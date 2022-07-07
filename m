@@ -2,204 +2,246 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04085C43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 12:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE94C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 15:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235495AbiGGM5x (ORCPT
+        id S235625AbiGGP1e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jul 2022 08:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
+        Thu, 7 Jul 2022 11:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235778AbiGGM4z (ORCPT
+        with ESMTP id S231897AbiGGP1d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jul 2022 08:56:55 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B142132066
-        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 05:56:29 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id e12so30950874lfr.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Jul 2022 05:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=454tFgA3S0AdDHLCz9NCzDKFnu7jUDGP8ZhaUxLFAwM=;
-        b=ZBZNaeAww+Dou3ANR4Eicb8fz7bLlNgPQ80A7xVXd4cLFP/jtPon2GknTZ+8EtMU/y
-         D1d4W/S1z5kLi6xXr2EoGQRtv6DNFXc4fPxmiGCFMVzpRHOfV8WOSAorS53sV77apMMb
-         COE/hG8m0zyyAMG1MEMtnRpfLsLImDEkvBaTFLhPmDpvLdpAw096gSb0Xj/l50nw4c2F
-         8vvnqvNFKk18zK8GlZHC2r59j/j8KpS3CB1OOAedY2LGKNDLuIRTq0rVJZhPmUVIHibc
-         t24NdRzWzXTxXEjdFfXqQKrBM7msLM29t79+xi9GG5qIh9qGgeVLwvA7AMSHkf5lEwb1
-         wGJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=454tFgA3S0AdDHLCz9NCzDKFnu7jUDGP8ZhaUxLFAwM=;
-        b=RQalPnJn1yyzs0OZzJWSa+B6KqKR2MIu6DY4Tn74sw194YyLjAiDHmMdXPypA7jmIp
-         oczS9xwgw+ggFquGhJzBQsY/OJRaWjD6XV9suGXWuRLY95otfp1owxYBdReGVg+qtb3b
-         tYpYwwDrtcsj/HSuVkXhOnnjY/7UEXnjJwzGRGZBBwYpwRAftcieGHwYy8BqdQ20yYY1
-         qmc2/RT2C0x3J8JiRemabh9xeZkSVSm0gxPOk79Re5A0Imb6oB+FTdE/K9Z/C0tl6avi
-         amVR7sXQLmF16NEYZMbirMyIVE414+cNa/1Eiilvg+ho98mppjkPqsaDK8AAf3zGrVbh
-         9X5A==
-X-Gm-Message-State: AJIora+/y6MK6aA5XJbelDusnHRlSWHFU2l85IrjC+ll+c6Rr5ADONBV
-        C4ubkqEKdGBNoCcq8sqh2LnEUg==
-X-Google-Smtp-Source: AGRyM1tUIF+2YDWl6srviD3jNZnzTpeDIWSQK6Nxo7YmHYsOrhaaVVcT0yZfLbFNHGMKVZdRHQ/fIg==
-X-Received: by 2002:a05:6512:260b:b0:47f:b04e:3116 with SMTP id bt11-20020a056512260b00b0047fb04e3116mr31189424lfb.474.1657198589088;
-        Thu, 07 Jul 2022 05:56:29 -0700 (PDT)
-Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
-        by smtp.gmail.com with ESMTPSA id d7-20020a05651221c700b0047255d2111csm6810361lft.75.2022.07.07.05.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 05:56:28 -0700 (PDT)
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jaz@semihalf.com, dmy@semihalf.com, mario.limonciello@amd.com,
-        seanjc@google.com, dbehr@google.com, upstream@semihalf.com,
-        zide.chen@intel.corp-partner.google.com,
+        Thu, 7 Jul 2022 11:27:33 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2050.outbound.protection.outlook.com [40.107.237.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA6F2E6A9;
+        Thu,  7 Jul 2022 08:27:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HQ6iK8ZMk32JEZ7j47i+b5AdZbA2MFOx4QK8b1krvsIIPz3up3Hcu+FkrDb09ckIOAPlWySuITWLOO/MC52KV1n9zgi45gEbT2jqtLHWp6h/6cYd6KR1abIXhOKiwqmC6IHtfe+qBE1Ja4r1t1q0NqKN55uYeMFaE07gy4RtKC1H7gksw6TNOBYdoPKGdehzbQYFlJvWaxrNtCzpLHcrDDotRiCJEk7glHH6BPva6xn20IWAXejG3pyoVBmKlP9M2djdZCTJW+6eG+1XEsEl4eUuTM0Pk1RV5BB7SHBvD7EQ0ndCQr40puFooazdMPqEYAWmFJcnrXNs9oEwFoSouA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cflTPdaTBS1qx1FqCstuBaDzkotQcI+iTKIiMAHC/y0=;
+ b=Vpu+bucFYSgSXzXNZ6Wlhf13sV9dBxfBEeM5ZvxRHxo0ygRBoSNy/reLXW/4/AVWY9XvFX5NXf6vbrSqq9GYPTpuPMQeiEJZAYkaYDGPucLkbcHq5CR8yK2agjSsFh/hWQZi1JR/UL+HyWGh/QBCs42aJkie4gzPiy13JATrzcLGRMXvcrfQuyEWEI59RzHSkaCrIyqrJSN2ZYFQi9aAStCrFwRlEseRtyz0ND5hV4YkyDtkEJB7D4wyOVzqQORJbtNdCNkm6Li50VnOCLrWdgQx4gXgAs9sUsecHBr6VMinm/zjT0aS4c9ZAgkNCP/diBci30Jmko9YZua9T9+eFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cflTPdaTBS1qx1FqCstuBaDzkotQcI+iTKIiMAHC/y0=;
+ b=BQYI3TWWgKOK5DulZ7X2dLwiZnnKfsF9cnoORRkTQWR1zF+8/wsU1VUB1Pzih+Q19vxm/AfrnPmxjO4Jg5EypxwDNU7VnCIinWKtXt/6VUH10/7dLVnB4juyKV8arRfbicwaFEvdtpEsbC9NRa6lSph8QaAPR2SoH8kMmDMmXgM=
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM6PR12MB3483.namprd12.prod.outlook.com (2603:10b6:5:11f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.18; Thu, 7 Jul
+ 2022 15:27:24 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598%5]) with mapi id 15.20.5395.021; Thu, 7 Jul 2022
+ 15:27:24 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     Grzegorz Jaszczyk <jaz@semihalf.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "dmy@semihalf.com" <dmy@semihalf.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "dbehr@google.com" <dbehr@google.com>,
+        "upstream@semihalf.com" <upstream@semihalf.com>,
+        "zide.chen@intel.corp-partner.google.com" 
+        <zide.chen@intel.corp-partner.google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sachi King <nakato@nakato.io>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS),
-        linux-pm@vger.kernel.org (open list:SUSPEND TO RAM)
-Subject: [RFC PATCH 2/2] platform/x86: Add virtual PMC driver used for S2Idle
-Date:   Thu,  7 Jul 2022 12:53:24 +0000
-Message-Id: <20220707125329.378277-3-jaz@semihalf.com>
-X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-In-Reply-To: <20220707125329.378277-1-jaz@semihalf.com>
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:HIBERNATION (aka Software Suspend, aka swsusp)" 
+        <linux-pm@vger.kernel.org>
+Subject: RE: [RFC PATCH 0/2] x86: allow to notify host about guest entering
+ s2idle
+Thread-Topic: [RFC PATCH 0/2] x86: allow to notify host about guest entering
+ s2idle
+Thread-Index: AQHYkgDy4lzAjPGC9UKu5zAtzCiz0q1zB75w
+Date:   Thu, 7 Jul 2022 15:27:24 +0000
+Message-ID: <MN0PR12MB610107D8E99AC05C7884AEE6E2839@MN0PR12MB6101.namprd12.prod.outlook.com>
 References: <20220707125329.378277-1-jaz@semihalf.com>
+In-Reply-To: <20220707125329.378277-1-jaz@semihalf.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-07-07T15:27:21Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=5e06c8fa-9fa7-4eef-8d22-2ac09137181a;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-07-07T15:27:23Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: de8b1b8a-0829-411d-8f2b-c933272e8c83
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 342b7545-8776-403e-e510-08da602d3195
+x-ms-traffictypediagnostic: DM6PR12MB3483:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MbkCYreULCjtP+eb8nktS3Nm4V4H7hwRH0bXEWA9g58wsymtdf+p4pfdptfw8XnhmD0/CNQcizMf4F6BG22p3HnHnMckT2CotBY70snCsqbhFhEoSawvzNpI6k7JjXS/HoKWt/C7LBjsImYTwGcR4ypIWOhcxNIc9S0Cne4N03ybCdbwF5cbBBLX9vRU3TBsYUyUJxRXDuL6RZNQ9jlcd+tjuQnh+ozGR7JjOkfBHOgYJUxMLCGNu4kuxkUMfwiWGB1TMU+SDF2g/pbTI7SrHIR7cJcAV9UUb0sdgFa8A6/2mzYGg9fp4cjIG8M+EltC0YH0yHr1tIJDN4YGGbHDu/OP4vRfUHalfC8cUDDmO5PqUhtwVDvHzFsQCS8UXROaywKzD8g6c7QJk/N6wmi+VG9REjSTDbT2k1Pv7zjmCrHxFoWeppc4f1qNmW13uezYuilfFxMTeIsKugX8SWaezNGG/125VbgKMMKbhvzkECeGdiyd909x/84EbdZOJLNyq74yGXg/u17gxzWvlrMcRTgVZPg+6Pb/Zs2kRDgFJ7zLSQBw4fI0U7rB8jehmkVuRcdCzP3swcjO28FH4QhWsS72gOaoldvIh7CJPYRCaauWHC9DNHS3jTzBWPL9MIZJaKUoXX/3sF6CWLseU+XYfjZ0N9STyEO4gAQch2wGV9KpfsSeBJER1ic8pgnvRz27xHhEc8H/HwnPjkOe+5yklUQp2FUasIAJOzt65/G0nVU7ayP3jiHh0vJ4rU3fSvPhBfNSpZKCm7jXZXVskK19QdnQSF+p05Axe/rqrLDXpjWp+j+u28vmhRJcA7DtknPkawFn6XmP7Y0/6ksnGkFRzWL+IkMGdiXiwhSGWJY0ZDXt5s2sOjcMJjE3Gim9Rgbz
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(136003)(346002)(396003)(39860400002)(376002)(45080400002)(6506007)(966005)(9686003)(54906003)(110136005)(38100700002)(186003)(316002)(41300700001)(8676002)(66946007)(38070700005)(4326008)(76116006)(53546011)(26005)(8936002)(86362001)(122000001)(64756008)(55016003)(52536014)(83380400001)(7416002)(478600001)(71200400001)(2906002)(5660300002)(66446008)(66556008)(7696005)(33656002)(66476007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?WUz86dADOHKj3ckIaSvg4QCKzvI8bD7h3kr5a+UqB2u4PqZNV8z7d5DKS9E+?=
+ =?us-ascii?Q?I/rnWSKWxmrQKhnHKmRRez0wgafw+EwzV2jRegfTNMwNRXP6/knwQYTqIC37?=
+ =?us-ascii?Q?Vtsrp86SRqlYssey3k2MaR4D5rdAau49nNA6ySBgBJRhLczGB7xgVweXxu7i?=
+ =?us-ascii?Q?uPdm4UxNKoEsaoonStcrvttZ7vnIAORcClc4njJWhVSJNjNZilQRTu8+kf3n?=
+ =?us-ascii?Q?aFLzz41SALnJY7O0Ivg7FuskOysi/ObwGNVRDHPauAD9FRDj4O0WvXnMRd/j?=
+ =?us-ascii?Q?8AFgbtG5LmjOB3GQMfa03+IqC4QdR8YKAB7FobpBND/E/l4qR++/pdkbNr3F?=
+ =?us-ascii?Q?5hHlkoONkfUkwJu3ETUioLvVLyCd2Y9ZeZ3TGW66+/dinQp2sq4ihRUpoM+J?=
+ =?us-ascii?Q?cLlCWu5OreIF7Dy7yq6XQ8tFoH/uxEr9kN10OThWxf3ITE9tOgpjrFsUv+5Z?=
+ =?us-ascii?Q?/OpLCLEJUoIC2oaAy/hvzcfBoQEMaJwFIQ64+szLC2us2vRo2bAS7TDphOpZ?=
+ =?us-ascii?Q?xEqiC29ERU3/F5ek08Zn7IQ+Oa/tOiQ/7CED5P2kh4fjbMsBbQN4p4eEKOjl?=
+ =?us-ascii?Q?AIV0X3nXcrHNd3gBT7aRJalCpeRPNFFrhnL34gFPskZ4mdwadVuU7Hwmq96D?=
+ =?us-ascii?Q?NVkfIc34W+pg7pUAYLlRRMX29eG4iuqzbmqj8rZZYB86vq4hrRUdx0LW59+0?=
+ =?us-ascii?Q?fEpGKJjHM7Wtq4YzHa9lBhbTnM6rzwG+rGVXY8qThDN+uYhepoxt1vwxHQQr?=
+ =?us-ascii?Q?NUDRl438dj54DjD0tv66RElEET1iBaPBvhuxnI5C6Ebgr3IVp+8KjyCC4CDz?=
+ =?us-ascii?Q?LA1IUE194B8X3RvOSoAW+oJW7ZbnRKFw4lC3O5NYbFtNWc5Ifqh5HIcXlJ7N?=
+ =?us-ascii?Q?DSbtNeUZhclBGVyHkTJYTkb3NNZy31tCe/thrwmwrwBMWMGxa0rjbCTIy5dR?=
+ =?us-ascii?Q?aenaVvrSRFbie6h0ECJrnNAX/hi8unWJa7BSuYdEru6GdHQKfqgC0MYWN6Ow?=
+ =?us-ascii?Q?mYlGTUyNYMMY5XAp/Fp9L508Tc6e1B6+ReeTi+MAaZ3OFL41uz9appA6ZQuM?=
+ =?us-ascii?Q?/YrcDjPUNAgOkJCd910zr+pg7jX0xKvt3WmoH8fN8PMQqmO4RlhB4wxK4tWx?=
+ =?us-ascii?Q?+qqLI5BpyGBmcG8PjLKeSosvmqxZh+TMhTmP7mscH5BUx8JoKPOEfZgk98Vc?=
+ =?us-ascii?Q?K8cZvhtfgy99sG5lCrFytIG2lPfM9ub39DCa9LjXvB3YC5o/9B7/RLivdvtj?=
+ =?us-ascii?Q?KL4R2X/gQ+raDscCB9P92Y9BjPC3kiRXDKhJbAymFR5MPY5onYpOElHZL2av?=
+ =?us-ascii?Q?ac/qs/DthCQ5k+ZknuxI8eVtDYstF/rwS3fC5W5Tq157DUvqudACcavzIjQ3?=
+ =?us-ascii?Q?ZuuQF87jPkNha3NT60cWOmt9IUDqyY12a/jTAcWRngDEoDWgtiodQbdLpcQL?=
+ =?us-ascii?Q?ODcCeLS/CNzaRS3YngR6acSht5Dihmny82BJhbUovL9QoGYNGGh1KOtoj04F?=
+ =?us-ascii?Q?QO/7BdKY7+y2vzVlNjvkzLdpZOfYCLcYUDt5MEoDg5RD4vqj+g+UdKTfbYmE?=
+ =?us-ascii?Q?srtJ0zOBLJGGokg85hw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 342b7545-8776-403e-e510-08da602d3195
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2022 15:27:24.7266
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3qf+KEi9z7U15mZ535ATNjBqQnXhyxyjOq6W6mpoFxM+0Q+JL8itaOumJOUMWAi76M5daF2Wr2QvCSsvGK/lEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3483
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Virtual PMC driver is meant for the guest VMs for the S2Idle
-notification. Its purpose is to register S2Idle dev ops notify handler,
-which will evaluate ACPI _DSM as a very last command before the guest
-enters S2Idle power state.
+[Public]
 
-This allows to trap on MMIO access done as a consequence of _DSM
-evaluation and therefore notify the VMM about the guest entering S2Idle
-state.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
----
- drivers/platform/x86/Kconfig    |  7 ++++
- drivers/platform/x86/Makefile   |  1 +
- drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
- 3 files changed, 81 insertions(+)
- create mode 100644 drivers/platform/x86/virt_pmc.c
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bc4013e950ed..dee974321b01 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -479,6 +479,13 @@ config WIRELESS_HOTKEY
- 	 To compile this driver as a module, choose M here: the module will
- 	 be called wireless-hotkey.
- 
-+config VIRT_PMC
-+	tristate "Virt PMC"
-+	depends on ACPI && SUSPEND
-+	help
-+	  The Virtual PMC driver is meant for the guest VMs and it's main
-+	  purpose is to notify about guest entering s2idle state.
-+
- config HP_WMI
- 	tristate "HP WMI extras"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 4a59f47a46e2..3c3e440f11bb 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -116,6 +116,7 @@ obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
- obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
- obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
- obj-$(CONFIG_X86_ANDROID_TABLETS)	+= x86-android-tablets.o
-+obj-$(CONFIG_VIRT_PMC)			+= virt_pmc.o
- 
- # Intel uncore drivers
- obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
-diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/virt_pmc.c
-new file mode 100644
-index 000000000000..d0607db6cd22
---- /dev/null
-+++ b/drivers/platform/x86/virt_pmc.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Virtual Power Management Controller Driver
-+ *
-+ * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/platform_device.h>
-+
-+#define ACPI_VIRT_PMC_DSM_UUID	"9ea49ba3-434a-49a6-be30-37cc55c4d397"
-+#define ACPI_VIRT_PMC_NOTIFY 1
-+
-+static acpi_handle virt_pmc_handle;
-+
-+static void virt_pmc_s2idle_notify(void)
-+{
-+	union acpi_object *out_obj;
-+	static guid_t dsm_guid;
-+
-+	guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
-+
-+	out_obj = acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
-+					0, ACPI_VIRT_PMC_NOTIFY, NULL);
-+
-+	acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluation %s\n",
-+			  ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful" : "failed");
-+
-+	ACPI_FREE(out_obj);
-+}
-+
-+static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
-+	.notify = virt_pmc_s2idle_notify,
-+};
-+
-+static int virt_pmc_probe(struct platform_device *pdev)
-+{
-+	int err = 0;
-+
-+	virt_pmc_handle = ACPI_HANDLE(&pdev->dev);
-+
-+	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+	if (err)
-+		dev_warn(&pdev->dev, "failed to register LPS0 sleep handler\n");
-+
-+	return err;
-+}
-+
-+static int virt_pmc_remove(struct platform_device *pdev)
-+{
-+	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id virt_pmc_acpi_ids[] = {
-+	{"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
-+
-+static struct platform_driver virt_pmc_driver = {
-+	.driver = {
-+		.name = "virtual_pmc",
-+		.acpi_match_table = ACPI_PTR(virt_pmc_acpi_ids),
-+	},
-+	.probe = virt_pmc_probe,
-+	.remove = virt_pmc_remove,
-+};
-+
-+module_platform_driver(virt_pmc_driver);
-+
-+MODULE_DESCRIPTION("Virtual PMC Driver");
--- 
-2.37.0.rc0.161.g10f37bed90-goog
+> -----Original Message-----
+> From: Grzegorz Jaszczyk <jaz@semihalf.com>
+> Sent: Thursday, July 7, 2022 07:53
+> To: linux-kernel@vger.kernel.org
+> Cc: jaz@semihalf.com; dmy@semihalf.com; Limonciello, Mario
+> <Mario.Limonciello@amd.com>; seanjc@google.com; dbehr@google.com;
+> upstream@semihalf.com; zide.chen@intel.corp-partner.google.com; Rafael J.
+> Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; Hans de Goede
+> <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>; Pavel Machek
+> <pavel@ucw.cz>; Mika Westerberg <mika.westerberg@linux.intel.com>; Sachi
+> King <nakato@nakato.io>; open list:ACPI <linux-acpi@vger.kernel.org>; ope=
+n
+> list:X86 PLATFORM DRIVERS <platform-driver-x86@vger.kernel.org>; open
+> list:HIBERNATION (aka Software Suspend, aka swsusp) <linux-
+> pm@vger.kernel.org>
+> Subject: [RFC PATCH 0/2] x86: allow to notify host about guest entering s=
+2idle
+>=20
+> According to the mailing list discussion [1] about the preferred approach
+> for notifying hypervisor/VMM about guest entering s2idle state this RFC w=
+as
+> implemented.
+>=20
+> Instead of original hypercall based approach, which involves KVM change [=
+2]
+> and makes it hypervisor specific, implement different mechanism, which
+> takes advantage of MMIO/PIO trapping and makes it hypervisor independent.
+>=20
+> Patch #1 extends S2Idle ops by new notify handler which will be invoked a=
+s
+> a very last command before system actually enters S2Idle states. It also
+> allows to register and use driver specific notification hook which is use=
+d
+> in patch #2.
+>=20
+> Patch #2 introduces new driver for virtual PMC, which registers
+> acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
+> ACPI _DSM evaluation, which in turn can perform MMIO access and allow to
+> trap and therefore notify the VMM about guest entering S2Idle state.
+>=20
+> Please see individual patches and commit logs for more verbose descriptio=
+n.
+>=20
+> This patchset is marked as RFC since patch #2 implements driver for non
+> existing device "HYPE0001", which ACPI ID was not registered yet.
+> Furthermore the required registration process [3] will not be started
+> before getting positive feedback about this patchset.
+>=20
+> [1]
+> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+w
+> ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
+> 2-
+> jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> 7C3000%7C%7C%7C&amp;sdata=3DRIDiHUNpHUsBYyK3pwGND%2BWJoioXZNCKt
+> mML2%2F1LAxs%3D&amp;reserved=3D0
+> [2]
+> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
+w
+> ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
+> 3-
+> jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> 7C3000%7C%7C%7C&amp;sdata=3DBqykAwWzO%2BfeGPSsAqTmX13O8F0Vvm3G
+> PL56EpmdSJ8%3D&amp;reserved=3D0
+> [3]
+> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fuefi.=
+org
+> %2FPNP_ACPI_Registry&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> 7C3000%7C%7C%7C&amp;sdata=3DQXK52zFXJGEBm6xIv6IFeF7Xxgz4Yp5UmgLSQ
+> diXtlI%3D&amp;reserved=3D0
+>=20
+> Grzegorz Jaszczyk (2):
+>   suspend: extend S2Idle ops by new notify handler
+>   platform/x86: Add virtual PMC driver used for S2Idle
+>=20
+>  drivers/acpi/x86/s2idle.c       | 11 +++++
+>  drivers/platform/x86/Kconfig    |  7 ++++
+>  drivers/platform/x86/Makefile   |  1 +
+>  drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
+>  include/linux/acpi.h            |  1 +
+>  include/linux/suspend.h         |  1 +
+>  kernel/power/suspend.c          |  4 ++
+>  7 files changed, 98 insertions(+)
+>  create mode 100644 drivers/platform/x86/virt_pmc.c
+>=20
+> --
+> 2.37.0.rc0.161.g10f37bed90-goog
 
+Thanks, you matched the implementation I was expecting.
+This looks fine by me.
