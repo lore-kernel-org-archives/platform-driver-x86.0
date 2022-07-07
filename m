@@ -2,98 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D5CC43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 07:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BECFC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 08:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231393AbiGGHyg (ORCPT
+        id S235436AbiGGIV6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jul 2022 03:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
+        Thu, 7 Jul 2022 04:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbiGGHyf (ORCPT
+        with ESMTP id S235218AbiGGIVV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jul 2022 03:54:35 -0400
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050:0:465::201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BB42616;
-        Thu,  7 Jul 2022 00:54:32 -0700 (PDT)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Ldpb727dYz9sp9;
-        Thu,  7 Jul 2022 09:54:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1657180467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V+yyT26kcCPIvJtlTgb0qkwB1W9jNIgrKQnDPJqABws=;
-        b=VGFq8cLB6ORk/2eP9jRsUcVNi7kAJE2eSN0/j3hS5jGEWw5H3wc4XleMrxyVqP5Sxxwgwq
-        oLsmpzndN6xrDwoiBT+CAR0HR/4cFZE7qpREol2H+LMy1I1ECvqsUi0d7b9piB1ituRx0x
-        2K2IFKEyf3M8Uot/Fwxojb8cg8qBLvIeSQwYK2Yxk7+fpMmutbDLKO15hEoZ7L3jPq5PJt
-        8r1ElP1ECLiCRRTt839ZD57ehcPKNeyKNBL4CIL2ER6e8GvoJRdl6YwW6TveUqwuUnvhpE
-        eT0g9IYh7rymEvOwf0I6bkmUP1qWMCiKELXHAJhcrh7lls1ZuSOIbB6s6o7+VQ==
-Date:   Thu, 7 Jul 2022 09:54:26 +0200 (CEST)
-From:   torvic9@mailbox.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Message-ID: <830109073.51279.1657180466311@office.mailbox.org>
-In-Reply-To: <CAHk-=whfSg1FNFJXv9QfXXnWFO71YufsoTs9S8sYzonfwjm4XA@mail.gmail.com>
-References: <272584304.305738.1657029005216@office.mailbox.org>
- <CAHk-=wivGGgs9K_TfQYTW4RzH_C-JVfLZKNA5+hKQU0eNFBeiw@mail.gmail.com>
- <MN0PR12MB61015A04C6E4202B2E8E08A9E2819@MN0PR12MB6101.namprd12.prod.outlook.com>
- <72419963.329229.1657096948079@office.mailbox.org>
- <8ee1bc75-3ecd-9d87-b7cc-37ba15133026@leemhuis.info>
- <CAHk-=whfSg1FNFJXv9QfXXnWFO71YufsoTs9S8sYzonfwjm4XA@mail.gmail.com>
-Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+        Thu, 7 Jul 2022 04:21:21 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00A1140F3;
+        Thu,  7 Jul 2022 01:20:15 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1o9Mk9-0001Rr-QT; Thu, 07 Jul 2022 10:20:13 +0200
+Message-ID: <77dbe20b-b99d-ec7c-9043-6d2b053303ad@leemhuis.info>
+Date:   Thu, 7 Jul 2022 10:20:13 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
+Content-Language: en-US
+To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <272584304.305738.1657029005216@office.mailbox.org>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <272584304.305738.1657029005216@office.mailbox.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-MBO-RS-ID: 995ad3399b4688e71e7
-X-MBO-RS-META: t1g34utnt94rj7afsxinsoojtq6b3iwq
-X-Rspamd-Queue-Id: 4Ldpb727dYz9sp9
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657182015;77807d7a;
+X-HE-SMSGID: 1o9Mk9-0001Rr-QT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On 05.07.22 15:50, torvic9@mailbox.org wrote:
 
-> Linus Torvalds <torvalds@linux-foundation.org> hat am 06.07.2022 18:59 GMT geschrieben:
+> Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
+> rc3 and rc4 were still fine, so I guess something between rc4 and rc5
+> introduced a regression.
 > 
->  
-> On Wed, Jul 6, 2022 at 11:21 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > Wild guess, I'm not involved at all in any of the following, I just
-> > noticed it and thought it might be worth mentioning:
-> >
-> > I heard Fedora rawhide added this patch to solve a boot problem that
-> > sounded similar to yours:
-> > https://patchwork.freedesktop.org/patch/489982/
+> Unfortunately, there are no errors or warning messages.
+> It gets stuck quite early on boot, about the time USB is initialized,
+> so less than 1 second into post-bootloader boot.
+> It then just sits there doing nothing - SysRq still works though.
 > 
-> Yes, this looks likely, and matches that "starts in 5.19-rc5" since
-> the offending commit came in as
-> 
->   ee7a69aa38d8 ("fbdev: Disable sysfb device registration when
-> removing conflicting FBs")
-> 
-> so that does look like a likely cause.
-> 
+> I don't have time for a bisect, but I thought I'll let you know about
+> this issue, and maybe someone already has an idea.
+> [...]
 
-I confirm that applying
-  "drm/aperture: Run fbdev removal before internal helpers"
-on top of rc5 solves this issue, computer boots normally again.
-I suppose this commit will be cherry-picked for rc6.
+This is mostly dealt with already, as can be seen from this thread,
+nevertheless adding it to the tracking:
 
-Thanks to all!
-Tor
+#regzbot ^introduced ee7a69aa38d8
+#regzbot title drm: fbdev/simplefb: Linux 5.19-rc5 gets stuck on boot,
+not rc4
+#regzbot ignore-activity
+#regzbot fixed-by: bf43e4521ff3223a
 
->               Linus
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
