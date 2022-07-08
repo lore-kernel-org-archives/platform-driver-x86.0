@@ -2,119 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE11C43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 21:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57494C43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 21:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238685AbiGHVb0 (ORCPT
+        id S231144AbiGHV6h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 17:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45794 "EHLO
+        Fri, 8 Jul 2022 17:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238368AbiGHVbY (ORCPT
+        with ESMTP id S231845AbiGHV6e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 17:31:24 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EE39FE30;
-        Fri,  8 Jul 2022 14:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657315884; x=1688851884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8glBkFV6dO5pltOl2NLTXJxSpJypr9SAuPCGEx1OqtM=;
-  b=NSu9sE30DEDPm4VOiJY5WTUl4waQWrmmu9JdPJsmQMNnyokEDvg1/P9h
-   UfDoB8aETpoQeSPrbWZEDG8KJ79p9lAjG9kphOOV4XpRFnFm4J7DsKpUT
-   GeFp/1ZuD6xBXRTkp1oHsLzVYRsWzbbtm6J0ToG3GvftT0VWQEATaNxBD
-   5R9xT6XQ5u1JrIenWZ+/a81LKS2JgO7xaYRZyd2OaEvpi+TG97HYGLiHI
-   2wQ9DJQ93w8nvHv3ANHwh9Yv0ztlN3oX4/nV+pv99MY2NAioNL1bujTrD
-   +rCDQ4bAjfNa3Woyvcp26uYCYV5/EQdpU+W9EjBatBsLQxnXrM02xDbAv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="284392675"
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="284392675"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 14:31:23 -0700
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="621372477"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 14:31:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1o9vZE-0018qY-1T;
-        Sat, 09 Jul 2022 00:31:16 +0300
-Date:   Sat, 9 Jul 2022 00:31:16 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/5] ACPI: utils: Introduce
- acpi_match_video_device_handle() helper
-Message-ID: <YsiiJFdbFVLyRL6i@smile.fi.intel.com>
-References: <20220630212819.42958-1-andriy.shevchenko@linux.intel.com>
- <Yr6KcPlC/3rYAtKE@lahna>
- <CAJZ5v0ht6hfaBsifhr=M_htHh6uHohwgcab2dFR5hqq4rO+xFQ@mail.gmail.com>
- <YsihLEX3At421cAK@smile.fi.intel.com>
+        Fri, 8 Jul 2022 17:58:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E14A11C30
+        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 14:58:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 97F5061851
+        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 21:58:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 04234C341C0
+        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 21:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657317513;
+        bh=PjIBDvPeyDNG0KsT8bBccMWiwQ+Kmk9/xlUxfUY1PHQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=EoblCL5/o5QU36UhCnrgzyq1jAC7f5UbmEuyMW/zZeayUv8weh5K6wAHWEr0uoKR8
+         OQHAN+XRjkm2PJXjDEDkXwxyS6f42TDvO7h1PcPvHdMSya10Uu1KussKUjOzwQLAzu
+         WPTLgn3BxMKOAXLg1trxHPkMT9udlDUcuyyYtASqaJJ+NUXAqH9x0sVgpukIl1DbFe
+         04llhLgg2x7zq0zQSyG9faZK7Eg7MQ3kEhYNz0LDGGXU0v3Ptzq4Trrgg6MqAlMPLR
+         S8kjfP2gqPQxIhfJ8Hy75Rp/pclRqzPYobxQoO/iu87FTyM4blNqPFOSO0UCWYFrId
+         /e0Ka7blB3qTg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id D90D2C05FD6; Fri,  8 Jul 2022 21:58:32 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
+ SPI device CSC3551:00
+Date:   Fri, 08 Jul 2022 21:58:32 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: blur.3rd@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-215993-215701-gwHfIbkpSP@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
+References: <bug-215993-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YsihLEX3At421cAK@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jul 09, 2022 at 12:27:09AM +0300, Andy Shevchenko wrote:
-> On Tue, Jul 05, 2022 at 08:40:30PM +0200, Rafael J. Wysocki wrote:
-> > On Fri, Jul 1, 2022 at 7:47 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Fri, Jul 01, 2022 at 12:28:15AM +0300, Andy Shevchenko wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
 
-...
+--- Comment #12 from Supasak Sutha (blur.3rd@gmail.com) ---
+Couldn't get this line to work.=20
 
-> > > >  extern long acpi_is_video_device(acpi_handle handle);
-> > > > +extern bool acpi_match_video_device_handle(acpi_handle handle);
+dev_info(dev, "%s <--> %s\n", acpi_dev_name(ACPI_COMPANION(dev->parent)),
+acpi_dev_name(data));
 
-> > > I think we can do slightly better here. The only caller of
-> > > acpi_is_video_device() is in drivers/acpi/video_detect.c so we can move
-> > > it there and make it static (is_video_device()).
-> 
-> AFAICS, the scan.c is user of it as well.
-> 
-> > > Then we can name this one acpi_is_video_device() instead and in addition
-> > > make it take struct acpi_device as parameter instead of acpi_handle (I
-> > > think we should not use acpi_handles in drivers if possible).
-> > 
-> > Agreed.
-> 
-> Not sure it will help to have acpi device since most of the callers asks for
-> handle to be checked.
+I don't see any output of this line, tried with dev_err and dev_warn also
+nothing.=20
+May be it's not reach that function. or I miss something?=20
 
-Actually it's 2:2 now. I'm fine with ACPI device and name like
+P.S. Thanks for v5.19-rc5 link, I will have a look.
 
-	acpi_dev_is_video_device()
+--=20
+You may reply to this email to add a comment.
 
-> Taking into account above, what we can do is to rename it to
-> 
-> 	acpi_handle_is_video_device()
-> 
-> which should be clearer than initial proposal.
-> 
-> Thoughts?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
