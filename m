@@ -2,83 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C29DC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 10:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97CAC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 13:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237649AbiGHK7f (ORCPT
+        id S237978AbiGHNOV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 06:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33932 "EHLO
+        Fri, 8 Jul 2022 09:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237642AbiGHK7e (ORCPT
+        with ESMTP id S237879AbiGHNOU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 06:59:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3809C88F07
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 03:59:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 8 Jul 2022 09:14:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DA784D98
+        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 06:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657286058;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o5XQMgCfmhZL4LYvSLEJtLzGT9HVAJkUynKxpB5ttVE=;
+        b=djCHP2hgKLBIB3YUE/f68y5PpHEWuo4wEWKRNWMeLNdb0+DctPo3K6Gco6acCG/h84JqK2
+        LIisG+7IE4yg/nAGDR1Qrm2ngUOYDo0e8XucsdDtc/EjE8tmQAFQm+S5ssDwd6IhuKNkut
+        RBx9iYxuPv5edtf9iQ7dCDDfek41r/Y=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-447-qk53IZJcOgulgx2KvvxJmw-1; Fri, 08 Jul 2022 09:14:16 -0400
+X-MC-Unique: qk53IZJcOgulgx2KvvxJmw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E21B3B80189
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 10:59:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A18C5C341C7
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 10:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657277971;
-        bh=5DcOw5DH2/mpo/bNpwgx1sdgDkoSb2PpRlurF8lIFJs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=mVGrm37psUMnH2987hRbqML18l2tzoOuHNTVKz5RoUnQiNvtCwmLTfjr1Yvrtq5Ts
-         IlK9pBng+qGW9clpkUXtZ/5LodP/e3E8p0njV4pFug/YwBuUCB+qHlQL9gubvoGHXJ
-         XSJYb3gt9RstZ4gJ7jmeqCjWw8Mgiq8AV9eiL40ckAPh3ooigkApS2KAKFIDpTQXLE
-         smqqnPWFfR7J+2Uwv7cKot/H13BmOz//kRqgWu0kabq6QXZZAsObPuQZIfflh7knWw
-         fEnUWDvp/+T8YOk70cOU4uk8DTU3u+FIRPFrdjaOJ5u2DTGYEHR2qZXApeIIqTZzn2
-         IHCTL/M8rBJ4Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 82D1CC05FD2; Fri,  8 Jul 2022 10:59:31 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
- SPI device CSC3551:00
-Date:   Fri, 08 Jul 2022 10:59:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: blur.3rd@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-215993-215701-9L1HRzhyzr@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
-References: <bug-215993-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D9331035340;
+        Fri,  8 Jul 2022 13:14:16 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.193.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 988F81121314;
+        Fri,  8 Jul 2022 13:14:14 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org, linux-efi@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: x86-android-tablets: Fix Lenovo Yoga Tablet 2 830/1050 poweroff again
+Date:   Fri,  8 Jul 2022 15:14:11 +0200
+Message-Id: <20220708131412.81078-2-hdegoede@redhat.com>
+In-Reply-To: <20220708131412.81078-1-hdegoede@redhat.com>
+References: <20220708131412.81078-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
+Commit 98f30d0ecf79 ("ACPI: power: Switch to sys-off handler API")
+switched the ACPI sleep code from directly setting the old global
+pm_power_off handler to using the new register_sys_off_handler()
+mechanism with a priority of SYS_OFF_PRIO_FIRMWARE.
 
---- Comment #6 from Supasak Sutha (blur.3rd@gmail.com) ---
-Now it's like this
+This is a problem in special cases where the old global pm_power_off
+handler later gets overwritten, such as the Lenovo Tab2 poweroff bugfix
+in x86-android-tablets. The old global pm_power_off handler gets run
+with a priority of SYS_OFF_PRIO_DEFAULT which is lower then
+SYS_OFF_PRIO_FIRMWARE, causing the troublesome ACPI poweroff (which
+freezes the system) to run first.
 
-[   21.037999] Serial bus multi instantiate pseudo device driver CSC3551:00:
-error -2404: failed to allocate SPI device CSC3551:00 from ACPI: -2404
-[   21.038102] Serial bus multi instantiate pseudo device driver: probe of
-CSC3551:00 failed with error -2404
+Switch the registering of lenovo_yoga_tab2_830_1050_power_off over to
+register_sys_off_handler() with a priority of SYS_OFF_PRIO_FIRMWARE + 1
+so that it will run before acpi_power_off() to fix this.
 
---=20
-You may reply to this email to add a comment.
+Fixes: 98f30d0ecf79 ("ACPI: power: Switch to sys-off handler API")
+Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/x86-android-tablets.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+index f446be72e539..480375977435 100644
+--- a/drivers/platform/x86/x86-android-tablets.c
++++ b/drivers/platform/x86/x86-android-tablets.c
+@@ -27,8 +27,8 @@
+ #include <linux/pinctrl/machine.h>
+ #include <linux/platform_data/lp855x.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+ #include <linux/power/bq24190_charger.h>
++#include <linux/reboot.h>
+ #include <linux/rmi.h>
+ #include <linux/serdev.h>
+ #include <linux/spi/spi.h>
+@@ -889,6 +889,7 @@ static const struct pinctrl_map lenovo_yoga_tab2_830_1050_codec_pinctrl_map =
+ 			  "INT33FC:02", "pmu_clk2_grp", "pmu_clk");
+ 
+ static struct pinctrl *lenovo_yoga_tab2_830_1050_codec_pinctrl;
++static struct sys_off_handler *lenovo_yoga_tab2_830_1050_sys_off_handler;
+ 
+ static int __init lenovo_yoga_tab2_830_1050_init_codec(void)
+ {
+@@ -933,9 +934,11 @@ static int __init lenovo_yoga_tab2_830_1050_init_codec(void)
+  * followed by a normal 3 second press to recover. Avoid this by doing an EFI
+  * poweroff instead.
+  */
+-static void lenovo_yoga_tab2_830_1050_power_off(void)
++static int lenovo_yoga_tab2_830_1050_power_off(struct sys_off_data *data)
+ {
+ 	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
++
++	return NOTIFY_DONE;
+ }
+ 
+ static int __init lenovo_yoga_tab2_830_1050_init(void)
+@@ -950,13 +953,19 @@ static int __init lenovo_yoga_tab2_830_1050_init(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	pm_power_off = lenovo_yoga_tab2_830_1050_power_off;
++	/* SYS_OFF_PRIO_FIRMWARE + 1 so that it runs before acpi_power_off */
++	lenovo_yoga_tab2_830_1050_sys_off_handler =
++		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_FIRMWARE + 1,
++					 lenovo_yoga_tab2_830_1050_power_off, NULL);
++	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler))
++		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
++
+ 	return 0;
+ }
+ 
+ static void lenovo_yoga_tab2_830_1050_exit(void)
+ {
+-	pm_power_off = NULL; /* Just turn poweroff into halt on module unload */
++	unregister_sys_off_handler(lenovo_yoga_tab2_830_1050_sys_off_handler);
+ 
+ 	if (lenovo_yoga_tab2_830_1050_codec_pinctrl) {
+ 		pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
+-- 
+2.36.0
+
