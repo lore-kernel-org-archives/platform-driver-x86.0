@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0A6C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138E1C43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 09:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236513AbiGHIs3 (ORCPT
+        id S237290AbiGHJHo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 04:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        Fri, 8 Jul 2022 05:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237447AbiGHIs1 (ORCPT
+        with ESMTP id S230230AbiGHJHo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 04:48:27 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165D828C;
-        Fri,  8 Jul 2022 01:48:26 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id bf13so8758256pgb.11;
-        Fri, 08 Jul 2022 01:48:26 -0700 (PDT)
+        Fri, 8 Jul 2022 05:07:44 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4031FCE4;
+        Fri,  8 Jul 2022 02:07:43 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id r1so15836245plo.10;
+        Fri, 08 Jul 2022 02:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iCfJi2yWLIUTn9UQCo9Ykdpvm8wq/AZQhSB/e7t7MCc=;
-        b=cA3i5O+WepkIn1s/5GB3E2+Ku0g0EBJv0rasWDUe1Q/wXY3Jis6VL37H1TLy8O5Zf+
-         Wn6I8KtVdhVWOCU1RGPP6tBEmg2m0/nsFmQSbXHATDNfF7gtb9B/5P80Hs2jdm0OLTEk
-         3rN2rMj3jIugTMSlvYYa/0RVPVVu3vdV2RCHEthqqAVhEI9UHBV9nxEbs8qq9NsohLwn
-         M1X5Rh2axgnwfCFvTz373Rf95q8lHipDDQRyqsgPcVLyoIH9pvsdRouHv+G8Y7kc59ud
-         FW5/1J/yHejKA1OQG8iAxZvrLlwBRD/rCdnkY9aA3WJDbuB4nH0g23x36phdsX18nuib
-         0Hnw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=C33xyLawJhRLBaWCMnBU/MS45wpGFkBXlQelADzR1CM=;
+        b=VE2aEf6wO3TdSh1eQqY/sbtphYbuNh22y9pfryfy9Rh8iNoi68OEb6m4WoG9zRjPoO
+         I+S2Pkyuyp1s4sKTKbnaUfcqLt3FjJLJ4j9w82Nt/TwQDAubSnyqcX2BvG5iYeq32+Xf
+         HYI2wU11GO9nmMdzecfprIM3mu5OqULJDBznBbj58l0e8hznp8IptyPeMkjiwhZbwVyl
+         elZHVNROTFKrRI523VVdi+xUBEYoMAB2Do7mnHNhbpraMgOk+63Jgj2L/Y2BK6ew/HV/
+         Q9CXAgcE5KLYmQEFUEC3fzMrMLNOz5GXxKPisqZoKcGYt1MOqjOhZyCYrm2b06vsMKui
+         xjuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iCfJi2yWLIUTn9UQCo9Ykdpvm8wq/AZQhSB/e7t7MCc=;
-        b=0jx0UQGQU80DFbzUICZOcI6AT4zrTaQ2A0VQvMgv3ynwqdU3joc//bc9QTrorB0aen
-         vCft6XRcnhkag5XCFSYDLr62eEQB5iVMrKww6y8lgMV9uuwv+weoehk5p+H5m7TpQqJ+
-         ZgMOBRcwVW0xYisAjv/DaFDAE5E75Sgoidoer9pdV9Dwh05tNWx6Lwt0+dnZ9XjGA9vo
-         RK2xwoWIgktF5/mBQbBe7n11vOPAhZsycHRERWCGgHyb0MhadPfYpCLezJUz5ZbZIAh1
-         QlSuRy6slWI/bELKqFyqicRXLlGa0h4+BmBSf5WmIfKTJ58Z6S/tmmPQR/2DFFC+URap
-         uN+A==
-X-Gm-Message-State: AJIora8Kya1uQy9pwhAHUuuwSPsDNAT450JCGUFrNl1zWPhlfBu5L6+V
-        kgcceyFb8rFggM3eTpZBegnf/ofd4FmwXEOF
-X-Google-Smtp-Source: AGRyM1u4mMnhUINvCUcELjUuGvzeMC5NeE3B2bNlFdnC6LOnkDLTcEcl5NFtcAu9hayIxfLHRpLFEw==
-X-Received: by 2002:a65:6bd3:0:b0:3fd:63c3:a84b with SMTP id e19-20020a656bd3000000b003fd63c3a84bmr2395028pgw.572.1657270105388;
-        Fri, 08 Jul 2022 01:48:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=C33xyLawJhRLBaWCMnBU/MS45wpGFkBXlQelADzR1CM=;
+        b=7MInlN1p7WuWiM8f2QZsX3Hb064wqDz0Yb6wFSZtyGGGBQcNUkxOB0fXpRBL0pFUd3
+         yWUP8cqfwyvdd8iAwQbfiZLbMBlaJ3nfcJ3ObdE56FDgp0GBHRY3PVygQUGBh8UxGcEj
+         iZfw7Q8mgO7A46oEP7mEU93eWOf7AZPT8To3DN88C8PJDr5/rZ1rfstawq5med5HRyrT
+         AtY330lqAP/NwyHyBEr4XW5iyTV7hHMubJS2AePZqNBcADQscMAeTyyZW0hMcQoHBltS
+         O5M3fZnHNNGxAIkNN9DnDBYkQ6vNSp5wzeNsn3E+3B99vXK+jHLiife2/unkgKOBTrti
+         C+Pg==
+X-Gm-Message-State: AJIora/SqD0mf4xOSCY90oKFDSdc3yK8QOucy1GVsSg6AXafTKtpMaz3
+        K1fdZULIq5jRakQ+eWHcpFg=
+X-Google-Smtp-Source: AGRyM1tmf+w1xYZ05W3IWubTGrPvxQZlkI4+b0g1gy4AnuM96XgE+cB7/RC78MF3xWuHWnBE4Xky/g==
+X-Received: by 2002:a17:902:e9d3:b0:16b:fe8c:e89b with SMTP id 19-20020a170902e9d300b0016bfe8ce89bmr2829189plk.81.1657271262811;
+        Fri, 08 Jul 2022 02:07:42 -0700 (PDT)
 Received: from localhost.localdomain (61-216-65-192.hinet-ip.hinet.net. [61.216.65.192])
-        by smtp.gmail.com with ESMTPSA id q1-20020a170902eb8100b0016bf1e8f1besm7661655plg.28.2022.07.08.01.48.22
+        by smtp.gmail.com with ESMTPSA id l17-20020a170903245100b0016c06a10861sm4563666pls.74.2022.07.08.02.07.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 01:48:24 -0700 (PDT)
+        Fri, 08 Jul 2022 02:07:42 -0700 (PDT)
 From:   PaddyKP_Yao <ispaddy@gmail.com>
 X-Google-Original-From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
 To:     hdegoede@redhat.com, mgross@linux.intel.com,
@@ -57,9 +57,11 @@ Cc:     luke@ljones.dev, PaddyKP_Yao@asus.com,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         acpi4asus-user@lists.sourceforge.net
 Subject: [PATCH 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev support
-Date:   Fri,  8 Jul 2022 16:48:16 +0800
-Message-Id: <20220708084816.1140540-1-PaddyKP_Yao@asus.com>
+Date:   Fri,  8 Jul 2022 17:07:31 +0800
+Message-Id: <20220708090731.1237488-1-PaddyKP_Yao@asus.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220708084816.1140540-1-PaddyKP_Yao@asus.com>
+References: <20220708084816.1140540-1-PaddyKP_Yao@asus.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -67,7 +69,7 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 In some new ASUS devices, hotkey Fn+F13 is used for mic mute. If mic-mute
-LED is preset by checking WMI ASUS_WMI_DEVID_MICMUTE_LED, we will add a
+LED is present by checking WMI ASUS_WMI_DEVID_MICMUTE_LED, we will add a
 mic-mute LED classdev, asus::micmute, in the asus-wmi driver to control
 it. The binding of mic-mute LED controls will be swithched with LED
 trigger.
@@ -75,9 +77,9 @@ trigger.
 Signed-off-by: PaddyKP_Yao <PaddyKP_Yao@asus.com>
 ---
  drivers/platform/x86/Kconfig               |  2 ++
- drivers/platform/x86/asus-wmi.c            | 26 ++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.c            | 25 ++++++++++++++++++++++
  include/linux/platform_data/x86/asus-wmi.h |  1 +
- 3 files changed, 29 insertions(+)
+ 3 files changed, 28 insertions(+)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
 index f915cf67aa26..74769050b770 100644
@@ -93,7 +95,7 @@ index f915cf67aa26..74769050b770 100644
  	help
  	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e14fb5fa7324..f1da083b7cd1 100644
+index e14fb5fa7324..40c0e00a4b71 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
 @@ -191,6 +191,7 @@ struct asus_wmi {
@@ -104,7 +106,7 @@ index e14fb5fa7324..f1da083b7cd1 100644
  	struct workqueue_struct *led_workqueue;
  	struct work_struct tpd_led_work;
  	struct work_struct wlan_led_work;
-@@ -906,12 +907,24 @@ static enum led_brightness lightbar_led_get(struct led_classdev *led_cdev)
+@@ -906,12 +907,23 @@ static enum led_brightness lightbar_led_get(struct led_classdev *led_cdev)
  	return result & ASUS_WMI_DSTS_LIGHTBAR_MASK;
  }
  
@@ -115,7 +117,6 @@ index e14fb5fa7324..f1da083b7cd1 100644
 +	int err;
 +
 +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MICMUTE_LED, state, NULL);
-+	pr_info("%s: brightness : %d, state: %d, err=%d\n", __func__, brightness, state, err);
 +	return err < 0 ? err : 0;
 +}
 +
@@ -129,7 +130,7 @@ index e14fb5fa7324..f1da083b7cd1 100644
  
  	if (asus->led_workqueue)
  		destroy_workqueue(asus->led_workqueue);
-@@ -983,6 +996,19 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+@@ -983,6 +995,19 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
  					   &asus->lightbar_led);
  	}
  
