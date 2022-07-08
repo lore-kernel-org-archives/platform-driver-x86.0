@@ -2,77 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB328C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 15:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32B7C43334
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 16:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238198AbiGHP2J (ORCPT
+        id S238853AbiGHQhu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 11:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46558 "EHLO
+        Fri, 8 Jul 2022 12:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237057AbiGHP2I (ORCPT
+        with ESMTP id S238547AbiGHQhu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 11:28:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9161E73904;
-        Fri,  8 Jul 2022 08:28:07 -0700 (PDT)
+        Fri, 8 Jul 2022 12:37:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD86167EF;
+        Fri,  8 Jul 2022 09:37:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 347E5B824F6;
-        Fri,  8 Jul 2022 15:28:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCE2C341C0;
-        Fri,  8 Jul 2022 15:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1657294085;
-        bh=KAfXERdqbtilgXrs/mlOi+seJobFePGOK/Z/qHdIrPM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fa0QzF3gez7GOGb5Jbc4Q5RU38Yl6LieKGxFgCPAKWHXPxMdnzStPP6p/w9bxY83G
-         feiBvLdAehuZ8+c7W6CBmtJzwRrcSLnSTbhAUyPGpLRpNPJ/qPMn2Gzsf2EhBbkQQt
-         2TmHxpdM+28JFO/k4wcovTDi5Ob1TsDCjD8X35lk=
-Date:   Fri, 8 Jul 2022 17:28:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jithu Joseph <jithu.joseph@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, ashok.raj@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev
-Subject: Re: [PATCH] platform/x86/intel/ifs: Allow non-default names for IFS
- image
-Message-ID: <YshNAh6awfPFmxzU@kroah.com>
-References: <20220708151938.986530-1-jithu.joseph@intel.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id B4B00B828B5;
+        Fri,  8 Jul 2022 16:37:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F8D3C341C6;
+        Fri,  8 Jul 2022 16:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657298266;
+        bh=faBbiFmeCk/XXmJzoX4Ig8MuGcWSSVfGfVZBC0uD89k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JnNXQWwfR5Pobgkk8oUvEGVJBSmO2r9GUMSSXlJVJdnjacOYs4rzXZWR5xmnv4a9V
+         EgIw/O7MB3F2AVQe10p3DSyNGUskkhA9GX0KFE45XYEH6U2oqHPwNF2s0PTOM6Tbqb
+         +NrTONPkT3X+4Vth/c+oAIggdeCp4m3/wCte3gkq9csT28C2fUd8cgL8vEn2SbmI8z
+         FP4DKekY/u9cbEm5oWQS/AAC1NyCHA/KobF2VwgAUerALCK/Z4B7EYl3T1sjPXN/2R
+         4GXx4zL0QFw2MDFbeBxRG6I3RHAs7Jz4ihj0wGobXZq+EHQLU3c03k26EXfXlRR2CW
+         f+Ip/z3hWi6lA==
+Received: by mail-ot1-f45.google.com with SMTP id q18-20020a9d7c92000000b00616b27cda7cso16572452otn.9;
+        Fri, 08 Jul 2022 09:37:46 -0700 (PDT)
+X-Gm-Message-State: AJIora/ERigHeK+aorDpCkoc6Ighsdjp5BrWUnaNgxSS3bFuDQytH3pt
+        t4g6ymRDrjkMWlCtsP3WV9NbK6rj/tSHF/22NVM=
+X-Google-Smtp-Source: AGRyM1svHSEUASsl57J1Bv3MiYQY3jBtqML3YrRdG2TT3OOBZQNPUyNOlB3mW51SOJdsvRkRATEvgOuuAgNAADolzfA=
+X-Received: by 2002:a9d:7cc7:0:b0:61a:4fe8:95c4 with SMTP id
+ r7-20020a9d7cc7000000b0061a4fe895c4mr1924578otn.71.1657298265369; Fri, 08 Jul
+ 2022 09:37:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220708151938.986530-1-jithu.joseph@intel.com>
+References: <20220708131412.81078-1-hdegoede@redhat.com> <20220708131412.81078-3-hdegoede@redhat.com>
+In-Reply-To: <20220708131412.81078-3-hdegoede@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 8 Jul 2022 18:37:34 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH8sck_WMQObNVuT0RkoRFpdZ-V7A4wNW2Mj9CmwdSmZw@mail.gmail.com>
+Message-ID: <CAMj1kXH8sck_WMQObNVuT0RkoRFpdZ-V7A4wNW2Mj9CmwdSmZw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] efi: Fix efi_power_off() not being run before
+ acpi_power_off() when necessary
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, X86 ML <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 08:19:38AM -0700, Jithu Joseph wrote:
-> Existing implementation limits IFS image to be loaded only from
-> a default file-name (ff-mm-ss.scan).
-> 
-> Change the semantics of the "reload" file. Writing "1" keeps the legacy
-> behavior to reload from the default "ff-mm-ss.scan" file, but now interpret
-> other strings as a filename to be loaded from the /lib/firmware/intel/ifs
-> directory.
-> 
-> Situations where multiple image files are helpful:
-> 1. Test contents are larger than the memory reserved for IFS by BIOS
-> 2. Increased test coverage
-> 3. Custom test files to debug certain specific issues in field
+On Fri, 8 Jul 2022 at 15:14, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Commit 98f30d0ecf79 ("ACPI: power: Switch to sys-off handler API")
+> switched the ACPI sleep code from directly setting the old global
+> pm_power_off handler to using the new register_sys_off_handler()
+> mechanism with a priority of SYS_OFF_PRIO_FIRMWARE.
+>
+> This is a problem when the old global pm_power_off handler would later
+> be overwritten, such as done by the late_initcall(efi_shutdown_init):
+>
+>         if (efi_poweroff_required())
+>                 pm_power_off = efi_power_off;
+>
+> The old global pm_power_off handler gets run with a priority of
+> SYS_OFF_PRIO_DEFAULT which is lower then SYS_OFF_PRIO_FIRMWARE, causing
+> acpi_power_off() to run first, changing the behavior from before
+> the ACPI sleep code switched to the new register_sys_off_handler().
+>
+> Switch the registering of efi_power_off over to register_sys_off_handler()
+> with a priority of SYS_OFF_PRIO_FIRMWARE + 1 so that it will run before
+> acpi_power_off() as before.
+>
+> Note since the new sys-off-handler code will try all handlers in
+> priority order, there is no more need for the EFI code to store and
+> call the original pm_power_off handler.
+>
+> Fixes: 98f30d0ecf79 ("ACPI: power: Switch to sys-off handler API")
+> Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Ick, but now what namespace are you saying that path is in?  If you need
-debugging stuff, then put the api/interface in debugfs and use it there,
-don't overload the existing sysfs api to do something different here.
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-> Fix the below items in adjacent code
-> - Return error when ifs_image_sanity_check() fails in ifs_load_firmware()
-> - Correct documentation "ifs.0"->"ifs"
+Note that, as far as I know, this should only affect x86 even though
+this is generic EFI code, and arm64 also supports ACPI boot, but it
+doesn't use ACPI for poweroff/reboot etc
 
-That should all be a separate patch, you and Tony know better than this.
-
-{sigh}
-
-greg k-h
+> ---
+>  drivers/firmware/efi/reboot.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/reboot.c b/drivers/firmware/efi/reboot.c
+> index 73089a24f04b..ceae84c19d22 100644
+> --- a/drivers/firmware/efi/reboot.c
+> +++ b/drivers/firmware/efi/reboot.c
+> @@ -6,7 +6,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/reboot.h>
+>
+> -static void (*orig_pm_power_off)(void);
+> +static struct sys_off_handler *efi_sys_off_handler;
+>
+>  int efi_reboot_quirk_mode = -1;
+>
+> @@ -51,15 +51,11 @@ bool __weak efi_poweroff_required(void)
+>         return false;
+>  }
+>
+> -static void efi_power_off(void)
+> +static int efi_power_off(struct sys_off_data *data)
+>  {
+>         efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+> -       /*
+> -        * The above call should not return, if it does fall back to
+> -        * the original power off method (typically ACPI poweroff).
+> -        */
+> -       if (orig_pm_power_off)
+> -               orig_pm_power_off();
+> +
+> +       return NOTIFY_DONE;
+>  }
+>
+>  static int __init efi_shutdown_init(void)
+> @@ -68,8 +64,13 @@ static int __init efi_shutdown_init(void)
+>                 return -ENODEV;
+>
+>         if (efi_poweroff_required()) {
+> -               orig_pm_power_off = pm_power_off;
+> -               pm_power_off = efi_power_off;
+> +               /* SYS_OFF_PRIO_FIRMWARE + 1 so that it runs before acpi_power_off */
+> +               efi_sys_off_handler =
+> +                       register_sys_off_handler(SYS_OFF_MODE_POWER_OFF,
+> +                                                SYS_OFF_PRIO_FIRMWARE + 1,
+> +                                                efi_power_off, NULL);
+> +               if (IS_ERR(efi_sys_off_handler))
+> +                       return PTR_ERR(efi_sys_off_handler);
+>         }
+>
+>         return 0;
+> --
+> 2.36.0
+>
