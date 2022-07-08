@@ -2,165 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BEEC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jul 2022 20:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BB6CCA47B
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 06:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236447AbiGGUns (ORCPT
+        id S237280AbiGHGVM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jul 2022 16:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        Fri, 8 Jul 2022 02:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236350AbiGGUnr (ORCPT
+        with ESMTP id S237172AbiGHGVK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jul 2022 16:43:47 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDA2237D6
-        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 13:43:45 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id y9so7507439pff.12
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Jul 2022 13:43:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ll20ZcAb0w9z6zV6paEiNQvrdmi0bjy9wQYysAR+tA8=;
-        b=URF1boc84AH8v3HsZBbgNOqHaD2PrXzBbYwtXSIfIVRywqeC1B6KsyAiYI58j7p8Ll
-         w+BpTtRDUQDJMzOvCRjLMRlP/I4XvBlIw0fmlot8jvJ4iTPyGKKHpugbxZbP42XsyQPt
-         0zpbeWv6tIlOzL0jPLkJCDZBGjh0PyOY0jp2S31IKnOXJ2gPxDiRBrVdra/sEZ7CqSxR
-         jyEsVkeYWIAW55BczsdSKQ4cHzs7S1sruDMhUa9dcTtj6rR8RxyN7Rd6tWIgt6TA24zc
-         6StG5dlQKRb9/JD+KpgqdRiSHCG6KbPQuHygtUPG1uZy1vtJqtdlxyRNnpCo9gnlodNf
-         DwPA==
+        Fri, 8 Jul 2022 02:21:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C0FC72CE19
+        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Jul 2022 23:21:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657261268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vucI6v2UNiSkfdv0+LNa4VjRInUBJ0CkIXv+ERyy8hk=;
+        b=FgMDuwjXglaB1EExow9vFBO9vMdfPJZ3MinvIC8WU2ZPUxf+Ksc887StiIaoW4GufZOLdt
+        WPsJSMSDnuwQ2qJPlZmuOEPuUO7hUJUWtqAA9RwoqIGwCfWjat0aeMDZC25G8o39+Dme1V
+        zx5deSF0z4nrftNEb1ncAw0hHoO2CBI=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-155-sgXf5ojFPOuV09XagfS_WQ-1; Fri, 08 Jul 2022 02:21:05 -0400
+X-MC-Unique: sgXf5ojFPOuV09XagfS_WQ-1
+Received: by mail-lf1-f71.google.com with SMTP id cf10-20020a056512280a00b0047f5a295656so7389020lfb.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Jul 2022 23:21:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ll20ZcAb0w9z6zV6paEiNQvrdmi0bjy9wQYysAR+tA8=;
-        b=39hHo7HL/vTjTiL9NvVidMg89t5+QrqVuh76lwuaL1vpTctDYeFfOvvfne1owRcnGJ
-         5yCdPU6/fVKKisa2hFbXTgHT0ij8GshmBd4o4X2VXAfc7LhGJPRRLxAjWDLoywStwquO
-         aXgwyk+E6aNlE9Iqpl++Ev5Vezq2xiTeABpfIplMyGX1xmhj3kZW/G6zhdj6LNeBZrZ1
-         aRIXyggOtTkr8lTb66sI97JyU2z81YFCGbl4LQdVi3+/tZOh+Jcf3zhJF5fUyT1jKVzV
-         gtUY5SVYGxeEbuXxmAODgtwvitddBw3leBo+PdcjddnD3uudD7v7EQSgmhDe+QnkGU89
-         n4QA==
-X-Gm-Message-State: AJIora/5wjjQkLQkgdsA5QRcHFg4wpP09o7qibFY1Mo+kQzoXydxEKCz
-        9Ow8d0ejl6IUrO/4wAwWOy/a2w==
-X-Google-Smtp-Source: AGRyM1snpqN5XIgDiCvMqPlmhkqtR4FIdb2NphBLO/yR046bU8RX+GmUkvAlMCeGkCa4G4i/R5k0NQ==
-X-Received: by 2002:a05:6a00:a8e:b0:527:9d23:c613 with SMTP id b14-20020a056a000a8e00b005279d23c613mr55562111pfl.53.1657226624708;
-        Thu, 07 Jul 2022 13:43:44 -0700 (PDT)
-Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
-        by smtp.gmail.com with ESMTPSA id g16-20020a63e610000000b0041264dec901sm6517163pgh.21.2022.07.07.13.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 13:43:43 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 20:43:40 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Michael Roth <michael.roth@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v12 19/46] x86/kernel: Make the .bss..decrypted section
- shared in RMP table
-Message-ID: <YsdFfL231NXvYOXu@google.com>
-References: <20220307213356.2797205-20-brijesh.singh@amd.com>
- <YqfabnTRxFSM+LoX@google.com>
- <YqistMvngNKEJu2o@google.com>
- <daaf7a84-4204-48ca-e40c-7ba296b4789c@amd.com>
- <YqizrTCk460kov/X@google.com>
- <6db51d45-e17a-38dd-131d-e43132c55dfb@amd.com>
- <Yqjm/b3deMlxxePh@google.com>
- <9abe9a71-242d-91d5-444a-b56c8b9b6d90@amd.com>
- <YqtdIf7OSivLxFL0@google.com>
- <Yr8mARnQT+VZK0iy@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vucI6v2UNiSkfdv0+LNa4VjRInUBJ0CkIXv+ERyy8hk=;
+        b=PclMDBybngLn8mD9Ojh0fOJDopDXx0jg8UCeL1un8mPE9Th/ZNVjLsnuT2C0KiDNi6
+         WYdIEgURcNvOHn39f8NENRrwQdDXVC14lyFZJAMl4TyIntn3a+MKRrYP/Zc7ZuLfNO5a
+         hg0SBRAM6iC1icjigP1ye13uMUfHYETKcQ9sjsO59s9AVwIH9C3Ec7fCeMsRgroIZeTZ
+         CY4eohndyimovSeFAp/pMGgtZM67mnsDDoc6bLeaSHL7JZZw/v54oZQAQ69d4LMeDevx
+         oKSVMG/Yn+C41eWqiM81x2hGt0yElNwGltm3Sq6m1fVZ909WIMVwuGmjwR2x7SmnHerQ
+         8LgA==
+X-Gm-Message-State: AJIora/pfJekYiTEahcBJUb7CC07Du5uUFIqfD2jeYQpqkdX5E4Xd5+Z
+        nZBbqvae6yyzWVurV71gS2NeUvy+XnBtIgUXVg+pghKW7HuGA20SUnLq0HxA/RWCMEgWRtA6cyp
+        nuXPd7wfIB5wJgn1Gw19ImZatwi/vdp8drpw0MYioTEGsgJvp+Q==
+X-Received: by 2002:a2e:9ad0:0:b0:25a:7156:26bb with SMTP id p16-20020a2e9ad0000000b0025a715626bbmr999484ljj.141.1657261263911;
+        Thu, 07 Jul 2022 23:21:03 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1siGvuif2Z3b/qz6BV5rwXiRX4Y2KnHOm/sW0UQhHOR8L3Ua/tIp6J6o+V7iV6847cM54TvfHUP9+sN1Wog1zw=
+X-Received: by 2002:a2e:9ad0:0:b0:25a:7156:26bb with SMTP id
+ p16-20020a2e9ad0000000b0025a715626bbmr999458ljj.141.1657261263714; Thu, 07
+ Jul 2022 23:21:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yr8mARnQT+VZK0iy@zn.tnic>
+References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
+ <20220629065656.54420-39-xuanzhuo@linux.alibaba.com> <c0747cbc-685b-85a9-1931-0124124755f2@redhat.com>
+ <1656986375.3420787-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1656986375.3420787-1-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Fri, 8 Jul 2022 14:20:52 +0800
+Message-ID: <CACGkMEu80KP-ULz_CBvauRk_3XsCubMkkWv0uLnbt-wib5KOnA@mail.gmail.com>
+Subject: Re: [PATCH v11 38/40] virtio_net: support rx queue resize
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        kangjie.xu@linux.alibaba.com,
+        virtualization <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 01, 2022, Borislav Petkov wrote:
-> On Thu, Jun 16, 2022 at 04:41:05PM +0000, Sean Christopherson wrote:
-> > > I worry that another use of cc_platform_has() could creep in at some point
-> > > and cause the same issue. Not sure how bad it would be, performance-wise, to
-> > > remove the jump table optimization for arch/x86/coco/core.c.
-> 
-> Is there a gcc switch for that?
+On Tue, Jul 5, 2022 at 10:00 AM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrot=
+e:
+>
+> On Mon, 4 Jul 2022 11:44:12 +0800, Jason Wang <jasowang@redhat.com> wrote=
+:
+> >
+> > =E5=9C=A8 2022/6/29 14:56, Xuan Zhuo =E5=86=99=E9=81=93:
+> > > This patch implements the resize function of the rx queues.
+> > > Based on this function, it is possible to modify the ring num of the
+> > > queue.
+> > >
+> > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > ---
+> > >   drivers/net/virtio_net.c | 22 ++++++++++++++++++++++
+> > >   1 file changed, 22 insertions(+)
+> > >
+> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > index 9fe222a3663a..6ab16fd193e5 100644
+> > > --- a/drivers/net/virtio_net.c
+> > > +++ b/drivers/net/virtio_net.c
+> > > @@ -278,6 +278,8 @@ struct padded_vnet_hdr {
+> > >     char padding[12];
+> > >   };
+> > >
+> > > +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *b=
+uf);
+> > > +
+> > >   static bool is_xdp_frame(void *ptr)
+> > >   {
+> > >     return (unsigned long)ptr & VIRTIO_XDP_FLAG;
+> > > @@ -1846,6 +1848,26 @@ static netdev_tx_t start_xmit(struct sk_buff *=
+skb, struct net_device *dev)
+> > >     return NETDEV_TX_OK;
+> > >   }
+> > >
+> > > +static int virtnet_rx_resize(struct virtnet_info *vi,
+> > > +                        struct receive_queue *rq, u32 ring_num)
+> > > +{
+> > > +   int err, qindex;
+> > > +
+> > > +   qindex =3D rq - vi->rq;
+> > > +
+> > > +   napi_disable(&rq->napi);
+> >
+> >
+> > Do we need to cancel the refill work here?
+>
+>
+> I think no, napi_disable is mutually exclusive, which ensures that there =
+will be
+> no conflicts between them.
 
-I believe -fno-jump-tables will do the trick.  That also reminds me exactly why
-CONFIG_RETPOLINE=y isn't broken, jump tables are disabled when retpolines are enabled[*].
+So this sounds similar to what I've fixed recently.
 
-[*] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86952
+1) NAPI schedule delayed work.
+2) we disable NAPI here
+3) delayed work get schedule and call NAPI again
 
-> > One thought would be to initialize "vendor" to a bogus value, disallow calls to
-> > cc_set_vendor() until after the kernel as gotten to a safe point, and then WARN
-> > (or panic?) if cc_platform_has() is called before "vendor" is explicitly set.
-> > New calls can still get in, but they'll be much easier to detect and less likely
-> > to escape initial testing.
-> 
-> The invalid vendor thing makes sense but I don't think it'll help in
-> this case.
-> 
-> We set vendor in sme_enable() which comes before the
-> 
-> __startup_64 -> sme_postprocess_startup
-> 
-> path you're hitting.
+?
 
-Right, but that's easily solved, no?  E.g.
+Thanks
 
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index e8f7953fda83..ed3118f5bf62 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -487,6 +487,8 @@ void __init sme_early_init(void)
-        if (!sme_me_mask)
-                return;
+>
+> Thanks.
+>
+> >
+> > Thanks
+> >
+> >
+> > > +
+> > > +   err =3D virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_unused=
+_buf);
+> > > +   if (err)
+> > > +           netdev_err(vi->dev, "resize rx fail: rx queue index: %d e=
+rr: %d\n", qindex, err);
+> > > +
+> > > +   if (!try_fill_recv(vi, rq, GFP_KERNEL))
+> > > +           schedule_delayed_work(&vi->refill, 0);
+> > > +
+> > > +   virtnet_napi_enable(rq->vq, &rq->napi);
+> > > +   return err;
+> > > +}
+> > > +
+> > >   /*
+> > >    * Send command via the control virtqueue and check status.  Comman=
+ds
+> > >    * supported by the hypervisor, as indicated by feature bits, shoul=
+d
+> >
+>
 
-+       cc_set_vendor(CC_VENDOR_AMD);
-+
-        early_pmd_flags = __sme_set(early_pmd_flags);
-
-        __supported_pte_mask = __sme_set(__supported_pte_mask);
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index f415498d3175..6b1c60032400 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -611,7 +611,6 @@ void __init sme_enable(struct boot_params *bp)
- out:
-        if (sme_me_mask) {
-                physical_mask &= ~sme_me_mask;
--               cc_set_vendor(CC_VENDOR_AMD);
-                cc_set_mask(sme_me_mask);
-        }
- }
-
-And disallow cc_set_vendor() before x86_64_start_kernel(), then fix any fallout.
-
-> We could do only the aspect of checking whether it hasn't been set yet
-> and warn then, in order to make the usage more robust...
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
