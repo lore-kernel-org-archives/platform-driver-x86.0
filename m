@@ -2,69 +2,69 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89483C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77995C43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 14:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbiGIOsU (ORCPT
+        id S229461AbiGIOuL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Jul 2022 10:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
+        Sat, 9 Jul 2022 10:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiGIOsT (ORCPT
+        with ESMTP id S229605AbiGIOuJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Jul 2022 10:48:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 46F8F25B
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 07:48:18 -0700 (PDT)
+        Sat, 9 Jul 2022 10:50:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5DAEC13E21
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 07:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657378097;
+        s=mimecast20190719; t=1657378206;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VLQSiBSYXaiYR0Ew7PdiVWeTwrVfhMdeI5Zm0PhD4Pg=;
-        b=JYMIy/iQX1CzEVUnjLVyLQ0ng7F/i3tQdugOes5kwMatXtXHyyQCilAKbz6oBb8D51+rjH
-        90DXQr7sLHwdiyfO9co3s/NqEWHL/xr3X2wq5ZFbGnvF4g2wBuCazNFCvDNmCjp5WIGM7J
-        WGHdaD8w7OcJoIpDPQDwZUAoiIOYnSQ=
+        bh=Z2GDUzN3l0qxO/Hqli77WYp9WmA8Xfb4Bjw+PpkPjgE=;
+        b=J/ayatMvF7nBsodgGznuSwtPl4CqsnNooCsMabCZ9Rm0+IlKmhtq5p9+BdTCVXCSeGQl31
+        AIPltN7qX6cnmzre/uHlioDEhFz9RvbG7S7UZvHv8bxrkmRNvPeoceJJ2pQcV7eW9sO1q0
+        SuxBX3ZuB3asdCkNobbXtaJgrJdROks=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-247-shwV_ofuOKKV8dja8s9voA-1; Sat, 09 Jul 2022 10:48:16 -0400
-X-MC-Unique: shwV_ofuOKKV8dja8s9voA-1
-Received: by mail-ed1-f71.google.com with SMTP id y6-20020a056402270600b00433940d207eso1127628edd.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 07:48:15 -0700 (PDT)
+ us-mta-190-kNWZmVoGO8e5FQJH8BM1MA-1; Sat, 09 Jul 2022 10:49:59 -0400
+X-MC-Unique: kNWZmVoGO8e5FQJH8BM1MA-1
+Received: by mail-ed1-f71.google.com with SMTP id o13-20020a056402438d00b0043aa846b2d2so1116103edc.8
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 07:49:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:references:content-language:in-reply-to
          :content-transfer-encoding;
-        bh=VLQSiBSYXaiYR0Ew7PdiVWeTwrVfhMdeI5Zm0PhD4Pg=;
-        b=X+I7bSK64hsA9Oa8NbDfu1Z8c8iEfV9M0aBT5QFRQR8g+S23MPqWm9ff4lpxJbVgAB
-         GKNRP6Gfntcv5ShEcIZQMIZDcJU5eegZB7pQ4tL9FCkKdfFyVz5IH/2j6on1fvWat9j7
-         GDT+K3tPxo095hQWXRgX5IfK5QjfiHZDMp97lRnOuxseiKPrFyLV/hnR4CbR2QBZJoKn
-         yafGRT95kZUzOH6h+Ldf8CurlClvW0ZP2FBcGvGZwKJK5CbmnWpGxjxYbDQoZe8xk7BS
-         Wp2qcZmAopXzyluFqefNkDwrVmcPcQr+XFtE1Qc2ZUnTFhGl9wrJjUwmp4UlOo+KVlNr
-         MBJQ==
-X-Gm-Message-State: AJIora/AU03ovYoMQRLEFFqhTyJF7/9UFB5NVx4sPB6hmD48U82q1f1N
-        JI+wNT4GMhnJfj5mOH6MIAeSLm5AsdKC0NYRJH0Wyg4lQxxGHcg3VJMq0uzOmNmAbMjJb+MR2YD
-        STFnTyhKDemFtiwnPKouzQnS5yTcyvILojA==
-X-Received: by 2002:a17:907:2cea:b0:72a:f6c9:8a26 with SMTP id hz10-20020a1709072cea00b0072af6c98a26mr9338383ejc.206.1657378095087;
-        Sat, 09 Jul 2022 07:48:15 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vf63NX/Ri2F/NXTNyou1769psU2EzxKL8ExuUadMlJju8h/nj9voivpSW4cXtAwJ3feKTV0A==
-X-Received: by 2002:a17:907:2cea:b0:72a:f6c9:8a26 with SMTP id hz10-20020a1709072cea00b0072af6c98a26mr9338368ejc.206.1657378094902;
-        Sat, 09 Jul 2022 07:48:14 -0700 (PDT)
+        bh=Z2GDUzN3l0qxO/Hqli77WYp9WmA8Xfb4Bjw+PpkPjgE=;
+        b=X8JfwAxuSuZCvb0YIFISWWNNN50mCOAetO8lkcM+gT7tML2IMbJukNPGzcCETF47nM
+         ok/7y3W6y2db8aIk4ONlUemzz1kddO3RKeiRK+P4JkqWfxyPjiLphTnRwcJOiObWNTFK
+         CNw7YJ98p8LjNZkZ/nH7tzI7rSEdZg8rjQeXQTsitOpOdkDLNjriLAAdn+14nCJ8uuvz
+         VQ7NUUbAvU4VgOgF4fILzq+cAKIr0yTIRYVACwBN/opHd5f/g50m8/mosBWI+NmN5ls2
+         70hT/lPyYEA2moPh3MxQou7IygIPn/rRF49tKo9eMZH/BhYZaDavAxw1qR36+ixOrzdc
+         2eCA==
+X-Gm-Message-State: AJIora+HktFkukv73qL8w+reoDv6eV51/dO9EXaCdZikpItdx+J0YbEw
+        JMKn1zXC6Aby/qUnNmWM6uRIfcqHFaoPVOaB96ui7qSCFg6Skob2kYRBTxxGAYkRhgbWi4jmMMH
+        iutkI5QWfaqe0fk+Uaje+wo+eKfOzgYiJSg==
+X-Received: by 2002:a17:907:1c9d:b0:726:3666:2ea4 with SMTP id nb29-20020a1709071c9d00b0072636662ea4mr9251480ejc.547.1657378197855;
+        Sat, 09 Jul 2022 07:49:57 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1t7swZutTwFRmzp4K87Butk8yX03IUfLsvruhrGJA3qp1QYs+a6KCEABk5oRVNxfkF4tLKHtQ==
+X-Received: by 2002:a17:907:1c9d:b0:726:3666:2ea4 with SMTP id nb29-20020a1709071c9d00b0072636662ea4mr9251473ejc.547.1657378197707;
+        Sat, 09 Jul 2022 07:49:57 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id 14-20020a170906318e00b00715705dd23asm665386ejy.89.2022.07.09.07.48.13
+        by smtp.gmail.com with ESMTPSA id az21-20020a170907905500b0072b02f99e55sm663737ejc.197.2022.07.09.07.49.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Jul 2022 07:48:14 -0700 (PDT)
-Message-ID: <5c6c0516-7540-b668-9e7d-95db44ff336d@redhat.com>
-Date:   Sat, 9 Jul 2022 16:48:13 +0200
+        Sat, 09 Jul 2022 07:49:57 -0700 (PDT)
+Message-ID: <8211e5ce-7ab0-312d-3d64-00c94440a676@redhat.com>
+Date:   Sat, 9 Jul 2022 16:49:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
+From:   Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
  support
-Content-Language: en-US
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         PaddyKP_Yao <ispaddy@gmail.com>
 Cc:     Mark Gross <mgross@linux.intel.com>,
@@ -76,13 +76,15 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
 References: <20220708084816.1140540-1-PaddyKP_Yao@asus.com>
  <20220708090731.1237488-1-PaddyKP_Yao@asus.com>
  <CAHp75Vc-5Py8heCJ4bKh1-7y+U+ycJxRuYdFwiT=NM5=gLqwQw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
+Content-Language: en-US
 In-Reply-To: <CAHp75Vc-5Py8heCJ4bKh1-7y+U+ycJxRuYdFwiT=NM5=gLqwQw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
+
+<accidentally hit send to soon, trying again>
 
 Hi,
 
@@ -92,6 +94,21 @@ On 7/9/22 13:44, Andy Shevchenko wrote:
 
 Also the From of this email: PaddyKP_Yao <ispaddy@gmail.com> and
 the Signed-off-by:
+
+Signed-off-by: PaddyKP_Yao <PaddyKP_Yao@asus.com>
+
+do not match. If you want the Author field of the commit to
+bet set to match the Signed-off-by, but have trouble submitting
+patches from your Asus email I can fix this up for you when
+applying. Please let me know if you want me to do this;
+or fix this issue for your next patch.
+
+Regards,
+
+Hans
+
+
+
 
 > 
 > On Fri, Jul 8, 2022 at 11:08 AM PaddyKP_Yao <ispaddy@gmail.com> wrote:
