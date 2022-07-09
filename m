@@ -2,81 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A65C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 18:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07DACCA47C
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 21:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbiGIS0e (ORCPT
+        id S229518AbiGIVQw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Jul 2022 14:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        Sat, 9 Jul 2022 17:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiGIS0d (ORCPT
+        with ESMTP id S229534AbiGIVQu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Jul 2022 14:26:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB3D1183F
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 11:26:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 09CE460F9F
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 18:26:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55733C3411C
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 18:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657391191;
-        bh=1cA+iFTa7wpGZonVB15eZFZK2p/n9ier/MW3hj3TKkQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=HZ9skvM8L7z2EY+6qMdJXwJ+Yuj7eus/ex4JFaKwYeHXRsaseAKdqcIisPGTMB4Y9
-         B16HeSXZgrbwiY3N8saJ9f8GC1/LZfh3eHBKEfsgOU2ZkSaq5rOdLIm0ntM4ZLWSSV
-         T26R+ISZHouKonvJKV8B5110aOf5yScyP1RacEaFXZcx70nvM+7IM8BvxqiHigJK++
-         fUcJmGlSEWoytKhWoO8PgdI1IEWM8ebl3o3YnPuQo0w1krqtB6b1F+IFbtYuEPyfPX
-         ZDxWVNBFYZJwFFZFF6SK9IRK3WWSUeg6oXzAYcfnF5griCjbYwx//ktJY+vHYQTIrJ
-         S+prdOKNtVu5g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 3958FC05FD6; Sat,  9 Jul 2022 18:26:31 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216230] "irq9: nobody cared" on Thinkpad T14 Gen1 (AMD) when
- s2idle is enabled
-Date:   Sat, 09 Jul 2022 18:26:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: madcatx@atlas.cz
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cf_kernel_version
-Message-ID: <bug-216230-215701-VWwShhKVby@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216230-215701@https.bugzilla.kernel.org/>
-References: <bug-216230-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sat, 9 Jul 2022 17:16:50 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96012193FA;
+        Sat,  9 Jul 2022 14:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657401409; x=1688937409;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Z/0lEMWIV0iL01NyKqCruERgYiLsTG+vyknWoi7Sfd4=;
+  b=QAdZycM+c6GkAiCHSWo2oqTkUvqar0WG9snOb8SLcRYy1ViwGwAbRJ56
+   AyJgAkzPRbXxG3A3e7Q6LBR7iBEd3ahTGMEjn896kmhyncAAcI/xhkFoW
+   vrPikEZ6EWCvVWD8OBDDe+01SJZB40vm4u4+Su+muMqe4A75+cm91Dht4
+   Ko9W0kJbPrXeqWKk4vwk8bpKQLevPve6XCZqs4mMEVs7+eMAvs2yhYMvc
+   hpa6di8ccn7pXXQ/elA065CitpGit6jcOZjfZ7Ogs6neTIfsE+/ATWnp0
+   rzqlHEzKf2Fe7S3F56mSjw26cpun27f8xc2rGJBrtQyMiUEJdXDkFWr6K
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10403"; a="264872817"
+X-IronPort-AV: E=Sophos;i="5.92,259,1650956400"; 
+   d="scan'208";a="264872817"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2022 14:16:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,259,1650956400"; 
+   d="scan'208";a="594463351"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2022 14:16:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D04E95AD; Sun, 10 Jul 2022 00:16:54 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 4/6] platform/x86: serial-multi-instantiate: Use while (i--) pattern to clean up
+Date:   Sun, 10 Jul 2022 00:16:51 +0300
+Message-Id: <20220709211653.18938-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220709211653.18938-1-andriy.shevchenko@linux.intel.com>
+References: <20220709211653.18938-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216230
+Use more natural while (i--) patter to clean up allocated resources.
 
-madcatx@atlas.cz changed:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+v2: added tag (Hans)
+ drivers/platform/x86/serial-multi-instantiate.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-     Kernel Version|5.18.10                     |5.18.9
+diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+index 970ede0ff002..0a2335693f4f 100644
+--- a/drivers/platform/x86/serial-multi-instantiate.c
++++ b/drivers/platform/x86/serial-multi-instantiate.c
+@@ -70,11 +70,11 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
+ 
+ static void smi_devs_unregister(struct smi *smi)
+ {
+-	while (smi->i2c_num > 0)
+-		i2c_unregister_device(smi->i2c_devs[--smi->i2c_num]);
++	while (smi->i2c_num--)
++		i2c_unregister_device(smi->i2c_devs[smi->i2c_num]);
+ 
+-	while (smi->spi_num > 0)
+-		spi_unregister_device(smi->spi_devs[--smi->spi_num]);
++	while (smi->spi_num--)
++		spi_unregister_device(smi->spi_devs[smi->spi_num]);
+ }
+ 
+ /**
+-- 
+2.35.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
