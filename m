@@ -2,91 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387E1C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 11:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070ACC43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 11:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbiGILo4 (ORCPT
+        id S229470AbiGILtu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Jul 2022 07:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
+        Sat, 9 Jul 2022 07:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiGILoz (ORCPT
+        with ESMTP id S229460AbiGILtu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Jul 2022 07:44:55 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389AF64E11;
-        Sat,  9 Jul 2022 04:44:54 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-31cf1adbf92so9927007b3.4;
-        Sat, 09 Jul 2022 04:44:54 -0700 (PDT)
+        Sat, 9 Jul 2022 07:49:50 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBFB18B16
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 04:49:47 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id f73so1670503yba.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 04:49:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WecurZc/PD+8FSgyr1LUS8UeYsQb8Bww772Y3FfisNA=;
-        b=cECSHQ/Jpc1SIPJf2KU6KHrPE59UPGYiOlnQF6JSY67SVLvYtv0ZaEaox8EzEWyehU
-         e4SjU1Mr9YkrIiB6fOhyaFnbjsR08fvg4yKLfMAPXy64671YdJZAhn0b+gnHZN/leiQl
-         AVHe8Y9SvIoM1gw0//+MRqYhUGxt2Eu+lcIasMkMT5CO664/lKLHiu94+HbBCwG0ODa+
-         LKdGwzXafms9gd2+3iK+C5E61f0P8afGg2fJax8yGvMc6r8YJrpSFE+koR4W9nC4bt4M
-         XwlizR4S/iKpuQLftjj+suHbsdG7idh3TDXVIyFgtC3RcEMz3HBjLR0SN9ymfMNqKoqg
-         4fPw==
+        bh=b4JgXK2qzyqueEjBo4pl9JDtirmOYWYxuVTNifmliN4=;
+        b=M2bVyx/Mbh/Q+ZxJZQZ4CLc6Dy1Al11rJ4HJTGt/NWCKb0zXP9MurM0QPLvTTR6D9H
+         COtJ6CwHGRJHR7gfjIwAc/JmbbzGyc3j1f3shLheGg1mZT7DTguTTdQxdleC95QygotK
+         u0SpJ2wgJXmpDGjvz5Wn/Wmtiu5/N2LUk61ksUhOBoWyVX7g7xIltVHNjLXClWHXKdiV
+         ACCwvpr1LKw6LF9JejMyl54RqiRbNbd4LB4dKKsyWyDOX0i2H9o828an63MtIFcY4ow7
+         2maA0Dlo5unBi5+jrqZgRAiI3iWWA3fNYGyUA1AsxTQFIunw0IReXOzjTtD9twNkNyL3
+         Bprw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WecurZc/PD+8FSgyr1LUS8UeYsQb8Bww772Y3FfisNA=;
-        b=Qf0xjMnCdG8f4yyFpW0aRYEkY+1Ugu6R0uNGHvL6NLgn1zEzQ7PqcfUtDCLNliza59
-         lRKKyNKo2Fzeg+5fj9jXrs59vRTJMiHEtWGtNbDeD9CC4BcWhf0zAPVZA/krfuS2pY4S
-         xZShXuJHQUTWH5ZfVtw95SAeA4pt+HCQi0jm7zsFRb36Uz7og27Duw0uV9Rw0kyWWG9h
-         gKebFnRLSKI1IdPYLzUVLOLs5CSnnnuGgF4FC3ooFPKV4Af1BgznkgYv9YrmdzmcqZZw
-         0Xraadj9uAOcDLrGV2zRiyKQVafISsvnHVSRWuOYemEs5vUtWCj1GEruHRC959R7OIjw
-         v2Iw==
-X-Gm-Message-State: AJIora/YM8p3YSAj/aj0vaZl+xg0uBRkMKOhiEOAp9X2oKwUpQyqSY1P
-        1LV+34Xv60ONlsibfVX3paZ6xYnNt10XlgbP6MQ=
-X-Google-Smtp-Source: AGRyM1u/nIFaAJ6qPNU4u0ekU49mH3RtsLxWUhuQ7/nNsIH62cqo7wgZZ8iDEiBdOLaY4g53HK0MOXkNAWLvRwtYa5k=
-X-Received: by 2002:a81:468b:0:b0:318:4cac:6576 with SMTP id
- t133-20020a81468b000000b003184cac6576mr9010833ywa.277.1657367093389; Sat, 09
- Jul 2022 04:44:53 -0700 (PDT)
+        bh=b4JgXK2qzyqueEjBo4pl9JDtirmOYWYxuVTNifmliN4=;
+        b=EZid6Mo4rOyE7YRi6GzaM0VLKapBpq5L/f4bgoGZ2kQtucRA3Jq1nnnYHu9jtJhsx3
+         s9DHiPfVyAjWrBjbPnGVUjoLJZ1qjB+igt1lme56hbAXk7VaxebCYaRlkiq7DJH5B8zJ
+         HygYbsaRj73z381gCpYEqp+zzXnGdXUiKZK1tlb6W1nUjiD+j/v9dTii0nXBcQ7SwRma
+         M88wjR6vRURzlLNhaooaQkxo3LcHyLLBu7pY0YOV4FIkHFRuNRtF4Rvfcrd7F1/28M/D
+         kCeLXB0VET1KC35b5Yu1ptotKniavO7AAsV+XoYPq7AYTtkU7rYF63m7iPyygPYKpmrv
+         yYHw==
+X-Gm-Message-State: AJIora9ZqNp52UFY/wXOtMOuwNETUoUHoqBJ7CHtHD7xZt+nHSgjpCqB
+        S1A3mnYL1ZqO/5jrkEMz0SLD1Rh+w8EzHe865LI=
+X-Google-Smtp-Source: AGRyM1sMlqZPMaIxnfPI3Y2A05Lct3CQvzaiOxp0bIyzS/RIwxU1TIuKmOfhQbTR2YbD8IUE/ZnZzVoP6tuPVW2L+L0=
+X-Received: by 2002:a25:cbcf:0:b0:66e:8893:a02c with SMTP id
+ b198-20020a25cbcf000000b0066e8893a02cmr8554595ybg.460.1657367387054; Sat, 09
+ Jul 2022 04:49:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220708084816.1140540-1-PaddyKP_Yao@asus.com> <20220708090731.1237488-1-PaddyKP_Yao@asus.com>
-In-Reply-To: <20220708090731.1237488-1-PaddyKP_Yao@asus.com>
+References: <ddd7bf26-f790-1e7a-dd19-9db2e5336cff@gmx.de> <ae136d14-d632-5e58-fb21-28c5e79f92ff@redhat.com>
+In-Reply-To: <ae136d14-d632-5e58-fb21-28c5e79f92ff@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 9 Jul 2022 13:44:16 +0200
-Message-ID: <CAHp75Vc-5Py8heCJ4bKh1-7y+U+ycJxRuYdFwiT=NM5=gLqwQw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev support
-To:     PaddyKP_Yao <ispaddy@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Luke Jones <luke@ljones.dev>, PaddyKP_Yao@asus.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
+Date:   Sat, 9 Jul 2022 13:49:10 +0200
+Message-ID: <CAHp75Vd4J2VfBKCbQewNmjrPHk7-adjYkyxPh4tZbR67oUvW1Q@mail.gmail.com>
+Subject: Re: WMI driver duplicate UUID
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Armin Wolf <W_Armin@gmx.de>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Mark Gross <markgross@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-You have sent two patches with the same version, your submission
-confuses everybody, which one are we supposed to consider?
+On Sat, Jul 9, 2022 at 1:39 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 7/9/22 03:33, Armin Wolf wrote:
 
-On Fri, Jul 8, 2022 at 11:08 AM PaddyKP_Yao <ispaddy@gmail.com> wrote:
+> > while trying to write my own WMI driver, i noticed that the WMI bus driver complained
+> > about duplicated WMI UUIDs. After doing some research, i think i found the reason for
+> > these messages:
+> >
+> > Apparently, the ACPI WMI specification by Microsoft treats the _UID of the WMI PnP-device
+> > like a namespace, which means that duplicate UUIDs are llegal if they do not share the same
+> > namespace (= PnP-device).
+> >
+> > In my case, only one wmi-bmof device is used, the rest is filtered out despite laying in
+> > a different namespace since they have the same UUID.
+> >
+> > Could it be theoretically possible to fix this issue with the WMI bus?
 >
-> In some new ASUS devices, hotkey Fn+F13 is used for mic mute. If mic-mute
-> LED is present by checking WMI ASUS_WMI_DEVID_MICMUTE_LED, we will add a
-> mic-mute LED classdev, asus::micmute, in the asus-wmi driver to control
-> it. The binding of mic-mute LED controls will be swithched with LED
+> Yes this has been a known issue for quite a while now, there
+> is a bugzilla for this here:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=201885
+>
+> As pointed out there, patches fixing this have been posted
+> a few years ago already, but they did not get merged.
+>
+> The patches are here:
+>
+> https://lkml.org/lkml/2017/12/8/912
+> https://lkml.org/lkml/2017/12/8/914
+>
+> There is one review comment which needs to be addressed:
+>
+> https://lkml.org/lkml/2017/12/9/165
+>
+> If you can pick these patches up, address the review
+> comment, test them and then submit a version 2 upstream
+> I would be happy to merge this into the platform-drivers-x86
+> tree.
 
-switched
+https://lore.kernel.org/all/1512786861-1014-1-git-send-email-mario.limonciello@dell.com/
 
-> trigger.
+This way it's easier to handle with `b4`
 
-...
-
-Not reviewing code because of the above.
-
-Hint: `git format-patch -vX ...`, where X is a version number will
-help. And when cooking a new version don't forget to add a changelog
-between versions.
+  b4 am -s https://lore.kernel.org/all/1512786861-1014-1-git-send-email-mario.limonciello@dell.com/
 
 -- 
 With Best Regards,
