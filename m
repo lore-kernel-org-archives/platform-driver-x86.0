@@ -2,98 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F67CCA481
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 00:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8086BC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 01:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiGIAH0 (ORCPT
+        id S229560AbiGIBeB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 20:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
+        Fri, 8 Jul 2022 21:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229965AbiGIAHL (ORCPT
+        with ESMTP id S229453AbiGIBeB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 20:07:11 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518D0691D0;
-        Fri,  8 Jul 2022 17:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657325204; x=1688861204;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GXx+zHGTkfRPNz2ElI/nqimWtZFLg+8XXSQyrC7jW0c=;
-  b=bFqzBZnkiEbRukQstPA2vTBWC8rJHPq2mBQg6i0yEkMXW2pDobruAxVz
-   ATR9bq1dH5bGk839lgbBbqgIJniWr5D9ZJgoOjXFd3X8znN0aDXAcX7mk
-   3Dl58RD/jiP702JovHgjtwC2YUk3v/HzyNFtrPMDNUepcbtkP5aCmWiSS
-   vGUIR4eLXNmv4p1vtpoTG33k6acSV3jAyxAIpGxvdy2fG6lbuLPZIQ+6K
-   rsjhbOuFleNbeErkSQCfaqwFOB/tVLGJcUF+qsaaK5n2KKUyfFlA8bpTg
-   Og2Uy6Qr474edYscs8T1cn7fdtg9V9HBssFXlasErlNybzeQaD8fzl3NQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="370700483"
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="370700483"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 17:06:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
-   d="scan'208";a="697045271"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Jul 2022 17:06:41 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B41585CC; Sat,  9 Jul 2022 03:06:46 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 8 Jul 2022 21:34:01 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CE7EE03
+        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 18:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1657330425;
+        bh=CcycPIXmFtN1Is0M2Jny1b4InhkRB8XtD1SbY8wn/Vs=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=bxyRPkviEh+iFbYtQv3nmE5V9zxN8uSI7Zf03hHPUm1s0+laMvpt6SeB4pvY8s1rC
+         c6fXDSKf3A/jRK7YVVcNK0D0EZM87jlKQniU/6pbCInH9HvUGPMmqR2dFFghfFMyYX
+         mazbh6MkIgPLxmnn4UIDYQaAC0mytyO0Ua4Wngt8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKbgE-1nrDTo43gq-00L0Tp; Sat, 09
+ Jul 2022 03:33:45 +0200
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 6/7] platform/x86: serial-multi-instantiate: Get rid of redundant 'else'
-Date:   Sat,  9 Jul 2022 03:06:35 +0300
-Message-Id: <20220709000636.35550-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
-References: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
+        platform-driver-x86@vger.kernel.org
+From:   Armin Wolf <W_Armin@gmx.de>
+Subject: WMI driver duplicate UUID
+Message-ID: <ddd7bf26-f790-1e7a-dd19-9db2e5336cff@gmx.de>
+Date:   Sat, 9 Jul 2022 03:33:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:hm1QAGK8d6PWsIvLAcjoniFdreezBHxXwTv8e6hGIPPtciaQOHA
+ 5VGeZSMdehUGXY6T/RNiiGFJw6TXz7ZwZKDqtq1Q8xKDrapMUd4dMHvEXlnzfOnbmSwi8sA
+ y5LwmdYGrc127uuwZ1fBh8Gbwh0GHBIZz2yNSIJ6fGPqEwcM1wArQovd6xc8+bTriFBcpr9
+ GU/v+rWucCt8pWqqCVK0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EXao1zwm4uQ=:2XcIVudgImp2JxdRNNoCyz
+ sH1M4HwJ/B7La81wD/JpYJCmomly1wOW5KH2y9acKRqma40hMIkGLGZnZhQo0JFOtHjPInZot
+ 52cXwOtpNYVc1+mdQ5gowOXYWWsvQ3HXi+cNj9U/TLlXw6tZuy6QWk73Y3uf76CDUHAuauoCo
+ splebaR2CXFNTVEFCgxJXV3e1X56BnakOQCcwDuVO43S/66E/5APAhoOQENyMxqVQKp29CCJV
+ c+m2stMtLOtnHuRF8OD1t87YZsTt03e7+O1BrvoKd/L5WRy+E2lRBYHOHa+7IyhcqG/NrYFzv
+ MlnYeuTzdLtgqRuSU7X4WGzjYoucvH+8ab6iDrMMDTKyUnAAbFxLU0krz2by6Z73o7Iklfywp
+ mPLfGWCS5hjotnlR1Wr+2z9HPwQfvhPVDuPi/3XbYI8UapUtgJw9o7e4IgoYTQY2JMrAlmBaM
+ LtGeGO+/P0mEmXR3hakTVS151jApJ1K9t42YnPy0Fz2Q5uq6bwfyzw8R0xKyq79DGu1GUTSYy
+ +xoD5iLSL1iSXgG/PUAzWjgoBcb6jDrupM7eGySx7w6+T/GiTqbqAAcNdDAsg8bnhstwX+xCD
+ HCJxUqDsSg0W4bcvQd7jSgxlgE6rgsBVdwey4k6G3VMbz6hejvTj20i5AT8gSFayQcYbdC0Sx
+ 2f6lGMmHxG/UEx0DeTyeqq+wOP2cQZA//6XtEEyFm5SAPLWdofFUgqzPC4VI9mq8NUxcyWR5u
+ 0a9ADB2fI3sR9B+hS8KyKMNrJJGGY1Qp/pvR62JFiNc/OfIxZ6l9+1kTlCNv/6/bw+IC8X69L
+ 7mOVd2VB9w8vQKwlQ3OhNbO6U9orHQeBM0TGYDr0wIGGnFepFNX+KN1J8/wO4D41Zx6VpyxBP
+ HIxaaUaR54RCoY6a1yMp7rB/wYoHQ/ytCOA0vZYaZj7lV/T7ctOPxS21JSim8zBQB5ypzJ5Sn
+ ctfjTLIOfaX9Pa8Ct1NUtMdBlbagENO2ZIedIGMPM0wtoiqA2BbgjADzoJm+Twg23UOzIJ5F8
+ C8lhTSzqnf8TDR5i5esyE0W7G/ad6yBgIY5aDZVHcIOMNE2mhPqBlc+m8lmsNxAdKtOn8vMXC
+ BricTxU7mq35hPHe1iHuZijSpILRy4iYvq2gOhUx4DkUvDc2/oXtngTog==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In the snippets like the following
+Hello,
 
-	if (...)
-		return / goto / break / continue ...;
-	else
-		...
+while trying to write my own WMI driver, i noticed that the WMI bus driver complained
+about duplicated WMI UUIDs. After doing some research, i think i found the reason for
+these messages:
 
-the 'else' is redundant. Get rid of it.
+Apparently, the ACPI WMI specification by Microsoft treats the _UID of the WMI PnP-device
+like a namespace, which means that duplicate UUIDs are llegal if they do not share the same
+namespace (= PnP-device).
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/serial-multi-instantiate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In my case, only one wmi-bmof device is used, the rest is filtered out despite laying in
+a different namespace since they have the same UUID.
 
-diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-index 38bc644a50c3..3f8fc80ec9cc 100644
---- a/drivers/platform/x86/serial-multi-instantiate.c
-+++ b/drivers/platform/x86/serial-multi-instantiate.c
-@@ -98,7 +98,7 @@ static int smi_spi_probe(struct platform_device *pdev, struct smi *smi,
- 	ret = acpi_spi_count_resources(adev);
- 	if (ret < 0)
- 		return ret;
--	else if (!ret)
-+	if (!ret)
- 		return -ENOENT;
- 
- 	count = ret;
-@@ -180,7 +180,7 @@ static int smi_i2c_probe(struct platform_device *pdev, struct smi *smi,
- 	ret = i2c_acpi_client_count(adev);
- 	if (ret < 0)
- 		return ret;
--	else if (!ret)
-+	if (!ret)
- 		return -ENOENT;
- 
- 	count = ret;
--- 
-2.35.1
+Could it be theoretically possible to fix this issue with the WMI bus?
+
+Armin Wolf
 
