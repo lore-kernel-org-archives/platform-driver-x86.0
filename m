@@ -2,85 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6BCC43334
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Jul 2022 23:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E43C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 00:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239055AbiGHXTk (ORCPT
+        id S229553AbiGIAHT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 19:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53840 "EHLO
+        Fri, 8 Jul 2022 20:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239176AbiGHXTj (ORCPT
+        with ESMTP id S229869AbiGIAHI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 19:19:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C017841990
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 16:19:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 76AC4B82A19
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 23:19:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C205C341C0
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 23:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657322376;
-        bh=1jyYhfandcygOHEMgUX2pS4FBr+yyfxYTgSzmLq4X74=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=NqjH7UcnXyoolLh5ya75w28f0CUvtPDr0KSgd5oS5kuaB9uN1xHcP0IHXgGClUwva
-         WCFQSyDw+2AoAt8aAgHXbMrwBRNK0TY+h9TbwzNdB31IMHa68NM/emD6REf7ypqG2a
-         Abtw6ltWUHptWMzvvQ7EvBNuUOZaU1YulOO6Ze4NKExAd6V66zUy9cfcGLG88bwGS9
-         8Mee+NPMos7gJHtnXuNpulJiJd7ggU6GkPM9e55QiNn2Z46pnhNmZyPyHpK3OXC4wy
-         xXxxrKv9ZiXdxSRl/yliCp3Nr0SQetOp6WeedG8v3IW8y6wvzgqJhc8h4dPzdoOuwl
-         SxghCepwgvrEg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 1BDA9C05FD2; Fri,  8 Jul 2022 23:19:36 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
- SPI device CSC3551:00
-Date:   Fri, 08 Jul 2022 23:19:35 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-215993-215701-mNIxvUMSaW@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
-References: <bug-215993-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Fri, 8 Jul 2022 20:07:08 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6197C655B0;
+        Fri,  8 Jul 2022 17:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657325201; x=1688861201;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RAmP1zmZqEEh81I7jPo8Lw24kbG1K8aqOqSBiNfhc4k=;
+  b=eWG1nqAYGqWA9H1VcKWToE6cSiq6fRzWL7dqNQhqP6XD2qrF7YZuZ1tE
+   KlDeeFAs3XwahY/s/hpgAcBvt+9zydrCa5MOkWCjnC4/kytZmRoDjbdP6
+   /Cppx07GxclSMbsJgQIegnA7kwgaVGhZ60R61+hZViRJkLsxWuYIcdb+R
+   +JcztDmT7QjSxWJn/SSMhGQRsf1LQzvbIAKd2oyiIp/Uycf+5pS/UDJYO
+   rqVsxvgrjtR8pwcSPnb2TkWw4LIMHByXRDV0cv6TrL5otIcKSI2t3g2hc
+   U0KUUG8Lk0tyhLI5r+LBPH3W1J+VBTb1wDYWSBdnVORCM5wZG/n/5rrBD
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10402"; a="284411873"
+X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
+   d="scan'208";a="284411873"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 17:06:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,256,1650956400"; 
+   d="scan'208";a="721038546"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jul 2022 17:06:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7C7C6AD; Sat,  9 Jul 2022 03:06:46 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/7] platform/x86: serial-multi-instantiate: Drop duplicate check
+Date:   Sat,  9 Jul 2022 03:06:32 +0300
+Message-Id: <20220709000636.35550-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
+References: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
+The device_get_match_data() checks for firmware node to be present,
+there is no need to check for ACPI companion.
 
---- Comment #13 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-(In reply to Supasak Sutha from comment #12)
-> May be it's not reach that function. or I miss something?=20
-It maybe a clue actually. Can you replace this -ENODEV (should be failing l=
-ine
-in your case, 2404)
-https://elixir.bootlin.com/linux/v5.19-rc4/source/drivers/spi/spi.c#L2401 w=
-ith
--EPROBE_DEFER and tell me if anything has been changed?
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ .../platform/x86/serial-multi-instantiate.c   | 21 +++++++------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
---=20
-You may reply to this email to add a comment.
+diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+index e599058196bb..ceb0e414b9f5 100644
+--- a/drivers/platform/x86/serial-multi-instantiate.c
++++ b/drivers/platform/x86/serial-multi-instantiate.c
+@@ -81,16 +81,16 @@ static void smi_devs_unregister(struct smi *smi)
+ /**
+  * smi_spi_probe - Instantiate multiple SPI devices from inst array
+  * @pdev:	Platform device
+- * @adev:	ACPI device
+  * @smi:	Internal struct for Serial multi instantiate driver
+  * @inst_array:	Array of instances to probe
+  *
+  * Returns the number of SPI devices instantiate, Zero if none is found or a negative error code.
+  */
+-static int smi_spi_probe(struct platform_device *pdev, struct acpi_device *adev, struct smi *smi,
++static int smi_spi_probe(struct platform_device *pdev, struct smi *smi,
+ 			 const struct smi_instance *inst_array)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	struct spi_controller *ctlr;
+ 	struct spi_device *spi_dev;
+ 	char name[50];
+@@ -166,17 +166,17 @@ static int smi_spi_probe(struct platform_device *pdev, struct acpi_device *adev,
+ /**
+  * smi_i2c_probe - Instantiate multiple I2C devices from inst array
+  * @pdev:	Platform device
+- * @adev:	ACPI device
+  * @smi:	Internal struct for Serial multi instantiate driver
+  * @inst_array:	Array of instances to probe
+  *
+  * Returns the number of I2C devices instantiate, Zero if none is found or a negative error code.
+  */
+-static int smi_i2c_probe(struct platform_device *pdev, struct acpi_device *adev, struct smi *smi,
++static int smi_i2c_probe(struct platform_device *pdev, struct smi *smi,
+ 			 const struct smi_instance *inst_array)
+ {
+ 	struct i2c_board_info board_info = {};
+ 	struct device *dev = &pdev->dev;
++	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	char name[32];
+ 	int i, ret, count;
+ 
+@@ -230,14 +230,9 @@ static int smi_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	const struct smi_node *node;
+-	struct acpi_device *adev;
+ 	struct smi *smi;
+ 	int ret;
+ 
+-	adev = ACPI_COMPANION(dev);
+-	if (!adev)
+-		return -ENODEV;
+-
+ 	node = device_get_match_data(dev);
+ 	if (!node) {
+ 		dev_dbg(dev, "Error ACPI match data is missing\n");
+@@ -252,14 +247,14 @@ static int smi_probe(struct platform_device *pdev)
+ 
+ 	switch (node->bus_type) {
+ 	case SMI_I2C:
+-		return smi_i2c_probe(pdev, adev, smi, node->instances);
++		return smi_i2c_probe(pdev, smi, node->instances);
+ 	case SMI_SPI:
+-		return smi_spi_probe(pdev, adev, smi, node->instances);
++		return smi_spi_probe(pdev, smi, node->instances);
+ 	case SMI_AUTO_DETECT:
+-		ret = smi_i2c_probe(pdev, adev, smi, node->instances);
++		ret = smi_i2c_probe(pdev, smi, node->instances);
+ 		if (ret && ret != -ENOENT)
+ 			return ret;
+-		ret = smi_spi_probe(pdev, adev, smi, node->instances);
++		ret = smi_spi_probe(pdev, smi, node->instances);
+ 		if (ret && ret != -ENOENT)
+ 			return ret;
+ 		if (ret)
+-- 
+2.35.1
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
