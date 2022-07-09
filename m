@@ -2,81 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53725C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 09:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2D8C43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 09:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiGIJrT (ORCPT
+        id S229774AbiGIJtJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Jul 2022 05:47:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
+        Sat, 9 Jul 2022 05:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiGIJrS (ORCPT
+        with ESMTP id S229513AbiGIJsq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Jul 2022 05:47:18 -0400
+        Sat, 9 Jul 2022 05:48:46 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1EB7E65D6D
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 02:47:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98A2471BD8
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 02:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657360037;
+        s=mimecast20190719; t=1657360086;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oVjul2vVFMPSpvmkVCAUVdXizXpt78M3xwKxWk3zHY0=;
-        b=V9tHx/L3ecaAbsW7nYGPbvKyxCYu37BxUNYyK7njXO7tJzrWVV1omMbLrVN1jch/2g94dG
-        DSeNj85/wP4f7bmo/Urkz1NTfTTGwXGcZ9BtJjUC1PYfLS/nv/5WSrGMZl1sJHStCK00nn
-        6GAyQwZW1JXmc0ZaI20F92MzQkALDVw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=BlyBQAyYHr94kaXAtNbsePMNGWU7xxVjNP6Ohft23ow=;
+        b=I+AleDTy2reGvQpCgJk9H+G6BlFWut+Ub2yjbvCrnv4hz9KCRIs7ZJ8CVBKprYiPcA0Udc
+        7qKll8TdzeaHH6PaCsgyoWkJq1tr2ZBdGnO5ar2tvSugoMutEHIWNpiIjFUefgiML1u7rW
+        zu+XLcez2z8z94p76zwn5cY7D7b4I2M=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-542-4b2F8TyeMq2CSKVT1-mtlg-1; Sat, 09 Jul 2022 05:47:15 -0400
-X-MC-Unique: 4b2F8TyeMq2CSKVT1-mtlg-1
-Received: by mail-ed1-f72.google.com with SMTP id b7-20020a056402350700b00435bd1c4523so830497edd.5
-        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 02:47:15 -0700 (PDT)
+ us-mta-610-cJNsRShxOZ-14KN37lcTGQ-1; Sat, 09 Jul 2022 05:48:05 -0400
+X-MC-Unique: cJNsRShxOZ-14KN37lcTGQ-1
+Received: by mail-ed1-f69.google.com with SMTP id b7-20020a056402350700b00435bd1c4523so831263edd.5
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 02:48:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:references:content-language:in-reply-to
          :content-transfer-encoding;
-        bh=oVjul2vVFMPSpvmkVCAUVdXizXpt78M3xwKxWk3zHY0=;
-        b=UCkvOTT3B0YJSdJsx3tKBfTn+kNLCG6xTOSgtb0oe52Xrk4Kf9QYhSp4D3EqG49BfF
-         WJDbGPepde8o7913w8w+mf038zGTUUOwphFfnPHqv24Val4sXj2q2JCDr9jmVTkHLQ3B
-         VnizqNjClW/bV5sYmMxya558+oeYPSsDdIgAOTYUMYYmghKBbtwhuaBWfkdaD0VSXEPv
-         eWDKSg3AQqefTP1WC92pj58JeNTLpVmPxA8eTVPHlGez5l6D1UmuG9p5Dx2IB9LIvL4M
-         Su54MFOFM8ypQCA/Y+6QN9wiJstwLE2rxddM8jLh3pGsLBSU+wv78zhTHdvmr3SnJLLG
-         UlvA==
-X-Gm-Message-State: AJIora8IttTbqxvk43M2Wsyh0175Z8ADyhbfQKLyNczoaZOUwJtbs6Wt
-        Hq+WVPmNo2FzhIB7iIzQ12Y8nox9QwV+verepAYxL2xHGXpbp6EJysg3AqshOJY6nXQw+eTFGf2
-        9DwIplrOK7/Dri4VNb08lmxhEUCvULe70fw==
-X-Received: by 2002:a05:6402:26c8:b0:43a:c404:a553 with SMTP id x8-20020a05640226c800b0043ac404a553mr972158edd.53.1657360033899;
-        Sat, 09 Jul 2022 02:47:13 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tXnhUx6P1aaMUqcqU4AG0UIrUqo7LsszkPewfUUVM8I3enoWg8y6z1maxgws7Of6Id+JDpwQ==
-X-Received: by 2002:a05:6402:26c8:b0:43a:c404:a553 with SMTP id x8-20020a05640226c800b0043ac404a553mr972140edd.53.1657360033730;
-        Sat, 09 Jul 2022 02:47:13 -0700 (PDT)
+        bh=BlyBQAyYHr94kaXAtNbsePMNGWU7xxVjNP6Ohft23ow=;
+        b=zvho2zHWMvlDNgkr+lLvkywiZ+5Vw6hurT1YNwxa/5+IcvRRctqyl0scmKrIWSlSf8
+         w0D0CvNawQ9H0zzFsTxSlZBwLkRifyqYvB5r7G2B0lPoeASq51XMRxRBlyj87kdGlqkl
+         xNoQ3R8mj0g8ttJwu4PvUFtmArfNXhddzoz2TQ1yvXBuFB2CEZT4tod9bYtKBLGjCeCQ
+         7bCaL31nayHF4OeV5lt7hfdtd2RB1MYGPvLvjLu5HaZeAnbCA9Veq6CbwwHZmTyy9N+S
+         If6gMKI2cz4+CmNV/irSS78ybaXugLB+IcrtbX37N0bbPXSmxNqiCPPxjwdqr8s8J/NQ
+         iRzA==
+X-Gm-Message-State: AJIora/AonLZBL4GxFDTuK2cbDG6ibnAFLOhzRWE7WK+SbMd2X5BySSu
+        6ZkYEwYI2CyOl0DWDixKA6ujW8mEu8soVeptOuU01A6E2lZ8CchSHqzEw5Jux2YMcs7BbdPn8J3
+        zvEdo+wOK0MHUa6g1ADFcEbfSyvDyN4TLhg==
+X-Received: by 2002:a05:6402:7da:b0:43a:6fe3:b7a9 with SMTP id u26-20020a05640207da00b0043a6fe3b7a9mr10483551edy.410.1657360084322;
+        Sat, 09 Jul 2022 02:48:04 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uCp3mRdrtnkzP+ynBSq50nc9ST/sufvKQLSHaXJ+i+49NH7M0ZCD5q8Pppa2o0iJgLjgnwHg==
+X-Received: by 2002:a05:6402:7da:b0:43a:6fe3:b7a9 with SMTP id u26-20020a05640207da00b0043a6fe3b7a9mr10483532edy.410.1657360084113;
+        Sat, 09 Jul 2022 02:48:04 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id l1-20020aa7c301000000b0043ab5939ecbsm684940edq.59.2022.07.09.02.47.13
+        by smtp.gmail.com with ESMTPSA id a25-20020aa7cf19000000b0043a56c0ededsm680948edy.74.2022.07.09.02.48.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Jul 2022 02:47:13 -0700 (PDT)
-Message-ID: <9826f272-ed7d-1daa-c852-6f353258bb2b@redhat.com>
-Date:   Sat, 9 Jul 2022 11:47:12 +0200
+        Sat, 09 Jul 2022 02:48:03 -0700 (PDT)
+Message-ID: <edba69a1-3404-d20f-2a9c-6359de37b6ee@redhat.com>
+Date:   Sat, 9 Jul 2022 11:48:03 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
+From:   Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH v1 2/7] platform/x86: serial-multi-instantiate: Improve
  autodetection
-Content-Language: en-US
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Binding <sbinding@opensource.cirrus.com>
+Cc:     Mark Gross <markgross@kernel.org>, patches@opensource.cirrus.com
 References: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
  <20220709000636.35550-2-andriy.shevchenko@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
+Content-Language: en-US
 In-Reply-To: <20220709000636.35550-2-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
+
+<resend with Stefan added to the To list>
 
 Hi,
 
