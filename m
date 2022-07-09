@@ -2,83 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8086BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 01:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BAAC43334
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Jul 2022 09:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbiGIBeB (ORCPT
+        id S229685AbiGIJqA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Jul 2022 21:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
+        Sat, 9 Jul 2022 05:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiGIBeB (ORCPT
+        with ESMTP id S229679AbiGIJpr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Jul 2022 21:34:01 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CE7EE03
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Jul 2022 18:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1657330425;
-        bh=CcycPIXmFtN1Is0M2Jny1b4InhkRB8XtD1SbY8wn/Vs=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=bxyRPkviEh+iFbYtQv3nmE5V9zxN8uSI7Zf03hHPUm1s0+laMvpt6SeB4pvY8s1rC
-         c6fXDSKf3A/jRK7YVVcNK0D0EZM87jlKQniU/6pbCInH9HvUGPMmqR2dFFghfFMyYX
-         mazbh6MkIgPLxmnn4UIDYQaAC0mytyO0Ua4Wngt8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKbgE-1nrDTo43gq-00L0Tp; Sat, 09
- Jul 2022 03:33:45 +0200
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-From:   Armin Wolf <W_Armin@gmx.de>
-Subject: WMI driver duplicate UUID
-Message-ID: <ddd7bf26-f790-1e7a-dd19-9db2e5336cff@gmx.de>
-Date:   Sat, 9 Jul 2022 03:33:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Sat, 9 Jul 2022 05:45:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C59506E886
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jul 2022 02:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657359932;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iWvnBMFObBlyOO6QJSeCElG9d75fpXtdy6dwQMRWtN0=;
+        b=a2kjd0JTWyqi/pv55ettf9OJ5Y7bk7abqQtPYMt1NIG2bvhtUS6+esZQdmZLnrc9yyObFn
+        UwBxVYhRgO13Ol5KjV8ccT6EOLCJ89bOgxHpMQrsUV0nxEpdV7i8ifHgPG8/B6FEZPn1zt
+        KoQknbZBpu+HbuTwzhz65LhwmcawxoM=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-83-T5Cbqp-KPbytiFitCPCgdQ-1; Sat, 09 Jul 2022 05:45:30 -0400
+X-MC-Unique: T5Cbqp-KPbytiFitCPCgdQ-1
+Received: by mail-ej1-f72.google.com with SMTP id l2-20020a170906078200b006fed42bfeacso68758ejc.16
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Jul 2022 02:45:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=iWvnBMFObBlyOO6QJSeCElG9d75fpXtdy6dwQMRWtN0=;
+        b=t1/LRud7Nh4UIkVk+HTi+venwkFpJNgTUhZvk5tIsku+hxDHcN1FJTTg66Ay4lnH8v
+         j4JUNoTiAHUnkgoVwiQmEs4qBEuzuGBkJ5F8oX4hNxi7522+5B5zqqOwmq/7PF/qWrTO
+         DEF+VJugvagniWunW6eUpL6ept9qiBq0t6kjCXtQAILgItXfoib5AK9qnzEw5nyRC27I
+         ScR2LMc46aFmdU38FRFe3MV+yjbq4Y7FcLtYOpC0Jdgh2yOPkrMR95ZRmmDDfvprJ7vG
+         lcRFEjLb3EPvxHxA/rqNlFIgMW3Gc2kpqOs6fQW2FWXpC44XtmCW65qdqzuF6SC2Ik59
+         OvIg==
+X-Gm-Message-State: AJIora9q76Me5eyHZaH68cpkxJ34ZUBbwcseh6EFrC+x1IlENE1AAyJh
+        HraUeeqDx08evpmv5YpRbGkdoG76fZ09vdi2+zWln4h94FW1IOi7NHCIn9Ma04lbyir66lUO1fc
+        sj1TLgxwr6jHdKPkF00vl5E1f3bJ74fnr1w==
+X-Received: by 2002:a05:6402:5c9:b0:420:aac6:257b with SMTP id n9-20020a05640205c900b00420aac6257bmr10338731edx.128.1657359929498;
+        Sat, 09 Jul 2022 02:45:29 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sktFAj695Q1qN3O0qx1hrC8DPFEhPTFugT3sudOcjMzshgtIOXHdA/+MZHh2dgOnE5u3d0qw==
+X-Received: by 2002:a05:6402:5c9:b0:420:aac6:257b with SMTP id n9-20020a05640205c900b00420aac6257bmr10338720edx.128.1657359929354;
+        Sat, 09 Jul 2022 02:45:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id kx13-20020a170907774d00b0072aebed5937sm415607ejc.221.2022.07.09.02.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 Jul 2022 02:45:28 -0700 (PDT)
+Message-ID: <929f8a53-0529-a4fe-699a-18e8f106368e@redhat.com>
+Date:   Sat, 9 Jul 2022 11:45:27 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v1 1/7] platform/x86: serial-multi-instantiate: return
+ -ENOENT when no resources found
 Content-Language: en-US
-X-Provags-ID: V03:K1:hm1QAGK8d6PWsIvLAcjoniFdreezBHxXwTv8e6hGIPPtciaQOHA
- 5VGeZSMdehUGXY6T/RNiiGFJw6TXz7ZwZKDqtq1Q8xKDrapMUd4dMHvEXlnzfOnbmSwi8sA
- y5LwmdYGrc127uuwZ1fBh8Gbwh0GHBIZz2yNSIJ6fGPqEwcM1wArQovd6xc8+bTriFBcpr9
- GU/v+rWucCt8pWqqCVK0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EXao1zwm4uQ=:2XcIVudgImp2JxdRNNoCyz
- sH1M4HwJ/B7La81wD/JpYJCmomly1wOW5KH2y9acKRqma40hMIkGLGZnZhQo0JFOtHjPInZot
- 52cXwOtpNYVc1+mdQ5gowOXYWWsvQ3HXi+cNj9U/TLlXw6tZuy6QWk73Y3uf76CDUHAuauoCo
- splebaR2CXFNTVEFCgxJXV3e1X56BnakOQCcwDuVO43S/66E/5APAhoOQENyMxqVQKp29CCJV
- c+m2stMtLOtnHuRF8OD1t87YZsTt03e7+O1BrvoKd/L5WRy+E2lRBYHOHa+7IyhcqG/NrYFzv
- MlnYeuTzdLtgqRuSU7X4WGzjYoucvH+8ab6iDrMMDTKyUnAAbFxLU0krz2by6Z73o7Iklfywp
- mPLfGWCS5hjotnlR1Wr+2z9HPwQfvhPVDuPi/3XbYI8UapUtgJw9o7e4IgoYTQY2JMrAlmBaM
- LtGeGO+/P0mEmXR3hakTVS151jApJ1K9t42YnPy0Fz2Q5uq6bwfyzw8R0xKyq79DGu1GUTSYy
- +xoD5iLSL1iSXgG/PUAzWjgoBcb6jDrupM7eGySx7w6+T/GiTqbqAAcNdDAsg8bnhstwX+xCD
- HCJxUqDsSg0W4bcvQd7jSgxlgE6rgsBVdwey4k6G3VMbz6hejvTj20i5AT8gSFayQcYbdC0Sx
- 2f6lGMmHxG/UEx0DeTyeqq+wOP2cQZA//6XtEEyFm5SAPLWdofFUgqzPC4VI9mq8NUxcyWR5u
- 0a9ADB2fI3sR9B+hS8KyKMNrJJGGY1Qp/pvR62JFiNc/OfIxZ6l9+1kTlCNv/6/bw+IC8X69L
- 7mOVd2VB9w8vQKwlQ3OhNbO6U9orHQeBM0TGYDr0wIGGnFepFNX+KN1J8/wO4D41Zx6VpyxBP
- HIxaaUaR54RCoY6a1yMp7rB/wYoHQ/ytCOA0vZYaZj7lV/T7ctOPxS21JSim8zBQB5ypzJ5Sn
- ctfjTLIOfaX9Pa8Ct1NUtMdBlbagENO2ZIedIGMPM0wtoiqA2BbgjADzoJm+Twg23UOzIJ5F8
- C8lhTSzqnf8TDR5i5esyE0W7G/ad6yBgIY5aDZVHcIOMNE2mhPqBlc+m8lmsNxAdKtOn8vMXC
- BricTxU7mq35hPHe1iHuZijSpILRy4iYvq2gOhUx4DkUvDc2/oXtngTog==
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>
+References: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220709000636.35550-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+Hi Andy,
 
-while trying to write my own WMI driver, i noticed that the WMI bus driver complained
-about duplicated WMI UUIDs. After doing some research, i think i found the reason for
-these messages:
+On 7/9/22 02:06, Andy Shevchenko wrote:
+> Distinguish the case when device is present, but there are no resources.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Apparently, the ACPI WMI specification by Microsoft treats the _UID of the WMI PnP-device
-like a namespace, which means that duplicate UUIDs are llegal if they do not share the same
-namespace (= PnP-device).
+IMHO it would have been better to squash this together with patch 2/7,
+but think patch 2/7 should be dropped, so this one should be dropped
+to IMHO.
 
-In my case, only one wmi-bmof device is used, the rest is filtered out despite laying in
-a different namespace since they have the same UUID.
+Regards,
 
-Could it be theoretically possible to fix this issue with the WMI bus?
+Hans
 
-Armin Wolf
+
+> ---
+>  drivers/platform/x86/serial-multi-instantiate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index 1e8063b7c169..97db23243018 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -100,7 +100,7 @@ static int smi_spi_probe(struct platform_device *pdev, struct acpi_device *adev,
+>  	if (ret < 0)
+>  		return ret;
+>  	else if (!ret)
+> -		return -ENODEV;
+> +		return -ENOENT;
+>  
+>  	count = ret;
+>  
+> @@ -184,7 +184,7 @@ static int smi_i2c_probe(struct platform_device *pdev, struct acpi_device *adev,
+>  	if (ret < 0)
+>  		return ret;
+>  	else if (!ret)
+> -		return -ENODEV;
+> +		return -ENOENT;
+>  
+>  	count = ret;
+>  
 
