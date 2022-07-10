@@ -2,78 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7541AC43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Jul 2022 17:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E37CC43334
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Jul 2022 17:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbiGJRAr (ORCPT
+        id S229513AbiGJRhO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 10 Jul 2022 13:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        Sun, 10 Jul 2022 13:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiGJRAq (ORCPT
+        with ESMTP id S229456AbiGJRhN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Jul 2022 13:00:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB23E0F0;
-        Sun, 10 Jul 2022 10:00:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 10 Jul 2022 13:37:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B130EB491
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Jul 2022 10:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657474630;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9jy0b2i2Y+T54tT6SJacS4JsnRKguB8Ll5vtJHfq6ZQ=;
+        b=WKcViAk2q43FV9vG3juEmYIbERp+1NGddnxui7qymzlbMaFyKLMlPUotTmukQZzcWn0D8T
+        qAgV8Oyzft6RW645krxklbqdJfiyfs6FQYNpWDcUC/SlLNTPN39FmsZvcEVcoID4u8ok3I
+        Uf0mA8Mti3lekzzi2LgOyNHGchwMuhI=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-662-IjZIj9p0MUykshQCV54umw-1; Sun, 10 Jul 2022 13:37:05 -0400
+X-MC-Unique: IjZIj9p0MUykshQCV54umw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 02F9560B0B;
-        Sun, 10 Jul 2022 17:00:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B801C341CB;
-        Sun, 10 Jul 2022 17:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1657472444;
-        bh=RXJPWzKEvNojmH6onaoi2IawBje3FDYFyUPoyxcvX3g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vo3v6YBmJb/xIPtHLys+IlTgkyML3/SX7IM0k0SQShVMSCC9ZbGsXYY68Ao39DoBS
-         QWCGs2RLyOXNp/jIJR5JUBRcFQGhSFwRrNtxR1usoSfSEB+hOJfYTUzwSt+IZQ+6ia
-         KUztzlfWfxGrZAi4QVfRNF1KtYFxIGYGwcIGF4iI=
-Date:   Sun, 10 Jul 2022 19:00:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jithu Joseph <jithu.joseph@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, ashok.raj@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev
-Subject: Re: [PATCH v2] platform/x86/intel/ifs: Allow non-default names for
- IFS image
-Message-ID: <YssFueUGqzq2WLHa@kroah.com>
-References: <20220710160011.995800-1-jithu.joseph@intel.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 082483C025B5;
+        Sun, 10 Jul 2022 17:37:05 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45E33492CA2;
+        Sun, 10 Jul 2022 17:37:04 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_atomisp2_led: Also turn off the always-on camera LED on the Asus T100TAF
+Date:   Sun, 10 Jul 2022 19:36:58 +0200
+Message-Id: <20220710173658.221528-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220710160011.995800-1-jithu.joseph@intel.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jul 10, 2022 at 09:00:11AM -0700, Jithu Joseph wrote:
-> Existing implementation limits IFS images to be loaded only from
-> a default file-name /lib/firmware/intel/ifs/ff-mm-ss.scan.
-> 
-> But there are situations where there may be multiple scan files
-> that can be run on a particular system stored in /lib/firmware/intel/ifs
-> 
-> E.g.
-> 1. Because test contents are larger than the memory reserved for IFS by BIOS
-> 2. To provide increased test coverage
-> 3. Custom test files to debug certain specific issues in the field
-> 
-> Renaming each of these to ff-mm-ss.scan and then loading might be
-> possible in some environments. But on systems where /lib is read-only
-> this is not a practical solution.
-> 
-> Modify the semantics of the driver file
-> /sys/devices/virtual/misc/intel_ifs_0/reload such that,
-> it interprets the input as the filename to be loaded.
-> 
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> ---
+Like the Asus T100TA the Asus T100TAF has a camera LED which is always
+on by default and both also use the same GPIO for the LED.
 
-Also note that this does not follow the required Intel rules for
-submitting kernel patches.  Why the rush and circumventing of the normal
-process that we have in place for good reasons?
+Relax the DMI match for the Asus T100TA so that it also matches
+the T100TAF.
 
-greg k-h
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/atomisp2/led.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/atomisp2/led.c b/drivers/platform/x86/intel/atomisp2/led.c
+index 5935dfca166f..10077a61d8c5 100644
+--- a/drivers/platform/x86/intel/atomisp2/led.c
++++ b/drivers/platform/x86/intel/atomisp2/led.c
+@@ -50,7 +50,8 @@ static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
+ 	{
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++			/* Non exact match to also match T100TAF */
++			DMI_MATCH(DMI_PRODUCT_NAME, "T100TA"),
+ 		},
+ 		.driver_data = &asus_t100ta_lookup,
+ 	},
+-- 
+2.36.0
+
