@@ -2,103 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BEEC43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Jul 2022 10:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F31CCA479
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Jul 2022 11:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiGJKQB (ORCPT
+        id S229545AbiGJLru (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 10 Jul 2022 06:16:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
+        Sun, 10 Jul 2022 07:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiGJKQA (ORCPT
+        with ESMTP id S229469AbiGJLrt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Jul 2022 06:16:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D725612600;
-        Sun, 10 Jul 2022 03:15:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8CFD1B80A29;
-        Sun, 10 Jul 2022 10:15:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62459C3411E;
-        Sun, 10 Jul 2022 10:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1657448157;
-        bh=GCv9XYzyLfxbuwZ58INX2UzxLUEVrBaQalSsByPr00A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Heck747PzToMtNCTo6wLiw5cuQotqiXzQlnPEP4x9f6O0cmeNKLtfQXUatET81NNP
-         EPg0rkjW9J/EdH74osSwr9mzY/yRrcU2OL8NX+ZQF88HSEUgFMBt7wlJs1IYvhEsFS
-         hdQ1UPx0T87AJORYHAz6yBJzBy/cBb9MTVHQD6lo=
-Date:   Sun, 10 Jul 2022 12:15:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, ashok.raj@intel.com,
-        tony.luck@intel.com, ravi.v.shankar@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev
-Subject: Re: [PATCH] platform/x86/intel/ifs: Allow non-default names for IFS
- image
-Message-ID: <Ysqm1BRbCTtWfAcW@kroah.com>
-References: <20220708151938.986530-1-jithu.joseph@intel.com>
- <YshNAh6awfPFmxzU@kroah.com>
- <33a6193e-1084-ae5f-1f80-232274f71bd0@intel.com>
+        Sun, 10 Jul 2022 07:47:49 -0400
+X-Greylist: delayed 571 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 10 Jul 2022 04:47:48 PDT
+Received: from mail.olddoctor.net (unknown [43.154.27.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B9B101DC;
+        Sun, 10 Jul 2022 04:47:48 -0700 (PDT)
+Received: from localhost (unknown [39.187.221.229])
+        by mail.olddoctor.net (Postfix) with ESMTPA id 2743BA671B;
+        Sun, 10 Jul 2022 19:38:15 +0800 (CST)
+From:   Misaka19465 <misaka19465@olddoctor.net>
+To:     corentin.chary@gmail.com, hdegoede@redhat.com, markgross@kernel.org
+Cc:     acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Misaka19465 <misaka19465@olddoctor.net>
+Subject: [PATCH v2 1/1] platform/x86: asus-wmi: Add key mappings
+Date:   Sun, 10 Jul 2022 19:37:27 +0800
+Message-Id: <20220710113727.281634-1-misaka19465@olddoctor.net>
+X-Mailer: git-send-email 2.37.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33a6193e-1084-ae5f-1f80-232274f71bd0@intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 11:34:40AM -0700, Joseph, Jithu wrote:
-> 
-> 
-> On 7/8/2022 8:28 AM, Greg KH wrote:
-> > On Fri, Jul 08, 2022 at 08:19:38AM -0700, Jithu Joseph wrote:
-> >> Existing implementation limits IFS image to be loaded only from
-> >> a default file-name (ff-mm-ss.scan).
-> >>
-> 
-> > 
-> > Ick, but now what namespace are you saying that path is in?  If you need
-> > debugging stuff, then put the api/interface in debugfs and use it there,
-> > don't overload the existing sysfs api to do something different here.
-> 
-> The namespace related confusion could be because, the original commit message
-> was not using full path-names. The below write-up tries to be more clear on this
-> 
-> Existing implementation limits IFS images to be loaded only from
-> a default file-name /lib/firmware/intel/ifs/ff-mm-ss.scan.
-> 
-> But there are situations where there may be multiple scan files
-> that can be run on a particular system stored in /lib/firmware/intel/ifs
-> 
-> E.g.
-> 1. Because test contents are larger than the memory reserved for IFS by BIOS
-> 2. To provide increased test coverage
-> 3. Custom test files to debug certain specific issues in the field
-> 
-> Renaming each of these to ff-mm-ss.scan and then loading might be
-> possible in some environments. But on systems where /lib is read-only
-> this is not a practical solution.
-> 
-> Extend the semantics of the driver /sys/devices/virtual/misc/intel_ifs_0/reload
-> file:
-> 
->   Writing "1" remains the legacy behavior to load from the default
->   ff-mm-ss.scan file.
-> 
->   Writing some other string is interpreted as a filename in
->   /lib/firmware/intel/ifs to be loaded instead of the default file.
+On laptops like ASUS TUF Gaming A15, which have hotkeys to start Armoury
+Crate or AURA Sync, these hotkeys are unavailable. This patch add
+mappings for them.
 
-Ick, you are overloading an existing sysfs file to do different things
-based on random stuff.  This is a brand-new api that you are already
-messing with in crazy ways.  Why not just revert the whole thing and
-start over as obviously this was not tested well with real devices.
+Signed-off-by: Misaka19465 <misaka19465@olddoctor.net>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-And what is wrong with a firmware file called '1'?  :)
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 57a07db65..478dd300b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -522,6 +522,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+ 	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
++	{ KE_KEY, 0x38, { KEY_PROG3 } }, /* Armoury Crate */
+ 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
+ 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
+ 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
+@@ -574,6 +575,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
+ 	{ KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
+ 	{ KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
++	{ KE_KEY, 0xB3, { KEY_PROG4 } }, /* AURA */
+ 	{ KE_KEY, 0xB5, { KEY_CALC } },
+ 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+-- 
+2.37.0
 
-thanks,
-
-greg k-h
