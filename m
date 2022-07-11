@@ -2,91 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19A7C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 07:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD13C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 07:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbiGKHCE (ORCPT
+        id S229872AbiGKHtr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 03:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51520 "EHLO
+        Mon, 11 Jul 2022 03:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiGKHCE (ORCPT
+        with ESMTP id S229773AbiGKHtq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 03:02:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1547140C2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 00:02:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7EC2FB80D8F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 07:02:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D66CC3411C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 07:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657522921;
-        bh=H36CrZidTLuUwcv7IzXwt03hydq6H3fvjQD27c6EudE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=eBeghJmaPvZ+lHVFtOQgG1S/dwNQw271Or22KKs1EjIMnJCs+Z7iBcebrc9/V+6KM
-         U2w7sT9ZH5l/6Ck2xQPy+3uv21sRqbKJRxr4ivMUKT0Ygq34MipBFD0L35eYkvsdDE
-         i8GuFiPTUrPhOzkFnTcpJ+SUEiTtJW412HCObomN1FlrVac4zBM3wCmkxVUHodwbbi
-         vojLmYUGWmOUGAW7siUf8lOZFUPZRnel9Neb3bZ6f40KymyDRNcdmudC5ccwAYmdx2
-         AFNWsS1U2X2NKEpTwy2wWdD9zFNXRMNure15sBYTRYPWZX3jqty5JBaY0zJBe3vi9/
-         Kzeai53diMOlg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 10849CC13B0; Mon, 11 Jul 2022 07:02:01 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216230] "irq9: nobody cared" on Thinkpad T14 Gen1 (AMD) when
- s2idle is enabled
-Date:   Mon, 11 Jul 2022 07:02:00 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: madcatx@atlas.cz
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216230-215701-Ic34WSNzSX@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216230-215701@https.bugzilla.kernel.org/>
-References: <bug-216230-215701@https.bugzilla.kernel.org/>
+        Mon, 11 Jul 2022 03:49:46 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022FA167D7;
+        Mon, 11 Jul 2022 00:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1657525776;
+        bh=X8TyN9CyILknghhxouhGz5KDBpMuUPkomyRmVP6/WJQ=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=ciFgp6FFpYmKHdsOciitwiLjRv9x7YktwFfuh5UWVTvq1CzT4eYHq6d7043zQY7Cj
+         QoaKzXmpz7GYs5QEbYkBB4Z9nybNZUqYKdjaPpULhn27jW74MuM6dfhRXkYUhqk6aD
+         B2+3DelqMhTZus1IOwd0Py8Nqq71qpeJYqwOOkNk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.101.2.47] ([185.104.136.29]) by mail.gmx.net (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MJmKh-1nqfx8429p-00KBVE; Mon, 11
+ Jul 2022 09:49:36 +0200
+Message-ID: <df7313597d2ac3212f10c05aa3d369728f030c86.camel@gmx.co.uk>
+Subject: Re: input/i8042: Malfunctioning brightness keys on HP Elite
+ Dragonfly G2
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     Hans de Goede <hdegoede@redhat.com>, dmitry.torokhov@gmail.com,
+        tiwai@suse.de, markgross@kernel.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Mon, 11 Jul 2022 08:49:27 +0100
+In-Reply-To: <8b893c42-e514-bcef-0513-070b3723cdcc@redhat.com>
+References: <20220629094314.b7xmfb3xccj7vs6v@ic-alex-elitebook>
+         <3fedf676645bfa638c9a6c656121083abc2c98ea.camel@gmx.co.uk>
+         <8b893c42-e514-bcef-0513-070b3723cdcc@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+User-Agent: Evolution 3.44.3 
 MIME-Version: 1.0
+X-Provags-ID: V03:K1:VwGkmh3JaBEWCVMCW8dyte5COe3jDZpDWSZrT1/KhFIj1pj71LG
+ KMYdeiAzn5grTZRJ0CcwVeFzlonTahgV+1Fnc4IqtuG7qAQ/Squc+M1lyP5k8c4MLQgOqEg
+ AYW9fyt49xlzipdwla8Q3HlX+JleIAWJYAQgBwQTLEynIHtq9X7xE1JsPq4iIOTd2TkTmpi
+ JAH+dsjlUMWgM6iD35gRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qkZG5VY/jvc=:3evydC3xMAcZQb3g3dkQwS
+ /YTSc/PNcdiu3DeC0Mn8j4aY6SHeZqIyhF/IUs0uIwMqaugjyj8UkrI2sK5ipzVSYuOt8Tq2J
+ 1j6Oq6cCTjh2EPzJpX3AdE0DRoxTMXCUkb6ehc20zM9wvxExg0OVWXuLsFgnAXLQKT8rSEhT8
+ ghVyPyADz/WbvFE3Z9SWY9l7da7L7wEzu6TLdQVeLbgSRTNyW2m0xFxPZsw7a50NjAfOBTXch
+ JPufTW4H8XbmZjpdfR92eiAQ9J7NPO2k7lBkzi87156EuQndJfCVnITOfZ4TTB/c/2Vb7LHF4
+ zm+PvH7ISDo2ENnNV189LlNICpXHLKyzRKzgvgELrMW3qNP83CFfCSdZtCrKT5lY/jkO/VZKR
+ 6oCV7WMCoH1Ujcn82gTDSOrFAUJoTFzrq2I7X8JgBt/DKQ2A7Veir2tg+EwU51vmlnfSoodjw
+ kCbLLfoRuzwbjqHpoB5TzNcHFPpV3xU/+WfkvpGJshFrToUGwh4kJVsGhMxXSd0qpctZHBS7f
+ LWvdSD/qEYe/5svIVgSuyz9uZJdriKIUmJds2T9m+J7Jz4hrcRczpkWKQ+MZmSWtizkaKaeBu
+ 50SZraeKvqZdd3SgfcNnu/mLA/BbAGRaM/Ny28D+GoNvKSIfes9vIgCT0Dqn+dSqHEVZ91kOd
+ 31daldwNCUiLCiWMYP4I3v0Eyouso5FZ7mJeReuZujc5Rf/YZ2Er4Xtjf+WYrU9+xwmH2gEPw
+ yGwjPiOliOp8R92Y0eYWPlXUMWCRZ+ah2X/w4G/FwaE0Cxk0XavQXEGVTuZeyrzs4B0jQTnuf
+ v+hB+Hk4w6J6akLdpFQAx2nQs2ve3L+BS36VW1eBypddc8xOCEZza0hfscHl4nY5lasGzej8U
+ 5f4PbZf3hnLiAIKycXeIo4QfRbGtpvgfTLmvr/Zn/2sKa4qdvBFEtDPSgBkAMh0WxfpPR15ff
+ dpF4zDzUv7yQVdfHVQhrZbNuLxv14lM7lH2lZlW0z8gHx4k7FcWPEzhiNCzHzmnwNF5XEN3Rb
+ bSALeodXVZH7ihWvRWfwYz7Kd88aJDzgLoTLePLqmHosDO6F1teFPW8+oTLrlmN0mhWVKQuT8
+ Ye+VfqWoqXINbWgIPrcJswYZnUMh9LUN22u21rdk3NJn1lKzK0ZbqkWHw==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216230
+Hi Hans,
 
---- Comment #5 from madcatx@atlas.cz ---
-Thanks for looking into this.
+On Sat, 2022-07-09 at 16:56 +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 7/5/22 19:25, Alex Dewar wrote:
+> > Friendly ping? =F0=9F=99=82
+> >=20
+> > I'm also CC'ing the x86 platform people into this, as I'm not sure
+> > whether this problem is something more within their remit.
+>=20
+> Please test the atbkd device with "sudo evemu-record" or "sudo
+> evtest"
+> and if the brightness keys generate events there, write down the
+> raw event codes (MSC events).
 
-It turns out that the issue is more difficult to reproduce than I'd origina=
-lly
-thought. I saw a few cold boots that went fine and one warm boot when the i=
-rq9
-fault happened. It looks like the cold/warm boot was just a red herring.
+I tried this but unfortunately this doesn't seem to be the whole story.
+If I press "decrease brightness" I get:
+Event: time 1657525393.922727, -------------- SYN_REPORT ------------
+Event: time 1657525397.043348, type 4 (EV_MSC), code 4 (MSC_SCAN),
+value 81
+Event: time 1657525397.043348, type 1 (EV_KEY), code 190 (KEY_F20),
+value 1
+Event: time 1657525397.043348, -------------- SYN_REPORT ------------
+Event: time 1657525397.050384, type 4 (EV_MSC), code 4 (MSC_SCAN),
+value 81
+Event: time 1657525397.050384, type 1 (EV_KEY), code 190 (KEY_F20),
+value 0
 
-My machine is affected by the NVMe slow wakeup bug so I only started to use
-s2idle since kernel 5.18. As such I don't know if this is a regression. I'll
-see if I can downgrade the firmware if you think that'd help you track this
-down. FTR I'm on version 1.40 which seems to be the latest one as of now.
+And if I press "increase brightness" I get:
+Event: time 1657525397.050384, -------------- SYN_REPORT ------------
+Event: time 1657525398.607184, type 4 (EV_MSC), code 4 (MSC_SCAN),
+value 81
+Event: time 1657525398.607184, type 1 (EV_KEY), code 190 (KEY_F20),
+value 1
+Event: time 1657525398.607184, -------------- SYN_REPORT ------------
+Event: time 1657525398.614190, type 4 (EV_MSC), code 4 (MSC_SCAN),
+value 81
+Event: time 1657525398.614190, type 1 (EV_KEY), code 190 (KEY_F20),
+value 0
 
-I attached the requested logs.
+There's no difference! And I also get the same thing if I press the
+*actual* mute mic button =F0=9F=98=9E.
 
---=20
-You may reply to this email to add a comment.
+Any ideas?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Best,
+Alex
+
