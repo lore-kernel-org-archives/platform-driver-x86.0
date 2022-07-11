@@ -2,46 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 14:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7E0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 15:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiGKOgK (ORCPT
+        id S230118AbiGKPBO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 10:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
+        Mon, 11 Jul 2022 11:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiGKOgJ (ORCPT
+        with ESMTP id S231945AbiGKPA4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 10:36:09 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E8365572;
-        Mon, 11 Jul 2022 07:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1657550155;
-        bh=DINkJDHugX/iLt6KCztwk/iCqEfBYvl9VubtRoa42D8=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=D+/HFeiCy9H/U5NDeue5bpHBQl1eLwEh4IP+WQHMoav1wuE0TfHQbLe4ZnNse0lcV
-         FTbjWN3L8PSKvyh5yesXJGyW3v2VVpEccbI+9iB3uzYr9nVKFJRgzvZo13EF+VfDb8
-         9zhFv4aqt4eHG4NXtoIAsNQ7wJMDD0+Hb9JuTKwU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from dyn3207-67.wlan.ic.ac.uk ([146.169.207.67]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M3lcJ-1oBjj60zGl-000pvJ; Mon, 11 Jul 2022 16:35:55 +0200
-Message-ID: <0e8611ad73017bc204372f491ae5666dd60885a9.camel@gmx.co.uk>
-Subject: Re: input/i8042: Malfunctioning brightness keys on HP Elite
- Dragonfly G2
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>,
+        Mon, 11 Jul 2022 11:00:56 -0400
+Received: from us-smtp-delivery-162.mimecast.com (us-smtp-delivery-162.mimecast.com [170.10.133.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D74674E15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 08:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hp.com; s=mimecast20180716;
+        t=1657551626;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1BINb2OKAGYMKfD5Dw/svhLCa03WTy5XwOWmZWhWmJw=;
+        b=ZmF1d0qHJ/XdVN32n5BtFxbITxp2+eM0E57+hVxDCbJaq14COV+Kj9YxHPSfR538AZnGKJ
+        2ntGNjunG3VTo9IldXw4ZD4VU/YxOvX1rqwSuN+aQCgQ9yl3wxfxVnR5+NAZzrNzQxvviF
+        96t5EeJfXw44Ch7t1NgybHYq5ZTki0U=
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com
+ (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-312-B9gP04pnPPCHe6ZNtYR-Iw-1; Mon, 11 Jul 2022 11:00:25 -0400
+X-MC-Unique: B9gP04pnPPCHe6ZNtYR-Iw-1
+Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:160::10)
+ by SJ0PR84MB1652.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:a03:433::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Mon, 11 Jul
+ 2022 14:59:21 +0000
+Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::880d:1bb8:7f9e:19cc]) by PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::880d:1bb8:7f9e:19cc%7]) with mapi id 15.20.5417.026; Mon, 11 Jul 2022
+ 14:59:21 +0000
+From:   "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>
+To:     Alex Dewar <alex.dewar@gmx.co.uk>,
         Hans de Goede <hdegoede@redhat.com>,
         "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
         "tiwai@suse.de" <tiwai@suse.de>,
         "markgross@kernel.org" <markgross@kernel.org>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+CC:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Date:   Mon, 11 Jul 2022 15:35:54 +0100
-In-Reply-To: <PH0PR84MB19536D04A5625D4DC8B76AF1A8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
+Subject: RE: input/i8042: Malfunctioning brightness keys on HP Elite Dragonfly
+ G2
+Thread-Topic: input/i8042: Malfunctioning brightness keys on HP Elite
+ Dragonfly G2
+Thread-Index: AQHYlR8s56cSTJIX+UqJ5MPQFYzlza15IwvQgAAVZnCAAARdAIAAAFBg
+Date:   Mon, 11 Jul 2022 14:59:21 +0000
+Message-ID: <PH0PR84MB195301AA9C44F2F4ECE4A848A8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
 References: <20220629094314.b7xmfb3xccj7vs6v@ic-alex-elitebook>
          <3fedf676645bfa638c9a6c656121083abc2c98ea.camel@gmx.co.uk>
          <8b893c42-e514-bcef-0513-070b3723cdcc@redhat.com>
@@ -49,216 +65,204 @@ References: <20220629094314.b7xmfb3xccj7vs6v@ic-alex-elitebook>
          <c89d39eb-17b9-8800-c8ff-8d236b80de2f@redhat.com>
          <PH0PR84MB195309F5BA5B96858024E61FA8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
          <PH0PR84MB19536D04A5625D4DC8B76AF1A8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+ <0e8611ad73017bc204372f491ae5666dd60885a9.camel@gmx.co.uk>
+In-Reply-To: <0e8611ad73017bc204372f491ae5666dd60885a9.camel@gmx.co.uk>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-bromium-msgid: 763ac64b-367a-4bf0-befd-1166f7ee4bac
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8f5cabf-273d-4b86-2cc0-08da634df008
+x-ms-traffictypediagnostic: SJ0PR84MB1652:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0
+x-microsoft-antispam-message-info: kuwn4cOrXlVo/pi/fdReXVqQdJXh7HdOVLMybltBMxO0QbILb0aN4jcnpin1+OqvzTxF06iKa46Q5KGg2EMTLEOWvEIfAFm5oSRgRwx4npOSNem5mxWJs/j+14aoOI4u5aLR/Tu+GJH714bLGkDPlKwII4kRmomzcwFRDRXEd7EhZMlIx8TupDodFAmNus/ZPGPpYuqJVilCc7wcPGy5JhKldRT/dk3a7oCbyuu0XwWmvF5I6fx7rMMP++Y/g8Yfv5JyDSqzHlzG8X/pB4oqOerQkP8HyC8kfhvuD8R0bVZHZmRuIq14EWyoTD9dayuHsQ9tWcVgzipfYjPa8iWVvklvjI9zoi6/eLjaW48lwJgAYX1OkKIg928LbasKP9VBbimeBb6ZL/PaJCQ1wll5dlJsDsM84Ip9uc6hoLLkjP+g4yY5N6FjiQKpyJeh77fN7Kti9QgydrpPcwcPZH1UQvYgz/HN0JvI3d9fFm+Gcs7utTUmBs/nNIalAlGKqCbsavro+JJury1QvERRUKTpOOUsExowGGLc0+72BHaufhEoZEgQhv0quM8mNMd60FWQe5QLcSNzFaCTYL3ik+7RX1Wu14WTFey6VJdHy59P2eZTz5LD2uSrGpI7BqJqr10Eupb59LVe7jje1nLMhTRWx04JfmHtsaZZzccdlEO50TTCgIPFsyo5c2oKbzmnzTqWjmuOoQrKdFmBXKdXkSYAPZrKKoaF2c9U9Wc0hRZJu4TEJG7dlCy2mwAqsYbMjWTH2nN0wsvB+V6GIyw0EO0VSwheyYY2w1MsdYuz7N6qgKyK9yt7U/k1bgUcwsELPw+RWybu2SvlGuSQrOUlqxb/tkWlve57U9qtiB3MQdddkpg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(366004)(396003)(376002)(39860400002)(84040400005)(66556008)(110136005)(33656002)(76116006)(4326008)(122000001)(8676002)(66946007)(5660300002)(54906003)(64756008)(38100700002)(86362001)(38070700005)(316002)(82960400001)(66446008)(41300700001)(83380400001)(52536014)(66476007)(8936002)(55016003)(7696005)(186003)(26005)(9686003)(71200400001)(2906002)(53546011)(966005)(478600001)(6506007);DIR:OUT;SFP:1102
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RHpHWkcxb0ZZQThoOXlIN1RJdW51R1FHWHdpU1E1Y2hLcVA3Nk1EUzVzbC9t?=
+ =?utf-8?B?NFpKakJXZlIwNXpVdndxZXRjcm5jUExhQjk4V285NFBlSVhkSC9VMHA0OFpw?=
+ =?utf-8?B?ZVJiZUw1dnN5VnFXL1VsMmFmNU1ZbXphcXdoQjQzTlMwK3BmK1lGWGwzUUE1?=
+ =?utf-8?B?TTdqWlFyV3E0UXdVUWg3ZExUY1FKQzE3LzFpSlFGUVdERVVIUWJ0amRmcWg4?=
+ =?utf-8?B?NElIVjVGdXhMVzlLYVFicUVNSTlrTTZ5aFNHRVZ3dGpmTkxlU21yMTdIam5X?=
+ =?utf-8?B?bTVpVFVJbGZYK01PdEx2bllkWGJmanUwckVuQ0hFZmZraWl0WG5KN2NRU3JO?=
+ =?utf-8?B?UXhJeGc5TmRDOW9KaEJNZnBEUVJLQkU3eWF5T2w1UXh5ejU2VVpyUXdPRHRr?=
+ =?utf-8?B?dHROdGRsem9QbER2TlM1TEpYL0dOREFObFJYcVNhSW9qclNKNjdhQkxCLzR6?=
+ =?utf-8?B?bWx0ZHdqU00xUnpISmxpeSt4R2lkalZTL3JFWXRKaGlIOHFuajBxQ3U5eC9D?=
+ =?utf-8?B?WDhtaVBUd3JrZkFBRkFWdk9qMnI2dVNEVzBnS3lKaGZFb2JWSU9LYS9UVy85?=
+ =?utf-8?B?aDgzY0dqVGRsVWJ5MkVkTEs0MFVqSmRjMG1pSUYyQ0srUGZ3bjdmZVl3VE9j?=
+ =?utf-8?B?NHBzRDNvQmtvV3IxZUYwbEQ5ZjA0T0hIamN5YklQSzRqdnUxQklpQko2YU5O?=
+ =?utf-8?B?NTFPdUR5bTFNeng0ZFhiZW5td2pNZk9xR2J5THl6Zis3RE5HcStkSjJZWDRt?=
+ =?utf-8?B?b3B5Zm82b050VU8wd2JzQ3BPbXNrSjBraHBQeTZUT0VWK01admljNmtmMmlI?=
+ =?utf-8?B?R1BSKzVLYjlYMDJnV1krek10ZFFlSlZxdnJTeGZVU3BUMm1WRGVDZ3dLVXVV?=
+ =?utf-8?B?SGplM3RBaldYOUZyNXNvbkRsK1Q3dFl0djhxK0FMUWJkQ25ucmJXY293N3Ax?=
+ =?utf-8?B?bTUzU2ZoZDdYTlpxaGswbXZJMGVyeXk3MWJoeHhZMDdUNVVrM3Y3QVJ5Vmg0?=
+ =?utf-8?B?cTNzTDQ4Z0QzbFMzWGtEVUpScHBiclJMdmNVYkZmQmIvYmQrTnozenBlZ0Uw?=
+ =?utf-8?B?SklPQ2tySStxT0JCeE5xVHV0YjVpOTdIa2F3NFl0b1ZFWnlSODVpWXZoNjcx?=
+ =?utf-8?B?OWRUQy9GdVd1YUp3WEtYY0lSVWd3bC94cGRscHNKaHRrUjRGQ21OVS9SVjBt?=
+ =?utf-8?B?bGQrOTlYdTZza1h1OFEwRWxKd2QwZ2VNOEJ0cDk3RHlCaWdCL1FZcXdWM043?=
+ =?utf-8?B?QzBhL2Ntb3BPSTVlNTBTa3RBZTRVMWlkOGtJZzNBWVBwaHNGNnU5RWtqL2hG?=
+ =?utf-8?B?ZGVYdTVZcjI4UEZlL1hCczBsdUNOd1paMVRTR0UvY01aM0FJcTZ6SXhXcVgy?=
+ =?utf-8?B?SGQvdS8rNXhkWW0zS0xYemxxTW5PcDRUUWJrTUFRV2ZMQm5jUzFqK1ErTlJI?=
+ =?utf-8?B?TzMxMGo2djFQUi9OWUVvbDBjV3loZEQxejJWbXhMMk9QUjBGSkc4L09lWnFz?=
+ =?utf-8?B?MHRXbFdWZEU5bXpETFNkcklEOGZNQis5MWlPcGpCNjU2UzNSNHU4ZVNnUlpE?=
+ =?utf-8?B?dkhQTEx4Unl6czJBcWUxQmIvK0JucDBzSVBxcTRIeEJDODBXSVNDTEVrbVk1?=
+ =?utf-8?B?V3ErY0lGUkpOcGVZRUNQdVVRYjBqby9jeWxiMDY1Y0ppU1pxRGE5MUkvU245?=
+ =?utf-8?B?MWcwa2tXbHIyT0ZQb3FvS3VvUzBjc21ZRXF3WEZrYVRwcEdNNUJ0Qjk5YUlG?=
+ =?utf-8?B?bllwYkRzb0pQaEV3K3ZaWW5wL2RUR1c1Z01ndjh6RWVpWWh4M2RPd3VMNXNs?=
+ =?utf-8?B?OVB5QktLUU5zVVRvWlQ2eHloYXB2Y1BuWmhmL3dkbHNRWUNEZG9sOTdUWldi?=
+ =?utf-8?B?K29XcVlaTW4rVyswOTU2RTkyblNmRWhvS00xWmIwSUx4d0Y1WTladXNCVmdk?=
+ =?utf-8?B?NkRHWUpUeDFBbnNDUXlXNlFnSjBPZTNVd0h4d1J4MVRBOVF1QnpLak03RFRE?=
+ =?utf-8?B?QUl2aTNTaXNwMEZ3K3FEN0d4YmhEd3pzOHZId0JRaU9DakRRSWwwbVkxcUE0?=
+ =?utf-8?B?REx4TFdZOVByOVRld0hnRXgvWnVxQjhaRlpRV2ZLZyszdjJVeGtVUDBMQU1W?=
+ =?utf-8?Q?THrVDm6/+IF13Xjz91RXZDUZP?=
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:mkX6o6pK+J5SJpfHS+S0yxxYG4rQM1yv80MihpgYOG7DG2s9jLR
- 4oj8TRtJNoz43lnEFet24YoCKMcNLvIR8W9hpupsRiY39fqH1JbJzNPYwOXYV5WVD0weAgD
- 4GZlkwrsyk/4Saw7y7IsAgDfDAFlypUifv9hOdjdZJ8U/2fBQEmorwdPs6jPgXf6PDtGKxB
- B7tEx48ynC3P+IEqnRGpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hxHdsAnloPg=:5rf6qlNnaOM+88InnFoKPO
- LTLDqPIWWyXcdMTs0KOrbHDdzwLGgpHVwnxlLbDIyaiTXXFIPN7iROKxkxg+Lcp7ZMp3YUJZ2
- IG7f+VgcWQwk8u5nkvDhRqpFUeo6TmDRGmkS0JZF8jaTz5o3xBURw2jTqMXBf4LrNlOLp9pNh
- rcPhthfClqnSG7b8oKgp95mzHD+M1ykCwHyaIlQYqfYCCSDBvwnhFxwvxf+MHOlw3fycDqtVS
- gMW3aNQOiPOtOjUZwrvwN2a8cewZ9BdW69u70xi1H+VfcAXe2nSA6JmRwDntrb7MV56a67xsk
- ITcjFYUkIxfLVlUtMY7ZZa0WW+6VC8NzEgowiE+IMF8CWa4vBUL2rXUbIuqaqv9n0dO/Mv7uh
- 9zDr+uTZKLzOnZK4WyojygwcH7diUXAdWH2GtKw0hXeAZOS5l93TgqpjFKoL4G2xS7P+Nmjw6
- yOXgZXGRaS3LiV67iwxOh/IoaIpR08nSO6kc67WSDy9cdlVYRoX397brKBjPEq7NXPlRhXOpB
- ANUhZzm7PgPN37PGXqaq8HyZHOEoGozSF6m6/JBCx9rB3Jy5XEzwogbSp/I/qHy5MY0+TgaG1
- hhMcjxgAkizI8aoWO6j6LvImdE+vAJrDhqwr5tOkK6H/e2qmrDnlVzF2vBo2xL5S+4TViaZT3
- n3xOgjW5Mh+yGbcvvevUAw43biUaKTo63srl64H3WLFE1uEaOSrLjNG2kKNsReYsx5qTdG9FE
- eRzhImRlqWtU8MzRf7vP8v3P0JRdRhBAhW/bAVIZcVUNxHoGS4rVGHpZLBGjC7dxH5u6ibTHJ
- bohAPVAUOog6Bf+wEnIq/VPKj0vLOL640HbTJ7Ta25Kd2Pgw3NiZ8UoqzTBUTyDLpgnO8I+9c
- oYrhthWLclSu4dATXxIdZRg2kXnp1sBVYfNqI1J/9bLK3aU2wuXfubYbAdnxf4T8tAArtxEMk
- zmOSZbg3aLEST0Z9MMuFK9Y19CCNI9z42yGta/aQAfCd5TJS74MgEMigs8zhopyQCeICCXDpV
- 8DhjcAT22J4ClyNUAB+VRrOgV4VQRHMjx2kNkv7BA+7rhcXTZPDvFbtWNXmyaU4rGiyBlf85I
- daVPxtRq8aqpxkQyU1pXwbMg8MbfPhzi/m1u1Hyxi8sMz/pAalNvlTvew==
+X-OriginatorOrg: hp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8f5cabf-273d-4b86-2cc0-08da634df008
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 14:59:21.6733
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: ca7981a2-785a-463d-b82a-3db87dfc3ce6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u/V9bT0Dhtpjo7Pcd5NRLeFfpSxFKGRfqK7nsljkv3m2hu8f9gOZwd0nCPa2FeTgz8QbqhX6L6Yc2zp8tszLVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR84MB1652
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA62A171 smtp.mailfrom=jorge.lopez2@hp.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: hp.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2022-07-11 at 14:26 +0000, Lopez, Jorge A (Security) wrote:
-> Hi Alex,
->=20
-> I confirmed brightness up/down and mute are AT translated set of keys
-> and not handled by HP-WMI driver.
-> BIOS should be sending an 0x4 event which keycode 224 (brightness
-> up), 225 (brightness down), and 190 (microphone).
-> Instead, BIOS is sending keycode 190 for all three keys.
->=20
-> I will search for an Elite Dragonfly G2 unit and try to duplicate the
-> problem.=C2=A0 Please send the BIOS version your system is running on.
-> This problem could have been reported and fixed in the latest BIOS
-> version.
->=20
-> Look forward to hearing back from you.
->=20
->=20
-> Regards,
->=20
-> Jorge Lopez
-> Hewlett-Packard=20
->=20
-> =E2=80=9COnce you stop learning, you start dying=E2=80=9D
-> Albert Einstein
-
-Hi Jorge,
-
-Thanks for looking into this =F0=9F=99=82
-
-Here is my BIOS info:
-Handle 0x0001, DMI type 0, 26 bytes
-BIOS Information
-        Vendor: HP
-        Version: T90 Ver. 01.04.01
-        Release Date: 06/01/2021
-        Address: 0xF0000
-        Runtime Size: 64 kB
-        ROM Size: 32 MB
-        Characteristics:
-                PCI is supported
-                PC Card (PCMCIA) is supported
-                BIOS is upgradeable
-                BIOS shadowing is allowed
-                Boot from CD is supported
-                Selectable boot is supported
-                EDD is supported
-                Print screen service is supported (int 5h)
-                8042 keyboard services are supported (int 9h)
-                Serial services are supported (int 14h)
-                Printer services are supported (int 17h)
-                ACPI is supported
-                USB legacy is supported
-                Smart battery is supported
-                BIOS boot specification is supported
-                Function key-initiated network boot is supported
-                Targeted content distribution is supported
-                UEFI is supported
-        BIOS Revision: 4.1
-        Firmware Revision: 55.29
-
-I should maybe add that I think the keyboard was working fine when I
-had Windows 10 running on this machine and I haven't updated the BIOS
-since installing Linux.
-
-In case it's relevant, I'm running Arch Linux with the following
-kernel:
-Linux ic-alex-elitebook 5.18.9-arch1-1 #1 SMP PREEMPT_DYNAMIC Sat, 02
-Jul 2022 21:03:06 +0000 x86_64 GNU/Linux
-
-Best,
-Alex
-
->=20
-> -----Original Message-----
-> From: Lopez, Jorge A (Security)=20
-> Sent: Monday, July 11, 2022 8:10 AM
-> To: 'Hans de Goede' <hdegoede@redhat.com>; Alex Dewar
-> <alex.dewar@gmx.co.uk>; dmitry.torokhov@gmail.com; tiwai@suse.de;
-> markgross@kernel.org
-> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-> platform-driver-x86@vger.kernel.org
-> Subject: RE: input/i8042: Malfunctioning brightness keys on HP Elite
-> Dragonfly G2
->=20
-> Hi Alex,
->=20
-> Let me investigate this issue.=C2=A0 The driver maps some keys, so it is
-> possible the list is incomplete.=C2=A0=20
-> It is expected hp_wmi driver to be loaded, Correct?
-> Can you provide the BIOS version current in your system?
->=20
->=20
-> Regards,
->=20
-> Jorge Lopez
-> Hewlett-Packard=20
->=20
-> =E2=80=9COnce you stop learning, you start dying=E2=80=9D
-> Albert Einstein
->=20
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: Monday, July 11, 2022 7:10 AM
-> To: Alex Dewar <alex.dewar@gmx.co.uk>; dmitry.torokhov@gmail.com;
-> tiwai@suse.de; markgross@kernel.org; Lopez, Jorge A (Security)
-> <jorge.lopez2@hp.com>
-> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-> platform-driver-x86@vger.kernel.org
-> Subject: Re: input/i8042: Malfunctioning brightness keys on HP Elite
-> Dragonfly G2
->=20
-> Hi Alex,
->=20
-> On 7/11/22 09:49, Alex Dewar wrote:
-> > Hi Hans,
-> >=20
-> > On Sat, 2022-07-09 at 16:56 +0200, Hans de Goede wrote:
-> > > Hi,
-> > >=20
-> > > On 7/5/22 19:25, Alex Dewar wrote:
-> > > > Friendly ping? =F0=9F=99=82
-> > > >=20
-> > > > I'm also CC'ing the x86 platform people into this, as I'm not
-> > > > sure=20
-> > > > whether this problem is something more within their remit.
-> > >=20
-> > > Please test the atbkd device with "sudo evemu-record" or "sudo=20
-> > > evtest"
-> > > and if the brightness keys generate events there, write down the
-> > > raw=20
-> > > event codes (MSC events).
-> >=20
-> > I tried this but unfortunately this doesn't seem to be the whole
-> > story.
-> > If I press "decrease brightness" I get:
-> > Event: time 1657525393.922727, -------------- SYN_REPORT ----------
-> > --
-> > Event: time 1657525397.043348, type 4 (EV_MSC), code 4 (MSC_SCAN),=20
-> > value 81
-> > Event: time 1657525397.043348, type 1 (EV_KEY), code 190 (KEY_F20),
-> > value 1
-> > Event: time 1657525397.043348, -------------- SYN_REPORT ----------
-> > --
-> > Event: time 1657525397.050384, type 4 (EV_MSC), code 4 (MSC_SCAN),=20
-> > value 81
-> > Event: time 1657525397.050384, type 1 (EV_KEY), code 190 (KEY_F20),
-> > value 0
-> >=20
-> > And if I press "increase brightness" I get:
-> > Event: time 1657525397.050384, -------------- SYN_REPORT ----------
-> > --
-> > Event: time 1657525398.607184, type 4 (EV_MSC), code 4 (MSC_SCAN),=20
-> > value 81
-> > Event: time 1657525398.607184, type 1 (EV_KEY), code 190 (KEY_F20),
-> > value 1
-> > Event: time 1657525398.607184, -------------- SYN_REPORT ----------
-> > --
-> > Event: time 1657525398.614190, type 4 (EV_MSC), code 4 (MSC_SCAN),=20
-> > value 81
-> > Event: time 1657525398.614190, type 1 (EV_KEY), code 190 (KEY_F20),
-> > value 0
-> >=20
-> > There's no difference! And I also get the same thing if I press the
-> > *actual* mute mic button =F0=9F=98=9E.
-> >=20
-> > Any ideas?
->=20
-> From this it looks like we need to use some other interface to get
-> these events (+ ignore the above events).
->=20
-> Do you have a "HP WMI hotkeys" device in your list of input devices?=C2=
-=A0
-> And are you getting any events on that ?
->=20
-> Likewise do you have a "Video Bus" device and any events on that ?
->=20
-> I've also added Jorge from HP to the Cc. Jorge, can you help with
-> this ?
->=20
-> Regards,
->=20
-> Hans
->=20
+SGkgQWxleCwNCg0KVGhhbmsgeW91IGZvciB0aGUgQklPUyBpbmZvcm1hdGlvbi4gICBUaGUgcHJv
+YmxlbSB5b3UgYXJlIGV4cGVyaWVuY2luZyB3YXMgZml4ZWQgaW4gQklPUyB2ZXJzaW9uIDAxLjA3
+LjAyIFJldi5BDQoNCgktIEZpeGVzIGFuIGlzc3VlIHdoZXJlIEZuK0YzL0Y0IGRvIG5vdCBjaGFu
+Z2UgdGhlIGJyaWdodG5lc3Mgb2YgdGhlIGRpc3BsYXkgcGFuZWwgd2hlbiB0aGUgUHJpdmFjeSBQ
+YW5lbCBpcyBlbmFibGVkIGluIHRoZSBGMTAgc2V0dGluZ3MuDQoNClRoZSBsYXRlc3QgQklPUyB2
+ZXJzaW9uIGlzIDAxLjA5LjAxIFJldi5BIHNvIHRoZSBwcm9ibGVtIHdpbGwgYmUgcmVzb2x2ZWQg
+YWZ0ZXIgQklPUyB1cGdyYWRlLiAgICBCSU9TIGlzIG5vdCBhdmFpbGFibGUgdmlhIExWRlMsIHlv
+dSB3aWxsIG5lZWQgdG8gaW5zdGFsbCBpdCB2aWEgV2luZG93cyBleGVjdXRhYmxlLg0KaHR0cHM6
+Ly9zdXBwb3J0LmhwLmNvbS91cy1lbi9kcml2ZXJzL2xhcHRvcHMNCg0KTGV0IG1lIGtub3cgaWYg
+dGhlIHByb2JsZW0gaXMgcmVzb2x2ZWQuDQoNCg0KUmVnYXJkcywNCg0KSm9yZ2UgTG9wZXoNCkhl
+d2xldHQtUGFja2FyZCANCg0K4oCcT25jZSB5b3Ugc3RvcCBsZWFybmluZywgeW91IHN0YXJ0IGR5
+aW5n4oCdDQpBbGJlcnQgRWluc3RlaW4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZy
+b206IEFsZXggRGV3YXIgPGFsZXguZGV3YXJAZ214LmNvLnVrPiANClNlbnQ6IE1vbmRheSwgSnVs
+eSAxMSwgMjAyMiA5OjM2IEFNDQpUbzogTG9wZXosIEpvcmdlIEEgKFNlY3VyaXR5KSA8am9yZ2Uu
+bG9wZXoyQGhwLmNvbT47IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+OyBkbWl0
+cnkudG9yb2tob3ZAZ21haWwuY29tOyB0aXdhaUBzdXNlLmRlOyBtYXJrZ3Jvc3NAa2VybmVsLm9y
+Zw0KQ2M6IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJl
+OiBpbnB1dC9pODA0MjogTWFsZnVuY3Rpb25pbmcgYnJpZ2h0bmVzcyBrZXlzIG9uIEhQIEVsaXRl
+IERyYWdvbmZseSBHMg0KDQpPbiBNb24sIDIwMjItMDctMTEgYXQgMTQ6MjYgKzAwMDAsIExvcGV6
+LCBKb3JnZSBBIChTZWN1cml0eSkgd3JvdGU6DQo+IEhpIEFsZXgsDQo+IA0KPiBJIGNvbmZpcm1l
+ZCBicmlnaHRuZXNzIHVwL2Rvd24gYW5kIG11dGUgYXJlIEFUIHRyYW5zbGF0ZWQgc2V0IG9mIGtl
+eXMgDQo+IGFuZCBub3QgaGFuZGxlZCBieSBIUC1XTUkgZHJpdmVyLg0KPiBCSU9TIHNob3VsZCBi
+ZSBzZW5kaW5nIGFuIDB4NCBldmVudCB3aGljaCBrZXljb2RlIDIyNCAoYnJpZ2h0bmVzcyB1cCks
+IA0KPiAyMjUgKGJyaWdodG5lc3MgZG93biksIGFuZCAxOTAgKG1pY3JvcGhvbmUpLg0KPiBJbnN0
+ZWFkLCBCSU9TIGlzIHNlbmRpbmcga2V5Y29kZSAxOTAgZm9yIGFsbCB0aHJlZSBrZXlzLg0KPiAN
+Cj4gSSB3aWxsIHNlYXJjaCBmb3IgYW4gRWxpdGUgRHJhZ29uZmx5IEcyIHVuaXQgYW5kIHRyeSB0
+byBkdXBsaWNhdGUgdGhlIA0KPiBwcm9ibGVtLsKgIFBsZWFzZSBzZW5kIHRoZSBCSU9TIHZlcnNp
+b24geW91ciBzeXN0ZW0gaXMgcnVubmluZyBvbi4NCj4gVGhpcyBwcm9ibGVtIGNvdWxkIGhhdmUg
+YmVlbiByZXBvcnRlZCBhbmQgZml4ZWQgaW4gdGhlIGxhdGVzdCBCSU9TIA0KPiB2ZXJzaW9uLg0K
+PiANCj4gTG9vayBmb3J3YXJkIHRvIGhlYXJpbmcgYmFjayBmcm9tIHlvdS4NCj4gDQo+IA0KPiBS
+ZWdhcmRzLA0KPiANCj4gSm9yZ2UgTG9wZXoNCj4gSGV3bGV0dC1QYWNrYXJkDQo+IA0KPiDigJxP
+bmNlIHlvdSBzdG9wIGxlYXJuaW5nLCB5b3Ugc3RhcnQgZHlpbmfigJ0NCj4gQWxiZXJ0IEVpbnN0
+ZWluDQoNCkhpIEpvcmdlLA0KDQpUaGFua3MgZm9yIGxvb2tpbmcgaW50byB0aGlzIPCfmYINCg0K
+SGVyZSBpcyBteSBCSU9TIGluZm86DQpIYW5kbGUgMHgwMDAxLCBETUkgdHlwZSAwLCAyNiBieXRl
+cw0KQklPUyBJbmZvcm1hdGlvbg0KICAgICAgICBWZW5kb3I6IEhQDQogICAgICAgIFZlcnNpb246
+IFQ5MCBWZXIuIDAxLjA0LjAxDQogICAgICAgIFJlbGVhc2UgRGF0ZTogMDYvMDEvMjAyMQ0KICAg
+ICAgICBBZGRyZXNzOiAweEYwMDAwDQogICAgICAgIFJ1bnRpbWUgU2l6ZTogNjQga0INCiAgICAg
+ICAgUk9NIFNpemU6IDMyIE1CDQogICAgICAgIENoYXJhY3RlcmlzdGljczoNCiAgICAgICAgICAg
+ICAgICBQQ0kgaXMgc3VwcG9ydGVkDQogICAgICAgICAgICAgICAgUEMgQ2FyZCAoUENNQ0lBKSBp
+cyBzdXBwb3J0ZWQNCiAgICAgICAgICAgICAgICBCSU9TIGlzIHVwZ3JhZGVhYmxlDQogICAgICAg
+ICAgICAgICAgQklPUyBzaGFkb3dpbmcgaXMgYWxsb3dlZA0KICAgICAgICAgICAgICAgIEJvb3Qg
+ZnJvbSBDRCBpcyBzdXBwb3J0ZWQNCiAgICAgICAgICAgICAgICBTZWxlY3RhYmxlIGJvb3QgaXMg
+c3VwcG9ydGVkDQogICAgICAgICAgICAgICAgRUREIGlzIHN1cHBvcnRlZA0KICAgICAgICAgICAg
+ICAgIFByaW50IHNjcmVlbiBzZXJ2aWNlIGlzIHN1cHBvcnRlZCAoaW50IDVoKQ0KICAgICAgICAg
+ICAgICAgIDgwNDIga2V5Ym9hcmQgc2VydmljZXMgYXJlIHN1cHBvcnRlZCAoaW50IDloKQ0KICAg
+ICAgICAgICAgICAgIFNlcmlhbCBzZXJ2aWNlcyBhcmUgc3VwcG9ydGVkIChpbnQgMTRoKQ0KICAg
+ICAgICAgICAgICAgIFByaW50ZXIgc2VydmljZXMgYXJlIHN1cHBvcnRlZCAoaW50IDE3aCkNCiAg
+ICAgICAgICAgICAgICBBQ1BJIGlzIHN1cHBvcnRlZA0KICAgICAgICAgICAgICAgIFVTQiBsZWdh
+Y3kgaXMgc3VwcG9ydGVkDQogICAgICAgICAgICAgICAgU21hcnQgYmF0dGVyeSBpcyBzdXBwb3J0
+ZWQNCiAgICAgICAgICAgICAgICBCSU9TIGJvb3Qgc3BlY2lmaWNhdGlvbiBpcyBzdXBwb3J0ZWQN
+CiAgICAgICAgICAgICAgICBGdW5jdGlvbiBrZXktaW5pdGlhdGVkIG5ldHdvcmsgYm9vdCBpcyBz
+dXBwb3J0ZWQNCiAgICAgICAgICAgICAgICBUYXJnZXRlZCBjb250ZW50IGRpc3RyaWJ1dGlvbiBp
+cyBzdXBwb3J0ZWQNCiAgICAgICAgICAgICAgICBVRUZJIGlzIHN1cHBvcnRlZA0KICAgICAgICBC
+SU9TIFJldmlzaW9uOiA0LjENCiAgICAgICAgRmlybXdhcmUgUmV2aXNpb246IDU1LjI5DQoNCkkg
+c2hvdWxkIG1heWJlIGFkZCB0aGF0IEkgdGhpbmsgdGhlIGtleWJvYXJkIHdhcyB3b3JraW5nIGZp
+bmUgd2hlbiBJIGhhZCBXaW5kb3dzIDEwIHJ1bm5pbmcgb24gdGhpcyBtYWNoaW5lIGFuZCBJIGhh
+dmVuJ3QgdXBkYXRlZCB0aGUgQklPUyBzaW5jZSBpbnN0YWxsaW5nIExpbnV4Lg0KDQpJbiBjYXNl
+IGl0J3MgcmVsZXZhbnQsIEknbSBydW5uaW5nIEFyY2ggTGludXggd2l0aCB0aGUgZm9sbG93aW5n
+DQprZXJuZWw6DQpMaW51eCBpYy1hbGV4LWVsaXRlYm9vayA1LjE4LjktYXJjaDEtMSAjMSBTTVAg
+UFJFRU1QVF9EWU5BTUlDIFNhdCwgMDIgSnVsIDIwMjIgMjE6MDM6MDYgKzAwMDAgeDg2XzY0IEdO
+VS9MaW51eA0KDQpCZXN0LA0KQWxleA0KDQo+IA0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiBGcm9tOiBMb3BleiwgSm9yZ2UgQSAoU2VjdXJpdHkpDQo+IFNlbnQ6IE1vbmRheSwgSnVs
+eSAxMSwgMjAyMiA4OjEwIEFNDQo+IFRvOiAnSGFucyBkZSBHb2VkZScgPGhkZWdvZWRlQHJlZGhh
+dC5jb20+OyBBbGV4IERld2FyIA0KPiA8YWxleC5kZXdhckBnbXguY28udWs+OyBkbWl0cnkudG9y
+b2tob3ZAZ21haWwuY29tOyB0aXdhaUBzdXNlLmRlOyANCj4gbWFya2dyb3NzQGtlcm5lbC5vcmcN
+Cj4gQ2M6IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgDQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJFOiBpbnB1dC9pODA0MjogTWFsZnVuY3Rpb25pbmcgYnJpZ2h0bmVzcyBrZXlzIG9uIEhQ
+IEVsaXRlIA0KPiBEcmFnb25mbHkgRzINCj4gDQo+IEhpIEFsZXgsDQo+IA0KPiBMZXQgbWUgaW52
+ZXN0aWdhdGUgdGhpcyBpc3N1ZS7CoCBUaGUgZHJpdmVyIG1hcHMgc29tZSBrZXlzLCBzbyBpdCBp
+cyANCj4gcG9zc2libGUgdGhlIGxpc3QgaXMgaW5jb21wbGV0ZS4NCj4gSXQgaXMgZXhwZWN0ZWQg
+aHBfd21pIGRyaXZlciB0byBiZSBsb2FkZWQsIENvcnJlY3Q/DQo+IENhbiB5b3UgcHJvdmlkZSB0
+aGUgQklPUyB2ZXJzaW9uIGN1cnJlbnQgaW4geW91ciBzeXN0ZW0/DQo+IA0KPiANCj4gUmVnYXJk
+cywNCj4gDQo+IEpvcmdlIExvcGV6DQo+IEhld2xldHQtUGFja2FyZA0KPiANCj4g4oCcT25jZSB5
+b3Ugc3RvcCBsZWFybmluZywgeW91IHN0YXJ0IGR5aW5n4oCdDQo+IEFsYmVydCBFaW5zdGVpbg0K
+PiANCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gU2VudDogTW9uZGF5LCBKdWx5IDExLCAyMDIyIDc6MTAg
+QU0NCj4gVG86IEFsZXggRGV3YXIgPGFsZXguZGV3YXJAZ214LmNvLnVrPjsgZG1pdHJ5LnRvcm9r
+aG92QGdtYWlsLmNvbTsgDQo+IHRpd2FpQHN1c2UuZGU7IG1hcmtncm9zc0BrZXJuZWwub3JnOyBM
+b3BleiwgSm9yZ2UgQSAoU2VjdXJpdHkpIA0KPiA8am9yZ2UubG9wZXoyQGhwLmNvbT4NCj4gQ2M6
+IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgDQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
+OiBpbnB1dC9pODA0MjogTWFsZnVuY3Rpb25pbmcgYnJpZ2h0bmVzcyBrZXlzIG9uIEhQIEVsaXRl
+IA0KPiBEcmFnb25mbHkgRzINCj4gDQo+IEhpIEFsZXgsDQo+IA0KPiBPbiA3LzExLzIyIDA5OjQ5
+LCBBbGV4IERld2FyIHdyb3RlOg0KPiA+IEhpIEhhbnMsDQo+ID4gDQo+ID4gT24gU2F0LCAyMDIy
+LTA3LTA5IGF0IDE2OjU2ICswMjAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOg0KPiA+ID4gSGksDQo+
+ID4gPiANCj4gPiA+IE9uIDcvNS8yMiAxOToyNSwgQWxleCBEZXdhciB3cm90ZToNCj4gPiA+ID4g
+RnJpZW5kbHkgcGluZz8g8J+Zgg0KPiA+ID4gPiANCj4gPiA+ID4gSSdtIGFsc28gQ0MnaW5nIHRo
+ZSB4ODYgcGxhdGZvcm0gcGVvcGxlIGludG8gdGhpcywgYXMgSSdtIG5vdCANCj4gPiA+ID4gc3Vy
+ZSB3aGV0aGVyIHRoaXMgcHJvYmxlbSBpcyBzb21ldGhpbmcgbW9yZSB3aXRoaW4gdGhlaXIgcmVt
+aXQuDQo+ID4gPiANCj4gPiA+IFBsZWFzZSB0ZXN0IHRoZSBhdGJrZCBkZXZpY2Ugd2l0aCAic3Vk
+byBldmVtdS1yZWNvcmQiIG9yICJzdWRvIA0KPiA+ID4gZXZ0ZXN0Ig0KPiA+ID4gYW5kIGlmIHRo
+ZSBicmlnaHRuZXNzIGtleXMgZ2VuZXJhdGUgZXZlbnRzIHRoZXJlLCB3cml0ZSBkb3duIHRoZSAN
+Cj4gPiA+IHJhdyBldmVudCBjb2RlcyAoTVNDIGV2ZW50cykuDQo+ID4gDQo+ID4gSSB0cmllZCB0
+aGlzIGJ1dCB1bmZvcnR1bmF0ZWx5IHRoaXMgZG9lc24ndCBzZWVtIHRvIGJlIHRoZSB3aG9sZSAN
+Cj4gPiBzdG9yeS4NCj4gPiBJZiBJIHByZXNzICJkZWNyZWFzZSBicmlnaHRuZXNzIiBJIGdldDoN
+Cj4gPiBFdmVudDogdGltZSAxNjU3NTI1MzkzLjkyMjcyNywgLS0tLS0tLS0tLS0tLS0gU1lOX1JF
+UE9SVCAtLS0tLS0tLS0tDQo+ID4gLS0NCj4gPiBFdmVudDogdGltZSAxNjU3NTI1Mzk3LjA0MzM0
+OCwgdHlwZSA0IChFVl9NU0MpLCBjb2RlIDQgKE1TQ19TQ0FOKSwgDQo+ID4gdmFsdWUgODENCj4g
+PiBFdmVudDogdGltZSAxNjU3NTI1Mzk3LjA0MzM0OCwgdHlwZSAxIChFVl9LRVkpLCBjb2RlIDE5
+MCAoS0VZX0YyMCksIA0KPiA+IHZhbHVlIDENCj4gPiBFdmVudDogdGltZSAxNjU3NTI1Mzk3LjA0
+MzM0OCwgLS0tLS0tLS0tLS0tLS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0tDQo+ID4gLS0NCj4gPiBF
+dmVudDogdGltZSAxNjU3NTI1Mzk3LjA1MDM4NCwgdHlwZSA0IChFVl9NU0MpLCBjb2RlIDQgKE1T
+Q19TQ0FOKSwgDQo+ID4gdmFsdWUgODENCj4gPiBFdmVudDogdGltZSAxNjU3NTI1Mzk3LjA1MDM4
+NCwgdHlwZSAxIChFVl9LRVkpLCBjb2RlIDE5MCAoS0VZX0YyMCksIA0KPiA+IHZhbHVlIDANCj4g
+PiANCj4gPiBBbmQgaWYgSSBwcmVzcyAiaW5jcmVhc2UgYnJpZ2h0bmVzcyIgSSBnZXQ6DQo+ID4g
+RXZlbnQ6IHRpbWUgMTY1NzUyNTM5Ny4wNTAzODQsIC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBPUlQg
+LS0tLS0tLS0tLQ0KPiA+IC0tDQo+ID4gRXZlbnQ6IHRpbWUgMTY1NzUyNTM5OC42MDcxODQsIHR5
+cGUgNCAoRVZfTVNDKSwgY29kZSA0IChNU0NfU0NBTiksIA0KPiA+IHZhbHVlIDgxDQo+ID4gRXZl
+bnQ6IHRpbWUgMTY1NzUyNTM5OC42MDcxODQsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAxOTAgKEtF
+WV9GMjApLCANCj4gPiB2YWx1ZSAxDQo+ID4gRXZlbnQ6IHRpbWUgMTY1NzUyNTM5OC42MDcxODQs
+IC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBPUlQgLS0tLS0tLS0tLQ0KPiA+IC0tDQo+ID4gRXZlbnQ6
+IHRpbWUgMTY1NzUyNTM5OC42MTQxOTAsIHR5cGUgNCAoRVZfTVNDKSwgY29kZSA0IChNU0NfU0NB
+TiksIA0KPiA+IHZhbHVlIDgxDQo+ID4gRXZlbnQ6IHRpbWUgMTY1NzUyNTM5OC42MTQxOTAsIHR5
+cGUgMSAoRVZfS0VZKSwgY29kZSAxOTAgKEtFWV9GMjApLCANCj4gPiB2YWx1ZSAwDQo+ID4gDQo+
+ID4gVGhlcmUncyBubyBkaWZmZXJlbmNlISBBbmQgSSBhbHNvIGdldCB0aGUgc2FtZSB0aGluZyBp
+ZiBJIHByZXNzIHRoZQ0KPiA+ICphY3R1YWwqIG11dGUgbWljIGJ1dHRvbiDwn5ieLg0KPiA+IA0K
+PiA+IEFueSBpZGVhcz8NCj4gDQo+IEZyb20gdGhpcyBpdCBsb29rcyBsaWtlIHdlIG5lZWQgdG8g
+dXNlIHNvbWUgb3RoZXIgaW50ZXJmYWNlIHRvIGdldCANCj4gdGhlc2UgZXZlbnRzICgrIGlnbm9y
+ZSB0aGUgYWJvdmUgZXZlbnRzKS4NCj4gDQo+IERvIHlvdSBoYXZlIGEgIkhQIFdNSSBob3RrZXlz
+IiBkZXZpY2UgaW4geW91ciBsaXN0IG9mIGlucHV0IGRldmljZXM/IA0KPiBBbmQgYXJlIHlvdSBn
+ZXR0aW5nIGFueSBldmVudHMgb24gdGhhdCA/DQo+IA0KPiBMaWtld2lzZSBkbyB5b3UgaGF2ZSBh
+ICJWaWRlbyBCdXMiIGRldmljZSBhbmQgYW55IGV2ZW50cyBvbiB0aGF0ID8NCj4gDQo+IEkndmUg
+YWxzbyBhZGRlZCBKb3JnZSBmcm9tIEhQIHRvIHRoZSBDYy4gSm9yZ2UsIGNhbiB5b3UgaGVscCB3
+aXRoIHRoaXMgDQo+ID8NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBIYW5zDQo+IA0KDQo=
 
