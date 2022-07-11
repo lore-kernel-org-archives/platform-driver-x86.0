@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0CFC43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 19:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4356DC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 19:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbiGKThN (ORCPT
+        id S230325AbiGKTzW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 15:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43112 "EHLO
+        Mon, 11 Jul 2022 15:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229869AbiGKThN (ORCPT
+        with ESMTP id S229759AbiGKTzW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 15:37:13 -0400
+        Mon, 11 Jul 2022 15:55:22 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715394D80A
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 12:37:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57044220CF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 12:55:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0A5AAB811B6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 19:37:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A1955C341CB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 19:37:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2360DB811F0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 19:55:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DC778C341C8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 19:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657568229;
-        bh=BDwZNkasv5D5sFUbcCLoiGiBtLfgYACxxDTLj5FlfZ0=;
+        s=k20201202; t=1657569318;
+        bh=OXAN2H3MCDONY6Ifk/oGZXDUnx7eqckjA8DeT/PpoVg=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=NnNZbhjWdgTNUL8SPdO7IK2gAIJtqV9RIVZwpjPJdOHvGBuo5fAxoDAG1S8ezTRCR
-         TH7ib+n02VT+rtutbsICdGbkvuAOzPyB94Bblu3tabeyVdo8MNS4AmCNrB0/K3TfBX
-         Po33vpzHMdGS8xBMs9M/eU8DADIQ3hgdQHvsupFpFeWzxEVvo3nDcjWaA/Cbs/Q0qk
-         chHPXvRZu5OWt5C+VzFJemunE8RcflDsmiAyiE7j/o91jIPOJneRwRzWeZLdfC3w5s
-         /djibQaX/0gAsUUmnRP0csz8NvRkDIvgfOgwgzsXMWE0ge1lqG9/IlZ6KqxYGxCl/u
-         AbqNw7cziK/Lw==
+        b=GF/Sz/rW/huWcLBdIRdBqR9anTTNuE7HnNffS8HjwtpjhZg9d+1uq3yF8VDs0q0Dt
+         eJgWuM3IUQN7gL8oF8A0dsvLcrx0sB1JcE+GJqH68n7TlGExC1KNVnlvrJj9ENL55H
+         EYeRQTIGD9iHCt8csw24/vre1ScncIG9U8NcYvboaRZh9nY2E2wpnaeQQqX/ZIE9U/
+         0d7e5nII9E/mZg5rcJBbeL7S31YjWNlsMs0C0kqrPWA99tTE+I5MBc1uYG17FG1EyC
+         zT3gdubRc9vkoGS3kdFjRDTaJDT0uJi+7h5tkKiyxVaiLzv4GhK3S5wIA7PHvizZYx
+         ZFUSVnS4jGgsQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 7CF19CC13B0; Mon, 11 Jul 2022 19:37:09 +0000 (UTC)
+        id C016CCC13B0; Mon, 11 Jul 2022 19:55:18 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216230] "irq9: nobody cared" on Thinkpad T14 Gen1 (AMD) when
- s2idle is enabled
-Date:   Mon, 11 Jul 2022 19:37:09 +0000
+Subject: [Bug 215993] Serial Bus Multi Instantiate driver fails to allocate
+ SPI device CSC3551:00
+Date:   Mon, 11 Jul 2022 19:55:18 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Component: Sound(ALSA)
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Who: andy.shevchenko@gmail.com
+X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Assigned-To: perex@perex.cz
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216230-215701-s4gZpqUryp@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216230-215701@https.bugzilla.kernel.org/>
-References: <bug-216230-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: component assigned_to
+Message-ID: <bug-215993-215701-CctiCF5W5P@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215993-215701@https.bugzilla.kernel.org/>
+References: <bug-215993-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -67,12 +67,19 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216230
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215993
 
---- Comment #14 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Try using this instead:
+Andy Shevchenko (andy.shevchenko@gmail.com) changed:
 
-dyndbg=3D"module pinctrl_amd +p"
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|Platform_x86                |Sound(ALSA)
+           Assignee|drivers_platform_x86@kernel |perex@perex.cz
+                   |-bugs.osdl.org              |
+
+--- Comment #23 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+I see. So it seems the best approach is to wait what Cirrus will do.
+I reassign this to the ALSA, because SPI issue has been fixed.
 
 --=20
 You may reply to this email to add a comment.
