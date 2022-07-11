@@ -2,102 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02E0C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 11:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B21C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 11:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbiGKLpL (ORCPT
+        id S230445AbiGKLsG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 07:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        Mon, 11 Jul 2022 07:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbiGKLox (ORCPT
+        with ESMTP id S230106AbiGKLrs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 07:44:53 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166AC1A1;
-        Mon, 11 Jul 2022 04:41:33 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id v21so1684902plo.0;
-        Mon, 11 Jul 2022 04:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XFN3Kyiudf896LabgETt2hdX1v48HrkVIcYMpIGJ6GU=;
-        b=LLnwtfTzrW5Jxiby1mAMYGY6pje0/utXz7cGptyMG7FNOB7GPN0OXr1le5yB99IQgS
-         jCWU/5f7iyBrEcrXRnhYllHkgwNGMV+MuAuFJNjj+CBwDhcl3Cs2AKPFCEFTPhIAvKXY
-         XCKn36WHJFgSkr+Con5OEoj5DKA53TwHdEqPynJAtJz+TJ0/CeV81aqHPGtvdIgUjP2o
-         hE3WvW/kDOrY0pDdoL3rJihXga6vswzbRj5uDHRho1M1pWAU8Ea0m1RsCasWU5NDfZx/
-         cBSjr3HpOU8GBMMNSEJ2hESOPXES2qWR/OH9syYVMjprKBjVBgtJke2hcS1CvFPome8N
-         BQjg==
+        Mon, 11 Jul 2022 07:47:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EB3E1D7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 04:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657540033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5y2xr3Vx8OQwRCbGVz5PkIj/TcERMyOp8kvktoro/qE=;
+        b=hPJXGiEszlANB6EDTC2XRDa1msam2L5DwcVzWQOSgjdDWwJmAk0wVT4+TDxmlI1qijOGw9
+        Okx1g/Qwp2muaV7+L6mc84tgUKbGHXEW/AxoexFhe1LwLmC9zolmkX1eDwBv9OXO52cuzl
+        8PhfCHKH/vjbs3YIDWXelT3kuCHXH7s=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-351-1tFBaejSN6CutjuoY7Qdxw-1; Mon, 11 Jul 2022 07:47:08 -0400
+X-MC-Unique: 1tFBaejSN6CutjuoY7Qdxw-1
+Received: by mail-ed1-f70.google.com with SMTP id c9-20020a05640227c900b0043ad14b1fa0so1877342ede.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 04:47:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XFN3Kyiudf896LabgETt2hdX1v48HrkVIcYMpIGJ6GU=;
-        b=QcpVIEV/63WsuHmoFfZF8oAILMFeUH1OYCc2RLc87UoVHIo3c/NSTAmNAMPDsieCOg
-         92DuRtalupajLGsy4c2D235joZq2QpTO/9uGSfte7ENCcQNV3CkWnQIf3m54yNZHK7sA
-         XgICM/+bCBUACFAlf5SEqHs02u3Ew3TjLpm/C0VjJKZL9R9cY8E3UGXoLyuvvLlFQxsY
-         JTCH7RwGZQwKJ6XN3aaV7/MzdOm2l5JXAbsY4kq6/WZTvpFNPxDSx+MyxFehqt/9RT91
-         clk8wMcE6J3eiYewG0dYKScQv0qHppYzP6JNuFiiaTX7lZoQdyM18LrgaqPK/uCB6iBW
-         afRQ==
-X-Gm-Message-State: AJIora/P1ay6cs41zuxgK2Qfy6JcHddq1YyecyrDPfkgK9ElD8lCzJec
-        LtPGId1DDcWYEubnv0NQdqA=
-X-Google-Smtp-Source: AGRyM1uFuNYMi8HbuR1ZPtyNiT+jzToYC5Qgwr1xGtqjrfJys4b0Zij24tlW9WkQBYXQtjfIBkEtAg==
-X-Received: by 2002:a17:90b:4c0f:b0:1f0:3dba:bdb0 with SMTP id na15-20020a17090b4c0f00b001f03dbabdb0mr5209790pjb.6.1657539692273;
-        Mon, 11 Jul 2022 04:41:32 -0700 (PDT)
-Received: from paddy-ASUS-EXPERTBOOK-B1400CBA (61-216-65-192.hinet-ip.hinet.net. [61.216.65.192])
-        by smtp.gmail.com with ESMTPSA id e7-20020a17090301c700b0016c4f006603sm1463359plh.54.2022.07.11.04.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 04:41:31 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 19:41:27 +0800
-From:   PaddyKP Yao <ispaddy@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     PaddyKP_Yao@asus.com, Hans de Goede <hdegoede@redhat.com>,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=5y2xr3Vx8OQwRCbGVz5PkIj/TcERMyOp8kvktoro/qE=;
+        b=BELzxuWGaqSKzaS/tQXfMIfpJLmqyPLFeS3gyeKWdH+8WpxlzR02FQOKewIQnn2rQY
+         cchKgPlEG5bNpIgBex17CULsDKHX91krT3o6WpTETNQuBVlzcnzfZoZgSQEHImEVWtAr
+         6spFfcm4rCK0AzG/oClbwaCEIpDvgcxgItF11Co3sBoNeBa1CgYtWXEnwrmpplJsixrz
+         0+V20Dzn/1MIbIzlU8QGHGVEECLjmFqKEXLk2kXRyGrtDILE88T17zIho8YSHfJ97AYb
+         RbqLQSupxTLeI0vUhIEbae7jI70O0a0NUy8GKXo4oFY1viytXsGxGBRadK9arGV30Mj3
+         k1ow==
+X-Gm-Message-State: AJIora9uyjwpvMfQ3J+vFjA1moVGuLRNmsquDTpcYz3gTBZx2noTOh1b
+        +It8l9gIjxG1zZGHqzboH6JO83bOffyv/F7qUG41rRZZZ0kXyA/nK2FqLbbA7mTWj8na/GJo7yN
+        frRrZFK7SHH6labupuiJ4Cfw9+S5Zoa4alQ==
+X-Received: by 2002:a17:907:168c:b0:726:c521:25aa with SMTP id hc12-20020a170907168c00b00726c52125aamr18125277ejc.46.1657540027217;
+        Mon, 11 Jul 2022 04:47:07 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uigjXoyFbpZ7GXNNBz8Nrc+N2ZvmSbHZ4faDHCA9Dj8i7rNqjuANtp8LwCYs6GrD2hWSVG+w==
+X-Received: by 2002:a17:907:168c:b0:726:c521:25aa with SMTP id hc12-20020a170907168c00b00726c52125aamr18125258ejc.46.1657540026969;
+        Mon, 11 Jul 2022 04:47:06 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id fy6-20020a170906b7c600b0072aed3b2158sm2609073ejb.45.2022.07.11.04.47.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Jul 2022 04:47:06 -0700 (PDT)
+Message-ID: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
+Date:   Mon, 11 Jul 2022 13:47:05 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
+ support
+Content-Language: en-US
+To:     PaddyKP Yao <ispaddy@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     PaddyKP_Yao@asus.com,
         acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
         Corentin Chary <corentin.chary@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Luke Jones <luke@ljones.dev>,
         Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
- support
-Message-ID: <YswMZ5Il+5yde3+f@paddy-ASUS-EXPERTBOOK-B1400CBA>
 References: <HK0PR04MB33636680A6DC47211560BB43FA879@HK0PR04MB3363.apcprd04.prod.outlook.com>
  <20220711024718.1700067-1-PaddyKP_Yao@asus.com>
  <CAHp75Vfnt0DX9wnx0pKhit4JWCjBST+4caTjY6x6VYNdGjqn9Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vfnt0DX9wnx0pKhit4JWCjBST+4caTjY6x6VYNdGjqn9Q@mail.gmail.com>
+ <YswMZ5Il+5yde3+f@paddy-ASUS-EXPERTBOOK-B1400CBA>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YswMZ5Il+5yde3+f@paddy-ASUS-EXPERTBOOK-B1400CBA>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-<accidentally hit send to soon, trying again>
-
 Hi,
 
-Sorry for mistake about send two patch mail again...
-After some try, I cannot remove legal message from asus mail.
-I will use my gmail and send patch again.
-And may I use author PaddyKP_Yao@asus.com instead of my gmail account?
+On 7/11/22 13:41, PaddyKP Yao wrote:
+> <accidentally hit send to soon, trying again>
+> 
+> Hi,
+> 
+> Sorry for mistake about send two patch mail again...
+> After some try, I cannot remove legal message from asus mail.
+> I will use my gmail and send patch again.
+> And may I use author PaddyKP_Yao@asus.com instead of my gmail account?
 
-Many thanks for your kind feedback.
+Yes I can fix that up for you.
 
-On Mon, Jul 11, 2022 at 10:50:29AM +0200, Andy Shevchenko wrote:
-> On Mon, Jul 11, 2022 at 4:47 AM <PaddyKP_Yao@asus.com> wrote:
-> >
-> > From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
+Regards,
+
+Hans
+
+
+
 > 
-> Besides we got two emails again of the same version...
+> Many thanks for your kind feedback.
 > 
-> > ===================================================================================================================================
-> > This email and any attachments to it contain confidential information and are intended solely for the use of the individual to whom it is addressed.If you are not the intended recipient or receive it accidentally, please immediately notify the sender by e-mail and delete the message and any attachments from your computer system, and destroy all hard copies. If any, please be advised that any unauthorized disclosure, copying, distribution or any action taken or omitted in reliance on this, is illegal and prohibited. Furthermore, any views or opinions expressed are solely those of the author and do not represent those of ASUSTeK. Thank you for your cooperation.
-> > ===================================================================================================================================
+> On Mon, Jul 11, 2022 at 10:50:29AM +0200, Andy Shevchenko wrote:
+>> On Mon, Jul 11, 2022 at 4:47 AM <PaddyKP_Yao@asus.com> wrote:
+>>>
+>>> From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
+>>
+>> Besides we got two emails again of the same version...
+>>
+>>> ===================================================================================================================================
+>>> This email and any attachments to it contain confidential information and are intended solely for the use of the individual to whom it is addressed.If you are not the intended recipient or receive it accidentally, please immediately notify the sender by e-mail and delete the message and any attachments from your computer system, and destroy all hard copies. If any, please be advised that any unauthorized disclosure, copying, distribution or any action taken or omitted in reliance on this, is illegal and prohibited. Furthermore, any views or opinions expressed are solely those of the author and do not represent those of ASUSTeK. Thank you for your cooperation.
+>>> ===================================================================================================================================
+>>
+>> ...this is problematic and can't be used in open source projects. Ask
+>> your legal team how to deal with it.
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
 > 
-> ...this is problematic and can't be used in open source projects. Ask
-> your legal team how to deal with it.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+
