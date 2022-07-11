@@ -2,70 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F90C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86196C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 08:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbiGKIq1 (ORCPT
+        id S229723AbiGKIq3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 04:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56534 "EHLO
+        Mon, 11 Jul 2022 04:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbiGKIq0 (ORCPT
+        with ESMTP id S229707AbiGKIq2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 04:46:26 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2042.outbound.protection.outlook.com [40.107.244.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB0BE1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 01:46:23 -0700 (PDT)
+        Mon, 11 Jul 2022 04:46:28 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2052.outbound.protection.outlook.com [40.107.243.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF299E1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 01:46:27 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UJ5B2o+3ev6Vcyil95b9YSoADhjM2pRGjzY+0oac6v34kIXDAIjMlGnA7hwzWlMtKHsIgukxzlfuN/9KR0u+puM/+bkHcNlUoQhlscxGxK5kIQRidC1X79szN0M+D1ptTnBfS5q7GajnlyXlyBr2DBO+cBZMCmiIBOolFmGwiS4NvTubN6x0GeLdX4x7npYLijuTpzPcwm1XkVc7mrcVHHSRTjLx7Ibh03c6NlaZLKE6Y5G71uFmyHh95ezae5tZbaQ3+0r2OcbdPeX1HKfHgGAiVSku7ufSIzdQ0bpSva9SatDWpip30t9S7jx+COtCrRdLqQMrQbhcMRRFUU6g8Q==
+ b=ATfGvssa7FKE44HUV5vKbxsMgSQN4ZbCXY7JPnnhkrTtHzR1Qlv0OZzK1qRNrWNjvVSxbdRZRCyOGsVHB+xhf27vKgOhGLMVPq3TLKNnojz7Hwilfj4jWuJAv+E4kqd03GvEm+gU7n8wLuCLDw6LpSzgzwgmOzzWmunDaMyx21rwI9g/312HBe6K1wWq4OjTYRlvnIF8aPM/4x/M2Gppd3MKlxg9+eJ80qSgO009ievOfrRs55erDnURfW/6yhc97tXjzFgS1Zk5oclDsfA2DWSS4felvgpp4Ff1GjcSPFMh3s7/NxNjEku3hFAf0u6aQCMFfjq71NO3e56TrBPBFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J+UAglLSYOss4M9efvV/lfjgGo+aXuZ4/Tunbi7xfnw=;
- b=NQrrLYcbBtt8j7RdrJrkeHZ6hz5vcfQ+ElRrSDNj0K2Erk9mTaCadqjNTK2K4B9jCaNqyHVRdPSRsRY6EVh+JK8h1UmtD4zz2Ba/T7sZGOOI1ikEH7/H/MUCli0Ec97Vki/HU5QB27tKeVkpsO7uQvfnao6tCIWvj5+qo69bwzmeiIvlLzlCxekDUVWwWexCzTFH6YJF3RZdRaGPHPNSuIAWEBgNcVuPV1g0D7qJuAM9pSZxKsE5RJPF6I9HXlE3QhPh+sYF1Si89XyP7VHV+e9EsMrPCUgjToNMhUhCmTGPOFygZtALS48KcFOnjB4cOVA6r63H1ba3n0eofVEm2g==
+ bh=W59ItjG2R0b9VJ1GIexR/gkzt6C1Oh08iAS2gVvQVrQ=;
+ b=nX0cxl16zfXRr+qzmk2/7/+yCyxWF7ecKsIbOb0YlNJH6Pk2G2pyBnbQ3LwrxB51rGTAbLvH1wN6WwXh7KaKOnHazfA7eVhpOo+AebRol1fw9dMpymA8Gvzb4Egxr8aL/8peLwtCSktjDHvW0b8DCcT1ceeKrWRcUxkqRZnY4bEGr/4nRFVWEs1/DLucmh6by0uG4/He74npNIs8l4jntaIvF4CFypr/EqFPzkE1l4JALX6Xw/Rop62tIvBZ8vG6GMEwFp2ty/4QJ/STmhwkLAgJFVOTA+4YpTn7YXHyRn7h9+EbUr1c0N1jSF2+7jtxgcF3pgOqqCgNSX7UNXWxMA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 12.22.5.234) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J+UAglLSYOss4M9efvV/lfjgGo+aXuZ4/Tunbi7xfnw=;
- b=rqw1OZEkLOJXnzUDlNKpw4eLLpo198+GgAqgFArqZrAfl/AVuWSnp+KvPfbMNNz+w8hift047ws0ATwPxCtU8GGms4JgbLUBKAmSxnO7EAJbv5CxmIggDhZ/uJieKER0YCco9FCZy4vUE+vY2y/UbCjAMRAWfOPV0GO19WiNo5pt4wUBdAqFUSAmputdVTuugtdXFZSCwW2MS5XNrBY0TpvoU5DMobqIDPwSTkYsBp8nyGTn1mCCZsb19GMUXAMeg9W6DjA29LC0dHsceK74LKplqzpc5lAHqXClEhVsF04c1Jy6t3UbnQhNnUo+dfl02qKKBC2ZrjQK9eEstzM2bw==
-Received: from MWHPR10CA0003.namprd10.prod.outlook.com (2603:10b6:301::13) by
- SN6PR12MB2831.namprd12.prod.outlook.com (2603:10b6:805:ec::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5417.16; Mon, 11 Jul 2022 08:46:20 +0000
-Received: from CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
- (2603:10b6:301:0:cafe::ac) by MWHPR10CA0003.outlook.office365.com
- (2603:10b6:301::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.17 via Frontend
- Transport; Mon, 11 Jul 2022 08:46:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
+ bh=W59ItjG2R0b9VJ1GIexR/gkzt6C1Oh08iAS2gVvQVrQ=;
+ b=VuzRbPLlRWxMTyWVxS+5ixwMQqkMB8i6eHU2P+KEFgc81mBqas08jtbVtJkVlg70SszRprk2yQDQI7Th8JGboEQ7ngq2TybVfLJqWC3am9zp+uNGbBB40cdvAUO48+i/X0SN0LV7yaX1FNQqaDoB6FKRAbH/A5g+5fiqLyarBXUBA5V3ecfG6/bqAasdksI6FFW3Jox+OyQheFCiPF67ByEhoqXa3l5zBg2euC9O6nLTsNEhDWW8AGWQvB7Vx8vDvTuZL+zLFfdA3d4AxdOO5W7u8RIdzO6i0PpsIjCaq3zyS4gHqI/g7UDywKhgwXmH6+oklM5ldsqIyNLC2+w04Q==
+Received: from BN9PR03CA0124.namprd03.prod.outlook.com (2603:10b6:408:fe::9)
+ by BN8PR12MB3011.namprd12.prod.outlook.com (2603:10b6:408:4a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.23; Mon, 11 Jul
+ 2022 08:46:26 +0000
+Received: from BN8NAM11FT046.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:fe:cafe::45) by BN9PR03CA0124.outlook.office365.com
+ (2603:10b6:408:fe::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20 via Frontend
+ Transport; Mon, 11 Jul 2022 08:46:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.234)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (12.22.5.235) by
- CO1NAM11FT054.mail.protection.outlook.com (10.13.174.70) with Microsoft SMTP
+ 12.22.5.234 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.234; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (12.22.5.234) by
+ BN8NAM11FT046.mail.protection.outlook.com (10.13.177.127) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5417.15 via Frontend Transport; Mon, 11 Jul 2022 08:46:20 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Mon, 11 Jul
- 2022 08:46:19 +0000
+ 15.20.5417.15 via Frontend Transport; Mon, 11 Jul 2022 08:46:25 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL101.nvidia.com
+ (10.27.9.10) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Mon, 11 Jul
+ 2022 08:46:25 +0000
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.26; Mon, 11 Jul 2022 01:46:17 -0700
+ 15.2.986.26; Mon, 11 Jul 2022 01:46:23 -0700
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 0/9] platform/x86: mlx-platform: Extend to support new systems and additional user interfaces
-Date:   Mon, 11 Jul 2022 11:45:50 +0300
-Message-ID: <20220711084559.62447-1-vadimp@nvidia.com>
+Subject: [PATCH platform-next 2/9] platform/x86: mlx-platform: Add cosmetic changes for alignment
+Date:   Mon, 11 Jul 2022 11:45:52 +0300
+Message-ID: <20220711084559.62447-3-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220711084559.62447-1-vadimp@nvidia.com>
+References: <20220711084559.62447-1-vadimp@nvidia.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -74,68 +77,103 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d49b8928-089d-45e1-cd89-08da6319d3ce
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2831:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7243c3c-cf0a-415a-2897-08da6319d725
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3011:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RVjgMeKVX23MBltsp7RtwAol+5CIGhfOvPt7SYqBjFYHTApjHT2WLCWy+gHtrGAWEEj9vyCsqVywp6v4pII2Sf0VZyn55WComum6B0u7ztNU/oFl9Ov8iDNG4qY48ghsDn4ssmrMwutH6WRrSUMa/PfSWZ3OdX4ZRiat1eKl8Hg+p9dopmsFhEqQGzVsyzkB57y/liObTF3+caAY0+MbnNKZepjGRrBQ7/5j2ijgAEBNR1htZJtsTrrx8mV1aVu8P109dlHQcnsobxjB896xWDZTkfhXZ6hgpoxyWHbRVo7xBfkgQzoEJbfOpZoUb633LYfdezPqSqxQzynjHYtV07pVd1UcWCVnqA6+ESa+/KBYcnbfg9qSjQYeOOy+0oBWErZoW6yr8UMikE7DtK/Qekb0FxjyGlZ72TL77PEoexQOrYhVv5Mr7On2FTbVfIftSdDE3HHZgIr/MmBZlpMN9CU/871dg3B4mS6J//aHMNUfOrQesdRt1EM1zb/dgbBsvJpZaY2jGjVnC1z2mn/FomZnD26kgC2jtejnGqmI7IQhf4J/Ho+bLdGWcTIcw7BB8kUeGZ66gQgcZLaDOqSqY6P9vgaRTpeFxReRxaG5dLb5rl2O8YHszWR8PPA57Lv5Qzqny2W7z8hMq1vZJoH0ZctEPZmm+EWCsFvkapVsH/cEhmQTd5PWQhN8g6WIA7DuLLk3XURiqeuHRw9C5MJ2N1WHlkAiy1xj/plQKk9ZKWHH2AsHCTtTOj31J81NtyO4hiGl9kUo+3S0KZq4NusoEBABfIltk7roSEInP3gKODX8k+H0cI0VR37KQr0ixYXxMDwO+/+6tePgitwmzWv6jPsrU1wLrWOmxyaqqa6FnMI=
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(346002)(376002)(40470700004)(46966006)(36840700001)(36756003)(83380400001)(107886003)(2616005)(336012)(82740400003)(4326008)(47076005)(186003)(1076003)(5660300002)(70586007)(356005)(16526019)(8936002)(70206006)(426003)(2906002)(8676002)(40480700001)(82310400005)(40460700003)(41300700001)(6916009)(6666004)(54906003)(26005)(36860700001)(86362001)(81166007)(478600001)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: vrWWYggj8ZIJ4+cty91sEkBKgooAeQfU1mtt/3/jUrLlnQjTMbjqYnZsAeuP9yfmtG3hkyzgmNi1I91T38zeRpReLKLRf7IM1NjcxUfaI7bn9r5mlf1/jd0b3KtbIMj0l05ItIUl78SrxF3PfGz3MvY+IFctkYlb0cSKhu1HKHzOkcq7Wyc8E2wpapvoG602qcAJJYekEPdTuSa7srsBUWO8pMhwX+R0XQSUryEUyaVKBS/2BciLWVS7PvmzkOk/A9LUYUPmz6KpC6MZ9Iii+G8u0U8oSby+/BcHU9u1lNMywfXMMZeF/YjQI4C2A1/jtH84mhQpu+zcPRgY/b72a6bPqR0+2Ty+x1uuhqSbTPE16osxgg+PaS6Pl8JovAe773fYt5iMs3JOmfxHsDYqWzPVROl4pq5vlrusIti4ZBkhCHeOGwz4qs+7Sdx/X/x3l59zqgD1mcXJ/+nh4BQHabrsNNKosqsv5/oA2Cwd9dUqCDWc+xYxC9n6P0QimaXpCiD8mGJ9JZLsxbH9xpACaQWcj7tL4bkoPokBPjoSFK/tMSG+myibwkg4sRvQ0G6BFQ1Jw89oeshWH7hc5NaYvp0m34T7DzYwWWX55YhNJeRqeWfkyKilhRQZQm2Rgb2J8dkHDLOp8+mCk6wBp7WHqz5+/QdYirNHMC+K6t1IV4f7CNbzbtjhzw31Gs+LyRMRc6OvPNzA1TpK5/Ka2vYAlOF/HSQ2+oQaZsvViyXHVBHzpogyPQpdoxx7lbHZT0F/JfgE/PneXKuMUE1saL0PQFv7TpNu7RZriV+i8ys/gR2b5xIkt2E9NrtphdqHdg9qek55HKfSmt55/fEcFRMtuWT6k8klneKW2gM9AruHmec=
+X-Forefront-Antispam-Report: CIP:12.22.5.234;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(136003)(39860400002)(396003)(46966006)(40470700004)(36840700001)(26005)(6916009)(54906003)(40460700003)(8936002)(1076003)(40480700001)(81166007)(316002)(6666004)(86362001)(356005)(478600001)(82740400003)(70586007)(4326008)(41300700001)(336012)(186003)(8676002)(16526019)(36756003)(83380400001)(5660300002)(2906002)(426003)(36860700001)(82310400005)(47076005)(2616005)(107886003)(70206006)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 08:46:20.4130
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 08:46:25.9653
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d49b8928-089d-45e1-cd89-08da6319d3ce
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7243c3c-cf0a-415a-2897-08da6319d725
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT054.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.234];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT046.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2831
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3011
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The patch set adds:
-- Support for new systems:
-  - COMe NVSwitch management module for Vulcan chassis containing
-    Nvidia's Hopper dGPU (GH100), NVswitch (LS10) based HGX
-    baseboard.
-  - XH3000 system, which is a water-cooling Ethernet switch blade
-    equipped with 32x200G Ethernet ports.
-- Support for systems equipped with two ASICc.
-- Logic for selective activation of some drivers.
-- Documentation fixes and introduction of new attributes.
-- Locking protection for IO operations over register space.
+Align the first argument with open parenthesis for
+platform_device_register_resndata() calls.
 
-The patch set contains:
-Patch #1 - extends logic for selective activation of some drivers,
-	   depending on system type.
-Patch #2 - contains cosmetic changes.
-Patch #3 - adds support for systems with two ASICs.
-Patches #4-#5 - introduce new systems.
-Patch #6 - adds new feature for system minor revision changes.
-Patch #7 - adds locking for IO operations.
-Patches #8-#9 - documentation changes.
+Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+Reviewed-by: Oleksandr Shamray <oleksandrs@nvidia.com>
+---
+ drivers/platform/x86/mlx-platform.c | 36 +++++++++++++----------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
-Vadim Pasternak (9):
-  platform/x86: mlx-platform: Make activation of some drivers
-    conditional
-  platform/x86: mlx-platform: Add cosmetic changes for alignment
-  platform/x86: mlx-platform: Add support for systems equipped with two
-    ASICs
-  platform/x86: mlx-platform: Introduce support for COMe NVSwitch
-    management module for Vulcan chassis
-  platform/x86: mlx-platform: Add support for new system XH3000
-  platform/x86: mlx-platform: Add COME board revision register
-  platform/mellanox: mlxreg-io: Add locking for io operations
-  Documentation/ABI: mlxreg-io: Fix contact info
-  Documentation/ABI: Add new attributes for mlxreg-io sysfs interfaces
-
- .../ABI/stable/sysfs-driver-mlxreg-io         |  81 ++-
- drivers/platform/mellanox/mlxreg-io.c         |  23 +
- drivers/platform/x86/mlx-platform.c           | 491 ++++++++++++++++--
- 3 files changed, 526 insertions(+), 69 deletions(-)
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 54c99f3fde51..12d56d7090f1 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -4830,22 +4830,20 @@ static int __init mlxplat_init(void)
+ 	nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
+ 	if (mlxplat_i2c)
+ 		mlxplat_i2c->regmap = priv->regmap;
+-	priv->pdev_i2c = platform_device_register_resndata(
+-					&mlxplat_dev->dev, "i2c_mlxcpld",
+-					nr, mlxplat_mlxcpld_resources,
+-					ARRAY_SIZE(mlxplat_mlxcpld_resources),
+-					mlxplat_i2c, sizeof(*mlxplat_i2c));
++	priv->pdev_i2c = platform_device_register_resndata(&mlxplat_dev->dev, "i2c_mlxcpld",
++							   nr, mlxplat_mlxcpld_resources,
++							   ARRAY_SIZE(mlxplat_mlxcpld_resources),
++							   mlxplat_i2c, sizeof(*mlxplat_i2c));
+ 	if (IS_ERR(priv->pdev_i2c)) {
+ 		err = PTR_ERR(priv->pdev_i2c);
+ 		goto fail_alloc;
+ 	}
+ 
+ 	for (i = 0; i < mlxplat_mux_num; i++) {
+-		priv->pdev_mux[i] = platform_device_register_resndata(
+-						&priv->pdev_i2c->dev,
+-						"i2c-mux-reg", i, NULL,
+-						0, &mlxplat_mux_data[i],
+-						sizeof(mlxplat_mux_data[i]));
++		priv->pdev_mux[i] = platform_device_register_resndata(&priv->pdev_i2c->dev,
++								      "i2c-mux-reg", i, NULL, 0,
++								      &mlxplat_mux_data[i],
++								      sizeof(mlxplat_mux_data[i]));
+ 		if (IS_ERR(priv->pdev_mux[i])) {
+ 			err = PTR_ERR(priv->pdev_mux[i]);
+ 			goto fail_platform_mux_register;
+@@ -4906,11 +4904,10 @@ static int __init mlxplat_init(void)
+ 	/* Add FAN driver. */
+ 	if (mlxplat_fan) {
+ 		mlxplat_fan->regmap = priv->regmap;
+-		priv->pdev_fan = platform_device_register_resndata(
+-					&mlxplat_dev->dev, "mlxreg-fan",
+-					PLATFORM_DEVID_NONE, NULL, 0,
+-					mlxplat_fan,
+-					sizeof(*mlxplat_fan));
++		priv->pdev_fan = platform_device_register_resndata(&mlxplat_dev->dev, "mlxreg-fan",
++								   PLATFORM_DEVID_NONE, NULL, 0,
++								   mlxplat_fan,
++								   sizeof(*mlxplat_fan));
+ 		if (IS_ERR(priv->pdev_fan)) {
+ 			err = PTR_ERR(priv->pdev_fan);
+ 			goto fail_platform_io_regs_register;
+@@ -4924,11 +4921,10 @@ static int __init mlxplat_init(void)
+ 	for (j = 0; j < MLXPLAT_CPLD_WD_MAX_DEVS; j++) {
+ 		if (mlxplat_wd_data[j]) {
+ 			mlxplat_wd_data[j]->regmap = priv->regmap;
+-			priv->pdev_wd[j] = platform_device_register_resndata(
+-						&mlxplat_dev->dev, "mlx-wdt",
+-						j, NULL, 0,
+-						mlxplat_wd_data[j],
+-						sizeof(*mlxplat_wd_data[j]));
++			priv->pdev_wd[j] =
++				platform_device_register_resndata(&mlxplat_dev->dev, "mlx-wdt", j,
++								  NULL, 0, mlxplat_wd_data[j],
++								  sizeof(*mlxplat_wd_data[j]));
+ 			if (IS_ERR(priv->pdev_wd[j])) {
+ 				err = PTR_ERR(priv->pdev_wd[j]);
+ 				goto fail_platform_wd_register;
 -- 
 2.20.1
 
