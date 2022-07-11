@@ -2,70 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BFACCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 08:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF4C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 08:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbiGKIs1 (ORCPT
+        id S229934AbiGKIsc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 04:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        Mon, 11 Jul 2022 04:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230173AbiGKIsT (ORCPT
+        with ESMTP id S230249AbiGKIsW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 04:48:19 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB9613DCB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 01:48:01 -0700 (PDT)
+        Mon, 11 Jul 2022 04:48:22 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2087.outbound.protection.outlook.com [40.107.96.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126AF21819
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 01:48:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oEm7C5kxARdSipYLzV2aFxay0RZYncgv0ztGGEJ/IVhvOVPK3WG39ZGa/9vYsAqYolmZoRvOPRi+7C9Kf+tE3NY/ds0qCds+iedo2xs+GHOosRi4N0qaw1tSwCoeE2SB0vSDWc1nGrtl/96PEkPCmyW4Vz1A5DIdrdvJEqIeq18918KMlrbvsmMzwGSj/aN8irsLept6Y+zduOvkGBHH0KACg2TaSiaW68qBV+gz48ZAK5y/LG4tLRcL1WlHVhtINlKNltAnfd4WYau7eXH2spmDbrSyABZRPQH7CnKX677x44jpHLe5O7y//qwFo3NJHE6pFeZO2IbCsk5YbrQt4A==
+ b=WZDLH1mRacROXUmfEKpS0+WMyJX9HOVbMqAujSuFYljtpD1fkkK5OoRonvgOXXZ94iYfoeXIf4xqgp9XI9rpwOzieNU/hODkBynDRHTI8tHnW1PZ1eUaMFfmTQEctMI771N+fAfu8BV+dFVqtFWpVYFh8c1cG0wCtl+8KTd9WyXYFMMQz1pR2+4QW7wIJ9bZvbBcunONn5rPbKLQApwhWi7itASt68wlznCKOhgue9QLNoImrU4MyxKiLsojQRdBQIn0YbudxIjSnYXpXtKtl+1+Pd3TavzWbT4Ww/o/P+JxuDeqXO/m9CO6NVYsCgKprgJPZkeyuRLoGbaQu9fBuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/6QieKwO8ffZyB42x7wkIjcGCZ1CIuzAJuve1kcw54g=;
- b=AUlkfxukvg04QdJga79J1VtQiK+0bstTpIkBf9Yrb1FQLSd4Z8HvqbNvGrVYAdpjio8Sk4ls9d2j/vD+/ScK5gu+jErrw3YS1Y4mu4oc4bPT+SmYkAd8FqhwvOPT6jnuju4Q9y69zzkEt7eIsuECL/lKBCqY8PzZB1MCqh1kr430vKEtREB9j4GMaoC9WE/Iy47JnYq08lSd2VJCsFlMbRktg5Ui9Ty9HkNdO8bINtBfVznnb0004Q6md4K3Fh2vVUqKmykIaQIffzQ2iNIFlK0oPGsw0D4zPAHasnBSOjEA2CCA+yzgN2HfoGh410y5vrL4aNvZSpWgJ5ZY5Obing==
+ bh=cr6zSL21C9NeY9zRCiXFXMDn5InyiRXP65KEp2DLeZU=;
+ b=oCDjNykJW2DuAmVCE+z+Sb1F+/hIQxUva4eIC9gxtTedeEqRjB33wzdAHEQN2k0mZRehPVOWO6NQSnSD1ZVJi2nOinl/NU/wdiT1rQckZZhK0mIlSfjNAEPeYF+kVED/CvM19fQqgghfg6LZ8lhH8ScyWmWO5UTsPiU4ifjaE92GSHwYz1OP2U1XWqDCLMY5R7YEpQCLYCy/6rpjss7IXWs7tug/6+8HrZpTsk3p7Be3R5KiJahQmxJh8ZQnEv5NVbBDLW6XiDPXYX4lUTQ5UPdD72GsU9Hu6Y5ciCSjdTEHb49CX3fO3+eIFOdNGTEWjmZJyJVWgn5ZKd63cViAIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 12.22.5.238) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/6QieKwO8ffZyB42x7wkIjcGCZ1CIuzAJuve1kcw54g=;
- b=o7tZyd72fRmhEiUZAQbLlIj8mi3uUpsJLgKvj69T+YhYgAvn/nX8PGurv+cdkhp4WLJLvdruC3mg3BSoScvsr17d0uzjY5P3Uj6qPdgHjZthxO2CVOx4ukBttsRfrOjjWbLiZTuJswXmKfP6HB0yD6HpHvklgt/Wu1wqDpM3iUUjAeNZg1Ee+pC0kivIRyoNB21kADGx76iylOzSoOHGSVNJkW/9ds+d+TvdYIzeu4icW5SxMZdzhCNsLoZYXItaGT22vO2lVtzNyyAE0JDzAenT/d1eU3epE9oxKyOPpNMaHUFgO2ffVHjiYmxTEuxuFuudUPiXENFg4oCPTVcvZg==
-Received: from MW4PR03CA0046.namprd03.prod.outlook.com (2603:10b6:303:8e::21)
- by SA0PR12MB4511.namprd12.prod.outlook.com (2603:10b6:806:95::9) with
+ bh=cr6zSL21C9NeY9zRCiXFXMDn5InyiRXP65KEp2DLeZU=;
+ b=EnLkJUNbfWlgEEm03B2hIFlLmBxs2bmrcEsI2+OJObf7BBcjZ98vMxvwdsdEjuWTJxydK7eFaKyprXefjKVCqQpMT3R9iK4IDqgS+GH/2UkUspKwGfZXdsrKFCOeugp0sp43LD97+p+dGwbj230kpvUXayr2OVkdLAFA4f+s/gkITNRs7OSyaXTVLXiOEpLRyfxq5YQzJXy1cY6tuY4PWSDoLoRLXnkXu59nOWJo7WRR8V6qhTFVxvRGl0ywAZDC7mUhzVwFsN5yMkMDgksWqlzxB/04V3zbi1NTu6hXTIQ8CD6nWRycjTAEGAyf38psyLkMX8gjnjpeoivTwb0Z5Q==
+Received: from BN9PR03CA0434.namprd03.prod.outlook.com (2603:10b6:408:113::19)
+ by SJ1PR12MB6196.namprd12.prod.outlook.com (2603:10b6:a03:456::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Mon, 11 Jul
- 2022 08:47:59 +0000
-Received: from CO1NAM11FT028.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8e:cafe::52) by MW4PR03CA0046.outlook.office365.com
- (2603:10b6:303:8e::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.20 via Frontend
- Transport; Mon, 11 Jul 2022 08:47:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.26; Mon, 11 Jul
+ 2022 08:48:02 +0000
+Received: from BN8NAM11FT054.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:113:cafe::e9) by BN9PR03CA0434.outlook.office365.com
+ (2603:10b6:408:113::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.19 via Frontend
+ Transport; Mon, 11 Jul 2022 08:48:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.238)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (12.22.5.235) by
- CO1NAM11FT028.mail.protection.outlook.com (10.13.175.214) with Microsoft SMTP
+ 12.22.5.238 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.238; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (12.22.5.238) by
+ BN8NAM11FT054.mail.protection.outlook.com (10.13.177.102) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5417.15 via Frontend Transport; Mon, 11 Jul 2022 08:47:59 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Mon, 11 Jul
- 2022 08:47:58 +0000
+ 15.20.5417.15 via Frontend Transport; Mon, 11 Jul 2022 08:48:02 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Mon, 11 Jul
+ 2022 08:48:01 +0000
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.26; Mon, 11 Jul 2022 01:47:57 -0700
+ 15.2.986.26; Mon, 11 Jul 2022 01:47:59 -0700
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 7/9] platform/mellanox: mlxreg-io: Add locking for io operations
-Date:   Mon, 11 Jul 2022 11:45:57 +0300
-Message-ID: <20220711084559.62447-8-vadimp@nvidia.com>
+Subject: [PATCH platform-next 8/9] Documentation/ABI: mlxreg-io: Fix contact info
+Date:   Mon, 11 Jul 2022 11:45:58 +0300
+Message-ID: <20220711084559.62447-9-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20220711084559.62447-1-vadimp@nvidia.com>
 References: <20220711084559.62447-1-vadimp@nvidia.com>
@@ -77,124 +77,227 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4a33e783-85e0-4daa-b8ad-08da631a0eb2
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4511:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74560e5f-6382-49c7-83ae-08da631a10a6
+X-MS-TrafficTypeDiagnostic: SJ1PR12MB6196:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ALvsMQMWrJHU8wBhHE6f/iRp/s7riOq3NUygM5SFc2olF2hfGsdmSXhpWgiFr/flmKnjx3+Ca8u/5MTRnQheA+MIMSHCPeM2gh2GUbBheuZxjVjA6tv1FS5Y+TXYMgWbdjQ8hwrDOLGrwJ27eUSlBaC5B8bmTKLz2Bz1Xz0QtyNvHb76tEFxzQVQjztfd274Uv/2+uYIXCV7UvyRX/lPVEkI7ZE2DL8FNs/wYmOeAy8be/ETAL+sk99EocXJhDxnXVZn7+28HvWBLRYeYXkNxwXzhVJvj13KtBgFT+K+R8c/HZjSE5fW6wT/72rUJF6yOwJnxvrHAE8nCsohRFr84y4RYWZBHgFQeNMy5jVWYSnIo/fkXPL+JBOYzOZLKtju/37IJCrsVBG0fRXzh7Y3or8lRS8B6c9LQ8cmPdr8CO2+HQyslgPmkvk/itLfAaGFJbVP8Cf/8NbNHXYH6XxrYRPh+dOrNiYLPzfwcAUs67llBPolmQ1lThTAl3X03SB/5BUp6u2B+2AthMQpvGNp2U8j6h/1r1RJQfIPNMWaynk65wgbLGeR3Rte5plt8ss2oVWLaf7PAqYsdec2+vVd5hzikSSeVM6wf/XuqmQ5m3u1MMSOweabjmyWJAsfrCPJjmB7+ZP8vczWOIoTD+eGXx5UXowuwwooc4F67nReVBXrfB5coUJFPeATsYzW4yBvFQ7hNHa0+qcuyxgioTz/7v4M7g3gbjXSBUOopPOCtVRIapSBZrZcEG5sMfjpPqB8vASIumMRyai0g+6vHcfrUl2owoTXt1cAtIUd+SaODe8Bbnz/4ytAvcMMMp6xyvQhNWsFRgTFFNZ6pe9k8fx0n6GfhlmbCgAdibmpnfhy/gA=
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(376002)(39860400002)(396003)(46966006)(40470700004)(36840700001)(83380400001)(81166007)(1076003)(86362001)(316002)(2906002)(82310400005)(82740400003)(356005)(40480700001)(36756003)(70586007)(5660300002)(426003)(41300700001)(8936002)(54906003)(478600001)(36860700001)(8676002)(26005)(70206006)(336012)(47076005)(6916009)(4326008)(2616005)(107886003)(186003)(40460700003)(16526019)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ofabINc5utVpJm+VHnmd77sVA3EoN5+31qZRsUmOm7FTxsf1Y2oOSykl7pnOj23EV36RT0xWL0qFwusHtiqKsOglhsMpFXwomy0wAfHPWfyHNg6wsrGwsMJRYm37KUtH3SdQ2Gq4QTC+SakCZdj66nhE9+ch5ikhMjONTLT6uqwJ+UWiVzvr1ZvEWrmZgsfdKpiFyIeZwImwkTGLaeqJfng5cxnBfJEOME+ip2urjICHcI2NbmLjleA5/6r9wSaSjnd7fE2L8wXW4IZdC2ITpohKQ5CylBR5ZNWbEl4nzDGNinjK7nDCRT2JicU30c0/8KW9ulq+T6JompQ4BtUfzwJpGgsLh5Ta1PyBQZEtHAYpPvpobohKnhqxEI3xkDsMX93DgcnI9as51C8wQMp3i3bccISlr7iNu/gMoK5+YSoO09FbCsAUQylsWINQY99K60DXDbyOavB4zCp8D0b8r2Eq4kB+KZNLY1IYAIQVG78ZK9563Am5DMZuf4gEV36rPWHhMgOFSsmb8MCLLw/GGfluD9wH/SwOhUqR01/NwsrTiLBml3dr67LU7w2vtBRUUQivc1XzjNxLtu6FhvL29ic7UtoQrQEJlvYroCnbsaYnSrIkWdfWMlzMQrCv0xn5KTeYpwFFzY7Ql6v8cI90KeH4pSz2JqjW6hBG1PY0bb1u8E9EaCSOL5KCjdYP/KzYV0ZZqO4XKiyeSnCf8nlWSxSir46Nbk+d/lex0BdKsRBhJyRJEmFPWOJp23/AcPzQqLlNtmOklXT5IyAdVRlQi+tdzxpKAyjYZm1jv2FOEP2Pv8aP1hRYv58+wLJz+l8Y372xUTuNYVILpRjv2WR7cmRqt6JfLS2hmub4m0EEzWg=
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(376002)(346002)(136003)(396003)(40470700004)(36840700001)(46966006)(82310400005)(36860700001)(86362001)(40460700003)(356005)(8936002)(82740400003)(81166007)(41300700001)(2906002)(5660300002)(478600001)(316002)(83380400001)(4326008)(70206006)(8676002)(6916009)(54906003)(70586007)(336012)(186003)(47076005)(16526019)(426003)(40480700001)(2616005)(26005)(1076003)(107886003)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 08:47:59.1989
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 08:48:02.3338
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a33e783-85e0-4daa-b8ad-08da631a0eb2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74560e5f-6382-49c7-83ae-08da631a10a6
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT028.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT054.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4511
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6196
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add lock to protect user read/write access to the registers.
+Fix e-mail in contact fields.
 
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 ---
- drivers/platform/mellanox/mlxreg-io.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../ABI/stable/sysfs-driver-mlxreg-io         | 42 +++++++++----------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-io.c b/drivers/platform/mellanox/mlxreg-io.c
-index 2c2686d5c2fc..ddc08abf398c 100644
---- a/drivers/platform/mellanox/mlxreg-io.c
-+++ b/drivers/platform/mellanox/mlxreg-io.c
-@@ -31,6 +31,7 @@
-  * @group: sysfs attribute group;
-  * @groups: list of sysfs attribute group for hwmon registration;
-  * @regsize: size of a register value;
-+ * @io_lock: user access locking;
-  */
- struct mlxreg_io_priv_data {
- 	struct platform_device *pdev;
-@@ -41,6 +42,7 @@ struct mlxreg_io_priv_data {
- 	struct attribute_group group;
- 	const struct attribute_group *groups[2];
- 	int regsize;
-+	struct mutex io_lock; /* Protects user access. */
- };
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index b312242d4f40..3539b1839829 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -1,7 +1,7 @@
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
+ Date:		June 2018
+ KernelVersion:	4.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file shows ASIC health status. The possible values are:
+ 		0 - health failed, 2 - health OK, 3 - ASIC in booting state.
  
- static int
-@@ -116,14 +118,19 @@ mlxreg_io_attr_show(struct device *dev, struct device_attribute *attr,
- 	u32 regval = 0;
- 	int ret;
+@@ -11,7 +11,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld1_version
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld2_version
+ Date:		June 2018
+ KernelVersion:	4.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show with which CPLD versions have been burned
+ 		on carrier and switch boards.
  
-+	mutex_lock(&priv->io_lock);
-+
- 	ret = mlxreg_io_get_reg(priv->pdata->regmap, data, 0, true,
- 				priv->regsize, &regval);
- 	if (ret)
- 		goto access_error;
+@@ -20,7 +20,7 @@ Description:	These files show with which CPLD versions have been burned
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
+ Date:		December 2018
+ KernelVersion:	5.0
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file shows the system fans direction:
+ 		forward direction - relevant bit is set 0;
+ 		reversed direction - relevant bit is set 1.
+@@ -30,7 +30,7 @@ Description:	This file shows the system fans direction:
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+ Date:		November 2018
+ KernelVersion:	5.0
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show with which CPLD versions have been burned
+ 		on LED or Gearbox board.
  
-+	mutex_unlock(&priv->io_lock);
-+
- 	return sprintf(buf, "%u\n", regval);
+@@ -39,7 +39,7 @@ Description:	These files show with which CPLD versions have been burned
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
+ Date:		November 2018
+ KernelVersion:	5.0
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files enable and disable the access to the JTAG domain.
+ 		By default access to the JTAG domain is disabled.
  
- access_error:
-+	mutex_unlock(&priv->io_lock);
- 	return ret;
- }
+@@ -48,7 +48,7 @@ Description:	These files enable and disable the access to the JTAG domain.
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/select_iio
+ Date:		June 2018
+ KernelVersion:	4.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file allows iio devices selection.
  
-@@ -145,6 +152,8 @@ mlxreg_io_attr_store(struct device *dev, struct device_attribute *attr,
- 	if (ret)
- 		return ret;
+ 		Attribute select_iio can be written with 0 or with 1. It
+@@ -62,7 +62,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu1_on
+ 		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/pwr_down
+ Date:		June 2018
+ KernelVersion:	4.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files allow asserting system power cycling, switching
+ 		power supply units on and off and system's main power domain
+ 		shutdown.
+@@ -89,7 +89,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_short_pb
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sw_reset
+ Date:		June 2018
+ KernelVersion:	4.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show the system reset cause, as following: power
+ 		auxiliary outage or power refresh, ASIC thermal shutdown, halt,
+ 		hotswap, watchdog, firmware reset, long press power button,
+@@ -106,7 +106,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
+ Date:		November 2018
+ KernelVersion:	5.0
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show the system reset cause, as following: ComEx
+ 		power fail, reset from ComEx, system platform reset, reset
+ 		due to voltage monitor devices upgrade failure,
+@@ -119,7 +119,7 @@ Description:	These files show the system reset cause, as following: ComEx
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
+ Date:		November 2018
+ KernelVersion:	5.0
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show with which CPLD versions have been burned
+ 		on LED board.
  
-+	mutex_lock(&priv->io_lock);
-+
- 	ret = mlxreg_io_get_reg(priv->pdata->regmap, data, input_val, false,
- 				priv->regsize, &regval);
- 	if (ret)
-@@ -154,9 +163,12 @@ mlxreg_io_attr_store(struct device *dev, struct device_attribute *attr,
- 	if (ret)
- 		goto access_error;
+@@ -133,7 +133,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sff_wd
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_swb_wd
+ Date:		June 2019
+ KernelVersion:	5.3
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show the system reset cause, as following:
+ 		COMEX thermal shutdown; wathchdog power off or reset was derived
+ 		by one of the next components: COMEX, switch board or by Small Form
+@@ -148,7 +148,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/config1
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/config2
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show system static topology identification
+ 		like system's static I2C topology, number and type of FPGA
+ 		devices within the system and so on.
+@@ -161,7 +161,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_soc
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sw_pwr_off
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show the system reset causes, as following: reset
+ 		due to AC power failure, reset invoked from software by
+ 		assertion reset signal through CPLD. reset caused by signal
+@@ -173,7 +173,7 @@ Description:	These files show the system reset causes, as following: reset
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/pcie_asic_reset_dis
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file allows to retain ASIC up during PCIe root complex
+ 		reset, when attribute is set 1.
  
-+	mutex_unlock(&priv->io_lock);
-+
- 	return len;
+@@ -182,7 +182,7 @@ Description:	This file allows to retain ASIC up during PCIe root complex
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/vpd_wp
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file allows to overwrite system VPD hardware write
+ 		protection when attribute is set 1.
  
- access_error:
-+	mutex_unlock(&priv->io_lock);
- 	dev_err(&priv->pdev->dev, "Bus access error\n");
- 	return ret;
- }
-@@ -246,16 +258,27 @@ static int mlxreg_io_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->hwmon);
- 	}
+@@ -191,7 +191,7 @@ Description:	This file allows to overwrite system VPD hardware write
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/voltreg_update_status
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file exposes the configuration update status of burnable
+ 		voltage regulator devices. The status values are as following:
+ 		0 - OK; 1 - CRC failure; 2 = I2C failure; 3 - in progress.
+@@ -201,7 +201,7 @@ Description:	This file exposes the configuration update status of burnable
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/ufm_version
+ Date:		January 2020
+ KernelVersion:	5.6
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file exposes the firmware version of burnable voltage
+ 		regulator devices.
  
-+	mutex_init(&priv->io_lock);
- 	dev_set_drvdata(&pdev->dev, priv);
- 
- 	return 0;
- }
- 
-+static int mlxreg_io_remove(struct platform_device *pdev)
-+{
-+	struct mlxreg_io_priv_data *priv = dev_get_drvdata(&pdev->dev);
-+
-+	mutex_destroy(&priv->io_lock);
-+
-+	return 0;
-+}
-+
- static struct platform_driver mlxreg_io_driver = {
- 	.driver = {
- 	    .name = "mlxreg-io",
- 	},
- 	.probe = mlxreg_io_probe,
-+	.remove = mlxreg_io_remove,
- };
- 
- module_platform_driver(mlxreg_io_driver);
+@@ -217,7 +217,7 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version_min
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version_min
+ Date:		July 2020
+ KernelVersion:	5.9
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	These files show with which CPLD part numbers and minor
+ 		versions have been burned CPLD devices equipped on a
+ 		system.
+@@ -471,7 +471,7 @@ Description:	These files provide the maximum powered required for line card
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/phy_reset
+ Date:		May 2022
+ KernelVersion:	5.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file allows to reset PHY 88E1548 when attribute is set 0
+ 		due to some abnormal PHY behavior.
+ 		Expected behavior:
+@@ -483,7 +483,7 @@ Description:	This file allows to reset PHY 88E1548 when attribute is set 0
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/mac_reset
+ Date:		May 2022
+ KernelVersion:	5.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file allows to reset ASIC MT52132 when attribute is set 0
+ 		due to some abnormal ASIC behavior.
+ 		Expected behavior:
+@@ -495,7 +495,7 @@ Description:	This file allows to reset ASIC MT52132 when attribute is set 0
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/qsfp_pwr_good
+ Date:		May 2022
+ KernelVersion:	5.19
+-Contact:	Vadim Pasternak <vadimpmellanox.com>
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
+ Description:	This file shows QSFP ports power status. The value is set to 0
+ 		when one of any QSFP ports is plugged. The value is set to 1 when
+ 		there are no any QSFP ports are plugged.
 -- 
 2.20.1
 
