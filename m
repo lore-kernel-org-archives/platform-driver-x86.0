@@ -2,129 +2,169 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B21C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 11:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCF0C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jul 2022 11:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbiGKLsG (ORCPT
+        id S229585AbiGKLwW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jul 2022 07:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        Mon, 11 Jul 2022 07:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiGKLrs (ORCPT
+        with ESMTP id S229514AbiGKLwV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jul 2022 07:47:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EB3E1D7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 04:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657540033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5y2xr3Vx8OQwRCbGVz5PkIj/TcERMyOp8kvktoro/qE=;
-        b=hPJXGiEszlANB6EDTC2XRDa1msam2L5DwcVzWQOSgjdDWwJmAk0wVT4+TDxmlI1qijOGw9
-        Okx1g/Qwp2muaV7+L6mc84tgUKbGHXEW/AxoexFhe1LwLmC9zolmkX1eDwBv9OXO52cuzl
-        8PhfCHKH/vjbs3YIDWXelT3kuCHXH7s=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-351-1tFBaejSN6CutjuoY7Qdxw-1; Mon, 11 Jul 2022 07:47:08 -0400
-X-MC-Unique: 1tFBaejSN6CutjuoY7Qdxw-1
-Received: by mail-ed1-f70.google.com with SMTP id c9-20020a05640227c900b0043ad14b1fa0so1877342ede.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jul 2022 04:47:08 -0700 (PDT)
+        Mon, 11 Jul 2022 07:52:21 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30ED6167D7;
+        Mon, 11 Jul 2022 04:52:20 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id 5so4204659plk.9;
+        Mon, 11 Jul 2022 04:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wE0g7bUn5n8gLr1tJA7riCOdigGVun4E5doeS+PgJgA=;
+        b=Bw5KwDV0F1SKBib3nCgkQg1DblY0lZH/8wYKsinnLAopPq0S7I+/8M2AksQm7MBPO7
+         PCGlIfjUp+iQyhcm/KOc2TKr5jW5lGpgvXUi5+ZZqlKyihWpXh7TG00kgTGSLSwh584Z
+         0Y0EKOFE/GYEsNfhRFLODjgo2tIONVpKyE4eBcGtZsnhRKsrL+8bqvk82nqKkPoqM7nc
+         8UUkwFRagPd2peAUzd+d4vyP9uRS5X+kEB6+2MXjgIDOBdrmHfAdu/EKL6LENlFTiBhU
+         2uCIhnSXt8xiwH0Jnq9j0ZOnPZcthUKDTNN9btKwAUdl9N3uEJx21vNXuXLoBJPYPvpv
+         COuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=5y2xr3Vx8OQwRCbGVz5PkIj/TcERMyOp8kvktoro/qE=;
-        b=BELzxuWGaqSKzaS/tQXfMIfpJLmqyPLFeS3gyeKWdH+8WpxlzR02FQOKewIQnn2rQY
-         cchKgPlEG5bNpIgBex17CULsDKHX91krT3o6WpTETNQuBVlzcnzfZoZgSQEHImEVWtAr
-         6spFfcm4rCK0AzG/oClbwaCEIpDvgcxgItF11Co3sBoNeBa1CgYtWXEnwrmpplJsixrz
-         0+V20Dzn/1MIbIzlU8QGHGVEECLjmFqKEXLk2kXRyGrtDILE88T17zIho8YSHfJ97AYb
-         RbqLQSupxTLeI0vUhIEbae7jI70O0a0NUy8GKXo4oFY1viytXsGxGBRadK9arGV30Mj3
-         k1ow==
-X-Gm-Message-State: AJIora9uyjwpvMfQ3J+vFjA1moVGuLRNmsquDTpcYz3gTBZx2noTOh1b
-        +It8l9gIjxG1zZGHqzboH6JO83bOffyv/F7qUG41rRZZZ0kXyA/nK2FqLbbA7mTWj8na/GJo7yN
-        frRrZFK7SHH6labupuiJ4Cfw9+S5Zoa4alQ==
-X-Received: by 2002:a17:907:168c:b0:726:c521:25aa with SMTP id hc12-20020a170907168c00b00726c52125aamr18125277ejc.46.1657540027217;
-        Mon, 11 Jul 2022 04:47:07 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uigjXoyFbpZ7GXNNBz8Nrc+N2ZvmSbHZ4faDHCA9Dj8i7rNqjuANtp8LwCYs6GrD2hWSVG+w==
-X-Received: by 2002:a17:907:168c:b0:726:c521:25aa with SMTP id hc12-20020a170907168c00b00726c52125aamr18125258ejc.46.1657540026969;
-        Mon, 11 Jul 2022 04:47:06 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id fy6-20020a170906b7c600b0072aed3b2158sm2609073ejb.45.2022.07.11.04.47.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Jul 2022 04:47:06 -0700 (PDT)
-Message-ID: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
-Date:   Mon, 11 Jul 2022 13:47:05 +0200
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wE0g7bUn5n8gLr1tJA7riCOdigGVun4E5doeS+PgJgA=;
+        b=vtZFrfJArJSz5DbdEdQvCFA6E56HG9xQ7qVLLt1ao5cNiet/w6mCXNwsmfuMA3bRJe
+         cr+zd62IMAZUZGj9IItWccaKIV7y6Pl1AJdC+slGqJXSQPTq65xWyGNN92pdvfg/dVQr
+         au5s/uXQQzoPq6UcN3Ii4gLl/Gbrs3YCjmqJS884cI0K5q3b6PjqmAY39J/nCG4LocUg
+         wsVcFAKHHg2oZ1WnSRO1cNwgOk+jgmY8TXdAQbDGE2nxoiwOpp3XMkFHl+9YRjJATCOK
+         +hLLGIx+J0RJah1aizNnd4+O6jKI77sKNKhKB/J7l8rbePfeo1HKzVsiZksLQp5KCvul
+         Obyw==
+X-Gm-Message-State: AJIora/7rhhstLi8IdLfGZ0IMhbpQLcNddpQASFt9rgDum3l/ejj5/5r
+        TdrjPKzicjlypHH3yKzkuao=
+X-Google-Smtp-Source: AGRyM1vBf0TKuCf9RDDi7Hqc80k8Fpq9HFxeQSxKQq08Fw+y/zy7MCQRtT2V2Obeif6dx0nAqPzKyg==
+X-Received: by 2002:a17:902:6b42:b0:16b:f27c:1c17 with SMTP id g2-20020a1709026b4200b0016bf27c1c17mr18005081plt.152.1657540339324;
+        Mon, 11 Jul 2022 04:52:19 -0700 (PDT)
+Received: from localhost.localdomain (61-216-65-192.hinet-ip.hinet.net. [61.216.65.192])
+        by smtp.gmail.com with ESMTPSA id t15-20020a1709027fcf00b0016c27561454sm4487108plb.283.2022.07.11.04.52.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 04:52:18 -0700 (PDT)
+From:   PaddyKP_Yao <ispaddy@gmail.com>
+X-Google-Original-From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
+To:     hdegoede@redhat.com
+Cc:     PaddyKP_Yao@asus.com, acpi4asus-user@lists.sourceforge.net,
+        andy.shevchenko@gmail.com, corentin.chary@gmail.com,
+        ispaddy@gmail.com, linux-kernel@vger.kernel.org, luke@ljones.dev,
+        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev support
+Date:   Mon, 11 Jul 2022 19:51:25 +0800
+Message-Id: <20220711115125.2072508-1-PaddyKP_Yao@asus.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
+References: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
- support
-Content-Language: en-US
-To:     PaddyKP Yao <ispaddy@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     PaddyKP_Yao@asus.com,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luke Jones <luke@ljones.dev>,
-        Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <HK0PR04MB33636680A6DC47211560BB43FA879@HK0PR04MB3363.apcprd04.prod.outlook.com>
- <20220711024718.1700067-1-PaddyKP_Yao@asus.com>
- <CAHp75Vfnt0DX9wnx0pKhit4JWCjBST+4caTjY6x6VYNdGjqn9Q@mail.gmail.com>
- <YswMZ5Il+5yde3+f@paddy-ASUS-EXPERTBOOK-B1400CBA>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <YswMZ5Il+5yde3+f@paddy-ASUS-EXPERTBOOK-B1400CBA>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+In some new ASUS devices, hotkey Fn+F13 is used for mic mute. If mic-mute
+LED is present by checking WMI ASUS_WMI_DEVID_MICMUTE_LED, we will add a
+mic-mute LED classdev, asus::micmute, in the asus-wmi driver to control
+it. The binding of mic-mute LED controls will be swithched with LED
+trigger.
 
-On 7/11/22 13:41, PaddyKP Yao wrote:
-> <accidentally hit send to soon, trying again>
-> 
-> Hi,
-> 
-> Sorry for mistake about send two patch mail again...
-> After some try, I cannot remove legal message from asus mail.
-> I will use my gmail and send patch again.
-> And may I use author PaddyKP_Yao@asus.com instead of my gmail account?
+Signed-off-by: PaddyKP_Yao <PaddyKP_Yao@asus.com>
+---
+V1 -> V2: fix typo for 'present' and remove unnecessary pr_info() log
+V2 -> V3: resend patch again by gmail to avoid Asus legal in the mail
 
-Yes I can fix that up for you.
+ drivers/platform/x86/Kconfig               |  2 ++
+ drivers/platform/x86/asus-wmi.c            | 25 ++++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 3 files changed, 28 insertions(+)
 
-Regards,
-
-Hans
-
-
-
-> 
-> Many thanks for your kind feedback.
-> 
-> On Mon, Jul 11, 2022 at 10:50:29AM +0200, Andy Shevchenko wrote:
->> On Mon, Jul 11, 2022 at 4:47 AM <PaddyKP_Yao@asus.com> wrote:
->>>
->>> From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
->>
->> Besides we got two emails again of the same version...
->>
->>> ===================================================================================================================================
->>> This email and any attachments to it contain confidential information and are intended solely for the use of the individual to whom it is addressed.If you are not the intended recipient or receive it accidentally, please immediately notify the sender by e-mail and delete the message and any attachments from your computer system, and destroy all hard copies. If any, please be advised that any unauthorized disclosure, copying, distribution or any action taken or omitted in reliance on this, is illegal and prohibited. Furthermore, any views or opinions expressed are solely those of the author and do not represent those of ASUSTeK. Thank you for your cooperation.
->>> ===================================================================================================================================
->>
->> ...this is problematic and can't be used in open source projects. Ask
->> your legal team how to deal with it.
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
-> 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index f915cf67aa26..74769050b770 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -274,6 +274,8 @@ config ASUS_WMI
+ 	select INPUT_SPARSEKMAP
+ 	select LEDS_CLASS
+ 	select NEW_LEDS
++	select LEDS_TRIGGERS
++	select LEDS_TRIGGER_AUDIO
+ 	select ACPI_PLATFORM_PROFILE
+ 	help
+ 	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index e14fb5fa7324..40c0e00a4b71 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -191,6 +191,7 @@ struct asus_wmi {
+ 	int kbd_led_wk;
+ 	struct led_classdev lightbar_led;
+ 	int lightbar_led_wk;
++	struct led_classdev micmute_led;
+ 	struct workqueue_struct *led_workqueue;
+ 	struct work_struct tpd_led_work;
+ 	struct work_struct wlan_led_work;
+@@ -906,12 +907,23 @@ static enum led_brightness lightbar_led_get(struct led_classdev *led_cdev)
+ 	return result & ASUS_WMI_DSTS_LIGHTBAR_MASK;
+ }
+ 
++static int micmute_led_set(struct led_classdev *led_cdev,
++			   enum led_brightness brightness)
++{
++	int state = brightness != LED_OFF;
++	int err;
++
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MICMUTE_LED, state, NULL);
++	return err < 0 ? err : 0;
++}
++
+ static void asus_wmi_led_exit(struct asus_wmi *asus)
+ {
+ 	led_classdev_unregister(&asus->kbd_led);
+ 	led_classdev_unregister(&asus->tpd_led);
+ 	led_classdev_unregister(&asus->wlan_led);
+ 	led_classdev_unregister(&asus->lightbar_led);
++	led_classdev_unregister(&asus->micmute_led);
+ 
+ 	if (asus->led_workqueue)
+ 		destroy_workqueue(asus->led_workqueue);
+@@ -983,6 +995,19 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 					   &asus->lightbar_led);
+ 	}
+ 
++	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MICMUTE_LED)) {
++		asus->micmute_led.name = "asus::micmute";
++		asus->micmute_led.max_brightness = 1;
++		asus->micmute_led.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		asus->micmute_led.brightness_set_blocking = micmute_led_set;
++		asus->micmute_led.default_trigger = "audio-micmute";
++
++		rv = led_classdev_register(&asus->platform_device->dev,
++						&asus->micmute_led);
++		if (rv)
++			goto error;
++	}
++
+ error:
+ 	if (rv)
+ 		asus_wmi_led_exit(asus);
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 17dc5cb6f3f2..38ee75874d11 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -49,6 +49,7 @@
+ #define ASUS_WMI_DEVID_LED4		0x00020014
+ #define ASUS_WMI_DEVID_LED5		0x00020015
+ #define ASUS_WMI_DEVID_LED6		0x00020016
++#define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
+ 
+ /* Backlight and Brightness */
+ #define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor */
+-- 
+2.34.1
 
