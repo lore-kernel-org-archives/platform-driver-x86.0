@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA62CCA481
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Jul 2022 19:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA5C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Jul 2022 19:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234304AbiGLTtu (ORCPT
+        id S232801AbiGLTtw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Jul 2022 15:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
+        Tue, 12 Jul 2022 15:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235496AbiGLTsP (ORCPT
+        with ESMTP id S235607AbiGLTsQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Jul 2022 15:48:15 -0400
+        Tue, 12 Jul 2022 15:48:16 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 329DABD688
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Jul 2022 12:41:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 49103BD68E
+        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Jul 2022 12:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657654862;
+        s=mimecast20190719; t=1657654867;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Tm6jMPVycKydgq3WZrq/Jda/tvRxwWE3Xj77RCx9x/Q=;
-        b=KO3iX027SkLvjnJvRJJTaVbx0ZWMl98wHtg9CxgykS/ty+zvfk2OjdMV/4zNbDWXOCjXMW
-        3KR5dsf4aamtGU5r/1Cx+hg5ZSGeAfYB+luhvvVzGfIajzChO5CQy1doo7Xr0FvoITjyHO
-        q0e0k0xWLI9xtvTJo8VhfGclVUis1Tc=
+        bh=IN+2MbILBTq8EAj5bW31Ky4wdixJFQxoXnYtSMwDdnc=;
+        b=JL0Es+gGPkFBGPI7MSEFidQWINjcDQGESjHmjm3FNa09D1WzGkQdyIbMqqg4JZJ+IMimSq
+        NHY+hOctCVINPLN+CA263oYFZOEWSG+1Irf1KVt+T1COTwM68R5h2Z11Ya4TW+j9D3P9OR
+        beHffB6sjwD6f43C1wJI0SLwfUdoMl8=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-402-Snu9z6XIP-O3BJUxI2K8Ng-1; Tue, 12 Jul 2022 15:41:00 -0400
-X-MC-Unique: Snu9z6XIP-O3BJUxI2K8Ng-1
+ us-mta-608-KiUzqHqVPPWJSgiUy31CoA-1; Tue, 12 Jul 2022 15:40:57 -0400
+X-MC-Unique: KiUzqHqVPPWJSgiUy31CoA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8F6B101A586;
-        Tue, 12 Jul 2022 19:40:59 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E815B40E80E0;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B2F4780418F;
         Tue, 12 Jul 2022 19:40:55 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EF0F40E80E0;
+        Tue, 12 Jul 2022 19:40:52 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
         Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
@@ -64,9 +64,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 24/29] platform/x86: samsung-laptop: Move acpi_backlight=[vendor|native] quirks to ACPI video_detect.c
-Date:   Tue, 12 Jul 2022 21:39:05 +0200
-Message-Id: <20220712193910.439171-25-hdegoede@redhat.com>
+Subject: [PATCH v2 23/29] platform/x86: asus-wmi: Move acpi_backlight=native quirks to ACPI video_detect.c
+Date:   Tue, 12 Jul 2022 21:39:04 +0200
+Message-Id: <20220712193910.439171-24-hdegoede@redhat.com>
 In-Reply-To: <20220712193910.439171-1-hdegoede@redhat.com>
 References: <20220712193910.439171-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -76,216 +76,101 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Remove the asus-wmi quirk_entry.wmi_backlight_native quirk-flag, which
+called acpi_video_set_dmi_backlight_type(acpi_backlight_native) and replace
+it with acpi/video_detect.c video_detect_dmi_table[] entries using the
+video_detect_force_native callback.
+
 acpi_video_set_dmi_backlight_type() is troublesome because it may end up
 getting called after other backlight drivers have already called
 acpi_video_get_backlight_type() resulting in the other drivers
 already being registered even though they should not.
 
-Move all the acpi_backlight=[vendor|native] quirks from samsung-laptop to
-drivers/acpi/video_detect.c .
-
-Note the X360 -> acpi_backlight=native quirk is not moved because that
-already was present in drivers/acpi/video_detect.c .
-
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/video_detect.c           | 54 +++++++++++++++++
- drivers/platform/x86/samsung-laptop.c | 87 ---------------------------
- 2 files changed, 54 insertions(+), 87 deletions(-)
+ drivers/acpi/video_detect.c        |  8 ++++++++
+ drivers/platform/x86/asus-nb-wmi.c | 14 --------------
+ drivers/platform/x86/asus-wmi.c    |  3 ---
+ drivers/platform/x86/asus-wmi.h    |  1 -
+ 4 files changed, 8 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index a92322f4caff..84dce2c113ef 100644
+index 5d5215969f1d..a92322f4caff 100644
 --- a/drivers/acpi/video_detect.c
 +++ b/drivers/acpi/video_detect.c
-@@ -220,6 +220,33 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "GB-BXBT-2807"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 /* Samsung N150/N210/N220 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 /* Samsung NF110/NF210/NF310 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
-+		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 /* Samsung NC210 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
-+		DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
-+		},
-+	},
- 	{
- 	.callback = video_detect_force_vendor,
- 	/* Sony VPCEH3U1E */
-@@ -562,6 +589,33 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
+@@ -554,6 +554,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "GA503"),
  		},
  	},
 +	{
 +	 .callback = video_detect_force_native,
-+	 /* Samsung N150P */
++	 /* Asus UX303UB */
 +	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Samsung N145P/N250P/N260P */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Samsung N250P */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N250P"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N250P"),
++		DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
 +		},
 +	},
  	/*
  	 * Clevo NL5xRU and NL5xNU/TUXEDO Aura 15 Gen1 and Gen2 have both a
  	 * working native and video interface. However the default detection
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index c187dcdf82f0..cc30cf08f32d 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -356,23 +356,13 @@ struct samsung_laptop {
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 074b4764ee8a..325ccd030a32 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -97,11 +97,6 @@ static struct quirk_entry quirk_asus_x200ca = {
+ 	.wmi_backlight_set_devstate = true,
  };
  
- struct samsung_quirks {
--	bool broken_acpi_video;
- 	bool four_kbd_backlight_levels;
- 	bool enable_kbd_backlight;
--	bool use_native_backlight;
- 	bool lid_handling;
- };
- 
- static struct samsung_quirks samsung_unknown = {};
- 
--static struct samsung_quirks samsung_broken_acpi_video = {
--	.broken_acpi_video = true,
+-static struct quirk_entry quirk_asus_ux303ub = {
+-	.wmi_backlight_native = true,
+-	.wmi_backlight_set_devstate = true,
 -};
 -
--static struct samsung_quirks samsung_use_native_backlight = {
--	.use_native_backlight = true,
--};
--
- static struct samsung_quirks samsung_np740u3e = {
- 	.four_kbd_backlight_levels = true,
- 	.enable_kbd_backlight = true,
-@@ -1540,76 +1530,6 @@ static const struct dmi_system_id samsung_dmi_table[] __initconst = {
+ static struct quirk_entry quirk_asus_x550lb = {
+ 	.wmi_backlight_set_devstate = true,
+ 	.xusb2pr = 0x01D9,
+@@ -372,15 +367,6 @@ static const struct dmi_system_id asus_quirks[] = {
  		},
+ 		.driver_data = &quirk_asus_x200ca,
  	},
- 	/* Specific DMI ids for laptop with quirks */
 -	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "N150P",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
--		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
+-		.callback = dmi_matched,
+-		.ident = "ASUSTeK COMPUTER INC. UX303UB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
 -		},
--	 .driver_data = &samsung_use_native_backlight,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "N145P/N250P/N260P",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
--		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
--		},
--	 .driver_data = &samsung_use_native_backlight,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "N150/N210/N220",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
--		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
--		},
--	 .driver_data = &samsung_broken_acpi_video,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "NF110/NF210/NF310",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
--		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
--		},
--	 .driver_data = &samsung_broken_acpi_video,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "X360",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "X360"),
--		DMI_MATCH(DMI_BOARD_NAME, "X360"),
--		},
--	 .driver_data = &samsung_broken_acpi_video,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "N250P",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "N250P"),
--		DMI_MATCH(DMI_BOARD_NAME, "N250P"),
--		},
--	 .driver_data = &samsung_use_native_backlight,
--	},
--	{
--	 .callback = samsung_dmi_matched,
--	 .ident = "NC210",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
--		DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
--		},
--	 .driver_data = &samsung_broken_acpi_video,
+-		.driver_data = &quirk_asus_ux303ub,
 -	},
  	{
- 	 .callback = samsung_dmi_matched,
- 	 .ident = "730U3E/740U3E",
-@@ -1654,15 +1574,8 @@ static int __init samsung_init(void)
- 	samsung->handle_backlight = true;
- 	samsung->quirks = quirks;
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. UX330UAK",
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ac3f5606e267..a0df14d35574 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3609,9 +3609,6 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (asus->driver->quirks->wmi_force_als_set)
+ 		asus_wmi_set_als();
  
--#ifdef CONFIG_ACPI
--	if (samsung->quirks->broken_acpi_video)
--		acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
--	if (samsung->quirks->use_native_backlight)
+-	if (asus->driver->quirks->wmi_backlight_native)
 -		acpi_video_set_dmi_backlight_type(acpi_backlight_native);
 -
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		samsung->handle_backlight = false;
--#endif
+ 	if (asus->driver->quirks->xusb2pr)
+ 		asus_wmi_set_xusb2pr(asus);
  
- 	ret = samsung_platform_init(samsung);
- 	if (ret)
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 30770e411301..f30252efe1db 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -29,7 +29,6 @@ struct quirk_entry {
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
+-	bool wmi_backlight_native;
+ 	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
+ 	bool use_kbd_dock_devid;
 -- 
 2.36.0
 
