@@ -2,95 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39CFC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jul 2022 09:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F3FC43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jul 2022 09:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234186AbiGMJZ0 (ORCPT
+        id S230195AbiGMJgi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jul 2022 05:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        Wed, 13 Jul 2022 05:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbiGMJZT (ORCPT
+        with ESMTP id S231969AbiGMJgh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jul 2022 05:25:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F97F1E3F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Jul 2022 02:25:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 26B6DB81D5C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Jul 2022 09:25:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB8ABC34114
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Jul 2022 09:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657704315;
-        bh=ByqA9mMvxLIRetWPmMt6CLvm2/hB5a1P3mjc9+O95Ms=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oCE6M1ZnJuJyAdluBmZueGd9T7iLUz3Xq9xoEysMYjtFYLFwMeLLW+/TI4nN/O3Ah
-         M4Jx3Qe3hpUwUAI/leWz7/alSm1xx8mLR2HH3Ask4dgwQwEaAUUKSdatJypmqqeVBG
-         muGkU3SJTrpdTTkfTCOPvhreKtkvWssk3+dVvqJVqcW9+JYzTdsfiu225CGKfJoNiy
-         iaHeHocuj7K94w+0WRaeQzwvIp2C00op9lrZAz7+WFqJajFVpRBvimDvYVfm6pO0Wn
-         TcX/kB9UAzLwJXeYcNjU4F+/3dKaTp3DI7HfadGv0isdteuckB3N7ViA0N7S6JiZvi
-         o3x370askXMTg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 8E9B5C05FD6; Wed, 13 Jul 2022 09:25:15 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 215075] BUG: scheduling while atomic: cpuhp/1/21/0x00000002
- when going out of sleep S3 state
-Date:   Wed, 13 Jul 2022 09:25:14 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Process Management
-X-Bugzilla-Component: Scheduler
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: g794911663@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-215075-215701-stGQU1D2VM@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215075-215701@https.bugzilla.kernel.org/>
-References: <bug-215075-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 13 Jul 2022 05:36:37 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622A9DF6F;
+        Wed, 13 Jul 2022 02:36:36 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-31caffa4a45so106654127b3.3;
+        Wed, 13 Jul 2022 02:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SXQGxMlZiGDV5DfoHS3oy/b53Aw0pi2XrxvR7btJDu4=;
+        b=fGtMYPE1JzhAg0cPVVxu/PPLSc2kSOS5IoNwzOtAyu8n1wqELcerIi/RCWzSF91Z0l
+         Npxv6lm5ZZRMnsMj93xgW055FOmMS2hHDFq949QbCCTGNXJP/7jScBu6NdDgJgesXNcx
+         MaV4S9DuwJ+nfsWNh9+/qGTIQsPH9AHU/OD+6IDcxi4aGWArTIBE8BGDcGt3EqdMrBag
+         Mj4ds4V+6p2nodu1+1ZyY/DI/j94E7V2j8xGJtIqlRNXHlOh0sNcHovx9KINtnBRA+0T
+         hDequxDs7GadI9CEoZvRpYHT8HXrsvH48Gs6y49ZaYgMwg9mvpd+ZVkwgrXCkjFBaBaP
+         aZiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SXQGxMlZiGDV5DfoHS3oy/b53Aw0pi2XrxvR7btJDu4=;
+        b=pXuKSHMlAmlGaotio6kS53dQq/AyDJ/MstVE38LBfwyaP79ZqSpOq06OYQENgwcOsj
+         /O/4mjF0MFPUoBV8VxJTiMpKCpKMt+L3VgMKjPettuPAtLKggKqApNTc2i8RBwx6OAmr
+         y7DS3Ho3MGGoC+Mw4DhssmaX0n83NUo25yijRaOA0F0DxWfTLT7pAEY3gbGRzuH7sGWK
+         ggKFMY5pyB0FYkyxfAKDLrUcVynM4RqWiEuaBCZb9ueepp8KJNaxGqRnQPa6m+DUMlXP
+         u2/RB9Sk1F6LnHTcX9FKzedEb6qP11lFBeRRYMqV8cN7AvXJmo5FyhHuvEwCwL1BaUbj
+         mo9g==
+X-Gm-Message-State: AJIora95LiPw54TVMYdu+a+RqXo3dedQPCGGf75H9fxTxNF60/klArH2
+        8n2H1u7R8vp7TbXp6OkVqsnm/2LNH9zzg8PX+UlzZFePE8hW6w==
+X-Google-Smtp-Source: AGRyM1sddBAxQ9eUSQFKjZ/gW4Zm+PBH0OnhPqkaWg+6wIlkqiw3WzbhistxLtjURf4xorFey2ZcG2T/gbVV6bCzTGM=
+X-Received: by 2002:a81:108f:0:b0:31c:d7ae:9ff1 with SMTP id
+ 137-20020a81108f000000b0031cd7ae9ff1mr3074047ywq.18.1657704995629; Wed, 13
+ Jul 2022 02:36:35 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 Jul 2022 11:35:59 +0200
+Message-ID: <CAHp75VeFNZjj3rL-Z_KuaNNQUEkzNzjDj7O_mzMj_H7Fnu802w@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: repair file entry in MICROSOFT SURFACE
+ AGGREGATOR TABLET-MODE SWITCH
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215075
+On Wed, Jul 13, 2022 at 6:19 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+>
+> Commit 9f794056db5b ("platform/surface: Add KIP/POS tablet-mode switch
+> driver") adds the section MICROSOFT SURFACE AGGREGATOR TABLET-MODE SWITCH
+> with a file entry, but the file that is added with this commit is actually
+> named slightly differently.
+>
+>   file entry name: drivers/platform/surface/surface_aggregator_tablet_switch.c
+>   added file name: drivers/platform/surface/surface_aggregator_tabletsw.c
+>
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+> broken reference.
+>
+> Repair this file entry to the actual file name added with the commit above.
 
-Ricardo T.Liu (g794911663@gmail.com) changed:
+Fixes tag?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |g794911663@gmail.com
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
---- Comment #2 from Ricardo T.Liu (g794911663@gmail.com) ---
-Hi, I've looked at the log you gave, and I think there was an error checking
-the atomic state of the cpu.
-/*
- * The former STARTING/DYING states, ran with IRQs disabled and must not fa=
-il.
- */
-static bool cpuhp_is_atomic_state(enum cpuhp_state state)
-{
-        return CPUHP_AP_IDLE_DEAD <=3D state && state < CPUHP_AP_ONLINE;
-}
-And I found a computer similar to yours and did not reproduce the problem, I
-guess you may need to overhaul your hardware.
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+With Best Regards,
+Andy Shevchenko
