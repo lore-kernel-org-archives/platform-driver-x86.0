@@ -2,89 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F3FC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jul 2022 09:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F703C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jul 2022 09:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbiGMJgi (ORCPT
+        id S235325AbiGMJsl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jul 2022 05:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53850 "EHLO
+        Wed, 13 Jul 2022 05:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231969AbiGMJgh (ORCPT
+        with ESMTP id S235306AbiGMJsg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jul 2022 05:36:37 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622A9DF6F;
-        Wed, 13 Jul 2022 02:36:36 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-31caffa4a45so106654127b3.3;
-        Wed, 13 Jul 2022 02:36:36 -0700 (PDT)
+        Wed, 13 Jul 2022 05:48:36 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C796CF32E5;
+        Wed, 13 Jul 2022 02:48:08 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id z23-20020a7bc7d7000000b003a2e00222acso1980523wmk.0;
+        Wed, 13 Jul 2022 02:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SXQGxMlZiGDV5DfoHS3oy/b53Aw0pi2XrxvR7btJDu4=;
-        b=fGtMYPE1JzhAg0cPVVxu/PPLSc2kSOS5IoNwzOtAyu8n1wqELcerIi/RCWzSF91Z0l
-         Npxv6lm5ZZRMnsMj93xgW055FOmMS2hHDFq949QbCCTGNXJP/7jScBu6NdDgJgesXNcx
-         MaV4S9DuwJ+nfsWNh9+/qGTIQsPH9AHU/OD+6IDcxi4aGWArTIBE8BGDcGt3EqdMrBag
-         Mj4ds4V+6p2nodu1+1ZyY/DI/j94E7V2j8xGJtIqlRNXHlOh0sNcHovx9KINtnBRA+0T
-         hDequxDs7GadI9CEoZvRpYHT8HXrsvH48Gs6y49ZaYgMwg9mvpd+ZVkwgrXCkjFBaBaP
-         aZiA==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=fuphTEp6gNMdkhjIg8cwnYlOV7ZC8UEsafO4euU0qTU=;
+        b=OwPBw5/wFhQh1FmCHxrzl4SdPN+VQzIegQ/2l8pFzpnH3QPnIp/195F3g+1vAlBLeE
+         ryTCUkvXaqsptU13qkORenx6Q1KXP8Ww94pxUAKuWe1sXHac7Ao4y3CH/SxwBla8VSkJ
+         pvA3IMc8wICq+nc0uS0wtpKC9zQeYFrpUzyGiyWENUWu1ymXL0GTz+Q0lIwapfaibVpO
+         b4QaDs3EyLprJ5/EEFR8QDshPYHlGxpn/yUHSacDtEO3haidbIDG0o3HJXosz1YRkY63
+         5IUs2GthRrSa9hCIKycx1OvLRxazLQJFi8Unp4HTvOahMqwhTM1+a0OG7/D4Qb7+Jz4J
+         Hy6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SXQGxMlZiGDV5DfoHS3oy/b53Aw0pi2XrxvR7btJDu4=;
-        b=pXuKSHMlAmlGaotio6kS53dQq/AyDJ/MstVE38LBfwyaP79ZqSpOq06OYQENgwcOsj
-         /O/4mjF0MFPUoBV8VxJTiMpKCpKMt+L3VgMKjPettuPAtLKggKqApNTc2i8RBwx6OAmr
-         y7DS3Ho3MGGoC+Mw4DhssmaX0n83NUo25yijRaOA0F0DxWfTLT7pAEY3gbGRzuH7sGWK
-         ggKFMY5pyB0FYkyxfAKDLrUcVynM4RqWiEuaBCZb9ueepp8KJNaxGqRnQPa6m+DUMlXP
-         u2/RB9Sk1F6LnHTcX9FKzedEb6qP11lFBeRRYMqV8cN7AvXJmo5FyhHuvEwCwL1BaUbj
-         mo9g==
-X-Gm-Message-State: AJIora95LiPw54TVMYdu+a+RqXo3dedQPCGGf75H9fxTxNF60/klArH2
-        8n2H1u7R8vp7TbXp6OkVqsnm/2LNH9zzg8PX+UlzZFePE8hW6w==
-X-Google-Smtp-Source: AGRyM1sddBAxQ9eUSQFKjZ/gW4Zm+PBH0OnhPqkaWg+6wIlkqiw3WzbhistxLtjURf4xorFey2ZcG2T/gbVV6bCzTGM=
-X-Received: by 2002:a81:108f:0:b0:31c:d7ae:9ff1 with SMTP id
- 137-20020a81108f000000b0031cd7ae9ff1mr3074047ywq.18.1657704995629; Wed, 13
- Jul 2022 02:36:35 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=fuphTEp6gNMdkhjIg8cwnYlOV7ZC8UEsafO4euU0qTU=;
+        b=LA8ORLWeeNY7tY427OxZCS8X2/e12JbKvxgKlb3Nj/wMkLi3L+BCkwEStucD9Me6qT
+         KxVqjuROl/mzIEw1sKxEJ5DvUT5BCRQEPed5PJ8fdotlTTgvSilagS0le1JwQdch24Y3
+         iNzyUe0X1eAcXtJnciI+yFW2PUj3Ho7QDynmA7yFLtAbnmTW/rDk/24guXWVv9CKD0Rv
+         vUUefuQ+3QE9nb9yHRawDN5AaIEmwCT2YuzLqQZNElFwrfMY5Pp2AKEY2TswzySUZEf3
+         Z75DO7f5bkpP7Sdi4pb9QkAGS00uM4vEwGNe79MqYT3gFOKOKFwz4TqKtBibiwTlvRgy
+         2dpg==
+X-Gm-Message-State: AJIora/ErdalqinL9UD9eHW/p4UAUyrsjDkbh2ZmsaYf6lV1XQ8jqagl
+        TIlm9zZgd+0T4OyXEn39d7R5zChzHww=
+X-Google-Smtp-Source: AGRyM1vGx38DCq5gzzkM1jipHVI4keT4cuLpJSx0FcW/ba8RgyJ051bVK5Io+nAy7+m8m8TR+8ipEQ==
+X-Received: by 2002:a7b:c04d:0:b0:3a2:f89d:5707 with SMTP id u13-20020a7bc04d000000b003a2f89d5707mr2501653wmc.1.1657705686310;
+        Wed, 13 Jul 2022 02:48:06 -0700 (PDT)
+Received: from [192.168.2.202] (pd9ea36f5.dip0.t-ipconnect.de. [217.234.54.245])
+        by smtp.gmail.com with ESMTPSA id m4-20020a05600c4f4400b003976fbfbf00sm1677083wmq.30.2022.07.13.02.48.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Jul 2022 02:48:05 -0700 (PDT)
+Message-ID: <80a11145-36b9-9173-2bd1-ff4c077db9ff@gmail.com>
+Date:   Wed, 13 Jul 2022 11:48:05 +0200
 MIME-Version: 1.0
-References: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Jul 2022 11:35:59 +0200
-Message-ID: <CAHp75VeFNZjj3rL-Z_KuaNNQUEkzNzjDj7O_mzMj_H7Fnu802w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
 Subject: Re: [PATCH] MAINTAINERS: repair file entry in MICROSOFT SURFACE
  AGGREGATOR TABLET-MODE SWITCH
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+Content-Language: en-US
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20220713040916.1767-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 6:19 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
+On 7/13/22 06:09, Lukas Bulwahn wrote:
 > Commit 9f794056db5b ("platform/surface: Add KIP/POS tablet-mode switch
 > driver") adds the section MICROSOFT SURFACE AGGREGATOR TABLET-MODE SWITCH
 > with a file entry, but the file that is added with this commit is actually
 > named slightly differently.
->
->   file entry name: drivers/platform/surface/surface_aggregator_tablet_switch.c
->   added file name: drivers/platform/surface/surface_aggregator_tabletsw.c
->
+> 
+>    file entry name: drivers/platform/surface/surface_aggregator_tablet_switch.c
+>    added file name: drivers/platform/surface/surface_aggregator_tabletsw.c
+> 
 > Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
 > broken reference.
->
+> 
 > Repair this file entry to the actual file name added with the commit above.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Fixes tag?
+Thanks for fixing this and sorry for messing this up, I should have noticed.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+With the appropriate Fixes tag, as mentioned by Andy:
 
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-With Best Regards,
-Andy Shevchenko
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9bfd69e2b83d..9ec738419526 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13440,7 +13440,7 @@ MICROSOFT SURFACE AGGREGATOR TABLET-MODE SWITCH
+>   M:	Maximilian Luz <luzmaximilian@gmail.com>
+>   L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+> -F:	drivers/platform/surface/surface_aggregator_tablet_switch.c
+> +F:	drivers/platform/surface/surface_aggregator_tabletsw.c
+>   
+>   MICROSOFT SURFACE BATTERY AND AC DRIVERS
+>   M:	Maximilian Luz <luzmaximilian@gmail.com>
