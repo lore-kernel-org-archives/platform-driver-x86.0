@@ -2,147 +2,187 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B2BC43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 16:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAEDC43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 18:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232564AbiGNQub (ORCPT
+        id S240798AbiGNSnA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jul 2022 12:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
+        Thu, 14 Jul 2022 14:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240506AbiGNQuN (ORCPT
+        with ESMTP id S239259AbiGNSm4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jul 2022 12:50:13 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082A013CE3;
-        Thu, 14 Jul 2022 09:47:21 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 75so4192093ybf.4;
-        Thu, 14 Jul 2022 09:47:20 -0700 (PDT)
+        Thu, 14 Jul 2022 14:42:56 -0400
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808B45C961;
+        Thu, 14 Jul 2022 11:42:55 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id f73so4696924yba.10;
+        Thu, 14 Jul 2022 11:42:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sKkMo+vK7lqJ6rNsvFjcKcJ08hq9L2uCtIalBlioWsM=;
-        b=3rEAHCjxPkYxGZvDSjxlzRpRQ4qEyV/3sbab5GBkTBAO4vrrM8yQoUvdO4C6jjBbay
-         Rn4CxwnzMV/PyBdV6odw3JbU2EZcPA1TuX6gPr95Ge08VEl6qoyQZo9zTPNyidiL2HMl
-         VpNLtu/erVUHYbUAN3w4gDvkNn5V8Lui+gqc81oF9k1uChHYYlEOCBmQply7/bBv7XwA
-         SLlly/SDQs+Z4gRsa4kt04cJMwhRg6cz5FMI5hdgy1/Egm8QkibSX6/PuKsSB+V3VJhe
-         AXW6yeOKxsG4I5YB61kHzoCl3AQ/n2+fjKWCmy9rA9KPGN0mkTTP8Dg6x53WdYW5jH2L
-         XSIg==
-X-Gm-Message-State: AJIora/A0b6O2xrPlF8o5LDCktt6GOa/VI1OIYJQmUnRt/I0rOuTq1Po
-        eqdN+MPCo1ebhOuDVtNmlbzUzMoIAY/YjgwjY3dsLivp
-X-Google-Smtp-Source: AGRyM1vtzdW/okzhD29lioId5DAwBnQkttu10dp0dNEzR7Qr41jZi4wrgQXdYT1WODRaGoFbgqX+WHhey8zVbRHz9ho=
-X-Received: by 2002:a25:fb02:0:b0:66e:3db9:5d49 with SMTP id
- j2-20020a25fb02000000b0066e3db95d49mr10051140ybe.137.1657817240235; Thu, 14
- Jul 2022 09:47:20 -0700 (PDT)
+        bh=EDH55iqvm/y4+GbMmm5kPEwcI5VbOHTkDFiwVpL7Q+Y=;
+        b=qebwH6kdrdtSinrh1Rlkig8nGyX8FkRRWtb94XYaK4Y+CStu21usdu/lOv2XzshbCF
+         QCmjfxvUVZa2cQ5auaGHZP7yR+lduSqnbEbsAwbyCHI0/XaNrE40rVaufniO4KpkDIZL
+         TPp2mGrMh1b0EyLJy+zk9UUGvjFQ3t85PuScCZsp+EPvTMGKQhSTXHfS1LWqp4BZgpyN
+         vM79Jgl5A/keHrjHjj51U9mnCSCF7Y1hWx/TCRid1uZH3xzq3ZJo4pLq9Xwz2or1zKf/
+         XClTCoKxrCmuQs5bOBNTvH16u2hO8Ua75OWzvUz1QVezQ7/tOABUeOJ/1r6StWzaM1TX
+         Bk2Q==
+X-Gm-Message-State: AJIora+hYkQzYkJNWJMup09WcLL92M1OiFRi4k1QG+A5A/q53VMwH0Fm
+        PrN/fzotaiWaBMHfoIk1OZv00MVcVqn1RCHOQiI=
+X-Google-Smtp-Source: AGRyM1uOg/ADFcPsdMzLnvU2uBVx1my5WzxOa2CgPp0ozGCbJOTO7wJTsgVJ8R4Z9vZgGvRH+k4XbRB9AkLzAoXMd9M=
+X-Received: by 2002:a05:6902:1207:b0:66e:f2d2:6e91 with SMTP id
+ s7-20020a056902120700b0066ef2d26e91mr10470466ybu.153.1657824174742; Thu, 14
+ Jul 2022 11:42:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220713211101.85547-1-hdegoede@redhat.com> <20220713211101.85547-2-hdegoede@redhat.com>
-In-Reply-To: <20220713211101.85547-2-hdegoede@redhat.com>
+References: <20220712193910.439171-1-hdegoede@redhat.com>
+In-Reply-To: <20220712193910.439171-1-hdegoede@redhat.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Jul 2022 18:47:09 +0200
-Message-ID: <CAJZ5v0g6Gpdc3zjh-xJWU+217xA+eU53rJxdz=qYEEhPN=pZ9A@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: video: Fix acpi_video_handles_brightness_key_presses()
+Date:   Thu, 14 Jul 2022 20:42:43 +0200
+Message-ID: <CAJZ5v0gunykTeHRH=nSnu2kLgFgKiL3rUkfpK+v=8MP2WSDmUA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/29] drm/kms: Stop registering multiple
+ /sys/class/backlight devs for a single display
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Len Brown <lenb@kernel.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        regressions@lists.linux.dev, Ben Greening <bgreening@gmail.com>
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 11:11 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Tue, Jul 12, 2022 at 9:39 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Commit 3a0cf7ab8df3 ("ACPI: video: Change how we determine if brightness
-> key-presses are handled") made acpi_video_handles_brightness_key_presses()
-> report false when none of the ACPI Video Devices support backlight control.
+> Hi All,
 >
-> But it turns out that at least on a Dell Inspiron N4010 there is no ACPI
-> backlight control, yet brightness hotkeys are still reported through
-> the ACPI Video Bus; and since acpi_video_handles_brightness_key_presses()
-> now returns false, brightness keypresses are now reported twice.
+> As mentioned in my RFC titled "drm/kms: control display brightness through
+> drm_connector properties":
+> https://lore.kernel.org/dri-devel/0d188965-d809-81b5-74ce-7d30c49fee2d@redhat.com/
 >
-> To fix this rename the has_backlight flag to may_report_brightness_keys and
-> also set it the first time a brightness key press event is received.
+> The first step towards this is to deal with some existing technical debt
+> in backlight handling on x86/ACPI boards, specifically we need to stop
+> registering multiple /sys/class/backlight devs for a single display.
 >
-> Depending on the delivery of the other ACPI (WMI) event vs the ACPI Video
-> Bus event this means that the first brightness key press might still get
-> reported twice, but all further keypresses will be filtered as before.
+> This series implements my RFC describing my plan for these cleanups:
+> https://lore.kernel.org/dri-devel/98519ba0-7f18-201a-ea34-652f50343158@redhat.com/
 >
-> Note that this relies on other drivers reporting brightness key events
-> calling acpi_video_handles_brightness_key_presses() when delivering
-> the events (rather then once during driver probe). This is already
-> required and documented in include/acpi/video.h:
+> This new version addresses the few small remarks made on version 1 (mainly
+> changing patch 1/29) and more importantly this finishes the refactoring by
+> else addressing all the bits from the "Other issues" section of
+> the refactor RFC (resulting in patches 15-29 which are new in v2).
 >
-> /*
->  * Note: The value returned by acpi_video_handles_brightness_key_presses()
->  * may change over time and should not be cached.
->  */
->
-> Fixes: 3a0cf7ab8df3 ("ACPI: video: Change how we determine if brightness key-presses are handled")
-> Link: https://lore.kernel.org/regressions/CALF=6jEe5G8+r1Wo0vvz4GjNQQhdkLT5p8uCHn6ZXhg4nsOWow@mail.gmail.com/
-> Reported-by: Ben Greening <bgreening@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Please review and test! I hope to be able to make an immutable branch
+> based on 5.20-rc1 + this series available for merging into the various
+> touched subsystems once 5.20-rc2 is out.
+
+Please feel free to add
 
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> ---
->  drivers/acpi/acpi_video.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+to all of the ACPI video patches in this series.
+
+Thanks!
+
+> Hans de Goede (29):
+>   ACPI: video: Add acpi_video_backlight_use_native() helper
+>   drm/i915: Don't register backlight when another backlight should be
+>     used
+>   drm/amdgpu: Don't register backlight when another backlight should be
+>     used
+>   drm/radeon: Don't register backlight when another backlight should be
+>     used
+>   drm/nouveau: Don't register backlight when another backlight should be
+>     used
+>   ACPI: video: Drop backlight_device_get_by_type() call from
+>     acpi_video_get_backlight_type()
+>   ACPI: video: Remove acpi_video_bus from list before tearing it down
+>   ACPI: video: Simplify acpi_video_unregister_backlight()
+>   ACPI: video: Make backlight class device registration a separate step
+>   ACPI: video: Remove code to unregister acpi_video backlight when a
+>     native backlight registers
+>   drm/i915: Call acpi_video_register_backlight() (v2)
+>   drm/nouveau: Register ACPI video backlight when nv_backlight
+>     registration fails
+>   drm/amdgpu: Register ACPI video backlight when skipping amdgpu
+>     backlight registration
+>   drm/radeon: Register ACPI video backlight when skipping radeon
+>     backlight registration
+>   ACPI: video: Refactor acpi_video_get_backlight_type() a bit
+>   ACPI: video: Add Nvidia WMI EC brightness control detection
+>   ACPI: video: Add Apple GMUX brightness control detection
+>   platform/x86: apple-gmux: Stop calling acpi/video.h functions
+>   platform/x86: toshiba_acpi: Stop using
+>     acpi_video_set_dmi_backlight_type()
+>   platform/x86: acer-wmi: Move backlight DMI quirks to
+>     acpi/video_detect.c
+>   platform/x86: asus-wmi: Drop DMI chassis-type check from backlight
+>     handling
+>   platform/x86: asus-wmi: Move acpi_backlight=vendor quirks to ACPI
+>     video_detect.c
+>   platform/x86: asus-wmi: Move acpi_backlight=native quirks to ACPI
+>     video_detect.c
+>   platform/x86: samsung-laptop: Move acpi_backlight=[vendor|native]
+>     quirks to ACPI video_detect.c
+>   ACPI: video: Remove acpi_video_set_dmi_backlight_type()
+>   ACPI: video: Drop "Samsung X360" acpi_backlight=native quirk
+>   ACPI: video: Drop Clevo/TUXEDO NL5xRU and NL5xNU acpi_backlight=native
+>     quirks
+>   ACPI: video: Fix indentation of video_detect_dmi_table[] entries
+>   drm/todo: Add entry about dealing with brightness control on devices
+>     with > 1 panel
 >
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index 43177c20ce4f..eaea733b368a 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -73,7 +73,7 @@ module_param(device_id_scheme, bool, 0444);
->  static int only_lcd = -1;
->  module_param(only_lcd, int, 0444);
+>  Documentation/gpu/todo.rst                    |  68 +++
+>  drivers/acpi/Kconfig                          |   1 +
+>  drivers/acpi/acpi_video.c                     |  59 ++-
+>  drivers/acpi/video_detect.c                   | 415 +++++++++++-------
+>  drivers/gpu/drm/Kconfig                       |  12 +
+>  .../gpu/drm/amd/amdgpu/atombios_encoders.c    |  14 +-
+>  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   9 +
+>  drivers/gpu/drm/gma500/Kconfig                |   2 +
+>  drivers/gpu/drm/i915/Kconfig                  |   2 +
+>  .../gpu/drm/i915/display/intel_backlight.c    |   7 +
+>  drivers/gpu/drm/i915/display/intel_display.c  |   8 +
+>  drivers/gpu/drm/i915/display/intel_panel.c    |   3 +
+>  drivers/gpu/drm/i915/i915_drv.h               |   2 +
+>  drivers/gpu/drm/nouveau/nouveau_backlight.c   |  14 +
+>  drivers/gpu/drm/radeon/atombios_encoders.c    |   7 +
+>  drivers/gpu/drm/radeon/radeon_encoders.c      |  11 +-
+>  .../gpu/drm/radeon/radeon_legacy_encoders.c   |   7 +
+>  drivers/platform/x86/acer-wmi.c               |  66 ---
+>  drivers/platform/x86/apple-gmux.c             |   3 -
+>  drivers/platform/x86/asus-nb-wmi.c            |  21 -
+>  drivers/platform/x86/asus-wmi.c               |  13 -
+>  drivers/platform/x86/asus-wmi.h               |   2 -
+>  drivers/platform/x86/eeepc-wmi.c              |  25 +-
+>  drivers/platform/x86/samsung-laptop.c         |  87 ----
+>  drivers/platform/x86/toshiba_acpi.c           |  16 -
+>  include/acpi/video.h                          |   9 +-
+>  26 files changed, 468 insertions(+), 415 deletions(-)
 >
-> -static bool has_backlight;
-> +static bool may_report_brightness_keys;
->  static int register_count;
->  static DEFINE_MUTEX(register_count_mutex);
->  static DEFINE_MUTEX(video_list_lock);
-> @@ -1224,7 +1224,7 @@ acpi_video_bus_get_one_device(struct acpi_device *device,
->         acpi_video_device_find_cap(data);
->
->         if (data->cap._BCM && data->cap._BCL)
-> -               has_backlight = true;
-> +               may_report_brightness_keys = true;
->
->         mutex_lock(&video->device_list_lock);
->         list_add_tail(&data->entry, &video->video_device_list);
-> @@ -1693,6 +1693,9 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
->                 break;
->         }
->
-> +       if (keycode)
-> +               may_report_brightness_keys = true;
-> +
->         acpi_notifier_call_chain(device, event, 0);
->
->         if (keycode && (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS)) {
-> @@ -2253,7 +2256,7 @@ void acpi_video_unregister(void)
->         if (register_count) {
->                 acpi_bus_unregister_driver(&acpi_video_bus);
->                 register_count = 0;
-> -               has_backlight = false;
-> +               may_report_brightness_keys = false;
->         }
->         mutex_unlock(&register_count_mutex);
->  }
-> @@ -2275,7 +2278,7 @@ void acpi_video_unregister_backlight(void)
->
->  bool acpi_video_handles_brightness_key_presses(void)
->  {
-> -       return has_backlight &&
-> +       return may_report_brightness_keys &&
->                (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS);
->  }
->  EXPORT_SYMBOL(acpi_video_handles_brightness_key_presses);
 > --
 > 2.36.0
 >
