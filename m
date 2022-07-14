@@ -2,153 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4838AC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 09:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5EDCCA482
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 09:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238140AbiGNJZC (ORCPT
+        id S238312AbiGNJh0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jul 2022 05:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50118 "EHLO
+        Thu, 14 Jul 2022 05:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238444AbiGNJYf (ORCPT
+        with ESMTP id S238278AbiGNJhZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jul 2022 05:24:35 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981321CB3F;
-        Thu, 14 Jul 2022 02:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1657790580;
-        bh=XLh6uW9piesBKYmxZS8eU/yFhlZ7ljg9w80HtVriwhY=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=Vmtx44ECV9ap1hh8yWh5jWQ+LCJuQoI44B2NTwXkLuvH9bhetObZPIUHXJWcjcFnu
-         ycLYl542YQX7ynINixqYnjxZDcUeIjZeKr8hFKQb42mfQ9Jug44F6Ja23yBStC7HDD
-         3Lh714xi28ZzXfMAnY4/IOoACU80NycOhwpjUr0I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from dyn3207-67.wlan.ic.ac.uk ([146.169.207.67]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MNt0M-1nwTdc0ea0-00OCwA; Thu, 14 Jul 2022 11:23:00 +0200
-Message-ID: <7b35628c152bb039a526adf404076ee43fa3a130.camel@gmx.co.uk>
-Subject: Re: input/i8042: Malfunctioning brightness keys on HP Elite
- Dragonfly G2
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>,
+        Thu, 14 Jul 2022 05:37:25 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FBF37193
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 02:37:23 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id ay25so679948wmb.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 02:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=SzhVHfRoTJrnpDanrMQh8Ww74DmMD2/mZU8JBmDOY6U=;
+        b=w+SFia/W6qX5vP8nw0AjesFXx0zp6LOc8q909IC4Cp95MZ71BILXXzMnC/3WOsIdct
+         CkYau2KI5/JEJ94jeRt3YB5ZPPzWtM5XHvFatRoNYbDQHm9H3PyTO3kZoJtZQZbeFVex
+         wuXzGkhH5Omos/WJIs5Gmht6ZF8kawYZFanMIDuB+LmNS/xzLCiKfD6Qpd/G8xN3uwF5
+         vSLbfC2nRkiow5AqDQ0LkAPV2AlMYzgAjJZlb1n8JFE/uvm3zQI3xjVNyqv3H24yUvmN
+         F3+DR4PDRPQVSlxRXc5UIZrP4UcgIWHALHsSrTkHe+InkX1J5061qEIJSY3iZlzvjmfO
+         oVcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SzhVHfRoTJrnpDanrMQh8Ww74DmMD2/mZU8JBmDOY6U=;
+        b=bo3H4anL6SkMq7ZjvccZZoZLwGSYtJnEL2fwgcsi96dr4vLV5KQBRH/j5YW9Iy/PuJ
+         FqgmmfpLLja+cz6yxuBBQfvT2xKfwhJT2ysHdrFviK5RUSUyfbkxieBlIaWJPcnGI8zu
+         ZCV3s5JbxiErM1XIx8BlP42NWbo1qAeFbVfa1Ap6lOChSOBNX/qdEf6BZtJzJ6H0Uc12
+         8r62DZPkfxVWUizebz+TItGTs3Sey3n7SXrzOdaU348y5i+RKe5D8T70NLZNz/M06/Cs
+         p6oNkGhRKaZCgqhVHXsEjXade1d3K6wtZWgnUrMi0j/Cxxu7TH4B+S19N07u8Fvala9C
+         +2Dg==
+X-Gm-Message-State: AJIora8TLx+JdI9wuAeFTqxBblasZlEbH00Euob+2BUoQhPO19O24Qdi
+        qjLBNWYQfjVKicARgYOOIE9oQLSyvdl3lQ==
+X-Google-Smtp-Source: AGRyM1sYAcheIlzffIBizpYIN7jFiJ0gX1659DuMbABmoyKT1xnuz89E+Mbrc/U/du9waWQjzl2Ikg==
+X-Received: by 2002:a05:600c:1e18:b0:3a0:4865:3784 with SMTP id ay24-20020a05600c1e1800b003a048653784mr8096924wmb.139.1657791442299;
+        Thu, 14 Jul 2022 02:37:22 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id z16-20020adff1d0000000b0021d65675583sm987947wro.52.2022.07.14.02.37.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jul 2022 02:37:21 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 10:37:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "markgross@kernel.org" <markgross@kernel.org>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Date:   Thu, 14 Jul 2022 10:22:59 +0100
-In-Reply-To: <PH0PR84MB1953BA49D88304F1D61AB7A0A8899@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20220629094314.b7xmfb3xccj7vs6v@ic-alex-elitebook>
-         <3fedf676645bfa638c9a6c656121083abc2c98ea.camel@gmx.co.uk>
-         <8b893c42-e514-bcef-0513-070b3723cdcc@redhat.com>
-         <df7313597d2ac3212f10c05aa3d369728f030c86.camel@gmx.co.uk>
-         <c89d39eb-17b9-8800-c8ff-8d236b80de2f@redhat.com>
-         <PH0PR84MB195309F5BA5B96858024E61FA8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-         <PH0PR84MB19536D04A5625D4DC8B76AF1A8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-         <0e8611ad73017bc204372f491ae5666dd60885a9.camel@gmx.co.uk>
-         <PH0PR84MB195301AA9C44F2F4ECE4A848A8879@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-         <afeb858778de9b25d0de655ffccb64b85511c428.camel@gmx.co.uk>
-         <PH0PR84MB1953BA49D88304F1D61AB7A0A8899@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <Ys/jz7HqhrxSCOnV@google.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <YqBS8I62YBPFC9iS@google.com>
+ <CAHp75Ve9Lju8AEQd5huz1aYGg4sOu-ae7tTdyDWCXPCBR=wXbQ@mail.gmail.com>
+ <YrGyWCaY+swYAYzH@smile.fi.intel.com>
+ <YryAXlZqcr/liN7n@smile.fi.intel.com>
+ <20220629191406.35965d5b@md1za8fc.ad001.siemens.net>
+ <Ys71dyMdozGUAto0@smile.fi.intel.com>
+ <20220713204827.0b290fd7@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:M5IGv0gfR25O+6RjBWtSy3Eg+LMJ6HabRMW08i0VAPOFbzkerIE
- /5bIqNXv76Y9IG6QXxx2/nkj28Qx6CKvm5sVxDItnWPeJYWeALzpJp+LrQc0cPGgmHLUls+
- VKvpl1mYea0lu2NHT//w1Aoxs9HpIMHcbL8ni4h0DbO0PN2QASOu+HOwamBBeBCRBce02sk
- zwd/+zKSG/fwIpTSm0lAw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dMlmKG7/Z9Y=:zS0Pekc2ujzE/wkK7i70Gc
- vCnQyNRlBC8Vx6cSZKwl1e7xVtS6BlKK68imgBT1ep6DobwvyZmREN8BrW7tzLTaFQtBOQTHP
- EnTFMFA0dxJKskv0iLHxoaQmW60XncpyqKyVHeqk18ZeZQb2y7oKrJYl/sj17IRpQGWbsKrwm
- D+vz6s43hi8YczNPzo/UHjEE1qBGeAkiVdjhvRiL4dvRRqFN8CilAfoLZM9yTWKd5TR8RLkuh
- 8cyuEh+6BIqWz7xddNeOxqpiTfla0Z8OOjlTc1q6hoNzih4ZTTA+ADpaUFaHZM9MmiTeKz+v/
- B1HindPMezSNxzCiFGw1knfrZGRQLcr4D9/Lb7cA9B/4ml4oZt+ddVMJLLbXxN3ZBLIURbiUm
- IJYPB6946+81jU9WmfxP4/WtpfrHRAbkQwExIwcmsqADrqzu5OL5DtvtGpRwyAfyHLO2/tEyM
- +lyc2yw9W12eYHlh+WZHd5t11lARW7NIBPmheviFgI2HO8YwDjIPlknSwT45BFT4wMhZPhmii
- k8SZbPmOpVfki/itcdw/4mCuwbnnC0PQ/vKxEz0cBlCYMgda7xgy2m7lI7u8ewO1cOPYO6Eoi
- Ngsf9PlKf2RULPq9gAXD/85lt4iBsoVMh0SMXlnDZJy32Ar+X0K9K2smhE5qiYGj5/Rfw5WXT
- LPBLnPVYJ3sXaKQCH+2a45iaTB7ByN9ezVNEz0kOdWDRUczIZL3okXaOHY+Zhrz+37fL5RU80
- 8bofDyLQNZ0BOe7qZqhB6L6yPqVKGCxdzktDbEMxES3TbMnYaxK/8zey2ozI8zH4nTth1N1HA
- 4EFEiVdv7xo0W+bKxIfyTinm5UhaX6T9KbsmIe3sOwMKPTFOglrM1t1+kwdrvc8ecPr89Qe2i
- kNnMp0dWPCziGwboMK47D8nfH87giOhFx+N8yXuH4M7xaKYAdEid7yQJfxLWCf6YmT2E0w3SI
- V1nzKWvoAWuy4UIedSgI+DJD4lIDbgznf2FqyPpwv7eLsC8uG+FFUz7CK6+HYbSl1hlWnsLNk
- xPaVEca9YuBdUKKt+Dn6k35+8BXg/yfu2Qx9JK5BvGF435nXRFIxowS49ewIXpm7x75JI5rZ2
- xOQ0RI5lFQp936BXh+u7lqBEz5IRTtQz8yI+ik29CYk5DY4zlvhhBRCCg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220713204827.0b290fd7@md1za8fc.ad001.siemens.net>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2022-07-13 at 16:34 +0000, Lopez, Jorge A (Security) wrote:
-> HI Alex,
->=20
-> HP is working in publishing HP BIOS to LVFS and the team is making
-> progress.=C2=A0=20
-> There are several BIOS published and it appears BIOS for your Elite
-> Dragonfly is one of them.=C2=A0=C2=A0=20
-> See https://fwupd.org/lvfs/firmware/10948.
->=20
-> The BIOS is applicable to notebooks with T90 type BIOS.=C2=A0 If you
-> decide to try flashing the firmware, please do it at your own risk.
->=20
-> BIOS-System Firmware (1)
-> HP BIOS and System Firmware (T90)
-> Version: 01.09.10 Rev.A=C2=A0
->=20
->=20
+On Wed, 13 Jul 2022, Henning Schild wrote:
 
-Great! Thanks =F0=9F=99=82
->=20
-> Regards,
->=20
-> Jorge Lopez
-> Hewlett-Packard=20
->=20
-> =E2=80=9COnce you stop learning, you start dying=E2=80=9D
-> Albert Einstein
->=20
-> -----Original Message-----
-> From: Alex Dewar <alex.dewar@gmx.co.uk>=20
-> Sent: Wednesday, July 13, 2022 3:17 AM
-> To: Lopez, Jorge A (Security) <jorge.lopez2@hp.com>; Hans de Goede
-> <hdegoede@redhat.com>; dmitry.torokhov@gmail.com; tiwai@suse.de;
-> markgross@kernel.org
-> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org;
-> platform-driver-x86@vger.kernel.org
-> Subject: Re: input/i8042: Malfunctioning brightness keys on HP Elite
-> Dragonfly G2
->=20
-> On Mon, 2022-07-11 at 14:59 +0000, Lopez, Jorge A (Security) wrote:
-> > Hi Alex,
-> >=20
-> > Thank you for the BIOS information.=C2=A0=C2=A0 The problem you are
-> > experiencing=20
-> > was fixed in BIOS version 01.07.02 Rev.A
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Fixes an issue where =
-Fn+F3/F4 do not change the
-> > brightness=20
-> > of the display panel when the Privacy Panel is enabled in the F10=20
-> > settings.
-> >=20
-> > The latest BIOS version is 01.09.01 Rev.A so the problem will be=20
-> > resolved after BIOS upgrade.=C2=A0=C2=A0=C2=A0 BIOS is not available vi=
-a LVFS, you
-> > will need to install it via Windows executable.
-> > https://support.hp.com/us-en/drivers/laptops
-> >=20
-> > Let me know if the problem is resolved.
->=20
-> That worked a treat. Thanks!
->=20
-> And if you have an internal ticked called "Support Elitebooks on
-> LVFS"
-> or similar, feel free to add my +1 to it =F0=9F=98=89
->=20
-> Best,
-> Alex
->=20
+> Am Wed, 13 Jul 2022 19:40:23 +0300
+> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> 
+> > On Wed, Jun 29, 2022 at 07:14:06PM +0200, Henning Schild wrote:
+> > > Am Wed, 29 Jun 2022 19:39:58 +0300
+> > > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> > >   
+> > > > +Cc: Rafael
+> > > > 
+> > > > On Tue, Jun 21, 2022 at 02:58:16PM +0300, Andy Shevchenko wrote:  
+> > > > > On Wed, Jun 08, 2022 at 12:50:44PM +0200, Andy Shevchenko
+> > > > > wrote:    
+> > > > > > On Wed, Jun 8, 2022 at 9:42 AM Lee Jones
+> > > > > > <lee.jones@linaro.org> wrote:    
+> > > > > > > On Mon, 06 Jun 2022, Andy Shevchenko wrote:
+> > > > > > >    
+> > > > > > > > There are a few users that would like to utilize P2SB
+> > > > > > > > mechanism of hiding and unhiding a device from the PCI
+> > > > > > > > configuration space.
+> > > > > > > >
+> > > > > > > > Here is the series to consolidate p2sb handling code for
+> > > > > > > > existing users and to provide a generic way for new
+> > > > > > > > comer(s).
+> > > > > > > >
+> > > > > > > > It also includes a patch to enable GPIO controllers on
+> > > > > > > > Apollo Lake when it's used with ABL bootloader w/o ACPI
+> > > > > > > > support.
+> > > > > > > >
+> > > > > > > > The patch that brings the helper ("platform/x86/intel: Add
+> > > > > > > > Primary to Sideband (P2SB) bridge support") has a commit
+> > > > > > > > message that sheds a light on what the P2SB is and why
+> > > > > > > > this is needed.
+> > > > > > > >
+> > > > > > > > I have tested this on Apollo Lake platform (I'm able to
+> > > > > > > > see SPI NOR and since we have an ACPI device for GPIO I
+> > > > > > > > do not see any attempts to recreate one).
+> > > > > > > >
+> > > > > > > > The series is ready to be merged via MFD tree, but see
+> > > > > > > > below.
+> > > > > > > >
+> > > > > > > > The series also includes updates for Simatic IPC drivers
+> > > > > > > > that partially tagged by respective maintainers (the main
+> > > > > > > > question is if Pavel is okay with the last three patches,
+> > > > > > > > since I believe Hans is okay with removing some code
+> > > > > > > > under PDx86). Hence the first 8 patches can be merged
+> > > > > > > > right away and the rest when Pavel does his review.    
+> > > > > > >
+> > > > > > > Can we just wait for Pavel's review, then merge them all at
+> > > > > > > once?    
+> > > > > > 
+> > > > > > Sure, it would be the best course of action.    
+> > > > > 
+> > > > > Pavel, do you have a chance to review the patches (last three)
+> > > > > that touch LED drivers? What would be your verdict?    
+> > > > 
+> > > > Lee, Rafael,
+> > > > 
+> > > > It seems quite hard to get Pavel's attention to this series [1].
+> > > > It's already passed more than 3 weeks for any sign of review of
+> > > > three top patches of the series that touched LED subsystem. The
+> > > > entire series has all necessary tags, but for LED changes.
+> > > > 
+> > > > Note, that the top of this series is not done by me and was sent
+> > > > for preliminary review much earlier [2], altogether it makes
+> > > > months of no response from the maintainer.
+> > > > 
+> > > > The nature of patches is pretty simple and doesn't touch any of
+> > > > other than Simatic LED drivers nor LED core. Moreover, it was
+> > > > written by Siemens, who produces the H/W in question and very
+> > > > well tested as a separate change and as part of the series.  
+> > > 
+> > > The code has been reviewed and is in fact pretty simple. The only
+> > > questionable but pragmatic change that might catch the attention of
+> > > a pedantic reviewer is that i did put the gpio implementation of the
+> > > driver under the same/existing kernel config switch.
+> > >   
+> > > > I think to move forward we may ask Rafael to review it on behalf
+> > > > of good maintainer and with his approval apply entire series.
+> > > > 
+> > > > Thoughts?  
+> > > 
+> > > Thanks for pushing this Andy. I was wondering how and when that
+> > > story would continue. Technically these changes should really go in
+> > > one badge or we need to find a way to separate them somehow. I
+> > > would try to go that extra mile to get out of your way. But i am
+> > > kind of afraid such an effort might also end up touching the same
+> > > files and block us at the same maintainer.
+> > > 
+> > > Did anyone check whether Pavel was active at all in those last
+> > > months and maybe other patches waiting for review? Hope he is fine
+> > > and active and just somehow forgot/overlooked/ignored this one.  
+> > 
+> > I have send a private mail to Pavel and have got no response.
+> > Can we move this forward, let's say, by applying first 8 patches?
+> 
+> I am sorry that situation is now coming. Both simatic-ipc and that
+> appollo lake pinctrl driver compete for the same device memory. That
+> conflict was known and we agreed on sorting it out together somehow.
+> Not applying my patches could leave my LED drivers simply not working
+> any longer, or worse ... them making the apollolake platform stuff act
+> up somehow weird with unexpected EBUSY.
+> 
+> The series can not be split, or we have to write additional code to
+> properly deal with the conflict. I could envision my LED drivers still
+> accessing raw memory and ignoring EBUSY (very hacky! ... and touching
+> "we need Pavel code")
+> 
+> Another way could maybe be. Do the whole P2SB but do not make
+> apollolake pinctrl come up without ACPI. Somewhere in patches 1-8 there
+> is code which makes the pinctrl stuff come up for certain CPUs without
+> ACPI. It is really only some out of many CPUs which have pinctrl, and i
+> am not sure i remember what that has to do with the P2SB helpers as
+> such. The helpers are a refactoring, while the "bring up apollolake
+> pinctrl at all times" is a functional change ... now causing conflict.
+> 
+> And maybe there is a way/process to escalate to another maintainer.
+> Does anyone even know what is going on with Pavel? 
 
+I'll take the hit.  He had his chance.
+
+I'm happy to move forward with Andy's review.
+
+(Side note: Seeing as Pavel hasn't been seen for 2 months, I'll also
+ follow-up on  the LED ML to offer to become temporary maintainer for a
+ bit)
+
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
