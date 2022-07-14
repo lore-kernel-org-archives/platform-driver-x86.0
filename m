@@ -2,84 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB27C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 11:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07230C43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jul 2022 12:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238940AbiGNLfE (ORCPT
+        id S239203AbiGNMLx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jul 2022 07:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47380 "EHLO
+        Thu, 14 Jul 2022 08:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238969AbiGNLfA (ORCPT
+        with ESMTP id S238823AbiGNMLk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jul 2022 07:35:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98430599F7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 04:34:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 259FAB824A1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 11:34:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A96A5C34114
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 11:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657798496;
-        bh=hrIk+PrubEjSfXN2qfapKp/3mVJ0T5+BJzx1Gj3NL2Q=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Hha7075smeK1EuEqoJPTjuCjzntBwoZB5pSMsBVbK+FItKFNOVwZivsks5/Yi41ra
-         VfGTqIeGkBzL812HTkkqekMhPKG9XJM0ypc/gwVESQHlnrd1+LntN48GZkrr6v5Kux
-         Kj6K7CTCmRC83xZqrfoZvBTI79edYipdLpXEnLJsbrwZfH8/M0XO/1xw22v15ocjez
-         Iki6Gx2dQr9kB83LnVAq+mCUwDzFjEYhe0ToCxOiFWwe6UY3L/SGrl9ucsfeJbQrf0
-         lRrjh8w+KfS2HAa+WtPuQ9lKiutldsNypyUen50KHSVs4gb+Frep7mkhm2oTD8wKdH
-         e+8JPdRShixfg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 8AC7DCC13B7; Thu, 14 Jul 2022 11:34:56 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216230] "irq9: nobody cared" on Thinkpad T14 Gen1 (AMD) when
- s2idle is enabled
-Date:   Thu, 14 Jul 2022 11:34:56 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: ASSIGNED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216230-215701-mwf51FUMwn@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216230-215701@https.bugzilla.kernel.org/>
-References: <bug-216230-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 14 Jul 2022 08:11:40 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD4746DA6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 05:10:53 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id r10so2304617wrv.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2022 05:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=y5Tg7l3XIXoLarUSKVZXEIQ6qB8NqY7J9uUJaMOQEX8=;
+        b=b/ypvXVyh+dDxJNobrL9DNZ1DoTaduf7JAcxjZ4FguVhuYGZjXPdNS5C3UDuBmE3JX
+         B5BVsODBbBg4sgftte7GAxhPHdvpFPAAGPql53cVq4Oee/IumsBM1qvYwyKDpGX9OFd9
+         OCghFn7ZZhG14Ro3ckNC3+/t82pvU1ECLnWquKP5LGO9Dffux4Jysc13mVFUjKiIQ7P4
+         7G9H4ojcn7vuZ9//k56Ucu3Js86jjVaMY3H8ckafZ7oYSFwTgQ9CKX71g7WJM9QhYS6a
+         dB0gF/WK12cO461nmCJn9BDxYvx9wI6OMw5AGJSj9PfJlzmyvfCtv3TyoYWlx3KBp1YG
+         0zig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=y5Tg7l3XIXoLarUSKVZXEIQ6qB8NqY7J9uUJaMOQEX8=;
+        b=kaavnn5RpBsPBSBEjtijXjpjTpmcPPvTpykCAE6pCdYgYZOIhtDvvXLYsilpCEMrBX
+         uNt4G/nA41MtDTZmqiRZLwP8wnSHk+DdNjMWjU/92DsexbTF1XuVPyIZM05cB7HzIAAi
+         L0CdTX7ZGkkZE7G3HGaIvlgQrGLdPwu0VBrC3+ruxaBk9ZVB78YiDursYaG+CpYh2H29
+         D/2UQDE5fKOwFKwpOl5yBRY9EcSY8VcWXMV9qLP7QOIHqwXOpMdESw88x9Wz8OZ2RCIS
+         4mry6yeNsyMeN7cqbD4ctQByL/jewCX3kU6bOyQAXTybgfcx9ISkL0gKWCxA1h2uv7DN
+         iz9w==
+X-Gm-Message-State: AJIora8UU/IQ8ViC7MyjmZV+2ATzIRVq98Ene14fGj5WYqdgOT1s0fUc
+        lSmgl7FLv304II65PDhkQgpdPw==
+X-Google-Smtp-Source: AGRyM1v/MKz110s+XqlPHUIpr1tAlhGTb2EkTdhvuwwGbX91Jd/nkFrdVfYH/EhwzLayzDaDhecP8g==
+X-Received: by 2002:adf:f5c7:0:b0:21d:7f20:7508 with SMTP id k7-20020adff5c7000000b0021d7f207508mr7965566wrp.458.1657800652395;
+        Thu, 14 Jul 2022 05:10:52 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id m17-20020a05600c3b1100b003976fbfbf00sm2121158wms.30.2022.07.14.05.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jul 2022 05:10:51 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 13:10:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YtAHyZ5WHDRbgOZe@google.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <YqBS8I62YBPFC9iS@google.com>
+ <20220714112656.GB16407@duo.ucw.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220714112656.GB16407@duo.ucw.cz>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216230
+On Thu, 14 Jul 2022, Pavel Machek wrote:
 
---- Comment #22 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Were you still using the initramfs method when 33000 came through?
-If so; please switch to built-in.  That should allow the driver to load as
-early as possible.
+> On Wed 2022-06-08 08:42:40, Lee Jones wrote:
+> > On Mon, 06 Jun 2022, Andy Shevchenko wrote:
+> > 
+> > > There are a few users that would like to utilize P2SB mechanism of hiding
+> > > and unhiding a device from the PCI configuration space.
+> > > 
+> > > Here is the series to consolidate p2sb handling code for existing users
+> > > and to provide a generic way for new comer(s).
+> > > 
+> > > It also includes a patch to enable GPIO controllers on Apollo Lake
+> > > when it's used with ABL bootloader w/o ACPI support.
+> > > 
+> > > The patch that brings the helper ("platform/x86/intel: Add Primary to
+> > > Sideband (P2SB) bridge support") has a commit message that sheds a light
+> > > on what the P2SB is and why this is needed.
+> > > 
+> > > I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> > > since we have an ACPI device for GPIO I do not see any attempts to recreate
+> > > one).
+> > > 
+> > > The series is ready to be merged via MFD tree, but see below.
+> > > 
+> > > The series also includes updates for Simatic IPC drivers that partially
+> > > tagged by respective maintainers (the main question is if Pavel is okay
+> > > with the last three patches, since I believe Hans is okay with removing
+> > > some code under PDx86). Hence the first 8 patches can be merged right
+> > > away and the rest when Pavel does his review.
+> > 
+> > Can we just wait for Pavel's review, then merge them all at once?
+> 
+> 10,12: Acked-by: Pavel Machek <pavel@ucw.cz>
 
-> Thanks a lot for all the guidance how to track this down!
+Thanks Pavel.  I'll get that added.
 
-Sure!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
