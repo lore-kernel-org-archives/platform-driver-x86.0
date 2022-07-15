@@ -2,156 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21470C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 11:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E142C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 12:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233430AbiGRLrs (ORCPT
+        id S235106AbiGRMof (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 07:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
+        Mon, 18 Jul 2022 08:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234513AbiGRLrr (ORCPT
+        with ESMTP id S234392AbiGRMoe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 07:47:47 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA3A2126D;
-        Mon, 18 Jul 2022 04:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658144865; x=1689680865;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=k95d+pG1IVPgq98QC9nwO2SCOSkBsTf8lK1Vpw4nOGQ=;
-  b=iEbLIeA+FS6vaiBZkW57vHtdagdclumdYegK6ed8qZJVPO0Vi4w04yAs
-   eq5VF7L0+KJXyX0jXE5DzhpOBRUbx98v5e6zoL9/cil1HmWujL3RsCmw7
-   ma42manXf6DvyLrHeH2WGqSnUXkmimWC1tREJN4jgpOh3pHrOIFH2TTAZ
-   qKF4pSO+Y6aV5ejF779nvHiINl/oNE6fWYsIzpXwPgq11TXV8BRbXff7A
-   4RmQtaqthnLJfh/ad5nQisjCr3lDLzn3hgl2nBfSCeXmAh+thZK1KgBn4
-   OyZ+Jk2iJxPSza7t6tU84mPi6knlmQJ03SU1OWZcyVz5x8d/3NqVn1jze
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="265982491"
-X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
-   d="scan'208";a="265982491"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:47:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
-   d="scan'208";a="629890758"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 18 Jul 2022 04:47:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 5DEB813E2; Mon, 18 Jul 2022 14:47:51 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>, Kate Hsuan <hpa@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] platform/x86: p2sb: Move out of X86_PLATFORM_DEVICES dependency
-Date:   Mon, 18 Jul 2022 14:47:48 +0300
-Message-Id: <20220718114748.6365-1-andriy.shevchenko@linux.intel.com>
+        Mon, 18 Jul 2022 08:44:34 -0400
+Received: from smtpbg.qq.com (unknown [43.155.67.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A98B0D;
+        Mon, 18 Jul 2022 05:44:29 -0700 (PDT)
+X-QQ-mid: bizesmtp77t1658148208ture0qdj
+Received: from localhost.localdomain ( [171.223.96.21])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Mon, 18 Jul 2022 20:43:25 +0800 (CST)
+X-QQ-SSF: 01000000002000E0U000C00A0000000
+X-QQ-FEAT: 2emgeMsfL/uG/uzL5nLmXFfF5xD76Np0VZSC4AXXJTWY2IJ1TWWY07aTlUx0k
+        CL+k1cHscHxHXdM7eABgwz8q+ddYtrLbRVaG1CXJScRdunZHYlmuswGZhGNXyLhOChHZMDz
+        CHWOxABkLcJnT7OvestQj5x8r3cF8pXTlTee77kTdjGUcX8V3fXUMS81XYf4syUZDRkaU0m
+        WaGvlaRnbM9zteC22S9i5qif+bAyNvnDJf4DSgosuCPXEJZs+77gALuUviwYzXDYm8qh/87
+        1z3usgqbgSeAFn33o5jjEbJhHRJUgRCRfrs05QpDAAgEBg/IRYdX63iIaBVNGFgy2gLoCX+
+        i2QHrGp02KorPWezPpm1d02dmWa5Xj9QA5SWHYhGFJ0zm3HWHTl4AsBMzCOoKs4Myxyjvxy
+        HqRZ9crpmSs=
+X-QQ-GoodBg: 0
+From:   Jason Wang <wangborong@cdjrlc.com>
+To:     tglx@linutronix.de
+Cc:     ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Wang <wangborong@cdjrlc.com>
+Subject: [PATCH] efi: Fix comment typo
+Date:   Fri, 15 Jul 2022 12:41:29 +0800
+Message-Id: <20220715044129.18712-1-wangborong@cdjrlc.com>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The P2SB library is used for various drivers, including server
-platforms. That's why the dependency on X86_PLATFORM_DEVICES
-seems superfluous.
+The double `there' is duplicated in line 172, remove one.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
 ---
- drivers/platform/x86/Kconfig            | 12 ++++++++++++
- drivers/platform/x86/Makefile           |  4 ++++
- drivers/platform/x86/intel/Kconfig      | 12 ------------
- drivers/platform/x86/intel/Makefile     |  2 --
- drivers/platform/x86/{intel => }/p2sb.c |  0
- 5 files changed, 16 insertions(+), 14 deletions(-)
- rename drivers/platform/x86/{intel => }/p2sb.c (100%)
+ arch/x86/platform/efi/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bc4013e950ed..cab9ceb85436 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1164,6 +1164,18 @@ config WINMATE_FM07_KEYS
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 6e598bd78eef..ebc98a68c400 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -169,7 +169,7 @@ static void __init do_add_efi_memmap(void)
+ }
  
- endif # X86_PLATFORM_DEVICES
- 
-+config P2SB
-+	bool "Primary to Sideband (P2SB) bridge access support"
-+	depends on PCI
-+	help
-+	  The Primary to Sideband (P2SB) bridge is an interface to some
-+	  PCI devices connected through it. In particular, SPI NOR controller
-+	  in Intel Apollo Lake SoC is one of such devices.
-+
-+	  The main purpose of this library is to unhide P2SB device in case
-+	  firmware kept it hidden on some platforms in order to access devices
-+	  behind it.
-+
- config PMC_ATOM
-        def_bool y
-        depends on PCI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 4a59f47a46e2..f04001431c91 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -120,6 +120,10 @@ obj-$(CONFIG_X86_ANDROID_TABLETS)	+= x86-android-tablets.o
- # Intel uncore drivers
- obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
- 
-+# Intel miscellaneous drivers
-+intel_p2sb-y				:= p2sb.o
-+obj-$(CONFIG_P2SB)			+= intel_p2sb.o
-+
- # Intel PMIC / PMC / P-Unit devices
- obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
- obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index c9cfbaae436b..794968bda115 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -70,18 +70,6 @@ config INTEL_OAKTRAIL
- 	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
- 	  here; it will only load on supported platforms.
- 
--config P2SB
--	bool "Primary to Sideband (P2SB) bridge access support"
--	depends on PCI
--	help
--	  The Primary to Sideband (P2SB) bridge is an interface to some
--	  PCI devices connected through it. In particular, SPI NOR controller
--	  in Intel Apollo Lake SoC is one of such devices.
--
--	  The main purpose of this library is to unhide P2SB device in case
--	  firmware kept it hidden on some platforms in order to access devices
--	  behind it.
--
- config INTEL_BXTWC_PMIC_TMU
- 	tristate "Intel Broxton Whiskey Cove TMU Driver"
- 	depends on INTEL_SOC_PMIC_BXTWC
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 741a9404db98..717933dd0cfd 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -28,8 +28,6 @@ intel_int0002_vgpio-y			:= int0002_vgpio.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
- intel_oaktrail-y			:= oaktrail.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
--intel_p2sb-y				:= p2sb.o
--obj-$(CONFIG_P2SB)			+= intel_p2sb.o
- intel_sdsi-y				:= sdsi.o
- obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
- intel_vsec-y				:= vsec.o
-diff --git a/drivers/platform/x86/intel/p2sb.c b/drivers/platform/x86/p2sb.c
-similarity index 100%
-rename from drivers/platform/x86/intel/p2sb.c
-rename to drivers/platform/x86/p2sb.c
+ /*
+- * Given add_efi_memmap defaults to 0 and there there is no alternative
++ * Given add_efi_memmap defaults to 0 and there is no alternative
+  * e820 mechanism for soft-reserved memory, import the full EFI memory
+  * map if soft reservations are present and enabled. Otherwise, the
+  * mechanism to disable the kernel's consideration of EFI_MEMORY_SP is
 -- 
 2.35.1
 
