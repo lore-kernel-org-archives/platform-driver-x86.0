@@ -2,204 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DDCCA47F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jul 2022 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8639CC433EF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jul 2022 15:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234794AbiGON1p (ORCPT
+        id S233497AbiGOPQS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jul 2022 09:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
+        Fri, 15 Jul 2022 11:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234749AbiGON1n (ORCPT
+        with ESMTP id S229480AbiGOPQR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jul 2022 09:27:43 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBFE79EF4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 06:27:41 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id o5-20020a17090a3d4500b001ef76490983so6079066pjf.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 06:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0w0kQnLZNCUoA67Subv68HnzjOpEtCqrqlpvwcv8QtQ=;
-        b=aQJTeA/7QYoqg4phh6dYbrQSrhVVwmYY+spKooPDbdK0/+3i5UXnK5MMw1/F6ry2/e
-         qTCtfYnU6xf2MfjFDlDdR4Ux7++iRsvOhr+NYVNSwL8ImRpCOv4ju2Kw1ED5ovrhkXsr
-         /3cPLPIg/KN8FEYj6D7UGhWwYiIEhQUQSDw7KC4kEul7gTCFVJ9pvBQ58S+OfNtCxWgo
-         Tex/aWXTs9mccMEc9BzY+3Uk5c7vb6x978y1fzzX8PMgEXdPShX1nGddytJLu2YVEbA9
-         fvNefAmRSSpOR2rEd+qpzYaH66WcfPMXIwBxfyCN5WRFZz0nc9XWxevPlzPZQUn66jwf
-         X4qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0w0kQnLZNCUoA67Subv68HnzjOpEtCqrqlpvwcv8QtQ=;
-        b=fHBTglTz31YoAWxgiVm9bg/zrDydF8qjdRzKozlDh47PNKfaSjb56Yvr+Qk9nY0KmN
-         RWOVcjUlvBRmyCCciBuLMtcEucbpF8dH8hKw3Yyupe1WmRCgVaFMSjBOleB8CZA9R5sU
-         gUkyE5z9ofiKLC4/5rQc6dv8wrmDIL0b2GQcEif1JUSMEZ7Qee2PleRF1MarVx+SWNyd
-         ewbUFCoxC+Ussmik4GZHkjzyi6JJUbnjrd+VcgWIifY2z2PJdOvUZRl7LZBCuf175L6x
-         eUsB35qgRsg5KKFr8rEgIThJ/Z2US4ApWEKYrS0ID8LBmXeYW+zRHIBayYU/gRi41l09
-         FAYw==
-X-Gm-Message-State: AJIora+Gi1IgvwfDgJBHl6IcL17Loup5UNqFSy2aOz8ll2ZrUu82u60T
-        gMvDIGoVxdyrIX0ivaUOiVbD8QFaF8H3c9NhNrmn3RyUtqbvBg==
-X-Google-Smtp-Source: AGRyM1uxobt3jQNw8mkgTNw7tHuEHXM0gZenwP8TKU40cNS4zzk/pNnAHQubPXJXXJpyrdH3FzItpK7St541HUkKyP4=
-X-Received: by 2002:a17:902:d510:b0:16c:3cd:db78 with SMTP id
- b16-20020a170902d51000b0016c03cddb78mr13974279plg.17.1657891661082; Fri, 15
- Jul 2022 06:27:41 -0700 (PDT)
+        Fri, 15 Jul 2022 11:16:17 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23D3326EC;
+        Fri, 15 Jul 2022 08:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657898176; x=1689434176;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WRHSubit+Lk19ufdasQNizHHZwCF18420UwzZxf6a8w=;
+  b=LE4/cLSbfI0y/0abW/EijQzbYytTUCLQzkcUe/qBf5RcHTOF+ecmwKjc
+   emD7hTXDHOwlgXbRubGih5EUw/NyVYa61xX0VxiB/+hwhGtEmC7etNiW1
+   yDRQkCedpMRvsQgX0riLKuYAZB8p/vn7Dfc1FJkfebw/05S/O2IU9535K
+   LEwq4b4rk5ia4on2eSmtHrvMgVjJnpXQMrKo4o32CxNPiDDiN3KYB0h9I
+   nO4n8Jp54PdpJQsaiHCTzU6zNUqp/kQO3R80LV661HqQok/e3xMmV9V6H
+   00IX4cI+KJIYNMItWRAoKRSG52kUcn2LO+nbLLejxHjislMpKSQDI5T6b
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="286955082"
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="286955082"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 08:16:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="723109285"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by orsmga004.jf.intel.com with ESMTP; 15 Jul 2022 08:16:13 -0700
+Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 26FFGBwn012966;
+        Fri, 15 Jul 2022 16:16:11 +0100
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: [PATCH] x86/olpc: fix 'logical not is only applied to the left hand side'
+Date:   Fri, 15 Jul 2022 17:15:36 +0200
+Message-Id: <20220715151536.67401-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220707125329.378277-1-jaz@semihalf.com> <MN0PR12MB610107D8E99AC05C7884AEE6E2839@MN0PR12MB6101.namprd12.prod.outlook.com>
-In-Reply-To: <MN0PR12MB610107D8E99AC05C7884AEE6E2839@MN0PR12MB6101.namprd12.prod.outlook.com>
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-Date:   Fri, 15 Jul 2022 15:27:30 +0200
-Message-ID: <CAH76GKM+bGM77gcPCz1yt=MULOxRW=-TCVFwsn6grP0aGRpsMg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] x86: allow to notify host about guest entering s2idle
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmy@semihalf.com" <dmy@semihalf.com>,
-        "dbehr@google.com" <dbehr@google.com>,
-        "upstream@semihalf.com" <upstream@semihalf.com>,
-        "zide.chen@intel.corp-partner.google.com" 
-        <zide.chen@intel.corp-partner.google.com>,
-        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sachi King <nakato@nakato.io>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:HIBERNATION (aka Software Suspend, aka swsusp)" 
-        <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-czw., 7 lip 2022 o 17:27 Limonciello, Mario
-<Mario.Limonciello@amd.com> napisa=C5=82(a):
->
-> [Public]
->
->
->
-> > -----Original Message-----
-> > From: Grzegorz Jaszczyk <jaz@semihalf.com>
-> > Sent: Thursday, July 7, 2022 07:53
-> > To: linux-kernel@vger.kernel.org
-> > Cc: jaz@semihalf.com; dmy@semihalf.com; Limonciello, Mario
-> > <Mario.Limonciello@amd.com>; seanjc@google.com; dbehr@google.com;
-> > upstream@semihalf.com; zide.chen@intel.corp-partner.google.com; Rafael =
-J.
-> > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; Hans de Goede
-> > <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>; Pavel Machek
-> > <pavel@ucw.cz>; Mika Westerberg <mika.westerberg@linux.intel.com>; Sach=
-i
-> > King <nakato@nakato.io>; open list:ACPI <linux-acpi@vger.kernel.org>; o=
-pen
-> > list:X86 PLATFORM DRIVERS <platform-driver-x86@vger.kernel.org>; open
-> > list:HIBERNATION (aka Software Suspend, aka swsusp) <linux-
-> > pm@vger.kernel.org>
-> > Subject: [RFC PATCH 0/2] x86: allow to notify host about guest entering=
- s2idle
-> >
-> > According to the mailing list discussion [1] about the preferred approa=
-ch
-> > for notifying hypervisor/VMM about guest entering s2idle state this RFC=
- was
-> > implemented.
-> >
-> > Instead of original hypercall based approach, which involves KVM change=
- [2]
-> > and makes it hypervisor specific, implement different mechanism, which
-> > takes advantage of MMIO/PIO trapping and makes it hypervisor independen=
-t.
-> >
-> > Patch #1 extends S2Idle ops by new notify handler which will be invoked=
- as
-> > a very last command before system actually enters S2Idle states. It als=
-o
-> > allows to register and use driver specific notification hook which is u=
-sed
-> > in patch #2.
-> >
-> > Patch #2 introduces new driver for virtual PMC, which registers
-> > acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
-> > ACPI _DSM evaluation, which in turn can perform MMIO access and allow t=
-o
-> > trap and therefore notify the VMM about guest entering S2Idle state.
-> >
-> > Please see individual patches and commit logs for more verbose descript=
-ion.
-> >
-> > This patchset is marked as RFC since patch #2 implements driver for non
-> > existing device "HYPE0001", which ACPI ID was not registered yet.
-> > Furthermore the required registration process [3] will not be started
-> > before getting positive feedback about this patchset.
-> >
-> > [1]
-> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
-chw
-> > ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
-> > 2-
-> > jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
-> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
-> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
-> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
-> > 7C3000%7C%7C%7C&amp;sdata=3DRIDiHUNpHUsBYyK3pwGND%2BWJoioXZNCKt
-> > mML2%2F1LAxs%3D&amp;reserved=3D0
-> > [2]
-> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
-chw
-> > ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
-> > 3-
-> > jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
-> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
-> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
-> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
-> > 7C3000%7C%7C%7C&amp;sdata=3DBqykAwWzO%2BfeGPSsAqTmX13O8F0Vvm3G
-> > PL56EpmdSJ8%3D&amp;reserved=3D0
-> > [3]
-> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fuef=
-i.org
-> > %2FPNP_ACPI_Registry&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
-> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
-> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
-> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
-> > 7C3000%7C%7C%7C&amp;sdata=3DQXK52zFXJGEBm6xIv6IFeF7Xxgz4Yp5UmgLSQ
-> > diXtlI%3D&amp;reserved=3D0
-> >
-> > Grzegorz Jaszczyk (2):
-> >   suspend: extend S2Idle ops by new notify handler
-> >   platform/x86: Add virtual PMC driver used for S2Idle
-> >
-> >  drivers/acpi/x86/s2idle.c       | 11 +++++
-> >  drivers/platform/x86/Kconfig    |  7 ++++
-> >  drivers/platform/x86/Makefile   |  1 +
-> >  drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
-> >  include/linux/acpi.h            |  1 +
-> >  include/linux/suspend.h         |  1 +
-> >  kernel/power/suspend.c          |  4 ++
-> >  7 files changed, 98 insertions(+)
-> >  create mode 100644 drivers/platform/x86/virt_pmc.c
-> >
-> > --
-> > 2.37.0.rc0.161.g10f37bed90-goog
->
-> Thanks, you matched the implementation I was expecting.
-> This looks fine by me.
+The bitops compile-time optimization series revealed one more
+problem in olpc-xo1-sci.c:send_ebook_state(), resulted in GCC
+warnings:
 
-Thank you Mario.
+arch/x86/platform/olpc/olpc-xo1-sci.c: In function 'send_ebook_state':
+arch/x86/platform/olpc/olpc-xo1-sci.c:83:63: warning: logical not is only applied to the left hand side of comparison [-Wlogical-not-parentheses]
+   83 |         if (!!test_bit(SW_TABLET_MODE, ebook_switch_idev->sw) == state)
+      |                                                               ^~
+arch/x86/platform/olpc/olpc-xo1-sci.c:83:13: note: add parentheses around left hand side expression to silence this warning
 
-Rafael, Sean, Hans - could you please kindly tell if this approach is
-ok by you? If so I will want to start the registration process of ACPI
-ID required for this series.
+Despite this code working as intended, this redundant double
+negation of boolean value, together with comparing to `char`
+with no explicit conversion to bool, makes compilers think
+the author made some unintentional logical mistakes here.
+Make it the other way around and negate the char instead
+to silence the warnings.
 
-Previously Mario suggested that maybe Linux Foundation could own the
-namespace and ID for this Virtual PMC device - could you please advise
-in this matter?
+Fixes: d2aa37411b8e ("x86/olpc/xo1/sci: Produce wakeup events for buttons and switches")
+Cc: stable@vger.kernel.org # 3.5+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: kernel test robot <lkp@intel.com>
+Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+---
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you in advance,
-Grzegorz
+diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+index f03a6883dcc6..89f25af4b3c3 100644
+--- a/arch/x86/platform/olpc/olpc-xo1-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+@@ -80,7 +80,7 @@ static void send_ebook_state(void)
+ 		return;
+ 	}
+ 
+-	if (!!test_bit(SW_TABLET_MODE, ebook_switch_idev->sw) == state)
++	if (test_bit(SW_TABLET_MODE, ebook_switch_idev->sw) == !!state)
+ 		return; /* Nothing new to report. */
+ 
+ 	input_report_switch(ebook_switch_idev, SW_TABLET_MODE, state);
+-- 
+2.36.1
+
