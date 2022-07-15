@@ -2,324 +2,204 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6FFC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jul 2022 12:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DDCCA47F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jul 2022 13:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232176AbiGOMBx (ORCPT
+        id S234794AbiGON1p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jul 2022 08:01:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
+        Fri, 15 Jul 2022 09:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234854AbiGOMBs (ORCPT
+        with ESMTP id S234749AbiGON1n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jul 2022 08:01:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CE1528B4AF
-        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 05:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657886504;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oVqiCGNB6a+1hDQPxLgnu2SagG2cJPOWVlfxzqlYu1Q=;
-        b=iCK+6uoML5nLnoMXj31dCwpbiu0cuoc74LFKAC6+Nlfnqu6GLbGwYBi2KxIBjb63rhYbla
-        M/mqXNrT2SFehY83xPn7jTav1MzuCEJ31b2dxB7GeCP+UpiVaebbDwmbcDDsUpvECbpxjj
-        pRgQZODy+m0lXrYopkrdrArv6NmeMtU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-410-hQQ-Crj-NqyqDVtPuQvAfw-1; Fri, 15 Jul 2022 08:01:43 -0400
-X-MC-Unique: hQQ-Crj-NqyqDVtPuQvAfw-1
-Received: by mail-ed1-f69.google.com with SMTP id j6-20020a05640211c600b0043a8ea2c138so3340866edw.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 05:01:43 -0700 (PDT)
+        Fri, 15 Jul 2022 09:27:43 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBFE79EF4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 06:27:41 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id o5-20020a17090a3d4500b001ef76490983so6079066pjf.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Jul 2022 06:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0w0kQnLZNCUoA67Subv68HnzjOpEtCqrqlpvwcv8QtQ=;
+        b=aQJTeA/7QYoqg4phh6dYbrQSrhVVwmYY+spKooPDbdK0/+3i5UXnK5MMw1/F6ry2/e
+         qTCtfYnU6xf2MfjFDlDdR4Ux7++iRsvOhr+NYVNSwL8ImRpCOv4ju2Kw1ED5ovrhkXsr
+         /3cPLPIg/KN8FEYj6D7UGhWwYiIEhQUQSDw7KC4kEul7gTCFVJ9pvBQ58S+OfNtCxWgo
+         Tex/aWXTs9mccMEc9BzY+3Uk5c7vb6x978y1fzzX8PMgEXdPShX1nGddytJLu2YVEbA9
+         fvNefAmRSSpOR2rEd+qpzYaH66WcfPMXIwBxfyCN5WRFZz0nc9XWxevPlzPZQUn66jwf
+         X4qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=oVqiCGNB6a+1hDQPxLgnu2SagG2cJPOWVlfxzqlYu1Q=;
-        b=Q/hjmbsef1xbPzjEHQZbSt8opDPqZAf+wMWwiQuGcVXl6N860iIIW65LyDKzWrekwu
-         9RHmnAFh5aZBrzwnWdb/PJhXwmZMZfKuCBDWzh/MEMZNjrkUirBoAxVc65+ebDtgjGzD
-         0VqqW6vVRr7tEbuPBNBuwVjURfVgQvarS7U4qBAflmee/eST5ceHp/IQrL2Qn+oxYO6P
-         4aStBKwyf3F7ltHhrBkoPKNJTZ6Dz04XGPuvEfbThiFvRcsDYaKcTxNsGafds1ErrXAQ
-         X2obBeE6mjEbB/KksZ0JU/Pse14fMx3DSPafKvTJd5x5LZJmtwabbFAYQb9WDP51B2Xw
-         K9fg==
-X-Gm-Message-State: AJIora8kdrVfeJ8dEMAmArnr8xXaUYGRoY6rTAQAjulG7TRxKE8kuHok
-        G/Kb2Lp2QmhSpnl+BahNK+gKCYCVYOglhynNT8vRMfctQ1kcw6syZGAESzMmplv5cEXPj3IIIil
-        +M3TH6Ij81J70gtu4czh7jhkvkOSWZL2Yvw==
-X-Received: by 2002:a05:6402:1011:b0:43a:76bf:6c40 with SMTP id c17-20020a056402101100b0043a76bf6c40mr18706515edu.352.1657886502353;
-        Fri, 15 Jul 2022 05:01:42 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s4ZXT/YV1dR7jU5drrgi+u+qGxZJjoBjsMNrXR/NiwsA9lFfG5d91HH4Ib0JA6GRvbpcAhIw==
-X-Received: by 2002:a05:6402:1011:b0:43a:76bf:6c40 with SMTP id c17-20020a056402101100b0043a76bf6c40mr18706479edu.352.1657886502117;
-        Fri, 15 Jul 2022 05:01:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170906218200b0072b873f19a0sm1933827eju.129.2022.07.15.05.01.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Jul 2022 05:01:41 -0700 (PDT)
-Message-ID: <235a6965-b6df-022f-82ed-b287af81f959@redhat.com>
-Date:   Fri, 15 Jul 2022 14:01:40 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0w0kQnLZNCUoA67Subv68HnzjOpEtCqrqlpvwcv8QtQ=;
+        b=fHBTglTz31YoAWxgiVm9bg/zrDydF8qjdRzKozlDh47PNKfaSjb56Yvr+Qk9nY0KmN
+         RWOVcjUlvBRmyCCciBuLMtcEucbpF8dH8hKw3Yyupe1WmRCgVaFMSjBOleB8CZA9R5sU
+         gUkyE5z9ofiKLC4/5rQc6dv8wrmDIL0b2GQcEif1JUSMEZ7Qee2PleRF1MarVx+SWNyd
+         ewbUFCoxC+Ussmik4GZHkjzyi6JJUbnjrd+VcgWIifY2z2PJdOvUZRl7LZBCuf175L6x
+         eUsB35qgRsg5KKFr8rEgIThJ/Z2US4ApWEKYrS0ID8LBmXeYW+zRHIBayYU/gRi41l09
+         FAYw==
+X-Gm-Message-State: AJIora+Gi1IgvwfDgJBHl6IcL17Loup5UNqFSy2aOz8ll2ZrUu82u60T
+        gMvDIGoVxdyrIX0ivaUOiVbD8QFaF8H3c9NhNrmn3RyUtqbvBg==
+X-Google-Smtp-Source: AGRyM1uxobt3jQNw8mkgTNw7tHuEHXM0gZenwP8TKU40cNS4zzk/pNnAHQubPXJXXJpyrdH3FzItpK7St541HUkKyP4=
+X-Received: by 2002:a17:902:d510:b0:16c:3cd:db78 with SMTP id
+ b16-20020a170902d51000b0016c03cddb78mr13974279plg.17.1657891661082; Fri, 15
+ Jul 2022 06:27:41 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v2 20/29] platform/x86: acer-wmi: Move backlight DMI
- quirks to acpi/video_detect.c
-Content-Language: en-US
-To:     Daniel Dadap <ddadap@nvidia.com>, Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+References: <20220707125329.378277-1-jaz@semihalf.com> <MN0PR12MB610107D8E99AC05C7884AEE6E2839@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <MN0PR12MB610107D8E99AC05C7884AEE6E2839@MN0PR12MB6101.namprd12.prod.outlook.com>
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+Date:   Fri, 15 Jul 2022 15:27:30 +0200
+Message-ID: <CAH76GKM+bGM77gcPCz1yt=MULOxRW=-TCVFwsn6grP0aGRpsMg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] x86: allow to notify host about guest entering s2idle
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmy@semihalf.com" <dmy@semihalf.com>,
+        "dbehr@google.com" <dbehr@google.com>,
+        "upstream@semihalf.com" <upstream@semihalf.com>,
+        "zide.chen@intel.corp-partner.google.com" 
+        <zide.chen@intel.corp-partner.google.com>,
+        Len Brown <lenb@kernel.org>, Mark Gross <markgross@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20220712193910.439171-1-hdegoede@redhat.com>
- <20220712193910.439171-21-hdegoede@redhat.com>
- <2c4fafb0-e47f-d640-0fc9-4530a8d462e0@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2c4fafb0-e47f-d640-0fc9-4530a8d462e0@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sachi King <nakato@nakato.io>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:HIBERNATION (aka Software Suspend, aka swsusp)" 
+        <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+czw., 7 lip 2022 o 17:27 Limonciello, Mario
+<Mario.Limonciello@amd.com> napisa=C5=82(a):
+>
+> [Public]
+>
+>
+>
+> > -----Original Message-----
+> > From: Grzegorz Jaszczyk <jaz@semihalf.com>
+> > Sent: Thursday, July 7, 2022 07:53
+> > To: linux-kernel@vger.kernel.org
+> > Cc: jaz@semihalf.com; dmy@semihalf.com; Limonciello, Mario
+> > <Mario.Limonciello@amd.com>; seanjc@google.com; dbehr@google.com;
+> > upstream@semihalf.com; zide.chen@intel.corp-partner.google.com; Rafael =
+J.
+> > Wysocki <rafael@kernel.org>; Len Brown <lenb@kernel.org>; Hans de Goede
+> > <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>; Pavel Machek
+> > <pavel@ucw.cz>; Mika Westerberg <mika.westerberg@linux.intel.com>; Sach=
+i
+> > King <nakato@nakato.io>; open list:ACPI <linux-acpi@vger.kernel.org>; o=
+pen
+> > list:X86 PLATFORM DRIVERS <platform-driver-x86@vger.kernel.org>; open
+> > list:HIBERNATION (aka Software Suspend, aka swsusp) <linux-
+> > pm@vger.kernel.org>
+> > Subject: [RFC PATCH 0/2] x86: allow to notify host about guest entering=
+ s2idle
+> >
+> > According to the mailing list discussion [1] about the preferred approa=
+ch
+> > for notifying hypervisor/VMM about guest entering s2idle state this RFC=
+ was
+> > implemented.
+> >
+> > Instead of original hypercall based approach, which involves KVM change=
+ [2]
+> > and makes it hypervisor specific, implement different mechanism, which
+> > takes advantage of MMIO/PIO trapping and makes it hypervisor independen=
+t.
+> >
+> > Patch #1 extends S2Idle ops by new notify handler which will be invoked=
+ as
+> > a very last command before system actually enters S2Idle states. It als=
+o
+> > allows to register and use driver specific notification hook which is u=
+sed
+> > in patch #2.
+> >
+> > Patch #2 introduces new driver for virtual PMC, which registers
+> > acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
+> > ACPI _DSM evaluation, which in turn can perform MMIO access and allow t=
+o
+> > trap and therefore notify the VMM about guest entering S2Idle state.
+> >
+> > Please see individual patches and commit logs for more verbose descript=
+ion.
+> >
+> > This patchset is marked as RFC since patch #2 implements driver for non
+> > existing device "HYPE0001", which ACPI ID was not registered yet.
+> > Furthermore the required registration process [3] will not be started
+> > before getting positive feedback about this patchset.
+> >
+> > [1]
+> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
+chw
+> > ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
+> > 2-
+> > jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> > 7C3000%7C%7C%7C&amp;sdata=3DRIDiHUNpHUsBYyK3pwGND%2BWJoioXZNCKt
+> > mML2%2F1LAxs%3D&amp;reserved=3D0
+> > [2]
+> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
+chw
+> > ork.kernel.org%2Fproject%2Flinux-pm%2Fpatch%2F20220609110337.1238762-
+> > 3-
+> > jaz%40semihalf.com%2F&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> > 7C3000%7C%7C%7C&amp;sdata=3DBqykAwWzO%2BfeGPSsAqTmX13O8F0Vvm3G
+> > PL56EpmdSJ8%3D&amp;reserved=3D0
+> > [3]
+> > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fuef=
+i.org
+> > %2FPNP_ACPI_Registry&amp;data=3D05%7C01%7Cmario.limonciello%40amd.co
+> > m%7C514a545cf9aa4a7b6d9508da6018138b%7C3dd8961fe4884e608e11a82d9
+> > 94e183d%7C0%7C0%7C637927953769026163%7CUnknown%7CTWFpbGZsb3d8
+> > eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
+> > 7C3000%7C%7C%7C&amp;sdata=3DQXK52zFXJGEBm6xIv6IFeF7Xxgz4Yp5UmgLSQ
+> > diXtlI%3D&amp;reserved=3D0
+> >
+> > Grzegorz Jaszczyk (2):
+> >   suspend: extend S2Idle ops by new notify handler
+> >   platform/x86: Add virtual PMC driver used for S2Idle
+> >
+> >  drivers/acpi/x86/s2idle.c       | 11 +++++
+> >  drivers/platform/x86/Kconfig    |  7 ++++
+> >  drivers/platform/x86/Makefile   |  1 +
+> >  drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
+> >  include/linux/acpi.h            |  1 +
+> >  include/linux/suspend.h         |  1 +
+> >  kernel/power/suspend.c          |  4 ++
+> >  7 files changed, 98 insertions(+)
+> >  create mode 100644 drivers/platform/x86/virt_pmc.c
+> >
+> > --
+> > 2.37.0.rc0.161.g10f37bed90-goog
+>
+> Thanks, you matched the implementation I was expecting.
+> This looks fine by me.
 
-On 7/12/22 22:24, Daniel Dadap wrote:
-> I'll ask around to see if there's some DMI property we can match in order to detect whether a system is expected to use the EC backlight driver: if so, maybe we can avoid the WMI interactions in patch 16/29 of this series. Although I suppose even if there were a DMI property, we'd still need to call the WMI-wrapped ACPI method to check whether the system is currently configured to drive the backlight through the EC, unless the system somehow exports a different DMI table depending on the current backlight control configuration, which I imagine to be unlikely.
+Thank you Mario.
 
-IMHO the duplication is fine, it is also important that
-the video_detect.c code and the actual backlight driver use
-the same detection mechanism where possible.
-Otherwise acpi_video_get_backlight_type() may return
-acpi_backlight_nvidia_wmi_ec while the EC backlight driver
-refuses to load...
+Rafael, Sean, Hans - could you please kindly tell if this approach is
+ok by you? If so I will want to start the registration process of ACPI
+ID required for this series.
 
-Regards,
+Previously Mario suggested that maybe Linux Foundation could own the
+namespace and ID for this Virtual PMC device - could you please advise
+in this matter?
 
-Hans
-
-
-
-
-
-> 
-> This change looks fine to me, although I suppose somebody who maintains the acer-wmi driver should comment. The bugzilla links are a nice touch.
-> 
-> On 7/12/22 14:39, Hans de Goede wrote:
->> Move the backlight DMI quirks to acpi/video_detect.c, so that
->> the driver no longer needs to call acpi_video_set_dmi_backlight_type().
->>
->> acpi_video_set_dmi_backlight_type() is troublesome because it may end up
->> getting called after other backlight drivers have already called
->> acpi_video_get_backlight_type() resulting in the other drivers
->> already being registered even though they should not.
->>
->> Note that even though the DMI quirk table name was video_vendor_dmi_table,
->> 5/6 quirks were actually quirks to use the GPU native backlight.
->>
->> These 5 quirks also had a callback in their dmi_system_id entry which
->> disabled the acer-wmi vendor driver; and any DMI match resulted in:
->>
->>     acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
->>
->> which disabled the acpi_video driver, so only the native driver was left.
->> The new entries for these 5/6 devices correctly marks these as needing
->> the native backlight driver.
->>
->> Also note that other changes in this series change the native backlight
->> drivers to no longer unconditionally register their backlight. Instead
->> these drivers now do this check:
->>
->>     if (acpi_video_get_backlight_type(false) != acpi_backlight_native)
->>         return 0; /* bail */
->>
->> which without this patch would have broken these 5/6 "special" quirks.
->>
->> Since I had to look at all the commits adding the quirks anyways, to make
->> sure that I understood the code correctly, I've also added links to
->> the various original bugzillas for these quirks to the new entries.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/acpi/video_detect.c     | 53 ++++++++++++++++++++++++++
->>   drivers/platform/x86/acer-wmi.c | 66 ---------------------------------
->>   2 files changed, 53 insertions(+), 66 deletions(-)
->>
->> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
->> index a514adaec14d..cd51cb0d7821 100644
->> --- a/drivers/acpi/video_detect.c
->> +++ b/drivers/acpi/video_detect.c
->> @@ -147,6 +147,15 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
->>           DMI_MATCH(DMI_BOARD_NAME, "X360"),
->>           },
->>       },
->> +    {
->> +     /* https://bugzilla.redhat.com/show_bug.cgi?id=1128309 */
->> +     .callback = video_detect_force_vendor,
->> +     /* Acer KAV80 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "KAV80"),
->> +        },
->> +    },
->>       {
->>       .callback = video_detect_force_vendor,
->>       /* Asus UL30VT */
->> @@ -427,6 +436,41 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
->>           DMI_MATCH(DMI_BOARD_NAME, "JV50"),
->>           },
->>       },
->> +    {
->> +     /* https://bugzilla.redhat.com/show_bug.cgi?id=1012674 */
->> +     .callback = video_detect_force_native,
->> +     /* Acer Aspire 5741 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5741"),
->> +        },
->> +    },
->> +    {
->> +     /* https://bugzilla.kernel.org/show_bug.cgi?id=42993 */
->> +     .callback = video_detect_force_native,
->> +     /* Acer Aspire 5750 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
->> +        },
->> +    },
->> +    {
->> +     /* https://bugzilla.kernel.org/show_bug.cgi?id=42833 */
->> +     .callback = video_detect_force_native,
->> +     /* Acer Extensa 5235 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "Extensa 5235"),
->> +        },
->> +    },
->> +    {
->> +     .callback = video_detect_force_native,
->> +     /* Acer TravelMate 4750 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 4750"),
->> +        },
->> +    },
->>       {
->>        /* https://bugzilla.kernel.org/show_bug.cgi?id=207835 */
->>        .callback = video_detect_force_native,
->> @@ -437,6 +481,15 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
->>           DMI_MATCH(DMI_BOARD_NAME, "BA51_MV"),
->>           },
->>       },
->> +    {
->> +     /* https://bugzilla.kernel.org/show_bug.cgi?id=36322 */
->> +     .callback = video_detect_force_native,
->> +     /* Acer TravelMate 5760 */
->> +     .matches = {
->> +        DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> +        DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5760"),
->> +        },
->> +    },
->>       {
->>       .callback = video_detect_force_native,
->>       /* ASUSTeK COMPUTER INC. GA401 */
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
->> index 9c6943e401a6..c08eeb1e0e05 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -643,69 +643,6 @@ static const struct dmi_system_id non_acer_quirks[] __initconst = {
->>       {}
->>   };
->>   -static int __init
->> -video_set_backlight_video_vendor(const struct dmi_system_id *d)
->> -{
->> -    interface->capability &= ~ACER_CAP_BRIGHTNESS;
->> -    pr_info("Brightness must be controlled by generic video driver\n");
->> -    return 0;
->> -}
->> -
->> -static const struct dmi_system_id video_vendor_dmi_table[] __initconst = {
->> -    {
->> -        .callback = video_set_backlight_video_vendor,
->> -        .ident = "Acer TravelMate 4750",
->> -        .matches = {
->> -            DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 4750"),
->> -        },
->> -    },
->> -    {
->> -        .callback = video_set_backlight_video_vendor,
->> -        .ident = "Acer Extensa 5235",
->> -        .matches = {
->> -            DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "Extensa 5235"),
->> -        },
->> -    },
->> -    {
->> -        .callback = video_set_backlight_video_vendor,
->> -        .ident = "Acer TravelMate 5760",
->> -        .matches = {
->> -            DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate 5760"),
->> -        },
->> -    },
->> -    {
->> -        .callback = video_set_backlight_video_vendor,
->> -        .ident = "Acer Aspire 5750",
->> -        .matches = {
->> -            DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
->> -        },
->> -    },
->> -    {
->> -        .callback = video_set_backlight_video_vendor,
->> -        .ident = "Acer Aspire 5741",
->> -        .matches = {
->> -            DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5741"),
->> -        },
->> -    },
->> -    {
->> -        /*
->> -         * Note no video_set_backlight_video_vendor, we must use the
->> -         * acer interface, as there is no native backlight interface.
->> -         */
->> -        .ident = "Acer KAV80",
->> -        .matches = {
->> -            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
->> -            DMI_MATCH(DMI_PRODUCT_NAME, "KAV80"),
->> -        },
->> -    },
->> -    {}
->> -};
->> -
->>   /* Find which quirks are needed for a particular vendor/ model pair */
->>   static void __init find_quirks(void)
->>   {
->> @@ -2482,9 +2419,6 @@ static int __init acer_wmi_init(void)
->>         set_quirks();
->>   -    if (dmi_check_system(video_vendor_dmi_table))
->> -        acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
->> -
->>       if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->>           interface->capability &= ~ACER_CAP_BRIGHTNESS;
->>   
-> 
-
+Thank you in advance,
+Grzegorz
