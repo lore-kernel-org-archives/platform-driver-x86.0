@@ -2,114 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D91FCCA47B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jul 2022 05:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8E6CCA486
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jul 2022 10:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232421AbiGQFbx (ORCPT
+        id S232421AbiGQK1t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jul 2022 01:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42376 "EHLO
+        Sun, 17 Jul 2022 06:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbiGQFbx (ORCPT
+        with ESMTP id S229731AbiGQK1s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jul 2022 01:31:53 -0400
-X-Greylist: delayed 921 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 16 Jul 2022 22:31:52 PDT
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E2B22285;
-        Sat, 16 Jul 2022 22:31:52 -0700 (PDT)
-Received: from [IPv6:::1] ([IPv6:2601:646:8600:40c1:ae5e:3057:2e2c:7f5b])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.15.2) with ESMTPSA id 26H5FeWZ725281
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Sat, 16 Jul 2022 22:15:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 26H5FeWZ725281
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2022070501; t=1658034943;
-        bh=2oBoSTWNfbYjfQp5I53ct47lO8uP5kHvPPZlw0O0iT4=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=x9NX+33NijYF6F4JSe2y1tPLDO3Vv0GKcb2L66yq+xscfClCQYR3I0FKpfj+dnHXH
-         d7BHMb3RN1f+jpj5lZyLsoxAvENnGI+BDriJ+MekMAcKOf8oXYP1/DI2qZrnXiAx/Z
-         1rKyWVEzlND39q2MTT55L2fCG4Xgvvnuglu7tQmZQMuieim0Ipe+aGD3a+ItWQdWeI
-         z74RwIF3MX13sn9vkrl54IpGsQMq5Tzpwm9MsMLf1vYfqUDpx7xFiNEB+gftJHYS31
-         YIb/nb6phxefYclwPAukUrvcU4CzYiEdYMrl8b7K7w9pi6jthuuMt5zEeWk9DaBXCv
-         EfPsfdx3helig==
-Date:   Sat, 16 Jul 2022 22:08:09 -0700
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-CC:     brijesh.singh@amd.com, Ingo Molnar <mingo@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        brijesh.ksingh@gmail.com, tony.luck@intel.com, marcorr@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v12_29/46=5D_x86/boot=3A_Add_Co?= =?US-ASCII?Q?nfidential_Computing_type_to_setup=5Fdata?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <91ed3c18-6cff-c6d4-a628-81f1f71b21dc@amd.com>
-References: <20220307213356.2797205-1-brijesh.singh@amd.com> <20220307213356.2797205-30-brijesh.singh@amd.com> <87v8vlzz8x.ffs@tglx> <91ed3c18-6cff-c6d4-a628-81f1f71b21dc@amd.com>
-Message-ID: <496A3732-C91B-48B0-9DBB-126108174D93@zytor.com>
+        Sun, 17 Jul 2022 06:27:48 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29E013F6C;
+        Sun, 17 Jul 2022 03:27:46 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7278C1C0003; Sun, 17 Jul 2022 12:27:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+        t=1658053665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3MVHf1qHPbwU04QPrugrK9rKDYYcr5uqSuRuIBZh6RU=;
+        b=E1wd2mR5U0P3hGWzxsehSHmMQgRyWJTSAWmvHc26G/G5mkxAEtvEy4BVpQYub/YXK0hYbL
+        gmW9mhrDbGEHoVivVOofSu0a+HUqTkuMdgM76XcH8SZq2pXnNX8d9RZSiwmbZcTmslAn0D
+        KJbRBbX8TLTBo1MJdd6AFEC9ra/P6L0=
+Date:   Sun, 17 Jul 2022 12:27:44 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <20220717102744.GD14285@duo.ucw.cz>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+ <YqBS8I62YBPFC9iS@google.com>
+ <20220714112656.GB16407@duo.ucw.cz>
+ <YtAHyZ5WHDRbgOZe@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
+Content-Disposition: inline
+In-Reply-To: <YtAHyZ5WHDRbgOZe@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On April 7, 2022 7:57:22 AM PDT, Brijesh Singh <brijesh=2Esingh@amd=2Ecom> =
-wrote:
->
->
->On 4/6/22 16:19, Thomas Gleixner wrote:
->> On Mon, Mar 07 2022 at 15:33, Brijesh Singh wrote:
->>>  =20
->>> +/*
->>> + * AMD SEV Confidential computing blob structure=2E The structure is
->>> + * defined in OVMF UEFI firmware header:
->>> + * https://github=2Ecom/tianocore/edk2/blob/master/OvmfPkg/Include/Gu=
-id/ConfidentialComputingSevSnpBlob=2Eh
->>> + */
->>> +#define CC_BLOB_SEV_HDR_MAGIC	0x45444d41
->>> +struct cc_blob_sev_info {
->>> +	u32 magic;
->>> +	u16 version;
->>> +	u16 reserved;
->>> +	u64 secrets_phys;
->>> +	u32 secrets_len;
->>> +	u32 rsvd1;
->>> +	u64 cpuid_phys;
->>> +	u32 cpuid_len;
->>> +	u32 rsvd2;
->>> +};
->>=20
->> Shouldn't this be packed?
->>=20
->
->Yep, to avoid any additional compiler alignment we should pack it=2E
->
->thanks
 
-It shouldn't be *necessary*, any more than it is necessary for kernel-user=
- space structures, since EFI is a C-based ABI=2E On x86 it doesn't hurt, ei=
-ther, though, so might as well=2E
+--ZARJHfwaSJQLOEUz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > Can we just wait for Pavel's review, then merge them all at once?
+> >=20
+> > 10,12: Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> Thanks Pavel.  I'll get that added.
+
+Thank you, sorry for the delays.
+
+Best regards,
+							Pavel
+
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--ZARJHfwaSJQLOEUz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYtPkIAAKCRAw5/Bqldv6
+8shAAJ9XaR038+0wsZQKvKNF4Tgr3zzktwCcCU+9rZjRQhe2EMoVQr1ueJ71gO0=
+=4aTK
+-----END PGP SIGNATURE-----
+
+--ZARJHfwaSJQLOEUz--
