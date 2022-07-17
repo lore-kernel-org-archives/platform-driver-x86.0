@@ -2,101 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15162C43334
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jul 2022 12:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2D8C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jul 2022 14:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiGQMHu (ORCPT
+        id S232898AbiGQOuu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jul 2022 08:07:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
+        Sun, 17 Jul 2022 10:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbiGQMHt (ORCPT
+        with ESMTP id S232848AbiGQOut (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jul 2022 08:07:49 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128D915813;
-        Sun, 17 Jul 2022 05:07:45 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id l22-20020a05600c4f1600b003a2e10c8cdeso6337761wmq.1;
-        Sun, 17 Jul 2022 05:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eyGGShEtJ5QngHNH1K1pLBz5li6ed+QkJBaQv+XwZiI=;
-        b=PWIdhjoscQZbm5ADgJnYohKqIsKWLtf9ju97xPrnOXe+r+K6GZUSF3tfsj/aCbTqrb
-         F/LbLCCQTTCfifo/RD8KSt2dPqPFzcpyMPeS8ctW8SHsQQKsrU8IErMhKKxRMWgj/359
-         e6DjlWf1J82stxHU+kwgV7Exl/oOfeJL9vg9dWjL1t4qiC8HnmwcovSlVCPDyrGRNwzq
-         OmznekccZqI7RrC5O/7ENb1H7RL4UyL2nS1Uqp4vcw38H7liMHVo8J0XFo804hctVutq
-         hfesxY3bwOgYGyFEVNY02dN+nH0wrGJidrxkOkAQxUmq/Ixf2Mypvhz+iTPPLHGwc2v7
-         WQtg==
+        Sun, 17 Jul 2022 10:50:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BC2E4C8
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jul 2022 07:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658069447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hkZ/kwPcmy7MO8oN1ITciGcELFqkzl55uZkPhtRqCIk=;
+        b=NvBLdzBsWvlciwyiclHnjxu1ehkQF0Wr4Ighkik2sllUx8iZHXqfV8HpnFRCtKpNHj5lII
+        U35M71pkBmVRQmBD+Cmee1AqFIqKSici6YMaElpWvHJRn2LLNPF9+SGcGOuYb3RVtLDM/2
+        H7glcfbMuwwTzmZeZHOOaRN0TNnHXs0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-564-laUPLEnvO22izUF90lYI6g-1; Sun, 17 Jul 2022 10:50:44 -0400
+X-MC-Unique: laUPLEnvO22izUF90lYI6g-1
+Received: by mail-ed1-f69.google.com with SMTP id w13-20020a05640234cd00b0043a991fb3f3so6414454edc.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jul 2022 07:50:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=eyGGShEtJ5QngHNH1K1pLBz5li6ed+QkJBaQv+XwZiI=;
-        b=xKgCWtuHZB7JcFRJ2amlYTtoMQQMFz3PW2CEQhu49FAj80b3T1dMZBwkdFIU1C49Bf
-         44Sdjb0H2vE+GgD7UpEP+K3cw5L2tc0osCe2TNPIKeBnkBQ2kioh3wtqT/omXjkCy1mV
-         /+CBnbRQhtBdFuQelBXgmQLIbnPWVwCFd3Si0rLkk4+HtVn+LUu/LGlwuAY6gEhml7Xt
-         U90HwGvrBuRJW7WdsWrirWDW0QDt/v6K96SFoIGGqK+F82fe5pnaQIKwyJd1GEaRaW3s
-         e1oFuK9KVYuKNSlGUQRKqJTPf2/iilaxfsdeUR5d3kIWv/yADO9Wle6fdbW3+qT8C2dL
-         XG5w==
-X-Gm-Message-State: AJIora9P/rW7gi/O14KuEJWSzb5RNG/j79kY8ZN0LrsHq2WTfxouZwMV
-        b/rPO8ACMNf/Z5s9J15O5z4=
-X-Google-Smtp-Source: AGRyM1tO7vuOsF+0/JqzXCNNfyASqaxGNaareyrNlCthAXRzf8BXtQqQNdPj+tFxw9k15VtGTCoZaw==
-X-Received: by 2002:a7b:c381:0:b0:3a2:fe96:2ce4 with SMTP id s1-20020a7bc381000000b003a2fe962ce4mr19633955wmj.70.1658059663508;
-        Sun, 17 Jul 2022 05:07:43 -0700 (PDT)
-Received: from xws.localdomain (pd9ea330d.dip0.t-ipconnect.de. [217.234.51.13])
-        by smtp.gmail.com with ESMTPSA id f7-20020a05600c154700b003a2fcc32031sm16584324wmg.3.2022.07.17.05.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jul 2022 05:07:43 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+        bh=hkZ/kwPcmy7MO8oN1ITciGcELFqkzl55uZkPhtRqCIk=;
+        b=S3ULNQ2uGRnuu9DXDnbP3bBw1cWhNXK6sz59kF04UjQp3XMNnGTLBvYaRDstPqfk+x
+         oCmAW1X15PL4xFx0a0DPBH8c1PCQQJ7DxuFcVbG/zt7FM0Y2yM2CTu5fviMwB37Z2vtp
+         gjDBQh1mLBdTrieM8RdcK2kwDJ9ENVB2eG4tw83o7ip3KuUVvB2RFVBc5peg5lTxO1pa
+         pPUytO14rHth3JTHd/yyK8JrVBPqoXeFlNhOIHHh3iDRb/kyWt3zXDuMmhL4YLnanl9P
+         ZWW4R3UXVY0nz0bgrp9AEdkoOXxco6UIQxI343ytthAHuxtEULwi9ZYzXI9dyLX8FFix
+         6rKA==
+X-Gm-Message-State: AJIora9iiG7imJ/cJKtBJ/xv/oqq3wi+HdUNbGhg9dCbrhDXSKIIMjkr
+        HdEVk9RNxUfu7ufwQ3pf0N9T4b06dELbexV8MaRYKtmlJs2KmpUzXWxovttavSNGvP+7feoQYwG
+        +hGmZDFCeZH1ogDKBb7MrC2cIrvI7gZaOqA==
+X-Received: by 2002:a05:6402:c44:b0:431:52cc:f933 with SMTP id cs4-20020a0564020c4400b0043152ccf933mr31731720edb.41.1658069442837;
+        Sun, 17 Jul 2022 07:50:42 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1t68Dj5m2zJTHbj18uYrkPS87PtDkKTD2pdvO8clhSLlNtqLUuh6ZBXO80+BgNQwuv416VITw==
+X-Received: by 2002:a05:6402:c44:b0:431:52cc:f933 with SMTP id cs4-20020a0564020c4400b0043152ccf933mr31731701edb.41.1658069442625;
+        Sun, 17 Jul 2022 07:50:42 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id l10-20020a1709060cca00b007262b9f7120sm4419676ejh.167.2022.07.17.07.50.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Jul 2022 07:50:42 -0700 (PDT)
+Message-ID: <28928879-9543-e423-89af-d53c19b7b164@redhat.com>
+Date:   Sun, 17 Jul 2022 16:50:41 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] platform/surface: tabletsw: Fix __le32 integer access
+Content-Language: en-US
+To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
         kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/surface: tabletsw: Fix __le32 integer access
-Date:   Sun, 17 Jul 2022 14:07:35 +0200
-Message-Id: <20220717120735.2052160-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.37.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220717120735.2052160-1-luzmaximilian@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220717120735.2052160-1-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The sources.count field is a __le32 inside a packed struct. So use the
-proper functions to access it.
+Hi,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 9f794056db5b ("platform/surface: Add KIP/POS tablet-mode switch driver")
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/platform/surface/surface_aggregator_tabletsw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 7/17/22 14:07, Maximilian Luz wrote:
+> The sources.count field is a __le32 inside a packed struct. So use the
+> proper functions to access it.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 9f794056db5b ("platform/surface: Add KIP/POS tablet-mode switch driver")
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-diff --git a/drivers/platform/surface/surface_aggregator_tabletsw.c b/drivers/platform/surface/surface_aggregator_tabletsw.c
-index 596ca6c80681..27d95a6a7851 100644
---- a/drivers/platform/surface/surface_aggregator_tabletsw.c
-+++ b/drivers/platform/surface/surface_aggregator_tabletsw.c
-@@ -410,7 +410,7 @@ static int ssam_pos_get_source(struct ssam_tablet_sw *sw, u32 *source_id)
- 	if (status)
- 		return status;
- 
--	if (sources.count == 0) {
-+	if (get_unaligned_le32(&sources.count) == 0) {
- 		dev_err(&sw->sdev->dev, "no posture sources found\n");
- 		return -ENODEV;
- 	}
-@@ -422,7 +422,7 @@ static int ssam_pos_get_source(struct ssam_tablet_sw *sw, u32 *source_id)
- 	 * is a device that provides multiple sources, at which point we can
- 	 * then try to figure out how to handle them.
- 	 */
--	WARN_ON(sources.count > 1);
-+	WARN_ON(get_unaligned_le32(&sources.count) > 1);
- 
- 	*source_id = get_unaligned_le32(&sources.id[0]);
- 	return 0;
--- 
-2.37.0
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/surface/surface_aggregator_tabletsw.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/surface_aggregator_tabletsw.c b/drivers/platform/surface/surface_aggregator_tabletsw.c
+> index 596ca6c80681..27d95a6a7851 100644
+> --- a/drivers/platform/surface/surface_aggregator_tabletsw.c
+> +++ b/drivers/platform/surface/surface_aggregator_tabletsw.c
+> @@ -410,7 +410,7 @@ static int ssam_pos_get_source(struct ssam_tablet_sw *sw, u32 *source_id)
+>  	if (status)
+>  		return status;
+>  
+> -	if (sources.count == 0) {
+> +	if (get_unaligned_le32(&sources.count) == 0) {
+>  		dev_err(&sw->sdev->dev, "no posture sources found\n");
+>  		return -ENODEV;
+>  	}
+> @@ -422,7 +422,7 @@ static int ssam_pos_get_source(struct ssam_tablet_sw *sw, u32 *source_id)
+>  	 * is a device that provides multiple sources, at which point we can
+>  	 * then try to figure out how to handle them.
+>  	 */
+> -	WARN_ON(sources.count > 1);
+> +	WARN_ON(get_unaligned_le32(&sources.count) > 1);
+>  
+>  	*source_id = get_unaligned_le32(&sources.id[0]);
+>  	return 0;
 
