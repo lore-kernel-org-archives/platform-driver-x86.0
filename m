@@ -2,163 +2,195 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D885BC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 13:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24611C43334
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 14:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233220AbiGRNRd (ORCPT
+        id S233567AbiGRONO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 09:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
+        Mon, 18 Jul 2022 10:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231846AbiGRNRc (ORCPT
+        with ESMTP id S231547AbiGRONN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 09:17:32 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCD627B0E;
-        Mon, 18 Jul 2022 06:17:31 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IB4SFZ018834;
-        Mon, 18 Jul 2022 13:17:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : content-type : mime-version; s=corp-2022-7-12;
- bh=QbduH7IvcIhtWH+EsZ3o1SeNINjm2WdWbVycNnnI+Pg=;
- b=itJmrIOSgMqPPA17iKcokEVBpocstF9ByxnxVMGX6PhZBimxiVOLVZYU/lCrdbpVw9lK
- MiD9RO46QjCsrQCAm7t+ojUEiRpFsyBgC2fjCqIDQLXVHqyIygxUUxIq9atJxhTqnKLr
- QKOLAFGZnOwSbdwKpvmDJUSGPT5GRS23qkCnpMfvZ8l1vP5IPvaZf8M22V/YB1/A/GzC
- EFXUbEa8+jTLznLxP8I32qLORDQUPL+4XDeHGVqP/vNIpd+kZKJ8M+QdPv7NueiLC64L
- tb2qKiHZi/x8ksA9icytK2hGnRsmDrN7Fda8difsT5Fepr23Nk+a0fnnMP1UUaDOvcCI bg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbn7a379y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Jul 2022 13:17:30 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26ICInP5006501;
-        Mon, 18 Jul 2022 13:17:30 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1gfjjex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Jul 2022 13:17:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BwAhnVPnASYCEzYYza7rY2df0xfN8WFKTQdZOEinQaRVNMHYe8ne3cVUSkkvEVP3vVMlMGtfLCwz+fwHPWj846ZFiWOsvQ0ABJSvy7tStvbKWcj8xy4gDJjUcubfP/aY0Vhb+ipg+AyXZjVVEbyiB/0pyFFZIjA/L0p+8Z2I+IAVjPaUxGc5I7wY/oyyWU/6y1kyXUS7jpNUqrzLNuF3vUW+MjZAcYHlQKz5GPYKyyu6ATs4wzZSNAttKQCXSqI7DjHpDzOG5iqqjoxVKavbe1Hqp51yK2e4lmXA5kUlE8WRuBmFbhBQP4CqmrQelVsn9DHfqqzFnEcZ1TtHnew4Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QbduH7IvcIhtWH+EsZ3o1SeNINjm2WdWbVycNnnI+Pg=;
- b=OODuv8oyjqEQ0HEszNwKYmwwnSjgp89QidGhOsX9J55qHoKvhN2V83HLxpuQnfOhs3QYSAhOA1ulNuzXX1rbdeHGBqpa/7wvR+mtyeNVaTJVbZpPrpJXT2jP48FlY+dTUCJN39udwR8Dg7zr9p5iLeQV+hU7fXWlyjc9fzelyiqw16NRM8J8a/4F2DA9vJ7Ug3yWP+NT2i8jR2jQYLgsDJMdbYwWVGjIxLmiCZLi1J0CYwqsacSi1UB2M7xc+2+ZsGO2mdUm/QUxmmnESZHgctvjIFHr26qpQIRLvN+OXlu1cbGvvT2hbbMk6mOlk2JLOdy1GeRSpwhMcPp7GkX8mQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QbduH7IvcIhtWH+EsZ3o1SeNINjm2WdWbVycNnnI+Pg=;
- b=teSWf3FHFelJcBcsWN75azflF+uffFAtmFt2omubZEmDLpL+h4DHmBOdKKnIOHuX82zHWVctaXivy4Pq5yPv0scPup1dBZ+sEwsWXkd+TQ8XRL3iWq6i6D5e7c6BFUX4ceyk7q90J2Mh0IBgOaR0YikS2dCdEg9Z+5S8mbuWAEY=
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28) by DM5PR1001MB2201.namprd10.prod.outlook.com
- (2603:10b6:4:31::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.23; Mon, 18 Jul
- 2022 13:17:28 +0000
-Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::5020:9b82:5917:40b]) by MWHPR1001MB2365.namprd10.prod.outlook.com
- ([fe80::5020:9b82:5917:40b%6]) with mapi id 15.20.5438.023; Mon, 18 Jul 2022
- 13:17:28 +0000
-Date:   Mon, 18 Jul 2022 16:17:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] tools/power/x86/intel-speed-select: Fix off by one check
-Message-ID: <YtVdXen0K8KH0kwu@kili>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-ClientProxiedBy: ZR0P278CA0111.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:20::8) To MWHPR1001MB2365.namprd10.prod.outlook.com
- (2603:10b6:301:2d::28)
+        Mon, 18 Jul 2022 10:13:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72C97275CE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 07:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658153591;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HEXGIVwfrt07LtwhxUfTMwTUQOGHho48gf67fULBC/s=;
+        b=aemA4W1GvYi8Rhc2XRF+jNBAOTooG2/kdeB1ynJlzV4HfiHGC87pEt1yVqh1BAqdLtXYH/
+        aaYLM1GpZ3LEaTbwuC8RPa/F9SP5ZoY69IgZOgwpHANJkKZaVQfffWORyMNiXFnMpqELU+
+        fbhJZOFWq9a0pHRE/6r/u36ZcY22K9Q=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-668-nSfFebiUPZa03IiOD3Yvqg-1; Mon, 18 Jul 2022 10:13:10 -0400
+X-MC-Unique: nSfFebiUPZa03IiOD3Yvqg-1
+Received: by mail-ej1-f69.google.com with SMTP id jg29-20020a170907971d00b0072b5acf30e7so2314667ejc.8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 07:13:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=HEXGIVwfrt07LtwhxUfTMwTUQOGHho48gf67fULBC/s=;
+        b=WfRr93MfrZ8hGaZnusxBM5mAPAFCmlsN/vEVuPrSYcTtX4pTZqJ1wzHQMxC0qQ4kqD
+         JllVI7RlNZNf5VBHEi1L9TvgYHbtSwysQYVvKw62FB8oWtiZJlE1yeyC074WGpryBfpK
+         wi2jPM7fZkNE6VwG5m0stMJmr8k8LUaB1THk7NmXX9oqgYgf20q9YdVaUL2SUhZUNa4w
+         ePDow1aokjkdPYzLOS/OY0L401BEr+EjLANoeXdmy5g50KYnvFkZLTmNTGhKOKefGm60
+         Cfyjzm6w9C/Wc2HG8tQhguPnL4MM3d8O7CYE3pb66s+e5dr4rf8tMDv3Du5NLu3O3+xC
+         TsxA==
+X-Gm-Message-State: AJIora/nxNJo6bmC5VTVMBdCtwqj5U6y5ulkyKm8IG0XpHBnm1evIDL9
+        8mF4iBXzojI71Rt5H6jU+Dl761GGW7wzPx0mY1Stk+FjEPrN5Dj2uWY1R1EcdnQhEDlhl0BIf0y
+        YK6trO9785b3vUbqcjF9JOSezVXmG/30aOA==
+X-Received: by 2002:a05:6402:358d:b0:43a:c600:a678 with SMTP id y13-20020a056402358d00b0043ac600a678mr37500599edc.219.1658153588901;
+        Mon, 18 Jul 2022 07:13:08 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1v+L2EpsFUtH/PoBmDiVf/DKk3qClDJkE5lw7mlgjotUmcg0wUEt9TxWgocXkgbM7tHvXVvgw==
+X-Received: by 2002:a05:6402:358d:b0:43a:c600:a678 with SMTP id y13-20020a056402358d00b0043ac600a678mr37500567edc.219.1658153588662;
+        Mon, 18 Jul 2022 07:13:08 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906078900b00722e31fcf42sm5441935ejc.184.2022.07.18.07.13.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jul 2022 07:13:08 -0700 (PDT)
+Message-ID: <aa9e27c7-e4cf-00f1-e88a-8d6c3857eb71@redhat.com>
+Date:   Mon, 18 Jul 2022 16:13:07 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6958f62e-843a-47b7-e18b-08da68bfdccd
-X-MS-TrafficTypeDiagnostic: DM5PR1001MB2201:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Tnv9PjhfCuFnJlA4RKUw2EQ0JTLn6Xo2r3seBuzZ1OEGkJLNSDhdUzam6QqLOOhtzrbQWZ9O6v4G4kxDh7pFAbshnfNOdbXfYLYCinsqT5vzmAa81Ft+B9/FH1PYwrtoW13bZ80wGKjSMs92ibeL4kkVIyoRWoJjdBhbZvZqLqtNK07D3YNVA6Nu73jQzwWETECTKcCBT83/uE4QllJN+YgnNNiG0lTqiI55J79k3SyjFFl0b1wCVbdprqhH3e3gR2PBBGM+EHqlfwjv5/fJExkaDsiYFf52IXqWS3xVIYI6y0T6WiLV6cxfU3kMNbQspG9ozLiy485nhruu584UkbA2nlOqPjjZ04yOVHi04VNBIT5cVcxBpLjjZnLUnV1x7mg9yqItwZR6zNlRKLsmf05bpPVRq70EzUQWbtVZk8WNEW28g2VSRWE9wlWYqO5yyikxAIrdNsNKjdMD5Sc4SFD+umI4CpAVLIqmZ3LV8N8qjXm3ZbYOxZO+KGMee5QXr79UOwUbv6UaEMRP9uOZYheVTG7BFhKk86VlGipC+/ysU53jpnlSLxXOxtkQpsYWUqY2xtC4hqrukNjW7dTy9EtyMuJfwS+oxQeRuAS3nee6E8vRFG8sPMXVh6FPfDFfTPu8ilh2+2Ny0A4IyKgsHlun9fPrUj7mGaDU9sprSl+myrT91AHa76Xh7TMic40ZcDN9YFEhBswktknJY+uksQ/ynNA/3pVm4x1xFENjspDqDxuDD3sooxsNeed/MQ01T5m+d66BEswr9o26/mT45nG2aN9GeMpihXT8jKmCTdrv2XZl1bx9mwuQpjseJLyG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(39860400002)(136003)(346002)(366004)(376002)(396003)(83380400001)(9686003)(26005)(6512007)(6506007)(38100700002)(38350700002)(5660300002)(44832011)(186003)(4744005)(8936002)(33716001)(2906002)(52116002)(41300700001)(6486002)(6666004)(66476007)(478600001)(8676002)(316002)(66946007)(4326008)(86362001)(66556008)(6916009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bc2SM6kWSzSiv1i+YsR0Gak0w2hWhsF9OwuvA0dpOVTBmk9hxXrwBg2sYR12?=
- =?us-ascii?Q?GQkGodjRAkqKPNWjXHMjUrtmRhrUS34Ish3AdyrInV35CsVmbFDF5wmSoJIA?=
- =?us-ascii?Q?aFWlloP5m5ONtHmyF85CANTinJbDWcSJFCriscBRbB0mPRHF5BotXJEfH8l+?=
- =?us-ascii?Q?s7juwqIgJRjJCEnJm+7SRcIDJZGECBCRae8gs/DOBivn4X+5kh34hxRObaZ5?=
- =?us-ascii?Q?H6qoNS5n6thIGAgHx/fhMM90toXJ7OGiDfZflRdK02ZSHr+YoCBqJUFldNxd?=
- =?us-ascii?Q?hcVtkQJSX+sPwIb5hxbOCTORjH+Kj9ijpFYcGncd1+Wjsy+wEs03HE2cra/L?=
- =?us-ascii?Q?yjBmuUkY+66X52ESYSx8dUHzYimzFYz0MDFdKomLnLTcgHxYomDLj/xwdT9S?=
- =?us-ascii?Q?YY8Yx8HxWmsKCyLFJ6GJOLg7yHdY9xIzL0pjgTWKhs7qQup+F9CJ7Il7Pe2A?=
- =?us-ascii?Q?/maTJ68/ZzCU5E28Imc4WlX7Dl6jCHYjnAqlkPD7JcHLSsE3BiIDxQ4tDl9g?=
- =?us-ascii?Q?Tr0BhA+aTk1qGIi+QwlifuzxMQQSrIJvkNU77eion5fnrZFqTdefQfUWmM5L?=
- =?us-ascii?Q?zCPOuO7Zm1KScj3aZZpGEHpLIDJP+uWQnSfyDp2XQwlkCTGL377KGNblB1My?=
- =?us-ascii?Q?zHRovO40e5jqYIKOWIvlcqlyhxl8R7RZT3kUB+cI4HzEMoHkkV7QLR0oblos?=
- =?us-ascii?Q?rBJbyR3rBIPg2V2ZpFnGMcT5QnQTWTAJ/THKcy0cTPSsaIvCIAOwty2LcKTd?=
- =?us-ascii?Q?Ko65DRVgBXa8r9rTggqSLcATGNjRCuIO1y9U05ezcZvWs8E/pTlOKV6zOnKm?=
- =?us-ascii?Q?QXGv7pfAYyLX2ay1YuHUViJh8NPxiDQRNzI0/kS0QuBtJnzsWt6qrOOtOaFh?=
- =?us-ascii?Q?yqndtTYBv8IXXjqMedlGFaABGRyzu+YJC06pAsnyyPIQfBYgm1xf7PDIyM8V?=
- =?us-ascii?Q?8Ac/cHYZiHo9cA9MvThXHHyF6++RA3PsV/9/kerzyQ8gmmBCYIMbpeAw6Gnn?=
- =?us-ascii?Q?dE46HPP2cBIUAdh1ftObVsILp4yZsbo5xigdSmA2mh8bE/Z53O6VYFKdIF5n?=
- =?us-ascii?Q?D/RMMk5UxTeBC+Yw/fueYPK1qzgonnDPUjgN+8x3v7cUiWDjoAizTMUH2v3K?=
- =?us-ascii?Q?TavLlSDI8DuzJk0a3qhSIibgYEZa2bi01bEge/RXt8ASUHBYhfX69bIo+wcS?=
- =?us-ascii?Q?4S/fElixo5lZ+rubg6Gd/N1pWzMk7zLlIqpDYFtU7CSG39IMErL2g/kNqWiZ?=
- =?us-ascii?Q?6tB7olyfR5lGb1DVgwiXAQz+mfK1xhg4uA8yN/37Ip+dhn/tyk+Zr71xDi2S?=
- =?us-ascii?Q?/0xSRuVH13uAGrd1H8mizApJrdkIhQSA6VKUWGNhWA5fjSn5te/AyP2poj0w?=
- =?us-ascii?Q?XgzSSyItKYiydDhn5StwyTw3YeXecnCLqxnoBJWPu1aWH2cP9Af3Sp3sCnKq?=
- =?us-ascii?Q?NjkAumaCj2k82BJtnaZQX7D7LWU0vZWk86OZ4QJahoIvsPIz8J62On+rfqga?=
- =?us-ascii?Q?q9xtP+rLRevaviAUWDfh/mUaWZXg6nqZhf5gdswLtd5I2rm6cUJRpFxo1sHs?=
- =?us-ascii?Q?apbV3ejTBAZMJWYYAjkaeeIF6z5i/WoyOzNQzr+IzpkSQE1Ion5IjYfMHLNf?=
- =?us-ascii?Q?6Q=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6958f62e-843a-47b7-e18b-08da68bfdccd
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 13:17:27.9806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UjuSHKW/w96VF54aEapCl3Fh6Ol4Nxto3QufjD/zcajTVlf9jepaLz6y30BB6OBZ2ij3cLik0vF9+ZFWR//z1Bg3UfpQ9DfkjrcrnMC7Iww=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1001MB2201
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-18_12,2022-07-18_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 bulkscore=0
- malwarescore=0 adultscore=0 mlxscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
- definitions=main-2207180058
-X-Proofpoint-ORIG-GUID: CV7kMtPwJGwxKti8k6EqFIISqy5uGYq4
-X-Proofpoint-GUID: CV7kMtPwJGwxKti8k6EqFIISqy5uGYq4
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Move out of
+ X86_PLATFORM_DEVICES dependency
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        kernel test robot <lkp@intel.com>
+References: <20220718114748.6365-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220718114748.6365-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Change > MAX_DIE_PER_PACKAGE to >= MAX_DIE_PER_PACKAGE to prevent
-accessing one element beyond the end of the array.
+Hi,
 
-Fixes: 7fd786dfbd2c ("tools/power/x86/intel-speed-select: OOB daemon mode")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- tools/power/x86/intel-speed-select/isst-daemon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 7/18/22 13:47, Andy Shevchenko wrote:
+> The P2SB library is used for various drivers, including server
+> platforms. That's why the dependency on X86_PLATFORM_DEVICES
+> seems superfluous.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/Kconfig            | 12 ++++++++++++
+>  drivers/platform/x86/Makefile           |  4 ++++
+>  drivers/platform/x86/intel/Kconfig      | 12 ------------
+>  drivers/platform/x86/intel/Makefile     |  2 --
+>  drivers/platform/x86/{intel => }/p2sb.c |  0
+>  5 files changed, 16 insertions(+), 14 deletions(-)
+>  rename drivers/platform/x86/{intel => }/p2sb.c (100%)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bc4013e950ed..cab9ceb85436 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1164,6 +1164,18 @@ config WINMATE_FM07_KEYS
+>  
+>  endif # X86_PLATFORM_DEVICES
+>  
+> +config P2SB
+> +	bool "Primary to Sideband (P2SB) bridge access support"
+> +	depends on PCI
 
-diff --git a/tools/power/x86/intel-speed-select/isst-daemon.c b/tools/power/x86/intel-speed-select/isst-daemon.c
-index dd372924bc82..d0400c6684ba 100644
---- a/tools/power/x86/intel-speed-select/isst-daemon.c
-+++ b/tools/power/x86/intel-speed-select/isst-daemon.c
-@@ -41,7 +41,7 @@ void process_level_change(int cpu)
- 	time_t tm;
- 	int ret;
- 
--	if (pkg_id >= MAX_PACKAGE_COUNT || die_id > MAX_DIE_PER_PACKAGE) {
-+	if (pkg_id >= MAX_PACKAGE_COUNT || die_id >= MAX_DIE_PER_PACKAGE) {
- 		debug_printf("Invalid package/die info for cpu:%d\n", cpu);
- 		return;
- 	}
--- 
-2.35.1
+This needs to become "PCI && X86" to avoid this possible getting
+enabled on other platforms.
+
+With that added you may add my:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+and this also counts as my ack for merging this through
+Lee's MFD tree together with the rest of the series.
+
+Regards,
+
+Hans
+
+
+> +	help
+> +	  The Primary to Sideband (P2SB) bridge is an interface to some
+> +	  PCI devices connected through it. In particular, SPI NOR controller
+> +	  in Intel Apollo Lake SoC is one of such devices.
+> +
+> +	  The main purpose of this library is to unhide P2SB device in case
+> +	  firmware kept it hidden on some platforms in order to access devices
+> +	  behind it.
+> +
+>  config PMC_ATOM
+>         def_bool y
+>         depends on PCI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 4a59f47a46e2..f04001431c91 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -120,6 +120,10 @@ obj-$(CONFIG_X86_ANDROID_TABLETS)	+= x86-android-tablets.o
+>  # Intel uncore drivers
+>  obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+>  
+> +# Intel miscellaneous drivers
+> +intel_p2sb-y				:= p2sb.o
+> +obj-$(CONFIG_P2SB)			+= intel_p2sb.o
+> +
+>  # Intel PMIC / PMC / P-Unit devices
+>  obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+> index c9cfbaae436b..794968bda115 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -70,18 +70,6 @@ config INTEL_OAKTRAIL
+>  	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+>  	  here; it will only load on supported platforms.
+>  
+> -config P2SB
+> -	bool "Primary to Sideband (P2SB) bridge access support"
+> -	depends on PCI
+> -	help
+> -	  The Primary to Sideband (P2SB) bridge is an interface to some
+> -	  PCI devices connected through it. In particular, SPI NOR controller
+> -	  in Intel Apollo Lake SoC is one of such devices.
+> -
+> -	  The main purpose of this library is to unhide P2SB device in case
+> -	  firmware kept it hidden on some platforms in order to access devices
+> -	  behind it.
+> -
+>  config INTEL_BXTWC_PMIC_TMU
+>  	tristate "Intel Broxton Whiskey Cove TMU Driver"
+>  	depends on INTEL_SOC_PMIC_BXTWC
+> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+> index 741a9404db98..717933dd0cfd 100644
+> --- a/drivers/platform/x86/intel/Makefile
+> +++ b/drivers/platform/x86/intel/Makefile
+> @@ -28,8 +28,6 @@ intel_int0002_vgpio-y			:= int0002_vgpio.o
+>  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+>  intel_oaktrail-y			:= oaktrail.o
+>  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+> -intel_p2sb-y				:= p2sb.o
+> -obj-$(CONFIG_P2SB)			+= intel_p2sb.o
+>  intel_sdsi-y				:= sdsi.o
+>  obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
+>  intel_vsec-y				:= vsec.o
+> diff --git a/drivers/platform/x86/intel/p2sb.c b/drivers/platform/x86/p2sb.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel/p2sb.c
+> rename to drivers/platform/x86/p2sb.c
 
