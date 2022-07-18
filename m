@@ -2,44 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E142C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 12:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3856CCA47F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 12:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235106AbiGRMof (ORCPT
+        id S234391AbiGRMti (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 08:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
+        Mon, 18 Jul 2022 08:49:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234392AbiGRMoe (ORCPT
+        with ESMTP id S234694AbiGRMth (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 08:44:34 -0400
-Received: from smtpbg.qq.com (unknown [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A98B0D;
-        Mon, 18 Jul 2022 05:44:29 -0700 (PDT)
-X-QQ-mid: bizesmtp77t1658148208ture0qdj
-Received: from localhost.localdomain ( [171.223.96.21])
+        Mon, 18 Jul 2022 08:49:37 -0400
+Received: from smtpbg.qq.com (biz-43-154-54-12.mail.qq.com [43.154.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7208960DC;
+        Mon, 18 Jul 2022 05:49:31 -0700 (PDT)
+X-QQ-mid: bizesmtp81t1658148567tcl5iv99
+Received: from harry-jrlc.. ( [182.148.15.157])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Mon, 18 Jul 2022 20:43:25 +0800 (CST)
-X-QQ-SSF: 01000000002000E0U000C00A0000000
-X-QQ-FEAT: 2emgeMsfL/uG/uzL5nLmXFfF5xD76Np0VZSC4AXXJTWY2IJ1TWWY07aTlUx0k
-        CL+k1cHscHxHXdM7eABgwz8q+ddYtrLbRVaG1CXJScRdunZHYlmuswGZhGNXyLhOChHZMDz
-        CHWOxABkLcJnT7OvestQj5x8r3cF8pXTlTee77kTdjGUcX8V3fXUMS81XYf4syUZDRkaU0m
-        WaGvlaRnbM9zteC22S9i5qif+bAyNvnDJf4DSgosuCPXEJZs+77gALuUviwYzXDYm8qh/87
-        1z3usgqbgSeAFn33o5jjEbJhHRJUgRCRfrs05QpDAAgEBg/IRYdX63iIaBVNGFgy2gLoCX+
-        i2QHrGp02KorPWezPpm1d02dmWa5Xj9QA5SWHYhGFJ0zm3HWHTl4AsBMzCOoKs4Myxyjvxy
-        HqRZ9crpmSs=
+        id ; Mon, 18 Jul 2022 20:49:11 +0800 (CST)
+X-QQ-SSF: 0100000000600020C000000A0000020
+X-QQ-FEAT: w7IG6bg2XpkbdaEd/YpMJwtHqnOmLvCaC899yerFVCv9VtTdrojPT631bBG/F
+        oCcmv9jjKSOK8EOhnjhb7n+TExGIfo+R5FsH85CPsbz44mp4TRlvyrPpTkY2RpgOVtlMNeA
+        ZhRUKAUXvNSk0GzgGGejFGbdfSgkNzw10OH+NN7+3+HD1gmO9LdZcS5WVkLofMIzMFGpdcP
+        K4A4z/oelZgA8ZTIxBZMsoxTdS64wtuZDOkxz74SUV4xxfVjzuvuKD7GAqmzMb90YyniosO
+        bPRo21uKMs+cY7+2ugEoj0b6/gUz45dnAHZb4Ga8o7wfmAgIjN1e0/pLHGOEBbcRag5Ai76
+        6kcY9qn6JTnBYUvMQD2AVVi51lUlEd5SYC/SblsCAEFlZrZAu4aUA5ASMiyvQ==
 X-QQ-GoodBg: 0
-From:   Jason Wang <wangborong@cdjrlc.com>
-To:     tglx@linutronix.de
-Cc:     ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Wang <wangborong@cdjrlc.com>
-Subject: [PATCH] efi: Fix comment typo
-Date:   Fri, 15 Jul 2022 12:41:29 +0800
-Message-Id: <20220715044129.18712-1-wangborong@cdjrlc.com>
-X-Mailer: git-send-email 2.35.1
+From:   Xin Gao <gaoxin@cdjrlc.com>
+To:     srinivas.pandruvada@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xin Gao <gaoxin@cdjrlc.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select:Unneeded semicolon
+Date:   Mon, 18 Jul 2022 20:49:07 +0800
+Message-Id: <20220718124907.7254-1-gaoxin@cdjrlc.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
@@ -48,26 +44,26 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The double `there' is duplicated in line 172, remove one.
+Unneeded semicolon
 
-Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+Signed-off-by: Xin Gao <gaoxin@cdjrlc.com>
 ---
- arch/x86/platform/efi/efi.c | 2 +-
+ tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 6e598bd78eef..ebc98a68c400 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -169,7 +169,7 @@ static void __init do_add_efi_memmap(void)
- }
+diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
+index 761375062505..f0ed69721308 100644
+--- a/tools/power/x86/intel-speed-select/hfi-events.c
++++ b/tools/power/x86/intel-speed-select/hfi-events.c
+@@ -144,7 +144,7 @@ static int family_handler(struct nl_msg *msg, void *arg)
+ 			continue;
+ 		res->id = nla_get_u32(tb2[CTRL_ATTR_MCAST_GRP_ID]);
+ 		break;
+-	};
++	}
  
- /*
-- * Given add_efi_memmap defaults to 0 and there there is no alternative
-+ * Given add_efi_memmap defaults to 0 and there is no alternative
-  * e820 mechanism for soft-reserved memory, import the full EFI memory
-  * map if soft reservations are present and enabled. Otherwise, the
-  * mechanism to disable the kernel's consideration of EFI_MEMORY_SP is
+ 	return 0;
+ }
 -- 
-2.35.1
+2.30.2
 
