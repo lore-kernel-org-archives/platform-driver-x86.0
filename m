@@ -2,271 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F72CCA487
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 09:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDCFCCA485
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 11:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233734AbiGRJOi (ORCPT
+        id S234460AbiGRLR4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 05:14:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
+        Mon, 18 Jul 2022 07:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233353AbiGRJOh (ORCPT
+        with ESMTP id S234213AbiGRLRy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 05:14:37 -0400
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B92F5B9;
-        Mon, 18 Jul 2022 02:14:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0VJhAxgV_1658135667;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VJhAxgV_1658135667)
-          by smtp.aliyun-inc.com;
-          Mon, 18 Jul 2022 17:14:29 +0800
-Message-ID: <1658135504.1522465-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v11 39/40] virtio_net: support tx queue resize
-Date:   Mon, 18 Jul 2022 17:11:44 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Mon, 18 Jul 2022 07:17:54 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F73A201A6;
+        Mon, 18 Jul 2022 04:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658143073; x=1689679073;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DpqXmie6D9DsH9mDkAnCsfL2eLPGa6h9nC1O717sCwo=;
+  b=cURgWqaW9Lu9LegfsezxykDu/beK25EE3rbW0zMJcqSra9P939iuxMzp
+   0PcP0aOGZUWZyPIQIzTvSlFfkEPQtP/b+Swq40zFTICLPdm7MsFTCRpoq
+   FxlykXm/M79vT9CkFornHOeNs3nfESLH4hXCC5OvijSSk8/W4C0uganuw
+   ZneLsGIR8tddAZw8sD2/Qxv1mFDuOG6NpvQzNy6FUf5GybNIQ/kuU7CF2
+   IXC/zW7olnvselFsidhZCkbeTNxeX7yg33yUjKDotK3Kc2fNWRNYiPQIb
+   /i6BuUvIuRYCQ7erashf3Q3ZK1+VeHAx17M7adMoF6Vh0fVGHX/lIUtH8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="287342817"
+X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
+   d="scan'208";a="287342817"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:52 -0700
+X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
+   d="scan'208";a="686702470"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oDOkw-001O8N-2k;
+        Mon, 18 Jul 2022 14:17:42 +0300
+Date:   Mon, 18 Jul 2022 14:17:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
+        Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm <kvm@vger.kernel.org>,
-        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        kangjie.xu@linux.alibaba.com,
-        virtualization <virtualization@lists.linux-foundation.org>
-References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
- <20220629065656.54420-40-xuanzhuo@linux.alibaba.com>
- <102d3b83-1ae9-a59a-16ce-251c22b7afb0@redhat.com>
- <1656986432.1164997-2-xuanzhuo@linux.alibaba.com>
- <CACGkMEt8MSS=tcn=Hd6WF9+btT0ccocxEd1ighRgK-V1uiWmCQ@mail.gmail.com>
- <1657873703.9301925-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEvgjX+67NxwrUym7CnbNFU2-=CbAXPN_UmtvDOTS1LrHA@mail.gmail.com>
-In-Reply-To: <CACGkMEvgjX+67NxwrUym7CnbNFU2-=CbAXPN_UmtvDOTS1LrHA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YtVBViMLFIUfFpXa@smile.fi.intel.com>
+References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 18 Jul 2022 16:57:53 +0800, Jason Wang <jasowang@redhat.com> wrote:
-> On Fri, Jul 15, 2022 at 4:32 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wr=
-ote:
-> >
-> > On Fri, 8 Jul 2022 14:23:57 +0800, Jason Wang <jasowang@redhat.com> wro=
-te:
-> > > On Tue, Jul 5, 2022 at 10:01 AM Xuan Zhuo <xuanzhuo@linux.alibaba.com=
-> wrote:
-> > > >
-> > > > On Mon, 4 Jul 2022 11:45:52 +0800, Jason Wang <jasowang@redhat.com>=
- wrote:
-> > > > >
-> > > > > =E5=9C=A8 2022/6/29 14:56, Xuan Zhuo =E5=86=99=E9=81=93:
-> > > > > > This patch implements the resize function of the tx queues.
-> > > > > > Based on this function, it is possible to modify the ring num o=
-f the
-> > > > > > queue.
-> > > > > >
-> > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > ---
-> > > > > >   drivers/net/virtio_net.c | 48 +++++++++++++++++++++++++++++++=
-+++++++++
-> > > > > >   1 file changed, 48 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > > > > index 6ab16fd193e5..fd358462f802 100644
-> > > > > > --- a/drivers/net/virtio_net.c
-> > > > > > +++ b/drivers/net/virtio_net.c
-> > > > > > @@ -135,6 +135,9 @@ struct send_queue {
-> > > > > >     struct virtnet_sq_stats stats;
-> > > > > >
-> > > > > >     struct napi_struct napi;
-> > > > > > +
-> > > > > > +   /* Record whether sq is in reset state. */
-> > > > > > +   bool reset;
-> > > > > >   };
-> > > > > >
-> > > > > >   /* Internal representation of a receive virtqueue */
-> > > > > > @@ -279,6 +282,7 @@ struct padded_vnet_hdr {
-> > > > > >   };
-> > > > > >
-> > > > > >   static void virtnet_rq_free_unused_buf(struct virtqueue *vq, =
-void *buf);
-> > > > > > +static void virtnet_sq_free_unused_buf(struct virtqueue *vq, v=
-oid *buf);
-> > > > > >
-> > > > > >   static bool is_xdp_frame(void *ptr)
-> > > > > >   {
-> > > > > > @@ -1603,6 +1607,11 @@ static void virtnet_poll_cleantx(struct =
-receive_queue *rq)
-> > > > > >             return;
-> > > > > >
-> > > > > >     if (__netif_tx_trylock(txq)) {
-> > > > > > +           if (READ_ONCE(sq->reset)) {
-> > > > > > +                   __netif_tx_unlock(txq);
-> > > > > > +                   return;
-> > > > > > +           }
-> > > > > > +
-> > > > > >             do {
-> > > > > >                     virtqueue_disable_cb(sq->vq);
-> > > > > >                     free_old_xmit_skbs(sq, true);
-> > > > > > @@ -1868,6 +1877,45 @@ static int virtnet_rx_resize(struct virt=
-net_info *vi,
-> > > > > >     return err;
-> > > > > >   }
-> > > > > >
-> > > > > > +static int virtnet_tx_resize(struct virtnet_info *vi,
-> > > > > > +                        struct send_queue *sq, u32 ring_num)
-> > > > > > +{
-> > > > > > +   struct netdev_queue *txq;
-> > > > > > +   int err, qindex;
-> > > > > > +
-> > > > > > +   qindex =3D sq - vi->sq;
-> > > > > > +
-> > > > > > +   virtnet_napi_tx_disable(&sq->napi);
-> > > > > > +
-> > > > > > +   txq =3D netdev_get_tx_queue(vi->dev, qindex);
-> > > > > > +
-> > > > > > +   /* 1. wait all ximt complete
-> > > > > > +    * 2. fix the race of netif_stop_subqueue() vs netif_start_=
-subqueue()
-> > > > > > +    */
-> > > > > > +   __netif_tx_lock_bh(txq);
-> > > > > > +
-> > > > > > +   /* Prevent rx poll from accessing sq. */
-> > > > > > +   WRITE_ONCE(sq->reset, true);
-> > > > >
-> > > > >
-> > > > > Can we simply disable RX NAPI here?
-> > > >
-> > > > Disable rx napi is indeed a simple solution. But I hope that when d=
-ealing with
-> > > > tx, it will not affect rx.
-> > >
-> > > Ok, but I think we've already synchronized with tx lock here, isn't i=
-t?
-> >
-> > Yes, do you have any questions about WRITE_ONCE()? There is a set false=
- operation
-> > later, I did not use lock there, so I used WRITE/READ_ONCE
-> > uniformly.
->
-> I mean, since we've already used tx locks somewhere, we'd better use
-> them here as well at least as a start.
+On Mon, Jun 06, 2022 at 07:41:26PM +0300, Andy Shevchenko wrote:
+> There are a few users that would like to utilize P2SB mechanism of hiding
+> and unhiding a device from the PCI configuration space.
+> 
+> Here is the series to consolidate p2sb handling code for existing users
+> and to provide a generic way for new comer(s).
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that brings the helper ("platform/x86/intel: Add Primary to
+> Sideband (P2SB) bridge support") has a commit message that sheds a light
+> on what the P2SB is and why this is needed.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> The series is ready to be merged via MFD tree, but see below.
+> 
+> The series also includes updates for Simatic IPC drivers that partially
+> tagged by respective maintainers (the main question is if Pavel is okay
+> with the last three patches, since I believe Hans is okay with removing
+> some code under PDx86). Hence the first 8 patches can be merged right
+> away and the rest when Pavel does his review.
+
+Kernel test bot seems found an issue with dependencies, because selection
+of P2SB is not enough.
+
+There are two solutions that I can see now:
+1) move P2SB out of X86_PLATFORM_DEVICES section (like PMC_ATOM);
+2) add 'depends on X86_PLATFORM_DEVICES' to the affected drivers.
+
+I think the first solution cleaner, because it would be strange to have
+the dependency on the drivers that quite unlikely be on server platforms
+(e.g. EDAC).
+
+In long term perhaps something like drivers/platform/x86/lib which is for
+platform libraries or so and independent on X86_PLATFORM_DEVICES?
+
+I will send a fix soon as per 1) above, feel free to comment here or there.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-OK. next version will fix.
-
-Thanks.
-
-+static int virtnet_tx_resize(struct virtnet_info *vi,
-+			     struct send_queue *sq, u32 ring_num)
-+{
-+	struct netdev_queue *txq;
-+	int err, qindex;
-+
-+	qindex =3D sq - vi->sq;
-+
-+	virtnet_napi_tx_disable(&sq->napi);
-+
-+	txq =3D netdev_get_tx_queue(vi->dev, qindex);
-+
-+	/* 1. wait all ximt complete
-+	 * 2. fix the race of netif_stop_subqueue() vs netif_start_subqueue()
-+	 */
-+	__netif_tx_lock_bh(txq);
-+
-+	sq->reset =3D true;
-+
-+	/* Prevent the upper layer from trying to send packets. */
-+	netif_stop_subqueue(vi->dev, qindex);
-+
-+	__netif_tx_unlock_bh(txq);
-+
-+	err =3D virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_unused_buf);
-+	if (err)
-+		netdev_err(vi->dev, "resize tx fail: tx queue index: %d err: %d\n", qind=
-ex, err);
-+
-+	__netif_tx_lock_bh(txq);
-+	sq->reset =3D false;
-+	netif_tx_wake_queue(txq);
-+	__netif_tx_unlock_bh(txq);
-+
-+	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
-+	return err;
-+}
-
-
->
-> Thanks
->
-> >
-> > Thanks.
-> >
-> > >
-> > > Thanks
-> > >
-> > > >
-> > > > Thanks.
-> > > >
-> > > >
-> > > > >
-> > > > > Thanks
-> > > > >
-> > > > >
-> > > > > > +
-> > > > > > +   /* Prevent the upper layer from trying to send packets. */
-> > > > > > +   netif_stop_subqueue(vi->dev, qindex);
-> > > > > > +
-> > > > > > +   __netif_tx_unlock_bh(txq);
-> > > > > > +
-> > > > > > +   err =3D virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_=
-unused_buf);
-> > > > > > +   if (err)
-> > > > > > +           netdev_err(vi->dev, "resize tx fail: tx queue index=
-: %d err: %d\n", qindex, err);
-> > > > > > +
-> > > > > > +   /* Memory barrier before set reset and start subqueue. */
-> > > > > > +   smp_mb();
-> > > > > > +
-> > > > > > +   WRITE_ONCE(sq->reset, false);
-> > > > > > +   netif_tx_wake_queue(txq);
-> > > > > > +
-> > > > > > +   virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
-> > > > > > +   return err;
-> > > > > > +}
-> > > > > > +
-> > > > > >   /*
-> > > > > >    * Send command via the control virtqueue and check status.  =
-Commands
-> > > > > >    * supported by the hypervisor, as indicated by feature bits,=
- should
-> > > > >
-> > > >
-> > >
-> >
->
