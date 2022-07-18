@@ -2,173 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4EC433EF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jul 2022 16:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C083C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 08:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiGQQzA (ORCPT
+        id S233480AbiGRI4l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jul 2022 12:55:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
+        Mon, 18 Jul 2022 04:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiGQQy7 (ORCPT
+        with ESMTP id S233410AbiGRI4k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jul 2022 12:54:59 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F342A13F9B;
-        Sun, 17 Jul 2022 09:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658076898; x=1689612898;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=uhB0GA9ESzIKU1S9MryS5ARAASOFFo6mC6Zn+QAlZUA=;
-  b=OPKC8DNYOEco+m1+Eij00/iWyeXfVQEUUCZuW6ZWzwLqSBaIXNlMQTWu
-   tSNGWpGvtQHDHJH7lX/fhH9IK+Gy2IF/VzcKag8dO2NWqwQsYdQdz7Oa6
-   sCW2j6f9MSS9DGu7C4SLkJp4wZ8TCFbaWvHVVeKQ6V/idDg8/u+VH+3q0
-   7HNE4TjG9tclEgxsokLcrM7iB2GArREx4e9qtnGMyX2Z2jRWfrJjlqeUX
-   A4QNNH/939/VFEU0D1Jib+Xi87z+v/r/5bMeUIcENxjQusJiOVF/KoY+U
-   YGCcIwFI36M7x9BHeooSndIJzZxpKzaKLc435RzwnU69icvp7mM8XCc6n
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="266482300"
-X-IronPort-AV: E=Sophos;i="5.92,279,1650956400"; 
-   d="scan'208";a="266482300"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2022 09:54:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,279,1650956400"; 
-   d="scan'208";a="686494943"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jul 2022 09:54:56 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oD7Xk-0003Ui-1O;
-        Sun, 17 Jul 2022 16:54:56 +0000
-Date:   Mon, 18 Jul 2022 00:54:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
-Cc:     kbuild-all@lists.01.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [pdx86-platform-drivers-x86:review-hans 66/93]
- drivers/platform/x86/intel/vsec.c:429:38: sparse: sparse: incorrect type in
- initializer (different base types)
-Message-ID: <202207180002.aO1yUtRE-lkp@intel.com>
+        Mon, 18 Jul 2022 04:56:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69C42EE15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 01:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658134598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OWEVZ0lWemvnjJGr1KMJVEu33/f4lcOHck1LBmLT0x4=;
+        b=NWPyndKqiiALIP0h9Pk5HFNLdaRo74E7HqnT5JnQeuq4WI3nacKSGivB4DgbxhbMjsmeKn
+        ASLHd+lSj/QrGkGVbq3wx/AiMFdF7wFLzd/Jq8wGdPmqPAN0zgaUf5V7Meob/5vH1qQx/O
+        1XcmVgTlq7efUkg7K8ShMKEIeyPAwkg=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-550-uT_eLE4FOzmZpYrOnSoyxg-1; Mon, 18 Jul 2022 04:56:36 -0400
+X-MC-Unique: uT_eLE4FOzmZpYrOnSoyxg-1
+Received: by mail-lf1-f72.google.com with SMTP id z1-20020a195041000000b00489cc321e11so4069613lfj.23
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 01:56:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OWEVZ0lWemvnjJGr1KMJVEu33/f4lcOHck1LBmLT0x4=;
+        b=W4NE3zxwNOKmRLZmM9inXUKkOGpOHArAFLUYxuZfh4auAcJfyBB6yr+BxtDDHqPRCQ
+         mUpjNKvalQKEQgswrolR8ld1D2G95jZBF4xxqKJ35wFDLosg0+siTTF80WBaZoywk2VX
+         oV/hR24f6Jq5BC7yO4FoLV8qt95oNIlGErp5UB7tQ9yiAlBXU5VCUklZnaFtfSwdGywS
+         HxSf/i7ARsWhw1h0I+QdqXAjeNiygbTU1JOhQ9sTrla94Pf6YOclH0dPzviZ5dHGHGI0
+         umlnVxkXl56p76TzUYuqC1tL45UXfHygnEd3uncv3K2Ub6YagOacoGwBQ4kSM+flh0xe
+         yOMQ==
+X-Gm-Message-State: AJIora9k3WEmmNWYhlBIAoYORd8uJstIuntKlGu8NGEk4oUvig1UdlPR
+        30Vz4m37f3G026giI956EjVZglAdo1nLv0tp/i1yEktbkaBZfzVzgf2FFAqK0sRRWpEqV5+N6pQ
+        4XjmywS8EwGSN5xppZNOgoAcyrdj+aO533SWjNqQOUVE9w7boTg==
+X-Received: by 2002:ac2:4c4c:0:b0:489:fe2c:c877 with SMTP id o12-20020ac24c4c000000b00489fe2cc877mr15771571lfk.238.1658134595381;
+        Mon, 18 Jul 2022 01:56:35 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uT17stmgD/4/ICa/9NkCqW44+T43NZzTbYZlFnn5f6GksCmVOwfYnKSj/DtJ2DugQNpv1qMO4BpXj9dv3Brrw=
+X-Received: by 2002:ac2:4c4c:0:b0:489:fe2c:c877 with SMTP id
+ o12-20020ac24c4c000000b00489fe2cc877mr15771561lfk.238.1658134595164; Mon, 18
+ Jul 2022 01:56:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220629065656.54420-1-xuanzhuo@linux.alibaba.com>
+ <20220629065656.54420-39-xuanzhuo@linux.alibaba.com> <c0747cbc-685b-85a9-1931-0124124755f2@redhat.com>
+ <1656986375.3420787-1-xuanzhuo@linux.alibaba.com> <CACGkMEu80KP-ULz_CBvauRk_3XsCubMkkWv0uLnbt-wib5KOnA@mail.gmail.com>
+ <1657874178.9766078-2-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1657874178.9766078-2-xuanzhuo@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Mon, 18 Jul 2022 16:56:24 +0800
+Message-ID: <CACGkMEtF5NSXh-=nnsniLqy0pX2Tpyh413S5Bu5vZ6h=d+aHTA@mail.gmail.com>
+Subject: Re: [PATCH v11 38/40] virtio_net: support rx queue resize
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm <kvm@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        kangjie.xu@linux.alibaba.com,
+        virtualization <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-hans
-head:   7a4a04f4e90d746928501a6d551de87d02c28323
-commit: 936874b77dd0a86aafc1f03c11cb97ec938c16f1 [66/93] platform/x86/intel/vsec: Add PCI error recovery support to Intel PMT
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20220718/202207180002.aO1yUtRE-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?id=936874b77dd0a86aafc1f03c11cb97ec938c16f1
-        git remote add pdx86-platform-drivers-x86 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-        git fetch --no-tags pdx86-platform-drivers-x86 review-hans
-        git checkout 936874b77dd0a86aafc1f03c11cb97ec938c16f1
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/misc/lkdtm/ drivers/platform/x86/intel/ kernel/trace/
+On Fri, Jul 15, 2022 at 4:37 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrot=
+e:
+>
+> On Fri, 8 Jul 2022 14:20:52 +0800, Jason Wang <jasowang@redhat.com> wrote=
+:
+> > On Tue, Jul 5, 2022 at 10:00 AM Xuan Zhuo <xuanzhuo@linux.alibaba.com> =
+wrote:
+> > >
+> > > On Mon, 4 Jul 2022 11:44:12 +0800, Jason Wang <jasowang@redhat.com> w=
+rote:
+> > > >
+> > > > =E5=9C=A8 2022/6/29 14:56, Xuan Zhuo =E5=86=99=E9=81=93:
+> > > > > This patch implements the resize function of the rx queues.
+> > > > > Based on this function, it is possible to modify the ring num of =
+the
+> > > > > queue.
+> > > > >
+> > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > ---
+> > > > >   drivers/net/virtio_net.c | 22 ++++++++++++++++++++++
+> > > > >   1 file changed, 22 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > > index 9fe222a3663a..6ab16fd193e5 100644
+> > > > > --- a/drivers/net/virtio_net.c
+> > > > > +++ b/drivers/net/virtio_net.c
+> > > > > @@ -278,6 +278,8 @@ struct padded_vnet_hdr {
+> > > > >     char padding[12];
+> > > > >   };
+> > > > >
+> > > > > +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, voi=
+d *buf);
+> > > > > +
+> > > > >   static bool is_xdp_frame(void *ptr)
+> > > > >   {
+> > > > >     return (unsigned long)ptr & VIRTIO_XDP_FLAG;
+> > > > > @@ -1846,6 +1848,26 @@ static netdev_tx_t start_xmit(struct sk_bu=
+ff *skb, struct net_device *dev)
+> > > > >     return NETDEV_TX_OK;
+> > > > >   }
+> > > > >
+> > > > > +static int virtnet_rx_resize(struct virtnet_info *vi,
+> > > > > +                        struct receive_queue *rq, u32 ring_num)
+> > > > > +{
+> > > > > +   int err, qindex;
+> > > > > +
+> > > > > +   qindex =3D rq - vi->rq;
+> > > > > +
+> > > > > +   napi_disable(&rq->napi);
+> > > >
+> > > >
+> > > > Do we need to cancel the refill work here?
+> > >
+> > >
+> > > I think no, napi_disable is mutually exclusive, which ensures that th=
+ere will be
+> > > no conflicts between them.
+> >
+> > So this sounds similar to what I've fixed recently.
+> >
+> > 1) NAPI schedule delayed work.
+> > 2) we disable NAPI here
+> > 3) delayed work get schedule and call NAPI again
+> >
+> > ?
+>
+> Yes, but I don't think there are any negative effects.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+An infinite wait on the napi_disable()?
 
+Thanks
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/platform/x86/intel/vsec.c:429:38: sparse: sparse: incorrect type in initializer (different base types) @@     expected restricted pci_channel_state_t [usertype] status @@     got restricted pci_ers_result_t @@
-   drivers/platform/x86/intel/vsec.c:429:38: sparse:     expected restricted pci_channel_state_t [usertype] status
-   drivers/platform/x86/intel/vsec.c:429:38: sparse:     got restricted pci_ers_result_t
->> drivers/platform/x86/intel/vsec.c:434:24: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_channel_state_t [usertype] status @@     got restricted pci_ers_result_t @@
-   drivers/platform/x86/intel/vsec.c:434:24: sparse:     expected restricted pci_channel_state_t [usertype] status
-   drivers/platform/x86/intel/vsec.c:434:24: sparse:     got restricted pci_ers_result_t
->> drivers/platform/x86/intel/vsec.c:438:16: sparse: sparse: incorrect type in return expression (different base types) @@     expected restricted pci_ers_result_t @@     got restricted pci_channel_state_t [usertype] status @@
-   drivers/platform/x86/intel/vsec.c:438:16: sparse:     expected restricted pci_ers_result_t
-   drivers/platform/x86/intel/vsec.c:438:16: sparse:     got restricted pci_channel_state_t [usertype] status
-   drivers/platform/x86/intel/vsec.c:444:38: sparse: sparse: incorrect type in initializer (different base types) @@     expected restricted pci_channel_state_t [usertype] status @@     got restricted pci_ers_result_t @@
-   drivers/platform/x86/intel/vsec.c:444:38: sparse:     expected restricted pci_channel_state_t [usertype] status
-   drivers/platform/x86/intel/vsec.c:444:38: sparse:     got restricted pci_ers_result_t
-   drivers/platform/x86/intel/vsec.c:457:16: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_channel_state_t [usertype] status @@     got restricted pci_ers_result_t @@
-   drivers/platform/x86/intel/vsec.c:457:16: sparse:     expected restricted pci_channel_state_t [usertype] status
-   drivers/platform/x86/intel/vsec.c:457:16: sparse:     got restricted pci_ers_result_t
-   drivers/platform/x86/intel/vsec.c:472:16: sparse: sparse: incorrect type in return expression (different base types) @@     expected restricted pci_ers_result_t @@     got restricted pci_channel_state_t [usertype] status @@
-   drivers/platform/x86/intel/vsec.c:472:16: sparse:     expected restricted pci_ers_result_t
-   drivers/platform/x86/intel/vsec.c:472:16: sparse:     got restricted pci_channel_state_t [usertype] status
->> drivers/platform/x86/intel/vsec.c:480:33: sparse: sparse: symbol 'intel_vsec_pci_err_handlers' was not declared. Should it be static?
+>
+> Thanks.
+>
+> >
+> > Thanks
+> >
+> > >
+> > > Thanks.
+> > >
+> > > >
+> > > > Thanks
+> > > >
+> > > >
+> > > > > +
+> > > > > +   err =3D virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_un=
+used_buf);
+> > > > > +   if (err)
+> > > > > +           netdev_err(vi->dev, "resize rx fail: rx queue index: =
+%d err: %d\n", qindex, err);
+> > > > > +
+> > > > > +   if (!try_fill_recv(vi, rq, GFP_KERNEL))
+> > > > > +           schedule_delayed_work(&vi->refill, 0);
+> > > > > +
+> > > > > +   virtnet_napi_enable(rq->vq, &rq->napi);
+> > > > > +   return err;
+> > > > > +}
+> > > > > +
+> > > > >   /*
+> > > > >    * Send command via the control virtqueue and check status.  Co=
+mmands
+> > > > >    * supported by the hypervisor, as indicated by feature bits, s=
+hould
+> > > >
+> > >
+> >
+>
 
-
-vim +429 drivers/platform/x86/intel/vsec.c
-
-   425	
-   426	static pci_ers_result_t intel_vsec_pci_error_detected(struct pci_dev *pdev,
-   427							      pci_channel_state_t state)
-   428	{
- > 429		pci_channel_state_t status = PCI_ERS_RESULT_NEED_RESET;
-   430	
-   431		dev_info(&pdev->dev, "PCI error detected, state %d", state);
-   432	
-   433		if (state == pci_channel_io_perm_failure)
- > 434			status = PCI_ERS_RESULT_DISCONNECT;
-   435		else
-   436			pci_disable_device(pdev);
-   437	
- > 438		return status;
-   439	}
-   440	
-   441	static pci_ers_result_t intel_vsec_pci_slot_reset(struct pci_dev *pdev)
-   442	{
-   443		struct intel_vsec_device *intel_vsec_dev;
- > 444		pci_channel_state_t status = PCI_ERS_RESULT_DISCONNECT;
-   445		const struct pci_device_id *pci_dev_id;
-   446		unsigned long index;
-   447	
-   448		dev_info(&pdev->dev, "Resetting PCI slot\n");
-   449	
-   450		msleep(2000);
-   451		if (pci_enable_device(pdev)) {
-   452			dev_info(&pdev->dev,
-   453				 "Failed to re-enable PCI device after reset.\n");
-   454			goto out;
-   455		}
-   456	
-   457		status =  PCI_ERS_RESULT_RECOVERED;
-   458	
-   459		xa_for_each(&auxdev_array, index, intel_vsec_dev) {
-   460			/* check if pdev doesn't match */
-   461			if (pdev != intel_vsec_dev->pcidev)
-   462				continue;
-   463			devm_release_action(&pdev->dev, intel_vsec_remove_aux,
-   464					    &intel_vsec_dev->auxdev);
-   465		}
-   466		pci_disable_device(pdev);
-   467		pci_restore_state(pdev);
-   468		pci_dev_id = pci_match_id(intel_vsec_pci_ids, pdev);
-   469		intel_vsec_pci_probe(pdev, pci_dev_id);
-   470	
-   471	out:
-   472		return status;
-   473	}
-   474	
-   475	static void intel_vsec_pci_resume(struct pci_dev *pdev)
-   476	{
-   477		dev_info(&pdev->dev, "Done resuming PCI device\n");
-   478	}
-   479	
- > 480	const struct pci_error_handlers intel_vsec_pci_err_handlers = {
-   481		.error_detected = intel_vsec_pci_error_detected,
-   482		.slot_reset = intel_vsec_pci_slot_reset,
-   483		.resume = intel_vsec_pci_resume,
-   484	};
-   485	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
