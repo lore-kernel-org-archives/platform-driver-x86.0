@@ -2,127 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDCFCCA485
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 11:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21470C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 11:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234460AbiGRLR4 (ORCPT
+        id S233430AbiGRLrs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 07:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
+        Mon, 18 Jul 2022 07:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234213AbiGRLRy (ORCPT
+        with ESMTP id S234513AbiGRLrr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 07:17:54 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F73A201A6;
-        Mon, 18 Jul 2022 04:17:53 -0700 (PDT)
+        Mon, 18 Jul 2022 07:47:47 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA3A2126D;
+        Mon, 18 Jul 2022 04:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658143073; x=1689679073;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DpqXmie6D9DsH9mDkAnCsfL2eLPGa6h9nC1O717sCwo=;
-  b=cURgWqaW9Lu9LegfsezxykDu/beK25EE3rbW0zMJcqSra9P939iuxMzp
-   0PcP0aOGZUWZyPIQIzTvSlFfkEPQtP/b+Swq40zFTICLPdm7MsFTCRpoq
-   FxlykXm/M79vT9CkFornHOeNs3nfESLH4hXCC5OvijSSk8/W4C0uganuw
-   ZneLsGIR8tddAZw8sD2/Qxv1mFDuOG6NpvQzNy6FUf5GybNIQ/kuU7CF2
-   IXC/zW7olnvselFsidhZCkbeTNxeX7yg33yUjKDotK3Kc2fNWRNYiPQIb
-   /i6BuUvIuRYCQ7erashf3Q3ZK1+VeHAx17M7adMoF6Vh0fVGHX/lIUtH8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="287342817"
-X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
-   d="scan'208";a="287342817"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:52 -0700
-X-IronPort-AV: E=Sophos;i="5.92,280,1650956400"; 
-   d="scan'208";a="686702470"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:17:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oDOkw-001O8N-2k;
-        Mon, 18 Jul 2022 14:17:42 +0300
-Date:   Mon, 18 Jul 2022 14:17:42 +0300
+  t=1658144865; x=1689680865;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k95d+pG1IVPgq98QC9nwO2SCOSkBsTf8lK1Vpw4nOGQ=;
+  b=iEbLIeA+FS6vaiBZkW57vHtdagdclumdYegK6ed8qZJVPO0Vi4w04yAs
+   eq5VF7L0+KJXyX0jXE5DzhpOBRUbx98v5e6zoL9/cil1HmWujL3RsCmw7
+   ma42manXf6DvyLrHeH2WGqSnUXkmimWC1tREJN4jgpOh3pHrOIFH2TTAZ
+   qKF4pSO+Y6aV5ejF779nvHiINl/oNE6fWYsIzpXwPgq11TXV8BRbXff7A
+   4RmQtaqthnLJfh/ad5nQisjCr3lDLzn3hgl2nBfSCeXmAh+thZK1KgBn4
+   OyZ+Jk2iJxPSza7t6tU84mPi6knlmQJ03SU1OWZcyVz5x8d/3NqVn1jze
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="265982491"
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="265982491"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 04:47:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="629890758"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 18 Jul 2022 04:47:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5DEB813E2; Mon, 18 Jul 2022 14:47:51 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tony Luck <tony.luck@intel.com>, Wolfram Sang <wsa@kernel.org>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+To:     Hans de Goede <hdegoede@redhat.com>, Kate Hsuan <hpa@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jonathan Yong <jonathan.yong@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v6 00/12] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YtVBViMLFIUfFpXa@smile.fi.intel.com>
-References: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] platform/x86: p2sb: Move out of X86_PLATFORM_DEVICES dependency
+Date:   Mon, 18 Jul 2022 14:47:48 +0300
+Message-Id: <20220718114748.6365-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220606164138.66535-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 06, 2022 at 07:41:26PM +0300, Andy Shevchenko wrote:
-> There are a few users that would like to utilize P2SB mechanism of hiding
-> and unhiding a device from the PCI configuration space.
-> 
-> Here is the series to consolidate p2sb handling code for existing users
-> and to provide a generic way for new comer(s).
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
-> 
-> The patch that brings the helper ("platform/x86/intel: Add Primary to
-> Sideband (P2SB) bridge support") has a commit message that sheds a light
-> on what the P2SB is and why this is needed.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> The series is ready to be merged via MFD tree, but see below.
-> 
-> The series also includes updates for Simatic IPC drivers that partially
-> tagged by respective maintainers (the main question is if Pavel is okay
-> with the last three patches, since I believe Hans is okay with removing
-> some code under PDx86). Hence the first 8 patches can be merged right
-> away and the rest when Pavel does his review.
+The P2SB library is used for various drivers, including server
+platforms. That's why the dependency on X86_PLATFORM_DEVICES
+seems superfluous.
 
-Kernel test bot seems found an issue with dependencies, because selection
-of P2SB is not enough.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig            | 12 ++++++++++++
+ drivers/platform/x86/Makefile           |  4 ++++
+ drivers/platform/x86/intel/Kconfig      | 12 ------------
+ drivers/platform/x86/intel/Makefile     |  2 --
+ drivers/platform/x86/{intel => }/p2sb.c |  0
+ 5 files changed, 16 insertions(+), 14 deletions(-)
+ rename drivers/platform/x86/{intel => }/p2sb.c (100%)
 
-There are two solutions that I can see now:
-1) move P2SB out of X86_PLATFORM_DEVICES section (like PMC_ATOM);
-2) add 'depends on X86_PLATFORM_DEVICES' to the affected drivers.
-
-I think the first solution cleaner, because it would be strange to have
-the dependency on the drivers that quite unlikely be on server platforms
-(e.g. EDAC).
-
-In long term perhaps something like drivers/platform/x86/lib which is for
-platform libraries or so and independent on X86_PLATFORM_DEVICES?
-
-I will send a fix soon as per 1) above, feel free to comment here or there.
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bc4013e950ed..cab9ceb85436 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1164,6 +1164,18 @@ config WINMATE_FM07_KEYS
+ 
+ endif # X86_PLATFORM_DEVICES
+ 
++config P2SB
++	bool "Primary to Sideband (P2SB) bridge access support"
++	depends on PCI
++	help
++	  The Primary to Sideband (P2SB) bridge is an interface to some
++	  PCI devices connected through it. In particular, SPI NOR controller
++	  in Intel Apollo Lake SoC is one of such devices.
++
++	  The main purpose of this library is to unhide P2SB device in case
++	  firmware kept it hidden on some platforms in order to access devices
++	  behind it.
++
+ config PMC_ATOM
+        def_bool y
+        depends on PCI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 4a59f47a46e2..f04001431c91 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -120,6 +120,10 @@ obj-$(CONFIG_X86_ANDROID_TABLETS)	+= x86-android-tablets.o
+ # Intel uncore drivers
+ obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+ 
++# Intel miscellaneous drivers
++intel_p2sb-y				:= p2sb.o
++obj-$(CONFIG_P2SB)			+= intel_p2sb.o
++
+ # Intel PMIC / PMC / P-Unit devices
+ obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index c9cfbaae436b..794968bda115 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -70,18 +70,6 @@ config INTEL_OAKTRAIL
+ 	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+ 	  here; it will only load on supported platforms.
+ 
+-config P2SB
+-	bool "Primary to Sideband (P2SB) bridge access support"
+-	depends on PCI
+-	help
+-	  The Primary to Sideband (P2SB) bridge is an interface to some
+-	  PCI devices connected through it. In particular, SPI NOR controller
+-	  in Intel Apollo Lake SoC is one of such devices.
+-
+-	  The main purpose of this library is to unhide P2SB device in case
+-	  firmware kept it hidden on some platforms in order to access devices
+-	  behind it.
+-
+ config INTEL_BXTWC_PMIC_TMU
+ 	tristate "Intel Broxton Whiskey Cove TMU Driver"
+ 	depends on INTEL_SOC_PMIC_BXTWC
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index 741a9404db98..717933dd0cfd 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -28,8 +28,6 @@ intel_int0002_vgpio-y			:= int0002_vgpio.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ intel_oaktrail-y			:= oaktrail.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+-intel_p2sb-y				:= p2sb.o
+-obj-$(CONFIG_P2SB)			+= intel_p2sb.o
+ intel_sdsi-y				:= sdsi.o
+ obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
+ intel_vsec-y				:= vsec.o
+diff --git a/drivers/platform/x86/intel/p2sb.c b/drivers/platform/x86/p2sb.c
+similarity index 100%
+rename from drivers/platform/x86/intel/p2sb.c
+rename to drivers/platform/x86/p2sb.c
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
