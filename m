@@ -2,99 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3D2C433EF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 14:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F3C433EF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 15:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233949AbiGROzq (ORCPT
+        id S232768AbiGRP2Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 10:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
+        Mon, 18 Jul 2022 11:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234600AbiGROzp (ORCPT
+        with ESMTP id S235205AbiGRP2W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 10:55:45 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C1A2495B;
-        Mon, 18 Jul 2022 07:55:44 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id w12so15611366edd.13;
-        Mon, 18 Jul 2022 07:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tme4hCoAp9MJH+npHPL49EiKb8s+dPVv5cWtW6ohLjk=;
-        b=FoWHmcXwsjKL2J3LqgSvD1QjWVSyRADC+Lo6e90B2NLuDiiGpuq2OhATGbWSrvwuju
-         OavdJKob7sCVKvts0gUqpztlAviw7jasp39tr0Hkh05Z5i7YwtGZNmQb55UGkGQTVrc1
-         /CKziuG/YEvBeIwn2lGrlXevaFf3FYXzz76xaCpIiEcZEsVixLAeDteNwSb2vzwvGWjh
-         rIc9ZTHgYxp6UkpzDHhAh/z4HkTDTT5PfopKiQ4aCQ30rUodFpTZlMhbiZOeQe8QwFCk
-         ZHqQyBGpyRU3RwNj9RmgVB04PywuEUatRvXnH9Wg1m3N3MdFaV9rLudgXpkm5r+mAsiT
-         bg5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tme4hCoAp9MJH+npHPL49EiKb8s+dPVv5cWtW6ohLjk=;
-        b=IJfVYgWAg1I/ikr3rS2JoT8bGdZ0hfSL70eubY+8IIMwTo/P5dOJJuBIwOSuOgsfoE
-         0Y9su2Sewoj33gYfiq/Vcwugu2y3clR+fupe6TJwsu8qqFTLM2Fm/mN6W7mvTd2mgjZh
-         NIy3vUjoQx03hy5bISyvrOXqZejgGok8IzFpiwQpamq/Y64KkRDJnJrkI2FUcicBEcGh
-         ae4gYhwfRedRGotit/upFcWjd63UCo1UyVnmnNUJPV3ap6PzhyrAbuLbTXrzfv4gt8nz
-         y6Wlo/q6CWzozIfBpcGUAoH/D2+uRxw150ItkMbyThbFofLJxa0tZjV4YuT2eowy2BMS
-         W8fQ==
-X-Gm-Message-State: AJIora/ZVNc+fwrWLJJ/H3N6Fd8lS84N4uftCSsHrpI29JTm2+YgUWV+
-        Xsl4hS5k072RepIQMBJZIsj44E0JHDGUXE/qa+U=
-X-Google-Smtp-Source: AGRyM1sCF2+fysrzqxDyhua18fILUdQ2AZJyQGxg718W+CMc1RbtcMXNWkH4Ho5xwCKwD1Mz2f17SghcGbsaKierwQw=
-X-Received: by 2002:a05:6402:d05:b0:435:b2a6:94eb with SMTP id
- eb5-20020a0564020d0500b00435b2a694ebmr36970947edb.87.1658156142935; Mon, 18
- Jul 2022 07:55:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220718114748.6365-1-andriy.shevchenko@linux.intel.com> <aa9e27c7-e4cf-00f1-e88a-8d6c3857eb71@redhat.com>
-In-Reply-To: <aa9e27c7-e4cf-00f1-e88a-8d6c3857eb71@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Jul 2022 16:55:06 +0200
-Message-ID: <CAHp75Vfez=qECDuVdsDpWu4qjOt6U_xBrMC3P-O--V2EQprB8w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Move out of
- X86_PLATFORM_DEVICES dependency
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kernel test robot <lkp@intel.com>
+        Mon, 18 Jul 2022 11:28:22 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A813E29833;
+        Mon, 18 Jul 2022 08:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658158103; x=1689694103;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=oBAC0uBsnllVtRcBgr6VIc30v+nLQVx0Zviwvr2nGSc=;
+  b=dJ2Ethx/oAki115zzUr/I4LgRI/ty99EGqXEjcUUce8kv/HZsDa3A1MU
+   V4iFXECQiuwIfMv/bLJoN2fUNEQi398I3jbqaDbI2pbzwpuAW3etyv2Dn
+   ptGg8e2JZ363nhWJuvp79ym4/ITwr0waVEWfaZLuXLKxBKfbg8Ox7hVdY
+   TmAXfl/tcbttVyfwBwiS/NIOzhfU9F9nKXfYl/8MIfv9gzCc1jS7EY1Ir
+   7gMDybwVM84J/qJOgjc8HWk3od0O2ByYYWyWUFw7Q0CI3eowOt8bqL8XJ
+   ZmkGY30bVQkMALMiA3YHm8lKlnhvFmeZsxezFRpdzEIFsyXGEHcNfLyBY
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10412"; a="347938715"
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="347938715"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 08:28:22 -0700
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="773776175"
+Received: from jwconnol-mobl1.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.102.92])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 08:28:21 -0700
+Message-ID: <2a240c21041b5ac03b9dd3502b2f15fead96c341.camel@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select:Unneeded semicolon
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Xin Gao <gaoxin@cdjrlc.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 18 Jul 2022 08:28:20 -0700
+In-Reply-To: <20220718124907.7254-1-gaoxin@cdjrlc.com>
+References: <20220718124907.7254-1-gaoxin@cdjrlc.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 4:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 7/18/22 13:47, Andy Shevchenko wrote:
+On Mon, 2022-07-18 at 20:49 +0800, Xin Gao wrote:
+> Unneeded semicolon
+> 
+> Signed-off-by: Xin Gao <gaoxin@cdjrlc.com>
+Thanks, I will add to PULL request.
 
-...
+> ---
+>  tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/power/x86/intel-speed-select/hfi-events.c
+> b/tools/power/x86/intel-speed-select/hfi-events.c
+> index 761375062505..f0ed69721308 100644
+> --- a/tools/power/x86/intel-speed-select/hfi-events.c
+> +++ b/tools/power/x86/intel-speed-select/hfi-events.c
+> @@ -144,7 +144,7 @@ static int family_handler(struct nl_msg *msg,
+> void *arg)
+>                         continue;
+>                 res->id = nla_get_u32(tb2[CTRL_ATTR_MCAST_GRP_ID]);
+>                 break;
+> -       };
+> +       }
+>  
+>         return 0;
+>  }
 
-> >  endif # X86_PLATFORM_DEVICES
-> >
-> > +config P2SB
-> > +     bool "Primary to Sideband (P2SB) bridge access support"
-> > +     depends on PCI
->
-> This needs to become "PCI && X86" to avoid this possible getting
-> enabled on other platforms.
-
-Indeed.
-
-> With that added you may add my:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Thanks!
-Amended and sent a v2.
-
-> and this also counts as my ack for merging this through
-> Lee's MFD tree together with the rest of the series.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
