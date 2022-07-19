@@ -2,76 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B19C43334
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jul 2022 20:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E1C43334
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jul 2022 11:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233947AbiGRUSO (ORCPT
+        id S231710AbiGSLDv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jul 2022 16:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58854 "EHLO
+        Tue, 19 Jul 2022 07:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbiGRUSN (ORCPT
+        with ESMTP id S229886AbiGSLDv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jul 2022 16:18:13 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E77DF3B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 13:18:12 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id ez10so23340713ejc.13
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jul 2022 13:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=mloeAXDE6EDYZtSWmY6ksMIqAo+NlJskQ/kvKcbPkLc=;
-        b=dOK9qktV/GIxvJpfDlLcEnBCjo4IOzRfewd6cnj1EK3K+E7agyajXKZO0ChA2zuKTU
-         eDP3toZpK28VSFCQm50bVamQOzcCxyWa36YnOPXMPQVklmh76Qm83L3nwFPCdTp5GwXa
-         YE8pCj5h4d0jmafFvlYDU6obbHaWC192V2TENHJt57l6s4bJpFJNYCRr0abQ2WW0lZdU
-         lMIqlG6Vhfuu7jDOUPvK7Gaqp9aq4SGv9mKz0TYAhZPBy3ngg8uAt2M18yY5MNK4cBhg
-         DeLpGbLa/6eE7kSaDuYEz59FsQvCAdCk3IIO9TNO+XGjvehPHaUL0sHNpSyDtYN+ImSZ
-         78qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=mloeAXDE6EDYZtSWmY6ksMIqAo+NlJskQ/kvKcbPkLc=;
-        b=QGudBc8BOlFFD7/WJJpua+3PDSC1gkNvo1HA/e4/Os/ULqQaoThDM2MfIt1Nb39hQC
-         DWb4b+4LZ66FCJUdkOv7VpjFqc7EK3ybkhe3I7LJ94qSDq7o4hvbqlGyLKACrnlgSubs
-         n/0YpoiWIx40/HosUaOmMzYeqzojOvCKOjbcVG9ELww1L08dbP7hu8/YFzecQizf7SXl
-         0Xlxu8OlGPO58NwSMV5VD456frhYwpqQRtVwjMDlFLhxCYHCJIm5u0q477xi1EraEcYl
-         a5/bOfp9zklCU85Hzddpuw9/yf5SkH/+JSQuI3VQ3KJBDiEnsGs1k8PWYRq342YFpB7n
-         c0Nw==
-X-Gm-Message-State: AJIora94AS6k0IfAelyMZluhHDUu024AmY6m3z+gwON+pGcDWRTx7Wrn
-        nXsLEP2Hd9Ct/BMaDgFFF9RRdDSDnoJx8Kaz7mfISkKUEjmhkB33
-X-Google-Smtp-Source: AGRyM1sWyRIsuCYjJp5Buuj1j1Rsx1LmyC3IKnEamfZoi1CzemEEwSFSe54M+XBjv0VVxo2oxQsOXKjtiU+kzghC1yI=
-X-Received: by 2002:a17:906:9b09:b0:72b:9612:d373 with SMTP id
- eo9-20020a1709069b0900b0072b9612d373mr26220763ejc.606.1658175491236; Mon, 18
- Jul 2022 13:18:11 -0700 (PDT)
+        Tue, 19 Jul 2022 07:03:51 -0400
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA824255BB;
+        Tue, 19 Jul 2022 04:03:50 -0700 (PDT)
+Received: from localhost.localdomain (unknown [83.149.199.65])
+        by mail.ispras.ru (Postfix) with ESMTPS id 9F00340D403D;
+        Tue, 19 Jul 2022 11:03:48 +0000 (UTC)
+From:   Andrey Strachuk <strochuk@ispras.ru>
+To:     Mattia Dongili <malattia@linux.it>
+Cc:     Andrey Strachuk <strochuk@ispras.ru>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org
+Subject: [PATCH] platform/x86: remove useless comparisons in sony_pic_read_possible_resource()
+Date:   Tue, 19 Jul 2022 14:03:41 +0300
+Message-Id: <20220719110341.7239-1-strochuk@ispras.ru>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 Jul 2022 22:17:35 +0200
-Message-ID: <CAHp75VeH9Lax-S=qPq4a_i1kLBWTV=Y0=ePtFHNUN7cR65sa_g@mail.gmail.com>
-Subject: names for root swnodes in INT33FE driver and others
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HI!
+Local variable 'p' is initialized by an address
+of field of acpi_resource structure, so it does
+not make sense to compare 'p' with NULL.
 
-During the discussion of some DSA rework [1] I just realized that
-names for root swnodes are not required and moreover should be unique
-in the system. Looking into the INT33FE driver I'm now asking myself
-why we are still using names there (except just convenience for us)?
+Local variable 'io' is initialized by an address
+of field of acpi_resource structure, so it does
+not make sense to compare 'io' with NULL.
 
-Note, theoretically it might be possible that one can somehow connect
-another i2c device to those Cherry Trail machines (let's say via
-USB-to-I2C adapter). And somehow try to register swnode from maybe
-out-of-tree driver, however it's not an issue to the official kernel.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-That said, maybe better just to remove them where we don't rely on their names?
+Signed-off-by: Andrey Strachuk <strochuk@ispras.ru>
+Fixes: 41b16dce3905 ("create drivers/platform/x86/ from drivers/misc/")
+---
+ drivers/platform/x86/sony-laptop.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-[1]: https://lore.kernel.org/all/YtWzWdkFVMg0Hyvf@smile.fi.intel.com/
-
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index d8d0c0bed5e9..07ef05f727a2 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4341,7 +4341,7 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
+ 		{
+ 			struct acpi_resource_irq *p = &resource->data.irq;
+ 			struct sony_pic_irq *interrupt = NULL;
+-			if (!p || !p->interrupt_count) {
++			if (!p->interrupt_count) {
+ 				/*
+ 				 * IRQ descriptors may have no IRQ# bits set,
+ 				 * particularly those those w/ _STA disabled
+@@ -4374,11 +4374,6 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
+ 			struct acpi_resource_io *io = &resource->data.io;
+ 			struct sony_pic_ioport *ioport =
+ 				list_first_entry(&dev->ioports, struct sony_pic_ioport, list);
+-			if (!io) {
+-				dprintk("Blank IO resource\n");
+-				return AE_OK;
+-			}
+-
+ 			if (!ioport->io1.minimum) {
+ 				memcpy(&ioport->io1, io, sizeof(*io));
+ 				dprintk("IO1 at 0x%.4x (0x%.2x)\n", ioport->io1.minimum,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
