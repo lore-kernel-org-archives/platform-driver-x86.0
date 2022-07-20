@@ -2,24 +2,24 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1572DCCA486
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 03:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957F2C43334
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 03:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240810AbiGTDFE (ORCPT
+        id S241377AbiGTDFU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jul 2022 23:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
+        Tue, 19 Jul 2022 23:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240664AbiGTDEx (ORCPT
+        with ESMTP id S240667AbiGTDFB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jul 2022 23:04:53 -0400
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FDB45F75;
-        Tue, 19 Jul 2022 20:04:50 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VJuvIR2_1658286283;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VJuvIR2_1658286283)
+        Tue, 19 Jul 2022 23:05:01 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25144B4B7;
+        Tue, 19 Jul 2022 20:04:55 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VJuw0JL_1658286288;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VJuw0JL_1658286288)
           by smtp.aliyun-inc.com;
-          Wed, 20 Jul 2022 11:04:44 +0800
+          Wed, 20 Jul 2022 11:04:49 +0800
 From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 To:     virtualization@lists.linux-foundation.org
 Cc:     Richard Weinberger <richard@nod.at>,
@@ -55,9 +55,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         kangjie.xu@linux.alibaba.com
-Subject: [PATCH v12 03/40] virtio_ring: update the document of the virtqueue_detach_unused_buf for queue reset
-Date:   Wed, 20 Jul 2022 11:03:59 +0800
-Message-Id: <20220720030436.79520-4-xuanzhuo@linux.alibaba.com>
+Subject: [PATCH v12 05/40] virtio_ring: split vring_virtqueue
+Date:   Wed, 20 Jul 2022 11:04:01 +0800
+Message-Id: <20220720030436.79520-6-xuanzhuo@linux.alibaba.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
 References: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
@@ -68,30 +68,154 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Added documentation for virtqueue_detach_unused_buf, allowing it to be
-called on queue reset.
+Separate the two inline structures(split and packed) from the structure
+vring_virtqueue.
+
+In this way, we can use these two structures later to pass parameters
+and retain temporary variables.
 
 Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 Acked-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/virtio/virtio_ring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/virtio/virtio_ring.c | 116 ++++++++++++++++++-----------------
+ 1 file changed, 60 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index a5ec724c01d8..17024389b62c 100644
+index a3d76fd87983..1bc5794e9739 100644
 --- a/drivers/virtio/virtio_ring.c
 +++ b/drivers/virtio/virtio_ring.c
-@@ -2130,8 +2130,8 @@ EXPORT_SYMBOL_GPL(virtqueue_enable_cb_delayed);
-  * @_vq: the struct virtqueue we're talking about.
-  *
-  * Returns NULL or the "data" token handed to virtqueue_add_*().
-- * This is not valid on an active queue; it is useful only for device
-- * shutdown.
-+ * This is not valid on an active queue; it is useful for device
-+ * shutdown or the reset queue.
-  */
- void *virtqueue_detach_unused_buf(struct virtqueue *_vq)
- {
+@@ -85,6 +85,64 @@ struct vring_desc_extra {
+ 	u16 next;			/* The next desc state in a list. */
+ };
+ 
++struct vring_virtqueue_split {
++	/* Actual memory layout for this queue. */
++	struct vring vring;
++
++	/* Last written value to avail->flags */
++	u16 avail_flags_shadow;
++
++	/*
++	 * Last written value to avail->idx in
++	 * guest byte order.
++	 */
++	u16 avail_idx_shadow;
++
++	/* Per-descriptor state. */
++	struct vring_desc_state_split *desc_state;
++	struct vring_desc_extra *desc_extra;
++
++	/* DMA address and size information */
++	dma_addr_t queue_dma_addr;
++	size_t queue_size_in_bytes;
++};
++
++struct vring_virtqueue_packed {
++	/* Actual memory layout for this queue. */
++	struct {
++		unsigned int num;
++		struct vring_packed_desc *desc;
++		struct vring_packed_desc_event *driver;
++		struct vring_packed_desc_event *device;
++	} vring;
++
++	/* Driver ring wrap counter. */
++	bool avail_wrap_counter;
++
++	/* Avail used flags. */
++	u16 avail_used_flags;
++
++	/* Index of the next avail descriptor. */
++	u16 next_avail_idx;
++
++	/*
++	 * Last written value to driver->flags in
++	 * guest byte order.
++	 */
++	u16 event_flags_shadow;
++
++	/* Per-descriptor state. */
++	struct vring_desc_state_packed *desc_state;
++	struct vring_desc_extra *desc_extra;
++
++	/* DMA address and size information */
++	dma_addr_t ring_dma_addr;
++	dma_addr_t driver_event_dma_addr;
++	dma_addr_t device_event_dma_addr;
++	size_t ring_size_in_bytes;
++	size_t event_size_in_bytes;
++};
++
+ struct vring_virtqueue {
+ 	struct virtqueue vq;
+ 
+@@ -124,64 +182,10 @@ struct vring_virtqueue {
+ 
+ 	union {
+ 		/* Available for split ring */
+-		struct {
+-			/* Actual memory layout for this queue. */
+-			struct vring vring;
+-
+-			/* Last written value to avail->flags */
+-			u16 avail_flags_shadow;
+-
+-			/*
+-			 * Last written value to avail->idx in
+-			 * guest byte order.
+-			 */
+-			u16 avail_idx_shadow;
+-
+-			/* Per-descriptor state. */
+-			struct vring_desc_state_split *desc_state;
+-			struct vring_desc_extra *desc_extra;
+-
+-			/* DMA address and size information */
+-			dma_addr_t queue_dma_addr;
+-			size_t queue_size_in_bytes;
+-		} split;
++		struct vring_virtqueue_split split;
+ 
+ 		/* Available for packed ring */
+-		struct {
+-			/* Actual memory layout for this queue. */
+-			struct {
+-				unsigned int num;
+-				struct vring_packed_desc *desc;
+-				struct vring_packed_desc_event *driver;
+-				struct vring_packed_desc_event *device;
+-			} vring;
+-
+-			/* Driver ring wrap counter. */
+-			bool avail_wrap_counter;
+-
+-			/* Avail used flags. */
+-			u16 avail_used_flags;
+-
+-			/* Index of the next avail descriptor. */
+-			u16 next_avail_idx;
+-
+-			/*
+-			 * Last written value to driver->flags in
+-			 * guest byte order.
+-			 */
+-			u16 event_flags_shadow;
+-
+-			/* Per-descriptor state. */
+-			struct vring_desc_state_packed *desc_state;
+-			struct vring_desc_extra *desc_extra;
+-
+-			/* DMA address and size information */
+-			dma_addr_t ring_dma_addr;
+-			dma_addr_t driver_event_dma_addr;
+-			dma_addr_t device_event_dma_addr;
+-			size_t ring_size_in_bytes;
+-			size_t event_size_in_bytes;
+-		} packed;
++		struct vring_virtqueue_packed packed;
+ 	};
+ 
+ 	/* How to notify other side. FIXME: commonalize hcalls! */
 -- 
 2.31.0
 
