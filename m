@@ -2,95 +2,218 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD368C43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 01:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEA9CCA485
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 03:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241963AbiGTBaE (ORCPT
+        id S239701AbiGTDEs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jul 2022 21:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42378 "EHLO
+        Tue, 19 Jul 2022 23:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242296AbiGTB3I (ORCPT
+        with ESMTP id S230125AbiGTDEq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jul 2022 21:29:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E321BEAC;
-        Tue, 19 Jul 2022 18:19:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 829B661730;
-        Wed, 20 Jul 2022 01:19:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF56BC341CE;
-        Wed, 20 Jul 2022 01:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658279960;
-        bh=ZCwShvZKZQZigm2Kc6t3uOLilUrXfOoRxUdBcJ0fLnQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKQtrLATIS3TZctsKUSY2ljWKYR68jSs9gw2tfFJ5pJmsgG8LfLU+0bKYu7U6Gjq1
-         XZ07/EXCz/c0T1K4F77aDF00lgqGK/tezhBoRaE2Ph9h89jLWm+jHUIrleOZPx7Ux5
-         Vsa0Bo8cBfM9ei4T+0vj//kaWgc6Bng6xGOLqDy/7+PSdcV0cE+LtJqd9oRF/2Dfk+
-         q0AuUADn57PACAflgfQBgQJi2D7edNyc8DK5FHRcqlv3AgGh2m0TVCDjzIjlhhwew7
-         afQ2V6FsClpLqnO7eRgBb7jkNl2m7oAsMvbOHqIKFEAjt8NBQMgtDGi2iTwPvOWZ9M
-         UziH41UieU9AQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misaka19465 <misaka19465@olddoctor.net>,
+        Tue, 19 Jul 2022 23:04:46 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB192CC82;
+        Tue, 19 Jul 2022 20:04:43 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VJuvIOR_1658286276;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VJuvIOR_1658286276)
+          by smtp.aliyun-inc.com;
+          Wed, 20 Jul 2022 11:04:37 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 6/6] platform/x86: asus-wmi: Add key mappings
-Date:   Tue, 19 Jul 2022 21:18:57 -0400
-Message-Id: <20220720011858.1025523-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220720011858.1025523-1-sashal@kernel.org>
-References: <20220720011858.1025523-1-sashal@kernel.org>
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+Subject: [PATCH v12 00/40] virtio pci support VIRTIO_F_RING_RESET
+Date:   Wed, 20 Jul 2022 11:03:56 +0800
+Message-Id: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+X-Git-Hash: 366032b2ffac
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Misaka19465 <misaka19465@olddoctor.net>
+The virtio spec already supports the virtio queue reset function. This patch set
+is to add this function to the kernel. The relevant virtio spec information is
+here:
 
-[ Upstream commit f56e676a7f1ca7de9002526df3d2ee0e47dfd8ce ]
+    https://github.com/oasis-tcs/virtio-spec/issues/124
+    https://github.com/oasis-tcs/virtio-spec/issues/139
 
-On laptops like ASUS TUF Gaming A15, which have hotkeys to start Armoury
-Crate or AURA Sync, these hotkeys are unavailable. This patch add
-mappings for them.
+Also regarding MMIO support for queue reset, I plan to support it after this
+patch is passed.
 
-Signed-off-by: Misaka19465 <misaka19465@olddoctor.net>
-Link: https://lore.kernel.org/r/20220710113727.281634-1-misaka19465@olddoctor.net
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+This patch set implements the refactoring of vring. Finally, the
+virtuque_resize() interface is provided based on the reset function of the
+transport layer.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 8137aa343706..8f33a58f9ee6 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -495,6 +495,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
- 	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
-+	{ KE_KEY, 0x38, { KEY_PROG3 } }, /* Armoury Crate */
- 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
- 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
-@@ -543,6 +544,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
- 	{ KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
- 	{ KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
-+	{ KE_KEY, 0xB3, { KEY_PROG4 } }, /* AURA */
- 	{ KE_KEY, 0xB5, { KEY_CALC } },
- 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
- 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
--- 
-2.35.1
+Test environment:
+    Host: 4.19.91
+    Qemu: QEMU emulator version 6.2.50 (with vq reset support)
+    Test Cmd:  ethtool -G eth1 rx $1 tx $2; ethtool -g eth1
+
+    The default is split mode, modify Qemu virtio-net to add PACKED feature to test
+    packed mode.
+
+Qemu code:
+    https://github.com/fengidri/qemu/compare/89f3bfa3265554d1d591ee4d7f1197b6e3397e84...master
+
+In order to simplify the review of this patch set, the function of reusing
+the old buffers after resize will be introduced in subsequent patch sets.
+
+Please review. Thanks.
+
+v12:
+  1. access vq->num_max directly without helper
+  2. rename the vq reset callbacks:
+ 	     int (*disable_vq_and_reset)(struct virtqueue *vq);
+ 	     int (*enable_vq_after_reset)(struct virtqueue *vq);
+
+  3. rename vring to vring_split, vring_packed
+  4. protect sq->reset by tx lock
+
+v11:
+  1. struct virtio_pci_common_cfg to virtio_pci_modern.h
+  2. conflict resolution
+
+v10:
+  1. on top of the harden vring IRQ
+  2. factor out split and packed from struct vring_virtqueue
+  3. some suggest from @Jason Wang
+
+v9:
+  1. Provide a virtqueue_resize() interface directly
+  2. A patch set including vring resize, virtio pci reset, virtio-net resize
+  3. No more separate structs
+
+v8:
+  1. Provide a virtqueue_reset() interface directly
+  2. Split the two patch sets, this is the first part
+  3. Add independent allocation helper for allocating state, extra
+
+v7:
+  1. fix #6 subject typo
+  2. fix #6 ring_size_in_bytes is uninitialized
+  3. check by: make W=12
+
+v6:
+  1. virtio_pci: use synchronize_irq(irq) to sync the irq callbacks
+  2. Introduce virtqueue_reset_vring() to implement the reset of vring during
+     the reset process. May use the old vring if num of the vq not change.
+  3. find_vqs() support sizes to special the max size of each vq
+
+v5:
+  1. add virtio-net support set_ringparam
+
+v4:
+  1. just the code of virtio, without virtio-net
+  2. Performing reset on a queue is divided into these steps:
+    1. reset_vq: reset one vq
+    2. recycle the buffer from vq by virtqueue_detach_unused_buf()
+    3. release the ring of the vq by vring_release_virtqueue()
+    4. enable_reset_vq: re-enable the reset queue
+  3. Simplify the parameters of enable_reset_vq()
+  4. add container structures for virtio_pci_common_cfg
+
+v3:
+  1. keep vq, irq unreleased
+
+Xuan Zhuo (40):
+  virtio: record the maximum queue num supported by the device.
+  virtio: struct virtio_config_ops add callbacks for queue_reset
+  virtio_ring: update the document of the virtqueue_detach_unused_buf
+    for queue reset
+  virtio_ring: extract the logic of freeing vring
+  virtio_ring: split vring_virtqueue
+  virtio_ring: introduce virtqueue_init()
+  virtio_ring: split: introduce vring_free_split()
+  virtio_ring: split: extract the logic of alloc queue
+  virtio_ring: split: extract the logic of alloc state and extra
+  virtio_ring: split: extract the logic of attach vring
+  virtio_ring: split: extract the logic of vring init
+  virtio_ring: split: introduce virtqueue_reinit_split()
+  virtio_ring: split: reserve vring_align, may_reduce_num
+  virtio_ring: split: introduce virtqueue_resize_split()
+  virtio_ring: packed: introduce vring_free_packed
+  virtio_ring: packed: extract the logic of alloc queue
+  virtio_ring: packed: extract the logic of alloc state and extra
+  virtio_ring: packed: extract the logic of attach vring
+  virtio_ring: packed: extract the logic of vring init
+  virtio_ring: packed: introduce virtqueue_reinit_packed()
+  virtio_ring: packed: introduce virtqueue_resize_packed()
+  virtio_ring: introduce virtqueue_resize()
+  virtio_pci: struct virtio_pci_common_cfg add queue_notify_data
+  virtio: allow to unbreak/break virtqueue individually
+  virtio: queue_reset: add VIRTIO_F_RING_RESET
+  virtio_ring: struct virtqueue introduce reset
+  virtio_pci: struct virtio_pci_common_cfg add queue_reset
+  virtio_pci: introduce helper to get/set queue reset
+  virtio_pci: extract the logic of active vq for modern pci
+  virtio_pci: support VIRTIO_F_RING_RESET
+  virtio: find_vqs() add arg sizes
+  virtio_pci: support the arg sizes of find_vqs()
+  virtio_mmio: support the arg sizes of find_vqs()
+  virtio: add helper virtio_find_vqs_ctx_size()
+  virtio_net: set the default max ring size by find_vqs()
+  virtio_net: get ringparam by virtqueue_get_vring_max_size()
+  virtio_net: split free_unused_bufs()
+  virtio_net: support rx queue resize
+  virtio_net: support tx queue resize
+  virtio_net: support set_ringparam
+
+ arch/um/drivers/virtio_uml.c             |   3 +-
+ drivers/net/virtio_net.c                 | 208 +++++-
+ drivers/platform/mellanox/mlxbf-tmfifo.c |   3 +
+ drivers/remoteproc/remoteproc_virtio.c   |   3 +
+ drivers/s390/virtio/virtio_ccw.c         |   4 +
+ drivers/virtio/virtio_mmio.c             |  11 +-
+ drivers/virtio/virtio_pci_common.c       |  32 +-
+ drivers/virtio/virtio_pci_common.h       |   3 +-
+ drivers/virtio/virtio_pci_legacy.c       |   8 +-
+ drivers/virtio/virtio_pci_modern.c       | 161 ++++-
+ drivers/virtio/virtio_pci_modern_dev.c   |  39 ++
+ drivers/virtio/virtio_ring.c             | 769 +++++++++++++++++------
+ drivers/virtio/virtio_vdpa.c             |   3 +
+ include/linux/virtio.h                   |  10 +
+ include/linux/virtio_config.h            |  40 +-
+ include/linux/virtio_pci_modern.h        |   9 +
+ include/uapi/linux/virtio_config.h       |   7 +-
+ include/uapi/linux/virtio_pci.h          |   2 +
+ 18 files changed, 1038 insertions(+), 277 deletions(-)
+
+--
+2.31.0
 
