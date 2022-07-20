@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF41DC43334
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 01:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EAECCA48A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jul 2022 01:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241667AbiGTBVY (ORCPT
+        id S239519AbiGTBZO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jul 2022 21:21:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45410 "EHLO
+        Tue, 19 Jul 2022 21:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240841AbiGTBUd (ORCPT
+        with ESMTP id S242007AbiGTBYW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jul 2022 21:20:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB7F655A7;
-        Tue, 19 Jul 2022 18:16:05 -0700 (PDT)
+        Tue, 19 Jul 2022 21:24:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97407390B;
+        Tue, 19 Jul 2022 18:17:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 02AFDB81DE8;
-        Wed, 20 Jul 2022 01:16:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBDDDC341D1;
-        Wed, 20 Jul 2022 01:16:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDB936172D;
+        Wed, 20 Jul 2022 01:17:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFCDC341C6;
+        Wed, 20 Jul 2022 01:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658279761;
-        bh=b/YFQZ/cCeh4t/njU6qYLaBSWrdRC0xNYA6SQ22L0p0=;
+        s=k20201202; t=1658279841;
+        bh=MgdMCtwYXvQAqxy4oZnDpLibpTyHN/ieYm+iNFSZYA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5gjv6YVy5rC8J7AzjytFmOicpgg2tk9Sj8AQDerpRQX8YZLDANuwN440kMsG3i21
-         EDcBqrIlzeJV3ydmgZE3Ycrtk00HSdXbno7QofkOVOJ3m++haW8Zet3kbWMuoEedE8
-         HeVR7O/Pp9YjqBdvGZVBENsgMPu3UTLN9Kw2wxHUjSBR9KFF0BWHO1dA2Q/Y0hQQsZ
-         ehyJXhLZagrEIoOb+zuPnbPeSJtqqrmz89pe1Iitbcw9Lp5qOxmeXv58gHGmc0uTom
-         5vJv7j9pIG2teuljEhERn8bAXjhyzkmgYC3czkL8l/AmXR4wDa8VWhXyvfOCWFixqW
-         LkkTYfGJAARDw==
+        b=OM/ZCYQsSgjeR+Tq6nhyYNo4LNq52V+a95b6xx0hT21lT1btZwGpvaQviiNJi6PF6
+         qBjzypMRtARPmeAQ6atF6h8qT+IBw12uiqNLdr2/Xx50nT50HTG8VZh7nDlah2oFCM
+         LzOzBPmNhjyOdyFQagp5x5Hvpqe2OZ1ASfxRtTolgA/emq1wlxSJDK5TAkWhkawdtZ
+         wALN7FjUOtvJ3dYaq2mgBe3TKCzj965dlXxfU7ILY21WkI83nutHne2l3sbEbn4W1D
+         WcmPemY94i0d9yGPUO0FuphgIPMqr/Bx0mogRh79UzoZ2TNcTcIXfv/vVjwp4/ptvK
+         68e6GTMhWIwuw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Misaka19465 <misaka19465@olddoctor.net>,
@@ -40,12 +40,12 @@ Cc:     Misaka19465 <misaka19465@olddoctor.net>,
         Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
         markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 36/42] platform/x86: asus-wmi: Add key mappings
-Date:   Tue, 19 Jul 2022 21:13:44 -0400
-Message-Id: <20220720011350.1024134-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 21/25] platform/x86: asus-wmi: Add key mappings
+Date:   Tue, 19 Jul 2022 21:16:12 -0400
+Message-Id: <20220720011616.1024753-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220720011350.1024134-1-sashal@kernel.org>
-References: <20220720011350.1024134-1-sashal@kernel.org>
+In-Reply-To: <20220720011616.1024753-1-sashal@kernel.org>
+References: <20220720011616.1024753-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,10 +72,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index a81dc4b191b7..6ec9529f8142 100644
+index 949ddeb673bc..7ec2e90ca1ac 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -522,6 +522,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+@@ -479,6 +479,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
  	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
  	{ KE_KEY, 0x32, { KEY_MUTE } },
  	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
@@ -83,7 +83,7 @@ index a81dc4b191b7..6ec9529f8142 100644
  	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
  	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
  	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
-@@ -573,6 +574,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+@@ -530,6 +531,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
  	{ KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
  	{ KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
  	{ KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
