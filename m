@@ -2,204 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58494CCA485
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jul 2022 09:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8D5C43334
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jul 2022 12:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231911AbiGUJag (ORCPT
+        id S230230AbiGUMLt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Jul 2022 05:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
+        Thu, 21 Jul 2022 08:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbiGUJaf (ORCPT
+        with ESMTP id S233422AbiGUMLs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Jul 2022 05:30:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F5907A51C
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658395832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cE2msxk6QPw86zAV3haYmpL0Ot9f5ZCy5ykRLxOKnec=;
-        b=GlQjpbr7E+McOWJVbcQk3HbL++9lYEsdLLPe232nBwS20VCQ8UVr88APvkNZShIZ2bdUE3
-        gwnC908AMcEdw/MeRywV3jTADaCBKeqhXJ9mcvuMUNuUdt9yKjl5IBljgOubmAlnwIL4cO
-        8mNKyrrEmOeFGML90r5dJy1vHkuBN6E=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-172-ZgNrJZnGMYCv-4mWziYfUg-1; Thu, 21 Jul 2022 05:30:31 -0400
-X-MC-Unique: ZgNrJZnGMYCv-4mWziYfUg-1
-Received: by mail-pf1-f198.google.com with SMTP id y10-20020a056a00180a00b0052b10093100so625134pfa.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:30:31 -0700 (PDT)
+        Thu, 21 Jul 2022 08:11:48 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F14E863D4;
+        Thu, 21 Jul 2022 05:11:44 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id d16so1957835wrv.10;
+        Thu, 21 Jul 2022 05:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jgZ7b5BpqUN262iVeVVcETGdJrjMXgnEA22zRenxb6o=;
+        b=A2ohSeZRbdZ3Qcmg3JePke+AqbwoYpO/aoXtGYISCSKp6uqGDJrNrD8lQYw47P29tP
+         vrfJuMT6na/tKi0YA0WhrOUktK1FLYPB9y/Z4CYkBdvudkFg3uXDoFlT2BrrfyOya3p7
+         wuNWW1M/GvF0ttqIEhyipiWOQJUJc4M43P6nDRmydBtO3nIoehEiLAMopqi+ZjSuqABL
+         Y4Is8vJIpT4ZjGv7JbbMFNqOCLSut4be7qwhiBw7cr9I672oD0t1Pq5d04+3EfyLJuIs
+         Ldx1hTLYAbAPTCpsj8DIxAKWIlp38kRUANOIOCDEeBQg+FlHoIc2kN57Lmbn99VIyQB2
+         CREg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cE2msxk6QPw86zAV3haYmpL0Ot9f5ZCy5ykRLxOKnec=;
-        b=ukJZOHx0/c23rKDJdkx8wMU3aNhRTiNvfJzwMZQIJiTJrcaQTwmCxU1Ubz9vjnoPte
-         ovpJ4W56X7tIU0rN/CchcAB/vDrMdeZkn3KbE7eh7Qb1aw+fubAZVUERyQe6jMbUrlbk
-         45sTTOqw0RNT4/QU3NqnD79x5fjh9GpGxgra+A0HFLeMSgrmR/6z43JFbmSN1j7i01lG
-         KMfFvyEGSwPnj9nZw8RISIXh29vlNzVYiHEdFlCGz4u01FHrO9B7vIcYpsArCp72Ti3w
-         pahPkZixYUyXltvK1edJCpi9HrobFFoGQWmpLiv+YO3D+CImWwe7VtsQRNE+ZtKP9wls
-         /eBQ==
-X-Gm-Message-State: AJIora+FSvZruqBxEq80oPIZGXQBrdNp9DtRYHlusmM/AYiis2olqDZk
-        4g47DHaZOZFqcSwbm0RzRC1U0o2qdRWLdkh9EZBxjv8QLwblrkXehtdmza/gNmPS7RITLNo91/t
-        P17P3/U9dpHX5D5aWNWySP653PytlUF/QvQ==
-X-Received: by 2002:a05:6a00:1308:b0:528:2ed8:7e3d with SMTP id j8-20020a056a00130800b005282ed87e3dmr44101342pfu.82.1658395830228;
-        Thu, 21 Jul 2022 02:30:30 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sZJ2tQPOK504th0WDmmE1eCdXGAgBe+DPqkW4Ch1xqd/jvYFMXQX10YnFglctjFz+BMq1srg==
-X-Received: by 2002:a05:6a00:1308:b0:528:2ed8:7e3d with SMTP id j8-20020a056a00130800b005282ed87e3dmr44101301pfu.82.1658395829765;
-        Thu, 21 Jul 2022 02:30:29 -0700 (PDT)
-Received: from [10.72.12.47] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id b14-20020a17090a6ace00b001f061359023sm988456pjm.21.2022.07.21.02.30.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 02:30:29 -0700 (PDT)
-Message-ID: <cbc59d60-f3b3-465d-185b-5b83f893be63@redhat.com>
-Date:   Thu, 21 Jul 2022 17:30:18 +0800
+        bh=jgZ7b5BpqUN262iVeVVcETGdJrjMXgnEA22zRenxb6o=;
+        b=jiQNc1XmA7B459lMHhWLTq61EPmJJiqo059zzjI5hs5avS4AJjZfF0eW9Cim90Red2
+         XADVyXPIGGW7htcPdNkSn00OppEWdaM01bMxIw9sXTmbhOBI3aRTf+S7EvNv/jc5ImmZ
+         TOkm90ug6g3f3xRPi4qE9gqWUrmrnwDL9epZw4UFGlcQlJkQ8wicqezKnz588U/VTCx+
+         ri8k6X1/KaBAv4PhCm99F3hA/S95KFehpQjIXf1DXnkm3wxoJOInDzQLGtcB5n/NKyiI
+         wD3/eJqsYYdbPy7BRoECj/0MDd9nyXAiOtO9aG1CgVl9lN38ub4iPLzSv0os1DjDhjTA
+         tTHg==
+X-Gm-Message-State: AJIora/gv/4S+KHeu0kznSZlmpmnPxfRRp5jZxGW9jiyfu3oMGeKrlJt
+        ynnwRSmz5Oou8uf4qcuezDM=
+X-Google-Smtp-Source: AGRyM1vNTi3XnhWi22coX9ZEhIzldh4NU7xk/NisQGW3+HRGE9AkUFoBflOJn7MakeH9Fioe1sKENQ==
+X-Received: by 2002:adf:facb:0:b0:21e:4f54:9651 with SMTP id a11-20020adffacb000000b0021e4f549651mr4891337wrs.378.1658405502524;
+        Thu, 21 Jul 2022 05:11:42 -0700 (PDT)
+Received: from xws.localdomain (pd9ea365f.dip0.t-ipconnect.de. [217.234.54.95])
+        by smtp.gmail.com with ESMTPSA id l3-20020a1c7903000000b003a320e6f011sm1958862wme.1.2022.07.21.05.11.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jul 2022 05:11:41 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH] platform/surface: gpe: Add support for 13" Intel version of Surface Laptop 4
+Date:   Thu, 21 Jul 2022 14:11:20 +0200
+Message-Id: <20220721121120.2002430-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v12 39/40] virtio_net: support tx queue resize
-Content-Language: en-US
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        virtualization@lists.linux-foundation.org
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com
-References: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
- <20220720030436.79520-40-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-In-Reply-To: <20220720030436.79520-40-xuanzhuo@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The 13" Intel version of the Surface Laptop 4 uses the same GPE as the
+Surface Laptop Studio for wakeups via the lid. Set it up accordingly.
 
-在 2022/7/20 11:04, Xuan Zhuo 写道:
-> This patch implements the resize function of the tx queues.
-> Based on this function, it is possible to modify the ring num of the
-> queue.
->
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/surface_gpe.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-
-> ---
->   drivers/net/virtio_net.c | 47 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 47 insertions(+)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 1115a8b59a08..d1e6940b46d8 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -135,6 +135,9 @@ struct send_queue {
->   	struct virtnet_sq_stats stats;
->   
->   	struct napi_struct napi;
-> +
-> +	/* Record whether sq is in reset state. */
-> +	bool reset;
->   };
->   
->   /* Internal representation of a receive virtqueue */
-> @@ -279,6 +282,7 @@ struct padded_vnet_hdr {
->   };
->   
->   static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *buf);
-> +static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf);
->   
->   static bool is_xdp_frame(void *ptr)
->   {
-> @@ -1603,6 +1607,11 @@ static void virtnet_poll_cleantx(struct receive_queue *rq)
->   		return;
->   
->   	if (__netif_tx_trylock(txq)) {
-> +		if (sq->reset) {
-> +			__netif_tx_unlock(txq);
-> +			return;
-> +		}
-> +
->   		do {
->   			virtqueue_disable_cb(sq->vq);
->   			free_old_xmit_skbs(sq, true);
-> @@ -1868,6 +1877,44 @@ static int virtnet_rx_resize(struct virtnet_info *vi,
->   	return err;
->   }
->   
-> +static int virtnet_tx_resize(struct virtnet_info *vi,
-> +			     struct send_queue *sq, u32 ring_num)
-> +{
-> +	struct netdev_queue *txq;
-> +	int err, qindex;
-> +
-> +	qindex = sq - vi->sq;
-> +
-> +	virtnet_napi_tx_disable(&sq->napi);
-> +
-> +	txq = netdev_get_tx_queue(vi->dev, qindex);
-> +
-> +	/* 1. wait all ximt complete
-> +	 * 2. fix the race of netif_stop_subqueue() vs netif_start_subqueue()
-> +	 */
-> +	__netif_tx_lock_bh(txq);
-> +
-> +	/* Prevent rx poll from accessing sq. */
-> +	sq->reset = true;
-> +
-> +	/* Prevent the upper layer from trying to send packets. */
-> +	netif_stop_subqueue(vi->dev, qindex);
-> +
-> +	__netif_tx_unlock_bh(txq);
-> +
-> +	err = virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_unused_buf);
-> +	if (err)
-> +		netdev_err(vi->dev, "resize tx fail: tx queue index: %d err: %d\n", qindex, err);
-> +
-> +	__netif_tx_lock_bh(txq);
-> +	sq->reset = false;
-> +	netif_tx_wake_queue(txq);
-> +	__netif_tx_unlock_bh(txq);
-> +
-> +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
-> +	return err;
-> +}
-> +
->   /*
->    * Send command via the control virtqueue and check status.  Commands
->    * supported by the hypervisor, as indicated by feature bits, should
+diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
+index 27365cbe1ee9..c219b840d491 100644
+--- a/drivers/platform/surface/surface_gpe.c
++++ b/drivers/platform/surface/surface_gpe.c
+@@ -171,6 +171,18 @@ static const struct dmi_system_id dmi_lid_device_table[] = {
+ 		},
+ 		.driver_data = (void *)lid_device_props_l4D,
+ 	},
++	{
++		.ident = "Surface Laptop 4 (Intel 13\")",
++		.matches = {
++			/*
++			 * We match for SKU here due to different variants: The
++			 * AMD (15") version does not rely on GPEs.
++			 */
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Laptop_4_1950:1951"),
++		},
++		.driver_data = (void *)lid_device_props_l4B,
++	},
+ 	{
+ 		.ident = "Surface Laptop Studio",
+ 		.matches = {
+-- 
+2.37.1
 
