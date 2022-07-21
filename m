@@ -2,67 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72296C43334
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jul 2022 09:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58494CCA485
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jul 2022 09:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232529AbiGUJ0X (ORCPT
+        id S231911AbiGUJag (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Jul 2022 05:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
+        Thu, 21 Jul 2022 05:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbiGUJ0W (ORCPT
+        with ESMTP id S230152AbiGUJaf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Jul 2022 05:26:22 -0400
+        Thu, 21 Jul 2022 05:30:35 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7566C77571
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:26:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F5907A51C
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658395580;
+        s=mimecast20190719; t=1658395832;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pxqVBZnZmkgOHYwiYGXPDu4uhyKliCc2cAcObS0C01w=;
-        b=bb7fqamyHS9GFmq8uDAqWQwb3iJWNvxV9yoq01Smrxkx/x6QUiQDKZ7fHM9p+QCb82ouby
-        9KFPRl6THFvmGU9gCQ2KedVChMpYy2Nu4mIVAfHqY9nBG1GCKzmM7QJ0CYeqFF12jIs6xj
-        efsJ5tdAHnrnH7/6H1vKQ1QijtDM84k=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=cE2msxk6QPw86zAV3haYmpL0Ot9f5ZCy5ykRLxOKnec=;
+        b=GlQjpbr7E+McOWJVbcQk3HbL++9lYEsdLLPe232nBwS20VCQ8UVr88APvkNZShIZ2bdUE3
+        gwnC908AMcEdw/MeRywV3jTADaCBKeqhXJ9mcvuMUNuUdt9yKjl5IBljgOubmAlnwIL4cO
+        8mNKyrrEmOeFGML90r5dJy1vHkuBN6E=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-582-Lct17Vh6OP6CrE2vQxvPXQ-1; Thu, 21 Jul 2022 05:26:19 -0400
-X-MC-Unique: Lct17Vh6OP6CrE2vQxvPXQ-1
-Received: by mail-pg1-f200.google.com with SMTP id h13-20020a63e14d000000b0040df75eaa2eso667387pgk.21
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:26:19 -0700 (PDT)
+ us-mta-172-ZgNrJZnGMYCv-4mWziYfUg-1; Thu, 21 Jul 2022 05:30:31 -0400
+X-MC-Unique: ZgNrJZnGMYCv-4mWziYfUg-1
+Received: by mail-pf1-f198.google.com with SMTP id y10-20020a056a00180a00b0052b10093100so625134pfa.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jul 2022 02:30:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=pxqVBZnZmkgOHYwiYGXPDu4uhyKliCc2cAcObS0C01w=;
-        b=QKfHk/9QhXouEtCV8/kq+Fw7xRcS9I71Aph9RqE1L87ULJbrwTJSwoT7o40vpOZ8RH
-         iuYXUfV5jK84UtNf4GMXaZbQs59P8YdiCSccVae9onqKNrEdAzfAxkbfYBy5yBiTnX3P
-         2/N4LNx6RA2D35FcYazBPe/SawUeGSva9D4aQ4rMfQIlvt6y+ohLsSdsJLMuPNRpFep4
-         7993Utm9jfD1yEOBzAdrb8rXTVteeHmuhwKKQCtPIZlkW2zQoQMt9lT2p+zPxtwYPARN
-         4LTRCziNZe8qe3h5gU8J4jAPrvsAHWsj/C4MoTyRDmLu6a6bpdtfff3sg+EFjZ7jPLuy
-         baDg==
-X-Gm-Message-State: AJIora9iSgy593hnANRVISHvxWjeFH1JO7kBD8Z5Z4UllUctNn5ODyop
-        XJ7dOYsD57SbYG+KqutDej7MMzxySLZv3MT3SrsFkRZgIfCOUCGIMnfwvSCTvSDxogyEHzpNB55
-        i88ls1gzezCBdv2B+l+l4Qu2G8sY2/xhtPg==
-X-Received: by 2002:a17:90a:f481:b0:1f2:43c:a61 with SMTP id bx1-20020a17090af48100b001f2043c0a61mr10625087pjb.134.1658395578171;
-        Thu, 21 Jul 2022 02:26:18 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sVEm7Oz/22bKmKW2lh3GmJtdU5mssFIrGu+0Tisk4DP+fMNvbSDHGVBHUYgonKpLqTeG+uag==
-X-Received: by 2002:a17:90a:f481:b0:1f2:43c:a61 with SMTP id bx1-20020a17090af48100b001f2043c0a61mr10625043pjb.134.1658395577872;
-        Thu, 21 Jul 2022 02:26:17 -0700 (PDT)
+        bh=cE2msxk6QPw86zAV3haYmpL0Ot9f5ZCy5ykRLxOKnec=;
+        b=ukJZOHx0/c23rKDJdkx8wMU3aNhRTiNvfJzwMZQIJiTJrcaQTwmCxU1Ubz9vjnoPte
+         ovpJ4W56X7tIU0rN/CchcAB/vDrMdeZkn3KbE7eh7Qb1aw+fubAZVUERyQe6jMbUrlbk
+         45sTTOqw0RNT4/QU3NqnD79x5fjh9GpGxgra+A0HFLeMSgrmR/6z43JFbmSN1j7i01lG
+         KMfFvyEGSwPnj9nZw8RISIXh29vlNzVYiHEdFlCGz4u01FHrO9B7vIcYpsArCp72Ti3w
+         pahPkZixYUyXltvK1edJCpi9HrobFFoGQWmpLiv+YO3D+CImWwe7VtsQRNE+ZtKP9wls
+         /eBQ==
+X-Gm-Message-State: AJIora+FSvZruqBxEq80oPIZGXQBrdNp9DtRYHlusmM/AYiis2olqDZk
+        4g47DHaZOZFqcSwbm0RzRC1U0o2qdRWLdkh9EZBxjv8QLwblrkXehtdmza/gNmPS7RITLNo91/t
+        P17P3/U9dpHX5D5aWNWySP653PytlUF/QvQ==
+X-Received: by 2002:a05:6a00:1308:b0:528:2ed8:7e3d with SMTP id j8-20020a056a00130800b005282ed87e3dmr44101342pfu.82.1658395830228;
+        Thu, 21 Jul 2022 02:30:30 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sZJ2tQPOK504th0WDmmE1eCdXGAgBe+DPqkW4Ch1xqd/jvYFMXQX10YnFglctjFz+BMq1srg==
+X-Received: by 2002:a05:6a00:1308:b0:528:2ed8:7e3d with SMTP id j8-20020a056a00130800b005282ed87e3dmr44101301pfu.82.1658395829765;
+        Thu, 21 Jul 2022 02:30:29 -0700 (PDT)
 Received: from [10.72.12.47] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id l28-20020a635b5c000000b0041a411823d4sm1036080pgm.22.2022.07.21.02.26.04
+        by smtp.gmail.com with ESMTPSA id b14-20020a17090a6ace00b001f061359023sm988456pjm.21.2022.07.21.02.30.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 02:26:17 -0700 (PDT)
-Message-ID: <726a5056-789a-b445-a2c6-879008ad270a@redhat.com>
-Date:   Thu, 21 Jul 2022 17:25:59 +0800
+        Thu, 21 Jul 2022 02:30:29 -0700 (PDT)
+Message-ID: <cbc59d60-f3b3-465d-185b-5b83f893be63@redhat.com>
+Date:   Thu, 21 Jul 2022 17:30:18 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v12 38/40] virtio_net: support rx queue resize
+Subject: Re: [PATCH v12 39/40] virtio_net: support tx queue resize
 Content-Language: en-US
 To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         virtualization@lists.linux-foundation.org
@@ -98,9 +98,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         kangjie.xu@linux.alibaba.com
 References: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
- <20220720030436.79520-39-xuanzhuo@linux.alibaba.com>
+ <20220720030436.79520-40-xuanzhuo@linux.alibaba.com>
 From:   Jason Wang <jasowang@redhat.com>
-In-Reply-To: <20220720030436.79520-39-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <20220720030436.79520-40-xuanzhuo@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -109,61 +109,93 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 在 2022/7/20 11:04, Xuan Zhuo 写道:
-> This patch implements the resize function of the rx queues.
+> This patch implements the resize function of the tx queues.
 > Based on this function, it is possible to modify the ring num of the
 > queue.
 >
 > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
 > ---
->   drivers/net/virtio_net.c | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
+>   drivers/net/virtio_net.c | 47 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
 >
 > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index fe4dc43c05a1..1115a8b59a08 100644
+> index 1115a8b59a08..d1e6940b46d8 100644
 > --- a/drivers/net/virtio_net.c
 > +++ b/drivers/net/virtio_net.c
-> @@ -278,6 +278,8 @@ struct padded_vnet_hdr {
->   	char padding[12];
+> @@ -135,6 +135,9 @@ struct send_queue {
+>   	struct virtnet_sq_stats stats;
+>   
+>   	struct napi_struct napi;
+> +
+> +	/* Record whether sq is in reset state. */
+> +	bool reset;
 >   };
 >   
-> +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *buf);
-> +
+>   /* Internal representation of a receive virtqueue */
+> @@ -279,6 +282,7 @@ struct padded_vnet_hdr {
+>   };
+>   
+>   static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *buf);
+> +static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf);
+>   
 >   static bool is_xdp_frame(void *ptr)
 >   {
->   	return (unsigned long)ptr & VIRTIO_XDP_FLAG;
-> @@ -1846,6 +1848,26 @@ static netdev_tx_t start_xmit(struct sk_buff *skb, struct net_device *dev)
->   	return NETDEV_TX_OK;
+> @@ -1603,6 +1607,11 @@ static void virtnet_poll_cleantx(struct receive_queue *rq)
+>   		return;
+>   
+>   	if (__netif_tx_trylock(txq)) {
+> +		if (sq->reset) {
+> +			__netif_tx_unlock(txq);
+> +			return;
+> +		}
+> +
+>   		do {
+>   			virtqueue_disable_cb(sq->vq);
+>   			free_old_xmit_skbs(sq, true);
+> @@ -1868,6 +1877,44 @@ static int virtnet_rx_resize(struct virtnet_info *vi,
+>   	return err;
 >   }
 >   
-> +static int virtnet_rx_resize(struct virtnet_info *vi,
-> +			     struct receive_queue *rq, u32 ring_num)
+> +static int virtnet_tx_resize(struct virtnet_info *vi,
+> +			     struct send_queue *sq, u32 ring_num)
 > +{
+> +	struct netdev_queue *txq;
 > +	int err, qindex;
 > +
-> +	qindex = rq - vi->rq;
+> +	qindex = sq - vi->sq;
 > +
-> +	napi_disable(&rq->napi);
-
-
-We need to disable refill work as well. So this series might need 
-rebasing on top of
-
-https://lore.kernel.org/netdev/20220704074859.16912-1-jasowang@redhat.com/
-
-I will send a new version (probably tomorrow).
-
-Thanks
-
-
+> +	virtnet_napi_tx_disable(&sq->napi);
 > +
-> +	err = virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_unused_buf);
+> +	txq = netdev_get_tx_queue(vi->dev, qindex);
+> +
+> +	/* 1. wait all ximt complete
+> +	 * 2. fix the race of netif_stop_subqueue() vs netif_start_subqueue()
+> +	 */
+> +	__netif_tx_lock_bh(txq);
+> +
+> +	/* Prevent rx poll from accessing sq. */
+> +	sq->reset = true;
+> +
+> +	/* Prevent the upper layer from trying to send packets. */
+> +	netif_stop_subqueue(vi->dev, qindex);
+> +
+> +	__netif_tx_unlock_bh(txq);
+> +
+> +	err = virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_unused_buf);
 > +	if (err)
-> +		netdev_err(vi->dev, "resize rx fail: rx queue index: %d err: %d\n", qindex, err);
+> +		netdev_err(vi->dev, "resize tx fail: tx queue index: %d err: %d\n", qindex, err);
 > +
-> +	if (!try_fill_recv(vi, rq, GFP_KERNEL))
-> +		schedule_delayed_work(&vi->refill, 0);
+> +	__netif_tx_lock_bh(txq);
+> +	sq->reset = false;
+> +	netif_tx_wake_queue(txq);
+> +	__netif_tx_unlock_bh(txq);
 > +
-> +	virtnet_napi_enable(rq->vq, &rq->napi);
+> +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
 > +	return err;
 > +}
 > +
