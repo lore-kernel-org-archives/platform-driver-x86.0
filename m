@@ -2,72 +2,31 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE0CCCA48D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jul 2022 07:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED9CCCA48E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jul 2022 07:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbiGYH3R (ORCPT
+        id S237828AbiGZHWl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Jul 2022 03:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
+        Tue, 26 Jul 2022 03:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230486AbiGYH3M (ORCPT
+        with ESMTP id S237607AbiGZHWi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Jul 2022 03:29:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6BCB12097
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jul 2022 00:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658734150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7V73Urf85bEAl0pJImVws1FSD2o2Nh9wuLCajEhv1dQ=;
-        b=UuhvzleC7C3ZwDyuYvwUb9V7eyomBOsXr1mDMqFp8kk/KFG6dxtHz+vmvotfa/Mt+Ob0ku
-        2KefS7nicYLQXzKoF6Cl368vhyH5IxMWSlxqMtxh+0lDtC6KrXZ78EHFmfBUbe2j5NR+3S
-        03xqqwdjI89HNx4FzVyQ9dV07zAFLXQ=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-73-pCFFDr8wNqa30yDx9_U0RA-1; Mon, 25 Jul 2022 03:29:08 -0400
-X-MC-Unique: pCFFDr8wNqa30yDx9_U0RA-1
-Received: by mail-lj1-f199.google.com with SMTP id k1-20020a2e9201000000b0025dd56bd7a4so2166609ljg.17
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jul 2022 00:29:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7V73Urf85bEAl0pJImVws1FSD2o2Nh9wuLCajEhv1dQ=;
-        b=uLR99iMz3AO8jN6BpCGCxz3k61nVMkNOxNqXIwQVeG7yZijTkGJomhay4hX/mWm5Iz
-         dpY2aN7iD8Nm0jVditT5M/VYR6ahSDhSgTmPqwt5dRXEqQHRlsTY0Ru0ZrfSsSK4d+1K
-         3m35fFZB8r55MvDdPxtv+ld2Nqrrn9rsU+XLuH6ta3kKhmumJ9X4S4gcFPKgI82x5cw7
-         OfPq+/919H7vP54Fg4bSg/zy2CwsBhLBFX4tRrOlCXh5Mt8GorfmeY+H89C1RfcoTiS/
-         cqtQZQf1ToQ6sY1oyvSgrsCS6hlcQzTGl2EaF5Qgn82gqm9ez+rPGwcof1eM84Ykd/MB
-         OyBg==
-X-Gm-Message-State: AJIora9kHi0Qb9ifN3Mw0WUXJAOwJd5qiwsbRIsgQY5li+aHJLQYIi8f
-        2zYIsf24RkdqFxzgquYdL985DYxlHIXXs3TYcP0hCG3uhR/fBsuoIIrCARzreu8JZGZ5YlGFoyN
-        vstrXjJgPtUxub/WQbJhHRSD/tDXy4JWMoVLMmXA8MX1YofsOwQ==
-X-Received: by 2002:a05:6512:3f0e:b0:48a:5edd:99b2 with SMTP id y14-20020a0565123f0e00b0048a5edd99b2mr3893768lfa.124.1658734147156;
-        Mon, 25 Jul 2022 00:29:07 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vSilpMwka+2TIjWzkO9OCXsrSScPIWOm9X8cfPvK1yqV+F7/YxylSd832Ayyg4Jn4Euf9+iYQrDan3aN009eg=
-X-Received: by 2002:a05:6512:3f0e:b0:48a:5edd:99b2 with SMTP id
- y14-20020a0565123f0e00b0048a5edd99b2mr3893759lfa.124.1658734146714; Mon, 25
- Jul 2022 00:29:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220720030436.79520-1-xuanzhuo@linux.alibaba.com>
- <20220720030436.79520-39-xuanzhuo@linux.alibaba.com> <726a5056-789a-b445-a2c6-879008ad270a@redhat.com>
- <1658731116.1695666-1-xuanzhuo@linux.alibaba.com> <CACGkMEvsAyR5uRprobv-bQYPOKKOM4sZzQ-Vw5ZiETMjiCkdRQ@mail.gmail.com>
- <1658733700.3892667-1-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1658733700.3892667-1-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Mon, 25 Jul 2022 15:28:55 +0800
-Message-ID: <CACGkMEvsS_QVbq3iCG8hvHuKrp9ObTy3jPUn75zPk-bSHd7tzA@mail.gmail.com>
-Subject: Re: [PATCH v12 38/40] virtio_net: support rx queue resize
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+        Tue, 26 Jul 2022 03:22:38 -0400
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B3A13F15;
+        Tue, 26 Jul 2022 00:22:35 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VKUN6Jv_1658820149;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VKUN6Jv_1658820149)
+          by smtp.aliyun-inc.com;
+          Tue, 26 Jul 2022 15:22:30 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     virtualization@lists.linux-foundation.org
 Cc:     Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         Johannes Berg <johannes@sipsolutions.net>,
         "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -89,134 +48,73 @@ Cc:     Richard Weinberger <richard@nod.at>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm <kvm@vger.kernel.org>,
-        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        Kangjie Xu <kangjie.xu@linux.alibaba.com>,
-        virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+Subject: [PATCH v13 02/42] virtio: struct virtio_config_ops add callbacks for queue_reset
+Date:   Tue, 26 Jul 2022 15:21:45 +0800
+Message-Id: <20220726072225.19884-3-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
+References: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
+MIME-Version: 1.0
+X-Git-Hash: 19d2a6aae0b1
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 25, 2022 at 3:23 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrot=
-e:
->
-> On Mon, 25 Jul 2022 14:57:11 +0800, Jason Wang <jasowang@redhat.com> wrot=
-e:
-> > On Mon, Jul 25, 2022 at 2:43 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> =
-wrote:
-> > >
-> > > On Thu, 21 Jul 2022 17:25:59 +0800, Jason Wang <jasowang@redhat.com> =
-wrote:
-> > > >
-> > > > =E5=9C=A8 2022/7/20 11:04, Xuan Zhuo =E5=86=99=E9=81=93:
-> > > > > This patch implements the resize function of the rx queues.
-> > > > > Based on this function, it is possible to modify the ring num of =
-the
-> > > > > queue.
-> > > > >
-> > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > ---
-> > > > >   drivers/net/virtio_net.c | 22 ++++++++++++++++++++++
-> > > > >   1 file changed, 22 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > > > index fe4dc43c05a1..1115a8b59a08 100644
-> > > > > --- a/drivers/net/virtio_net.c
-> > > > > +++ b/drivers/net/virtio_net.c
-> > > > > @@ -278,6 +278,8 @@ struct padded_vnet_hdr {
-> > > > >     char padding[12];
-> > > > >   };
-> > > > >
-> > > > > +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, voi=
-d *buf);
-> > > > > +
-> > > > >   static bool is_xdp_frame(void *ptr)
-> > > > >   {
-> > > > >     return (unsigned long)ptr & VIRTIO_XDP_FLAG;
-> > > > > @@ -1846,6 +1848,26 @@ static netdev_tx_t start_xmit(struct sk_bu=
-ff *skb, struct net_device *dev)
-> > > > >     return NETDEV_TX_OK;
-> > > > >   }
-> > > > >
-> > > > > +static int virtnet_rx_resize(struct virtnet_info *vi,
-> > > > > +                        struct receive_queue *rq, u32 ring_num)
-> > > > > +{
-> > > > > +   int err, qindex;
-> > > > > +
-> > > > > +   qindex =3D rq - vi->rq;
-> > > > > +
-> > > > > +   napi_disable(&rq->napi);
-> > > >
-> > > >
-> > > > We need to disable refill work as well. So this series might need
-> > > > rebasing on top of
-> > > >
-> > > > https://lore.kernel.org/netdev/20220704074859.16912-1-jasowang@redh=
-at.com/
-> > >
-> > > I understand that your patch is used to solve the situation where dev=
- is
-> > > destoryed but refill work is running.
-> > >
-> > > And is there such a possibility here?
-> >
-> > E.g the refill work runs in parallel with this function?
->
-> napi_disable enables lock-like functionality. So I think it's safe.
->
+reset can be divided into the following four steps (example):
+ 1. transport: notify the device to reset the queue
+ 2. vring:     recycle the buffer submitted
+ 3. vring:     reset/resize the vring (may re-alloc)
+ 4. transport: mmap vring to device, and enable the queue
 
-Ok, right, since there will be a napi_enable() soon afterwards.
+In order to support queue reset, add two callbacks in struct
+virtio_config_ops to implement steps 1 and 4.
 
-So
-
+Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 Acked-by: Jason Wang <jasowang@redhat.com>
+---
+ include/linux/virtio_config.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Thanks
-
-> Thanks.
->
-> >
-> > Thanks
-> >
-> > > Or is there any other scenario that I'm
-> > > not expecting?
-> > >
-> > > Thanks.
-> > >
-> > >
-> > > >
-> > > > I will send a new version (probably tomorrow).
-> > > >
-> > > > Thanks
-> > > >
-> > > >
-> > > > > +
-> > > > > +   err =3D virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_un=
-used_buf);
-> > > > > +   if (err)
-> > > > > +           netdev_err(vi->dev, "resize rx fail: rx queue index: =
-%d err: %d\n", qindex, err);
-> > > > > +
-> > > > > +   if (!try_fill_recv(vi, rq, GFP_KERNEL))
-> > > > > +           schedule_delayed_work(&vi->refill, 0);
-> > > > > +
-> > > > > +   virtnet_napi_enable(rq->vq, &rq->napi);
-> > > > > +   return err;
-> > > > > +}
-> > > > > +
-> > > > >   /*
-> > > > >    * Send command via the control virtqueue and check status.  Co=
-mmands
-> > > > >    * supported by the hypervisor, as indicated by feature bits, s=
-hould
-> > > >
-> > >
-> >
->
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index b47c2e7ed0ee..36ec7be1f480 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -78,6 +78,18 @@ struct virtio_shm_region {
+  * @set_vq_affinity: set the affinity for a virtqueue (optional).
+  * @get_vq_affinity: get the affinity for a virtqueue (optional).
+  * @get_shm_region: get a shared memory region based on the index.
++ * @disable_vq_and_reset: reset a queue individually (optional).
++ *	vq: the virtqueue
++ *	Returns 0 on success or error status
++ *	disable_vq_and_reset will guarantee that the callbacks are disabled and
++ *	synchronized.
++ *	Except for the callback, the caller should guarantee that the vring is
++ *	not accessed by any functions of virtqueue.
++ * @enable_vq_after_reset: enable a reset queue
++ *	vq: the virtqueue
++ *	Returns 0 on success or error status
++ *	If disable_vq_and_reset is set, then enable_vq_after_reset must also be
++ *	set.
+  */
+ typedef void vq_callback_t(struct virtqueue *);
+ struct virtio_config_ops {
+@@ -104,6 +116,8 @@ struct virtio_config_ops {
+ 			int index);
+ 	bool (*get_shm_region)(struct virtio_device *vdev,
+ 			       struct virtio_shm_region *region, u8 id);
++	int (*disable_vq_and_reset)(struct virtqueue *vq);
++	int (*enable_vq_after_reset)(struct virtqueue *vq);
+ };
+ 
+ /* If driver didn't advertise the feature, it will never appear. */
+-- 
+2.31.0
 
