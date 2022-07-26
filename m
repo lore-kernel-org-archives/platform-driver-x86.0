@@ -2,24 +2,24 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DECCA491
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jul 2022 07:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7038FCCA491
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jul 2022 07:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238027AbiGZHXA (ORCPT
+        id S238109AbiGZHXE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jul 2022 03:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57554 "EHLO
+        Tue, 26 Jul 2022 03:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237891AbiGZHWw (ORCPT
+        with ESMTP id S238047AbiGZHW5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jul 2022 03:22:52 -0400
-Received: from out199-16.us.a.mail.aliyun.com (out199-16.us.a.mail.aliyun.com [47.90.199.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E912AC67;
-        Tue, 26 Jul 2022 00:22:42 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VKUN6LO_1658820155;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VKUN6LO_1658820155)
+        Tue, 26 Jul 2022 03:22:57 -0400
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24142AE0F;
+        Tue, 26 Jul 2022 00:22:45 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0VKUIJXA_1658820159;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VKUIJXA_1658820159)
           by smtp.aliyun-inc.com;
-          Tue, 26 Jul 2022 15:22:36 +0800
+          Tue, 26 Jul 2022 15:22:40 +0800
 From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 To:     virtualization@lists.linux-foundation.org
 Cc:     Richard Weinberger <richard@nod.at>,
@@ -55,9 +55,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         kangjie.xu@linux.alibaba.com
-Subject: [PATCH v13 05/42] virtio_ring: split vring_virtqueue
-Date:   Tue, 26 Jul 2022 15:21:48 +0800
-Message-Id: <20220726072225.19884-6-xuanzhuo@linux.alibaba.com>
+Subject: [PATCH v13 07/42] virtio_ring: split: stop __vring_new_virtqueue as export symbol
+Date:   Tue, 26 Jul 2022 15:21:50 +0800
+Message-Id: <20220726072225.19884-8-xuanzhuo@linux.alibaba.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
 References: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
@@ -68,154 +68,106 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Separate the two inline structures(split and packed) from the structure
-vring_virtqueue.
+There is currently only one place to reference __vring_new_virtqueue()
+directly from the outside of virtio core. And here vring_new_virtqueue()
+can be used instead.
 
-In this way, we can use these two structures later to pass parameters
-and retain temporary variables.
+Subsequent patches will modify __vring_new_virtqueue, so stop it as an
+export symbol for now.
 
 Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/virtio/virtio_ring.c | 116 ++++++++++++++++++-----------------
- 1 file changed, 60 insertions(+), 56 deletions(-)
+ drivers/virtio/virtio_ring.c | 25 ++++++++++++++++---------
+ include/linux/virtio_ring.h  | 10 ----------
+ tools/virtio/virtio_test.c   |  4 ++--
+ 3 files changed, 18 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index a3d76fd87983..1bc5794e9739 100644
+index 0ad35eca0d39..4e54ed7ee7fb 100644
 --- a/drivers/virtio/virtio_ring.c
 +++ b/drivers/virtio/virtio_ring.c
-@@ -85,6 +85,64 @@ struct vring_desc_extra {
- 	u16 next;			/* The next desc state in a list. */
+@@ -204,6 +204,14 @@ struct vring_virtqueue {
+ #endif
  };
  
-+struct vring_virtqueue_split {
-+	/* Actual memory layout for this queue. */
-+	struct vring vring;
-+
-+	/* Last written value to avail->flags */
-+	u16 avail_flags_shadow;
-+
-+	/*
-+	 * Last written value to avail->idx in
-+	 * guest byte order.
-+	 */
-+	u16 avail_idx_shadow;
-+
-+	/* Per-descriptor state. */
-+	struct vring_desc_state_split *desc_state;
-+	struct vring_desc_extra *desc_extra;
-+
-+	/* DMA address and size information */
-+	dma_addr_t queue_dma_addr;
-+	size_t queue_size_in_bytes;
-+};
-+
-+struct vring_virtqueue_packed {
-+	/* Actual memory layout for this queue. */
-+	struct {
-+		unsigned int num;
-+		struct vring_packed_desc *desc;
-+		struct vring_packed_desc_event *driver;
-+		struct vring_packed_desc_event *device;
-+	} vring;
-+
-+	/* Driver ring wrap counter. */
-+	bool avail_wrap_counter;
-+
-+	/* Avail used flags. */
-+	u16 avail_used_flags;
-+
-+	/* Index of the next avail descriptor. */
-+	u16 next_avail_idx;
-+
-+	/*
-+	 * Last written value to driver->flags in
-+	 * guest byte order.
-+	 */
-+	u16 event_flags_shadow;
-+
-+	/* Per-descriptor state. */
-+	struct vring_desc_state_packed *desc_state;
-+	struct vring_desc_extra *desc_extra;
-+
-+	/* DMA address and size information */
-+	dma_addr_t ring_dma_addr;
-+	dma_addr_t driver_event_dma_addr;
-+	dma_addr_t device_event_dma_addr;
-+	size_t ring_size_in_bytes;
-+	size_t event_size_in_bytes;
-+};
-+
- struct vring_virtqueue {
- 	struct virtqueue vq;
++static struct virtqueue *__vring_new_virtqueue(unsigned int index,
++					       struct vring vring,
++					       struct virtio_device *vdev,
++					       bool weak_barriers,
++					       bool context,
++					       bool (*notify)(struct virtqueue *),
++					       void (*callback)(struct virtqueue *),
++					       const char *name);
  
-@@ -124,64 +182,10 @@ struct vring_virtqueue {
+ /*
+  * Helpers.
+@@ -2197,14 +2205,14 @@ irqreturn_t vring_interrupt(int irq, void *_vq)
+ EXPORT_SYMBOL_GPL(vring_interrupt);
  
- 	union {
- 		/* Available for split ring */
--		struct {
--			/* Actual memory layout for this queue. */
--			struct vring vring;
--
--			/* Last written value to avail->flags */
--			u16 avail_flags_shadow;
--
--			/*
--			 * Last written value to avail->idx in
--			 * guest byte order.
--			 */
--			u16 avail_idx_shadow;
--
--			/* Per-descriptor state. */
--			struct vring_desc_state_split *desc_state;
--			struct vring_desc_extra *desc_extra;
--
--			/* DMA address and size information */
--			dma_addr_t queue_dma_addr;
--			size_t queue_size_in_bytes;
--		} split;
-+		struct vring_virtqueue_split split;
+ /* Only available for split ring */
+-struct virtqueue *__vring_new_virtqueue(unsigned int index,
+-					struct vring vring,
+-					struct virtio_device *vdev,
+-					bool weak_barriers,
+-					bool context,
+-					bool (*notify)(struct virtqueue *),
+-					void (*callback)(struct virtqueue *),
+-					const char *name)
++static struct virtqueue *__vring_new_virtqueue(unsigned int index,
++					       struct vring vring,
++					       struct virtio_device *vdev,
++					       bool weak_barriers,
++					       bool context,
++					       bool (*notify)(struct virtqueue *),
++					       void (*callback)(struct virtqueue *),
++					       const char *name)
+ {
+ 	struct vring_virtqueue *vq;
  
- 		/* Available for packed ring */
--		struct {
--			/* Actual memory layout for this queue. */
--			struct {
--				unsigned int num;
--				struct vring_packed_desc *desc;
--				struct vring_packed_desc_event *driver;
--				struct vring_packed_desc_event *device;
--			} vring;
--
--			/* Driver ring wrap counter. */
--			bool avail_wrap_counter;
--
--			/* Avail used flags. */
--			u16 avail_used_flags;
--
--			/* Index of the next avail descriptor. */
--			u16 next_avail_idx;
--
--			/*
--			 * Last written value to driver->flags in
--			 * guest byte order.
--			 */
--			u16 event_flags_shadow;
--
--			/* Per-descriptor state. */
--			struct vring_desc_state_packed *desc_state;
--			struct vring_desc_extra *desc_extra;
--
--			/* DMA address and size information */
--			dma_addr_t ring_dma_addr;
--			dma_addr_t driver_event_dma_addr;
--			dma_addr_t device_event_dma_addr;
--			size_t ring_size_in_bytes;
--			size_t event_size_in_bytes;
--		} packed;
-+		struct vring_virtqueue_packed packed;
- 	};
+@@ -2272,7 +2280,6 @@ struct virtqueue *__vring_new_virtqueue(unsigned int index,
+ 	kfree(vq);
+ 	return NULL;
+ }
+-EXPORT_SYMBOL_GPL(__vring_new_virtqueue);
  
- 	/* How to notify other side. FIXME: commonalize hcalls! */
+ struct virtqueue *vring_create_virtqueue(
+ 	unsigned int index,
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index b485b13fa50b..8b8af1a38991 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -76,16 +76,6 @@ struct virtqueue *vring_create_virtqueue(unsigned int index,
+ 					 void (*callback)(struct virtqueue *vq),
+ 					 const char *name);
+ 
+-/* Creates a virtqueue with a custom layout. */
+-struct virtqueue *__vring_new_virtqueue(unsigned int index,
+-					struct vring vring,
+-					struct virtio_device *vdev,
+-					bool weak_barriers,
+-					bool ctx,
+-					bool (*notify)(struct virtqueue *),
+-					void (*callback)(struct virtqueue *),
+-					const char *name);
+-
+ /*
+  * Creates a virtqueue with a standard layout but a caller-allocated
+  * ring.
+diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
+index 23f142af544a..86a410ddcedd 100644
+--- a/tools/virtio/virtio_test.c
++++ b/tools/virtio/virtio_test.c
+@@ -102,8 +102,8 @@ static void vq_reset(struct vq_info *info, int num, struct virtio_device *vdev)
+ 
+ 	memset(info->ring, 0, vring_size(num, 4096));
+ 	vring_init(&info->vring, num, info->ring, 4096);
+-	info->vq = __vring_new_virtqueue(info->idx, info->vring, vdev, true,
+-					 false, vq_notify, vq_callback, "test");
++	info->vq = vring_new_virtqueue(info->idx, num, 4096, vdev, true, false,
++				       info->ring, vq_notify, vq_callback, "test");
+ 	assert(info->vq);
+ 	info->vq->priv = info;
+ }
 -- 
 2.31.0
 
