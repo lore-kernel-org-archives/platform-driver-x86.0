@@ -2,81 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C12BC04A68
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 21:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A63C04A68
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 21:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiG0Vo6 (ORCPT
+        id S229628AbiG0VsD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jul 2022 17:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
+        Wed, 27 Jul 2022 17:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbiG0Vo6 (ORCPT
+        with ESMTP id S229517AbiG0VsC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Jul 2022 17:44:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 233AE40BD7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:44:56 -0700 (PDT)
+        Wed, 27 Jul 2022 17:48:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2433511A23
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658958295;
+        s=mimecast20190719; t=1658958480;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=N5UUB+68S8t4MdKwwtcp3qpjDwy4HeAB9ZEqC96735Q=;
-        b=iHri7ORirZjj+cU4YTQwOunH7oqhxt/WcpebWfgtdMmoZNiNbdktOyrGM9+LivjtuBbAmi
-        8v9rSXSRl3LjJG+k7dBG6OfiCkBw4oGL3t1E0OqeaYVVwFT3bPchRgOAgTFSs8UTBmcTv1
-        5KhfaXGs8JpkFMU3VLceU3HkYvs1N94=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4YSLnzjinJJRI+D88VH39Oy1Vc+0bxZ9OidGoCxtqiU=;
+        b=GHazBoSnYO11iTMaDC7ahQ/dBTbwA8Bm4NsawBVwjSd5QJbxLuNdHtg7IQGeQMzg0bml4K
+        P9eWmbuu9K96adJAfsViLNRq90Aw/EzyDHlAwWpKEbmwCPZJgHHYETgSxQaAtQXuO+W1rv
+        4LMA0pQ5RC/bv99zWdK6PMyv1p3Y4Ow=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-657-t6NXLXijPtuOYJm3TVTcDg-1; Wed, 27 Jul 2022 17:44:53 -0400
-X-MC-Unique: t6NXLXijPtuOYJm3TVTcDg-1
-Received: by mail-ed1-f69.google.com with SMTP id s17-20020a056402521100b0043ade613038so7503edd.17
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:44:52 -0700 (PDT)
+ us-mta-76-Eu9LIn29M46YleyKxJOIsg-1; Wed, 27 Jul 2022 17:47:58 -0400
+X-MC-Unique: Eu9LIn29M46YleyKxJOIsg-1
+Received: by mail-ed1-f72.google.com with SMTP id y2-20020a056402440200b0043bd6c898deso5570eda.20
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:47:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
+         :subject:to:cc:references:content-language:in-reply-to
          :content-transfer-encoding;
-        bh=N5UUB+68S8t4MdKwwtcp3qpjDwy4HeAB9ZEqC96735Q=;
-        b=61nIntDXsP9kgkZ+4hJqOwmUPIiaeLi8zB9VlHvNuo41Mbqgu8YkFB8bQXmCPp7z3Q
-         tZOJiX6JOv0fzR55QPAPz8/Dwkquse9muJKs6NVhgVmvhrNkYHjAEdw2BjQ3T7PLkb2D
-         rZ1A2liEHSyv8dttKQY6up8szNf4foR2hmk44FH9rM730AHgre8qOMmGyU4Cbfmgm+hK
-         x4qm5CkYKk4Lbr9htHNYMNtAMXPfvR5JXlCyaolQ/HppgcVjpi3ua2LayiL47GW6uHda
-         yf2w4yrkUfMrDGzGLa9dJuBbA3gYSENJD5UgCflqTHTwEDNmdwutq50c0aR6RjMhbNwH
-         mxkg==
-X-Gm-Message-State: AJIora9dniNxK2rfLqK5JRpKYi8WIi56RmMcO590GIQ9YJIhtkozi+mx
-        NWEgIARDAoPEV1uBNfV36zfcC6CZfZjQ3eSzdKc4hIgIBtlGJ0oQF7isLzXUNRTNYl0KN7O77cs
-        ylp1nTo78an61hbAtnZNRtLIk8hABu7aWhQ==
-X-Received: by 2002:a05:6402:b72:b0:43c:81c2:dd3f with SMTP id cb18-20020a0564020b7200b0043c81c2dd3fmr8878109edb.19.1658958291755;
-        Wed, 27 Jul 2022 14:44:51 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1v8P1EiUo2QR9NE+62AIW37Kirz0MYdhCW/lQfD8WL/4gNS+I9Dub8YzuqaTsTolhtsg8CZ7g==
-X-Received: by 2002:a05:6402:b72:b0:43c:81c2:dd3f with SMTP id cb18-20020a0564020b7200b0043c81c2dd3fmr8878084edb.19.1658958291190;
-        Wed, 27 Jul 2022 14:44:51 -0700 (PDT)
+        bh=4YSLnzjinJJRI+D88VH39Oy1Vc+0bxZ9OidGoCxtqiU=;
+        b=cYLHi2qbG3iqdAhmm4MQiWlVqg38+ES+D4WGhwws1JcJwaPwuHH6oSgF58S7T13k51
+         vRJCrH4ZSOnfwI07G8CJcyT1z7Cuc1Q6n8LtJ828HwrUtO8O4RI1Mm51PMj0+mHl2rg7
+         zgArUd7NXEwRKU3CMA/ApJdh7ezpGZhCeOv+Y4u9Fl6g7MC62i2FWj/4WCgaf4z4M70S
+         dSjJLOyOoYDRCwOrbmGpLHfsb4c4GctN3/4e3ngn/Nw2KjTLnFTcQGTiFAIJXnbTc+KI
+         0gJvje7O9Pa9oqYnc3/oU1Xy521Mk6utIIOFOGa4SWWdwIYv8nhrz2X2naCsrjInpl0G
+         Su+Q==
+X-Gm-Message-State: AJIora//uZqV3XBtp511SzJJ2Syex7CfH4JPXTVqUpwIv6nafn90oSt0
+        jRGtCfMEKLtt2iByNLgggb+13pdlhHT139P762xYI5GXdO8d7km/LkH0gAJd+tkxuLHE9IY9DkM
+        5x+46grS7HU9ZhYjqkKSQqRes2+LfIh4i1A==
+X-Received: by 2002:a05:6402:510f:b0:43b:f3d2:94a9 with SMTP id m15-20020a056402510f00b0043bf3d294a9mr18409318edd.103.1658958477574;
+        Wed, 27 Jul 2022 14:47:57 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uTTFcQOW3qQ9S79YqkCQGKT16eFWC63VClVApqoIg21n2Wsv6nEJIkMG452sXaFQaB4EzfOg==
+X-Received: by 2002:a05:6402:510f:b0:43b:f3d2:94a9 with SMTP id m15-20020a056402510f00b0043bf3d294a9mr18409296edd.103.1658958477053;
+        Wed, 27 Jul 2022 14:47:57 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id kw26-20020a170907771a00b0072124df085bsm8090987ejc.15.2022.07.27.14.44.50
+        by smtp.gmail.com with ESMTPSA id n15-20020a05640206cf00b0043be9b2f7d2sm6318547edy.38.2022.07.27.14.46.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 14:44:50 -0700 (PDT)
-Message-ID: <b54c63e0-0eaf-d934-3d2e-0716e5ff0092@redhat.com>
-Date:   Wed, 27 Jul 2022 23:44:50 +0200
+        Wed, 27 Jul 2022 14:47:07 -0700 (PDT)
+Message-ID: <4585d2c6-6ac1-a697-d54a-f173e9821446@redhat.com>
+Date:   Wed, 27 Jul 2022 23:46:21 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
+From:   Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH v1 13/15] platform/x86/amd/pmf: Handle AMT and CQL events
  for Auto mode
-Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Mark Pearson <markpearson@lenovo.com>
 References: <20220712145847.3438544-1-Shyam-sundar.S-k@amd.com>
  <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
+Content-Language: en-US
 In-Reply-To: <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
+
+<resend with Cc list fixed>
 
 Hi,
 
