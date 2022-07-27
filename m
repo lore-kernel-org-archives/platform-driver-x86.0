@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FD9C04A68
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 21:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17323C04A68
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 21:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbiG0VdM (ORCPT
+        id S229628AbiG0VlD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jul 2022 17:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        Wed, 27 Jul 2022 17:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiG0VdL (ORCPT
+        with ESMTP id S229508AbiG0VlC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Jul 2022 17:33:11 -0400
+        Wed, 27 Jul 2022 17:41:02 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 338FD5F128
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:33:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA940BE06
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658957589;
+        s=mimecast20190719; t=1658958060;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dOgXTIPPVCxSkj1iMz8KpzmB8pl14d0jPIepaXJHznY=;
-        b=WS0q/OcKhEHQu+pwL/QgyNaL7PdUanLhqAc6O7OwsIGjutvZ0waLZAI/XRvFd0oQUNn81q
-        czRbReuoAdWxsgD3rVIpnFcXl1gpgD27y9VEL96xaICMGWFD3X01ETLK9a2W0UJNh9PUIc
-        RyZJr6LUO5r2jBEqJ98xU9C2M55r/fU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XjpX+Hxm97fE+CSZFoqr2RxDKqQPz41lFZIaoWOHVGw=;
+        b=NBs9sp0FsDq5oE7DoHtTaHkpQp1WXHvCslE1WhaAtJGjxAANdS+h3LDQ6k/2S6NeZi27PL
+        1Ns7eDZfwZAD25xqEEYs+vYoPq3VsvghBR0ZlFbRq4EQ5Rfgz7AC1TQh20V1GqVgACDX1g
+        4DgZE6pQEg0ymcY9XMqCU8IZA/HZOQo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-279-2p-cfX82PEivziYDMoIuGA-1; Wed, 27 Jul 2022 17:33:08 -0400
-X-MC-Unique: 2p-cfX82PEivziYDMoIuGA-1
-Received: by mail-ed1-f71.google.com with SMTP id g15-20020a056402424f00b0043bff7a68dbso5291edb.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:33:07 -0700 (PDT)
+ us-mta-575-U6PZvpJ3PAuiOfUS8-hykw-1; Wed, 27 Jul 2022 17:40:58 -0400
+X-MC-Unique: U6PZvpJ3PAuiOfUS8-hykw-1
+Received: by mail-ed1-f72.google.com with SMTP id e6-20020a056402190600b0043bde36ab23so12766edz.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 14:40:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=dOgXTIPPVCxSkj1iMz8KpzmB8pl14d0jPIepaXJHznY=;
-        b=mPEi7nlc9tLpdJbRq4/axgjavNvp7B1ZBIJcCzPJXO6z2Nd0OUeVce0QwuMdhUAk//
-         3lX9xQSDtKjH6GdqbAaJi5oE97FOXo067pAwJctAvhw3tuL5fVd52qGH7bt4mP99jt0G
-         jg+SMKLqfdvyONTUij+zUABhNPJhnrvU6zp4wWpxHY3yHtmjcRIuOKe2mE7pThDFUHW1
-         OU6pf9/Zoxwwe/GLc48oMtvV+IfSpBG6wRWC5ys3WeLubL85khjKQYHn+4JGd4+pTpZU
-         Us3MHg0yGIQnCQirJgVWBsRrhfsbgjEqPi2QzTOr+75+Im7My4kZyNHsItq95lIvCKW3
-         6kjw==
-X-Gm-Message-State: AJIora8TaQBFOZ+no1FFzJo6tgc/J91OSI7FgtgyX9qS6ssFOiUiJNPd
-        R5QjPCetKfoKEiUcNqIfMhENJosX2FsKDHUsfPgZ1Pu8jvkIJvJJ6yaLsC5VkkoRdqM2QrTbhT4
-        DvitEJSSDzxGUWmhnUUcmTyQTHFsxaQBblQ==
-X-Received: by 2002:a17:906:8448:b0:72b:5659:9873 with SMTP id e8-20020a170906844800b0072b56599873mr19800194ejy.117.1658957586858;
-        Wed, 27 Jul 2022 14:33:06 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tQQX2mIxVWCqfvm8oeeMTiKRpyMYF/c78p0zw/+Wh8ek3C3XoRaxBJjJNSoiasYmM3UaFBIw==
-X-Received: by 2002:a17:906:8448:b0:72b:5659:9873 with SMTP id e8-20020a170906844800b0072b56599873mr19800177ejy.117.1658957586556;
-        Wed, 27 Jul 2022 14:33:06 -0700 (PDT)
+        bh=XjpX+Hxm97fE+CSZFoqr2RxDKqQPz41lFZIaoWOHVGw=;
+        b=6w93uTcupElcTF2cItiN6AvIucdUHrXzZeSuM6Rhp17zI16Fcdt9+5YhqGJuJiASbF
+         nRBZYWBU3immlj03MQA7M0HESq4UD4W+dRrL0a6GNx06v7tZiSFvhgS4FYUBWdDO1gic
+         Js2R9bTPMaDrb8gk2c6ICYplHruIN6JRATd9A6dEQIWFkSQClWBXSq0jRakeeCT3fKcW
+         B+ooDYaanE+rapJN99YaBE+E119gb3C+ziTCL3nS6aiRWTni7UH9ORz8xnxcYv4tcsHK
+         tLiVxHe09um1T+i2p0sZhLJsHn8i6whIwsp27UYhS2O6ZstrN0a7KUjUmjocFfu3y9lx
+         oftQ==
+X-Gm-Message-State: AJIora+7B0I8J2Je8GhiITdBIKU6lqpNWyKteugd1Or/zCzPxgH8riRl
+        3DiIAXWKlTip9f6ymQG5MuTKE+P5GJucmSwXTNHUFvVoZrzpjs3WQeaqfnLrmI1B288OjFODRxG
+        dyetDWqeg1L1Xc//Bq3H6PFjylYSfpvfBeg==
+X-Received: by 2002:a05:6402:26c8:b0:43c:1ce4:e9a4 with SMTP id x8-20020a05640226c800b0043c1ce4e9a4mr14766881edd.26.1658958057556;
+        Wed, 27 Jul 2022 14:40:57 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vBnML6PVTOE7Ed9JwcZobWmA4wRe5J95C0yephLR2Dst1WmpEFPgc1AwstUydoXK26ESSW6A==
+X-Received: by 2002:a05:6402:26c8:b0:43c:1ce4:e9a4 with SMTP id x8-20020a05640226c800b0043c1ce4e9a4mr14766870edd.26.1658958057360;
+        Wed, 27 Jul 2022 14:40:57 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id gh4-20020a1709073c0400b006fe8c831632sm7974138ejc.73.2022.07.27.14.33.05
+        by smtp.gmail.com with ESMTPSA id a17-20020a50ff11000000b00435a62d35b5sm10746267edu.45.2022.07.27.14.40.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 14:33:06 -0700 (PDT)
-Message-ID: <6f82a798-98f1-10ba-09e3-71da95f8b102@redhat.com>
-Date:   Wed, 27 Jul 2022 23:33:05 +0200
+        Wed, 27 Jul 2022 14:40:56 -0700 (PDT)
+Message-ID: <26254e35-ccb9-b1d5-fc7e-f5b3177caff0@redhat.com>
+Date:   Wed, 27 Jul 2022 23:40:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v1 13/15] platform/x86/amd/pmf: Handle AMT and CQL events
- for Auto mode
+Subject: Re: [PATCH v1 14/15] platform/x86/amd/pmf: Force load driver on older
+ supported platforms
 Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
 References: <20220712145847.3438544-1-Shyam-sundar.S-k@amd.com>
- <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
+ <20220712145847.3438544-15-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20220712145847.3438544-15-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,376 +80,83 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 7/12/22 16:58, Shyam Sundar S K wrote:
-> The transition to auto-mode happens when the PMF driver receives
-> AMT (Auto Mode transition) event. transition logic will reside in the
-> PMF driver but the events would come from other supported drivers[1].
-> 
-> The thermal parameters would vary between when a performance "on-lap" mode
-> is detected and versus when not. The CQL event would get triggered from
-> other drivers, so that PMF driver would adjust the system thermal config
-> based on the ACPI inputs.
-> 
-> OEMs can control whether or not to enable AMT or CQL via other supported
-> drivers[1] but the actual transition logic resides in the AMD PMF driver.
-> When an AMT event is received the automatic mode transition RAPL algorithm
-> will run. When a CQL event is received an performance "on-lap" mode will
-> be enabled and thermal parameters will be adjusted accordingly.
-> 
-> [1]
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-hans&id=755b249250df1b612d982f3b702c831b26ecdf73
+> Some of the older platforms with _HID "AMDI0100" PMF driver can be force
+> loaded by interested users but only for experimental purposes.
 > 
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/acpi.c      | 90 +++++++++++++++++++++++-
->  drivers/platform/x86/amd/pmf/auto-mode.c | 22 ++++++
->  drivers/platform/x86/amd/pmf/cnqf.c      |  4 +-
->  drivers/platform/x86/amd/pmf/core.c      | 18 ++++-
->  drivers/platform/x86/amd/pmf/pmf.h       | 29 +++++++-
->  5 files changed, 156 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index e9f33e61659f..4bde86aeafa0 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -12,6 +12,8 @@
->  #include "pmf.h"
->  
->  #define APMF_METHOD "\\_SB_.PMF_.APMF"
-> +#define APMF_CQL_NOTIFICATION	2
-> +#define APMF_AMT_NOTIFICATION	3
->  
->  static unsigned long supported_func;
->  
-> @@ -55,6 +57,7 @@ static void apmf_if_parse_functions(struct apmf_if_functions *func, u32 mask)
->  {
->  	func->system_params = mask & APMF_FUNC_GET_SYS_PARAMS;
->  	func->static_slider_granular = mask & APMF_FUNC_STATIC_SLIDER_GRANULAR;
-> +	func->sbios_requests = mask & APMF_FUNC_SBIOS_REQUESTS;
->  	func->auto_mode_def = mask & APMF_FUNC_AUTO_MODE;
->  	func->fan_table_idx = mask & APMF_FUNC_SET_FAN_IDX;
->  	func->dyn_slider_ac = mask & APMF_FUNC_DYN_SLIDER_GRANULAR_AC;
-> @@ -292,6 +295,36 @@ int apmf_get_dyn_slider_def_dc(struct apmf_if *ampf_if, struct apmf_dyn_slider_o
->  	return err;
->  }
->  
-> +int apmf_get_sbios_requests(struct apmf_if *ampf_if, struct apmf_sbios_req *req)
-> +{
-> +	union acpi_object *info;
-> +	size_t size;
-> +	int err = 0;
-> +
-> +	info = apmf_if_call(ampf_if, APMF_FUNC_SBIOS_REQUESTS, NULL);
-> +	if (!info)
-> +		return -EIO;
-> +
-> +	size = *(u16 *)info->buffer.pointer;
-> +
-> +	if (size < sizeof(union acpi_object)) {
-> +		pr_err("PMF: buffer too small %zu\n", size);
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	size = min(sizeof(*req), size);
-> +	memset(req, 0, sizeof(*req));
-> +	memcpy(req, info->buffer.pointer, size);
-> +
-> +	pr_debug("PMF: %s: pending_req:%d cql:%d amt:%d\n", __func__,
-> +		 req->pending_req, req->cql_event, req->amt_event);
-> +
-> +out:
-> +	kfree(info);
-> +	return err;
-> +}
-> +
 
-Please use apmf_if_call_store_buffer() for this.
+Thanks, patch looks good to me:
 
->  static acpi_handle apmf_if_probe_handle(void)
->  {
->  	acpi_handle handle = NULL;
-> @@ -312,18 +345,62 @@ static acpi_handle apmf_if_probe_handle(void)
->  	return handle;
->  }
->  
-> +static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
-> +{
-> +	struct amd_pmf_dev *pmf_dev = data;
-> +	struct apmf_if *apmf_if = pmf_dev->apmf_if;
-> +	int ret;
-> +
-> +	if (apmf_if->func.sbios_requests) {
-> +		struct apmf_sbios_req req;
-> +
-> +		ret = apmf_get_sbios_requests(apmf_if, &req);
-> +		if (ret) {
-> +			dev_err(pmf_dev->dev, "Failed to get SBIOS requests:%d\n", ret);
-> +			return;
-> +		}
-> +		if (req.pending_req & BIT(APMF_AMT_NOTIFICATION)) {
-> +			pr_debug("PMF: AMT is supported and notifications %s\n",
-> +				 req.amt_event ? "Enabled" : "Disabled");
-> +			if (req.amt_event)
-> +				pmf_dev->is_amt_event = true;
-> +			else
-> +				pmf_dev->is_amt_event = !!req.amt_event;
-
-Replace the entire if-else with:
-
-			pmf_dev->is_amt_event = !!req.amt_event;
-
-please.
-
-
-> +		}
-> +
-> +		if (req.pending_req & BIT(APMF_CQL_NOTIFICATION)) {
-> +			pr_debug("PMF: CQL is supported and notifications %s\n",
-> +				 req.cql_event ? "Enabled" : "Disabled");
-> +			if (req.cql_event)
-> +				pmf_dev->is_cql_event = true;
-> +			else
-> +				pmf_dev->is_cql_event = !!req.cql_event;
-
-Replace the entire if-else with:
-
-			pmf_dev->is_cql_event = !!req.cql_event;
-
-please.
-
-
-> +
-> +			/* update the target mode information */
-> +			amd_pmf_update_2_cql(pmf_dev);
-> +		}
-> +	}
-> +}
-> +
->  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
->  {
-> +	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> +
->  	if (pmf_dev->apmf_if->func.sbios_heartbeat)
->  		cancel_delayed_work_sync(&pmf_dev->heart_beat);
-> +
-> +	if (is_apmf_func_supported(APMF_FUNC_AUTO_MODE))
-> +		acpi_remove_notify_handler(ahandle, ACPI_ALL_NOTIFY,
-> +					   apmf_event_handler);
->  }
->  
->  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
->  {
-> +	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
->  	struct apmf_notification_cfg *n;
->  	acpi_handle apmf_if_handle;
->  	struct apmf_if *apmf_if;
-> -	int ret;
-> +	int ret, status;
->  
->  	apmf_if_handle = apmf_if_probe_handle();
->  	if (!apmf_if_handle)
-> @@ -360,6 +437,17 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
->  		schedule_delayed_work(&pmf_dev->heart_beat, 0);
->  	}
->  
-> +	/* Install the APMF Notify handler */
-> +	if (is_apmf_func_supported(APMF_FUNC_AUTO_MODE)) {
-> +		status = acpi_install_notify_handler(ahandle,
-> +						     ACPI_ALL_NOTIFY,
-> +						     apmf_event_handler, pmf_dev);
-> +		if (ACPI_FAILURE(status)) {
-> +			dev_err(pmf_dev->dev, "failed to install notify handler\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-> +
->  out:
->  	return ret;
->  }
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> index 954fde25e71e..a85ef4b95cdb 100644
-> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -111,6 +111,13 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
->  	bool update = false;
->  	int i, j;
->  
-> +	if (!dev->amt_running && dev->is_amt_event) {
-> +		dev_dbg(dev->dev, "setting AMT thermals\n");
-> +		amd_pmf_handle_automode(dev, SLIDER_OP_SET, config_store.current_mode, NULL);
-> +		dev->amt_running = true;
-> +		return;
-> +	}
-> +
->  	/* Get the average moving average computed by auto mode algorithm */
->  	avg_power = amd_pmf_get_moving_avg(socket_power);
->  
-> @@ -161,6 +168,21 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
->  	}
->  }
->  
-> +void amd_pmf_update_2_cql(struct amd_pmf_dev *dev)
-> +{
-> +	config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].target_mode =
-> +			dev->is_cql_event ? AUTO_PERFORMANCE_ON_LAP : AUTO_PERFORMANCE;
-> +	if ((config_store.current_mode == AUTO_PERFORMANCE ||
-> +	     config_store.current_mode == AUTO_PERFORMANCE_ON_LAP) &&
-> +	    config_store.current_mode !=
-> +	    config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].target_mode) {
-> +		config_store.current_mode =
-> +				config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].target_mode;
-> +		amd_pmf_handle_automode(dev, SLIDER_OP_SET, config_store.current_mode, NULL);
-> +	}
-> +	dev_dbg(dev->dev, "updated CQL thermals\n");
-> +}
-> +
->  static void amd_pmf_get_power_threshold(void)
->  {
->  	config_store.transition[AUTO_TRANSITION_TO_QUIET].power_threshold =
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 2b03ae1ad37f..eba8f0d79a62 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -101,7 +101,7 @@ static const char *state_as_str(unsigned int state)
->  	}
->  }
->  
-> -void amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms)
-> +void amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms)
->  {
->  	struct cnqf_tran_params *tp;
->  	int src, i, j, index = 0;
-> @@ -117,7 +117,7 @@ void amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_
->  	}
->  
->  	for (i = 0; i < CNQF_TRANSITION_MAX; i++) {
-> -		config_store.trans_param[src][i].timer += time_lapsed_ms;
-> +		config_store.trans_param[src][i].timer += time_elapsed_ms;
-
-This should be in squashed into the patch introducing the type. Each patch should
-compile without errors individually (on top of previous patches obviously).
-
->  		config_store.trans_param[src][i].total_power += socket_power;
->  		config_store.trans_param[src][i].count++;
->  
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 674ddf599135..2a3dacfb2005 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -109,10 +109,15 @@ static void amd_pmf_get_metrics(struct work_struct *work)
->  	enum platform_profile_option current_profile;
->  	ktime_t time_elapsed_ms;
->  	int socket_power;
-> +	u8 mode;
->  
->  	/* Get the current profile information */
->  	platform_profile_get(&current_profile);
->  
-> +	if (!dev->is_amt_event)
-> +		dev_dbg(dev->dev, "%s amt event: %s\n", __func__,
-> +			dev->is_amt_event ? "Enabled" : "Disabled");
-> +
->  	/* Transfer table contents */
->  	memset(&dev->m_table, 0, sizeof(dev->m_table));
->  	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
-> @@ -123,8 +128,17 @@ static void amd_pmf_get_metrics(struct work_struct *work)
->  	socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
->  
->  	if (current_profile == PLATFORM_PROFILE_BALANCED) {
-> -		/* Apply the Auto Mode transition */
-> -		amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
-> +		if (dev->is_amt_event) {
-> +			/* Apply the Auto Mode transition */
-> +			amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
-> +		} else if (!dev->is_amt_event && dev->amt_running) {
-> +			pr_debug("resetting AMT thermals\n");
-> +			mode = amd_pmf_get_pprof_modes(dev);
-> +			amd_pmf_update_slider(dev, SLIDER_OP_SET, mode, NULL);
-> +			dev->amt_running = false;
-> +		}
-> +	} else {
-> +		dev->amt_running = false;
->  	}
->  
->  	if (dev->cnqf_feat) {
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 0532f49e9613..9ae9812353cd 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -17,6 +17,7 @@
->  /* APMF Functions */
->  #define APMF_FUNC_VERIFY_INTERFACE			0
->  #define APMF_FUNC_GET_SYS_PARAMS			1
-> +#define APMF_FUNC_SBIOS_REQUESTS			2
->  #define APMF_FUNC_SBIOS_HEARTBEAT			4
->  #define APMF_FUNC_AUTO_MODE					5
->  #define APMF_FUNC_SET_FAN_IDX				7
-> @@ -51,6 +52,7 @@
->  /* AMD PMF BIOS interfaces */
->  struct apmf_if_functions {
->  	bool system_params;
-> +	bool sbios_requests;
->  	bool sbios_heartbeat;
->  	bool auto_mode_def;
->  	bool fan_table_idx;
-> @@ -84,6 +86,24 @@ struct apmf_system_params {
->  	u32 heartbeat_int;
->  } __packed;
->  
-> +struct apmf_sbios_req {
-> +	u16 size;
-> +	u32 pending_req;
-> +	u8 rsd;
-> +	u8 cql_event;
-> +	u8 amt_event;
-> +	u32 fppt;
-> +	u32 sppt;
-> +	u32 fppt_apu_only;
-> +	u32 spl;
-> +	u32 stt_min_limit;
-> +	u8 skin_temp_apu;
-> +	u8 skin_temp_hs2;
-> +	u8 dps_enable;
-> +	u32 custom_policy_1;
-> +	u32 custom_policy_2;
-> +} __packed;
-> +
->  struct apmf_fan_idx {
->  	u16 size;
->  	u8 fan_ctl_mode;
-> @@ -171,6 +191,9 @@ struct amd_pmf_dev {
->  #endif /* CONFIG_DEBUG_FS */
->  	bool cnqf_feat;
->  	bool cnqf_running;
-> +	bool is_amt_event;
-> +	bool is_cql_event;
-> +	bool amt_running;
->  };
->  
->  struct apmf_sps_prop_granular {
-> @@ -417,9 +440,11 @@ int apmf_update_fan_idx(struct apmf_if *ampf_if, bool manual, u32 idx);
->  /* Auto Mode Layer */
->  void amd_pmf_load_defaults_auto_mode(struct amd_pmf_dev *dev);
->  int apmf_get_auto_mode_def(struct apmf_if *ampf_if, struct apmf_auto_mode *data);
-> +int apmf_get_sbios_requests(struct apmf_if *ampf_if, struct apmf_sbios_req *req);
->  void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev);
->  void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev);
-> -void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
-> +void amd_pmf_update_2_cql(struct amd_pmf_dev *dev);
-> +void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
->  
->  /* CnQF Layer */
->  int apmf_get_dyn_slider_def_ac(struct apmf_if *ampf_if, struct apmf_dyn_slider_output *data);
-> @@ -427,6 +452,6 @@ int apmf_get_dyn_slider_def_dc(struct apmf_if *ampf_if, struct apmf_dyn_slider_o
->  void amd_pmf_init_cnqf(struct amd_pmf_dev *dev);
->  void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
->  void amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev);
-> -void amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
-> +void amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
->  
->  #endif /* PMF_H */
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
+> ---
+>  drivers/platform/x86/amd/pmf/core.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 2a3dacfb2005..ef50d67f6013 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -39,6 +39,7 @@
+>  #define AMD_PMF_RESULT_FAILED                0xFF
+>  
+>  /* List of supported CPU ids */
+> +#define AMD_CPU_ID_RMB			0x14b5
+>  #define AMD_CPU_ID_PS			0x14e8
+>  
+>  #define PMF_MSG_DELAY_MIN_US		50
+> @@ -52,6 +53,11 @@ static int metrics_table_loop_ms = 1000;
+>  module_param(metrics_table_loop_ms, int, 0644);
+>  MODULE_PARM_DESC(metrics_table_loop_ms, " Metrics Table sample size time (default = 1000ms) ");
+>  
+> +/* Force load on supported older platforms */
+> +static bool force_load;
+> +module_param(force_load, bool, 0444);
+> +MODULE_PARM_DESC(force_load, " Force load this driver on supported older platforms (experimental) ");
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  static int current_power_limits_show(struct seq_file *seq, void *unused)
+>  {
+> @@ -240,6 +246,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+>  }
+>  
+>  static const struct pci_device_id pmf_pci_ids[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RMB) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
+>  	{ }
+>  };
+> @@ -313,6 +320,7 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  }
+>  
+>  static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+> +	{"AMDI0100", 0x100},
+>  	{"AMDI0102", 0},
+>  	{ }
+>  };
+> @@ -320,6 +328,7 @@ MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
+>  
+>  static int amd_pmf_probe(struct platform_device *pdev)
+>  {
+> +	const struct acpi_device_id *id;
+>  	struct amd_pmf_dev *dev;
+>  	struct pci_dev *rdev;
+>  	u32 base_addr_lo;
+> @@ -328,6 +337,13 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	u32 val;
+>  	int err;
+>  
+> +	id = acpi_match_device(amd_pmf_acpi_ids, &pdev->dev);
+> +	if (!id)
+> +		return -ENODEV;
+> +
+> +	if (id->driver_data == 0x100 && !force_load)
+> +		return -ENODEV;
+> +
+>  	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+>  	if (!dev)
+>  		return -ENOMEM;
 
