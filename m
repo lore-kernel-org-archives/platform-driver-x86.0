@@ -2,68 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0442C19F28
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 04:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FC6C19F21
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 04:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240270AbiG0Eff (ORCPT
+        id S240361AbiG0Eho (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jul 2022 00:35:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37018 "EHLO
+        Wed, 27 Jul 2022 00:37:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240209AbiG0Efd (ORCPT
+        with ESMTP id S240163AbiG0Ehn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Jul 2022 00:35:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98325BF73
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jul 2022 21:35:32 -0700 (PDT)
+        Wed, 27 Jul 2022 00:37:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D2DE83D5B8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jul 2022 21:37:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658896531;
+        s=mimecast20190719; t=1658896661;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4Nhmdd76VxuZywcj4ABrLti2+JKOVAikxn2IN6L8acM=;
-        b=dgRTNSxhuFkV7YNGzVBVDTQKwFbBAV/jaFluy71WagnQS8IaRLJYgs3CA1NRb7X7q6wk62
-        1NwdA91oL99Ezay9+Yo8dKObFk17QPtPoW+oc9Kf0VJK6zDFh/6wRZaGg3e0bmZU3K/s5A
-        miArsWOBOoUjN+rhqJcWAmcXvTrSQoo=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=eglJXh28UWwMt7nfBux4PPlOeAEHThKdFwbJ4et/2A8=;
+        b=KDMXYbcDiB7Ovgd+MI+K7xaBbNi7yacHpY1GoMG1w1bZR9EHU3UIQwWosku1d0XlbFfEfM
+        LIclddEpErPX5YDJWz3/qNH1oLz2Qbn/JRCJLLtpeJSsPciYp/WE6LLN6dAWPi8/33hw3Q
+        E8FKgOhlzNzSNh5ZjgCtTCFaHT0UZZM=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-213-vMuHludUPsOJrRUlfOSbjg-1; Wed, 27 Jul 2022 00:35:30 -0400
-X-MC-Unique: vMuHludUPsOJrRUlfOSbjg-1
-Received: by mail-pj1-f71.google.com with SMTP id t19-20020a17090a5d9300b001f2f3223d17so1590073pji.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jul 2022 21:35:30 -0700 (PDT)
+ us-mta-126-KyiHA2KhN2i_lKIYhDLlpw-1; Wed, 27 Jul 2022 00:37:39 -0400
+X-MC-Unique: KyiHA2KhN2i_lKIYhDLlpw-1
+Received: by mail-pf1-f198.google.com with SMTP id cu3-20020a056a00448300b0052ae559108fso5453874pfb.9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jul 2022 21:37:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=4Nhmdd76VxuZywcj4ABrLti2+JKOVAikxn2IN6L8acM=;
-        b=Qz90zRfPjJ+463gWLTJs+w7AbJjEeDkshMKYwOyAvG/24H50TTImLrwN0L/DOqALIS
-         Xgmw15/dSe2ECFhe/wu5Mi5a+r1IDY05h7zgrBgsozCuQmMNAdFUZ1H9Py2SlKvmLAem
-         oDRAJli2MLHP31eGBHmAAaZfac2h7OKGSI2eIzZcFhqBIQn1jHsQLJLjCzFYQroh1TwK
-         ThP4KtjELQxRHzf/Bve4xQYlghziN+gGPnGQIiPctqXiHUy6x4ORavRjNXBJYq5ydcnp
-         pSEi6gP7sSxOz7hq23BNucmxAXfTr6oLIv1K292MyvUim3IBfIhxpLkVzsEuzTv2nOo/
-         AWKg==
-X-Gm-Message-State: AJIora/vB7PVnd83WeWNp7KWdvQXsKUHn/9rPKkjCaa9InxqJKt/IE/o
-        rNC7gfqWGt77TTBhJEydiGVHAvARt2SxLN3BeJYRZcxWEpq/tYCQLZn6KHxI7FRjm9wqmVlmmpL
-        MvVEuAIORjtvNa63yMt6vYaQ6/sSp4LKc1w==
-X-Received: by 2002:a17:90b:1d90:b0:1f2:5f47:ca6c with SMTP id pf16-20020a17090b1d9000b001f25f47ca6cmr2521231pjb.162.1658896528719;
-        Tue, 26 Jul 2022 21:35:28 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sv66YMuYLn2D/TECwlGvVrDyp85rujIUbxh1LnRrYj8nx/VinuiyLNA/hwGDceqmYNtwAlaQ==
-X-Received: by 2002:a17:90b:1d90:b0:1f2:5f47:ca6c with SMTP id pf16-20020a17090b1d9000b001f25f47ca6cmr2521196pjb.162.1658896528457;
-        Tue, 26 Jul 2022 21:35:28 -0700 (PDT)
+        bh=eglJXh28UWwMt7nfBux4PPlOeAEHThKdFwbJ4et/2A8=;
+        b=5msKPYzCnC9D99UjMo4/bs95iD/YojXf269dLbzMv9tJQuUid3qiv4CFAA5TZYOpFx
+         VQy/r83085maKYv+gjL58xbnCDD9d3nWLyh5skj53LGTG5yQHcApCUrC7GIeqvExJJRU
+         fcpJbmup/3yAnf2uKhF0+/ujFkfhHVdmfaDrKLMoFKtiI0Le7ugCkQoQ5RgcTOg8Ey+E
+         n4GGl4kZjGDf2HdUnsr/KZ2SAG/lFLFF95fJXmlRf+l390JAbKeegQxPZ7YIJQZtX6mi
+         IFr5se0K8/hFO3YGRQq9/g/Y+BheZ3aFWR8d2P2sgv8BRalejOmchcoNsyC5+mfkH1Qu
+         ryuA==
+X-Gm-Message-State: AJIora+r0jYjW68tEzCIOqR3EO6mynJAjhCEg8bPD7TRr+XHB1+NovnT
+        elvu72E5Vfyu3v14Ou8J/Gh9+Aro5kmDZFaX2S3AcaZ3xMXzhscuhZAH/wgMLaTjPQzOiUIBPdO
+        b4fban+4dkGi9RaQW9KXfRZtEvZAS5WbdPA==
+X-Received: by 2002:a17:90b:4c51:b0:1f2:46b2:7c28 with SMTP id np17-20020a17090b4c5100b001f246b27c28mr2510307pjb.231.1658896657998;
+        Tue, 26 Jul 2022 21:37:37 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tcSW0SH/oE3E1QIJ9xZXlmolMaePDPPfBCRfkcaVWN7oKvG/J6RPnSNe2Qq4YMnD3xbv2vjg==
+X-Received: by 2002:a17:90b:4c51:b0:1f2:46b2:7c28 with SMTP id np17-20020a17090b4c5100b001f246b27c28mr2510272pjb.231.1658896657718;
+        Tue, 26 Jul 2022 21:37:37 -0700 (PDT)
 Received: from [10.72.12.96] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id i17-20020a170902c95100b0016d9d729f0bsm2843421pla.135.2022.07.26.21.35.16
+        by smtp.gmail.com with ESMTPSA id t4-20020a170902e84400b0016a0bf0ce32sm12698532plg.70.2022.07.26.21.37.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Jul 2022 21:35:26 -0700 (PDT)
-Message-ID: <7b33b166-785f-ef8a-153f-e0b1c3b7e23d@redhat.com>
-Date:   Wed, 27 Jul 2022 12:35:12 +0800
+        Tue, 26 Jul 2022 21:37:30 -0700 (PDT)
+Message-ID: <980553b7-ba12-bcdf-0be0-8f3da5985441@redhat.com>
+Date:   Wed, 27 Jul 2022 12:37:12 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v13 22/42] virtio_ring: packed: introduce
- virtqueue_reinit_packed()
+Subject: Re: [PATCH v13 32/42] virtio_pci: support VIRTIO_F_RING_RESET
 Content-Language: en-US
 To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         virtualization@lists.linux-foundation.org
@@ -99,9 +98,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         kvm@vger.kernel.org, bpf@vger.kernel.org,
         kangjie.xu@linux.alibaba.com
 References: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
- <20220726072225.19884-23-xuanzhuo@linux.alibaba.com>
+ <20220726072225.19884-33-xuanzhuo@linux.alibaba.com>
 From:   Jason Wang <jasowang@redhat.com>
-In-Reply-To: <20220726072225.19884-23-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <20220726072225.19884-33-xuanzhuo@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -110,11 +109,17 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 在 2022/7/26 15:22, Xuan Zhuo 写道:
-> Introduce a function to initialize vq without allocating new ring,
-> desc_state, desc_extra.
+> This patch implements virtio pci support for QUEUE RESET.
 >
-> Subsequent patches will call this function after reset vq to
-> reinitialize vq.
+> Performing reset on a queue is divided into these steps:
+>
+>   1. notify the device to reset the queue
+>   2. recycle the buffer submitted
+>   3. reset the vring (may re-alloc)
+>   4. mmap vring to device, and enable the queue
+>
+> This patch implements virtio_reset_vq(), virtio_enable_resetq() in the
+> pci scenario.
 >
 > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 
@@ -123,39 +128,151 @@ Acked-by: Jason Wang <jasowang@redhat.com>
 
 
 > ---
->   drivers/virtio/virtio_ring.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
+>   drivers/virtio/virtio_pci_common.c | 12 +++-
+>   drivers/virtio/virtio_pci_modern.c | 88 ++++++++++++++++++++++++++++++
+>   2 files changed, 97 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index 00b18cf3b4d9..7d4c444b5a9d 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -1957,6 +1957,27 @@ static void virtqueue_vring_attach_packed(struct vring_virtqueue *vq,
->   	vq->packed = *vring_packed;
+> diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+> index ca51fcc9daab..ad258a9d3b9f 100644
+> --- a/drivers/virtio/virtio_pci_common.c
+> +++ b/drivers/virtio/virtio_pci_common.c
+> @@ -214,9 +214,15 @@ static void vp_del_vq(struct virtqueue *vq)
+>   	struct virtio_pci_vq_info *info = vp_dev->vqs[vq->index];
+>   	unsigned long flags;
+>   
+> -	spin_lock_irqsave(&vp_dev->lock, flags);
+> -	list_del(&info->node);
+> -	spin_unlock_irqrestore(&vp_dev->lock, flags);
+> +	/*
+> +	 * If it fails during re-enable reset vq. This way we won't rejoin
+> +	 * info->node to the queue. Prevent unexpected irqs.
+> +	 */
+> +	if (!vq->reset) {
+> +		spin_lock_irqsave(&vp_dev->lock, flags);
+> +		list_del(&info->node);
+> +		spin_unlock_irqrestore(&vp_dev->lock, flags);
+> +	}
+>   
+>   	vp_dev->del_vq(info);
+>   	kfree(info);
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 9041d9a41b7d..c3b9f2761849 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -34,6 +34,9 @@ static void vp_transport_features(struct virtio_device *vdev, u64 features)
+>   	if ((features & BIT_ULL(VIRTIO_F_SR_IOV)) &&
+>   			pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_SRIOV))
+>   		__virtio_set_bit(vdev, VIRTIO_F_SR_IOV);
+> +
+> +	if (features & BIT_ULL(VIRTIO_F_RING_RESET))
+> +		__virtio_set_bit(vdev, VIRTIO_F_RING_RESET);
 >   }
 >   
-> +static void virtqueue_reinit_packed(struct vring_virtqueue *vq)
+>   /* virtio config->finalize_features() implementation */
+> @@ -199,6 +202,87 @@ static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
+>   	return 0;
+>   }
+>   
+> +static int vp_modern_disable_vq_and_reset(struct virtqueue *vq)
 > +{
-> +	int size, i;
+> +	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
+> +	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
+> +	struct virtio_pci_vq_info *info;
+> +	unsigned long flags;
 > +
-> +	memset(vq->packed.vring.device, 0, vq->packed.event_size_in_bytes);
-> +	memset(vq->packed.vring.driver, 0, vq->packed.event_size_in_bytes);
-> +	memset(vq->packed.vring.desc, 0, vq->packed.ring_size_in_bytes);
+> +	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
+> +		return -ENOENT;
 > +
-> +	size = sizeof(struct vring_desc_state_packed) * vq->packed.vring.num;
-> +	memset(vq->packed.desc_state, 0, size);
+> +	vp_modern_set_queue_reset(mdev, vq->index);
 > +
-> +	size = sizeof(struct vring_desc_extra) * vq->packed.vring.num;
-> +	memset(vq->packed.desc_extra, 0, size);
+> +	info = vp_dev->vqs[vq->index];
 > +
-> +	for (i = 0; i < vq->packed.vring.num - 1; i++)
-> +		vq->packed.desc_extra[i].next = i + 1;
+> +	/* delete vq from irq handler */
+> +	spin_lock_irqsave(&vp_dev->lock, flags);
+> +	list_del(&info->node);
+> +	spin_unlock_irqrestore(&vp_dev->lock, flags);
 > +
-> +	virtqueue_init(vq, vq->packed.vring.num);
-> +	virtqueue_vring_init_packed(&vq->packed, !!vq->vq.callback);
+> +	INIT_LIST_HEAD(&info->node);
+> +
+> +#ifdef CONFIG_VIRTIO_HARDEN_NOTIFICATION
+> +	__virtqueue_break(vq);
+> +#endif
+> +
+> +	/* For the case where vq has an exclusive irq, call synchronize_irq() to
+> +	 * wait for completion.
+> +	 *
+> +	 * note: We can't use disable_irq() since it conflicts with the affinity
+> +	 * managed IRQ that is used by some drivers.
+> +	 */
+> +	if (vp_dev->per_vq_vectors && info->msix_vector != VIRTIO_MSI_NO_VECTOR)
+> +		synchronize_irq(pci_irq_vector(vp_dev->pci_dev, info->msix_vector));
+> +
+> +	vq->reset = true;
+> +
+> +	return 0;
 > +}
 > +
->   static struct virtqueue *vring_create_virtqueue_packed(
->   	unsigned int index,
->   	unsigned int num,
+> +static int vp_modern_enable_vq_after_reset(struct virtqueue *vq)
+> +{
+> +	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
+> +	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
+> +	struct virtio_pci_vq_info *info;
+> +	unsigned long flags, index;
+> +	int err;
+> +
+> +	if (!vq->reset)
+> +		return -EBUSY;
+> +
+> +	index = vq->index;
+> +	info = vp_dev->vqs[index];
+> +
+> +	if (vp_modern_get_queue_reset(mdev, index))
+> +		return -EBUSY;
+> +
+> +	if (vp_modern_get_queue_enable(mdev, index))
+> +		return -EBUSY;
+> +
+> +	err = vp_active_vq(vq, info->msix_vector);
+> +	if (err)
+> +		return err;
+> +
+> +	if (vq->callback) {
+> +		spin_lock_irqsave(&vp_dev->lock, flags);
+> +		list_add(&info->node, &vp_dev->virtqueues);
+> +		spin_unlock_irqrestore(&vp_dev->lock, flags);
+> +	} else {
+> +		INIT_LIST_HEAD(&info->node);
+> +	}
+> +
+> +#ifdef CONFIG_VIRTIO_HARDEN_NOTIFICATION
+> +	__virtqueue_unbreak(vq);
+> +#endif
+> +
+> +	vp_modern_set_queue_enable(&vp_dev->mdev, index, true);
+> +	vq->reset = false;
+> +
+> +	return 0;
+> +}
+> +
+>   static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vector)
+>   {
+>   	return vp_modern_config_vector(&vp_dev->mdev, vector);
+> @@ -413,6 +497,8 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
+>   	.set_vq_affinity = vp_set_vq_affinity,
+>   	.get_vq_affinity = vp_get_vq_affinity,
+>   	.get_shm_region  = vp_get_shm_region,
+> +	.disable_vq_and_reset = vp_modern_disable_vq_and_reset,
+> +	.enable_vq_after_reset = vp_modern_enable_vq_after_reset,
+>   };
+>   
+>   static const struct virtio_config_ops virtio_pci_config_ops = {
+> @@ -431,6 +517,8 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
+>   	.set_vq_affinity = vp_set_vq_affinity,
+>   	.get_vq_affinity = vp_get_vq_affinity,
+>   	.get_shm_region  = vp_get_shm_region,
+> +	.disable_vq_and_reset = vp_modern_disable_vq_and_reset,
+> +	.enable_vq_after_reset = vp_modern_enable_vq_after_reset,
+>   };
+>   
+>   /* the PCI probing function */
 
