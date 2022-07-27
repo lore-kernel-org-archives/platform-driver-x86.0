@@ -2,74 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60599C04A68
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 20:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2407DC04A68
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jul 2022 20:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiG0UwZ (ORCPT
+        id S231599AbiG0Uwh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jul 2022 16:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48800 "EHLO
+        Wed, 27 Jul 2022 16:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiG0UwZ (ORCPT
+        with ESMTP id S229924AbiG0Uwg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Jul 2022 16:52:25 -0400
+        Wed, 27 Jul 2022 16:52:36 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F6A75071D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 13:52:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C527C5071D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 13:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658955143;
+        s=mimecast20190719; t=1658955153;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FzDI56maoJN/D8p4GaLW8Pwo0uqMVrnlEqnsUfjM8C4=;
-        b=a3YqGy3WCkpO2q8LTRp8MXrlxhrzCXbbuPqMtvJJbluFLU5Ba8no+YYOpnhoQOloOJH9cD
-        iMf5WeOzXMoUk8fSthy+oi6PY8Sjkx73jIum4bjgMmu4Qgx69ZaYLMvbA4xtpbVo0h4tEH
-        zFeMSoFKCrKrFXFT8KuQFiTPN3qX49Y=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fol8CsQN97d5WIOJcVV0om0tULr/TAMgyaTN0LEdGEU=;
+        b=hLgEHJkCFP33q6xLuc1hYLG4KVTcCcU3DXpGQ0BCit6yGcq57JSUzB1fbwNLa6d6yj7GVO
+        jxL8dwPq8svnynrfk8D4NIOJJQ733fM0+vrNzyLgus0LGcyRt0/5lqSWP7w3lc3ofqHJnV
+        EX97nwXAZ2EEazc7WB7vAovf+4TdYHc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-149-k6KbRX_aNdyxhRLKEdJSXw-1; Wed, 27 Jul 2022 16:52:20 -0400
-X-MC-Unique: k6KbRX_aNdyxhRLKEdJSXw-1
-Received: by mail-ej1-f72.google.com with SMTP id hr24-20020a1709073f9800b0072b57c28438so5356588ejc.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 13:52:20 -0700 (PDT)
+ us-mta-357-VCSai_pKM0KBuFuN4kfDsg-1; Wed, 27 Jul 2022 16:52:32 -0400
+X-MC-Unique: VCSai_pKM0KBuFuN4kfDsg-1
+Received: by mail-ed1-f72.google.com with SMTP id y2-20020a056402440200b0043bd6c898deso9011509eda.20
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jul 2022 13:52:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=FzDI56maoJN/D8p4GaLW8Pwo0uqMVrnlEqnsUfjM8C4=;
-        b=NX3qFiTNeCa/ECET5oSyMjsXXs6SUw5bs8WrBzGMkbUdouDGS4wm4ixHS3vSkWtKQl
-         3YvRkPYXX5fzixXO0kzlgR6Z/VS/APfeqxiJ0ge+r8vHyZv4B9jxk9IgzvKBVVGoXL5E
-         XsMF2WopquLGOP1FZNMGB7+ABa8uzf+pjLX3h/m/0C9l7lekvH4DNEM6k9i6xgVeh6X1
-         Dejq2b0S+kK4/ruZxu/u7Vb51K9q02tB5RUjEt6Cnnk0Fi0eLHcLTe18/Za4M7zM3TKA
-         Uv7UGmTkKyspGe7zpW695eNM5eJVZPMTlQz546xmciljFw1iqQ6nhdbaCWM+uJC3kGnP
-         3n2Q==
-X-Gm-Message-State: AJIora9+o7Ro0Cl1T0dEJ3p/F5acTACaabd2yYXNAlAzY3VB2976k0m/
-        kAL8Cgeu3wz9dWv0foL7fysmKOnNwobKhLQmppmVtIG/F4gCcZeTeoiuD3dNgBnLYuybINGmpkc
-        y9YN50xzw/8ql+3d+FVQ/9NVE3DxYFR/Fmg==
-X-Received: by 2002:a05:6402:4511:b0:43b:a182:8a0a with SMTP id ez17-20020a056402451100b0043ba1828a0amr24966374edb.410.1658955139142;
-        Wed, 27 Jul 2022 13:52:19 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1ujq1eZxcRHmQPIJiJ0qH3lmWt7J9tQtrg2kLuknIUWMUSjM1qRM4RT/Yd97DrVbpARa8od0Q==
-X-Received: by 2002:a05:6402:4511:b0:43b:a182:8a0a with SMTP id ez17-20020a056402451100b0043ba1828a0amr24966365edb.410.1658955138989;
-        Wed, 27 Jul 2022 13:52:18 -0700 (PDT)
+        bh=fol8CsQN97d5WIOJcVV0om0tULr/TAMgyaTN0LEdGEU=;
+        b=ZrWfQTbJuR2KpjI7VDg99wwACNOzOQpJ5s4Mbr5y19FjD0OKz16LdkOObb5EMGBHvq
+         HFuV4qAeVnF/NQzzBzcrsjHI5N/Yvg4RSCStQgnJpaV/Ew+JXXr+1p+rWlWgT89oGF9C
+         rkWSpmIxmAVJ0Xf02B07nXSXs+WAGP2yNgkUlueRnKPzMoU/Mx4T2g8JT3oJWjwKXCsC
+         efwbS8SL0QUGDSwbUxDHshTpBOmJk31xHe/56yBODOBmRWu3q7MmuM7x5jFJnk/jDvUs
+         sAs4mHz3RRWdauYfZ+S/WlZxSqGzPabNABMjR8APNZ0LdJlDSjqdfFCGfrgVe9g1eojr
+         ESeg==
+X-Gm-Message-State: AJIora8EI0q2vfQYwPZNRwfm50B0jF+BZvvNMTO3EFN7Ru/boDs1LbSY
+        6Z6KtkXw33I5fVLlQ/6wisoJ8pbQzD0iU5r5IL67W5PZrTF4cZGygyyitWRJUAk4HjFlzb9siqz
+        5VyeifhS5qrtDANLNil0vVRgIRd7U7koKuQ==
+X-Received: by 2002:a05:6402:d05:b0:425:b5c8:faeb with SMTP id eb5-20020a0564020d0500b00425b5c8faebmr23996438edb.273.1658955151234;
+        Wed, 27 Jul 2022 13:52:31 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sPR1ppOqQVHQZsK7E4HpCfazz0dxbSENQ85RWyyKz6rvL6qVkPlLyTjcYuo4iqYGF6/E2CIg==
+X-Received: by 2002:a05:6402:d05:b0:425:b5c8:faeb with SMTP id eb5-20020a0564020d0500b00425b5c8faebmr23996414edb.273.1658955150768;
+        Wed, 27 Jul 2022 13:52:30 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906210a00b0072b33c0a831sm8107252ejt.17.2022.07.27.13.52.18
+        by smtp.gmail.com with ESMTPSA id i8-20020aa7c9c8000000b0043bbf79b3ebsm10766119edt.54.2022.07.27.13.52.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 13:52:18 -0700 (PDT)
-Message-ID: <85479b1e-08d2-49da-f9ba-894594270113@redhat.com>
-Date:   Wed, 27 Jul 2022 22:52:17 +0200
+        Wed, 27 Jul 2022 13:52:30 -0700 (PDT)
+Message-ID: <7b4bdbc9-9c68-c5c8-3f01-6a966c004a14@redhat.com>
+Date:   Wed, 27 Jul 2022 22:52:29 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v1 10/15] platform/x86/amd/pmf: Add sysfs to toggle CnQF
+Subject: Re: [PATCH v1 11/15] Documentation/ABI/testing/sysfs-amd-pmf: Add ABI
+ doc for AMD PMF
 Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
 References: <20220712145847.3438544-1-Shyam-sundar.S-k@amd.com>
- <20220712145847.3438544-11-Shyam-sundar.S-k@amd.com>
+ <20220712145847.3438544-12-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220712145847.3438544-11-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20220712145847.3438544-12-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,9 +80,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 7/12/22 16:58, Shyam Sundar S K wrote:
-> Whether to turn CnQF on/off by default upon driver load would be decided
-> by a BIOS flag. Add a sysfs node to provide a way to the user whether to
-> use static slider or CnQF .
+> AMD PMF driver provides the flexibility to turn "on" or "off"
+> CnQF feature (introduced in the earlier patch).
+> 
+> Add corresponding ABI documentation for the new sysfs node.
 > 
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
@@ -95,78 +97,25 @@ Hans
 
 
 > ---
->  drivers/platform/x86/amd/pmf/cnqf.c | 52 +++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
+>  Documentation/ABI/testing/sysfs-amd-pmf | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-amd-pmf
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 8c6756faab25..2b03ae1ad37f 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -302,9 +302,59 @@ void amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev)
->  		config_store.trans_prio[i] = i;
->  }
->  
-> +static ssize_t feat_store(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
-> +	int result, src;
-> +	bool enabled;
-> +	u8 mode;
+> diff --git a/Documentation/ABI/testing/sysfs-amd-pmf b/Documentation/ABI/testing/sysfs-amd-pmf
+> new file mode 100644
+> index 000000000000..5935dc549185
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-amd-pmf
+> @@ -0,0 +1,11 @@
+> +What:		/sys/devices/platform/AMDI0102\:00/cnqf/feat
+> +Date:		July 2022
+> +Contact:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> +Description:	Reading this file tells if the AMD Platform Management(PMF)
+> +		Cool n Quiet Framework(CnQF) feature is enabled or not.
 > +
-> +	result = kstrtobool(buf, &enabled);
-> +	if (result)
-> +		return result;
+> +		This feature is not enabled by default and gets only turned on
+> +		if OEM BIOS passes a "flag" to PMF ACPI function (index 11 or 12)
+> +		or in case the user writes "on".
 > +
-> +	src = amd_pmf_get_power_source();
-> +	pdev->cnqf_feat = enabled;
-> +	if (pdev->cnqf_feat) {
-> +		amd_pmf_handle_cnqf(pdev, SLIDER_OP_SET, src, config_store.current_mode, NULL);
-> +	} else {
-> +		pdev->cnqf_running = false;
-> +		mode = amd_pmf_get_pprof_modes(pdev);
-> +		amd_pmf_update_slider(pdev, SLIDER_OP_SET, mode, NULL);
-> +	}
-> +
-> +	dev_dbg(pdev->dev, "Received CnQF %s\n", enabled ? "on" : "off");
-> +	return count;
-> +}
-> +
-> +static ssize_t feat_show(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 char *buf)
-> +{
-> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%s\n", pdev->cnqf_feat ? "on" : "off");
-> +}
-> +
-> +static DEVICE_ATTR_RW(feat);
-> +
-> +static struct attribute *cnqf_feature_attrs[] = {
-> +	&dev_attr_feat.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group cnqf_feature_attribute_group = {
-> +	.attrs = cnqf_feature_attrs,
-> +	.name = "cnqf"
-> +};
-> +
->  void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev)
->  {
->  	cancel_delayed_work_sync(&dev->work_buffer);
-> +	sysfs_remove_group(&dev->dev->kobj, &cnqf_feature_attribute_group);
-> +	kobject_uevent(&dev->dev->kobj, KOBJ_CHANGE);
->  }
->  
->  void amd_pmf_init_cnqf(struct amd_pmf_dev *dev)
-> @@ -324,4 +374,6 @@ void amd_pmf_init_cnqf(struct amd_pmf_dev *dev)
->  	/* update the thermal for CnQF */
->  	src = amd_pmf_get_power_source();
->  	amd_pmf_handle_cnqf(dev, SLIDER_OP_SET, src, config_store.current_mode, NULL);
-> +	ret = sysfs_create_group(&dev->dev->kobj, &cnqf_feature_attribute_group);
-> +	kobject_uevent(&dev->dev->kobj, KOBJ_CHANGE);
->  }
+> +		To turn off CnQF user can write "off" to the sysfs node.
 
