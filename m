@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7FCC04A68
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 18:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5436DC04A68
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 18:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbiG1SU5 (ORCPT
+        id S229894AbiG1SVA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Jul 2022 14:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
+        Thu, 28 Jul 2022 14:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbiG1SU4 (ORCPT
+        with ESMTP id S229735AbiG1SU7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Jul 2022 14:20:56 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2063.outbound.protection.outlook.com [40.107.220.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC971C10C
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 11:20:55 -0700 (PDT)
+        Thu, 28 Jul 2022 14:20:59 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4621C10C
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 11:20:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQh/eDwxR5x51WoG20gcPTM89Bp9HpOvkGahap5dqyd0yniEcRLlvQfSonJ2oCADlVKJaJbz/w0xoD6gl0jRwU3G+LXiS13X9hwFf6COY3yAjTsN1gClw41fw/Kb6Unlmtm9cOmPzepMImo9kPrZtd/qH03jyXAO1JFRKwGEybgSeFcJ0IQgjQ8F03fqvCeU/KLhsBjZiYEUksnRJ9xdMBxJRvrNM8c6p5Bo2efGLAp04YUH91ee4WXfcic1I575TiB7mfW8q42kCRqQoz3Oy9U3AJK5M1k4o5YJrWnp8eZBEFnOB3Pkab02hl0utMyXmKIh/WHIhLwFei5Jh8FrBw==
+ b=A1F4KWrCqy7AxzZKxX+W/4xm682cBL9IEIXeJNtEqIbCr0wWz+BvrQko9hMrYzv19ooS3F8GDO01MkNtwTP3Fw1eqxmT42rQ4tOSVQUzhmErq7swmLquBLkNYmuFOUrYtKsuqu4Aam56rQR3nvpASro7PFWvgM7ugwfb+iULHK7LcA8KCBtLfheAcjw34T0YDQI/mLpwvHpaeTxmUzM/0IuygGVnyeCuAAC5yZmRX0u5x4IVnQ3HNHQbjTsGB+fVnsKztPacHjHfUaxQCMajfyN4guNkx3kPvDpjT0dmSM3VnG3RHcNYhD5fCFxyrGqldnToi1JdD+ECD1+XzyaLzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SOkeIE2L3sQ+3p2gDubXdxApyo5VH2uhyKW0lYgWk10=;
- b=bRGHzVwbi0JTw97K2gh0I5SDVhdau1t/MwIeMzwAmgu/PWA82GrL2Ikt+ugwxL7t+fEL88DnLFIAFUUURrhtjOpaRwSYssueRfobnsUyPtR2/nY1uVmo6nG/uBgxT9jOwl3LrVQYrLfIpz7AuvGWvxZzCOZo9eUo9Flh5+mIOt6ZpoyGaGT+WOUSYntOGbhN2wlXZGPNP0eykcLxP3Ma33dUKiF2lLB1YXIZDtw+dMFtJCD17TS1EW4G/ZallzCRpqn9TQyyjLTEfleDQ7kXB+jV6Q0jvxv/hdRQ+IldH51JVqwfM2Gil7+3GFkydZJfuQZ6VOJLyzbFOYxDyfhrBg==
+ bh=gW/L+FNdJI6KIY6poPeUBcKuDxWAuv2jDnBAPezxrTo=;
+ b=B7M6iIe73Xq9ePzbBJijcVin8zdMiSMLTysneW8DI5D0RKuMJ5r5uPFzRjDq++N8mlTUnr0GBs6LedtsSwU3aK65Tw2n8UL8qz46A8bN+nj7SJe5TWkUveiqFKShSVTsCd2gTHnKnxPKofGW6jNUrG5S/ifZGww+RdeZ9sT6WXUQxuy4Noc4/iLVbWG9R1R1vb9ReKnJuipNciC7GT0l6peP6EnwiSrXaKWGDeGdV60fcD+5qZDJQZEIB3zOnPGhE66Gei/keq7rVd4xKjejLMnISEcTY3H/hM/jbhKUZ5kHVV7Y6Ft9UhfgHs8pa12QfRHIXoE2S19HH1LM9sKiOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SOkeIE2L3sQ+3p2gDubXdxApyo5VH2uhyKW0lYgWk10=;
- b=No/WyKOuuHmHzaDxUBJyEFNnzInjOfZ4Um7jfnogt8TDLjlGOS+0EXV+a9/B/Mqfl7eu4Wqv6cKoKXJLTu1cpU26aoSKkXSOnszkJUJxr8RPkr7GTD2TjlxlsqEzYoi3xzCz0ZeynrGCn4uAJdtu7gKOcYsfsfdtSHAo2mYALyQ=
-Received: from BN9PR03CA0584.namprd03.prod.outlook.com (2603:10b6:408:10d::19)
- by CH2PR12MB4247.namprd12.prod.outlook.com (2603:10b6:610:7c::20) with
+ bh=gW/L+FNdJI6KIY6poPeUBcKuDxWAuv2jDnBAPezxrTo=;
+ b=Yy6PY4Bqd1Eg0cJMWPU5dW++Mb+BSpbxX+50Ud+1F6ZN4ZfHDo9kKh/Rravlara2oq+iyoeyhqNfpF7WBFxZkA9Ae3bWm9m+qrjnFbDAPBDXxF+Za1crudxahg0F0F6+kWpyE8d7LMbxkS1700XejK8YyE6qielQDQinYVnjRyQ=
+Received: from BN9PR03CA0549.namprd03.prod.outlook.com (2603:10b6:408:138::14)
+ by DM5PR12MB1932.namprd12.prod.outlook.com (2603:10b6:3:10e::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19; Thu, 28 Jul
- 2022 18:20:53 +0000
-Received: from BN8NAM11FT062.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:10d:cafe::17) by BN9PR03CA0584.outlook.office365.com
- (2603:10b6:408:10d::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.20 via Frontend
- Transport; Thu, 28 Jul 2022 18:20:53 +0000
+ 2022 18:20:56 +0000
+Received: from BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:138:cafe::8c) by BN9PR03CA0549.outlook.office365.com
+ (2603:10b6:408:138::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.7 via Frontend
+ Transport; Thu, 28 Jul 2022 18:20:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,23 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT062.mail.protection.outlook.com (10.13.177.34) with Microsoft SMTP
+ BN8NAM11FT019.mail.protection.outlook.com (10.13.176.158) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5482.10 via Frontend Transport; Thu, 28 Jul 2022 18:20:53 +0000
+ 15.20.5482.10 via Frontend Transport; Thu, 28 Jul 2022 18:20:55 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 28 Jul
- 2022 13:20:51 -0500
+ 2022 13:20:53 -0500
 From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To:     <hdegoede@redhat.com>, <markgross@kernel.org>
 CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
         "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v2 RESEND 00/11] platform/x86/amd/pmf: Introduce AMD PMF Driver
-Date:   Thu, 28 Jul 2022 23:50:17 +0530
-Message-ID: <20220728182028.2082096-1-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v2 RESEND 01/11] platform/x86/amd/pmf: Add support for PMF core layer
+Date:   Thu, 28 Jul 2022 23:50:18 +0530
+Message-ID: <20220728182028.2082096-2-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220728182028.2082096-1-Shyam-sundar.S-k@amd.com>
+References: <20220728182028.2082096-1-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -71,97 +73,399 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a98dfd3a-8a1e-43e1-43b6-08da70c5e847
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4247:EE_
+X-MS-Office365-Filtering-Correlation-Id: 859f8cd5-db60-46b2-5293-08da70c5e9af
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1932:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0NugN4fj4DT7gr8w9urZEluMQWdgEhx5+dkaw2nu6nNv1jaQFgPnvGict5cS1coENZcXZsHL/OibwweUJ4oB5OxRlTvNF2f7nJdXr79S77ZKTcg0qRn1xEK9Pn2GfgZiHvuqBsmWVwfxn3v2L8FrqWi+XHIMWMhakvH5SqWIHtyj6VIC2gGSE/1vw6VZWqjKjxuKRdQ5Jjvn94xn0gEJqx9iXqwJM6eGYiAchjyrEW5Vqxe1/YLLnvIas8k9phgUt7jdr7M/SZwVqAKKLOygKOtjPUTcbWs7ks3Wli/jJn/9nIFkNStjHIfXpjM3qKscAcC+b1O6UX79PtuL80yzBWc676gHYevlAHuHWi5DPlpJM5XEznmVxhbVzORWX5Dp4WlJrmYpRky8tP8n5E9p3HidqSI7hWykfstbwy/pmfPVyIXgtq31hNkqcyrhx/psJqiCnKPn/jSNNMPdhAhR7MFEdHET+xVJx+QGMF3XTGxXUp61ee1edF5jOsL9urtAj+Wb3OT9iApek8DLYOHfoyh/mZj8VH9aMei2na4ASVXtSIeJB9V9pcik1AXP9kBX3nRDKmiPAhhGDsyYgT3mpB+9u56YSxtL2hlcCW8xqMHmCyM3ppuzo9Q1l0Vp85n5K+khaJzryG4ueuuN48ser9bMKxttOEHEKdhF2lt9/dwWan43j/lBrDCrY73woPRfEeLwLWOibIdbNP1sUSuoT0+szfBXw3+/1SGbcRIcGIKK5z4CqPCxbJg2ppmvbzPX4O90RCqAOwRGGPo+R6uT/Sg96fWjcpIv0Zjnbc69B0GQMWJ/daNZizGpFuleY+QNmBrBoKbKpQGpNP2Ieypi0Q==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(346002)(39860400002)(136003)(40470700004)(36840700001)(46966006)(40460700003)(70586007)(186003)(110136005)(478600001)(4326008)(86362001)(8676002)(426003)(316002)(36756003)(356005)(70206006)(82740400003)(8936002)(81166007)(54906003)(36860700001)(2616005)(16526019)(5660300002)(336012)(82310400005)(1076003)(41300700001)(40480700001)(47076005)(6666004)(26005)(7696005)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: iDVCnSHTMqJJEn8QmIQfZ0/rybIoXBcFQvAlMmv9SAKWmc0n8BZK3TFJvn/o2HdBP582o6280PKH8MioXdvAYWwE2pOLRYgSHRVdv8yuE/mn7ZY5bep2od59cTkEqHXRPppGT7U2exQ5NKdcqBGjuayOvMcYvcF2OyZgkrVUS+NGLtP/jY4uSnhKKG7HMDOONmmvzJQmrAZ5fhtyoV6ZXRvSLICwIEvTobBx0KebHmWNJwi2YuscwsIYU2Wpo+xR6ljSunP8W5Hf2w1ur574vrf3CkGyCnF0PvgXSDZ08QInHd3UfdbrlDLoJblItxQccxkMXmsXUvxYTSXU7OovvhWDSvaibYDqdY/AstF40v9+ZtBiT+xgakn0i2+RmwauWJTFBT3+gpJc2ZMCCajis4BjSnN7c3omfAaa8iCJXGmCx1QbXwM7G8I8aZp+wSzrDWK3Huom5BW+C1pSCFYg784XiNO5LAQocQIXrxHiQTBL5dehENXc2M46HoXBMV/YaJiM7gKU2Q5u01MSWIOWND8mQ2WEyz3yT8turoJmLdfU50Pk74zIj9IYdi0+Aqhxi7XasseBdlPyODyRJheMgMlCjyR83sdDR+K3gKsp/ZAGaE9ZBfjlLIFePLilygnsVhSyWpxPoZgjfoEnEloi+BaIssG8ZoFZoPeWo+2cmRSJlirgLDgf/SGe3m9hm+LoXJL5dBUdVFPXpd7lE8d4mSws4yYXz456Vzh38p9HWnyPYG6LFuHIDjuyOG3vF66wDAmG0m7SjhifgQ3+KixsbC0qo2itI+lI4CiPWIRuF1GYbZZnx2bNvkO8ouGHPQ2KS5/f2WGjHgEAJQLqJApZGg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(39860400002)(396003)(346002)(376002)(36840700001)(46966006)(40470700004)(54906003)(6666004)(82310400005)(81166007)(82740400003)(110136005)(356005)(316002)(70206006)(36860700001)(8676002)(36756003)(40480700001)(30864003)(2906002)(426003)(47076005)(86362001)(41300700001)(26005)(7696005)(5660300002)(1076003)(478600001)(70586007)(16526019)(83380400001)(336012)(186003)(4326008)(40460700003)(8936002)(2616005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 18:20:53.3418
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 18:20:55.7171
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a98dfd3a-8a1e-43e1-43b6-08da70c5e847
+X-MS-Exchange-CrossTenant-Network-Message-Id: 859f8cd5-db60-46b2-5293-08da70c5e9af
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT062.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4247
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1932
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-AMD PMF Driver (a.k.a Platform Management Framework) provides a
-centralized framework based on sensor inputs, OS hints, platform state
-and APU metrics to dynamically manage perf, power and system thermals.
+PMF core layer is meant to abstract the common functionalities
+across PMF features. This layer also does the plumbing work
+like setting up the mailbox channel for the communication
+between the PMF driver and the PMFW (Power Management Firmware)
+running on the SMU.
 
-The goal of the driver is to enhance end user experience by making AMD
-PCs smarter, quieter, power efficient by adapting to user behavior and
-environment.
-
-The larger goals include:
-
-- Enable easy customization of smart PC solutions by OEMs.
-- Provide a framework for OEMs to add in custom algorithms and solutions
-- Improve standby and dynamic platform power through active power
-  management of platform devices.
-
-In this series, support for following features has been added.
-- "Static Power Slider" meant to manage the power budget based on the
-  power modes or the slider position.
-- "Auto Mode" tracks the moving power average of the APU and takes
-  intelligent decisions to switch between different modes.
-
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-
-v2 Resend:
------------
-- Patches from 9 to 11 were not sent due to wrong email address. Hence
-  resending.
-
-v1->v2:
--------
-- optimize the ACPI path by having a common routine
-  apmf_if_call_store_buffer()
-- Simply Static slider interaction with platform_profile
-- Remove CONFIG_DEBUG_FS stub code
-- Drop changes introduced in platform_profile_get()
-- Drop CnQF support. Will be sent as a patch-set later.
-- Other code improvements
-
-Shyam Sundar S K (11):
-  platform/x86/amd/pmf: Add support for PMF core layer
-  platform/x86/amd/pmf: Add support for PMF APCI layer
-  platform/x86/amd/pmf: Add support SPS PMF feature
-  platform/x86/amd/pmf: Add debugfs information
-  platform/x86/amd/pmf: Add heartbeat signal support
-  platform/x86/amd/pmf: Add fan control support
-  platform/x86/amd/pmf: Get performance metrics from PMFW
-  platform/x86/amd/pmf: Add support for Auto mode feature
-  platform/x86/amd/pmf: Handle AMT and CQL events for Auto mode
-  platform/x86/amd/pmf: Force load driver on older supported platforms
-  MAINTAINERS: Add AMD PMF driver entry
-
- MAINTAINERS                              |   7 +
- drivers/platform/x86/amd/Kconfig         |   2 +
- drivers/platform/x86/amd/Makefile        |   1 +
- drivers/platform/x86/amd/pmf/Kconfig     |  16 +
- drivers/platform/x86/amd/pmf/Makefile    |   9 +
- drivers/platform/x86/amd/pmf/acpi.c      | 320 ++++++++++++++++++
- drivers/platform/x86/amd/pmf/auto-mode.c | 339 +++++++++++++++++++
- drivers/platform/x86/amd/pmf/core.c      | 412 +++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/pmf.h       | 346 +++++++++++++++++++
- drivers/platform/x86/amd/pmf/sps.c       | 152 +++++++++
- 10 files changed, 1604 insertions(+)
+---
+ drivers/platform/x86/amd/Kconfig      |   2 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/pmf/Kconfig  |  16 ++
+ drivers/platform/x86/amd/pmf/Makefile |   8 +
+ drivers/platform/x86/amd/pmf/core.c   | 235 ++++++++++++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h    |  46 +++++
+ 6 files changed, 308 insertions(+)
  create mode 100644 drivers/platform/x86/amd/pmf/Kconfig
  create mode 100644 drivers/platform/x86/amd/pmf/Makefile
- create mode 100644 drivers/platform/x86/amd/pmf/acpi.c
- create mode 100644 drivers/platform/x86/amd/pmf/auto-mode.c
  create mode 100644 drivers/platform/x86/amd/pmf/core.c
  create mode 100644 drivers/platform/x86/amd/pmf/pmf.h
- create mode 100644 drivers/platform/x86/amd/pmf/sps.c
 
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index c0d0a3c5170c..a825af8126c8 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -3,6 +3,8 @@
+ # AMD x86 Platform Specific Drivers
+ #
+ 
++source "drivers/platform/x86/amd/pmf/Kconfig"
++
+ config AMD_PMC
+ 	tristate "AMD SoC PMC driver"
+ 	depends on ACPI && PCI && RTC_CLASS
+diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+index a03fbb08e808..2c229198e24c 100644
+--- a/drivers/platform/x86/amd/Makefile
++++ b/drivers/platform/x86/amd/Makefile
+@@ -8,3 +8,4 @@ amd-pmc-y			:= pmc.o
+ obj-$(CONFIG_AMD_PMC)		+= amd-pmc.o
+ amd_hsmp-y			:= hsmp.o
+ obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
++obj-$(CONFIG_AMD_PMF)		+= pmf/
+diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+new file mode 100644
+index 000000000000..2a5f72419515
+--- /dev/null
++++ b/drivers/platform/x86/amd/pmf/Kconfig
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# AMD PMF Driver
++#
++
++config AMD_PMF
++	tristate "AMD Platform Management Framework"
++	depends on ACPI
++	help
++	  This driver provides support for the AMD Platform Management Framework.
++	  The goal is to enhance end user experience by making AMD PCs smarter,
++	  quiter, power efficient by adapting to user behavior and environment.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called amd_pmf.
++
+diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+new file mode 100644
+index 000000000000..459005f659e5
+--- /dev/null
++++ b/drivers/platform/x86/amd/pmf/Makefile
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for linux/drivers/platform/x86/amd/pmf
++# AMD Platform Management Framework
++#
++
++obj-$(CONFIG_AMD_PMF) += amd-pmf.o
++amd-pmf-objs := core.o
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+new file mode 100644
+index 000000000000..aef97965c181
+--- /dev/null
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -0,0 +1,235 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * AMD Platform Management Framework Driver
++ *
++ * Copyright (c) 2022, Advanced Micro Devices, Inc.
++ * All Rights Reserved.
++ *
++ * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
++ */
++
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include "pmf.h"
++
++/* PMF-SMU communication registers */
++#define AMD_PMF_REGISTER_MESSAGE	0xA18
++#define AMD_PMF_REGISTER_RESPONSE	0xA78
++#define AMD_PMF_REGISTER_ARGUMENT	0xA58
++
++/* Base address of SMU for mapping physical address to virtual address */
++#define AMD_PMF_SMU_INDEX_ADDRESS	0xB8
++#define AMD_PMF_SMU_INDEX_DATA		0xBC
++#define AMD_PMF_MAPPING_SIZE		0x01000
++#define AMD_PMF_BASE_ADDR_OFFSET	0x10000
++#define AMD_PMF_BASE_ADDR_LO		0x13B102E8
++#define AMD_PMF_BASE_ADDR_HI		0x13B102EC
++#define AMD_PMF_BASE_ADDR_LO_MASK	GENMASK(15, 0)
++#define AMD_PMF_BASE_ADDR_HI_MASK	GENMASK(31, 20)
++
++/* SMU Response Codes */
++#define AMD_PMF_RESULT_OK                    0x01
++#define AMD_PMF_RESULT_CMD_REJECT_BUSY       0xFC
++#define AMD_PMF_RESULT_CMD_REJECT_PREREQ     0xFD
++#define AMD_PMF_RESULT_CMD_UNKNOWN           0xFE
++#define AMD_PMF_RESULT_FAILED                0xFF
++
++/* List of supported CPU ids */
++#define AMD_CPU_ID_PS			0x14e8
++
++#define PMF_MSG_DELAY_MIN_US		50
++#define RESPONSE_REGISTER_LOOP_MAX	20000
++
++#define DELAY_MIN_US	2000
++#define DELAY_MAX_US	3000
++
++static inline u32 amd_pmf_reg_read(struct amd_pmf_dev *dev, int reg_offset)
++{
++	return ioread32(dev->regbase + reg_offset);
++}
++
++static inline void amd_pmf_reg_write(struct amd_pmf_dev *dev, int reg_offset, u32 val)
++{
++	iowrite32(val, dev->regbase + reg_offset);
++}
++
++static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
++{
++	u32 value;
++
++	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_RESPONSE);
++	dev_dbg(dev->dev, "AMD_PMF_REGISTER_RESPONSE:%x\n", value);
++
++	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
++	dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT:%d\n", value);
++
++	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_MESSAGE);
++	dev_dbg(dev->dev, "AMD_PMF_REGISTER_MESSAGE:%x\n", value);
++}
++
++int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data)
++{
++	int rc;
++	u32 val;
++
++	mutex_lock(&dev->lock);
++
++	/* Wait until we get a valid response */
++	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
++				val, val != 0, PMF_MSG_DELAY_MIN_US,
++				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
++	if (rc) {
++		dev_err(dev->dev, "failed to talk to SMU\n");
++		goto out_unlock;
++	}
++
++	/* Write zero to response register */
++	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_RESPONSE, 0);
++
++	/* Write argument into argument register */
++	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_ARGUMENT, arg);
++
++	/* Write message ID to message ID register */
++	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_MESSAGE, message);
++
++	/* Wait until we get a valid response */
++	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
++				val, val != 0, PMF_MSG_DELAY_MIN_US,
++				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
++	if (rc) {
++		dev_err(dev->dev, "SMU response timed out\n");
++		goto out_unlock;
++	}
++
++	switch (val) {
++	case AMD_PMF_RESULT_OK:
++		if (get) {
++			/* PMFW may take longer time to return back the data */
++			usleep_range(DELAY_MIN_US, 10 * DELAY_MAX_US);
++			*data = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
++		}
++		break;
++	case AMD_PMF_RESULT_CMD_REJECT_BUSY:
++		dev_err(dev->dev, "SMU not ready. err: 0x%x\n", val);
++		rc = -EBUSY;
++		goto out_unlock;
++	case AMD_PMF_RESULT_CMD_UNKNOWN:
++		dev_err(dev->dev, "SMU cmd unknown. err: 0x%x\n", val);
++		rc = -EINVAL;
++		goto out_unlock;
++	case AMD_PMF_RESULT_CMD_REJECT_PREREQ:
++	case AMD_PMF_RESULT_FAILED:
++	default:
++		dev_err(dev->dev, "SMU cmd failed. err: 0x%x\n", val);
++		rc = -EIO;
++		goto out_unlock;
++	}
++
++out_unlock:
++	mutex_unlock(&dev->lock);
++	amd_pmf_dump_registers(dev);
++	return rc;
++}
++
++static const struct pci_device_id pmf_pci_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
++	{ }
++};
++
++static const struct acpi_device_id amd_pmf_acpi_ids[] = {
++	{"AMDI0102", 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
++
++static int amd_pmf_probe(struct platform_device *pdev)
++{
++	struct amd_pmf_dev *dev;
++	struct pci_dev *rdev;
++	u32 base_addr_lo;
++	u32 base_addr_hi;
++	u64 base_addr;
++	u32 val;
++	int err;
++
++	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
++	if (!dev)
++		return -ENOMEM;
++
++	dev->dev = &pdev->dev;
++
++	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
++	if (!rdev || !pci_match_id(pmf_pci_ids, rdev)) {
++		pci_dev_put(rdev);
++		return -ENODEV;
++	}
++
++	dev->cpu_id = rdev->device;
++	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_LO);
++	if (err) {
++		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
++		pci_dev_put(rdev);
++		return pcibios_err_to_errno(err);
++	}
++
++	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
++	if (err) {
++		pci_dev_put(rdev);
++		return pcibios_err_to_errno(err);
++	}
++
++	base_addr_lo = val & AMD_PMF_BASE_ADDR_HI_MASK;
++
++	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_HI);
++	if (err) {
++		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
++		pci_dev_put(rdev);
++		return pcibios_err_to_errno(err);
++	}
++
++	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
++	if (err) {
++		pci_dev_put(rdev);
++		return pcibios_err_to_errno(err);
++	}
++
++	base_addr_hi = val & AMD_PMF_BASE_ADDR_LO_MASK;
++	pci_dev_put(rdev);
++	base_addr = ((u64)base_addr_hi << 32 | base_addr_lo);
++
++	dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMF_BASE_ADDR_OFFSET,
++				    AMD_PMF_MAPPING_SIZE);
++	if (!dev->regbase)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, dev);
++
++	mutex_init(&dev->lock);
++	dev_info(dev->dev, "registered PMF device successfully\n");
++
++	return 0;
++}
++
++static int amd_pmf_remove(struct platform_device *pdev)
++{
++	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
++
++	mutex_destroy(&dev->lock);
++	kfree(dev->buf);
++	return 0;
++}
++
++static struct platform_driver amd_pmf_driver = {
++	.driver = {
++		.name = "amd-pmf",
++		.acpi_match_table = amd_pmf_acpi_ids,
++	},
++	.probe = amd_pmf_probe,
++	.remove = amd_pmf_remove,
++};
++module_platform_driver(amd_pmf_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("AMD Platform Management Framework Driver");
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+new file mode 100644
+index 000000000000..1c2e942e5096
+--- /dev/null
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * AMD Platform Management Framework Driver
++ *
++ * Copyright (c) 2022, Advanced Micro Devices, Inc.
++ * All Rights Reserved.
++ *
++ * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
++ */
++
++#ifndef PMF_H
++#define PMF_H
++
++/* Message Definitions */
++#define SET_SPL				0x03 /* SPL: Sustained Power Limit */
++#define SET_SPPT			0x05 /* SPPT: Slow Package Power Tracking */
++#define SET_FPPT			0x07 /* FPPT: Fast Package Power Tracking */
++#define GET_SPL				0x0B
++#define GET_SPPT			0x0D
++#define GET_FPPT			0x0F
++#define SET_DRAM_ADDR_HIGH	0x14
++#define SET_DRAM_ADDR_LOW	0x15
++#define SET_TRANSFER_TABLE	0x16
++#define SET_STT_MIN_LIMIT	0x18 /* STT: Skin Temperature Tracking */
++#define SET_STT_LIMIT_APU	0x19
++#define SET_STT_LIMIT_HS2	0x1A
++#define SET_SPPT_APU_ONLY	0x1D
++#define GET_SPPT_APU_ONLY	0x1E
++#define GET_STT_MIN_LIMIT	0x1F
++#define GET_STT_LIMIT_APU	0x20
++#define GET_STT_LIMIT_HS2	0x21
++
++struct amd_pmf_dev {
++	void __iomem *regbase;
++	void __iomem *smu_virt_addr;
++	void *buf;
++	u32 base_addr;
++	u32 cpu_id;
++	struct device *dev;
++	struct mutex lock; /* protects the PMF interface */
++};
++
++/* Core Layer */
++int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
++
++#endif /* PMF_H */
 -- 
 2.25.1
 
