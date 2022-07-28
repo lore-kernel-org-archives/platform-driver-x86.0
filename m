@@ -2,266 +2,285 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B65C04A68
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 21:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7DC04A68
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 21:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbiG1VBO (ORCPT
+        id S230131AbiG1VCi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Jul 2022 17:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        Thu, 28 Jul 2022 17:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbiG1VBN (ORCPT
+        with ESMTP id S229735AbiG1VCg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Jul 2022 17:01:13 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D39B6246
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 14:01:11 -0700 (PDT)
+        Thu, 28 Jul 2022 17:02:36 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2067.outbound.protection.outlook.com [40.107.102.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAA43A9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 14:02:34 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E3/jOOqRVwBOksV7uePTLmxHfCbyAMiybfpDMVLq0l9nGI8+w3QOXuH15LczIZSVDZZBiwF9Ugzy+rmql7kO6gazg3MOGUOPc8gFL9vK9cBGxeEUnFA1hDAmLH0JAyHKC2POSdtGBEVE5MAdn5qsSQUZiYsCv+JnsoBx/GQI7OmXis8TO70od09/6C1G+NnkCzuSpOa3QFKwM0IsR/mjJ+vMOHy8q3MdkyvifI0OMVVuN4fc3v7N7Z24alKH3Yv4yIDKWrSBnDIUe0zMPKsI2Z92hGDHX4//P5e043USk/LlWGP2mtb9KmMT6frIkTT283mVsT8VUlCuWQ2pY59txQ==
+ b=AmIOVRYq8NVi0e1Zac5jJCwOYAGKwtvn/oI8h3ewkbIFjzNwuwZnu+9tZPetFuQTPSYplmwIVPddjou3Y1gYI0WHIkMZAc61AcsEtYzHfd2BI5Vtue4BF5zV083VQJe7H0W4CP03VJUOROQBlyjZ5+hTn2PgMqUuQiFhb1tDVZpfnGLF7a16X/OFmRqpyJXtzYMaOUO0Vgr/6VmUcdvIGemOMoHk4AKOhDkR5jzVcjRNJYP3fX5rGu2uKR/P1cZ8F8gv3PPzWJ+cqVRCXMemCsKaZSCMraHGE/3P5qyJ617CEN/+pzryootF76nZJnq4eHoO1V8CDDjwNIvOpRC8tQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9NlcbLihUIp5JjOAdCCRKhsYbBWX+89EKQSrYwwsqJg=;
- b=a1aQZNa7WwJJAYnTiokDW++YJ46B9t7/yPYWssxTXkXyZHfjysfbold7fAnAEdQI7cbjeMf305+HUPO0Ppw+tiNoNiRkM5Ixj+Ji+1UUfu6mLK7xS/dHbcpVYeUPWjsh2qh0z/reTHz6FHZja1B4cSxnVtqUlPMVbKdTfFl4ltiY9fDAK6Mt1LXeE6gOlE+/I6ws3ANP2UAUfas1wzzfy93nh/ESlBDhi4mYoGOOdW734N+G8BUERtSHk1OEw3FcjsDmLe010ebiv7ecJhL9wkS2QHpHSbtqwxPQgFOlW2MXRnMD6zwmUbl7NU/nh0O5Z+fpkUdXEuGD3JNyWthdbg==
+ bh=M00mBr60GvhkjmYBnHABKLaXlWsRSHGwqDi7oPGFung=;
+ b=VSkilNXzR41TIOBXdoN1I3Av8ufMqu3aX7nT4sEpwqcPnUGBp80AZ+PMM/GJbdU6qdoSCP9QhfNH5+/9h5lsK3/9/Bj/MBI2AfyJJb7AqT2oks3h7XvvbblyLb+Q2Q3/sEU2mcYi+GScg9SKUJpxGgJd9YgPAlLpBwTiNNLjnI9D2zktJ5T9+AJpBU9dtNR+TYcFBP57j4jl6IePlCkISTRjEiqdmZ/sAXjFaNL1nZA6hw/TE2SYj6eJDSthR2eV1dHRbdpxMUdzpKofCWtfD2a4BcHNMyAUof0drpaA9rItNhV+MhcgQ4HVBJksDDIko70EJDIMv6WifJRAsLH3dw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9NlcbLihUIp5JjOAdCCRKhsYbBWX+89EKQSrYwwsqJg=;
- b=RJHkigRn2+hkcBE5HS52hMTYn3//WX/DCnwoChBiCu+HSKlmYNPbEPbOqHa4abzpQvKv7sWJkzLC3HGJxZ40zty2pjIHw1WC16M7T5OJheMCFF2GPzH+c+y1I77TSs/b4X+aGS7gzAJlLNsIlDtaDqYvrCpvKOWdrdazqlAmCHg=
+ bh=M00mBr60GvhkjmYBnHABKLaXlWsRSHGwqDi7oPGFung=;
+ b=jBlpXYDXaX+yoxX0oFYcIGtHfrnbHX6TmMfB8nZPX+jEqBT6eEFtjJn+XtC2URdBChY1T4+K5/x2KZX1eG5iP6QL8eJ5Ht5ZZWLRxkS2jGFp61pxl7i4inc/92WuoZqxI4ozy43/5FEYl53KZe872twjJ0cXmsCS0dOWFBg49Ck=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM5PR12MB1930.namprd12.prod.outlook.com (2603:10b6:3:10d::22) with
+ by CH2PR12MB3911.namprd12.prod.outlook.com (2603:10b6:610:2f::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.11; Thu, 28 Jul
- 2022 21:01:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19; Thu, 28 Jul
+ 2022 21:02:30 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::1143:10a5:987a:7598%6]) with mapi id 15.20.5438.023; Thu, 28 Jul 2022
- 21:01:09 +0000
-Message-ID: <fbc06d40-f466-d971-d60e-0a9e0b8f7580@amd.com>
-Date:   Thu, 28 Jul 2022 16:01:07 -0500
+ 21:02:30 +0000
+Message-ID: <20af3e5c-450b-a5d2-a3f0-732d0fbaeda5@amd.com>
+Date:   Thu, 28 Jul 2022 16:02:28 -0500
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v1 13/15] platform/x86/amd/pmf: Handle AMT and CQL events
- for Auto mode
+Subject: Re: [PATCH v2 RESEND 07/11] platform/x86/amd/pmf: Get performance
+ metrics from PMFW
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
         markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
-        Mark Pearson <markpearson@lenovo.com>
-References: <20220712145847.3438544-1-Shyam-sundar.S-k@amd.com>
- <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
- <4585d2c6-6ac1-a697-d54a-f173e9821446@redhat.com>
- <d01e52cb-31c5-7d20-4f18-1e4bb70c1355@amd.com>
- <828a7b8e-2375-a9d0-7b00-d59e84cfaa2b@redhat.com>
- <5500e911-22eb-08b3-c3fe-2a63cf22d7b8@amd.com>
- <ce75f2cc-0129-84f5-bbab-dae5ed9a7ea9@redhat.com>
- <f351a921-3b7f-d8c9-10e5-816f83f22775@amd.com>
- <81fae6a4-4859-bc15-4edc-2c4df953cc12@redhat.com>
- <b1059e6d-31f9-16de-c728-d9003597b31b@amd.com>
- <0bc30454-315d-2466-4915-ad673b1029a9@redhat.com>
+Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
+References: <20220728182028.2082096-1-Shyam-sundar.S-k@amd.com>
+ <20220728182028.2082096-8-Shyam-sundar.S-k@amd.com>
 From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <0bc30454-315d-2466-4915-ad673b1029a9@redhat.com>
+In-Reply-To: <20220728182028.2082096-8-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM5PR07CA0065.namprd07.prod.outlook.com
- (2603:10b6:4:ad::30) To MN0PR12MB6101.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0168.namprd04.prod.outlook.com
+ (2603:10b6:806:125::23) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 167dd3e0-a8dd-4231-1349-08da70dc4ba6
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1930:EE_
+X-MS-Office365-Filtering-Correlation-Id: 004a38ed-5f53-4d94-dead-08da70dc7c2e
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3911:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mx83zfDRmjRO3xIaHDWTavxdoSi1QGlRBarwsrzRhTnMZM41CsLPpA17lW2jasqj607bLn976J5N3fD7bEl7VQtKGQi7S0YgKVZ4fjnGUNy+2gbMYAo06lcO6Dle800FTcjkV9AQSm25gTmXdFU0ADsatwz3uMrQdqpsbAqPWEfRtyK77L3k1gMd+XyI8asdMYIaQ7twg53HiiO54rvLqEmMsAdXobTYkfdGqZFJYujROHBZ/bJslzqAA3+uFaawtuPweaurBzTZbxoNffeAtlvXmqX7fp2d+Ep656XDOA3BIVPj0b6MudU3AezdvIexthTiBA25HLEqAAIrk1Rw8mgPR46y/dFTQZlVLCP+KM5+jXInCwtNveVUo1ZRhCKmddGfV1ljcNQr0MoCHonb0kGJwYi+4Gj0RsBQjV79CviOj1JoAC9Oid3+EkXATedaD9Ot1gABQ3iqEW8ujjV3FcJMYjqZRXnzos6IbyvfKKMWdtX5cuG6NxmPgBECHcIASQwj8ldt4h6XMSg3ZciIfWbL+kNBHbFZP+tMBA86k8HxDuEkxNMkIP7yVowE17kkCZHJU7Azpa3gOuvyL/XQiEMXWcNSDmU5sCdXr1Pj042yIZpj0QbE3/XNeW3YH7IEtzEno3Z2HRXUL0Fox2Azam6axkWukB+9nmdWPSC6nUAya7MxS5RP99VS8PAe5m2eB3zp9LktQitisvmWe8JRDqO2hV2bGokOBb7GdGzeX1Ua5LFYQORU4pGjg3A28ZisJrnXVZLGa1Wrm7PKPR2nNDaTo/7zv7SiqqyAb3CbSLVaRMRTJ9ua2KLeZXfX79sEWfwyuic//Z4rLfNCunoLCM6llO0vL4U+oDrd//01oXE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(478600001)(31696002)(86362001)(38100700002)(83380400001)(66946007)(66556008)(8676002)(316002)(4326008)(110136005)(66476007)(2906002)(26005)(6512007)(53546011)(6506007)(8936002)(186003)(41300700001)(5660300002)(6486002)(2616005)(36756003)(31686004)(45980500001)(43740500002)(309714004);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: zetgQtGA1OjfSpthABuKnjE6V6E1YmuD5IIwyRp8uGJwowKMPC0TjK4L9eAGKRjrQWFA4lcaKJS6lqIJ8dYFuDf9BcqLnjebDouY7rjRDwudGjyRoexvzlZE3uDjNc3igeQFPh5GqGT63PDUTJH2vBhYhg6fUpKBEaHZaspse6crItZIGBSdxsETA6Nd7CG2PugUUw80DgMrBcc9//nevtAYqxIcPOLPVuFK6XU19nlIl4ZS0300Pbvh+B8Q8K7HJBMvywjeu3HxEX8okzS1JBZyYbOWmp9Mu0JSD6jXvpmYF2uh7DCAMaSF6dqFZfP7CuHQPqSxzshxU/z0Ls+x+Rb28K13+lM94RXmVeMfBRH6BIBTtGzx9NatJK1cauLbi0WYNYwZk+UTmShzBwmX+1aEFvVkclI7pVmUTMNzLuhvFlI127dpaysKtfKFOjaMGMmO8yw4I0U0SBt9XXQHtqBFqfFm4rm+N45o73fuE1z+Z08IL7bAqLrCCrbYruUnEpEGmWGAseOy+bkRZ/dPlzipcwjJGNyHL6zDjCzMjTCS759xs8IJAJtdOtk75JTX7YZEdFFcLBOrXgOZXztAb/XzU5H636ytQC0FphXJp2lLVRFa0xiF0cET+veDNpK5x5MjrX5Ek6heYg9ItjoU06u0MqMwtPLMnqHNlc50f7XUtemLgP8JZgcLpwmou6Uz55jQf4QKQiCsvRh+ubb2f55+RAabKxMQ7ok2++lZz1CRRFyEmgjf5Ng/6q8DVWEJLnP5kmYt8Y3Lvwmd1kIXC5XjQep/jU9y4GYXwFG/CwVqUKoqjtjBLxyxULd4WcVoEwDaQ5g5ROBs/IB7a8zE0A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(376002)(396003)(366004)(136003)(38100700002)(4326008)(66946007)(31696002)(8676002)(8936002)(316002)(6486002)(6512007)(66476007)(6506007)(26005)(86362001)(41300700001)(53546011)(478600001)(31686004)(36756003)(66556008)(186003)(2616005)(83380400001)(5660300002)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a3JRdmlKSnBmeWFldUZtWFNDVnZPVnRtblNXUEF6cjRQSWtOK3RQVUJoTHFp?=
- =?utf-8?B?ZEhUMldJV0s5Vm9WSnpMcEloWEdva1gxSGNyTnhEV09NMmFEVEVXWUt2MnJ6?=
- =?utf-8?B?S1k2OXM4UU5OdFhFYjZYc1loSUFBYkt4d25tZ1dSZGdpbFFLV0J5WUZPUTRv?=
- =?utf-8?B?VFJ5cGVoM3JvUWZucy9kVGVmK1h5cFJ2cnpScGI4alN1TWtCdkNTTGlFRG0z?=
- =?utf-8?B?RlBYSVF2Wm5Ua1hlM2ZWNERrUzZwcllMaExLSkNBdXVXb094SGNWOU10VTk0?=
- =?utf-8?B?aWlMK0FValAvbmJDbXZEVGZtZ2gwN01LTW05YXA1Tnpjeld2aEt2ZmpRRUFt?=
- =?utf-8?B?aVNpZEpjMU55UnZSYzNzZXRNbC9sTEFWbU1PR1ZZK1VOWVpDU2RLaENiMzVp?=
- =?utf-8?B?TjF6ZUoyYm1hV1hlMWcrSEhrSDc5TDg0bk1NWFV5UFFick0wTzR2KzNKcmZX?=
- =?utf-8?B?VFBWbytvU3I0akZoNkkwUk9JYXRoYytKK2pJbU03YnFJd2hRWk9nZ080RmVu?=
- =?utf-8?B?QzlDZjJyZ2RqcXYxMytZbGxuTjIyTExkYTkzL01heElsVjBCalI4RG9xQzJh?=
- =?utf-8?B?N21sS0RvZytGZHJDcDZOSENEWXJxdkZ4SUtBc1N6cmF2SkxGYUw3NDVwdDFL?=
- =?utf-8?B?RXRRKzJmVGNuM1F6V09TTUxCTllLRVo5bTg3MXNxd2RmemowOGdFb01pS04w?=
- =?utf-8?B?Kyt5djdiVjRvTmhpdTc1ZTI3cUkydzZ1MTA3ZUlYRUNjcmppSm4wbnhPOG51?=
- =?utf-8?B?VGJaNkZyU2NtSW5jMk9NL0EwMjhYTjU5RGxFN0tMSEpIMXhDeDV4aVNxTXZm?=
- =?utf-8?B?K0YreXdtR2EyR2VnL0VacTMveDVwQ3VRZDg5bmZJRGxSeUxqV1FVMW9hcnZl?=
- =?utf-8?B?VUE5VGNhOU9nSmdaeEdzOC9vTGRDWk9mb2NEZmlVYkFDU1hXdGlDOVA1Qmlt?=
- =?utf-8?B?Rjd3RXR2UjBFSGRQYXpBYnU5RFV4VUFHWDMxV0xkOVhvT2xhSHJuaGF4QzJ3?=
- =?utf-8?B?NU9uQ1hYMXpKZXNxYTJoZUxZeE5iMlZNZmJPSFovbUdscmJ6dUpuMkE0c0RV?=
- =?utf-8?B?eDFUL3ZjTkQ1eUZaOHh2eEQ2eWVHSEVZamdMVTRTNWlsTkZJZE1oMGh0R0lk?=
- =?utf-8?B?L2pGUzZLZTZxVmdYK1lWREJhemcrdmx1RFVQNURiVFZsWmpueEpFbFZWNXUz?=
- =?utf-8?B?bWk3b0VZSDViRFRnNnRvTEEzV1B5R0VNbjBkTVI2T0xDWEdCOVYrTUZLbzEw?=
- =?utf-8?B?aEFrRTY1OCtWT3hVUmlxeXpNYU5nZFkvR3IyTnV2TERqWG03WTFlWFJ0Zm1m?=
- =?utf-8?B?WHowUWIzb2JYOXVnNmV2ZHdlS3pWM2d5VWIxeXdEZU9mbnk1d1dPU0s3MVlz?=
- =?utf-8?B?bjNZUnJxRk5pVTEwQStJQ0p6ellnbjhRY1RWZjhXWnBlNXJnR2RtbXJsYzBz?=
- =?utf-8?B?UXRQVWc0NThhWjVHT1hjK2d2RFdpMFVuSS9GaGpMMzJ4ZWQrdTN2OEUyeTJm?=
- =?utf-8?B?clVXSHRIMEhVNXN6OVhqdjUzRlhaTUpQa0hhazZmbVVLdENTS2x0ZG14VEVO?=
- =?utf-8?B?R1llV21vWU96UTJnYUFqT0VhNFpDR2didzRoelYzaHFLbXFvd2JSTm1VK2F4?=
- =?utf-8?B?cE53a1IxRWU0bjA1QlA3U0NQYkZBOXpQVUpIclcyTWpScjQ4VFBTbHllcnJr?=
- =?utf-8?B?WWdTaEc4RGZvVkl3aUtOTmtmY3haZHFwQ0VyeTRERFJRUHZGc0dXTHJRUFR4?=
- =?utf-8?B?dWxRZzhmTUQ0SVBVUytEL3k1T3AraWNkV1VybzYzL1RzOVpHWGhWc0FyaTUw?=
- =?utf-8?B?Nm5JeEEreURLZTBPU2hOeGtOMkdqQXRJdTNrM2VoWHNHdEZTcGxxZEJzdVJa?=
- =?utf-8?B?Q2sxVG1tdTJOR05XOTloRGtvSjMxUWFiamdmbldLWXRkUXlSZzVYby9VZXZi?=
- =?utf-8?B?cU5iVzJ4Q0IrcDF2N0N0VXVtS1J0TXkxN21hZXFhTnlQekxSckxlK3dwQzdz?=
- =?utf-8?B?M09aYWp0TWdyelRPUk5ONlpUM3pCUjVyeTZ0UWxlWTNkeDkxTEsra05zZ0JI?=
- =?utf-8?B?ZU1BaTIvR2M1K0s3VytrbHBOYmxUU05HU3h1Rm12TndJcUlsNkkxY3EreWpX?=
- =?utf-8?Q?rgdvl73bJCLZoyeQ3FEf7PLyM?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NG9PdldJb0RaS1BveEJjVnRUWlBoeWtDQUxsK2FhOHkzUTdoUS9MMzdPcjR3?=
+ =?utf-8?B?RlVtYUhTQ2xkZVF6aXdpcFNYTTg0Z2tYd0hQNnhNbm1ERGdsM1B3TDFiT3Uv?=
+ =?utf-8?B?MGFmT0t1Z3BuLzlnSmNjRHJLZ0lLdUgwOW5uVDVrRVlsWlNUQWlvSWhLNzQw?=
+ =?utf-8?B?VEJCKzYwdmdOSFVNNk43WjVpU0Z6enowMlhaZUJZaGtPSEZMdFpTc29aOGoz?=
+ =?utf-8?B?RVJaNndoRzFZZUlMZTFyWFROVlJJam0xNi9lWjF6R25ONnJya2NNMmV6NWFs?=
+ =?utf-8?B?YWhxcGg3QndPd3I3ZFJ2enYzSTh3by8rcXpWT0Y4cVU3SDk2T3NaMWRCaUdR?=
+ =?utf-8?B?bWViWmJTWUZZWHpUOTk5eE45NEJEMFN3bkxUeC94b0w0Z1BRYS9RVTVOaTRp?=
+ =?utf-8?B?cXpDZTVodnJ6UmNYaFJZK0duMHlOQWU0Z0ZFVndLczMwZGozZm1iS3lMQnV6?=
+ =?utf-8?B?QVFweEUxc0p3VGdRV09kb2M5SUpVU05uSVA2dTJlMExMMDFrNU1xZkxYa0dE?=
+ =?utf-8?B?U0JBYTRaaGNVN1BlbDdudEJMUTF6cVA2VUpOY3hjUkFsTGJMKzBNb05hanJq?=
+ =?utf-8?B?ZW1pSWlSUTJyWjYzR1ZmdDlwYlhiWjN2TWREZEJoTncvaUtBQmRNSHZFTERo?=
+ =?utf-8?B?QjJ0WVBmNmNDNGRxY2NKMlVWSFg2TFJvbHhCdUhod0tTVFRZdUlXZ1lZZ3N2?=
+ =?utf-8?B?RVc3dldsd2lDaUFHL053dmhVdWZuU2swZ3FiYlZlbWt0ZTMrZjM5MGxIaXAv?=
+ =?utf-8?B?VFF6OHErdmFhL040VjMwSTRjQi92dWFVMDBOMkR0UGZRRmtHcGRha0ZTTXk2?=
+ =?utf-8?B?Y0ZVbmJZNmRSL01yVk1uL245T1EzUE03RmZDSTNNTlo3UGZSek5QRjdaYUty?=
+ =?utf-8?B?RXIrYWhDYjVzRTBOU21UbjRNcnoxU1M5S1IybjRzbXdsVlNmVmtOcnNYSXpw?=
+ =?utf-8?B?WTROcXRLVG9vQUZPNGxuL0N4cXZmRjhVMVpLK2ZnaHZBS3JNbjZVWEQ3bjhY?=
+ =?utf-8?B?YTNyMHhsMng4Z2Q4TU13b0NaeHNuRHRTWjNGYW4vMUFmdUtNUjlXMkhFZ0Nh?=
+ =?utf-8?B?c1VlTUFLaGRpaUFoZVhTMTBmS3U4MTlwQ1VTby9PUXZkRjZjVXNnQ2Y1Q0ow?=
+ =?utf-8?B?aWNZbldUc0puVlRXT0pYYkVuOHpIZnFPSmZBb2trQVhjQUFCSDJSL3FJVXVU?=
+ =?utf-8?B?L2NWYjBEOHhvRVJnYXlpaVB2U2lKTEQ5SUFvcWZBZVJRMy9IbVEyRVBVSU5O?=
+ =?utf-8?B?cUtRcEd5NEs0VkpVbnlYWExYRlBvYUt5U2NaSG9xblIwWTg5cHNOU3BUNkQ5?=
+ =?utf-8?B?SWRzRHVpTWRCb2RiT1lmQzlIaUlTRWpEWC90THRCemZ1YlArL25jdGxET3NK?=
+ =?utf-8?B?NEhJbDRPdzN0YXZzNnRjaEJ1WFV0cFpVS0lvRVRTSytqOGFjclMyY1ppeTQw?=
+ =?utf-8?B?VG1KRUpEQzRlQ05jQ0lWdFh3ZkxNTGFvbzVOM2J3YnZycHlpV2dwTGpSOTl1?=
+ =?utf-8?B?ckZycUZDWHM0Q0J4dG5UZEE5Mll3Q2w4SlJhUnV3MEg1Tk9WL3ZEVlI1SEl4?=
+ =?utf-8?B?YjlYL0JYUGJrYXNGZXBEck1tVmxhZ01xVG9kS1FxM245TTVuNXdCcjl6QzZp?=
+ =?utf-8?B?ZldFNmRYdVdoZ2p0YmEvYVVBUXZwUFVybUlGcDZEOWVPTHJENG9meWFONVVU?=
+ =?utf-8?B?a2JXU2tOQUlBVnAyNXhoRFhJV1prSnBjVHdMQmd5NWw5SUtZb0FFcWo5dkFD?=
+ =?utf-8?B?M1Y5NUxycmI5aWxDbWhFRTVvenJ6b1dwSEJwc1UvOERoRklFcnRLVFZhajZ1?=
+ =?utf-8?B?RkpFM094QVJBU1pVLy9Cc2xLVFNTRmNMZEsxeU1pTVQ0MlhqSXduTWZubGtV?=
+ =?utf-8?B?SzVyazRIeDh1VmNHTkFqVjR0WmNWMUlHSDJsMmFJK0dma2J2YjJQcG4zN1Q2?=
+ =?utf-8?B?VzFpRXFNMldiS2NuMGNsNXVWWHF2UmRlUDlWV0svQlVUR25uL2d2NU1oTmFH?=
+ =?utf-8?B?LzZYdEtXZFNsZFpJbnFSN1lsemJvaFZBWWVMRit4R1kwN1YzQklTVzRqQ3ox?=
+ =?utf-8?B?MjN2VE1aRXNQRU9Sd1lMemZHMlVZcWU2R0FXUDQvdmFzbG9QRGZ4b0UxQkIw?=
+ =?utf-8?Q?w9Jo57c8jsgH9aOgYkKvAiug5?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 167dd3e0-a8dd-4231-1349-08da70dc4ba6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 004a38ed-5f53-4d94-dead-08da70dc7c2e
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 21:01:09.2043
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 21:02:30.6158
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pWy++hDV5Etqzp3wV5ZzdDDG83WcIuJgkF19QN0LkLSVzQM10b6PxbDugW5ntZQnMOblaGJhwjEDUQ53Be2LeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1930
+X-MS-Exchange-CrossTenant-UserPrincipalName: ECUlbrbJ9wL3lkTtKX5axww1L25hKjokEAKeHprP01t3esktxJuhX/FNvmWdeloGce6973cKKWjMmeIr5ck0+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3911
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/28/2022 13:17, Hans de Goede wrote:
-> Hi,
+On 7/28/2022 13:20, Shyam Sundar S K wrote:
+> PMF driver polls for metrics information from PMFW to understand the system
+> behavior, power consumption etc.
 > 
-> On 7/28/22 20:06, Limonciello, Mario wrote:
->> On 7/28/2022 12:46, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 7/28/22 16:38, Limonciello, Mario wrote:
->>>>
->>>>>>> 1. If I understand things right, then on ThinkPads /sys/firmware/apci/platform_profile
->>>>>>>        will be registered by thinkpad_acpi. But in version 1 of this patchset nothing is
->>>>>>>        stopping the amd-pmf code from registering /sys/firmware/apci/platform_profile if
->>>>>>>        the amd-pmf module gets loaded first. So if the intend is for it to always be owned
->>>>>>>        by thinkpad_acpi then the amd-pmf code must check for this and not even try to
->>>>>>>        register its platform_profile support. We cannot rely on module ordering ensuring
->>>>>>>        that thinkpad_acpi registers first and then amd-pmf will get an -EBUSY error,
->>>>>>>        since there are no module load ordering guarantees.
->>>>>>
->>>>>> This was my thought initially too while this was being developed, but actually there is some nuance here that is non-obvious.  The platform profile registering code in amd-pmf will examine bits set in the BIOS to decide whether or not to export platform profile support.  In Lenovo platforms that support thinkpad_acpi these bits are not set.  So platform profile support ONLY comes from thinkpad-acpi in those platforms.
->>>>>
->>>>> Right, Shyam mentioned this in another part of the thread. As I
->>>>> mentioned there IHMO it would still be good to check this in the driver
->>>>> though. To catch cases where a BIOS for some reasons advertises an
->>>>> unexpected combination of features.
->>>>>
->>>>>>> 2. So when the thinkpad_acpi platform_profile is set to balanced, then it will
->>>>>>>        enable AMT and then the periodically run workqueue function from amd-pmf
->>>>>>>        will do its AMT thing. But what when the thinkpad_acpi platform_profile is
->>>>>>>        set to low-power or performance. Should the amd-pmf code then apply the static
->>>>>>>        slider settings for low-power/performance which it has read from the ACPI
->>>>>>>        tables?  Or will the ACPI/EC code on thinkpads take care of this themselves ?
->>>>>>>
->>>>>>
->>>>>> When thinkpad_acpi changes platform profile then a BIOS event goes through and amd-pmf receives that and will run based on the event.
->>>>>
->>>>> Hmm, I don't remember seeing anything for this in the patches. Actually this
->>>>> reminds me that the code should probably reschedule (using mod_delayed_work)
->>>>> the work to run immediately after a BIOS event, rather then waiting for
->>>>> the next normally scheduled run.
->>>>>
->>>>> But even then I don't remember seeing any code related to catching
->>>>> platform-profile changes done outside amd-pmf... ?
->>>>
->>>> It's not a platform profile change - it's an ACPI event.
->>>>
->>>> When a user changes a platform profile then thinkpad_acpi will see whether it's balanced or not.  When changing to/from balanced thinkpad_acpi sends an AMT event.  amd-pmf reacts to said AMT event.
->>>>
->>>> This is the code you're looking for (in this specific patch):
->>>>
->>>> +static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
->>>> +{
->>>> +    struct amd_pmf_dev *pmf_dev = data;
->>>> +    struct apmf_if *apmf_if = pmf_dev->apmf_if;
->>>> +    int ret;
->>>> +
->>>> +    if (apmf_if->func.sbios_requests) {
->>>> +        struct apmf_sbios_req req;
->>>> +
->>>> +        ret = apmf_get_sbios_requests(apmf_if, &req);
->>>> +        if (ret) {
->>>> +            dev_err(pmf_dev->dev, "Failed to get SBIOS requests:%d\n", ret);
->>>> +            return;
->>>> +        }
->>>> +        if (req.pending_req & BIT(APMF_AMT_NOTIFICATION)) {
->>>> +            pr_debug("PMF: AMT is supported and notifications %s\n",
->>>> +                 req.amt_event ? "Enabled" : "Disabled");
->>>> +            if (req.amt_event)
->>>> +                pmf_dev->is_amt_event = true;
->>>> +            else
->>>> +                pmf_dev->is_amt_event = !!req.amt_event;
->>>> +        }
->>>> +
->>>> +        if (req.pending_req & BIT(APMF_CQL_NOTIFICATION)) {
->>>> +            pr_debug("PMF: CQL is supported and notifications %s\n",
->>>> +                 req.cql_event ? "Enabled" : "Disabled");
->>>> +            if (req.cql_event)
->>>> +                pmf_dev->is_cql_event = true;
->>>> +            else
->>>> +                pmf_dev->is_cql_event = !!req.cql_event;
->>>> +
->>>> +            /* update the target mode information */
->>>> +            amd_pmf_update_2_cql(pmf_dev);
->>>> +        }
->>>> +    }
->>>> +}
->>>> +
->>>
->>> Right this is the AMT on/off path that bit I understand.
->>> This happens when switching to / away from balanced mode.
->>>
->>> My question is what does the equivalent of these lines:
->>>
->>> +        amd_pmf_send_cmd(dev, SET_SPL, false, config_store.prop[src][idx].spl, NULL);
->>> +        amd_pmf_send_cmd(dev, SET_FPPT, false, config_store.prop[src][idx].fppt, NULL);
->>> +        amd_pmf_send_cmd(dev, SET_SPPT, false, config_store.prop[src][idx].sppt, NULL);
->>> +        amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false,
->>> +                 config_store.prop[src][idx].sppt_apu_only, NULL);
->>> +        amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
->>> +                 config_store.prop[src][idx].stt_min, NULL);
->>> +        amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
->>> +                 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU], NULL);
->>> +        amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
->>> +                 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2], NULL);
->>>
->>> When the profile is switched (by userspace, or through the hotkeys on
->>> the laptop) to low-power or to performance mode ?
->>
->> Lenovo's firmware will handle the equivalent of changing relevant values for their platform through a BIOS interface in this case when they change ACPI platform profiles.  You will see in their driver something call "PSC" mode, and this is exactly that type of stuff.
+> This metrics table information will be used the PMF features to tweak the
+> thermal heuristics. The poll duration can also be changed by the user
+> by changing the poll duration time.
 > 
-> Ok I see, thank you for clarifying this.
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>   drivers/platform/x86/amd/pmf/core.c | 56 +++++++++++++++++++++++++++++
+>   drivers/platform/x86/amd/pmf/pmf.h  | 39 ++++++++++++++++++++
+>   2 files changed, 95 insertions(+)
 > 
-> So as for the AMT mode, since that is Lenovo only, I guess that means
-> that there is no need to do call amd_pmf_update_slider() when AMT
-> is being disabled since at this point the firmware will have
-> already set the values.
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 6c1c5a89fe71..ede4eefc33a4 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -47,6 +47,11 @@
+>   #define DELAY_MIN_US	2000
+>   #define DELAY_MAX_US	3000
+>   
+> +/* override Metrics Table sample size time (in ms) */
+> +static int metrics_table_loop_ms = 1000;
+> +module_param(metrics_table_loop_ms, int, 0644);
+> +MODULE_PARM_DESC(metrics_table_loop_ms, " Metrics Table sample size time (default = 1000ms) ");
+> +
+>   static int current_power_limits_show(struct seq_file *seq, void *unused)
+>   {
+>   	struct amd_pmf_dev *dev = seq->private;
+> @@ -88,6 +93,29 @@ int amd_pmf_get_power_source(void)
+>   		return POWER_SOURCE_DC;
+>   }
+>   
+> +static void amd_pmf_get_metrics(struct work_struct *work)
+> +{
+> +	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, work_buffer.work);
+> +	enum platform_profile_option current_profile;
+> +	ktime_t time_elapsed_ms;
+> +	int socket_power;
+> +
+> +	/* Get the current profile information */
+> +	current_profile = READ_ONCE(dev->current_profile);
 
-Yeah, Shyam made this modification for v2 to make sure that code path 
-isn't called unless static slider was set in the BIOS.
+AFAICT this parameter isn't actually used/needed anymore.
 
-> 
-> Actually this seems to mean that we must ensure that the AMD-PMF
-> code stops touching these settings as soon as the event is received.
-> 
-> Which would imply killing the periodic work when an AMT off event
-> is received from within the event handling and then restating it
-> when AMT is on (and making sure the work being queued or not state
-> matches the AMT on/off state at driver probe time) ?
-> 
+> +
+> +	/* Transfer table contents */
+> +	memset(&dev->m_table, 0, sizeof(dev->m_table));
+> +	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
+> +	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
+> +
+> +	time_elapsed_ms = ktime_to_ms(ktime_get()) - dev->start_time;
+> +	/* Calculate the avg SoC power consumption */
+> +	socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
+> +
+> +	dev->start_time = ktime_to_ms(ktime_get());
+> +	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms));
+> +}
+> +
+>   static inline u32 amd_pmf_reg_read(struct amd_pmf_dev *dev, int reg_offset)
+>   {
+>   	return ioread32(dev->regbase + reg_offset);
+> @@ -181,6 +209,34 @@ static const struct pci_device_id pmf_pci_ids[] = {
+>   	{ }
+>   };
+>   
+> +int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+> +{
+> +	u64 phys_addr;
+> +	u32 hi, low;
+> +
+> +	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
+> +
+> +	/* Get Metrics Table Address */
+> +	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
+> +	if (!dev->buf)
+> +		return -ENOMEM;
+> +
+> +	phys_addr = virt_to_phys(dev->buf);
+> +	hi = phys_addr >> 32;
+> +	low = phys_addr & GENMASK(31, 0);
+> +
+> +	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
+> +	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
+> +
+> +	/*
+> +	 * Start collecting the metrics data after a small delay
+> +	 * or else, we might end up getting stale values from PMFW.
+> +	 */
+> +	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms * 3));
+> +
+> +	return 0;
+> +}
+> +
+>   static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>   {
+>   	/* Enable Static Slider */
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index b6501a68aa4e..49d3232ee2e0 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -84,6 +84,41 @@ struct apmf_fan_idx {
+>   	u32 fan_ctl_idx;
+>   } __packed;
+>   
+> +struct smu_pmf_metrics {
+> +	u16 gfxclk_freq; /* in MHz */
+> +	u16 socclk_freq; /* in MHz */
+> +	u16 vclk_freq; /* in MHz */
+> +	u16 dclk_freq; /* in MHz */
+> +	u16 memclk_freq; /* in MHz */
+> +	u16 spare;
+> +	u16 gfx_activity; /* in Centi */
+> +	u16 uvd_activity; /* in Centi */
+> +	u16 voltage[2]; /* in mV */
+> +	u16 currents[2]; /* in mA */
+> +	u16 power[2];/* in mW */
+> +	u16 core_freq[8]; /* in MHz */
+> +	u16 core_power[8]; /* in mW */
+> +	u16 core_temp[8]; /* in centi-Celsius */
+> +	u16 l3_freq; /* in MHz */
+> +	u16 l3_temp; /* in centi-Celsius */
+> +	u16 gfx_temp; /* in centi-Celsius */
+> +	u16 soc_temp; /* in centi-Celsius */
+> +	u16 throttler_status;
+> +	u16 current_socketpower; /* in mW */
+> +	u16 stapm_orig_limit; /* in W */
+> +	u16 stapm_cur_limit; /* in W */
+> +	u32 apu_power; /* in mW */
+> +	u32 dgpu_power; /* in mW */
+> +	u16 vdd_tdc_val; /* in mA */
+> +	u16 soc_tdc_val; /* in mA */
+> +	u16 vdd_edc_val; /* in mA */
+> +	u16 soc_edcv_al; /* in mA */
+> +	u16 infra_cpu_maxfreq; /* in MHz */
+> +	u16 infra_gfx_maxfreq; /* in MHz */
+> +	u16 skin_temp; /* in centi-Celsius */
+> +	u16 device_state;
+> +};
+> +
+>   enum amd_stt_skin_temp {
+>   	STT_TEMP_APU,
+>   	STT_TEMP_HS2,
+> @@ -121,6 +156,9 @@ struct amd_pmf_dev {
+>   	struct delayed_work heart_beat;
+>   	struct mutex lock; /* protects the PMF interface */
+>   	struct dentry *dbgfs_dir;
+> +	struct smu_pmf_metrics m_table;
+> +	struct delayed_work work_buffer;
+> +	ktime_t start_time;
+>   };
+>   
+>   struct apmf_sps_prop_granular {
+> @@ -154,6 +192,7 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+>   void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
+>   int is_apmf_func_supported(unsigned long index);
+>   int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
+> +int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
+>   int amd_pmf_get_power_source(void);
+>   
+>   /* SPS Layer */
 
-At first glance this seems plausible, but actually I think it should 
-stay as is because CQL thermals can be set at any time (that's like a 
-lap mode sensor event from thinkpad_acpi).  Even when AMT is turned off, 
-you may want the CQL thermal profile set accordingly.
