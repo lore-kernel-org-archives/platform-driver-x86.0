@@ -2,336 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4FFC19F2C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 09:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911D0C04A68
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 10:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234026AbiG1JE4 (ORCPT
+        id S235982AbiG1Kez (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Jul 2022 05:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44856 "EHLO
+        Thu, 28 Jul 2022 06:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235023AbiG1JEz (ORCPT
+        with ESMTP id S234823AbiG1Kez (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Jul 2022 05:04:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 917DD65669
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 02:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658999093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        Thu, 28 Jul 2022 06:34:55 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191DE4B0DD;
+        Thu, 28 Jul 2022 03:34:53 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B362320AEE;
+        Thu, 28 Jul 2022 10:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1659004491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=DE+7ye1yGql++GLaeEI3m8GcZZJm0NhK1cN8F4iHjXQ=;
-        b=TyqEgzjYGV8D00yhp8ci+WZMssXVO2TnYOJdyp+SXVe5TmTYyJCW2/KoIr1mVW6cOozQvr
-        UyYOCv3jpSW6J6WdZ177fjdWQ/eD3jQOwve0RdW3EHSKab3Jnqv3NvzXKSbeuYAXW5pQKb
-        XT6Qi8/ya/AuHpm26NF4Aiswz4xC+f0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-548-EjI-Euv2PQ6MjMg6k8unYA-1; Thu, 28 Jul 2022 05:04:50 -0400
-X-MC-Unique: EjI-Euv2PQ6MjMg6k8unYA-1
-Received: by mail-ed1-f72.google.com with SMTP id z14-20020a05640240ce00b0043c25c21e94so706146edb.14
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 02:04:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DE+7ye1yGql++GLaeEI3m8GcZZJm0NhK1cN8F4iHjXQ=;
-        b=HPwMH0+80ins6U8Bpz2BqCp1rNQEJ30LBaTY69H9v1PburXAEAq8h6/gFSEkg1aB4o
-         5q7iOhm5OJRIlJNj2JAjhOdHhVLmmwnCpLfS6K+gXaN1YHyQH1cPDgSrV8YlF6//uD2N
-         x8FxRZk6Y0u/erHI8YJ8UapIKb6E55QY/IsYWm6Ck4LJR99rWaHP/MHQ4Amv9ku7t44k
-         Fz9tMAQ69wLFxtYuzHzexAZWM5aAcbYGRsziaAGyjG8pLaCrNz90H3Av5mmuSjvCo4PF
-         2ekCIlUpX7yeQxVe2o+7VUkptntrP+LqQUB6EyZ+w8DHrq5W7HWOvder6amlMZ38spCc
-         suyg==
-X-Gm-Message-State: AJIora91Nxa7r/3BuJDpCg5iDl0cOYmjOtUqhqLHcDuxNI0P1YJdQ2z8
-        B5ckEMYljErCkEqXD73+89p9Wtf3emyla3pTpMqECR/OvKQ8RRieV0ev0lwbh1X/WVs24Wb4dTJ
-        zk989Yrcoa+iNszZKrm+yNTrp+bL6CuOAoyytszeoCr0O/DRZcg==
-X-Received: by 2002:a05:6402:e8d:b0:43b:b989:67a7 with SMTP id h13-20020a0564020e8d00b0043bb98967a7mr26870710eda.365.1658999088585;
-        Thu, 28 Jul 2022 02:04:48 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s1w+ifPe5brXP86zsuwWmOU7w3VBKz6YZbGZMkO1Ncvx95MYfD9EAWpCCUuuHrp8ACTACnKlnhDk4GL3uXFGk=
-X-Received: by 2002:a05:6402:e8d:b0:43b:b989:67a7 with SMTP id
- h13-20020a0564020e8d00b0043bb98967a7mr26870656eda.365.1658999088045; Thu, 28
- Jul 2022 02:04:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
- <20220726072225.19884-17-xuanzhuo@linux.alibaba.com> <15aa26f2-f8af-5dbd-f2b2-9270ad873412@redhat.com>
- <1658907413.1860468-2-xuanzhuo@linux.alibaba.com> <CACGkMEvxsOfiiaWWAR8P68GY1yfwgTvaAbHk1JF7pTw-o2k25w@mail.gmail.com>
- <1658992162.584327-1-xuanzhuo@linux.alibaba.com> <CACGkMEv-KYieHKXY_Qn0nfcnLMOSF=TowF5PwLKOxESL3KQ40Q@mail.gmail.com>
- <1658995783.1026692-1-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1658995783.1026692-1-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Thu, 28 Jul 2022 17:04:36 +0800
-Message-ID: <CACGkMEv6Ptn4zj_F-ww3Nay-VPmCNrXLaf5U98PvupAvo44FpA@mail.gmail.com>
-Subject: Re: [PATCH v13 16/42] virtio_ring: split: introduce virtqueue_resize_split()
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        bh=15xB0syOxpUyZLtSuSwIo1ykSjFTZ54OBZTEcJ1JHjs=;
+        b=sF03yEIbEmLKh4FG3rgx6HBm4sfXwOFDufJiJQxSvS04UV1OQ8JVZj+OaHkBGilnUQsPog
+        7Ig1+Q49JkLxKAEFJG4nLAQDh9+dHIHNlawg9jT7+SIx3/JHMQXhImhNvgLHSKPhXydBO2
+        qgF+2uUKDHnkersI+NggaghUCnK0Kn8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1659004491;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=15xB0syOxpUyZLtSuSwIo1ykSjFTZ54OBZTEcJ1JHjs=;
+        b=P4RoukuqRFQYYDjnXnsfVbF8GhRAF5bEXd9/BKjztctPGVgEbzdZ7WRX0rcvBA1i+SnOrd
+        lzHnB20DNyTZB7DA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7680913427;
+        Thu, 28 Jul 2022 10:34:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id YqskHEtm4mIYbAAAMHmgww
+        (envelope-from <tiwai@suse.de>); Thu, 28 Jul 2022 10:34:51 +0000
+Date:   Thu, 28 Jul 2022 12:34:50 +0200
+Message-ID: <87a68tmsol.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Lucas Tanure <tanureal@opensource.cirrus.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm <kvm@vger.kernel.org>,
-        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
-        Kangjie Xu <kangjie.xu@linux.alibaba.com>,
-        virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Takashi Iwai <tiwai@suse.com>,
+        Cameron Berkenpas <cam@neo-zeon.de>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] Add support for CLSA0101
+In-Reply-To: <20220727095924.80884-1-tanureal@opensource.cirrus.com>
+References: <20220727095924.80884-1-tanureal@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 28, 2022 at 4:18 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrot=
-e:
->
-> On Thu, 28 Jul 2022 15:42:50 +0800, Jason Wang <jasowang@redhat.com> wrot=
-e:
-> > On Thu, Jul 28, 2022 at 3:24 PM Xuan Zhuo <xuanzhuo@linux.alibaba.com> =
-wrote:
-> > >
-> > > On Thu, 28 Jul 2022 10:38:51 +0800, Jason Wang <jasowang@redhat.com> =
-wrote:
-> > > > On Wed, Jul 27, 2022 at 3:44 PM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
-om> wrote:
-> > > > >
-> > > > > On Wed, 27 Jul 2022 11:12:19 +0800, Jason Wang <jasowang@redhat.c=
-om> wrote:
-> > > > > >
-> > > > > > =E5=9C=A8 2022/7/26 15:21, Xuan Zhuo =E5=86=99=E9=81=93:
-> > > > > > > virtio ring split supports resize.
-> > > > > > >
-> > > > > > > Only after the new vring is successfully allocated based on t=
-he new num,
-> > > > > > > we will release the old vring. In any case, an error is retur=
-ned,
-> > > > > > > indicating that the vring still points to the old vring.
-> > > > > > >
-> > > > > > > In the case of an error, re-initialize(virtqueue_reinit_split=
-()) the
-> > > > > > > virtqueue to ensure that the vring can be used.
-> > > > > > >
-> > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > > > > ---
-> > > > > > >   drivers/virtio/virtio_ring.c | 34 +++++++++++++++++++++++++=
-+++++++++
-> > > > > > >   1 file changed, 34 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/vi=
-rtio_ring.c
-> > > > > > > index b6fda91c8059..58355e1ac7d7 100644
-> > > > > > > --- a/drivers/virtio/virtio_ring.c
-> > > > > > > +++ b/drivers/virtio/virtio_ring.c
-> > > > > > > @@ -220,6 +220,7 @@ static struct virtqueue *__vring_new_virt=
-queue(unsigned int index,
-> > > > > > >                                            void (*callback)(s=
-truct virtqueue *),
-> > > > > > >                                            const char *name);
-> > > > > > >   static struct vring_desc_extra *vring_alloc_desc_extra(unsi=
-gned int num);
-> > > > > > > +static void vring_free(struct virtqueue *_vq);
-> > > > > > >
-> > > > > > >   /*
-> > > > > > >    * Helpers.
-> > > > > > > @@ -1117,6 +1118,39 @@ static struct virtqueue *vring_create_=
-virtqueue_split(
-> > > > > > >     return vq;
-> > > > > > >   }
-> > > > > > >
-> > > > > > > +static int virtqueue_resize_split(struct virtqueue *_vq, u32=
- num)
-> > > > > > > +{
-> > > > > > > +   struct vring_virtqueue_split vring_split =3D {};
-> > > > > > > +   struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > > > > > +   struct virtio_device *vdev =3D _vq->vdev;
-> > > > > > > +   int err;
-> > > > > > > +
-> > > > > > > +   err =3D vring_alloc_queue_split(&vring_split, vdev, num,
-> > > > > > > +                                 vq->split.vring_align,
-> > > > > > > +                                 vq->split.may_reduce_num);
-> > > > > > > +   if (err)
-> > > > > > > +           goto err;
-> > > > > >
-> > > > > >
-> > > > > > I think we don't need to do anything here?
-> > > > >
-> > > > > Am I missing something?
-> > > >
-> > > > I meant it looks to me most of the virtqueue_reinit() is unnecessar=
-y.
-> > > > We probably only need to reinit avail/used idx there.
-> > >
-> > >
-> > > In this function, we can indeed remove some code.
-> > >
-> > > >       static void virtqueue_reinit_split(struct vring_virtqueue *vq=
-)
-> > > >       {
-> > > >               int size, i;
-> > > >
-> > > >               memset(vq->split.vring.desc, 0, vq->split.queue_size_=
-in_bytes);
-> > > >
-> > > >               size =3D sizeof(struct vring_desc_state_split) * vq->=
-split.vring.num;
-> > > >               memset(vq->split.desc_state, 0, size);
-> > > >
-> > > >               size =3D sizeof(struct vring_desc_extra) * vq->split.=
-vring.num;
-> > > >               memset(vq->split.desc_extra, 0, size);
-> > >
-> > > These memsets can be removed, and theoretically it will not cause any
-> > > exceptions.
-> >
-> > Yes, otherwise we have bugs in detach_buf().
-> >
-> > >
-> > > >
-> > > >
-> > > >
-> > > >               for (i =3D 0; i < vq->split.vring.num - 1; i++)
-> > > >                       vq->split.desc_extra[i].next =3D i + 1;
-> > >
-> > > This can also be removed, but we need to record free_head that will b=
-een update
-> > > inside virtqueue_init().
-> >
-> > We can simply keep free_head unchanged? Otherwise it's a bug somewhere =
-I guess.
-> >
-> >
-> > >
-> > > >
-> > > >               virtqueue_init(vq, vq->split.vring.num);
-> > >
-> > > There are some operations in this, which can also be skipped, such as=
- setting
-> > > use_dma_api. But I think calling this function directly will be more =
-convenient
-> > > for maintenance.
-> >
-> > I don't see anything that is necessary here.
->
-> These three are currently inside virtqueue_init()
->
-> vq->last_used_idx =3D 0;
-> vq->event_triggered =3D false;
-> vq->num_added =3D 0;
+On Wed, 27 Jul 2022 11:59:20 +0200,
+Lucas Tanure wrote:
+> 
+> Add Support for the CLSA0101 laptop, an Intel version of CLSA0100.
+> This patch has been tested using the CLSA0100, ensuring it
+> doesn't break the sound for it.
+> We appreciate it if someone with CLSA0101 could verify that this
+> the patch works for them.
+> 
+> Changes from V1:
+>  - Add CLSA0101 id into scan.c, serial-multi-instantiate.c
+>  and cs35l41_hda_i2c.c
+> 
+> Lucas Tanure (4):
+>   ALSA: hda: cs35l41: Use the CS35L41 HDA internal define
+>   ALSA: hda: cs35l41: Support CLSA0101
+>   ACPI: scan: Add CLSA0101 Laptop Support
+>   platform/x86: serial-multi-instantiate: Add CLSA0101 Laptop
 
-Right. Let's keep it there.
+Applied all four patches now.  Thanks.
 
-(Though it's kind of strange that the last_used_idx is not initialized
-at the same place with avail_idx/flags_shadow, we can optimize it on
-top).
 
-Thanks
-
->
-> Thanks.
->
->
-> >
-> > >
-> > >
-> > > >               virtqueue_vring_init_split(&vq->split, vq);
-> > >
-> > > virtqueue_vring_init_split() is necessary.
-> >
-> > Right.
-> >
-> > >
-> > > >       }
-> > >
-> > > Another method, we can take out all the variables to be reinitialized
-> > > separately, and repackage them into a new function. I don=E2=80=99t t=
-hink it=E2=80=99s worth
-> > > it, because this path will only be reached if the memory allocation f=
-ails, which
-> > > is a rare occurrence. In this case, doing so will increase the cost o=
-f
-> > > maintenance. If you think so also, I will remove the above memset in =
-the next
-> > > version.
-> >
-> > I agree.
-> >
-> > Thanks
-> >
-> > >
-> > > Thanks.
-> > >
-> > >
-> > > >
-> > > > Thanks
-> > > >
-> > > > >
-> > > > > >
-> > > > > >
-> > > > > > > +
-> > > > > > > +   err =3D vring_alloc_state_extra_split(&vring_split);
-> > > > > > > +   if (err) {
-> > > > > > > +           vring_free_split(&vring_split, vdev);
-> > > > > > > +           goto err;
-> > > > > >
-> > > > > >
-> > > > > > I suggest to move vring_free_split() into a dedicated error lab=
-el.
-> > > > >
-> > > > > Will change.
-> > > > >
-> > > > > Thanks.
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > Thanks
-> > > > > >
-> > > > > >
-> > > > > > > +   }
-> > > > > > > +
-> > > > > > > +   vring_free(&vq->vq);
-> > > > > > > +
-> > > > > > > +   virtqueue_vring_init_split(&vring_split, vq);
-> > > > > > > +
-> > > > > > > +   virtqueue_init(vq, vring_split.vring.num);
-> > > > > > > +   virtqueue_vring_attach_split(vq, &vring_split);
-> > > > > > > +
-> > > > > > > +   return 0;
-> > > > > > > +
-> > > > > > > +err:
-> > > > > > > +   virtqueue_reinit_split(vq);
-> > > > > > > +   return -ENOMEM;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >
-> > > > > > >   /*
-> > > > > > >    * Packed ring specific functions - *_packed().
-> > > > > >
-> > > > >
-> > > >
-> > >
-> >
->
-
+Takashi
