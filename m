@@ -2,159 +2,266 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D31C04A68
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 18:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B65C04A68
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jul 2022 21:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232559AbiG1SsI (ORCPT
+        id S232113AbiG1VBO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Jul 2022 14:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
+        Thu, 28 Jul 2022 17:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbiG1SsH (ORCPT
+        with ESMTP id S230131AbiG1VBN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Jul 2022 14:48:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61AD971BDE
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 11:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659034085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2DJM3dywGojOdJzQwenMVghSwcw7CDj/ldG3SLSuEbw=;
-        b=bSLecQ4b+32wMKDBr0AtNfSxwHXqNlpea6ZacuEw9DA7jJ/f6WDaBtH5UjuyXT7j8mb4Xn
-        xDNNsX3AByvwSZkQvxvJy3Teovb0GMRDYOE4JN5KlmIIaUQbuuq1Fs+TTD+Ory8C4P9tyo
-        W48jVx64pwrnYBi1Jy6VWaj0ArCbq0c=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-618-Xy1Z9RO9MxGmYA2Gdf0N4A-1; Thu, 28 Jul 2022 14:48:02 -0400
-X-MC-Unique: Xy1Z9RO9MxGmYA2Gdf0N4A-1
-Received: by mail-ed1-f71.google.com with SMTP id s17-20020a056402521100b0043ade613038so1617907edd.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 11:48:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=2DJM3dywGojOdJzQwenMVghSwcw7CDj/ldG3SLSuEbw=;
-        b=ZT+aOc1cRjjg4+arYq3FP5TCrPHc4ocv1UOnvwWF89sOXXPM/ZEuNvt9fQJV4mVAp1
-         a3fHEyiIOkV9dQv8R4zumAIyG08QyWu34DIhKotMO8SCDlexQv57zIsTsepahjFZ69vJ
-         BsGlaMO5jbcoeFFYvfS705qnha90V5N4GXZX2L9gmqmGoQfQwxemy7pPO5vc2pYFJJ8J
-         y0IX0p6ZjY2mXZRSizLmJ1I7hPqQjZk5j6lAKNmFkY59DaY1Y2dp9G6nUJUvlQ4ZtAFO
-         mc51aJzXVrGkE8sp0yWgxarddIMpCYXnifxfZ9S9PkD0/Ia/4imWkg1xfw4/4YRpO23G
-         0wgA==
-X-Gm-Message-State: AJIora9SbdhG/ofMSo8yJmwEs3xsejQIiC8nQCb1jrUeDMMvpg6RZZOu
-        MCmoUB8r2HoSXE1rThI5SuaMWeIbGO62bukdbbu/5h8uDsp/wsWP6A5qv/nYZPJRthvz7uJ+d7i
-        Qh/F7IUJ82oXswkprYCSXG8eX9h32oGbbVg==
-X-Received: by 2002:a17:907:3e21:b0:72f:87c:efeb with SMTP id hp33-20020a1709073e2100b0072f087cefebmr214907ejc.528.1659034081603;
-        Thu, 28 Jul 2022 11:48:01 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vAcJF0/ZzVFPQboJ+JLU58QC/RmPOy2zxuKOSX70XcNJXPfG51IrsnAW5B5zXNdTrQbF6e3g==
-X-Received: by 2002:a17:907:3e21:b0:72f:87c:efeb with SMTP id hp33-20020a1709073e2100b0072f087cefebmr214882ejc.528.1659034081223;
-        Thu, 28 Jul 2022 11:48:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id s21-20020aa7cb15000000b0043cfda1368fsm944844edt.82.2022.07.28.11.48.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Jul 2022 11:48:00 -0700 (PDT)
-Message-ID: <26102aca-a730-ddf8-d024-2e7367696757@redhat.com>
-Date:   Thu, 28 Jul 2022 20:48:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+        Thu, 28 Jul 2022 17:01:13 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D39B6246
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Jul 2022 14:01:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E3/jOOqRVwBOksV7uePTLmxHfCbyAMiybfpDMVLq0l9nGI8+w3QOXuH15LczIZSVDZZBiwF9Ugzy+rmql7kO6gazg3MOGUOPc8gFL9vK9cBGxeEUnFA1hDAmLH0JAyHKC2POSdtGBEVE5MAdn5qsSQUZiYsCv+JnsoBx/GQI7OmXis8TO70od09/6C1G+NnkCzuSpOa3QFKwM0IsR/mjJ+vMOHy8q3MdkyvifI0OMVVuN4fc3v7N7Z24alKH3Yv4yIDKWrSBnDIUe0zMPKsI2Z92hGDHX4//P5e043USk/LlWGP2mtb9KmMT6frIkTT283mVsT8VUlCuWQ2pY59txQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9NlcbLihUIp5JjOAdCCRKhsYbBWX+89EKQSrYwwsqJg=;
+ b=a1aQZNa7WwJJAYnTiokDW++YJ46B9t7/yPYWssxTXkXyZHfjysfbold7fAnAEdQI7cbjeMf305+HUPO0Ppw+tiNoNiRkM5Ixj+Ji+1UUfu6mLK7xS/dHbcpVYeUPWjsh2qh0z/reTHz6FHZja1B4cSxnVtqUlPMVbKdTfFl4ltiY9fDAK6Mt1LXeE6gOlE+/I6ws3ANP2UAUfas1wzzfy93nh/ESlBDhi4mYoGOOdW734N+G8BUERtSHk1OEw3FcjsDmLe010ebiv7ecJhL9wkS2QHpHSbtqwxPQgFOlW2MXRnMD6zwmUbl7NU/nh0O5Z+fpkUdXEuGD3JNyWthdbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9NlcbLihUIp5JjOAdCCRKhsYbBWX+89EKQSrYwwsqJg=;
+ b=RJHkigRn2+hkcBE5HS52hMTYn3//WX/DCnwoChBiCu+HSKlmYNPbEPbOqHa4abzpQvKv7sWJkzLC3HGJxZ40zty2pjIHw1WC16M7T5OJheMCFF2GPzH+c+y1I77TSs/b4X+aGS7gzAJlLNsIlDtaDqYvrCpvKOWdrdazqlAmCHg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM5PR12MB1930.namprd12.prod.outlook.com (2603:10b6:3:10d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.11; Thu, 28 Jul
+ 2022 21:01:09 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::1143:10a5:987a:7598%6]) with mapi id 15.20.5438.023; Thu, 28 Jul 2022
+ 21:01:09 +0000
+Message-ID: <fbc06d40-f466-d971-d60e-0a9e0b8f7580@amd.com>
+Date:   Thu, 28 Jul 2022 16:01:07 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v2] platform/x86/intel/ifs: Allow non-default names for
- IFS image
+Subject: Re: [PATCH v1 13/15] platform/x86/amd/pmf: Handle AMT and CQL events
+ for Auto mode
 Content-Language: en-US
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>
-References: <20220710160011.995800-1-jithu.joseph@intel.com>
- <YssFjbveghDLNn4N@kroah.com>
- <55368a65-c536-93c7-c501-9f6086e308d2@redhat.com>
- <YuJ8Ah37WAHGTJlV@kroah.com>
- <39b47ca8-1d25-0e60-d326-ad627541fe36@redhat.com>
- <YuKIL4QkC25h6RF8@kroah.com>
- <1ea8a38f-538c-43ed-c4dc-bc3722c03489@redhat.com>
- <SJ1PR11MB6083263E8EEBF106B6B61B24FC969@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <SJ1PR11MB6083263E8EEBF106B6B61B24FC969@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
+        Mark Pearson <markpearson@lenovo.com>
+References: <20220712145847.3438544-1-Shyam-sundar.S-k@amd.com>
+ <20220712145847.3438544-14-Shyam-sundar.S-k@amd.com>
+ <4585d2c6-6ac1-a697-d54a-f173e9821446@redhat.com>
+ <d01e52cb-31c5-7d20-4f18-1e4bb70c1355@amd.com>
+ <828a7b8e-2375-a9d0-7b00-d59e84cfaa2b@redhat.com>
+ <5500e911-22eb-08b3-c3fe-2a63cf22d7b8@amd.com>
+ <ce75f2cc-0129-84f5-bbab-dae5ed9a7ea9@redhat.com>
+ <f351a921-3b7f-d8c9-10e5-816f83f22775@amd.com>
+ <81fae6a4-4859-bc15-4edc-2c4df953cc12@redhat.com>
+ <b1059e6d-31f9-16de-c728-d9003597b31b@amd.com>
+ <0bc30454-315d-2466-4915-ad673b1029a9@redhat.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <0bc30454-315d-2466-4915-ad673b1029a9@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM5PR07CA0065.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::30) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 167dd3e0-a8dd-4231-1349-08da70dc4ba6
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1930:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mx83zfDRmjRO3xIaHDWTavxdoSi1QGlRBarwsrzRhTnMZM41CsLPpA17lW2jasqj607bLn976J5N3fD7bEl7VQtKGQi7S0YgKVZ4fjnGUNy+2gbMYAo06lcO6Dle800FTcjkV9AQSm25gTmXdFU0ADsatwz3uMrQdqpsbAqPWEfRtyK77L3k1gMd+XyI8asdMYIaQ7twg53HiiO54rvLqEmMsAdXobTYkfdGqZFJYujROHBZ/bJslzqAA3+uFaawtuPweaurBzTZbxoNffeAtlvXmqX7fp2d+Ep656XDOA3BIVPj0b6MudU3AezdvIexthTiBA25HLEqAAIrk1Rw8mgPR46y/dFTQZlVLCP+KM5+jXInCwtNveVUo1ZRhCKmddGfV1ljcNQr0MoCHonb0kGJwYi+4Gj0RsBQjV79CviOj1JoAC9Oid3+EkXATedaD9Ot1gABQ3iqEW8ujjV3FcJMYjqZRXnzos6IbyvfKKMWdtX5cuG6NxmPgBECHcIASQwj8ldt4h6XMSg3ZciIfWbL+kNBHbFZP+tMBA86k8HxDuEkxNMkIP7yVowE17kkCZHJU7Azpa3gOuvyL/XQiEMXWcNSDmU5sCdXr1Pj042yIZpj0QbE3/XNeW3YH7IEtzEno3Z2HRXUL0Fox2Azam6axkWukB+9nmdWPSC6nUAya7MxS5RP99VS8PAe5m2eB3zp9LktQitisvmWe8JRDqO2hV2bGokOBb7GdGzeX1Ua5LFYQORU4pGjg3A28ZisJrnXVZLGa1Wrm7PKPR2nNDaTo/7zv7SiqqyAb3CbSLVaRMRTJ9ua2KLeZXfX79sEWfwyuic//Z4rLfNCunoLCM6llO0vL4U+oDrd//01oXE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(478600001)(31696002)(86362001)(38100700002)(83380400001)(66946007)(66556008)(8676002)(316002)(4326008)(110136005)(66476007)(2906002)(26005)(6512007)(53546011)(6506007)(8936002)(186003)(41300700001)(5660300002)(6486002)(2616005)(36756003)(31686004)(45980500001)(43740500002)(309714004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a3JRdmlKSnBmeWFldUZtWFNDVnZPVnRtblNXUEF6cjRQSWtOK3RQVUJoTHFp?=
+ =?utf-8?B?ZEhUMldJV0s5Vm9WSnpMcEloWEdva1gxSGNyTnhEV09NMmFEVEVXWUt2MnJ6?=
+ =?utf-8?B?S1k2OXM4UU5OdFhFYjZYc1loSUFBYkt4d25tZ1dSZGdpbFFLV0J5WUZPUTRv?=
+ =?utf-8?B?VFJ5cGVoM3JvUWZucy9kVGVmK1h5cFJ2cnpScGI4alN1TWtCdkNTTGlFRG0z?=
+ =?utf-8?B?RlBYSVF2Wm5Ua1hlM2ZWNERrUzZwcllMaExLSkNBdXVXb094SGNWOU10VTk0?=
+ =?utf-8?B?aWlMK0FValAvbmJDbXZEVGZtZ2gwN01LTW05YXA1Tnpjeld2aEt2ZmpRRUFt?=
+ =?utf-8?B?aVNpZEpjMU55UnZSYzNzZXRNbC9sTEFWbU1PR1ZZK1VOWVpDU2RLaENiMzVp?=
+ =?utf-8?B?TjF6ZUoyYm1hV1hlMWcrSEhrSDc5TDg0bk1NWFV5UFFick0wTzR2KzNKcmZX?=
+ =?utf-8?B?VFBWbytvU3I0akZoNkkwUk9JYXRoYytKK2pJbU03YnFJd2hRWk9nZ080RmVu?=
+ =?utf-8?B?QzlDZjJyZ2RqcXYxMytZbGxuTjIyTExkYTkzL01heElsVjBCalI4RG9xQzJh?=
+ =?utf-8?B?N21sS0RvZytGZHJDcDZOSENEWXJxdkZ4SUtBc1N6cmF2SkxGYUw3NDVwdDFL?=
+ =?utf-8?B?RXRRKzJmVGNuM1F6V09TTUxCTllLRVo5bTg3MXNxd2RmemowOGdFb01pS04w?=
+ =?utf-8?B?Kyt5djdiVjRvTmhpdTc1ZTI3cUkydzZ1MTA3ZUlYRUNjcmppSm4wbnhPOG51?=
+ =?utf-8?B?VGJaNkZyU2NtSW5jMk9NL0EwMjhYTjU5RGxFN0tMSEpIMXhDeDV4aVNxTXZm?=
+ =?utf-8?B?K0YreXdtR2EyR2VnL0VacTMveDVwQ3VRZDg5bmZJRGxSeUxqV1FVMW9hcnZl?=
+ =?utf-8?B?VUE5VGNhOU9nSmdaeEdzOC9vTGRDWk9mb2NEZmlVYkFDU1hXdGlDOVA1Qmlt?=
+ =?utf-8?B?Rjd3RXR2UjBFSGRQYXpBYnU5RFV4VUFHWDMxV0xkOVhvT2xhSHJuaGF4QzJ3?=
+ =?utf-8?B?NU9uQ1hYMXpKZXNxYTJoZUxZeE5iMlZNZmJPSFovbUdscmJ6dUpuMkE0c0RV?=
+ =?utf-8?B?eDFUL3ZjTkQ1eUZaOHh2eEQ2eWVHSEVZamdMVTRTNWlsTkZJZE1oMGh0R0lk?=
+ =?utf-8?B?L2pGUzZLZTZxVmdYK1lWREJhemcrdmx1RFVQNURiVFZsWmpueEpFbFZWNXUz?=
+ =?utf-8?B?bWk3b0VZSDViRFRnNnRvTEEzV1B5R0VNbjBkTVI2T0xDWEdCOVYrTUZLbzEw?=
+ =?utf-8?B?aEFrRTY1OCtWT3hVUmlxeXpNYU5nZFkvR3IyTnV2TERqWG03WTFlWFJ0Zm1m?=
+ =?utf-8?B?WHowUWIzb2JYOXVnNmV2ZHdlS3pWM2d5VWIxeXdEZU9mbnk1d1dPU0s3MVlz?=
+ =?utf-8?B?bjNZUnJxRk5pVTEwQStJQ0p6ellnbjhRY1RWZjhXWnBlNXJnR2RtbXJsYzBz?=
+ =?utf-8?B?UXRQVWc0NThhWjVHT1hjK2d2RFdpMFVuSS9GaGpMMzJ4ZWQrdTN2OEUyeTJm?=
+ =?utf-8?B?clVXSHRIMEhVNXN6OVhqdjUzRlhaTUpQa0hhazZmbVVLdENTS2x0ZG14VEVO?=
+ =?utf-8?B?R1llV21vWU96UTJnYUFqT0VhNFpDR2didzRoelYzaHFLbXFvd2JSTm1VK2F4?=
+ =?utf-8?B?cE53a1IxRWU0bjA1QlA3U0NQYkZBOXpQVUpIclcyTWpScjQ4VFBTbHllcnJr?=
+ =?utf-8?B?WWdTaEc4RGZvVkl3aUtOTmtmY3haZHFwQ0VyeTRERFJRUHZGc0dXTHJRUFR4?=
+ =?utf-8?B?dWxRZzhmTUQ0SVBVUytEL3k1T3AraWNkV1VybzYzL1RzOVpHWGhWc0FyaTUw?=
+ =?utf-8?B?Nm5JeEEreURLZTBPU2hOeGtOMkdqQXRJdTNrM2VoWHNHdEZTcGxxZEJzdVJa?=
+ =?utf-8?B?Q2sxVG1tdTJOR05XOTloRGtvSjMxUWFiamdmbldLWXRkUXlSZzVYby9VZXZi?=
+ =?utf-8?B?cU5iVzJ4Q0IrcDF2N0N0VXVtS1J0TXkxN21hZXFhTnlQekxSckxlK3dwQzdz?=
+ =?utf-8?B?M09aYWp0TWdyelRPUk5ONlpUM3pCUjVyeTZ0UWxlWTNkeDkxTEsra05zZ0JI?=
+ =?utf-8?B?ZU1BaTIvR2M1K0s3VytrbHBOYmxUU05HU3h1Rm12TndJcUlsNkkxY3EreWpX?=
+ =?utf-8?Q?rgdvl73bJCLZoyeQ3FEf7PLyM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 167dd3e0-a8dd-4231-1349-08da70dc4ba6
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2022 21:01:09.2043
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pWy++hDV5Etqzp3wV5ZzdDDG83WcIuJgkF19QN0LkLSVzQM10b6PxbDugW5ntZQnMOblaGJhwjEDUQ53Be2LeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1930
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Tony,
-
-On 7/28/22 17:12, Luck, Tony wrote:
->>>> Speculating myself as far as I understand IFS is not for factory
->>>> tests but for testing in the fields since big cloud vendors have
->>>> found that sometimes there are hard to catch CPU defects which
->>>> they only find out by running statistics which show that certain
->>>> tasks only crash when run on machine a, socket b, core c.
+On 7/28/2022 13:17, Hans de Goede wrote:
+> Hi,
+> 
+> On 7/28/22 20:06, Limonciello, Mario wrote:
+>> On 7/28/2022 12:46, Hans de Goede wrote:
+>>> Hi,
 >>>
->>> Who knows, Intel doesn't say so we can't really guess :(
+>>> On 7/28/22 16:38, Limonciello, Mario wrote:
+>>>>
+>>>>>>> 1. If I understand things right, then on ThinkPads /sys/firmware/apci/platform_profile
+>>>>>>>        will be registered by thinkpad_acpi. But in version 1 of this patchset nothing is
+>>>>>>>        stopping the amd-pmf code from registering /sys/firmware/apci/platform_profile if
+>>>>>>>        the amd-pmf module gets loaded first. So if the intend is for it to always be owned
+>>>>>>>        by thinkpad_acpi then the amd-pmf code must check for this and not even try to
+>>>>>>>        register its platform_profile support. We cannot rely on module ordering ensuring
+>>>>>>>        that thinkpad_acpi registers first and then amd-pmf will get an -EBUSY error,
+>>>>>>>        since there are no module load ordering guarantees.
+>>>>>>
+>>>>>> This was my thought initially too while this was being developed, but actually there is some nuance here that is non-obvious.  The platform profile registering code in amd-pmf will examine bits set in the BIOS to decide whether or not to export platform profile support.  In Lenovo platforms that support thinkpad_acpi these bits are not set.  So platform profile support ONLY comes from thinkpad-acpi in those platforms.
+>>>>>
+>>>>> Right, Shyam mentioned this in another part of the thread. As I
+>>>>> mentioned there IHMO it would still be good to check this in the driver
+>>>>> though. To catch cases where a BIOS for some reasons advertises an
+>>>>> unexpected combination of features.
+>>>>>
+>>>>>>> 2. So when the thinkpad_acpi platform_profile is set to balanced, then it will
+>>>>>>>        enable AMT and then the periodically run workqueue function from amd-pmf
+>>>>>>>        will do its AMT thing. But what when the thinkpad_acpi platform_profile is
+>>>>>>>        set to low-power or performance. Should the amd-pmf code then apply the static
+>>>>>>>        slider settings for low-power/performance which it has read from the ACPI
+>>>>>>>        tables?  Or will the ACPI/EC code on thinkpads take care of this themselves ?
+>>>>>>>
+>>>>>>
+>>>>>> When thinkpad_acpi changes platform profile then a BIOS event goes through and amd-pmf receives that and will run based on the event.
+>>>>>
+>>>>> Hmm, I don't remember seeing anything for this in the patches. Actually this
+>>>>> reminds me that the code should probably reschedule (using mod_delayed_work)
+>>>>> the work to run immediately after a BIOS event, rather then waiting for
+>>>>> the next normally scheduled run.
+>>>>>
+>>>>> But even then I don't remember seeing any code related to catching
+>>>>> platform-profile changes done outside amd-pmf... ?
+>>>>
+>>>> It's not a platform profile change - it's an ACPI event.
+>>>>
+>>>> When a user changes a platform profile then thinkpad_acpi will see whether it's balanced or not.  When changing to/from balanced thinkpad_acpi sends an AMT event.  amd-pmf reacts to said AMT event.
+>>>>
+>>>> This is the code you're looking for (in this specific patch):
+>>>>
+>>>> +static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
+>>>> +{
+>>>> +    struct amd_pmf_dev *pmf_dev = data;
+>>>> +    struct apmf_if *apmf_if = pmf_dev->apmf_if;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (apmf_if->func.sbios_requests) {
+>>>> +        struct apmf_sbios_req req;
+>>>> +
+>>>> +        ret = apmf_get_sbios_requests(apmf_if, &req);
+>>>> +        if (ret) {
+>>>> +            dev_err(pmf_dev->dev, "Failed to get SBIOS requests:%d\n", ret);
+>>>> +            return;
+>>>> +        }
+>>>> +        if (req.pending_req & BIT(APMF_AMT_NOTIFICATION)) {
+>>>> +            pr_debug("PMF: AMT is supported and notifications %s\n",
+>>>> +                 req.amt_event ? "Enabled" : "Disabled");
+>>>> +            if (req.amt_event)
+>>>> +                pmf_dev->is_amt_event = true;
+>>>> +            else
+>>>> +                pmf_dev->is_amt_event = !!req.amt_event;
+>>>> +        }
+>>>> +
+>>>> +        if (req.pending_req & BIT(APMF_CQL_NOTIFICATION)) {
+>>>> +            pr_debug("PMF: CQL is supported and notifications %s\n",
+>>>> +                 req.cql_event ? "Enabled" : "Disabled");
+>>>> +            if (req.cql_event)
+>>>> +                pmf_dev->is_cql_event = true;
+>>>> +            else
+>>>> +                pmf_dev->is_cql_event = !!req.cql_event;
+>>>> +
+>>>> +            /* update the target mode information */
+>>>> +            amd_pmf_update_2_cql(pmf_dev);
+>>>> +        }
+>>>> +    }
+>>>> +}
+>>>> +
+>>>
+>>> Right this is the AMT on/off path that bit I understand.
+>>> This happens when switching to / away from balanced mode.
+>>>
+>>> My question is what does the equivalent of these lines:
+>>>
+>>> +        amd_pmf_send_cmd(dev, SET_SPL, false, config_store.prop[src][idx].spl, NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_FPPT, false, config_store.prop[src][idx].fppt, NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_SPPT, false, config_store.prop[src][idx].sppt, NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false,
+>>> +                 config_store.prop[src][idx].sppt_apu_only, NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+>>> +                 config_store.prop[src][idx].stt_min, NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+>>> +                 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU], NULL);
+>>> +        amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+>>> +                 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2], NULL);
+>>>
+>>> When the profile is switched (by userspace, or through the hotkeys on
+>>> the laptop) to low-power or to performance mode ?
 >>
->> Right, for version 3 the commit message and ABI documentation changes
->> really need to clarify why multiple test-pattern files may be needed
->> mucy better. If possible please also include 1 or 2 _clear_ examples
->> of cases where more then 1 test-pattern file may be used.
+>> Lenovo's firmware will handle the equivalent of changing relevant values for their platform through a BIOS interface in this case when they change ACPI platform profiles.  You will see in their driver something call "PSC" mode, and this is exactly that type of stuff.
 > 
-> Sorry for the radio silence. We took Greg's suggestion to go back and
-> thinks this out completely to heart. As he said, there is no rush to get
-> this in. We need to do it right.
+> Ok I see, thank you for clarifying this.
+> 
+> So as for the AMT mode, since that is Lenovo only, I guess that means
+> that there is no need to do call amd_pmf_update_slider() when AMT
+> is being disabled since at this point the firmware will have
+> already set the values.
 
-That (taking your time to get this right) is good to hear, thanks.
+Yeah, Shyam made this modification for v2 to make sure that code path 
+isn't called unless static slider was set in the BIOS.
 
-> Your summary above on how this works is completely correct.
 > 
-> The reason for adding more files is to cover more transistors in the
-> core. The base file that we started with gets mumble-mumble percent
-> of the transistors checked. Adding a few more files will increase that
-> quite significantly.
+> Actually this seems to mean that we must ensure that the AMD-PMF
+> code stops touching these settings as soon as the event is received.
 > 
-> So testing a system may look like:
+> Which would imply killing the periodic work when an AMT off event
+> is received from within the event handling and then restating it
+> when AMT is on (and making sure the work being queued or not state
+> matches the AMT on/off state at driver probe time) ?
 > 
-> 	for each scan file
-> 	do
-> 		load the scan file
-> 		for each core
-> 		do
-> 			test the core with this set of tests
-> 		done
-> 	done
-> 
-> Our internal discussions on naming are following the same direction that
-> you suggested, but likely even more restrictive. The "suffix" may just be
-> a two-digit hex number (allowing for up to 256 files ... though for Sapphire
-> Rapids we are looking at just 6).
-> 
-> So our current direction is to name six "parts" something like this:
-> 
-> 	06-8f-06-00.scan
-> 	06-8f-06-01.scan
-> 	06-8f-06-02.scan
-> 	06-8f-06-03.scan
-> 	06-8f-06-04.scan
-> 	06-8f-06-05.scan
-> 
-> but we are still checking to make sure this will work for future CPUs. Once
-> we have something solid we will come back to the mailing list.
 
-Thanks, this sounds good to me.
-
-> As also suggested in earlier thread we will change the name of the "reload"
-> file (since skipping to a new file isn't a "reload"). The "load a scan file" will
-> write the "part" number to this new file.
-
-Regards,
-
-Hans
-
+At first glance this seems plausible, but actually I think it should 
+stay as is because CQL thermals can be set at any time (that's like a 
+lap mode sensor event from thinkpad_acpi).  Even when AMT is turned off, 
+you may want the CQL thermal profile set accordingly.
