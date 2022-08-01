@@ -2,164 +2,78 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE803C00144
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Aug 2022 11:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030D9C00144
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Aug 2022 11:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbiHALac (ORCPT
+        id S230431AbiHALeS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Aug 2022 07:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        Mon, 1 Aug 2022 07:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbiHALa3 (ORCPT
+        with ESMTP id S229935AbiHALeR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Aug 2022 07:30:29 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1742365BC;
-        Mon,  1 Aug 2022 04:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659353426; x=1690889426;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HwmzK4Q3FX296ZwWrVPKXYCI6LiXwe1b/aPBo9GUgfA=;
-  b=fXkLGySnisBZrTnq4FiTuHnH8OWRpKZE4tTPYTaO6ff7fEHJDWezDqeb
-   EIXPfUzWMygLHcwZsuuiH+NLTIvJTC8PdEMCxJwd6pCk5XKI7E67Wrg8B
-   oKPMboxGZUOHuyAF5aD+AzB37ITYOrybk/H/Wx1bkSrKKFCleCB50oABz
-   hPddq196UIzBwAaJDtmpfk0o76/Uulnd21iUPRA7U1pa5L8EKU4Lm8Fsr
-   VAsSCQu58k1ByTUOMl3uqq0tIkqRxdHF8qMo+/loTs0yfvHff2nnBdsdp
-   lbBQurJKhhYf1mPRa/ScR4L7DP2cKAcEacu857GPsL5e9PhUywAlwyRuP
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10425"; a="375425839"
-X-IronPort-AV: E=Sophos;i="5.93,206,1654585200"; 
-   d="scan'208";a="375425839"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2022 04:30:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,206,1654585200"; 
-   d="scan'208";a="552483224"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 01 Aug 2022 04:30:11 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 12A5F86; Mon,  1 Aug 2022 14:30:22 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 3/4] platform/x86: pmc_atom: Make terminator entry uniform
-Date:   Mon,  1 Aug 2022 14:30:17 +0300
-Message-Id: <20220801113018.9882-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220801113018.9882-1-andriy.shevchenko@linux.intel.com>
-References: <20220801113018.9882-1-andriy.shevchenko@linux.intel.com>
+        Mon, 1 Aug 2022 07:34:17 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF77630F4E;
+        Mon,  1 Aug 2022 04:34:16 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id sz17so19760617ejc.9;
+        Mon, 01 Aug 2022 04:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=0nrlg1hueJXUxVV+lqZApf1awzm2sOxgKLEM6ZoqXq0=;
+        b=k0FM184C+weVBG0o7xTXc42UTJo44dONfU2J8NdsEQVZD3XPlIj3p7ByWt6tf9n64L
+         F5sHU5tfzMY35XKY/moKpYKVxUOWc2a8T5Wpt6/9c68I2MZfjWgSXTORg2QzJ0bZulp4
+         Edm/UZyrCcEHTEL26f4R5PtPQcWuss6NVKFRP/w518+7sqvQE7ukQTJrB7Fr/ARJMBK2
+         8fRTIuh2GiCXZAkNgednWq59DwquG0MVtHK85mhrU+tZUTZg1Nne7d7BzrVnJTp1ejzh
+         I3Edy8pAIHAB93hisd+Q5ua9UCGshGBOatHDIDbKNdANvHvH8h+Sn3mly8iy/XZ5dq5a
+         Yazg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=0nrlg1hueJXUxVV+lqZApf1awzm2sOxgKLEM6ZoqXq0=;
+        b=ValnY48cJvVj8q0kQELUZ2HoU/o1eGNjBMV7yTT1yTNM5YYNKh/Nat201hBynhIcrz
+         YXgFO+zw1DZ4BJS7kDPPZ7DfWZVqdRxklKZn5r11oygU70Sslvglxq58fNtuf/L/c1ev
+         yipZgVc6itlIGbT+/SOJXHhUMM2oo4/vjg92fjkZjRbxw45gwSoiji9JFimd8qM3+KFX
+         oG+BW9ivSgRyM/Ok8/ibJGNXwFUxc3S1Exb17JEVSk96CaZq0c53+hnhA5ikLulUsVc4
+         gRwAaq0IYr/3gTYoGA/Xx68TVxvh/qXz1ooEdMCWS3wJlx5fot59U8yt86zYWbtMrNkp
+         GFcQ==
+X-Gm-Message-State: AJIora+vGaxOCi32tl88ZR11BFqfNZMYKUSZsfzvArfWQjkhybox+vjR
+        A/2Vola5sRsM5sQwZ1I2URix9Ot2+H81HaiFYzMV0f6OZIY=
+X-Google-Smtp-Source: AGRyM1tr+APqQ02vqalZVF3lyVSzQ8hsaqeXlfegTbvkYEciJO5YSt6hbva9Rqbdj9JYC2N/iOW8xngkwbLJbTjskj8=
+X-Received: by 2002:a17:907:6e02:b0:72b:9f16:1bc5 with SMTP id
+ sd2-20020a1709076e0200b0072b9f161bc5mr12684280ejc.676.1659353655417; Mon, 01
+ Aug 2022 04:34:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220801113018.9882-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220801113018.9882-1-andriy.shevchenko@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Aug 2022 13:33:38 +0200
+Message-ID: <CAHp75VeYQy0oZLU6FiSdw3AKzuKnAP=-hE1=tr6VQiDjq=J7iw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] platform/x86: pmc_atom: Fix SLP_TYPx bitfield mask
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make terminator entry uniform by dropping:
- - trailing commas
- - anything inside curly braces
+On Mon, Aug 1, 2022 at 1:30 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Intel hardware the SLP_TYPx bitfield occupies bits 10-12 as per ACPI
+> specification (see Table 4.13 "PM1 Control Registers Fixed Hardware
+> Feature Control Bits" for the details).
+>
+> Fix the mask and other related definitions accordingly.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/pmc_atom.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+Please, discard this series, it has compilation issues.
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 4c3d6b48d2f0..8d91999446f5 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -60,7 +60,7 @@ static const struct pmc_clk byt_clks[] = {
- 		.freq = 19200000,
- 		.parent_name = "xtal",
- 	},
--	{},
-+	{}
- };
- 
- static const struct pmc_clk cht_clks[] = {
-@@ -69,7 +69,7 @@ static const struct pmc_clk cht_clks[] = {
- 		.freq = 19200000,
- 		.parent_name = NULL,
- 	},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map d3_sts_0_map[] = {
-@@ -105,7 +105,7 @@ static const struct pmc_bit_map d3_sts_0_map[] = {
- 	{"LPSS2_F5_I2C5",	BIT_LPSS2_F5_I2C5},
- 	{"LPSS2_F6_I2C6",	BIT_LPSS2_F6_I2C6},
- 	{"LPSS2_F7_I2C7",	BIT_LPSS2_F7_I2C7},
--	{},
-+	{}
- };
- 
- static struct pmc_bit_map byt_d3_sts_1_map[] = {
-@@ -113,21 +113,21 @@ static struct pmc_bit_map byt_d3_sts_1_map[] = {
- 	{"OTG_SS_PHY",		BIT_OTG_SS_PHY},
- 	{"USH_SS_PHY",		BIT_USH_SS_PHY},
- 	{"DFX",			BIT_DFX},
--	{},
-+	{}
- };
- 
- static struct pmc_bit_map cht_d3_sts_1_map[] = {
- 	{"SMB",			BIT_SMB},
- 	{"GMM",			BIT_STS_GMM},
- 	{"ISH",			BIT_STS_ISH},
--	{},
-+	{}
- };
- 
- static struct pmc_bit_map cht_func_dis_2_map[] = {
- 	{"SMB",			BIT_SMB},
- 	{"GMM",			BIT_FD_GMM},
- 	{"ISH",			BIT_FD_ISH},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map byt_pss_map[] = {
-@@ -149,7 +149,7 @@ static const struct pmc_bit_map byt_pss_map[] = {
- 	{"OTG_VCCA",		PMC_PSS_BIT_OTG_VCCA},
- 	{"USB",			PMC_PSS_BIT_USB},
- 	{"USB_SUS",		PMC_PSS_BIT_USB_SUS},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map cht_pss_map[] = {
-@@ -172,7 +172,7 @@ static const struct pmc_bit_map cht_pss_map[] = {
- 	{"DFX_CLUSTER3",	PMC_PSS_BIT_CHT_DFX_CLUSTER3},
- 	{"DFX_CLUSTER4",	PMC_PSS_BIT_CHT_DFX_CLUSTER4},
- 	{"DFX_CLUSTER5",	PMC_PSS_BIT_CHT_DFX_CLUSTER5},
--	{},
-+	{}
- };
- 
- static const struct pmc_reg_map byt_reg_map = {
-@@ -422,8 +422,7 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
- 		},
- 	},
--
--	{ /*sentinel*/ }
-+	{}
- };
- 
- static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
-@@ -503,7 +502,7 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
- static const struct pci_device_id pmc_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_VLV_PMC), (kernel_ulong_t)&byt_data },
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_CHT_PMC), (kernel_ulong_t)&cht_data },
--	{ 0, },
-+	{}
- };
- 
- static int __init pmc_atom_init(void)
 -- 
-2.35.1
-
+With Best Regards,
+Andy Shevchenko
