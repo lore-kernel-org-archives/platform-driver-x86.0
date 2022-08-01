@@ -2,75 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F7C00144
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Aug 2022 12:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80702C00144
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Aug 2022 13:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235150AbiHAM4u (ORCPT
+        id S230349AbiHANSe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Aug 2022 08:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60048 "EHLO
+        Mon, 1 Aug 2022 09:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231615AbiHAM43 (ORCPT
+        with ESMTP id S229953AbiHANSd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Aug 2022 08:56:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8D6682632
-        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Aug 2022 05:55:16 -0700 (PDT)
+        Mon, 1 Aug 2022 09:18:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9C9CE2B267
+        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Aug 2022 06:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659358515;
+        s=mimecast20190719; t=1659359911;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XjDwZv9TcwlWYrH4XMwfwCynT6l9weW/q3tkZaDzeh8=;
-        b=WTgDDY6iEgus+PDdrtWztCFZf3iw/0vH1/ka3p9W9ySyG13CxpyBc++UhZaMJ7L7g8rkeH
-        QFhO4khU+AJW0oayDBME8gI+h+hlLsK6ydtjWrlemNcXAIfyqcnIyYQlAtfK5GUjAcYtIv
-        qcmJv0OLBgFV9sGAGgPg5dhtBjDwn14=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nmwDeLQvJDLKEJgLy8vWuAULGkgEWIC8QOStKrp6Mzs=;
+        b=EdtQVjQ5AI2Cjh+xbYtsGZwNkT+/DR9rhJxJSz1jvCtuDlo57I/N9MJiNobCUfhRc/Mr8/
+        tXOypm3oZqONMZwBT6kuJUda1hAAksdFt4itSttVmrwn0dUlUHjWSGEqMVrohW5qY9aMem
+        v5zBNnMC5B0hkBldEdng5y0mt8EHtbs=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-662-OKcv-6ThOJ-EZqwz6i9YNA-1; Mon, 01 Aug 2022 08:55:14 -0400
-X-MC-Unique: OKcv-6ThOJ-EZqwz6i9YNA-1
-Received: by mail-ej1-f69.google.com with SMTP id hr24-20020a1709073f9800b0072b57c28438so2931993ejc.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Aug 2022 05:55:14 -0700 (PDT)
+ us-mta-91--xNMJrSiOxOARkUA1sl7Pg-1; Mon, 01 Aug 2022 09:18:30 -0400
+X-MC-Unique: -xNMJrSiOxOARkUA1sl7Pg-1
+Received: by mail-ed1-f69.google.com with SMTP id c9-20020a05640227c900b0043ad14b1fa0so7130309ede.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Aug 2022 06:18:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:from:to:cc:references:in-reply-to
          :content-transfer-encoding;
-        bh=XjDwZv9TcwlWYrH4XMwfwCynT6l9weW/q3tkZaDzeh8=;
-        b=AF2p9YW/BcXRdWDR73e2sQiPuFUyLewJIfJLC1EyVK1yN+KmX7LkjeJOIGoCVefAum
-         L1Ot48FLLoHIl/9OiPFg2SSuBRpv9pWEdHE1pNX81sFTajDg+WSPTLjphe/iNB2U6Euj
-         /xNXJg/SHTsAbAb+5jGGtCnQLRzaiLVsDQk3XpAa6kKa2+exrqoKAR0IQ0S0UA95w/+o
-         s8WuCXKxz9WSsP0oTksn9xAc0KAeOFV8DZJp546dQ+qwQf+Aekc9+IjqZbTJEdcMDJBP
-         +8qIdrGdvQiNYAb1+Llsr4E5W1DbZYmyn42CKic0YwaIaxk1tiuLySqy8hHhS5U0CGrj
-         b25w==
-X-Gm-Message-State: ACgBeo22ferracHBdnvIR+IiN/ZpyCVfYIMmL5tH59mPfWaHqmEeMTb5
-        dur0TULGhj9iriqXodRvY1hWdgo5upf8RpdyWqxqr4dDRwsUlTtl1eVSN4Wa2cGfiq12yg5r5kI
-        /Is4t1Ljm/JNlEEC8xnTRYPxKZuIcZPus4Q==
-X-Received: by 2002:a17:907:2708:b0:730:6cea:2209 with SMTP id w8-20020a170907270800b007306cea2209mr5051942ejk.761.1659358513100;
-        Mon, 01 Aug 2022 05:55:13 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4RYKj+jffXOsSwmAENrJpRCjZUZK2zpne+HUJZYHVEu7fPh6JZxFTpNzpADKX0XRF8T3GCdw==
-X-Received: by 2002:a17:907:2708:b0:730:6cea:2209 with SMTP id w8-20020a170907270800b007306cea2209mr5051920ejk.761.1659358512722;
-        Mon, 01 Aug 2022 05:55:12 -0700 (PDT)
+        bh=nmwDeLQvJDLKEJgLy8vWuAULGkgEWIC8QOStKrp6Mzs=;
+        b=1ncxcUP5on5OoDgFYDlneurPxJFK3mp060tHBKiDKTdlZg76KohLXYT54pcxmfQ19I
+         +BlEne5c70IUn5U7hZoeqZArOeX4Tvo8GFJvmnHVpYfIWl72Rh16hMWhlVD2kUJXtsh3
+         he0ByIEufWH7iuSzcUQ1sW9TdA0QD1am4OatRLqdJrWifHHczXm+KQZ6msfCke0YTIq0
+         FaQdgpCqltXnzlJdvirWIkcfyKlFz5hui+TB+AN/L9vLMNGibp4TeRYcYa8NZU055LTQ
+         DEIbaobrGUfHN4Y9eVSSAVccGq/t62bvFK7z9pmVdYKzWC0/haQNLGJiZMKd9Eciq6vk
+         BU3Q==
+X-Gm-Message-State: AJIora91/gJ48nV86T+O+ZEq1QyRjMBv1smUBxTNrMU0lKMakOC5Ql5/
+        KEoDIx87BMbIfV7ZHdH+QjMzZkOtU45LLvH2csLxEJmCW1meNXeuGCxO9s6bz/z2cSnslQCXeoI
+        VZZsWt25UQl9rBodLRHBYHOjPm2NlUfGLdg==
+X-Received: by 2002:a17:907:3e11:b0:72b:49d1:2054 with SMTP id hp17-20020a1709073e1100b0072b49d12054mr12707098ejc.78.1659359909486;
+        Mon, 01 Aug 2022 06:18:29 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uUCwSo/ZwlnSMxpdIPrrAqu+o4P39ja/eZLvs4zI2cSCHxhov2xr9GN06YlgSehA39IJNIrg==
+X-Received: by 2002:a17:907:3e11:b0:72b:49d1:2054 with SMTP id hp17-20020a1709073e1100b0072b49d12054mr12707073ejc.78.1659359909184;
+        Mon, 01 Aug 2022 06:18:29 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 24-20020a170906301800b007262a1c8d20sm5194976ejz.19.2022.08.01.05.55.11
+        by smtp.gmail.com with ESMTPSA id kf23-20020a17090776d700b00718d18a1860sm5195568ejc.61.2022.08.01.06.18.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Aug 2022 05:55:12 -0700 (PDT)
-Message-ID: <805fd0f5-6b18-5518-14b5-cf62fd75737d@redhat.com>
-Date:   Mon, 1 Aug 2022 14:55:11 +0200
+        Mon, 01 Aug 2022 06:18:28 -0700 (PDT)
+Message-ID: <83e3c4d6-79c4-2ceb-c366-8f03b4be886f@redhat.com>
+Date:   Mon, 1 Aug 2022 15:18:28 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v2 RESEND 08/11] platform/x86/amd/pmf: Add support for
- Auto mode feature
+Subject: Re: [PATCH v2 RESEND 02/11] platform/x86/amd/pmf: Add support for PMF
+ APCI layer
 Content-Language: en-US
+From:   Hans de Goede <hdegoede@redhat.com>
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
 References: <20220728182028.2082096-1-Shyam-sundar.S-k@amd.com>
- <20220728182028.2082096-9-Shyam-sundar.S-k@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220728182028.2082096-9-Shyam-sundar.S-k@amd.com>
+ <20220728182028.2082096-3-Shyam-sundar.S-k@amd.com>
+ <ca75e2b7-e18d-4610-af16-b4ef8fb9f95d@redhat.com>
+In-Reply-To: <ca75e2b7-e18d-4610-af16-b4ef8fb9f95d@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,646 +80,373 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 7/28/22 20:20, Shyam Sundar S K wrote:
-> This feature has 3 modes quiet, balanced, performance
+On 8/1/22 14:48, Hans de Goede wrote:
+> Hi,
 > 
-> The objective of this feature is to track the moving average of system
-> power over the time period specified and switch to the subsequent mode.
+> On 7/28/22 20:20, Shyam Sundar S K wrote:
+>> PMF driver implements the ACPI methods as defined by AMD for PMF Support.
+>> The ACPI layer acts as a glue that helps in providing the infrastructure
+>> for OEMs customization.
+>>
+>> OEMs can refer to PMF support documentation to decide on the list of
+>> functions to be supported on their specific platform model.
+>>
+>> AMD mandates that PMF ACPI fn0 and fn1 to be implemented which
+>> provides the set of functions, params and the notifications that
+>> would be sent to PMF driver so that PMF driver can adapt and
+>> react.
+>>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/pmf/Makefile |   2 +-
+>>  drivers/platform/x86/amd/pmf/acpi.c   | 182 ++++++++++++++++++++++++++
+>>  drivers/platform/x86/amd/pmf/core.c   |   1 +
+>>  drivers/platform/x86/amd/pmf/pmf.h    |  32 +++++
+>>  4 files changed, 216 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/platform/x86/amd/pmf/acpi.c
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+>> index 459005f659e5..2617eba773ce 100644
+>> --- a/drivers/platform/x86/amd/pmf/Makefile
+>> +++ b/drivers/platform/x86/amd/pmf/Makefile
+>> @@ -5,4 +5,4 @@
+>>  #
+>>  
+>>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>> -amd-pmf-objs := core.o
+>> +amd-pmf-objs := core.o acpi.o
+>> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+>> new file mode 100644
+>> index 000000000000..bd796d7e1d96
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * AMD Platform Management Framework Driver
+>> + *
+>> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include "pmf.h"
+>> +
+>> +#define APMF_METHOD "\\_SB_.PMF_.APMF"
+>> +
+>> +static unsigned long supported_func;
+>> +
+>> +static void apmf_if_parse_functions(struct apmf_if_functions *func, u32 mask);
+>> +
+>> +static union acpi_object *apmf_if_call(struct apmf_if *apmf_if, int func, struct acpi_buffer *param)
+>> +{
+>> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>> +	struct acpi_object_list apmf_if_arg_list;
+>> +	union acpi_object apmf_if_args[2];
+>> +	acpi_status status;
+>> +
+>> +	apmf_if_arg_list.count = 2;
+>> +	apmf_if_arg_list.pointer = &apmf_if_args[0];
+>> +
+>> +	apmf_if_args[0].type = ACPI_TYPE_INTEGER;
+>> +	apmf_if_args[0].integer.value = func;
+>> +
+>> +	if (param) {
+>> +		apmf_if_args[1].type = ACPI_TYPE_BUFFER;
+>> +		apmf_if_args[1].buffer.length = param->length;
+>> +		apmf_if_args[1].buffer.pointer = param->pointer;
+>> +	} else {
+>> +		apmf_if_args[1].type = ACPI_TYPE_INTEGER;
+>> +		apmf_if_args[1].integer.value = 0;
+>> +	}
+>> +
+>> +	status = acpi_evaluate_object(apmf_if->handle, NULL, &apmf_if_arg_list, &buffer);
+>> +	if (ACPI_FAILURE(status)) {
+>> +		pr_err("PMF: APMF method call failed\n");
+
+Since the plan is to drop struct apmf_if and to directly store the
+handle in amd_pmf_dev we will now have an amd_pmf_dev here so
+please use dev_err() instead of pr_err() here.
+
+>> +		if (status != AE_NOT_FOUND)
+>> +			kfree(buffer.pointer);
+>> +
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return buffer.pointer;
+>> +}
+>> +
+>> +static int apmf_if_call_store_buffer(struct apmf_if *apmf_if, int func, void *dest, size_t out_sz)
+>> +{
+>> +	union acpi_object *info;
+>> +	size_t size;
+>> +	int err = 0;
+>> +
+>> +	info = apmf_if_call(apmf_if, func, NULL);
+>> +	if (!info)
+>> +		return -EIO;
+>> +
+>> +	if (info->type != ACPI_TYPE_BUFFER) {
+>> +		pr_err("object is not a buffer\n");
+
+Since the plan is to drop struct apmf_if and to directly store the
+handle in amd_pmf_dev we will now have an amd_pmf_dev here so
+please use dev_err() instead of pr_err() here.
+
+This also means that adding the:
+
+#define pr_fmt(fmt) "AMD-PMF: " fmt
+
+line will no longer be necessary.
+
+>> +		err = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (info->buffer.length < 2) {
+>> +		pr_err("buffer too small\n");
+>> +		err = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +
+>> +	size = *(u16 *)info->buffer.pointer;
+>> +	if (info->buffer.length < size) {
+>> +		pr_err("buffer smaller then headersize %u < %zu\n",
+>> +		       info->buffer.length, size);
+>> +		err = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (size < out_sz) {
+>> +		pr_err("buffer too small %zu\n", size);
+>> +		err = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +
+>> +	size = out_sz;
+>> +	memcpy(dest, info->buffer.pointer, size);
+>> +
+>> +out:
+>> +	kfree(info);
+>> +	return err;
+>> +}
+>> +
+>> +static void apmf_if_parse_functions(struct apmf_if_functions *func, u32 mask)
+>> +{
+>> +	func->system_params = mask & APMF_FUNC_GET_SYS_PARAMS;
 > 
-> In order to do this, PMF driver will get the moving average of APU power
-> from PMFW and power threshold, time constants, system config parameters
-> from OEM inputs.
+> I just noticed that this is not correct, this should be:
 > 
-> System power as read by PMF driver from PMFW is the filtered value over
-> the sampling window. Every sampling window, moving average of system power
-> is computed. At the end of the monitoring window, the moving average is
-> compared against the threshold for mode switch for decision making.
+> 	func->system_params = mask & BIT(APMF_FUNC_GET_SYS_PARAMS - 1);
 > 
-> With AMD managing the system config limits, any mode switch within
-> auto-mode will result in limits of fPPT/sPPT/STAPM or STT being scaled
-> down.
+> Which for APMF_FUNC_GET_SYS_PARAMS happens to be the same, but for
+> other AMPF_FUNC_* values the difference does matter!
 > 
-> When "auto mode" is enabled, the static slider control remains out of
-> the PMF driver, so the platform_profile registration would not
-> happen in PMF driver.
+> Also this information is duplicated by:
 > 
-> The transition to auto-mode only happens when the APMF fn5 is enabled
-> in BIOS, platform_profile set to "balanced" and a AMT
-> (Auto Mode transition) is received.
+> is_apmf_func_supported(APMF_FUNC_GET_SYS_PARAMS) please drop the
+> apmf_if_functions struct and use is_apmf_func_supported() everywhere.
 > 
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/Makefile    |   3 +-
->  drivers/platform/x86/amd/pmf/acpi.c      |   7 +
->  drivers/platform/x86/amd/pmf/auto-mode.c | 317 +++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/core.c      |   9 +
->  drivers/platform/x86/amd/pmf/pmf.h       | 115 ++++++++
->  5 files changed, 450 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/platform/x86/amd/pmf/auto-mode.c
+> Note this means that you also will need to drop func->sbios_heartbeat
+> which does not come from the mask and which is initialized in
+> a different place rather then inside apmf_if_parse_functions() which
+> already shows that sbios_hearbeat does not really belong inside
+> this struct.
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-> index 557521a80427..ef2b08c9174d 100644
-> --- a/drivers/platform/x86/amd/pmf/Makefile
-> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> @@ -5,4 +5,5 @@
->  #
->  
->  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
-> -amd-pmf-objs := core.o acpi.o sps.o
-> +amd-pmf-objs := core.o acpi.o sps.o \
-> +		auto-mode.o
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index 1814d48f8e44..724150ec58fb 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -99,6 +99,7 @@ static void apmf_if_parse_functions(struct apmf_if_functions *func, u32 mask)
->  {
->  	func->system_params = mask & APMF_FUNC_GET_SYS_PARAMS;
->  	func->static_slider_granular = mask & APMF_FUNC_STATIC_SLIDER_GRANULAR;
-> +	func->auto_mode_def = mask & APMF_FUNC_AUTO_MODE;
+> Instead of moving the sbios_heartbeat flag, please just directly
+> use notify_cfg.hb_interval inside apmf_acpi_deinit(). This will also
+> make the cancel_delayed_work_sync(&pmf_dev->heart_beat) condition
+> match the queue condition 1:1.
+> 
+> 
+>> +}
+>> +
+>> +int is_apmf_func_supported(unsigned long index)
+>> +{
+>> +	/* If bit-n is set, that indicates function n+1 is supported */
+>> +	return ((supported_func & (1 << (index - 1))) != 0);
+> 
+> Please write this as:
+> 
+> 	return (supported_func & BIT(index - 1)) != 0;
+> 
+> or as:
+> 
+> 	return !!(supported_func & BIT(index - 1));
+> 
+> 
 
-I just noticed that this is not correct, this should be:
-
-	func->system_params = mask & BIT(APMF_FUNC_... - 1);
-
-Which does something completely different!
-
-Also this information is duplicated by:
-
-is_apmf_func_supported(APMF_FUNC_...) so please drop the apmf_if_functions
-struct completely and use is_apmf_func_supported() everywhere.
-
->  	func->fan_table_idx = mask & APMF_FUNC_SET_FAN_IDX;
->  }
->  
-> @@ -160,6 +161,12 @@ int apmf_update_fan_idx(struct apmf_if *ampf_if, bool manual, u32 idx)
->  	return err;
->  }
->  
-> +int apmf_get_auto_mode_def(struct apmf_if *apmf_if, struct apmf_auto_mode *data)
-> +{
-> +	return apmf_if_call_store_buffer(apmf_if, APMF_FUNC_AUTO_MODE,
-> +					 data, sizeof(*data));
-> +}
-> +
->  static int apmf_if_verify_interface(struct amd_pmf_dev *pdev, struct apmf_if *apmf_if)
->  {
->  	struct apmf_verify_interface output;
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> new file mode 100644
-> index 000000000000..954fde25e71e
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -0,0 +1,317 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AMD Platform Management Framework Driver
-> + *
-> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/list.h>
-
-Please drop the list.h include, see below.
-
-> +#include <linux/workqueue.h>
-> +#include "pmf.h"
-> +
-> +#define AVG_SAMPLE_SIZE 3
-> +
-
-please replace the code from here.
-
-> +struct power_history {
-> +	int socket_power;
-> +	struct list_head list;
-> +	int avg;
-> +	int total;
-> +};
-> +
-> +struct list_pdata {
-> +	int total;
-> +	int avg;
-> +};
-> +
-> +static struct power_history power_list;
-> +static struct list_pdata pdata;
-
-to here with:
-
-static int socket_power_history[AVG_SAMPLE_SIZE];
-static int socket_power_history_idx = -1;
-
-> +
-> +static struct auto_mode_mode_config config_store;
-> +static const char *state_as_str(unsigned int state);
-> +
-> +static void amd_pmf_handle_automode(struct amd_pmf_dev *dev, bool op, int idx,
-> +				    struct auto_mode_mode_config *table)
-> +{
-
-all callers use SLIDER_OP_GET for the "op" argument. Please rename this to
-amd_pmf_set_automode(), drop the "op" argument and drop the SLIDER_OP_GET
-handling code.
-
-> +	if (op == SLIDER_OP_SET) {
-> +		struct power_table_control *pwr_ctrl = &config_store.mode_set[idx].power_control;
-> +
-> +		amd_pmf_send_cmd(dev, SET_SPL, false, pwr_ctrl->spl, NULL);
-> +		amd_pmf_send_cmd(dev, SET_FPPT, false, pwr_ctrl->fppt, NULL);
-> +		amd_pmf_send_cmd(dev, SET_SPPT, false, pwr_ctrl->sppt, NULL);
-> +		amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pwr_ctrl->sppt_apu_only, NULL);
-> +		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_min, NULL);
-> +		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-> +				 pwr_ctrl->stt_skin_temp[STT_TEMP_APU], NULL);
-> +		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-> +				 pwr_ctrl->stt_skin_temp[STT_TEMP_HS2], NULL);
-> +	} else if (op == SLIDER_OP_GET) {
-> +		amd_pmf_send_cmd(dev, GET_SPL, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.spl);
-> +		amd_pmf_send_cmd(dev, GET_FPPT, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.fppt);
-> +		amd_pmf_send_cmd(dev, GET_SPPT, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.sppt);
-> +		amd_pmf_send_cmd(dev, GET_SPPT_APU_ONLY, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.sppt_apu_only);
-> +		amd_pmf_send_cmd(dev, GET_STT_MIN_LIMIT, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.stt_min);
-> +		amd_pmf_send_cmd(dev, GET_STT_LIMIT_APU, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.stt_skin_temp[STT_TEMP_APU]);
-> +		amd_pmf_send_cmd(dev, GET_STT_LIMIT_HS2, true, ARG_NONE,
-> +				 &table->mode_set[idx].power_control.stt_skin_temp[STT_TEMP_HS2]);
-> +	}
-> +
-> +	if (dev->apmf_if->func.fan_table_idx)
-> +		apmf_update_fan_idx(dev->apmf_if, config_store.mode_set[idx].fan_control.manual,
-> +				    config_store.mode_set[idx].fan_control.fan_id);
-> +}
-> +
-> +static int amd_pmf_get_moving_avg(int socket_power)
-> +{
-> +	struct power_history *tmp;
-> +	struct list_head *pos, *q;
-> +	static int count;
-
-Why is this here, but is power_list a global ?
-
-Note that you can initialize a (static) list while declaring it. E.g. :
-
-	static LIST_HEAD(power_list);
-
-But as I mention below this whole code can be mode much much simpler.
-
-> +
-> +	tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
-> +	tmp->socket_power = socket_power;
-> +	list_add_tail(&tmp->list, &power_list.list);
-> +
-> +	list_for_each_safe(pos, q, &power_list.list) {
-> +		if (count >= AVG_SAMPLE_SIZE) {
-> +			tmp = list_first_entry(pos, struct power_history, list);
-> +			list_del_init(pos);
-> +			goto next;
-> +		}
-> +	}
-> +
-> +next:
-> +	pdata.total = 0;
-> +	pdata.avg = 0;
-> +
-> +	list_for_each(pos, &power_list.list) {
-> +		tmp = list_entry(pos, struct power_history, list);
-> +		pdata.total += tmp->socket_power;
-> +		pdata.avg = pdata.total / AVG_SAMPLE_SIZE;
-> +	}
-> +
-> +	count++;
-> +	if (count >= AVG_SAMPLE_SIZE)
-> +		return pdata.avg;
-> +
-> +	return 0;
-> +}
-
-Please replace all this list + alloc + free magic which is very hard to review
-and needlessly complicated with this much simpler implementation:
-
-static int amd_pmf_get_moving_avg(int socket_power)
-{
-	int i, total = 0;
-
-	if (socket_power_history_idx == -1) {
-		for (i = 0; i < AVG_SAMPLE_SIZE; i++)
-			socket_power_history[i] = socket_power;
-	}
-
-	socket_power_history_idx = (socket_power_history_idx + 1) % AVG_SAMPLE_SIZE;
-	socket_power_history[socket_power_history_idx] = socket_power;
-
-	for (i = 0; i < AVG_SAMPLE_SIZE; i++)
-		total += socket_power_history[i];
-
-	return total / AVG_SAMPLE_SIZE;
-}
-
-> +
-> +void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms)
-> +{
-> +	int avg_power = 0;
-> +	bool update = false;
-> +	int i, j;
-> +
-> +	/* Get the average moving average computed by auto mode algorithm */
-> +	avg_power = amd_pmf_get_moving_avg(socket_power);
-> +
-> +	for (i = 0; i < AUTO_TRANSITION_MAX; i++) {
-> +		if ((config_store.transition[i].shifting_up && avg_power >=
-> +		     config_store.transition[i].power_threshold) ||
-> +		    (!config_store.transition[i].shifting_up && avg_power <=
-> +		     config_store.transition[i].power_threshold)) {
-> +			if (config_store.transition[i].timer <
-> +			    config_store.transition[i].time_constant)
-> +				config_store.transition[i].timer += time_elapsed_ms;
-> +		} else {
-> +			config_store.transition[i].timer = 0;
-> +		}
-> +
-> +		if (config_store.transition[i].timer >=
-> +		    config_store.transition[i].time_constant &&
-> +		    !config_store.transition[i].applied) {
-> +			config_store.transition[i].applied = true;
-> +			update = true;
-> +		} else if (config_store.transition[i].timer <=
-> +			   config_store.transition[i].time_constant &&
-> +			   config_store.transition[i].applied) {
-> +			config_store.transition[i].applied = false;
-> +			update = true;
-> +		}
-> +	}
-> +
-> +	dev_dbg(dev->dev, "[AUTO_MODE] avg power: %u mW mode: %s\n", avg_power,
-> +		state_as_str(config_store.current_mode));
-> +
-> +	if (update) {
-> +		for (j = 0; j < AUTO_TRANSITION_MAX; j++) {
-> +			/* Apply the mode with highest priority indentified */
-> +			if (config_store.transition[j].applied) {
-> +				if (config_store.current_mode !=
-> +				    config_store.transition[j].target_mode) {
-> +					config_store.current_mode =
-> +							config_store.transition[j].target_mode;
-> +					dev_dbg(dev->dev, "[AUTO_MODE] moving to mode:%s\n",
-> +						state_as_str(config_store.current_mode));
-> +					amd_pmf_handle_automode(dev, SLIDER_OP_SET,
-> +								config_store.current_mode, NULL);
-> +				}
-> +				break;
-> +			}
-> +		}
-> +	}
-> +}
-> +
-> +static void amd_pmf_get_power_threshold(void)
-> +{
-> +	config_store.transition[AUTO_TRANSITION_TO_QUIET].power_threshold =
-> +				config_store.mode_set[AUTO_BALANCE].power_floor -
-> +				config_store.transition[AUTO_TRANSITION_TO_QUIET].power_delta;
-> +
-> +	config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].power_threshold =
-> +				config_store.mode_set[AUTO_BALANCE].power_floor -
-> +				config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].power_delta;
-> +
-> +	config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].power_threshold =
-> +			config_store.mode_set[AUTO_QUIET].power_floor -
-> +			config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].power_delta;
-> +
-> +	config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_threshold =
-> +		config_store.mode_set[AUTO_PERFORMANCE].power_floor -
-> +		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_delta;
-> +}
-> +
-> +static const char *state_as_str(unsigned int state)
-> +{
-> +	switch (state) {
-> +	case AUTO_QUIET:
-> +		return "QUIET";
-> +	case AUTO_BALANCE:
-> +		return "BALANCED";
-> +	case AUTO_PERFORMANCE_ON_LAP:
-> +		return "ON_LAP";
-> +	case AUTO_PERFORMANCE:
-> +		return "PERFORMANCE";
-> +	default:
-> +		return "Unknown Auto Mode State";
-> +	}
-> +}
-> +
-> +void amd_pmf_load_defaults_auto_mode(struct amd_pmf_dev *dev)
-> +{
-> +	struct apmf_auto_mode output;
-> +	struct power_table_control *pwr_ctrl;
-> +	int i;
-> +
-> +	if (dev->apmf_if->func.auto_mode_def) {
-
-This is already checked by the "if (is_apmf_func_supported(APMF_FUNC_AUTO_MODE))"
-check inside amd_pmf_init_features(), please drop this check.
-
-> +		apmf_get_auto_mode_def(dev->apmf_if, &output);
-> +		/* time constant */
-> +		config_store.transition[AUTO_TRANSITION_TO_QUIET].time_constant =
-> +									output.balanced_to_quiet;
-> +		config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].time_constant =
-> +									output.balanced_to_perf;
-> +		config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].time_constant =
-> +									output.quiet_to_balanced;
-> +		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].time_constant =
-> +									output.perf_to_balanced;
-> +
-> +		/* power floor */
-> +		config_store.mode_set[AUTO_QUIET].power_floor = output.pfloor_quiet;
-> +		config_store.mode_set[AUTO_BALANCE].power_floor = output.pfloor_balanced;
-> +		config_store.mode_set[AUTO_PERFORMANCE].power_floor = output.pfloor_perf;
-> +		config_store.mode_set[AUTO_PERFORMANCE_ON_LAP].power_floor = output.pfloor_perf;
-> +
-> +		/* Power delta for mode change */
-> +		config_store.transition[AUTO_TRANSITION_TO_QUIET].power_delta =
-> +									output.pd_balanced_to_quiet;
-> +		config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].power_delta =
-> +									output.pd_balanced_to_perf;
-> +		config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].power_delta =
-> +									output.pd_quiet_to_balanced;
-> +		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_delta =
-> +									output.pd_perf_to_balanced;
-> +
-> +		/* Power threshold */
-> +		amd_pmf_get_power_threshold();
-> +
-> +		/* skin temperature limits */
-> +		pwr_ctrl = &config_store.mode_set[AUTO_QUIET].power_control;
-> +		pwr_ctrl->spl = output.spl_quiet;
-> +		pwr_ctrl->sppt = output.sppt_quiet;
-> +		pwr_ctrl->fppt = output.fppt_quiet;
-> +		pwr_ctrl->sppt_apu_only = output.sppt_apu_only_quiet;
-> +		pwr_ctrl->stt_min = output.stt_min_limit_quiet;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_APU] = output.stt_apu_quiet;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_HS2] = output.stt_hs2_quiet;
-> +
-> +		pwr_ctrl = &config_store.mode_set[AUTO_BALANCE].power_control;
-> +		pwr_ctrl->spl = output.spl_balanced;
-> +		pwr_ctrl->sppt = output.sppt_balanced;
-> +		pwr_ctrl->fppt = output.fppt_balanced;
-> +		pwr_ctrl->sppt_apu_only = output.sppt_apu_only_balanced;
-> +		pwr_ctrl->stt_min = output.stt_min_limit_balanced;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_APU] = output.stt_apu_balanced;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_HS2] = output.stt_hs2_balanced;
-> +
-> +		pwr_ctrl = &config_store.mode_set[AUTO_PERFORMANCE].power_control;
-> +		pwr_ctrl->spl = output.spl_perf;
-> +		pwr_ctrl->sppt = output.sppt_perf;
-> +		pwr_ctrl->fppt = output.fppt_perf;
-> +		pwr_ctrl->sppt_apu_only = output.sppt_apu_only_perf;
-> +		pwr_ctrl->stt_min = output.stt_min_limit_perf;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_APU] = output.stt_apu_perf;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_HS2] = output.stt_hs2_perf;
-> +
-> +		pwr_ctrl = &config_store.mode_set[AUTO_PERFORMANCE_ON_LAP].power_control;
-> +		pwr_ctrl->spl = output.spl_perf_on_lap;
-> +		pwr_ctrl->sppt = output.sppt_perf_on_lap;
-> +		pwr_ctrl->fppt = output.fppt_perf_on_lap;
-> +		pwr_ctrl->sppt_apu_only = output.sppt_apu_only_perf_on_lap;
-> +		pwr_ctrl->stt_min = output.stt_min_limit_perf_on_lap;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_APU] = output.stt_apu_perf_on_lap;
-> +		pwr_ctrl->stt_skin_temp[STT_TEMP_HS2] = output.stt_hs2_perf_on_lap;
-> +
-> +		/* Fan ID */
-> +		config_store.mode_set[AUTO_QUIET].fan_control.fan_id = output.fan_id_quiet;
-> +		config_store.mode_set[AUTO_BALANCE].fan_control.fan_id = output.fan_id_balanced;
-> +		config_store.mode_set[AUTO_PERFORMANCE].fan_control.fan_id = output.fan_id_perf;
-> +		config_store.mode_set[AUTO_PERFORMANCE_ON_LAP].fan_control.fan_id =
-> +										output.fan_id_perf;
-> +
-> +		config_store.transition[AUTO_TRANSITION_TO_QUIET].target_mode = AUTO_QUIET;
-> +		config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].target_mode =
-> +									AUTO_PERFORMANCE;
-> +		config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].target_mode =
-> +										AUTO_BALANCE;
-> +		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].target_mode =
-> +										AUTO_BALANCE;
-> +
-> +		config_store.transition[AUTO_TRANSITION_TO_QUIET].shifting_up = false;
-> +		config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].shifting_up = true;
-> +		config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].shifting_up = true;
-> +		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].shifting_up =
-> +											false;
-> +
-> +		for (i = 0 ; i < AUTO_MODE_MAX ; i++) {
-> +			if (config_store.mode_set[i].fan_control.fan_id == FAN_INDEX_AUTO)
-> +				config_store.mode_set[i].fan_control.manual = false;
-> +			else
-> +				config_store.mode_set[i].fan_control.manual = true;
-> +		}
-> +	}
-
-This function should also set config_store.current_mode to some sane default (probably balanced).
-
-> +}
-> +
-> +void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev)
-> +{
-> +	cancel_delayed_work_sync(&dev->work_buffer);
-> +}
-> +
-> +void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev)
-> +{
-> +	INIT_LIST_HEAD(&power_list.list);
-> +
-> +	amd_pmf_init_metrics_table(dev);
-
-amd_pmf_init_metrics_table(dev) starts the work, so this needs to be done as the last
-step in this function.
-
-> +	amd_pmf_load_defaults_auto_mode(dev);
-> +
-> +	/* update the thermal for Automode */
-> +	amd_pmf_handle_automode(dev, SLIDER_OP_SET, config_store.current_mode, NULL);
-> +}
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index ede4eefc33a4..ef71f8326248 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -244,12 +244,21 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
->  		amd_pmf_init_sps(dev);
->  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
->  	}
-> +
-> +	/* Enable Auto Mode */
-> +	if (is_apmf_func_supported(APMF_FUNC_AUTO_MODE)) {
-> +		amd_pmf_init_auto_mode(dev);
-> +		dev_dbg(dev->dev, "Auto Mode Init done\n");
-> +	}
->  }
->  
->  static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
->  {
->  	if (is_apmf_func_supported(APMF_FUNC_STATIC_SLIDER_GRANULAR))
->  		amd_pmf_deinit_sps(dev);
-> +
-> +	if (is_apmf_func_supported(APMF_FUNC_AUTO_MODE))
-> +		amd_pmf_deinit_auto_mode(dev);
->  }
->  
->  static const struct acpi_device_id amd_pmf_acpi_ids[] = {
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 49d3232ee2e0..4618ddc5a662 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -18,6 +18,7 @@
->  #define APMF_FUNC_VERIFY_INTERFACE			0
->  #define APMF_FUNC_GET_SYS_PARAMS			1
->  #define APMF_FUNC_SBIOS_HEARTBEAT			4
-> +#define APMF_FUNC_AUTO_MODE					5
->  #define APMF_FUNC_SET_FAN_IDX				7
->  #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
->  
-> @@ -49,6 +50,7 @@
->  struct apmf_if_functions {
->  	bool system_params;
->  	bool sbios_heartbeat;
-> +	bool auto_mode_def;
->  	bool fan_table_idx;
->  	bool static_slider_granular;
->  };
-> @@ -187,6 +189,111 @@ struct fan_table_control {
->  	unsigned long fan_id;
->  };
->  
-> +struct power_table_control {
-> +	u32 spl;
-> +	u32 sppt;
-> +	u32 fppt;
-> +	u32 sppt_apu_only;
-> +	u32 stt_min;
-> +	u32 stt_skin_temp[STT_TEMP_COUNT];
-> +	u32 reserved[16];
-> +};
-> +
-> +/* Auto Mode Layer */
-> +enum auto_mode_transition_priority {
-> +	AUTO_TRANSITION_TO_PERFORMANCE, /* Any other mode to Performance Mode */
-> +	AUTO_TRANSITION_FROM_QUIET_TO_BALANCE, /* Quiet Mode to Balance Mode */
-> +	AUTO_TRANSITION_TO_QUIET, /* Any other mode to Quiet Mode */
-> +	AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE, /* Performance Mode to Balance Mode */
-> +	AUTO_TRANSITION_MAX,
-> +};
-> +
-> +enum auto_mode_mode {
-> +	AUTO_QUIET,
-> +	AUTO_BALANCE,
-> +	AUTO_PERFORMANCE_ON_LAP,
-> +	AUTO_PERFORMANCE,
-> +	AUTO_MODE_MAX,
-> +};
-> +
-> +struct auto_mode_trans_params {
-> +	u32 time_constant; /* minimum time required to switch to next mode */
-> +	u32 power_delta; /* delta power to shift mode */
-> +	u32 power_threshold;
-> +	u32 timer; /* elapsed time. if timer > TimeThreshold, it will move to next mode */
-> +	u32 applied;
-> +	enum auto_mode_mode target_mode;
-> +	u32 shifting_up;
-> +};
-> +
-> +struct auto_mode_mode_settings {
-> +	struct power_table_control power_control;
-> +	struct fan_table_control fan_control;
-> +	u32 power_floor;
-> +};
-> +
-> +struct auto_mode_mode_config {
-> +	struct auto_mode_trans_params transition[AUTO_TRANSITION_MAX];
-> +	struct auto_mode_mode_settings mode_set[AUTO_MODE_MAX];
-> +	enum auto_mode_mode current_mode;
-> +	bool on_lap;
-> +	bool better_perf;
-> +	u32 amt_enabled; /* Auto Mode Transition */
-> +	u32 avg_power;
-> +};
-> +
-> +struct apmf_auto_mode {
-> +	u16 size;
-> +	/* time constant */
-> +	u32 balanced_to_perf;
-> +	u32 perf_to_balanced;
-> +	u32 quiet_to_balanced;
-> +	u32 balanced_to_quiet;
-> +	/* power floor */
-> +	u32 pfloor_perf;
-> +	u32 pfloor_balanced;
-> +	u32 pfloor_quiet;
-> +	/* Power delta for mode change */
-> +	u32 pd_balanced_to_perf;
-> +	u32 pd_perf_to_balanced;
-> +	u32 pd_quiet_to_balanced;
-> +	u32 pd_balanced_to_quiet;
-> +	/* skin temperature limits */
-> +	u8 stt_apu_perf_on_lap; /* CQL ON */
-> +	u8 stt_hs2_perf_on_lap; /* CQL ON */
-> +	u8 stt_apu_perf;
-> +	u8 stt_hs2_perf;
-> +	u8 stt_apu_balanced;
-> +	u8 stt_hs2_balanced;
-> +	u8 stt_apu_quiet;
-> +	u8 stt_hs2_quiet;
-> +	u32 stt_min_limit_perf_on_lap; /* CQL ON */
-> +	u32 stt_min_limit_perf;
-> +	u32 stt_min_limit_balanced;
-> +	u32 stt_min_limit_quiet;
-> +	/* SPL based */
-> +	u32 fppt_perf_on_lap; /* CQL ON */
-> +	u32 sppt_perf_on_lap; /* CQL ON */
-> +	u32 spl_perf_on_lap; /* CQL ON */
-> +	u32 sppt_apu_only_perf_on_lap; /* CQL ON */
-> +	u32 fppt_perf;
-> +	u32 sppt_perf;
-> +	u32 spl_perf;
-> +	u32 sppt_apu_only_perf;
-> +	u32 fppt_balanced;
-> +	u32 sppt_balanced;
-> +	u32 spl_balanced;
-> +	u32 sppt_apu_only_balanced;
-> +	u32 fppt_quiet;
-> +	u32 sppt_quiet;
-> +	u32 spl_quiet;
-> +	u32 sppt_apu_only_quiet;
-> +	/* Fan ID */
-> +	u32 fan_id_perf;
-> +	u32 fan_id_balanced;
-> +	u32 fan_id_quiet;
-> +} __packed;
-> +
->  /* Core Layer */
->  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
->  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
-> @@ -206,4 +313,12 @@ int apmf_get_static_slider_granular(struct apmf_if *ampf_if,
->  void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev);
->  
->  int apmf_update_fan_idx(struct apmf_if *ampf_if, bool manual, u32 idx);
-> +
-> +/* Auto Mode Layer */
-> +void amd_pmf_load_defaults_auto_mode(struct amd_pmf_dev *dev);
-> +int apmf_get_auto_mode_def(struct apmf_if *ampf_if, struct apmf_auto_mode *data);
-> +void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev);
-> +void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev);
-> +void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
-> +
->  #endif /* PMF_H */
+Also please make this function take a "struct amd_pmf_dev *pdev" argument
+and add an "u32 supported_func" to amd_pmf_dev instead of making it a global
+variable.
 
 Regards,
 
 Hans
+
+
+
+>> +}
+>> +
+>> +static int apmf_if_verify_interface(struct amd_pmf_dev *pdev, struct apmf_if *apmf_if)
+>> +{
+>> +	struct apmf_verify_interface output;
+>> +	int err;
+>> +
+>> +	err = apmf_if_call_store_buffer(apmf_if, APMF_FUNC_VERIFY_INTERFACE,
+>> +					&output, sizeof(output));
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	apmf_if_parse_functions(&apmf_if->func, output.supported_functions);
+>> +	supported_func = output.supported_functions;
+>> +	dev_dbg(pdev->dev, "supported functions:0x%x notifications:0x%x\n",
+>> +		output.supported_functions, output.notification_mask);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int apmf_get_system_params(struct apmf_if *apmf_if)
+>> +{
+>> +	struct apmf_system_params params;
+>> +	int err;
+>> +
+>> +	if (apmf_if->func.system_params) {
+>> +		err = apmf_if_call_store_buffer(apmf_if, APMF_FUNC_GET_SYS_PARAMS,
+>> +						&params, sizeof(params));
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>> +	pr_debug("PMF: system params mask:0x%x flags:0x%x cmd_code:0x%x\n",
+>> +		 params.valid_mask,
+>> +		 params.flags,
+>> +		 params.command_code);
+>> +	params.flags = params.flags & params.valid_mask;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
+>> +{
+>> +	acpi_handle apmf_if_handle;
+>> +	struct apmf_if *apmf_if;
+>> +	acpi_status status;
+>> +	int ret;
+>> +
+>> +	status = acpi_get_handle(NULL, (acpi_string) APMF_METHOD, &apmf_if_handle);
+>> +	if (ACPI_FAILURE(status))
+>> +		return -ENODEV;
+>> +
+>> +	apmf_if = kzalloc(sizeof(*apmf_if), GFP_KERNEL);
+>> +	if (!apmf_if)
+>> +		goto out;
+>> +
+>> +	apmf_if->handle = apmf_if_handle;
+>> +
+>> +	ret = apmf_if_verify_interface(pmf_dev, apmf_if);
+>> +	if (ret) {
+>> +		dev_err(pmf_dev->dev, "APMF verify interface failed :%d\n", ret);
+>> +		kfree(apmf_if);
+>> +		goto out;
+>> +	}
+>> +	pmf_dev->apmf_if = apmf_if;
+> 
+> After dropping the apmf_if_functions sub-struct from amp_if amp_if only contains
+> an acpi_handle. Please just store the handle (and later on also the struct
+> apmf_notification_cfg) directly inside struct amd_pmf_dev, this also removes
+> the need for doing the whole alloc + free + associated error handling dance here.
+> 
+> Regsards,
+> 
+> Hans
+> 
+> 
+>> +
+>> +	ret = apmf_get_system_params(apmf_if);
+>> +	if (ret) {
+>> +		dev_err(pmf_dev->dev, "APMF apmf_get_system_params failed :%d\n", ret);
+>> +		kfree(apmf_if);
+>> +		goto out;
+>> +	}
+>> +
+>> +out:
+>> +	return ret;
+>> +}
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index aef97965c181..c5002b7bb904 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -204,6 +204,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>  	if (!dev->regbase)
+>>  		return -ENOMEM;
+>>  
+>> +	apmf_acpi_init(dev);
+>>  	platform_set_drvdata(pdev, dev);
+>>  
+>>  	mutex_init(&dev->lock);
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index 1c2e942e5096..08c6bc0e2b42 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -11,6 +11,12 @@
+>>  #ifndef PMF_H
+>>  #define PMF_H
+>>  
+>> +#include <linux/acpi.h>
+>> +
+>> +/* APMF Functions */
+>> +#define APMF_FUNC_VERIFY_INTERFACE			0
+>> +#define APMF_FUNC_GET_SYS_PARAMS			1
+>> +
+>>  /* Message Definitions */
+>>  #define SET_SPL				0x03 /* SPL: Sustained Power Limit */
+>>  #define SET_SPPT			0x05 /* SPPT: Slow Package Power Tracking */
+>> @@ -30,6 +36,30 @@
+>>  #define GET_STT_LIMIT_APU	0x20
+>>  #define GET_STT_LIMIT_HS2	0x21
+>>  
+>> +/* AMD PMF BIOS interfaces */
+>> +struct apmf_if_functions {
+>> +	bool system_params;
+>> +};
+>> +
+>> +struct apmf_if {
+>> +	acpi_handle handle;
+>> +	struct apmf_if_functions func;
+>> +};
+>> +
+>> +struct apmf_verify_interface {
+>> +	u16 size;
+>> +	u16 version;
+>> +	u32 notification_mask;
+>> +	u32 supported_functions;
+>> +} __packed;
+>> +
+>> +struct apmf_system_params {
+>> +	u16 size;
+>> +	u32 valid_mask;
+>> +	u32 flags;
+>> +	u8 command_code;
+>> +} __packed;
+>> +
+>>  struct amd_pmf_dev {
+>>  	void __iomem *regbase;
+>>  	void __iomem *smu_virt_addr;
+>> @@ -37,10 +67,12 @@ struct amd_pmf_dev {
+>>  	u32 base_addr;
+>>  	u32 cpu_id;
+>>  	struct device *dev;
+>> +	struct apmf_if *apmf_if;
+>>  	struct mutex lock; /* protects the PMF interface */
+>>  };
+>>  
+>>  /* Core Layer */
+>> +int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+>>  int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
+>>  
+>>  #endif /* PMF_H */
 
