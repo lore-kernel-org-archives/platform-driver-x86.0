@@ -2,151 +2,374 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119F3C19F2C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Aug 2022 11:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90365C19F2C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Aug 2022 11:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236705AbiHBLAt (ORCPT
+        id S236811AbiHBLJm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Aug 2022 07:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36630 "EHLO
+        Tue, 2 Aug 2022 07:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236716AbiHBLA3 (ORCPT
+        with ESMTP id S236752AbiHBLJl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Aug 2022 07:00:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3125713E3B
-        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Aug 2022 04:00:27 -0700 (PDT)
+        Tue, 2 Aug 2022 07:09:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89C0348E8A
+        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Aug 2022 04:09:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659438026;
+        s=mimecast20190719; t=1659438579;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xJ6goYLsX5C+yTaCJPNre3d6qfx4iGoRBFFTCYqO9mg=;
-        b=TOjngPX3m82/AgOWtf2YL54DLHHOXlKXtBs6rJ4ShpWHmc+b9pG+DFPHs4zCTCOy6FSLjs
-        quxm8UwHW6AJCJkrXGjNMZb29z4cZBAwCPnnXJCczjsAcQIxSjckjwoaTaGGA/3bdelGf0
-        n0+B4EE6EtrqcXK1WKflAuXUi8vR77U=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=6BifT43D9freggl3HgwGtguwbmiNbluqDwwULzzJtpQ=;
+        b=IzYz6VSSBCnWfYgCSj0BmhcDoFHmb5RPYLModdgsyH0u9PFBqfkXA4h/jVNAv6U5Hl5I3o
+        7EwnJBlP5HS3VeDA7zjPgbNV/+M909tR4Y0F7V1AuP1MuGKPk4QQ5OH1H1ZPipThGEYZ6H
+        8hb0GsI7wWUjQ816lxYJAQJQqW4hSZQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-588-aeNPlKYnMPeuZVr82G5gJw-1; Tue, 02 Aug 2022 07:00:25 -0400
-X-MC-Unique: aeNPlKYnMPeuZVr82G5gJw-1
-Received: by mail-ed1-f72.google.com with SMTP id q18-20020a056402519200b0043dd2ff50feso2362058edd.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Aug 2022 04:00:25 -0700 (PDT)
+ us-mta-573-7NTbRAFiPImVo1nT6LZ_Cw-1; Tue, 02 Aug 2022 07:09:38 -0400
+X-MC-Unique: 7NTbRAFiPImVo1nT6LZ_Cw-1
+Received: by mail-ed1-f71.google.com with SMTP id o2-20020a056402438200b0043d552deb2aso5149412edc.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Aug 2022 04:09:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=xJ6goYLsX5C+yTaCJPNre3d6qfx4iGoRBFFTCYqO9mg=;
-        b=BehFCx7F7xTjyJzW+wDWmOwGijHxzG4TXD//YMBomBoREBdUp4yreXT6OmTuLkfVtT
-         jP5V2mJIO8be/C6QkdXOOFRBqvQgZm4AcJXwjSAy6uBUCT3HI1GVp7nnb/TZ9LYOHgq2
-         MvksuYuNC06F0ZHc8NQPMmPLtQ/LKsQkMBYaGs5tjKrKyrz9Xh/a4bSnTW/+iDain8rs
-         hmMtHTOMLfC9RZCj95NQD313fhhVbF6w6PABHRmjnXoDxZOUX64SquuxVXKgow/IgaNK
-         TOfxSZtjiK8+dISZtdMv171YGON8NEmyuUs7P1RiDTkCfUEvJHqQEX0jAxbRonTgeEjR
-         vjfw==
-X-Gm-Message-State: ACgBeo3B5ZNOU8lfkmMwFOfYk7S58qiKoR1foTDLmMqky5lL8yl0Il8/
-        B0YsPdkJW3iYMei4g/Uw24RgfbMOG+1CVSSZL7FLKF4uJ4hpDu9nNGvKHETc3d5oEYxP6Tz27Dp
-        uJ3ov/GOYW3VczyuA4qV9IM/1gIT3UfV8HQ==
-X-Received: by 2002:a05:6402:2755:b0:43d:7568:c78e with SMTP id z21-20020a056402275500b0043d7568c78emr12185421edd.104.1659438024024;
-        Tue, 02 Aug 2022 04:00:24 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7wenvZ6H4t+/xkk0JBUWMSDv2NZrtbupC0xYJYdLYkbUs+HEkLnUxumivyHZaRuNQ1ouWezA==
-X-Received: by 2002:a05:6402:2755:b0:43d:7568:c78e with SMTP id z21-20020a056402275500b0043d7568c78emr12185409edd.104.1659438023864;
-        Tue, 02 Aug 2022 04:00:23 -0700 (PDT)
+        bh=6BifT43D9freggl3HgwGtguwbmiNbluqDwwULzzJtpQ=;
+        b=1bvF3x/o9ZFXwLh5u/Td2Vs8aj2GHVs+F541q5cQLRzRXGfc63R+Wb14fkAJDH6h/i
+         X8FX92MNOiwNroPsAB+/dlOak5MkA3IHOkNCw4LElL3VNz/TxOigQitopRzt9H+BST6G
+         8bMsFt2w8QlLjEwjfuOrIYvlVJMUMiJc3kzqdH+zDhYIgXde/xegL3q4V2uF/h0gCHuL
+         kwg7eyuvrLX4DFZPHwWo6K0yBiUuEe7pJ9zqaFcC26hSWIaylHxjQ3z7NX2hDj2gLpY/
+         4nT5nueOmMCQh5n+PNhLtEYqX8YR+8SE/MMJQkv8SpdH9AFVy5B4DU0f9bqXw/WJyPYb
+         0XAg==
+X-Gm-Message-State: AJIora/rCHDvgkqJR29Opm1ow134GTcvKrTjTuTn4s+oPxaY9TAvmkhd
+        hXb+k583haZmZLyRS+CV4li9rjcSa/lu2J9CED+e25TpUxD1UFV01jH9txmDszbHvXNYZI9hUZg
+        HMVAv7ztuvXfHVY+ZrlVz8fYPe0SSoZQdXA==
+X-Received: by 2002:a17:906:7482:b0:722:edf9:e72f with SMTP id e2-20020a170906748200b00722edf9e72fmr15625726ejl.92.1659438577254;
+        Tue, 02 Aug 2022 04:09:37 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uq2ekdaNit9efw2ckO/parj6gVLp//Nsu4D/ZPzj6dYKWh7G3lCW04SG2a2ByGFq4LcDNNNA==
+X-Received: by 2002:a17:906:7482:b0:722:edf9:e72f with SMTP id e2-20020a170906748200b00722edf9e72fmr15625713ejl.92.1659438577031;
+        Tue, 02 Aug 2022 04:09:37 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id u25-20020a17090617d900b0072f4f4dc038sm6116478eje.42.2022.08.02.04.00.23
+        by smtp.gmail.com with ESMTPSA id k19-20020aa7c393000000b0043bbcd94ee4sm8071099edq.51.2022.08.02.04.09.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Aug 2022 04:00:23 -0700 (PDT)
-Message-ID: <6820bd94-1476-b1dc-e325-22b958aea696@redhat.com>
-Date:   Tue, 2 Aug 2022 13:00:22 +0200
+        Tue, 02 Aug 2022 04:09:36 -0700 (PDT)
+Message-ID: <e6c0ca61-97d3-328b-f50e-7cdac50eb083@redhat.com>
+Date:   Tue, 2 Aug 2022 13:09:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v2 1/4] platform/x86: pmc_atom: Fix SLP_TYPx bitfield mask
+Subject: Re: [PATCH] asus-wmi: Add support for TUF laptop keyboard RGB
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-References: <20220801113734.36131-1-andriy.shevchenko@linux.intel.com>
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20220802045942.1565559-1-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220801113734.36131-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220802045942.1565559-1-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Luke,
 
-On 8/1/22 13:37, Andy Shevchenko wrote:
-> On Intel hardware the SLP_TYPx bitfield occupies bits 10-12 as per ACPI
-> specification (see Table 4.13 "PM1 Control Registers Fixed Hardware
-> Feature Control Bits" for the details).
+On 8/2/22 06:59, Luke D. Jones wrote:
+> Adds support for TUF laptop RGB control. This creates two sysfs
+> paths to add control of basic keyboard LEDs, and power states.
 > 
-> Fix the mask and other related definitions accordingly.
+> /sys/devices/platform/asus-nb-wmi/tuf_krgb_mode has the following
+> as input options via U8 "n n n n n n":
+> - Save or set, if set, then settings revert on cold boot
+> - Mode, 0-8 for regular modes (if supported), 10-12 for "warning" styles
+> - Red, 0-255
+> - Green, 0-255
+> - Blue, 0-255
+> - Speed, 0 = Slow, 1 = Medium, 2 = Fast
 > 
-> Fixes: 93e5eadd1f6e ("x86/platform: New Intel Atom SOC power management controller driver")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> /sys/devices/platform/asus-nb-wmi/tuf_krgb_state has the following
+> as input options via boolean "b b b b b":
+> - Save or set, if set, then settings revert on cold boot
+> - Boot, if true, the keyboard displays animation on boot
+> - Awake, if true, the keyboard LED's are on while device is awake
+> - Sleep, if true, the keyboard shows animation while device is suspended
+> - Keybaord, appears to have no effect
 
-Thank you for your patch-series, I've applied this series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Typo in Keybaord here.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Thank you for your patch. I really appreciate your continued
+efforts to make Asus laptops work well with Linux.
 
-Patches which are added to review-hans now are intended for
-the next rc1. This branch will get rebased to the next rc1 when
-it is out and after the rebasing the contents of review-hans
-will be pushed to the platform-drivers-x86/for-next branch.
+For keyboard backlight support Linux has standardized on
+using the /sys/class/leds API. So I'm afraid that this patch
+will need to be rewritten to use the standard LED API
+and then specifically the somewhat new multicolor LED API
+at least for setting the RGB values (within the current mode)
+
+Any extra functionality can then be added as extra sysfs
+attributes under the /sys/class/leds/asus::kbd_backlight
+device, see e.g. the use of kbd_led_groups in:
+drivers/platform/x86/dell/dell-laptop.c
+
+Note the kbd_backlight part of the name is important this
+will allow upower to recognize this as a keyboard backlight
+and will then enable desktop-environments which use
+upower for kbd backlight control to at least control
+the overall brightness of the kbd-backlight.
+
+I realize that this means that you need to redo a whole
+bunch of work here; and I presume also in your
+asusctl userspace utility, sorry about that. But it
+really is important that standard userspace APIs are
+used for things like this where ever possible.
 
 Regards,
 
 Hans
 
 
-> ---
-> v2: addressed compilation error
->  drivers/platform/x86/pmc_atom.c            | 2 +-
->  include/linux/platform_data/x86/pmc_atom.h | 6 ++++--
->  2 files changed, 5 insertions(+), 3 deletions(-)
+
+
 > 
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index b8b1ed1406de..c220172fefbb 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -232,7 +232,7 @@ static void pmc_power_off(void)
->  	pm1_cnt_port = acpi_base_addr + PM1_CNT;
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 168 +++++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |   6 +
+>  2 files changed, 174 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 62ce198a3463..09277bd98249 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -234,6 +234,9 @@ struct asus_wmi {
+>  	bool dgpu_disable_available;
+>  	bool dgpu_disable;
 >  
->  	pm1_cnt_value = inl(pm1_cnt_port);
-> -	pm1_cnt_value &= SLEEP_TYPE_MASK;
-> +	pm1_cnt_value &= ~SLEEP_TYPE_MASK;
->  	pm1_cnt_value |= SLEEP_TYPE_S5;
->  	pm1_cnt_value |= SLEEP_ENABLE;
->  
-> diff --git a/include/linux/platform_data/x86/pmc_atom.h b/include/linux/platform_data/x86/pmc_atom.h
-> index 6807839c718b..ea01dd80153b 100644
-> --- a/include/linux/platform_data/x86/pmc_atom.h
-> +++ b/include/linux/platform_data/x86/pmc_atom.h
-> @@ -7,6 +7,8 @@
->  #ifndef PMC_ATOM_H
->  #define PMC_ATOM_H
->  
-> +#include <linux/bits.h>
+> +	bool tuf_kb_rgb_mode_available;
+> +	bool tuf_kb_rgb_state_available;
 > +
->  /* ValleyView Power Control Unit PCI Device ID */
->  #define	PCI_DEVICE_ID_VLV_PMC	0x0F1C
->  /* CherryTrail Power Control Unit PCI Device ID */
-> @@ -139,9 +141,9 @@
->  #define	ACPI_MMIO_REG_LEN	0x100
+>  	bool throttle_thermal_policy_available;
+>  	u8 throttle_thermal_policy_mode;
 >  
->  #define	PM1_CNT			0x4
-> -#define	SLEEP_TYPE_MASK		0xFFFFECFF
-> +#define	SLEEP_TYPE_MASK		GENMASK(12, 10)
->  #define	SLEEP_TYPE_S5		0x1C00
-> -#define	SLEEP_ENABLE		0x2000
-> +#define	SLEEP_ENABLE		BIT(13)
+> @@ -734,6 +737,153 @@ static ssize_t egpu_enable_store(struct device *dev,
 >  
->  extern int pmc_atom_read(int offset, u32 *value);
+>  static DEVICE_ATTR_RW(egpu_enable);
 >  
+> +/* TUF Laptop Keyboard RGB Modes **********************************************/
+> +static int tuf_kb_rgb_mode_check_present(struct asus_wmi *asus)
+> +{
+> +	u32 result;
+> +	int err;
+> +
+> +	asus->tuf_kb_rgb_mode_available = false;
+> +
+> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_TUF_RGB_MODE, &result);
+> +	if (err) {
+> +		if (err == -ENODEV)
+> +			return 0;
+> +		return err;
+> +	}
+> +
+> +	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
+> +		asus->tuf_kb_rgb_mode_available = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t tuf_kb_rgb_mode_store(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf, size_t count)
+> +{
+> +	int err;
+> +	u32 ret;
+> +	u8 res, tmp, arg_num;
+> +	char *data, *part, *end;
+> +	u8 cmd, mode, r, g,  b,  speed;
+> +
+> +	data = end = kstrdup(buf, GFP_KERNEL);
+> +	cmd = mode = r = g = b = speed = arg_num = 0;
+> +
+> +	while ((part = strsep(&end, " ")) != NULL) {
+> +		if (part == NULL)
+> +			return -1;
+> +
+> +		res = kstrtou8(part, 10, &tmp);
+> +		if (res)
+> +			return -1;
+> +
+> +		if (arg_num == 0)
+> +			// apply : set
+> +			cmd = tmp == 1 ? 0xb5 : 0xb4;
+> +		else if (arg_num == 1)
+> +			// From 0-8 are valid modes with 10-12 being "warning"
+> +			// style modes. All models have "pulse" mode 10.
+> +			mode = (tmp <= 12 && tmp != 9) ? tmp : 10;
+> +		else if (arg_num == 2)
+> +			r = tmp;
+> +		else if (arg_num == 3)
+> +			g = tmp;
+> +		else if (arg_num == 4)
+> +			b = tmp;
+> +		else if (arg_num == 5) {
+> +			if (tmp == 0)
+> +				speed = 0xe1;
+> +			else if (tmp == 1)
+> +				speed = 0xeb;
+> +			else if (tmp == 2)
+> +				speed = 0xf5;
+> +		}
+> +
+> +		arg_num += 1;
+> +	}
+> +
+> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
+> +			cmd | (mode << 8) | (r << 16) | (g << 24), (b) | (speed << 8), &ret);
+> +	if (err)
+> +		return err;
+> +
+> +	kfree(data);
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_WO(tuf_kb_rgb_mode);
+> +
+> +/* TUF Laptop Keyboard RGB States *********************************************/
+> +static int tuf_kb_rgb_state_check_present(struct asus_wmi *asus)
+> +{
+> +	u32 result;
+> +	int err;
+> +
+> +	asus->tuf_kb_rgb_state_available = false;
+> +
+> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_TUF_RGB_STATE, &result);
+> +	if (err) {
+> +		if (err == -ENODEV)
+> +			return 0;
+> +		return err;
+> +	}
+> +
+> +	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
+> +		asus->tuf_kb_rgb_state_available = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t tuf_kb_rgb_state_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	int err;
+> +	u32 ret;
+> +	bool tmp;
+> +	char *data, *part, *end;
+> +	u8 save, flags, res, arg_num;
+> +
+> +	save = flags = arg_num = 0;
+> +	data = end = kstrdup(buf, GFP_KERNEL);
+> +
+> +	while ((part = strsep(&end, " ")) != NULL) {
+> +		if (part == NULL)
+> +			return -1;
+> +
+> +		res = kstrtobool(part, &tmp);
+> +		if (res)
+> +			return -1;
+> +
+> +		if (tmp) {
+> +			if (arg_num == 0) // save  :  set
+> +				save = tmp == 0 ? 0x0100 : 0x0000;
+> +			else if (arg_num == 1)
+> +				flags |= 0x02; // boot
+> +			else if (arg_num == 2)
+> +				flags |= 0x08; // awake
+> +			else if (arg_num == 3)
+> +				flags |= 0x20; // sleep
+> +			else if (arg_num == 4)
+> +				flags |= 0x80; // keyboard
+> +		}
+> +
+> +		arg_num += 1;
+> +	}
+> +
+> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
+> +			ASUS_WMI_DEVID_TUF_RGB_STATE, 0xBD | save | (flags << 16), 0, &ret);
+> +	if (err)
+> +		return err;
+> +
+> +	kfree(data);
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_WO(tuf_kb_rgb_state);
+> +
+>  /* Battery ********************************************************************/
+>  
+>  /* The battery maximum charging percentage */
+> @@ -3258,6 +3408,8 @@ static struct attribute *platform_attributes[] = {
+>  	&dev_attr_touchpad.attr,
+>  	&dev_attr_egpu_enable.attr,
+>  	&dev_attr_dgpu_disable.attr,
+> +	&dev_attr_tuf_kb_rgb_mode.attr,
+> +	&dev_attr_tuf_kb_rgb_state.attr,
+>  	&dev_attr_lid_resume.attr,
+>  	&dev_attr_als_enable.attr,
+>  	&dev_attr_fan_boost_mode.attr,
+> @@ -3286,6 +3438,12 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+>  		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+>  	else if (attr == &dev_attr_egpu_enable.attr)
+>  		ok = asus->egpu_enable_available;
+> +	else if (attr == &dev_attr_tuf_kb_rgb_mode.attr)
+> +		ok = asus->tuf_kb_rgb_mode_available;
+> +	else if (attr == &dev_attr_tuf_kb_rgb_state.attr)
+> +		ok = asus->tuf_kb_rgb_state_available;
+> +	else if (attr == &dev_attr_dgpu_disable.attr)
+> +		ok = asus->dgpu_disable_available;
+>  	else if (attr == &dev_attr_dgpu_disable.attr)
+>  		ok = asus->dgpu_disable_available;
+>  	else if (attr == &dev_attr_fan_boost_mode.attr)
+> @@ -3557,6 +3715,14 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	if (err)
+>  		goto fail_dgpu_disable;
+>  
+> +	err = tuf_kb_rgb_mode_check_present(asus);
+> +	if (err)
+> +		goto fail_tuf_kb_rgb_mode;
+> +
+> +	err = tuf_kb_rgb_state_check_present(asus);
+> +	if (err)
+> +		goto fail_tuf_kb_rgb_state;
+> +
+>  	err = fan_boost_mode_check_present(asus);
+>  	if (err)
+>  		goto fail_fan_boost_mode;
+> @@ -3671,6 +3837,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  fail_fan_boost_mode:
+>  fail_egpu_enable:
+>  fail_dgpu_disable:
+> +fail_tuf_kb_rgb_mode:
+> +fail_tuf_kb_rgb_state:
+>  fail_platform:
+>  fail_panel_od:
+>  	kfree(asus);
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index a571b47ff362..af4191fb0508 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -98,6 +98,12 @@
+>  /* dgpu on/off */
+>  #define ASUS_WMI_DEVID_DGPU		0x00090020
+>  
+> +/* TUF laptop RGB modes/colours */
+> +#define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
+> +
+> +/* TUF laptop RGB power/state */
+> +#define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
+> +
+>  /* DSTS masks */
+>  #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+>  #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
 
