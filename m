@@ -2,72 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D744C19F28
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Aug 2022 05:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D4C19F2A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Aug 2022 06:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235526AbiHCFkR (ORCPT
+        id S236832AbiHCGh6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Aug 2022 01:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
+        Wed, 3 Aug 2022 02:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233757AbiHCFkQ (ORCPT
+        with ESMTP id S235590AbiHCGh5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Aug 2022 01:40:16 -0400
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70501208A;
-        Tue,  2 Aug 2022 22:40:14 -0700 (PDT)
+        Wed, 3 Aug 2022 02:37:57 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE464332F;
+        Tue,  2 Aug 2022 23:37:56 -0700 (PDT)
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id CDD1132002E2;
-        Wed,  3 Aug 2022 01:40:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 03 Aug 2022 01:40:12 -0400
+        by mailout.nyi.internal (Postfix) with ESMTP id 562E65C00F5;
+        Wed,  3 Aug 2022 02:37:54 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 03 Aug 2022 02:37:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:date:date:from:from:in-reply-to
         :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm2; t=1659505211; x=1659591611; bh=3d0B77o3eBWwaP2xZ673IRtdc
-        bfHIjwQwGGQLrMukF4=; b=XvQwn4Y8pQ7Y0rh7xfPXwhXLdfgAHL8DCJOkKxg0p
-        A4Xl7KLjtCQTHulE9PNNFAphpIR0rhVr84nO3cKzoCiQAXexWFnbytDaBB25HYzr
-        H0q3NOiolKNsrKm0N+bXbbPWF6hIgQF0upMw+SjWBJfK/p6IAY1go651deY6e/xQ
-        EN9Ew35fxAyuU1nvER9jiRgd71L5AJz+aQcESUHpPSyr9IHcScqJuMcC8mwu/1rK
-        uVmMzIUxfBRU8v283OPgIYQx0K4mwzUjcLp1sPyIbMSMr/bNsCLX4U1l2nSJAs1d
-        dEH0+A81RIcRjmZQ/nRMLU5Ktw28ZvjlW/OlpOm48AY3w==
+         s=fm2; t=1659508674; x=1659595074; bh=ec/uBSy6Li+Q68/BgBsPvhpml
+        DzjV9tNKKH4sKLQzIw=; b=MI+LTI2PqdU+2e7jrhRBNCsTsl22Ps0v/qktVx/JA
+        7bx/Zo6YioDbj0oiBRW3x2vs/bAEx5JModLnXGKA21PryJERiaP6fj4pvrXeztho
+        UVCIvPtj937Do1ufU83DYlrppka9ZYPKNaCdu3+lb7dc2BYCpOGPF3ti6keqtgcd
+        hwqa3ZhiqfacdHOsATWzq96B4ulE467Jt2IiVZAQxZ9uSE2jxp/YzUCUO7GE0pK3
+        l8duceQHZE+ZbfkmvitxGoIurNqViC27uuCnpgcMC98gfL4Sk0A0nsL024jEjTQ5
+        AEji/stVbmyFeYjitEJTQ614ZA2SU52bg5AOMAifePxwg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
         :feedback-id:feedback-id:from:from:in-reply-to:message-id
         :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1659505211; x=1659591611; bh=3d0B77o3eBWwaP2xZ673IRtdcbfHIjwQwGG
-        QLrMukF4=; b=A2t2nZx9BKatDfHtzPAKwYZOggqf13RdjMgUC9qI2PLXyErr6S+
-        6pm3+tpDtNliIA60nNr6/FaeG93xvvip2ZcH3ASGyjpxDvS8UIBUbxsnB/vwX5K/
-        jb63rd93PzN+vIWVclbLQSu5Fs0k1fbrIZHhX0IUFYr/scoaffDpdDd28PL0JhdM
-        yJKsxRqsqN1XZzlPFur4CTWIr6QKjGDOvXucd2H4EQ+Lwr1up84/pMNzJx2Sh+7c
-        8wGFTYXHOpkkINAm7r3mDQCJES1FEDBgxPW9U2iikdUDr1fxgf7qpv1tRTER+0z/
-        rPi7x5mXYqFvTu2oDQfmKm5SDg5mqFBgshg==
-X-ME-Sender: <xms:OwrqYuxZJwKlgh_gHKyyJWcDhESN8Dnf3QkIqBljBEjnL-NjkaJzaQ>
-    <xme:OwrqYqRtERsKPg0GdUQFgt793im2Wz6Yo7jMivZVYCc56Wr4bLDv-AGrMS9-6OhHK
-    ODLiM5sG_KygChZ-E4>
-X-ME-Received: <xmr:OwrqYgVffXGA7M07qu3UZyLxRqfFNVGoYv0PWs6Iu8VdWzB0Ixo2HhNSVXOH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvddviedgleejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
-    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
-    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:OwrqYkhfPynhutdtQoBW4_6LvbK7WiaVe4SXFWwsaTFeQNqNvaKlFQ>
-    <xmx:OwrqYgAGOgLTU89KxSU7P3RBHxrqL3bseIthHnepz-GgkmXcjik3PQ>
-    <xmx:OwrqYlIq_xyQcptndZD3AtqRQ-ZeVT18M53BpIiBbnAHC6ZbzZFrrg>
-    <xmx:OwrqYjPT_-3lgXm0KGwb6xy2S5r1UdfLoooyzRoliJgpVm_7ILcjnA>
+        1659508674; x=1659595074; bh=ec/uBSy6Li+Q68/BgBsPvhpmlDzjV9tNKKH
+        4sKLQzIw=; b=zPbNgjPh4xMKz657QG9j0qiGkDwOFops+7PsU9r0/aVuNMv+4g6
+        DChDDmgJoyed99VZMOdxdnTT0YDrIZlaoFrqcwq6u4E7Y36XQ3M+lZ5JhSNz7dta
+        0Zw60c4bn78E1zaGRGdHyRzZqA3MmYLiP4/EL05XjRKGEmpHVWj4Vjrymx+izugb
+        BnOD12i8MG7A2y9X3xy9H7ysVuYOu6r5tIzUx6FYHNUOSBWNH+1mrgyx696zZYKP
+        kRPcPWtv/1UobF3eDDogDduPW4XdwI1pSE3NmOLD2TPPJ2Kix+NinC1yQcMB4idV
+        dbNVeAxajZ5W6GStE26n47KMFljZd9MbHww==
+X-ME-Sender: <xms:whfqYo52YUXfY_TyqoawFbXAw6F9UrT_MxD65GDlSTiQPmotTMMdfw>
+    <xme:whfqYp4q4dF1vP4Yxdnec-SzDl_KuLSVsH4DmgOQTgu7CfBFnwsdHoDZ-YUbrC5KC
+    U6ChJ2Rx9y06Pih2Es>
+X-ME-Received: <xmr:whfqYndxMe7HM4jG0uRCPRO4UZmbP1RVrExXPmuw-hhjOvMC5-0_mefCJIVP>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvddviedguddutdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
+    dtredttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhj
+    ohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftd
+    dtvdfhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:whfqYtKlledgpuwn3miEyyE_ug8jsC4-26-0Fzxyf0_RPjq2cDCFJw>
+    <xmx:whfqYsIKjkOy1G6pjkwYfIt0niUNVEHwezAL7Ch9vezEn35zGzPGSg>
+    <xmx:whfqYux84wjd4xj9LYHfQ2M47JANcbOQX-iOK9lPGLJcS2SWmR160g>
+    <xmx:whfqYjXu0raEaiOY6DcTJFIPBsTm1Qs3rDW5N5Ci8yxT_iLiQzQNKg>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Aug 2022 01:40:08 -0400 (EDT)
+ 3 Aug 2022 02:37:51 -0400 (EDT)
 From:   "Luke D. Jones" <luke@ljones.dev>
 To:     hdegoede@redhat.com
 Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH] asus-wmi: Add support for dGPU-only mode
-Date:   Wed,  3 Aug 2022 17:39:56 +1200
-Message-Id: <20220803053956.760356-1-luke@ljones.dev>
+Subject: [PATCH 1/1] asus-wmi: Add support for ROG X13 tablet mode
+Date:   Wed,  3 Aug 2022 18:37:34 +1200
+Message-Id: <20220803063734.765614-1-luke@ljones.dev>
 X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,167 +75,130 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Adds support for a dGPU-only mode on some laptops where when enabled
-the boot GPU is the dGPU, and the iGPU is not visible.
+Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
+lid flip (all screen rotations).
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- drivers/platform/x86/asus-wmi.c            | 92 ++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  3 +
- 2 files changed, 95 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c         | 16 ++++++++++++++++
+ drivers/platform/x86/asus-wmi.c            | 16 +++++++++++++++-
+ drivers/platform/x86/asus-wmi.h            |  1 +
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 4 files changed, 33 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 478dd300b9c9..1ce8924d0474 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -123,6 +123,12 @@ static struct quirk_entry quirk_asus_use_lid_flip_devid = {
+ 	.use_lid_flip_devid = true,
+ };
+ 
++static struct quirk_entry quirk_asus_gv301 = {
++	.wmi_backlight_set_devstate = true,
++	.use_lid_flip_devid = true,
++	.enodev_as_tablet_mode = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -471,6 +477,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_use_lid_flip_devid,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ROG FLOW X13",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
++		},
++		.driver_data = &quirk_asus_gv301,
++	},
+ 	{},
+ };
+ 
+@@ -581,6 +596,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+ 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+ 	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
++	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on rog flow laptops */
+ 	{ KE_END, 0},
+ };
+ 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 0e7fbed8a50d..25be8b422041 100644
+index 62ce198a3463..0458e9107ca7 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -234,6 +234,9 @@ struct asus_wmi {
- 	bool dgpu_disable_available;
- 	bool dgpu_disable;
+@@ -68,6 +68,7 @@ module_param(fnlock_default, bool, 0444);
+ #define NOTIFY_KBD_FBM			0x99
+ #define NOTIFY_KBD_TTP			0xae
+ #define NOTIFY_LID_FLIP			0xfa
++#define NOTIFY_LID_FLIP_GV301	0xbd
  
-+	bool dgpu_only_available;
-+	bool dgpu_only;
-+
- 	bool throttle_thermal_policy_available;
- 	u8 throttle_thermal_policy_mode;
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
  
-@@ -559,6 +562,87 @@ static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
- 	}
- }
+@@ -516,6 +517,12 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
  
-+/* dedicated GPU only *********************************************************/
-+static int dgpu_only_check_present(struct asus_wmi *asus)
-+{
-+	u32 result;
-+	int err;
+ 	if (asus->driver->quirks->use_lid_flip_devid) {
+ 		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
++		if (result < 0)
++			result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GV301_LID_FLIP);
 +
-+	asus->dgpu_only_available = false;
++		if (result == -ENODEV && asus->driver->quirks->enodev_as_tablet_mode)
++			result = 1;
 +
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_DGPU, &result);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		return err;
-+	}
-+
-+	if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
-+		asus->dgpu_only_available = true;
-+		asus->dgpu_only = result & ASUS_WMI_DSTS_STATUS_BIT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dgpu_only_write(struct asus_wmi *asus)
-+{
-+	u32 retval;
-+	u8 value;
-+	int err;
-+
-+	/* Don't rely on type conversion */
-+	value = asus->dgpu_only ? 1 : 0;
-+
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, value, &retval);
-+	if (err) {
-+		pr_warn("Failed to set dGPU-only mode: %d\n", err);
-+		return err;
-+	}
-+
-+	if (retval > 1) {
-+		pr_warn("Failed to set dGPU-only mode (retval): 0x%x\n", retval);
-+		return -EIO;
-+	}
-+
-+	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "dgpu_only");
-+
-+	return 0;
-+}
-+
-+static ssize_t dgpu_only_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	u8 mode = asus->dgpu_only;
-+
-+	return sysfs_emit(buf, "%d\n", mode);
-+}
-+
-+static ssize_t dgpu_only_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	bool enable;
-+	int result;
-+
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	result = kstrtobool(buf, &enable);
-+	if (result)
-+		return result;
-+
-+	asus->dgpu_only = enable;
-+
-+	result = dgpu_only_write(asus);
-+	if (result)
-+		return result;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(dgpu_only);
-+
- /* dGPU ********************************************************************/
- static int dgpu_disable_check_present(struct asus_wmi *asus)
+ 		if (result < 0)
+ 			asus->driver->quirks->use_lid_flip_devid = 0;
+ 		if (result >= 0) {
+@@ -553,6 +560,12 @@ static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
  {
-@@ -3258,6 +3342,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_touchpad.attr,
- 	&dev_attr_egpu_enable.attr,
- 	&dev_attr_dgpu_disable.attr,
-+	&dev_attr_dgpu_only.attr,
- 	&dev_attr_lid_resume.attr,
- 	&dev_attr_als_enable.attr,
- 	&dev_attr_fan_boost_mode.attr,
-@@ -3288,6 +3373,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		ok = asus->egpu_enable_available;
- 	else if (attr == &dev_attr_dgpu_disable.attr)
- 		ok = asus->dgpu_disable_available;
-+	else if (attr == &dev_attr_dgpu_only.attr)
-+		ok = asus->dgpu_only_available;
- 	else if (attr == &dev_attr_fan_boost_mode.attr)
- 		ok = asus->fan_boost_mode_available;
- 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
-@@ -3557,6 +3644,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_dgpu_disable;
+ 	int result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
  
-+	err = dgpu_only_check_present(asus);
-+	if (err)
-+		goto fail_dgpu_only;
++	if (result < 0)
++		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GV301_LID_FLIP);
 +
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-@@ -3671,6 +3762,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- fail_fan_boost_mode:
- fail_egpu_enable:
- fail_dgpu_disable:
-+fail_dgpu_only:
- fail_platform:
- fail_panel_od:
- 	kfree(asus);
++	if (result == -ENODEV && asus->driver->quirks->enodev_as_tablet_mode)
++		result = 1;
++
+ 	if (result >= 0) {
+ 		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+ 		input_sync(asus->inputdev);
+@@ -3094,7 +3107,8 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 		return;
+ 	}
+ 
+-	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
++	if (asus->driver->quirks->use_lid_flip_devid &&
++			(code == NOTIFY_LID_FLIP || code == NOTIFY_LID_FLIP_GV301)) {
+ 		lid_flip_tablet_mode_get_state(asus);
+ 		return;
+ 	}
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index b302415bf1d9..ac9023aae838 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -35,6 +35,7 @@ struct quirk_entry {
+ 	bool wmi_force_als_set;
+ 	bool use_kbd_dock_devid;
+ 	bool use_lid_flip_devid;
++	bool enodev_as_tablet_mode;
+ 	int wapf;
+ 	/*
+ 	 * For machines with AMD graphic chips, it will send out WMI event
 diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index a571b47ff362..f54d0e307d87 100644
+index a571b47ff362..79bd06628a8b 100644
 --- a/include/linux/platform_data/x86/asus-wmi.h
 +++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -92,6 +92,9 @@
- /* Keyboard dock */
- #define ASUS_WMI_DEVID_KBD_DOCK		0x00120063
+@@ -64,6 +64,7 @@
+ #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
++#define ASUS_WMI_DEVID_GV301_LID_FLIP	0x00060077
  
-+/* Dedicated GPU only. When active the dGPU will be the only visible GPU */
-+#define ASUS_WMI_DEVID_DEDICATED	0x00090016
-+
- /* dgpu on/off */
- #define ASUS_WMI_DEVID_EGPU		0x00090019
- 
+ /* Storage */
+ #define ASUS_WMI_DEVID_CARDREADER	0x00080013
 -- 
 2.37.1
 
