@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F288BC00140
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1D0C00140
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 10:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbiHEKUc (ORCPT
+        id S232901AbiHEKjY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 Aug 2022 06:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
+        Fri, 5 Aug 2022 06:39:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235203AbiHEKUb (ORCPT
+        with ESMTP id S232506AbiHEKjX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Aug 2022 06:20:31 -0400
+        Fri, 5 Aug 2022 06:39:23 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E25D4DF4B
-        for <platform-driver-x86@vger.kernel.org>; Fri,  5 Aug 2022 03:20:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1ABB4BD2C
+        for <platform-driver-x86@vger.kernel.org>; Fri,  5 Aug 2022 03:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659694827;
+        s=mimecast20190719; t=1659695960;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eoawpQ98KrxrUoKk0kAsqlJjx6PNFX2L1XuM9CSsOGc=;
-        b=I4Ha6oDcV0eHDwOqaAp8XWZYut+DpkMoG8FlCQYvCOAvGa/tA1BNDwRB4nCew0G5GAXasA
-        ESis6BzXolllXywayNGYHA0tIaostdOscLQ8gHs2wPyjMuQYp/GJKzHIZkOdvMYZVkie8Z
-        lTshUUpL8xT7zlf/QFTUvJUaa1ChzDE=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=JdL6bru+pjvqwYyo9nSJFiQmk6r0xFoB2LvT9l9qMOY=;
+        b=XqCSzib/rcwHanKgKSMBu+x91JVpyboWEglHWuz0h1xo10xxTV+PU+o3gS2uZrYqEZ315q
+        +HXxZdFVZZkTptDhB53NNSy5LCDP6gsoWaxbtQPUnTNB4VyRmTYgMME0rEVau7zD+u3A8j
+        qHum8Q7crDiw7a56mYOcDjD3+JJ5aUQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-519-orEHig2mOiGSzJnTIy2yHg-1; Fri, 05 Aug 2022 06:20:26 -0400
-X-MC-Unique: orEHig2mOiGSzJnTIy2yHg-1
-Received: by mail-ed1-f69.google.com with SMTP id b6-20020a056402278600b0043e686058feso1339680ede.10
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Aug 2022 03:20:26 -0700 (PDT)
+ us-mta-127-xAhRbwBsPpO8CMvUUd7SGw-1; Fri, 05 Aug 2022 06:39:17 -0400
+X-MC-Unique: xAhRbwBsPpO8CMvUUd7SGw-1
+Received: by mail-ed1-f72.google.com with SMTP id t13-20020a056402524d00b0043db1fbefdeso1383703edd.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Aug 2022 03:39:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc;
-        bh=eoawpQ98KrxrUoKk0kAsqlJjx6PNFX2L1XuM9CSsOGc=;
-        b=qQVTYAYq8VeTiRxoECtGZ4fbvfCLQWR3Pzq9+M+TUTcVuIpE/w3W27zZeamxHKT95L
-         ZWh17tYJjf9eCF4faPDT0Cxy8xporUq6V5Pafk9j+dTxmiQJso7G7QHUlqIYHPOJ92bc
-         AJ+5PJwylAxjwz/F3tbSzHJ2NfPg79+eWqTFl/Mp7kCfw1y4tAbyihr4PUkoFvDJQzXe
-         alCpIJF8lDo7lA98248RsKz36q9k23Nj49D/JmKvJX8m4TvAgH+tDELsweUVPB0evn7K
-         VoWqyVmRqxOoe8Dxvyf6Dqu+L8jdScajnuNUiAmJQ0DmkeWEUOpxsKPiWTeFZXhHZE1A
-         ZWKg==
-X-Gm-Message-State: ACgBeo3cAL6YoZ5xidIy4UCDWMyCQuLKoS2O0yCc7pZ8VXhMNYtvMAqG
-        Hcb9czsGByBVmgxh6ih5wZYOriYPAUtH3XWowJt2ZbFWMoUqdllB5xAFP88bPsihCfJbBrtAezL
-        2LTEZnFYLFINzYkdMVXrAFPyyCYBDfDB5Rw==
-X-Received: by 2002:a17:907:2c62:b0:730:d9b9:aabb with SMTP id ib2-20020a1709072c6200b00730d9b9aabbmr4096560ejc.84.1659694825336;
-        Fri, 05 Aug 2022 03:20:25 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7SYK4KbwmGfOJO75TSPyWiLcHKtNGgiXnM9d5eGZysnKlpTk2wFNIlxBf9KWTAkFSO0cUDOw==
-X-Received: by 2002:a17:907:2c62:b0:730:d9b9:aabb with SMTP id ib2-20020a1709072c6200b00730d9b9aabbmr4096549ejc.84.1659694825055;
-        Fri, 05 Aug 2022 03:20:25 -0700 (PDT)
+        bh=JdL6bru+pjvqwYyo9nSJFiQmk6r0xFoB2LvT9l9qMOY=;
+        b=HndEJGBabqnn6AHgUXjsMWvE0OBWTGf0NjGzF5rn1wbNckqmTOqHKL18uLso4wmGqn
+         0yYyb7Irdlsn0+5LqcB4U2liOAngUWtGTA7/OAuf2BKpH3TaqmvyII4swuDvIXAFX6c0
+         NJVqr45Uyictz72hH8HhHzxyrHKQ/SG6wMFjCsOACu76mhSjtte7ZPCbQ4is+uXi9j3x
+         iu3uRjtRRxFOUCVanJ3eQF1WoyKLJRAuu8YWZXLA9JMSTtC3b75/b0GoDboxCqDPeIDk
+         ZgDcz1FudZYHI9HEY6AfaZUTn2SvS6YvqqrNC1yvF0ebr4EeRi+tlRVGlhzU2myrDrBK
+         25Kw==
+X-Gm-Message-State: ACgBeo2xugH/1QrK6i5PJdYkwGrj9aNkzEoSXXMAOBU3kN+zmqxNWErI
+        HKPRcRUiuLN8/mz+uexhtfisYWuCDK/G58J6lUlhv15fJCRFyBBgv/oNrOHzWxitVm0In04wbkw
+        boCsrU20scKI9jQlwwzZ59FUc5W8QsqNvwA==
+X-Received: by 2002:a05:6402:440c:b0:43a:1124:e56a with SMTP id y12-20020a056402440c00b0043a1124e56amr6166441eda.134.1659695955944;
+        Fri, 05 Aug 2022 03:39:15 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4n8aUJ5cSSnvsCFPfLUm4EObE+KLW1mTxswrvs5PSVB1tGVwQeVRq/s9sobHvrFjmyDzImww==
+X-Received: by 2002:a05:6402:440c:b0:43a:1124:e56a with SMTP id y12-20020a056402440c00b0043a1124e56amr6166420eda.134.1659695955652;
+        Fri, 05 Aug 2022 03:39:15 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id pj18-20020a170906d79200b007309f007d3asm1404753ejb.128.2022.08.05.03.20.24
+        by smtp.gmail.com with ESMTPSA id r10-20020a17090609ca00b00730b5a35288sm1390701eje.214.2022.08.05.03.39.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Aug 2022 03:20:24 -0700 (PDT)
-Message-ID: <9f28db20-f0d5-1298-c3d5-b4ad13a2a51d@redhat.com>
-Date:   Fri, 5 Aug 2022 12:20:24 +0200
+        Fri, 05 Aug 2022 03:39:15 -0700 (PDT)
+Message-ID: <ccfecf97-45c1-cebd-5b19-63c0349a17b7@redhat.com>
+Date:   Fri, 5 Aug 2022 12:39:14 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH v4 01/11] platform/x86/amd/pmf: Add support for PMF core
- layer
+Subject: Re: [PATCH v4 03/11] platform/x86/amd/pmf: Add support SPS PMF
+ feature
 Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
 References: <20220802151149.2123699-1-Shyam-sundar.S-k@amd.com>
- <20220802151149.2123699-2-Shyam-sundar.S-k@amd.com>
+ <20220802151149.2123699-4-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220802151149.2123699-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20220802151149.2123699-4-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,388 +80,403 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 8/2/22 17:11, Shyam Sundar S K wrote:
-> PMF core layer is meant to abstract the common functionalities
-> across PMF features. This layer also does the plumbing work
-> like setting up the mailbox channel for the communication
-> between the PMF driver and the PMFW (Power Management Firmware)
-> running on the SMU.
+> SPS (a.k.a. Static Power Slider) gives a feel of Windows performance
+> power slider for the Linux users, where the user selects a certain
+> mode (like "balanced", "low-power" or "performance") and the thermals
+> associated with each selected mode gets applied from the silicon
+> side via the mailboxes defined through PMFW.
+> 
+> PMF driver hooks to platform_profile by reading the PMF ACPI fn9 to
+> see if the support is being advertised by ACPI interface.
+> 
+> If supported, the PMF driver reacts to platform_profile selection choices
+> made by the user and adjust the system thermal behavior.
 > 
 > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/amd/Kconfig      |   2 +
->  drivers/platform/x86/amd/Makefile     |   1 +
->  drivers/platform/x86/amd/pmf/Kconfig  |  15 ++
->  drivers/platform/x86/amd/pmf/Makefile |   8 +
->  drivers/platform/x86/amd/pmf/core.c   | 235 ++++++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/pmf.h    |  46 +++++
->  6 files changed, 307 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/pmf/Kconfig
->  create mode 100644 drivers/platform/x86/amd/pmf/Makefile
->  create mode 100644 drivers/platform/x86/amd/pmf/core.c
->  create mode 100644 drivers/platform/x86/amd/pmf/pmf.h
+>  drivers/platform/x86/amd/pmf/Makefile |   2 +-
+>  drivers/platform/x86/amd/pmf/acpi.c   |  10 ++
+>  drivers/platform/x86/amd/pmf/core.c   |  26 +++++
+>  drivers/platform/x86/amd/pmf/pmf.h    |  64 +++++++++++
+>  drivers/platform/x86/amd/pmf/sps.c    | 149 ++++++++++++++++++++++++++
+>  5 files changed, 250 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/x86/amd/pmf/sps.c
 > 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index c0d0a3c5170c..a825af8126c8 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -3,6 +3,8 @@
->  # AMD x86 Platform Specific Drivers
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index 2617eba773ce..557521a80427 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -5,4 +5,4 @@
 >  #
 >  
-> +source "drivers/platform/x86/amd/pmf/Kconfig"
+>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+> -amd-pmf-objs := core.o acpi.o
+> +amd-pmf-objs := core.o acpi.o sps.o
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index b378f9e31194..5997ab724f3a 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -93,6 +93,16 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index)
+>  	return !!(pdev->supported_func & BIT(index - 1));
+>  }
+>  
+> +int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
+> +				    struct apmf_static_slider_granular_output *data)
+> +{
+> +	if (!is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
+> +		return -EINVAL;
 > +
->  config AMD_PMC
->  	tristate "AMD SoC PMC driver"
->  	depends on ACPI && PCI && RTC_CLASS
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index a03fbb08e808..2c229198e24c 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -8,3 +8,4 @@ amd-pmc-y			:= pmc.o
->  obj-$(CONFIG_AMD_PMC)		+= amd-pmc.o
->  amd_hsmp-y			:= hsmp.o
->  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-> +obj-$(CONFIG_AMD_PMF)		+= pmf/
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR,
+> +									 data, sizeof(*data));
+> +}
+> +
+>  static int apmf_if_verify_interface(struct amd_pmf_dev *pdev)
+>  {
+>  	struct apmf_verify_interface output;
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index c5002b7bb904..a70ab6c9608a 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+>  #include "pmf.h"
+>  
+>  /* PMF-SMU communication registers */
+> @@ -45,6 +46,14 @@
+>  #define DELAY_MIN_US	2000
+>  #define DELAY_MAX_US	3000
+>  
+> +int amd_pmf_get_power_source(void)
+> +{
+> +	if (power_supply_is_system_supplied() > 0)
+> +		return POWER_SOURCE_AC;
+> +	else
+> +		return POWER_SOURCE_DC;
+> +}
+> +
+>  static inline u32 amd_pmf_reg_read(struct amd_pmf_dev *dev, int reg_offset)
+>  {
+>  	return ioread32(dev->regbase + reg_offset);
+> @@ -138,6 +147,21 @@ static const struct pci_device_id pmf_pci_ids[] = {
+>  	{ }
+>  };
+>  
+> +static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+> +{
+> +	/* Enable Static Slider */
+> +	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
+> +		amd_pmf_init_sps(dev);
+> +		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+> +	}
+> +}
+> +
+> +static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+> +{
+> +	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
+> +		amd_pmf_deinit_sps(dev);
+> +}
+> +
+>  static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+>  	{"AMDI0102", 0},
+>  	{ }
+> @@ -206,6 +230,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  
+>  	apmf_acpi_init(dev);
+>  	platform_set_drvdata(pdev, dev);
+> +	amd_pmf_init_features(dev);
+>  
+>  	mutex_init(&dev->lock);
+>  	dev_info(dev->dev, "registered PMF device successfully\n");
+> @@ -218,6 +243,7 @@ static int amd_pmf_remove(struct platform_device *pdev)
+>  	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+>  
+>  	mutex_destroy(&dev->lock);
+> +	amd_pmf_deinit_features(dev);
+>  	kfree(dev->buf);
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index bdadbff168ee..5c867dac7d44 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -12,10 +12,12 @@
+>  #define PMF_H
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/platform_profile.h>
+>  
+>  /* APMF Functions */
+>  #define APMF_FUNC_VERIFY_INTERFACE			0
+>  #define APMF_FUNC_GET_SYS_PARAMS			1
+> +#define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
+>  
+>  /* Message Definitions */
+>  #define SET_SPL				0x03 /* SPL: Sustained Power Limit */
+> @@ -36,6 +38,8 @@
+>  #define GET_STT_LIMIT_APU	0x20
+>  #define GET_STT_LIMIT_HS2	0x21
+>  
+> +#define ARG_NONE 0
+> +
+>  /* AMD PMF BIOS interfaces */
+>  struct apmf_verify_interface {
+>  	u16 size;
+> @@ -51,6 +55,30 @@ struct apmf_system_params {
+>  	u8 command_code;
+>  } __packed;
+>  
+> +enum amd_stt_skin_temp {
+> +	STT_TEMP_APU,
+> +	STT_TEMP_HS2,
+> +	STT_TEMP_COUNT,
+> +};
+> +
+> +enum amd_slider_op {
+> +	SLIDER_OP_GET,
+> +	SLIDER_OP_SET,
+> +};
+> +
+> +enum power_source {
+> +	POWER_SOURCE_AC,
+> +	POWER_SOURCE_DC,
+> +	POWER_SOURCE_MAX,
+> +};
+> +
+> +enum power_modes {
+> +	POWER_MODE_PERFORMANCE,
+> +	POWER_MODE_BALANCED_POWER,
+> +	POWER_MODE_POWER_SAVER,
+> +	POWER_MODE_MAX,
+> +};
+> +
+>  struct amd_pmf_dev {
+>  	void __iomem *regbase;
+>  	void __iomem *smu_virt_addr;
+> @@ -60,10 +88,46 @@ struct amd_pmf_dev {
+>  	struct device *dev;
+>  	struct mutex lock; /* protects the PMF interface */
+>  	u32 supported_func;
+> +	enum platform_profile_option current_profile;
+> +	struct platform_profile_handler pprof;
+> +};
+> +
+> +struct apmf_sps_prop_granular {
+> +	u32 fppt;
+> +	u32 sppt;
+> +	u32 sppt_apu_only;
+> +	u32 spl;
+> +	u32 stt_min;
+> +	u8 stt_skin_temp[STT_TEMP_COUNT];
+> +	u32 fan_id;
+> +} __packed;
+> +
+> +/* Static Slider */
+> +struct apmf_static_slider_granular_output {
+> +	u16 size;
+> +	struct apmf_sps_prop_granular prop[POWER_SOURCE_MAX * POWER_MODE_MAX];
+> +} __packed;
+> +
+> +struct amd_pmf_static_slider_granular {
+> +	u16 size;
+> +	struct apmf_sps_prop_granular prop[POWER_SOURCE_MAX][POWER_MODE_MAX];
+>  };
+>  
+>  /* Core Layer */
+>  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+> +int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index);
+>  int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
+> +int amd_pmf_get_power_source(void);
+> +
+> +/* SPS Layer */
+> +u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
+> +void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+> +			   struct amd_pmf_static_slider_granular *table);
+> +int amd_pmf_init_sps(struct amd_pmf_dev *dev);
+> +void amd_pmf_deinit_sps(struct amd_pmf_dev *dev);
+> +int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
+> +				    struct apmf_static_slider_granular_output *output);
+> +void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev);
+> +
+>  
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
 > new file mode 100644
-> index 000000000000..ef771bbe1198
+> index 000000000000..ef4df3fd774b
 > --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -0,0 +1,15 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD PMF Driver
-> +#
+> +++ b/drivers/platform/x86/amd/pmf/sps.c
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD Platform Management Framework (PMF) Driver
+> + *
+> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + */
 > +
-> +config AMD_PMF
-> +	tristate "AMD Platform Management Framework"
-> +	depends on ACPI
+> +#include "pmf.h"
+> +
+> +static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
+> +			       enum platform_profile_option *profile);
+> +static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
+> +			       enum platform_profile_option profile);
+> +static struct amd_pmf_static_slider_granular config_store;
+> +
+> +void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev)
 
-I believe this is missing a depends on PCI (like the CONFIG_AMD_PMC has),
-this seems to be necessary since this call pci_get_domain_bus_and_slot()
-and a bunch of other PCI functions.
+This function is only used in this file, so it can be static,
+I will fix this up while merging this.
 
-I will fix this up (added the depends) while merging this (assuming I
-find no blockers in the other patches).
+> +{
+> +	struct apmf_static_slider_granular_output output;
+> +	int i, j, idx = 0;
+> +
+> +	memset(&config_store, 0, sizeof(config_store));
+> +	apmf_get_static_slider_granular(dev, &output);
+> +
+> +	for (i = 0; i < POWER_SOURCE_MAX; i++) {
+> +		for (j = 0; j < POWER_MODE_MAX; j++) {
+> +			config_store.prop[i][j].spl = output.prop[idx].spl;
+> +			config_store.prop[i][j].sppt = output.prop[idx].sppt;
+> +			config_store.prop[i][j].sppt_apu_only =
+> +						output.prop[idx].sppt_apu_only;
+> +			config_store.prop[i][j].fppt = output.prop[idx].fppt;
+> +			config_store.prop[i][j].stt_min = output.prop[idx].stt_min;
+> +			config_store.prop[i][j].stt_skin_temp[STT_TEMP_APU] =
+> +					output.prop[idx].stt_skin_temp[STT_TEMP_APU];
+> +			config_store.prop[i][j].stt_skin_temp[STT_TEMP_HS2] =
+> +					output.prop[idx].stt_skin_temp[STT_TEMP_HS2];
+> +			config_store.prop[i][j].fan_id = output.prop[idx].fan_id;
+> +			idx++;
+> +		}
+> +	}
+> +}
+> +
+> +void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+> +			   struct amd_pmf_static_slider_granular *table)
+> +{
+> +	int src = amd_pmf_get_power_source();
+> +
+> +	if (op == SLIDER_OP_SET) {
+> +		amd_pmf_send_cmd(dev, SET_SPL, false, config_store.prop[src][idx].spl, NULL);
+> +		amd_pmf_send_cmd(dev, SET_FPPT, false, config_store.prop[src][idx].fppt, NULL);
+> +		amd_pmf_send_cmd(dev, SET_SPPT, false, config_store.prop[src][idx].sppt, NULL);
+> +		amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false,
+> +				 config_store.prop[src][idx].sppt_apu_only, NULL);
+> +		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+> +				 config_store.prop[src][idx].stt_min, NULL);
+> +		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> +				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU], NULL);
+> +		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> +				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2], NULL);
+> +	} else if (op == SLIDER_OP_GET) {
+> +		amd_pmf_send_cmd(dev, GET_SPL, true, ARG_NONE, &table->prop[src][idx].spl);
+> +		amd_pmf_send_cmd(dev, GET_FPPT, true, ARG_NONE, &table->prop[src][idx].fppt);
+> +		amd_pmf_send_cmd(dev, GET_SPPT, true, ARG_NONE, &table->prop[src][idx].sppt);
+> +		amd_pmf_send_cmd(dev, GET_SPPT_APU_ONLY, true, ARG_NONE,
+> +				 &table->prop[src][idx].sppt_apu_only);
+> +		amd_pmf_send_cmd(dev, GET_STT_MIN_LIMIT, true, ARG_NONE,
+> +				 &table->prop[src][idx].stt_min);
+> +		amd_pmf_send_cmd(dev, GET_STT_LIMIT_APU, true, ARG_NONE,
+> +				 (u32 *)&table->prop[src][idx].stt_skin_temp[STT_TEMP_APU]);
+> +		amd_pmf_send_cmd(dev, GET_STT_LIMIT_HS2, true, ARG_NONE,
+> +				 (u32 *)&table->prop[src][idx].stt_skin_temp[STT_TEMP_HS2]);
+> +	}
+> +}
+> +
+> +static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
+> +			       enum platform_profile_option *profile)
+> +{
+> +	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
+> +
+> +	*profile = pmf->current_profile;
+> +	return 0;
+> +}
+> +
+> +u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
+> +{
+> +	u8 mode;
+> +
+> +	switch (pmf->current_profile) {
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		mode = POWER_MODE_PERFORMANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		mode = POWER_MODE_BALANCED_POWER;
+> +		break;
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		mode = POWER_MODE_POWER_SAVER;
+> +		break;
+> +	default:
+> +		dev_err(pmf->dev, "Unknown Platform Profile.\n");
+> +		break;
+> +	}
+> +
+> +	return mode;
+> +}
+> +
+> +int amd_pmf_profile_set(struct platform_profile_handler *pprof,
+> +			enum platform_profile_option profile)
+
+This function is only used in this file, so it can be static
+(it actually is declared static at the top of the file)
+I will fix this up while merging this.
+
+> +{
+> +	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
+> +	u8 mode;
+> +
+> +	pmf->current_profile = profile;
+> +	mode = amd_pmf_get_pprof_modes(pmf);
+> +	amd_pmf_update_slider(pmf, SLIDER_OP_SET, mode, NULL);
+> +	return 0;
+> +}
+> +
+> +int amd_pmf_init_sps(struct amd_pmf_dev *dev)
+> +{
+> +	int err = 0;
+> +
+> +	dev->pprof.profile_get = amd_pmf_profile_get;
+> +	dev->pprof.profile_set = amd_pmf_profile_set;
+> +
+> +	/* Setup supported modes */
+> +	set_bit(PLATFORM_PROFILE_LOW_POWER, dev->pprof.choices);
+> +	set_bit(PLATFORM_PROFILE_BALANCED, dev->pprof.choices);
+> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, dev->pprof.choices);
+> +
+> +	/* Create platform_profile structure and register */
+> +	err = platform_profile_register(&dev->pprof);
+> +	if (err) {
+> +		dev_err(dev->dev, "Failed to register SPS support, this is most likely an SBIOS bug: %d\n",
+> +			err);
+> +		return -EEXIST;
+> +	}
+> +
+> +	dev->current_profile = PLATFORM_PROFILE_BALANCED;
+> +	amd_pmf_load_defaults_sps(dev);
+
+I just realized that there is a theoretical race here where
+userspace can call amd_pmf_profile_set before
+amd_pmf_load_defaults_sps() is finshed, so the
+platform_profile_register() must be moved to the end of the
+function. I will fix this up while merging this.
 
 Regards,
 
 Hans
 
 
-> +	help
-> +	  This driver provides support for the AMD Platform Management Framework.
-> +	  The goal is to enhance end user experience by making AMD PCs smarter,
-> +	  quiter, power efficient by adapting to user behavior and environment.
 > +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called amd_pmf.
-> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-> new file mode 100644
-> index 000000000000..459005f659e5
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for linux/drivers/platform/x86/amd/pmf
-> +# AMD Platform Management Framework
-> +#
-> +
-> +obj-$(CONFIG_AMD_PMF) += amd-pmf.o
-> +amd-pmf-objs := core.o
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> new file mode 100644
-> index 000000000000..aef97965c181
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -0,0 +1,235 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * AMD Platform Management Framework Driver
-> + *
-> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + */
-> +
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include "pmf.h"
-> +
-> +/* PMF-SMU communication registers */
-> +#define AMD_PMF_REGISTER_MESSAGE	0xA18
-> +#define AMD_PMF_REGISTER_RESPONSE	0xA78
-> +#define AMD_PMF_REGISTER_ARGUMENT	0xA58
-> +
-> +/* Base address of SMU for mapping physical address to virtual address */
-> +#define AMD_PMF_SMU_INDEX_ADDRESS	0xB8
-> +#define AMD_PMF_SMU_INDEX_DATA		0xBC
-> +#define AMD_PMF_MAPPING_SIZE		0x01000
-> +#define AMD_PMF_BASE_ADDR_OFFSET	0x10000
-> +#define AMD_PMF_BASE_ADDR_LO		0x13B102E8
-> +#define AMD_PMF_BASE_ADDR_HI		0x13B102EC
-> +#define AMD_PMF_BASE_ADDR_LO_MASK	GENMASK(15, 0)
-> +#define AMD_PMF_BASE_ADDR_HI_MASK	GENMASK(31, 20)
-> +
-> +/* SMU Response Codes */
-> +#define AMD_PMF_RESULT_OK                    0x01
-> +#define AMD_PMF_RESULT_CMD_REJECT_BUSY       0xFC
-> +#define AMD_PMF_RESULT_CMD_REJECT_PREREQ     0xFD
-> +#define AMD_PMF_RESULT_CMD_UNKNOWN           0xFE
-> +#define AMD_PMF_RESULT_FAILED                0xFF
-> +
-> +/* List of supported CPU ids */
-> +#define AMD_CPU_ID_PS			0x14e8
-> +
-> +#define PMF_MSG_DELAY_MIN_US		50
-> +#define RESPONSE_REGISTER_LOOP_MAX	20000
-> +
-> +#define DELAY_MIN_US	2000
-> +#define DELAY_MAX_US	3000
-> +
-> +static inline u32 amd_pmf_reg_read(struct amd_pmf_dev *dev, int reg_offset)
-> +{
-> +	return ioread32(dev->regbase + reg_offset);
+> +	return err;
 > +}
 > +
-> +static inline void amd_pmf_reg_write(struct amd_pmf_dev *dev, int reg_offset, u32 val)
+> +void amd_pmf_deinit_sps(struct amd_pmf_dev *dev)
 > +{
-> +	iowrite32(val, dev->regbase + reg_offset);
+> +	platform_profile_remove();
 > +}
-> +
-> +static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
-> +{
-> +	u32 value;
-> +
-> +	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_RESPONSE);
-> +	dev_dbg(dev->dev, "AMD_PMF_REGISTER_RESPONSE:%x\n", value);
-> +
-> +	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
-> +	dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT:%d\n", value);
-> +
-> +	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_MESSAGE);
-> +	dev_dbg(dev->dev, "AMD_PMF_REGISTER_MESSAGE:%x\n", value);
-> +}
-> +
-> +int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data)
-> +{
-> +	int rc;
-> +	u32 val;
-> +
-> +	mutex_lock(&dev->lock);
-> +
-> +	/* Wait until we get a valid response */
-> +	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
-> +				val, val != 0, PMF_MSG_DELAY_MIN_US,
-> +				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
-> +	if (rc) {
-> +		dev_err(dev->dev, "failed to talk to SMU\n");
-> +		goto out_unlock;
-> +	}
-> +
-> +	/* Write zero to response register */
-> +	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_RESPONSE, 0);
-> +
-> +	/* Write argument into argument register */
-> +	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_ARGUMENT, arg);
-> +
-> +	/* Write message ID to message ID register */
-> +	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_MESSAGE, message);
-> +
-> +	/* Wait until we get a valid response */
-> +	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
-> +				val, val != 0, PMF_MSG_DELAY_MIN_US,
-> +				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
-> +	if (rc) {
-> +		dev_err(dev->dev, "SMU response timed out\n");
-> +		goto out_unlock;
-> +	}
-> +
-> +	switch (val) {
-> +	case AMD_PMF_RESULT_OK:
-> +		if (get) {
-> +			/* PMFW may take longer time to return back the data */
-> +			usleep_range(DELAY_MIN_US, 10 * DELAY_MAX_US);
-> +			*data = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
-> +		}
-> +		break;
-> +	case AMD_PMF_RESULT_CMD_REJECT_BUSY:
-> +		dev_err(dev->dev, "SMU not ready. err: 0x%x\n", val);
-> +		rc = -EBUSY;
-> +		goto out_unlock;
-> +	case AMD_PMF_RESULT_CMD_UNKNOWN:
-> +		dev_err(dev->dev, "SMU cmd unknown. err: 0x%x\n", val);
-> +		rc = -EINVAL;
-> +		goto out_unlock;
-> +	case AMD_PMF_RESULT_CMD_REJECT_PREREQ:
-> +	case AMD_PMF_RESULT_FAILED:
-> +	default:
-> +		dev_err(dev->dev, "SMU cmd failed. err: 0x%x\n", val);
-> +		rc = -EIO;
-> +		goto out_unlock;
-> +	}
-> +
-> +out_unlock:
-> +	mutex_unlock(&dev->lock);
-> +	amd_pmf_dump_registers(dev);
-> +	return rc;
-> +}
-> +
-> +static const struct pci_device_id pmf_pci_ids[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
-> +	{ }
-> +};
-> +
-> +static const struct acpi_device_id amd_pmf_acpi_ids[] = {
-> +	{"AMDI0102", 0},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
-> +
-> +static int amd_pmf_probe(struct platform_device *pdev)
-> +{
-> +	struct amd_pmf_dev *dev;
-> +	struct pci_dev *rdev;
-> +	u32 base_addr_lo;
-> +	u32 base_addr_hi;
-> +	u64 base_addr;
-> +	u32 val;
-> +	int err;
-> +
-> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-> +	if (!dev)
-> +		return -ENOMEM;
-> +
-> +	dev->dev = &pdev->dev;
-> +
-> +	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
-> +	if (!rdev || !pci_match_id(pmf_pci_ids, rdev)) {
-> +		pci_dev_put(rdev);
-> +		return -ENODEV;
-> +	}
-> +
-> +	dev->cpu_id = rdev->device;
-> +	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_LO);
-> +	if (err) {
-> +		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
-> +		pci_dev_put(rdev);
-> +		return pcibios_err_to_errno(err);
-> +	}
-> +
-> +	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
-> +	if (err) {
-> +		pci_dev_put(rdev);
-> +		return pcibios_err_to_errno(err);
-> +	}
-> +
-> +	base_addr_lo = val & AMD_PMF_BASE_ADDR_HI_MASK;
-> +
-> +	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_HI);
-> +	if (err) {
-> +		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
-> +		pci_dev_put(rdev);
-> +		return pcibios_err_to_errno(err);
-> +	}
-> +
-> +	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
-> +	if (err) {
-> +		pci_dev_put(rdev);
-> +		return pcibios_err_to_errno(err);
-> +	}
-> +
-> +	base_addr_hi = val & AMD_PMF_BASE_ADDR_LO_MASK;
-> +	pci_dev_put(rdev);
-> +	base_addr = ((u64)base_addr_hi << 32 | base_addr_lo);
-> +
-> +	dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMF_BASE_ADDR_OFFSET,
-> +				    AMD_PMF_MAPPING_SIZE);
-> +	if (!dev->regbase)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, dev);
-> +
-> +	mutex_init(&dev->lock);
-> +	dev_info(dev->dev, "registered PMF device successfully\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int amd_pmf_remove(struct platform_device *pdev)
-> +{
-> +	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
-> +
-> +	mutex_destroy(&dev->lock);
-> +	kfree(dev->buf);
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver amd_pmf_driver = {
-> +	.driver = {
-> +		.name = "amd-pmf",
-> +		.acpi_match_table = amd_pmf_acpi_ids,
-> +	},
-> +	.probe = amd_pmf_probe,
-> +	.remove = amd_pmf_remove,
-> +};
-> +module_platform_driver(amd_pmf_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("AMD Platform Management Framework Driver");
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> new file mode 100644
-> index 000000000000..1c2e942e5096
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -0,0 +1,46 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * AMD Platform Management Framework Driver
-> + *
-> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + */
-> +
-> +#ifndef PMF_H
-> +#define PMF_H
-> +
-> +/* Message Definitions */
-> +#define SET_SPL				0x03 /* SPL: Sustained Power Limit */
-> +#define SET_SPPT			0x05 /* SPPT: Slow Package Power Tracking */
-> +#define SET_FPPT			0x07 /* FPPT: Fast Package Power Tracking */
-> +#define GET_SPL				0x0B
-> +#define GET_SPPT			0x0D
-> +#define GET_FPPT			0x0F
-> +#define SET_DRAM_ADDR_HIGH	0x14
-> +#define SET_DRAM_ADDR_LOW	0x15
-> +#define SET_TRANSFER_TABLE	0x16
-> +#define SET_STT_MIN_LIMIT	0x18 /* STT: Skin Temperature Tracking */
-> +#define SET_STT_LIMIT_APU	0x19
-> +#define SET_STT_LIMIT_HS2	0x1A
-> +#define SET_SPPT_APU_ONLY	0x1D
-> +#define GET_SPPT_APU_ONLY	0x1E
-> +#define GET_STT_MIN_LIMIT	0x1F
-> +#define GET_STT_LIMIT_APU	0x20
-> +#define GET_STT_LIMIT_HS2	0x21
-> +
-> +struct amd_pmf_dev {
-> +	void __iomem *regbase;
-> +	void __iomem *smu_virt_addr;
-> +	void *buf;
-> +	u32 base_addr;
-> +	u32 cpu_id;
-> +	struct device *dev;
-> +	struct mutex lock; /* protects the PMF interface */
-> +};
-> +
-> +/* Core Layer */
-> +int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
-> +
-> +#endif /* PMF_H */
 
