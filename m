@@ -2,215 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E23C25B0C
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 14:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6282C00140
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 21:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241222AbiHEO7m (ORCPT
+        id S237621AbiHEV31 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 Aug 2022 10:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
+        Fri, 5 Aug 2022 17:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241149AbiHEO6m (ORCPT
+        with ESMTP id S236064AbiHEV3Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Aug 2022 10:58:42 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 432A061D88
-        for <platform-driver-x86@vger.kernel.org>; Fri,  5 Aug 2022 07:58:17 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id j7so3566223wrh.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Aug 2022 07:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=+LKPhNKLGEVFzXPLROXys6y1jDgivXC9DTGdXpCbdug=;
-        b=esaMTjnp69RL3woTrdc24TQt0JCs8qISF4KHdB2djLUrswQOeXm4f1WklijtlNaS8W
-         y/Lb4HeyDgvShVesCqKsGyd1+kO6fLVgxMcftLr+sMbS/Hifl9STEeUOE4dwtDEToE6y
-         DZyj99tqanRhk91LPmTtpFJbq4vMT/A74niwa3YHDhIiZev8NL5wwzqccBYvBOkJ2Ruc
-         Xgjl3H7vC5E2PTXbfzrTUP3VRiHGRElS7IaVAU0FuWAJnaKAP6Dj/mYRbOVqG8Uxt6hN
-         esVhoie2iQtM1rAPzjDUaQ5gZocv2ffH3WclUad+iXQc/i83mMZDvv5t8KCHxMgH0zus
-         sWfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=+LKPhNKLGEVFzXPLROXys6y1jDgivXC9DTGdXpCbdug=;
-        b=WqhC8zLeNl8s1XSWx17ygTVtrvxy2aJ3+u0GQCx9XOO+WMczLjWtDw30EX3/OLe5Vn
-         UbaU6kvPBKVDPDiFGCEc4TmRqZR8YGfvHlpKTBfGRbE0xuIvtGwaZVsradPOUlVzNFgA
-         EWMbeYeFkNjiFLgzFyWGljZoDdNMLUkj62NwaadUunxRRqLaJZ3SPOW6GhCaihjt6fzq
-         DK2H+/l2llkUuxYwcWHYihnABgKuErz3WnkyYhy/TuJsMR1dMB29fthnv6ao8wXBNvyI
-         hsUvf6knT0hQvj0nJqsFFyvwE1GUK3wnq+AFhcdZ+9GCuS1TMHiXegzCiruc5IPSGEyN
-         xibQ==
-X-Gm-Message-State: ACgBeo0Hzt2jI7ofJ6OW9gXx4/Ubg8B+7M5BPZuN3DHMvc5D4/GybLmx
-        AT7t2IWh2QtKuJW9EG/SoiY+0JfbBJw6Gg==
-X-Google-Smtp-Source: AA6agR7u6zk+rXVU+V7Sgy68MHi+eF2Emd07lie03xAjqv2erUPFXDdl1laFdt+SVm/JxI/N9bNeoA==
-X-Received: by 2002:a5d:595f:0:b0:220:619d:da07 with SMTP id e31-20020a5d595f000000b00220619dda07mr4567517wri.10.1659711496782;
-        Fri, 05 Aug 2022 07:58:16 -0700 (PDT)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:aef0:8606:da6b:79ef])
-        by smtp.gmail.com with ESMTPSA id y1-20020adfd081000000b0022159d92004sm3102448wrh.82.2022.08.05.07.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Aug 2022 07:58:16 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     rui.zhang@intel.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v1 23/26] thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
-Date:   Fri,  5 Aug 2022 16:57:26 +0200
-Message-Id: <20220805145729.2491611-24-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220805145729.2491611-1-daniel.lezcano@linaro.org>
-References: <20220805145729.2491611-1-daniel.lezcano@linaro.org>
+        Fri, 5 Aug 2022 17:29:25 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77FEC1AD9C;
+        Fri,  5 Aug 2022 14:29:24 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id A72695C01E3;
+        Fri,  5 Aug 2022 17:29:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Fri, 05 Aug 2022 17:29:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1659734963; x=1659821363; bh=EfIpyjOOcf
+        4jZ6FdNb5kXcSL5JG3gIWiATWUoT9UbSo=; b=g/rB3Mk7OZyOV7qNxZ02rIJZU/
+        CD+6g+7aPLfCBWXz2DFpNRp/p6IZhuy0hfMySxoBHu1l36B8+8NaqGl3W0o9SJFF
+        CX+AsO00Sxgh1pOKecu4uDp1gLFuXF71o219UTN+bBd3g99QlZx7ojns6CHtlxr2
+        KU36NSi0K5wsNSDjXAyo6dqmuPOyJuIpvvQK9QQDtcAoNbpqUVmWAc9BgRYUI3M8
+        zQaUTlB5+beUDJ1HRi1IMIDzh84kMeNCeVCAjLS3CkHqd0AsKMbKiFaoVuVVo3xY
+        zTTDdTy8+FMIM8fRd5kRxAg3jKZoBvmtGg/qoQyOxr7x2/5owmx5gRlrUNpg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1659734963; x=1659821363; bh=EfIpyjOOcf4jZ6FdNb5kXcSL5JG3
+        gIWiATWUoT9UbSo=; b=CF94houWiFG+lmfWQBJVsDopxR8Ark49aTNy3SNhYgyb
+        FOiNhZbGM45X/6+s5/fXcdniwIA1GUPjKYWFWA7t5wfikog9TrHg1XO2SnopeD2X
+        l4qCoVj7Mfk/4/lbR/O0+pBkz1oNz9FJ9BkYpKkM5wEGiXmFf+spe7KTIfuDuyYw
+        YyKUkHOYLhqSBYe+oSNHSmZKFWChQ7mWFPM+uf2uMJBsr6O64xK7JX8qJKFxV/y4
+        Aqy55tfgnSt36btanBFmriSDU7KqgYjmsS681XvQ4YRC4JmW9vtBm1MwenC2I6lM
+        SxIgBOL85239ZL5MVJlDTkhgNLJT6goaLODbdStDLg==
+X-ME-Sender: <xms:s4vtYlJPeepfo7L_J27IFTK75A8Z_m1mMyESHIMHfrhvn6iV3Gc1GQ>
+    <xme:s4vtYhKOeFY5nCVrvcFqKzjkJTHE7E5-Kf_kIZMLk7ScpsckewySkw1PeaKMvA7CJ
+    c5FeFv-D7rRHawqs6w>
+X-ME-Received: <xmr:s4vtYtsB8ayZ7ECrJaldVDoGgjhWlMfTaUa7-V7aH95yImirX4yfg-OaabM5_SyU9QDTwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefuddgudeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpedvvdegledtheefieejgfevgeefiefhtdevteefteduhfevtdefleethfetgeeluden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:s4vtYmb4Dw9dtrqZnUx9kW4OlZHI3zo-etQySUzV_acUC2JaIoTkyA>
+    <xmx:s4vtYsYrRHFizcTAfo890bxj7ub32kmMci_duTxzn_IijUGh0Z1Ewg>
+    <xmx:s4vtYqAjyQj67d5YfM8qdgWFsIBIlOPQ-ID2sF0cLNKvEPEotNh0rA>
+    <xmx:s4vtYrmrYvsA1LwMjuK4IZHJYjzho_xhf7lgV7Ofihp4zUfCajuFDg>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 5 Aug 2022 17:29:19 -0400 (EDT)
+Date:   Sat, 06 Aug 2022 09:29:06 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH 3/5] asus-wmi: Add support for TUF laptop keyboard states
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <IOV5GR.PZU2YHNSNKYD2@ljones.dev>
+In-Reply-To: <20220805120859.GB20036@duo.ucw.cz>
+References: <20220805081909.10962-1-luke@ljones.dev>
+        <20220805081909.10962-4-luke@ljones.dev> <20220805120859.GB20036@duo.ucw.cz>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal framework gives the possibility to register the trip
-points with the thermal zone. When that is done, no get_trip_* ops are
-needed and they can be removed.
+Hi Pavel,
 
-Convert ops content logic into generic trip points and register them with the
-thermal zone.
+On Fri, Aug 5 2022 at 14:08:59 +0200, Pavel Machek <pavel@ucw.cz> wrote:
+> Hi!
+>> 
+>>  Adds two paths:
+>>  - /sys/devices/platform/asus-nb-wmi/keyboard_rgb_state
+>>  - /sys/devices/platform/asus-nb-wmi/keyboard_rgb_state_index
+> 
+> Patches 2-3 -- we already have pattern trigger. This should use it...
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
- 1 file changed, 26 insertions(+), 47 deletions(-)
+Can you please provide more information? I'd be happy to use it, but 
+because I do this in my free time I don't have the best knowledge of 
+helpful stuff that already exists - so far I've been learning about 
+stuff like this when someone like yourself brings it up, otherwise I 
+try to follow existing code patterns in the source file.
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 3463629f8764..cf757f3a1e6b 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -46,6 +46,8 @@
-  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
-  * assume 89°C is critical temperature.
-  */
-+#define ACERHDF_DEFAULT_TEMP_FANON 60000
-+#define ACERHDF_DEFAULT_TEMP_FANOFF 53000
- #define ACERHDF_TEMP_CRIT 89000
- #define ACERHDF_FAN_OFF 0
- #define ACERHDF_FAN_AUTO 1
-@@ -70,8 +72,8 @@ static int kernelmode;
- #endif
- 
- static unsigned int interval = 10;
--static unsigned int fanon = 60000;
--static unsigned int fanoff = 53000;
-+static unsigned int fanon = ACERHDF_DEFAULT_TEMP_FANON;
-+static unsigned int fanoff = ACERHDF_DEFAULT_TEMP_FANOFF;
- static unsigned int verbose;
- static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
-@@ -137,6 +139,15 @@ struct ctrl_settings {
- 	int mcmd_enable;
- };
- 
-+static struct thermal_trip trips[] = {
-+	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
-+		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
-+		.type = THERMAL_TRIP_ACTIVE },
-+
-+	[1] = { .temperature = ACERHDF_TEMP_CRIT,
-+		.type = THERMAL_TRIP_CRITICAL }
-+};
-+
- static struct ctrl_settings ctrl_cfg __read_mostly;
- 
- /* Register addresses and values for different BIOS versions */
-@@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 		fanon = ACERHDF_MAX_FANON;
- 	}
- 
-+	if (fanon < fanoff) {
-+		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
-+		       fanoff, fanon, fanon);
-+		fanoff = fanon;
-+	};
-+	
-+	trips[0].temperature = fanon;
-+	trips[0].hysteresis  = fanon - fanoff;
-+	
- 	if (kernelmode && prev_interval != interval) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
-@@ -424,43 +444,6 @@ static int acerhdf_change_mode(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
--				 enum thermal_trip_type *type)
--{
--	if (trip == 0)
--		*type = THERMAL_TRIP_ACTIVE;
--	else if (trip == 1)
--		*type = THERMAL_TRIP_CRITICAL;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip != 0)
--		return -EINVAL;
--
--	*temp = fanon - fanoff;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip == 0)
--		*temp = fanon;
--	else if (trip == 1)
--		*temp = ACERHDF_TEMP_CRIT;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
- static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
- 				 int *temperature)
- {
-@@ -474,13 +457,9 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
- 	.unbind = acerhdf_unbind,
- 	.get_temp = acerhdf_get_ec_temp,
- 	.change_mode = acerhdf_change_mode,
--	.get_trip_type = acerhdf_get_trip_type,
--	.get_trip_hyst = acerhdf_get_trip_hyst,
--	.get_trip_temp = acerhdf_get_trip_temp,
- 	.get_crit_temp = acerhdf_get_crit_temp,
- };
- 
--
- /*
-  * cooling device callback functions
-  * get maximal fan cooling state
-@@ -710,10 +689,10 @@ static int __init acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
--	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
--					      &acerhdf_dev_ops,
--					      &acerhdf_zone_params, 0,
--					      (kernelmode) ? interval*1000 : 0);
-+	thz_dev = thermal_zone_device_register_with_trips("acerhdf", trips, ARRAY_SIZE(trips),
-+							  0, NULL, &acerhdf_dev_ops,
-+							  &acerhdf_zone_params, 0,
-+							  (kernelmode) ? interval*1000 : 0);
- 	if (IS_ERR(thz_dev))
- 		return -EINVAL;
- 
--- 
-2.25.1
+Many thanks,
+Luke.
+
+> 
+> Best regards,
+> 									Pavel
+> --
+> People of Russia, stop Putin before his war on Ukraine escalates.
+
 
