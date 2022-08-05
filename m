@@ -2,113 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C67C00140
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 21:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ECAC00140
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Aug 2022 21:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236832AbiHEVaZ (ORCPT
+        id S233746AbiHEVnj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 Aug 2022 17:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55776 "EHLO
+        Fri, 5 Aug 2022 17:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234104AbiHEVaY (ORCPT
+        with ESMTP id S232791AbiHEVnh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Aug 2022 17:30:24 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A0DCE01;
-        Fri,  5 Aug 2022 14:30:23 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3E8425C0193;
-        Fri,  5 Aug 2022 17:30:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 05 Aug 2022 17:30:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1659735023; x=1659821423; bh=Z3kAfDDHZi
-        MWfE1loWKkH4N3TfbNAIObShduimNijm0=; b=RUdc9qrcM8RLyp6kwEZOxkWzbg
-        eeAfYciZr1tjgmCCDflgpNH/T7nlaXzeCZCtyVSo6agdArlQMyP68yYQM7loYnNE
-        idAHyNFIZDDw83U5edTUJjjdx00oUDTqYSzmru+zl7wunA8N+Hl3X4Egvx33JL0o
-        U6BKXL5BoqpGqJQeZ0ntHpF3bHoaNoo894dViu17zqU01l8mE96QU+DTep6qXaz9
-        6gLPaG1RN+ObQ2tPBqbiRPACDx8RO4FsTYkchn6nMeZAXRxsH1zzHY7xpo0CgCQX
-        MH9GzfTbfTNJ4a4vaH8XEiK20fJKiGUj+bTiCwEOVdAUVjstrEfKTTfgdAGQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1659735023; x=1659821423; bh=Z3kAfDDHZiMWfE1loWKkH4N3TfbN
-        AIObShduimNijm0=; b=oHOJMIH1hgh8dTxeOl/38oDtGdEIGmG85qYJAR8YmHFS
-        +ZZm5kNN6oo42WtGmcw4MaKDbI1Fm7/xVbQUowRUJXCo9UhnwOejB1ySUhtf3VX/
-        IVz1QMUoGe04VMZn3ue2x2FDvcsXRWOJczCktUBz/WCPC7LmBWEohbiCC6wgyvLE
-        bz3RlXu3JdijgSnt7ZOfsUDUGYS5GPFxQRaBTQHGhiu4UwaBcWlw774b5zF1z6IG
-        9O1C6OfUnxbQ4Hp8SEbYFCG9E6O2GyIPBlbdZ7IPXCnpeUaM0ZDNBTzHCQlBnknC
-        FV3397lhFVvXWVrJ1iNe1a254BoEPyL017vf72XXbg==
-X-ME-Sender: <xms:74vtYk_f2-plhgN7sD2TKy8WaA0dZJMqPSGJqAkP_2BnJJtYbsUZIQ>
-    <xme:74vtYssqCTFnrkfHOCCbYeP-bjD1XZOmz4BpSDpVAh1PT5l5Dnc8G0CUPMGO8jQuT
-    5rAtU0gY7JtE5aRiGk>
-X-ME-Received: <xmr:74vtYqDy3ZHJHa4fgtvJYHxeIanUnEnRuV9VnNVOx8cPhMmzSctSlaFm8MSnrCh3wZ3tXg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefuddgudeigecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhk
-    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
-    hnpedvvdegledtheefieejgfevgeefiefhtdevteefteduhfevtdefleethfetgeeluden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
-    eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:74vtYkd63zOaXmuGJ1LH532UvQRFVB4XgIeoso43ncRdG0DnSYvKrQ>
-    <xmx:74vtYpOeumU4QuQLjBlscxzKOziVVS-4qEkjVfIJ46UVNjjDW28ELQ>
-    <xmx:74vtYukyWCX9dlxMu8_jEmEiavp66YyDpoQrsCsCDpqwc3ET6udE2Q>
-    <xmx:74vtYibLlfrQoBEPf5vLFzXHDfgYXfJp4xyEDvEB6JM_Cno3Nkxj1Q>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 5 Aug 2022 17:30:18 -0400 (EDT)
-Date:   Sat, 06 Aug 2022 09:30:07 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH 0/5] asus-wmi: Add support for RGB keyboards
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <7QV5GR.SLNVJBURF77S2@ljones.dev>
-In-Reply-To: <20220805120539.GA20036@duo.ucw.cz>
-References: <20220805081909.10962-1-luke@ljones.dev>
-        <20220805120539.GA20036@duo.ucw.cz>
-X-Mailer: geary/40.0
+        Fri, 5 Aug 2022 17:43:37 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2523C14D;
+        Fri,  5 Aug 2022 14:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659735815; x=1691271815;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NpludD3pNBFukze8ah1npXAw02fk1Yx2nd1X/2H0KSo=;
+  b=ifYozoWtvOqHj21NsAaV6LMyiPRFwvE4nrFlpdo3B6Unxc/XbP03liw4
+   fPn1y2GAC5tXscQmz/CzaERCl/C6buLO4cZ0stxflV0C105sDJgCJ/lvs
+   UR2wfzsYrK0XUxTGSsGOlaw+JitimyLdki+H04WsXRmLRSX9urZDf2gdu
+   hNldwSoI4aYkP4HkFH+PTB/DiVOH+aWD/2OtLRdX2hBYSRWQ1lltM+TAZ
+   co239s7ivLRYPrSVmqTRXd8gy94lF/gHPzAT12dlagZlSYtbRLjsAK8s8
+   XFVqvtgLrVkj/0zPwWYVjxOszqWs0BXRJPjOOUKM6a1qzCGqMS6XtDqAX
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10430"; a="270684116"
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="270684116"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 14:43:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="671830664"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2022 14:43:33 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oK56T-000Jl3-0o;
+        Fri, 05 Aug 2022 21:43:33 +0000
+Date:   Sat, 6 Aug 2022 05:43:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
+Cc:     kbuild-all@lists.01.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: Re: [PATCH 4/5] asus-wmi: Document many of the undocumented API
+Message-ID: <202208060544.FBvHeTue-lkp@intel.com>
+References: <20220805081909.10962-5-luke@ljones.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220805081909.10962-5-luke@ljones.dev>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-I'll be sure to do that when I next adjust things. Thanks!
+Hi "Luke,
 
-On Fri, Aug 5 2022 at 14:05:39 +0200, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
-> 
->>  This is a patch series to add RGB support for ASUS laptops.
->>  The laptops with this RGB tend to be the TUF series of gamer 
->> laptops.
->> 
->>  The first step is initial bringup of support using the multicolor 
->> LED API.
->> 
->>  These types of keyboards implement a slightly more complex 
->> interface than
->>  just RGB control however - they also have modes with can be static 
->> LED,
->>  blinking, rainbow, color cycles, and more. They also have some 
->> custom
->>  animations that can play depending on device state, such as 
->> suspended
->>  playing a fancy colour cycle, or playing a "wave" animation.
->> 
->>  Two of the patches add support for these features.
-> 
-> Please Cc: LED maintainers with LED patches.
-> 
-> Best regards,
-> 								Pavel
-> 
-> --
-> People of Russia, stop Putin before his war on Ukraine escalates.
+Thank you for the patch! Perhaps something to improve:
 
+[auto build test WARNING on v5.19]
+[cannot apply to linus/master next-20220805]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/asus-wmi-Add-support-for-RGB-keyboards/20220805-162136
+base:    3d7cb6b04c3f3115719235cc6866b10326de34cd
+reproduce: make htmldocs
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> Documentation/ABI/testing/sysfs-platform-asus-wmi:71: WARNING: Unexpected indentation.
+
+vim +71 Documentation/ABI/testing/sysfs-platform-asus-wmi
+
+  > 71	Date:		Dec 2022
+    72	KernelVersion:	5.17
+    73	Contact:	"Luke Jones" <luke@ljones.dev>
+    74	Description:
+    75			Enable the external GPU paired with ROG X-Flow laptops.
+    76			Toggling this setting will also trigger ACPI to disable the dGPU:
+    77				* 0 - Disable,
+    78				* 1 - Enable,
+    79	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
