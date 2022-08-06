@@ -2,59 +2,59 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBB8C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 09:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31D2C19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 09:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbiHFJs7 (ORCPT
+        id S229606AbiHFJ5h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 Aug 2022 05:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
+        Sat, 6 Aug 2022 05:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbiHFJs6 (ORCPT
+        with ESMTP id S229478AbiHFJ5g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Aug 2022 05:48:58 -0400
+        Sat, 6 Aug 2022 05:57:36 -0400
 Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410AA15831;
-        Sat,  6 Aug 2022 02:48:57 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id m22so3421588qkm.12;
-        Sat, 06 Aug 2022 02:48:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F88110FEB;
+        Sat,  6 Aug 2022 02:57:35 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id m22so3428194qkm.12;
+        Sat, 06 Aug 2022 02:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=soTs+6aBLXvB/CSHeZwohpV8hY/yAbdVbAL5FwGeUow=;
-        b=LRnlJQYrRQdAsd9T2wR4Gl0wFRGlIbQGiUMW8t9OUIiGKzTguv2UsdsLA/1UTQIiHA
-         7gL+mvAQ7M9kwBzByzOwII730LNy0bMFdSw6znr/JV1r3Ym9TaReBNflEUCwdBultSHe
-         KeY8OWIguL/EwnWQUhAWXWAyGovestG+7Wt4nlma9UuyznwakF9y5OFsa14L1JZtGe7i
-         E7m1UA8BMHi/1C9feLaOXc7c7Wy7FTtNo2DPSmA1k2S5ZMxSfH3VWWkPsFWlEOjdYTx5
-         FiBS5l2zk1ZuvSRG8strxYasg89XrhP39GJQyQ8OJ3WOr8gqR5Sc3EAaH/u0xMlUkt+Q
-         n9zQ==
+        bh=rM2r893tX6UeJ6IA/xwdRLyGKAipcqqqqEylN0hdxZo=;
+        b=YM5xBvU8oi3QHNtle90hlJNrkhOzMBUJksPrtbpwJc9GA7EgnAAjFehTHoADnkcmfG
+         dIYzS1CEmRcuX1e+vMTsoj0sGGLISC/FAXgsh5bhx2djEDPQWT6FV1hY+KxeMo2kXzA4
+         FHeuhwfkPf6vE8KYMbouqN6kyQimOIvkDBZo4gdOCuB23E1mPZTBSPONdkehVId6jRgP
+         fi6N0iH2/DudZl3ZJa+n28AGwx1pJUym4QUf6cQJgq9MkiIBWrX6e1h7GrpjYBt7tjHA
+         +pPDGLmEhxHc2sakMae9IIdY1MSLEZ+UAzgfKbItczUlHW5Q0ERF4DJjPpHh9t8hBvPv
+         Y8ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=soTs+6aBLXvB/CSHeZwohpV8hY/yAbdVbAL5FwGeUow=;
-        b=4VGGrFyI7cbDyw6nLZRwXPHkdoAwTvaYeR0Z77F20OlSS9usrtFvtPzn+afJyRrLcq
-         TinupiVnu/sw6UnZuuBsyN82o6AzSypEuUVDvd4V6HRM+H+Y8bjcsgTDE61JqGfn+jtm
-         DU/Ir+XZldbbwoaUaxn8RrwNoJRM0OFCa7p3V1aLqlCffKom1KFH6olWOZdtreHM85Oq
-         DwesMlXJXyp4m6AlX7hgthtmuvBFXY6j0powX93DmtHW8jc7cw296ziJZREFaNGAEKeO
-         aJFgUdASrPVX7kqogiUmFTzmdCUQXSQo2ALB+RarFsuVqoMm3r4b/IVNz+NkeDf1sVV5
-         +TmQ==
-X-Gm-Message-State: ACgBeo3VIBdqmBnqQ9ufWLNkVnl1YeFuHzzY94eocf2QGIb49XTWr/jP
-        w/qRFJwSC2jCbKeiM5QDB789cEVOJZUNk+Huedc=
-X-Google-Smtp-Source: AA6agR5Zv1HxbcMB8RhDvBBr//rirLD6qa4dQw+fo0lmiY3ehB886wydTx2U+du+/ax2zCN2RWr9H2HNvfrZeAfjRSo=
-X-Received: by 2002:a05:620a:31a:b0:6b9:1f1a:7e13 with SMTP id
- s26-20020a05620a031a00b006b91f1a7e13mr3658459qkm.748.1659779336348; Sat, 06
- Aug 2022 02:48:56 -0700 (PDT)
+        bh=rM2r893tX6UeJ6IA/xwdRLyGKAipcqqqqEylN0hdxZo=;
+        b=pkxHr07fuVroOtTGoIfirqr44kquYeOTmAgxArQyJ59wCJ61oWYRlAtTE7+SdueHAa
+         KpG4PkB53LzpPgi5mAQLHDAGxAWt0y53N6v/DFksypaCC8Sk1DNqXoqO07CwsC545Ms0
+         h+RRkwBzjU/Bj2Ppo6dLjag/sjQGhBlJQmYRXaIEe8F/B4BApQmFnOlW48etTRN4J/N1
+         b3r9ykmv3eWsOim6cVL9I6fQ5TWqkQ4DPK1qABpScCuY258vXFli1w2uSMMkb3DZwdMF
+         FGidDJGNGR0FPqVSDBwC8PWpGRNm31Sm8WF4BVxp8oWjH8c3RIAtz2npt4wN75W9Tnu+
+         7X4A==
+X-Gm-Message-State: ACgBeo2fms3RijBdCNZD18Hxz92jyw3+ZybwMo7z6CaeF/l/hKNmVlVI
+        Vo6S4HQaLHkyD7tq5MqRYNLhNYPqbLiObgpfQ9KQIwzsmxo=
+X-Google-Smtp-Source: AA6agR4lmRT846scNJETOCADZsMtIjb5MBULtHoVx+VaY2KLhelA7SaUzLtq65EXAagcE2T/tQtJORnFCJ+yszsbtVI=
+X-Received: by 2002:a05:620a:8018:b0:6b6:5df:977 with SMTP id
+ ee24-20020a05620a801800b006b605df0977mr7841172qkb.320.1659779854641; Sat, 06
+ Aug 2022 02:57:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220805081909.10962-1-luke@ljones.dev> <CAHp75Vd4iEGkAE1Ds_Zyqi0P+gQbOyqvGoJctpOHNmMD7cUG0g@mail.gmail.com>
- <J6T6GR.SW0RXSJSYG9R1@ljones.dev>
-In-Reply-To: <J6T6GR.SW0RXSJSYG9R1@ljones.dev>
+References: <20220805081909.10962-1-luke@ljones.dev> <20220805081909.10962-3-luke@ljones.dev>
+In-Reply-To: <20220805081909.10962-3-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 6 Aug 2022 11:48:18 +0200
-Message-ID: <CAHp75VcdmFk4k6Vvcv7aMgJ7Cw21YMKsq28G4aO0XyUj1-5rRg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] asus-wmi: Add support for RGB keyboards
-To:     Luke Jones <luke@ljones.dev>
+Date:   Sat, 6 Aug 2022 11:56:58 +0200
+Message-ID: <CAHp75VcYba6wYwkMo_Q_QEZsr4wyfDB5czu13w-y6hfQ13CkvQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] asus-wmi: Add support for TUF laptop keyboard RGB
+ mode control
+To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -64,46 +64,96 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Aug 6, 2022 at 11:33 AM Luke Jones <luke@ljones.dev> wrote:
-> On Sat, Aug 6 2022 at 11:10:37 +0200, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Aug 5, 2022 at 10:20 AM Luke D. Jones <luke@ljones.dev> wrote:
-
-> > There are so many patches
+On Fri, Aug 5, 2022 at 10:20 AM Luke D. Jones <luke@ljones.dev> wrote:
 >
-> This is what Hans requested that I do after the previous submissions,
-
-No, what I'm referring to is that it was so many versions of the same
-patch(es) that are floating around and it's too messy to understand
-which version is which and what to consider.
-
-> >  and versioning of all of this is completely
-> > broken.
+> Adds support for TUF laptop RGB mode control.
 >
-> I was unsure how to handle this as the previous patches were
-> individual, I thought perhaps this patch series is a good place to
-> restart since the work done is a bit different.
->
-> I will try to better track what I do in future.
+> Two paths are added:
+> - /sys/devices/platform/asus-nb-wmi/kernel_rgb_mode
+> - /sys/devices/platform/asus-nb-wmi/kernel_rgb_mode_index
 
-Thanks!
+...
 
-> > You really have to clean up the mess and realize what version
-> > of this is. To me it looks like this series is v5 or so of the
-> > previously sent patch(es). Also you missed the changelog between
-> > versions so we can see what you have done from vX to vX+1 for the
-> > whole range (1 ... X+1).
->
-> As described before I thought this would hopefully be a good point at
-> which to reset due to the changes requested by Hans which meant that
-> the underlying structure is different.
->
-> I do have another version already prepped, so I will do my best to
-> address the previous submissions and your concerns in the cover letter
-> along with a changelog.
+> +static int keyboard_rgb_mode_check_present(struct asus_wmi *asus)
+> +{
+> +       u32 result;
+> +       int err;
+> +
+> +       asus->keyboard_rgb_mode_available = false;
+> +
+> +       err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_TUF_RGB_MODE, &result);
+> +       if (err) {
+> +               if (err == -ENODEV)
+> +                       return 0;
+> +               return err;
+> +       }
 
-Thanks. For the less confusion continue this versioning than (v2 will
-be the next one for the series).
+> +       if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
+> +               asus->keyboard_rgb_mode_available = true;
+> +       }
+
+{} are not needed (except if they will be utilized in the next patches
+in the series).
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (sscanf(buf, "%hhd %hhd %hhd", &save, &mode, &speed) != 3)
+> +               return -EINVAL;
+
+Usually we have three separate nodes for that, but they are kinda
+hidden in one driver, so I don't care much.
+
+...
+
+> +       asus->keyboard_rgb_mode.save = save > 0 ? 1 : 0;
+
+So, it's actually boolean.
+
+You may write it as
+
+    ...save = !!save;
+
+> +       /* These are the known usable modes across all TUF/ROG */
+> +       asus->keyboard_rgb_mode.mode = mode < 12 && mode != 9 ? mode : 0x0a;
+> +
+> +       if (speed == 0)
+> +               asus->keyboard_rgb_mode.speed = 0xe1;
+> +       else if (speed == 1)
+> +               asus->keyboard_rgb_mode.speed = 0xeb;
+> +       else if (speed == 2)
+> +               asus->keyboard_rgb_mode.speed = 0xf5;
+
+> +       else
+> +               asus->keyboard_rgb_mode.speed = 0xeb;
+
+So the 1 is default then, why not use switch-case to show this explicitly?
+
+switch (speed) {
+  case 0:
+    ...
+  break;
+  case 1:
+  default:
+    ...
+  break;
+  case 2:
+    ...
+  break;
+}
+
+Yes, it's longer, but I think it's cleaner.
+
+> +       err = tuf_rgb_brightness_set(cdev, cdev->brightness);
+> +       if (err)
+> +               return err;
+> +       return 0;
+
+return tuf_rgb_brightness_set(...);
+
+> +}
 
 -- 
 With Best Regards,
