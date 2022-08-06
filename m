@@ -2,270 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C92EC19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 10:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06FFC19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 10:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiHFKRB (ORCPT
+        id S237364AbiHFK1o (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 Aug 2022 06:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38228 "EHLO
+        Sat, 6 Aug 2022 06:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiHFKQ7 (ORCPT
+        with ESMTP id S229671AbiHFK1n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Aug 2022 06:16:59 -0400
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF8312D06;
-        Sat,  6 Aug 2022 03:16:58 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 3540E32000F9;
-        Sat,  6 Aug 2022 06:16:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 06 Aug 2022 06:16:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1659781014; x=1659867414; bh=Hqmot6k+wA
-        5/nwdZH9VuaMpObSSqlmQv9gNrzpjhSK4=; b=YFoI1RWKkGjGhTL3onfIc8VPJk
-        oY8r4/Ihui2/dgFY1eeJbm1XzBf/o6UxTIz2jCXKny+brRJqJKHdvBtcwLcquUBK
-        KnG7IiwcJJbExuGSTttM6hIXgGuW/eDx0EaQvxxiBbrD5+co866w84ylhcGVEUGw
-        Qiw5U46Sehzz5SO4JOFg0q4vQ6FsKJ900mw7dtiRCfeee6+f23DmClIgJ7v8AQRB
-        5mue0noSusX0zRKfW9eYyTa8RUrkKNii8v0uoVCPys4c0hgISNY+S+W5U09OW8Gl
-        MzTLFlM+vnWpbPROTktxFsVXwLu/UOOuBLZRVmSN/MyFLJLJeMxQl5MYhhUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1659781014; x=1659867414; bh=Hqmot6k+wA5/nwdZH9VuaMpObSSq
-        lmQv9gNrzpjhSK4=; b=1Q9Be8r/Rw2JCt04nmGrZ3TTjfba5xgU3jk13Dqgw85M
-        iaKPzV0gChnDA3T+f8welpx71wbclv/gT51o4GH81LSfkKeSwOvgh4k05H0zRE2u
-        dwrj/PXq+lfwAZTpOkf+47wNAecqGmDlS4fJe9PCf1rqmKUwxoIoEcp3BdDYDSSp
-        SD0JNLfEu10J8gpwR61ytvTKBHW1bBFdKMkyvz9LlqQcwyXIxlHK1qD1jOjR3mP1
-        ooIbnmSRUaKGUAf7IGm8dfh4jQqpCngdXo6v6458A7NRsDsAYHKK1s6LLlpFEs8y
-        9jR99ZS6ajFCaAU8pxrh+HK7zN+1YGoCdlnAdxqN3A==
-X-ME-Sender: <xms:lj_uYkiqdnKUmFYRzqo_H_dI9getdQiZCGxAs9NYDgtB6O40ENn_Sw>
-    <xme:lj_uYtBM2Quswj1doPbVzMQ5FfkkImzvzmASKhh4SimauGwBPieNLbM51wcp2cqkM
-    0fn1_1y-FupDKHYURM>
-X-ME-Received: <xmr:lj_uYsHsqG0s6RnqgcI_EsL9a9YMnMctDvDE1t93n1ruPhWoIeMh4O4qh1pzISdJCwmSmw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeffedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:lj_uYlSgcVoJFJ6XcUXif_8MAzgjB8BxPMHgGMb3VopcSl86rDsHiA>
-    <xmx:lj_uYhyAIHoSCNJbI6utVTZYqZ6EkG6xjKUBsboLmhf3PzFUHfbcdw>
-    <xmx:lj_uYj5QphXwbKmlp8hWXMubA1k4bXSqoyko5ZfnS9O918CHqRY6YQ>
-    <xmx:lj_uYs_0mJLLoLIXbo_PlfhgNseK1PiF0Zx2gmGFbfSYBdT12zyEdw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 6 Aug 2022 06:16:50 -0400 (EDT)
-Date:   Sat, 06 Aug 2022 22:16:35 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH 1/5] asus-wmi: Add basic support for TUF laptop keyboard
- RGB
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        Sat, 6 Aug 2022 06:27:43 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E161D48;
+        Sat,  6 Aug 2022 03:27:42 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id ff27so899701qtb.11;
+        Sat, 06 Aug 2022 03:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=ojb/oCXcMsye9R9CinrRz1U1Kdh/Eo0FGrLI1wf3hRo=;
+        b=SV9w6rFrbzPtMv1R31cJ+GUPMfFRCHJfmfKJfTTLpDBrrc9VyEQzzVRPflpihdbzEj
+         uuByrltYXixKsW3PTMi6EMVcyb7lHjvWCeQtGvrASfgy+v+AHOFOZ4AyaH5Zbn1WgrdV
+         K60/iSExTU6QqGdoGHSzjL5ZKQnFDbDM6UhWYqOz4AK5PHPJTZ7IXX9SwUxMctPnUjdw
+         qaXQ0H4ilY38hPwoJS6Kbgl1d33Dfkv20OgFtpj8GzAqj+cxWggyrR3d30CO9chzrcfC
+         OTeWai6Hwm0IrlUEl+4vsrZgdzrF0sRVFAZud4easlHzbz1+JXiwgRTS6DjGxf5AXWZs
+         LPqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=ojb/oCXcMsye9R9CinrRz1U1Kdh/Eo0FGrLI1wf3hRo=;
+        b=14rf70KfUUlyCL7OYWhsI/vWxEDPZZAfgeb93kEs7Db1sGCkF5a6O2su2XBNZ7GXEC
+         Ne1CUg+XzVROqzN8OMWrNnooMTfAbO5Rf1qzCgd39X1EDDeh/BDkve8O90w9FyqKenqa
+         BTH5y8GZ0GOsBko0mA9xHQY8zKUxgGQhQ1fmz4YUKEyI2uEIaXLinMo0q9aeuyYrdUsa
+         jpcTE4H+oZUISKc8zJgzijV/UFbtOrrU5hLB9SR9A6luLMouLc4tvcFuNMq/ykcq8OnW
+         ejSOJ0VDOYQ2QASj8L3lbMkJvgaeq9TgHvcAww0zMTKI+oPpTLCAP0+NQ0wKkmBQIzLB
+         70Dw==
+X-Gm-Message-State: ACgBeo0IF0tIrODXCsKLzuWKe5CZ95XDwQLUVw0tX+mEr5mGWggqSBVL
+        ji2ZyeHBoEmP1sPMESqtVwDqkHCKLSLvcjPemXY=
+X-Google-Smtp-Source: AA6agR4vEs3/3l/nfiwRbEmkE4Jpc/Nx5vNokQLkPB8Gtj1j6m0KOpDZ/VI2B5cAjbZwWY2Z43LTsKF4dTXKQ6Ohpu4=
+X-Received: by 2002:ac8:5784:0:b0:31f:24e:93f5 with SMTP id
+ v4-20020ac85784000000b0031f024e93f5mr9170257qta.429.1659781661197; Sat, 06
+ Aug 2022 03:27:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220805081909.10962-1-luke@ljones.dev> <20220805081909.10962-2-luke@ljones.dev>
+ <CAHp75Ve-oo=pGkpD10kbOVtrYtzQLscFq9HO0-Y5a6M_fpXDNw@mail.gmail.com> <N7V6GR.XFSPFYLCEU9X2@ljones.dev>
+In-Reply-To: <N7V6GR.XFSPFYLCEU9X2@ljones.dev>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 6 Aug 2022 12:27:04 +0200
+Message-ID: <CAHp75VfGSpYsX_bAebtU3TbjzAK7fmYioJB88X8p3NG5BDA2+g@mail.gmail.com>
+Subject: Re: [PATCH 1/5] asus-wmi: Add basic support for TUF laptop keyboard RGB
+To:     Luke Jones <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <N7V6GR.XFSPFYLCEU9X2@ljones.dev>
-In-Reply-To: <CAHp75Ve-oo=pGkpD10kbOVtrYtzQLscFq9HO0-Y5a6M_fpXDNw@mail.gmail.com>
-References: <20220805081909.10962-1-luke@ljones.dev>
-        <20220805081909.10962-2-luke@ljones.dev>
-        <CAHp75Ve-oo=pGkpD10kbOVtrYtzQLscFq9HO0-Y5a6M_fpXDNw@mail.gmail.com>
-X-Mailer: geary/40.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy, thanks for the feedback:
+On Sat, Aug 6, 2022 at 12:16 PM Luke Jones <luke@ljones.dev> wrote:
+> On Sat, Aug 6 2022 at 11:44:33 +0200, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Aug 5, 2022 at 10:20 AM Luke D. Jones <luke@ljones.dev> wrote:
 
-On Sat, Aug 6 2022 at 11:44:33 +0200, Andy Shevchenko 
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Aug 5, 2022 at 10:20 AM Luke D. Jones <luke@ljones.dev> wrote:
->> 
->>  Adds support for TUF laptop RGB control via the multicolor LED API.
->> 
->>  As this is the base essentials for adjusting the RGB, it sets the
-> 
-> these are
-> ...or...
-> essential
-> 
->>  default mode of the keyboard to static. This overwrites the booted
->>  state of the keyboard.
-> 
-> ...
-> 
->>   #include <linux/leds.h>
->>  +#include <linux/led-class-multicolor.h>
-> 
-> Not sure about the ordering ('-' vs. 's') in locale C.
-> 
+...
 
-I used hid-playstation.c as a reference and followed that ordering.
+> >>   #include <linux/leds.h>
+> >>  +#include <linux/led-class-multicolor.h>
+> >
+> > Not sure about the ordering ('-' vs. 's') in locale C.
+>
+> I used hid-playstation.c as a reference and followed that ordering.
 
-> ...
-> 
->>  +static int tuf_rgb_brightness_set(struct led_classdev *cdev,
->>  +       enum led_brightness brightness)
->>  +{
->>  +       u8 r, g, b;
->>  +       int err;
->>  +       u32 ret;
-> 
->>  +
->>  +       struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-> 
-> No need to put blank lines in the definition block. Also it would be
-> better to move the longest line to be first.
+Try something like this:
 
-Okay cool. Done.
+  LC_ALL=c sort
 
-> 
->>  +       led_mc_calc_color_components(mc_cdev, brightness);
->>  +       r = mc_cdev->subled_info[0].brightness;
->>  +       g = mc_cdev->subled_info[1].brightness;
->>  +       b = mc_cdev->subled_info[2].brightness;
->>  +
->>  +       /* Writing out requires some defaults. This will overwrite 
->> boot mode */
->>  +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, 
->> ASUS_WMI_DEVID_TUF_RGB_MODE,
->>  +                       1 | 0 | (r << 16) | (g << 24), (b) | 0, 
->> &ret);
-> 
-> What the point in those ' | 0'  additions?
+for these two lines and see if the ordering is the same.
 
-They were place-holders in testing that I forgot to change in the 
-second patch which adds mode configuration :(
+...
 
-Should be "save | (mode << 8) | (r << 16) | (g << 24), (b) | (speed << 
-8), &ret);", two bytes.
+> >>  +       if (err) {
+> >>  +               pr_err("Unable to set TUF RGB data?\n");
+> >
+> > Why not dev_err() ?
+>
+> I didn't know about it? Is there an example or doc on its use?
 
-> 
->>  +       if (err) {
->>  +               pr_err("Unable to set TUF RGB data?\n");
-> 
-> Why not dev_err() ?
+Thousands of examples in the kernel source tree. The point is if you
+have a device (instance) available, use it for messaging.
 
-I didn't know about it? Is there an example or doc on its use?
-
-> 
->>  +               return err;
->>  +       }
->>  +       return 0;
-> 
+> >>  +               return err;
+> >>  +       }
+> >>  +       return 0;
+> >
+> > return err;
+>
+> Something like this then?
+>
+> if (err) {
+>         pr_err("Unable to set TUF RGB data?\n");
+> }
 > return err;
+>
+> If so, done.
 
-Something like this then?
+No parentheses. Have you run checkpatch.pl?
 
-if (err) {
-	pr_err("Unable to set TUF RGB data?\n");
-}
-return err;
+Something like
 
-If so, done.
+  if (err)
+    dev_err(...);
 
-> 
->>  +}
-> 
-> ...
-> 
->>  +       if (asus_wmi_dev_is_present(asus, 
->> ASUS_WMI_DEVID_TUF_RGB_MODE)) {
->>  +               struct led_classdev_mc *mc_cdev;
->>  +               struct mc_subled *mc_led_info;
->>  +               u8 brightness = 127;
-> 
->>  +               mc_cdev = &asus->keyboard_rgb_mode.dev;
-> 
-> Join this with the definition above. It's fine if it's a bit longer
-> than 80 characters.
+  return err;
 
-Done.
+> >>  +}
 
-> 
->>  +               /*
->>  +                * asus::kbd_backlight still controls a base 
->> 3-level backlight and when
->>  +                * it is on 0, the RGB is not visible at all. RGB 
->> should be treated as
->>  +                * an additional step.
->>  +                */
->>  +               mc_cdev->led_cdev.name = 
->> "asus::multicolour::kbd_backlight";
->>  +               mc_cdev->led_cdev.flags = LED_CORE_SUSPENDRESUME | 
->> LED_RETAIN_AT_SHUTDOWN;
->>  +               mc_cdev->led_cdev.brightness_set_blocking = 
->> tuf_rgb_brightness_set;
->>  +               mc_cdev->led_cdev.brightness_get = 
->> tuf_rgb_brightness_get;
->>  +
->>  +               /* Let the multicolour LED own the info */
->>  +               mc_led_info = devm_kmalloc_array(
->>  +                       &asus->platform_device->dev,
-> 
-> With a temporary variable you may make this one line shorter and 
-> nicer looking
-> 
->   struct device *dev = &asus->platform_device->dev;
-> 
-
-Done.
-
->>  +                       3,
->>  +                       sizeof(*mc_led_info),
->>  +                       GFP_KERNEL | __GFP_ZERO);
->>  +
->>  +               if (!mc_led_info)
->>  +                       return -ENOMEM;
->>  +
->>  +               mc_led_info[0].color_index = LED_COLOR_ID_RED;
->>  +               mc_led_info[1].color_index = LED_COLOR_ID_GREEN;
->>  +               mc_led_info[2].color_index = LED_COLOR_ID_BLUE;
->>  +
->>  +               /*
->>  +                * It's not possible to get last set data from 
->> device so set defaults
->>  +                * to make it safe for a user to change either RGB 
->> or modes. We don't
->>  +                * write these defaults to the device because they 
->> will overwrite a
->>  +                * users last saved boot setting (in NVRAM).
->>  +                */
->>  +               mc_cdev->led_cdev.brightness = brightness;
->>  +               mc_cdev->led_cdev.max_brightness = brightness;
->>  +               mc_led_info[0].intensity = brightness;
->>  +               mc_led_info[0].brightness = 
->> mc_cdev->led_cdev.brightness;
->>  +               mc_led_info[1].brightness = 
->> mc_cdev->led_cdev.brightness;
->>  +               mc_led_info[2].brightness = 
->> mc_cdev->led_cdev.brightness;
->>  +               led_mc_calc_color_components(mc_cdev, brightness);
->>  +
->>  +               mc_cdev->subled_info = mc_led_info;
->>  +               mc_cdev->num_colors = 3;
->>  +
->>  +               rv = 
->> led_classdev_multicolor_register(&asus->platform_device->dev, 
->> mc_cdev);
-> 
-> This also becomes shorter.
-
-Done.
-
-> 
->>  +       }
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
