@@ -2,59 +2,58 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBB8C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 10:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D87C19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Aug 2022 10:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiHFKDB (ORCPT
+        id S230025AbiHFKGC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 Aug 2022 06:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        Sat, 6 Aug 2022 06:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbiHFKDB (ORCPT
+        with ESMTP id S229695AbiHFKGB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Aug 2022 06:03:01 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54199DE99;
-        Sat,  6 Aug 2022 03:03:00 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id y11so3348819qvn.3;
-        Sat, 06 Aug 2022 03:03:00 -0700 (PDT)
+        Sat, 6 Aug 2022 06:06:01 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892011274E;
+        Sat,  6 Aug 2022 03:06:00 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id i24so3435276qkg.13;
+        Sat, 06 Aug 2022 03:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=s4JW53l/rwhkjuydn9SbUuUWG8CvOPHHCEYhWqEX/qY=;
-        b=q1jyGQhrdNvXXcxQ37Wj+Hrr+TAfhmLat5AbvoAZY/z2y5viHffc/PShAU0JVHKAt/
-         +ssla/tfOq+5thaMbRP0VnqkFLbKQMBp8a3DgT8hk5HcwrL/qruLBVApTckrfe/ed/0e
-         6Z6Ydksk7j9QDu37fMGPjJ83ZnDAF9N2sv1kYLzyjB2wQtEccpYd6TzWSsfPHQ+OKOCQ
-         /CXhDZBboZdKKUKvqePcvezSkdWlIORaRthp5EgUuxOcmA1uImiASZxqwprZSeICNHmN
-         hl0oyyMwDvsA+LUGpVdUKysdyCAHYiiTCspKbtMq9K+l0fdANK+R9U5QUFffUV3bKyBW
-         FOlQ==
+        bh=yHRj2jxBzVmdqRuMjTnDCE7Ot2HBke77O0JneFoj7pY=;
+        b=i1LGlN0nAXw1rigtTV5oZaEXY2bfDQs2E4YTswrc5ipnMNLgXVJQ4k5y52342RhSyb
+         WxA20pKz6/vm+Y4wkmoFh9EZQ147bfCTVjow91Pa8D5NmAr3xXOKsLMYzboUBtAnnPSS
+         yNtEr2F8GV7X2wBG/6t+b0SngYfc7/fdPa1z7oyfebwExTHH6aQ4jYMjct3uRfyucoMt
+         sgfutSAImUBmNKiXXhwFw8sYWVR2uAu1w38eAnsfObuUZgY9gfcqQN9fPCVb1gFYLTje
+         GwOfslcEcu4mSF0mPzAbZx5dkZfQt0KnsLQEuYBOpihJqLQWk568E6BTieMlVBq2SXNW
+         MueA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=s4JW53l/rwhkjuydn9SbUuUWG8CvOPHHCEYhWqEX/qY=;
-        b=RvX4A6wUBaaZ/2NmnRPRR0t33np+SubxivLdaVxs0esrxHOWVAeQj+c+XL07S5VzC9
-         stmrn+w4Y7oIScU5RuDmGONlvm1GKjpgIjEFngE58aW2zceulnZdj3P3ccAF5HZEXUY7
-         OwqjvmQEUrmL+Vq4YRIrkxtD3xL7XkM6tfq/QzVMtYFvvTjqJIdKuBxJYO27a7wwnI2E
-         vWsPn6ModyQfTvwZcI92ggUdevpqz6uib/A55ZQulTPdC5yYN5FChp+a0awBBerU9qZQ
-         xCsL8TtSiPmX7Y59F8yxLor1s23P5LuZJn9SOL2HyEDVLZDfdRmEt8C2vfDAfCGkusdm
-         PsUg==
-X-Gm-Message-State: ACgBeo2kuE8MQMBC3oRCViEwxMY0vJwambWso4vBqZ2/Cp73O0pVPh/e
-        dR4QuT6qNKxUzkAOiwNc9gJJ0c78cJbi41/B0mc=
-X-Google-Smtp-Source: AA6agR7B1cjwQ3mtyYX3ntrg5Ny7XS+MxZqE+SQ7y5Rj0/vQQzDmD3PnalTKvwWev4BXWXKkH4YvAGHEmpP25Fg9veM=
-X-Received: by 2002:ad4:5cc3:0:b0:474:8dda:dfb6 with SMTP id
- iu3-20020ad45cc3000000b004748ddadfb6mr8956650qvb.82.1659780179372; Sat, 06
- Aug 2022 03:02:59 -0700 (PDT)
+        bh=yHRj2jxBzVmdqRuMjTnDCE7Ot2HBke77O0JneFoj7pY=;
+        b=5wFnpcPM7566i+dcZqCVtk3KqZLObkooK39Q0+f2Q8wxPDTDwq1JgP+aPfoo4pwZUR
+         riOXqw0BIW2I7DDWgE4I3ExST3/fuVnO1+ijQ86kEcVCAlXGq7vadbK0g94XPKOt7kdK
+         oQN474Ar2J6dG2QCh8hkZawI/KvEjXHq8bxSGOd9OAUUSkv6Nj+BxAFbRSJSF777bjIx
+         0rFhwMxCNyfkQhOFCUOqwPV/c8WphFeFKz1Tlkvgr2QmVQvGwK8lo7BSRLDVnS/5UaU0
+         JkqwZ8/r5tL/o9V1/cLhxqnvKkZuZYFf2L8Tx28HLSa+NdjmvOFpSLb69sSnWtnS8JB9
+         0h6g==
+X-Gm-Message-State: ACgBeo0T1YGqdKFpWo91tdur3OzxzoayAEIg1fmiq9WptCxW9wKEKHGy
+        J0lBZ5uslCj3cOx1OTusQ+x26Qg5fMVIAZ27gPI=
+X-Google-Smtp-Source: AA6agR4HSV096e2QAbXkLRZgLSCOw71NDEE8wIsT+oYajrWdE2qE22FTCfIGay1lfs192rpv6uTO1DyCKa3A+5qxZco=
+X-Received: by 2002:a05:620a:8018:b0:6b6:5df:977 with SMTP id
+ ee24-20020a05620a801800b006b605df0977mr7860733qkb.320.1659780359624; Sat, 06
+ Aug 2022 03:05:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220805081909.10962-1-luke@ljones.dev> <CAHp75Vd4iEGkAE1Ds_Zyqi0P+gQbOyqvGoJctpOHNmMD7cUG0g@mail.gmail.com>
- <J6T6GR.SW0RXSJSYG9R1@ljones.dev>
-In-Reply-To: <J6T6GR.SW0RXSJSYG9R1@ljones.dev>
+References: <20220805081909.10962-1-luke@ljones.dev> <20220805081909.10962-6-luke@ljones.dev>
+In-Reply-To: <20220805081909.10962-6-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 6 Aug 2022 12:02:19 +0200
-Message-ID: <CAHp75VcrSe4aTYo_cVCfhX=y1LjZPOJG1yh9SrLt_XQBzNoGhA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] asus-wmi: Add support for RGB keyboards
-To:     Luke Jones <luke@ljones.dev>
+Date:   Sat, 6 Aug 2022 12:05:12 +0200
+Message-ID: <CAHp75Ve69bEOSiaD_Y6skfsDNc2gZtiUH76yud_X3Xb2b37YZw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] asus-wmi: Convert all attr _show to use sysfs_emit
+To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -64,17 +63,16 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Aug 6, 2022 at 11:33 AM Luke Jones <luke@ljones.dev> wrote:
-> On Sat, Aug 6 2022 at 11:10:37 +0200, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Fri, Aug 5, 2022 at 10:21 AM Luke D. Jones <luke@ljones.dev> wrote:
 
-...
+Commit message is missing. It's no go.
 
-> I do have another version already prepped
+I recommend reading [1] to make your contribution to the projects
+(even close source, if any) better.
 
-Hold on and try to address many more review comments. It seems the
-series needs much more work, otherwise it will be spam in the mailing
-list and demotivating reviewers to continue.
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+
+[1]: https://cbea.ms/git-commit/
 
 -- 
 With Best Regards,
