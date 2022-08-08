@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA5FC00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 15:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B901BC00140
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 15:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243791AbiHHPx3 (ORCPT
+        id S235709AbiHHP5o (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 11:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56670 "EHLO
+        Mon, 8 Aug 2022 11:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230460AbiHHPx2 (ORCPT
+        with ESMTP id S231475AbiHHP5o (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 11:53:28 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0F65FFE;
-        Mon,  8 Aug 2022 08:53:27 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id k19so2431347qkj.7;
-        Mon, 08 Aug 2022 08:53:27 -0700 (PDT)
+        Mon, 8 Aug 2022 11:57:44 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B06B1DD;
+        Mon,  8 Aug 2022 08:57:43 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id f14so6808553qkm.0;
+        Mon, 08 Aug 2022 08:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=632cVpHhmjLitVQZ04+RZU+wT80FL/jo9t2xH7JYoMU=;
-        b=ZM157r7LRK1HxC/WtUJDLvCGLNHg2364aXMcFPgHeyzvEFbPSlg4XYC8SXlgWTt5GL
-         RX52F/Q77RiYYkmIhVpkTbf/6H1CwACb+An6kO3GVHwmgO71sCplTRNsFMP4Yzc/8ZJ5
-         0WLqbozc6YGhvhXCNmezARph7MaSlZsRuRvdhozO7Hvz7bxjQMAYzWxasPQXfsmu3vup
-         mgaqr+gmQZjndebdhR9Cb5sRuDPXedc6hyAbJNKMbcSmtNevXWXJdGzv4bR5y/VvyIJV
-         Vp1wTDmW26pP+qOi2HjeYKTb6lVZCe8R9UcX9UpearLHqnKyfEP6v0fYTJ7lQIxKQMpm
-         jC7w==
+        bh=qWt11qITzn9FmimPn0bMHjF81SjCsQx57ULbXVc2hTM=;
+        b=aAlK/eVAK+zXuWHxzgOtyWCMFKNOon+RqH4/lL4NLjJz+BOoF7eAtf6jSx7dU3cx8C
+         veFb929KO1BaeDQILUxPwXjOy1kExHpkw+I8Jzdsg/EtCXq8UvbctUj8rdi74I4SKq2F
+         2hdycA3Uu/kEs+NtQWPSBHaUqNPCjrKjX92oYr2/rwvd9HTvNV2gajSodePZKGtHBrqH
+         kU/actZ8NeI7FHkYQcWBlA7JHhJK+VSoZMbxSgfETnIZtxK2G1cSIEtKuTpvBsqBrkBk
+         e6/LAVGNwA8/lFZxm8RLSFvQu1lexochD37MWO9f3S3aSIyz6hFI/tnHSRju4+GBF+DO
+         EqGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=632cVpHhmjLitVQZ04+RZU+wT80FL/jo9t2xH7JYoMU=;
-        b=S7s2xdKBwSaY8JddtjVfTSCO3F8Jf91PY8xW92MdAnGyfafDW1G4XcTt+0olyzMibg
-         POW/IOD84WSL7D7mzQL7YqJzVwPnGn4d1Sxs1/V7l9JaNImPoeLQtuO5wXgXlgSrTYcZ
-         s09M+6Y7UjpoGLFawd4maFAkUAGxe8+DI2X0TsmhoOzkvCD0O9oQ3SWPuiame7O5HDW/
-         iiAObrA4oh517Fyd8purao8KyDknZ2EFXhDjmKNiQmDhMWTd1HoDU6mnYlwuflwNmf6c
-         F0/KIiy3kPdjvGglTjO/Ua9sZX+VxoZKGHAQLK9WbUo6fb31NOT+HqSner4VPGjeW3da
-         KNQQ==
-X-Gm-Message-State: ACgBeo3LfDZ7kpabSKAcOqhMXnJHFiXOw2OyqSjH26V2Cc778RvELWR1
-        OG/YSAZgFLJieCHYgmAKrI8GpBE7oIYfhNBi2NA=
-X-Google-Smtp-Source: AA6agR6HZlKVM6ixWgbVlN3lxTKi3SEoKguNFmbxsrhUSGEl/4CEJ4F8q3dWRbbPc0AcpagMje/l00SGKR7IPqWB7ec=
+        bh=qWt11qITzn9FmimPn0bMHjF81SjCsQx57ULbXVc2hTM=;
+        b=3ZfzwbXgo0y2KhrXE436vMT6GVbsiUqQqPlDudBm3e2btYUpVs0E75iHmk6ibkewAz
+         /KZa7rAOS5WXnjozJPIuc+rtKJGPo3Q0/2b1YUPG5be4lVYe3SJwbSyfmQb+z19s/kyC
+         kGb6ndeYi9kNYXbQ0IJ+xXU8bolCWYrHyCm7NqXHsYG1BXRdoY5Hojf2yIXbRjW855AX
+         GfSz6zIv7VDHNbzcDlZCGxNHr4OD2jG5ht9+67ntgz3fDnViC2mtT3DEmMC3aXe5Y+Ol
+         GVpqZzp+yK7vIUzFSR4M/J+bA4QNFP7f9zEIHNdiMhUtfAK7019i0MxmEegv6uafQtDn
+         nXgQ==
+X-Gm-Message-State: ACgBeo2JxT+EdQ+FyK+jTMEoLCoehFnazP2WTF5kFvBu/aueYaJnJnPG
+        OnGcKr7dmRhCO8oIfhmOuYhJlGiSD3O8KZxAFDbXdk0MOlg=
+X-Google-Smtp-Source: AA6agR4dauGfvodMcNk07bUbMB4WxEO8WvbwPh0gljK03tWtiawWx2IPYxd2zTisJ7r3ap3dxzd3QmfrB7YevywUwIE=
 X-Received: by 2002:a05:620a:288a:b0:6b8:fcfe:db02 with SMTP id
- j10-20020a05620a288a00b006b8fcfedb02mr14687852qkp.504.1659974006264; Mon, 08
- Aug 2022 08:53:26 -0700 (PDT)
+ j10-20020a05620a288a00b006b8fcfedb02mr14699194qkp.504.1659974262258; Mon, 08
+ Aug 2022 08:57:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220808031132.10075-1-luke@ljones.dev> <20220808031132.10075-3-luke@ljones.dev>
-In-Reply-To: <20220808031132.10075-3-luke@ljones.dev>
+References: <20220808043643.1571932-1-luke@ljones.dev> <20220808043643.1571932-2-luke@ljones.dev>
+In-Reply-To: <20220808043643.1571932-2-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Aug 2022 17:52:48 +0200
-Message-ID: <CAHp75VcjTG=fFBjjHRYT2+ARfE-VHWKJ9aV8sF4JtRVo7Ke2vQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] asus-wmi: Add support for ROG X13 tablet mode
+Date:   Mon, 8 Aug 2022 17:57:05 +0200
+Message-ID: <CAHp75VfyfiWi-PR_j1SPPxjgjZFuDhp3R5DOVXNj=FV3E8t0BQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] asus-wmi: Support the GPU fan on TUF laptops
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
@@ -63,57 +63,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 5:12 AM Luke D. Jones <luke@ljones.dev> wrote:
+On Mon, Aug 8, 2022 at 6:38 AM Luke D. Jones <luke@ljones.dev> wrote:
 >
-> Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
-> lid flip (all screen rotations).
+> Add support for TUF laptops which have the ability to control
+> the GPU fan. This will show as a second fan in hwmon, and has
+> the ability to run run as boost (fullspeed), or auto.
+
+Single 'run' is enough, I believe.
 
 ...
 
-> -       { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
-> +       { KE_KEY, 0xFA, { KEY_PROG2 } }, /* Lid flip action */
+> +       /*
+> +        * Modern models like G713 also have GPU fan control. This is not AGFN.
 
-Have maintainers asked you about this? Otherwise it is irrelevant change.
-
-...
-
-> +                       pr_err("This device has lid-flip-rog quirk but got ENODEV checking it. This is a bug.");
-
-dev_err() ?
+like the G713
+(Also possibly to surround this subphrase by commas)
 
 ...
 
-> +                       pr_err("Error checking for lid-flip: %d\n", result);
-
-Ditto.
-
-...
-
-> +static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi *asus)
+> +static ssize_t pwm2_enable_show(struct device *dev,
+> +                               struct device_attribute *attr,
+> +                               char *buf)
 > +{
-> +       int result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
+> +       struct asus_wmi *asus = dev_get_drvdata(dev);
 > +
-> +       if (result >= 0) {
+> +       return sprintf(buf, "%d\n", asus->gpu_fan_pwm_mode);
 
-First of all, it's better to decouple assignment and definition, and
-move assignment closer to its user. This is usual pattern.
-
-   int result;
-
-  result = ...
-  if (result...)
-
-> +               input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> +               input_sync(asus->inputdev);
-> +       }
-
-Second, it will look better with standard pattern of checking for errors, i.e.
-
-  int result;
-
-  if (result < 0)
-    return;
-  ...
+SHould be sysfs_emit(). If there are other uses of sprintf() or
+similar in the cases when it goes to sysfs, you may add another patch
+to fix them all.
 
 > +}
 
