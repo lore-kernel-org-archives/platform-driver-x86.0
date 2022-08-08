@@ -2,73 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8670EC25B07
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 03:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC67BC19F2A
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 03:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235144AbiHHDE7 (ORCPT
+        id S236074AbiHHDFV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 7 Aug 2022 23:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49590 "EHLO
+        Sun, 7 Aug 2022 23:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235433AbiHHDE5 (ORCPT
+        with ESMTP id S235718AbiHHDFC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Aug 2022 23:04:57 -0400
+        Sun, 7 Aug 2022 23:05:02 -0400
 Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D993BE00;
-        Sun,  7 Aug 2022 20:04:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89001BE27;
+        Sun,  7 Aug 2022 20:05:01 -0700 (PDT)
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0CAD35C00E6;
-        Sun,  7 Aug 2022 23:04:56 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id CCDDE5C00BB;
+        Sun,  7 Aug 2022 23:05:00 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 07 Aug 2022 23:04:56 -0400
+  by compute5.internal (MEProxy); Sun, 07 Aug 2022 23:05:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:date:date:from:from:in-reply-to
         :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1659927896; x=1660014296; bh=oO
-        8D9D8rHRPyOxrPkAEHf4nClIeVCnqow+HgTegQJyY=; b=C7bqK3bsgKGCu70jlB
-        VD8m6a9H37vhMf5iA4VQ/9DwLWvKOlTOBqMXhAxDnABgFYSebbtcZphmZN2znTpn
-        zqt2UaqdNZznmD6UkJD+VUJ22VFDLJGX4P9BDU9wEkxrervlx93UCYZ4y6Cx/3OW
-        D8UatXIKazs6IEAi1Bh8wSwY2hG3e9eEV53PfQQTq44QIIfGZw54XAbwLAfSHcDv
-        ycF0tnf6Xwnr24EQB51BelhcvGt5PIuH0Hf/PBBrtMldv6lNOP/6nSfx9xiv64zq
-        USqYevkoLt3FwfH7lRsaPXSF/jheLTSnUundzSSI1niyxFWoyKqFDIu3dYXq6Bqt
-        BV9w==
+        :subject:subject:to:to; s=fm2; t=1659927900; x=1660014300; bh=Cb
+        kfhbdI8L3C3EeP6YMMpqMtzalfJzOZjgHdKwXmum8=; b=m1cAoTTpCkRHofnlxN
+        2iBSKnRQl8Vv0SWCuod13eVkHVZtb6+NUN593BJfjo3ELYQzlEVtV/EIfQkfeD+B
+        8re/ro18I4SLi9B5n2KKj0pdcfjCGyhqBe6xKarR1DYq42nw8sBc/fqbjcvBba7y
+        EkK9vH58CfXf97C5T8lXIf4QfUDGAsOGBUT7gmOmIpW/Qf3l9YEywGW1mQoqj0M9
+        cm48t/zipn6JnXt00nSLDEplS/SG4YZOeWwLy8pzxZKQ2qW54CSeSKV2JaFdHa1n
+        Txf6C/UxjyIF7TpwhR7COHxGYtK85mzziXG7MjQ/abbjzclK3VT8Fht199xh0RYe
+        NHLQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
         :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
         :message-id:mime-version:references:reply-to:sender:subject
         :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1659927896; x=1660014296; bh=oO8D9D8rHRPyO
-        xrPkAEHf4nClIeVCnqow+HgTegQJyY=; b=pwbJh9i8zcfVITeEFADbY82IF90NZ
-        Nj8XAgRdei1Qnn9NTBzkdew1HvRm5gW+PMVClSNgvMiZGsTZlXERJyMev4aXuTWF
-        vxxTUjwUg4rAqlc0SHllAF+SVW4hSOCjuI2nExSQ9SX9QzLU/B0TMof+dH+Wg7Xm
-        cTV0sEOl5e//U78fhCvVM5knBQyak1P18FDdxKr2FY9+/IO+asgIT5xefbXrfusR
-        Sowbmb2kGi38lN8h53IpIyLTMZBRgkyAo5ah9C/rZFpskpmF/ybi7KdkGpnWE0+8
-        OO9RQjTs2ax4NN8zWbj7e4Enjx2GVPq0baSe7MqGw7HL9fXBbQ2KsheHw==
-X-ME-Sender: <xms:V33wYjKSPl4Tv3ZrCqe0B0KcDDnMcaPWJInCrfI7v3wiFje__PEflA>
-    <xme:V33wYnJHC8Ins1aTa9CPJ57pGSp2QT_-JUfiueC-zoDSZRUuekJTfleqhxnEQCmSb
-    0jIZLoSpjEN51hVrRo>
-X-ME-Received: <xmr:V33wYrsvdnEnpnIuc0tN7M15XkGukXx91UKs0jmYRb2D23hnG0JxTYgEpbCb>
+        :x-sasl-enc; s=fm1; t=1659927900; x=1660014300; bh=CbkfhbdI8L3C3
+        EeP6YMMpqMtzalfJzOZjgHdKwXmum8=; b=bFrqvcrLCK/YT5mXzdECTb0kZqS12
+        H4of8HymFe0GjNLfHljlR7VRW6aJ/XEejDoeAqK1SUNjrftbNJkZF7JhEmckxGx+
+        FHxlguxlsWQZno4FT9NsBzQLN6qrLgJyL4V8rDlE3pNQNAMzdzu28EMf8DBq9Rql
+        iUOl9eYsTnIz0Vanwg2mt57nWxxWI5gI3wcY/0zWd8cvE3V0BwCFEJmEOYWTQ8Te
+        hJYF80SgnIMEyxnZBlIke+TWtkNT7etwDlRKfXoEyahsvKGrz0TaLTpG1W+G7XxO
+        9NSScyly6+JOiD6orDeNC7ndSrGeGGWysJ5sg2veOF8TbTGBeldCg1oEw==
+X-ME-Sender: <xms:XH3wYtFUPF87pCi2WWnBZCrNwMIelblTQryW3aArnoUO-O0Yy90Lbw>
+    <xme:XH3wYiX_hXd6Xt6tMEIFe0sNFRGGiXz_3SoI_UR6CNwIwfDMulLwvw9cDcrc-rqTv
+    gTpOVQR5NWbI8Xb7Cw>
+X-ME-Received: <xmr:XH3wYvI4xYoVOWMKjcyC_gvpsn5mng86_vopHh_1IkJXNCv5m79eCmoenbN8>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefjedgieegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
     jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgepuden
     ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:V33wYsbAe-0RojQfhebLr_cWOCzTkmz86-9AgR9Ymtx6Ap2mTh2pBQ>
-    <xmx:V33wYqa8rvMRrxLF5wI0Q9FHmv4lpnoE6NYmG1gBDEa5eBN13UTlXQ>
-    <xmx:V33wYgAT0hwjvwYuqF5qT2Pqptsu1Tt-Sl7mpvR6KdPvepmGP1jo8Q>
-    <xmx:WH3wYpl4eguX2g16faQPs-EWhajb3BIfpKQkI_j5K2O92Hh-qpRdtw>
+X-ME-Proxy: <xmx:XH3wYjEXHuegYEtljNSy28ZutrMtSx8wb96kPsSut27aip9aSchg2A>
+    <xmx:XH3wYjWqFYwtjIoj6FUHM3nyTopgAMhN2-gPlTLbYbeBEKoGCecacA>
+    <xmx:XH3wYuOy53tjvb6UKfV8mdIcrwQFIssJlJFWhUIn1W-Ti1sxGujVrw>
+    <xmx:XH3wYgjp9cQEQa2TJL6TlEtsTpb7yRCLABnV5r7Jnb-vjDo66XaDUg>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 7 Aug 2022 23:04:53 -0400 (EDT)
+ 7 Aug 2022 23:04:58 -0400 (EDT)
 From:   "Luke D. Jones" <luke@ljones.dev>
 To:     hdegoede@redhat.com
 Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v2 3/6] asus-wmi: Implement TUF laptop keyboard power states
-Date:   Mon,  8 Aug 2022 15:04:17 +1200
-Message-Id: <20220808030420.8633-4-luke@ljones.dev>
+Subject: [PATCH v2 5/6] asus-wmi: Convert all attr-show to use sysfs_emit
+Date:   Mon,  8 Aug 2022 15:04:19 +1200
+Message-Id: <20220808030420.8633-6-luke@ljones.dev>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220808030420.8633-1-luke@ljones.dev>
 References: <20220808030420.8633-1-luke@ljones.dev>
@@ -78,156 +78,81 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Adds support for setting various power states of TUF keyboards.
-These states are combinations of:
-- boot, set if a boot animation is shown on keyboard
-- awake, set if the keyboard LEDs are visible while laptop is on
-- sleep, set if an animation is displayed while the laptop is suspended
-- keyboard (unknown effect)
-
-Adds two sysfs attributes to asus-nb-wmi:
-- keyboard_rgb_state
-- keyboard_rgb_state_index
+This changes all *_show attributes in asus-wmi.c to use sysfs_emit
+instead of the older method of writing to the output buffer manually.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- drivers/platform/x86/asus-wmi.c            | 74 ++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  2 +
- 2 files changed, 76 insertions(+)
+ drivers/platform/x86/asus-wmi.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 4c2bdd9dac30..9b2c54726955 100644
+index 9b2c54726955..b9e5d87e3e18 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -246,6 +246,7 @@ struct asus_wmi {
- 	bool dgpu_disable_available;
- 	bool dgpu_disable;
+@@ -919,7 +919,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
+ 						 struct device_attribute *attr,
+ 						 char *buf)
+ {
+-	return sprintf(buf, "%d\n", charge_end_threshold);
++	return sysfs_emit(buf, "%d\n", charge_end_threshold);
+ }
  
-+	bool keyboard_rgb_state_available;
- 	bool keyboard_rgb_mode_available;
- 	struct keyboard_rgb_led keyboard_rgb_mode;
+ static DEVICE_ATTR_RW(charge_control_end_threshold);
+@@ -2009,7 +2009,7 @@ static ssize_t pwm1_show(struct device *dev,
+ 		value = -1;
+ 	}
  
-@@ -820,6 +821,68 @@ static ssize_t keyboard_rgb_mode_index_show(struct device *device,
+-	return sprintf(buf, "%d\n", value);
++	return sysfs_emit(buf, "%d\n", value);
+ }
  
- static DEVICE_ATTR_RO(keyboard_rgb_mode_index);
+ static ssize_t pwm1_store(struct device *dev,
+@@ -2069,7 +2069,7 @@ static ssize_t fan1_input_show(struct device *dev,
+ 		return -ENXIO;
+ 	}
  
-+/* TUF Laptop Keyboard RGB States *********************************************/
-+static int keyboard_rgb_state_check_present(struct asus_wmi *asus)
-+{
-+	u32 result;
-+	int err;
-+
-+	asus->keyboard_rgb_state_available = false;
-+
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_TUF_RGB_STATE, &result);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		return err;
-+	}
-+
-+	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-+		asus->keyboard_rgb_state_available = true;
-+
-+	return 0;
-+}
-+
-+static ssize_t keyboard_rgb_state_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	u8 flags, save, boot, awake, sleep, keyboard;
-+	int err;
-+	u32 ret;
-+
-+	flags = 0;
-+	if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, &awake, &sleep, &keyboard) != 5)
-+		return -EINVAL;
-+
-+	save = save == 0 ? 0x0100 : 0x0000;
-+	if (boot)
-+		flags |= 0x02;
-+	if (awake)
-+		flags |= 0x08;
-+	if (sleep)
-+		flags |= 0x20;
-+	if (keyboard)
-+		flags |= 0x80;
-+
-+	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
-+			ASUS_WMI_DEVID_TUF_RGB_STATE, 0xBD | save | (flags << 16), 0, &ret);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_WO(keyboard_rgb_state);
-+
-+static ssize_t keyboard_rgb_state_index_show(struct device *device,
-+						 struct device_attribute *attr,
-+						 char *buf)
-+{
-+	return sysfs_emit(buf, "%s\n", "save boot awake sleep keyboard");
-+}
-+
-+static DEVICE_ATTR_RO(keyboard_rgb_state_index);
-+
- /* Battery ********************************************************************/
+-	return sprintf(buf, "%d\n", value < 0 ? -1 : value*100);
++	return sysfs_emit(buf, "%d\n", value < 0 ? -1 : value*100);
+ }
  
- /* The battery maximum charging percentage */
-@@ -3412,6 +3475,8 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_dgpu_disable.attr,
- 	&dev_attr_keyboard_rgb_mode.attr,
- 	&dev_attr_keyboard_rgb_mode_index.attr,
-+	&dev_attr_keyboard_rgb_state.attr,
-+	&dev_attr_keyboard_rgb_state_index.attr,
- 	&dev_attr_lid_resume.attr,
- 	&dev_attr_als_enable.attr,
- 	&dev_attr_fan_boost_mode.attr,
-@@ -3446,6 +3511,10 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		ok = asus->keyboard_rgb_mode_available;
- 	else if (attr == &dev_attr_keyboard_rgb_mode_index.attr)
- 		ok = asus->keyboard_rgb_mode_available;
-+	else if (attr == &dev_attr_keyboard_rgb_state.attr)
-+		ok = asus->keyboard_rgb_state_available;
-+	else if (attr == &dev_attr_keyboard_rgb_state_index.attr)
-+		ok = asus->keyboard_rgb_state_available;
- 	else if (attr == &dev_attr_fan_boost_mode.attr)
- 		ok = asus->fan_boost_mode_available;
- 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
-@@ -3719,6 +3788,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_keyboard_rgb_mode;
+ static ssize_t pwm1_enable_show(struct device *dev,
+@@ -2087,7 +2087,7 @@ static ssize_t pwm1_enable_show(struct device *dev,
+ 	 * in practice on X532FL at least (the bit is always 0) and there's
+ 	 * also nothing in the DSDT to indicate that this behaviour exists.
+ 	 */
+-	return sprintf(buf, "%d\n", asus->fan_pwm_mode);
++	return sysfs_emit(buf, "%d\n", asus->fan_pwm_mode);
+ }
  
-+	err = keyboard_rgb_state_check_present(asus);
-+	if (err)
-+		goto fail_keyboard_rgb_state;
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-@@ -3834,6 +3907,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- fail_egpu_enable:
- fail_dgpu_disable:
- fail_keyboard_rgb_mode:
-+fail_keyboard_rgb_state:
- fail_platform:
- fail_panel_od:
- 	kfree(asus);
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index d63c9945a17d..b5c966798ef8 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -100,6 +100,8 @@
+ static ssize_t pwm1_enable_store(struct device *dev,
+@@ -2155,7 +2155,7 @@ static ssize_t fan1_label_show(struct device *dev,
+ 					  struct device_attribute *attr,
+ 					  char *buf)
+ {
+-	return sprintf(buf, "%s\n", ASUS_FAN_DESC);
++	return sysfs_emit(buf, "%s\n", ASUS_FAN_DESC);
+ }
  
- /* TUF laptop RGB control */
- #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
-+/* TUF laptop RGB state control */
-+#define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
+ static ssize_t asus_hwmon_temp1(struct device *dev,
+@@ -2348,7 +2348,7 @@ static ssize_t fan_boost_mode_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
  
- /* DSTS masks */
- #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+-	return scnprintf(buf, PAGE_SIZE, "%d\n", asus->fan_boost_mode);
++	return sysfs_emit(buf, "%d\n", asus->fan_boost_mode);
+ }
+ 
+ static ssize_t fan_boost_mode_store(struct device *dev,
+@@ -2901,7 +2901,7 @@ static ssize_t throttle_thermal_policy_show(struct device *dev,
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	u8 mode = asus->throttle_thermal_policy_mode;
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%d\n", mode);
++	return sysfs_emit(buf, "%d\n", mode);
+ }
+ 
+ static ssize_t throttle_thermal_policy_store(struct device *dev,
 -- 
 2.37.1
 
