@@ -2,123 +2,170 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC85C3F6B0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 19:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2543C00140
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 21:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbiHHThR (ORCPT
+        id S244523AbiHHVn5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 15:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48550 "EHLO
+        Mon, 8 Aug 2022 17:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiHHThR (ORCPT
+        with ESMTP id S236856AbiHHVn4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 15:37:17 -0400
-X-Greylist: delayed 156 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 08 Aug 2022 12:37:15 PDT
-Received: from smtprelay02.ispgateway.de (smtprelay02.ispgateway.de [80.67.18.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D98913DEF;
-        Mon,  8 Aug 2022 12:37:15 -0700 (PDT)
-Received: from [109.90.180.58] (helo=[192.168.1.27])
-        by smtprelay02.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <peter@piie.net>)
-        id 1oL8WY-0006MF-26; Mon, 08 Aug 2022 21:34:50 +0200
-Message-ID: <fdaba367-c657-0d85-7244-918b99569337@piie.net>
-Date:   Mon, 8 Aug 2022 21:34:32 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v1 23/26] thermal/drivers/acerhdf: Use generic
- thermal_zone_get_trip() function
-Content-Language: en-US
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
-Cc:     rui.zhang@intel.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mon, 8 Aug 2022 17:43:56 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05836369;
+        Mon,  8 Aug 2022 14:43:54 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4E74B5C012B;
+        Mon,  8 Aug 2022 17:43:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 08 Aug 2022 17:43:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1659995031; x=1660081431; bh=Noq7c0Nawz
+        gYCdsg9ZW5dIqk4AKYo1HmGlvkyEbTt+c=; b=NzBoaOMR564b9o7V+HRo3/nIkd
+        FFrKyQHi2J4r/hOcCnBif/E5rH35hfZdzTrDHzOiWNTndrciYHPflbX3rxT4otuq
+        n+HfFq4qXXh5noZhRaYFley+ZtcEaH2oT9pkUl6Nx7IIC206rZoc48LxnRLM+JTH
+        0irsuf6BNMaVn7Cnx5MhRMwsIwjL+vqwKIAlWApIQVY8NTipKdpZKChVfEc4baYS
+        atGXCzX2xNuQjx0yHqGZlaXpx92cp8i9xq0jY9dg/ZpVBlHU/EGVJ8JRyQ4WFgoo
+        E44AaDSb5A3HMspYOlWQ1s3RhvzQvvZaGWjv77ALZSOhv8XruqTSVRh07TJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1659995031; x=1660081431; bh=Noq7c0NawzgYCdsg9ZW5dIqk4AKY
+        o1HmGlvkyEbTt+c=; b=hWJITFklnaX55cOl0D/padFTW6Q44xFfQcivdn+cnBVQ
+        LzqDXvc91jS0IcXdppGr7dgDdClEYagzZ//Ep+cyNhGYG/j5XTPmApcEsMDC1WQz
+        hQxso2BA3fnYBeXPo9lxn4nelFL0ioi2YCKDqEZAAlb50Xczwk2WXe9Nd43BFX5Q
+        Ip4jgt5ROy+R2Zmrhu/UmkbBumKN+Mnf4YbrBrcEzbuVsnicEt3vN5BGn1TuXVth
+        fMGvSC6s8Fm0b0MiFut+Va7oK1w91OzesVTOBeles1YmDva/hTxcFZjN+kYvioGi
+        1Vj6EYPmtpMcMkCTVEXa1nGL9ak66D0zNOxiDuGXIg==
+X-ME-Sender: <xms:l4PxYodSMV1sp8ab-ng7IxluAGDZLHKp1bMVDoHc6378JessSTGlIw>
+    <xme:l4PxYqOJj2xRxvksmuFMfYdn6yGGL3JQT26SiUXlt85TYimMc0jyAwYP_6Ya1yFqa
+    ubo7r8v1Uxo7_pZ2Cw>
+X-ME-Received: <xmr:l4PxYphkamKw9GeFClYKpVi1H2X4b7JQ-T4710USchlZlTVpv6hck6ykxJ-eqQ48OCEUFg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgtdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
+    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
+    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
+    hljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:l4PxYt_QsE4XqtkyFV_TFEjVn3Xdne4PvHrfItZUN6uEZbUJhdpyCQ>
+    <xmx:l4PxYksNyYjiwRoZzvMMTLO5u5gN2ej8OG3swxS1_S0VYbnfllhcMg>
+    <xmx:l4PxYkGnlqtrJxgpblxR3krWqciZ3FE_JKAZHOMVC2a6Umk1b0tMsg>
+    <xmx:l4PxYt5Yzr6sGrwayr3doGMMzazkEgOd2NGfr4I2EPwA5RTb58kwlQ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 8 Aug 2022 17:43:46 -0400 (EDT)
+Date:   Tue, 09 Aug 2022 09:43:32 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH v2 2/6] asus-wmi: Implement TUF laptop keyboard LED modes
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20220805145729.2491611-1-daniel.lezcano@linaro.org>
- <20220805145729.2491611-24-daniel.lezcano@linaro.org>
-From:   =?UTF-8?Q?Peter_K=c3=a4stle?= <peter@piie.net>
-In-Reply-To: <20220805145729.2491611-24-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Df-Sender: cGV0ZXJAcGlpZS5uZXQ=
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <KCGBGR.P2V4UO7HLOX11@ljones.dev>
+In-Reply-To: <CAHp75VcR-strGDhaGE78NjToamK98e8UO-rQhU-Ow81AavU5YA@mail.gmail.com>
+References: <20220808030420.8633-1-luke@ljones.dev>
+        <20220808030420.8633-3-luke@ljones.dev>
+        <CAHp75VcR-strGDhaGE78NjToamK98e8UO-rQhU-Ow81AavU5YA@mail.gmail.com>
+X-Mailer: geary/40.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+Hi Andy,
 
-some comments.  Please merge if those are considered.  Thanks.
-
-
-On 05.08.22 16:57, Daniel Lezcano wrote:
-> The thermal framework gives the possibility to register the trip
-> points with the thermal zone. When that is done, no get_trip_* ops are
-> needed and they can be removed.
 > 
-> Convert ops content logic into generic trip points and register them with the
-> thermal zone.
+>>  +       if (sscanf(buf, "%hhd %hhd %hhd", &save, &mode, &speed) != 
+>> 3)
+>>  +               return -EINVAL;
 > 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Acked-by: Peter Kästle <peter@piie.net>
-
-> ---
->   drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
->   1 file changed, 26 insertions(+), 47 deletions(-)
+> Same comment as per v1.
 > 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 3463629f8764..cf757f3a1e6b 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
 
-[...]
+You wrote:
 
-> @@ -137,6 +139,15 @@ struct ctrl_settings {
->   	int mcmd_enable;
->   };
->   
-> +static struct thermal_trip trips[] = {
-> +	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
-> +		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
-> +		.type = THERMAL_TRIP_ACTIVE },
-> +
-> +	[1] = { .temperature = ACERHDF_TEMP_CRIT,
-> +		.type = THERMAL_TRIP_CRITICAL }
-> +};
-> +
->   static struct ctrl_settings ctrl_cfg __read_mostly;
->   
->   /* Register addresses and values for different BIOS versions */
-> @@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
->   		fanon = ACERHDF_MAX_FANON;
->   	}
->   
-> +	if (fanon < fanoff) {
-> +		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
-> +		       fanoff, fanon, fanon);
-> +		fanoff = fanon;
-> +	};
-> +	
+ > Usually we have three separate nodes for that, but they are kinda
+ > hidden in one driver, so I don't care much.
 
-Tab whitespace, please remove.
+I think that is the wrong direction to take. Doing so would mean that 
+every write to one of these values has to write-out to device. I don't 
+know how long writes on an i2c device take, but on the USB connected 
+versions they are 1ms, which means that to individually set colour, 
+save, mode, speed (also direction and sometimes a 2nd colour on USB) 
+adds up to 4-6ms - and I don't know what sort of impact that has in the 
+kernel itself, but I do know that users expect there to be fancy 
+effects available on par with Windows (like audio equalizer visuals on 
+the RGB, something that is in progress in asusctl).
 
-> +	trips[0].temperature = fanon;
-> +	trips[0].hysteresis  = fanon - fanoff;
-> +	
+Using multicolor LED class already breaks away from having a single 
+packet write, but the gain in API scope was worth the compromise. 
+Hopefully we can keep the single set of parameters here?
 
-Tab whitespace, please remove
+Pavel suggested using triggers, I've yet to look at that, but will do 
+so after finalising this.
 
->   	if (kernelmode && prev_interval != interval) {
->   		if (interval > ACERHDF_MAX_INTERVAL) {
->   			pr_err("interval too high, set to %d\n",
+I suppose one alternative would be to store speed and mode as 
+attributes, but not write out until the "save" node is written to? So 
+this raises the question of: we can't read from device, and speed+mode 
+must be saved in module for use with "save" now, should I then allow 
+showing these values in a _show? On fresh boot they will be incorrect..
 
-I don't know the current behavior of the thermal layer well enough.
-Is it ensured, that those new trips[0].temperature / trips[0].hysteresis 
-values are taken into account?
+I'm going to go ahead and split those parameters in to individual nodes 
+now anyway - it may help with later work using triggers.
 
 
--- 
-best regards,
---peter;
+> ...
+> 
+>>  +       asus->keyboard_rgb_mode.mode = mode < 12 && mode != 9 ? 
+>> mode : 0x0a;
+> 
+> Same comment as per v1.
+> 
+
+I missed it sorry. Done now.
+
+> ...
+> 
+>>  +       switch (speed) {
+>>  +       case 0:
+>>  +               asus->keyboard_rgb_mode.speed = 0xe1;
+>>  +               break;
+>>  +       case 1:
+>>  +               asus->keyboard_rgb_mode.speed = 0xeb;
+>>  +               break;
+>>  +       case 2:
+>>  +               asus->keyboard_rgb_mode.speed = 0xf5;
+>>  +               break;
+>>  +       default:
+>>  +               asus->keyboard_rgb_mode.speed = 0xeb;
+> 
+> break;
+
+Done
+
+> 
+>>  +       }
+> 
+> ...
+> 
+>>  +
+> 
+> A blank line is not needed here.
+
+Okay thanks, I'll go through previous patches and check this.
+
+Kind regards,
+Luke.
+> 
+
+
