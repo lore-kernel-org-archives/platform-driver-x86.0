@@ -2,288 +2,237 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47687C00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB01C25B0C
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 14:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232223AbiHHIi7 (ORCPT
+        id S243300AbiHHO4f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 04:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56814 "EHLO
+        Mon, 8 Aug 2022 10:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbiHHIi6 (ORCPT
+        with ESMTP id S243239AbiHHO4d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 04:38:58 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AECCA55B0;
-        Mon,  8 Aug 2022 01:38:56 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 79E3C5C006F;
-        Mon,  8 Aug 2022 04:38:53 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 08 Aug 2022 04:38:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1659947933; x=1660034333; bh=zqjaDTRPpN
-        d2Kx1hkomqQMG2U7vx1XaSDkqkLliNO30=; b=WJkqMIz9bcEmFrZ3B6vHnyGUAN
-        WhOA9awUapl9k2O0bdH6WV7ZM6TJedUm4QqIxXNgAMVH78Evqp2vF6app8HE3nQn
-        0RxUx3KXO4Iq+obzp8eLo88bChLxjGjCUekI2cg6v/zdJUAKwLP3POwKst8iV+ca
-        GxXoXMzSqTo16cue9ybkDq0Xmvy6EHAV/oAr+aeHlR9ak89JlHoZBEI9lesxB2Sq
-        UOvYSMpns3AZLViEOk/t7ty/GZetyzxyoHZms2gm1uLkSdiBMsYfDlFQ+4N9zsyi
-        UeZgc3RBg3yFF59jqQpK1hlO3tctv8P4/nIqd9tInjmgtHcifgj74epXQnFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1659947933; x=1660034333; bh=zqjaDTRPpNd2Kx1hkomqQMG2U7vx
-        1XaSDkqkLliNO30=; b=uSXsmaorJahSOzI/vgc1VkKEOHs76rj9jSQl8axfhs0v
-        Zfmy+JAomQKJ2t9F+cZsu5Zzr8sGa/vwuwnzkp0sDTDyCyswKVuphBkzdB5kB6f3
-        SL4fr2/Jd+WpyHT85XOLzlWpu4aiKsmZrahFiRcwyGrxHugI0+oPI8Pk9mImZILW
-        U0tVUdWrQeznNxQAELCTJmU9fDjvsZEpJKJ19qBEyg487dYfbViQuWFrwZMDOFPm
-        Ubv74/KN9pIkFjmZOs6xwu0cd9ubGbST4iaL5Y2hEpOZvwZBgSceYfr3d8AeWRhA
-        r79sefiVmvj00wFrzPLpO1x3++mrhJ/m6cuK++U37Q==
-X-ME-Sender: <xms:ncvwYm5Ny2yO5b67Z3vg_9L3z_617qwFwlORJYvC2Je6Wd-rMHlxtg>
-    <xme:ncvwYv7nfgeKWsb72uModwqlQRFxx0IsK_OJ6CEhvZSl30VovravECDyvBfpe2oUo
-    bnMNmt4Kbmor_hgy04>
-X-ME-Received: <xmr:ncvwYldT_05V57ssPfiUQMqdWpFuqGFU4Fo5WyuaCv_MhRJaMwY0Y12MzjWtFZ-epOuGeA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefkedgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvfevkfgjfhfogggtsehttd
-    ertdertddvnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghs
-    rdguvghvqeenucggtffrrghtthgvrhhnpedvvdegledtheefieejgfevgeefiefhtdevte
-    efteduhfevtdefleethfetgeeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:ncvwYjISrpIhWjI2w6KxinuKvUK-O10CQYGYzxNo_z8V0f47TkuNfw>
-    <xmx:ncvwYqJv0jZy0O7UiiH2azOwRuGRxrUEU5otVcbq9t-RyugGbouVyA>
-    <xmx:ncvwYkywI07l8IjA3xhok0YXyMTaNsOHfYlO_uzDpdFwP4Es8UH6Ow>
-    <xmx:ncvwYshxTtCtsqxNQqG681z5UyXx2rLjnhJuHqnQGYTLWAH151i8bg>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Aug 2022 04:38:48 -0400 (EDT)
-Date:   Mon, 08 Aug 2022 20:38:33 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v2 6/6] asus-wmi: Add support for dGPU-only mode
-To:     hdegoede@redhat.com
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <90GAGR.D69M1ZE8ZLC21@ljones.dev>
-In-Reply-To: <20220808030420.8633-7-luke@ljones.dev>
-References: <20220808030420.8633-1-luke@ljones.dev>
-        <20220808030420.8633-7-luke@ljones.dev>
-X-Mailer: geary/40.0
+        Mon, 8 Aug 2022 10:56:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9EF13DEB1
+        for <platform-driver-x86@vger.kernel.org>; Mon,  8 Aug 2022 07:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659970588;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q81adJEOTwFc/hg5uP+tJ9s7aedbQ4D0T6kDguRSfeM=;
+        b=bafJu1Q+hIRQnmx4tsWb0Cd3eEGxT8c8hdBvggZco2LaFTmBR4JXTog7H8BreOB0P2jJx4
+        ls1w7m3eJ7TogQq2PtjNShZXjyqqY9UPxl2e9ZzH1ygtfVuXlPGUwfgATC2TFgPAjy0ImA
+        FEuWBhgRD+H0N6a5RKlJb9vM5Bca7Qw=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-517-nmD9CQ2BNPWIYPegpgfxug-1; Mon, 08 Aug 2022 10:56:27 -0400
+X-MC-Unique: nmD9CQ2BNPWIYPegpgfxug-1
+Received: by mail-ed1-f70.google.com with SMTP id n8-20020a05640205c800b00434fb0c150cso5738752edx.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Aug 2022 07:56:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=Q81adJEOTwFc/hg5uP+tJ9s7aedbQ4D0T6kDguRSfeM=;
+        b=DPzkJk011LJkGarSIx5XuCCEBB3BANBtsNFhkI/IVJZ9Gq1kaDYDt04UCjILI1jfgv
+         MKIQ/OjANJkx0tYoQK3HPgVG0oN/CZjurlMuS6fqYzr3IUSpcJvbwZGs0CUGXiPMzan1
+         2+NB6sFH1nMLpOh9xvuT1edl+ssCqDFr3cv0yjQTbqIxosrlFpMYoukoVHHBNcahA79M
+         f1txKwJh8gLvL51aJojxBNiZ56L3KmjWY2SPpJDgppro1YJj2RvqaVKCvhxDipYJ4f33
+         s8yASjBxyLc55vw3pYV4fbA9ARf2TFUHfpeOMZQstjaSp1klcDBcU0mP5quOUK0OQeFm
+         WvZA==
+X-Gm-Message-State: ACgBeo3jeyuTnhgALJPmMZpaF5MOrn6CHlc0b1wJtEIWR13+4t/Xab4X
+        XYyDjdoeptDWHTMQtAhfuq2LqVJsTBY+yOIFoonsRzSItUR25xGHKrDe/D9Jx/vzIlsKLjUR6Nf
+        oBI3KcH9eDIN25j2/IQxnJxGtdjfrZausMA==
+X-Received: by 2002:a17:907:6096:b0:72f:1d74:b71b with SMTP id ht22-20020a170907609600b0072f1d74b71bmr13975058ejc.272.1659970586182;
+        Mon, 08 Aug 2022 07:56:26 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6iE1RlTukWMvsEMA1thEekevbdE2HkKHb8PUGj3hcIsyNE8ALGkMyoQeJyjqpaCrXoUhlvEw==
+X-Received: by 2002:a17:907:6096:b0:72f:1d74:b71b with SMTP id ht22-20020a170907609600b0072f1d74b71bmr13975042ejc.272.1659970585913;
+        Mon, 08 Aug 2022 07:56:25 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id u19-20020aa7db93000000b0043bbb3535d6sm4656016edt.66.2022.08.08.07.56.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Aug 2022 07:56:25 -0700 (PDT)
+Message-ID: <67bf0109-0606-a44c-7a58-606101bdb52d@redhat.com>
+Date:   Mon, 8 Aug 2022 16:56:24 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v1 23/26] thermal/drivers/acerhdf: Use generic
+ thermal_zone_get_trip() function
+Content-Language: en-US
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
+Cc:     rui.zhang@intel.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Kaestle <peter@piie.net>,
+        Mark Gross <markgross@kernel.org>,
+        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20220805145729.2491611-1-daniel.lezcano@linaro.org>
+ <20220805145729.2491611-24-daniel.lezcano@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220805145729.2491611-24-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It appears I have included the wrong dgpu-only patch. This one has 
-mistakes in it and early testing...
+Hi,
 
-I will include the fixed one in the next version after review.
-
-Kind regards,
-Luke.
-
-On Mon, Aug 8 2022 at 15:04:20 +1200, Luke D. Jones <luke@ljones.dev> 
-wrote:
-> Adds support for a dGPU-only mode on some laptops where when enabled
-> the boot GPU is the dGPU, and the iGPU is not visible.
+On 8/5/22 16:57, Daniel Lezcano wrote:
+> The thermal framework gives the possibility to register the trip
+> points with the thermal zone. When that is done, no get_trip_* ops are
+> needed and they can be removed.
 > 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Convert ops content logic into generic trip points and register them with the
+> thermal zone.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Thanks, patch looks good to me, feel free to merge this
+through the thermal tree together with the rest of the series:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
 > ---
->  .../ABI/testing/sysfs-platform-asus-wmi       |  9 ++
->  drivers/platform/x86/asus-wmi.c               | 92 
-> +++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h    |  3 +
->  3 files changed, 104 insertions(+)
+>  drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
+>  1 file changed, 26 insertions(+), 47 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi 
-> b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index 66b262476d92..93d111a65313 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -77,6 +77,15 @@ Description:
->  			* 0 - Disable,
->  			* 1 - Enable,
-> 
-> +What:		/sys/devices/platform/<platform>/dgpu_only
-> +Date:		Aug 2022
-> +KernelVersion:	6.0
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the dGPU to be the only GPU available:
-> +			* 0 - Disable,
-> +			* 1 - Enable,
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 3463629f8764..cf757f3a1e6b 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -46,6 +46,8 @@
+>   * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
+>   * assume 89°C is critical temperature.
+>   */
+> +#define ACERHDF_DEFAULT_TEMP_FANON 60000
+> +#define ACERHDF_DEFAULT_TEMP_FANOFF 53000
+>  #define ACERHDF_TEMP_CRIT 89000
+>  #define ACERHDF_FAN_OFF 0
+>  #define ACERHDF_FAN_AUTO 1
+> @@ -70,8 +72,8 @@ static int kernelmode;
+>  #endif
+>  
+>  static unsigned int interval = 10;
+> -static unsigned int fanon = 60000;
+> -static unsigned int fanoff = 53000;
+> +static unsigned int fanon = ACERHDF_DEFAULT_TEMP_FANON;
+> +static unsigned int fanoff = ACERHDF_DEFAULT_TEMP_FANOFF;
+>  static unsigned int verbose;
+>  static unsigned int list_supported;
+>  static unsigned int fanstate = ACERHDF_FAN_AUTO;
+> @@ -137,6 +139,15 @@ struct ctrl_settings {
+>  	int mcmd_enable;
+>  };
+>  
+> +static struct thermal_trip trips[] = {
+> +	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
+> +		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
+> +		.type = THERMAL_TRIP_ACTIVE },
 > +
->  What:		/sys/devices/platform/<platform>/panel_od
->  Date:		Aug 2022
->  KernelVersion:	5.17
-> diff --git a/drivers/platform/x86/asus-wmi.c 
-> b/drivers/platform/x86/asus-wmi.c
-> index b9e5d87e3e18..840299828512 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -246,6 +246,9 @@ struct asus_wmi {
->  	bool dgpu_disable_available;
->  	bool dgpu_disable;
-> 
-> +	bool dgpu_only_available;
-> +	bool dgpu_only;
+> +	[1] = { .temperature = ACERHDF_TEMP_CRIT,
+> +		.type = THERMAL_TRIP_CRITICAL }
+> +};
 > +
->  	bool keyboard_rgb_state_available;
->  	bool keyboard_rgb_mode_available;
->  	struct keyboard_rgb_led keyboard_rgb_mode;
-> @@ -750,6 +753,87 @@ static ssize_t egpu_enable_store(struct device 
-> *dev,
-> 
->  static DEVICE_ATTR_RW(egpu_enable);
-> 
-> +/* dedicated GPU only 
-> *********************************************************/
-> +static int dgpu_only_check_present(struct asus_wmi *asus)
-> +{
-> +	u32 result;
-> +	int err;
-> +
-> +	asus->dgpu_only_available = false;
-> +
-> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_DGPU, &result);
-> +	if (err) {
-> +		if (err == -ENODEV)
-> +			return 0;
-> +		return err;
-> +	}
-> +
-> +	if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
-> +		asus->dgpu_only_available = true;
-> +		asus->dgpu_only = result & ASUS_WMI_DSTS_STATUS_BIT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dgpu_only_write(struct asus_wmi *asus)
-> +{
-> +	u32 retval;
-> +	u8 value;
-> +	int err;
-> +
-> +	/* Don't rely on type conversion */
-> +	value = asus->dgpu_only ? 1 : 0;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, value, &retval);
-> +	if (err) {
-> +		pr_warn("Failed to set dGPU-only mode: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (retval > 1) {
-> +		pr_warn("Failed to set dGPU-only mode (retval): 0x%x\n", retval);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "dgpu_only");
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t dgpu_only_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	u8 mode = asus->dgpu_only;
-> +
-> +	return sysfs_emit(buf, "%d\n", mode);
-> +}
-> +
-> +static ssize_t dgpu_only_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	bool enable;
-> +	int result;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtobool(buf, &enable);
-> +	if (result)
-> +		return result;
-> +
-> +	asus->dgpu_only = enable;
-> +
-> +	result = dgpu_only_write(asus);
-> +	if (result)
-> +		return result;
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(dgpu_only);
-> +
->  /* TUF Laptop Keyboard RGB Modes 
-> **********************************************/
->  static int keyboard_rgb_mode_check_present(struct asus_wmi *asus)
+>  static struct ctrl_settings ctrl_cfg __read_mostly;
+>  
+>  /* Register addresses and values for different BIOS versions */
+> @@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+>  		fanon = ACERHDF_MAX_FANON;
+>  	}
+>  
+> +	if (fanon < fanoff) {
+> +		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
+> +		       fanoff, fanon, fanon);
+> +		fanoff = fanon;
+> +	};
+> +	
+> +	trips[0].temperature = fanon;
+> +	trips[0].hysteresis  = fanon - fanoff;
+> +	
+>  	if (kernelmode && prev_interval != interval) {
+>  		if (interval > ACERHDF_MAX_INTERVAL) {
+>  			pr_err("interval too high, set to %d\n",
+> @@ -424,43 +444,6 @@ static int acerhdf_change_mode(struct thermal_zone_device *thermal,
+>  	return 0;
+>  }
+>  
+> -static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
+> -				 enum thermal_trip_type *type)
+> -{
+> -	if (trip == 0)
+> -		*type = THERMAL_TRIP_ACTIVE;
+> -	else if (trip == 1)
+> -		*type = THERMAL_TRIP_CRITICAL;
+> -	else
+> -		return -EINVAL;
+> -
+> -	return 0;
+> -}
+> -
+> -static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
+> -				 int *temp)
+> -{
+> -	if (trip != 0)
+> -		return -EINVAL;
+> -
+> -	*temp = fanon - fanoff;
+> -
+> -	return 0;
+> -}
+> -
+> -static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
+> -				 int *temp)
+> -{
+> -	if (trip == 0)
+> -		*temp = fanon;
+> -	else if (trip == 1)
+> -		*temp = ACERHDF_TEMP_CRIT;
+> -	else
+> -		return -EINVAL;
+> -
+> -	return 0;
+> -}
+> -
+>  static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
+>  				 int *temperature)
 >  {
-> @@ -3473,6 +3557,7 @@ static struct attribute *platform_attributes[] 
-> = {
->  	&dev_attr_touchpad.attr,
->  	&dev_attr_egpu_enable.attr,
->  	&dev_attr_dgpu_disable.attr,
-> +	&dev_attr_dgpu_only.attr,
->  	&dev_attr_keyboard_rgb_mode.attr,
->  	&dev_attr_keyboard_rgb_mode_index.attr,
->  	&dev_attr_keyboard_rgb_state.attr,
-> @@ -3507,6 +3592,8 @@ static umode_t asus_sysfs_is_visible(struct 
-> kobject *kobj,
->  		ok = asus->egpu_enable_available;
->  	else if (attr == &dev_attr_dgpu_disable.attr)
->  		ok = asus->dgpu_disable_available;
-> +	else if (attr == &dev_attr_dgpu_only.attr)
-> +		ok = asus->dgpu_only_available;
->  	else if (attr == &dev_attr_keyboard_rgb_mode.attr)
->  		ok = asus->keyboard_rgb_mode_available;
->  	else if (attr == &dev_attr_keyboard_rgb_mode_index.attr)
-> @@ -3784,6 +3871,10 @@ static int asus_wmi_add(struct platform_device 
-> *pdev)
->  	if (err)
->  		goto fail_dgpu_disable;
-> 
-> +	err = dgpu_only_check_present(asus);
-> +	if (err)
-> +		goto fail_dgpu_only;
-> +
->  	err = keyboard_rgb_mode_check_present(asus);
->  	if (err)
->  		goto fail_keyboard_rgb_mode;
-> @@ -3906,6 +3997,7 @@ static int asus_wmi_add(struct platform_device 
-> *pdev)
->  fail_fan_boost_mode:
->  fail_egpu_enable:
->  fail_dgpu_disable:
-> +fail_dgpu_only:
->  fail_keyboard_rgb_mode:
->  fail_keyboard_rgb_state:
->  fail_platform:
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h 
-> b/include/linux/platform_data/x86/asus-wmi.h
-> index b5c966798ef8..76b0756a0666 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -98,6 +98,9 @@
->  /* dgpu on/off */
->  #define ASUS_WMI_DEVID_DGPU		0x00090020
-> 
-> +/* Dedicated GPU only. When active the dGPU will be the only visible 
-> GPU */
-> +#define ASUS_WMI_DEVID_DEDICATED	0x00090016
-> +
->  /* TUF laptop RGB control */
->  #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
->  /* TUF laptop RGB state control */
-> --
-> 2.37.1
-> 
-
+> @@ -474,13 +457,9 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
+>  	.unbind = acerhdf_unbind,
+>  	.get_temp = acerhdf_get_ec_temp,
+>  	.change_mode = acerhdf_change_mode,
+> -	.get_trip_type = acerhdf_get_trip_type,
+> -	.get_trip_hyst = acerhdf_get_trip_hyst,
+> -	.get_trip_temp = acerhdf_get_trip_temp,
+>  	.get_crit_temp = acerhdf_get_crit_temp,
+>  };
+>  
+> -
+>  /*
+>   * cooling device callback functions
+>   * get maximal fan cooling state
+> @@ -710,10 +689,10 @@ static int __init acerhdf_register_thermal(void)
+>  	if (IS_ERR(cl_dev))
+>  		return -EINVAL;
+>  
+> -	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
+> -					      &acerhdf_dev_ops,
+> -					      &acerhdf_zone_params, 0,
+> -					      (kernelmode) ? interval*1000 : 0);
+> +	thz_dev = thermal_zone_device_register_with_trips("acerhdf", trips, ARRAY_SIZE(trips),
+> +							  0, NULL, &acerhdf_dev_ops,
+> +							  &acerhdf_zone_params, 0,
+> +							  (kernelmode) ? interval*1000 : 0);
+>  	if (IS_ERR(thz_dev))
+>  		return -EINVAL;
+>  
 
