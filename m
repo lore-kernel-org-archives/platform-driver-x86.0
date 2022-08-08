@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32538C00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA259C25B0C
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237133AbiHHQIq (ORCPT
+        id S234900AbiHHQML (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 12:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
+        Mon, 8 Aug 2022 12:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbiHHQIo (ORCPT
+        with ESMTP id S231475AbiHHQMK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 12:08:44 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B18B95A2;
-        Mon,  8 Aug 2022 09:08:43 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d16so6816238qtw.8;
-        Mon, 08 Aug 2022 09:08:43 -0700 (PDT)
+        Mon, 8 Aug 2022 12:12:10 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301B630C;
+        Mon,  8 Aug 2022 09:12:09 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id l5so404642qtv.4;
+        Mon, 08 Aug 2022 09:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=D6H3FWkvPgAyi8KcndKPUMxUb6100sFw7ExbmjwXTbI=;
-        b=IFbQVJhlIBsaHJiiXp3oauZaR0IAyt7xdm/OlK7D72eCbkdePMuZZ1hTWIdB+i1I8B
-         lTjuKAaamm1v5OnKxpw/kCU8mOL6eNEoZAlrH/Sm8uNI3swdhnHSZvsturuVbCR8+sBU
-         sAhnJeuC5hw0EHIaf5IdYrYykxnt0vlrKBRH7eMylODmVgtt9uAJ9DQJedtUrtykUPcP
-         v7ekaS9OrK21ckc4jaQf/Ima2OSG32xgTS0Xqcg+fsq3ilG4/ahTUqtzTEvPLb7k1a6m
-         YmDtMGcekKH5ojVDL1iKBlVsu+/tm3thgN3uzhoHpPxRWZPzOUTMh2zFJm2Pi23RZyG3
-         VC8w==
+        bh=gILE/DsFTOP8PS0Yp1nF3NCvuUGJhqQFgsUGLdHXvV8=;
+        b=jUFe1axofvyCb6gyzxGTtNwHyegk3CnDZMId+aHrAzoNtF8INilsWQPC+STOs1HddK
+         CzGUhG3kK4Dx9QqZ3NWbGmnk2O0HnxRnwHI+Iefs6ZnQhZL9TA/eC3fJeL1Sc8Y6s5wa
+         VAGzRa91ONRrsOdJKwke1gkVMBSwwhhKVOcrydQpj6d5WUi1PyRrd3zZwygESwtCuYce
+         7wqY9ogPv6DbLCNf/yhkPX8W5wdp3bWLoHN6XrXwCv/L3aaZJdGrYyb64m5wkksTl0fS
+         9fXNC/2rpvGtEIElZQsiJt4tqf2Qt4cQZT30fa+E6XOWmRGlE3MzpqvKixvzhy2ljIXx
+         Z6Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=D6H3FWkvPgAyi8KcndKPUMxUb6100sFw7ExbmjwXTbI=;
-        b=xXT2fQMQ641vLQ//j9CG5CBQragrHtopksE83+Vpw9/QucyPyBjg2OTk7dW8UtmQtu
-         Q1QQgVG6T7NuSIS42dzSva473ko2Xze5I7p2c8nq4jWv2Vej0A2KcH5DAe2tJJrczlUi
-         URMW82AVFD7fkS8WzKtCXso0+LXvBC9EPxHAXykjTzNHKj1ZiwRrOrOEOtTVhRVVLTFu
-         oVKAo/UKXAF5AKTpmTV5NwC8bQhHanU7swcTmiCuFrqDLQGRTBoXXp8FWac/pXIG6ZZf
-         gtHaS1D1X5pV8nTQx90ieazPmC4Sr5pEtTPubC64eNcsBDHKb583eZj59zqOe5KLuXiK
-         S4Qg==
-X-Gm-Message-State: ACgBeo2WT/4cYoOUUCDov/1HIUusY5GO1c7Z2N9acczTrfcwol8P3feW
-        za/dqAkHo2RZ6y8hfA4wm6SvzoFD5sd4Kf39LOc=
-X-Google-Smtp-Source: AA6agR58PRbpaqSPrt63xFozfeaOJB5yDow6p+0r5CZrmaGgnD2oxSE5whd8ETpPyoTz83nWgeVYJqOx3IFb3pKBB/0=
-X-Received: by 2002:a05:622a:48f:b0:343:463:351a with SMTP id
- p15-20020a05622a048f00b003430463351amr1168316qtx.61.1659974922729; Mon, 08
- Aug 2022 09:08:42 -0700 (PDT)
+        bh=gILE/DsFTOP8PS0Yp1nF3NCvuUGJhqQFgsUGLdHXvV8=;
+        b=acjBgEV211m4J1YzW27A4eBQH+Nx9wM3zGHdBFMlihKt4mIFL2sml+hub79WVjwRhr
+         YOSj/OlVXc+Xb+8O0KtwDZukVmmUtz8uPA3vx0YLUpaKXmad1bokMFIM010NaeobCvzK
+         Y+5IdGvQcyWREy+y7ZYsGec5bEDT+SFIKF/Lb7f/qZjfUWbXrIxBmbtwmG7yE94cqCMo
+         +kY6Fvo2fycQQyI2YzcpLwFvCqCu75r+QlHNNqm6aIYnKQtBVlEcXHutZ8QZ9IegVEyd
+         GsWwwoLt3FaIvNvOI3/4mhHYtrI9m+qCtQTuZgrlxo0r5R+4k9Tbr2jvOnFPI/wBB48t
+         5afA==
+X-Gm-Message-State: ACgBeo2v3gxOnrHcLMJBK9K2ZNbk+aQQw3Lw5Orkvyfma64Ey7W5IKuy
+        MyL1JXLH7pWo/XRwMwCTfQ9gV1ei3EkIE1HwFHU=
+X-Google-Smtp-Source: AA6agR6YMGbmSGWrM3mvE3XFN1H+euyfs1mFLCcKBtY7QVRDfF162WRcbFP1i1/j4WhE6bRQtesrXDtrrJbcldYNPn4=
+X-Received: by 2002:ac8:7fd1:0:b0:31e:e9c0:c071 with SMTP id
+ b17-20020ac87fd1000000b0031ee9c0c071mr16765824qtk.481.1659975128238; Mon, 08
+ Aug 2022 09:12:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220808030420.8633-1-luke@ljones.dev> <20220808030420.8633-4-luke@ljones.dev>
-In-Reply-To: <20220808030420.8633-4-luke@ljones.dev>
+References: <20220808030420.8633-1-luke@ljones.dev> <20220808030420.8633-5-luke@ljones.dev>
+In-Reply-To: <20220808030420.8633-5-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Aug 2022 18:08:06 +0200
-Message-ID: <CAHp75VdNa8csSF5Je87kOzC3EQ4yetZqpxXFZu1D7C4A6XCTNg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] asus-wmi: Implement TUF laptop keyboard power states
+Date:   Mon, 8 Aug 2022 18:11:32 +0200
+Message-ID: <CAHp75VdJyukGnJkhjPiB7wMxS5aQkVfMwVVhqAxA6DppyH3HLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] asus-wmi: Document previously added attributes
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
@@ -65,76 +65,85 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Aug 8, 2022 at 5:09 AM Luke D. Jones <luke@ljones.dev> wrote:
 >
-> Adds support for setting various power states of TUF keyboards.
-> These states are combinations of:
-> - boot, set if a boot animation is shown on keyboard
-> - awake, set if the keyboard LEDs are visible while laptop is on
-> - sleep, set if an animation is displayed while the laptop is suspended
-> - keyboard (unknown effect)
->
-> Adds two sysfs attributes to asus-nb-wmi:
+> Documents some previously added attributes:
+> - dgpu_disable
+> - egpu_enable
+> - panel_od
+> - keyboard_rgb_mode
 > - keyboard_rgb_state
-> - keyboard_rgb_state_index
 
 ...
 
-> +       flags = 0;
-
-This can be done before 'if (boot)'
-
-> +       if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, &awake, &sleep, &keyboard) != 5)
-> +               return -EINVAL;
-
-Same Q here: wouldn't it be better to put each of the parameters to a
-separate sysfs node? Or look at the LED ABI (that what Pavel mentioned
-for multi-color patterns) and see if there are already some
-established ways of how to represent necessary information?
-
-> +       save = save == 0 ? 0x0100 : 0x0000;
-
-  if (save)
-    flags = BIT(8);
-
-> +       if (boot)
-> +               flags |= 0x02;
-> +       if (awake)
-> +               flags |= 0x08;
-> +       if (sleep)
-> +               flags |= 0x20;
-> +       if (keyboard)
-> +               flags |= 0x80;
-
-Use BIT() for flags.
-
-...
-
-> +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
-> +                       ASUS_WMI_DEVID_TUF_RGB_STATE, 0xBD | save | (flags << 16), 0, &ret);
-
-Why not provide flags to be a full 32-bit value?
-
-Also 0xBD can be lower-cased and explained somehow?
-
-...
-
+> +What:          /sys/devices/platform/<platform>/dgpu_disable
+> +Date:          Aug 2022
+> +KernelVersion: 5.17
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Disable discrete GPU:
+> +                       * 0 - Enable dGPU,
+> +                       * 1 - Disable dGPU,
 > +
-
-No need for a blank line.
-
-> +static DEVICE_ATTR_WO(keyboard_rgb_state);
-
-...
-
+> +What:          /sys/devices/platform/<platform>/egpu_enable
+> +Date:          Aug 2022
+> +KernelVersion: 5.17
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Enable the external GPU paired with ROG X-Flow laptops.
+> +               Toggling this setting will also trigger ACPI to disable the dGPU:
+> +                       * 0 - Disable,
+> +                       * 1 - Enable,
 > +
-> +static DEVICE_ATTR_RO(keyboard_rgb_state_index);
+> +What:          /sys/devices/platform/<platform>/panel_od
+> +Date:          Aug 2022
+> +KernelVersion: 5.17
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Enable an LCD response-time boost to reduce or remove ghosting:
+> +                       * 0 - Disable,
+> +                       * 1 - Enable,
 
-Ditto and same for many other similar cases.
+These should be in  separate patch(es) with the corresponding Fixes
+tags. (The latter may not be so important, though. I leave it to Hans
+to decide)
 
 ...
 
->  #define ASUS_WMI_DSTS_STATUS_BIT       0x00000001
+> +What:          /sys/devices/platform/<platform>/keyboard_rgb_mode
+> +Date:          Aug 2022
+> +KernelVersion: 6.0
 
-BIT(0) ? (This might require to add bits.h inclusion)
+These should go separately. Dunno if it should be a separate
+documentation change for the both, or should it be split and
+reattached to the respective patches from the series. Up to Hans.
+
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Set some RGB keyboard modes and features (write-only).
+> +
+> +               The accepted input is "save mode speed", where "n n n" options
+> +               are:
+> +                       * save - 0 or 1, if 0 then settings are not retained on boot
+> +                       * mode - 0 to 12, each is an RGB such as static, rainbow, pulse.
+> +                                       Not all keyboards accept every mode.
+> +                       * speed - 0, 1, 2, equal to low, medium, high.
+> +                                       Only applies to certain modes.
+> +
+> +What:          /sys/devices/platform/<platform>/keyboard_rgb_state
+> +Date:          Aug 2022
+> +KernelVersion: 6.0
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Set some RGB keyboard power states (write-only).
+> +
+> +               The accepted input is "boot awake sleep keyboard", where "n n n n n"
+> +               options are:
+> +                       * save - 0 or 1, if 0 then settings are not retained on boot
+> +                       * boot - 0 or 1, controls if a boot animation is shown
+> +                       * awake - 0 or 1, controls if the keyboard LED are on during awake
+> +                       * sleep - 0 or 1, controls if a suspended animation is shown.
+> +                                               This is only active if the AC is connected.
+> +                       * keyboard - 0 or 1, unknown what effect this really has
+
 
 -- 
 With Best Regards,
