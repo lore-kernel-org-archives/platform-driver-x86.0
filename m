@@ -2,59 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F69AC00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213E2C00140
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243303AbiHHQNr (ORCPT
+        id S243708AbiHHQYn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 12:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
+        Mon, 8 Aug 2022 12:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243936AbiHHQNq (ORCPT
+        with ESMTP id S237665AbiHHQYm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 12:13:46 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D8C95B6;
-        Mon,  8 Aug 2022 09:13:45 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id f14so6848603qkm.0;
-        Mon, 08 Aug 2022 09:13:45 -0700 (PDT)
+        Mon, 8 Aug 2022 12:24:42 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B009614D21;
+        Mon,  8 Aug 2022 09:24:41 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id b24so432439qka.5;
+        Mon, 08 Aug 2022 09:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=RydAc2h1TG1DNQLkGPwhdBQh+OZCJYVbtJqYkQv0eqs=;
-        b=lTkujjumqQiRClqVK/7uGOiLol86GKygEm7KB1YnzNtAjcVvg83b5dzIp7yVeX0LD1
-         82rfY6UjfYtUeuyeCr4SbTPsrPixb8+3ki0ohTwe3JwooIUb31lZ2PAatCLuaZWZxakJ
-         zfUD/2tXgv+WMlBL3tLAJr2aZ2n5K8lHFz8FwdUoTnzOSHwLpLV5oIiNrUj+Z6Z4G/Dj
-         2zDjqHI37fsD8r9si8ndG3ZJMblQ7DZmAX/ldd9s5UbLICJFpfN6Oswa2s8wz65f5EY0
-         +edsSU/tbEs84GXgFMpsYzcEYK96H59D4l4m574cLmQ/7BmvEIJDQDZTW5NUjIUIHUe0
-         uW+A==
+        bh=9LlB2T5/Ktkdp4+h2dNUH3viE5cqaKUYMhF8qyI39kk=;
+        b=Ggwp5Xq79yAkjkfaqjg+4yl90dhY/9jp6ksgwver9RCzSiIn5x22eQW7CSsOH62jxv
+         rEhvnz0bkrC9+L3kvl+F3oePv1TWDsn6+kuxuwl8MSgNykRNuKF0Vovcv3lfcg/mONOC
+         glnXB85M18l4LgVqHZP/kuBniEx9WfW4qv+X5NiJE+ElmXLZxSb8QZTkfQMlcQ8K2xhS
+         K4VaNkJ996lObBp8LssutEToDCPPjgbG8u/lKAszByYjtnI8FrEd4Hnje3F/0xipluo2
+         gtz/iwLJPvH/bXnmb2Ou+vJKNQd/Sf/tHaCmLq11BV3kSrtIVADnMHN+HvedsbgQ6jpu
+         pUMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=RydAc2h1TG1DNQLkGPwhdBQh+OZCJYVbtJqYkQv0eqs=;
-        b=AopuPEz9FnLVZUyN3+J8hXL1Kd9j+tTctgh2B9lYjceIzRaEHFg5NOi1WOAfDGZFXZ
-         Wy0zg4kK7W8u0ccpFEAayCyrVRV4ylJUp3i5nqo9AiADCeBpjstoZlYGU64UfLoEPV+d
-         aviDcw8+PAZkPFRWXSec7jEnG6LRQQIpWLSlJijXdQ0VOBv6xyDHsd8giFliaJOZmV57
-         GVK7jutebH7mNx++qxgLZ/xUCkPPwcwhU1TTjinKO7rfYKq08C2LxrSaJHqrW7q0+EVz
-         0gMeSfbf35di57AcLuULOzt46EFicTRxe1kO2JxcbMB5IKmy+zX1N1zZ5+1A1P1kWBD1
-         jY/Q==
-X-Gm-Message-State: ACgBeo0yMjJtMfORNtCN5fco1ZIGEKZvoODDUKvp6GWNRVzsZEtzSar2
-        gzhJ2G1MbxhNihsqUBODC2es7AlO91U5vyT0RpY=
-X-Google-Smtp-Source: AA6agR7XtKMvsHc14GyMFRB4LH96lb/VxXn/pAY+PTjrqAEQKF7Ovqn1Zp8MAOxfO+fUECjMl1ixyoSN8+RNZ1QRrNs=
-X-Received: by 2002:a05:620a:254d:b0:6ab:84b8:25eb with SMTP id
- s13-20020a05620a254d00b006ab84b825ebmr14564064qko.383.1659975224727; Mon, 08
- Aug 2022 09:13:44 -0700 (PDT)
+        bh=9LlB2T5/Ktkdp4+h2dNUH3viE5cqaKUYMhF8qyI39kk=;
+        b=rP+ZRiOLWcfAH5fu+FxmiZjz0hPaPHBF+H0oyBSkg66jNrprZSWzaYYSYClx1E/L0W
+         dxrojVUClWumOh9Tt5MClYIWzBv1NlxqtZ2AQHwW23yAKTz0t2eRv3xkP4qFYY8TIVcG
+         kQou3rm64hZJ7TMZSI21+MsuI528LQg57jVxxvva4Lc5RTR188AfQmyRa023gKvSva9H
+         KzAMtSJ6gwpU1o9zL9Y6jD+LqsZQKUehoqxjZoqkC/N8ReP9JGQAqmd5x/DTNpa33XAF
+         QJ0wnNn7ReiL4sC0qQv7M0wJgAz5CVd77v0n3+fgxVy7BpST+W1w5K78Z0ggg84dsQuu
+         GhCQ==
+X-Gm-Message-State: ACgBeo1E0HwMwTNEHNocvHdvxynrj8bwdS86P4DJGJcARJp1q5R9yv5h
+        G9Vax1xKmebgQH2kVvXldvCUajQcKY/aUn1NtsA=
+X-Google-Smtp-Source: AA6agR58jXZx7W1R3kDfPgYf/ysCjCZyolGANT1QGQh3vQSmzjT9VWfqgw9EOALbFuoikpd6yShSrtKvtV6W/BRrALM=
+X-Received: by 2002:a05:620a:8018:b0:6b6:5df:977 with SMTP id
+ ee24-20020a05620a801800b006b605df0977mr14267090qkb.320.1659975880731; Mon, 08
+ Aug 2022 09:24:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220808030420.8633-1-luke@ljones.dev> <20220808030420.8633-6-luke@ljones.dev>
-In-Reply-To: <20220808030420.8633-6-luke@ljones.dev>
+References: <20220808031132.10075-1-luke@ljones.dev> <20220808031132.10075-2-luke@ljones.dev>
+ <CAHp75Vds+DmQdeuSM7ixtZiX60jg83CWveFZNcQoQ=QyiqcvUw@mail.gmail.com> <23e2630c-2328-40cd-836b-f3b619ff6a4b@redhat.com>
+In-Reply-To: <23e2630c-2328-40cd-836b-f3b619ff6a4b@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Aug 2022 18:13:08 +0200
-Message-ID: <CAHp75VdgGgp2H906sQjhauzEGLp8Mr-2Hj9hKdkF9MPeOOCbLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] asus-wmi: Convert all attr-show to use sysfs_emit
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Date:   Mon, 8 Aug 2022 18:24:04 +0200
+Message-ID: <CAHp75VcW+aSCSAE-FRqJxwwGWwDz+38GY4FrceWVso6BT8=sWg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] asus-wmi: Adjust tablet/lidflip handling to use enum
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
         Mark Gross <markgross@kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -63,20 +64,25 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 5:08 AM Luke D. Jones <luke@ljones.dev> wrote:
->
-> This changes all *_show attributes in asus-wmi.c to use sysfs_emit
-
-We refer to functions as func().
-
-> instead of the older method of writing to the output buffer manually.
+On Mon, Aug 8, 2022 at 6:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 8/8/22 17:48, Andy Shevchenko wrote:
+> > On Mon, Aug 8, 2022 at 5:12 AM Luke D. Jones <luke@ljones.dev> wrote:
 
 ...
 
-> -       return sprintf(buf, "%d\n", value < 0 ? -1 : value*100);
-> +       return sysfs_emit(buf, "%d\n", value < 0 ? -1 : value*100);
+> > To the switch-cases, please add a "default" case to each of them.
+>
+> The switch-cases are on an enum type, so adding a default is
+> not necessary and adding one will actually loose the useful
+> compiler warning about unhandled enum values.
 
-While at it, put spaces around *: 'value * 100'.
+It's good if you can cover all enum values, which usually you can't.
+enum according to the standard should be located in the type that is
+enough to keep it and be compatible to a char. This means that the
+code somewhere else may assign anything to enum (actually enum values
+are type of int) and without default you can't see the difference here
+and the compiler probably will be happy. That said, I doubt the
+usefulness of such a warning. But it's up to you.
 
 -- 
 With Best Regards,
