@@ -2,149 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA259C25B0C
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D854EC25B0C
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 16:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234900AbiHHQML (ORCPT
+        id S243930AbiHHQNg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 12:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43966 "EHLO
+        Mon, 8 Aug 2022 12:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231475AbiHHQMK (ORCPT
+        with ESMTP id S243926AbiHHQNf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 12:12:10 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301B630C;
-        Mon,  8 Aug 2022 09:12:09 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id l5so404642qtv.4;
-        Mon, 08 Aug 2022 09:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=gILE/DsFTOP8PS0Yp1nF3NCvuUGJhqQFgsUGLdHXvV8=;
-        b=jUFe1axofvyCb6gyzxGTtNwHyegk3CnDZMId+aHrAzoNtF8INilsWQPC+STOs1HddK
-         CzGUhG3kK4Dx9QqZ3NWbGmnk2O0HnxRnwHI+Iefs6ZnQhZL9TA/eC3fJeL1Sc8Y6s5wa
-         VAGzRa91ONRrsOdJKwke1gkVMBSwwhhKVOcrydQpj6d5WUi1PyRrd3zZwygESwtCuYce
-         7wqY9ogPv6DbLCNf/yhkPX8W5wdp3bWLoHN6XrXwCv/L3aaZJdGrYyb64m5wkksTl0fS
-         9fXNC/2rpvGtEIElZQsiJt4tqf2Qt4cQZT30fa+E6XOWmRGlE3MzpqvKixvzhy2ljIXx
-         Z6Cw==
+        Mon, 8 Aug 2022 12:13:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 02098559D
+        for <platform-driver-x86@vger.kernel.org>; Mon,  8 Aug 2022 09:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659975212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KLGbq2su7y8qF0iuV3H8NZV3RgfNkEtVGQYGB91WtLc=;
+        b=TQ2R7dT4VBMJmCdV61D2RTvdF11aS7doEekN8OGhQpF0M7bv8H98DGLObTEvqzAAstaLKI
+        A+3V9dfyYBUnYCHPMg7/N2+YQbQ6UaYrfF3Q3A3qzLeKPj22g9ZDRVLLzE0EbG4y8bcVHL
+        2etiOmEWD+9xpW1BXcg7IFFuOr5Rr7M=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-655-cqmaATZ9NMScU23Jt98trw-1; Mon, 08 Aug 2022 12:13:31 -0400
+X-MC-Unique: cqmaATZ9NMScU23Jt98trw-1
+Received: by mail-ej1-f70.google.com with SMTP id gn23-20020a1709070d1700b0073094d0e02cso2588691ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Aug 2022 09:13:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=gILE/DsFTOP8PS0Yp1nF3NCvuUGJhqQFgsUGLdHXvV8=;
-        b=acjBgEV211m4J1YzW27A4eBQH+Nx9wM3zGHdBFMlihKt4mIFL2sml+hub79WVjwRhr
-         YOSj/OlVXc+Xb+8O0KtwDZukVmmUtz8uPA3vx0YLUpaKXmad1bokMFIM010NaeobCvzK
-         Y+5IdGvQcyWREy+y7ZYsGec5bEDT+SFIKF/Lb7f/qZjfUWbXrIxBmbtwmG7yE94cqCMo
-         +kY6Fvo2fycQQyI2YzcpLwFvCqCu75r+QlHNNqm6aIYnKQtBVlEcXHutZ8QZ9IegVEyd
-         GsWwwoLt3FaIvNvOI3/4mhHYtrI9m+qCtQTuZgrlxo0r5R+4k9Tbr2jvOnFPI/wBB48t
-         5afA==
-X-Gm-Message-State: ACgBeo2v3gxOnrHcLMJBK9K2ZNbk+aQQw3Lw5Orkvyfma64Ey7W5IKuy
-        MyL1JXLH7pWo/XRwMwCTfQ9gV1ei3EkIE1HwFHU=
-X-Google-Smtp-Source: AA6agR6YMGbmSGWrM3mvE3XFN1H+euyfs1mFLCcKBtY7QVRDfF162WRcbFP1i1/j4WhE6bRQtesrXDtrrJbcldYNPn4=
-X-Received: by 2002:ac8:7fd1:0:b0:31e:e9c0:c071 with SMTP id
- b17-20020ac87fd1000000b0031ee9c0c071mr16765824qtk.481.1659975128238; Mon, 08
- Aug 2022 09:12:08 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=KLGbq2su7y8qF0iuV3H8NZV3RgfNkEtVGQYGB91WtLc=;
+        b=Wc5WxRPMdAnLeuihNoxZjp+dCnpKRHLgqzUfRrfPCu3ztEzHwfDOEdclFqJGhD4hTX
+         yP8KKu4NNlrviQGZRVZ7UMztvgOfBIsbaz22PCLvQJwjiHHajYObFL1wRZS8gEqpqKPd
+         R0bO5sCXufFgEiwRsDMcn7xSSyUUZY7T9X/2AdtQXA+Lc3SDD1xFBdKOrnNKnshp87qh
+         Klyu7cy9HrUul6ld5m+k8e2o6lud0y9O3BjCGeYVpk83xx4PdlgRhLOgZfaoaScxaYTn
+         Har4O+sMHpHalZxtET75f8KD1tqPVTY4psivRso9pLZSMiZNVDxD8Mxo61qP55+ZHWHf
+         tkjQ==
+X-Gm-Message-State: ACgBeo3ffN2B38RVUMNCenoEZLVJu+kl1broxo6cD9/NOzf/V66MyZZo
+        kpKB0XVBffWmlhdAd3j7NyAXJS8M0O5wZ07cCwW/1dgV+rmfqHhzLoW1YAMOO2XCGLeNHc8PNsE
+        u5dBe2yZDdWzdQFi2JCUIlr4ao+kQXLJSdA==
+X-Received: by 2002:a05:6402:378f:b0:43a:d3f5:79f2 with SMTP id et15-20020a056402378f00b0043ad3f579f2mr18616707edb.338.1659975210018;
+        Mon, 08 Aug 2022 09:13:30 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5Kc6OlGYcnsyhPFkY4Wweec7H/qFBO8/QI44ngY3ug7LVyYtJhYC0p05uXc2jIPASVP4zWTg==
+X-Received: by 2002:a05:6402:378f:b0:43a:d3f5:79f2 with SMTP id et15-20020a056402378f00b0043ad3f579f2mr18616692edb.338.1659975209877;
+        Mon, 08 Aug 2022 09:13:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id k5-20020a17090632c500b0072b1cb2818csm11634ejk.158.2022.08.08.09.13.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Aug 2022 09:13:28 -0700 (PDT)
+Message-ID: <23e2630c-2328-40cd-836b-f3b619ff6a4b@redhat.com>
+Date:   Mon, 8 Aug 2022 18:13:27 +0200
 MIME-Version: 1.0
-References: <20220808030420.8633-1-luke@ljones.dev> <20220808030420.8633-5-luke@ljones.dev>
-In-Reply-To: <20220808030420.8633-5-luke@ljones.dev>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 8 Aug 2022 18:11:32 +0200
-Message-ID: <CAHp75VdJyukGnJkhjPiB7wMxS5aQkVfMwVVhqAxA6DppyH3HLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] asus-wmi: Document previously added attributes
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2 1/2] asus-wmi: Adjust tablet/lidflip handling to use
+ enum
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Luke D. Jones" <luke@ljones.dev>
+Cc:     Mark Gross <markgross@kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20220808031132.10075-1-luke@ljones.dev>
+ <20220808031132.10075-2-luke@ljones.dev>
+ <CAHp75Vds+DmQdeuSM7ixtZiX60jg83CWveFZNcQoQ=QyiqcvUw@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75Vds+DmQdeuSM7ixtZiX60jg83CWveFZNcQoQ=QyiqcvUw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 5:09 AM Luke D. Jones <luke@ljones.dev> wrote:
->
-> Documents some previously added attributes:
-> - dgpu_disable
-> - egpu_enable
-> - panel_od
-> - keyboard_rgb_mode
-> - keyboard_rgb_state
+Hi,
 
-...
+On 8/8/22 17:48, Andy Shevchenko wrote:
+> On Mon, Aug 8, 2022 at 5:12 AM Luke D. Jones <luke@ljones.dev> wrote:
+>>
+>> Due to multiple types of tablet/lidflip, the existing code for
+>> handlign these events is refactored to use an enum for each type.
+> 
+> handling
+> 
+> Can you run a spell checker for your commit messages?
+> 
+> ...
+> 
+> To the switch-cases, please add a "default" case to each of them.
 
-> +What:          /sys/devices/platform/<platform>/dgpu_disable
-> +Date:          Aug 2022
-> +KernelVersion: 5.17
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Disable discrete GPU:
-> +                       * 0 - Enable dGPU,
-> +                       * 1 - Disable dGPU,
-> +
-> +What:          /sys/devices/platform/<platform>/egpu_enable
-> +Date:          Aug 2022
-> +KernelVersion: 5.17
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Enable the external GPU paired with ROG X-Flow laptops.
-> +               Toggling this setting will also trigger ACPI to disable the dGPU:
-> +                       * 0 - Disable,
-> +                       * 1 - Enable,
-> +
-> +What:          /sys/devices/platform/<platform>/panel_od
-> +Date:          Aug 2022
-> +KernelVersion: 5.17
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Enable an LCD response-time boost to reduce or remove ghosting:
-> +                       * 0 - Disable,
-> +                       * 1 - Enable,
+The switch-cases are on an enum type, so adding a default is
+not necessary and adding one will actually loose the useful
+compiler warning about unhandled enum values.
 
-These should be in  separate patch(es) with the corresponding Fixes
-tags. (The latter may not be so important, though. I leave it to Hans
-to decide)
+Regards,
 
-...
+Hans
 
-> +What:          /sys/devices/platform/<platform>/keyboard_rgb_mode
-> +Date:          Aug 2022
-> +KernelVersion: 6.0
-
-These should go separately. Dunno if it should be a separate
-documentation change for the both, or should it be split and
-reattached to the respective patches from the series. Up to Hans.
-
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Set some RGB keyboard modes and features (write-only).
-> +
-> +               The accepted input is "save mode speed", where "n n n" options
-> +               are:
-> +                       * save - 0 or 1, if 0 then settings are not retained on boot
-> +                       * mode - 0 to 12, each is an RGB such as static, rainbow, pulse.
-> +                                       Not all keyboards accept every mode.
-> +                       * speed - 0, 1, 2, equal to low, medium, high.
-> +                                       Only applies to certain modes.
-> +
-> +What:          /sys/devices/platform/<platform>/keyboard_rgb_state
-> +Date:          Aug 2022
-> +KernelVersion: 6.0
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Set some RGB keyboard power states (write-only).
-> +
-> +               The accepted input is "boot awake sleep keyboard", where "n n n n n"
-> +               options are:
-> +                       * save - 0 or 1, if 0 then settings are not retained on boot
-> +                       * boot - 0 or 1, controls if a boot animation is shown
-> +                       * awake - 0 or 1, controls if the keyboard LED are on during awake
-> +                       * sleep - 0 or 1, controls if a suspended animation is shown.
-> +                                               This is only active if the AC is connected.
-> +                       * keyboard - 0 or 1, unknown what effect this really has
-
-
--- 
-With Best Regards,
-Andy Shevchenko
