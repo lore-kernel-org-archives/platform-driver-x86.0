@@ -2,105 +2,240 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4667DC00140
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 03:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34755C3F6B0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 03:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiHIDbH (ORCPT
+        id S231289AbiHIDbT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 23:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
+        Mon, 8 Aug 2022 23:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232852AbiHIDa5 (ORCPT
+        with ESMTP id S231804AbiHIDbC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 23:30:57 -0400
+        Mon, 8 Aug 2022 23:31:02 -0400
 Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BD8640B;
-        Mon,  8 Aug 2022 20:30:56 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9EEA95C01CA;
-        Mon,  8 Aug 2022 23:30:55 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E53064DA;
+        Mon,  8 Aug 2022 20:31:01 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 922A25C0093;
+        Mon,  8 Aug 2022 23:31:00 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 08 Aug 2022 23:30:55 -0400
+  by compute2.internal (MEProxy); Mon, 08 Aug 2022 23:31:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm2; t=1660015855; x=1660102255; bh=qF550eH5VOcKt9w3Exq04HQ5z
-        lTuCvWjlWMtOxOLmk0=; b=D1nZs5rDmuK1GJKOP/gQjqUE5mZvIFC5GDp4zUa6i
-        WY3IlFx2YEQJ62V1VgC4/Cf+M7pGqGnHgqnjyyNQJOEtTINw81hS7/JFbKFYpjiu
-        OFPiY8m4e1tmIWGTQbJRZeCgdH5fvNXE95yhdBcDFSoHPThTgaG7GX7leqxQNdMo
-        qHQowAaZpVSmyTjTMimsIMLhkF8I3bD0WTfhpTXgzijZQ4OEnqBdFiGmbmYvDtiU
-        H8X6GGjE3iLjnDvPZQm2xkhWD4PaatNuggnwk4KVMUyrKJY2MlEUEVRyEIm5G4LO
-        k7z0ey0DSM+nARXWXIoKeSeH0e9fOrXFLDe86y/XYFnBw==
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1660015860; x=1660102260; bh=nv
+        kTijB0VB7W98jLK9gRvJD/2uHgCUQLG98hIofqflg=; b=MTJ037C6UY3HECfJI5
+        yiwYv5l1VHg4zzoCDObJdNOmANYgylb5X02OcH4+bCVVUFnezHE9MEYJdHRP6RXA
+        3ALwJdNR6NP3u9E5Rua293DOM0TlUjHW07RrceeZRrwYrtoFLqmY+24jrPQWIJ/m
+        I+whostDsj3QmDTVVrDvC3b51AsnTtGVMtuHFJ/EGtlPSVyq4egAu77FM+aZAz0m
+        rBg/Ph+GcgB9AbTSewAG8poMriOJcr99LYTf0RV/tQbRRPX8aCZYCLyrUn40THOP
+        od3H0CIVsmcQ9uulpqTLT8sHBWiWibLeex5vtzttDuZnKs5ApfXP9y+KcZccwAmY
+        qagg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1660015855; x=1660102255; bh=qF550eH5VOcKt9w3Exq04HQ5zlTuCvWjlWM
-        tOxOLmk0=; b=ETTRJhy67dbmH6DIRTwyCnVtxZCpr1yW6gZrYMkw2+vtguaMzWm
-        4F+Uvyz2px5y1SsG/zLnakR678bu5nU7Toq4S9aRNLxMvGd0YToZ1QKG2Vsi2EaU
-        dTdjoSn+6n1qQaIDvv52YwYa60hzvF8IGjne6tG3DaUf6Rc0dVLTMceuEgpUtqDu
-        QgUdbHtTxskk/ttoGp50CmK/r/6oOkv0x49oH+0BxNgxlXQc7+pZMkW60xe8bpji
-        cqCyoWYGgh7HZLfFZesLSnGN1cY8mQCM1CULSCVm1DYDi8HAJqzI/FTj5H6a4DKs
-        k3tLTYK0pBSZXtb6OLfGS6Mq0PjKroVkGCQ==
-X-ME-Sender: <xms:79TxYu33cXQWZfGhVRXArXQFEHzoKZQppf42BNTjKQ0DK1zP45Rl1A>
-    <xme:79TxYhGat1VliB2TrZJI5ITys3JM7WOvJXwAAUkBOR0YulTQyT1PUShyOmK8EptgD
-    I61_jP8pnVmt9VutHk>
-X-ME-Received: <xmr:79TxYm43pDAPJyOeDO6ifaQ4ZCbZQd8YDVJ_o6rYigTlwg6c7-Utzjnyd6OC>
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1660015860; x=1660102260; bh=nvkTijB0VB7W9
+        8jLK9gRvJD/2uHgCUQLG98hIofqflg=; b=uGff1uiN7xwZGQqgH8CQtnwjtBXv6
+        n2TzbpC0FhxFd7ruu78UmLPclszsLnC0BA+msJp26OhpeDXyAjFKYfAFsW4mihqe
+        PRIVNgB48EOKgnDoFnLt+p/ZhVZdEUiBKbmAgMF5her16o3YWXluOwS5M9o1UAb4
+        XVXGQI33DGa/xT6OKrcpx6IDWqqpoIwXccJFnsDuKrbz0fCnSjkfxUgeNDTZH3NU
+        7/7Spa6cYPBx32e37N2wFNjCjc6tnEdxTxPGhNTz3S4IqafOwsjeae/BL3INCsOT
+        QSQpUjTkzulVtxZUn6S5iSF932tIuzuFptNvSvfDquLiZ+j5aIkmhw0kA==
+X-ME-Sender: <xms:9NTxYu9OST2D1lPcKvSUIWoyq-nJJ0WGCG_YrUy73APweBu9YDz5Tg>
+    <xme:9NTxYutxa0PSwNbp4EiAct7y6YvGccDyGqcNSm8vETJKi_aewR6bLvZKwosMNOF9e
+    JmEcnjUjWYtMh7m9-E>
+X-ME-Received: <xmr:9NTxYkD7HAM10yz4n2rAnCEu_IrkJrnyvvvb-JTyOOB2R4vETo0F_P8DU0Ot>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgjeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
-    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgeegieevfeekleejvefhkedvhfffue
-    egudeljeeiieeuhfegkeehtdevuedujeejnecuffhomhgrihhnpehlkhhmlhdrohhrghen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
-    eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:79TxYv3ZAwJ6HFu4oxadwdgLKYRrL1mNpMOXZftBqOrcu5YjooT2oQ>
-    <xmx:79TxYhHj_OgeQgSjPLOH4upCIvHtgvJWkJblCrFJUE7KaHEehlhFhA>
-    <xmx:79TxYo-QQPoSJlMc2s_h_WMUQ12UQM8DjGPSCGvViX_PSs17FSeY9A>
-    <xmx:79TxYmTh4DZxzLEQDBW6kuC0mFjAup_F9_4YRSR2lm0Kw6_B-LM2-A>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
+    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:9NTxYmfm9cCFz3sDB2_TIF2lOHyITIQe-Rb9But4UE4SiyqFrh0aNw>
+    <xmx:9NTxYjNo6wp3VkQ04B3yESG356fJAXgeK4ngHBSrKjed5cJ4Me7CDw>
+    <xmx:9NTxYgnMw-8CMGMj7IMRJv33CBxrK06SXK1OqzXI8HxAPwLG3ZmbrQ>
+    <xmx:9NTxYsYoOhd10KmtCo3LAD_yuIGR1QwoDeacfNeWh9UYbmT_JtADLQ>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Aug 2022 23:30:52 -0400 (EDT)
+ 8 Aug 2022 23:30:58 -0400 (EDT)
 From:   "Luke D. Jones" <luke@ljones.dev>
 To:     hdegoede@redhat.com
 Cc:     andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v3 0/2] asus-wmi: add support for ROG XFlow tablet mode
-Date:   Tue,  9 Aug 2022 15:30:46 +1200
-Message-Id: <20220809033048.1634583-1-luke@ljones.dev>
+Subject: [PATCH v3 2/2] asus-wmi: Add support for ROG X13 tablet mode
+Date:   Tue,  9 Aug 2022 15:30:48 +1200
+Message-Id: <20220809033048.1634583-3-luke@ljones.dev>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220809033048.1634583-1-luke@ljones.dev>
+References: <20220809033048.1634583-1-luke@ljones.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch series refactors a part of the tablet/lid-flip code to
-use an enum to set the different behaviours, and adds support for
-the ASUS ROG XFlow (X13) 2-in-1 laptop.
+Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
+lid flip (all screen rotations).
 
-Changelog:
-- V3:
-  + Use dev_err() in place of pr_err() in asus_wmi_input_init()
-  + Adjust declaration of variables vs instantiation to match expected pattern
-- V2:
-  + Refactor the base handling paths of tablet modes to use enum
-  + Add support for ROG XFlow using the refactored code
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-nb-wmi.c         | 15 +++++++++
+ drivers/platform/x86/asus-wmi.c            | 37 ++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h            |  1 +
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 4 files changed, 54 insertions(+)
 
-This obsoletes a previous patch I submitted:
-- https://lkml.org/lkml/2022/8/3/94
-
-Luke D. Jones (2):
-  asus-wmi: Adjust tablet/lidflip handling to use enum
-  asus-wmi: Add support for ROG X13 tablet mode
-
- drivers/platform/x86/asus-nb-wmi.c         |  28 ++++--
- drivers/platform/x86/asus-wmi.c            | 104 ++++++++++++++++-----
- drivers/platform/x86/asus-wmi.h            |  10 +-
- include/linux/platform_data/x86/asus-wmi.h |   1 +
- 4 files changed, 112 insertions(+), 31 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 3a93e056c4e1..d4cc6afc1861 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -123,6 +123,11 @@ static struct quirk_entry quirk_asus_use_lid_flip_devid = {
+ 	.tablet_switch_mode = asus_wmi_lid_flip_devid,
+ };
+ 
++static struct quirk_entry quirk_asus_tablet_mode = {
++	.wmi_backlight_set_devstate = true,
++	.tablet_switch_mode = asus_wmi_lid_flip_rog_devid,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -471,6 +476,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_use_lid_flip_devid,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ROG FLOW X13",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
++		},
++		.driver_data = &quirk_asus_tablet_mode,
++	},
+ 	{},
+ };
+ 
+@@ -575,6 +589,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+ 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+ 	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
++	{ KE_KEY, 0xBD, { KEY_PROG2 } }, /* Lid flip action on ROG xflow laptops */
+ 	{ KE_END, 0},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 029c26a218e1..8b8ab48a644e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -69,6 +69,7 @@ module_param(fnlock_default, bool, 0444);
+ #define NOTIFY_KBD_FBM			0x99
+ #define NOTIFY_KBD_TTP			0xae
+ #define NOTIFY_LID_FLIP			0xfa
++#define NOTIFY_LID_FLIP_ROG		0xbd
+ 
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+ 
+@@ -551,6 +552,19 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+ 			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+ 		}
+ 		break;
++	case asus_wmi_lid_flip_rog_devid:
++		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
++		if (result < 0)
++			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
++		if (result >= 0) {
++			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
++			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++		} else if (result == -ENODEV) {
++			dev_err(dev, "This device has lid-flip-rog quirk but got ENODEV checking it. This is a bug.");
++		} else {
++			dev_err(dev, "Error checking for lid-flip: %d\n", result);
++		}
++		break;
+ 	}
+ 
+ 	err = input_register_device(asus->inputdev);
+@@ -585,6 +599,17 @@ static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
+ 	}
+ }
+ 
++static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi *asus)
++{
++	int result;
++
++	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
++	if (result >= 0) {
++		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++		input_sync(asus->inputdev);
++	}
++}
++
+ /* dGPU ********************************************************************/
+ static int dgpu_disable_check_present(struct asus_wmi *asus)
+ {
+@@ -3431,6 +3456,12 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 			return;
+ 		}
+ 		break;
++	case asus_wmi_lid_flip_rog_devid:
++		if (code == NOTIFY_LID_FLIP_ROG) {
++			lid_flip_rog_tablet_mode_get_state(asus);
++			return;
++		}
++		break;
+ 	}
+ 
+ 	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+@@ -4105,6 +4136,9 @@ static int asus_hotk_resume(struct device *device)
+ 	case asus_wmi_lid_flip_devid:
+ 		lid_flip_tablet_mode_get_state(asus);
+ 		break;
++	case asus_wmi_lid_flip_rog_devid:
++		lid_flip_rog_tablet_mode_get_state(asus);
++		break;
+ 	}
+ 
+ 	return 0;
+@@ -4153,6 +4187,9 @@ static int asus_hotk_restore(struct device *device)
+ 	case asus_wmi_lid_flip_devid:
+ 		lid_flip_tablet_mode_get_state(asus);
+ 		break;
++	case asus_wmi_lid_flip_rog_devid:
++		lid_flip_rog_tablet_mode_get_state(asus);
++		break;
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 413920bad0c6..0187f13d2414 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -29,6 +29,7 @@ enum asus_wmi_tablet_switch_mode {
+ 	asus_wmi_no_tablet_switch,
+ 	asus_wmi_kbd_dock_devid,
+ 	asus_wmi_lid_flip_devid,
++	asus_wmi_lid_flip_rog_devid,
+ };
+ 
+ struct quirk_entry {
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 3faeb98f6ea9..69c5308ed4c5 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -64,6 +64,7 @@
+ #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
++#define ASUS_WMI_DEVID_LID_FLIP_ROG	0x00060077
+ 
+ /* Storage */
+ #define ASUS_WMI_DEVID_CARDREADER	0x00080013
 -- 
 2.37.1
 
