@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49008C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A940CC19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240409AbiHIIrV (ORCPT
+        id S241126AbiHIIxA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 04:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49236 "EHLO
+        Tue, 9 Aug 2022 04:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239184AbiHIIrN (ORCPT
+        with ESMTP id S240092AbiHIIw7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 04:47:13 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C668322288;
-        Tue,  9 Aug 2022 01:47:10 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id z3so8272500qtv.5;
-        Tue, 09 Aug 2022 01:47:10 -0700 (PDT)
+        Tue, 9 Aug 2022 04:52:59 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C787C38B7;
+        Tue,  9 Aug 2022 01:52:58 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id u24so582794qku.2;
+        Tue, 09 Aug 2022 01:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=J7QbzOr78YImnozlEAsmvj0GITL/0KLYvwQdpUC74wM=;
-        b=aWGRKCVYu0Q780Tz20w+c8PuqoCkT7/rV2IqdEKAGrOjH0iXGV/BppkWmq83OPej85
-         BWUSrIUqzAs5+gqkJC21x2eD8WOhKg4xBKr1YS7ds04sqa8uVvhHD0c0MVVUmnQ5hErd
-         etE+izzdWZzGat9Ue4D9g7suoRMgfKwJtnMbj/fewxzEBcHBXoSo5J726NjzJ0X+xyym
-         1cbOPgM5fXdG3Ij+yOEHYLPyUcO904cmOWbVSel+gJVtf4P5BXsI6DDctVFrdNc8zH3O
-         hwLWKqQnd/bx3n98U9YfDyiKAADj0kxAwPih3T4UX9s0KFB6KoqVv+zQrfp1Xqh36EiZ
-         luFg==
+        bh=kj+IBIcvmD9Bocwc77ln5rMdqZQ+fPOnDWWREVnTls0=;
+        b=JrTJM90XjLXeMYorJpV2SEmeQpEzqiDpYQCbkZD4M7ibiGDL36UGezTp5dUhT5eoI5
+         xQbHIqoJ/f3dasXBlCzMJ4/uwfOUHTRlQeP0BztvhkmW5rmBjEjlw2wV8vhG9dfh2Kkz
+         dS6vdNS27YlaK2pQLSWbsQDyVDik3wGNMxtxyGEjZ8V3jThDiJ61U1ulgiRMuGbxnXQd
+         LSMNzQOlSBc0NwjiUTO7TUiHeY+jXj5HjFP3HuYBIVyINOViXfNQdN+GVQHQG0Gnj+NZ
+         1pKMGcwoMssxSveLrS91JMxB7sorjt6rsETSrS47cFUsqgSyCIXnM/BmCX5REYqhzlLy
+         Uokg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=J7QbzOr78YImnozlEAsmvj0GITL/0KLYvwQdpUC74wM=;
-        b=3ptrGA44i9CvStrM953Pss4zlIabIi9E9z/qU4KUhcCEmfge3TJYB6DjibhEO7tkkQ
-         opwKc1w76h2CF3hoHjtqDy0esdHipQMlwbxBuSyIz0L+CrcP10PBP2c0v9O+pUxzLZ2C
-         UtHDsikuU9I8JHdt0hkGJdFNoP7RiQsij+sqmekBwB2Zmwaw3XCMllJiipVnpCXDstNG
-         de8ndn+bL9d4CFjIsHpKEwuQFFtXr88I0CBN6lvCiAo2JWre522/qBJkuFn8XlacyVD+
-         dpEkZIwck22indU6Xv27hOtz/NLt2S3qkuI+U2qLTYIkT6Y30qUX+oXMdc0X6OHayhGb
-         EXhg==
-X-Gm-Message-State: ACgBeo1j6kZMx7mrEp6mnv9jQSHadMWTJ5SokWeKFZUZwN4f5Om341NW
-        KeTjXqIMo7Jlm1A0pzVostczt/hqUBPwyb4VrLHqP4Wp1OY=
-X-Google-Smtp-Source: AA6agR69BSaNFrvRPepLkeCtXKVS+IWbFvHVrHfKQrR5cysHhHaiUDTRjhW7Ob2d7aASUdsZPCpAqJP5J6dZZ17PJEA=
-X-Received: by 2002:ac8:5786:0:b0:343:3051:170d with SMTP id
- v6-20020ac85786000000b003433051170dmr689135qta.429.1660034829827; Tue, 09 Aug
- 2022 01:47:09 -0700 (PDT)
+        bh=kj+IBIcvmD9Bocwc77ln5rMdqZQ+fPOnDWWREVnTls0=;
+        b=kaUwdLeBRu+rHzr27tyY7UfL3uk0KuXn5wLJF6SGDGYNC07N7ZGvWfgXICAKAGHtaq
+         t5g7pveCUfbJtHqFoQT4Dc4EtGgpRsagzGANxwYSerUDtzbNvQvO9Cx8JnBXvjkYaPG1
+         RubYUZ6KI+43JRKkWw5JAOHWavtD2SEUTANnFtQ3Sma0gmnlCVUHZCXNWLIkUfs/R5Mg
+         2Rr4LHZAdC21hQd8LCdLZ1egJk2ow9jaRCVevvZNi6HE3q1SgC4STK+E/vHmRGzQZ1kd
+         PsvNllyb4uHf9iXYvRh8jJj/hl9E4kE5YjVgKTYlpAufNS+8nG84peg/bHHBBvKh7h+B
+         of1w==
+X-Gm-Message-State: ACgBeo3RtZqzqadPMCU/Mw+9KPGUCojT2zcv+da+QixSNEkwzx1ixNGB
+        phJnJTzN65Q3mbMK/EXM93qqhXFArqGnfeGPBJl2nNznbdw=
+X-Google-Smtp-Source: AA6agR6kZcoRcKdtrZ8kXkWgKT/W4OviW071Nnmosd8hPlPFwLT98UM3u+AoOHgOP2euLuyz1qSk3rQU8A7AZIP0GUI=
+X-Received: by 2002:a05:620a:2809:b0:6b6:5908:316e with SMTP id
+ f9-20020a05620a280900b006b65908316emr17216266qkp.734.1660035177874; Tue, 09
+ Aug 2022 01:52:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220809025054.1626339-1-luke@ljones.dev> <20220809025054.1626339-2-luke@ljones.dev>
-In-Reply-To: <20220809025054.1626339-2-luke@ljones.dev>
+References: <20220809025054.1626339-1-luke@ljones.dev> <20220809025054.1626339-4-luke@ljones.dev>
+In-Reply-To: <20220809025054.1626339-4-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Aug 2022 10:46:33 +0200
-Message-ID: <CAHp75VfZeuuQjfM+CY4nxrFJQcfpdHVVzyj6GLjeweT3ycSn5A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] asus-wmi: Implement TUF laptop keyboard RGB control
+Date:   Tue, 9 Aug 2022 10:52:21 +0200
+Message-ID: <CAHp75VenHd6JREvxjmcNbeshvgv-S_th9pqBBgQJ+FBgPzgWqA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] asus-wmi: Implement TUF laptop keyboard power states
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
@@ -66,28 +66,81 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Tue, Aug 9, 2022 at 4:51 AM Luke D. Jones <luke@ljones.dev> wrote:
 >
-> Adds support for TUF laptop RGB control via the multicolor LED API.
+> Adds support for setting various power states of TUF keyboards.
+> These states are combinations of:
+> - boot, set if a boot animation is shown on keyboard
+> - awake, set if the keyboard LEDs are visible while laptop is on
+> - sleep, set if an animation is displayed while the laptop is suspended
+> - keyboard (unknown effect)
 >
-> As this is the bas for adjusting only the RGB values, it sets the
-> default mode of the keyboard to static since there is no way to read
-> any existing settings from the device. These defaults overwrite the
-> booted state of the keyboard when the module is loaded.
+> Adds two sysfs attributes to asus-nb-wmi:
+> - keyboard_rgb_state
+> - keyboard_rgb_state_index
 
 ...
 
-> +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
-> +                               rgb->save | (rgb->mode << 8) | (r << 16) | (g << 24),
-> +                               (b) | (rgb->speed << 8),
+>                 until the keyboard_rgb_save attribute is set (write-only):
+>                         * 0 - slow
+>                         * 1 - medium
+> -                       * 2 - fast
+> \ No newline at end of file
 
-Too many parentheses.
+^^^
 
-> +                               &ret);
-> +       if (err)
-> +               dev_err(dev, "Unable to set TUF RGB data?\n");
+> +                       * 2 - fast
 > +
-> +       return err;
+> +What:          /sys/devices/platform/<platform>/keyboard_rgb_state
+> +Date:          Aug 2022
+> +KernelVersion: 6.1
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Set some RGB keyboard power states (write-only).
+> +
+> +               The accepted input is "boot awake sleep keyboard", where "n n n n n"
+> +               options are:
+> +                       * save - 0 or 1, if 0 then settings are not retained on boot
+> +                       * boot - 0 or 1, controls if a boot animation is shown
+> +                       * awake - 0 or 1, controls if the keyboard LED are on during awake
+> +                       * sleep - 0 or 1, controls if a suspended animation is shown.
+> +                                               This is only active if the AC is connected.
+> +                       * keyboard - 0 or 1, unknown what effect this really has
+> \ No newline at end of file
 
-How ret is being used?
+^^^
+
+Be sure of not repeating the same mistake. I.e. add a newline as suggested.
+
+
+> +       flags = 0;
+
+Seems you ignored my comment here...
+
+> +       if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, &awake, &sleep, &keyboard) != 5
+> +               return -EINVAL;
+
+> +       save = save == 0 ? 0x0100 : 0x0000;
+
+...and here...
+
+> +       if (boot)
+> +               flags |= 0x02;
+> +       if (awake)
+> +               flags |= 0x08;
+> +       if (sleep)
+> +               flags |= 0x20;
+> +       if (keyboard)
+> +               flags |= 0x80;
+
+...and here.
+
+...
+
+> +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
+> +                       ASUS_WMI_DEVID_TUF_RGB_STATE, 0xBD | save | (flags << 16), 0, &ret);
+> +       if (err)
+> +               return err;
+
+Also see another comment about how ret is supposed to be used.
 
 -- 
 With Best Regards,
