@@ -2,217 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD5C25B06
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 22:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC91C19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 22:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbiHIWGG (ORCPT
+        id S229441AbiHIW0H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 18:06:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        Tue, 9 Aug 2022 18:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbiHIWFf (ORCPT
+        with ESMTP id S229601AbiHIWZn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 18:05:35 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DC512AA6
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 Aug 2022 15:05:29 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id l22so15765217wrz.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Aug 2022 15:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=CAWsRL4Ep4kicXkJntoYYRIcd5mxS+P+lyhev3U4OgFFKo31iklfxZ8YBswYrWQo8q
-         r/7/d7aaRZyY0QjEAprQWpzmQvCErYj3/ESOm+yenMF1AmwmopLxHHkZ6bhIjLyvUa2E
-         mx9Pl7YIEkZFIxkeTLe97cmpc7b3Eox4Qnkg8+wrftdtcWob5llvFamt98DJGvzxclFb
-         oz2J0+x/OFDEE+v4CO43Nc2mVzGvqsvpdavHoMM2k8uYEZ93m/gJ6DQRO0FeDcuIhdYf
-         YpI23rxd4CsZqAruWv/kqq8A9BcwWvtDasVKL9qB8dB8X1d9wH+QMPugcEbzRWvPo4tf
-         a5MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=FdCTQbA5xk8BfQ+aMO9EqraXnVxmc02SUXTER5sIQ2JUY9iccpfnvzPUmUlbNM3nDd
-         0lDMaDWgMkKP1fAwzwWsUom9mFnP/pe67ovm2qx6kInlBWHpnJ1OiRsNeo+8TzgZSSJY
-         TgPEKJvraVHIa537j7gdWF/0WLUBeUc/jgXP15bW6pSiv15FFl63EhsVgIavgphlzoPC
-         z6fUtIjI86y3X1DqBEKQwLa/1oNY5IcZyerO6p3tBWnIEMrPJ5KvJ4zxktMysMI6qgK0
-         1JMZ4bWTvBx2g7MNe0M+gTej8+G+XIadNtwvNa0sBKWXdAIBW4l7l74WH8gC57VyZNiC
-         5P1Q==
-X-Gm-Message-State: ACgBeo0eSLzusFlFkGRNtTuyQbjiHBgkLglRXhnD8QSbwOOGN0UkhzU4
-        O3AGTC1QUMLZTVJF736UXh6N5w==
-X-Google-Smtp-Source: AA6agR73C8FYlygjs2eWSiL4P5CCNWIL9h5r5LJCnL/XSF0M8E+RfGw1MC6lcPFkWKuYH6Yi8UW67A==
-X-Received: by 2002:adf:f94b:0:b0:21e:46fe:bcdb with SMTP id q11-20020adff94b000000b0021e46febcdbmr14731147wrr.143.1660082727580;
-        Tue, 09 Aug 2022 15:05:27 -0700 (PDT)
-Received: from localhost.localdomain (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id m21-20020a05600c3b1500b003a317ee3036sm293583wms.2.2022.08.09.15.05.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Aug 2022 15:05:27 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     rui.zhang@intel.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Peter=20K=C3=A4stle?= <peter@piie.net>,
+        Tue, 9 Aug 2022 18:25:43 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D146515FE8;
+        Tue,  9 Aug 2022 15:25:42 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6E3ED5C01C8;
+        Tue,  9 Aug 2022 18:25:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 09 Aug 2022 18:25:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660083940; x=
+        1660170340; bh=wUwu7rEramo4VPL2of7nNhGsxyAcdYrNtJ7iJLfolt8=; b=G
+        HGBHv7xnNkOHdzo3v7CYoIT11b7tr1nsuU98hzsl8r1yvod15Q7IRf7+LAFgWQa3
+        C54AiOxBD8mx2++pzV/IMYT0oo0dctUGAl4ByVJ1wgVIGxK1UsfkYgDErCO8HGq2
+        EJx3S2fVcxLj5SW7IH7p7tKvZZtrI028ELnRf3eR/diyrChdcsxw9/aEPdAjvthc
+        p7eEAfG5rSCSeeWcun61Z4yWnIddcbriVPztnm6d04OrYMI57r3LuDioKJHunw60
+        Y9ZaWt+ZnwKV0zC40vhxbqrmyh6Vq+LW0v9+w49TIiTiS2UbiRSVcxUmJjbDlcZY
+        NOpv6DnyQbwmlt8G7aksA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660083940; x=
+        1660170340; bh=wUwu7rEramo4VPL2of7nNhGsxyAcdYrNtJ7iJLfolt8=; b=c
+        1+AbC51ttUtBW2+7r92rjPgjCHB+seZOd3jWWXfP8hGWdntCTYRhiEOZl0SziGXX
+        Q4rqkw90+4idmhbS+X44ScSvszvO6JuztPB39fKYuzuL1LKMvAmnRKLZRhhS+Hqn
+        vlicCeVqyaPur2m4Y9BRM5uISw/bXu8mMzm14/RpHjm6pZIpTPkMDPEBjW03ykmh
+        pB8J6GU++YYsmvJMoFjFTfpGs1AqjwClfLzm5RPlZO61Ek/TuepLj1XYotnBFWR7
+        hKD81YLk0VOfyk1iEyQyjWd4JYa4j9hlfVw5/o7XwHNzX3vfL2vdQyCyp+/XZjpH
+        +wqDfptHqdv2YOpao3azw==
+X-ME-Sender: <xms:5N7yYunBlLNABfMBnsErOdi1ZlevYvvzU9Gd7EQ1mpowtcQ56CDHbQ>
+    <xme:5N7yYl0CUDUTp5HCFip7CKEnyDvy1uS7x7IQCWt3TIThe3_wbbVb_GAG473tbylQR
+    qKoAZSD2z7RW9ppti4>
+X-ME-Received: <xmr:5N7yYsrnTGBuD07IXD-r5gGTPbW3s3iDnr2PRziWvk8H2YYa2JT7BLwN56XR0OUJ9nhFlA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeguddgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeekfeffueejveeujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:5N7yYimZGTiOPtKD9Oz23gV2PkDssfJ0xkNCno5gWWHBf6q1TOq-HA>
+    <xmx:5N7yYs3QkN6dshHoDpd_LCigHC1rBWbUJcskUxZ7MjfhGKypVykUJA>
+    <xmx:5N7yYpuxI6MnNcLQjNkZiERcUVa8uMnuD4OpkYMxdWmogGo_Ku3GVA>
+    <xmx:5N7yYqBKxt_mvOlzn0mCLhgvfrXL9rGsev3z3pdlUEe2k0pTZlWWcw>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Aug 2022 18:25:37 -0400 (EDT)
+Message-ID: <43ca98e5a51d30291efc96ef4758ff508ee143a4.camel@ljones.dev>
+Subject: Re: [PATCH v2 3/6] asus-wmi: Implement TUF laptop keyboard power
+ states
+From:   Luke Jones <luke@ljones.dev>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v2 23/26] thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
-Date:   Wed, 10 Aug 2022 00:04:33 +0200
-Message-Id: <20220809220436.711020-24-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220809220436.711020-1-daniel.lezcano@linaro.org>
-References: <20220809220436.711020-1-daniel.lezcano@linaro.org>
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Aug 2022 10:25:29 +1200
+In-Reply-To: <CAHp75Ve4kFJz-4QqpUYTujQRkOkFZ+w01eHRwZyvQAA+GkNG9A@mail.gmail.com>
+References: <20220808030420.8633-1-luke@ljones.dev>
+         <20220808030420.8633-4-luke@ljones.dev>
+         <CAHp75VdNa8csSF5Je87kOzC3EQ4yetZqpxXFZu1D7C4A6XCTNg@mail.gmail.com>
+         <X5LBGR.15DO7CCYH6ER@ljones.dev>
+         <CAHp75Ve4kFJz-4QqpUYTujQRkOkFZ+w01eHRwZyvQAA+GkNG9A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (by Flathub.org) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal framework gives the possibility to register the trip
-points with the thermal zone. When that is done, no get_trip_* ops are
-needed and they can be removed.
+G'day Andy,
 
-Convert ops content logic into generic trip points and register them with the
-thermal zone.
+On Tue, 2022-08-09 at 10:29 +0200, Andy Shevchenko wrote:
+> On Tue, Aug 9, 2022 at 1:27 AM Luke Jones <luke@ljones.dev> wrote:
+>=20
+> ...
+>=20
+> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (sscanf(buf, "%hhd %=
+hhd %hhd %hhd %hhd", &save,
+> > > > &boot,
+> > > > &awake, &sleep, &keyboard) !=3D 5)
+> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > >=20
+> > > Same Q here: wouldn't it be better to put each of the parameters
+> > > to a
+> > > separate sysfs node? Or look at the LED ABI (that what Pavel
+> > > mentioned
+> > > for multi-color patterns) and see if there are already some
+> > > established ways of how to represent necessary information?
+> >=20
+> > Same argument I make for the RGB mode nodes. But here I think it's
+> > probably even more pertinent. The reasons I would like to keep this
+> > as
+> > one node are:
+> >=20
+> > - It's separate to the RGB part
+> > - We can't read the device to set defaults on boot
+>=20
+> Hmm... Maybe it's done via one of the WMI calls?
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Peter Kästle <peter@piie.net>
----
- drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
- 1 file changed, 26 insertions(+), 47 deletions(-)
+That was my hope, but I'm unable to find one. I'm fairly certain that
+this set of keyboards uses the same controller as the USB connected one
+(the USB one has two versions in circulation also), and I've not been
+able to find any packet data that indicates the USB ones send a
+"supported".
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 3463629f8764..a7407aa032ba 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -46,6 +46,8 @@
-  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
-  * assume 89°C is critical temperature.
-  */
-+#define ACERHDF_DEFAULT_TEMP_FANON 60000
-+#define ACERHDF_DEFAULT_TEMP_FANOFF 53000
- #define ACERHDF_TEMP_CRIT 89000
- #define ACERHDF_FAN_OFF 0
- #define ACERHDF_FAN_AUTO 1
-@@ -70,8 +72,8 @@ static int kernelmode;
- #endif
- 
- static unsigned int interval = 10;
--static unsigned int fanon = 60000;
--static unsigned int fanoff = 53000;
-+static unsigned int fanon = ACERHDF_DEFAULT_TEMP_FANON;
-+static unsigned int fanoff = ACERHDF_DEFAULT_TEMP_FANOFF;
- static unsigned int verbose;
- static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
-@@ -137,6 +139,15 @@ struct ctrl_settings {
- 	int mcmd_enable;
- };
- 
-+static struct thermal_trip trips[] = {
-+	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
-+		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
-+		.type = THERMAL_TRIP_ACTIVE },
-+
-+	[1] = { .temperature = ACERHDF_TEMP_CRIT,
-+		.type = THERMAL_TRIP_CRITICAL }
-+};
-+
- static struct ctrl_settings ctrl_cfg __read_mostly;
- 
- /* Register addresses and values for different BIOS versions */
-@@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 		fanon = ACERHDF_MAX_FANON;
- 	}
- 
-+	if (fanon < fanoff) {
-+		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
-+		       fanoff, fanon, fanon);
-+		fanoff = fanon;
-+	};
-+
-+	trips[0].temperature = fanon;
-+	trips[0].hysteresis  = fanon - fanoff;
-+
- 	if (kernelmode && prev_interval != interval) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
-@@ -424,43 +444,6 @@ static int acerhdf_change_mode(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
--				 enum thermal_trip_type *type)
--{
--	if (trip == 0)
--		*type = THERMAL_TRIP_ACTIVE;
--	else if (trip == 1)
--		*type = THERMAL_TRIP_CRITICAL;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip != 0)
--		return -EINVAL;
--
--	*temp = fanon - fanoff;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip == 0)
--		*temp = fanon;
--	else if (trip == 1)
--		*temp = ACERHDF_TEMP_CRIT;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
- static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
- 				 int *temperature)
- {
-@@ -474,13 +457,9 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
- 	.unbind = acerhdf_unbind,
- 	.get_temp = acerhdf_get_ec_temp,
- 	.change_mode = acerhdf_change_mode,
--	.get_trip_type = acerhdf_get_trip_type,
--	.get_trip_hyst = acerhdf_get_trip_hyst,
--	.get_trip_temp = acerhdf_get_trip_temp,
- 	.get_crit_temp = acerhdf_get_crit_temp,
- };
- 
--
- /*
-  * cooling device callback functions
-  * get maximal fan cooling state
-@@ -710,10 +689,10 @@ static int __init acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
--	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
--					      &acerhdf_dev_ops,
--					      &acerhdf_zone_params, 0,
--					      (kernelmode) ? interval*1000 : 0);
-+	thz_dev = thermal_zone_device_register_with_trips("acerhdf", trips, ARRAY_SIZE(trips),
-+							  0, NULL, &acerhdf_dev_ops,
-+							  &acerhdf_zone_params, 0,
-+							  (kernelmode) ? interval*1000 : 0);
- 	if (IS_ERR(thz_dev))
- 		return -EINVAL;
- 
--- 
-2.34.1
+Checking with `fwts wmi -` reveals nothing (all passes).
 
+I've emailed my contact in the ROG engineering team at ASUS to see if
+they can provide any insight.
+
+>=20
+> > - Because of the above, if we set a default and the user wants to
+> > change perhaps "sleep", then we're going to have to write some
+> > incorrect guess data since the write requires all the flags at once
+> > - One way to improve the UX is to add _show, but then this has to
+> > display incorrect data on boot
+> > - We end up with 5 more nodes
+> >=20
+> > The same reasons above apply to the RGB nodes, which right now I'm
+> > of
+> > two minds about. We'll see which way the RGB mode patch goes after
+> > some
+> > daily use.
+>=20
+> I just realized that in previous mail I mentioned Device Tree which
+> is
+> irrelevant here. We can't use it on x86 traditional platforms, so it
+> means that platform should somehow pass the data to the OS one way or
+> another. If there is no way to read back (bad designed interfaces),
+> then we can only reset to whatever user provides.
+>=20
+
+Umm.. Do you mean:
+- load module
+- module sets a default (all on)
+- user or userspace-util sets user preference?
+
+Given that the system daemon I develop (asusd + asusctl) is in very
+wide use, I guess it's not such a big issue to both split these nodes
+out and set a default.. I guess I'll go ahead and keep the expectation
+that the reworked RGB-mode patch sets.
+
+It seems to me that the appropriate way to do the "write-out" for both
+mode and state is to have nodes:
+- keyboard_rgb_mode_apply
+- keyboard_rgb_state_apply
+- Input 0 =3D set (doesn't stick on boot), 1 =3D save
+
+going with the above I should rename existing nodes, especially the
+current *_save node. And this brings me to my next issue: currently
+behaviour for the *_apply is:
+- write 0 applies, but doesn't stick
+- write 1 applies, and sticks on boot
+- reading the *_apply nodes will show 0/1
+- if already "1", you still need to overwrite with "1" to apply.
+
+This doesn't seem appropriate does it?
+Should there be a WO node for *_apply, and another node for *_save
+(which would store/show the setting)? I'm inclined to think so, and
+that this will add quite a bit of clutter (6 nodes for state, 4 for
+mode).
+
+Kind regards,
+Luke.
