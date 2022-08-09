@@ -2,156 +2,182 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE1C00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Aug 2022 23:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14758C00140
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 02:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233125AbiHHX17 (ORCPT
+        id S229869AbiHICvL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 19:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56472 "EHLO
+        Mon, 8 Aug 2022 22:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232862AbiHHX15 (ORCPT
+        with ESMTP id S229530AbiHICvJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 19:27:57 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28776258;
-        Mon,  8 Aug 2022 16:27:56 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id AB2475C0185;
-        Mon,  8 Aug 2022 19:27:53 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 08 Aug 2022 19:27:53 -0400
+        Mon, 8 Aug 2022 22:51:09 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92869192BF;
+        Mon,  8 Aug 2022 19:51:08 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id B7BDF5C01AC;
+        Mon,  8 Aug 2022 22:51:07 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 08 Aug 2022 22:51:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1660001273; x=1660087673; bh=n9y09zFa9r
-        VKe8pEdf/zPqfBD6xx47qhNH1z9hXdyk0=; b=Uvd30Go0WfPEhLsrd9Es5QHWgX
-        03+WGc/bNS/2ZJRpNoinpbvClNImXzGoO1ZTEHN4UeKUUF/4WB/yNlMT4qhIHHZF
-        kC6gsOCeFDRRW4UvDBrOuy/jhu12UFeIOkf3Df7gu+xBWy2Z9nL/KNwyF0XSHCF8
-        LUcH6wG1jWXoqwxbtRiJoGHTK3HHo8lCjas6Z5hwD9CcjrN+F6h53agpvWnJKTLf
-        ybF5D5QrEQLnOjbY0nDg0ZXgBkC5UKimqRBQEnTacG9j8t83trjLdhCf1t0UVvIt
-        l/uDF6Tvi8tfT3DN9On7rItOnUCvB/fthtsXMQ+D1ZcimD1krj+Xeoz+AE/Q==
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1660013467; x=1660099867; bh=tIl52IRQaxW/iUmLxVVcxMgfe
+        DapuxQ+9WVpDqlMsAQ=; b=VpNPGfd22vom+5qO8FHLQJB8V5K6Ztzvw/UPssoKD
+        OeNhMyc/2TJQUDwORZW91pwwZnE1+KHlaOtIIYdllQX0F0iU3AwsMyyS9Ypcs8Ot
+        P3CrEu+vKaHj9BjXD1/7f+IbKC5E+OyP720Gxs6GcqkrG51jG+NhZ2qY8+wzc7C/
+        liRAL8iuEO5z3M6uL62268G50DeJljFvIcnW4JKkBJ7caO9UZlwoNH/Pdm/xiLgI
+        3KK334R2pY01XgiNEwaSx1Mm9z9htIkxSgyILTRNWdjQUxQjSXoJ3lObBXlnoObO
+        pQ03uCv+gJhJZDyH+tk+5JLZ/PIzPANA5zt2TtB0dK3WQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660001273; x=1660087673; bh=n9y09zFa9rVKe8pEdf/zPqfBD6xx
-        47qhNH1z9hXdyk0=; b=dm+gULD1lT703Hs5wTD3rKqzPlR6/oaV1eAceHm/UI7C
-        QZUYAynUXOlhrnh+qrNfIYqKiPI4CLaZeEKohlxOxwmIWzaEbCo0lfQPPoTnBR70
-        dibDob2CMWdmwfCHP86osmOuXs8Sc1OFHY+Zk4LJ3lgfcIu968MphB1e2BkW6/VX
-        g78aGQWAQCaRxvVRuB4GcGIVBHgm16kNNUFHdNbVfB0EXw3vYN0Fm1odzf8vvwxL
-        W30k7e7AEiocvgbqZL8TFkNXXLy6rO8eJWc1lQv1kO/CmYZhha+UDWiXTywNRmf4
-        plTro/sQcmuTgc4dBZawCFknef2OsVW2GuKfrtRrZw==
-X-ME-Sender: <xms:-ZvxYiMwfhANpNroHRaLdaWVasiSXsxeRPtrvcXY5KvnXuoJrz9TzQ>
-    <xme:-ZvxYg8NNGdIb4x8ZKXAZzm8FUU_riyjGuyJ0KChY7PpbF4ttysmkpBJIwO3IO4fN
-    rdpSbRL8zFvpnc6PkA>
-X-ME-Received: <xmr:-ZvxYpRhGbhJQeHWN31sH58Z4rJYh4oAf8tVXILDQiV9h5eXN-oHr4YevKtWWNfvUi24CA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgvdefucetufdoteggodetrfdotf
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1660013467; x=1660099867; bh=tIl52IRQaxW/iUmLxVVcxMgfeDapuxQ+9WV
+        pDqlMsAQ=; b=zhBxPFJPabVIJBUuhrgACL92kpno123egEtLo2bhWR/54qqaC/y
+        lLdr86NE7WmfTG4PHPL0H75xeK0MlHA8TsEGItLtkSCNcfI+1KAflVcD9Yh0cF3w
+        Jnrm6nN8NQmUpH0efMqK1PcMRBZvXF4CDxegFp3uvUq1Loh76uSm0YXBqYTQAGZo
+        lse3SHgiGMFPiUiqeHm3gAq2KY1Lh7UWlpi8UmFVKCM5vg9sqP5w6k0lVo46FfcO
+        Yl92jy/ghvwTAdzfDKUD0tQsgMEflq9HDqxBnUAluBRM2SfgmU1p+KvhQjtCOLYX
+        nftjK+Z5tajQ6jEqc2JQ6hQvIVAKswHzvLg==
+X-ME-Sender: <xms:m8vxYrCbFj0kTL_qRBpnfJaUGa-aDCpuoWPtChsWNSZS601IxdMHuw>
+    <xme:m8vxYhiGtsBgXK6s8GwiaET1qB3J01rvI4qPbtk91A4KafZn-MzSuuOw7Nd4TorGN
+    h0f_8Px1blhX0La-jI>
+X-ME-Received: <xmr:m8vxYmkAsW8hFKoJo1UplCKl9cRPoVcV9zeXFNq3pA6qf2F3lxCOUnBGO6XR>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgieehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:-ZvxYivwzMHBxrvOHutCRwgqvr9fQrB2UnDPSW6eiExryHolADuVBQ>
-    <xmx:-ZvxYqeo8JFZs7H1J4mM0vrai8MWoTsfQfEOML4rXSzFhaKarO-V-A>
-    <xmx:-ZvxYm112Ce5GfJBf_LF7Q-nyTXLrgk_yFcXbtWJyhtwyxHasWNo2Q>
-    <xmx:-ZvxYrqDsx6c5lzoOJ58zLPOIm3Ut1t8VGj3qQw_Idl42dYQeJhzVw>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgeegieevfeekleejvefhkedvhfffue
+    egudeljeeiieeuhfegkeehtdevuedujeejnecuffhomhgrihhnpehlkhhmlhdrohhrghen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:m8vxYtzuakhiItGXSkRyzg_fzvNlDm2n_on8K0kJBn7jiE_dVd2GCw>
+    <xmx:m8vxYgQgNR_DnDVVEYwQkW1mQENu7St0ibvfvgk5Bz_xGv59FHClMQ>
+    <xmx:m8vxYgbW-IASn3c9-FueyvAgnItqi1WdHl63Q3ZXZNR47nLkcQWQqw>
+    <xmx:m8vxYmPTMBgUj22SksHcrvD03iE0BtyiIgPS8_4AutPWL56J6fpZaw>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Aug 2022 19:27:48 -0400 (EDT)
-Date:   Tue, 09 Aug 2022 11:27:33 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v2 3/6] asus-wmi: Implement TUF laptop keyboard power
- states
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <X5LBGR.15DO7CCYH6ER@ljones.dev>
-In-Reply-To: <CAHp75VdNa8csSF5Je87kOzC3EQ4yetZqpxXFZu1D7C4A6XCTNg@mail.gmail.com>
-References: <20220808030420.8633-1-luke@ljones.dev>
-        <20220808030420.8633-4-luke@ljones.dev>
-        <CAHp75VdNa8csSF5Je87kOzC3EQ4yetZqpxXFZu1D7C4A6XCTNg@mail.gmail.com>
-X-Mailer: geary/40.0
+ 8 Aug 2022 22:51:03 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     andy.shevchenko@gmail.com, pobrn@protonmail.com, pavel@ucw.cz,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v3 0/6] asus-wmi: Add support for RGB keyboards
+Date:   Tue,  9 Aug 2022 14:50:48 +1200
+Message-Id: <20220809025054.1626339-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy
+This is a patch series to add RGB support for ASUS laptops.
+The laptops with this RGB tend to be the TUF series of gamer laptops.
 
->>  +       flags = 0;
-> 
-> This can be done before 'if (boot)'
+The first step is initial bringup of support using the multicolor LED API.
 
-Okay done.
+These types of keyboards implement a slightly more complex interface than
+just RGB control however - they also have modes with can be static LED,
+blinking, rainbow, color cycles, and more. They also have some custom
+animations that can play depending on device state, such as suspended
+playing a fancy colour cycle, or playing a "wave" animation.
 
-> 
->>  +       if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, 
->> &awake, &sleep, &keyboard) != 5)
->>  +               return -EINVAL;
-> 
-> Same Q here: wouldn't it be better to put each of the parameters to a
-> separate sysfs node? Or look at the LED ABI (that what Pavel mentioned
-> for multi-color patterns) and see if there are already some
-> established ways of how to represent necessary information?
+Two of the patches add support for these features.
 
-Same argument I make for the RGB mode nodes. But here I think it's 
-probably even more pertinent. The reasons I would like to keep this as 
-one node are:
+One patch adds documentation in:
+Documentation/ABI/testing/sysfs-platform-asus-wmi
+for some features that were added previously.
 
-- It's separate to the RGB part
-- We can't read the device to set defaults on boot
-- Because of the above, if we set a default and the user wants to 
-change perhaps "sleep", then we're going to have to write some 
-incorrect guess data since the write requires all the flags at once
-- One way to improve the UX is to add _show, but then this has to 
-display incorrect data on boot
-- We end up with 5 more nodes
+The final patch adds support for a particular MUX switch found only
+on a few ROG laptops. This patch is added to this series due to some
+conflicts in merge caused by the RGB patch series.
 
-The same reasons above apply to the RGB nodes, which right now I'm of 
-two minds about. We'll see which way the RGB mode patch goes after some 
-daily use.
+Some notes:
 
-> 
->>  +       save = save == 0 ? 0x0100 : 0x0000;
-> 
->   if (save)
->     flags = BIT(8);
+- this patch series obsoletes the previous RGB patches by myself
 
-I didn't know about BIT(). Will do.
+- it is not possible to add attribute groups to multicolor LED as
+  they get overwritten by `led_multicolor_groups` in
+  `led_classdev_multicolor_register_ext`.
 
-> 
->>  +       if (boot)
->>  +               flags |= 0x02;
->>  +       if (awake)
->>  +               flags |= 0x08;
->>  +       if (sleep)
->>  +               flags |= 0x20;
->>  +       if (keyboard)
->>  +               flags |= 0x80;
-> 
-> Use BIT() for flags.
-> 
-> ...
-> 
->>  +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
->>  +                       ASUS_WMI_DEVID_TUF_RGB_STATE, 0xBD | save | 
->> (flags << 16), 0, &ret);
-> 
-> Why not provide flags to be a full 32-bit value?
-> 
-> Also 0xBD can be lower-cased and explained somehow?
+- the methods for RGB control do not provide a way to fetch exisiting
+  state, so these methods are WO.
 
-Done, as is the rest of comments
+- There is an existing `asus::kbd_backlight`, this provides a 4-step
+  brightness to the RGB (off,low,med,high) individually to multicolor.
+  I was unsure of the effect of adding a similar path so have used the
+  `asus::multicolour::kbd_backlight` name to be clear about purpose.
+  If the `asus::kbd_backlight` is off, then no RGB is shown at all.
+  
+Changelog:
+- V3: patch 2: asus-wmi RGB mode control
+	+ Split save, speed, mode in to separate nodes
+	+ Remove the _index node as it is not required with the above nodes
+	+ Cleanup of a one-line ternary
+	+ rename asus->keyboard_rgb_mode to keyboard_rgb_led to be clearer about purpose
+	+ Attach documentation to this patch
+- V3: patch 3:
+	+ Use BIT() in place of previous hex for flags
+	+ Comment on purpose of 0xbd in state write
+	+ Attach documentation to this patch
+- V3: patch 6: asus-wmi: hardware GPU MUX:
+	+ Include the correct patch for this feature 
+- V2: patch 1: asus-wmi - RGB
+	+ shorten a few lines
+	+ move unused keyboard_rgb_mode_available to next patch
+	+ remove tuf_rgb_brightness_get() is it was only returning current
+	  led_classdev brightness, not reading it from device
+	+ remove unnecessary setting of brightness on multicolor init
+	+ set brightness_get to null for TUF RGB
+	+ actually use the member subled_info in keyboard_rgb_led struct and
+	  not the leftover dynamic allocation (now removed)
+- V2: patch 2: asus-wmi RGB mode control
+	+ tuf_rgb_brightness_set() was still using hardcoded save/mode/speed
+	  from testing. This is now using the pre-set default.
+	+ asus_wmi_led_init(), set speed value to a correct value
+	+ keyboard_rgb_mode_store() return count, not 0
+	+ correctly unregister the mulicolor led on module exit
+	+ use switch/case in keyboard_rgb_mode_store() for speed
+	+ remove a single line bracket block
+- V2: patch 3: asus-wmi RGB power control
+	+ Try to fix the indent warning from buildbot
+	+ Use correct date on added API docs
+	+ Add missing panel_od doc
+	+ correctly label attribute for keyboard_rgb_state
+- V2: patch 4: documentation
+	+ Add commit message
+- V2: patch 5: attributes using sysfs_emit:
+	+ Add commit message
+- V2: patch 6: new patch, dgpu_only mode
+	+ A previous patch I submitted "0006-asus-wmi-Add-support-for-dGPU-only-mode.patch"
+	  is now part of this series due to merge conflicts caused by the
+	  previous 5 patches
 
-Kind regards,
-Luke.
-> 
+Previous patches obsoleted:
+https://lkml.org/lkml/2022/8/3/885
+https://lkml.org/lkml/2022/8/3/886
+https://lkml.org/lkml/2022/8/3/44
+I may not have listed all.
 
+Luke D. Jones (6):
+  asus-wmi: Implement TUF laptop keyboard RGB control
+  asus-wmi: Implement TUF laptop keyboard LED modes
+  asus-wmi: Implement TUF laptop keyboard power states
+  asus-wmi: Document previously added attributes
+  asus-wmi: Convert all attr-show to use sysfs_emit
+  asus-wmi: Support the hardware GPU MUX on some laptops
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  83 ++++
+ drivers/platform/x86/asus-wmi.c               | 368 +++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h    |   8 +
+ 3 files changed, 452 insertions(+), 7 deletions(-)
+
+-- 
+2.37.1
 
