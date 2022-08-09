@@ -2,81 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77096C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D8C19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 09:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232033AbiHII6f (ORCPT
+        id S235573AbiHIJDu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 04:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
+        Tue, 9 Aug 2022 05:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbiHII6b (ORCPT
+        with ESMTP id S237465AbiHIJDt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 04:58:31 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F6E220FF;
-        Tue,  9 Aug 2022 01:58:31 -0700 (PDT)
+        Tue, 9 Aug 2022 05:03:49 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6A622502;
+        Tue,  9 Aug 2022 02:03:48 -0700 (PDT)
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 98B2E5C0107;
-        Tue,  9 Aug 2022 04:58:30 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 9B1575C00E9;
+        Tue,  9 Aug 2022 05:03:47 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 09 Aug 2022 04:58:30 -0400
+  by compute5.internal (MEProxy); Tue, 09 Aug 2022 05:03:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
         :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1660035510; x=1660121910; bh=G2NhCb66cb
-        19eINodXsc2D+4/M/84dcn7QljyzSwVWg=; b=koXXtds2oHmQJyH6Qn+1botDjJ
-        74bB5oOkvE8JpeBjk/n3kQrf0aBVpcPc6aoyg1BAnGtkpJRA1IJtZCOZXmdFY3Jx
-        39pOk4ajHm0296SOxEl0oQLmW2+PfSkz3qE9q6h9ijyQuYKriU1eW2ACiQJjYmMy
-        Wa84SAXb75NPyH+hU+IfOoEXhYz/iw3hVZhy0HsG1DI0k1ldBFPnYyn5MTpNr5UE
-        SwSQJREJMpq6BsimScgy6jYERUvbCSgy6xTNhZIz3f3CSZ56c6eW00mwckuZ9mcB
-        7mK401DqvNPwYjkVWEO01JRS+THa1YqOjmO52N5f11VwY6baXIvFZNSaW0wQ==
+        :subject:to:to; s=fm2; t=1660035827; x=1660122227; bh=nTV7sNCozL
+        xKqxT4iQ3xI1kz6XFl6DJT30vVE2/aW94=; b=ZQztSYA+XSczmHY9i4rO0RU2u8
+        HL8/5Mqjh/e0qbJohfy3yT4FVcAgDI3EGm8dcCgsBu/8dBmnW402lajy0iXTT66R
+        VkqhffbGPzupu29UcI14hbBO5Ya0znrMy1BjsZLyW4mQK5FN2wuinV1kd2COFk7K
+        rLIEnOc/Ta33zd5c019HrrWOQAAln2Od/gb3rlBJBEzsEVIZvGAVjpe4ADhE5fQB
+        nxqQ9FXtXrEoiwUDcStSBSIhjzVxzxDEJMW/PgOuIXG1ac8yc9nqxuGrUQfeBpAM
+        FUoNM+GDgAnYRYyLC74vcgKuAZOz7rjzRqRiE3NKr2vqnpT/XXWyFGM1IeFA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
         :feedback-id:from:from:in-reply-to:in-reply-to:message-id
         :mime-version:references:reply-to:sender:subject:subject:to:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660035510; x=1660121910; bh=G2NhCb66cb19eINodXsc2D+4/M/8
-        4dcn7QljyzSwVWg=; b=WhbaeE9kQ4DppP8fW7HJQiuP+ZXn/vT9/nf4pIIzapN1
-        Dzu7MRr5KNSr4lA//H+zA5CTbXfsfLPWLur9IWQ/AoaA5O/oLqXKFSBGbx14/Ar/
-        nfXU27f55T9I+nlFYd7jo8IGdb+5WIXvlJnzn7NgmZKDhUGWHGnhL3CR61pyB0mp
-        rcEQEx0BodHUnNOAb/0DS8wMRIAjUegWl1T9k63a93ych4O5uM1Xw65gd4kyuP3d
-        ShmVGuh+Dp1LMEj3jOqqdndCNW1vyhguxA3o8UTFLjJUHowoBfptLdp+1mfOGpf/
-        Ubn7UWHE+btPut7m9RjqrzXGE+wfNsney0CFO0qhIg==
-X-ME-Sender: <xms:tiHyYsVow885GSKkXux46b0W1GDfxX3qfLI3OVbphMFFkQFVtuxiVg>
-    <xme:tiHyYgm25rmX6L0RCwm2lF4F-K8VIeuBix-19FYfs6-haco4H6DwFrBWJJUcEM1b2
-    VVcuhJLLIFdAFJp9Mk>
-X-ME-Received: <xmr:tiHyYgbwcwTLwIHw-XiTiOz40iXHHGFw7HjacdMfClFEDu862iEyqSzEm_h7YR-3tcTATw>
+        fm1; t=1660035827; x=1660122227; bh=nTV7sNCozLxKqxT4iQ3xI1kz6XFl
+        6DJT30vVE2/aW94=; b=FvoYq8R2X+H9pk8BoFTydE1vUlhQ9BwyJJ6mUHDE+Ku5
+        /jNC/APVHWs3CLkf7YSJcs9aSB9emiENP/qaOjB3wlhmhaHWrpvAY2nKoOphGxzS
+        oOhU7q8JjOmywsdUd/lIbIrZYBvGQoISvXg0FDA0i0t9cfYFLLDLlUbmJrqo+qQd
+        gyxO500gLs6qenTrr3E5omTuBMwLAkUQFjJbVPmopkvS6VsFqXJVhOBBle95lRvM
+        SOMry2KylJrFUvTRa7zmOANWSLy2VVavKCEik0Sy2Fzt5x7i0FbTprJpxVYiTRFr
+        GTZvNKqlhbscJySoetmZo7YwEgWDw8xsqS9WqPLRwQ==
+X-ME-Sender: <xms:8yLyYvFOw__zApqLf05RfeBHqKKoU1oa7vwQj6vCsTVXxXlCl0xALA>
+    <xme:8yLyYsU-N2sIlhc3ZHe5ubvRtROCDzdoPHsPnrsuZIZoE9FeROy057u5hZhLzQNZ2
+    3qgLBX8Czwrso4121k>
+X-ME-Received: <xmr:8yLyYhIQ5_PEYUg2-SFWy7GYWPUPama611kG_-QjAD-a4ZHQvhBFUdts4vxUP2hHCE3XLg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdegtddgudduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
     ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:tiHyYrUCbs06-eVo_2E4eyIxsI492Sow6veA7H_9ieuVRO7uB2K8lA>
-    <xmx:tiHyYmmJZf-jEtV-qMIWHi3GtuSTuYvtQJWU6XF8Jdi9RF3eHE-JtA>
-    <xmx:tiHyYgd0YjPKCfGO3NO3heA_N_qaHfq-QvJqTAkKr23joEp_2TkTxQ>
-    <xmx:tiHyYoizbMmLfaobailRMrGHufQYraRl2IZov6jCiLe_3QVXlXdfdA>
+    ephfeigedtveefjeeukeetfeektdeffeefteekfeffieeiteeigeehhfdutdeitdehnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:8yLyYtFvTSNS1W7-IlL3xOfBsvgO3oS3Sdu_N8KTEUBrUcBRo5KCvA>
+    <xmx:8yLyYlUmXileyPlweukr86uqOGbTSj8lyjtMqxKZfch2DRxRYVBtog>
+    <xmx:8yLyYoNMycCy1dfZvpZ3vAysf8xYZHf5rLAG8fcKQHNBTlUsx7IDKw>
+    <xmx:8yLyYkdE-rh6ZO1fHj8Xzu58k7EpkSiv74wCjIwtTKaGIJvL_jNgBA>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Aug 2022 04:58:24 -0400 (EDT)
-Date:   Tue, 09 Aug 2022 20:58:12 +1200
+ 9 Aug 2022 05:03:44 -0400 (EDT)
+Date:   Tue, 09 Aug 2022 21:03:30 +1200
 From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 3/6] asus-wmi: Implement TUF laptop keyboard power
- states
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
+Subject: Re: [PATCH v3 2/2] asus-wmi: Add support for ROG X13 tablet mode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <0LBCGR.NDLPJAR4JTJQ@ljones.dev>
-In-Reply-To: <CAHp75VenHd6JREvxjmcNbeshvgv-S_th9pqBBgQJ+FBgPzgWqA@mail.gmail.com>
-References: <20220809025054.1626339-1-luke@ljones.dev>
-        <20220809025054.1626339-4-luke@ljones.dev>
-        <CAHp75VenHd6JREvxjmcNbeshvgv-S_th9pqBBgQJ+FBgPzgWqA@mail.gmail.com>
+Message-Id: <UTBCGR.Y86SR52O1CXJ@ljones.dev>
+In-Reply-To: <e6370233-eae5-5668-3f07-d1a70eb92690@redhat.com>
+References: <20220809033048.1634583-1-luke@ljones.dev>
+        <20220809033048.1634583-3-luke@ljones.dev>
+        <CAHp75VeAMBM+itfAn8hRDykV9rRLGXzck8L2kBgpGkVRsPUm5g@mail.gmail.com>
+        <e6370233-eae5-5668-3f07-d1a70eb92690@redhat.com>
 X-Mailer: geary/40.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
@@ -84,94 +82,79 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+Hello,
 
-On Tue, Aug 9 2022 at 10:52:21 +0200, Andy Shevchenko 
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Aug 9, 2022 at 4:51 AM Luke D. Jones <luke@ljones.dev> wrote:
+On Tue, Aug 9 2022 at 10:46:11 +0200, Hans de Goede 
+<hdegoede@redhat.com> wrote:
+> Hi,
+> 
+> On 8/9/22 10:40, Andy Shevchenko wrote:
+>>  On Tue, Aug 9, 2022 at 5:31 AM Luke D. Jones <luke@ljones.dev> 
+>> wrote:
+>>> 
+>>>  Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
+>>>  lid flip (all screen rotations).
 >> 
->>  Adds support for setting various power states of TUF keyboards.
->>  These states are combinations of:
->>  - boot, set if a boot animation is shown on keyboard
->>  - awake, set if the keyboard LEDs are visible while laptop is on
->>  - sleep, set if an animation is displayed while the laptop is 
->> suspended
->>  - keyboard (unknown effect)
+>>  ...
 >> 
->>  Adds two sysfs attributes to asus-nb-wmi:
->>  - keyboard_rgb_state
->>  - keyboard_rgb_state_index
+>>>          { KE_IGNORE, 0xC6, },  /* Ambient Light Sensor 
+>>> notification */
+>>>          { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip 
+>>> action */
+>>>  +       { KE_KEY, 0xBD, { KEY_PROG2 } }, /* Lid flip action on ROG 
+>>> xflow laptops */
+>> 
+>>  Shouldn't you keep it sorted by value?
 > 
-> ...
+> Actually as I mentioned in my review of v1, we don't want this
+> addition at all, see:
 > 
->>                  until the keyboard_rgb_save attribute is set 
->> (write-only):
->>                          * 0 - slow
->>                          * 1 - medium
->>  -                       * 2 - fast
->>  \ No newline at end of file
-> 
-> ^^^
-> 
->>  +                       * 2 - fast
->>  +
->>  +What:          /sys/devices/platform/<platform>/keyboard_rgb_state
->>  +Date:          Aug 2022
->>  +KernelVersion: 6.1
->>  +Contact:       "Luke Jones" <luke@ljones.dev>
->>  +Description:
->>  +               Set some RGB keyboard power states (write-only).
->>  +
->>  +               The accepted input is "boot awake sleep keyboard", 
->> where "n n n n n"
->>  +               options are:
->>  +                       * save - 0 or 1, if 0 then settings are not 
->> retained on boot
->>  +                       * boot - 0 or 1, controls if a boot 
->> animation is shown
->>  +                       * awake - 0 or 1, controls if the keyboard 
->> LED are on during awake
->>  +                       * sleep - 0 or 1, controls if a suspended 
->> animation is shown.
->>  +                                               This is only active 
->> if the AC is connected.
->>  +                       * keyboard - 0 or 1, unknown what effect 
->> this really has
->>  \ No newline at end of file
-> 
-> ^^^
-> 
-> Be sure of not repeating the same mistake. I.e. add a newline as 
-> suggested.
-> 
-> 
->>  +       flags = 0;
-> 
-> Seems you ignored my comment here...
-> 
->>  +       if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, 
->> &awake, &sleep, &keyboard) != 5
->>  +               return -EINVAL;
-> 
->>  +       save = save == 0 ? 0x0100 : 0x0000;
-> 
-> ...and here...
-> 
->>  +       if (boot)
->>  +               flags |= 0x02;
->>  +       if (awake)
->>  +               flags |= 0x08;
->>  +       if (sleep)
->>  +               flags |= 0x20;
->>  +       if (keyboard)
->>  +               flags |= 0x80;
-> 
-> ...and here.
+> https://lore.kernel.org/platform-driver-x86/d9d79f9b-f3ab-c07e-9e18-5760ff828487@redhat.com/
 > 
 
-Umm... I know for sure I fixed all those. I must have screwed up a git 
-rebase :(
-I'll fix again.
+My apologies, I will fix this.
 
+
+> Regards,
+> 
+> Hans
+> 
+> 
+>> 
+>>  ...
+>> 
+>>>   #define NOTIFY_KBD_FBM                 0x99
+>>>   #define NOTIFY_KBD_TTP                 0xae
+>>>   #define NOTIFY_LID_FLIP                        0xfa
+>>>  +#define NOTIFY_LID_FLIP_ROG            0xbd
+>> 
+>>  Ditto.
+>> 
+>>  ...
+>> 
+>>>  +static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi 
+>>> *asus)
+>>>  +{
+>>>  +       int result;
+>>>  +
+>>>  +       result = asus_wmi_get_devstate_simple(asus, 
+>>> ASUS_WMI_DEVID_LID_FLIP_ROG);
+>>>  +       if (result >= 0) {
+>> 
+>>  You missed the second part of my comment. Please, read carefully 
+>> _all_
+>>  reviewer's comments.
+>> 
+>>>  +               input_report_switch(asus->inputdev, 
+>>> SW_TABLET_MODE, result);
+>>>  +               input_sync(asus->inputdev);
+>>>  +       }
+>>>  +}
+>> 
+>>  ...
+>> 
+>>  Overall, it's getting better!
+>> 
+> 
 
 
