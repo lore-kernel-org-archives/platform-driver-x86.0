@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA9C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8BEC19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235252AbiHIIhp (ORCPT
+        id S236598AbiHIIlL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 04:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
+        Tue, 9 Aug 2022 04:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229976AbiHIIho (ORCPT
+        with ESMTP id S231240AbiHIIlJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 04:37:44 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B44E1EAFE;
-        Tue,  9 Aug 2022 01:37:43 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id e28so176422qts.1;
-        Tue, 09 Aug 2022 01:37:43 -0700 (PDT)
+        Tue, 9 Aug 2022 04:41:09 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1708C0A;
+        Tue,  9 Aug 2022 01:41:08 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id e28so180444qts.1;
+        Tue, 09 Aug 2022 01:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=5wAmAP/0n2nSTjV3vgB4RzL7PV/UfzJLwel1ipxqIUs=;
-        b=AJAxzwloNzTJT0yDJAkW5/+xoS3P9cRbuADl2sHhOv6yw5X9QI6ZXDr7GD2KmGXmfx
-         jkc3oT4UCArJfztSmx1vRg8FYjMj9hRSrcqtGKHv61JBlfRsxFhXL3IisMBY3wRUU34q
-         226Dl5P5qDwo6FBzgAA/0YPdte8+EifuuP//li9r4XxT9DnsU2E1+USMgvEB3G8cSLY8
-         AWk26bqoh5ra12u28RRoKFpoqaxYuafq0l4gOMHIdIOG2uIyrB3HOFsb62wWMk/QN40b
-         53a0wk3/bR7PQ7IAJYrB/RfnYV2JjpC4D3Jf2mpeVHKCPnxpeDKJC3aw1qlSoaQu7sl9
-         K1AA==
+        bh=2GWUGJV06d2di07FtdpKYMMbz25wdyp6M5GtNkd9ZH0=;
+        b=N6B2unRqY+lno29swo0ZKnl5BLI73wbMFOmhVY3xwjt5kM90wje9zmKmwuFRJBJkNs
+         S32cNeodm2vGIv41azHakaZOzXEZFyJGur4JlCm3I80xSddw+sCkjj/a9U6o8RAy0kr+
+         EtnVcBa5eRXx86ScWhlql0rXFvz1EUhi0z4VeQaIwdqMXkBiRmjUkGpPqekff+QWQin6
+         bgpZe4nGntfE1v/AdABbUtygMO1ghVFRjkWgaLQ77YOe51McFqGQA4bmo0CNSad0/CBv
+         UkyLEIu8194MaaLkAXFcU65BPb1mwbjjq6hxQnTw4WYtIaiRxmwcZSfs3DqF7BQ1fd9b
+         mu1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=5wAmAP/0n2nSTjV3vgB4RzL7PV/UfzJLwel1ipxqIUs=;
-        b=U3CjU4DnhrtKbSJgorp3ZNuWNRoZnmsJqCCAAFAX+Meuy1c4T3N7Osn01F470OTrWk
-         aAglWRy4nxB0zXtRfa2uPb/tRPOz6mmsURt5udSsZJL3qul7ShZBzyovvx5JM7RHv2wb
-         XAWbAAua84ZtkdxXXBn7K4a/Vqw00OMEajZFHokEv1gLy28idJaQ7JFl+RcJQEhUlDSh
-         yORDzPB8ZPC+Hmk/qsHzA4B/z6tvPKyeRZ8vT5pFn3l7auFlWbpKXta0XjPa91MWlYre
-         oJn5cPtGuapV6PMozTdykpMhqH87y9nobsb0RTrFZcVtNSDU6tq+jqq5VLJuR0kw99mS
-         R5MQ==
-X-Gm-Message-State: ACgBeo0IiI7AVnj6wA3w3+7MYDY7TVkB6Yaff0N+LnnI8v+F6eaips0o
-        UEdmdDBBE0rVoT8828xobCqG1NY/+MVWZ7DTOAU=
-X-Google-Smtp-Source: AA6agR4xJCQOrsi1GnCSBL5Yt9nYhadTZlmUQYKq0QLFPrQRHzIijhlMSjxHtwf/1GcGLiOGX2PuX8nSYNlnT0ONDbQ=
-X-Received: by 2002:ac8:7fd1:0:b0:31e:e9c0:c071 with SMTP id
- b17-20020ac87fd1000000b0031ee9c0c071mr19362497qtk.481.1660034262645; Tue, 09
- Aug 2022 01:37:42 -0700 (PDT)
+        bh=2GWUGJV06d2di07FtdpKYMMbz25wdyp6M5GtNkd9ZH0=;
+        b=Ajx8Ac8SEVferozEKe/87g0d5IU0eJ/pXxqxi+xZjl4Ie8TmR0G9lkMYS0/z69ruA0
+         uYoHYt1utoU5NihsvnBCbQ/jAVU8qlbUxsxEIVKpyrBgwcRp9OFMFty4xrCc+oiMwZCw
+         yGLHK1AtCubRMI+Ke5say3na9ApnQACOsZ2dygBODh4kenfaq+6D//P1oYazwNj9Nq3m
+         cqsmc97bA9XrwEYLAGLjhbbFNXHuks9nbYjUiUvsiQWxyp7+U8QEOdC1lmWodAA1L1bi
+         V1CW+gzvg1xb6vUBDrJX3ksc3lTpjy3m/KxJ6Wy19iy127UBbuZRUFv1YSyvhTXcJT23
+         kVYg==
+X-Gm-Message-State: ACgBeo3yMrFAwOG7ciwIUv3zeIM/dejR3pCSodsBWyMDeVTe54m6OvPp
+        hPQy2WRBUSUSyZ9K5GdB7nQgzNJC/DWntE31Xc4Gl0SDasw=
+X-Google-Smtp-Source: AA6agR5HeRJNm+1muED9l1I5dO8yNvOG5wEolOrqz7LCJBrOVXPCAH8+OpuvQ2THfA4M9Juejo0+MCwmam2lownJeuE=
+X-Received: by 2002:ac8:7f88:0:b0:342:e9dc:ee77 with SMTP id
+ z8-20020ac87f88000000b00342e9dcee77mr13416295qtj.384.1660034467919; Tue, 09
+ Aug 2022 01:41:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220809033048.1634583-1-luke@ljones.dev> <20220809033048.1634583-2-luke@ljones.dev>
-In-Reply-To: <20220809033048.1634583-2-luke@ljones.dev>
+References: <20220809033048.1634583-1-luke@ljones.dev> <20220809033048.1634583-3-luke@ljones.dev>
+In-Reply-To: <20220809033048.1634583-3-luke@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 9 Aug 2022 10:37:05 +0200
-Message-ID: <CAHp75VdAMTUpWd9d+vq1_4CqyPYyKJy4dYRyDrgVCb5cJtPF5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] asus-wmi: Adjust tablet/lidflip handling to use enum
+Date:   Tue, 9 Aug 2022 10:40:31 +0200
+Message-ID: <CAHp75VeAMBM+itfAn8hRDykV9rRLGXzck8L2kBgpGkVRsPUm5g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] asus-wmi: Add support for ROG X13 tablet mode
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -62,48 +62,48 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 9, 2022 at 5:30 AM Luke D. Jones <luke@ljones.dev> wrote:
+On Tue, Aug 9, 2022 at 5:31 AM Luke D. Jones <luke@ljones.dev> wrote:
 >
-> Due to multiple types of tablet/lidflip, the existing code for
-> handling these events is refactored to use an enum for each type.
+> Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
+> lid flip (all screen rotations).
 
 ...
 
->  static int asus_wmi_input_init(struct asus_wmi *asus)
->  {
-> +       struct device *dev;
->         int err, result;
->
-> +       dev = &asus->platform_device->dev;
+>         { KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+>         { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+> +       { KE_KEY, 0xBD, { KEY_PROG2 } }, /* Lid flip action on ROG xflow laptops */
+
+Shouldn't you keep it sorted by value?
+
+...
+
+>  #define NOTIFY_KBD_FBM                 0x99
+>  #define NOTIFY_KBD_TTP                 0xae
+>  #define NOTIFY_LID_FLIP                        0xfa
+> +#define NOTIFY_LID_FLIP_ROG            0xbd
+
+Ditto.
+
+...
+
+> +static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi *asus)
+> +{
+> +       int result;
 > +
+> +       result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
+> +       if (result >= 0) {
 
-While the discussed pattern of splitting assignments is a good
-practice, for some cases we don't do it when we rely on the guarantee
-by the callers that some of the stuff won't be problematic. Here the
-device is part of the platform device and can't be NULL, there is no
-point to split definition and assignment (and you may find plenty
-examples in the kernel), so
+You missed the second part of my comment. Please, read carefully _all_
+reviewer's comments.
 
-  struct device *dev = &asus->platform_device->dev;
-
-is better to have as it's guaranteed not to be NULL and since that we
-don't check it in the code anyway.
-
+> +               input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> +               input_sync(asus->inputdev);
+> +       }
+> +}
 
 ...
 
->                         input_report_switch(asus->inputdev, SW_TABLET_MODE,
-> -                                           !result);
-> +                                               !result);
-
-Irrelevant change.
-
-...
-
-It also seems you switched to dev_err() here for the pr_err() that
-aren't related to the change, either split that to a separate patch,
-or don't do it right now. I.o.w. use dev_err() only in the lines your
-change touches, otherwise it's irrelevant.
+Overall, it's getting better!
 
 -- 
 With Best Regards,
