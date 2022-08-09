@@ -2,81 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48147C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77096C19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 08:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241329AbiHII43 (ORCPT
+        id S232033AbiHII6f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 04:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
+        Tue, 9 Aug 2022 04:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241380AbiHII4T (ORCPT
+        with ESMTP id S231147AbiHII6b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 04:56:19 -0400
+        Tue, 9 Aug 2022 04:58:31 -0400
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF1722516;
-        Tue,  9 Aug 2022 01:56:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F6E220FF;
+        Tue,  9 Aug 2022 01:58:31 -0700 (PDT)
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 247E05C0069;
-        Tue,  9 Aug 2022 04:56:16 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 98B2E5C0107;
+        Tue,  9 Aug 2022 04:58:30 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 09 Aug 2022 04:56:16 -0400
+  by compute5.internal (MEProxy); Tue, 09 Aug 2022 04:58:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
         :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1660035376; x=1660121776; bh=xpGxjD2A50
-        fdV198hvsG7pRw/iujbctYhUQwuP/l34c=; b=X0G/RfiURd4O9ADNGjzBA7Oapu
-        V9IzUW+34EDzGgT1MQ1BXpfaXN5tZEtbW1fUW/94zPSC+L70YC5kKzjVfdd8bzRo
-        HIOjnYiO0P+mhmvl0V2F8Q5gf8aP+TJY6CGvi4znPhzDCDHdceHf02aMZuuseNdA
-        5Kq/G/bSUetH4RwPiI9Z3T6Q292dzYQkpHTjAZ+Ag+ud1v4SzKZ+WNvJk6t/ZpM2
-        3l+SxtR3AO3FllQRE/Lm2Fj8wPSQB5ujnQ2lm8lHhO5TzrOLZH6AE/pJIZvPrgND
-        B2EHrwKpziZA7ggOteYqusLzvvLV9BhMocYdZBTsn5vZkAsThuubgaj1Y/QA==
+        :subject:to:to; s=fm2; t=1660035510; x=1660121910; bh=G2NhCb66cb
+        19eINodXsc2D+4/M/84dcn7QljyzSwVWg=; b=koXXtds2oHmQJyH6Qn+1botDjJ
+        74bB5oOkvE8JpeBjk/n3kQrf0aBVpcPc6aoyg1BAnGtkpJRA1IJtZCOZXmdFY3Jx
+        39pOk4ajHm0296SOxEl0oQLmW2+PfSkz3qE9q6h9ijyQuYKriU1eW2ACiQJjYmMy
+        Wa84SAXb75NPyH+hU+IfOoEXhYz/iw3hVZhy0HsG1DI0k1ldBFPnYyn5MTpNr5UE
+        SwSQJREJMpq6BsimScgy6jYERUvbCSgy6xTNhZIz3f3CSZ56c6eW00mwckuZ9mcB
+        7mK401DqvNPwYjkVWEO01JRS+THa1YqOjmO52N5f11VwY6baXIvFZNSaW0wQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
         :feedback-id:from:from:in-reply-to:in-reply-to:message-id
         :mime-version:references:reply-to:sender:subject:subject:to:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660035376; x=1660121776; bh=xpGxjD2A50fdV198hvsG7pRw/iuj
-        bctYhUQwuP/l34c=; b=UyGwNjr97EMolB4dTDz2ap5ZwJLiHUcaoQVZXK0AciJv
-        BwSkiu8UxchaL82nP3WwxSLE9lMkDFLlsJbb6WDVoF1pEO0X1Zjwbt2+haR3U9fD
-        uXVuDNCP00hLqO7BynPspfDdpZMWzqD6vRroRCnazou5AoXtEhdeQArTSpEG8ta6
-        5zG8JRtygApyzL9BSpafIS27vaCfdbSJpMZAqMPkxUHnVzn6XsfJYnrX+3YWAgbM
-        +RrgxxSmw5qDHy6oNw/HvDBLR+AY+rTfJDjCPeLH2nw/+A46dJNsMAsRwBgiHFcz
-        8OgXX/nrGQgS5LBNsTDYFmU7DYSL0TQ9A/8TpWSEiA==
-X-ME-Sender: <xms:LyHyYtEjfdv7TlmkligTpGGebMhTKY3a8VHMvmyKOZMQIbpQjiUPOg>
-    <xme:LyHyYiUiGG1u5GYc3ICYFNoPMNgccCiBRrCeeKyCrw41eS9syuN96wsnARkj9nDdy
-    jRlvkI8fAM_hWKCN14>
-X-ME-Received: <xmr:LyHyYvIfcKmnEHcZx8FFmcuq3rv5AYjrkXXXgVqvuGXIJp2HzaPx-DFvDGWCp8XneWUYaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdegtddgtdelucetufdoteggodetrfdotf
+        fm1; t=1660035510; x=1660121910; bh=G2NhCb66cb19eINodXsc2D+4/M/8
+        4dcn7QljyzSwVWg=; b=WhbaeE9kQ4DppP8fW7HJQiuP+ZXn/vT9/nf4pIIzapN1
+        Dzu7MRr5KNSr4lA//H+zA5CTbXfsfLPWLur9IWQ/AoaA5O/oLqXKFSBGbx14/Ar/
+        nfXU27f55T9I+nlFYd7jo8IGdb+5WIXvlJnzn7NgmZKDhUGWHGnhL3CR61pyB0mp
+        rcEQEx0BodHUnNOAb/0DS8wMRIAjUegWl1T9k63a93ych4O5uM1Xw65gd4kyuP3d
+        ShmVGuh+Dp1LMEj3jOqqdndCNW1vyhguxA3o8UTFLjJUHowoBfptLdp+1mfOGpf/
+        Ubn7UWHE+btPut7m9RjqrzXGE+wfNsney0CFO0qhIg==
+X-ME-Sender: <xms:tiHyYsVow885GSKkXux46b0W1GDfxX3qfLI3OVbphMFFkQFVtuxiVg>
+    <xme:tiHyYgm25rmX6L0RCwm2lF4F-K8VIeuBix-19FYfs6-haco4H6DwFrBWJJUcEM1b2
+    VVcuhJLLIFdAFJp9Mk>
+X-ME-Received: <xmr:tiHyYgbwcwTLwIHw-XiTiOz40iXHHGFw7HjacdMfClFEDu862iEyqSzEm_h7YR-3tcTATw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdegtddgudduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
     ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epfffgfeelieeitddtteeivdetueejhfejfeejteehvefhgeefueeftdehjeeukeelnecu
-    ffhomhgrihhnpehuihgtrdgvughunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:LyHyYjFybHWcHAvfvYOEg58dlybi-OZkiVS7kRI1VJlgohYoF26Hug>
-    <xmx:LyHyYjVpNG1oirgd9PCRW98K5HC0nEZha8BUjqc5UMyNCV2hct7I_Q>
-    <xmx:LyHyYuMFmQkcDTW3-RUCRyhAeHwv7hI61uSCHth8fzMN9zgq0TV5pw>
-    <xmx:MCHyYuQk2QMupMQY0v5Uw1KeDla5QJYGKnRZOkDF-1wDi1Xwf6ZVOQ>
+    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
+    hljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:tiHyYrUCbs06-eVo_2E4eyIxsI492Sow6veA7H_9ieuVRO7uB2K8lA>
+    <xmx:tiHyYmmJZf-jEtV-qMIWHi3GtuSTuYvtQJWU6XF8Jdi9RF3eHE-JtA>
+    <xmx:tiHyYgd0YjPKCfGO3NO3heA_N_qaHfq-QvJqTAkKr23joEp_2TkTxQ>
+    <xmx:tiHyYoizbMmLfaobailRMrGHufQYraRl2IZov6jCiLe_3QVXlXdfdA>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Aug 2022 04:56:11 -0400 (EDT)
-Date:   Tue, 09 Aug 2022 20:55:58 +1200
+ 9 Aug 2022 04:58:24 -0400 (EDT)
+Date:   Tue, 09 Aug 2022 20:58:12 +1200
 From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 1/6] asus-wmi: Implement TUF laptop keyboard RGB
- control
+Subject: Re: [PATCH v3 3/6] asus-wmi: Implement TUF laptop keyboard power
+ states
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>,
         Pavel Machek <pavel@ucw.cz>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <AHBCGR.7I4U7CDRZ3J83@ljones.dev>
-In-Reply-To: <CAHp75VfZeuuQjfM+CY4nxrFJQcfpdHVVzyj6GLjeweT3ycSn5A@mail.gmail.com>
+Message-Id: <0LBCGR.NDLPJAR4JTJQ@ljones.dev>
+In-Reply-To: <CAHp75VenHd6JREvxjmcNbeshvgv-S_th9pqBBgQJ+FBgPzgWqA@mail.gmail.com>
 References: <20220809025054.1626339-1-luke@ljones.dev>
-        <20220809025054.1626339-2-luke@ljones.dev>
-        <CAHp75VfZeuuQjfM+CY4nxrFJQcfpdHVVzyj6GLjeweT3ycSn5A@mail.gmail.com>
+        <20220809025054.1626339-4-luke@ljones.dev>
+        <CAHp75VenHd6JREvxjmcNbeshvgv-S_th9pqBBgQJ+FBgPzgWqA@mail.gmail.com>
 X-Mailer: geary/40.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
@@ -86,49 +86,92 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi Andy,
 
-On Tue, Aug 9 2022 at 10:46:33 +0200, Andy Shevchenko 
+On Tue, Aug 9 2022 at 10:52:21 +0200, Andy Shevchenko 
 <andy.shevchenko@gmail.com> wrote:
 > On Tue, Aug 9, 2022 at 4:51 AM Luke D. Jones <luke@ljones.dev> wrote:
 >> 
->>  Adds support for TUF laptop RGB control via the multicolor LED API.
+>>  Adds support for setting various power states of TUF keyboards.
+>>  These states are combinations of:
+>>  - boot, set if a boot animation is shown on keyboard
+>>  - awake, set if the keyboard LEDs are visible while laptop is on
+>>  - sleep, set if an animation is displayed while the laptop is 
+>> suspended
+>>  - keyboard (unknown effect)
 >> 
->>  As this is the bas for adjusting only the RGB values, it sets the
->>  default mode of the keyboard to static since there is no way to read
->>  any existing settings from the device. These defaults overwrite the
->>  booted state of the keyboard when the module is loaded.
+>>  Adds two sysfs attributes to asus-nb-wmi:
+>>  - keyboard_rgb_state
+>>  - keyboard_rgb_state_index
 > 
 > ...
 > 
->>  +       err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, 
->> ASUS_WMI_DEVID_TUF_RGB_MODE,
->>  +                               rgb->save | (rgb->mode << 8) | (r 
->> << 16) | (g << 24),
->>  +                               (b) | (rgb->speed << 8),
+>>                  until the keyboard_rgb_save attribute is set 
+>> (write-only):
+>>                          * 0 - slow
+>>                          * 1 - medium
+>>  -                       * 2 - fast
+>>  \ No newline at end of file
 > 
-> Too many parentheses.
-
-Uh, yeah. I was unable to find concrete info on this. I at one point 
-experienced an issue where the order of operations *without* 
-parentheses ended up as "x | y << (8 | z) << 16". But now I'm not even 
-sure if I remember that correctly. I see the order here 
-https://www.cs.uic.edu/~i109/Notes/COperatorPrecedenceTable.pdf
-
-I'll do as said and test it to be certain.
-
+> ^^^
 > 
->>  +                               &ret);
->>  +       if (err)
->>  +               dev_err(dev, "Unable to set TUF RGB data?\n");
+>>  +                       * 2 - fast
 >>  +
->>  +       return err;
+>>  +What:          /sys/devices/platform/<platform>/keyboard_rgb_state
+>>  +Date:          Aug 2022
+>>  +KernelVersion: 6.1
+>>  +Contact:       "Luke Jones" <luke@ljones.dev>
+>>  +Description:
+>>  +               Set some RGB keyboard power states (write-only).
+>>  +
+>>  +               The accepted input is "boot awake sleep keyboard", 
+>> where "n n n n n"
+>>  +               options are:
+>>  +                       * save - 0 or 1, if 0 then settings are not 
+>> retained on boot
+>>  +                       * boot - 0 or 1, controls if a boot 
+>> animation is shown
+>>  +                       * awake - 0 or 1, controls if the keyboard 
+>> LED are on during awake
+>>  +                       * sleep - 0 or 1, controls if a suspended 
+>> animation is shown.
+>>  +                                               This is only active 
+>> if the AC is connected.
+>>  +                       * keyboard - 0 or 1, unknown what effect 
+>> this really has
+>>  \ No newline at end of file
 > 
-> How ret is being used?
-
-Damn.. fixed now.
-
+> ^^^
 > 
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Be sure of not repeating the same mistake. I.e. add a newline as 
+> suggested.
+> 
+> 
+>>  +       flags = 0;
+> 
+> Seems you ignored my comment here...
+> 
+>>  +       if (sscanf(buf, "%hhd %hhd %hhd %hhd %hhd", &save, &boot, 
+>> &awake, &sleep, &keyboard) != 5
+>>  +               return -EINVAL;
+> 
+>>  +       save = save == 0 ? 0x0100 : 0x0000;
+> 
+> ...and here...
+> 
+>>  +       if (boot)
+>>  +               flags |= 0x02;
+>>  +       if (awake)
+>>  +               flags |= 0x08;
+>>  +       if (sleep)
+>>  +               flags |= 0x20;
+>>  +       if (keyboard)
+>>  +               flags |= 0x80;
+> 
+> ...and here.
+> 
+
+Umm... I know for sure I fixed all those. I must have screwed up a git 
+rebase :(
+I'll fix again.
+
 
 
