@@ -2,84 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC91C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 22:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085BFC25B08
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 23:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbiHIW0H (ORCPT
+        id S229743AbiHIXEB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 18:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
+        Tue, 9 Aug 2022 19:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiHIWZn (ORCPT
+        with ESMTP id S229637AbiHIXD7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 18:25:43 -0400
+        Tue, 9 Aug 2022 19:03:59 -0400
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D146515FE8;
-        Tue,  9 Aug 2022 15:25:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7923A6AA15;
+        Tue,  9 Aug 2022 16:03:58 -0700 (PDT)
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6E3ED5C01C8;
-        Tue,  9 Aug 2022 18:25:40 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id D4D135C026D;
+        Tue,  9 Aug 2022 19:03:57 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 09 Aug 2022 18:25:40 -0400
+  by compute4.internal (MEProxy); Tue, 09 Aug 2022 19:03:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660083940; x=
-        1660170340; bh=wUwu7rEramo4VPL2of7nNhGsxyAcdYrNtJ7iJLfolt8=; b=G
-        HGBHv7xnNkOHdzo3v7CYoIT11b7tr1nsuU98hzsl8r1yvod15Q7IRf7+LAFgWQa3
-        C54AiOxBD8mx2++pzV/IMYT0oo0dctUGAl4ByVJ1wgVIGxK1UsfkYgDErCO8HGq2
-        EJx3S2fVcxLj5SW7IH7p7tKvZZtrI028ELnRf3eR/diyrChdcsxw9/aEPdAjvthc
-        p7eEAfG5rSCSeeWcun61Z4yWnIddcbriVPztnm6d04OrYMI57r3LuDioKJHunw60
-        Y9ZaWt+ZnwKV0zC40vhxbqrmyh6Vq+LW0v9+w49TIiTiS2UbiRSVcxUmJjbDlcZY
-        NOpv6DnyQbwmlt8G7aksA==
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660086237; x=
+        1660172637; bh=1CmhGkiO/qNhBvEH10/VjJXKi8kf/mGQveffQloDLnw=; b=i
+        tNrluxbhZ9IQAv3vuUjGmfrUKWU/nI+GzMq4f8MZsJPkzZHQFuodvfVAFn389wEJ
+        vAQn8TEpg8ZOj5MYeatdP7bATWEzxrERxymqtinK+DPdgC3wCJwegK/8VhpaYOH6
+        NkpaIIvs8nObqkD6i/lpIDYqxkL/ALSshEP2dPA6ws7HKhhHUE9l4UNUT863k10J
+        qRibslfhU7Z+VDLCgOhfLqLaW74ePzv2js0Bg4nnhzD5YZK0Ar0zOePrG8dxfLEk
+        63IDgAgD64D6AGHI9LsKe8XlbSL1tk5XMeTDa8C8JHKCzHp4D/INa10c52kRd/Y0
+        FkLrOgYmEHZrCAlLJPBEA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660083940; x=
-        1660170340; bh=wUwu7rEramo4VPL2of7nNhGsxyAcdYrNtJ7iJLfolt8=; b=c
-        1+AbC51ttUtBW2+7r92rjPgjCHB+seZOd3jWWXfP8hGWdntCTYRhiEOZl0SziGXX
-        Q4rqkw90+4idmhbS+X44ScSvszvO6JuztPB39fKYuzuL1LKMvAmnRKLZRhhS+Hqn
-        vlicCeVqyaPur2m4Y9BRM5uISw/bXu8mMzm14/RpHjm6pZIpTPkMDPEBjW03ykmh
-        pB8J6GU++YYsmvJMoFjFTfpGs1AqjwClfLzm5RPlZO61Ek/TuepLj1XYotnBFWR7
-        hKD81YLk0VOfyk1iEyQyjWd4JYa4j9hlfVw5/o7XwHNzX3vfL2vdQyCyp+/XZjpH
-        +wqDfptHqdv2YOpao3azw==
-X-ME-Sender: <xms:5N7yYunBlLNABfMBnsErOdi1ZlevYvvzU9Gd7EQ1mpowtcQ56CDHbQ>
-    <xme:5N7yYl0CUDUTp5HCFip7CKEnyDvy1uS7x7IQCWt3TIThe3_wbbVb_GAG473tbylQR
-    qKoAZSD2z7RW9ppti4>
-X-ME-Received: <xmr:5N7yYsrnTGBuD07IXD-r5gGTPbW3s3iDnr2PRziWvk8H2YYa2JT7BLwN56XR0OUJ9nhFlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeguddgtdelucetufdoteggodetrfdotf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660086237; x=
+        1660172637; bh=1CmhGkiO/qNhBvEH10/VjJXKi8kf/mGQveffQloDLnw=; b=u
+        BVX3PLCzzJW9bDsz//C1itq9lonQw3vHcJEs+gG6n0sja7/voFHD1jX1VJgornXr
+        ngUDs2DtIGAU8ZK7hwK6kEXCaze8doY45Woqnj9SIyEBgYoGyq3vjlKeHY+6biLw
+        bCJeis4QmL8/GtOhGBpMckuDqaTstAF9PAMYVzP94/qp5lBfgZinhMzlBu+ABSdl
+        hgVGvO9iHLOi0j+cGaKM8ig2Lv+0gSvIrPh0ucnPMQRrV85rKoEiWy6j5e4tJeI0
+        OxY1jHMOpM0Mx6beyn8KCZ2eAb3IHvEWOVNepK3w8cDcMwiYm301lWx+DMUQcJfp
+        XP0CGtsw/wj1mIPXVPpEA==
+X-ME-Sender: <xms:3efyYiyiFkvgvntuuGzScshj3AF8mv_62C8FQ515AaMTk0dR9jOE9w>
+    <xme:3efyYuSw3D5zZq3eOuGt7neNudER26ByOGnk5uF0rapr_vXKENlVkCCqp-Ebw62j4
+    z7YNygXQI0tPavBl_8>
+X-ME-Received: <xmr:3efyYkWBdMwAPzTiP0DsO7o7s3sywRkIrZFlYDq00Te1_-PG4DpsmrTjFsDo76ZcVSzwfQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeguddgudejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhk
     vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
-    hnpeekfeffueejveeujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
-    eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:5N7yYimZGTiOPtKD9Oz23gV2PkDssfJ0xkNCno5gWWHBf6q1TOq-HA>
-    <xmx:5N7yYs3QkN6dshHoDpd_LCigHC1rBWbUJcskUxZ7MjfhGKypVykUJA>
-    <xmx:5N7yYpuxI6MnNcLQjNkZiERcUVa8uMnuD4OpkYMxdWmogGo_Ku3GVA>
-    <xmx:5N7yYqBKxt_mvOlzn0mCLhgvfrXL9rGsev3z3pdlUEe2k0pTZlWWcw>
+    hnpefgtdekheektdeghffhfffhgedutddthfehhfeuiedvjedukeffveevudevheefieen
+    ucffohhmrghinhepghhithhlrggsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:3efyYoh0PgBEJWR00SvtGEkLOwx00RgzZdIDrnk7iiNMWX5-Ez2JJg>
+    <xmx:3efyYkCS7dCkrGD3tzLf9fvwnpgvBK524s3M_tib729K8ohebqkCtw>
+    <xmx:3efyYpJhczoJSpVn3XRdGXyQTkd-5Y30eB6qptr7cnTRk7xL9vkGXg>
+    <xmx:3efyYnOngBzzJdZmFUM9tv0jkmBiPigGwPLbMuqBJyn07xKd53bvnw>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Aug 2022 18:25:37 -0400 (EDT)
-Message-ID: <43ca98e5a51d30291efc96ef4758ff508ee143a4.camel@ljones.dev>
-Subject: Re: [PATCH v2 3/6] asus-wmi: Implement TUF laptop keyboard power
- states
+ 9 Aug 2022 19:03:54 -0400 (EDT)
+Message-ID: <7362f2f7795bebe9bbf9c00f0efd3eaa9143015d.camel@ljones.dev>
+Subject: Re: [PATCH 3/5] asus-wmi: Add support for TUF laptop keyboard states
 From:   Luke Jones <luke@ljones.dev>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 10 Aug 2022 10:25:29 +1200
-In-Reply-To: <CAHp75Ve4kFJz-4QqpUYTujQRkOkFZ+w01eHRwZyvQAA+GkNG9A@mail.gmail.com>
-References: <20220808030420.8633-1-luke@ljones.dev>
-         <20220808030420.8633-4-luke@ljones.dev>
-         <CAHp75VdNa8csSF5Je87kOzC3EQ4yetZqpxXFZu1D7C4A6XCTNg@mail.gmail.com>
-         <X5LBGR.15DO7CCYH6ER@ljones.dev>
-         <CAHp75Ve4kFJz-4QqpUYTujQRkOkFZ+w01eHRwZyvQAA+GkNG9A@mail.gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 10 Aug 2022 11:03:46 +1200
+In-Reply-To: <20220807124102.GA32221@duo.ucw.cz>
+References: <20220805081909.10962-1-luke@ljones.dev>
+         <20220805081909.10962-4-luke@ljones.dev>
+         <20220805120859.GB20036@duo.ucw.cz> <ZTI8GR.GMVLPPJWYEO53@ljones.dev>
+         <20220807124102.GA32221@duo.ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (by Flathub.org) 
@@ -88,99 +84,29 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-G'day Andy,
-
-On Tue, 2022-08-09 at 10:29 +0200, Andy Shevchenko wrote:
-> On Tue, Aug 9, 2022 at 1:27 AM Luke Jones <luke@ljones.dev> wrote:
+On Sun, 2022-08-07 at 14:41 +0200, Pavel Machek wrote:
+> Hi!
 >=20
-> ...
+> > I'm sorry but can you direct me to a source file or other that
+> > shows use of
+> > "pattern trigger". I don't know what this means or what to look
+> > for. From
+> > your response it seems I should certainly be using it.
 >=20
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (sscanf(buf, "%hhd %=
-hhd %hhd %hhd %hhd", &save,
-> > > > &boot,
-> > > > &awake, &sleep, &keyboard) !=3D 5)
-> > > > =C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> > >=20
-> > > Same Q here: wouldn't it be better to put each of the parameters
-> > > to a
-> > > separate sysfs node? Or look at the LED ABI (that what Pavel
-> > > mentioned
-> > > for multi-color patterns) and see if there are already some
-> > > established ways of how to represent necessary information?
-> >=20
-> > Same argument I make for the RGB mode nodes. But here I think it's
-> > probably even more pertinent. The reasons I would like to keep this
-> > as
-> > one node are:
-> >=20
-> > - It's separate to the RGB part
-> > - We can't read the device to set defaults on boot
->=20
-> Hmm... Maybe it's done via one of the WMI calls?
+> Trigger is at drivers/leds/trigger/ledtrig-pattern.c , you'd want to
+> do something similar to drivers/leds/rgb/leds-qcom-lpg.c .
 
-That was my hope, but I'm unable to find one. I'm fairly certain that
-this set of keyboards uses the same controller as the USB connected one
-(the USB one has two versions in circulation also), and I've not been
-able to find any packet data that indicates the USB ones send a
-"supported".
+I think we lost something in communication. This looks like it is all
+done in software.
 
-Checking with `fwts wmi -` reveals nothing (all passes).
+On these laptops, TUF and ROG, the LED effects are all done by the
+keyboard EC. For the TUF series you can reference this
+https://gitlab.com/asus-linux/reverse-engineering/-/blob/master/TUF-i2c_lap=
+tops/led-rgb
 
-I've emailed my contact in the ROG engineering team at ASUS to see if
-they can provide any insight.
 
->=20
-> > - Because of the above, if we set a default and the user wants to
-> > change perhaps "sleep", then we're going to have to write some
-> > incorrect guess data since the write requires all the flags at once
-> > - One way to improve the UX is to add _show, but then this has to
-> > display incorrect data on boot
-> > - We end up with 5 more nodes
-> >=20
-> > The same reasons above apply to the RGB nodes, which right now I'm
-> > of
-> > two minds about. We'll see which way the RGB mode patch goes after
-> > some
-> > daily use.
->=20
-> I just realized that in previous mail I mentioned Device Tree which
-> is
-> irrelevant here. We can't use it on x86 traditional platforms, so it
-> means that platform should somehow pass the data to the OS one way or
-> another. If there is no way to read back (bad designed interfaces),
-> then we can only reset to whatever user provides.
->=20
-
-Umm.. Do you mean:
-- load module
-- module sets a default (all on)
-- user or userspace-util sets user preference?
-
-Given that the system daemon I develop (asusd + asusctl) is in very
-wide use, I guess it's not such a big issue to both split these nodes
-out and set a default.. I guess I'll go ahead and keep the expectation
-that the reworked RGB-mode patch sets.
-
-It seems to me that the appropriate way to do the "write-out" for both
-mode and state is to have nodes:
-- keyboard_rgb_mode_apply
-- keyboard_rgb_state_apply
-- Input 0 =3D set (doesn't stick on boot), 1 =3D save
-
-going with the above I should rename existing nodes, especially the
-current *_save node. And this brings me to my next issue: currently
-behaviour for the *_apply is:
-- write 0 applies, but doesn't stick
-- write 1 applies, and sticks on boot
-- reading the *_apply nodes will show 0/1
-- if already "1", you still need to overwrite with "1" to apply.
-
-This doesn't seem appropriate does it?
-Should there be a WO node for *_apply, and another node for *_save
-(which would store/show the setting)? I'm inclined to think so, and
-that this will add quite a bit of clutter (6 nodes for state, 4 for
-mode).
+It's for this reason I first went with a single node using "n n n n n
+n" input.
 
 Kind regards,
 Luke.
