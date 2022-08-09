@@ -2,129 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD8BC00140
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 03:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4667DC00140
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 03:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233966AbiHID1B (ORCPT
+        id S229600AbiHIDbH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Aug 2022 23:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37614 "EHLO
+        Mon, 8 Aug 2022 23:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233913AbiHID07 (ORCPT
+        with ESMTP id S232852AbiHIDa5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Aug 2022 23:26:59 -0400
+        Mon, 8 Aug 2022 23:30:57 -0400
 Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E64D1D0EC;
-        Mon,  8 Aug 2022 20:26:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BD8640B;
+        Mon,  8 Aug 2022 20:30:56 -0700 (PDT)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7162F5C00DC;
-        Mon,  8 Aug 2022 23:26:57 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 9EEA95C01CA;
+        Mon,  8 Aug 2022 23:30:55 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 08 Aug 2022 23:26:57 -0400
+  by compute3.internal (MEProxy); Mon, 08 Aug 2022 23:30:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1660015617; x=1660102017; bh=Na1XoX1/pl
-        BEkZMRkmfcwe6ezbcEqTuiz3RXzc8G/lo=; b=dahsuqSRcsgQlzXC4GXJeOIzRM
-        MbXenQKtGPgGRs4sLNMzJlhdveSh212ppuOi2+RuspySiTUu4luk2Ff7l93ri/n/
-        3pivHsyiuwQW4FUDxMl9bnWaIe+VZGye1BZe4B8XtJ2cEXiekzP7rU8a1oWwAYmW
-        1Lqr1iM/OzuDRdLDFUfmYB5XRucOz9lfZxSy82to7QgurdPs4WBHRxl+JttZPa72
-        e6jUDnxVmELoH+YFv+Wkv4tpSZsBNxXXVQwfppLSAzNwU9060/w/c1R08LG9rsYU
-        HYNHJQW3TrdyQtd7Ifen2vr9VntYfleQZe2FzquqBx4W4M5K95qQehoqio3g==
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1660015855; x=1660102255; bh=qF550eH5VOcKt9w3Exq04HQ5z
+        lTuCvWjlWMtOxOLmk0=; b=D1nZs5rDmuK1GJKOP/gQjqUE5mZvIFC5GDp4zUa6i
+        WY3IlFx2YEQJ62V1VgC4/Cf+M7pGqGnHgqnjyyNQJOEtTINw81hS7/JFbKFYpjiu
+        OFPiY8m4e1tmIWGTQbJRZeCgdH5fvNXE95yhdBcDFSoHPThTgaG7GX7leqxQNdMo
+        qHQowAaZpVSmyTjTMimsIMLhkF8I3bD0WTfhpTXgzijZQ4OEnqBdFiGmbmYvDtiU
+        H8X6GGjE3iLjnDvPZQm2xkhWD4PaatNuggnwk4KVMUyrKJY2MlEUEVRyEIm5G4LO
+        k7z0ey0DSM+nARXWXIoKeSeH0e9fOrXFLDe86y/XYFnBw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660015617; x=1660102017; bh=Na1XoX1/plBEkZMRkmfcwe6ezbcE
-        qTuiz3RXzc8G/lo=; b=geIR+6yznXYUBqDt2RJImro+xBsTJPP5Vf7XF1Aw2vkJ
-        FMP+U9jE9VSxGGP/qIgjMSO3zXJSXxBvpCJ03aJD8PoYK574KeBcwFp18Zd4t85C
-        p2TdI0I1OudbO/OWHwibSLLKNTpefwuSCpM9K9Oxh5YfXcUraQIxD41lhbiiVbRD
-        j3nOMACr6MeDUDSbby3A6b1+KOZyzKCGqb0qtMBk8qeYUfg/Fm9dWB5Wp8WCR6Lx
-        Uvix9YlYvbF3OKFfhmcSJmP2qmt6XeWD4m8qeYuG2njku2oC5rsQTCtR6BpypgFL
-        OUivVHdN3osvPREHUT2oUhNQzPp8uo7PQLRXGE6lMw==
-X-ME-Sender: <xms:AdTxYoQoyWXLVbywUepTdeAQNhq7Ig0H3xJDQv9h_H8xqge0PsPpuw>
-    <xme:AdTxYlz0sirfaVcrz1cA00qCRqirERwPi_pwFTkbW3WjunZH5BNOsMD_2f4CCOQlq
-    Dd9z7Jp_MtnFwM-uL0>
-X-ME-Received: <xmr:AdTxYl0L7fnQBv9i6EzO_YFXnSEvEiEzwtSNSxjOVx_U8QXQy8xmwA9vnabeOh9WowJfRQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgjedvucetufdoteggodetrfdotf
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1660015855; x=1660102255; bh=qF550eH5VOcKt9w3Exq04HQ5zlTuCvWjlWM
+        tOxOLmk0=; b=ETTRJhy67dbmH6DIRTwyCnVtxZCpr1yW6gZrYMkw2+vtguaMzWm
+        4F+Uvyz2px5y1SsG/zLnakR678bu5nU7Toq4S9aRNLxMvGd0YToZ1QKG2Vsi2EaU
+        dTdjoSn+6n1qQaIDvv52YwYa60hzvF8IGjne6tG3DaUf6Rc0dVLTMceuEgpUtqDu
+        QgUdbHtTxskk/ttoGp50CmK/r/6oOkv0x49oH+0BxNgxlXQc7+pZMkW60xe8bpji
+        cqCyoWYGgh7HZLfFZesLSnGN1cY8mQCM1CULSCVm1DYDi8HAJqzI/FTj5H6a4DKs
+        k3tLTYK0pBSZXtb6OLfGS6Mq0PjKroVkGCQ==
+X-ME-Sender: <xms:79TxYu33cXQWZfGhVRXArXQFEHzoKZQppf42BNTjKQ0DK1zP45Rl1A>
+    <xme:79TxYhGat1VliB2TrZJI5ITys3JM7WOvJXwAAUkBOR0YulTQyT1PUShyOmK8EptgD
+    I61_jP8pnVmt9VutHk>
+X-ME-Received: <xmr:79TxYm43pDAPJyOeDO6ifaQ4ZCbZQd8YDVJ_o6rYigTlwg6c7-Utzjnyd6OC>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgjeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:AdTxYsDQwsaFX0z2NOBuG_NMHnHnchg2sN7SrPgIPRnxscc3IMgl7Q>
-    <xmx:AdTxYhgmw9WyebHmZwQ0_o-FMcYF0QKWVRqS534X-rc2bPNOss0BWg>
-    <xmx:AdTxYopkV8c2LpJ3VeDIXUT3uxTLK3IGJ7tU431FVidpbahq1uRFGw>
-    <xmx:AdTxYkveE-nvbWi7GrX2s78KQSGglS1ZInStKbTnRajWIDKkPi_tRw>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgeegieevfeekleejvefhkedvhfffue
+    egudeljeeiieeuhfegkeehtdevuedujeejnecuffhomhgrihhnpehlkhhmlhdrohhrghen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:79TxYv3ZAwJ6HFu4oxadwdgLKYRrL1mNpMOXZftBqOrcu5YjooT2oQ>
+    <xmx:79TxYhHj_OgeQgSjPLOH4upCIvHtgvJWkJblCrFJUE7KaHEehlhFhA>
+    <xmx:79TxYo-QQPoSJlMc2s_h_WMUQ12UQM8DjGPSCGvViX_PSs17FSeY9A>
+    <xmx:79TxYmTh4DZxzLEQDBW6kuC0mFjAup_F9_4YRSR2lm0Kw6_B-LM2-A>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Aug 2022 23:26:52 -0400 (EDT)
-Date:   Tue, 09 Aug 2022 15:26:39 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v2 2/2] asus-wmi: Add support for ROG X13 tablet mode
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <F8WBGR.2I3OK4ERR79N3@ljones.dev>
-In-Reply-To: <CAHp75VcjTG=fFBjjHRYT2+ARfE-VHWKJ9aV8sF4JtRVo7Ke2vQ@mail.gmail.com>
-References: <20220808031132.10075-1-luke@ljones.dev>
-        <20220808031132.10075-3-luke@ljones.dev>
-        <CAHp75VcjTG=fFBjjHRYT2+ARfE-VHWKJ9aV8sF4JtRVo7Ke2vQ@mail.gmail.com>
-X-Mailer: geary/40.0
+ 8 Aug 2022 23:30:52 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v3 0/2] asus-wmi: add support for ROG XFlow tablet mode
+Date:   Tue,  9 Aug 2022 15:30:46 +1200
+Message-Id: <20220809033048.1634583-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
-> 
->>  -       { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip 
->> action */
->>  +       { KE_KEY, 0xFA, { KEY_PROG2 } }, /* Lid flip action */
-> 
-> Have maintainers asked you about this? Otherwise it is irrelevant 
-> change.
-> 
+This patch series refactors a part of the tablet/lid-flip code to
+use an enum to set the different behaviours, and adds support for
+the ASUS ROG XFlow (X13) 2-in-1 laptop.
 
-Fixed
+Changelog:
+- V3:
+  + Use dev_err() in place of pr_err() in asus_wmi_input_init()
+  + Adjust declaration of variables vs instantiation to match expected pattern
+- V2:
+  + Refactor the base handling paths of tablet modes to use enum
+  + Add support for ROG XFlow using the refactored code
 
-> ...
-> 
->>  +                       pr_err("This device has lid-flip-rog quirk 
->> but got ENODEV checking it. This is a bug.");
-> 
-> dev_err() ?
+This obsoletes a previous patch I submitted:
+- https://lkml.org/lkml/2022/8/3/94
 
-Okay, changed here and in previous patch to match it.
+Luke D. Jones (2):
+  asus-wmi: Adjust tablet/lidflip handling to use enum
+  asus-wmi: Add support for ROG X13 tablet mode
 
-So that I'm clearer on dev_err(), this doesn't do something like exit 
-the module does it? It's just a more detailed error print?
+ drivers/platform/x86/asus-nb-wmi.c         |  28 ++++--
+ drivers/platform/x86/asus-wmi.c            | 104 ++++++++++++++++-----
+ drivers/platform/x86/asus-wmi.h            |  10 +-
+ include/linux/platform_data/x86/asus-wmi.h |   1 +
+ 4 files changed, 112 insertions(+), 31 deletions(-)
 
-> 
->>  +static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi 
->> *asus)
->>  +{
->>  +       int result = asus_wmi_get_devstate_simple(asus, 
->> ASUS_WMI_DEVID_LID_FLIP_ROG);
->>  +
->>  +       if (result >= 0) {
-> 
-> First of all, it's better to decouple assignment and definition, and
-> move assignment closer to its user. This is usual pattern.
-> 
-
-I don't fully understand why you would want the separation given how 
-short these two blocks are (I'll change in this and previous patch of 
-course, I just don't personally understand it).
-
-Cheers,
-Luke.
-> 
-
+-- 
+2.37.1
 
