@@ -2,159 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D8C19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 09:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866BBC19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Aug 2022 09:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235573AbiHIJDu (ORCPT
+        id S240506AbiHIJXi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Aug 2022 05:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
+        Tue, 9 Aug 2022 05:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237465AbiHIJDt (ORCPT
+        with ESMTP id S234639AbiHIJXh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Aug 2022 05:03:49 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6A622502;
-        Tue,  9 Aug 2022 02:03:48 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9B1575C00E9;
-        Tue,  9 Aug 2022 05:03:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 09 Aug 2022 05:03:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1660035827; x=1660122227; bh=nTV7sNCozL
-        xKqxT4iQ3xI1kz6XFl6DJT30vVE2/aW94=; b=ZQztSYA+XSczmHY9i4rO0RU2u8
-        HL8/5Mqjh/e0qbJohfy3yT4FVcAgDI3EGm8dcCgsBu/8dBmnW402lajy0iXTT66R
-        VkqhffbGPzupu29UcI14hbBO5Ya0znrMy1BjsZLyW4mQK5FN2wuinV1kd2COFk7K
-        rLIEnOc/Ta33zd5c019HrrWOQAAln2Od/gb3rlBJBEzsEVIZvGAVjpe4ADhE5fQB
-        nxqQ9FXtXrEoiwUDcStSBSIhjzVxzxDEJMW/PgOuIXG1ac8yc9nqxuGrUQfeBpAM
-        FUoNM+GDgAnYRYyLC74vcgKuAZOz7rjzRqRiE3NKr2vqnpT/XXWyFGM1IeFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1660035827; x=1660122227; bh=nTV7sNCozLxKqxT4iQ3xI1kz6XFl
-        6DJT30vVE2/aW94=; b=FvoYq8R2X+H9pk8BoFTydE1vUlhQ9BwyJJ6mUHDE+Ku5
-        /jNC/APVHWs3CLkf7YSJcs9aSB9emiENP/qaOjB3wlhmhaHWrpvAY2nKoOphGxzS
-        oOhU7q8JjOmywsdUd/lIbIrZYBvGQoISvXg0FDA0i0t9cfYFLLDLlUbmJrqo+qQd
-        gyxO500gLs6qenTrr3E5omTuBMwLAkUQFjJbVPmopkvS6VsFqXJVhOBBle95lRvM
-        SOMry2KylJrFUvTRa7zmOANWSLy2VVavKCEik0Sy2Fzt5x7i0FbTprJpxVYiTRFr
-        GTZvNKqlhbscJySoetmZo7YwEgWDw8xsqS9WqPLRwQ==
-X-ME-Sender: <xms:8yLyYvFOw__zApqLf05RfeBHqKKoU1oa7vwQj6vCsTVXxXlCl0xALA>
-    <xme:8yLyYsU-N2sIlhc3ZHe5ubvRtROCDzdoPHsPnrsuZIZoE9FeROy057u5hZhLzQNZ2
-    3qgLBX8Czwrso4121k>
-X-ME-Received: <xmr:8yLyYhIQ5_PEYUg2-SFWy7GYWPUPama611kG_-QjAD-a4ZHQvhBFUdts4vxUP2hHCE3XLg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdegtddgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    ephfeigedtveefjeeukeetfeektdeffeefteekfeffieeiteeigeehhfdutdeitdehnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:8yLyYtFvTSNS1W7-IlL3xOfBsvgO3oS3Sdu_N8KTEUBrUcBRo5KCvA>
-    <xmx:8yLyYlUmXileyPlweukr86uqOGbTSj8lyjtMqxKZfch2DRxRYVBtog>
-    <xmx:8yLyYoNMycCy1dfZvpZ3vAysf8xYZHf5rLAG8fcKQHNBTlUsx7IDKw>
-    <xmx:8yLyYkdE-rh6ZO1fHj8Xzu58k7EpkSiv74wCjIwtTKaGIJvL_jNgBA>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Aug 2022 05:03:44 -0400 (EDT)
-Date:   Tue, 09 Aug 2022 21:03:30 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 2/2] asus-wmi: Add support for ROG X13 tablet mode
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tue, 9 Aug 2022 05:23:37 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18CBAB48E;
+        Tue,  9 Aug 2022 02:23:33 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id i24so8228202qkg.13;
+        Tue, 09 Aug 2022 02:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=f+fdEIR1AEiTFiMAXgcgg4D5Xs19jgAX17houym3UV4=;
+        b=JK9r/P8zKiHlaVfCRdaWXmexAL4vdmpL7PrlLEtZiwxGGppGxVVO6Hukb5qigsqc6A
+         gddP03pAB5VCIqBGkzqQBut7W6Ng5qWqcsEaGzL5CKC3LSF7BEaa3xTwY3wCSmVnpSVd
+         6smtV5Wd8xmb2trZBRe/82gKTbS3/lYsYhiwWjSzFL2WKilDTsDN6IhQq/n8uD4p2szx
+         urPtqK+argJj5tWti1qs20ZbWmBbaGZ3EmsbDD7fk0/0KTwaNmQ5YPIDkOhPw4byTcJ1
+         EsmJNUH8/yDl2StB+qzJbjbQ6HUfKJvD983CdziZ5xnWqjz3AnMaDZb65ZQe+mXFQEPj
+         TpnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=f+fdEIR1AEiTFiMAXgcgg4D5Xs19jgAX17houym3UV4=;
+        b=tUH9m3HGgco3jRvJWDu3bLIVGuTTsDHTlF3xJEz1CmmUWkSsUNezfWLb8ctMiZQ3Dp
+         CdtZnfsEcnnBUdtgH4ig1xIp2t4QVBBj9abACUu6RttSUoExoguisk7JVu4EskbtaP3q
+         iS22/G0WPomJrodS5t62dSVCiREvsOLzNIIUv3Swq+dSLp5QHHnjnn66v91Pum0X2pwC
+         iLNR9Ekj9zUYGhHrmRr+ExOPgRrdM/TAux972rsyG3tvZLoRluvkSh9Gz2DaJeQbFZbp
+         2QF4lS6NF5Z8WZhD7zISfUqPrUAeVp/+35t8MSEi+/n+gyQSGvyXLwU4muRRr/Gbmrsn
+         9vRw==
+X-Gm-Message-State: ACgBeo14exC7fBVHEJsoUpyGnMDnKZG7BnAWzDp3Brs2nCi6kR8etYAT
+        fqGNH9tB66iXluiH2guMGMR46CfR0dkqwe75wwY=
+X-Google-Smtp-Source: AA6agR7u2vIoLyFHu+Fwj6xhzyZ9kJaHV+/fIU8nRNkSYf3YSOl3Q/USv6mQgiMQnEk2V8iPpPm9hGfpqIqMGtzmtDU=
+X-Received: by 2002:a05:620a:2809:b0:6b6:5908:316e with SMTP id
+ f9-20020a05620a280900b006b65908316emr17276480qkp.734.1660037012162; Tue, 09
+ Aug 2022 02:23:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220809025054.1626339-1-luke@ljones.dev> <20220809025054.1626339-3-luke@ljones.dev>
+In-Reply-To: <20220809025054.1626339-3-luke@ljones.dev>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 Aug 2022 11:22:55 +0200
+Message-ID: <CAHp75VdrWMD7A2PJ-nPa0aLYZPqmgC7+pZ2SMDMtGWjHrx=xxA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] asus-wmi: Implement TUF laptop keyboard LED modes
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <UTBCGR.Y86SR52O1CXJ@ljones.dev>
-In-Reply-To: <e6370233-eae5-5668-3f07-d1a70eb92690@redhat.com>
-References: <20220809033048.1634583-1-luke@ljones.dev>
-        <20220809033048.1634583-3-luke@ljones.dev>
-        <CAHp75VeAMBM+itfAn8hRDykV9rRLGXzck8L2kBgpGkVRsPUm5g@mail.gmail.com>
-        <e6370233-eae5-5668-3f07-d1a70eb92690@redhat.com>
-X-Mailer: geary/40.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+On Tue, Aug 9, 2022 at 4:51 AM Luke D. Jones <luke@ljones.dev> wrote:
+>
+> Adds support for changing the laptop keyboard LED modes. These
+> are visible effects such as static, rainbow, pulsing, colour cycles.
+>
+> These sysfs attributes are added to asus-nb-wmi:
+> - keyboard_rgb_save
+> - keyboard_rgb_mode
+> - keyboard_rgb_speed
 
-On Tue, Aug 9 2022 at 10:46:11 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi,
-> 
-> On 8/9/22 10:40, Andy Shevchenko wrote:
->>  On Tue, Aug 9, 2022 at 5:31 AM Luke D. Jones <luke@ljones.dev> 
->> wrote:
->>> 
->>>  Add quirk for ASUS ROG X13 Flow 2-in-1 to enable tablet mode with
->>>  lid flip (all screen rotations).
->> 
->>  ...
->> 
->>>          { KE_IGNORE, 0xC6, },  /* Ambient Light Sensor 
->>> notification */
->>>          { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip 
->>> action */
->>>  +       { KE_KEY, 0xBD, { KEY_PROG2 } }, /* Lid flip action on ROG 
->>> xflow laptops */
->> 
->>  Shouldn't you keep it sorted by value?
-> 
-> Actually as I mentioned in my review of v1, we don't want this
-> addition at all, see:
-> 
-> https://lore.kernel.org/platform-driver-x86/d9d79f9b-f3ab-c07e-9e18-5760ff828487@redhat.com/
-> 
+...
 
-My apologies, I will fix this.
+> +What:          /sys/devices/platform/<platform>/keyboard_rgb_speed
+> +Date:          Aug 2022
+> +KernelVersion: 6.1
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Set the speed of the selected RGB effect, the speed will not apply
+> +               until the keyboard_rgb_save attribute is set (write-only):
+> +                       * 0 - slow
+> +                       * 1 - medium
+> +                       * 2 - fast
 
+> \ No newline at end of file
 
-> Regards,
-> 
-> Hans
-> 
-> 
->> 
->>  ...
->> 
->>>   #define NOTIFY_KBD_FBM                 0x99
->>>   #define NOTIFY_KBD_TTP                 0xae
->>>   #define NOTIFY_LID_FLIP                        0xfa
->>>  +#define NOTIFY_LID_FLIP_ROG            0xbd
->> 
->>  Ditto.
->> 
->>  ...
->> 
->>>  +static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi 
->>> *asus)
->>>  +{
->>>  +       int result;
->>>  +
->>>  +       result = asus_wmi_get_devstate_simple(asus, 
->>> ASUS_WMI_DEVID_LID_FLIP_ROG);
->>>  +       if (result >= 0) {
->> 
->>  You missed the second part of my comment. Please, read carefully 
->> _all_
->>  reviewer's comments.
->> 
->>>  +               input_report_switch(asus->inputdev, 
->>> SW_TABLET_MODE, result);
->>>  +               input_sync(asus->inputdev);
->>>  +       }
->>>  +}
->> 
->>  ...
->> 
->>  Overall, it's getting better!
->> 
-> 
+^^^
 
+...
 
+> +       u8 save;
+> +       int err;
+
+> +
+> +       struct asus_wmi *asus = dev_get_drvdata(device);
+> +       struct led_classdev *cdev = &asus->keyboard_rgb_led.dev.led_cdev;
+
+No blank line in the definition block and try to keep "the longest
+line first", a.k.a. reversed xmas tree ordering.
+
+...
+
+> +       u8 mode;
+> +
+> +       struct asus_wmi *asus = dev_get_drvdata(device);
+
+Ditto.
+
+I would really recommend you spending some time to read the existing
+code (better recent one) and look for the common patterns.
+
+...
+
+> +       /* These are the known usable modes across all TUF/ROG */
+> +       if (mode >= 12 || mode == 10)
+
+The second condition was different in previous versions. Or am I
+confused by another patch series?
+
+> +         asus->keyboard_rgb_led.mode = 10;
+> +       else
+> +         asus->keyboard_rgb_led.mode = mode;
+
+...
+
+> +
+> +
+
+Single blank line is enough.
+
+...
+
+> -               struct mc_subled *mc_led_info = asus->keyboard_rgb_mode.subled_info;
+> -               struct led_classdev_mc *mc_cdev = &asus->keyboard_rgb_mode.dev;
+> +               struct mc_subled *mc_led_info = asus->keyboard_rgb_led.subled_info;
+> +               struct led_classdev_mc *mc_cdev = &asus->keyboard_rgb_led.dev;
+
+Not sure why this change happened...
+
+> -               asus->keyboard_rgb_mode.save = 1;
+> -               asus->keyboard_rgb_mode.mode = 0;
+> -               asus->keyboard_rgb_mode.speed = 0xeb;
+> +               asus->keyboard_rgb_led.save = 1;
+> +               asus->keyboard_rgb_led.mode = 0;
+> +               asus->keyboard_rgb_led.speed = 0xeb;
+
+...and this.
+Is it some kind of renaming? Can you split it to another patch if it
+was initially like that?
+
+-- 
+With Best Regards,
+Andy Shevchenko
