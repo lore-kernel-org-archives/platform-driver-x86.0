@@ -2,248 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E7FC25B06
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Aug 2022 18:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A715C19F2A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Aug 2022 22:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236081AbiHKSxi (ORCPT
+        id S236300AbiHKWCH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Aug 2022 14:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34632 "EHLO
+        Thu, 11 Aug 2022 18:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236104AbiHKSxa (ORCPT
+        with ESMTP id S236246AbiHKWCF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Aug 2022 14:53:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01AC59E11B
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Aug 2022 11:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660244008;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ozah201mnfEEDkVFShrVs48byUP3DGG4fcUS7109nSU=;
-        b=MHR15G1PInDUWUMNmzmaSdZaH1ixrJ2LRE1mKO8Wde2jE7N4OxbrjpAiSbBry5B66H4r8v
-        qGFvhhLbRgE7Ogih2ANBnSJAsk/o+SsJd8NZdtdj+sVf90yBeh5wvfrywYS4uyFLvQcoUi
-        9/ZyHU5C3ugdGewgExzdie5iN0RgAOk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-479-QAf3l11wP7aHFkk2szN_pQ-1; Thu, 11 Aug 2022 14:53:26 -0400
-X-MC-Unique: QAf3l11wP7aHFkk2szN_pQ-1
-Received: by mail-ej1-f71.google.com with SMTP id gs35-20020a1709072d2300b00730e14fd76eso5809371ejc.15
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Aug 2022 11:53:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Ozah201mnfEEDkVFShrVs48byUP3DGG4fcUS7109nSU=;
-        b=o6E9go3snlDnLAKj07NHbfSwfU54SwSRkZ9PmAY85ItdqkQ+zB1iy69IZjHA057twX
-         IFvMhEWBptB8La7YEBJWGu7wzr/pCKrDM3TzSzLIQUMdk+jVwYVZsP6nBeolefMlW/2W
-         9OqR0cOOlkKYdWUWjkPvjQqCOnFDFo/hWYGQ3l8/bNFE0KjDf6baXMgBq5K0jyi6csL4
-         VsGaz06j/A46kd49rkU8okiknqx/fQ2ztldXyWiUQxeVIBsxbcVsSoIIm6labkKtE59R
-         TdfhDo0gSTJXDPt8iqFndkTAxD6F/SRYGa8/NVCM46Ea5jW74haGfTSB0QovN+TgLh6g
-         80QQ==
-X-Gm-Message-State: ACgBeo3NGNzeM3J5YRpjHLm2oOQPUPzASnS5ElBZHyFX4WWlVKXKXJHD
-        6UdmmLiUJneRAr6xePH+NzRcRTa7uE7bk/86qN1zNpzjKvei0hBWll38Ooc4n8rPs8QjL3818VY
-        an9aQo12M5qzTFKUAkzVgPSXFQJ7TPBdE2A==
-X-Received: by 2002:a05:6402:538a:b0:43a:298e:bc2b with SMTP id ew10-20020a056402538a00b0043a298ebc2bmr407770edb.125.1660244005844;
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4Hf0C3qERg79013qKBqVwC7oHyWQmFquBERdgftTvV6Wvyxf06qOEovcWRBXcfm3s3neBGlw==
-X-Received: by 2002:a05:6402:538a:b0:43a:298e:bc2b with SMTP id ew10-20020a056402538a00b0043a298ebc2bmr407757edb.125.1660244005666;
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id f2-20020a17090660c200b007317ad29921sm3879701ejk.13.2022.08.11.11.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Aug 2022 11:53:25 -0700 (PDT)
-Message-ID: <23778397-8080-da39-fbde-22a10c820fbd@redhat.com>
-Date:   Thu, 11 Aug 2022 20:53:24 +0200
+        Thu, 11 Aug 2022 18:02:05 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2278567C9B;
+        Thu, 11 Aug 2022 15:02:03 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9942C5C005E;
+        Thu, 11 Aug 2022 18:02:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 11 Aug 2022 18:02:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660255321; x=
+        1660341721; bh=CTZyQu3k2T4ygetTKcwPn3NWnNrR4oMoRyDyOnzTuKk=; b=p
+        JXlaIsTzR3RliCOqfus13+e4Mw5GdwEzUtdCgETjH7tCHCuoojoQjiiBbJlQGEHQ
+        +DrYuEUM9trb5reHKBY0N1WqRTxfaGfDk0kkWQQezXC6KGrQOQTLt2cc8AKKhrXb
+        g5qiGCSSgb5KJxQKsfBctVNM8N+UjO/WdsGt37o1TSXKophZHQPOd+WF/mqQh8sK
+        qNPbsV9cKT1RsAdfLDQhRH97Vvz7YQ0hQHv6bK3uaNhiuh05QOifu7ICbM9OORoI
+        vFMh/h0+0IB11ilXad9kDhX0KLg2Pk6QjWtxEnO7xazXLEaLsf1Hh3QHycuQCOCK
+        TPse55UkdICxDp4v1qJEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660255321; x=
+        1660341721; bh=CTZyQu3k2T4ygetTKcwPn3NWnNrR4oMoRyDyOnzTuKk=; b=A
+        YnrfKvRehig5zjxHamNNXXl/LSZYPvSj3loCapKsFK60JBxRqY1s/XLKvLkrfz8q
+        bjpHiDptsCguKnMbqc06waPX+tZNrzlBLOZl2i8FoV6+Z7r2OMimYxcc3ZuUecND
+        PDXRD9uc17lFNPSx00dfczc1kb81yNQPLb9Q9Pdv5i61hmbw96rnKLN5F6BDz72z
+        PxftOR/vDJuKePK+R6ns3zrfRVe6mr4CRumug3ku0HdDYSJn+Wb/D/KHCA9Uya1L
+        g1NTdlNhZSkj3sTJTiKf0OK5w0bSI0DDO2+eLCfpe0f1Rr7g8ojzfev4Q0eDeRFO
+        uI6f6rs7oWm+20kr1dpmw==
+X-ME-Sender: <xms:WXz1YjjXGEr5NWN1FyDWKptOktiGCLfyr3c2fCCCfunWqtMOZOb-sg>
+    <xme:WXz1YgAPhh1jqe1014656hDUzvNPc-0dEAES0jse4PYn8EXtUhNWMpR2pKdDJORBo
+    0NQfpp1jIINhensm9E>
+X-ME-Received: <xmr:WXz1YjG77s4BpoqMX0F4_yoPHF4C9PyxcuO12v5o1EgGGvTZ6OWWlweH91MfA7UE-blEQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeghedgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeekfeffueejveeujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:WXz1YgQm4-sx7vJVUhU-LFQwomGc1cBNJaJe6jTcoXT-8nTRwiP3gw>
+    <xmx:WXz1YgyM0kOaC36wy9IWDOEWWsmklJkBPnFL8n1WF97u6g06z-5GJg>
+    <xmx:WXz1Ym4Fbw7ag1JDflznlDc8LdbLipobE0HDs8RCyxMIymVGxV8MfQ>
+    <xmx:WXz1Ys9qPdGlCfjTo3hhFGbwRntUJnyk46_9XQ03bJAzkPzBlaqlmA>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 11 Aug 2022 18:01:59 -0400 (EDT)
+Message-ID: <9ed62983bd03ed26cdb4399dd69b4096e8711fa9.camel@ljones.dev>
+Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
+ laptops
+From:   Luke Jones <luke@ljones.dev>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     andy.shevchenko@gmail.com, pobrn@protonmail.com, pavel@ucw.cz,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Aug 2022 10:01:51 +1200
+In-Reply-To: <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
+References: <20220809025054.1626339-1-luke@ljones.dev>
+         <20220809025054.1626339-7-luke@ljones.dev>
+         <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (by Flathub.org) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v3 3/4] leds: simatic-ipc-leds-gpio: add new model 227G
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220811153908.31283-1-henning.schild@siemens.com>
- <20220811153908.31283-4-henning.schild@siemens.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220811153908.31283-4-henning.schild@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On 8/11/22 17:39, Henning Schild wrote:
-> This adds support of the Siemens Simatic IPC227G. Its LEDs are connected
-> to GPIO pins provided by the gpio-f7188x module. We make sure that
-> gets loaded, if not enabled in the kernel config no LED support will be
-> available.
-> 
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+On Thu, 2022-08-11 at 15:53 +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 8/9/22 04:50, Luke D. Jones wrote:
+> > Support the hardware GPU MUX switch available on some models. This
+> > switch can toggle the MUX between:
+> >=20
+> > - 0, Dedicated mode
+> > - 1, Optimus mode
+> >=20
+> > Optimus mode is the regular iGPU + dGPU available, while dedicated
+> > mode switches the system to have only the dGPU available.
+> >=20
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>=20
+> I see that you have replied to this that it needs more work.
+>=20
+> Besides it needing more work, ideally this should hook into
+> the existing vga-switcheroo mechanism for this. Can you take
+> a look at that please?
+>=20
+> I think this might be the first non GPU driver doing vga-
+> switcheroo stuff. So this may be something to discuss
+> on the dri-devel list.
 
-Thanks, patch looks good to me:
+I'm not sure how this would work. In typical ASUS fashion they do non-
+standard stuff. This switch is a basic toggle that requires a reboot to
+enable after writing to the ACPI method, after reboot the dGPU becomes
+the only visible GPU on the system and (this GPU) can not be suspended.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+In short: it toggles the laptop from discrete-only mode, and optimus
+mode, requiring a reboot to switch.
 
-Regards,
+From what I understand of switcheroo it is more to manage having dual
+(or more) GPU available during runtime, and manage the power states,
+offload etc.
 
-Hans
+I have a vastly improved patch for this prepared now. Because of how
+the actual feature works (and the above explanation) it must be under
+the asus-nb-wmi sysfs (next to the dgpu_disable and egpu_enable toggles
+which are also unusual and non-standard work-arounds of Windows
+issues).
 
-
-> ---
->  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 42 ++++++++++++++++---
->  drivers/platform/x86/simatic-ipc.c            |  4 +-
->  .../platform_data/x86/simatic-ipc-base.h      |  1 +
->  include/linux/platform_data/x86/simatic-ipc.h |  1 +
->  4 files changed, 42 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.c b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> index 4c9e663a90ba..0d73dcbeec2d 100644
-> --- a/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio.c
-> @@ -13,28 +13,45 @@
->  #include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/platform_data/x86/simatic-ipc-base.h>
->  
-> -static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-> +struct gpiod_lookup_table *simatic_ipc_led_gpio_table;
-> +
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
->  	.dev_id = "leds-gpio",
->  	.table = {
-> -		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 1, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 2, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 3, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 5, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
->  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
->  	},
->  };
->  
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
-> +	.dev_id = "leds-gpio",
-> +	.table = {
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 1, NULL, 1, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 2, NULL, 2, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5, GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7, GPIO_ACTIVE_HIGH),
-> +	}
-> +};
-> +
->  static const struct gpio_led simatic_ipc_gpio_leds[] = {
-> -	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
->  	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
->  	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
->  	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
-> +	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
->  };
->  
->  static const struct gpio_led_platform_data simatic_ipc_gpio_leds_pdata = {
-> @@ -46,7 +63,7 @@ static struct platform_device *simatic_leds_pdev;
->  
->  static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
->  {
-> -	gpiod_remove_lookup_table(&simatic_ipc_led_gpio_table);
-> +	gpiod_remove_lookup_table(simatic_ipc_led_gpio_table);
->  	platform_device_unregister(simatic_leds_pdev);
->  
->  	return 0;
-> @@ -54,10 +71,25 @@ static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
->  
->  static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
->  {
-> +	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
->  	struct gpio_desc *gpiod;
->  	int err;
->  
-> -	gpiod_add_lookup_table(&simatic_ipc_led_gpio_table);
-> +	switch (plat->devmode) {
-> +	case SIMATIC_IPC_DEVICE_127E:
-> +		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_127e;
-> +		break;
-> +	case SIMATIC_IPC_DEVICE_227G:
-> +		if (!IS_ENABLED(CONFIG_GPIO_F7188X))
-> +			return -ENODEV;
-> +		request_module("gpio-f7188x");
-> +		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_227g;
-> +		break;
-> +	default:
-> +		return -ENODEV;
-> +	}
-> +
-> +	gpiod_add_lookup_table(simatic_ipc_led_gpio_table);
->  	simatic_leds_pdev = platform_device_register_resndata(NULL,
->  		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
->  		&simatic_ipc_gpio_leds_pdata,
-> diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-> index ca3647b751d5..1825ef21a86d 100644
-> --- a/drivers/platform/x86/simatic-ipc.c
-> +++ b/drivers/platform/x86/simatic-ipc.c
-> @@ -41,6 +41,7 @@ static struct {
->  	{SIMATIC_IPC_IPC127E, SIMATIC_IPC_DEVICE_127E, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC227D, SIMATIC_IPC_DEVICE_227D, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC227E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_227E},
-> +	{SIMATIC_IPC_IPC227G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC277E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E},
->  	{SIMATIC_IPC_IPC427D, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_NONE},
->  	{SIMATIC_IPC_IPC427E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_427E},
-> @@ -65,7 +66,8 @@ static int register_platform_devices(u32 station_id)
->  	}
->  
->  	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
-> -		if (ledmode == SIMATIC_IPC_DEVICE_127E)
-> +		if (ledmode == SIMATIC_IPC_DEVICE_127E ||
-> +		    ledmode == SIMATIC_IPC_DEVICE_227G)
->  			pdevname = KBUILD_MODNAME "_leds_gpio";
->  		platform_data.devmode = ledmode;
->  		ipc_led_platform_device =
-> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
-> index 39fefd48cf4d..57d6a10dfc9e 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc-base.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc-base.h
-> @@ -19,6 +19,7 @@
->  #define SIMATIC_IPC_DEVICE_427E 2
->  #define SIMATIC_IPC_DEVICE_127E 3
->  #define SIMATIC_IPC_DEVICE_227E 4
-> +#define SIMATIC_IPC_DEVICE_227G 5
->  
->  struct simatic_ipc_platform {
->  	u8	devmode;
-> diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-> index f3b76b39776b..7a2e79f3be0b 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc.h
-> @@ -31,6 +31,7 @@ enum simatic_ipc_station_ids {
->  	SIMATIC_IPC_IPC427E = 0x00000A01,
->  	SIMATIC_IPC_IPC477E = 0x00000A02,
->  	SIMATIC_IPC_IPC127E = 0x00000D01,
-> +	SIMATIC_IPC_IPC227G = 0x00000F01,
->  };
->  
->  static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
-
+Kind regards,
+Luke.
