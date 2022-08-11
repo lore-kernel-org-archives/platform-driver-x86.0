@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A715C19F2A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Aug 2022 22:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BC9C19F2A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Aug 2022 22:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236300AbiHKWCH (ORCPT
+        id S235969AbiHKWIg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Aug 2022 18:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42986 "EHLO
+        Thu, 11 Aug 2022 18:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236246AbiHKWCF (ORCPT
+        with ESMTP id S230006AbiHKWIg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Aug 2022 18:02:05 -0400
+        Thu, 11 Aug 2022 18:08:36 -0400
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2278567C9B;
-        Thu, 11 Aug 2022 15:02:03 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9942C5C005E;
-        Thu, 11 Aug 2022 18:02:01 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674CEA0262;
+        Thu, 11 Aug 2022 15:08:35 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id C8C215C006A;
+        Thu, 11 Aug 2022 18:08:34 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 11 Aug 2022 18:02:01 -0400
+  by compute5.internal (MEProxy); Thu, 11 Aug 2022 18:08:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660255321; x=
-        1660341721; bh=CTZyQu3k2T4ygetTKcwPn3NWnNrR4oMoRyDyOnzTuKk=; b=p
-        JXlaIsTzR3RliCOqfus13+e4Mw5GdwEzUtdCgETjH7tCHCuoojoQjiiBbJlQGEHQ
-        +DrYuEUM9trb5reHKBY0N1WqRTxfaGfDk0kkWQQezXC6KGrQOQTLt2cc8AKKhrXb
-        g5qiGCSSgb5KJxQKsfBctVNM8N+UjO/WdsGt37o1TSXKophZHQPOd+WF/mqQh8sK
-        qNPbsV9cKT1RsAdfLDQhRH97Vvz7YQ0hQHv6bK3uaNhiuh05QOifu7ICbM9OORoI
-        vFMh/h0+0IB11ilXad9kDhX0KLg2Pk6QjWtxEnO7xazXLEaLsf1Hh3QHycuQCOCK
-        TPse55UkdICxDp4v1qJEA==
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660255714; x=
+        1660342114; bh=8ZCDjbDiatX8L4toFofmUz+eVA1AbAXz/oRWIKvDcSo=; b=G
+        isUhB/wN1ioUV+Ag+wZaIMzQUEoJh5uuW07ezA4iHDfaVs3xkzdGlK/ZwjjtEdHP
+        k2286GAOwybQaVszqFrXG5vvSY2awa/zhIYMCfxRt75f5ZhSUv+lQLkzOxPXtkmA
+        Ld/q5f3ZEmtujnGCfGCbbmim9zTHWwoz3d4KlDzqWYpZ7zHNDyfYwhFgippLhtto
+        KvDXSqz/Wh1z/zLktc2Ypm9LjX4IWv9GsgtKXueFssf2NPo1yNxqX++WAurm2ffT
+        Q9SOHe5x/VfHg5m6pVXmkUW3qkWCRQ4eTqT65X/OFbEJDNZn0GU8a4rnKnJDjTOP
+        bc/xTV0gXM0/4G2G/AM8w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660255321; x=
-        1660341721; bh=CTZyQu3k2T4ygetTKcwPn3NWnNrR4oMoRyDyOnzTuKk=; b=A
-        YnrfKvRehig5zjxHamNNXXl/LSZYPvSj3loCapKsFK60JBxRqY1s/XLKvLkrfz8q
-        bjpHiDptsCguKnMbqc06waPX+tZNrzlBLOZl2i8FoV6+Z7r2OMimYxcc3ZuUecND
-        PDXRD9uc17lFNPSx00dfczc1kb81yNQPLb9Q9Pdv5i61hmbw96rnKLN5F6BDz72z
-        PxftOR/vDJuKePK+R6ns3zrfRVe6mr4CRumug3ku0HdDYSJn+Wb/D/KHCA9Uya1L
-        g1NTdlNhZSkj3sTJTiKf0OK5w0bSI0DDO2+eLCfpe0f1Rr7g8ojzfev4Q0eDeRFO
-        uI6f6rs7oWm+20kr1dpmw==
-X-ME-Sender: <xms:WXz1YjjXGEr5NWN1FyDWKptOktiGCLfyr3c2fCCCfunWqtMOZOb-sg>
-    <xme:WXz1YgAPhh1jqe1014656hDUzvNPc-0dEAES0jse4PYn8EXtUhNWMpR2pKdDJORBo
-    0NQfpp1jIINhensm9E>
-X-ME-Received: <xmr:WXz1YjG77s4BpoqMX0F4_yoPHF4C9PyxcuO12v5o1EgGGvTZ6OWWlweH91MfA7UE-blEQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeghedgtdehucetufdoteggodetrfdotf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660255714; x=
+        1660342114; bh=8ZCDjbDiatX8L4toFofmUz+eVA1AbAXz/oRWIKvDcSo=; b=r
+        1yp9+b11KeIx+50+UEMu2jx/k+Q8BluB2l55aVCVoeSvxhsPN7NZqpIkhAAHdzVP
+        5Vsyw5VJVnlS1KbXsZA/KEbDLXCWpf9zlRT0ciWCcCK/HgRWbnTzmg2AgGx646q3
+        UEreodsPxldzb8inVCel6kuTkovlrT/eiC0Akvo6aV+b0yTdvJkLxeWYJHQTJgBD
+        MKfslJNMtYxSf6FnjpXsTo0GWBdzTzy+wxQs/mroeF9p0nOHrQjbRynAytsf21RE
+        7d6dPylElT56nBL4Y1rfn3d5ei6YbdvWfWb20/n3NhALT3aKP1ZSXuoiQAYLdalh
+        9BxXZH5G5Oqmd5Tcu2aiQ==
+X-ME-Sender: <xms:4n31Yrd0RXt_mlYkV4TnW33E6SqzwG-urNcTn5kQR0tkbwygx11DAQ>
+    <xme:4n31YhM4GXYpOKaE2XzG5ukYcmPumoWvzQ5V9i-Q5XU8xqIrAzEBroPqGJAYV1EpQ
+    uVlzyMVRzbZi5zM9QM>
+X-ME-Received: <xmr:4n31YkhKAhRB2R9UJI_oBMnw-o2eyKg6-YhxWiuBGPcjRNmL4SF3Gb2r1wmzJRMbDbseBQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeghedgtdeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhk
@@ -57,25 +57,28 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeghedgtdehucetufdoteggod
     hnpeekfeffueejveeujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieen
     ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
     eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:WXz1YgQm4-sx7vJVUhU-LFQwomGc1cBNJaJe6jTcoXT-8nTRwiP3gw>
-    <xmx:WXz1YgyM0kOaC36wy9IWDOEWWsmklJkBPnFL8n1WF97u6g06z-5GJg>
-    <xmx:WXz1Ym4Fbw7ag1JDflznlDc8LdbLipobE0HDs8RCyxMIymVGxV8MfQ>
-    <xmx:WXz1Ys9qPdGlCfjTo3hhFGbwRntUJnyk46_9XQ03bJAzkPzBlaqlmA>
+X-ME-Proxy: <xmx:4n31Ys-8-cL9z1vg1dXBV9zMPJkcmzLaT1FKvn1C1lpP92eVzHUcqQ>
+    <xmx:4n31YnsiDzGe0IDFgAeDkea2BEn_knIdEaQ9pX_uJld_wmMtcwmikg>
+    <xmx:4n31YrHMtnDN-bpeTswx2mUnSUXyP30gohwpSR00SZaLhM9id7SgJg>
+    <xmx:4n31YnK373oLA-XbtGUsNWRHOafkC5YsKXY9jD2SFbMguqWHeeXLgg>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 11 Aug 2022 18:01:59 -0400 (EDT)
-Message-ID: <9ed62983bd03ed26cdb4399dd69b4096e8711fa9.camel@ljones.dev>
-Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
- laptops
+ 11 Aug 2022 18:08:32 -0400 (EDT)
+Message-ID: <ef32187cf1090de6e8cda2bf0218985cd3f4c21e.camel@ljones.dev>
+Subject: Re: [PATCH v3 4/6] asus-wmi: Document previously added attributes
 From:   Luke Jones <luke@ljones.dev>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     andy.shevchenko@gmail.com, pobrn@protonmail.com, pavel@ucw.cz,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Aug 2022 10:01:51 +1200
-In-Reply-To: <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 12 Aug 2022 10:08:25 +1200
+In-Reply-To: <a0688d90-8b20-fc50-56ec-d50a5601f468@redhat.com>
 References: <20220809025054.1626339-1-luke@ljones.dev>
-         <20220809025054.1626339-7-luke@ljones.dev>
-         <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
+         <20220809025054.1626339-5-luke@ljones.dev>
+         <CAHp75VeLWGURdL9SK4+fLPRsM_Dc3bNvGSoWXKOWMSz=3CQUQg@mail.gmail.com>
+         <a0688d90-8b20-fc50-56ec-d50a5601f468@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (by Flathub.org) 
@@ -84,50 +87,42 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-On Thu, 2022-08-11 at 15:53 +0200, Hans de Goede wrote:
+On Thu, 2022-08-11 at 17:08 +0200, Hans de Goede wrote:
 > Hi,
 >=20
-> On 8/9/22 04:50, Luke D. Jones wrote:
-> > Support the hardware GPU MUX switch available on some models. This
-> > switch can toggle the MUX between:
+> On 8/9/22 11:25, Andy Shevchenko wrote:
+> > On Tue, Aug 9, 2022 at 4:51 AM Luke D. Jones <luke@ljones.dev>
+> > wrote:
+> > >=20
+> > > Documents some previously added attributes:
+> > > - dgpu_disable
+> > > - egpu_enable
+> > > - panel_od
 > >=20
-> > - 0, Dedicated mode
-> > - 1, Optimus mode
+> > Try to find a commit that introduced thouse and add the respective
+> > Fixes tag.
 > >=20
-> > Optimus mode is the regular iGPU + dGPU available, while dedicated
-> > mode switches the system to have only the dGPU available.
+> > ...
 > >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * keyboa=
+rd - 0 or 1, unknown what effect
+> > > this really has
+> > > \ No newline at end of file
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * keyboa=
+rd - 0 or 1, unknown what effect
+> > > this really has
+> >=20
+> > Should be part of another patch.
 >=20
-> I see that you have replied to this that it needs more work.
+> Ack to both remarks.
 >=20
-> Besides it needing more work, ideally this should hook into
-> the existing vga-switcheroo mechanism for this. Can you take
-> a look at that please?
->=20
-> I think this might be the first non GPU driver doing vga-
-> switcheroo stuff. So this may be something to discuss
-> on the dri-devel list.
+> Luke please make this patch one of the first patches in your next
+> version / patch-series and then add the doucmentation of the new
+> kbd RGB backlight attributes in the patches where you are also
+> adding those actual attributes.
 
-I'm not sure how this would work. In typical ASUS fashion they do non-
-standard stuff. This switch is a basic toggle that requires a reboot to
-enable after writing to the ACPI method, after reboot the dGPU becomes
-the only visible GPU on the system and (this GPU) can not be suspended.
-
-In short: it toggles the laptop from discrete-only mode, and optimus
-mode, requiring a reboot to switch.
-
-From what I understand of switcheroo it is more to manage having dual
-(or more) GPU available during runtime, and manage the power states,
-offload etc.
-
-I have a vastly improved patch for this prepared now. Because of how
-the actual feature works (and the above explanation) it must be under
-the asus-nb-wmi sysfs (next to the dgpu_disable and egpu_enable toggles
-which are also unusual and non-standard work-arounds of Windows
-issues).
-
-Kind regards,
-Luke.
+Yep, done. Everything is looking much cleaner too.
