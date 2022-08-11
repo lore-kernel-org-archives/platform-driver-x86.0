@@ -2,84 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55635C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Aug 2022 15:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCD6C00140
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Aug 2022 01:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbiHJPGr (ORCPT
+        id S233301AbiHKBcK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Aug 2022 11:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
+        Wed, 10 Aug 2022 21:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbiHJPGr (ORCPT
+        with ESMTP id S230461AbiHKBcJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Aug 2022 11:06:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CF660500
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Aug 2022 08:06:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A664E60EFC
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Aug 2022 15:06:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 100BDC433D6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Aug 2022 15:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660144005;
-        bh=9sEaFpuRa1HQLWJpMOjmAfXLkRvYb+SnYT1mqAFc9xs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=SOV0ahYMEQ+TsYGS/krDnRwZDVff1zNhwqFLmu3Aeh5Fe+g1kjj/og5RnT5glP1Y4
-         Vov/MT6PvUuIEmoagp0Yyb8xsuE7vGhoTpNI6ELxGUpLvN2ZuNW2YD4IyAgFbRxpOp
-         a/Q2S1A5yknveg8qIrg6E0tuT9BVDCkW1FTwXC8mTUlr3c/v/6j4stwy6wN48RcCr9
-         SAKgaKzbqvej8WgJclxjyuGoOvbq5FvGRvh3+NDrjuQzde0v4KrhwiEGcu6mzJDAzR
-         kew4zkRoT9r1devhoBV+9X/4EkuhSHy3F7f4DzkRzJAYwIYnO9QHHRIW3ceiHP4B+q
-         IiDRChyClS9Kw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E8BB2C433E7; Wed, 10 Aug 2022 15:06:44 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216347] ACPI power profile keeps switching to "low-power" on
- ThinkPad T14 Gen1 (AMD)
-Date:   Wed, 10 Aug 2022 15:06:44 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216347-215701-I9Z3EeeTZ1@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216347-215701@https.bugzilla.kernel.org/>
-References: <bug-216347-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 10 Aug 2022 21:32:09 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB48A844EF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Aug 2022 18:32:08 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id c24so11030139pgg.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Aug 2022 18:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=EtdTk/pSm9fy7p3GeAyhP376teZ1FETJ+RMWAFF66Dk=;
+        b=h22lEBdacTWkUHcVnyi3JevWq/kaqoGkVT8thpksGlkrXxJ5DjahL9KOr6lCV+OigQ
+         zkZJgORC/WVJpi5lv/xrQyTaiRMw3AycUOygq661BViTc58QlBK8kB6k6zcsgZs7jYOZ
+         z9gcwZ+h1secFtSGc055AYWTJ6skZ/PeBoeav3TZCVvcHQY96R+HtZKNvW2iKlSrom8/
+         Mlb5OSXEvGpu8QI6JX1/g80tFp0k7t0Da5oGy9EgIdDh/zs/2MVyJy8uRsMIRBjXvKde
+         /cCFNwaErJnpAzoXvQNBzF88suuXDryZwt6eyr3+L6ldbmuVSdPTto+ZBNlrWVh/Bbdm
+         y+vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=EtdTk/pSm9fy7p3GeAyhP376teZ1FETJ+RMWAFF66Dk=;
+        b=pqinEt6NOWxrur6qYKt+M0S316ETDoI7OWRI0T5a5fbQFy/K3+Z/W2mbOYIqgNcVVU
+         a7wUpBLeig1QQWEz6Oa9qFmwVCPk1wFXUwJ49y7OPfaPiEKLxO24HhSLuZkvpmnPlzlq
+         210IJC0Lg0dtgiLB5KGeWptcI/4XhaxBA0Ha1/HRin/qjMwEg6Rrk6vkLsR7TPS7bl0P
+         dvMT7LXqLIpFOQ9BMj8xF4un9q0T3pLadCjT+YOThRrQiT8tbYr1nk8r+OgPxdPIimYj
+         MLin6PKknYnHsvLc0pbUuykxKLXB7e+ZRu5kk1SJ4gUFj+7k8xTuOlM82gDJ2lblvqeJ
+         /bBQ==
+X-Gm-Message-State: ACgBeo3244cCW0RY7NRpij3btyHZddYWhecuMscLe1CDGufpOzlbBNWz
+        gMDwpD2kkJGeU69b+CIZBfc=
+X-Google-Smtp-Source: AA6agR5M47jN+jf6IJ2MqPEo1aolwGXM5PCmU8Yhf7mclaBwjp73wC6CSyaOgrcN1hSWgmuL0b2/YQ==
+X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id r11-20020a65498b000000b0041208e42842mr25003051pgs.71.1660181527956;
+        Wed, 10 Aug 2022 18:32:07 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id f206-20020a6238d7000000b0052d50e14f1dsm2695359pfa.78.2022.08.10.18.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 18:32:07 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: ye.xingchen@zte.com.cn
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH linux-next] platform/x86: asus-wmi:Use the function kobj_to_dev()
+Date:   Thu, 11 Aug 2022 01:32:03 +0000
+Message-Id: <20220811013203.16010-1-ye.xingchen@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216347
+From: ye xingchen <ye.xingchen@zte.com.cn>
 
---- Comment #3 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-If PPD isn't the cause maybe it's the firmware causing it?
+Use kobj_to_dev() instead of open-coding it.
 
-If you can modify the kernel driver, can you please add some debugging
-statement here to see if a related event is coming through:
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+---
+ drivers/platform/x86/asus-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-https://github.com/torvalds/linux/blob/master/drivers/platform/x86/thinkpad=
-_acpi.c#L11023
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 89b604e04d7f..afb33a084f44 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2006,7 +2006,7 @@ static struct attribute *hwmon_attributes[] = {
+ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 					  struct attribute *attr, int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
+ 	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
+ 
+@@ -3294,7 +3294,7 @@ static struct attribute *platform_attributes[] = {
+ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 				    struct attribute *attr, int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	bool ok = true;
+ 	int devid = -1;
+-- 
+2.25.1
