@@ -2,130 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE04C00140
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Aug 2022 08:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AF4C25B0E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Aug 2022 08:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235743AbiHLIkj (ORCPT
+        id S237455AbiHLIoP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Aug 2022 04:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
+        Fri, 12 Aug 2022 04:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237326AbiHLIkQ (ORCPT
+        with ESMTP id S237127AbiHLIoO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Aug 2022 04:40:16 -0400
-X-Greylist: delayed 505 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 12 Aug 2022 01:40:14 PDT
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42D0DBEA;
-        Fri, 12 Aug 2022 01:40:13 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 10:31:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=t-8ch.de; s=mail;
-        t=1660293104; bh=wDg6UBM71uMikyiOtiwiJmqJ+yurtqkNI7534WQKogc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EF2OL4H9HtMyHEQNDskMDUjBotKdr9ltPIbv3ExUgVX74avgOuxmBWaGcYnKECaJ3
-         WTovhYZdVbXcuc8sHuH692VXTO+NJFw6auxnhVhunDOIhwNxo6Jji7PHnUxFffgqyI
-         9tbMjcotTk3+XO+M626axEhFu52fcWmGGcVDvPBM=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Luke Jones <luke@ljones.dev>, andy.shevchenko@gmail.com,
-        pobrn@protonmail.com, pavel@ucw.cz,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
- laptops
-Message-ID: <0239b3bb-d9cb-4549-9e9e-006923b61634@t-8ch.de>
-References: <20220809025054.1626339-1-luke@ljones.dev>
- <20220809025054.1626339-7-luke@ljones.dev>
- <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
- <9ed62983bd03ed26cdb4399dd69b4096e8711fa9.camel@ljones.dev>
- <b287e98a-7880-5979-94a4-38715d448de4@redhat.com>
+        Fri, 12 Aug 2022 04:44:14 -0400
+Received: from vm3.sequanux.org (static.55.155.9.5.clients.your-server.de [5.9.155.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D126CA8965;
+        Fri, 12 Aug 2022 01:44:12 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by vm3.sequanux.org (Postfix) with ESMTP id EBDD2108095;
+        Fri, 12 Aug 2022 10:43:53 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
+Received: from vm3.sequanux.org ([127.0.0.1])
+        by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ryt02m_ZlS5e; Fri, 12 Aug 2022 10:43:14 +0200 (CEST)
+Received: from localhost (softwrestling.org [95.216.36.37])
+        by vm3.sequanux.org (Postfix) with ESMTPSA id 06647108752;
+        Fri, 12 Aug 2022 10:43:13 +0200 (CEST)
+Date:   Fri, 12 Aug 2022 10:43:03 +0200
+From:   simon.guinot@sequanux.org
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>
+Subject: Re: [PATCH v3 1/4] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+Message-ID: <YvYSl2FpOGnqZfTZ@76cbfcf04d45>
+References: <20220811153908.31283-1-henning.schild@siemens.com>
+ <20220811153908.31283-2-henning.schild@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ouneLSNkbbKTFRML"
 Content-Disposition: inline
-In-Reply-To: <b287e98a-7880-5979-94a4-38715d448de4@redhat.com>
-Jabber-ID: thomas@t-8ch.de
-X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
-X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
+In-Reply-To: <20220811153908.31283-2-henning.schild@siemens.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 2022-08-12 09:59+0200, Hans de Goede wrote:
-> Date: Fri, 12 Aug 2022 09:59:29 +0200
-> From: Hans de Goede <hdegoede@redhat.com>
-> To: Luke Jones <luke@ljones.dev>
-> Cc: andy.shevchenko@gmail.com, pobrn@protonmail.com, pavel@ucw.cz,
->  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
->  laptops
-> User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
->  Thunderbird/91.12.0
-> 
-> Hi,
-> 
-> On 8/12/22 00:01, Luke Jones wrote:
-> > Hi Hans,
-> > 
-> > On Thu, 2022-08-11 at 15:53 +0200, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 8/9/22 04:50, Luke D. Jones wrote:
-> >>> Support the hardware GPU MUX switch available on some models. This
-> >>> switch can toggle the MUX between:
-> >>>
-> >>> - 0, Dedicated mode
-> >>> - 1, Optimus mode
-> >>>
-> >>> Optimus mode is the regular iGPU + dGPU available, while dedicated
-> >>> mode switches the system to have only the dGPU available.
-> >>>
-> >>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> >>
-> >> I see that you have replied to this that it needs more work.
-> >>
-> >> Besides it needing more work, ideally this should hook into
-> >> the existing vga-switcheroo mechanism for this. Can you take
-> >> a look at that please?
-> >>
-> >> I think this might be the first non GPU driver doing vga-
-> >> switcheroo stuff. So this may be something to discuss
-> >> on the dri-devel list.
-> > 
-> > I'm not sure how this would work. In typical ASUS fashion they do non-
-> > standard stuff. This switch is a basic toggle that requires a reboot to
-> > enable after writing to the ACPI method, after reboot the dGPU becomes
-> > the only visible GPU on the system and (this GPU) can not be suspended.
-> > 
-> > In short: it toggles the laptop from discrete-only mode, and optimus
-> > mode, requiring a reboot to switch.
-> > 
-> > From what I understand of switcheroo it is more to manage having dual
-> > (or more) GPU available during runtime, and manage the power states,
-> > offload etc.
-> 
-> Right, I did not realize this requires a reboot, that would be
-> something to mention in the Documentation bits accompanying the patch.
-> 
-> This is also a reason why it is good to have the docs update in
-> the same patch as adding the functionality, because the docs may
-> help with reviewing.
-> 
-> Anyways I agree that if this requires a reboot then using
-> the vga switcheroo stuff is not applicable. So we can just go with
-> a simple(ish) asus-wmi sysfs attribute.
+--ouneLSNkbbKTFRML
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Would this not fit the existing "firmware-attributes" class?
-It even has a flag to signal that a reboot is required after an attribute has
-been changed.
+On Thu, Aug 11, 2022 at 05:39:05PM +0200, Henning Schild wrote:
+> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
+> very similar to the ones from Fintek. In other subsystems they also
+> share drivers and are called a family of drivers.
+>=20
+> For the GPIO subsystem the only difference is that the direction bit is
+> reversed and that there is only one data bit per pin. On the SuperIO
+> level the logical device is another one.
+>=20
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/gpio/gpio-f7188x.c | 71 +++++++++++++++++++++++++++-----------
+>  1 file changed, 51 insertions(+), 20 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+> index 18a3147f5a42..7b05ecc611e9 100644
+> --- a/drivers/gpio/gpio-f7188x.c
+> +++ b/drivers/gpio/gpio-f7188x.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882, F71889 and =
+F81866
+> + * and Nuvoton Super-I/O NCT6116D
+>   *
+>   * Copyright (C) 2010-2013 LaCie
+>   *
+> @@ -22,13 +23,12 @@
+>  #define SIO_LDSEL		0x07	/* Logical device select */
+>  #define SIO_DEVID		0x20	/* Device ID (2 bytes) */
+>  #define SIO_DEVREV		0x22	/* Device revision */
+> -#define SIO_MANID		0x23	/* Fintek ID (2 bytes) */
+> =20
+> -#define SIO_LD_GPIO		0x06	/* GPIO logical device */
+>  #define SIO_UNLOCK_KEY		0x87	/* Key to enable Super-I/O */
+>  #define SIO_LOCK_KEY		0xAA	/* Key to disable Super-I/O */
+> =20
+> -#define SIO_FINTEK_ID		0x1934	/* Manufacturer ID */
+> +#define SIO_LD_GPIO_FINTEK	0x06	/* GPIO logical device */
+> +#define SIO_LD_GPIO_NUVOTON	0x07	/* GPIO logical device */
 
-Maybe it is overkill to use it only for this, though.
+Please indulge me and add a new line here.
 
-> > I have a vastly improved patch for this prepared now. Because of how
-> > the actual feature works (and the above explanation) it must be under
-> > the asus-nb-wmi sysfs (next to the dgpu_disable and egpu_enable toggles
-> > which are also unusual and non-standard work-arounds of Windows
-> > issues).
-> 
-> Ack, sounds good.
+>  #define SIO_F71869_ID		0x0814	/* F71869 chipset ID */
+>  #define SIO_F71869A_ID		0x1007	/* F71869A chipset ID */
+>  #define SIO_F71882_ID		0x0541	/* F71882 chipset ID */
+> @@ -37,7 +37,7 @@
+>  #define SIO_F81866_ID		0x1010	/* F81866 chipset ID */
+>  #define SIO_F81804_ID		0x1502  /* F81804 chipset ID, same for f81966 */
+>  #define SIO_F81865_ID		0x0704	/* F81865 chipset ID */
+> -
+> +#define SIO_NCT6116D_ID		0xD283  /* NCT6116D chipset ID */
+> =20
 
-Thomas
+=2E.. snip ...
+
+> @@ -485,12 +516,8 @@ static int __init f7188x_find(int addr, struct f7188=
+x_sio *sio)
+>  		return err;
+> =20
+>  	err =3D -ENODEV;
+> -	devid =3D superio_inw(addr, SIO_MANID);
+> -	if (devid !=3D SIO_FINTEK_ID) {
+> -		pr_debug(DRVNAME ": Not a Fintek device at 0x%08x\n", addr);
+> -		goto err;
+> -	}
+
+Sorry for missing that at my first review. You can't remove this block
+of code. This driver is poking around on the I2C bus, which is not
+great. So we want to make sure as much as possible that we are speaking
+to the right device.
+
+Simon
+
+--ouneLSNkbbKTFRML
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmL2EpMACgkQzyg/RDPm
+szouqQ//Xm9sagJ+5NtJYyyq5s/U5oK5vxLAExQHpoto22qUjrB2E/30aiJt5v4N
+XzoV9Iqya8fOGFJeIwXwhKmoKdX/LW3XyOGK5Wp3jlBVsOw+551T6A6PxW2hH6SZ
+5+2CkgOw3+PoCs5XAN4eU33k4uii31D8vtR0fGtQ0HvrtuPWjtNTawaXH2JFVC5h
+kBZF+o7vUYIv6RJJf1O3zQL9uWPtJl6QuHmLVw9+AfW0ndQjFWzpgxCcvb29VS9g
+sjGlgqyDLeoDODxP+0plqFa/Pb4n74Mi/Xlv9ygRT7xtc2Cz4U4VFaZqvo31yQ83
+ogbwvsR+SW3KaB/GS4wPVg5ogYUmVLo+46HIvaiMxW61/GWYDUH5EE5T62EWOdMw
+B4+/FwUiZ6DMOvsSgHkkIztNswBMjZrOPPoYkrqs1thV0rXDQUzPXhJGTFGY8glw
+iDlF+FcQzBsxKQ3AAtLFAs4gNaPa1tNYcNhgneXpA2pv5c57GSmkJ15hEkwWO0qs
+p+shGzwecgkE3g1pKz+QoxGNtZBte4K+d2HpI67XxPi9W4/Fh8T3u3TeKVazXDN/
+uudFsjYx31Njb/mDe6AbAgfo1TZF0xajk8PTjR+gMq94Y78cK2nxwKa486OqHVRw
+IEosfhp62UPWz6faNf1r/mkbC78NdVm5xFHkamv2PprSVGI6Dw0=
+=gt73
+-----END PGP SIGNATURE-----
+
+--ouneLSNkbbKTFRML--
