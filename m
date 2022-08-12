@@ -2,184 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F3C00140
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Aug 2022 08:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FA7C282E7
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Aug 2022 10:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237523AbiHLIpL (ORCPT
+        id S238453AbiHLKXY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Aug 2022 04:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56494 "EHLO
+        Fri, 12 Aug 2022 06:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237559AbiHLIpC (ORCPT
+        with ESMTP id S237800AbiHLKXV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Aug 2022 04:45:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 86BE9A8CCE
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Aug 2022 01:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660293900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wxoycUTdX5EPODZXQ/28haLXP8FulwP/RdMCFThGP5k=;
-        b=At91W78CjkCIbk8AEzJQ2kKrmflI9FuQNtl9qpx6+4oP5oELRvarRdO3oOkI+ZZrErlV3b
-        kasOuuF7R1x/wabqrhMY3IyGs8/bTx3Zub8TsGuC25BXoZ+GWLTUCW31g5qnGEs5rqlboG
-        g9qf5L4+1hJp+S/g6wBi6fVgldjXI9A=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-593-Hr_hqEzfN7OKn3Ytu9vNiw-1; Fri, 12 Aug 2022 04:44:59 -0400
-X-MC-Unique: Hr_hqEzfN7OKn3Ytu9vNiw-1
-Received: by mail-ej1-f70.google.com with SMTP id qf23-20020a1709077f1700b007308a195618so189283ejc.7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Aug 2022 01:44:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=wxoycUTdX5EPODZXQ/28haLXP8FulwP/RdMCFThGP5k=;
-        b=5+cpsF5vWKXj9TPW8X0Slg7zS1uLqXfZ21vm2Sel8RawdSfzm/O7KyNsXsdqpLRWoX
-         XdhPW7R+afXGXi5jG/zrNrCMslgbcvemJetYjKIT7iyRWMosnCaSIYN/y5yhNO7u8cDj
-         f+2JMEH21plrBRmSpiRyLg4WcW+WVUjViUiyOX3BluNq4+09aTRURgE37vhu2UheEXIf
-         5MKPzIqH7nPbytTVLi/u57QOqpX8Vx+RuuZQiHiv1ODCHqYU9TdfWGdc8SIpdAguVNx5
-         USf3lYa+IhrdDbl39Wap5WjlzkheRV4fNMMfiOV5yG1cYw2lksvOwI7xFkXtc80VZTT0
-         Xk5A==
-X-Gm-Message-State: ACgBeo2w7G8IwWGRD21rSls69wWrRFLoxtUnzrItkFbpxTGe0LkhZWQY
-        fVUezir44FVFInwQ/zVmnZUKtJmVimxiQrVzD9wf1Rw42leVcQraU9tlfm83teMn7QipW3J7Eqw
-        /ALjfZYMHmlrWtOekC6T0UdV0in031ZbdSQ==
-X-Received: by 2002:a05:6402:b1b:b0:442:8cee:177d with SMTP id bm27-20020a0564020b1b00b004428cee177dmr2605044edb.318.1660293897724;
-        Fri, 12 Aug 2022 01:44:57 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4faCKb3OVGqQbsXrDmbmSTRFWZL9S/wtfh7PDkDMvgkKLZysKH6klOEkjyTQwgLnIp49JfNA==
-X-Received: by 2002:a05:6402:b1b:b0:442:8cee:177d with SMTP id bm27-20020a0564020b1b00b004428cee177dmr2604927edb.318.1660293895418;
-        Fri, 12 Aug 2022 01:44:55 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id e6-20020a1709061e8600b006fec4ee28d0sm536426ejj.189.2022.08.12.01.44.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Aug 2022 01:44:54 -0700 (PDT)
-Message-ID: <c3bb0989-78d9-c513-1669-75407b2acbac@redhat.com>
-Date:   Fri, 12 Aug 2022 10:44:54 +0200
+        Fri, 12 Aug 2022 06:23:21 -0400
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-eopbgr50063.outbound.protection.outlook.com [40.107.5.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F3E92F40;
+        Fri, 12 Aug 2022 03:23:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lad0l3Yvwn/0AMFe/gsnVFNstclHlgPF3QYUQVEdNoRUsGbg/q88r7AxeNnZqUGLShq0ZG26kiN+Vvew5wgdjbrs+7Al41lDZV7BdB7Nj5nwdz9cwmK0ZgCLXMym1wa2CDpEUyD6gqyl9XjUg/GEcHjtFyyD6u83XebvhP0SyizQxreECpcVEfQ3/smYMzBl7mbTZys6HUx4Q8tv8n4MDVpVkj9bwBGSrO3if5a8xw9to7j5Q+MG6+NW5U2sNNKZVkTR47gW3/nFtdI/fZuq0ZzcTOrJ5icNq8vb2GsxRKKVaoNr+yqqO+EsOrfdsRhOH6p63bkamF9pzO5C08wLfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LmCJV09CoIOJyIXziHjG81wQZTz6g85dUgxakKnGWdw=;
+ b=nLXK7yj7vtVASVjeSVuhTY/jTCzjjmYBWu9ecnnXzwzDZQtOykL7SZlfHWvcbmaIC0pppXY8/qjGw/FOZb7tMnMVUwqbNSOXoBUbDQyUPLJb88j58jRwGKSHTrL7tNb1rjNoiXULT/ILqE26STobzRSOa7S1WOPtKRQfxYXcSnL3t221mFZLyTJXouFRBN8tYBnGaHi14LjFNtBXiKd640tp+S71ifUut9rfRpDdW2p/9z5h2UolDVpp9UvB4t4HKSenzu2tlV0Ge9p+MuJl5pUYHB7qcR4YyDFXLh02mb0/qqZgaNiUSEh3epwE67KIu4tnmbj0Wb45B5FGdZi5og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmCJV09CoIOJyIXziHjG81wQZTz6g85dUgxakKnGWdw=;
+ b=hNwlvlH1XbiKxvx23y8Ptv6gJHeJ29aT8/HwvgLFFC9TsJWw6/lZkRmTvLUnILCelk6pIWRV+ERCWSsdLqCQT2DpOWdhHWWVbRFP8kyly+GcSQeHiNdsKHMLNnbsoUKv8KtPFgBRC4OBLTLQvePHJH6LQ6QuNJQKmu5usgDKpBzY8ByL6yPgkUWfZ3X/Cn8sLb3S16VV9D5ud/quNViLeJEdw27VFmURq1DrtNo/m+ZEHuX5bzNuTQuoI29xazYV9YL1C+r1YIP4dUJeZSGPIuzD5Psny+vXRqvpJDWnmkxTkxinkwoTmvP/Wvzt8nmA0XyzYXj8IMx7N1OKvNjYKw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by DB8PR10MB3813.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:169::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Fri, 12 Aug
+ 2022 10:23:17 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b%3]) with mapi id 15.20.5525.010; Fri, 12 Aug 2022
+ 10:23:17 +0000
+Date:   Fri, 12 Aug 2022 12:23:12 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     simon.guinot@sequanux.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>
+Subject: Re: [PATCH v3 1/4] gpio-f7188x: Add GPIO support for Nuvoton
+ NCT6116
+Message-ID: <20220812122312.7f6f6a30@md1za8fc.ad001.siemens.net>
+In-Reply-To: <YvYSl2FpOGnqZfTZ@76cbfcf04d45>
+References: <20220811153908.31283-1-henning.schild@siemens.com>
+        <20220811153908.31283-2-henning.schild@siemens.com>
+        <YvYSl2FpOGnqZfTZ@76cbfcf04d45>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0129.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:97::15) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:269::8)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
- laptops
-Content-Language: en-US
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@t-8ch.de>
-Cc:     Luke Jones <luke@ljones.dev>, andy.shevchenko@gmail.com,
-        pobrn@protonmail.com, pavel@ucw.cz,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220809025054.1626339-1-luke@ljones.dev>
- <20220809025054.1626339-7-luke@ljones.dev>
- <7365d41a-1475-118c-96a8-6ab927bda5b7@redhat.com>
- <9ed62983bd03ed26cdb4399dd69b4096e8711fa9.camel@ljones.dev>
- <b287e98a-7880-5979-94a4-38715d448de4@redhat.com>
- <0239b3bb-d9cb-4549-9e9e-006923b61634@t-8ch.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0239b3bb-d9cb-4549-9e9e-006923b61634@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1e737b4d-212f-40f0-e4d2-08da7c4cac01
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3813:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0xlCN39Mpaqm7Bpx3mitllz4A5+W8klutg1EgM4zhls2VDZHVowFXH41MNl/aLygZFly0W7aSQOeNhN9uqyLeZciBrF7uFqbyiKbTOMsILSIuxUo+kCCKJo52b1Prh97NAzZ3GKKs2DC/je41UumqMIo6yZsgsjrDUjNwNK6Q+t02VY19VrfshnyNh2J+BLzNtwATf+qQhzlK7lcMqt1WDPLPIs5sEpAAWKELDmcu1UaUxHND7y48ZujOtguFb3E0rOEqnq8LY7boBFYL/z6/BDPWZLcTfLIkY6F1wNIPNMiR5foFdBU5XR2deIEZ4xZnKllrn+8V0wzDAAUJVPJuaXLWErdD7xWPHMKu8/Lf7oRAgSMCIsYpI5m8ixf+7lYXpLvGiPxizuFYg5rp46KGpzP5/7dulhImwkOAaL0uQE6UKUS+d0Tb1FvwlK/yp7U1m39rvfA/eps6JLw2rPEFKx38JFk+ua5dyvj8zzz2M8bCpZdMKkXf20V2MWU5bgEXDc9dgPZ2p/QbPcrQtJqHtHgBMriJrG1b/pVHZSv6xstGk0yjYjsGOmHxKFeer74ydicfGh5rm5JS0jYG4R8qeNThvWEjEBYq/AWFumzN263atkb0ZKwEP+zJL1i/ELGW8VZVmN6bPQE4CUgCHxXZ3qaopH90rphM6whS33QJ8vXfo3YT9vGwOrSwN90dzBLfGKscJnBcef+hlL7Liis9dSXShw0WxRA3YRsCdG29lPt2Hg3hpSCxABCHnnvWdDX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(66556008)(82960400001)(83380400001)(9686003)(316002)(6512007)(8936002)(6666004)(44832011)(41300700001)(7416002)(5660300002)(6506007)(66476007)(66946007)(6486002)(186003)(86362001)(1076003)(478600001)(2906002)(4326008)(8676002)(38100700002)(6916009)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hoWHY9thlYbozY2FHpPRvFyWwT8Mji4D40O+a/iGQc+Z1q2pQfnCy4EGSfWZ?=
+ =?us-ascii?Q?nk+2eA1PSes0UBt7ij+zw1TpXdNpXHr+S/AJ1t2XinLoeH8ynPpnXRnwEQrt?=
+ =?us-ascii?Q?9cpOEdtnYE5xx6sMOvGMSLBLp4aGK6PesEd2O4iIqhBBlkhA+iwgaA1q1/Ei?=
+ =?us-ascii?Q?O+xee0jJuov7cgUBHpow2O6oJHAsPJTfnbUC0xPoDYQCOQ5akohMuKr0c8Cz?=
+ =?us-ascii?Q?AcEvZEfZ90B9xb4ai1DEVrO2lGBbozq8TY7DA+lIR9M2KedRBIBO4X/1pkOV?=
+ =?us-ascii?Q?ccP+iis5L8Qip9O7QMOa9sc45xN25yxp8aGhPQljNVGp4l/Fi8w5nc6s9Cq6?=
+ =?us-ascii?Q?sMEHtK16lx+1X0/Qg408wMcFDNp0LSZlx5+P9wDHmaEzyfi5s6Xt2uu/R8vd?=
+ =?us-ascii?Q?NQqTeEO8b+ulvl34sduD9WEtVC2NbGfLSTvmq3drBrSNFoukGOpmri5shDMi?=
+ =?us-ascii?Q?0tKpFH2TEZOVWQmWh4JDYZUN3XTa6ptHbEvmAy6d/p6nq0itJkSrXstq9bbw?=
+ =?us-ascii?Q?tlE13GzYn+YWkiR6gy0maodEnvT9rFOJZzRx3K8Mlt+f1AjDG84VDzR89z5k?=
+ =?us-ascii?Q?Tw1pdHCYF5ZP31CGFy7dbZED1axupaNw5jeslZ+UpVpCMBYyxEu+3sILyevd?=
+ =?us-ascii?Q?mzqT5LC+gDagoocwIVFsQ5hXmVCiSTGUYcQlwgyVNIOIWJeetyaSspleoQwG?=
+ =?us-ascii?Q?Uycm4YBM8Le/XEhxue3QX+i6mI54Ti05o3X3x0E7U62T3s/5paBehxUokmqK?=
+ =?us-ascii?Q?ipFhdAJlcINsfvnMcyNY58TIZ4nIwF+3bdyrTP1hSUQT48su2ZdVSEEJ2o/J?=
+ =?us-ascii?Q?LD6bXCfjFJrieLmny0i5I3Cb0E7L9gVP0YIYwxNM/xBv2Ek2j4u81qRd67qv?=
+ =?us-ascii?Q?5IcFCZ1BgIrLIGdxjfSQr81KXbXYOW+ENaIzbSv/snebkGQmq4YXaPoBY1qV?=
+ =?us-ascii?Q?L6tqsOlNYHHMz80xhVOjkDql//3PfdgTcYwvtbAAk/+k1DI7p534sMDFGBhd?=
+ =?us-ascii?Q?BpGtZT8dJchgZkCGmag+pj36Rg/FxCNZG/kvSi07VpMC8ycRnkA443Pahrrr?=
+ =?us-ascii?Q?YgImzClw+2BL/C65KijiRHx284YZAlgSHOZTpJJFv2zmSNVjBVe7Xn4OJkgA?=
+ =?us-ascii?Q?MVhBXy6kQsPx8phNou7olSFBhzeCgXuANLBBZZiIm2BV6pDBepqejK2mmW3O?=
+ =?us-ascii?Q?zq2J2mZr+TV2kOoS/bLo9JKVFIrz0MIkX1hQVvLIRew1laDYM2k3noI8M9Q/?=
+ =?us-ascii?Q?L1SaTDW6vQttJXtX4Si8YvGb7e+3/1rvOU6mqN/nu1gyvO/knfkTwcw/6SrO?=
+ =?us-ascii?Q?bTWqXjN6fwD4r2k6QTc5NA4Qkpit6bqxiSHUiRJ2MpscLB2lDZ/VoZIoRaMY?=
+ =?us-ascii?Q?9+obR1axt0Rt2oe6Wt+AdkXOWEu0IFuWKjr22OxCW7qKgV3VrJwwY+1rVx0i?=
+ =?us-ascii?Q?aF+3ICwU0ioEEO2CWVCVX78188cL2YCxX0x1EAT27Ao5UeCMTVx4O2UqNhVo?=
+ =?us-ascii?Q?7ZHCPCsvRAdRwmIrPSuYqcDo+eYj9xh0MeduYyfbkRVLGrppIBozIpJv/71R?=
+ =?us-ascii?Q?ZZwgL3yWWFNDLoA1IlAY5uihdlumUEQeTvml0J7j6gvZ3o0yFNpkqWuzwWVQ?=
+ =?us-ascii?Q?qbf3cbTtbpKGJRjMuNnacdhM4bvp12/0ev56FLlqQQnXrdVQ2R/XoHLLUXan?=
+ =?us-ascii?Q?emYcCw=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e737b4d-212f-40f0-e4d2-08da7c4cac01
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2022 10:23:17.3541
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nwcAr/alnKPaDDGD9t+0fU1apBvMAMcCI5MXRTZdoemyTUqiFVeegnmy84E95pSYtWCq5nyC7na49n017ffR4Cyj7bHq+U3sQfLitucZVoM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3813
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Am Fri, 12 Aug 2022 10:43:03 +0200
+schrieb simon.guinot@sequanux.org:
 
-On 8/12/22 10:31, Thomas Weißschuh wrote:
-> Hi,
+> On Thu, Aug 11, 2022 at 05:39:05PM +0200, Henning Schild wrote:
+> > Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
+> > very similar to the ones from Fintek. In other subsystems they also
+> > share drivers and are called a family of drivers.
+> > 
+> > For the GPIO subsystem the only difference is that the direction
+> > bit is reversed and that there is only one data bit per pin. On the
+> > SuperIO level the logical device is another one.
+> > 
+> > Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> > ---
+> >  drivers/gpio/gpio-f7188x.c | 71
+> > +++++++++++++++++++++++++++----------- 1 file changed, 51
+> > insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+> > index 18a3147f5a42..7b05ecc611e9 100644
+> > --- a/drivers/gpio/gpio-f7188x.c
+> > +++ b/drivers/gpio/gpio-f7188x.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0-or-later
+> >  /*
+> >   * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882,
+> > F71889 and F81866
+> > + * and Nuvoton Super-I/O NCT6116D
+> >   *
+> >   * Copyright (C) 2010-2013 LaCie
+> >   *
+> > @@ -22,13 +23,12 @@
+> >  #define SIO_LDSEL		0x07	/* Logical device
+> > select */ #define SIO_DEVID		0x20	/* Device ID
+> > (2 bytes) */ #define SIO_DEVREV		0x22	/*
+> > Device revision */ -#define SIO_MANID		0x23	/*
+> > Fintek ID (2 bytes) */ 
+> > -#define SIO_LD_GPIO		0x06	/* GPIO logical
+> > device */ #define SIO_UNLOCK_KEY		0x87	/* Key
+> > to enable Super-I/O */ #define SIO_LOCK_KEY
+> > 0xAA	/* Key to disable Super-I/O */ 
+> > -#define SIO_FINTEK_ID		0x1934	/* Manufacturer
+> > ID */ +#define SIO_LD_GPIO_FINTEK	0x06	/* GPIO
+> > logical device */ +#define SIO_LD_GPIO_NUVOTON	0x07
+> > /* GPIO logical device */  
 > 
-> On 2022-08-12 09:59+0200, Hans de Goede wrote:
->> Date: Fri, 12 Aug 2022 09:59:29 +0200
->> From: Hans de Goede <hdegoede@redhat.com>
->> To: Luke Jones <luke@ljones.dev>
->> Cc: andy.shevchenko@gmail.com, pobrn@protonmail.com, pavel@ucw.cz,
->>  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH v3 6/6] asus-wmi: Support the hardware GPU MUX on some
->>  laptops
->> User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
->>  Thunderbird/91.12.0
->>
->> Hi,
->>
->> On 8/12/22 00:01, Luke Jones wrote:
->>> Hi Hans,
->>>
->>> On Thu, 2022-08-11 at 15:53 +0200, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 8/9/22 04:50, Luke D. Jones wrote:
->>>>> Support the hardware GPU MUX switch available on some models. This
->>>>> switch can toggle the MUX between:
->>>>>
->>>>> - 0, Dedicated mode
->>>>> - 1, Optimus mode
->>>>>
->>>>> Optimus mode is the regular iGPU + dGPU available, while dedicated
->>>>> mode switches the system to have only the dGPU available.
->>>>>
->>>>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>>>
->>>> I see that you have replied to this that it needs more work.
->>>>
->>>> Besides it needing more work, ideally this should hook into
->>>> the existing vga-switcheroo mechanism for this. Can you take
->>>> a look at that please?
->>>>
->>>> I think this might be the first non GPU driver doing vga-
->>>> switcheroo stuff. So this may be something to discuss
->>>> on the dri-devel list.
->>>
->>> I'm not sure how this would work. In typical ASUS fashion they do non-
->>> standard stuff. This switch is a basic toggle that requires a reboot to
->>> enable after writing to the ACPI method, after reboot the dGPU becomes
->>> the only visible GPU on the system and (this GPU) can not be suspended.
->>>
->>> In short: it toggles the laptop from discrete-only mode, and optimus
->>> mode, requiring a reboot to switch.
->>>
->>> From what I understand of switcheroo it is more to manage having dual
->>> (or more) GPU available during runtime, and manage the power states,
->>> offload etc.
->>
->> Right, I did not realize this requires a reboot, that would be
->> something to mention in the Documentation bits accompanying the patch.
->>
->> This is also a reason why it is good to have the docs update in
->> the same patch as adding the functionality, because the docs may
->> help with reviewing.
->>
->> Anyways I agree that if this requires a reboot then using
->> the vga switcheroo stuff is not applicable. So we can just go with
->> a simple(ish) asus-wmi sysfs attribute.
+> Please indulge me and add a new line here.
+
+Mhh ... how about you write exactly how you would like to have that
+define block. So we do not have taste issues in the next round.
+
+> >  #define SIO_F71869_ID		0x0814	/* F71869
+> > chipset ID */ #define SIO_F71869A_ID		0x1007
+> > /* F71869A chipset ID */ #define SIO_F71882_ID
+> > 0x0541	/* F71882 chipset ID */ @@ -37,7 +37,7 @@
+> >  #define SIO_F81866_ID		0x1010	/* F81866
+> > chipset ID */ #define SIO_F81804_ID		0x1502  /*
+> > F81804 chipset ID, same for f81966 */ #define SIO_F81865_ID
+> > 	0x0704	/* F81865 chipset ID */ -
+> > +#define SIO_NCT6116D_ID		0xD283  /* NCT6116D chipset
+> > ID */ 
 > 
-> Would this not fit the existing "firmware-attributes" class?
-> It even has a flag to signal that a reboot is required after an attribute has
-> been changed.
-
-Yes it sounds like a BIOS setting is being toggled from within
-Linux, which would normally be done through the
-"firmware-attributes" class, but all existing "firmware-attributes"
-class drivers allow changing all BIOS setting not just a single
-setting, so using the  "firmware-attributes" class here is not really
-appropriate.
-
-> Maybe it is overkill to use it only for this, though.
-
-Right :)
-
-Regards,
-
-Hans
-
-
->>> I have a vastly improved patch for this prepared now. Because of how
->>> the actual feature works (and the above explanation) it must be under
->>> the asus-nb-wmi sysfs (next to the dgpu_disable and egpu_enable toggles
->>> which are also unusual and non-standard work-arounds of Windows
->>> issues).
->>
->> Ack, sounds good.
+> ... snip ...
 > 
-> Thomas
+> > @@ -485,12 +516,8 @@ static int __init f7188x_find(int addr, struct
+> > f7188x_sio *sio) return err;
+> >  
+> >  	err = -ENODEV;
+> > -	devid = superio_inw(addr, SIO_MANID);
+> > -	if (devid != SIO_FINTEK_ID) {
+> > -		pr_debug(DRVNAME ": Not a Fintek device at
+> > 0x%08x\n", addr);
+> > -		goto err;
+> > -	}  
 > 
+> Sorry for missing that at my first review. You can't remove this block
+> of code. This driver is poking around on the I2C bus, which is not
+> great. So we want to make sure as much as possible that we are
+> speaking to the right device.
+
+Ok fair enough, we can make that more conservative and match the two
+manufacturers and also make sure that not one can bring a chip id that
+the other one uses for another chip.
+A v4 is coming earliest in 1.5 weeks.
+
+Henning
+
+> Simon
 
