@@ -2,95 +2,239 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46DFC00140
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Aug 2022 03:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D989AC19F2D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Aug 2022 09:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234567AbiHMDKK (ORCPT
+        id S233851AbiHMJ0l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Aug 2022 23:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
+        Sat, 13 Aug 2022 05:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232374AbiHMDKJ (ORCPT
+        with ESMTP id S229507AbiHMJ0k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Aug 2022 23:10:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31977F1E
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Aug 2022 20:10:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DF36AB8254B
-        for <platform-driver-x86@vger.kernel.org>; Sat, 13 Aug 2022 03:10:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 648FCC43148
-        for <platform-driver-x86@vger.kernel.org>; Sat, 13 Aug 2022 03:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660360205;
-        bh=LMIW7GepFYR8wJ3A/B22nT1trf+EPtYh+W1PGnpO2AI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=D7UdnOY3pqbOkYnEis6H8C2l6L9+Mz9GDhmhqtL7eurKh7UwzL8wx88ZDIHVlk4Zf
-         sHEJHjMRwqhXx/weqtk27OoQsti4qO+WGrKV62di3JmZM+9T1H23alcqvlHuySoBWC
-         a5+Qz/3pXylZZe+AyzEvWsW+Ykpoz1va0bc2y646C+kh88WF+V8GZ19K+V2ox8B0Uv
-         MVJ/nWrXg9F5VKV/PVY9tOCnPFLLhIbpayK2vo5WzMTZJjZGewznftx5Tz4uvM9AxH
-         To8Bw4lWe7udziMNDh35AVG+5jB4SoWLn+RE6vaoNaOWC5X3OtUjFyXMlcMmiUI+Bh
-         opHhw5PojvbSw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 54C43C433E4; Sat, 13 Aug 2022 03:10:05 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 32742] Keyboard backlight does not work on Toshiba Satellite M
- series laptops
-Date:   Sat, 13 Aug 2022 03:10:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: cado007@gmail.com
-X-Bugzilla-Status: ASSIGNED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-32742-215701-Ed2hZQjZfo@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-32742-215701@https.bugzilla.kernel.org/>
-References: <bug-32742-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sat, 13 Aug 2022 05:26:40 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3777B2A426;
+        Sat, 13 Aug 2022 02:26:39 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 80E5D320089C;
+        Sat, 13 Aug 2022 05:26:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 13 Aug 2022 05:26:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1660382796; x=1660469196; bh=pFfuz6Pb6zgmosFpm3ocdnQBX
+        HnpsxKhbqrD48iXvy4=; b=QI6AEJfqPwOzR0T5Vh3RjziHNFjdPDijkb+G94d6h
+        NG4Lbgf6QienSYE3KVs6F2AG0q8y7MeS3ty6IlGQFSoec1LJ3pW24JJqdALGbGX3
+        7bHNdIkODuVShrujgZ5EksmM2/9oRY4YG68wo4aP7K14b7Glh1Np9iYGggw2BzOw
+        xAawOGC9/SBkUIzh3hQVtBWKnjwX7p7J5rQhMscrDhW3Mys222cHxEpOSToY9xQp
+        CQq2KDy/MjlXwKgrtH8T4sX1JPBqBuHnbCNCjo6yw+FH3RP9gUcs2ATE4CV9YCVG
+        Bhbym9Qv1vyX8Vhd6gozonZ+dAXwUvbqN9iq35TiMEkUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1660382796; x=1660469196; bh=pFfuz6Pb6zgmosFpm3ocdnQBXHnpsxKhbqr
+        D48iXvy4=; b=bvG4M1xt1T2kiHn0ml98B/B8FnF9yzL88lhrlB/8k/AgG1u1RuJ
+        Tq+1xLOnUU8/X22AuNdWVP6DJU3TawlM01cqWxvLWf2QPHpHyntVAwmJg4QvMw1y
+        4poh74GMVOBPH8Xpl2wllGNQzrJuhqrm7omcm0OinomYKSDJIuVzW9xuqTU0z/g+
+        jekVOjrGoovBd5csiEdinogIUjsGCPiayskTXrSVmDz8OHTZ6EUBLMMCcL9I6HmS
+        irBmDASHJgYgJ4vKubnjmSY7o2nf1j3tSXaxye+FoUzRdFeBar/ZCQuPyfhHjU6x
+        FL+gZVVOVIi62EAodmRWpgAXDQXbuxXX+hA==
+X-ME-Sender: <xms:S273YmjYBjfSrxskUCs9F-sUxRycHw1VKoq2Y0kn_9HgxtDorVhmkQ>
+    <xme:S273YnCwLYxDYbBTgC3sHVPxObFb6tnChV7wdN9ft6SEnimBioQ6x98GLOouO4sZD
+    DxRwwoovMpBE9EVuLA>
+X-ME-Received: <xmr:S273YuEXmXqVlc4PzWuzqmeZN0dJyglaYJXNluDJRgkTPtHhGicURXKBH0DX>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdegkedgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
+    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:S273YvS88iQWAmd7AYrm10O4zJopelYaLuluV8AId7JQNpFgkT8FOQ>
+    <xmx:S273YjxwUdbfhAKRfxVQtnkVQDf4olOv7crO9xA7uf__YZoVSDna-Q>
+    <xmx:S273Yt5NuWsIk7DkvKi2EKr3dF9ypzFSeOMC-5p6NZNednB64O494A>
+    <xmx:TG73Yu_Iq27eLLHyUOY1gPLNe2xOGc-r7ziwrFYwQajRAYENsCi2yg>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 13 Aug 2022 05:26:32 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] asus-wmi: Support the hardware GPU MUX on some laptops
+Date:   Sat, 13 Aug 2022 21:26:24 +1200
+Message-Id: <20220813092624.6228-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D32742
+Support the hardware GPU MUX switch available on some models. This
+switch can toggle the MUX between:
 
-cado007@gmail.com changed:
+- 0, Dedicated mode
+- 1, Optimus mode
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |cado007@gmail.com
+Optimus mode is the regular iGPU + dGPU available, while dedicated
+mode switches the system to have only the dGPU available.
 
---- Comment #116 from cado007@gmail.com ---
-I have the same issue with a Satellite M645 and the trick from:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D32742#c108 worked.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ .../ABI/testing/sysfs-platform-asus-wmi       | 11 ++++
+ drivers/platform/x86/asus-wmi.c               | 62 +++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h    |  3 +
+ 3 files changed, 76 insertions(+)
 
-Since I'm in dual boot with Windows 10 to activate the keyboard with the tr=
-ick
-instead of booting with a Win CD I just begin to boot in Windows and shutdo=
-wn
-the computer by holding the power button as soon the boot begin and right a=
-fter
-I boot in Linux and it work.
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 574b5170a37d..03124eab7f01 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -58,6 +58,17 @@ Description:
+ 			* 1 - overboost,
+ 			* 2 - silent
+ 
++What:          /sys/devices/platform/<platform>/gpu_mux_mode
++Date:          Aug 2022
++KernelVersion: 6.1
++Contact:       "Luke Jones" <luke@ljones.dev>
++Description:
++               Switch the GPU hardware MUX mode. Laptops with this feature can
++			   can be toggled to boot with only the dGPU (discrete mode) or in
++			   standard Optimus/Hybrid mode. On switch a reboot is required:
++                       * 0 - Discrete GPU,
++                       * 1 - Optimus/Hybrid,
++
+ What:          /sys/devices/platform/<platform>/dgpu_disable
+ Date:          Aug 2022
+ KernelVersion: 5.17
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index e2b51b5550e8..0421ffb81927 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -230,6 +230,7 @@ struct asus_wmi {
+ 
+ 	bool egpu_enable_available;
+ 	bool dgpu_disable_available;
++	bool gpu_mux_mode_available;
+ 
+ 	bool throttle_thermal_policy_available;
+ 	u8 throttle_thermal_policy_mode;
+@@ -668,6 +669,59 @@ static ssize_t egpu_enable_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(egpu_enable);
+ 
++/* gpu mux switch *************************************************************/
++static int gpu_mux_mode_check_present(struct asus_wmi *asus)
++{
++	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
++
++   return 0;
++}
++
++static ssize_t gpu_mux_mode_show(struct device *dev,
++                  struct device_attribute *attr, char *buf)
++{
++   struct asus_wmi *asus = dev_get_drvdata(dev);
++   int result;
++
++   result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
++   if (result < 0)
++       return result;
++
++   return sysfs_emit(buf, "%d\n", result);
++}
++
++static ssize_t gpu_mux_mode_store(struct device *dev,
++                   struct device_attribute *attr,
++                   const char *buf, size_t count)
++{
++   struct asus_wmi *asus = dev_get_drvdata(dev);
++   int result, err;
++   u32 optimus;
++
++   err = kstrtou32(buf, 10, &optimus);
++   if (err)
++       return err;
++
++   if (optimus > 1)
++       return -EINVAL;
++
++   err = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, &result);
++   if (err) {
++       dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
++       return err;
++   }
++	/* !1 is considered a fail by ASUS */
++	if (result != 1) {
++		dev_warn(dev, "Failed to set GPU MUX mode (result): 0x%x\n", result);
++       return -EIO;
++   }
++
++   sysfs_notify(&asus->platform_device->dev.kobj, NULL, "gpu_mux_mode");
++
++   return count;
++}
++static DEVICE_ATTR_RW(gpu_mux_mode);
++
+ /* Battery ********************************************************************/
+ 
+ /* The battery maximum charging percentage */
+@@ -3165,6 +3219,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_touchpad.attr,
+ 	&dev_attr_egpu_enable.attr,
+ 	&dev_attr_dgpu_disable.attr,
++	&dev_attr_gpu_mux_mode.attr,
+ 	&dev_attr_lid_resume.attr,
+ 	&dev_attr_als_enable.attr,
+ 	&dev_attr_fan_boost_mode.attr,
+@@ -3195,6 +3250,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		ok = asus->egpu_enable_available;
+ 	else if (attr == &dev_attr_dgpu_disable.attr)
+ 		ok = asus->dgpu_disable_available;
++	else if (attr == &dev_attr_gpu_mux_mode.attr)
++		ok = asus->gpu_mux_mode_available;
+ 	else if (attr == &dev_attr_fan_boost_mode.attr)
+ 		ok = asus->fan_boost_mode_available;
+ 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
+@@ -3464,6 +3521,10 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_dgpu_disable;
+ 
++	err = gpu_mux_mode_check_present(asus);
++   if (err)
++       goto fail_gpu_mux_mode;
++
+ 	err = fan_boost_mode_check_present(asus);
+ 	if (err)
+ 		goto fail_fan_boost_mode;
+@@ -3578,6 +3639,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ fail_fan_boost_mode:
+ fail_egpu_enable:
+ fail_dgpu_disable:
++fail_gpu_mux_mode:
+ fail_platform:
+ fail_panel_od:
+ 	kfree(asus);
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index a571b47ff362..c023332842a2 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -98,6 +98,9 @@
+ /* dgpu on/off */
+ #define ASUS_WMI_DEVID_DGPU		0x00090020
+ 
++/* gpu mux switch, 0 = dGPU, 1 = Optimus */
++#define ASUS_WMI_DEVID_GPU_MUX 0x00090016
++
+ /* DSTS masks */
+ #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+ #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+-- 
+2.37.1
 
-It's not really elegant but it work.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
