@@ -2,96 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C79AC19F2D
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Aug 2022 15:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D23C25B06
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 14 Aug 2022 09:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239693AbiHMPQ7 (ORCPT
+        id S229555AbiHNJKB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 13 Aug 2022 11:16:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        Sun, 14 Aug 2022 05:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239504AbiHMPQ7 (ORCPT
+        with ESMTP id S229485AbiHNJKB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 13 Aug 2022 11:16:59 -0400
-Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7127B13F93;
-        Sat, 13 Aug 2022 08:16:53 -0700 (PDT)
-X-QQ-mid: bizesmtp74t1660403795twerpap8
-Received: from localhost.localdomain ( [110.188.55.240])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Sat, 13 Aug 2022 23:16:28 +0800 (CST)
-X-QQ-SSF: 0100000000200080H000B00A0000020
-X-QQ-FEAT: DRnj/z+Sqac7eaaRnRxjohl0DEvoOesJDpkPKa5FAiUeCIb4HB4wRQobyKARc
-        2u+3PVZtiijWZKitdsaVoddTICob6JL/nXE4UWivOeUdM7x8N4dpy7bz7LH9RKmBLCJBW6K
-        RREVCUsjGcsmpzf54Ur9zgspPaB8cgvxCEtbjJUdA+IvMCFeOj1VdCSrfJ8tRQ/HJZLXJRL
-        bmoZTZYSRxZReH0vbmnl1tHXZ+r2nQJ2NObg92HN+G+NhbR6n7ysmYA6q0DMz7VNZN//p+L
-        A9zKhfcPkMGYP4duw4yLuEFtH32np6SoL5RUnRdfRpCNiYrf4M/T45q9AmJzIXvRMNOF7Ay
-        21zLIE84pSggkGo3SrGIu/Fhf1mfUk16ICswMPbkYhRpq4hE6EmjWmdIoji8A==
-X-QQ-GoodBg: 0
-From:   min tang <tangmin@cdjrlc.com>
-To:     airlied@linux.ie, daniel@ffwll.ch,
-        srinivas.pandruvada@linux.intel.com
-Cc:     dan.carpenter@oracle.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, min tang <tangmin@cdjrlc.com>
-Subject: [PATCH] drm/i915/gt: Unneeded semicolon
-Date:   Sat, 13 Aug 2022 23:16:16 +0800
-Message-Id: <20220813151616.4193-1-tangmin@cdjrlc.com>
-X-Mailer: git-send-email 2.17.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
+        Sun, 14 Aug 2022 05:10:01 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DEA2A25C;
+        Sun, 14 Aug 2022 02:09:59 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 89BC95C00B7;
+        Sun, 14 Aug 2022 05:09:56 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 14 Aug 2022 05:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660468196; x=
+        1660554596; bh=U5z+vIAK2wN19+T9d2bnGKigsa7e867hygBkLVspi9o=; b=F
+        VmPShbjYLGVFbusD9zGf0p7+XOC2P69dvaAkMhdwujcVvChE/8gyEmIIa14oxN6O
+        FrgDyCffWt1hQM5hcYQw7zic3rxuu+kcYfU9eUzGKRstX4b3ZDW0gToilonWDPmr
+        XE1gwbvKnMmrUP52KiNsNTODkPcww9sYEpYpggQTqp9KuWbxqpF84KIUUugiwEk+
+        5eZJXDAJ83yDaYZ+I2vIpF46iQ3YPpCKRky7IWL4eG4/TeSEVNhrEsMuoOJZhDqs
+        9Q+Pc+cNmVB0RrNArxSceCwtwyKrPRuZ8nUVt68fIMpkh2jdjYmYdgEsLQnEZUoE
+        hOqcsFWyPUKSFm/GNBOeA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660468196; x=
+        1660554596; bh=U5z+vIAK2wN19+T9d2bnGKigsa7e867hygBkLVspi9o=; b=Q
+        eeSUVzvE3OJNc/W1+bqJML3DEyqNr/UXkTfFeHfO0SX6625p5vU3tb9HgjOzTq60
+        xObnOtxdIvcrR7czrMxIV5JcjOgRKOcMn9uJzYuSb2B0HHjiqemveK2kGkc3f1i1
+        Y4QVws5TLhSrL2SCRRu8BvQyXtJqhoGrgCWJU+Xyabo0IDN6w+R3TTxRZ02mmgC3
+        O0mCSiR7GUhz8Yz9z4/jwYcrechup4mm97vfRyv1al7seteJwskbfQwpME8DZInJ
+        e/dHMjgZSBfLk5h434U/OZs8BQ5alOwHaMHOAc9Sgw6AlWYDFkZfCD3ugssdrEXB
+        HGzNcAXhIiGmhzeKy4OdA==
+X-ME-Sender: <xms:5Lv4YhQkaCstgUG61BysrlCqxRZfp9SCc7yhagEbgW-t36Bl02YjGQ>
+    <xme:5Lv4YqxwJ-4z2l4y0_diB6sIowNuukK3cEN9uZxeFs3wCY5qQVWzKCu4xnn4kolN4
+    ZTOy3Sxd_BOg94y5fA>
+X-ME-Received: <xmr:5Lv4Ym3Z9dNHx20w7maTpQuGXl0aJvi9BQAHHVhYFn7agI8hoKRwfzL8eD-Jrds_fs4H1Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehtddgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeekfeffueejveeujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:5Lv4YpDtZFzdFnzlQfxQ5Yfv3LjiATVOl9ILbUXv_xNHSmgh-OZgtQ>
+    <xmx:5Lv4YqhKbCE9FPQb9vSMWMwY6WtZzhMjqprW-NIuiEgieBh_MM-XDQ>
+    <xmx:5Lv4YtpV9YkYGxVSwAgYm2_UGSspFuyazkwfUliUzALH6XdNGs7a4g>
+    <xmx:5Lv4YtsEZ3B8bGHa3yoRfXlA2X7yfdLbJs0D5Z380_XQZFNC1EX5Yw>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 14 Aug 2022 05:09:53 -0400 (EDT)
+Message-ID: <56171d4f65c02d3cba64d2f6d49e190107c12a18.camel@ljones.dev>
+Subject: Re: [PATCH] asus-wmi: Support the hardware GPU MUX on some laptops
+From:   Luke Jones <luke@ljones.dev>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sun, 14 Aug 2022 21:09:43 +1200
+In-Reply-To: <20220813105533.GA3258@wunner.de>
+References: <20220813092624.6228-1-luke@ljones.dev>
+         <20220813105533.GA3258@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (by Flathub.org) 
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There is no semicolon after '}' in line 648.
+Hi Lukas,
 
-Signed-off-by: min tang <tangmin@cdjrlc.com>
----
- drivers/gpu/drm/i915/gt/intel_migrate.c         | 2 +-
- tools/power/x86/intel-speed-select/hfi-events.c | 2 +-
- tools/testing/selftests/timers/nanosleep.c      | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Sat, 2022-08-13 at 12:55 +0200, Lukas Wunner wrote:
+> On Sat, Aug 13, 2022 at 09:26:24PM +1200, Luke D. Jones wrote:
+> > Support the hardware GPU MUX switch available on some models. This
+> > switch can toggle the MUX between:
+> >=20
+> > - 0, Dedicated mode
+> > - 1, Optimus mode
+> >=20
+> > Optimus mode is the regular iGPU + dGPU available, while dedicated
+> > mode switches the system to have only the dGPU available.
+>=20
+> Could you please integrate this with the framework provided by:
+>=20
+> =C2=A0 include/linux/vga_switcheroo.h
+> =C2=A0 drivers/gpu/vga/vga_switcheroo.c
+>=20
+> vga_switcheroo will then automatically expose a sysfs interface.
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_migrate.c b/drivers/gpu/drm/i915/gt/intel_migrate.c
-index 2c35324b5f68..a69b244f14d0 100644
---- a/drivers/gpu/drm/i915/gt/intel_migrate.c
-+++ b/drivers/gpu/drm/i915/gt/intel_migrate.c
-@@ -645,7 +645,7 @@ static int scatter_list_length(struct scatterlist *sg)
- 	while (sg && sg_dma_len(sg)) {
- 		len += sg_dma_len(sg);
- 		sg = sg_next(sg);
--	};
-+	}
- 
- 	return len;
- }
-diff --git a/tools/power/x86/intel-speed-select/hfi-events.c b/tools/power/x86/intel-speed-select/hfi-events.c
-index 761375062505..f0ed69721308 100644
---- a/tools/power/x86/intel-speed-select/hfi-events.c
-+++ b/tools/power/x86/intel-speed-select/hfi-events.c
-@@ -144,7 +144,7 @@ static int family_handler(struct nl_msg *msg, void *arg)
- 			continue;
- 		res->id = nla_get_u32(tb2[CTRL_ATTR_MCAST_GRP_ID]);
- 		break;
--	};
-+	}
- 
- 	return 0;
- }
-diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
-index 71b5441c2fd9..433a09676aeb 100644
---- a/tools/testing/selftests/timers/nanosleep.c
-+++ b/tools/testing/selftests/timers/nanosleep.c
-@@ -72,7 +72,7 @@ char *clockstring(int clockid)
- 		return "CLOCK_BOOTTIME_ALARM";
- 	case CLOCK_TAI:
- 		return "CLOCK_TAI";
--	};
-+	}
- 	return "UNKNOWN_CLOCKID";
- }
- 
--- 
-2.17.1
+I did investigate this first before submitting. The way asus does it is
+not standard at all. On switch you must reboot, and the change isn't
+reflected by the ACPI get method until reboot. It's very reflective of
+how they used dgpu_disable to work around windows issues that we do in
+Linux by removing the device from the device tree.
 
+The key thing is a reboot is required. This is not done on-the-fly. I
+have a two year old GX502 which has the same method as exposed here,
+and also a 2022 TUF laptop with same method. My understanding of this
+pariicular method is that it isn't the same one as what Nvidia is
+advertising, and ASUS is perhaps misadvertising it - the suspision is
+raised by the fact that my GX502 machine predates what Nvidia is
+advertising.
+
+Kind regards,
+Luke.
