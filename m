@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB87C00140
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 02:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E0BC19F2C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 05:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231811AbiHPCCB (ORCPT
+        id S230478AbiHPFYh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Aug 2022 22:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
+        Tue, 16 Aug 2022 01:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232320AbiHPCBT (ORCPT
+        with ESMTP id S231659AbiHPFYX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Aug 2022 22:01:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43AB0108931
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 14:54:07 -0700 (PDT)
+        Tue, 16 Aug 2022 01:24:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1029227871
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 14:56:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660600420;
+        s=mimecast20190719; t=1660600569;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=bDCYLEy+BFzUXB2vyNCVod0ccaWSLx6QeKp/OdHtLfo=;
-        b=hfxdy9dqiFEV75Y3cHN417lkjVoIJnwu3YKwry4T2NVel8BSjfThWxzyWntZskkMf1l21n
-        +MF/5HoeKkRgphZpr3zm3E9cX4Iid9jwUEBOdouY6ctivWRSoxKUHkRs6HSKi48o0d7liD
-        dk+qAIHPSD9ORqUgRrS1lgYLPTIOfE4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fg6AseMQKhGFaW1h59Li+nNVbNoTUAPXOEzU4kFeR3k=;
+        b=EJEkyDfYM/BGawTJ2OMQyC1FS1aOjvNAlf+NDID9UjMozt+989c64LNKbDrVd/dxUN+Gcx
+        JotEwU/vrpJlvG5ncT7Mpb8OR1dJb7dUBSpXiNnROfsEnz/y7qxW7m3dHMeHIA4U3eKM27
+        FshbL6tiLCuSqSjBPBOjS/ywefSxF34=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-515-5RzOpnYiNb2Cyb0_SGsRtQ-1; Mon, 15 Aug 2022 17:53:39 -0400
-X-MC-Unique: 5RzOpnYiNb2Cyb0_SGsRtQ-1
-Received: by mail-wm1-f69.google.com with SMTP id a17-20020a05600c349100b003a545125f6eso9244271wmq.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 14:53:39 -0700 (PDT)
+ us-mta-92-PjAAwgWfNaW6XhmnoQ_UtA-1; Mon, 15 Aug 2022 17:54:02 -0400
+X-MC-Unique: PjAAwgWfNaW6XhmnoQ_UtA-1
+Received: by mail-wm1-f72.google.com with SMTP id r4-20020a1c4404000000b003a5fa79008bso306458wma.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 14:53:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=bDCYLEy+BFzUXB2vyNCVod0ccaWSLx6QeKp/OdHtLfo=;
-        b=imbeSaAQu+n8yobFg3jdPhEzhDxNA8Psg4wF+eOC3dkqA3q4zO4SluZvZYpj+kRbKg
-         0KPNFeMO8FBoT225Dxaxbw7MKiEWMJnnXQ52NuDKl6Ok0S240ybCYpofUd9Tz/k6899X
-         GycDCTBag9dof0C3596w7fhrbDiNgvIvgWLtcL7J4OenP2M4UhtnagakEcAdThWR4f4/
-         VOFf6fDHyziS4PKwEmz+jE8fSbDNCqUFzrY+/D0j/VlkhwlicBqAwSgdWvGbzQA9urvi
-         lcLGvsC5GUlGHnEooK/T9ZAJlnEddISni9Scftrl6KghElx5wCEBjoEycqAIFOOmLWKD
-         DFSQ==
-X-Gm-Message-State: ACgBeo2TflyrB36QNC2IyK30P7EfRoRCvLPyDEblncVwAr6MbqUU+pnW
-        luMlru3vYsWz12sCPf3bEUXSEoXrHINxnD+3zriEwFSmzFUHV5uIVHQICXDy96NfnHWA2IsLwvM
-        fsUFXrZimaRZXYri9VS9vg0/i8sGnY4bRuw==
-X-Received: by 2002:a7b:ca42:0:b0:3a6:9d:a444 with SMTP id m2-20020a7bca42000000b003a6009da444mr2231542wml.51.1660600418493;
-        Mon, 15 Aug 2022 14:53:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4BN8C+PGA8RpmSRZwBido/QgzW+8NIJd7WJaZE3l05LkbGN7+KhxLct1xW2rLS+iQX/I9U0w==
-X-Received: by 2002:a7b:ca42:0:b0:3a6:9d:a444 with SMTP id m2-20020a7bca42000000b003a6009da444mr2231508wml.51.1660600418216;
-        Mon, 15 Aug 2022 14:53:38 -0700 (PDT)
+        bh=fg6AseMQKhGFaW1h59Li+nNVbNoTUAPXOEzU4kFeR3k=;
+        b=B2+AJ4M1qZuBgJEj5GpVKZXNgFezYXUukT3vaP6Kj5tU6QluytmJp9YDpwYTiFtS0y
+         8Wm53rHc09gGhuyXuJQZaMYx7k/V4WQmBmbxE75HPD1ihEPdSY5MfPCTIN2IIPI46CQZ
+         fAp8x/Z22Q2W4IpmCkrzkQpGDIFkQEwfHpnNZBCPB+s82fgSMMDqHPa839hLlPemBhM7
+         0+gWAuJ1p5XLZA6+JnS65PiDij7kmG0MEpFsLLThPs0rXQloGRprjf3SsJXwjRi3gZOL
+         HkOPw0m95G9BLXV+MINyLMfF3l4u43CWf8vRpNKYiJcmRCCPtqF2qFthHex//7kuZ6bc
+         WLsA==
+X-Gm-Message-State: ACgBeo3Qj05z6lnlCj1NWrIiOoD3B6cGf7ig+4BlKAFu7PaDgwz+xSGk
+        9FEHq6PuVg0F5rLTPJ05TlvLwAVacxBq0h62oPoxWywD3y5oTVQcpF2tEp82Vl00apq0G16QKx5
+        1SCW4hyagvp+ALrk81woRb/pKeeNNQ73tqQ==
+X-Received: by 2002:a5d:688c:0:b0:21f:160d:8859 with SMTP id h12-20020a5d688c000000b0021f160d8859mr10167794wru.711.1660600438100;
+        Mon, 15 Aug 2022 14:53:58 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7i3yRQDphQZIsyoh1v41BSMjkMtop58XMuZPufNQqNvzCeKRCE/8qJPk0HkyEzaJW0RSPyXA==
+X-Received: by 2002:a5d:688c:0:b0:21f:160d:8859 with SMTP id h12-20020a5d688c000000b0021f160d8859mr10167756wru.711.1660600437733;
+        Mon, 15 Aug 2022 14:53:57 -0700 (PDT)
 Received: from redhat.com ([2.55.4.37])
-        by smtp.gmail.com with ESMTPSA id l23-20020a1c7917000000b003a541358bdbsm10115773wme.21.2022.08.15.14.53.30
+        by smtp.gmail.com with ESMTPSA id q9-20020adff509000000b0021efc75914esm8326304wro.79.2022.08.15.14.53.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 14:53:37 -0700 (PDT)
-Date:   Mon, 15 Aug 2022 17:53:29 -0400
+        Mon, 15 Aug 2022 14:53:57 -0700 (PDT)
+Date:   Mon, 15 Aug 2022 17:53:50 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
@@ -90,8 +90,8 @@ Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org
-Subject: [PATCH v2 1/1] virtio: Revert "virtio: find_vqs() add arg sizes"
-Message-ID: <20220815215251.154451-4-mst@redhat.com>
+Subject: [PATCH v2 5/5] virtio: Revert "virtio: find_vqs() add arg sizes"
+Message-ID: <20220815215251.154451-8-mst@redhat.com>
 References: <20220815215251.154451-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -116,6 +116,18 @@ let's drop it.
 
 Fixes: a10fba037714 ("virtio: find_vqs() add arg sizes")
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ arch/um/drivers/virtio_uml.c             |  2 +-
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  1 -
+ drivers/remoteproc/remoteproc_virtio.c   |  1 -
+ drivers/s390/virtio/virtio_ccw.c         |  1 -
+ drivers/virtio/virtio_mmio.c             |  1 -
+ drivers/virtio/virtio_pci_common.c       |  2 +-
+ drivers/virtio/virtio_pci_common.h       |  2 +-
+ drivers/virtio/virtio_pci_modern.c       |  7 ++-----
+ drivers/virtio/virtio_vdpa.c             |  1 -
+ include/linux/virtio_config.h            | 14 +++++---------
+ 10 files changed, 10 insertions(+), 22 deletions(-)
 
 diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
 index 79e38afd4b91..e719af8bdf56 100644
