@@ -2,120 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2798C00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Aug 2022 15:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74CEC00140
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Aug 2022 15:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbiHOPCy (ORCPT
+        id S232590AbiHOPF6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Aug 2022 11:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44044 "EHLO
+        Mon, 15 Aug 2022 11:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbiHOPCw (ORCPT
+        with ESMTP id S232837AbiHOPFp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Aug 2022 11:02:52 -0400
+        Mon, 15 Aug 2022 11:05:45 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9C19420BEB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 08:02:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 914EA62ED
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 08:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660575770;
+        s=mimecast20190719; t=1660575943;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g2yECLw+fKeeM6y1cLjr8I9qnE48sejea9S2eLZ2jxw=;
-        b=DYaoWqEcjzM68l7IO2qNMbDpqKSxfS0uAUDB+oW8JIw/QtcvhSXrtrGY2/106pIbLvfcEU
-        f4JyIBz+AfdZdnEwAFZ5SiBzohgpK2BcQC261iU09JOdP+a2aYHGKDTX5EmwKeKQ7hojSd
-        Bsxkx4JU7mCFEpQOKFtswu/N9yqG8Fg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-494-eq9sRRK_M8uNRJehRzbsSg-1; Mon, 15 Aug 2022 11:02:49 -0400
-X-MC-Unique: eq9sRRK_M8uNRJehRzbsSg-1
-Received: by mail-ed1-f71.google.com with SMTP id y14-20020a056402440e00b0044301c7ccd9so4856969eda.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 08:02:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=g2yECLw+fKeeM6y1cLjr8I9qnE48sejea9S2eLZ2jxw=;
-        b=QRl2PBAi9EHNPhqMSj1Eg6NDs5Z536Hq6uVOdErST2OCdS3cRa997e783vka1gH1Hs
-         3vrTLwrouUcRqerGNbUDkafPzEz/iHFQJBkpoceich8LGQmHqRiGUdTMHHxpTstEZUaD
-         O8w9PWe9OMvZZ6gWP+3k0p9msjmesf5i533gSiJRvQupOmWIKW7BTwMGVCRc580o7vn1
-         OHkZvn0fyCX8+0Uf7EfHmNiukfHF5DBE+2HBy5J+N/V/opqa9Z4e5ob4JvOK7Wb5rCLm
-         /BIrdn2N21aE/i2PQomGF7MYPmw05suMvEHGbIlAh+HZB6ieVW6/aI/5cS84l1tYG2pr
-         cq4w==
-X-Gm-Message-State: ACgBeo0SNrWTEf09ODY7Yxk6ofhtg1tRlztvwqlD3tVaSoHMzsEJyfnx
-        vxOs8sLYdawbejwj4TuqBJ+of9vNDbiaak5fY1IHPOTJ2bXnVTmXEmMRZa5xouVWbxi4ozuJ4GX
-        EvEL1RlngJTk+DpINUG571hg4mpxECwwSkA==
-X-Received: by 2002:a17:906:8c7:b0:730:c1a9:e187 with SMTP id o7-20020a17090608c700b00730c1a9e187mr10882195eje.55.1660575767820;
-        Mon, 15 Aug 2022 08:02:47 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5LD4zKo/+auF625gRYdARIrc/DRdPkN9y4NN8HFq9hC5uXTUuugQODOjmSg32Pk51BGX3O7g==
-X-Received: by 2002:a17:906:8c7:b0:730:c1a9:e187 with SMTP id o7-20020a17090608c700b00730c1a9e187mr10882181eje.55.1660575767672;
-        Mon, 15 Aug 2022 08:02:47 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id jz18-20020a170906bb1200b00718e4e64b7bsm4208038ejb.79.2022.08.15.08.02.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Aug 2022 08:02:47 -0700 (PDT)
-Message-ID: <089e9d73-07c2-fcb4-fc76-b6e829e491cc@redhat.com>
-Date:   Mon, 15 Aug 2022 17:02:46 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 0/6] asus-wmi: cleanup dgpu_disable, egpu_enable, panel_od
-Content-Language: en-US
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220812222509.292692-1-luke@ljones.dev>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vp9L10hFdGZDfD/jyC7LozOLpQF/iDyQkMJrWxFBQW8=;
+        b=ezgdNUEDQsR+C2heRL5t+F8pNGeEyRwhXZanG+DCvQ5YrZpeA0V2okthAixlqor8g8eOeo
+        UkHIlCXivQDkQKceV8Uo/cL3uuRI3Xw0r3H4463bferqP+46Ti8UOqlXRT8AKaBxAtgQgY
+        AVcdp3c/lcnBsPXcV5IXTVmqGiBMR6s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-668-hMJ5gqzXP5Cw1fVGs4598A-1; Mon, 15 Aug 2022 11:05:41 -0400
+X-MC-Unique: hMJ5gqzXP5Cw1fVGs4598A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7C84E85A587;
+        Mon, 15 Aug 2022 15:05:41 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 201362026D64;
+        Mon, 15 Aug 2022 15:05:39 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220812222509.292692-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D . Jones" <luke@ljones.dev>
+Subject: [PATCH] platform/x86: asus-wmi: Simplify some of the *_check_present() helpers
+Date:   Mon, 15 Aug 2022 17:05:38 +0200
+Message-Id: <20220815150538.474306-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+After the recent cleanup patches, some of the *_check_present() helpers
+just propagate the result of asus_wmi_dev_is_present().
 
-On 8/13/22 00:25, Luke D. Jones wrote:
-> This patch series does two things for previously added features:
-> - dgpu_disable
-> - egpu_enable
-> - panel_od
-> 
-> The fixes add missing documentation, and the refactors vastly clean up how
-> the features work, including reading the values from WMI methods on *_show()
-> and checking the result correctly (these methods return 1 on success).
+Replace these with direct asus_wmi_dev_is_present() calls as a further
+cleanup.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Cc: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-wmi.c | 47 +++------------------------------
+ 1 file changed, 3 insertions(+), 44 deletions(-)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> 
-> Luke D. Jones (6):
->   Fixes 98829e84dc67 ("asus-wmi: Add dgpu disable method")
->   Fixes: 382b91db8044 ("asus-wmi: Add egpu enable method")
->   Fixes: ca91ea34778f ("asus-wmi: Add panel overdrive functionality")
->   asus-wmi: Refactor disable_gpu attribute
->   asus-wmi: Refactor egpu_enable attribute
->   asus-wmi: Refactor panel_od attribute
-> 
->  .../ABI/testing/sysfs-platform-asus-wmi       |  28 +++
->  drivers/platform/x86/asus-wmi.c               | 231 ++++++------------
->  2 files changed, 103 insertions(+), 156 deletions(-)
-> 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 2d9d709aa59f..d72491fb218b 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -557,16 +557,6 @@ static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
+ }
+ 
+ /* dGPU ********************************************************************/
+-static int dgpu_disable_check_present(struct asus_wmi *asus)
+-{
+-	asus->dgpu_disable_available = false;
+-
+-	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU))
+-		asus->dgpu_disable_available = true;
+-
+-	return 0;
+-}
+-
+ static ssize_t dgpu_disable_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -620,16 +610,6 @@ static ssize_t dgpu_disable_store(struct device *dev,
+ static DEVICE_ATTR_RW(dgpu_disable);
+ 
+ /* eGPU ********************************************************************/
+-static int egpu_enable_check_present(struct asus_wmi *asus)
+-{
+-	asus->egpu_enable_available = false;
+-
+-	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU))
+-		asus->egpu_enable_available = true;
+-
+-	return 0;
+-}
+-
+ static ssize_t egpu_enable_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -1497,16 +1477,6 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ }
+ 
+ /* Panel Overdrive ************************************************************/
+-static int panel_od_check_present(struct asus_wmi *asus)
+-{
+-	asus->panel_overdrive_available = false;
+-
+-	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD))
+-		asus->panel_overdrive_available = true;
+-
+-	return 0;
+-}
+-
+ static ssize_t panel_od_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -3493,13 +3463,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform;
+ 
+-	err = egpu_enable_check_present(asus);
+-	if (err)
+-		goto fail_egpu_enable;
+-
+-	err = dgpu_disable_check_present(asus);
+-	if (err)
+-		goto fail_dgpu_disable;
++	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
++	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
++	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
+ 
+ 	err = fan_boost_mode_check_present(asus);
+ 	if (err)
+@@ -3515,10 +3481,6 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform_profile_setup;
+ 
+-	err = panel_od_check_present(asus);
+-	if (err)
+-		goto fail_panel_od;
+-
+ 	err = asus_wmi_sysfs_init(asus->platform_device);
+ 	if (err)
+ 		goto fail_sysfs;
+@@ -3613,10 +3575,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (asus->platform_profile_support)
+ 		platform_profile_remove();
+ fail_fan_boost_mode:
+-fail_egpu_enable:
+-fail_dgpu_disable:
+ fail_platform:
+-fail_panel_od:
+ 	kfree(asus);
+ 	return err;
+ }
+-- 
+2.36.1
 
