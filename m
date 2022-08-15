@@ -2,134 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5342EC00140
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Aug 2022 13:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5FBC25B0E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Aug 2022 13:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242855AbiHONUV (ORCPT
+        id S231513AbiHONZo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Aug 2022 09:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60618 "EHLO
+        Mon, 15 Aug 2022 09:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242856AbiHONUS (ORCPT
+        with ESMTP id S240447AbiHONZX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Aug 2022 09:20:18 -0400
+        Mon, 15 Aug 2022 09:25:23 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6469F1BB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 06:20:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2DD0926FB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 06:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660569614;
+        s=mimecast20190719; t=1660569921;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4rVK1ozz77xi6iL2PkzLoziMUza56btcQ1nNVLrI5o8=;
-        b=R2rleXtFMJf7kh8BYiEafO2eFB88WNl4TDr4sMffUeaI8zrgzLk+ok1F/drnT52B0c5uZt
-        Efi0phscmnQcV3YJ1OY3ZUYCteweFSoo4dFTxEyfXDveJYr9fAXAzE6Qg1UY8A2jsMvsQD
-        z38Vi+59nOnczCIgQQEfTOjggg9LmP0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=dIIzjPxeddzxMn7RZ9/iKALDcfamsWN+Y3QvwDD0LAQ=;
+        b=HQkC9+r428EDkWPmbBpUhX/NXorfdxCkf1gETUN/ra99SNJI4t+f/TUdFlrK4/xW3by+zE
+        eFvpNYrYu57+pwRsB65hiJ2icMYdbf+SXSrEZQuDnTuVOthulBBt2SLMI3wI+tt4QDBf96
+        2/et5c+ppWNYhM//T58+qpy9fT7pRy4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-452-ORzwQ3_4M5mRQHrrBelUrg-1; Mon, 15 Aug 2022 09:20:13 -0400
-X-MC-Unique: ORzwQ3_4M5mRQHrrBelUrg-1
-Received: by mail-ej1-f71.google.com with SMTP id hp22-20020a1709073e1600b007309edc4089so1047015ejc.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 06:20:12 -0700 (PDT)
+ us-mta-324-b6mIy0FxPvecxLXhhvxb2g-1; Mon, 15 Aug 2022 09:25:17 -0400
+X-MC-Unique: b6mIy0FxPvecxLXhhvxb2g-1
+Received: by mail-ed1-f70.google.com with SMTP id c14-20020a05640227ce00b0043e5df12e2cso4763224ede.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 06:25:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc;
-        bh=4rVK1ozz77xi6iL2PkzLoziMUza56btcQ1nNVLrI5o8=;
-        b=thzZKCuxQ8wHhT/C5WoQ3zu8XKThquxtIA0/vdcWoPVXM1gHK98iBF6QCUHEaNqJBP
-         cak40I5Qm2TyVwn/bJgawQe53D2FKktWUpGmy4RalG3uuXQlTaCvbGcAEhT6XWpOlkc+
-         LfT5xwDSslo6RA5BelxrOpip/PuSNW+KKDSWonwXsjnn8wAzEp6vSciPDFc4T+N+MAlL
-         VRjcZHQgNyM2IFgHK68+DgqtJuNoIbmAxUHZaMxl3iPDOR1pr3fZ93Md4SiJfLRclta0
-         hd6iZA4KCwQAC94QIbS7t69MjvAxw5kGpH2mNf90ncjOEyabFeF2RLRrH7bymP6ra3Xq
-         jArQ==
-X-Gm-Message-State: ACgBeo3PJt/PnLMcu8p+9ykfG5ZhjNkgOTJKQmlkZlJ1WMwvnYrED0rc
-        0+AtLaTRaplSy3h5fDPRAt16KRWHOYUOcWNc+fdR2QPavzh4UyKNoZwRKIAjIFRc014tN/YmE46
-        VMR2ENcAhA3lt8InPVxrxNpJKPqaysFO9eQ==
-X-Received: by 2002:a05:6402:14e:b0:443:f58:17e9 with SMTP id s14-20020a056402014e00b004430f5817e9mr14700023edu.106.1660569612017;
-        Mon, 15 Aug 2022 06:20:12 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5XoVQ0Mp3AJX4T37JptQoNzJiJ8k3q2ZrR61Bs9IRJzVKLQFggiLS79zLf1pPagMjBIlhn8Q==
-X-Received: by 2002:a05:6402:14e:b0:443:f58:17e9 with SMTP id s14-20020a056402014e00b004430f5817e9mr14700007edu.106.1660569611869;
-        Mon, 15 Aug 2022 06:20:11 -0700 (PDT)
+        bh=dIIzjPxeddzxMn7RZ9/iKALDcfamsWN+Y3QvwDD0LAQ=;
+        b=d/WS5frYmm/FYDxJ4S6wG67noyhz/kA0SPfvZ9BXEaqhpTlLYUeBSDuZ+xHQtZ8zFB
+         brDj8KWqZd2PxjIBWmElirP8DWPjRenSD6m7Q1+Ca5WCFFLxOm1lILJorOdvrCsSxxP8
+         hO02AqWWV8lgunCOlNVO52bc5u7UFCojTAqXKUtQMyyzSZdjUd3mMdSPmTR3diIO31HE
+         dIR/We6mgeMpLlwC4vtqqiOOv2eRhRfVb1BOy/4ZmNxxVtvawzGxxucm6QGtWg0VYEwe
+         Pq7i8AX0NI9M0JxeQf8CL2xF0PCHN43XnxlUf+fZ/oqaOHMm1ukVt7P/L0YPSZrNgbNd
+         NJJw==
+X-Gm-Message-State: ACgBeo3DkZrUt8cqQ9ZGU9Iz6nduRYXxiPs8tTJOehvwB6HOKxK0dE+z
+        ir439B4i3IjtjsUnZ/PQOwtO7G0alDN6rMUp76cjxO44yLuu5EBJEYBxManowoTuvI/39kX7yr0
+        iRPMcF0mPRA3MN8jaDYoB81bVzLclEIfeZg==
+X-Received: by 2002:a17:907:a06b:b0:730:9496:4f63 with SMTP id ia11-20020a170907a06b00b0073094964f63mr10323124ejc.238.1660569916907;
+        Mon, 15 Aug 2022 06:25:16 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7Np8EHjN3xV6j5gtUKKxrJruO/oaY6oPl7sUzHkQj7ymdHJKpTA67SMUruPrbigSRKc8zgyg==
+X-Received: by 2002:a17:907:a06b:b0:730:9496:4f63 with SMTP id ia11-20020a170907a06b00b0073094964f63mr10323118ejc.238.1660569916757;
+        Mon, 15 Aug 2022 06:25:16 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cw5-20020a056402228500b0043bd192e826sm6621810edb.17.2022.08.15.06.20.10
+        by smtp.gmail.com with ESMTPSA id j4-20020aa7ca44000000b0043d1a9f6e4asm6703036edt.9.2022.08.15.06.25.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Aug 2022 06:20:11 -0700 (PDT)
-Message-ID: <0b448932-8cfa-a718-ee38-2784d914c66b@redhat.com>
-Date:   Mon, 15 Aug 2022 15:20:10 +0200
+        Mon, 15 Aug 2022 06:25:16 -0700 (PDT)
+Message-ID: <fc250b82-c7c7-9215-f3dd-be87e0a72edd@redhat.com>
+Date:   Mon, 15 Aug 2022 15:25:15 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH linux-next] platform/x86: asus-wmi:Use the function
- kobj_to_dev()
+Subject: Re: [PATCH 1/6] Fixes 98829e84dc67 ("asus-wmi: Add dgpu disable
+ method")
 Content-Language: en-US
-To:     cgel.zte@gmail.com
-Cc:     corentin.chary@gmail.com, markgross@kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-References: <20220811013203.16010-1-ye.xingchen@zte.com.cn>
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220812222509.292692-1-luke@ljones.dev>
+ <20220812222509.292692-2-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220811013203.16010-1-ye.xingchen@zte.com.cn>
+In-Reply-To: <20220812222509.292692-2-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Luke,
 
-On 8/11/22 03:32, cgel.zte@gmail.com wrote:
-> From: ye xingchen <ye.xingchen@zte.com.cn>
+On 8/13/22 00:25, Luke D. Jones wrote:
+> The dgpu_disable attribute was not documented, this adds the
+> required documentation.
 > 
-> Use kobj_to_dev() instead of open-coding it.
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+
+Thanks for the patch. Note that the Fixes tag should be above your
+signed-off-by and then the patch should otherwise have a normal
+subject + body. I've changed the commit msg to the following
+while merging this:
+
+"""
+platform/x86: asus-wmi: Document the dgpu_disable sysfs attribute
+    
+The dgpu_disable attribute was not documented, this adds the
+required documentation.
+    
+Fixes 98829e84dc67 ("asus-wmi: Add dgpu disable method")
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+"""
+
+and I will make similar changes to patch 2/6 and 3/6
+> ---
+>  Documentation/ABI/testing/sysfs-platform-asus-wmi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> index 04885738cf15..0f932fd60f4a 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> @@ -57,3 +57,12 @@ Description:
+>  			* 0 - default,
+>  			* 1 - overboost,
+>  			* 2 - silent
+> +
+> +What:          /sys/devices/platform/<platform>/dgpu_disable
+> +Date:          Aug 2022
+> +KernelVersion: 5.17
+> +Contact:       "Luke Jones" <luke@ljones.dev>
+> +Description:
+> +               Disable discrete GPU:
+> +                       * 0 - Enable dGPU,
+> +                       * 1 - Disable dGPU,
+> \ No newline at end of file
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Next time please make sure the file always ends with a newline
+even in intermediate patches.
 
 Regards,
 
 Hans
 
-> ---
->  drivers/platform/x86/asus-wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 89b604e04d7f..afb33a084f44 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2006,7 +2006,7 @@ static struct attribute *hwmon_attributes[] = {
->  static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
->  					  struct attribute *attr, int idx)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
->  	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
->  
-> @@ -3294,7 +3294,7 @@ static struct attribute *platform_attributes[] = {
->  static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->  				    struct attribute *attr, int idx)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct asus_wmi *asus = dev_get_drvdata(dev);
->  	bool ok = true;
->  	int devid = -1;
 
