@@ -2,307 +2,180 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C27C2BB41
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 08:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A7FC2BB41
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 08:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbiHPIMe (ORCPT
+        id S232558AbiHPIOY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Aug 2022 04:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52008 "EHLO
+        Tue, 16 Aug 2022 04:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232797AbiHPILG (ORCPT
+        with ESMTP id S232354AbiHPINr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Aug 2022 04:11:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CBA3764EA
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 22:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660628221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cpgv5FAeV4Xgxidc6icz1XaUm6ZCyxEOOOfQnaAl0aE=;
-        b=bN4/k5Cp0bVB5GsWteP06MZ7FUC4OytbR+bB1a0Xk+0gQoDSbk4ZlQWHx342mRyttebVTr
-        NsrHaPMzNs4um6IL/P8QxnksTpowXbPQGj9mgN2zESGk12Z2kKEGkrgB42BT/4s0+8+Tib
-        8SzN4kk6ibNd8eZmw5nAeBdAszAI530=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-638-7W5Ag1vNMwGF2ngZgm_Q3w-1; Tue, 16 Aug 2022 01:36:59 -0400
-X-MC-Unique: 7W5Ag1vNMwGF2ngZgm_Q3w-1
-Received: by mail-wm1-f71.google.com with SMTP id r10-20020a1c440a000000b003a538a648a9so4463934wma.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 22:36:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=Cpgv5FAeV4Xgxidc6icz1XaUm6ZCyxEOOOfQnaAl0aE=;
-        b=ITPgAbZ0klH7DnY/Zd0RJvvlopir/u3HLQSi9EzZ1Sj6ga2eAzu9JAEy0gRysGJWWc
-         G+UIzFVY1N+XHgZvz6aVMNgG30rDAtAtKT6ZyEkL+RNKefv2G2mjYAkwtviC8yZGyDxi
-         UzrgvfXkZtgIKMUKxr2de/pj+bHRptm4Q1XqtPzxvmeJIhxZfRS6U+32Km5qlVWT7XCC
-         w7niHukdw2aG8ga1B+vnXwTZ9WVUKFYmIrprHC3tbEHF0oLpznYKUPcdkE/DMWf8kvBP
-         tx2ba9jN8NaBxCzXunsRllgU0QZcHXzm0+epBeLFjoNnM9iDveuGOmO1CowvTTbrmb65
-         9riA==
-X-Gm-Message-State: ACgBeo1vl8ICCyImMHtbGPPSQRwVXcD5g5Di5eHgmkt/FP3me+tdjZPv
-        q9IYxY/TGPwT4BvWrP3lbbu6URgEqMrwaq7oF4G3A/VbSTL81SG8DH2i5bmpq8tUAxgBmt8TzSG
-        u7+H890RvPlbQ/dbTGDBPVFyGtZn+y3pmsw==
-X-Received: by 2002:adf:f5cc:0:b0:221:7e3f:41eb with SMTP id k12-20020adff5cc000000b002217e3f41ebmr10278829wrp.551.1660628218610;
-        Mon, 15 Aug 2022 22:36:58 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5WDnzBpzupB051dVdRKYw1crDTF90RoLhqKzZL00iu8qEeaHBRmDf/lNXmgrH/YzznHXnhuA==
-X-Received: by 2002:adf:f5cc:0:b0:221:7e3f:41eb with SMTP id k12-20020adff5cc000000b002217e3f41ebmr10278814wrp.551.1660628218337;
-        Mon, 15 Aug 2022 22:36:58 -0700 (PDT)
-Received: from redhat.com ([2.55.4.37])
-        by smtp.gmail.com with ESMTPSA id f16-20020adfb610000000b002237fd66585sm8918606wre.92.2022.08.15.22.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 22:36:57 -0700 (PDT)
-Date:   Tue, 16 Aug 2022 01:36:51 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH v4 6/6] virtio: Revert "virtio: find_vqs() add arg sizes"
-Message-ID: <20220816053602.173815-8-mst@redhat.com>
-References: <20220816053602.173815-1-mst@redhat.com>
+        Tue, 16 Aug 2022 04:13:47 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E952BB682;
+        Mon, 15 Aug 2022 23:23:23 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E20055C01BF;
+        Tue, 16 Aug 2022 02:23:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 16 Aug 2022 02:23:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1660631002; x=
+        1660717402; bh=VuiWkrx0WjSNrdBUNlnlS2OD/zEWL0zC5/S13h+8Guk=; b=Z
+        K/u0Gv6QyA0G7Im/MUYjWujaE6FWzgsjX134N54yWursw9wQQGfPeY3XSQCJk2Vs
+        NKhGC+/7olLQZrRb/TQmPtj7n4PoHk8dqn32iC6qOyyHAFXGM6Y1PZK7hMtxHyvv
+        dxYNyzImlIvPJwQQm8sEdRuHn+D8vV2zpy85YwQ5koLWBPalLsOaGVADV02CrB/h
+        t1gNFnqCbTOGl5WLRmxA6DTUnDOB69lnIvGlxKP5Q43UmPmJ1PKpxe/+PFLPTsko
+        2q5EL6BgG8ehrrd297cqVQaGXKUEMUSKicYj/Tgf16MZ57Ba7QHTDyCdLn5RV+1t
+        ZuaVWtjkgZBiYpg1cdkcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660631002; x=
+        1660717402; bh=VuiWkrx0WjSNrdBUNlnlS2OD/zEWL0zC5/S13h+8Guk=; b=r
+        y15Pzl98naqAJIa+zfs5IXlw4hqmnb/smRxFK6dnO+Es6kE4Himp48XoN4Svs+Ha
+        aXOo6R8TW9AoE3h3R8UvavJ5VsJYLHUEXANkFHKWhjY87mkqlZrNliaZDECRpXxZ
+        e8xwm53qTlLH0vGYZ32wqMmKDwi2hFJlgRPz1RpLzNVJ9mDTlYf8moCw58TB2DSe
+        XwonI+mZKa3oYkrs1zNce326CpcMYG7H7qKLqsBrTuC93Au3rhAuytS3HNBSpxVK
+        frN8rWOV4wVTkkFM8m3wiDGYVIHdT0HfiB0dLvC49oXfNtEqQ08x1JAFzhwprjdb
+        D0SJrZ54WXN1iPIyuRbwA==
+X-ME-Sender: <xms:2jf7Ys4TH7Ts6rW_1mkCgl6jV0ml5XrOQGJ_jB4QvYaMaPGqdwYhxg>
+    <xme:2jf7Yt6e5MoUpiuqmVkkph7HThJXUQ4PVGrwdlMvPSNBWrjWWvRvgfsS2w945Vpzi
+    lGPCcinLpOhG-8WFrk>
+X-ME-Received: <xmr:2jf7YrdwG7rrmDT972ceWNnPVidIkgltvU0w2dcDFhERTybpDO5dDJFt19YimXn5MoguwQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehfedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredttderjeenucfhrhhomhepnfhu
+    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
+    hrnhepkeefffeujeevueejueegleelhedtgedvledukedttdffhfeifeelvdduheefjeei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukh
+    gvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:2jf7YhLUisQKKUdBxzpOIC6QaRdP0BC4RMD6b8xOAe2vziSkfWCf1w>
+    <xmx:2jf7YgI8gMK8R7WK0bUssh4c-bKzfhJ-92BzjNgrPscXgz_aB_Uoug>
+    <xmx:2jf7Yiz1QZWtpPGMD4H73fsCtq2Msjt-4dE5c7SzqYmSyf4TitYTsA>
+    <xmx:2jf7YqiPjX8q5JA9dEk-u6vPGG6KwSxvCITLr0wvkVWvuYo_1reCBA>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 16 Aug 2022 02:23:20 -0400 (EDT)
+Message-ID: <14bed619e6a884f37403ec58aead34ff86525f26.camel@ljones.dev>
+Subject: Re: [PATCH 1/6] Fixes 98829e84dc67 ("asus-wmi: Add dgpu disable
+ method")
+From:   Luke Jones <luke@ljones.dev>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 16 Aug 2022 18:23:13 +1200
+In-Reply-To: <657998b3-0f26-9a66-8191-713715622c01@redhat.com>
+References: <20220812222509.292692-1-luke@ljones.dev>
+         <20220812222509.292692-2-luke@ljones.dev>
+         <fc250b82-c7c7-9215-f3dd-be87e0a72edd@redhat.com>
+         <657998b3-0f26-9a66-8191-713715622c01@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (by Flathub.org) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220816053602.173815-1-mst@redhat.com>
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This reverts commit a10fba0377145fccefea4dc4dd5915b7ed87e546: the
-proposed API isn't supported on all transports but no
-effort was made to address this.
+On Mon, 2022-08-15 at 15:40 +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 8/15/22 15:25, Hans de Goede wrote:
+> > Hi Luke,
+> >=20
+> > On 8/13/22 00:25, Luke D. Jones wrote:
+> > > The dgpu_disable attribute was not documented, this adds the
+> > > required documentation.
+> > >=20
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> >=20
+> > Thanks for the patch. Note that the Fixes tag should be above your
+> > signed-off-by and then the patch should otherwise have a normal
+> > subject + body. I've changed the commit msg to the following
+> > while merging this:
+> >=20
+> > """
+> > platform/x86: asus-wmi: Document the dgpu_disable sysfs attribute
+> > =C2=A0=C2=A0=C2=A0=20
+> > The dgpu_disable attribute was not documented, this adds the
+> > required documentation.
+> > =C2=A0=C2=A0=C2=A0=20
+> > Fixes 98829e84dc67 ("asus-wmi: Add dgpu disable method")
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > """
+>=20
+> While merging this I noticed that this is also using spaces
+> instead of tabs for indentation, where as the rest of
+> the file is using tabs.
+>=20
+> I've also fixed this up while merging, but next time
+> please make sure to use spaces.
+>=20
+> I will make similar spaces -> tabs changes to patch 2/6 and 3/6
+>=20
 
-It might not be hard to fix if we want to: maybe just
-rename size to size_hint and make sure legacy
-transports ignore the hint.
+I ran these through ./scripts/checkpatch.pl... I'm really not sure what
+happened. I'll triple-check that in future.
 
-But it's not sure what the benefit is in any case, so
-let's drop it.
-
-Fixes: a10fba037714 ("virtio: find_vqs() add arg sizes")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- arch/um/drivers/virtio_uml.c             |  2 +-
- drivers/platform/mellanox/mlxbf-tmfifo.c |  1 -
- drivers/remoteproc/remoteproc_virtio.c   |  1 -
- drivers/s390/virtio/virtio_ccw.c         |  1 -
- drivers/virtio/virtio_mmio.c             |  1 -
- drivers/virtio/virtio_pci_common.c       |  2 +-
- drivers/virtio/virtio_pci_common.h       |  2 +-
- drivers/virtio/virtio_pci_modern.c       |  7 ++-----
- drivers/virtio/virtio_vdpa.c             |  1 -
- include/linux/virtio_config.h            | 14 +++++---------
- 10 files changed, 10 insertions(+), 22 deletions(-)
-
-diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
-index 79e38afd4b91..e719af8bdf56 100644
---- a/arch/um/drivers/virtio_uml.c
-+++ b/arch/um/drivers/virtio_uml.c
-@@ -1011,7 +1011,7 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
- 
- static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
- 		       struct virtqueue *vqs[], vq_callback_t *callbacks[],
--		       const char * const names[], u32 sizes[], const bool *ctx,
-+		       const char * const names[], const bool *ctx,
- 		       struct irq_affinity *desc)
- {
- 	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 8be13d416f48..1ae3c56b66b0 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -928,7 +928,6 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 					struct virtqueue *vqs[],
- 					vq_callback_t *callbacks[],
- 					const char * const names[],
--					u32 sizes[],
- 					const bool *ctx,
- 					struct irq_affinity *desc)
- {
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 81c4f5776109..0f7706e23eb9 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -158,7 +158,6 @@ static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 				 struct virtqueue *vqs[],
- 				 vq_callback_t *callbacks[],
- 				 const char * const names[],
--				 u32 sizes[],
- 				 const bool * ctx,
- 				 struct irq_affinity *desc)
- {
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index 896896e32664..a10dbe632ef9 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -637,7 +637,6 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
- 			       struct virtqueue *vqs[],
- 			       vq_callback_t *callbacks[],
- 			       const char * const names[],
--			       u32 sizes[],
- 			       const bool *ctx,
- 			       struct irq_affinity *desc)
- {
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index dfcecfd7aba1..3ff746e3f24a 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -474,7 +474,6 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 		       struct virtqueue *vqs[],
- 		       vq_callback_t *callbacks[],
- 		       const char * const names[],
--		       u32 sizes[],
- 		       const bool *ctx,
- 		       struct irq_affinity *desc)
- {
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index 7ad734584823..ad258a9d3b9f 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -396,7 +396,7 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
- /* the config->find_vqs() implementation */
- int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 		struct virtqueue *vqs[], vq_callback_t *callbacks[],
--		const char * const names[], u32 sizes[], const bool *ctx,
-+		const char * const names[], const bool *ctx,
- 		struct irq_affinity *desc)
- {
- 	int err;
-diff --git a/drivers/virtio/virtio_pci_common.h b/drivers/virtio/virtio_pci_common.h
-index a5ff838b85a5..23112d84218f 100644
---- a/drivers/virtio/virtio_pci_common.h
-+++ b/drivers/virtio/virtio_pci_common.h
-@@ -110,7 +110,7 @@ void vp_del_vqs(struct virtio_device *vdev);
- /* the config->find_vqs() implementation */
- int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 		struct virtqueue *vqs[], vq_callback_t *callbacks[],
--		const char * const names[], u32 sizes[], const bool *ctx,
-+		const char * const names[], const bool *ctx,
- 		struct irq_affinity *desc);
- const char *vp_bus_name(struct virtio_device *vdev);
- 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index be51ec849252..c3b9f2761849 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -347,15 +347,12 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
- static int vp_modern_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 			      struct virtqueue *vqs[],
- 			      vq_callback_t *callbacks[],
--			      const char * const names[],
--			      u32 sizes[],
--			      const bool *ctx,
-+			      const char * const names[], const bool *ctx,
- 			      struct irq_affinity *desc)
- {
- 	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
- 	struct virtqueue *vq;
--	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, sizes, ctx,
--			     desc);
-+	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx, desc);
- 
- 	if (rc)
- 		return rc;
-diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-index 832d2c5b1b19..9670cc79371d 100644
---- a/drivers/virtio/virtio_vdpa.c
-+++ b/drivers/virtio/virtio_vdpa.c
-@@ -269,7 +269,6 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
- 				struct virtqueue *vqs[],
- 				vq_callback_t *callbacks[],
- 				const char * const names[],
--				u32 sizes[],
- 				const bool *ctx,
- 				struct irq_affinity *desc)
- {
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index 888f7e96f0c7..36ec7be1f480 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -55,7 +55,6 @@ struct virtio_shm_region {
-  *		include a NULL entry for vqs that do not need a callback
-  *	names: array of virtqueue names (mainly for debugging)
-  *		include a NULL entry for vqs unused by driver
-- *	sizes: array of virtqueue sizes
-  *	Returns 0 on success or error status
-  * @del_vqs: free virtqueues found by find_vqs().
-  * @synchronize_cbs: synchronize with the virtqueue callbacks (optional)
-@@ -104,9 +103,7 @@ struct virtio_config_ops {
- 	void (*reset)(struct virtio_device *vdev);
- 	int (*find_vqs)(struct virtio_device *, unsigned nvqs,
- 			struct virtqueue *vqs[], vq_callback_t *callbacks[],
--			const char * const names[],
--			u32 sizes[],
--			const bool *ctx,
-+			const char * const names[], const bool *ctx,
- 			struct irq_affinity *desc);
- 	void (*del_vqs)(struct virtio_device *);
- 	void (*synchronize_cbs)(struct virtio_device *);
-@@ -215,7 +212,7 @@ struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
- 	const char *names[] = { n };
- 	struct virtqueue *vq;
- 	int err = vdev->config->find_vqs(vdev, 1, &vq, callbacks, names, NULL,
--					 NULL, NULL);
-+					 NULL);
- 	if (err < 0)
- 		return ERR_PTR(err);
- 	return vq;
-@@ -227,8 +224,7 @@ int virtio_find_vqs(struct virtio_device *vdev, unsigned nvqs,
- 			const char * const names[],
- 			struct irq_affinity *desc)
- {
--	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL,
--				      NULL, desc);
-+	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL, desc);
- }
- 
- static inline
-@@ -237,8 +233,8 @@ int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
- 			const char * const names[], const bool *ctx,
- 			struct irq_affinity *desc)
- {
--	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL,
--				      ctx, desc);
-+	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, ctx,
-+				      desc);
- }
- 
- /**
--- 
-MST
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
+>=20
+> > > ---
+> > > =C2=A0Documentation/ABI/testing/sysfs-platform-asus-wmi | 9 +++++++++
+> > > =C2=A01 file changed, 9 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > index 04885738cf15..0f932fd60f4a 100644
+> > > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > @@ -57,3 +57,12 @@ Description:
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+* 0 - default,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+* 1 - overboost,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+* 2 - silent
+> > > +
+> > > +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /sys/dev=
+ices/platform/<platform>/dgpu_disable
+> > > +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Aug 2022
+> > > +KernelVersion: 5.17
+> > > +Contact:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Luke Jones" <luke@ljon=
+es.dev>
+> > > +Description:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 Disable discrete GPU:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 0 - En=
+able dGPU,
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 1 - Di=
+sable dGPU,
+> > > \ No newline at end of file
+> >=20
+> > Next time please make sure the file always ends with a newline
+> > even in intermediate patches.
+> >=20
+> > Regards,
+> >=20
+> > Hans
+> >=20
+> >=20
+>=20
 
