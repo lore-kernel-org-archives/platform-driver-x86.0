@@ -2,291 +2,307 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462ACC32771
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 07:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C27C2BB41
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Aug 2022 08:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiHPHfJ (ORCPT
+        id S231197AbiHPIMe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Aug 2022 03:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41712 "EHLO
+        Tue, 16 Aug 2022 04:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232251AbiHPHef (ORCPT
+        with ESMTP id S232797AbiHPILG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Aug 2022 03:34:35 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AEBB4DB37;
-        Mon, 15 Aug 2022 21:16:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ThYdgyXgtQGFyy1NZmbNbmTv0Uo413VvNLxAdxQLvHSr6qs5Y8laMPN0VIKcnhKwN6IR0Nuv9GjDC1GVap5vM7/MFzHHfehlvTVHO2Ybym7vcGNHqAsFX0sXo8glx8FkmMr6UilukVzdLg7qy6c2ZHifNazR7vE+2Jw/uV46c0W667fDHQ05+5OuvuVO0oFeXjCXbJaxM7KZTHeVOc5SfhNtLR9LFZi/KEbx5/X/h8oe6IFr9S/KlJDRDth44UIk0J4hf7m4UNw1F8N4y3GJOnuKlBM36xs4RPq1qWDP5QEgnLRzXWIb5UHbmfRFXj4pZI5o5e4hLhzi94FLBWQRAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2iqjQ7zTt6EBB3XC3XjI2B84c+QnIJrzzS3EAIvuPm8=;
- b=Q91VYbdvT2QjGIu6QXDOji3k5PjZ4EU8uHZyCCDthyEI6yQk0DPniurYe4R8fBZfZt+Vo/OpKoMXEiUSzo1dLlxuqjKGNIw5tRVQ31Ujbya3Z4pPkTjADqVgsn6x3hLxkYBN/fJZcx0pUsmRUjzgpSW2NmZ0k4DGfEABnH1lJG5y8QTmSqOXnZ7YiqqBtZuOZPbDpdvLqx3e5Wdv4H+JpCCTjW9O2fbJw8txUPYVfK0KCaQQcVtFBIU4k4nr+laD1uPzbA7Q7C9LBS6b8WG+RB8wC4xNDTrPXDsDyFc76Bz3xmVetgaTbsV850HlW0xwxkmEPbNXIESElFxOQJ4nsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2iqjQ7zTt6EBB3XC3XjI2B84c+QnIJrzzS3EAIvuPm8=;
- b=K82x6PmrOQV6jdWWxJiwTcijm2hyTBA0EV3fyyA1pqpM6iYIOE8sQXq0mq4esJ5rKyR1rfCPX4CHJFhUyxJgndJvzMRnpDS2YX34eVjtaiaI/SroNsciBQFFd1dHE+8loh45FGhM/q79ATqBzAE+lG33LxJGv/TkrkLu2ivTLoQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BN6PR12MB1553.namprd12.prod.outlook.com (2603:10b6:405:6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.10; Tue, 16 Aug
- 2022 04:16:15 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::4489:9a98:ef82:6c67]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::4489:9a98:ef82:6c67%3]) with mapi id 15.20.5504.027; Tue, 16 Aug 2022
- 04:16:15 +0000
-Message-ID: <e186622e-f3e6-5715-9f6d-bc41fb41560d@amd.com>
-Date:   Mon, 15 Aug 2022 23:16:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] asus-wmi: Support the hardware GPU MUX on some laptops
-Content-Language: en-US
-To:     "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220813092624.6228-1-luke@ljones.dev>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20220813092624.6228-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN1PR12CA0045.namprd12.prod.outlook.com
- (2603:10b6:802:20::16) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        Tue, 16 Aug 2022 04:11:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CBA3764EA
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 22:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1660628221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cpgv5FAeV4Xgxidc6icz1XaUm6ZCyxEOOOfQnaAl0aE=;
+        b=bN4/k5Cp0bVB5GsWteP06MZ7FUC4OytbR+bB1a0Xk+0gQoDSbk4ZlQWHx342mRyttebVTr
+        NsrHaPMzNs4um6IL/P8QxnksTpowXbPQGj9mgN2zESGk12Z2kKEGkrgB42BT/4s0+8+Tib
+        8SzN4kk6ibNd8eZmw5nAeBdAszAI530=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-638-7W5Ag1vNMwGF2ngZgm_Q3w-1; Tue, 16 Aug 2022 01:36:59 -0400
+X-MC-Unique: 7W5Ag1vNMwGF2ngZgm_Q3w-1
+Received: by mail-wm1-f71.google.com with SMTP id r10-20020a1c440a000000b003a538a648a9so4463934wma.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Aug 2022 22:36:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=Cpgv5FAeV4Xgxidc6icz1XaUm6ZCyxEOOOfQnaAl0aE=;
+        b=ITPgAbZ0klH7DnY/Zd0RJvvlopir/u3HLQSi9EzZ1Sj6ga2eAzu9JAEy0gRysGJWWc
+         G+UIzFVY1N+XHgZvz6aVMNgG30rDAtAtKT6ZyEkL+RNKefv2G2mjYAkwtviC8yZGyDxi
+         UzrgvfXkZtgIKMUKxr2de/pj+bHRptm4Q1XqtPzxvmeJIhxZfRS6U+32Km5qlVWT7XCC
+         w7niHukdw2aG8ga1B+vnXwTZ9WVUKFYmIrprHC3tbEHF0oLpznYKUPcdkE/DMWf8kvBP
+         tx2ba9jN8NaBxCzXunsRllgU0QZcHXzm0+epBeLFjoNnM9iDveuGOmO1CowvTTbrmb65
+         9riA==
+X-Gm-Message-State: ACgBeo1vl8ICCyImMHtbGPPSQRwVXcD5g5Di5eHgmkt/FP3me+tdjZPv
+        q9IYxY/TGPwT4BvWrP3lbbu6URgEqMrwaq7oF4G3A/VbSTL81SG8DH2i5bmpq8tUAxgBmt8TzSG
+        u7+H890RvPlbQ/dbTGDBPVFyGtZn+y3pmsw==
+X-Received: by 2002:adf:f5cc:0:b0:221:7e3f:41eb with SMTP id k12-20020adff5cc000000b002217e3f41ebmr10278829wrp.551.1660628218610;
+        Mon, 15 Aug 2022 22:36:58 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5WDnzBpzupB051dVdRKYw1crDTF90RoLhqKzZL00iu8qEeaHBRmDf/lNXmgrH/YzznHXnhuA==
+X-Received: by 2002:adf:f5cc:0:b0:221:7e3f:41eb with SMTP id k12-20020adff5cc000000b002217e3f41ebmr10278814wrp.551.1660628218337;
+        Mon, 15 Aug 2022 22:36:58 -0700 (PDT)
+Received: from redhat.com ([2.55.4.37])
+        by smtp.gmail.com with ESMTPSA id f16-20020adfb610000000b002237fd66585sm8918606wre.92.2022.08.15.22.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Aug 2022 22:36:57 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 01:36:51 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH v4 6/6] virtio: Revert "virtio: find_vqs() add arg sizes"
+Message-ID: <20220816053602.173815-8-mst@redhat.com>
+References: <20220816053602.173815-1-mst@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b62b2c6b-2a52-4012-e3a1-08da7f3e0faa
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1553:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QuFpKR9rWPw6ZyvQH4te+Jgl34Oij59+pA8I4clgK/9Pr4+YTrDH0i7DQ/iyMykf4gP5B1IOoAxxpPGy8RXtjq4H2MbJT/9Uk1XTrkfEHW7auyn3ENKlFFaZrr8a5L6X/FT77uiFPLkgi/cJRIeearHWnhrhXA0rW/RV12N+9AJBwSsHzA930ookvijC3gpqLut1Tr/3p7hWZf1YwY7XUiP7sgynaTA8AE7KRvlgmId1CR6fDXqfYing7elSTU0tjK3FNnKXZmT649OSUpuzJkoBdmBFApMRhqFslRxa9K5Yiuo1lyi8nj+4DM2hCsnU3b8Ii4kGaYR2/ymbLX9lxkzFtEkhR+wUjhjuIe/JLOadJ1IiN2ODG14o7HNKQk5Zc+rO6bi7wH7bx1HoHrNKQf1qG451D86sOvKRY/J4AZR9e4Pl/r1lJmUX2AbOJ6vOda0E5YPWndvSpGoX8RSSGjFDstAP/QXYtXdAFA2crOFObp/H1HpzOOLA8/Oe0TggMIHN1kTW3fOg0a1dXNbLmEoH7HnErZy0AGewFqngt1TNbz9KMOI/k8o5CGPG9lNxiVaubboabh58bhO1qp31f+innBNErO/yxl0s4t/I6C1Er++kpaPhtu+1+38qQlPs1mCX/xbbVJTaZdLJqgpqXb7BIlt+L0SKppuaIcXzkR0PRnWCU+ndRVP5hFjJaubD/0SYtfxMj9taS7XckXUEZB9qhY9fdi51DCYev1FrmPVSEnrVhKuM5+Dl3CoaqBE869bAHBQbORmOohZc0E1ulRZRVb/9ShizupSJDuH1mCcG0Ha6UzDp6e7WbS3bq2zMl71wctuwAusOjrCw77XY1Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(38100700002)(44832011)(186003)(6512007)(6506007)(53546011)(31686004)(5660300002)(36756003)(2616005)(8936002)(2906002)(6666004)(316002)(31696002)(478600001)(8676002)(4326008)(66946007)(6486002)(66476007)(66556008)(86362001)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S3liTWd1NmNpakJOd09SbWdVR1BQZHNSYnd6VjdPMktKTnRPL2FkZEhXazhj?=
- =?utf-8?B?UHdFd0tLSDFweVQ3VFVsVVNaaEdyM21PSTdTYXg2elMrb2RoYmo4eEU5MTFs?=
- =?utf-8?B?cy84bEpGQUVXOS9wek9SSVZNZXNEeDNwV1YrQnVETHFiRlJXNXV2OVVuYTlT?=
- =?utf-8?B?cGF0NGhKbUg0cTRUL2lvQlFCMWJRNnc4ek1QSVYzM3BrMnZvbTVicWxzUzJZ?=
- =?utf-8?B?czE0QmlEK1Y5SEVVMDNhYkZIeWQ3bXZUNmVUbjY3NCs2b0F5ZUFNVlZXdlox?=
- =?utf-8?B?SUhaWUdLMjhneXBFLzdHc3BkVlhxZG80Sis5TlozbG12YzhkRXFWNWw2V3dZ?=
- =?utf-8?B?eHZhdksyK1F5TVdDek1lRlVXTHllVXpWZmtHd0taWGN3UTJIR21lTW5ZOWt3?=
- =?utf-8?B?emoxNlZuV3dNdU5RajZ5TmxXeGhuaXhQWWR3T01vTVBQc1A0b0VKcjY4Mzd3?=
- =?utf-8?B?bXVPVG1wbG5EaUxaMTBTeTcwUmY3S2FyY0g0VXdobFRKS1R6akFtYWVIcmJk?=
- =?utf-8?B?eWFZdU9DVmM3eGdzb0JpaUw3WUFncHFHYmZjdm9KK1lxcjBySkUycjNGZkhx?=
- =?utf-8?B?aTMrTmhKK2FkVWRuSzZxU1NHbStiOFpEZGhrQjJST0h3UllQWXZnQWp1V2Mx?=
- =?utf-8?B?OWk0ekRFYldISlM0dXl4VDgwQUJKTkN1b2ExNEhvRUFwY2JMRG9Lak5nVWpK?=
- =?utf-8?B?V0JnVUxvVjFSNjdtOWkyaDA4cDZpRjhreFptanpSSGxQNE9VYVl3Ullxcm5p?=
- =?utf-8?B?bE5KdUFhQUJ3ckM1UXZlVXNDSkNoUW9DSlJJUUZNZ0JGMk9BU09MamJzMTdY?=
- =?utf-8?B?SWl4Nk5nT2JYOXp2RnM0UURoZjYyOTAyMW9BdXdWUWI1d3I3ZS9yOE12MjAv?=
- =?utf-8?B?YkxEUkJqOGpSZi9BTnBQdUp3NnEzM0MyV0dQTjVDeWZrVTFQLzRXTVJKam1P?=
- =?utf-8?B?OUhnejdLdDc4S1NScGFVaCtJcDNpUUFScDhEWnB0RlBwNmVPci9hekdCY0pw?=
- =?utf-8?B?a1hPQTYvNUhGVDB6L2ZBSjhpSjVDTlNRaVg3WU9TN21idFVXU2JLVDFLbUZr?=
- =?utf-8?B?eER0bmRiSHRmZ0dCYWViZHk0RUdUTjc4UVFnZFZiNEN3UTg3ZE9LbHFKNFRr?=
- =?utf-8?B?UmpjcjdmbTJaZG5VY0wzdnZWckZraFZlR1NLN1BPd0MwWTdNVU1UZmZrcndP?=
- =?utf-8?B?MjFCWEJqWDI5eFZTRmZDd284dTgvS2F5UnlhVStva3FXTVdheTNBZ1M2MGJH?=
- =?utf-8?B?aW9uYm8rbTFZeEI0Ryt6QUN5LzNsVFNITjhKMGltWHpzc1ZML2ZQUGE3QTlM?=
- =?utf-8?B?b0xTRTNpbUpwUFZyb0FHSk5QYnNUSFVGOVJrc091TXdVZ0VmTVdFRnZhbXBu?=
- =?utf-8?B?YmhkWlE0Vll5Nm05NityMjZBWFNoU1ljZ3VNMm0vaVhINFVRelJrME5jSE9H?=
- =?utf-8?B?YUNKaDliZDF5SitsMjQ2WjNtSnY4NUh2Q0NISFkvZ2ZUaC9MNGphNHV0YzZi?=
- =?utf-8?B?MDdDNEs1eWIwMjE3MUVuUlREN290Q3VoekNUeWo5emhXOUV4QUxFTDhmMmJW?=
- =?utf-8?B?a3JJRlJkL2ZCNnA2VTZURmlaY242dWNYbzkrU3dwN2sxU0svZGRDRWFobWNx?=
- =?utf-8?B?SDBPbkloOGR0UnVuN3Z4UktaUWJ2M1hwVi9WUUp3RnpmUVN5TlQzTkl2b2pI?=
- =?utf-8?B?VGhUMXZ0NzBTQjM5Q3pLSWNvYXJ5aFgzYjNqUXFuQzB2c1NWQlJwT1FVWFNR?=
- =?utf-8?B?NkFONHN3SDZKZkhOcmQwcnE4RmFLeXJ4RUlDWm5rZkt5TFFIWiszMkh6TkVR?=
- =?utf-8?B?ZCtZcHBYakJXYjhYS2FodmJZcDZDQTBVYzVWVUJ1WGx1eGpXNHd4aXVhT2xN?=
- =?utf-8?B?OVJBNUw4ZnI0YVRFQzQ3U2RZdzBLYnhEUzRqTXZReGtxYXplcjQ1T0Fma1pP?=
- =?utf-8?B?V2xLSXVPRlpPd2FKSXgrTVRkREJKRWlJQ3NhbGplYksrNDl4WnhqbGpKMnNG?=
- =?utf-8?B?a0d2YWZjVkNycWVLemVyMzZuQlVUUVVFaVlYOGx3VnB3eWt2VjRjdk5WdGla?=
- =?utf-8?B?YlV5TWxjSVcra2UxcHNKT2FreHJpN01OcWNtZGV0ZVBLT2xSdHlJdVRNNWhp?=
- =?utf-8?B?a1VFWXFYQVR1aStGeDJxQ1Z2N3VsN0xlSXZDUmg1NzlVS1NCVVRUaEpVNFMx?=
- =?utf-8?Q?IGMpRbA6UNtDsnQPrfvK07uOzyp58HOvGeFXpCPc1t0U?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b62b2c6b-2a52-4012-e3a1-08da7f3e0faa
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 04:16:15.5153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OFcadM/0WpgW9I94bIqDEwRhc0mwj0VIWfgu910GjiCRM1fbTwiCK/6zYuVx35ro5fZk5MWf+oQZOm9yaCye8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1553
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816053602.173815-1-mst@redhat.com>
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 8/13/22 04:26, Luke D. Jones wrote:
-> Support the hardware GPU MUX switch available on some models. This
-> switch can toggle the MUX between:
-> 
-> - 0, Dedicated mode
-> - 1, Optimus mode
-> 
-> Optimus mode is the regular iGPU + dGPU available, while dedicated
-> mode switches the system to have only the dGPU available.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->   .../ABI/testing/sysfs-platform-asus-wmi       | 11 ++++
->   drivers/platform/x86/asus-wmi.c               | 62 +++++++++++++++++++
->   include/linux/platform_data/x86/asus-wmi.h    |  3 +
->   3 files changed, 76 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index 574b5170a37d..03124eab7f01 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -58,6 +58,17 @@ Description:
->   			* 1 - overboost,
->   			* 2 - silent
->   
-> +What:          /sys/devices/platform/<platform>/gpu_mux_mode
-> +Date:          Aug 2022
-> +KernelVersion: 6.1
-> +Contact:       "Luke Jones" <luke@ljones.dev>
-> +Description:
-> +               Switch the GPU hardware MUX mode. Laptops with this feature can
-> +			   can be toggled to boot with only the dGPU (discrete mode) or in
-> +			   standard Optimus/Hybrid mode. On switch a reboot is required:
-> +                       * 0 - Discrete GPU,
-> +                       * 1 - Optimus/Hybrid,
+This reverts commit a10fba0377145fccefea4dc4dd5915b7ed87e546: the
+proposed API isn't supported on all transports but no
+effort was made to address this.
 
-This feel like it should probably export using 
-/sys/class/firmware-attributes.  That's exactly how those types of 
-attributes work.
+It might not be hard to fix if we want to: maybe just
+rename size to size_hint and make sure legacy
+transports ignore the hint.
 
-As a bonus, software like fwupd 1.8.4 knows how to manipulate it and you 
-don't need special documentation.
+But it's not sure what the benefit is in any case, so
+let's drop it.
 
-> +
->   What:          /sys/devices/platform/<platform>/dgpu_disable
->   Date:          Aug 2022
->   KernelVersion: 5.17
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index e2b51b5550e8..0421ffb81927 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -230,6 +230,7 @@ struct asus_wmi {
->   
->   	bool egpu_enable_available;
->   	bool dgpu_disable_available;
-> +	bool gpu_mux_mode_available;
->   
->   	bool throttle_thermal_policy_available;
->   	u8 throttle_thermal_policy_mode;
-> @@ -668,6 +669,59 @@ static ssize_t egpu_enable_store(struct device *dev,
->   }
->   static DEVICE_ATTR_RW(egpu_enable);
->   
-> +/* gpu mux switch *************************************************************/
-> +static int gpu_mux_mode_check_present(struct asus_wmi *asus)
-> +{
-> +	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
-> +
-> +   return 0;
-> +}
-> +
-> +static ssize_t gpu_mux_mode_show(struct device *dev,
-> +                  struct device_attribute *attr, char *buf)
-> +{
-> +   struct asus_wmi *asus = dev_get_drvdata(dev);
-> +   int result;
-> +
-> +   result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-> +   if (result < 0)
-> +       return result;
-> +
-> +   return sysfs_emit(buf, "%d\n", result);
-> +}
-> +
-> +static ssize_t gpu_mux_mode_store(struct device *dev,
-> +                   struct device_attribute *attr,
-> +                   const char *buf, size_t count)
-> +{
-> +   struct asus_wmi *asus = dev_get_drvdata(dev);
-> +   int result, err;
-> +   u32 optimus;
-> +
-> +   err = kstrtou32(buf, 10, &optimus);
-> +   if (err)
-> +       return err;
-> +
-> +   if (optimus > 1)
-> +       return -EINVAL;
-> +
-> +   err = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, &result);
-> +   if (err) {
-> +       dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
-> +       return err;
-> +   }
-> +	/* !1 is considered a fail by ASUS */
-> +	if (result != 1) {
-> +		dev_warn(dev, "Failed to set GPU MUX mode (result): 0x%x\n", result);
-> +       return -EIO;
-> +   }
-> +
-> +   sysfs_notify(&asus->platform_device->dev.kobj, NULL, "gpu_mux_mode");
-> +
-> +   return count;
-> +}
-> +static DEVICE_ATTR_RW(gpu_mux_mode);
-> +
->   /* Battery ********************************************************************/
->   
->   /* The battery maximum charging percentage */
-> @@ -3165,6 +3219,7 @@ static struct attribute *platform_attributes[] = {
->   	&dev_attr_touchpad.attr,
->   	&dev_attr_egpu_enable.attr,
->   	&dev_attr_dgpu_disable.attr,
-> +	&dev_attr_gpu_mux_mode.attr,
->   	&dev_attr_lid_resume.attr,
->   	&dev_attr_als_enable.attr,
->   	&dev_attr_fan_boost_mode.attr,
-> @@ -3195,6 +3250,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->   		ok = asus->egpu_enable_available;
->   	else if (attr == &dev_attr_dgpu_disable.attr)
->   		ok = asus->dgpu_disable_available;
-> +	else if (attr == &dev_attr_gpu_mux_mode.attr)
-> +		ok = asus->gpu_mux_mode_available;
->   	else if (attr == &dev_attr_fan_boost_mode.attr)
->   		ok = asus->fan_boost_mode_available;
->   	else if (attr == &dev_attr_throttle_thermal_policy.attr)
-> @@ -3464,6 +3521,10 @@ static int asus_wmi_add(struct platform_device *pdev)
->   	if (err)
->   		goto fail_dgpu_disable;
->   
-> +	err = gpu_mux_mode_check_present(asus);
-> +   if (err)
-> +       goto fail_gpu_mux_mode;
-> +
->   	err = fan_boost_mode_check_present(asus);
->   	if (err)
->   		goto fail_fan_boost_mode;
-> @@ -3578,6 +3639,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->   fail_fan_boost_mode:
->   fail_egpu_enable:
->   fail_dgpu_disable:
-> +fail_gpu_mux_mode:
->   fail_platform:
->   fail_panel_od:
->   	kfree(asus);
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index a571b47ff362..c023332842a2 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -98,6 +98,9 @@
->   /* dgpu on/off */
->   #define ASUS_WMI_DEVID_DGPU		0x00090020
->   
-> +/* gpu mux switch, 0 = dGPU, 1 = Optimus */
-> +#define ASUS_WMI_DEVID_GPU_MUX 0x00090016
-> +
->   /* DSTS masks */
->   #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
->   #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+Fixes: a10fba037714 ("virtio: find_vqs() add arg sizes")
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ arch/um/drivers/virtio_uml.c             |  2 +-
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  1 -
+ drivers/remoteproc/remoteproc_virtio.c   |  1 -
+ drivers/s390/virtio/virtio_ccw.c         |  1 -
+ drivers/virtio/virtio_mmio.c             |  1 -
+ drivers/virtio/virtio_pci_common.c       |  2 +-
+ drivers/virtio/virtio_pci_common.h       |  2 +-
+ drivers/virtio/virtio_pci_modern.c       |  7 ++-----
+ drivers/virtio/virtio_vdpa.c             |  1 -
+ include/linux/virtio_config.h            | 14 +++++---------
+ 10 files changed, 10 insertions(+), 22 deletions(-)
+
+diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+index 79e38afd4b91..e719af8bdf56 100644
+--- a/arch/um/drivers/virtio_uml.c
++++ b/arch/um/drivers/virtio_uml.c
+@@ -1011,7 +1011,7 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+ 
+ static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 		       struct virtqueue *vqs[], vq_callback_t *callbacks[],
+-		       const char * const names[], u32 sizes[], const bool *ctx,
++		       const char * const names[], const bool *ctx,
+ 		       struct irq_affinity *desc)
+ {
+ 	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 8be13d416f48..1ae3c56b66b0 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -928,7 +928,6 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+ 					struct virtqueue *vqs[],
+ 					vq_callback_t *callbacks[],
+ 					const char * const names[],
+-					u32 sizes[],
+ 					const bool *ctx,
+ 					struct irq_affinity *desc)
+ {
+diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+index 81c4f5776109..0f7706e23eb9 100644
+--- a/drivers/remoteproc/remoteproc_virtio.c
++++ b/drivers/remoteproc/remoteproc_virtio.c
+@@ -158,7 +158,6 @@ static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 				 struct virtqueue *vqs[],
+ 				 vq_callback_t *callbacks[],
+ 				 const char * const names[],
+-				 u32 sizes[],
+ 				 const bool * ctx,
+ 				 struct irq_affinity *desc)
+ {
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index 896896e32664..a10dbe632ef9 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -637,7 +637,6 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 			       struct virtqueue *vqs[],
+ 			       vq_callback_t *callbacks[],
+ 			       const char * const names[],
+-			       u32 sizes[],
+ 			       const bool *ctx,
+ 			       struct irq_affinity *desc)
+ {
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index dfcecfd7aba1..3ff746e3f24a 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -474,7 +474,6 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 		       struct virtqueue *vqs[],
+ 		       vq_callback_t *callbacks[],
+ 		       const char * const names[],
+-		       u32 sizes[],
+ 		       const bool *ctx,
+ 		       struct irq_affinity *desc)
+ {
+diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+index 7ad734584823..ad258a9d3b9f 100644
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -396,7 +396,7 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
+ /* the config->find_vqs() implementation */
+ int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+-		const char * const names[], u32 sizes[], const bool *ctx,
++		const char * const names[], const bool *ctx,
+ 		struct irq_affinity *desc)
+ {
+ 	int err;
+diff --git a/drivers/virtio/virtio_pci_common.h b/drivers/virtio/virtio_pci_common.h
+index a5ff838b85a5..23112d84218f 100644
+--- a/drivers/virtio/virtio_pci_common.h
++++ b/drivers/virtio/virtio_pci_common.h
+@@ -110,7 +110,7 @@ void vp_del_vqs(struct virtio_device *vdev);
+ /* the config->find_vqs() implementation */
+ int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+-		const char * const names[], u32 sizes[], const bool *ctx,
++		const char * const names[], const bool *ctx,
+ 		struct irq_affinity *desc);
+ const char *vp_bus_name(struct virtio_device *vdev);
+ 
+diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+index be51ec849252..c3b9f2761849 100644
+--- a/drivers/virtio/virtio_pci_modern.c
++++ b/drivers/virtio/virtio_pci_modern.c
+@@ -347,15 +347,12 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+ static int vp_modern_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 			      struct virtqueue *vqs[],
+ 			      vq_callback_t *callbacks[],
+-			      const char * const names[],
+-			      u32 sizes[],
+-			      const bool *ctx,
++			      const char * const names[], const bool *ctx,
+ 			      struct irq_affinity *desc)
+ {
+ 	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+ 	struct virtqueue *vq;
+-	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, sizes, ctx,
+-			     desc);
++	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx, desc);
+ 
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+index 832d2c5b1b19..9670cc79371d 100644
+--- a/drivers/virtio/virtio_vdpa.c
++++ b/drivers/virtio/virtio_vdpa.c
+@@ -269,7 +269,6 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+ 				struct virtqueue *vqs[],
+ 				vq_callback_t *callbacks[],
+ 				const char * const names[],
+-				u32 sizes[],
+ 				const bool *ctx,
+ 				struct irq_affinity *desc)
+ {
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index 888f7e96f0c7..36ec7be1f480 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -55,7 +55,6 @@ struct virtio_shm_region {
+  *		include a NULL entry for vqs that do not need a callback
+  *	names: array of virtqueue names (mainly for debugging)
+  *		include a NULL entry for vqs unused by driver
+- *	sizes: array of virtqueue sizes
+  *	Returns 0 on success or error status
+  * @del_vqs: free virtqueues found by find_vqs().
+  * @synchronize_cbs: synchronize with the virtqueue callbacks (optional)
+@@ -104,9 +103,7 @@ struct virtio_config_ops {
+ 	void (*reset)(struct virtio_device *vdev);
+ 	int (*find_vqs)(struct virtio_device *, unsigned nvqs,
+ 			struct virtqueue *vqs[], vq_callback_t *callbacks[],
+-			const char * const names[],
+-			u32 sizes[],
+-			const bool *ctx,
++			const char * const names[], const bool *ctx,
+ 			struct irq_affinity *desc);
+ 	void (*del_vqs)(struct virtio_device *);
+ 	void (*synchronize_cbs)(struct virtio_device *);
+@@ -215,7 +212,7 @@ struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
+ 	const char *names[] = { n };
+ 	struct virtqueue *vq;
+ 	int err = vdev->config->find_vqs(vdev, 1, &vq, callbacks, names, NULL,
+-					 NULL, NULL);
++					 NULL);
+ 	if (err < 0)
+ 		return ERR_PTR(err);
+ 	return vq;
+@@ -227,8 +224,7 @@ int virtio_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 			const char * const names[],
+ 			struct irq_affinity *desc)
+ {
+-	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL,
+-				      NULL, desc);
++	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL, desc);
+ }
+ 
+ static inline
+@@ -237,8 +233,8 @@ int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
+ 			const char * const names[], const bool *ctx,
+ 			struct irq_affinity *desc)
+ {
+-	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL,
+-				      ctx, desc);
++	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, ctx,
++				      desc);
+ }
+ 
+ /**
+-- 
+MST
 
