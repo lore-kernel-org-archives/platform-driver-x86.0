@@ -2,446 +2,239 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D373C28B2B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Aug 2022 15:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9D3C32772
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Aug 2022 16:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237499AbiHQPGB (ORCPT
+        id S240422AbiHQQpa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Aug 2022 11:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59156 "EHLO
+        Wed, 17 Aug 2022 12:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240747AbiHQPFa (ORCPT
+        with ESMTP id S238130AbiHQQpY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Aug 2022 11:05:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CDDE25FF
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Aug 2022 08:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660748726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KShMranrEFLD9QlmTntksvAhlJ9TxuXw0jK2WhgquNg=;
-        b=PTTqMzOIO/Sr5YtzmVYl5kaHr6YSGCsVjeqEHHbieMsxwUU/zulzaNa+LwAOXxJbCKOp/4
-        9HkjDnnUpfDVdc3gakb8FGh4ytF2Dde29TFx9nCVVOdGZBoA+Y21W4sPCPxbv7G85e/3XY
-        iqgWufMNxCiKFUVykLTntu8XQ4VBZMA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-651-0PNMOfzRPm2DlE129x0kFw-1; Wed, 17 Aug 2022 11:05:20 -0400
-X-MC-Unique: 0PNMOfzRPm2DlE129x0kFw-1
-Received: by mail-ej1-f71.google.com with SMTP id oz39-20020a1709077da700b007313bf43f0dso3038888ejc.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Aug 2022 08:05:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=KShMranrEFLD9QlmTntksvAhlJ9TxuXw0jK2WhgquNg=;
-        b=OuRbn+FIc5fZKvtE5V0fO1+PYQP0cir/L4jWE1+FEXI4eqKS3TnH9cRrlxSZNfo0Tw
-         XcvVsWNMmIZ37Apnvgx75MnAOOXUmgZ2Jgb5UnwSyHhOwPftKvXMaSsZqpkqQJH15oV3
-         ekZ9bD87zSZiqqGG87JIhsUb/9XI/tvD9f9nDrxV/A5uLFqARc/uysuT+fKG+BfFfa+W
-         sJ0e3GbDmPMXfIRP1tuupovlhTi/6iQEGNfUVZgepG1gQlcPku0PLG2t+dTuMXIFrN4a
-         XubK25637Noipr3EobHEjh2fiZrvlSAvdFSvhLR8/XtRuk/tFxdOv92KCiSmHBMs9ytv
-         CR0A==
-X-Gm-Message-State: ACgBeo2hYZ2L1oSrTmVkPuaRkRxOmNoKMAN2fDk8GEt7qKXAiv9rH+x6
-        cV52c3SJ3A7xzPGxggg0qhzKfMAyKOwvpCyYqgaNMKBGDJolrVqGTb3qA6wIcQtM5QQPGbfCFAb
-        SO672w65BxATPQmk3YK0q4e//NwEYdpdlsg==
-X-Received: by 2002:a17:907:2bd1:b0:730:a134:cd0b with SMTP id gv17-20020a1709072bd100b00730a134cd0bmr17085351ejc.509.1660748718910;
-        Wed, 17 Aug 2022 08:05:18 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5LeS5XIWUe56QRXrzd2YeaTNQ9Jl9nYk18CkriLHSOXksH1EfW9/EjJ9VtpIAAYUHc0W/58w==
-X-Received: by 2002:a17:907:2bd1:b0:730:a134:cd0b with SMTP id gv17-20020a1709072bd100b00730a134cd0bmr17085318ejc.509.1660748718368;
-        Wed, 17 Aug 2022 08:05:18 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id w20-20020aa7da54000000b0043bba5ed21csm10819785eds.15.2022.08.17.08.05.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Aug 2022 08:05:17 -0700 (PDT)
-Message-ID: <94c69af4-5a30-0b80-fce1-64d01858d79b@redhat.com>
-Date:   Wed, 17 Aug 2022 17:05:16 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v2 01/29] ACPI: video: Add
- acpi_video_backlight_use_native() helper
-Content-Language: en-US
-To:     Daniel Dadap <ddadap@nvidia.com>, Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Wed, 17 Aug 2022 12:45:24 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A7C5AA0E;
+        Wed, 17 Aug 2022 09:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660754723; x=1692290723;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Nx5mmk70MR2vvj7Oyc43IjGFrUEvYIAc0Um7u/GzS9I=;
+  b=ennEyulHvTzvP0HyywD9PdWVtPcToECcgxCm7hiH+oR4RgVkQdJ8Mo0t
+   JtPTB3CqnqcO3qJVUDsRSGGwCF2X1F/pkT4NC7Lf74XICE1zrWSIc724H
+   pKZc0hGJ7via0AWpglvTOBT29f1obqHqD52VBbQSOsySWxgOG5lxVMhiV
+   5Oezl3/BGUKn4ICi1hQdDMcF/LHrjA4jqLFOCCgkx4AUWiP1AJbvbV63u
+   M3fO6UMfDhSuSXGiEhMzcbj726WeF8sX8PheT8RT2KKLkjHaN1pKg9g7l
+   IAoX+IQ1qkTlAJ6VybO62b+JxMNInTn0mNVzcFcKEZYRYt1jEzg0S0v6z
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="378839391"
+X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
+   d="scan'208";a="378839391"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 09:44:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
+   d="scan'208";a="696844257"
+Received: from lkp-server02.sh.intel.com (HELO 81d7e1ade3ba) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Aug 2022 09:44:25 -0700
+Received: from kbuild by 81d7e1ade3ba with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oOM9Y-00018A-2W;
+        Wed, 17 Aug 2022 16:44:24 +0000
+Date:   Thu, 18 Aug 2022 00:43:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        linux-iio@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20220712193910.439171-1-hdegoede@redhat.com>
- <20220712193910.439171-2-hdegoede@redhat.com>
- <641cb059-48f5-5f05-5ec2-610f1215391c@nvidia.com>
- <20e4ffcf-2a3a-e671-5f98-1602b78df3cb@nvidia.com>
- <331ebd23-d2a4-bb33-5462-b9bd3284ab69@redhat.com>
- <5cfb26a2-ec7b-578e-dc01-79776dc7e0c9@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <5cfb26a2-ec7b-578e-dc01-79776dc7e0c9@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD SUCCESS WITH WARNING
+ 95d10484d66e54d5c01e36389e9318221fb8f60b
+Message-ID: <62fd1ab9.SkkTg97b0fVLQyM+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Daniel,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 95d10484d66e54d5c01e36389e9318221fb8f60b  Add linux-next specific files for 20220817
 
-On 8/2/22 18:49, Daniel Dadap wrote:
-> On 8/2/22 06:31, Hans de Goede wrote:
->> Hi Daniel,
->>
->> On 7/21/22 23:30, Daniel Dadap wrote:
->>> On 7/21/22 16:24, Daniel Dadap wrote:
->>>> On 7/12/22 14:38, Hans de Goede wrote:
->>>>> ATM on x86 laptops where we want userspace to use the acpi_video backlight
->>>>> device we often register both the GPU's native backlight device and
->>>>> acpi_video's firmware acpi_video# backlight device. This relies on
->>>>> userspace preferring firmware type backlight devices over native ones, but
->>>>> registering 2 backlight devices for a single display really is undesirable.
->>>>>
->>>>> On x86 laptops where the native GPU backlight device should be used,
->>>>> the registering of other backlight devices is avoided by their drivers
->>>>> using acpi_video_get_backlight_type() and only registering their backlight
->>>>> if the return value matches their type.
->>>>>
->>>>> acpi_video_get_backlight_type() uses
->>>>> backlight_device_get_by_type(BACKLIGHT_RAW) to determine if a native
->>>>> driver is available and will never return native if this returns
->>>>> false. This means that the GPU's native backlight registering code
->>>>> cannot just call acpi_video_get_backlight_type() to determine if it
->>>>> should register its backlight, since acpi_video_get_backlight_type() will
->>>>> never return native until the native backlight has already registered.
->>>>>
->>>>> To fix this add a new internal native function parameter to
->>>>> acpi_video_get_backlight_type(), which when set to true will make
->>>>> acpi_video_get_backlight_type() behave as if a native backlight has
->>>>> already been registered.
->>>>>
->>>>> And add a new acpi_video_backlight_use_native() helper, which sets this
->>>>> to true, for use in native GPU backlight code.
->>>>>
->>>>> Changes in v2:
->>>>> - Replace adding a native parameter to acpi_video_get_backlight_type() with
->>>>>     adding a new acpi_video_backlight_use_native() helper.
->>>>>
->>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>> ---
->>>>>    drivers/acpi/video_detect.c | 24 ++++++++++++++++++++----
->>>>>    include/acpi/video.h        |  5 +++++
->>>>>    2 files changed, 25 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
->>>>> index becc198e4c22..4346c990022d 100644
->>>>> --- a/drivers/acpi/video_detect.c
->>>>> +++ b/drivers/acpi/video_detect.c
->>>>> @@ -17,8 +17,9 @@
->>>>>     * Otherwise vendor specific drivers like thinkpad_acpi, asus-laptop,
->>>>>     * sony_acpi,... can take care about backlight brightness.
->>>>>     *
->>>>> - * Backlight drivers can use acpi_video_get_backlight_type() to determine
->>>>> - * which driver should handle the backlight.
->>>>> + * Backlight drivers can use acpi_video_get_backlight_type() to determine which
->>>>> + * driver should handle the backlight. RAW/GPU-driver backlight drivers must
->>>>> + * use the acpi_video_backlight_use_native() helper for this.
->>>>>     *
->>>>>     * If CONFIG_ACPI_VIDEO is neither set as "compiled in" (y) nor as a module (m)
->>>>>     * this file will not be compiled and acpi_video_get_backlight_type() will
->>>>> @@ -548,9 +549,10 @@ static int acpi_video_backlight_notify(struct notifier_block *nb,
->>>>>     * Arguably the native on win8 check should be done first, but that would
->>>>>     * be a behavior change, which may causes issues.
->>>>>     */
->>>>> -enum acpi_backlight_type acpi_video_get_backlight_type(void)
->>>>> +static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
->>>>>    {
->>>>>        static DEFINE_MUTEX(init_mutex);
->>>>> +    static bool native_available;
->>>>>        static bool init_done;
->>>>>        static long video_caps;
->>>>>    @@ -570,6 +572,8 @@ enum acpi_backlight_type acpi_video_get_backlight_type(void)
->>>>>                backlight_notifier_registered = true;
->>>>>            init_done = true;
->>>>>        }
->>>>> +    if (native)
->>>>> +        native_available = true;
->>>>>        mutex_unlock(&init_mutex);
->>>>>          if (acpi_backlight_cmdline != acpi_backlight_undef)
->>>>> @@ -581,13 +585,25 @@ enum acpi_backlight_type acpi_video_get_backlight_type(void)
->>>>>        if (!(video_caps & ACPI_VIDEO_BACKLIGHT))
->>>>>            return acpi_backlight_vendor;
->>>>>    -    if (acpi_osi_is_win8() && backlight_device_get_by_type(BACKLIGHT_RAW))
->>>>> +    if (acpi_osi_is_win8() &&
->>>>> +        (native_available || backlight_device_get_by_type(BACKLIGHT_RAW)))
->>>>>            return acpi_backlight_native;
->>>>>          return acpi_backlight_video;
->>>>
->>>> So I ran into a minor problem when testing the NVIDIA proprietary driver against this change set, after checking acpi_video_backlight_use_native() before registering the NVIDIA proprietary driver's backlight handler. Namely, for the case where a user installs the NVIDIA proprietary driver after the video.ko has already registered its backlight handler, we end up with both the firmware and native handlers registered simultaneously, since the ACPI video driver no longer unregisters its backlight handler. In this state, desktop environments end up preferring the registered but non-functional firmware handler from video.ko. (Manually twiddling the sysfs interface for the native NVIDIA handler works fine.) When rebooting the system after installing the NVIDIA proprietary driver, it is able to register its native handler before the delayed work to register the ACPI video backlight handler fires, so we end up with only one (native) handler, and userspace is happy.
->>>>
->>>> Maybe this will be moot later on, when the existing sysfs interface is deprecated, and it probably isn't a huge deal, since a reboot fixes things (I imagine installing an in-tree DRM/KMS driver on an already running kernel isn't really a thing, which is why this isn't a problem with the in-tree drivers), but would it make sense to unregister the ACPI video backlight handler here before returning acpi_backlight_native? That way, we'll briefly end up with zero backlight handlers rather than briefly ending up with two of them. Not sure if that's really any better, though.
->>>>
->>> Thinking about this a little more, maybe it's better not to overly complicate things, and just assert that users of the NVIDIA proprietary driver will need to reboot after installation in order to get the backlight working, at least until we get further along in this effort and the backlight interface transitions to the DRM connector property you have proposed.
->> Right, this series stops unregistering the acpi_video# /sys/class/backlight
->> devices because the idea is to never register them in the first place.
->>
->> Registering them in the first place causes 2 problems:
->>
->> 1. It causes userspace to see udev events for the register + unregister
->> and by the time the systemd backlight level save/restore helper runs
->> from udev the unregister has already happened and it logs ugly errors.
->> More in general this kinda racy behavior just is ugly.
->>
->> 2. On some hw merely registering the backlight device, which I think
->> at least tries to retrieve the current level through ACPI, is causing
->> issues. So now we have DMI quirks to force the native backlight on
->> some devices, even though the heuristics also say native eventually,
->> just to avoid the race. Avoiding the add + remove dance allows
->> us to drop a bunch of quirks and likely also fixes issues on other
->> devices which we don't yet know need the quirk.
-> 
-> 
-> Yes, those sound like good reasons to avoid registering the ACPI video backlight driver wherever possible.
-> 
-> 
->> So this patch-set changes the acpi_video.c code to no longer register
->> the acpi_video# backlight devices at init time *at all*. Instead native
->> drivers are supposed to now call acpi_video_register_backlight()
->> when they have found an internal panel. But to avoid this causing
->> the acpi_video# backlight devices to not show up at all in some
->> cases (e.g. native kms drivers blacklisted) the acpi_video code
->> also calls acpi_video_register_backlight() itself after 8 seconds.
->>
->> I believe this is what you are hitting, the 8 seconds have passed
->> before the nvidia driver calls acpi_video_backlight_use_native(),
->> so the acpi_video# backlight devices have registered (and no longer
->> go away).
->>
->> This is not only a problem when installing the nvidia binary driver
->> for the first time. It can also be a problem if the binary driver
->> is not in the initrd and leaving the initrd takes longer then
->> 8 seconds, say because of a diskcrypt password. So I believe that
->> this really can be a problem with the nvidia binary driver.
-> 
-> 
-> Hmm. I hadn't considered the case of the binary driver being absent from the initrd, and the possibility of the transition out of the initrd happening after the timeout. Yes, this is a bigger problem than the "only after first installing the driver" scenario I ran into.
-> 
-> 
->> But I think this is easy to fix. We could make the 8 second
->> delay configurable by replacing the ACPI_VIDEO_REGISTER_BACKLIGHT_DELAY
->> define with a module-parameter; and we could make "0" as value mean
->> that acpi_video.c will never call acpi_video_register_backlight()
->> itself.
->>
->> Since the various (also counting distor packaging) nvidia binary
->> driver installers already all modify the kernel commandline to
->> blacklist nouveau, then the installers can just also pass this
->> parameter and then acpi_video.c will never register the acpi_video#.
-> 
-> 
-> This sounds like a reasonable compromise, but I worry that it may be difficult to determine whether a system definitely doesn't need the ACPI video backlight driver. On the other hand, the last system that I recall personally seeing that did use the ACPI video backlight driver was a little over 10 years ago, so it's possible that there are no systems which use that driver which are supported by current versions of the NVIDIA proprietary driver. I'll have to do some research to determine what types of systems actually used video.ko's backlight driver, unless you happen to know already.
+Warning reports:
 
-Generally the backlight control method / fw interface to use depends
-on the Era of the laptop:
+https://lore.kernel.org/linux-doc/202208162058.7apPivKL-lkp@intel.com
+https://lore.kernel.org/llvm/202207251313.gKhpElEq-lkp@intel.com
 
-1. pre Windows XP Era laptops use vendor specific ACPI or SMBIOS interfaces
-   such as those dealt with by dell-laptop, thinkpad-acpi, etc.
-2. Windows XP Era (which ends with Win 8/Vista) laptops used the ACPI video
-   bus backlight interface
-3. Win 8/Vista and later Era laptops use the GPU driver's native backlight
-   support instead of some firmware interface
+Warning: (recently discovered and may have been fixed)
 
-This is generalizing things a bit. E.g. esp during the transition between
-the Eras often both Era methods (e.g vendor + acpi-video) would work
-equally well.
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:1046:5: warning: no previous prototype for 'fill_dc_scaling_info' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:1222:6: warning: no previous prototype for 'handle_cursor_update' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:152:6: warning: no previous prototype for 'modifier_has_dcc' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:1576:5: warning: no previous prototype for 'amdgpu_dm_plane_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:157:10: warning: no previous prototype for 'modifier_gfx9_swizzle_mode' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:752:5: warning: no previous prototype for 'fill_plane_buffer_attributes' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:83:31: warning: no previous prototype for 'amd_get_format_info' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:88:6: warning: no previous prototype for 'fill_blending_from_plane_state' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_plane.c:992:5: warning: no previous prototype for 'dm_plane_helper_check_state' [-Wmissing-prototypes]
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:905:28: warning: variable 'top' set but not used [-Wunused-but-set-variable]
+drivers/iio/accel/bma400_core.c:1091 bma400_activity_event_en() error: uninitialized symbol 'field_value'.
+drivers/iio/cdc/ad7746.c:336:14: warning: use of uninitialized value '<unknown>' [CWE-457] [-Wanalyzer-use-of-uninitialized-value]
+drivers/platform/mellanox/mlxreg-lc.c:866 mlxreg_lc_probe() warn: passing zero to 'PTR_ERR'
+mm/memory_hotplug.c:343 __add_pages() error: uninitialized symbol 'err'.
 
-So wrt your questions, generally speaking any laptops which were
-designed for Win8/Vista or newer no longer use the ACPI video
-interface.
+Warning ids grouped by kconfigs:
 
-So yes it is possible that there are no systems supported by
-the latest NVIDIA proprietary driver which need ACPI video at
-all. OTOH on dual-GPU setups with muxes it is not unreasonable
-for ACPI video to actually be the driver which needs to be
-used in case e.g. the backlight control is hooked up to the
-EC so that it does not need to go through the mux. Basically
-ACPI video Should work well (if the ACPI tables are written
-properly) in setups where the EC drivers the backlight and
-where this the GPU driver cannot control it directly. So
-their might very well be pre nvidia-wmi-ec-backlight laptops
-which use ACPI video to control the brightness through the EC.
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amd_get_format_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amdgpu_dm_plane_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-dm_plane_helper_check_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_blending_from_plane_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_dc_scaling_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_plane_buffer_attributes
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-handle_cursor_update
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_gfx9_swizzle_mode
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_has_dcc
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_kms.c:warning:variable-top-set-but-not-used
+|-- alpha-randconfig-c023-20220815
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amd_get_format_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amdgpu_dm_plane_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-dm_plane_helper_check_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_blending_from_plane_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_dc_scaling_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_plane_buffer_attributes
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-handle_cursor_update
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_gfx9_swizzle_mode
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_has_dcc
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amd_get_format_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amdgpu_dm_plane_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-dm_plane_helper_check_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_blending_from_plane_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_dc_scaling_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_plane_buffer_attributes
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-handle_cursor_update
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_gfx9_swizzle_mode
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_has_dcc
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_kms.c:warning:variable-top-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amd_get_format_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amdgpu_dm_plane_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-dm_plane_helper_check_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_blending_from_plane_state
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_dc_scaling_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-fill_plane_buffer_attributes
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-handle_cursor_update
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_gfx9_swizzle_mode
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-modifier_has_dcc
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_kms.c:warning:variable-top-set-but-not-used
+|-- arm-defconfig
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_kms.c:warning:variable-top-set-but-not-used
+|-- arm-randconfig-c002-20220817
+|   `-- drivers-iio-cdc-ad7746.c:warning:use-of-uninitialized-value-unknown-CWE
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amd_get_format_info
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm_plane.c:warning:no-previous-prototype-for-amdgpu_dm_plane_init
+clang_recent_errors
+`-- mips-omega2p_defconfig
+    `-- lib-crypto-blake2s-selftest.c:warning:stack-frame-size-()-exceeds-limit-()-in-blake2s_selftest
 
->> This does mean that the nvidia binary driver then must call
->> acpi_video_register_backlight() when an internal panel is found.
->>
->> Note the current patches to amdgpu/nouveau skip the calling of
->> acpi_video_register_backlight() when
->> the acpi_video_backlight_use_native() call returns true and they
->> have registered their own backlight. But calling it always is ok
->> *as long as the driver is driving the laptops internal panel* !
->>
->> acpi_video_register_backlight() contains:
->>
->>         if (acpi_video_get_backlight_type() != acpi_backlight_video)
->>                  return 0;
->>
->> So calling it when a native backlight has already been registered
->> is a no-op.
-> 
-> 
-> The NVIDIA proprietary driver will already know when it has registered its own backlight handler, so there probably isn't any need to always call it when driving an internal panel.
+elapsed time: 727m
 
-Ok.
+configs tested: 81
+configs skipped: 2
 
-> I'll have to double-check to see if we have already determined whether a panel is connected before registering the backlight handler: I am pretty certain that is the case.
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+m68k                        stmark2_defconfig
+microblaze                      mmu_defconfig
+i386                                defconfig
+arm                         nhk8815_defconfig
+x86_64                           rhel-8.3-kvm
+arc                  randconfig-r043-20220815
+x86_64               randconfig-a001-20220815
+x86_64                              defconfig
+arc                               allnoconfig
+i386                 randconfig-a003-20220815
+x86_64                    rhel-8.3-kselftests
+arm                                 defconfig
+sh                        sh7757lcr_defconfig
+x86_64               randconfig-a003-20220815
+x86_64                               rhel-8.3
+alpha                             allnoconfig
+i386                 randconfig-a004-20220815
+mips                             allyesconfig
+csky                              allnoconfig
+riscv                             allnoconfig
+x86_64               randconfig-a002-20220815
+i386                 randconfig-a002-20220815
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20220815
+x86_64                           allyesconfig
+alpha                            allyesconfig
+x86_64               randconfig-a006-20220815
+mips                            gpr_defconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a005-20220815
+i386                 randconfig-a001-20220815
+sh                               allmodconfig
+i386                 randconfig-a006-20220815
+i386                 randconfig-a005-20220815
+x86_64                           rhel-8.3-syz
+m68k                             allmodconfig
+x86_64                          rhel-8.3-func
+arc                              allyesconfig
+x86_64                         rhel-8.3-kunit
+m68k                             allyesconfig
+i386                             allyesconfig
+i386                 randconfig-c001-20220815
+arm                              allyesconfig
+arm                         vf610m4_defconfig
+ia64                      gensparse_defconfig
+parisc64                         alldefconfig
+sh                          landisk_defconfig
+ia64                                defconfig
+powerpc                         wii_defconfig
+sh                                  defconfig
+arm64                            allyesconfig
+ia64                             allmodconfig
+arm                          simpad_defconfig
+sh                           se7750_defconfig
+powerpc                        cell_defconfig
 
-Yeah registering a backlight handler when there is no internal panel would be weird.
+clang tested configs:
+x86_64               randconfig-a013-20220815
+x86_64               randconfig-a012-20220815
+x86_64               randconfig-a011-20220815
+x86_64               randconfig-a014-20220815
+hexagon              randconfig-r041-20220815
+powerpc                     ksi8560_defconfig
+s390                             alldefconfig
+x86_64               randconfig-a016-20220815
+arm                    vt8500_v6_v7_defconfig
+mips                          ath79_defconfig
+s390                 randconfig-r044-20220815
+x86_64               randconfig-a015-20220815
+i386                 randconfig-a012-20220815
+i386                 randconfig-a013-20220815
+hexagon              randconfig-r045-20220815
+i386                 randconfig-a011-20220815
+riscv                randconfig-r042-20220815
+i386                 randconfig-a015-20220815
+i386                 randconfig-a016-20220815
+i386                 randconfig-a014-20220815
+mips                        omega2p_defconfig
+x86_64                          rhel-8.3-rust
+powerpc                 mpc832x_mds_defconfig
+powerpc                      ppc64e_defconfig
 
-> One further potential difficulty that I anticipate is that not all dynamic mux systems use the EC backlight driver (or a similar, GPU-agnostic driver), and rather have whichever GPU happens to be connected at the time be responsible for the backlight. I had initially thought that supporting the EC backlight interface was a requirement for OEMs to implement dynamic mux support, but I recently learned this is not true in all cases. On Windows, this requires coordinating the backlight controls of the two GPU drivers across a mux switch, to load the state of the switched-away-from GPU and set it on the switched-to GPU. I imagine for these systems we may need to do some similar save/restore, probably managed by vga-switcheroo, but it would require having both GPU drivers register their own native backlight handlers (and possibly while one of them is not connected to the panel).
-
-Right, systems where the backlight control basically gets muxed from one GPU to the other GPU together with the panel's video-data lines exist. Currently Linux already register both native GPU backlight handlers in this case. e.g. /sys/class/backlight/intel_backlight and /sys/class/backlight/nouveau_bl.
-
-Userspace (atleast GNOME) has code which checks which GPU is actually connected to the panel using the panel's drm connector's status on each GPU (only one of which should report connected) and then uses the backlight interface associated with the connected connector.
-
-> Dynamic mux switching isn't actually supported on Linux, yet, so we should be able to kick this particular can a little further down the road, but in the meantime we should probably start planning for how best to handle this sort of system under the "only one backlight handler per panel" model. Maybe the vga-switcheroo handler can register its own backlight handler, that then negotiates the actual backlight settings between the relevant GPU drivers, possibly through a new vga-switcheroo client callback. I'll have to think about this a bit more.
-
-The "only one backlight handler per panel" model is actualy "only one backlight handler per panel"-connector since the new API uses drm properties on the drm connector object. With 2 GPUs both using their native backlight control there will be 2 connectors and userspace will/must use the one which is actually reporting that it is connected to the panel so this will work fine.
-
-If anything the nvidia-wmi-ec-backlight case is a but more tricky, the "only one backlight handler per panel" thing is actually more of a "only one backlight handler per laptop" rule which is intended for (to be written) drm helpers for the new properties to be able to get the handler from the backlight class in the non native case by just taking the first registered backlight handler.
-
-This means that in a dual GPU setup with nvidia-wmi-ec-backlight both GPU's panel connector objects will have their brightness properties pointing to / proxying the same backlight class device. Userspace should really be only writing to the one which is actually connected though. I guess we could even enforce this
-in the kernel and reject brightness property writes on unconnected connectors.
-
->> Please let me know if the proposed solution works for you and
->> if you want me to make ACPI_VIDEO_REGISTER_BACKLIGHT_DELAY a
->> module-option for the next version.
-> 
-> 
-> I do think it should be workable, apart from the concern I mentioned above about knowing when to set the module option to disable the ACPI video backlight driver.
-
-Note the option does not disable the ACPI video backlight driver. It disables the acpi_video code timing out and deciding to go ahead and register its backlight itself (providing that at the moment of timeout acpi_video_get_backlight_type() returns acpi_backlight_video). Any code (e.g. the nvidia binary driver) can still call acpi_video_register_backlight() itself to try and register even if the timeout handling has been disabled.
-
-The idea is that without the timeout the probe order looks like this:
-
-1. acpi_video initializes, does not register backlight
-2. GPU driver initalizes, it either registers a native backlight handler;
-   or it calls acpi_video_register_backlight()
-3. acpi_video_register_backlight() runs (if called) and calls:
-   acpi_video_get_backlight_type()
-4.1 if acpi_video_get_backlight_type() returns acpi_backlight_video
-   /sys/class/backlight/acpi_video# is/are registered
-4.2 if acpi_video_get_backlight_type() returns somerthing else, e.g.
-   acpi_backlight_nvidia_wmi_ec, acpi_video_register_backlight()
-   does nothing
-
-
-The timeout is to ensure that 3. still happens, even if
-there is no native GPU driver, because of e.g.
-nomodeset on the kernel cmdline.
-
-With the nvidia binary driver, that driver can call
-acpi_video_register_backlight() if necessary so the timeout
-is not necessary.
-
-I'm currently preparing v3 of this patchset. I'll modify the
-patch introducing the timeout to make it configurable
-(with 0 disabling it completely).
-
->> p.s.
->>
->> I think that eventually I might even try to make the new
->> module-param default to 0 / default to not having acpi_video.c
->> do the registering itself ever and see how that goes...
-> 
-> Would the GPU drivers then be responsible for calling acpi_video_register_backlight() again? My understanding was that part of the intention here was to make that no longer necessary.
-
-It is actually the other way around, before this patch-set
-acpi_video_register_backlight() does not exist as a separate
-step. Before this patch-set the registering is done at
-acpi_video probe time. At acpi_video probe time it may be
-unknown if a native GPU driver (which is preferred) might
-become available later.
-
-This patch-set actually makes the registration a separate
-step, which must be called by the GPU driver driving the panel
-when its own native backlight control probing is done
-(and has not resulted in registering its own backlight handler).
-
-IOW this patch-set is actually what makes it necessary for
-the GPU drivers to call acpi_video_register_backlight()
-(rather then making this no longer necessary).
-
-Also see the probe order example I wrote above.
-
-The timeout is really just a bandaid to not regress on systems
-where for some reason there is no native GPU driver to do
-the registration.
-
-I hope this makes things a bit more clear.
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
->>
->>>>>    }
->>>>> +
->>>>> +enum acpi_backlight_type acpi_video_get_backlight_type(void)
->>>>> +{
->>>>> +    return __acpi_video_get_backlight_type(false);
->>>>> +}
->>>>>    EXPORT_SYMBOL(acpi_video_get_backlight_type);
->>>>>    +bool acpi_video_backlight_use_native(void)
->>>>> +{
->>>>> +    return __acpi_video_get_backlight_type(true) == acpi_backlight_native;
->>>>> +}
->>>>> +EXPORT_SYMBOL(acpi_video_backlight_use_native);
->>>>> +
->>>>>    /*
->>>>>     * Set the preferred backlight interface type based on DMI info.
->>>>>     * This function allows DMI blacklists to be implemented by external
->>>>> diff --git a/include/acpi/video.h b/include/acpi/video.h
->>>>> index db8548ff03ce..4705e339c252 100644
->>>>> --- a/include/acpi/video.h
->>>>> +++ b/include/acpi/video.h
->>>>> @@ -56,6 +56,7 @@ extern void acpi_video_unregister(void);
->>>>>    extern int acpi_video_get_edid(struct acpi_device *device, int type,
->>>>>                       int device_id, void **edid);
->>>>>    extern enum acpi_backlight_type acpi_video_get_backlight_type(void);
->>>>> +extern bool acpi_video_backlight_use_native(void);
->>>>>    extern void acpi_video_set_dmi_backlight_type(enum acpi_backlight_type type);
->>>>>    /*
->>>>>     * Note: The value returned by acpi_video_handles_brightness_key_presses()
->>>>> @@ -77,6 +78,10 @@ static inline enum acpi_backlight_type acpi_video_get_backlight_type(void)
->>>>>    {
->>>>>        return acpi_backlight_vendor;
->>>>>    }
->>>>> +static inline bool acpi_video_backlight_use_native(void)
->>>>> +{
->>>>> +    return true;
->>>>> +}
->>>>>    static inline void acpi_video_set_dmi_backlight_type(enum acpi_backlight_type type)
->>>>>    {
->>>>>    }
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
