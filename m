@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B4C00140
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Aug 2022 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E452FC00140
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Aug 2022 18:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345041AbiHRSo0 (ORCPT
+        id S1343844AbiHRSoc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Aug 2022 14:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
+        Thu, 18 Aug 2022 14:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345209AbiHRSoG (ORCPT
+        with ESMTP id S1345488AbiHRSoH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Aug 2022 14:44:06 -0400
+        Thu, 18 Aug 2022 14:44:07 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E066B8CF
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Aug 2022 11:43:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EE46D57F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Aug 2022 11:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660848229;
+        s=mimecast20190719; t=1660848231;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=c7cbLrhybeXhTd6E0KCP79PiLRPmdaDHe09WAOWHr3I=;
-        b=DrwU0HcWKrxAa1uV9AWAf1xzZ62jh/QNKK3YVqQ3B45pj/ac9D36UI6CO1kfYb58yeBK3J
-        4GByRUet+cUb+8BkrcXErdXtVwludvy/XdJV6aA5uxDWPgOgnlmd4Gkf4L4GnhZ34BZXzt
-        mbaUxTHCAit3vgdw4/E4K4tp7DBZGA0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Gy4nad6Qh8tnv7TIvT0rDPmcwKdzWmM3aE/TJMfZBr0=;
+        b=MlTKagzrVXrWD7DoHwUsa9G9auXJ+CQXQKq0D1+5mBEZBai9OSsgtTLn8EjGbUH3HYaXxu
+        sU8oshVWJh45cYTfbMnTMtjP1XmI5fPHVl2pQdynQo8drHAKdX6H/mJW/gs3kEpGneaEvC
+        F6Nj1uAWqBBSV1C7CFMvaX3bjmS0pKI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-259-iWkuLWGsMGaCrmdhUUlncA-1; Thu, 18 Aug 2022 14:43:44 -0400
-X-MC-Unique: iWkuLWGsMGaCrmdhUUlncA-1
+ us-mta-115-VlvnqFrEOf2ssVDbp6NEFQ-1; Thu, 18 Aug 2022 14:43:48 -0400
+X-MC-Unique: VlvnqFrEOf2ssVDbp6NEFQ-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0813329AA3B6;
-        Thu, 18 Aug 2022 18:43:43 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F3323101A588;
+        Thu, 18 Aug 2022 18:43:46 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 19807403340;
-        Thu, 18 Aug 2022 18:43:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D14A492C3B;
+        Thu, 18 Aug 2022 18:43:43 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
         Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
@@ -65,9 +65,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
         Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 07/31] ACPI: video: Remove acpi_video_bus from list before tearing it down
-Date:   Thu, 18 Aug 2022 20:42:38 +0200
-Message-Id: <20220818184302.10051-8-hdegoede@redhat.com>
+Subject: [PATCH v3 08/31] ACPI: video: Simplify acpi_video_unregister_backlight()
+Date:   Thu, 18 Aug 2022 20:42:39 +0200
+Message-Id: <20220818184302.10051-9-hdegoede@redhat.com>
 In-Reply-To: <20220818184302.10051-1-hdegoede@redhat.com>
 References: <20220818184302.10051-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -77,40 +77,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move the list_del removing an acpi_video_bus from video_bus_head
-on teardown to before the teardown is done, to avoid code iterating
-over the video_bus_head list seeing acpi_video_bus objects on there
-which are (partly) torn down already.
+When acpi_video_register() has not run yet the video_bus_head will be
+empty, so there is no need to check the register_count flag first.
 
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/acpi_video.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/acpi_video.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 5cbe2196176d..cde8ffa9f0b8 100644
+index cde8ffa9f0b8..8545bf94866f 100644
 --- a/drivers/acpi/acpi_video.c
 +++ b/drivers/acpi/acpi_video.c
-@@ -2111,14 +2111,14 @@ static int acpi_video_bus_remove(struct acpi_device *device)
+@@ -2257,14 +2257,10 @@ void acpi_video_unregister_backlight(void)
+ {
+ 	struct acpi_video_bus *video;
  
- 	video = acpi_driver_data(device);
+-	mutex_lock(&register_count_mutex);
+-	if (register_count) {
+-		mutex_lock(&video_list_lock);
+-		list_for_each_entry(video, &video_bus_head, entry)
+-			acpi_video_bus_unregister_backlight(video);
+-		mutex_unlock(&video_list_lock);
+-	}
+-	mutex_unlock(&register_count_mutex);
++	mutex_lock(&video_list_lock);
++	list_for_each_entry(video, &video_bus_head, entry)
++		acpi_video_bus_unregister_backlight(video);
++	mutex_unlock(&video_list_lock);
+ }
  
--	acpi_video_bus_remove_notify_handler(video);
--	acpi_video_bus_unregister_backlight(video);
--	acpi_video_bus_put_devices(video);
--
- 	mutex_lock(&video_list_lock);
- 	list_del(&video->entry);
- 	mutex_unlock(&video_list_lock);
- 
-+	acpi_video_bus_remove_notify_handler(video);
-+	acpi_video_bus_unregister_backlight(video);
-+	acpi_video_bus_put_devices(video);
-+
- 	kfree(video->attached_array);
- 	kfree(video);
- 
+ bool acpi_video_handles_brightness_key_presses(void)
 -- 
 2.37.2
 
