@@ -2,178 +2,180 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C18FC28B2B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03FEC28B2B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 18:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349938AbiHSSAO (ORCPT
+        id S1349964AbiHSSLR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Aug 2022 14:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
+        Fri, 19 Aug 2022 14:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349988AbiHSR7h (ORCPT
+        with ESMTP id S1349994AbiHSSKA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Aug 2022 13:59:37 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143964F646
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 10:46:25 -0700 (PDT)
+        Fri, 19 Aug 2022 14:10:00 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24C79FF7;
+        Fri, 19 Aug 2022 11:00:35 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y6aeMgkHNhNqq/Y5zzx9aPsjUL97QjKYr9zuXBGecvJhjv9+mK0CgR9yLzNxKqKk9jqVOgoJWm4P2e2kApKQcef03dhSUlJ4XFA9iedL7+P9ffuEykvgHuM5q5UGKEXQkBsKKh8z+j/Vlq557nKY99/ADGfOeBvAlhOJiCOEIaueOw3padXwGnbRtJMKxtQH/HJF4nFOPIhjzxjwWqigdyV6YvHr+5atWqiec+dsLCpU0munzmk1wqIJMYy9McbKJoE1546Tb7sqwmVI3qgc1BktwwXRWSAIvKQfyrdscnrDjX9B6veTdjJX7rHPc5wBhUzpeGGZmmKcqPB6Z6Ixzg==
+ b=JBSrS+07aHxXbn0gK8OXjEAsUuGOeOCTYJRfI2+c73hiui31Lzt6XQ9mRx1cq96cfJIIrgHunL9OogmYAob5KonNR/fS0oQ7HJC6g08zZHtkIhgWtQexmmRKI7fEJu+ujS1y5A7NQQQV40YWm0+oEwkjijH2kRrmTS8KSuRE4PqvLPpnhH5Gm+5OQNuapqkMuR3kQMrZspMa8tJGSa+hFyBTj1VoDgxrwkuJAwRnL48t8zQQ+YOosGHemleTqadxVLUNwf7cG/EBkRIjHMmJ48wN//mJQsPcUzibHZW1Gv4Caeb1tJzQbe1XFu6fjM8B0BWUtcbtyM3Eu9xtnQKHNQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1F+vJtTWH1BF9zjQtDLmVgeYYIsGve6VdfnuhhFKMDM=;
- b=DCZMtWeCtPiCHOtRYh9XQKhnVMcXW+xdUX8SBTtW5pXjHV4lzPuCLGrM6dS1U7k8BYAtLk5zD9nQnUuxcdR48QilJb3uzPnH3TZswlQPxBwE8fqR6OMzzduEtUqTWAftpR1copjgH5o01P5nqG11nMA5hBPEfFQpFEHX0h2yLFry7e487qNc3hA/e5FZ7TgaBlAk+vcWPjmJNqN+wcC+ahrh0447WEkb+etQJpgwAq1iuwsSiciwb8IzG8MZmoPdyj630BZ5HSkc+0Dx8pO8OZNrqVcLpRJUsLBfRhV33bC4/J9oaot4faWURhG8MwqE/056vnFFhEBKK/XmQQW3kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ bh=CmvtuoZTC46Hai5gd9ctow2J+/J4eIREecU+PeIouNs=;
+ b=dc5t3P7rCHEkzuI4YMTnhjDkoDrFNy7yp/930F9kSSwUxjiGLwBBraTwxd4g9ZFXhXM1AowCeFPGLyvJz5MaLQpKuBe/KG4G40T4r2pgHYtWc8IZ1hNBZ6E7eHc+te5kFRN2ew2CfT+dJX3uni9K0PGRBuzyTDTszy3JRIdOFvgp1buq4PPX6DDSBjf0d4D4EPawGqR+uqqjaj1UcwzD4UHQdf9cZL9mmtqU25OL8SKX0/1/fPp08cr/Zm+kZeOeNEFyZgNvyiAQPFsZ80Yx15GPSYwqGQz/Gj+d4Rdmw36AdXFUheJoMLFrPv4U4ygEwiiklqjVPEeVVyPXhvZx0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1F+vJtTWH1BF9zjQtDLmVgeYYIsGve6VdfnuhhFKMDM=;
- b=hqR6iv/ep8ownyKHAh9uRVFWxWOGbjD/9qUbdn9Um5gSsyavdoqq8mABNSE9VaGX/1yTDCjHkMTeGwT9Hqmg9QToX052vI8TblVd/Wx4y8bBK9VMTxfiWqMDx8WVCSxP0TPbTtcJUgBeh8XWr5ExcvCpx2txVvs2gFE+2lMymnI=
-Received: from DS7PR06CA0023.namprd06.prod.outlook.com (2603:10b6:8:2a::14) by
- BYAPR12MB3639.namprd12.prod.outlook.com (2603:10b6:a03:db::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5546.16; Fri, 19 Aug 2022 17:46:22 +0000
-Received: from DM6NAM11FT081.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:2a:cafe::34) by DS7PR06CA0023.outlook.office365.com
- (2603:10b6:8:2a::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.19 via Frontend
- Transport; Fri, 19 Aug 2022 17:46:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT081.mail.protection.outlook.com (10.13.172.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5546.7 via Frontend Transport; Fri, 19 Aug 2022 17:46:22 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 19 Aug
- 2022 12:46:19 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH] platform/x86/amd/pmf: Fix clang unused variable warning
-Date:   Fri, 19 Aug 2022 23:15:58 +0530
-Message-ID: <20220819174559.4029855-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+ bh=CmvtuoZTC46Hai5gd9ctow2J+/J4eIREecU+PeIouNs=;
+ b=Et9naoRBdHZ/lm5uyg/iHXgI8NZCNFpUmTdKbvvtJhYSwReCsE1en5ClXXxIXcALfhJq6eRNZ42yUGCGnQXxvdBTV4tjIpxUJ8lx0ZYRTx2h5wU3iXGSuP7mZ1KaFDcCsIWTeoqopYhFINks5jiOjbxgwgZrnF3BcgNBvu7mPM0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN2PR12MB3326.namprd12.prod.outlook.com (2603:10b6:208:cb::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.16; Fri, 19 Aug
+ 2022 18:00:33 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::4489:9a98:ef82:6c67]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::4489:9a98:ef82:6c67%3]) with mapi id 15.20.5546.016; Fri, 19 Aug 2022
+ 18:00:33 +0000
+Message-ID: <1faa9531-8897-dd21-2c38-3b7dd740ebfa@amd.com>
+Date:   Fri, 19 Aug 2022 13:00:30 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [External] [PATCH] platform/x86: thinkpad_acpi: Explicitly set to
+ balanced mode on startup
+Content-Language: en-US
+To:     Mark Pearson <markpearson@lenovo.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     madcatx@atlas.cz, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220819140142.4925-1-mario.limonciello@amd.com>
+ <d9be30da-7306-149d-0e43-f32832965e59@lenovo.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <d9be30da-7306-149d-0e43-f32832965e59@lenovo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0178.namprd13.prod.outlook.com
+ (2603:10b6:208:2bd::33) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a777e673-1909-4cd7-f927-08da820abacd
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3639:EE_
+X-MS-Office365-Filtering-Correlation-Id: 790ba33c-1b1a-4e54-42ce-08da820cb5c6
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3326:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GVBHZQihk2wmSG5PlrZTXB+Rg4m4FZuBBkVeAIaO3jaMKdpyI5o21U+k2fcALoBWSeEhWnlaF2fHlKM/Rz58jygNQapEU4FeF0JtbWqFZG3KDwAKq24w6eJd2wD2XVGboWc/yo7esggx+Xkzc77AFoJiETwnni4v3LMHwQHF8S5Uw1ilc58ww1TPUXk2kneq9PLcZb1X/UJA+0yxfvKt01It7TYs2Lhv1fRL3uwYJ3ICApdlCHv3aizCxHL6drPWItGRIip0K6NhfRBEeUOQemop8UAJe+lTD6DQUZkE2wVxVmiYO2Src6LnMmiI1QLtlvqtQD9050Ri8pqGaKVecO5jhNomlTSVOWctFDS8fq5uIM8VT0xu+sOpIc1VADW5haAiAAnduUwlKOmDvrvP7p6Kq9ivqhssGcHjdqmXsrGKnijfpuYh7msxHSdMuuycEzhNopwfxkjzSKd9jiZrIaOpnds1zbYuXOJvWUe+Ipqj2ybbavrvM1fGkRkyMsuXZwBN2YKtptWhhSLn8PsbZjRvE8lYiMB0LgT95E4/LLhXUc3HuxfcON/cWuO6NpO9FDGJpefaok6ytUVg8vrpZlKQavyubWggYBTLy4zbozjJLhh7kBC/tfWleRBnK/j3GG4pXeyR8BzxeQWERFpUv4k9O9U69/DGyI36TkRNkrQJ7cX2zk7+dRsnxQ2xCtRDEesKdHezbBU1YPIcF62EDuNUlQ48NdHF3j1LpLUAk2DduPxEuaj8rSV0waenK+TqiZ58otvaw82puPM6MoyO1eB1aX3azk0riXO4Ag4KmSOmExu1mepJHvp0wXKhXYyj
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(396003)(376002)(136003)(36840700001)(40470700004)(46966006)(2906002)(36756003)(4326008)(8676002)(478600001)(70586007)(70206006)(40480700001)(41300700001)(82310400005)(316002)(7696005)(6666004)(86362001)(26005)(110136005)(54906003)(356005)(1076003)(81166007)(2616005)(336012)(16526019)(40460700003)(83380400001)(186003)(82740400003)(8936002)(5660300002)(36860700001)(426003)(47076005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: g4ob8mVGTILXol1uQVAqRWD+FxGF3s7gfablgYT6O2O+VXAJolIAeLFZjQd2fzLdsXZtcAyEwHcrRcZ8IeEbi1N1uMBrEYSAzcwRuyqUfYEFJRneIDCyWZCc2ODNSXfsNmq2khSadEBpkHr2wUVOrKypzVP05tNZnHfjYWdqUrLrBYkICyzSsRxJoT5xWbn2SJhUFk6SeBYK+houT29Xy4S0iUUVOXxCdi+iKNCp2YVqyjz45kNsqxB/WCW821UAopFUPf8OtBo5TNWCLrRtOWlaAimo7KYQlVLfRgxr/fpoTREChWSSPWkbZraStVzzMcrgoF9oQJKFzTiBW0WGwXlJ0d4ZwtEF8AxJ0vB084p+/ky7GB9y9aPdBjyWkegyJZ+FMcbfgMQMhQdtF+n1aBkVzORY0QnVZ0MIk440aLAwFaleqHuDtsg3GPb7G6w5EDzujFAkh+SJMgdhAkvvvkHkh46/mQLNUk2WOdwOV3s50ncf4UP30ItqqGSuXUJd2AYZPROu7pYQcgGqAx7+EfqfossXkLXAjldrTRbAcJOC5y3+XU3689AzL5pM0mvgL1h78KyTeQpcr0i7+5+XkEq/PnR8j8th5ENUefUuvtM6gQnBlur4UR0GKHK5HB+gYwtr1OBLGHjxhNfaR8d0O5+edNsXEqGa2P7elnMGh9hi+3nBgb50tcT4Hdq//rlxWbEatoy4Yk52mstmyVpIOrNk2InHpjv/4AD3fmq7m8R8hx+RbUQYXh7P2QJdjFDtsaDCFuRzV9XMElJCF1fV+cWFWT7X4o94odawdT/Uhv2EJN+KjZRGybCRQwofHjRf6dylJBhIG3nWA65lSLdhzg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(366004)(346002)(39860400002)(136003)(45080400002)(83380400001)(966005)(6486002)(38100700002)(478600001)(26005)(53546011)(2616005)(66476007)(41300700001)(186003)(5660300002)(4326008)(36756003)(8676002)(6506007)(2906002)(66946007)(66556008)(8936002)(86362001)(6512007)(110136005)(31696002)(31686004)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?THNDNTBOcERtRkdrb3RXbTFZV2tUZUdjR1kyTWEyZjd3WXlIcGdabW5USGh5?=
+ =?utf-8?B?S29UYk1uVXdZTkFBZDJwS3NTY0QwSWxYMEVzQUg3R3BSalB4OHBGbmU5T1Fa?=
+ =?utf-8?B?M2w4azFybGNqM29JcmEwb0N3bkdXN0c4Z0FFNXZtcmF0TmFHU3FYL0FOdFZp?=
+ =?utf-8?B?V1J2YXhNbUQ5VGdtZ2VwdWdLbDErdGJtYWFEbGNIS2NCSUZSN3ZNOWxnbndm?=
+ =?utf-8?B?V2tHdklyOGtIVGRiOEJlSE94bE5OaUx5T0xrTDZQZUZmUjdtdUc1d2ErOGEz?=
+ =?utf-8?B?T2Z1cXhIWThSazNVWTltYUNQSGw3bS9NSmtjaWw5eThhZ0p2em1Ua2p1cjYw?=
+ =?utf-8?B?UGQ3UFpwRE41QUYrbllCaS9iUXl1SUgzd3FRNWpsUFZqZVN0S3d5Wi83SmV5?=
+ =?utf-8?B?MXBWWERVTU5HT1k1cTlWYWdhSEhYK2M4TmtTVEtOb3R6dVk4V0t3dVJJUEtD?=
+ =?utf-8?B?Q2hjbTU5Q3hnQUprQ25mV1diWUhWZ2k0UkxnV1RkWHJVRHIzc2pVUDFzTU5R?=
+ =?utf-8?B?MjZkdCsvWUNzR3A3aHFTN2hsM21NSEF2NXdkSHhMbmZxQm5OMXJ1OTlZZ0Fn?=
+ =?utf-8?B?bk9tQk83VlJRSzVVNzRJdE55QUZlc0svU1JNYVJlZ21GVzZWSzRkb3pKVVIr?=
+ =?utf-8?B?TW9XeEpUdWM3UysyeWxnakx3MTU3WWRROWlNUlpFL3V5M2YrU3NoUHhhZ21m?=
+ =?utf-8?B?b0VoZHlrNXA3NEh5cmFVYnU2UEFwa1UvRy9iOVRUSzZBdStIZUs4VTVSYXkw?=
+ =?utf-8?B?ZzJjaGtSVWwxL2NjS2d3Q1pYVDd0LzJncG4ra2tCNnhUeFNxZTA0eFVTZkpS?=
+ =?utf-8?B?allnc0lnQUVoVEpxZmNUS1k2d0o0RmFRaGpTRzBxTGt5RVdoYmJLSTlIZXcy?=
+ =?utf-8?B?WXdaUlhLZjJ6WXZBZEg1MnFQeXlRUzB2WmE1RCtOM1BsKys4ZUFKTVZEZ2RS?=
+ =?utf-8?B?eW5DeldITVNtUk9XbnNjcm5GZmM2dERxUHQzOHFqOWpaSm1KRTlJQ1FWK3Ay?=
+ =?utf-8?B?c2EzKzdWeGxOaGpBWDk2bVhTbUFoU3VTTk5ONGFGRXZyalFXZ3BVMGRDYlpz?=
+ =?utf-8?B?YmVwSmpqL0hFeklyWEwrbHZ6RG11L1I1NERwbXZGOTBIbVZIZlQ3ZWtzZStG?=
+ =?utf-8?B?aUoxczJYMEd3WnpncW5aZjA0ZUhsT3I2OXlGR2RNRjJyaW9YKysrQjJSN2NT?=
+ =?utf-8?B?dG1nSmdiY0NOQmk5em5vVGhRWTRKL3BLeVJEdGM2SHg3UEd3dUZsL0p2eU9O?=
+ =?utf-8?B?SFBVZ29KMXQvK3F5Z0Rid1prOFdablJrMzI3NDJWYmh4VFMzaGYrdUxGQnJ5?=
+ =?utf-8?B?QVZBSDlOR2EzV2JWUGJKenlMYytiODhnUTdick8ycGRRakNpZDQzOGh0S2d3?=
+ =?utf-8?B?VzF2TTU5NjlucTBUNWszMW00OXkrVHNaRzVDL1JuSnR6MVhFSGFtTFdhZWMv?=
+ =?utf-8?B?N1pKQ1JJZWlQbkFoRnoxa2JjZVNDcWZoQm8zYTJDa2FSMmtmU2k3M0pPRjNq?=
+ =?utf-8?B?QXlmVHkvcWtiNXNwelFnQ3ZudTBIQTVFeFFjZEthSkFTeEhha21kZjZVYjJS?=
+ =?utf-8?B?dHpWeFFKZkVMekMzbTYwYjdiRW9CTG5kc2h2bkI5SFk5aGtUeDVqWXYzK25r?=
+ =?utf-8?B?Z0FESDRNbWJ3YVhGRWdiN0N4cXZGbVFpTGR5blNycWJoak9qRVBpYU5jQnZk?=
+ =?utf-8?B?TVhJV3JjTGFkUldFcTF3K1Y3cGlhUXBwM2MwQmdRcWYzUldWL3VGaHVzblYz?=
+ =?utf-8?B?aHRFeVhRRlhzeDY2OWpYaDJaZVkyZ3R1MmlDMmFndzNyMFJWdytNUnZzVXZW?=
+ =?utf-8?B?Ukt6d1VQVDI2ekh5N3U3bzZhN0pnUVNYdlBNRnhpcVhxQ3FUdWhUeDQrdEVC?=
+ =?utf-8?B?ZEYrSWF1RFZBYUMrd0FWamhERm0rVGRxbDhCZFBCdDdTdHpVTVZuT0N2dktl?=
+ =?utf-8?B?R0F5QkRkbnIyVFc5YlhJbXVhY2F6MG5uTlhOZTJHYit6dEY5R0FQUEZsTkdr?=
+ =?utf-8?B?cVVQUUdRVWNJRUNVYVk3dUxCL2l5UkI2SUhCQkkyTVRWNlhQdjFYVC9PRnNn?=
+ =?utf-8?B?SytXeXFJZXhJODlZS2VGTUJJRDdtcEFFSTA1OHM2cXloNkhQTWt3cFo2SHdB?=
+ =?utf-8?Q?kbcIe8a8Y4zsRlLSMHdgwP5b8?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2022 17:46:22.0597
+X-MS-Exchange-CrossTenant-Network-Message-Id: 790ba33c-1b1a-4e54-42ce-08da820cb5c6
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2022 18:00:32.8952
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a777e673-1909-4cd7-f927-08da820abacd
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT081.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3639
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aJR0ELkfxHcEN8TWuhg4rirD16sTrzm+D8inKpkcrK81QXKy82ZHCgsgwF1Cm+nUEzIbGVYT0ifJGNSEP9J6fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3326
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-variable 'mode' is used uninitialized whenever switch default is taken
-in sps.c which leads to the following clang warning.
+On 8/19/2022 11:57, Mark Pearson wrote:
+> 
+> 
+> On 2022-08-19 10:01, Mario Limonciello wrote:
+>> It was observed that on a Thinkpad T14 Gen1 (AMD) that the platform
+>> profile is starting up in 'low-power' mode after refreshing what the
+>> firmware had.  This is most likely a firmware bug, but as a harmless
+>> workaround set the default profile to 'balanced' at thinkpad_acpi startup.
+>>
+>> Reported-and-tested-by: madcatx@atlas.cz
+>> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216347&amp;data=05%7C01%7Cmario.limonciello%40amd.com%7C7f33822a8c2c428fdb0b08da8203f783%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637965250825035615%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=ua0qRTvx6MmngRCYI8TxgaTjLrd2fnRNtUhA0%2BRS6S8%3D&amp;reserved=0>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/platform/x86/thinkpad_acpi.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 22d4e8633e30..e7e86c0b9ad7 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -10590,12 +10590,7 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>>   		return -ENODEV;
+>>   
+>>   	/* Ensure initial values are correct */
+>> -	dytc_profile_refresh();
+>> -
+>> -	/* Set AMT correctly now we know current profile */
+>> -	if ((dytc_capabilities & BIT(DYTC_FC_PSC)) &&
+>> -	    (dytc_capabilities & BIT(DYTC_FC_AMT)))
+>> -	    dytc_control_amt(dytc_current_profile == PLATFORM_PROFILE_BALANCED);
+>> +	dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
+>>   
+>>   	return 0;
+>>   }
+> I'm hesitant on this and would like some time to dig into it first.
+> 
+> I worry that this would be overriding the setting in the BIOS. On the
+> Intel platforms (at least on the mobile workstations) we can set the
+> default power setting in the BIOS. I don't see this on the T14 AMD G1 -
+> and haven't had a chance to check other platforms so its less of a
+> concern there.
 
----
-drivers/platform/x86/amd/pmf/sps.c:96:2: error: variable 'mode' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
-          default:
-          ^~~~~~~
-  drivers/platform/x86/amd/pmf/sps.c:101:9: note: uninitialized use occurs here
-          return mode;
-                 ^~~~
-  drivers/platform/x86/amd/pmf/sps.c:84:9: note: initialize the variable 'mode' to silence this warning
-          u8 mode;
-                 ^
-                  = '\0'
-  1 error generated.
----
+Ah wasn't aware you stored it for some systems.
 
-Fix it by returning -EOPNOTSUPP in default case and also change the return
-type of the function amd_pmf_get_pprof_modes() to keep it similar like
-other drivers which implement platform_profile.
+> 
+> As a compromise I'd want to force the profile to balanced on the PSC
+> modes only.
+> 
+> Ideally, if this is a FW bug we should get it fixed in FW. I know our FW
+> team can be a bit slow, but I'd rather hold off a few more days until I
+> have a better idea where the issue is. I don't really understand why the
+> person with the original issue is seeing the behaviour that they are.
+> 
+> Mark
 
-Fixes: 4c71ae414474 ("platform/x86/amd/pmf: Add support SPS PMF feature")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/pmf.h |  2 +-
- drivers/platform/x86/amd/pmf/sps.c | 11 +++++++----
- 2 files changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 7613ed2ef6e3..172610f93bd1 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -303,7 +303,7 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
- int amd_pmf_get_power_source(void);
- 
- /* SPS Layer */
--u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
-+int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
- void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
- 			   struct amd_pmf_static_slider_granular *table);
- int amd_pmf_init_sps(struct amd_pmf_dev *dev);
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index 8923e29cc6ca..dba7e36962dc 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -79,9 +79,9 @@ static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
--u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
-+int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
- {
--	u8 mode;
-+	int mode;
- 
- 	switch (pmf->current_profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
-@@ -95,7 +95,7 @@ u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
- 		break;
- 	default:
- 		dev_err(pmf->dev, "Unknown Platform Profile.\n");
--		break;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	return mode;
-@@ -105,10 +105,13 @@ static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
- 			       enum platform_profile_option profile)
- {
- 	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
--	u8 mode;
-+	int mode;
- 
- 	pmf->current_profile = profile;
- 	mode = amd_pmf_get_pprof_modes(pmf);
-+	if (mode < 0)
-+		return mode;
-+
- 	amd_pmf_update_slider(pmf, SLIDER_OP_SET, mode, NULL);
- 	return 0;
- }
--- 
-2.25.1
-
+Sure; I'll send out a v2 to that effect.
