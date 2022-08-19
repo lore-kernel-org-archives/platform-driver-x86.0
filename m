@@ -2,150 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F31C32771
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 21:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A2C28D13
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 22:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235003AbiHSVqq (ORCPT
+        id S233114AbiHSWlK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Aug 2022 17:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54410 "EHLO
+        Fri, 19 Aug 2022 18:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbiHSVqn (ORCPT
+        with ESMTP id S229796AbiHSWlJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Aug 2022 17:46:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24ED109A0B
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 14:46:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 49119B82964
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 21:46:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924EFC433D7;
-        Fri, 19 Aug 2022 21:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660945599;
-        bh=Ui0S4mtdVjywSkJgdIpWR2/qLcfYesVdDI1yPwEcS+I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uMvXIU20/Z0zAjAhtpuV9KjbhYUT+hGI5JzJUNrRgNcR1wgAhc29/FOQLi0/a6wAo
-         0GUA4mbF/3InuHy8tFyU+i5TAea6rslBjEciWLzcP3Vb1CP5KIHNgjJCdWOlJXiQIS
-         iDfiTkCn5EBQqhH1bpFRj9Icuz2iXZkxnsPrMvMTo1n0Cb4gxK+L/e9pavy0c9KmIO
-         dJjWkGC9myndww9o39kDKi/oz5TAcxx3VwGEUERp33RR/SndPpmfOGVthfml/lLU3u
-         OJNo1zygAZsfbl/ibyCWpzWs777MIUFf6pHILOgdzXn2AtxnONgIiv6R37kKFmPpAD
-         7HLg80mQPxB5w==
-Date:   Fri, 19 Aug 2022 14:46:37 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix clang unused variable warning
-Message-ID: <YwAEvbHW/UwwIYbt@dev-arch.thelio-3990X>
-References: <20220819174559.4029855-1-Shyam-sundar.S-k@amd.com>
+        Fri, 19 Aug 2022 18:41:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E391C10EED3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 15:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=FhmwHA1ti8OucyiSKvBQfIxWY6ORKHaNFX9oXUQ/eVo=; b=1Nktz7P69hSbLqwvqLxfBtbTsW
+        FZYm5GhGpb5K4J/IFJc5Dhpjf6OSTvXmYpI8WzuVvxk9h/emaoFwiozo8u1iGwPW/pRAtnH2aAUms
+        4bp1WWc1qYBSjCHbMJKFJHfbcmuSnFq80zHlFzvnjePd/9pPGgLargmfzyWjSPG3dhfMyz5DDqi5t
+        jwX9rot85SPU5dwEMck060rozGQOz4VSnV9IvXqBkzQwvNNQ0nQKNvOkbUXXU4Xgl5w0wPUM1F/7E
+        piHK3DPyB7RjuJMGoXQMy2Bs2Tvg6Yl61WfspfX+dVWUsvLwLohGy6OEED55qw0VmrkhrxIjWeaIe
+        gj6qTV9A==;
+Received: from [2601:1c0:6280:3f0::a6b3]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oPAfp-00CzEs-OF; Fri, 19 Aug 2022 22:41:05 +0000
+Message-ID: <742ce0ac-bfd4-b056-b0e4-eb43162f56b6@infradead.org>
+Date:   Fri, 19 Aug 2022 15:41:05 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220819174559.4029855-1-Shyam-sundar.S-k@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix undefined reference to
+ platform_profile
+Content-Language: en-US
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
+References: <20220819083858.3987590-1-Shyam-sundar.S-k@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220819083858.3987590-1-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Shyam,
 
-On Fri, Aug 19, 2022 at 11:15:58PM +0530, Shyam Sundar S K wrote:
-> variable 'mode' is used uninitialized whenever switch default is taken
-> in sps.c which leads to the following clang warning.
+
+On 8/19/22 01:38, Shyam Sundar S K wrote:
+> Its reported that amd-pmf driver when built with config which does not
+> have ACPI_PLATFORM_PROFILE set/enabled throws a undefined references to
+> symbols used.
 > 
 > ---
-> drivers/platform/x86/amd/pmf/sps.c:96:2: error: variable 'mode' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
->           default:
->           ^~~~~~~
->   drivers/platform/x86/amd/pmf/sps.c:101:9: note: uninitialized use occurs here
->           return mode;
->                  ^~~~
->   drivers/platform/x86/amd/pmf/sps.c:84:9: note: initialize the variable 'mode' to silence this warning
->           u8 mode;
->                  ^
->                   = '\0'
->   1 error generated.
+> ld: vmlinux.o: in function `amd_pmf_init_sps':
+> /work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:132: undefined reference to `platform_profile_register'
+> ld: vmlinux.o: in function `amd_pmf_deinit_sps':
+> /work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:142: undefined reference to `platform_profile_remove'
 > ---
 > 
-> Fix it by returning -EOPNOTSUPP in default case and also change the return
-> type of the function amd_pmf_get_pprof_modes() to keep it similar like
-> other drivers which implement platform_profile.
+> Fix it by adding a "select" to the Kconfig.
 > 
-> Fixes: 4c71ae414474 ("platform/x86/amd/pmf: Add support SPS PMF feature")
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
 > ---
->  drivers/platform/x86/amd/pmf/pmf.h |  2 +-
->  drivers/platform/x86/amd/pmf/sps.c | 11 +++++++----
->  2 files changed, 8 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 7613ed2ef6e3..172610f93bd1 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -303,7 +303,7 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
->  int amd_pmf_get_power_source(void);
->  
->  /* SPS Layer */
-> -u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
-> +int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
->  void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
->  			   struct amd_pmf_static_slider_granular *table);
->  int amd_pmf_init_sps(struct amd_pmf_dev *dev);
-> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-> index 8923e29cc6ca..dba7e36962dc 100644
-> --- a/drivers/platform/x86/amd/pmf/sps.c
-> +++ b/drivers/platform/x86/amd/pmf/sps.c
-> @@ -79,9 +79,9 @@ static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
->  	return 0;
->  }
->  
-> -u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
-> +int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
->  {
-> -	u8 mode;
-> +	int mode;
->  
->  	switch (pmf->current_profile) {
->  	case PLATFORM_PROFILE_PERFORMANCE:
-> @@ -95,7 +95,7 @@ u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
->  		break;
->  	default:
->  		dev_err(pmf->dev, "Unknown Platform Profile.\n");
-> -		break;
-> +		return -EOPNOTSUPP;
->  	}
->  
->  	return mode;
-> @@ -105,10 +105,13 @@ static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
->  			       enum platform_profile_option profile)
->  {
->  	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
-> -	u8 mode;
-> +	int mode;
->  
->  	pmf->current_profile = profile;
->  	mode = amd_pmf_get_pprof_modes(pmf);
-
-I see a few other places where amd_pmf_get_pprof_modes() is called.
-Should they be updated in this same way to handle a negative return
-code?
-
-Regardless, the change is what I envisioned so looks good to me.
-
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-
-Cheers,
-Nathan
-
-> +	if (mode < 0)
-> +		return mode;
-> +
->  	amd_pmf_update_slider(pmf, SLIDER_OP_SET, mode, NULL);
->  	return 0;
->  }
-> -- 
-> 2.25.1
+> Based on "review-hans" branch.
 > 
+>  drivers/platform/x86/amd/pmf/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index e65ffa52229b..c375498c4071 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -6,6 +6,7 @@
+>  config AMD_PMF
+>  	tristate "AMD Platform Management Framework"
+>  	depends on ACPI && PCI
+> +	select ACPI_PLATFORM_PROFILE
+>  	help
+>  	  This driver provides support for the AMD Platform Management Framework.
+>  	  The goal is to enhance end user experience by making AMD PCs smarter,
+
+-- 
+~Randy
