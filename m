@@ -2,178 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB03C25B0E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 06:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908C2C25B0E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 08:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239344AbiHSGXZ (ORCPT
+        id S1347182AbiHSIj7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Aug 2022 02:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39710 "EHLO
+        Fri, 19 Aug 2022 04:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235053AbiHSGXY (ORCPT
+        with ESMTP id S1346731AbiHSIj3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Aug 2022 02:23:24 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADDB45F59;
-        Thu, 18 Aug 2022 23:23:23 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id w28so2710362qtc.7;
-        Thu, 18 Aug 2022 23:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=fY9LveBLnFiSKbYjRHuFcLH7o9uOpu0WQwKbq0SBCjI=;
-        b=TjqudFaW/qj1ie2RbOptrz2HTLfhnQ0w3n7Z6veDV64KlFGtbQzBRK6HPWWj5jMxJt
-         oHqTN5GSOp+cUfJkEY9LNxVsj5FhUVwsAKBnTB66YI7ivf+7iVDj+qoWK+a777FlCtNH
-         ZbVVIxMYa4d2aMpnlIhLYJOlqjoEUD9+UMFpXx0q/bL/umZNfiStNjs3WXsbUOA2GKmW
-         q1oQzRQc3oX/tcc43Wk0rH2SlTyHkR3XOmFUO4xFqeWokBv6/EPa1pgrXuhqLec5Susi
-         03yxAZRobpw6YtpIc7X6+hZ/gL+9WfyI6GpfkxGbF2HidldmArMTSqi8XGwkn3WHZvpY
-         nT7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=fY9LveBLnFiSKbYjRHuFcLH7o9uOpu0WQwKbq0SBCjI=;
-        b=qKKN0vzkMdkokUFos3Y3Yi0cWhh1ZErPsmDYmwqPNN9dRi+/p6TH+IH48XrXRd1gaj
-         JSyr4epPCkaimf5oiNsoVEaU7+jv7oox8Ep0xU3nZhCG/P8NpOHv80piYnKaNTzVmiC6
-         P0iFfG+7iJng2iYB0ENRwhXQODElkS6ITR1iJ24j5088KFm6FehKy07pyHCHiaDQgG9w
-         qd1b0s7lTR73yRAqf/f1LSSxmUTSdwskgbrxo4xEabPoCKLGp4ruTgwZjhWaDtsnI4JA
-         WPt6kai2ieO5DzirMNFEp8EDCImrpfI6G7VPH/F7HbEy+3tMXDugl+O9mFWfMDPfp0m2
-         QjDQ==
-X-Gm-Message-State: ACgBeo0ULf+TgKL23xm3uQGhEIzwF0hNvSIzNzhteF38EsZCJVItbMSP
-        hNGZM4h4pR3ZqxMsq43nuJxLUuigjTD8PDt5gH0=
-X-Google-Smtp-Source: AA6agR7/N1zPVsasyqkyG/YF+U2KyCp9duOxoXwYcnvf2RRSPdXQSkddTw+2IQC/XZoltV8H+EDmscYRRPJqEIAKK2I=
-X-Received: by 2002:ac8:7f92:0:b0:344:8cd8:59a1 with SMTP id
- z18-20020ac87f92000000b003448cd859a1mr5566251qtj.384.1660890201997; Thu, 18
- Aug 2022 23:23:21 -0700 (PDT)
+        Fri, 19 Aug 2022 04:39:29 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2574F2B247
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 01:39:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g8k/+ATgtwsrr7IFlAMCO4yR7ZMe9Iqbm4nn/0yZPSxUu6i9qhDqyh8oMY4+eG84E01QxCDTu69EsP84meNsr658BNyQF8+7T4so7NZvivOMypr7kRItu5T2qUicSocz7IrNaurBnDld7piH2prf9m7tmPTMN2wg9X5oeBkkzvQwy+XUJaBSMqe8OodUJGhwlnR3Tq7Y5GXjKwpIZTZJ79wrzYgYGSkiJbSYiVpwADOiWYwu681ScketeuIuqHTmnMxbNNw4TQJQDIwRBHimTxNRqDhK6wGA7SDeGkeIn7BOawAwwerfjw0IwnzWJPcIFUE9z0Kps2RBuAzJbUr3/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nJrH87JsKqDTWwYL9NvXJ6fQXDidcSObmQznXj4rq+g=;
+ b=SNIwXAYECR6rJDIjr9duBzS1uQ4jhotKt1fe3btzdZHj5uGa9l435GgCXeb/7SSxPNr/khukVZxBpWEx4LOw/mbsV0+7cUmcIiMZsgIANVOshmbeBQrxVldSxYNxJeSdOq9zwQ+u47dKr+4ui4Wo1kM//0Awyin5nQ4ViRrE67H6OeCBpHm32glGVEa5lKm26xbrZwaP8XMvRn2/7o1OQSnMFHwOM+D13xuZxfB2ONfsPO7Ml2zvWSiczVh1XIlxEQXbkKZiq7VsojYOhWL05dUuWp8GdT8ma4lx5gmdrcuClWWRNTA0EYwC7le0+cwFb8k5pV9OxiJaLLS2KKeARA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJrH87JsKqDTWwYL9NvXJ6fQXDidcSObmQznXj4rq+g=;
+ b=lU83yIQ2ibQJwETWhO0Q/Dc86p/jzmfbMh8Z6jR1ijtayc9CyRBlPdZvOi6S4eB0NQYIciD3ufslHLfdJgNVXtaiKWw1e3xPIIkeOmxM50PWS9MuA9vo+2zHAocsGGZS9yWMJMHR299PYY5M9HfywNqBf/3KmNEl7shJgrhkiTc=
+Received: from MW4PR03CA0239.namprd03.prod.outlook.com (2603:10b6:303:b9::34)
+ by DM6PR12MB2986.namprd12.prod.outlook.com (2603:10b6:5:39::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.17; Fri, 19 Aug
+ 2022 08:39:22 +0000
+Received: from CO1NAM11FT108.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b9:cafe::63) by MW4PR03CA0239.outlook.office365.com
+ (2603:10b6:303:b9::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.17 via Frontend
+ Transport; Fri, 19 Aug 2022 08:39:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT108.mail.protection.outlook.com (10.13.175.226) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5546.7 via Frontend Transport; Fri, 19 Aug 2022 08:39:22 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 19 Aug
+ 2022 03:39:19 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>
+CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86/amd/pmf: Fix undefined reference to platform_profile
+Date:   Fri, 19 Aug 2022 14:08:58 +0530
+Message-ID: <20220819083858.3987590-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220818210058.7229-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20220818210058.7229-1-wsa+renesas@sang-engineering.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 19 Aug 2022 09:22:45 +0300
-Message-ID: <CAHp75VeM2q7wdnREoenyYpJ-tso2G6M-uyGFJGjPGL8hfUmzhQ@mail.gmail.com>
-Subject: Re: [PATCH] platform: move from strlcpy with unused retval to strscpy
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Divya Bharathi <divya.bharathi@dell.com>,
-        Prasanth Ksr <prasanth.ksr@dell.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Dell.Client.Kernel@dell.com,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5e08c9f4-e05a-4351-22fc-08da81be50c4
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2986:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: k4x91ITJ7jctf0gndn8zu6kKILO53+1N+Jmu8Jt9GXA0PNAuEhPdx3LnjITyP7xh+EuKsgeS5S3p1a0+ctnCKYaCH11SSeC7dleHdYnVdPMefVtPP80bxJ8t7tI59DLMMsAPdKBWdb1q5VK/ioNx1YmuYCiFBFS8A1rDHjG24GjsqyIWQJeccz3iPlUpL73bZMnzP4aG0jIRGLzXmiwKTAsD++JQycW6FAwPrNOldLOpA/bh2bJ/CofkywkKnbXiY42VxGHJGLY44QYR8tVm6UK+Zdp88ygHcU3fHdxPOxf0wCVco1SUN+suZSgxE3BraNnLwhhFrQlXmRwwzimjvh2X4/2MoiYU3G4F5Xo/NFtFwb5+SmT8g6vubzSx/A4QM4Z0QgOutXlXYR4CLherv+dOk6REpVfuSny+OEL1U2sdxIsjWl/OajEy+BUp+AakuzDoMPRgB6ZujI54mPhUpqPn5IHUlxSyGH3Ryud3Ac0Hp9etp5nzHzpi/sSIlKnkrUrA5IRJ2LsmFZCXhvZkVJqdMiIPhnHKjfYlDTidn/QQKp++S0wmmombYZjQM5CT8CB5yhQKSpsr1rNLoOAfskFhshxytdlgHSD978YBCMtAFCEkxnxwsdi1bxsDj/ujINXKvMrER1jmTk0XMDd1GUCdC7dmmDqxN95w7hBXA8GqCu86xiFF3Wii7+vgQnDW8Vodl2Yu6fnbZBTmmM1i88AT9Ef1ZJ0YLymXl/TI+Zhpg7oUF/+A2KJS5QBaZRlpALumyx2upY9jplRuzUWhwgcvV9lOwHy1ogbMBY6LhrWD1rAVN37LGAuUZek+W39L
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(376002)(136003)(39860400002)(40470700004)(46966006)(36840700001)(36860700001)(356005)(70206006)(40460700003)(54906003)(110136005)(316002)(81166007)(478600001)(82740400003)(8676002)(70586007)(4326008)(40480700001)(82310400005)(8936002)(5660300002)(2906002)(1076003)(86362001)(6666004)(7696005)(41300700001)(26005)(47076005)(336012)(16526019)(426003)(2616005)(186003)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2022 08:39:22.3269
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e08c9f4-e05a-4351-22fc-08da81be50c4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT108.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2986
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 12:06 AM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> Follow the advice of the below link and prefer 'strscpy' in this
+Its reported that amd-pmf driver when built with config which does not
+have ACPI_PLATFORM_PROFILE set/enabled throws a undefined references to
+symbols used.
 
-We refer to the functions like this: strscpy() (note no quote marks).
+---
+ld: vmlinux.o: in function `amd_pmf_init_sps':
+/work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:132: undefined reference to `platform_profile_register'
+ld: vmlinux.o: in function `amd_pmf_deinit_sps':
+/work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:142: undefined reference to `platform_profile_remove'
+---
 
-> subsystem. Conversion is 1:1 because the return value is not used.
-> Generated by a coccinelle script.
+Fix it by adding a "select" to the Kconfig.
 
-I assume you are experimenting with coccinelle, so I have no objection
-to the change, but in PDx86 we usually want to have one patch per
-driver. Can you split?
+Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
 
-You also may add
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-to each of them.
+Based on "review-hans" branch.
 
-> Link: https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/platform/surface/surface3_power.c          | 2 +-
->  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
->  drivers/platform/x86/intel/chtwc_int33fe.c         | 6 +++---
->  drivers/platform/x86/thinkpad_acpi.c               | 4 ++--
->  4 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
-> index 444ec81ba02d..4c53d116d59b 100644
-> --- a/drivers/platform/surface/surface3_power.c
-> +++ b/drivers/platform/surface/surface3_power.c
-> @@ -519,7 +519,7 @@ static int mshw0011_probe(struct i2c_client *client)
->         i2c_set_clientdata(client, data);
->
->         memset(&board_info, 0, sizeof(board_info));
-> -       strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
-> +       strscpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
->
->         bat0 = i2c_acpi_new_device(dev, 1, &board_info);
->         if (IS_ERR(bat0))
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index 636bdfa83284..0a6411a8a104 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -270,7 +270,7 @@ void strlcpy_attr(char *dest, char *src)
->         size_t len = strlen(src) + 1;
->
->         if (len > 1 && len <= MAX_BUFF)
-> -               strlcpy(dest, src, len);
-> +               strscpy(dest, src, len);
->
->         /*len can be zero because any property not-applicable to attribute can
->          * be empty so check only for too long buffers and log error
-> diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-> index c52ac23e2331..1ea989df513c 100644
-> --- a/drivers/platform/x86/intel/chtwc_int33fe.c
-> +++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-> @@ -270,7 +270,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
->         }
->
->         memset(&board_info, 0, sizeof(board_info));
-> -       strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
-> +       strscpy(board_info.type, "max17047", I2C_NAME_SIZE);
->         board_info.dev_name = "max17047";
->         board_info.fwnode = fwnode;
->         data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
-> @@ -361,7 +361,7 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
->         }
->
->         memset(&board_info, 0, sizeof(board_info));
-> -       strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-> +       strscpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
->         board_info.dev_name = "fusb302";
->         board_info.fwnode = fwnode;
->         board_info.irq = fusb302_irq;
-> @@ -381,7 +381,7 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
->         memset(&board_info, 0, sizeof(board_info));
->         board_info.dev_name = "pi3usb30532";
->         board_info.fwnode = fwnode;
-> -       strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
-> +       strscpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
->
->         data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
->         if (IS_ERR(data->pi3usb30532)) {
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 22d4e8633e30..8dad0428a83c 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -7623,9 +7623,9 @@ static int __init volume_create_alsa_mixer(void)
->         data = card->private_data;
->         data->card = card;
->
-> -       strlcpy(card->driver, TPACPI_ALSA_DRVNAME,
-> +       strscpy(card->driver, TPACPI_ALSA_DRVNAME,
->                 sizeof(card->driver));
-> -       strlcpy(card->shortname, TPACPI_ALSA_SHRTNAME,
-> +       strscpy(card->shortname, TPACPI_ALSA_SHRTNAME,
->                 sizeof(card->shortname));
->         snprintf(card->mixername, sizeof(card->mixername), "ThinkPad EC %s",
->                  (thinkpad_id.ec_version_str) ?
-> --
-> 2.35.1
->
+ drivers/platform/x86/amd/pmf/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-
+diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+index e65ffa52229b..c375498c4071 100644
+--- a/drivers/platform/x86/amd/pmf/Kconfig
++++ b/drivers/platform/x86/amd/pmf/Kconfig
+@@ -6,6 +6,7 @@
+ config AMD_PMF
+ 	tristate "AMD Platform Management Framework"
+ 	depends on ACPI && PCI
++	select ACPI_PLATFORM_PROFILE
+ 	help
+ 	  This driver provides support for the AMD Platform Management Framework.
+ 	  The goal is to enhance end user experience by making AMD PCs smarter,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
