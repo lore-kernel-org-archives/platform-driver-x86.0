@@ -2,110 +2,309 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1170DC25B0E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 09:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B749EC32773
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 10:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348140AbiHSJVE (ORCPT
+        id S1348325AbiHSKFl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Aug 2022 05:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56066 "EHLO
+        Fri, 19 Aug 2022 06:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348120AbiHSJVD (ORCPT
+        with ESMTP id S1348314AbiHSKFh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Aug 2022 05:21:03 -0400
+        Fri, 19 Aug 2022 06:05:37 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8CBE588D
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 02:21:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DD6EEC62
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 03:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660900860;
+        s=mimecast20190719; t=1660903534;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1IbbuZ/sOEyv7Ff85tiaeE6QSXFpWukZ2njJ70+6dh0=;
-        b=KBFQ6TF7bosHmWjdEfZL+Advxk190j+7fJokdvcEKAYqZp7sD0C4aMJErRWo9fnW9rFqmM
-        34kX+7DLLM7NePvkDA85TYCvNoEGQcj2MOZDa5I8YBDnmbs0kZ5vt5kyc6Myrg3VxN+2MU
-        /sL96OKoNQ7L00EFWez6Ed+XslmNYG8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ClrqC6xI3y34Msl2MghOyY6wxIWtFZ3bYpyy58JPY0M=;
+        b=ewMUXRkHFBhfedn4ytU/x0XKNenTNUOPk2ou2/Jqs1n4dRh9xBRkC//rmKfFv03ZJyG8ZX
+        2EjSfVgAFo71mew2DTPksFKq7/nF0guIEZCpCM1IcVhkiRYQSvEE5IOpm3IX1vpVcPEWMA
+        pEdxzzWUSnasPx8D00eddLc4xsThr4k=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-588-xrk8um7HP7qfpGGVBZ45Cg-1; Fri, 19 Aug 2022 05:20:51 -0400
-X-MC-Unique: xrk8um7HP7qfpGGVBZ45Cg-1
-Received: by mail-ej1-f71.google.com with SMTP id qb27-20020a1709077e9b00b0073160a55fd7so1306625ejc.17
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 02:20:51 -0700 (PDT)
+ us-mta-272-wRIMXaiyM-2ec8rFpAIGOw-1; Fri, 19 Aug 2022 06:05:33 -0400
+X-MC-Unique: wRIMXaiyM-2ec8rFpAIGOw-1
+Received: by mail-ed1-f69.google.com with SMTP id z3-20020a056402274300b0043d4da3b4b5so2556733edd.12
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 03:05:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc;
-        bh=1IbbuZ/sOEyv7Ff85tiaeE6QSXFpWukZ2njJ70+6dh0=;
-        b=36S9gJkiqjfb46cFlVPmTGFoYvb9LauBvTxNRlnAPoxFnkKJiUONE30Xq8wfIg2/zN
-         Sm842P8+i/pyf/jJTXmCUjiOV8Qhmb5SpXjWsPLSW2fFL9s7dTaI+pXHOCQKRZp5/afU
-         6dJ1HppLwQDlIX3OAJMVbFilgzgBA843M+dIXmf5sNNt92SZtQoKY6yNL54TVTFHoSOt
-         M3R90v9InDeiDogAZtqQ0WL7U/r8GPAZ0SuzzY/BQurEmM8EzT/6EZ4TZfuQTeSveXhc
-         DmpTWoEmVFKgXsewLycNnui2z67YM5IdgCSAFP4UIHKudv0PGSpYjpSmDj+C9KgiuWVp
-         8kew==
-X-Gm-Message-State: ACgBeo2dnZuwp6l5p7iAk42BNfBLMIHXEDpBAddUcIESP1XFNPiMn+0Q
-        lAGGxMQmtj0YT8xLLGoNqKMS629tcPxRhC1fa3bnmWEnvWRSTnGVaHfgV8v+WtcJmxGV3eZHo2Y
-        AMeUFUalEAWiaW++MH6kFb2QpsGYScI+G7g==
-X-Received: by 2002:a17:907:168d:b0:731:67eb:b608 with SMTP id hc13-20020a170907168d00b0073167ebb608mr4173252ejc.518.1660900850406;
-        Fri, 19 Aug 2022 02:20:50 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5W4/lZxNZ8ZjUFgSfxvralXr9HHWlIfklNUN8lChAnSN0KD0mbBjxMaqIPfftrDrw7U1CAVg==
-X-Received: by 2002:a17:907:168d:b0:731:67eb:b608 with SMTP id hc13-20020a170907168d00b0073167ebb608mr4173245ejc.518.1660900850273;
-        Fri, 19 Aug 2022 02:20:50 -0700 (PDT)
+        bh=ClrqC6xI3y34Msl2MghOyY6wxIWtFZ3bYpyy58JPY0M=;
+        b=NQoutrrHz04nGgw0KZmDJpRB4XefcMO6Dl1oluemACi/PV9qCZyTzWAMHFALEXe/lZ
+         hIix999sd+YvyoFjcvzKz3PC2+fLOsm26EEFn+U3zQ7qo4vPnfbeMx7JLqeVNS+0zWBn
+         mL7mvLjInvDekE/2u4RGCDooSy7hQQ30QiDz08jLL9ghy1i/EDQfTGRIZn1lKHmGGQcX
+         wZa9u4vADQUtyylNE7QdyLTBVJdwHOk8TnJU/isW19FjyjkuME1Dpy2oZQGYBg2rRT5K
+         +xlnc2tNdrgalSIPzf8NMMm1lG7wgT7vHvfYiDUtfbO2ZJmg/10phqL1pyowWX891Xvs
+         5oeA==
+X-Gm-Message-State: ACgBeo1s/idP2f9GZPtHYNGfKleKmLf5d5FuTbbk3llfxopMba5KNmaL
+        JOPNZcmLckvS3jnycDHa6Ka3UxAeokXYNZHgG/JCIiMrRUl6Pi96IqAfXsorEdKiUFYKVYG6+Y2
+        T/jAKzpecDE8R6mnmBxQBF1zW2FT+/BGXyg==
+X-Received: by 2002:a05:6402:84e:b0:440:4bac:be5a with SMTP id b14-20020a056402084e00b004404bacbe5amr5564241edz.103.1660903532627;
+        Fri, 19 Aug 2022 03:05:32 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7fU47agb0EFZDnJX43gsuZ1SU7OR4Ob90bb0C5SXvvscJYiU83fnrABD1bw+CGIeNcDMsT+g==
+X-Received: by 2002:a05:6402:84e:b0:440:4bac:be5a with SMTP id b14-20020a056402084e00b004404bacbe5amr5564218edz.103.1660903532345;
+        Fri, 19 Aug 2022 03:05:32 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id j15-20020aa7c0cf000000b0043bbc9503ddsm2736545edp.76.2022.08.19.02.20.49
+        by smtp.gmail.com with ESMTPSA id q29-20020a056402249d00b0043ca6fb7e7dsm2780438eda.68.2022.08.19.03.05.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Aug 2022 02:20:49 -0700 (PDT)
-Message-ID: <9c6f4ac0-1e71-6b91-ae03-0795cd551c46@redhat.com>
-Date:   Fri, 19 Aug 2022 11:20:48 +0200
+        Fri, 19 Aug 2022 03:05:31 -0700 (PDT)
+Message-ID: <d5767b2e-a20f-43ca-61d7-6ea577b31188@redhat.com>
+Date:   Fri, 19 Aug 2022 12:05:30 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH] platform: move from strlcpy with unused retval to strscpy
+Subject: Re: [PATCH v3 15/31] platform/x86: nvidia-wmi-ec-backlight: Move fw
+ interface definitions to a header
 Content-Language: en-US
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To:     Daniel Dadap <ddadap@nvidia.com>, Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Mark Gross <markgross@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Divya Bharathi <divya.bharathi@dell.com>,
-        Prasanth Ksr <prasanth.ksr@dell.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Dell.Client.Kernel@dell.com,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>
-References: <20220818210058.7229-1-wsa+renesas@sang-engineering.com>
- <CAHp75VeM2q7wdnREoenyYpJ-tso2G6M-uyGFJGjPGL8hfUmzhQ@mail.gmail.com>
- <Yv9VhdVXqXhONj41@shikoro>
+        Andy Shevchenko <andy@kernel.org>
+Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20220818184302.10051-1-hdegoede@redhat.com>
+ <20220818184302.10051-16-hdegoede@redhat.com>
+ <12cc48c5-b54f-1eb7-c268-beb98bce2a5d@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Yv9VhdVXqXhONj41@shikoro>
+In-Reply-To: <12cc48c5-b54f-1eb7-c268-beb98bce2a5d@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/19/22 11:19, Wolfram Sang wrote:
+On 8/18/22 21:38, Daniel Dadap wrote:
 > 
->> I assume you are experimenting with coccinelle, so I have no objection
->> to the change, but in PDx86 we usually want to have one patch per
->> driver. Can you split?
+> On 8/18/22 1:42 PM, Hans de Goede wrote:
+>> Move the WMI interface definitions to a header, so that the definitions
+>> can be shared with drivers/acpi/video_detect.c .
+>>
+>> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   MAINTAINERS                                   |  1 +
+>>   .../platform/x86/nvidia-wmi-ec-backlight.c    | 66 +----------------
+>>   .../x86/nvidia-wmi-ec-backlight.h             | 70 +++++++++++++++++++
+>>   3 files changed, 72 insertions(+), 65 deletions(-)
+>>   create mode 100644 include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 8a5012ba6ff9..8d59c6e9b4db 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -14526,6 +14526,7 @@ M:    Daniel Dadap <ddadap@nvidia.com>
+>>   L:    platform-driver-x86@vger.kernel.org
+>>   S:    Supported
+>>   F:    drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> +F:    include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>>     NVM EXPRESS DRIVER
+>>   M:    Keith Busch <kbusch@kernel.org>
+>> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> index 61e37194df70..e84e1d629b14 100644
+>> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> @@ -7,74 +7,10 @@
+>>   #include <linux/backlight.h>
+>>   #include <linux/mod_devicetable.h>
+>>   #include <linux/module.h>
+>> +#include <linux/platform_data/x86/nvidia-wmi-ec-backlight.h>
+>>   #include <linux/types.h>
+>>   #include <linux/wmi.h>
+>>   -/**
+>> - * enum wmi_brightness_method - WMI method IDs
+>> - * @WMI_BRIGHTNESS_METHOD_LEVEL:  Get/Set EC brightness level status
+>> - * @WMI_BRIGHTNESS_METHOD_SOURCE: Get/Set EC Brightness Source
+>> - */
+>> -enum wmi_brightness_method {
+>> -    WMI_BRIGHTNESS_METHOD_LEVEL = 1,
+>> -    WMI_BRIGHTNESS_METHOD_SOURCE = 2,
+>> -    WMI_BRIGHTNESS_METHOD_MAX
+>> -};
+>> -
+>> -/**
+>> - * enum wmi_brightness_mode - Operation mode for WMI-wrapped method
+>> - * @WMI_BRIGHTNESS_MODE_GET:            Get the current brightness level/source.
+>> - * @WMI_BRIGHTNESS_MODE_SET:            Set the brightness level.
+>> - * @WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL:  Get the maximum brightness level. This
+>> - *                                      is only valid when the WMI method is
+>> - *                                      %WMI_BRIGHTNESS_METHOD_LEVEL.
+>> - */
+>> -enum wmi_brightness_mode {
+>> -    WMI_BRIGHTNESS_MODE_GET = 0,
+>> -    WMI_BRIGHTNESS_MODE_SET = 1,
+>> -    WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL = 2,
+>> -    WMI_BRIGHTNESS_MODE_MAX
+>> -};
+>> -
+>> -/**
+>> - * enum wmi_brightness_source - Backlight brightness control source selection
+>> - * @WMI_BRIGHTNESS_SOURCE_GPU: Backlight brightness is controlled by the GPU.
+>> - * @WMI_BRIGHTNESS_SOURCE_EC:  Backlight brightness is controlled by the
+>> - *                             system's Embedded Controller (EC).
+>> - * @WMI_BRIGHTNESS_SOURCE_AUX: Backlight brightness is controlled over the
+>> - *                             DisplayPort AUX channel.
+>> - */
+>> -enum wmi_brightness_source {
+>> -    WMI_BRIGHTNESS_SOURCE_GPU = 1,
+>> -    WMI_BRIGHTNESS_SOURCE_EC = 2,
+>> -    WMI_BRIGHTNESS_SOURCE_AUX = 3,
+>> -    WMI_BRIGHTNESS_SOURCE_MAX
+>> -};
+>> -
+>> -/**
+>> - * struct wmi_brightness_args - arguments for the WMI-wrapped ACPI method
+>> - * @mode:    Pass in an &enum wmi_brightness_mode value to select between
+>> - *           getting or setting a value.
+>> - * @val:     In parameter for value to set when using %WMI_BRIGHTNESS_MODE_SET
+>> - *           mode. Not used in conjunction with %WMI_BRIGHTNESS_MODE_GET or
+>> - *           %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL mode.
+>> - * @ret:     Out parameter returning retrieved value when operating in
+>> - *           %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL
+>> - *           mode. Not used in %WMI_BRIGHTNESS_MODE_SET mode.
+>> - * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+>> - *
+>> - * This is the parameters structure for the WmiBrightnessNotify ACPI method as
+>> - * wrapped by WMI. The value passed in to @val or returned by @ret will be a
+>> - * brightness value when the WMI method ID is %WMI_BRIGHTNESS_METHOD_LEVEL, or
+>> - * an &enum wmi_brightness_source value with %WMI_BRIGHTNESS_METHOD_SOURCE.
+>> - */
+>> -struct wmi_brightness_args {
+>> -    u32 mode;
+>> -    u32 val;
+>> -    u32 ret;
+>> -    u32 ignored[3];
+>> -};
+>> -
+>>   /**
+>>    * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+>>    * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+>> diff --git a/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h b/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>> new file mode 100644
+>> index 000000000000..d83104c6c6cb
+>> --- /dev/null
+>> +++ b/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>> @@ -0,0 +1,70 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
 > 
-> I can split if you want.
 > 
-> I intentionally did group per subsystem, otherwise I would have sent out
-> 1200+ patches. So, I chose to do it on subsystem level first and adapt
-> later where this scheme does not fit.
+> Should the copyright notice from nvidia-wmi-ec-backlight be copied here as well?
 
-See my reply to Andy, there is no need to split this further IMHO,
-as you sat 1200 patches would be a bit much.
+Ah right, I forgot that. I'll fix that for version 4 of the series.
 
-I will merge this as is during my next round of merges.
+I'll also make the GUID a #define for version 4 of the series as
+you mentioned in one of your other remarks.
+
+>> +#ifndef __PLATFORM_DATA_X86_NVIDIA_WMI_EC_BACKLIGHT_H
+>> +#define __PLATFORM_DATA_X86_NVIDIA_WMI_EC_BACKLIGHT_H
+>> +
+>> +/**
+>> + * enum wmi_brightness_method - WMI method IDs
+>> + * @WMI_BRIGHTNESS_METHOD_LEVEL:  Get/Set EC brightness level status
+>> + * @WMI_BRIGHTNESS_METHOD_SOURCE: Get/Set EC Brightness Source
+>> + */
+>> +enum wmi_brightness_method {
+>> +    WMI_BRIGHTNESS_METHOD_LEVEL = 1,
+>> +    WMI_BRIGHTNESS_METHOD_SOURCE = 2,
+>> +    WMI_BRIGHTNESS_METHOD_MAX
+>> +};
+> 
+> 
+> It might be nice, but certainly not essential, to namespace these better, now that they're no longer internal to the EC backlight driver. I did that in the version of this change that I had started working up, but got kind of annoyed that it made a lot of lines go over 80 columns, and then got distracted by other work and never ended up finishing the change up. I guess it's probably fine to leave them as is, since there won't be many files that include this header.
+
+This header is only used in 2 .c files, as such I'm not worried about
+namespacing the defines, so my plan for version 4 is to just keep
+this as is.
 
 Regards,
 
 Hans
+
+
+> 
+> 
+>> +
+>> +/**
+>> + * enum wmi_brightness_mode - Operation mode for WMI-wrapped method
+>> + * @WMI_BRIGHTNESS_MODE_GET:            Get the current brightness level/source.
+>> + * @WMI_BRIGHTNESS_MODE_SET:            Set the brightness level.
+>> + * @WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL:  Get the maximum brightness level. This
+>> + *                                      is only valid when the WMI method is
+>> + *                                      %WMI_BRIGHTNESS_METHOD_LEVEL.
+>> + */
+>> +enum wmi_brightness_mode {
+>> +    WMI_BRIGHTNESS_MODE_GET = 0,
+>> +    WMI_BRIGHTNESS_MODE_SET = 1,
+>> +    WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL = 2,
+>> +    WMI_BRIGHTNESS_MODE_MAX
+>> +};
+>> +
+>> +/**
+>> + * enum wmi_brightness_source - Backlight brightness control source selection
+>> + * @WMI_BRIGHTNESS_SOURCE_GPU: Backlight brightness is controlled by the GPU.
+>> + * @WMI_BRIGHTNESS_SOURCE_EC:  Backlight brightness is controlled by the
+>> + *                             system's Embedded Controller (EC).
+>> + * @WMI_BRIGHTNESS_SOURCE_AUX: Backlight brightness is controlled over the
+>> + *                             DisplayPort AUX channel.
+>> + */
+>> +enum wmi_brightness_source {
+>> +    WMI_BRIGHTNESS_SOURCE_GPU = 1,
+>> +    WMI_BRIGHTNESS_SOURCE_EC = 2,
+>> +    WMI_BRIGHTNESS_SOURCE_AUX = 3,
+>> +    WMI_BRIGHTNESS_SOURCE_MAX
+>> +};
+>> +
+>> +/**
+>> + * struct wmi_brightness_args - arguments for the WMI-wrapped ACPI method
+>> + * @mode:    Pass in an &enum wmi_brightness_mode value to select between
+>> + *           getting or setting a value.
+>> + * @val:     In parameter for value to set when using %WMI_BRIGHTNESS_MODE_SET
+>> + *           mode. Not used in conjunction with %WMI_BRIGHTNESS_MODE_GET or
+>> + *           %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL mode.
+>> + * @ret:     Out parameter returning retrieved value when operating in
+>> + *           %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL
+>> + *           mode. Not used in %WMI_BRIGHTNESS_MODE_SET mode.
+>> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+>> + *
+>> + * This is the parameters structure for the WmiBrightnessNotify ACPI method as
+>> + * wrapped by WMI. The value passed in to @val or returned by @ret will be a
+>> + * brightness value when the WMI method ID is %WMI_BRIGHTNESS_METHOD_LEVEL, or
+>> + * an &enum wmi_brightness_source value with %WMI_BRIGHTNESS_METHOD_SOURCE.
+>> + */
+>> +struct wmi_brightness_args {
+>> +    u32 mode;
+>> +    u32 val;
+>> +    u32 ret;
+>> +    u32 ignored[3];
+>> +};
+>> +
+>> +#endif
+> 
 
