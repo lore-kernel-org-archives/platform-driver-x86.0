@@ -2,96 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A2C28D13
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Aug 2022 22:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B06C25B08
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 Aug 2022 20:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233114AbiHSWlK (ORCPT
+        id S230096AbiHTU0p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Aug 2022 18:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
+        Sat, 20 Aug 2022 16:26:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbiHSWlJ (ORCPT
+        with ESMTP id S229909AbiHTU0o (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Aug 2022 18:41:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E391C10EED3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Aug 2022 15:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=FhmwHA1ti8OucyiSKvBQfIxWY6ORKHaNFX9oXUQ/eVo=; b=1Nktz7P69hSbLqwvqLxfBtbTsW
-        FZYm5GhGpb5K4J/IFJc5Dhpjf6OSTvXmYpI8WzuVvxk9h/emaoFwiozo8u1iGwPW/pRAtnH2aAUms
-        4bp1WWc1qYBSjCHbMJKFJHfbcmuSnFq80zHlFzvnjePd/9pPGgLargmfzyWjSPG3dhfMyz5DDqi5t
-        jwX9rot85SPU5dwEMck060rozGQOz4VSnV9IvXqBkzQwvNNQ0nQKNvOkbUXXU4Xgl5w0wPUM1F/7E
-        piHK3DPyB7RjuJMGoXQMy2Bs2Tvg6Yl61WfspfX+dVWUsvLwLohGy6OEED55qw0VmrkhrxIjWeaIe
-        gj6qTV9A==;
-Received: from [2601:1c0:6280:3f0::a6b3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oPAfp-00CzEs-OF; Fri, 19 Aug 2022 22:41:05 +0000
-Message-ID: <742ce0ac-bfd4-b056-b0e4-eb43162f56b6@infradead.org>
-Date:   Fri, 19 Aug 2022 15:41:05 -0700
+        Sat, 20 Aug 2022 16:26:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED17927FC2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Aug 2022 13:26:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 817A260C58
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Aug 2022 20:26:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DCB89C43141
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Aug 2022 20:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661027202;
+        bh=ekhvEScwKgicVgrTPWVztrIKJ0LNc/SizrgsM8cXC04=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=S3QD0BoAbiEG8vDO4djaI6lBGGHqwybcJoTe25VEcaDoGHRVptqrWVCtUTAdx0Xd6
+         I851AddD8xv9S1YFk0T1Rui4LXAgO3Lv9yKnb1UH4UmBplUHHgcnh+D5BG4Cj+3kIy
+         YbSbDJ/Bvybc7YTAbmS4UQLWHnrjj0IoUiIjOLLfq/kveygIgl6yuJ2GsoYCyvcuTs
+         jTITgz9TS/l1L5hF3nmOtkpVm+mdvHRAcsdi1JjzaFnfyJHzzus1rT85uQ2ZRtI5o4
+         8x1FPX/N7/tEEZ3hb1m9JpSslN02gQ21XxBOJ6pgHWe9W3OR4T/QDezCPUELec9qYd
+         +6SsYRc8d3Tlw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id CDE99C433E6; Sat, 20 Aug 2022 20:26:42 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sat, 20 Aug 2022 20:26:40 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: renedis@hotmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-cUlL69JSnI@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix undefined reference to
- platform_profile
-Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20220819083858.3987590-1-Shyam-sundar.S-k@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220819083858.3987590-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+
+--- Comment #255 from renedis (renedis@hotmail.com) ---
+Thanks all! With kernel 5.17 it didn't worked without manually patching. I'=
+ve
+skipped kernel 5.18 but can confirm that kernel 5.19 works OOTB:
+
+nct6798-isa-0290
+Adapter: ISA adapter
+in0:                      664.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
+in1:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in2:                        3.28 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in3:                        3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in4:                      992.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in5:                      832.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in6:                      240.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in7:                        3.28 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in8:                        3.22 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in9:                      496.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in10:                     608.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in11:                     592.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in12:                     1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
+ALARM
+in13:                     232.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in14:                     376.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+fan1:                     2235 RPM  (min =3D    0 RPM)
+fan2:                     2224 RPM  (min =3D    0 RPM)
+fan3:                        0 RPM  (min =3D    0 RPM)
+fan4:                        0 RPM  (min =3D    0 RPM)
+fan5:                        0 RPM  (min =3D    0 RPM)
+fan6:                        0 RPM  (min =3D    0 RPM)
+SYSTIN:                    +35.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+CPUTIN:                    +33.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+AUXTIN0:                   +91.0=C2=B0C    sensor =3D thermistor
+AUXTIN1:                   +15.0=C2=B0C    sensor =3D thermistor
+AUXTIN2:                   +16.0=C2=B0C    sensor =3D thermistor
+AUXTIN3:                   +75.0=C2=B0C    sensor =3D thermistor
+PECI Agent 0 Calibration:  +32.0=C2=B0C=20=20
+PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
+PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
+PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
+intrusion0:               OK
+intrusion1:               ALARM
+beep_enable:              disabled
+
+Kernel:
+5.19.0-051900-generic
 
 
-On 8/19/22 01:38, Shyam Sundar S K wrote:
-> Its reported that amd-pmf driver when built with config which does not
-> have ACPI_PLATFORM_PROFILE set/enabled throws a undefined references to
-> symbols used.
-> 
-> ---
-> ld: vmlinux.o: in function `amd_pmf_init_sps':
-> /work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:132: undefined reference to `platform_profile_register'
-> ld: vmlinux.o: in function `amd_pmf_deinit_sps':
-> /work/lnx/next/linux-next-20220818/X64/../drivers/platform/x86/amd/pmf/sps.c:142: undefined reference to `platform_profile_remove'
-> ---
-> 
-> Fix it by adding a "select" to the Kconfig.
-> 
-> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Many thanks again!
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+--=20
+You may reply to this email to add a comment.
 
-Thanks.
-
-> ---
-> 
-> Based on "review-hans" branch.
-> 
->  drivers/platform/x86/amd/pmf/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index e65ffa52229b..c375498c4071 100644
-> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -6,6 +6,7 @@
->  config AMD_PMF
->  	tristate "AMD Platform Management Framework"
->  	depends on ACPI && PCI
-> +	select ACPI_PLATFORM_PROFILE
->  	help
->  	  This driver provides support for the AMD Platform Management Framework.
->  	  The goal is to enhance end user experience by making AMD PCs smarter,
-
--- 
-~Randy
+You are receiving this mail because:
+You are watching the assignee of the bug.=
