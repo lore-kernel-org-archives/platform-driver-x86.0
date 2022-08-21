@@ -2,238 +2,282 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB0BC32789
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Aug 2022 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F2C00140
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Aug 2022 23:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231645AbiHUUJl (ORCPT
+        id S231826AbiHUXH2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Aug 2022 16:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
+        Sun, 21 Aug 2022 19:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231328AbiHUUJl (ORCPT
+        with ESMTP id S231328AbiHUXH2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Aug 2022 16:09:41 -0400
-Received: from vorpal.se (vorpal.se [151.236.221.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42B317054
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Aug 2022 13:09:39 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id 67ED8147F4;
-        Sun, 21 Aug 2022 20:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1661112578; bh=kQE168syXxJNCXzQ0WVGxrda5hnIeJdqNsWw0zR4CnQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BfRWwX8nH4sIR4rOE765ZbdiAWfS29DGn/cJW+R6C46hXNeFdI9fEWabfeD2mZFB8
-         RwcrUVlT8zGRRvx9OOgyiN6LZ0bpQI71B+HecigXjXfynkLp2xoBSkaOnNKDXrAcsM
-         7HH6LtZnG9LmEUzDnL1P7DmxVLUMGifItrDusgQj74ZObqKOBExh6WTgkvk7ImI/CW
-         /u5V7yJjs7Yi9JKwwYXbWiOd1w8RPVCZ/I5DH7sQFnKkTR93uzWE7QXgIS9sCrMM41
-         JT+nvIKbbrLsAKFmahsyCuLIHI5lDLRxWMxTMO5DoNTBGDI5qoQaMIalFjjpx7yrW3
-         l+Xp+0Zxe6/gA==
-From:   Arvid Norlander <lkml@vorpal.se>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Azael Avalos <coproscefalo@gmail.com>,
-        Arvid Norlander <lkml@vorpal.se>
-Subject: [PATCH 2/2] platform/x86: Battery charge mode in toshiba_acpi
-Date:   Sun, 21 Aug 2022 22:08:22 +0200
-Message-Id: <20220821200821.1837460-3-lkml@vorpal.se>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220821200821.1837460-1-lkml@vorpal.se>
-References: <20220821200821.1837460-1-lkml@vorpal.se>
+        Sun, 21 Aug 2022 19:07:28 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C003718E31;
+        Sun, 21 Aug 2022 16:07:26 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 3942B3200902;
+        Sun, 21 Aug 2022 19:07:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sun, 21 Aug 2022 19:07:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1661123242; x=1661209642; bh=czDpEEAMWh
+        sY8eA8N88MVKQ3wyFIGynWGLd906dyt3Y=; b=pi2nckzTX3lXmAZq897Op8xOg9
+        yoJ+lwhZEcRwCsYaCRBVfpVY+74S1MEAoK7l+nfEd9h3YrHljfgu8ieIk/5Qy4bZ
+        gx//zG0EzqNlvA6d3ju9ThNRIVDaaaMVj8ugqBHbmMwFhSCystr/+vspPwwJpbdy
+        Hgk/gfzLvY9MkBM2zfDom+K5LWG6y0cNgEYrHKeuilKWJcat30UykzDGUpgTwwwg
+        vylok/AaZnXNIUjNm45HyMPyCc6hU3u0kU0yLYfuWEhO1wnShLVbzEMT5/CtSPzy
+        sGGq14+w/uUtoqESb5BY8R53Jy5M3+M5gQTjbNBYAV0pmJ9oi90O/gwSqo5Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1661123242; x=1661209642; bh=czDpEEAMWhsY8eA8N88MVKQ3wyFI
+        GynWGLd906dyt3Y=; b=rsAgZsKBm4XfAWRMar9HYypU4cGmGdzPTv15u8jX/UOh
+        Qunl+/tFVCJYGM179zfE4oKNAQfrm8mvlRcQZBatZUmjLjYRl9dShMjQ3SKUMSbi
+        r4pudOilJSepSqqeKWxaycFi7x5OZxS11Ep3hIYj7nQsDgCIcPq+Rqo0ET6VDfW8
+        gUbXFnnEnhrBMJXwU6SNy8ZPdpNUmYEpf2OEIVqkqcwpQHV2AYihzs11QRBgNsnX
+        sb0CUVb1uAk0pqBBJeTMZoACFqO5QbStwitjbwVCasgcsNoKSlf5Kx/MJGXSw39r
+        oFeEKO/Lb4Rf/CsRuarYP6tqvU1sEZTEBN2FFpTXGQ==
+X-ME-Sender: <xms:qroCYwU0bwdHdcR8qyb0ueHZ-j7ickrOsKe0OARk7O-m5lxIlOvr4g>
+    <xme:qroCY0nAp6XsGIihCyFbGo5VYvLNTINqyUa_RjLV_CkArGsUmOBibEr-BGSGA0UqB
+    KoOY-e9Ku92lHN004U>
+X-ME-Received: <xmr:qroCY0bN2sedCI0pjLuXe0l13ol9q3YnCbzKT9aWkSkRBQjajiHg1CCBbUHeVrvdVNdE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeiiedgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
+    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
+    ephfeigedtveefjeeukeetfeektdeffeefteekfeffieeiteeigeehhfdutdeitdehnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:qroCY_W2AeIVsLWI-SHPTQugw0OYk5FQaJ2e_j7h2UzU1vn6wtwJqA>
+    <xmx:qroCY6nIOiGK0IS8gC_cBO0vcqlwnGaXoNWbM3Kzo_KKb2b-_HiWqg>
+    <xmx:qroCY0fiAQFLKqCi-cLvp4-cBzRg1mIc4TxBr_j0D0bd-qWPLihq2w>
+    <xmx:qroCY_zhbH_zMGWr1Bi-yG3eD7mCTfT7sDiOmZTopMurgAKYOHEnKw>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 21 Aug 2022 19:07:19 -0400 (EDT)
+Date:   Mon, 22 Aug 2022 11:07:06 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH] asus-wmi: Support the hardware GPU MUX on some laptops
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <UVMZGR.6LXKPONA9OS33@ljones.dev>
+In-Reply-To: <e186622e-f3e6-5715-9f6d-bc41fb41560d@amd.com>
+References: <20220813092624.6228-1-luke@ljones.dev>
+        <e186622e-f3e6-5715-9f6d-bc41fb41560d@amd.com>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Unlike for example ThinkPads where this control is granular here it is
-just off/on. When off it charges to 100%. When on it charges to about 80%.
+Hi Mario,
 
-Controlling this setting is done via HCI register 0x00ba. Setting to value
-1 will result in limiting the charing to 80% of the battery capacity,
-while setting it to 0 will allow charging to 100%.
+On Mon, Aug 15 2022 at 23:16:12 -0500, Mario Limonciello 
+<mario.limonciello@amd.com> wrote:
+> On 8/13/22 04:26, Luke D. Jones wrote:
+>> Support the hardware GPU MUX switch available on some models. This
+>> switch can toggle the MUX between:
+>> 
+>> - 0, Dedicated mode
+>> - 1, Optimus mode
+>> 
+>> Optimus mode is the regular iGPU + dGPU available, while dedicated
+>> mode switches the system to have only the dGPU available.
+>> 
+>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>> ---
+>>   .../ABI/testing/sysfs-platform-asus-wmi       | 11 ++++
+>>   drivers/platform/x86/asus-wmi.c               | 62 
+>> +++++++++++++++++++
+>>   include/linux/platform_data/x86/asus-wmi.h    |  3 +
+>>   3 files changed, 76 insertions(+)
+>> 
+>> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi 
+>> b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>> index 574b5170a37d..03124eab7f01 100644
+>> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>> @@ -58,6 +58,17 @@ Description:
+>>   			* 1 - overboost,
+>>   			* 2 - silent
+>>   +What:          /sys/devices/platform/<platform>/gpu_mux_mode
+>> +Date:          Aug 2022
+>> +KernelVersion: 6.1
+>> +Contact:       "Luke Jones" <luke@ljones.dev>
+>> +Description:
+>> +               Switch the GPU hardware MUX mode. Laptops with this 
+>> feature can
+>> +			   can be toggled to boot with only the dGPU (discrete mode) or 
+>> in
+>> +			   standard Optimus/Hybrid mode. On switch a reboot is required:
+>> +                       * 0 - Discrete GPU,
+>> +                       * 1 - Optimus/Hybrid,
+> 
+> This feel like it should probably export using 
+> /sys/class/firmware-attributes.  That's exactly how those types of 
+> attributes work.
+> 
+> As a bonus, software like fwupd 1.8.4 knows how to manipulate it and 
+> you don't need special documentation.
+> 
+>> +
+>>   What:          /sys/devices/platform/<platform>/dgpu_disable
+>>   Date:          Aug 2022
+>>   KernelVersion: 5.17
+>> diff --git a/drivers/platform/x86/asus-wmi.c 
+>> b/drivers/platform/x86/asus-wmi.c
+>> index e2b51b5550e8..0421ffb81927 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -230,6 +230,7 @@ struct asus_wmi {
+>>     	bool egpu_enable_available;
+>>   	bool dgpu_disable_available;
+>> +	bool gpu_mux_mode_available;
+>>     	bool throttle_thermal_policy_available;
+>>   	u8 throttle_thermal_policy_mode;
+>> @@ -668,6 +669,59 @@ static ssize_t egpu_enable_store(struct device 
+>> *dev,
+>>   }
+>>   static DEVICE_ATTR_RW(egpu_enable);
+>>   +/* gpu mux switch 
+>> *************************************************************/
+>> +static int gpu_mux_mode_check_present(struct asus_wmi *asus)
+>> +{
+>> +	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, 
+>> ASUS_WMI_DEVID_GPU_MUX);
+>> +
+>> +   return 0;
+>> +}
+>> +
+>> +static ssize_t gpu_mux_mode_show(struct device *dev,
+>> +                  struct device_attribute *attr, char *buf)
+>> +{
+>> +   struct asus_wmi *asus = dev_get_drvdata(dev);
+>> +   int result;
+>> +
+>> +   result = asus_wmi_get_devstate_simple(asus, 
+>> ASUS_WMI_DEVID_GPU_MUX);
+>> +   if (result < 0)
+>> +       return result;
+>> +
+>> +   return sysfs_emit(buf, "%d\n", result);
+>> +}
+>> +
+>> +static ssize_t gpu_mux_mode_store(struct device *dev,
+>> +                   struct device_attribute *attr,
+>> +                   const char *buf, size_t count)
+>> +{
+>> +   struct asus_wmi *asus = dev_get_drvdata(dev);
+>> +   int result, err;
+>> +   u32 optimus;
+>> +
+>> +   err = kstrtou32(buf, 10, &optimus);
+>> +   if (err)
+>> +       return err;
+>> +
+>> +   if (optimus > 1)
+>> +       return -EINVAL;
+>> +
+>> +   err = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, 
+>> &result);
+>> +   if (err) {
+>> +       dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
+>> +       return err;
+>> +   }
+>> +	/* !1 is considered a fail by ASUS */
+>> +	if (result != 1) {
+>> +		dev_warn(dev, "Failed to set GPU MUX mode (result): 0x%x\n", 
+>> result);
+>> +       return -EIO;
+>> +   }
+>> +
+>> +   sysfs_notify(&asus->platform_device->dev.kobj, NULL, 
+>> "gpu_mux_mode");
+>> +
+>> +   return count;
+>> +}
+>> +static DEVICE_ATTR_RW(gpu_mux_mode);
+>> +
+>>   /* Battery 
+>> ********************************************************************/
+>>     /* The battery maximum charging percentage */
+>> @@ -3165,6 +3219,7 @@ static struct attribute *platform_attributes[] 
+>> = {
+>>   	&dev_attr_touchpad.attr,
+>>   	&dev_attr_egpu_enable.attr,
+>>   	&dev_attr_dgpu_disable.attr,
+>> +	&dev_attr_gpu_mux_mode.attr,
+>>   	&dev_attr_lid_resume.attr,
+>>   	&dev_attr_als_enable.attr,
+>>   	&dev_attr_fan_boost_mode.attr,
+>> @@ -3195,6 +3250,8 @@ static umode_t asus_sysfs_is_visible(struct 
+>> kobject *kobj,
+>>   		ok = asus->egpu_enable_available;
+>>   	else if (attr == &dev_attr_dgpu_disable.attr)
+>>   		ok = asus->dgpu_disable_available;
+>> +	else if (attr == &dev_attr_gpu_mux_mode.attr)
+>> +		ok = asus->gpu_mux_mode_available;
+>>   	else if (attr == &dev_attr_fan_boost_mode.attr)
+>>   		ok = asus->fan_boost_mode_available;
+>>   	else if (attr == &dev_attr_throttle_thermal_policy.attr)
+>> @@ -3464,6 +3521,10 @@ static int asus_wmi_add(struct 
+>> platform_device *pdev)
+>>   	if (err)
+>>   		goto fail_dgpu_disable;
+>>   +	err = gpu_mux_mode_check_present(asus);
+>> +   if (err)
+>> +       goto fail_gpu_mux_mode;
+>> +
+>>   	err = fan_boost_mode_check_present(asus);
+>>   	if (err)
+>>   		goto fail_fan_boost_mode;
+>> @@ -3578,6 +3639,7 @@ static int asus_wmi_add(struct platform_device 
+>> *pdev)
+>>   fail_fan_boost_mode:
+>>   fail_egpu_enable:
+>>   fail_dgpu_disable:
+>> +fail_gpu_mux_mode:
+>>   fail_platform:
+>>   fail_panel_od:
+>>   	kfree(asus);
+>> diff --git a/include/linux/platform_data/x86/asus-wmi.h 
+>> b/include/linux/platform_data/x86/asus-wmi.h
+>> index a571b47ff362..c023332842a2 100644
+>> --- a/include/linux/platform_data/x86/asus-wmi.h
+>> +++ b/include/linux/platform_data/x86/asus-wmi.h
+>> @@ -98,6 +98,9 @@
+>>   /* dgpu on/off */
+>>   #define ASUS_WMI_DEVID_DGPU		0x00090020
+>>   +/* gpu mux switch, 0 = dGPU, 1 = Optimus */
+>> +#define ASUS_WMI_DEVID_GPU_MUX 0x00090016
+>> +
+>>   /* DSTS masks */
+>>   #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+>>   #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+> 
 
-Reading the current state is a bit weird, and needs a 1 set in the last
-position of the query for whatever reason. In addition, the read may
-return 0x8d20 (Data not available) rarely, so a retry mechanism is needed.
+You can see previous discussion here 
+https://lore.kernel.org/platform-driver-x86/c3bb0989-78d9-c513-1669-75407b2acbac@redhat.com/
 
-According to the Windows program used to control the feature the setting
-will not take effect until the battery has been discharged to around 50%.
-However, in my testing it takes effect as soon as the charge drops below
-80%. On Windows Toshiba branded this feature as "Eco charging".
+Below is Hans response verbatim:
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
----
- drivers/platform/x86/toshiba_acpi.c | 110 ++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+ > Yes it sounds like a BIOS setting is being toggled from within
+ > Linux, which would normally be done through the
+ > "firmware-attributes" class, but all existing "firmware-attributes"
+ > class drivers allow changing all BIOS setting not just a single
+ > setting, so using the  "firmware-attributes" class here is not really
+ > appropriate.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 6cc617b2940e..2e13f241538a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -112,6 +112,7 @@ MODULE_LICENSE("GPL");
- #define HCI_KBD_ILLUMINATION		0x0095
- #define HCI_ECO_MODE			0x0097
- #define HCI_ACCELEROMETER2		0x00a6
-+#define HCI_BATTERY_CHARGE_MODE		0x00ba
- #define HCI_SYSTEM_INFO			0xc000
- #define SCI_PANEL_POWER_ON		0x010d
- #define SCI_ILLUMINATION		0x014e
-@@ -201,6 +202,7 @@ struct toshiba_acpi_dev {
- 	unsigned int usb_three_supported:1;
- 	unsigned int wwan_supported:1;
- 	unsigned int cooling_method_supported:1;
-+	unsigned int battery_charge_mode_supported:1;
- 	unsigned int sysfs_created:1;
- 	unsigned int special_functions;
- 
-@@ -1285,6 +1287,69 @@ static int toshiba_cooling_method_set(struct toshiba_acpi_dev *dev, u32 state)
- 	return (result == TOS_SUCCESS || result == TOS_SUCCESS2) ? 0 : -EIO;
- }
- 
-+/* Battery charge control */
-+static void toshiba_battery_charge_mode_available(struct toshiba_acpi_dev *dev)
-+{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	dev->battery_charge_mode_supported = 0;
-+
-+	status = tci_raw(dev, in, out);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to get Battery Charge Mode failed\n");
-+		return;
-+	}
-+
-+	if (out[0] != TOS_SUCCESS && out[0] != TOS_SUCCESS2)
-+		return;
-+
-+	dev->battery_charge_mode_supported = 1;
-+}
-+
-+static int toshiba_battery_charge_mode_get(struct toshiba_acpi_dev *dev, u32 *state)
-+{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0x1 };
-+	u32 out[TCI_WORDS];
-+	int retries = 3;
-+
-+	do {
-+		acpi_status status = tci_raw(dev, in, out);
-+
-+		if (ACPI_FAILURE(status))
-+			pr_err("ACPI call to get Battery Charge Mode failed\n");
-+		switch (out[0]) {
-+		case TOS_SUCCESS:
-+		case TOS_SUCCESS2:
-+			*state = out[2];
-+			return 0;
-+		case TOS_NOT_SUPPORTED:
-+			return -ENODEV;
-+		case TOS_DATA_NOT_AVAILABLE:
-+			retries--;
-+			break;
-+		default:
-+			return -EIO;
-+		}
-+	} while (retries);
-+
-+	return -EIO;
-+}
-+
-+static int toshiba_battery_charge_mode_set(struct toshiba_acpi_dev *dev, u32 state)
-+{
-+	u32 result = hci_write(dev, HCI_BATTERY_CHARGE_MODE, state);
-+
-+	if (result == TOS_FAILURE)
-+		pr_err("ACPI call to set Battery Charge Mode failed\n");
-+
-+	if (result == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	return (result == TOS_SUCCESS || result == TOS_SUCCESS2) ? 0 : -EIO;
-+}
-+
- /* Transflective Backlight */
- static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
- {
-@@ -2334,6 +2399,44 @@ static ssize_t cooling_method_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(cooling_method);
- 
-+static ssize_t battery_charge_mode_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int state;
-+	int ret;
-+
-+	ret = toshiba_battery_charge_mode_get(toshiba, &state);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", state);
-+}
-+
-+static ssize_t battery_charge_mode_store(struct device *dev,
-+					    struct device_attribute *attr,
-+					    const char *buf, size_t count)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int state;
-+	int ret;
-+
-+	ret = kstrtoint(buf, 0, &state);
-+	if (ret)
-+		return ret;
-+
-+	if (state != 0 && state != 1)
-+		return -EINVAL;
-+
-+	ret = toshiba_battery_charge_mode_set(toshiba, state);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(battery_charge_mode);
-+
- static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_version.attr,
- 	&dev_attr_fan.attr,
-@@ -2350,6 +2453,7 @@ static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_panel_power_on.attr,
- 	&dev_attr_usb_three.attr,
- 	&dev_attr_cooling_method.attr,
-+	&dev_attr_battery_charge_mode.attr,
- 	NULL,
- };
- 
-@@ -2384,6 +2488,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 		exists = (drv->usb_three_supported) ? true : false;
- 	else if (attr == &dev_attr_cooling_method.attr)
- 		exists = (drv->cooling_method_supported) ? true : false;
-+	else if (attr == &dev_attr_battery_charge_mode.attr)
-+		exists = (drv->battery_charge_mode_supported) ? true : false;
- 
- 	return exists ? attr->mode : 0;
- }
-@@ -2959,6 +3065,8 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
- 		pr_cont(" wwan");
- 	if (dev->cooling_method_supported)
- 		pr_cont(" cooling-method");
-+	if (dev->battery_charge_mode_supported)
-+		pr_cont(" battery-charge-mode");
- 
- 	pr_cont("\n");
- }
-@@ -3166,6 +3274,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 
- 	toshiba_cooling_method_available(dev);
- 
-+	toshiba_battery_charge_mode_available(dev);
-+
- 	print_supported_features(dev);
- 
- 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
--- 
-2.37.2
+Kind regards,
+Luke.
+
 
