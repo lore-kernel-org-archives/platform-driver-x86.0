@@ -2,39 +2,39 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AF2C3F6B0
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Aug 2022 19:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05707C32789
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Aug 2022 19:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231531AbiHUTxm (ORCPT
+        id S229561AbiHUTxm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sun, 21 Aug 2022 15:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiHUTxl (ORCPT
+        with ESMTP id S231521AbiHUTxl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sun, 21 Aug 2022 15:53:41 -0400
-X-Greylist: delayed 217 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Aug 2022 12:53:40 PDT
-Received: from vorpal.se (vorpal.se [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B75DF9B
+X-Greylist: delayed 218 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Aug 2022 12:53:40 PDT
+Received: from vorpal.se (vorpal.se [151.236.221.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4497DDF5F
         for <platform-driver-x86@vger.kernel.org>; Sun, 21 Aug 2022 12:53:40 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id D713A147F4;
-        Sun, 21 Aug 2022 19:50:02 +0000 (UTC)
+Received: by vorpal.se (Postfix) with ESMTPSA id 2056C147FC;
+        Sun, 21 Aug 2022 19:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1661111403; bh=f721RqTAx+CsWkI3Nmo0p5IQycITvOoqX1qYTpx3QwY=;
+        t=1661111408; bh=4orMM4lS0oZK8v/FYHToYn5nL2/cho4WGlPuUToJsAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/c7dXPsBPxoadpvMuE/LkKWLl0fn8gJKegsKDO/04SaeeRuRMrJdUWFolwl5q5K1
-         DrzjoPtxsDx7gKUWrO/8lSD13LiAuHtyfoUJh6PloDEj7x6hKXoFjEwLx1yyi9b9iZ
-         ttkGcu33jwFi2Crn6Nq1alXSEg7nKKrq/wu7CMh1AV0zW+ajJ24jFDpQbgU0ag3TJq
-         BcgUUXzfqL9ny5Y1aGIvtbodoFtHJ3fMrZZrCrwZ227x3p/+uV0vi+LMZLKo0BeJP/
-         HNNKQpou037xJrCwrvd7H8EQGysOjJEJGU1T6ifBTRp7+Zw97vSvYlHykjUiH1FAzf
-         EHlP3g3JyAwiA==
+        b=jpKX50PhoQltV7yT4v3bhMJClgLwNnGDaizjSMuDGuGWLvdgjhilY8ppAQP1UOJDe
+         aSe4S5UOc2VzJ9Zptru0pAa2zGug0Z/Hp24lUF3n/Nu4M0v0RUdCGJneKWW9pBBZML
+         qvaDxwL9ZTdO3T4B5Fh23UIq1eVKfjt+900mG7inrtRkSZ71mCHs6E5QuDwMow4BC3
+         XXpq0p/dcMf1M5BHALZSJ3mKi9PpAjmdrzLE8+hKAN1OTdXZ1WUb+/2OO0Ea0Bt7D4
+         Wadu3Ue8TS5bme141eCBGgJuWGkjgkZGtPkKjEoktXWlWTbc6jFDZ7n8pbghIPJTf7
+         u7uxU8+ebYy5Q==
 From:   lkml@vorpal.se
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Azael Avalos <coproscefalo@gmail.com>,
         Arvid Norlander <lkml@vorpal.se>
-Subject: [PATCH 1/2] platform/x86: Fix ECO LED control on Toshiba Z830
-Date:   Sun, 21 Aug 2022 21:49:26 +0200
-Message-Id: <20220821194926.1813412-2-lkml@vorpal.se>
+Subject: [PATCH 2/2] platform/x86: Battery charge mode in toshiba_acpi
+Date:   Sun, 21 Aug 2022 21:49:27 +0200
+Message-Id: <20220821194926.1813412-3-lkml@vorpal.se>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20220821194926.1813412-1-lkml@vorpal.se>
 References: <20220821194926.1813412-1-lkml@vorpal.se>
@@ -46,36 +46,197 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Arvid Norlander <lkml@vorpal.se>
 
-The toshiba_acpi driver checks for TOS_INPUT_DATA_ERROR and tries a
-different format. On the Z830 the error returned is TOS_NOT_SUPPORTED
-though the different format still works. Allow either error.
+Unlike for example ThinkPads where this control is granular here it is
+just off/on. When off it charges to 100%. When on it charges to about 80%.
+
+Controlling this setting is done via HCI register 0x00ba. Setting to value
+1 will result in limiting the charing to 80% of the battery capacity,
+while setting it to 0 will allow charging to 100%.
+
+Reading the current state is a bit weird, and needs a 1 set in the last
+position of the query for whatever reason. In addition, the read may
+return 0x8d20 (Data not available) rarely, so a retry mechanism is needed.
+
+According to the Windows program used to control the feature the setting
+will not take effect until the battery has been discharged to around 50%.
+However, in my testing it takes effect as soon as the charge drops below
+80%. On Windows Toshiba branded this feature as "Eco charging".
 
 Signed-off-by: Arvid Norlander <lkml@vorpal.se>
 ---
- drivers/platform/x86/toshiba_acpi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/toshiba_acpi.c | 110 ++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 0fc9e8b8827b..6cc617b2940e 100644
+index 6cc617b2940e..2e13f241538a 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -675,12 +675,15 @@ static void toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
- 		return;
- 	}
+@@ -112,6 +112,7 @@ MODULE_LICENSE("GPL");
+ #define HCI_KBD_ILLUMINATION		0x0095
+ #define HCI_ECO_MODE			0x0097
+ #define HCI_ACCELEROMETER2		0x00a6
++#define HCI_BATTERY_CHARGE_MODE		0x00ba
+ #define HCI_SYSTEM_INFO			0xc000
+ #define SCI_PANEL_POWER_ON		0x010d
+ #define SCI_ILLUMINATION		0x014e
+@@ -201,6 +202,7 @@ struct toshiba_acpi_dev {
+ 	unsigned int usb_three_supported:1;
+ 	unsigned int wwan_supported:1;
+ 	unsigned int cooling_method_supported:1;
++	unsigned int battery_charge_mode_supported:1;
+ 	unsigned int sysfs_created:1;
+ 	unsigned int special_functions;
  
--	if (out[0] == TOS_INPUT_DATA_ERROR) {
-+	if (out[0] == TOS_INPUT_DATA_ERROR || out[0] == TOS_NOT_SUPPORTED) {
- 		/*
- 		 * If we receive 0x8300 (Input Data Error), it means that the
- 		 * LED device is present, but that we just screwed the input
- 		 * parameters.
- 		 *
-+		 * On some laptops 0x8000 (Not supported) is also returned in
-+		 * this case, so we need to allow for that as well.
-+		 *
- 		 * Let's query the status of the LED to see if we really have a
- 		 * success response, indicating the actual presense of the LED,
- 		 * bail out otherwise.
+@@ -1285,6 +1287,69 @@ static int toshiba_cooling_method_set(struct toshiba_acpi_dev *dev, u32 state)
+ 	return (result == TOS_SUCCESS || result == TOS_SUCCESS2) ? 0 : -EIO;
+ }
+ 
++/* Battery charge control */
++static void toshiba_battery_charge_mode_available(struct toshiba_acpi_dev *dev)
++{
++	u32 in[TCI_WORDS] = { HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0 };
++	u32 out[TCI_WORDS];
++	acpi_status status;
++
++	dev->battery_charge_mode_supported = 0;
++
++	status = tci_raw(dev, in, out);
++	if (ACPI_FAILURE(status)) {
++		pr_err("ACPI call to get Battery Charge Mode failed\n");
++		return;
++	}
++
++	if (out[0] != TOS_SUCCESS && out[0] != TOS_SUCCESS2)
++		return;
++
++	dev->battery_charge_mode_supported = 1;
++}
++
++static int toshiba_battery_charge_mode_get(struct toshiba_acpi_dev *dev, u32 *state)
++{
++	u32 in[TCI_WORDS] = { HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0x1 };
++	u32 out[TCI_WORDS];
++	int retries = 3;
++
++	do {
++		acpi_status status = tci_raw(dev, in, out);
++
++		if (ACPI_FAILURE(status))
++			pr_err("ACPI call to get Battery Charge Mode failed\n");
++		switch (out[0]) {
++		case TOS_SUCCESS:
++		case TOS_SUCCESS2:
++			*state = out[2];
++			return 0;
++		case TOS_NOT_SUPPORTED:
++			return -ENODEV;
++		case TOS_DATA_NOT_AVAILABLE:
++			retries--;
++			break;
++		default:
++			return -EIO;
++		}
++	} while (retries);
++
++	return -EIO;
++}
++
++static int toshiba_battery_charge_mode_set(struct toshiba_acpi_dev *dev, u32 state)
++{
++	u32 result = hci_write(dev, HCI_BATTERY_CHARGE_MODE, state);
++
++	if (result == TOS_FAILURE)
++		pr_err("ACPI call to set Battery Charge Mode failed\n");
++
++	if (result == TOS_NOT_SUPPORTED)
++		return -ENODEV;
++
++	return (result == TOS_SUCCESS || result == TOS_SUCCESS2) ? 0 : -EIO;
++}
++
+ /* Transflective Backlight */
+ static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
+ {
+@@ -2334,6 +2399,44 @@ static ssize_t cooling_method_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(cooling_method);
+ 
++static ssize_t battery_charge_mode_show(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
++{
++	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
++	int state;
++	int ret;
++
++	ret = toshiba_battery_charge_mode_get(toshiba, &state);
++	if (ret < 0)
++		return ret;
++
++	return sprintf(buf, "%d\n", state);
++}
++
++static ssize_t battery_charge_mode_store(struct device *dev,
++					    struct device_attribute *attr,
++					    const char *buf, size_t count)
++{
++	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
++	int state;
++	int ret;
++
++	ret = kstrtoint(buf, 0, &state);
++	if (ret)
++		return ret;
++
++	if (state != 0 && state != 1)
++		return -EINVAL;
++
++	ret = toshiba_battery_charge_mode_set(toshiba, state);
++	if (ret)
++		return ret;
++
++	return count;
++}
++static DEVICE_ATTR_RW(battery_charge_mode);
++
+ static struct attribute *toshiba_attributes[] = {
+ 	&dev_attr_version.attr,
+ 	&dev_attr_fan.attr,
+@@ -2350,6 +2453,7 @@ static struct attribute *toshiba_attributes[] = {
+ 	&dev_attr_panel_power_on.attr,
+ 	&dev_attr_usb_three.attr,
+ 	&dev_attr_cooling_method.attr,
++	&dev_attr_battery_charge_mode.attr,
+ 	NULL,
+ };
+ 
+@@ -2384,6 +2488,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
+ 		exists = (drv->usb_three_supported) ? true : false;
+ 	else if (attr == &dev_attr_cooling_method.attr)
+ 		exists = (drv->cooling_method_supported) ? true : false;
++	else if (attr == &dev_attr_battery_charge_mode.attr)
++		exists = (drv->battery_charge_mode_supported) ? true : false;
+ 
+ 	return exists ? attr->mode : 0;
+ }
+@@ -2959,6 +3065,8 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
+ 		pr_cont(" wwan");
+ 	if (dev->cooling_method_supported)
+ 		pr_cont(" cooling-method");
++	if (dev->battery_charge_mode_supported)
++		pr_cont(" battery-charge-mode");
+ 
+ 	pr_cont("\n");
+ }
+@@ -3166,6 +3274,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 	toshiba_cooling_method_available(dev);
+ 
++	toshiba_battery_charge_mode_available(dev);
++
+ 	print_supported_features(dev);
+ 
+ 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
 -- 
 2.37.2
 
