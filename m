@@ -2,236 +2,199 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9DC32792
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 06:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EEDC32772
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 09:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbiHVGaA (ORCPT
+        id S234178AbiHVJ0i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Aug 2022 02:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
+        Mon, 22 Aug 2022 05:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231382AbiHVG34 (ORCPT
+        with ESMTP id S233777AbiHVJ0g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Aug 2022 02:29:56 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FBE15FC9
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Aug 2022 23:29:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PW/ESNvqvOLW5iWRHLYrbeTewXjv+CXcA6DPXVj3Aq5+y0qPPNHB11PD960DK/OpUgzWr4/CRWCCTbQPmSU55Frh7Wys3RrZhK84ofbhjqZspvwMg5LEXYzX7+9u6dFu3kmj+rjYvyiG3Fu/NU1IartVF1vGrdUyUhEjBArcZBIHGxstT0GguLyeJM1Hq5K18dqHq7iGsBA1HZSWEcL9C3v28qbCewyZ9TIfja5+n15kqKGoBimfngMniLBAQyTNfdMcL0HZ8zhweoAy+Bq3ckgktNptL8mBTg6FjZCnk8ZdaN4Rz/TdZMKUQ5rlSovt2HCuhako54Y9bNpmercbgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QWXH7d7CtBOe+tpyplKDFcheELha9Pw5p2OMsh5RvLk=;
- b=VZkWGLZgWL66lITD3uwptnPh0cK+Moo3j0w7WNhN7l/sc8WPLXbHc5k76qbK4I7Owydl08WUZgAGv1gN5D6BW643gM0BA3IjV4gJaMx+ff8MQYew7mVjRE4HRDDdf+smShAz1fJpRxd54nCXpt1HPiV6UjnI2zlKy19s7hdEGXsr/Ah0plQbQKRs8s7zwAsXdM1DbIYvW//Iu8xAinB5Qm+VB8WhRJG7AoRSXsMueLNQwGYt1M3mAUKHjtV0AeBjh27P0hNuJ5gNim519K5Qw2r9fZjuQmjZ8XOdgn61gMJ+EQ86S6y3GBdlKiToPDPEIpRwLAflD3QdhDrmHekP4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QWXH7d7CtBOe+tpyplKDFcheELha9Pw5p2OMsh5RvLk=;
- b=a54Yi34mINAwDKr0Qov9A8Pmr63bGAfyFrCO8yElkrWLx1eNuvHnN6PFLV6umHWKmcrgIAAzidGHX85LdqKxCJgtSJpGeslehrmGG/cy0eiVnGLcjYiaX2TMRvTj9Gwq6jJa2ccBt7Bc4T5XwHxG7MX/o23FU94HpjrlSpOc9Ns=
-Received: from DS7P222CA0030.NAMP222.PROD.OUTLOOK.COM (2603:10b6:8:2e::10) by
- DM4PR12MB6616.namprd12.prod.outlook.com (2603:10b6:8:8e::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5546.22; Mon, 22 Aug 2022 06:29:52 +0000
-Received: from DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:2e:cafe::d5) by DS7P222CA0030.outlook.office365.com
- (2603:10b6:8:2e::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.19 via Frontend
- Transport; Mon, 22 Aug 2022 06:29:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT049.mail.protection.outlook.com (10.13.172.188) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5546.15 via Frontend Transport; Mon, 22 Aug 2022 06:29:51 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Mon, 22 Aug
- 2022 01:29:44 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH v2] platform/x86/amd/pmf: Fix clang unused variable warning
-Date:   Mon, 22 Aug 2022 11:59:17 +0530
-Message-ID: <20220822062917.4061503-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 22 Aug 2022 05:26:36 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4192C1A38C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Aug 2022 02:26:35 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id f21so10363407pjt.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Aug 2022 02:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=afZwlyJFWi1oxAywjZJ8aFoRq/simALxdy+t/pD5S1g=;
+        b=p0GZd/XZJG+l9vJANZ5ADTT4svgFLH6gATUVTUqN50UgmM70MBgX6XZIyztbgxqI4C
+         BEb2TNVa1ptT708XMi5eaWgFEBiKkl1D1VHXH5vglSEI5O9lL8Six0R9jpTrWLDtaXcW
+         Dylm5HwV1lf+kRw/wkZrrZM3FErmbnRX0aRZfprFIJcKd4Q+jRswyne7Ao6yHu7cp31E
+         3RZWbl0CP7bwb/ZI/IYF/x9dPNJL6ia++6hfVt9brvATZXbv7+mTI98JXvN8mFIWXAr4
+         COv2KFL0mAeywSG32d6wtgN3cCc4EfC9xAJ1V3QwFCV46iJ2L/l5p5M9Q6+vsUlZUGmj
+         eUSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=afZwlyJFWi1oxAywjZJ8aFoRq/simALxdy+t/pD5S1g=;
+        b=spyxFyuLrxVVDbxbREVIzqitTQOHqxvIqq27H5Lr1YJw8axqZgDxGk2d1bt91+SCsI
+         kQimDV+acMUoJxSL6gbADQeErt/+Ct2/feyOeJxkD8JJqwDCNbrWizw5A05v6LQVyf3K
+         ac7BZMZDT71ocvz8ec7IYeBS+qyGC26ylPlA+s/4jmgFCbS7CGkR5pP/euestGQbK3pQ
+         p3+XuADk4LrCD7D4udy6+FLrRUQH/fARZj0YaRvboZpnM8tE+0bPFlEHCb3wae3OfYJM
+         vF8w2dG9HnVBmteFyMymcOBK26V/tg87UvuXGAUwsdE4b0KTgShG3xKkMO6Dwmj0396C
+         qOhw==
+X-Gm-Message-State: ACgBeo0K2Kat3kRbGsVyFLu6slzmeVov97Uf4Z5+w0iOOHXM2arRiB4i
+        afMzyQEEAhYhScHigq8sgbamXhBSMV4TgcJP0EMSAw==
+X-Google-Smtp-Source: AA6agR4PTWfx6mJ4JfDP2s87MqHuEGPKmtNZbCfU8v7BsNem/96YT6tLIZvRLFXdnFduhqQo4YmT8Ok1AHREWZ1lgFk=
+X-Received: by 2002:a17:90b:3b4d:b0:1f4:d1b6:cb69 with SMTP id
+ ot13-20020a17090b3b4d00b001f4d1b6cb69mr22224004pjb.229.1661160394706; Mon, 22
+ Aug 2022 02:26:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2bebaf24-ad26-4dfa-7bf1-08da8407b867
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6616:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3m0eALyXktoUr++QHmH7a2jXPuqe/xRpMqKn8Q8xeV3YRncL5PMIBeMHCIeIw3THxf+vE3nzUbbmGY7SwAsyx0P/0vE89ex7WuvRrpshZvgSemMAlypvVFDryuRJjWg4XbkXF8wt67TVnUdji79VqQxcYLme38J686T28afMxHMmlbC8sNyHLgl07KGYboYxg0Dopf4MvUV3D99VXV0+ty1fXgdYq+m8KEGCWIU6FvtNclq/9illlnXY6jc4wvT5Tejg93l3a30Ln0OE6oXc14A5OrD0sbotszE6yNIReTvcoLL8woVfPNZuxYr9J+Je0hqEetvUsH3efypFal6R26W0gh8v9+pHydLTRuqdOukNZVZaUBkP5AmjUjvb9RZxkOISQ+IuZhrxpOce9etjhfSY65RWLb2db7F8qX1YrN/TeKmdX9jw5ygZBTNzp9bJM1X33caKNolN3VUCkVXJAhkcfolXZEp34BdY1wtt1QoTVI5q1VFpQabNNWbrVN5hpIqXeMB2hLEaiw3kJaEoiq8v0p3rmkUGpuu+Oo3bjlx/NL+sQboKfCulzgvccYwq+4Wl5KRGhRL7v55RKtqlfQTKaofcxmKnidPA4amVwfBkVYTh11r/BQxs1K9qp/nhbTTzARoQzXUVyH06EaIhsfpm0tWkZ8GJpGxlVyVlPohKP8nLg24AkAqrOSDpT2ei/vuZ/FV8rF3NZj2X9CnYrWjEvw7kcpHfedsDNsby5BO5m31f+X9ZOrKkMgANifYGFr1oE1bGOHaV2aZEn97yZCSi2rQIQMV51UZhi+UAAMoJnrxu730mREYNOFBzhniS
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(39860400002)(346002)(136003)(36840700001)(46966006)(40470700004)(70206006)(8676002)(4326008)(70586007)(86362001)(110136005)(54906003)(36860700001)(36756003)(356005)(81166007)(82740400003)(2616005)(186003)(1076003)(336012)(16526019)(26005)(47076005)(426003)(7696005)(6666004)(41300700001)(478600001)(40460700003)(8936002)(316002)(40480700001)(82310400005)(83380400001)(2906002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2022 06:29:51.8367
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bebaf24-ad26-4dfa-7bf1-08da8407b867
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6616
+References: <20220707125329.378277-1-jaz@semihalf.com> <20220707125329.378277-2-jaz@semihalf.com>
+ <CAJZ5v0gdCN3P52ko44LQMqWJvDArHxZ7p4aSiQamML7aG_kRAA@mail.gmail.com> <CAH76GKO9sxnuLM--x6sg7m3bC_NgvLA94N6jHA-+5gW741-ByQ@mail.gmail.com>
+In-Reply-To: <CAH76GKO9sxnuLM--x6sg7m3bC_NgvLA94N6jHA-+5gW741-ByQ@mail.gmail.com>
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+Date:   Mon, 22 Aug 2022 11:26:23 +0200
+Message-ID: <CAH76GKMw2rAnQOSFqReG1sEC=sdncWOJHNXn-Rp2Gx1oUZR3ZQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] suspend: extend S2Idle ops by new notify handler
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmytro Maluka <dmy@semihalf.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Dominik Behr <dbehr@google.com>, upstream@semihalf.com,
+        Zide Chen <zide.chen@intel.corp-partner.google.com>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sachi King <nakato@nakato.io>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:HIBERNATION (aka Software Suspend, aka swsusp)" 
+        <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-variable 'mode' is used uninitialized whenever switch default is taken
-in sps.c which leads to the following clang warning.
+Hi Rafael,
 
----
-drivers/platform/x86/amd/pmf/sps.c:96:2: error: variable 'mode' is used uninitialized whenever switch default is taken [-Werror,-Wsometimes-uninitialized]
-          default:
-          ^~~~~~~
-  drivers/platform/x86/amd/pmf/sps.c:101:9: note: uninitialized use occurs here
-          return mode;
-                 ^~~~
-  drivers/platform/x86/amd/pmf/sps.c:84:9: note: initialize the variable 'mode' to silence this warning
-          u8 mode;
-                 ^
-                  = '\0'
-  1 error generated.
----
+Could you please kindly comment on the above?
 
-Fix it by returning -EOPNOTSUPP in default case and also change the return
-type of the function amd_pmf_get_pprof_modes() to keep it similar like
-other drivers which implement platform_profile.
+Thank you in advance,
+Grzegorz
 
-Fixes: 4c71ae414474 ("platform/x86/amd/pmf: Add support SPS PMF feature")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-v2:
-- Handle return codes for all amd_pmf_get_pprof_modes() callers.
-
- drivers/platform/x86/amd/pmf/auto-mode.c |  8 ++++++--
- drivers/platform/x86/amd/pmf/core.c      |  3 +++
- drivers/platform/x86/amd/pmf/pmf.h       |  4 ++--
- drivers/platform/x86/amd/pmf/sps.c       | 11 +++++++----
- 4 files changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-index 368964d885a2..644af42e07cf 100644
---- a/drivers/platform/x86/amd/pmf/auto-mode.c
-+++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-@@ -264,7 +264,7 @@ static void amd_pmf_load_defaults_auto_mode(struct amd_pmf_dev *dev)
- 	dev->socket_power_history_idx = -1;
- }
- 
--void amd_pmf_reset_amt(struct amd_pmf_dev *dev)
-+int amd_pmf_reset_amt(struct amd_pmf_dev *dev)
- {
- 	/*
- 	 * OEM BIOS implementation guide says that if the auto mode is enabled
-@@ -275,11 +275,15 @@ void amd_pmf_reset_amt(struct amd_pmf_dev *dev)
- 	 */
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
--		u8 mode = amd_pmf_get_pprof_modes(dev);
-+		int mode = amd_pmf_get_pprof_modes(dev);
-+
-+		if (mode < 0)
-+			return mode;
- 
- 		dev_dbg(dev->dev, "resetting AMT thermals\n");
- 		amd_pmf_update_slider(dev, SLIDER_OP_SET, mode, NULL);
- 	}
-+	return 0;
- }
- 
- void amd_pmf_handle_amt(struct amd_pmf_dev *dev)
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index e46d63aa51b8..a675ca969331 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -65,6 +65,9 @@ static int current_power_limits_show(struct seq_file *seq, void *unused)
- 	int mode, src = 0;
- 
- 	mode = amd_pmf_get_pprof_modes(dev);
-+	if (mode < 0)
-+		return mode;
-+
- 	src = amd_pmf_get_power_source();
- 	amd_pmf_update_slider(dev, SLIDER_OP_GET, mode, &table);
- 	seq_printf(seq, "spl:%u fppt:%u sppt:%u sppt_apu_only:%u stt_min:%u stt[APU]:%u stt[HS2]: %u\n",
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 7613ed2ef6e3..0a72a395c2ef 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -303,7 +303,7 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
- int amd_pmf_get_power_source(void);
- 
- /* SPS Layer */
--u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
-+int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
- void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
- 			   struct amd_pmf_static_slider_granular *table);
- int amd_pmf_init_sps(struct amd_pmf_dev *dev);
-@@ -322,6 +322,6 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
- int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req);
- 
- void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
--void amd_pmf_reset_amt(struct amd_pmf_dev *dev);
-+int amd_pmf_reset_amt(struct amd_pmf_dev *dev);
- void amd_pmf_handle_amt(struct amd_pmf_dev *dev);
- #endif /* PMF_H */
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index 8923e29cc6ca..dba7e36962dc 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -79,9 +79,9 @@ static int amd_pmf_profile_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
--u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
-+int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
- {
--	u8 mode;
-+	int mode;
- 
- 	switch (pmf->current_profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
-@@ -95,7 +95,7 @@ u8 amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
- 		break;
- 	default:
- 		dev_err(pmf->dev, "Unknown Platform Profile.\n");
--		break;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	return mode;
-@@ -105,10 +105,13 @@ static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
- 			       enum platform_profile_option profile)
- {
- 	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
--	u8 mode;
-+	int mode;
- 
- 	pmf->current_profile = profile;
- 	mode = amd_pmf_get_pprof_modes(pmf);
-+	if (mode < 0)
-+		return mode;
-+
- 	amd_pmf_update_slider(pmf, SLIDER_OP_SET, mode, NULL);
- 	return 0;
- }
--- 
-2.25.1
-
+=C5=9Br., 20 lip 2022 o 15:15 Grzegorz Jaszczyk <jaz@semihalf.com> napisa=
+=C5=82(a):
+>
+> wt., 19 lip 2022 o 20:09 Rafael J. Wysocki <rafael@kernel.org> napisa=C5=
+=82(a):
+> >
+> > On Thu, Jul 7, 2022 at 2:56 PM Grzegorz Jaszczyk <jaz@semihalf.com> wro=
+te:
+> > >
+> > > Currently the LPS0 prepare_late callback is aimed to run as the very
+> > > last thing before entering the S2Idle state from LPS0 perspective,
+> > > nevertheless between this call and the system actually entering the
+> > > S2Idle state there are several places where the suspension process co=
+uld
+> > > be canceled.
+> >
+> > And why is this a problem?
+> >
+> > The cancellation will occur only if there is a wakeup signal that
+> > would otherwise cause one of the CPUs to exit the idle state.  Such a
+> > wakeup signal can appear after calling the new notifier as well, so
+> > why does it make a difference?
+>
+> It could also occur due to suspend_test. Additionally with new
+> notifier we could get notification when the system wakes up from
+> s2idle_loop and immediately goes to sleep again (due to e.g.
+> acpi_s2idle_wake condition not being met) - in this case relying on
+> prepare_late callback is not possible since it is not called in this
+> path.
+>
+> >
+> > > In order to notify VMM about guest entering suspend, extend the S2Idl=
+e
+> > > ops by new notify callback, which will be really invoked as a very la=
+st
+> > > thing before guest actually enters S2Idle state.
+> >
+> > It is not guaranteed that "suspend" (defined as all CPUs entering idle
+> > states) will be actually entered even after this "last step".
+>
+> Since this whole patchset is aimed at notifying the host about a guest
+> entering s2idle state, reaching this step can be considered as a
+> suspend "entry point" for VM IMO. It is because we are talking about
+> the vCPU not the real CPU. Therefore it seems to me, that even if some
+> other vCPUs could still get some wakeup signal they will not be able
+> to kick (through s2idle_wake->swake_up_one(&s2idle_wait_head);) the
+> original vCPU which entered s2idle_loop, triggered the new notifier
+> and is halted due to handling vCPU exit (and was about to trigger
+> swait_event_exclusive). So it will prevent the VM's resume process
+> from being started.
+>
+> >
+> > > Additionally extend the acpi_s2idle_dev_ops by notify() callback so
+> > > any driver can hook into it and allow to implement its own notificati=
+on.
+> > >
+> > > Taking advantage of e.g. existing acpi_s2idle_dev_ops's prepare/resto=
+re
+> > > hooks is not an option since it will not allow to prevent race
+> > > conditions:
+> > > - VM0 enters s2idle
+> > > - host notes about VM0 is in s2idle
+> > > - host continues with system suspension but in the meantime VM0 exits
+> > > s2idle and sends notification but it is already too late (VM could no=
+t
+> > > even send notification on time).
+> >
+> > Too late for what?
+>
+> Too late to cancel the host suspend process, which thinks that the VM
+> is in s2idle state while it isn't.
+>
+> >
+> > > Introducing notify() as a very last step before the system enters S2I=
+dle
+> > > together with an assumption that the VMM has control over guest
+> > > resumption allows preventing mentioned races.
+> >
+> > How does it do that?
+>
+> At the moment when VM triggers this new notifier we trap on MMIO
+> access and the VMM handles vCPU exit (so the vCPU is "halted").
+> Therefore the VMM could control when it finishes such handling and
+> releases the vCPU again.
+>
+> Maybe adding some more context will be helpful. This patchset was
+> aimed for two different scenarios actually:
+> 1) Host is about to enter the suspend state and needs first to suspend
+> VM with all pass-through devices. In this case the host waits for
+> s2idle notification from the guest and when it receives it, it
+> continues with its own suspend process.
+> 2) Guest could be a "privileged" one (in terms of VMM) and when the
+> guest enters s2idle state it notifies the host, which in turn triggers
+> the suspend process of the host.
+>
+> >
+> > It looks like you want suspend-to-idle to behave like S3 and it won't.
+>
+> In a way, yes, we compensate for the lack of something like PM1_CNT to
+> trap on for detecting that the guest is suspending.
+> We could instead force the guest to use S3 but IMO it is undesirable,
+> since it generally does make a difference which suspend mode is used
+> in the guest, s2idle or S3, e.g some drivers check which suspend type
+> is used and based on that behaves differently during suspend. One of
+> the example is:
+> https://elixir.bootlin.com/linux/v5.18.12/source/drivers/gpu/drm/amd/amdg=
+pu/amdgpu_drv.c#L2323
+> https://elixir.bootlin.com/linux/v5.18.12/source/drivers/gpu/drm/amd/amdg=
+pu/amdgpu_acpi.c#L1069
+> https://elixir.bootlin.com/linux/v5.18.12/source/drivers/gpu/drm/amd/amdg=
+pu/amdgpu_gfx.c#L583
+>
+> Thank you,
+> Grzegorz
