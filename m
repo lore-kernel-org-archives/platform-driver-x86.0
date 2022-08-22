@@ -2,215 +2,272 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993A8C3F6B0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 16:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380A4C3F6B0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 17:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236919AbiHVQB0 (ORCPT
+        id S236830AbiHVRRA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Aug 2022 12:01:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
+        Mon, 22 Aug 2022 13:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236958AbiHVQBX (ORCPT
+        with ESMTP id S236773AbiHVRQ7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Aug 2022 12:01:23 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80050.outbound.protection.outlook.com [40.107.8.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3C12DA8E;
-        Mon, 22 Aug 2022 09:01:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R4FHomp1Lcb4Twg5yVu45KoRQ1MMlg5brGn7TqVD+CXvnwaymg8H2QhOd3rrkck8LlKkDAg16XAi1CuWqa9xdTgJl2xRZmjpWrOXSAROr19KfmErMock/Ofk5HJMCVmw22kHn8EBEkpMtzD6/xsZmqCdZw4imzXaY+Cz9unczYJrbrgu/d+W9269qGYlc1rnDOwnAu+igkbuPyRyQmeAFlfKmPSFX8sOd7YYgSxgtC3Xmd3e2lO/pB6Pac4UwahNASKduxEPvz1pP1i16A2uii8e7JnqD1XtmAw8ScgTdz3sbqFovPXdMzfg8zNjjqn3vkGnBzPOtxtQouXfwDSkmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TGUfQtlDfWQkMaZo2brnKXEbdbzx5kDyMp7KvmN7pMg=;
- b=VMaS57yXX1QGeqiusIPmXlLa6GjBVBfoNTaSVmrgCF9bZPm87UM0OsyEMcgVkiKiaFOIuTrfMXc+c1q8Azc9w9QU6fAR5BC6MUILF8Uh/Bb+sIe3lmOK7kGdF5j95bIJVrbeU1T2v/NGq6lfgoBCBvMInfPqIdisGgElX6JwQnD9zTMMhafNem5F/7IciACB9zzg4EyLycBfZVsgpuQQKbKludZWBNSGAnhUSeG6o4dR7HDxPlT21A1NRa684O4RXy5hrX7vg2JUjcNCZ5gLrYDzgaIoFyF2XPWzQ4Qk/KX99d5HcdQlLmH4Zk8vYYmZBLsrQOjlmHIYZRc0p8FIqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TGUfQtlDfWQkMaZo2brnKXEbdbzx5kDyMp7KvmN7pMg=;
- b=QCfExMVyn5tK7YXbWtYeKtiW341EqbfZxEwymgXkVjCxWBE2QQhDO85kgJvTHcZMfn+Gbhzfij8iWuW/tUfGI66EbAzSAiY7NKsOHs4Vb5C1H57ZdzBM13e2Pw7+6q5tAs6OUaShUc2UL0SRfzGviEUP6wVo/rouW7/XbFN6AqhW1rvDm/91eHbjDdzZ+yFNBONx4zLr5Ikoj48oHxEVPCfPe/5bwIuFIsPXxJAfFUlysooZ69nL9TY0vaCt2AAyyHeL5bY4srRxwmI8gIXUQAPCGoIXgxO1K8xS3saXEjioGcd/FXf+zTjdaXJCNiV38oYnsrndgsintfuSYNEgrA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by AS8PR10MB4439.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:2e2::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.16; Mon, 22 Aug
- 2022 16:01:18 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::75ee:d5d2:6b1d:150b%3]) with mapi id 15.20.5546.022; Mon, 22 Aug 2022
- 16:01:18 +0000
-Date:   Mon, 22 Aug 2022 18:01:10 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     simon.guinot@sequanux.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>
-Subject: Re: [PATCH v3 1/4] gpio-f7188x: Add GPIO support for Nuvoton
- NCT6116
-Message-ID: <20220822180110.70c5cab4@md1za8fc.ad001.siemens.net>
-In-Reply-To: <YvYSl2FpOGnqZfTZ@76cbfcf04d45>
-References: <20220811153908.31283-1-henning.schild@siemens.com>
-        <20220811153908.31283-2-henning.schild@siemens.com>
-        <YvYSl2FpOGnqZfTZ@76cbfcf04d45>
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0009.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:15::14) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
+        Mon, 22 Aug 2022 13:16:59 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9FB240B4;
+        Mon, 22 Aug 2022 10:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661188618; x=1692724618;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3bjX4Nqvr1niq4WhvJ4vndYQsekMu1imibjNM0OeL9c=;
+  b=G7gPaerAiZ7pY8HluamIEWPfsBIsB/ljNgiiu2pwPaWaw5am0SrFA7H3
+   CnhjnNkztPrUkxXXr2V6jH8qMcgtaHrAGUhiqTqEw85imXqDLOFJ9SPa8
+   iZjB55BVqpozBsLXbSz40poJYaB+TK7DpmZmbbAIhGH/pbt4vrjGoUSt3
+   KtHQgDmwLIDTk3+F0bYzJBXGp32KneymFvitSci3550zfvdoAbi6Vxmh7
+   pSjSsuUMokHoC6V/p7deiC3lQ1A8uNdsr48p2kUFpAJe/XD0CmR7mhm7u
+   stJ9Pl0fGWWnTj+ja/f81JC3m9Cum3hCt0YVXpAS8czXljGg89H5rbJjv
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10447"; a="294262594"
+X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
+   d="scan'208";a="294262594"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 10:16:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,255,1654585200"; 
+   d="scan'208";a="585608200"
+Received: from lkp-server01.sh.intel.com (HELO dd9b29378baa) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 22 Aug 2022 10:16:55 -0700
+Received: from kbuild by dd9b29378baa with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oQB2l-0000Vn-0g;
+        Mon, 22 Aug 2022 17:16:55 +0000
+Date:   Tue, 23 Aug 2022 01:16:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     sound-open-firmware@alsa-project.org,
+        platform-driver-x86@vger.kernel.org, linux-arch@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ cc2986f4dc67df7e6209e0cd74145fffbd30d693
+Message-ID: <6303b9e7.XfUgtQTlIdzz7vPk%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 83842d20-de88-4d3f-b51b-08da84578c96
-X-MS-TrafficTypeDiagnostic: AS8PR10MB4439:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zDDjthpJuGp/DaSTce5OrK/EZ2efQqkLuxyDvyDKU9pDixlgy340pAgIpGuH0i7v6KOwburWr9dDm/taxkbn09EHBiC1K4rzlivH8R+judls1Rv43qHMMkSmGMpAIoGxi3h2J6ogukqooCEAH8+xEQnsiDgGg7K5FV6AsTiXRaMkY6JycTFzIcz9YUentUvHJk2fh9soLPCQtEEC4G0sFSfFg3IgQaXjEccyGCs5xi/HRMWG0OtHX0c6GNmIrXID+L9h5nQ3DELmhe0xP6GS8Qvs/hdg8Kol/XSiOHuM/Y8XgMfwDKGYr5STFuETWAXqMB8tSAwgarKhbJw1Tk7ozdzunMvr1Yh7QnIb3BAu3oFXeby40OdTp7EuIbzS9sLW5BIyxGq+/f7uQVaqEjL2dgnWT9NrcEfaXxdO3ilkmPly9Nm9dd/w9bma5mQgvoNwi19zoYuuPw6TdzFh6JQQg2ZYp+JUX5T38kHSc2oRegovp5WIdQAOFtdNEwpBg2/XCe/ri5BOHj3pv5Bz1BZorRgdq3DnKk4GOUYkho583SSfczTOLffAFd1xzDpExvxH5jILcwVxSBlmlPeeSt++1dZFDgm1dFq0yW8xdM/b3j2lEv3/JfI6/UYjIBxo3klTL6bD0fQNBtFDXgYJ0EN7aJu2hzq2eto80rQYYVBq/0gKcLD61Xbm3gxlE/T95zGcUom66HZcMOvgQ5oBdMlYTA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(6506007)(86362001)(6512007)(9686003)(26005)(6486002)(6666004)(5660300002)(478600001)(82960400001)(44832011)(41300700001)(8936002)(7416002)(2906002)(186003)(1076003)(83380400001)(38100700002)(66946007)(4326008)(316002)(6916009)(66556008)(8676002)(66476007)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?R4Lc5JhctMj7dEd+EcRJiXYwSF3w3CC4j/hzLU9wqbio8m8zY9gnMsMKIjzJ?=
- =?us-ascii?Q?EWJYX1dL+um9lFhAOeZIWuVeFB2HEfPonI/ZC7QaCpdQ81yfNhhzRio9lq3J?=
- =?us-ascii?Q?9S5LJIryrqDHBY57Q85rUmd945N08mVC5B5W2w8pOFYABhNc7f5egUjVDPJO?=
- =?us-ascii?Q?vynrA+cvBBc2+Xi81Y5nBfJVOh1ZiJ3KS55mEFeURNOM35aGYhEnaDtYEIRT?=
- =?us-ascii?Q?+VeeCw7yv/LacBg1NiVh+UH3RV59rrLAAh2isbfByN7mSjAVN9yPBSBJGulC?=
- =?us-ascii?Q?b5hPv1X702i3/nqAmZSMN9laybekhuJbPzx8ukRuBMD4qQ4oryK5LfZutIMc?=
- =?us-ascii?Q?yXeyQGLDXXJvwT3NAAyrl9M74kNAlbOiJ8k9vmp8CT4ET1MgPC6gheFB7QN3?=
- =?us-ascii?Q?fIhEPG48FP6oJKNxVLMNaFUtbFmzYM1YxBi7nO1sKxZztSohvQMW0fz45dzY?=
- =?us-ascii?Q?71FydglXsVjpgm+n+K6LqfmdURUJqn3p0UvSLd93V5vA7PreXYOAtzL7vQS9?=
- =?us-ascii?Q?rbOdwwXhxYcuHSZjmpmax3D5XbOw2n51Q7FZCZljlvmq4kF1UlDaWoXXTNM+?=
- =?us-ascii?Q?myCzzl9I5Brjr6TRkR8sNiOuGK7lt+RQCafPgm1vbs13g78Nak8G75f4n8Qv?=
- =?us-ascii?Q?rWtUgGhKmt61jkoKz9xXC0unI0UY6mr/sova9qv/MjwhhpLZ3lmJ1lAJTo7Q?=
- =?us-ascii?Q?eMSSWu7NN3HZuhxoM81zsgIzCLLdA+34iIGgu58gmEwroU60Pb2rx86Zl7/V?=
- =?us-ascii?Q?uXp6vL79hRk2+Aj70H5sKbnvHzELCUkMwCujsK52y7Rr4AMMcTrshRAutEPT?=
- =?us-ascii?Q?X3jCn9Ej910IxyUrh1ZywymjMyZZEMDlCrb/R5du7bdpC21zniQlGQENwP2/?=
- =?us-ascii?Q?3qKT0ILlO4a/m3A9MltbMCdA3zK6bmXHHyCrKwE6OjmhcIj9kbCBYmIyOZYe?=
- =?us-ascii?Q?9hcEMuPjcFcvM80Ph74tMkA1evo7Ij0Ta+HefporQOizaszRwxbPLnnmU8Za?=
- =?us-ascii?Q?7oPAObGUA1jh1u+VTvBGW0Y5XnOa/C42MajpkvyWnVmmjoJOHEeVT6bDVzC5?=
- =?us-ascii?Q?evVe/bNTnTG7iiWtGWsDRy6Qsn4EO3hfn45yKBo7QuFl+l09M89njEPd+qFZ?=
- =?us-ascii?Q?Rb5UWbauWSjG6hOoNHSaUedu+uUOFyD/VKg9GcQYXZ62BGynkPQ5riSGMJJA?=
- =?us-ascii?Q?tQL6zCPtDsrFyihWkejgh0Z1He7pa1FkWjcyhU1yKEhyGHDZrkLjVA67L75W?=
- =?us-ascii?Q?jL/whI7JBKFC4Lv7jFUjHKziLnJvWeu6V9b1bGXshZT2HkSqSrUOmubxVdYE?=
- =?us-ascii?Q?1pE9Hi3vurWbX9SC6HyTURLR3OzXoVioe8liAzh7a4fhParxamNnp//RBB5r?=
- =?us-ascii?Q?FgcM6YUI2ORVLnxIlYpbqHu/SC5s9siLF6Lp5HLvtRImQ7bVgG6Nj3F4TxpG?=
- =?us-ascii?Q?6VdcJ09HxtjhIzvM0e5h7eSjxgKnis5gZF4aIIC5Zkkoc65+cJq+6rCMzBZu?=
- =?us-ascii?Q?RlzfpNf+JRkNeXxP+mINJtVpOPDOJEUcmDEExnHK0mtB7dXZyNIxqVjMoy1H?=
- =?us-ascii?Q?jRA8HGg8KCh9d8rlVis45YGynqnKczOjJFrXHcYmSS3su55t26mWn5Qfenrq?=
- =?us-ascii?Q?BQ=3D=3D?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83842d20-de88-4d3f-b51b-08da84578c96
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2022 16:01:18.3317
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j4IkoES4FGbyEb5eDETAnR1TKZiMye4d8k6rj2lutUh97WtpbOZabsDRGpCfMk9Lr/lP6hm3klxwtqzTdMpNuUpN3L6JJEZoxjc2NFdZz60=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB4439
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Fri, 12 Aug 2022 10:43:03 +0200
-schrieb simon.guinot@sequanux.org:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: cc2986f4dc67df7e6209e0cd74145fffbd30d693  Add linux-next specific files for 20220822
 
-> On Thu, Aug 11, 2022 at 05:39:05PM +0200, Henning Schild wrote:
-> > Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
-> > very similar to the ones from Fintek. In other subsystems they also
-> > share drivers and are called a family of drivers.
-> > 
-> > For the GPIO subsystem the only difference is that the direction
-> > bit is reversed and that there is only one data bit per pin. On the
-> > SuperIO level the logical device is another one.
-> > 
-> > Signed-off-by: Henning Schild <henning.schild@siemens.com>
-> > ---
-> >  drivers/gpio/gpio-f7188x.c | 71
-> > +++++++++++++++++++++++++++----------- 1 file changed, 51
-> > insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
-> > index 18a3147f5a42..7b05ecc611e9 100644
-> > --- a/drivers/gpio/gpio-f7188x.c
-> > +++ b/drivers/gpio/gpio-f7188x.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0-or-later
-> >  /*
-> >   * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882,
-> > F71889 and F81866
-> > + * and Nuvoton Super-I/O NCT6116D
-> >   *
-> >   * Copyright (C) 2010-2013 LaCie
-> >   *
-> > @@ -22,13 +23,12 @@
-> >  #define SIO_LDSEL		0x07	/* Logical device
-> > select */ #define SIO_DEVID		0x20	/* Device ID
-> > (2 bytes) */ #define SIO_DEVREV		0x22	/*
-> > Device revision */ -#define SIO_MANID		0x23	/*
-> > Fintek ID (2 bytes) */ 
-> > -#define SIO_LD_GPIO		0x06	/* GPIO logical
-> > device */ #define SIO_UNLOCK_KEY		0x87	/* Key
-> > to enable Super-I/O */ #define SIO_LOCK_KEY
-> > 0xAA	/* Key to disable Super-I/O */ 
-> > -#define SIO_FINTEK_ID		0x1934	/* Manufacturer
-> > ID */ +#define SIO_LD_GPIO_FINTEK	0x06	/* GPIO
-> > logical device */ +#define SIO_LD_GPIO_NUVOTON	0x07
-> > /* GPIO logical device */  
-> 
-> Please indulge me and add a new line here.
-> 
-> >  #define SIO_F71869_ID		0x0814	/* F71869
-> > chipset ID */ #define SIO_F71869A_ID		0x1007
-> > /* F71869A chipset ID */ #define SIO_F71882_ID
-> > 0x0541	/* F71882 chipset ID */ @@ -37,7 +37,7 @@
-> >  #define SIO_F81866_ID		0x1010	/* F81866
-> > chipset ID */ #define SIO_F81804_ID		0x1502  /*
-> > F81804 chipset ID, same for f81966 */ #define SIO_F81865_ID
-> > 	0x0704	/* F81865 chipset ID */ -
-> > +#define SIO_NCT6116D_ID		0xD283  /* NCT6116D chipset
-> > ID */ 
-> 
-> ... snip ...
-> 
-> > @@ -485,12 +516,8 @@ static int __init f7188x_find(int addr, struct
-> > f7188x_sio *sio) return err;
-> >  
-> >  	err = -ENODEV;
-> > -	devid = superio_inw(addr, SIO_MANID);
-> > -	if (devid != SIO_FINTEK_ID) {
-> > -		pr_debug(DRVNAME ": Not a Fintek device at
-> > 0x%08x\n", addr);
-> > -		goto err;
-> > -	}  
-> 
-> Sorry for missing that at my first review. You can't remove this block
-> of code. This driver is poking around on the I2C bus, which is not
-> great. So we want to make sure as much as possible that we are
-> speaking to the right device.
+Error/Warning: (recently discovered and may have been fixed)
 
-Unfortunately the Nuvoton Super IOs do not have a global manufacturer
-ID, just that chip ID in their global control registers.
+drivers/base/regmap/regmap-mmio.c:221:17: error: implicit declaration of function 'writesb'; did you mean 'writeb'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:224:17: error: implicit declaration of function 'writesw'; did you mean 'writew'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:227:17: error: implicit declaration of function 'writesl'; did you mean 'writel'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:231:17: error: implicit declaration of function 'writesq'; did you mean 'writeq'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:231:17: error: implicit declaration of function 'writesq'; did you mean 'writesl'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:358:17: error: implicit declaration of function 'readsb'; did you mean 'readb'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:361:17: error: implicit declaration of function 'readsw'; did you mean 'readw'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:364:17: error: implicit declaration of function 'readsl'; did you mean 'readl'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readq'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readsl'? [-Werror=implicit-function-declaration]
+drivers/platform/mellanox/mlxreg-lc.c:866 mlxreg_lc_probe() warn: passing zero to 'PTR_ERR'
+sound/soc/sof/compress.c:330:13: warning: variable 'dai_posn' set but not used [-Wunused-but-set-variable]
 
-So i think we should really just drop the checking of the manufacturer
-ID all together, like proposed here. Or we could check manid+chipid for
-fintek and only chipid for nuvoton (like i.e. all the wdt and hwmon
-drivers for nuvoton do already).
+Error/Warning ids grouped by kconfigs:
 
-In fact i will implement the best checking we can do, so match
-manufacturer and chip where possible and drop to chip only where not.
+gcc_recent_errors
+|-- alpha-allmodconfig
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- alpha-allyesconfig
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|   `-- sound-soc-sof-compress.c:warning:variable-dai_posn-set-but-not-used
+|-- alpha-buildonly-randconfig-r001-20220822
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- alpha-buildonly-randconfig-r006-20220821
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- alpha-randconfig-r031-20220822
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- arc-allyesconfig
+|   `-- sound-soc-sof-compress.c:warning:variable-dai_posn-set-but-not-used
+|-- arm-allyesconfig
+|   `-- sound-soc-sof-compress.c:warning:variable-dai_posn-set-but-not-used
+clang_recent_errors
+|-- hexagon-randconfig-r001-20220821
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insw
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_fromio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_toio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsw
+|   |-- include-asm-generic-io.h:error:redefinition-of-memset_io
+|   |-- include-asm-generic-io.h:error:redefinition-of-phys_to_virt
+|   |-- include-asm-generic-io.h:error:redefinition-of-readb
+|   |-- include-asm-generic-io.h:error:redefinition-of-readl
+|   |-- include-asm-generic-io.h:error:redefinition-of-readw
+|   |-- include-asm-generic-io.h:error:redefinition-of-virt_to_phys
+|   |-- include-asm-generic-io.h:error:redefinition-of-writeb
+|   |-- include-asm-generic-io.h:error:redefinition-of-writel
+|   `-- include-asm-generic-io.h:error:redefinition-of-writew
+|-- hexagon-randconfig-r004-20220822
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insw
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_fromio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_toio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsw
+|   |-- include-asm-generic-io.h:error:redefinition-of-memset_io
+|   |-- include-asm-generic-io.h:error:redefinition-of-phys_to_virt
+|   |-- include-asm-generic-io.h:error:redefinition-of-readb
+|   |-- include-asm-generic-io.h:error:redefinition-of-readl
+|   |-- include-asm-generic-io.h:error:redefinition-of-readw
+|   |-- include-asm-generic-io.h:error:redefinition-of-virt_to_phys
+|   |-- include-asm-generic-io.h:error:redefinition-of-writeb
+|   |-- include-asm-generic-io.h:error:redefinition-of-writel
+|   `-- include-asm-generic-io.h:error:redefinition-of-writew
+|-- hexagon-randconfig-r032-20220821
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-insw
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_fromio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-memcpy_toio
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsb
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsl
+|   |-- include-asm-generic-io.h:error:conflicting-types-for-outsw
+|   |-- include-asm-generic-io.h:error:redefinition-of-memset_io
+|   |-- include-asm-generic-io.h:error:redefinition-of-phys_to_virt
+|   |-- include-asm-generic-io.h:error:redefinition-of-readb
+|   |-- include-asm-generic-io.h:error:redefinition-of-readl
+|   |-- include-asm-generic-io.h:error:redefinition-of-readw
 
-Henning
+elapsed time: 721m
 
-> Simon
+configs tested: 76
+configs skipped: 2
 
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64               randconfig-a012-20220822
+x86_64               randconfig-a013-20220822
+x86_64               randconfig-a011-20220822
+i386                 randconfig-a014-20220822
+x86_64                              defconfig
+i386                 randconfig-a013-20220822
+i386                 randconfig-a011-20220822
+csky                              allnoconfig
+x86_64               randconfig-a016-20220822
+arc                               allnoconfig
+x86_64               randconfig-a014-20220822
+i386                 randconfig-a012-20220822
+alpha                             allnoconfig
+x86_64               randconfig-a015-20220822
+i386                                defconfig
+i386                 randconfig-a016-20220822
+x86_64                               rhel-8.3
+arm                                 defconfig
+riscv                             allnoconfig
+arc                  randconfig-r043-20220821
+arm                           sama5_defconfig
+mips                           jazz_defconfig
+x86_64                           allyesconfig
+i386                 randconfig-a015-20220822
+powerpc                           allnoconfig
+alpha                            allyesconfig
+m68k                         apollo_defconfig
+arc                  randconfig-r043-20220822
+m68k                             allmodconfig
+arc                              allyesconfig
+arm                            lart_defconfig
+riscv                randconfig-r042-20220822
+sh                           se7724_defconfig
+m68k                       m5275evb_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+x86_64                          rhel-8.3-func
+i386                             allyesconfig
+x86_64                         rhel-8.3-kunit
+s390                 randconfig-r044-20220822
+x86_64                           rhel-8.3-kvm
+x86_64                    rhel-8.3-kselftests
+sh                               allmodconfig
+x86_64                           rhel-8.3-syz
+mips                             allyesconfig
+sh                   sh7770_generic_defconfig
+powerpc                          allmodconfig
+ia64                             allmodconfig
+m68k                             allyesconfig
+
+clang tested configs:
+i386                 randconfig-a001-20220822
+i386                 randconfig-a002-20220822
+i386                 randconfig-a003-20220822
+i386                 randconfig-a005-20220822
+i386                 randconfig-a004-20220822
+i386                 randconfig-a006-20220822
+x86_64               randconfig-a002-20220822
+x86_64               randconfig-a004-20220822
+hexagon              randconfig-r041-20220822
+arm                        neponset_defconfig
+powerpc                      katmai_defconfig
+x86_64               randconfig-a003-20220822
+mips                      maltaaprp_defconfig
+x86_64               randconfig-a001-20220822
+x86_64               randconfig-a006-20220822
+x86_64               randconfig-a005-20220822
+hexagon              randconfig-r045-20220822
+hexagon              randconfig-r045-20220821
+hexagon              randconfig-r041-20220821
+s390                 randconfig-r044-20220821
+riscv                randconfig-r042-20220821
+mips                        bcm63xx_defconfig
+powerpc                    socrates_defconfig
+powerpc                     powernv_defconfig
+x86_64                          rhel-8.3-rust
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
