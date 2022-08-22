@@ -2,630 +2,344 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75ADC28D13
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 11:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EABFC32772
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Aug 2022 13:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234653AbiHVLja (ORCPT
+        id S234789AbiHVNXU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Aug 2022 07:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39284 "EHLO
+        Mon, 22 Aug 2022 09:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233197AbiHVLj3 (ORCPT
+        with ESMTP id S234427AbiHVNVw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Aug 2022 07:39:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19D61BE82
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Aug 2022 04:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661168365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dn7qcf5LVqUeHOtrJWDm7qcKmL26xaaKCkuxvydggKA=;
-        b=PKpOWbqb/o9DJLUHR11xph00VeNCJ6sl67OV7tu6u0hWX7VSMtCaDcWTVOXxXcdoJ+RGSW
-        8XoVaH9nnvD+Ehyz9w449DzoDlBSvUfOOTjf4JcaAi5NxlS8p0hHRtMCgKJVnGk8fCXina
-        yD1gi/CDXyvGPglHpdUCuTILAFdnEXI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-556-85ovUjiCPx2FL_FqlrcnAg-1; Mon, 22 Aug 2022 07:39:24 -0400
-X-MC-Unique: 85ovUjiCPx2FL_FqlrcnAg-1
-Received: by mail-ed1-f70.google.com with SMTP id r20-20020a05640251d400b00446e3eee8a1so880474edd.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Aug 2022 04:39:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Dn7qcf5LVqUeHOtrJWDm7qcKmL26xaaKCkuxvydggKA=;
-        b=RnEewIkpAxpC7hmQ2yxVecO9dG0V1B4IJ3TGe8TVT/nMLH0Vy/fhRmxRJiprWKMULL
-         0CvEcxp8VhVdTm88PuNp0r9rF6d3vbfZMnCkFs6e7s79TXiO/sVuLzufyCMbLBBm5h0H
-         oyttyhCKde7iw5oBTuk4Z0H267V2e3ec0dZ3vzmkhSKh701mkqHXWjOpRnbV0KU0e3eF
-         kP5TdDnK+Av1Vrwf3JCkOap85MZv/2XbwX1wtMxQoED6+hHKms2cLKp3HicvRxyh6Lu0
-         DrCrgq87iOUovNTpcH+WhDAKwE92XFkrxj0JLgfXTmd746OjVU71TvlYkfamUUSTHp93
-         F3Ww==
-X-Gm-Message-State: ACgBeo14XHt1fiEXQPVWTxwO3QoBW/I02Rm+Pkjtzc6hwIh6nMUj96+O
-        M6AIj4M6RB3JHxAjHWbG3Pj4wQvKPffnOsi+ktcXHA34V6Q1n37ZEZx9pznxfm4u+gQ9ZuhYjpO
-        OEM4QqS37TMnT/zuUsmR4jiygNOeOCCPXWw==
-X-Received: by 2002:a17:906:fc6:b0:72f:d080:416 with SMTP id c6-20020a1709060fc600b0072fd0800416mr12453622ejk.1.1661168362463;
-        Mon, 22 Aug 2022 04:39:22 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7EslOwiB8PFirhCnGpfUKcQPO9I3vNXx6R3lb7mRftIJYrbqJm5XJ7V+bp4oyG6JqO2ADh4g==
-X-Received: by 2002:a17:906:fc6:b0:72f:d080:416 with SMTP id c6-20020a1709060fc600b0072fd0800416mr12453594ejk.1.1661168361905;
-        Mon, 22 Aug 2022 04:39:21 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id h23-20020a50ed97000000b00445b5874249sm8030356edr.62.2022.08.22.04.39.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Aug 2022 04:39:21 -0700 (PDT)
-Message-ID: <2ddade8b-7260-8497-12f2-c8b13cf35e6a@redhat.com>
-Date:   Mon, 22 Aug 2022 13:39:20 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 0/2] [RFC] platform/x86: Fixes for Toshiba Z830
-Content-Language: en-US
-To:     Arvid Norlander <lkml@vorpal.se>,
-        platform-driver-x86@vger.kernel.org,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Azael Avalos <coproscefalo@gmail.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20220821200821.1837460-1-lkml@vorpal.se>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220821200821.1837460-1-lkml@vorpal.se>
-Content-Type: text/plain; charset=UTF-8
+        Mon, 22 Aug 2022 09:21:52 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60082.outbound.protection.outlook.com [40.107.6.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290D524F24;
+        Mon, 22 Aug 2022 06:21:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TkNkCI0czivXBhYPUad2+Y47s9UIsD4X26iqAmj9bZZ7j8aqnzmJ8i6Izp3C6yUvR3jIBxY4s/iJ9vm9szumyVNKmXGnpVWKwYqg/3vaDe2GUUnsj6mL3TStDE4GUdEPKj2E2qcBTY4L1kk5ET6t4+Tsstphtr7vAigS3NBoLey1FRhbNMwlKMLJCXEwF3sZnZ/6YrT51R5pBEx0x7p64iRKXUYjWYYMtyHbedPr3cdvni8jjuTLuODEFKLu04SVGGYpTwRUa+TxQl14eLngqaxxbEN/T4tez3XKtty1ythB5nce8eunOZQ5ebEbMJUzcDVSZHMW2Ti4XAt5XeaYdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JMnVSipjrdwhn3ZkwErhEIoZumJB/1k6x/SCoNChmOI=;
+ b=HjyNFXkKyFdQ98UXRJF6Hi+lC+CDIl7vSx7hlp0150t3ovrXnuRuVpC96+ln/mCrRghHHfAPWqOph3d+bnxhRqER+0mjLbY8cmzey9jGqs4ywEHfDMI3KxQzgeFIH4hVlCZNuw6jK9/EXlH2ulgvyQavlmexYV9cgXnjNziXKsXptIDBklkjGUHT0Zzj9gqR01QInlljeYqBeoi7fJ/pvq4QcWfqa1aCzls8yRVFnG+vcrdj7HN835ZH4wbdg/8b6ZWX3jsaJP/2ia7ki8XGgyuugpNWd/stutnyl8qQTlkN9DUXjz0jrQphZbZzZmMTI+ah6TcyIs3Lir2ANOR2PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JMnVSipjrdwhn3ZkwErhEIoZumJB/1k6x/SCoNChmOI=;
+ b=NkfUPa5rL+5llytHBoUS+EFH4eFtbAlAjzgIGNJOLkdMHsNMeP6yOLogozq/1mxsHR3V1YHc4FOGibCoR1YhHub1tz4UZ+VBhLNedJO0kbT+WbvmJRVXPMLI0zALtInMZe89ToJeS30IOQkKhbbj6R0cGBp2hzYt3Y9zjMyOPlOAqeJHSzx3DszGPv1I98ybfBqWTfFWpsITzpiFz7JZ8HrMWjCiyBKlpHAepqBDBeU8E0eEgP0wgkVdPpHdopUBz4NaoPfS/daJs9ueykyxa6iPNkQDF1fOuvDIjTdjmkzAdHwwDyBUB4Vo4pVjND1vU63om9Z98r0n3gatzkZTJg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by GVXPR10MB5887.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:6::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.22; Mon, 22 Aug
+ 2022 13:21:47 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b%3]) with mapi id 15.20.5546.022; Mon, 22 Aug 2022
+ 13:21:47 +0000
+Date:   Mon, 22 Aug 2022 15:21:33 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>
+Subject: Re: [PATCH v3 2/4] gpio-f7188x: use unique labels for banks/chips
+Message-ID: <20220822152133.5e8f257e@md1za8fc.ad001.siemens.net>
+In-Reply-To: <CAHp75VdWdzsT9wc9BNNKTJ3-eBn3uWdCFXqE2TT+CiJnoTOQYw@mail.gmail.com>
+References: <20220811153908.31283-1-henning.schild@siemens.com>
+        <20220811153908.31283-3-henning.schild@siemens.com>
+        <CAHp75VdWdzsT9wc9BNNKTJ3-eBn3uWdCFXqE2TT+CiJnoTOQYw@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR05CA0031.namprd05.prod.outlook.com (2603:10b6:610::44)
+ To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6cedf383-0e73-433d-b49b-08da844143ab
+X-MS-TrafficTypeDiagnostic: GVXPR10MB5887:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mG2WLaXazLSBCafbhefod9tXAV4SNbtI5E/EoiQsRI767tDHlLnkSb9jCViwfg+N3Hih2XsNaAQ4GsSY3WzKTf468oOugkeM8Ac1uTMHKVRhdA6fbRpPua+JWiXA7zXDUoTHHiXfYxGOX0/I3M45yZtMj/fhdUFVBmUcj724oGf9GG3YBi9XDKkFoR8xnIs/PNr7e0ZBmMjTnhCboTwjf0PI7sP7c7QXsIb+X0DbW9/pZv1rD2gnN0bqexasFqr03WFp+hmli3AhgIaLBMfP6m1T9fs+ndOtOR35lKNnYWJFRRv/X4rXMDwR5JvYwLdAMIQQYnNauR/+SAnyQcSP+zzIBiz4lA57OSHfL5uE1j3bZyFx9+9r5hYzCe4oNH8bUOdiZjlmMv8IWHDbTT679yW+fwVquArlhFeRSS7EkUIamlirxvp4nVX06OWt0G36miEDTnRPb/BCFPOu23ygyO4dS0mWRDyJxNMGD8cv7zfYujacqtY6OyAerbZp/+I6Snak/ILdqA6D7YDxAJHDEDebs4Dc5+m3yAe99xRe07RvOA1td2MWHYYjG3yxwz9iDSe3zpKqQ4Rs2RoKl2cxxEV3iSQ1o7tO3+m1Pp4AuL7KfU6qZ+NEcdqAXxQqUSX1AwYOE1zZ9KF1QAj9msreD/wr6Co9iBOFRZoaSfnlqSYqRtAGGrojr+7KtX+NwR7eUmo1N3Ta3/GVfFnYhW9ShA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(376002)(366004)(346002)(6506007)(6666004)(478600001)(6486002)(41300700001)(186003)(1076003)(9686003)(6512007)(26005)(2906002)(83380400001)(44832011)(8936002)(7416002)(5660300002)(316002)(54906003)(6916009)(66556008)(4326008)(8676002)(66946007)(66476007)(38100700002)(86362001)(82960400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?haxzI1841zmX9seDQouWzBg8EZWMhs41UYbvevzJsCkbWfsAfmipervfxZGo?=
+ =?us-ascii?Q?IlbgkfWrEbSJU23olgsoHsucquJKHhPP7A7ARQ00UR98HzqH86u5bwlWvTM/?=
+ =?us-ascii?Q?ZYbb7W3kGhs9u3u0sn3IVo9E9FNvXGCmAX1TgqXseqr+BmzFE+OuiTpcHnvJ?=
+ =?us-ascii?Q?EMJa1q6FSB+1ZhJEwVxA5zVJfQc/b5TC+e2l7Qc6bnw5l0VcK3WjScQbD3Mf?=
+ =?us-ascii?Q?hMRGvQkCJTjbYm9feXrBX2bCLnObjo+EkQAQV0esRuT/XRWFVd4z0UX2KTzd?=
+ =?us-ascii?Q?nosTIyaFbPApmWPOEThsYK/8fAVYOJTZ1IG8fb4lU4WKZkn3V0PERVVKVK5z?=
+ =?us-ascii?Q?vc/AlsevTR8n+wT6HpS1iH2eGYmlBdmcjOqa9+PiY7wvwVCPPXxXGSGi/RvZ?=
+ =?us-ascii?Q?KthRiXvbzZ+wplJbM9/J4MLtL7n73WvdZRlPsFJ8YcJuPcDM8oi1F1SE08Ot?=
+ =?us-ascii?Q?Y2CvyuD1W0SV8HywU1fERInN8xet6UikCN7ouq+PontiY5fCGzQUwLKwAu2r?=
+ =?us-ascii?Q?L5hQ2okg1Kv8UY5gL4mHjPJ685LdXlM+YTRZLja8oIvqRuLmPu3yikBOUCrz?=
+ =?us-ascii?Q?E1qFXy3B2c47KRIQerDm+sV6MKRJNdtpVnNAoGuJ5TiZyPjHso2c5zwBuAyb?=
+ =?us-ascii?Q?UeC1WGnOe4zuvJZjqpTJxl2TruuTFubZYenZY3BAPkjCzGU+ZVI12bQO9LSC?=
+ =?us-ascii?Q?Q4tyilyJGasf6oy2SHSHYfSJMCSMD7mQv5I415RnuGzNrSM71Ng1TLw+X0Sa?=
+ =?us-ascii?Q?kFOXhQui0NLVAZYUmeUbi9TVCDPwdn5p5wTblC+Auky/ImFLFhfwFrK59Izs?=
+ =?us-ascii?Q?OnvYdnFeipNcFanqEzLLzmpTBNxRlXyO7oHX56p0ECFr/wq7te7OpKQgkbbC?=
+ =?us-ascii?Q?24sLjDAnpcIbkrh5lSPENrDFR6lao3nDdt5HOpDmo/eV/q82z0VHrj7oYj3E?=
+ =?us-ascii?Q?GxGLCbkXSqhqHhchzADPIJDUKd9gUAe1E4Q4b7YNdlKcFabt3wdq0G8zbNAy?=
+ =?us-ascii?Q?H4O6kRGFhA4i/J9fvfXgwTdjl/0lJqTTJwyrRQmTrNuH72tB6YLKUBhqhqOm?=
+ =?us-ascii?Q?irm+d5xLCkWCNOOUTOiIMQUpdZ1wr1Ys6Ykhyd7jmYQDQJiDTmV4J/jm1CN1?=
+ =?us-ascii?Q?TMK1lfEkBXqNnhKuTjCfApcdkE2v4fpQ180hEnUyIsP052IMYQGE9/NcWWCm?=
+ =?us-ascii?Q?vczsTgVu05v3zJmXZIiTUR5V2NwbfzhGd1Gm3IFLNKwEGe3r7BCcGeU2v5iu?=
+ =?us-ascii?Q?5LQFQCXknxePpwRpxSsrYIBN8wluXMeo2/xjdMl5sn0PY+lrV/wcJCalFe0L?=
+ =?us-ascii?Q?/TGryq8KjLoRWMTyjbyzY9XVWPMW0meijKoMQYqBrkMMyiw0uwxljAwMIcAZ?=
+ =?us-ascii?Q?IaZfi/xwSbttLxIcPnuVYG0G8lwe0AmR8bLxluJw6bpOyrCyKVy4R04qvahn?=
+ =?us-ascii?Q?t3g0TR+FpjBTiXthEpuThx3M0Rv9bSlzSxQ0Z6D405gbTp1HKhpIlyxhm0/O?=
+ =?us-ascii?Q?y1QSAOm+PSQknII5Pczkmn83KqIvVF6b5JVI2Es24W/2Ui8v73mJy1uIbkCE?=
+ =?us-ascii?Q?7hG0sdJPZKaTAVS1sJ/31OVmDkKFu+IRtuXXFQa54vcJywqGbkTpz9Pfm1Le?=
+ =?us-ascii?Q?Vg=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cedf383-0e73-433d-b49b-08da844143ab
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2022 13:21:47.1601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GhU8ly0R5oOh0v/GJHIF2t1BdzS6FCJb6NwH/mf+HhDdMccrPTfOUGB03wqY+ZALjO5KURC4tjpuoVZhL/0bxfGUpZZFWBg+gTqaUTxq5q4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR10MB5887
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Arvid,
+Am Fri, 12 Aug 2022 10:39:08 +0200
+schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
 
-Nice to meet you.
-
-On 8/21/22 22:08, Arvid Norlander wrote:
-> Hi,
+> On Thursday, August 11, 2022, Henning Schild
+> <henning.schild@siemens.com> wrote:
 > 
-> NOTE: I had some trouble sending this with git send-email, I only managed
-> to send one copy successfully! Sorry if I managed to send it multiple
-> times.
+> > So that drivers building on top can find those pins with GPIO_LOOKUP
+> > helpers.  
 > 
-> I'm new to this kernel development thing, so applogies in advance for any
-> mistakes.
-
-No worries, I think you are doing great so far.
-
-Thank you for the detailed analysis and for all the work you are putting
-into this.
-
-> I have an old Toshiba Z830-10W laptop. Unfortunately it doesn't
-> work well under Linux. Fortunately I spent some time figuring out what was
-> wrong. I had documented my findings below. I have also included patches
-> (see the next few emails) for some of the issues.
 > 
-> I would like advice on how to proceed for some of the more advanced
-> problems though:
-> * Do we want to expose all these features that I figured out? For example,
->   how to set the boot order on this old BIOS-only laptop from user space.
->   Or various other settings accessible via the BIOS.
+> 
+> Missed given tag. Do we need to bother reviewing your patches?
 
-I'll try to write a short reply to each feature separately,
-I think we need to balance the worth of a feature to end users vs the amount
-of code to write + maintain here. E.g. adding support for non working
-hw buttons is generally considered worth the effort. Adding support for
-changing the boot-order not so much.
+Sorry but i have no idea what you are talking about, please help me
+out. Whatever i did miss seems to be pretty relevant it seems.
 
-Note there is a generic interface for changing BIOS options from
-within Linux, so if you can change all (or almost all) BIOS options,
-you could consider implementing support for:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-class-firmware-attributes
-
-That has been implemented for Lenovo Think* and for some Dell
-models, but by the vendors themselves and the used WMI APIs are
-actually guaranteed to work on multiple models / generations hardware
-making it worth the effort. Also this is something which their
-customers want for managed rollout of these devices in big
-companies.
-
-IMHO for these Toshiba laptops I still think it is a lot of work
-for something which won't see much use.
-
-It would be good though to:
-1. Write some generic documentation from an end user pov for toshiba_acpi as:
-Documentation/admin-guide/laptops/toshiba_acpi.rst
-see:
-Documentation/admin-guide/laptops/thinkpad-acpi.rst
-as an example
-
-2. Extend the doc from 1. with toshiba_acpi firmware API documentation,
-including your findings on protocol bits which we won't directly
-implement/use so that this is at least written down in case it is
-needed later.
-
-For 2. you can actually just copy and paste a lot of this email,
-I believe that having the info in this email in a
-Documentation/admin-guide/laptops/toshiba_acpi.rst file
-will make it a lot easier to find in the future then only having
-it in the mailinglist archives.
-
-> * For the hardware buttons I describe below, is a solution specific to
->   toshiba_acpi preferred, or should additional effort be spent on
->   investigating a generic solution?
-
-Ok, this is interesting there actually is a specification from
-Microsoft for this:
-http://download.microsoft.com/download/9/c/5/9c5b2167-8017-4bae-9fde-d599bac8184a/dirapplaunch.docx
-
-And there was a previous attempt to add support for the PNP0C32 devices:
-https://marc.info/?l=linux-acpi&m=120550727131007
-https://lkml.org/lkml/2010/5/28/327
-
-And this even made it into drivers/staging for a while, if you do:
-git revert 0be013e3dc2ee79ffab8a438bbb4e216837e3d52
-you will get a: drivers/staging/quickstart/quickstart.c file.
-
-Note this is not great code:
-
-1. If you do:
-  ls /sys/bus/platform/devices
-  You should already see a couple of PNP0C32 platform devices there and the
-  driver should simply bind to those rather then creating its own platform device
-2. As mentioned this really should use the standard /dev/input/event interface
-  for event reporting and allow userspace to change the scancode to EV_KEY*
-  mapping. You can do this e.g. by using a sparse_keymap for the scancode to
-  EV_KEY* mapping which will give you this for free.
-
-> Before I start coding on these more complex issues I would like advice in
-> order to avoid wasting my time on bad designs. In particular, on how to
-> proceed with the "Hardware buttons" section below.
-
-I believe that sending the magic command to make these keys generate events
-should be part of toshiba_acpi, combined with a generic PNP0C32 driver
-for actually reporting the key-presses.
-
-
+Henning
 
 > 
-> Best regards,
-> Arvid Norlander
+> > Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> > ---
+> >  drivers/gpio/gpio-f7188x.c | 138
+> > ++++++++++++++++++------------------- 1 file changed, 69
+> > insertions(+), 69 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+> > index 7b05ecc611e9..45b466b04070 100644
+> > --- a/drivers/gpio/gpio-f7188x.c
+> > +++ b/drivers/gpio/gpio-f7188x.c
+> > @@ -149,10 +149,10 @@ static void f7188x_gpio_set(struct gpio_chip
+> > *chip, unsigned offset, int value);
+> >  static int f7188x_gpio_set_config(struct gpio_chip *chip, unsigned
+> > offset, unsigned long config);
+> >
+> > -#define F7188X_GPIO_BANK(_base, _ngpio, _regbase)
+> >     \ +#define F7188X_GPIO_BANK(_base, _ngpio, _regbase, _label)
+> >       \
+> >         {
+> >     \ .chip = {                                               \
+> > -                       .label            = DRVNAME,
+> >     \
+> > +                       .label            = _label,
+> >     \ .owner            = THIS_MODULE,                \
+> >                         .get_direction    =
+> > f7188x_gpio_get_direction,  \ .direction_input  =
+> > f7188x_gpio_direction_in,   \ @@ -177,98 +177,98 @@ static int
+> > f7188x_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+> >  #define gpio_data_single(type) ((type) == nct6116d)
+> >
+> >  static struct f7188x_gpio_bank f71869_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 6, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 5, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 6, 0x90),
+> > +       F7188X_GPIO_BANK(0, 6, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 6, 0x90, DRVNAME "-6"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f71869a_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 6, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 5, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 8, 0x90),
+> > -       F7188X_GPIO_BANK(70, 8, 0x80),
+> > +       F7188X_GPIO_BANK(0, 6, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
+> > +       F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f71882_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 8, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 4, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 4, 0xB0),
+> > +       F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 4, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 4, 0xB0, DRVNAME "-4"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f71889a_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 7, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 7, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 5, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 8, 0x90),
+> > -       F7188X_GPIO_BANK(70, 8, 0x80),
+> > +       F7188X_GPIO_BANK(0, 7, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 7, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
+> > +       F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f71889_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 7, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 7, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 5, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 8, 0x90),
+> > -       F7188X_GPIO_BANK(70, 8, 0x80),
+> > +       F7188X_GPIO_BANK(0, 7, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 7, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
+> > +       F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f81866_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 8, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 8, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 8, 0x90),
+> > -       F7188X_GPIO_BANK(70, 8, 0x80),
+> > -       F7188X_GPIO_BANK(80, 8, 0x88),
+> > +       F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
+> > +       F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
+> > +       F7188X_GPIO_BANK(80, 8, 0x88, DRVNAME "-8"),
+> >  };
+> >
+> >
+> >  static struct f7188x_gpio_bank f81804_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 8, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(50, 8, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 8, 0x90),
+> > -       F7188X_GPIO_BANK(70, 8, 0x80),
+> > -       F7188X_GPIO_BANK(90, 8, 0x98),
+> > +       F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(90, 8, 0x98, DRVNAME "-6"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank f81865_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 8, 0xF0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(20, 8, 0xD0),
+> > -       F7188X_GPIO_BANK(30, 8, 0xC0),
+> > -       F7188X_GPIO_BANK(40, 8, 0xB0),
+> > -       F7188X_GPIO_BANK(50, 8, 0xA0),
+> > -       F7188X_GPIO_BANK(60, 5, 0x90),
+> > +       F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 5, 0x90, DRVNAME "-6"),
+> >  };
+> >
+> >  static struct f7188x_gpio_bank nct6116d_gpio_bank[] = {
+> > -       F7188X_GPIO_BANK(0, 8, 0xE0),
+> > -       F7188X_GPIO_BANK(10, 8, 0xE4),
+> > -       F7188X_GPIO_BANK(20, 8, 0xE8),
+> > -       F7188X_GPIO_BANK(30, 8, 0xEC),
+> > -       F7188X_GPIO_BANK(40, 8, 0xF0),
+> > -       F7188X_GPIO_BANK(50, 8, 0xF4),
+> > -       F7188X_GPIO_BANK(60, 8, 0xF8),
+> > -       F7188X_GPIO_BANK(70, 1, 0xFC),
+> > +       F7188X_GPIO_BANK(0, 8, 0xE0, DRVNAME "-0"),
+> > +       F7188X_GPIO_BANK(10, 8, 0xE4, DRVNAME "-1"),
+> > +       F7188X_GPIO_BANK(20, 8, 0xE8, DRVNAME "-2"),
+> > +       F7188X_GPIO_BANK(30, 8, 0xEC, DRVNAME "-3"),
+> > +       F7188X_GPIO_BANK(40, 8, 0xF0, DRVNAME "-4"),
+> > +       F7188X_GPIO_BANK(50, 8, 0xF4, DRVNAME "-5"),
+> > +       F7188X_GPIO_BANK(60, 8, 0xF8, DRVNAME "-6"),
+> > +       F7188X_GPIO_BANK(70, 1, 0xFC, DRVNAME "-7"),
+> >  };
+> >
+> >  static int f7188x_gpio_get_direction(struct gpio_chip *chip,
+> > unsigned offset)
+> > --
+> > 2.35.1
+> >
+> >  
 > 
-> Table of contents
-> =================
-> 1. Short info on the laptop and methodology
-> 2. Background on Toshiba ACPI communication methods
-> 3. LED: "Eco" LED ................................ [implemented in patch 1]
-> 4. Battery charge mode ........................... [implemented in patch 2]
-> 5. Hardware buttons ...................................... [Advice wanted!]
-> 6. Panel power control via HCI
-> 7. BIOS setting control from the OS ................... [should we bother?]
->    7.1 Setting boot order
->    7.2 Setting USB memory emulation
->    7.3 Display during boot
->    7.4 CPU control
->    7.5 Wake on LAN
->    7.6 SATA power control
->    7.8 Legacy USB
->    7.9 Wake on keyboard
-> 8. Other features .... [nothing actionable as of now, for information only]
-> 
-> 
-> 1. Short info on the laptop and methodology
-> ===========================================
-> 
-> The Toshiba Z830-10W laptop is a so-called "Ultrabook" dating from 2011.
-> It has BIOS, not UEFI.
-> 
-> The Toshiba Z830-10W laptop has several features that don't work properly
-> under Linux. I have performed reverse engineering by tracing ACPI calls
-> with WinDbg using the "AMLI" feature while performing various actions to
-> determine what the Windows drivers do. My user space tracing on Windows
-> has been limited to determine which programs interact with the driver so
-> that I could kill those that I was not testing behaviour of at the moment.
-> 
-> I have then tested these features using the "acpi_call" kernel module on
-> Linux to issue the relevant calls under Linux. In the following sections
-> is a feature by feature breakdown.
-> 
-> 
-> 2. Background on Toshiba ACPI communication methods
-> ===================================================
-> 
-> This is a short summary of the general protocol. This is already
-> implemented in the toshiba_acpi driver. If you are already familiar with
-> that you can skip this section.
-> 
-> Almost all vendor specific features work via the \_SB_.VALZ ACPI device
-> defined in the DSDT. There are a handful of interesting methods on this
-> object, but for the purposes of this write-up only "GHCI" is relevant. This
-> method takes 6 integer (32-bit) arguments and returns a buffer 6 32-bit
-> integers.
-> 
-> The general format of queries is: {OPERATION, REGISTER, ARG1, ..., ARG4 }.
-> The operation is one of HCI_GET/HCI_SET or SCI_GET/SCI_SET (plus SCI_OPEN
-> and  SCI_CLOSE). This allows for getting and setting various registers to
-> control features or read out data.
-> 
-> The data returned varies a bit, but is /generally/ on the form:
-> {STATUS_CODE, REGISTER_FROM_QUERY, VAL1, ..., VAL4 }
-> 
-> What is the difference between HCI_* and SCI_* calls? The only important
-> difference here is that for SCI_GET/SET you first need to call SCI_OPEN and
-> then follow the get or set with an SCI_CLOSE call.
-> 
-> Much of the rest of this write-up consists of documenting registers
-> previously not handled by the toshiba_acpi Linux driver.
-> 
-> 
-> 3. LED: "Eco" LED [implemented in patch 1]
-> =================
-> 
-> The toshiba_acpi driver has support for controlling some LEDs including the
-> "Eco" LED. Unfortunately that LED works differently on this laptop.
-> 
-> The toshiba_acpi driver checks for TOS_INPUT_DATA_ERROR and tries a
-> different format. On the Z830 the error returned is TOS_NOT_SUPPORTED
-> though the different format still works.
-
-This looks good I'll go and merge it into my for-next git branch
-sometime this week (I usually merge patches in batches).
-
-> 4. Battery charge mode [implemented in patch 2]
-> ======================
-> 
-> This laptop supports not charging the battery fully in order to prolong
-> battery life. Unlike for example ThinkPads where this control is granular
-> here it is just off/on. When off it charges to 100%. When on it charges to
-> about 80%.
-> 
-> According to the Windows program used to control the feature the setting
-> will not take effect until the battery has been discharged to around 50%.
-> However, in my testing it takes effect as soon as the charge drops below
-> 80%. On Windows Toshiba branded this feature as "Eco charging"
-> 
-> In the following example ACPI calls I will use the following newly defined
-> constants:
-> #define HCI_BATTERY_CHARGE_MODE 0xba
-> #define BATTERY_CHARGE_FULL 0
-> #define BATTERY_CHARGE_80_PERCENT 1
-> 
-> To set the feature:
->   {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
-> To query for the existence of the feature:
->   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
-> To read the feature:
->   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
-> 
-> The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
-> the status code. This rarely happens (I have never observed it on Linux),
-> but I have seen it happen under Windows once, and the software did retry
-> it.
-
-Hmm, this is interesting if you look at:
-
-Documentation/ABI/testing/sysfs-class-power
-
-You will see there already is a standard API for this in the form of
-adding a "charge_control_end_threshold" attribute to the standard
-ACPI /sys/class/power_supply/BAT*/ sysfs interface. See e.g.
-drivers/platform/x86/thinkpad_acpi.c
-
-For an example of how to add sysfs attributes to a battery
-which is managed by the standard drivers/acpi/battery.c driver.
-
-I think you can use this standard attribute enabling eco charging
-for any writes with a value <= 90 and disabling it for values
-> 90 (90 being halfway between 80 and 100).
-
-While always showing 80 or 100 on read.
-
-You should then also write a patch for:
-
-Documentation/ABI/testing/sysfs-class-power
-
-Adding something like this to the "charge_control_end_threshold"
-section:
-
-"not all hardware is capable of setting this to an arbitrary
-percentage. Drivers will round written values to the nearest
-supported value. Reading back the value will show the actual
-threshold set by the driver."
-
-(feel free to copy verbatim, but maybe you can do better)
-
-
-> 5. Hardware buttons [Advice wanted!]
-> ===================
-> 
-> All the Fn+<key> hotkeys work. However, there are some hardware buttons
-> that do not. These buttons are:
-> 
-> * A button between space and the touchpad to turn off/on the touchpad.
-> * Two buttons next to the power button, one is "eco-mode", the other is
-> "projector".
-> 
-> The two buttons next to the power button both send Windows+X by default.
-> The touchpad control button does nothing that Linux can detect.
-> 
-> To enable this functionality several changes are needed.
-> 
-> The toshiba_acpi driver currently uses
->   {HCI_SET, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE, 0, ...}
-> to enable the Fn+<key> hotkeys, where HCI_HOTKEY_ENABLE = 0x09. However on
-> this laptop the value 0x05 must be used instead.
-> 
-> This is not the whole story however, as these keys do not work like any of
-> the Fn-hotkeys (ACPI notification on \_SB_.VALZ). Instead, once enabled via
-> the above method they start sending notifications on various PNP0C32
-> devices. These are currently not handled by Linux. According to a search
-> PNP0C32 is "HIDACPI Button Device", so perhaps a generic driver should be
-> created.
-> 
-> The devices in question are:
-> PNP0C32 \_SB_.HS81 UID 0x03 = Enable/disable trackpad
-> PNP0C32 \_SB_.HS87 UID 0x01 = Eco button
-> PNP0C32 \_SB_.HS86 UID 0x02 = Monitor/projector button
-> 
-> Only the "path" and the "UID" value in the ACPI DSDT tell these devices
-> apart.
-> 
-> The notification always uses the value 0x80.
-> 
-> I'm not sure what the best approach to implement support for these would
-> be.
-
-Discussed above.
-
-> 6. Panel power control via HCI
-> ==============================
-> 
-> The toshiba_acpi driver supports controlling the panel power via SCI calls
-> (SCI_PANEL_POWER_ON). Based on the fact that the toshiba_acpi driver
-> outputs a message about reboot being needed I assume this is related to
-> panel power during boot?
-> 
-> However there is a HCI call that can turn the panel off or on immediately:
-> 
-> #define HCI_PANEL_POWER_ON 0x2
-> #define PANEL_ON 1
-> #define PANEL_OFF 0
-> 
-> To read/query existence: {HCI_GET, HCI_PANEL_POWER_ON, 0, 0, 0, 0}
-> To write: {HCI_SET, HCI_PANEL_POWER_ON, panel_on, 0, 0, 0}
-> 
-> This could be related to some backlight issues this laptop is having where
-> backlight control stops working after a suspend/resume.
-> 
-> Control via /sys/class/backlight/intel_backlight always works on this
-> laptop, however, most desktop environment seems to prefer the acpi_video or
-> vendor backlight controls if those exist.
-> 
-> I have tried acpi_backlight=vendor/native but that is broken in the same
-> way. With acpi_backlight=none, the screen never turns on after a resume.
-> However if I turn it on using the above HCI call, everything works
-> normally after that. And since only the intel_backlight driver is left,
-> the desktop environment controls backlight via that method.
->   
-> I have yet to find a satisfactory solution to this problem, but I suspect
-> the correct solution would be to fix backlight control from acpi_video,
-> if that is possible. Suggestions?
-
-I think this is another case of some Toshiba devices needing the
-acpi_video backlight level save/restore behavior over suspend/resume
-while leaving the actual backlight control to intel_backlight.
-
-Quoting from: drivers/acpi/acpi_video.c :
-
-         * Some machines have a broken acpi-video interface for brightness
-         * control, but still need an acpi_video_device_lcd_set_level() call
-         * on resume to turn the backlight power on.  We Enable backlight
-         * control on these systems, but do not register a backlight sysfs
-         * as brightness control does not work.
-         */
-        {
-         /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-         .callback = video_disable_backlight_sysfs_if,
-         .ident = "Toshiba Portege R700",
-         .matches = {
-                DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-                DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
-                },
-        },
-
-Also:
-Toshiba Portege R830:    https://bugs.freedesktop.org/show_bug.cgi?id=82634
-Toshiba Satellite R830:  https://bugzilla.kernel.org/show_bug.cgi?id=21012
-
-You can see if the same option fixes things for you by adding:
-"video.disable_backlight_sysfs_if=1" to your kernel commandline while
-removing all other options. If this works, please submit a patch to
-add your model to the list in drivers/acpi/acpi_video.c, or provide
-dmidecode output, then I can do it for you.
-
-> 7. BIOS setting control from the OS [should we bother?]
-> ===================================
-> Several of the BIOS settings can be controlled from the OS. This all
-> happens via SCI calls. On Windows the "Hwsetup.exe" program offers this
-> control. I'm not sure how useful any of this is (as this is already
-> available via the BIOS).
-> 
-> If you think it is a good idea I could absolutely implement support for
-> this. Otherwise I might build a simple user space tool on top of acpi_call
-> for this. 
-
-As discussed above I don't really think we should bother; and IMHO
-certainly not something worth spending time on before the other issues
-are wrapped up.
-
-> 7.1 Setting boot order
-> ----------------------
-> This is a BIOS (not UEFI) laptop, so boot order could normally not be
-> controlled from the OS. However here it is possible:
-> 
-> #define SCI_BOOT_ORDER 0x157
-> 
-> In this SCI register the boot order is stored as a list with each nibble
-> indicating a device:
-> #define SCI_BOOT_ORDER_FDD 0x0
-> #define SCI_BOOT_ORDER_HDD 0x1
-> #define SCI_BOOT_ORDER_LAN 0x3
-> #define SCI_BOOT_ORDER_USB_MEMORY 0x4
-> #define SCI_BOOT_ORDER_USB_CD 0x7
-> #define SCI_BOOT_ORDER_USB_UNUSED 0xf
-> 
-> These are then combined as follows:
-> 
-> Set boot order to USB memory, USB CD, HDD, LAN, FDD:
-> {SCI_SET, SCI_BOOT_ORDER, 0xfff03174, 0, 0, 0}
-> 
-> Each nibble indicates a device, with the lowest nibble being the first
-> device in the boot order. As this device doesn't have a physical FDD I
-> assume that this refers to USB attached devices, but I have not tested this
-> (I do have a USB floppy drive if anyone really cares).
-> 
-> When reading the data out the result is a bit surprising:
->   {0x0, 0x8505, 0xfff30174, 0x5, 0xfff30741, 0x0}
-> Presumably these other values also mean something, the boot order in this
-> case is USB memory, USB CD, HDD, FDD, LAN, so the third value is the boot
-> order.
-> 
-> I'm not sure what a suitable API for exposing this setting to userspace via
-> sysfs would be.
-> 
-> 7.2 Setting USB memory emulation
-> --------------------------------
-> The BIOS can either treat USB drives as HDDs or FDDs for booting purposes:
-> 
-> #define SCI_BOOT_FLOPPY_EMULATION 0x511
-> #define SCI_BOOT_FLOPPY_EMULATION_FDD 0x1
-> #define SCI_BOOT_FLOPPY_EMULATION_HDD 0x0
-> 
-> To set: {SCI_SET, SCI_BOOT_FLOPPY_EMULATION, value, 0, 0, 0}
-> Getting/existence query: {SCI_GET, SCI_BOOT_FLOPPY_EMULATION, 0, 0, 0, 0}
-> 
-> 7.3 Display during boot
-> -----------------------
-> This controls if BIOS/GRUB/etc is shown on just the internal monitor or
-> if the montior is automatically selected.
-> 
-> Note: When changing this in Windows it tells me a restart is required.
-> 
-> #define SCI_BOOT_DISPLAY 0x300
-> #define SCI_BOOT_DISPLAY_INTERNAL 0x1250
-> #define SCI_BOOT_DISPLAY_AUTO 0x3250
-> 
-> To set: {SCI_SET, SCI_BOOT_DISPLAY, value, 0, 0, 0}
-> Getting/existence query as usual.
-> 
-> Note! I have not tested the effects of this, as the only external monitors
-> I have that are not in storage use DisplayPort, while this laptop has HDMI
-> and VGA. I *do* have an old VGA TFT in storage if anyone cares though...
-> 
-> 7.4 CPU control
-> ---------------
-> I presume this is only for operating systems that don't manage this
-> themselves, I don't know for sure. The wording in the documentation is
-> vague, but I believe it controls CPU frequency behaviour.
-> 
-> Note: When changing this in Windows it tells me a restart is required.
-> 
-> #define SCI_CPU_FREQUENCY 0x132
-> #define SCI_CPU_FREQUENCY_DYNAMIC 0x0
-> #define SCI_CPU_FREQUENCY_HIGH 0x1
-> #define SCI_CPU_FREQUENCY_LOW 0x2
-> 
-> Set and get as usual ({SCI_GET/SET, SCI_CPU_FREQUENCY, value, 0, 0, 0}).
-> 
-> 7.5 Wake on LAN
-> ---------------
-> Note! This only controls Wake on LAN when off/hibernated (and since this
-> laptop has Intel Rapid Start, presumably in that mode too). It is not
-> relevant to WoL when in sleep.
-> 
-> Here the Windows driver seem to query several possibilities until it hits
-> on one that works:
-> #define SCI_WAKE_ON_LAN 0x700
-> 
-> #define SCI_WAKE_ON_LAN_OFF 0x1
-> #define SCI_WAKE_ON_LAN_ON 0x1
-> 
-> #define SCI_WAKE_ON_LAN_REG1 0x0
-> #define SCI_WAKE_ON_LAN_REG2 0x1000
-> #define SCI_WAKE_ON_LAN_REG3 0x800
-> 
-> To set:
->   {SCI_SET, SCI_WAKE_ON_LAN, value | register, 0, 0, 0}
-> To get/query:
->   {SCI_GET, SCI_WAKE_ON_LAN, register, 0, 0, 0}
-> 
-> For example on this specific laptop to enable WoL:
->   {SCI_SET, SCI_WAKE_ON_LAN, SCI_WAKE_ON_LAN_ON | SCI_WAKE_ON_LAN_REG3, 0, 0, 0}
-> 
-> REG1 and REG2 give return code TOS_INPUT_DATA_ERROR on this laptop, but
-> presumably they are needed on some laptops, or the Windows program would
-> not be attempting to use them.
-> 
-> 7.6 SATA power control
-> ----------------------
-> This is another one that I don't know what exactly it corresponds to, maybe
-> it is something Linux can control directly:
-> 
-> #define SCI_SATA_POWER 0x406
-> #define SCI_SATA_POWER_BATTERY_LIFE 0x1
-> #define SCI_SATA_POWER_PERFORMANCE 0x0
-> 
-> Get/set/query as expected: {SCI_SET, SCI_SATA_POWER, value, 0, 0, 0}
-> 
-> 7.8 Legacy USB
-> --------------
-> Controls Legacy USB support in BIOS.
-> 
-> Note: When changing this in Windows it tells me a restart is required.
-> 
-> #define SCI_LEGACY_USB 0x50c
-> #define SCI_LEGACY_USB_ENABLED 0x1
-> #define SCI_LEGACY_USB_DISABLED 0x0
-> 
-> 
-> Get/set/query as expected: {SCI_SET, SCI_LEGACY_USB, value, 0, 0, 0}
-> 
-> 7.9 Wake on keyboard
-> --------------------
-> This controls if pressing a key on the keyboard wakes the laptop from
-> sleep. Otherwise, only opening the monitor or pressing the power button
-> works for this.
-> 
-> #define SCI_WAKE_ON_KEYBOARD 0x137
-> #define SCI_WAKE_ON_KEYBOARD_ENABLE 0x8
-> #define SCI_WAKE_ON_KEYBOARD_DISABLE 0x0
-> 
-> Set: {SCI_SET, SCI_WAKE_ON_KEYBOARD, value, 0, 0, 0}
-> 
-> Get/query on the standard form but with slightly weird return values:
->   {TOS_SUCCESS2, 0x800a, value, 0x38, 0x0, 0x0}
-> 
-> 
-> 8. Other features
-> =================
-> 
-> I should note that I did discover some additional registers, but I don't
-> fully understand them yet. I have thus not included them here in order to
-> not waste your time. However I did write a blog post about this which
-> includes that information, which is available should you be interested:
-> 
-> https://vorpal.se/posts/2022/aug/21/reverse-engineering-acpi-functionality-on-a-toshiba-z830-ultrabook/#other-features_1
-> 
-> 
-> Arvid Norlander (2):
->   platform/x86: Fix ECO LED control on Toshiba Z830
->   platform/x86: Battery charge mode in toshiba_acpi
-> 
->  drivers/platform/x86/toshiba_acpi.c | 115 +++++++++++++++++++++++++++-
->  1 file changed, 114 insertions(+), 1 deletion(-)
-> 
-> 
-> base-commit: e3f259d33c0ebae1b6e4922c7cdb50e864c81928
-
-
-Regards,
-
-Hans
 
