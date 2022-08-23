@@ -2,121 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698FAC32796
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Aug 2022 15:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26718C3F6B0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Aug 2022 15:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240269AbiHWPQ5 (ORCPT
+        id S241566AbiHWPXW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Aug 2022 11:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
+        Tue, 23 Aug 2022 11:23:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244276AbiHWPPa (ORCPT
+        with ESMTP id S244651AbiHWPQB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Aug 2022 11:15:30 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2055.outbound.protection.outlook.com [40.107.95.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3AA516011E
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Aug 2022 03:31:09 -0700 (PDT)
+        Tue, 23 Aug 2022 11:16:01 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70072.outbound.protection.outlook.com [40.107.7.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1501665B9;
+        Tue, 23 Aug 2022 03:33:06 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B8Q3itRhoJD0isgR949doc+rDX725BuDnq2xmUDJ2y8NqekC5atp2xvImhvlfQK/+zkl4jIUkEpahRVXkP3A/TZrUpT2zMuIA/HQUZKmELkCxIJmo872/zjPfsWREPtTYLLuVuBI1sj790Q2u/kJPLUK5pVegLY5CRgZDfK4CW/QNzN0FdqlNlZ76suZ4DShru7OS8FjgRbxA/6VjjL+/hB674DW15hZ90zlEj6XhV9TlmIGfsdEmtWIDYyOKB2MFAM5gYAvzjTQpSrHF8UPVdhruvOWf0PYFfydXxtV8BwvKLC71dWec2X+kHQdZ4F+LFbzn/WcDRMRdjY+7mTpog==
+ b=VfIrjBK1Ay25VnwiuVkeq5VbeyZmCqouyfkZgjt0GELQrqOPd3hCsRhNGDcSbNf+EGwKqCIEU3srba9qvtZUTxULnVnpu1TCYcRG8g6WHEfRmGi4kAmc6t7Ko9Qut8Cx8EjWLBIc9wbPh6ABVpakyJP2mJaRcSK9CdV6dpUlcjM5kedsKChNzs8JDYB3m4nvEC06DoAmzxZXwK3QbNegIS4Q8qyymm7QKFWIvKgRyhxYLoFwKHILyufEfsaB2T8OfVjULiZegFQiMHmd9YT6j8MaYBjn9sxRUqqplz6Vbk2Tz7A95XPqGKGc4IcplNMTe0zMWNByQE9WGBmlfpJVLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BGZv40rvLde99cb90vRWRrk2OLr9veoYcxIiLje4ioU=;
- b=i/znryL5lIPZTBOHwQ2Y4unlHkTBGNByhHFpH1QFFKHJh0jVHrZYjmA/RhDViziN6jlsyTZ6senKks11WgQIXuh47Em0ZntEDlTldjIzAvAvW3BYTm/1YAq/k0w1pJYAh3bSZovAwILtKWZKK1zFoHuekWUQSKes/MYD13/dIqP8IiG6e/d7/68oYO5+Cncqp1dZ7mYAt0Wiw50XIfas77OiFtyuzbPqe3oD21/k1L2PpejhnYTXi+Vl+7wc34INEJaDsDpqos0pmQeZSWPm5SEtgsHintzwqYNe5MpiK+BX3ifpcIge2dPU8K2QVs95TbSkvbdTBJyb0SalnXT19g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ bh=Q/SIkLdlwCfAKaSHnpyBQjoFHswi4PZziFDzWcXh9Yo=;
+ b=VBJUZqEYWashTny5uuCO8svj5qfG0WOxnInOmxbmaTPopuihx9WGxjBHlBFt+IhF9zVg1Q9q1IwpLU0jTJ7OspXtjrI/PPrSXZM4gHZZ8JilD2MWJQVPtoSQGDWfmlrIeFMdKyeDgHXDjB4ifae4tQ3Mem1ztlqhwPwNhCvw+gT32aTbiVSrYO/i/1WTg7gbxJPZR2kCfq2002ZRyhY3H/Q/UyF8EKJsbYONL/RDng18Jbf/zDDvv5k6uamCJI02mAi3Kuok24s2tW7opg1kRZAliYCI7MLDUXECSsuM6PreYF+AJwjsivG8b+3DuMpM+xZEDhapWqGvS9GmHbxXBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 194.138.21.75) smtp.rcpttodomain=linaro.org smtp.mailfrom=siemens.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=siemens.com;
  dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BGZv40rvLde99cb90vRWRrk2OLr9veoYcxIiLje4ioU=;
- b=nkL/Gpz4QDXTZ9pqHB1NcNUdnH1B13IvID/suOSvjrDqW9W9MYBpJT6gTlUGEX7W8a444nPhmTy3LU+1Y9f7ZHVpnYDWh1KeeoCUJYuzDcwVi4ASDl4/Cau5+j45uwHpalmPffjjK3zeRBhyc5rHArpnU4Orz38WEO8CP3T0W4w=
-Received: from DM6PR01CA0015.prod.exchangelabs.com (2603:10b6:5:296::20) by
- SJ0PR12MB5422.namprd12.prod.outlook.com (2603:10b6:a03:3ac::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.20; Tue, 23 Aug
- 2022 10:29:33 +0000
-Received: from DM6NAM11FT099.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:296:cafe::d1) by DM6PR01CA0015.outlook.office365.com
- (2603:10b6:5:296::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.22 via Frontend
- Transport; Tue, 23 Aug 2022 10:29:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT099.mail.protection.outlook.com (10.13.172.241) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5546.7 via Frontend Transport; Tue, 23 Aug 2022 10:29:33 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 23 Aug
- 2022 05:29:30 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 0/4] platform/x86/amd/pmf: Introduce CnQF feature for AMD PMF
-Date:   Tue, 23 Aug 2022 15:59:09 +0530
-Message-ID: <20220823102913.4181217-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+ bh=Q/SIkLdlwCfAKaSHnpyBQjoFHswi4PZziFDzWcXh9Yo=;
+ b=qzJezurO6Gvp6kVORMpgYR6Euw/3NVBc/+bkcFVBf2cavrDZiENLHIF6p4rLFaarxxhOTrgg0S44Xxwp8MwM6if5cf29VKoPCrjcp8ZGVuBOxrc9iy3HokWGmSsch2IUubvOtdiZ7wKzGndwMYpG7lCWvcv+U7dq58Yye+t6Ll+OfiujNQLxV5O4V19Z0Wh+RyeE3fMBl7hzKEpvEH6CA8HLwplUrUqeAv5LC/8kClYT6+FAk3SCSgc9MaCg8djDLUMNu4jpoDo3jZiDpuhsWVPsk2rHjBXzN1uy4VbP38GHXFyWnrXPnaajQlhlLj8P+PSIz13OMWoHggNc832LdQ==
+Received: from GV3P280CA0058.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:9::28) by
+ DB9PR10MB4846.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:2c2::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.16; Tue, 23 Aug 2022 10:24:07 +0000
+Received: from HE1EUR01FT029.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:150:9:cafe::7) by GV3P280CA0058.outlook.office365.com
+ (2603:10a6:150:9::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11 via Frontend
+ Transport; Tue, 23 Aug 2022 10:24:07 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 194.138.21.75)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=siemens.com;
+Received-SPF: Fail (protection.outlook.com: domain of siemens.com does not
+ designate 194.138.21.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.75; helo=hybrid.siemens.com;
+Received: from hybrid.siemens.com (194.138.21.75) by
+ HE1EUR01FT029.mail.protection.outlook.com (10.152.0.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.15 via Frontend Transport; Tue, 23 Aug 2022 10:24:07 +0000
+Received: from DEMCHDC89XA.ad011.siemens.net (139.25.226.103) by
+ DEMCHDC8VRA.ad011.siemens.net (194.138.21.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.9; Tue, 23 Aug 2022 12:24:05 +0200
+Received: from md1za8fc.ad001.siemens.net (139.25.0.80) by
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.9; Tue, 23 Aug 2022 12:24:05 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+CC:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        <simon.guinot@sequanux.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH v4 4/5] platform/x86: simatic-ipc: enable watchdog for 227G
+Date:   Tue, 23 Aug 2022 12:23:43 +0200
+Message-ID: <20220823102344.17624-5-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220823102344.17624-1-henning.schild@siemens.com>
+References: <20220823102344.17624-1-henning.schild@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
+Content-Type: text/plain
+X-Originating-IP: [139.25.0.80]
+X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
+ DEMCHDC89XA.ad011.siemens.net (139.25.226.103)
+X-TM-AS-Product-Ver: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-AS-Result: No-10--11.447500-8.000000
+X-TMASE-MatchedRID: L90KqhDWgfOUYAP3WXIsZ3Cm15xQGrnE2mwVXKpQ3BdHg88w74mNDktc
+        8DbogbSE31GU/N5W5BDT/pFzauZLmXEK4P8QtiVHs3gZaLIY9no/aaS8hrB/2J4CIKY/Hg3AaZG
+        o0EeYG97Gr09tQ7Cw/1BIVsvVu9ABIAcCikR3vq9vibMxAqYXjWHFPUyW8t4AX3DcTx0UaPNCEh
+        brM/bogi6eQ3HQcWnw
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--11.447500-8.000000
+X-TMASE-Version: SMEX-14.0.0.3080-8.6.1018-26680.007
+X-TM-SNTS-SMTP: 06510759FC19E0F5CCD4FBDB51AA4970CD0F36EA6E75AE5B40D375318C7AA1562000:8
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 00e5a11a-6b17-4985-1169-08da84f25eb8
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB5422:EE_
+X-MS-Office365-Filtering-Correlation-Id: a25ec1f1-5b42-4212-908f-08da84f19c54
+X-MS-TrafficTypeDiagnostic: DB9PR10MB4846:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S092JAU6csad8LGtAnjv4IWJjB2TRgZ+mFwCPWXYNI56cPcgas/idneLFcgx91eumEiVCIxV6U0KY3hQn+pr1y/42SYEVFUYs5yLEvsmPspfMR//PGU3SbHo+78QCp1Gbl+vfpiqJtdxlR7f1cQbCvROYi4Cgu/L9gYB6NM+VIP/60z6I0cDD4hZCdLEjyPoipDpLN1TgEow3d6XYr8ql87n6BbZB+FLSI0WFwHqsJn3w8xFwv668ZOiv7+AzxaRsrGoU7H0SR3dawuvHPTJg58NTDm96MTMXmBeCpGQGlSYwJuJibyyXkSLK8zPfI+ZALAnjXISQwSC1uzejlonl9Ld4eLB06w6Rpj2PkqE/siFVbo+fLuGohUuZAX0zXcicR2NJNh2jZp0OFfPiPdoSsH1xtyaGqr8wWymvDDq/2FRS/c7gfY51/T035zbtEPe4xjFcmtoRwJC9+RWWpM5U1EqjuPlgRos6DJWzbJl1gzhdXwgyTfJXE+hcnqUDc5OaTycil57BBY0bWvfHrcFUfE1oXB//nrm40qzuH5ejNNwmTJ9fD/mWDukpyIkH1BpPIGs8syu+jncBnbUD/9HRHw99j+KvZvVfkZdeoNrnlIPiN3Mw63Vx/i3Io80EzVh5/FS9mEzA3sYS7uNb7A+5n52NDlSNnJI0VH/uHesIGwjxdfJlFj3MpI7rzZP6f201MspO0SLlCHfUhnUuHlYDceAok8bVfZO+tOJgenctSZNJJYKAIMYS7WAT0XBL9qlcSLiu36HXIxImblmIENz1veb90nAcAtAPgYX8h1aIdk=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(396003)(346002)(39860400002)(376002)(46966006)(36840700001)(40470700004)(70586007)(70206006)(8676002)(316002)(8936002)(110136005)(5660300002)(6666004)(54906003)(2906002)(4326008)(7696005)(83380400001)(478600001)(26005)(41300700001)(36756003)(426003)(47076005)(2616005)(336012)(186003)(1076003)(16526019)(40480700001)(40460700003)(86362001)(356005)(36860700001)(81166007)(82740400003)(82310400005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2022 10:29:33.1326
+X-Microsoft-Antispam-Message-Info: 6xdsrH1gmrKCcNeGeKdMaFs6BX7eaMSt46g9aQ8vtrD75gcvqhAv5do4ki5AV5YEBPnv8brz7Vs87P6A3vl8gDrHR98an5eNxoiK027kRCmiJ0vjG4HGbgeINGe04cPguU5tcsPEZWXVT38JZE+zwCRAobs4OWgTTgvLeDP4u1+piYBPPWqkg+oXMWizfEZq/wW0OvNrgCSPXffVlrcCjCZ202I9mXIlf2VZ/CfxYaRz0ZI9WSjxGQK+asjRyHibLeOs8atpuDSjggy+A+aY28Poq2hmsY4IsoJCsaEwpgmESj9ZhX7cGe1WtDDOZNTcM2QHrgl1bTYpVgZLftITTYWukQ64jaoyHwIVXJ7D4zdtRKr98Av87elHkzs8CWdJ43+J5vpbWwXe5ieYXFLrZo2UgBWwd262zS8vz2mdXNUKW375nwImk64g5TlwrGeJ6vDFE1qK6va4MBSCWiEXgmXjje40Vk1o6G2VcTcJIlJKJmfgQRUxXuLBnVg1NWvU9a6yUeaj7+yba8vMeGQYCFoT3fVnk66Jenk7DZlRGhuF0rdffUcqHAmG9TR4MgxfrW4eDJSpNRbU+hp1t7PGD/Mq8HnLGJmVg1bgz2nUtNi8MrtjfCxQoec30GRZMrf/WJJo1QlnAOv0dYJc1P7gyf34Shxwo/70EDXaV743nS51R+f4jK6nPcXxAFv9bgha+IPelXjbr9LCdic6eLGbskSXYttEha7H/m7KVEsnzPWwAW+Wn9TzeHD0RjdLno5gY/I1xUW8Yc7LhajOofaKN6Sv4N5ipoVUuKkHBU0oUqMXe1T0xd3Ma5fYzYpFUq/CNQTSVvkULusSfFNoEBE3kMi4F5L7yvbgz/ye+5orpXBf6YyXOMsjx89vApVmCDRBkj+QvFkOZkrF32YREZqikQ==
+X-Forefront-Antispam-Report: CIP:194.138.21.75;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(136003)(376002)(39860400002)(36840700001)(46966006)(40470700004)(2906002)(36756003)(82310400005)(5660300002)(40480700001)(8676002)(4326008)(70586007)(70206006)(6666004)(316002)(107886003)(110136005)(54906003)(41300700001)(478600001)(26005)(82740400003)(81166007)(82960400001)(356005)(921005)(186003)(86362001)(16526019)(47076005)(336012)(956004)(2616005)(36860700001)(8936002)(7416002)(44832011)(4744005)(1076003)(34020700004)(83380400001)(40460700003)(36900700001)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2022 10:24:07.0025
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00e5a11a-6b17-4985-1169-08da84f25eb8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT099.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a25ec1f1-5b42-4212-908f-08da84f19c54
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.75];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT029.eop-EUR01.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5422
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB4846
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In this series, support for following features has been added.
-- "Cool n Quiet Framework (CnQF)" is an extension to the static slider,
-  where the system power can be boosted or throttled independent
-  of the selected slider position.
-- On the fly, the CnQF can be turned on/off via a sysfs knob.
+Just load the watchdog module, after having identified that machine.
+That watchdog module does not have any autoloading support.
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ drivers/platform/x86/simatic-ipc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Shyam Sundar S K (4):
-  platform/x86/amd/pmf: Add support for CnQF
-  platform/x86/amd/pmf: Add sysfs to toggle CnQF
-  Documentation/ABI/testing/sysfs-amd-pmf: Add ABI doc for AMD PMF
-  MAINTAINERS: Update ABI doc path for AMD PMF
-
- Documentation/ABI/testing/sysfs-amd-pmf |  11 +
- MAINTAINERS                             |   1 +
- drivers/platform/x86/amd/pmf/Makefile   |   2 +-
- drivers/platform/x86/amd/pmf/acpi.c     |  10 +
- drivers/platform/x86/amd/pmf/cnqf.c     | 374 ++++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/core.c     |  16 +-
- drivers/platform/x86/amd/pmf/pmf.h      | 100 +++++++
- 7 files changed, 512 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-amd-pmf
- create mode 100644 drivers/platform/x86/amd/pmf/cnqf.c
-
+diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+index 1825ef21a86d..8dd686d1c9f1 100644
+--- a/drivers/platform/x86/simatic-ipc.c
++++ b/drivers/platform/x86/simatic-ipc.c
+@@ -96,6 +96,9 @@ static int register_platform_devices(u32 station_id)
+ 			 ipc_wdt_platform_device->name);
+ 	}
+ 
++	if (station_id == SIMATIC_IPC_IPC227G)
++		request_module("w83627hf_wdt");
++
+ 	if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
+ 	    wdtmode == SIMATIC_IPC_DEVICE_NONE) {
+ 		pr_warn("unsupported IPC detected, station id=%08x\n",
 -- 
-2.25.1
+2.35.1
 
