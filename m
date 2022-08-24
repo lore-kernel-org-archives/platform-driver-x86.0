@@ -2,93 +2,197 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F45C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 13:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A606CC32793
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 13:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235001AbiHXNSf (ORCPT
+        id S237265AbiHXN0y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 09:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
+        Wed, 24 Aug 2022 09:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238109AbiHXNSd (ORCPT
+        with ESMTP id S238237AbiHXN0x (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 09:18:33 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBB158506;
-        Wed, 24 Aug 2022 06:18:31 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1oQqH8-000392-8f; Wed, 24 Aug 2022 15:18:30 +0200
-Message-ID: <094a288e-f80c-49f7-9288-490406901c15@leemhuis.info>
-Date:   Wed, 24 Aug 2022 15:18:28 +0200
+        Wed, 24 Aug 2022 09:26:53 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A939269F5B;
+        Wed, 24 Aug 2022 06:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661347611; x=1692883611;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=MlySsLPdoAztoxuUnioJVpj6nmnJAiB2GUXpz6LMYIs=;
+  b=b5lh3zWNK8FigoTwzJB7oO09MRvBVQJWrG5X99qudCkM/i7X4xthBxqR
+   66D7PnzV774PG/VCw7lfFhrbx3IVSDpAkUZ8AWhuzyMIUPAmToOGVaYJM
+   xcFUFrgWIl3Ohxe3OA8hQZJkRTr1rvu/R0bIoZTqKQ2i78IyP+pEl0Y8V
+   xM141I93MCinZSQJ6buqBAj0WrQ0LWLyHmkoIr1l46b4qXmT1IwkwYfHB
+   HBRMq6utV8hJZXY3Ne9bDWC5iA0PNmvBzPM2FuRbb7HTQfFsezR1ZNtqI
+   eUxaLR1yGuFcyEbmM+kBpOfvWEqz2pl9HOnPRMKos1o0lBIsG/dd/+No8
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="273716797"
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="273716797"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 06:26:50 -0700
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="670503413"
+Received: from zlim2-mobl.gar.corp.intel.com (HELO localhost) ([10.252.52.23])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 06:26:43 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 11/31] drm/i915: Call acpi_video_register_backlight()
+ (v2)
+In-Reply-To: <7660855c-6307-a321-5250-cc8a51075bda@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20220824121523.1291269-1-hdegoede@redhat.com>
+ <20220824121523.1291269-12-hdegoede@redhat.com> <87y1vdizau.fsf@intel.com>
+ <7660855c-6307-a321-5250-cc8a51075bda@redhat.com>
+Date:   Wed, 24 Aug 2022 16:26:40 +0300
+Message-ID: <87sfllixgv.fsf@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Content-Language: en-US
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     plumerlis@gmail.com,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Hans de Goede <hdegoede@redhat.com>
-To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Bug 216355 - Thinkpad X1C 9th mute LED stop working after kernel 5.19
- upgrade
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661347112;715ce597;
-X-HE-SMSGID: 1oQqH8-000392-8f
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi, this is your Linux kernel regression tracker.
+On Wed, 24 Aug 2022, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
+>
+> On 8/24/22 14:47, Jani Nikula wrote:
+>> On Wed, 24 Aug 2022, Hans de Goede <hdegoede@redhat.com> wrote:
+>>> On machins without an i915 opregion the acpi_video driver immediately
+>>> probes the ACPI video bus and used to also immediately register
+>>> acpi_video# backlight devices when supported.
+>>>
+>>> Once the drm/kms driver then loaded later and possibly registered
+>>> a native backlight device then the drivers/acpi/video_detect.c code
+>>> unregistered the acpi_video0 device to avoid there being 2 backlight
+>>> devices (when acpi_video_get_backlight_type()==native).
+>>>
+>>> This means that userspace used to briefly see 2 devices and the
+>>> disappearing of acpi_video0 after a brief time confuses the systemd
+>>> backlight level save/restore code, see e.g.:
+>>> https://bbs.archlinux.org/viewtopic.php?id=269920
+>>>
+>>> To fix this the ACPI video code has been modified to make backlight class
+>>> device registration a separate step, relying on the drm/kms driver to
+>>> ask for the acpi_video backlight registration after it is done setting up
+>>> its native backlight device.
+>>>
+>>> Add a call to the new acpi_video_register_backlight() after the i915 calls
+>>> acpi_video_register() (after setting up the i915 opregion) so that the
+>>> acpi_video backlight devices get registered on systems where the i915
+>>> native backlight device is not registered.
+>>>
+>>> Changes in v2:
+>>> -Only call acpi_video_register_backlight() when a panel is detected
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> ---
+>>>  drivers/gpu/drm/i915/display/intel_display.c | 8 ++++++++
+>>>  drivers/gpu/drm/i915/display/intel_panel.c   | 3 +++
+>>>  drivers/gpu/drm/i915/i915_drv.h              | 2 ++
+>>>  3 files changed, 13 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+>>> index 6103b02c081f..2bb53efdb149 100644
+>>> --- a/drivers/gpu/drm/i915/display/intel_display.c
+>>> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+>>> @@ -9088,6 +9088,14 @@ void intel_display_driver_register(struct drm_i915_private *i915)
+>>>  	/* Must be done after probing outputs */
+>>>  	intel_opregion_register(i915);
+>>>  	acpi_video_register();
+>>> +	/*
+>>> +	 * Only call this if i915 is driving the internal panel. If the internal
+>>> +	 * panel is not driven by i915 then another GPU driver may still register
+>>> +	 * a native backlight driver later and this should only be called after
+>>> +	 * any native backlights have been registered.
+>>> +	 */
+>>> +	if (i915->have_panel)
+>>> +		acpi_video_register_backlight();
+>> 
+>> Apologies for procrastinating the review.
+>> 
+>> Please let's not add new flags like have_panel to i915; we're trying to
+>> clean it up instead.
+>> 
+>> The code here needs to iterate over the connectors to decide. Maybe
+>> better abstracted a function.
+>
+> So something like add a i915_have_panel() helper which iterates over all
+> the connectors and then of 1 of them is of the LVDS / eDP / DSI type
+> return true ?
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported. That's why I decided to forward it by
-mail to those that afaics should handle this.
+Or abstract the acpi_video_register_backlight() calling in a function
+that does the loop and calls if necessary.
 
-To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216355 :
+BR,
+Jani.
 
->  plum 2022-08-13 02:11:01 UTC
-> 
-> I upgrade to kernel 5.19.1 but found my thinkpad x1 carbon 2021's mute led stop working.
-> 
-> Function is okay but LED won't light up.
-> 
-> Back to kernel 5.18 and it's normal and working again.
-> 
-> Fedora 36 64 bit 
-> Gnome-shell 42
 
-See the ticket for details and further comments.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>>>  	intel_audio_init(i915);
+>>>  
+>>> diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+>>> index 237a40623dd7..4536c527f50c 100644
+>>> --- a/drivers/gpu/drm/i915/display/intel_panel.c
+>>> +++ b/drivers/gpu/drm/i915/display/intel_panel.c
+>>> @@ -646,8 +646,11 @@ intel_panel_mode_valid(struct intel_connector *connector,
+>>>  
+>>>  int intel_panel_init(struct intel_connector *connector)
+>>>  {
+>>> +	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
+>>>  	struct intel_panel *panel = &connector->panel;
+>>>  
+>>> +	dev_priv->have_panel = true;
+>>> +
+>>>  	intel_backlight_init_funcs(panel);
+>>>  
+>>>  	drm_dbg_kms(connector->base.dev,
+>>> diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+>>> index 69ce6db6a7c1..14b0dcaf25c2 100644
+>>> --- a/drivers/gpu/drm/i915/i915_drv.h
+>>> +++ b/drivers/gpu/drm/i915/i915_drv.h
+>>> @@ -756,6 +756,8 @@ struct drm_i915_private {
+>>>  
+>>>  	bool ipc_enabled;
+>>>  
+>>> +	bool have_panel;
+>>> +
+>>>  	struct intel_audio_private audio;
+>>>  
+>>>  	struct i915_pmu pmu;
+>> 
+>
 
-Please look into the issue if you're among the main recipients of this
-mail (and not just CCed). I hope I picked the right people to sent this
-to, if not just let everyone know.
-
-Anyway, to ensure this is not forgotten lets get this tracked by the the
-Linux kernel regression tracking bot:
-
-#regzbot introduced: v5.18..v5.19
-https://bugzilla.kernel.org/show_bug.cgi?id=216355
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report in bugzilla, as the kernel's documentation calls
-for; above page explains why this is important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+-- 
+Jani Nikula, Intel Open Source Graphics Center
