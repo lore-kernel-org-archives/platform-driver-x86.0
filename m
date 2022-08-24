@@ -2,81 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE49C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 15:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8831C3F6B0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 15:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239099AbiHXPVJ (ORCPT
+        id S238916AbiHXP74 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 11:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48306 "EHLO
+        Wed, 24 Aug 2022 11:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238837AbiHXPVI (ORCPT
+        with ESMTP id S238447AbiHXP7z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 11:21:08 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CC074DE2;
-        Wed, 24 Aug 2022 08:21:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661354466; x=1692890466;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0blbZmCGeUs6sn2zmHlBPUj2jjJyqCVMCrHAfZOhsJ4=;
-  b=k6wdD35i7rP31k/iKJ7VD35BKyNMwj30URIINKUeY9C/GMs35gUogXs9
-   VNdJVwHL7zwQgxeVUUVkJecsV5R8Njc/lBCkNm99AQK34adZNyMCTRAfO
-   KnmCtByVE42cd9ngf37lTtctv4kq8VoM2jgCOGbfLOTLkl6n+89VTRNPl
-   X4DHVZsPxFqZl5z7bYsdttnvfsEnVHL9ImwMG6dKPOalEGau+BrcahxQ/
-   +IQ3uTcvbmrH9giwmK/J+8Hb+uoTJo+3nRzaG0l8TtH6ingfeijKdETuj
-   Y8LjbFTYc1pRr309an7g20gbfR+/SnDWg+7+la2vJ03bBb2YAmWdqk+V/
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="295275958"
-X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
-   d="scan'208";a="295275958"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 08:21:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
-   d="scan'208";a="670545402"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Aug 2022 08:21:03 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 87A90174; Wed, 24 Aug 2022 18:21:17 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/x86: intel_cht_int33fe: Fix comment according to the code flow
-Date:   Wed, 24 Aug 2022 18:21:15 +0300
-Message-Id: <20220824152115.88012-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        Wed, 24 Aug 2022 11:59:55 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C66927B3D;
+        Wed, 24 Aug 2022 08:59:54 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id m2so5611637qvq.11;
+        Wed, 24 Aug 2022 08:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=7hORbcq/+/qG8SwkVlzbfMOWmi0HkT2VLP96xu1KWXs=;
+        b=ZV/kBVEPZRaG0fH4TYyc75cjY5NOpj9CpPG15QgBOMjpAs8RDetkPOMrBDyd3rL7wA
+         +jKILlJ8KhrEBkYo5Q4vQ/HWTyN+lm4wOGxBwhlvXY5z8/CeeCWbII5IHquvQsZAhBkv
+         O2CYI3gkcYHsypMF690g+zDwEyyPYUqSJ7iWyyg1TRY/9260TJuh6fvU7zxhfIjIvBlw
+         5oRUu6Q/aYKPDILqgcidfUVUx3nKY3d7aViT/0cy3V7zbTk4cUXD/AOZTz+kD1XctOyl
+         mDLmdoPBCvCUDb1sqyceA5qVfRmz/1VeWGywagHqeY2eTO0WJHeJKO8WBcsgNbnp2nYa
+         0mFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=7hORbcq/+/qG8SwkVlzbfMOWmi0HkT2VLP96xu1KWXs=;
+        b=fwfOL9UTyMn7pGyCf6rvjibhnQKL9MxET8b/b0xj3J6JZhoHbY+Zqdom87t9SOFYFk
+         XJ+mR1QT1MI1IJtkKnRLrLQ9uZyjR9o+XqfgEPKSBTznwzkLh55bCODJjscPFfRL7dSQ
+         B/yrY2ZONyRephUn1o5tqytAIhyZvX6Ee0syoF3KHYyEzg2N87ZLUARFznHZuLDlZNZ5
+         bGwuoWRDl51Wcq06y2KTP+VwDVF3HcecXdgscf2F/GCCb1YEsyCdwA2PZxtpa+vAhhpP
+         mlWAqAdkj56TGFQYDHTq7qdgUp9HArNUtZmMPkkZMNCIwkLEUTcfv+RHnamX5S/grhVn
+         AgHA==
+X-Gm-Message-State: ACgBeo2sD5x2ep7K64vAgVx6HBP/wZqfV19ZYMZJjHDybBugK/LtM9L+
+        UH70eciBUk4ld5KPGkgZMAFybUcaDVQSWx+IRzM=
+X-Google-Smtp-Source: AA6agR6IH/YQUvcAvIaOUOZc6i6jJnkeQHEC2lXPQYr5m1uMOxJpXvI2FPgxjplaxtJAK3k4brOP372jhbwcCfOHiS0=
+X-Received: by 2002:ad4:5baf:0:b0:476:6a9e:b5e1 with SMTP id
+ 15-20020ad45baf000000b004766a9eb5e1mr24691932qvq.64.1661356793655; Wed, 24
+ Aug 2022 08:59:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220824140347.1842-1-henning.schild@siemens.com> <20220824140347.1842-2-henning.schild@siemens.com>
+In-Reply-To: <20220824140347.1842-2-henning.schild@siemens.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 Aug 2022 18:59:17 +0300
+Message-ID: <CAHp75Vf6agD-G1Ey1UgUvWnub4Q8-ysx3OMV14dR3ed5FRX=Vw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        simon.guinot@sequanux.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-We don't use software_node_register_nodes() in the code, fix the comment.
+On Wed, Aug 24, 2022 at 5:04 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+>
+> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO chips are
+> very similar to the ones from Fintek. In other subsystems they also
+> share drivers and are called a family of drivers.
+>
+> For the GPIO subsystem the only difference is that the direction bit is
+> reversed and that there is only one data bit per pin. On the SuperIO
+> level the logical device is another one.
+>
+> On a chip level we do not have a manufacturer ID to check and also no
+> revision.
 
-Fixes: 140355e5db8b ("platform/x86: intel_cht_int33fe: Convert software node array to group")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-index c52ac23e2331..9448e2e67c3f 100644
---- a/drivers/platform/x86/intel/chtwc_int33fe.c
-+++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-@@ -219,7 +219,7 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
- 
- 	/*
- 	 * Update node used in "usb-role-switch" property. Note that we
--	 * rely on software_node_register_nodes() to use the original
-+	 * rely on software_node_register_node_group() to use the original
- 	 * instance of properties instead of copying them.
- 	 */
- 	fusb302_mux_refs[0].node = mux_ref_node;
+> +#define gpio_dir_invert(type)  ((type) == nct6116d)
+> +#define gpio_data_single(type) ((type) == nct6116d)
+
+What you are trying to do here is to put GPIO maintainers / heavy
+contributors on a minefield (basically moving your job to their
+shoulders). Please, provide a proper namespace and not gpio_ one. I'm
+talking in my "GPIO heavy contributor" hat on.
+
+With that fixed I can survive w/o pr_fmt() being in this patch. If you
+are going to address this, you may add my tag in a new version.
+
 -- 
-2.35.1
-
+With Best Regards,
+Andy Shevchenko
