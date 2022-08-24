@@ -2,205 +2,150 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DBC38142
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 14:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1321C00140
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 15:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238423AbiHXOYz (ORCPT
+        id S238827AbiHXPL7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 10:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41016 "EHLO
+        Wed, 24 Aug 2022 11:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238932AbiHXOYx (ORCPT
+        with ESMTP id S238039AbiHXPL6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 10:24:53 -0400
+        Wed, 24 Aug 2022 11:11:58 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB783CF6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 07:24:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762EA92F67
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 08:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661351090;
+        s=mimecast20190719; t=1661353916;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQke1uAFyf+l+gfskjhrFENVwnZBGyDHLkVnYKpq0b8=;
-        b=SS+xMMTftpLu0QQYDHV4u7WWwukEnS6dF4ciYr+gAJ9wzpn7O5OufvYvxWpfp2ORRKcdoJ
-        u6+bD4KDYkKitfddMQTtQHdWmyBFwkZ5qzu5XKSZsdi7PgtydVXGd3sXUR807BlbcOBJYn
-        ywm5Qi8VNCg2XJ8oVfyJD8NCHZs21YA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-395-Bsdq8JpGNzmZAbvFcIVPsA-1; Wed, 24 Aug 2022 10:24:48 -0400
-X-MC-Unique: Bsdq8JpGNzmZAbvFcIVPsA-1
-Received: by mail-ed1-f71.google.com with SMTP id z6-20020a05640240c600b0043e1d52fd98so11233947edb.22
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 07:24:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=tQke1uAFyf+l+gfskjhrFENVwnZBGyDHLkVnYKpq0b8=;
-        b=rA0iuZph0MJ2QS2GK3UzNktYbqbQxVnL8G4FAYL5568Mh09Y5S/8Wtgj8IcLjfGyTU
-         CcfCcecMAlZAwYmF6g2dck0KOqY36mn5LW+aTPHB8SLYv+H9wOfpyI/NwTl8A6eBbnln
-         ZFL7WXiQ+FdtnzQx+RF4YeRwEppw8jnlNhqckEc4q+hfzg5Kab6HV1LB4pzq0wFEDv0v
-         BnS7fahZyoFcVllIA38vUUwz/EgnRp5vAs3H3SLL+SnmwmfhcDrHb7REbFl+qrrnc4a6
-         jbqXeQ0XJlwe+wS8+b8dft92uTDy7dohBHUKJo7XBLVzNyCqN8fQMzPPfsfXDM7pq3aj
-         AYUg==
-X-Gm-Message-State: ACgBeo0k9cQyjr0O/FTvEuaKnms92VJQqSGei4VmEjUCOyZm7CWTubc+
-        o1oIkkcCO+hAciz5Cx/IdJv1yt/RFqongwiZB/7RsiSCrnvyEgbYKQz+WAiENWUWeHiUmOF1hlX
-        XBu+BvjY+8H9edrtp2k3uoSt+y5W1Wvc4Fw==
-X-Received: by 2002:a17:907:9625:b0:730:ad62:9c86 with SMTP id gb37-20020a170907962500b00730ad629c86mr3011146ejc.281.1661351087765;
-        Wed, 24 Aug 2022 07:24:47 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4bv/Po/N8M1a0SF9Ql41Lt+GukBkl+BsrHt2uxtwsEvwijMYkrGatSVB5OWU9bIY5pkkWNYQ==
-X-Received: by 2002:a17:907:9625:b0:730:ad62:9c86 with SMTP id gb37-20020a170907962500b00730ad629c86mr3011123ejc.281.1661351087546;
-        Wed, 24 Aug 2022 07:24:47 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id p7-20020a17090653c700b0073d68d2fc29sm1185239ejo.218.2022.08.24.07.24.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Aug 2022 07:24:46 -0700 (PDT)
-Message-ID: <3ec46cab-c775-824c-6bad-6fdddeea6e6a@redhat.com>
-Date:   Wed, 24 Aug 2022 16:24:46 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v4 1/5] gpio-f7188x: Add GPIO support for Nuvoton NCT6116
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     simon.guinot@sequanux.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>
-References: <20220823102344.17624-1-henning.schild@siemens.com>
- <20220823102344.17624-2-henning.schild@siemens.com>
- <YwToilxquEZGqzQD@smile.fi.intel.com>
- <20220823165459.143e1c30@md1za8fc.ad001.siemens.net>
- <YwYjXzsSHNe+J3aO@76cbfcf04d45>
- <20220824155038.5aa19495@md1za8fc.ad001.siemens.net>
- <a001efb5-95a3-d89d-32bd-557b6f11bb80@redhat.com>
- <20220824161757.4ca3bb97@md1za8fc.ad001.siemens.net>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JjvEvWpVQObDEctpZ5deFovSJx3NuM3FBCCpU6Q01x0=;
+        b=bARDjTF4ysAyYeBESL1h1FzbMnLDhoVOQaWGxMt9aTcbYsSIh4MMfDiC2ow8lAlvwgEsgT
+        AYJwbWRwDp92gF5/03RcnltAhtmAVyWzB7e4xDRJsExU3Tk64v4/flRjhI/l7AWYD7cZ/z
+        uE1rc3Oevbb+5orDn0qt47eUA0gE+sE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-275-Pri-FbsqPreoFtb_M1n-6A-1; Wed, 24 Aug 2022 11:11:55 -0400
+X-MC-Unique: Pri-FbsqPreoFtb_M1n-6A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B3B03815D48;
+        Wed, 24 Aug 2022 15:11:54 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.193.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF0911121315;
+        Wed, 24 Aug 2022 15:11:53 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220824161757.4ca3bb97@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D . Jones" <luke@ljones.dev>
+Subject: [PATCH 1/2] platform/x86: asus-wmi: Simplify tablet-mode-switch probing
+Date:   Wed, 24 Aug 2022 17:11:44 +0200
+Message-Id: <20220824151145.1448010-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The 3 different tablet-mode-switch initialization paths repeat a lot
+of the same code. Add a helper function for this.
 
-On 8/24/22 16:17, Henning Schild wrote:
-> Am Wed, 24 Aug 2022 15:54:28 +0200
-> schrieb Hans de Goede <hdegoede@redhat.com>:
-> 
->> Hi Henning,
->>
->> On 8/24/22 15:50, Henning Schild wrote:
->>> Am Wed, 24 Aug 2022 15:10:55 +0200
->>> schrieb simon.guinot@sequanux.org:
->>>   
->>>> On Tue, Aug 23, 2022 at 04:54:59PM +0200, Henning Schild wrote:  
->>>>> Am Tue, 23 Aug 2022 17:47:38 +0300
->>>>> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:    
->>>>
->>>> Hi Andy,
->>>>
->>>> Thanks for this new version. It is looking good to me.
->>>>  
->>>>>     
->>>>>> On Tue, Aug 23, 2022 at 12:23:40PM +0200, Henning Schild wrote:
->>>>>>   
->>>>>>> Add GPIO support for Nuvoton NCT6116 chip. Nuvoton SuperIO
->>>>>>> chips are very similar to the ones from Fintek. In other
->>>>>>> subsystems they also share drivers and are called a family of
->>>>>>> drivers.
->>>>>>>
->>>>>>> For the GPIO subsystem the only difference is that the direction
->>>>>>> bit is reversed and that there is only one data bit per pin. On
->>>>>>> the SuperIO level the logical device is another one.
->>>>>>>
->>>>>>> On a chip level we do not have a manufacturer ID to check and
->>>>>>> also no revision.      
->>>>>>
->>>>>> ...
->>>>>>     
->>>>>>> - * GPIO driver for Fintek Super-I/O F71869, F71869A, F71882,
->>>>>>> F71889 and F81866
->>>>>>> + * GPIO driver for Fintek and Nuvoton Super-I/O chips      
->>>>>>
->>>>>> I'm not sure it's good idea to drop it from here. It means reader
->>>>>> has to get this info in a hard way.
->>>>>>
->>>>>> ...    
->>>>>
->>>>> Let us see what others say. I wanted to keep this in line with
->>>>> what Kconfig says and the oneliner in the Kconfig was getting
->>>>> pretty longish. Hence i decided to shorten that. Other drivers
->>>>> also seem to not list all the possible chips in many places, it
->>>>> is all maint effort when a new chips is added and the list is in
->>>>> like 5 places.    
->>>>
->>>> I agree with you that we can drop this line. It was already
->>>> incomplete and the information is quite readable a few lines below
->>>> in both the define list and the chip enumeration.
->>>>  
->>>>>     
->>>>>>> +#define gpio_dir_invert(type)	((type) == nct6116d)
->>>>>>> +#define gpio_data_single(type)	((type) == nct6116d)
->>>>>>>  
->>>>>>
->>>>>> What's prevents us to add a proper prefix to these? I don't like
->>>>>> the idea of them having "gpio" prefix.
->>>>>>
->>>>>> ...
->>>>>>     
->>>>>>> +		pr_info(DRVNAME ": Unsupported device
->>>>>>> 0x%04x\n", devid);
->>>>>>> +			pr_debug(DRVNAME ": Not a Fintek
->>>>>>> device at 0x%08x\n", addr);
->>>>>>> +	pr_info(DRVNAME ": Found %s at %#x\n",
->>>>>>> +		pr_info(DRVNAME ":   revision %d\n",      
->>>>>>
->>>>>> Can we, please, utilize pr_fmt()?
->>>>>>     
->>>>>>> +			(int)superio_inb(addr,
->>>>>>> SIO_FINTEK_DEVREV));      
->>>>>>
->>>>>> Explicit casting in printf() means wrong specifier in 99% of
->>>>>> cases.   
->>>>>
->>>>> For all the other comments i will wait for a second opinion. I
->>>>> specifically did not change existing code for more than the
->>>>> functional changes needed. And a bit of checkpatch.pl fixing.
->>>>> Beautification could be done on the way but would only cause
->>>>> inconsistency. That driver is what it is, if someone wants to
->>>>> overhaul the style ... that should be another patch. One likely
->>>>> not coming from me.    
->>>>
->>>> About the int cast, I think you can drop it while you are updating
->>>> this line. It is unneeded.  
->>>
->>> Ok two voices for doing that one fix along the way. I will send a v5
->>> and hope nobody insists on me fixing the other findings in code i
->>> never wrote.  
->>
->> You did not write it, but you are using it to do hw-enablement for
->> your company's products. So being asked to also some touch-ups
->> left and right while you are at it really is not unexpected IMHO.
-> 
-> Sure thing. Dropping a few characters from a line i touch anyhow is
-> easy enough. But i.e a refactoring to pr_fmt would feel like asking too
-> much in my book. That feels like work of the author or maintainer.
+This also makes the error-handling for the kbd_dock_devid case consistent
+with the other 2 cases.
 
-Right, but that assumes that the original author / maintainer is still
-around and actively contributing which unfortunately is not always
-the case.
+Cc: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-wmi.c | 55 +++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 33 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 5352055848d0..d71daa024752 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -484,13 +484,28 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
+ }
+ 
+ /* Input **********************************************************************/
++static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
++{
++	struct device *dev = &asus->platform_device->dev;
++	int result;
++
++	result = asus_wmi_get_devstate_simple(asus, dev_id);
++	if (result < 0)
++		asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
++	if (result >= 0) {
++		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
++		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++	} else if (result == -ENODEV) {
++		dev_err(dev, "This device has tablet-mode-switch quirk but got ENODEV checking it. This is a bug.");
++	} else {
++		dev_err(dev, "Error checking for tablet-mode-switch: %d\n", result);
++	}
++}
+ 
+ static int asus_wmi_input_init(struct asus_wmi *asus)
+ {
+-	struct device *dev;
+-	int err, result;
+-
+-	dev = &asus->platform_device->dev;
++	struct device *dev = &asus->platform_device->dev;
++	int err;
+ 
+ 	asus->inputdev = input_allocate_device();
+ 	if (!asus->inputdev)
+@@ -510,39 +525,13 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+ 	case asus_wmi_no_tablet_switch:
+ 		break;
+ 	case asus_wmi_kbd_dock_devid:
+-		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
+-		if (result >= 0) {
+-			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+-			input_report_switch(asus->inputdev, SW_TABLET_MODE, !result);
+-		} else if (result != -ENODEV) {
+-			dev_err(dev, "Error checking for keyboard-dock: %d\n", result);
+-		}
++		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_KBD_DOCK, NOTIFY_KBD_DOCK_CHANGE);
+ 		break;
+ 	case asus_wmi_lid_flip_devid:
+-		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+-		if (result < 0)
+-			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+-		if (result >= 0) {
+-			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+-			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+-		} else if (result == -ENODEV) {
+-			dev_err(dev, "This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+-		} else {
+-			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+-		}
++		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_LID_FLIP, NOTIFY_LID_FLIP);
+ 		break;
+ 	case asus_wmi_lid_flip_rog_devid:
+-		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
+-		if (result < 0)
+-			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+-		if (result >= 0) {
+-			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+-			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+-		} else if (result == -ENODEV) {
+-			dev_err(dev, "This device has lid-flip-rog quirk but got ENODEV checking it. This is a bug.");
+-		} else {
+-			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+-		}
++		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_LID_FLIP_ROG, NOTIFY_LID_FLIP_ROG);
+ 		break;
+ 	}
+ 
+-- 
+2.37.2
 
