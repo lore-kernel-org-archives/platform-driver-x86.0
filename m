@@ -2,175 +2,331 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B53C32793
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 14:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2609AC00140
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 14:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236377AbiHXOEU (ORCPT
+        id S236522AbiHXOMu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 10:04:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
+        Wed, 24 Aug 2022 10:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238516AbiHXOEQ (ORCPT
+        with ESMTP id S238130AbiHXOMt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 10:04:16 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80078.outbound.protection.outlook.com [40.107.8.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3104B97ED8;
-        Wed, 24 Aug 2022 07:04:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gNIGL66POaQirop0pZMBsOORAZBO5u6g3Oo8joRtbNXmqbWP3HwHpPdoE8Vy8tZYosHPGjGuz3zZqbwswLoIWS3XOwpupQt56UVEcUolpUEs+8Y5CCGvKQEkbx7Csg1SXHTkBPLFReLcd9w0mxrP24fllK+7hRduTHWcMVj7ToMR3H1bu6RFVg/biilPTSxcp2s34qNNAgNVjPv/jqYFC0Q8L+zTyR4I8gllZJ4VV1FgGdus6QQj89sO7rlCKhuo8j8Jl7++YxIOiwia4rGDa/sz/809rfuQsdVBRkSm7poiVM+HQOSm6nw25UJl1ySWZCF4Ks/ZueijeE/OU8pW/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CoeqWO5jn+/1Y3EBaDcSz5dtAsOK/vG3RHWEKr4jE9U=;
- b=LAROHh8yR/8PZUlb/bu4o5a4nTGHv4FVyFFtEBJymeelD7bZmQIEUmXFoZ8GgIHAfYsNwpXES/Buhg3+24qi9McuNl0oBOC34Dnms8VhRt7sBjUZF39DYvihEOOsIPG0l25wsiGYC1fiPfbLySn0l888hgYqd2KHqzPMzQQeV08FQG9rWEwax3nL8A0VlM9bNwQmDLgmlnzRJtfwrQjc2mGVw1t+SWnxNrRZJw1ZySbgYnhWuC+2WgEK48hzkenIG9LpAN/JqlmOF77a/YqQt/u1S8gfhTQddhI6zhmYFTWckKCsgK+odSjmSm1DFnSWggoojDe7+p2ly2rJztB6tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 194.138.21.74) smtp.rcpttodomain=linaro.org smtp.mailfrom=siemens.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=siemens.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CoeqWO5jn+/1Y3EBaDcSz5dtAsOK/vG3RHWEKr4jE9U=;
- b=EYnMIq/ibSsMys2xC7qQ9zH6fgMaAu+zXuWJhD2CWbJMUVuge8kj1BLT9BqASu4tYlg9NzwBg6II7miAZ8CyObJcvy3WKsQAKMqsbVHrcguT6eGCJ07s/I6yYPJcuufFomKiQndLp9jimInhGKyLE34U1+JA07oHm+dMcXtfxfdVBj8wDfbcDwTnEeYBNTBEAOskv8+CAW51XJPcSm88QZJ4NIm4v7MuYgF2HPLroBfsGR/7R1Vcyo02j9yN/3d3CWlxe2dqeTGAFgLfijfc2NDGCDpgMsek/wHeEa3uv/zscUudyDu5H1KNL1NuUHdTVM7l09AJ9IkcSRAAqwQyWA==
-Received: from DB6P191CA0018.EURP191.PROD.OUTLOOK.COM (2603:10a6:6:28::28) by
- AM0PR10MB2289.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:dd::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5546.21; Wed, 24 Aug 2022 14:04:12 +0000
-Received: from DB5EUR01FT085.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:6:28:cafe::1e) by DB6P191CA0018.outlook.office365.com
- (2603:10a6:6:28::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14 via Frontend
- Transport; Wed, 24 Aug 2022 14:04:12 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 194.138.21.74)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=siemens.com;
-Received-SPF: Fail (protection.outlook.com: domain of siemens.com does not
- designate 194.138.21.74 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.74; helo=hybrid.siemens.com;
-Received: from hybrid.siemens.com (194.138.21.74) by
- DB5EUR01FT085.mail.protection.outlook.com (10.152.5.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5566.15 via Frontend Transport; Wed, 24 Aug 2022 14:04:12 +0000
-Received: from DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) by
- DEMCHDC8VQA.ad011.siemens.net (194.138.21.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.9; Wed, 24 Aug 2022 16:04:11 +0200
-Received: from md1za8fc.ad001.siemens.net (139.25.0.80) by
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.9; Wed, 24 Aug 2022 16:04:10 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        <simon.guinot@sequanux.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v5 5/5] platform/x86: simatic-ipc: add new model 427G
-Date:   Wed, 24 Aug 2022 16:03:47 +0200
-Message-ID: <20220824140347.1842-6-henning.schild@siemens.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220824140347.1842-1-henning.schild@siemens.com>
-References: <20220824140347.1842-1-henning.schild@siemens.com>
+        Wed, 24 Aug 2022 10:12:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93846979C1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 07:12:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661350367;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yCkPSzN/cwsCtf3kYco4CiqtD7edlWebFhcM0DlPaBI=;
+        b=OD7KgqRyBkLrsuoMcpXW+dldbxZa9cvEadB9fR4WHbMDlKHG/cbSqh1wRDF/o5FXJqfe6p
+        5PbVPPItvaJrdJ6wpeEFGpmR1O+SjRkEznFxjiHjvz76YlSuMYM8uLv3yZqZxfZfO3Y9Cd
+        5ztBP0F9mRJkvpl/10letQKPfJhUE/Y=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-480-gQEB7lTmOKakmoDDdTXFow-1; Wed, 24 Aug 2022 10:12:46 -0400
+X-MC-Unique: gQEB7lTmOKakmoDDdTXFow-1
+Received: by mail-ed1-f72.google.com with SMTP id w17-20020a056402269100b0043da2189b71so10807054edd.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 07:12:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=yCkPSzN/cwsCtf3kYco4CiqtD7edlWebFhcM0DlPaBI=;
+        b=mngFOckG+R9041zq/X5z1K1if6NdNhuQQ4QLq7yuRMACPP9TNeXzG8IXwzgoO+5J71
+         GtufzhGZ25V6wMLYS+ST8lWnJ6LLGAvlEfaEU0v7WWxPjNujozlboh/mSMAkLJROO5Jr
+         yZ3R4yT5KXutpDWwRT6Zvprb/J1HKmNR+2UoJ7WYGyGxQSEQv1HMTjoP9X9hODLkTh/w
+         yzTv2fCsznMI6KCYB5LeyOi7xuX1/04+JwaxZQDwvz0PoM5Xz3/5gzxWn+g2cK+1DJAz
+         q3uuwfobhRct7bHV1vv12ke9WxUNBa0BU2T6kn8G8aanhnDWM/ZWG3PDjfNYpQORxF1k
+         oFFg==
+X-Gm-Message-State: ACgBeo1u1H4KE5Bdv2dwTQRyKG5z/4hQ4CRXq15j+c93hjKmW7ILug3u
+        ERw4IBUT0C+oxinjcquMfAWnrZMyEd1tbXjHlyWdvVPy3n8OdTHJ1bgMjVMcxzP1LinKyhakpPz
+        e47skE5/Vtkg/W+oEBpLtep4Eg+sFKGxm8w==
+X-Received: by 2002:a17:907:808:b0:730:54cc:b597 with SMTP id wv8-20020a170907080800b0073054ccb597mr2985283ejb.434.1661350364084;
+        Wed, 24 Aug 2022 07:12:44 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7ZdzW3McIYOgkJWgU5B4o8yxCDFDqU2e+Hks72wJw0+TwESjmYyLmaMHvttgGx9y0Skf8+Wg==
+X-Received: by 2002:a17:907:808:b0:730:54cc:b597 with SMTP id wv8-20020a170907080800b0073054ccb597mr2985272ejb.434.1661350363776;
+        Wed, 24 Aug 2022 07:12:43 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id k15-20020a1709063e0f00b0073c1e339a37sm1209290eji.149.2022.08.24.07.12.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Aug 2022 07:12:43 -0700 (PDT)
+Message-ID: <b2ce575a-470c-5a56-2cd0-9f3e7dbac1ad@redhat.com>
+Date:   Wed, 24 Aug 2022 16:12:42 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [139.25.0.80]
-X-ClientProxiedBy: DEMCHDC89XA.ad011.siemens.net (139.25.226.103) To
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a1a8de5c-7eeb-4bf8-a132-08da85d985ae
-X-MS-TrafficTypeDiagnostic: AM0PR10MB2289:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LEeF8rjMJe7EMwGhe1ttdhbZPVouO5OBbzyBMFPBf1KpnpCZpNupiEw2Z9qdXz6FUThNp6x/dph4C8FzrzP3MPD5qYPgDjQv30/syWi6xYBVK5yx/3l/H7KQpU5xEBc9F2OUZlaTZrbDaFtKvPDYulk6d2LZpQQjzclgiOlu5J/gVT8603P3ezn8EHg+jY0aGNyJoyoyu69tn54bkaSO75b2hCWfxGB+0LFGmY2LsPk8+QtbkXbz8dWnqxF6UOuI/SGcNgTttYLOWzJUOSMGJDp8hIrgGTzesAFubepyMxg6XyzFLR4KbGqCTBLZegLWr3WtTh5yCXJcdOi/PJQ6Ge3asVxEoc9gQtjyGA7ZOibLLEO8A01G0Z3CA7ZyfKuH4006aitZda3azvteQQEiopuoW/JDWhAH6t6RdZCED0ODKFobXyAFY+2AcIiQbOaqFwSk4cLvvk2QSz95c8iwp6m2dATdGywiPl9Sq5YS5kgj0LfTd+ELxcqUAS/GUlcgeNvoxwC9jyncol+xbj6WGDzXX18qRth6v3SzMXDT+xk774caH2ywypha8Zh/MPBi0k7XyWopuHPZTtZu1793VrJy26Z9nEijI+NRsQ13ah9nOHwUGehjyC+edoqK7TCncC+Pxob6uSzozENh12Jp2oOEh9A+ATSlI3LX5FeGkvA7b23T3MKU4eefCpAb9COOtZrDvM5Q3Pq7+TtvLkSt3/++10YfVmxo2rSuHBcjOZhC0+20bDs1ZFxr0jG+Usg2aeupXcG9WMgIJ6MOpM+8mfPQmAiBj4dKG35ODVWH+xVMxgV3TWqFPFPy1pL8/VQRYcl6vMFp8aWIfMKBp4qA7iiM6+bu52EKoIeOINuS7uM=
-X-Forefront-Antispam-Report: CIP:194.138.21.74;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:hybrid.siemens.com;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(346002)(39860400002)(136003)(46966006)(36840700001)(40470700004)(34020700004)(86362001)(36860700001)(40460700003)(82960400001)(7596003)(356005)(7636003)(82740400003)(921005)(70586007)(70206006)(54906003)(8936002)(316002)(110136005)(2906002)(8676002)(44832011)(4326008)(1076003)(40480700001)(956004)(107886003)(336012)(16526019)(83380400001)(2616005)(26005)(82310400005)(186003)(5660300002)(6666004)(47076005)(478600001)(41300700001)(36756003)(7416002)(2101003)(83996005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2022 14:04:12.2776
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1a8de5c-7eeb-4bf8-a132-08da85d985ae
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.74];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT085.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2289
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 1/2] asus-wmi: Adjust tablet/lidflip handling to use enum
+Content-Language: en-US
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220813092753.6635-1-luke@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220813092753.6635-1-luke@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This adds support for the Siemens Simatic IPC427G. A board which
-basically works like the 227G added in a previous patch. So all there is
-to do is to add the station_id and make it take all the 227G branches.
+Hi,
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
----
- drivers/platform/x86/simatic-ipc.c            | 11 +++++++----
- include/linux/platform_data/x86/simatic-ipc.h |  1 +
- 2 files changed, 8 insertions(+), 4 deletions(-)
+On 8/13/22 11:27, Luke D. Jones wrote:
+> Due to multiple types of tablet/lidflip, the existing code for
+> handling these events is refactored to use an enum for each type.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
-diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-index 8dd686d1c9f1..ca76076fc706 100644
---- a/drivers/platform/x86/simatic-ipc.c
-+++ b/drivers/platform/x86/simatic-ipc.c
-@@ -41,11 +41,12 @@ static struct {
- 	{SIMATIC_IPC_IPC127E, SIMATIC_IPC_DEVICE_127E, SIMATIC_IPC_DEVICE_NONE},
- 	{SIMATIC_IPC_IPC227D, SIMATIC_IPC_DEVICE_227D, SIMATIC_IPC_DEVICE_NONE},
- 	{SIMATIC_IPC_IPC227E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_227E},
--	{SIMATIC_IPC_IPC227G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_NONE},
-+	{SIMATIC_IPC_IPC227G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
- 	{SIMATIC_IPC_IPC277E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E},
- 	{SIMATIC_IPC_IPC427D, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_NONE},
- 	{SIMATIC_IPC_IPC427E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_427E},
- 	{SIMATIC_IPC_IPC477E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_427E},
-+	{SIMATIC_IPC_IPC427G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
- };
- 
- static int register_platform_devices(u32 station_id)
-@@ -82,6 +83,11 @@ static int register_platform_devices(u32 station_id)
- 			 ipc_led_platform_device->name);
- 	}
- 
-+	if (wdtmode == SIMATIC_IPC_DEVICE_227G) {
-+		request_module("w83627hf_wdt");
-+		return 0;
-+	}
-+
- 	if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
- 		platform_data.devmode = wdtmode;
- 		ipc_wdt_platform_device =
-@@ -96,9 +102,6 @@ static int register_platform_devices(u32 station_id)
- 			 ipc_wdt_platform_device->name);
- 	}
- 
--	if (station_id == SIMATIC_IPC_IPC227G)
--		request_module("w83627hf_wdt");
--
- 	if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
- 	    wdtmode == SIMATIC_IPC_DEVICE_NONE) {
- 		pr_warn("unsupported IPC detected, station id=%08x\n",
-diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-index 7a2e79f3be0b..632320ec8f08 100644
---- a/include/linux/platform_data/x86/simatic-ipc.h
-+++ b/include/linux/platform_data/x86/simatic-ipc.h
-@@ -32,6 +32,7 @@ enum simatic_ipc_station_ids {
- 	SIMATIC_IPC_IPC477E = 0x00000A02,
- 	SIMATIC_IPC_IPC127E = 0x00000D01,
- 	SIMATIC_IPC_IPC227G = 0x00000F01,
-+	SIMATIC_IPC_IPC427G = 0x00001001,
- };
- 
- static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
--- 
-2.35.1
+Thank you for the patch, I've merged this but with one change:
+
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 13 +++---
+>  drivers/platform/x86/asus-wmi.c    | 67 ++++++++++++++++++++----------
+>  drivers/platform/x86/asus-wmi.h    |  9 +++-
+>  3 files changed, 58 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index a81dc4b191b7..3a93e056c4e1 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -115,12 +115,12 @@ static struct quirk_entry quirk_asus_forceals = {
+>  };
+>  
+>  static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
+> -	.use_kbd_dock_devid = true,
+> +	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
+>  };
+>  
+>  static struct quirk_entry quirk_asus_use_lid_flip_devid = {
+>  	.wmi_backlight_set_devstate = true,
+> -	.use_lid_flip_devid = true,
+> +	.tablet_switch_mode = asus_wmi_lid_flip_devid,
+>  };
+>  
+>  static int dmi_matched(const struct dmi_system_id *dmi)
+> @@ -492,16 +492,13 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+>  
+>  	switch (tablet_mode_sw) {
+>  	case 0:
+> -		quirks->use_kbd_dock_devid = false;
+> -		quirks->use_lid_flip_devid = false;
+> +		quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+>  		break;
+>  	case 1:
+> -		quirks->use_kbd_dock_devid = true;
+> -		quirks->use_lid_flip_devid = false;
+> +		quirks->tablet_switch_mode = asus_wmi_kbd_dock_devid;
+>  		break;
+>  	case 2:
+> -		quirks->use_kbd_dock_devid = false;
+> -		quirks->use_lid_flip_devid = true;
+> +		quirks->tablet_switch_mode = asus_wmi_lid_flip_devid;
+>  		break;
+>  	}
+>  
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 0421ffb81927..b4690ac39147 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -485,8 +485,11 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
+>  
+>  static int asus_wmi_input_init(struct asus_wmi *asus)
+>  {
+> +	struct device *dev;
+>  	int err, result;
+>  
+> +	dev = &asus->platform_device->dev;
+> +
+>  	asus->inputdev = input_allocate_device();
+>  	if (!asus->inputdev)
+>  		return -ENOMEM;
+> @@ -494,35 +497,38 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+>  	asus->inputdev->name = asus->driver->input_name;
+>  	asus->inputdev->phys = asus->driver->input_phys;
+>  	asus->inputdev->id.bustype = BUS_HOST;
+> -	asus->inputdev->dev.parent = &asus->platform_device->dev;
+> +	asus->inputdev->dev.parent = dev;
+>  	set_bit(EV_REP, asus->inputdev->evbit);
+>  
+>  	err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
+>  	if (err)
+>  		goto err_free_dev;
+>  
+> -	if (asus->driver->quirks->use_kbd_dock_devid) {
+> +	switch (asus->driver->quirks->tablet_switch_mode) {
+> +	case asus_wmi_no_tablet_switch:
+> +		break;
+> +	case asus_wmi_kbd_dock_devid:
+>  		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
+>  		if (result >= 0) {
+>  			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+>  			input_report_switch(asus->inputdev, SW_TABLET_MODE, !result);
+>  		} else if (result != -ENODEV) {
+> -			pr_err("Error checking for keyboard-dock: %d\n", result);
+> +			dev_err(dev, "Error checking for keyboard-dock: %d\n", result);
+>  		}
+> -	}
+> -
+> -	if (asus->driver->quirks->use_lid_flip_devid) {
+> +		break;
+> +	case asus_wmi_lid_flip_devid:
+>  		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+>  		if (result < 0)
+> -			asus->driver->quirks->use_lid_flip_devid = 0;
+> +			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+>  		if (result >= 0) {
+>  			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+>  			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+>  		} else if (result == -ENODEV) {
+> -			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+> +			dev_err(dev, "This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+>  		} else {
+> -			pr_err("Error checking for lid-flip: %d\n", result);
+> +			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+>  		}
+> +		break;
+>  	}
+>  
+>  	err = input_register_device(asus->inputdev);
+> @@ -548,8 +554,9 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+>  
+>  static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
+>  {
+> -	int result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> +	int result;
+>  
+> +	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+>  	if (result >= 0) {
+>  		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+>  		input_sync(asus->inputdev);
+> @@ -3044,20 +3051,26 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>  		return;
+>  	}
+>  
+> -	if (asus->driver->quirks->use_kbd_dock_devid && code == NOTIFY_KBD_DOCK_CHANGE) {
+
+Given that we need to check for both the tablet_switch_mode as well as
+different event codes, I believe that keep using something like:
+
+	if (asus->driver->quirks->tablet_switch_mode == asus_wmi_kbd_dock_devid &&
+	    code == NOTIFY_KBD_DOCK_CHANGE) {
+
+here is better then doing a switch-case with the code checkes nested under
+
+> -		result = asus_wmi_get_devstate_simple(asus,
+> -						      ASUS_WMI_DEVID_KBD_DOCK);
+> +	switch (asus->driver->quirks->tablet_switch_mode) {
+> +	case asus_wmi_no_tablet_switch:
+> +		break;
+> +	case asus_wmi_kbd_dock_devid:
+> +		if (code == NOTIFY_KBD_DOCK_CHANGE) {
+> +			result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
+>  		if (result >= 0) {
+>  			input_report_switch(asus->inputdev, SW_TABLET_MODE,
+
+Note the indent of these 2 lines is wrong now, it should be indentend one
+extra step because it is inside the if (code == NOTIFY_KBD_DOCK_CHANGE) {
+block now, sticking with a:
+
+	if (asus->driver->quirks->tablet_switch_mode == asus_wmi_kbd_dock_devid &&
+	    code == NOTIFY_KBD_DOCK_CHANGE) {
+
+is style instead of nesting avoids the need for this extra indentation.
+
+I have fixed this up while merging the patches.
+
+Regards,
+
+Hans
+
+
+
+
+> -					    !result);
+> +						!result);
+>  			input_sync(asus->inputdev);
+>  		}
+>  		return;
+> -	}
+> -
+> -	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
+> -		lid_flip_tablet_mode_get_state(asus);
+> -		return;
+> +		}
+> +		break;
+> +	case asus_wmi_lid_flip_devid:
+> +		if (code == NOTIFY_LID_FLIP) {
+> +			lid_flip_tablet_mode_get_state(asus);
+> +			return;
+> +		}
+> +		break;
+>  	}
+>  
+>  	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+> @@ -3700,8 +3713,14 @@ static int asus_hotk_resume(struct device *device)
+>  	if (asus_wmi_has_fnlock_key(asus))
+>  		asus_wmi_fnlock_update(asus);
+>  
+> -	if (asus->driver->quirks->use_lid_flip_devid)
+> +	switch (asus->driver->quirks->tablet_switch_mode) {
+> +	case asus_wmi_no_tablet_switch:
+> +	case asus_wmi_kbd_dock_devid:
+> +		break;
+> +	case asus_wmi_lid_flip_devid:
+>  		lid_flip_tablet_mode_get_state(asus);
+> +		break;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -3742,8 +3761,14 @@ static int asus_hotk_restore(struct device *device)
+>  	if (asus_wmi_has_fnlock_key(asus))
+>  		asus_wmi_fnlock_update(asus);
+>  
+> -	if (asus->driver->quirks->use_lid_flip_devid)
+> +	switch (asus->driver->quirks->tablet_switch_mode) {
+> +	case asus_wmi_no_tablet_switch:
+> +	case asus_wmi_kbd_dock_devid:
+> +		break;
+> +	case asus_wmi_lid_flip_devid:
+>  		lid_flip_tablet_mode_get_state(asus);
+> +		break;
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index b302415bf1d9..413920bad0c6 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -25,6 +25,12 @@ struct module;
+>  struct key_entry;
+>  struct asus_wmi;
+>  
+> +enum asus_wmi_tablet_switch_mode {
+> +	asus_wmi_no_tablet_switch,
+> +	asus_wmi_kbd_dock_devid,
+> +	asus_wmi_lid_flip_devid,
+> +};
+> +
+>  struct quirk_entry {
+>  	bool hotplug_wireless;
+>  	bool scalar_panel_brightness;
+> @@ -33,8 +39,7 @@ struct quirk_entry {
+>  	bool wmi_backlight_native;
+>  	bool wmi_backlight_set_devstate;
+>  	bool wmi_force_als_set;
+> -	bool use_kbd_dock_devid;
+> -	bool use_lid_flip_devid;
+> +	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+>  	int wapf;
+>  	/*
+>  	 * For machines with AMD graphic chips, it will send out WMI event
 
