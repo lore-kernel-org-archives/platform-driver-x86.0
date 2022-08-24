@@ -2,82 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52376C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 10:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B1C00140
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 10:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236654AbiHXKGb (ORCPT
+        id S236517AbiHXK7P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 06:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
+        Wed, 24 Aug 2022 06:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236619AbiHXKG0 (ORCPT
+        with ESMTP id S236378AbiHXK7O (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 06:06:26 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0A449B58;
-        Wed, 24 Aug 2022 03:06:25 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C13E31C000B; Wed, 24 Aug 2022 12:06:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1661335583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eBTZqk3XG4I0DIew+BbIPdIsYk961dnj2iB7RR+Va8U=;
-        b=PEVBdtiHzfTeRIrxPTbAJvKWpyCGDFNhUYuh3fwTt95t0ardN/tpplcP5y9e/GaFh8gE7q
-        oTyWiMrRdM7FiqeRFayvCLiQQmCcloLNDnmLyfKU3d/S5wSOaWwgOmeby7OTTUP9IUNCLR
-        XQa/C59LXTIMIzbv/wvZf685+0pNfCg=
-Date:   Wed, 24 Aug 2022 12:06:22 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     PaddyKP_Yao <ispaddy@gmail.com>, PaddyKP_Yao@asus.com,
+        Wed, 24 Aug 2022 06:59:14 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 827266613F;
+        Wed, 24 Aug 2022 03:59:13 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id x19so15342142plc.5;
+        Wed, 24 Aug 2022 03:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=Q3LzJlvifUAGbTLxcQoH7AaagIP6GFnZFwsKVBw+lLI=;
+        b=plA1uj00ujDSe0KzXRc7a0wMWpT/Xk5/wm+TKlbkdJoXAXxij2ZFImAK+sv+sa35JP
+         ahHMsDXRsDuHzhXSJLUoVaJxqBLLGM7MuhhhCGt+UhRUIxzARhQv3Oik/PkPGp/l/75B
+         2WcsHcsv0NrACmVgyLBtpdxR8BGNb1IAgqsv3yUWmYjJa2wPFpXDD8zZ50GBGoDUXKEX
+         zOskCrSh4NDxj3r7uOX7Yf1VBXeLGUlYYAbJ6lA7oHvb4CDzOZ6wGw5uD8OCqct3qJyH
+         e5uO1JiRW8er9zjUsPB0PWkSrQJBAmBbXEN/bw9+SX15sMaUDXrBfFZx6ZEMeCVnixgG
+         uZNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=Q3LzJlvifUAGbTLxcQoH7AaagIP6GFnZFwsKVBw+lLI=;
+        b=hof03kGOsMM4m1WteinUgPhD7y55SECC+P2WB8QPIwPQVKrAagkGLKpa+ggLzKSpPn
+         QMukAKls7s05oOM0y/2KbhDOtDB6LLxSBEwVB63mVRkx4F8MhxGH3i+MIN5uS8a8Dy7M
+         RaRmGqkSIlu7cs1VQ4333v6BxkRAHHDI+IvellW5RzWP1Wk2LCfD6sS2RKGjUx3NYzrW
+         NkdfvSK0fvvjS5k1tCQTUt64xhr+yvR66TbF9NrIsc/dRjCJzcM0nyN2+8jlQgi+ulqV
+         NMskF+OUxTpuJ5RE+07RiPGIWwHcnOWAaFVGRUNQEwNPvzSD/OQt/yLD432KBv7qj3tk
+         6crw==
+X-Gm-Message-State: ACgBeo2nWFsaX8y8qfOQRUIxFeps4e4vMDNMnHtygcya9dM+K3JpK1gc
+        XUUInkGZeOgpiZX+/y5THBU=
+X-Google-Smtp-Source: AA6agR50ZGuvdB8+3Su+9vbP/9fi4BkOnb4p20DmyU2aYynxvE+qLNhRQ+m3UExS11ggL1jijcUZkg==
+X-Received: by 2002:a17:902:ecc1:b0:172:dd1f:5b76 with SMTP id a1-20020a170902ecc100b00172dd1f5b76mr15558404plh.28.1661338752781;
+        Wed, 24 Aug 2022 03:59:12 -0700 (PDT)
+Received: from AA2000783-NB2.corpnet.asus (125-229-150-10.hinet-ip.hinet.net. [125.229.150.10])
+        by smtp.gmail.com with ESMTPSA id z6-20020a170902ccc600b0017315b11bb8sm1186774ple.213.2022.08.24.03.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Aug 2022 03:59:12 -0700 (PDT)
+Date:   Wed, 24 Aug 2022 18:59:08 +0800
+From:   PaddyKP Yao <ispaddy@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Hans de Goede <hdegoede@redhat.com>, PaddyKP_Yao@asus.com,
         acpi4asus-user@lists.sourceforge.net, andy.shevchenko@gmail.com,
         corentin.chary@gmail.com, linux-kernel@vger.kernel.org,
         luke@ljones.dev, mgross@linux.intel.com,
         platform-driver-x86@vger.kernel.org
 Subject: Re: [PATCH v3 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
  support
-Message-ID: <20220824100622.GB1049@bug>
+Message-ID: <20220824105908.GA111@AA2000783-NB2.corpnet.asus>
 References: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
  <20220711115125.2072508-1-PaddyKP_Yao@asus.com>
  <e120ac7c-7abb-4999-efe8-6b3b697d12d6@redhat.com>
+ <20220824100622.GB1049@bug>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e120ac7c-7abb-4999-efe8-6b3b697d12d6@redhat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20220824100622.GB1049@bug>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi!
+Hi Pavel,
 
-> > LED is present by checking WMI ASUS_WMI_DEVID_MICMUTE_LED, we will add a
-> > mic-mute LED classdev, asus::micmute, in the asus-wmi driver to control
-> > it. The binding of mic-mute LED controls will be swithched with LED
-> > trigger.
-> > 
-> > Signed-off-by: PaddyKP_Yao <PaddyKP_Yao@asus.com>
-> > ---
-> > V1 -> V2: fix typo for 'present' and remove unnecessary pr_info() log
-> > V2 -> V3: resend patch again by gmail to avoid Asus legal in the mail
+On Wed, Aug 24, 2022 at 12:06:22PM +0200, Pavel Machek wrote:
 > 
-> Thank you for your patch, I've applied this patch to my review-hans 
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> It would be good to get the API right before it hits mainline release.
 > 
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
 
-> > +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MICMUTE_LED)) {
-> > +		asus->micmute_led.name = "asus::micmute";
+What do you mean about API you mentioned?
 
-It would be good to get the API right before it hits mainline release.
-
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Best Regards, Paddy
