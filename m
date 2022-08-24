@@ -2,104 +2,212 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467D3C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 11:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC922C00140
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 12:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234222AbiHXLRk (ORCPT
+        id S231804AbiHXMPq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 07:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
+        Wed, 24 Aug 2022 08:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233768AbiHXLRj (ORCPT
+        with ESMTP id S237326AbiHXMPn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 07:17:39 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FE97F259;
-        Wed, 24 Aug 2022 04:17:38 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id q63so500798pga.9;
-        Wed, 24 Aug 2022 04:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=NW2FQwGNAroq7kGJ/SM5+2ixhiz8WdBcU3MZns9y+ZQ=;
-        b=B2HlsCjau6l9n5Vbr/PKGuE1opvjcUsTNIwZUILw5ZS1KC/aBymytdGZr8lnV32jOy
-         m1T8LJJWZq6LYyMGBIdzmI4GdUT9cvGYTikqXdWi0GY+fg4bWisw0bYLsHN0jrCUg2uc
-         vEuhwkWE1O6/BCXFpyR8vZ3E0S40D+e77CIwHMA2uZoe+UBr6HR4ntZ+onJtbbOO4ZFP
-         KEnOjFSG2pbxJjfgvN5Piz8KUaa4vqJuL8t74+o62RAZ31IQopaUjsk2CigqQnMAYj3x
-         qrMqR1Mgjd66eBfnVxN9cO5KzF9MmNN3CtoCM5y7WboXYKHCbw5s1Xruf10k2SYcNxaY
-         WZOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=NW2FQwGNAroq7kGJ/SM5+2ixhiz8WdBcU3MZns9y+ZQ=;
-        b=inCLum7H3CC6vElW4xCsLNHKolDUqTeq7hJ2JHNKiL6xZTqAydU0X3w0u6iXI7hhP0
-         LyvrXddNjZ1XuFdWotfpd4hd+6xUoMqnHRmLnkHoCI/KcoNXa2bRhIo6OnNSMF0JB/I1
-         qaIoqH+2KVDutjZ2YvCXjy8JyDHxnTZZimDF/q7kX0Bbqeuo/6rYyGAt4jIlbQ77GXsS
-         yttJrs6l1SMBeYEHqtB/0vBd7mBGVqKnG6uLO+IE5Ub5tq8V8T+AtNsoMzKA/FY+GFhM
-         DbaYmidNcXq8evPrqPvvJdJIq2U6rQjCN+9kEN/r4ua2+13gemaXuRdGWPOV5XJf/XJZ
-         0U7w==
-X-Gm-Message-State: ACgBeo0Ex3YeBuzFJRuxeqA5pCw+dxLd5Zgc2hQZ9r2Ot4xupV9UKX6O
-        cDlTi4ambAjsPPW++s0d8V0=
-X-Google-Smtp-Source: AA6agR4QDK1gssjmyVghqiF+FjmNbR39rJhzGns1cUN/i1fubGYWNPzWvLHyJ97j3DXOT6qV6ZQvyA==
-X-Received: by 2002:a05:6a00:1894:b0:537:2e86:c7df with SMTP id x20-20020a056a00189400b005372e86c7dfmr3314915pfh.18.1661339857865;
-        Wed, 24 Aug 2022 04:17:37 -0700 (PDT)
-Received: from AA2000783-NB2.corpnet.asus (125-229-150-10.hinet-ip.hinet.net. [125.229.150.10])
-        by smtp.gmail.com with ESMTPSA id u64-20020a627943000000b0052c7ff2ac74sm13101357pfc.17.2022.08.24.04.17.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 04:17:37 -0700 (PDT)
-Date:   Wed, 24 Aug 2022 19:17:34 +0800
-From:   PaddyKP Yao <ispaddy@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, PaddyKP_Yao@asus.com,
-        andy.shevchenko@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        corentin.chary@gmail.com, linux-kernel@vger.kernel.org,
-        luke@ljones.dev, mgross@linux.intel.com,
+        Wed, 24 Aug 2022 08:15:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F435A8B0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 05:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661343340;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XuX8j1Jb0th5Nr5Sma6YpihUjb+UUTKrqxwD44wEPgc=;
+        b=ADG97Hz2Iu0Jd5M1e7wIobc1/GKydYtxZpQb+YExRUzGpLj6bT5xPgBu56v0ZbvTbLBuHy
+        tf8gmoY3DgeqV6raQeT6xn04km7c06zMvTxuBvwKQSHcgjy3d0qyufseycac6f1RzY/2QH
+        RXOFAWjTm5e3C56arKeLDg2OziTg3Go=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-156-IB18Y2XuNZyu781RhRUDxg-1; Wed, 24 Aug 2022 08:15:37 -0400
+X-MC-Unique: IB18Y2XuNZyu781RhRUDxg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0409101A54E;
+        Wed, 24 Aug 2022 12:15:36 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.193.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 269EDC15BBA;
+        Wed, 24 Aug 2022 12:15:32 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pan@vger.kernel.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
- support
-Message-ID: <20220824111734.GA8434@AA2000783-NB2.corpnet.asus>
-References: <HK0PR04MB33636680A6DC47211560BB43FA879@HK0PR04MB3363.apcprd04.prod.outlook.com>
- <20220711024718.1700067-1-PaddyKP_Yao@asus.com>
- <20220824100615.GA1049@bug>
- <20220824110908.GB111@AA2000783-NB2.corpnet.asus>
- <ca13b742-7bb9-da20-4e50-2d04233aaf93@redhat.com>
+Subject: [PATCH v4 00/31] drm/kms: Stop registering multiple /sys/class/backlight devs for a single display
+Date:   Wed, 24 Aug 2022 14:14:52 +0200
+Message-Id: <20220824121523.1291269-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca13b742-7bb9-da20-4e50-2d04233aaf93@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi All,
 
-On Wed, Aug 24, 2022 at 01:11:32PM +0200, Hans de Goede wrote:
-> Yes. Since I have already merged your original patch can you please make
-> this a new patch on top of your original patch ?  In other words just
-> make this 1 small change in the new patch:
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 2d9d709aa59f..18e584eb9f0f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1060,7 +1060,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  	}
->  
->  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MICMUTE_LED)) {
-> -		asus->micmute_led.name = "asus::micmute";
-> +		asus->micmute_led.name = "platform::micmute";
->  		asus->micmute_led.max_brightness = 1;
->  		asus->micmute_led.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
->  		asus->micmute_led.brightness_set_blocking = micmute_led_set;
-> 
-> Regards,
-> 
-> Hans
-> 
+As mentioned in my RFC titled "drm/kms: control display brightness through
+drm_connector properties":
+https://lore.kernel.org/dri-devel/0d188965-d809-81b5-74ce-7d30c49fee2d@redhat.com/
 
-Thanks for your advice.
-No problem, I will fix it soon.
+The first step towards this is to deal with some existing technical debt
+in backlight handling on x86/ACPI boards, specifically we need to stop
+registering multiple /sys/class/backlight devs for a single display.
 
-Best Regards, Paddy
+This series implements my RFC describing my plan for these cleanups:
+https://lore.kernel.org/dri-devel/98519ba0-7f18-201a-ea34-652f50343158@redhat.com/
+
+Changes in version 4:
+- Minor tweaks to nvidia-wmi-ec-backlight changes
+- Add nouveau_acpi_* wrappers around used include/acpi/video.h functions to
+  fix unresolved symbol errors on non X86
+
+Changes in version 3:
+- ACPI_VIDEO can now be enabled on non X86 too, adjust various Kconfig changes
+- Make the delay before doing fallback acpi_video backlight registration
+  a module option (patch 9)
+- Move the nvidia-wmi-ec-backlight fw API definitions to a shared header
+- Add a "acpi_video_get_backlight_type() == acpi_backlight_nvidia_wmi_ec"
+  check to the nvidia-wmi-ec-backlight driver (patch 19)
+
+Changes in version 2:
+- Introduce acpi_video_backlight_use_native() helper
+- Finishes the refactoring, addressing all the bits from the "Other issues"
+  section of the refactor RFC
+
+Note the i915 patches (patch 2 and 12 still need a review/ack, and
+I've dropped the previouw review of the nouveau patches because of
+changes there. Please review.
+
+This series as submitted is based on drm-tip for CI purposes.
+I also have an immutable branch based on 6.0-rc1 with these
+same patches available here:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=backlight-detect-refactor-v4
+assuming the i915 patches also pass review I hope to send out
+a pull-request to all involved subsystems based on this branch soon.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (31):
+  ACPI: video: Add acpi_video_backlight_use_native() helper
+  drm/i915: Don't register backlight when another backlight should be
+    used
+  drm/amdgpu: Don't register backlight when another backlight should be
+    used (v3)
+  drm/radeon: Don't register backlight when another backlight should be
+    used (v3)
+  drm/nouveau: Don't register backlight when another backlight should be
+    used (v2)
+  ACPI: video: Drop backlight_device_get_by_type() call from
+    acpi_video_get_backlight_type()
+  ACPI: video: Remove acpi_video_bus from list before tearing it down
+  ACPI: video: Simplify acpi_video_unregister_backlight()
+  ACPI: video: Make backlight class device registration a separate step
+    (v2)
+  ACPI: video: Remove code to unregister acpi_video backlight when a
+    native backlight registers
+  drm/i915: Call acpi_video_register_backlight() (v2)
+  drm/nouveau: Register ACPI video backlight when nv_backlight
+    registration fails (v2)
+  drm/amdgpu: Register ACPI video backlight when skipping amdgpu
+    backlight registration
+  drm/radeon: Register ACPI video backlight when skipping radeon
+    backlight registration
+  platform/x86: nvidia-wmi-ec-backlight: Move fw interface definitions
+    to a header (v2)
+  ACPI: video: Refactor acpi_video_get_backlight_type() a bit
+  ACPI: video: Add Nvidia WMI EC brightness control detection (v3)
+  ACPI: video: Add Apple GMUX brightness control detection
+  platform/x86: nvidia-wmi-ec-backlight: Use
+    acpi_video_get_backlight_type()
+  platform/x86: apple-gmux: Stop calling acpi/video.h functions
+  platform/x86: toshiba_acpi: Stop using
+    acpi_video_set_dmi_backlight_type()
+  platform/x86: acer-wmi: Move backlight DMI quirks to
+    acpi/video_detect.c
+  platform/x86: asus-wmi: Drop DMI chassis-type check from backlight
+    handling
+  platform/x86: asus-wmi: Move acpi_backlight=vendor quirks to ACPI
+    video_detect.c
+  platform/x86: asus-wmi: Move acpi_backlight=native quirks to ACPI
+    video_detect.c
+  platform/x86: samsung-laptop: Move acpi_backlight=[vendor|native]
+    quirks to ACPI video_detect.c
+  ACPI: video: Remove acpi_video_set_dmi_backlight_type()
+  ACPI: video: Drop "Samsung X360" acpi_backlight=native quirk
+  ACPI: video: Drop NL5x?U, PF4NU1F and PF5?U?? acpi_backlight=native
+    quirks
+  ACPI: video: Fix indentation of video_detect_dmi_table[] entries
+  drm/todo: Add entry about dealing with brightness control on devices
+    with > 1 panel
+
+ Documentation/gpu/todo.rst                    |  68 +++
+ MAINTAINERS                                   |   1 +
+ drivers/acpi/Kconfig                          |   1 +
+ drivers/acpi/acpi_video.c                     |  64 ++-
+ drivers/acpi/video_detect.c                   | 428 +++++++++++-------
+ drivers/gpu/drm/Kconfig                       |  14 +
+ .../gpu/drm/amd/amdgpu/atombios_encoders.c    |  14 +-
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   9 +
+ drivers/gpu/drm/gma500/Kconfig                |   2 +
+ drivers/gpu/drm/i915/Kconfig                  |   2 +
+ .../gpu/drm/i915/display/intel_backlight.c    |   7 +
+ drivers/gpu/drm/i915/display/intel_display.c  |   8 +
+ drivers/gpu/drm/i915/display/intel_panel.c    |   3 +
+ drivers/gpu/drm/i915/i915_drv.h               |   2 +
+ drivers/gpu/drm/nouveau/nouveau_acpi.c        |  10 +
+ drivers/gpu/drm/nouveau/nouveau_acpi.h        |   4 +
+ drivers/gpu/drm/nouveau/nouveau_backlight.c   |  13 +
+ drivers/gpu/drm/radeon/atombios_encoders.c    |   7 +
+ drivers/gpu/drm/radeon/radeon_encoders.c      |  11 +-
+ .../gpu/drm/radeon/radeon_legacy_encoders.c   |   7 +
+ drivers/platform/x86/Kconfig                  |   1 +
+ drivers/platform/x86/acer-wmi.c               |  66 ---
+ drivers/platform/x86/apple-gmux.c             |   3 -
+ drivers/platform/x86/asus-nb-wmi.c            |  21 -
+ drivers/platform/x86/asus-wmi.c               |  13 -
+ drivers/platform/x86/asus-wmi.h               |   2 -
+ drivers/platform/x86/eeepc-wmi.c              |  25 +-
+ .../platform/x86/nvidia-wmi-ec-backlight.c    |  82 +---
+ drivers/platform/x86/samsung-laptop.c         |  87 ----
+ drivers/platform/x86/toshiba_acpi.c           |  16 -
+ include/acpi/video.h                          |   9 +-
+ .../x86/nvidia-wmi-ec-backlight.h             |  76 ++++
+ 32 files changed, 570 insertions(+), 506 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+
+-- 
+2.37.2
+
