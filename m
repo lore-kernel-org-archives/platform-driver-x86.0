@@ -2,199 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15788C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 18:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082FFC32796
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 19:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237976AbiHXSMX (ORCPT
+        id S239944AbiHXT3D (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 14:12:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44486 "EHLO
+        Wed, 24 Aug 2022 15:29:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240436AbiHXSMV (ORCPT
+        with ESMTP id S237076AbiHXT3C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 14:12:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B966D9CE
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 11:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661364739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zQ3qZtEYF9kIZvb5A1H9IxOTwvdPfHqi1+4CI8j2JWY=;
-        b=cmdcz3/aE0EiHKXTs/dw6orYmLpo06czB4O9H4wnuNSGtXKOy0KDB04XEUPLOaLLyvYQdZ
-        CUXuNaIMxkJsDMd34BhU/AjxGGSp10EyRIX9H6ZFoZzGTDnZl7RNHCLKXEf72DnzGCgiOh
-        kGMBtbPO7pmMDzafMxB5eGhR8I5Qps0=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-183-3kbW6XBjNQ-kiP0K5Itf_w-1; Wed, 24 Aug 2022 14:12:18 -0400
-X-MC-Unique: 3kbW6XBjNQ-kiP0K5Itf_w-1
-Received: by mail-qk1-f198.google.com with SMTP id w22-20020a05620a445600b006bb7f43d1cfso15386397qkp.16
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 11:12:18 -0700 (PDT)
+        Wed, 24 Aug 2022 15:29:02 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39A078BD0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 12:29:00 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id bn9so9810648ljb.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 12:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=ud6LSmJPhrEe1O3tH9bfACVlWJ+Fj1pwj346rUu8aFw=;
+        b=Z2jM1L6bkJVPjP2DKAJljcsyrOOrVaGqJLAqzlKrZ639M1ou4W+gt6VEnZfM9GIMCF
+         SeUBSTwTEy/ugCEIoJSMg5gpQiXV/YW8/zFDEiaz/lWm7DXElQFdhc17HKi9O+Y2CZkL
+         LhgOKoPXstdnGWEeMhiyY+aOF3HfM663rHuZK+6w6NIL9v3qCSiPAEZX+aiF0FQg3jWf
+         pv7cfJk+q0TMm2WecwsV5HTEjCEihc3UL8NuZ65x8xj93UAjZQQwIdmU3F/yvrkvP4aa
+         azCkdsSTY4R3TVzoCkUDFq7dX8KwGtjjKyO7z02ZdXK1aG1zPFzRiwWJpd0Ss4+9b9BD
+         INIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=zQ3qZtEYF9kIZvb5A1H9IxOTwvdPfHqi1+4CI8j2JWY=;
-        b=zYbPiHthmZDloARE66CGRX3eSbg5wCLJN2zRKVUQ8ix9VKZt1VSQ+8gKQJGLn3VxmV
-         eOZlFHK3Yqp83GxNSvZDKI0Hjb3z9wCzqlHYqfdmKR5oRZ0XWliVSduguNV0VGOikxHC
-         YiTuckweiCeYC1P24J0lspUfrGSDVUWbLWtONIRsQnteKrG4ZjfMo/IcaWIbYDKSlCR+
-         AKg1D6L1QfF5l4Ry7DDKR5D98KveendyOpkHWqF6GSaGCk4SH0ZicfnRBHCUhaKAkyLd
-         6Ur0DMignqRQpCAbswHgcbBYFKDtqy+Ca3zLDF0tmSjGzNVeUgYXSHeeAtl1TCznvUzM
-         3CLQ==
-X-Gm-Message-State: ACgBeo0BICooU044pTOyDSs2Q3JCMbA+EZPL4Cbt+5DshsVbDtbhg5NW
-        GTCUW7iIQIrwpahqh0xFBcIf1BcS5fAWF5GBn63vMtPhj2w4xzYurPjG/f3M+0VWjjxbFSdPrcO
-        gGEANjAS57YxmRP47Jupd/gVFjHiUEShQ+A==
-X-Received: by 2002:a05:6214:27ee:b0:496:f17b:7459 with SMTP id jt14-20020a05621427ee00b00496f17b7459mr338520qvb.101.1661364737695;
-        Wed, 24 Aug 2022 11:12:17 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4SOi3GajklItGmlUgJlLLhtanN0frscFinRBtNfwg/Jh8eIC0ruh9bVuC+aRmJv5zCKqZZxQ==
-X-Received: by 2002:a05:6214:27ee:b0:496:f17b:7459 with SMTP id jt14-20020a05621427ee00b00496f17b7459mr338488qvb.101.1661364737427;
-        Wed, 24 Aug 2022 11:12:17 -0700 (PDT)
-Received: from [192.168.8.139] (pool-100-0-245-4.bstnma.fios.verizon.net. [100.0.245.4])
-        by smtp.gmail.com with ESMTPSA id u4-20020a05620a454400b006bbe7ded98csm12598653qkp.112.2022.08.24.11.12.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 11:12:16 -0700 (PDT)
-Message-ID: <341368d96c5c3bdbcab48d48a0d9b702a930ea05.camel@redhat.com>
-Subject: Re: [PATCH v4 31/31] drm/todo: Add entry about dealing with
- brightness control on devices with > 1 panel
-From:   Lyude Paul <lyude@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Pan Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 24 Aug 2022 14:12:15 -0400
-In-Reply-To: <20220824121523.1291269-32-hdegoede@redhat.com>
-References: <20220824121523.1291269-1-hdegoede@redhat.com>
-         <20220824121523.1291269-32-hdegoede@redhat.com>
-Organization: Red Hat Inc.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=ud6LSmJPhrEe1O3tH9bfACVlWJ+Fj1pwj346rUu8aFw=;
+        b=At9BAAG32p3ee4V9BikM66arAz6/DCM0/iSH3t5zc7Yf5T9JCYunt6EdKcx+9ipxtp
+         6u/RKUu06ujwkM/TbntT7fYeU61xzRL65mRx9LI6o2XYK1IUVsgzeIJB8RMt0tENsSHZ
+         /gjlPQH+on+kV1SIzM5oErHj4cpmfG/FVA8jbZ/8O0m8GT3XbwlDkDqAHCS4ZI9Guycp
+         FyDgVz2FGPrdEFt3smGDCGpcmwNhfOzqa6rBHrKmalU8Rvk/WBVNhgEBNWynqCbbyxJl
+         oZSzzs0JG/NzQUG8ZH+8lrF5SK2w/D31ePBYItdjboSkX1OL/I3GJqWeRg4+raNoSfop
+         0Ltw==
+X-Gm-Message-State: ACgBeo3gQdiSy7hO3/QXOL3AV64LwWfFTGxPN0+oM08oxSbzE3H+RICo
+        gU+tImozBvBfYeEUwVImyFd9NO6RZ8vVTXRAOHa33w==
+X-Google-Smtp-Source: AA6agR6qzB+SDh82GOibU+ibPmxm9norlNaWBI74hZciCbfvsiOsZDachVztTY0d9cfRDTTu6O2cHU/LynXQAo0SUJw=
+X-Received: by 2002:a2e:9ad2:0:b0:261:cbdd:1746 with SMTP id
+ p18-20020a2e9ad2000000b00261cbdd1746mr181526ljj.486.1661369338801; Wed, 24
+ Aug 2022 12:28:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20220307213356.2797205-1-brijesh.singh@amd.com>
+ <20220307213356.2797205-44-brijesh.singh@amd.com> <CAAH4kHYm1BhjJXUMH12kzR0Xun=fUTj-3Hy6At0XR_09Bf0Ccw@mail.gmail.com>
+In-Reply-To: <CAAH4kHYm1BhjJXUMH12kzR0Xun=fUTj-3Hy6At0XR_09Bf0Ccw@mail.gmail.com>
+From:   Peter Gonda <pgonda@google.com>
+Date:   Wed, 24 Aug 2022 13:28:47 -0600
+Message-ID: <CAMkAt6oKQ3CnmNdrJLMWreExkN56t9vs=B883_JD+HtiNYw9HA@mail.gmail.com>
+Subject: Re: [PATCH v12 43/46] virt: Add SEV-SNP guest driver
+To:     Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:X86 KVM CPUs" <kvm@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        brijesh.ksingh@gmail.com, Tony Luck <tony.luck@intel.com>,
+        Marc Orr <marcorr@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+On Wed, Aug 24, 2022 at 12:01 PM Dionna Amalie Glaze
+<dionnaglaze@google.com> wrote:
+>
+> Apologies for the necropost, but I noticed strange behavior testing my
+> own Golang-based wrapper around the /dev/sev-guest driver.
+>
+> > +
+> > +static int handle_guest_request(struct snp_guest_dev *snp_dev, u64 exit_code, int msg_ver,
+> > +                               u8 type, void *req_buf, size_t req_sz, void *resp_buf,
+> > +                               u32 resp_sz, __u64 *fw_err)
+> > +{
+> > +       unsigned long err;
+> > +       u64 seqno;
+> > +       int rc;
+> > +
+> > +       /* Get message sequence and verify that its a non-zero */
+> > +       seqno = snp_get_msg_seqno(snp_dev);
+> > +       if (!seqno)
+> > +               return -EIO;
+> > +
+> > +       memset(snp_dev->response, 0, sizeof(struct snp_guest_msg));
+> > +
+> > +       /* Encrypt the userspace provided payload */
+> > +       rc = enc_payload(snp_dev, seqno, msg_ver, type, req_buf, req_sz);
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       /* Call firmware to process the request */
+> > +       rc = snp_issue_guest_request(exit_code, &snp_dev->input, &err);
+> > +       if (fw_err)
+> > +               *fw_err = err;
+> > +
+> > +       if (rc)
+> > +               return rc;
+> > +
+>
+> The fw_err is written back regardless of rc, so since err is
+> uninitialized, you can end up with garbage written back. I've worked
+> around this by only caring about fw_err when the result is -EIO, but
+> thought that I should bring this up.
 
-On Wed, 2022-08-24 at 14:15 +0200, Hans de Goede wrote:
-> Add an entry summarizing the discussion about dealing with brightness
-> control on devices with more then 1 internal panel.
-> 
-> The original discussion can be found here:
-> https://lore.kernel.org/dri-devel/20220517152331.16217-1-hdegoede@redhat.com/
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/gpu/todo.rst | 68 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
-> index 7634c27ac562..393d218e4a0c 100644
-> --- a/Documentation/gpu/todo.rst
-> +++ b/Documentation/gpu/todo.rst
-> @@ -679,6 +679,74 @@ Contact: Sam Ravnborg
->  
->  Level: Advanced
->  
-> +Brightness handling on devices with multiple internal panels
-> +============================================================
-> +
-> +On x86/ACPI devices there can be multiple backlight firmware interfaces:
-> +(ACPI) video, vendor specific and others. As well as direct/native (PWM)
-> +register programming by the KMS driver.
-> +
-> +To deal with this backlight drivers used on x86/ACPI call
-> +acpi_video_get_backlight_type() which has heuristics (+quirks) to select
-> +which backlight interface to use; and backlight drivers which do not match
-> +the returned type will not register themselves, so that only one backlight
-> +device gets registered (in a single GPU setup, see below).
-> +
-> +At the moment this more or less assumes that there will only
-> +be 1 (internal) panel on a system.
-> +
-> +On systems with 2 panels this may be a problem, depending on
-> +what interface acpi_video_get_backlight_type() selects:
-> +
-> +1. native: in this case the KMS driver is expected to know which backlight
-> +   device belongs to which output so everything should just work.
-> +2. video: this does support controlling multiple backlights, but some work
-> +   will need to be done to get the output <-> backlight device mapping
-> +
-> +The above assumes both panels will require the same backlight interface type.
-> +Things will break on systems with multiple panels where the 2 panels need
-> +a different type of control. E.g. one panel needs ACPI video backlight control,
-> +where as the other is using native backlight control. Currently in this case
-> +only one of the 2 required backlight devices will get registered, based on
-> +the acpi_video_get_backlight_type() return value.
-> +
-> +If this (theoretical) case ever shows up, then supporting this will need some
-> +work. A possible solution here would be to pass a device and connector-name
-> +to acpi_video_get_backlight_type() so that it can deal with this.
-> +
-> +Note in a way we already have a case where userspace sees 2 panels,
-> +in dual GPU laptop setups with a mux. On those systems we may see
-> +either 2 native backlight devices; or 2 native backlight devices.
-> +
-> +Userspace already has code to deal with this by detecting if the related
-> +panel is active (iow which way the mux between the GPU and the panels
-> +points) and then uses that backlight device. Userspace here very much
-> +assumes a single panel though. It picks only 1 of the 2 backlight devices
-> +and then only uses that one.
-> +
-> +Note that all userspace code (that I know off) is currently hardcoded
-> +to assume a single panel.
-> +
-> +Before the recent changes to not register multiple (e.g. video + native)
-> +/sys/class/backlight devices for a single panel (on a single GPU laptop),
-> +userspace would see multiple backlight devices all controlling the same
-> +backlight.
-> +
-> +To deal with this userspace had to always picks one preferred device under
-> +/sys/class/backlight and will ignore the others. So to support brightness
-> +control on multiple panels userspace will need to be updated too.
-> +
-> +There are plans to allow brightness control through the KMS API by adding
-> +a "display brightness" property to drm_connector objects for panels. This
-> +solves a number of issues with the /sys/class/backlight API, including not
-> +being able to map a sysfs backlight device to a specific connector. Any
-> +userspace changes to add support for brightness control on devices with
-> +multiple panels really should build on top of this new KMS property.
-> +
-> +Contact: Hans de Goede
-> +
-> +Level: Advanced
-> +
->  Outside DRM
->  ===========
->  
+I also noticed that we use a u64 in snp_guest_request_ioctl.fw_err and
+u32 in sev_issue_cmd.error when these should be errors from the
+sev_ret_code enum IIUC.
 
--- 
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+We can fix snp_issue_guest_request() to set |fw_err| to zero when it
+returns 0 but what should we return to userspace if we encounter an
+error that prevents the FW from even being called? In ` crypto: ccp -
+Ensure psp_ret is always init'd in __sev_platform_init_locked()` we
+set the return to -1 so we could continue that convection here and
+better codify it in the sev_ret_code enum.
 
+>
+> --
+> -Dionna Glaze, PhD (she/her)
