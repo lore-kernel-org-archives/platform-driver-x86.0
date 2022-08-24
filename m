@@ -2,238 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC71C00140
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 15:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1575FC00140
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Aug 2022 15:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238845AbiHXPMC (ORCPT
+        id S239416AbiHXPOL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 11:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
+        Wed, 24 Aug 2022 11:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238039AbiHXPMC (ORCPT
+        with ESMTP id S238706AbiHXPOK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 11:12:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D270892F77
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 08:12:00 -0700 (PDT)
+        Wed, 24 Aug 2022 11:14:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABA697D77
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 08:14:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661353920;
+        s=mimecast20190719; t=1661354048;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qIsTYsGtRRqqtMPo3U3yKgx0qBsztEG+7HRqvY+0ZP0=;
-        b=BnApA1AClCEkyNxQ/SviMMp4zvpeBiugwe4JA6YTRz1kTBJ2iNU0RiWGVSKJTUlIK7e+C2
-        2ebudUnHCMNOwBSgrnvf+Jk21fTqG0AaYU1+CC0fVhqXd5cPy9gBKSwc/DKUtUrdnRwmTR
-        vJE5wX+GPtuxjPaZdqKb8+P3hHdOQ8w=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-14-e_epLFNtM5WOd_pAjqQdgg-1; Wed, 24 Aug 2022 11:11:56 -0400
-X-MC-Unique: e_epLFNtM5WOd_pAjqQdgg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A19131C14D47;
-        Wed, 24 Aug 2022 15:11:55 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.193.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CFF861121315;
-        Wed, 24 Aug 2022 15:11:54 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
+        bh=ZJEDkuzu9IHJZHMc08jlIqmTDTiinMncF0FEI8o0Qeg=;
+        b=U7IgUxbsQ0SVTveqe1nTK3wldSLpZ6kHwNHSD4KmfYUCQf03XCXsMpH1a5IFb09YNKKHa8
+        714S0aNG3Hzcbb6YjF6yFLGTPNkIOYJWkzPCTok1LJ7vCJUWekzBjq0P8+c5wsXwTFhcdA
+        2u4xB297fAso2mNFcMDoAswK3SDYeAM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-593-p90nuH_rOuOICPC-OTiZgw-1; Wed, 24 Aug 2022 11:14:07 -0400
+X-MC-Unique: p90nuH_rOuOICPC-OTiZgw-1
+Received: by mail-ej1-f69.google.com with SMTP id sc3-20020a1709078a0300b0073d77f805b3so3229013ejc.22
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 08:14:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=ZJEDkuzu9IHJZHMc08jlIqmTDTiinMncF0FEI8o0Qeg=;
+        b=wWJGEkAZz+d/49+3NPGv+7/XNG1h7l6wQU2++TwpHJykTY52SJZ+pny4nnbIhgg3sX
+         Vl8+f/nrlFMD9jABCwuj5XILsAOrJZL6p7YKGAhjOUR0fnjvXK4Ij2jh2Vh7/KtnsBhQ
+         k7yq179NENDM9wESjRVZXyuk7cMaRSwSncdEMP+inykjP8yEcicIlNE1igOVF5/P/cLy
+         9/nh94Y57UnuJzOcYdMYQsKJ8l7D9NUGUsC59RsGE5DRPV+bx4vZf8XmK/8KM7r9HJgb
+         iEZcfcYINl76j4EmOBLrnbPvxMqBmqI1f8UDYvhWWXgyBz/Uz5i7lWAq1aPvxvq3v3jM
+         aHSA==
+X-Gm-Message-State: ACgBeo33EOJ7Lpkk+WyCXj5HWrFlphTTpIito+P0MQpQLGsHbWvYzMMm
+        e8oJwPtYK+IFZ7yIGnKej7rAwIy4lGJiUWlT8wpZJkcfHFRdpARH7cAxxz02xidQArxKmT3Tm3Z
+        BHX4Mz+qoEQfG+LP0Z8bDQLVa4KIZCDkeNA==
+X-Received: by 2002:a17:906:9b84:b0:73d:8324:487e with SMTP id dd4-20020a1709069b8400b0073d8324487emr3186740ejc.98.1661354045652;
+        Wed, 24 Aug 2022 08:14:05 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7vIXmRTV3Fq7EMUoDGRCWsTAwfJwbCVHvBTfIfGEclmXWJCzndbCOkLl4d4hM2fG7Rx5CV1w==
+X-Received: by 2002:a17:906:9b84:b0:73d:8324:487e with SMTP id dd4-20020a1709069b8400b0073d8324487emr3186731ejc.98.1661354045470;
+        Wed, 24 Aug 2022 08:14:05 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id w5-20020a05640234c500b00445b3cab975sm3332267edc.56.2022.08.24.08.14.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Aug 2022 08:14:04 -0700 (PDT)
+Message-ID: <cf4a71bb-58f6-cb43-a90b-34b4842a2a42@redhat.com>
+Date:   Wed, 24 Aug 2022 17:14:04 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Simplify tablet-mode-switch
+ probing
+Content-Language: en-US
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
+Cc:     platform-driver-x86@vger.kernel.org,
         "Luke D . Jones" <luke@ljones.dev>
-Subject: [PATCH 2/2] drivers/platform: asus-wmi: Simplify tablet-mode-switch handling
-Date:   Wed, 24 Aug 2022 17:11:45 +0200
-Message-Id: <20220824151145.1448010-2-hdegoede@redhat.com>
-In-Reply-To: <20220824151145.1448010-1-hdegoede@redhat.com>
 References: <20220824151145.1448010-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220824151145.1448010-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Simplify tablet-mode-switch handling:
-1. The code is the same for all variants, the only difference is the
-   dev_id and notify event code. Store the dev_id + code in struct asus_wmi
-   and unify the handling
-2. Make the new unified asus_wmi_tablet_mode_get_state() check dev_id has
-   been set and make it a no-op when not set. This allows calling it
-   unconditionally at resume/restore time
-3. Simplify the tablet_mode_sw module-param handling, this also allows
-   selecting the new lid-flip-rog type through the module-param.
+Hi,
 
-Cc: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 13 +----
- drivers/platform/x86/asus-wmi.c    | 76 ++++++------------------------
- 2 files changed, 16 insertions(+), 73 deletions(-)
+On 8/24/22 17:11, Hans de Goede wrote:
+> The 3 different tablet-mode-switch initialization paths repeat a lot
+> of the same code. Add a helper function for this.
+> 
+> This also makes the error-handling for the kbd_dock_devid case consistent
+> with the other 2 cases.
+> 
+> Cc: Luke D. Jones <luke@ljones.dev>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index d9e7cf6e4a0e..cb8af61d684c 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -504,17 +504,8 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- 	else
- 		wapf = quirks->wapf;
- 
--	switch (tablet_mode_sw) {
--	case 0:
--		quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
--		break;
--	case 1:
--		quirks->tablet_switch_mode = asus_wmi_kbd_dock_devid;
--		break;
--	case 2:
--		quirks->tablet_switch_mode = asus_wmi_lid_flip_devid;
--		break;
--	}
-+	if (tablet_mode_sw != -1)
-+		quirks->tablet_switch_mode = tablet_mode_sw;
- 
- 	if (quirks->i8042_filter) {
- 		ret = i8042_install_filter(quirks->i8042_filter);
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d71daa024752..0f9f79f249c7 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -222,6 +222,9 @@ struct asus_wmi {
- 	struct asus_rfkill gps;
- 	struct asus_rfkill uwb;
- 
-+	int tablet_switch_event_code;
-+	u32 tablet_switch_dev_id;
-+
- 	enum fan_type fan_type;
- 	int fan_pwm_mode;
- 	int agfn_pwm;
-@@ -490,11 +493,11 @@ static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event
- 	int result;
- 
- 	result = asus_wmi_get_devstate_simple(asus, dev_id);
--	if (result < 0)
--		asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
- 	if (result >= 0) {
- 		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
- 		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-+		asus->tablet_switch_dev_id = dev_id;
-+		asus->tablet_switch_event_code = event_code;
- 	} else if (result == -ENODEV) {
- 		dev_err(dev, "This device has tablet-mode-switch quirk but got ENODEV checking it. This is a bug.");
- 	} else {
-@@ -556,22 +559,14 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
- 
- /* Tablet mode ****************************************************************/
- 
--static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
-+static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
- {
- 	int result;
- 
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
--	if (result >= 0) {
--		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
--		input_sync(asus->inputdev);
--	}
--}
--
--static void lid_flip_rog_tablet_mode_get_state(struct asus_wmi *asus)
--{
--	int result;
-+	if (!asus->tablet_switch_dev_id)
-+		return;
- 
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
-+	result = asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id);
- 	if (result >= 0) {
- 		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
- 		input_sync(asus->inputdev);
-@@ -3020,9 +3015,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- {
- 	unsigned int key_value = 1;
- 	bool autorelease = 1;
--	int result, orig_code;
--
--	orig_code = code;
-+	int orig_code = code;
- 
- 	if (asus->driver->key_filter) {
- 		asus->driver->key_filter(asus->driver, &code, &key_value,
-@@ -3065,27 +3058,8 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
--	if (asus->driver->quirks->tablet_switch_mode == asus_wmi_kbd_dock_devid &&
--	    code == NOTIFY_KBD_DOCK_CHANGE) {
--		result = asus_wmi_get_devstate_simple(asus,
--						      ASUS_WMI_DEVID_KBD_DOCK);
--		if (result >= 0) {
--			input_report_switch(asus->inputdev, SW_TABLET_MODE,
--					    !result);
--			input_sync(asus->inputdev);
--		}
--		return;
--	}
--
--	if (asus->driver->quirks->tablet_switch_mode == asus_wmi_lid_flip_devid &&
--	    code == NOTIFY_LID_FLIP) {
--		lid_flip_tablet_mode_get_state(asus);
--		return;
--	}
--
--	if (asus->driver->quirks->tablet_switch_mode == asus_wmi_lid_flip_rog_devid &&
--	    code == NOTIFY_LID_FLIP_ROG) {
--		lid_flip_rog_tablet_mode_get_state(asus);
-+	if (code == asus->tablet_switch_event_code) {
-+		asus_wmi_tablet_mode_get_state(asus);
- 		return;
- 	}
- 
-@@ -3714,18 +3688,7 @@ static int asus_hotk_resume(struct device *device)
- 	if (asus_wmi_has_fnlock_key(asus))
- 		asus_wmi_fnlock_update(asus);
- 
--	switch (asus->driver->quirks->tablet_switch_mode) {
--	case asus_wmi_no_tablet_switch:
--	case asus_wmi_kbd_dock_devid:
--		break;
--	case asus_wmi_lid_flip_devid:
--		lid_flip_tablet_mode_get_state(asus);
--		break;
--	case asus_wmi_lid_flip_rog_devid:
--		lid_flip_rog_tablet_mode_get_state(asus);
--		break;
--	}
--
-+	asus_wmi_tablet_mode_get_state(asus);
- 	return 0;
- }
- 
-@@ -3765,18 +3728,7 @@ static int asus_hotk_restore(struct device *device)
- 	if (asus_wmi_has_fnlock_key(asus))
- 		asus_wmi_fnlock_update(asus);
- 
--	switch (asus->driver->quirks->tablet_switch_mode) {
--	case asus_wmi_no_tablet_switch:
--	case asus_wmi_kbd_dock_devid:
--		break;
--	case asus_wmi_lid_flip_devid:
--		lid_flip_tablet_mode_get_state(asus);
--		break;
--	case asus_wmi_lid_flip_rog_devid:
--		lid_flip_rog_tablet_mode_get_state(asus);
--		break;
--	}
--
-+	asus_wmi_tablet_mode_get_state(asus);
- 	return 0;
- }
- 
--- 
-2.37.2
+I've added these 2 patches to my review-hans (soon to be for-next) branch now.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/asus-wmi.c | 55 +++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 5352055848d0..d71daa024752 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -484,13 +484,28 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
+>  }
+>  
+>  /* Input **********************************************************************/
+> +static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
+> +{
+> +	struct device *dev = &asus->platform_device->dev;
+> +	int result;
+> +
+> +	result = asus_wmi_get_devstate_simple(asus, dev_id);
+> +	if (result < 0)
+> +		asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+> +	if (result >= 0) {
+> +		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> +		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> +	} else if (result == -ENODEV) {
+> +		dev_err(dev, "This device has tablet-mode-switch quirk but got ENODEV checking it. This is a bug.");
+> +	} else {
+> +		dev_err(dev, "Error checking for tablet-mode-switch: %d\n", result);
+> +	}
+> +}
+>  
+>  static int asus_wmi_input_init(struct asus_wmi *asus)
+>  {
+> -	struct device *dev;
+> -	int err, result;
+> -
+> -	dev = &asus->platform_device->dev;
+> +	struct device *dev = &asus->platform_device->dev;
+> +	int err;
+>  
+>  	asus->inputdev = input_allocate_device();
+>  	if (!asus->inputdev)
+> @@ -510,39 +525,13 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+>  	case asus_wmi_no_tablet_switch:
+>  		break;
+>  	case asus_wmi_kbd_dock_devid:
+> -		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
+> -		if (result >= 0) {
+> -			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> -			input_report_switch(asus->inputdev, SW_TABLET_MODE, !result);
+> -		} else if (result != -ENODEV) {
+> -			dev_err(dev, "Error checking for keyboard-dock: %d\n", result);
+> -		}
+> +		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_KBD_DOCK, NOTIFY_KBD_DOCK_CHANGE);
+>  		break;
+>  	case asus_wmi_lid_flip_devid:
+> -		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> -		if (result < 0)
+> -			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+> -		if (result >= 0) {
+> -			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> -			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> -		} else if (result == -ENODEV) {
+> -			dev_err(dev, "This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+> -		} else {
+> -			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+> -		}
+> +		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_LID_FLIP, NOTIFY_LID_FLIP);
+>  		break;
+>  	case asus_wmi_lid_flip_rog_devid:
+> -		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP_ROG);
+> -		if (result < 0)
+> -			asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
+> -		if (result >= 0) {
+> -			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> -			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> -		} else if (result == -ENODEV) {
+> -			dev_err(dev, "This device has lid-flip-rog quirk but got ENODEV checking it. This is a bug.");
+> -		} else {
+> -			dev_err(dev, "Error checking for lid-flip: %d\n", result);
+> -		}
+> +		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_LID_FLIP_ROG, NOTIFY_LID_FLIP_ROG);
+>  		break;
+>  	}
+>  
 
