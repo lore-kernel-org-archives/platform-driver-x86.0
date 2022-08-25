@@ -2,196 +2,214 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89192C64990
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 14:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F507C64990
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 14:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235303AbiHYObK (ORCPT
+        id S242397AbiHYOiR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 10:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54242 "EHLO
+        Thu, 25 Aug 2022 10:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240890AbiHYObG (ORCPT
+        with ESMTP id S242399AbiHYOhk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 10:31:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7824F7B1D2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:31:05 -0700 (PDT)
+        Thu, 25 Aug 2022 10:37:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCBCB07EA
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661437864;
+        s=mimecast20190719; t=1661438256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D7VcBhHiv8IbbT8z6tWNMuI4PjjYorz2V+BoVVIIzj4=;
-        b=DgKkHX0nwVzO46MgaI0g0xzUs+5ISLGxf2vVK+Cj/73zHN0L0kJiSBqIGxWdkX2qU/GtGL
-        LvBONoitBb6VMfQH0+N4/49CQHlHWqZd2A1F8/5ipF+wRuwDQp+VY7+R/jpRfDuSlNrdyh
-        SMCWaLSTpL2NrK9kFQQi14HWfQlsxjM=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-532-bHFHhqh3NWKZ5slb6rJmIQ-1; Thu, 25 Aug 2022 10:31:03 -0400
-X-MC-Unique: bHFHhqh3NWKZ5slb6rJmIQ-1
-Received: by mail-ed1-f72.google.com with SMTP id w17-20020a056402269100b0043da2189b71so12718061edd.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:31:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=D7VcBhHiv8IbbT8z6tWNMuI4PjjYorz2V+BoVVIIzj4=;
-        b=Xgvg0q2B+QfoJWPjUfGMG4BsoJvvlQt7YNhLD5646dzIPcQY0Ph/xWZ6230hZZBSsB
-         0zVI+9Y7i1XzZjJV5yLxd0pY3HOhxmO1XoiMdEfI1BFW4+AN/1CYEeVhyhv7qRJdDVWh
-         WU4gEKPysqDp5Fsa663seh+syP14AlpZtTFnHkkS6VVZEGdp61zw8HHWXo1I3iFUU4hH
-         JxNw1WApLnn+YdmQ7OIYmEdEw63wck1ErYK9hON7/ISFSdkyll14aFag7IoZfg1UT/jn
-         lTzSTJwQA9BYuIxfrFOUHfOvlb7YW1vwT8CJLRgpUrtwWp2018J+ZUs8JNV7awx8sFhq
-         Ft4w==
-X-Gm-Message-State: ACgBeo2mjoIDLWEYJvv/woZ5Fp8DUIA8v0sI7Hhlme0JsnRzM2kGFW9Z
-        CciWb9VhsFdSvL1esrX2nPlHRhvQ+i75QxzOFUHDrBN8nrqRj8rK/PDFJTuF+AfnA2jSG33RrOS
-        sUowCFKF/45oy5sAzj3KoSB07V0r5P/Od5Q==
-X-Received: by 2002:a17:906:4fd2:b0:733:f44:c964 with SMTP id i18-20020a1709064fd200b007330f44c964mr2696494ejw.386.1661437862030;
-        Thu, 25 Aug 2022 07:31:02 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6b3DiS6kslr2dz1LOcQtM2Wg/5Z/QUKV4g1gbMzobKli0eVTgE8ZzahF/ObK591Ghk3vWQPQ==
-X-Received: by 2002:a17:906:4fd2:b0:733:f44:c964 with SMTP id i18-20020a1709064fd200b007330f44c964mr2696477ejw.386.1661437861817;
-        Thu, 25 Aug 2022 07:31:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id fj15-20020a0564022b8f00b0044657ecfbb5sm4932421edb.13.2022.08.25.07.31.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Aug 2022 07:31:01 -0700 (PDT)
-Message-ID: <89680041-c773-0edb-87d6-188bb6d217ad@redhat.com>
-Date:   Thu, 25 Aug 2022 16:31:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v6 0/7] add support for another simatic board
-Content-Language: en-US
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220825104422.14156-1-henning.schild@siemens.com>
- <34315356-f23e-34ff-98e6-a152b588f201@redhat.com>
- <20220825162910.6c8eab84@md1za8fc.ad001.siemens.net>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=O4J7msV35Y59tpMeVrBJQ/SHSU3/vshN9nue8TqJlB4=;
+        b=WKIgGZBP46YRS/EgD+zLEpNLoW2F6m1BUae2zjMYzhAEbHMJe7sXVhIr0OjVyErqKz+1FV
+        Jk/CPHyPyCZyl59pHp+7o8zctcugCY1BQlKSt50IzmjYSdk1kPN+sbYqzMBoi3C4Bj/L3Q
+        Ho7BWBpYYpokQ/Yl3ouxtPLJpajCECs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-43-yxcPGkQqP4Cbp34SPOVM-g-1; Thu, 25 Aug 2022 10:37:32 -0400
+X-MC-Unique: yxcPGkQqP4Cbp34SPOVM-g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4631718A64EA;
+        Thu, 25 Aug 2022 14:37:31 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.193.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 25AF82166B29;
+        Thu, 25 Aug 2022 14:37:27 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220825162910.6c8eab84@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pan@vger.kernel.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v5 00/31] drm/kms: Stop registering multiple /sys/class/backlight devs for a single display
+Date:   Thu, 25 Aug 2022 16:36:55 +0200
+Message-Id: <20220825143726.269890-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 8/25/22 16:29, Henning Schild wrote:
-> Am Thu, 25 Aug 2022 16:25:49 +0200
-> schrieb Hans de Goede <hdegoede@redhat.com>:
-> 
->> Hi,
->>
->> On 8/25/22 12:44, Henning Schild wrote:
->>> changes since v5:
->>>   - adding patch to convert to pr_fmt
->>>   - adding patch to prefix macros with "f7188x_"
->>>   - rebased p1v4 to be p3v5 and added tag
->>>
->>> changes since v4:
->>>   - remove int case from a printk in p1
->>>   - include tags into commit messages
->>>
->>> changes since v3:
->>>   - update Kconfig as well
->>>   - drop chip names from comment in driver header
->>>   - add manufacturer check for Fintek again, Nuvoton not possible
->>>   - drop revision printing for Nuvoton
->>>   - restructure defines again
->>>   - add new model 427G
->>>
->>> changes since v2: (p1 only)
->>>   - rename macros that change behavior
->>>   - use chip type not device id in the macros
->>>   - reorder defines a bit
->>>
->>> changes since v1:
->>>   - remove unused define
->>>   - fix bug where (base + 2) was used as second data bit
->>>   - add macros for "inverted" and "single data bit"
->>>
->>> The first two patches apply some style refactorings before actual
->>> functional changes are made.
->>>
->>> Later, This series enables a SuperIO GPIO driver to support a chip
->>> from the vendor Nuvoton, the driver is for Fintek devices but those
->>> just are very similar. And in watchdog and hwmon subsystems these
->>> SuperIO drivers also share code and are sometimes called a family.
->>>
->>> In another step the individual banks receive a label to tell them
->>> apart, a step which potentially changes an interface to legacy
->>> users that might rely on all banks having the same label, or an
->>> exact label. But since a later patch wants to use GPIO_LOOKUP
->>> unique labels are needed and i decided to assign them for all
->>> supported chips.
->>>
->>> In a following patch the Simatic GPIO LED driver is extended to
->>> provide LEDs in case that SuperIO GPIO driver can be loaded.
->>>
->>> Last but not least the watchdog module of that same SuperIO gets
->>> loaded on a best effort basis.
->>>
->>> The very last patch enables a second model of that same board type.
->>>
->>> Henning Schild (7):
->>>   gpio-f7188x: switch over to using pr_fmt
->>>   gpio-f7188x: add a prefix to macros to keep gpio namespace clean
->>>   gpio-f7188x: Add GPIO support for Nuvoton NCT6116
->>>   gpio-f7188x: use unique labels for banks/chips
->>>   leds: simatic-ipc-leds-gpio: add new model 227G
->>>   platform/x86: simatic-ipc: enable watchdog for 227G
->>>   platform/x86: simatic-ipc: add new model 427G  
->>
->> So it looks like all these patches are ready for merging now,
->> the only thing which is missing is an Ack from Pavel or
->> one of the other LED people for patch 5/7.
->>
->> Pavel can have your ack for merging this through another tree
->> please?
-> 
-> Would i need to send again and include the tags given on v6?
+As mentioned in my RFC titled "drm/kms: control display brightness through
+drm_connector properties":
+https://lore.kernel.org/dri-devel/0d188965-d809-81b5-74ce-7d30c49fee2d@redhat.com/
 
-No that is not necessary. The only reason for sending a new
-version would be if Pavel wants some changes to patch 5/7
+The first step towards this is to deal with some existing technical debt
+in backlight handling on x86/ACPI boards, specifically we need to stop
+registering multiple /sys/class/backlight devs for a single display.
+
+This series implements my RFC describing my plan for these cleanups:
+https://lore.kernel.org/dri-devel/98519ba0-7f18-201a-ea34-652f50343158@redhat.com/
+
+Changes in version 5:
+- Use drm_info(drm_dev, ...) in patch 2/31
+- Modify "drm/i915: Call acpi_video_register_backlight()", dropping
+  the global has_panel flag, replacing it with a new
+  intel_acpi_video_register() helper
+
+Changes in version 4:
+- Minor tweaks to nvidia-wmi-ec-backlight changes
+- Add nouveau_acpi_* wrappers around used include/acpi/video.h functions to
+  fix unresolved symbol errors on non X86
+
+Changes in version 3:
+- ACPI_VIDEO can now be enabled on non X86 too, adjust various Kconfig changes
+- Make the delay before doing fallback acpi_video backlight registration
+  a module option (patch 9)
+- Move the nvidia-wmi-ec-backlight fw API definitions to a shared header
+- Add a "acpi_video_get_backlight_type() == acpi_backlight_nvidia_wmi_ec"
+  check to the nvidia-wmi-ec-backlight driver (patch 19)
+
+Changes in version 2:
+- Introduce acpi_video_backlight_use_native() helper
+- Finishes the refactoring, addressing all the bits from the "Other issues"
+  section of the refactor RFC
+
+This series as submitted is based on drm-tip for CI purposes.
+
+Assuming the last i915 patch also pass review now, I hope to push
+out an immutable branch with this series on top of v6.0-rc1 and
+send out a pull-request to all involved subsystems based on
+this branch soon.
 
 Regards,
 
 Hans
 
 
+Hans de Goede (31):
+  ACPI: video: Add acpi_video_backlight_use_native() helper
+  drm/i915: Don't register backlight when another backlight should be
+    used (v2)
+  drm/amdgpu: Don't register backlight when another backlight should be
+    used (v3)
+  drm/radeon: Don't register backlight when another backlight should be
+    used (v3)
+  drm/nouveau: Don't register backlight when another backlight should be
+    used (v2)
+  ACPI: video: Drop backlight_device_get_by_type() call from
+    acpi_video_get_backlight_type()
+  ACPI: video: Remove acpi_video_bus from list before tearing it down
+  ACPI: video: Simplify acpi_video_unregister_backlight()
+  ACPI: video: Make backlight class device registration a separate step
+    (v2)
+  ACPI: video: Remove code to unregister acpi_video backlight when a
+    native backlight registers
+  drm/i915: Call acpi_video_register_backlight() (v3)
+  drm/nouveau: Register ACPI video backlight when nv_backlight
+    registration fails (v2)
+  drm/amdgpu: Register ACPI video backlight when skipping amdgpu
+    backlight registration
+  drm/radeon: Register ACPI video backlight when skipping radeon
+    backlight registration
+  platform/x86: nvidia-wmi-ec-backlight: Move fw interface definitions
+    to a header (v2)
+  ACPI: video: Refactor acpi_video_get_backlight_type() a bit
+  ACPI: video: Add Nvidia WMI EC brightness control detection (v3)
+  ACPI: video: Add Apple GMUX brightness control detection
+  platform/x86: nvidia-wmi-ec-backlight: Use
+    acpi_video_get_backlight_type()
+  platform/x86: apple-gmux: Stop calling acpi/video.h functions
+  platform/x86: toshiba_acpi: Stop using
+    acpi_video_set_dmi_backlight_type()
+  platform/x86: acer-wmi: Move backlight DMI quirks to
+    acpi/video_detect.c
+  platform/x86: asus-wmi: Drop DMI chassis-type check from backlight
+    handling
+  platform/x86: asus-wmi: Move acpi_backlight=vendor quirks to ACPI
+    video_detect.c
+  platform/x86: asus-wmi: Move acpi_backlight=native quirks to ACPI
+    video_detect.c
+  platform/x86: samsung-laptop: Move acpi_backlight=[vendor|native]
+    quirks to ACPI video_detect.c
+  ACPI: video: Remove acpi_video_set_dmi_backlight_type()
+  ACPI: video: Drop "Samsung X360" acpi_backlight=native quirk
+  ACPI: video: Drop NL5x?U, PF4NU1F and PF5?U?? acpi_backlight=native
+    quirks
+  ACPI: video: Fix indentation of video_detect_dmi_table[] entries
+  drm/todo: Add entry about dealing with brightness control on devices
+    with > 1 panel
 
+ Documentation/gpu/todo.rst                    |  68 +++
+ MAINTAINERS                                   |   1 +
+ drivers/acpi/Kconfig                          |   1 +
+ drivers/acpi/acpi_video.c                     |  64 ++-
+ drivers/acpi/video_detect.c                   | 428 +++++++++++-------
+ drivers/gpu/drm/Kconfig                       |  14 +
+ .../gpu/drm/amd/amdgpu/atombios_encoders.c    |  14 +-
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   9 +
+ drivers/gpu/drm/gma500/Kconfig                |   2 +
+ drivers/gpu/drm/i915/Kconfig                  |   2 +
+ drivers/gpu/drm/i915/display/intel_acpi.c     |  27 ++
+ drivers/gpu/drm/i915/display/intel_acpi.h     |   3 +
+ .../gpu/drm/i915/display/intel_backlight.c    |   7 +
+ drivers/gpu/drm/i915/display/intel_display.c  |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_acpi.c        |  10 +
+ drivers/gpu/drm/nouveau/nouveau_acpi.h        |   4 +
+ drivers/gpu/drm/nouveau/nouveau_backlight.c   |  13 +
+ drivers/gpu/drm/radeon/atombios_encoders.c    |   7 +
+ drivers/gpu/drm/radeon/radeon_encoders.c      |  11 +-
+ .../gpu/drm/radeon/radeon_legacy_encoders.c   |   7 +
+ drivers/platform/x86/Kconfig                  |   1 +
+ drivers/platform/x86/acer-wmi.c               |  66 ---
+ drivers/platform/x86/apple-gmux.c             |   3 -
+ drivers/platform/x86/asus-nb-wmi.c            |  21 -
+ drivers/platform/x86/asus-wmi.c               |  13 -
+ drivers/platform/x86/asus-wmi.h               |   2 -
+ drivers/platform/x86/eeepc-wmi.c              |  25 +-
+ .../platform/x86/nvidia-wmi-ec-backlight.c    |  82 +---
+ drivers/platform/x86/samsung-laptop.c         |  87 ----
+ drivers/platform/x86/toshiba_acpi.c           |  16 -
+ include/acpi/video.h                          |   9 +-
+ .../x86/nvidia-wmi-ec-backlight.h             |  76 ++++
+ 32 files changed, 588 insertions(+), 507 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
 
-> 
-> Henning
-> 
->> So what is the plan for merging this?
->>
->> I see 2 options:
->>
->> Option a:
->> 1. Merge the GPIO changes (patches 1-4) through the GPIO tree; and
->> 2. Merge the leds + pdx86 changes through the pdx86 tree
->>
->> Option b:
->> Merge everything through the pdx86 tree, and I will then provide
->> an immutable branch + signed tag for other subsystems to pull
->> (if they want to).
->>
->> Regards,
->>
->> Hans
->>
-> 
+-- 
+2.37.2
 
