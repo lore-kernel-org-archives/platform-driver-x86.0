@@ -2,362 +2,347 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32947ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 21:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C970FECAAA3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 22:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231562AbiHYVCP (ORCPT
+        id S243442AbiHYWMG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 17:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
+        Thu, 25 Aug 2022 18:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243688AbiHYVB4 (ORCPT
+        with ESMTP id S231648AbiHYWMF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 17:01:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708BDB248E
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 14:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661461306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZccaYkMry3RxMZ99ND8Fk/NXsxoLv+/F79ThHFopAZE=;
-        b=VIOdyTkpmFvoqzWmZa5X0aS7mXznimd96C/1EODPnXKkB/xzRErUTQX+8JpT9+1Wud6Eic
-        b2AZ3OVJP61TrYkzr+pTkgIT4kOFy2ZXVW44nz5ham+EqSZjVgZtfUPI/icLXYHQJxsEsQ
-        LuTx/hCktLoGf7SR3vPlG03trQXsqf0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-228-HbtVk1V6MGue9AkI0Jf4IA-1; Thu, 25 Aug 2022 17:01:44 -0400
-X-MC-Unique: HbtVk1V6MGue9AkI0Jf4IA-1
-Received: by mail-ej1-f72.google.com with SMTP id qw34-20020a1709066a2200b00730ca5a94bfso6643388ejc.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 14:01:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=ZccaYkMry3RxMZ99ND8Fk/NXsxoLv+/F79ThHFopAZE=;
-        b=62zYtOvV0MhJuuIFun1/W3KD4eZJUzOg00wWLyl5hG08RgIXkDEbg2tSvd+SIS4+Gc
-         OxFtXMShFPaKkhkSf3DGErtF3FLdu9i3ssB6Eq4Inei3QDx8Thl0H7x5y2LVMUt64Ein
-         P5whXzKnb92sjzGYLh2/X8OGc0BcJy+xUw7/BrO3V7TcLvow7nZdWYtiyovhG48YjX56
-         MB/aAK6iPTcbEviNamulg2sDeYCw8I9ZpVIuhjCjsiOZOa6juK0WC20UZCYcvpIa8YJ0
-         pxdcw2Kc1HVGYP0EKMn1QjAZtm/bGjTq3mbwcUX3el4xM8kbmgaA21xaLM6sizHLkHmb
-         JlqA==
-X-Gm-Message-State: ACgBeo1752/AjeXwcnGK6VgePtzEYmZpVUPBQ1SxiIdF1b9cNJ/zDyn5
-        Zqn1dUHYFwQw8KDVNiv2fo94QQhhpa5SexS0OHW8A0K7FovcinXfxxz4cBIrsULqoDdCNUUtawf
-        kZnRKcchOE+kvklMr0ZzMznTXkNyJTkPyAg==
-X-Received: by 2002:aa7:cdcc:0:b0:447:bac0:4c20 with SMTP id h12-20020aa7cdcc000000b00447bac04c20mr3492217edw.183.1661461303233;
-        Thu, 25 Aug 2022 14:01:43 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5LSFnJRE+1rcn7cDkRpGQA4Ro3QfLFXht+CWSKYX9oE8D98shMiJUsBEtxye3/sIY6D1CePA==
-X-Received: by 2002:aa7:cdcc:0:b0:447:bac0:4c20 with SMTP id h12-20020aa7cdcc000000b00447bac04c20mr3492208edw.183.1661461302952;
-        Thu, 25 Aug 2022 14:01:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id z3-20020a170906668300b0073d796a1043sm86983ejo.123.2022.08.25.14.01.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Aug 2022 14:01:42 -0700 (PDT)
-Message-ID: <737e34f6-298d-fcf9-ef81-cd81fb0279e3@redhat.com>
-Date:   Thu, 25 Aug 2022 23:01:41 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 1/2] asus-wmi: Adjust tablet/lidflip handling to use enum
+        Thu, 25 Aug 2022 18:12:05 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE56E402E4;
+        Thu, 25 Aug 2022 15:12:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bFu6OfJAm7kH9WAmnqf23d2OrSBWI+PqgTHrYDjSXZenZitbkd9lvM5PDasoFXcXRNn+xTFrZ3orq0vKtFII44oQdSgcYbRkaZAhLx+TZ3ToKN5kOaJIWIQf9vm7MzL0el3w3YC6UkuA+w1SSDyW3W7O5tJXK1Gkr0b4+1ktxImFM2FbQbB3TD2GHviGNpvaiQ69qUoTL5fHjcZbBAQ+gjIrYNdsWyMHIEKhT5zOgk033Xq2u7L/w7Ir/c2VeV7ukTnMBX80/wqgl511Hk6G2qmgr66aFgN5GmJyzGkb3+A/sfWd3fQZI/XMaaRTYGaxpINFcpFOFEXRwt/HJKzqhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KzOnNrMVb9n4jzdfZCm0d8X8JjCYqOUk5LdVrYVJfJw=;
+ b=bbhMZxBokki5bMZ3Ze+lKclCFeqbuEtYMLDSeRsLIK0xtJiX2fbHSo7VIQf7bdr3n9WkaNHcSyJVMIGFjuywAM7pA42EiS49DcGqF0u8gS5+NKEAMZccfNPUqYoaxiMk12ntW0PS2zSBNNSogZeb9vz3W7A34QD1UHzGHJ0sj/DPdI5E7qlvjLJfjh/KV9qdrxTD7l0f7kOiiAV+ol7fyqx/U43QO8DFdvLFXhBdOOMH5zy6ZGHTe0ZjZIvUepEPMJdMzOwyZcG5CIz59nQgWRtv21w05nVXQeusyvrl6fny5twWdQ3Ypt+Yv9hkTTCjIwiK9vZLE90tWceazsVDtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KzOnNrMVb9n4jzdfZCm0d8X8JjCYqOUk5LdVrYVJfJw=;
+ b=Zxxn5f0BLwp5dC1cJcxp2X17C70jnZL9rKtk/LPfs8WxAgl+5wo4ro84i/eFj+Pw6wUyeBoaRN4ZOfwSSiuG4J+UbWa6BimNGC4PAxvOZFYeCl0bhO6UbqkFMBIsznhKgOUvVOGRdVTG+v6LbXF5S2fchFeWpah1ONBe+RP+QjKyeZ/MDmPnwyfOXcS/qOAI5ScG1DBLA7l+wql7dx/zcrr6fbdCYZRtXauUCLujCJxvOlX8M0ysAdXZgFFow8ycCpfEPMu3YX5Bpa76UtlNYOYsCIrNeNILHg0za8AZYPuFmjTiDYPUq64K+muacWroxIgjuJhTDJUc0BvyzShpmQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
+ CH2PR12MB4277.namprd12.prod.outlook.com (2603:10b6:610:ae::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.18; Thu, 25 Aug 2022 22:12:02 +0000
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6012:2e0d:2697:8b02]) by DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6012:2e0d:2697:8b02%3]) with mapi id 15.20.5566.014; Thu, 25 Aug 2022
+ 22:12:02 +0000
+Subject: Re: [PATCH v5 15/31] platform/x86: nvidia-wmi-ec-backlight: Move fw
+ interface definitions to a header (v2)
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20220825143726.269890-1-hdegoede@redhat.com>
+ <20220825143726.269890-16-hdegoede@redhat.com>
+From:   Daniel Dadap <ddadap@nvidia.com>
+Message-ID: <4201ab83-a859-8533-b93b-88c012514590@nvidia.com>
+Date:   Thu, 25 Aug 2022 17:11:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
+In-Reply-To: <20220825143726.269890-16-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To:     Luke Jones <luke@ljones.dev>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220813092753.6635-1-luke@ljones.dev>
- <b2ce575a-470c-5a56-2cd0-9f3e7dbac1ad@redhat.com>
- <G7V6HR.3WZF23WP4MCJ3@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <G7V6HR.3WZF23WP4MCJ3@ljones.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR18CA0024.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::33) To DM6PR12MB2763.namprd12.prod.outlook.com
+ (2603:10b6:5:48::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b39267ba-849a-4989-1aaf-08da86e6d5fd
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4277:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: saj/WwOupsgi6rU06sJ41tVGdIsFFaqjGAq+8EAu99mQoZcpw4El/+jMKqzpyEfZPxzdUNhFMyYUOkKrnVz2A/NPesi7PuR2q5CIT8nZ7Iq8ICQq2GB4VtoY5ONYrRg2WuHmgl7OAVtcJqGxgaAFu4KmKzcAWQNfwuNoK+Z3ofZIALogEL5tvU/rD3UiRB6R8LCsiwHps6/eA+8yy2w+J+Sz8SBPf+nQcLiPrnTg2P9H76ZpM2AU4R503Xl54NkJIwvRyMg8mEGr7JzK9mMFm58Un+lW0juYoNWW7Ajq5VRifQPJnw6uulRJGFk7x/2psmbOUQJZ8h2H82uslUnQZZp6kg2Vv5Nc0/IOeImwq5l5bvYigqcAiRLyrQj7Gc2OJIm1/15E1Ad77p6FLcfZG1Q1NujU14MNoU43xmy3b4QwhjJJziaHoxAYlNcZGVnAdMEXw8S06G7Nwu3+3WIJ0++nYQzcWTPINU2OvZt6j45CjXjSvdyoHW+jN0Lepz9kHh/vSzrCglhjqc9uFXlD6H/rU3HIHR+6T/8nYORQaR65wrWTSdLU2ZWXYxaGoQC5lkXlWZGhjXLY2cyBu9KkXhxbw5Qn9iVM8TouscllkdfGVfWUEMkD7B/MgBiQElLqseRQ/rjKZDZPhDKAatjZi1v1UVSLzC1MjSE8Zbq8qCXpV89VzXBqKDFrFzD0FKvhyT7yRviTN2mQqrudn6rP3txHItjYuiYHCJLDp6WZvcFoBGSgSrSKOcyCGHh9y7F5YKtGtWToRyR1TJz0cFtwIVhS66aFvhchRe9WJdEq0clP3X7cZGPSU3Bzq0BApVtz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(38100700002)(6506007)(2616005)(6486002)(186003)(53546011)(36756003)(7416002)(5660300002)(6666004)(41300700001)(478600001)(2906002)(31686004)(8936002)(4326008)(110136005)(86362001)(31696002)(26005)(6512007)(83380400001)(66946007)(54906003)(316002)(66476007)(8676002)(66556008)(921005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1JndmxLcEwyeGUvQ29kUENYdEFoM1NVVTdXTkRvK0J1VmJ3UlMxZ2R5KzBD?=
+ =?utf-8?B?aFV1akNkbkJ1OEJGT0RvaGFiS0lkNWRBdVBncTVVcXN2QTAxaDdXcDBNS3Jv?=
+ =?utf-8?B?Q1hkN1QwR2lEQU5YQ2FzVlRhZTQvSWhmMXpHaDBPN1BnT3JZbmkza2x2Mnhp?=
+ =?utf-8?B?cEUvclF4U2c3U3NoWFRMSXd4T2NQTzZOOGJDSkVMbjJXelc1UDNhdFBoSito?=
+ =?utf-8?B?NitHalVzdVNTVFMvTmhnQm9DR1hldkJMRGxVRUt1Y3pMNGMzbG5Rb1JVaEF3?=
+ =?utf-8?B?SC9KdjVZRldYaUY0QlFvUGV0eEIxK1VYT1c4TEhDcTVmdDFlYVhISnJrRjNT?=
+ =?utf-8?B?bk9LWXVvSnNzYUxIWlV3RmdqVW9CaFpnUnZjTjJSTlVrV1FRSC8wc3o1YkRv?=
+ =?utf-8?B?aXlzMmRJdnArdWJFK1ZoanRRQ0o0dy9xaU5lZm9PdlMwZUlkTExwNHdTcWMv?=
+ =?utf-8?B?Y2NkWDhVZGZQN2R4Y0FVZjZkUTNsY0tRNGlIREZlc0hHS1RzNXFUQXM5aWh2?=
+ =?utf-8?B?eHFqb2JoczN3Q1R2cDZCWFZhSWRFTmorTlVyQ2JITElyREhzVkhoL0lSazBW?=
+ =?utf-8?B?S0dHL3lnV0pvQ1NsSEdVdnJZUTc3RFF2djI3QXFFT2tOYVRuSW9wbFQ0QXRX?=
+ =?utf-8?B?aEwyaDlTanYxNG1sZDQ4aU1pQndBSzI1d0NaaXJSY2Jpdjg2NTZsUDNTSnRU?=
+ =?utf-8?B?UHh6SzgzNWFWeWRHblR3UVNNOUdVRTg0bEFXdGw2YVVnNmREeFErYkF1SmlM?=
+ =?utf-8?B?Yit6eDd5eXlmcjZXQWVGUHRzKytyai9GeGptMEMycGlINW9Bd3VyV0x1R24v?=
+ =?utf-8?B?UUNlZ0tSc2dlNDlocEtyWXJiNXZ1ZHI3OTdoU2tnTFhaNXo2K0U3emp3azF6?=
+ =?utf-8?B?SEdHZkRvZUd3Vkp2bkIvKzR0bWdKbWJwR0dnSVpFcGFQbDFLbE1QU2JWejZ5?=
+ =?utf-8?B?dGpydEZrV0NzVXFrTGwrSHkrak1mTEMzR3BtUmdiUFNHRllZMUJoM2lPdW5O?=
+ =?utf-8?B?Z0NQM1N1aEwvV3FuYUl0Y0V5ellhaE1ZUHR2TkRtRjROYmUxMDdhcldwVG5O?=
+ =?utf-8?B?THk5N3BQMkt4NkROVkVQTHJ2QkxlVys1cVE2clA1WTlrL0NrYWtoTWlKdWtN?=
+ =?utf-8?B?VVFEcUVXaUIzUkhxdkEvYy91ejZUTThLdnNRd1hydDliV2FXYmRFd2E4bXcx?=
+ =?utf-8?B?QUdybENFeExYMXl1ODR2ZzFOaWR3S0FDZ253QTlrV0FQTmFIaWxKanpva3FQ?=
+ =?utf-8?B?OWc0WUhiUEZQdTBFQzdsR0pWRHBRWnpuVGtJRVVyaC9Bc01uU0VlTVkraW0z?=
+ =?utf-8?B?ZWpjSXV2VUdaQmI2NnhsNU9xSk4rRmxqTmEvNm1iMC9MblFKTURoL2puU0V5?=
+ =?utf-8?B?bXlBKzhEKzhDMXpkcndoWnhkcWhnZHpKUTNhdHFkYkxFbTg0U3JiTEdiN1Z1?=
+ =?utf-8?B?WnByOUhWZTNMRFREL2RXR1dZZmswb1JuZVdPbUZHNWpja1JKa2FnNWp6a2hX?=
+ =?utf-8?B?ZERIMTRCY20xWnJSSytveXVrMmFaQ2w3Rmhzc0tLMDcvUStucGE5dE1oYmtP?=
+ =?utf-8?B?R3lCRjRlSlNwNDZQaC9ISFVvZlFzOVdOSHhjWHByNG0xd2QwdmM4Rzd0Qm1n?=
+ =?utf-8?B?ZFRuYTNkTzJvOHNHc2ttb2k1NlBJTVgrNkpkQXkwS2NxTWNIeVdDRmZkKzlu?=
+ =?utf-8?B?cVl0WDdsSXYzcFJEVVFmLzR0OERuUThHQ3RTbkpyWlJXajJyd2J0elZoSy96?=
+ =?utf-8?B?RVUyWDJaemRZclA1RTBSUUtyTXVTSVZVNUM4SHhMSE9nOFdtOE5aZjVlYUUz?=
+ =?utf-8?B?QmRzbXJ4SVBIQ3YwbzVFUXhoSldvNXFIbXl1V3h6bEpaYk1RRkhxcURhclRr?=
+ =?utf-8?B?dlVOOGZHOWxNN1pXaVo5K3lqZlZHaVMxZVE5YUthckw3NFI3UndYUzNYUC9F?=
+ =?utf-8?B?S2g3V1FXRnFvcGsrS2NOZnJGYmpkYnVBeVowcFBiYW4yVWx3ZndGY2FYZTJB?=
+ =?utf-8?B?bHdqdkJEcGdhWEhTV2MxMmVhMzRMR0M4T2pzYU1YNGZmbjUySEl3cTJ1akd4?=
+ =?utf-8?B?dHZvckNLUGFvUzhUK245Y2t0R21FNWhVVGt1a0pNREducHYrcE13OHNBclNV?=
+ =?utf-8?Q?zRv/VZp73D9P0G3XvGmp7k3NJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b39267ba-849a-4989-1aaf-08da86e6d5fd
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2022 22:12:01.9893
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ub5uaQeHeGxC12euUqn0YTi+X38/dm1f01Q4GFJiwTSRyPXKSoU6rNBVQIQtEhcSpPHHy29pXVefO6xivxi+6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4277
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Thanks, Hans.
 
-On 8/25/22 22:50, Luke Jones wrote:
-> 
-> 
-> On Wed, Aug 24 2022 at 16:12:42 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 8/13/22 11:27, Luke D. Jones wrote:
->>>  Due to multiple types of tablet/lidflip, the existing code for
->>>  handling these events is refactored to use an enum for each type.
->>>
->>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>
->> Thank you for the patch, I've merged this but with one change:
->>
->>>  ---
->>>   drivers/platform/x86/asus-nb-wmi.c | 13 +++---
->>>   drivers/platform/x86/asus-wmi.c    | 67 ++++++++++++++++++++----------
->>>   drivers/platform/x86/asus-wmi.h    |  9 +++-
->>>   3 files changed, 58 insertions(+), 31 deletions(-)
->>>
->>>  diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->>>  index a81dc4b191b7..3a93e056c4e1 100644
->>>  --- a/drivers/platform/x86/asus-nb-wmi.c
->>>  +++ b/drivers/platform/x86/asus-nb-wmi.c
->>>  @@ -115,12 +115,12 @@ static struct quirk_entry quirk_asus_forceals = {
->>>   };
->>>
->>>   static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
->>>  -    .use_kbd_dock_devid = true,
->>>  +    .tablet_switch_mode = asus_wmi_kbd_dock_devid,
->>>   };
->>>
->>>   static struct quirk_entry quirk_asus_use_lid_flip_devid = {
->>>       .wmi_backlight_set_devstate = true,
->>>  -    .use_lid_flip_devid = true,
->>>  +    .tablet_switch_mode = asus_wmi_lid_flip_devid,
->>>   };
->>>
->>>   static int dmi_matched(const struct dmi_system_id *dmi)
->>>  @@ -492,16 +492,13 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
->>>
->>>       switch (tablet_mode_sw) {
->>>       case 0:
->>>  -        quirks->use_kbd_dock_devid = false;
->>>  -        quirks->use_lid_flip_devid = false;
->>>  +        quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
->>>           break;
->>>       case 1:
->>>  -        quirks->use_kbd_dock_devid = true;
->>>  -        quirks->use_lid_flip_devid = false;
->>>  +        quirks->tablet_switch_mode = asus_wmi_kbd_dock_devid;
->>>           break;
->>>       case 2:
->>>  -        quirks->use_kbd_dock_devid = false;
->>>  -        quirks->use_lid_flip_devid = true;
->>>  +        quirks->tablet_switch_mode = asus_wmi_lid_flip_devid;
->>>           break;
->>>       }
->>>
->>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>>  index 0421ffb81927..b4690ac39147 100644
->>>  --- a/drivers/platform/x86/asus-wmi.c
->>>  +++ b/drivers/platform/x86/asus-wmi.c
->>>  @@ -485,8 +485,11 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
->>>
->>>   static int asus_wmi_input_init(struct asus_wmi *asus)
->>>   {
->>>  +    struct device *dev;
->>>       int err, result;
->>>
->>>  +    dev = &asus->platform_device->dev;
->>>  +
->>>       asus->inputdev = input_allocate_device();
->>>       if (!asus->inputdev)
->>>           return -ENOMEM;
->>>  @@ -494,35 +497,38 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
->>>       asus->inputdev->name = asus->driver->input_name;
->>>       asus->inputdev->phys = asus->driver->input_phys;
->>>       asus->inputdev->id.bustype = BUS_HOST;
->>>  -    asus->inputdev->dev.parent = &asus->platform_device->dev;
->>>  +    asus->inputdev->dev.parent = dev;
->>>       set_bit(EV_REP, asus->inputdev->evbit);
->>>
->>>       err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
->>>       if (err)
->>>           goto err_free_dev;
->>>
->>>  -    if (asus->driver->quirks->use_kbd_dock_devid) {
->>>  +    switch (asus->driver->quirks->tablet_switch_mode) {
->>>  +    case asus_wmi_no_tablet_switch:
->>>  +        break;
->>>  +    case asus_wmi_kbd_dock_devid:
->>>           result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
->>>           if (result >= 0) {
->>>               input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
->>>               input_report_switch(asus->inputdev, SW_TABLET_MODE, !result);
->>>           } else if (result != -ENODEV) {
->>>  -            pr_err("Error checking for keyboard-dock: %d\n", result);
->>>  +            dev_err(dev, "Error checking for keyboard-dock: %d\n", result);
->>>           }
->>>  -    }
->>>  -
->>>  -    if (asus->driver->quirks->use_lid_flip_devid) {
->>>  +        break;
->>>  +    case asus_wmi_lid_flip_devid:
->>>           result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
->>>           if (result < 0)
->>>  -            asus->driver->quirks->use_lid_flip_devid = 0;
->>>  +            asus->driver->quirks->tablet_switch_mode = asus_wmi_no_tablet_switch;
->>>           if (result >= 0) {
->>>               input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
->>>               input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
->>>           } else if (result == -ENODEV) {
->>>  -            pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
->>>  +            dev_err(dev, "This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
->>>           } else {
->>>  -            pr_err("Error checking for lid-flip: %d\n", result);
->>>  +            dev_err(dev, "Error checking for lid-flip: %d\n", result);
->>>           }
->>>  +        break;
->>>       }
->>>
->>>       err = input_register_device(asus->inputdev);
->>>  @@ -548,8 +554,9 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
->>>
->>>   static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
->>>   {
->>>  -    int result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
->>>  +    int result;
->>>
->>>  +    result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
->>>       if (result >= 0) {
->>>           input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
->>>           input_sync(asus->inputdev);
->>>  @@ -3044,20 +3051,26 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->>>           return;
->>>       }
->>>
->>>  -    if (asus->driver->quirks->use_kbd_dock_devid && code == NOTIFY_KBD_DOCK_CHANGE) {
->>
->> Given that we need to check for both the tablet_switch_mode as well as
->> different event codes, I believe that keep using something like:
->>
->>     if (asus->driver->quirks->tablet_switch_mode == asus_wmi_kbd_dock_devid &&
->>         code == NOTIFY_KBD_DOCK_CHANGE) {
->>
->> here is better then doing a switch-case with the code checkes nested under
-> 
-> I think I recall that Andy requested use of the switch/case but I might be wrong.
+Reviewed-by: Daniel Dadap <ddadap@nvidia.com>
 
-Yeah, or maybe it was me even who asked that :)  The code is not really
-ideal in either form.
-
-So as you've probably seen from the Cc I've done some further cleanup
-unifying the handling of all 3 tablet-mode-switch types.
-
-Those extra cleanup patches are also in my review-hans branch now.
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
->>
->>>  -        result = asus_wmi_get_devstate_simple(asus,
->>>  -                              ASUS_WMI_DEVID_KBD_DOCK);
->>>  +    switch (asus->driver->quirks->tablet_switch_mode) {
->>>  +    case asus_wmi_no_tablet_switch:
->>>  +        break;
->>>  +    case asus_wmi_kbd_dock_devid:
->>>  +        if (code == NOTIFY_KBD_DOCK_CHANGE) {
->>>  +            result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_DOCK);
->>>           if (result >= 0) {
->>>               input_report_switch(asus->inputdev, SW_TABLET_MODE,
->>
->> Note the indent of these 2 lines is wrong now, it should be indentend one
->> extra step because it is inside the if (code == NOTIFY_KBD_DOCK_CHANGE) {
->> block now, sticking with a:
->>
->>     if (asus->driver->quirks->tablet_switch_mode == asus_wmi_kbd_dock_devid &&
->>         code == NOTIFY_KBD_DOCK_CHANGE) {
->>
->> is style instead of nesting avoids the need for this extra indentation.
->>
->> I have fixed this up while merging the patches.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>>  -                        !result);
->>>  +                        !result);
->>>               input_sync(asus->inputdev);
->>>           }
->>>           return;
->>>  -    }
->>>  -
->>>  -    if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
->>>  -        lid_flip_tablet_mode_get_state(asus);
->>>  -        return;
->>>  +        }
->>>  +        break;
->>>  +    case asus_wmi_lid_flip_devid:
->>>  +        if (code == NOTIFY_LID_FLIP) {
->>>  +            lid_flip_tablet_mode_get_state(asus);
->>>  +            return;
->>>  +        }
->>>  +        break;
->>>       }
->>>
->>>       if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
->>>  @@ -3700,8 +3713,14 @@ static int asus_hotk_resume(struct device *device)
->>>       if (asus_wmi_has_fnlock_key(asus))
->>>           asus_wmi_fnlock_update(asus);
->>>
->>>  -    if (asus->driver->quirks->use_lid_flip_devid)
->>>  +    switch (asus->driver->quirks->tablet_switch_mode) {
->>>  +    case asus_wmi_no_tablet_switch:
->>>  +    case asus_wmi_kbd_dock_devid:
->>>  +        break;
->>>  +    case asus_wmi_lid_flip_devid:
->>>           lid_flip_tablet_mode_get_state(asus);
->>>  +        break;
->>>  +    }
->>>
->>>       return 0;
->>>   }
->>>  @@ -3742,8 +3761,14 @@ static int asus_hotk_restore(struct device *device)
->>>       if (asus_wmi_has_fnlock_key(asus))
->>>           asus_wmi_fnlock_update(asus);
->>>
->>>  -    if (asus->driver->quirks->use_lid_flip_devid)
->>>  +    switch (asus->driver->quirks->tablet_switch_mode) {
->>>  +    case asus_wmi_no_tablet_switch:
->>>  +    case asus_wmi_kbd_dock_devid:
->>>  +        break;
->>>  +    case asus_wmi_lid_flip_devid:
->>>           lid_flip_tablet_mode_get_state(asus);
->>>  +        break;
->>>  +    }
->>>
->>>       return 0;
->>>   }
->>>  diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
->>>  index b302415bf1d9..413920bad0c6 100644
->>>  --- a/drivers/platform/x86/asus-wmi.h
->>>  +++ b/drivers/platform/x86/asus-wmi.h
->>>  @@ -25,6 +25,12 @@ struct module;
->>>   struct key_entry;
->>>   struct asus_wmi;
->>>
->>>  +enum asus_wmi_tablet_switch_mode {
->>>  +    asus_wmi_no_tablet_switch,
->>>  +    asus_wmi_kbd_dock_devid,
->>>  +    asus_wmi_lid_flip_devid,
->>>  +};
->>>  +
->>>   struct quirk_entry {
->>>       bool hotplug_wireless;
->>>       bool scalar_panel_brightness;
->>>  @@ -33,8 +39,7 @@ struct quirk_entry {
->>>       bool wmi_backlight_native;
->>>       bool wmi_backlight_set_devstate;
->>>       bool wmi_force_als_set;
->>>  -    bool use_kbd_dock_devid;
->>>  -    bool use_lid_flip_devid;
->>>  +    enum asus_wmi_tablet_switch_mode tablet_switch_mode;
->>>       int wapf;
->>>       /*
->>>        * For machines with AMD graphic chips, it will send out WMI event
->>
-> 
-> 
-
+On 8/25/22 9:37 AM, Hans de Goede wrote:
+> Move the WMI interface definitions to a header, so that the definitions
+> can be shared with drivers/acpi/video_detect.c .
+>
+> Changes in v2:
+> - Add missing Nvidia copyright header
+> - Move WMI_BRIGHTNESS_GUID to nvidia-wmi-ec-backlight.h as well
+>
+> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   MAINTAINERS                                   |  1 +
+>   .../platform/x86/nvidia-wmi-ec-backlight.c    | 68 +----------------
+>   .../x86/nvidia-wmi-ec-backlight.h             | 76 +++++++++++++++++++
+>   3 files changed, 78 insertions(+), 67 deletions(-)
+>   create mode 100644 include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9d7f64dc0efe..d6f6b96f51f7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14527,6 +14527,7 @@ M:	Daniel Dadap <ddadap@nvidia.com>
+>   L:	platform-driver-x86@vger.kernel.org
+>   S:	Supported
+>   F:	drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> +F:	include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+>   
+>   NVM EXPRESS DRIVER
+>   M:	Keith Busch <kbusch@kernel.org>
+> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> index 61e37194df70..be803e47eac0 100644
+> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> @@ -7,74 +7,10 @@
+>   #include <linux/backlight.h>
+>   #include <linux/mod_devicetable.h>
+>   #include <linux/module.h>
+> +#include <linux/platform_data/x86/nvidia-wmi-ec-backlight.h>
+>   #include <linux/types.h>
+>   #include <linux/wmi.h>
+>   
+> -/**
+> - * enum wmi_brightness_method - WMI method IDs
+> - * @WMI_BRIGHTNESS_METHOD_LEVEL:  Get/Set EC brightness level status
+> - * @WMI_BRIGHTNESS_METHOD_SOURCE: Get/Set EC Brightness Source
+> - */
+> -enum wmi_brightness_method {
+> -	WMI_BRIGHTNESS_METHOD_LEVEL = 1,
+> -	WMI_BRIGHTNESS_METHOD_SOURCE = 2,
+> -	WMI_BRIGHTNESS_METHOD_MAX
+> -};
+> -
+> -/**
+> - * enum wmi_brightness_mode - Operation mode for WMI-wrapped method
+> - * @WMI_BRIGHTNESS_MODE_GET:            Get the current brightness level/source.
+> - * @WMI_BRIGHTNESS_MODE_SET:            Set the brightness level.
+> - * @WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL:  Get the maximum brightness level. This
+> - *                                      is only valid when the WMI method is
+> - *                                      %WMI_BRIGHTNESS_METHOD_LEVEL.
+> - */
+> -enum wmi_brightness_mode {
+> -	WMI_BRIGHTNESS_MODE_GET = 0,
+> -	WMI_BRIGHTNESS_MODE_SET = 1,
+> -	WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL = 2,
+> -	WMI_BRIGHTNESS_MODE_MAX
+> -};
+> -
+> -/**
+> - * enum wmi_brightness_source - Backlight brightness control source selection
+> - * @WMI_BRIGHTNESS_SOURCE_GPU: Backlight brightness is controlled by the GPU.
+> - * @WMI_BRIGHTNESS_SOURCE_EC:  Backlight brightness is controlled by the
+> - *                             system's Embedded Controller (EC).
+> - * @WMI_BRIGHTNESS_SOURCE_AUX: Backlight brightness is controlled over the
+> - *                             DisplayPort AUX channel.
+> - */
+> -enum wmi_brightness_source {
+> -	WMI_BRIGHTNESS_SOURCE_GPU = 1,
+> -	WMI_BRIGHTNESS_SOURCE_EC = 2,
+> -	WMI_BRIGHTNESS_SOURCE_AUX = 3,
+> -	WMI_BRIGHTNESS_SOURCE_MAX
+> -};
+> -
+> -/**
+> - * struct wmi_brightness_args - arguments for the WMI-wrapped ACPI method
+> - * @mode:    Pass in an &enum wmi_brightness_mode value to select between
+> - *           getting or setting a value.
+> - * @val:     In parameter for value to set when using %WMI_BRIGHTNESS_MODE_SET
+> - *           mode. Not used in conjunction with %WMI_BRIGHTNESS_MODE_GET or
+> - *           %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL mode.
+> - * @ret:     Out parameter returning retrieved value when operating in
+> - *           %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL
+> - *           mode. Not used in %WMI_BRIGHTNESS_MODE_SET mode.
+> - * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+> - *
+> - * This is the parameters structure for the WmiBrightnessNotify ACPI method as
+> - * wrapped by WMI. The value passed in to @val or returned by @ret will be a
+> - * brightness value when the WMI method ID is %WMI_BRIGHTNESS_METHOD_LEVEL, or
+> - * an &enum wmi_brightness_source value with %WMI_BRIGHTNESS_METHOD_SOURCE.
+> - */
+> -struct wmi_brightness_args {
+> -	u32 mode;
+> -	u32 val;
+> -	u32 ret;
+> -	u32 ignored[3];
+> -};
+> -
+>   /**
+>    * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+>    * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+> @@ -191,8 +127,6 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+>   	return PTR_ERR_OR_ZERO(bdev);
+>   }
+>   
+> -#define WMI_BRIGHTNESS_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
+> -
+>   static const struct wmi_device_id nvidia_wmi_ec_backlight_id_table[] = {
+>   	{ .guid_string = WMI_BRIGHTNESS_GUID },
+>   	{ }
+> diff --git a/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h b/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+> new file mode 100644
+> index 000000000000..23d60130272c
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+> @@ -0,0 +1,76 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
+> + */
+> +
+> +#ifndef __PLATFORM_DATA_X86_NVIDIA_WMI_EC_BACKLIGHT_H
+> +#define __PLATFORM_DATA_X86_NVIDIA_WMI_EC_BACKLIGHT_H
+> +
+> +#define WMI_BRIGHTNESS_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
+> +
+> +/**
+> + * enum wmi_brightness_method - WMI method IDs
+> + * @WMI_BRIGHTNESS_METHOD_LEVEL:  Get/Set EC brightness level status
+> + * @WMI_BRIGHTNESS_METHOD_SOURCE: Get/Set EC Brightness Source
+> + */
+> +enum wmi_brightness_method {
+> +	WMI_BRIGHTNESS_METHOD_LEVEL = 1,
+> +	WMI_BRIGHTNESS_METHOD_SOURCE = 2,
+> +	WMI_BRIGHTNESS_METHOD_MAX
+> +};
+> +
+> +/**
+> + * enum wmi_brightness_mode - Operation mode for WMI-wrapped method
+> + * @WMI_BRIGHTNESS_MODE_GET:            Get the current brightness level/source.
+> + * @WMI_BRIGHTNESS_MODE_SET:            Set the brightness level.
+> + * @WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL:  Get the maximum brightness level. This
+> + *                                      is only valid when the WMI method is
+> + *                                      %WMI_BRIGHTNESS_METHOD_LEVEL.
+> + */
+> +enum wmi_brightness_mode {
+> +	WMI_BRIGHTNESS_MODE_GET = 0,
+> +	WMI_BRIGHTNESS_MODE_SET = 1,
+> +	WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL = 2,
+> +	WMI_BRIGHTNESS_MODE_MAX
+> +};
+> +
+> +/**
+> + * enum wmi_brightness_source - Backlight brightness control source selection
+> + * @WMI_BRIGHTNESS_SOURCE_GPU: Backlight brightness is controlled by the GPU.
+> + * @WMI_BRIGHTNESS_SOURCE_EC:  Backlight brightness is controlled by the
+> + *                             system's Embedded Controller (EC).
+> + * @WMI_BRIGHTNESS_SOURCE_AUX: Backlight brightness is controlled over the
+> + *                             DisplayPort AUX channel.
+> + */
+> +enum wmi_brightness_source {
+> +	WMI_BRIGHTNESS_SOURCE_GPU = 1,
+> +	WMI_BRIGHTNESS_SOURCE_EC = 2,
+> +	WMI_BRIGHTNESS_SOURCE_AUX = 3,
+> +	WMI_BRIGHTNESS_SOURCE_MAX
+> +};
+> +
+> +/**
+> + * struct wmi_brightness_args - arguments for the WMI-wrapped ACPI method
+> + * @mode:    Pass in an &enum wmi_brightness_mode value to select between
+> + *           getting or setting a value.
+> + * @val:     In parameter for value to set when using %WMI_BRIGHTNESS_MODE_SET
+> + *           mode. Not used in conjunction with %WMI_BRIGHTNESS_MODE_GET or
+> + *           %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL mode.
+> + * @ret:     Out parameter returning retrieved value when operating in
+> + *           %WMI_BRIGHTNESS_MODE_GET or %WMI_BRIGHTNESS_MODE_GET_MAX_LEVEL
+> + *           mode. Not used in %WMI_BRIGHTNESS_MODE_SET mode.
+> + * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
+> + *
+> + * This is the parameters structure for the WmiBrightnessNotify ACPI method as
+> + * wrapped by WMI. The value passed in to @val or returned by @ret will be a
+> + * brightness value when the WMI method ID is %WMI_BRIGHTNESS_METHOD_LEVEL, or
+> + * an &enum wmi_brightness_source value with %WMI_BRIGHTNESS_METHOD_SOURCE.
+> + */
+> +struct wmi_brightness_args {
+> +	u32 mode;
+> +	u32 val;
+> +	u32 ret;
+> +	u32 ignored[3];
+> +};
+> +
+> +#endif
