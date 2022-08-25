@@ -2,159 +2,170 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654EEC28D13
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF5DC28D13
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 14:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238171AbiHYORB (ORCPT
+        id S241888AbiHYO1D (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 10:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51430 "EHLO
+        Thu, 25 Aug 2022 10:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241972AbiHYOOe (ORCPT
+        with ESMTP id S242050AbiHYO0n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 10:14:34 -0400
+        Thu, 25 Aug 2022 10:26:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D51B6D65
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:14:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188BFB6D5D
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661436861;
+        s=mimecast20190719; t=1661437553;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yLjXhPoFWJh0BS4tWgMq4jt/qW3/RS4b/ONVguiT+Kw=;
-        b=d7sETZEP066/FSszyklXkTACKQ7mMGtCgsvOVv+i7fQXryqHD4s66kDCMESQhmnFYf/CmA
-        6TRAFY1hAK/8DhTGhzlkeH+cR0SSPbDCGd5aQcnxJksK3ox6NakT7+d/q6dy8HW5eGa0Dn
-        JiCamJ0G3Bk/O7QruFrJL0SAWs/rvX8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-74-J9he1LyaMrus8YhTzeYFCQ-1; Thu, 25 Aug 2022 10:14:15 -0400
-X-MC-Unique: J9he1LyaMrus8YhTzeYFCQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E92D7280DB29;
-        Thu, 25 Aug 2022 14:13:39 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.193.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3DD8F492C3B;
-        Thu, 25 Aug 2022 14:13:39 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86: msi-laptop: Simplify ec_delay handling
-Date:   Thu, 25 Aug 2022 16:13:35 +0200
-Message-Id: <20220825141336.208597-2-hdegoede@redhat.com>
-In-Reply-To: <20220825141336.208597-1-hdegoede@redhat.com>
-References: <20220825141336.208597-1-hdegoede@redhat.com>
+        bh=q49EiEhu4KKBgImNE6Kk4TPrRnh4uj8GAAC4ty7YwzQ=;
+        b=hts767g+PGhmiPHyV+GZdV6hjOQUGpb1jAfagxXRYq62ULqKndNebx9iCenNFCc8rr/WR1
+        xfm6lp7S0MRyjs8upcy7vFxUkXhHisU07boJHMcprwr8mcmo5Bte0qQjsv+IvufypI6E0o
+        jHFfFgv4xXNDed7AoAnNyAX92R3J/28=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-484-ytDLoaHWOam0ESoU80yAyw-1; Thu, 25 Aug 2022 10:25:52 -0400
+X-MC-Unique: ytDLoaHWOam0ESoU80yAyw-1
+Received: by mail-ej1-f70.google.com with SMTP id ho13-20020a1709070e8d00b00730a655e173so6309560ejc.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:25:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=q49EiEhu4KKBgImNE6Kk4TPrRnh4uj8GAAC4ty7YwzQ=;
+        b=uY9jc5KvQGmdscx0dURy4pII3LbWeGv6RAjqPEUfwGIvLyRd7+f/aSLKhUhJOVxJ2Q
+         cv4rqHK7UnPi2hfev6KWdJdG9vG0YMeoXJMsVRkS4hE5DvhcWhC4r/VeakvjAudQh0FL
+         9IUdkvDHGY3hPwWlrq84pFRvVhpMHq88TBSVN0lHIQWs+KD/st2Fuq0X7L5NcZ9h+qyQ
+         mM8Hb9+3Kz6oKKpcgd4xvDXMtBoCsX53vOITkEyBO7iNeUcScoUWoqTQFBvvynnTQ5Vq
+         wXkunpxDhlxbMCSscerSZY6OFDvH0RbgQTN2Lz8TzmSKyMFevF7U8UOjk3dlX9bq/Hy4
+         FbBA==
+X-Gm-Message-State: ACgBeo2zUgerPpydhbQYhyRbFj1BqcAE33aHjJ++fwK/n/CKhAZlianp
+        mZgWCztFKIVvBXPd0C93JyUwTfzIvewvYlV2W8BU3P0dQ26PRwUecEn3XpbK4ekfUhRJ6/uhX35
+        P1GyZOns1onXSZU7q8h8kJ22ExiLfViTeXw==
+X-Received: by 2002:a17:906:5d04:b0:722:f46c:b891 with SMTP id g4-20020a1709065d0400b00722f46cb891mr2735319ejt.4.1661437551535;
+        Thu, 25 Aug 2022 07:25:51 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5E5uCelGZZVL2PStU0q6L4cU1QZeOKGrToalPkIi67JvXZz2A4Dkd4yrB6s0Xp+yWSQ3O/jw==
+X-Received: by 2002:a17:906:5d04:b0:722:f46c:b891 with SMTP id g4-20020a1709065d0400b00722f46cb891mr2735313ejt.4.1661437551289;
+        Thu, 25 Aug 2022 07:25:51 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id d14-20020a50fb0e000000b00447d4109e16sm107170edq.87.2022.08.25.07.25.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Aug 2022 07:25:50 -0700 (PDT)
+Message-ID: <34315356-f23e-34ff-98e6-a152b588f201@redhat.com>
+Date:   Thu, 25 Aug 2022 16:25:49 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v6 0/7] add support for another simatic board
+Content-Language: en-US
+To:     Henning Schild <henning.schild@siemens.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        simon.guinot@sequanux.org
+References: <20220825104422.14156-1-henning.schild@siemens.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220825104422.14156-1-henning.schild@siemens.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There is no reason to have both non-delayed and delayed work structs
-for the rfkill and touchpad work.
+Hi,
 
-Instead simply call schedule_delayed_work() with a delay of 0 for
-the quirks->ec_delay == fase case.
+On 8/25/22 12:44, Henning Schild wrote:
+> changes since v5:
+>   - adding patch to convert to pr_fmt
+>   - adding patch to prefix macros with "f7188x_"
+>   - rebased p1v4 to be p3v5 and added tag
+> 
+> changes since v4:
+>   - remove int case from a printk in p1
+>   - include tags into commit messages
+> 
+> changes since v3:
+>   - update Kconfig as well
+>   - drop chip names from comment in driver header
+>   - add manufacturer check for Fintek again, Nuvoton not possible
+>   - drop revision printing for Nuvoton
+>   - restructure defines again
+>   - add new model 427G
+> 
+> changes since v2: (p1 only)
+>   - rename macros that change behavior
+>   - use chip type not device id in the macros
+>   - reorder defines a bit
+> 
+> changes since v1:
+>   - remove unused define
+>   - fix bug where (base + 2) was used as second data bit
+>   - add macros for "inverted" and "single data bit"
+> 
+> The first two patches apply some style refactorings before actual
+> functional changes are made.
+> 
+> Later, This series enables a SuperIO GPIO driver to support a chip from
+> the vendor Nuvoton, the driver is for Fintek devices but those just are
+> very similar. And in watchdog and hwmon subsystems these SuperIO drivers
+> also share code and are sometimes called a family.
+> 
+> In another step the individual banks receive a label to tell them apart,
+> a step which potentially changes an interface to legacy users that might
+> rely on all banks having the same label, or an exact label. But since a
+> later patch wants to use GPIO_LOOKUP unique labels are needed and i
+> decided to assign them for all supported chips.
+> 
+> In a following patch the Simatic GPIO LED driver is extended to provide
+> LEDs in case that SuperIO GPIO driver can be loaded.
+> 
+> Last but not least the watchdog module of that same SuperIO gets loaded
+> on a best effort basis.
+> 
+> The very last patch enables a second model of that same board type.
+> 
+> Henning Schild (7):
+>   gpio-f7188x: switch over to using pr_fmt
+>   gpio-f7188x: add a prefix to macros to keep gpio namespace clean
+>   gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+>   gpio-f7188x: use unique labels for banks/chips
+>   leds: simatic-ipc-leds-gpio: add new model 227G
+>   platform/x86: simatic-ipc: enable watchdog for 227G
+>   platform/x86: simatic-ipc: add new model 427G
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/msi-laptop.c | 31 +++++++++++--------------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+So it looks like all these patches are ready for merging now,
+the only thing which is missing is an Ack from Pavel or
+one of the other LED people for patch 5/7.
 
-diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-index 54170172a666..65db18c6e3e8 100644
---- a/drivers/platform/x86/msi-laptop.c
-+++ b/drivers/platform/x86/msi-laptop.c
-@@ -590,6 +590,14 @@ static int dmi_check_cb(const struct dmi_system_id *dmi)
- 	return 1;
- }
- 
-+static unsigned long msi_work_delay(int msecs)
-+{
-+	if (quirks->ec_delay)
-+		return msecs_to_jiffies(msecs);
-+
-+	return 0;
-+}
-+
- static const struct dmi_system_id msi_dmi_table[] __initconst = {
- 	{
- 		.ident = "MSI S270",
-@@ -784,7 +792,6 @@ static void msi_update_rfkill(struct work_struct *ignored)
- 		msi_rfkill_set_state(rfk_threeg, !threeg_s);
- }
- static DECLARE_DELAYED_WORK(msi_rfkill_dwork, msi_update_rfkill);
--static DECLARE_WORK(msi_rfkill_work, msi_update_rfkill);
- 
- static void msi_send_touchpad_key(struct work_struct *ignored)
- {
-@@ -800,7 +807,6 @@ static void msi_send_touchpad_key(struct work_struct *ignored)
- 		KEY_TOUCHPAD_ON : KEY_TOUCHPAD_OFF, 1, true);
- }
- static DECLARE_DELAYED_WORK(msi_touchpad_dwork, msi_send_touchpad_key);
--static DECLARE_WORK(msi_touchpad_work, msi_send_touchpad_key);
- 
- static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
- 				struct serio *port)
-@@ -818,20 +824,12 @@ static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
- 		extended = false;
- 		switch (data) {
- 		case 0xE4:
--			if (quirks->ec_delay) {
--				schedule_delayed_work(&msi_touchpad_dwork,
--					round_jiffies_relative(0.5 * HZ));
--			} else
--				schedule_work(&msi_touchpad_work);
-+			schedule_delayed_work(&msi_touchpad_dwork, msi_work_delay(500));
- 			break;
- 		case 0x54:
- 		case 0x62:
- 		case 0x76:
--			if (quirks->ec_delay) {
--				schedule_delayed_work(&msi_rfkill_dwork,
--					round_jiffies_relative(0.5 * HZ));
--			} else
--				schedule_work(&msi_rfkill_work);
-+			schedule_delayed_work(&msi_rfkill_dwork, msi_work_delay(500));
- 			break;
- 		}
- 	}
-@@ -898,12 +896,7 @@ static int rfkill_init(struct platform_device *sdev)
- 	}
- 
- 	/* schedule to run rfkill state initial */
--	if (quirks->ec_delay) {
--		schedule_delayed_work(&msi_rfkill_init,
--			round_jiffies_relative(1 * HZ));
--	} else
--		schedule_work(&msi_rfkill_work);
--
-+	schedule_delayed_work(&msi_rfkill_init, msi_work_delay(1000));
- 	return 0;
- 
- err_threeg:
-@@ -1114,7 +1107,6 @@ static int __init msi_init(void)
- 	if (quirks->load_scm_model) {
- 		i8042_remove_filter(msi_laptop_i8042_filter);
- 		cancel_delayed_work_sync(&msi_rfkill_dwork);
--		cancel_work_sync(&msi_rfkill_work);
- 		rfkill_cleanup();
- 	}
- fail_scm_model_init:
-@@ -1135,7 +1127,6 @@ static void __exit msi_cleanup(void)
- 		i8042_remove_filter(msi_laptop_i8042_filter);
- 		input_unregister_device(msi_laptop_input_dev);
- 		cancel_delayed_work_sync(&msi_rfkill_dwork);
--		cancel_work_sync(&msi_rfkill_work);
- 		rfkill_cleanup();
- 	}
- 
--- 
-2.37.2
+Pavel can have your ack for merging this through another tree
+please?
+
+So what is the plan for merging this?
+
+I see 2 options:
+
+Option a:
+1. Merge the GPIO changes (patches 1-4) through the GPIO tree; and
+2. Merge the leds + pdx86 changes through the pdx86 tree
+
+Option b:
+Merge everything through the pdx86 tree, and I will then provide
+an immutable branch + signed tag for other subsystems to pull
+(if they want to).
+
+Regards,
+
+Hans
 
