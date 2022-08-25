@@ -2,34 +2,56 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0A1C04AA5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 07:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33D6C28D13
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 08:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236832AbiHYHzw (ORCPT
+        id S239101AbiHYIF4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 03:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
+        Thu, 25 Aug 2022 04:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbiHYHzw (ORCPT
+        with ESMTP id S237349AbiHYIFz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 03:55:52 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125D113DCC;
-        Thu, 25 Aug 2022 00:55:49 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 01BAA1C0003; Thu, 25 Aug 2022 09:55:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1661414148;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kzzOjev5G5gIAWst/oIl84t7VEw8u84D0Oqzi9ztX0k=;
-        b=Tdn+buxE6AXHinzzjNYJ3xsdjTfjBFTgmB1w1aE36nhLBRXjpznE5KGngRC97Tb8IQ/1ar
-        60bPOzvquyO/qW0S3hPBD59adLzDjC8gFyGrTZN6UmxIGHLziIXuBOuf5adQD2MQWAT9+f
-        6gs268uNdUOjTmwZMwAXg62FbR3V4Lk=
-Date:   Thu, 25 Aug 2022 09:55:47 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     PaddyKP Yao <ispaddy@gmail.com>
+        Thu, 25 Aug 2022 04:05:55 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A22540BEF;
+        Thu, 25 Aug 2022 01:05:52 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id y127so15990760pfy.5;
+        Thu, 25 Aug 2022 01:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=heEHOjqaoZfuUKBnGqgwRXL1DFbaof5JCnXSywcr050=;
+        b=d1RFGcXrwRHPrYRWhhFh+QaqBW4JEqlixPxU77fKDXR/EnFbnUShHEyAgI6enNoyfv
+         jCsxfwxekr+CqXOGuupR/CZ6TPDtv3XLYmgxUzLEDTui0gvUphjJW3ZADWu6kYmWtgXz
+         clglysHXpiFy/KVJcVxBj/mLruQA3dED6XXJBgfcY8kATK4yrYBuOA+vTe3Pn3qiPPut
+         VxaFJuVCxzHuwNSEaEIv6NkoikvDcBgZ6VW/bgiie0hpi397OZQCgJdH8eKCFKtGbYuw
+         SKyPqCXP8/07URCCajFw5zu9ulEImAAogATlLLpZOHOc1l/2C+4widbOQxwTzj91lits
+         7Q+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=heEHOjqaoZfuUKBnGqgwRXL1DFbaof5JCnXSywcr050=;
+        b=aTxEDxWty3+V9ZGBpJdxVP90v13G/zaM7QSLw/KfA4v3LVXfS3cZz5i0JSbOlb3+ZO
+         ERQNCRjPxNn67dHxY/nkCdf2/LI8rnTdqyxHKmJ6Mo/nFdTlPVaa0xjNi/yeLUThO8U0
+         uLXAt36G/o+MzTfzTlWVSlFIkSqbcCCvxijeQYzCXNqg4WlMfToe2B12SRsbsUCyrUfH
+         fhNBPOhzuiuAEj6T1mZwFPTvzrXUdXLAuOAObPvVls7yUJ9e80txA6QfKoBwMEkVqjQ6
+         IuwINueLATnFMTo+/88sz77xGIYPaqHvsRJ3EnsoTBkr1ITLQ8U3YJKS/zakf6hEskDB
+         IaUg==
+X-Gm-Message-State: ACgBeo3m+h7drPLakMNmNNKNsH8CDhYnMGWR/KjxlsURFr241eUcagQN
+        eIY+NZPYOhllhj36c6g9f0M=
+X-Google-Smtp-Source: AA6agR4FmJGWUFbjGrMVXXNJjNWn9k5Zzxi/9fDCATJ5osMpOW1YgXdmobFgtI/HywFmm7LLRFCR1Q==
+X-Received: by 2002:a63:e412:0:b0:41d:9c6a:7e with SMTP id a18-20020a63e412000000b0041d9c6a007emr2322510pgi.575.1661414751987;
+        Thu, 25 Aug 2022 01:05:51 -0700 (PDT)
+Received: from AA2000783-NB2.corpnet.asus (125-229-150-10.hinet-ip.hinet.net. [125.229.150.10])
+        by smtp.gmail.com with ESMTPSA id z11-20020a63190b000000b0042b2311f749sm2431052pgl.19.2022.08.25.01.05.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Aug 2022 01:05:51 -0700 (PDT)
+Date:   Thu, 25 Aug 2022 16:05:48 +0800
+From:   PaddyKP Yao <ispaddy@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
 Cc:     Hans de Goede <hdegoede@redhat.com>, PaddyKP_Yao@asus.com,
         acpi4asus-user@lists.sourceforge.net, andy.shevchenko@gmail.com,
         corentin.chary@gmail.com, linux-kernel@vger.kernel.org,
@@ -37,53 +59,44 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, PaddyKP_Yao@asus.com,
         platform-driver-x86@vger.kernel.org
 Subject: Re: [PATCH v3 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
  support
-Message-ID: <20220825075547.GA28653@duo.ucw.cz>
+Message-ID: <20220825080548.GA17321@AA2000783-NB2.corpnet.asus>
 References: <d7e2a109-c1b7-9f8c-c2b2-b765f016a9a3@redhat.com>
  <20220711115125.2072508-1-PaddyKP_Yao@asus.com>
  <e120ac7c-7abb-4999-efe8-6b3b697d12d6@redhat.com>
  <20220824100622.GB1049@bug>
  <20220824105908.GA111@AA2000783-NB2.corpnet.asus>
+ <20220825075547.GA28653@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220824105908.GA111@AA2000783-NB2.corpnet.asus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220825075547.GA28653@duo.ucw.cz>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi Pavel,
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 25, 2022 at 09:55:47AM +0200, Pavel Machek wrote:
+> On Wed 2022-08-24 18:59:08, PaddyKP Yao wrote:
+> > Hi Pavel,
+> > 
+> > On Wed, Aug 24, 2022 at 12:06:22PM +0200, Pavel Machek wrote:
+> > > 
+> > > It would be good to get the API right before it hits mainline release.
+> > > 
+> > 
+> > What do you mean about API you mentioned?
+> 
+> We really don't want to see asus: prefix in the sysfs.
+> 
+> Best regards,
+> 								Pavel
+> -- 
+> People of Russia, stop Putin before his war on Ukraine escalates.
 
-On Wed 2022-08-24 18:59:08, PaddyKP Yao wrote:
-> Hi Pavel,
->=20
-> On Wed, Aug 24, 2022 at 12:06:22PM +0200, Pavel Machek wrote:
-> >=20
-> > It would be good to get the API right before it hits mainline release.
-> >=20
->=20
-> What do you mean about API you mentioned?
+Understand and thanks for your feedback.
+I aready submited new patch to fix this.
 
-We really don't want to see asus: prefix in the sysfs.
+https://lore.kernel.org/all/20220825004305.709539-1-PaddyKP_Yao@asus.com/
 
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYwcrAwAKCRAw5/Bqldv6
-8kvJAKCt663cvQNSSOOrzfjGI/g3haJHUQCeLJzq6UsDeGo3QuzK9uT5Z3pQJXw=
-=YAXV
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+Best Regards, Paddy
