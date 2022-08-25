@@ -2,171 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E23EC64991
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 12:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251E6C64990
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 14:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240887AbiHYMDZ (ORCPT
+        id S231695AbiHYOOm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 08:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41854 "EHLO
+        Thu, 25 Aug 2022 10:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241021AbiHYMDW (ORCPT
+        with ESMTP id S242057AbiHYOO1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 08:03:22 -0400
-Received: from vm3.sequanux.org (static.55.155.9.5.clients.your-server.de [5.9.155.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D1109F8E1;
-        Thu, 25 Aug 2022 05:03:20 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by vm3.sequanux.org (Postfix) with ESMTP id 2343410880C;
-        Thu, 25 Aug 2022 14:02:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
-Received: from vm3.sequanux.org ([127.0.0.1])
-        by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QeA1dTuyiUkp; Thu, 25 Aug 2022 14:02:20 +0200 (CEST)
-Received: from localhost (softwrestling.org [95.216.36.37])
-        by vm3.sequanux.org (Postfix) with ESMTPSA id 49FBF1086FC;
-        Thu, 25 Aug 2022 14:02:20 +0200 (CEST)
-Date:   Thu, 25 Aug 2022 14:02:06 +0200
-From:   simon.guinot@sequanux.org
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>
-Subject: Re: [PATCH v6 1/7] gpio-f7188x: switch over to using pr_fmt
-Message-ID: <Ywdkvu0VNWti1WTe@76cbfcf04d45>
-References: <20220825104422.14156-1-henning.schild@siemens.com>
- <20220825104422.14156-2-henning.schild@siemens.com>
+        Thu, 25 Aug 2022 10:14:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CEA4B6D54
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Aug 2022 07:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661436853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jjCw53578ZQbfvMbrpeA/25Za2+9ilXFFaivNzbyPcE=;
+        b=YG4HsBHpxhLe62WF32lhip1XJzMLCt7fxhdfCNY4phXYfPc3WYp9+CiLB9/akM2LPQt7Ka
+        +eHYY6nq5gvPohOVzOupbj2s5qmSP2bA9zumHMRuN5UX4cR4ub/SPSvM1TwkerF8jF36Kr
+        Thb1vCc3bQpr34Yk7nt9RmIyBBeqEqU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-351-ZvtCPZCkMCK8qihdK7FK4w-1; Thu, 25 Aug 2022 10:14:09 -0400
+X-MC-Unique: ZvtCPZCkMCK8qihdK7FK4w-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 09A331C0566A;
+        Thu, 25 Aug 2022 14:13:39 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.193.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A35B2492C3B;
+        Thu, 25 Aug 2022 14:13:37 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/3] platform/x86: msi-laptop: Fix old-ec check for backlight registering
+Date:   Thu, 25 Aug 2022 16:13:34 +0200
+Message-Id: <20220825141336.208597-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8eVkuOeCNQZeK+6U"
-Content-Disposition: inline
-In-Reply-To: <20220825104422.14156-2-henning.schild@siemens.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Commit 2cc6c717799f ("msi-laptop: Port to new backlight interface
+selection API") replaced this check:
 
---8eVkuOeCNQZeK+6U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	if (!quirks->old_ec_model || acpi_video_backlight_support())
+		pr_info("Brightness ignored, ...");
+	else
+		do_register();
 
-On Thu, Aug 25, 2022 at 12:44:16PM +0200, Henning Schild wrote:
-> Subsequent patches will touch that file, apply some nice to have style
-> changes before actually adding functional changes.
->=20
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+With:
 
-Acked-by: Simon Guinot <simon.guinot@sequanux.org>
+	if (quirks->old_ec_model ||
+	    acpi_video_get_backlight_type() == acpi_backlight_vendor)
+		do_register();
 
-> ---
->  drivers/gpio/gpio-f7188x.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
-> index 18a3147f5a42..fef539bbc03a 100644
-> --- a/drivers/gpio/gpio-f7188x.c
-> +++ b/drivers/gpio/gpio-f7188x.c
-> @@ -7,6 +7,9 @@
->   * Author: Simon Guinot <simon.guinot@sequanux.org>
->   */
-> =20
-> +#define DRVNAME "gpio-f7188x"
-> +#define pr_fmt(fmt) DRVNAME ": " fmt
-> +
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> @@ -14,8 +17,6 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> =20
-> -#define DRVNAME "gpio-f7188x"
-> -
->  /*
->   * Super-I/O registers
->   */
-> @@ -110,7 +111,7 @@ static inline int superio_enter(int base)
->  {
->  	/* Don't step on other drivers' I/O space by accident. */
->  	if (!request_muxed_region(base, 2, DRVNAME)) {
-> -		pr_err(DRVNAME "I/O address 0x%04x already in use\n", base);
-> +		pr_err("I/O address 0x%04x already in use\n", base);
->  		return -EBUSY;
->  	}
-> =20
-> @@ -487,7 +488,7 @@ static int __init f7188x_find(int addr, struct f7188x=
-_sio *sio)
->  	err =3D -ENODEV;
->  	devid =3D superio_inw(addr, SIO_MANID);
->  	if (devid !=3D SIO_FINTEK_ID) {
-> -		pr_debug(DRVNAME ": Not a Fintek device at 0x%08x\n", addr);
-> +		pr_debug("Not a Fintek device at 0x%08x\n", addr);
->  		goto err;
->  	}
-> =20
-> @@ -518,13 +519,13 @@ static int __init f7188x_find(int addr, struct f718=
-8x_sio *sio)
->  		sio->type =3D f81865;
->  		break;
->  	default:
-> -		pr_info(DRVNAME ": Unsupported Fintek device 0x%04x\n", devid);
-> +		pr_info("Unsupported Fintek device 0x%04x\n", devid);
->  		goto err;
->  	}
->  	sio->addr =3D addr;
->  	err =3D 0;
-> =20
-> -	pr_info(DRVNAME ": Found %s at %#x, revision %d\n",
-> +	pr_info("Found %s at %#x, revision %d\n",
->  		f7188x_names[sio->type],
->  		(unsigned int) addr,
->  		(int) superio_inb(addr, SIO_DEVREV));
-> @@ -548,13 +549,13 @@ f7188x_gpio_device_add(const struct f7188x_sio *sio)
->  	err =3D platform_device_add_data(f7188x_gpio_pdev,
->  				       sio, sizeof(*sio));
->  	if (err) {
-> -		pr_err(DRVNAME "Platform data allocation failed\n");
-> +		pr_err("Platform data allocation failed\n");
->  		goto err;
->  	}
-> =20
->  	err =3D platform_device_add(f7188x_gpio_pdev);
->  	if (err) {
-> -		pr_err(DRVNAME "Device addition failed\n");
-> +		pr_err("Device addition failed\n");
->  		goto err;
->  	}
-> =20
-> --=20
-> 2.35.1
+But since the do_register() part was part of the else branch, the entire
+condition should be inverted.  So not only the 2 statements on either
+side of the || should be inverted, but the || itself should be replaced
+with a &&.
 
---8eVkuOeCNQZeK+6U
-Content-Type: application/pgp-signature; name="signature.asc"
+In practice this has likely not been an issue because the new-ec models
+(old_ec_model==false) likely all support ACPI video backlight control,
+making acpi_video_get_backlight_type() return acpi_backlight_video
+turning the second part of the || also false when old_ec_model == false.
 
------BEGIN PGP SIGNATURE-----
+Fixes: 2cc6c717799f ("msi-laptop: Port to new backlight interface selection API")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/msi-laptop.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmMHZLoACgkQzyg/RDPm
-szpxxBAAmtKLLqa5vkTy0Ur+b3aTcHHH0Mb/j+RbTY1y+onlBpjc5i//1MCNBDiU
-w0AMTQFUBuvlGW/kvs8JoZTsnU2kMGjxwBCL+KbQVvNCmHb2A6J/+ccmJ5WAuNxx
-LKkwj3tjnsUxH34brPOp6CVJJkSJUhlwL/7AocQfC4KjvZ48FYjvp+ZQZIzrOLGc
-9YZpHD5ByjvRAoaDNqGpzPvCP+rUgA/OUF8UaTjv9ReV4wJqlpd1T0mQgocAcAx9
-wgibepOyck1koj5aW66uYYg+8EZ648yW8MV4mNdS5pBaRyOOZoln+LfSIlmPClbF
-sHULNz0tF6zOzULRbMDAG8J4X0hjzyeQSm7V6ieJ8HrfSrCM9yEoJELo1qezN8YK
-+dS/ayy2mRCzbynr4/PorSAJbC7a0kZZ8teLLmbg6L40NFu3KbdRpLDUwh4cfntK
-1jBy+v2UMueJ7MhxhgRm6mi4RmS8OL0qt+1WivkSVtIFPM6UlsnEKanpxgoMg18m
-cgmX5XOnu8Ejx0KVNIAi8Rx0XmwsxIxx54M4C2jCXOqSAiashUKQfSoSqpLt1xfe
-NSgI9W/Q0hpAQZQw3KqA8mJfHJw19i2DF9vRq/4LX8smoNlnQwvQwo/xAljwwg2i
-QzL0SgK3MoykWb7vHZtWgF8+zSC5t+21POY57CleZsJYvV8ZggI=
-=6jNd
------END PGP SIGNATURE-----
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index 93ef8851b93e..54170172a666 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -1047,8 +1047,7 @@ static int __init msi_init(void)
+ 		return -EINVAL;
+ 
+ 	/* Register backlight stuff */
+-
+-	if (quirks->old_ec_model ||
++	if (quirks->old_ec_model &&
+ 	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 		struct backlight_properties props;
+ 		memset(&props, 0, sizeof(struct backlight_properties));
+-- 
+2.37.2
 
---8eVkuOeCNQZeK+6U--
