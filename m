@@ -2,91 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B304DC04AA5
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 00:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47379C04AA5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 01:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbiHYAnS (ORCPT
+        id S230268AbiHYB3O (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Aug 2022 20:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41546 "EHLO
+        Wed, 24 Aug 2022 21:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbiHYAnS (ORCPT
+        with ESMTP id S231989AbiHYB3N (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Aug 2022 20:43:18 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C528C031
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 17:43:17 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id p13so5764231pld.6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2022 17:43:17 -0700 (PDT)
+        Wed, 24 Aug 2022 21:29:13 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C636C8034F;
+        Wed, 24 Aug 2022 18:29:12 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id f17so12051713pfk.11;
+        Wed, 24 Aug 2022 18:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=5NyE7ddGexR3qBkfUPKXwE82DRyekUvvMAtk/kcYrdQ=;
-        b=o3doCklM0HeMpV3GqDHBwihS1DXHdpat1uEIX0vAfqiBx7I3d3FSXO3ltGx3LZ91N7
-         TdTjCbbFZzCTKtVtozr8dPcKjzvdtC8/jWnrEBK9ThzHqCLMc7EXEUNVdQj6O5qrlGQ+
-         A48qSwSl6l1uurtvN8Jh5uRxqYhaTMB6AlotRSjwC6XAueFCkJP8i41N8pYWfXeZ2dbp
-         zqVtGj/kmOCr9rczkrFy66M+5hnuUakVWzcrmiKR0xd9Xq80LVfad/EF3GbHPkQ765y5
-         e7A4HnUAOhjNE4HoJTU573ae30+MjFfZRJbtwl8+54zUfx2K057705Dky6B2028stCWd
-         Bccg==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=JZ6jUZFJ3GusaHzs6nel0cSD6BnzpjxW/8u8oueO9BU=;
+        b=dPkkN7qA1dAk49xU+KV7QjMFftVxzOc0rkxg4EKsfjYWjpoZWwRRWkf/S/GAT6QBDI
+         b7zecXTTLbeKalI+ldikqTnDVelQZ1cm3x+F1WHPWbPGCGv1nPw5jCxgoauSFK4aIU54
+         1P0KOcFCfEj76D7stx43k3EXsqB/VBl2tCkLDP1PkWo4ieYC694eP/uFKO0ctjddYG5U
+         o4Ml58bTvrfd8OSn21+Ma9NlKnLbBH7E9/68TgLvhmmnvlIMewlzCv0yXvs0aRS/FG4O
+         g1CTIVQFIoltV3PmlxTsA4hUmHLYEAlOo9PA+JiRAQLCIVa2UMkXEf0i/5nZHtaXUUaA
+         utNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=5NyE7ddGexR3qBkfUPKXwE82DRyekUvvMAtk/kcYrdQ=;
-        b=RpJbWdmYhuVPSLWXcPlfAAbDUr8taexnVZY2W/Vxqr4QpYOnccRumLdZrvEJ36dLIK
-         K1vbWGUsUIjZokAnVRQ10LzLK6qQrubxgz2GCqN462PJ0fJwScVSsS6Nmyf0fRHSiB37
-         /0Wz8dTGldUDKg2t2V0auXUv7KwqxzNnfTVJkh96sR1NnVXfyCut1cMLjw3jpTmJ42xT
-         Z1yIwlb6s9qqyFgu38SwptXEJdc474BoBpeChqmLhtaJF+YqimjYS0m4HTIMW7TRmgDx
-         ySdkxR+qezYoDYwxnOfaLHu1KhgidWv6MupzwgfGKy9lTprumROCRF+bQCnkDAO9HsWu
-         4rFg==
-X-Gm-Message-State: ACgBeo1A7L6nOo38zwuxxcRaSR3xhRQDy7tjRhuX3a1vLc9OKazAz4/+
-        3pgyAIbkD/vhN6Zyjgzbd8s=
-X-Google-Smtp-Source: AA6agR5QZLWx+XCEs28JmuSXHngi6sscaR2UXJgZ835C1PHN2gEtc0zWvBzuCA0faYU9Us8PK9iUjg==
-X-Received: by 2002:a17:90b:4a85:b0:1fb:7466:b33d with SMTP id lp5-20020a17090b4a8500b001fb7466b33dmr8456269pjb.48.1661388196741;
-        Wed, 24 Aug 2022 17:43:16 -0700 (PDT)
-Received: from localhost.localdomain (61-216-65-192.hinet-ip.hinet.net. [61.216.65.192])
-        by smtp.gmail.com with ESMTPSA id a5-20020a170902710500b00172cea5467dsm9609373pll.274.2022.08.24.17.43.14
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=JZ6jUZFJ3GusaHzs6nel0cSD6BnzpjxW/8u8oueO9BU=;
+        b=ht7qzXt7xqj4dkDUrneF2H605yIsBptIDtbUwfTAbjPlJCKC4LjzBDpG9JWcvEi1zm
+         pFw1Cn1ovrwOEDEmcNUrmXSE5Ts0xfwKxiS6Ex3PUN3vSV2Hcgc2uKDn5j5IegPXOS2n
+         8OLUWF4VuzRk/S4NDeJZfMne4+pfeQ+3EyM1bx4oYi623ez6hIcsJxM4m8hfww8IuzIF
+         ydVg1BMOQ/rLVHxXGVFREY/4N6MvpIStZrig9/oAC0avQmjlExvKlbqWDwNWprvJ2RFX
+         xP/RCv8JSSA/AxhgrELwU6b8+GGSbL6InKh0wBZ6d8YUXUyaHie8EmOrnK7YYAW3TB9G
+         ijIw==
+X-Gm-Message-State: ACgBeo2+c3T0mpADC19EQ5Lfk9qRK2HbH23xK0bYqmkACQ8PoDb+XNCi
+        NLU89z2+mmntUUsZUb1Pnnw=
+X-Google-Smtp-Source: AA6agR7TtU/PKiAEbgLU6Y7PA8FIy+3PQBYu0PJIWzcsVd+rwTZL72ApIlWHpsysT4xLcdq27gLgRw==
+X-Received: by 2002:a05:6a00:2446:b0:528:5da9:cc7 with SMTP id d6-20020a056a00244600b005285da90cc7mr1813772pfj.51.1661390951982;
+        Wed, 24 Aug 2022 18:29:11 -0700 (PDT)
+Received: from paddy-ASUS-EXPERTBOOK-B1400CBA (61-216-65-192.hinet-ip.hinet.net. [61.216.65.192])
+        by smtp.gmail.com with ESMTPSA id s17-20020a63e811000000b00429ffc18e5csm11608982pgh.59.2022.08.24.18.29.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 17:43:16 -0700 (PDT)
-From:   PaddyKP_Yao <ispaddy@gmail.com>
-X-Google-Original-From: PaddyKP_Yao <PaddyKP_Yao@asus.com>
-To:     corentin.chary@gmail.com, hdegoede@redhat.com, markgross@kernel.org
-Cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, paddykp_yao@asus.com,
-        PaddyKP_Yao <PaddyKP_Yao@asus.com>
-Subject: [PATCH v1 1/1] platform/x86: asus-wmi: Fix name of mic-mute LED classdev
-Date:   Thu, 25 Aug 2022 08:43:05 +0800
-Message-Id: <20220825004305.709539-1-PaddyKP_Yao@asus.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 24 Aug 2022 18:29:11 -0700 (PDT)
+Date:   Thu, 25 Aug 2022 09:29:06 +0800
+From:   PaddyKP Yao <ispaddy@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, PaddyKP_Yao@asus.com,
+        andy.shevchenko@gmail.com, acpi4asus-user@lists.sourceforge.net,
+        corentin.chary@gmail.com, linux-kernel@vger.kernel.org,
+        luke@ljones.dev, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: Add mic-mute LED classdev
+ support
+Message-ID: <YwbQYlqZ3H0NgaUu@paddy-ASUS-EXPERTBOOK-B1400CBA>
+References: <HK0PR04MB33636680A6DC47211560BB43FA879@HK0PR04MB3363.apcprd04.prod.outlook.com>
+ <20220711024718.1700067-1-PaddyKP_Yao@asus.com>
+ <20220824100615.GA1049@bug>
+ <20220824110908.GB111@AA2000783-NB2.corpnet.asus>
+ <ca13b742-7bb9-da20-4e50-2d04233aaf93@redhat.com>
+ <20220824111734.GA8434@AA2000783-NB2.corpnet.asus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220824111734.GA8434@AA2000783-NB2.corpnet.asus>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-According to well-known-leds.txt, we sould use "platform::micmute"
-instead of "asus::micmute" for name of mic-mute LED classdev. This patch
-fix it into good name.
+Hi Hans,
 
-Signed-off-by: PaddyKP_Yao <PaddyKP_Yao@asus.com>
----
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Aug 24, 2022 at 07:17:34PM +0800, PaddyKP Yao wrote:
+> Hi Hans,
+> 
+> On Wed, Aug 24, 2022 at 01:11:32PM +0200, Hans de Goede wrote:
+> > Yes. Since I have already merged your original patch can you please make
+> > this a new patch on top of your original patch ?  In other words just
+> > make this 1 small change in the new patch:
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 89b604e04d7f..3acc75c24c79 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1118,7 +1118,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	}
- 
- 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MICMUTE_LED)) {
--		asus->micmute_led.name = "asus::micmute";
-+		asus->micmute_led.name = "platform::micmute";
- 		asus->micmute_led.max_brightness = 1;
- 		asus->micmute_led.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
- 		asus->micmute_led.brightness_set_blocking = micmute_led_set;
--- 
-2.34.1
+Thanks for your help. I already submited new patch by below mail.
+And may I use author PaddyKP_Yao@asus.com instead of my gmail account for
+this new patch?
 
+# mail for new patch:
+Subject: [PATCH v1 1/1] platform/x86: asus-wmi: Fix name of mic-mute LED classdev
+Date: Thu, 25 Aug 2022 08:43:05 +0800
+Message-Id: <20220825004305.709539-1-PaddyKP_Yao@asus.com>
+
+Best Regards, Paddy
