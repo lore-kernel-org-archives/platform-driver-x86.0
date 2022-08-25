@@ -2,466 +2,310 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AE6ECAA2D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 17:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC33ECAA25
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Aug 2022 17:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235551AbiHYRBI (ORCPT
+        id S240635AbiHYRdu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 13:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
+        Thu, 25 Aug 2022 13:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235195AbiHYRA7 (ORCPT
+        with ESMTP id S236512AbiHYRdt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 13:00:59 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145A7B0B26;
-        Thu, 25 Aug 2022 10:00:54 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id f3so7716631ilq.5;
-        Thu, 25 Aug 2022 10:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=v1dvRJ6XblsGisRRzEYdGO06meug6sXpliVP9J5rRxU=;
-        b=BHUN7ytYGrJwu2K+MMEjyAQyYUzB+eO3t5up+BMbV1k3PgLesTLpTBoAkVdN2ez/2E
-         WqmY9WBlC1SB85xR7YN9CRHZNUE5LxpuvjolwulvmClPGipv+y7OudHu3CGdFdXt0UGI
-         ZVE9CfYLnMYoOkTjGFB8wgoP5Vxd+lO8thUJIo7o9z1eVIIf7d3XWsmNkkiDM6UdRmK4
-         NywwJZGcfg/WnGoq9CNnHpEqgZljlCISq5q07k8DVLCwFd+j99gZqApq+qDTGD2aZIZv
-         sUHhZMHSaUhOnzZ6jijAdtOy7xMY9fr+8pU2xRgcfLKodl9/xiGBakX6SJ3oU5EsMmqI
-         zzYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=v1dvRJ6XblsGisRRzEYdGO06meug6sXpliVP9J5rRxU=;
-        b=1j8UArKVLKqBcbuvisoPqpaMFAsZaUNf1iL5GtYWqaflw5uM6epr78+PP3mB41+eWl
-         Vx110FM//Ru7JDlurOQmIjrQeyNpmhPI/BBeRHN40X+rbtj8xhv1llpNMARVSF1fywqK
-         lTko/6KpRxkL1LJv9J37rYu6Di42hlQrHTtfot4D/3dqtNQ/gGjPOwgQbYqn4rlX/w4j
-         5uHUF5zbhMa+Gib3TkwtF6PBxAO2DTurFbySDp2jtdtuCy1MiTh4Q3iR4Lt4flAeRYoP
-         QQWDE/V60zSzSDcYHe5X2j0+dZKw6ADCp+71t//GUihCKjyZDu64KEynRr2GgtmG7OhT
-         lTvg==
-X-Gm-Message-State: ACgBeo0+a2ZMqXSgXfPBUoXRXErtdhSuc8NPAaQc+ndZEaNW7IlMFct3
-        PvIYiLKroj8pXhFdc2OPnYld1LF18YdFIcg9Z99UT51v
-X-Google-Smtp-Source: AA6agR41Knre/Cjl2y9Ty7rHK82GEsgyA+19r1bVVUA1QmGj3ey7BQnkNASe1cbyEFzUHy2a5xmC9mlnFK680JoWHOc=
-X-Received: by 2002:a05:6e02:180a:b0:2ea:525:52e8 with SMTP id
- a10-20020a056e02180a00b002ea052552e8mr2386840ilv.129.1661446852720; Thu, 25
- Aug 2022 10:00:52 -0700 (PDT)
+        Thu, 25 Aug 2022 13:33:49 -0400
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2043.outbound.protection.outlook.com [40.107.104.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ECFBB72A6;
+        Thu, 25 Aug 2022 10:33:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oR+FnzheiXFSlRj2TQ3vJX0WuWZ83ae5gKxZ3Wh8Rsufj2xS7MM7IhRRfbULXuvYC5hUnIqKUOh7hTSyF/REsECfnwqGZEGXAgjQS2vK+WAdSFjuSpYHnaDCIZkslaA3yXZIjAXRD28jcor4Uy6RoLjVfyYIwYcHC8yAe2mgAE+Kz7aKNeyKMiLEv0UPbATc21fUtTH33JTpZWfUqHw4y9QcrBhFxEQXnqgyr/VpPY4TMfq54BCckFEsZvMcEsEiNz8RMassrXcsVmW/aha5Jja34QqCCNPe3122jjDY+8tAxOF5AZczOoxEXpLWVHEvs/Ixbw4R+FpWK5oAz7g6eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Zgx6Rf+b7lOzXCtm5COLsvT7XnUdTpeTn0367c7oMLA=;
+ b=Wyp6fsI1y/GtpNV6b+gXlHG4wvIla+PMptsXbeut2VUoxWI7MlYg8qphQbkpFnB4PbVu3gf2XAZCqKwbx8mjEfpDr+so2/LBvmxT9SqLSrkI//ZRpOuCO5Bbw8L378wg0d8Iq97IT23b58PlBO5xG3LGBB7PHye+Yr8J8SNOCzDefUlHnUNMlhzDyUavMRW2IeOnnAVRVsG9/ofCLdcXkuY4X4zjWeWNHuviF9Zyq1ZqIYAGfJ/gKhNKFGF65+lx3cv6rHsC7o7UMiPK8NcqGT6HisfAePpgjXYHt6KiHdmQNIsjJ6Pk9/fbOIdc+YpMd6m7LjjsiN290yu9xNoW3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zgx6Rf+b7lOzXCtm5COLsvT7XnUdTpeTn0367c7oMLA=;
+ b=Ct45ZfmKSc5L1mxeubOkljdfyrvgXDG7KFV/MnYM4+fP7jPUScDKncWElwKamwY2+aHxIX6fHj9sNdnzH2WPikPaXx2Gs5AP/U7wGiOLmq+saGB5HFT/yxSTPWPhoQy/3IleJVbwSlWiPHkmlo3M94ChgJZZynune5QJPdH38E5GHId8ImEj6Mbme5V+CQwcdwWpXCYgJt6v4Ytsj0PZCAMvXymmN4xvhbAqJ68sX8LWGT3tatNUV3uUTEZlqNivZT0hZDzhML+296hbR6GwzTzjSrPQqW6IF+eqPJMBqsRXy4qPzdosvgp5bgsLVzMoCFpGz063qVv5p560cQU8rg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by AM4PR1001MB1427.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:200:9a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.22; Thu, 25 Aug
+ 2022 17:33:45 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::75ee:d5d2:6b1d:150b%4]) with mapi id 15.20.5566.015; Thu, 25 Aug 2022
+ 17:33:44 +0000
+Date:   Thu, 25 Aug 2022 19:33:40 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        <simon.guinot@sequanux.org>
+Subject: Re: [PATCH v6 5/7] leds: simatic-ipc-leds-gpio: add new model 227G
+Message-ID: <20220825193340.058fd4c5@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20220825104422.14156-6-henning.schild@siemens.com>
+References: <20220825104422.14156-1-henning.schild@siemens.com>
+        <20220825104422.14156-6-henning.schild@siemens.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6PR08CA0037.eurprd08.prod.outlook.com
+ (2603:10a6:20b:c0::25) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:269::8)
 MIME-Version: 1.0
-References: <20220821200821.1837460-1-lkml@vorpal.se> <2ddade8b-7260-8497-12f2-c8b13cf35e6a@redhat.com>
- <12a39cf6-1247-d2a3-bf07-51297e9b6640@vorpal.se>
-In-Reply-To: <12a39cf6-1247-d2a3-bf07-51297e9b6640@vorpal.se>
-From:   Azael Avalos <coproscefalo@gmail.com>
-Date:   Thu, 25 Aug 2022 11:00:42 -0600
-Message-ID: <CAGdLNWFYizajrM3X7ww_=Yz6DiA34-eGoRfE0r=388+t3OAhWQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] [RFC] platform/x86: Fixes for Toshiba Z830
-To:     Arvid Norlander <lkml@vorpal.se>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 80b5d40e-42c4-44ae-0728-08da86bff5cc
+X-MS-TrafficTypeDiagnostic: AM4PR1001MB1427:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YvAB/h5u0eLMDEUXZtyhvAP2csuHk4ni0vQZxLa3s96urclSgwANLRk/J7+tzpYFCe0dI7AnCTPxJvohg5W0dcylqat3siBx7pRZ4+XZjnPN3OK/7CjF9L9qNE/etM9sVGB/hncGf3Io1DdEyEUca0b7BzBAtMFVvQHWB36jRtsjnvUraKwsiUM30GyiytAoWRm1UOcHo9k34TefOe3k90Z36iA0AALQ/KkDYOgfVZcCyEGukVnCuJyuGeKntgAod6Xmw/xh5Yz6cC0hfNi7b+3wG9bl/sTkL/rLB/BiSg0LKPlSlhamFJ0YaGLRyJt6oiW3mm4ZhaUcCBBEReGVH4fxrlIzKSerAv+X550RRYnfbqwNx/4r4LhtHDQQEHP+kHY1mndXxXihOEUe048r+Q+JS7CwUlgh8pCugQOYmsr6pXERAvA518vhoBdFM3QjsduIRC5OwTVuMYzJxrQNzN4nHJ80TpOmgM4tPnqSiPDbBOD+dOlRhto9FCN83ODbS6jBwOfAkwL0HY+zgDR7odXiM5eYayayoyJ1YxY3ND6MU/NdmHQl70/DDk8eQOkTb01iwJOZwD5PBOAqa35N/1AheS5CKK9TnCUAK6cLeOu/ScTB0IKjS/459ilceZpVeHkMZMbOzsqTaVejQpARO7Lr8cuAoQGBTdYWlc1FSqIfKVeQBssYRHeFZ/V7H1Htm/M759Tj7mSAKt+wt4CwfMUJwhmFf1tf1mhbswPQzbPOf0H3OtUtbWWZLFEvU64t
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(82960400001)(4326008)(66476007)(54906003)(86362001)(66556008)(110136005)(921005)(8676002)(316002)(66946007)(6486002)(1076003)(83380400001)(478600001)(186003)(38100700002)(6512007)(9686003)(6506007)(2906002)(41300700001)(7416002)(44832011)(5660300002)(8936002)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SN0zhrxZCR0q7XPjiu8AgTNygHkHiGokniJ7XSj3DuatehxCZilbPvAN+Pm9?=
+ =?us-ascii?Q?DysFZr5aAOTzeUoTJHbQSAD07ThOY+f0wa/9IHkMNvsjU12Civxh77dBoBTQ?=
+ =?us-ascii?Q?PxNhAyOifK2lRSmTK6FphcilFPA8Yo2x6bthf6+vO9BlfxW1+unDRqWl52fp?=
+ =?us-ascii?Q?AVplxvxa02nEpn9EuOx5vauK2L7dY5WlLmKqJmuDXkydx05TIdmk83LzXDJj?=
+ =?us-ascii?Q?FAhxtfy9us9isSDz6aGQnRp1i3QKVJhrgKmWh/QP+obDroUflClG/Cn8WYo/?=
+ =?us-ascii?Q?xpRpjLUnmUyYo9+dSc/FOBkl3EOnHU45xSPNeMLsEJbVXDf9aGOh8GplvkSX?=
+ =?us-ascii?Q?69pZsKmzhCsUm6LivSLedwDMgfpSFioOFkh2qLQ+mL1T6U5a+d3cgM+I81BI?=
+ =?us-ascii?Q?OOepotOpTxM1kZcp1KJNpxvx876N+fmBsDq93N8zeaV+YrCrHL4Q9GS6MGw5?=
+ =?us-ascii?Q?DpyOw2Mamrxp7XQazDH+bSDnsCsERGEiaZiEO/PLsyAIPGeFdVKc2dcGtztw?=
+ =?us-ascii?Q?0DSoY4T2iGpvIRXGs95YNWYZavXXdYtw47EldzUUh4xO9nDFU2eZAWGxqgi2?=
+ =?us-ascii?Q?XQUOoYI4KO5M50GEBCOlZsFpeRxepMGJ1rNzombzfvyYjKwwYRdijXogzm0l?=
+ =?us-ascii?Q?bIyyU9WXjMF5d3brQOl40LCZqkakDw5z+3oCBRnqyJRHbWURglKNicBqNMyg?=
+ =?us-ascii?Q?1tDlWiKTs5S5b1OWLo6DKVDyc5b3gP78C9vKsgFNKRGfZ/8I0A59tyySsgOE?=
+ =?us-ascii?Q?8u2tG4TBqFcQAD0CQS0+y5foLfZKeCv+euhw+IdZ29hfxUNX5Og3a+nj8g9g?=
+ =?us-ascii?Q?XkLhOCAovFKSXdUckcMNfRhaocrnTnrI8mufsEYbCl3J38+56FhBJ7FhgSzW?=
+ =?us-ascii?Q?XXEsJVnfH5iUx9GZeP434OxWmSP6ErzIAhgtIWhTA4tgye64qdrMRo46OA9L?=
+ =?us-ascii?Q?mnKp7SWz5zGblBfrzaxzKt2IfenGBFWRvlGmGe4pi5TFF5Bcgpae9mn24kTR?=
+ =?us-ascii?Q?DUbp4DnWGZM/6lwaSRGty4uNjPj+3xEhuTzQv2PVZuvi02x5lVsFfGmLvHcf?=
+ =?us-ascii?Q?kAiUyqqjnETgL44zkCJ4ij3MtfjfXqKcbyNGviZSam1hoyrFhnNC1p4+Emxw?=
+ =?us-ascii?Q?GQ2ZRchboyBgZLLP1X0aKWWIpJKFf3+3X3ZwjHqVcMMq70zhfJDV3BggpZ3p?=
+ =?us-ascii?Q?07wOcgFQLJeVt5/IcrCMzirCcAVfJXFhRsVV0C15WoZDoUbYOKAlCpa8eRY6?=
+ =?us-ascii?Q?b2rTmyUWfKFyKQ63kqTBtRukz/Csqo87ayHNhWo1Ncix/F3FXwLuhmYOipOh?=
+ =?us-ascii?Q?hmEAR2+4nCiL9XGBG60CTbWCBbjxNK05rLpg6sTiJWEeyLAPr/74GzXrxlBs?=
+ =?us-ascii?Q?kDhnvUcocUtYqFk2qitLHuZmgUl9uumRFkIKmrG+xRYmuQaE/6dLjP+AmkYE?=
+ =?us-ascii?Q?xEiVvCf4FpQgrpAu5wnl6dV3KOYi/mfQNi939LRj0f73EMpErq1pJTDqLND4?=
+ =?us-ascii?Q?9habMvqPUVliB/WGK5DgperTTT4vFTDNJCyiuxIl1im5WLIIHI+WKCF678A8?=
+ =?us-ascii?Q?wl0ZdE9JouMzlfdwUfDKWUHR9KtpD2d9dkPRlItsbsX+Z/M49LcD2wNZRy2r?=
+ =?us-ascii?Q?3kG4NCtTX6mgQph8h5ubkN1YwyatH2YsHGRFHopkL8ylZmkPLSbXH/2UmDjZ?=
+ =?us-ascii?Q?01JeXw=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80b5d40e-42c4-44ae-0728-08da86bff5cc
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2022 17:33:44.8730
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5e+0aqI1MhGkxJf2D41IEcx+WMQvsQ/V1oGSAJKVmSmQGxDyXEz0vrIuhQK+j6CmZvkj+CDhEAGXfDIFt+nmRfaosSYXz/g23fO8e1mE/lI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR1001MB1427
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi there
+Am Thu, 25 Aug 2022 12:44:20 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-Sorry for pinging in a bit late, been under a lot of work lately.
+> This adds support of the Siemens Simatic IPC227G. Its LEDs are
+> connected to GPIO pins provided by the gpio-f7188x module. We make
+> sure that gets loaded, if not enabled in the kernel config no LED
+> support will be available.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 42
+> ++++++++++++++++--- drivers/platform/x86/simatic-ipc.c            |
+> 4 +- .../platform_data/x86/simatic-ipc-base.h      |  1 +
+>  include/linux/platform_data/x86/simatic-ipc.h |  1 +
+>  4 files changed, 42 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.c
+> b/drivers/leds/simple/simatic-ipc-leds-gpio.c index
+> 4c9e663a90ba..0d73dcbeec2d 100644 ---
+> a/drivers/leds/simple/simatic-ipc-leds-gpio.c +++
+> b/drivers/leds/simple/simatic-ipc-leds-gpio.c @@ -13,28 +13,45 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/platform_data/x86/simatic-ipc-base.h>
+>  
+> -static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
+> +struct gpiod_lookup_table *simatic_ipc_led_gpio_table;
+> +
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
+>  	.dev_id = "leds-gpio",
+>  	.table = {
+> -		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0,
+> GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL,
+> 1, GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53,
+> NULL, 2, GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0",
+> 57, NULL, 3, GPIO_ACTIVE_LOW),
+> GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 4,
+> GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL,
+> 5, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 0,
+> GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL,
+> 6, GPIO_ACTIVE_LOW), GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59,
+> NULL, 7, GPIO_ACTIVE_HIGH), },
+>  };
+>  
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
+> +	.dev_id = "leds-gpio",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 1, NULL, 1,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 2, NULL, 2,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5,
+> GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6,
+> GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7,
+> GPIO_ACTIVE_HIGH),
+> +	}
+> +};
+> +
+>  static const struct gpio_led simatic_ipc_gpio_leds[] = {
+> -	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
+>  	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
+>  	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
+>  	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
+>  	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
+>  	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
+> +	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
+>  };
 
-You can poke the Toshiba BIOS interface directly via /dev/toshiba_acpi
-to test your findings, once it is ironed out, you can start making patches
-for inclusion in the kernel.
+Concerning these two tables from above i have a question i need to find
+an answer for for maintaining the out-of-tree modules of these drivers.
 
-I know there are a lot of areas where the driver is lacking features due to
-hardware restrictions on the machines I had at the time, so it's good to
-see a bit more movement here.
+When getting the drivers into the kernel i had to rename the leds but
+in out-of-tree i would like to keep the old names and just equip their
+setters/getters with a deprecation warning. Just to give existing
+users time to slowly adopt the upstream name change if i can.
 
-Cheers
-Azael
+In the open-coded way i just defined each LED twice and added a strcmp
++ pr_warn. With the "leds-gpio" version i still fail to find a solution
+which does not get me into -EBUSY. So i already fail at the second
+definition of the legacy name, not even had a chance to think about how
+to smuggle in my deprecation warning.
 
-El mi=C3=A9, 24 ago 2022 a la(s) 06:31, Arvid Norlander (lkml@vorpal.se) es=
-cribi=C3=B3:
->
-> On 2022-08-22 13:39, Hans de Goede wrote:
-> > Hi Arvid,
-> >
-> > Nice to meet you.
-> >
-> > On 8/21/22 22:08, Arvid Norlander wrote:
-> >> Hi,
-> >>
-> >> NOTE: I had some trouble sending this with git send-email, I only mana=
-ged
-> >> to send one copy successfully! Sorry if I managed to send it multiple
-> >> times.
-> >>
-> >> I'm new to this kernel development thing, so applogies in advance for =
-any
-> >> mistakes.
-> >
-> > No worries, I think you are doing great so far.
-> >
-> > Thank you for the detailed analysis and for all the work you are puttin=
-g
-> > into this.
->
-> Thanks for the quick and detailed feedback. I agree with your reasoning,
-> it seems sound.
->
-> However, note that this will likely take me some time, as for me kernel
-> development is purely done as a hobby and it has to fit in between all my
-> other hobbies such as hiking, etc. Do not mistake radio silence for that =
-I
-> have given up, just that I don't have much time.
->
-> >
-> >> I have an old Toshiba Z830-10W laptop. Unfortunately it doesn't
-> >> work well under Linux. Fortunately I spent some time figuring out what=
- was
-> >> wrong. I had documented my findings below. I have also included patche=
-s
-> >> (see the next few emails) for some of the issues.
-> >>
-> >> I would like advice on how to proceed for some of the more advanced
-> >> problems though:
-> >> * Do we want to expose all these features that I figured out? For exam=
-ple,
-> >>   how to set the boot order on this old BIOS-only laptop from user spa=
-ce.
-> >>   Or various other settings accessible via the BIOS.
-> >
-> > I'll try to write a short reply to each feature separately,
-> > I think we need to balance the worth of a feature to end users vs the a=
-mount
-> > of code to write + maintain here. E.g. adding support for non working
-> > hw buttons is generally considered worth the effort. Adding support for
-> > changing the boot-order not so much.
-> >
-> > Note there is a generic interface for changing BIOS options from
-> > within Linux, so if you can change all (or almost all) BIOS options,
-> > you could consider implementing support for:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >
-> > That has been implemented for Lenovo Think* and for some Dell
-> > models, but by the vendors themselves and the used WMI APIs are
-> > actually guaranteed to work on multiple models / generations hardware
-> > making it worth the effort. Also this is something which their
-> > customers want for managed rollout of these devices in big
-> > companies.
-> >
-> > IMHO for these Toshiba laptops I still think it is a lot of work
-> > for something which won't see much use.
-> >
-> > It would be good though to:
-> > 1. Write some generic documentation from an end user pov for toshiba_ac=
-pi as:
-> > Documentation/admin-guide/laptops/toshiba_acpi.rst
-> > see:
-> > Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> > as an example
-> >
-> >
-> > 2. Extend the doc from 1. with toshiba_acpi firmware API documentation,
-> > including your findings on protocol bits which we won't directly
-> > implement/use so that this is at least written down in case it is
-> > needed later.
->
-> This seems like a good idea indeed.
->
-> > For 2. you can actually just copy and paste a lot of this email,
-> > I believe that having the info in this email in a
-> > Documentation/admin-guide/laptops/toshiba_acpi.rst file
-> > will make it a lot easier to find in the future then only having
-> > it in the mailinglist archives.
-> >
-> >> * For the hardware buttons I describe below, is a solution specific to
-> >>   toshiba_acpi preferred, or should additional effort be spent on
-> >>   investigating a generic solution?
-> >
-> > Ok, this is interesting there actually is a specification from
-> > Microsoft for this:
-> > http://download.microsoft.com/download/9/c/5/9c5b2167-8017-4bae-9fde-d5=
-99bac8184a/dirapplaunch.docx
-> >
-> > And there was a previous attempt to add support for the PNP0C32 devices=
-:
-> > https://marc.info/?l=3Dlinux-acpi&m=3D120550727131007
-> > https://lkml.org/lkml/2010/5/28/327
-> >
-> > And this even made it into drivers/staging for a while, if you do:
-> > git revert 0be013e3dc2ee79ffab8a438bbb4e216837e3d52
-> > you will get a: drivers/staging/quickstart/quickstart.c file.
-> >
-> > Note this is not great code:
-> >
-> > 1. If you do:
-> >   ls /sys/bus/platform/devices
-> >   You should already see a couple of PNP0C32 platform devices there and=
- the
-> >   driver should simply bind to those rather then creating its own platf=
-orm device
-> > 2. As mentioned this really should use the standard /dev/input/event in=
-terface
-> >   for event reporting and allow userspace to change the scancode to EV_=
-KEY*
-> >   mapping. You can do this e.g. by using a sparse_keymap for the scanco=
-de to
-> >   EV_KEY* mapping which will give you this for free.
->
-> I have yet to have time to look at it. However this seems to suggest that
-> these buttons should work when the laptop is off. That is not the case on
-> the Z830. They only do anything when the computer is on and I can't find
-> any settings to change that.
->
-> Looking at the specification it also mentions several different
-> notification codes for the button. The only one used on the Z830 is 0x80.
-> That is, as far as I can tell from the decompilation of the DSDT.
->
-> Thus I worry I will not be able to test any sort of generic implementatio=
-n
-> very well, if the Z830 only implements a small subset of the functionalit=
-y.
->
-> >> Before I start coding on these more complex issues I would like advice=
- in
-> >> order to avoid wasting my time on bad designs. In particular, on how t=
-o
-> >> proceed with the "Hardware buttons" section below.
-> >
-> > I believe that sending the magic command to make these keys generate ev=
-ents
-> > should be part of toshiba_acpi, combined with a generic PNP0C32 driver
-> > for actually reporting the key-presses.
->
-> I guess there is no way to figure out what the buttons are supposed to me=
-an in
-> this case, and we simply have to leave that to the user to map as they se=
-e fit
-> (as long as the IDs are stable). I'm not sure how well that works with th=
-e event
-> subsystem, as when I test evtest it seems to asign some sort of labels to=
- the
-> events (e.g. KEY_SLEEP, KEY_BLUETOOTH, ...).
->
-> > [...]
-> >>
-> >> 3. LED: "Eco" LED [implemented in patch 1]
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> The toshiba_acpi driver has support for controlling some LEDs includin=
-g the
-> >> "Eco" LED. Unfortunately that LED works differently on this laptop.
-> >>
-> >> The toshiba_acpi driver checks for TOS_INPUT_DATA_ERROR and tries a
-> >> different format. On the Z830 the error returned is TOS_NOT_SUPPORTED
-> >> though the different format still works.
-> >
-> > This looks good I'll go and merge it into my for-next git branch
-> > sometime this week (I usually merge patches in batches).
->
-> Awsome!
->
-> >
-> >> 4. Battery charge mode [implemented in patch 2]
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> This laptop supports not charging the battery fully in order to prolon=
-g
-> >> battery life. Unlike for example ThinkPads where this control is granu=
-lar
-> >> here it is just off/on. When off it charges to 100%. When on it charge=
-s to
-> >> about 80%.
-> >>
-> >> According to the Windows program used to control the feature the setti=
-ng
-> >> will not take effect until the battery has been discharged to around 5=
-0%.
-> >> However, in my testing it takes effect as soon as the charge drops bel=
-ow
-> >> 80%. On Windows Toshiba branded this feature as "Eco charging"
-> >>
-> >> In the following example ACPI calls I will use the following newly def=
-ined
-> >> constants:
-> >> #define HCI_BATTERY_CHARGE_MODE 0xba
-> >> #define BATTERY_CHARGE_FULL 0
-> >> #define BATTERY_CHARGE_80_PERCENT 1
-> >>
-> >> To set the feature:
-> >>   {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
-> >> To query for the existence of the feature:
-> >>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
-> >> To read the feature:
-> >>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
-> >>
-> >> The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned =
-as
-> >> the status code. This rarely happens (I have never observed it on Linu=
-x),
-> >> but I have seen it happen under Windows once, and the software did ret=
-ry
-> >> it.
-> >
-> > Hmm, this is interesting if you look at:
-> >
-> > Documentation/ABI/testing/sysfs-class-power
-> >
-> > You will see there already is a standard API for this in the form of
-> > adding a "charge_control_end_threshold" attribute to the standard
-> > ACPI /sys/class/power_supply/BAT*/ sysfs interface. See e.g.
-> > drivers/platform/x86/thinkpad_acpi.c
-> >
-> > For an example of how to add sysfs attributes to a battery
-> > which is managed by the standard drivers/acpi/battery.c driver.
-> >
-> > I think you can use this standard attribute enabling eco charging
-> > for any writes with a value <=3D 90 and disabling it for values
-> >> 90 (90 being halfway between 80 and 100).
-> >
-> > While always showing 80 or 100 on read.
-> >
-> > You should then also write a patch for:
-> >
-> > Documentation/ABI/testing/sysfs-class-power
-> >
-> > Adding something like this to the "charge_control_end_threshold"
-> > section:
-> >
-> > "not all hardware is capable of setting this to an arbitrary
-> > percentage. Drivers will round written values to the nearest
-> > supported value. Reading back the value will show the actual
-> > threshold set by the driver."
-> >
-> > (feel free to copy verbatim, but maybe you can do better)
-> >
-> >
->
-> This makes perfect sense, but I don't know if it is guaranteed to be 80%
-> on all Toshiba laptops. Do you know of any other Toshiba laptops that
-> have/had this feature, and if so, what the limits are? The Windows driver
-> for this laptop does not document exactly what the limit is. 80% is simpl=
-y
-> what I have observed in practice.
->
-> >> 6. Panel power control via HCI
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> The toshiba_acpi driver supports controlling the panel power via SCI c=
-alls
-> >> (SCI_PANEL_POWER_ON). Based on the fact that the toshiba_acpi driver
-> >> outputs a message about reboot being needed I assume this is related t=
-o
-> >> panel power during boot?
-> >>
-> >> However there is a HCI call that can turn the panel off or on immediat=
-ely:
-> >>
-> >> #define HCI_PANEL_POWER_ON 0x2
-> >> #define PANEL_ON 1
-> >> #define PANEL_OFF 0
-> >>
-> >> To read/query existence: {HCI_GET, HCI_PANEL_POWER_ON, 0, 0, 0, 0}
-> >> To write: {HCI_SET, HCI_PANEL_POWER_ON, panel_on, 0, 0, 0}
-> >>
-> >> This could be related to some backlight issues this laptop is having w=
-here
-> >> backlight control stops working after a suspend/resume.
-> >>
-> >> Control via /sys/class/backlight/intel_backlight always works on this
-> >> laptop, however, most desktop environment seems to prefer the acpi_vid=
-eo or
-> >> vendor backlight controls if those exist.
-> >>
-> >> I have tried acpi_backlight=3Dvendor/native but that is broken in the =
-same
-> >> way. With acpi_backlight=3Dnone, the screen never turns on after a res=
-ume.
-> >> However if I turn it on using the above HCI call, everything works
-> >> normally after that. And since only the intel_backlight driver is left=
-,
-> >> the desktop environment controls backlight via that method.
-> >>
-> >> I have yet to find a satisfactory solution to this problem, but I susp=
-ect
-> >> the correct solution would be to fix backlight control from acpi_video=
-,
-> >> if that is possible. Suggestions?
-> >
-> > I think this is another case of some Toshiba devices needing the
-> > acpi_video backlight level save/restore behavior over suspend/resume
-> > while leaving the actual backlight control to intel_backlight.
-> >
-> > Quoting from: drivers/acpi/acpi_video.c :
-> >
-> >          * Some machines have a broken acpi-video interface for brightn=
-ess
-> >          * control, but still need an acpi_video_device_lcd_set_level()=
- call
-> >          * on resume to turn the backlight power on.  We Enable backlig=
-ht
-> >          * control on these systems, but do not register a backlight sy=
-sfs
-> >          * as brightness control does not work.
-> >          */
-> >         {
-> >          /* https://bugzilla.kernel.org/show_bug.cgi?id=3D21012 */
-> >          .callback =3D video_disable_backlight_sysfs_if,
-> >          .ident =3D "Toshiba Portege R700",
-> >          .matches =3D {
-> >                 DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-> >                 DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
-> >                 },
-> >         },
-> >
-> > Also:
-> > Toshiba Portege R830:    https://bugs.freedesktop.org/show_bug.cgi?id=
-=3D82634
-> > Toshiba Satellite R830:  https://bugzilla.kernel.org/show_bug.cgi?id=3D=
-21012
-> >
-> > You can see if the same option fixes things for you by adding:
-> > "video.disable_backlight_sysfs_if=3D1" to your kernel commandline while
-> > removing all other options. If this works, please submit a patch to
-> > add your model to the list in drivers/acpi/acpi_video.c, or provide
-> > dmidecode output, then I can do it for you.
->
-> I will test this when I get some time (hopefully at the end of this
-> weekend, after comming from a multi-day hiking trip).
->
-> >
-> >> 7. BIOS setting control from the OS [should we bother?]
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> Several of the BIOS settings can be controlled from the OS. This all
-> >> happens via SCI calls. On Windows the "Hwsetup.exe" program offers thi=
-s
-> >> control. I'm not sure how useful any of this is (as this is already
-> >> available via the BIOS).
-> >>
-> >> If you think it is a good idea I could absolutely implement support fo=
-r
-> >> this. Otherwise I might build a simple user space tool on top of acpi_=
-call
-> >> for this.
-> >
-> > As discussed above I don't really think we should bother; and IMHO
-> > certainly not something worth spending time on before the other issues
-> > are wrapped up.
->
-> Makes perfect sense, and kind of what I suspected.
->
-> > [...]
-> >
-> > Regards,
-> >
-> > Hans
-> >
->
+I know out-of-tree is not a concern to people here, but someone might
+have an answer anyhow.
 
+Thanks,
+Henning
 
---=20
--- El mundo apesta y vosotros apestais tambien --
+>  static const struct gpio_led_platform_data
+> simatic_ipc_gpio_leds_pdata = { @@ -46,7 +63,7 @@ static struct
+> platform_device *simatic_leds_pdev; 
+>  static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
+>  {
+> -	gpiod_remove_lookup_table(&simatic_ipc_led_gpio_table);
+> +	gpiod_remove_lookup_table(simatic_ipc_led_gpio_table);
+>  	platform_device_unregister(simatic_leds_pdev);
+>  
+>  	return 0;
+> @@ -54,10 +71,25 @@ static int simatic_ipc_leds_gpio_remove(struct
+> platform_device *pdev) 
+>  static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
+>  {
+> +	const struct simatic_ipc_platform *plat =
+> pdev->dev.platform_data; struct gpio_desc *gpiod;
+>  	int err;
+>  
+> -	gpiod_add_lookup_table(&simatic_ipc_led_gpio_table);
+> +	switch (plat->devmode) {
+> +	case SIMATIC_IPC_DEVICE_127E:
+> +		simatic_ipc_led_gpio_table =
+> &simatic_ipc_led_gpio_table_127e;
+> +		break;
+> +	case SIMATIC_IPC_DEVICE_227G:
+> +		if (!IS_ENABLED(CONFIG_GPIO_F7188X))
+> +			return -ENODEV;
+> +		request_module("gpio-f7188x");
+> +		simatic_ipc_led_gpio_table =
+> &simatic_ipc_led_gpio_table_227g;
+> +		break;
+> +	default:
+> +		return -ENODEV;
+> +	}
+> +
+> +	gpiod_add_lookup_table(simatic_ipc_led_gpio_table);
+>  	simatic_leds_pdev = platform_device_register_resndata(NULL,
+>  		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
+>  		&simatic_ipc_gpio_leds_pdata,
+> diff --git a/drivers/platform/x86/simatic-ipc.c
+> b/drivers/platform/x86/simatic-ipc.c index ca3647b751d5..1825ef21a86d
+> 100644 --- a/drivers/platform/x86/simatic-ipc.c
+> +++ b/drivers/platform/x86/simatic-ipc.c
+> @@ -41,6 +41,7 @@ static struct {
+>  	{SIMATIC_IPC_IPC127E, SIMATIC_IPC_DEVICE_127E,
+> SIMATIC_IPC_DEVICE_NONE}, {SIMATIC_IPC_IPC227D,
+> SIMATIC_IPC_DEVICE_227D, SIMATIC_IPC_DEVICE_NONE},
+> {SIMATIC_IPC_IPC227E, SIMATIC_IPC_DEVICE_427E,
+> SIMATIC_IPC_DEVICE_227E},
+> +	{SIMATIC_IPC_IPC227G, SIMATIC_IPC_DEVICE_227G,
+> SIMATIC_IPC_DEVICE_NONE}, {SIMATIC_IPC_IPC277E,
+> SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E},
+> {SIMATIC_IPC_IPC427D, SIMATIC_IPC_DEVICE_427E,
+> SIMATIC_IPC_DEVICE_NONE}, {SIMATIC_IPC_IPC427E,
+> SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_427E}, @@ -65,7 +66,8 @@
+> static int register_platform_devices(u32 station_id) } 
+>  	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
+> -		if (ledmode == SIMATIC_IPC_DEVICE_127E)
+> +		if (ledmode == SIMATIC_IPC_DEVICE_127E ||
+> +		    ledmode == SIMATIC_IPC_DEVICE_227G)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio";
+>  		platform_data.devmode = ledmode;
+>  		ipc_led_platform_device =
+> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h
+> b/include/linux/platform_data/x86/simatic-ipc-base.h index
+> 39fefd48cf4d..57d6a10dfc9e 100644 ---
+> a/include/linux/platform_data/x86/simatic-ipc-base.h +++
+> b/include/linux/platform_data/x86/simatic-ipc-base.h @@ -19,6 +19,7 @@
+>  #define SIMATIC_IPC_DEVICE_427E 2
+>  #define SIMATIC_IPC_DEVICE_127E 3
+>  #define SIMATIC_IPC_DEVICE_227E 4
+> +#define SIMATIC_IPC_DEVICE_227G 5
+>  
+>  struct simatic_ipc_platform {
+>  	u8	devmode;
+> diff --git a/include/linux/platform_data/x86/simatic-ipc.h
+> b/include/linux/platform_data/x86/simatic-ipc.h index
+> f3b76b39776b..7a2e79f3be0b 100644 ---
+> a/include/linux/platform_data/x86/simatic-ipc.h +++
+> b/include/linux/platform_data/x86/simatic-ipc.h @@ -31,6 +31,7 @@
+> enum simatic_ipc_station_ids { SIMATIC_IPC_IPC427E = 0x00000A01,
+>  	SIMATIC_IPC_IPC477E = 0x00000A02,
+>  	SIMATIC_IPC_IPC127E = 0x00000D01,
+> +	SIMATIC_IPC_IPC227G = 0x00000F01,
+>  };
+>  
+>  static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
+
