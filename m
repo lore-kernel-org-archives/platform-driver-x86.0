@@ -2,302 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA5DECAAD2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 10:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4623ECAAD5
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 10:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245548AbiHZKEu (ORCPT
+        id S1343938AbiHZKyf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 Aug 2022 06:04:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        Fri, 26 Aug 2022 06:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbiHZKEW (ORCPT
+        with ESMTP id S1343723AbiHZKyf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Aug 2022 06:04:22 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F86DA3C7;
-        Fri, 26 Aug 2022 03:03:27 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2F0015C0076;
-        Fri, 26 Aug 2022 06:03:05 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 26 Aug 2022 06:03:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1661508185; x=1661594585; bh=C/04hfQf58
-        qqXEDynVULUcRZ7WQWjIiHU+DlIbnltZc=; b=TXe35oeU2yhX83tiLt73Awq6sg
-        T78r2YOqD+vWfgNUqQGBJf6yt6S+7+sihvP6osCc3IAs5bD0bjU0tjBMfMC/Lqs0
-        KRAuNP0ewHxxosHNxo59HI/xoVQZ807bP7toG3EryilmnLAdOKcfQ0dnopuz7rqd
-        LSZgQLH0MNEQWUT5iYQA4SqG6Y3ms0ijaKh2OdUCwJOUzst9hhoD09Tf8KRwiHdS
-        +ZoxNotK3FS5nl4oYv5e85gjGo8eMcgVvXbpDibjZguntZ3+wu5+iBrmW3f58zD0
-        i26EKF/JZ9PVAhfsrXuIdycIhV/4luIhieCJBkOZ9rm4Ab8q4aS8p0rJ8prw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1661508185; x=1661594585; bh=C/04hfQf58qqXEDynVULUcRZ7WQW
-        jIiHU+DlIbnltZc=; b=3Aw6qP2ZZGbsXW0RY2/dL/0Uen8enYpGfv8u2ZkI05i4
-        zA9mwrqneayshNeSrAln8p/7OlV+r4cn1Push4acynNfw311JlJt5H8LfhGMAiGc
-        zPu6cjHXpE/D4HwD2u/m1ohxbxPTRvcM5c/pvIARX2dAYIowbYpciCNIhJdCZNMg
-        +iNxAJWcZBEZhkYwvHNg9PmIusaHfHsMSY7q8KUifJMX+EEj31NBOe5WdfUZCXsl
-        6HT5f7nSKtIZ5dSz5wRekbKLx+aYVluCC7ZYTc36Vxr3Szm5N1Bu2URag3nANo5c
-        Y2YHNdPq/5Onj1XS67FExA207IgEn+kggjVMT3aIsw==
-X-ME-Sender: <xms:WJoIY1-pG6bLJsnvxxlvB0xZlKZRscTh-6kmBtcd4rAjojGVdjPGZw>
-    <xme:WJoIY5uTfGGxgk9ifEbACUupMx8umtGc_2r1hCrOW_RM-EF-LDssRzsOjKGRri0bp
-    t_qYH6JJB78WNF4LV4>
-X-ME-Received: <xmr:WJoIYzBz7OKBwWVfntq3Ei9-CNplLRba-chvKA3WAA10MUCF4fpo9ceVgdyp2OgxpE4_Pg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdejhedgvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:WZoIY5eXTSNX7Myc4_bBc1FqclJ4iwg0HWlTeInk2SUv7sNeSOTqKw>
-    <xmx:WZoIY6P5sqvzI7V2VahJobuASsLN54VdhRU0Dad0c2mBp4mospCSsQ>
-    <xmx:WZoIY7lYp-QlOzktrQCBSe91Ls920ha941FYHfl4Tib-cYvYYJlb9Q>
-    <xmx:WZoIY3p7WxdXawBSvqcMThEL5TUAprz9Y1c8BzLlT-eubfblJqNzqA>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Aug 2022 06:02:58 -0400 (EDT)
-Date:   Fri, 26 Aug 2022 22:02:43 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v4 1/2] asus-wmi: Implement TUF laptop keyboard LED modes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        pobrn@protonmail.com, pavel@ucw.cz
-Message-Id: <JWV7HR.9II7K7ZK8G9M1@ljones.dev>
-In-Reply-To: <4b196309-fb73-bc77-0096-81915ac9a97d@redhat.com>
-References: <20220825232251.345893-1-luke@ljones.dev>
-        <20220825232251.345893-2-luke@ljones.dev>
-        <0a45a991-4123-a76c-174f-435523f6d348@redhat.com>
-        <XMV7HR.FTECLY4PXEQX@ljones.dev>
-        <4b196309-fb73-bc77-0096-81915ac9a97d@redhat.com>
-X-Mailer: geary/40.0
+        Fri, 26 Aug 2022 06:54:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23F0578A6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 03:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661511272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EQ1zneK9DxbiINAMLJbVkqYItLnLRxocRocpFZJXiBQ=;
+        b=LdwJdE1IK2cgTTJMznXMNG7oUKLKZEZtxBJiDd0acYYzRtYNEAFqbmTtqAMGo4+VbLSXzT
+        HhTiJ3OaRvtkkVBto/j1AMO2DLQeNLKs4iEIzplpNGxZpL3qvELX5FDZuwAXg+x4TRgtkT
+        6CwIrdsBuk+C/4ZaESHPk+6s/lLA7xI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-625-mfFx7Q2mNfSrqTGwuVD0_A-1; Fri, 26 Aug 2022 06:54:31 -0400
+X-MC-Unique: mfFx7Q2mNfSrqTGwuVD0_A-1
+Received: by mail-ed1-f69.google.com with SMTP id i6-20020a05640242c600b00447c00a776aso902854edc.20
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 03:54:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=EQ1zneK9DxbiINAMLJbVkqYItLnLRxocRocpFZJXiBQ=;
+        b=RTedMXlmciWmjpt3DNgqaYAQ2wAjd16AvS/HeZ7cJB2xsYTR3BQHKVXYnSQN9w7Y7L
+         ljWM9qi2GhH6qzlEl87TR0+llQKIKbKflKuQjuRkeTEK8IN0s/vjdt3vBerMrNSgFpDE
+         okO6pWFIeTDQajy/MsInZDuJCPveVS1gDEm9Zqg2dcwBHq9sWD+8kMAKyp4yMTCmmdta
+         qxYdknwZMEmq333ooXziibvlb9RblKuQdPhPXdG9l0kIp2xlzWkTiReW8G32+cRr8tWZ
+         SggIPGQPH3NyYg+N/C6XpiGhOgAnafrjWaip5MPXuLlxfcOZxzZ2g7mNBXQst6faMbVn
+         w4yg==
+X-Gm-Message-State: ACgBeo3fqIOmj2BN0AJNgM5/pDXJlMJIin1uzt3SdhP316UVAifjtk0w
+        WAtrRq56RhOX+ZZHTluTdz2WC0j2JWbsdZPDbTyrHHTQiLhGTQ38044KBoi1E3I3jxjFbL9tDpx
+        udeHPyaQ/xp1Ec53AqYgi2ophlV++OqrmSA==
+X-Received: by 2002:a17:907:c24:b0:73d:7c20:cc45 with SMTP id ga36-20020a1709070c2400b0073d7c20cc45mr5307338ejc.294.1661511270503;
+        Fri, 26 Aug 2022 03:54:30 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7Zahy8UbiX83PS8DajnrtZl2IMzDHutGMmSOQzE0/tOlE1bRATGqzyd6HBr9SlnmlJ9Wv8FQ==
+X-Received: by 2002:a17:907:c24:b0:73d:7c20:cc45 with SMTP id ga36-20020a1709070c2400b0073d7c20cc45mr5307323ejc.294.1661511270291;
+        Fri, 26 Aug 2022 03:54:30 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id eq23-20020a170907291700b0073d234e994csm738434ejc.185.2022.08.26.03.54.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Aug 2022 03:54:29 -0700 (PDT)
+Message-ID: <8f54d308-7db1-d7d2-abd7-c57c028a28b8@redhat.com>
+Date:   Fri, 26 Aug 2022 12:54:28 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Explicitly set to
+ balanced mode on startup
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+Cc:     madcatx@atlas.cz, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220819180101.6383-1-mario.limonciello@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220819180101.6383-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-
-On Fri, Aug 26 2022 at 11:59:55 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi,
+On 8/19/22 20:01, Mario Limonciello wrote:
+> It was observed that on a Thinkpad T14 Gen1 (AMD) that the platform
+> profile is starting up in 'low-power' mode after refreshing what the
+> firmware had.  This is most likely a firmware bug, but as a harmless
+> workaround set the default profile to 'balanced' at thinkpad_acpi startup.
 > 
-> On 8/26/22 11:56, Luke Jones wrote:
->> 
->> 
->>  On Fri, Aug 26 2022 at 11:47:37 +0200, Hans de Goede 
->> <hdegoede@redhat.com> wrote:
->>>  Hi Luke,
->>> 
->>>  On 8/26/22 01:22, Luke D. Jones wrote:
->>>>   Adds support for changing the laptop keyboard LED mode and 
->>>> colour.
->>>> 
->>>>   The modes are visible effects such as static, rainbow, pulsing,
->>>>   colour cycles.
->>>> 
->>>>   These sysfs attributes are added to asus::kbd_backlight:
->>>>   - kbd_rgb_mode
->>>>   - kbd_rgb_mode_index
->>>> 
->>>>   Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>>>   ---
->>>>    drivers/platform/x86/asus-wmi.c            | 76 
->>>> +++++++++++++++++++++-
->>>>    include/linux/platform_data/x86/asus-wmi.h |  3 +
->>>>    2 files changed, 78 insertions(+), 1 deletion(-)
->>>> 
->>>>   diff --git a/drivers/platform/x86/asus-wmi.c 
->>>> b/drivers/platform/x86/asus-wmi.c
->>>>   index 0f9f79f249c7..92f16bb9b4ef 100644
->>>>   --- a/drivers/platform/x86/asus-wmi.c
->>>>   +++ b/drivers/platform/x86/asus-wmi.c
->>>>   @@ -237,6 +237,8 @@ struct asus_wmi {
->>>>        bool dgpu_disable_available;
->>>>        bool gpu_mux_mode_available;
->>>> 
->>>>   +    bool kbd_rgb_mode_available;
->>>>   +
->>>>        bool throttle_thermal_policy_available;
->>>>        u8 throttle_thermal_policy_mode;
->>>> 
->>>>   @@ -720,6 +722,69 @@ static ssize_t gpu_mux_mode_store(struct 
->>>> device *dev,
->>>>    }
->>>>    static DEVICE_ATTR_RW(gpu_mux_mode);
->>>> 
->>>>   +/* TUF Laptop Keyboard RGB Modes 
->>>> **********************************************/
->>>>   +static ssize_t kbd_rgb_mode_store(struct device *dev,
->>>>   +                 struct device_attribute *attr,
->>>>   +                 const char *buf, size_t count)
->>>>   +{
->>>>   +    u32 cmd, mode, r, g,  b,  speed;
->>>>   +    int err;
->>>>   +
->>>>   +    if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, 
->>>> &b, &speed) != 6)
->>>>   +        return -EINVAL;
->>>>   +
->>>>   +    cmd = !!cmd;
->>>>   +
->>>>   +    /* These are the known usable modes across all TUF/ROG */
->>>>   +    if (mode >= 12 || mode == 9)
->>>>   +        mode = 10;
->>>>   +
->>>>   +    switch (speed) {
->>>>   +    case 0:
->>>>   +        speed = 0xe1;
->>>>   +        break;
->>>>   +    case 1:
->>>>   +        speed = 0xeb;
->>>>   +        break;
->>>>   +    case 2:
->>>>   +        speed = 0xf5;
->>>>   +        break;
->>>>   +    default:
->>>>   +        speed = 0xeb;
->>>>   +    }
->>>>   +
->>>>   +    err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, 
->>>> ASUS_WMI_DEVID_TUF_RGB_MODE,
->>>>   +            cmd | (mode << 8) | (r << 16) | (g << 24), b | 
->>>> (speed << 8), NULL);
->>>>   +    if (err)
->>>>   +        return err;
->>>>   +
->>>>   +    return count;
->>>>   +}
->>>>   +static DEVICE_ATTR_WO(kbd_rgb_mode);
->>>>   +
->>>>   +static ssize_t kbd_rgb_mode_index_show(struct device *device,
->>>>   +                         struct device_attribute *attr,
->>>>   +                         char *buf)
->>>>   +{
->>>>   +    return sysfs_emit(buf, "%s\n", "cmd mode red green blue 
->>>> speed");
->>>>   +}
->>>>   +static DEVICE_ATTR_RO(kbd_rgb_mode_index);
->>>>   +
->>>>   +static struct attribute *kbd_rgb_mode_attrs[] = {
->>>>   +    &dev_attr_kbd_rgb_mode.attr,
->>>>   +    &dev_attr_kbd_rgb_mode_index.attr,
->>>>   +    NULL,
->>>>   +};
->>>>   +
->>>>   +static const struct attribute_group kbd_rgb_mode_group = {
->>>>   +    .attrs = kbd_rgb_mode_attrs,
->>>>   +};
->>>>   +
->>>>   +const struct attribute_group *kbd_rgb_mode_groups[] = {
->>>>   +    NULL,
->>>>   +    NULL,
->>>>   +};
->>>>   +
->>>>    /* Battery 
->>>> ********************************************************************/
->>>> 
->>>>    /* The battery maximum charging percentage */
->>>>   @@ -1038,7 +1103,10 @@ static void asus_wmi_led_exit(struct 
->>>> asus_wmi *asus)
->>>> 
->>>>    static int asus_wmi_led_init(struct asus_wmi *asus)
->>>>    {
->>>>   -    int rv = 0, led_val;
->>>>   +    int rv = 0, num_rgb_groups = 0, led_val;
->>>>   +
->>>>   +    if (asus->kbd_rgb_mode_available)
->>>>   +        kbd_rgb_mode_groups[num_rgb_groups++] = 
->>>> &kbd_rgb_mode_group;
->>>> 
->>>>        asus->led_workqueue = 
->>>> create_singlethread_workqueue("led_workqueue");
->>>>        if (!asus->led_workqueue)
->>>>   @@ -1066,6 +1134,9 @@ static int asus_wmi_led_init(struct 
->>>> asus_wmi *asus)
->>>>            asus->kbd_led.brightness_get = kbd_led_get;
->>>>            asus->kbd_led.max_brightness = 3;
->>>> 
->>>>   +        if (num_rgb_groups != 0)
->>>>   +            asus->kbd_led.groups = kbd_rgb_mode_groups;
->>>>   +
->>>>            rv = led_classdev_register(&asus->platform_device->dev,
->>>>                           &asus->kbd_led);
->>>>            if (rv)
->>>>   @@ -3253,6 +3324,8 @@ static umode_t 
->>>> asus_sysfs_is_visible(struct kobject *kobj,
->>>>            ok = asus->egpu_enable_available;
->>>>        else if (attr == &dev_attr_dgpu_disable.attr)
->>>>            ok = asus->dgpu_disable_available;
->>>>   +    else if (attr == &dev_attr_dgpu_disable.attr)
->>>>   +        ok = asus->dgpu_disable_available;
->>>>        else if (attr == &dev_attr_gpu_mux_mode.attr)
->>>>            ok = asus->gpu_mux_mode_available;
->>>>        else if (attr == &dev_attr_fan_boost_mode.attr)
->>> 
->>>  This patch-hunk looks like it is a (mangled) leftover from 
->>> previous versions
->>>  of the patch.
->> 
->>  Do you mean:
->> 
->>  +    else if (attr == &dev_attr_dgpu_disable.attr)
->>  +        ok = asus->dgpu_disable_available;
-> 
-> Yes, patch hunks or chunks are the parts of a patch between
-> a "@@ ... @@" line and the next "@@ ... @@" line.
+> Reported-by: madcatx@atlas.cz
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216347
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2
+>  * Only run on AMD systems (PSC mode)
 
-Thanks. Oh gosh i see now... dgpu_disable. I'm unsure how I missed 
-that. My apologies..
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note I will also add this to the fixes branch and I will
+include this in the next fixes pull-req for 6.0 .
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
 
 > 
-> Regards,
+>  drivers/platform/x86/thinkpad_acpi.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> Hans
-> 
-> 
-> 
-> 
-> 
->>>>   @@ -3519,6 +3592,7 @@ static int asus_wmi_add(struct 
->>>> platform_device *pdev)
->>>>        asus->egpu_enable_available = asus_wmi_dev_is_present(asus, 
->>>> ASUS_WMI_DEVID_EGPU);
->>>>        asus->dgpu_disable_available = 
->>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
->>>>        asus->gpu_mux_mode_available = 
->>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
->>>>   +    asus->kbd_rgb_mode_available = 
->>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
->>>>        asus->panel_overdrive_available = 
->>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
->>>> 
->>>>        err = fan_boost_mode_check_present(asus);
->>>>   diff --git a/include/linux/platform_data/x86/asus-wmi.h 
->>>> b/include/linux/platform_data/x86/asus-wmi.h
->>>>   index 6e8a95c10d17..3d861477cb20 100644
->>>>   --- a/include/linux/platform_data/x86/asus-wmi.h
->>>>   +++ b/include/linux/platform_data/x86/asus-wmi.h
->>>>   @@ -103,6 +103,9 @@
->>>>    /* gpu mux switch, 0 = dGPU, 1 = Optimus */
->>>>    #define ASUS_WMI_DEVID_GPU_MUX        0x00090016
->>>> 
->>>>   +/* TUF laptop RGB modes/colours */
->>>>   +#define ASUS_WMI_DEVID_TUF_RGB_MODE    0x00100056
->>>>   +
->>>>    /* DSTS masks */
->>>>    #define ASUS_WMI_DSTS_STATUS_BIT    0x00000001
->>>>    #define ASUS_WMI_DSTS_UNKNOWN_BIT    0x00000002
->>> 
->> 
->> 
-> 
-
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 22d4e8633e30..2dbb9fc011a7 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10592,10 +10592,9 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	/* Ensure initial values are correct */
+>  	dytc_profile_refresh();
+>  
+> -	/* Set AMT correctly now we know current profile */
+> -	if ((dytc_capabilities & BIT(DYTC_FC_PSC)) &&
+> -	    (dytc_capabilities & BIT(DYTC_FC_AMT)))
+> -	    dytc_control_amt(dytc_current_profile == PLATFORM_PROFILE_BALANCED);
+> +	/* Workaround for https://bugzilla.kernel.org/show_bug.cgi?id=216347 */
+> +	if (dytc_capabilities & BIT(DYTC_FC_PSC))
+> +		dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
+>  
+>  	return 0;
+>  }
 
