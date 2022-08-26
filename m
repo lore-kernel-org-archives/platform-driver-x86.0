@@ -2,232 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8AECAAA2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 00:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9272EECAAD6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 08:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241447AbiHZAm3 (ORCPT
+        id S229893AbiHZIcD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Aug 2022 20:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
+        Fri, 26 Aug 2022 04:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231750AbiHZAm2 (ORCPT
+        with ESMTP id S1343589AbiHZIcB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2022 20:42:28 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CED11B7B8;
-        Thu, 25 Aug 2022 17:42:28 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6F89D5C009C;
-        Thu, 25 Aug 2022 20:42:27 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 25 Aug 2022 20:42:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1661474547; x=1661560947; bh=8y
-        +/T3N0SqWF6NxVxIldRMBVIEBEY0pHYfeqFdDVrBc=; b=UOgFY3LerbKgwZ2lqa
-        U/sdnptlZxbObnT1caomdpjkM35N14N6WI4qgsUUih+eTqldZN5ErE/Tx3tspecx
-        //WYQxTgBCRxlozUmbp4ECFIx2zNuroAEPJVFJpm4a2prYvbzKCj004aNxjnjNKj
-        +Lu2yGeRNsL/KwehBrBjTaTGTuYKbMugagtRkp725djiBAphEZU66Oq7a3wkbbkZ
-        hnRo8g88ZUT0fK4hdE+ZqVMku9magv2Wj266kKjhCOvFCakeHRxWL5ZepNbdKWCJ
-        0l43+XOean3NQ6mVlfwTbqWv7PGGe7ZvqHu/VDVRErk2eA9w+7v0U0+4P9iR3Bf6
-        dhIg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1661474547; x=1661560947; bh=8y+/T3N0SqWF6
-        NxVxIldRMBVIEBEY0pHYfeqFdDVrBc=; b=iu4l+VsjM76o4EaZfRTXiKo/1kKiG
-        XUIhqOu3zFk9wsaynYSPABqZ4PlLEx3lx4smH9SY9ON/ekKjmS61VvKKFb/Ds5J2
-        sD6XPUzpHaqHZwyA2J21gIDRxCPbdhgNajdEMj7F2LIyuzn8w/mO+DEiobXFm0u7
-        GY4FS8k8zNbfYfid5I25t/6e1tRHZVPjfoCOwytiJwo0StFeZ2LD6Ty1cA9zdZ74
-        qR3lchAL9pl77tEFwYJ0Lx8ZtjxbjRmzh/NaPPOuwZjjbeb6z58wRDPnQculjIfv
-        pgTA+33Vxudull76N1EOLiMa8kVENjiUqfVnoHz+/18PwAs9SmHYxkhgw==
-X-ME-Sender: <xms:8xYIY_m-_TJpqogzz1jCkDUIocuQhDtNHAOsaQ0tPcfWGz7iMsvrsQ>
-    <xme:8xYIYy0iIPNahLUodqH3-AIRyXl2S4oapa916zdBQDEAEeFmXtl8hxt5QG8JKfS0S
-    pgIg2BL_v_2sK6_Gb4>
-X-ME-Received: <xmr:8xYIY1pTP-JkOUaM61jBFRgTOCTtT9ElfAH40WVxDba-MB-hihjRRcGiDWlf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdejgedgfeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgepuden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:8xYIY3nFtGG9tP1HNprdQLpp1j21stobadg5IfHPuKhy2NyLKVsrQA>
-    <xmx:8xYIY92OMjmBd1rCkr4qLE9l09hk5p1QomuX5HZlciJPiaaiS_aUYw>
-    <xmx:8xYIY2v-g6EpHzE2srVAXEhK8yEhgzOq5bYF-JxIYOGFNwalDmMsYg>
-    <xmx:8xYIY7C6-2t4xVsLtzXg-G2CNSQ56C1UvwnWeUKwkog_PiKiv0xLFg>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Aug 2022 20:42:25 -0400 (EDT)
-From:   "Luke D. Jones" <luke@ljones.dev>
-To:     hdegoede@redhat.com
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v2 2/2] asus-wmi: Support the GPU fan on TUF laptops
-Date:   Fri, 26 Aug 2022 12:42:10 +1200
-Message-Id: <20220826004210.356534-3-luke@ljones.dev>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220826004210.356534-1-luke@ljones.dev>
-References: <20220826004210.356534-1-luke@ljones.dev>
+        Fri, 26 Aug 2022 04:32:01 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5A0D2E95
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id d21so1826653eje.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
+        b=Kq09X+u9u6zfdlCM2VAWNO0BBCZvzu2TxeBvYSWTLT7NI+B7hmI3SvzU7w355GY9RH
+         9Q46AsVFVbtQ2W96A1j7F/0LzlqEPMXi+wYhaZIjSgzHZMRvy9d3KSHx+QhDCcICDZMF
+         P74yYd/HLduNFacztnkz1dVz0kyR+KIYYLQXuvZ8pJg5MjEfFkNi9XBT1uqhKLrQ/WgF
+         kUI2Pfqvgc/iZ6hu6CKlHPvVPuFSQGzES4iMmO4IXWCICkOJob952iWdTkC9vM2wY7cp
+         n85umVjV8PGmGqUs4SMQw3DEDLfW6ij2CrjJrhG6ezu5RgZHCRtJNkwrzf+Y2gUyyq3X
+         V2+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
+        b=f/qTEwQx6M6ISUhUE2XiUhBeEkHB6rGkD6IqKjLxRF/oxmJIi6wPSmsEBrc6/s+0m5
+         tyZ5DCeM6A+Ec64RyHRnzdAzEkkTR64jN4z7YuWPgVHmqGjUvYwh6Aox5K70hWg2kJj4
+         pFWF8TwWl7Qsy+LYXBM9uPWsO5gMUy8Y81bCZZKzqcnDz42lGF+bs1R1arQLL0Y/0FFw
+         ILXTN/H4YZKqNbzHe1NssLNaHiRqtwgnzVmF7OUFsq4T5LRR6ijS3Y9szd45K5g49QRQ
+         ro32ps8ekLTDOcPwP1bDjOaFx1GwUkStX3U+X3Q5gC0adAiiRq00KTMqTohkgvold9p1
+         3wwA==
+X-Gm-Message-State: ACgBeo2SVHexgYABwqQb0FJycAfTJv5rm0iZVpqmatKhZulGvYCypfm+
+        Ltxfi6PdxCcVvX+I9W6PvYzHoYOX2Q5QJwztxBgV0/aiLiI=
+X-Google-Smtp-Source: AA6agR4GOyrhcuahIpbw96Io6rSfYfT+CpDB61ITbseXVm8BFNhxgBy45DU3Tf7NEjhIlvx2NVjaMcRMmsD+Ya8kNGw=
+X-Received: by 2002:a17:906:58c8:b0:6fe:91d5:18d2 with SMTP id
+ e8-20020a17090658c800b006fe91d518d2mr4921280ejs.190.1661502719056; Fri, 26
+ Aug 2022 01:31:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220811153908.31283-1-henning.schild@siemens.com>
+ <20220811153908.31283-3-henning.schild@siemens.com> <CAHp75VdWdzsT9wc9BNNKTJ3-eBn3uWdCFXqE2TT+CiJnoTOQYw@mail.gmail.com>
+ <20220822152133.5e8f257e@md1za8fc.ad001.siemens.net> <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
+In-Reply-To: <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 26 Aug 2022 10:31:47 +0200
+Message-ID: <CACRpkdYiLuLCG=mCk0UwpTH-Z1iTeGjdqUd6c6e6COvEzRKO0Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] gpio-f7188x: use unique labels for banks/chips
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Henning Schild <henning.schild@siemens.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
+        Tasanakorn Phaipool <tasanakorn@gmail.com>,
+        "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for TUF laptops which have the ability to control
-the GPU fan. This will show as a second fan in hwmon, and has
-the ability to run as boost (fullspeed), or auto.
+On Mon, Aug 22, 2022 at 11:37 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Aug 22, 2022 at 4:21 PM Henning Schild
+> <henning.schild@siemens.com> wrote:
+> > Am Fri, 12 Aug 2022 10:39:08 +0200
+> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+> > > On Thursday, August 11, 2022, Henning Schild
+> > > <henning.schild@siemens.com> wrote:
+> > >
+> > > > So that drivers building on top can find those pins with GPIO_LOOKUP
+> > > > helpers.
+> > >
+> > > Missed given tag. Do we need to bother reviewing your patches?
+> >
+> > Sorry but i have no idea what you are talking about, please help me
+> > out. Whatever i did miss seems to be pretty relevant it seems.
+>
+> If I remember correctly somebody gave you an Acked-by (or
+> Reviewed-by?) tag in previous versions of the series. I don't see it
+> included.
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c            | 71 ++++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 72 insertions(+)
+I think I added a Reviewed-by but it came in probably after this
+version was posted due to me being slow on processing my
+inbox, so this one is likely on me.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ea45e10302f7..d05684194f2d 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -226,7 +226,9 @@ struct asus_wmi {
- 	u32 tablet_switch_dev_id;
- 
- 	enum fan_type fan_type;
-+	enum fan_type gpu_fan_type;
- 	int fan_pwm_mode;
-+	int gpu_fan_pwm_mode;
- 	int agfn_pwm;
- 
- 	bool fan_boost_mode_available;
-@@ -1861,6 +1863,18 @@ static int asus_fan_set_auto(struct asus_wmi *asus)
- 		return -ENXIO;
- 	}
- 
-+	/*
-+	 * Modern models like the G713 also have GPU fan control (this is not AGFN)
-+	 */
-+	if (asus->gpu_fan_type == FAN_TYPE_SPEC83) {
-+		status = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_FAN_CTRL,
-+					       0, &retval);
-+		if (status)
-+			return status;
-+
-+		if (retval != 1)
-+			return -EIO;
-+	}
- 
- 	return 0;
- }
-@@ -2063,9 +2077,57 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
- 		       deci_kelvin_to_millicelsius(value & 0xFFFF));
- }
- 
-+/* GPU fan on modern ROG laptops */
-+static ssize_t pwm2_enable_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->gpu_fan_pwm_mode);
-+}
-+
-+static ssize_t pwm2_enable_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	int state;
-+	int value;
-+	int ret;
-+	u32 retval;
-+
-+	ret = kstrtouint(buf, 10, &state);
-+	if (ret)
-+		return ret;
-+
-+	switch (state) { /* standard documented hwmon values */
-+	case ASUS_FAN_CTRL_FULLSPEED:
-+		value = 1;
-+		break;
-+	case ASUS_FAN_CTRL_AUTO:
-+		value = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_FAN_CTRL,
-+				    value, &retval);
-+	if (ret)
-+		return ret;
-+
-+	if (retval != 1)
-+		return -EIO;
-+
-+	asus->gpu_fan_pwm_mode = state;
-+	return count;
-+}
-+
- /* Fan1 */
- static DEVICE_ATTR_RW(pwm1);
- static DEVICE_ATTR_RW(pwm1_enable);
-+static DEVICE_ATTR_RW(pwm2_enable);
- static DEVICE_ATTR_RO(fan1_input);
- static DEVICE_ATTR_RO(fan1_label);
- 
-@@ -2075,6 +2137,7 @@ static DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL);
- static struct attribute *hwmon_attributes[] = {
- 	&dev_attr_pwm1.attr,
- 	&dev_attr_pwm1_enable.attr,
-+	&dev_attr_pwm2_enable.attr,
- 	&dev_attr_fan1_input.attr,
- 	&dev_attr_fan1_label.attr,
- 
-@@ -2097,6 +2160,9 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 	    || attr == &dev_attr_pwm1_enable.attr) {
- 		if (asus->fan_type == FAN_TYPE_NONE)
- 			return 0;
-+	} else if (attr == &dev_attr_pwm2_enable.attr) {
-+		if (asus->gpu_fan_type == FAN_TYPE_NONE)
-+			return 0;
- 	} else if (attr == &dev_attr_temp1_input.attr) {
- 		int err = asus_wmi_get_devstate(asus,
- 						ASUS_WMI_DEVID_THERMAL_CTRL,
-@@ -2139,6 +2205,7 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
- 
- static int asus_wmi_fan_init(struct asus_wmi *asus)
- {
-+	asus->gpu_fan_type = FAN_TYPE_NONE;
- 	asus->fan_type = FAN_TYPE_NONE;
- 	asus->agfn_pwm = -1;
- 
-@@ -2147,6 +2214,10 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
- 	else if (asus_wmi_has_agfn_fan(asus))
- 		asus->fan_type = FAN_TYPE_AGFN;
- 
-+	/*  Modern models like G713 also have GPU fan control */
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_FAN_CTRL))
-+		asus->gpu_fan_type = FAN_TYPE_SPEC83;
-+
- 	if (asus->fan_type == FAN_TYPE_NONE)
- 		return -ENODEV;
- 
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 7dd580fdc61c..28234dc9fa6a 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -79,6 +79,7 @@
- #define ASUS_WMI_DEVID_THERMAL_CTRL	0x00110011
- #define ASUS_WMI_DEVID_FAN_CTRL		0x00110012 /* deprecated */
- #define ASUS_WMI_DEVID_CPU_FAN_CTRL	0x00110013
-+#define ASUS_WMI_DEVID_GPU_FAN_CTRL	0x00110014
- #define ASUS_WMI_DEVID_CPU_FAN_CURVE	0x00110024
- #define ASUS_WMI_DEVID_GPU_FAN_CURVE	0x00110025
- 
--- 
-2.37.2
-
+Yours,
+Linus Walleij
