@@ -2,104 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9272EECAAD6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 08:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B6ECAAD6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 09:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiHZIcD (ORCPT
+        id S1343896AbiHZJ3h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 Aug 2022 04:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
+        Fri, 26 Aug 2022 05:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343589AbiHZIcB (ORCPT
+        with ESMTP id S1343828AbiHZJ30 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Aug 2022 04:32:01 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5A0D2E95
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id d21so1826653eje.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 01:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
-        b=Kq09X+u9u6zfdlCM2VAWNO0BBCZvzu2TxeBvYSWTLT7NI+B7hmI3SvzU7w355GY9RH
-         9Q46AsVFVbtQ2W96A1j7F/0LzlqEPMXi+wYhaZIjSgzHZMRvy9d3KSHx+QhDCcICDZMF
-         P74yYd/HLduNFacztnkz1dVz0kyR+KIYYLQXuvZ8pJg5MjEfFkNi9XBT1uqhKLrQ/WgF
-         kUI2Pfqvgc/iZ6hu6CKlHPvVPuFSQGzES4iMmO4IXWCICkOJob952iWdTkC9vM2wY7cp
-         n85umVjV8PGmGqUs4SMQw3DEDLfW6ij2CrjJrhG6ezu5RgZHCRtJNkwrzf+Y2gUyyq3X
-         V2+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=O3a2ywKetAiTPlrs9lT8+YShy/yttp6DQHGKIy61pD0=;
-        b=f/qTEwQx6M6ISUhUE2XiUhBeEkHB6rGkD6IqKjLxRF/oxmJIi6wPSmsEBrc6/s+0m5
-         tyZ5DCeM6A+Ec64RyHRnzdAzEkkTR64jN4z7YuWPgVHmqGjUvYwh6Aox5K70hWg2kJj4
-         pFWF8TwWl7Qsy+LYXBM9uPWsO5gMUy8Y81bCZZKzqcnDz42lGF+bs1R1arQLL0Y/0FFw
-         ILXTN/H4YZKqNbzHe1NssLNaHiRqtwgnzVmF7OUFsq4T5LRR6ijS3Y9szd45K5g49QRQ
-         ro32ps8ekLTDOcPwP1bDjOaFx1GwUkStX3U+X3Q5gC0adAiiRq00KTMqTohkgvold9p1
-         3wwA==
-X-Gm-Message-State: ACgBeo2SVHexgYABwqQb0FJycAfTJv5rm0iZVpqmatKhZulGvYCypfm+
-        Ltxfi6PdxCcVvX+I9W6PvYzHoYOX2Q5QJwztxBgV0/aiLiI=
-X-Google-Smtp-Source: AA6agR4GOyrhcuahIpbw96Io6rSfYfT+CpDB61ITbseXVm8BFNhxgBy45DU3Tf7NEjhIlvx2NVjaMcRMmsD+Ya8kNGw=
-X-Received: by 2002:a17:906:58c8:b0:6fe:91d5:18d2 with SMTP id
- e8-20020a17090658c800b006fe91d518d2mr4921280ejs.190.1661502719056; Fri, 26
- Aug 2022 01:31:59 -0700 (PDT)
+        Fri, 26 Aug 2022 05:29:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3A3B5A44
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 02:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661506165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=veoKzPrgUiFcfr6+6VQn4D3klUeoZiBvawAgjMGVc6I=;
+        b=KSUc6mFPfHteLlWJk6rRQhgVPeliym5xekoBQEH7oU66VWO3+7r7OZPX2Pj/mhHQtf4xb/
+        n9H6QCEpGftMVJGtK6Dq/Pz2lOCXFyNqcVSpBn2uvpTbMPFTZjaYVrp116pj0rQCeivulU
+        kgnAqR5cgui0F+1eijOrSsPgWhlV5Kw=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-387-zsz6BMsBOX2d4I_6eixo6A-1; Fri, 26 Aug 2022 05:29:23 -0400
+X-MC-Unique: zsz6BMsBOX2d4I_6eixo6A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 56B191C051A7;
+        Fri, 26 Aug 2022 09:29:23 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.193.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D89840C141D;
+        Fri, 26 Aug 2022 09:29:22 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Luke D . Jones" <luke@ljones.dev>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: asus-wmi: Update tablet_mode_sw module-param help text
+Date:   Fri, 26 Aug 2022 11:29:21 +0200
+Message-Id: <20220826092921.8907-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20220811153908.31283-1-henning.schild@siemens.com>
- <20220811153908.31283-3-henning.schild@siemens.com> <CAHp75VdWdzsT9wc9BNNKTJ3-eBn3uWdCFXqE2TT+CiJnoTOQYw@mail.gmail.com>
- <20220822152133.5e8f257e@md1za8fc.ad001.siemens.net> <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
-In-Reply-To: <CAHp75VfzOxW6KOW8ObSnqoFiaggkCWgWccrV9wV3x7BJFJR3fg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 26 Aug 2022 10:31:47 +0200
-Message-ID: <CACRpkdYiLuLCG=mCk0UwpTH-Z1iTeGjdqUd6c6e6COvEzRKO0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] gpio-f7188x: use unique labels for banks/chips
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 11:37 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Aug 22, 2022 at 4:21 PM Henning Schild
-> <henning.schild@siemens.com> wrote:
-> > Am Fri, 12 Aug 2022 10:39:08 +0200
-> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> > > On Thursday, August 11, 2022, Henning Schild
-> > > <henning.schild@siemens.com> wrote:
-> > >
-> > > > So that drivers building on top can find those pins with GPIO_LOOKUP
-> > > > helpers.
-> > >
-> > > Missed given tag. Do we need to bother reviewing your patches?
-> >
-> > Sorry but i have no idea what you are talking about, please help me
-> > out. Whatever i did miss seems to be pretty relevant it seems.
->
-> If I remember correctly somebody gave you an Acked-by (or
-> Reviewed-by?) tag in previous versions of the series. I don't see it
-> included.
+Document how to select asus_wmi_lid_flip_rog_devid as tablet_switch_mode
+by adding "3:lid-flip-rog" to the tablet_mode_sw module-param help text.
 
-I think I added a Reviewed-by but it came in probably after this
-version was posted due to me being slow on processing my
-inbox, so this one is likely on me.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index bbfed85051ee..222aef762a6c 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -43,7 +43,7 @@ MODULE_PARM_DESC(wapf, "WAPF value");
+ 
+ static int tablet_mode_sw = -1;
+ module_param(tablet_mode_sw, uint, 0444);
+-MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect: -1:auto 0:disable 1:kbd-dock 2:lid-flip");
++MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect: -1:auto 0:disable 1:kbd-dock 2:lid-flip 3:lid-flip-rog");
+ 
+ static struct quirk_entry *quirks;
+ 
+-- 
+2.37.2
+
