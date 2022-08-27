@@ -2,82 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF4BECAAD8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Aug 2022 21:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B560C0502A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Aug 2022 11:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245719AbiHZVmp (ORCPT
+        id S234627AbiH0LnA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 Aug 2022 17:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47106 "EHLO
+        Sat, 27 Aug 2022 07:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiHZVmo (ORCPT
+        with ESMTP id S1345437AbiH0Lm5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Aug 2022 17:42:44 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2161903E
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 14:42:42 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-33da3a391d8so68071857b3.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2022 14:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=stVd1kvtLgfEmwVkeFj+I3sq6eTvN2FbTADCLAaKivY=;
-        b=cpORBdKyDf9E+dMF/M1oISvK5qEa/G3NcnVQrFQbWWjMPCPEJBCAUOq6kNgiNOCTLd
-         1X40iUjQ1XZA8MuboIiSjjtJ7r0Pcd2l4s2Ti8Y61EqTHP0UQm9w+egw8igqv/EezsXb
-         Ia3GrgGZN9B7BQLEdSeHRWs9aY5C00jVW9xuD+jb0Jay6fZngjiYlOK4MphbusgD1Aro
-         Fps9c2cm18M7TBXnqPY8SNC7LpLUZMzm3ZgUIaqdmXxtdO3HM/8LVJ2nGutNpze43pzt
-         dl0cK9uU6uUfc0prCPyIQhDt0jTyvIhoGYcG3lNWc4lFT/osLNNWPvyfXjrd1EEVUChR
-         RUTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=stVd1kvtLgfEmwVkeFj+I3sq6eTvN2FbTADCLAaKivY=;
-        b=YmYyylOMwDpfDj3BkSHen4Nu37Vm0OZipsOZ2kSaA1ttgJlc6PZu3+SPbhyJHgCc+S
-         jMf4/i1ppcwcRDZABj+tAYtw/hDMdf/ac1MW80r9BdplUCCOPb8GZx7OaKPciAsEtjdk
-         CJs8ARO2hqWLb2NSYJaebEl+QczWtaNhWd3imwZnloHxabi5nVtQ/R3PcYnJ5uKnuxkf
-         EN120GSwucVfjGODARnibozcOIHdCLbpBvLaS4hv8dIMRe2OfRQ3pg7aUCR5WHIbBvhC
-         Cuu4B/t5/M85MtNeOsKGVjg5mzzIgCn2ob6qXjbp3bMKKiqpvkdzUNc8HJVmTem4qif3
-         /cKg==
-X-Gm-Message-State: ACgBeo27Qbw8eOrQmTgk21OjJWPOZ/YWxxBugEkQt6ygozDwLgIsbcAm
-        v3zSRTEFG1tvMV46os8KlcWcxuCI+NPOYXtm+edWIA==
-X-Google-Smtp-Source: AA6agR7MUxUWlWIUrcYRP1p+BJKCa/BwK4c0Lfj4vCbAboDXjIK3nknSMyrkg2wxgWFegS5KCUPLDRxJTC7ctbNQrx0=
-X-Received: by 2002:a05:6902:3c6:b0:694:1088:5448 with SMTP id
- g6-20020a05690203c600b0069410885448mr1577517ybs.410.1661550162253; Fri, 26
- Aug 2022 14:42:42 -0700 (PDT)
+        Sat, 27 Aug 2022 07:42:57 -0400
+Received: from vorpal.se (vorpal.se [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82F65E57E
+        for <platform-driver-x86@vger.kernel.org>; Sat, 27 Aug 2022 04:42:54 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id D978414629;
+        Sat, 27 Aug 2022 11:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
+        t=1661600573; bh=5/hBEGWvRswAO94/wwHjpzNAPDH3Y/qOAOE6fSwbneA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=GS2oQc6tD7a7gpOh4vp0XVEneFxoYHQZWZDGPk6tbOcnPI3NThDaeiA/vL2T52RjV
+         jBieuD6dS8qE9pzgXQ3BjN/B55pPikbb5QWSArzHvceexBqN3WNS9XlG9nAbJOXqvS
+         FD2l0/Xe3ly9XGcX89yCet4kAT3vl7FJZx9nFTIer2Oe/CntKVKToErG8WxxjG8f4r
+         7nqTOANnzUFpteIg02HwqKnJM9GEMfc8HNoEwXt3wbNhGCg+dkoqoKlu1M6vsYctNP
+         jyUNnIdh9/uiz6Q7Z6FPv1kWYQ7oHq3K73PD8DadDrdwvL23/e+5X5vVosxNCxC/tz
+         dCNayED0PustA==
+Message-ID: <3c6b5583-9a1c-7e7b-446e-f7db7591a2b8@vorpal.se>
+Date:   Sat, 27 Aug 2022 13:42:52 +0200
 MIME-Version: 1.0
-References: <20220825104422.14156-1-henning.schild@siemens.com> <20220825104422.14156-2-henning.schild@siemens.com>
-In-Reply-To: <20220825104422.14156-2-henning.schild@siemens.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 26 Aug 2022 23:42:30 +0200
-Message-ID: <CACRpkdZgcLsP+q_jRkKX6gXfXErnnF6DPUzLMzVEtZui24chyQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] gpio-f7188x: switch over to using pr_fmt
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/2] [RFC] platform/x86: Fixes for Toshiba Z830
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-Content-Type: text/plain; charset="UTF-8"
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Azael Avalos <coproscefalo@gmail.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20220821200821.1837460-1-lkml@vorpal.se>
+ <2ddade8b-7260-8497-12f2-c8b13cf35e6a@redhat.com>
+ <12a39cf6-1247-d2a3-bf07-51297e9b6640@vorpal.se>
+ <123960a4-7a38-234b-24ca-dfe3655e32de@redhat.com>
+From:   Arvid Norlander <lkml@vorpal.se>
+In-Reply-To: <123960a4-7a38-234b-24ca-dfe3655e32de@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 25, 2022 at 12:44 PM Henning Schild
-<henning.schild@siemens.com> wrote:
+On 2022-08-26 14:07, Hans de Goede wrote:
+> Hi,
+> 
+> On 8/24/22 14:31, Arvid Norlander wrote:
+>> On 2022-08-22 13:39, Hans de Goede wrote:
+> 
+> <snip>
+> 
+>>> For 2. you can actually just copy and paste a lot of this email,
+>>> I believe that having the info in this email in a
+>>> Documentation/admin-guide/laptops/toshiba_acpi.rst file
+>>> will make it a lot easier to find in the future then only having
+>>> it in the mailinglist archives.
+>>>
+>>>> * For the hardware buttons I describe below, is a solution specific to
+>>>>   toshiba_acpi preferred, or should additional effort be spent on
+>>>>   investigating a generic solution?
+>>>
+>>> Ok, this is interesting there actually is a specification from
+>>> Microsoft for this:
+>>> http://download.microsoft.com/download/9/c/5/9c5b2167-8017-4bae-9fde-d599bac8184a/dirapplaunch.docx
+>>>
+>>> And there was a previous attempt to add support for the PNP0C32 devices:
+>>> https://marc.info/?l=linux-acpi&m=120550727131007
+>>> https://lkml.org/lkml/2010/5/28/327
+>>>
+>>> And this even made it into drivers/staging for a while, if you do:
+>>> git revert 0be013e3dc2ee79ffab8a438bbb4e216837e3d52
+>>> you will get a: drivers/staging/quickstart/quickstart.c file.
+>>>
+>>> Note this is not great code:
+>>>
+>>> 1. If you do:
+>>>   ls /sys/bus/platform/devices
+>>>   You should already see a couple of PNP0C32 platform devices there and the
+>>>   driver should simply bind to those rather then creating its own platform device
+>>> 2. As mentioned this really should use the standard /dev/input/event interface
+>>>   for event reporting and allow userspace to change the scancode to EV_KEY*
+>>>   mapping. You can do this e.g. by using a sparse_keymap for the scancode to
+>>>   EV_KEY* mapping which will give you this for free.
+>>
+>> I have yet to have time to look at it. However this seems to suggest that
+>> these buttons should work when the laptop is off. That is not the case on
+>> the Z830. They only do anything when the computer is on and I can't find
+>> any settings to change that.
+> 
+> Not necessarily fully off, but maybe when suspended ?
 
-> Subsequent patches will touch that file, apply some nice to have style
-> changes before actually adding functional changes.
->
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+Tested it. Nope. In fact there is no code in the DSDT to handle the wakeup
+case. Or rather, only some partial lines of code are left over from that.
+That functionality is definitely non-functional on this laptop.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+In addition the Microsoft specification lists _PRW as being a required
+method. This is missing. Only _STA (which does something funky based on
+variables set based on _OSI, haven't bothered figuring that out yet), _HID,
+_UID and GHID exist as methods on the button objects.
 
-Yours,
-Linus Walleij
+> 
+>> Looking at the specification it also mentions several different
+>> notification codes for the button. The only one used on the Z830 is 0x80.
+>> That is, as far as I can tell from the decompilation of the DSDT.
+>>
+>> Thus I worry I will not be able to test any sort of generic implementation
+>> very well, if the Z830 only implements a small subset of the functionality.
+> 
+> Right I understand still I think there should be a separate
+> 
+> drivers/platform/x86/acpi_pnp0c32_buttons.c 
+> 
+> driver for this IMHO. If it is only tested on your one model that
+> is fine (should be documented with a comment in the code though).
+> 
+> Then at least we have something to serve as a basis for if people
+> want to add support for this on more laptop models.
+> 
+> Does that sound reasonable ?
+
+Sure, we may have talked past each other, as this is what I also believe I
+suggested. I just don't see how I can possibly implement the wakeup
+handling part of this, as no laptop I own has that. Unless you know some
+else who has a laptop that would allow testing that part.
+
+Would a sensible option be to only implement support for key presses while
+the laptop is awake? If someone comes along with a laptop that has the
+support for these buttons waking from sleep they can add that missing
+functionality at that point. (It seems rather unlikely that will happen
+though: I get the feeling that this type of button never became a hit and
+is mostly a forgotten relic of the past. And if no one came along and
+bothered to add support in the decade+ since it was introduced, it was
+probably quite rare back then as well.)
+
+<snip>
+
+>>>> 4. Battery charge mode [implemented in patch 2]
+>>>> ======================
+>>>>
+>>>> This laptop supports not charging the battery fully in order to prolong
+>>>> battery life. Unlike for example ThinkPads where this control is granular
+>>>> here it is just off/on. When off it charges to 100%. When on it charges to
+>>>> about 80%.
+>>>>
+>>>> According to the Windows program used to control the feature the setting
+>>>> will not take effect until the battery has been discharged to around 50%.
+>>>> However, in my testing it takes effect as soon as the charge drops below
+>>>> 80%. On Windows Toshiba branded this feature as "Eco charging"
+>>>>
+>>>> In the following example ACPI calls I will use the following newly defined
+>>>> constants:
+>>>> #define HCI_BATTERY_CHARGE_MODE 0xba
+>>>> #define BATTERY_CHARGE_FULL 0
+>>>> #define BATTERY_CHARGE_80_PERCENT 1
+>>>>
+>>>> To set the feature:
+>>>>   {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
+>>>> To query for the existence of the feature:
+>>>>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
+>>>> To read the feature:
+>>>>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
+>>>>
+>>>> The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
+>>>> the status code. This rarely happens (I have never observed it on Linux),
+>>>> but I have seen it happen under Windows once, and the software did retry
+>>>> it.
+>>>
+>>> Hmm, this is interesting if you look at:
+>>>
+>>> Documentation/ABI/testing/sysfs-class-power
+>>>
+>>> You will see there already is a standard API for this in the form of
+>>> adding a "charge_control_end_threshold" attribute to the standard
+>>> ACPI /sys/class/power_supply/BAT*/ sysfs interface. See e.g.
+>>> drivers/platform/x86/thinkpad_acpi.c
+>>>
+>>> For an example of how to add sysfs attributes to a battery
+>>> which is managed by the standard drivers/acpi/battery.c driver.
+>>>
+>>> I think you can use this standard attribute enabling eco charging
+>>> for any writes with a value <= 90 and disabling it for values
+>>>> 90 (90 being halfway between 80 and 100).
+>>>
+>>> While always showing 80 or 100 on read.
+>>>
+>>> You should then also write a patch for:
+>>>
+>>> Documentation/ABI/testing/sysfs-class-power
+>>>
+>>> Adding something like this to the "charge_control_end_threshold"
+>>> section:
+>>>
+>>> "not all hardware is capable of setting this to an arbitrary
+>>> percentage. Drivers will round written values to the nearest
+>>> supported value. Reading back the value will show the actual
+>>> threshold set by the driver."
+>>>
+>>> (feel free to copy verbatim, but maybe you can do better)
+>>>
+>>>
+>>
+>> This makes perfect sense, but I don't know if it is guaranteed to be 80%
+>> on all Toshiba laptops. Do you know of any other Toshiba laptops that
+>> have/had this feature, and if so, what the limits are? The Windows driver
+>> for this laptop does not document exactly what the limit is. 80% is simply
+>> what I have observed in practice.
+> 
+> Right, the idea is to document that the hw/fw/driver may only
+> support some fixed values and that written values will be
+> rounded to one of the supported fixed values. There is no need
+> to document what those fixed values are.  The idea is that
+> userspace consumers will read back the value to see what
+> they actually got.
+
+I think we might be slightly talking past each other here. I absolutely
+agree with your idea. My only worry is that toshiba_acpi returning 80%
+might not be the right choice. This could be model dependent.
+
+Since I only have a sample size of one, it could even depend on the current
+condition of the battery for all I know (though that is probably not
+likely). The Windows software and the manual do not specify any sort of
+percentage. It is just documented as a mode that prolongs battery life
+while reducing full charge basically. Without putting any qualifiers on
+"how much".
+
+An option would be to return 80% for the Z830, and the string "unknown" for
+other models. Though I guess there is a risk of breaking user space
+software that only expects numeric values, so it may be a no-go.
+
+I guess the user space software using this interface consists of *at least*
+"tlp" and whatever KDE uses to handle it ("powerdevil" I belive?).
+
+> 
+> Regards,
+> 
+> Hans
+> 
+
+Best regards,
+Arvid Norlander
