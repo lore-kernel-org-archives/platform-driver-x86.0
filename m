@@ -2,80 +2,144 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8679ECAAD2
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Aug 2022 13:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E326ECAAD1
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Aug 2022 20:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbiH0Naz (ORCPT
+        id S229904AbiH0UGA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 27 Aug 2022 09:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
+        Sat, 27 Aug 2022 16:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231961AbiH0Naz (ORCPT
+        with ESMTP id S229462AbiH0UF7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Aug 2022 09:30:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D934521E2E;
-        Sat, 27 Aug 2022 06:30:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 74B3FB8013C;
-        Sat, 27 Aug 2022 13:30:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0384EC433D6;
-        Sat, 27 Aug 2022 13:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661607050;
-        bh=NMxqpqaBLhAnK0P2jMNxG42gIO1zGsISRaqGFoRIfV0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aUmwBrPcCYxYZJqxv/+Bc3XGD3iJ24M63V3UQ06pqJ3u8BHN+rT8jheh+8Jl9sTwF
-         pqOY9ZMwPKdKahy7abjK5oC35rgVwESoqhto3TZdrbSjvgfC6cZTL5D2VY5TDMdFdK
-         8YYVAmN7ZvxOAUDinn1Hba0i5x7Eg9CTWaE1QWaL6nItbS9gasitu/CHqmyPMl6Rpy
-         n/5rcXA6lvO8O55+yJ8ZFqkZ3ITIBeoyvt/M2VHZmwXc8IL+sdFaPTUaPDmGs3EjQa
-         zn05bc9pJsQQfFMUY1e2D8MEUXc1tpODofiOirCgGu+Vr/hGenfEplsv7jvsLBCwhh
-         ltpkzVkrt3KRA==
-Received: by pali.im (Postfix)
-        id F2586C7A; Sat, 27 Aug 2022 15:30:46 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-wmi: Add WMI event 0x0012 0x0003 to the list
-Date:   Sat, 27 Aug 2022 15:30:40 +0200
-Message-Id: <20220827133040.15932-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Sat, 27 Aug 2022 16:05:59 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D281C4CA2B;
+        Sat, 27 Aug 2022 13:05:57 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id q81so3714790iod.9;
+        Sat, 27 Aug 2022 13:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=U3nX4cdNXZqpfLJDqBLA44CtW4+U9zWhNzo9DHIZoaU=;
+        b=qpg69lwLsm8EE0skmNswnst9smx0Xds+vzMdByGY6gmduLxuLspE9phL6buIhnVJii
+         gOA3bRG+OSl/7uh1on599nc9npfT6Yh1ba/sM3iu+lGhwsmqHF4U5rLzBRnyBAPCX8sq
+         A9TvAAvOwXrlQdFeRfW9UuzuUw3vww8lWn6uxYwtTv1tnmdbn1d22O/q3CUSPulW0WPL
+         V3SEDXs0avUTx4F3/cnxVjmaFqbp874jWn9z6Ya9VdULkXtCM3DdLvuaL6ID5XtYGQiK
+         jEWy9nQlziImFjAh2r5uNaB+sIUM5monEGG2OOIBulqltmPEMA4qmZrcNAVlK1/wD/0I
+         efXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=U3nX4cdNXZqpfLJDqBLA44CtW4+U9zWhNzo9DHIZoaU=;
+        b=HGaL2LAcHyrANq/za4WYHuioXaD38JLp8GZlRrPL6mznAv3/GNGem4UH5TxAZe3WJr
+         fZ7Q9kgftnouQFIE26hoCMwWvk3XS5kESaZikqELRDFgWQ4+lOGCwDFbsKWewvzjwtum
+         o2yD/qw5gs5HXsi/pZQHU9iSWRAvJwlEd4uY1zJB5qQkRuU/7fCuGtfobfRyjlTCOgc0
+         0ZQtdjAIMbnI20iusEC0CCHLxyyVPdtbf5Rmykyu5rk0L7wCMYlL5C1CFu3LgajhoQ5k
+         FDs+AP+mHRXzgU54tqszwonHAvciZ6DubvMDyjPK8oni/kapqH6cbhjVKA0WgvUd7Tyx
+         +bog==
+X-Gm-Message-State: ACgBeo2M3hjbB4bqA6kdhDe0FonzXrqiGc5q2TH5pTahmKTWiqZrR2+R
+        hHKQtilmO6/ZPjo8PTsmRfZl11jaR+neVnVGJ+c=
+X-Google-Smtp-Source: AA6agR6mQKT+8qybXjCS/+jRJabXAhyutX/JaN8GU1n3O7tgg0juo+fbdSfQyWB6w+kVUABbS8dUgR8xb7E9H6GGeZw=
+X-Received: by 2002:a02:1d01:0:b0:349:d886:df1 with SMTP id
+ 1-20020a021d01000000b00349d8860df1mr6860680jaj.307.1661630757268; Sat, 27 Aug
+ 2022 13:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20220821200821.1837460-1-lkml@vorpal.se> <2ddade8b-7260-8497-12f2-c8b13cf35e6a@redhat.com>
+ <12a39cf6-1247-d2a3-bf07-51297e9b6640@vorpal.se> <CAGdLNWFYizajrM3X7ww_=Yz6DiA34-eGoRfE0r=388+t3OAhWQ@mail.gmail.com>
+ <be56c117-a62d-e0b5-db50-71fda9c04f76@vorpal.se>
+In-Reply-To: <be56c117-a62d-e0b5-db50-71fda9c04f76@vorpal.se>
+From:   Azael Avalos <coproscefalo@gmail.com>
+Date:   Sat, 27 Aug 2022 14:05:47 -0600
+Message-ID: <CAGdLNWEqaONoJ0xqwPPg0+=YsTq+6yvjC_VG+JVwXoPXbeB5sQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] [RFC] platform/x86: Fixes for Toshiba Z830
+To:     Arvid Norlander <lkml@vorpal.se>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It looks like that on Dell Latitude E6440 is WMI event 0x0012 0x0003 sent
-when display changes brightness. When it happens kernel prints
-"dell_wmi: Unknown WMI event type 0x12" message into dmesg.
+Hi there
 
-So ignore it for now to not spam dmesg.
+El s=C3=A1b, 27 ago 2022 a la(s) 05:51, Arvid Norlander (lkml@vorpal.se) es=
+cribi=C3=B3:
+>
+> Hi,
+>
+> On 2022-08-25 19:00, Azael Avalos wrote:
+> > Hi there
+> >
+> > Sorry for pinging in a bit late, been under a lot of work lately.
+>
+> It happens to all of us.
+>
+> > You can poke the Toshiba BIOS interface directly via /dev/toshiba_acpi
+> > to test your findings, once it is ironed out, you can start making patc=
+hes
+> > for inclusion in the kernel.
+>
+> Interesting. I'm new to kernel development and I can't find where in
+> toshiba_acpi.c this is implemented. Nor do I see any documentation for th=
+is
+> interface. I would love some hints with regards to this.
+>
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
- 1 file changed, 3 insertions(+)
+From line 2248 onwards
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-index e07d3ba85a3f..0a259a27459f 100644
---- a/drivers/platform/x86/dell/dell-wmi-base.c
-+++ b/drivers/platform/x86/dell/dell-wmi-base.c
-@@ -344,6 +344,9 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
-  * They are events with extended data
-  */
- static const struct key_entry dell_wmi_keymap_type_0012[] = {
-+	/* Backlight brightness change event */
-+	{ KE_IGNORE, 0x0003, { KEY_RESERVED } },
-+
- 	/* Ultra-performance mode switch request */
- 	{ KE_IGNORE, 0x000d, { KEY_RESERVED } },
- 
--- 
-2.20.1
+Here's a link to some documents you might find interesting:
+http://www.buzzard.me.uk/toshiba/docs.html
 
+The interface was introduced to the kernel many years ago, back when
+the (char) toshiba module
+was used, i just added support to the toshiba_acpi via ACPI calls
+
+> For now I have been using the out-of-tree acpi_call module:
+>
+> https://github.com/nix-community/acpi_call
+>
+> Arch Linux (which I use) packages it as a DKMS module. Handy to test with=
+,
+> but probably really easy to screw up your system using it if you don't kn=
+ow
+> what you are doing.
+
+The interface is pretty straight forward, you can make a small C prog to te=
+st,
+basically you just need to:
+- Open the (/dev/toshiba_acpi) device for R/W (make sure you have permissio=
+ns)
+- Fill out the SMMRegisters struct with your query and get the results
+- Rinse and repeat till you find what you're looking for
+
+WARNING: This might (or might not) set your house on fire...
+
+>
+> > I know there are a lot of areas where the driver is lacking features du=
+e to
+> > hardware restrictions on the machines I had at the time, so it's good t=
+o
+> > see a bit more movement here.
+> >
+> > Cheers
+> > Azael
+> >
+>
+> Best regards,
+> Arvid Norlander
+>
+> <snip>
+
+Saludos
+Azael
+
+
+
+--=20
+-- El mundo apesta y vosotros apestais tambien --
