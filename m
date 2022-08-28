@@ -2,160 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA2CECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 28 Aug 2022 13:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B6C0502C
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 28 Aug 2022 19:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbiH1Ngm (ORCPT
+        id S230096AbiH1TaO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 28 Aug 2022 09:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39672 "EHLO
+        Sun, 28 Aug 2022 15:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiH1Ngk (ORCPT
+        with ESMTP id S230041AbiH1TaM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 28 Aug 2022 09:36:40 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B97275FA
-        for <platform-driver-x86@vger.kernel.org>; Sun, 28 Aug 2022 06:36:37 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id se27so3261464ejb.8
-        for <platform-driver-x86@vger.kernel.org>; Sun, 28 Aug 2022 06:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=KylSzsCbG5Y50VeFVUq/wxId+S+oA2SdPnkKQYFuGQA=;
-        b=P/vZxCKI8hi+Ou7qQesWiXfrPKXDGXulKznD2F7gAdudAVF0rTWq97o+ZF6o5Fh1AK
-         ldFEp6h+zAwq2ojJSkIiSxsrz04mHlh/gtgpSuYJLhtLILCgyE5c9pb6T+cBdfIOxetU
-         QT7F7mtO5++5RlIH1ee7AULcSrEBR6JoxPqy48Z8Rtnf9C3sx4RUZQ0eSOpunV+SW9rf
-         FvCG4T5cs+MMOVj7G10CRNvMakhveXRvybM1ktbCgPByt+E0yjt9PpX6+95L/VM1vM6I
-         8Cr9Bpz5HlndC5CfTW1YRWyKYTB9ALzBTQBRSF4jXUppW9NeDf5tXxRZDQRwDWp/AOqw
-         d5ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=KylSzsCbG5Y50VeFVUq/wxId+S+oA2SdPnkKQYFuGQA=;
-        b=ZNf9CmkKN3fdwZqXof4RDMcnJ23bXFdPzO4QYOeQDcfQf6VCg2RqD9Eg8IKCZQKDIs
-         FyILD768kUCdHxMgYtskKez1iQUWUMGgTJXh2B0QyuQvGsGuGzg8NAzlo2XnsfU3jDTz
-         WOqWfNheEaIzOs2O2XXieXYMRHtu7w4/DMalJE2zDd+PskUVv/20r7LC0BK4ZkwMv+d1
-         Vlt5VxRnjv9bdPuglQnXTZ6RTWIdPvClsKT3QouW7lLB7kJO67kGea0nVvquDLkdeM9l
-         aJH0FvGN5hKoB1bvmGWDg1fBece4oNILT8+7rzeUK2fS29nDmhbFY1Iz5cxMF+R8+bog
-         +Fbw==
-X-Gm-Message-State: ACgBeo0v1zHI0wkdLyVhIUB+Z9YV6nkqMirR+L9fwEpIzwIE/HyQ5bY0
-        5A1aEsxuhedUevjqczC77Vj1UNywkbA4ZVAsgPH+ME8Gteg=
-X-Google-Smtp-Source: AA6agR5b0GP1PNxq0DhS2DIhzbtjgJ6gXXYxE4LaPe+DB2soJcGSyu6I7XCcnLvqzC6ZdCmFRBFwJB+7lRuRJAJc7rY=
-X-Received: by 2002:a17:906:8a4e:b0:730:9fcd:d988 with SMTP id
- gx14-20020a1709068a4e00b007309fcdd988mr10664664ejc.636.1661693796309; Sun, 28
- Aug 2022 06:36:36 -0700 (PDT)
+        Sun, 28 Aug 2022 15:30:12 -0400
+Received: from vorpal.se (vorpal.se [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BEF10FCA;
+        Sun, 28 Aug 2022 12:29:55 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id 4896114629;
+        Sun, 28 Aug 2022 19:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
+        t=1661714993; bh=27gm5R3zURqjI4/mvmf25FHer+yapIFUWqt2wrWO/M0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZUUwVq6R3IKwoT37UflOBJburjgXVo6F9yF03FydtrP40IjIbQn903VFMhT4E0vVM
+         SpnxNhCFyNjlT9gOV5D7xgtPVysKh67IvYJW8zxDrvwi6bhQPq7fX7Ohw06VOBHMAZ
+         0g39Ve7Sm9pHSFErDYzobU0o9WYQtpl8agKo72fOj2KG0hz37zn97JL3i8gUWqF0j6
+         bwL/OoQS8LSYmwO64p6FzpF8RwoOTP/4VXoTaf2Bv7pomAkUF4iNSmfmNNqvrqynGG
+         erhuODdre76rwdBGXNDl7psszo1syrRBLx04aszG2qebC4EGKSfvgvSAaGDxT5tQpe
+         0yAeWG1XQVKTA==
+From:   Arvid Norlander <lkml@vorpal.se>
+To:     platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Azael Avalos <coproscefalo@gmail.com>,
+        Arvid Norlander <lkml@vorpal.se>
+Subject: [PATCH 0/3] platform/x86: Battery charge mode in toshiba_acpi
+Date:   Sun, 28 Aug 2022 21:29:17 +0200
+Message-Id: <20220828192920.805253-1-lkml@vorpal.se>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <20220825104422.14156-1-henning.schild@siemens.com> <34315356-f23e-34ff-98e6-a152b588f201@redhat.com>
-In-Reply-To: <34315356-f23e-34ff-98e6-a152b588f201@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 28 Aug 2022 15:36:25 +0200
-Message-ID: <CAMRc=Mc0WSi=1UN8KGEBi42Afty7NPvfOZzxDSaVvVOnsduX0A@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] add support for another simatic board
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 25, 2022 at 4:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 8/25/22 12:44, Henning Schild wrote:
-> > changes since v5:
-> >   - adding patch to convert to pr_fmt
-> >   - adding patch to prefix macros with "f7188x_"
-> >   - rebased p1v4 to be p3v5 and added tag
-> >
-> > changes since v4:
-> >   - remove int case from a printk in p1
-> >   - include tags into commit messages
-> >
-> > changes since v3:
-> >   - update Kconfig as well
-> >   - drop chip names from comment in driver header
-> >   - add manufacturer check for Fintek again, Nuvoton not possible
-> >   - drop revision printing for Nuvoton
-> >   - restructure defines again
-> >   - add new model 427G
-> >
-> > changes since v2: (p1 only)
-> >   - rename macros that change behavior
-> >   - use chip type not device id in the macros
-> >   - reorder defines a bit
-> >
-> > changes since v1:
-> >   - remove unused define
-> >   - fix bug where (base + 2) was used as second data bit
-> >   - add macros for "inverted" and "single data bit"
-> >
-> > The first two patches apply some style refactorings before actual
-> > functional changes are made.
-> >
-> > Later, This series enables a SuperIO GPIO driver to support a chip from
-> > the vendor Nuvoton, the driver is for Fintek devices but those just are
-> > very similar. And in watchdog and hwmon subsystems these SuperIO drivers
-> > also share code and are sometimes called a family.
-> >
-> > In another step the individual banks receive a label to tell them apart,
-> > a step which potentially changes an interface to legacy users that might
-> > rely on all banks having the same label, or an exact label. But since a
-> > later patch wants to use GPIO_LOOKUP unique labels are needed and i
-> > decided to assign them for all supported chips.
-> >
-> > In a following patch the Simatic GPIO LED driver is extended to provide
-> > LEDs in case that SuperIO GPIO driver can be loaded.
-> >
-> > Last but not least the watchdog module of that same SuperIO gets loaded
-> > on a best effort basis.
-> >
-> > The very last patch enables a second model of that same board type.
-> >
-> > Henning Schild (7):
-> >   gpio-f7188x: switch over to using pr_fmt
-> >   gpio-f7188x: add a prefix to macros to keep gpio namespace clean
-> >   gpio-f7188x: Add GPIO support for Nuvoton NCT6116
-> >   gpio-f7188x: use unique labels for banks/chips
-> >   leds: simatic-ipc-leds-gpio: add new model 227G
-> >   platform/x86: simatic-ipc: enable watchdog for 227G
-> >   platform/x86: simatic-ipc: add new model 427G
->
-> So it looks like all these patches are ready for merging now,
-> the only thing which is missing is an Ack from Pavel or
-> one of the other LED people for patch 5/7.
->
-> Pavel can have your ack for merging this through another tree
-> please?
->
-> So what is the plan for merging this?
->
-> I see 2 options:
->
-> Option a:
-> 1. Merge the GPIO changes (patches 1-4) through the GPIO tree; and
-> 2. Merge the leds + pdx86 changes through the pdx86 tree
->
-> Option b:
-> Merge everything through the pdx86 tree, and I will then provide
-> an immutable branch + signed tag for other subsystems to pull
-> (if they want to).
->
+This is an improved version of the battery charge control for Toshiba
+Satellite Z830. The full background is available in the two emails linked
+below, but a short summary will follow, including only what is relevant
+for battery charge control.
 
-Hey! Sorry for the delay, I've just come back from vacation. I'm fine
-with option b and to that end:
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Background (from link 1)
+==========
+
+The Toshiba Satellite/Portege Z830 supports not charging the battery fully
+in order to prolong battery life. Unlike for example ThinkPads where this
+control is granular here it is just off/on. When off it charges to 100%.
+When on it charges to about 80%.
+
+According to the Windows program used to control the feature the setting
+will not take effect until the battery has been discharged to around 50%.
+However, in my testing it takes effect as soon as the charge drops below
+80%. On Windows Toshiba branded this feature as "Eco charging"
+
+In the following example ACPI calls I will use the following newly defined
+constants:
+#define HCI_BATTERY_CHARGE_MODE 0xba
+#define BATTERY_CHARGE_FULL 0
+#define BATTERY_CHARGE_80_PERCENT 1
+
+To set the feature:
+  {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
+To query for the existence of the feature:
+  {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
+To read the feature:
+  {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
+
+The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
+the status code. This rarely happens (I have never observed it on Linux),
+but I have seen it happen under Windows once, and the software did retry
+it.
+
+
+Improvements
+============
+
+As discussed in link 2 & 3 below, the original approach was suboptimal.
+
+This patch series instead consists of two patches.
+
+The first patch implements detecting the feature as well as internal
+getter/setter methods.
+
+The second patch adds battery hooks (heavily based on the code for this in
+thinkpad_acpi) which creates the standard charge_control_end_threshold file
+under /sys/class/power_supply/BAT1.
+
+Side note: There is no BAT0 on this Toshiba, I'm not sure why the numbering
+ends up starting from 1 instead of 0 here. This differs from my Thinkpads,
+where the numbering starts from 0, with BAT1 being the second battery.
+However, I haven't spent much effort investigating this, as it did not seem
+important.
+
+Patch 3 updates the ABI test documentation as suggested by Hans de Goede.
+Note that only the charge_control_end_threshold is updated, as this is the
+only limit supported by the Toshiba Z830. Possibly
+charge_control_start_threshold should also be updated similarly, or would
+it be better to wait for an actual example of this in the wild first?
+
+Link (1): https://www.spinics.net/lists/platform-driver-x86/msg34314.html
+Link (2): https://www.spinics.net/lists/platform-driver-x86/msg34354.html
+Link (3): https://www.spinics.net/lists/platform-driver-x86/msg34320.html
+
+Arvid Norlander (3):
+  platform/x86: Battery charge mode in toshiba_acpi (internals)
+  platform/x86: Battery charge mode in toshiba_acpi (sysfs)
+  docs: ABI: charge_control_end_threshold may not support all values
+
+ Documentation/ABI/testing/sysfs-class-power |   5 +-
+ drivers/platform/x86/toshiba_acpi.c         | 162 ++++++++++++++++++++
+ 2 files changed, 166 insertions(+), 1 deletion(-)
+
+
+base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
+-- 
+2.37.2
+
