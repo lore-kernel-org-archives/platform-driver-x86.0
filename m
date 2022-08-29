@@ -2,213 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F72C0502C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Aug 2022 13:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBAFECAAD2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Aug 2022 13:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbiH2N0Z (ORCPT
+        id S229972AbiH2N3n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Aug 2022 09:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
+        Mon, 29 Aug 2022 09:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbiH2N0I (ORCPT
+        with ESMTP id S230136AbiH2N3Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Aug 2022 09:26:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23601D0C5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Aug 2022 06:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661779440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NuVlFDDdZ7yC0FFHn+Ct3CaNxoa9Omb+EPvuDDgUNDA=;
-        b=aMw79ppTVFsPz8rl2rXu9wdnR9lHNn9ouAUVkM1FWlWf1IAXnPyS1hMGLETH79zrK484f1
-        u0qwOCEojW7YubhwJh2szY6v8TD2E+/11Nc7T6ch51po+2HRsylU52iHuqy6WrRh56ZjdC
-        vg2JZ+8djPrcRQ6g+55PQnWyWUDvmqY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-166-x7Up3jNvPlOgOgWnSU9D0A-1; Mon, 29 Aug 2022 09:20:22 -0400
-X-MC-Unique: x7Up3jNvPlOgOgWnSU9D0A-1
-Received: by mail-ed1-f69.google.com with SMTP id t13-20020a056402524d00b0043db1fbefdeso5434560edd.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Aug 2022 06:20:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=NuVlFDDdZ7yC0FFHn+Ct3CaNxoa9Omb+EPvuDDgUNDA=;
-        b=0m1SyL9Uoddov+c1J2f/9HnSQ7Y5jF1Eti6lMyfUE7VWQdAZv57AGRoQO1r2FYMT+J
-         vS5i+04tpxCbcdjkzeDTK+idsWTEdVo9XCxkYCqo4LXLddjG8qMmJT2+Ui+N4Q9cnU6X
-         ZcGMlrWGPwa2Xx6Lvux5zC10C3WrhyX9lgTmA0cxwTxRBGaeLVwe9XPBud8pRHwvwvrN
-         +o9SUAPy7ffyxdHxw+/Jzr56BY24jkaL2fLSt2J5AZUDXSnPCQH8xxjvwgITpsPiHxpH
-         k9NxXo/346K+k39ZkLNzUGqkUIIWjRlC9G9xTUBbhzMambXIpVYpt2W6CnseHGdSeqx0
-         tU9A==
-X-Gm-Message-State: ACgBeo3HVnRHHIz69csSTGb/VdA1T7w4FcVC77H1Ct3kp+831wQITOJM
-        fV5AOWB8pHUW+Z7BoWo16qMOBF2Mt54qJAhcqrutuc2vjaiHEUMnvJHZtgJ6j9T2YIwK6KR6rtC
-        Rm1ZQFf0A/2kD8U53uZ7JuoMPOLACj9EwgQ==
-X-Received: by 2002:a05:6402:337:b0:447:c616:2aed with SMTP id q23-20020a056402033700b00447c6162aedmr14621810edw.127.1661779221094;
-        Mon, 29 Aug 2022 06:20:21 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4/T7HO9twugSkVIrGWz8sbPW6joUbY1lFxeSEy5YM6caADRgCVkQAVEgJPyLGwzJlGZq8VyQ==
-X-Received: by 2002:a05:6402:337:b0:447:c616:2aed with SMTP id q23-20020a056402033700b00447c6162aedmr14621788edw.127.1661779220824;
-        Mon, 29 Aug 2022 06:20:20 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id q12-20020a17090676cc00b007413dde3151sm3645527ejn.130.2022.08.29.06.20.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Aug 2022 06:20:20 -0700 (PDT)
-Message-ID: <dd71f560-6d57-8147-8010-f14abd4f63cf@redhat.com>
-Date:   Mon, 29 Aug 2022 15:20:19 +0200
+        Mon, 29 Aug 2022 09:29:25 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E69E0BA;
+        Mon, 29 Aug 2022 06:29:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aBE+6qg+b5ORhl3FNpIhDQpNLCNvFG9j3xpZ8OTWC3dGokOVi667r7mHTexNPpMEeTbSqSIXYFljIyKuoUo0anPBZEekh1qLPc+9RYUQnpsWqKZF9cBOrAMrR1b1WKXU/H5AxNYGutPxLJQ71oP6oQNJuzopPrc7ftEL9bvS31zSuHIe04tdjJrOuRs2NyNBQ5sa+3jEInVSMHdvMQPnWb+6BtlzmFf6EB2EYtLXDSUJByEW4l4m8KUlIQ0XbCcdHOSzDzCX/Mhvlf7AurQta5BKM5ooaRGDz0jXaCtbaEho7NVH4S8gLuiQCX0XteXT4tWic0DpQha9pAsKEDanjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EqEycSAnlKZox9yQ+YPSwKPbApaJVA79NUbKp9znjXw=;
+ b=F6a4uRwzfIdWEs4GeAEOE8+SFWxmN3ItwPHwQdDVBihs8Vry/BK/D1Ma0nVR94OOavECm7gAMYLVBzxHlkRXR2LD8FcPKQxQQ2YZXpZ6qGZHh03hrq7gZ5yE4t0MS4ovvFX2JZ2dF3gq2wypEWF6d1PTf2D/OAhUS8Ud3s/JcpPrZGV430+8AW7nMSGYHRBq92GF1az4GkUOym+A9pyh9X4RDCXbIfeFMogUJKHMrgfWTKZTawnL9CZsFGKct3uhmpt0xNiJQVz1gjqBgQjlBlM8L0/mmPf4oeEn7ugna15xiKbqJI1NkGs6Cx1N6m83y6YN0bY22TRSzHsvNzHeZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EqEycSAnlKZox9yQ+YPSwKPbApaJVA79NUbKp9znjXw=;
+ b=hVw4Y5x08mDxJt3Yvcya7bLmfNrIAxHtW+8dYzSHQh5kbxRFVYRjz+hc7cSHtqks/fW3KiJqz0g2fuV0KYDHOC0rf7VuYyk4rZPc9BaDVYaxnnnbQr90OB7H3K9IIMw8XyGFoBLhB6UP183ojq2t9cGpU6NgFkVqAmCBTzVAR+c=
+Received: from MW4PR04CA0351.namprd04.prod.outlook.com (2603:10b6:303:8a::26)
+ by CY8PR12MB7291.namprd12.prod.outlook.com (2603:10b6:930:54::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
+ 2022 13:29:11 +0000
+Received: from CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8a:cafe::56) by MW4PR04CA0351.outlook.office365.com
+ (2603:10b6:303:8a::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14 via Frontend
+ Transport; Mon, 29 Aug 2022 13:29:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT044.mail.protection.outlook.com (10.13.175.188) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5566.15 via Frontend Transport; Mon, 29 Aug 2022 13:29:11 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Mon, 29 Aug
+ 2022 08:29:09 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <mario.limonciello@amd.com>, Len Brown <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>
+CC:     <rafael@kernel.org>, <hdegoede@redhat.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/4] Add some extra debugging mechanisms for s0i3
+Date:   Mon, 29 Aug 2022 08:29:03 -0500
+Message-ID: <20220829132908.5254-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] platform/x86: wmi: Lower verbosity of some duplicate GUID
- messages
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220826170053.2124-1-mario.limonciello@amd.com>
- <a547f88a-7ab2-e665-aa6d-d80ef74f4fd4@redhat.com>
- <12b98ed4-6bc3-455c-3b90-a159d811147d@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <12b98ed4-6bc3-455c-3b90-a159d811147d@amd.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8ac9eb08-f528-426f-db91-08da89c27580
+X-MS-TrafficTypeDiagnostic: CY8PR12MB7291:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8QhTIJKChx7qx39ZfLgK+kQOzFns3VB3oxNgM3IITeFaVFzE3UlVel+IDpRDbGBqMgpImD1czM0d4CFj8sYV4SMJFxQ6xQ2iI7bHFJpOWTYHdI5gZiON98j2DbhgKJG8r3eFT7k3CNBOUuf3Wu6zdn451hA0AEIlmLvB7PpMm5tcLdTpzOGbMy2pUlYMygFA8JSNPVhoXSM3udk7NbPNG/vOofuK2sQdDUuI+iEPEFXxiwIFSxFqXzP8eo9AtcQMaDkX7y/77yoR3TwVP4B2MH4gO/jSvhSMsgbJCmp9woP794vDaS/5780MVMWGptEIvyHP4U6Y8PEQcGAp+K/P00byJYf2k95IWfN5H/0seLoqAoZcYpv7PDyCtAUZSjP5smjqU4VJub636fRmPGuO/wh638H4kAX7epX7+goyCdWhdheGv/TOZAFyx5F/h4nWLZpKSsC/5XM6g9mJ26TjepLByJz5jtHaJlajNbrCSGMEKuvXmLUVN1Ua9VBDkJ1TpuRDH1dq/M9bMzvJ0F9SAP4EH6e5HpwkOpnoHozDJz7Y+IOA81SLvuSPAdysl6DYBYp8CUPC5OdjTpi38OoqAhbJXugVcS8QqnMnOzlu4k70eaPv2/tmZOlr7I4Y/st/gAlxKLEDLh97S2JXEdMPpSY4VVnQLPEPaGwpNUZA3Z4rY/Rb1yYgekmIbEy9cvBQKVMB7e7V5yuDTm5yzxgBFDDF+SOPJIddZgeoG0p8q1qnprg/79pLYKhFKiAnyeLNZAyTi4uDzUmKXy6aalh4Fs4DGx/1xOot+VkIru3fKSeKMsBzQssm+wGBzmhe6LOFsplnY21mxdsx6Szp+lxgLZLTNGv80e3mQS8Ic9pzmQw=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(136003)(39860400002)(346002)(40470700004)(46966006)(36840700001)(2906002)(26005)(44832011)(82740400003)(6666004)(2616005)(82310400005)(7696005)(40460700003)(40480700001)(47076005)(83380400001)(336012)(186003)(1076003)(16526019)(426003)(36860700001)(316002)(8676002)(54906003)(110136005)(4326008)(70206006)(70586007)(41300700001)(81166007)(356005)(86362001)(5660300002)(8936002)(36756003)(478600001)(138113003)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2022 13:29:11.2511
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ac9eb08-f528-426f-db91-08da89c27580
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7291
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Recently there have been reports of problems where the system consumes
+too much power after certain interrupts occur that would notify the
+kernel of some event but those events aren't marked for wakeup.
 
-On 8/29/22 14:17, Mario Limonciello wrote:
-> On 8/29/22 06:45, Hans de Goede wrote:
->> Hi Mario,
->>
->> On 8/26/22 19:00, Mario Limonciello wrote:
->>> The WMI subsystem in the kernel currently tracks WMI devices by
->>> a GUID string not by ACPI device.  The GUID used by the `wmi-bmof`
->>> module however is available from many devices on nearly every machine.
->>>
->>> This originally was though to be a bug, but as it happens on most
->>> machines it is a design mistake.  As there isn't an active need to
->>> get the binary from each of the `wmi-bmof` device, special case it
->>> and lower the message to debugging.  This will help to identify if
->>> there are other duplicate GUIDs in the wild.
->>>
->>> If there are and the information contained in them is desirable it
->>> may be worth considering a design change to the WMI subsystem to
->>> access those.
->>>
->>> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2017%2F12%2F8%2F913&amp;data=05%7C01%7Cmario.limonciello%40amd.com%7Ce38feb41da464767725808da89b3efcc%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637973703162395560%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=sGh1bVTcO7vXOF6%2BwibhS7nbSiH3aEEdVNGfanKkGF8%3D&amp;reserved=0
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>
->> I am a bit surprised by this patch. I though that there was
->> consensus that the right thing to do here is actually create
->> wmi-bus devices for the duplicate WMI-ids adding a numbered
->> postfix to the extra devices (lets not add the postfix
->> to the first device for each WMI GUID as some userspace
->> code / scripts may depend on the sysfs paths not changing).
->>
->> IMHO registering wmi-bus devices for all the WMI devices
->> in the ACPI table would be the right thing to do ?
-> 
-> I don't disagree it's the correct eventual direction, but I looked at it and it seems to be a much larger overhaul because that means drivers would also need to be able to specify which ACPI device they're intending on interacting with from wmi.c rather than just a GUID string.
-> 
-> So before going down that path I think it's best to understand if it really is just wmi-bmof causing these cases or more cases (low priority IMO) or if there really is a strong need for the overhaul.
+These problems have been root caused to the timing of the kernel moving
+the cores into ACPI C3 relative to other events from the previous wakeup
+not being settled.  Linux will more aggressively move the cores into C3
+for s2idle than Windows does for Modern Standby.
 
-Hmm, some alternative ideas (just brainstorming here):
+To aide with debugging this class of problems in the future add a new
+set of optional debugging infrastructure.
 
-1. Use an allow-multiple-instances-guids list/array fo guids and create multiple-devices
-   for those, starting with the bmof guid. The bmof driver is a new-style wmi-bus driver
-   so it can handle multiple instances/devices just fine
+Mario Limonciello (4):
+  ACPI: s2idle: Add a new ->enter() callback for platform_s2idle_ops
+  platform/x86/amd: pmc: Add defines for STB events
+  platform/x86/amd: pmc: Always write to the STB
+  platform/x86/amd: pmc: Add an extra STB message for entering s2idle
 
-2. Always instantiate multiple devices, making sure that we keep an ordered list of
-   them, so that when searching for a guid through the old-style APIs we always
-   find the first instance; and document that the old-style APIs always operate
-   on the first wmi_device probed which matches the requested GUID
+ drivers/acpi/sleep.h           |  1 +
+ drivers/acpi/x86/s2idle.c      | 14 ++++++++++++++
+ drivers/platform/x86/amd/pmc.c | 32 ++++++++++++++++++++------------
+ include/linux/acpi.h           |  1 +
+ include/linux/suspend.h        |  1 +
+ kernel/power/suspend.c         |  3 +++
+ 6 files changed, 40 insertions(+), 12 deletions(-)
 
-IMHO if an old-style driver needs to support multiple instances of the same GUID
-it really should be converted to a new-style driver.
-
-I personally think both suggestions are workable but I have a preference for option 1.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-> 
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>> ---
->>>   drivers/platform/x86/wmi-bmof.c |  2 --
->>>   drivers/platform/x86/wmi.c      | 10 ++++++++--
->>>   include/linux/wmi.h             |  2 ++
->>>   3 files changed, 10 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
->>> index 80137afb9753..af46e9e03376 100644
->>> --- a/drivers/platform/x86/wmi-bmof.c
->>> +++ b/drivers/platform/x86/wmi-bmof.c
->>> @@ -18,8 +18,6 @@
->>>   #include <linux/types.h>
->>>   #include <linux/wmi.h>
->>>   -#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
->>> -
->>>   struct bmof_priv {
->>>       union acpi_object *bmofdata;
->>>       struct bin_attribute bmof_bin_attr;
->>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
->>> index aed293b5af81..d7a1f4bf443b 100644
->>> --- a/drivers/platform/x86/wmi.c
->>> +++ b/drivers/platform/x86/wmi.c
->>> @@ -1157,6 +1157,9 @@ static void wmi_free_devices(struct acpi_device *device)
->>>   static bool guid_already_parsed(struct acpi_device *device, const guid_t *guid)
->>>   {
->>>       struct wmi_block *wblock;
->>> +    guid_t guid_wmi_bmof;
->>> +
->>> +    guid_parse(WMI_BMOF_GUID, &guid_wmi_bmof);
->>>         list_for_each_entry(wblock, &wmi_block_list, list) {
->>>           if (guid_equal(&wblock->gblock.guid, guid)) {
->>> @@ -1166,8 +1169,11 @@ static bool guid_already_parsed(struct acpi_device *device, const guid_t *guid)
->>>                * we need to suppress GUIDs that are unique on a
->>>                * given node but duplicated across nodes.
->>>                */
->>> -            dev_warn(&device->dev, "duplicate WMI GUID %pUL (first instance was on %s)\n",
->>> -                 guid, dev_name(&wblock->acpi_device->dev));
->>> +            if (guid_equal(guid, &guid_wmi_bmof))
->>> +                dev_dbg(&device->dev, "duplicate WMI-BMOF GUID found\n");
->>> +            else
->>> +                dev_warn(&device->dev, "duplicate WMI GUID %pUL (first instance was on %s)\n",
->>> +                     guid, dev_name(&wblock->acpi_device->dev));
->>>               return true;
->>>           }
->>>       }
->>> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
->>> index b88d7b58e61e..59acdceb4411 100644
->>> --- a/include/linux/wmi.h
->>> +++ b/include/linux/wmi.h
->>> @@ -13,6 +13,8 @@
->>>   #include <linux/mod_devicetable.h>
->>>   #include <uapi/linux/wmi.h>
->>>   +#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
->>> +
->>>   struct wmi_device {
->>>       struct device dev;
->>>   
->>
-> 
+-- 
+2.34.1
 
