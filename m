@@ -2,96 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13961ECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 28 Aug 2022 22:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D5ECAAD4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Aug 2022 08:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbiH1WpF (ORCPT
+        id S229813AbiH2IRA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 28 Aug 2022 18:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58002 "EHLO
+        Mon, 29 Aug 2022 04:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbiH1WpE (ORCPT
+        with ESMTP id S229446AbiH2IQ7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 28 Aug 2022 18:45:04 -0400
-Received: from vorpal.se (vorpal.se [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBFC19282;
-        Sun, 28 Aug 2022 15:45:01 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id 3D8B9140DD;
-        Sun, 28 Aug 2022 22:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1661726699; bh=nHJNcmazr8tcJXlbXro7XFfNqlC6ONrrJz4e6dIHIDE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=a5U/gG+kEPjQPvxn4fkCUrT5ZVmE31PXg5bwKWFQKp8NfvZizmrPg1eoGHfDyI/G2
-         O7+L7M+jEgMAo1lXUPiHZ1G0ak594PYI/mFnQhtR4Nxk3dwojcqGi3vszivTRcqnfW
-         yxBesg/bkvLzVYPwcZUqjZIQkz7EGeWqtxsBb8IIgijDUnmnki07EP054u85VxiNiR
-         fvjiZbqA2rJimOJ7BFVNhEAOXYEJu+6k9WwZVGbfOl8EcU26w4fzeHRgQc58t7riGA
-         r4ZWTCRyPM8mvbiP5CdiaGxTVsAkiByC1j4lmeSaNBMKwsrA1oILlke2y3GGp7B0wH
-         TIZlLAk2JVqAA==
-Message-ID: <90ae872b-9da6-f5a9-56e0-5a61fe3b84ed@vorpal.se>
-Date:   Mon, 29 Aug 2022 00:44:57 +0200
+        Mon, 29 Aug 2022 04:16:59 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C9D50067;
+        Mon, 29 Aug 2022 01:16:53 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id b142so5946689iof.10;
+        Mon, 29 Aug 2022 01:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=SR2zs66VfZ+7cR5z7A6IvTd2O6F2fkE2TEOJvg0bu0I=;
+        b=PTiQgniWppKvxkEzmd65ZhoEsm6L8mv1pdTOpYZYU0um2dXu20/Ay0lDQZhlb3y7YV
+         Z6PrrCJid38YfRz/WBeg9z+M+MgKo2emiGXW7xNTpmnapY2372F06UOxTa8L0IalIx2E
+         XG8ccXtuMXVBc6b2RUop8g659t17ZKYoX43+E9LyrD0eao3ydclhyqH1iOfLwMGssORl
+         QhUwG0jExizZ3Vd6E2v3Vw7mH+6VbVqhAjFmQnf10oPCcNz0BHn8SKJo8UAg64RLr9G9
+         wU6Mw09FG3hk7EXhiaFsVfExIr66P0WWArwI3M9KB8ei62rxRzyLXyPbDHHuqGWbrH/j
+         M8NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=SR2zs66VfZ+7cR5z7A6IvTd2O6F2fkE2TEOJvg0bu0I=;
+        b=eGLrxQwOKF3cYJlt7XjzpgaNEV36OoJO2O8LpRGepdi2D0/4Q9NDSa7EDpzfwQvHWh
+         YP1lghjxN7Mv/YsqeOUgqPlPFYyaF7OWVoHDBCwKEqs6CWIkkiVzZQyAs/SyeelcvbHE
+         I4O4bNg02qMJzCz2auH9FYOVkoUZ+8y7+KG4kR71u/608ClfMCgGhXbZsnRPVcu0neq9
+         3ZNhnv7pZV3lqyTvcO3GTr5LJ853Zk7FFPaQ04xji8KtvjpXRjJP1FI6rfTst7EA8rUI
+         X+Ee/dIJnTK4IdhbsF5tQJCBcfzniVhpRRZ7BxAVeX7iquyxUddQ+FfzmcV7jj4UgPkC
+         18Cg==
+X-Gm-Message-State: ACgBeo3Pa6wCI//JR9afVgews4BF8AdyeMimTPMDayPQS+0EQiVbjdBQ
+        g/bDlCysTjODc0v61h5Ut66iRt0dzoQjA5I096U=
+X-Google-Smtp-Source: AA6agR5w+knSfmVPltVfcUUnZ62s8C1vDjkSljRB9xvXicYviWK7mE+Hfygcmzi/6VAoy72EtqSMkaAc7FqcDgPzgQI=
+X-Received: by 2002:a05:6638:4117:b0:346:b5e1:383a with SMTP id
+ ay23-20020a056638411700b00346b5e1383amr9940873jab.264.1661761012858; Mon, 29
+ Aug 2022 01:16:52 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 2/3] platform/x86: Battery charge mode in toshiba_acpi
- (sysfs)
-Content-Language: en-GB
-To:     kernel test robot <lkp@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+References: <20220828192920.805253-3-lkml@vorpal.se> <202208290605.gE9IGbxE-lkp@intel.com>
+ <90ae872b-9da6-f5a9-56e0-5a61fe3b84ed@vorpal.se>
+In-Reply-To: <90ae872b-9da6-f5a9-56e0-5a61fe3b84ed@vorpal.se>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 29 Aug 2022 10:16:41 +0200
+Message-ID: <CANiq72m+PnnVojGx_swBaNF-zVv0XGyXbPn5C71h06jHsTeUpw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] platform/x86: Battery charge mode in toshiba_acpi (sysfs)
+To:     Arvid Norlander <lkml@vorpal.se>
+Cc:     kernel test robot <lkp@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        llvm@lists.linux.dev, kbuild-all@lists.01.org,
         Sebastian Reichel <sre@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Azael Avalos <coproscefalo@gmail.com>
-References: <20220828192920.805253-3-lkml@vorpal.se>
- <202208290605.gE9IGbxE-lkp@intel.com>
-From:   Arvid Norlander <lkml@vorpal.se>
-In-Reply-To: <202208290605.gE9IGbxE-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Mon, Aug 29, 2022 at 12:50 AM Arvid Norlander <lkml@vorpal.se> wrote:
+>
+> It would be nice to see these warnings locally, anyone know how to turn them on?
 
-On 2022-08-29 00:15, kernel test robot wrote:
-> Hi Arvid,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on 1c23f9e627a7b412978b4e852793c5e3c3efc555]
+Compiling with W=1 (and possibly with Clang) should show them. Or
+doesn't that work for you?
 
-<snip>
-
-> vim +/status +2992 drivers/platform/x86/toshiba_acpi.c
-> 
->   2984	
->   2985	
->   2986	/* ACPI battery hooking */
->   2987	static ssize_t charge_control_end_threshold_show(struct device *device,
->   2988							 struct device_attribute *attr,
->   2989							 char *buf)
->   2990	{
->   2991		int state;
->> 2992		int status;
-
-Will be fixed in the next version, it should be used. Waiting for human feedback too first.
-
-It would be nice to see these warnings locally, anyone know how to turn them on?
-
->   2993	
->   2994		if (toshiba_acpi == NULL) {
->   2995			pr_err("Toshiba ACPI object invalid\n");
->   2996			return -ENODEV;
->   2997		}
->   2998	
->   2999		status = toshiba_battery_charge_mode_get(toshiba_acpi, &state);
->   3000		if (state == 1)
->   3001			return sprintf(buf, "80\n");
->   3002		else
->   3003			return sprintf(buf, "100\n");
->   3004	}
->   3005	
-> 
-
-Best regards,
-Arvid Norlander
+Cheers,
+Miguel
