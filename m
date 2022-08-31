@@ -2,95 +2,229 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06013ECAAD4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 Aug 2022 15:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CABECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 Aug 2022 18:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231421AbiHaPQv (ORCPT
+        id S232589AbiHaSgA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 Aug 2022 11:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57030 "EHLO
+        Wed, 31 Aug 2022 14:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbiHaPQu (ORCPT
+        with ESMTP id S232177AbiHaSfh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 Aug 2022 11:16:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC127E00A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Aug 2022 08:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661959009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e0xifggWWVXyqkkAAWgCH5K33dRfapcSInzbE22dq0k=;
-        b=HGf+cnUBR1FPtuSd+T7b1h/pX/WcDYd6L1WUBBsJQPgNmQGTgWYzWUmQj+hYdEg3VBiCRv
-        Q0+yRULq7Fvi09pvJqRZURHP0Oh3sqfE/pohQi/9XkR8DpWFyBFVi6FMwLqzRKh3BPGqRX
-        /ut2p1b7JzlwzBGVqTQeXnrS9WIxvqg=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-391-NF93lCjBNbaLXl4sk0xxzw-1; Wed, 31 Aug 2022 11:16:46 -0400
-X-MC-Unique: NF93lCjBNbaLXl4sk0xxzw-1
-Received: by mail-ej1-f70.google.com with SMTP id gs35-20020a1709072d2300b00730e14fd76eso5492448ejc.15
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Aug 2022 08:16:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=e0xifggWWVXyqkkAAWgCH5K33dRfapcSInzbE22dq0k=;
-        b=SrbJ07c4tAi5Wf0uK51SK3QI7+b8Cn2FvWjLwemGLyiOfWAU5+cRqGwj4DJN3/Z1Vk
-         qDBtZ7PJVGCq64T4kES4LuMlnWi6zb3OHrOu1ZcakE0KwOKK0DEg/3+vthwb7iE0WTuJ
-         MUxgTvPOwvDnt3gaDACjoEJIdW6xNRv78uYn7xxZlC71+1o3ig03wlIhQgnRe6uVbBoO
-         BC5Jm0DnFotAzgz0J+ssL8g85KBD2p7bzijeP4sks/QX/YieLS2xzwXtYyvDLt1leQba
-         53gP8tW2ljN+cDreNcbmTmUzeSiHLsPOT1ozwZq7trQ2qfkwxXbI1tRnxbIQVe0DVTfM
-         Ha0g==
-X-Gm-Message-State: ACgBeo3gmI047Sfjw1vo4YRIlBL2DFZIpzhlxndmuJYsnxMcdtWUC6OR
-        KBqaKRlrxtN9nsjKsHozAEUv+T+iUYLMtqXuiLIZf81EL4rSb6SeO/P7HkE2rJjDWQKur8h48q+
-        5dc4iEYejd0YLAsr7vGwZglizvwWj6RRdOQ==
-X-Received: by 2002:a17:907:968d:b0:741:5d55:e501 with SMTP id hd13-20020a170907968d00b007415d55e501mr13353102ejc.449.1661959005202;
-        Wed, 31 Aug 2022 08:16:45 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6V+akHnnsYaO06t426lFF4ZrUc7b7phUa9GsHReHWCCzfJw8cqILu7eNd1LmGLN4cBIMbY9g==
-X-Received: by 2002:a17:907:968d:b0:741:5d55:e501 with SMTP id hd13-20020a170907968d00b007415d55e501mr13353095ejc.449.1661959005024;
-        Wed, 31 Aug 2022 08:16:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id rl26-20020a170907217a00b0073db043a6f7sm7206294ejb.210.2022.08.31.08.16.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Aug 2022 08:16:44 -0700 (PDT)
-Message-ID: <8b4547ca-6859-20b8-595b-759830bbe54a@redhat.com>
-Date:   Wed, 31 Aug 2022 17:16:44 +0200
+        Wed, 31 Aug 2022 14:35:37 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC78F0772;
+        Wed, 31 Aug 2022 11:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661970685; x=1693506685;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=o2Ftrt6s6ruHdV2MNerq/oWUDP4gJYggV0CnYVZ6fa8=;
+  b=gDLnY2EZ/UPWSs98t1b/G4zu/xpintAOV63f8BLHfne4iMBVuVR8bVPm
+   iqPSFauZxTWatXaJ1VmWv/FrHiMYUvHdNzA70G+rJiqrksAS5aBrj+kkI
+   dnvjFvUQXocd6SM0+ymJA0ZeAkVNCpWBSiEe081AFsqkPHiuqxhQXgwJz
+   vWIhTPXe9uTZGISLWfWNpDT01J+VZFJYgkcEIvdTgtlYRYgj1MIzB8Z6T
+   vBgY3jLVovOEtrsQbxtRM3CW04Ow/PWQzEjztz0QIRGfvcBTJr5ey8NK/
+   ZIwImfrXVNUdhDAuQmaRW5cPwPX+Tj2L76yEwfGuTzlIIKmBnzEpCGXVZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="321657382"
+X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
+   d="scan'208";a="321657382"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 11:31:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,278,1654585200"; 
+   d="scan'208";a="563132886"
+Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 31 Aug 2022 11:31:22 -0700
+Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oTSUk-0000a6-00;
+        Wed, 31 Aug 2022 18:31:22 +0000
+Date:   Thu, 01 Sep 2022 02:30:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-wpan@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 7fd22855300e693668c3397771b3a2b3948f827a
+Message-ID: <630fa8c5.moZxX4/JNtIfjYQO%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v1 1/1] platform/x86: intel_cht_int33fe: Fix comment
- according to the code flow
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-References: <20220824152115.88012-1-andriy.shevchenko@linux.intel.com>
- <Yw9tIAObVXvLcg+v@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Yw9tIAObVXvLcg+v@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 7fd22855300e693668c3397771b3a2b3948f827a  Add linux-next specific files for 20220831
 
-On 8/31/22 16:16, Andy Shevchenko wrote:
-> On Wed, Aug 24, 2022 at 06:21:15PM +0300, Andy Shevchenko wrote:
->> We don't use software_node_register_nodes() in the code, fix the comment.
-> 
-> Any comments?
+Error/Warning reports:
 
-No, I just have a bit of a patch backlog to process,
-I'm trying to process the backlog in FIFO order and
-I have not gotten around to this one yet.
+https://lore.kernel.org/linux-mm/202209010004.BZ0Et3LM-lkp@intel.com
+https://lore.kernel.org/llvm/202208312208.HjwleIeN-lkp@intel.com
 
-Regards,
+Error/Warning: (recently discovered and may have been fixed)
 
-Hans
+drivers/base/regmap/regmap-mmio.c:221:17: error: implicit declaration of function 'writesb'; did you mean 'writeb'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:224:17: error: implicit declaration of function 'writesw'; did you mean 'writew'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:227:17: error: implicit declaration of function 'writesl'; did you mean 'writel'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:231:17: error: implicit declaration of function 'writesq'; did you mean 'writeq'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:231:17: error: implicit declaration of function 'writesq'; did you mean 'writesl'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:358:17: error: implicit declaration of function 'readsb'; did you mean 'readb'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:361:17: error: implicit declaration of function 'readsw'; did you mean 'readw'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:364:17: error: implicit declaration of function 'readsl'; did you mean 'readl'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readq'? [-Werror=implicit-function-declaration]
+drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readsl'? [-Werror=implicit-function-declaration]
+drivers/platform/mellanox/mlxreg-lc.c:866 mlxreg_lc_probe() warn: passing zero to 'PTR_ERR'
+net/ieee802154/nl802154.c:2503:26: error: 'NL802154_CMD_DEL_SEC_LEVEL' undeclared here (not in a function); did you mean 'NL802154_CMD_SET_CCA_ED_LEVEL'?
 
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- alpha-randconfig-r024-20220830
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- arc-randconfig-r002-20220830
+|   `-- net-ieee802154-nl802154.c:error:NL802154_CMD_DEL_SEC_LEVEL-undeclared-here-(not-in-a-function)
+|-- i386-randconfig-s001
+|   `-- include-trace-events-kmem.h:sparse:sparse:restricted-gfp_t-degrades-to-integer
+|-- i386-randconfig-s002
+|   `-- include-trace-events-kmem.h:sparse:sparse:restricted-gfp_t-degrades-to-integer
+|-- i386-randconfig-s003
+|   `-- include-trace-events-kmem.h:sparse:sparse:restricted-gfp_t-degrades-to-integer
+|-- parisc-randconfig-r012-20220831
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
+|-- powerpc-randconfig-s053-20220830
+|   `-- include-trace-events-kmem.h:sparse:sparse:restricted-gfp_t-degrades-to-integer
+|-- s390-randconfig-s052-20220830
+|   `-- include-trace-events-kmem.h:sparse:sparse:restricted-gfp_t-degrades-to-integer
+|-- sparc-allyesconfig
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|-- sparc-buildonly-randconfig-r005-20220830
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|-- sparc64-buildonly-randconfig-r006-20220830
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|-- sparc64-randconfig-c042-20220830
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
+|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
+|   `-- net-ieee802154-nl802154.c:error:NL802154_CMD_DEL_SEC_LEVEL-undeclared-here-(not-in-a-function)
+clang_recent_errors
+`-- arm-randconfig-r006-20220830
+    `-- drivers-gpu-drm-amd-amdgpu-imu_v11_0_3.c:warning:no-previous-prototype-for-function-imu_v11_0_3_program_rlc_ram
+
+elapsed time: 725m
+
+configs tested: 76
+configs skipped: 2
+
+gcc tested configs:
+arc                        vdk_hs38_defconfig
+arm                           u8500_defconfig
+arm                          badge4_defconfig
+arm                           tegra_defconfig
+powerpc                           allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                           alldefconfig
+i386                                defconfig
+arm                         nhk8815_defconfig
+x86_64                              defconfig
+xtensa                  cadence_csp_defconfig
+x86_64                               rhel-8.3
+x86_64                    rhel-8.3-kselftests
+arm                          simpad_defconfig
+x86_64                          rhel-8.3-func
+m68k                           virt_defconfig
+x86_64                         rhel-8.3-kunit
+i386                          randconfig-a001
+arm                      footbridge_defconfig
+i386                          randconfig-a003
+ia64                                defconfig
+arc                  randconfig-r043-20220830
+x86_64                        randconfig-a013
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                           allyesconfig
+sparc                            alldefconfig
+csky                              allnoconfig
+sh                               allmodconfig
+arc                               allnoconfig
+alpha                             allnoconfig
+riscv                             allnoconfig
+mips                             allyesconfig
+arm                                 defconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a015
+x86_64                        randconfig-a004
+i386                          randconfig-a014
+x86_64                        randconfig-a002
+i386                          randconfig-a012
+i386                             allyesconfig
+i386                          randconfig-a016
+x86_64                        randconfig-a006
+ia64                             allmodconfig
+m68k                             allyesconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+arm                         axm55xx_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+
+clang tested configs:
+arm                            mmp2_defconfig
+i386                          randconfig-a002
+hexagon              randconfig-r045-20220830
+x86_64                        randconfig-a012
+riscv                randconfig-r042-20220830
+i386                          randconfig-a006
+hexagon              randconfig-r041-20220830
+s390                 randconfig-r044-20220830
+i386                          randconfig-a004
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a011
+x86_64                        randconfig-a005
+i386                          randconfig-a015
+arm                       mainstone_defconfig
+arm                        magician_defconfig
+riscv                          rv32_defconfig
+x86_64                        randconfig-k001
+x86_64                          rhel-8.3-rust
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
