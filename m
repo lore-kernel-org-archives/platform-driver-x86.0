@@ -2,177 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF21AECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 16:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BC5ECAAD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 17:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233452AbiIAQnj (ORCPT
+        id S233374AbiIARRK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 12:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47660 "EHLO
+        Thu, 1 Sep 2022 13:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235088AbiIAQni (ORCPT
+        with ESMTP id S231447AbiIARRJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 12:43:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4695AA04
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 09:43:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662050616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=PrJ4ySHIrP8ROBjoDBorg1jCunJZhbH8/S5JcvsTtFM=;
-        b=Tx+MV4/wx7IstIHbuSp/n7o0pbfI+qOH0cueWtiqnUEjf5fwzDVKUWtmmAwGLaOv+X4+/z
-        pKsBBbJx4L2U8o1JJqSd/yjW0Zio3l9RliHKCFUN0h0sUf4AxvHcZn83FXRpPAcZa+NiOz
-        zdDLmS+nO+h1hdqUjThQGTANHm8n+kM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-480-tOc2mxrcMMWtIsJBC_1mYA-1; Thu, 01 Sep 2022 12:43:33 -0400
-X-MC-Unique: tOc2mxrcMMWtIsJBC_1mYA-1
-Received: by mail-ed1-f69.google.com with SMTP id z20-20020a05640235d400b0043e1e74a495so12198714edc.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 09:43:33 -0700 (PDT)
+        Thu, 1 Sep 2022 13:17:09 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D825E543;
+        Thu,  1 Sep 2022 10:17:08 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id x5so13961115qtv.9;
+        Thu, 01 Sep 2022 10:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=ZOHdBiwdIYc+dnYpSN1q+dn6Q0Ow16U+F6k+oTcaels=;
+        b=jCV0u6Xge8EdKIun7aDa1/g3BBAwXbgj2ECaWYIOUQx+qstpL6S/lDXJJ4NQgshrd+
+         dkQi2QxfQCetuXoiCdj3qh5EW/6N5k4hTypZZhBjtxKtazR4VPOws3VZvzsDe9e2mwyB
+         yMh8A6bToGuMdAPSY7ogxZkjaQcCX6Bdg9sRMfUsHtfY2vTH2brdYUT9mmBIezhoctxI
+         q6fYwfsJznU2g+qjnbu8ZDc5iaPHq6nMGTs/tdt88MLk+XpkAwHuGLsc8zN4cwShm4qD
+         LRWhcqIIL7QlVZoaKSw5Tzp6p4zpE2lIMfQDlP2A5bxnQeomTKsLFNRummKG21eSJVo9
+         b2/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date;
-        bh=PrJ4ySHIrP8ROBjoDBorg1jCunJZhbH8/S5JcvsTtFM=;
-        b=lgRAMFr6HE7fiO3v4DPk17rbpW7vm49e7JLEENqkutm9+Wx0rhwbDBgztyA9aLCT7d
-         spnoPD0GHrlo4s1DhdG5Mk0PhTuEv8fdQcKLuxjUwrNrr93NPJgRX0KsHd4/+1siDjFe
-         OqkEhiyzWNCQ1kZ8wluwqKh9qd0GJ6HktQGugq5QpvJI9hqN29t/o6RY97G1ULqtzuMq
-         Qjt35GqnB5io7rjOVLZNePCV0pwzpCR/KJk2HWqOLll3r8Z6YpX6QmCU5YX6BUd+awAp
-         m2fpMbUZZkHutDR4JUgHLAbB9P+sxV6BYesskaWnlBtLZirGLIXM2xvI9pfTpuUluHas
-         NWEQ==
-X-Gm-Message-State: ACgBeo1jqNK3LXBbaeiq5N2YgT0JowP9dJX52nWagc2+me8IyrbQc7Ue
-        1FybnPb8bPWI88sUiaUIv33405PiI8GK8KxodenTBct3eMStgP//CAnDnJf53xR023fNsz9NbDj
-        KPBIHdYhjDR/FVtrUgJH0hZH9SB//rkyN9Q==
-X-Received: by 2002:a17:907:7678:b0:730:e1ad:b128 with SMTP id kk24-20020a170907767800b00730e1adb128mr25179596ejc.67.1662050612026;
-        Thu, 01 Sep 2022 09:43:32 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5NrGqkbyyZ0fwizjhE35YmoDlfDgv524Gsk/uveADS0YNnu8WYkhS9FzPvX7l7wwMqul5mtQ==
-X-Received: by 2002:a17:907:7678:b0:730:e1ad:b128 with SMTP id kk24-20020a170907767800b00730e1adb128mr25179578ejc.67.1662050611763;
-        Thu, 01 Sep 2022 09:43:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id h10-20020a0564020e8a00b004478be33bddsm1583098eda.15.2022.09.01.09.43.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 09:43:31 -0700 (PDT)
-Message-ID: <3766fb4c-d7fa-564c-abeb-c746cdf12526@redhat.com>
-Date:   Thu, 1 Sep 2022 18:43:30 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ZOHdBiwdIYc+dnYpSN1q+dn6Q0Ow16U+F6k+oTcaels=;
+        b=vOtYNmhl7BR+HZuSrcp3nytdayGyQ82yYFjVRFguTUD13l1JjNRLHdK9Xu3YXsRtGP
+         sQSeSu1sA30/CN6UIXpHRxtNLLMVGD3sZhdAzwdfDnjjYmsZ+c2wfL1+wLl4ALWfQRwy
+         Szdz6UyXv6YhfvHC6RGFSV4gWCUyZvkIGmrkMcH5/zZyirzaPiUw6FLBioyJHAO6ry+a
+         dc8oODFfot8MTVRSVamvyVpceWT+CzzYjINkpWPEbWgM3wCnJOACq57u1yaUIgPliewr
+         0dCUu6Y/6bQK79d1FD//tur/YjkCy1Qraz6F53N7td+Yalu48OJN9QW975eBGXNd//TU
+         59rw==
+X-Gm-Message-State: ACgBeo13WfLhuiaT9q0DIoPbsudsh21+zFtP8g8gmVZH0HJT2R4XlgiE
+        anWq7v3j4+PYkhydJrxXGtBW72N0m/FOEk8xKLU=
+X-Google-Smtp-Source: AA6agR5CqN3nI7KOHP0szFvgAi/dLNLUo0fWAahY13BBukxRKSVN/mrtigRzRoN61PnDThy/C+Md32/m4jfIrwk8ABU=
+X-Received: by 2002:ac8:7dd0:0:b0:344:afc1:b11d with SMTP id
+ c16-20020ac87dd0000000b00344afc1b11dmr24103252qte.195.1662052627885; Thu, 01
+ Sep 2022 10:17:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.0-2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220829201500.6341-1-mario.limonciello@amd.com>
+In-Reply-To: <20220829201500.6341-1-mario.limonciello@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 1 Sep 2022 20:16:31 +0300
+Message-ID: <CAHp75Vc3v4a6=ZJnOYYFGHEomExxopuUy8axDL=M2tbxHqtXqQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: wmi: Allow duplicate GUIDs for drivers
+ that use struct wmi_driver
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+On Mon, Aug 29, 2022 at 11:20 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> The WMI subsystem in the kernel currently tracks WMI devices by
+> a GUID string not by ACPI device.  The GUID used by the `wmi-bmof`
+> module however is available from many devices on nearly every machine.
+>
+> This originally was though to be a bug, but as it happens on most
 
-Here is the first round of fixes for platform-drivers-x86 for 6.0,
-nothing special to report just various small fixes and hardware-id
-additions.
+thought
 
-Regards,
+> machines it is a design mistake.  It has been fixed by tying an ACPI
+> device to the driver with struct wmi_driver. So drivers that have
+> moved over to struct wmi_driver can actually support multiple
+> instantiations of a GUID without any problem.
+>
+> Add an allow list into wmi.c for GUIDs that the drivers that are known
+> to use struct wmi_driver.  The list is populated with `wmi-bmof` right
+> now. The additional instances of that in sysfs with be suffixed with -%d
 
-Hans
+...
 
+> +/* allow duplicate GUIDs as these device drivers use struct wmi_driver */
+> +static const char * const allow_duplicates[] = {
+> +       "05901221-D566-11D1-B2F0-00A0C9062910", /* wmi-bmof */
+> +       NULL,
 
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+No comma for the terminator.
 
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+> +};
 
-are available in the Git repository at:
+...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.0-2
+> +static int guid_count(const guid_t *guid)
+> +{
+> +       struct wmi_block *wblock;
+> +       int count = 0;
+> +
+> +       list_for_each_entry(wblock, &wmi_block_list, list) {
+> +               if (guid_equal(&wblock->gblock.guid, guid))
+> +                       count++;
+> +       }
+> +
+> +       return count;
+> +}
 
-for you to fetch changes up to 647e82dbf85124697be59a4b4cf00c0d38177dcb:
+I haven't deeply checked the code, but this kind of approach is
+fragile and proven to be error prone as shown in practice. The
+scenario is (again, not sure if it's possible, need a comment in the
+code if it's not possible) removing an entry from the list in the
+middle and trying to add it again. you will see the duplicate count
+values. That's why in the general case we use IDA or similar
+approaches.
 
-  platform/x86: p2sb: Fix UAF when caller uses resource name (2022-09-01 17:51:34 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.0-2
-
-Various small fixes and hardware-id additions.
-
-The following is an automated git shortlog grouped by driver:
-
-acer-wmi:
- -  Acer Aspire One AOD270/Packard Bell Dot keymap fixes
-
-asus-wmi:
- -  Increase FAN_CURVE_BUF_LEN to 32
- -  Fix the name of the mic-mute LED classdev
-
-p2sb:
- -  Fix UAF when caller uses resource name
-
-platform/mellanox:
- -  Remove redundant 'NULL' check
- -  Remove unnecessary code
- -  mlxreg-lc: Fix locking issue
- -  mlxreg-lc: Fix coverity warning
-
-platform/surface:
- -  aggregator_registry: Add HID devices for sensors and UCSI client to SP8
- -  aggregator_registry: Rename HID device nodes based on new findings
- -  aggregator_registry: Rename HID device nodes based on their function
- -  aggregator_registry: Add support for Surface Laptop Go 2
-
-pmc_atom:
- -  Fix SLP_TYPx bitfield mask
-
-thinkpad_acpi:
- -  Explicitly set to balanced mode on startup
-
-x86-android-tablets:
- -  Fix broken touchscreen on Chuwi Hi8 with Windows BIOS
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      platform/x86: pmc_atom: Fix SLP_TYPx bitfield mask
-      platform/x86: p2sb: Fix UAF when caller uses resource name
-
-Hans de Goede (2):
-      platform/x86: x86-android-tablets: Fix broken touchscreen on Chuwi Hi8 with Windows BIOS
-      platform/x86: acer-wmi: Acer Aspire One AOD270/Packard Bell Dot keymap fixes
-
-Luke D. Jones (1):
-      platform/x86: asus-wmi: Increase FAN_CURVE_BUF_LEN to 32
-
-Mario Limonciello (1):
-      platform/x86: thinkpad_acpi: Explicitly set to balanced mode on startup
-
-Maximilian Luz (4):
-      platform/surface: aggregator_registry: Add support for Surface Laptop Go 2
-      platform/surface: aggregator_registry: Rename HID device nodes based on their function
-      platform/surface: aggregator_registry: Rename HID device nodes based on new findings
-      platform/surface: aggregator_registry: Add HID devices for sensors and UCSI client to SP8
-
-PaddyKP_Yao (1):
-      platform/x86: asus-wmi: Fix the name of the mic-mute LED classdev
-
-Vadim Pasternak (4):
-      platform/mellanox: mlxreg-lc: Fix coverity warning
-      platform/mellanox: mlxreg-lc: Fix locking issue
-      platform/mellanox: Remove unnecessary code
-      platform/mellanox: Remove redundant 'NULL' check
-
- drivers/platform/mellanox/mlxreg-lc.c              | 53 +++++++++++++---------
- .../platform/surface/surface_aggregator_registry.c | 47 ++++++++++---------
- drivers/platform/x86/acer-wmi.c                    |  9 +++-
- drivers/platform/x86/asus-wmi.c                    | 11 ++---
- drivers/platform/x86/p2sb.c                        | 18 +++++++-
- drivers/platform/x86/pmc_atom.c                    |  2 +-
- drivers/platform/x86/thinkpad_acpi.c               |  7 ++-
- drivers/platform/x86/x86-android-tablets.c         | 14 ++++++
- include/linux/platform_data/x86/pmc_atom.h         |  6 ++-
- 9 files changed, 108 insertions(+), 59 deletions(-)
-
+-- 
+With Best Regards,
+Andy Shevchenko
