@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6886ECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 12:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3486ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 12:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233048AbiIAMsl (ORCPT
+        id S232790AbiIAMut (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 08:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60224 "EHLO
+        Thu, 1 Sep 2022 08:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232987AbiIAMsk (ORCPT
+        with ESMTP id S232877AbiIAMup (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 08:48:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB7611169
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 05:48:34 -0700 (PDT)
+        Thu, 1 Sep 2022 08:50:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F71233342
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 05:50:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662036513;
+        s=mimecast20190719; t=1662036639;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jBmbuaOhhXgRkQYGy2MYrWPlvTGZeB6QqJI1Z1s4SrI=;
-        b=f6zAocOzeILKSHSwgPxM67tl3sbWIYNEu1+COBdgXuMgo8GgPHXrcIDuJAUuKlX+ZmWo/Y
-        /UBR492AXRwem0LYY9nQ77ZdC2+Lurg2OlgoHsOsnCW+WLJefhBywSQQRlyicjBamd90TA
-        ArJHiYlrrX3XZFCJyun2TTgifilVYNU=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=jzJH/mFnhHzqFHe2QCKkbQOatunPBFjzCPFC0VNIipc=;
+        b=XRRd/h06lhaOYIWtA5c1Q/OdyKjLFNUgFmNPSkjZZXWNYpMOLO4omKMGNu3kuFfel//eQE
+        i5GOw6fT7OY7Mr15wfNyjuPdMBp3He3dEp8GOBEXWLVgtto5HYjvlieageQAy2Lym0qMvQ
+        HGO9gloQpGuMJKf1qZurnsw7RLzC/eY=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-294-srX24bFiNU2aI1DtxbyO9w-1; Thu, 01 Sep 2022 08:48:32 -0400
-X-MC-Unique: srX24bFiNU2aI1DtxbyO9w-1
-Received: by mail-ed1-f72.google.com with SMTP id q32-20020a05640224a000b004462f105fa9so11550012eda.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 05:48:31 -0700 (PDT)
+ us-mta-659-0-WQo0_5Ofmf1AJg-iCU_w-1; Thu, 01 Sep 2022 08:50:38 -0400
+X-MC-Unique: 0-WQo0_5Ofmf1AJg-iCU_w-1
+Received: by mail-ed1-f71.google.com with SMTP id z6-20020a05640240c600b0043e1d52fd98so11876645edb.22
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 05:50:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=jBmbuaOhhXgRkQYGy2MYrWPlvTGZeB6QqJI1Z1s4SrI=;
-        b=VO/YeshIuLOUDpmShaq3u3MtitjRCX+Wsjbj+0UcsP4/KjKoaq7i+OJaD5f5BzmXFr
-         hW8jVue22FqQdGom3+opSgn1EP7Rule6MKuS4Vo+LqNLHR05PGoLuN+ZrmGEKI0qxOHu
-         kvS7Q71hqaUlrk41BDqa1CtKUOtdK/9pCNQ9+WH/+/9OmsiGOOaMfpz6CKLfI5Bq5SLK
-         e3V3WYsi2LrrbSnYFolKyzqtMsxohJ7KjO1TFb19655r7jVgT3g5sFxvpC9TOx430dAZ
-         mk3evf9jinwXF8MmqdPlYlBIfbNbYVzoGT0XCZre+CeZfH5coOHCGYZ2/Qgg51J8rLeu
-         6zeA==
-X-Gm-Message-State: ACgBeo1UYc+Jab9AdlJFbox8IBvAUAy3eYS3+z1WB9aosTYLEk88C2Lk
-        mnDtaWlfxnaPHyL/2swegpjfAtMwamEvgLdzdAT5ZlVhA9iQ/zTGYrLSSj6ncmphKBvQlrJ9AFL
-        CNv23PKsFf+tIo3CU3kGqBjjukB4zXlk4fQ==
-X-Received: by 2002:a17:907:2d92:b0:731:3310:418d with SMTP id gt18-20020a1709072d9200b007313310418dmr23472338ejc.379.1662036510862;
-        Thu, 01 Sep 2022 05:48:30 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5S1Wp1ZlGpO984mB6y2bbNw6k/B1k/vhSGHf+6tDVNHYEq0M78yjWNbliiVvD4kbZRThx23g==
-X-Received: by 2002:a17:907:2d92:b0:731:3310:418d with SMTP id gt18-20020a1709072d9200b007313310418dmr23472323ejc.379.1662036510597;
-        Thu, 01 Sep 2022 05:48:30 -0700 (PDT)
+        bh=jzJH/mFnhHzqFHe2QCKkbQOatunPBFjzCPFC0VNIipc=;
+        b=eRhPeATAro8jCF86az36u0OsobwPc19js/votOo2q+pS7uiJgkam1x+meXZ6osPnm2
+         BuC4HHpE44BVBqMvPn8FosVIkYExrjsyY5hIvV76tRAMXNKhmCBDym+2l3FljI7Urb7E
+         SwiXbyCEMTk0UXQRaSiqIGv8NO21eGuW7KvgQXCo6oh7qp4/YLftvvvRJS47tLfkNMSp
+         afRU7/2J9Xr+BlVHsmgOlTD9ryMe1+41sWu4NcG3z681C9FAhYLzk2OnuBc/s/9TnEBE
+         vuNBe1JuEdZOwoe62okl79Emhu1YfdAhLOucUxp+hq5tqhwMkfUh2jc4/yqsOOkN7Xuu
+         vrtA==
+X-Gm-Message-State: ACgBeo365YK9nNpujmwMXU+P7sUBjCrRfM+Bn9UhFrH5qSYD+4E86m0J
+        HT9+7WNkk3pbH9Ra14FRrK+YzTn+GZWCTf3Mk48DpAFdEJuLM81ngUIuRI0qUEAXjFxsnuRTAxn
+        PqdnrnDOTLVEDG3wRUc4CFj95O8LIsD1F5Q==
+X-Received: by 2002:a05:6402:1909:b0:447:f0d3:a9b1 with SMTP id e9-20020a056402190900b00447f0d3a9b1mr24135156edz.100.1662036637539;
+        Thu, 01 Sep 2022 05:50:37 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6+fKohXs2E7Q+sSvhx52Aj58JDBgSTfq5zaBn0bqfrs76ZEUkvx9l1CgzEdzGFMvMDzeU2Hw==
+X-Received: by 2002:a05:6402:1909:b0:447:f0d3:a9b1 with SMTP id e9-20020a056402190900b00447f0d3a9b1mr24135150edz.100.1662036637371;
+        Thu, 01 Sep 2022 05:50:37 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id q20-20020a170906b29400b0074b4e77ccc6sm201882ejz.151.2022.09.01.05.48.29
+        by smtp.gmail.com with ESMTPSA id k21-20020a17090632d500b007419b73bb8dsm5148750ejk.10.2022.09.01.05.50.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 05:48:30 -0700 (PDT)
-Message-ID: <82c807cf-41ae-1860-2dce-57f9c22379d9@redhat.com>
-Date:   Thu, 1 Sep 2022 14:48:29 +0200
+        Thu, 01 Sep 2022 05:50:36 -0700 (PDT)
+Message-ID: <1e23900b-a1f4-b3b1-8ed5-2b1db6eeb519@redhat.com>
+Date:   Thu, 1 Sep 2022 14:50:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH platform 2/4] platform/mellanox: mlxreg-lc: Fix locking
- issue
+Subject: Re: [PATCH v1 1/1] platform/x86: intel_cht_int33fe: Fix comment
+ according to the code flow
 Content-Language: en-US
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     dan.carpenter@oracle.comq, platform-driver-x86@vger.kernel.org
-References: <20220823201937.46855-1-vadimp@nvidia.com>
- <20220823201937.46855-3-vadimp@nvidia.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>
+References: <20220824152115.88012-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220823201937.46855-3-vadimp@nvidia.com>
+In-Reply-To: <20220824152115.88012-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,191 +79,44 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/23/22 22:19, Vadim Pasternak wrote:
-> Fix locking issues:
-> - mlxreg_lc_state_update() takes a lock when set or clear
->   "MLXREG_LC_POWERED".
-> - All the devices can be deleted before MLXREG_LC_POWERED flag is cleared.
+On 8/24/22 17:21, Andy Shevchenko wrote:
+> We don't use software_node_register_nodes() in the code, fix the comment.
 > 
-> To fix it:
-> - Add lock() / unlock() at the beginning / end of
->   mlxreg_lc_event_handler() and remove locking from
->   mlxreg_lc_power_on_off() and mlxreg_lc_enable_disable()
-> - Add locked version of mlxreg_lc_state_update() -
->   mlxreg_lc_state_update_locked() for using outside
->   mlxreg_lc_event_handler().
-> 
-> (2) Remove redundant NULL check for of if 'data->notifier'.
-> 
-> Fixes: 62f9529b8d5c87b ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxreg-lc.c | 37 ++++++++++++++++++---------
->  1 file changed, 25 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> index 9a1bfcd24317..e578c7bc060b 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -460,8 +460,6 @@ static int mlxreg_lc_power_on_off(struct mlxreg_lc *mlxreg_lc, u8 action)
->  	u32 regval;
->  	int err;
->  
-> -	mutex_lock(&mlxreg_lc->lock);
-> -
->  	err = regmap_read(mlxreg_lc->par_regmap, mlxreg_lc->data->reg_pwr, &regval);
->  	if (err)
->  		goto regmap_read_fail;
-> @@ -474,7 +472,6 @@ static int mlxreg_lc_power_on_off(struct mlxreg_lc *mlxreg_lc, u8 action)
->  	err = regmap_write(mlxreg_lc->par_regmap, mlxreg_lc->data->reg_pwr, regval);
->  
->  regmap_read_fail:
-> -	mutex_unlock(&mlxreg_lc->lock);
->  	return err;
->  }
->  
-> @@ -491,8 +488,6 @@ static int mlxreg_lc_enable_disable(struct mlxreg_lc *mlxreg_lc, bool action)
->  	 * line card which is already has been enabled. Disabling does not affect the disabled line
->  	 * card.
->  	 */
-> -	mutex_lock(&mlxreg_lc->lock);
-> -
->  	err = regmap_read(mlxreg_lc->par_regmap, mlxreg_lc->data->reg_ena, &regval);
->  	if (err)
->  		goto regmap_read_fail;
-> @@ -505,7 +500,6 @@ static int mlxreg_lc_enable_disable(struct mlxreg_lc *mlxreg_lc, bool action)
->  	err = regmap_write(mlxreg_lc->par_regmap, mlxreg_lc->data->reg_ena, regval);
->  
->  regmap_read_fail:
-> -	mutex_unlock(&mlxreg_lc->lock);
->  	return err;
->  }
->  
-> @@ -537,6 +531,15 @@ mlxreg_lc_sn4800_c16_config_init(struct mlxreg_lc *mlxreg_lc, void *regmap,
->  
->  static void
->  mlxreg_lc_state_update(struct mlxreg_lc *mlxreg_lc, enum mlxreg_lc_state state, u8 action)
-> +{
-> +	if (action)
-> +		mlxreg_lc->state |= state;
-> +	else
-> +		mlxreg_lc->state &= ~state;
-> +}
-> +
-> +static void
-> +mlxreg_lc_state_update_locked(struct mlxreg_lc *mlxreg_lc, enum mlxreg_lc_state state, u8 action)
->  {
->  	mutex_lock(&mlxreg_lc->lock);
->  
-> @@ -560,8 +563,11 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  	dev_info(mlxreg_lc->dev, "linecard#%d state %d event kind %d action %d\n",
->  		 mlxreg_lc->data->slot, mlxreg_lc->state, kind, action);
->  
-> -	if (!(mlxreg_lc->state & MLXREG_LC_INITIALIZED))
-> +	mutex_lock(&mlxreg_lc->lock);
-> +	if (!(mlxreg_lc->state & MLXREG_LC_INITIALIZED)) {
-> +		mutex_unlock(&mlxreg_lc->lock);
+> Fixes: 140355e5db8b ("platform/x86: intel_cht_int33fe: Convert software node array to group")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-So here you are unlocking before return.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
->  		return 0;
-> +	}
->  
->  	switch (kind) {
->  	case MLXREG_HOTPLUG_LC_SYNCED:
-> @@ -574,7 +580,7 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  		if (!(mlxreg_lc->state & MLXREG_LC_POWERED) && action) {
->  			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
->  			if (err)
-> -				return err;
-> +				goto mlxreg_lc_power_on_off_fail;
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Yet here you use a goto (better IMHO).
-
->  		}
->  		/* In case line card is configured - enable it. */
->  		if (mlxreg_lc->state & MLXREG_LC_CONFIGURED && action)
-> @@ -588,12 +594,13 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  				/* In case line card is configured - enable it. */
->  				if (mlxreg_lc->state & MLXREG_LC_CONFIGURED)
->  					err = mlxreg_lc_enable_disable(mlxreg_lc, 1);
-> +				mutex_unlock(&mlxreg_lc->lock);
-
-and here is another unlocking before return.
-
->  				return err;
->  			}
->  			err = mlxreg_lc_create_static_devices(mlxreg_lc, mlxreg_lc->main_devs,
->  							      mlxreg_lc->main_devs_num);
->  			if (err)
-> -				return err;
-> +				goto mlxreg_lc_create_static_devices_fail;
-
-and here is an other goto.
-
-This is not very consistent. Can you please switch to goto-s everywhere?
-Preferable with just a simply single "out" label?
-
-I always prefer the goto-s here so that the function has a single
-entry + exit point and we can easily see that the lock + unlock
-is balanced since there is only 1 of each.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
-
+> ---
+>  drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+> index c52ac23e2331..9448e2e67c3f 100644
+> --- a/drivers/platform/x86/intel/chtwc_int33fe.c
+> +++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+> @@ -219,7 +219,7 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
 >  
->  			/* In case line card is already in ready state - enable it. */
->  			if (mlxreg_lc->state & MLXREG_LC_CONFIGURED)
-> @@ -620,6 +627,10 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  		break;
->  	}
->  
-> +mlxreg_lc_power_on_off_fail:
-> +mlxreg_lc_create_static_devices_fail:
-> +	mutex_unlock(&mlxreg_lc->lock);
-> +
->  	return err;
->  }
->  
-> @@ -665,7 +676,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
->  		if (err)
->  			goto mlxreg_lc_create_static_devices_failed;
->  
-> -		mlxreg_lc_state_update(mlxreg_lc, MLXREG_LC_POWERED, 1);
-> +		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_POWERED, 1);
->  	}
->  
->  	/* Verify if line card is synchronized. */
-> @@ -676,7 +687,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
->  	/* Power on line card if necessary. */
->  	if (regval & mlxreg_lc->data->mask) {
->  		mlxreg_lc->state |= MLXREG_LC_SYNCED;
-> -		mlxreg_lc_state_update(mlxreg_lc, MLXREG_LC_SYNCED, 1);
-> +		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
->  		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
->  			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
->  			if (err)
-> @@ -684,7 +695,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
->  		}
->  	}
->  
-> -	mlxreg_lc_state_update(mlxreg_lc, MLXREG_LC_INITIALIZED, 1);
-> +	mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_INITIALIZED, 1);
->  
->  	return 0;
->  
-> @@ -904,6 +915,8 @@ static int mlxreg_lc_remove(struct platform_device *pdev)
->  	struct mlxreg_core_data *data = dev_get_platdata(&pdev->dev);
->  	struct mlxreg_lc *mlxreg_lc = platform_get_drvdata(pdev);
->  
-> +	mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_INITIALIZED, 0);
-> +
 >  	/*
->  	 * Probing and removing are invoked by hotplug events raised upon line card insertion and
->  	 * removing. If probing procedure fails all data is cleared. However, hotplug event still
+>  	 * Update node used in "usb-role-switch" property. Note that we
+> -	 * rely on software_node_register_nodes() to use the original
+> +	 * rely on software_node_register_node_group() to use the original
+>  	 * instance of properties instead of copying them.
+>  	 */
+>  	fusb302_mux_refs[0].node = mux_ref_node;
 
