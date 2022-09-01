@@ -2,75 +2,78 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2826ECAAD1
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F38ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234510AbiIAPlX (ORCPT
+        id S233855AbiIAPnM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 11:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37296 "EHLO
+        Thu, 1 Sep 2022 11:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233671AbiIAPlW (ORCPT
+        with ESMTP id S231211AbiIAPnJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 11:41:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FA5F114
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:41:17 -0700 (PDT)
+        Thu, 1 Sep 2022 11:43:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723FC8A1D7
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:43:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662046876;
+        s=mimecast20190719; t=1662046987;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NYoFtYjF1V+qwYcerU3qx9YeyX1w8Ov3wZ1QYftIVaQ=;
-        b=OKatM3SXccNMG5aDgrbhQYKz+wmrMofGila/L/RvQ1o/QR0vCR15we7k95CR+eojfxEDpP
-        8w9gkjDcYgEBpKEyTyCGgKd1hCxQK0PUgGCLK2Akcl/UPUvHVRoYOcgNwfZrbCChrznpmX
-        Fc7xsNIcahN+uBBpkFqNRY4QeX84PKk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=zPoitkGieiA519AGfM1lLFH3EIE6WMP8WybuQF7XBQY=;
+        b=QrWr+D/+WA5vkBPm+QszWJOwYRfvsn5M5NcGCyimTC9ByR8Btjps1Dxl4BN66cSYLEHkBT
+        ZtqolGnuZpJsnAPtxGiloJ4JxouDlGGqv5+YgmpOfmXdj1r+5TCanUj/ck8S+zWdtg0VGD
+        4jEj44ivrQ7dkW5tnFMKY8QJsirL1Zo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-662-rsJKyljhPH6sgl_lZMconA-1; Thu, 01 Sep 2022 11:41:14 -0400
-X-MC-Unique: rsJKyljhPH6sgl_lZMconA-1
-Received: by mail-ej1-f70.google.com with SMTP id sd6-20020a1709076e0600b0073315809fb5so7050064ejc.10
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:41:14 -0700 (PDT)
+ us-mta-413-wl8EOQ09PvyKPT3jWWl1ZQ-1; Thu, 01 Sep 2022 11:43:06 -0400
+X-MC-Unique: wl8EOQ09PvyKPT3jWWl1ZQ-1
+Received: by mail-ed1-f72.google.com with SMTP id z20-20020a05640235d400b0043e1e74a495so12092093edc.11
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:43:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=NYoFtYjF1V+qwYcerU3qx9YeyX1w8Ov3wZ1QYftIVaQ=;
-        b=DfahWLg5Y3rTDbnZRQfFp4ENbdE1CJkOC2Be2QvEiPAv060PD4YudxN5QBO9GclBwM
-         GGdY5DbDo241YhcxnaVJP9KQsa1jHIw5wCXgP2SO+ZTEFPg9zs9LnpwzZRrIn9qizdo2
-         HM8DQf6aE3q0jb0dck9LLdqpmtXHXe/pQopD+6943UuLyuvTll7aTn1mEVA+p3AwpAN1
-         yw+0NbCsXgwWhGzm4RYVBXph+v38C8/1U8uelKQPut4IOPETjacXBK6EbkdUXgIeYA8d
-         t7b6tlB6H5dgSHPM/6+v5qJyXMYftFdUyl1FKHM1d2VA4XpsfTnezgciX3jTAg0ezd9f
-         IXeQ==
-X-Gm-Message-State: ACgBeo3TCivRBAVi2yY6Vzrpr40Qy9KJj0bdjPmuHU9+hkEEE8HhDuYl
-        YfvS1iKgiGEEHlX3cW92NEnHfiv4Xb7072MEIzA2PxW2geSJ8LLhoVxJIpaXlQ5nYPERPxZsRy7
-        bmxtCtthuQLKfZVrZWqP0uS58ob35QF7+ig==
-X-Received: by 2002:a17:907:6d1d:b0:741:5b1b:5c9a with SMTP id sa29-20020a1709076d1d00b007415b1b5c9amr16289870ejc.642.1662046873300;
-        Thu, 01 Sep 2022 08:41:13 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4kUKy50HgQPipp6hTm1cKVdFjk8aQzOrrTyDTDNMTXxEwut13kcOojubSlvSxAd8rjdxhcuA==
-X-Received: by 2002:a17:907:6d1d:b0:741:5b1b:5c9a with SMTP id sa29-20020a1709076d1d00b007415b1b5c9amr16289855ejc.642.1662046873099;
-        Thu, 01 Sep 2022 08:41:13 -0700 (PDT)
+        bh=zPoitkGieiA519AGfM1lLFH3EIE6WMP8WybuQF7XBQY=;
+        b=eNtXtWM0nQ5wToT5NT0H05WQOFwdoquZnTI78MG/OF4cgN0MDysh10RrpW21XFV2Aj
+         n+mzqduK7d75SbdWRkD5QAjZO+EG20VqPfZK44D5DgKcMOud5sCz2Vjv2rhADGjnAqBT
+         fYQYoWhLTSvzlYqR4c7J1Jjo4SPRUs2MPEbK/kK+DRX0yYYxBdMdRTci0avLPctW5uHV
+         ecQpOKVXlMSOw2rKS9bJvTmthPWkGfR2gLykSz65Ix1MkAfzCSyI9u4IZEs5jB9eXXgP
+         aUGCF+tnIKXEWfRwXskEwIlKDRY72Ry6tfeCuAYG9nVZ3RabGQKYZyCrlMvmcyP9MPf0
+         5Rww==
+X-Gm-Message-State: ACgBeo2nPY2fFFqOMFi5EjHKQUnxnZc+lpG+bmELP/CUZb6nBS7rTkPy
+        sEZC6e8i1LFyhc30pPAzj4SWpaA143IKJD9KWZrdUcw22Pl0hwfIbZwECKmd8LiD2oRE36SYceI
+        6JoA2knDvABCV3cf0qWK2Ggw8B9R0FquSSA==
+X-Received: by 2002:a17:906:9b09:b0:741:879e:fa with SMTP id eo9-20020a1709069b0900b00741879e00famr13609767ejc.573.1662046984748;
+        Thu, 01 Sep 2022 08:43:04 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5skRuTJgjGK/5n5XrmzssooAjFbQ1CE9Ph1X052a+kR7D00THN55FR8+GL484EgzVxktcOKw==
+X-Received: by 2002:a17:906:9b09:b0:741:879e:fa with SMTP id eo9-20020a1709069b0900b00741879e00famr13609754ejc.573.1662046984592;
+        Thu, 01 Sep 2022 08:43:04 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id v12-20020a056402184c00b0044629b54b00sm1545641edy.46.2022.09.01.08.41.12
+        by smtp.gmail.com with ESMTPSA id vp10-20020a17090712ca00b0072b1bc9b37fsm8612934ejb.22.2022.09.01.08.43.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 08:41:12 -0700 (PDT)
-Message-ID: <7912c9bd-e2a6-f02d-835b-0379e354920e@redhat.com>
-Date:   Thu, 1 Sep 2022 17:41:12 +0200
+        Thu, 01 Sep 2022 08:43:04 -0700 (PDT)
+Message-ID: <b8a5038b-3d3a-4a2c-8fca-32b47f11e85c@redhat.com>
+Date:   Thu, 1 Sep 2022 17:43:03 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH v2] platform/x86: wmi: Allow duplicate GUIDs for drivers
- that use struct wmi_driver
+Subject: Re: [PATCH v1] platform/x86/intel: pmc/core: Add Raptor Lake support
+ to pmc core driver
 Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220829201500.6341-1-mario.limonciello@amd.com>
+To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, irenic.rajneesh@gmail.com,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Box <david.e.box@intel.com>
+References: <20220830182001.3693030-1-gayatri.kammela@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220829201500.6341-1-mario.limonciello@amd.com>
+In-Reply-To: <20220830182001.3693030-1-gayatri.kammela@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,25 +82,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/29/22 22:14, Mario Limonciello wrote:
-> The WMI subsystem in the kernel currently tracks WMI devices by
-> a GUID string not by ACPI device.  The GUID used by the `wmi-bmof`
-> module however is available from many devices on nearly every machine.
+On 8/30/22 20:20, Gayatri Kammela wrote:
+> Add Raptor Lake client parts (both RPL and RPL_S) support to pmc core
+> driver. Raptor Lake client parts reuse all the Alder Lake PCH IPs.
 > 
-> This originally was though to be a bug, but as it happens on most
-> machines it is a design mistake.  It has been fixed by tying an ACPI
-> device to the driver with struct wmi_driver. So drivers that have
-> moved over to struct wmi_driver can actually support multiple
-> instantiations of a GUID without any problem.
-> 
-> Add an allow list into wmi.c for GUIDs that the drivers that are known
-> to use struct wmi_driver.  The list is populated with `wmi-bmof` right
-> now. The additional instances of that in sysfs with be suffixed with -%d
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v1->v2:
->  * Change to an allow list for wmi-bmof and suffix the extra instances
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: David Box <david.e.box@intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -116,104 +108,23 @@ Regards,
 Hans
 
 
-
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->  drivers/platform/x86/wmi.c | 45 ++++++++++++++++++++++++++++++--------
->  1 file changed, 36 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index aed293b5af81..2997dad79e8b 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -105,6 +105,12 @@ static const struct acpi_device_id wmi_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
->  
-> +/* allow duplicate GUIDs as these device drivers use struct wmi_driver */
-> +static const char * const allow_duplicates[] = {
-> +	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
-> +	NULL,
-> +};
-> +
->  static struct platform_driver acpi_wmi_driver = {
->  	.driver = {
->  		.name = "acpi-wmi",
-> @@ -1073,6 +1079,19 @@ static const struct device_type wmi_type_data = {
->  	.release = wmi_dev_release,
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index a1fe1e0dcf4a..17ec5825d13d 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1914,6 +1914,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
+>  	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_reg_map),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_reg_map),
+>  	{}
 >  };
 >  
-> +static int guid_count(const guid_t *guid)
-> +{
-> +	struct wmi_block *wblock;
-> +	int count = 0;
-> +
-> +	list_for_each_entry(wblock, &wmi_block_list, list) {
-> +		if (guid_equal(&wblock->gblock.guid, guid))
-> +			count++;
-> +	}
-> +
-> +	return count;
-> +}
-> +
->  static int wmi_create_device(struct device *wmi_bus_dev,
->  			     struct wmi_block *wblock,
->  			     struct acpi_device *device)
-> @@ -1080,6 +1099,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
->  	struct acpi_device_info *info;
->  	char method[WMI_ACPI_METHOD_NAME_SIZE];
->  	int result;
-> +	uint count;
->  
->  	if (wblock->gblock.flags & ACPI_WMI_EVENT) {
->  		wblock->dev.dev.type = &wmi_type_event;
-> @@ -1134,7 +1154,11 @@ static int wmi_create_device(struct device *wmi_bus_dev,
->  	wblock->dev.dev.bus = &wmi_bus_type;
->  	wblock->dev.dev.parent = wmi_bus_dev;
->  
-> -	dev_set_name(&wblock->dev.dev, "%pUL", &wblock->gblock.guid);
-> +	count = guid_count(&wblock->gblock.guid);
-> +	if (count)
-> +		dev_set_name(&wblock->dev.dev, "%pUL-%d", &wblock->gblock.guid, count);
-> +	else
-> +		dev_set_name(&wblock->dev.dev, "%pUL", &wblock->gblock.guid);
->  
->  	device_initialize(&wblock->dev.dev);
->  
-> @@ -1154,11 +1178,20 @@ static void wmi_free_devices(struct acpi_device *device)
->  	}
->  }
->  
-> -static bool guid_already_parsed(struct acpi_device *device, const guid_t *guid)
-> +static bool guid_already_parsed_for_legacy(struct acpi_device *device, const guid_t *guid)
->  {
->  	struct wmi_block *wblock;
->  
->  	list_for_each_entry(wblock, &wmi_block_list, list) {
-> +		/* skip warning and register if we know the driver will use struct wmi_driver */
-> +		for (int i = 0; allow_duplicates[i] != NULL; i++) {
-> +			guid_t tmp;
-> +
-> +			if (guid_parse(allow_duplicates[i], &tmp))
-> +				continue;
-> +			if (guid_equal(&tmp, guid))
-> +				return false;
-> +		}
->  		if (guid_equal(&wblock->gblock.guid, guid)) {
->  			/*
->  			 * Because we historically didn't track the relationship
-> @@ -1208,13 +1241,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
->  		if (debug_dump_wdg)
->  			wmi_dump_wdg(&gblock[i]);
->  
-> -		/*
-> -		 * Some WMI devices, like those for nVidia hooks, have a
-> -		 * duplicate GUID. It's not clear what we should do in this
-> -		 * case yet, so for now, we'll just ignore the duplicate
-> -		 * for device creation.
-> -		 */
-> -		if (guid_already_parsed(device, &gblock[i].guid))
-> +		if (guid_already_parsed_for_legacy(device, &gblock[i].guid))
->  			continue;
->  
->  		wblock = kzalloc(sizeof(*wblock), GFP_KERNEL);
+> 
+> base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
 
