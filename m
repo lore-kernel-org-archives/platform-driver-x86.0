@@ -2,145 +2,227 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FEDC54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 21:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ED4ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 22:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233057AbiIAV6k (ORCPT
+        id S235291AbiIAW32 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 17:58:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58432 "EHLO
+        Thu, 1 Sep 2022 18:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233034AbiIAV6h (ORCPT
+        with ESMTP id S235531AbiIAW3C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 17:58:37 -0400
-Received: from vorpal.se (vorpal.se [151.236.221.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5A179636;
-        Thu,  1 Sep 2022 14:58:34 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id 2999F142D4;
-        Thu,  1 Sep 2022 21:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1662069513; bh=gNrPW0U1FSW58IPsYgYMKepiEb2EP4cQVpEuA1Qo2zo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OG45IhxgYcpVlsn6PheI8Prel5lw5v75tDT4/eK5jIzUzTbgC+KxsxFXXiVwwrkX0
-         9VW6igeQdw+BY3kB8DbTq845NCcaa0ClEiiCQp7U183lSDQmzEumwrJe975Zni+3O7
-         uSSsRvzS/PPp4ehkmUJSw2fCIsMk0+NkVM6+rclsy91K81CUILPooAEHLCIWQ/2KrM
-         uKuwZDi0HhSSE3LOAsoZRSBn/0QzLAd8n9+oVyqjALxjaPHRTzOW9Nn9E//hQMQPkr
-         bGWLcxRj1kE7EGxSIQHgfaTVJ50dH3vMnZF48wB3wVJCxFtTdVr+4GlfIoKha5DmoC
-         GYSKawN3+rOuQ==
-From:   Arvid Norlander <lkml@vorpal.se>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org,
-        Arvid Norlander <lkml@vorpal.se>
-Subject: [PATCH v2 0/2] platform/x86: toshiba_acpi: HWMON Fan RPM support
-Date:   Thu,  1 Sep 2022 23:58:17 +0200
-Message-Id: <20220901215819.1608723-1-lkml@vorpal.se>
-X-Mailer: git-send-email 2.37.3
+        Thu, 1 Sep 2022 18:29:02 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903895A2D2;
+        Thu,  1 Sep 2022 15:27:04 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id c24so352984pgg.11;
+        Thu, 01 Sep 2022 15:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date;
+        bh=urWiAJvJTeU3odRH4F2HVAZeh9sdqu14J1UUhMV1XWA=;
+        b=K18uVnJ0z7HvkYrHtMmB7bKXLLOvXseJrnmbMxkLfptllaNXdK1kaIHgtBotHEDYjL
+         zyajOWk8XX+ABgiYmC9WH8Vz6D147ZcABpw5Ig9zoKyoms3i/jXM+FZc7gCa4aC9wDEb
+         +zVaSUYhCKjkHVMxM1UV7LJk4iCSFpm+XOMeTt3pDlQYm/MUIJ2QMnRNXFEx2im7QONL
+         NotXQdBA7MV7EOSXyged+palsy162Hh/yWMjgcPC+qr0wGE/LnSSJQpqYqjQ+mJQfQyR
+         +pnWXAjmomunJgxmVk3z7u0vHVF6FUbtp5vX+pLdjOO9bOr6HgDqp0YtDkWNhWx306pe
+         bRUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=urWiAJvJTeU3odRH4F2HVAZeh9sdqu14J1UUhMV1XWA=;
+        b=2QgdJ9azCUxETUrZi5/GCqH6cL3l3BEthZ/0paxC8r/WVAvEgYhrsaZ+Mc8wquiqhx
+         kkpTLaQhou3AxbhrZQF+7h34hSaQS+wEtQxRgx+S6MpzMTDW9VMYYT1BLPTRySrfnuwC
+         xGQ32wYuC0LdcEHpG+cJV531CFe/S4SPQu37IQLepFRcZQkKIFgRAvyeOvG7gL8Cs1iL
+         /N74mA+H1KLr2ss/R3MV0tqNM78lP0fti1wxXbUSUxPC+fV1H+BWJbNFSDuPpd4sslis
+         RyOPP1TQRtjOpXUAz/S7/NNzS0Sx4lyGdUTU9p6Pma1Nlf4sUmVmb4j4M+QpxgJfzHzP
+         2SfA==
+X-Gm-Message-State: ACgBeo3x17ovgHEXeeSI1cjm8rndRzrTIkeoqBbj9UoNUj0CalWAgL0e
+        5J0wCE4+N3BYyoLp23xwM2oXc2W8K9uAEA==
+X-Google-Smtp-Source: AA6agR6hieGYuvU+3IO1KtRYSSSoMesegNmN7YLHBVQcXOpr0+kBjREqZaZ5QshzO9ev4aDx7spIhQ==
+X-Received: by 2002:a05:6a00:a8f:b0:530:3c05:4644 with SMTP id b15-20020a056a000a8f00b005303c054644mr33637514pfl.79.1662071223577;
+        Thu, 01 Sep 2022 15:27:03 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t8-20020a6564c8000000b0042c29d1610dsm30240pgv.63.2022.09.01.15.27.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Sep 2022 15:27:02 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <0e31840d-aaf3-d2fb-f490-848e30f626a8@roeck-us.net>
+Date:   Thu, 1 Sep 2022 15:27:00 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 2/2] platform/x86: toshiba_acpi: Add fan RPM reading
+ (hwmon interface)
+Content-Language: en-US
+To:     Arvid Norlander <lkml@vorpal.se>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org
+References: <20220901215819.1608723-1-lkml@vorpal.se>
+ <20220901215819.1608723-3-lkml@vorpal.se>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <20220901215819.1608723-3-lkml@vorpal.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Changelog
-=========
-v2: Fixed feedback on usage of HWMON interfaces in patch 2.
+On 9/1/22 14:58, Arvid Norlander wrote:
+> This expands on the previous commit, exporting the fan RPM via hwmon.
+> 
+> This will look something like the following when using the "sensors"
+> command from lm_sensors:
+> 
+> toshiba_acpi_sensors-acpi-0
+> Adapter: ACPI interface
+> fan1:           0 RPM
+> 
+> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+> ---
+>   drivers/platform/x86/Kconfig        |  1 +
+>   drivers/platform/x86/toshiba_acpi.c | 72 +++++++++++++++++++++++++++++
+>   2 files changed, 73 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index f2f98e942cf2..4d0d2676939a 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -797,6 +797,7 @@ config ACPI_TOSHIBA
+>   	depends on INPUT
+>   	depends on SERIO_I8042 || SERIO_I8042 = n
+>   	depends on ACPI_VIDEO || ACPI_VIDEO = n
+> +	depends on HWMON || HWMON = n
+>   	depends on RFKILL || RFKILL = n
+>   	depends on IIO
+>   	select INPUT_SPARSEKMAP
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 02e3522f4eeb..a976dfb97a5e 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -46,6 +46,10 @@
+>   #include <linux/toshiba.h>
+>   #include <acpi/video.h>
+>   
+> +#ifdef CONFIG_HWMON
+> +#include <linux/hwmon.h>
+> +#endif
 
-Fan
-===
+ifdef not needed here.
 
-Currently /sys/bus/acpi/devices/TOS6208:00/fan allows controlling the fan
-by writing 0 (off) or 1 (on at low speed). However when reading I have
-observed values up to 64 (fan at full speed during prime95 stress test).
+> +
+>   MODULE_AUTHOR("John Belmonte");
+>   MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+>   MODULE_LICENSE("GPL");
+> @@ -171,6 +175,9 @@ struct toshiba_acpi_dev {
+>   	struct miscdevice miscdev;
+>   	struct rfkill *wwan_rfk;
+>   	struct iio_dev *indio_dev;
+> +#ifdef CONFIG_HWMON
+> +	struct device *hwmon_device;
+> +#endif
+>   
+>   	int force_fan;
+>   	int last_key_event;
+> @@ -2941,6 +2948,54 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>   	return 0;
+>   }
+>   
+> +/* HWMON support for fan */
+> +#ifdef CONFIG_HWMON
 
-Removing the check for "zero or one" shows that on the Z830 at least 64
-levels do indeed seem possible. In fact higher values can be written.
+This should be #if IS_REACHABLE(CONFIG_HWMON)
 
-But anything above ~50 seems to max out the RPM.
+> +umode_t toshiba_acpi_hwmon_is_visible(const void *drvdata,
+> +				      enum hwmon_sensor_types type,
+> +				      u32 attr, int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +int toshiba_acpi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +			    u32 attr, int channel, long *val)
+> +{
+> +	/*
+> +	 * There is only a single channel and single attribute (for the
+> +	 * fan) at this point.
+> +	 * This can be replaced with more advanced logic in the future,
+> +	 * should the need arise.
+> +	 */
+> +	if (type == hwmon_fan && channel == 0 && attr == hwmon_fan_input) {
+> +		u32 value;
+> +		int ret;
+> +
+> +		ret = get_fan_rpm(toshiba_acpi, &value);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = value;
+> +		return 0;
+> +	}
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static const struct hwmon_channel_info *toshiba_acpi_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops toshiba_acpi_hwmon_ops = {
+> +	.is_visible = toshiba_acpi_hwmon_is_visible,
+> +	.read = toshiba_acpi_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info toshiba_acpi_hwmon_chip_info = {
+> +	.ops = &toshiba_acpi_hwmon_ops,
+> +	.info = toshiba_acpi_hwmon_info,
+> +};
+> +#endif
+> +
+>   static void print_supported_features(struct toshiba_acpi_dev *dev)
+>   {
+>   	pr_info("Supported laptop features:");
+> @@ -2995,6 +3050,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>   
+>   	remove_toshiba_proc_entries(dev);
+>   
+> +#ifdef CONFIG_HWMON
 
-I don't know how to detect the supported range, so I have not created a
-patch for this. Advice is welcome.
+#if IS_REACHABLE()
 
-
-Fan RPM
-=======
-
-There is a way to read Fan RPM:
-
-#define HCI_FAN_RPM 0x45
-
-This one is weird. On windows I have observed the cooling self test program
-(which supposedly verifies that the cooling is working correctly) calling
-this a few different ways. Here is a summary of what I managed to figure
-out:
-
-HCI_SET, 0x45, 0, 1, 0, 0: This sets the fan to run at max speed, but it
-will not be visible when reading /sys/bus/acpi/devices/TOS6208:00/fan.
-I will refer to this operation as "set-max-fan" below.
-
-The only way I found to stop it running at max RPM is to use HCI_FAN
-(e.g. 0 > /sys/bus/acpi/devices/TOS6208:00/fan or call the ACPI method
-directly).
-
-However the get method is more interesting:
-
-HCI_GET, 0x45, 0, 1, 0, 0 returns: {0x0, 0x45, fan_rpm, 0x1db0, 0x0, 0x0}
-
-I believe fan_rpm is accurate, without any scaling factors needed:
-* It behaves properly (higher value when fan is louder/faster/higher
-  pitched, 0 when fan is off).
-* It matches the value range reported by HwInfo64 on Windows (which seems
-  to be able to read this, I have not looked into how it does that).
-* Unfortunately there is no tool by Toshiba that exposes the numerical
-  value that I can find (that would have been ideal). Nor is it shown in
-  BIOS. The Windows tools "Toshiba PC Health Monitor" reports everything in
-  percentages. Yes even the temperatures!
-* It is definitely a loud and whiny fan, even by laptop standards, so the
-  high reported RPM range of 3540-7600 RPM could make sense. Though it did
-  seem a bit high.
-* Finally, to be sure, I borrowed a tachometer from work. Yes, the fan
-  really spins that fast. Byt it is only 30 mm, so I guess that makes
-  sense.
-
-HCI_GET 0x45, 0, 0, 0, 0 returns: {0x0, 0x45, fan_rpm, 0x0, 0x0, 0x0}
-
-The Windows software does *not* use this variant as far as I have observed.
-It appears to work the same except that it doesn't return 0x1db0 in index 3.
-
-I'm not sure, but I strongly suspect 0x1db0 could be the max RPM (7600).
-The most I have observed when using "set-max-fan" is 0x1da6 (7590 RPM),
-which is very close. Note that this is significantly more than I can get
-using just HCI_FAN, which seems to max out at 0x17ac (6060 RPM).
-
-
-Patches
-=======
-
-I'm not personally particularly interested in user space control of fan
-speed, plus the fact that there is a way to make the fan go faster than
-the *other* max speed makes me wonder about the safety of running the fan
-at that speed for prolonged periods of time. Thus, I have only added a
-read-only hwmon interface for reading the fan RPM.
-
-I elected to use the same call that the Windows code does, which fetches
-what I believe is the max RPM. I think it is safer to stay as close as
-possible to that code. However I don't currently make use of this value,
-suggestions for where to use it are welcome.
-
-Note! I assume that if the FAN RPM call do not result in an error, that
-it is in fact supported. This may not be true. I would welcome testing by
-anyone who owns a Toshiba laptop!
+> +	if (dev->hwmon_device)
+> +		hwmon_device_unregister(dev->hwmon_device);
+> +#endif
+> +
+>   	if (dev->accelerometer_supported && dev->indio_dev) {
+>   		iio_device_unregister(dev->indio_dev);
+>   		iio_device_free(dev->indio_dev);
+> @@ -3187,6 +3247,18 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>   	ret = get_fan_rpm(dev, &dummy);
+>   	dev->fan_rpm_supported = !ret;
+>   
+> +#ifdef CONFIG_HWMON
 
 
-Arvid Norlander (2):
-  platform/x86: toshiba_acpi: Add fan RPM reading (internals)
-  platform/x86: toshiba_acpi: Add fan RPM reading (hwmon interface)
+... and again.
 
- drivers/platform/x86/Kconfig        |   1 +
- drivers/platform/x86/toshiba_acpi.c | 102 ++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
-
-
-base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
--- 
-2.37.3
+> +	if (dev->fan_rpm_supported) {
+> +		dev->hwmon_device = hwmon_device_register_with_info(
+> +			&dev->acpi_dev->dev, "toshiba_acpi_sensors", NULL,
+> +			&toshiba_acpi_hwmon_chip_info, NULL);
+> +		if (IS_ERR(dev->hwmon_device)) {
+> +			dev->hwmon_device = NULL;
+> +			pr_warn("unable to register hwmon device, skipping\n");
+> +		}
+> +	}
+> +#endif
+> +
+>   	toshiba_wwan_available(dev);
+>   	if (dev->wwan_supported)
+>   		toshiba_acpi_setup_wwan_rfkill(dev);
 
