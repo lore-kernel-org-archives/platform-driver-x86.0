@@ -2,144 +2,195 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D752ECAAD1
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 17:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ABDECAAD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 18:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231244AbiIARcX (ORCPT
+        id S234101AbiIASL1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 13:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43822 "EHLO
+        Thu, 1 Sep 2022 14:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbiIARcW (ORCPT
+        with ESMTP id S232665AbiIASLE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 13:32:22 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5364190833;
-        Thu,  1 Sep 2022 10:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662053541; x=1693589541;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=O9murFNnf7yd+h4pRFCxdy6du3N7zy8u2YJxy89V9Aw=;
-  b=ksVoPni7b+P9nC6E6pno8LdPjqu7gRPDcxitwsrhqSK0tDi9l1HeRd5f
-   kq2FHyrBqy9kwkep5da80kM3IizSJVDuZYrbG9WbmbkGrUwfbwkSRqXJa
-   wKfafAmeQiF05VrUXiyv286RGnv2gD/Vt3q4t+GbkOHdF0otROm9sWbiW
-   0T6Y5XqBiA27X+27W+aNGUqIFLl9htopTXLLrmhsalzdwarU8yqEGkgse
-   1ICzw8N014fnsykCW2/lARG/3QPdKW2/2p+SiqUhaKTnn1bshk67R1gsJ
-   UD3CtJE7VhJ1M1FBTct4Itt2Ie/btvYBmqWkOBDWQoXO6PLc/boq2Ki+m
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="297064805"
-X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
-   d="scan'208";a="297064805"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 10:32:20 -0700
-X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
-   d="scan'208";a="642431191"
-Received: from gkammela-mobl.amr.corp.intel.com (HELO [10.212.21.24]) ([10.212.21.24])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 10:32:16 -0700
-Message-ID: <8d1dec22-72e2-8297-9dbd-6b2904349fda@linux.intel.com>
-Date:   Thu, 1 Sep 2022 10:32:15 -0700
+        Thu, 1 Sep 2022 14:11:04 -0400
+Received: from vorpal.se (vorpal.se [151.236.221.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63BC786ED;
+        Thu,  1 Sep 2022 11:10:45 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id 2D35C142D4;
+        Thu,  1 Sep 2022 18:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
+        t=1662055843; bh=g9vNwg893t2qP2cvJ34PAs68DLtBraMZMZ1eKQJITow=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=LRbCSxGNultzKNwouxAcjJaWU3cO/S69gmKkf5a7f8ER06V4I8Z/pySgXHdbwF4Kp
+         d7AEaIBythzMNSWGVgbYWqnUYSjdgrxrdM1rw5I0Rm6kMXXcaqsFKoc2oVjuFTqpO4
+         k5nHza4EcLjEK9VTu7ChXa3BzkgYwP9DOpfSSzEhY5uN/numkjeWTd8MV4A4C37xdF
+         VjNZQ4ES4nPr5jC2sgGWdXireKJkF24DJw+ijg3ewVRlRxtyDynBqjs/rlDUUsnfM1
+         Cv9MJ5SNuEe+CsUukpNcvvXQQKt+rH3aJvZJw+j929izaH1n48/qB6YI/IszR74JR4
+         ogZfFvucgaGVw==
+Message-ID: <2d059eb6-3e3d-4490-3988-5f7e493c69a9@vorpal.se>
+Date:   Thu, 1 Sep 2022 20:10:42 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v1] platform/x86/intel: pmc/core: Add Raptor Lake support
- to pmc core driver
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 2/2] [RFC] platform/x86: toshiba_acpi: Add fan RPM reading
+ (hwmon interface)
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, irenic.rajneesh@gmail.com,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Box <david.e.box@intel.com>
-References: <20220830182001.3693030-1-gayatri.kammela@linux.intel.com>
- <b8a5038b-3d3a-4a2c-8fca-32b47f11e85c@redhat.com>
- <e14b3264-7e60-9cfe-34f8-f79815878d50@redhat.com>
-From:   "Kammela, Gayatri" <gayatri.kammela@linux.intel.com>
-In-Reply-To: <e14b3264-7e60-9cfe-34f8-f79815878d50@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To:     Guenter Roeck <linux@roeck-us.net>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org
+References: <20220901144941.1426407-1-lkml@vorpal.se>
+ <20220901144941.1426407-3-lkml@vorpal.se>
+ <c5f0f1c3-4cec-1f68-b83d-5277e18c050f@roeck-us.net>
+From:   Arvid Norlander <lkml@vorpal.se>
+In-Reply-To: <c5f0f1c3-4cec-1f68-b83d-5277e18c050f@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/1/2022 8:47 AM, Hans de Goede wrote:
-
-> Hi,
->
-> On 9/1/22 17:43, Hans de Goede wrote:
->> Hi,
+On 2022-09-01 17:28, Guenter Roeck wrote:
+> On 9/1/22 07:49, Arvid Norlander wrote:
+>> This expands on the previous commit, exporting the fan RPM via hwmon.
 >>
->> On 8/30/22 20:20, Gayatri Kammela wrote:
->>> Add Raptor Lake client parts (both RPL and RPL_S) support to pmc core
->>> driver. Raptor Lake client parts reuse all the Alder Lake PCH IPs.
->>>
->>> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
->>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>> Cc: David Box <david.e.box@intel.com>
->>> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
->> Thank you for your patch, I've applied this patch to my review-hans
->> branch:
->> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> In file included from drivers/platform/x86/intel/pmc/core.c:29:
-> ./arch/x86/include/asm/cpu_device_id.h:161:46: error: ‘INTEL_FAM6_RAPTORLAKE_S’ undeclared here (not in a function); did you mean ‘INTEL_FAM6_RAPTORLAKE_P’?
->    161 |         X86_MATCH_VENDOR_FAM_MODEL(INTEL, 6, INTEL_FAM6_##model, data)
->        |                                              ^~~~~~~~~~~
-> ./arch/x86/include/asm/cpu_device_id.h:46:27: note: in definition of macro ‘X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE’
->     46 |         .model          = _model,                                       \
->        |                           ^~~~~~
-> ./arch/x86/include/asm/cpu_device_id.h:129:9: note: in expansion of macro ‘X86_MATCH_VENDOR_FAM_MODEL_FEATURE’
->    129 |         X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model,       \
->        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./arch/x86/include/asm/cpu_device_id.h:161:9: note: in expansion of macro ‘X86_MATCH_VENDOR_FAM_MODEL’
->    161 |         X86_MATCH_VENDOR_FAM_MODEL(INTEL, 6, INTEL_FAM6_##model, data)
->        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/platform/x86/intel/pmc/core.c:1918:9: note: in expansion of macro ‘X86_MATCH_INTEL_FAM6_MODEL’
->   1918 |         X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,        &adl_reg_map),
->        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> make[5]: *** [scripts/Makefile.build:249: drivers/platform/x86/intel/pmc/core.o] Error 1
->
-> And dropped again, please upstream this through the tree which also has the new
-> INTEL_FAM6_RAPTORLAKE* macros.
->
-> Here is my Acked-by for merging this through another tree:
->
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
->
-> Regards,
->
-> Hans
+>> This will look something like the following when using the "sensors"
+>> command from lm_sensors:
+>>
+>> toshiba_acpi_sensors-acpi-0
+>> Adapter: ACPI interface
+>> fan1:           0 RPM
+>>
+>> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+>> ---
+>>   drivers/platform/x86/Kconfig        |  1 +
+>>   drivers/platform/x86/toshiba_acpi.c | 49 +++++++++++++++++++++++++++++
+>>   2 files changed, 50 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index f2f98e942cf2..9a98974ab8bf 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -799,6 +799,7 @@ config ACPI_TOSHIBA
+>>       depends on ACPI_VIDEO || ACPI_VIDEO = n
+>>       depends on RFKILL || RFKILL = n
+>>       depends on IIO
+>> +    select HWMON
+> 
+> This is wrong. I know other drivers in this directory do it, but it is
+> still wrong. It should be something like
+> 
+>     depends on HWMON || HWMON=n
+> 
+> and the code should deal with the conditionals.
 
-Hi Hans!
+Thanks, I will do that. Perhaps ping the thinkpad_acpi maintainers about
+this as well, that is where I copied it from.
 
-Thank you for your Acked-by! The cpuid patch has been merged in to 
-v6.0-rc3. I am not sure why its complaining about 
-INTEL_FAM6_RAPTORLAKE_S being undeclared.
+> 
+>>       select INPUT_SPARSEKMAP
+>>       help
+>>         This driver adds support for access to certain system settings
+>> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+>> index 02e3522f4eeb..2b71dac34cf0 100644
+>> --- a/drivers/platform/x86/toshiba_acpi.c
+>> +++ b/drivers/platform/x86/toshiba_acpi.c
+>> @@ -39,6 +39,7 @@
+>>   #include <linux/i8042.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/dmi.h>
+>> +#include <linux/hwmon.h>
+>>   #include <linux/uaccess.h>
+>>   #include <linux/miscdevice.h>
+>>   #include <linux/rfkill.h>
+>> @@ -171,6 +172,7 @@ struct toshiba_acpi_dev {
+>>       struct miscdevice miscdev;
+>>       struct rfkill *wwan_rfk;
+>>       struct iio_dev *indio_dev;
+>> +    struct device *hwmon_device;
+>>         int force_fan;
+>>       int last_key_event;
+>> @@ -2941,6 +2943,38 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>>       return 0;
+>>   }
+>>   +
+>> +/* HWMON support for fan */
+>> +static ssize_t fan_fan1_input_show(struct device *dev,
+>> +                   struct device_attribute *attr,
+>> +                   char *buf)
+>> +{
+>> +    u32 value;
+>> +    int ret;
+>> +
+>> +    ret = get_fan_rpm(toshiba_acpi, &value);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    return sysfs_emit(buf, "%u\n", value);
+>> +}
+>> +
+>> +static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+>> +
+>> +static struct attribute *fan_attributes[] = {
+>> +    &dev_attr_fan1_input.attr,
+>> +    NULL
+>> +};
+>> +
+>> +static const struct attribute_group fan_attr_group = {
+>> +    .attrs = fan_attributes,
+>> +};
+>> +
+>> +static const struct attribute_group *toshiba_acpi_hwmon_groups[] = {
+>> +    &fan_attr_group,
+>> +    NULL,
+>> +};
+>> +
+>>   static void print_supported_features(struct toshiba_acpi_dev *dev)
+>>   {
+>>       pr_info("Supported laptop features:");
+>> @@ -2995,6 +3029,9 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>>         remove_toshiba_proc_entries(dev);
+>>   +    if (dev->hwmon_device)
+>> +        hwmon_device_unregister(dev->hwmon_device);
+>> +
+>>       if (dev->accelerometer_supported && dev->indio_dev) {
+>>           iio_device_unregister(dev->indio_dev);
+>>           iio_device_free(dev->indio_dev);
+>> @@ -3187,6 +3224,18 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>>       ret = get_fan_rpm(dev, &dummy);
+>>       dev->fan_rpm_supported = !ret;
+>>   +    if (dev->fan_rpm_supported) {
+>> +        dev->hwmon_device = hwmon_device_register_with_groups(
+> 
+> New drivers should register using [devm_]hwmon_device_register_with_info().
 
-patch - ea902bcc1943f7539200ec464de3f54335588774 : "x86/cpu: Add new 
-Raptor Lake CPU model number".
+Again, copied thikpad_acpi, but I'll look into that function for version 2.
 
-I made sure its built without errors before sending it out.
+> 
+>> +            &dev->acpi_dev->dev, "toshiba_acpi_sensors", NULL,
+>> +            toshiba_acpi_hwmon_groups);
+>> +        if (IS_ERR(dev->hwmon_device)) {
+>> +            ret = PTR_ERR(dev->hwmon_device);
+>> +            dev->hwmon_device = NULL;
+>> +            pr_err("unable to register hwmon device\n");
+>> +            goto error;
+> 
+> The driver works just fine without hwmon, and should not fail to probe
+> if hwmon registration fails. It did not fail before this patch was applied
+> either, and hwmon is not essential functionality for this driver.
 
->
->
->
->>> ---
->>>   drivers/platform/x86/intel/pmc/core.c | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->>> index a1fe1e0dcf4a..17ec5825d13d 100644
->>> --- a/drivers/platform/x86/intel/pmc/core.c
->>> +++ b/drivers/platform/x86/intel/pmc/core.c
->>> @@ -1914,6 +1914,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->>>   	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
->>>   	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
->>>   	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
->>> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_reg_map),
->>> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_reg_map),
->>>   	{}
->>>   };
->>>   
->>>
->>> base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
+Good point. Again, this was based on thinkpad_acpi which it appears then
+has some legacy behaviour.
+
+> 
+> Guenter
+> 
+>> +        }
+>> +    }
+>> +
+>>       toshiba_wwan_available(dev);
+>>       if (dev->wwan_supported)
+>>           toshiba_acpi_setup_wwan_rfkill(dev);
+> 
+
+Best regards,
+Arvid Norlander
