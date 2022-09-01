@@ -2,74 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809D4ECAAD1
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2826ECAAD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233825AbiIAPey (ORCPT
+        id S234510AbiIAPlX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 11:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
+        Thu, 1 Sep 2022 11:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233225AbiIAPev (ORCPT
+        with ESMTP id S233671AbiIAPlW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 11:34:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5348E2A2
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:34:47 -0700 (PDT)
+        Thu, 1 Sep 2022 11:41:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7FA5F114
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662046486;
+        s=mimecast20190719; t=1662046876;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EdU6kcxk31+NfDy/R26HslGdp1j7dLdIqqiHO/JJmC8=;
-        b=XUVMCgmIt7zgb1iQZn7DdvpuhJrMbmVssMFRazT7OQzsFvSO2M31mnm9UMiwfyF1ku4uay
-        QIp13hWRg61FUeF5nIc6kds+VGfLT1OpQznMn96BArBP/ZrY2guSRcAeyUDu5QYPpST1UU
-        cXvWuOHn4gjBh2IYnwYcq+S+2rzvi+I=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=NYoFtYjF1V+qwYcerU3qx9YeyX1w8Ov3wZ1QYftIVaQ=;
+        b=OKatM3SXccNMG5aDgrbhQYKz+wmrMofGila/L/RvQ1o/QR0vCR15we7k95CR+eojfxEDpP
+        8w9gkjDcYgEBpKEyTyCGgKd1hCxQK0PUgGCLK2Akcl/UPUvHVRoYOcgNwfZrbCChrznpmX
+        Fc7xsNIcahN+uBBpkFqNRY4QeX84PKk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-661-W72Ll0xzOuqkBhpZd7GHQg-1; Thu, 01 Sep 2022 11:34:45 -0400
-X-MC-Unique: W72Ll0xzOuqkBhpZd7GHQg-1
-Received: by mail-ed1-f71.google.com with SMTP id b13-20020a056402350d00b0043dfc84c533so11837814edd.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:34:45 -0700 (PDT)
+ us-mta-662-rsJKyljhPH6sgl_lZMconA-1; Thu, 01 Sep 2022 11:41:14 -0400
+X-MC-Unique: rsJKyljhPH6sgl_lZMconA-1
+Received: by mail-ej1-f70.google.com with SMTP id sd6-20020a1709076e0600b0073315809fb5so7050064ejc.10
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:41:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=EdU6kcxk31+NfDy/R26HslGdp1j7dLdIqqiHO/JJmC8=;
-        b=I72XGX9bihAf5dLwrtkDAHr/5dOfhgbOuueIbSxTLz4J0zQxGZYaL0RnoMNgmjKsm4
-         gm/wRf7Cab3cFo/sAEA7oAkn2y4GSSOTpEdv2ffQNbcRyOkiZzU/HwUsg57XcLPr0Xz5
-         kSfZ93a6US6SBId+CR+65Nn9F10kmVqumwfGqlY5z0Ms4gOetXIVHAIOI5HG73fMifDA
-         lh/22F1PnMpWtT++tz0FnSEv5ytq8nbcRGt/ulWPPHVcDOiNpbAWakGeFa895StEKYV1
-         QJgHPoTNBqX40sHEaDmViITrvuJFgVJlpeHUWTta4rGJtCnM+VTTuCZc5PK40LGdGfbv
-         hG1w==
-X-Gm-Message-State: ACgBeo2qWgzqwaU275eKgLke29Zlri7wSo+mIaOavtpvm++C6QACdehm
-        nyld8qQhAZqMs7f/Z5ZFW0sQ5mbAmR1o7cZspSNQW+QwnQJkOAaB2npB4Q3J+J1kwda9qbYlCk0
-        5vpdXKNFy/hJpaYBMpt1k9p54UsOqfyCHag==
-X-Received: by 2002:a17:907:3e06:b0:733:693:600e with SMTP id hp6-20020a1709073e0600b007330693600emr22714943ejc.410.1662046484224;
-        Thu, 01 Sep 2022 08:34:44 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6CGvsVadtU/FKpog77yx9E+0aH5YULUA3W4O38vGBKP5LbcMpEQQEm87QgPg9ZZYddq9+tLA==
-X-Received: by 2002:a17:907:3e06:b0:733:693:600e with SMTP id hp6-20020a1709073e0600b007330693600emr22714935ejc.410.1662046484002;
-        Thu, 01 Sep 2022 08:34:44 -0700 (PDT)
+        bh=NYoFtYjF1V+qwYcerU3qx9YeyX1w8Ov3wZ1QYftIVaQ=;
+        b=DfahWLg5Y3rTDbnZRQfFp4ENbdE1CJkOC2Be2QvEiPAv060PD4YudxN5QBO9GclBwM
+         GGdY5DbDo241YhcxnaVJP9KQsa1jHIw5wCXgP2SO+ZTEFPg9zs9LnpwzZRrIn9qizdo2
+         HM8DQf6aE3q0jb0dck9LLdqpmtXHXe/pQopD+6943UuLyuvTll7aTn1mEVA+p3AwpAN1
+         yw+0NbCsXgwWhGzm4RYVBXph+v38C8/1U8uelKQPut4IOPETjacXBK6EbkdUXgIeYA8d
+         t7b6tlB6H5dgSHPM/6+v5qJyXMYftFdUyl1FKHM1d2VA4XpsfTnezgciX3jTAg0ezd9f
+         IXeQ==
+X-Gm-Message-State: ACgBeo3TCivRBAVi2yY6Vzrpr40Qy9KJj0bdjPmuHU9+hkEEE8HhDuYl
+        YfvS1iKgiGEEHlX3cW92NEnHfiv4Xb7072MEIzA2PxW2geSJ8LLhoVxJIpaXlQ5nYPERPxZsRy7
+        bmxtCtthuQLKfZVrZWqP0uS58ob35QF7+ig==
+X-Received: by 2002:a17:907:6d1d:b0:741:5b1b:5c9a with SMTP id sa29-20020a1709076d1d00b007415b1b5c9amr16289870ejc.642.1662046873300;
+        Thu, 01 Sep 2022 08:41:13 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4kUKy50HgQPipp6hTm1cKVdFjk8aQzOrrTyDTDNMTXxEwut13kcOojubSlvSxAd8rjdxhcuA==
+X-Received: by 2002:a17:907:6d1d:b0:741:5b1b:5c9a with SMTP id sa29-20020a1709076d1d00b007415b1b5c9amr16289855ejc.642.1662046873099;
+        Thu, 01 Sep 2022 08:41:13 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id dy17-20020a05640231f100b0043cc66d7accsm1518518edb.36.2022.09.01.08.34.43
+        by smtp.gmail.com with ESMTPSA id v12-20020a056402184c00b0044629b54b00sm1545641edy.46.2022.09.01.08.41.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 08:34:43 -0700 (PDT)
-Message-ID: <c23819ae-f7be-d07d-65bc-ea2c56a85b58@redhat.com>
-Date:   Thu, 1 Sep 2022 17:34:42 +0200
+        Thu, 01 Sep 2022 08:41:12 -0700 (PDT)
+Message-ID: <7912c9bd-e2a6-f02d-835b-0379e354920e@redhat.com>
+Date:   Thu, 1 Sep 2022 17:41:12 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH] asus-wmi: Increase FAN_CURVE_BUF_LEN to 32
+Subject: Re: [PATCH v2] platform/x86: wmi: Allow duplicate GUIDs for drivers
+ that use struct wmi_driver
 Content-Language: en-US
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, markgross@kernel.org
-References: <20220828074638.5473-1-luke@ljones.dev>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220829201500.6341-1-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220828074638.5473-1-luke@ljones.dev>
+In-Reply-To: <20220829201500.6341-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,16 +79,25 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/28/22 09:46, Luke D. Jones wrote:
-> Fix for TUF laptops returning with an -ENOSPC on calling
-> asus_wmi_evaluate_method_buf() when fetching default curves. The TUF method
-> requires at least 32 bytes space.
+On 8/29/22 22:14, Mario Limonciello wrote:
+> The WMI subsystem in the kernel currently tracks WMI devices by
+> a GUID string not by ACPI device.  The GUID used by the `wmi-bmof`
+> module however is available from many devices on nearly every machine.
 > 
-> This also moves and changes the pr_debug() in fan_curve_check_present() to
-> pr_warn() in fan_curve_get_factory_default() so that there is at least some
-> indication in logs of why it fails.
+> This originally was though to be a bug, but as it happens on most
+> machines it is a design mistake.  It has been fixed by tying an ACPI
+> device to the driver with struct wmi_driver. So drivers that have
+> moved over to struct wmi_driver can actually support multiple
+> instantiations of a GUID without any problem.
 > 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Add an allow list into wmi.c for GUIDs that the drivers that are known
+> to use struct wmi_driver.  The list is populated with `wmi-bmof` right
+> now. The additional instances of that in sysfs with be suffixed with -%d
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Change to an allow list for wmi-bmof and suffix the extra instances
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -106,43 +116,104 @@ Regards,
 Hans
 
 
-> ---
->  drivers/platform/x86/asus-wmi.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3d9fd58573f9..11203213e00d 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -108,7 +108,7 @@ module_param(fnlock_default, bool, 0444);
->  #define WMI_EVENT_MASK			0xFFFF
+>  drivers/platform/x86/wmi.c | 45 ++++++++++++++++++++++++++++++--------
+>  1 file changed, 36 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index aed293b5af81..2997dad79e8b 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -105,6 +105,12 @@ static const struct acpi_device_id wmi_device_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
 >  
->  #define FAN_CURVE_POINTS		8
-> -#define FAN_CURVE_BUF_LEN		(FAN_CURVE_POINTS * 2)
-> +#define FAN_CURVE_BUF_LEN		32
->  #define FAN_CURVE_DEV_CPU		0x00
->  #define FAN_CURVE_DEV_GPU		0x01
->  /* Mask to determine if setting temperature or percentage */
-> @@ -2383,8 +2383,10 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
->  	curves = &asus->custom_fan_curves[fan_idx];
->  	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
->  					   FAN_CURVE_BUF_LEN);
-> -	if (err)
-> +	if (err) {
-> +		pr_warn("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
->  		return err;
+> +/* allow duplicate GUIDs as these device drivers use struct wmi_driver */
+> +static const char * const allow_duplicates[] = {
+> +	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
+> +	NULL,
+> +};
+> +
+>  static struct platform_driver acpi_wmi_driver = {
+>  	.driver = {
+>  		.name = "acpi-wmi",
+> @@ -1073,6 +1079,19 @@ static const struct device_type wmi_type_data = {
+>  	.release = wmi_dev_release,
+>  };
+>  
+> +static int guid_count(const guid_t *guid)
+> +{
+> +	struct wmi_block *wblock;
+> +	int count = 0;
+> +
+> +	list_for_each_entry(wblock, &wmi_block_list, list) {
+> +		if (guid_equal(&wblock->gblock.guid, guid))
+> +			count++;
 > +	}
+> +
+> +	return count;
+> +}
+> +
+>  static int wmi_create_device(struct device *wmi_bus_dev,
+>  			     struct wmi_block *wblock,
+>  			     struct acpi_device *device)
+> @@ -1080,6 +1099,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+>  	struct acpi_device_info *info;
+>  	char method[WMI_ACPI_METHOD_NAME_SIZE];
+>  	int result;
+> +	uint count;
 >  
->  	fan_curve_copy_from_buf(curves, buf);
->  	curves->device_id = fan_dev;
-> @@ -2402,9 +2404,6 @@ static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
+>  	if (wblock->gblock.flags & ACPI_WMI_EVENT) {
+>  		wblock->dev.dev.type = &wmi_type_event;
+> @@ -1134,7 +1154,11 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+>  	wblock->dev.dev.bus = &wmi_bus_type;
+>  	wblock->dev.dev.parent = wmi_bus_dev;
 >  
->  	err = fan_curve_get_factory_default(asus, fan_dev);
->  	if (err) {
-> -		pr_debug("fan_curve_get_factory_default(0x%08x) failed: %d\n",
-> -			 fan_dev, err);
-> -		/* Don't cause probe to fail on devices without fan-curves */
->  		return 0;
+> -	dev_set_name(&wblock->dev.dev, "%pUL", &wblock->gblock.guid);
+> +	count = guid_count(&wblock->gblock.guid);
+> +	if (count)
+> +		dev_set_name(&wblock->dev.dev, "%pUL-%d", &wblock->gblock.guid, count);
+> +	else
+> +		dev_set_name(&wblock->dev.dev, "%pUL", &wblock->gblock.guid);
+>  
+>  	device_initialize(&wblock->dev.dev);
+>  
+> @@ -1154,11 +1178,20 @@ static void wmi_free_devices(struct acpi_device *device)
 >  	}
+>  }
 >  
+> -static bool guid_already_parsed(struct acpi_device *device, const guid_t *guid)
+> +static bool guid_already_parsed_for_legacy(struct acpi_device *device, const guid_t *guid)
+>  {
+>  	struct wmi_block *wblock;
+>  
+>  	list_for_each_entry(wblock, &wmi_block_list, list) {
+> +		/* skip warning and register if we know the driver will use struct wmi_driver */
+> +		for (int i = 0; allow_duplicates[i] != NULL; i++) {
+> +			guid_t tmp;
+> +
+> +			if (guid_parse(allow_duplicates[i], &tmp))
+> +				continue;
+> +			if (guid_equal(&tmp, guid))
+> +				return false;
+> +		}
+>  		if (guid_equal(&wblock->gblock.guid, guid)) {
+>  			/*
+>  			 * Because we historically didn't track the relationship
+> @@ -1208,13 +1241,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+>  		if (debug_dump_wdg)
+>  			wmi_dump_wdg(&gblock[i]);
+>  
+> -		/*
+> -		 * Some WMI devices, like those for nVidia hooks, have a
+> -		 * duplicate GUID. It's not clear what we should do in this
+> -		 * case yet, so for now, we'll just ignore the duplicate
+> -		 * for device creation.
+> -		 */
+> -		if (guid_already_parsed(device, &gblock[i].guid))
+> +		if (guid_already_parsed_for_legacy(device, &gblock[i].guid))
+>  			continue;
+>  
+>  		wblock = kzalloc(sizeof(*wblock), GFP_KERNEL);
 
