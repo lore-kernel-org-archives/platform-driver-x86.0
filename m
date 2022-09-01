@@ -2,132 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C5FECAAD1
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 14:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A15ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 14:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232430AbiIAOxf (ORCPT
+        id S233730AbiIAOzM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 10:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35748 "EHLO
+        Thu, 1 Sep 2022 10:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233545AbiIAOxa (ORCPT
+        with ESMTP id S233101AbiIAOzK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 10:53:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAD082759
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 07:53:29 -0700 (PDT)
+        Thu, 1 Sep 2022 10:55:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE711A389
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 07:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662044009;
+        s=mimecast20190719; t=1662044108;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=A0g1blcGod6K82z7PHFW5jtZohl7FHhnQON5Wk+LVyQ=;
-        b=S3EV/+vPYAy1cW7/4C/yQ1rVTrB1E/2GV5Czy7Q8GXM8eMZGmxllsTvMC9inBOxxXFtjNA
-        zjsJBQ5QWNxNChqvMP1q7iHlHTLUnE+v1RABekj/FS2r44/vAtScVmX3dvteN+7+X2iHzV
-        TuedTHRwQMJeqK1+8JSfGXFdAJFAMss=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5poaUCXaJbI2zmBn4LFN02z8P6dE9ZahVD/y5bAwx+s=;
+        b=Eg4CpL7CCh1UvVS0lHqaEokqApdJxskJQHF/+HuM0EEHFeXpeNXsSmqU3dKtIb8hg5QED8
+        l03/CXTJ2q3pTN+amlLaq+PBDIcnZZwv6RPimCLqMUHQ4BESKuA//pfaxTNtCEpE/45D3l
+        GrH/rEQ4jobelGi4a9jCMnF/DDi6SJk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-547-WF9D6k9TOmC11DVwhIwhVg-1; Thu, 01 Sep 2022 10:53:28 -0400
-X-MC-Unique: WF9D6k9TOmC11DVwhIwhVg-1
-Received: by mail-ed1-f72.google.com with SMTP id l19-20020a056402255300b0043df64f9a0fso11980288edb.16
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 07:53:27 -0700 (PDT)
+ us-mta-576-MYqi0pHxPoKIcjm2sU_hBA-1; Thu, 01 Sep 2022 10:55:07 -0400
+X-MC-Unique: MYqi0pHxPoKIcjm2sU_hBA-1
+Received: by mail-ej1-f71.google.com with SMTP id hp14-20020a1709073e0e00b00741a2093c4aso5316410ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 07:55:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=A0g1blcGod6K82z7PHFW5jtZohl7FHhnQON5Wk+LVyQ=;
-        b=jxsaLgOMPszUTAQyDnnhXQRsNbwGoKsHEtmUREeVdLUX9TwxSy1pFM5GZ87yfbGfcr
-         gv5B8bycRhWXcDN91hVAtDKmm7gZj/TXXJqkDF86p643h1rwQR1cqFlmgnwZaEf5g+DZ
-         lCIgZA7GPL3Q9yfW8W2rtvdoX/JsuPeMhPN/KJfxEDrdA6AI/a6mazt/6ukV3rpuCMbg
-         USYq/czUombbNj6gSYH6XfgcU9aIDnxZurn8hBmXV7uvSss9b8CYyfOslipGAfFMXayz
-         D+ptWiaIeKMJEqjNBmZzYd6tohOXt/51ydETqVg0IB8lBtFc3jGTZJLkcCKFr7xz9PMg
-         lpCg==
-X-Gm-Message-State: ACgBeo1jp4E+VRekHxYhFvvXqZOJYcQDf1iKqlc30BMQGIkM58BMxv9H
-        b87xNHL3BwGlHEHhZ29pjy9Y6vMu68o9fyWffXQ9vcwYOONpoTsVPEZGZ+w0AgY0YIwpNiQ4oLU
-        dKYXmi2deYh0+TSfAqx+jw4IF1oSR2mVIsg==
-X-Received: by 2002:a17:907:97d3:b0:73d:8b9b:a6c1 with SMTP id js19-20020a17090797d300b0073d8b9ba6c1mr23841558ejc.71.1662044006881;
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6A5xb5zxDdAmIlrBKOAQ/kfMCQXQVATSUFSS8Zk3+p7j3ebhCP6gZtK0drupcmwhEfsr5TTQ==
-X-Received: by 2002:a17:907:97d3:b0:73d:8b9b:a6c1 with SMTP id js19-20020a17090797d300b0073d8b9ba6c1mr23841540ejc.71.1662044006697;
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
+        bh=5poaUCXaJbI2zmBn4LFN02z8P6dE9ZahVD/y5bAwx+s=;
+        b=wZ8OEoXvEMl+8v4YyugNxYGxvsw77rhMmJ0RY+Rx4VtJGL9l7SV6uEq8m3171CDGKS
+         On91iHHeyxlKmwjR+32/GTrY2s4Tr6Ta+3QSJx31axfnLNWBX1wqm7+vIekuY+XQF2/A
+         8d/4/SbNB0D0dGQRk+0y0e9e7PI8LADjya6FILvHtBBqwbnZrhWoEagZvsCzylZvKLY3
+         CEjWjkxiqL6VjkkrmtSkN89Ah5AaWM1Pl73pmr4pTym97ibMmEKBgCkqiuGmEV0QdP6V
+         uyWqGPu24AZmg+AOHhr6pVw1C6jZ0W1hqaqYOpZdmREmevF8j9fp7xL6EIF6Ej0Qf1M/
+         sQzA==
+X-Gm-Message-State: ACgBeo1rhuwcZaXJ43yoxt6TLmdqFNvJBx2UjnQuy97oac4Nqu36Xp21
+        NdY7Uvm8rXwConFrDwNAF50vG96IbBiu/5yUnu7QSS2tzN4T8218FlwJyN5Yrl63A4+iIGa9YdQ
+        rKLJ6Nn/JE1ciz7QuYaR5pxRt+ASA8ZSi9w==
+X-Received: by 2002:a17:907:b15:b0:741:8ae4:f79d with SMTP id h21-20020a1709070b1500b007418ae4f79dmr14003338ejl.247.1662044106427;
+        Thu, 01 Sep 2022 07:55:06 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7pHLqWKYnezkwg6Cw+LC0vRhxIy2LH6NjSTOVS+3Vo3GzJgUoIEibH37ESMSoAQeZpV+k1Sg==
+X-Received: by 2002:a17:907:b15:b0:741:8ae4:f79d with SMTP id h21-20020a1709070b1500b007418ae4f79dmr14003324ejl.247.1662044106160;
+        Thu, 01 Sep 2022 07:55:06 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id vs23-20020a170907139700b0072ed9efc9dfsm8530465ejb.48.2022.09.01.07.53.25
+        by smtp.gmail.com with ESMTPSA id 1-20020a170906210100b0073d61238ae1sm8535366ejt.83.2022.09.01.07.55.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 07:53:26 -0700 (PDT)
-Message-ID: <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-Date:   Thu, 1 Sep 2022 16:53:25 +0200
+        Thu, 01 Sep 2022 07:55:05 -0700 (PDT)
+Message-ID: <7abac73e-d7e2-f457-7a72-9fecb532ddd5@redhat.com>
+Date:   Thu, 1 Sep 2022 16:55:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] Immutable branch with 6.0-rc1 + "[PATCH v6 0/7] add
- support for another simatic board" series
-To:     Henning Schild <henning.schild@siemens.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-References: <20220825104422.14156-1-henning.schild@siemens.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi: Add WMI event 0x0012 0x0003 to
+ the list
 Content-Language: en-US
-In-Reply-To: <20220825104422.14156-1-henning.schild@siemens.com>
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220827133040.15932-1-pali@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220827133040.15932-1-pali@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dear GPIO and LED subsystem maintainers,
+Hi,
 
-Here is a pull-request for v6.0-rc1 + the
-"[PATCH v6 0/7] add support for another simatic board" series
-for merging into the gpio and leds subsystems.
+On 8/27/22 15:30, Pali Rohár wrote:
+> It looks like that on Dell Latitude E6440 is WMI event 0x0012 0x0003 sent
+> when display changes brightness. When it happens kernel prints
+> "dell_wmi: Unknown WMI event type 0x12" message into dmesg.
+> 
+> So ignore it for now to not spam dmesg.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
-
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-simatec-1
-
-for you to fetch changes up to 8f5c9858c5db129359b5de2f60f5f034bf5d56c0:
-
-  platform/x86: simatic-ipc: add new model 427G (2022-09-01 16:15:03 +0200)
-
-----------------------------------------------------------------
-Tag (immutable branch) for:
-v6.0-rc1 + "[PATCH v6 0/7] add support for another simatic board" series
-for merging into the gpio, leds and pdx86 subsystems.
-
-----------------------------------------------------------------
-Henning Schild (7):
-      gpio-f7188x: switch over to using pr_fmt
-      gpio-f7188x: add a prefix to macros to keep gpio namespace clean
-      gpio-f7188x: Add GPIO support for Nuvoton NCT6116
-      gpio-f7188x: use unique labels for banks/chips
-      leds: simatic-ipc-leds-gpio: add new model 227G
-      platform/x86: simatic-ipc: enable watchdog for 227G
-      platform/x86: simatic-ipc: add new model 427G
-
- drivers/gpio/Kconfig                               |   3 +-
- drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
- drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
- drivers/platform/x86/simatic-ipc.c                 |  10 +-
- include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
- include/linux/platform_data/x86/simatic-ipc.h      |   2 +
- 6 files changed, 216 insertions(+), 117 deletions(-)
+> ---
+>  drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+> index e07d3ba85a3f..0a259a27459f 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-base.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
+> @@ -344,6 +344,9 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
+>   * They are events with extended data
+>   */
+>  static const struct key_entry dell_wmi_keymap_type_0012[] = {
+> +	/* Backlight brightness change event */
+> +	{ KE_IGNORE, 0x0003, { KEY_RESERVED } },
+> +
+>  	/* Ultra-performance mode switch request */
+>  	{ KE_IGNORE, 0x000d, { KEY_RESERVED } },
+>  
 
