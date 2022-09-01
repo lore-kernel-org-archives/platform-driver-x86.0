@@ -2,125 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD84C64991
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0887BECAAD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Sep 2022 15:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233865AbiIAPUP (ORCPT
+        id S234216AbiIAP2V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Sep 2022 11:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52062 "EHLO
+        Thu, 1 Sep 2022 11:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233846AbiIAPUN (ORCPT
+        with ESMTP id S233144AbiIAP1s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2022 11:20:13 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1F531ED0
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:20:11 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id w2so7542530edc.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
-        b=Kw/EoRfWoshcdSsSEeJr6RNkQ3rmFQFy4BcuBRdDcXp9SQSg7EyYGf8Wv929UeL19E
-         46wzxNxWgMPlwMQOCBxq0/FEbjdwRZ1tW84RaosNaJFpZ0VIt38j4l2Lg5uJPZT90CiR
-         wgiRel239a1f0EJmYA/oSeM0+X6+hYVrmnAyELAit4wbh3wAd/QUjrq7M5yRXQ60GjvH
-         5fieFSd0Q8FhH+QKuO4o++KGJ7WSjzxpCPu4zlcPRV+0piF4P5MDOcKA+LvIWcZjuKSD
-         3o9httpKBNq2k0Q5ozGB5D3TdTH+jRiO/Kw+FKdZQk/elpH/M7zyVqcuIluE+C9YCvrT
-         p/YQ==
+        Thu, 1 Sep 2022 11:27:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A097B7AE
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Sep 2022 08:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662046053;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MRBNC1HE2yF6yx84dT5sACeASdUIpsotFUSThdag6so=;
+        b=dDioY6qy/H6Q3Uwe3XRMwFe5q1kKoT//MC9VW9vkSxlG/Ud/5u/PAuV0ECLee1WCPNibpa
+        h52Q/7bM+hEbkYtbUVhSLn36MTc1pNfYxDZjNIe8ST+9p7990YtS2tflA5G6UdfKHyBzIz
+        PFQaXtsFXqGryt+plLp6qtn5qdoZwQk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-101-xDz1k3qmNB67o_a3Xg4Qvw-1; Thu, 01 Sep 2022 11:27:32 -0400
+X-MC-Unique: xDz1k3qmNB67o_a3Xg4Qvw-1
+Received: by mail-ej1-f69.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso6935043ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2022 08:27:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q6mBPFQpA06ZvWUnOEBda1D5SKhKuxvQbDfHBpf3uwc=;
-        b=csJ3J9cK/ZVmCqr2GQJxyohvUGaGIx+IM/dm3xWaBDTtkZdRYPiw70yg/7oLH+o5dh
-         k9nF8dtX/rOMZ/V5wRZ8fl/Wl86Gjcmk3qsk6flOlV95/PQBChpgJyIe9ezOq4uHfSoM
-         33WLE59Y8bmhRELlyVFSu45cz+yMGnFFtCitw5mx7b+keaepw7hCpPAQGgjPNbApe1CA
-         zdrGOGvHJrl5DYgsii7uRAJ/T7cOeTKeOYuCdC0BhUuKUMakBStSZtfiV8Iu7HVSG1IB
-         Mwcpjtd17acq6upv7ihLRnk09UkRygP/sJGU3eLLz4ieVuLmipWNNcBAJfGXCQ6toNOO
-         RyQg==
-X-Gm-Message-State: ACgBeo1uKdk0ssHIy1Gr6ZUSvQdD4Oce5HQq8KJKzAaEJyu5mQAlxa+r
-        H/GWmqRyUQx5F3YGoYVjFzU5j/9KOKTcfSJdi2e8ug==
-X-Google-Smtp-Source: AA6agR5EiqW8yi4rig6EGzVf96EbDsC2nA3KamdLRmLfuxYLnfdyAOimOKpKepGbWdH7MVblW4fMOcn8lYH3DDQBXLs=
-X-Received: by 2002:a05:6402:71a:b0:447:ebb2:18f2 with SMTP id
- w26-20020a056402071a00b00447ebb218f2mr24571735edx.408.1662045609686; Thu, 01
- Sep 2022 08:20:09 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=MRBNC1HE2yF6yx84dT5sACeASdUIpsotFUSThdag6so=;
+        b=q6J60eA2Bk9yx+fjDREhoIUhE2OgYK10v4M0YgLySx+mcDihK4nW5pIQJxZB+jaCK6
+         7eVA2SribwCBI4XIUWP7GnD6ipqoBj1Jh6sduPwRW5EqVAwUPUXq4WPH9bn99vxWjWLA
+         xXlh81Qaca59nHPtqt7hYwMXQgfW9qQR7p9NVRqSbKynfYyVu8Z1LnkrwpuUWE4Sr0hT
+         m7l2yFqMTNde6T8lIMi5n4HyxMAMa1RWEktbwpJ0Aq6aRiebdac4ENVVrC0CMF4pkvDJ
+         nkrzXktvKZTW8rkdV4lpjZUlVmjgCAzC38exNJwilK8Spq390PGSpRgE/5aRZQDr4+60
+         gM3w==
+X-Gm-Message-State: ACgBeo3ocb7Jku5hpAeVKJ5iBalga0wKNUTLEyknxKNRxbw4WwVg0Yo9
+        bet1pLmoiMQEKlr/n3xSeHZun40unI5va3c+qX9VfTgku73NfQNUxHRqJbTC24GKcbNUeqjU5Hb
+        wi7iqatG6ZMPkwvZDSCWLK0CpCd3mY0pt+w==
+X-Received: by 2002:a17:907:60c7:b0:731:2be4:f72d with SMTP id hv7-20020a17090760c700b007312be4f72dmr24297901ejc.639.1662046051207;
+        Thu, 01 Sep 2022 08:27:31 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6lZW+mGGW08k3rbm7xIpUM2bRXeAt5QvzQT5Q+B4KnUEHhTriAIHv4Fm+fWH97djKSuNGshw==
+X-Received: by 2002:a17:907:60c7:b0:731:2be4:f72d with SMTP id hv7-20020a17090760c700b007312be4f72dmr24297884ejc.639.1662046050952;
+        Thu, 01 Sep 2022 08:27:30 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id 8-20020a170906328800b007414152ec4asm7661014ejw.163.2022.09.01.08.27.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Sep 2022 08:27:30 -0700 (PDT)
+Message-ID: <13da9fe4-ee2b-24b1-093b-28017ecc9818@redhat.com>
+Date:   Thu, 1 Sep 2022 17:27:29 +0200
 MIME-Version: 1.0
-References: <20220825104422.14156-1-henning.schild@siemens.com> <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-In-Reply-To: <298e6d86-dc7b-ed24-893d-2211017463bb@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 1 Sep 2022 17:19:58 +0200
-Message-ID: <CAMRc=McxL0KEb+KHTcTAW1NC91Jx8uNAt9AAaLrH97oAA_0SZA@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch with 6.0-rc1 + "[PATCH v6 0/7] add
- support for another simatic board" series
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Sheng-Yuan Huang <syhuang3@nuvoton.com>,
-        Tasanakorn Phaipool <tasanakorn@gmail.com>,
-        simon.guinot@sequanux.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/3] platform/x86: Battery charge mode in toshiba_acpi
+Content-Language: en-US
+To:     Arvid Norlander <lkml@vorpal.se>,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Azael Avalos <coproscefalo@gmail.com>
+References: <20220828192920.805253-1-lkml@vorpal.se>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220828192920.805253-1-lkml@vorpal.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 4:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Dear GPIO and LED subsystem maintainers,
->
-> Here is a pull-request for v6.0-rc1 + the
-> "[PATCH v6 0/7] add support for another simatic board" series
-> for merging into the gpio and leds subsystems.
->
-> Regards,
->
-> Hans
->
->
-> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
->
->   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-simatec-1
->
-> for you to fetch changes up to 8f5c9858c5db129359b5de2f60f5f034bf5d56c0:
->
->   platform/x86: simatic-ipc: add new model 427G (2022-09-01 16:15:03 +0200)
->
-> ----------------------------------------------------------------
-> Tag (immutable branch) for:
-> v6.0-rc1 + "[PATCH v6 0/7] add support for another simatic board" series
-> for merging into the gpio, leds and pdx86 subsystems.
->
-> ----------------------------------------------------------------
-> Henning Schild (7):
->       gpio-f7188x: switch over to using pr_fmt
->       gpio-f7188x: add a prefix to macros to keep gpio namespace clean
->       gpio-f7188x: Add GPIO support for Nuvoton NCT6116
->       gpio-f7188x: use unique labels for banks/chips
->       leds: simatic-ipc-leds-gpio: add new model 227G
->       platform/x86: simatic-ipc: enable watchdog for 227G
->       platform/x86: simatic-ipc: add new model 427G
->
->  drivers/gpio/Kconfig                               |   3 +-
->  drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
->  drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
->  drivers/platform/x86/simatic-ipc.c                 |  10 +-
->  include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
->  include/linux/platform_data/x86/simatic-ipc.h      |   2 +
->  6 files changed, 216 insertions(+), 117 deletions(-)
->
+Hi Arvid,
 
-Pulled, thanks!
+On 8/28/22 21:29, Arvid Norlander wrote:
+> This is an improved version of the battery charge control for Toshiba
+> Satellite Z830. The full background is available in the two emails linked
+> below, but a short summary will follow, including only what is relevant
+> for battery charge control.
 
-Bart
+Thank you for your work on this.
+
+Overall 3 patches look good to me.
+
+Sebastian, any chance you could take a look at patch 3/3
+and maybe give me an ack for merging that through the pdx86
+tree ?   (assuming you are ok with it)
+
+
+2 small remarks about patch 2/3:
+
+Remark 1:
+
++	rval = toshiba_battery_charge_mode_set(toshiba_acpi,
++					       (value < 90) ? 1 : 0);
+
+Playing Devil's advocate here: to a casual reader this looks
+a bit weird, why would I want to enable "charge mode"
+(whatever that is).
+
+IMHO it would be better to call the set (and get) function something
+like e.g.:  toshiba_battery_set_eco_charge_mode()  So basicaly
+add "eco" somewhere in the name. IIRC that is what Toshiba themselves
+use right ?  I think that makes the meaning of the mode being 0 vs
+it being one more clear.
+
+That and/or add an enum for the 0/1 values and use the enum instead,
+the enum could e.g. look something like this:
+
+enum {
+	TOSHIBA_CHARGE_FULL_CHARGE,
+	TOSHIBA_CHARGE_ECO_MODE,
+};
+
+Note either of the suggested changes would be enough to make
+the code more clear. Also this and especially the suggested
+names are just a suggestion.
+
+
+Remark 2:
+
++static int toshiba_acpi_battery_add(struct power_supply *battery)
++{
++	if (toshiba_acpi == NULL) {
++		pr_err("Init order issue\n");
++		return -ENODEV;
+
+
+This will never happen. The hook is only registered when
+toshiba_acpi != NULL and it will get unregistered before
+toshiba_acpi gets set to NULL on remove.
+
++	}
++	if (!toshiba_acpi->battery_charge_mode_supported)
++		return -ENODEV;
+
+If toshiba_acpi->battery_charge_mode_supported == false then
+the acpi_battery_hook battery_hook will never get registered
+and thus this will never get called.
+
++	if (device_add_groups(&battery->dev, toshiba_acpi_battery_groups))
++		return -ENODEV;
++	return 0;
++}
+
+So you really only need the device_add_groups() which should never
+faill and if it does fail then propagating the actual error would
+be better.
+
+So all in all IMHO this function can be simplified to just:
+
+static int toshiba_acpi_battery_add(struct power_supply *battery)
+{
+	return device_add_groups(&battery->dev, toshiba_acpi_battery_groups);
+}
+
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> 
+> 
+> Background (from link 1)
+> ==========
+> 
+> The Toshiba Satellite/Portege Z830 supports not charging the battery fully
+> in order to prolong battery life. Unlike for example ThinkPads where this
+> control is granular here it is just off/on. When off it charges to 100%.
+> When on it charges to about 80%.
+> 
+> According to the Windows program used to control the feature the setting
+> will not take effect until the battery has been discharged to around 50%.
+> However, in my testing it takes effect as soon as the charge drops below
+> 80%. On Windows Toshiba branded this feature as "Eco charging"
+> 
+> In the following example ACPI calls I will use the following newly defined
+> constants:
+> #define HCI_BATTERY_CHARGE_MODE 0xba
+> #define BATTERY_CHARGE_FULL 0
+> #define BATTERY_CHARGE_80_PERCENT 1
+> 
+> To set the feature:
+>   {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
+> To query for the existence of the feature:
+>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
+> To read the feature:
+>   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
+> 
+> The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
+> the status code. This rarely happens (I have never observed it on Linux),
+> but I have seen it happen under Windows once, and the software did retry
+> it.
+> 
+> 
+> Improvements
+> ============
+> 
+> As discussed in link 2 & 3 below, the original approach was suboptimal.
+> 
+> This patch series instead consists of two patches.
+> 
+> The first patch implements detecting the feature as well as internal
+> getter/setter methods.
+> 
+> The second patch adds battery hooks (heavily based on the code for this in
+> thinkpad_acpi) which creates the standard charge_control_end_threshold file
+> under /sys/class/power_supply/BAT1.
+> 
+> Side note: There is no BAT0 on this Toshiba, I'm not sure why the numbering
+> ends up starting from 1 instead of 0 here. This differs from my Thinkpads,
+> where the numbering starts from 0, with BAT1 being the second battery.
+> However, I haven't spent much effort investigating this, as it did not seem
+> important.
+> 
+> Patch 3 updates the ABI test documentation as suggested by Hans de Goede.
+> Note that only the charge_control_end_threshold is updated, as this is the
+> only limit supported by the Toshiba Z830. Possibly
+> charge_control_start_threshold should also be updated similarly, or would
+> it be better to wait for an actual example of this in the wild first?
+> 
+> Link (1): https://www.spinics.net/lists/platform-driver-x86/msg34314.html
+> Link (2): https://www.spinics.net/lists/platform-driver-x86/msg34354.html
+> Link (3): https://www.spinics.net/lists/platform-driver-x86/msg34320.html
+> 
+> Arvid Norlander (3):
+>   platform/x86: Battery charge mode in toshiba_acpi (internals)
+>   platform/x86: Battery charge mode in toshiba_acpi (sysfs)
+>   docs: ABI: charge_control_end_threshold may not support all values
+> 
+>  Documentation/ABI/testing/sysfs-class-power |   5 +-
+>  drivers/platform/x86/toshiba_acpi.c         | 162 ++++++++++++++++++++
+>  2 files changed, 166 insertions(+), 1 deletion(-)
+> 
+> 
+> base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
+
