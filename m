@@ -2,205 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6282FECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60356C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 14:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237939AbiIBNqa (ORCPT
+        id S236798AbiIBO0d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Sep 2022 09:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51670 "EHLO
+        Fri, 2 Sep 2022 10:26:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237979AbiIBNpx (ORCPT
+        with ESMTP id S237121AbiIBO0R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Sep 2022 09:45:53 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABB7FC11A;
-        Fri,  2 Sep 2022 06:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662124899; x=1693660899;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=/NRcLs2FH7Yj/TRPNvW19fp4y9VVTFA7hNnEtx6+aXw=;
-  b=AlJPF+VjBkHA6UhqciTORr4UgnF+vuC2UsqNtVuPw5QtiGU21RwocZIo
-   JelJOIKYOxhSTZsd7XVbcoqnQdc787u2zfXobjHt1f9fEm8vdRvQdqVPU
-   Ni4nkrOBYRH9GXDShfcLIa1tjOCRvHDRI7Q7j2i5GRbYgWCC0oUf9qQaw
-   Q1SwGaV57ICNXQQKOX0cnsPzkocMweTikUov8KF3Hj5150ZCIMAKwl11G
-   isvQpkQ4kOHe55Ml3H2Ix7XjlEoPNDuwxv/gnU+39QI8VLtEDCvMrYMP5
-   76MnqXvn28ZTRQXc6MQWP1ZoaHa+LEdPqT2QvwQClOOylkC2Tmxf/LNqn
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="276378482"
-X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="276378482"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 06:20:39 -0700
-X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="674351857"
-Received: from svandene-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.245])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 06:20:32 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@redhat.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 11/31] drm/i915: Call acpi_video_register_backlight()
- (v3)
-In-Reply-To: <20220825143726.269890-12-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20220825143726.269890-1-hdegoede@redhat.com>
- <20220825143726.269890-12-hdegoede@redhat.com>
-Date:   Fri, 02 Sep 2022 16:20:21 +0300
-Message-ID: <87k06lewve.fsf@intel.com>
+        Fri, 2 Sep 2022 10:26:17 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703A75F120;
+        Fri,  2 Sep 2022 06:53:33 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id o4so2096023pjp.4;
+        Fri, 02 Sep 2022 06:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date;
+        bh=5RLBa13ipEWAkpiaQtXZ6Miu9XQu43K14Fb1Ip6In04=;
+        b=pwyCU8O4/acAUKXQY58Ih4qrZpW+ruGqollsRjkVqVbbki6npX0Hj4Fivb9hqesjBu
+         RPfVWl/dS3xRputH6HAiycosYH+CK+V4VsX3+5JwEllkwWwn5zF25Vh9EM52xaoKac6Y
+         yQrfxQqXQwAlsa+QULESlsOnPU0Vzj5Ln5eneb+zX+J1B9fd68JYG5Ma6J5yQkDVQzLu
+         9YB0JaKTtLAiRjhNpVGb1XxRyavOhVp8qm3VkyrQJMZFzYVM3pMsQVTvxtoq2tLRJ2cU
+         +jyK17z/DHNGnGRStH5weRACodYARykR43ppwEbNs+TxhWoIE/HSNkGOwoalqOGR4V1k
+         DZSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=5RLBa13ipEWAkpiaQtXZ6Miu9XQu43K14Fb1Ip6In04=;
+        b=lwD5BhNyNhlyf3sxoBYbT29jaSGgKRTYgP5O1fLOxadNxyQ9d3GAduB2mJ8ZrwyPf2
+         ndrL5grU+G4BcoNyIRmWIvkiJ2RhAaeamtWILlbVDN3FckQg0MNN0QJKr+8lprzgDR+Y
+         qeDTyorw6fR7sqVLSrrPUH3Yt35FxF5xopUcZBGgtP+mLDmNuSTG8cGaqaJ6nOCxWrBq
+         MfLdGs5APzXhRmJy4M5+ArtUC3tQakHpbNDDPlUdKcNi+3InPLFtYNGfR0KRZCjEZiva
+         T+K8dfaWWxSDrFlUZIgQErtSR9IGsuzvu1z8JDP/PrKAxRTl94snJgYdVlQ1s2grvK9T
+         SkBw==
+X-Gm-Message-State: ACgBeo3PRziD8wmIQ22uug4zMYmgf+0vWv7oVSv5Qq2q2VyQTSXkG9WO
+        qQS7g2TzZb+wmUK1kLfKOBk=
+X-Google-Smtp-Source: AA6agR4BRMVL3/Y1sJ5NnmmVdAulRFNJV3hU3ss/jlsea4zTWR965R6XYNuG6X53l1Wqdx+rIapQ1g==
+X-Received: by 2002:a17:90b:3511:b0:1f7:3c52:4b98 with SMTP id ls17-20020a17090b351100b001f73c524b98mr4855463pjb.17.1662126811439;
+        Fri, 02 Sep 2022 06:53:31 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e18-20020a656892000000b0041d6cda2d60sm1443828pgt.66.2022.09.02.06.53.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Sep 2022 06:53:30 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <8f74ce03-c5b6-f81f-bac5-42cde4e318d8@roeck-us.net>
+Date:   Fri, 2 Sep 2022 06:53:27 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 2/2] platform/x86: toshiba_acpi: Add fan RPM reading
+ (hwmon interface)
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Arvid Norlander <lkml@vorpal.se>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org
+References: <20220901215819.1608723-1-lkml@vorpal.se>
+ <20220901215819.1608723-3-lkml@vorpal.se>
+ <0e31840d-aaf3-d2fb-f490-848e30f626a8@roeck-us.net>
+ <891c2cd5-cacc-f19d-0334-0186d37b9bd2@redhat.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <891c2cd5-cacc-f19d-0334-0186d37b9bd2@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 25 Aug 2022, Hans de Goede <hdegoede@redhat.com> wrote:
-> On machins without an i915 opregion the acpi_video driver immediately
-> probes the ACPI video bus and used to also immediately register
-> acpi_video# backlight devices when supported.
->
-> Once the drm/kms driver then loaded later and possibly registered
-> a native backlight device then the drivers/acpi/video_detect.c code
-> unregistered the acpi_video0 device to avoid there being 2 backlight
-> devices (when acpi_video_get_backlight_type()==native).
->
-> This means that userspace used to briefly see 2 devices and the
-> disappearing of acpi_video0 after a brief time confuses the systemd
-> backlight level save/restore code, see e.g.:
-> https://bbs.archlinux.org/viewtopic.php?id=269920
->
-> To fix this the ACPI video code has been modified to make backlight class
-> device registration a separate step, relying on the drm/kms driver to
-> ask for the acpi_video backlight registration after it is done setting up
-> its native backlight device.
->
-> Add a call to the new acpi_video_register_backlight() after the i915 calls
-> acpi_video_register() (after setting up the i915 opregion) so that the
-> acpi_video backlight devices get registered on systems where the i915
-> native backlight device is not registered.
->
-> Changes in v2:
-> -Only call acpi_video_register_backlight() when a panel is detected
->
-> Changes in v3:
-> -Add a new intel_acpi_video_register() helper which checks if a panel
->  is present and then calls acpi_video_register_backlight()
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 9/2/22 01:29, Hans de Goede wrote:
+> Hi Guenter, Arvid,
+> 
+> On 9/2/22 00:27, Guenter Roeck wrote:
+>> On 9/1/22 14:58, Arvid Norlander wrote:
+>>> This expands on the previous commit, exporting the fan RPM via hwmon.
+>>>
+>>> This will look something like the following when using the "sensors"
+>>> command from lm_sensors:
+>>>
+>>> toshiba_acpi_sensors-acpi-0
+>>> Adapter: ACPI interface
+>>> fan1:           0 RPM
+>>>
+>>> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+>>> ---
+>>>    drivers/platform/x86/Kconfig        |  1 +
+>>>    drivers/platform/x86/toshiba_acpi.c | 72 +++++++++++++++++++++++++++++
+>>>    2 files changed, 73 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index f2f98e942cf2..4d0d2676939a 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -797,6 +797,7 @@ config ACPI_TOSHIBA
+>>>        depends on INPUT
+>>>        depends on SERIO_I8042 || SERIO_I8042 = n
+>>>        depends on ACPI_VIDEO || ACPI_VIDEO = n
+>>> +    depends on HWMON || HWMON = n
+>>>        depends on RFKILL || RFKILL = n
+>>>        depends on IIO
+>>>        select INPUT_SPARSEKMAP
+>>> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+>>> index 02e3522f4eeb..a976dfb97a5e 100644
+>>> --- a/drivers/platform/x86/toshiba_acpi.c
+>>> +++ b/drivers/platform/x86/toshiba_acpi.c
+>>> @@ -46,6 +46,10 @@
+>>>    #include <linux/toshiba.h>
+>>>    #include <acpi/video.h>
+>>>    +#ifdef CONFIG_HWMON
+>>> +#include <linux/hwmon.h>
+>>> +#endif
+>>
+>> ifdef not needed here.
+> 
+> Ack.
+> 
+>>
+>>> +
+>>>    MODULE_AUTHOR("John Belmonte");
+>>>    MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+>>>    MODULE_LICENSE("GPL");
+>>> @@ -171,6 +175,9 @@ struct toshiba_acpi_dev {
+>>>        struct miscdevice miscdev;
+>>>        struct rfkill *wwan_rfk;
+>>>        struct iio_dev *indio_dev;
+>>> +#ifdef CONFIG_HWMON
+>>> +    struct device *hwmon_device;
+>>> +#endif
+>>>          int force_fan;
+>>>        int last_key_event;
+>>> @@ -2941,6 +2948,54 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>>>        return 0;
+>>>    }
+>>>    +/* HWMON support for fan */
+>>> +#ifdef CONFIG_HWMON
+>>
+>> This should be #if IS_REACHABLE(CONFIG_HWMON)
+> 
+> Actually that should be IS_ENABLED since you suggested that
+> Arvid should use:
+> 
+> 	depends on HWMON || HWMON = n
+> 
+Yes, you are absolutely correct.
 
-Apologies for the delay. I truly appreciate the effort you've put into
-this series, and I'm looking forward to seeing the next steps in drm!
-
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-
-And ack for merging via whichever tree you think best.
-
-
-> ---
->  drivers/gpu/drm/i915/display/intel_acpi.c    | 27 ++++++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_acpi.h    |  3 +++
->  drivers/gpu/drm/i915/display/intel_display.c |  2 +-
->  3 files changed, 31 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
-> index e78430001f07..9df78e7caa2b 100644
-> --- a/drivers/gpu/drm/i915/display/intel_acpi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_acpi.c
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/pci.h>
->  #include <linux/acpi.h>
-> +#include <acpi/video.h>
->  
->  #include "i915_drv.h"
->  #include "intel_acpi.h"
-> @@ -331,3 +332,29 @@ void intel_acpi_assign_connector_fwnodes(struct drm_i915_private *i915)
->  	 */
->  	fwnode_handle_put(fwnode);
->  }
-> +
-> +void intel_acpi_video_register(struct drm_i915_private *i915)
-> +{
-> +	struct drm_connector_list_iter conn_iter;
-> +	struct drm_connector *connector;
-> +
-> +	acpi_video_register();
-> +
-> +	/*
-> +	 * If i915 is driving an internal panel without registering its native
-> +	 * backlight handler try to register the acpi_video backlight.
-> +	 * For panels not driven by i915 another GPU driver may still register
-> +	 * a native backlight later and acpi_video_register_backlight() should
-> +	 * only be called after any native backlights have been registered.
-> +	 */
-> +	drm_connector_list_iter_begin(&i915->drm, &conn_iter);
-> +	drm_for_each_connector_iter(connector, &conn_iter) {
-> +		struct intel_panel *panel = &to_intel_connector(connector)->panel;
-> +
-> +		if (panel->backlight.funcs && !panel->backlight.device) {
-> +			acpi_video_register_backlight();
-> +			break;
-> +		}
-> +	}
-> +	drm_connector_list_iter_end(&conn_iter);
-> +}
-> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.h b/drivers/gpu/drm/i915/display/intel_acpi.h
-> index 4a760a2baed9..6a0007452f95 100644
-> --- a/drivers/gpu/drm/i915/display/intel_acpi.h
-> +++ b/drivers/gpu/drm/i915/display/intel_acpi.h
-> @@ -14,6 +14,7 @@ void intel_unregister_dsm_handler(void);
->  void intel_dsm_get_bios_data_funcs_supported(struct drm_i915_private *i915);
->  void intel_acpi_device_id_update(struct drm_i915_private *i915);
->  void intel_acpi_assign_connector_fwnodes(struct drm_i915_private *i915);
-> +void intel_acpi_video_register(struct drm_i915_private *i915);
->  #else
->  static inline void intel_register_dsm_handler(void) { return; }
->  static inline void intel_unregister_dsm_handler(void) { return; }
-> @@ -23,6 +24,8 @@ static inline
->  void intel_acpi_device_id_update(struct drm_i915_private *i915) { return; }
->  static inline
->  void intel_acpi_assign_connector_fwnodes(struct drm_i915_private *i915) { return; }
-> +static inline
-> +void intel_acpi_video_register(struct drm_i915_private *i915) { return; }
->  #endif /* CONFIG_ACPI */
->  
->  #endif /* __INTEL_ACPI_H__ */
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> index 6103b02c081f..129a13375101 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> @@ -9087,7 +9087,7 @@ void intel_display_driver_register(struct drm_i915_private *i915)
->  
->  	/* Must be done after probing outputs */
->  	intel_opregion_register(i915);
-> -	acpi_video_register();
-> +	intel_acpi_video_register(i915);
->  
->  	intel_audio_init(i915);
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks,
+Guenter
