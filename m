@@ -2,178 +2,332 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B809C54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 08:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE07C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 08:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235642AbiIBIHs (ORCPT
+        id S235137AbiIBI31 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Sep 2022 04:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
+        Fri, 2 Sep 2022 04:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235643AbiIBIHr (ORCPT
+        with ESMTP id S232239AbiIBI30 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Sep 2022 04:07:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46E7BB693
-        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Sep 2022 01:07:45 -0700 (PDT)
+        Fri, 2 Sep 2022 04:29:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E23B72BA
+        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Sep 2022 01:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662106065;
+        s=mimecast20190719; t=1662107364;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jkCqqIO8foYTlUIWanTYmb1eD9F9iDyE1IcUyDBWeec=;
-        b=O6vdiwk95cjdtthpSa3Ukwam/jKluX8X2RaJaBxJujB5n9SjEK8973/2HhfVZ9Sih0R06Q
-        GmNi5qaaaVbhNLVQRaI5voBgDTNZvYBYzTTJRhiqBGl2HGS8JsYqTu/xhr/VD+gTJPshw6
-        jiqDzSUDMxeaW1MV+NKh042hX8XWDvw=
+        bh=4TLo39eROIivl+usHDFfUNSoJf8Z2ud7DhOrgCFPZX8=;
+        b=RFz2zG0tV14bsC3/10e8fLMedDQSbzlG5IyiI0rpTZvsWsghbhh5K//fLoaFLHqaO2nFTr
+        0WwugBYPR6+FkQVZkZTAMMGMDLSGTBitSZVPBWNAC/xPjuK6K35r8rOeVzK2pSNbCA7bbS
+        PwYNJ+kdJoCghLNL7T0TIx1iYhsQbJE=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-331-iek3SowhPImxxtrkz1pJyQ-1; Fri, 02 Sep 2022 04:07:43 -0400
-X-MC-Unique: iek3SowhPImxxtrkz1pJyQ-1
-Received: by mail-ed1-f69.google.com with SMTP id x21-20020a05640226d500b0044856301c62so892765edd.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Sep 2022 01:07:43 -0700 (PDT)
+ us-mta-650-cWmU4f6KOU6ujsmfvOwr0w-1; Fri, 02 Sep 2022 04:29:23 -0400
+X-MC-Unique: cWmU4f6KOU6ujsmfvOwr0w-1
+Received: by mail-ed1-f69.google.com with SMTP id r11-20020a05640251cb00b004484ec7e3a4so940530edd.8
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Sep 2022 01:29:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=jkCqqIO8foYTlUIWanTYmb1eD9F9iDyE1IcUyDBWeec=;
-        b=pKPBqGQtRsKx6x593Vd3iIZ1+ZM7HTix7+VGgUn13+OF2DG9iCjz7TO4bBIIHozFwG
-         qdGfa0Fpo7TDEv6RInlrJoRGElOBkcZA1kFIxgKjnQUjMUYVBn6HC9poXzg34PgiRiw4
-         j29sWPyH6g1I+afyNUJLOvhKHsdgCDnHEIIRSmpARz9Ll0C/Yy66pwA7suyU1p0UmT2g
-         aTshG4BdjQqNAchtvptHSO+xutLyDGY6Pjqub8tv20QvsAp7o+a9PvOZwJpYABxAQM98
-         d1UJuF/L6bktRtmbdT8tQQgWkmc0Xk4H/Uypk49pNaeae1ztqGWES/RQTzqrBVyO9v6O
-         eKSQ==
-X-Gm-Message-State: ACgBeo01U7oTr3dn43UVtVn+s2MVQ/W7+cafsLQLdLT6Y9F74Ddc0NB0
-        CJeHSqd9yLyDdwSHE8VD9vGWlHX5tDCrdJJLVJIWz5OfA7pd3M0VcrufFtsOcGWo9orNLLEXdrw
-        nwh9628l9vUA9e1QaSuHvY9Avkv1ehpKOXQ==
-X-Received: by 2002:a17:907:c0f:b0:741:9525:23d6 with SMTP id ga15-20020a1709070c0f00b00741952523d6mr16448788ejc.277.1662106062839;
-        Fri, 02 Sep 2022 01:07:42 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4yiYTHzK+gzUo9zoqd/CH/evovZNWSJQnB5hGXo9T+dVDAD70xJ3OfQlaE7vw9o+Y8pgJXBQ==
-X-Received: by 2002:a17:907:c0f:b0:741:9525:23d6 with SMTP id ga15-20020a1709070c0f00b00741952523d6mr16448773ejc.277.1662106062622;
-        Fri, 02 Sep 2022 01:07:42 -0700 (PDT)
+        bh=4TLo39eROIivl+usHDFfUNSoJf8Z2ud7DhOrgCFPZX8=;
+        b=J++e0AKEqKfQScioWBuUos3dYqDIHWBkoSEm+1NT4kjN929IIW4MUfUY9odupU4KcQ
+         UWccdycxE/4QyMXzo47uHo1XB8j/zlND8+zQqGIIVKkAobXLV7eaaUGagC9jpXeg+NwB
+         gonF3JZ/0tbGI4PlXdTk2W5bcfAHDxKZaW3OdB7q7PD+Jnm/iYwdCFzq5RPMTMEZOGmC
+         3mK7TezIEhBplxUlBqX0bMXydOBovbE3ko+8v2c6xal1xo27frXWV+4/hyBnlWINE+0d
+         7mgECeYYhfWlkSeahHERYkUcKlu5W20X6/9KpBzo++WGvpQLVH/mIICQSpZq5wZS/HT7
+         07MQ==
+X-Gm-Message-State: ACgBeo0OiOcKT//wt/l6II0YNLn60nCNc0JLZzqTUsOm+mwa9jg50m4E
+        JPI/9L2+zj6T9ORe1Kw89M/JtwFszcAcg7WhyyZCYH3IjFbZbi3rdkfhLdDc/GvXpqFQ4qDLSXn
+        wL2JJchYP9hoIZvuc4RYgqZ1fmWKiIzxEQw==
+X-Received: by 2002:a17:907:160d:b0:741:a253:422f with SMTP id hb13-20020a170907160d00b00741a253422fmr13864109ejc.640.1662107362118;
+        Fri, 02 Sep 2022 01:29:22 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7hppGKadO19UzqzKHTHxlU72qiQ30uslYTbMgrYqPw/qvcsv8dl9WlQwUUQkQPTDP3fq0iHw==
+X-Received: by 2002:a17:907:160d:b0:741:a253:422f with SMTP id hb13-20020a170907160d00b00741a253422fmr13864097ejc.640.1662107361843;
+        Fri, 02 Sep 2022 01:29:21 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id gz28-20020a170907a05c00b0072b92daef1csm848895ejc.146.2022.09.02.01.07.41
+        by smtp.gmail.com with ESMTPSA id y13-20020a50eb0d000000b00443d657d8a4sm930862edp.61.2022.09.02.01.29.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Sep 2022 01:07:41 -0700 (PDT)
-Message-ID: <3df6405a-924a-b0e6-c879-05b9151011e3@redhat.com>
-Date:   Fri, 2 Sep 2022 10:07:41 +0200
+        Fri, 02 Sep 2022 01:29:21 -0700 (PDT)
+Message-ID: <891c2cd5-cacc-f19d-0334-0186d37b9bd2@redhat.com>
+Date:   Fri, 2 Sep 2022 10:29:20 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH v2] platform/x86: wmi: Allow duplicate GUIDs for drivers
- that use struct wmi_driver
+Subject: Re: [PATCH v2 2/2] platform/x86: toshiba_acpi: Add fan RPM reading
+ (hwmon interface)
 Content-Language: en-US
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20220829201500.6341-1-mario.limonciello@amd.com>
- <CAHp75Vc3v4a6=ZJnOYYFGHEomExxopuUy8axDL=M2tbxHqtXqQ@mail.gmail.com>
- <MN0PR12MB6101441AA29CE815DCAD26AEE27B9@MN0PR12MB6101.namprd12.prod.outlook.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Arvid Norlander <lkml@vorpal.se>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org
+References: <20220901215819.1608723-1-lkml@vorpal.se>
+ <20220901215819.1608723-3-lkml@vorpal.se>
+ <0e31840d-aaf3-d2fb-f490-848e30f626a8@roeck-us.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <MN0PR12MB6101441AA29CE815DCAD26AEE27B9@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <0e31840d-aaf3-d2fb-f490-848e30f626a8@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Guenter, Arvid,
 
-On 9/1/22 23:39, Limonciello, Mario wrote:
-> [Public]
+On 9/2/22 00:27, Guenter Roeck wrote:
+> On 9/1/22 14:58, Arvid Norlander wrote:
+>> This expands on the previous commit, exporting the fan RPM via hwmon.
+>>
+>> This will look something like the following when using the "sensors"
+>> command from lm_sensors:
+>>
+>> toshiba_acpi_sensors-acpi-0
+>> Adapter: ACPI interface
+>> fan1:           0 RPM
+>>
+>> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+>> ---
+>>   drivers/platform/x86/Kconfig        |  1 +
+>>   drivers/platform/x86/toshiba_acpi.c | 72 +++++++++++++++++++++++++++++
+>>   2 files changed, 73 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index f2f98e942cf2..4d0d2676939a 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -797,6 +797,7 @@ config ACPI_TOSHIBA
+>>       depends on INPUT
+>>       depends on SERIO_I8042 || SERIO_I8042 = n
+>>       depends on ACPI_VIDEO || ACPI_VIDEO = n
+>> +    depends on HWMON || HWMON = n
+>>       depends on RFKILL || RFKILL = n
+>>       depends on IIO
+>>       select INPUT_SPARSEKMAP
+>> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+>> index 02e3522f4eeb..a976dfb97a5e 100644
+>> --- a/drivers/platform/x86/toshiba_acpi.c
+>> +++ b/drivers/platform/x86/toshiba_acpi.c
+>> @@ -46,6 +46,10 @@
+>>   #include <linux/toshiba.h>
+>>   #include <acpi/video.h>
+>>   +#ifdef CONFIG_HWMON
+>> +#include <linux/hwmon.h>
+>> +#endif
 > 
+> ifdef not needed here.
+
+Ack.
+
 > 
+>> +
+>>   MODULE_AUTHOR("John Belmonte");
+>>   MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+>>   MODULE_LICENSE("GPL");
+>> @@ -171,6 +175,9 @@ struct toshiba_acpi_dev {
+>>       struct miscdevice miscdev;
+>>       struct rfkill *wwan_rfk;
+>>       struct iio_dev *indio_dev;
+>> +#ifdef CONFIG_HWMON
+>> +    struct device *hwmon_device;
+>> +#endif
+>>         int force_fan;
+>>       int last_key_event;
+>> @@ -2941,6 +2948,54 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>>       return 0;
+>>   }
+>>   +/* HWMON support for fan */
+>> +#ifdef CONFIG_HWMON
 > 
->> -----Original Message-----
->> From: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Sent: Thursday, September 1, 2022 12:17
->> To: Limonciello, Mario <Mario.Limonciello@amd.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>; Mark Gross
->> <markgross@kernel.org>; Platform Driver <platform-driver-
->> x86@vger.kernel.org>; Linux Kernel Mailing List <linux-
->> kernel@vger.kernel.org>
->> Subject: Re: [PATCH v2] platform/x86: wmi: Allow duplicate GUIDs for drivers
->> that use struct wmi_driver
->>
->> On Mon, Aug 29, 2022 at 11:20 PM Mario Limonciello
->> <mario.limonciello@amd.com> wrote:
->>>
->>> The WMI subsystem in the kernel currently tracks WMI devices by
->>> a GUID string not by ACPI device.  The GUID used by the `wmi-bmof`
->>> module however is available from many devices on nearly every machine.
->>>
->>> This originally was though to be a bug, but as it happens on most
->>
->> thought
->>
->>> machines it is a design mistake.  It has been fixed by tying an ACPI
->>> device to the driver with struct wmi_driver. So drivers that have
->>> moved over to struct wmi_driver can actually support multiple
->>> instantiations of a GUID without any problem.
->>>
->>> Add an allow list into wmi.c for GUIDs that the drivers that are known
->>> to use struct wmi_driver.  The list is populated with `wmi-bmof` right
->>> now. The additional instances of that in sysfs with be suffixed with -%d
->>
->> ...
->>
->>> +/* allow duplicate GUIDs as these device drivers use struct wmi_driver */
->>> +static const char * const allow_duplicates[] = {
->>> +       "05901221-D566-11D1-B2F0-00A0C9062910", /* wmi-bmof */
->>> +       NULL,
->>
->> No comma for the terminator.
->>
->>> +};
->>
->> ...
->>
->>> +static int guid_count(const guid_t *guid)
->>> +{
->>> +       struct wmi_block *wblock;
->>> +       int count = 0;
->>> +
->>> +       list_for_each_entry(wblock, &wmi_block_list, list) {
->>> +               if (guid_equal(&wblock->gblock.guid, guid))
->>> +                       count++;
->>> +       }
->>> +
->>> +       return count;
->>> +}
->>
->> I haven't deeply checked the code, but this kind of approach is
->> fragile and proven to be error prone as shown in practice. The
->> scenario is (again, not sure if it's possible, need a comment in the
->> code if it's not possible) removing an entry from the list in the
->> middle and trying to add it again. you will see the duplicate count
->> values. That's why in the general case we use IDA or similar
->> approaches.
-> 
-> It shouldn't be possible to add/remove from the list, they're fixed
-> lists that were parsed from _WDG.
-> 
-> Hans - since you already took this into your review queue, can you
-> land fixes for the 3 things Andy pointed out before it goes to -next
-> or do you want me to do a manual follow up for them?
+> This should be #if IS_REACHABLE(CONFIG_HWMON)
 
-I can do a local fix and squash it into the original commit.
+Actually that should be IS_ENABLED since you suggested that
+Arvid should use:
 
-> 1) Spelling error in commit message
-> 2) Remove comma on terminator
+	depends on HWMON || HWMON = n
 
-Ack, will fix.
+In the Kconfig bit there is no need for IS_REACHABLE,
+note IS_REACHABLE will work too but I generally prefer
+to avoid it because cases which actually need it lead
+to weirdness where e.g. both HWMON and TOSHIBA_ACPI are
+enabled yet TOSHIBA_ACPI will still not have HWMON
+support.
 
-> 3) Add a comment why guid_count is safe (if you agree with me it is)
+Arvid, sorry about the "noise" here, let me try to
+explain.
 
-I agree it is safe.
+First of all lets explain this bit of magic:
 
-Can you suggest some wording for the comment please ?
+	depends on HWMON || HWMON = n
+
+What this says is that if HWMON is enabled it must
+be able to satisfy dependencies on it in toshiba_acpi.c
+(or it may also be fully disabled).
+
+This magic is necessary to avoid a case where
+toshiba_acpi gets build into the kernel, but the
+hwmon code is a module. In that case linking errors
+(unresolved hwmon symbols) will happen when building
+the main vmlinuz kernel image.
+
+So basically what this does is if HWMON is configured
+as a module, it limits the choices for TOSHIBA_ACPI
+to either n or m and disallows y.
+
+I hope that so far I'm making sense...
+
+So now to the #ifdef-ery. Since HWMON can be a module
+when enabled the #define's from Kconfig will either
+contain:
+
+#define CONFIG_HWMON 1   // when builtin, HWMON=y
+
+or:
+
+#define CONFIG_HWMON_MODULE 1   // when a module, HWMON=m
+
+So you would need to write:
+
+#if defined CONFIG_HWMON || defined CONFIG_HWMON_MODULE
+
+as a condition
+
+#if IS_ENABLED(CONFIG_HWMON)
+
+is a shorthand (macro) for this.
+
+###
+
+Now back to:
+
+#if IS_REACHABLE(CONFIG_HWMON)
+
+This is a special macro for when your Kconfig bit would just be:
+
+	depends on HWMON
+
+in that case TOSHIBA_ACPI might be set to builtin (y)
+while the HWMON core/class code is a module. As mentioned
+above that would lead to undefined hwmon symbols when
+using "#if IS_ENABLED(CONFIG_HWMON)" as test. IS_REACHABLE
+is special in that it will disable (evaluate to false)
+in the case where the code being build is builtin and
+the dependency is a module.
+
+But that cannot happen here because your Kconfig bit is:
+
+	depends on HWMON || HWMON = n
+
+So "#if IS_ENABLED(CONFIG_HWMON)" is sufficient.
+
+TL;DR: please use "#if IS_ENABLED(CONFIG_HWMON)" to test
+if the hwmon code should be build.
 
 Regards,
 
 Hans
+
+
+
+
+
+
+
+
+
+
+
+> 
+>> +umode_t toshiba_acpi_hwmon_is_visible(const void *drvdata,
+>> +                      enum hwmon_sensor_types type,
+>> +                      u32 attr, int channel)
+>> +{
+>> +    return 0444;
+>> +}
+>> +
+>> +int toshiba_acpi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>> +                u32 attr, int channel, long *val)
+>> +{
+>> +    /*
+>> +     * There is only a single channel and single attribute (for the
+>> +     * fan) at this point.
+>> +     * This can be replaced with more advanced logic in the future,
+>> +     * should the need arise.
+>> +     */
+>> +    if (type == hwmon_fan && channel == 0 && attr == hwmon_fan_input) {
+>> +        u32 value;
+>> +        int ret;
+>> +
+>> +        ret = get_fan_rpm(toshiba_acpi, &value);
+>> +        if (ret)
+>> +            return ret;
+>> +
+>> +        *val = value;
+>> +        return 0;
+>> +    }
+>> +    return -EOPNOTSUPP;
+>> +}
+>> +
+>> +static const struct hwmon_channel_info *toshiba_acpi_hwmon_info[] = {
+>> +    HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
+>> +    NULL
+>> +};
+>> +
+>> +static const struct hwmon_ops toshiba_acpi_hwmon_ops = {
+>> +    .is_visible = toshiba_acpi_hwmon_is_visible,
+>> +    .read = toshiba_acpi_hwmon_read,
+>> +};
+>> +
+>> +static const struct hwmon_chip_info toshiba_acpi_hwmon_chip_info = {
+>> +    .ops = &toshiba_acpi_hwmon_ops,
+>> +    .info = toshiba_acpi_hwmon_info,
+>> +};
+>> +#endif
+>> +
+>>   static void print_supported_features(struct toshiba_acpi_dev *dev)
+>>   {
+>>       pr_info("Supported laptop features:");
+>> @@ -2995,6 +3050,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>>         remove_toshiba_proc_entries(dev);
+>>   +#ifdef CONFIG_HWMON
+> 
+> #if IS_REACHABLE()
+> 
+>> +    if (dev->hwmon_device)
+>> +        hwmon_device_unregister(dev->hwmon_device);
+>> +#endif
+>> +
+>>       if (dev->accelerometer_supported && dev->indio_dev) {
+>>           iio_device_unregister(dev->indio_dev);
+>>           iio_device_free(dev->indio_dev);
+>> @@ -3187,6 +3247,18 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>>       ret = get_fan_rpm(dev, &dummy);
+>>       dev->fan_rpm_supported = !ret;
+>>   +#ifdef CONFIG_HWMON
+> 
+> 
+> ... and again.
+> 
+>> +    if (dev->fan_rpm_supported) {
+>> +        dev->hwmon_device = hwmon_device_register_with_info(
+>> +            &dev->acpi_dev->dev, "toshiba_acpi_sensors", NULL,
+>> +            &toshiba_acpi_hwmon_chip_info, NULL);
+>> +        if (IS_ERR(dev->hwmon_device)) {
+>> +            dev->hwmon_device = NULL;
+>> +            pr_warn("unable to register hwmon device, skipping\n");
+>> +        }
+>> +    }
+>> +#endif
+>> +
+>>       toshiba_wwan_available(dev);
+>>       if (dev->wwan_supported)
+>>           toshiba_acpi_setup_wwan_rfkill(dev);
+> 
 
