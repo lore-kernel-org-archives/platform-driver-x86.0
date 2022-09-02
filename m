@@ -2,187 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53250C6FA81
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A593ECAAD5
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Sep 2022 18:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236987AbiIBRkg (ORCPT
+        id S235995AbiIBSAu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Sep 2022 13:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45640 "EHLO
+        Fri, 2 Sep 2022 14:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235637AbiIBRkf (ORCPT
+        with ESMTP id S235956AbiIBSAs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Sep 2022 13:40:35 -0400
-Received: from vorpal.se (vorpal.se [151.236.221.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEF980F4C;
-        Fri,  2 Sep 2022 10:40:34 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id BD0A6142D4;
-        Fri,  2 Sep 2022 17:40:32 +0000 (UTC)
+        Fri, 2 Sep 2022 14:00:48 -0400
+Received: from vorpal.se (vorpal.se [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B324E1920;
+        Fri,  2 Sep 2022 11:00:47 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id AF442142D4;
+        Fri,  2 Sep 2022 18:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1662140433; bh=WIvzaANfqaO7ctXv8lU3dR7YDSJP908fumkBs1xjDO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NF0DD575SgY766jA9NwUtGvplOpa9uww73nMmhhwp/idnR8+mpj9tBnkhhKjRhHYb
-         dDUHHDeG6G9xHzp+YGa6fEOhXHaqjBXBKblHftv5K60aSu5c6uv4IXx/AypizHMfAi
-         plqANF8sfQG+b7RT7d1cGXnc5fHkcY9b3Maswz/5B/i43hNthHVGFaEOIxKjLZ7tdG
-         6/hYwQrI0wV6ANWyhsx37tW6KEcGYdhxa+n7iL+cQS9CRfcj0WVFfxdL9pmZuI0yUi
-         K6IenyPbJxqRc6ZuKekbDuuDcltQOOAaSUiIR7DlIjbU5sNrD8C+zOsUtMzIxN+KyX
-         A56m03x5kIJfQ==
+        t=1662141646; bh=ieJxfXn8RBLaaarQxjRT77vhQr+Ye5GGe2lBdjfql6o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IWn48oPl+R5nL1nys3Es3V4bCDYYqmpQ3802wFy6NiuT1z5AcPT/txCVi0Y7+n29/
+         Yzodjw26f4jxbxg2t/6jSBHLab3iJWwykeJXHKwt9F5kf0PRRb9OV+OkMHnKXAsBoO
+         znqNvl7z7a/bfZN+AHvyJc6hwjN9CV6EN/zUF/VJxXF4Q96r7znr+dMH0dPEewDeML
+         LwvjjHPhjtBrBmn9JBEuCAZ3xfn/n2iknAJlm7il60E43MJSUfYHRKz+bjqII7bWJG
+         gbEJbLQkmlDdZkuB0dh4mGP9vmIHmN8DR2i+4XhOtehoYYZX6E2etpkDsq9TeqSG8J
+         VQo+gH9keKQOg==
 From:   Arvid Norlander <lkml@vorpal.se>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Azael Avalos <coproscefalo@gmail.com>, linux-hwmon@vger.kernel.org,
+To:     platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Azael Avalos <coproscefalo@gmail.com>,
         Arvid Norlander <lkml@vorpal.se>
-Subject: [PATCH v3 2/2] platform/x86: toshiba_acpi: Add fan RPM reading (hwmon interface)
-Date:   Fri,  2 Sep 2022 19:40:18 +0200
-Message-Id: <20220902174018.1720029-3-lkml@vorpal.se>
+Subject: [PATCH v2 0/3] platform/x86: Battery charge mode in toshiba_acpi
+Date:   Fri,  2 Sep 2022 20:00:34 +0200
+Message-Id: <20220902180037.1728546-1-lkml@vorpal.se>
 X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220902174018.1720029-1-lkml@vorpal.se>
-References: <20220902174018.1720029-1-lkml@vorpal.se>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This expands on the previous commit, exporting the fan RPM via hwmon.
+Hi,
 
-This will look something like the following when using the "sensors"
-command from lm_sensors:
+Here we go again.
 
-toshiba_acpi_sensors-acpi-0
-Adapter: ACPI interface
-fan1:           0 RPM
+Note that this patch series edits in the same place as my patch series
+adding HWMON support for the fan, so there will be a trivial merge
+conflict, as both series insert new functions in the same location in the
+file. Hopefully this is not a big issue, but if so I can rebase one on top
+of the other.
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
----
- drivers/platform/x86/Kconfig        |  1 +
- drivers/platform/x86/toshiba_acpi.c | 70 +++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
+Changelog
+=========
+v2:
+  * Fix compiler warning discovered by "kernel test robot" in patch 2
+    (real issue).
+  * Added Acked-by in patch 3 (Thanks Sebastian Reichel).
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f2f98e942cf2..4d0d2676939a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -797,6 +797,7 @@ config ACPI_TOSHIBA
- 	depends on INPUT
- 	depends on SERIO_I8042 || SERIO_I8042 = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on HWMON || HWMON = n
- 	depends on RFKILL || RFKILL = n
- 	depends on IIO
- 	select INPUT_SPARSEKMAP
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 02e3522f4eeb..0949b1bcab83 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -42,10 +42,12 @@
- #include <linux/uaccess.h>
- #include <linux/miscdevice.h>
- #include <linux/rfkill.h>
-+#include <linux/hwmon.h>
- #include <linux/iio/iio.h>
- #include <linux/toshiba.h>
- #include <acpi/video.h>
- 
-+
- MODULE_AUTHOR("John Belmonte");
- MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
- MODULE_LICENSE("GPL");
-@@ -171,6 +173,9 @@ struct toshiba_acpi_dev {
- 	struct miscdevice miscdev;
- 	struct rfkill *wwan_rfk;
- 	struct iio_dev *indio_dev;
-+#if IS_ENABLED(CONFIG_HWMON)
-+	struct device *hwmon_device;
-+#endif
- 
- 	int force_fan;
- 	int last_key_event;
-@@ -2941,6 +2946,54 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
- 	return 0;
- }
- 
-+/* HWMON support for fan */
-+#if IS_ENABLED(CONFIG_HWMON)
-+umode_t toshiba_acpi_hwmon_is_visible(const void *drvdata,
-+				      enum hwmon_sensor_types type,
-+				      u32 attr, int channel)
-+{
-+	return 0444;
-+}
-+
-+int toshiba_acpi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, long *val)
-+{
-+	/*
-+	 * There is only a single channel and single attribute (for the
-+	 * fan) at this point.
-+	 * This can be replaced with more advanced logic in the future,
-+	 * should the need arise.
-+	 */
-+	if (type == hwmon_fan && channel == 0 && attr == hwmon_fan_input) {
-+		u32 value;
-+		int ret;
-+
-+		ret = get_fan_rpm(toshiba_acpi, &value);
-+		if (ret)
-+			return ret;
-+
-+		*val = value;
-+		return 0;
-+	}
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_channel_info *toshiba_acpi_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_ops toshiba_acpi_hwmon_ops = {
-+	.is_visible = toshiba_acpi_hwmon_is_visible,
-+	.read = toshiba_acpi_hwmon_read,
-+};
-+
-+static const struct hwmon_chip_info toshiba_acpi_hwmon_chip_info = {
-+	.ops = &toshiba_acpi_hwmon_ops,
-+	.info = toshiba_acpi_hwmon_info,
-+};
-+#endif
-+
- static void print_supported_features(struct toshiba_acpi_dev *dev)
- {
- 	pr_info("Supported laptop features:");
-@@ -2995,6 +3048,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
- 
- 	remove_toshiba_proc_entries(dev);
- 
-+#if IS_ENABLED(CONFIG_HWMON)
-+	if (dev->hwmon_device)
-+		hwmon_device_unregister(dev->hwmon_device);
-+#endif
-+
- 	if (dev->accelerometer_supported && dev->indio_dev) {
- 		iio_device_unregister(dev->indio_dev);
- 		iio_device_free(dev->indio_dev);
-@@ -3187,6 +3245,18 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = get_fan_rpm(dev, &dummy);
- 	dev->fan_rpm_supported = !ret;
- 
-+#if IS_ENABLED(CONFIG_HWMON)
-+	if (dev->fan_rpm_supported) {
-+		dev->hwmon_device = hwmon_device_register_with_info(
-+			&dev->acpi_dev->dev, "toshiba_acpi_sensors", NULL,
-+			&toshiba_acpi_hwmon_chip_info, NULL);
-+		if (IS_ERR(dev->hwmon_device)) {
-+			dev->hwmon_device = NULL;
-+			pr_warn("unable to register hwmon device, skipping\n");
-+		}
-+	}
-+#endif
-+
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
- 		toshiba_acpi_setup_wwan_rfkill(dev);
+
+Mostly original (from v1 of this series) cover letter follows:
+
+Summary
+=======
+
+This patch series implements battery charge control for Toshiba Satellite
+Z830 (and posssibly some other models). The full background is available
+in the two emails linked below, but a short summary will follow, including
+only what is relevant for battery charge control.
+
+Background (from link 1)
+==========
+
+The Toshiba Satellite/Portege Z830 supports not charging the battery fully
+in order to prolong battery life. Unlike for example ThinkPads where this
+control is granular here it is just off/on. When off it charges to 100%.
+When on it charges to about 80%.
+
+According to the Windows program used to control the feature the setting
+will not take effect until the battery has been discharged to around 50%.
+However, in my testing it takes effect as soon as the charge drops below
+80%. On Windows Toshiba branded this feature as "Eco charging"
+
+In the following example ACPI calls I will use the following newly defined
+constants:
+#define HCI_BATTERY_CHARGE_MODE 0xba
+#define BATTERY_CHARGE_FULL 0
+#define BATTERY_CHARGE_80_PERCENT 1
+
+To set the feature:
+  {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
+To query for the existence of the feature:
+  {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
+To read the feature:
+  {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
+
+The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
+the status code. This rarely happens (I have never observed it on Linux),
+but I have seen it happen under Windows once, and the software did retry
+it.
+
+
+Improvements
+============
+
+As discussed in link 2 & 3 below, the original approach was suboptimal.
+
+This patch series instead consists of two patches.
+
+The first patch implements detecting the feature as well as internal
+getter/setter methods.
+
+The second patch adds battery hooks (heavily based on the code for this in
+thinkpad_acpi) which creates the standard charge_control_end_threshold file
+under /sys/class/power_supply/BAT1.
+
+Side note: There is no BAT0 on this Toshiba, I'm not sure why the numbering
+ends up starting from 1 instead of 0 here. This differs from my Thinkpads,
+where the numbering starts from 0, with BAT1 being the second battery.
+However, I haven't spent much effort investigating this, as it did not seem
+important.
+
+Patch 3 updates the ABI test documentation as suggested by Hans de Goede.
+Note that only the charge_control_end_threshold is updated, as this is the
+only limit supported by the Toshiba Z830. Possibly
+charge_control_start_threshold should also be updated similarly, or would
+it be better to wait for an actual example of this in the wild first?
+
+Link (1): https://www.spinics.net/lists/platform-driver-x86/msg34314.html
+Link (2): https://www.spinics.net/lists/platform-driver-x86/msg34354.html
+Link (3): https://www.spinics.net/lists/platform-driver-x86/msg34320.html
+
+Best regards,
+Arvid Norlander
+
+
+Arvid Norlander (3):
+  platform/x86: Battery charge mode in toshiba_acpi (internals)
+  platform/x86: Battery charge mode in toshiba_acpi (sysfs)
+  docs: ABI: charge_control_end_threshold may not support all values
+
+ Documentation/ABI/testing/sysfs-class-power |   5 +-
+ drivers/platform/x86/toshiba_acpi.c         | 166 ++++++++++++++++++++
+ 2 files changed, 170 insertions(+), 1 deletion(-)
+
+
+base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
 -- 
 2.37.3
 
