@@ -2,201 +2,192 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CB4C6FA89
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Sep 2022 08:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DD1C6FA89
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Sep 2022 09:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237807AbiIEIh6 (ORCPT
+        id S238015AbiIEJAX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Sep 2022 04:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41210 "EHLO
+        Mon, 5 Sep 2022 05:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237803AbiIEIhm (ORCPT
+        with ESMTP id S237554AbiIEJAS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Sep 2022 04:37:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C85501A5
-        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Sep 2022 01:35:52 -0700 (PDT)
+        Mon, 5 Sep 2022 05:00:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456FE205DE
+        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Sep 2022 02:00:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662366952;
+        s=mimecast20190719; t=1662368414;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FKWvK74RqhWO5Ba3E7ZgA5XXRtVg9Ah/YW25Q16K5a0=;
-        b=jSxIAxVV0kkj/MJ8Lck/VU0Hta1GNnsLoxZHNnviaxwCGwoCD/Qj+HU2XPSYHa9+bPYaqC
-        HASyb36uHILCCO4sIXe82P6wRbV8QL/angGzGu/1uFqlrjwhcY+3UPbVhj3+/P1uvLj6AG
-        ySSu+87NZJjUJ+7qRiy5UFpzBTls3JU=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-671-jRatXV4DMKaMGpP8zsl77w-1; Mon, 05 Sep 2022 04:35:50 -0400
-X-MC-Unique: jRatXV4DMKaMGpP8zsl77w-1
-Received: by mail-ed1-f72.google.com with SMTP id m18-20020a056402511200b0044862412596so5409209edd.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Sep 2022 01:35:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date;
-        bh=FKWvK74RqhWO5Ba3E7ZgA5XXRtVg9Ah/YW25Q16K5a0=;
-        b=URaAgtNvxOFBBsPkVU5mL71DM3FYN1reeIktRZJ3czppdTQcmcaaiSozwZijy6r4He
-         hWe5a8kUK43iWTa2zdb/tvOeawzXvTX764E/YioAon94yrvkqAAXkiyEhjlrBqgIvBE8
-         aYv4sQ4tcD5QPGvuT8SzhH9FJ2JSXdVAXabUGH6PzQFlNtS+UOwSyV2oPouMOilwSG3x
-         bRMxBqQaXFkgABTdZC7IXfD/rjGFKS0WZSBqNmDMVJsktUpEc7H1gOusTW8som93/coy
-         Q0hBC5Fyhar5dYXbXtuOd4NzBaR/HZIzSpoPj7eicr4zb6+6yt1+DlGWvvM7M51mKfN+
-         8QEw==
-X-Gm-Message-State: ACgBeo1IoNupX9+DGLj7B6Kjd/LTbFGmlOjW6HDDEZUwVtQ8rnCPdEqo
-        vrnOm+/eYXHHl6tXUEynd3MXXhDomT2HjZB1uvKGb5GdaQNp40ewF8CBBWM0csul+y8CL1NRU+H
-        mm5vcftvqf5tsj8cyExLVuAxknGpobjtDqw==
-X-Received: by 2002:a05:6402:f92:b0:44e:84e0:1d2a with SMTP id eh18-20020a0564020f9200b0044e84e01d2amr3153065edb.395.1662366949023;
-        Mon, 05 Sep 2022 01:35:49 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4VBNuR9PQ8/ymdedcVLZvd83Z5BrbBJNdtbcbD4W3JQHoyQWf8ni6TYgJ7xy7xpT4yxIFbjA==
-X-Received: by 2002:a05:6402:f92:b0:44e:84e0:1d2a with SMTP id eh18-20020a0564020f9200b0044e84e01d2amr3153055edb.395.1662366948816;
-        Mon, 05 Sep 2022 01:35:48 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ee35-20020a056402292300b0044dde9244fdsm3162245edb.8.2022.09.05.01.35.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Sep 2022 01:35:48 -0700 (PDT)
-Message-ID: <261afe3d-7790-e945-adf6-a2c96c9b1eff@redhat.com>
-Date:   Mon, 5 Sep 2022 10:35:47 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Kak+kX/DDRA/EEjOvyGzedv9zWYHaP7tpP/hT0BV7mk=;
+        b=Gh0OynGF3wNprp2LoiUfiohRA2V8epS6YnQl5lX3G+lTy6bhsHjl1GuSJX2yPwUSW00yxU
+        J4Eq0qUjIHZ/KDbzDQUZ8gYyi0ptovQuSN1SmMpGKAKwZIxVJDARKTEiKin2TVQVpeiD9Y
+        gdlhRy1Xbu1AWZBEUImhhiSS17I/6nE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-392-8qlLRQF_M_61V1HxGAXVnA-1; Mon, 05 Sep 2022 05:00:13 -0400
+X-MC-Unique: 8qlLRQF_M_61V1HxGAXVnA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 880B9101A56D;
+        Mon,  5 Sep 2022 09:00:12 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.195.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79BDBC15BB3;
+        Mon,  5 Sep 2022 09:00:10 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] Immutable backlight-detect-refactor branch between acpi,
- drm-* and pdx86
-To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, nouveau@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@redhat.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Arvid Norlander <lkml@vorpal.se>, linux-acpi@vger.kernel.org,
+        Andy Shevchenko <andy@infradead.org>,
         platform-driver-x86@vger.kernel.org
-Content-Language: en-US
+Subject: [PATCH 1/2] drivers/platform: toshiba_acpi: Call HCI_PANEL_POWER_ON on resume on some models
+Date:   Mon,  5 Sep 2022 11:00:04 +0200
+Message-Id: <20220905090005.333429-2-hdegoede@redhat.com>
+In-Reply-To: <20220905090005.333429-1-hdegoede@redhat.com>
+References: <20220905090005.333429-1-hdegoede@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+Some Toshibas have a broken acpi-video interface for brightness control, so
+far these have been using a special workaround in drivers/acpi/acpi_video.c
+which gets activated by the disable_backlight_sysfs_if module-param/quirks.
 
-Now that all patches have been reviewed/acked here is an immutable backlight-detect-refactor
-branch with 6.0-rc1 + the v5 patch-set, for merging into the relevant (acpi, drm-* and pdx86)
-subsystems.
+The recent x86/acpi backlight refactoring has broken this workaround:
+1. This workaround relies on acpi_video_get_backlight_type() returning
+   acpi_video so that the acpi_video code actually runs; and
+2. this relies on the actual native GPU driver to offer the sysfs
+   backlight interface to userspace.
 
-Please pull this branch into the relevant subsystems.
+After the refactor this breaks since the native driver will no
+longer register its backlight-device if acpi_video_get_backlight_type()
+does not return native and making it return native breaks 1.
 
-I will merge this into the review-hans branch of the pdx86 git tree today and
-from there it will move to for-next once the builders have successfully build-tested
-the merge.
+Keeping the acpi_video backlight handling on resume active, while not
+using it to set the brightness, is necessary because it does a _BCM
+call on resume which is necessary to turn the panel back on on resume.
 
-Regards,
+Looking at the DSDT shows that this _BCM call results in a Toshiba
+HCI_SET HCI_LCD_BRIGHTNESS call, which turns the panel back on.
 
-Hans
+This commit makes toshiba_acpi do a HCI_SET HCI_PANEL_POWER_ON call
+on resume on the affected models, so that the (now broken)
+acpi_video disable_backlight_sysfs_if workaround will no longer
+be necessary.
 
+Note this uses HCI_PANEL_POWER_ON instead of HCI_LCD_BRIGHTNESS
+to avoid changing the configured brightness level.
 
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+Fixes: b1d36e73cc1c ("drm/i915: Don't register backlight when another backlight should be used (v2)")
+Tested-by: Arvid Norlander <lkml@vorpal.se>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 46 +++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/backlight-detect-refactor-1
-
-for you to fetch changes up to 4f96b1bc156e7076f6efedc2a76a8c7e897c7977:
-
-  drm/todo: Add entry about dealing with brightness control on devices with > 1 panel (2022-09-03 12:17:27 +0200)
-
-----------------------------------------------------------------
-Immutable backlight-detect-refactor branch between acpi, drm-* and pdx86
-
-Tag (immutable branch) with v6.0-rc1 + the (acpi/x86) backlight
-detect refactor work. For merging into the acpi, drm-* and pdx86
-subsystems.
-
-----------------------------------------------------------------
-Hans de Goede (31):
-      ACPI: video: Add acpi_video_backlight_use_native() helper
-      drm/i915: Don't register backlight when another backlight should be used (v2)
-      drm/amdgpu: Don't register backlight when another backlight should be used (v3)
-      drm/radeon: Don't register backlight when another backlight should be used (v3)
-      drm/nouveau: Don't register backlight when another backlight should be used (v2)
-      ACPI: video: Drop backlight_device_get_by_type() call from acpi_video_get_backlight_type()
-      ACPI: video: Remove acpi_video_bus from list before tearing it down
-      ACPI: video: Simplify acpi_video_unregister_backlight()
-      ACPI: video: Make backlight class device registration a separate step (v2)
-      ACPI: video: Remove code to unregister acpi_video backlight when a native backlight registers
-      drm/i915: Call acpi_video_register_backlight() (v3)
-      drm/nouveau: Register ACPI video backlight when nv_backlight registration fails (v2)
-      drm/amdgpu: Register ACPI video backlight when skipping amdgpu backlight registration
-      drm/radeon: Register ACPI video backlight when skipping radeon backlight registration
-      platform/x86: nvidia-wmi-ec-backlight: Move fw interface definitions to a header (v2)
-      ACPI: video: Refactor acpi_video_get_backlight_type() a bit
-      ACPI: video: Add Nvidia WMI EC brightness control detection (v3)
-      ACPI: video: Add Apple GMUX brightness control detection
-      platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()
-      platform/x86: apple-gmux: Stop calling acpi/video.h functions
-      platform/x86: toshiba_acpi: Stop using acpi_video_set_dmi_backlight_type()
-      platform/x86: acer-wmi: Move backlight DMI quirks to acpi/video_detect.c
-      platform/x86: asus-wmi: Drop DMI chassis-type check from backlight handling
-      platform/x86: asus-wmi: Move acpi_backlight=vendor quirks to ACPI video_detect.c
-      platform/x86: asus-wmi: Move acpi_backlight=native quirks to ACPI video_detect.c
-      platform/x86: samsung-laptop: Move acpi_backlight=[vendor|native] quirks to ACPI video_detect.c
-      ACPI: video: Remove acpi_video_set_dmi_backlight_type()
-      ACPI: video: Drop "Samsung X360" acpi_backlight=native quirk
-      ACPI: video: Drop NL5x?U, PF4NU1F and PF5?U?? acpi_backlight=native quirks
-      ACPI: video: Fix indentation of video_detect_dmi_table[] entries
-      drm/todo: Add entry about dealing with brightness control on devices with > 1 panel
-
- Documentation/gpu/todo.rst                         |  68 ++++
- MAINTAINERS                                        |   1 +
- drivers/acpi/Kconfig                               |   1 +
- drivers/acpi/acpi_video.c                          |  64 ++-
- drivers/acpi/video_detect.c                        | 428 ++++++++++++---------
- drivers/gpu/drm/Kconfig                            |  14 +
- drivers/gpu/drm/amd/amdgpu/atombios_encoders.c     |  14 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   9 +
- drivers/gpu/drm/gma500/Kconfig                     |   2 +
- drivers/gpu/drm/i915/Kconfig                       |   2 +
- drivers/gpu/drm/i915/display/intel_acpi.c          |  27 ++
- drivers/gpu/drm/i915/display/intel_acpi.h          |   3 +
- drivers/gpu/drm/i915/display/intel_backlight.c     |   7 +
- drivers/gpu/drm/i915/display/intel_display.c       |   2 +-
- drivers/gpu/drm/nouveau/nouveau_acpi.c             |  10 +
- drivers/gpu/drm/nouveau/nouveau_acpi.h             |   4 +
- drivers/gpu/drm/nouveau/nouveau_backlight.c        |  13 +
- drivers/gpu/drm/radeon/atombios_encoders.c         |   7 +
- drivers/gpu/drm/radeon/radeon_encoders.c           |  11 +-
- drivers/gpu/drm/radeon/radeon_legacy_encoders.c    |   7 +
- drivers/platform/x86/Kconfig                       |   1 +
- drivers/platform/x86/acer-wmi.c                    |  66 ----
- drivers/platform/x86/apple-gmux.c                  |   3 -
- drivers/platform/x86/asus-nb-wmi.c                 |  21 -
- drivers/platform/x86/asus-wmi.c                    |  13 -
- drivers/platform/x86/asus-wmi.h                    |   2 -
- drivers/platform/x86/eeepc-wmi.c                   |  25 +-
- drivers/platform/x86/nvidia-wmi-ec-backlight.c     |  82 +---
- drivers/platform/x86/samsung-laptop.c              |  87 -----
- drivers/platform/x86/toshiba_acpi.c                |  16 -
- include/acpi/video.h                               |   9 +-
- .../platform_data/x86/nvidia-wmi-ec-backlight.h    |  76 ++++
- 32 files changed, 588 insertions(+), 507 deletions(-)
- create mode 100644 include/linux/platform_data/x86/nvidia-wmi-ec-backlight.h
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 030dc37d50b8..826ffac4af1c 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -23,6 +23,7 @@
+ #define PROC_INTERFACE_VERSION	1
+ 
+ #include <linux/compiler.h>
++#include <linux/dmi.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+@@ -100,6 +101,7 @@ MODULE_LICENSE("GPL");
+ #define TOS_NOT_INSTALLED		0x8e00
+ 
+ /* Registers */
++#define HCI_PANEL_POWER_ON		0x0002
+ #define HCI_FAN				0x0004
+ #define HCI_TR_BACKLIGHT		0x0005
+ #define HCI_SYSTEM_EVENT		0x0016
+@@ -206,6 +208,7 @@ struct toshiba_acpi_dev {
+ 
+ 	bool kbd_event_generated;
+ 	bool killswitch;
++	bool turn_on_panel_on_resume;
+ };
+ 
+ static struct toshiba_acpi_dev *toshiba_acpi;
+@@ -2999,6 +3002,43 @@ static const char *find_hci_method(acpi_handle handle)
+ 	return NULL;
+ }
+ 
++/*
++ * Some Toshibas have a broken acpi-video interface for brightness control,
++ * these are quirked in drivers/acpi/video_detect.c to use the GPU native
++ * (/sys/class/backlight/intel_backlight) instead.
++ * But these need a HCI_SET call to actually turn the panel back on at resume,
++ * without this call the screen stays black at resume.
++ * Either HCI_LCD_BRIGHTNESS (used by acpi_video's _BCM) or HCI_PANEL_POWER_ON
++ * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
++ * the configured brightness level.
++ */
++static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
++	{
++	 /* Toshiba Portégé R700 */
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
++		},
++	},
++	{
++	 /* Toshiba Satellite/Portégé R830 */
++	 /* Portégé: https://bugs.freedesktop.org/show_bug.cgi?id=82634 */
++	 /* Satellite: https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
++		},
++	},
++	{
++	 /* Toshiba Satellite/Portégé Z830 */
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
++		},
++	},
++};
++
+ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ {
+ 	struct toshiba_acpi_dev *dev;
+@@ -3141,6 +3181,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 	ret = get_fan_status(dev, &dummy);
+ 	dev->fan_supported = !ret;
+ 
++	dev->turn_on_panel_on_resume =
++		dmi_check_system(turn_on_panel_on_resume_dmi_ids);
++
+ 	toshiba_wwan_available(dev);
+ 	if (dev->wwan_supported)
+ 		toshiba_acpi_setup_wwan_rfkill(dev);
+@@ -3257,6 +3300,9 @@ static int toshiba_acpi_resume(struct device *device)
+ 			rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+ 	}
+ 
++	if (dev->turn_on_panel_on_resume)
++		hci_write(dev, HCI_PANEL_POWER_ON, 1);
++
+ 	return 0;
+ }
+ #endif
+-- 
+2.36.1
 
