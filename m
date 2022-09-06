@@ -2,68 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AACECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Sep 2022 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F845C6FA86
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Sep 2022 17:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238763AbiIFRCh (ORCPT
+        id S234708AbiIFROO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Sep 2022 13:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38330 "EHLO
+        Tue, 6 Sep 2022 13:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239322AbiIFRBg (ORCPT
+        with ESMTP id S239734AbiIFRNo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Sep 2022 13:01:36 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F3974DF8
-        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Sep 2022 09:48:11 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id k9so16390291wri.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Sep 2022 09:48:11 -0700 (PDT)
+        Tue, 6 Sep 2022 13:13:44 -0400
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B5F8FD5A;
+        Tue,  6 Sep 2022 10:03:16 -0700 (PDT)
+Received: by mail-ot1-x32a.google.com with SMTP id t8-20020a9d5908000000b0063b41908168so8471126oth.8;
+        Tue, 06 Sep 2022 10:03:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=PCzElyvISj5qWfubEWFk/604t2S+HL6Am3VsTrI8JH6HFKBPnnHUuVAK3RZu5VQbnZ
-         yZ+kKc2PVSmX98UhEMyD23ay7DopBE5dm9+J7/YOEuJDwEv8LBhEnw5491up/s8dkcsv
-         M1hgUvo+MT9iWH8gOOwv4n2TWF/8xgK0slBLWsUXS30Pw2eGWsrz2Nly4pdHY+/htqtZ
-         yZgUn/Dhxo+J27UkQJsZfByJHXD4kxwxYFyCIE79kjBDcynuyUUnM1+bObFVJYCNMmf9
-         EwquFk2g6UfDNf97PS1S/mSca1F6T62XchlkX5yja//6RgmwT2ZDuVjEC2cM4A7tlAjB
-         kO1A==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=XjI3JQEiXwzsRWt/M8irfOaiWmTHLb3z63j8Zzx/as0=;
+        b=SMRLrhO64BMjAoRWo5yIUqIHCvBvyhZfPGyHTSyX2FAnm4yuQfP5mK4qpUNGuEMzjv
+         szkieXnp4bIxa8CgyTBgMSfXYrbJBVzpr4+NSK2mn+aMMJar5a2niuCiKpMqk7v5laoX
+         SiKQe+F61EnSs8OhNVgDaBYK4iLZN6RT5s2wFXBZglZD8eJWIeOYcCkbkZrD0Ni8yeWQ
+         Rv0woTE6mWOc7S1fnnuQXIdrXpQdoNUs0mn9IUMbpHr4DCDz1tVLFissbc0A/uzx7rwl
+         O+4nK9LwzWBYjgoXcft8zONGLPllEwhwbyt3/etuEHVv4xbstI6126MjMEUU4CZZKO/U
+         s+XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=TQs95Hoq9mx29kKb1UXu+i/86wkKOHKoauxHyiSc9KjyOz/NHcXagjk3NVLUfLMLXK
-         PX98kDEdWSjMFtVkWcs3EPxtB8/13f3uanTkTXRDRukp3e+6pbDcuwkwgr02EW0RQzAY
-         pf37XXiYq5tpevuc7pjLnMypeF7QlxDfID9KllRZg3iC6viGiSQHxKcM/GZawGa+rC1X
-         4vS/+Ck6T4Ax3ls0aw8wGUq0D/YSDcRmBqsK2Qv1ztBIhcKaaTJRJEp9oGX6J9Diu3YF
-         7FNzCLyaWKCYL4xYZogGC3PMuket8CxzFibRIwqBRSNCVnL6+bbd0OfU1pwJNB5Ry+W2
-         HJYg==
-X-Gm-Message-State: ACgBeo0vp9/AAeSi1ssNsh2gnAi4FB2/7JcCIO0dMIFo3UqAhJmoXYYd
-        GjkEXQPT7jFco/CnYUXFIbHLNQ==
-X-Google-Smtp-Source: AA6agR4KiTG3Eru17Vb3ip7FH2DYgJ0MzL1zIUo8LKJZHLF/vSbp07/4ddqSaZWzBerIAzbaCURF+A==
-X-Received: by 2002:a5d:58cb:0:b0:228:dc7f:b9b3 with SMTP id o11-20020a5d58cb000000b00228dc7fb9b3mr1427048wrf.98.1662482891357;
-        Tue, 06 Sep 2022 09:48:11 -0700 (PDT)
-Received: from localhost.localdomain (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id e27-20020adf9bdb000000b0021f0ff1bc6csm7426600wrc.41.2022.09.06.09.48.10
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=XjI3JQEiXwzsRWt/M8irfOaiWmTHLb3z63j8Zzx/as0=;
+        b=KxQ+SCJmW2pXb/c8VuXXheJ+kSQtxcumyuaxK6truriSSCSVEpB2LS3UzkBouZmY6H
+         /4UjgPiUuQ5VrneU9DfzPUzzXz2rdNe71GOCwUEcLinLvwTdOKxHtdswGLoIaFnH15R1
+         e8z7kIiRURFWBjE9CauwP+oifhXx3/r0YpeF53vC8rRkKzGcXIYTqjSr9WNCmMp+WUNC
+         4jK4XDQhOW8KWWETuY8uvZzsxtSoGWIQSH6mbKkWx2m5p3OuvvrwpRXS0si1SDEqEIGr
+         WqUhPHa90SWx5LiMsr42wSUqK3c3CgiFt4cb9Bse0QnUpvnDF9v6UBsa7ShGIyc/o8hY
+         Tl6Q==
+X-Gm-Message-State: ACgBeo2GD5m1qM/ddSdTjki/k1n31Knf81by060tRmaYZd6dt213TEZO
+        brz+CaPtvF9sURdH5P0uNn9A00QwlPw=
+X-Google-Smtp-Source: AA6agR4jL192rwove6vYYrGTACHllK/hCOUHL6kR1Quiw3oBNFFDCg2SvxQi1G3M1tmvgCIugxf6Mw==
+X-Received: by 2002:a05:6830:6308:b0:639:3942:7bad with SMTP id cg8-20020a056830630800b0063939427badmr22018527otb.221.1662483761455;
+        Tue, 06 Sep 2022 10:02:41 -0700 (PDT)
+Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390::465])
+        by smtp.gmail.com with ESMTPSA id j95-20020a9d17e8000000b00638dd127f54sm6049634otj.1.2022.09.06.10.02.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 09:48:11 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Peter=20K=C3=A4stle?= <peter@piie.net>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v3 27/30] thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
-Date:   Tue,  6 Sep 2022 18:47:17 +0200
-Message-Id: <20220906164720.330701-28-daniel.lezcano@linaro.org>
+        Tue, 06 Sep 2022 10:02:40 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, balalic.enver@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     markgross@kernel.org
+Subject: [PATCH v1 1/1] hp-wmi: Setting thermal profile fails with 0x06
+Date:   Tue,  6 Sep 2022 12:02:39 -0500
+Message-Id: <20220906170239.30384-1-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220906164720.330701-1-daniel.lezcano@linaro.org>
-References: <20220906164720.330701-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -71,148 +65,66 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal framework gives the possibility to register the trip
-points with the thermal zone. When that is done, no get_trip_* ops are
-needed and they can be removed.
+Error 0x06 (invalid command parameter) is reported by hp-wmi module
+when reading the current thermal profile and then proceed to set it
+back. The failing condition occurs in Linux NixOS after user
+configures the thermal profile to ‘quiet mode’ in Windows.  Quiet Fan
+Mode is supported in Windows but was not supported in hp-wmi module.
 
-Convert ops content logic into generic trip points and register them with the
-thermal zone.
+This fix adds support for PLATFORM_PROFILE_QUIET in hp-wmi module for
+HP notebooks other than HP Omen series.  Quiet thermal profile is not
+supported in HP Omen series notebooks.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Peter Kästle <peter@piie.net>
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
 ---
- drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
- 1 file changed, 26 insertions(+), 47 deletions(-)
+Based on the latest platform-drivers-x86.git/for-next
+---
+ drivers/platform/x86/hp-wmi.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 3463629f8764..a7407aa032ba 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -46,6 +46,8 @@
-  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
-  * assume 89°C is critical temperature.
-  */
-+#define ACERHDF_DEFAULT_TEMP_FANON 60000
-+#define ACERHDF_DEFAULT_TEMP_FANOFF 53000
- #define ACERHDF_TEMP_CRIT 89000
- #define ACERHDF_FAN_OFF 0
- #define ACERHDF_FAN_AUTO 1
-@@ -70,8 +72,8 @@ static int kernelmode;
- #endif
- 
- static unsigned int interval = 10;
--static unsigned int fanon = 60000;
--static unsigned int fanoff = 53000;
-+static unsigned int fanon = ACERHDF_DEFAULT_TEMP_FANON;
-+static unsigned int fanoff = ACERHDF_DEFAULT_TEMP_FANOFF;
- static unsigned int verbose;
- static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
-@@ -137,6 +139,15 @@ struct ctrl_settings {
- 	int mcmd_enable;
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index bc7020e9df9e..f5c13df35af0 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+-	HP_THERMAL_PROFILE_COOL			= 0x02
++	HP_THERMAL_PROFILE_COOL			= 0x02,
++	HP_THERMAL_PROFILE_QUIET		= 0x03,
  };
  
-+static struct thermal_trip trips[] = {
-+	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
-+		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
-+		.type = THERMAL_TRIP_ACTIVE },
+ #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+@@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+ 	case HP_THERMAL_PROFILE_COOL:
+ 		*profile =  PLATFORM_PROFILE_COOL;
+ 		break;
++	case HP_THERMAL_PROFILE_QUIET:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1216,6 +1220,10 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+ 	case PLATFORM_PROFILE_COOL:
+ 		tp =  HP_THERMAL_PROFILE_COOL;
+ 		break;
++	case PLATFORM_PROFILE_QUIET:
++		tp = HP_THERMAL_PROFILE_QUIET;
++		break;
 +
-+	[1] = { .temperature = ACERHDF_TEMP_CRIT,
-+		.type = THERMAL_TRIP_CRITICAL }
-+};
-+
- static struct ctrl_settings ctrl_cfg __read_mostly;
- 
- /* Register addresses and values for different BIOS versions */
-@@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 		fanon = ACERHDF_MAX_FANON;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -1266,6 +1274,7 @@ static int thermal_profile_setup(void)
  	}
  
-+	if (fanon < fanoff) {
-+		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
-+		       fanoff, fanon, fanon);
-+		fanoff = fanon;
-+	};
-+
-+	trips[0].temperature = fanon;
-+	trips[0].hysteresis  = fanon - fanoff;
-+
- 	if (kernelmode && prev_interval != interval) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
-@@ -424,43 +444,6 @@ static int acerhdf_change_mode(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
--				 enum thermal_trip_type *type)
--{
--	if (trip == 0)
--		*type = THERMAL_TRIP_ACTIVE;
--	else if (trip == 1)
--		*type = THERMAL_TRIP_CRITICAL;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip != 0)
--		return -EINVAL;
--
--	*temp = fanon - fanoff;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip == 0)
--		*temp = fanon;
--	else if (trip == 1)
--		*temp = ACERHDF_TEMP_CRIT;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
- static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
- 				 int *temperature)
- {
-@@ -474,13 +457,9 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
- 	.unbind = acerhdf_unbind,
- 	.get_temp = acerhdf_get_ec_temp,
- 	.change_mode = acerhdf_change_mode,
--	.get_trip_type = acerhdf_get_trip_type,
--	.get_trip_hyst = acerhdf_get_trip_hyst,
--	.get_trip_temp = acerhdf_get_trip_temp,
- 	.get_crit_temp = acerhdf_get_crit_temp,
- };
- 
--
- /*
-  * cooling device callback functions
-  * get maximal fan cooling state
-@@ -710,10 +689,10 @@ static int __init acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
--	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
--					      &acerhdf_dev_ops,
--					      &acerhdf_zone_params, 0,
--					      (kernelmode) ? interval*1000 : 0);
-+	thz_dev = thermal_zone_device_register_with_trips("acerhdf", trips, ARRAY_SIZE(trips),
-+							  0, NULL, &acerhdf_dev_ops,
-+							  &acerhdf_zone_params, 0,
-+							  (kernelmode) ? interval*1000 : 0);
- 	if (IS_ERR(thz_dev))
- 		return -EINVAL;
+ 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
++	set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
  
 -- 
 2.34.1
