@@ -2,235 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E1EC6FA8A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 15:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72F7ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 16:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbiIIPet (ORCPT
+        id S231479AbiIIQBK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Sep 2022 11:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
+        Fri, 9 Sep 2022 12:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbiIIPeZ (ORCPT
+        with ESMTP id S230291AbiIIQBJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Sep 2022 11:34:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEAF3A146
-        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 08:33:54 -0700 (PDT)
+        Fri, 9 Sep 2022 12:01:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE76ABAD96
+        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 09:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662737569;
+        s=mimecast20190719; t=1662739267;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YK3pUKgRwclbOeDOWbgpPjqAw2vRt2AQ8DlMolANBu0=;
-        b=OR4B9r45rmGgKKs9cEqA2xOook59P65oc5Nb+G6ib37gUJyGunLDo/je3kljHH7hJViBa6
-        dutbWLq3qUXkQooze2PAJqJXUUZ19c5rjmZ2GaCZv708dfCF3Kn5gN7/gSohg9P/bR9DZ/
-        52bjpHUkSPq/6Lg4dVyhcmflpLhUIGo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-561-wYGoyxhJP1uGnr7CcjrPUw-1; Fri, 09 Sep 2022 11:32:46 -0400
-X-MC-Unique: wYGoyxhJP1uGnr7CcjrPUw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B2B80103942C;
-        Fri,  9 Sep 2022 15:32:45 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 715622166B26;
-        Fri,  9 Sep 2022 15:32:43 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Arvid Norlander <lkml@vorpal.se>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2 2/2] ACPI: video: Change disable_backlight_sysfs_if quirks to acpi_backlight=native
-Date:   Fri,  9 Sep 2022 17:32:39 +0200
-Message-Id: <20220909153239.34606-2-hdegoede@redhat.com>
-In-Reply-To: <20220909153239.34606-1-hdegoede@redhat.com>
-References: <20220909153239.34606-1-hdegoede@redhat.com>
+        bh=MkilgVlqA2kdgmhZQ0iReqC0oZWmONGkCnLgx6F5YI4=;
+        b=eape8K73ZXyvYRy5FycUbxm1SD1+5DWria3y1r4BtWIjCmWLhrl/7vHvjd5IFx4ksS6PO/
+        CV0qJP8WT+2DOUrD+INjZzjdx8BwEQ6McStTtoha1Et6HcZb8zOiaWQl0Zo6cmT5Qs09uE
+        fUDEBM2zv4U1xyHssxklkX8SU9iKrWo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-278-kq8K-rE_Nbm-adUekBybKA-1; Fri, 09 Sep 2022 12:01:05 -0400
+X-MC-Unique: kq8K-rE_Nbm-adUekBybKA-1
+Received: by mail-ej1-f72.google.com with SMTP id qb39-20020a1709077ea700b0073ddc845586so1256172ejc.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Sep 2022 09:01:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=MkilgVlqA2kdgmhZQ0iReqC0oZWmONGkCnLgx6F5YI4=;
+        b=QYbPJV2wOcx8Xl2cbVkF4htY3zdFVxLIo3/EEBFU8iAn0aKQMMbO3exo3kiKMdro4W
+         6OKRdGK1seXMXKQeCdcAOZNG+vNAT3lzf1Nv58AamGz2g0ezogbHPaIq12Q9eIw3DqVU
+         j9zlwp/ml4jemop5VzEoFwdUkcpWaAuj3kaJ/j9V/g9ZUlcRcrxt0Tw9ZO1RO6/ip/a7
+         yp9GMI9Zi4UEsJ7ukGTPBykuJ9//T6poceostXcb1MFhJBKCpwcvoI7CprICYy/Qeu6Y
+         MNiXq6+TjGh2juO4wyYw2FccaxU+3IQfEyMQcTK6zlVpiS7rZrLM2iuiZJow1z9TDVO3
+         PYlg==
+X-Gm-Message-State: ACgBeo06b496EpDiYq/Z76oTDLKImcPVfq7JvvwhSYyAa3mS+RHxoHm9
+        4Jwqjg5pjVwOgl2a+NiLIERD9W0MOjAMuRb5fGR4j6pdePF19k1xHfadxe1hpFjUdyqwAK8my8A
+        G/8Jn5jOuO+F1lq34fHlW9qgSOunToPJx7w==
+X-Received: by 2002:a05:6402:43c4:b0:43b:c5eb:c9dd with SMTP id p4-20020a05640243c400b0043bc5ebc9ddmr11996992edc.402.1662739264696;
+        Fri, 09 Sep 2022 09:01:04 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR72OcWlz0Jbmm54CZLQ/xuPVPgg8tPeaEAnwi8Y5sOr7fgQ3xJUzER4kEnNijxbdDbaF4EzCw==
+X-Received: by 2002:a05:6402:43c4:b0:43b:c5eb:c9dd with SMTP id p4-20020a05640243c400b0043bc5ebc9ddmr11996963edc.402.1662739264420;
+        Fri, 09 Sep 2022 09:01:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
+        by smtp.gmail.com with ESMTPSA id q16-20020aa7cc10000000b0044e84d05cd8sm640965edt.0.2022.09.09.09.01.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Sep 2022 09:01:03 -0700 (PDT)
+Message-ID: <75e632e6-07df-5b97-d9d7-c4b60a5a3b9b@redhat.com>
+Date:   Fri, 9 Sep 2022 18:01:02 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3 0/4] Add some extra debugging mechanisms for s0i3
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
+References: <20220829162953.5947-1-mario.limonciello@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220829162953.5947-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some Toshibas have a broken acpi-video interface for brightness control
-and need a special firmware call on resume to turn the panel back on.
-So far these have been using the disable_backlight_sysfs_if workaround
-to deal with this.
+Hi All,
 
-The recent x86/acpi backlight refactoring has broken this workaround:
-1. This workaround relies on acpi_video_get_backlight_type() returning
-   acpi_video so that the acpi_video code actually runs; and
-2. this relies on the actual native GPU driver to offer the sysfs
-   backlight interface to userspace.
+On 8/29/22 18:29, Mario Limonciello wrote:
+> Recently there have been reports of problems where the system consumes
+> too much power after certain interrupts occur that would notify the
+> kernel of some event but those events aren't marked for wakeup.
+> 
+> These problems have been root caused to the timing of the kernel moving
+> the cores into ACPI C3 relative to other events from the previous wakeup
+> not being settled.  Linux will more aggressively move the cores into C3
+> for s2idle than Windows does for Modern Standby.
+> 
+> To aide with debugging this class of problems in the future add a new
+> set of optional debugging infrastructure.
+> 
+> Mario Limonciello (4):
+>   ACPI: s2idle: Add a new ->check() callback for platform_s2idle_ops
+>   platform/x86/amd: pmc: Add defines for STB events
+>   platform/x86/amd: pmc: Always write to the STB
+>   platform/x86/amd: pmc: Add an extra STB message for checking s2idle
+>     entry
 
-After the refactor this breaks since the native driver will no
-longer register its backlight-device if acpi_video_get_backlight_type()
-does not return native and making it return native breaks 1.
 
-Keeping the acpi_video backlight handling on resume active, while not
-using it to set the brightness, is necessary because it does a _BCM
-call on resume which is necessary to turn the panel back on on resume.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Looking at the DSDT shows that this _BCM call results in a Toshiba
-HCI_SET HCI_LCD_BRIGHTNESS call, which turns the panel back on.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-This kind of special vendor specific handling really belongs in
-the vendor specific acpi driver. An earlier patch in this series
-modifies toshiba_acpi to make the necessary HCI_SET call on resume
-on affected models.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-With toshiba_acpi taking care of the HCI_SET call on resume,
-the acpi_video code no longer needs to call _BCM on resume.
+Regards,
 
-So instead of using the (now broken) disable_backlight_sysfs_if
-workaround, simply setting acpi_backlight=native to disable
-the broken apci-video interface is sufficient fix things now.
+Hans
 
-After this there are no more users of the disable_backlight_sysfs_if
-flag and as discussed above the flag also no longer works as intended,
-so remove the disable_backlight_sysfs_if flag entirely.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/acpi_video.c   | 48 -------------------------------------
- drivers/acpi/video_detect.c | 35 +++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index a7c3d11e0dac..99894fbcf4e3 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -47,9 +47,6 @@ module_param(brightness_switch_enabled, bool, 0644);
- static bool allow_duplicates;
- module_param(allow_duplicates, bool, 0644);
- 
--static int disable_backlight_sysfs_if = -1;
--module_param(disable_backlight_sysfs_if, int, 0444);
--
- #define REPORT_OUTPUT_KEY_EVENTS		0x01
- #define REPORT_BRIGHTNESS_KEY_EVENTS		0x02
- static int report_key_events = -1;
-@@ -394,14 +391,6 @@ static int video_set_bqc_offset(const struct dmi_system_id *d)
- 	return 0;
- }
- 
--static int video_disable_backlight_sysfs_if(
--	const struct dmi_system_id *d)
--{
--	if (disable_backlight_sysfs_if == -1)
--		disable_backlight_sysfs_if = 1;
--	return 0;
--}
--
- static int video_set_device_id_scheme(const struct dmi_system_id *d)
- {
- 	device_id_scheme = true;
-@@ -474,40 +463,6 @@ static const struct dmi_system_id video_dmi_table[] = {
- 		},
- 	},
- 
--	/*
--	 * Some machines have a broken acpi-video interface for brightness
--	 * control, but still need an acpi_video_device_lcd_set_level() call
--	 * on resume to turn the backlight power on.  We Enable backlight
--	 * control on these systems, but do not register a backlight sysfs
--	 * as brightness control does not work.
--	 */
--	{
--	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
--	 .callback = video_disable_backlight_sysfs_if,
--	 .ident = "Toshiba Portege R700",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
--		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
--		},
--	},
--	{
--	 /* https://bugs.freedesktop.org/show_bug.cgi?id=82634 */
--	 .callback = video_disable_backlight_sysfs_if,
--	 .ident = "Toshiba Portege R830",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
--		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R830"),
--		},
--	},
--	{
--	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
--	 .callback = video_disable_backlight_sysfs_if,
--	 .ident = "Toshiba Satellite R830",
--	 .matches = {
--		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
--		DMI_MATCH(DMI_PRODUCT_NAME, "SATELLITE R830"),
--		},
--	},
- 	/*
- 	 * Some machine's _DOD IDs don't have bit 31(Device ID Scheme) set
- 	 * but the IDs actually follow the Device ID Scheme.
-@@ -1770,9 +1725,6 @@ static void acpi_video_dev_register_backlight(struct acpi_video_device *device)
- 	if (result)
- 		return;
- 
--	if (disable_backlight_sysfs_if > 0)
--		return;
--
- 	name = kasprintf(GFP_KERNEL, "acpi_video%d", count);
- 	if (!name)
- 		return;
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index db2474fe58ac..0d9064a9804c 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -610,6 +610,41 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		},
- 	},
- 
-+	/*
-+	 * These Toshibas have a broken acpi-video interface for brightness
-+	 * control. They also have an issue where the panel is off after
-+	 * suspend until a special firmware call is made to turn it back
-+	 * on. This is handled by the toshiba_acpi kernel module, so that
-+	 * module must be enabled for these models to work correctly.
-+	 */
-+	{
-+	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-+	 .callback = video_detect_force_native,
-+	 /* Toshiba Portégé R700 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
-+		},
-+	},
-+	{
-+	 /* Portégé: https://bugs.freedesktop.org/show_bug.cgi?id=82634 */
-+	 /* Satellite: https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-+	 .callback = video_detect_force_native,
-+	 /* Toshiba Satellite/Portégé R830 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Toshiba Satellite/Portégé Z830 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
-+		},
-+	},
-+
- 	/*
- 	 * Desktops which falsely report a backlight and which our heuristics
- 	 * for this do not catch.
--- 
-2.36.1
+> 
+>  drivers/acpi/sleep.h           |  1 +
+>  drivers/acpi/x86/s2idle.c      | 14 ++++++++++++++
+>  drivers/platform/x86/amd/pmc.c | 32 ++++++++++++++++++++------------
+>  include/linux/acpi.h           |  1 +
+>  include/linux/suspend.h        |  1 +
+>  kernel/power/suspend.c         |  3 +++
+>  6 files changed, 40 insertions(+), 12 deletions(-)
+> 
 
