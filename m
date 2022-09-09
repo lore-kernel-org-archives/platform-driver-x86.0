@@ -2,127 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C38BECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 19:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C54ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 21:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231868AbiIITrc (ORCPT
+        id S230103AbiIIVJ6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Sep 2022 15:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        Fri, 9 Sep 2022 17:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231865AbiIITrP (ORCPT
+        with ESMTP id S229890AbiIIVJ5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Sep 2022 15:47:15 -0400
-Received: from vorpal.se (unknown [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FC2102A;
-        Fri,  9 Sep 2022 12:44:25 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id 645D4142D4;
-        Fri,  9 Sep 2022 19:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1662752648; bh=GP+MSYE65OoUV9voAxXbxbEJEZlFVVgEIaFmMVF8Yak=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=HXQCdkESwt/vmeF1dEnHdwWcklLRJ4LcpzzyxWIingsiqCplRVu/9Fhqg7t6nnLxR
-         8dvWjBvZv03/CejPVKaVMXSBIlgZrY6xuUljYEPP2tdyDsdVbH0F9xiviG124DpzVT
-         UUcM2RMjFwk0kDhOEJ8IVQCq8PfjtBFey2jJ2gIVItSnHmCSS54xIsjmfLsRlN5IDt
-         5OuXXNSyIFQ8T1Cx2KU2mtbnBEnRWuGglkPbYmhcJbjtu5Fvq4H0a4NetgdSVDM7zL
-         lfqYZYezzuINirzaLO/CYUwwqMGNtssvZ7N4wHozEYsR4EHd2A67wwG/D3eLpjRBpM
-         fl/FRaCNOk0iw==
-Message-ID: <7b55c9ed-e25b-fb8d-ad62-426ffbeeef6d@vorpal.se>
-Date:   Fri, 9 Sep 2022 21:44:07 +0200
+        Fri, 9 Sep 2022 17:09:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2637033E1D
+        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 14:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662757794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zSuo3AYYgy9swN0NWNbUrHKfy/RX+9hRmzx24HINlPg=;
+        b=WjQdzdxjhCExNtkHTb5bqGffEHEeIaeViN81CqvZrBgubFxD9dcwwQLkXxThIIlqnzpnfq
+        DODYQEE3vvuzASfb/KvxBEOOzYZTEunHK62t9ZmvnegE9vPOx2dn4RAMXEISIJziPO1WJ/
+        7WXmP/fUoxQ2u32mPmmlaRNp+zLM7DA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-25-bAbxj0MCNlyvtuDAxiLynw-1; Fri, 09 Sep 2022 17:09:53 -0400
+X-MC-Unique: bAbxj0MCNlyvtuDAxiLynw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CDDBA185A7A4;
+        Fri,  9 Sep 2022 21:09:52 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7101E492C3B;
+        Fri,  9 Sep 2022 21:09:51 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] platform/x86: asus-wmi: Make kbd_rgb_mode_groups statis
+Date:   Fri,  9 Sep 2022 23:09:50 +0200
+Message-Id: <20220909210950.385398-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2 1/2] drivers/platform: toshiba_acpi: Call
- HCI_PANEL_POWER_ON on resume on some models
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20220909153239.34606-1-hdegoede@redhat.com>
- <ee77aadf-8adc-c812-55ae-c534fb523de5@vorpal.se>
- <cc8ae460-9ebd-6c47-a938-eb515ce42104@redhat.com>
- <de8a1f37-414d-3a06-0b56-54b0daa4a250@vorpal.se>
- <0a3cc313-2f7d-ed99-392f-92cad2838a1d@redhat.com>
-Content-Language: en-US
-From:   Arvid Norlander <lkml@vorpal.se>
-In-Reply-To: <0a3cc313-2f7d-ed99-392f-92cad2838a1d@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+kbd_rgb_mode_groups is only used inside asus-wmi.c, make it static.
 
-On 2022-09-09 21:20, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/9/22 20:32, Arvid Norlander wrote:
->> Hi,
->>
->> On 2022-09-09 19:42, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 9/9/22 19:29, Arvid Norlander wrote:
->>>> Hi,
->>>>
->>>> Given the changes, do you want me to test this again? If so, on what branch?
->>>
->>> I have just pushed this new version + all your pending toshiba_acpi patches
->>> to my review-hans branch:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans\
->>>
->>> If you can give this branch a quick test and let me know if everything works
->>> as expected that would be great.
->>
->> My changes (battery charge threshold, fan HWMON support, ECO LED work as
->> expected.
->>
->> Display does come on after resume. Unfortunately the computer also
->> completely locks up (I can't even switch from X to a VT). SSH is dead.
->> When I suspend with a VT active the cursor is no longer blinking on resume.
->> So something else is severly broken in this version and I cannot fully test
->> this.
->>
->> I notice your tree is based on rc1. I was previously testing with 5.19 as
->> well as rc2 and newer. Is it possible this is a bug from mainline?
-> 
-> Ah yes, sorry about that. There is a scsi bug which causes any sata
-> disks to become inaccessible after suspend/resume in rc1.
-> 
-> If you cherry pick this commit on top of my tree the problem should be gone:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=785538bfdd682c8e962341d585f9b88262a0475e
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This fixed it. Resume works properly, as does backlight controls after resume.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index d95170b7dba0..ae46af731de9 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -835,7 +835,7 @@ static const struct attribute_group kbd_rgb_state_group = {
+ 	.attrs = kbd_rgb_state_attrs,
+ };
+ 
+-const struct attribute_group *kbd_rgb_mode_groups[] = {
++static const struct attribute_group *kbd_rgb_mode_groups[] = {
+ 	NULL,
+ 	NULL,
+ 	NULL,
+-- 
+2.36.1
 
-Tested-by: Arvid Norlander <lkml@vorpal.se>
-(For the relevant toshiba_acpi patches)
-
-However I notice that the laptop is hung for about a second after resume. I
-had not noticed this before. But I went back and checked on 5.19 and it
-happens there too, so presumably I just ended up being hyper-aware about
-resume issues after this...
-
-> 
->> Or is
->> it something introduced by your tree? I'm wondering it it would be easier
->> to first rebase your tree on the latest RC rather than trying to bisect it
->> as is.
->>
->> Or the easiest test is perhaps: Does suspend and resume with this tree work
->> on your computer? I remember hearing that there were SATA issues in early
->> 6.0-rcs (don't remember the details), the Toshiba uses mSATA.
-> 
-> Right, see above.
-> 
-> Regards,
-> 
-> Hans
-> 
-
-Best regards,
-Arvid Norlander
