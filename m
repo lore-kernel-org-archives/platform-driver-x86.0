@@ -2,202 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2ECECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 17:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB630ECAAA1
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 17:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229989AbiIIRZm (ORCPT
+        id S230142AbiIIR3s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Sep 2022 13:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
+        Fri, 9 Sep 2022 13:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbiIIRZk (ORCPT
+        with ESMTP id S230098AbiIIR3r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Sep 2022 13:25:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63BA7170D
-        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 10:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662744337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/68DLX4ZB0BCPq/lxr4I9uNyopsJZrj50uBAQRwrOg4=;
-        b=UAyt3eAgkp0QcaQfU35IWSLHFW6OocrFE0uBxAh8WYavS7vqE+xkzpvPKhFWNv55geATPF
-        acOjl8ShBotJZx38ZbjUAKqtR86fUefvTcdHLbnLOc9HbWP7m8mm879ptxcJZdnhQApjib
-        JY0owgltFIiFXpBJ66ws41NnaU1kuNM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-649-19-iujEFNtm0rccP6CB6qg-1; Fri, 09 Sep 2022 13:25:35 -0400
-X-MC-Unique: 19-iujEFNtm0rccP6CB6qg-1
-Received: by mail-ed1-f70.google.com with SMTP id i17-20020a05640242d100b0044f18a5379aso1751017edc.21
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Sep 2022 10:25:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=/68DLX4ZB0BCPq/lxr4I9uNyopsJZrj50uBAQRwrOg4=;
-        b=C0LjZQB2qEFZ9FeJwATHQGmx6nKQgZdjDObjpRzb52e9TLJ5b7NPBZ81lBQABQtO9w
-         SgRW0McN0z7AGwlus//HB+jBkzXu36ArIBVXLfkgQkbJh9joebBYkGxpzdzrp3SCEBvc
-         ZgsmxhAoiqUSxK+oLl7pwvsf4h+UCB0vSLH0bIgFbmIpDTbE66Ze8qgShoLDb6qlu7+m
-         mKcb09uLwIhxN9O1Mt9+w6wYCrI5t9ksOejjgbFMZ4A+jidJ4xB3mZIXLtPDX5GmxGbg
-         7UR8HllOroG/MIaDQa+X4T00D+3Pc42Gaz4hFfIcQtndF8XY2lR33asKUpRENmHXFpqa
-         qkEQ==
-X-Gm-Message-State: ACgBeo0ZCQCD9Juo4LvCNH4QV+Jx3bvaeXVUUBviZaZ/XO9LJ0S8JagD
-        u17G6Cvntr2tloKSBFQRHu1IGQ7r/sUG44D7k/pU9WAeBPt5lnHMDtn+gCoYsMNpmzx8XjOPpBa
-        s8zPLuGcNVOkRa3bIvrTwz/Utu/NgjYfKRA==
-X-Received: by 2002:a17:907:6e27:b0:77a:206e:4dbb with SMTP id sd39-20020a1709076e2700b0077a206e4dbbmr2146712ejc.435.1662744334730;
-        Fri, 09 Sep 2022 10:25:34 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5od2I685u9Ty01Bf2WgchJdOnaNg2jSvHrss2tloVWS2k9NbiII5b9GExKsES4UiKLi7YvEQ==
-X-Received: by 2002:a17:907:6e27:b0:77a:206e:4dbb with SMTP id sd39-20020a1709076e2700b0077a206e4dbbmr2146701ejc.435.1662744334464;
-        Fri, 09 Sep 2022 10:25:34 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id u9-20020a50c2c9000000b0043cc2c9f5adsm736187edf.40.2022.09.09.10.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Sep 2022 10:25:33 -0700 (PDT)
-Message-ID: <8c4a6b8e-cef0-6a68-eb3d-c2fe10225e6b@redhat.com>
-Date:   Fri, 9 Sep 2022 19:25:33 +0200
+        Fri, 9 Sep 2022 13:29:47 -0400
+Received: from vorpal.se (unknown [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB8DF58B;
+        Fri,  9 Sep 2022 10:29:32 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id 8B1F4142D4;
+        Fri,  9 Sep 2022 17:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
+        t=1662744555; bh=YxV1bcA7852pBmchzb8H20s3XoEh/vN7giCg2FvWDIA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=G7fb4E9lTq9AWL3QhRnWulJ3xuCqmB2rRwItoppeaUwPtsMPTZrK3lda7TBkE3tMd
+         otB2o1SxijJbKOv6s6Hu6+0SJDzyzmrdvhvlFdakxT7rvt0mqrLu1VQ1wdC4PX936n
+         WaftnGfBlI7nH3g9OSWzKc095A6u/1nEvq9AL8pRy0Y+x+2EsWCBfMy/jabC+lsyCu
+         z3cVNAkshqWnsn009u3iQH0Hzwq8MlbtMXHfw4vfJfpY9lw1MRLfVeSPxO12DLPwLL
+         3MB7AHH90kX4HGmu/Tg5lFJJUNDsfCWZU8L0d2BOhs0S9JFiKV/UAzk93GpKCH8kLF
+         06w+qWzhFEOmA==
+Message-ID: <ee77aadf-8adc-c812-55ae-c534fb523de5@vorpal.se>
+Date:   Fri, 9 Sep 2022 19:29:14 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2 0/3] platform/x86: Battery charge mode in toshiba_acpi
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v2 1/2] drivers/platform: toshiba_acpi: Call
+ HCI_PANEL_POWER_ON on resume on some models
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20220909153239.34606-1-hdegoede@redhat.com>
 Content-Language: en-US
-To:     Arvid Norlander <lkml@vorpal.se>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Azael Avalos <coproscefalo@gmail.com>
-References: <20220902180037.1728546-1-lkml@vorpal.se>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220902180037.1728546-1-lkml@vorpal.se>
+From:   Arvid Norlander <lkml@vorpal.se>
+In-Reply-To: <20220909153239.34606-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/2/22 20:00, Arvid Norlander wrote:
-> Hi,
-> 
-> Here we go again.
-> 
-> Note that this patch series edits in the same place as my patch series
-> adding HWMON support for the fan, so there will be a trivial merge
-> conflict, as both series insert new functions in the same location in the
-> file. Hopefully this is not a big issue, but if so I can rebase one on top
-> of the other.
-> 
-> Changelog
-> =========
-> v2:
->   * Fix compiler warning discovered by "kernel test robot" in patch 2
->     (real issue).
->   * Added Acked-by in patch 3 (Thanks Sebastian Reichel).
-> 
-> 
-> Mostly original (from v1 of this series) cover letter follows:
-> 
-> Summary
-> =======
-> 
-> This patch series implements battery charge control for Toshiba Satellite
-> Z830 (and posssibly some other models). The full background is available
-> in the two emails linked below, but a short summary will follow, including
-> only what is relevant for battery charge control.
-> 
-> Background (from link 1)
-> ==========
-> 
-> The Toshiba Satellite/Portege Z830 supports not charging the battery fully
-> in order to prolong battery life. Unlike for example ThinkPads where this
-> control is granular here it is just off/on. When off it charges to 100%.
-> When on it charges to about 80%.
-> 
-> According to the Windows program used to control the feature the setting
-> will not take effect until the battery has been discharged to around 50%.
-> However, in my testing it takes effect as soon as the charge drops below
-> 80%. On Windows Toshiba branded this feature as "Eco charging"
-> 
-> In the following example ACPI calls I will use the following newly defined
-> constants:
-> #define HCI_BATTERY_CHARGE_MODE 0xba
-> #define BATTERY_CHARGE_FULL 0
-> #define BATTERY_CHARGE_80_PERCENT 1
-> 
-> To set the feature:
->   {HCI_SET, HCI_BATTERY_CHARGE_MODE, charge_mode, 0, 0, 0}
-> To query for the existence of the feature:
->   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 0}
-> To read the feature:
->   {HCI_GET, HCI_BATTERY_CHARGE_MODE, 0, 0, 0, 1}
-> 
-> The read may need to be retried if TOS_DATA_NOT_AVAILABLE is returned as
-> the status code. This rarely happens (I have never observed it on Linux),
-> but I have seen it happen under Windows once, and the software did retry
-> it.
-> 
-> 
-> Improvements
-> ============
-> 
-> As discussed in link 2 & 3 below, the original approach was suboptimal.
-> 
-> This patch series instead consists of two patches.
-> 
-> The first patch implements detecting the feature as well as internal
-> getter/setter methods.
-> 
-> The second patch adds battery hooks (heavily based on the code for this in
-> thinkpad_acpi) which creates the standard charge_control_end_threshold file
-> under /sys/class/power_supply/BAT1.
-> 
-> Side note: There is no BAT0 on this Toshiba, I'm not sure why the numbering
-> ends up starting from 1 instead of 0 here. This differs from my Thinkpads,
-> where the numbering starts from 0, with BAT1 being the second battery.
-> However, I haven't spent much effort investigating this, as it did not seem
-> important.
-> 
-> Patch 3 updates the ABI test documentation as suggested by Hans de Goede.
-> Note that only the charge_control_end_threshold is updated, as this is the
-> only limit supported by the Toshiba Z830. Possibly
-> charge_control_start_threshold should also be updated similarly, or would
-> it be better to wait for an actual example of this in the wild first?
-> 
-> Link (1): https://www.spinics.net/lists/platform-driver-x86/msg34314.html
-> Link (2): https://www.spinics.net/lists/platform-driver-x86/msg34354.html
-> Link (3): https://www.spinics.net/lists/platform-driver-x86/msg34320.html
-> 
-> Best regards,
-> Arvid Norlander
-> 
-> 
-> Arvid Norlander (3):
->   platform/x86: Battery charge mode in toshiba_acpi (internals)
->   platform/x86: Battery charge mode in toshiba_acpi (sysfs)
->   docs: ABI: charge_control_end_threshold may not support all values
-> 
->  Documentation/ABI/testing/sysfs-class-power |   5 +-
->  drivers/platform/x86/toshiba_acpi.c         | 166 ++++++++++++++++++++
->  2 files changed, 170 insertions(+), 1 deletion(-)
+Given the changes, do you want me to test this again? If so, on what branch?
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Best regards,
+Arvid Norlander
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
+On 2022-09-09 17:32, Hans de Goede wrote:
+> Some Toshibas have a broken acpi-video interface for brightness control, so
+> far these have been using a special workaround in drivers/acpi/acpi_video.c
+> which gets activated by the disable_backlight_sysfs_if module-param/quirks.
+> 
+> The recent x86/acpi backlight refactoring has broken this workaround:
+> 1. This workaround relies on acpi_video_get_backlight_type() returning
+>    acpi_video so that the acpi_video code actually runs; and
+> 2. this relies on the actual native GPU driver to offer the sysfs
+>    backlight interface to userspace.
+> 
+> After the refactor this breaks since the native driver will no
+> longer register its backlight-device if acpi_video_get_backlight_type()
+> does not return native and making it return native breaks 1.
+> 
+> Keeping the acpi_video backlight handling on resume active, while not
+> using it to set the brightness, is necessary because it does a _BCM
+> call on resume which is necessary to turn the panel back on on resume.
+> 
+> Looking at the DSDT shows that this _BCM call results in a Toshiba
+> HCI_SET HCI_LCD_BRIGHTNESS call, which turns the panel back on.
+> 
+> This commit makes toshiba_acpi do a HCI_SET HCI_PANEL_POWER_ON call
+> on resume on the affected models, so that the (now broken)
+> acpi_video disable_backlight_sysfs_if workaround will no longer
+> be necessary.
+> 
+> Note this uses HCI_PANEL_POWER_ON instead of HCI_LCD_BRIGHTNESS
+> to avoid changing the configured brightness level.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Add a turn_on_panel_on_resume module parameter to allow overriding
+>   the DMI quirk based setting
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 50 +++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 900ee68a4c0b..aa55ed0d029d 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -23,6 +23,7 @@
+>  #define PROC_INTERFACE_VERSION	1
+>  
+>  #include <linux/compiler.h>
+> +#include <linux/dmi.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+> @@ -50,6 +51,11 @@ MODULE_AUTHOR("John Belmonte");
+>  MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+>  MODULE_LICENSE("GPL");
+>  
+> +int turn_on_panel_on_resume = -1;
+> +module_param(turn_on_panel_on_resume, int, 0644);
+> +MODULE_PARM_DESC(turn_on_panel_on_resume,
+> +	"Call HCI_PANEL_POWER_ON on resume (-1 = auto, 0 = no, 1 = yes");
+> +
+>  #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
+>  
+>  /* Scan code for Fn key on TOS1900 models */
+> @@ -100,6 +106,7 @@ MODULE_LICENSE("GPL");
+>  #define TOS_NOT_INSTALLED		0x8e00
+>  
+>  /* Registers */
+> +#define HCI_PANEL_POWER_ON		0x0002
+>  #define HCI_FAN				0x0004
+>  #define HCI_TR_BACKLIGHT		0x0005
+>  #define HCI_SYSTEM_EVENT		0x0016
+> @@ -3002,6 +3009,43 @@ static const char *find_hci_method(acpi_handle handle)
+>  	return NULL;
+>  }
+>  
+> +/*
+> + * Some Toshibas have a broken acpi-video interface for brightness control,
+> + * these are quirked in drivers/acpi/video_detect.c to use the GPU native
+> + * (/sys/class/backlight/intel_backlight) instead.
+> + * But these need a HCI_SET call to actually turn the panel back on at resume,
+> + * without this call the screen stays black at resume.
+> + * Either HCI_LCD_BRIGHTNESS (used by acpi_video's _BCM) or HCI_PANEL_POWER_ON
+> + * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
+> + * the configured brightness level.
+> + */
+> +static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
+> +	{
+> +	 /* Toshiba Portégé R700 */
+> +	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
+> +		},
+> +	},
+> +	{
+> +	 /* Toshiba Satellite/Portégé R830 */
+> +	 /* Portégé: https://bugs.freedesktop.org/show_bug.cgi?id=82634 */
+> +	 /* Satellite: https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
+> +		},
+> +	},
+> +	{
+> +	 /* Toshiba Satellite/Portégé Z830 */
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
+> +		},
+> +	},
+> +};
+> +
+>  static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  {
+>  	struct toshiba_acpi_dev *dev;
+> @@ -3144,6 +3188,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  	ret = get_fan_status(dev, &dummy);
+>  	dev->fan_supported = !ret;
+>  
+> +	if (turn_on_panel_on_resume == -1)
+> +		turn_on_panel_on_resume = dmi_check_system(turn_on_panel_on_resume_dmi_ids);
+> +
+>  	toshiba_wwan_available(dev);
+>  	if (dev->wwan_supported)
+>  		toshiba_acpi_setup_wwan_rfkill(dev);
+> @@ -3260,6 +3307,9 @@ static int toshiba_acpi_resume(struct device *device)
+>  			rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+>  	}
+>  
+> +	if (turn_on_panel_on_resume)
+> +		hci_write(dev, HCI_PANEL_POWER_ON, 1);
+> +
+>  	return 0;
+>  }
+>  #endif
 
