@@ -2,47 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB630ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5424ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 17:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbiIIR3s (ORCPT
+        id S229610AbiIIRla (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Sep 2022 13:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
+        Fri, 9 Sep 2022 13:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbiIIR3r (ORCPT
+        with ESMTP id S230207AbiIIRl3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Sep 2022 13:29:47 -0400
-Received: from vorpal.se (unknown [IPv6:2a01:7e00::f03c:91ff:fe73:398e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB8DF58B;
-        Fri,  9 Sep 2022 10:29:32 -0700 (PDT)
-Received: by vorpal.se (Postfix) with ESMTPSA id 8B1F4142D4;
-        Fri,  9 Sep 2022 17:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
-        t=1662744555; bh=YxV1bcA7852pBmchzb8H20s3XoEh/vN7giCg2FvWDIA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=G7fb4E9lTq9AWL3QhRnWulJ3xuCqmB2rRwItoppeaUwPtsMPTZrK3lda7TBkE3tMd
-         otB2o1SxijJbKOv6s6Hu6+0SJDzyzmrdvhvlFdakxT7rvt0mqrLu1VQ1wdC4PX936n
-         WaftnGfBlI7nH3g9OSWzKc095A6u/1nEvq9AL8pRy0Y+x+2EsWCBfMy/jabC+lsyCu
-         z3cVNAkshqWnsn009u3iQH0Hzwq8MlbtMXHfw4vfJfpY9lw1MRLfVeSPxO12DLPwLL
-         3MB7AHH90kX4HGmu/Tg5lFJJUNDsfCWZU8L0d2BOhs0S9JFiKV/UAzk93GpKCH8kLF
-         06w+qWzhFEOmA==
-Message-ID: <ee77aadf-8adc-c812-55ae-c534fb523de5@vorpal.se>
-Date:   Fri, 9 Sep 2022 19:29:14 +0200
+        Fri, 9 Sep 2022 13:41:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13A5979F7
+        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 10:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662745287;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9M0kqItM9plhK1KFlZ7clm4OCYC2Cx+YQmfHN1M/8m0=;
+        b=IPlnk13S7HiaSOT8+Ys/uoWupRNbRKCInxNX2z0E1dCjDo09fmF+uhxJVvKGOOg+M9HH4P
+        0WKOArAm7I6OgQ9Am6+IG3sOwLcKOHSSRurPX233w5k3rSRVDl91fwZOK9e+o6yLShLV9q
+        Y6Gx1fGnLrSJDysDuzsgL6tLrgIEtqc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-437-Txv17v8JNH2t0zsPZEiDVw-1; Fri, 09 Sep 2022 13:41:17 -0400
+X-MC-Unique: Txv17v8JNH2t0zsPZEiDVw-1
+Received: by mail-ej1-f72.google.com with SMTP id hs4-20020a1709073e8400b0073d66965277so1360951ejc.6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Sep 2022 10:41:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=9M0kqItM9plhK1KFlZ7clm4OCYC2Cx+YQmfHN1M/8m0=;
+        b=6dBwpjhPGPnfx04/kAYFbxLPpA0yIT4xWnTx1ki7fqz/9Nyr9IWzL9sHl1WdTheD9e
+         CR4/Tmanpl13CkBmxUfA9m3yH2++3HF5ML9wpmI7z/ZBqlmFBknt5mpUOOL81Fu/VFOs
+         m5LoOKKqFPYAzt7JZXoMxgxUalL5+w0gwLvmWcYYX3LjGLfKmHJ8hdK1X50BJMXpBcTV
+         7UYQEY+K47n9l4ArYmlbPQqRZZ2JW1k2aT1dMPLE3UdcnBJZBYzy017hJUY3/ZKaUarm
+         hH0LMTgrva9c1d0Esl/mGy4SldOyaC4Cf5KCjiFn/WlkCkaI63EfOW53oANm4Z5pm1ho
+         FHfg==
+X-Gm-Message-State: ACgBeo1pZ4eGn37A1fl00Bx2Hnh8xCZEtI4iN0Bj1lzi4fZVDojuUdks
+        /HqE7UMqjmWlXGPONdAIn31RoTQAQ2ZGnnRYpeg5u1xm7qCfRgVWDN/JTfqG8lrXiSRso6H1v8L
+        cY8//4c/m8ome3GZcJBzsFQA3Kk2l42eAtw==
+X-Received: by 2002:a17:907:8686:b0:773:6f77:f110 with SMTP id qa6-20020a170907868600b007736f77f110mr7484567ejc.547.1662745272371;
+        Fri, 09 Sep 2022 10:41:12 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5g51v7A56nWF33hp1ZuydAQ3ObgUmrUx/xmVtZgT9K967VFJqOVfKnbXLU2WP1/VDl9oIEHQ==
+X-Received: by 2002:a17:907:8686:b0:773:6f77:f110 with SMTP id qa6-20020a170907868600b007736f77f110mr7484555ejc.547.1662745272116;
+        Fri, 09 Sep 2022 10:41:12 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
+        by smtp.gmail.com with ESMTPSA id b4-20020aa7df84000000b0044dbecdcd29sm729398edy.12.2022.09.09.10.41.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Sep 2022 10:41:11 -0700 (PDT)
+Message-ID: <43c52d4c-3355-6699-7ad9-02a62e63fbd9@redhat.com>
+Date:   Fri, 9 Sep 2022 19:41:11 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
 Subject: Re: [PATCH v2 1/2] drivers/platform: toshiba_acpi: Call
  HCI_PANEL_POWER_ON on resume on some models
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+Content-Language: en-US
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Arvid Norlander <lkml@vorpal.se>,
         Mark Gross <mgross@linux.intel.com>
 Cc:     linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
         platform-driver-x86@vger.kernel.org
 References: <20220909153239.34606-1-hdegoede@redhat.com>
-Content-Language: en-US
-From:   Arvid Norlander <lkml@vorpal.se>
+From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <20220909153239.34606-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,12 +81,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-Given the changes, do you want me to test this again? If so, on what branch?
-
-Best regards,
-Arvid Norlander
-
-On 2022-09-09 17:32, Hans de Goede wrote:
+On 9/9/22 17:32, Hans de Goede wrote:
 > Some Toshibas have a broken acpi-video interface for brightness control, so
 > far these have been using a special workaround in drivers/acpi/acpi_video.c
 > which gets activated by the disable_backlight_sysfs_if module-param/quirks.
@@ -92,6 +116,17 @@ On 2022-09-09 17:32, Hans de Goede wrote:
 > Changes in v2:
 > - Add a turn_on_panel_on_resume module parameter to allow overriding
 >   the DMI quirk based setting
+
+I have added these 2 patches to my review-hans (soon to be for-next)
+branch now.
+
+Regards,
+
+Hans
+
+
+
+
 > ---
 >  drivers/platform/x86/toshiba_acpi.c | 50 +++++++++++++++++++++++++++++
 >  1 file changed, 50 insertions(+)
