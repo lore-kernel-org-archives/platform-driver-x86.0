@@ -2,152 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD1CECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E9AECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Sep 2022 18:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiIIRve (ORCPT
+        id S230165AbiIISBX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Sep 2022 13:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49784 "EHLO
+        Fri, 9 Sep 2022 14:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231416AbiIIRvd (ORCPT
+        with ESMTP id S230502AbiIISBJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Sep 2022 13:51:33 -0400
+        Fri, 9 Sep 2022 14:01:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C7C11CD60
-        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 10:51:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 568A8B656C
+        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Sep 2022 11:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662745892;
+        s=mimecast20190719; t=1662746467;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zY6222WckzVK2KF9fJBNjhtu9q+nbygI3g+xxUdhLVM=;
-        b=INGbY3CLLjJZVm+StuP7y6PUyP3a+dZXwAREwTPjVZIvek71ABTOlcDR0ziCcj3pnr9a6c
-        unY3RzVA2nQ9OJFSEsPghyhi6O0nMG86ftEzHxg/6zz267Y/UF0ZeAsXfAqni3jZtDTxLD
-        92mFeHUyRIvBP9EonIEaIvNMwPKKecU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=3D26A95ux8AtSyHj3kN5yWBRCCyIa3I2ao1wuKJQdY0=;
+        b=TXCuEcYTyaYOYwAfdEOGJ7KGupGJkpmP15U2i92Fs5Lo6AYIFF2hPXM2Tgz2h9J8gKZ4bR
+        yDHC+tRgPfNJjNJ7TbnztuPzPkXVbyZd2F+QexXcW0OwmtZFxkCFY2ni9S/WekQj4l0vzD
+        IVuFotN6Kjisby/4JbLPR1CTuyrfLDc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-114-pzau0lY7P1urR8b0Ril6Kg-1; Fri, 09 Sep 2022 13:51:30 -0400
-X-MC-Unique: pzau0lY7P1urR8b0Ril6Kg-1
-Received: by mail-ed1-f71.google.com with SMTP id p4-20020a056402500400b00447e8b6f62bso1782835eda.17
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Sep 2022 10:51:30 -0700 (PDT)
+ us-mta-116-CUL4k7BnONStwYNPTL54Lw-1; Fri, 09 Sep 2022 14:01:05 -0400
+X-MC-Unique: CUL4k7BnONStwYNPTL54Lw-1
+Received: by mail-ej1-f70.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso1393509ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Sep 2022 11:01:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=zY6222WckzVK2KF9fJBNjhtu9q+nbygI3g+xxUdhLVM=;
-        b=OcWHL0LgpiN9rOZAg1r9VY0lDAk0WEL6w1jByX8foic8oJgUHmsjQVrRx6Dg0jh4ZH
-         jtMr4c7fRt8/Tvmg4diIliyWfmo4eOSFOjb3bjCihJTucss4csoBO9mJAPc01M9HzbR/
-         IrLO4R2FOWmWoQ3YGGrZb0MA8DIEFRh+Wjg2t0Yh0eR2rBMBBIzDbZgzyO4CIuudtrdn
-         dpj4PeeAyiBC8F0UimPrqlTZyVvkrSMQojp4KHemuP6BDfUlkp4T8QruHcdMqMBFU7DN
-         SSbcLEMzzoU3SeSG3ZTihWkvn9JxKKrn6HrXSX+VCXbFuo6W0ped3BB0poXI9bHkhfRt
-         PcBg==
-X-Gm-Message-State: ACgBeo3TkqBNWkLNkylhVDFlG4HEnbN4i+LIFQWY1+gS1BDT9DNocMh7
-        2H+6OC9GxZvHeyP02iD1aXElO/b+pU74Nd83/a7Y7fkbxA5yStypfl7kL21Uwk44v/fy+KgXN0I
-        e0pnewMmWZ6ZURNIYboJe8FX06qvfyb/1KQ==
-X-Received: by 2002:aa7:da4f:0:b0:44e:864b:7a3e with SMTP id w15-20020aa7da4f000000b0044e864b7a3emr12733438eds.378.1662745889498;
-        Fri, 09 Sep 2022 10:51:29 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7eSb5jcKQbu3GV5bmpBUvssCQ+gY9FphMHM+nQQDWOsXpBZ57P/7Sl2oKZ6rrontmRGkmA5w==
-X-Received: by 2002:aa7:da4f:0:b0:44e:864b:7a3e with SMTP id w15-20020aa7da4f000000b0044e864b7a3emr12733427eds.378.1662745889346;
-        Fri, 09 Sep 2022 10:51:29 -0700 (PDT)
+        bh=3D26A95ux8AtSyHj3kN5yWBRCCyIa3I2ao1wuKJQdY0=;
+        b=4Sw4jFLzJcTO0lc0B/Szl2NK/+9CUnoh2cDT0RiKMXBXV3w08pPg0GrWYtC2vKe3r1
+         eufbA4J2OSHr5H7iAHpAwrbfJU9f1YDU9D1qM1b6k0kQHl96qgM/Gsd2zIqk+TnsXoI/
+         vHBZ/VVy0uQito3coOKc1Fti2Q04fq95oqUUB++toNlhucKerFw4iIQhFcJQNZ3+6MIi
+         02PArM7dUqlnuyxu8PtBB//r7ciAxAi3pLRXiVlMVrouNjjUpbAgY5Zi1ZCKdouxUFgs
+         MTITfA5S5XmS0sO2BtKikyhBmUbrC51bE3t3eXRTuxOqqsaZAk1P14Gf7SdKxbthplV7
+         H0VQ==
+X-Gm-Message-State: ACgBeo3egFPWfczEdKAvTAzIlypB6d8clezHlKh9huCfbID4r3Yo/J0V
+        JSS7ww1Cnqpn7eplhydgDwZYY2Cd/gNYct1htKe1xHyz7pQB5rX2PlQHfbqoAm9rDJQoslYvjmR
+        6hAO3V7OMV02K2dzFEslMKoVqz24oR6fxIQ==
+X-Received: by 2002:a17:907:60c7:b0:739:52ba:cbd0 with SMTP id hv7-20020a17090760c700b0073952bacbd0mr10772619ejc.152.1662746464574;
+        Fri, 09 Sep 2022 11:01:04 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR518PPyB3tBg1mbTu+yRfNwrJ4KjUBwnlEw1t78r+948rsIep6kuQmUdGiNT/jfsXGkqYojzg==
+X-Received: by 2002:a17:907:60c7:b0:739:52ba:cbd0 with SMTP id hv7-20020a17090760c700b0073952bacbd0mr10772611ejc.152.1662746464382;
+        Fri, 09 Sep 2022 11:01:04 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170906210200b00715a02874acsm589103ejt.35.2022.09.09.10.51.28
+        by smtp.gmail.com with ESMTPSA id 7-20020a170906308700b0072b1bc9b37fsm578447ejv.22.2022.09.09.11.01.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Sep 2022 10:51:28 -0700 (PDT)
-Message-ID: <f98cc079-3ded-e8aa-da27-62fd298b79ca@redhat.com>
-Date:   Fri, 9 Sep 2022 19:51:28 +0200
+        Fri, 09 Sep 2022 11:01:03 -0700 (PDT)
+Message-ID: <1d2d7da9-3046-b5fc-da6f-7615aa8a8285@redhat.com>
+Date:   Fri, 9 Sep 2022 20:01:03 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH platform-next 1/1] platform/mellanox: mlxreg-lc: Make
- error handling flow consistent
+Subject: Re: [PATCH v1 1/1] hp-wmi: Setting thermal profile fails with 0x06
 Content-Language: en-US
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20220904141113.49048-1-vadimp@nvidia.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>, balalic.enver@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     markgross@kernel.org
+References: <20220906170239.30384-1-jorge.lopez2@hp.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220904141113.49048-1-vadimp@nvidia.com>
+In-Reply-To: <20220906170239.30384-1-jorge.lopez2@hp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Jorge,
 
-On 9/4/22 16:11, Vadim Pasternak wrote:
-> Use 'goto' statement in error flow of mlxreg_lc_event_handler() at all
-> places for consistency.
+On 9/6/22 19:02, Jorge Lopez wrote:
+> Error 0x06 (invalid command parameter) is reported by hp-wmi module
+> when reading the current thermal profile and then proceed to set it
+> back. The failing condition occurs in Linux NixOS after user
+> configures the thermal profile to ‘quiet mode’ in Windows.  Quiet Fan
+> Mode is supported in Windows but was not supported in hp-wmi module.
 > 
-> This follow-up patch implementing comments from
-> https://www.spinics.net/lists/platform-driver-x86/msg34587.html
+> This fix adds support for PLATFORM_PROFILE_QUIET in hp-wmi module for
+> HP notebooks other than HP Omen series.  Quiet thermal profile is not
+> supported in HP Omen series notebooks.
 > 
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
+Thank you for looking into this!
+
+
+
+> 
 > ---
->  drivers/platform/mellanox/mlxreg-lc.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+> Based on the latest platform-drivers-x86.git/for-next
+> ---
+>  drivers/platform/x86/hp-wmi.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> index 1e071df4c9f5..d47fe22080e6 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -564,10 +564,8 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  		 mlxreg_lc->data->slot, mlxreg_lc->state, kind, action);
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index bc7020e9df9e..f5c13df35af0 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
+>  enum hp_thermal_profile {
+>  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+>  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> -	HP_THERMAL_PROFILE_COOL			= 0x02
+> +	HP_THERMAL_PROFILE_COOL			= 0x02,
+> +	HP_THERMAL_PROFILE_QUIET		= 0x03,
+>  };
 >  
->  	mutex_lock(&mlxreg_lc->lock);
-> -	if (!(mlxreg_lc->state & MLXREG_LC_INITIALIZED)) {
-> -		mutex_unlock(&mlxreg_lc->lock);
-> -		return 0;
-> -	}
-> +	if (!(mlxreg_lc->state & MLXREG_LC_INITIALIZED))
-> +		goto mlxreg_lc_non_initialzed_exit;
+>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+> @@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+>  	case HP_THERMAL_PROFILE_COOL:
+>  		*profile =  PLATFORM_PROFILE_COOL;
+>  		break;
+> +	case HP_THERMAL_PROFILE_QUIET:
+> +		*profile = PLATFORM_PROFILE_QUIET;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -1216,6 +1220,10 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+>  	case PLATFORM_PROFILE_COOL:
+>  		tp =  HP_THERMAL_PROFILE_COOL;
+>  		break;
+> +	case PLATFORM_PROFILE_QUIET:
+> +		tp = HP_THERMAL_PROFILE_QUIET;
+> +		break;
+> +
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -1266,6 +1274,7 @@ static int thermal_profile_setup(void)
+>  	}
 >  
->  	switch (kind) {
->  	case MLXREG_HOTPLUG_LC_SYNCED:
-> @@ -594,8 +592,7 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  				/* In case line card is configured - enable it. */
->  				if (mlxreg_lc->state & MLXREG_LC_CONFIGURED)
->  					err = mlxreg_lc_enable_disable(mlxreg_lc, 1);
-> -				mutex_unlock(&mlxreg_lc->lock);
-> -				return err;
-> +					goto mlxreg_lc_enable_disable_exit;
+>  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+> +	set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
 
-The intend of this goto is wrong (one indent level too much).
+In the commit msg you say that quiet profile is only supported on the non Omen
+models, should this then not be inside the else branch of the:
 
-I have merged this now with the indent fixed up:
+if (is_omen_thermal_profile()) { ... } else { ... }
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+just above this code block ?
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+>  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+>  	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
+>  
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
 
 Regards,
 
 Hans
-
-
->  			}
->  			err = mlxreg_lc_create_static_devices(mlxreg_lc, mlxreg_lc->main_devs,
->  							      mlxreg_lc->main_devs_num);
-> @@ -627,8 +624,10 @@ static int mlxreg_lc_event_handler(void *handle, enum mlxreg_hotplug_kind kind,
->  		break;
->  	}
->  
-> +mlxreg_lc_enable_disable_exit:
->  mlxreg_lc_power_on_off_fail:
->  mlxreg_lc_create_static_devices_fail:
-> +mlxreg_lc_non_initialzed_exit:
->  	mutex_unlock(&mlxreg_lc->lock);
->  
->  	return err;
 
