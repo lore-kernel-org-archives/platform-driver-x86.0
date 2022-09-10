@@ -2,46 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D2AC6FA83
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Sep 2022 21:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2AAECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Sep 2022 21:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiIJVQb (ORCPT
+        id S229895AbiIJVTd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Sep 2022 17:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56082 "EHLO
+        Sat, 10 Sep 2022 17:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbiIJVQa (ORCPT
+        with ESMTP id S229881AbiIJVS4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Sep 2022 17:16:30 -0400
+        Sat, 10 Sep 2022 17:18:56 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F368947B88;
-        Sat, 10 Sep 2022 14:16:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A480D4DF1F;
+        Sat, 10 Sep 2022 14:17:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AE88CB8093B;
-        Sat, 10 Sep 2022 21:16:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3397C433B5;
-        Sat, 10 Sep 2022 21:16:26 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4D7E2B80943;
+        Sat, 10 Sep 2022 21:17:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E75C433B5;
+        Sat, 10 Sep 2022 21:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662844587;
-        bh=hFz289cURpz/2AcKIza+w5U70ny1pNXJNBG5RO5VPdQ=;
+        s=k20201202; t=1662844657;
+        bh=g1K/tsCZeF3hfaAJ8DuIWNbrtY7uwq/dhFvhIaqT3/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=suSPuLN4PNOl22bjsYUqnUMIsW9KhHmLPNc6NZbHsdP9ahXSubXU45EvOAvIHevHt
-         JxrWxfBpVlV9mGwtomCAUAEBLtvknpTCgJs5kTnmsKb5INAfehKe8CJEiQ79uXCZC1
-         TG5+pV2eqIY3a8xSwaOohArS/ALS31x2hA/SjdGrwDlo84Vg/GBkJvogTJSS5dVLci
-         dPKBX+ENtiz/ZbL6opzBTkBAPUId9D50Fv03ERUWV/S88QNhaN0bK7k7kJPJspTFEP
-         5gpPt82A0iO9oYDi+vRhGcZMycR06EHBnHHqml1fwIMVYi7SgHkmch7afvup4jpOTQ
-         qChZqvedv+2ug==
+        b=LLxgpPyOabUMCkTKT/iXfD+hIq8+nlXvu1t8eowwOCWUrEnRNlmcMs4wh8MaP2skh
+         17GJT4wkd94m6LhjcaSWHzJTMvcAKk4sTv4zMSxQIegRfcVxND6qrgiVGFnk6v1DMU
+         SSiVo6znfKm535ct4D5uw+RPnWCtwBfV5JxVfTrlx8j8D1USOU1LbNo6JQdybh+obM
+         7sZJlpAJ9nxCAjv4jkvGYSUxRIZzJIYobPKCX3yTlg20HWmCmI1ADaBmHjQ+KOgSGr
+         qMFH9P22xMXVSMgQHkR1VGK9ArrYyRjRZdtUBBZ6ie6AIWI6aIWlsijmotf4EN4I9m
+         8nF4RpWfijkAg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 02/38] platform/surface: aggregator_registry: Add support for Surface Laptop Go 2
-Date:   Sat, 10 Sep 2022 17:15:47 -0400
-Message-Id: <20220910211623.69825-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.19 34/38] platform/x86: asus-wmi: Increase FAN_CURVE_BUF_LEN to 32
+Date:   Sat, 10 Sep 2022 17:16:19 -0400
+Message-Id: <20220910211623.69825-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220910211623.69825-1-sashal@kernel.org>
 References: <20220910211623.69825-1-sashal@kernel.org>
@@ -53,34 +54,61 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Maximilian Luz <luzmaximilian@gmail.com>
+From: "Luke D. Jones" <luke@ljones.dev>
 
-[ Upstream commit 84b8e403435c8fb94b872309673764a447961e00 ]
+[ Upstream commit 5542dfc582f4a925f67bbfaf8f62ca83506032ae ]
 
-The Surface Laptop Go 2 seems to have the same SAM client devices as the
-Surface Laptop Go 1, so re-use its node group.
+Fix for TUF laptops returning with an -ENOSPC on calling
+asus_wmi_evaluate_method_buf() when fetching default curves. The TUF method
+requires at least 32 bytes space.
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-Link: https://lore.kernel.org/r/20220810140133.99087-1-luzmaximilian@gmail.com
+This also moves and changes the pr_debug() in fan_curve_check_present() to
+pr_warn() in fan_curve_get_factory_default() so that there is at least some
+indication in logs of why it fails.
+
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/20220828074638.5473-1-luke@ljones.dev
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/surface/surface_aggregator_registry.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/platform/x86/asus-wmi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index ce2bd88feeaa8..08019c6ccc9ca 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -556,6 +556,9 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
- 	/* Surface Laptop Go 1 */
- 	{ "MSHW0118", (unsigned long)ssam_node_group_slg1 },
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 62ce198a34631..a0f31624aee97 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -107,7 +107,7 @@ module_param(fnlock_default, bool, 0444);
+ #define WMI_EVENT_MASK			0xFFFF
  
-+	/* Surface Laptop Go 2 */
-+	{ "MSHW0290", (unsigned long)ssam_node_group_slg1 },
-+
- 	/* Surface Laptop Studio */
- 	{ "MSHW0123", (unsigned long)ssam_node_group_sls },
+ #define FAN_CURVE_POINTS		8
+-#define FAN_CURVE_BUF_LEN		(FAN_CURVE_POINTS * 2)
++#define FAN_CURVE_BUF_LEN		32
+ #define FAN_CURVE_DEV_CPU		0x00
+ #define FAN_CURVE_DEV_GPU		0x01
+ /* Mask to determine if setting temperature or percentage */
+@@ -2208,8 +2208,10 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+ 	curves = &asus->custom_fan_curves[fan_idx];
+ 	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
+ 					   FAN_CURVE_BUF_LEN);
+-	if (err)
++	if (err) {
++		pr_warn("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
+ 		return err;
++	}
+ 
+ 	fan_curve_copy_from_buf(curves, buf);
+ 	curves->device_id = fan_dev;
+@@ -2227,9 +2229,6 @@ static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
+ 
+ 	err = fan_curve_get_factory_default(asus, fan_dev);
+ 	if (err) {
+-		pr_debug("fan_curve_get_factory_default(0x%08x) failed: %d\n",
+-			 fan_dev, err);
+-		/* Don't cause probe to fail on devices without fan-curves */
+ 		return 0;
+ 	}
  
 -- 
 2.35.1
