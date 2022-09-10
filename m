@@ -2,48 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94118C6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Sep 2022 21:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82817C6FA8B
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Sep 2022 21:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbiIJV1T (ORCPT
+        id S231403AbiIJV1U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Sep 2022 17:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43932 "EHLO
+        Sat, 10 Sep 2022 17:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231336AbiIJV00 (ORCPT
+        with ESMTP id S231347AbiIJV0h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Sep 2022 17:26:26 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E8E4F649;
-        Sat, 10 Sep 2022 14:21:16 -0700 (PDT)
+        Sat, 10 Sep 2022 17:26:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F1952FF8;
+        Sat, 10 Sep 2022 14:21:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 404B3CE0AF6;
-        Sat, 10 Sep 2022 21:19:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDDBBC433D6;
-        Sat, 10 Sep 2022 21:19:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AEE5E60F15;
+        Sat, 10 Sep 2022 21:19:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABCCC43470;
+        Sat, 10 Sep 2022 21:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662844796;
-        bh=uASbzskNgxAg+HPPH5Q5UI7OXq1oofkIiy+UyhNuo7s=;
+        s=k20201202; t=1662844787;
+        bh=5d1gcZu3g64lFbFQtJHcc3lz3f22++oEQ2WVyfr0LSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Riu56QS0EbzU/Or8GA0j4DmcdLOLYskvb3HphiPZkx5YPxmX5fP63lNFNtx1Zit3i
-         clPVwEY/Ybu+95dP/DVXQmdPmahjEGgn1ffgqS/QjD2tYYeFj5J66Rksz3GWxs9cgy
-         ZLLjEzT5hh0Pv1zJdCrUNWb9LIDcIRuOv7cTi9Pih/Vly6ZsF2VbUxMxsWLLz+8lKJ
-         daDW1FD5NNwTQc5MutsyerHHDk00ncKDmaqdyku37A/u4D78xuukxD/Iwr9AB6C1u8
-         2bFigGxjEYyTS8DUYSaADx5yc/BrFU837sWp74JhOavfTgiqv8xgqCj6PQCIvhqYki
-         SSwwyYkD0d8vg==
+        b=Q6C3icDBU0jokVrxnv1C5bjo9Eryu0Jl9yjEiK35iUE8vfINgIGrvWJtXih7itREp
+         yIwFldO75x4g7u8vznd6CL/fnj2GLIM5gVKFAJ9a1XmFTjhnahkB4Pgb96s4ytXe0m
+         7u7aTej58o5bzyVy3WyyzkJdBr6cUea5jDNfJXGvNZ4CijU907O0kDU3G4YzQ2kko9
+         A6kB2cJpPMx+Cbb6453deXtAc6jqJ746FS1t229nEKoNVAhreLZW6xPEls3hBcXUbO
+         LuDRsP0NeN7IdsLmz2I0HbAzZc3+JzUDWPgsaouDBztmrIvffEkJ0WIR7wnBQhJr9c
+         xbzkf5r5TBAig==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, jlee@suse.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 5/5] platform/x86: acer-wmi: Acer Aspire One AOD270/Packard Bell Dot keymap fixes
-Date:   Sat, 10 Sep 2022 17:19:47 -0400
-Message-Id: <20220910211947.71066-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 5/5] platform/x86: acer-wmi: Acer Aspire One AOD270/Packard Bell Dot keymap fixes
+Date:   Sat, 10 Sep 2022 17:19:37 -0400
+Message-Id: <20220910211938.70997-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220910211947.71066-1-sashal@kernel.org>
-References: <20220910211947.71066-1-sashal@kernel.org>
+In-Reply-To: <20220910211938.70997-1-sashal@kernel.org>
+References: <20220910211938.70997-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -76,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index ec3cbb7844bce..c10b97c91f3cc 100644
+index 5ddc359135a85..8b4af118ff94b 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -105,6 +105,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
+@@ -106,6 +106,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
  	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
  	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
  	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
@@ -87,7 +87,7 @@ index ec3cbb7844bce..c10b97c91f3cc 100644
  	{KE_KEY, 0x29, {KEY_PROG3} },    /* P_Key for TM8372 */
  	{KE_IGNORE, 0x41, {KEY_MUTE} },
  	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
-@@ -118,7 +119,13 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
+@@ -119,7 +120,13 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
  	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
  	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
  	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
