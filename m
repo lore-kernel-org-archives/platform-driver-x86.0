@@ -2,106 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82817C6FA8B
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Sep 2022 21:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19E7C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Sep 2022 03:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231403AbiIJV1U (ORCPT
+        id S229569AbiIKDlz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Sep 2022 17:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43982 "EHLO
+        Sat, 10 Sep 2022 23:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231347AbiIJV0h (ORCPT
+        with ESMTP id S229516AbiIKDly (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Sep 2022 17:26:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F1952FF8;
-        Sat, 10 Sep 2022 14:21:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AEE5E60F15;
-        Sat, 10 Sep 2022 21:19:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABCCC43470;
-        Sat, 10 Sep 2022 21:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662844787;
-        bh=5d1gcZu3g64lFbFQtJHcc3lz3f22++oEQ2WVyfr0LSg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6C3icDBU0jokVrxnv1C5bjo9Eryu0Jl9yjEiK35iUE8vfINgIGrvWJtXih7itREp
-         yIwFldO75x4g7u8vznd6CL/fnj2GLIM5gVKFAJ9a1XmFTjhnahkB4Pgb96s4ytXe0m
-         7u7aTej58o5bzyVy3WyyzkJdBr6cUea5jDNfJXGvNZ4CijU907O0kDU3G4YzQ2kko9
-         A6kB2cJpPMx+Cbb6453deXtAc6jqJ746FS1t229nEKoNVAhreLZW6xPEls3hBcXUbO
-         LuDRsP0NeN7IdsLmz2I0HbAzZc3+JzUDWPgsaouDBztmrIvffEkJ0WIR7wnBQhJr9c
-         xbzkf5r5TBAig==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, jlee@suse.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/5] platform/x86: acer-wmi: Acer Aspire One AOD270/Packard Bell Dot keymap fixes
-Date:   Sat, 10 Sep 2022 17:19:37 -0400
-Message-Id: <20220910211938.70997-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220910211938.70997-1-sashal@kernel.org>
-References: <20220910211938.70997-1-sashal@kernel.org>
+        Sat, 10 Sep 2022 23:41:54 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4C12A404;
+        Sat, 10 Sep 2022 20:41:53 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MQFmz54BqzmVBh;
+        Sun, 11 Sep 2022 11:38:11 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.58) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sun, 11 Sep 2022 11:41:52 +0800
+From:   Xiu Jianfeng <xiujianfeng@huawei.com>
+To:     <dvhart@infradead.org>, <andy@infradead.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+        <hpa@zytor.com>
+CC:     <x86@kernel.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86: platform: add __init/__exit annotations to module init/exit funcs
+Date:   Sun, 11 Sep 2022 11:38:23 +0800
+Message-ID: <20220911033823.127075-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.58]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Add missing __init/__exit annotations to module init/exit funcs.
 
-[ Upstream commit c3b82d26bc85f5fc2fef5ec8cce17c89633a55a8 ]
-
-2 keymap fixes for the Acer Aspire One AOD270 and the same hardware
-rebranded as Packard Bell Dot SC:
-
-1. The F2 key is marked with a big '?' symbol on the Packard Bell Dot SC,
-this sends WMID_HOTKEY_EVENTs with a scancode of 0x27 add a mapping
-for this.
-
-2. Scancode 0x61 is KEY_SWITCHVIDEOMODE. Usually this is a duplicate
-input event with the "Video Bus" input device events. But on these devices
-the "Video Bus" does not send events for this key. Map 0x61 to KEY_UNKNOWN
-instead of using KE_IGNORE so that udev/hwdb can override it on these devs.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20220829163544.5288-1-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- drivers/platform/x86/acer-wmi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/platform/iris/iris.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 5ddc359135a85..8b4af118ff94b 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -106,6 +106,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
- 	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
- 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
-+	{KE_KEY, 0x27, {KEY_HELP} },
- 	{KE_KEY, 0x29, {KEY_PROG3} },    /* P_Key for TM8372 */
- 	{KE_IGNORE, 0x41, {KEY_MUTE} },
- 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
-@@ -119,7 +120,13 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
- 	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
- 	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
--	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
-+	/*
-+	 * 0x61 is KEY_SWITCHVIDEOMODE. Usually this is a duplicate input event
-+	 * with the "Video Bus" input device events. But sometimes it is not
-+	 * a dup. Map it to KEY_UNKNOWN instead of using KE_IGNORE so that
-+	 * udev/hwdb can override it on systems where it is not a dup.
-+	 */
-+	{KE_KEY, 0x61, {KEY_UNKNOWN} },
- 	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
- 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
- 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
+diff --git a/arch/x86/platform/iris/iris.c b/arch/x86/platform/iris/iris.c
+index b42bfdab01a9..d3381340c5f3 100644
+--- a/arch/x86/platform/iris/iris.c
++++ b/arch/x86/platform/iris/iris.c
+@@ -88,7 +88,7 @@ static struct resource iris_resources[] = {
+ 
+ static struct platform_device *iris_device;
+ 
+-static int iris_init(void)
++static int __init iris_init(void)
+ {
+ 	int ret;
+ 	if (force != 1) {
+@@ -112,7 +112,7 @@ static int iris_init(void)
+ 	return 0;
+ }
+ 
+-static void iris_exit(void)
++static void __exit iris_exit(void)
+ {
+ 	platform_device_unregister(iris_device);
+ 	platform_driver_unregister(&iris_driver);
 -- 
-2.35.1
+2.17.1
 
