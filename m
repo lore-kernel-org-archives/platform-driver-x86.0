@@ -2,103 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16795C6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 17:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA4CC6FA83
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 19:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbiILRaE (ORCPT
+        id S229688AbiILT0H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Sep 2022 13:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        Mon, 12 Sep 2022 15:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbiILRaD (ORCPT
+        with ESMTP id S229677AbiILT0G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Sep 2022 13:30:03 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079EE19030;
-        Mon, 12 Sep 2022 10:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1663003786;
-        bh=le7Hd+CVZKvyI8cRoUEmz4/qdEQPFqmPQE68nCfLxLM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZzZRaZD0OOQhPNBE1Kx31W1LmPDgyJY7AekTLtg7jMdjMx47K7QU8MlBXyGQfdVB9
-         DjgRt3wyvFHVQU0oCfLsa+d656MzSQWhFhTWUuLduV5d4ldxTt74DnXq1kpQ1Yjj0v
-         Vt2MPj/r79HOXzDl8uK/YTLfuzOrX8pb+p4RhGCE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mt79P-1pMAyp2PIP-00tQ2Q; Mon, 12
- Sep 2022 19:29:46 +0200
-Subject: Re: [PATCH 3/5] ACPI: battery: Allow battery hooks to be registered
- multiple times.
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, rafael@kernel.org,
-        lenb@kernel.org, hmh@hmh.eng.br, matan@svgalib.org,
-        corentin.chary@gmail.com, jeremy@system76.com,
-        productdev@system76.com, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-4-W_Armin@gmx.de>
- <wY3UHtenNt5tmQSMtoDLmzNxvJ7B56SLwlhguYfg6rqC71dDDCYypvSqvS0SUhRJwsel8wBEy3yeS8rDlJCOii24Llo0XKU34IcSn5WNwg8=@protonmail.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <155062a9-8d1a-e771-1bee-35580b1b2b73@gmx.de>
-Date:   Mon, 12 Sep 2022 19:29:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Mon, 12 Sep 2022 15:26:06 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2051512608;
+        Mon, 12 Sep 2022 12:26:06 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-11e9a7135easo26083075fac.6;
+        Mon, 12 Sep 2022 12:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=OwBDVbFQEw2EAV+CoYDVuZdyw9Sp+7B2pZqgX6wtMO8=;
+        b=VoJ5UatIZjLOTKrOnCmk/Zs7UgHFZN1Z5iu17az8YvLSGUNJ5r0hATbF37tZf0OjHH
+         5ZKToyVbZpsue0tm3aNPKtlC7U7ivv/8D94Lrtz0vCC/12ZlBjVdkrY+5Ybm/dH3VWmZ
+         b2CNKTlvhrDtgVkP9oYfHMAIToEliZTHYbWq6w15tvcY5yM55L8gNOa63KY0UKyCZnFm
+         InPZPsyFDTyxSMaCyaFhpxGhC+lWecgJJcL6nj5nCozXulS9vJZXFIMA26gGu2fR8jC2
+         wFOuvzdwFq0/Cc6Hf2uI9mBJ2Gkyx0SXzniLjUc2llJMa+w6An0EUC+PxKXztfSTUPnq
+         UECw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=OwBDVbFQEw2EAV+CoYDVuZdyw9Sp+7B2pZqgX6wtMO8=;
+        b=3lZQzbNTkA+/fRkTdoX7xBUxf7kyPAmJXeiXcv6nEZKfuIKSZgCpb8CRLUgmDwmTaP
+         hZi1X303NxKDEVBiA+inKNkjKZk3h3lo6iBEBciQw44sF5ZhjNmBPFOaKaa/vmMda48o
+         dQaqLfoiXQ3WCI7hm8yiCzfDMNElJKUWJjK+O8jgL6r6bmjdZIJElVnH5beLGF8GjF0p
+         E8TJRzsrCE/aVb9sOpCX9K3MhqxDavtcHrQkfsBu3fASV50WDYCwxKy1J5K9Kx2kLUDo
+         AdkrQrAF/Q9FMtOv1QdaLt+HhTI5eX0kZSYwpUaBeuQb+3K+yQTvVluQmbtr0aOaz5ET
+         xCdw==
+X-Gm-Message-State: ACgBeo0NM5J9y1Uv+iXmP4VNZGh7fKgUBvO5E28SCC1xJQFrGF4JsXGO
+        awqNWsbqSQ+eaVURItvQLn0=
+X-Google-Smtp-Source: AA6agR5hLdk4wV80PywGLbBBBLUDe6WFVwWLD7ei7ufpEjqgMbvwq6LB/oZJvWToQ283HEK1RjQQPw==
+X-Received: by 2002:a05:6808:23cc:b0:34b:73b1:19e8 with SMTP id bq12-20020a05680823cc00b0034b73b119e8mr10207917oib.105.1663010765430;
+        Mon, 12 Sep 2022 12:26:05 -0700 (PDT)
+Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390::465])
+        by smtp.gmail.com with ESMTPSA id 5-20020a9d0d85000000b0063975d170a8sm5018208ots.7.2022.09.12.12.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Sep 2022 12:26:04 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, balalic.enver@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     markgross@kernel.org
+Subject: [PATCH v2 1/1] hp-wmi: Setting thermal profile fails with 0x06
+Date:   Mon, 12 Sep 2022 14:26:03 -0500
+Message-Id: <20220912192603.4001-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <wY3UHtenNt5tmQSMtoDLmzNxvJ7B56SLwlhguYfg6rqC71dDDCYypvSqvS0SUhRJwsel8wBEy3yeS8rDlJCOii24Llo0XKU34IcSn5WNwg8=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:bdj8FMZD7tMIwPC/ksvUpRNyQqCwV+ldwI02o5ILod4hUEQk+h8
- DXozwhFh1pceb3/GkW+EliRwkhZ0dQoHDQHdzvX5YOKNwazFsL97Sj5DXPs54boLWtqChUR
- 35Yd7ufis5GjcM675xncg1kyMATEDolQWAKXusvcGDnRoop6YTEm1Ev/mFIXco7Ng0MKauI
- AUqhW/FCOMSsH1FmddhCQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hEjY63qmLik=:+zINZNHgvC4OyF4g8553NF
- 6rTG7ChLVVn67f8lRi9ILSeSWERRAUXEyr8sPkv+/bnyJ9C3a8bwhLWvX/JqLg0pjxHhfe9MS
- Qhxk+8/AvrnxKyc912+JsyAHSza7w/lKwA2d+MeTuwtTpKCLQ/zpHd0XhJ5jiqsNt4gteEp2Z
- aa+/q5pAxvpTy+S/wQ24bcAzQ80vJ6Pju5iMJKX+8SW5RF2ReXZJ7Ve/LpG35iWZDN/CWBluF
- oukfm4q338k7FVXB5UYPb0xFgwDDmIqRfeo8aK+ewS0I7/O60yYDdo4XwArrmR08xxHiqxZnM
- SnUxHx6ojHMLQ04NO5srMwAQH+B+SBKxZhDpknTUUd96tIUz0VB3CTMa9cbtr5HB0jUXnSqNC
- D5kgc1oxA0TxKyiYMC3RSBS52Nv7vmL4hQuuRCoEukBFm0yZ3PyiaLfXZMn/wlmQ1NjE36l/J
- ux/JrFUPI6YNiDXUOGb4jdjw4zig3VJ+OxlEcR26lTmMrw3Bs1ah1lNsNg+P22jIXOLWH9u2G
- roJ99gw5caI14HTTrJTjtUG0GsBWzT6F1L/lwUSUiWKj5+3l9qGmjpG/ljFpeDeD0uRJYa4oB
- J3MVs+2VHfSKTkbs025lNhgXcw2qpBBPyOL7DrD1vMTiTKA/KEKNWwWPMIV7xhw6XSNLeUOLJ
- 4PJGc9TpMHKNp+WtklOwtX51y4UY9T/V8wqyQzPJwKsbJyO7u1Z8+KARhtctyAJz4r4Li+wyU
- 92xgYWySgWMrTT8hfs0K1w8CXJp5Hyfid/jcf7qRX2yTHjp/shplRG6u8xaosUjt3VF8ozM2D
- +MvtMXvBBD9t5tLK9F7gXMN5i2OYjRh5U7v/njWob5MqGGSi9d2u8ptD3GkPgORGQHPjVciWg
- Ih2MkiWlF8xvpYmn2z2WHuTQZyQRID2e8cBC5EnNe6Ezamp+hhmv4WgIR5xSeNZojoY4WwQh3
- TYO9+mjFM5TfBqKpOxSr3AuWrIps7T6xV0VXKqztij1P/YAfsYRjBbTY6v3qtn/YAg6pshm44
- AC2ycw5r/W+7hALgUTSUERh+aqUEwCVuybvV8PVWsPl6r9p9OzkZdPxeMHRzA1s3Lgz6k32IZ
- Iikwvs2fox6nwHuxv8AGKJ25yIzvBepbauEbo525tUjZTf++8KBd2HkQ4mVIhkvfHkRP+ktGC
- TaFn5Y22rsLQtTiHL482EFjM+2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 12.09.22 um 18:42 schrieb Barnab=C3=A1s P=C5=91cze:
+Error 0x06 (invalid command parameter) is reported by hp-wmi module
+when reading the current thermal profile and then proceed to set it
+back. The failing condition occurs in Linux NixOS after user
+configures the thermal profile to ‘quiet mode’ in Windows.  Quiet Fan
+Mode is supported in Windows but was not supported in hp-wmi module.
 
-> Hi
->
-> 2022. szeptember 12., h=C3=A9tf=C5=91 14:53 keltez=C3=A9ssel, Armin Wolf=
- =C3=ADrta:
->
->> Registering multiple instances of a battery hook is beneficial
->> for drivers which can be instantiated multiple times. Until now,
->> this would mean that such a driver would have to implement some
->> logic to manage battery hooks.
->>
->> Extend the battery hook handling instead.
-> I think this is already possible by embedding the acpi_battery_hook
-> object inside the driver's device specific data object, no?
->
-> Regards,
-> Barnab=C3=A1s P=C5=91cze
->
->
-Yes, it indeed is. However afaik it is not possible to pass instance-speci=
-fic
-data to such an embedded battery hook. It could be possible by passing the
-battery hook as an argument to add_battery()/remove_battery() and using co=
-ntainer_of(),
-but in my opinion this would be too much of a quick hack.
+This fix adds support for PLATFORM_PROFILE_QUIET in hp-wmi module for
+HP notebooks other than HP Omen series.  Quiet thermal profile is not
+supported in HP Omen series notebooks.
 
->> [...]
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
+---
+Based on the latest platform-drivers-x86.git/for-next
+
+Version 2 - Set bit (PROFILE_QUIET) only for non HP Omen Notebooks
+Version 1 - Original patch
+---
+ drivers/platform/x86/hp-wmi.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index bc7020e9df9e..9a64601e217f 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+-	HP_THERMAL_PROFILE_COOL			= 0x02
++	HP_THERMAL_PROFILE_COOL			= 0x02,
++	HP_THERMAL_PROFILE_QUIET		= 0x03,
+ };
+ 
+ #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+@@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+ 	case HP_THERMAL_PROFILE_COOL:
+ 		*profile =  PLATFORM_PROFILE_COOL;
+ 		break;
++	case HP_THERMAL_PROFILE_QUIET:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1216,6 +1220,10 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+ 	case PLATFORM_PROFILE_COOL:
+ 		tp =  HP_THERMAL_PROFILE_COOL;
+ 		break;
++	case PLATFORM_PROFILE_QUIET:
++		tp = HP_THERMAL_PROFILE_QUIET;
++		break;
++
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -1263,6 +1271,8 @@ static int thermal_profile_setup(void)
+ 
+ 		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
+ 		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
++
++		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+ 	}
+ 
+ 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+-- 
+2.34.1
+
