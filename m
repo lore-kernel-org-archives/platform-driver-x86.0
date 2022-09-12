@@ -2,117 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4260ECAAD5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 09:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3ADECAAD5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 12:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbiILJM7 (ORCPT
+        id S229797AbiILMyA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Sep 2022 05:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56534 "EHLO
+        Mon, 12 Sep 2022 08:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbiILJM6 (ORCPT
+        with ESMTP id S229512AbiILMx7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Sep 2022 05:12:58 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061d.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::61d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A073419029
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Sep 2022 02:12:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R+IoVBcCa8+QiPIRrng+Q+T8ROMSRqy2/u/N5HFEVxmvRp+dag/oDH7HyMfNgBl1wN6WjToMGPlL6oGDjSfRLgVIC6Lmx0D6vyaDFLXU0edVzkkPtqzp04T6OrvLk0aryNAYfNVC8CH0tSfcmufwRlg19fE9dfMlbWgC8vSOpMEz2FKCL6OgiYXEneFQrhxr6By/TaUu4DqCxfhKKG85ClK+qUodlGnExw09RzOVuMm9QgEAJBNAkywdIs2oOK3f7Lfg7kOGQzCI4k2ILWdNtJjwLhLyUlZH/m38YCRhApdJJ1DCHiAGFA926eVevMeKWk87YNFn0YHxPUfF7F1w3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XJL2QtBKhCydE3bL2ffkK2MOQ1Ygg7QZ53zPMzqQ80U=;
- b=SGwxFEpliuUbW7kPRxInFeLnAlp+q8y0/x+k1lWsXMiiQ3cEepkQMeeHPxA2ekYkZ2lMxPlNitbEGtlh/OBST9aTa0pEJhGpOB6UsK2CaTQ88QDuxcODq+EorKuQV7yBKqdaUI2f1KvCFH66mYG0b6c/TNFrFEBEr8p9fwPMZALaaIW29Bd7+XDS9oVOgDZx/KhNYg2y3m0uY4DJ/xfov1tc6RZrtALKlg5YK30jW3QlP3l69/qCBFOdXjj/14QhCHuocbGGA9GZktXSkCdZqy1mU1dYw6CHafg/QvaEDeX5onCfJ8sxs/xIQaWwgIVES50jbej9CTHAclZF/NkuCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XJL2QtBKhCydE3bL2ffkK2MOQ1Ygg7QZ53zPMzqQ80U=;
- b=inDnGf77ziKo4k51h89WunVbfDHuQbK2NW4ImGbibjv6Hzo8oWVJG9RbsD2RSpZA8zAgFsNZjS00SNuZjIRmMYP5RyWJRE9DDx6uS0gxR7fZl30+oP+6gDh4W56vktHvKhz7XmWZA8ppnF36uNvt4k/w3WCpmoMjOYp1gzGV6PU=
-Received: from BN9PR03CA0989.namprd03.prod.outlook.com (2603:10b6:408:109::34)
- by PH7PR12MB7115.namprd12.prod.outlook.com (2603:10b6:510:1ee::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.22; Mon, 12 Sep
- 2022 09:12:54 +0000
-Received: from BN8NAM11FT086.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:109:cafe::49) by BN9PR03CA0989.outlook.office365.com
- (2603:10b6:408:109::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14 via Frontend
- Transport; Mon, 12 Sep 2022 09:12:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT086.mail.protection.outlook.com (10.13.176.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5612.13 via Frontend Transport; Mon, 12 Sep 2022 09:12:53 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Mon, 12 Sep
- 2022 04:12:48 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        <bnocera@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v2 4/4] MAINTAINERS: Update ABI doc path for AMD PMF
-Date:   Mon, 12 Sep 2022 14:36:41 +0530
-Message-ID: <20220912090641.111658-5-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220912090641.111658-1-Shyam-sundar.S-k@amd.com>
-References: <20220912090641.111658-1-Shyam-sundar.S-k@amd.com>
+        Mon, 12 Sep 2022 08:53:59 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5C938698;
+        Mon, 12 Sep 2022 05:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1662987224;
+        bh=95JIk+nlCdCOT/oR0LRrrmD4ccWWrV8jyvKWVBS9DT4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Vb4Yq7CPnawXCxXbOj45oBr1eKauq2ddERPPxYrzElUMoREjAct1LSttpABT0AMSr
+         vSPYJ9Z88uzI8DmBV4Qqas0A4QV7WEeIxrSSQZSVz9I77UysUd4hhBGWg0352XzWga
+         iYtbG/Sn7XIWG4Yo6j+/F6gpj0WLxcIfYN3HbCrw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N8GQy-1pT6nA2ASG-014Ebo; Mon, 12 Sep 2022 14:53:44 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
+        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
+        productdev@system76.com, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] platform/x86: dell: Add new dell-wmi-ddv driver
+Date:   Mon, 12 Sep 2022 14:53:37 +0200
+Message-Id: <20220912125342.7395-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT086:EE_|PH7PR12MB7115:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f0b0292-2601-4aa4-21c9-08da949ef98f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hhO6PLdyp2W2yPf5dToy58z9zW7CI+RcQNbKGwEhjKmv08nBmXB8wNb2ypT7cKMvHQ4YG12TUFZPl4XJswo2k1P7NWxPa4zBr8hz/vKiMkAn07dIimLFtOZ+ZzPCyVIbWAgbjdFNtPtkPMVNV15tbWoaZ8JXBTBrVnvxD0P+c+MkmdGOjy54iHsfttA0fM361ACbcyUBbWTjXwqNaLOxhtqIkRDZG/bQ7wVm9Poi+li1Tmsosazc3m1WmuyZPR8eadaSfVttZAbOONUQ1yvR8376GSiRcod1fn7MzlTbv3woUOMDJxZb1XEekf9BM0zvZG3a1gZ+j04EfxSkQLbpROHCAHcmbewp/SEFGQcQfKQG9X1C4C+O37EATOWEtldoueHGK2lfv16p6Z+Z124xaH/KKIW8HqxGmNfN83SsR4fXNgn7RlDK4Z3wmNZtSn0KcG71tGw9Dd6C/stBKM3ObvuuzfWMvN3HTTe2iV6DKI5ZHIpP6twrn4YJA9Uzmm2uB1j9C+r4o6TDMkSmj7ivz4W0i4K9zVn2DR5ZfAs+frMDCTW0oAOb9LLkAOiAtP5xr0L0m74V7Tdwd7q3uACJIQWXSWUa5QNe4LUGZ9m08N7KIAewzdN13QO7EcnH98ksnUerXGL1WGfW3kK4E3vFygk5Uy+pnCGxQBIXShlMaTWG/b8S3jBznHSTi4kZWcdsV+DjjMK+YJKf15i1s4XS4YNxn25N6m64V0cFRjRq5zMkaWeoYRPF16KyuSRiN8ICSte7NqoETyYnJUUpik+u5DcKPYw7NKxGF7vEe0OnTbEin5w8sLnpBghPfS7iAsqr
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(346002)(39860400002)(396003)(40470700004)(46966006)(36840700001)(4326008)(478600001)(8676002)(86362001)(36860700001)(70586007)(70206006)(356005)(110136005)(81166007)(316002)(54906003)(82740400003)(40460700003)(8936002)(16526019)(41300700001)(15650500001)(47076005)(40480700001)(4744005)(36756003)(26005)(83380400001)(6666004)(2906002)(426003)(7696005)(5660300002)(336012)(82310400005)(186003)(1076003)(2616005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2022 09:12:53.8372
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f0b0292-2601-4aa4-21c9-08da949ef98f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT086.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7115
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:q2Fl1nJ8G/jxhgS7uLyaRurElsMZWilswTbSWp73FjyQXX/Pmhf
+ 0YvZVJWLmShpKvTUyvgjzv/U0qF7IiT7oJXe0uN7BWWtJRSGjsHE4Ub+1dFU7XO0wqasHd7
+ s07F9D3E/y6oBWZDNU7J2OEwBNneMhsdWoibETmRWVnuA64enondcCAgkctuwX+BhHcUDY4
+ 73yHz5Vai5RCRnUcNgRHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p7YrqshLByU=:FuaodLwb78ccs7+/QdD/xX
+ jBApjhdFa84ZrkHQX6K+gm3DYjIdSJ5wWtCYv4DNa3V8CWdH71a8qlCkfmr0qzxfwkMfOdZQR
+ QbAcJe/qZDeP9yjRh/4NwfgmGyLK7bgkBaG83i3bA9C4O7RUvtPht5TeaZmEf5H/kq+KTBeKu
+ 5zDJDeZLqgbT/wxh4rbw+AfGFdsi8EarTJndoRJomg2z9fi+qcHHEt8n5Qm5eJcZdvm0S2d+E
+ KFdan3Y64IBG7p5si0Qd4AItN0Z7z0WljEGVvoPU9xg/C1VPwc4dUdHN6w5qwPScK4eMveA9+
+ pR6OPgQQrxtpTOmX2UK0+V5Vt9boNobceJRyu7710gU8A/Q97HM69qN+rk4JwVyuddY8rlilG
+ pL+tiJtnsGotEtags4PgdXs7RfXrS7IYi8cdTv1ihqBF44Hy50kXEI0S/nmcv8gmIrF3+1D+/
+ XvkGdO59kY66aeNj7WxvEVBGWsfzt9xHfVuj3BZ5wUcVRsEIxFNXwIJLofE/7Te1aH6e5a+jo
+ g0aAoCi6DJq4fwyqgtl+oefLcBXTNhfVTsLpQO9YRqDRuNwSBt5e8tGuTDNfn5hSfUVM9FiKn
+ QCBi4okWftVtxArWxI8ySSjohrFSUOnTV7zU+ZCJRTW4mn9ROMcV7f1uMYjvAkzeshA1jdPq2
+ 6DCyc75Zhs20XfhsgClepyOHregte8baMsU/t6v5FwT+nbut/o7xNveOWGxhbLt0Bo/xh/Ovk
+ bmW8IDuL73B8YdXfpqBQXt0x8u96YdH+Z8mxI+kulL2SqCJa+wnt1E4xfaEXXIMRUOHdP7cdu
+ H2fxD10AYtQmnXtWYZbnddXBV+BX7glCAqzcm+Ym0n4NLUthvg9Ns08xQI9snovXgg2xG1PXj
+ 7eiJkBiI1t4UBPpDfmXlYTU1tC6lRJuJoA6Pb67akmje9pEsqsqcisVbhr+ubMEdUZ+9eGIN0
+ sBLaurUpnu9b3mKDZW/tWQFJl+He4MoolnqHTbPot86ZUc+XRvTN5hQamzmrARb7AF+rkdhR7
+ VMxo9Lxy2RCpCIWl/O0/zAQF3XC9khIITtA7acrvJR/MNZakTULXWbIGtsPJildwqi3cnCyVn
+ kvxoxJh5zqPSJR3duA0DCw1X3k37hHyZdxFJC/RrhX7bt/QmhJ3Jdad1SNidDoUMinbsLaqHI
+ vI0Cvym3NEqgMCygwGhtPnXN4b
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update the MAINTAINERS file with ABI doc path for AMD PMF driver.
+This patch series adds a new driver for a WMI interface found in
+many newer Dell machines. This interface allows to read battery
+properties like temperature and the ePPID (Dell-specific), while
+also providing fan and thermal sensor information.
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+The interface does support multiple batteries which are indetified
+by an "index", which appears to be the batteries ACPI UID. Since
+the interface also appears to omit any bounts checking of the
+index, the ACPI battery hook mechanism is used to discover batteries.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d74bf90f5056..255527be7e24 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1026,6 +1026,7 @@ AMD PMF DRIVER
- M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-amd-pmf
- F:	drivers/platform/x86/amd/pmf/
- 
- AMD HSMP DRIVER
--- 
-2.25.1
+Since the information returned when querying fan/thermal sensor
+information is currently unknown, a debugfs entry is created to
+allow for easier reverse engineering. The interface is likely
+to be replaced by a proper hwmon interface in the future.
+
+Since the driver can potentially be instantiated mutplie times,
+the ACPI battery hook mechanism had to be extended.
+
+The first two patches allow that battery hooks are not unloaded
+if they return an error when a battery was added, so that they
+can safely return -ENODEV.
+
+The next two patches extend the battery hook mechanism to better
+support drivers which can be instantiated mupltible times.
+
+The last patch finally adds the new driver. It was called
+dell-wmi-ddv since the interface is called "DDV" by Dell software,
+likely meaning "Dell Data Vault".
+
+The driver was tested, together with the changes made to the
+ACPI battery driver, on a Dell Inspiron 3505. Other drivers
+already using the battery hook mechanism where changed as well,
+but could only be compile-tested due to missing hardware.
+
+Armin Wolf (5):
+  ACPI: battery: Do not unload battery hooks on single error
+  ACPI: battery: Simplify battery_hook_unregister()
+  ACPI: battery: Allow battery hooks to be registered multiple times.
+  ACPI: battery: Allow for passing data to battery hooks.
+  platform/x86: dell: Add new dell-wmi-ddv driver
+
+ .../ABI/testing/debugfs-dell-wmi-ddv          |  21 +
+ .../ABI/testing/sysfs-platform-dell-wmi-ddv   |  16 +
+ MAINTAINERS                                   |   7 +
+ drivers/acpi/battery.c                        |  59 ++-
+ drivers/platform/x86/asus-wmi.c               |  20 +-
+ drivers/platform/x86/dell/Kconfig             |  13 +
+ drivers/platform/x86/dell/Makefile            |   1 +
+ drivers/platform/x86/dell/dell-wmi-ddv.c      | 365 ++++++++++++++++++
+ drivers/platform/x86/huawei-wmi.c             |  15 +-
+ drivers/platform/x86/lg-laptop.c              |  14 +-
+ drivers/platform/x86/system76_acpi.c          |  22 +-
+ drivers/platform/x86/thinkpad_acpi.c          |  15 +-
+ drivers/platform/x86/wmi.c                    |   1 +
+ include/acpi/battery.h                        |  12 +-
+ 14 files changed, 504 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-dell-wmi-ddv
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+ create mode 100644 drivers/platform/x86/dell/dell-wmi-ddv.c
+
+=2D-
+2.30.2
 
