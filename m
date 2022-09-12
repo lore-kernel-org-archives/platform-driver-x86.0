@@ -2,134 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA4CC6FA83
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 19:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C4C6FA83
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Sep 2022 21:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbiILT0H (ORCPT
+        id S229744AbiILV4d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Sep 2022 15:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        Mon, 12 Sep 2022 17:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbiILT0G (ORCPT
+        with ESMTP id S230060AbiILV42 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Sep 2022 15:26:06 -0400
-Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2051512608;
-        Mon, 12 Sep 2022 12:26:06 -0700 (PDT)
-Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-11e9a7135easo26083075fac.6;
-        Mon, 12 Sep 2022 12:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=OwBDVbFQEw2EAV+CoYDVuZdyw9Sp+7B2pZqgX6wtMO8=;
-        b=VoJ5UatIZjLOTKrOnCmk/Zs7UgHFZN1Z5iu17az8YvLSGUNJ5r0hATbF37tZf0OjHH
-         5ZKToyVbZpsue0tm3aNPKtlC7U7ivv/8D94Lrtz0vCC/12ZlBjVdkrY+5Ybm/dH3VWmZ
-         b2CNKTlvhrDtgVkP9oYfHMAIToEliZTHYbWq6w15tvcY5yM55L8gNOa63KY0UKyCZnFm
-         InPZPsyFDTyxSMaCyaFhpxGhC+lWecgJJcL6nj5nCozXulS9vJZXFIMA26gGu2fR8jC2
-         wFOuvzdwFq0/Cc6Hf2uI9mBJ2Gkyx0SXzniLjUc2llJMa+w6An0EUC+PxKXztfSTUPnq
-         UECw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=OwBDVbFQEw2EAV+CoYDVuZdyw9Sp+7B2pZqgX6wtMO8=;
-        b=3lZQzbNTkA+/fRkTdoX7xBUxf7kyPAmJXeiXcv6nEZKfuIKSZgCpb8CRLUgmDwmTaP
-         hZi1X303NxKDEVBiA+inKNkjKZk3h3lo6iBEBciQw44sF5ZhjNmBPFOaKaa/vmMda48o
-         dQaqLfoiXQ3WCI7hm8yiCzfDMNElJKUWJjK+O8jgL6r6bmjdZIJElVnH5beLGF8GjF0p
-         E8TJRzsrCE/aVb9sOpCX9K3MhqxDavtcHrQkfsBu3fASV50WDYCwxKy1J5K9Kx2kLUDo
-         AdkrQrAF/Q9FMtOv1QdaLt+HhTI5eX0kZSYwpUaBeuQb+3K+yQTvVluQmbtr0aOaz5ET
-         xCdw==
-X-Gm-Message-State: ACgBeo0NM5J9y1Uv+iXmP4VNZGh7fKgUBvO5E28SCC1xJQFrGF4JsXGO
-        awqNWsbqSQ+eaVURItvQLn0=
-X-Google-Smtp-Source: AA6agR5hLdk4wV80PywGLbBBBLUDe6WFVwWLD7ei7ufpEjqgMbvwq6LB/oZJvWToQ283HEK1RjQQPw==
-X-Received: by 2002:a05:6808:23cc:b0:34b:73b1:19e8 with SMTP id bq12-20020a05680823cc00b0034b73b119e8mr10207917oib.105.1663010765430;
-        Mon, 12 Sep 2022 12:26:05 -0700 (PDT)
-Received: from grumpy-vm.hsd1.tx.comcast.net ([2601:2c3:480:7390::465])
-        by smtp.gmail.com with ESMTPSA id 5-20020a9d0d85000000b0063975d170a8sm5018208ots.7.2022.09.12.12.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Sep 2022 12:26:04 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, balalic.enver@gmail.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     markgross@kernel.org
-Subject: [PATCH v2 1/1] hp-wmi: Setting thermal profile fails with 0x06
-Date:   Mon, 12 Sep 2022 14:26:03 -0500
-Message-Id: <20220912192603.4001-1-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 12 Sep 2022 17:56:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DBC4DB19;
+        Mon, 12 Sep 2022 14:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=qeScmlSI8Hi8VVYRvf9aNKdlS+V7Mh8b/pcQ1tMazl4=; b=h0TIXi8rk3Oq+o1oppxN9crjkW
+        I6+Vy0ALGJv3j1R0EsfAgysvp9GJC0NXpqoh+4uyIyyscGZuw56P5cfq14tRXa6Fy04uPsbiotmR7
+        g3vZ/sl1+OsiYl32F0lPYvjvhZH6Z4pJPaPytub1uV0IjDFk+EageOIjDC3+Qq/aPISDnEaLZ0fIC
+        pgR25ntwkSeL8ul/g47jKm342pdTw1C3vtmgiv7ULwodTPnh+SbQHTiQQ30Kcys+ofQwql2B5pGVA
+        LEJk1740hi5XuHAnSCcJkPZrLVI0pcACUQbP+QTtZOYQwzdR/Xi0OTIJMzasxIxEUIXbaD1YcHue2
+        zXSP2PpQ==;
+Received: from [2601:1c0:6280:3f0::a6b3]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oXrPY-00EPu2-Lx; Mon, 12 Sep 2022 21:56:13 +0000
+Message-ID: <b1b794b4-f6c3-7697-5d5a-b811809a9313@infradead.org>
+Date:   Mon, 12 Sep 2022 14:56:10 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH 5/5] platform/x86: dell: Add new dell-wmi-ddv driver
+Content-Language: en-US
+To:     Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
+        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
+        productdev@system76.com, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220912125342.7395-1-W_Armin@gmx.de>
+ <20220912125342.7395-6-W_Armin@gmx.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220912125342.7395-6-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Error 0x06 (invalid command parameter) is reported by hp-wmi module
-when reading the current thermal profile and then proceed to set it
-back. The failing condition occurs in Linux NixOS after user
-configures the thermal profile to ‘quiet mode’ in Windows.  Quiet Fan
-Mode is supported in Windows but was not supported in hp-wmi module.
+Hi--
 
-This fix adds support for PLATFORM_PROFILE_QUIET in hp-wmi module for
-HP notebooks other than HP Omen series.  Quiet thermal profile is not
-supported in HP Omen series notebooks.
+On 9/12/22 05:53, Armin Wolf wrote:
+> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+> index 25421e061c47..209e63e347e2 100644
+> --- a/drivers/platform/x86/dell/Kconfig
+> +++ b/drivers/platform/x86/dell/Kconfig
+> @@ -189,6 +189,19 @@ config DELL_WMI_DESCRIPTOR
+>  	default n
+>  	depends on ACPI_WMI
+> 
+> +config DELL_WMI_DDV
+> +	tristate "Dell WMI sensors Support"
+> +	default m
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+You should (try to) justify default m, otherwise just
+don't have a default for it.
 
----
-Based on the latest platform-drivers-x86.git/for-next
+> +	depends on ACPI_BATTERY
+> +	depends on ACPI_WMI
+> +	help
+> +	  This option adds support for WMI-based sensors like
+> +	  battery temperature sensors found on some Dell notebooks.
+> +	  It also supports reading of the batteries ePPID.
+> +
+> +	  To compile this drivers as a module, choose M here: the module will
+> +	  be called dell-wmi-ddv.
 
-Version 2 - Set bit (PROFILE_QUIET) only for non HP Omen Notebooks
-Version 1 - Original patch
----
- drivers/platform/x86/hp-wmi.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index bc7020e9df9e..9a64601e217f 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
- enum hp_thermal_profile {
- 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
- 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
--	HP_THERMAL_PROFILE_COOL			= 0x02
-+	HP_THERMAL_PROFILE_COOL			= 0x02,
-+	HP_THERMAL_PROFILE_QUIET		= 0x03,
- };
- 
- #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
-@@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
- 	case HP_THERMAL_PROFILE_COOL:
- 		*profile =  PLATFORM_PROFILE_COOL;
- 		break;
-+	case HP_THERMAL_PROFILE_QUIET:
-+		*profile = PLATFORM_PROFILE_QUIET;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1216,6 +1220,10 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
- 	case PLATFORM_PROFILE_COOL:
- 		tp =  HP_THERMAL_PROFILE_COOL;
- 		break;
-+	case PLATFORM_PROFILE_QUIET:
-+		tp = HP_THERMAL_PROFILE_QUIET;
-+		break;
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -1263,6 +1271,8 @@ static int thermal_profile_setup(void)
- 
- 		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
- 		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
-+
-+		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
- 	}
- 
- 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
 -- 
-2.34.1
-
+~Randy
