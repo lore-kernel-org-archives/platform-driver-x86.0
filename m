@@ -2,194 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F114ECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Sep 2022 14:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E0C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Sep 2022 16:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbiINOTn (ORCPT
+        id S229491AbiINQ7M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Sep 2022 10:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
+        Wed, 14 Sep 2022 12:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiINOTk (ORCPT
+        with ESMTP id S229614AbiINQ7L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Sep 2022 10:19:40 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2045.outbound.protection.outlook.com [40.107.100.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153F66419;
-        Wed, 14 Sep 2022 07:19:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=odKBK+rAG1PGZj5xQH1EMTeCQh3rH3VE1sp1nwXGo9UL5jwWgZAvPrHPQGYWzRkrluz+y4eBYLVkKFibcaHZ2tdh52ZDxeqW+U/GeIGu+Hak5qpf1/oLiiiyKrwjHY5KVOb/jyl1Ol5NSFF9r0W5l/WF4flWGJmAZSgRSXlrFAcE0BGlL6o167oOXE3WAa2XMlXRSqgf5bJ8xryu9ausH7bIKocnjDA15MFvw8sNfy5xm1xZhiMBkEEhLEdFiFtb2kp5yJXMf9oKmBVq5fNdbPBWQ9WX+HJ2TyIkBiJdnJsQuDosjNP4yu8cEk5wH2qfPYVwPx8WOf+gq/EKK8P1Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PMsOO+CspOiS2Z/bhforObZvIYzvymDtcNB2TzRsyPE=;
- b=hYgvxdfsOrEv7ylODWMdi5Pcx792rnM9awhqml4bCZbnPokQx+Lf98DEzTOh0DvsgruNnAoapQKgJ93AUIglbP2I/MwIbzBj+kCGBHqGs0dKT5CX/6CjPFDVtCUfPNcyFsvYerdlqxnpVEEi/8v7Zf6lKnStOQ2CtXAeRymLWpl1ogSIW7YM5QTrZu0dws7WYT/wbvW8Cp+HfOeET6glNhwaPJhCjyuA0ua9hZ2t6cXKwefWj+XarFgKjT6V2oVNERl2wU40dL6fLzUObihYxlwnQVxZndCNQT0SOuGbncfxXFvMbgo+hZxxnVJJtjQkwBG7UDLbOJh+uDh50QJ5pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMsOO+CspOiS2Z/bhforObZvIYzvymDtcNB2TzRsyPE=;
- b=qyqn6hByfpZpgWeU00PO4obheyKnd31r+9aGg6fZ+tFUD00xu/MGzrhWI3gT1fDjvS2nQ9FhSLl066gJZ/I6tNkODSzUv182yG8sjZknICC7kZoJhmWxdCreL9Ny6ETK9x5LGrW6+zVG0TJeerTcU7gUdseDoGhCM5tJ6d/KTbM=
-Received: from BN1PR13CA0014.namprd13.prod.outlook.com (2603:10b6:408:e2::19)
- by CY5PR12MB6406.namprd12.prod.outlook.com (2603:10b6:930:3d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.22; Wed, 14 Sep
- 2022 14:19:35 +0000
-Received: from BN8NAM11FT070.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:e2:cafe::41) by BN1PR13CA0014.outlook.office365.com
- (2603:10b6:408:e2::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.5 via Frontend
- Transport; Wed, 14 Sep 2022 14:19:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT070.mail.protection.outlook.com (10.13.177.50) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5632.12 via Frontend Transport; Wed, 14 Sep 2022 14:19:35 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 14 Sep
- 2022 09:19:32 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <mario.limonciello@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-CC:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2] platform/x86/amd: pmc: Add sysfs files for SMU
-Date:   Wed, 14 Sep 2022 09:18:50 -0500
-Message-ID: <20220914141850.259-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 14 Sep 2022 12:59:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB4C81B2C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Sep 2022 09:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663174749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8eAE9HpKpIVvmOEFXUeeAc8cv8ndkWqJta1h5pXlw4I=;
+        b=faVxKe/OXficetfU422VJoc4BL9fcmWCwOXPx/yH9OWULexiZqZk+q/+mCwvGvvMRfFWhb
+        nuv1mseqGIW8sC0V5bfEaWgRP60mUSReNf4mqejn7yePvWSNdyZyiFKxgF6dvSdGGWzLA1
+        diZBVr2G8R6sN4LOCIT5S1Ys0S8xAUQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-214-a_o06iD0MW2WQCrfq6DTyQ-1; Wed, 14 Sep 2022 12:59:04 -0400
+X-MC-Unique: a_o06iD0MW2WQCrfq6DTyQ-1
+Received: by mail-wm1-f72.google.com with SMTP id y15-20020a1c4b0f000000b003b47578405aso4531609wma.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Sep 2022 09:59:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=8eAE9HpKpIVvmOEFXUeeAc8cv8ndkWqJta1h5pXlw4I=;
+        b=tufo3FBpfspLm1JCj//EX5l1t5VWGzmwud803JQoI5J5duW+Ib2u7W2MZ1z8POfhwW
+         0MvvE7lg/GxzeYrZGBWy/lvDMyWYnuzfsdB0F441MVimBi1AAAqfNEla6zkSQOg4NQfv
+         crLIcLptbwhZasA4K7kK/zGAZKMHVvug08Du+OWKTsy3UmKsx7uwnVhJqeFAz6Nc5ChP
+         4Z5LYN7mp3eHcrJqKvhaNR/M/3P5KHzOx9Ng5vbgS+k3AfgVz1cIRCntygMoHIrf8dqW
+         w2iCTw7R8cjBNaudqZs8qk66lfARdBaUSyW+a2khkdwRd3uqsSZJuBkRkoRvPEynopYX
+         mFmA==
+X-Gm-Message-State: ACgBeo3r/QqnpyMKpd2RWJOT7kr+odNL8MItLDcXw9/RJM2yQpvviZ3T
+        A1IS+t+X7tYmoX6i6YDeFaLMPFpON1ZnM4kH5X2FK+Va6AfI2JOt7DL5IrC075P5eypTjL7LNQZ
+        m7TaixS3j0/S2J7JUzm3vVSBWhZZ23WFEGA==
+X-Received: by 2002:adf:f211:0:b0:228:d6a4:3510 with SMTP id p17-20020adff211000000b00228d6a43510mr21648606wro.448.1663174741047;
+        Wed, 14 Sep 2022 09:59:01 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4/hMrbSSVrICYCjqMv7OHktLT/ShhknRc4TABv3IGMoKgXGV5RhWzuT4s56YrRzLlwdjxauA==
+X-Received: by 2002:adf:f211:0:b0:228:d6a4:3510 with SMTP id p17-20020adff211000000b00228d6a43510mr21648581wro.448.1663174740767;
+        Wed, 14 Sep 2022 09:59:00 -0700 (PDT)
+Received: from [172.16.38.152] ([185.122.133.20])
+        by smtp.gmail.com with ESMTPSA id m23-20020a05600c3b1700b003b477532e66sm6954615wms.2.2022.09.14.09.58.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Sep 2022 09:58:59 -0700 (PDT)
+Message-ID: <2b7693c4-b04e-425a-2f87-c4b12fa2f63b@redhat.com>
+Date:   Wed, 14 Sep 2022 17:58:58 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT070:EE_|CY5PR12MB6406:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19baef57-ed81-4869-8185-08da965c267e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TBEywmzFD3leS0o87BCdyw5gMPtbjBqypBjZMHaTTcOvVX6d7WZSiES4OsSgF33fWS3I0VeFtYBYkUwbNhdurQMPMD87y0qFGXAoL5gb2yDHWBBgEJOaPHu7rUWBqR4tu3tsJSwh3cfNnuuPoLbKKlZHKBESPcuUsQRZP3DBjc+qebehns/qW5TxRB8WryJyxr62wND2CCxOKQiyE64OA5tFeIbHAkIxmNGQBDayX8DzOxNcRLbj+V+UtPV/8o8bdiEY8JJ09DMtNFhIQ4dP04uHjJE1c3BmQ7ryLfRdxV7l/i5IHSrnlV/nrvsOyRnzlE4cwsr4PsGux47WdaNwebaXatnX91HrvxyElI7SvSsHVsa4R5B6MN2rdF/8lmJXtAHBn2GcGr/LpCVfGy3m8ka2b6dTpxdKdKJJVla3I1gbKnM85zIwwRTC/RbQoioKyAXJqKi9AOCy/+2S0TMsQY4TZcd1x8WaZcMXW5mnEF3JBS9i9J+eQLE9ToqTNfU6NOSl3HCcGYe0V2yr/5el84Hy0+DR6Z8opZIletGrrlThbffKdGqJZ5psw3gbWZIYZeltpNinPhmI+VbgIWlqburlYSF9tRx+9J+CqX871aP9uP/t/MQH/m9J9E8o6+5qgOpcRLOUNqWqBnPfYiNdUw8AZaxBa/Xu5vmlP4rJ8eh2MMXwsOVQU79JyPAg+yv1WpsX+IgVp+GsUzQRQbEmfTZG1ZNSR/dFUPUsH2dyQzawzOAlIxTEu0TFgS9UQR49/4q38hLfW8rEds3HVLX4OIzPf0xkLVTa9JtkIHWR0XU=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(346002)(396003)(376002)(451199015)(36840700001)(46966006)(40470700004)(47076005)(54906003)(8676002)(81166007)(40480700001)(186003)(110136005)(26005)(356005)(6666004)(8936002)(41300700001)(478600001)(16526019)(6636002)(82310400005)(2616005)(336012)(7696005)(5660300002)(82740400003)(1076003)(36860700001)(44832011)(2906002)(36756003)(86362001)(4326008)(70206006)(40460700003)(316002)(426003)(70586007)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2022 14:19:35.2704
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19baef57-ed81-4869-8185-08da965c267e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT070.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6406
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [GIT PULL] Immutable backlight-detect-refactor branch between
+ acpi, drm-* and pdx86
+Content-Language: en-US
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <261afe3d-7790-e945-adf6-a2c96c9b1eff@redhat.com>
+ <20220914112933.64ovljgsrv2l25rs@penduick>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220914112933.64ovljgsrv2l25rs@penduick>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The CPU/APU SMU FW version and program is currently discoverable by
-turning on dynamic debugging or examining debugfs for the amdgpu
-driver. To make this more discoverable, create a dedicated sysfs
-file for it that userspace can parse without debugging enabled.
+Hi,
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v1->v2:
- * Feedback from Barnabás Pőcze
-   - Fix documentation EOF missing newline
-   - Use ATTRIBUTE_GROUPS macro
-   - Add missing NULL at end of attr
+On 9/14/22 12:29, Maxime Ripard wrote:
+> Hi Hans,
+> 
+> On Mon, Sep 05, 2022 at 10:35:47AM +0200, Hans de Goede wrote:
+>> Hi All,
+>>
+>> Now that all patches have been reviewed/acked here is an immutable backlight-detect-refactor
+>> branch with 6.0-rc1 + the v5 patch-set, for merging into the relevant (acpi, drm-* and pdx86)
+>> subsystems.
+>>
+>> Please pull this branch into the relevant subsystems.
+>>
+>> I will merge this into the review-hans branch of the pdx86 git tree today and
+>> from there it will move to for-next once the builders have successfully build-tested
+>> the merge.
+> 
+> I merged it into drm-misc-next, thanks!
 
- Documentation/ABI/testing/sysfs-amd-pmc | 14 +++++++++
- drivers/platform/x86/amd/pmc.c          | 39 +++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-amd-pmc
+Great, thank you!
 
-diff --git a/Documentation/ABI/testing/sysfs-amd-pmc b/Documentation/ABI/testing/sysfs-amd-pmc
-new file mode 100644
-index 000000000000..5d71c2298f5b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-amd-pmc
-@@ -0,0 +1,14 @@
-+What:		/sys/bus/platform/drivers/amd_pmc/*/smu_fw_version
-+Date:		October 2022
-+Contact:	Mario Limonciello <mario.limonciello@amd.com>
-+Description:	Reading this file reports the version of the firmware loaded to
-+		System Management Unit (SMU) contained in AMD CPUs and
-+		APUs.
-+
-+What:		/sys/bus/platform/drivers/amd_pmc/*/smu_program
-+Date:		October 2022
-+Contact:	Mario Limonciello <mario.limonciello@amd.com>
-+Description:	Reading this file reports the program corresponding to the SMU
-+		firmware version.  The program field is used to disambiguate two
-+		APU/CPU models that can share the same firmware binary.
-+
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index 700eb19e8450..6373c1bce649 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -455,6 +455,44 @@ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
- 	return 0;
- }
- 
-+static ssize_t smu_fw_version_show(struct device *d, struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-+
-+	if (!dev->major) {
-+		int rc = amd_pmc_get_smu_version(dev);
-+
-+		if (rc)
-+			return rc;
-+	}
-+	return sysfs_emit(buf, "%u.%u.%u\n", dev->major, dev->minor, dev->rev);
-+}
-+
-+static ssize_t smu_program_show(struct device *d, struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-+
-+	if (!dev->major) {
-+		int rc = amd_pmc_get_smu_version(dev);
-+
-+		if (rc)
-+			return rc;
-+	}
-+	return sysfs_emit(buf, "%u\n", dev->smu_program);
-+}
-+
-+static DEVICE_ATTR_RO(smu_fw_version);
-+static DEVICE_ATTR_RO(smu_program);
-+
-+static struct attribute *pmc_attrs[] = {
-+	&dev_attr_smu_fw_version.attr,
-+	&dev_attr_smu_program.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(pmc);
-+
- static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
- {
- 	struct amd_pmc_dev *dev = s->private;
-@@ -935,6 +973,7 @@ static struct platform_driver amd_pmc_driver = {
- 	.driver = {
- 		.name = "amd_pmc",
- 		.acpi_match_table = amd_pmc_acpi_ids,
-+		.dev_groups = pmc_groups,
- 	},
- 	.probe = amd_pmc_probe,
- 	.remove = amd_pmc_remove,
--- 
-2.34.1
+Regards,
+
+Hans
 
