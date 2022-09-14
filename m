@@ -2,174 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2270ECAAD8
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Sep 2022 09:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A9FECAAD8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Sep 2022 11:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbiINJuV (ORCPT
+        id S229877AbiINL3j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Sep 2022 05:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
+        Wed, 14 Sep 2022 07:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbiINJuU (ORCPT
+        with ESMTP id S229872AbiINL3h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Sep 2022 05:50:20 -0400
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78FC1FCEE
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Sep 2022 02:50:17 -0700 (PDT)
-Date:   Wed, 14 Sep 2022 09:50:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1663149012; x=1663408212;
-        bh=6VovnvAvT7wB2LMpcTIS6rq0tvcrlTsBEIBwvJyaOr0=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID;
-        b=sPnuCl9H1XDQAYDW16m7Z6w8txbgbXzwm+GzI9H0R444QpWr5gScwlFtBZ3+8rahu
-         4PmyCCH/RJ6fEHcEF3GyUHWTavG3g3pVseOEeUXSL0AP6avrR2+s/QFluYau+iHvDo
-         9O1/pEx63zTcEBCKbhEBLQnpjmcRKtkXeKL1oEVi6cwIsuePDqsrAHJINjoy9KYVBx
-         6+FGcXlM0JjkXCWEeTSz+qtDIOah+dXI4RTMSgoGmaDlKwPDanOnBr74Xy7IYzPSLU
-         S8aK4iHQpww0mxFw2v4kBWhwp2xuA/bt/T77FRyMnlXkNM3Q3ox1h90DBaYtxpsH8f
-         Lp/5D9kjr293A==
-To:     Mario Limonciello <mario.limonciello@amd.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Wed, 14 Sep 2022 07:29:37 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B19FEB;
+        Wed, 14 Sep 2022 04:29:36 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 151235C002F;
+        Wed, 14 Sep 2022 07:29:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 14 Sep 2022 07:29:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1663154976; x=1663241376; bh=nQu2SC9skj
+        3zvKgRAY+OE/EsK7UjSaSgeju0QfEt0Cs=; b=sI6+pKkRrFiyWe0Di0vUI4Elub
+        WU2WZ16qg5NsAIf4cYxne5RPHmLNkNbOnTap31OE31Ikj6KyXkxyRBvzyARaAhH1
+        4WaF17Vp33VyqXlgHWVeTnX5TE8blIAtgT28busRsPYDhgksEk1HjeCc08Wvga+t
+        bskfWscIPId4Ly552s6iPRxZIfV693nUdEISY1m1C6cuM/CBHr2clsj2w6waZpUc
+        kcNd7KZM3nEz3ZczPhAysdEw9m6h8AG4IDnT16cTpd7wxRGIT51rselgZprVkbNo
+        cV2i7Zr6x+DVMwNNIE9IhKXuFhnjxru5j7vvcHFaD2a37X7XKXbzwbCoWkvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1663154976; x=1663241376; bh=nQu2SC9skj3zvKgRAY+OE/EsK7Uj
+        SaSgeju0QfEt0Cs=; b=tB/hgMgRkBvvDe2Larr5g2Xf2i8pcNlw8zMWLcyXqMtz
+        RB6o4uF3NQfWxsrTx4foH9n8N0buQUyc78NvdvGkG4UlhuwObb4DLW7+hBTGHLOI
+        lz+e2Q5CLfsdCvSDgB0+WnUG5qLcyw1qIvyWSVO2MWJgapsJp1mP+Gu2aPma6Ict
+        WXXqlCMcwpPIUC+xd91w/xzze6dFXsOtXBwdztItwSbghsQjRH2NPHQVRhFBnZ6q
+        dY908u0Y4DOR5UQPGpXG3/WuBqpOiYl5lrcVVme9qasVWakJqRmTomu16NE1d1XL
+        GnsoGxdlzWy+uNseiD8/XdR6ysJ9+BdoSF2XaJiEiw==
+X-ME-Sender: <xms:H7shYy-z-Sy-s0CYkYhiWGEo-Fk_sa4yzpFsShmbVmcw8NKVEim-Ow>
+    <xme:H7shYyuhl7apl0uzCWtoXaLVdsY3vIuHlVJPZVfymPsr4NqTL0cxTJskRvonuk2hn
+    j43Mbjcps8eNMsiwoQ>
+X-ME-Received: <xmr:H7shY4CZYM4ETUI7hJOe8i-3Bo9XlCMwvu1ooLO0z2Jo5DxvZAi390_OMsGo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeduiedggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeetfefffefgkedtfefgledugfdtjeefjedvtddtkeetieffjedvgfehheff
+    hfevudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:H7shY6fH7W_BVuQc_Pv1wOCbe0JZZwDcqIOQjR9ElV0d0XyvT8FDFA>
+    <xmx:H7shY3PQ1WXtryglSTdW3rrdTj3tpcFZXxBJFYoc6JJb0xJRVeA8nQ>
+    <xmx:H7shY0mvO9oKdlpqejxArcWaOLnY7GbsVZO4bMdJEo1YmlDQ9Owr_w>
+    <xmx:ILshY6hp7U4y67xd1z7aW61uMylQ-NOWf_PLrKUGCD3bAJEil6TFPg>
+Feedback-ID: i8771445c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Sep 2022 07:29:34 -0400 (EDT)
+Date:   Wed, 14 Sep 2022 12:29:33 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Lyude <lyude@redhat.com>, Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd: pmc: Add sysfs files for SMU
-Message-ID: <-v-ziVgHRq7Du4eop0IF6fTMkTT8XCT7ZbcGnyIIppnBSAgjI1fUCsHCVrW7C3tcvj7_lXHjvAyjHmd8ksObYBoxp5c4A0nlFvOwGpO8Im4=@protonmail.com>
-In-Reply-To: <20220913142510.1612-1-mario.limonciello@amd.com>
-References: <20220913142510.1612-1-mario.limonciello@amd.com>
-Feedback-ID: 20568564:user:proton
+        Andy Shevchenko <andy@kernel.org>,
+        nouveau@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [GIT PULL] Immutable backlight-detect-refactor branch between
+ acpi, drm-* and pdx86
+Message-ID: <20220914112933.64ovljgsrv2l25rs@penduick>
+References: <261afe3d-7790-e945-adf6-a2c96c9b1eff@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hy5cszh57lz34buf"
+Content-Disposition: inline
+In-Reply-To: <261afe3d-7790-e945-adf6-a2c96c9b1eff@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
 
-2022. szeptember 13., kedd 16:25 keltez=C3=A9ssel, Mario Limonciello =C3=
-=ADrta:
+--hy5cszh57lz34buf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The CPU/APU SMU FW version and program is currently discoverable by
-> turning on dynamic debugging or examining debugfs for the amdgpu
-> driver. To make this more discoverable, create a dedicated sysfs
-> file for it that userspace can parse without debugging enabled.
+Hi Hans,
+
+On Mon, Sep 05, 2022 at 10:35:47AM +0200, Hans de Goede wrote:
+> Hi All,
 >=20
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  Documentation/ABI/testing/sysfs-amd-pmc | 13 ++++++++
->  drivers/platform/x86/amd/pmc.c          | 44 +++++++++++++++++++++++++
->  2 files changed, 57 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-amd-pmc
+> Now that all patches have been reviewed/acked here is an immutable backli=
+ght-detect-refactor
+> branch with 6.0-rc1 + the v5 patch-set, for merging into the relevant (ac=
+pi, drm-* and pdx86)
+> subsystems.
 >=20
-> diff --git a/Documentation/ABI/testing/sysfs-amd-pmc b/Documentation/ABI/=
-testing/sysfs-amd-pmc
-> new file mode 100644
-> index 000000000000..ff627b48c875
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-amd-pmc
-> @@ -0,0 +1,13 @@
-> +What:=09=09/sys/bus/platform/drivers/amd_pmc/*/smu_fw_version
-> +Date:=09=09October 2022
-> +Contact:=09Mario Limonciello <mario.limonciello@amd.com>
-> +Description:=09Reading this file reports the version of the firmware loa=
-ded to
-> +=09=09System Management Unit (SMU) contained in AMD CPUs and
-> +=09=09APUs.
-> +
-> +What:=09=09/sys/bus/platform/drivers/amd_pmc/*/smu_program
-> +Date:=09=09October 2022
-> +Contact:=09Mario Limonciello <mario.limonciello@amd.com>
-> +Description:=09Reading this file reports the program corresponding to th=
-e SMU
-> +=09=09firmware version.  The program field is used to disambiguate two
-> +=09=09APU/CPU models that can share the same firmware binary.
-> \ No newline at end of file
-    ^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pm=
-c.c
-> index 700eb19e8450..4302e7662087 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -455,6 +455,49 @@ static int amd_pmc_get_smu_version(struct amd_pmc_de=
-v *dev)
->  =09return 0;
->  }
+> Please pull this branch into the relevant subsystems.
 >=20
-> +static ssize_t smu_fw_version_show(struct device *d, struct device_attri=
-bute *attr,
-> +=09=09=09=09   char *buf)
-> +{
-> +=09struct amd_pmc_dev *dev =3D dev_get_drvdata(d);
-> +
-> +=09if (!dev->major) {
-> +=09=09int rc =3D amd_pmc_get_smu_version(dev);
-> +
-> +=09=09if (rc)
-> +=09=09=09return rc;
-> +=09}
-> +=09return sysfs_emit(buf, "%u.%u.%u\n", dev->major, dev->minor, dev->rev=
-);
-> +}
-> +static DEVICE_ATTR_RO(smu_fw_version);
-> +
-> +static ssize_t smu_program_show(struct device *d, struct device_attribut=
-e *attr,
-> +=09=09=09=09   char *buf)
-> +{
-> +=09struct amd_pmc_dev *dev =3D dev_get_drvdata(d);
-> +
-> +=09if (!dev->major) {
-> +=09=09int rc =3D amd_pmc_get_smu_version(dev);
-> +
-> +=09=09if (rc)
-> +=09=09=09return rc;
-> +=09}
-> +=09return sysfs_emit(buf, "%u\n", dev->smu_program);
-> +}
-> +static DEVICE_ATTR_RO(smu_program);
-> +
-> +static struct attribute *pmc_attrs[] =3D {
-> +=09&dev_attr_smu_fw_version.attr,
-> +=09&dev_attr_smu_program.attr,
-> +};
+> I will merge this into the review-hans branch of the pdx86 git tree today=
+ and
+> from there it will move to for-next once the builders have successfully b=
+uild-tested
+> the merge.
 
-I believe this should be NULL-terminated.
+I merged it into drm-misc-next, thanks!
+Maxime
 
+--hy5cszh57lz34buf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +static struct attribute_group pmc_attr_group =3D {
-> +=09.attrs =3D pmc_attrs,
-> +};
-> +
-> +static const struct attribute_group *pmc_groups[] =3D {
-> +=09&pmc_attr_group,
-> +=09NULL,
-> +};
+-----BEGIN PGP SIGNATURE-----
 
-I think you could use the ATTRIBUTE_GROUPS() macro to generate these two ob=
-jects.
+iHUEABMIAB0WIQTXEe0+DlZaRlgM8LOIQ8rmN6G3ywUCYyG7HQAKCRCIQ8rmN6G3
+yxexAQD6R+v7rkQb0GeB4b/P6qIJ8gkrhQhlZLrmcPYoUuwldAD/fLehBZhVa7TE
+ohzG1kghzg7S8i2Op8YPG+18dMDqoTU=
+=37BB
+-----END PGP SIGNATURE-----
 
-
-> +
->  static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
->  {
->  =09struct amd_pmc_dev *dev =3D s->private;
-> @@ -935,6 +978,7 @@ static struct platform_driver amd_pmc_driver =3D {
->  =09.driver =3D {
->  =09=09.name =3D "amd_pmc",
->  =09=09.acpi_match_table =3D amd_pmc_acpi_ids,
-> +=09=09.dev_groups =3D pmc_groups,
->  =09},
->  =09.probe =3D amd_pmc_probe,
->  =09.remove =3D amd_pmc_remove,
-> --
-> 2.34.1
->=20
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+--hy5cszh57lz34buf--
