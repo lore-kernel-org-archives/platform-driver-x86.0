@@ -2,150 +2,174 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBDBC54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Sep 2022 18:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2270ECAAD8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Sep 2022 09:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232858AbiIMSxE (ORCPT
+        id S230284AbiINJuV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Sep 2022 14:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
+        Wed, 14 Sep 2022 05:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232982AbiIMSw2 (ORCPT
+        with ESMTP id S229907AbiINJuU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Sep 2022 14:52:28 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B12344561;
-        Tue, 13 Sep 2022 11:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Nhmtl5U4i4aIMPF1bl0Sfg+C74cfK2TnIe+LlE37uRU=; b=eK0RlLHEjCIF0rUTBXogwTMNSv
-        IfpEnispYRuoUd9lahWonBcV7K9cdHI6PIehPePhbfbRsFa/b7lcN6npUcyF61eOuZMVQbjEAEzm3
-        AqpLwwOfknRGzfWmhClsPzpCvtGSPSs1mVQ+nWmpu4tMYAxrJ8NyyB14k6Q40vA2aqm1E5qBBu72N
-        59SstCz0pagKKcI63IKdWDEGjBPrOUOxtma1dmuW5iNKyhJG3F32oYdKqQS5uhj4nu0WVptuxc8fM
-        A6asMYDS2YyJXpmGCigZD2zcCFAvDFKtttW8X/3ZQ4AIv1QwiRyh4y2tus454mkIMCTdDuSyqLGiE
-        XzTjTmAA==;
-Received: from [2601:1c0:6280:3f0::a6b3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oYAnB-00EnsI-7s; Tue, 13 Sep 2022 18:37:53 +0000
-Message-ID: <e324fb96-bbf9-5ec6-78f3-9f298dac0644@infradead.org>
-Date:   Tue, 13 Sep 2022 11:37:52 -0700
+        Wed, 14 Sep 2022 05:50:20 -0400
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78FC1FCEE
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Sep 2022 02:50:17 -0700 (PDT)
+Date:   Wed, 14 Sep 2022 09:50:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1663149012; x=1663408212;
+        bh=6VovnvAvT7wB2LMpcTIS6rq0tvcrlTsBEIBwvJyaOr0=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID;
+        b=sPnuCl9H1XDQAYDW16m7Z6w8txbgbXzwm+GzI9H0R444QpWr5gScwlFtBZ3+8rahu
+         4PmyCCH/RJ6fEHcEF3GyUHWTavG3g3pVseOEeUXSL0AP6avrR2+s/QFluYau+iHvDo
+         9O1/pEx63zTcEBCKbhEBLQnpjmcRKtkXeKL1oEVi6cwIsuePDqsrAHJINjoy9KYVBx
+         6+FGcXlM0JjkXCWEeTSz+qtDIOah+dXI4RTMSgoGmaDlKwPDanOnBr74Xy7IYzPSLU
+         S8aK4iHQpww0mxFw2v4kBWhwp2xuA/bt/T77FRyMnlXkNM3Q3ox1h90DBaYtxpsH8f
+         Lp/5D9kjr293A==
+To:     Mario Limonciello <mario.limonciello@amd.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd: pmc: Add sysfs files for SMU
+Message-ID: <-v-ziVgHRq7Du4eop0IF6fTMkTT8XCT7ZbcGnyIIppnBSAgjI1fUCsHCVrW7C3tcvj7_lXHjvAyjHmd8ksObYBoxp5c4A0nlFvOwGpO8Im4=@protonmail.com>
+In-Reply-To: <20220913142510.1612-1-mario.limonciello@amd.com>
+References: <20220913142510.1612-1-mario.limonciello@amd.com>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH 5/5] platform/x86: dell: Add new dell-wmi-ddv driver
-Content-Language: en-US
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
-        Armin Wolf <W_Armin@gmx.de>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>
-Cc:     "rafael@kernel.org" <rafael@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "hmh@hmh.eng.br" <hmh@hmh.eng.br>,
-        "matan@svgalib.org" <matan@svgalib.org>,
-        "corentin.chary@gmail.com" <corentin.chary@gmail.com>,
-        "jeremy@system76.com" <jeremy@system76.com>,
-        "productdev@system76.com" <productdev@system76.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-6-W_Armin@gmx.de>
- <b1b794b4-f6c3-7697-5d5a-b811809a9313@infradead.org>
- <2aae0ae9-9608-675a-ec0c-6e7526e57363@gmx.de>
- <MN0PR12MB6101CE9055DC152A6E96B2EDE2479@MN0PR12MB6101.namprd12.prod.outlook.com>
- <7224d38e-9b51-0f81-e113-72f065909ea0@infradead.org>
- <4ec6d46f-b5c9-3c47-a102-6356e72c5225@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <4ec6d46f-b5c9-3c47-a102-6356e72c5225@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi
+
+2022. szeptember 13., kedd 16:25 keltez=C3=A9ssel, Mario Limonciello =C3=
+=ADrta:
+
+> The CPU/APU SMU FW version and program is currently discoverable by
+> turning on dynamic debugging or examining debugfs for the amdgpu
+> driver. To make this more discoverable, create a dedicated sysfs
+> file for it that userspace can parse without debugging enabled.
+>=20
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  Documentation/ABI/testing/sysfs-amd-pmc | 13 ++++++++
+>  drivers/platform/x86/amd/pmc.c          | 44 +++++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-amd-pmc
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-amd-pmc b/Documentation/ABI/=
+testing/sysfs-amd-pmc
+> new file mode 100644
+> index 000000000000..ff627b48c875
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-amd-pmc
+> @@ -0,0 +1,13 @@
+> +What:=09=09/sys/bus/platform/drivers/amd_pmc/*/smu_fw_version
+> +Date:=09=09October 2022
+> +Contact:=09Mario Limonciello <mario.limonciello@amd.com>
+> +Description:=09Reading this file reports the version of the firmware loa=
+ded to
+> +=09=09System Management Unit (SMU) contained in AMD CPUs and
+> +=09=09APUs.
+> +
+> +What:=09=09/sys/bus/platform/drivers/amd_pmc/*/smu_program
+> +Date:=09=09October 2022
+> +Contact:=09Mario Limonciello <mario.limonciello@amd.com>
+> +Description:=09Reading this file reports the program corresponding to th=
+e SMU
+> +=09=09firmware version.  The program field is used to disambiguate two
+> +=09=09APU/CPU models that can share the same firmware binary.
+> \ No newline at end of file
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-On 9/13/22 11:30, Limonciello, Mario wrote:
-> On 9/13/2022 13:27, Randy Dunlap wrote:
->>
->>
->> On 9/13/22 09:08, Limonciello, Mario wrote:
->>> [Public]
->>>
->>>
->>>
->>>> -----Original Message-----
->>>> From: Armin Wolf <W_Armin@gmx.de>
->>>> Sent: Tuesday, September 13, 2022 09:41
->>>> To: Randy Dunlap <rdunlap@infradead.org>; hdegoede@redhat.com;
->>>> markgross@kernel.org
->>>> Cc: rafael@kernel.org; lenb@kernel.org; hmh@hmh.eng.br;
->>>> matan@svgalib.org; corentin.chary@gmail.com; jeremy@system76.com;
->>>> productdev@system76.com; platform-driver-x86@vger.kernel.org; linux-
->>>> acpi@vger.kernel.org; linux-kernel@vger.kernel.org
->>>> Subject: Re: [PATCH 5/5] platform/x86: dell: Add new dell-wmi-ddv driver
->>>>
->>>> Am 12.09.22 um 23:56 schrieb Randy Dunlap:
->>>>
->>>>> Hi--
->>>>>
->>>>> On 9/12/22 05:53, Armin Wolf wrote:
->>>>>> diff --git a/drivers/platform/x86/dell/Kconfig
->>>> b/drivers/platform/x86/dell/Kconfig
->>>>>> index 25421e061c47..209e63e347e2 100644
->>>>>> --- a/drivers/platform/x86/dell/Kconfig
->>>>>> +++ b/drivers/platform/x86/dell/Kconfig
->>>>>> @@ -189,6 +189,19 @@ config DELL_WMI_DESCRIPTOR
->>>>>>        default n
->>>>>>        depends on ACPI_WMI
->>>>>>
->>>>>> +config DELL_WMI_DDV
->>>>>> +    tristate "Dell WMI sensors Support"
->>>>>> +    default m
->>>>> You should (try to) justify default m, otherwise just
->>>>> don't have a default for it.
->>>>
->>>> I have chosen default m since many other Dell platform drivers are being
->>>> default m. Since this driver is not essential for normal operation,
->>>> i will drop default m then.
->>>
->>> Actually Dell drivers directory are a bit unique in this regard.  There is a special
->>> top level boolean.  I would suggest to keep it as is.
->>>
->>> Take a look at:
->>> menuconfig X86_PLATFORM_DRIVERS_DELL
->>>
->>
->> So all of those "default m" and "default y" drivers are *needed*
->> as opposed to desirable?
->>
-> 
-> It was supposed to be a convenience option, it's first introduced in f1e1ea516721d1.
-> 
-> So if you have a Dell laptop you set the one option and then get defaults for all those modules.
+> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pm=
+c.c
+> index 700eb19e8450..4302e7662087 100644
+> --- a/drivers/platform/x86/amd/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc.c
+> @@ -455,6 +455,49 @@ static int amd_pmc_get_smu_version(struct amd_pmc_de=
+v *dev)
+>  =09return 0;
+>  }
+>=20
+> +static ssize_t smu_fw_version_show(struct device *d, struct device_attri=
+bute *attr,
+> +=09=09=09=09   char *buf)
+> +{
+> +=09struct amd_pmc_dev *dev =3D dev_get_drvdata(d);
+> +
+> +=09if (!dev->major) {
+> +=09=09int rc =3D amd_pmc_get_smu_version(dev);
+> +
+> +=09=09if (rc)
+> +=09=09=09return rc;
+> +=09}
+> +=09return sysfs_emit(buf, "%u.%u.%u\n", dev->major, dev->minor, dev->rev=
+);
+> +}
+> +static DEVICE_ATTR_RO(smu_fw_version);
+> +
+> +static ssize_t smu_program_show(struct device *d, struct device_attribut=
+e *attr,
+> +=09=09=09=09   char *buf)
+> +{
+> +=09struct amd_pmc_dev *dev =3D dev_get_drvdata(d);
+> +
+> +=09if (!dev->major) {
+> +=09=09int rc =3D amd_pmc_get_smu_version(dev);
+> +
+> +=09=09if (rc)
+> +=09=09=09return rc;
+> +=09}
+> +=09return sysfs_emit(buf, "%u\n", dev->smu_program);
+> +}
+> +static DEVICE_ATTR_RO(smu_program);
+> +
+> +static struct attribute *pmc_attrs[] =3D {
+> +=09&dev_attr_smu_fw_version.attr,
+> +=09&dev_attr_smu_program.attr,
+> +};
 
-oh well. whatever.
+I believe this should be NULL-terminated.
 
-thanks.
 
->>>>
->>>> Armin Wolf
->>>>
->>>>>> +    depends on ACPI_BATTERY
->>>>>> +    depends on ACPI_WMI
->>>>>> +    help
->>>>>> +      This option adds support for WMI-based sensors like
->>>>>> +      battery temperature sensors found on some Dell notebooks.
->>>>>> +      It also supports reading of the batteries ePPID.
->>>>>> +
->>>>>> +      To compile this drivers as a module, choose M here: the module will
->>>>>> +      be called dell-wmi-ddv.
->>
->> thanks.
-> 
+> +static struct attribute_group pmc_attr_group =3D {
+> +=09.attrs =3D pmc_attrs,
+> +};
+> +
+> +static const struct attribute_group *pmc_groups[] =3D {
+> +=09&pmc_attr_group,
+> +=09NULL,
+> +};
 
--- 
-~Randy
+I think you could use the ATTRIBUTE_GROUPS() macro to generate these two ob=
+jects.
+
+
+> +
+>  static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
+>  {
+>  =09struct amd_pmc_dev *dev =3D s->private;
+> @@ -935,6 +978,7 @@ static struct platform_driver amd_pmc_driver =3D {
+>  =09.driver =3D {
+>  =09=09.name =3D "amd_pmc",
+>  =09=09.acpi_match_table =3D amd_pmc_acpi_ids,
+> +=09=09.dev_groups =3D pmc_groups,
+>  =09},
+>  =09.probe =3D amd_pmc_probe,
+>  =09.remove =3D amd_pmc_remove,
+> --
+> 2.34.1
+>=20
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
