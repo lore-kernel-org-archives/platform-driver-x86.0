@@ -2,102 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D619CC6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Sep 2022 17:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF17C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Sep 2022 21:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiIQRMD (ORCPT
+        id S229462AbiIQVEO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 17 Sep 2022 13:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Sat, 17 Sep 2022 17:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiIQRMC (ORCPT
+        with ESMTP id S229455AbiIQVEM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Sep 2022 13:12:02 -0400
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56A331DE1;
-        Sat, 17 Sep 2022 10:12:01 -0700 (PDT)
-Date:   Sat, 17 Sep 2022 17:11:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1663434716; x=1663693916;
-        bh=UwnMF0OLzyixe7J9iCpdVnUKQFdiBm9JY1tCAOzgt88=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID;
-        b=kZ7sn4k2mjc5fKaGF+v95lS8w8nSWeVzBAJcyY+3bJ9CoILfuPmm/u4QYFdTbNwj7
-         vdZ5zq28Zo4awXImNMUoYAXitmAxHTeYPYXfr3OY1x44qTzJrHuK+MKh+FH3II4q3g
-         OPpCajaczOxsY76bSHf7Slvw9KnoniaBJ0pTx9TnsITfWOO5QLtKgkCcYiXrdXljRB
-         ELpaB9huWb+hnxD6V3nwLX61X0r7C97XzZh9cigfiReY080jVaolXsuIp2tfgBhmQS
-         P34gd3wOgcpw0EyMWz/UL/sBRy4CPICp/VtoUW/2V+5KtDaHH/h1fOsOUmvDTyDKWD
-         /58GdIXQRDk5w==
-To:     "Luke D. Jones" <luke@ljones.dev>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        corentin.chary@gmail.com, linux@roeck-us.net, jdelvare@suse.com,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] asus-wmi: Expand support of GPU fan to read RPM and label
-Message-ID: <qf0UI0B6IRDrhWfipl2Yv_LaJN2NsaEhHx8oqzQIvLu0DwDM5xUsVep8so-SE1QyqH1CaXjQXIF7COGUkoCXyI9aoL0u8QLGTZwWGJRPB0w=@protonmail.com>
-In-Reply-To: <20220916004623.10992-1-luke@ljones.dev>
-References: <20220916004623.10992-1-luke@ljones.dev>
-Feedback-ID: 20568564:user:proton
+        Sat, 17 Sep 2022 17:04:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5672C658
+        for <platform-driver-x86@vger.kernel.org>; Sat, 17 Sep 2022 14:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663448650;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=eD055yD72ytGrWLwmCULS6WL+LR1pBuSfH6qBO8xEO4=;
+        b=Cl50aESIzxtgK4gKN1nwGJHoZFg/dgvqJKOim0cbIsuc2ZZeXl34hNsF9tTQY/fM6vSQl6
+        h6KFNRcg6rzdL6pWcaz1ni8ZX7acu5mR5Gdn7WIJwtEqEglUX8VdUTxkzDZbThoh0noQCo
+        A/8uiHMBbXmNTcwhYnpC7ryAUy2RDo4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-673-x78qWhOtMcKhy6snsvkcJg-1; Sat, 17 Sep 2022 17:04:08 -0400
+X-MC-Unique: x78qWhOtMcKhy6snsvkcJg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 849A8811726;
+        Sat, 17 Sep 2022 21:04:08 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D06672166B26;
+        Sat, 17 Sep 2022 21:04:07 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: msi-laptop: Change DMI match / alias strings to fix module autoloading
+Date:   Sat, 17 Sep 2022 23:04:07 +0200
+Message-Id: <20220917210407.647432-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On a MSI S270 with Fedora 37 x86_64 / systemd-251.4 the module does not
+properly autoload.
 
+This is likely caused by issues with how systemd-udevd handles the single
+quote char (') which is part of the sys_vendor / chassis_vendor strings
+on this laptop. As a workaround remove the single quote char + everything
+behind it from the sys_vendor + chassis_vendor matches. This fixes
+the module not autoloading.
 
-2022. szeptember 16., p=C3=A9ntek 2:46 keltez=C3=A9ssel, Luke D. Jones =
-=C3=ADrta:
+Link: https://github.com/systemd/systemd/issues/24715
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/msi-laptop.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> The previously added patch to add support for pwm change for TUF laptops
-> also is usuable for more than TUF. The same method `0x00110014` is
-> used to read the fan RPM.
->=20
-> Add two extra attributes for reading fan2 plus fan2 label.
->=20
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c | 36 +++++++++++++++++++++++++++++++--
->  1 file changed, 34 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index ae46af731de9..7fe6ce25da0a 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -72,6 +72,7 @@ module_param(fnlock_default, bool, 0444);
-> [...]
-> +static ssize_t fan2_input_show(struct device *dev,
-> +=09=09=09=09=09struct device_attribute *attr,
-> +=09=09=09=09=09char *buf)
-> +{
-> +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> +=09int value;
-> +=09int ret;
-> +
-> +=09ret =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_GPU_FAN_CTRL, &val=
-ue);
-> +=09if (ret < 0)
-> +=09=09return ret;
-> +
-> +=09value &=3D 0xffff;
-> +
-> +=09return sysfs_emit(buf, "%d\n", value < 0 ? -1 : value * 100);
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index 1c29678e5727..2f850396e9a7 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -602,11 +602,10 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+ 	{
+ 		.ident = "MSI S270",
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD"),
++			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1013"),
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
+-			DMI_MATCH(DMI_CHASSIS_VENDOR,
+-				  "MICRO-STAR INT'L CO.,LTD")
++			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
+ 		},
+ 		.driver_data = &quirk_old_ec_model,
+ 		.callback = dmi_check_cb
+@@ -639,8 +638,7 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "NOTEBOOK"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "SAM2000"),
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
+-			DMI_MATCH(DMI_CHASSIS_VENDOR,
+-				  "MICRO-STAR INT'L CO.,LTD")
++			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
+ 		},
+ 		.driver_data = &quirk_old_ec_model,
+ 		.callback = dmi_check_cb
+-- 
+2.37.3
 
-Can `value` can be negative here? I am not sure because of the `value &=3D =
-0xffff` part.
-And maybe it would be better to return -ENODATA or something similar instea=
-d of printing "-1".
-
-
-> +}
-> [...]
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
