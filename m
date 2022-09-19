@@ -2,130 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C63ECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5996C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiISLPq (ORCPT
+        id S230053AbiISLTA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 07:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        Mon, 19 Sep 2022 07:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbiISLPn (ORCPT
+        with ESMTP id S229997AbiISLS7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 07:15:43 -0400
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2095.outbound.protection.outlook.com [40.107.255.95])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05471056F;
-        Mon, 19 Sep 2022 04:15:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JQrNe2aBq6+Ryn37uZkebABJXYWQB3WV11k/Erbr8WjTdI7fwJIkgySQjXTwjcID19tksMMGxl/g48y3KmI34g2YfoEVNQlMzs6I/sqKlMc0H8WaA1FcYOf43kPVi61KPpk2RuK/ahK74uVXzLmsuY1E5XDHlJftadGaDGqF4wELdOmrulWAE7SXeeigYGHe+D9/Jpdm7Aa+Ia/bAg+ZKdOYn2kgMVXWxETQ/gVVL1QYw5v8ZyTwb4Qy1XNtaHgyAfCfwpS5HSe3uhUw5UZDaitS1dURiPYxIxyLuxQMhUl0EMM2os7+PeoIBOXHpgDoNGgumIrUGNcbt0YXB5f7vA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HMse0NqRRlDPFqRSYl4YRrOAmyV4kWG5ZKnkF8HUN3I=;
- b=OoleYjOQjFYJPmkmAZAInTVQjr3SPKMJ+3iTZmwZ9GvnaQj+BrLAI39xWUxxDCUPbKlLStzrbxhdz16iKN1asy5y3ZBWRNo3H+S42eVv8Q7zbE2/bWKVJ9XACtJMkI7VMw4qIL2Nkw4fXk9r4mbyaKZMfC7Ir8DT3DjjMTbnbIiXAopfQYY1OkukEh07rSk1IKG50h3uwv/wLjN/noDV+zC/XqUTQHOZWIdo8TilmaasFPwS3hlzpfHGIX9nxrRVfFaupI/6GIO37CdpIG8IP5s5dDAyq+3nSFw2p00R250R2X2HxX5okFJKPxteDjoacPGElfO7Hbm5e015Ru9tew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HMse0NqRRlDPFqRSYl4YRrOAmyV4kWG5ZKnkF8HUN3I=;
- b=lRuCaqAUiLcJvvZPSuMPplkYx7O9nzeM+2glCuG6Ctqpq6NaTNP+VUjoeV3j5zmMdpVghcYgi/spc4urWIHQfv2r0cmRqebZ75WM6aperRA6w9R79LryNgRZebAXeGBZW8eSg/LUEB35fLcpb2VkLf9LxtqmpotHOUUCZ5/p4OFNH/hut4EqYvkwkhvKCvI3XjIN5Vt3Ftw55aPqizjtmrcgpl/3RlqXbKfKdWIo7Prdx85eg3nqb3YepXZ1RhOC+5k9Ht4q5VH0ARiS3nj9S/jQ+iKuAtFg3Mm34pRuR/IgtRbJh+l/6oGJZLjWOSiPPssOPNaV/UCRsCBBdbZ4qw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB4173.apcprd06.prod.outlook.com (2603:1096:400:26::14)
- by PUZPR06MB5618.apcprd06.prod.outlook.com (2603:1096:301:e8::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.17; Mon, 19 Sep
- 2022 11:15:39 +0000
-Received: from TYZPR06MB4173.apcprd06.prod.outlook.com
- ([fe80::f9ad:4efb:64f6:856b]) by TYZPR06MB4173.apcprd06.prod.outlook.com
- ([fe80::f9ad:4efb:64f6:856b%5]) with mapi id 15.20.5632.021; Mon, 19 Sep 2022
- 11:15:39 +0000
-From:   Yihao Han <hanyihao@vivo.com>
-To:     Azael Avalos <coproscefalo@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Yihao Han <hanyihao@vivo.com>
-Subject: [PATCH] drivers/platform: toshiba_acpi: Remove duplicate include
-Date:   Mon, 19 Sep 2022 04:15:18 -0700
-Message-Id: <20220919111519.19491-1-hanyihao@vivo.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0048.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::11) To TYZPR06MB4173.apcprd06.prod.outlook.com
- (2603:1096:400:26::14)
+        Mon, 19 Sep 2022 07:18:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA1915A10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663586337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Kx7E01hSyU80wB3SXnhVQQqt90Oj6j/7g7l/TvkhTeg=;
+        b=AcsrZSn1hGFBVym65BiJvtknnvRnHJN86TOD0LTTyuf501k3BkrU67J4/SMm+gVcvObMcD
+        OWYw2a18V0WGxr2+nePhs1PxV6zceQRyfdoAKC+7xetRjOhZoMG8CUKLpnEvhWn7niw2u5
+        sLzRfUVmrBVnQfpoMNIG7RGAHIpHOc0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-657-U-wNOBYGOGWcvszmfZIZFw-1; Mon, 19 Sep 2022 07:18:55 -0400
+X-MC-Unique: U-wNOBYGOGWcvszmfZIZFw-1
+Received: by mail-ej1-f71.google.com with SMTP id jg32-20020a170907972000b0077ce313a8f0so8312165ejc.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:18:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=Kx7E01hSyU80wB3SXnhVQQqt90Oj6j/7g7l/TvkhTeg=;
+        b=AHsQMPeX3cpj/YIvyW42hnmr06RwHVWUNpWB9owZW4HNaRM2iAe1Ir2sQiplDzC/n3
+         K2d/rdqSJlgNhQt2g07Bq9uLuBOnjXozamfxqAjJj2NGNEMtHKBEmoojK5A2ndd6f9Rn
+         4D9guVRrh1LYTp+yOIbHuePJDIT2vUyKiuf/ncPgQ2T3eYuH3Lhy9RAk8UAAeevzJtxg
+         2hvJBNLuRDNJQbziip70PdCIE/hKlRQjtezSqVQbnAy1I1yfTcc4QMOz9OWgRSrewSyn
+         rSjnMwb/Z92o3XQBpAC1up3PxZm/k2X1kOGtu2zkW0CMnpos+UiuaTf3QV/wLPez4rli
+         DNoQ==
+X-Gm-Message-State: ACrzQf2fAHByeGCZwjgQ5VOJBJXCANG6AzAKcxEIawo7nuirbRikD3FE
+        14vuNl49DV+HUDdhgNb4rRyvf38FAsyuwhtnPWqivfUtW+aZ0MF0m88KHJWbS3LwzXwYcq6OoKr
+        tgwGnWZ7oXNXityId3Vi7Z+suIzQW3mVPMg==
+X-Received: by 2002:a17:906:8457:b0:781:648c:3495 with SMTP id e23-20020a170906845700b00781648c3495mr2101331ejy.541.1663586334771;
+        Mon, 19 Sep 2022 04:18:54 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM714cXvKgCSSJ+a8DKsDXrhpoN4BCzjAgwe5qdPnPLrQ2CLdb1EYO5ot7l5URRtlD/madaG4g==
+X-Received: by 2002:a17:906:8457:b0:781:648c:3495 with SMTP id e23-20020a170906845700b00781648c3495mr2101321ejy.541.1663586334580;
+        Mon, 19 Sep 2022 04:18:54 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id l5-20020a056402028500b004542c37e68esm1661498edv.33.2022.09.19.04.18.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 04:18:54 -0700 (PDT)
+Message-ID: <a60266df-bf73-57e7-129a-f5395d373f1f@redhat.com>
+Date:   Mon, 19 Sep 2022 12:18:53 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB4173:EE_|PUZPR06MB5618:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7841e5f0-b3ec-44ae-2658-08da9a30487a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vjZ+06nxuiv8skEbk/L9I8/I9RfHv+Tnu/cW2wXPX3xKgkN4zG7U1UeEFYddliDswzXsVj8/q1O4b4n4EM5E+BHOlwnaOkvEeKpe13w9bUFoLomJrNNRi4bUC8n2yT23GWl++OdKpQ/PsWM+uSqsWPw6RualcCkb7Q2R7aRKHblLzYjpdmXX5BTj6EP5mMdrqJgQkp9SkxlYJID8PIEbPm1DVyKh7EFj5xCi+XhdoVsRRjUv5hWdd+E9KEG1azvRljRvwh/g4jUCfkun0e5q7pTcaL/b/x8w4oDvEGsJRCNt/2Bao/GnY5Rj/TBrxr92BRvugmHwvGE4wKjMsgIrvCUBgoaOqQi3PCiGUZ0nforP8OWD/8J7xZr3R64KxlSQs6qUleR3lp8QawRTOy8v/BO/lCpv4sjCNz6/J+/k2ij7p17JhkHJeh1SQgrsGC5AuRYQ4bgv1dPHHDlesp8eGVGx3LRxbfPflpnWQ8vT6IqeZvOLEp3wvz9mVnzsI6WZMsQj8zhzNLxxrmC4z/J86YrQEQRUvg2JnfsjVcErVnaJ1EecH3ci0tTPD6I5QUd23UZXtUUCQMDhTD6hSVJMO1I9RYy3AUgOprBlAUZXWPdTJVFGDUd26n7GQFVsPqcnrAspkoKD2ijdZRmFOJWQI5Qf69dVGQ0x3gcCbcgdo2hjBsSVFZfpLVN5PjE/aqi4YIuC94BPvM4r7hTGsf9+2MM9FB5qJBMQIR6LWyXnUzKRjj3M6tA41sCTXgB62UAt1w1djxQRrO2U37TmN8AQSQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4173.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199015)(6506007)(4326008)(52116002)(36756003)(2906002)(66946007)(86362001)(8936002)(6512007)(6486002)(26005)(66476007)(66556008)(38100700002)(38350700002)(8676002)(41300700001)(6666004)(107886003)(478600001)(83380400001)(110136005)(2616005)(1076003)(186003)(5660300002)(316002)(4744005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2diy1n94pGflOjG8X22g0tQOAjdkDfwk4rvk1cqs5X81s3ut3CFL4XJnMK21?=
- =?us-ascii?Q?OdFLGdBmFCptzu/km35wHHQXSwiUYi5bKN2QLpKm8Zb8ACQY3C0mjn9DEYIg?=
- =?us-ascii?Q?2LgN8TSOJctGpQrOWrgKFKHah4Qgpc85UhzVifZVGT6huOmxQCZMwKoLL3Pq?=
- =?us-ascii?Q?GVGH8srazZ2fG408TkPzjprRattiusZ5xV+iS73WSedIQPigQ0lCTdxg3kdJ?=
- =?us-ascii?Q?CcbA3l1u0I/yQKu5iTyb9fw9ai3yKptT5118wUinpmlFzq8s+qe8tuD1g0GE?=
- =?us-ascii?Q?7Uq9BQo1HLUki8BPJn4bSNIFLugLiA36PpbUblmGYD30NfjEJ0J5GRCQ2OFS?=
- =?us-ascii?Q?dvjtK8Ml3NqrG84rNnd4oNx3rZNoVoZj5CNwpmUMKOLxDo44EVUvYkAtBbab?=
- =?us-ascii?Q?UdpCnL9f+Cd9XZyRwyIQYifbchUqbpCCnmV69kTJj1OdS993bjVAzAmtqFK0?=
- =?us-ascii?Q?RfpoVDtnsdP5fZapapqzB9BqgqFF5Wnyg3JnJDoOQRzHKZnp0Sk0QvbsfeX2?=
- =?us-ascii?Q?2oxy47OqmibE0QtrPn6UFgO77YfRulgff4yFP07UfOcnB7t1XcLrUgDsxFSb?=
- =?us-ascii?Q?+WPHrn7qeW0/ReGBqFh+AMIzvG+JiPTQgZn3IIzCe9hFqZ/cDMRFJnzK3hxZ?=
- =?us-ascii?Q?sXwgc5GMa/CJ4RqG7GqbkIVLBZWT1XSQeXGL6GwurHPd162brFYvG3gJgv3k?=
- =?us-ascii?Q?Wj5sde08Lhiqr6VNPUTJdchqS+ZNq2ukvR9gJRxDf4tychlLcZwZMW5KXg5r?=
- =?us-ascii?Q?zV1d0BqPZlSIY5FpHg8+N1SLJsztS3LWMnifyoHsJDUCrbcAnklYf9Qu/fG3?=
- =?us-ascii?Q?8kZ8bpQkuLkKnrC+2SFM/yWWzf2IfrWWrAHmOIwv6/BIvS4olkvRqKOLB9e2?=
- =?us-ascii?Q?k08u/UHDwPE9LeKObtVBullJoGI4coM127iI4P8sJzBYWvn0xDBXHcG9j0Yp?=
- =?us-ascii?Q?O1EDvYWyM8c7W6XpHtqK5+N4YZYq/xlHwPhKT9Oqrd23dvLCKMUZjA1+5UVJ?=
- =?us-ascii?Q?wdZ00VIStXIBw8oHKKKoJzcByu1CFaiUrgsmDWsuC+xOnUa4P4+LquOYWk7s?=
- =?us-ascii?Q?Ki2gwk18oMl2SZqIXExj6o8/BmsAU+wb1wZkvM3hkMc7epOtX3vt7tvCwga+?=
- =?us-ascii?Q?7kMPNEU1cSeK5G7nlVsSnCMGg/y8yb7Q1NXT5RSzV2Yah/slhrzqdoLZdk4c?=
- =?us-ascii?Q?alD0qfPqrnfiLE7dBWOnczI1jdVoDv8pIv6++K+dYowsilfngTCphV+EuBjz?=
- =?us-ascii?Q?L5oSHi6OPhGXfNJE+/rb3v+n5M+EIq8mDaJ8RD+bj24FeY9SlILRst0aQlwU?=
- =?us-ascii?Q?pkHtgv6wzHRmHBAnj/Tzx06Ho9IA0cM1FadQHCR7Vqswk9RsI3+WRjB4Lhaj?=
- =?us-ascii?Q?R4UfNkHbkMd8mvzQWDjIoJ3av1vhnGn553Thdy6kBmGZUZhl/XizQHbZBenN?=
- =?us-ascii?Q?JLmvdBzNMmsgouQc56ZyQSWYPz/BXlaSUDqxCaZdxLKpd74HeN6FsMybMTIp?=
- =?us-ascii?Q?eq21xqz33YxeDfuY1TQ615EJ2fcORz+nfNfYN0mH3S7nCNCnUahUpvdcsJE8?=
- =?us-ascii?Q?1UwoCio92ieqEDzbL0B1FiZKBj9vexk11rThUnmm?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7841e5f0-b3ec-44ae-2658-08da9a30487a
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4173.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 11:15:39.3137
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bNh139F9miVcWpR4GX+j51VcHExsfH3GLmeaSmO3OnNmt8Y3INAOfCWAPK4/OqUsC3gx30qPcCrnF46MJVZc8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5618
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH 3/5] ACPI: battery: Allow battery hooks to be registered
+ multiple times.
+Content-Language: en-US
+To:     Armin Wolf <W_Armin@gmx.de>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     markgross@kernel.org, rafael@kernel.org, lenb@kernel.org,
+        hmh@hmh.eng.br, matan@svgalib.org, corentin.chary@gmail.com,
+        jeremy@system76.com, productdev@system76.com,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220912125342.7395-1-W_Armin@gmx.de>
+ <20220912125342.7395-4-W_Armin@gmx.de>
+ <wY3UHtenNt5tmQSMtoDLmzNxvJ7B56SLwlhguYfg6rqC71dDDCYypvSqvS0SUhRJwsel8wBEy3yeS8rDlJCOii24Llo0XKU34IcSn5WNwg8=@protonmail.com>
+ <155062a9-8d1a-e771-1bee-35580b1b2b73@gmx.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <155062a9-8d1a-e771-1bee-35580b1b2b73@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Remove duplicate include in toshiba_acpi.c
+Hi,
 
-Signed-off-by: Yihao Han <hanyihao@vivo.com>
----
- drivers/platform/x86/toshiba_acpi.c | 1 -
- 1 file changed, 1 deletion(-)
+On 9/12/22 18:29, Armin Wolf wrote:
+> Am 12.09.22 um 18:42 schrieb Barnabás Pőcze:
+> 
+>> Hi
+>>
+>> 2022. szeptember 12., hétfő 14:53 keltezéssel, Armin Wolf írta:
+>>
+>>> Registering multiple instances of a battery hook is beneficial
+>>> for drivers which can be instantiated multiple times. Until now,
+>>> this would mean that such a driver would have to implement some
+>>> logic to manage battery hooks.
+>>>
+>>> Extend the battery hook handling instead.
+>> I think this is already possible by embedding the acpi_battery_hook
+>> object inside the driver's device specific data object, no?
+>>
+>> Regards,
+>> Barnabás Pőcze
+>>
+>>
+> Yes, it indeed is. However afaik it is not possible to pass instance-specific
+> data to such an embedded battery hook. It could be possible by passing the
+> battery hook as an argument to add_battery()/remove_battery() and using container_of(),
+> but in my opinion this would be too much of a quick hack.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 43cc25351aea..b62a08ec5f45 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -39,7 +39,6 @@
- #include <linux/workqueue.h>
- #include <linux/i8042.h>
- #include <linux/acpi.h>
--#include <linux/dmi.h>
- #include <linux/uaccess.h>
- #include <linux/miscdevice.h>
- #include <linux/rfkill.h>
--- 
-2.17.1
+Actually thinking more about this (after my reviewed-by of 4/5) I believe
+that leaving the lifetime management of the struct acpi_battery_hook hook
+in the caller and then modifying 4/4 to pass the hook to the callback,
+so that the callback can indeed do container_of to get its top-level
+driver-data struct would be a better/cleaner solution then this patch +
+patch 4/5 .
+
+Doing things this way is quite normal in the kernel and doing a single
+large alloc is better then a bunch of small allocs. In this case it does
+not really matter, but if we do things like this over all drivers
+eventually all the small mallocs add up.
+
+Doing things this way would also reduce the amount of churn in this
+series a bit.
+
+Regards,
+
+Hans
 
