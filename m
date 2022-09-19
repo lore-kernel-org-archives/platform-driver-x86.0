@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98A0ECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D90C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbiISM4S (ORCPT
+        id S230253AbiISM4c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 08:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
+        Mon, 19 Sep 2022 08:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiISM4R (ORCPT
+        with ESMTP id S230078AbiISM4b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 08:56:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10AE4E096
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:14 -0700 (PDT)
+        Mon, 19 Sep 2022 08:56:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C0E2DF1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663592173;
+        s=mimecast20190719; t=1663592189;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aURQnqb/AGxaO5pU8WGqAj7kiKkM6zkjukq5URyOsjE=;
-        b=Cf9Fml3bOHmAF66RhafXuy1iWd5kz5CNTSrhApiz9Y/QDiZefaJ6bb25+BVvgvclr1q39B
-        6SOvYtlhG1kRfAw5Lx4vP/jlNRAJBSWefV7P7Q1rKrWgixobbZvUFwuai7hISrdtti6Vfa
-        BwTBOMwCIyU/v+JcdvGx9swZS6YX7jc=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=KBjmtOJBVrvCkDxZNegQRrlno9ip0hHfVuVwFPIj78k=;
+        b=L6Z5PH5nnIRX2esfLBpfBEqGz1t9CmdpwMfkA82Lu/JW3rPnthtDiQqW/z/VFwIF1Mpjj+
+        bmwt34EcS6QdIT3IRlDIfiZAYdMiIEy1eM6CZf05Bd0jne3AgbxBmOV2Hndlbv5afXGsKo
+        NA66z1bqrEvfE5XWp6ykx6GqOUaJ8Rw=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-668-1MQfF8CiO1idjsGoUpGkpw-1; Mon, 19 Sep 2022 08:56:12 -0400
-X-MC-Unique: 1MQfF8CiO1idjsGoUpGkpw-1
-Received: by mail-ed1-f71.google.com with SMTP id s17-20020a056402521100b004511c8d59e3so19889885edd.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:11 -0700 (PDT)
+ us-mta-661-lC-iPmAhMZW-UtsyRkw_7g-1; Mon, 19 Sep 2022 08:56:26 -0400
+X-MC-Unique: lC-iPmAhMZW-UtsyRkw_7g-1
+Received: by mail-ed1-f69.google.com with SMTP id m13-20020a056402510d00b004519332f0b1so16580323edd.7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=aURQnqb/AGxaO5pU8WGqAj7kiKkM6zkjukq5URyOsjE=;
-        b=63aMOvUQ47NQCBXpLCd0pB2ayfvew1SKjO1+EqCxNcBJyMDlYodQL3bFa/99jXTyT3
-         La9EKRRqgBcaV5xtKZ1yPTOR9XPiO641mHnThsLdsre3aDhH0f3O9yzH/WRJgkqwkYYA
-         B8lhx+shFH1KACmgDDzNClkF9LDJUaTP2hMsxRaZLltc37OTuWed4nE1J/B1t+DrdyyH
-         GYq6gEQtsMy3Yj5vUuDaxXBSzjDN63LNPBVoccPXHYHrdPpxXviVhGPM2aIqt4reKSBf
-         Lvq/Iy+HTeHR+Tm7E/sSEzPizgI/0vGhFgI5fAkPAzd9TQc17Sg3jbH+wvONfBN/DRsR
-         555w==
-X-Gm-Message-State: ACrzQf0ZQKCFxxdkyljh7ESFbvem+Gnm0kxg/BDbX+zkLzDXmutxcDGX
-        DT6mwvcEZk8/oNWgLF0vIuXMR2prbzw+LcehnXkka505ykHeDFlb//DeXlA08pErYPS1LweSZ8b
-        j60+sc2ZgBNwBUXK2XUyOOTf0nmmJ6yVo0g==
-X-Received: by 2002:a17:907:2c4f:b0:77e:ac5:a734 with SMTP id hf15-20020a1709072c4f00b0077e0ac5a734mr12728491ejc.597.1663592170927;
-        Mon, 19 Sep 2022 05:56:10 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6CZkBD5rWW1lve0r1EuILUNr6US9JC8NljjSn/dJVgWVvvfNas/FC3POjXO2/j9gnZ+/bjbw==
-X-Received: by 2002:a17:907:2c4f:b0:77e:ac5:a734 with SMTP id hf15-20020a1709072c4f00b0077e0ac5a734mr12728475ejc.597.1663592170673;
-        Mon, 19 Sep 2022 05:56:10 -0700 (PDT)
+        bh=KBjmtOJBVrvCkDxZNegQRrlno9ip0hHfVuVwFPIj78k=;
+        b=w44mA6QdcTq2eRGHpts8j3ebZHYbl3yJv2LPVMAScog+EAl98bheiuoMbcfcuIh0vG
+         xEktZLb9Hseql2fguu+XsMPbs9ZOwL+E8nyFv3KKoO6aKXEut5eVvr6qzzYU2NHfD0vS
+         SN2gA79hnaP3bW2Szw2QaaQCWTS6l9Pxh6v2C2RPHPxt2cYikbj5wduc0f4b8y1uaug8
+         gIvBl6bMNSxGvTVlIfULXQamA8D/64/eoQ8BNix2qk4LVJcwQHhSF9WjNqJoqAP4oc8O
+         dpMnbvBfdqdl/Kw4yrQLNBDIEMPJEKElXDnTcGhYzii5J+MbAPkZgpuzkMmTXOlHhU2q
+         f1Mg==
+X-Gm-Message-State: ACrzQf14lboQfbHKaxUn8EDFomDnAfuWsw3XmvqrdZL9A96+fcVtmd1Q
+        HQckHtj5eb+hDSFRXUBTl6HGsU6pUZXhFa35cXMgXu192Nci5mKhDrQktAm+SjSW+DWnJXXVJTw
+        gwr9GkT0PgCeti+S1mAjCWgTSVvkUHKIF2Q==
+X-Received: by 2002:a17:907:7fac:b0:780:ec98:af85 with SMTP id qk44-20020a1709077fac00b00780ec98af85mr7737544ejc.641.1663592185339;
+        Mon, 19 Sep 2022 05:56:25 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6EC97w2aNxIRzaoRnpvQieGkNUwuQejTM0orqeHPsjccPsu2mOGsAfu35iwEAr6AXJ3eAmLA==
+X-Received: by 2002:a17:907:7fac:b0:780:ec98:af85 with SMTP id qk44-20020a1709077fac00b00780ec98af85mr7737525ejc.641.1663592185160;
+        Mon, 19 Sep 2022 05:56:25 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id g22-20020a170906539600b0076fa6d9d891sm15441911ejo.46.2022.09.19.05.56.09
+        by smtp.gmail.com with ESMTPSA id g17-20020a17090604d100b00773f3ccd989sm939584eja.68.2022.09.19.05.56.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 05:56:09 -0700 (PDT)
-Message-ID: <20eb8b7e-6f0e-c567-882a-cb8b23830f90@redhat.com>
-Date:   Mon, 19 Sep 2022 13:56:09 +0100
+        Mon, 19 Sep 2022 05:56:24 -0700 (PDT)
+Message-ID: <13edebe5-2bb6-2de5-8352-a4737c9465d5@redhat.com>
+Date:   Mon, 19 Sep 2022 13:56:24 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: [PATCH] platform/x86: msi-laptop: Change DMI match / alias
- strings to fix module autoloading
+Subject: Re: [PATCH] drivers/platform: toshiba_acpi: Remove duplicate include
 Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20220917210407.647432-1-hdegoede@redhat.com>
+To:     Yihao Han <hanyihao@vivo.com>,
+        Azael Avalos <coproscefalo@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220919111519.19491-1-hanyihao@vivo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220917210407.647432-1-hdegoede@redhat.com>
+In-Reply-To: <20220919111519.19491-1-hanyihao@vivo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,20 +79,22 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/17/22 22:04, Hans de Goede wrote:
-> On a MSI S270 with Fedora 37 x86_64 / systemd-251.4 the module does not
-> properly autoload.
+On 9/19/22 12:15, Yihao Han wrote:
+> Remove duplicate include in toshiba_acpi.c
 > 
-> This is likely caused by issues with how systemd-udevd handles the single
-> quote char (') which is part of the sys_vendor / chassis_vendor strings
-> on this laptop. As a workaround remove the single quote char + everything
-> behind it from the sys_vendor + chassis_vendor matches. This fixes
-> the module not autoloading.
-> 
-> Link: https://github.com/systemd/systemd/issues/24715
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Yihao Han <hanyihao@vivo.com>
 
-I have added this to my review-hans branch now.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -100,35 +102,19 @@ Hans
 
 
 > ---
->  drivers/platform/x86/msi-laptop.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+>  drivers/platform/x86/toshiba_acpi.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-> index 1c29678e5727..2f850396e9a7 100644
-> --- a/drivers/platform/x86/msi-laptop.c
-> +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -602,11 +602,10 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
->  	{
->  		.ident = "MSI S270",
->  		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD"),
-> +			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1013"),
->  			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
-> -			DMI_MATCH(DMI_CHASSIS_VENDOR,
-> -				  "MICRO-STAR INT'L CO.,LTD")
-> +			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
->  		},
->  		.driver_data = &quirk_old_ec_model,
->  		.callback = dmi_check_cb
-> @@ -639,8 +638,7 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "NOTEBOOK"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "SAM2000"),
->  			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
-> -			DMI_MATCH(DMI_CHASSIS_VENDOR,
-> -				  "MICRO-STAR INT'L CO.,LTD")
-> +			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
->  		},
->  		.driver_data = &quirk_old_ec_model,
->  		.callback = dmi_check_cb
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 43cc25351aea..b62a08ec5f45 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -39,7 +39,6 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/i8042.h>
+>  #include <linux/acpi.h>
+> -#include <linux/dmi.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/miscdevice.h>
+>  #include <linux/rfkill.h>
 
