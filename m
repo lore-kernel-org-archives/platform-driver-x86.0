@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332DCC54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 10:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B3DC6FA93
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 10:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230218AbiISK0L (ORCPT
+        id S229778AbiISKrQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37832 "EHLO
+        Mon, 19 Sep 2022 06:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231174AbiISKXx (ORCPT
+        with ESMTP id S229888AbiISKqu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:23:53 -0400
+        Mon, 19 Sep 2022 06:46:50 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D1627DCA
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:19:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BDF28E09
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663582742;
+        s=mimecast20190719; t=1663583623;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pKlu8iRPYqQrmjiilB0fXgVQlLkirRKSKLErQ6tCx0Y=;
-        b=fhgzEKmMGyyvP1Yfbn13ZlzOALN8RfoHeReMOQp2uirmThs3q0SzH+S6nfrK4ZZsxajTid
-        Q0Dl1pnGs+BBOk2OeLR3irWEk/+/cz662YDc7sADySkQmScqs/w9nrRv7C+PZtSM2qDc0d
-        huvO8m2x9sCsjbxOqTJXVu4je4ltYqg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=zuAJkdaPOcKHUAxfD3RjYm8+yqJJC9j2vg0HOY5onF4=;
+        b=F0hPJHBklbyu4ecpyaQsTvU6IpKCxCMzsuUdDeHTXg87H6A76FgcMDZ5tDLB2HKZcbylEW
+        dtlWTupXdI8J2MrTwJ0XCG/afbI5lGClMy1vMsfE8c8Bixua6CVX/gZMvWEFO7Wb+aLCY6
+        W+SvuXuXUj+6+rHy6WBnhzFS0jBfUnA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-522-7VYQslBBNl2jrMNer3t1Jg-1; Mon, 19 Sep 2022 06:19:01 -0400
-X-MC-Unique: 7VYQslBBNl2jrMNer3t1Jg-1
-Received: by mail-ed1-f70.google.com with SMTP id b16-20020a056402279000b0044f1102e6e2so20434454ede.20
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:19:01 -0700 (PDT)
+ us-mta-248-Xw-z8Z8_Ps2yC84oJCJXHg-1; Mon, 19 Sep 2022 06:33:42 -0400
+X-MC-Unique: Xw-z8Z8_Ps2yC84oJCJXHg-1
+Received: by mail-ej1-f70.google.com with SMTP id oz30-20020a1709077d9e00b0077239b6a915so10471893ejc.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:33:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=pKlu8iRPYqQrmjiilB0fXgVQlLkirRKSKLErQ6tCx0Y=;
-        b=nF8QAp220hSGduFq0se341Cyam+DhRiYOeHk36woOu4wIIxh6UNGTUUItTKaNysU+m
-         v5093ZoUnGLKS9pj623g3ZiR+IQTUEz+bDtOrEVw/Sx2bxEAC66D/7g3SigGc59pw9Gu
-         QRN2r/B2kUzkgOgKzfOV7Hqu6/myZujl/XJACwqIxzUcbc25sI4xO3jX9dPH/mVDQUkb
-         2p7TIjUTIoMeAQjSB7K6ocdclQVYmWF7OmOlk6NnciuZGJfYan/cBGTRISjG0TFDyIDw
-         T82HBntwEEmnDtehoyHkr+rVRlPlacrLrB8HsIUL5SOsZ0dQB/zMOBK5RHb/4L9vwCT/
-         UAig==
-X-Gm-Message-State: ACrzQf2K3lUWGVOVIHnZh5hjeNeOIHlt+qyqY4jjacOECMExQZoJINWe
-        aatG5uocUsTzkMOVBKJkX9z5DpWvyT9uZ4ZmAZOg/ZItoVOxALRYWaca18XMtOqdrCv3xqAMbqh
-        lkzwZR1gtwRecT6vcpCdITJyUTlFk8FdeRw==
-X-Received: by 2002:a17:906:b106:b0:780:83a8:773 with SMTP id u6-20020a170906b10600b0078083a80773mr12184101ejy.758.1663582740153;
-        Mon, 19 Sep 2022 03:19:00 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4igIJeurxovRYj4DDIdODghNsQ4F1o9jcbaQ0gHwBeoWz3Y/5tomNosKRzLBa/tG6CvhjJbA==
-X-Received: by 2002:a17:906:b106:b0:780:83a8:773 with SMTP id u6-20020a170906b10600b0078083a80773mr12184084ejy.758.1663582739871;
-        Mon, 19 Sep 2022 03:18:59 -0700 (PDT)
+        bh=zuAJkdaPOcKHUAxfD3RjYm8+yqJJC9j2vg0HOY5onF4=;
+        b=ZmwcrzoL30zIrp1ydhy6wPgVvQsAqqy7ll578FH6uk5id2MRJ49sDVCb4Qmnn/w32K
+         cCjLtIXQYLZUyTW8SMAqxkfR9hA4onx3XEMRconIpVKOttwv66B7AwokRO4TFeBNVbBc
+         cRMEcdZd6oDMnITCblrw9Gm8Ta6zjHhOL9n7qBuWJWWdz6JCXcf5i6E5GeH34N/2guxv
+         fPyb0+I5RkYaVIhTHkkDwV1xYsZ/LReaHOqMPHfvgA6HHkCBkHYQHvyXIHeAul3+FXbx
+         hG+4U229ElLWzjW0rvT229UKMM2GGc8E+sF5qyftimqCaU2LnjfbZNW+7/Q7oHFKI1+c
+         7FUA==
+X-Gm-Message-State: ACrzQf0xqQJP6Irek6l0JH6wuL7Y/WvIw4XWh/CqMdPp3ya0SlOCEItK
+        zxLGHk3XcdkF4hUdZHb2yBrNq3JBe9/9nWhiTmyPuRM8qlCKHbPNZpHpsV5sI4dDXrQL16DW4Kg
+        lo7/c67ubxw78d/eiT+8jYJspIxZsE5BsYQ==
+X-Received: by 2002:a17:907:7609:b0:770:8665:dfd4 with SMTP id jx9-20020a170907760900b007708665dfd4mr11686704ejc.494.1663583620915;
+        Mon, 19 Sep 2022 03:33:40 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM45v/eX0Zjx0lM0hA0jGTN+rfbwLpBrK1h+Y7ta3kpSTbHslmdNWVrey45Wss3Us4lTJBvM8g==
+X-Received: by 2002:a17:907:7609:b0:770:8665:dfd4 with SMTP id jx9-20020a170907760900b007708665dfd4mr11686690ejc.494.1663583620487;
+        Mon, 19 Sep 2022 03:33:40 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id y17-20020a50ce11000000b0044f2afbb1easm20262560edi.27.2022.09.19.03.18.59
+        by smtp.gmail.com with ESMTPSA id v2-20020a170906292200b00730bfe6adc4sm15543239ejd.37.2022.09.19.03.33.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 03:18:59 -0700 (PDT)
-Message-ID: <902d0ec0-1639-8763-b82c-7b35f1516dbc@redhat.com>
-Date:   Mon, 19 Sep 2022 11:18:58 +0100
+        Mon, 19 Sep 2022 03:33:39 -0700 (PDT)
+Message-ID: <e08eb287-91e7-0bfe-b373-c1a544450dbe@redhat.com>
+Date:   Mon, 19 Sep 2022 11:33:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
@@ -417,6 +417,20 @@ On 9/12/22 10:06, Shyam Sundar S K wrote:
 > +			if (ret)
 > +				dev_err(dev->dev,
 > +					"APMF apmf_get_dyn_slider_def_ac failed :%d\n", ret);
+
+The error handling here is broken, if either is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC)
+is false or apmf_get_dyn_slider_def_ac() returns an error then the "out" struct will contain
+whatever random data is on the stack, yet you still continue below with calling
+amd_pmf_update_mode_set(i, out); and amd_pmf_update_trans_data(i, out); filling the global
+config_store with random bytes from the stack.
+
+Please fix this to instead return an error and in case of an error you will want
+amd_pmf_init_cnqf(() to return without setting dev->cnqf_enabled = true.
+
+Actually since you want to make cnqf_enabled toggable at runtime through sysfs,
+you will want separate cnqf_supported and cnqf_enabled flags and in case of
+an error here neither of these 2 flags should get set.
+
 > +		} else if (i == POWER_SOURCE_DC &&
 > +				is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
 > +			ret = apmf_get_dyn_slider_def_dc(dev, &out);
@@ -439,11 +453,6 @@ On 9/12/22 10:06, Shyam Sundar S K wrote:
 > +
 > +	for (i = 0; i < CNQF_TRANSITION_MAX; i++)
 > +		config_store.trans_prio[i] = i;
-
-So trans_prio, now just contains { 0, 1, 2, 3, ... } and this is not changed
-anywhere. Please just drop trans_prio and in the places where trans_prio[i] is read,
-just use "i" directly.
-
 > +}
 > +
 > +void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev)
@@ -460,6 +469,20 @@ just use "i" directly.
 > +		dev_dbg(dev->dev, "CnQF bios default_enable flag not set\n");
 > +		return;
 > +	}
+
+Not calling amd_pmf_load_defaults_cnqf() and amd_pmf_init_metrics_table()
+here is a problem since cnqf_enabled can be set to true through sysfs later.
+
+Please use 2 separate cnqf_supported and cnqf_enabled flags and then
+after error-checking that amd_pmf_load_defaults_cnqf() and amd_pmf_init_metrics_table()
+succeed, set cnqf_supported, leaving only cnqf_enabled to depend on the bios
+default_enable flag.
+
+Regards,
+
+Hans
+
+
 > +
 > +	dev->cnqf_enabled = true;
 > +	amd_pmf_load_defaults_cnqf(dev);
@@ -468,18 +491,6 @@ just use "i" directly.
 > +	/* update the thermal for CnQF */
 > +	src = amd_pmf_get_power_source();
 > +	amd_pmf_set_cnqf(dev, src, config_store.current_mode, NULL);
-
-current_mode is not initialized anywhere, so at this point it is 0, which is CNQF_MODE_QUIET,
-which seems like a weird default?
-
-Also should this not only be done "if (dev->current_profile == PLATFORM_PROFILE_BALANCED),
-similar to how amd_pmf_trans_cnqf() only calls amd_pmf_set_cnqf() under this condition?
-
-Regards,
-
-Hans
-
-
 > +}
 > diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
 > index a675ca969331..2cb7793d07cf 100644
