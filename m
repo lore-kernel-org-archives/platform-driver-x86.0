@@ -2,142 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB59ECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B7ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 17:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbiISQ1i (ORCPT
+        id S229711AbiISRhI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 12:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
+        Mon, 19 Sep 2022 13:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbiISQ1h (ORCPT
+        with ESMTP id S229783AbiISRgw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 12:27:37 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484F33B955;
-        Mon, 19 Sep 2022 09:27:36 -0700 (PDT)
-Received: by mail-qk1-f177.google.com with SMTP id d17so20075054qko.13;
-        Mon, 19 Sep 2022 09:27:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=dEokQm5n7CvZvcm2/TuaTTXN7aMhR9oWpeaOPSUYU4I=;
-        b=2VB1+Tr3QCxgJH8CMgvGesRM8iys/5TAkWesrqMfkx2TTD+lFfC81RWae/u3/sgiqi
-         u5IM7ISnTFLG6Pc3hTlDpEqf51p5QgoJ8yNm/1RaKrOwnVBw+BDIddCHeYS7DiTnNT+K
-         0ILoxd1n/2jMvghPUuXCkQ5MTbksVxl9cJVMLIuD6l5GKsXQZGRFQa5/ZlWqRm++h3Y7
-         vV4dti/OmiUT8LRIImLwY0O1LIARe7cCIYJs+txCUnQyhNcGK+S3NyOMhPSAj3PaMZcg
-         /2h5Ws3tnxssuwkj6hrlWw4uvG0WPg0vjimRST7fLdd9mvsSryo8SjUbMHPx+blPTEFE
-         PSvQ==
-X-Gm-Message-State: ACrzQf0rj2RXm/fckP1O+OoVg5RVUgF8eiAkxSYYNC3Ugi4E4iQlEcGB
-        DDkbT3mKLHfHRY3WFPWAJQVUixF1+R7GEGGKEAPGZzQaBV8=
-X-Google-Smtp-Source: AMsMyM4XZU0z1J3kzFB53bs7jo2hBp6BEvaMD6zIiq/E5pFGeXvdD251SJwkmfPDO2xF+FINSxCgav8IXCY7rRiYzZ0=
-X-Received: by 2002:a05:620a:2988:b0:6ce:cc3f:73b9 with SMTP id
- r8-20020a05620a298800b006cecc3f73b9mr10917915qkp.9.1663604855357; Mon, 19 Sep
- 2022 09:27:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220912125342.7395-1-W_Armin@gmx.de> <20220912125342.7395-2-W_Armin@gmx.de>
- <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
-In-Reply-To: <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 19 Sep 2022 18:27:24 +0200
-Message-ID: <CAJZ5v0jWVMMTjc+KtBRS86f8kYpbPcDCH9JV2ZgeN4f-MSO8rQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] ACPI: battery: Do not unload battery hooks on single error
+        Mon, 19 Sep 2022 13:36:52 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE3042ACB;
+        Mon, 19 Sep 2022 10:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663609011; x=1695145011;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Rvk8sYX+O/ZUZrjhW06HtVxtlqh/xDeDZldQxb/Hfic=;
+  b=Ye53wNn3bBCbkSjEzGTtHtVJWTDSOqZ2W8gobdstLg8ANJ3WF5XuaCtO
+   mypHb45c/5Iz5w6JsN9lUz0rPZQ2Q3eQJlTVUkInXj4yhdrw1xcDq9bA+
+   hVFaEs+v2c3PmbpJ0QSsUQkjwNZtq98a+CoyLSppgDjrY6JLhdUG9w8/a
+   5WoUzqMMAolU0ILaaPNBRHHcGrLokrQCibB9sO3ej0m196eFgE+tRSIc7
+   aDc8HEyJVpPEg/v6l8nd+jB3s10B79J2vUHRzDwgjToTlgI/c5Y3yQohh
+   D1lvH/4c01G3dkz/NcLXC3OqbjtPX26KPJzaTMFiBQp2XVmkC7HObXUWf
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="361206178"
+X-IronPort-AV: E=Sophos;i="5.93,328,1654585200"; 
+   d="scan'208";a="361206178"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 10:36:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,328,1654585200"; 
+   d="scan'208";a="596176013"
+Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 19 Sep 2022 10:36:49 -0700
+Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oaKhM-00028b-2K;
+        Mon, 19 Sep 2022 17:36:48 +0000
+Date:   Tue, 20 Sep 2022 01:36:19 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Armin Wolf <W_Armin@gmx.de>, Mark Gross <markgross@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>, productdev@system76.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Azael Avalos <coproscefalo@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [pdx86-platform-drivers-x86:review-hans 63/75]
+ drivers/platform/x86/toshiba_acpi.c:56:5: sparse: sparse: symbol
+ 'turn_on_panel_on_resume' was not declared. Should it be static?
+Message-ID: <202209200116.yruuNbr4-lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 9/12/22 13:53, Armin Wolf wrote:
-> > Currently, battery hooks are being unloaded if they return
-> > an error when adding a single battery.
-> > This however also causes the removal of successfully added
-> > hooks if they return -ENODEV for a single unsupported
-> > battery.
-> >
-> > Do not unload battery hooks in such cases since the hook
-> > handles any cleanup actions.
-> >
-> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->
-> Maybe instead of removing all error checking, allow -ENODEV
-> and behave as before when the error is not -ENODEV ?
->
-> Otherwise we should probably make the add / remove callbacks
-> void to indicate that any errors are ignored.
->
-> Rafael, do you have any opinion on this?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-hans
+head:   c710765a4742337e40199403acde2fdd3189183d
+commit: 3cb1f40dfdc3b9f5449076c96b4e2523139f5cd0 [63/75] drivers/platform: toshiba_acpi: Call HCI_PANEL_POWER_ON on resume on some models
+config: x86_64-randconfig-s021-20220919 (https://download.01.org/0day-ci/archive/20220920/202209200116.yruuNbr4-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-39-gce1a6720-dirty
+        # https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?id=3cb1f40dfdc3b9f5449076c96b4e2523139f5cd0
+        git remote add pdx86-platform-drivers-x86 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
+        git fetch --no-tags pdx86-platform-drivers-x86 review-hans
+        git checkout 3cb1f40dfdc3b9f5449076c96b4e2523139f5cd0
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/platform/x86/
 
-IMV this is not a completely safe change, because things may simply
-not work in the cases in which an error is returned.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-It would be somewhat better to use a special error code to indicate
-"no support" (eg. -ENOTSUPP) and ignore that one only.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/platform/x86/toshiba_acpi.c:56:5: sparse: sparse: symbol 'turn_on_panel_on_resume' was not declared. Should it be static?
 
-> > ---
-> >  drivers/acpi/battery.c | 24 +++---------------------
-> >  1 file changed, 3 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-> > index 306513fec1e1..e59c261c7c59 100644
-> > --- a/drivers/acpi/battery.c
-> > +++ b/drivers/acpi/battery.c
-> > @@ -724,20 +724,10 @@ void battery_hook_register(struct acpi_battery_hook *hook)
-> >        * its attributes.
-> >        */
-> >       list_for_each_entry(battery, &acpi_battery_list, list) {
-> > -             if (hook->add_battery(battery->bat)) {
-> > -                     /*
-> > -                      * If a add-battery returns non-zero,
-> > -                      * the registration of the extension has failed,
-> > -                      * and we will not add it to the list of loaded
-> > -                      * hooks.
-> > -                      */
-> > -                     pr_err("extension failed to load: %s", hook->name);
-> > -                     __battery_hook_unregister(hook, 0);
-> > -                     goto end;
-> > -             }
-> > +             hook->add_battery(battery->bat);
-> >       }
-> >       pr_info("new extension: %s\n", hook->name);
-> > -end:
-> > +
-> >       mutex_unlock(&hook_mutex);
-> >  }
-> >  EXPORT_SYMBOL_GPL(battery_hook_register);
-> > @@ -762,15 +752,7 @@ static void battery_hook_add_battery(struct acpi_battery *battery)
-> >        * during the battery module initialization.
-> >        */
-> >       list_for_each_entry_safe(hook_node, tmp, &battery_hook_list, list) {
-> > -             if (hook_node->add_battery(battery->bat)) {
-> > -                     /*
-> > -                      * The notification of the extensions has failed, to
-> > -                      * prevent further errors we will unload the extension.
-> > -                      */
-> > -                     pr_err("error in extension, unloading: %s",
-> > -                                     hook_node->name);
-> > -                     __battery_hook_unregister(hook_node, 0);
-> > -             }
-> > +             hook_node->add_battery(battery->bat);
-> >       }
-> >       mutex_unlock(&hook_mutex);
-> >  }
-> > --
-> > 2.30.2
-> >
->
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
