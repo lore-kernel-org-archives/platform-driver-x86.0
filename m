@@ -2,157 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44E1C54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB59ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 16:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbiISM4p (ORCPT
+        id S229779AbiISQ1i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 08:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
+        Mon, 19 Sep 2022 12:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiISM4n (ORCPT
+        with ESMTP id S229663AbiISQ1h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 08:56:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77E625C53
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663592201;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/twziYe5SmyrEoxkmcqYfkTZMoyCl+SSBlFYTEK2DNs=;
-        b=LyQz/ZOPuMBo1pmEoRSRF8u8ALn9j1p7n8onuVH7Sbs3uND/c9BOFdnMicl3sOGyH5vx/S
-        Mv3GWAMj+VsdhC3YqmBJkj62qrmZpyQQbERtqh5wQzu7S3dWJMSed1EtJebqHsThwCo6Zd
-        nHSfcekIIdQNIHfmJoIu3YyUu2h3OK4=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-618-zoIYtPDkO3Wv4cgKHATEPw-1; Mon, 19 Sep 2022 08:56:40 -0400
-X-MC-Unique: zoIYtPDkO3Wv4cgKHATEPw-1
-Received: by mail-ej1-f71.google.com with SMTP id qa33-20020a17090786a100b0077a69976d24so9784027ejc.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:39 -0700 (PDT)
+        Mon, 19 Sep 2022 12:27:37 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484F33B955;
+        Mon, 19 Sep 2022 09:27:36 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id d17so20075054qko.13;
+        Mon, 19 Sep 2022 09:27:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=/twziYe5SmyrEoxkmcqYfkTZMoyCl+SSBlFYTEK2DNs=;
-        b=8CeKVU/URnfSSdFCTq4XCZCwXIFpC+l6p0LvWPdWXj+v7nUP/HsggqRobWBwQMJ3UD
-         QFzRv/gLl5pe40PEN7IwHSZRGrwwBa3lf0ZyB1J+gvGFSzh5uKDTL9nKLxQZtM9bKU71
-         iIFDpV7oovTmWFImDRdzYvjfMf0aRT8xZycgTwR0Io9WOQtASZGB6qBEWMjf/lP9nVnT
-         WRRbJA+3rDi7DMYO07jO/6BBvAxCo/ow0DZGSJztP+5z3finEZh63WAX6GMlU3Mga74B
-         jXPtSO66dFBL/nmIqmT8bgmo04wRaqPgXW85wmNVJ3XznvVtryN5FcV34bQADZGtbF3I
-         Zeyw==
-X-Gm-Message-State: ACrzQf1MN1/Z2D3PoxjN9DGkqIlULyANRvytG5SXESbFDCZzWY0fswA2
-        xhTk3FUj3WjIDgk1DCYgZOsrXxpXq5LptvWkFluLQKh5aeZu2Cymp8nZKthe+1xM3HuYLEgsSga
-        R3/f6klmiaJMVt+77J96REqY31WCtJAIJDw==
-X-Received: by 2002:a05:6402:1655:b0:44e:b208:746d with SMTP id s21-20020a056402165500b0044eb208746dmr15724354edx.229.1663592198955;
-        Mon, 19 Sep 2022 05:56:38 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7rfRFLT6JfQ5SKwX4r9xQ2KH8nb+iQ995AwRvF/w4vEW5FKYAF6xdGQkIMqd18cCrxImUgUQ==
-X-Received: by 2002:a05:6402:1655:b0:44e:b208:746d with SMTP id s21-20020a056402165500b0044eb208746dmr15724340edx.229.1663592198684;
-        Mon, 19 Sep 2022 05:56:38 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id o23-20020a17090611d700b007341663d7ddsm15532923eja.96.2022.09.19.05.56.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 05:56:38 -0700 (PDT)
-Message-ID: <ddad44a9-e228-e492-9ec9-e6be32ad8e15@redhat.com>
-Date:   Mon, 19 Sep 2022 13:56:37 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=dEokQm5n7CvZvcm2/TuaTTXN7aMhR9oWpeaOPSUYU4I=;
+        b=2VB1+Tr3QCxgJH8CMgvGesRM8iys/5TAkWesrqMfkx2TTD+lFfC81RWae/u3/sgiqi
+         u5IM7ISnTFLG6Pc3hTlDpEqf51p5QgoJ8yNm/1RaKrOwnVBw+BDIddCHeYS7DiTnNT+K
+         0ILoxd1n/2jMvghPUuXCkQ5MTbksVxl9cJVMLIuD6l5GKsXQZGRFQa5/ZlWqRm++h3Y7
+         vV4dti/OmiUT8LRIImLwY0O1LIARe7cCIYJs+txCUnQyhNcGK+S3NyOMhPSAj3PaMZcg
+         /2h5Ws3tnxssuwkj6hrlWw4uvG0WPg0vjimRST7fLdd9mvsSryo8SjUbMHPx+blPTEFE
+         PSvQ==
+X-Gm-Message-State: ACrzQf0rj2RXm/fckP1O+OoVg5RVUgF8eiAkxSYYNC3Ugi4E4iQlEcGB
+        DDkbT3mKLHfHRY3WFPWAJQVUixF1+R7GEGGKEAPGZzQaBV8=
+X-Google-Smtp-Source: AMsMyM4XZU0z1J3kzFB53bs7jo2hBp6BEvaMD6zIiq/E5pFGeXvdD251SJwkmfPDO2xF+FINSxCgav8IXCY7rRiYzZ0=
+X-Received: by 2002:a05:620a:2988:b0:6ce:cc3f:73b9 with SMTP id
+ r8-20020a05620a298800b006cecc3f73b9mr10917915qkp.9.1663604855357; Mon, 19 Sep
+ 2022 09:27:35 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH] platform/x86: wmi: Drop forward declaration of static
- functions
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
-References: <20220919122213.852322-1-u.kleine-koenig@pengutronix.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220919122213.852322-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20220912125342.7395-1-W_Armin@gmx.de> <20220912125342.7395-2-W_Armin@gmx.de>
+ <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
+In-Reply-To: <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 19 Sep 2022 18:27:24 +0200
+Message-ID: <CAJZ5v0jWVMMTjc+KtBRS86f8kYpbPcDCH9JV2ZgeN4f-MSO8rQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] ACPI: battery: Do not unload battery hooks on single error
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Armin Wolf <W_Armin@gmx.de>, Mark Gross <markgross@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>, productdev@system76.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Mon, Sep 19, 2022 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 9/12/22 13:53, Armin Wolf wrote:
+> > Currently, battery hooks are being unloaded if they return
+> > an error when adding a single battery.
+> > This however also causes the removal of successfully added
+> > hooks if they return -ENODEV for a single unsupported
+> > battery.
+> >
+> > Do not unload battery hooks in such cases since the hook
+> > handles any cleanup actions.
+> >
+> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>
+> Maybe instead of removing all error checking, allow -ENODEV
+> and behave as before when the error is not -ENODEV ?
+>
+> Otherwise we should probably make the add / remove callbacks
+> void to indicate that any errors are ignored.
+>
+> Rafael, do you have any opinion on this?
 
-On 9/19/22 13:22, Uwe Kleine-König wrote:
-> Usually it's not necessary to declare static functions if the symbols are
-> in the right order. Moving the definition of acpi_wmi_driver down in the
-> compilation unit allows to drop two such declarations.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+IMV this is not a completely safe change, because things may simply
+not work in the cases in which an error is returned.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+It would be somewhat better to use a special error code to indicate
+"no support" (eg. -ENOTSUPP) and ignore that one only.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/platform/x86/wmi.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index aed293b5af81..dbc535b772b3 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -95,9 +95,6 @@ module_param(debug_dump_wdg, bool, 0444);
->  MODULE_PARM_DESC(debug_dump_wdg,
->  		 "Dump available WMI interfaces [0/1]");
->  
-> -static int acpi_wmi_remove(struct platform_device *device);
-> -static int acpi_wmi_probe(struct platform_device *device);
-> -
->  static const struct acpi_device_id wmi_device_ids[] = {
->  	{"PNP0C14", 0},
->  	{"pnp0c14", 0},
-> @@ -105,15 +102,6 @@ static const struct acpi_device_id wmi_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
->  
-> -static struct platform_driver acpi_wmi_driver = {
-> -	.driver = {
-> -		.name = "acpi-wmi",
-> -		.acpi_match_table = wmi_device_ids,
-> -	},
-> -	.probe = acpi_wmi_probe,
-> -	.remove = acpi_wmi_remove,
-> -};
-> -
->  /*
->   * GUID parsing functions
->   */
-> @@ -1449,6 +1437,15 @@ void wmi_driver_unregister(struct wmi_driver *driver)
->  }
->  EXPORT_SYMBOL(wmi_driver_unregister);
->  
-> +static struct platform_driver acpi_wmi_driver = {
-> +	.driver = {
-> +		.name = "acpi-wmi",
-> +		.acpi_match_table = wmi_device_ids,
-> +	},
-> +	.probe = acpi_wmi_probe,
-> +	.remove = acpi_wmi_remove,
-> +};
-> +
->  static int __init acpi_wmi_init(void)
->  {
->  	int error;
-> 
-> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-
+> > ---
+> >  drivers/acpi/battery.c | 24 +++---------------------
+> >  1 file changed, 3 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> > index 306513fec1e1..e59c261c7c59 100644
+> > --- a/drivers/acpi/battery.c
+> > +++ b/drivers/acpi/battery.c
+> > @@ -724,20 +724,10 @@ void battery_hook_register(struct acpi_battery_hook *hook)
+> >        * its attributes.
+> >        */
+> >       list_for_each_entry(battery, &acpi_battery_list, list) {
+> > -             if (hook->add_battery(battery->bat)) {
+> > -                     /*
+> > -                      * If a add-battery returns non-zero,
+> > -                      * the registration of the extension has failed,
+> > -                      * and we will not add it to the list of loaded
+> > -                      * hooks.
+> > -                      */
+> > -                     pr_err("extension failed to load: %s", hook->name);
+> > -                     __battery_hook_unregister(hook, 0);
+> > -                     goto end;
+> > -             }
+> > +             hook->add_battery(battery->bat);
+> >       }
+> >       pr_info("new extension: %s\n", hook->name);
+> > -end:
+> > +
+> >       mutex_unlock(&hook_mutex);
+> >  }
+> >  EXPORT_SYMBOL_GPL(battery_hook_register);
+> > @@ -762,15 +752,7 @@ static void battery_hook_add_battery(struct acpi_battery *battery)
+> >        * during the battery module initialization.
+> >        */
+> >       list_for_each_entry_safe(hook_node, tmp, &battery_hook_list, list) {
+> > -             if (hook_node->add_battery(battery->bat)) {
+> > -                     /*
+> > -                      * The notification of the extensions has failed, to
+> > -                      * prevent further errors we will unload the extension.
+> > -                      */
+> > -                     pr_err("error in extension, unloading: %s",
+> > -                                     hook_node->name);
+> > -                     __battery_hook_unregister(hook_node, 0);
+> > -             }
+> > +             hook_node->add_battery(battery->bat);
+> >       }
+> >       mutex_unlock(&hook_mutex);
+> >  }
+> > --
+> > 2.30.2
+> >
+>
