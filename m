@@ -2,111 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2EAC6FA8B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98A0ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbiISMWx (ORCPT
+        id S230098AbiISM4S (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 08:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53728 "EHLO
+        Mon, 19 Sep 2022 08:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbiISMW1 (ORCPT
+        with ESMTP id S229975AbiISM4R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 08:22:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001C015FDF
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:22:26 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oaFn1-0007TP-NM; Mon, 19 Sep 2022 14:22:19 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oaFn2-001f0B-BK; Mon, 19 Sep 2022 14:22:18 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oaFn0-001xrm-1E; Mon, 19 Sep 2022 14:22:18 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] platform/x86: wmi: Drop forward declaration of static functions
-Date:   Mon, 19 Sep 2022 14:22:13 +0200
-Message-Id: <20220919122213.852322-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.37.2
+        Mon, 19 Sep 2022 08:56:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10AE4E096
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663592173;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aURQnqb/AGxaO5pU8WGqAj7kiKkM6zkjukq5URyOsjE=;
+        b=Cf9Fml3bOHmAF66RhafXuy1iWd5kz5CNTSrhApiz9Y/QDiZefaJ6bb25+BVvgvclr1q39B
+        6SOvYtlhG1kRfAw5Lx4vP/jlNRAJBSWefV7P7Q1rKrWgixobbZvUFwuai7hISrdtti6Vfa
+        BwTBOMwCIyU/v+JcdvGx9swZS6YX7jc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-668-1MQfF8CiO1idjsGoUpGkpw-1; Mon, 19 Sep 2022 08:56:12 -0400
+X-MC-Unique: 1MQfF8CiO1idjsGoUpGkpw-1
+Received: by mail-ed1-f71.google.com with SMTP id s17-20020a056402521100b004511c8d59e3so19889885edd.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:56:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=aURQnqb/AGxaO5pU8WGqAj7kiKkM6zkjukq5URyOsjE=;
+        b=63aMOvUQ47NQCBXpLCd0pB2ayfvew1SKjO1+EqCxNcBJyMDlYodQL3bFa/99jXTyT3
+         La9EKRRqgBcaV5xtKZ1yPTOR9XPiO641mHnThsLdsre3aDhH0f3O9yzH/WRJgkqwkYYA
+         B8lhx+shFH1KACmgDDzNClkF9LDJUaTP2hMsxRaZLltc37OTuWed4nE1J/B1t+DrdyyH
+         GYq6gEQtsMy3Yj5vUuDaxXBSzjDN63LNPBVoccPXHYHrdPpxXviVhGPM2aIqt4reKSBf
+         Lvq/Iy+HTeHR+Tm7E/sSEzPizgI/0vGhFgI5fAkPAzd9TQc17Sg3jbH+wvONfBN/DRsR
+         555w==
+X-Gm-Message-State: ACrzQf0ZQKCFxxdkyljh7ESFbvem+Gnm0kxg/BDbX+zkLzDXmutxcDGX
+        DT6mwvcEZk8/oNWgLF0vIuXMR2prbzw+LcehnXkka505ykHeDFlb//DeXlA08pErYPS1LweSZ8b
+        j60+sc2ZgBNwBUXK2XUyOOTf0nmmJ6yVo0g==
+X-Received: by 2002:a17:907:2c4f:b0:77e:ac5:a734 with SMTP id hf15-20020a1709072c4f00b0077e0ac5a734mr12728491ejc.597.1663592170927;
+        Mon, 19 Sep 2022 05:56:10 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6CZkBD5rWW1lve0r1EuILUNr6US9JC8NljjSn/dJVgWVvvfNas/FC3POjXO2/j9gnZ+/bjbw==
+X-Received: by 2002:a17:907:2c4f:b0:77e:ac5:a734 with SMTP id hf15-20020a1709072c4f00b0077e0ac5a734mr12728475ejc.597.1663592170673;
+        Mon, 19 Sep 2022 05:56:10 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id g22-20020a170906539600b0076fa6d9d891sm15441911ejo.46.2022.09.19.05.56.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 05:56:09 -0700 (PDT)
+Message-ID: <20eb8b7e-6f0e-c567-882a-cb8b23830f90@redhat.com>
+Date:   Mon, 19 Sep 2022 13:56:09 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH] platform/x86: msi-laptop: Change DMI match / alias
+ strings to fix module autoloading
+Content-Language: en-US
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20220917210407.647432-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220917210407.647432-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1762; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=5D4W0kMYNqAdzOUP1zwVr0qDLiCf7/f0PFBfh5tMOlY=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjKF7yOWORl8pFgV6oTttiayKKuSZRyPMEP+VoE4bL 3ben4giJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYyhe8gAKCRDB/BR4rcrsCbwkB/ wM8Eqlks+LHThNBLOouI7HkM//ORvJv+rYvQAoGt3d0zLMEaRVx+CgX+W43+DesY/xPvP3qcoI2WXJ wV0IPnjKn4t5KyIPLmx8YeLyXzUv+0AeFsp9zSKrFKtFP5evCs0akmWriVndssclPIlmu1UwYXMWvt LTL6RoNfZMQ5giyNEOVUpafyw6AswsoVEXj3rHBL415c28xE7v36QOMfmtt/42K2XkbMX5Z/0q3MJ5 QRn7BNqzilSLKp03Sa6W0GGnEVJao5U3NpR+3Q7vhQmrzLmHGA5lgxLWosrsTqaGOF0E55KznrXIRq SPkQWe4O8M8GsR1I9jn7a/lHU9B5n5
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Usually it's not necessary to declare static functions if the symbols are
-in the right order. Moving the definition of acpi_wmi_driver down in the
-compilation unit allows to drop two such declarations.
+Hi,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/platform/x86/wmi.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+On 9/17/22 22:04, Hans de Goede wrote:
+> On a MSI S270 with Fedora 37 x86_64 / systemd-251.4 the module does not
+> properly autoload.
+> 
+> This is likely caused by issues with how systemd-udevd handles the single
+> quote char (') which is part of the sys_vendor / chassis_vendor strings
+> on this laptop. As a workaround remove the single quote char + everything
+> behind it from the sys_vendor + chassis_vendor matches. This fixes
+> the module not autoloading.
+> 
+> Link: https://github.com/systemd/systemd/issues/24715
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index aed293b5af81..dbc535b772b3 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -95,9 +95,6 @@ module_param(debug_dump_wdg, bool, 0444);
- MODULE_PARM_DESC(debug_dump_wdg,
- 		 "Dump available WMI interfaces [0/1]");
- 
--static int acpi_wmi_remove(struct platform_device *device);
--static int acpi_wmi_probe(struct platform_device *device);
--
- static const struct acpi_device_id wmi_device_ids[] = {
- 	{"PNP0C14", 0},
- 	{"pnp0c14", 0},
-@@ -105,15 +102,6 @@ static const struct acpi_device_id wmi_device_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
- 
--static struct platform_driver acpi_wmi_driver = {
--	.driver = {
--		.name = "acpi-wmi",
--		.acpi_match_table = wmi_device_ids,
--	},
--	.probe = acpi_wmi_probe,
--	.remove = acpi_wmi_remove,
--};
--
- /*
-  * GUID parsing functions
-  */
-@@ -1449,6 +1437,15 @@ void wmi_driver_unregister(struct wmi_driver *driver)
- }
- EXPORT_SYMBOL(wmi_driver_unregister);
- 
-+static struct platform_driver acpi_wmi_driver = {
-+	.driver = {
-+		.name = "acpi-wmi",
-+		.acpi_match_table = wmi_device_ids,
-+	},
-+	.probe = acpi_wmi_probe,
-+	.remove = acpi_wmi_remove,
-+};
-+
- static int __init acpi_wmi_init(void)
- {
- 	int error;
+I have added this to my review-hans branch now.
 
-base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
--- 
-2.37.2
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/msi-laptop.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index 1c29678e5727..2f850396e9a7 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -602,11 +602,10 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+>  	{
+>  		.ident = "MSI S270",
+>  		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD"),
+> +			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1013"),
+>  			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
+> -			DMI_MATCH(DMI_CHASSIS_VENDOR,
+> -				  "MICRO-STAR INT'L CO.,LTD")
+> +			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
+>  		},
+>  		.driver_data = &quirk_old_ec_model,
+>  		.callback = dmi_check_cb
+> @@ -639,8 +638,7 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "NOTEBOOK"),
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "SAM2000"),
+>  			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
+> -			DMI_MATCH(DMI_CHASSIS_VENDOR,
+> -				  "MICRO-STAR INT'L CO.,LTD")
+> +			DMI_MATCH(DMI_CHASSIS_VENDOR, "MICRO-STAR INT")
+>  		},
+>  		.driver_data = &quirk_old_ec_model,
+>  		.callback = dmi_check_cb
 
