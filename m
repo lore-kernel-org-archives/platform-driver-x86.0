@@ -2,352 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81DEECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C63ECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiISLIr (ORCPT
+        id S229498AbiISLPq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 07:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
+        Mon, 19 Sep 2022 07:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230022AbiISLIg (ORCPT
+        with ESMTP id S229613AbiISLPn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 07:08:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9DEE03E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663585711;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jwyU2KnuE+2XvBMTG3lUyXjwxhJE1NI7m29fH5pw0Co=;
-        b=F3HzqiU3jOk24xqBvYgBeQZuNa7vmiY3qeEWwRKlP06mwjDMy9Xnd6MY5da+R+9DwZUGHP
-        O3n6CzQiFFmCTgHtbGK596hgIXL4m/ZW6J1ZJqPd4BuTlohuyiKyp6EstH73wC34vHbV4R
-        IGur+j4f9HUABWw/5AGRUSs3ew9in2I=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-341-A6qwMku1M6eRC_ffuqkuQQ-1; Mon, 19 Sep 2022 07:08:22 -0400
-X-MC-Unique: A6qwMku1M6eRC_ffuqkuQQ-1
-Received: by mail-ed1-f69.google.com with SMTP id z13-20020a05640240cd00b0045276a79364so12444536edb.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:08:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=jwyU2KnuE+2XvBMTG3lUyXjwxhJE1NI7m29fH5pw0Co=;
-        b=urSA0OrGJXIh7d55gFOfkjsn5IPD61EfiGj/69InzgWsMEnlLSUkbC0xmD6mHo+TP8
-         zx9sCsuheFR63kLWlyY9508CbzF1VBoEQc+fsOZYi6TR1Ln4XeafHPTagt4ur/LCElKq
-         RfhLRpy4eJbYO7jL/8qLLDkqKQMSrZp19PQm2CagrzKnX5fwFkZbkFbHCB0x0dPP3dsb
-         z8JmENojd/RKQG33OHB9XZDodXbNNpw4O4xMuA7TfWRcYGgzeu6Qm4DG5ibiGn3e1LAN
-         EHeUMpeAyownpAkH8QqOavQuv5HrIP9fRTGkssuiimM4PUfZBKpX24IFrsIJ4LKyTrsV
-         tvWQ==
-X-Gm-Message-State: ACrzQf1cSYQ1Ag5V+4Cwammdu1eLpZOBxkt7Zno+klOVV/PbXH0AoH9K
-        wyEhaGFW6F2CfDA7od6l80v20sm4TkQTWxlCDlPfjRfRHj2i6DTN9Y2RJisjL44ewnYB40IZde5
-        8SqbiOfzw2U4hW1cgG1Yfp769VoFElzHhew==
-X-Received: by 2002:aa7:c792:0:b0:453:98b7:213c with SMTP id n18-20020aa7c792000000b0045398b7213cmr9733746eds.159.1663585701133;
-        Mon, 19 Sep 2022 04:08:21 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6qRPJbqMLzWIF5o6Bz9+pNwdb52w7wMQDBAImSbvrcpq5cqyDuCg7z+HurZxw1TprXyrk4WA==
-X-Received: by 2002:aa7:c792:0:b0:453:98b7:213c with SMTP id n18-20020aa7c792000000b0045398b7213cmr9733727eds.159.1663585700862;
-        Mon, 19 Sep 2022 04:08:20 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id p24-20020a056402075800b0045081dc93dfsm20033362edy.78.2022.09.19.04.08.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 04:08:20 -0700 (PDT)
-Message-ID: <2f76bf4d-4e7a-14fb-2247-5eb55112ad8e@redhat.com>
-Date:   Mon, 19 Sep 2022 12:08:19 +0100
+        Mon, 19 Sep 2022 07:15:43 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2095.outbound.protection.outlook.com [40.107.255.95])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05471056F;
+        Mon, 19 Sep 2022 04:15:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JQrNe2aBq6+Ryn37uZkebABJXYWQB3WV11k/Erbr8WjTdI7fwJIkgySQjXTwjcID19tksMMGxl/g48y3KmI34g2YfoEVNQlMzs6I/sqKlMc0H8WaA1FcYOf43kPVi61KPpk2RuK/ahK74uVXzLmsuY1E5XDHlJftadGaDGqF4wELdOmrulWAE7SXeeigYGHe+D9/Jpdm7Aa+Ia/bAg+ZKdOYn2kgMVXWxETQ/gVVL1QYw5v8ZyTwb4Qy1XNtaHgyAfCfwpS5HSe3uhUw5UZDaitS1dURiPYxIxyLuxQMhUl0EMM2os7+PeoIBOXHpgDoNGgumIrUGNcbt0YXB5f7vA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HMse0NqRRlDPFqRSYl4YRrOAmyV4kWG5ZKnkF8HUN3I=;
+ b=OoleYjOQjFYJPmkmAZAInTVQjr3SPKMJ+3iTZmwZ9GvnaQj+BrLAI39xWUxxDCUPbKlLStzrbxhdz16iKN1asy5y3ZBWRNo3H+S42eVv8Q7zbE2/bWKVJ9XACtJMkI7VMw4qIL2Nkw4fXk9r4mbyaKZMfC7Ir8DT3DjjMTbnbIiXAopfQYY1OkukEh07rSk1IKG50h3uwv/wLjN/noDV+zC/XqUTQHOZWIdo8TilmaasFPwS3hlzpfHGIX9nxrRVfFaupI/6GIO37CdpIG8IP5s5dDAyq+3nSFw2p00R250R2X2HxX5okFJKPxteDjoacPGElfO7Hbm5e015Ru9tew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HMse0NqRRlDPFqRSYl4YRrOAmyV4kWG5ZKnkF8HUN3I=;
+ b=lRuCaqAUiLcJvvZPSuMPplkYx7O9nzeM+2glCuG6Ctqpq6NaTNP+VUjoeV3j5zmMdpVghcYgi/spc4urWIHQfv2r0cmRqebZ75WM6aperRA6w9R79LryNgRZebAXeGBZW8eSg/LUEB35fLcpb2VkLf9LxtqmpotHOUUCZ5/p4OFNH/hut4EqYvkwkhvKCvI3XjIN5Vt3Ftw55aPqizjtmrcgpl/3RlqXbKfKdWIo7Prdx85eg3nqb3YepXZ1RhOC+5k9Ht4q5VH0ARiS3nj9S/jQ+iKuAtFg3Mm34pRuR/IgtRbJh+l/6oGJZLjWOSiPPssOPNaV/UCRsCBBdbZ4qw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com (2603:1096:400:26::14)
+ by PUZPR06MB5618.apcprd06.prod.outlook.com (2603:1096:301:e8::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.17; Mon, 19 Sep
+ 2022 11:15:39 +0000
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::f9ad:4efb:64f6:856b]) by TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::f9ad:4efb:64f6:856b%5]) with mapi id 15.20.5632.021; Mon, 19 Sep 2022
+ 11:15:39 +0000
+From:   Yihao Han <hanyihao@vivo.com>
+To:     Azael Avalos <coproscefalo@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Yihao Han <hanyihao@vivo.com>
+Subject: [PATCH] drivers/platform: toshiba_acpi: Remove duplicate include
+Date:   Mon, 19 Sep 2022 04:15:18 -0700
+Message-Id: <20220919111519.19491-1-hanyihao@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0048.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::11) To TYZPR06MB4173.apcprd06.prod.outlook.com
+ (2603:1096:400:26::14)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH 4/5] ACPI: battery: Allow for passing data to battery
- hooks.
-Content-Language: en-US
-To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
-Cc:     rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
-        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
-        productdev@system76.com, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-5-W_Armin@gmx.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220912125342.7395-5-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB4173:EE_|PUZPR06MB5618:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7841e5f0-b3ec-44ae-2658-08da9a30487a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vjZ+06nxuiv8skEbk/L9I8/I9RfHv+Tnu/cW2wXPX3xKgkN4zG7U1UeEFYddliDswzXsVj8/q1O4b4n4EM5E+BHOlwnaOkvEeKpe13w9bUFoLomJrNNRi4bUC8n2yT23GWl++OdKpQ/PsWM+uSqsWPw6RualcCkb7Q2R7aRKHblLzYjpdmXX5BTj6EP5mMdrqJgQkp9SkxlYJID8PIEbPm1DVyKh7EFj5xCi+XhdoVsRRjUv5hWdd+E9KEG1azvRljRvwh/g4jUCfkun0e5q7pTcaL/b/x8w4oDvEGsJRCNt/2Bao/GnY5Rj/TBrxr92BRvugmHwvGE4wKjMsgIrvCUBgoaOqQi3PCiGUZ0nforP8OWD/8J7xZr3R64KxlSQs6qUleR3lp8QawRTOy8v/BO/lCpv4sjCNz6/J+/k2ij7p17JhkHJeh1SQgrsGC5AuRYQ4bgv1dPHHDlesp8eGVGx3LRxbfPflpnWQ8vT6IqeZvOLEp3wvz9mVnzsI6WZMsQj8zhzNLxxrmC4z/J86YrQEQRUvg2JnfsjVcErVnaJ1EecH3ci0tTPD6I5QUd23UZXtUUCQMDhTD6hSVJMO1I9RYy3AUgOprBlAUZXWPdTJVFGDUd26n7GQFVsPqcnrAspkoKD2ijdZRmFOJWQI5Qf69dVGQ0x3gcCbcgdo2hjBsSVFZfpLVN5PjE/aqi4YIuC94BPvM4r7hTGsf9+2MM9FB5qJBMQIR6LWyXnUzKRjj3M6tA41sCTXgB62UAt1w1djxQRrO2U37TmN8AQSQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4173.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199015)(6506007)(4326008)(52116002)(36756003)(2906002)(66946007)(86362001)(8936002)(6512007)(6486002)(26005)(66476007)(66556008)(38100700002)(38350700002)(8676002)(41300700001)(6666004)(107886003)(478600001)(83380400001)(110136005)(2616005)(1076003)(186003)(5660300002)(316002)(4744005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2diy1n94pGflOjG8X22g0tQOAjdkDfwk4rvk1cqs5X81s3ut3CFL4XJnMK21?=
+ =?us-ascii?Q?OdFLGdBmFCptzu/km35wHHQXSwiUYi5bKN2QLpKm8Zb8ACQY3C0mjn9DEYIg?=
+ =?us-ascii?Q?2LgN8TSOJctGpQrOWrgKFKHah4Qgpc85UhzVifZVGT6huOmxQCZMwKoLL3Pq?=
+ =?us-ascii?Q?GVGH8srazZ2fG408TkPzjprRattiusZ5xV+iS73WSedIQPigQ0lCTdxg3kdJ?=
+ =?us-ascii?Q?CcbA3l1u0I/yQKu5iTyb9fw9ai3yKptT5118wUinpmlFzq8s+qe8tuD1g0GE?=
+ =?us-ascii?Q?7Uq9BQo1HLUki8BPJn4bSNIFLugLiA36PpbUblmGYD30NfjEJ0J5GRCQ2OFS?=
+ =?us-ascii?Q?dvjtK8Ml3NqrG84rNnd4oNx3rZNoVoZj5CNwpmUMKOLxDo44EVUvYkAtBbab?=
+ =?us-ascii?Q?UdpCnL9f+Cd9XZyRwyIQYifbchUqbpCCnmV69kTJj1OdS993bjVAzAmtqFK0?=
+ =?us-ascii?Q?RfpoVDtnsdP5fZapapqzB9BqgqFF5Wnyg3JnJDoOQRzHKZnp0Sk0QvbsfeX2?=
+ =?us-ascii?Q?2oxy47OqmibE0QtrPn6UFgO77YfRulgff4yFP07UfOcnB7t1XcLrUgDsxFSb?=
+ =?us-ascii?Q?+WPHrn7qeW0/ReGBqFh+AMIzvG+JiPTQgZn3IIzCe9hFqZ/cDMRFJnzK3hxZ?=
+ =?us-ascii?Q?sXwgc5GMa/CJ4RqG7GqbkIVLBZWT1XSQeXGL6GwurHPd162brFYvG3gJgv3k?=
+ =?us-ascii?Q?Wj5sde08Lhiqr6VNPUTJdchqS+ZNq2ukvR9gJRxDf4tychlLcZwZMW5KXg5r?=
+ =?us-ascii?Q?zV1d0BqPZlSIY5FpHg8+N1SLJsztS3LWMnifyoHsJDUCrbcAnklYf9Qu/fG3?=
+ =?us-ascii?Q?8kZ8bpQkuLkKnrC+2SFM/yWWzf2IfrWWrAHmOIwv6/BIvS4olkvRqKOLB9e2?=
+ =?us-ascii?Q?k08u/UHDwPE9LeKObtVBullJoGI4coM127iI4P8sJzBYWvn0xDBXHcG9j0Yp?=
+ =?us-ascii?Q?O1EDvYWyM8c7W6XpHtqK5+N4YZYq/xlHwPhKT9Oqrd23dvLCKMUZjA1+5UVJ?=
+ =?us-ascii?Q?wdZ00VIStXIBw8oHKKKoJzcByu1CFaiUrgsmDWsuC+xOnUa4P4+LquOYWk7s?=
+ =?us-ascii?Q?Ki2gwk18oMl2SZqIXExj6o8/BmsAU+wb1wZkvM3hkMc7epOtX3vt7tvCwga+?=
+ =?us-ascii?Q?7kMPNEU1cSeK5G7nlVsSnCMGg/y8yb7Q1NXT5RSzV2Yah/slhrzqdoLZdk4c?=
+ =?us-ascii?Q?alD0qfPqrnfiLE7dBWOnczI1jdVoDv8pIv6++K+dYowsilfngTCphV+EuBjz?=
+ =?us-ascii?Q?L5oSHi6OPhGXfNJE+/rb3v+n5M+EIq8mDaJ8RD+bj24FeY9SlILRst0aQlwU?=
+ =?us-ascii?Q?pkHtgv6wzHRmHBAnj/Tzx06Ho9IA0cM1FadQHCR7Vqswk9RsI3+WRjB4Lhaj?=
+ =?us-ascii?Q?R4UfNkHbkMd8mvzQWDjIoJ3av1vhnGn553Thdy6kBmGZUZhl/XizQHbZBenN?=
+ =?us-ascii?Q?JLmvdBzNMmsgouQc56ZyQSWYPz/BXlaSUDqxCaZdxLKpd74HeN6FsMybMTIp?=
+ =?us-ascii?Q?eq21xqz33YxeDfuY1TQ615EJ2fcORz+nfNfYN0mH3S7nCNCnUahUpvdcsJE8?=
+ =?us-ascii?Q?1UwoCio92ieqEDzbL0B1FiZKBj9vexk11rThUnmm?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7841e5f0-b3ec-44ae-2658-08da9a30487a
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4173.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 11:15:39.3137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bNh139F9miVcWpR4GX+j51VcHExsfH3GLmeaSmO3OnNmt8Y3INAOfCWAPK4/OqUsC3gx30qPcCrnF46MJVZc8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5618
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Remove duplicate include in toshiba_acpi.c
 
-On 9/12/22 13:53, Armin Wolf wrote:
-> Since a driver may register multiple instances of a
-> battery hook, passing data to each instance is
-> convenient.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Yihao Han <hanyihao@vivo.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/acpi/battery.c               | 11 ++++++-----
->  drivers/platform/x86/asus-wmi.c      |  7 ++++---
->  drivers/platform/x86/huawei-wmi.c    |  6 +++---
->  drivers/platform/x86/lg-laptop.c     |  6 +++---
->  drivers/platform/x86/system76_acpi.c |  6 +++---
->  drivers/platform/x86/thinkpad_acpi.c |  6 +++---
->  include/acpi/battery.h               |  7 ++++---
->  7 files changed, 26 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-> index 15bb5d868a56..396a7324216c 100644
-> --- a/drivers/acpi/battery.c
-> +++ b/drivers/acpi/battery.c
-> @@ -696,7 +696,7 @@ void battery_hook_unregister(struct acpi_battery_hook *hook)
->  	mutex_lock(&hook_mutex);
-> 
->  	list_for_each_entry(battery, &acpi_battery_list, list) {
-> -		hook->ops->remove_battery(battery->bat);
-> +		hook->ops->remove_battery(hook->data, battery->bat);
->  	}
->  	list_del(&hook->list);
-> 
-> @@ -706,7 +706,7 @@ void battery_hook_unregister(struct acpi_battery_hook *hook)
->  }
->  EXPORT_SYMBOL_GPL(battery_hook_unregister);
-> 
-> -struct acpi_battery_hook *battery_hook_register(const char *name,
-> +struct acpi_battery_hook *battery_hook_register(const char *name, void *data,
->  						const struct acpi_battery_hook_ops *ops)
->  {
->  	struct acpi_battery_hook *hook = kzalloc(sizeof(*hook), GFP_KERNEL);
-> @@ -716,6 +716,7 @@ struct acpi_battery_hook *battery_hook_register(const char *name,
->  		return ERR_PTR(-ENOMEM);
-> 
->  	hook->name = name;
-> +	hook->data = data;
->  	hook->ops = ops;
-> 
->  	mutex_lock(&hook_mutex);
-> @@ -728,7 +729,7 @@ struct acpi_battery_hook *battery_hook_register(const char *name,
->  	 * its attributes.
->  	 */
->  	list_for_each_entry(battery, &acpi_battery_list, list) {
-> -		hook->ops->add_battery(battery->bat);
-> +		hook->ops->add_battery(hook->data, battery->bat);
->  	}
->  	pr_info("new extension: %s\n", hook->name);
-> 
-> @@ -758,7 +759,7 @@ static void battery_hook_add_battery(struct acpi_battery *battery)
->  	 * during the battery module initialization.
->  	 */
->  	list_for_each_entry_safe(hook_node, tmp, &battery_hook_list, list) {
-> -		hook_node->ops->add_battery(battery->bat);
-> +		hook_node->ops->add_battery(hook_node->data, battery->bat);
->  	}
->  	mutex_unlock(&hook_mutex);
->  }
-> @@ -773,7 +774,7 @@ static void battery_hook_remove_battery(struct acpi_battery *battery)
->  	 * custom attributes from the battery.
->  	 */
->  	list_for_each_entry(hook, &battery_hook_list, list) {
-> -		hook->ops->remove_battery(battery->bat);
-> +		hook->ops->remove_battery(hook->data, battery->bat);
->  	}
->  	/* Then, just remove the battery from the list */
->  	list_del(&battery->list);
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 37d8649418f4..18afcf38931f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -882,7 +882,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
-> 
->  static DEVICE_ATTR_RW(charge_control_end_threshold);
-> 
-> -static int asus_wmi_battery_add(struct power_supply *battery)
-> +static int asus_wmi_battery_add(void *data, struct power_supply *battery)
->  {
->  	/* The WMI method does not provide a way to specific a battery, so we
->  	 * just assume it is the first battery.
-> @@ -909,7 +909,7 @@ static int asus_wmi_battery_add(struct power_supply *battery)
->  	return 0;
->  }
-> 
-> -static int asus_wmi_battery_remove(struct power_supply *battery)
-> +static int asus_wmi_battery_remove(void *data, struct power_supply *battery)
->  {
->  	device_remove_file(&battery->dev,
->  			   &dev_attr_charge_control_end_threshold);
-> @@ -924,7 +924,8 @@ static const struct acpi_battery_hook_ops battery_hook_ops = {
->  static void asus_wmi_battery_init(struct asus_wmi *asus)
->  {
->  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_RSOC)) {
-> -		asus->hook = battery_hook_register("ASUS Battery Extension", &battery_hook_ops);
-> +		asus->hook = battery_hook_register("ASUS Battery Extension", NULL,
-> +						   &battery_hook_ops);
->  	}
->  }
-> 
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-> index 6fd02b25a97b..f23806299c1a 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -469,7 +469,7 @@ static DEVICE_ATTR_RW(charge_control_start_threshold);
->  static DEVICE_ATTR_RW(charge_control_end_threshold);
->  static DEVICE_ATTR_RW(charge_control_thresholds);
-> 
-> -static int huawei_wmi_battery_add(struct power_supply *battery)
-> +static int huawei_wmi_battery_add(void *data, struct power_supply *battery)
->  {
->  	int err = 0;
-> 
-> @@ -484,7 +484,7 @@ static int huawei_wmi_battery_add(struct power_supply *battery)
->  	return err;
->  }
-> 
-> -static int huawei_wmi_battery_remove(struct power_supply *battery)
-> +static int huawei_wmi_battery_remove(void *data, struct power_supply *battery)
->  {
->  	device_remove_file(&battery->dev, &dev_attr_charge_control_start_threshold);
->  	device_remove_file(&battery->dev, &dev_attr_charge_control_end_threshold);
-> @@ -507,7 +507,7 @@ static void huawei_wmi_battery_setup(struct device *dev)
->  		return;
->  	}
-> 
-> -	huawei->hook = battery_hook_register("Huawei Battery Extension",
-> +	huawei->hook = battery_hook_register("Huawei Battery Extension", NULL,
->  					     &huawei_wmi_battery_hook_ops);
->  	device_create_file(dev, &dev_attr_charge_control_thresholds);
->  }
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index d8a61a07313e..f1abb1924150 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -547,7 +547,7 @@ static DEVICE_ATTR_RW(fn_lock);
->  static DEVICE_ATTR_RW(charge_control_end_threshold);
->  static DEVICE_ATTR_RW(battery_care_limit);
-> 
-> -static int lg_battery_add(struct power_supply *battery)
-> +static int lg_battery_add(void *data, struct power_supply *battery)
->  {
->  	if (device_create_file(&battery->dev,
->  			       &dev_attr_charge_control_end_threshold))
-> @@ -556,7 +556,7 @@ static int lg_battery_add(struct power_supply *battery)
->  	return 0;
->  }
-> 
-> -static int lg_battery_remove(struct power_supply *battery)
-> +static int lg_battery_remove(void *data, struct power_supply *battery)
->  {
->  	device_remove_file(&battery->dev,
->  			   &dev_attr_charge_control_end_threshold);
-> @@ -750,7 +750,7 @@ static int acpi_add(struct acpi_device *device)
->  	led_classdev_register(&pf_device->dev, &tpad_led);
-> 
->  	wmi_input_setup();
-> -	hook = battery_hook_register("LG Battery Extension", &battery_hook_ops);
-> +	hook = battery_hook_register("LG Battery Extension", NULL, &battery_hook_ops);
-> 
->  	return 0;
-> 
-> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-> index 1ec22db32bd0..9414b9491806 100644
-> --- a/drivers/platform/x86/system76_acpi.c
-> +++ b/drivers/platform/x86/system76_acpi.c
-> @@ -255,7 +255,7 @@ static struct attribute *system76_battery_attrs[] = {
-> 
->  ATTRIBUTE_GROUPS(system76_battery);
-> 
-> -static int system76_battery_add(struct power_supply *battery)
-> +static int system76_battery_add(void *data, struct power_supply *battery)
->  {
->  	// System76 EC only supports 1 battery
->  	if (strcmp(battery->desc->name, "BAT0") != 0)
-> @@ -267,7 +267,7 @@ static int system76_battery_add(struct power_supply *battery)
->  	return 0;
->  }
-> 
-> -static int system76_battery_remove(struct power_supply *battery)
-> +static int system76_battery_remove(void *data, struct power_supply *battery)
->  {
->  	device_remove_groups(&battery->dev, system76_battery_groups);
->  	return 0;
-> @@ -280,7 +280,7 @@ static const struct acpi_battery_hook_ops system76_battery_hook_ops = {
-> 
->  static void system76_battery_init(struct system76_data *data)
->  {
-> -	data->hook = battery_hook_register("System76 Battery Extension",
-> +	data->hook = battery_hook_register("System76 Battery Extension", NULL,
->  					   &system76_battery_hook_ops);
->  }
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 8adafc3c31fa..6008d88e0727 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9898,7 +9898,7 @@ ATTRIBUTE_GROUPS(tpacpi_battery);
-> 
->  /* ACPI battery hooking */
-> 
-> -static int tpacpi_battery_add(struct power_supply *battery)
-> +static int tpacpi_battery_add(void *data, struct power_supply *battery)
->  {
->  	int batteryid = tpacpi_battery_get_id(battery->desc->name);
-> 
-> @@ -9909,7 +9909,7 @@ static int tpacpi_battery_add(struct power_supply *battery)
->  	return 0;
->  }
-> 
-> -static int tpacpi_battery_remove(struct power_supply *battery)
-> +static int tpacpi_battery_remove(void *data, struct power_supply *battery)
->  {
->  	device_remove_groups(&battery->dev, tpacpi_battery_groups);
->  	return 0;
-> @@ -9943,7 +9943,7 @@ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
->  					battery_quirk_table,
->  					ARRAY_SIZE(battery_quirk_table));
-> 
-> -	battery_info.hook = battery_hook_register("ThinkPad Battery Extension",
-> +	battery_info.hook = battery_hook_register("ThinkPad Battery Extension", NULL,
->  						  &battery_hook_ops);
-> 
->  	return 0;
-> diff --git a/include/acpi/battery.h b/include/acpi/battery.h
-> index b3c81abada1e..cca401b793b2 100644
-> --- a/include/acpi/battery.h
-> +++ b/include/acpi/battery.h
-> @@ -11,17 +11,18 @@
->  #define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
-> 
->  struct acpi_battery_hook_ops {
-> -	int (*add_battery)(struct power_supply *battery);
-> -	int (*remove_battery)(struct power_supply *battery);
-> +	int (*add_battery)(void *data, struct power_supply *battery);
-> +	int (*remove_battery)(void *data, struct power_supply *battery);
->  };
-> 
->  struct acpi_battery_hook {
->  	const char *name;
->  	const struct acpi_battery_hook_ops *ops;
-> +	void *data;
->  	struct list_head list;
->  };
-> 
-> -struct acpi_battery_hook *battery_hook_register(const char *name,
-> +struct acpi_battery_hook *battery_hook_register(const char *name, void *data,
->  						const struct acpi_battery_hook_ops *hook);
->  void battery_hook_unregister(struct acpi_battery_hook *hook);
-> 
-> --
-> 2.30.2
-> 
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 43cc25351aea..b62a08ec5f45 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -39,7 +39,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/i8042.h>
+ #include <linux/acpi.h>
+-#include <linux/dmi.h>
+ #include <linux/uaccess.h>
+ #include <linux/miscdevice.h>
+ #include <linux/rfkill.h>
+-- 
+2.17.1
 
