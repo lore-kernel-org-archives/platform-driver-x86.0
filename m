@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B3DC6FA93
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 10:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE06C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 10:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbiISKrQ (ORCPT
+        id S229825AbiISKsr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        Mon, 19 Sep 2022 06:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbiISKqu (ORCPT
+        with ESMTP id S229824AbiISKsO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:46:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BDF28E09
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:33:44 -0700 (PDT)
+        Mon, 19 Sep 2022 06:48:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9832B63D
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:37:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663583623;
+        s=mimecast20190719; t=1663583869;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zuAJkdaPOcKHUAxfD3RjYm8+yqJJC9j2vg0HOY5onF4=;
-        b=F0hPJHBklbyu4ecpyaQsTvU6IpKCxCMzsuUdDeHTXg87H6A76FgcMDZ5tDLB2HKZcbylEW
-        dtlWTupXdI8J2MrTwJ0XCG/afbI5lGClMy1vMsfE8c8Bixua6CVX/gZMvWEFO7Wb+aLCY6
-        W+SvuXuXUj+6+rHy6WBnhzFS0jBfUnA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=LurvLky4hxiQS6y/M1AdQvdK8qetSsgFhPKox96ywdw=;
+        b=jMUtclGv0ZBW8+I9C3G08KCVwzU2ewYr0ZywUOw7UKfFMr42TC5vUi6RiNLw4BF3K6XY/m
+        j2YvhMaKLLYBydthmCxTzZnQNOuibSf1uyKqyYihMKFWUlMSx/l1p7W3/t8ww+ZyH8SIu9
+        au2Oe71EOwsiMAit2+hY4VRD8+Qc7Hw=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-248-Xw-z8Z8_Ps2yC84oJCJXHg-1; Mon, 19 Sep 2022 06:33:42 -0400
-X-MC-Unique: Xw-z8Z8_Ps2yC84oJCJXHg-1
-Received: by mail-ej1-f70.google.com with SMTP id oz30-20020a1709077d9e00b0077239b6a915so10471893ejc.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:33:41 -0700 (PDT)
+ us-mta-19-cnw8VjRBOZWvG2cvxQM7aw-1; Mon, 19 Sep 2022 06:37:47 -0400
+X-MC-Unique: cnw8VjRBOZWvG2cvxQM7aw-1
+Received: by mail-ej1-f72.google.com with SMTP id gv43-20020a1709072beb00b0077c3f58a03eso8190379ejc.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 03:37:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=zuAJkdaPOcKHUAxfD3RjYm8+yqJJC9j2vg0HOY5onF4=;
-        b=ZmwcrzoL30zIrp1ydhy6wPgVvQsAqqy7ll578FH6uk5id2MRJ49sDVCb4Qmnn/w32K
-         cCjLtIXQYLZUyTW8SMAqxkfR9hA4onx3XEMRconIpVKOttwv66B7AwokRO4TFeBNVbBc
-         cRMEcdZd6oDMnITCblrw9Gm8Ta6zjHhOL9n7qBuWJWWdz6JCXcf5i6E5GeH34N/2guxv
-         fPyb0+I5RkYaVIhTHkkDwV1xYsZ/LReaHOqMPHfvgA6HHkCBkHYQHvyXIHeAul3+FXbx
-         hG+4U229ElLWzjW0rvT229UKMM2GGc8E+sF5qyftimqCaU2LnjfbZNW+7/Q7oHFKI1+c
-         7FUA==
-X-Gm-Message-State: ACrzQf0xqQJP6Irek6l0JH6wuL7Y/WvIw4XWh/CqMdPp3ya0SlOCEItK
-        zxLGHk3XcdkF4hUdZHb2yBrNq3JBe9/9nWhiTmyPuRM8qlCKHbPNZpHpsV5sI4dDXrQL16DW4Kg
-        lo7/c67ubxw78d/eiT+8jYJspIxZsE5BsYQ==
-X-Received: by 2002:a17:907:7609:b0:770:8665:dfd4 with SMTP id jx9-20020a170907760900b007708665dfd4mr11686704ejc.494.1663583620915;
-        Mon, 19 Sep 2022 03:33:40 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM45v/eX0Zjx0lM0hA0jGTN+rfbwLpBrK1h+Y7ta3kpSTbHslmdNWVrey45Wss3Us4lTJBvM8g==
-X-Received: by 2002:a17:907:7609:b0:770:8665:dfd4 with SMTP id jx9-20020a170907760900b007708665dfd4mr11686690ejc.494.1663583620487;
-        Mon, 19 Sep 2022 03:33:40 -0700 (PDT)
+        bh=LurvLky4hxiQS6y/M1AdQvdK8qetSsgFhPKox96ywdw=;
+        b=g8PFUqdynra2ADzYFIZuXif4Xpwg2hdxDIy1l1htS1T7jux3LQf/59OJ/7FOG0Vjfr
+         73u9cZgnI8OH4T9DkjGf21Ovdj4V4aUiwowhZxkAGd0qNZvAL+4N7kesk+y1BVDThhP7
+         AKtPAGkl5d32p4giBB7IgZUtkGmmNf9LpyFyDye6LdRj+ewo6UFu/KaX2NopIL269gmU
+         YQP0mop4dUGfS5YIlqW3bE+1HSePR+mUhzWbS/3zclu7P13h8snNKWTEFF1/pPpUgP3p
+         gKfgWfFItwtfJpzz2lva1EVMBpE8Xvsj7xPsLejoBXIOgM2Ecu00ed3vdN+6h9IJGg6A
+         YD0A==
+X-Gm-Message-State: ACrzQf3VzKoE2JINLBKrWmSmzN+53aBpWcXd8ix4BqCqwCLxKpIfU/OI
+        xT2C/tVykNDjE1PHu1IPAM/RYf0RQ60glyvUDgnaFf/6u4r20Y3nWBpLXRsCe8e0GSdQv4olnkq
+        fQdVLsKUq2XUqS9Q1tawRmEAC1ZK5t2o/ig==
+X-Received: by 2002:a17:906:8a6b:b0:780:ab37:b63 with SMTP id hy11-20020a1709068a6b00b00780ab370b63mr10467995ejc.365.1663583866513;
+        Mon, 19 Sep 2022 03:37:46 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5N0naVITTXy/kftNsUaNi04Cs3ZZSm1stexk5aOsgLImmD1QeTr6F9NUor3fDSO5e9d+myzQ==
+X-Received: by 2002:a17:906:8a6b:b0:780:ab37:b63 with SMTP id hy11-20020a1709068a6b00b00780ab370b63mr10467978ejc.365.1663583866323;
+        Mon, 19 Sep 2022 03:37:46 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id v2-20020a170906292200b00730bfe6adc4sm15543239ejd.37.2022.09.19.03.33.39
+        by smtp.gmail.com with ESMTPSA id j27-20020a170906279b00b0078135401b9csm2701478ejc.130.2022.09.19.03.37.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 03:33:39 -0700 (PDT)
-Message-ID: <e08eb287-91e7-0bfe-b373-c1a544450dbe@redhat.com>
-Date:   Mon, 19 Sep 2022 11:33:38 +0100
+        Mon, 19 Sep 2022 03:37:45 -0700 (PDT)
+Message-ID: <f34c2f79-1d2f-5968-7a81-03b4fd580ff6@redhat.com>
+Date:   Mon, 19 Sep 2022 11:37:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: [PATCH v2 1/4] platform/x86/amd/pmf: Add support for CnQF
+Subject: Re: [PATCH v2 2/4] platform/x86/amd/pmf: Add sysfs to toggle CnQF
 Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
         bnocera@redhat.com
 References: <20220912090641.111658-1-Shyam-sundar.S-k@amd.com>
- <20220912090641.111658-2-Shyam-sundar.S-k@amd.com>
+ <20220912090641.111658-3-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220912090641.111658-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20220912090641.111658-3-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,588 +80,139 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 9/12/22 10:06, Shyam Sundar S K wrote:
-> CnQF (a.k.a Cool and Quiet Framework) extends the static slider concept.
-> PMF dynamically manages system power limits and fan policy based on system
-> power trends which is representative of workload trend.
-> 
-> Static slider and CnQF controls are mutually exclusive for system power
-> budget adjustments. CnQF supports configurable number of modes which can
-> be unique for AC and DC. Every mode is representative of a system state
-> characterized by unique steady state and boost behavior.
-> 
-> OEMs can configure the different modes/system states and how the
-> transition to a mode happens. Whether to have CnQF manage system power
-> budget dynamically in AC or DC or both is also configurable. Mode changes
-> due to CnQF don't result in slider position change.
-> 
-> The default OEM values are obtained after evaluating the PMF ACPI function
-> idx 11 & 12 for AC and DC respectively. Whether to turn ON/OFF by default
-> is guided by a "flag" passed by the OEM BIOS.
+> Whether to turn CnQF on/off by default upon driver load would be decided
+> by a BIOS flag. Add a sysfs node to provide a way to the user whether to
+> use static slider or CnQF .
 > 
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/Makefile |   2 +-
->  drivers/platform/x86/amd/pmf/acpi.c   |  10 +
->  drivers/platform/x86/amd/pmf/cnqf.c   | 319 ++++++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/core.c   |  16 +-
->  drivers/platform/x86/amd/pmf/pmf.h    | 100 ++++++++
->  5 files changed, 445 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/platform/x86/amd/pmf/cnqf.c
+> ---1
+>  drivers/platform/x86/amd/pmf/cnqf.c | 57 +++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-> index ef2b08c9174d..fdededf54392 100644
-> --- a/drivers/platform/x86/amd/pmf/Makefile
-> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> @@ -6,4 +6,4 @@
->  
->  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
->  amd-pmf-objs := core.o acpi.o sps.o \
-> -		auto-mode.o
-> +		auto-mode.o cnqf.o
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index cb46a7252414..05a2b8a056fc 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -233,6 +233,16 @@ static int apmf_get_system_params(struct amd_pmf_dev *dev)
->  	return 0;
+> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
+> index aebcef778a0b..8d0c1eff1659 100644
+> --- a/drivers/platform/x86/amd/pmf/cnqf.c
+> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
+> @@ -294,9 +294,64 @@ void amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev)
+>  		config_store.trans_prio[i] = i;
 >  }
 >  
-> +int apmf_get_dyn_slider_def_ac(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data)
+> +static ssize_t feat_store(struct device *dev,
+> +			  struct device_attribute *attr,
+> +			  const char *buf, size_t count)
+
+I don't like the "feat" name, why not just call it "enable", or even
+better call it "cnqf_enable" and drop the extra cnqf subdir in sysfs?
+
 > +{
-> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_AC, data, sizeof(*data));
-> +}
+> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+> +	int mode = amd_pmf_get_pprof_modes(pdev);
+> +	int result, src;
+> +	bool input;
 > +
-> +int apmf_get_dyn_slider_def_dc(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data)
-> +{
-> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_DC, data, sizeof(*data));
-> +}
-> +
->  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
->  {
->  	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> new file mode 100644
-> index 000000000000..aebcef778a0b
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -0,0 +1,319 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AMD Platform Management Framework Driver
-> + *
-> + * Copyright (c) 2022, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + */
-> +
-> +#include <linux/workqueue.h>
-> +#include "pmf.h"
-> +
-> +static struct cnqf_config config_store;
-> +
-> +static int amd_pmf_set_cnqf(struct amd_pmf_dev *dev, int src, int idx,
-> +			    struct cnqf_config *table)
-> +{
-> +	struct power_table_control *pc;
-> +
-> +	pc = &config_store.mode_set[src][idx].power_control;
-> +
-> +	amd_pmf_send_cmd(dev, SET_SPL, false, pc->spl, NULL);
-> +	amd_pmf_send_cmd(dev, SET_FPPT, false, pc->fppt, NULL);
-> +	amd_pmf_send_cmd(dev, SET_SPPT, false, pc->sppt, NULL);
-> +	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pc->sppt_apu_only, NULL);
-> +	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pc->stt_min, NULL);
-> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, pc->stt_skin_temp[STT_TEMP_APU],
-> +			 NULL);
-> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, pc->stt_skin_temp[STT_TEMP_HS2],
-> +			 NULL);
-> +
-> +	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
-> +		apmf_update_fan_idx(dev,
-> +				    config_store.mode_set[src][idx].fan_control.manual,
-> +				    config_store.mode_set[src][idx].fan_control.fan_id);
-> +
-> +	return 0;
-> +}
-> +
-> +static void amd_pmf_update_power_threshold(void)
-> +{
-> +	struct cnqf_mode_settings *ts;
-> +	struct cnqf_tran_params *tp;
-> +	int i;
-> +
-> +	for (i = 0; i < POWER_SOURCE_MAX; i++) {
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_TO_QUIET];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_BALANCE];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_TO_TURBO];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_PERFORMANCE];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_FROM_BALANCE_TO_PERFORMANCE];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_BALANCE];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_FROM_PERFORMANCE_TO_BALANCE];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_PERFORMANCE];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_FROM_QUIET_TO_BALANCE];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_QUIET];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +
-> +		tp = &config_store.trans_param[i][CNQF_TRANSITION_FROM_TURBO_TO_PERFORMANCE];
-> +		ts = &config_store.mode_set[i][CNQF_MODE_TURBO];
-> +		tp->power_threshold = ts->power_floor - tp->power_delta;
-> +	}
-> +}
-> +
-> +static const char *state_as_str(unsigned int state)
-> +{
-> +	switch (state) {
-> +	case CNQF_MODE_QUIET:
-> +		return "QUIET";
-> +	case CNQF_MODE_BALANCE:
-> +		return "BALANCED";
-> +	case CNQF_MODE_TURBO:
-> +		return "TURBO";
-> +	case CNQF_MODE_PERFORMANCE:
-> +		return "PERFORMANCE";
-> +	default:
-> +		return "Unknown CnQF mode";
-> +	}
-> +}
-> +
-> +int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms)
-> +{
-> +	struct cnqf_tran_params *tp;
-> +	int src, i, j, index = 0;
-> +	u32 avg_power = 0;
+> +	result = kstrtobool(buf, &input);
+> +	if (result)
+> +		return result;
 > +
 > +	src = amd_pmf_get_power_source();
+> +	pdev->cnqf_enabled = input;
 > +
-> +	if (dev->current_profile == PLATFORM_PROFILE_BALANCED) {
-> +		amd_pmf_set_cnqf(dev, src, config_store.current_mode, NULL);
+> +	if (mode < 0)
+> +		return mode;
+
+You have already set pdev->cnqf_enabled here, while you are returning
+an error. If you return an error then no changes to the internal state
+should be made, so please move this check up.
+
+> +
+> +	if (pdev->cnqf_enabled) {
+> +		amd_pmf_set_cnqf(pdev, src, config_store.current_mode, NULL);
+
+This is missing a "if (dev->current_profile == PLATFORM_PROFILE_BALANCED)"
+check.
+
+Also amd_pmf_init_cnqf() will call:
+
+	amd_pmf_load_defaults_cnqf(dev);
+	amd_pmf_init_metrics_table(dev);
+
+Only when the BIOS has things enabled, so if the user now writes 1 or on to this sysfs
+attribute then cnqf will be enabled but none of its limits / other settings will
+be set so it will be very broken in this case!
+
+It seems to me that:
+
+	amd_pmf_load_defaults_cnqf(dev);
+	amd_pmf_init_metrics_table(dev);
+
+Should always be called on systems which support cnqf. As mentioned in my review of
+patch 1/4 Please use 2 separate cnqf_supported and cnqf_enabled flags.
+
+Also this function should then never be able to run when cnqf_supported is false,
+as Mario already mentioned you should use a is_visible callback for this.
+
+
+
 > +	} else {
-> +		/*
-> +		 * Return from here if the platform_profile is not balanced
-> +		 * so that preference is given to user mode selection, rather
-> +		 * than enforcing CnQF to run all the time (if enabled)
-> +		 */
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < CNQF_TRANSITION_MAX; i++) {
-> +		config_store.trans_param[src][i].timer += time_lapsed_ms;
-> +		config_store.trans_param[src][i].total_power += socket_power;
-> +		config_store.trans_param[src][i].count++;
-> +
-> +		tp = &config_store.trans_param[src][i];
-> +		if (tp->timer >= tp->time_constant && tp->count) {
-> +			avg_power = tp->total_power / tp->count;
-> +
-> +			/* Reset the indices */
-> +			tp->timer = 0;
-> +			tp->total_power = 0;
-> +			tp->count = 0;
-> +
-> +			if ((tp->shifting_up && avg_power >= tp->power_threshold) ||
-> +			    (!tp->shifting_up && avg_power <= tp->power_threshold)) {
-> +				tp->priority = true;
-> +			} else {
-> +				tp->priority = false;
-> +			}
+> +		if (is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
+> +			amd_pmf_init_sps(pdev);
+> +			amd_pmf_update_slider(pdev, SLIDER_OP_SET, mode, NULL);
 > +		}
 > +	}
 > +
-> +	dev_dbg(dev->dev, "[CNQF] Avg power: %u mW socket power: %u mW mode:%s\n",
-> +		avg_power, socket_power, state_as_str(config_store.current_mode));
-> +
-> +	for (j = 0; j < CNQF_TRANSITION_MAX; j++) {
-> +		/* apply the highest priority */
-> +		index = config_store.trans_prio[j];
-> +		if (config_store.trans_param[src][index].priority) {
-> +			if (config_store.current_mode !=
-> +			    config_store.trans_param[src][index].target_mode) {
-> +				config_store.current_mode =
-> +						config_store.trans_param[src][index].target_mode;
-> +				dev_dbg(dev->dev, "Moving to Mode :%s\n",
-> +					state_as_str(config_store.current_mode));
-> +				amd_pmf_set_cnqf(dev, src,
-> +						 config_store.current_mode, NULL);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +	return 0;
+> +	dev_dbg(pdev->dev, "Received CnQF %s\n", input ? "on" : "off");
+> +	return count;
 > +}
 > +
-> +static void amd_pmf_update_trans_data(int idx, struct apmf_dyn_slider_output out)
+> +static ssize_t feat_show(struct device *dev,
+> +			 struct device_attribute *attr,
+> +			 char *buf)
 > +{
-> +	struct cnqf_tran_params *tp;
+> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
 > +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_TO_QUIET];
-> +	tp->time_constant = out.t_balanced_to_quiet;
-> +	tp->target_mode = CNQF_MODE_QUIET;
-> +	tp->shifting_up = false;
-> +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_BALANCE_TO_PERFORMANCE];
-> +	tp->time_constant = out.t_balanced_to_perf;
-> +	tp->target_mode = CNQF_MODE_PERFORMANCE;
-> +	tp->shifting_up = true;
-> +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_QUIET_TO_BALANCE];
-> +	tp->time_constant = out.t_quiet_to_balanced;
-> +	tp->target_mode = CNQF_MODE_BALANCE;
-> +	tp->shifting_up = true;
-> +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_PERFORMANCE_TO_BALANCE];
-> +	tp->time_constant = out.t_perf_to_balanced;
-> +	tp->target_mode = CNQF_MODE_BALANCE;
-> +	tp->shifting_up = false;
-> +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_TURBO_TO_PERFORMANCE];
-> +	tp->time_constant = out.t_turbo_to_perf;
-> +	tp->target_mode = CNQF_MODE_PERFORMANCE;
-> +	tp->shifting_up = false;
-> +
-> +	tp = &config_store.trans_param[idx][CNQF_TRANSITION_TO_TURBO];
-> +	tp->time_constant = out.t_perf_to_turbo;
-> +	tp->target_mode = CNQF_MODE_TURBO;
-> +	tp->shifting_up = true;
+> +	return sprintf(buf, "%s\n", pdev->cnqf_enabled ? "on" : "off");
 > +}
 > +
-> +static void amd_pmf_update_mode_set(int idx, struct apmf_dyn_slider_output out)
-> +{
-> +	struct cnqf_mode_settings *ms;
+> +static DEVICE_ATTR_RW(feat);
 > +
-> +	/* Quiet Mode */
-> +	ms = &config_store.mode_set[idx][CNQF_MODE_QUIET];
-> +	ms->power_floor = out.ps[APMF_CNQF_QUIET].pfloor;
-> +	ms->power_control.fppt = out.ps[APMF_CNQF_QUIET].fppt;
-> +	ms->power_control.sppt = out.ps[APMF_CNQF_QUIET].sppt;
-> +	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_QUIET].sppt_apu_only;
-> +	ms->power_control.spl = out.ps[APMF_CNQF_QUIET].spl;
-> +	ms->power_control.stt_min = out.ps[APMF_CNQF_QUIET].stt_min_limit;
-> +	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> +		out.ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_APU];
-> +	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> +		out.ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out.ps[APMF_CNQF_QUIET].fan_id;
+> +static struct attribute *cnqf_feature_attrs[] = {
+> +	&dev_attr_feat.attr,
+> +	NULL
+> +};
 > +
-> +	/* Balance Mode */
-> +	ms = &config_store.mode_set[idx][CNQF_MODE_BALANCE];
-> +	ms->power_floor = out.ps[APMF_CNQF_BALANCE].pfloor;
-> +	ms->power_control.fppt = out.ps[APMF_CNQF_BALANCE].fppt;
-> +	ms->power_control.sppt = out.ps[APMF_CNQF_BALANCE].sppt;
-> +	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_BALANCE].sppt_apu_only;
-> +	ms->power_control.spl = out.ps[APMF_CNQF_BALANCE].spl;
-> +	ms->power_control.stt_min = out.ps[APMF_CNQF_BALANCE].stt_min_limit;
-> +	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> +		out.ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_APU];
-> +	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> +		out.ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out.ps[APMF_CNQF_BALANCE].fan_id;
+> +static const struct attribute_group cnqf_feature_attribute_group = {
+> +	.attrs = cnqf_feature_attrs,
+> +	.name = "cnqf"
+> +};
 > +
-> +	/* Performance Mode */
-> +	ms = &config_store.mode_set[idx][CNQF_MODE_PERFORMANCE];
-> +	ms->power_floor = out.ps[APMF_CNQF_PERFORMANCE].pfloor;
-> +	ms->power_control.fppt = out.ps[APMF_CNQF_PERFORMANCE].fppt;
-> +	ms->power_control.sppt = out.ps[APMF_CNQF_PERFORMANCE].sppt;
-> +	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_PERFORMANCE].sppt_apu_only;
-> +	ms->power_control.spl = out.ps[APMF_CNQF_PERFORMANCE].spl;
-> +	ms->power_control.stt_min = out.ps[APMF_CNQF_PERFORMANCE].stt_min_limit;
-> +	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> +		out.ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_APU];
-> +	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> +		out.ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out.ps[APMF_CNQF_PERFORMANCE].fan_id;
-> +
-> +	/* Turbo Mode */
-> +	ms = &config_store.mode_set[idx][CNQF_MODE_TURBO];
-> +	ms->power_floor = out.ps[APMF_CNQF_TURBO].pfloor;
-> +	ms->power_control.fppt = out.ps[APMF_CNQF_TURBO].fppt;
-> +	ms->power_control.sppt = out.ps[APMF_CNQF_TURBO].sppt;
-> +	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_TURBO].sppt_apu_only;
-> +	ms->power_control.spl = out.ps[APMF_CNQF_TURBO].spl;
-> +	ms->power_control.stt_min = out.ps[APMF_CNQF_TURBO].stt_min_limit;
-> +	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> +		out.ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_APU];
-> +	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> +		out.ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out.ps[APMF_CNQF_TURBO].fan_id;
-> +}
-> +
-> +static int amd_pmf_check_flags(struct amd_pmf_dev *dev)
-> +{
-> +	struct apmf_dyn_slider_output out = {};
-> +
-> +	if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC))
-> +		apmf_get_dyn_slider_def_ac(dev, &out);
-> +	else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC))
-> +		apmf_get_dyn_slider_def_dc(dev, &out);
-> +
-> +	return out.flags;
-> +}
-> +
-> +void amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev)
-> +{
-> +	struct apmf_dyn_slider_output out;
-> +	int i, j, ret;
-> +
-> +	for (i = 0; i < POWER_SOURCE_MAX; i++) {
-> +		if (i == POWER_SOURCE_AC && is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC)) {
-> +			ret = apmf_get_dyn_slider_def_ac(dev, &out);
-> +			if (ret)
-> +				dev_err(dev->dev,
-> +					"APMF apmf_get_dyn_slider_def_ac failed :%d\n", ret);
+>  void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev)
+>  {
+>  	cancel_delayed_work_sync(&dev->work_buffer);
+> +	sysfs_remove_group(&dev->dev->kobj, &cnqf_feature_attribute_group);
+> +	kobject_uevent(&dev->dev->kobj, KOBJ_CHANGE);
 
-The error handling here is broken, if either is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC)
-is false or apmf_get_dyn_slider_def_ac() returns an error then the "out" struct will contain
-whatever random data is on the stack, yet you still continue below with calling
-amd_pmf_update_mode_set(i, out); and amd_pmf_update_trans_data(i, out); filling the global
-config_store with random bytes from the stack.
+Drop these 2 lines (see below).
 
-Please fix this to instead return an error and in case of an error you will want
-amd_pmf_init_cnqf(() to return without setting dev->cnqf_enabled = true.
+>  }
+>  
+>  void amd_pmf_init_cnqf(struct amd_pmf_dev *dev)
+> @@ -316,4 +371,6 @@ void amd_pmf_init_cnqf(struct amd_pmf_dev *dev)
+>  	/* update the thermal for CnQF */
+>  	src = amd_pmf_get_power_source();
+>  	amd_pmf_set_cnqf(dev, src, config_store.current_mode, NULL);
+> +	ret = sysfs_create_group(&dev->dev->kobj, &cnqf_feature_attribute_group);
+> +	kobject_uevent(&dev->dev->kobj, KOBJ_CHANGE);
+>  }
 
-Actually since you want to make cnqf_enabled toggable at runtime through sysfs,
-you will want separate cnqf_supported and cnqf_enabled flags and in case of
-an error here neither of these 2 flags should get set.
+Manual sysfs attr registration like this is known to be racy. Please use
+the .groups member of the driver struct instead to let the core handle this,
+combined with an is_visible callback to hide the attribute on systems where
+this is not supported.
 
-> +		} else if (i == POWER_SOURCE_DC &&
-> +				is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
-> +			ret = apmf_get_dyn_slider_def_dc(dev, &out);
-> +			if (ret)
-> +				dev_err(dev->dev,
-> +					"APMF apmf_get_dyn_slider_def_dc failed :%d\n", ret);
-> +		}
-> +
-> +		amd_pmf_update_mode_set(i, out);
-> +		amd_pmf_update_trans_data(i, out);
-> +
-> +		for (j = 0; j < CNQF_MODE_MAX; j++) {
-> +			if (config_store.mode_set[i][j].fan_control.fan_id == FAN_INDEX_AUTO)
-> +				config_store.mode_set[i][j].fan_control.manual = false;
-> +			else
-> +				config_store.mode_set[i][j].fan_control.manual = true;
-> +		}
-> +	}
-> +	amd_pmf_update_power_threshold();
-> +
-> +	for (i = 0; i < CNQF_TRANSITION_MAX; i++)
-> +		config_store.trans_prio[i] = i;
-> +}
-> +
-> +void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev)
-> +{
-> +	cancel_delayed_work_sync(&dev->work_buffer);
-> +}
-> +
-> +void amd_pmf_init_cnqf(struct amd_pmf_dev *dev)
-> +{
-> +	int ret, src;
-> +
-> +	ret = amd_pmf_check_flags(dev);
-> +	if (!ret) {
-> +		dev_dbg(dev->dev, "CnQF bios default_enable flag not set\n");
-> +		return;
-> +	}
+See e.g. how thinkpad_acpi.c does this.
 
-Not calling amd_pmf_load_defaults_cnqf() and amd_pmf_init_metrics_table()
-here is a problem since cnqf_enabled can be set to true through sysfs later.
-
-Please use 2 separate cnqf_supported and cnqf_enabled flags and then
-after error-checking that amd_pmf_load_defaults_cnqf() and amd_pmf_init_metrics_table()
-succeed, set cnqf_supported, leaving only cnqf_enabled to depend on the bios
-default_enable flag.
 
 Regards,
 
 Hans
-
-
-> +
-> +	dev->cnqf_enabled = true;
-> +	amd_pmf_load_defaults_cnqf(dev);
-> +	amd_pmf_init_metrics_table(dev);
-> +
-> +	/* update the thermal for CnQF */
-> +	src = amd_pmf_get_power_source();
-> +	amd_pmf_set_cnqf(dev, src, config_store.current_mode, NULL);
-> +}
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index a675ca969331..2cb7793d07cf 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -123,6 +123,11 @@ static void amd_pmf_get_metrics(struct work_struct *work)
->  		amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
->  	}
->  
-> +	if (dev->cnqf_enabled) {
-> +		/* Apply the CnQF transition */
-> +		amd_pmf_trans_cnqf(dev, socket_power, time_elapsed_ms);
-> +	}
-> +
->  	dev->start_time = ktime_to_ms(ktime_get());
->  	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms));
->  	mutex_unlock(&dev->update_mutex);
-> @@ -262,6 +267,11 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
->  	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_init_auto_mode(dev);
->  		dev_dbg(dev->dev, "Auto Mode Init done\n");
-> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
-> +			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
-> +		/* Enable Cool n Quiet Framework (CnQF) */
-> +		amd_pmf_init_cnqf(dev);
-> +		dev_dbg(dev->dev, "CnQF Init done\n");
->  	}
->  }
->  
-> @@ -270,8 +280,12 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
->  	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
->  		amd_pmf_deinit_sps(dev);
->  
-> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE))
-> +	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_deinit_auto_mode(dev);
-> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
-> +			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
-> +		amd_pmf_deinit_cnqf(dev);
-> +	}
->  }
->  
->  static const struct acpi_device_id amd_pmf_acpi_ids[] = {
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 0a72a395c2ef..07ff8a7ec7b0 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -22,6 +22,8 @@
->  #define APMF_FUNC_AUTO_MODE					5
->  #define APMF_FUNC_SET_FAN_IDX				7
->  #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
-> +#define APMF_FUNC_DYN_SLIDER_AC				11
-> +#define APMF_FUNC_DYN_SLIDER_DC				12
->  
->  /* Message Definitions */
->  #define SET_SPL				0x03 /* SPL: Sustained Power Limit */
-> @@ -165,6 +167,7 @@ struct amd_pmf_dev {
->  	int socket_power_history_idx;
->  	bool amt_enabled;
->  	struct mutex update_mutex; /* protects race between ACPI handler and metrics thread */
-> +	bool cnqf_enabled;
->  };
->  
->  struct apmf_sps_prop_granular {
-> @@ -294,6 +297,94 @@ struct apmf_auto_mode {
->  	u32 fan_id_quiet;
->  } __packed;
->  
-> +/* CnQF Layer */
-> +enum cnqf_trans_priority {
-> +	CNQF_TRANSITION_TO_TURBO, /* Any other mode to Turbo Mode */
-> +	CNQF_TRANSITION_FROM_BALANCE_TO_PERFORMANCE, /* quiet/balance to Performance Mode */
-> +	CNQF_TRANSITION_FROM_QUIET_TO_BALANCE, /* Quiet Mode to Balance Mode */
-> +	CNQF_TRANSITION_TO_QUIET, /* Any other mode to Quiet Mode */
-> +	CNQF_TRANSITION_FROM_PERFORMANCE_TO_BALANCE, /* Performance/Turbo to Balance Mode */
-> +	CNQF_TRANSITION_FROM_TURBO_TO_PERFORMANCE, /* Turbo mode to Performance Mode */
-> +	CNQF_TRANSITION_MAX,
-> +};
-> +
-> +enum cnqf_mode {
-> +	CNQF_MODE_QUIET,
-> +	CNQF_MODE_BALANCE,
-> +	CNQF_MODE_PERFORMANCE,
-> +	CNQF_MODE_TURBO,
-> +	CNQF_MODE_MAX,
-> +};
-> +
-> +enum apmf_cnqf_pos {
-> +	APMF_CNQF_TURBO,
-> +	APMF_CNQF_PERFORMANCE,
-> +	APMF_CNQF_BALANCE,
-> +	APMF_CNQF_QUIET,
-> +	APMF_CNQF_MAX,
-> +};
-> +
-> +struct cnqf_mode_settings {
-> +	struct power_table_control power_control;
-> +	struct fan_table_control fan_control;
-> +	u32 power_floor;
-> +};
-> +
-> +struct cnqf_tran_params {
-> +	u32 time_constant; /* minimum time required to switch to next mode */
-> +	u32 power_delta; /* minimum power required to switch to next mode */
-> +	u32 power_threshold;
-> +	u32 timer; /* elapsed time. if timer > timethreshold, it will move to next mode */
-> +	u32 total_power;
-> +	u32 count;
-> +	bool priority;
-> +	bool shifting_up;
-> +	enum cnqf_mode target_mode;
-> +};
-> +
-> +struct cnqf_power_delta {
-> +	u32 to_turbo;
-> +	u32 balance_to_perf;
-> +	u32 quiet_to_balance;
-> +	u32 to_quiet;
-> +	u32 perf_to_balance;
-> +	u32 turbo_to_perf;
-> +};
-> +
-> +struct cnqf_config {
-> +	struct cnqf_tran_params trans_param[POWER_SOURCE_MAX][CNQF_TRANSITION_MAX];
-> +	struct cnqf_mode_settings mode_set[POWER_SOURCE_MAX][CNQF_MODE_MAX];
-> +	struct power_table_control defaults;
-> +	enum cnqf_mode current_mode;
-> +	struct cnqf_power_delta power_delta[POWER_SOURCE_MAX];
-> +	u32 power_src;
-> +	u32 avg_power;
-> +	enum cnqf_trans_priority trans_prio[CNQF_TRANSITION_MAX];
-> +};
-> +
-> +struct apmf_cnqf_power_set {
-> +	u32 pfloor;
-> +	u32 fppt;
-> +	u32 sppt;
-> +	u32 sppt_apu_only;
-> +	u32 spl;
-> +	u32 stt_min_limit;
-> +	u8 stt_skintemp[STT_TEMP_COUNT];
-> +	u32 fan_id;
-> +} __packed;
-> +
-> +struct apmf_dyn_slider_output {
-> +	u16 size;
-> +	u16 flags;
-> +	u32 t_perf_to_turbo;
-> +	u32 t_balanced_to_perf;
-> +	u32 t_quiet_to_balanced;
-> +	u32 t_balanced_to_quiet;
-> +	u32 t_perf_to_balanced;
-> +	u32 t_turbo_to_perf;
-> +	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
-> +} __packed;
-> +
->  /* Core Layer */
->  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
->  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
-> @@ -324,4 +415,13 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
->  void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
->  int amd_pmf_reset_amt(struct amd_pmf_dev *dev);
->  void amd_pmf_handle_amt(struct amd_pmf_dev *dev);
-> +
-> +/* CnQF Layer */
-> +int apmf_get_dyn_slider_def_ac(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data);
-> +int apmf_get_dyn_slider_def_dc(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_output *data);
-> +void amd_pmf_init_cnqf(struct amd_pmf_dev *dev);
-> +void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
-> +void amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev);
-> +int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
-> +
->  #endif /* PMF_H */
 
