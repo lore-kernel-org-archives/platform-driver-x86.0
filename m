@@ -2,198 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4D2C54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2EAC6FA8B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbiISMSr (ORCPT
+        id S229699AbiISMWx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 08:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
+        Mon, 19 Sep 2022 08:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbiISMSn (ORCPT
+        with ESMTP id S229826AbiISMW1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 08:18:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667E5167FF
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663589921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G0DSvgpZ4h6uehJTMxHzzvXh1HsmXnvIzwbdbIVtcjw=;
-        b=WsZk18sJrl6Nd1XaKjGaoehLvuJib0ArAerp09qsVR6WcGJtzxkHbyiNlDTT19neczw3ZY
-        IhYxOXqv7XFIwiDm1SbldY+C1xOuk6fPjaKs/o1unH40gfr0uGW38me2Z/SWwRNCvwxOak
-        E1vOALCOu7Y/4aKTmcLAMbHlTJ2mQTo=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-669-gZtSGHxZNuKD1aqfI0cXdA-1; Mon, 19 Sep 2022 08:18:40 -0400
-X-MC-Unique: gZtSGHxZNuKD1aqfI0cXdA-1
-Received: by mail-ed1-f70.google.com with SMTP id r11-20020a05640251cb00b004516feb8c09so17269160edd.10
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:18:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=G0DSvgpZ4h6uehJTMxHzzvXh1HsmXnvIzwbdbIVtcjw=;
-        b=DSo84+qLTJUNwxy0jN/cmE9gfpR22GvnDEL/E+1ogCozNzG4caLq6FTrVdBJ1ux1Sw
-         WHFT1cKi1yf/Lqt/EcxdrhR6CpYAN6Q7WIwRYJa3UYy8IGZoFrNTdVHyWfokPCBhCl0a
-         kDt9KdkhNWJzdMNkMxAPq7Z8Pg4vGlbMxZ1et1HWrMM4BPaNTz3rs0EE10RKeeTXnlnJ
-         dOLTANZ+yQbMknfALN5lGZWdZbqw/rf+/QJCTgkBgFLq7emNbTyhrXBDh54L9l/GH267
-         rRvsJZzGBpzsyfuIExaJD2SK8lewi6PO/+xOpSzpzwosEaNX339D++YisUKZ+wv9cjXw
-         AzNw==
-X-Gm-Message-State: ACrzQf0LctctEBkBDo+4wOiYo2/FGskTwNDB9OO9vVlOBTsXzge5y4Uu
-        lYoB9Mnu3YMRQUt1PVMDwzw8RHdAL3H2WNmmx3DcMcV5lbFn7cPnZ5Bd9h9TsOeaNxWCJ5Mlv/U
-        +q1EOsW7Cf88ttz5bYGGyv0NMcAJ8O3Urww==
-X-Received: by 2002:a17:906:ef90:b0:77f:8f0d:e925 with SMTP id ze16-20020a170906ef9000b0077f8f0de925mr12304841ejb.622.1663589918974;
-        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4Vah5wh+rQnfBOmtQuW378vREh4+2MDpEX/5SEMBLmSfhDdy44YDwGEz5SJhjSkq8AL/3OJA==
-X-Received: by 2002:a17:906:ef90:b0:77f:8f0d:e925 with SMTP id ze16-20020a170906ef9000b0077f8f0de925mr12304825ejb.622.1663589918787;
-        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ee52-20020a056402293400b00453995b4c20sm6447617edb.73.2022.09.19.05.18.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
-Message-ID: <4d55be61-e797-9eec-bf7e-ed675947b04d@redhat.com>
-Date:   Mon, 19 Sep 2022 13:18:37 +0100
+        Mon, 19 Sep 2022 08:22:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001C015FDF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:22:26 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaFn1-0007TP-NM; Mon, 19 Sep 2022 14:22:19 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaFn2-001f0B-BK; Mon, 19 Sep 2022 14:22:18 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaFn0-001xrm-1E; Mon, 19 Sep 2022 14:22:18 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] platform/x86: wmi: Drop forward declaration of static functions
+Date:   Mon, 19 Sep 2022 14:22:13 +0200
+Message-Id: <20220919122213.852322-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH] asus-wmi: Expand support of GPU fan to read RPM and label
-Content-Language: en-US
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     markgross@kernel.org, corentin.chary@gmail.com, linux@roeck-us.net,
-        jdelvare@suse.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-References: <20220916004623.10992-1-luke@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220916004623.10992-1-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1762; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=5D4W0kMYNqAdzOUP1zwVr0qDLiCf7/f0PFBfh5tMOlY=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjKF7yOWORl8pFgV6oTttiayKKuSZRyPMEP+VoE4bL 3ben4giJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYyhe8gAKCRDB/BR4rcrsCbwkB/ wM8Eqlks+LHThNBLOouI7HkM//ORvJv+rYvQAoGt3d0zLMEaRVx+CgX+W43+DesY/xPvP3qcoI2WXJ wV0IPnjKn4t5KyIPLmx8YeLyXzUv+0AeFsp9zSKrFKtFP5evCs0akmWriVndssclPIlmu1UwYXMWvt LTL6RoNfZMQ5giyNEOVUpafyw6AswsoVEXj3rHBL415c28xE7v36QOMfmtt/42K2XkbMX5Z/0q3MJ5 QRn7BNqzilSLKp03Sa6W0GGnEVJao5U3NpR+3Q7vhQmrzLmHGA5lgxLWosrsTqaGOF0E55KznrXIRq SPkQWe4O8M8GsR1I9jn7a/lHU9B5n5
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Luke,
+Usually it's not necessary to declare static functions if the symbols are
+in the right order. Moving the definition of acpi_wmi_driver down in the
+compilation unit allows to drop two such declarations.
 
-On 9/16/22 01:46, Luke D. Jones wrote:
-> The previously added patch to add support for pwm change for TUF laptops
-> also is usuable for more than TUF. The same method `0x00110014` is
-> used to read the fan RPM.
-> 
-> Add two extra attributes for reading fan2 plus fan2 label.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c | 36 +++++++++++++++++++++++++++++++--
->  1 file changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ae46af731de9..7fe6ce25da0a 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -72,6 +72,7 @@ module_param(fnlock_default, bool, 0444);
->  
->  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
->  
-> +#define ASUS_GPU_FAN_DESC		"gpu_fan"
->  #define ASUS_FAN_DESC			"cpu_fan"
->  #define ASUS_FAN_MFUN			0x13
->  #define ASUS_FAN_SFUN_READ		0x06
-> @@ -2078,6 +2079,30 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
->  }
->  
->  /* GPU fan on modern ROG laptops */
-> +static ssize_t fan2_input_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	int value;
-> +	int ret;
-> +
-> +	ret = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_GPU_FAN_CTRL, &value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	value &= 0xffff;
-> +
-> +	return sysfs_emit(buf, "%d\n", value < 0 ? -1 : value * 100);
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/platform/x86/wmi.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-As already mentioned since you & with 0xffff above the sign bit can never be
-set, so the value is never less then < 0, so I have simplified this to:
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index aed293b5af81..dbc535b772b3 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -95,9 +95,6 @@ module_param(debug_dump_wdg, bool, 0444);
+ MODULE_PARM_DESC(debug_dump_wdg,
+ 		 "Dump available WMI interfaces [0/1]");
+ 
+-static int acpi_wmi_remove(struct platform_device *device);
+-static int acpi_wmi_probe(struct platform_device *device);
+-
+ static const struct acpi_device_id wmi_device_ids[] = {
+ 	{"PNP0C14", 0},
+ 	{"pnp0c14", 0},
+@@ -105,15 +102,6 @@ static const struct acpi_device_id wmi_device_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
+ 
+-static struct platform_driver acpi_wmi_driver = {
+-	.driver = {
+-		.name = "acpi-wmi",
+-		.acpi_match_table = wmi_device_ids,
+-	},
+-	.probe = acpi_wmi_probe,
+-	.remove = acpi_wmi_remove,
+-};
+-
+ /*
+  * GUID parsing functions
+  */
+@@ -1449,6 +1437,15 @@ void wmi_driver_unregister(struct wmi_driver *driver)
+ }
+ EXPORT_SYMBOL(wmi_driver_unregister);
+ 
++static struct platform_driver acpi_wmi_driver = {
++	.driver = {
++		.name = "acpi-wmi",
++		.acpi_match_table = wmi_device_ids,
++	},
++	.probe = acpi_wmi_probe,
++	.remove = acpi_wmi_remove,
++};
++
+ static int __init acpi_wmi_init(void)
+ {
+ 	int error;
 
-	return sysfs_emit(buf, "%d\n", value * 100);
-
-while merging.
-
-> +}
-> +
-> +static ssize_t fan2_label_show(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	return sprintf(buf, "%s\n", ASUS_GPU_FAN_DESC);
-> +}
-
-And here I have done s/sprintf/sysfs_emit/ with those changes
-I've applied this patch to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> +
->  static ssize_t pwm2_enable_show(struct device *dev,
->  				struct device_attribute *attr,
->  				char *buf)
-> @@ -2127,9 +2152,12 @@ static ssize_t pwm2_enable_store(struct device *dev,
->  /* Fan1 */
->  static DEVICE_ATTR_RW(pwm1);
->  static DEVICE_ATTR_RW(pwm1_enable);
-> -static DEVICE_ATTR_RW(pwm2_enable);
->  static DEVICE_ATTR_RO(fan1_input);
->  static DEVICE_ATTR_RO(fan1_label);
-> +/* Fan2 - GPU fan */
-> +static DEVICE_ATTR_RW(pwm2_enable);
-> +static DEVICE_ATTR_RO(fan2_input);
-> +static DEVICE_ATTR_RO(fan2_label);
->  
->  /* Temperature */
->  static DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL);
-> @@ -2140,6 +2168,8 @@ static struct attribute *hwmon_attributes[] = {
->  	&dev_attr_pwm2_enable.attr,
->  	&dev_attr_fan1_input.attr,
->  	&dev_attr_fan1_label.attr,
-> +	&dev_attr_fan2_input.attr,
-> +	&dev_attr_fan2_label.attr,
->  
->  	&dev_attr_temp1_input.attr,
->  	NULL
-> @@ -2160,7 +2190,9 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
->  	    || attr == &dev_attr_pwm1_enable.attr) {
->  		if (asus->fan_type == FAN_TYPE_NONE)
->  			return 0;
-> -	} else if (attr == &dev_attr_pwm2_enable.attr) {
-> +	} else if (attr == &dev_attr_fan2_input.attr
-> +	    || attr == &dev_attr_fan2_label.attr
-> +	    || attr == &dev_attr_pwm2_enable.attr) {
->  		if (asus->gpu_fan_type == FAN_TYPE_NONE)
->  			return 0;
->  	} else if (attr == &dev_attr_temp1_input.attr) {
+base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+-- 
+2.37.2
 
