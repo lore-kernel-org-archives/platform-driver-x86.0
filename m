@@ -2,164 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF72C54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4D2C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 12:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbiISMIB (ORCPT
+        id S229960AbiISMSr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 08:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
+        Mon, 19 Sep 2022 08:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbiISMH7 (ORCPT
+        with ESMTP id S229831AbiISMSn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 08:07:59 -0400
+        Mon, 19 Sep 2022 08:18:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 156C02B60C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:07:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667E5167FF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663589276;
+        s=mimecast20190719; t=1663589921;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bQPG1qSYwpLdETxNeyDxmc98p8o+CviwbIWCJA09kXY=;
-        b=DXwM7p3F+hjVy/Xtk7CFDb0eQhy7RcxYk/sSTQGHxE8sk4QE4JZGJdiwQtuK2Qc8uuim69
-        U6EwYfKet0UGEcvRClqyEt4vJGHn9PN2K7BBfv2N5/i4pCBlbZaqn46znXeoj4OIZvF4Y+
-        t/anaYBAkcvj14S0Qw/BgQWIzpTyfc0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=G0DSvgpZ4h6uehJTMxHzzvXh1HsmXnvIzwbdbIVtcjw=;
+        b=WsZk18sJrl6Nd1XaKjGaoehLvuJib0ArAerp09qsVR6WcGJtzxkHbyiNlDTT19neczw3ZY
+        IhYxOXqv7XFIwiDm1SbldY+C1xOuk6fPjaKs/o1unH40gfr0uGW38me2Z/SWwRNCvwxOak
+        E1vOALCOu7Y/4aKTmcLAMbHlTJ2mQTo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-53-Mu_RsvcoNEuwPnYo4-Ttog-1; Mon, 19 Sep 2022 08:07:55 -0400
-X-MC-Unique: Mu_RsvcoNEuwPnYo4-Ttog-1
-Received: by mail-ej1-f71.google.com with SMTP id jg32-20020a170907972000b0077ce313a8f0so8369517ejc.15
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:07:55 -0700 (PDT)
+ us-mta-669-gZtSGHxZNuKD1aqfI0cXdA-1; Mon, 19 Sep 2022 08:18:40 -0400
+X-MC-Unique: gZtSGHxZNuKD1aqfI0cXdA-1
+Received: by mail-ed1-f70.google.com with SMTP id r11-20020a05640251cb00b004516feb8c09so17269160edd.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 05:18:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=bQPG1qSYwpLdETxNeyDxmc98p8o+CviwbIWCJA09kXY=;
-        b=OD+sPKFYEJdTP8iyg+iW207SVXAxXr+Ed4AX67gCpxmybexwHE547T/TQrCgPl3my9
-         MHMEotOEfJoA59zNjIou03Nl6WsUhI+WYqu1OAjSN/SUnvKqM7r6AgvVZ6uvs2gYCYdH
-         P+MD9sCXwquJbnfOprQ9AGyk+ZaXXgztokRRAW3FMvidPl3DO2fGD3kh1pb9AVXjJT3t
-         3oG0VuwKZ8aCpoE1A5nKmvQiVNlAS5M3aJ0maNAGv6/zUW1Z+ysjdvHfHGPVhjzKokex
-         rAc53CGTQ5oIehMzaEpoxs5jE5El8ohqg1RjlZbmm9obszXlJ6GNw060p/lpVL8A0RWw
-         O5Og==
-X-Gm-Message-State: ACrzQf2Drmy/ijm0HGGXjslFS8TdCcfrDmOC3PefYY2Id4lD9wSWhRtO
-        fOy6GxAIeUrNUoKAf3OVi71KcQVb2Y7L0VPy9hNxzwvCvfsAo3eWUuO9y+GoY82CGnCffLMv3mO
-        LRg3kv7bL9fhBQgr6CfnACkIVa78AmT6sGQ==
-X-Received: by 2002:aa7:cd49:0:b0:451:e570:8a82 with SMTP id v9-20020aa7cd49000000b00451e5708a82mr15165990edw.369.1663589274719;
-        Mon, 19 Sep 2022 05:07:54 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5rDPhMTswM42xaou7oAF155Gh5fuaM4Qd4Q/Xie2TotlBceYV/uNaABmos4TFrLOuAXSweAg==
-X-Received: by 2002:aa7:cd49:0:b0:451:e570:8a82 with SMTP id v9-20020aa7cd49000000b00451e5708a82mr15165973edw.369.1663589274491;
-        Mon, 19 Sep 2022 05:07:54 -0700 (PDT)
+        bh=G0DSvgpZ4h6uehJTMxHzzvXh1HsmXnvIzwbdbIVtcjw=;
+        b=DSo84+qLTJUNwxy0jN/cmE9gfpR22GvnDEL/E+1ogCozNzG4caLq6FTrVdBJ1ux1Sw
+         WHFT1cKi1yf/Lqt/EcxdrhR6CpYAN6Q7WIwRYJa3UYy8IGZoFrNTdVHyWfokPCBhCl0a
+         kDt9KdkhNWJzdMNkMxAPq7Z8Pg4vGlbMxZ1et1HWrMM4BPaNTz3rs0EE10RKeeTXnlnJ
+         dOLTANZ+yQbMknfALN5lGZWdZbqw/rf+/QJCTgkBgFLq7emNbTyhrXBDh54L9l/GH267
+         rRvsJZzGBpzsyfuIExaJD2SK8lewi6PO/+xOpSzpzwosEaNX339D++YisUKZ+wv9cjXw
+         AzNw==
+X-Gm-Message-State: ACrzQf0LctctEBkBDo+4wOiYo2/FGskTwNDB9OO9vVlOBTsXzge5y4Uu
+        lYoB9Mnu3YMRQUt1PVMDwzw8RHdAL3H2WNmmx3DcMcV5lbFn7cPnZ5Bd9h9TsOeaNxWCJ5Mlv/U
+        +q1EOsW7Cf88ttz5bYGGyv0NMcAJ8O3Urww==
+X-Received: by 2002:a17:906:ef90:b0:77f:8f0d:e925 with SMTP id ze16-20020a170906ef9000b0077f8f0de925mr12304841ejb.622.1663589918974;
+        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4Vah5wh+rQnfBOmtQuW378vREh4+2MDpEX/5SEMBLmSfhDdy44YDwGEz5SJhjSkq8AL/3OJA==
+X-Received: by 2002:a17:906:ef90:b0:77f:8f0d:e925 with SMTP id ze16-20020a170906ef9000b0077f8f0de925mr12304825ejb.622.1663589918787;
+        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cf10-20020a170906b2ca00b007402796f065sm15535419ejb.132.2022.09.19.05.07.53
+        by smtp.gmail.com with ESMTPSA id ee52-20020a056402293400b00453995b4c20sm6447617edb.73.2022.09.19.05.18.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 05:07:53 -0700 (PDT)
-Message-ID: <1f144fc6-58a3-d799-acbd-f2bd40add442@redhat.com>
-Date:   Mon, 19 Sep 2022 13:07:53 +0100
+        Mon, 19 Sep 2022 05:18:38 -0700 (PDT)
+Message-ID: <4d55be61-e797-9eec-bf7e-ed675947b04d@redhat.com>
+Date:   Mon, 19 Sep 2022 13:18:37 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 6.1-rc1
+Subject: Re: [PATCH] asus-wmi: Expand support of GPU fan to read RPM and label
 Content-Language: en-US
-To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-Cc:     "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <f5d261460d60c546005d126a7629bfd5e4deeaba.camel@intel.com>
- <49ef6e43-eb16-052e-3e58-f0290328cdd6@redhat.com>
- <e53c62fcb89a701e104513ffcd40cd79abd32123.camel@intel.com>
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     markgross@kernel.org, corentin.chary@gmail.com, linux@roeck-us.net,
+        jdelvare@suse.com, acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+References: <20220916004623.10992-1-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <e53c62fcb89a701e104513ffcd40cd79abd32123.camel@intel.com>
+In-Reply-To: <20220916004623.10992-1-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Luke,
 
-On 9/15/22 19:31, Pandruvada, Srinivas wrote:
-> Hi Hans,
+On 9/16/22 01:46, Luke D. Jones wrote:
+> The previously added patch to add support for pwm change for TUF laptops
+> also is usuable for more than TUF. The same method `0x00110014` is
+> used to read the fan RPM.
 > 
-> This pull request contains:
-> - One fix for invalid display of cpu count for TDP level
-> - Removal of unused code and data
-> - consolidate package/die/cpu in a struct and use this
-> instead of passing all and recompute package and die ids
+> Add two extra attributes for reading fan2 plus fan2 label.
 > 
-> These changes are on top of
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-> for-next
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 36 +++++++++++++++++++++++++++++++--
+>  1 file changed, 34 insertions(+), 2 deletions(-)
 > 
-> 
-> The following changes since commit
-> 76fba1221e3045570478381c3436c8c2a2656376:
-> 
->   Merge tag 'backlight-detect-refactor-1' into review-hans (2022-09-05
-> 11:01:56 +0200)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/spandruvada/linux-kernel.git intel-sst
-> 
-> for you to fetch changes up to
-> 97ec890d070158f15fe8ef2419a5ff677bdbbc20:
-> 
->   tools/power/x86/intel-speed-select: Release v1.13 (2022-09-15
-> 11:16:06 -0700)
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index ae46af731de9..7fe6ce25da0a 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -72,6 +72,7 @@ module_param(fnlock_default, bool, 0444);
+>  
+>  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+>  
+> +#define ASUS_GPU_FAN_DESC		"gpu_fan"
+>  #define ASUS_FAN_DESC			"cpu_fan"
+>  #define ASUS_FAN_MFUN			0x13
+>  #define ASUS_FAN_SFUN_READ		0x06
+> @@ -2078,6 +2079,30 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
+>  }
+>  
+>  /* GPU fan on modern ROG laptops */
+> +static ssize_t fan2_input_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +	int value;
+> +	int ret;
+> +
+> +	ret = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_GPU_FAN_CTRL, &value);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	value &= 0xffff;
+> +
+> +	return sysfs_emit(buf, "%d\n", value < 0 ? -1 : value * 100);
 
-Thanks, I have merged this into my review-hans (soon to be for-next)
-branch now.
+As already mentioned since you & with 0xffff above the sign bit can never be
+set, so the value is never less then < 0, so I have simplified this to:
+
+	return sysfs_emit(buf, "%d\n", value * 100);
+
+while merging.
+
+> +}
+> +
+> +static ssize_t fan2_label_show(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  char *buf)
+> +{
+> +	return sprintf(buf, "%s\n", ASUS_GPU_FAN_DESC);
+> +}
+
+And here I have done s/sprintf/sysfs_emit/ with those changes
+I've applied this patch to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-> 
-> ----------------------------------------------------------------
-> Srinivas Pandruvada (1):
->       tools/power/x86/intel-speed-select: Release v1.13
-> 
-> Zhang Rui (13):
->       tools/power/x86/intel-speed-select: Fix cpu count for TDP level
-> display
->       tools/power/x86/intel-speed-select: Remove dead code
->       tools/power/x86/intel-speed-select: Remove unused core_mask array
->       tools/power/x86/intel-speed-select: Introduce struct isst_id
->       tools/power/x86/intel-speed-select: Add pkg and die in isst_id
->       tools/power/x86/intel-speed-select: Convert more function to use
-> isst_id
->       tools/power/x86/intel-speed-select: Cleanup get_physical_id usage
->       tools/power/x86/intel-speed-select: Introduce
-> is_cpu_in_power_domain helper
->       tools/power/x86/intel-speed-select: Do not export get_physical_id
->       tools/power/x86/intel-speed-select: Enforce isst_id value
->       tools/power/x86/intel-speed-select: Remove unused struct
-> clos_config fields
->       tools/power/x86/intel-speed-select: Utilize cpu_map to get
-> physical id
->       tools/power/x86/intel-speed-select: Optimize CPU initialization
-> 
->  tools/power/x86/intel-speed-select/hfi-events.c   |   5 +-
->  tools/power/x86/intel-speed-select/isst-config.c  | 511
-> ++++++++++++++++++++++++++++++++++++-----------------------------------
-> --
->  tools/power/x86/intel-speed-select/isst-core.c    | 313
-> +++++++++++++++++++++------------------------
->  tools/power/x86/intel-speed-select/isst-daemon.c  |  36 +++---
->  tools/power/x86/intel-speed-select/isst-display.c |  76 +++++------
->  tools/power/x86/intel-speed-select/isst.h         |  88 ++++++-------
->  6 files changed, 496 insertions(+), 533 deletions(-)
-> 
-> Thanks,
-> Srinivas
-> 
-> 
+
+> +
+>  static ssize_t pwm2_enable_show(struct device *dev,
+>  				struct device_attribute *attr,
+>  				char *buf)
+> @@ -2127,9 +2152,12 @@ static ssize_t pwm2_enable_store(struct device *dev,
+>  /* Fan1 */
+>  static DEVICE_ATTR_RW(pwm1);
+>  static DEVICE_ATTR_RW(pwm1_enable);
+> -static DEVICE_ATTR_RW(pwm2_enable);
+>  static DEVICE_ATTR_RO(fan1_input);
+>  static DEVICE_ATTR_RO(fan1_label);
+> +/* Fan2 - GPU fan */
+> +static DEVICE_ATTR_RW(pwm2_enable);
+> +static DEVICE_ATTR_RO(fan2_input);
+> +static DEVICE_ATTR_RO(fan2_label);
+>  
+>  /* Temperature */
+>  static DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL);
+> @@ -2140,6 +2168,8 @@ static struct attribute *hwmon_attributes[] = {
+>  	&dev_attr_pwm2_enable.attr,
+>  	&dev_attr_fan1_input.attr,
+>  	&dev_attr_fan1_label.attr,
+> +	&dev_attr_fan2_input.attr,
+> +	&dev_attr_fan2_label.attr,
+>  
+>  	&dev_attr_temp1_input.attr,
+>  	NULL
+> @@ -2160,7 +2190,9 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+>  	    || attr == &dev_attr_pwm1_enable.attr) {
+>  		if (asus->fan_type == FAN_TYPE_NONE)
+>  			return 0;
+> -	} else if (attr == &dev_attr_pwm2_enable.attr) {
+> +	} else if (attr == &dev_attr_fan2_input.attr
+> +	    || attr == &dev_attr_fan2_label.attr
+> +	    || attr == &dev_attr_pwm2_enable.attr) {
+>  		if (asus->gpu_fan_type == FAN_TYPE_NONE)
+>  			return 0;
+>  	} else if (attr == &dev_attr_temp1_input.attr) {
 
