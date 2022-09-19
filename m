@@ -2,619 +2,163 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7FECAAD3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A4BECAAD3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Sep 2022 11:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229826AbiISLdP (ORCPT
+        id S229772AbiISLje (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 07:33:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        Mon, 19 Sep 2022 07:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229833AbiISLdM (ORCPT
+        with ESMTP id S229825AbiISLjd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 07:33:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CEE29C8E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:33:09 -0700 (PDT)
+        Mon, 19 Sep 2022 07:39:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F22BDB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663587189;
+        s=mimecast20190719; t=1663587570;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Hs7OtkEz723CBwtrhRodpMUNVeglPiq2p7ND7Mb6hMA=;
-        b=WKfCvyg15Wh6tJ3qGxbqzYfz1SiGYC8G7eve6nZ7E3A237NlcDZfJrrkBg4tFOOGvKtOzU
-        Ie1Bi6vV6STonq/vth65TnW7DEMl0PQ6RTgedxJyonj/OQYLTei0CvNS8TmcfYIsG/i8J2
-        hAmX5f/Rxo1A6TcR33UwrwCqIqX0oU4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=bQ6zwKhiizSCTbZXM4hYel5ioxpL+B7BAbfA/FrZv8U=;
+        b=IFsWfNXFmqkTZ9NqsO1X3EQRNjYTsxOGtRJALq9R/i1qyLvMy1zhYsg+cE10/7Xrah1xxx
+        hxwdwYIsqJSEzXEARt9PrExcQ78ohrfQsrJFhsQ7sB4NWRfVkLMWJI98zpytKayq7Bn7Cb
+        KS9XU38kCYnPfLc0giXvxBReTZ/upns=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-648-_SfMt-M1MpO-K9aKwgTiRQ-1; Mon, 19 Sep 2022 07:33:08 -0400
-X-MC-Unique: _SfMt-M1MpO-K9aKwgTiRQ-1
-Received: by mail-ed1-f70.google.com with SMTP id y9-20020a056402270900b00451dfbbc9b2so15455407edd.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:33:07 -0700 (PDT)
+ us-mta-167-1ZkRSyOAPLGhNEsHXQ99MQ-1; Mon, 19 Sep 2022 07:39:28 -0400
+X-MC-Unique: 1ZkRSyOAPLGhNEsHXQ99MQ-1
+Received: by mail-ej1-f70.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso10435409ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Sep 2022 04:39:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=Hs7OtkEz723CBwtrhRodpMUNVeglPiq2p7ND7Mb6hMA=;
-        b=GNjzJdYi3NmF+gprhXM0PnIk9cZwN40eJ23mLZX1kU6cVcAJQ/AMSA2dhjsMaYtpJg
-         SN3z0+QFare5hQ+wtCiNh2IXAeW3EW8No0BpGSJEf93jlD2oVUXtIZUjxW9/KdbJBY+a
-         8kxjnm+9fRmy+BhGuTdFi+TvN5svXWu75ezkjNUThqMG+7Ve6IxVg3A5mt/JY29NqXBL
-         mc0pFHEeFDLI2xdFtFi8HxZ7jto8p7xet6ydj7E4enaYJJiKNEVtkAidPq2f9/fNoaZj
-         ybXbAypg1BK0SkmqKuM0KOmbcC8nYaJSY8q9fO8NmszmHLcWjCXE4MwGwDn/VGMkO/0b
-         qJpw==
-X-Gm-Message-State: ACrzQf2mbcumcRpbvMJxVFXANB3yTHnGzhWvTNq3AoW1CaN35hTsYehF
-        6eaR0+KqM3uX7boWN0jliZboAPuKow64Xp858ArXzTjp1C1Vu7OCpWC8O2P2tqw6PucdI8xEmjs
-        yyoq/p1RugyvFsStqIOYhFTXjODAgnKmLig==
-X-Received: by 2002:a17:907:628f:b0:72f:58fc:3815 with SMTP id nd15-20020a170907628f00b0072f58fc3815mr12559748ejc.719.1663587186060;
-        Mon, 19 Sep 2022 04:33:06 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7D6wXCwj8f/YIcTjy87dpoqr9ZfsXK8N8PaqKaPhnIChF/SssvdPMiNNuJKfXgYEAx7+cayA==
-X-Received: by 2002:a17:907:628f:b0:72f:58fc:3815 with SMTP id nd15-20020a170907628f00b0072f58fc3815mr12559738ejc.719.1663587185793;
-        Mon, 19 Sep 2022 04:33:05 -0700 (PDT)
+        bh=bQ6zwKhiizSCTbZXM4hYel5ioxpL+B7BAbfA/FrZv8U=;
+        b=Q2S+EuzfAeNNIqZ6G/HJvApNaO8bERYTVgcOhtJambDX72vWnkVDW/h4apZokauqHy
+         GPC7g2nyRHXXfVubH/i9APVESG7uSHW0iML9aLvZcZWYyOOk/3CUgIlflgfwortbGeRx
+         OuKVt7eMA3MgkqwXRr1nj/F2Lo2RVhhi8VzP8k0W+13heCgazplpjSZdTZ/WI3A7CSXj
+         B1xsLhwDunNbO8X/suQohCKHCT2KEA4/3jdsugOoKfVfqWqk0HA8oWg7sXQS62U1gBzT
+         S5P72ej1i2dpUhGFPyAQ+GkR5F9ElwGo5WI9kn8Ayj2OxmfaDYzSt9Omed8ADYbOOmYC
+         Lxqg==
+X-Gm-Message-State: ACrzQf3w2iZHPzE17VEvzwR2MeP6G8qc1Pj3pQ5AxeoAQHkfNkPIj07L
+        HN0zskoMxDT1P1lyJ89ENdpP1ZMaNlXptR7bUu2aTk1Pd84RCcQSGEdCoEJqJg84ZzRO6KDOiB8
+        3sj6kYMePljWYgqY4vUsWhQuLhPEBfx2Crw==
+X-Received: by 2002:a17:906:4786:b0:780:ed2a:ed6a with SMTP id cw6-20020a170906478600b00780ed2aed6amr7074836ejc.769.1663587567723;
+        Mon, 19 Sep 2022 04:39:27 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7y38ljAWNfKtMrDEWP8DJQZxSxjHC04BKrT2b3l3n2kt5naoWRx4HyyTQts4SVkNvtIXTVgw==
+X-Received: by 2002:a17:906:4786:b0:780:ed2a:ed6a with SMTP id cw6-20020a170906478600b00780ed2aed6amr7074827ejc.769.1663587567562;
+        Mon, 19 Sep 2022 04:39:27 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id kz25-20020a17090777d900b007812ba2a360sm2972667ejc.149.2022.09.19.04.33.05
+        by smtp.gmail.com with ESMTPSA id fq32-20020a1709069da000b00770812e2394sm15392871ejc.160.2022.09.19.04.39.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 04:33:05 -0700 (PDT)
-Message-ID: <c7d8c851-c046-ae59-4345-e8e308d4fb19@redhat.com>
-Date:   Mon, 19 Sep 2022 12:33:04 +0100
+        Mon, 19 Sep 2022 04:39:26 -0700 (PDT)
+Message-ID: <5160c28f-03df-b1a7-d02a-3f567fde249b@redhat.com>
+Date:   Mon, 19 Sep 2022 12:39:26 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: [PATCH 5/5] platform/x86: dell: Add new dell-wmi-ddv driver
+Subject: Re: [PATCH v2 1/1] hp-wmi: Setting thermal profile fails with 0x06
 Content-Language: en-US
-To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
-Cc:     rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
-        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
-        productdev@system76.com, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-6-W_Armin@gmx.de>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>, balalic.enver@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     markgross@kernel.org
+References: <20220912192603.4001-1-jorge.lopez2@hp.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220912125342.7395-6-W_Armin@gmx.de>
+In-Reply-To: <20220912192603.4001-1-jorge.lopez2@hp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/12/22 13:53, Armin Wolf wrote:
-> The dell-wmi-ddv driver adds support for reading
-> the current temperature and ePPID of ACPI batteries
-> on supported Dell machines.
+On 9/12/22 20:26, Jorge Lopez wrote:
+> Error 0x06 (invalid command parameter) is reported by hp-wmi module
+> when reading the current thermal profile and then proceed to set it
+> back. The failing condition occurs in Linux NixOS after user
+> configures the thermal profile to ‘quiet mode’ in Windows.  Quiet Fan
+> Mode is supported in Windows but was not supported in hp-wmi module.
 > 
-> Since the WMI interface used by this driver does not
-> do any input validation and thus cannot be used for probing,
-> the driver depends on the ACPI battery extension machanism
-> to discover batteries.
+> This fix adds support for PLATFORM_PROFILE_QUIET in hp-wmi module for
+> HP notebooks other than HP Omen series.  Quiet thermal profile is not
+> supported in HP Omen series notebooks.
 > 
-> The driver also supports a debugfs interface for retrieving
-> buffers containing fan and thermal sensor information.
-> Since the meaing of the content of those buffers is currently
-> unknown, the interface is meant for reverse-engineering and
-> will likely be replaced with an hwmon interface once the
-> meaning has been understood.
-> 
-> The driver was tested on a Dell Inspiron 3505.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  .../ABI/testing/debugfs-dell-wmi-ddv          |  21 +
->  .../ABI/testing/sysfs-platform-dell-wmi-ddv   |  16 +
->  MAINTAINERS                                   |   7 +
->  drivers/platform/x86/dell/Kconfig             |  13 +
->  drivers/platform/x86/dell/Makefile            |   1 +
->  drivers/platform/x86/dell/dell-wmi-ddv.c      | 365 ++++++++++++++++++
->  drivers/platform/x86/wmi.c                    |   1 +
->  7 files changed, 424 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-dell-wmi-ddv
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
->  create mode 100644 drivers/platform/x86/dell/dell-wmi-ddv.c
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-dell-wmi-ddv b/Documentation/ABI/testing/debugfs-dell-wmi-ddv
-> new file mode 100644
-> index 000000000000..fbcc5d6f7388
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-dell-wmi-ddv
-> @@ -0,0 +1,21 @@
-> +What:		/sys/kernel/debug/dell-wmi-ddv-<wmi_device_name>/fan_sensor_information
-> +Date:		September 2022
-> +KernelVersion:	6.1
-> +Contact:	Armin Wolf <W_Armin@gmx.de>
-> +Description:
-> +		This file contains the contents of the fan sensor information buffer,
-> +		which contains fan sensor entries and a terminating character (0xFF).
-> +
-> +		Each fan sensor entry consists of three bytes with an unknown meaning,
-> +		interested people may use this file for reverse-engineering.
-> +
-> +What:		/sys/kernel/debug/dell-wmi-ddv-<wmi_device_name>/thermal_sensor_information
-> +Date:		September 2022
-> +KernelVersion:	6.1
-> +Contact:	Armin Wolf <W_Armin@gmx.de>
-> +Description:
-> +		This file contains the contents of the thermal sensor information buffer,
-> +		which contains thermal sensor entries and a terminating character (0xFF).
-> +
-> +		Each thermal sensor entry consists of five bytes with an unknown meaning,
-> +		interested people may use this file for reverse-engineering.
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv b/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
-> new file mode 100644
-> index 000000000000..98e0b8399d13
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
-> @@ -0,0 +1,16 @@
-> +What:		/sys/class/power_supply/<battery_name>/temp
-> +Date:		September 2022
-> +KernelVersion:	6.1
-> +Contact:	Armin Wolf <W_Armin@gmx.de>
-> +Description:
-> +		Reports the current ACPI battery temperature on supported Dell machines.
-> +
-> +		Values are represented in 1/10 Degrees Celsius.
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-This is a standard power_supply class attribute which is already documented in:
-Documentation/ABI/testing/sysfs-class-power
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-so no need to document this here, please drop it.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Other then that this patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
-
-> +
-> +What:		/sys/class/power_supply/<battery_name>/eppid
-> +Date:		September 2022
-> +KernelVersion:	6.1
-> +Contact:	Armin Wolf <W_Armin@gmx.de>
-> +Description:
-> +		Reports the Dell ePPID (electronic Dell Piece Part Identification)
-> +		of the ACPI battery.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6bb894ea4a77..d9fd4c9eebbc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5821,6 +5821,13 @@ L:	Dell.Client.Kernel@dell.com
->  S:	Maintained
->  F:	drivers/platform/x86/dell/dell-wmi-descriptor.c
 > 
-> +DELL WMI DDV DRIVER
-> +M:	Armin Wolf <W_Armin@gmx.de>
-> +S:	Maintained
-> +F:	Documentation/ABI/testing/debugfs-dell-wmi-ddv
-> +F:	Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
-> +F:	drivers/platform/x86/dell/dell-wmi-ddv.c
-> +
->  DELL WMI SYSMAN DRIVER
->  M:	Divya Bharathi <divya.bharathi@dell.com>
->  M:	Prasanth Ksr <prasanth.ksr@dell.com>
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index 25421e061c47..209e63e347e2 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -189,6 +189,19 @@ config DELL_WMI_DESCRIPTOR
->  	default n
->  	depends on ACPI_WMI
+> ---
+> Based on the latest platform-drivers-x86.git/for-next
 > 
-> +config DELL_WMI_DDV
-> +	tristate "Dell WMI sensors Support"
-> +	default m
-> +	depends on ACPI_BATTERY
-> +	depends on ACPI_WMI
-> +	help
-> +	  This option adds support for WMI-based sensors like
-> +	  battery temperature sensors found on some Dell notebooks.
-> +	  It also supports reading of the batteries ePPID.
-> +
-> +	  To compile this drivers as a module, choose M here: the module will
-> +	  be called dell-wmi-ddv.
-> +
->  config DELL_WMI_LED
->  	tristate "External LED on Dell Business Netbooks"
->  	default m
-> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-> index ddba1df71e80..1b8942426622 100644
-> --- a/drivers/platform/x86/dell/Makefile
-> +++ b/drivers/platform/x86/dell/Makefile
-> @@ -19,5 +19,6 @@ dell-wmi-objs				:= dell-wmi-base.o
->  dell-wmi-$(CONFIG_DELL_WMI_PRIVACY)	+= dell-wmi-privacy.o
->  obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
->  obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
-> +obj-$(CONFIG_DELL_WMI_DDV)		+= dell-wmi-ddv.o
->  obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
->  obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
-> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> new file mode 100644
-> index 000000000000..6eef298f13eb
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> @@ -0,0 +1,365 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * dell-wmi-ddv.c -- Linux driver for WMI sensor information on Dell notebooks.
-> + *
-> + * Copyright (C) 2022 Armin Wolf <W_Armin@gmx.de>
-> + */
-> +
-> +#define pr_format(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <acpi/battery.h>
-> +#include <linux/acpi.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kstrtox.h>
-> +#include <linux/math.h>
-> +#include <linux/module.h>
-> +#include <linux/limits.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/wmi.h>
-> +
-> +#define DRIVER_NAME	"dell-wmi-ddv"
-> +
-> +#define DELL_DDV_SUPPORTED_INTERFACE 2
-> +#define DELL_DDV_GUID	"8A42EA14-4F2A-FD45-6422-0087F7A7E608"
-> +
-> +enum dell_ddv_method {
-> +	DELL_DDV_BATTERY_DESIGN_CAPACITY	= 0x01,
-> +	DELL_DDV_BATTERY_FULL_CHARGE_CAPACITY	= 0x02,
-> +	DELL_DDV_BATTERY_MANUFACTURE_NAME	= 0x03,
-> +	DELL_DDV_BATTERY_MANUFACTURE_DATE	= 0x04,
-> +	DELL_DDV_BATTERY_SERIAL_NUMBER		= 0x05,
-> +	DELL_DDV_BATTERY_CHEMISTRY_VALUE	= 0x06,
-> +	DELL_DDV_BATTERY_TEMPERATURE		= 0x07,
-> +	DELL_DDV_BATTERY_CURRENT		= 0x08,
-> +	DELL_DDV_BATTERY_VOLTAGE		= 0x09,
-> +	DELL_DDV_BATTERY_MANUFACTURER_ACCESS	= 0x0A,
-> +	DELL_DDV_BATTERY_RELATIVE_CHARGE_STATE	= 0x0B,
-> +	DELL_DDV_BATTERY_CYCLE_COUNT		= 0x0C,
-> +	DELL_DDV_BATTERY_EPPID			= 0x0D,
-> +	DELL_DDV_BATTERY_RAW_ANALYTICS_START	= 0x0E,
-> +	DELL_DDV_BATTERY_RAW_ANALYTICS		= 0x0F,
-> +	DELL_DDV_BATTERY_DESIGN_VOLTAGE		= 0x10,
-> +
-> +	DELL_DDV_INTERFACE_VERSION		= 0x12,
-> +
-> +	DELL_DDV_FAN_SENSOR_INFORMATION		= 0x20,
-> +	DELL_DDV_THERMAL_SENSOR_INFORMATION	= 0x22,
-> +};
-> +
-> +struct dell_wmi_ddv_data {
-> +	struct device_attribute temp_attr, eppid_attr;
-> +	struct wmi_device *wdev;
-> +};
-> +
-> +static int dell_wmi_ddv_query_type(struct wmi_device *wdev, enum dell_ddv_method method, u32 arg,
-> +				   union acpi_object **result, acpi_object_type type)
-> +{
-> +	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	const struct acpi_buffer in = {
-> +		.length = sizeof(arg),
-> +		.pointer = &arg,
-> +	};
-> +	union acpi_object *obj;
-> +	acpi_status ret;
-> +
-> +	ret = wmidev_evaluate_method(wdev, 0x0, method, &in, &out);
-> +	if (ACPI_FAILURE(ret))
-> +		return -EIO;
-> +
-> +	obj = out.pointer;
-> +	if (!obj)
-> +		return -ENODATA;
-> +
-> +	if (obj->type != type) {
-> +		kfree(obj);
-> +		return -EIO;
-> +	}
-> +
-> +	*result = obj;
-> +
-> +	return 0;
-> +}
-> +
-> +static int dell_wmi_ddv_query_integer(struct wmi_device *wdev, enum dell_ddv_method method,
-> +				      u32 arg, u32 *res)
-> +{
-> +	union acpi_object *obj;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_query_type(wdev, method, arg, &obj, ACPI_TYPE_INTEGER);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (obj->integer.value <= U32_MAX)
-> +		*res = (u32)obj->integer.value;
-> +	else
-> +		ret = -ERANGE;
-> +
-> +	kfree(obj);
-> +
-> +	return ret;
-> +}
-> +
-> +static int dell_wmi_ddv_query_buffer(struct wmi_device *wdev, enum dell_ddv_method method,
-> +				     u32 arg, union acpi_object **result)
-> +{
-> +	union acpi_object *obj;
-> +	u64 buffer_size;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_query_type(wdev, method, arg, &obj, ACPI_TYPE_PACKAGE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (obj->package.count != 2)
-> +		goto err_free;
-> +
-> +	if (obj->package.elements[0].type != ACPI_TYPE_INTEGER)
-> +		goto err_free;
-> +
-> +	buffer_size = obj->package.elements[0].integer.value;
-> +
-> +	if (obj->package.elements[1].type != ACPI_TYPE_BUFFER)
-> +		goto err_free;
-> +
-> +	if (buffer_size != obj->package.elements[1].buffer.length) {
-> +		dev_warn(&wdev->dev,
-> +			 FW_WARN "ACPI buffer size (%llu) does not match WMI buffer size (%d)\n",
-> +			 buffer_size, obj->package.elements[1].buffer.length);
-> +
-> +		goto err_free;
-> +	}
-> +
-> +	*result = obj;
-> +
-> +	return 0;
-> +
-> +err_free:
-> +	kfree(obj);
-> +
-> +	return -EIO;
-> +}
-> +
-> +static int dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_method method,
-> +				     u32 arg, union acpi_object **result)
-> +{
-> +	return dell_wmi_ddv_query_type(wdev, method, arg, result, ACPI_TYPE_STRING);
-> +}
-> +
-> +static int dell_wmi_ddv_battery_index(struct acpi_device *acpi_dev, u32 *index)
-> +{
-> +	const char *uid_str = acpi_device_uid(acpi_dev);
-> +
-> +	if (!uid_str)
-> +		return -ENODEV;
-> +
-> +	return kstrtou32(uid_str, 10, index);
-> +}
-> +
-> +static ssize_t temp_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct dell_wmi_ddv_data *data = container_of(attr, struct dell_wmi_ddv_data, temp_attr);
-> +	u32 index, value;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_battery_index(to_acpi_device(dev->parent), &index);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_TEMPERATURE, index, &value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%d\n", DIV_ROUND_CLOSEST(value, 10));
-> +}
-> +
-> +static ssize_t eppid_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct dell_wmi_ddv_data *data = container_of(attr, struct dell_wmi_ddv_data, eppid_attr);
-> +	union acpi_object *obj;
-> +	u32 index;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_battery_index(to_acpi_device(dev->parent), &index);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = dell_wmi_ddv_query_string(data->wdev, DELL_DDV_BATTERY_EPPID, index, &obj);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = sysfs_emit(buf, "%s\n", obj->string.pointer);
-> +
-> +	kfree(obj);
-> +
-> +	return ret;
-> +}
-> +
-> +static int dell_wmi_ddv_add_battery(void *drvdata, struct power_supply *battery)
-> +{
-> +	struct dell_wmi_ddv_data *data = drvdata;
-> +	u32 index;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_battery_index(to_acpi_device(battery->dev.parent), &index);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = device_create_file(&battery->dev, &data->temp_attr);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = device_create_file(&battery->dev, &data->eppid_attr);
-> +	if (ret < 0) {
-> +		device_remove_file(&battery->dev, &data->temp_attr);
-> +
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dell_wmi_ddv_remove_battery(void *drvdata, struct power_supply *battery)
-> +{
-> +	struct dell_wmi_ddv_data *data = drvdata;
-> +
-> +	device_remove_file(&battery->dev, &data->temp_attr);
-> +	device_remove_file(&battery->dev, &data->eppid_attr);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_battery_hook_ops dell_wmi_ddv_battery_hook_ops = {
-> +	.add_battery = dell_wmi_ddv_add_battery,
-> +	.remove_battery = dell_wmi_ddv_remove_battery,
-> +};
-> +
-> +static void dell_wmi_ddv_battery_remove(void *data)
-> +{
-> +	struct acpi_battery_hook *hook = data;
-> +
-> +	battery_hook_unregister(hook);
-> +}
-> +
-> +static int dell_wmi_ddv_battery_add(struct dell_wmi_ddv_data *data)
-> +{
-> +	struct acpi_battery_hook *hook;
-> +
-> +	sysfs_attr_init(&data->temp_attr.attr);
-> +	data->temp_attr.attr.name = "temp";
-> +	data->temp_attr.attr.mode = 0444;
-> +	data->temp_attr.show = temp_show;
-> +
-> +	sysfs_attr_init(&data->eppid_attr.attr);
-> +	data->eppid_attr.attr.name = "eppid";
-> +	data->eppid_attr.attr.mode = 0444;
-> +	data->eppid_attr.show = eppid_show;
-> +
-> +	hook = battery_hook_register("DELL Battery Extension", data,
-> +				     &dell_wmi_ddv_battery_hook_ops);
-> +	if (IS_ERR(hook))
-> +		return PTR_ERR(hook);
-> +
-> +	return devm_add_action_or_reset(&data->wdev->dev, dell_wmi_ddv_battery_remove, hook);
-> +}
-> +
-> +static int dell_wmi_ddv_buffer_read(struct seq_file *seq, enum dell_ddv_method method)
-> +{
-> +	struct device *dev = seq->private;
-> +	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
-> +	union acpi_object *obj;
-> +	union acpi_object buf;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_query_buffer(data->wdev, method, 0, &obj);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	buf = obj->package.elements[1];
-> +	ret = seq_write(seq, buf.buffer.pointer, buf.buffer.length);
-> +	kfree(obj);
-> +
-> +	return ret;
-> +}
-> +
-> +static int dell_wmi_ddv_fan_read(struct seq_file *seq, void *offset)
-> +{
-> +	return dell_wmi_ddv_buffer_read(seq, DELL_DDV_FAN_SENSOR_INFORMATION);
-> +}
-> +
-> +static int dell_wmi_ddv_temp_read(struct seq_file *seq, void *offset)
-> +{
-> +	return dell_wmi_ddv_buffer_read(seq, DELL_DDV_THERMAL_SENSOR_INFORMATION);
-> +}
-> +
-> +static void dell_wmi_ddv_debugfs_remove(void *data)
-> +{
-> +	struct dentry *entry = data;
-> +
-> +	debugfs_remove(entry);
-> +}
-> +
-> +static void dell_wmi_ddv_debugfs_init(struct wmi_device *wdev)
-> +{
-> +	struct dentry *entry;
-> +	char name[64];
-> +
-> +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", DRIVER_NAME, dev_name(&wdev->dev));
-> +	entry = debugfs_create_dir(name, NULL);
-> +
-> +	debugfs_create_devm_seqfile(&wdev->dev, "fan_sensor_information", entry,
-> +				    dell_wmi_ddv_fan_read);
-> +	debugfs_create_devm_seqfile(&wdev->dev, "thermal_sensor_information", entry,
-> +				    dell_wmi_ddv_temp_read);
-> +
-> +	devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_debugfs_remove, entry);
-> +}
-> +
-> +static int dell_wmi_ddv_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct dell_wmi_ddv_data *data;
-> +	u32 version;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_query_integer(wdev, DELL_DDV_INTERFACE_VERSION, 0, &version);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	dev_dbg(&wdev->dev, "WMI interface version: %d\n", version);
-> +	if (version != DELL_DDV_SUPPORTED_INTERFACE)
-> +		return -ENODEV;
-> +
-> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, data);
-> +	data->wdev = wdev;
-> +
-> +	dell_wmi_ddv_debugfs_init(wdev);
-> +
-> +	return dell_wmi_ddv_battery_add(data);
-> +}
-> +
-> +static const struct wmi_device_id dell_wmi_ddv_id_table[] = {
-> +	{ DELL_DDV_GUID, NULL },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(wmi, dell_wmi_ddv_id_table);
-> +
-> +static struct wmi_driver dell_wmi_ddv_driver = {
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +	},
-> +	.id_table = dell_wmi_ddv_id_table,
-> +	.probe = dell_wmi_ddv_probe,
-> +};
-> +module_wmi_driver(dell_wmi_ddv_driver);
-> +
-> +MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
-> +MODULE_DESCRIPTION("Dell WMI sensor driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index aff23309b5d3..f307d8c5c6c3 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -108,6 +108,7 @@ MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
->  /* allow duplicate GUIDs as these device drivers use struct wmi_driver */
->  static const char * const allow_duplicates[] = {
->  	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
-> +	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
->  	NULL
+> Version 2 - Set bit (PROFILE_QUIET) only for non HP Omen Notebooks
+> Version 1 - Original patch
+> ---
+>  drivers/platform/x86/hp-wmi.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index bc7020e9df9e..9a64601e217f 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
+>  enum hp_thermal_profile {
+>  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+>  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> -	HP_THERMAL_PROFILE_COOL			= 0x02
+> +	HP_THERMAL_PROFILE_COOL			= 0x02,
+> +	HP_THERMAL_PROFILE_QUIET		= 0x03,
 >  };
-> 
-> --
-> 2.30.2
-> 
+>  
+>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+> @@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
+>  	case HP_THERMAL_PROFILE_COOL:
+>  		*profile =  PLATFORM_PROFILE_COOL;
+>  		break;
+> +	case HP_THERMAL_PROFILE_QUIET:
+> +		*profile = PLATFORM_PROFILE_QUIET;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -1216,6 +1220,10 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+>  	case PLATFORM_PROFILE_COOL:
+>  		tp =  HP_THERMAL_PROFILE_COOL;
+>  		break;
+> +	case PLATFORM_PROFILE_QUIET:
+> +		tp = HP_THERMAL_PROFILE_QUIET;
+> +		break;
+> +
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -1263,6 +1271,8 @@ static int thermal_profile_setup(void)
+>  
+>  		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
+>  		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
+> +
+> +		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+>  	}
+>  
+>  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
 
