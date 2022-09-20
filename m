@@ -2,181 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2D6C6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Sep 2022 00:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB6C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Sep 2022 07:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbiITAV0 (ORCPT
+        id S230011AbiITHB0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Sep 2022 20:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
+        Tue, 20 Sep 2022 03:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiITAVY (ORCPT
+        with ESMTP id S229561AbiITHBZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Sep 2022 20:21:24 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13225018F;
-        Mon, 19 Sep 2022 17:21:22 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8D5225C01E2;
-        Mon, 19 Sep 2022 20:21:20 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 19 Sep 2022 20:21:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1663633280; x=
-        1663719680; bh=VbAejdjD9UaMfsDs74NDsg2d+mKxJjZQy4FL4UKO4Oc=; b=h
-        0m6f0gYrz52lqRrvTgAlh5LKIGa2/5zTZ/JuIlC0CXTGBos9+lxi8YGMjXb+nndy
-        gT9F+Z/GC2NBIW223WocZD2641UvmG9nvhIHXelKbkPFvu4raK+ewbhlGLxQb/Bq
-        WyMh2vUea84IZo4U0Q5saPdwpHPMVYhlVKV9MVQc2qHnRZoYJ13JffQrY5mO2Xf4
-        Y0HYkWy2mm8uREIkH8xF1hxLgHy560gvwK1fS3O1eR1LjsSeQtWVVZvfSdTaiOEI
-        3m3mS2ZHtqfY5YLAhiseqqaj8ISv6aF+fRdllZ5ZwKioHO2SXdvMRJyamLva1kVV
-        qMjN3inQ7JgveHxoIihBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1663633280; x=
-        1663719680; bh=VbAejdjD9UaMfsDs74NDsg2d+mKxJjZQy4FL4UKO4Oc=; b=Y
-        2VfrQQ01yFCBmjAeBsMvHXCq9JrHu8ge+niZPUXXAoraaGgvFkf4rBgAlTwaCR6S
-        9wWEhu55+kMSjedNj2CuuGdMWgO5rIUOXTqTBxHfIOUrKClLge8uLgU5L+l/GF2v
-        Dnc9YBMnjbhIarO8zUVCMYAOUAl96rKII03lnNn856pifKddOLHzxts4diujdvmv
-        Kio0Gy3PswLNsmUYmDqv8XCX48sCcYNqSU/iVy0kBXOHJx5e21EYebHPUaBZKN7H
-        KTHYQLsuAeFv31W1GaDz8oioPRtf+paU36iFO1km2HdcEF4iBCTx9L/vtnh9eNSu
-        7sfK5O3Yt5HFe0NkCIqoQ==
-X-ME-Sender: <xms:gAcpY8ENRw_5mVGv8BDtlnjNWmow-cdNx7uG8nCWBU5OqeRt6Lsmqg>
-    <xme:gAcpY1VdfqtAochlVc9G-6jGAwIZgKCEBtHuneK9QcJop6fhx9jHJ8BasTW8GAQfz
-    Key0c3vpFNmXvdCq74>
-X-ME-Received: <xmr:gAcpY2JzZEQVipx5NZwZ8P5YmkEvti13oXopAdxcNHhisdRZoc5Eop9t1D4GiAgHwhzUHg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfedvkedgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvveffjghftgfgfgggsehtsgertddtreejnecuhfhrohhmpefnuhhk
-    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
-    hnpeevjeelledugfehtedtleevtdegjeeiteeiffeihfduiefffffffedtteffkedvleen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:gAcpY-GYqv0BukNKba-S50Nqhq1bROArnP0hho5EGKHBRLiiTJ9e0g>
-    <xmx:gAcpYyUCrZBMDhFkIZw2WOe1XTLY0Mziqo2F_QauNG97ed6tqb-hNQ>
-    <xmx:gAcpYxPEmZqjAG6oBKmeVsXMKV4oWx-9-aXvyiN4ic7ylq_ZkdJJdw>
-    <xmx:gAcpY0JlB7ZXgtFKzPEblyCGeM3sXWX7TbgXBBDwzRE7Kh_ztjhY8Q>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 19 Sep 2022 20:21:16 -0400 (EDT)
-Message-ID: <d6a2c31de1cb7e10730926ff0c3630c8c40a0e19.camel@ljones.dev>
-Subject: Re: [PATCH] asus-wmi: Expand support of GPU fan to read RPM and
- label
-From:   Luke Jones <luke@ljones.dev>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     markgross@kernel.org, corentin.chary@gmail.com, linux@roeck-us.net,
-        jdelvare@suse.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Date:   Tue, 20 Sep 2022 12:21:07 +1200
-In-Reply-To: <4d55be61-e797-9eec-bf7e-ed675947b04d@redhat.com>
-References: <20220916004623.10992-1-luke@ljones.dev>
-         <4d55be61-e797-9eec-bf7e-ed675947b04d@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.0 (by Flathub.org)) 
+        Tue, 20 Sep 2022 03:01:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60904A805
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Sep 2022 00:01:24 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaXFv-0007j9-P3; Tue, 20 Sep 2022 09:01:19 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaXFv-001oCK-UJ; Tue, 20 Sep 2022 09:01:18 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oaXFt-0028uW-U8; Tue, 20 Sep 2022 09:01:17 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] platform/x86: int3472/discrete: Drop a forward declaration
+Date:   Tue, 20 Sep 2022 09:01:01 +0200
+Message-Id: <20220920070101.907596-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2532; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=yOFYzS7qJqt0sg1oK7XcJk/4o9lx/Qw0xHCBt/FyEb4=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjKWUpl8DN6QhQ+Mbl/V82KMtt+zyMMWXXDBG7zfPz NcC0q02JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYyllKQAKCRDB/BR4rcrsCVYAB/ 41jz95hwGFNNmp6FfH/y3Dc8otmVBYcx8OEQsfm9J81f7R8ZPrRqulOszj9obb1SMXc/DGbpGII97q aUyEvj0aIRdVYV2JOu7tZ9KXEqTf/QGG2mxps2AzpeHMkcct+cAuYGpgkM1vP1tribhOUaeHdj6fDZ kQG0RvuoH6ddgEKvaPYUXDyyNaNqPZ0TrY7d4MTcPlej+8P085zJD3lsMRLv6fFO64L8L0iBWy5t/R m48WQheUfKkNJz4lqj87OR9hiHoMOkZCIzV4MhxZ66rgQfO86tXuEHB0sdJY+4CFgdEAk1dMjqOn42 7Q+zOj6FGKH57hFt5/76Sk9wKHTQLI
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-T24gTW9uLCAyMDIyLTA5LTE5IGF0IDEzOjE4ICswMTAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+
-IEhpIEx1a2UsCj4gCj4gT24gOS8xNi8yMiAwMTo0NiwgTHVrZSBELiBKb25lcyB3cm90ZToKPiA+
-IFRoZSBwcmV2aW91c2x5IGFkZGVkIHBhdGNoIHRvIGFkZCBzdXBwb3J0IGZvciBwd20gY2hhbmdl
-IGZvciBUVUYKPiA+IGxhcHRvcHMKPiA+IGFsc28gaXMgdXN1YWJsZSBmb3IgbW9yZSB0aGFuIFRV
-Ri4gVGhlIHNhbWUgbWV0aG9kIGAweDAwMTEwMDE0YCBpcwo+ID4gdXNlZCB0byByZWFkIHRoZSBm
-YW4gUlBNLgo+ID4gCj4gPiBBZGQgdHdvIGV4dHJhIGF0dHJpYnV0ZXMgZm9yIHJlYWRpbmcgZmFu
-MiBwbHVzIGZhbjIgbGFiZWwuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEx1a2UgRC4gSm9uZXMg
-PGx1a2VAbGpvbmVzLmRldj4KPiA+IC0tLQo+ID4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3Vz
-LXdtaS5jIHwgMzYKPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+ID4gwqAx
-IGZpbGUgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+IAo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmMKPiA+IGIvZHJpdmVy
-cy9wbGF0Zm9ybS94ODYvYXN1cy13bWkuYwo+ID4gaW5kZXggYWU0NmFmNzMxZGU5Li43ZmU2Y2Uy
-NWRhMGEgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jCj4g
-PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jCj4gPiBAQCAtNzIsNiArNzIs
-NyBAQCBtb2R1bGVfcGFyYW0oZm5sb2NrX2RlZmF1bHQsIGJvb2wsIDA0NDQpOwo+ID4gwqAKPiA+
-IMKgI2RlZmluZSBBU1VTX1dNSV9GTkxPQ0tfQklPU19ESVNBQkxFRMKgwqBCSVQoMCkKPiA+IMKg
-Cj4gPiArI2RlZmluZSBBU1VTX0dQVV9GQU5fREVTQ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAiZ3B1X2ZhbiIKPiA+IMKgI2RlZmluZSBBU1VTX0ZBTl9ERVNDwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgImNwdV9mYW4iCj4gPiDCoCNkZWZpbmUgQVNVU19GQU5fTUZVTsKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MTMKPiA+IMKgI2RlZmluZSBBU1VT
-X0ZBTl9TRlVOX1JFQUTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDYKPiA+IEBAIC0yMDc4
-LDYgKzIwNzksMzAgQEAgc3RhdGljIHNzaXplX3QgYXN1c19od21vbl90ZW1wMShzdHJ1Y3QKPiA+
-IGRldmljZSAqZGV2LAo+ID4gwqB9Cj4gPiDCoAo+ID4gwqAvKiBHUFUgZmFuIG9uIG1vZGVybiBS
-T0cgbGFwdG9wcyAqLwo+ID4gK3N0YXRpYyBzc2l6ZV90IGZhbjJfaW5wdXRfc2hvdyhzdHJ1Y3Qg
-ZGV2aWNlICpkZXYsCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGRldmljZV9hdHRy
-aWJ1dGUKPiA+ICphdHRyLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNoYXIgKmJ1ZikKPiA+
-ICt7Cj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgYXN1c193bWkgKmFzdXMgPSBkZXZfZ2V0X2Ry
-dmRhdGEoZGV2KTsKPiA+ICvCoMKgwqDCoMKgwqDCoGludCB2YWx1ZTsKPiA+ICvCoMKgwqDCoMKg
-wqDCoGludCByZXQ7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqByZXQgPSBhc3VzX3dtaV9nZXRf
-ZGV2c3RhdGUoYXN1cywKPiA+IEFTVVNfV01JX0RFVklEX0dQVV9GQU5fQ1RSTCwgJnZhbHVlKTsK
-PiA+ICvCoMKgwqDCoMKgwqDCoGlmIChyZXQgPCAwKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHJldHVybiByZXQ7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqB2YWx1ZSAmPSAw
-eGZmZmY7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gc3lzZnNfZW1pdChidWYsICIl
-ZFxuIiwgdmFsdWUgPCAwID8gLTEgOiB2YWx1ZSAqCj4gPiAxMDApOwo+IAo+IEFzIGFscmVhZHkg
-bWVudGlvbmVkIHNpbmNlIHlvdSAmIHdpdGggMHhmZmZmIGFib3ZlIHRoZSBzaWduIGJpdCBjYW4K
-PiBuZXZlciBiZQo+IHNldCwgc28gdGhlIHZhbHVlIGlzIG5ldmVyIGxlc3MgdGhlbiA8IDAsIHNv
-IEkgaGF2ZSBzaW1wbGlmaWVkIHRoaXMKPiB0bzoKPiAKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJu
-IHN5c2ZzX2VtaXQoYnVmLCAiJWRcbiIsIHZhbHVlICogMTAwKTsKPiAKPiB3aGlsZSBtZXJnaW5n
-LgoKVGhhbmtzIEhhbnMgcmVhbGx5IGFwcHJlY2lhdGUgaXQsIHNvcnJ5IGkgbWlzc2VkIHRoYXQu
-IE15IHdvcmtsb2FkIGlzIGEKYml0IHRvbyBsYXJnZSBhdCB0aGUgbW9tZW50IDopCgpDaGVlcnMs
-Ckx1a2UuCgo+IAo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgc3NpemVfdCBmYW4yX2xhYmVsX3No
-b3coc3RydWN0IGRldmljZSAqZGV2LAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVj
-dCBkZXZpY2VfYXR0cmlidXRlCj4gPiAqYXR0ciwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBjaGFyICpidWYpCj4gPiArewo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHNwcmludGYoYnVm
-LCAiJXNcbiIsIEFTVVNfR1BVX0ZBTl9ERVNDKTsKPiA+ICt9Cj4gCj4gQW5kIGhlcmUgSSBoYXZl
-IGRvbmUgcy9zcHJpbnRmL3N5c2ZzX2VtaXQvIHdpdGggdGhvc2UgY2hhbmdlcwo+IEkndmUgYXBw
-bGllZCB0aGlzIHBhdGNoIHRvIG15IHJldmlldy1oYW5zIGJyYW5jaDoKPiBodHRwczovL2dpdC5r
-ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9wZHg4Ni9wbGF0Zm9ybS1kcml2ZXJz
-LXg4Ni5naXQvbG9nLz9oPXJldmlldy1oYW5zCj4gCj4gTm90ZSBpdCB3aWxsIHNob3cgdXAgaW4g
-bXkgcmV2aWV3LWhhbnMgYnJhbmNoIG9uY2UgSSd2ZSBwdXNoZWQgbXkKPiBsb2NhbCBicmFuY2gg
-dGhlcmUsIHdoaWNoIG1pZ2h0IHRha2UgYSB3aGlsZS4KPiAKPiBPbmNlIEkndmUgcnVuIHNvbWUg
-dGVzdHMgb24gdGhpcyBicmFuY2ggdGhlIHBhdGNoZXMgdGhlcmUgd2lsbCBiZQo+IGFkZGVkIHRv
-IHRoZSBwbGF0Zm9ybS1kcml2ZXJzLXg4Ni9mb3ItbmV4dCBicmFuY2ggYW5kIGV2ZW50dWFsbHkK
-PiB3aWxsIGJlIGluY2x1ZGVkIGluIHRoZSBwZHg4NiBwdWxsLXJlcXVlc3QgdG8gTGludXMgZm9y
-IHRoZSBuZXh0Cj4gbWVyZ2Utd2luZG93Lgo+IAo+IFJlZ2FyZHMsCj4gCj4gSGFucwo+IAo+IAo+
-IAo+ID4gKwo+ID4gwqBzdGF0aWMgc3NpemVfdCBwd20yX2VuYWJsZV9zaG93KHN0cnVjdCBkZXZp
-Y2UgKmRldiwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwKPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqBjaGFyICpidWYpCj4gPiBAQCAtMjEyNyw5ICsyMTUyLDEyIEBAIHN0YXRpYyBzc2l6ZV90
-IHB3bTJfZW5hYmxlX3N0b3JlKHN0cnVjdAo+ID4gZGV2aWNlICpkZXYsCj4gPiDCoC8qIEZhbjEg
-Ki8KPiA+IMKgc3RhdGljIERFVklDRV9BVFRSX1JXKHB3bTEpOwo+ID4gwqBzdGF0aWMgREVWSUNF
-X0FUVFJfUlcocHdtMV9lbmFibGUpOwo+ID4gLXN0YXRpYyBERVZJQ0VfQVRUUl9SVyhwd20yX2Vu
-YWJsZSk7Cj4gPiDCoHN0YXRpYyBERVZJQ0VfQVRUUl9STyhmYW4xX2lucHV0KTsKPiA+IMKgc3Rh
-dGljIERFVklDRV9BVFRSX1JPKGZhbjFfbGFiZWwpOwo+ID4gKy8qIEZhbjIgLSBHUFUgZmFuICov
-Cj4gPiArc3RhdGljIERFVklDRV9BVFRSX1JXKHB3bTJfZW5hYmxlKTsKPiA+ICtzdGF0aWMgREVW
-SUNFX0FUVFJfUk8oZmFuMl9pbnB1dCk7Cj4gPiArc3RhdGljIERFVklDRV9BVFRSX1JPKGZhbjJf
-bGFiZWwpOwo+ID4gwqAKPiA+IMKgLyogVGVtcGVyYXR1cmUgKi8KPiA+IMKgc3RhdGljIERFVklD
-RV9BVFRSKHRlbXAxX2lucHV0LCBTX0lSVUdPLCBhc3VzX2h3bW9uX3RlbXAxLCBOVUxMKTsKPiA+
-IEBAIC0yMTQwLDYgKzIxNjgsOCBAQCBzdGF0aWMgc3RydWN0IGF0dHJpYnV0ZSAqaHdtb25fYXR0
-cmlidXRlc1tdID0KPiA+IHsKPiA+IMKgwqDCoMKgwqDCoMKgwqAmZGV2X2F0dHJfcHdtMl9lbmFi
-bGUuYXR0ciwKPiA+IMKgwqDCoMKgwqDCoMKgwqAmZGV2X2F0dHJfZmFuMV9pbnB1dC5hdHRyLAo+
-ID4gwqDCoMKgwqDCoMKgwqDCoCZkZXZfYXR0cl9mYW4xX2xhYmVsLmF0dHIsCj4gPiArwqDCoMKg
-wqDCoMKgwqAmZGV2X2F0dHJfZmFuMl9pbnB1dC5hdHRyLAo+ID4gK8KgwqDCoMKgwqDCoMKgJmRl
-dl9hdHRyX2ZhbjJfbGFiZWwuYXR0ciwKPiA+IMKgCj4gPiDCoMKgwqDCoMKgwqDCoMKgJmRldl9h
-dHRyX3RlbXAxX2lucHV0LmF0dHIsCj4gPiDCoMKgwqDCoMKgwqDCoMKgTlVMTAo+ID4gQEAgLTIx
-NjAsNyArMjE5MCw5IEBAIHN0YXRpYyB1bW9kZV90Cj4gPiBhc3VzX2h3bW9uX3N5c2ZzX2lzX3Zp
-c2libGUoc3RydWN0IGtvYmplY3QgKmtvYmosCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHx8
-IGF0dHIgPT0gJmRldl9hdHRyX3B3bTFfZW5hYmxlLmF0dHIpIHsKPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgaWYgKGFzdXMtPmZhbl90eXBlID09IEZBTl9UWVBFX05PTkUpCj4g
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4g
-MDsKPiA+IC3CoMKgwqDCoMKgwqDCoH0gZWxzZSBpZiAoYXR0ciA9PSAmZGV2X2F0dHJfcHdtMl9l
-bmFibGUuYXR0cikgewo+ID4gK8KgwqDCoMKgwqDCoMKgfSBlbHNlIGlmIChhdHRyID09ICZkZXZf
-YXR0cl9mYW4yX2lucHV0LmF0dHIKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoCB8fCBhdHRyID09
-ICZkZXZfYXR0cl9mYW4yX2xhYmVsLmF0dHIKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoCB8fCBh
-dHRyID09ICZkZXZfYXR0cl9wd20yX2VuYWJsZS5hdHRyKSB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGlmIChhc3VzLT5ncHVfZmFuX3R5cGUgPT0gRkFOX1RZUEVfTk9ORSkK
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVy
-biAwOwo+ID4gwqDCoMKgwqDCoMKgwqDCoH0gZWxzZSBpZiAoYXR0ciA9PSAmZGV2X2F0dHJfdGVt
-cDFfaW5wdXQuYXR0cikgewo+IAoK
+By swapping the definition of skl_int3472_discrete_remove() and
+skl_int3472_discrete_probe() the forward declaration of the former can
+be dropped. This is a good thing as it removes code duplication.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
+
+I didn't check in detail, but in my experience calling the remove
+function in the error path of the probe function is prone to cleanup
+errors. I didn't spot anything after a quick glance, but let me point
+out this is unstable. E.g. in an error path of
+skl_int3472_register_clock() the function is left with
+int3472->clock.clk pointing to an unregistered clk and int3472->clock.cl
+== NULL. Someone modifying the return function must be well aware of
+that.
+
+Best regards
+Uwe
+
+ drivers/platform/x86/intel/int3472/discrete.c | 34 +++++++++----------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index ed4c9d760757..974a132db651 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -331,7 +331,22 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+ 	return 0;
+ }
+ 
+-static int skl_int3472_discrete_remove(struct platform_device *pdev);
++static int skl_int3472_discrete_remove(struct platform_device *pdev)
++{
++	struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
++
++	gpiod_remove_lookup_table(&int3472->gpios);
++
++	if (int3472->clock.cl)
++		skl_int3472_unregister_clock(int3472);
++
++	gpiod_put(int3472->clock.ena_gpio);
++	gpiod_put(int3472->clock.led_gpio);
++
++	skl_int3472_unregister_regulator(int3472);
++
++	return 0;
++}
+ 
+ static int skl_int3472_discrete_probe(struct platform_device *pdev)
+ {
+@@ -383,23 +398,6 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int skl_int3472_discrete_remove(struct platform_device *pdev)
+-{
+-	struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
+-
+-	gpiod_remove_lookup_table(&int3472->gpios);
+-
+-	if (int3472->clock.cl)
+-		skl_int3472_unregister_clock(int3472);
+-
+-	gpiod_put(int3472->clock.ena_gpio);
+-	gpiod_put(int3472->clock.led_gpio);
+-
+-	skl_int3472_unregister_regulator(int3472);
+-
+-	return 0;
+-}
+-
+ static const struct acpi_device_id int3472_device_id[] = {
+ 	{ "INT3472", 0 },
+ 	{ }
+
+base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+-- 
+2.37.2
 
