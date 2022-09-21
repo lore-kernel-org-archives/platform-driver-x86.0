@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967F1C6FA91
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Sep 2022 23:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A34FC32771
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Sep 2022 23:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230358AbiIUXEv (ORCPT
+        id S229899AbiIUXE4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Sep 2022 19:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49688 "EHLO
+        Wed, 21 Sep 2022 19:04:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiIUXEu (ORCPT
+        with ESMTP id S229472AbiIUXEw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Sep 2022 19:04:50 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262B559250;
-        Wed, 21 Sep 2022 16:04:49 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id c2-20020a1c3502000000b003b2973dafb7so221926wma.2;
-        Wed, 21 Sep 2022 16:04:49 -0700 (PDT)
+        Wed, 21 Sep 2022 19:04:52 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258EA5303E;
+        Wed, 21 Sep 2022 16:04:51 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id d12-20020a05600c3acc00b003b4c12e47f3so233743wms.4;
+        Wed, 21 Sep 2022 16:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=tkaw2t+B6c8owIS12c7Onfy2EYjl3zBqJf7jdOufviU=;
-        b=ovRk512mAT3JaTZrcrWoImvW967ZusXKdeRAgRrmPL6KnAQRpelyZ+OtTDkxiebRv3
-         KOkTBEzZr7lE2mPXpo9QAxKGqsSZdKn21HrWEp7/CT4TSnhX5qWehcEpqYv/rOJylNY5
-         LC83R3EDC4R2+i9PB8ST84CRLTriBcHi6I7herocyVnD59f4M7xlCbAUcd+GX5aNJrSS
-         zFykrmaTVcOR3vB4Sn2MMw4x84CLgVkVdmBDRotmy5X3qdqtnDw05iIxUn1J6KxY4/o7
-         s2X9uXT5dTBAVw5NJFXI8i0vdaSV7azk+82tXnwTAxAGMOo8SOYzLyEEJIHgBTBM1RVN
-         S/qA==
+        bh=ttAPtBvVDayfAZFEAiurM2USRVzwfizzaTOK/jSLWhg=;
+        b=YwoFHi5MFH45Q2dqstzKOfXUkAxGKTfIUjXElm7aGdVaJoRXouDkhq6IpGrGOCYekK
+         6RDuJYsddop+pX3oDc1tIjFSo4pP8A6PVKhdy5+YQsFuxVPbG7difhHexwqWGsKhbBZi
+         16PIbebkkv5l5Roev2tUvg489Vp9BqOfg5y3WKSt1UwHMxc9wC2gl8QSxFxhJ05RZiyj
+         4NKroGpGqHUIdHF2T/tUEVBhE4GuQlKAHsYmLk0v+DRJYkDNM0m+O8B/N9rVYo4qdqIL
+         KQB2BnuhChmOhxmPL2LPG4P6MbfngYeBgsfYPiAZIkIwMB4S4hQQaUb+2cPf/fM1qPXx
+         BfKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=tkaw2t+B6c8owIS12c7Onfy2EYjl3zBqJf7jdOufviU=;
-        b=tojWTjuevYmX7398yIg1LwOkXQihkO1C8v+9geIgF7si/4WFYeM1FHp5t8Tp2yPt1m
-         xbxtL3kGHhb+Up7ET4EClwOItkU3q4ssUVp5pDnRFEpZjCeoJCrG24xDCOFo3gahrBZm
-         bvvYFnbDm+6BaKVdYWNKylG5Xa4aFQcOHWMkskcRgMFK4UlzX9Mb66cUsRaRIz2523X2
-         YO8tnvBJH4DH9WSYJbgLIIATyt6lfKWK4ixKxb7RQxzJBSmgyo0Lmj6WmaJ58WjL7c05
-         GNw/TIOkh0EdAIUIs16Ixhv2x7cDxLPSKyNLrKtJZ6n0GiBeCE+1yqu1jE4UdtS6rH/b
-         jpgg==
-X-Gm-Message-State: ACrzQf1MQPy7V9Bw+mzd8Dw2o5ulsNeKMDk7nbHrbjpkJDEPtrG/Zoyo
-        PIuXLnooX2JYO5P/V1UOlVVfic6Tlp8=
-X-Google-Smtp-Source: AMsMyM6o+RRn5VBV9VRWvNHeuhGkxt4ZBle80NX757tRkycoaINK/ebVYXrfEy6U0yy21gvbCweInA==
-X-Received: by 2002:a05:600c:3585:b0:3b4:a308:1581 with SMTP id p5-20020a05600c358500b003b4a3081581mr7612070wmq.77.1663801487659;
-        Wed, 21 Sep 2022 16:04:47 -0700 (PDT)
+        bh=ttAPtBvVDayfAZFEAiurM2USRVzwfizzaTOK/jSLWhg=;
+        b=B717DmiNSEmw6V5cXIWz9R48pEXyn6WsK0J8bsXlLEsnZed9d9Ef8MircKooXKn9X9
+         Xe+3jJrYa8CXWJj02fH+h8mhVQbxnwvzJUfiXtkUM1RcaqFYYfJegOJCmcvrSNRFpDxi
+         woUXnLPHZ3mNZ93LMCcswZIPyIFbYjfhrX3/Ps9JtcQz5jQspGDlGG42EkEnvf05GPcG
+         AngZy7UBiARqfowr2XDe72VBCaMGdfD7RYddE5wAtcYMXn+3P8sIkSU3D9ewwn9Iwc9m
+         mjT9kCxbkCD8u73xR9/pd2cH/pYREaM3ig3pVPt3fPHHRsDsi9lopf2Zi+3w2yqAOMeX
+         Swxw==
+X-Gm-Message-State: ACrzQf2gUcNjN9wnC6R8JGSStRxy5EwLcep0bdXfuTBJShiIDlL6V8OJ
+        BqD6V5qBG0qPRJsXTOWnCUulFbiWs4A=
+X-Google-Smtp-Source: AMsMyM7o6+kbEKzggHEmviYKODkwBnuoGY1J1WCIVAZGbsEkxpCJvLN5TWuW+rGqIpzdceToeI/dAw==
+X-Received: by 2002:a05:600c:310b:b0:3b4:c618:180d with SMTP id g11-20020a05600c310b00b003b4c618180dmr323922wmo.25.1663801490649;
+        Wed, 21 Sep 2022 16:04:50 -0700 (PDT)
 Received: from localhost.localdomain (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
-        by smtp.gmail.com with ESMTPSA id x12-20020adfffcc000000b0022ac672654dsm3519252wrs.58.2022.09.21.16.04.46
+        by smtp.gmail.com with ESMTPSA id x12-20020adfffcc000000b0022ac672654dsm3519252wrs.58.2022.09.21.16.04.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 16:04:47 -0700 (PDT)
+        Wed, 21 Sep 2022 16:04:50 -0700 (PDT)
 From:   Daniel Scally <djrscally@gmail.com>
 To:     linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
 Cc:     rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
         sboyd@kernel.org, hdegoede@redhat.com, markgross@kernel.org,
         robert.moore@intel.com
-Subject: [PATCH v3 1/5] ACPI: scan: Add acpi_dev_get_next_consumer_dev()
-Date:   Thu, 22 Sep 2022 00:04:35 +0100
-Message-Id: <20220921230439.768185-2-djrscally@gmail.com>
+Subject: [PATCH v3 4/5] platform/x86: int3472: Support multiple gpio lookups in board data
+Date:   Thu, 22 Sep 2022 00:04:38 +0100
+Message-Id: <20220921230439.768185-5-djrscally@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220921230439.768185-1-djrscally@gmail.com>
 References: <20220921230439.768185-1-djrscally@gmail.com>
@@ -68,128 +68,139 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In commit b83e2b306736 ("ACPI: scan: Add function to fetch dependent
-of ACPI device") we added a means of fetching the first device to
-declare itself dependent on another ACPI device in the _DEP method.
-One assumption in that patch was that there would only be a single
-consuming device, but this has not held.
+Currently, we only support passing a single gpiod_lookup_table as part
+of the board data for the tps68470 driver. This carries the implicit
+assumption that each TPS68470 device will only support a single
+sensor, which does not hold true.
 
-Replace that function with a new function that fetches the next consumer
-of a supplier device. Where no "previous" consumer is passed in, it
-behaves identically to the original function.
+Extend the code to support the possibility of multiple sensors each
+having a gpiod_lookup_table, and opportunistically add the lookup
+table for the Surface Go line's IR camera.
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Daniel Scally <djrscally@gmail.com>
 ---
 Changes since v2:
 
-	- Separated adev_p and adev instead of relying on a cast (Rafael)
-	- Used a separate if block to check for adev == start in
-	  acpi_dev_get_next_consumer_dev() (Rafael)
+	- None
 
- drivers/acpi/scan.c                         | 40 +++++++++++++++------
- drivers/platform/x86/intel/int3472/common.c |  2 +-
- include/acpi/acpi_bus.h                     |  4 ++-
- 3 files changed, 34 insertions(+), 12 deletions(-)
+ drivers/platform/x86/intel/int3472/tps68470.c | 17 ++++++++++-----
+ drivers/platform/x86/intel/int3472/tps68470.h |  3 ++-
+ .../x86/intel/int3472/tps68470_board_data.c   | 21 ++++++++++++++++---
+ 3 files changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 42cec8120f18..12ac2f3ae5d2 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2235,9 +2235,22 @@ static int acpi_bus_attach(struct acpi_device *device, void *first_pass)
- 	return 0;
- }
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+index 8a684030933d..49fc379fe680 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.c
++++ b/drivers/platform/x86/intel/int3472/tps68470.c
+@@ -150,6 +150,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ 	int n_consumers;
+ 	int device_type;
+ 	int ret;
++	int i;
  
--static int acpi_dev_get_first_consumer_dev_cb(struct acpi_dep_data *dep, void *data)
-+static int acpi_dev_get_next_consumer_dev_cb(struct acpi_dep_data *dep, void *data)
+ 	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+ 	if (n_consumers < 0)
+@@ -194,15 +195,18 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ 		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+ 		cells[2].name = "tps68470-gpio";
+ 
+-		gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_table);
++		for (i = 0; i < board_data->n_gpiod_lookups; i++)
++			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+ 
+ 		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+ 					   cells, TPS68470_WIN_MFD_CELL_COUNT,
+ 					   NULL, 0, NULL);
+ 		kfree(cells);
+ 
+-		if (ret)
+-			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
++		if (ret) {
++			for (i = 0; i < board_data->n_gpiod_lookups; i++)
++				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
++		}
+ 
+ 		break;
+ 	case DESIGNED_FOR_CHROMEOS:
+@@ -226,10 +230,13 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ static int skl_int3472_tps68470_remove(struct i2c_client *client)
  {
--	struct acpi_device *adev;
-+	struct acpi_device **adev_p = data;
-+	struct acpi_device *adev = *adev_p;
-+
-+	/*
-+	 * If we're passed a 'previous' consumer device then we need to skip
-+	 * any consumers until we meet the previous one, and then NULL @data
-+	 * so the next one can be returned.
-+	 */
-+	if (adev) {
-+		if (dep->consumer == adev->handle)
-+			*adev_p = NULL;
-+
-+		return 0;
+ 	const struct int3472_tps68470_board_data *board_data;
++	int i;
+ 
+ 	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+-	if (board_data)
+-		gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_table);
++	if (board_data) {
++		for (i = 0; i < board_data->n_gpiod_lookups; i++)
++			gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
 +	}
  
- 	adev = acpi_bus_get_acpi_device(dep->consumer);
- 	if (adev) {
-@@ -2368,25 +2381,32 @@ bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
- EXPORT_SYMBOL_GPL(acpi_dev_ready_for_enumeration);
- 
- /**
-- * acpi_dev_get_first_consumer_dev - Return ACPI device dependent on @supplier
-+ * acpi_dev_get_next_consumer_dev - Return the next adev dependent on @supplier
-  * @supplier: Pointer to the dependee device
-+ * @start: Pointer to the current dependent device
-  *
-- * Returns the first &struct acpi_device which declares itself dependent on
-+ * Returns the next &struct acpi_device which declares itself dependent on
-  * @supplier via the _DEP buffer, parsed from the acpi_dep_list.
-  *
-- * The caller is responsible for putting the reference to adev when it is no
-- * longer needed.
-+ * If the returned adev is not passed as @start to this function, the caller is
-+ * responsible for putting the reference to adev when it is no longer needed.
-  */
--struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier)
-+struct acpi_device *acpi_dev_get_next_consumer_dev(struct acpi_device *supplier,
-+						   struct acpi_device *start)
- {
--	struct acpi_device *adev = NULL;
-+	struct acpi_device *adev = start;
- 
- 	acpi_walk_dep_device_list(supplier->handle,
--				  acpi_dev_get_first_consumer_dev_cb, &adev);
-+				  acpi_dev_get_next_consumer_dev_cb, &adev);
-+
-+	acpi_dev_put(start);
-+
-+	if (adev == start)
-+		return NULL;
- 
- 	return adev;
+ 	return 0;
  }
--EXPORT_SYMBOL_GPL(acpi_dev_get_first_consumer_dev);
-+EXPORT_SYMBOL_GPL(acpi_dev_get_next_consumer_dev);
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+index cfd33eb62740..35915e701593 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.h
++++ b/drivers/platform/x86/intel/int3472/tps68470.h
+@@ -16,8 +16,9 @@ struct tps68470_regulator_platform_data;
  
- /**
-  * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
-diff --git a/drivers/platform/x86/intel/int3472/common.c b/drivers/platform/x86/intel/int3472/common.c
-index 77cf058e4168..9db2bb0bbba4 100644
---- a/drivers/platform/x86/intel/int3472/common.c
-+++ b/drivers/platform/x86/intel/int3472/common.c
-@@ -62,7 +62,7 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
- 	struct acpi_device *sensor;
- 	int ret = 0;
+ struct int3472_tps68470_board_data {
+ 	const char *dev_name;
+-	struct gpiod_lookup_table *tps68470_gpio_lookup_table;
+ 	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
++	unsigned int n_gpiod_lookups;
++	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+ };
  
--	sensor = acpi_dev_get_first_consumer_dev(adev);
-+	sensor = acpi_dev_get_next_consumer_dev(adev, NULL);
- 	if (!sensor) {
- 		dev_err(dev, "INT3472 seems to have no dependents.\n");
- 		return -ENODEV;
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index e7d27373ff71..bf0886dca6eb 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -736,7 +736,9 @@ bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const ch
+ const struct int3472_tps68470_board_data *int3472_tps68470_get_board_data(const char *dev_name);
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index 525f09a3b5ff..e6cc8f40f5af 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -96,7 +96,7 @@ static const struct tps68470_regulator_platform_data surface_go_tps68470_pdata =
+ 	},
+ };
  
- void acpi_dev_clear_dependencies(struct acpi_device *supplier);
- bool acpi_dev_ready_for_enumeration(const struct acpi_device *device);
--struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier);
-+struct acpi_device *acpi_dev_get_next_consumer_dev(struct acpi_device *supplier,
-+						   struct acpi_device *start);
+-static struct gpiod_lookup_table surface_go_tps68470_gpios = {
++static struct gpiod_lookup_table surface_go_int347a_gpios = {
+ 	.dev_id = "i2c-INT347A:00",
+ 	.table = {
+ 		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+@@ -105,16 +105,31 @@ static struct gpiod_lookup_table surface_go_tps68470_gpios = {
+ 	}
+ };
+ 
++static struct gpiod_lookup_table surface_go_int347e_gpios = {
++	.dev_id = "i2c-INT347E:00",
++	.table = {
++		GPIO_LOOKUP("tps68470-gpio", 5, "enable", GPIO_ACTIVE_HIGH),
++		{ }
++	}
++};
 +
- struct acpi_device *
- acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
- struct acpi_device *
+ static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+ 	.dev_name = "i2c-INT3472:05",
+-	.tps68470_gpio_lookup_table = &surface_go_tps68470_gpios,
+ 	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
++	.n_gpiod_lookups = 2,
++	.tps68470_gpio_lookup_tables = {
++		&surface_go_int347a_gpios,
++		&surface_go_int347e_gpios,
++	},
+ };
+ 
+ static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data = {
+ 	.dev_name = "i2c-INT3472:01",
+-	.tps68470_gpio_lookup_table = &surface_go_tps68470_gpios,
+ 	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
++	.n_gpiod_lookups = 1,
++	.tps68470_gpio_lookup_tables = {
++		&surface_go_int347a_gpios
++	},
+ };
+ 
+ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
 -- 
 2.25.1
 
