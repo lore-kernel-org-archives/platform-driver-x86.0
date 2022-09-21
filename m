@@ -2,183 +2,284 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ECCC54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Sep 2022 20:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480FFC6FA91
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Sep 2022 09:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbiITUe0 (ORCPT
+        id S231667AbiIUJnZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Sep 2022 16:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        Wed, 21 Sep 2022 05:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbiITUeZ (ORCPT
+        with ESMTP id S231451AbiIUJnX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Sep 2022 16:34:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3117E754BC
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Sep 2022 13:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663706063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AW/dBlE2AQIyAJdoiRe+IiNWCzn2tZIwTsT8MkCs6dw=;
-        b=LwSM/RuNl64bBTuPzertN8E7wPL512PXsq7G9RJf4FfMXSKN6OoB0yR0eIIujQLrOPqOl4
-        j/u1jynuUlvZu7vNBRIAWwmzriTeCuT5TI+IarfotTdm/NPNjVlKftRnrX1chVdGQRT9sD
-        +hfLBaLCDkvD6wUy+xFBOXuWscE10Rs=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-594-bYyLs-c3PZ-dQIZVogMhTw-1; Tue, 20 Sep 2022 16:34:22 -0400
-X-MC-Unique: bYyLs-c3PZ-dQIZVogMhTw-1
-Received: by mail-ed1-f71.google.com with SMTP id e15-20020a056402190f00b0044f41e776a0so2720652edz.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Sep 2022 13:34:21 -0700 (PDT)
+        Wed, 21 Sep 2022 05:43:23 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A92D923F0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Sep 2022 02:43:21 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id t7so8854552wrm.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Sep 2022 02:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=E+bXTwXk468jHftEr3dBeJhK9o2shQayxao98VlwoRw=;
+        b=dqJCMoR3Wpm5q0wgjWEIoOZQr4Lf76QdaQF6NcFgkeNjpe3zjYpBGhHbB0GS8WOZ43
+         XDxuWllj6UvROVhKnEQzr1sSQrXlXMM1wdHRxCEBbrFO3km0MBbHYRCeXmaZgB2VnY++
+         XmBV44JotEeP9zKpdQor7kec0aKRL8PUA2HB2LCygrsVh1KZsjmDshhzU79GiZNuQJlE
+         Zhs2PXqbx+OqoF+SfMpqScXZlEQzM7D0kR59zCYIs5BFu58lnwelqSQjiEpx2uaaeoGu
+         yeMCdPtx2sqEb+YFMMe/l6UPDdfOH8O18rhy5M05+C1YMBNXU6gXIMQobtfmlpLTNd6d
+         F/Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=AW/dBlE2AQIyAJdoiRe+IiNWCzn2tZIwTsT8MkCs6dw=;
-        b=z2PyNkEB9QutObOVXFCAPkT8swNI4j4TKtiQ4qPCX2bGVikYRD3vD+FIlFERXMeyBl
-         mEXRA/HiF3JLqpcZJLgm9PqwTc3Q4LRtcn586Z9IYbwMwCcXamST0FW6GIy+6WY3Uhzz
-         FFOmjIQOdodZMlGZeLpysCM1a/seXqlNJN5prA0KIsw1aMQ4qnb4ywenhLu5NEmt9gkh
-         rQEfKUOK+S6QKIcXgXSKt9lMOQvJqoKIZrV7L5R7k0vy8l2GRPxZLxf2mZWzgLo/lH0D
-         IYojCkFMWXLLoinyR2a9H+3YyuGgUtAkJDLOvT7EN01BsAfPod7Y7HukPOzskVEgduvF
-         Sc1Q==
-X-Gm-Message-State: ACrzQf0+dk+17DXRUEJck/MPMmixrIQwQKMX5l+9/1byiXW9BJzVsDGh
-        IaPaJmfwzy8aVtgQGfraaMIKZk1ldFE8XBF+7ksR0rgEsTN7RMxZ+bUS1HMvWPSV8Blsnu4VpS7
-        eZYoO4uv02M+CLAEkgVE8PPHBqzJTcqoDNA==
-X-Received: by 2002:a05:6402:148e:b0:44e:aa8c:abc5 with SMTP id e14-20020a056402148e00b0044eaa8cabc5mr21854669edv.145.1663706060860;
-        Tue, 20 Sep 2022 13:34:20 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5FchS9e4VFCieS+jJqLY+dTOU/Tx49Du5MG0zdHE5Otei40J9KDFt3Sdcf4z5v6zK+N5MWgw==
-X-Received: by 2002:a05:6402:148e:b0:44e:aa8c:abc5 with SMTP id e14-20020a056402148e00b0044eaa8cabc5mr21854652edv.145.1663706060620;
-        Tue, 20 Sep 2022 13:34:20 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa7c45a000000b00452ff2c203asm415245edr.92.2022.09.20.13.34.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Sep 2022 13:34:20 -0700 (PDT)
-Message-ID: <0df56807-f8d3-e284-3c4d-f510b2c5604a@redhat.com>
-Date:   Tue, 20 Sep 2022 22:34:18 +0200
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=E+bXTwXk468jHftEr3dBeJhK9o2shQayxao98VlwoRw=;
+        b=78dYmhX/dwWfIBu5qA8ewf4airQmNesUFoQS0c0vV/jIENWHD9xxklmDQFbINdaxB/
+         iJg6mLA84S0/qJgoEMjIMGTppHzgkfLMNmiFT08YJuYEUnUxaS9sEZox8EQjtq+xKKgt
+         TncrFPxcSISoJ4xvjg/GHphdYcHNSY/NAkcRKfVWrnnPia0pK58ci9MTl6fwc8kpFKNT
+         ifaiJdUsyvKQ/71QNdBzriGfEYpUNkpulxchOW6LPlFsvmdqGRaPGwxWeYbpu3lVUqPx
+         uvc2W2yEbKl3fxVNWWvxSl6c5GCIYZnodp9iejdjGfeBP42TZeV4nY1JCNG2vTZUycPT
+         u/9Q==
+X-Gm-Message-State: ACrzQf0IRvvOliAItIPHSayxykMnUH07EKH0UOQVQehlhgCpaAqON2Ro
+        IQVWXo7LUwuSG8sQwp8U4OCQVg==
+X-Google-Smtp-Source: AMsMyM756OFdQ2evzY/NHW0O2+Dcfs8Bg0Nv7J0RzSsaoDmzxdVmx0SI/p/77zAwKi+aD9ZXpPDpOw==
+X-Received: by 2002:a05:6000:1d84:b0:224:f447:b1a7 with SMTP id bk4-20020a0560001d8400b00224f447b1a7mr16001103wrb.688.1663753399739;
+        Wed, 21 Sep 2022 02:43:19 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id r123-20020a1c2b81000000b003a62052053csm2763917wmr.18.2022.09.21.02.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 02:43:19 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH v4 00/30] Rework the trip points creation
+Date:   Wed, 21 Sep 2022 11:42:13 +0200
+Message-Id: <20220921094244.606948-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH RFC 1/2] staging: quickstart: Add ACPI quickstart button
- (PNP0C32) driver
-To:     Arvid Norlander <lkml@vorpal.se>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-input@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>
-References: <20220911194934.558019-1-lkml@vorpal.se>
- <20220911194934.558019-2-lkml@vorpal.se>
- <0e88f032-5f29-8842-401e-48a573319ecf@redhat.com>
- <484b5248-ebf2-74c9-0629-08daa538a5c0@vorpal.se>
-Content-Language: en-US
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <484b5248-ebf2-74c9-0629-08daa538a5c0@vorpal.se>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Arvid,
+This work is the pre-requisite of handling correctly when the trip
+point are crossed. For that we need to rework how the trip points are
+declared and assigned to a thermal zone.
 
-On 9/20/22 11:48, Arvid Norlander wrote:
-> On 2022-09-19 11:27, Hans de Goede wrote:
->> Hi,
->>
->> On 9/11/22 20:49, Arvid Norlander wrote:
->>> This is loosly based on a previous staging driver that was removed. See
->>> links below for more info on that driver. The original commit ID was
->>> 0be013e3dc2ee79ffab8a438bbb4e216837e3d52.
->>>
->>> However, here a completely different approach is taken to the user space
->>> API (which should solve the issues the original driver had). Each PNP0C32
->>> device is a button, and each such button gets a separate input device
->>> associated with it (instead of a shared platform input device).
->>>
->>> The button ID (as read from ACPI method GHID) is provided via a sysfs file
->>> "button_id".
->>>
->>> If the button caused a wakeup it will "latch" the "wakeup_cause" sysfs file
->>> to true. This can be reset by a user space process.
->>>
->>> Link: https://marc.info/?l=linux-acpi&m=120550727131007
->>> Link: https://lkml.org/lkml/2010/5/28/327
->>> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
->>
->> 2 high level remarks here:
->>
->> 1. I believe we should strive for having all issues with this driver fixed
->> before merging it, at which point it should not sit under drivers/staging
->> but rather under drivers/platform/x86 (as an added bonus this can also make
->> toshiba_apci's Kconfig bit select it automatically). So for the next version
->> please move this to drivers/platform/x86
-> 
-> Makes sense, will do. However, there is nothing x86 specific in theory with
-> this driver. Would it not make more sense to put it under drivers/acpi?
+Even if it appears to be a common sense to have the trip points being
+ordered, this no guarantee neither documentation telling that is the
+case.
 
-Since the spec is from Microsoft I expect it to be a x86 only thing
-(AFAIK this predates there couple of ARM attempts). Also since this has
-some tie-in with toshiba-acpi (at least for the laptops you are actually
-testing this on) keeping it in the same dir as toshiba-acpi seems to
-make the most sense to me.
+One solution could have been to create an ordered array of trips built
+when registering the thermal zone by calling the different get_trip*
+ops. However those ops receive a thermal zone pointer which is not
+known as it is in the process of creating it.
 
-A lot of ACPI drivers actually live under drivers/platform/x86 for
-similar reasons.
+This cyclic dependency shows we have to rework how we manage the trip
+points.
 
->> 2. This is using struct acpi_driver, but as Rafael (ACPI maintainer) always
->> said that is really only for very special cases. The ACPI subsystem should
->> instantiate standard platform devices for each PNP0C32 device, you can
->> check this under: /sys/bus/devices/platform.  And this driver should then
->> be convered to a standard platform_driver binding to the platform devices
->> instead of being a struct acpi_driver.
-> 
-> I had a look at this, and it seems like a much more complicated a approach,
-> for example, there is no dedicated .ops.notify, which means I need to use
-> acpi_install_notify_handler, and there is no devm_ version of that either.
-> A lot of other things seem to be ever so slightly more complicated as well. 
-> 
-> What is the motivation behind this being preferred? And are most of the
-> existing drivers using acpi_driver legacy (e.g. toshiba_acpi)?
+Actually, all the trip points definition can be common to the backend
+sensor drivers and we can factor out the thermal trip structure in all
+of them.
 
-I'm mostly just parroting (repeating) the party-line here. Not making
-new drivers an acpi_driver is typically requested by Rafael, the ACPI
-maintainer. Rafael can you explain why?
+Then, as we register the thermal trips array, they will be available
+in the thermal zone structure and a core function can return the trip
+given its id.
 
-From my own view point I guess this has to do with ACPI having changed
-over time from mostly offering firmware interfaces which mostly talk
-to the EC, to actually also describing the hw.
+The get_trip_* ops won't be needed anymore and could be removed. The
+resulting code will be another step forward to a self encapsulated
+generic thermal framework.
 
-Now a days of lot of ACPI devices are actually describing real hardware
-devices, e.g. PCI cards, I2C devices, SPI decices and UART attached devices
-including things like IO / MMIO addresses, I2C slave addresses, SPI chip
-selects, GPIOs, IRQs, etc.
+Most of the drivers can be converted more or less easily. This series
+does a first round with most of the drivers. Some remain and will be
+converted but with a smaller set of changes as the conversion is a bit
+more complex.
 
-So the kernel now a days instantiates actual SPI / I2C / UART / PCI /
-other(platform) devices for all the devices in ACPI, with all the physicial
-resources attached to the struct platform_device / struct i2c_client / etc.
-using the kernels standard resource mechanisms.
+Changelog:
+ v4:
+   - Remove extra lines on exynos changes as reported by Krzysztof Kozlowski
+   - Collected tags
+ v3:
+   - Reorg the series to be git-bisect safe
+   - Added the set_trip generic function
+   - Added the get_crit_temp generic function
+   - Removed more dead code in the thermal-of
+   - Fixed the exynos changelog
+   - Fixed the error check for the exynos drivers
+   - Collected tags
+ v2:
+   - Added missing EXPORT_SYMBOL_GPL() for thermal_zone_get_trip()
+   - Removed tab whitespace in the acerhdf driver
+   - Collected tags
 
-The struct platform_device / struct i2c_client / etc. devices then have
-a firmware_node pointer (aka companion device) pointing to the ACPI
-device in case the driver also needs to make some actual ACPI calls on
-either to query some extra information stored in ACPI, or sometimes
-to enable / disable special features driven through ACPI methods.
+Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Peter Kaestle <peter@piie.net>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amitk@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc: Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Support Opensource <support.opensource@diasemi.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Thara Gopinath <thara.gopinath@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "Niklas Söderlund" <niklas.soderlund@ragnatech.se>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Antoine Tenart <atenart@kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Dmitry Osipenko <digetx@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
 
-The instantiation of these struct platform_device / struct i2c_client / etc.
-devices is done through a special default/fallback acpi_driver. If you
-attach your own acpi_driver to an acpi_device then this will not happen.
+Daniel Lezcano (30):
+  thermal/core: Add a generic thermal_zone_get_trip() function
+  thermal/sysfs: Do not make get_trip_hyst optional
+  thermal/core: Add a generic thermal_zone_set_trip() function
+  thermal/core: Add a generic thermal_zone_get_crit_temp() function
+  thermal/core/governors: Use thermal_zone_get_trip() instead of ops
+    functions
+  thermal/of: Use generic thermal_zone_get_trip() function
+  thermal/of: Remove unused functions
+  thermal/drivers/exynos: Use generic thermal_zone_get_trip() function
+  thermal/drivers/exynos: of_thermal_get_ntrips()
+  thermal/drivers/exynos: Replace of_thermal_is_trip_valid() by
+    thermal_zone_get_trip()
+  thermal/drivers/tegra: Use generic thermal_zone_get_trip() function
+  thermal/drivers/uniphier: Use generic thermal_zone_get_trip() function
+  thermal/drivers/hisi: Use generic thermal_zone_get_trip() function
+  thermal/drivers/qcom: Use generic thermal_zone_get_trip() function
+  thermal/drivers/armada: Use generic thermal_zone_get_trip() function
+  thermal/drivers/rcar_gen3: Use the generic function to get the number
+    of trips
+  thermal/of: Remove of_thermal_get_ntrips()
+  thermal/of: Remove of_thermal_is_trip_valid()
+  thermal/of: Remove of_thermal_set_trip_hyst()
+  thermal/of: Remove of_thermal_get_crit_temp()
+  thermal/drivers/st: Use generic trip points
+  thermal/drivers/imx: Use generic thermal_zone_get_trip() function
+  thermal/drivers/rcar: Use generic thermal_zone_get_trip() function
+  thermal/drivers/broadcom: Use generic thermal_zone_get_trip() function
+  thermal/drivers/da9062: Use generic thermal_zone_get_trip() function
+  thermal/drivers/ti: Remove unused macros ti_thermal_get_trip_value() /
+    ti_thermal_trip_is_valid()
+  thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
+  thermal/drivers/cxgb4: Use generic thermal_zone_get_trip() function
+  thermal/intel/int340x: Replace parameter to simplify
+  thermal/drivers/intel: Use generic thermal_zone_get_trip() function
 
-So for any devices which also have some physical part (and not just pure
-firmware interface) using an acpi_driver is not what you want. At which
-point I guess we simply just want to avoid it even for pure virtual/fw
-devices like the PNP0C32 case for consistency.
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |   2 -
+ .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  41 +----
+ drivers/platform/x86/acerhdf.c                |  73 +++-----
+ drivers/thermal/armada_thermal.c              |  39 ++---
+ drivers/thermal/broadcom/bcm2835_thermal.c    |   8 +-
+ drivers/thermal/da9062-thermal.c              |  52 +-----
+ drivers/thermal/gov_bang_bang.c               |  23 +--
+ drivers/thermal/gov_fair_share.c              |  18 +-
+ drivers/thermal/gov_power_allocator.c         |  51 +++---
+ drivers/thermal/gov_step_wise.c               |  22 ++-
+ drivers/thermal/hisi_thermal.c                |  11 +-
+ drivers/thermal/imx_thermal.c                 |  72 +++-----
+ .../int340x_thermal/int340x_thermal_zone.c    |  31 ++--
+ .../int340x_thermal/int340x_thermal_zone.h    |   4 +-
+ .../processor_thermal_device.c                |  10 +-
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  | 120 +++++++------
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c   |  39 ++---
+ drivers/thermal/rcar_gen3_thermal.c           |   2 +-
+ drivers/thermal/rcar_thermal.c                |  49 +-----
+ drivers/thermal/samsung/exynos_tmu.c          |  57 +++----
+ drivers/thermal/st/st_thermal.c               |  47 +-----
+ drivers/thermal/tegra/soctherm.c              |  33 ++--
+ drivers/thermal/tegra/tegra30-tsensor.c       |  17 +-
+ drivers/thermal/thermal_core.c                | 158 +++++++++++++++---
+ drivers/thermal/thermal_core.h                |  22 ---
+ drivers/thermal/thermal_helpers.c             |  28 ++--
+ drivers/thermal/thermal_netlink.c             |  21 +--
+ drivers/thermal/thermal_of.c                  | 116 -------------
+ drivers/thermal/thermal_sysfs.c               | 127 +++++---------
+ drivers/thermal/ti-soc-thermal/ti-thermal.h   |  15 --
+ drivers/thermal/uniphier_thermal.c            |  27 ++-
+ include/linux/thermal.h                       |  10 ++
+ 32 files changed, 535 insertions(+), 810 deletions(-)
 
-Note this is just my view on this, perhaps Rafael can explain this better?
-
-Regards,
-
-Hans
+-- 
+2.34.1
 
