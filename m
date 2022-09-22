@@ -2,158 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6143C6FA90
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 09:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C508DC6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 11:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbiIVJHy (ORCPT
+        id S229622AbiIVLzo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Sep 2022 05:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
+        Thu, 22 Sep 2022 07:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiIVJHx (ORCPT
+        with ESMTP id S229453AbiIVLzm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Sep 2022 05:07:53 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B32B2D84;
-        Thu, 22 Sep 2022 02:07:51 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id n15so7519288wrq.5;
-        Thu, 22 Sep 2022 02:07:51 -0700 (PDT)
+        Thu, 22 Sep 2022 07:55:42 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744999DFB9;
+        Thu, 22 Sep 2022 04:55:41 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id c11so15092195wrp.11;
+        Thu, 22 Sep 2022 04:55:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Lc01pxS7q+WM84eQOKwpZ8GVMsKlTCdoSl+t7XzNmmA=;
-        b=RbCTv5XR3WIp8uuxZy8X0WTBJElmTPLj5L5QJmxOCHDabvdrlXs0sZa26Y+2OCB/wM
-         bkOg32k2FZj2N/k2Wg8w0r0vDoiYaEmrJvRBVNpxLhg13qmf3FWQnMbMhhcPfj5+G7Nx
-         TWRKcxJg/IwCBlGplgpuv1oB/8q51BDLxFs78dz2i0Y1W1DSh5Xbj9vSnIXGUJnDRNh5
-         ojEl2iUweK26IpBbxSWMKz5BPW7nqBCPCyium3x2l38nPNhuDqgIGlHtYA1I4hcEdcr8
-         WZh22qz6qJI+delKO/1XGK7VL1s1FcnV9qdF2Qaorh1JfRpERBJLrKrD9NdFZwP2a89e
-         nWzQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=eHfdo9NG5mSV1GqT+TMNYoa5pHvJV47fW+UKuY3so9U=;
+        b=gE26CUnH3Ul7RGU8Zulze1t66K8Zbd2cd8DSIqKFLocCNI6KCY+kI6dVEXp0RP1dvs
+         OWpmHj7K9ICYb2UmZ2hISu7Xbpb0YVLDorQfUCvK8YPFXB3Z9Ko3eNq//RFhKtrj0sl0
+         mqn0zBE+BxFRHGUton7f3bqaiESLh2D9NxRyCMlaWi+h9mU7SUC8qndaKXiJDdDwk7kg
+         YmvyzURbZ501/H7TWxMijtYR1hBvnEXxZtvOuf2PjjjGHg45CDcPEDjJzGD3SRnSEfCI
+         adv5SltE6NMjfZjiAwoHT1tgJhcG+5SMBoYv75SHYs3dixvHj8OZcG9YpPYnzBqk3xbE
+         72+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Lc01pxS7q+WM84eQOKwpZ8GVMsKlTCdoSl+t7XzNmmA=;
-        b=Z/9WJOarNO7UPfKhMXd/oGgGdEGrVCF0QgvEnevfRDSk8yuYRAEqPQql+yJ3tPdoW7
-         BX7GqNzlOt8u1W14HqihY0o8QGGz2lF64kXjwzY4BiU9zQtSN+ygTsfpCK1W1OIbSznn
-         ajmAze9fHSKOSyOfARiroTHY3FMHN0J83CDHyNLbbPv7GuOUoHqwoI45JoL7G06LfOot
-         Xx3ZEnZclJniG3TtH2L4BwSiNEnXLepp389UDEIOKP+++3KCUiC9VPtzzWdADkt32r3c
-         lhPaj9frQzp02iFlCfu1ZeyxerKFpsPHzEve+fLeZufByb1BU6y7DODTRLgntOboHh7D
-         8Szw==
-X-Gm-Message-State: ACrzQf2SpR0uVmjSnw6tDZecDp69Leie3j89hdOhTnGKWlGWFQ2hvQ4Y
-        o3XELy/962DGzzfUFxktE90=
-X-Google-Smtp-Source: AMsMyM6OhNsqdus/6gIXZZ90j8IUVPI+vlRImvqXvVN8jLCpqVhqHuHGufAEh6OUdXIKk4kuSzYqKw==
-X-Received: by 2002:a05:6000:178e:b0:22b:451:9f63 with SMTP id e14-20020a056000178e00b0022b04519f63mr1265576wrg.521.1663837670107;
-        Thu, 22 Sep 2022 02:07:50 -0700 (PDT)
-Received: from [192.168.0.14] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
-        by smtp.gmail.com with ESMTPSA id v6-20020a5d6106000000b002286231f479sm4582265wrt.50.2022.09.22.02.07.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 02:07:49 -0700 (PDT)
-Message-ID: <fda85ff3-8b52-288b-bb37-630decd51d4e@gmail.com>
-Date:   Thu, 22 Sep 2022 10:07:48 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=eHfdo9NG5mSV1GqT+TMNYoa5pHvJV47fW+UKuY3so9U=;
+        b=kspDYvLZc75EkqsmTBgAaRw2aJjxIDj8go1Ycu+0cX0iMXggG4KGyHLUrxQOsv7cXI
+         RJ5epr4d8ev1Yyj1qdCSRXjYEvdchnj2LFktq83Fc++r5BNJWlGzJdgS74hIpmq2GON6
+         Bzj754KpODdMeH8YjTgHc637WGLiLaavWibmadG5r1Hk3mPdTMpDFyCt7Hgwr7aJe3zk
+         FYwOZsCJAlhuP0w37AKpe+y0D8whByj5IMiwEKIqVLEwPni/OYsN2Od1Ly/JFA6dycar
+         vN85IwfC6ctehQ4nz8j4/qi1Th27BMJAQQerFsdVjX25JrZ3ef43ek98cMCoS2NqJjl3
+         CrvA==
+X-Gm-Message-State: ACrzQf1grdydKCem1uNKakzGXn/iJO8WRhZ0u9m1NJ0Yq/zh/pAhsyo5
+        eZfLIG85kIeSAImyLrDJ0LM=
+X-Google-Smtp-Source: AMsMyM4uLjeg4MhZfLsr4JYsb7tqTAFZ5TVmruuhsvzLK9efCbkwHJFeD+rcg2G11v8cntMW0nDO/w==
+X-Received: by 2002:a5d:64e5:0:b0:22a:3cae:93bf with SMTP id g5-20020a5d64e5000000b0022a3cae93bfmr1819455wri.323.1663847739847;
+        Thu, 22 Sep 2022 04:55:39 -0700 (PDT)
+Received: from daptop.. (host86-140-33-108.range86-140.btcentralplus.com. [86.140.33.108])
+        by smtp.gmail.com with ESMTPSA id g16-20020adfe410000000b0022ac13aa98fsm4754984wrm.97.2022.09.22.04.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 04:55:39 -0700 (PDT)
+From:   Daniel Houldsworth <dhould3@gmail.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     dhould3@gmail.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Support touchpad on/off
+Date:   Thu, 22 Sep 2022 12:54:59 +0100
+Message-Id: <20220922115459.6511-1-dhould3@gmail.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3 0/5] Add multiple-consumer support to int3472-tps68470
- driver
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        linux-clk@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc:     rafael@kernel.org, lenb@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, markgross@kernel.org, robert.moore@intel.com
-References: <20220921230439.768185-1-djrscally@gmail.com>
- <b3855fe0-4b85-a442-1835-3e62456b3206@redhat.com>
-From:   Daniel Scally <djrscally@gmail.com>
-In-Reply-To: <b3855fe0-4b85-a442-1835-3e62456b3206@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
+Add scancodes reported by the touchpad on/off button. The actual disabling
+and enabling is done in hardware, and this just reports that change to
+userspace.
 
-On 22/09/2022 09:55, Hans de Goede wrote:
-> Hi All,
->
-> On 9/22/22 01:04, Daniel Scally wrote:
->> Hello all
->>
->> At the moment there are a few places in the int3472-tps68470 driver that are
->> limited to just working with a single consuming device dependent on the PMIC.
->> There are systems where multiple camera sensors share a single TPS68470, so
->> we need to extend the driver to support them. This requires a couple of tweaks
->> to the ACPI functions to fetch dependent devices, which also assumes that only
->> a single dependent will be found.
->>
->> The v2 for this series was some time ago...it's kept falling to the back of my
->> to-do list so I've only just gotten round to it; sorry about that. v2 here:
->>
->> https://lore.kernel.org/linux-acpi/20220327161344.50477-1-djrscally@gmail.com/
-> Rafael, I would like to merge this through the pdx86 tree may I have your
-> ack for patches 1 + 2 for this. As a reminder (since it has been a while)
-> here are your review remarks to v2 of patch 1:
->
-> https://lore.kernel.org/platform-driver-x86/CAJZ5v0i2ciLHP-=8eQcZc0v0xCzhKHKpxLC=Kgv6W5E_5=HQJA@mail.gmail.com/
->
-> (which both seem to have been addressed)
->
-> AFAICT you did not have any remarks for v2 of patch 2.
->
-> Regards,
->
-> Hans
->
-> p.s.
->
-> Dan, if I want to give the IR cam a test run on my own Surface Go (version 1)
-> I guess I may need a sensor driver? Where can I find that sensor driver and
-> what do I need in userspace to test this ?
+Signed-off-by: Daniel Houldsworth <dhould3@gmail.com>
+---
+ drivers/platform/x86/hp-wmi.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index bc7020e9d..496c137d3 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -206,15 +206,17 @@ struct bios_rfkill2_state {
+ };
+ 
+ static const struct key_entry hp_wmi_keymap[] = {
+-	{ KE_KEY, 0x02,   { KEY_BRIGHTNESSUP } },
+-	{ KE_KEY, 0x03,   { KEY_BRIGHTNESSDOWN } },
+-	{ KE_KEY, 0x20e6, { KEY_PROG1 } },
+-	{ KE_KEY, 0x20e8, { KEY_MEDIA } },
+-	{ KE_KEY, 0x2142, { KEY_MEDIA } },
+-	{ KE_KEY, 0x213b, { KEY_INFO } },
+-	{ KE_KEY, 0x2169, { KEY_ROTATE_DISPLAY } },
+-	{ KE_KEY, 0x216a, { KEY_SETUP } },
+-	{ KE_KEY, 0x231b, { KEY_HELP } },
++	{ KE_KEY, 0x02,    { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 0x03,    { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, 0x20e6,  { KEY_PROG1 } },
++	{ KE_KEY, 0x20e8,  { KEY_MEDIA } },
++	{ KE_KEY, 0x2142,  { KEY_MEDIA } },
++	{ KE_KEY, 0x213b,  { KEY_INFO } },
++	{ KE_KEY, 0x2169,  { KEY_ROTATE_DISPLAY } },
++	{ KE_KEY, 0x216a,  { KEY_SETUP } },
++	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
++	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
++	{ KE_KEY, 0x231b,  { KEY_HELP } },
+ 	{ KE_END, 0 }
+ };
+ 
+-- 
+2.37.3
 
-It's the ov7251 sensor driver - the required changes are in mainline now
-actually so you should be good there. The format of the data is a bit
-unconventional; it's Y10 but passed through Intel's CIO2 CSI receiver
-which packs it into a different format [1]. I'm probably just going to
-add support for that format to Howdy [2] which is what people want to
-use this camera for, but for now you can just test by using the
-ipu3-unpack utility in libcamera [3] to convert back to proper Y10 and
-then raw2rgbpnm [4] to turn it into a ppm. I use this script for now:
-https://paste.debian.net/1254629. Be warned that unless you are in
-sunlight the image is basically just grey - the IR LED on the front of
-the surface needs driving to give a clear image otherwise. I have an led
-driver for the tps68470 which can do that, I'm just working on getting
-it all tied in so it triggers when streaming starts.
-
-
-
-[1]
-https://www.linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/pixfmt-yuv-luma.html
-
-[2] https://github.com/boltgolt/howdy
-
-[3] https://git.libcamera.org/libcamera/libcamera.git/tree/utils/ipu3
-
-[4] https://paste.debian.net/1254629
-
->
->
->> Daniel Scally (5):
->>   ACPI: scan: Add acpi_dev_get_next_consumer_dev()
->>   ACPI: bus: Add iterator for dependent devices
->>   platform/x86: int3472: Support multiple clock consumers
->>   platform/x86: int3472: Support multiple gpio lookups in board data
->>   platform/x86: int3472: Add board data for Surface Go2 IR camera
->>
->>  drivers/acpi/scan.c                           | 40 +++++++---
->>  drivers/clk/clk-tps68470.c                    | 13 +++-
->>  drivers/platform/x86/intel/int3472/common.c   |  2 +-
->>  drivers/platform/x86/intel/int3472/tps68470.c | 76 ++++++++++++++++---
->>  drivers/platform/x86/intel/int3472/tps68470.h |  3 +-
->>  .../x86/intel/int3472/tps68470_board_data.c   | 54 ++++++++++++-
->>  include/acpi/acpi_bus.h                       | 15 +++-
->>  include/linux/platform_data/tps68470.h        |  7 +-
->>  8 files changed, 177 insertions(+), 33 deletions(-)
->>
