@@ -2,265 +2,182 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED789C6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 15:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5D0C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 16:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbiIVPpX (ORCPT
+        id S230097AbiIVQv7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Sep 2022 11:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
+        Thu, 22 Sep 2022 12:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231967AbiIVPon (ORCPT
+        with ESMTP id S231474AbiIVQv5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Sep 2022 11:44:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14CCFD18
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 08:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663861473;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RHodpV7EhpaXu4aRtMhZB8p3sn/BG8brHG4TYIiiWwM=;
-        b=g5PNmi9NIb93y4PypYPQUtUdAbCwrJLHTGaa1z51onGO1mPMdJoRnfTKfRXYwd6Utu8IKW
-        wJty8RCXjyeyD4inYFKSWxJ9jg99XC0CpXT9/gs4PAx8eHBsT0BFPW5nr0ydUQ+GLUNqR/
-        8PZw892SfR2NiQzeOsLwrROJ+GXHqhM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-489-CURpFPjRP4OkaKS4n7fNww-1; Thu, 22 Sep 2022 11:44:31 -0400
-X-MC-Unique: CURpFPjRP4OkaKS4n7fNww-1
-Received: by mail-ed1-f69.google.com with SMTP id c6-20020a05640227c600b004521382116dso7068323ede.22
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 08:44:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=RHodpV7EhpaXu4aRtMhZB8p3sn/BG8brHG4TYIiiWwM=;
-        b=6gusJ8REMPtQ0TanChZCTzV8QOGrXC+r2sxkaxmuoq+njl9ugLV8F65mXJEpi/DfZf
-         ltw/zPGu5cs8TNUbAZJRJQuuOVOLYPyHOcYVM2LtvORkcn8HJtvz23d9Fs/r60piKphL
-         vLra+MFNTQc3Hx28pCGEHk2faKkIE1DPT7fbdl9gTyYADmxifX9+lVpny15PvMYfsof4
-         f3SbnhrXN9aerGsJJ7j0aTNYUpB6hey/lSROBtNEdmVUDHfL5ZXSxlF8kChsWsswQ9aq
-         r/7SYoMj7ClsqXRRcpo2GaBdcKeihzTD9oKuUAomfb39HDrsoSqDtKYwQU/Ss23hye3f
-         sO9Q==
-X-Gm-Message-State: ACrzQf0yxw7sSxk+cePP/OonRy8dU/PJZdCzKdGw5AK5xMgYwnSrb0+Z
-        ndd6H8IMXPzF1CPk5tAm5wXeBNaW7XJoIZJ/Z1GBDNW/Vkw2mxGHCZuR575+vUwY5gueHryX31P
-        U4vjhI16M9ZqjfZtetSrunIwqj48ZEOo6Qw==
-X-Received: by 2002:a05:6402:d47:b0:454:e621:3b3f with SMTP id ec7-20020a0564020d4700b00454e6213b3fmr3985268edb.5.1663861470798;
-        Thu, 22 Sep 2022 08:44:30 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6SpdK/PURq+X8cfXm0UH59zJ6jwrvbA2mVx1spGsqNnfrCFxza1apEtPYQDr3CbKYztRe/NA==
-X-Received: by 2002:a05:6402:d47:b0:454:e621:3b3f with SMTP id ec7-20020a0564020d4700b00454e6213b3fmr3985246edb.5.1663861470594;
-        Thu, 22 Sep 2022 08:44:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id a10-20020a50ff0a000000b00454546561cfsm3777921edu.82.2022.09.22.08.44.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 08:44:30 -0700 (PDT)
-Message-ID: <7b5ca374-4d54-9848-f059-f76a8e1fc3c6@redhat.com>
-Date:   Thu, 22 Sep 2022 17:44:29 +0200
+        Thu, 22 Sep 2022 12:51:57 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2058.outbound.protection.outlook.com [40.107.92.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06242EB124
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 09:51:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CaGNd+XbXQzDdpCxZcQGtXLx1exzlBO82o7DehOL+UlQBx3xNqUZloJsC5HRDrU3FLq7bAOyXl0wwB/+Gbldik36fMIDH3YvYib2RwH0jSznn2D7W6eD8lhUd2Bro/yjdO1gHmQltsD2VBdDoRl0mDkzU/4Uub9GCywk4giA7otdM4w8LxTHZuuBwNMQw/ukNSRen7D9km8jqm+TUMlu37c0MsJg2YstHmoatZTCyRh61+OLZQKs/x647iZ4SNSdrN8ruuVkfZw84aQeir2AKYebw9GvFJCSXNJReHJXXCbTyy2M+c0sFZmGL4Tt5WL0ETDxGw6IqgsEtS0gA/QlNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V2W1MkPHlR9jNFjMmb/PwX8KVm6TErGLNhXWktaEGTg=;
+ b=eW1sjrm14dSb1cSxMyiYgGuXske2jfFHgP/lgOWMLB2dtbzX1wwMV+feEdZvBm2yS3oYGYuLWb1VlYpwKsaPhxLr1C8CP7s5IfE7oHL8P+RxDrNevLeKzd9rIyvDJ0RG7nUJrZD2W57aZuikuCmumZPjoWjWzV3/WztrjSq3o1lGq+LmrXINlpuS5qyU+SYJ7/bILEt8BEKro8nWF2mHDN2L2Uq7jCY6tbDfj67w45eOTQARuuMQBIlyIIcO7JOvCToa+mt3VrxCJLqhWESBcSHdd+P5XdyTwwJvDf4+u7oLU5isbxEj0KE5MiJQ7d3yMi1J/9dS8BnXj7r7eUp/Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V2W1MkPHlR9jNFjMmb/PwX8KVm6TErGLNhXWktaEGTg=;
+ b=nBjO4YJ90Gmv9TBhqO+gA9XYxiQs+7D+CQDOsMqD5h0Sr7I2oLv1PUewMq/ZYusAMKcflvL8bm4rEjYoeNFcsYeH76UzWd827GHJ5CKHi0uH2ZY7svbhFnNG6iZ/1jCkjWPRbYOET+tRg63QXryYPer/OgFd6aaypK2i29/9SvI=
+Received: from BN9PR03CA0521.namprd03.prod.outlook.com (2603:10b6:408:131::16)
+ by MN2PR12MB4224.namprd12.prod.outlook.com (2603:10b6:208:1dd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.19; Thu, 22 Sep
+ 2022 16:51:50 +0000
+Received: from BN8NAM11FT083.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:131:cafe::ed) by BN9PR03CA0521.outlook.office365.com
+ (2603:10b6:408:131::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.18 via Frontend
+ Transport; Thu, 22 Sep 2022 16:51:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT083.mail.protection.outlook.com (10.13.177.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5654.14 via Frontend Transport; Thu, 22 Sep 2022 16:51:50 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 22 Sep
+ 2022 11:51:47 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <mario.limonciello@amd.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+        <bnocera@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH] platform/x86/amd/pmf: Remove unused power_delta instances
+Date:   Thu, 22 Sep 2022 22:21:18 +0530
+Message-ID: <20220922165118.163165-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH] platform/x86/amd: pmc: Fix build without debugfs
-To:     Nathan Chancellor <nathan@kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@lists.linux.dev
-References: <20220922153100.324922-1-nathan@kernel.org>
-Content-Language: en-US
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220922153100.324922-1-nathan@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT083:EE_|MN2PR12MB4224:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03eade44-e73f-401e-0d35-08da9cbabee3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uJQzPwVxOEbqvCpy7u6IXoY7GMnZEgnuG368zIPlOfToEvg/clNmLh4j/fWirjUu2B/4dCuPYrU/Csk9ziXBHmnGdUivDMjBkCDRU5dCPsnp0PsDFqlRpYOkDgVW96EQ+IEmpdSucjGxh6VyaRXGpiwPTpRe6d9JQx+q6tECqJhDN8+Ph48JbAbxmZzvW1XpWvV/HrWZTz0gN8FaPLdzqlczxdo0nKmn615pf/25SPiFYip57tRQZJs1D6876CXeuRG00CLGMemIvtQ7QQXB7PpdEbMyIq60WJkj4SxAmh8RG1urTEFKexJx4ZubzxauF37dB1ubuBm4atTC1dWv5Wc/T9zz5wXj+njhQKYGm1qWwoqQKUBJvIV59B8dNfIFwqcKfpZilIoxg2A+KT8VJPqTvSgdFo1j4F5axmGYZiOViL6Olysguaj9JUlxUQnvPRtsQpgR/DoIGqM+poNezac0L52FuUYJyTW2JJ+KyuQX8fd4V2sJQJtTPVP4DSnoqq1+h2YPMxF0Gim1arhBpanKH+STftu3nuXBmROOHX78C2jYFzeO7t30EVsBBxm0tgOrnwvMku2EakKhl1KSi+/aak8ekV16gC0CM2cpmU3RZbDYFDyJvcJCzJt9TazZwxb6rZlpN6c2RlyNmQKbmPa5QpZ0RhKkjuzR6KBxNDtWPE33f06fZGueBlWNh3gIOdiQyKTaZkvLidMjUsFH+Fdjl4GiYnVRFejvcgdrVXcHJATYgV/kVZUTzXHNFBmnB/s8l3LmQli3mNKJGWrThjwx0vuXT6CagQlbtQGOIkBKjVxMbpC3wXQHz7mfCfwm
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(396003)(346002)(376002)(451199015)(40470700004)(36840700001)(46966006)(36860700001)(2906002)(82310400005)(356005)(86362001)(81166007)(40460700003)(82740400003)(6666004)(2616005)(26005)(6636002)(54906003)(110136005)(316002)(7696005)(478600001)(336012)(41300700001)(8676002)(4326008)(8936002)(5660300002)(40480700001)(426003)(47076005)(186003)(1076003)(16526019)(70206006)(83380400001)(70586007)(36756003)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2022 16:51:50.5966
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03eade44-e73f-401e-0d35-08da9cbabee3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT083.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4224
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Initial version of the PMF ACPI documentation had the concept
+of "power_delta" which is removed in the recent revisions.
 
-On 9/22/22 17:31, Nathan Chancellor wrote:
-> Without CONFIG_DEBUG_FS, the following build error occurs:
-> 
->   drivers/platform/x86/amd/pmc.c:984:17: error: use of undeclared identifier 'pmc_groups'; did you mean 'set_groups'?
->                   .dev_groups = pmc_groups,
->                                 ^~~~~~~~~~
->                                 set_groups
->   ./include/linux/cred.h:65:13: note: 'set_groups' declared here
->   extern void set_groups(struct cred *, struct group_info *);
->               ^
->   drivers/platform/x86/amd/pmc.c:984:17: error: incompatible pointer types initializing 'const struct attribute_group **' with an expression of type 'void (struct cred *, struct group_info *)' [-Werror,-Wincompatible-pointer-types]
->                   .dev_groups = pmc_groups,
->                                 ^~~~~~~~~~
->   2 errors generated.
-> 
-> pmc_groups was only defined inside a CONFIG_DEBUG_FS block but
-> commit 7f1ea75d499a ("platform/x86/amd: pmc: Add sysfs files for SMU")
-> intended for these sysfs files to be available outside of debugfs.
-> Shuffle the necessary functions out of the CONFIG_DEBUG_FS block so that
-> the file always builds.
-> 
-> Fixes: 7f1ea75d499a ("platform/x86/amd: pmc: Add sysfs files for SMU")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+So the entire cnqf_power_delta structure is never used/updated.
+Hence removing it.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Fixes: 1738061c9ec8 ("platform/x86/amd/pmf: Add support for CnQF")
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmf/cnqf.c | 12 ++++++------
+ drivers/platform/x86/amd/pmf/pmf.h  | 11 -----------
+ 2 files changed, 6 insertions(+), 17 deletions(-)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/amd/pmc.c | 116 ++++++++++++++++-----------------
->  1 file changed, 58 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 0616ef8ce64c..e47e54b095af 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -371,6 +371,64 @@ static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
->  }
->  #endif
->  
-> +static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
-> +{
-> +	int rc;
-> +	u32 val;
-> +
-> +	rc = amd_pmc_send_cmd(dev, 0, &val, SMU_MSG_GETSMUVERSION, 1);
-> +	if (rc)
-> +		return rc;
-> +
-> +	dev->smu_program = (val >> 24) & GENMASK(7, 0);
-> +	dev->major = (val >> 16) & GENMASK(7, 0);
-> +	dev->minor = (val >> 8) & GENMASK(7, 0);
-> +	dev->rev = (val >> 0) & GENMASK(7, 0);
-> +
-> +	dev_dbg(dev->dev, "SMU program %u version is %u.%u.%u\n",
-> +		dev->smu_program, dev->major, dev->minor, dev->rev);
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t smu_fw_version_show(struct device *d, struct device_attribute *attr,
-> +				   char *buf)
-> +{
-> +	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-> +
-> +	if (!dev->major) {
-> +		int rc = amd_pmc_get_smu_version(dev);
-> +
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	return sysfs_emit(buf, "%u.%u.%u\n", dev->major, dev->minor, dev->rev);
-> +}
-> +
-> +static ssize_t smu_program_show(struct device *d, struct device_attribute *attr,
-> +				   char *buf)
-> +{
-> +	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-> +
-> +	if (!dev->major) {
-> +		int rc = amd_pmc_get_smu_version(dev);
-> +
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	return sysfs_emit(buf, "%u\n", dev->smu_program);
-> +}
-> +
-> +static DEVICE_ATTR_RO(smu_fw_version);
-> +static DEVICE_ATTR_RO(smu_program);
-> +
-> +static struct attribute *pmc_attrs[] = {
-> +	&dev_attr_smu_fw_version.attr,
-> +	&dev_attr_smu_program.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(pmc);
-> +
->  #ifdef CONFIG_DEBUG_FS
->  static int smu_fw_info_show(struct seq_file *s, void *unused)
->  {
-> @@ -437,64 +495,6 @@ static int s0ix_stats_show(struct seq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(s0ix_stats);
->  
-> -static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
-> -{
-> -	int rc;
-> -	u32 val;
-> -
-> -	rc = amd_pmc_send_cmd(dev, 0, &val, SMU_MSG_GETSMUVERSION, 1);
-> -	if (rc)
-> -		return rc;
-> -
-> -	dev->smu_program = (val >> 24) & GENMASK(7, 0);
-> -	dev->major = (val >> 16) & GENMASK(7, 0);
-> -	dev->minor = (val >> 8) & GENMASK(7, 0);
-> -	dev->rev = (val >> 0) & GENMASK(7, 0);
-> -
-> -	dev_dbg(dev->dev, "SMU program %u version is %u.%u.%u\n",
-> -		dev->smu_program, dev->major, dev->minor, dev->rev);
-> -
-> -	return 0;
-> -}
-> -
-> -static ssize_t smu_fw_version_show(struct device *d, struct device_attribute *attr,
-> -				   char *buf)
-> -{
-> -	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-> -
-> -	if (!dev->major) {
-> -		int rc = amd_pmc_get_smu_version(dev);
-> -
-> -		if (rc)
-> -			return rc;
-> -	}
-> -	return sysfs_emit(buf, "%u.%u.%u\n", dev->major, dev->minor, dev->rev);
-> -}
-> -
-> -static ssize_t smu_program_show(struct device *d, struct device_attribute *attr,
-> -				   char *buf)
-> -{
-> -	struct amd_pmc_dev *dev = dev_get_drvdata(d);
-> -
-> -	if (!dev->major) {
-> -		int rc = amd_pmc_get_smu_version(dev);
-> -
-> -		if (rc)
-> -			return rc;
-> -	}
-> -	return sysfs_emit(buf, "%u\n", dev->smu_program);
-> -}
-> -
-> -static DEVICE_ATTR_RO(smu_fw_version);
-> -static DEVICE_ATTR_RO(smu_program);
-> -
-> -static struct attribute *pmc_attrs[] = {
-> -	&dev_attr_smu_fw_version.attr,
-> -	&dev_attr_smu_program.attr,
-> -	NULL,
-> -};
-> -ATTRIBUTE_GROUPS(pmc);
-> -
->  static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
->  {
->  	struct amd_pmc_dev *dev = s->private;
-> 
-> base-commit: 401199ffa9b69baf3fd1f9ad082aa65c10910585
+diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
+index 927f3c8cd971..668c7c0fea83 100644
+--- a/drivers/platform/x86/amd/pmf/cnqf.c
++++ b/drivers/platform/x86/amd/pmf/cnqf.c
+@@ -45,27 +45,27 @@ static void amd_pmf_update_power_threshold(int src)
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_TO_QUIET];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_BALANCE];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_TO_TURBO];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_PERFORMANCE];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_FROM_BALANCE_TO_PERFORMANCE];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_BALANCE];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_FROM_PERFORMANCE_TO_BALANCE];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_PERFORMANCE];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_FROM_QUIET_TO_BALANCE];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_QUIET];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ 
+ 	tp = &config_store.trans_param[src][CNQF_TRANSITION_FROM_TURBO_TO_PERFORMANCE];
+ 	ts = &config_store.mode_set[src][CNQF_MODE_TURBO];
+-	tp->power_threshold = ts->power_floor - tp->power_delta;
++	tp->power_threshold = ts->power_floor;
+ }
+ 
+ static const char *state_as_str(unsigned int state)
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index 097f3f5d33a3..e5dc3ae238c7 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -333,7 +333,6 @@ struct cnqf_mode_settings {
+ 
+ struct cnqf_tran_params {
+ 	u32 time_constant; /* minimum time required to switch to next mode */
+-	u32 power_delta; /* minimum power required to switch to next mode */
+ 	u32 power_threshold;
+ 	u32 timer; /* elapsed time. if timer > timethreshold, it will move to next mode */
+ 	u32 total_power;
+@@ -343,21 +342,11 @@ struct cnqf_tran_params {
+ 	enum cnqf_mode target_mode;
+ };
+ 
+-struct cnqf_power_delta {
+-	u32 to_turbo;
+-	u32 balance_to_perf;
+-	u32 quiet_to_balance;
+-	u32 to_quiet;
+-	u32 perf_to_balance;
+-	u32 turbo_to_perf;
+-};
+-
+ struct cnqf_config {
+ 	struct cnqf_tran_params trans_param[POWER_SOURCE_MAX][CNQF_TRANSITION_MAX];
+ 	struct cnqf_mode_settings mode_set[POWER_SOURCE_MAX][CNQF_MODE_MAX];
+ 	struct power_table_control defaults;
+ 	enum cnqf_mode current_mode;
+-	struct cnqf_power_delta power_delta[POWER_SOURCE_MAX];
+ 	u32 power_src;
+ 	u32 avg_power;
+ };
+-- 
+2.25.1
 
