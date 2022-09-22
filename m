@@ -2,143 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B425C6FA86
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 13:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D5C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Sep 2022 13:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbiIVNM6 (ORCPT
+        id S230432AbiIVN5Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Sep 2022 09:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33452 "EHLO
+        Thu, 22 Sep 2022 09:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230454AbiIVNMw (ORCPT
+        with ESMTP id S231790AbiIVN5U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Sep 2022 09:12:52 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2075.outbound.protection.outlook.com [40.107.96.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194EBEC56D
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 06:12:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z/WovyMr9GMHY76Ziaow5IpfS7jv+4aJ73XoK+3wbIm1h6c7KAVO4SQPMITNH5LmK+KNVjCTNPpiwxlvQgcbJLuRZJuSABFaNuk94HDvSsruMxEr7rrwtieNABEvIpd/6TEzdKpFexDUB6xUnbcyixFH2ATk0m67gKDXJHXoDH7I/5OpXn3zapL/RAz71QUgVkM+rewBLxHWnMF6EfD32Ge1MjZYBRYlsUgUdF+eKu/JCSoQ61Eybk0GlGpGKxC6eh9qLNlINLQP2c4ccE27BHs/uDAGQLHPYFFK8fYqcpuamhxgydXHHU2ZbajTcRaSX7kXEIhwOFjOKv/JcdLAzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0l6tfb9yNXHLjK82CbvOUHU/87W0DXT/tsG63gXWCl8=;
- b=Gbk9w3nZAfvT792et+7mXQlYOQKk7TwvSCp0XpHxLNKr426UiMeQzvXRXxPby+LXnXykOewRQZnYhsaxdYbr99IjCvKIe6k5iPJVpTh/a1xKUlAycqmGjlqustrCSu8fQJ7TGb3eeE2nhph/yVbzmtFsbUdWgIgPQUOUtCURo6agTdsAlTrgFbGLR+GZnnbFV/KxtKWktIjJaQCgaEM1MEf7JyloW1K92+bRsY5Bxlj6/Z9yFGgXZldDJQzQ2fUFNFC1JoDnNiy+w1hU9ttR/AVzMMw+HqAiomDaYER7YavFDIwwH+S0t1WgSBsD9jCBukd5unNUiEPxp4bOJnYieQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0l6tfb9yNXHLjK82CbvOUHU/87W0DXT/tsG63gXWCl8=;
- b=FeVvRmAsFG/ihKxxgaMr4kSGqCoCqqRExuf5j8G8DEclCJR430hKfl0msnwfXv2gDfYwmuEdjGbyT4lvkRO1gZXAjO8cGAPwrdibL5o5pwMUiRkyXp2bEP+SpxOG6pvt42XFJPMf11Hu6nyIYmF78dNEMm9KX5K79lAW+FFZ1yQ=
-Received: from DM6PR02CA0101.namprd02.prod.outlook.com (2603:10b6:5:1f4::42)
- by DS7PR12MB6168.namprd12.prod.outlook.com (2603:10b6:8:97::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5632.18; Thu, 22 Sep 2022 13:12:43 +0000
-Received: from DM6NAM11FT029.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1f4:cafe::e2) by DM6PR02CA0101.outlook.office365.com
- (2603:10b6:5:1f4::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.19 via Frontend
- Transport; Thu, 22 Sep 2022 13:12:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT029.mail.protection.outlook.com (10.13.173.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5654.14 via Frontend Transport; Thu, 22 Sep 2022 13:12:42 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 22 Sep
- 2022 08:12:39 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>,
-        <mario.limonciello@amd.com>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        <bnocera@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v4 3/3] Documentation/ABI/testing/sysfs-amd-pmf: Add ABI doc for AMD PMF
-Date:   Thu, 22 Sep 2022 18:42:02 +0530
-Message-ID: <20220922131202.56529-4-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220922131202.56529-1-Shyam-sundar.S-k@amd.com>
-References: <20220922131202.56529-1-Shyam-sundar.S-k@amd.com>
+        Thu, 22 Sep 2022 09:57:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C95EFA79
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 06:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663855039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nskChPy4glYBFrIXy8qsZs6L121OHEImDdW1c6/aua4=;
+        b=HuOeDY3iFSTzhLw+mEWrEvnEsrkxVAd+D8C6jg1kvwTyh6P1W85S8KYYG8BUUttnMa5qlR
+        LznQWNYsKpr1gvBVtQub9Hy5hP39eYLhELdUD1LhPGeBMXblPDuodxnP0zcqlEmB3uCd7P
+        vByDNqAVY0MTizEPPLsng3xHZPZ35/I=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-655-vK1gYRzWPgGjfx68stUByg-1; Thu, 22 Sep 2022 09:57:17 -0400
+X-MC-Unique: vK1gYRzWPgGjfx68stUByg-1
+Received: by mail-ed1-f71.google.com with SMTP id e15-20020a056402190f00b0044f41e776a0so6712853edz.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Sep 2022 06:57:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=nskChPy4glYBFrIXy8qsZs6L121OHEImDdW1c6/aua4=;
+        b=futkj9ywbJhkh9XGMg8egIP6jpxl8gQyLGPQUSuxFWOlvvCzvIGNll5d1i9N0e3cwZ
+         uj/KlCnD7F/nNJtU9zUDQ06SwQ1Zi6wPyAlsRTJCHIVogpSH7lNhAYqmB4xR1lnOidU/
+         T6+sx/Orm4K0p/5BlsV/5uvlYKhke2slGeJ1l8uOh0sqSkfIs8gxsmccvEUnXAQGKeYh
+         rT4VuhhCBPuJI3eYUuW4rIWQlDJ5FMVlwwgDVdcprBjO6ZXlLnOgPS0wM9NtBz4oja5c
+         4zeShulDY+wwGht0aGCQsFndsm3NnkwqPNwhR9DPK2r2QP8ywnBw7gzVEzOxa/bpA8ck
+         n+zg==
+X-Gm-Message-State: ACrzQf26QlKQYzMfFl8W+v7d67wJBH4ThfG2AXjCtdLJXNeAOo64xVft
+        c8V+5LxR1DYUisATuhnsOS/WTMhCvpjpBGGHIW4Bn82N7yeJcocKCMdmw6tDqiNdVXkaKYIcram
+        mrP1Yzncn2NKLI9Extj4NGGdZ4rphs/qeIw==
+X-Received: by 2002:a17:906:2bc7:b0:72f:dc70:a3c6 with SMTP id n7-20020a1709062bc700b0072fdc70a3c6mr2981641ejg.645.1663855036818;
+        Thu, 22 Sep 2022 06:57:16 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7I0THngZa3Z2Cdc3gKejpCxdcSu0xzir8XpH3kEbn752qgqtjkWDU81TtSE4ljywtyDqPCYg==
+X-Received: by 2002:a17:906:2bc7:b0:72f:dc70:a3c6 with SMTP id n7-20020a1709062bc700b0072fdc70a3c6mr2981628ejg.645.1663855036633;
+        Thu, 22 Sep 2022 06:57:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id jz20-20020a17090775f400b0073d7bef38e3sm2674462ejc.45.2022.09.22.06.57.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Sep 2022 06:57:16 -0700 (PDT)
+Message-ID: <aa010c89-2c85-efd0-e24a-a87fc99f37b9@redhat.com>
+Date:   Thu, 22 Sep 2022 15:57:15 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH] platform/x86: int3472/discrete: Drop a forward
+ declaration
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+References: <20220920070101.907596-1-u.kleine-koenig@pengutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220920070101.907596-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT029:EE_|DS7PR12MB6168:EE_
-X-MS-Office365-Filtering-Correlation-Id: d75af576-4fd7-4541-d901-08da9c9c21d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uqPt0z3FQYBs1vJ01MqG9bVZxNkFWe328LnX2fqgRaZZOEqFwZRX/TMwsfhKDWC8H5PuMEApzAP4NeRNoh8P010wjveHqdrsiRshxQ2IV2MHjw0Ldx4bykWDCbxr+WzX60DHOegoSYqJbxWXEhnOLIs7RUqopg7z+Hhh16zsl/KfZyPFO5cohxjW6ttUe2MAHBO/jy53G5c4x3sUTXQ2jkMOwK4n9FSFW8oO675iX7fo+QILgZ6nLO+uG9VkCPjAAjPOmG0WA1dAUgSinDusEDlJ4oCfhZfWCVGy+hf+HYDFfMEovjJpFCbKpjtj/9RqE1KRbrbZt01hLmJJCXsOwjJ+DS6lvKnl77cbn1lalSU7S/TCNZZDHA+YYQdQkzb4uskS2bsN+cZl8UUPR/lm2/oS1iR4mIbDcM/r/oSfkYsk/9qlfgmY93UqdoBKzMtj4wBqcxWu4hhAP+MJk7TJfKmudy8hAVLZUegvPjPyw8Xr4CuTDFlFOHlOSxgN/9omzkIlUvNkthk1j2GHRTCzyKMBD9Y6M0IS+r0MFoi8bmNp+fOGnmHXFHUCF+B7mvy93fBCDYq9NRMumbv1YkGqq0C13jAGwaedg3YxU7YwlgH6/TJjsBEzTTQK6kS1ehw00TBuxD7TfSlnjOYLqWYs8+JEZ/BkxotHcpm8yKVdHhbdbLsbgrCBcAsntrWD4a0kuxj/f/EKFS+YQJVXB8eL+P70qIMD1TnMcWDF8kTRuEAIqLIk9g2qqPcYuy/r1zSUNIaegjoNu6NpC/PSOsuwWtqVrToSLjTL2QBaw+VgQp9CeGVT/qVom+3xkGPeAmmR2u2RGZDnkrPgchghWgS8GA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(39860400002)(346002)(451199015)(46966006)(36840700001)(40470700004)(7696005)(86362001)(82310400005)(26005)(5660300002)(4326008)(83380400001)(8936002)(6666004)(47076005)(70206006)(40460700003)(8676002)(41300700001)(70586007)(2616005)(36860700001)(40480700001)(426003)(186003)(81166007)(36756003)(16526019)(336012)(1076003)(2906002)(356005)(82740400003)(478600001)(110136005)(316002)(54906003)(6636002)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2022 13:12:42.1484
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d75af576-4fd7-4541-d901-08da9c9c21d1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT029.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6168
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-AMD PMF driver provides the flexibility to turn "on" or "off"
-CnQF feature (introduced in the earlier patch).
+Hi,
 
-Add corresponding ABI documentation for the new sysfs node and
-also update MAINTAINERS file with this new information
+On 9/20/22 09:01, Uwe Kleine-König wrote:
+> By swapping the definition of skl_int3472_discrete_remove() and
+> skl_int3472_discrete_probe() the forward declaration of the former can
+> be dropped. This is a good thing as it removes code duplication.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- Documentation/ABI/testing/sysfs-amd-pmf | 13 +++++++++++++
- MAINTAINERS                             |  1 +
- 2 files changed, 14 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-amd-pmf
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/Documentation/ABI/testing/sysfs-amd-pmf b/Documentation/ABI/testing/sysfs-amd-pmf
-new file mode 100644
-index 000000000000..7fc0e1c2b76b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-amd-pmf
-@@ -0,0 +1,13 @@
-+What:		/sys/devices/platform/*/cnqf_enable
-+Date:		September 2022
-+Contact:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-+Description:	Reading this file tells if the AMD Platform Management(PMF)
-+		Cool n Quiet Framework(CnQF) feature is enabled or not.
-+
-+		This feature is not enabled by default and gets only turned on
-+		if OEM BIOS passes a "flag" to PMF ACPI function (index 11 or 12)
-+		or in case the user writes "on".
-+
-+		To turn off CnQF user can write "off" to the sysfs node.
-+		Note: Systems that support auto mode will not have this sysfs file
-+		available.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d74bf90f5056..255527be7e24 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1026,6 +1026,7 @@ AMD PMF DRIVER
- M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-amd-pmf
- F:	drivers/platform/x86/amd/pmf/
- 
- AMD HSMP DRIVER
--- 
-2.25.1
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+> Hello,
+> 
+> I didn't check in detail, but in my experience calling the remove
+> function in the error path of the probe function is prone to cleanup
+> errors. I didn't spot anything after a quick glance, but let me point
+> out this is unstable. E.g. in an error path of
+> skl_int3472_register_clock() the function is left with
+> int3472->clock.clk pointing to an unregistered clk and int3472->clock.cl
+> == NULL. Someone modifying the return function must be well aware of
+> that.
+> 
+> Best regards
+> Uwe
+> 
+>  drivers/platform/x86/intel/int3472/discrete.c | 34 +++++++++----------
+>  1 file changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index ed4c9d760757..974a132db651 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -331,7 +331,22 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>  	return 0;
+>  }
+>  
+> -static int skl_int3472_discrete_remove(struct platform_device *pdev);
+> +static int skl_int3472_discrete_remove(struct platform_device *pdev)
+> +{
+> +	struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
+> +
+> +	gpiod_remove_lookup_table(&int3472->gpios);
+> +
+> +	if (int3472->clock.cl)
+> +		skl_int3472_unregister_clock(int3472);
+> +
+> +	gpiod_put(int3472->clock.ena_gpio);
+> +	gpiod_put(int3472->clock.led_gpio);
+> +
+> +	skl_int3472_unregister_regulator(int3472);
+> +
+> +	return 0;
+> +}
+>  
+>  static int skl_int3472_discrete_probe(struct platform_device *pdev)
+>  {
+> @@ -383,23 +398,6 @@ static int skl_int3472_discrete_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static int skl_int3472_discrete_remove(struct platform_device *pdev)
+> -{
+> -	struct int3472_discrete_device *int3472 = platform_get_drvdata(pdev);
+> -
+> -	gpiod_remove_lookup_table(&int3472->gpios);
+> -
+> -	if (int3472->clock.cl)
+> -		skl_int3472_unregister_clock(int3472);
+> -
+> -	gpiod_put(int3472->clock.ena_gpio);
+> -	gpiod_put(int3472->clock.led_gpio);
+> -
+> -	skl_int3472_unregister_regulator(int3472);
+> -
+> -	return 0;
+> -}
+> -
+>  static const struct acpi_device_id int3472_device_id[] = {
+>  	{ "INT3472", 0 },
+>  	{ }
+> 
+> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
 
