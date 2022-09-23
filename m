@@ -2,241 +2,455 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAA6C6FA8B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 23 Sep 2022 15:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6639C04A95
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 23 Sep 2022 19:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230351AbiIWPQE (ORCPT
+        id S231958AbiIWTYQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 23 Sep 2022 11:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53304 "EHLO
+        Fri, 23 Sep 2022 15:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232640AbiIWPP1 (ORCPT
+        with ESMTP id S229766AbiIWTYP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 23 Sep 2022 11:15:27 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2081.outbound.protection.outlook.com [40.107.95.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55831501B7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Sep 2022 08:15:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nsAvjpGvaxIU2uJBoyaocBO8dKJfUq+mcR+6GgfK8fh7l58F55ku4UR8AJPRkKy7vR/8aykuM5Zom2XvKmwJeKYrvpfFK71Qm7RkBy8n7AehgtAtBKWOVM1sfr6pfVdtTaax8kGwtdGgZmJVy1FYWWFmPZZMEOqf3ttFbdllyFnKO93i03YzMuAVhjOFoInlpRpGV6R4K6grbYX6IVPejuWtzLObWvzNMQbnKiM+qOZ4tc24L/6WJAQPusmV9fRPZT1iU41rOsdUaDfZ+5m69nCVEl0jDuvu5ur+2i2boQNTgeghttM4f/CdgT9QQ2kfygoyrAkMS5f1tO3Ts/UMjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xL/neGj9ZHTfd/kKaYj3wKqFaF+lDGn3XXSZBoc9hMw=;
- b=cfAVtVUMYlDCUqJDfuTbOzIkDgImopByvYPKFmdyCmZmQgSg6N+lAdjt1nMszJC2ItfImTi5PLkoaqkP0siQX+XBXaGHDCNdNgPCLRU1tGG/0FqEtpCIJGr68byLqM5UiafBJ4LMVSFIpMHezXX8PpqBEDXmCTsuQKPfQ2jVJK8YhtaKwNraWMmuTdSZBWYWgFnQyv3Fw+nKKUsJZxkFIWOy2ZzpK8v/a8igsIvokm8yCTxX8VOsKwsioNug/XJ62y79oVwIujxTIxTlcfwgY2ZDXajj4JTDDytpBFCLfSeQzAbCzLMt9mC11s6nfWH2SVBGuBF4TCxduAkO+isN5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xL/neGj9ZHTfd/kKaYj3wKqFaF+lDGn3XXSZBoc9hMw=;
- b=FzyQ3cQR1giqbTAzUHPQpQf5uysO0SdUnuC8oKR/pq+AlX0aSISQQi6FancN43hS+V9nTl1Dn31ipwylwuAE4u9I3qAjKySOe4o2bzQjq9IzLZ1daeYMGfkIunnrwwvV7upVl7TXciG5ONdTW5KEVNG5pE+3OO0yrXfdJ7MVJ3Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW3PR12MB4442.namprd12.prod.outlook.com (2603:10b6:303:55::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.20; Fri, 23 Sep
- 2022 15:15:22 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::76ec:6acf:dd4d:76a3]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::76ec:6acf:dd4d:76a3%7]) with mapi id 15.20.5654.017; Fri, 23 Sep 2022
- 15:15:22 +0000
-Message-ID: <11d8e17c-5b06-bff1-fd93-cb553f008a0e@amd.com>
-Date:   Fri, 23 Sep 2022 10:15:20 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] platform/x86/amd/pmf: install notify handler after acpi
- init
-Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
-        bnocera@redhat.com, Mark Pearson <markpearson@lenovo.com>
-References: <20220923131724.1812685-1-Shyam-sundar.S-k@amd.com>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20220923131724.1812685-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR12CA0002.namprd12.prod.outlook.com
- (2603:10b6:610:57::12) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        Fri, 23 Sep 2022 15:24:15 -0400
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C7912CCA3;
+        Fri, 23 Sep 2022 12:24:13 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 19:24:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1663961048; x=1664220248;
+        bh=pfA3tJxIHq44CV8r/RRpBJGZGtaPAkBc9hUJzHent9c=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID;
+        b=G7QIV5Sdj0R3G6E0v5Jh4Dae6N8ybX5xeRchi5qnOu/D4eJdHyINvrQuAeIKI+bIY
+         maXf0bFhr4djQK7zNEISUse6DoJnDyFxXa1IYxPRJMmW6wD+dvzTUliwqJGPkHa1IV
+         rMOeveAqwLQGJ5Tzaslcul1mZUalWca3KYbWkLlRG+TZhlWDy9YqPcjU0aecXhDIww
+         IDOlbQjQjaHTCww2GCnqVbWO54FIQZYhQQGJB8f/no75yiMLtcYhxYrIkQ4LUzQnok
+         EgFxrpPM67rY0r8Jj+qtUSxD0Fo9T++AtyfzYehhs8vsruqouX+oYFHBsBrgNO5DDV
+         mSvUdFcBNBJDg==
+To:     Arvid Norlander <lkml@vorpal.se>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-input@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH RFC v2 1/2] platform/x86: quickstart: Add ACPI quickstart button (PNP0C32) driver
+Message-ID: <4-mkye9NM7L93IKQAGjd8BmHi1_2zEnx4F8L3AvKk9RsNBtuoS5cpNCKV-nyb1Xpb1jmAZQDdpNlyvjoUfrFKkq4V-EOfXo9b_gRbyC1hSs=@protonmail.com>
+In-Reply-To: <20220922182424.934340-2-lkml@vorpal.se>
+References: <20220922182424.934340-1-lkml@vorpal.se> <20220922182424.934340-2-lkml@vorpal.se>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW3PR12MB4442:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1846af68-b235-4762-d744-08da9d766f3b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6TdonhWxP1WHjKDDFnT29+fSs+jsAL7X2myt2U2NFh3QW4lfjWhf3VZU+sDXsEPtnmobPsyqJj0QVU6Jpi8ELkUR878f86DDcTdc67lo1KTidZ4zVaUdX/L5fXT4WqvAztsCq7lRiRAQV8tE5N03GNLh8yqC2+E+ASLte/sZnjUjq41qmcicmqkMISZxrXP5ZQOWdVsZxK3nWvMvzBg7MrHewj+bNJN4AyHIJom31Ao/x4RQHsO//2b8dHI3KuWhmUVZFBNaKf+d8rYRuoc79LSZmp/nQgTLJGpAol1ZhJ1QYaxInv2JQzUcm3/hFjIFX8G609SCaAjJOrA+Ya0dPTalv752NGKXADjD+lobowaMHJilMhUT5CqyapSjtPB1gTxoV+BJOEiqGcwRQA6/HUwb9q9arPnyJ18WsZCxR4yxapPPlHk2ytlPBD1SwUtTpxSxG+L/JYc5r/qNOTkSLX0goCGIzPQTYiCehJA1avrIvvIeqCJmgLoAGrJfBeZgTCgaGtC7o7qSrrbo8sV8aNDwGw3vlhy+loG88kgPCIPXrvSgZZ6jbCLiKVDMOMuyyYMxiJpqfefZZ4SdBvqvt0atJvk3yzsc7KUbSMe0yfML8E7l4YdDPEr04MElPLWJRrR/W0sviDhTJVKci5oghhHH4YqXNWAtAyWvWMsrlWF10fJCZB35FwD+Lfj1dvjvRT9FWdWEnoXZhZq93/iRvLr1DLzbBVLK8JDba+de/ZoZq+XttPzLu1qpAx9/uRXF6cGOvEsJVGX2I8D0fK3NqAAisWJRumxui6gmy9Wbkk4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(451199015)(186003)(5660300002)(2906002)(83380400001)(38100700002)(31696002)(86362001)(36756003)(316002)(6506007)(53546011)(478600001)(6486002)(41300700001)(8936002)(66946007)(31686004)(6512007)(2616005)(8676002)(66476007)(26005)(66556008)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q3BuZ05KcTZaaDg4TGJxTjQ3SCtiRTBOblJqK0VZVHlsaStKUTZieGZ5ZW1a?=
- =?utf-8?B?WGJYaEJXVXN1VmlqalB0VWFNWUlKR2JkTEFsZTdoeXBFMFNQc1kvK2FOcW43?=
- =?utf-8?B?Vmh3TGlHajZQMExRSkVnZFM4ZUxXUlk5VWcraWZHZlN1cEp6ODl4U0xOeGJH?=
- =?utf-8?B?N29OM2RMVVE2dHNFd3FjNDhQL3NxMVJxUnQxR1JSNDBGZittd1VuZXUyZnlI?=
- =?utf-8?B?b2VnblByL3hITHB1aXdEWlo1enlMSlJJTWVsL0xjY3RJR3pqRytoRzVNWDkr?=
- =?utf-8?B?NjQ2bTFpZnZnMFR1NFIxekJBZWpmbGN3Y0N5YnNrV3U0TkZ0KzRsdENvdlZR?=
- =?utf-8?B?ZjdmdVp0RFZhaVVVRjUyMGtEQWc2TkhYU1ZuZ1QwVWE1bVprV0wzTEZSQkhG?=
- =?utf-8?B?SG12YjlUTFRRZ0Iyc1Y3MjZ2a2x2dFIybGJrbDgwUHUvRmY2c21yUUdqSXlz?=
- =?utf-8?B?OC9SeTdpSTc5MzdwOEhvNU0zMW9EVndzR3NWMmdrdlk1SUhqYmtDTDlRYWRy?=
- =?utf-8?B?Vk9SR1U2dWMrcndTQTR4KzdFQU5tOTR1RkVOMXk5a1BKYktEYXRVZ2FEWnh0?=
- =?utf-8?B?SldadWc5dGkzbXRiSnVNZncwN0VCUmZ3VlI1YStQTmY2RUxGemgwbUgrRnVS?=
- =?utf-8?B?VGhtZEY0WG9BYnRtSHd0VnV2a2pXK0lzY1Q3NFFGVkk5S1JkVGVyVmdHaXVC?=
- =?utf-8?B?QTBkS1VEWWZXVC9qNFJINUtsRG1IcjBNTWNvYW8xV0Z1cUdHWmVaemV4a2lM?=
- =?utf-8?B?VkUzMFdYYVppdlR6Y2ZVSVR3bzNWTjgzWFpuQzNaOE9zc201VE1iMXpTNHJq?=
- =?utf-8?B?b2xmZjlsY01iK09Sa1J6aUV5VjVOQnBnQlYzK0xYZ1V5S2tOME5ERGlzMHMx?=
- =?utf-8?B?MU1ZeVNPR245Z3NUOWFHekpsc1EycGNYWklPWjdHcndPYWZKRi9EU2lINHVU?=
- =?utf-8?B?RElYbFdHQkJ4RWdwaW9EeFVkUjZYU3laaTVPa3hWTThaL3RTZzZicHVsemx3?=
- =?utf-8?B?a3RYMVozTnovUk5wenU2RkovWHBCZjJvdFhZMU54VTdvZGE2SVB3Y3MycDdi?=
- =?utf-8?B?ZjNhS1BFSjlxdi84bUxsZlpaOUFETFN5WDJTOEpZUFpyOVI1RHlQcTFQR3o0?=
- =?utf-8?B?NUI3a0t4ME1ML2R6dUlyaG9VdjI1M0hGZm12blhKSkdpTnFaTjRmSEN1MDgr?=
- =?utf-8?B?NjdtYXh2VHp0RC9QWXlkenJWVXkyTE5tU0lrOWpXc1kzK2Q0c0NZTis0ZWk5?=
- =?utf-8?B?WGVCWll2eW05cDF0L2ViQnZTeUttaHhDcWttb3JuTWZLdnVXMnh4MTFyTkZJ?=
- =?utf-8?B?S0hWaEpwT3FiUTR1SjcrNE1jOEtTRFZkTkpsVXp4bGRiVnB6U25tSkZDOEdm?=
- =?utf-8?B?TzhDQTJiUkg4TVNibVZVRUtpUHRVVHhoeUhhTWVaVFdFcEhUSUp6QVJZbGt4?=
- =?utf-8?B?ZGthTDArck9CWkNzTUtBQkZsc0RBUHhiTDB5SFdkV0p4bzFHbFB0T0p2Skxm?=
- =?utf-8?B?a3pQVFRWbHdRUTZ3cFpmSWZraGxqTEVCVFF5elFDdXk5eFFTNExFRktjWWpn?=
- =?utf-8?B?RzhJQUd6N0h6NWdXZ0ltZGJQVCtwTURqMlJHNzdYRWJFblluVTdQY01LSkpj?=
- =?utf-8?B?d0poM3YwTmRwcHBYWlJxSmFrZGs4Q1BsNldHWnY5K21CUGNvN2xraXc2QUM3?=
- =?utf-8?B?NGNxTXJiSlVBL2ZtRGgzNGkwUzB0UWFhL2lvYlJjMnpMcXN2UDFJdHBUWTI1?=
- =?utf-8?B?a2IwZFBxeXN1OTU0SHpnU3pSNjA0b25ZVFlJUDl6enpTeHdwdlFtS05tOTcw?=
- =?utf-8?B?NHRpNU5xaHplbUlTbDgzeWUvSERrQytYWHI3S1N6di9EdzVRbVE1dTdGdzZQ?=
- =?utf-8?B?SGg2NnMxVGg0RkpIZGkvYTZjVnVEVVdWV0k3ZGRlKzI0MjVWZDZWYmJJRElZ?=
- =?utf-8?B?SDU2U0J6S2kwZDF0WlFtMlYwNnNkbVRXR2ZOYlJraHU1ZE00WFRUSHh2d0No?=
- =?utf-8?B?SVRwOCtGYnczV1RhWTJJd2VqSmhPcS85TzUvTitFREYxSmxwNFRxd25kQjVh?=
- =?utf-8?B?aVZhUWhmUUZRR3cwMzZlYnZBemR5VDVZVzlvTGRZN1dmQitMeUZxVGxOR0ND?=
- =?utf-8?Q?cxfzA5qZ3csoBBAsNmszFotvd?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1846af68-b235-4762-d744-08da9d766f3b
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2022 15:15:22.5178
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 20OcAsWKCA/MhJQGdSJ6rkIYuN5+Dwp8StNN2ytEQIv+EsbQZ3Ucb0blz/TAVk3BzUChJGF5efgTJ5hJtgGwIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4442
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/23/2022 08:17, Shyam Sundar S K wrote:
-> It is observed that when thinkpad_acpi driver loads before amd-pmf
-> driver, thinkpad_acpi driver sends the AMT "on" event and the request
-> immediately will be part of the PMF BIOS "pending requests".
-> 
-> With the current amd-pmf code, as soon as the amd-pmf driver gets
-> probed, it calls apmf_acpi_init() where the notify handler will be
-> installed. Handler callback would call amd_pmf_handle_amt() where the
-> amd_pmf_set_automode() shall update the auto-mode thermals.
-> In this case, the auto-mode config_store shall have "zeros", as the
-> auto mode init gets called during the later stage.
-> 
-> To fix this, change the order of the acpi notifer install and call it
-> after the auto mode initialization is done.
-> 
-> Fixes: 7d77dcc83ada ("platform/x86/amd/pmf: Handle AMT and CQL events for Auto mode")
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: Mark Pearson <markpearson@lenovo.com>
-> Cc: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Hi
 
-LGTM, thanks.
+2022. szeptember 22., cs=C3=BCt=C3=B6rt=C3=B6k 20:24 keltez=C3=A9ssel, Arvi=
+d Norlander =C3=ADrta:
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-
+> This is loosely based on a previous staging driver that was removed. See
+> links below for more info on that driver. The original commit ID was
+> 0be013e3dc2ee79ffab8a438bbb4e216837e3d52.
+>=20
+> However, here a completely different approach is taken to the user space
+> API (which should solve the issues the original driver had). Each PNP0C32
+> device is a button, and each such button gets a separate input device
+> associated with it (instead of a shared platform input device).
+>=20
+> The button ID (as read from ACPI method GHID) is provided via a sysfs fil=
+e
+> "button_id".
+>=20
+> If the button caused a wakeup it will "latch" the "wakeup_cause" sysfs fi=
+le
+> to true. This can be reset by a user space process.
+>=20
+> Link: https://marc.info/?l=3Dlinux-acpi&m=3D120550727131007
+> Link: https://lkml.org/lkml/2010/5/28/327
+> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
 > ---
->   drivers/platform/x86/amd/pmf/acpi.c | 38 +++++++++++++++++------------
->   drivers/platform/x86/amd/pmf/core.c |  1 +
->   drivers/platform/x86/amd/pmf/pmf.h  |  1 +
->   3 files changed, 24 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index 05a2b8a056fc..b6453157a59d 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -243,6 +243,28 @@ int apmf_get_dyn_slider_def_dc(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_
->   	return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_DC, data, sizeof(*data));
->   }
->   
-> +int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
-> +{
-> +	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> +	acpi_status status;
+> [...]
+> diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/qui=
+ckstart.c
+> new file mode 100644
+> index 000000000000..ce51abe012f7
+> --- /dev/null
+> +++ b/drivers/platform/x86/quickstart.c
+> @@ -0,0 +1,320 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + *  quickstart.c - ACPI Direct App Launch driver
+> + *
+> + *  Copyright (C) 2022 Arvid Norlander <lkml@vorapal.se>
+> + *  Copyright (C) 2007-2010 Angelo Arrifano <miknix@gmail.com>
+> + *
+> + *  Information gathered from disassembled dsdt and from here:
+> + *  <https://archive.org/details/microsoft-acpi-dirapplaunch>
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License as published by
+> + *  the Free Software Foundation; either version 2 of the License, or
+> + *  (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *  GNU General Public License for more details.
+> + *
+> + */
 > +
-> +	/* Install the APMF Notify handler */
-> +	if (is_apmf_func_supported(pmf_dev, APMF_FUNC_AUTO_MODE) &&
-> +	    is_apmf_func_supported(pmf_dev, APMF_FUNC_SBIOS_REQUESTS)) {
-> +		status = acpi_install_notify_handler(ahandle, ACPI_ALL_NOTIFY,
-> +						     apmf_event_handler, pmf_dev);
-> +		if (ACPI_FAILURE(status)) {
-> +			dev_err(pmf_dev->dev, "failed to install notify handler\n");
-> +			return -ENODEV;
-> +		}
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 > +
-> +	/* Call the handler once manually to catch up with possibly missed notifies. */
-> +	apmf_event_handler(ahandle, 0, pmf_dev);
-> +}
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
+> +#include <asm/unaligned.h>
 > +
-> +return 0;
-> +}
+> +MODULE_AUTHOR("Arvid Norlander <lkml@vorpal.se>");
+> +MODULE_AUTHOR("Angelo Arrifano");
+> +MODULE_DESCRIPTION("ACPI Direct App Launch driver");
+> +MODULE_LICENSE("GPL");
 > +
->   void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
->   {
->   	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> @@ -257,8 +279,6 @@ void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
->   
->   int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
->   {
-> -	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-> -	acpi_status status;
->   	int ret;
->   
->   	ret = apmf_if_verify_interface(pmf_dev);
-> @@ -279,20 +299,6 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
->   		schedule_delayed_work(&pmf_dev->heart_beat, 0);
->   	}
->   
-> -	/* Install the APMF Notify handler */
-> -	if (is_apmf_func_supported(pmf_dev, APMF_FUNC_AUTO_MODE) &&
-> -	    is_apmf_func_supported(pmf_dev, APMF_FUNC_SBIOS_REQUESTS)) {
-> -		status = acpi_install_notify_handler(ahandle,
-> -						     ACPI_ALL_NOTIFY,
-> -						     apmf_event_handler, pmf_dev);
-> -		if (ACPI_FAILURE(status)) {
-> -			dev_err(pmf_dev->dev, "failed to install notify handler\n");
-> -			return -ENODEV;
-> -		}
-> -		/* Call the handler once manually to catch up with possibly missed notifies. */
-> -		apmf_event_handler(ahandle, 0, pmf_dev);
-> -	}
-> -
->   out:
->   	return ret;
->   }
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 44fe30726b62..a5f5a4bcff6d 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -369,6 +369,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
->   	apmf_acpi_init(dev);
->   	platform_set_drvdata(pdev, dev);
->   	amd_pmf_init_features(dev);
-> +	apmf_install_handler(dev);
->   	amd_pmf_dbgfs_register(dev);
->   
->   	mutex_init(&dev->lock);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index e5dc3ae238c7..84bbe2c6ea61 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -381,6 +381,7 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index);
->   int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data);
->   int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
->   int amd_pmf_get_power_source(void);
-> +int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
->   
->   /* SPS Layer */
->   int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
+> +#define QUICKSTART_ACPI_DEVICE_NAME=09"quickstart"
+> +#define QUICKSTART_ACPI_HID=09=09"PNP0C32"
+> +
+> +/*
+> + * There will be two events:
+> + * 0x02 - A hot button was pressed while device was off/sleeping.
+> + * 0x80 - A hot button was pressed while device was up.
+> + */
+> +#define QUICKSTART_EVENT_WAKE=09=090x02
+> +#define QUICKSTART_EVENT_RUNTIME=090x80
+> +
+> +/*
+> + * Each PNP0C32 device is an individual button. This structure
+> + * keeps track of data associated with said device.
+> + */
+> +struct quickstart_acpi {
+> +=09struct platform_device *platform_dev;
+> +=09struct input_dev *input_device;
+> +=09struct quickstart_button *button;
+> +=09/* ID of button as returned by GHID */
+> +=09u32 id;
+> +=09/* Name of input device */
+> +=09char input_name[32];
+> +=09/* Physical path for the input device */
+> +=09char phys[32];
+> +=09/* Track if a wakeup event was received */
+> +=09bool wakeup_cause;
+> +};
+> +
+> +#define quickstart_name(dev) acpi_device_bid(dev->acpi_dev)
 
+This does not seem to be used.
+
+
+> +
+> +/*
+> + * Knowing what these buttons do require system specific knowledge.
+> + * This could be done by matching on DMI data in a long quirk table.
+> + * However, it is easier to leave it up to user space to figure this out=
+.
+> + *
+> + * Using for example udev hwdb the scancode 0x1 can be remapped suitably=
+.
+> + */
+> +static const struct key_entry quickstart_keymap[] =3D {
+> +=09{ KE_KEY, 0x1, { KEY_UNKNOWN } },
+> +=09{ KE_END, 0 },
+> +};
+> +
+> +static ssize_t wakeup_cause_show(struct device *dev,
+> +=09=09=09=09 struct device_attribute *attr, char *buf)
+> +{
+> +=09struct quickstart_acpi *quickstart =3D dev_get_drvdata(dev);
+> +
+> +=09return sysfs_emit(buf, "%s\n",
+> +=09=09=09  (quickstart->wakeup_cause ? "true" : "false"));
+> +}
+> +
+> +static ssize_t wakeup_cause_store(struct device *dev,
+> +=09=09=09=09  struct device_attribute *attr,
+> +=09=09=09=09  const char *buf, size_t count)
+> +{
+> +=09struct quickstart_acpi *quickstart =3D dev_get_drvdata(dev);
+> +
+> +=09if (count < 2)
+> +=09=09return -EINVAL;
+> +
+> +=09if (strncasecmp(buf, "false", 4) !=3D 0)
+> +=09=09return -EINVAL;
+> +
+
+If "true"/"false" will be used in the final version, then I think this chec=
+k
+currently is too lax. You could use `sysfs_streq()`. And I think the `count=
+ < 2`
+check is not needed.
+
+
+> +=09quickstart->wakeup_cause =3D false;
+> +=09return count;
+> +}
+> +static DEVICE_ATTR_RW(wakeup_cause);
+> +
+> +static ssize_t button_id_show(struct device *dev, struct device_attribut=
+e *attr,
+> +=09=09=09      char *buf)
+> +{
+> +=09struct quickstart_acpi *quickstart =3D dev_get_drvdata(dev);
+> +
+> +=09return sysfs_emit(buf, "%u\n", quickstart->id);
+> +}
+> +static DEVICE_ATTR_RO(button_id);
+> +
+> +/* ACPI Driver functions */
+> +static void quickstart_acpi_notify(acpi_handle handle, u32 event, void *=
+context)
+> +{
+> +=09struct platform_device *device =3D context;
+> +=09struct quickstart_acpi *quickstart =3D dev_get_drvdata(&device->dev);
+> +
+> +=09if (!quickstart)
+> +=09=09return;
+> +
+> +=09switch (event) {
+> +=09case QUICKSTART_EVENT_WAKE:
+> +=09=09quickstart->wakeup_cause =3D true;
+> +=09=09break;
+> +=09case QUICKSTART_EVENT_RUNTIME:
+> +=09=09if (!sparse_keymap_report_event(quickstart->input_device, 0x1,
+> +=09=09=09=09=09=091, true)) {
+> +=09=09=09pr_info("Key handling error\n");
+
+I don't think this branch can ever be taken.
+
+
+> +=09=09}
+> +=09=09break;
+> +=09default:
+> +=09=09pr_err("Unexpected ACPI event notify (%u)\n", event);
+
+I think `dev_{err,info}()` should be preferred.
+
+
+> +=09=09break;
+> +=09}
+> +}
+> +
+> +/*
+> + * The GHID ACPI method is used to indicate the "role" of the button.
+> + * However, all the meanings of these values are vendor defined.
+> + *
+> + * We do however expose this value to user space.
+> + */
+> +static int quickstart_acpi_ghid(struct quickstart_acpi *quickstart)
+> +{
+> +=09acpi_handle handle =3D ACPI_HANDLE(&quickstart->platform_dev->dev);
+> +=09acpi_status status;
+> +=09struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +=09int ret =3D 0;
+> +=09union acpi_object *obj =3D NULL;
+> +
+> +=09/*
+> +=09 * This returns a buffer telling the button usage ID,
+> +=09 * and triggers pending notify events (The ones before booting).
+> +=09 */
+> +=09status =3D acpi_evaluate_object(handle, "GHID", NULL, &buffer);
+> +=09if (ACPI_FAILURE(status)) {
+> +=09=09dev_err(&quickstart->platform_dev->dev,
+> +=09=09=09"GHID method failed, ACPI status %u\n", status);
+> +=09=09return -EINVAL;
+> +=09}
+> +=09obj =3D buffer.pointer;
+> +
+> +=09/*
+> +=09 * GHID returns buffers, sanity check that is the case.
+> +=09 */
+> +=09if (obj->type !=3D ACPI_TYPE_BUFFER) {
+> +=09=09dev_err(&quickstart->platform_dev->dev,
+> +=09=09=09"GHID did not return buffer\n");
+> +=09=09ret =3D -EINVAL;
+> +=09=09goto free_and_return;
+> +=09}
+> +
+> +=09/*
+> +=09 * Quoting the specification:
+> +=09 * "The GHID method can return a BYTE, WORD, or DWORD.
+> +=09 *  The value must be encoded in little-endian byte
+> +=09 *  order (least significant byte first)."
+> +=09 */
+> +=09switch (obj->buffer.length) {
+> +=09case 1:
+> +=09=09quickstart->id =3D *(u8 *)obj->buffer.pointer;
+> +=09=09break;
+> +=09case 2:
+> +=09=09quickstart->id =3D get_unaligned_le16(obj->buffer.pointer);
+> +=09=09break;
+> +=09case 4:
+> +=09=09quickstart->id =3D get_unaligned_le32(obj->buffer.pointer);
+> +=09=09break;
+> +=09case 8:
+> +=09=09quickstart->id =3D get_unaligned_le64(obj->buffer.pointer);
+> +=09=09break;
+> +=09default:
+> +=09=09dev_err(&quickstart->platform_dev->dev,
+> +=09=09=09"GHID method returned buffer of unexpected length %lu\n",
+> +=09=09=09(unsigned long)obj->buffer.length);
+> +=09=09ret =3D -EINVAL;
+> +=09=09break;
+> +=09}
+> +
+> +free_and_return:
+> +=09kfree(buffer.pointer);
+> +
+> +=09return ret;
+> +}
+> +
+> +static struct attribute *quickstart_attributes[] =3D {
+> +=09&dev_attr_wakeup_cause.attr,
+> +=09&dev_attr_button_id.attr,
+> +=09NULL,
+> +};
+> +
+> +static const struct attribute_group quickstart_attr_group =3D {
+> +=09.attrs =3D quickstart_attributes,
+> +};
+> +
+> +static int quickstart_remove(struct platform_device *device)
+> +{
+> +=09acpi_handle handle =3D ACPI_HANDLE(&device->dev);
+> +
+> +=09acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY,
+> +=09=09=09=09   quickstart_acpi_notify);
+> +
+> +=09return 0;
+> +}
+> +
+> +static int quickstart_probe(struct platform_device *device)
+> +{
+> +=09int ret;
+> +=09acpi_handle handle =3D ACPI_HANDLE(&device->dev);
+> +=09acpi_status status;
+> +=09struct quickstart_acpi *quickstart;
+> +
+> +=09if (!device)
+> +=09=09return -EINVAL;
+> +
+> +=09quickstart =3D
+> +=09=09devm_kzalloc(&device->dev, sizeof(*quickstart), GFP_KERNEL);
+> +=09if (!quickstart)
+> +=09=09return -ENOMEM;
+> +
+> +=09/*
+> +=09 * This must be set early for proper cleanup on error handling path.
+> +=09 * After this point generic error handling can be used.
+> +=09 */
+> +=09quickstart->platform_dev =3D device;
+> +=09dev_set_drvdata(&device->dev, quickstart);
+> +
+> +=09/* Retrieve the GHID ID */
+> +=09ret =3D quickstart_acpi_ghid(quickstart);
+> +=09if (ret < 0)
+> +=09=09goto error;
+
+You can replace all `goto`s in this function with `return`s. In fact, you s=
+hould
+because `quickstart_remove()` does not do useful work until the ACPI notify=
+ handler
+is registered, but if that succeeds, this function can no longer fail.
+
+
+> +
+> +=09/* Set up sysfs entries */
+> +=09ret =3D devm_device_add_group(&quickstart->platform_dev->dev,
+> +=09=09=09=09    &quickstart_attr_group);
+
+In the meantime I realized there is a simpler solution. Use the `ATTRIBUTE_=
+GROUPS()`
+macro and then simply set the `.dev_groups` member of `quickstart_platform_=
+driver.driver`.
+(see drivers/platform/x86/hp-wmi.c)
+
+
+> +=09if (ret) {
+> +=09=09dev_err(&device->dev, "Unable to setup sysfs entries\n");
+> +=09=09goto error;
+> +=09}
+> +
+> +=09/* Set up input device */
+> +=09quickstart->input_device =3D
+> +=09=09devm_input_allocate_device(&quickstart->platform_dev->dev);
+> +=09if (!quickstart->input_device) {
+> +=09=09ret =3D -ENOMEM;
+> +=09=09goto error;
+> +=09}
+> +=09ret =3D sparse_keymap_setup(quickstart->input_device, quickstart_keym=
+ap,
+> +=09=09=09=09  NULL);
+> +=09if (ret)
+> +=09=09goto error;
+> +
+> +=09snprintf(quickstart->input_name, sizeof(quickstart->phys),
+> +=09=09 "Quickstart Button %u", quickstart->id);
+> +=09snprintf(quickstart->phys, sizeof(quickstart->phys),
+> +=09=09 QUICKSTART_ACPI_DEVICE_NAME "/input%u", quickstart->id);
+> +
+> +=09quickstart->input_device->name =3D quickstart->input_name;
+> +=09quickstart->input_device->phys =3D quickstart->phys;
+> +=09quickstart->input_device->id.bustype =3D BUS_HOST;
+> +
+> +=09ret =3D input_register_device(quickstart->input_device);
+> +
+> +=09/* Set up notify handler */
+> +=09status =3D acpi_install_notify_handler(handle, ACPI_DEVICE_NOTIFY,
+> +=09=09=09=09=09     quickstart_acpi_notify, device);
+> +=09if (ACPI_FAILURE(status)) {
+> +=09=09dev_err(&device->dev, "Error installing notify handler\n");
+> +=09=09return -EIO;
+> +=09}
+> +
+> +=09return 0;
+> +error:
+> +=09quickstart_remove(device);
+> +=09return ret;
+> +}
+> +
+> +static const struct acpi_device_id quickstart_device_ids[] =3D {
+> +=09{ QUICKSTART_ACPI_HID, 0 },
+> +=09{ "", 0 },
+
+Small thing, but usually the comma after the sentinel entry is omitted.
+(see quickstart_keymap, quickstart_attributes as well)
+
+
+> +};
+> +MODULE_DEVICE_TABLE(acpi, quickstart_device_ids);
+> +
+> +static struct platform_driver quickstart_platform_driver =3D {
+> +=09.probe=09=3D quickstart_probe,
+> +=09.remove=09=3D quickstart_remove,
+> +=09.driver=09=3D {
+> +=09=09.name =3D QUICKSTART_ACPI_DEVICE_NAME,
+> +=09=09.acpi_match_table =3D quickstart_device_ids,
+> +=09=09.owner =3D THIS_MODULE,
+> +=09}
+> +};
+> +
+> +module_platform_driver(quickstart_platform_driver);
+> --
+> 2.37.3
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
