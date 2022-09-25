@@ -2,139 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5EAC6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Sep 2022 20:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4165AC6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Sep 2022 23:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231176AbiIYUnr (ORCPT
+        id S232864AbiIYXj5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 25 Sep 2022 16:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39210 "EHLO
+        Sun, 25 Sep 2022 19:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231218AbiIYUnq (ORCPT
+        with ESMTP id S231345AbiIYXj4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 25 Sep 2022 16:43:46 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF8929809;
-        Sun, 25 Sep 2022 13:43:45 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id dv25so10259543ejb.12;
-        Sun, 25 Sep 2022 13:43:45 -0700 (PDT)
+        Sun, 25 Sep 2022 19:39:56 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 364FD12616;
+        Sun, 25 Sep 2022 16:39:54 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 10so8349776lfy.5;
+        Sun, 25 Sep 2022 16:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=IRPOpbRztdIWfoMEyOR5FNdNwTAfeqMezmdLBhrI1Y8=;
-        b=oTO93ojZumu65icQuERJ+8LSy3jHGye4u5gcIEciPZolS5siDD0rmq7AzSUi5vBR5t
-         Gh/wHx/TQIWgkjVSbx4VvrAcwXWALY7CmBoniRuWSwOUfB0PmKg4xLk7jV9pyQ/ZGbOR
-         ltwL7OYwhDnu4AKWC9OxvL95A3D6r1TQAZ8AwkqW959qPEyMeHHghB5sVYOFRW9xAT8z
-         NwNsO0E4byzpL9gmBTD7LFlIIXul/fxAiAw1kFR7jlnx7PORzPvZWmXBLl+3/LG8vQT8
-         fplX8OILLeuwjIKK1pCVmOZFJuqna9MDBce7u2XMBoSqUJM+GlWtcSBv6c5j6WHatZQ6
-         /XYw==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=st3O2pRGPWK1FLJTPBGRuCniY8P/u6abQYJb/fEYuJQ=;
+        b=W3K2NP/a6+oTI8gFEGt5nGGS9enU+0KpjF9MSWpto/y/e8Pqkyk3KdNROeq1VReuw3
+         4tbDUQNzhEsLSU0JCkjVpzqYzoF9pZhg9SvgEiWunM5yC5N0DLguvjWHMxFYGtncW+mc
+         vOragtuGv5wtfYTpeKmAEjfsXd4V6tTTTzaNGi8+qtE32bmF4JD4wQ6frMIJoh9GGTge
+         RAD/AaBmrSAOC5LqiVErhUkwhGjVz5+qH/Z27UJUyGp+GEOEmwJRfc1RTbiWoQbzjL5M
+         mtmY0fn16PQvkz4jleVY/+noMI6YznIJxGIP6waxvJ+sh1wleUqUblTSTP3nNWAH+jkr
+         pZZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=IRPOpbRztdIWfoMEyOR5FNdNwTAfeqMezmdLBhrI1Y8=;
-        b=smG8kn2W7tcrwjQ3Eio1k9igSTYJt/O8PzvxprDM0roiCLa8NoZgnklmlkX4meFi8F
-         LbpAa7ghbsXsXOqNUfwyWS2hxcFPANacSXzEepVSNN/kV2P5jjFniRRr5brAikhvUsb7
-         /exadXl4Aok/fXhe+RXHQrI3Y5gGI7Wm7Ul1wB1U9kPqc9t0zbH3wOpltefVNhRhmqZP
-         NSWJZIoOGr6vI9NoXy5iqS53zbGzhaiLgB8FcziHHpAG4t7HBEkeGj//RZ6dC7AiWNy1
-         UrtUzDe9Wcr+9S5xCzAxNaSkMWqsEeWffAVyc5RYO0KpM6RX1FLQ+riwsJ8771JbXPfU
-         swhA==
-X-Gm-Message-State: ACrzQf2OT9futU76AUFzwvbYNau7h7mm+oNBDncrK81lRC8/phAYjoKF
-        8fzdTXdG3iVvvRiCNwGnO94IdRzsbxU=
-X-Google-Smtp-Source: AMsMyM53lHwQZ2WDcwegamAsdfP0T88HKZEVMFM0Ib1UMtvh/YWe8fSxw35fIvtEWh31SNW+0TdBRA==
-X-Received: by 2002:a17:907:1b0e:b0:72f:9b43:b98c with SMTP id mp14-20020a1709071b0e00b0072f9b43b98cmr15550202ejc.710.1664138624180;
-        Sun, 25 Sep 2022 13:43:44 -0700 (PDT)
-Received: from spectre.. (host-82-61-191-175.retail.telecomitalia.it. [82.61.191.175])
-        by smtp.gmail.com with ESMTPSA id r10-20020a17090609ca00b0073cb0801104sm7283889eje.147.2022.09.25.13.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Sep 2022 13:43:43 -0700 (PDT)
-From:   Elia Devito <eliadevito@gmail.com>
-Cc:     Elia Devito <eliadevito@gmail.com>,
-        Philippe Rouquier <bonfire-app@wanadoo.fr>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: add support for quiet thermal profile
-Date:   Sun, 25 Sep 2022 22:42:45 +0200
-Message-Id: <20220925204244.53506-1-eliadevito@gmail.com>
-X-Mailer: git-send-email 2.37.2
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=st3O2pRGPWK1FLJTPBGRuCniY8P/u6abQYJb/fEYuJQ=;
+        b=AsP+f8IT85QBbafwbsPWRMd9P/WUw0RjFJYhCQe32abKwsU+vkLttHabZaMLwzTDy6
+         1ZjAi0v0u91x8GQTwFzmemjy8gFOOa9Zf6dMFM9SNI7QjAN/UrkRKlkTwKi9LrBKNa4w
+         aQcL8RJ3UqnzgHmz2m7YwwJNCHvBDIVSU3+4oH4gj+cNvZQ0JBOH+HlAlxRPzW+yd54R
+         cEYz/7zUcz6fsWrbz0RAEPNWvqFYoR0lV0ClnDBF0+uViOUwbLMWWoDiMGVXVt+lt4rw
+         ih5A4pFsqVHngO/i7/CrM8t12pgFgolgB6sGCOkB7oIzxLdXJPMhvibEIRDElwf81w3d
+         +lwQ==
+X-Gm-Message-State: ACrzQf35T3/yVvtE+1LZyKK8CbInZm5zHVGGr7DsU70Tws1Hfm2J422g
+        /T2sP9zLw4tBpuLiTwP5TZI=
+X-Google-Smtp-Source: AMsMyM5aDKQS2b/KY3xFf9M+RoiDx1qfHHYGi1ptQgxDMi9xIzklVjEJFzIiBqGLPRgxtbvB3OmxiQ==
+X-Received: by 2002:a05:6512:2215:b0:49e:ac45:22e1 with SMTP id h21-20020a056512221500b0049eac4522e1mr8247070lfu.33.1664149192424;
+        Sun, 25 Sep 2022 16:39:52 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-124-206.nat.spd-mgts.ru. [109.252.124.206])
+        by smtp.googlemail.com with ESMTPSA id i11-20020ac2522b000000b0048a921664e8sm2351312lfl.37.2022.09.25.16.39.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Sep 2022 16:39:51 -0700 (PDT)
+Message-ID: <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+Date:   Mon, 26 Sep 2022 02:39:50 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+References: <20220825143726.269890-1-hdegoede@redhat.com>
+ <20220825143726.269890-3-hdegoede@redhat.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+In-Reply-To: <20220825143726.269890-3-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The quiet profile is available only on models without dGPU,
-so we enable it when the device has only one GPU onboard.
+25.08.2022 17:36, Hans de Goede пишет:
+> Before this commit when we want userspace to use the acpi_video backlight
+> device we register both the GPU's native backlight device and acpi_video's
+> firmware acpi_video# backlight device. This relies on userspace preferring
+> firmware type backlight devices over native ones.
+> 
+> Registering 2 backlight devices for a single display really is
+> undesirable, don't register the GPU's native backlight device when
+> another backlight device should be used.
+> 
+> Changes in v2:
+> - Use drm_info(drm_dev,  ...) for log messages
+> 
+> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_backlight.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_backlight.c b/drivers/gpu/drm/i915/display/intel_backlight.c
+> index 681ebcda97ad..03c7966f68d6 100644
+> --- a/drivers/gpu/drm/i915/display/intel_backlight.c
+> +++ b/drivers/gpu/drm/i915/display/intel_backlight.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/pwm.h>
+>  #include <linux/string_helpers.h>
+>  
+> +#include <acpi/video.h>
+> +
+>  #include "intel_backlight.h"
+>  #include "intel_backlight_regs.h"
+>  #include "intel_connector.h"
+> @@ -952,6 +954,11 @@ int intel_backlight_device_register(struct intel_connector *connector)
+>  
+>  	WARN_ON(panel->backlight.max == 0);
+>  
+> +	if (!acpi_video_backlight_use_native()) {
+> +		drm_info(&i915->drm, "Skipping intel_backlight registration\n");
+> +		return 0;
+> +	}
+> +
+>  	memset(&props, 0, sizeof(props));
+>  	props.type = BACKLIGHT_RAW;
+>  
 
-Signed-off-by: Elia Devito <eliadevito@gmail.com>
-Tested-by: Philippe Rouquier <bonfire-app@wanadoo.fr>
----
- drivers/platform/x86/hp-wmi.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index bc7020e9df9e..3e0e67be8001 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -177,7 +177,8 @@ enum hp_thermal_profile_omen_v1 {
- enum hp_thermal_profile {
- 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
- 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
--	HP_THERMAL_PROFILE_COOL			= 0x02
-+	HP_THERMAL_PROFILE_COOL			= 0x02,
-+	HP_THERMAL_PROFILE_QUIET			= 0x03,
- };
- 
- #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
-@@ -1194,6 +1195,9 @@ static int hp_wmi_platform_profile_get(struct platform_profile_handler *pprof,
- 	case HP_THERMAL_PROFILE_COOL:
- 		*profile =  PLATFORM_PROFILE_COOL;
- 		break;
-+	case HP_THERMAL_PROFILE_QUIET:
-+		*profile =  PLATFORM_PROFILE_QUIET;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1216,6 +1220,9 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
- 	case PLATFORM_PROFILE_COOL:
- 		tp =  HP_THERMAL_PROFILE_COOL;
- 		break;
-+	case PLATFORM_PROFILE_QUIET:
-+		tp =  HP_THERMAL_PROFILE_QUIET;
-+		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -1230,6 +1237,8 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
- static int thermal_profile_setup(void)
- {
- 	int err, tp;
-+	unsigned int n_gpu = 0;
-+	const struct dmi_device *dev = NULL;
- 
- 	if (is_omen_thermal_profile()) {
- 		tp = omen_thermal_profile_get();
-@@ -1263,6 +1272,16 @@ static int thermal_profile_setup(void)
- 
- 		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
- 		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
-+
-+		/*
-+		 * The quiet profile is available only on models without dGPU,
-+		 * so we enable it when the device has only one GPU onboard.
-+		 */
-+		while ((dev = dmi_find_device(DMI_DEV_TYPE_VIDEO, NULL, dev)))
-+			n_gpu++;
-+
-+		if (n_gpu == 1)
-+			set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
- 	}
- 
- 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
--- 
-2.37.2
-
+This breaks backlight on Acer Chromebook Spin 713 because backlight
+isn't registered anymore. Any ideas how to fix it?
