@@ -2,113 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFD0C07E9D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 11:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD17C6FA93
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 12:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbiI0LSX (ORCPT
+        id S231702AbiI0Mr1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 07:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        Tue, 27 Sep 2022 08:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbiI0LSF (ORCPT
+        with ESMTP id S231720AbiI0Mr0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 07:18:05 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92CDA11BCDD;
-        Tue, 27 Sep 2022 04:17:37 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id m3so12701437eda.12;
-        Tue, 27 Sep 2022 04:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=5+kF5Y0/203zzrdLAOZ9QTBoJ3rERNsk4sXaumVZuYA=;
-        b=P1pr7qRYb3951aLNn/CBQ8BqiBgzZ1kad+bR3TfANi+ZSu6uwdQ6EEpnR59OnNd8TF
-         MjC8/3hV5xTTqni2mubK+aEfbxmfXd8RXzDMVB+qd+Vq5By5znhsLcSpH1TmvKqsQaCK
-         ru1nw5fXw+0rVBx/gNRV59cNoQpQXtwcqPFXhPUMU6luhkhlaS8tfMeCExPcwMxflka5
-         +ooTe81Df7g6xdLrjZX4d8/cCWo0wa7LuGnl9/lAWLUcZ/s6SO0O5HEnTi2p8zkkQKcm
-         dz4AuZuOnfwstR6DjyoCUR81W4sHXnJ2HsqpWGg79ZftZ0+V/hTqnJp/UazY1EZdFpeT
-         WaEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=5+kF5Y0/203zzrdLAOZ9QTBoJ3rERNsk4sXaumVZuYA=;
-        b=vbah14I7F4GSkin+x0bHCQAsHaRYJuX2RJTha8I3XIEJngz2GAaLEvVz5RZNFcSKM6
-         u5c3sSMh7VsKP9rU/kIYfXxNl670OTMK3h3H97Cx0fKjUyISzUhzY9lO7eavS7oQ/jxq
-         L091EiAQNyUCtKJxsQuVNY0bCLSssO7RttyiKBFEvlA6Rf7NGgsyytG/0a211jXtoxC6
-         c9Lp7HdcNZfzSradtlg3586IjPqqmN1ftr3ZLj9lAsdkuXDzhx9OV4HfssM+m1dLTDvT
-         zsaN5JWB+6Fm3cx1UtNWfSVp9Cyky08Fj9KWt2vjsuXaKRIKncUQ2juzGfJT6J/4N9xT
-         DjMQ==
-X-Gm-Message-State: ACrzQf1/zBAIgRYAGHebeddcqEs8HeC+gQQJBZBkze+uK+3wC0/n2bKT
-        ruO1KyixNKDSO5GCbmsnoJxTPKtRbms=
-X-Google-Smtp-Source: AMsMyM7Ba26gbv0elp/pmHXdzEJc+KV4yTb3jSaLl1tIyeaybPhJvPLItfQ4DfNN8miR7/bjWmHp5w==
-X-Received: by 2002:a05:6402:3552:b0:451:2037:639e with SMTP id f18-20020a056402355200b004512037639emr27811797edd.136.1664277455225;
-        Tue, 27 Sep 2022 04:17:35 -0700 (PDT)
-Received: from [10.23.0.4] ([37.120.217.82])
-        by smtp.gmail.com with ESMTPSA id r17-20020a17090609d100b00781d411a63csm624283eje.151.2022.09.27.04.17.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 04:17:34 -0700 (PDT)
-Message-ID: <93a51c6f-40f4-1808-dbd6-4cd57bbaa3ed@gmail.com>
-Date:   Tue, 27 Sep 2022 13:17:33 +0200
+        Tue, 27 Sep 2022 08:47:26 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F278B161CD9;
+        Tue, 27 Sep 2022 05:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664282843; x=1695818843;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kpGAEpHLvVd76YdyrLzjv/w0GPJd1G4FzfKRQuGIxyI=;
+  b=KIX5UZuvwCMqKhYo6479+eg/nRutOJoDZGzOaYEnp7H+tymw14tZ9ij9
+   y3trTmxDBgwGwxLxp5giqRHuWsPwYxqDHpOOGe9APG3XniIl9B8XdyQwm
+   IbyDqrpl1XRNtiTAV/Lxcd2Mwro3Sx/9M9f1Uk9fm15zHqKFMtqe4Y6Ix
+   cFmDZN/5C/h/W8+5fhqNfTdyw13TjqFNismWf9uSFqU3Uu5GcV7dtImqO
+   +OW5u5mWOKhhD0t0u6Igp2yam/6M6R0Lm7oyDZ/Bu9BLrSsLHo0crPW3q
+   vu4unMaQjcHhniYQUJYIwe8BbceMeGyZktXFFsG4DzU/jo98zTumVD64u
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="288456525"
+X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
+   d="scan'208";a="288456525"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 05:47:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="654713029"
+X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
+   d="scan'208";a="654713029"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 27 Sep 2022 05:47:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1od9zZ-008S0p-2d;
+        Tue, 27 Sep 2022 15:47:17 +0300
+Date:   Tue, 27 Sep 2022 15:47:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-acpi@vger.kernel.org, linux-clk@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, rafael@kernel.org,
+        lenb@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        hdegoede@redhat.com, markgross@kernel.org, robert.moore@intel.com
+Subject: Re: [PATCH v3 3/5] platform/x86: int3472: Support multiple clock
+ consumers
+Message-ID: <YzLw1VVWDGF1YVu5@smile.fi.intel.com>
+References: <20220921230439.768185-1-djrscally@gmail.com>
+ <20220921230439.768185-4-djrscally@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH] platform/surface: Split memcpy() of struct ssam_event
- flexible array
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220927004011.1942739-1-keescook@chromium.org>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20220927004011.1942739-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220921230439.768185-4-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/27/22 02:40, Kees Cook wrote:
-> To work around a misbehavior of the compiler's ability to see into
-> composite flexible array structs (as detailed in the coming memcpy()
-> hardening series[1]), split the memcpy() of the header and the payload
-> so no false positive run-time overflow warning will be generated.
-> 
-> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
-> 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Sep 22, 2022 at 12:04:37AM +0100, Daniel Scally wrote:
+> At present, the tps68470.c only supports a single clock consumer when
+> passing platform data to the clock driver. In some devices multiple
+> sensors depend on the clock provided by a single TPS68470 and so all
+> need to be able to acquire the clock. Support passing multiple
+> consumers as platform data.
 
-Thanks!
+...
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> +static int
+> +skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data **clk_pdata)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +	struct acpi_device *consumer;
+> +	unsigned int n_consumers = 0;
+> +	const char *sensor_name;
+> +	unsigned int i = 0;
+> +
+> +	for_each_acpi_consumer_dev(adev, consumer)
+> +		n_consumers++;
 
-Regards,
-Max
+Here no put for consumer (and IIUC it's correct).
 
-> ---
->   drivers/platform/surface/surface_acpi_notify.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-> index 44e317970557..50500e562963 100644
-> --- a/drivers/platform/surface/surface_acpi_notify.c
-> +++ b/drivers/platform/surface/surface_acpi_notify.c
-> @@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
->   	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
->   	work->dev = d->dev;
->   
-> -	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
-> +	work->event = *event;
-> +	memcpy(work->event.data, event->data, event->length);
->   
->   	queue_delayed_work(san_wq, &work->work, delay);
->   	return SSAM_NOTIF_HANDLED;
+> +
+
+(Also no need to have a blank line here, the condition is tighten to
+ the for-loop.)
+
+> +	if (!n_consumers) {
+> +		dev_err(dev, "INT3472 seems to have no dependents\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	*clk_pdata = devm_kzalloc(dev, struct_size(*clk_pdata, consumers, n_consumers),
+> +				  GFP_KERNEL);
+> +	if (!*clk_pdata)
+> +		return -ENOMEM;
+> +
+> +	(*clk_pdata)->n_consumers = n_consumers;
+> +	i = 0;
+> +
+> +	for_each_acpi_consumer_dev(adev, consumer) {
+> +		sensor_name = devm_kasprintf(dev, GFP_KERNEL, I2C_DEV_NAME_FORMAT,
+> +					     acpi_dev_name(consumer));
+> +		if (!sensor_name)
+> +			return -ENOMEM;
+> +
+> +		(*clk_pdata)->consumers[i].consumer_dev_name = sensor_name;
+> +		i++;
+> +	}
+
+> +	acpi_dev_put(consumer);
+
+Why is it here?
+
+> +	return n_consumers;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
