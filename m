@@ -2,99 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73007C07E9D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 00:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2CBC07E9D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 01:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbiI0Ak1 (ORCPT
+        id S229484AbiI0BM5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Sep 2022 20:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
+        Mon, 26 Sep 2022 21:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbiI0AkU (ORCPT
+        with ESMTP id S229604AbiI0BM5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Sep 2022 20:40:20 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF4A33E3D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Sep 2022 17:40:14 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 3so8030606pga.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Sep 2022 17:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=pGt51fVnZ3EKLkKkT429v72La88Y6sW9WqI8weW67S8=;
-        b=Oq1JA4L/avWEqaRp3w58mg2z0PM4qsnliNUIsoKBlDE6tSA8D0QVjfVvKz0ZJJigRX
-         XZsQLFTfMeXNBQ0fCNu8mHYPxUh7urDzyBF8UsgJ3LeHGmxtJvANVPv5iykuK0+wjL/i
-         QEXkx5mq8tx8c8LxIDbjsg74TaDzSdDe/Tg6E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=pGt51fVnZ3EKLkKkT429v72La88Y6sW9WqI8weW67S8=;
-        b=PVlzxajB6VT4Z0H7kPgkoLTZwVE2Hj0vDg6ZvBogHh4i+plA/ocPr5FvNN9NQe1TtP
-         Bj/KeUHNm/U1ZF5OW3XAGYtpnjUfGPjERJnn6HG5+8pLp7+Njow4c+8PPshYKGVlrjzD
-         ufv8pu4UxZOdn4/bBJ8tGZV2c88Tco0GbgU2cA1Nt8Ac6Wi/MGwzuaDNLJSYJo6CYHLx
-         7UGXcH8s6oaeKCSFP2lsm7xxkO3JumWLiZVi84ukMVt/EWC2yeulqZEKpJZm41s9TMzm
-         vjOB4qmCUW1r9lk6DlhjjxVeMbfxHgXbF+nRRVcCxN/sZjvzXwwt1EyhwI0NemWD0HZA
-         f3Sw==
-X-Gm-Message-State: ACrzQf2hESf+DH0cK3brMucoF6og8dvKfIzjWCjUHset6tmw74ya9CBQ
-        cbNzhek8HtjpWGOX0hJym3ONdQE/wHL+WQ==
-X-Google-Smtp-Source: AMsMyM4DBwkJt9JgEwKhJyofsVCuApgj47vMcTyXAjbHT1YTCJiKsvKiWnfGQnHOgfU0c79wTb3QLw==
-X-Received: by 2002:a62:2983:0:b0:54e:7cd5:adb3 with SMTP id p125-20020a622983000000b0054e7cd5adb3mr25944829pfp.38.1664239213900;
-        Mon, 26 Sep 2022 17:40:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z187-20020a6265c4000000b005367c28fd32sm113065pfb.185.2022.09.26.17.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 17:40:13 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Mon, 26 Sep 2022 21:12:57 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F849B872;
+        Mon, 26 Sep 2022 18:12:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 30E0ACE13E7;
+        Tue, 27 Sep 2022 01:12:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED2CBC433C1;
+        Tue, 27 Sep 2022 01:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664241172;
+        bh=LkKSel0RdldqvXm8rwrJJuPghKrZg2g8e51qKRvCa9k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ikeX8zDYwKANctxavY3Xo8m9v4ulsS7NLH6QPpipbfZnVOBKLejB7PZtHoNvc2GU9
+         3Fg79+ZbcF6jJCl2fIbNXxvnMXemfCUWaFzZmCqqmuHwRynROEbBMBdAnK+/N7pJ9b
+         Yc7EhieMbTSzsbAspIizPiXXTbifuyzDK+kCmsWzA0S84at0ocXTM6VHHNRpaIJzRA
+         YLj6roYKVcvTTde9IEF+WmeBR7qmcealnWrwGzpQ75gi0/b3ADzcZW/mwlxhpMBzjh
+         ItIL6Sx4f86ssi9SO+nQ4a/ghKbHpt0Y0X596DXbfSE/UTXXlVVosYVPHkoZ25m0kC
+         Gd1mH+kraml8A==
+Date:   Mon, 26 Sep 2022 20:12:46 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] platform/surface: Split memcpy() of struct ssam_event flexible array
-Date:   Mon, 26 Sep 2022 17:40:11 -0700
-Message-Id: <20220927004011.1942739-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] platform/surface: Split memcpy() of struct ssam_event
+ flexible array
+Message-ID: <YzJODnTl1M/48zg0@work>
+References: <20220927004011.1942739-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1376; h=from:subject; bh=GL45TSDgSn7yiaUVdMr7d6+dV1xEwuSn6eIvk11kXhk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkZrIBbhM5eJ5F0lk3GSzc2tJpcGHkoXsVR+1CSD Z+kqhDiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGawAKCRCJcvTf3G3AJuYgD/ 42fEX1+srsvR9Fgixh0DPqR9AHu3bbG8VczVkxaEs0PIPA9m/U1oa61vODyMGQFvVpGTdtwtOqusao Lc0TCL8cxkBG9r985lB7EOFK5m6GOJq0qaATQVjyCgshaFJpd9i4KuZzj1OrUhyfFV11y1RPrZDeMx xZDjWfWyYmoJPjri9wFWsmxYh+wuDO2ZdhGUGcpF7UKEEfuLOQ5TdHvse0W5mgVr7vh6VgZsSQ8pwd YPJbaWfki0IsvGngCDXWd6WUkhHSbZXLCUiyL+xVk9jW4c3Q9mjyvseSyutd8l1Rweb8Z+nUSEyqjT pKZDSZyNqiNv/H0m7GfmguCiIaS2mp8ZGfarUOCqPK61YmiWzf/zr/7d+4A20CHcdiflyL49s0POov d7cldX6lZfTOQQh0Qy+/ObfAVmYRiG6Up1r/GB7sTM+YkKmqbfjtfvYfirXmBWFGFskZ20FvQ9Yc7E OdIV+frZTc8m36X9cNmWgcYd0XDtBxwQ5azt3DVdEnrTsD+L2qj/+nViU/PU07lghiFXiUmD6osc8q gmWLw8zA568medg+59ii7Zd5veCr+4xrl7pT9dLrx/Zo/e1PtV7GXSwHBPlP9lm4+1m0LRuEN1OSqc oWogHgOAb5bPrgyaAiQGoeO3xRS7a58Mzm3jVl2f6iYKmZ+3GTQrKeyoYUhQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220927004011.1942739-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-To work around a misbehavior of the compiler's ability to see into
-composite flexible array structs (as detailed in the coming memcpy()
-hardening series[1]), split the memcpy() of the header and the payload
-so no false positive run-time overflow warning will be generated.
+On Mon, Sep 26, 2022 at 05:40:11PM -0700, Kees Cook wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated.
+> 
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
+> 
+> Cc: Maximilian Luz <luzmaximilian@gmail.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mark Gross <markgross@kernel.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Cc: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/platform/surface/surface_acpi_notify.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks!
+--
+Gustavo
 
-diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-index 44e317970557..50500e562963 100644
---- a/drivers/platform/surface/surface_acpi_notify.c
-+++ b/drivers/platform/surface/surface_acpi_notify.c
-@@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
- 	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
- 	work->dev = d->dev;
- 
--	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
-+	work->event = *event;
-+	memcpy(work->event.data, event->data, event->length);
- 
- 	queue_delayed_work(san_wq, &work->work, delay);
- 	return SSAM_NOTIF_HANDLED;
--- 
-2.34.1
-
+> ---
+>  drivers/platform/surface/surface_acpi_notify.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+> index 44e317970557..50500e562963 100644
+> --- a/drivers/platform/surface/surface_acpi_notify.c
+> +++ b/drivers/platform/surface/surface_acpi_notify.c
+> @@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
+>  	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
+>  	work->dev = d->dev;
+>  
+> -	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
+> +	work->event = *event;
+> +	memcpy(work->event.data, event->data, event->length);
+>  
+>  	queue_delayed_work(san_wq, &work->work, delay);
+>  	return SSAM_NOTIF_HANDLED;
+> -- 
+> 2.34.1
+> 
