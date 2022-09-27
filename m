@@ -2,271 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C1FC6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 15:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3BFC6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 18:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232685AbiI0PrO (ORCPT
+        id S231153AbiI0SBA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 11:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56954 "EHLO
+        Tue, 27 Sep 2022 14:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiI0Pqo (ORCPT
+        with ESMTP id S230131AbiI0SBA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 11:46:44 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3862438B5;
-        Tue, 27 Sep 2022 08:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1664293461;
-        bh=xapIOah0tx06ZorbO2OBOQdT6JMIjrDJogdiPnNn/+g=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=jVzcNPrCjUtznpRRl8i1wIdrxVOTWjy7GI27X+VbWjmuQS8iU2WXQ5QrfQ+d8tLty
-         +tRKsj3T/5mVcQ86y/vwI8uwOQiSym9nIXOPg8ruFZGWstWxB1vYlDqR0KbnFSVBFW
-         Kw5gUjmxOJuakdZH0gskmZ0MlOLHQyMLnVBHQwKE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MCsQ4-1oURKX1oDw-008p78; Tue, 27
- Sep 2022 17:44:21 +0200
-Subject: Re: [PATCH 1/5] ACPI: battery: Do not unload battery hooks on single
- error
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>, Len Brown <lenb@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>, productdev@system76.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-2-W_Armin@gmx.de>
- <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
- <CAJZ5v0jWVMMTjc+KtBRS86f8kYpbPcDCH9JV2ZgeN4f-MSO8rQ@mail.gmail.com>
- <f2af5d01-a2cd-ae96-24c7-d61f5f0d0bc3@gmx.de>
- <f0b17ba6-3d3c-cbc1-ec0d-ec59c73f06f6@gmx.de>
- <471449b3-cced-d75d-e349-6bec950b0bc1@redhat.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <f6ac14a8-6403-029e-6179-f8ef0a7d5457@gmx.de>
-Date:   Tue, 27 Sep 2022 17:44:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <471449b3-cced-d75d-e349-6bec950b0bc1@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 27 Sep 2022 14:01:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4551B19C08
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 11:00:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E633CB80B98
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:00:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AA577C43470
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664301654;
+        bh=QrybqhtVqyIEi/IfEfjP9a+IyQPLNixryVDC/vqmwsw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=gxc+7WfirjXzCKvFFSEHWhXjYttHUui0TtfgNRirGO/GmARXPBwVoAVGGoGIuFR0e
+         PVH9N6wkdrbJDqtspFzxDGec6oSWj3ndz2ukgFmSlubfCG4pEJnPhLpfjjJnSi5uGx
+         +ZskSISMJmC0pm9qyqsGHOEKo8HT3cdwv+mmnITKItUbFf1jlYjiuyvQqA0i6SsO6Z
+         f2PwpB/VUngBXyPhmbKXNbUtARiT9P8S0o/7MASz0iZ8AMnu66a1ZBx+zgrwH21RPL
+         HtVe8fydAqsnazIKjIs+8NC6eIP2FCb6NYfvqu/hQ9GJiTFQK2pxM2FeHmyZ0v81BN
+         uhOT4KTOj6e4A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 837C8C433E4; Tue, 27 Sep 2022 18:00:54 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
+Date:   Tue, 27 Sep 2022 18:00:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216516-215701-XFDxDC3RfN@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
+References: <bug-216516-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:5MyBv8IKsYLuUsVsJMopstbGuvu343mvzrzSNTs3XpZouvuB+sw
- 41Id43MAQxI3DUcH2Ni9/Ogq+LyWZatySfktIDCOJJBL6UwWRG1/cH2NgEkWSvaNvGgId9f
- d9DC3xV/45bIaUxdfrfLJdE06TKCrXzPJfStc0A4jXrba5KM+5lsGsFu1am2x2YVOGUmamy
- GJjPotM7zMCpkaM2iPGfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Dj8zzLGJBJ8=:yEiB015XrdNoRKwZ8QnYti
- 2J5lDllNRvJ6Z5Q0FjkuLLlaN2OlVTKzpVpR/ymF/sDHXckj7FhmZPM0HUwOZo0Sk+8PgkXi2
- xg7YYVOOZVW/fV2j/+57tKRO42/P9TPgSd+h4Fp1lKj1JnXNfDLOtc0g43aRIDiQjaiyJwDmk
- teiy5sFa2kc0PFDIW3RPg1hWo31NBeuJe8zj1mUyVIwAUrlG+lv6hIYuo3GBOYW6q5JLY1TVb
- qhQD20nM3oZWe5OAE3mHoaOa/RmAvhu4/dWYx5ug26tzFfgngw2eUMDgjNMuvIdwU8jkx95vS
- axCgPbiEEaomUJrCipIkyGwoJ0tJUQsdv6oRYnX5acxKUtL2kM/WXs4nfgOIOjtyRP/WL8LuB
- 0NJhbvzNgbu/PxS0MbsJk5o8UrZMavA3mSmhz8xNityx6z8YXJaaNVtHPl+U8m+GmFrg3Is9D
- RSsmqDz042udb7TZ2fwcjGZvtnvRkcXy/A8yzo2dYfcZ5sVOYbtlV13ZzCuQ7kL26ZV3sSvvP
- NZbYuHUJgefgN596lcxhIz49vCHdjkapQ1DYWHCYU5QxSAGLWNjesxggIuuMSnQnoHJQDPrhw
- 1ATfwfY2XLDDpGVfAb1Jug8p8hxtOIqGXqa6DEICurOewGl8+H4saIfsnMNv/P9oVWfOs1/ZT
- IdAxECIDEye/0qUFsZrAnkriJATabEWWYsLOh6cslAW2ZYCqQzL5zI0WEphCTS/8xiOe5ahO4
- o/mFx0pTnS5JJtV9oyvZXjwaF8x8hPq143NF26zCbVC6teC51XQfqLTw/d/NUvMSnnHC0yoHr
- 2SeqJbz9EMezMJval78U7lpcRSJ8rIxpssg0gVPuOa+yDytN8Yve+LjAqH+skyq5fKOFs+rHh
- E2+uvk9x1yohwfNvcRhigwk6/1GYeDDTwWEVp2nomSYiHMOOoMbCu91/N24JMpZwUxtgrFj0M
- DyAbFH1zNACxVREPTdBCRSnroDtNFrTr07mvhZJJOZBPdEoHNybwGMO0A0IfWwf3KnkL0/kCO
- OpK1/4pIsGPpqDBfGAESR3M7BVT2s8sVGWEmZ7WN0XbDw0iADaBG7ONZ/KmcnSi3dQmF5M7x2
- Hn3ACkZHZgKsbuyHxe2VFT63QdTAr5ELnS45Dnld57tlofDtC+9Xrb1jCX23o55AAgwqGITww
- RmYbKkjSXhru5vmmaYZUGA00C1
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 27.09.22 um 16:29 schrieb Hans de Goede:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
 
-> Hi,
->
-> On 9/19/22 22:35, Armin Wolf wrote:
->> Am 19.09.22 um 21:12 schrieb Armin Wolf:
->>
->>> Am 19.09.22 um 18:27 schrieb Rafael J. Wysocki:
->>>
->>>> On Mon, Sep 19, 2022 at 12:42 PM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->>>>> Hi,
->>>>>
->>>>> On 9/12/22 13:53, Armin Wolf wrote:
->>>>>> Currently, battery hooks are being unloaded if they return
->>>>>> an error when adding a single battery.
->>>>>> This however also causes the removal of successfully added
->>>>>> hooks if they return -ENODEV for a single unsupported
->>>>>> battery.
->>>>>>
->>>>>> Do not unload battery hooks in such cases since the hook
->>>>>> handles any cleanup actions.
->>>>>>
->>>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>>> Maybe instead of removing all error checking, allow -ENODEV
->>>>> and behave as before when the error is not -ENODEV ?
->>>>>
->>>>> Otherwise we should probably make the add / remove callbacks
->>>>> void to indicate that any errors are ignored.
->>>>>
->>>>> Rafael, do you have any opinion on this?
->>>> IMV this is not a completely safe change, because things may simply
->>>> not work in the cases in which an error is returned.
->>>>
->>>> It would be somewhat better to use a special error code to indicate
->>>> "no support" (eg. -ENOTSUPP) and ignore that one only.
->>> I would favor -ENODEV then, since it is already used by quiet a few dr=
-ivers
->>> to indicate a unsupported battery.
->>>
->>> Armin Wolf
->>>
->> While checking all instances where the battery hook mechanism is curren=
-tly used,
->> i found out that all but a single battery hook return -ENODEV for all e=
-rrors they
->> encounter, the exception being the huawei-wmi driver.
-> Right, so this means that using -ENODEV to not automatically unload the
-> extension on error will result in a behavior change for those drivers,
-> with possibly unwanted side-effects.
->
-> As such I believe that using -ENOTSUP for the case where the extension
-> does not work for 1 battery but should still be used for the other
-> batter{y|ies} would be better as this preserves the existing behavior
-> for existing drivers.
->
->> I do not know the reason for this, but i fear unloading the extension o=
-n for
->> example -ENOTSUP will result in similar behavior by hooks wanting to av=
-oid being
->> unloaded on harmless errors.
-> I am not sure what you are trying to say here. The whole idea is
-> to add new behavior for -ENOTSUP to allow drivers to opt out of
-> getting their extension unregistered when they return this.
->
-> Although I wonder why not just have extensions return 0 when
-> they don't want to register any sysfs attr and that not considered
-> an error. If it is not considered an error the hook can just
-> return 0, which would not require any ACPI battery code changes
-> at all. So maybe just returning 0 is the easiest (which is
-> also often the best) answer here?
+--- Comment #16 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+> And indeed, power usage went down to 2 % per hour! :-)
+> So should I open a bug for s2idle in openSUSE instead!?
 
-I agree, i will send v2 soon.
+Eventually; yes.  But I think you need to further root cause why this is
+happening in openSUSE before opening a bug asking them to change a policy or
+userspace software.  Narrow down which wakeup trigger is causing the spurio=
+us
+events, and confirm that in Ubuntu 22.10 that wakeup trigger is disabled.
 
-Armin Wolf
+> But I couldn't get the s2idle power usage significantly below 2 % per hou=
+r.=20
 
->> However, i agree that when ignoring all errors, battery extensions whic=
-h provide
->> similar attributes may currently delete each others attributes.
-> AFAIK there are no cases where more then 1 extension driver gets loaded,
-> since all the extension drivers are tied to a specific vendor's interfac=
-es
-> so we won't e.g. see the thinkpad_acpi driver load on the same laptop as
-> where toshiba_acpi also loads.
->
-> IOW I think you are trying to solve a problem which does not exist here.
->
-> Regards,
->
-> Hans
->
->
->
->
->> Any idea on how to solve this?
->>
->> Armin Wolf
->>
->>>>>> ---
->>>>>>  =C2=A0 drivers/acpi/battery.c | 24 +++---------------------
->>>>>>  =C2=A0 1 file changed, 3 insertions(+), 21 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
->>>>>> index 306513fec1e1..e59c261c7c59 100644
->>>>>> --- a/drivers/acpi/battery.c
->>>>>> +++ b/drivers/acpi/battery.c
->>>>>> @@ -724,20 +724,10 @@ void battery_hook_register(struct acpi_batter=
-y_hook *hook)
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * its attributes.
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_each_entry(battery, =
-&acpi_battery_list, list) {
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if (hook->add_battery(battery->bat)) {
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * If a add-ba=
-ttery returns non-zero,
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the registr=
-ation of the extension has failed,
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * and we will=
- not add it to the list of loaded
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * hooks.
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("extension f=
-ailed to load: %s", hook->name);
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __battery_hook_unre=
-gister(hook, 0);
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto end;
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 }
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 hook->add_battery(battery->bat);
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_info("new extension: %s\n"=
-, hook->name);
->>>>>> -end:
->>>>>> +
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&hook_mutex);
->>>>>>  =C2=A0 }
->>>>>>  =C2=A0 EXPORT_SYMBOL_GPL(battery_hook_register);
->>>>>> @@ -762,15 +752,7 @@ static void battery_hook_add_battery(struct ac=
-pi_battery *battery)
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * during the battery mo=
-dule initialization.
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_each_entry_safe(hook=
-_node, tmp, &battery_hook_list, list) {
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if (hook_node->add_battery(battery->bat)) {
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * The notific=
-ation of the extensions has failed, to
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * prevent fur=
-ther errors we will unload the extension.
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err("error in ex=
-tension, unloading: %s",
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 hook_node->name);
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __battery_hook_unre=
-gister(hook_node, 0);
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 }
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 hook_node->add_battery(battery->bat);
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&hook_mutex);
->>>>>>  =C2=A0 }
->>>>>> --
->>>>>> 2.30.2
->>>>>>
+When the power consumption is at this level in your test environment, can y=
+ou
+please double check with amd_pmc.dyndbg enabled matches a high percentage of
+the time you were suspended?=20
+
+> Tomorrow I'm planning to do the debugging steps described by Mario in com=
+ment
+> #14.
+> So maybe with that the consumption can be brought further down for s2idle.
+
+Yeah let's see if that series of patches changes anything.  Like I suggeste=
+d on
+the otherwise unpatched configuration you should also correlate the number =
+you
+get for time (in microseconds) you were in the deepest state against the am=
+ount
+of time you were in suspend.
+
+> But I also still the idea of using S3 (especially because of the very low
+> power consumption).
+> So I'd still like to see a fix for the commit initially mentioned.=20
+> Or maybe not a fix, but a kernel command line option to disable that
+> behavior.
+
+s2idle should be less power consumption than S3 on AMD SoCs and also have a
+much faster suspend and wakeup process.
+I suspect what is happening here is that HP's EC is issuing wakeups too
+frequently and causing a wasted power consumption.  Let's see the informati=
+on
+from my other debugging steps and proposed patch if they help.
+
+For your request I sent up https://patchwork.freedesktop.org/patch/504971/ =
+for
+discussion.  You can feel free to leave a Tested-by: comment there if that
+works for you.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
