@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F4AC07E9D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 18:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3244C6FA83
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 18:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231290AbiI0SFM (ORCPT
+        id S232042AbiI0SHX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 14:05:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33694 "EHLO
+        Tue, 27 Sep 2022 14:07:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232590AbiI0SFJ (ORCPT
+        with ESMTP id S230131AbiI0SHW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 14:05:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9469217079
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 11:05:06 -0700 (PDT)
+        Tue, 27 Sep 2022 14:07:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BBEF370D
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 11:07:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 445D9B80B98
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:05:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7CB3C433B5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:05:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C9A9661AFD
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 35E05C433D6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664301903;
-        bh=XaRqS+ZNuqCBhVS4764ur0P20QG1oGqXM5EEecMfPZw=;
+        s=k20201202; t=1664302038;
+        bh=0zV45zjZQvm5MdQkT28/Yvw54BZEdjAxxqbIdofA0TA=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=V7LobbVVl+xwVlWK07i+UocvjM9b2rktAw/mPTSWqN/mgeob4yl4CyRnsbz/v71Kl
-         drzexjGv+lSgWuaf5JDIs4h1dtVOVFcymd9W9pAf9TVnbFhAPA5X0PI3Mk53fHZqq/
-         8bbeaB18QJcDjjhVQZ35n843Sajcqo49r336XwxVNH3mLnzXOueNsnsGw0jK1mYARv
-         8wITcBSdZto0P/sbokYOSDC7JeRmW/cqbw8mefSvow8Tc6J65d6QjnB78xKRXU8X3b
-         Aqb4u0/9PDzo5Dp7SOEIINTBiX+IzIk71uRcPuW/j5es8Zan4dQEdi1j2gzVBDT4d2
-         e1idgAcuZiNww==
+        b=KjuHyYENqx1u0Ho47lKqTMswZWRqq/De1EZdb5gfIxHqr16MGf+MUEuhYQ87XvIoG
+         HqKTUgLYQekzkwyf2QqXRELNpESoBMyCshyulgxHwRm1nhpXJWaAUH0sSbOzKhLmak
+         EuVlqdnleq9DOP1oM6SBzgnagxN2dI3F2Gj0uRQAVgGHzUphl0cjxOYb1k9UlXE8Qj
+         f/zjetSKmoBIy7gs8zdRwI2UZiViNI8S0mK1l3ZGB3oBy2qQNlkWPC5MAHbqjMFFVa
+         RMOoIwWEaaG1M0KIPJkfsoZ5Cl7kyGJipfvuJOqQL7VjyZwxaOd32qN3F9KgUEw5Kg
+         6TxbOf5vZMDPg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A142EC433E6; Tue, 27 Sep 2022 18:05:03 +0000 (UTC)
+        id 23E3EC433E4; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
-Date:   Tue, 27 Sep 2022 18:05:03 +0000
+Date:   Tue, 27 Sep 2022 18:07:17 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,14 +47,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: alexdeucher@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216516-215701-X7FghtwU6h@https.bugzilla.kernel.org/>
+Message-ID: <bug-216516-215701-Wax9Ea3Mnx@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
 References: <bug-216516-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,29 +68,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
 
---- Comment #17 from Alex Deucher (alexdeucher@gmail.com) ---
-(In reply to kolAflash from comment #15)
->=20
-> But I also still the idea of using S3 (especially because of the very low
-> power consumption).
-> ---> So I'd still like to see a fix for the commit initially mentioned. Or
-> maybe not a fix, but a kernel command line option to disable that behavio=
-r.
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/
-> ?id=3D7123d39dc24dcd21ff23d75f46f926b15269b9da
+--- Comment #18 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+> I think the reason this helped you was because the platform was not actua=
+lly
+> getting properly powered down so the GPU was never powered off, thus on
+> resume the GPU was in an unknown state
 
-You should not need to reset the GPU for S3 if the device is properly power=
-ed
-down on suspend.  The reset on suspend was to workaround the case where sus=
-pend
-failed and we needed a to put the GPU into a clean state to resume without =
-the
-GPU having been powered down.  I think the reason this helped you was becau=
-se
-the platform was not actually getting properly powered down so the GPU was
-never powered off, thus on resume the GPU was in an unknown state.  SO you =
-were
-not actually getting proper suspend in the first place.
+Which also re-affirms my point that the firmware wasn't properly enabled fo=
+r S3
+in the first place.
 
 --=20
 You may reply to this email to add a comment.
