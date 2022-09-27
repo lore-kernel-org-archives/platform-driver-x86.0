@@ -2,84 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3244C6FA83
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4C5C54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 20:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbiI0SHX (ORCPT
+        id S232026AbiI0Upp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 14:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
+        Tue, 27 Sep 2022 16:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbiI0SHW (ORCPT
+        with ESMTP id S231784AbiI0Upo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 14:07:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BBEF370D
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 11:07:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C9A9661AFD
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 35E05C433D6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664302038;
-        bh=0zV45zjZQvm5MdQkT28/Yvw54BZEdjAxxqbIdofA0TA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KjuHyYENqx1u0Ho47lKqTMswZWRqq/De1EZdb5gfIxHqr16MGf+MUEuhYQ87XvIoG
-         HqKTUgLYQekzkwyf2QqXRELNpESoBMyCshyulgxHwRm1nhpXJWaAUH0sSbOzKhLmak
-         EuVlqdnleq9DOP1oM6SBzgnagxN2dI3F2Gj0uRQAVgGHzUphl0cjxOYb1k9UlXE8Qj
-         f/zjetSKmoBIy7gs8zdRwI2UZiViNI8S0mK1l3ZGB3oBy2qQNlkWPC5MAHbqjMFFVa
-         RMOoIwWEaaG1M0KIPJkfsoZ5Cl7kyGJipfvuJOqQL7VjyZwxaOd32qN3F9KgUEw5Kg
-         6TxbOf5vZMDPg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 23E3EC433E4; Tue, 27 Sep 2022 18:07:18 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
-Date:   Tue, 27 Sep 2022 18:07:17 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216516-215701-Wax9Ea3Mnx@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
-References: <bug-216516-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 27 Sep 2022 16:45:44 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3EF6AA28;
+        Tue, 27 Sep 2022 13:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1664311525;
+        bh=g00gTC8uiJd4+HQmwY/X5XAQpW+K8YH6Th4LUw/wOZc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=CFJynzop0CYlSN35TJaYYZcp/W9E5tRUF491DTDYsgNHl+rfrBwepHFsIKjJD3Rev
+         gAfVOEU520T47Z9CCzvqo8awtG7fE99WJsVXS/+Zg8kwfO6bX0C/MV+wO/kTvooMZd
+         uo7PQmGEt8yH+zqonNYtC5+gE2pEqg4EptB0T6CY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N5GDv-1pM8pc0O29-011Cza; Tue, 27 Sep 2022 22:45:25 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
+        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
+        productdev@system76.com, mario.limonciello@amd.com,
+        pobrn@protonmail.com, coproscefalo@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] platform/x86: dell: Add new dell-wmi-ddv driver
+Date:   Tue, 27 Sep 2022 22:45:19 +0200
+Message-Id: <20220927204521.601887-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KzhWpbnWktfitIk8P9GXEYUxilNeEsMbxCQOJVDEZuhtG2Wi+SU
+ OyYlYiWH/HJstvWNF7PJuYohwNwa2XhaFdOTSZh8b8TYQH+aBataIlWzm+75PpOqZXqOKZf
+ 4qzT1CU86OxB0h6lvcWXaiqnyzPF+TFBye5+3A/PNzL5IcuM28arx0prxxprvrQhSa79wI7
+ GlRMv/7DtxV1YPJ48QBuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MikoliPZkXs=:UOEAoeNzdyU17gr4lKqxMN
+ St/jjd+gTwuaEYIcjc46xNH3n/hh55eJqC8w9nb8CCXqk+WBIx4QMH2AtDLwRlnsMpBHWDaZ4
+ y730Lwu9Q+9phEqk38M505Uvp8JFJ72IY+5a0HrPMAP8UHhbzPoC4rGdPl7G6w6k2E1TTFm5Y
+ lqjxEdEQQ/2RiS0jjy2/EWP4WxcBqL/a8OM2NtFPw4+7dRousyIRzh0cvneMrArXfCGInnRkd
+ WE+H4CgtqKEBF8ECORV5yf56dxfKlByi29OUrMyfYhqAZW/3xDfqzwNht0h7pSOPGWQQbmSML
+ d91ocQfyvSycx62ONjHKZhdrwIf6tVQ7qDNkPIsW3K1ISCsWM058YQqzQ4lhPUbIzSt3wlQI9
+ codVgoTKs1OoUTQEQL1j9aYjcEaGpqfw4h5z01cMjOQRrlr+22hNC39u9GkUllysDIxsv/9sk
+ krQlLCqidqAdFIxFCoSs4Iuo3NG8r++SDc9cdLi5iIHmOK3hbdYE2WoBXPYh0xlT45VGuEmL0
+ arAMNQehHbP6HFLjV/ENQOYo8JRqA50FobJTcoA/wXVNAsN4Ar1nXa88KyDkX8Zchuo2hBgye
+ 47wbjz7j5tjrg40E+w3l7L6Fft/97htl5UB5UKmn53ofu/qDVLb9FytBMWu3ZQ7cO+3O/sY5Z
+ jeN6s7XgMMBDIYGXKU6ov6re2AOdYrVNOYXRPw41J66JTwpK+jJUeyyBNPT2D4ArstI7Fky51
+ Ejakkj1t1qmzHQ7HblJxUmxIbmvrrBMCOEB7bjE2azyhSgZgOpWyniYZL2/2dxnVmAil0gR3o
+ LpdJRgZ2ngBNY74TcrpzWJmOp9yM+uc68JLnj2SLxZrO7K4A1NMPwUN4iMZf4PoPJPgNtvSKi
+ z6KE3y70B+NhbqVsY6OSDxLQuLXxb72zY7HOHlmYm059GUzPiZs8CUAHnPnlTkYT41v/ism31
+ WuLA//c/YFmXyY9AD4XNCRM0Po+WvCtAww5YiqNZnqiLX/U++nypGat5YcXwyhYbsvKbkwvDg
+ s/b+5tH2PqmVOXRMKuAa4svQctwtHMlnGtLiN+SW2403oRiKlcNi5JcxzJwTsRAaxY0OSLNpM
+ MsI41k1CbrRlYJXjNI5nMwomwTc6J4QMYluJWrg6SKEK2iIeiB8fOKOOmG7l5RC/gZHBU/ziY
+ /6wj7f/zuTfTrQuALZNFV45nge
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
+This patch series adds a new driver for a WMI interface found in
+many newer Dell machines. This interface allows to read battery
+properties like temperature and the ePPID (Dell-specific), while
+also providing fan and thermal sensor information.
 
---- Comment #18 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-> I think the reason this helped you was because the platform was not actua=
-lly
-> getting properly powered down so the GPU was never powered off, thus on
-> resume the GPU was in an unknown state
+The interface does support multiple batteries which are indentified
+by an "index", which appears to be the battery ACPI UID. Since
+the interface also appears to omit any bounts checking of the
+index, the ACPI battery hook mechanism is used to discover batteries.
 
-Which also re-affirms my point that the firmware wasn't properly enabled fo=
-r S3
-in the first place.
+Since the information returned when querying fan/thermal sensor
+information is currently unknown, a debugfs entry is created to
+allow for easier reverse engineering. The interface is likely
+to be replaced by a proper hwmon interface in the future.
 
---=20
-You may reply to this email to add a comment.
+Since the driver can potentially be instantiated multiple times,
+the ACPI battery hook mechanism had to be extended.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+The first patch passes a pointer to the battery hook to the
+hook callbacks, so that they can access instance-specific data
+with container_of().
+
+The second patch finally adds the new driver. It was called
+dell-wmi-ddv since the interface is called "DDV" by Dell software,
+likely meaning "Dell Data Vault".
+
+The driver was tested, together with the changes made to the
+ACPI battery driver, on a Dell Inspiron 3505. Other drivers
+already using the battery hook mechanism where changed as well,
+but could only be compile-tested due to missing hardware.
+
+=2D--
+Changes in v2:
+- Significantly lower the amount of changes being made to the
+acpi battery driver
+- drop unnecessary ABI description of the temp attribute
+- return 0 when a unsupported battery is found to avoid being
+unloaded
+
+Armin Wolf (2):
+  ACPI: battery: Pass battery hook pointer to hook callbacks
+  platform/x86: dell: Add new dell-wmi-ddv driver
+
+ .../ABI/testing/debugfs-dell-wmi-ddv          |  21 +
+ .../ABI/testing/sysfs-platform-dell-wmi-ddv   |   7 +
+ MAINTAINERS                                   |   7 +
+ drivers/acpi/battery.c                        |   8 +-
+ drivers/platform/x86/asus-wmi.c               |   4 +-
+ drivers/platform/x86/dell/Kconfig             |  13 +
+ drivers/platform/x86/dell/Makefile            |   1 +
+ drivers/platform/x86/dell/dell-wmi-ddv.c      | 361 ++++++++++++++++++
+ drivers/platform/x86/huawei-wmi.c             |   4 +-
+ drivers/platform/x86/lg-laptop.c              |   4 +-
+ drivers/platform/x86/system76_acpi.c          |   4 +-
+ drivers/platform/x86/thinkpad_acpi.c          |   4 +-
+ drivers/platform/x86/toshiba_acpi.c           |   4 +-
+ drivers/platform/x86/wmi.c                    |   1 +
+ include/acpi/battery.h                        |   4 +-
+ 15 files changed, 429 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-dell-wmi-ddv
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+ create mode 100644 drivers/platform/x86/dell/dell-wmi-ddv.c
+
+=2D-
+2.30.2
+
