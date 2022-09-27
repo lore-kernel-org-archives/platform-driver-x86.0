@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3635CC07E9D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88485C6FA82
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 13:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232615AbiI0Nfv (ORCPT
+        id S231981AbiI0Ntu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 09:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60560 "EHLO
+        Tue, 27 Sep 2022 09:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231991AbiI0Nff (ORCPT
+        with ESMTP id S232500AbiI0Nto (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 09:35:35 -0400
+        Tue, 27 Sep 2022 09:49:44 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F526AA3F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:35:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0947B859
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664285732;
+        s=mimecast20190719; t=1664286580;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
         bh=bIj/8LyuLrxKhsCRApmgbkJl/lXOMxhDqzOflKfD3iE=;
-        b=ZB4/Fs9CvbI2uvV1I9jKIzGCpfho9z7PUs/6Q6tsnNv9R6bXQ5TNJnn96fBOdVdvNTNXIl
-        h5R9bMZjIQG4LSsqHWvQhzbLRLHSozCNs/cv9isc7gUlMkbwwE8XHl06hCNoXVmu7TsrlW
-        0ihhCfIrA2GBGbjnRRHmNA866PcuB9Q=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        b=LgSSeootfT4vqB9ej98riiR9b/GHUbKqkiZx4SdldHOV2WRDsK97iMAQd9TjfAw+9++X3y
+        TVDqFRRngSuIG0FVL9M9eMqtPjHvgcgCqu3iOlus1JAbQSTSe1MBAni7JohS7lStO96lYQ
+        iQGCSXyHoljb6LLrjYeoTT+XZUNxp1M=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-395-mHURD_MtObWO2GuvTD7y5w-1; Tue, 27 Sep 2022 09:35:29 -0400
-X-MC-Unique: mHURD_MtObWO2GuvTD7y5w-1
-Received: by mail-ed1-f70.google.com with SMTP id w17-20020a056402269100b0045249bc17a9so7762215edd.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:35:29 -0700 (PDT)
+ us-mta-619-ia1hYSY_OOeo-fCV7YvcIQ-1; Tue, 27 Sep 2022 09:49:34 -0400
+X-MC-Unique: ia1hYSY_OOeo-fCV7YvcIQ-1
+Received: by mail-ed1-f71.google.com with SMTP id t13-20020a056402524d00b00452c6289448so7885816edd.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:49:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
         bh=bIj/8LyuLrxKhsCRApmgbkJl/lXOMxhDqzOflKfD3iE=;
-        b=P1WiNBqPmCogoVjdh8pO2f4NjvMW8PwWS8KpbbSTZhoxRfdUvHCXNIlnVezUuqFokK
-         0/59EJa5JWTmxIiZLYgB6rFmQEz/u2Gr1358drHcW9iKbxtnYyrawK4T6gi5yJaLhBi/
-         FBDKTuWydbqm7KyIqQOYF7Uj5y65+kU250K9ouxUbIYl82mo6zbvY673IUKIfQgEmvKG
-         WV9RVfy/z92VwyPFmOj9dWVbewWmuMeMwF3pOhTFQBk9l6clPWHE2tCOUrEf/tRHQ5VE
-         kxUytACTAPkH4lai/EbjknNTIVYLUNbjwm1nrnO7aSJRXFW6Wv9kGIKv5N3fic/tMVUl
-         K9bA==
-X-Gm-Message-State: ACrzQf22AmNEKJbjb6rgSzRCLMJ7B94SeBXxenVHo/3BrOmeHAUuackS
-        kmKeZhqC7ptqJTpfAkAGg6vmB12l1TiBVqMRaF60rSPS7zltz9jNM6gopCR4J5AtQt8VYC9J8zb
-        RhM0/jplddbp8B1UOqcsXh32p5hkMKXIn7Q==
-X-Received: by 2002:a17:907:802:b0:781:8017:b2df with SMTP id wv2-20020a170907080200b007818017b2dfmr22711974ejb.606.1664285728701;
-        Tue, 27 Sep 2022 06:35:28 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7nFd0P2BNHTBpUa3NwtqcrQs7WuFQhVItcv934KvS5WCRB0JbFGcNP0VtzIhYp6GYqvsTEYg==
-X-Received: by 2002:a17:907:802:b0:781:8017:b2df with SMTP id wv2-20020a170907080200b007818017b2dfmr22711955ejb.606.1664285728502;
-        Tue, 27 Sep 2022 06:35:28 -0700 (PDT)
+        b=ClilLcN6UOCa0zzB463+72TST3/KAsgVMgejt93/9xaND6rWpbwY8RjxDpjBTRt6CW
+         s9HcWcnxHVrXAJRVXrDcoKWn6pUod4E9wokcQvVu8ewlrYjdwPSTMzd9Kk7ulFU3XVsV
+         IiMak9CcZKV2llJL/zO/kifkoiKoBGqTmeMBVyFYj8E6om46TR5WVnGIcWod6juYsrP1
+         NGz7mkqbcJbtGRHCcRBEHwlujCjLunAXRN8PIKNN1WJEkaAL5UdeIXGsv+/z3yy7Jywg
+         vvsQFsS2VOxkNPj0cvgSnmWlAqxFxLVgoeHl1vDDdZBlZwkcIFIZXnu9znBxXlIOlOto
+         hwEg==
+X-Gm-Message-State: ACrzQf2H8rEz/iErGl9P1U2J0oZ+y07XKu6E7wLU31yB4X0fgxA7nhpM
+        cz305ZeZTr4PWd5Ykak5+UaZjpcr1PCrhXtJmqIf/3aJRW8v+KPyxLvtE/mOueLW9iKsAd5YElW
+        x3BDMpyuPlYxIjk3BEQv4hOBEm1cRUXjqSg==
+X-Received: by 2002:aa7:c549:0:b0:457:421d:449c with SMTP id s9-20020aa7c549000000b00457421d449cmr11384266edr.260.1664286572969;
+        Tue, 27 Sep 2022 06:49:32 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6PQW54IS0vLv7g9Mz+LKIzp4uo7MFpacQCTVhEpt+2gM1FvmJHdSeph4tHcd9bk2oN5T67OQ==
+X-Received: by 2002:aa7:c549:0:b0:457:421d:449c with SMTP id s9-20020aa7c549000000b00457421d449cmr11384246edr.260.1664286572798;
+        Tue, 27 Sep 2022 06:49:32 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id r10-20020a1709061baa00b00783f32d7eaesm778136ejg.164.2022.09.27.06.35.27
+        by smtp.gmail.com with ESMTPSA id p4-20020a17090635c400b00731803d4d04sm812533ejb.82.2022.09.27.06.49.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 06:35:27 -0700 (PDT)
-Message-ID: <037e2137-3c4d-95e1-76d0-27bec98a609e@redhat.com>
-Date:   Tue, 27 Sep 2022 15:35:27 +0200
+        Tue, 27 Sep 2022 06:49:32 -0700 (PDT)
+Message-ID: <729c5fc1-3bc1-f2f3-9820-a1e84b09aeac@redhat.com>
+Date:   Tue, 27 Sep 2022 15:49:31 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
