@@ -2,231 +2,295 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9183C6FA83
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128DEC6FA95
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232521AbiI0Oag (ORCPT
+        id S231993AbiI0OdP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 10:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50380 "EHLO
+        Tue, 27 Sep 2022 10:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230202AbiI0OaL (ORCPT
+        with ESMTP id S232342AbiI0Ocz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 10:30:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A479E10E
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664289001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3uRuuRVYQPLT+MslzRnqQghQMFwXG1xwpNvF+0tAnoc=;
-        b=Z078ygnMSFTpAPqS4F5UksFfVb4k0/tQraKludtZijDQrN4dXg303IPJXYLZW/P4xV1ROm
-        gNj0PzyGpWjBbXCPXB4IvrO4rLZMX+zhPEnS9/ROTmiT7GAHrN7dVLrYmQOz+d7Fc//Tz+
-        CLoYGiIWm3HzPQ+Fw2zjleGjF2YRXI4=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-134-UH3Fv9I1PbC2qOtVburF6A-1; Tue, 27 Sep 2022 10:29:59 -0400
-X-MC-Unique: UH3Fv9I1PbC2qOtVburF6A-1
-Received: by mail-ej1-f70.google.com with SMTP id sb34-20020a1709076da200b00783a5f786easo2853193ejc.22
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:29:59 -0700 (PDT)
+        Tue, 27 Sep 2022 10:32:55 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5CF5F7E3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:32:52 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id z13-20020a7bc7cd000000b003b5054c6f9bso9048055wmk.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=lEG/do5sMQQ/JWHE4BFbUNL2Ny8hvRaLYbD6Yt5puNQ=;
+        b=WzHEpGgfsQG8vLQDO4pKN/b01xNhaK5BO+daemd8aBkSK2a28ssXJBhUCaO0hJVlOi
+         waxgPpzvtKcmo11yXNNRVs0uwdOBpPiMNR4jFg3vJTu14g5dgRmZ1OysLoJ7fAI+tWgT
+         E/c759sgQfR1qiuq3fQkrb+pWp+rIsKK1XSDYwnRKrs0VsszpkbgiZ1doneyMJOMc4+y
+         cUgxJeA+sCH3CryVE7eJD/zYF/lDmtqsbm1JPu5EmsBzoynuS5kn0dh8OvaNMNJH3zjH
+         O1053WHT0sSvWs3mbCQ6apli0zQ42+5JbpJuTgAfP7UbhAM/z1gU6kb1eybgXlBHJbz+
+         m9kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=3uRuuRVYQPLT+MslzRnqQghQMFwXG1xwpNvF+0tAnoc=;
-        b=ysnSF1JFBB+7zxsG1YqmjnG2EzWOlC5rYrgYpb5iovuCqFPbaexDpfOHx3yoDdra1h
-         O4j29UZtsEP6dtIRxNSqbLx/rnzTr3eOJ+8ka2fjJCJX7b9cyRk4xCdfz3/DLm7g5Vna
-         flFsoiCJnwBcTYYuWAJJjlUNN0GraiCitfYC2R07bZKgXI1ji928fJnml1uVLm+W6/6K
-         F1gFhpJ8MbUlwBTOIggoHQJEOj358Avr4fO6k3rY1DyDorjddeVgQ8nrwjqLMMcntxAg
-         pu+H367weF5INk3rOaqueiJeH65NCfdoyL6zhlr977M5u+f/dq31/w2Sl9LK8DqdMfWQ
-         fHgQ==
-X-Gm-Message-State: ACrzQf1r+I6IMApfvk59IjcvDENzWc8EeDLG0vnWf8SIE2Q6yRuLivru
-        sAkYdvLN9a57nKynanZWkROetzvq9o3tjIXB5QCnLh+dVed9onr+LmVEogf2vu2OrL9ws0nKeRC
-        QBWL/svu5wc/7UubvUl7RlA78iMF9U/ftrg==
-X-Received: by 2002:a17:907:1dcc:b0:77a:c5f3:708b with SMTP id og12-20020a1709071dcc00b0077ac5f3708bmr23278260ejc.331.1664288998231;
-        Tue, 27 Sep 2022 07:29:58 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7oaN+oJNzgoKfTucQ5HgkrI0cpFFC7w+y2x3V1IlKbboxXQKgc1ZkJCZioVwRKc/L5CwFSIw==
-X-Received: by 2002:a17:907:1dcc:b0:77a:c5f3:708b with SMTP id og12-20020a1709071dcc00b0077ac5f3708bmr23278245ejc.331.1664288998021;
-        Tue, 27 Sep 2022 07:29:58 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id r17-20020a17090609d100b00781d411a63csm854954eje.151.2022.09.27.07.29.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 07:29:57 -0700 (PDT)
-Message-ID: <471449b3-cced-d75d-e349-6bec950b0bc1@redhat.com>
-Date:   Tue, 27 Sep 2022 16:29:56 +0200
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=lEG/do5sMQQ/JWHE4BFbUNL2Ny8hvRaLYbD6Yt5puNQ=;
+        b=AYLJRWRh8oLgQO9uQCHpwIpYo316+eYcXo/Ztv2M4oJmPelP2fQFd0nQxAc7rOA3IG
+         DXGxbCp0s9ikptHElwcmGYyCB8s0wL8e8xlVyCYg5lSVOeNqH16kSDxu/xUHVenAhnNP
+         mvU5K8D/x7DpR3nBOx4pXJ/+DemR2m1s7YH6d6dI3Cckn8atxjkc1dGTczOiqjfiF4IZ
+         eNKLpodyM/AI7A3QgTL0Vhkn1PqWVC/7uEVsRwmHbaWpCOhQSLb0op3fzxAXcZOYHthz
+         bGadkUB/DGyqRlpUhXMANuMfgBC2AsMQAhy7vBxUtVre4WlPoo+W2OjjBjvi1xrRPyQg
+         Y3RQ==
+X-Gm-Message-State: ACrzQf3iJmVGpF2M4xlEDSSOz1xUo3SX9IgpXcvLnXhCv+ymRQCQ6UBz
+        c7fTVdYu1+jakbKroVEMFjNu+g==
+X-Google-Smtp-Source: AMsMyM4jXCDB+Vrrru4PdJEWC6PPd1U3UW+8GOry5h6iOChq3o5YLE63D1t3ycmgPaKHNvlJl4YyNw==
+X-Received: by 2002:a05:600c:19cc:b0:3b4:b15a:7df with SMTP id u12-20020a05600c19cc00b003b4b15a07dfmr2981130wmq.185.1664289170484;
+        Tue, 27 Sep 2022 07:32:50 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id l6-20020a05600c4f0600b003b4924493bfsm17518371wmq.9.2022.09.27.07.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Sep 2022 07:32:49 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH v5 00/30] Rework the trip points creation
+Date:   Tue, 27 Sep 2022 16:32:10 +0200
+Message-Id: <20220927143239.376737-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH 1/5] ACPI: battery: Do not unload battery hooks on single
- error
-Content-Language: en-US
-To:     Armin Wolf <W_Armin@gmx.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>, Len Brown <lenb@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>, productdev@system76.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20220912125342.7395-1-W_Armin@gmx.de>
- <20220912125342.7395-2-W_Armin@gmx.de>
- <f8fa6d10-6eb1-7fa7-80eb-ea190d29ba4a@redhat.com>
- <CAJZ5v0jWVMMTjc+KtBRS86f8kYpbPcDCH9JV2ZgeN4f-MSO8rQ@mail.gmail.com>
- <f2af5d01-a2cd-ae96-24c7-d61f5f0d0bc3@gmx.de>
- <f0b17ba6-3d3c-cbc1-ec0d-ec59c73f06f6@gmx.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <f0b17ba6-3d3c-cbc1-ec0d-ec59c73f06f6@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+This work is the pre-requisite of handling correctly when the trip
+point are crossed. For that we need to rework how the trip points are
+declared and assigned to a thermal zone.
 
-On 9/19/22 22:35, Armin Wolf wrote:
-> Am 19.09.22 um 21:12 schrieb Armin Wolf:
-> 
->> Am 19.09.22 um 18:27 schrieb Rafael J. Wysocki:
->>
->>> On Mon, Sep 19, 2022 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>> Hi,
->>>>
->>>> On 9/12/22 13:53, Armin Wolf wrote:
->>>>> Currently, battery hooks are being unloaded if they return
->>>>> an error when adding a single battery.
->>>>> This however also causes the removal of successfully added
->>>>> hooks if they return -ENODEV for a single unsupported
->>>>> battery.
->>>>>
->>>>> Do not unload battery hooks in such cases since the hook
->>>>> handles any cleanup actions.
->>>>>
->>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> Maybe instead of removing all error checking, allow -ENODEV
->>>> and behave as before when the error is not -ENODEV ?
->>>>
->>>> Otherwise we should probably make the add / remove callbacks
->>>> void to indicate that any errors are ignored.
->>>>
->>>> Rafael, do you have any opinion on this?
->>> IMV this is not a completely safe change, because things may simply
->>> not work in the cases in which an error is returned.
->>>
->>> It would be somewhat better to use a special error code to indicate
->>> "no support" (eg. -ENOTSUPP) and ignore that one only.
->>
->> I would favor -ENODEV then, since it is already used by quiet a few drivers
->> to indicate a unsupported battery.
->>
->> Armin Wolf
->>
-> While checking all instances where the battery hook mechanism is currently used,
-> i found out that all but a single battery hook return -ENODEV for all errors they
-> encounter, the exception being the huawei-wmi driver.
+Even if it appears to be a common sense to have the trip points being
+ordered, this no guarantee neither documentation telling that is the
+case.
 
-Right, so this means that using -ENODEV to not automatically unload the
-extension on error will result in a behavior change for those drivers,
-with possibly unwanted side-effects.
+One solution could have been to create an ordered array of trips built
+when registering the thermal zone by calling the different get_trip*
+ops. However those ops receive a thermal zone pointer which is not
+known as it is in the process of creating it.
 
-As such I believe that using -ENOTSUP for the case where the extension
-does not work for 1 battery but should still be used for the other
-batter{y|ies} would be better as this preserves the existing behavior
-for existing drivers.
+This cyclic dependency shows we have to rework how we manage the trip
+points.
 
-> I do not know the reason for this, but i fear unloading the extension on for
-> example -ENOTSUP will result in similar behavior by hooks wanting to avoid being
-> unloaded on harmless errors.
+Actually, all the trip points definition can be common to the backend
+sensor drivers and we can factor out the thermal trip structure in all
+of them.
 
-I am not sure what you are trying to say here. The whole idea is
-to add new behavior for -ENOTSUP to allow drivers to opt out of
-getting their extension unregistered when they return this.
+Then, as we register the thermal trips array, they will be available
+in the thermal zone structure and a core function can return the trip
+given its id.
 
-Although I wonder why not just have extensions return 0 when
-they don't want to register any sysfs attr and that not considered
-an error. If it is not considered an error the hook can just
-return 0, which would not require any ACPI battery code changes
-at all. So maybe just returning 0 is the easiest (which is
-also often the best) answer here?
+The get_trip_* ops won't be needed anymore and could be removed. The
+resulting code will be another step forward to a self encapsulated
+generic thermal framework.
 
-> However, i agree that when ignoring all errors, battery extensions which provide
-> similar attributes may currently delete each others attributes.
+Most of the drivers can be converted more or less easily. This series
+does a first round with most of the drivers. Some remain and will be
+converted but with a smaller set of changes as the conversion is a bit
+more complex.
 
-AFAIK there are no cases where more then 1 extension driver gets loaded,
-since all the extension drivers are tied to a specific vendor's interfaces
-so we won't e.g. see the thinkpad_acpi driver load on the same laptop as
-where toshiba_acpi also loads.
+Changelog:
+ v6:
+    - Improved the code for the get_crit_temp() function as suggested by Rafael
+    - Removed inner parenthesis in the set_trip_temp() function and invert the
+      conditions. Check the type of the trip point is unchanged
+    - Folded patch 4 with 1
+    - Add per thermal zone info message in the bang-bang governor
+    - Folded the fix for an uninitialized variable in int340x_thermal_zone_add()
+ v5:
+    - Fixed a deadlock when calling thermal_zone_get_trip() while
+      handling the thermal zone lock
+    - Remove an extra line in the sysfs change
+    - Collected tags
+v4:
+   - Remove extra lines on exynos changes as reported by Krzysztof Kozlowski
+   - Collected tags
+ v3:
+   - Reorg the series to be git-bisect safe
+   - Added the set_trip generic function
+   - Added the get_crit_temp generic function
+   - Removed more dead code in the thermal-of
+   - Fixed the exynos changelog
+   - Fixed the error check for the exynos drivers
+   - Collected tags
+ v2:
+   - Added missing EXPORT_SYMBOL_GPL() for thermal_zone_get_trip()
+   - Removed tab whitespace in the acerhdf driver
+   - Collected tags
 
-IOW I think you are trying to solve a problem which does not exist here.
+Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Peter Kaestle <peter@piie.net>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amitk@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc: Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Support Opensource <support.opensource@diasemi.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Thara Gopinath <thara.gopinath@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "Niklas Söderlund" <niklas.soderlund@ragnatech.se>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Antoine Tenart <atenart@kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Dmitry Osipenko <digetx@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
 
-Regards,
+Daniel Lezcano (29):
+  thermal/core: Add a generic thermal_zone_get_trip() function
+  thermal/sysfs: Always expose hysteresis attributes
+  thermal/core: Add a generic thermal_zone_set_trip() function
+  thermal/core/governors: Use thermal_zone_get_trip() instead of ops
+    functions
+  thermal/of: Use generic thermal_zone_get_trip() function
+  thermal/of: Remove unused functions
+  thermal/drivers/exynos: Use generic thermal_zone_get_trip() function
+  thermal/drivers/exynos: of_thermal_get_ntrips()
+  thermal/drivers/exynos: Replace of_thermal_is_trip_valid() by
+    thermal_zone_get_trip()
+  thermal/drivers/tegra: Use generic thermal_zone_get_trip() function
+  thermal/drivers/uniphier: Use generic thermal_zone_get_trip() function
+  thermal/drivers/hisi: Use generic thermal_zone_get_trip() function
+  thermal/drivers/qcom: Use generic thermal_zone_get_trip() function
+  thermal/drivers/armada: Use generic thermal_zone_get_trip() function
+  thermal/drivers/rcar_gen3: Use the generic function to get the number
+    of trips
+  thermal/of: Remove of_thermal_get_ntrips()
+  thermal/of: Remove of_thermal_is_trip_valid()
+  thermal/of: Remove of_thermal_set_trip_hyst()
+  thermal/of: Remove of_thermal_get_crit_temp()
+  thermal/drivers/st: Use generic trip points
+  thermal/drivers/imx: Use generic thermal_zone_get_trip() function
+  thermal/drivers/rcar: Use generic thermal_zone_get_trip() function
+  thermal/drivers/broadcom: Use generic thermal_zone_get_trip() function
+  thermal/drivers/da9062: Use generic thermal_zone_get_trip() function
+  thermal/drivers/ti: Remove unused macros ti_thermal_get_trip_value() /
+    ti_thermal_trip_is_valid()
+  thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
+  thermal/drivers/cxgb4: Use generic thermal_zone_get_trip() function
+  thermal/intel/int340x: Replace parameter to simplify
+  thermal/drivers/intel: Use generic thermal_zone_get_trip() function
 
-Hans
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |   2 -
+ .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  41 +----
+ drivers/platform/x86/acerhdf.c                |  73 +++-----
+ drivers/thermal/armada_thermal.c              |  39 ++---
+ drivers/thermal/broadcom/bcm2835_thermal.c    |   8 +-
+ drivers/thermal/da9062-thermal.c              |  52 +-----
+ drivers/thermal/gov_bang_bang.c               |  39 +++--
+ drivers/thermal/gov_fair_share.c              |  18 +-
+ drivers/thermal/gov_power_allocator.c         |  51 +++---
+ drivers/thermal/gov_step_wise.c               |  22 ++-
+ drivers/thermal/hisi_thermal.c                |  11 +-
+ drivers/thermal/imx_thermal.c                 |  72 +++-----
+ .../int340x_thermal/int340x_thermal_zone.c    |  33 ++--
+ .../int340x_thermal/int340x_thermal_zone.h    |   4 +-
+ .../processor_thermal_device.c                |  10 +-
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  | 120 +++++++------
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c   |  39 ++---
+ drivers/thermal/rcar_gen3_thermal.c           |   2 +-
+ drivers/thermal/rcar_thermal.c                |  53 +-----
+ drivers/thermal/samsung/exynos_tmu.c          |  57 +++----
+ drivers/thermal/st/st_thermal.c               |  47 +----
+ drivers/thermal/tegra/soctherm.c              |  33 ++--
+ drivers/thermal/tegra/tegra30-tsensor.c       |  17 +-
+ drivers/thermal/thermal_core.c                | 161 +++++++++++++++---
+ drivers/thermal/thermal_core.h                |  24 +--
+ drivers/thermal/thermal_helpers.c             |  28 +--
+ drivers/thermal/thermal_netlink.c             |  21 +--
+ drivers/thermal/thermal_of.c                  | 116 -------------
+ drivers/thermal/thermal_sysfs.c               | 133 +++++----------
+ drivers/thermal/ti-soc-thermal/ti-thermal.h   |  15 --
+ drivers/thermal/uniphier_thermal.c            |  27 ++-
+ include/linux/thermal.h                       |  10 ++
+ 32 files changed, 559 insertions(+), 819 deletions(-)
 
-
-
-
-> 
-> Any idea on how to solve this?
-> 
-> Armin Wolf
-> 
->>>>> ---
->>>>>   drivers/acpi/battery.c | 24 +++---------------------
->>>>>   1 file changed, 3 insertions(+), 21 deletions(-)
->>>>>
->>>>> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
->>>>> index 306513fec1e1..e59c261c7c59 100644
->>>>> --- a/drivers/acpi/battery.c
->>>>> +++ b/drivers/acpi/battery.c
->>>>> @@ -724,20 +724,10 @@ void battery_hook_register(struct acpi_battery_hook *hook)
->>>>>         * its attributes.
->>>>>         */
->>>>>        list_for_each_entry(battery, &acpi_battery_list, list) {
->>>>> -             if (hook->add_battery(battery->bat)) {
->>>>> -                     /*
->>>>> -                      * If a add-battery returns non-zero,
->>>>> -                      * the registration of the extension has failed,
->>>>> -                      * and we will not add it to the list of loaded
->>>>> -                      * hooks.
->>>>> -                      */
->>>>> -                     pr_err("extension failed to load: %s", hook->name);
->>>>> -                     __battery_hook_unregister(hook, 0);
->>>>> -                     goto end;
->>>>> -             }
->>>>> +             hook->add_battery(battery->bat);
->>>>>        }
->>>>>        pr_info("new extension: %s\n", hook->name);
->>>>> -end:
->>>>> +
->>>>>        mutex_unlock(&hook_mutex);
->>>>>   }
->>>>>   EXPORT_SYMBOL_GPL(battery_hook_register);
->>>>> @@ -762,15 +752,7 @@ static void battery_hook_add_battery(struct acpi_battery *battery)
->>>>>         * during the battery module initialization.
->>>>>         */
->>>>>        list_for_each_entry_safe(hook_node, tmp, &battery_hook_list, list) {
->>>>> -             if (hook_node->add_battery(battery->bat)) {
->>>>> -                     /*
->>>>> -                      * The notification of the extensions has failed, to
->>>>> -                      * prevent further errors we will unload the extension.
->>>>> -                      */
->>>>> -                     pr_err("error in extension, unloading: %s",
->>>>> -                                     hook_node->name);
->>>>> -                     __battery_hook_unregister(hook_node, 0);
->>>>> -             }
->>>>> +             hook_node->add_battery(battery->bat);
->>>>>        }
->>>>>        mutex_unlock(&hook_mutex);
->>>>>   }
->>>>> -- 
->>>>> 2.30.2
->>>>>
+-- 
+2.34.1
 
