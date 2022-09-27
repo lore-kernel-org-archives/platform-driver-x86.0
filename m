@@ -2,162 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A0AC54EE9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F2BC6FA93
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbiI0Ojj (ORCPT
+        id S232380AbiI0O4d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 10:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
+        Tue, 27 Sep 2022 10:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233003AbiI0OjQ (ORCPT
+        with ESMTP id S232443AbiI0O4J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 10:39:16 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50E25FAD8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:35:23 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id a10so11217968ljq.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=/clpfezaOe8mLPrQfl3pX+kpaqNYyTiLhiE5Y1A/Axg=;
-        b=ZyxJ0VAXz3Yx6wVEKSkMktMdGFJ+xOEWNqSzclwgt627nnfNxbSWBkdUOdDVZIdPeO
-         ztKr1AfIi1u6h4wPXg0FlTTwg/AM2jMJONWfS9196v7E7IgYRPzJ/YrgMBsmiV4AGi9E
-         BZtY7qdtZg80u0PwB1t3FI+gH9HiiKMDR+3fhvMlpQyVAM74KbmRPelfIgKkO5/eRmIe
-         WQf37Y2jfiKxOBPKiXsa/rTdHymfI3YNyXBi8U3BLwu6w0/Q9bF0gsmUdr9B01p8PSGW
-         sbBayxucHNKPWzlzFqQi0sB/QK0yX49GQwHuULeeybmD+opaRa0BiJ7ZQ7WIosw7tFch
-         UDSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=/clpfezaOe8mLPrQfl3pX+kpaqNYyTiLhiE5Y1A/Axg=;
-        b=IgaCroEDcrX2ySn9U9pScrv2PGy5Vud+updNTvqXWm6sUUGf+wtMvrRcrC4xTAM7RS
-         MyWYub89rxmiv7+YdxsZWjOl69Mj33/yHMzG68Xoi/Mia5ebWc1ybK5ZJgN9fDIFSJGH
-         JI9yFupl/XFb4iJz8qoXORL7vvmuBIF4isRTGhk9VVxM7WppA2Breg9tIjE86M4pmpy8
-         Lb6H9O76uW7DEnNyERMBRae1dWptl1Xp+kwMynA9JnUV7QrH1N1nIm31y4nm3s86XsGD
-         OQ1kh/KaLJOHDOvGm+Q2a/SacDU5DdxHcQwsyGfRYpG+czhBeGtrIGisYLhg004N4cGN
-         XP+Q==
-X-Gm-Message-State: ACrzQf0ltLfV+djPhRuIafFJKyT+QKcOYUv5cSCi7hEJnthItySniOsz
-        ZE5lrAbywqxIc1T4YT8otiP7Xg==
-X-Google-Smtp-Source: AMsMyM6PT4U1pTFDQtF2QivAJie+RqkxW7ZZSiD2PM7A3oNR4iAzYYKKhCpfzt7mx7GPKsQjtnSovA==
-X-Received: by 2002:a05:651c:23a1:b0:26d:9eb6:7b60 with SMTP id bk33-20020a05651c23a100b0026d9eb67b60mr3329748ljb.208.1664289321468;
-        Tue, 27 Sep 2022 07:35:21 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id k4-20020a05651239c400b0048b143c09c2sm178450lfu.259.2022.09.27.07.35.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 07:35:20 -0700 (PDT)
-Message-ID: <5e269e1a-8819-a326-90e0-a020cb2c0d73@linaro.org>
-Date:   Tue, 27 Sep 2022 17:35:19 +0300
+        Tue, 27 Sep 2022 10:56:09 -0400
+Received: from vorpal.se (vorpal.se [151.236.221.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18EF160512;
+        Tue, 27 Sep 2022 07:54:58 -0700 (PDT)
+Received: by vorpal.se (Postfix) with ESMTPSA id 6159E14293;
+        Tue, 27 Sep 2022 14:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vorpal.se; s=2019;
+        t=1664290485; bh=ZMDF6AxLpFRw30JwNzc+ZPcKjRwkI977PeS1iICmxpE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=YtmnwQ3aLJeB6Gb1K+tFA89yK35/b3WnBMPg+LrP/xda9u9kqkr1Cj4kWih/Yh7fb
+         2gtoge3oUHtLoMOhY5+kMEHGFD5UiNdR8/lTaW+gceKBbMrGdIg2NvswvMZ1JYUd1x
+         mLzk4tRucVEOk93DqymCKQ/y0jKsv2AnIGNaTOpq0nhomyt9AJsNrze4zIx8HSZWmb
+         AZlHkpLpthA00+0wgjzFU1cQJ6PVYd/stB52lOKlgCCJNZgoTwlisOfou0dOpNRo/Q
+         YafydpNQX2LIHDk0pkKr/DKhQnJvbA9ZnchBDRNwPl9FNzBTCmqVnPvmqkriBqpLHl
+         VxIjmO49HSj0Q==
+Message-ID: <d1ec9351-7e5c-0f2d-8a67-f640d1105044@vorpal.se>
+Date:   Tue, 27 Sep 2022 16:54:44 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v5 00/30] Rework the trip points creation
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Antoine Tenart <atenart@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org
-References: <20220927143239.376737-1-daniel.lezcano@linaro.org>
-Content-Language: en-GB
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20220927143239.376737-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ Thunderbird/102.3.0
+Subject: Re: [PATCH RFC v2 1/2] platform/x86: quickstart: Add ACPI quickstart
+ button (PNP0C32) driver
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-input@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>
+References: <20220922182424.934340-1-lkml@vorpal.se>
+ <20220922182424.934340-2-lkml@vorpal.se>
+ <4-mkye9NM7L93IKQAGjd8BmHi1_2zEnx4F8L3AvKk9RsNBtuoS5cpNCKV-nyb1Xpb1jmAZQDdpNlyvjoUfrFKkq4V-EOfXo9b_gRbyC1hSs=@protonmail.com>
+ <3095147c-844c-42cf-833b-8a2eae5fcc21@vorpal.se>
+ <729c5fc1-3bc1-f2f3-9820-a1e84b09aeac@redhat.com>
+From:   Arvid Norlander <lkml@vorpal.se>
+In-Reply-To: <729c5fc1-3bc1-f2f3-9820-a1e84b09aeac@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Daniel,
+Hi,
 
-On 27/09/2022 17:32, Daniel Lezcano wrote:
+I think something may be slightly broken. I got the below email twice, once in
+reply to where it should be, once as a reply to the cover letter.
 
-[skipped]
+Best regards,
+Arvid
 
->   drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |   2 -
->   .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  41 +----
->   drivers/platform/x86/acerhdf.c                |  73 +++-----
->   drivers/thermal/armada_thermal.c              |  39 ++---
->   drivers/thermal/broadcom/bcm2835_thermal.c    |   8 +-
->   drivers/thermal/da9062-thermal.c              |  52 +-----
->   drivers/thermal/gov_bang_bang.c               |  39 +++--
->   drivers/thermal/gov_fair_share.c              |  18 +-
->   drivers/thermal/gov_power_allocator.c         |  51 +++---
->   drivers/thermal/gov_step_wise.c               |  22 ++-
->   drivers/thermal/hisi_thermal.c                |  11 +-
->   drivers/thermal/imx_thermal.c                 |  72 +++-----
->   .../int340x_thermal/int340x_thermal_zone.c    |  33 ++--
->   .../int340x_thermal/int340x_thermal_zone.h    |   4 +-
->   .../processor_thermal_device.c                |  10 +-
->   drivers/thermal/intel/x86_pkg_temp_thermal.c  | 120 +++++++------
->   drivers/thermal/qcom/qcom-spmi-temp-alarm.c   |  39 ++---
->   drivers/thermal/rcar_gen3_thermal.c           |   2 +-
->   drivers/thermal/rcar_thermal.c                |  53 +-----
->   drivers/thermal/samsung/exynos_tmu.c          |  57 +++----
->   drivers/thermal/st/st_thermal.c               |  47 +----
->   drivers/thermal/tegra/soctherm.c              |  33 ++--
->   drivers/thermal/tegra/tegra30-tsensor.c       |  17 +-
->   drivers/thermal/thermal_core.c                | 161 +++++++++++++++---
->   drivers/thermal/thermal_core.h                |  24 +--
->   drivers/thermal/thermal_helpers.c             |  28 +--
->   drivers/thermal/thermal_netlink.c             |  21 +--
->   drivers/thermal/thermal_of.c                  | 116 -------------
->   drivers/thermal/thermal_sysfs.c               | 133 +++++----------
->   drivers/thermal/ti-soc-thermal/ti-thermal.h   |  15 --
->   drivers/thermal/uniphier_thermal.c            |  27 ++-
->   include/linux/thermal.h                       |  10 ++
->   32 files changed, 559 insertions(+), 819 deletions(-)
-
-
-Could you please cc mailing lists on all patches? It's really hard to 
-determine whether qcom changes are correct without seeing other patches.
-
--- 
-With best wishes
-Dmitry
+On 2022-09-27 15:49, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/25/22 20:19, Arvid Norlander wrote:
+>> Hi,
+>>
+>> Thank you, I have incorperated your feedback in my local branch.
+>>
+>> On 2022-09-23 21:24, Barnabás Pőcze wrote:
+>>> Hi
+>>>
+>>> 2022. szeptember 22., csütörtök 20:24 keltezéssel, Arvid Norlander írta:
+>>>
+>>>> This is loosely based on a previous staging driver that was removed. See
+>>>> links below for more info on that driver. The original commit ID was
+>>>> 0be013e3dc2ee79ffab8a438bbb4e216837e3d52.
+>>>>
+>>>> However, here a completely different approach is taken to the user space
+>>>> API (which should solve the issues the original driver had). Each PNP0C32
+>>>> device is a button, and each such button gets a separate input device
+>>>> associated with it (instead of a shared platform input device).
+>>>>
+>>>> The button ID (as read from ACPI method GHID) is provided via a sysfs file
+>>>> "button_id".
+>>>>
+>>>> If the button caused a wakeup it will "latch" the "wakeup_cause" sysfs file
+>>>> to true. This can be reset by a user space process.
+>>>>
+>>>> Link: https://marc.info/?l=linux-acpi&m=120550727131007
+>>>> Link: https://lkml.org/lkml/2010/5/28/327
+>>>> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+>>>> ---
+>>>> [...]
+>>>> diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/quickstart.c
+>>>> new file mode 100644
+>>>> index 000000000000..ce51abe012f7
+>>>> --- /dev/null
+>>>> +++ b/drivers/platform/x86/quickstart.c
+>>>> @@ -0,0 +1,320 @@
+>>
+>> <snip>
+>>
+>>>> +
+>>>> +static ssize_t wakeup_cause_store(struct device *dev,
+>>>> +				  struct device_attribute *attr,
+>>>> +				  const char *buf, size_t count)
+>>>> +{
+>>>> +	struct quickstart_acpi *quickstart = dev_get_drvdata(dev);
+>>>> +
+>>>> +	if (count < 2)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (strncasecmp(buf, "false", 4) != 0)
+>>>> +		return -EINVAL;
+>>>> +
+>>>
+>>> If "true"/"false" will be used in the final version, then I think this check
+>>> currently is too lax. You could use `sysfs_streq()`. And I think the `count < 2`
+>>> check is not needed.
+>>
+>> Regarding the user space API I don't know, that is one of the open
+>> questions in the cover letter. I have yet to get any feedback on any of
+>> those questions. That is something that needs to happen before this driver
+>> can be included. I would appreciate your feedback on those.
+> 
+> I will reply to this question in my general review of the driver.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>>
+>> <snip>
+>>
+>>>
+>>> Regards,
+>>> Barnabás Pőcze
+>>
+>> Regards,
+>> Arvid Norlander
+>>
+> 
 
