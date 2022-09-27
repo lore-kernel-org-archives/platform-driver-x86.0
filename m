@@ -2,219 +2,150 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D58CC6FA8E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 13:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0450C6FA83
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 13:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbiI0N41 (ORCPT
+        id S232147AbiI0N4n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 09:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
+        Tue, 27 Sep 2022 09:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbiI0N40 (ORCPT
+        with ESMTP id S231906AbiI0N4l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 09:56:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1DA89CF4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664286984;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G5Xua/j/WDmJL42z8sQG3qQtotfZuTF0DnaN4t3gukM=;
-        b=EglRKAqZlqm4W4Qvl+ORzfOui6rB6oHFynCEmWh9FGNB7S1NepLRIJJufap91JITJU+nIu
-        Vz2LvIZUHjHJxehTNeo6KqW+89aCnEX/sQ+JIAtWG1aAFkn2NtEuoY04BajqkNvJpjBaS/
-        gWpRegdjpP+suGzEVIJdl2VlWHjqZAw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-609-VrztQGKlOcqz4XivyCJB7g-1; Tue, 27 Sep 2022 09:56:23 -0400
-X-MC-Unique: VrztQGKlOcqz4XivyCJB7g-1
-Received: by mail-ed1-f70.google.com with SMTP id s17-20020a056402521100b004511c8d59e3so7920666edd.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:56:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=G5Xua/j/WDmJL42z8sQG3qQtotfZuTF0DnaN4t3gukM=;
-        b=AIdjKCrnFqX6RmlvzbL+eucEQAZJCoAvXG1+wG/ydWtSy9xsUxAcWa8k9JsTXsY3fs
-         TSDKvWpRTT3mvh0pegZW4/4HYhMADMIX0DoO5WPahqXKF/DLoHqNKPiv1BiQZvI6LolM
-         jlD1bQFk1nmWwUK9jY5PEM2UiCHiTFRmUhci8UHJKmW7YfeDsbNMTU36J4qnoLsscECa
-         pjD1YRlnuCbHB+cRUcqeiSq6lQKvkRDAlW4ps0XmluExK+LXGPAcmiqTFHd0DRAlnR3N
-         DwM4K17UicVGHHmKTuHYdRcL1E/LRaHncYmNbpcEiaGxSRMiBWk+xn1NH1+6tEYE/yWg
-         I2mg==
-X-Gm-Message-State: ACrzQf2xAseOoOiOSMVf3O/5d7/Cdf0r4/DOMZaxFFFFlPS8PVi+7pCF
-        4PN/NWu78nG4TpU2zQx/4EOskA7B+Gs6ecR9WIbdmTU44pl5kCGRrwrA7LwzhNqTpq6WaDg13Ly
-        uKTJ5U4IIDEG2TvrzC4drFqrMPGu8PZ7X1g==
-X-Received: by 2002:a17:906:5d07:b0:781:c281:f6e4 with SMTP id g7-20020a1709065d0700b00781c281f6e4mr23046565ejt.744.1664286980489;
-        Tue, 27 Sep 2022 06:56:20 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5uXpxv8Fd+UAsejae4KeZD0FU7EkKhFURd7O+v/DyHvK9CGtfpBdVE6Xddt51N0e4hs7Plzg==
-X-Received: by 2002:a17:906:5d07:b0:781:c281:f6e4 with SMTP id g7-20020a1709065d0700b00781c281f6e4mr23046547ejt.744.1664286980279;
-        Tue, 27 Sep 2022 06:56:20 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id cw15-20020a170906c78f00b0073022b796a7sm840856ejb.93.2022.09.27.06.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 06:56:19 -0700 (PDT)
-Message-ID: <04c8d948-4d90-69b2-45a3-d992eb0793aa@redhat.com>
-Date:   Tue, 27 Sep 2022 15:56:17 +0200
+        Tue, 27 Sep 2022 09:56:41 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B52F13942B
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 06:56:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aVpF9lD5ibfVUWVY4H5d1HrezjolSWnAH4TwMtqIEAATrAMjQvbv038UFEDTFY31tRr/Ropwg1Ncrk57EAvhP3agrOnWKLrPFn8VlmJ5q+imLKtYe4enCWmKJAc4vHbtKiwjurRpd/FWH3Y2Go9KqFUrUxIizrHC10mBRtVdGYlQUiC64Elkdcj+Rd3YJhQuRlFXCVkaHs1DMAqdOFSBrQ9fN1tQ/fYYiDPPF+NJf/94/xj9edK+ljtJQJO3shHdUjsaOe2PgXhKAS9k0BPP8cexO+BoKtrnPbcT+A9x1t9ZNIB2V7fExF4AHgTBUIYJajpDW0rn91PbIbrm3IH/WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ozY/egBsu3+3rSH5FN0VMfSSy2ctcoE6FHUjGURi4Ns=;
+ b=bbpwObPP6r6W8CcrEA1CS388z34xBu92n3wkUNHhqAy1khtDJVIVh0mqS1IPI2+RaoquCI+sOZDtB8AR5X1KHRMg/OH3NZBR3WLJynYtOCPDRGLsxZUKDf7Z3Fftyh044jjoeKfP/yoyEzsl28Po9p6UlFQjn3CI5arQrK1eT/SwFApbD15SVyMOP8gs4FPhjtBoYYHM662fmIhsbs9x+duCQlaiTIyvDjQn9ky+QpUJrVzDdGiKoeDl312v2tiXaC16XFqHxKajgHcssTSyLBUfyo5ZbrtogXgYzTa4w4C5iSFM7+qE4oAUS/QqlXVvieLT85DgNcQdB96NbY1eIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ozY/egBsu3+3rSH5FN0VMfSSy2ctcoE6FHUjGURi4Ns=;
+ b=Wof/WuJiHqvmK/sGtxFgomRml1JKHyuaKYTmewaB2RKqw8dQO/bntOupe4nQ+pcBidgwKx0sguNp4cYGyXdo/nw5TJeDiigc/OdWNYN/qCeTn7iXZX1eHBfZ4z+XUimY5EXlAQB9sZ9U2go0cU+LLGHuBSeQ3bxsGm1aTz/UufQ=
+Received: from MW4PR04CA0135.namprd04.prod.outlook.com (2603:10b6:303:84::20)
+ by BL1PR12MB5363.namprd12.prod.outlook.com (2603:10b6:208:317::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.15; Tue, 27 Sep
+ 2022 13:56:37 +0000
+Received: from CO1NAM11FT005.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:84:cafe::18) by MW4PR04CA0135.outlook.office365.com
+ (2603:10b6:303:84::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.26 via Frontend
+ Transport; Tue, 27 Sep 2022 13:56:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT005.mail.protection.outlook.com (10.13.174.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5654.14 via Frontend Transport; Tue, 27 Sep 2022 13:56:37 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 27 Sep
+ 2022 08:56:33 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <mario.limonciello@amd.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <Dell.Client.Kernel@dell.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH] platform/x86/intel/wmi: thunderbolt: use dev_groups callback
+Date:   Tue, 27 Sep 2022 19:26:12 +0530
+Message-ID: <20220927135612.1602491-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH v2 2/2] platform/x86: toshiba_acpi: Add quirk for buttons
- on Z830
-Content-Language: en-US
-To:     Arvid Norlander <lkml@vorpal.se>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-input@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-References: <20220922182424.934340-1-lkml@vorpal.se>
- <20220922182424.934340-3-lkml@vorpal.se>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220922182424.934340-3-lkml@vorpal.se>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT005:EE_|BL1PR12MB5363:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fa4159c-21b2-4a32-e634-08daa090186d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Wo54125/ybCxH20yojpi1Fvn1D9BVgXdjT+shtqV8/iGlLj4ycqwPjVI9uGWNH53S3N8NLZwxxSfb2OBotxHJyM7gvESqNb4esg8+yWtPLP8ojG9oWqCrQZdt+z52asoRXlWGblDy8QPxP7DymxpsAES8rBsTAfJOgeUI7OCruiK7bx3tU8SQ+UX8XIMcQJIKG4RiMxSQJ4gJFP9sfWLp8D/gzWM+tkiAxRK7Z5QJ21sHyvfl8y3M3bOUOIEPYfxNZTsOxsb29qI1dAFwquL8o4JNIRGIvoJLEr8V+jJlP8qxd/SjQ2X8IL19HRYK/tSSvvGFtA3k9oxp9obyRV8KTpG5hiLlPGCK02dcxr3hf7/Lx78GVXkw1vEbS0EK91/n7idD/MbQcrkYkUz/VzH66i/ILOQ7xQGtMr3HDCrKs4jRz5vyE3tt87JEzTkWpZrqBHktBoB8M9uJhHYPLI+qSWx8OdDDRfvb6Nh1JsKNCRYkkuA8ahs2Hj8sXpIr/Woaah24ZqsiqkTsqYQ8HMbLA/kXTw6+/LH2KH/tbfGdMbP3tGoPprrZlrzNInaBfBGl2vJHhnOXCk2klyOIXIo7PXHX0Pxohkm46OJ7Jxpcoy1ztjYaFqzyWKyHRyB2i7lIrRcEQ5IBH2LLMqwqfn2zEQiTl6es3slpwfoCt5iLWHRSsqI8nzYOiREjjK5ykiIKRcmC4Dxx1x3l7hWqDZ4P6K8yj3KTqDvpNY84FmBrxZAEPH+ozJYjhbbcoqgFej86O8dHpMGpiFLXE+Irvd1ERO4TlcdVnQtc8EarjOSOnBigNVGwkOf6ZdueNq+fMN+g8b5/kSpGtYHLgYioQo7KQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(346002)(396003)(376002)(451199015)(46966006)(40470700004)(36840700001)(2616005)(26005)(478600001)(36756003)(2906002)(6636002)(316002)(8936002)(54906003)(110136005)(86362001)(4326008)(8676002)(41300700001)(70586007)(6666004)(7696005)(70206006)(82740400003)(82310400005)(5660300002)(356005)(40460700003)(81166007)(36860700001)(426003)(47076005)(40480700001)(1076003)(186003)(16526019)(336012)(83380400001)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2022 13:56:37.0218
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fa4159c-21b2-4a32-e634-08daa090186d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT005.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5363
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+use .dev_groups callback instead of manual sysfs registration.
+Remove .probe and .remove callbacks as they become dummy after
+using .dev_groups.
 
-On 9/22/22 20:24, Arvid Norlander wrote:
-> The Z830 has some buttons that will only work properly as "quickstart"
-> buttons. To enable them in that mode, a value between 1 and 7 must be
-> used for HCI_HOTKEY_EVENT. Windows uses 0x5 on this laptop so use that for
-> maximum predictability and compatibility.
-> 
-> As there is not yet a known way of auto detection, this patch uses a DMI
-> quirk table. A module parameter is exposed to allow setting this on other
-> models for testing.
-> 
-> Signed-off-by: Arvid Norlander <lkml@vorpal.se>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/intel/wmi/thunderbolt.c | 24 ++------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Note I assume that it is best to merge the 2 patches together, so I won't
-merge this now. Please add my Reviewed-by to the next version of the patch.
-
-Regards,
-
-Hans
-
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 36 ++++++++++++++++++++++++++---
->  1 file changed, 33 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 9f1394b73895..894afe74d815 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -58,6 +58,11 @@ module_param(turn_on_panel_on_resume, int, 0644);
->  MODULE_PARM_DESC(turn_on_panel_on_resume,
->  	"Call HCI_PANEL_POWER_ON on resume (-1 = auto, 0 = no, 1 = yes");
->  
-> +static int hci_hotkey_quickstart = -1;
-> +module_param(hci_hotkey_quickstart, int, 0644);
-> +MODULE_PARM_DESC(hci_hotkey_quickstart,
-> +	"Call HCI_HOTKEY_EVENT with value 0x5 for quickstart button support (-1 = auto, 0 = no, 1 = yes");
-> +
->  #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
->  
->  /* Scan code for Fn key on TOS1900 models */
-> @@ -137,6 +142,7 @@ MODULE_PARM_DESC(turn_on_panel_on_resume,
->  #define HCI_ACCEL_MASK			0x7fff
->  #define HCI_ACCEL_DIRECTION_MASK	0x8000
->  #define HCI_HOTKEY_DISABLE		0x0b
-> +#define HCI_HOTKEY_ENABLE_QUICKSTART	0x05
->  #define HCI_HOTKEY_ENABLE		0x09
->  #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
->  #define HCI_LCD_BRIGHTNESS_BITS		3
-> @@ -2731,10 +2737,15 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
->  		return -ENODEV;
->  
->  	/*
-> +	 * Enable quickstart buttons if supported.
-> +	 *
->  	 * Enable the "Special Functions" mode only if they are
->  	 * supported and if they are activated.
->  	 */
-> -	if (dev->kbd_function_keys_supported && dev->special_functions)
-> +	if (hci_hotkey_quickstart)
-> +		result = hci_write(dev, HCI_HOTKEY_EVENT,
-> +				   HCI_HOTKEY_ENABLE_QUICKSTART);
-> +	else if (dev->kbd_function_keys_supported && dev->special_functions)
->  		result = hci_write(dev, HCI_HOTKEY_EVENT,
->  				   HCI_HOTKEY_SPECIAL_FUNCTIONS);
->  	else
-> @@ -3260,7 +3271,14 @@ static const char *find_hci_method(acpi_handle handle)
->   * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
->   * the configured brightness level.
->   */
-> -static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
-> +#define QUIRK_TURN_ON_PANEL_ON_RESUME		BIT(0)
-> +/*
-> + * Some Toshibas use "quickstart" keys. On these, HCI_HOTKEY_EVENT must use
-> + * the value HCI_HOTKEY_ENABLE_QUICKSTART.
-> + */
-> +#define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-> +
-> +static const struct dmi_system_id toshiba_dmi_quirks[] = {
->  	{
->  	 /* Toshiba Portégé R700 */
->  	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-> @@ -3268,6 +3286,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
->  		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
->  		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
->  		},
-> +	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
->  	},
->  	{
->  	 /* Toshiba Satellite/Portégé R830 */
-> @@ -3277,6 +3296,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
->  		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
->  		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
->  		},
-> +	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
->  	},
->  	{
->  	 /* Toshiba Satellite/Portégé Z830 */
-> @@ -3284,6 +3304,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
->  		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
->  		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
->  		},
-> +	 .driver_data = (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOTKEY_QUICKSTART),
->  	},
->  };
->  
-> @@ -3292,6 +3313,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  	struct toshiba_acpi_dev *dev;
->  	const char *hci_method;
->  	u32 dummy;
-> +	const struct dmi_system_id *dmi_id;
-> +	long quirks = 0;
->  	int ret = 0;
->  
->  	if (toshiba_acpi)
-> @@ -3444,8 +3467,15 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  	}
->  #endif
->  
-> +	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-> +	if (dmi_id)
-> +		quirks = (long)dmi_id->driver_data;
-> +
->  	if (turn_on_panel_on_resume == -1)
-> -		turn_on_panel_on_resume = dmi_check_system(turn_on_panel_on_resume_dmi_ids);
-> +		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-> +
-> +	if (hci_hotkey_quickstart == -1)
-> +		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
->  
->  	toshiba_wwan_available(dev);
->  	if (dev->wwan_supported)
+diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platform/x86/intel/wmi/thunderbolt.c
+index 4ae87060d18b..fc333ff82d1e 100644
+--- a/drivers/platform/x86/intel/wmi/thunderbolt.c
++++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
+@@ -51,26 +51,7 @@ static struct attribute *tbt_attrs[] = {
+ 	&dev_attr_force_power.attr,
+ 	NULL
+ };
+-
+-static const struct attribute_group tbt_attribute_group = {
+-	.attrs = tbt_attrs,
+-};
+-
+-static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev,
+-				       const void *context)
+-{
+-	int ret;
+-
+-	ret = sysfs_create_group(&wdev->dev.kobj, &tbt_attribute_group);
+-	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
+-	return ret;
+-}
+-
+-static void intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
+-{
+-	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
+-	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
+-}
++ATTRIBUTE_GROUPS(tbt);
+ 
+ static const struct wmi_device_id intel_wmi_thunderbolt_id_table[] = {
+ 	{ .guid_string = INTEL_WMI_THUNDERBOLT_GUID },
+@@ -80,9 +61,8 @@ static const struct wmi_device_id intel_wmi_thunderbolt_id_table[] = {
+ static struct wmi_driver intel_wmi_thunderbolt_driver = {
+ 	.driver = {
+ 		.name = "intel-wmi-thunderbolt",
++		.dev_groups = tbt_groups,
+ 	},
+-	.probe = intel_wmi_thunderbolt_probe,
+-	.remove = intel_wmi_thunderbolt_remove,
+ 	.id_table = intel_wmi_thunderbolt_id_table,
+ };
+ 
+-- 
+2.25.1
 
