@@ -2,218 +2,162 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ECFC6FA83
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A0AC54EE9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Sep 2022 14:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233001AbiI0OfW (ORCPT
+        id S230202AbiI0Ojj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Sep 2022 10:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
+        Tue, 27 Sep 2022 10:39:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233015AbiI0Odq (ORCPT
+        with ESMTP id S233003AbiI0OjQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Sep 2022 10:33:46 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7472660696
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:33:30 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id u16-20020a05600c211000b003b5152ebf09so7009190wml.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:33:29 -0700 (PDT)
+        Tue, 27 Sep 2022 10:39:16 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50E25FAD8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:35:23 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id a10so11217968ljq.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Sep 2022 07:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=T9Yv44yYrTtCNaiU5wiZN0UL6Z3v3bqtDzkRBRov+GPkWFws7RcKceIXcRZjM/YOqm
-         3ppFsVB4L+XckbKJO+b9FSuuTwMMURVtLGXBoZ+PpsY7IQ2+aXB9jhUCCTYp5tXmV4xl
-         ww9Kv9GJ0ziNvLy0CzmNssBjDQvagCHVAm7AqWeMDmnD8Tvv8+yEnX+webFrjEQN+vut
-         LNj06unOKNTwD51nQFnljo2Y5lIRDAI/0MBnADAiWqMssX7GwlK5+iHgHMmgLIqw/Xa7
-         MMB0Dap0OCl7Z6fVlOPotbRN/uz+9JqDA9D02kMVP8EWsmqnWX1MBeMoQHamOroBXejA
-         AMQw==
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=/clpfezaOe8mLPrQfl3pX+kpaqNYyTiLhiE5Y1A/Axg=;
+        b=ZyxJ0VAXz3Yx6wVEKSkMktMdGFJ+xOEWNqSzclwgt627nnfNxbSWBkdUOdDVZIdPeO
+         ztKr1AfIi1u6h4wPXg0FlTTwg/AM2jMJONWfS9196v7E7IgYRPzJ/YrgMBsmiV4AGi9E
+         BZtY7qdtZg80u0PwB1t3FI+gH9HiiKMDR+3fhvMlpQyVAM74KbmRPelfIgKkO5/eRmIe
+         WQf37Y2jfiKxOBPKiXsa/rTdHymfI3YNyXBi8U3BLwu6w0/Q9bF0gsmUdr9B01p8PSGW
+         sbBayxucHNKPWzlzFqQi0sB/QK0yX49GQwHuULeeybmD+opaRa0BiJ7ZQ7WIosw7tFch
+         UDSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=Bvo7EJO01qiFSqaGbT4JiAGDEh8uk0vvz3ltgjeJ4xY=;
-        b=3r8kAdMEcjo7jwAOFFenX+veQjEdaUrjdbp+dU1rD5E56mjvltvefWTi6Pk2zTHtpg
-         mHL783I10SD+1lDqK0fgHhWUdUgCGXq3nkq3XuY4NvKP7rQ1xKkky2irZ6QW890ORVb0
-         Jwoqvv6hio5sdiG3AzGfrgMW9vyV8sQ7WYiRZrQc7S/5YkHT5fJlMlXt8DxRUj9h0DZF
-         ApxBBbjOCsnlWJOfAi15lw9aLaMQsFzN3s6T4ZRfbYzGuibL8Q6mfDp+6bKMAyzO5OJq
-         7U86D/4YRA8iAVAle7jYihivrIsrHHInTxt79kGqrEtiW1tt0qtbDvSe36jUX4S+stGZ
-         fc/Q==
-X-Gm-Message-State: ACrzQf2FBPfJ9LBg8zjZYnQ2lzbcYand/mTvlmxyC8ireKXvuESoC00O
-        gEpX4LG7w69On0wd4PH/cL5cLA==
-X-Google-Smtp-Source: AMsMyM4bkZzBpjUbqF+RHS8ZCprGjVOxdmWnqMSgcxklwDf8rYXb/cmGJT75lPf0Aml4T3XhYhOWEw==
-X-Received: by 2002:a05:600c:4211:b0:3b4:6334:9940 with SMTP id x17-20020a05600c421100b003b463349940mr3022429wmh.166.1664289207795;
-        Tue, 27 Sep 2022 07:33:27 -0700 (PDT)
-Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id l6-20020a05600c4f0600b003b4924493bfsm17518371wmq.9.2022.09.27.07.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 07:33:27 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Peter=20K=C3=A4stle?= <peter@piie.net>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v6 26/29] thermal/drivers/acerhdf: Use generic thermal_zone_get_trip() function
-Date:   Tue, 27 Sep 2022 16:32:36 +0200
-Message-Id: <20220927143239.376737-27-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220927143239.376737-1-daniel.lezcano@linaro.org>
-References: <20220927143239.376737-1-daniel.lezcano@linaro.org>
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=/clpfezaOe8mLPrQfl3pX+kpaqNYyTiLhiE5Y1A/Axg=;
+        b=IgaCroEDcrX2ySn9U9pScrv2PGy5Vud+updNTvqXWm6sUUGf+wtMvrRcrC4xTAM7RS
+         MyWYub89rxmiv7+YdxsZWjOl69Mj33/yHMzG68Xoi/Mia5ebWc1ybK5ZJgN9fDIFSJGH
+         JI9yFupl/XFb4iJz8qoXORL7vvmuBIF4isRTGhk9VVxM7WppA2Breg9tIjE86M4pmpy8
+         Lb6H9O76uW7DEnNyERMBRae1dWptl1Xp+kwMynA9JnUV7QrH1N1nIm31y4nm3s86XsGD
+         OQ1kh/KaLJOHDOvGm+Q2a/SacDU5DdxHcQwsyGfRYpG+czhBeGtrIGisYLhg004N4cGN
+         XP+Q==
+X-Gm-Message-State: ACrzQf0ltLfV+djPhRuIafFJKyT+QKcOYUv5cSCi7hEJnthItySniOsz
+        ZE5lrAbywqxIc1T4YT8otiP7Xg==
+X-Google-Smtp-Source: AMsMyM6PT4U1pTFDQtF2QivAJie+RqkxW7ZZSiD2PM7A3oNR4iAzYYKKhCpfzt7mx7GPKsQjtnSovA==
+X-Received: by 2002:a05:651c:23a1:b0:26d:9eb6:7b60 with SMTP id bk33-20020a05651c23a100b0026d9eb67b60mr3329748ljb.208.1664289321468;
+        Tue, 27 Sep 2022 07:35:21 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id k4-20020a05651239c400b0048b143c09c2sm178450lfu.259.2022.09.27.07.35.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Sep 2022 07:35:20 -0700 (PDT)
+Message-ID: <5e269e1a-8819-a326-90e0-a020cb2c0d73@linaro.org>
+Date:   Tue, 27 Sep 2022 17:35:19 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v5 00/30] Rework the trip points creation
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org
+References: <20220927143239.376737-1-daniel.lezcano@linaro.org>
+Content-Language: en-GB
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220927143239.376737-1-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal framework gives the possibility to register the trip
-points with the thermal zone. When that is done, no get_trip_* ops are
-needed and they can be removed.
+Hi Daniel,
 
-Convert ops content logic into generic trip points and register them with the
-thermal zone.
+On 27/09/2022 17:32, Daniel Lezcano wrote:
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Peter Kästle <peter@piie.net>
----
- drivers/platform/x86/acerhdf.c | 73 ++++++++++++----------------------
- 1 file changed, 26 insertions(+), 47 deletions(-)
+[skipped]
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 3463629f8764..a7407aa032ba 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -46,6 +46,8 @@
-  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
-  * assume 89°C is critical temperature.
-  */
-+#define ACERHDF_DEFAULT_TEMP_FANON 60000
-+#define ACERHDF_DEFAULT_TEMP_FANOFF 53000
- #define ACERHDF_TEMP_CRIT 89000
- #define ACERHDF_FAN_OFF 0
- #define ACERHDF_FAN_AUTO 1
-@@ -70,8 +72,8 @@ static int kernelmode;
- #endif
- 
- static unsigned int interval = 10;
--static unsigned int fanon = 60000;
--static unsigned int fanoff = 53000;
-+static unsigned int fanon = ACERHDF_DEFAULT_TEMP_FANON;
-+static unsigned int fanoff = ACERHDF_DEFAULT_TEMP_FANOFF;
- static unsigned int verbose;
- static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
-@@ -137,6 +139,15 @@ struct ctrl_settings {
- 	int mcmd_enable;
- };
- 
-+static struct thermal_trip trips[] = {
-+	[0] = { .temperature = ACERHDF_DEFAULT_TEMP_FANON,
-+		.hysteresis = ACERHDF_DEFAULT_TEMP_FANON - ACERHDF_DEFAULT_TEMP_FANOFF,
-+		.type = THERMAL_TRIP_ACTIVE },
-+
-+	[1] = { .temperature = ACERHDF_TEMP_CRIT,
-+		.type = THERMAL_TRIP_CRITICAL }
-+};
-+
- static struct ctrl_settings ctrl_cfg __read_mostly;
- 
- /* Register addresses and values for different BIOS versions */
-@@ -326,6 +337,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 		fanon = ACERHDF_MAX_FANON;
- 	}
- 
-+	if (fanon < fanoff) {
-+		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
-+		       fanoff, fanon, fanon);
-+		fanoff = fanon;
-+	};
-+
-+	trips[0].temperature = fanon;
-+	trips[0].hysteresis  = fanon - fanoff;
-+
- 	if (kernelmode && prev_interval != interval) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
-@@ -424,43 +444,6 @@ static int acerhdf_change_mode(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
--				 enum thermal_trip_type *type)
--{
--	if (trip == 0)
--		*type = THERMAL_TRIP_ACTIVE;
--	else if (trip == 1)
--		*type = THERMAL_TRIP_CRITICAL;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip != 0)
--		return -EINVAL;
--
--	*temp = fanon - fanoff;
--
--	return 0;
--}
--
--static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
--				 int *temp)
--{
--	if (trip == 0)
--		*temp = fanon;
--	else if (trip == 1)
--		*temp = ACERHDF_TEMP_CRIT;
--	else
--		return -EINVAL;
--
--	return 0;
--}
--
- static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
- 				 int *temperature)
- {
-@@ -474,13 +457,9 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
- 	.unbind = acerhdf_unbind,
- 	.get_temp = acerhdf_get_ec_temp,
- 	.change_mode = acerhdf_change_mode,
--	.get_trip_type = acerhdf_get_trip_type,
--	.get_trip_hyst = acerhdf_get_trip_hyst,
--	.get_trip_temp = acerhdf_get_trip_temp,
- 	.get_crit_temp = acerhdf_get_crit_temp,
- };
- 
--
- /*
-  * cooling device callback functions
-  * get maximal fan cooling state
-@@ -710,10 +689,10 @@ static int __init acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
--	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
--					      &acerhdf_dev_ops,
--					      &acerhdf_zone_params, 0,
--					      (kernelmode) ? interval*1000 : 0);
-+	thz_dev = thermal_zone_device_register_with_trips("acerhdf", trips, ARRAY_SIZE(trips),
-+							  0, NULL, &acerhdf_dev_ops,
-+							  &acerhdf_zone_params, 0,
-+							  (kernelmode) ? interval*1000 : 0);
- 	if (IS_ERR(thz_dev))
- 		return -EINVAL;
- 
+>   drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |   2 -
+>   .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  41 +----
+>   drivers/platform/x86/acerhdf.c                |  73 +++-----
+>   drivers/thermal/armada_thermal.c              |  39 ++---
+>   drivers/thermal/broadcom/bcm2835_thermal.c    |   8 +-
+>   drivers/thermal/da9062-thermal.c              |  52 +-----
+>   drivers/thermal/gov_bang_bang.c               |  39 +++--
+>   drivers/thermal/gov_fair_share.c              |  18 +-
+>   drivers/thermal/gov_power_allocator.c         |  51 +++---
+>   drivers/thermal/gov_step_wise.c               |  22 ++-
+>   drivers/thermal/hisi_thermal.c                |  11 +-
+>   drivers/thermal/imx_thermal.c                 |  72 +++-----
+>   .../int340x_thermal/int340x_thermal_zone.c    |  33 ++--
+>   .../int340x_thermal/int340x_thermal_zone.h    |   4 +-
+>   .../processor_thermal_device.c                |  10 +-
+>   drivers/thermal/intel/x86_pkg_temp_thermal.c  | 120 +++++++------
+>   drivers/thermal/qcom/qcom-spmi-temp-alarm.c   |  39 ++---
+>   drivers/thermal/rcar_gen3_thermal.c           |   2 +-
+>   drivers/thermal/rcar_thermal.c                |  53 +-----
+>   drivers/thermal/samsung/exynos_tmu.c          |  57 +++----
+>   drivers/thermal/st/st_thermal.c               |  47 +----
+>   drivers/thermal/tegra/soctherm.c              |  33 ++--
+>   drivers/thermal/tegra/tegra30-tsensor.c       |  17 +-
+>   drivers/thermal/thermal_core.c                | 161 +++++++++++++++---
+>   drivers/thermal/thermal_core.h                |  24 +--
+>   drivers/thermal/thermal_helpers.c             |  28 +--
+>   drivers/thermal/thermal_netlink.c             |  21 +--
+>   drivers/thermal/thermal_of.c                  | 116 -------------
+>   drivers/thermal/thermal_sysfs.c               | 133 +++++----------
+>   drivers/thermal/ti-soc-thermal/ti-thermal.h   |  15 --
+>   drivers/thermal/uniphier_thermal.c            |  27 ++-
+>   include/linux/thermal.h                       |  10 ++
+>   32 files changed, 559 insertions(+), 819 deletions(-)
+
+
+Could you please cc mailing lists on all patches? It's really hard to 
+determine whether qcom changes are correct without seeing other patches.
+
 -- 
-2.34.1
+With best wishes
+Dmitry
 
