@@ -2,134 +2,295 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53289C6FA82
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 10:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA3FC6FA86
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 11:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233383AbiI1Ksc (ORCPT
+        id S233305AbiI1LeC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Sep 2022 06:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
+        Wed, 28 Sep 2022 07:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233768AbiI1Ksa (ORCPT
+        with ESMTP id S229951AbiI1LeB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Sep 2022 06:48:30 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106E2AD980;
-        Wed, 28 Sep 2022 03:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664362110; x=1695898110;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fgqWgYLtqyh89ejbiHJg9arOWq6A+nLd10+6Mxvv6dE=;
-  b=UN09qkwjdYPfVaNcS4vi/97FEXNLOV+FZZuZzTJrArOy6aGaXy06RjjJ
-   bITVkpTn578r3EvwwjPBAjH7yR/tTRYdWwwfWTSxcp5bc5LY8HrJ6xBy7
-   eS30cj2DQ+ajr9HnRS917KN5CNgoDO9C1lf9MUZorGmcOTDlQKqvHE5cf
-   RZsRhJSBxOn68Zc0wdAn4U8oxBS67zvISNFTYSI2YOncjCR/XpXtQTtdZ
-   5JSbtRlhoEweEZ3ngKabQVtbSDUBk7hF2g2DgbHNTTtodLRjYyRyBkfXJ
-   BpjLc7ofxWUQJSEXP2ZAUBEEUW2wQW3Xb9z96vZV0wD4ieNs0M1mjep/X
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="303052262"
-X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
-   d="scan'208";a="303052262"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 03:48:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="950657958"
-X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
-   d="scan'208";a="950657958"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Sep 2022 03:48:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1odUc3-008u8P-23;
-        Wed, 28 Sep 2022 13:48:23 +0300
-Date:   Wed, 28 Sep 2022 13:48:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org,
-        rafael@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
-        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
-        productdev@system76.com, mario.limonciello@amd.com,
-        pobrn@protonmail.com, coproscefalo@gmail.com,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] platform/x86: dell: Add new dell-wmi-ddv driver
-Message-ID: <YzQmdwTE2XcratWr@smile.fi.intel.com>
-References: <20220927204521.601887-1-W_Armin@gmx.de>
- <8d976e9c-8fea-8a67-1331-7993705c60d9@redhat.com>
+        Wed, 28 Sep 2022 07:34:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECC587F95
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 04:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664364838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7VeawPEceN+pwXUUW/zmLlav8YN5wm0rpt26Ow1zsZo=;
+        b=daR44wPRKioS/nH/6kGULGlnjzT3Zu4+3VhiV7yd5bvkRk97BeFa9GoBJELkubLJjTvZY3
+        CaqOZtgUcGXqxZvth8W0DrVcDZLt2m2jwnaq73DGZuaC+sA40G0EVEiSurF2HkRoTDNJG0
+        9BjKt5W56XF7mwD4K8WXLEy8ZMh8Jc4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-442--GxJJdEHM1mvlyV-fnTTtQ-1; Wed, 28 Sep 2022 07:33:57 -0400
+X-MC-Unique: -GxJJdEHM1mvlyV-fnTTtQ-1
+Received: by mail-ed1-f70.google.com with SMTP id x5-20020a05640226c500b00451ec193793so10110113edd.16
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 04:33:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=7VeawPEceN+pwXUUW/zmLlav8YN5wm0rpt26Ow1zsZo=;
+        b=sfNcTND/onJUzWjGCPVyKtshqMt3RXowZyYI/dyil8PFi1yVL7l5OkRVGNRKwzZjnX
+         9CcaWx6CJfiNLEeT2d6sthkOw0KSMEtOQQYOePI8jtEPKz7FweoonptYPC91TTTTI5BN
+         zqO0PDs9BDfqhs7sdLYJszDKBampNVExbdqTpfN2JrbN6Az0emBzSWml4rPzS1WQVjyh
+         ztlu7mK232EcYba7rW07ZZ5eO6Oq84PXNq8weqmGt16kV8XlouxBmSXbqXcB9im4h8x4
+         f43hvROKjmC5fcedWs3zMAKHYwT7TRUTuDfnPe3I6xEm310NBp20KnzGkoWB9H9uLtlc
+         6e3g==
+X-Gm-Message-State: ACrzQf1F1jsd4OudAwRZCOkQvH9Ezsv8nsl40zDqucJAVOwrbr9a46ZQ
+        8zu0E65o920oDpCMwrQljZEn4Lq4dUYNr3qf/tYmyOtKGksRAmR1+3WqOvY8HsJjMszbHczouGh
+        S71/zt83LFt+lUfztazMmrPaLgV5ItNJ7bQ==
+X-Received: by 2002:a17:907:628f:b0:72f:58fc:3815 with SMTP id nd15-20020a170907628f00b0072f58fc3815mr26800439ejc.719.1664364836245;
+        Wed, 28 Sep 2022 04:33:56 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4Vgmkd143Xk/e7/oWKmjX1NPF5j5X0zLls0y2CgyjF+3pegkCzVm2mn9sbJ7adTkCjioK9qQ==
+X-Received: by 2002:a17:907:628f:b0:72f:58fc:3815 with SMTP id nd15-20020a170907628f00b0072f58fc3815mr26800415ejc.719.1664364835994;
+        Wed, 28 Sep 2022 04:33:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id r10-20020a1709061baa00b00783f32d7eaesm2209172ejg.164.2022.09.28.04.33.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Sep 2022 04:33:55 -0700 (PDT)
+Message-ID: <aaacb093-c5b2-09b4-2ddc-966b3b11544e@redhat.com>
+Date:   Wed, 28 Sep 2022 13:33:53 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d976e9c-8fea-8a67-1331-7993705c60d9@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH v2 2/2] platform/x86: dell: Add new dell-wmi-ddv driver
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Armin Wolf <W_Armin@gmx.de>
+Cc:     markgross@kernel.org, rafael@kernel.org, lenb@kernel.org,
+        hmh@hmh.eng.br, matan@svgalib.org, corentin.chary@gmail.com,
+        jeremy@system76.com, productdev@system76.com,
+        mario.limonciello@amd.com, pobrn@protonmail.com,
+        coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220927204521.601887-1-W_Armin@gmx.de>
+ <20220927204521.601887-3-W_Armin@gmx.de>
+ <YzQmQw0hEwzXV/iz@smile.fi.intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YzQmQw0hEwzXV/iz@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 11:52:51AM +0200, Hans de Goede wrote:
-> On 9/27/22 22:45, Armin Wolf wrote:
-> > This patch series adds a new driver for a WMI interface found in
-> > many newer Dell machines. This interface allows to read battery
-> > properties like temperature and the ePPID (Dell-specific), while
-> > also providing fan and thermal sensor information.
-> > 
-> > The interface does support multiple batteries which are indentified
-> > by an "index", which appears to be the battery ACPI UID. Since
-> > the interface also appears to omit any bounts checking of the
-> > index, the ACPI battery hook mechanism is used to discover batteries.
-> > 
-> > Since the information returned when querying fan/thermal sensor
-> > information is currently unknown, a debugfs entry is created to
-> > allow for easier reverse engineering. The interface is likely
-> > to be replaced by a proper hwmon interface in the future.
-> > 
-> > Since the driver can potentially be instantiated multiple times,
-> > the ACPI battery hook mechanism had to be extended.
-> > 
-> > The first patch passes a pointer to the battery hook to the
-> > hook callbacks, so that they can access instance-specific data
-> > with container_of().
-> > 
-> > The second patch finally adds the new driver. It was called
-> > dell-wmi-ddv since the interface is called "DDV" by Dell software,
-> > likely meaning "Dell Data Vault".
-> > 
-> > The driver was tested, together with the changes made to the
-> > ACPI battery driver, on a Dell Inspiron 3505. Other drivers
-> > already using the battery hook mechanism where changed as well,
-> > but could only be compile-tested due to missing hardware.
-> > 
-> > ---
-> > Changes in v2:
-> > - Significantly lower the amount of changes being made to the
-> > acpi battery driver
-> > - drop unnecessary ABI description of the temp attribute
-> > - return 0 when a unsupported battery is found to avoid being
-> > unloaded
-> > 
-> > Armin Wolf (2):
-> >   ACPI: battery: Pass battery hook pointer to hook callbacks
-> >   platform/x86: dell: Add new dell-wmi-ddv driver
-> 
-> Thanks.
-> 
-> The new version looks good to me:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> for the series.
-> 
-> Rafael, from my POV this can be merged through either your
-> tree or mine. Feel free to merge this through your tree,
-> or please give your Ack for merging through mine
-> (assuming you are ok with the changes of course).
+Hi,
 
-I gave some comments, but it's up to you if they have to be addressed now or as
-a follow up.
+On 9/28/22 12:47, Andy Shevchenko wrote:
+> On Tue, Sep 27, 2022 at 10:45:21PM +0200, Armin Wolf wrote:
+>> The dell-wmi-ddv driver adds support for reading
+>> the current temperature and ePPID of ACPI batteries
+>> on supported Dell machines.
+>>
+>> Since the WMI interface used by this driver does not
+>> do any input validation and thus cannot be used for probing,
+>> the driver depends on the ACPI battery extension machanism
+>> to discover batteries.
+>>
+>> The driver also supports a debugfs interface for retrieving
+>> buffers containing fan and thermal sensor information.
+>> Since the meaing of the content of those buffers is currently
+>> unknown, the interface is meant for reverse-engineering and
+>> will likely be replaced with an hwmon interface once the
+>> meaning has been understood.
+>>
+>> The driver was tested on a Dell Inspiron 3505.
+> 
+> ...
+> 
+>> +config DELL_WMI_DDV
+>> +	tristate "Dell WMI sensors Support"
+> 
+>> +	default m
+> 
+> Why? (Imagine I have Dell, but old machine)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Then you can select N if you really want to.
 
+> (And yes, I see that other Kconfig options are using it, but we shall avoid
+>  cargo cult and each default choice like this has to be explained at least.)
+
+This has been discussed during the review of v1 already.
+
+There are quite a few dell modules and the choice has
+been made to put these all behind a dell platform drivers
+options and then default all the individual modules to 'm'.
+
+> ...
+> 
+>> + * dell-wmi-ddv.c -- Linux driver for WMI sensor information on Dell notebooks.
+> 
+> Please, remove file name from the file. This will be an additional burden in
+> the future in case it will be renamed.
+> 
+> ...
+> 
+>> +#include <acpi/battery.h>
+> 
+> Is it required to be the first? Otherwise it seems ACPI specific to me and the
+> general rule is to put inclusions from generic towards custom. I.o.w. can you
+> move it after linux/wmi.h with a blank line in between?
+> 
+>> +#include <linux/acpi.h>
+>> +#include <linux/debugfs.h>
+>> +#include <linux/device.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/kstrtox.h>
+>> +#include <linux/math.h>
+>> +#include <linux/module.h>
+>> +#include <linux/limits.h>
+>> +#include <linux/power_supply.h>
+>> +#include <linux/seq_file.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/wmi.h>
+> 
+> ...
+> 
+>> +struct dell_wmi_ddv_data {
+>> +	struct acpi_battery_hook hook;
+>> +	struct device_attribute temp_attr, eppid_attr;
+> 
+> It's hard to read and easy to miss that the data type has two members here.
+> Please, put one member per one line.
+> 
+>> +	struct wmi_device *wdev;
+>> +};
+> 
+> ...
+> 
+>> +	if (obj->type != type) {
+>> +		kfree(obj);
+>> +		return -EIO;
+> 
+> EINVAL?
+> 
+>> +	}
+> 
+> ...
+> 
+>> +	kfree(obj);
+> 
+> I'm wondering what is the best to use in the drivers:
+>  1) kfree()
+>  2) acpi_os_free()
+>  3) ACPI_FREE()
+> 
+> ?
+
+Most ACPI driver code I know of just uses kfree() the other 2
+are more ACPI-core / ACPICA internal helpers.
+
+
+> 
+> ...
+> 
+>> +static int dell_wmi_ddv_battery_index(struct acpi_device *acpi_dev, u32 *index)
+>> +{
+> 
+>> +	const char *uid_str = acpi_device_uid(acpi_dev);
+>> +
+>> +	if (!uid_str)
+>> +		return -ENODEV;
+> 
+> It will be better for maintaining to have
+> 
+> 	const char *uid_str...;
+> 
+> 	uid_str = ...
+> 	if (!uid_str)
+> 		...
+> 
+>> +	return kstrtou32(uid_str, 10, index);
+>> +}
+> 
+> ...
+> 
+>> +	/* Return 0 instead of error to avoid being unloaded */
+>> +	ret = dell_wmi_ddv_battery_index(to_acpi_device(battery->dev.parent), &index);
+>> +	if (ret < 0)
+>> +		return 0;
+> 
+> How index is used?
+
+index is used in the registered sysfs attr show functions,
+so if this fails then the sysfs attr should not be registered.
+
+> 
+> ...
+> 
+>> +	ret = device_create_file(&battery->dev, &data->temp_attr);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = device_create_file(&battery->dev, &data->eppid_attr);
+>> +	if (ret < 0) {
+>> +		device_remove_file(&battery->dev, &data->temp_attr);
+>> +
+>> +		return ret;
+>> +	}
+> 
+> Why dev_groups member can't be utilized?
+
+Because this is an extension to the ACPI battery driver, IOW
+this adds extra attributes to the power-supply-class device
+registered by the ACPI battery driver. Note that the device
+in this case is managed by the power-supply-class code, so
+there is no access to dev_groups even in the ACPI battery code.
+
+> 
+> ...
+> 
+>> +static void dell_wmi_ddv_debugfs_init(struct wmi_device *wdev)
+> 
+> Strictly speaking this should return int (see below).
+> 
+>> +{
+>> +	struct dentry *entry;
+>> +	char name[64];
+>> +
+>> +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", DRIVER_NAME, dev_name(&wdev->dev));
+>> +	entry = debugfs_create_dir(name, NULL);
+>> +
+>> +	debugfs_create_devm_seqfile(&wdev->dev, "fan_sensor_information", entry,
+>> +				    dell_wmi_ddv_fan_read);
+>> +	debugfs_create_devm_seqfile(&wdev->dev, "thermal_sensor_information", entry,
+>> +				    dell_wmi_ddv_temp_read);
+>> +
+>> +	devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_debugfs_remove, entry);
+> 
+> return devm...
+> 
+> This is not related to debugfs and there is no rule to avoid checking error
+> codes from devm_add_action_or_reset().
+> 
+>> +}
+> 
+> ...
+> 
+>> +static struct wmi_driver dell_wmi_ddv_driver = {
+>> +	.driver = {
+>> +		.name = DRIVER_NAME,
+> 
+> I would use explicit literal since this is a (semi-) ABI, and having it as
+> a define feels not fully right.
+> 
+>> +	},
+>> +	.id_table = dell_wmi_ddv_id_table,
+>> +	.probe = dell_wmi_ddv_probe,
+>> +};
+> 
+
+
+Regards,
+
+Hans
 
