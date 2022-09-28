@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAA7C32771
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F5C04A95
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 17:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233271AbiI1Q5i (ORCPT
+        id S233426AbiI1RGf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Sep 2022 12:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
+        Wed, 28 Sep 2022 13:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232396AbiI1Q5h (ORCPT
+        with ESMTP id S234000AbiI1RGe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Sep 2022 12:57:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B03D77566
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 09:57:36 -0700 (PDT)
+        Wed, 28 Sep 2022 13:06:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185EDDED6E
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 10:06:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B499DB82174
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 16:57:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 68EEFC433D6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 16:57:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B779DB8217F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 17:06:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5681EC43470
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 17:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664384253;
-        bh=KzNSUKDttHazycFcxG728mMi8OY2OJAGQ4IN44u3kjE=;
+        s=k20201202; t=1664384790;
+        bh=o3APXcpHFMGp5M4MWUIw1JzcCurByy2WTgviZ0JBoW8=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tPoRvrWpW3vMJR8D+31t2B4aGeisW3oboJzb52nKDD9NS7AXKSxtHE/iMBdCJ0CFq
-         Es4IWkV6H/9yjdsYIrqy04NuPCGugo/+ywDJsn537X++U30nGoSSuk8oV29szQUyMF
-         xqF2aAW85iK6uuCfhmV080JJGj/W9ypR/aGAgjnjznWsIDSVtB4JIlmlgU86p9An3i
-         /OPqNIFYlOQjoiMxvkm5JZegGX4OoLOlxYvVJwEBgoG3P6xd/5HokKYDzUX2StZ6gR
-         m4QtoP5kJIRNlY5AsSsAKe4tWxIj0OLIsmpkprP3+mOZJNiQj4fhYgGM6piYtqxNV6
-         MO/0TFkzxKHMg==
+        b=IZiwpWHsG7h8MGU/nQeVQThkFY2DN63P2OSCLkYe1mhFF//bUNZLSY7jQ0dM25K/P
+         4+VhD3IuT8vEipVbNmBOMve6i+byJhoJWCP280OeT41jUPBGNf8uVuwNp78N8HmD6a
+         H1vfwyMYuKe/yTmvIOL1F+B8y2971kIYbvk5a6/iOqIdXWOtMs3nSx/aLfWCTdPfCE
+         2BdXUzwvVvT0RK2BnH1C7KDtfppB8Hr3YkAEXNGZU+71SlswBfXyBYJcSh/dLpQH9X
+         2ElSb30yq0JniVeSgTYfuEfPhlAE6IsNO5MOu8hSb8u+OkuHm05V0eJkkmh7nnLTV9
+         RvaOFkuos1w9g==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 4EE5EC433E6; Wed, 28 Sep 2022 16:57:33 +0000 (UTC)
+        id 30E7FC433E4; Wed, 28 Sep 2022 17:06:30 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
-Date:   Wed, 28 Sep 2022 16:57:33 +0000
+Date:   Wed, 28 Sep 2022 17:06:30 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,14 +47,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kolAflash@kolahilft.de
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216516-215701-rcZ6vK0XIA@https.bugzilla.kernel.org/>
+Message-ID: <bug-216516-215701-0m4WzuAokV@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
 References: <bug-216516-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,45 +68,33 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
 
---- Comment #22 from kolAflash (kolAflash@kolahilft.de) ---
-(In reply to Mario Limonciello (AMD) from comment #21)
-> > --> And closing the notebook lid is what's waking the CPU!
-> [...]
-> > 1. Stay in deepest sleep state when closing the lid. (or immediately re=
-turn
-> > to deepest sleep)
->=20
-> When you close the lid we need to know whether the kernel leaves the susp=
-end
-> loop or not.  If it didn't leave the suspend loop then my hypothesis is t=
-he
-> act of going into suspend and then closing the lid causes a Linux specific
-> race condition that prevents going into the deepest state.  That's why I
-> proposed by usleep_range patch.  It will only help with power consumption=
- if
-> the kernel is still in the s2idle loop.
+--- Comment #23 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+All of these events are so intermingled, we need to decouple and characteri=
+ze
+log events to understand which are issues we're hitting or not.
 
-I don't fully understand what you want me to do now. Please clarify.
+From what you've described there is at a minimum a firmware bug causing a
+spurious IRQ1.  I suspect this when paired with any other number of wakeup
+events is causing either a system wakeup or not getting into the deepest st=
+ate.
 
-The logs I attached where made with a v6.0-rc7 kernel containing all patches
-you mentioned in comment 14. Including the usleep_range patch.
-Does these logs help you?
+So your "disabling keyboard wakeup" is probably a good idea until HP can fix
+that firmware bug.
 
+I also hypothesize my patch will help battery life when there are these typ=
+es
+of spurious events but I don't really know for sure.
 
-> > 3. Bring the s2idle power consumption further down below 2 % per hour.
->=20
-> That last usleep_range patch is what I'm most interested in to fix this. =
- If
-> you run a longer suspend, I suspect it might help with going to sleep from
-> an EC triggered event for battery life notification.
+So with the same debugging lines I suggested in comment #12 and my patches
+suggested we need you to issue a suspend and keep track of what you did whe=
+n so
+we can correlate it to the events shown.
 
-So I should put the notebook to sleep for one hour, without closing the lid?
+>   sleep 10; systemctl start suspend.target
+> just before closing the lid.
 
-OK, I'll do
-  sleep 10; systemctl start suspend.target
-just before closing the lid.
-(then put the notebook into my bag and go home from work)
-(using the comment 14 patched kernel)
+That sounds good to me.  Then we'll know if the EC had spurious events that
+woke the system and whether it went back to deepest state and how long.
 
 --=20
 You may reply to this email to add a comment.
