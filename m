@@ -2,137 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED167C04A95
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 22:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2051C32771
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 23:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234109AbiI1WQr (ORCPT
+        id S231303AbiI1XqD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Sep 2022 18:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
+        Wed, 28 Sep 2022 19:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233818AbiI1WQq (ORCPT
+        with ESMTP id S233785AbiI1XqC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Sep 2022 18:16:46 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274E6CD66A;
-        Wed, 28 Sep 2022 15:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1664403305;
-        bh=ibjtVxtpavqCZDVP7y4RI1PBz/mwSGzCcQeKG6o8fQY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=hrDx7HjzYoAWaDsASGWu0HH3ZiQTaCP1a5rsk1Ki2iQZPWzDRJ/z17Vfh22TRSMm/
-         hRIGdtTLWw/ueCIXQjq4fQ30KWMLNyQuSXa9Nb4SKjCHIT4LbsUNI9F0dgQ/6ITP4S
-         7kgQ0CUzJ4TFUJFqg/uz9rGW2PTLdrFkPKzwukws=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MkYXm-1p5c5G3LYs-00lzGi; Thu, 29 Sep 2022 00:15:04 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     andriy.shevchenko@intel.com, rafael@kernel.org, lenb@kernel.org,
-        hmh@hmh.eng.br, matan@svgalib.org, corentin.chary@gmail.com,
-        jeremy@system76.com, productdev@system76.com,
-        mario.limonciello@amd.com, pobrn@protonmail.com,
-        coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: dell-ddv: Minor style fixes
-Date:   Thu, 29 Sep 2022 00:15:01 +0200
-Message-Id: <20220928221501.3823-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
+        Wed, 28 Sep 2022 19:46:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D331C100A92
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 16:46:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 958BEB82236
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 23:45:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 59F82C433D7
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 23:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664408758;
+        bh=N4KHs80/mGPHCpM0A1B9YU1KFKMmvx7LwYq+1+6m4eA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=oKkFgfQHzbBE8waR6jgL/pvJBmYOqhQaC6w/JFyMYJqB7/mYtual19GRjC4V+01F/
+         LXDRseHPeysukqJrt4PpAZQC3TbqZFk1jgczWAkpulKMmDcx9YKb/lZhhZ1vv02xJc
+         uOrUtaHPg6kDan0zeCMr5u3z5wG9bQvR9EZT6l9kQ5uC1YumNwwWvTSlPAfThAc/rX
+         VYrQfz8+4oUixvOqqfO4tgZmSVJG/tkxE9dQsVM3rGb4p0KlmGn9Dsx4XeGrazFQgB
+         ZGTE9EczAIHSKXH9y82GwXdI5i1xlboos96mgLKi07xLtjfqGH00l50sSG6UojdreB
+         NQe5MmdG1ymXA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 37A88C433E4; Wed, 28 Sep 2022 23:45:58 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
+Date:   Wed, 28 Sep 2022 23:45:57 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: kolAflash@kolahilft.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-216516-215701-e1JEBVuhaq@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
+References: <bug-216516-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nj6AwMYL8lgVwhwDheJAZPMH7j8l9XfP4urS0cXxMi7YJxVUm8E
- n0A83QSE1P2VpTzjqJX3Vy7yLJSA5D9ezlOYvVSOXUn2no36RKDTi0ZBGcJv1e/LhUndhY5
- MZ/i9FK9P19NEhKKbKkIy9F5u1ML7bSZiqDuphREmGOtGGPeS6wcDcphqsYj/FtWLFFVmEH
- zf4bfA4KkWHOJ1IgoYiNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xdckZvpyjd8=:hi0sBfM8Xh9mtue086RGXO
- 3gPvmUARBZA4+URDKRFDkRXYhDPY83P63Yxe+tsGl2w7xv0YyKWOLDhtVqB3vFDYr4GAhr79K
- JeXUmiFgvh4TekKSXZUAwyXikwi/PPwgSqHQFjKhEjPVdgMqwL/ZXEs9cJXIzSgSziIUujcTj
- TPD8A08CT0vXsHoODmBBSOeUR4sFURlCBysIZfpOtlrNaNFc7AfFomwNVJrzbhZVaIf9xErbD
- 791u3ZCcEyfo4PtEPMDLAt4+++KQJTXyyVC6mb6/AdtJA8pXoLoMcn/we8xUDoDUhvjvK/RdD
- i72OF6A06pisb4zVjb0cMBHZn6X4ItpN+T7sZ5zXOGGZVkWGfbALL8OWUwoFbcC1sm0c9yKiR
- WQP92NAEHENgpMY15vJe82Z2xA+O+NdCRFusG5eHqdCWT/CJN2NT9OYNRXP3WRY6cvdvL/H3a
- KcwwROb5aQiJPL14ZNZ8epJ8rtGcAYDislFIOTwz5IaSYqfeEEwi/vixVGhYximgyzRExcR5U
- XMcrYuVpNJuOoG7vrTV35yj8IEHpzrEFzDQOQESqmV43B0+snP0tKyPI6/EY768u8qgjXt4zd
- 1G7va3PaMiAzvo4GvFC6UlCBWPjkjAHz5Kg0kt8giX0PsWCtx2pS2JdKGt4C9twxD80VQ4KOY
- YqGHxt71zq/ZvNlBC95s0yu5aRHb1/an7GtT2Cv+C4u05MhD1ZEtaAZDkaAggbiYQwr48a5FY
- 1Qe98sh8SfZTgJi4v1aARK0mMKaiXT+SiRnhfr5QqolBBQBOLlQFGNlX7wR9Og1VPlCEBmYDV
- aSzctTLwNDu1xrsthU5rsr4o7e2yA9b9mY48VizaQvHDHYvHLSw8BJqbGCkQcGsQzCUiyeYDa
- zDVNZSTB6pysv3oDIVRSmeeMoP+moMHqqiVYWe5tC2kap71fqUsFuW6VXEj6090vFtoZv27CW
- /4bae19AC917rY1QS1PXVP05quOa1mfNuQzBa9yHaRHgogodQ78QtCqJEB3OgCuke/g2PNiRT
- fw7k9Nv2VXJ2cKELW3E11pwxhlzC+9GrdN+s6J60EiXnp4oVxEN2rjmZjLDDJVzudt4eDvXrN
- brqMJh3Bhj6N/RSLlOCm2+kHsnr7wlmfoxvh+yaWhw34l6xH3JcqPAPAAamY1w3onckklyNnb
- M9uarj3gTho4/6LIGi0Jk9jNoU
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Fix some style issues found during review to improve
-code maintainability, no functional changes.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
 
-Tested on a Dell Inspiron 3505.
+--- Comment #24 from kolAflash (kolAflash@kolahilft.de) ---
+Created attachment 301894
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301894&action=3Dedit
+kernel log for s2idle: v6.0-rc7 with bug 216516 comment #14 patches - 23
+minutes of s2idle
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes in v2:
-- change commit message
-=2D--
- drivers/platform/x86/dell/dell-wmi-ddv.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+@Mario
+Yes, it's definitely an intermingled mess...
+If you have an idea how I can help to untangle this, please give me detailed
+instructions which tests I should run.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 6ccce90f475d..699feae3c435 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -1,13 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * dell-wmi-ddv.c -- Linux driver for WMI sensor information on Dell note=
-books.
-+ * Linux driver for WMI sensor information on Dell notebooks.
-  *
-  * Copyright (C) 2022 Armin Wolf <W_Armin@gmx.de>
-  */
+If you think this will help, we can have a (video) call about this. Just se=
+nd
+me an email with date + time. (I live in UTC+2)
+Just tell me which (video) call tool you like to use. I'm open for pretty m=
+uch
+everything (Jitsi-Meet, Skype, Mumble, XMPP, Matrix, ...)
 
- #define pr_format(fmt) KBUILD_MODNAME ": " fmt
 
--#include <acpi/battery.h>
- #include <linux/acpi.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
-@@ -21,6 +20,8 @@
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
+Something about the sysfs and procfs settings I'm doing:
 
-+#include <acpi/battery.h>
-+
- #define DRIVER_NAME	"dell-wmi-ddv"
+This is needed to disable wakeup from USB events in S3 suspend.
+  echo XHC1 > /proc/acpi/wakeup
+Actually I wouldn't need to set this for s2idle.
+In future I'll leave this out for s2idle tests.
 
- #define DELL_DDV_SUPPORTED_INTERFACE 2
-@@ -52,7 +53,8 @@ enum dell_ddv_method {
+This is needed to prevent the system from waking on keyboard events and on
+closing the lid.
+  echo disabled > /sys/devices/platform/i8042/serio0/power/wakeup
+And additionally this is needed to prevent the system from waking on opening
+the lid.
+  echo disabled > /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/power/wak=
+eup
+(both, i8042 and LNXSYBUS:00/PNP0C0D:00, must be disabled to prevent wake on
+opening the lid)
 
- struct dell_wmi_ddv_data {
- 	struct acpi_battery_hook hook;
--	struct device_attribute temp_attr, eppid_attr;
-+	struct device_attribute temp_attr;
-+	struct device_attribute eppid_attr;
- 	struct wmi_device *wdev;
- };
+Additionally, if i8042 and LNXSYBUS:00/PNP0C0D:00 are not disabled, the sys=
+tem
+tends to wake after some minutes from s2idle. Maybe something between 10 or=
+ 60
+minutes.
+I haven't figured out yet if this is related to just one or both settings.
+So beside the lid open/close, keyboard and AC power events, there must be
+something else interrupting the suspend. Something which is totally without
+user interaction, because these wakes also appear if I leave the lid open a=
+nd
+don't touch the notebook at all.
 
-@@ -153,8 +155,9 @@ static int dell_wmi_ddv_query_string(struct wmi_device=
- *wdev, enum dell_ddv_meth
 
- static int dell_wmi_ddv_battery_index(struct acpi_device *acpi_dev, u32 *=
-index)
- {
--	const char *uid_str =3D acpi_device_uid(acpi_dev);
-+	const char *uid_str;
 
-+	uid_str =3D acpi_device_uid(acpi_dev);
- 	if (!uid_str)
- 		return -ENODEV;
 
-=2D-
-2.30.2
 
+
+I rebooted the system and then put it into s2idle for a little more than 23
+minutes (1400 seconds).
+See these lines:
+  Thu Sep 29 00:09:19 CEST 2022
+  Thu Sep 29 00:33:12 CEST 2022
+
+Everything, including all sysfs setting I made, is documented in the log.
+And I didn't closed the lid this time. I didn't even touched the notebook
+during that 23 minutes.
+
+
+
+These lines suggest, that the system didn't stay in "deepest state" of sleep
+the whole time.
+
+[   92.340524] PM: suspend-to-idle
+[   92.340549] ACPI: EC: ACPI EC GPE status set
+[   92.340562] ACPI: PM: Rearming ACPI SCI for wakeup
+[   92.364660] Timekeeping suspended for 759.694 seconds
+[   92.364660] ACPI: EC: ACPI EC GPE status set
+[   92.364680] ACPI: EC: ACPI EC GPE dispatched
+[   92.364987] ACPI: EC: ACPI EC work flushed
+[   92.364987] ACPI: PM: Rearming ACPI SCI for wakeup
+[   92.383963] ACPI: EC: ACPI EC GPE status set
+[   92.383981] ACPI: PM: Rearming ACPI SCI for wakeup
+[   92.408334] Timekeeping suspended for 331.956 seconds
+[   92.408334] ACPI: EC: ACPI EC GPE status set
+[   92.408334] ACPI: EC: ACPI EC GPE dispatched
+[   92.408340] ACPI: EC: ACPI EC work flushed
+[   92.408340] ACPI: PM: Rearming ACPI SCI for wakeup
+[   92.429810] Timekeeping suspended for 328.978 seconds
+[   92.429810] ACPI: EC: ACPI EC GPE status set
+[   92.429810] ACPI: EC: ACPI EC GPE dispatched
+[   92.429815] ACPI: EC: ACPI EC work flushed
+[   92.429815] ACPI: PM: Rearming ACPI SCI for wakeup
+[   92.451340] Timekeeping suspended for 8.978 seconds
+[...]
+[   92.451340] amd_pmc AMDI0005:00: Last suspend in deepest state for
+758373565us
+
+To it looks pretty much like the deepest sleep was only for the first 758
+seconds.
+The remaining time of the altogether ~ 1400 seconds the system wasn't in the
+deepest state.
+
+I guess that the deepest state has been interrupted by the remnant of what
+completely wakes the system if i8042 and LNXSYBUS:00/PNP0C0D:00 are not
+disabled (see above).
+
+
+
+I set the BIOS to limit the battery to max. 80 %. This usually drastically
+increases the overall lifetime of lithium-ion batteries. That's what makes =
+the
+difference between energy-full and energy-full-design in the log.=20
+
+These are the power consumption values:
+  energy-full-design:  53.0145 Wh
+  22.2222/(53.0145/100) =3D 41.9 %
+  20.8824/(53.0145/100) =3D 39.4 %
+So about 2.5 % of power (1.3398 Wh) was consumed.
+If the system was in perfect s2idle, this should have been less than 1% for=
+ 23
+minutes.
+Bug 2.5 % pretty much matches about 700 seconds of "bad" s2idle after the
+initial 700 "good" s2idle seconds in deepest state.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
