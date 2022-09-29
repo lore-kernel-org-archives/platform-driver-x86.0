@@ -2,194 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2051C32771
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Sep 2022 23:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6374AC6FA90
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Sep 2022 07:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbiI1XqD (ORCPT
+        id S233870AbiI2HbR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Sep 2022 19:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
+        Thu, 29 Sep 2022 03:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233785AbiI1XqC (ORCPT
+        with ESMTP id S234931AbiI2HbP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Sep 2022 19:46:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D331C100A92
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 16:46:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 958BEB82236
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 23:45:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 59F82C433D7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Sep 2022 23:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664408758;
-        bh=N4KHs80/mGPHCpM0A1B9YU1KFKMmvx7LwYq+1+6m4eA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oKkFgfQHzbBE8waR6jgL/pvJBmYOqhQaC6w/JFyMYJqB7/mYtual19GRjC4V+01F/
-         LXDRseHPeysukqJrt4PpAZQC3TbqZFk1jgczWAkpulKMmDcx9YKb/lZhhZ1vv02xJc
-         uOrUtaHPg6kDan0zeCMr5u3z5wG9bQvR9EZT6l9kQ5uC1YumNwwWvTSlPAfThAc/rX
-         VYrQfz8+4oUixvOqqfO4tgZmSVJG/tkxE9dQsVM3rGb4p0KlmGn9Dsx4XeGrazFQgB
-         ZGTE9EczAIHSKXH9y82GwXdI5i1xlboos96mgLKi07xLtjfqGH00l50sSG6UojdreB
-         NQe5MmdG1ymXA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 37A88C433E4; Wed, 28 Sep 2022 23:45:58 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
-Date:   Wed, 28 Sep 2022 23:45:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kolAflash@kolahilft.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-216516-215701-e1JEBVuhaq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
-References: <bug-216516-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 29 Sep 2022 03:31:15 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449AF12579F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 00:31:13 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id a2so964181lfb.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 00:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=d2EazhJPJSbwMcP0nRzwyGojAz7jhGIxDxpFS+S8wS4=;
+        b=du0lWC60PB/jENlb0ba14brLNTgO/3DRWot41R5k3uTVz+24nP0HL0BjGYCMm95mr5
+         BNPOsJXPrBecasKO/4qlBapwV9Vk1MORFh/AI+5khaDupzZXiCRMLYlaPQmhPIs0fHC5
+         61a0SgFNd1bo75he6Oc53j8W4ssb2A1Xoerac/pU59704OyLHhAtMVxwnAmXul6rBN7/
+         dkDvQgvbCQvydmJigpKdMTvayu4WJ4qDzSy/jkoHCdjfNX7fCJ0lpySU5GjsxY1W5WRg
+         gPyi7UY8h0W+7uV9sa6V8XnVoTYDEBTwTchp9qibd2MzuQY1/sTmJIvsj0wjrl7NExbu
+         JHAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=d2EazhJPJSbwMcP0nRzwyGojAz7jhGIxDxpFS+S8wS4=;
+        b=EFmIS8hBFpQOrrygAtCthuKaz2efsV54H2pQSF2UQutex4kF/beBfv1ZRbaCMklMZ8
+         1u7zNrxy7kEaqOnwyyGZzT5PJMWl9U8XvPxMNlfhPJSezQqNs3+ZiM+JkREXEjg7HKZI
+         CGX2pSHH5fS2rV2QjuGOlrdCGXgl54P3gdGKN/asBagi0z9IcWVy7gcErfMktTYHQlbW
+         vJW1G0njf2KFkYF2cLKgnD1BIlYXyC152dQkl18SYTLPp6hMMOEDh03cmgXSSltqSLBY
+         X8DxQQV69hwqxuOP2HWXfpgeXNcHfoUeD8cxzJJ1U0MIv+egkAbwMYgucEQcj2NqVbG/
+         pqCg==
+X-Gm-Message-State: ACrzQf10IXdsfPNqQTz3Lky6HGNlJ5dBOoov6mBzdN9Alc/7lxeIgogB
+        3E8+G96B3YsYnXK68PIudU9kkw==
+X-Google-Smtp-Source: AMsMyM5CKgW4S6Mj6aaX7feZSKj0JYhQYbjagNlBJnXfen43EhgyNrhEeSF02sHPuLu5XZa8/PUkvQ==
+X-Received: by 2002:a19:6b01:0:b0:499:b6fb:fcf2 with SMTP id d1-20020a196b01000000b00499b6fbfcf2mr753900lfa.622.1664436671624;
+        Thu, 29 Sep 2022 00:31:11 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id d22-20020a196b16000000b00497ac35ae1esm702592lfa.85.2022.09.29.00.31.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Sep 2022 00:31:11 -0700 (PDT)
+Message-ID: <1ddfd9c5-7986-3ff7-bcf8-409bc1250076@linaro.org>
+Date:   Thu, 29 Sep 2022 09:31:09 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v7 09/29] thermal/drivers/exynos: Replace
+ of_thermal_is_trip_valid() by thermal_zone_get_trip()
+Content-Language: en-US
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org
+References: <20220928210059.891387-1-daniel.lezcano@linaro.org>
+ <20220928210059.891387-10-daniel.lezcano@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220928210059.891387-10-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
+On 28/09/2022 23:00, Daniel Lezcano wrote:
+> The thermal_zone_get_trip() does the same check as
+> of_thermal_is_trip_valid(). Replace the call to
+> of_thermal_is_trip_valid() by thermal_zone_get_trip().
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
---- Comment #24 from kolAflash (kolAflash@kolahilft.de) ---
-Created attachment 301894
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301894&action=3Dedit
-kernel log for s2idle: v6.0-rc7 with bug 216516 comment #14 patches - 23
-minutes of s2idle
+I think I acked it...
 
-@Mario
-Yes, it's definitely an intermingled mess...
-If you have an idea how I can help to untangle this, please give me detailed
-instructions which tests I should run.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-If you think this will help, we can have a (video) call about this. Just se=
-nd
-me an email with date + time. (I live in UTC+2)
-Just tell me which (video) call tool you like to use. I'm open for pretty m=
-uch
-everything (Jitsi-Meet, Skype, Mumble, XMPP, Matrix, ...)
+Best regards,
+Krzysztof
 
-
-Something about the sysfs and procfs settings I'm doing:
-
-This is needed to disable wakeup from USB events in S3 suspend.
-  echo XHC1 > /proc/acpi/wakeup
-Actually I wouldn't need to set this for s2idle.
-In future I'll leave this out for s2idle tests.
-
-This is needed to prevent the system from waking on keyboard events and on
-closing the lid.
-  echo disabled > /sys/devices/platform/i8042/serio0/power/wakeup
-And additionally this is needed to prevent the system from waking on opening
-the lid.
-  echo disabled > /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/power/wak=
-eup
-(both, i8042 and LNXSYBUS:00/PNP0C0D:00, must be disabled to prevent wake on
-opening the lid)
-
-Additionally, if i8042 and LNXSYBUS:00/PNP0C0D:00 are not disabled, the sys=
-tem
-tends to wake after some minutes from s2idle. Maybe something between 10 or=
- 60
-minutes.
-I haven't figured out yet if this is related to just one or both settings.
-So beside the lid open/close, keyboard and AC power events, there must be
-something else interrupting the suspend. Something which is totally without
-user interaction, because these wakes also appear if I leave the lid open a=
-nd
-don't touch the notebook at all.
-
-
-
-
-
-
-I rebooted the system and then put it into s2idle for a little more than 23
-minutes (1400 seconds).
-See these lines:
-  Thu Sep 29 00:09:19 CEST 2022
-  Thu Sep 29 00:33:12 CEST 2022
-
-Everything, including all sysfs setting I made, is documented in the log.
-And I didn't closed the lid this time. I didn't even touched the notebook
-during that 23 minutes.
-
-
-
-These lines suggest, that the system didn't stay in "deepest state" of sleep
-the whole time.
-
-[   92.340524] PM: suspend-to-idle
-[   92.340549] ACPI: EC: ACPI EC GPE status set
-[   92.340562] ACPI: PM: Rearming ACPI SCI for wakeup
-[   92.364660] Timekeeping suspended for 759.694 seconds
-[   92.364660] ACPI: EC: ACPI EC GPE status set
-[   92.364680] ACPI: EC: ACPI EC GPE dispatched
-[   92.364987] ACPI: EC: ACPI EC work flushed
-[   92.364987] ACPI: PM: Rearming ACPI SCI for wakeup
-[   92.383963] ACPI: EC: ACPI EC GPE status set
-[   92.383981] ACPI: PM: Rearming ACPI SCI for wakeup
-[   92.408334] Timekeeping suspended for 331.956 seconds
-[   92.408334] ACPI: EC: ACPI EC GPE status set
-[   92.408334] ACPI: EC: ACPI EC GPE dispatched
-[   92.408340] ACPI: EC: ACPI EC work flushed
-[   92.408340] ACPI: PM: Rearming ACPI SCI for wakeup
-[   92.429810] Timekeeping suspended for 328.978 seconds
-[   92.429810] ACPI: EC: ACPI EC GPE status set
-[   92.429810] ACPI: EC: ACPI EC GPE dispatched
-[   92.429815] ACPI: EC: ACPI EC work flushed
-[   92.429815] ACPI: PM: Rearming ACPI SCI for wakeup
-[   92.451340] Timekeeping suspended for 8.978 seconds
-[...]
-[   92.451340] amd_pmc AMDI0005:00: Last suspend in deepest state for
-758373565us
-
-To it looks pretty much like the deepest sleep was only for the first 758
-seconds.
-The remaining time of the altogether ~ 1400 seconds the system wasn't in the
-deepest state.
-
-I guess that the deepest state has been interrupted by the remnant of what
-completely wakes the system if i8042 and LNXSYBUS:00/PNP0C0D:00 are not
-disabled (see above).
-
-
-
-I set the BIOS to limit the battery to max. 80 %. This usually drastically
-increases the overall lifetime of lithium-ion batteries. That's what makes =
-the
-difference between energy-full and energy-full-design in the log.=20
-
-These are the power consumption values:
-  energy-full-design:  53.0145 Wh
-  22.2222/(53.0145/100) =3D 41.9 %
-  20.8824/(53.0145/100) =3D 39.4 %
-So about 2.5 % of power (1.3398 Wh) was consumed.
-If the system was in perfect s2idle, this should have been less than 1% for=
- 23
-minutes.
-Bug 2.5 % pretty much matches about 700 seconds of "bad" s2idle after the
-initial 700 "good" s2idle seconds in deepest state.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
