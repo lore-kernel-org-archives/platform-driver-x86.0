@@ -2,161 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B1C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Sep 2022 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6F6C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Sep 2022 16:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235584AbiI2O50 (ORCPT
+        id S235714AbiI2Quk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Sep 2022 10:57:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49748 "EHLO
+        Thu, 29 Sep 2022 12:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235669AbiI2O5Y (ORCPT
+        with ESMTP id S235910AbiI2Quj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Sep 2022 10:57:24 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4E313EE83
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 07:57:21 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id m4so2625776wrr.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 07:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=nMnoSaH++1jbxSRlI1i6ADibQaQmTqMy1EUBbqCTBb4=;
-        b=Vv38lf5pdCpNoqOoAP120tgQ2KJMA7ZXY3zRv5IFf/18Ka+QYWp8iVvfDHwGWrUURq
-         XMcDVzCN67NfLLBvXneNU5Hkez1866vy2rJVUYu1vKryg0jxvA42QIHMFr7FwGNaV9n6
-         +IocjwdpayeRbeM2/sZgvPjKG7ythoaKpeUuXczusJJEcfS9wVBWcjyCRFl0D/sVgICw
-         2J5a8U1veuMcYYFjAV1q0dwyuM/YnZan597rCZ3Ds+v2h0MHW6JxifLG9t4Ao/8M6lM7
-         dZ4dzrfOEAf3pCEuuCr6J1A5XSYwp2pNtFtcBkJ2x/vFTyXVLC2qrq4yFh7WpEiVWHAy
-         sp4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=nMnoSaH++1jbxSRlI1i6ADibQaQmTqMy1EUBbqCTBb4=;
-        b=jda1XVX4pJoIvcGYjZevTaE9KsCmWa59OFp1XwUAj6CfbR+iDSKooV6V8AfrAIo9FW
-         5tsoG/iP8n3OP7OotH1DuYYscNNUBryymSA89FGMfrzq5fLiMZSJJ9pk4e/g94zKYH2s
-         0nCoRL8b//fMqray2L1wrw1qXP8JAWNbaofg7+ZuAEchrCvObjxT3QomZU0aiKimpXqy
-         2qZWtLyH0c+Y1Wb7caZtVBBPLJFnMQMDwRfV3c6UkpUV05zM5Fpmkx0raXzX4scX2ihV
-         p0EP5i6ILoaGGbOnExV8JvwrPejWkxrdeoJGtxN7/Uexfx2SvCj1XkKeuU1HoZttQ0ji
-         jIqw==
-X-Gm-Message-State: ACrzQf174wLQqEg7fPw6LwZMop+i19bfLJMPL6+5za/w2r6Iwz45aUql
-        2IwLPymP8Srh/+poZ4juTE9jvA==
-X-Google-Smtp-Source: AMsMyM4axP40VuENGb1cdsZ/JJas2+un/fCosaf9j+YjtgOlism/1wYOdarXHCbv/7WEnKLKyS9PoQ==
-X-Received: by 2002:a05:6000:2a3:b0:226:dff3:b031 with SMTP id l3-20020a05600002a300b00226dff3b031mr2687409wry.495.1664463439654;
-        Thu, 29 Sep 2022 07:57:19 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:48a2:39eb:9d1b:8b8d? ([2a05:6e02:1041:c10:48a2:39eb:9d1b:8b8d])
-        by smtp.googlemail.com with ESMTPSA id t187-20020a1c46c4000000b003b4a699ce8esm4646084wma.6.2022.09.29.07.57.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Sep 2022 07:57:19 -0700 (PDT)
-Message-ID: <ae86fc5a-0521-3dde-c2ea-8679c0ec4831@linaro.org>
-Date:   Thu, 29 Sep 2022 16:57:16 +0200
+        Thu, 29 Sep 2022 12:50:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1893A1EAF1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 09:50:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A3F3EB82366
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 16:50:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62C3BC43146
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 16:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664470236;
+        bh=utXwhY0jaSeb9gJhMjkZQ3anfb0zbUgHE55nm74LLrU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=iy1Pt2Jgz7zXtEvDyYkp1SBBlg9/RFybgqQzvsVk45Lm9BS2J0g2iNFRbOGEjRO2X
+         D5p3LfQp6ue9xnb1df8/Mek12ms6S301PIutvvrWjItSyl0Bos7JyYTkF2ohMNADBh
+         Tohugu3aM8V+K6eqWljmwjSME0MRUy/FOqa8tGedYKUn8vHFXrnhd6QTR+fgMfUjsF
+         nkUljN6b/b67Ht1X5ia4Gpm9qjlEi1JT+BvZXAqnfKDSQEIqauW9E1+yHzZlJ8PXhz
+         +IYgxX09jyMMYtUcB7ajKuqWhqcLbR4GljFmhET5deR+OkHOjZql5Um03J83FvFrAT
+         k/pBWgdaYO14Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 53BB3C433E7; Thu, 29 Sep 2022 16:50:36 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 201885] acpi PNP0C14:02: duplicate WMI GUID
+ 05901221-D566-11D1-B2F0-00A0C9062910 (first instance was on PNP0C14:01)
+Date:   Thu, 29 Sep 2022 16:50:35 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status resolution
+Message-ID: <bug-201885-215701-zZ7c3ZDgiO@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-201885-215701@https.bugzilla.kernel.org/>
+References: <bug-201885-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v7 00/29] Rework the trip points creation
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Antoine Tenart <atenart@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org
-References: <20220928210059.891387-1-daniel.lezcano@linaro.org>
- <d0be3159-8094-aed1-d9b1-c4b16d88d67c@linaro.org>
- <CAJZ5v0hOFoe0KqEimFv9pgmiAOzuRoLjdqoScr53ErNFU4AAPA@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAJZ5v0hOFoe0KqEimFv9pgmiAOzuRoLjdqoScr53ErNFU4AAPA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 29/09/2022 15:58, Rafael J. Wysocki wrote:
-> On Thu, Sep 29, 2022 at 2:26 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->>
->> Hi Rafael,
->>
->> are you happy with the changes?
-> 
-> I'll have a look and let you know.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D201885
 
-Great, thanks
-> 
->> I would like to integrate those changes with the thermal pull request
-> 
-> Sure, but it looks like you've got only a few ACKs for these patches
-> from the driver people.
-> 
-> Wouldn't it be prudent to give them some more time to review the changes?
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
-Well I would say I received the ACKs from the drivers which are actively 
-maintained. Others are either not with a dedicated maintainer or not a 
-reactive one. The first iteration of the series is from August 5th. So 
-it has been 2 months.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |RESOLVED
+         Resolution|---                         |CODE_FIX
 
-I pinged for imx, armada and tegra two weeks ago.
+--- Comment #17 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+This is fixed by the following commit which will be in 6.1:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
+git/commit/?h=3Dreview-hans&id=3D134038b075cb1dae21623499d765973d286ac94a
 
-The st, hisilicon drivers fall under the thermal maintainers umbrella
+--=20
+You may reply to this email to add a comment.
 
-There are three series coming after this series to be posted. I would 
-like to go forward in the process of cleaning up the framework. IMO two 
-months is enough to let the maintainers pay attention to the changes, 
-especially if we do a gentle ping and there are seven versions.
-
-And after that comes the thermal_zone_device_register() parameters 
-simplification :)
-
-[ ... ]
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+You are receiving this mail because:
+You are watching the assignee of the bug.=
