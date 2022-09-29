@@ -2,129 +2,132 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6374AC6FA90
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Sep 2022 07:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF27C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Sep 2022 09:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233870AbiI2HbR (ORCPT
+        id S231232AbiI2Jut (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Sep 2022 03:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54034 "EHLO
+        Thu, 29 Sep 2022 05:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234931AbiI2HbP (ORCPT
+        with ESMTP id S234023AbiI2Jup (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Sep 2022 03:31:15 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449AF12579F
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 00:31:13 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id a2so964181lfb.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Sep 2022 00:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=d2EazhJPJSbwMcP0nRzwyGojAz7jhGIxDxpFS+S8wS4=;
-        b=du0lWC60PB/jENlb0ba14brLNTgO/3DRWot41R5k3uTVz+24nP0HL0BjGYCMm95mr5
-         BNPOsJXPrBecasKO/4qlBapwV9Vk1MORFh/AI+5khaDupzZXiCRMLYlaPQmhPIs0fHC5
-         61a0SgFNd1bo75he6Oc53j8W4ssb2A1Xoerac/pU59704OyLHhAtMVxwnAmXul6rBN7/
-         dkDvQgvbCQvydmJigpKdMTvayu4WJ4qDzSy/jkoHCdjfNX7fCJ0lpySU5GjsxY1W5WRg
-         gPyi7UY8h0W+7uV9sa6V8XnVoTYDEBTwTchp9qibd2MzuQY1/sTmJIvsj0wjrl7NExbu
-         JHAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=d2EazhJPJSbwMcP0nRzwyGojAz7jhGIxDxpFS+S8wS4=;
-        b=EFmIS8hBFpQOrrygAtCthuKaz2efsV54H2pQSF2UQutex4kF/beBfv1ZRbaCMklMZ8
-         1u7zNrxy7kEaqOnwyyGZzT5PJMWl9U8XvPxMNlfhPJSezQqNs3+ZiM+JkREXEjg7HKZI
-         CGX2pSHH5fS2rV2QjuGOlrdCGXgl54P3gdGKN/asBagi0z9IcWVy7gcErfMktTYHQlbW
-         vJW1G0njf2KFkYF2cLKgnD1BIlYXyC152dQkl18SYTLPp6hMMOEDh03cmgXSSltqSLBY
-         X8DxQQV69hwqxuOP2HWXfpgeXNcHfoUeD8cxzJJ1U0MIv+egkAbwMYgucEQcj2NqVbG/
-         pqCg==
-X-Gm-Message-State: ACrzQf10IXdsfPNqQTz3Lky6HGNlJ5dBOoov6mBzdN9Alc/7lxeIgogB
-        3E8+G96B3YsYnXK68PIudU9kkw==
-X-Google-Smtp-Source: AMsMyM5CKgW4S6Mj6aaX7feZSKj0JYhQYbjagNlBJnXfen43EhgyNrhEeSF02sHPuLu5XZa8/PUkvQ==
-X-Received: by 2002:a19:6b01:0:b0:499:b6fb:fcf2 with SMTP id d1-20020a196b01000000b00499b6fbfcf2mr753900lfa.622.1664436671624;
-        Thu, 29 Sep 2022 00:31:11 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id d22-20020a196b16000000b00497ac35ae1esm702592lfa.85.2022.09.29.00.31.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Sep 2022 00:31:11 -0700 (PDT)
-Message-ID: <1ddfd9c5-7986-3ff7-bcf8-409bc1250076@linaro.org>
-Date:   Thu, 29 Sep 2022 09:31:09 +0200
+        Thu, 29 Sep 2022 05:50:45 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9864F31203;
+        Thu, 29 Sep 2022 02:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664445043; x=1695981043;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OuzAVg6ea9JReu4tlJ0aMNveBoUNr4OMqqCO6UkME1Q=;
+  b=Yl4GVGY8nOUHPA5nGzxxxmZ8EfL3g8KI9R46ljDPpIJhfqEPCthniHYm
+   pmtYVQA+sptBdCPf9M4vTzWs65/CwxVzkg+YpNzY7BFqZge9QoxoTl8R2
+   /JW7mm6JXSv7S0ihKbhVHO9NmVsNs3wBCaeAMP6ssBCInGXo1Fznz0y5m
+   kbzWGxFS+ae7A3+DTH6ERVeHn3TMm46ney2mCXtY0TB4NSwon/O/yxnUd
+   68979oALV3smN2xxUrEOnIfv4ahBHY2qjZO3XYw/qmpe2EBzeC5y3qW+c
+   hMxj8etQaurxhNWP4IJ+pKeAAPgWOzhmWK/tM6zO8WzwVZKAeNUQSNe8w
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="282214030"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="282214030"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 02:50:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="726332208"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="726332208"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Sep 2022 02:50:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1odqBh-009KrI-1K;
+        Thu, 29 Sep 2022 12:50:37 +0300
+Date:   Thu, 29 Sep 2022 12:50:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Armin Wolf <W_Armin@gmx.de>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, rafael@kernel.org,
+        lenb@kernel.org, hmh@hmh.eng.br, matan@svgalib.org,
+        corentin.chary@gmail.com, jeremy@system76.com,
+        productdev@system76.com, mario.limonciello@amd.com,
+        pobrn@protonmail.com, coproscefalo@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] platform/x86: dell: Add new dell-wmi-ddv driver
+Message-ID: <YzVqbSBHm3OrjIaQ@smile.fi.intel.com>
+References: <20220927204521.601887-1-W_Armin@gmx.de>
+ <20220927204521.601887-3-W_Armin@gmx.de>
+ <YzQmQw0hEwzXV/iz@smile.fi.intel.com>
+ <34774c9d-1210-0015-f78e-97fdf717480c@gmx.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v7 09/29] thermal/drivers/exynos: Replace
- of_thermal_is_trip_valid() by thermal_zone_get_trip()
-Content-Language: en-US
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Antoine Tenart <atenart@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org
-References: <20220928210059.891387-1-daniel.lezcano@linaro.org>
- <20220928210059.891387-10-daniel.lezcano@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220928210059.891387-10-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34774c9d-1210-0015-f78e-97fdf717480c@gmx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 28/09/2022 23:00, Daniel Lezcano wrote:
-> The thermal_zone_get_trip() does the same check as
-> of_thermal_is_trip_valid(). Replace the call to
-> of_thermal_is_trip_valid() by thermal_zone_get_trip().
+On Wed, Sep 28, 2022 at 10:57:16PM +0200, Armin Wolf wrote:
+> Am 28.09.22 um 12:47 schrieb Andy Shevchenko:
+> > On Tue, Sep 27, 2022 at 10:45:21PM +0200, Armin Wolf wrote:
+
+...
+
+> > > +static void dell_wmi_ddv_debugfs_init(struct wmi_device *wdev)
+> > Strictly speaking this should return int (see below).
+> > 
+> > > +{
+> > > +	struct dentry *entry;
+> > > +	char name[64];
+> > > +
+> > > +	scnprintf(name, ARRAY_SIZE(name), "%s-%s", DRIVER_NAME, dev_name(&wdev->dev));
+> > > +	entry = debugfs_create_dir(name, NULL);
+> > > +
+> > > +	debugfs_create_devm_seqfile(&wdev->dev, "fan_sensor_information", entry,
+> > > +				    dell_wmi_ddv_fan_read);
+> > > +	debugfs_create_devm_seqfile(&wdev->dev, "thermal_sensor_information", entry,
+> > > +				    dell_wmi_ddv_temp_read);
+> > > +
+> > > +	devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_debugfs_remove, entry);
+> > return devm...
+> > 
+> > This is not related to debugfs and there is no rule to avoid checking error
+> > codes from devm_add_action_or_reset().
+> > 
+> According to the documentation of debugfs_create_dir(), drivers should work fine if debugfs
+> initialization fails. Thus the the return value of dell_wmi_ddv_debugfs_init() would be ignored
+> when called, which means that returning an error would serve no purpose.
+> Additionally, devm_add_action_or_reset() automatically executes the cleanup function if devres
+> registration fails, so we do not have to care about that.
+
+The problem with your code that if devm_ call fails and you ain't stop probing
+the remove-insert module (or unbind-bind) cycle will fail, because of existing
+(leaked) debugfs dentries.
+
+> > > +}
+
+That said, you must check error code of devm_ call above. This is a potential
+leak of resources right now in the code.
+
+...
+
+> > > +		.name = DRIVER_NAME,
+> > I would use explicit literal since this is a (semi-) ABI, and having it as
+> > a define feels not fully right.
 > 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> The driver name is used in two places (init and debugfs), so having a define for it
+> avoids problems in case someone forgets to change both.
 
-I think I acked it...
+Which is exactly what we must prevent developer to do. If changing debugfs it
+mustn't change the driver name, because the latter is ABI, while the former is
+not.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I think now you got my point.
 
-Best regards,
-Krzysztof
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
