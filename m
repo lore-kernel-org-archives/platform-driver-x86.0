@@ -2,51 +2,36 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A055C4167E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Sep 2022 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364E3C433F5
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Oct 2022 08:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231767AbiI3Rjt (ORCPT
+        id S231297AbiJCInW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 30 Sep 2022 13:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46824 "EHLO
+        Mon, 3 Oct 2022 04:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbiI3Rjp (ORCPT
+        with ESMTP id S229949AbiJCImw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Sep 2022 13:39:45 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014FE63F8;
-        Fri, 30 Sep 2022 10:39:37 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id 3so3257924qka.5;
-        Fri, 30 Sep 2022 10:39:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=N8mI8UTtYw4tqhx/SpyLW2KXywh682BjJEpPuPB5RK8=;
-        b=zza6M3ytDEKAzydyndqKGKalgkEdTflvG+1mVsOmpzJVSEfQyM1NmEn0S1pOg53NiD
-         n/oKD0SJf++HmZZOxUNk1xbMU3bRVVVEPkWuQ/LRqYNiRangkq8Cv0vcmzWrUv0sE+eF
-         ylZZEiuf9HiDn3otQKqX+Gt4ZRdzOtbLICSZzYpXc3Bn5CMALFP1gRWoeFJDHrXI9dEw
-         vzTiteAg/odRDSxTW0++J+kmhxVN0+IZOeWFg8kSpiCrbFxBnJK7Kw2pwwsKWQQ18Y+9
-         oP9yfzSwcQdb2PnGJ91lhFK55L/UKW076ReFyudxrgfX4R6Aas6AcWUcvQ1UoDnDgKwE
-         sRMg==
-X-Gm-Message-State: ACrzQf3heoTHuLle29KFoFXqqdcVVzcLFeyqdrSGJR3fLN/BZBK2uQyc
-        q/JzPuKmsdju9DRQIrk3cF+FvFuzKujEzwH56jg=
-X-Google-Smtp-Source: AMsMyM5Be2M9430vaNDQKWi5Jn7X5sqcjjBRWlaB305zeNKwPI8Niz3+jSeejZPUTnTD+6uF7YXR9Lo8HGSlB5J32Ng=
-X-Received: by 2002:a05:620a:46ac:b0:6ce:3e55:fc21 with SMTP id
- bq44-20020a05620a46ac00b006ce3e55fc21mr6841047qkb.285.1664559576163; Fri, 30
- Sep 2022 10:39:36 -0700 (PDT)
+        Mon, 3 Oct 2022 04:42:52 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B8BA8205CE;
+        Mon,  3 Oct 2022 01:19:13 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CB4E139F;
+        Mon,  3 Oct 2022 00:33:12 -0700 (PDT)
+Received: from [10.57.4.29] (unknown [10.57.4.29])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B323B3F73B;
+        Mon,  3 Oct 2022 00:32:57 -0700 (PDT)
+Message-ID: <e4276afa-b6c5-8f5f-e604-92bc480714c9@arm.com>
+Date:   Mon, 3 Oct 2022 08:32:55 +0100
 MIME-Version: 1.0
-References: <20220928210059.891387-1-daniel.lezcano@linaro.org>
- <d0be3159-8094-aed1-d9b1-c4b16d88d67c@linaro.org> <CAJZ5v0hOFoe0KqEimFv9pgmiAOzuRoLjdqoScr53ErNFU4AAPA@mail.gmail.com>
- <ae86fc5a-0521-3dde-c2ea-8679c0ec4831@linaro.org> <CAJZ5v0jrWamTTXcHabSk=6cmm4pEx0_ebiECKZRfrX_vS85YYg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jrWamTTXcHabSk=6cmm4pEx0_ebiECKZRfrX_vS85YYg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 30 Sep 2022 19:39:25 +0200
-Message-ID: <CAJZ5v0gnfK2MBuzZi-C03VVO+b4dthckJcdj3zLo3q-qAUyy_g@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
 Subject: Re: [PATCH v7 00/29] Rework the trip points creation
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         "Zhang, Rui" <rui.zhang@intel.com>,
         Raju Rangoju <rajur@chelsio.com>,
@@ -65,7 +50,6 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
         Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -73,7 +57,7 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
         Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Alim Akhtar <alim.akhtar@samsung.com>,
@@ -95,37 +79,55 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
         linux-tegra <linux-tegra@vger.kernel.org>,
         Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20220928210059.891387-1-daniel.lezcano@linaro.org>
+ <d0be3159-8094-aed1-d9b1-c4b16d88d67c@linaro.org>
+ <CAJZ5v0hOFoe0KqEimFv9pgmiAOzuRoLjdqoScr53ErNFU4AAPA@mail.gmail.com>
+ <ae86fc5a-0521-3dde-c2ea-8679c0ec4831@linaro.org>
+ <CAJZ5v0jrWamTTXcHabSk=6cmm4pEx0_ebiECKZRfrX_vS85YYg@mail.gmail.com>
+ <CAJZ5v0gnfK2MBuzZi-C03VVO+b4dthckJcdj3zLo3q-qAUyy_g@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CAJZ5v0gnfK2MBuzZi-C03VVO+b4dthckJcdj3zLo3q-qAUyy_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 9:35 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Sep 29, 2022 at 4:57 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
-> >
-> > On 29/09/2022 15:58, Rafael J. Wysocki wrote:
-> > > On Thu, Sep 29, 2022 at 2:26 PM Daniel Lezcano
-> > > <daniel.lezcano@linaro.org> wrote:
-> > >>
-> > >>
-> > >> Hi Rafael,
-> > >>
-> > >> are you happy with the changes?
-> > >
-> > > I'll have a look and let you know.
-> >
-> > Great, thanks
->
-> Well, because you have not added the history of changes to the
-> patches, that will take more time than it would otherwise.
+Hi Rafael and Daniel
 
-Done.  I've sent ACKs and still had a comment on one patch (minor but
-still).  When that is addressed, the four initial core patches should
-be good to go in.
+On 9/30/22 18:39, Rafael J. Wysocki wrote:
+> On Thu, Sep 29, 2022 at 9:35 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>> On Thu, Sep 29, 2022 at 4:57 PM Daniel Lezcano
+>> <daniel.lezcano@linaro.org> wrote:
+>>>
+>>> On 29/09/2022 15:58, Rafael J. Wysocki wrote:
+>>>> On Thu, Sep 29, 2022 at 2:26 PM Daniel Lezcano
+>>>> <daniel.lezcano@linaro.org> wrote:
+>>>>>
+>>>>>
+>>>>> Hi Rafael,
+>>>>>
+>>>>> are you happy with the changes?
+>>>>
+>>>> I'll have a look and let you know.
+>>>
+>>> Great, thanks
+>>
+>> Well, because you have not added the history of changes to the
+>> patches, that will take more time than it would otherwise.
+> 
+> Done.  I've sent ACKs and still had a comment on one patch (minor but
+> still).  When that is addressed, the four initial core patches should
+> be good to go in.
+> 
+> I'm trusting you regarding the thermal/of changes (even though I think
+> that it would be good if someone involved in that code could review
+> them) and if you are confident about all of the driver changes, they
+> are fine with me too.
 
-I'm trusting you regarding the thermal/of changes (even though I think
-that it would be good if someone involved in that code could review
-them) and if you are confident about all of the driver changes, they
-are fine with me too.
+Sorry for being late. I have been busy with some internal bug hunting.
+I'll check the code today and test it on my dev boards.
+
+Regards,
+Lukasz
