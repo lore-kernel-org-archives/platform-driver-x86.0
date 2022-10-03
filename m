@@ -2,297 +2,476 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DE8C38A2B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Oct 2022 09:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD30C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Oct 2022 11:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231426AbiJCJeh (ORCPT
+        id S229611AbiJCLwC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Oct 2022 05:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49700 "EHLO
+        Mon, 3 Oct 2022 07:52:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbiJCJdn (ORCPT
+        with ESMTP id S229480AbiJCLwB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Oct 2022 05:33:43 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1568757228
-        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Oct 2022 02:28:24 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id r3-20020a05600c35c300b003b4b5f6c6bdso5483880wmq.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Oct 2022 02:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=pY49ET3ZIgq2w00tEafAmFrW/5GVD2UTvB8HzlNbQv0=;
-        b=T04C7dRhVMFUXZEHbcu1Ig9kQmAl4Nzl38oyHyFyc093xBPNgIPOlKKihhcCBNkTrs
-         1B8CRcagNT7TWPrW/A7UYzeM+1gjCEDZoSnsiMOyw/M5DZtb3Z7xPpn4eCbDR6RwlSP7
-         x7eD8svZ5XQ69poVJGCYZ8bNppFX7pU9889zOzwYZPDX6Q5f1XhPNlvhU0Jk9xWdYQdD
-         dkH4Za+9qiS6MH+biLaEK2KURQa2QEkayz5bFmhhulNgboJKB0sY4ng7Gt3sKaTUu9z/
-         dpy2ow+F+eugbrfUPzFdvuqYBp4ObWNBJYA705i+faYSC5OYujSs3B9EZcy5g8UfBfXY
-         zjlA==
+        Mon, 3 Oct 2022 07:52:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03A233A0E
+        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Oct 2022 04:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664797919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qMXO5rxoE1keEzdNr2Yi0hbMNwwpip5QiD/cR5C9Hlg=;
+        b=LH4aysGwqp6LrdnHENYLy7cyNPOSvYwbJuuloftmeNZaD35rB3pXT9p9cO4GpxGU7JReHb
+        J9bI9OqIXG3PSPf4wRUyOuQPas+bAd/JYjP3sPrm5/33WS8bgj+CN8q5zuH35ZiOnmyJxt
+        e/u7qHCfx6aPMnR1uY/BrQZwj0C0jBE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-34-vkAQ9jvhPump5cXdeMWQNg-1; Mon, 03 Oct 2022 07:51:58 -0400
+X-MC-Unique: vkAQ9jvhPump5cXdeMWQNg-1
+Received: by mail-ed1-f72.google.com with SMTP id dz21-20020a0564021d5500b0045217702048so8528774edb.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Oct 2022 04:51:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=pY49ET3ZIgq2w00tEafAmFrW/5GVD2UTvB8HzlNbQv0=;
-        b=mV/NhTEJ+Q/JBEcI7IG9EYP5LOA3wP19bjdDfRHmXYY+i9k5wX0awBW28eS3JxL9sP
-         zrkdaBnOOAF8+x8g8xyIZBp775BAgpNOwCzSEZK3fA8OqlEm2hRlVkNim7ku+Tv0GEdJ
-         F+A2gTQ6N6ku+IX8xMoa6jR+2MCe2yPEDU6OKUCo3I94ad3Mo3lvwOro+RVqvkmG89xC
-         aKDw8IaxrCluRyRG4EBk+h2vZ8twfc2c1qTAPqlZioBtilpYrJ1iN5Kkm4EhIPNpIH13
-         4G+nswM/NbjDEbsVvRF0rPszFIrNLqhsKtfuqgcaz5eSwlPnMvlrvutW/RZ2jJXHASGY
-         PdWA==
-X-Gm-Message-State: ACrzQf1Bq38TWHfGu3Glej1FdD4Gy5T+O1PiP7YFYN9we8nE4UTYcng6
-        3Rs3QBU3vSLDBqFNxCAY4je3Gw==
-X-Google-Smtp-Source: AMsMyM5+zJt6jybBFwi4vBGgi3BYQ43vjAGd6pfWFjwY6B6j+KbBhB00RfAYpBqJiXWLWm6a076F9Q==
-X-Received: by 2002:a05:600c:4211:b0:3b4:6334:9940 with SMTP id x17-20020a05600c421100b003b463349940mr6378922wmh.166.1664789269392;
-        Mon, 03 Oct 2022 02:27:49 -0700 (PDT)
-Received: from mai.. ([2a05:6e02:1041:c10:f3a:9f5e:1605:a75a])
-        by smtp.gmail.com with ESMTPSA id ay3-20020a5d6f03000000b0022cc157bf26sm9707520wrb.85.2022.10.03.02.27.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 02:27:48 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Antoine Tenart <atenart@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH v8 28/29] thermal/intel/int340x: Replace parameter to simplify
-Date:   Mon,  3 Oct 2022 11:26:01 +0200
-Message-Id: <20221003092602.1323944-29-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221003092602.1323944-1-daniel.lezcano@linaro.org>
-References: <20221003092602.1323944-1-daniel.lezcano@linaro.org>
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=qMXO5rxoE1keEzdNr2Yi0hbMNwwpip5QiD/cR5C9Hlg=;
+        b=Unk2ArZRjKTn3WTWokLEHruUqLXOzvCko9hCdK+R43uPXbiyplnniTG/HcJGvJQ3iQ
+         7ER+XSFL8kSWzfBFEreqtd4L+Ny1XWqgEJahViQ10u3ZGGzhszT6YJWesEVnNiLK6zkc
+         zjDIlIncAxW71JG3iOzE/cyouyacR0w4XPBHFvOgorbdzlNuth8hpIB0raIe/H1QrFsj
+         6jvE6YoMSCy7VK6SU8E5V2Nhy3QiPCWUWzofrPBveVwsjkkfjwGSq59Ll4AzSo2PHg80
+         A6WKIZ4I2NCIHmFEAVAxRzHmSwkmb9oYYOZZwkYN8wFahu5TxCj5NwTtzZto7pWOedrK
+         0HBA==
+X-Gm-Message-State: ACrzQf0nSpZ3v0EN4hvendJN6ooY3Gw901mLGqH57wnE7rP2ROZVpOXq
+        iu+IeNUtXd/4wLmf/eoBS7yAnn8AJ86NmgaXoohtkuCEY/LyagmdTt3LB+748vXtkYYhpivQVQX
+        jfSlHFaRzPzft5arahkH4FvOodhMndw9BnA==
+X-Received: by 2002:a17:906:4792:b0:782:c426:621 with SMTP id cw18-20020a170906479200b00782c4260621mr14982992ejc.478.1664797916319;
+        Mon, 03 Oct 2022 04:51:56 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6URNn51tSYz9XhJQxIUlm50pNQFxzy7z6i3nWbFENXU5G3RZPdN52AznWai8lKWDYeuwl0iQ==
+X-Received: by 2002:a17:906:4792:b0:782:c426:621 with SMTP id cw18-20020a170906479200b00782c4260621mr14982980ejc.478.1664797916047;
+        Mon, 03 Oct 2022 04:51:56 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id d2-20020a50f682000000b0044e01e2533asm7375572edn.43.2022.10.03.04.51.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Oct 2022 04:51:55 -0700 (PDT)
+Message-ID: <3c273674-197f-4a67-b83c-07c8dfd08718@redhat.com>
+Date:   Mon, 3 Oct 2022 13:51:54 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH v1] platform/x86: use PLATFORM_DEVID_NONE instead of -1
+Content-Language: en-US
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+References: <20220930104857.2796923-1-pobrn@protonmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220930104857.2796923-1-pobrn@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In the process of replacing the get_trip_* ops by the generic trip
-points, the current code has an 'override' property to add another
-indirection to a different ops.
+Hi,
 
-Rework this approach to prevent this indirection and make the code
-ready for the generic trip points conversion.
+On 9/30/22 12:59, Barnabás Pőcze wrote:
+> Use the `PLATFORM_DEVID_NONE` constant instead of
+> hard-coding -1 when creating a platform device.
+> 
+> No functional changes are intended.
+> 
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
 
-Actually the get_temp() is different regarding the platform, so it is
-pointless to add a new set of ops but just create dynamically the ops
-at init time.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../int340x_thermal/int340x_thermal_zone.c    | 33 +++++++++----------
- .../int340x_thermal/int340x_thermal_zone.h    |  4 +--
- .../processor_thermal_device.c                | 10 ++----
- 3 files changed, 20 insertions(+), 27 deletions(-)
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-index 62c0aa5d0783..66cd50e0b50a 100644
---- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-+++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-@@ -18,9 +18,6 @@ static int int340x_thermal_get_zone_temp(struct thermal_zone_device *zone,
- 	unsigned long long tmp;
- 	acpi_status status;
- 
--	if (d->override_ops && d->override_ops->get_temp)
--		return d->override_ops->get_temp(zone, temp);
--
- 	status = acpi_evaluate_integer(d->adev->handle, "_TMP", NULL, &tmp);
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
-@@ -46,9 +43,6 @@ static int int340x_thermal_get_trip_temp(struct thermal_zone_device *zone,
- 	struct int34x_thermal_zone *d = zone->devdata;
- 	int i;
- 
--	if (d->override_ops && d->override_ops->get_trip_temp)
--		return d->override_ops->get_trip_temp(zone, trip, temp);
--
- 	if (trip < d->aux_trip_nr)
- 		*temp = d->aux_trips[trip];
- 	else if (trip == d->crt_trip_id)
-@@ -79,9 +73,6 @@ static int int340x_thermal_get_trip_type(struct thermal_zone_device *zone,
- 	struct int34x_thermal_zone *d = zone->devdata;
- 	int i;
- 
--	if (d->override_ops && d->override_ops->get_trip_type)
--		return d->override_ops->get_trip_type(zone, trip, type);
--
- 	if (trip < d->aux_trip_nr)
- 		*type = THERMAL_TRIP_PASSIVE;
- 	else if (trip == d->crt_trip_id)
-@@ -112,9 +103,6 @@ static int int340x_thermal_set_trip_temp(struct thermal_zone_device *zone,
- 	acpi_status status;
- 	char name[10];
- 
--	if (d->override_ops && d->override_ops->set_trip_temp)
--		return d->override_ops->set_trip_temp(zone, trip, temp);
--
- 	snprintf(name, sizeof(name), "PAT%d", trip);
- 	status = acpi_execute_simple_method(d->adev->handle, name,
- 			millicelsius_to_deci_kelvin(temp));
-@@ -134,9 +122,6 @@ static int int340x_thermal_get_trip_hyst(struct thermal_zone_device *zone,
- 	acpi_status status;
- 	unsigned long long hyst;
- 
--	if (d->override_ops && d->override_ops->get_trip_hyst)
--		return d->override_ops->get_trip_hyst(zone, trip, temp);
--
- 	status = acpi_evaluate_integer(d->adev->handle, "GTSH", NULL, &hyst);
- 	if (ACPI_FAILURE(status))
- 		*temp = 0;
-@@ -217,7 +202,7 @@ static struct thermal_zone_params int340x_thermal_params = {
- };
- 
- struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
--				struct thermal_zone_device_ops *override_ops)
-+						     int (*get_temp) (struct thermal_zone_device *, int *))
- {
- 	struct int34x_thermal_zone *int34x_thermal_zone;
- 	acpi_status status;
-@@ -231,8 +216,17 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
- 		return ERR_PTR(-ENOMEM);
- 
- 	int34x_thermal_zone->adev = adev;
--	int34x_thermal_zone->override_ops = override_ops;
- 
-+	int34x_thermal_zone->ops = kmemdup(&int340x_thermal_zone_ops,
-+					   sizeof(int340x_thermal_zone_ops), GFP_KERNEL);
-+	if (!int34x_thermal_zone->ops) {
-+		ret = -ENOMEM;
-+		goto err_ops_alloc;
-+	}
-+
-+	if (get_temp)
-+		int34x_thermal_zone->ops->get_temp = get_temp;
-+	
- 	status = acpi_evaluate_integer(adev->handle, "PATC", NULL, &trip_cnt);
- 	if (ACPI_FAILURE(status))
- 		trip_cnt = 0;
-@@ -262,7 +256,7 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
- 						acpi_device_bid(adev),
- 						trip_cnt,
- 						trip_mask, int34x_thermal_zone,
--						&int340x_thermal_zone_ops,
-+						int34x_thermal_zone->ops,
- 						&int340x_thermal_params,
- 						0, 0);
- 	if (IS_ERR(int34x_thermal_zone->zone)) {
-@@ -281,6 +275,8 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
- 	acpi_lpat_free_conversion_table(int34x_thermal_zone->lpat_table);
- 	kfree(int34x_thermal_zone->aux_trips);
- err_trip_alloc:
-+	kfree(int34x_thermal_zone->ops);
-+err_ops_alloc:
- 	kfree(int34x_thermal_zone);
- 	return ERR_PTR(ret);
- }
-@@ -292,6 +288,7 @@ void int340x_thermal_zone_remove(struct int34x_thermal_zone
- 	thermal_zone_device_unregister(int34x_thermal_zone->zone);
- 	acpi_lpat_free_conversion_table(int34x_thermal_zone->lpat_table);
- 	kfree(int34x_thermal_zone->aux_trips);
-+	kfree(int34x_thermal_zone->ops);
- 	kfree(int34x_thermal_zone);
- }
- EXPORT_SYMBOL_GPL(int340x_thermal_zone_remove);
-diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-index 3b4971df1b33..e28ab1ba5e06 100644
---- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-+++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-@@ -29,13 +29,13 @@ struct int34x_thermal_zone {
- 	int hot_temp;
- 	int hot_trip_id;
- 	struct thermal_zone_device *zone;
--	struct thermal_zone_device_ops *override_ops;
-+	struct thermal_zone_device_ops *ops;
- 	void *priv_data;
- 	struct acpi_lpat_conversion_table *lpat_table;
- };
- 
- struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *,
--				struct thermal_zone_device_ops *override_ops);
-+				int (*get_temp) (struct thermal_zone_device *, int *));
- void int340x_thermal_zone_remove(struct int34x_thermal_zone *);
- int int340x_thermal_read_trips(struct int34x_thermal_zone *int34x_zone);
- 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index a8d98f1bd6c6..317703027ce9 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -207,10 +207,6 @@ static int proc_thermal_get_zone_temp(struct thermal_zone_device *zone,
- 	return ret;
- }
- 
--static struct thermal_zone_device_ops proc_thermal_local_ops = {
--	.get_temp       = proc_thermal_get_zone_temp,
--};
--
- static int proc_thermal_read_ppcc(struct proc_thermal_device *proc_priv)
- {
- 	int i;
-@@ -285,7 +281,7 @@ int proc_thermal_add(struct device *dev, struct proc_thermal_device *proc_priv)
- 	struct acpi_device *adev;
- 	acpi_status status;
- 	unsigned long long tmp;
--	struct thermal_zone_device_ops *ops = NULL;
-+	int (*get_temp) (struct thermal_zone_device *, int *) = NULL;
- 	int ret;
- 
- 	adev = ACPI_COMPANION(dev);
-@@ -304,10 +300,10 @@ int proc_thermal_add(struct device *dev, struct proc_thermal_device *proc_priv)
- 		/* there is no _TMP method, add local method */
- 		stored_tjmax = get_tjmax();
- 		if (stored_tjmax > 0)
--			ops = &proc_thermal_local_ops;
-+			get_temp = proc_thermal_get_zone_temp;
- 	}
- 
--	proc_priv->int340x_zone = int340x_thermal_zone_add(adev, ops);
-+	proc_priv->int340x_zone = int340x_thermal_zone_add(adev, get_temp);
- 	if (IS_ERR(proc_priv->int340x_zone)) {
- 		return PTR_ERR(proc_priv->int340x_zone);
- 	} else
--- 
-2.34.1
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+> Since this is a trivial change, I did not CC
+> the driver maintainers separately. I can send
+> a new version if that is deemed necessary.
+> 
+>  drivers/platform/x86/acer-wmi.c           | 2 +-
+>  drivers/platform/x86/acerhdf.c            | 2 +-
+>  drivers/platform/x86/amd/hsmp.c           | 2 +-
+>  drivers/platform/x86/amilo-rfkill.c       | 3 ++-
+>  drivers/platform/x86/asus-laptop.c        | 2 +-
+>  drivers/platform/x86/compal-laptop.c      | 2 +-
+>  drivers/platform/x86/dell/alienware-wmi.c | 2 +-
+>  drivers/platform/x86/dell/dcdbas.c        | 2 +-
+>  drivers/platform/x86/dell/dell-laptop.c   | 2 +-
+>  drivers/platform/x86/dell/dell_rbu.c      | 2 +-
+>  drivers/platform/x86/eeepc-laptop.c       | 2 +-
+>  drivers/platform/x86/fujitsu-laptop.c     | 2 +-
+>  drivers/platform/x86/hdaps.c              | 2 +-
+>  drivers/platform/x86/hp-wmi.c             | 2 +-
+>  drivers/platform/x86/huawei-wmi.c         | 2 +-
+>  drivers/platform/x86/intel/oaktrail.c     | 2 +-
+>  drivers/platform/x86/mlx-platform.c       | 2 +-
+>  drivers/platform/x86/msi-laptop.c         | 2 +-
+>  drivers/platform/x86/panasonic-laptop.c   | 2 +-
+>  drivers/platform/x86/samsung-laptop.c     | 2 +-
+>  drivers/platform/x86/sony-laptop.c        | 2 +-
+>  drivers/platform/x86/tc1100-wmi.c         | 2 +-
+>  drivers/platform/x86/thinkpad_acpi.c      | 4 ++--
+>  drivers/platform/x86/topstar-laptop.c     | 2 +-
+>  drivers/platform/x86/winmate-fm07-keys.c  | 2 +-
+>  25 files changed, 27 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 9610742fe6aa..18224f9a5bc0 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -2463,7 +2463,7 @@ static int __init acer_wmi_init(void)
+>  		goto error_platform_register;
+>  	}
+> 
+> -	acer_platform_device = platform_device_alloc("acer-wmi", -1);
+> +	acer_platform_device = platform_device_alloc("acer-wmi", PLATFORM_DEVID_NONE);
+>  	if (!acer_platform_device) {
+>  		err = -ENOMEM;
+>  		goto error_device_alloc;
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 3463629f8764..d2c0fc38c201 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -676,7 +676,7 @@ static int __init acerhdf_register_platform(void)
+>  	if (err)
+>  		return err;
+> 
+> -	acerhdf_dev = platform_device_alloc("acerhdf", -1);
+> +	acerhdf_dev = platform_device_alloc("acerhdf", PLATFORM_DEVID_NONE);
+>  	if (!acerhdf_dev) {
+>  		err = -ENOMEM;
+>  		goto err_device_alloc;
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index a0c54b838c11..521c6a229362 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -392,7 +392,7 @@ static int __init hsmp_plt_init(void)
+>  	if (ret)
+>  		return ret;
+> 
+> -	amd_hsmp_platdev = platform_device_alloc(DRIVER_NAME, -1);
+> +	amd_hsmp_platdev = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
+>  	if (!amd_hsmp_platdev) {
+>  		ret = -ENOMEM;
+>  		goto drv_unregister;
+> diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
+> index 493e169c8f61..3e313c4d538d 100644
+> --- a/drivers/platform/x86/amilo-rfkill.c
+> +++ b/drivers/platform/x86/amilo-rfkill.c
+> @@ -150,7 +150,8 @@ static int __init amilo_rfkill_init(void)
+>  	if (rc)
+>  		return rc;
+> 
+> -	amilo_rfkill_pdev = platform_device_register_simple(KBUILD_MODNAME, -1,
+> +	amilo_rfkill_pdev = platform_device_register_simple(KBUILD_MODNAME,
+> +							    PLATFORM_DEVID_NONE,
+>  							    NULL, 0);
+>  	if (IS_ERR(amilo_rfkill_pdev)) {
+>  		rc = PTR_ERR(amilo_rfkill_pdev);
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> index 4d2d32bfbe2a..47b2f8bb6fb5 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -1633,7 +1633,7 @@ static int asus_platform_init(struct asus_laptop *asus)
+>  {
+>  	int result;
+> 
+> -	asus->platform_device = platform_device_alloc(ASUS_LAPTOP_FILE, -1);
+> +	asus->platform_device = platform_device_alloc(ASUS_LAPTOP_FILE, PLATFORM_DEVID_NONE);
+>  	if (!asus->platform_device)
+>  		return -ENOMEM;
+>  	platform_set_drvdata(asus->platform_device, asus);
+> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+> index 72e1523edd31..e10d2f64dfad 100644
+> --- a/drivers/platform/x86/compal-laptop.c
+> +++ b/drivers/platform/x86/compal-laptop.c
+> @@ -1060,7 +1060,7 @@ static int __init compal_init(void)
+>  	if (ret)
+>  		goto err_backlight;
+> 
+> -	compal_device = platform_device_alloc(DRIVER_NAME, -1);
+> +	compal_device = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
+>  	if (!compal_device) {
+>  		ret = -ENOMEM;
+>  		goto err_platform_driver;
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index f21248255529..a34e07ef2c79 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -791,7 +791,7 @@ static int __init alienware_wmi_init(void)
+>  	ret = platform_driver_register(&platform_driver);
+>  	if (ret)
+>  		goto fail_platform_driver;
+> -	platform_device = platform_device_alloc("alienware-wmi", -1);
+> +	platform_device = platform_device_alloc("alienware-wmi", PLATFORM_DEVID_NONE);
+>  	if (!platform_device) {
+>  		ret = -ENOMEM;
+>  		goto fail_platform_device1;
+> diff --git a/drivers/platform/x86/dell/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
+> index 42beafbc54b2..0ecb7b164750 100644
+> --- a/drivers/platform/x86/dell/dcdbas.c
+> +++ b/drivers/platform/x86/dell/dcdbas.c
+> @@ -716,7 +716,7 @@ static struct platform_driver dcdbas_driver = {
+> 
+>  static const struct platform_device_info dcdbas_dev_info __initconst = {
+>  	.name		= DRIVER_NAME,
+> -	.id		= -1,
+> +	.id		= PLATFORM_DEVID_NONE,
+>  	.dma_mask	= DMA_BIT_MASK(32),
+>  };
+> 
+> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+> index 1321687d923e..e92c3ad06d69 100644
+> --- a/drivers/platform/x86/dell/dell-laptop.c
+> +++ b/drivers/platform/x86/dell/dell-laptop.c
+> @@ -2193,7 +2193,7 @@ static int __init dell_init(void)
+>  	ret = platform_driver_register(&platform_driver);
+>  	if (ret)
+>  		goto fail_platform_driver;
+> -	platform_device = platform_device_alloc("dell-laptop", -1);
+> +	platform_device = platform_device_alloc("dell-laptop", PLATFORM_DEVID_NONE);
+>  	if (!platform_device) {
+>  		ret = -ENOMEM;
+>  		goto fail_platform_device1;
+> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+> index e9f4b30dcafa..9f51e0fcab04 100644
+> --- a/drivers/platform/x86/dell/dell_rbu.c
+> +++ b/drivers/platform/x86/dell/dell_rbu.c
+> @@ -645,7 +645,7 @@ static int __init dcdrbu_init(void)
+>  	spin_lock_init(&rbu_data.lock);
+> 
+>  	init_packet_head();
+> -	rbu_device = platform_device_register_simple("dell_rbu", -1, NULL, 0);
+> +	rbu_device = platform_device_register_simple("dell_rbu", PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(rbu_device)) {
+>  		pr_err("platform_device_register_simple failed\n");
+>  		return PTR_ERR(rbu_device);
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index ba08c9235f76..a388a28b6f2a 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -444,7 +444,7 @@ static int eeepc_platform_init(struct eeepc_laptop *eeepc)
+>  {
+>  	int result;
+> 
+> -	eeepc->platform_device = platform_device_alloc(EEEPC_LAPTOP_FILE, -1);
+> +	eeepc->platform_device = platform_device_alloc(EEEPC_LAPTOP_FILE, PLATFORM_DEVID_NONE);
+>  	if (!eeepc->platform_device)
+>  		return -ENOMEM;
+>  	platform_set_drvdata(eeepc->platform_device, eeepc);
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 80929380ec7e..b543d117b12c 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -543,7 +543,7 @@ static int fujitsu_laptop_platform_add(struct acpi_device *device)
+>  	struct fujitsu_laptop *priv = acpi_driver_data(device);
+>  	int ret;
+> 
+> -	priv->pf_device = platform_device_alloc("fujitsu-laptop", -1);
+> +	priv->pf_device = platform_device_alloc("fujitsu-laptop", PLATFORM_DEVID_NONE);
+>  	if (!priv->pf_device)
+>  		return -ENOMEM;
+> 
+> diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
+> index 9996485f5295..f11f726d2062 100644
+> --- a/drivers/platform/x86/hdaps.c
+> +++ b/drivers/platform/x86/hdaps.c
+> @@ -547,7 +547,7 @@ static int __init hdaps_init(void)
+>  	if (ret)
+>  		goto out_region;
+> 
+> -	pdev = platform_device_register_simple("hdaps", -1, NULL, 0);
+> +	pdev = platform_device_register_simple("hdaps", PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(pdev)) {
+>  		ret = PTR_ERR(pdev);
+>  		goto out_driver;
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index da0d25c67e57..627a6d0eaf83 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -1519,7 +1519,7 @@ static int __init hp_wmi_init(void)
+> 
+>  	if (bios_capable) {
+>  		hp_wmi_platform_dev =
+> -			platform_device_register_simple("hp-wmi", -1, NULL, 0);
+> +			platform_device_register_simple("hp-wmi", PLATFORM_DEVID_NONE, NULL, 0);
+>  		if (IS_ERR(hp_wmi_platform_dev)) {
+>  			err = PTR_ERR(hp_wmi_platform_dev);
+>  			goto err_destroy_input;
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> index eac3e6b4ea11..5873c2663a65 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -871,7 +871,7 @@ static __init int huawei_wmi_init(void)
+>  	if (err)
+>  		goto pdrv_err;
+> 
+> -	pdev = platform_device_register_simple("huawei-wmi", -1, NULL, 0);
+> +	pdev = platform_device_register_simple("huawei-wmi", PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(pdev)) {
+>  		err = PTR_ERR(pdev);
+>  		goto pdev_err;
+> diff --git a/drivers/platform/x86/intel/oaktrail.c b/drivers/platform/x86/intel/oaktrail.c
+> index 1a09a75bd16d..7c5c623630c1 100644
+> --- a/drivers/platform/x86/intel/oaktrail.c
+> +++ b/drivers/platform/x86/intel/oaktrail.c
+> @@ -317,7 +317,7 @@ static int __init oaktrail_init(void)
+>  		goto err_driver_reg;
+>  	}
+> 
+> -	oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
+> +	oaktrail_device = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
+>  	if (!oaktrail_device) {
+>  		pr_warn("Unable to allocate platform device\n");
+>  		ret = -ENOMEM;
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index 5e072a0666f4..2fac05a17a5c 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -5181,7 +5181,7 @@ static int __init mlxplat_init(void)
+>  	if (!dmi_check_system(mlxplat_dmi_table))
+>  		return -ENODEV;
+> 
+> -	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, -1,
+> +	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, PLATFORM_DEVID_NONE,
+>  					mlxplat_lpc_resources,
+>  					ARRAY_SIZE(mlxplat_lpc_resources));
+> 
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index 2f850396e9a7..6b18ec543ac3 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -1066,7 +1066,7 @@ static int __init msi_init(void)
+> 
+>  	/* Register platform stuff */
+> 
+> -	msipf_device = platform_device_alloc("msi-laptop-pf", -1);
+> +	msipf_device = platform_device_alloc("msi-laptop-pf", PLATFORM_DEVID_NONE);
+>  	if (!msipf_device) {
+>  		ret = -ENOMEM;
+>  		goto fail_platform_driver;
+> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+> index d9a095d2c0eb..ad3083f9946d 100644
+> --- a/drivers/platform/x86/panasonic-laptop.c
+> +++ b/drivers/platform/x86/panasonic-laptop.c
+> @@ -1034,7 +1034,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+>  	/* optical drive initialization */
+>  	if (ACPI_SUCCESS(check_optd_present())) {
+>  		pcc->platform = platform_device_register_simple("panasonic",
+> -			-1, NULL, 0);
+> +			PLATFORM_DEVID_NONE, NULL, 0);
+>  		if (IS_ERR(pcc->platform)) {
+>  			result = PTR_ERR(pcc->platform);
+>  			goto out_backlight;
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+> index cc30cf08f32d..b4aa8ba35d2d 100644
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -1474,7 +1474,7 @@ static int __init samsung_platform_init(struct samsung_laptop *samsung)
+>  {
+>  	struct platform_device *pdev;
+> 
+> -	pdev = platform_device_register_simple("samsung", -1, NULL, 0);
+> +	pdev = platform_device_register_simple("samsung", PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(pdev))
+>  		return PTR_ERR(pdev);
+> 
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index 07ef05f727a2..765fcaba4d12 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -584,7 +584,7 @@ static int sony_pf_add(void)
+>  	if (ret)
+>  		goto out;
+> 
+> -	sony_pf_device = platform_device_alloc("sony-laptop", -1);
+> +	sony_pf_device = platform_device_alloc("sony-laptop", PLATFORM_DEVID_NONE);
+>  	if (!sony_pf_device) {
+>  		ret = -ENOMEM;
+>  		goto out_platform_registered;
+> diff --git a/drivers/platform/x86/tc1100-wmi.c b/drivers/platform/x86/tc1100-wmi.c
+> index 9072eb302618..ded26213c420 100644
+> --- a/drivers/platform/x86/tc1100-wmi.c
+> +++ b/drivers/platform/x86/tc1100-wmi.c
+> @@ -233,7 +233,7 @@ static int __init tc1100_init(void)
+>  	if (!wmi_has_guid(GUID))
+>  		return -ENODEV;
+> 
+> -	tc1100_device = platform_device_alloc("tc1100-wmi", -1);
+> +	tc1100_device = platform_device_alloc("tc1100-wmi", PLATFORM_DEVID_NONE);
+>  	if (!tc1100_device)
+>  		return -ENOMEM;
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 8fbe21ebcc52..6a823b850a77 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -11715,7 +11715,7 @@ static int __init thinkpad_acpi_module_init(void)
+>  		tp_features.quirks = dmi_id->driver_data;
+> 
+>  	/* Device initialization */
+> -	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, -1,
+> +	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, PLATFORM_DEVID_NONE,
+>  							NULL, 0);
+>  	if (IS_ERR(tpacpi_pdev)) {
+>  		ret = PTR_ERR(tpacpi_pdev);
+> @@ -11726,7 +11726,7 @@ static int __init thinkpad_acpi_module_init(void)
+>  	}
+>  	tpacpi_sensors_pdev = platform_device_register_simple(
+>  						TPACPI_HWMON_DRVR_NAME,
+> -						-1, NULL, 0);
+> +						PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(tpacpi_sensors_pdev)) {
+>  		ret = PTR_ERR(tpacpi_sensors_pdev);
+>  		tpacpi_sensors_pdev = NULL;
+> diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
+> index f7761d98c0fd..6d18fbf8762b 100644
+> --- a/drivers/platform/x86/topstar-laptop.c
+> +++ b/drivers/platform/x86/topstar-laptop.c
+> @@ -192,7 +192,7 @@ static int topstar_platform_init(struct topstar_laptop *topstar)
+>  {
+>  	int err;
+> 
+> -	topstar->platform = platform_device_alloc(TOPSTAR_LAPTOP_CLASS, -1);
+> +	topstar->platform = platform_device_alloc(TOPSTAR_LAPTOP_CLASS, PLATFORM_DEVID_NONE);
+>  	if (!topstar->platform)
+>  		return -ENOMEM;
+> 
+> diff --git a/drivers/platform/x86/winmate-fm07-keys.c b/drivers/platform/x86/winmate-fm07-keys.c
+> index 2c90c5c7eca2..465ffad81a65 100644
+> --- a/drivers/platform/x86/winmate-fm07-keys.c
+> +++ b/drivers/platform/x86/winmate-fm07-keys.c
+> @@ -161,7 +161,7 @@ static int __init fm07keys_init(void)
+>  		return ret;
+>  	}
+> 
+> -	dev = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+> +	dev = platform_device_register_simple(DRV_NAME, PLATFORM_DEVID_NONE, NULL, 0);
+>  	if (IS_ERR(dev)) {
+>  		ret = PTR_ERR(dev);
+>  		pr_err("fm07keys: failed to allocate device, err = %d\n", ret);
+> --
+> 2.37.3
+> 
+> 
 
