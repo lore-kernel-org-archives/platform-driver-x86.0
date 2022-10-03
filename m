@@ -2,151 +2,283 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA60EC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Oct 2022 11:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8711C43219
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Oct 2022 11:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiJCLw5 (ORCPT
+        id S229696AbiJCL4d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Oct 2022 07:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
+        Mon, 3 Oct 2022 07:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbiJCLw4 (ORCPT
+        with ESMTP id S229482AbiJCL43 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Oct 2022 07:52:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6A8481CB
-        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Oct 2022 04:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664797969;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nr6+vnW8DvOFip9yfzTRKftATIpSoYVhrZMNiUm1YqI=;
-        b=XDvfZs8VilQhG+RIRzxOQNAMLNwK5BIn1e3n2CS2+brK3WolCe/lgCs7pCoMf3YN90IKlo
-        Mlh3WlKPf5JmMJU9nI79qJ/HvF9zABQ2l3EqLid3hAhoMol4FWrdejGdSI6AnwMSshn8yU
-        gdUWc5cc/1haPXcxmZ++fHrtLjnoSis=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-145-q7bFumB9NKWqD-wIbLpcMQ-1; Mon, 03 Oct 2022 07:52:48 -0400
-X-MC-Unique: q7bFumB9NKWqD-wIbLpcMQ-1
-Received: by mail-ed1-f71.google.com with SMTP id z16-20020a05640235d000b0045485e4a5e0so8632647edc.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Oct 2022 04:52:48 -0700 (PDT)
+        Mon, 3 Oct 2022 07:56:29 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C30D4F1A5;
+        Mon,  3 Oct 2022 04:56:28 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id k12so6355263qkj.8;
+        Mon, 03 Oct 2022 04:56:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Nr6+vnW8DvOFip9yfzTRKftATIpSoYVhrZMNiUm1YqI=;
-        b=od8zd3WDMVaakQ9umSft4+XQ5TpA4IerT1xvhaeMnKTEWBLNLdz1HE6x8tAdSFZIDB
-         MIolTu1Ned0znVfUlhCa1AnJry/afUxw5vFTqhdUymLC7IGdWVZoPkQAN/mk06FG03fQ
-         sSHFyP+Ims1jah0qEms5CVhbCQUYdX0+GW//WMuuHfr97TGHIWoRrau0XgQvsf8/KFEr
-         acRDlyZuPmkwOrZ48EbJdobD3eEMJHT7WwDuoPc/9zzVQztymJKxOOmcW7CAf3qQDls4
-         Jjx3nCZSQiGSC6DRpmHnerNIUpEUVYnV8vBG9Zpe4c2x1yia0ULwhWsfdNpwiHj9SqDG
-         RcpA==
-X-Gm-Message-State: ACrzQf2zroJix4p6DQbr3g1HIq5i2RxTF4p1HUoJIeKtjhfqpsr9XLmg
-        if+Vowbj1N8gUh2A5JYm59gqJnKO0Qo+wXbDsFZCmMG1bRc8IUKgrC3Zo2iRFnc3yOwQ/GkkSFn
-        Q/OmAjEtsOwOOGwEQRMiu8II8tRw6GnnJKg==
-X-Received: by 2002:a17:907:271b:b0:789:fbc5:c4aa with SMTP id w27-20020a170907271b00b00789fbc5c4aamr6315163ejk.443.1664797967274;
-        Mon, 03 Oct 2022 04:52:47 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6hNEZuGzto1WGGrP0h9867sUWNMdIwEq6zQeCMRdNZYdzgF1VcwF2VNhtVjTlmyrtK6C1m6Q==
-X-Received: by 2002:a17:907:271b:b0:789:fbc5:c4aa with SMTP id w27-20020a170907271b00b00789fbc5c4aamr6315145ejk.443.1664797967093;
-        Mon, 03 Oct 2022 04:52:47 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ek12-20020a056402370c00b004587f9d3ce8sm6817071edb.56.2022.10.03.04.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Oct 2022 04:52:46 -0700 (PDT)
-Message-ID: <e6fe6c86-134d-e27b-2153-5ce81d26f19c@redhat.com>
-Date:   Mon, 3 Oct 2022 13:52:45 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WitNOf6WBeNmu77lsn7kACwTyf0tIcs7nBCxwgdcQsc=;
+        b=JblJdVZJHNu6dAYBd986ggG1XshqKu8jN1X+Qn2hlyLhPN2gS8TNzbZtbaNFNjDzcv
+         EtLliRJuX+F7coOo30/Gz1iuALGngevAgNUuNAdIrSBVGTEGui87K3UYIuA5e2whJoIo
+         YZoRVWjGSJOtVqpV5mRuv9PNPkJLGaTLhvbrib9u1xEtS1bqGI1aDIQiANXk0yHOOQds
+         kdnD2elzyBnFlY4ioj2Li2n4un8Q3j/T0NjgDOoQlllUClVdsZ1AYsjafjrOr9iNftog
+         1/1tdRWufXIiCzkPJjobiHrgAMieARYDijI6vz4NpU6xzCaN05JgRUMhN4/mBc6JyoWd
+         7d8w==
+X-Gm-Message-State: ACrzQf3kTj098frc7SX25UM5LpS63QIKdIflauM+RFYJY8QtL66c+tNx
+        u0suCzAEHebQ8P8SeMhVxBcIf7YV0RuYjoZNdhY=
+X-Google-Smtp-Source: AMsMyM6gK4Lpk9U29mVa1xe8BWRFfH9VFbqDWp91XeWepB1sC9vs6HtLeg7T4HHwhuWsguU1iWWGBGWooT36YUjNN0U=
+X-Received: by 2002:a37:a907:0:b0:6cb:be29:ac72 with SMTP id
+ s7-20020a37a907000000b006cbbe29ac72mr13323935qke.505.1664798187356; Mon, 03
+ Oct 2022 04:56:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH] platform/x86/amd: pmc: Dump idle mask during "check"
- stage instead
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220929215042.745-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220929215042.745-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20221003092602.1323944-1-daniel.lezcano@linaro.org> <20221003092602.1323944-4-daniel.lezcano@linaro.org>
+In-Reply-To: <20221003092602.1323944-4-daniel.lezcano@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 3 Oct 2022 13:56:16 +0200
+Message-ID: <CAJZ5v0jjHH1S=+i2i=TOERtgEmxFmm_SAJBXEwoJunQATH3pLQ@mail.gmail.com>
+Subject: Re: [PATCH v8 03/29] thermal/core: Add a generic thermal_zone_set_trip()
+ function
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, rui.zhang@intel.com,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Mon, Oct 3, 2022 at 11:26 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The thermal zone ops defines a set_trip callback where we can invoke
+> the backend driver to set an interrupt for the next trip point
+> temperature being crossed the way up or down, or setting the low level
+> with the hysteresis.
+>
+> The ops is only called from the thermal sysfs code where the userspace
+> has the ability to modify a trip point characteristic.
+>
+> With the effort of encapsulating the thermal framework core code,
+> let's create a thermal_zone_set_trip() which is the writable side of
+> the thermal_zone_get_trip() and put there all the ops encapsulation.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-On 9/29/22 23:50, Mario Limonciello wrote:
-> The idle mask is dumped during the "prepare" and "restore" stage
-> right now, which helps to demonstrate issues only related to the
-> first s2idle entry.
-> 
-> If the system has entered s2idle once, but was woken up never
-> breaking the s2idle loop but also never went back to sleep we
-> might still have another issue to deal with however.
-> 
-> Move the dynamic debugging message here so that we'll catch it on
-> each iteration.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216516
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
 > ---
->  drivers/platform/x86/amd/pmc.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 047e47449ff93..ce859b300712b 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -719,8 +719,6 @@ static void amd_pmc_s2idle_prepare(void)
->  		}
->  	}
->  
-> -	/* Dump the IdleMask before we send hint to SMU */
-> -	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
->  	msg = amd_pmc_get_os_hint(pdev);
->  	rc = amd_pmc_send_cmd(pdev, arg, NULL, msg, 0);
->  	if (rc) {
-> @@ -738,6 +736,9 @@ static void amd_pmc_s2idle_check(void)
->  	struct amd_pmc_dev *pdev = &pmc;
->  	int rc;
->  
-> +	/* Dump the IdleMask before we add to the STB */
-> +	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+>  V8:
+>    - pretty one line condition and parenthesis removal (Rafael J. Wysocki)
+> ---
+>  drivers/thermal/thermal_core.c  | 46 +++++++++++++++++++++++++++++
+>  drivers/thermal/thermal_sysfs.c | 52 +++++++++++----------------------
+>  include/linux/thermal.h         |  3 ++
+>  3 files changed, 66 insertions(+), 35 deletions(-)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 16ef91dc102f..3a9915824e67 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -1211,6 +1211,52 @@ int thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+>  }
+>  EXPORT_SYMBOL_GPL(thermal_zone_get_trip);
+>
+> +int thermal_zone_set_trip(struct thermal_zone_device *tz, int trip_id,
+> +                         const struct thermal_trip *trip)
+> +{
+> +       struct thermal_trip t;
+> +       int ret = -EINVAL;
 > +
->  	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_CHECK);
->  	if (rc)
->  		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
-> @@ -757,9 +758,6 @@ static void amd_pmc_s2idle_restore(void)
->  	/* Let SMU know that we are looking for stats */
->  	amd_pmc_send_cmd(pdev, 0, NULL, SMU_MSG_LOG_DUMP_DATA, 0);
->  
-> -	/* Dump the IdleMask to see the blockers */
-> -	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+> +       mutex_lock(&tz->lock);
+> +
+> +       if (!tz->ops->set_trip_temp && !tz->ops->set_trip_hyst && !tz->trips)
+> +               goto out;
+> +
+> +       ret = __thermal_zone_get_trip(tz, trip_id, &t);
+> +       if (ret)
+> +               goto out;
+> +
+> +       if (t.type != trip->type) {
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+> +
+> +       if (t.temperature != trip->temperature && tz->ops->set_trip_temp) {
+> +               ret = tz->ops->set_trip_temp(tz, trip_id, trip->temperature);
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +
+> +       if (t.hysteresis != trip->hysteresis && tz->ops->set_trip_hyst) {
+> +               ret = tz->ops->set_trip_hyst(tz, trip_id, trip->hysteresis);
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +
+> +       if (tz->trips && (t.temperature != trip->temperature || t.hysteresis != trip->hysteresis))
+> +               tz->trips[trip_id] = *trip;
+> +out:
+> +       mutex_unlock(&tz->lock);
+> +
+> +       if (!ret) {
+> +               thermal_notify_tz_trip_change(tz->id, trip_id, trip->type,
+> +                                             trip->temperature, trip->hysteresis);
+> +               thermal_zone_device_update(tz, THERMAL_TRIP_CHANGED);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  /**
+>   * thermal_zone_device_register_with_trips() - register a new thermal zone device
+>   * @type:      the thermal zone device type
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> index 6c45194aaabb..8d7b25ab67c2 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -115,32 +115,19 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
+>         struct thermal_trip trip;
+>         int trip_id, ret;
+>
+> -       if (!tz->ops->set_trip_temp && !tz->trips)
+> -               return -EPERM;
 > -
->  	rc = amd_pmc_write_stb(pdev, AMD_PMC_STB_S2IDLE_RESTORE);
->  	if (rc)
->  		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
-
+>         if (sscanf(attr->attr.name, "trip_point_%d_temp", &trip_id) != 1)
+>                 return -EINVAL;
+>
+> -       if (kstrtoint(buf, 10, &trip.temperature))
+> -               return -EINVAL;
+> -
+> -       if (tz->ops->set_trip_temp) {
+> -               ret = tz->ops->set_trip_temp(tz, trip_id, trip.temperature);
+> -               if (ret)
+> -                       return ret;
+> -       }
+> -
+> -       if (tz->trips)
+> -               tz->trips[trip_id].temperature = trip.temperature;
+> -
+>         ret = thermal_zone_get_trip(tz, trip_id, &trip);
+>         if (ret)
+>                 return ret;
+>
+> -       thermal_notify_tz_trip_change(tz->id, trip_id, trip.type,
+> -                                     trip.temperature, trip.hysteresis);
+> +       if (kstrtoint(buf, 10, &trip.temperature))
+> +               return -EINVAL;
+>
+> -       thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+> +       ret = thermal_zone_set_trip(tz, trip_id, &trip);
+> +       if (ret)
+> +               return ret;
+>
+>         return count;
+>  }
+> @@ -168,29 +155,24 @@ trip_point_hyst_store(struct device *dev, struct device_attribute *attr,
+>                       const char *buf, size_t count)
+>  {
+>         struct thermal_zone_device *tz = to_thermal_zone(dev);
+> -       int trip, ret;
+> -       int temperature;
+> -
+> -       if (!tz->ops->set_trip_hyst)
+> -               return -EPERM;
+> +       struct thermal_trip trip;
+> +       int trip_id, ret;
+>
+> -       if (sscanf(attr->attr.name, "trip_point_%d_hyst", &trip) != 1)
+> +       if (sscanf(attr->attr.name, "trip_point_%d_hyst", &trip_id) != 1)
+>                 return -EINVAL;
+>
+> -       if (kstrtoint(buf, 10, &temperature))
+> -               return -EINVAL;
+> +       ret = thermal_zone_get_trip(tz, trip_id, &trip);
+> +       if (ret)
+> +               return ret;
+>
+> -       /*
+> -        * We are not doing any check on the 'temperature' value
+> -        * here. The driver implementing 'set_trip_hyst' has to
+> -        * take care of this.
+> -        */
+> -       ret = tz->ops->set_trip_hyst(tz, trip, temperature);
+> +       if (kstrtoint(buf, 10, &trip.hysteresis))
+> +               return -EINVAL;
+>
+> -       if (!ret)
+> -               thermal_zone_set_trips(tz);
+> +       ret = thermal_zone_set_trip(tz, trip_id, &trip);
+> +       if (ret)
+> +               return ret;
+>
+> -       return ret ? ret : count;
+> +       return count;
+>  }
+>
+>  static ssize_t
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index feb8b61df746..66373f872237 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -338,6 +338,9 @@ static inline void devm_thermal_of_zone_unregister(struct device *dev,
+>  int thermal_zone_get_trip(struct thermal_zone_device *tz, int trip_id,
+>                           struct thermal_trip *trip);
+>
+> +int thermal_zone_set_trip(struct thermal_zone_device *tz, int trip_id,
+> +                         const struct thermal_trip *trip);
+> +
+>  int thermal_zone_get_num_trips(struct thermal_zone_device *tz);
+>
+>  int thermal_zone_get_crit_temp(struct thermal_zone_device *tz, int *temp);
+> --
+> 2.34.1
+>
