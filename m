@@ -2,101 +2,340 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73AC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Oct 2022 14:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A606DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Oct 2022 21:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiJDOLn (ORCPT
+        id S229539AbiJDVte (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Oct 2022 10:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54256 "EHLO
+        Tue, 4 Oct 2022 17:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbiJDOLl (ORCPT
+        with ESMTP id S229849AbiJDVt2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Oct 2022 10:11:41 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388426069C;
-        Tue,  4 Oct 2022 07:11:39 -0700 (PDT)
-Received: by mail-qv1-f41.google.com with SMTP id mx8so2375936qvb.8;
-        Tue, 04 Oct 2022 07:11:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EnBu8K7AOZssFSbSI2QGdkhNZmJjOZGjT3MpjFppNq0=;
-        b=OIN3dvz15VXlMpu4yHWg/MnW7ax+ZEXtP12bZ7tV3vgwAS49lPfgXPWRO65KuoT5zL
-         H2qqHVAeuvW06+u+H2ymTOTpBKhtkCIJRxIr6/Nb5K5FsVIhpH1N5dFQwooP6Rg7gb1n
-         d6q81/m3u9+ijuATaKio+3H2U88UtyNGpEjUtAp+vPiYr+gSER7v2zscJdpPYlLUM8rQ
-         YckS5ZhQiEPSk4bXNakQE3WXxQQ6bU5eKquAUm8YLslyxjeoT4kWFBJmLBKnsWnMxLAJ
-         CdPAgKF7nKEs82hg20hmXfHPOVNHWgcCluV35unuAYI+t9V/AE1LoBBH9s8XJoPiy1fa
-         GVUA==
-X-Gm-Message-State: ACrzQf0ux/S4ygmS4PWxmIjoqDXG3nXsBkO3URZrEICH8yJxXsJnr6NV
-        6XnZ3T8goySYcxVgJXp/jZQEBH2XFPo8vgZ92Q9vtMlZ
-X-Google-Smtp-Source: AMsMyM4OUKDamdB7dsx92fVIhxHYNjPPPNJWLJ8rypOA5LGNRT7ramr/4nkjgI6EJrWmZgltp8HhRspGKUMJr2/RVdg=
-X-Received: by 2002:ad4:5beb:0:b0:4af:96ab:21e5 with SMTP id
- k11-20020ad45beb000000b004af96ab21e5mr20002445qvc.85.1664892698328; Tue, 04
- Oct 2022 07:11:38 -0700 (PDT)
+        Tue, 4 Oct 2022 17:49:28 -0400
+X-Greylist: delayed 310 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 04 Oct 2022 14:49:26 PDT
+Received: from irl.hu (irl.hu [95.85.9.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F0B138
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Oct 2022 14:49:26 -0700 (PDT)
+Received: from localhost.localdomain (94-21-199-117.pool.digikabel.hu [::ffff:94.21.199.117])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 000000000006FE1B.00000000633CA92E.001AE9AD; Tue, 04 Oct 2022 23:44:14 +0200
+From:   Gergo Koteles <soyer@irl.hu>
+To:     platform-driver-x86@vger.kernel.org, dwmw2@infradead.org
+Cc:     Gergo Koteles <soyer@irl.hu>
+Subject: [RFC PATCH] Add Lenovo Yoga Mode Control driver
+Date:   Tue,  4 Oct 2022 23:43:32 +0200
+Message-Id: <20221004214332.35934-1-soyer@irl.hu>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-References: <20221004122636.61755-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221004122636.61755-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 4 Oct 2022 16:11:27 +0200
-Message-ID: <CAJZ5v0j-V3gG3ADr9OigPsK0Rf9Ygd4KdEAkW=re3sd2gf_Awg@mail.gmail.com>
-Subject: Re: [resend, PATCH v1 1/1] platform/x86: int3472: Don't leak
- reference on error
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 4, 2022 at 2:26 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The for_each_acpi_consumer_dev() takes a reference to the iterator
-> and if we break a loop we must drop that reference. This usually
-> happens when error handling is involved. However it's not the case
-> for skl_int3472_fill_clk_pdata().
->
-> Don't leak reference on error by dropping it properly.
->
-> Fixes: 43cf36974d76 ("platform/x86: int3472: Support multiple clock consumers")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->
-> resent to include Rafael and linux-acpi@ to the Cc list
->
->  drivers/platform/x86/intel/int3472/tps68470.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index f83e9c393f31..5b8d1a9620a5 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -128,15 +128,15 @@ skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data
->         for_each_acpi_consumer_dev(adev, consumer) {
->                 sensor_name = devm_kasprintf(dev, GFP_KERNEL, I2C_DEV_NAME_FORMAT,
->                                              acpi_dev_name(consumer));
-> -               if (!sensor_name)
-> +               if (!sensor_name) {
-> +                       acpi_dev_put(consumer);
->                         return -ENOMEM;
-> +               }
->
->                 (*clk_pdata)->consumers[i].consumer_dev_name = sensor_name;
->                 i++;
->         }
->
-> -       acpi_dev_put(consumer);
-> -
->         return n_consumers;
->  }
->
-> --
+This is a WMI driver for the Mode Control switch for Lenovo Yoga
+notebooks.
+The mode is mapped to a SW_TABLET_MODE switch capable input device.
 
-Applied, thanks!
+It should work with  models like the Yoga C940, Ideapad flex 14API,
+Yoga 9 14IAP7, Yoga 7 14ARB7.
+The 14ARB7 model must trigger the EC to send mode change events.
+This might be a firmware bug.
+
+Introduces a global variable in the ideapad-laptop driver.
+I would like some advice on how to do it without the variable,
+or how to do it better.
+---
+ drivers/platform/x86/Kconfig          |  10 ++
+ drivers/platform/x86/Makefile         |   1 +
+ drivers/platform/x86/ideapad-laptop.c |  18 +++
+ drivers/platform/x86/lenovo-ymc.c     | 185 ++++++++++++++++++++++++++
+ 4 files changed, 214 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-ymc.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index f2f98e942cf2..72ff6713e447 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -510,6 +510,16 @@ config IDEAPAD_LAPTOP
+ 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
+ 	  rfkill switch, hotkey, fan control and backlight control.
+ 
++config LENOVO_YMC
++	tristate "Lenovo Yoga Mode Control"
++	depends on ACPI_WMI
++	depends on INPUT
++	depends on IDEAPAD_LAPTOP
++	select ACPI_PLATFORM_PROFILE
++	select INPUT_SPARSEKMAP
++	help
++	  This is a driver for the Mode Control switch for Lenovo Yoga notebooks.
++
+ config SENSORS_HDAPS
+ 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
+ 	depends on INPUT
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 5a428caa654a..f8f0d6a0b43b 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -65,6 +65,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
+ # IBM Thinkpad and Lenovo
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+ obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
++obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
+ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index abd0c81d62c4..d88a4ee72bf6 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -103,6 +103,7 @@ enum {
+ 	VPCCMD_W_FAN,
+ 	VPCCMD_R_RF,
+ 	VPCCMD_W_RF,
++	VPCCMD_W_YMC = 0x2A,
+ 	VPCCMD_R_FAN = 0x2B,
+ 	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
+ 	VPCCMD_W_BL_POWER = 0x33,
+@@ -156,6 +157,8 @@ static bool allow_v4_dytc;
+ module_param(allow_v4_dytc, bool, 0444);
+ MODULE_PARM_DESC(allow_v4_dytc, "Enable DYTC version 4 platform-profile support.");
+ 
++static struct ideapad_private *ideapad_priv;
++
+ /*
+  * ACPI Helpers
+  */
+@@ -1421,6 +1424,19 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
+ 	}
+ }
+ 
++void ideapad_trigger_ymc_next_read(void)
++{
++	int err;
++	if (ideapad_priv != NULL) {
++		err = write_ec_cmd(ideapad_priv->adev->handle,
++			VPCCMD_W_YMC, 1);
++		if (err)
++			dev_warn(&ideapad_priv->platform_device->dev,
++				"Could not write YMC: %d\n", err);
++	}
++}
++EXPORT_SYMBOL(ideapad_trigger_ymc_next_read);
++
+ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ {
+ 	struct ideapad_private *priv = data;
+@@ -1663,6 +1679,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	}
+ #endif
+ 
++	ideapad_priv = priv;
+ 	return 0;
+ 
+ #if IS_ENABLED(CONFIG_ACPI_WMI)
+@@ -1696,6 +1713,7 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
+ 	struct ideapad_private *priv = dev_get_drvdata(&pdev->dev);
+ 	int i;
+ 
++	ideapad_priv = NULL;
+ #if IS_ENABLED(CONFIG_ACPI_WMI)
+ 	if (priv->fnesc_guid)
+ 		wmi_remove_notify_handler(priv->fnesc_guid);
+diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+new file mode 100644
+index 000000000000..0b899b02e12f
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-ymc.c
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * lenovo-ymc.c - Lenovo Yoga Mode Control driver
++ *
++ * Copyright © 2022 Gergo Koteles <soyer@irl.hu>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/dmi.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/wmi.h>
++
++#define LENOVO_YMC_EVENT_GUID	"06129D99-6083-4164-81AD-F092F9D773A6"
++#define LENOVO_YMC_QUERY_GUID	"09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C"
++
++#define LENOVO_YMC_QUERY_INSTANCE 0
++#define LENOVO_YMC_QUERY_METHOD 0xAB
++
++extern void ideapad_trigger_ymc_next_read(void);
++
++static bool ec_trigger __read_mostly;
++module_param(ec_trigger, bool, 0644);
++MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events");
++
++static int enable_ec_trigger(const struct dmi_system_id *id)
++{
++       pr_debug("Lenovo YMC enable EC triggering.\n");
++       ec_trigger = true;
++       return 0;
++}
++
++static const struct dmi_system_id ec_trigger_quirk_dmi_table[] = {
++	{
++		// Lenovo Yoga 7 14ARB7
++		.callback = enable_ec_trigger,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
++		},
++	},
++	{ },
++};
++
++static void lenovo_ymc_trigger_ec(void) {
++	if (ec_trigger) {
++		ideapad_trigger_ymc_next_read();
++	}
++}
++
++
++struct lenovo_ymc_private {
++	struct input_dev *input_dev;
++};
++
++
++static const struct key_entry lenovo_ymc_keymap[] = {
++	// Laptop
++	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
++	// Tablet
++	{ KE_SW, 0x02, { .sw = { SW_TABLET_MODE, 1 } } },
++	// Drawing Board
++	{ KE_SW, 0x03, { .sw = { SW_TABLET_MODE, 1 } } },
++	// Tent
++	{ KE_SW, 0x04, { .sw = { SW_TABLET_MODE, 1 } } },
++	{ KE_END },
++};
++
++static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
++{
++	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
++
++	u32 input_val = 0;
++	struct acpi_buffer input = {sizeof(input), &input_val};
++	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
++	acpi_status status;
++	union acpi_object *obj;
++	int code;
++
++	status = wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
++				LENOVO_YMC_QUERY_INSTANCE,
++				LENOVO_YMC_QUERY_METHOD,
++				&input, &output);
++
++	if (ACPI_FAILURE(status)) {
++		dev_warn(&wdev->dev,
++			"Failed to evaluate query method %ud\n", status);
++		return;
++	}
++
++	obj = (union acpi_object *)output.pointer;
++
++	if (obj->type != ACPI_TYPE_INTEGER) {
++		dev_warn(&wdev->dev,
++			"WMI event data is not an integer\n");
++		goto free_obj;
++	}
++	code = obj->integer.value;
++
++	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
++		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
++
++free_obj:
++	kfree(obj);
++	lenovo_ymc_trigger_ec();
++}
++
++static void lenovo_ymc_remove(struct wmi_device *wdev)
++{
++	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
++
++	input_unregister_device(priv->input_dev);
++}
++
++static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
++{
++	struct input_dev *input_dev;
++	struct lenovo_ymc_private *priv;
++	int err;
++
++	dmi_check_system(ec_trigger_quirk_dmi_table);
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	input_dev = input_allocate_device();
++	if (!input_dev) {
++		return -ENOMEM;
++	}
++
++	input_dev->name = "Lenovo Yoga Mode Control switch";
++	input_dev->phys = LENOVO_YMC_EVENT_GUID "/input0";
++	input_dev->id.bustype = BUS_HOST;
++	input_dev->dev.parent = &wdev->dev;
++
++	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
++
++	err = sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
++	if (err) {
++		dev_err(&wdev->dev,
++			"Could not set up input device keymap: %d\n", err);
++		goto err_free_dev;
++	}
++
++	err = input_register_device(input_dev);
++	if (err) {
++		dev_err(&wdev->dev,
++			"Could not register input device: %d\n", err);
++		goto err_free_dev;
++	}
++
++	priv->input_dev = input_dev;
++	dev_set_drvdata(&wdev->dev, priv);
++	lenovo_ymc_trigger_ec();
++	return 0;
++
++err_free_dev:
++	input_free_device(input_dev);
++	return err;
++}
++
++static const struct wmi_device_id lenovo_ymc_wmi_id_table[] = {
++	{ .guid_string = LENOVO_YMC_EVENT_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, lenovo_ymc_wmi_id_table);
++
++static struct wmi_driver lenovo_ymc_driver = {
++	.driver = {
++		.name = "lenovo-ymc",
++	},
++	.id_table = lenovo_ymc_wmi_id_table,
++	.probe = lenovo_ymc_probe,
++	.remove = lenovo_ymc_remove,
++	.notify = lenovo_ymc_notify,
++};
++
++module_wmi_driver(lenovo_ymc_driver);
++
++MODULE_AUTHOR("Gergo Koteles <soyer@irl.hu>");
++MODULE_DESCRIPTION("Lenovo Yoga Mode Control driver");
++MODULE_LICENSE("GPL");
+-- 
+2.37.3
+
