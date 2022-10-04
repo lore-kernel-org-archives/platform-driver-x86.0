@@ -2,232 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15BFC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Oct 2022 08:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186CBC433F5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Oct 2022 12:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbiJDItH (ORCPT
+        id S229581AbiJDMYp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Oct 2022 04:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
+        Tue, 4 Oct 2022 08:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230304AbiJDItF (ORCPT
+        with ESMTP id S229710AbiJDMYn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Oct 2022 04:49:05 -0400
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9524A10F;
-        Tue,  4 Oct 2022 01:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LiAbRkAexfNIkeNb/y4I//H9Ig3RPY6KfEDNNseQzrY=;
-  b=L3ZXJpBjPxOf6M8wKP45P3tnFKMVN0Mg44ivRbe2vQtlCwc/O9RiJpAK
-   1zM3MugsDDY2DAS4bnv6wvhrXlZrJbHX7o657CYBqY1HwgaBjz3o8ffPI
-   QfjJWGDyrMhjz0dlNqamcMP+LqlTXZFfTLInTtYEmoChnWkkHoRoxGfc2
-   4=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.93,367,1654552800"; 
-   d="scan'208";a="25403802"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 10:49:01 +0200
-Date:   Tue, 4 Oct 2022 10:49:00 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
-cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Tue, 4 Oct 2022 08:24:43 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436FE6342;
+        Tue,  4 Oct 2022 05:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664886282; x=1696422282;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SJ09/JMn8unIFQin7GqhIUUde5CDgaLhkNu2ObIMw2E=;
+  b=NWx8t1W21MBfp/ZCkKWBxwlkZOnq/557tLPJ3BDPS+D7qDxyfe2ndl0+
+   chtJtuQWGZ+9Vm9AyjxEEH33HBLIilktdlnuPVqkwpIp3KZbEEZhvD0y6
+   vJoYE6v2j4yiRybn8kaoA0lktjUvsx9AuNRGhHZ/uTDnxfAPIMU8lxwpK
+   Htt/V4aqEd7Qi+7ej/kergWJJrEjLEuD+Tq1lNAX1ltAPnuddZffNn+Dv
+   kXsmO8Wc3iWxVV8j72I4xlQv25nbHMmQuWswRAzD/w8GJxGz2O9qY5j4b
+   6JhwYko9pA/vwnquiC1+tdn3KmiTC6qQJ6pdpTL5dGLupY8Ou0VmU03JQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10489"; a="301616166"
+X-IronPort-AV: E=Sophos;i="5.93,157,1654585200"; 
+   d="scan'208";a="301616166"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 05:24:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10489"; a="686528640"
+X-IronPort-AV: E=Sophos;i="5.93,157,1654585200"; 
+   d="scan'208";a="686528640"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2022 05:24:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 89E3C155; Tue,  4 Oct 2022 15:24:59 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>, kernel@collabora.com,
-        kernel-janitors@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd/pmf: pass the struct by reference
-In-Reply-To: <20221004081019.619193-1-usama.anjum@collabora.com>
-Message-ID: <5ac457fa-3159-849f-e814-b8ae3eae9d17@inria.fr>
-References: <20221004081019.619193-1-usama.anjum@collabora.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: [PATCH v1 1/1] platform/x86: int3472: Don't leak reference on error
+Date:   Tue,  4 Oct 2022 15:24:58 +0300
+Message-Id: <20221004122458.61703-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The for_each_acpi_consumer_dev() takes a reference to the iterator
+and if we break a loop we must drop that reference. This usually
+happens when error handling is involved. However it's not the case
+for skl_int3472_fill_clk_pdata().
 
+Don't leak reference on error by dropping it properly.
 
-On Tue, 4 Oct 2022, Muhammad Usama Anjum wrote:
+Fixes: 43cf36974d76 ("platform/x86: int3472: Support multiple clock consumers")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel/int3472/tps68470.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> The out structure should be passed by reference instead of passing by
-> value. This saves the extra copy of the structure.
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+index f83e9c393f31..5b8d1a9620a5 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.c
++++ b/drivers/platform/x86/intel/int3472/tps68470.c
+@@ -128,15 +128,15 @@ skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data
+ 	for_each_acpi_consumer_dev(adev, consumer) {
+ 		sensor_name = devm_kasprintf(dev, GFP_KERNEL, I2C_DEV_NAME_FORMAT,
+ 					     acpi_dev_name(consumer));
+-		if (!sensor_name)
++		if (!sensor_name) {
++			acpi_dev_put(consumer);
+ 			return -ENOMEM;
++		}
+ 
+ 		(*clk_pdata)->consumers[i].consumer_dev_name = sensor_name;
+ 		i++;
+ 	}
+ 
+-	acpi_dev_put(consumer);
+-
+ 	return n_consumers;
+ }
+ 
+-- 
+2.35.1
 
-This seems like a common issue.  Many of the structures are small, but
-some contain multiple ints, pointers, etc.
-
-julia
-
->
-> Fixes: 1738061c9ec8 ("platform/x86/amd/pmf: Add support for CnQF")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  drivers/platform/x86/amd/pmf/cnqf.c | 92 ++++++++++++++---------------
->  1 file changed, 46 insertions(+), 46 deletions(-)
->
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 668c7c0fea83..3f9731a2ac28 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -158,100 +158,100 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->  	return 0;
->  }
->
-> -static void amd_pmf_update_trans_data(int idx, struct apmf_dyn_slider_output out)
-> +static void amd_pmf_update_trans_data(int idx, struct apmf_dyn_slider_output *out)
->  {
->  	struct cnqf_tran_params *tp;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_TO_QUIET];
-> -	tp->time_constant = out.t_balanced_to_quiet;
-> +	tp->time_constant = out->t_balanced_to_quiet;
->  	tp->target_mode = CNQF_MODE_QUIET;
->  	tp->shifting_up = false;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_BALANCE_TO_PERFORMANCE];
-> -	tp->time_constant = out.t_balanced_to_perf;
-> +	tp->time_constant = out->t_balanced_to_perf;
->  	tp->target_mode = CNQF_MODE_PERFORMANCE;
->  	tp->shifting_up = true;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_QUIET_TO_BALANCE];
-> -	tp->time_constant = out.t_quiet_to_balanced;
-> +	tp->time_constant = out->t_quiet_to_balanced;
->  	tp->target_mode = CNQF_MODE_BALANCE;
->  	tp->shifting_up = true;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_PERFORMANCE_TO_BALANCE];
-> -	tp->time_constant = out.t_perf_to_balanced;
-> +	tp->time_constant = out->t_perf_to_balanced;
->  	tp->target_mode = CNQF_MODE_BALANCE;
->  	tp->shifting_up = false;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_FROM_TURBO_TO_PERFORMANCE];
-> -	tp->time_constant = out.t_turbo_to_perf;
-> +	tp->time_constant = out->t_turbo_to_perf;
->  	tp->target_mode = CNQF_MODE_PERFORMANCE;
->  	tp->shifting_up = false;
->
->  	tp = &config_store.trans_param[idx][CNQF_TRANSITION_TO_TURBO];
-> -	tp->time_constant = out.t_perf_to_turbo;
-> +	tp->time_constant = out->t_perf_to_turbo;
->  	tp->target_mode = CNQF_MODE_TURBO;
->  	tp->shifting_up = true;
->  }
->
-> -static void amd_pmf_update_mode_set(int idx, struct apmf_dyn_slider_output out)
-> +static void amd_pmf_update_mode_set(int idx, struct apmf_dyn_slider_output *out)
->  {
->  	struct cnqf_mode_settings *ms;
->
->  	/* Quiet Mode */
->  	ms = &config_store.mode_set[idx][CNQF_MODE_QUIET];
-> -	ms->power_floor = out.ps[APMF_CNQF_QUIET].pfloor;
-> -	ms->power_control.fppt = out.ps[APMF_CNQF_QUIET].fppt;
-> -	ms->power_control.sppt = out.ps[APMF_CNQF_QUIET].sppt;
-> -	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_QUIET].sppt_apu_only;
-> -	ms->power_control.spl = out.ps[APMF_CNQF_QUIET].spl;
-> -	ms->power_control.stt_min = out.ps[APMF_CNQF_QUIET].stt_min_limit;
-> +	ms->power_floor = out->ps[APMF_CNQF_QUIET].pfloor;
-> +	ms->power_control.fppt = out->ps[APMF_CNQF_QUIET].fppt;
-> +	ms->power_control.sppt = out->ps[APMF_CNQF_QUIET].sppt;
-> +	ms->power_control.sppt_apu_only = out->ps[APMF_CNQF_QUIET].sppt_apu_only;
-> +	ms->power_control.spl = out->ps[APMF_CNQF_QUIET].spl;
-> +	ms->power_control.stt_min = out->ps[APMF_CNQF_QUIET].stt_min_limit;
->  	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> -		out.ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_APU];
-> +		out->ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_APU];
->  	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> -		out.ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_HS2];
-> -	ms->fan_control.fan_id = out.ps[APMF_CNQF_QUIET].fan_id;
-> +		out->ps[APMF_CNQF_QUIET].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out->ps[APMF_CNQF_QUIET].fan_id;
->
->  	/* Balance Mode */
->  	ms = &config_store.mode_set[idx][CNQF_MODE_BALANCE];
-> -	ms->power_floor = out.ps[APMF_CNQF_BALANCE].pfloor;
-> -	ms->power_control.fppt = out.ps[APMF_CNQF_BALANCE].fppt;
-> -	ms->power_control.sppt = out.ps[APMF_CNQF_BALANCE].sppt;
-> -	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_BALANCE].sppt_apu_only;
-> -	ms->power_control.spl = out.ps[APMF_CNQF_BALANCE].spl;
-> -	ms->power_control.stt_min = out.ps[APMF_CNQF_BALANCE].stt_min_limit;
-> +	ms->power_floor = out->ps[APMF_CNQF_BALANCE].pfloor;
-> +	ms->power_control.fppt = out->ps[APMF_CNQF_BALANCE].fppt;
-> +	ms->power_control.sppt = out->ps[APMF_CNQF_BALANCE].sppt;
-> +	ms->power_control.sppt_apu_only = out->ps[APMF_CNQF_BALANCE].sppt_apu_only;
-> +	ms->power_control.spl = out->ps[APMF_CNQF_BALANCE].spl;
-> +	ms->power_control.stt_min = out->ps[APMF_CNQF_BALANCE].stt_min_limit;
->  	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> -		out.ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_APU];
-> +		out->ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_APU];
->  	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> -		out.ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_HS2];
-> -	ms->fan_control.fan_id = out.ps[APMF_CNQF_BALANCE].fan_id;
-> +		out->ps[APMF_CNQF_BALANCE].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out->ps[APMF_CNQF_BALANCE].fan_id;
->
->  	/* Performance Mode */
->  	ms = &config_store.mode_set[idx][CNQF_MODE_PERFORMANCE];
-> -	ms->power_floor = out.ps[APMF_CNQF_PERFORMANCE].pfloor;
-> -	ms->power_control.fppt = out.ps[APMF_CNQF_PERFORMANCE].fppt;
-> -	ms->power_control.sppt = out.ps[APMF_CNQF_PERFORMANCE].sppt;
-> -	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_PERFORMANCE].sppt_apu_only;
-> -	ms->power_control.spl = out.ps[APMF_CNQF_PERFORMANCE].spl;
-> -	ms->power_control.stt_min = out.ps[APMF_CNQF_PERFORMANCE].stt_min_limit;
-> +	ms->power_floor = out->ps[APMF_CNQF_PERFORMANCE].pfloor;
-> +	ms->power_control.fppt = out->ps[APMF_CNQF_PERFORMANCE].fppt;
-> +	ms->power_control.sppt = out->ps[APMF_CNQF_PERFORMANCE].sppt;
-> +	ms->power_control.sppt_apu_only = out->ps[APMF_CNQF_PERFORMANCE].sppt_apu_only;
-> +	ms->power_control.spl = out->ps[APMF_CNQF_PERFORMANCE].spl;
-> +	ms->power_control.stt_min = out->ps[APMF_CNQF_PERFORMANCE].stt_min_limit;
->  	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> -		out.ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_APU];
-> +		out->ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_APU];
->  	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> -		out.ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_HS2];
-> -	ms->fan_control.fan_id = out.ps[APMF_CNQF_PERFORMANCE].fan_id;
-> +		out->ps[APMF_CNQF_PERFORMANCE].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out->ps[APMF_CNQF_PERFORMANCE].fan_id;
->
->  	/* Turbo Mode */
->  	ms = &config_store.mode_set[idx][CNQF_MODE_TURBO];
-> -	ms->power_floor = out.ps[APMF_CNQF_TURBO].pfloor;
-> -	ms->power_control.fppt = out.ps[APMF_CNQF_TURBO].fppt;
-> -	ms->power_control.sppt = out.ps[APMF_CNQF_TURBO].sppt;
-> -	ms->power_control.sppt_apu_only = out.ps[APMF_CNQF_TURBO].sppt_apu_only;
-> -	ms->power_control.spl = out.ps[APMF_CNQF_TURBO].spl;
-> -	ms->power_control.stt_min = out.ps[APMF_CNQF_TURBO].stt_min_limit;
-> +	ms->power_floor = out->ps[APMF_CNQF_TURBO].pfloor;
-> +	ms->power_control.fppt = out->ps[APMF_CNQF_TURBO].fppt;
-> +	ms->power_control.sppt = out->ps[APMF_CNQF_TURBO].sppt;
-> +	ms->power_control.sppt_apu_only = out->ps[APMF_CNQF_TURBO].sppt_apu_only;
-> +	ms->power_control.spl = out->ps[APMF_CNQF_TURBO].spl;
-> +	ms->power_control.stt_min = out->ps[APMF_CNQF_TURBO].stt_min_limit;
->  	ms->power_control.stt_skin_temp[STT_TEMP_APU] =
-> -		out.ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_APU];
-> +		out->ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_APU];
->  	ms->power_control.stt_skin_temp[STT_TEMP_HS2] =
-> -		out.ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_HS2];
-> -	ms->fan_control.fan_id = out.ps[APMF_CNQF_TURBO].fan_id;
-> +		out->ps[APMF_CNQF_TURBO].stt_skintemp[STT_TEMP_HS2];
-> +	ms->fan_control.fan_id = out->ps[APMF_CNQF_TURBO].fan_id;
->  }
->
->  static int amd_pmf_check_flags(struct amd_pmf_dev *dev)
-> @@ -284,8 +284,8 @@ static int amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev)
->  			return ret;
->  		}
->
-> -		amd_pmf_update_mode_set(i, out);
-> -		amd_pmf_update_trans_data(i, out);
-> +		amd_pmf_update_mode_set(i, &out);
-> +		amd_pmf_update_trans_data(i, &out);
->  		amd_pmf_update_power_threshold(i);
->
->  		for (j = 0; j < CNQF_MODE_MAX; j++) {
-> --
-> 2.30.2
->
->
