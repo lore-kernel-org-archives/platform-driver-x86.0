@@ -2,99 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC72C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Oct 2022 18:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5AAC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Oct 2022 00:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiJHSuF (ORCPT
+        id S231469AbiJJANS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 8 Oct 2022 14:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
+        Sun, 9 Oct 2022 20:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbiJHSuC (ORCPT
+        with ESMTP id S230514AbiJJAMp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 8 Oct 2022 14:50:02 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96EF237FF
-        for <platform-driver-x86@vger.kernel.org>; Sat,  8 Oct 2022 11:49:59 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id s2so11037513edd.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Oct 2022 11:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:content-language:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5epQj47sHxL0xV+W70y4hEnecmE3ASdEET21W4Q2Zpc=;
-        b=q5Qlszmq+NigroZa/5gj3lQ6ENOcmbC1YJmfx51NkGfnXhPZ0kCIWeQzs2rotc2qPA
-         BRxZWTuiZ6aNegwQ1MEdQzTS0trY6D0DPtxon2KQoQCm/yaarFswmXJud/YnvaJZoR9C
-         2q0lmdLpCmPMXx5iYUYLNnYCBqN7eNAqoqNgf8iyO/EZUT6mpg/zpOJfoC+K6UZDgI9t
-         w0CJJJNSYz4DPaLFkQfZBINTUijHvBHOpOHHwIYoGg/BC2uJrFmyjvwMYBAqM4+GmT+e
-         QPAY6N8z2HA7r6QmSAbGKJpTCJPH4EfnF87QPBu6FvPbddL3qrWG73Qcsjvvj5Q6RCbj
-         bGMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:content-language:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5epQj47sHxL0xV+W70y4hEnecmE3ASdEET21W4Q2Zpc=;
-        b=RsNKhpRNpdHfcsYpePemZdIH/OYfNoGH/P8tMV46OL2Q/ks9WzrLo0T7ciFVTIubLy
-         CPqWFEjNUyJGvaDRmytW3R94aCX53p4Cwswip6sx1jT888jGVJlxr4mx/q8ktN5ob4rn
-         I1UJBkrqyMQEr246ciiPcWAM9xUVKPYPV7dJzcCf5xX3iP1VKI5yPB7NAnFH2BIPP1C+
-         3IsD5SOtqMix2jDtFr6YMVCmbc/gnzHcevJWUcuUHtl94OsaGYBgevUdNQOUKIpk8T81
-         lUBiLU9pYGoU8n7MNEdBaR2cSJZHsF3W8kvQczrTY+ZdPso/IwBg+hy00vK7LxvsdWEn
-         nutw==
-X-Gm-Message-State: ACrzQf2h6Wqi0ceT3wTAvU+4mXyoGOAuZvIZuvCjt/zMs0i33zYKBq+2
-        vOMEGcZyjUYJWcKPX3U/KnY=
-X-Google-Smtp-Source: AMsMyM5QspheXEsi8coPHqCc+GmRkjb2wXwJ2c8UGKv8BJBScIT03+3DkuddaievAUoYA6i5LL6idw==
-X-Received: by 2002:a05:6402:c81:b0:458:c428:173a with SMTP id cm1-20020a0564020c8100b00458c428173amr10087195edb.298.1665254998203;
-        Sat, 08 Oct 2022 11:49:58 -0700 (PDT)
-Received: from [192.168.69.3] ([91.189.216.255])
-        by smtp.gmail.com with ESMTPSA id fp33-20020a1709069e2100b00730979f568fsm3022530ejc.150.2022.10.08.11.49.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Oct 2022 11:49:57 -0700 (PDT)
-Message-ID: <55400326-e64f-5444-94e5-22b8214d00b6@gmail.com>
-Date:   Sat, 8 Oct 2022 20:49:56 +0200
+        Sun, 9 Oct 2022 20:12:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6598E1A3B6;
+        Sun,  9 Oct 2022 16:49:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1DA6AB80DE4;
+        Sun,  9 Oct 2022 23:49:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325CEC433D7;
+        Sun,  9 Oct 2022 23:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665359396;
+        bh=T//Mq0MV/vPrzN/kQ3SK6QnEFdooxLJ2GbtjTJnDnIg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MNr2Bl15ayFbrtmbyLoA4195TFEAaOwbCwRSa99sAWuj/mnSLR+UubaRMZqApQ17F
+         pZdOkAyH1PlungTiSlVJr7xuaXIl6RsezHCsLtr5EHy0KMcXufl1fFENlF/6GiBLLR
+         arS2q9NHDQErO+AMMUPKB0yiWWGV0gr6T5ldXzoweKGdUCYxFD9ik47EJCDPK1kvaB
+         4Hdwfy7hB5sy1d+w5Qh5xXWGcB3UYjIxuxBBjWAM8T1XZZr91JxMLUMLiGZIdLCRDx
+         KtXov1ZRK/C4i60m/IKDH0NBvj/FoVGf1udPN0ilZ5dMETSYpT+TngQBrQyNJvC6iM
+         asJD1ptWdyS0w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 10/44] platform/x86: pmc_atom: Improve quirk message to be less cryptic
+Date:   Sun,  9 Oct 2022 19:48:58 -0400
+Message-Id: <20221009234932.1230196-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221009234932.1230196-1-sashal@kernel.org>
+References: <20221009234932.1230196-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-From:   =?UTF-8?Q?Micha=c5=82_Szczepaniak?= <m.szczepaniak.000@gmail.com>
-Subject: [ibm-acpi-devel] [PATCH] platform/x86: thinkpad_acpi: Fix a
- max_brightness of thinklight
-To:     ibm-acpi-devel@lists.sourceforge.net
-Content-Language: en-US
-Cc:     hmh@hmh.eng.br, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thinklight has only two values, on/off so it's reasonable for 
-max_brightness to be 0 and 1 as if you write anything between 0 and 255 
-it will be 255 anyway so there's no point for it to be 255.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Also sorry for repeated messages, I got no reply so I'm trying to figure 
-out what I did wrong.
+[ Upstream commit 32c9b75640aeb1b144f9e2963c1640f4cef7c6f2 ]
 
+Not everyone can get what "critclks" means in the message, improve
+it to make less cryptic.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20220801113734.36131-2-andriy.shevchenko@linux.intel.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-  drivers/platform/x86/thinkpad_acpi.c | 1 +
-  1 file changed, 1 insertion(+)
+ drivers/platform/x86/pmc_atom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c 
-b/drivers/platform/x86/thinkpad_acpi.c
-index 22d4e8633e30e9..775c2f327dc3a8 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5562,6 +5562,7 @@ static enum led_brightness light_sysfs_get(struct 
-led_classdev *led_cdev)
-  static struct tpacpi_led_classdev tpacpi_led_thinklight = {
-      .led_classdev = {
-          .name        = "tpacpi::thinklight",
-+        .max_brightness    = 1,
-          .brightness_set_blocking = &light_sysfs_set,
-          .brightness_get    = &light_sysfs_get,
-      }
-
-
-
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 5c757c7f64de..f4046572a9fe 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -354,7 +354,7 @@ static bool pmc_clk_is_critical = true;
+ 
+ static int dmi_callback(const struct dmi_system_id *d)
+ {
+-	pr_info("%s critclks quirk enabled\n", d->ident);
++	pr_info("%s: PMC critical clocks quirk enabled\n", d->ident);
+ 
+ 	return 1;
+ }
+-- 
+2.35.1
 
