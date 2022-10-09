@@ -2,48 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E895EC433F5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Oct 2022 00:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C85DC43217
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Oct 2022 00:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232263AbiJJAZk (ORCPT
+        id S232367AbiJJAZl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 9 Oct 2022 20:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35360 "EHLO
+        Sun, 9 Oct 2022 20:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232904AbiJJAXw (ORCPT
+        with ESMTP id S232971AbiJJAX6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 9 Oct 2022 20:23:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54002529F;
-        Sun,  9 Oct 2022 16:57:35 -0700 (PDT)
+        Sun, 9 Oct 2022 20:23:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CDA3D59F;
+        Sun,  9 Oct 2022 16:58:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6F8C8B80DEA;
-        Sun,  9 Oct 2022 23:57:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5153CC43145;
-        Sun,  9 Oct 2022 23:57:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 266DD60C27;
+        Sun,  9 Oct 2022 23:58:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAEF4C433D6;
+        Sun,  9 Oct 2022 23:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665359853;
-        bh=nlsFU6+qAFHENonUxtCRXgN1MbdHlXKsPAZ0zCns0UI=;
+        s=k20201202; t=1665359881;
+        bh=oB3xpT3Zs7hadFynM24sKouggPpK1LgwIk14AdEUvRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qt9zisu8CU3mIFy0A3g5BaUHXKWfUSH+3NiOgZlnWbNM0kS109RgSwpi5DRvMQUXd
-         /CPxviVihspERazb7IAG4j6wTyUV6pb4ssOWjkzFr8Obs1/Cf4LnatnC8Jl+opEdTP
-         TUbNjlQD1qg+R6GvdOhqrwJ4JRE5Q/sB+Vbxr2jZ9Y8aUzRLAETnM5d6bi3v6EfIqx
-         5UB1tJbe6Z/yvN4sUxaaux4sZkuEtkG2UGM1yY9zD1FcTYT1WSp5aItnD2Jgy3kP6K
-         nz0+STtfIjLZMKZ0GLBNNTzQigiLSNsn8VEJJzeL8biGT3n5y52WYQAC4U/TTvfIDM
-         8xd98YqwxMQqQ==
+        b=nftwYuI/RNbh8PfxlKeGWMNzscTrfmKm6LVbLUloeaxLwp3dkiUu5JrOeQyHy6iSB
+         NQhxavPHOCucrC4joOcmW6/BUwuzzFu/35DicvxhjlumR1fDFO2Qp/XHo64ZRjsdRl
+         KkVzxjDEUnaY6DgAe//BmOBO6mFvhlPwLqLqzBgvgqiEsaAN7cIcclr0SixKuc2FwT
+         2QbN1xZ0Z7ZezXlxxeMA7A76CiKOkpJtGpUz+nhwvFzi+RIG80wZ5e4OF5sjxGOJoM
+         sgCc7JHbqelofntFvoS44+pqUuaTz+recFAS9DjxNnPOnaoARVoXWywX66qoIPRYHb
+         oFWzXXnoirYDQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, jlee@suse.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/14] platform/x86: msi-laptop: Change DMI match / alias strings to fix module autoloading
-Date:   Sun,  9 Oct 2022 19:57:06 -0400
-Message-Id: <20221009235710.1231937-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/10] platform/x86: msi-laptop: Change DMI match / alias strings to fix module autoloading
+Date:   Sun,  9 Oct 2022 19:57:43 -0400
+Message-Id: <20221009235746.1232129-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221009235710.1231937-1-sashal@kernel.org>
-References: <20221009235710.1231937-1-sashal@kernel.org>
+In-Reply-To: <20221009235746.1232129-1-sashal@kernel.org>
+References: <20221009235746.1232129-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,10 +74,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-index 24ffc8e2d2d1..d8a94968aedc 100644
+index d5bfcc602090..3ad6ab5d2113 100644
 --- a/drivers/platform/x86/msi-laptop.c
 +++ b/drivers/platform/x86/msi-laptop.c
-@@ -596,11 +596,10 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+@@ -609,11 +609,10 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
  	{
  		.ident = "MSI S270",
  		.matches = {
@@ -91,7 +91,7 @@ index 24ffc8e2d2d1..d8a94968aedc 100644
  		},
  		.driver_data = &quirk_old_ec_model,
  		.callback = dmi_check_cb
-@@ -633,8 +632,7 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
+@@ -646,8 +645,7 @@ static const struct dmi_system_id msi_dmi_table[] __initconst = {
  			DMI_MATCH(DMI_SYS_VENDOR, "NOTEBOOK"),
  			DMI_MATCH(DMI_PRODUCT_NAME, "SAM2000"),
  			DMI_MATCH(DMI_PRODUCT_VERSION, "0131"),
