@@ -2,135 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C5C433F5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Oct 2022 15:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCFAC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Oct 2022 17:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230216AbiJKPjN (ORCPT
+        id S229436AbiJLRjL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Oct 2022 11:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52684 "EHLO
+        Wed, 12 Oct 2022 13:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231821AbiJKPir (ORCPT
+        with ESMTP id S229498AbiJLRjL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Oct 2022 11:38:47 -0400
-Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C84ABE53E;
-        Tue, 11 Oct 2022 08:28:10 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id 0E0A62B06723;
-        Tue, 11 Oct 2022 11:28:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 11 Oct 2022 11:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-         h=cc:cc:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1665502081; x=1665509281; bh=Ro
-        iYjXc5zpBqmqtGTly0dJ5h4knOXCOxvOzprpvvicY=; b=rOqBqfQIR1pyIo2y+Q
-        qXCNvR9q1gL4jfix8sxrOkGqGqROiSHyOvWNHIqbLpM5CyKJiTrw9hPly16jMeox
-        rCt2x8gcTitVSTlm5hdVJPA2xCT16jAt6cCxOG1KMbwGUcaPcXyFcIU55t18+ek7
-        B1riDrIGEzMQqyoNSDOBbpluYItZUW2OpkHp/uLMQKiWM/67u3uiyYw1v4Q7wBg4
-        b/69CmAXTR92H1cdjbIYsz9oC6jcyU/+pAgKTaM8hCy+lCsdJ7PY6GoXKMAlC5ES
-        ih3OxqqrlFdorAUJMS3+NnphnyXRXwbvsEob/47+qMbONRy9d9cnSLCEtDc3FSlX
-        aHvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1665502081; x=1665509281; bh=RoiYjXc5zpBqmqtGTly0dJ5h4knO
-        XCOxvOzprpvvicY=; b=D7xRYdn00TuXovu4EGPnJfmJV5jcNV/fRMwo9uBTiOHI
-        QI/UGUeuHztUjAPISjmnhM60ZbLAVNuFKUhn62xhJeC8AMyO5u5TrjbezEp/ko+2
-        Ol2JmAM6dx+n7A3NmNFNzBacE2rMuu7bz+dkGdv5m17HRkHvMkkiuzwlLU3hvKun
-        GJwdAKaUXGmigGQPFV8trjtO9IvcNZCQoSaUzm8CHNh/xuHOPSG5ZfbylR42i/Fu
-        yamnMsEUW69QlLy7RRw4JnpPlqaGsns3xIidA0z8aUmuvBhS6lozmNnx+VHDKdJe
-        iCnhsALrTfAAMfNLGfwzhflmmWhjqN+oqP6Pg2hOgw==
-X-ME-Sender: <xms:gItFY844esImGjIls8A7mGNDl_oNFq1crS_T2ia2jAc3FSrcqP1KKQ>
-    <xme:gItFY95f8eZP32qu-fw8KEOCIgIKHKfxISBLaxm9g38nYuTxQdtvAE0eCBb8zeCpt
-    E7eBOi7mwqlIiA6mU4>
-X-ME-Received: <xmr:gItFY7ed7wyvlAV2A-qDjX1iYhXcpMUURxJGGzw8qzTWxCGEFskPlTwzoehVDQ3C2n4qsg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejiedgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
-    ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
-    grmhgvqeenucggtffrrghtthgvrhhnpefhieeghfdtfeehtdeftdehgfehuddtvdeuheet
-    tddtheejueekjeegueeivdektdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
-X-ME-Proxy: <xmx:gItFYxL9TyWUGkkUexRQWqG1dijpGV-qMLjJrOBBuHOdg2NdM4gYXw>
-    <xmx:gItFYwKxSOUvJ8x6SawB36EvvRAhb75XA5vK1ynWsVeErq_Hfn5paA>
-    <xmx:gItFYyzGuVmV1GLHrEX0MjRoJUIV5ZQ5DJobusi2zP01mKNzpNFL5w>
-    <xmx:gYtFY9aWaSwdGibhXLTomCMmmDNUB1d2kM6K6JcClz5fPD5I2JG1-T3cyVI>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Oct 2022 11:28:00 -0400 (EDT)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id E4CEC103938; Tue, 11 Oct 2022 18:27:56 +0300 (+03)
-Date:   Tue, 11 Oct 2022 18:27:56 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        ardb@kernel.org, dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-Subject: Re: [PATCH v9 2/9] mm/mmzone: Tag pg_data_t with crypto capabilities
-Message-ID: <20221011152756.swms64so5q6s4f3j@box.shutemov.name>
-References: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
- <20220704135833.1496303-3-martin.fernandez@eclypsium.com>
- <20221007155323.ue4cdthkilfy4lbd@box.shutemov.name>
- <CAKgze5bRKph0SPOerLDLZb5KckPX5+q0y649XCU4J5HehYVu0A@mail.gmail.com>
+        Wed, 12 Oct 2022 13:39:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E8DC821A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Oct 2022 10:39:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 33467B81A25
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Oct 2022 17:39:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D57FDC433D6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Oct 2022 17:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665596347;
+        bh=gRKtKuM0d0ou3zJPhqOyHSqmwuAWtzvB+6Lo8QH9+1A=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=hGUukZBZOzRH5fOq0ppLBE3/XOo/FFET3YIBYO0b0B6x6nivJ+NPOpQQ49AG2NpUt
+         LQYM3DxrvtNscx9G4UXrvZGgadxbe2CUUe7XpRaPLJe+kR0VmYAfO5Tw+BAP1NOdwK
+         5QKS2DpXE0piqg17EcpBFKvFd2pB20iEWPwhbzxnkSBxwEwSQZxrQSbxekcZ+mXbMA
+         OOxP7YmmAmUbhekACeufRSPcy3RK+xmowAdXwJuAoHKnfWLCOQXEogoLCqO8qiFt47
+         flEaph12HBrAEnl+rqh2ap8gi9qc4BKn1/7d3ej85LY6x3sK2dnhfovIAq0eTcNiG3
+         DgCbvCBcCXZqA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id B3E7EC433E6; Wed, 12 Oct 2022 17:39:07 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216516] s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
+Date:   Wed, 12 Oct 2022 17:39:07 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: kolAflash@kolahilft.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: DOCUMENTED
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-216516-215701-g3LduyaAHL@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216516-215701@https.bugzilla.kernel.org/>
+References: <bug-216516-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgze5bRKph0SPOerLDLZb5KckPX5+q0y649XCU4J5HehYVu0A@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 10:28:44AM -0300, Martin Fernandez wrote:
-> On 10/7/22, Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> > On Mon, Jul 04, 2022 at 10:58:26AM -0300, Martin Fernandez wrote:
-> >> Add a new member in the pg_data_t struct to tell whether the node
-> >> corresponding to that pg_data_t is able to do hardware memory
-> >> encryption.
-> >>
-> >> This will be read from sysfs.
-> >>
-> >> Signed-off-by: Martin Fernandez <martin.fernandez@eclypsium.com>
-> >> ---
-> >>  include/linux/mmzone.h | 3 +++
-> >>  mm/page_alloc.c        | 1 +
-> >>  2 files changed, 4 insertions(+)
-> >>
-> >> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> >> index aab70355d64f..6fd4785f1d05 100644
-> >> --- a/include/linux/mmzone.h
-> >> +++ b/include/linux/mmzone.h
-> >> @@ -883,6 +883,9 @@ typedef struct pglist_data {
-> >>  	struct task_struct *kcompactd;
-> >>  	bool proactive_compact_trigger;
-> >>  #endif
-> >> +
-> >> +	bool crypto_capable;
-> >> +
-> >
-> > There's already pgdat->flags. Any reason we cannot encode it there?
-> 
-> Not really a reason, I'll considerate when I send then next version. I
-> tried to quickly find for references of what kind of flags does it
-> have, I didn't find any. Do you suggest it should work?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216516
 
-Maybe. Or maybe introduce capabilities bitfield and make crypto as one of
-them.
+--- Comment #34 from kolAflash (kolAflash@kolahilft.de) ---
+Created attachment 302983
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D302983&action=3Dedit
+kernel log for s2both with s2idle (hybrid sleep): v6.0
 
-We consider to re-use the approach for other cases. Like if the memory in
-the node is TDX-compatible (there's more requirements for it than just
-encryption).
+@Mario
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+I've got another related problem.
+(just tell me if I should open another bug for that)
+
+The system doesn't correctly enter s2both with s2idle. (a.k.a. "hybrid slee=
+p")
+Instead the system seems to do simply a s2disk.
+So the system simply shuts down completely. And resumes from swapfile at po=
+wer
+on.
+
+Correct behavior would be to write the memory to swapfile (like s2disk), but
+then enter s2idle.
+(the idea behind s2both is to prevent data loss if the battery is getting
+drained while being in some suspend to memory)
+
+
+
+What I do:
+echo suspend > /sys/power/disk
+echo disk > /sys/power/state
+
+$ cat /sys/power/mem_sleep=20
+[s2idle]
+
+Behavior is independent of the settings in these files:
+/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/power/wakeup
+/sys/devices/platform/i8042/serio0/power/wakeup
+/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0003:00/power_supply/AC/power/wake=
+up
+/sys/module/acpi/parameters/ec_no_wakeup
+
+Please see the attached kernel log.
+
+
+
+I use s2both on a lot of systems, especially with AMD CPU+GPU. And it usual=
+ly
+works flawlessly. But these systems all use S3 instead of s2idle. And I
+couldn't find if there's something extra to consider when using s2both with
+s2idle.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
