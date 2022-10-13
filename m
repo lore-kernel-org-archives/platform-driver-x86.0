@@ -2,88 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BC5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Oct 2022 03:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65066C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Oct 2022 19:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiJMD4W (ORCPT
+        id S229436AbiJMTsk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Oct 2022 23:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38072 "EHLO
+        Thu, 13 Oct 2022 15:48:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiJMD4V (ORCPT
+        with ESMTP id S229812AbiJMTsf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Oct 2022 23:56:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4785A1C417
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Oct 2022 20:56:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Thu, 13 Oct 2022 15:48:35 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B2518B497;
+        Thu, 13 Oct 2022 12:48:33 -0700 (PDT)
+Received: from zn.tnic (p200300ea9733e733329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e733:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D70376165E
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Oct 2022 03:56:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B823C433D7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Oct 2022 03:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665633380;
-        bh=vsYjgsadluReXpcbAOGPs6ADWQExqRTD/D//C1cCinc=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=YSsU7MLzr8GBHhTfk+1mlAdzYRwmq7ikDPZ/COVo2PdXCnTvvscXTGQKNHjeIpyOs
-         8dtcjGQsPt1LJ+Ex+yHv8mw9aABWf15qbdEBrMX+MQI0u5yXJ+r/IqRbMDeRmaXiKk
-         2UpLDcxbaSzNWprnEXd+i8Vjhs/+Y3ydPkWxbH1nXJ6f87qFf2upRkyQjHXhCIlgwG
-         4eOOJRYfl1lqXpYS2iH7fyOn/j5GQTzUPD+k1LL53ArxQDPtOqKrqzMVXPHXWN1SB1
-         5G+XOtuShctmLBSRKXpU34l6zE6aZVGzleQP3DD0PrjjkmxhlN7LgEiHSmUUhIhHwF
-         IPgSr5sTSKVRg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 28A51C433E4; Thu, 13 Oct 2022 03:56:20 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216574] Hybrid System Suspend broken HP EliteBook 845 G8
- (a.k.a. Hybrid Sleep / s2both) (s2idle Notebook)
-Date:   Thu, 13 Oct 2022 03:56:20 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-216574-215701-qOpolFL1Hi@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216574-215701@https.bugzilla.kernel.org/>
-References: <bug-216574-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B70521EC0662;
+        Thu, 13 Oct 2022 21:48:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1665690507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=AQTsN58dqUBa4kccfsq8CI7L28beVehD34GLLpg/uVc=;
+        b=AmiWO7JHwt9MRtIisXFnueA6sDdHqexmuRNDepSGd+d93yeoUVOPU4f1DbvEWzz7EjDfra
+        4FPPbxLDsT41p+Zh/zUV3Zn6bh1uFDGcPjPGrX2DMGu1JJf8RZbLVT0gx8e6j5cUOiDUhL
+        z+IYAah5BFbT7jNkEze8Rktk+M2UcMo=
+Date:   Thu, 13 Oct 2022 21:48:23 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Martin Fernandez <martin.fernandez@eclypsium.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+        dvhart@infradead.org, andy@infradead.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
+        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
+        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
+        alison.schofield@intel.com, keescook@chromium.org
+Subject: Re: [PATCH v9 0/9] x86: Show in sysfs if a memory node is able to do
+ encryption
+Message-ID: <Y0hrhzprPFTK+VWV@zn.tnic>
+References: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216574
+On Mon, Jul 04, 2022 at 10:58:24AM -0300, Martin Fernandez wrote:
+> If all nodes are capable of encryption and if the system have tme/sme
+> on we can pretty confidently say that the device is actively
+> encrypting all its memory.
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+Wait, what?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |CODE_FIX
+If all memory is crypto capable and I boot with mem_encrypt=off, then
+the device is certainly not encrypting any memory.
 
---- Comment #3 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-I've submitted it as
-https://lore.kernel.org/linux-pm/20221013035017.5098-1-mario.limonciello@am=
-d.com/T/#u
-.
+dhansen says TME cannot be controlled this way and if you turn it off in
+the BIOS, EFI_MEMORY_CPU_CRYPTO attr should not be set either. But that
+marking won't work on AMD.
 
---=20
-You may reply to this email to add a comment.
+You really need to be able to check whether memory encryption is also
+enabled.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+And I believe I've said this before but even if encryption is on, it is
+never "all its memory": the machine can decide to decrypt a page or a
+bunch of them for whatever reason. And then they're plaintext.
+
+> It's planned to make this check part of an specification that can be
+> passed to people purchasing hardware
+
+How is that supposed to work?
+
+People would boot a Linux on that hardware and fwupd would tell them
+whether it can encrypt memory or not?
+
+But if that were the only use case, why can't EFI simply say that in its
+fancy GUI?
+
+Because all the kernel seems to be doing here is parrot further
+EFI_MEMORY_CPU_CRYPTO.
+
+And that attribute gets set by EFI so it goes and picks apart whether
+the underlying hw can encrypt memory. So EFI could report it too.
+
+Hmmm?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
