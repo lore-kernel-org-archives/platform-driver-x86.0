@@ -2,61 +2,61 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E32C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E6C43219
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Oct 2022 23:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiJNX1c (ORCPT
+        id S229614AbiJNX1d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Oct 2022 19:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55706 "EHLO
+        Fri, 14 Oct 2022 19:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbiJNX1b (ORCPT
+        with ESMTP id S229681AbiJNX1c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Oct 2022 19:27:31 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC08E6747B
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Oct 2022 16:27:30 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id p24-20020a9d6958000000b00661c528849eso2715679oto.9
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Oct 2022 16:27:30 -0700 (PDT)
+        Fri, 14 Oct 2022 19:27:32 -0400
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C218EA570D
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Oct 2022 16:27:31 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1322d768ba7so7599962fac.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Oct 2022 16:27:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m8kK6rLItF/0pjg44b3n/aGs0jVKQfAhuUkNBxFA9lk=;
-        b=l030jiI9DLzuY27nTR5PO8E51Z51dxQPFexz34xUcTd4miao54Ycjzl4h0rJVAATju
-         v0nuwwGIeM363gB6VnFZqh3otSzqXo0xn4wPxy4cL6mBXPleIBV/k4W0K+52MrM1dJd/
-         AUOO+jp6b6FWfavama+6V/tfQl2G0ItmZnOASMAsr/jMw4UCXYWArsPTgH/7dtsBAmIM
-         2Vy/xw+JRc0p69DuMgxE5uTsC2F/4elp9ZrsLmcjs3bDCC3HMcv6HN1L6DY3ZIUS1CGA
-         AnetQKUM/KVeH6+1CelLkNvyg6NEKxL3MxVW5ddCiR82UvPcts1YZk6UheHMiwxZbYKT
-         6IDQ==
+        bh=j/kHIbP8Pj39JAAO9mLvYMjlYVVVvfKIUa5qufcwuCY=;
+        b=BwLt8xp0Yj9NDwvkOpA9i4gAyyDi4c26nMs+FUT49ZioFKKVlBJbEKcM5hxC2ngXnX
+         wgPMs2995HxDoV1OyI/JdngVRgTecIiu4k0f724A83Ld8yVaxY/5nhxXXgw6D2E66U4f
+         sn7e1W5LV4zsL5Zxt/ZsgsrB5jb3NOosrn7jRel0hIIk7z8ufeTeUp6nVKNcSDLILezO
+         cg9txVhWYehlHVZPK7FnKJKRITbEPToCsTlxmfMlWMczRYHxyj+NS/ghyAwFUt0arKbM
+         LzDuatfKaBYPHfgaXq/8l+GzeL9KcNh6rG2uajft/mzn5lZHPwmkBn2MY7FLceBMBGpN
+         6Hew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m8kK6rLItF/0pjg44b3n/aGs0jVKQfAhuUkNBxFA9lk=;
-        b=x3vNMLnYQTJWUHsoS9cJzhuBmcfcDt6tvtIL6ULJBywt+jJD6hvKjB6Hr/ZVYwOqea
-         pNjxhpjeBhHWSxvUIRTcuA0ZGNiH27+ujgibFzFp5wtZbLXkPuicNutzJrBo91ab8T2A
-         VChAly02TUMa63DYols9wp0d7VWRk2FTzuFFWVKJXoyjVqnzjEjpP6RAxq4yuv7Pd2W4
-         BgzyKuTKB68/bCGkhWndQys5FB8yoqllblIcDb46UJ7DNDcocDUIiaxgijjFXiG6uk4h
-         Lp8RM+Yh7WOuZ7mGYuHb3lleZShOifHYY9h4kVjpTvQQXXftkSTZu54JRMer1Ou/wn/o
-         atAw==
-X-Gm-Message-State: ACrzQf0uABgeUECX6jJg1X8AN235Neuz6QqVEPCadsOsy+hM+bAF19Pw
-        mFZtDGGeGYgv+RQqnmoLnlsk3EJfWv8=
-X-Google-Smtp-Source: AMsMyM5gojlOBHjtdE056jmBOF9eSFz7kwfpaMvm6sGh8gPrmoCTsfgfDBksN6hx8y6pyYJH8EA9Fw==
-X-Received: by 2002:a9d:68d1:0:b0:661:c3ac:c4c1 with SMTP id i17-20020a9d68d1000000b00661c3acc4c1mr157310oto.150.1665790050462;
-        Fri, 14 Oct 2022 16:27:30 -0700 (PDT)
+        bh=j/kHIbP8Pj39JAAO9mLvYMjlYVVVvfKIUa5qufcwuCY=;
+        b=LfTxQFCSw+xIi2TQyjPyMB6ArHPl0bIMRuiIKf7jIbfd69dlJBlhqR9IdPEEc8xHYy
+         q2Lo/2Zby84fop2UO1zu55mjux+8hLWInuYiKeOHkEK335M0UE0wG3pFbUDidFxYIlMq
+         g5eAEZxK148SphWIY2ekGbQVzrt+QdUtgdtsf7GCP0ADpP1v1BB+TaDuuzKGp42UU8kq
+         ummhgZAntJ1uIxuAIbbABPrx/Yu1DNx5p3DCl9sNuJ6Y9I8kORB+0eFZ33nqarwwj2Eu
+         KM3oa4151xq0mtDH6TrTjdVUeIQn21i2+yii6r8QybyXqtS0ZqRMDm187cLYNZnC3YbL
+         CrYA==
+X-Gm-Message-State: ACrzQf0zcaZWs5kFNNM81AChJskTiwli3TU9eLHbRCnFwMHAH1CY7lYb
+        steJyN/n1mH+RY0qsrdsbd/wOJrcA/Q=
+X-Google-Smtp-Source: AMsMyM5AGDwwdYxZ80/NS7jbkXgl0DuSAiRJmoJUyrs03jayJ1dpSN+5jasoTgzkhKEg08W8noACaw==
+X-Received: by 2002:a05:6870:a18e:b0:136:4add:e0d9 with SMTP id a14-20020a056870a18e00b001364adde0d9mr130586oaf.28.1665790051147;
+        Fri, 14 Oct 2022 16:27:31 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:d0e8:abee:fc20:2322])
-        by smtp.gmail.com with ESMTPSA id r6-20020a9d7cc6000000b0066192cb6ccfsm1778431otn.77.2022.10.14.16.27.29
+        by smtp.gmail.com with ESMTPSA id r6-20020a9d7cc6000000b0066192cb6ccfsm1778431otn.77.2022.10.14.16.27.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 14 Oct 2022 16:27:30 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 2/4] Update pending_reboot state value
-Date:   Fri, 14 Oct 2022 18:27:24 -0500
-Message-Id: <20221014232726.31301-3-jorge.lopez2@hp.com>
+Subject: [PATCH v2 3/4] Set current_value permissions appropriate to read-only attributes
+Date:   Fri, 14 Oct 2022 18:27:25 -0500
+Message-Id: <20221014232726.31301-4-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221014232726.31301-1-jorge.lopez2@hp.com>
 References: <20221014232726.31301-1-jorge.lopez2@hp.com>
@@ -67,163 +67,152 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There is not a reliable mechanism to programmatically determine which
-BIOS settings require a reboot to be updated.  The latest changes
-leverages “RequiredPhysicalPresence” reported value to set
-pending_reboot.
+This patch updates ‘current_value’ permissions to match the value
+reported by ‘is_readonly’ value associated with the attribute.
+‘current_value’ permissions are set to read-only if ‘is_readonly’
+value is 1.  ‘current_value’ permissions are set to read-write if
+‘is_readonly’ value is zero.   Other read-only and write-only
+permissions will remain unchanged.
 
 Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-
 ---
-Based on the latest platform-drivers-x86.git/for-next
----
- drivers/platform/x86/hp/enum-attributes.c     |  6 ++++
- drivers/platform/x86/hp/int-attributes.c      |  7 +++-
- drivers/platform/x86/hp/ordered-attributes.c  |  6 ++++
- .../platform/x86/hp/passwdobj-attributes.c    |  9 ++++-
- .../platform/x86/hp/sureadmin-attributes.c    | 34 +++++++++++++++++--
- 5 files changed, 58 insertions(+), 4 deletions(-)
+ drivers/platform/x86/hp/bioscfg.c            | 17 +++++++++++++++++
+ drivers/platform/x86/hp/bioscfg.h            |  1 +
+ drivers/platform/x86/hp/enum-attributes.c    |  4 ++++
+ drivers/platform/x86/hp/int-attributes.c     |  4 ++++
+ drivers/platform/x86/hp/ordered-attributes.c |  6 +++++-
+ drivers/platform/x86/hp/string-attributes.c  |  4 ++++
+ 6 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp/enum-attributes.c b/drivers/platform/x86/hp/enum-attributes.c
-index 6ec02b61857c..9d4b6e97bd16 100644
---- a/drivers/platform/x86/hp/enum-attributes.c
-+++ b/drivers/platform/x86/hp/enum-attributes.c
-@@ -78,6 +78,12 @@ static int validate_enumeration_input(int instance_id, const char *buf)
- 	strscpy(bioscfg_drv.enumeration_data[instance_id].new_value,
- 		buf,
- 		sizeof(bioscfg_drv.enumeration_data[instance_id].new_value));
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.enumeration_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
- 
- exit_validate_enum_input:
- 	kfree(options);
-diff --git a/drivers/platform/x86/hp/int-attributes.c b/drivers/platform/x86/hp/int-attributes.c
-index 9a49a528fd9e..aa61497b44d5 100644
---- a/drivers/platform/x86/hp/int-attributes.c
-+++ b/drivers/platform/x86/hp/int-attributes.c
-@@ -56,7 +56,12 @@ static int validate_integer_input(int instance_id, char *buf)
- 		return -EINVAL;
- 
- 	bioscfg_drv.integer_data[instance_id].new_value = in_val;
--
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.integer_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
- 	return 0;
+diff --git a/drivers/platform/x86/hp/bioscfg.c b/drivers/platform/x86/hp/bioscfg.c
+index f08bcae5752a..72dd963f29ae 100644
+--- a/drivers/platform/x86/hp/bioscfg.c
++++ b/drivers/platform/x86/hp/bioscfg.c
+@@ -542,6 +542,23 @@ inline int encode_outsize_for_pvsz(int outsize)
+ 	return 1;
  }
  
++/**
++ * update_attribute_permissions() - Update attributes permissions when
++ * isReadOnly value is 1
++ *
++ * @isReadOnly:  ReadOnly value
++ * @current_val: kobj_attribute corresponding to attribute.
++ *
++ **/
++void update_attribute_permissions(u32 isReadOnly, struct kobj_attribute *current_val)
++{
++	if (isReadOnly)
++		current_val->attr.mode = (umode_t)0444;
++	else
++		current_val->attr.mode = (umode_t)0600;
++}
++
++
+ /**
+  * destroy_attribute_objs() - Free a kset of kobjects
+  * @kset: The kset to destroy
+diff --git a/drivers/platform/x86/hp/bioscfg.h b/drivers/platform/x86/hp/bioscfg.h
+index ac02c8c1e5f2..ff030399b3a2 100644
+--- a/drivers/platform/x86/hp/bioscfg.h
++++ b/drivers/platform/x86/hp/bioscfg.h
+@@ -520,6 +520,7 @@ __BIN_ATTR(_name, 0444 | 0200, _group##_##_name##_read, _group##_##_name##_write
+ union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
+ int get_instance_count(const char *guid_string);
+ void strlcpy_attr(char *dest, char *src);
++void update_attribute_permissions(u32 isReadOnly, struct kobj_attribute *current_val);
+ 
+ /* String attributes */
+ int populate_string_buffer_data(union acpi_object *str_obj,
+diff --git a/drivers/platform/x86/hp/enum-attributes.c b/drivers/platform/x86/hp/enum-attributes.c
+index 9d4b6e97bd16..f4fe6a583ca4 100644
+--- a/drivers/platform/x86/hp/enum-attributes.c
++++ b/drivers/platform/x86/hp/enum-attributes.c
+@@ -190,6 +190,8 @@ int populate_enumeration_package_data(union acpi_object *enum_obj, int instance_
+ 	str_value = NULL;
+ 
+ 	populate_enumeration_elements_from_package(enum_obj, instance_id, HPWMI_ENUMERATION_TYPE);
++	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].is_readonly,
++				    &enumeration_current_val);
+ 
+ 	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
+ }
+@@ -362,6 +364,8 @@ int populate_enumeration_buffer_data(union acpi_object *enum_obj, int instance_i
+ 
+ 	/* Populate enumeration elements */
+ 	populate_enumeration_elements_from_buffer(enum_obj, instance_id, HPWMI_ENUMERATION_TYPE);
++	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].is_readonly,
++				    &enumeration_current_val);
+ 
+ 	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
+ }
+diff --git a/drivers/platform/x86/hp/int-attributes.c b/drivers/platform/x86/hp/int-attributes.c
+index aa61497b44d5..eaae4b065098 100644
+--- a/drivers/platform/x86/hp/int-attributes.c
++++ b/drivers/platform/x86/hp/int-attributes.c
+@@ -168,6 +168,8 @@ int populate_integer_package_data(union acpi_object *elements, int instance_id,
+ 	str_value = NULL;
+ 
+ 	populate_integer_elements_from_package(elements, instance_id, HPWMI_INTEGER_TYPE);
++	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].is_readonly,
++				    &integer_current_val);
+ 	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
+ }
+ 
+@@ -329,6 +331,8 @@ int populate_integer_buffer_data(union acpi_object *integer_obj, int instance_id
+ 
+ 	/* Populate integer elements */
+ 	populate_integer_elements_from_buffer(integer_obj, instance_id, HPWMI_INTEGER_TYPE);
++	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].is_readonly,
++				    &integer_current_val);
+ 
+ 	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
+ }
 diff --git a/drivers/platform/x86/hp/ordered-attributes.c b/drivers/platform/x86/hp/ordered-attributes.c
-index a66d7f0b34d2..585abc3bd362 100644
+index 585abc3bd362..723db9a0316d 100644
 --- a/drivers/platform/x86/hp/ordered-attributes.c
 +++ b/drivers/platform/x86/hp/ordered-attributes.c
-@@ -127,6 +127,12 @@ static int validate_ordered_list_input(int instance_id, const char *buf)
- 	strscpy(bioscfg_drv.ordered_list_data[instance_id].new_value,
- 		buf,
- 		sizeof(bioscfg_drv.ordered_list_data[instance_id].new_value));
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.ordered_list_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
+@@ -239,6 +239,9 @@ int populate_ordered_list_package_data(union acpi_object *order_obj, int instanc
+ 	str_value = NULL;
  
- validate_ordered_list_exit:
- 	return ret;
-diff --git a/drivers/platform/x86/hp/passwdobj-attributes.c b/drivers/platform/x86/hp/passwdobj-attributes.c
-index 75d2f2c1e0e3..e69688e7d55e 100644
---- a/drivers/platform/x86/hp/passwdobj-attributes.c
-+++ b/drivers/platform/x86/hp/passwdobj-attributes.c
-@@ -100,10 +100,17 @@ static ssize_t current_password_store(struct kobject *kobj,
- 	if (id >= 0)
- 		ret = validate_password_input(id, buf_cp);
- 
--	if (!ret)
-+	if (!ret) {
- 		strscpy(bioscfg_drv.password_data[id].current_password,
- 			buf_cp,
- 			sizeof(bioscfg_drv.password_data[id].current_password));
-+		/*
-+		 * set pending reboot flag depending on
-+		 * "RequiresPhysicalPresence" value
-+		 */
-+		if (bioscfg_drv.password_data[id].requires_physical_presence)
-+			bioscfg_drv.pending_reboot = TRUE;
-+	}
- 
- exit_current_password:
- 	kfree(buf_cp);
-diff --git a/drivers/platform/x86/hp/sureadmin-attributes.c b/drivers/platform/x86/hp/sureadmin-attributes.c
-index dba5f94e8c9a..5ad45cdddad9 100644
---- a/drivers/platform/x86/hp/sureadmin-attributes.c
-+++ b/drivers/platform/x86/hp/sureadmin-attributes.c
-@@ -158,14 +158,29 @@ int update_attribute_value(char *attr_name, char *attr_value)
- 		strscpy(bioscfg_drv.string_data[instance].current_value,
- 			attr_value,
- 			sizeof(bioscfg_drv.string_data[instance].current_value));
+ 	populate_ordered_list_elements_from_package(order_obj, instance_id, HPWMI_ORDERED_LIST_TYPE);
++	update_attribute_permissions(bioscfg_drv.ordered_list_data[instance_id].is_readonly,
++				    &ordered_list_current_val);
 +
-+		/*
-+		 * set pending reboot flag depending on
-+		 * "RequiresPhysicalPresence" value
-+		 */
-+		if (bioscfg_drv.string_data[instance].requires_physical_presence)
-+			bioscfg_drv.pending_reboot = TRUE;
- 		goto exit_update_attribute;
- 	}
+ 	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
+ }
  
- 	instance = get_instance_id_for_integer(attr_name);
- 	if (instance >= 0) {
- 		ret = kstrtoint(attr_value, 10, &int_val);
--		if (!ret)
-+		if (!ret) {
- 			bioscfg_drv.integer_data[instance].current_value = int_val;
-+			/*
-+			 * set pending reboot flag depending on
-+			 * "RequiresPhysicalPresence" value
-+			 */
-+			if (bioscfg_drv.integer_data[instance].requires_physical_presence)
-+				bioscfg_drv.pending_reboot = TRUE;
-+		}
-+
- 		goto exit_update_attribute;
- 	}
+@@ -426,7 +429,8 @@ int populate_ordered_list_buffer_data(union acpi_object *order_obj, int instance
  
-@@ -174,14 +189,29 @@ int update_attribute_value(char *attr_name, char *attr_value)
- 		strscpy(bioscfg_drv.enumeration_data[instance].current_value,
- 			attr_value,
- 			sizeof(bioscfg_drv.enumeration_data[instance].current_value));
-+		/*
-+		 * set pending reboot flag depending on
-+		 * "RequiresPhysicalPresence" value
-+		 */
-+		if (bioscfg_drv.enumeration_data[instance].requires_physical_presence)
-+			bioscfg_drv.pending_reboot = TRUE;
-+
- 		goto exit_update_attribute;
- 	}
- 	instance = get_instance_id_for_ordered_list(attr_name);
--	if (instance >= 0)
-+	if (instance >= 0) {
- 		strscpy(bioscfg_drv.ordered_list_data[instance].current_value,
- 			attr_value,
- 			sizeof(bioscfg_drv.ordered_list_data[instance].current_value));
+ 	/* Populate ordered list elements */
+ 	populate_ordered_list_elements_from_buffer(order_obj, instance_id, HPWMI_ORDERED_LIST_TYPE);
+-
++	update_attribute_permissions(bioscfg_drv.ordered_list_data[instance_id].is_readonly,
++				    &ordered_list_current_val);
+ 	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
+ }
  
-+		/*
-+		 * set pending reboot flag depending on
-+		 * "RequiresPhysicalPresence" value
-+		 */
-+		if (bioscfg_drv.ordered_list_data[instance].requires_physical_presence)
-+			bioscfg_drv.pending_reboot = TRUE;
-+	}
-+
- exit_update_attribute:
- 	return instance;
+diff --git a/drivers/platform/x86/hp/string-attributes.c b/drivers/platform/x86/hp/string-attributes.c
+index c85688cfbccc..a8e4f8b60dff 100644
+--- a/drivers/platform/x86/hp/string-attributes.c
++++ b/drivers/platform/x86/hp/string-attributes.c
+@@ -164,6 +164,8 @@ int populate_string_package_data(union acpi_object *elements, int instance_id,
+ 	str_value = NULL;
+ 
+ 	populate_string_elements_from_package(elements, instance_id, HPWMI_STRING_TYPE);
++	update_attribute_permissions(bioscfg_drv.string_data[instance_id].is_readonly,
++				    &string_current_val);
+ 
+ 	return sysfs_create_group(attr_name_kobj, &string_attr_group);
+ }
+@@ -321,6 +323,8 @@ int populate_string_buffer_data(union acpi_object *string_obj, int instance_id,
+ 	/* Populate string elements */
+ 
+ 	populate_string_elements_from_buffer(string_obj, instance_id, HPWMI_STRING_TYPE);
++	update_attribute_permissions(bioscfg_drv.string_data[instance_id].is_readonly,
++				    &string_current_val);
+ 
+ 	return sysfs_create_group(attr_name_kobj, &string_attr_group);
  }
 -- 
 2.34.1
