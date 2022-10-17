@@ -2,238 +2,348 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E76FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Oct 2022 16:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA091C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Oct 2022 17:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbiJQQEW (ORCPT
+        id S229990AbiJQRIQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Oct 2022 12:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
+        Mon, 17 Oct 2022 13:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbiJQQD4 (ORCPT
+        with ESMTP id S229817AbiJQRIO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Oct 2022 12:03:56 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2072.outbound.protection.outlook.com [40.107.220.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46EC16DFA5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Oct 2022 09:03:36 -0700 (PDT)
+        Mon, 17 Oct 2022 13:08:14 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A5771704;
+        Mon, 17 Oct 2022 10:08:10 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WyhlqYRVecCDU89vdBDxqXRZ7RLMd7aX5SdbFzQYcZaXATigJLngFV+LAVl1O6Ir2Yi1PjAAM/4i5M6399gZK2QqEFKFqy/R7WLcj5smk3nJ2FEWeoeObWBHGJnm1iBPXMcT8V6+uBnJ93iyGTWKUm7wPdZPqQ1sf/0K+RTMM1MhydwV9oT9RyTdexvHrVPi/ZNS9aDXbuKVZhmkcD5s6XbKNmZ2vYoIOgKXk4FRSaX4M+Xq3RPuGWCYX7EO8kWrZYsaDUMbnNbGJXGakxIZEmBFh5jnMT0sEoy1NJ9Fd+y0k9Lx3qyNc0pVWq3yILBPuQ/Uuhgta1PqKtP74Hps1g==
+ b=K3lQqmj7QWPZFiYPJsIwi3pFDmdN1/nZqrHCCXsoXyVqPlVavEBBM/2mH7ZLNScdcMNxyvJxJxRBPn6BTfMDh8no2tuT9ju/bnj+IRsDAvybk/h9QyvLmYqLOpBc+0cSe4ZaPI8BswQPEkB22iTdd8Cjnfc8kDNF0LqKaNTWLPEH/MyYxYdfKdCblK4Qp9wVi6r/x1jueO0iveN7m6CsLuGvyh7crDY03md73ucFFJvCrJipXF24tVTkrJL//jcre5zxs1vwKUnlJx3WsU57yXIQvOxVvkNZmPTh5Rg+BrTlb8QlFhfOGQu9V7CWXZIvwnARQu0cICdoCzOgkq/vcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aspOKknu8eemQIJ8PsJFhFQviUGD3jkiMJjKEInN1xY=;
- b=Zj+w7HwtP39UtPOgUFf4TYE3/4HWcsrsHG9aiH2yrdIXIcEx8Ob720vWPSadqBNNyPWgS/qQ6w6WopNrzMLca3WX0xAQ0DeO3R3ZsKgKC648D+eKHU512p52Qs/5T13ay2ASk2xXspeQG9dkTDPPIjtii4QLBcSgaMue1zAQbZJW9fZi2hm4+EZWnd2rI7ToS5GY8IntETI83sKgqT8kRZ2TZasLZNmpt0NHnV95UaYOluFFhPL17qdsoE8ABKqq2Ar47HvsSLQlaA0JGx6EGPzx4JkNhy/TJ1wR2jiDEjck+TacVH4OTVjzB51yQMY/u+xvHmRLv56H4JqFOrolZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=LCj1lfz8Y4RUSNFMuxUNQCaa1l8ltEjk1bkUKWUNQ98=;
+ b=ZlcZ43Lc5MoYX61wey5fezDsBFOV9W3psXxfscbRQ3TkMtiRJt5XetpFSkpYaOrdE6ZnZaWjWwhd3rris6vKfAu9AtBikXjSPy73AeMfonS/eQTBRQW5sy2KLITGoMAxruzE1Ls2/oTjnT9rZVwakN72TqAL3d+/gf8frIoMfTV3aqpVrpqr0j3lp95VOg0eSIrtaTzuzw2QeaSQ1jdDgF6EfkGQA5ffCHOGlbf+a5hywi4lzP1uQA6lvLBFMcyrDu6MFHhpr64r2/zk61Y4nfTLpqNsNfMcXjSDajaXNZ6mjg8/lhVbKmuE4t9BgunqONLu721FD0h56o+AMlsLaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=infradead.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aspOKknu8eemQIJ8PsJFhFQviUGD3jkiMJjKEInN1xY=;
- b=jiKSvYrI4hwgNnqlVD+GDwS91JP+JT2lRcgN14WowI4OAOKvmpZYtMWjJqYjQVhTWd6UNoRd11vw5z8vPPj4EXXmHA+ZHvhZjpaW2NoAi/mGeR4xPFVHr9awBmKc2qPvYqKaday6C+qZdOfdc4D4IJkdSeOh1FZIO/IT19JE/wo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MN2PR12MB4565.namprd12.prod.outlook.com (2603:10b6:208:26b::9) with
+ bh=LCj1lfz8Y4RUSNFMuxUNQCaa1l8ltEjk1bkUKWUNQ98=;
+ b=I6DERwXgFdtHm10Pplf6lgBi6jr5KxOgEK/CFejHbHQ6wIo+RRY87YAPX97NM2DkjTToe0C8bq5Z5IxGD6Ir64A9tvXvWhejl9TvQbo8Ybc0DOYNgy7q/oia1iGQgoyVQQM8KJOVxm5z6/2fs7h0QlWmhPchTj+DCdwbawDZUVuHF3wjxAjgZeVoqxjjNciJErMNnpWXhfAiOIIu9qGgOLo2Ak735pwRhLduzRQQMF1FbpUQSc37HnHcNbxW3Q8ie9ovY8Ia1j0Yv6s9YHfxVbathm/Ev9rBAxxA65mZkMPHIgOp/nJ1XiYGbI7f6cyUTTPKEC1ONRHfdB3YZTj9Zw==
+Received: from BN0PR03CA0001.namprd03.prod.outlook.com (2603:10b6:408:e6::6)
+ by PH7PR12MB5593.namprd12.prod.outlook.com (2603:10b6:510:133::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.26; Mon, 17 Oct
- 2022 16:03:34 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::76ec:6acf:dd4d:76a3]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::76ec:6acf:dd4d:76a3%8]) with mapi id 15.20.5723.033; Mon, 17 Oct 2022
- 16:03:34 +0000
-Message-ID: <643af53c-48c3-dd9f-4975-ff4430dc3c62@amd.com>
-Date:   Mon, 17 Oct 2022 11:03:31 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 1/1] Introduction of HP-BIOSCFG driver
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20221010162326.12957-1-jorge.lopez2@hp.com>
- <20221010162326.12957-2-jorge.lopez2@hp.com>
- <a50407fd-6969-9e9a-23a3-39879af639cd@amd.com>
- <CAOOmCE--qzRCOgpfpW5j5VmnCPExdTVDM9yQ-PcXrec76e492Q@mail.gmail.com>
- <d88e15ba-9e3f-310d-118b-7ccb2fbe1ca9@amd.com>
- <CAOOmCE9wVT=Fr72pgx58X4RMPy554MwZev3_8JtU8cBLdNpfhA@mail.gmail.com>
- <CAOOmCE9fuHTTVcSUSC0SU3N_ht8uVLg4hGUAJE7bJgs6UAt3gA@mail.gmail.com>
- <dbffc3c3-9fbf-8d7d-99a9-29d44671e7f2@amd.com>
- <f453562f-b87d-d754-0aaf-524575bc7f57@redhat.com>
- <CAOOmCE-E8SGmUVmajYqXFpza1p5mwTOJS2Z6a8Wxd4g=j92vkQ@mail.gmail.com>
- <30603c5b-2dbd-32d6-00b0-023a5ff977ee@redhat.com>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <30603c5b-2dbd-32d6-00b0-023a5ff977ee@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR05CA0036.namprd05.prod.outlook.com (2603:10b6:610::49)
- To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ 2022 17:08:07 +0000
+Received: from BN8NAM11FT004.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e6:cafe::91) by BN0PR03CA0001.outlook.office365.com
+ (2603:10b6:408:e6::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.31 via Frontend
+ Transport; Mon, 17 Oct 2022 17:08:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN8NAM11FT004.mail.protection.outlook.com (10.13.176.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5723.20 via Frontend Transport; Mon, 17 Oct 2022 17:08:07 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Mon, 17 Oct
+ 2022 10:07:42 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Mon, 17 Oct
+ 2022 10:07:41 -0700
+Received: from vdi.nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server id 15.2.986.29 via Frontend Transport; Mon, 17 Oct
+ 2022 10:07:40 -0700
+From:   Liming Sun <limings@nvidia.com>
+To:     David Thompson <davthompson@nvidia.com>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+CC:     Liming Sun <limings@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>
+Subject: [PATCH v1 1/1] platform/mellanox: Add BlueField-3 support in the tmfifo driver
+Date:   Mon, 17 Oct 2022 13:07:38 -0400
+Message-ID: <33bfcba9d1ad5a52ae9a63e817167b9ee3f0123a.1666024788.git.limings@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN2PR12MB4565:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18f4fe6c-114b-4f59-ec13-08dab0592497
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT004:EE_|PH7PR12MB5593:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d1ce5ad-2218-4f8e-6f60-08dab0622972
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n2dOWRERmsTNxw4uSQ6tpkXxEjLb1MaXfSnSSklrb6QtJsnvJdAIqm2TRyVOPAXGCfb/Nl8MJd6dRdA0EL8OlBhzHldt2lSgKHJsQoBO0rYpyBj7Ks8usLmHQXWu7XFOFR2Nrd9Qe+k7MENADPbBAlM3Im5BYLx4OKLnvcMnJKPzBqYCuNXbIc1J5v7LV2Zh9Yv/QS/azVnuHg0mwgru4SdeEsTNZUG3vME/6FXJ4t+VWRdSB1jjQYS0YDh+z9yG5KwuaAPAL37+h4ngmiIhCsSqyHWKIcl6JPVkzuvT45hYELTTqgpqj5Y59ovwuT/05aDfe7HHeeihRhah4JWk71Rp/t1Z2PXMpy8UdTzQ3n5USqB8MY7kgJ1yGwaB2bDdHOYAT9Kf0Sa1iKa2+9Lcv9JYArhiqUIu08YaBNfexlDiVIeEldl8HUECj/commuv1IEajVRpZ3HTYmToMObQaju482hFhFPVgwe9XoUo7pF7Fg7f78AJhZXdyJ7qTkyzo8gzk5KhvkSQ427dAbV1jLZgbTvTIHL+lkfA9isqhTJ22NpviO+TolMSucW9TQ9yvsR5vHJishCZG1CwofCRri7ZEii3iY3B86toxLkaxTxdwidtE8tYbflPUqNYUcglsiQqFiwg1PSYVp9LfB7/ykPINVIp7jp2MH5n0ZsqJYevE2AWWkH5lZaZEkoc4iTLYklLKSb1KGq32kQsXEfA74gGhDtvZVLFIoSp3DvhGVLBxZ3bdsAakL4CjoRQHQY4BeUvxOFC+3eGg72Ow98RhRDyeU3qTw0ue+EEdN3cSJjkhSrLWb95pa0w9IbPI363tk0IdD54bYlTJ/HuMGF61g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(451199015)(2616005)(186003)(6506007)(6512007)(6666004)(26005)(83380400001)(53546011)(2906002)(5660300002)(8936002)(110136005)(316002)(478600001)(6486002)(966005)(66476007)(41300700001)(4326008)(8676002)(66556008)(66946007)(36756003)(86362001)(31696002)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZCszTnJnNm1QbUJJMlVYaS9qZ3NSM1RINXJRRTFFanR0TGJPOWxrYWRnSWpL?=
- =?utf-8?B?cTM4azZjUDR1VUcvdFpnaUNyOXFndjVYMnY4Q3RMbXFGandLWjhFWVFpSG1Z?=
- =?utf-8?B?eFhLbXEwcFZLU3gwbjBXcGYzQ2psZFV4VEl6eGRucE5yYkQ2aWtWRFZQRlBR?=
- =?utf-8?B?MVRXUkZDSXQzM0NnUzRZTi8ydmhXQk5jbjZobVpIa0Y3d1AzeElQa0VMQWY1?=
- =?utf-8?B?ZVp5YkxsS1J0L2prcG1vT0x1K1VkWTAvY0dFZVk3SmYrM0dvcEI5OFpiWHFS?=
- =?utf-8?B?RFc2RUp4Y0Q5Q0pseXRpem53MWZub1dpcmlYMjJtUGFhTjhoZzR6emNjenRt?=
- =?utf-8?B?REJQakZPSmEyMDl0MDhKOUJ5R3Ivbm13dzB0WkZKNHhJVTl5SWJSOFgwbGdB?=
- =?utf-8?B?bnlLTWkwNDhERjAxYjZ2U0xzNlNHdmtqOUlkbzJpNXNjbmgwRFc2RWJQaG9r?=
- =?utf-8?B?MEpyQjBRL0RZaUdXMmc5NUx1eTJZdkhWL3YxRG9ONkdxYzZncEx1d1pPVmhn?=
- =?utf-8?B?clFnUjRvdEVzQ2toY3QrWG5CaXdJbVJ3Wk55K29QbTNXeC9YUk9Pdll5YXFB?=
- =?utf-8?B?anRlZU45NlAvZTRobUoreWwvcytTMnRXL1RORkZGZnI3dzlqUkVIVU5UVmVP?=
- =?utf-8?B?d2o1cS91MkJGU0Q2dVBMQ0IxK3pPbkJwellyOWZhSHJ5K2FSbHcvUSs5TmI3?=
- =?utf-8?B?bEptOHBkL3JjTG9yRW0zQXpONXpvZjFsSk5qZUEyT2I0Sld5VGJXdGVoQkRa?=
- =?utf-8?B?dmROTStWa3kyWmhWaWt2cUVid1p2RXh4TjJHb1E0NDZvMERhSFMwRVBWWGhZ?=
- =?utf-8?B?dGJORWhOZXNMQU1PaW1mcmkyMzNqV3UxN3VlNmxSTEEyZVJzUTZ2Z3JNWEli?=
- =?utf-8?B?UDNBSk1tM2M1VnVsYVh1KzZMdk5SSzd3SjNiNlR1bDZZaEJ6V1FtQVg1bjIy?=
- =?utf-8?B?ZGl2aFc3YUkyZXN1U0pkUFFxTkRRMzNMZlQ3eVdVVmFqMW92TFhXSVJjK0lV?=
- =?utf-8?B?SW82WVdEMHlkdzRacXBmd3ZTdktsMUkydDFzOUFzeTh2d2ZaMmQzSTBicFV0?=
- =?utf-8?B?NksxcFBESERFbCtHUmt5ZVA2eHE2VmR3RU00WWY4NU0ybnlGTnNyb1F6SnZm?=
- =?utf-8?B?MFBvbUdzNkVLWDZPRG5RdUdwRkJJWGVoTDVJU3FKS3piMVlENVZwd2txaEY0?=
- =?utf-8?B?WTBBbmg5dnpydEhXNTByN1cxemg0VWl2NHp5ejZBQVRrajIzajZCanBHd2lK?=
- =?utf-8?B?Ykt4TnVqUVJQY3FSMlpNMGVFZXZWTjl4akNDcEt2L25UU2xvbk52eGdDb3h6?=
- =?utf-8?B?aVFjYWowb2FOSFkxbDJPcmFNaFRFN0ZnOUVmQ3pyODQ4Ymx6b1ZVWDJTSWUz?=
- =?utf-8?B?SkVVYXJmZHd4NzU4MjUvdmxMWCtQbUkzaG9zdTgybUdHWTF0RlR3MlNYUVJE?=
- =?utf-8?B?ekxsMVVTVmpZOWZlSXZDc3ZFTkREMTdlWkNwNkRIY0FXeVpsYnhwWG5YOUFr?=
- =?utf-8?B?bHNzajJ4MlFkTit6N1lrSEJ1UHZnL1NaMkhpS25Zb2Jid1V0a3MxZnZidkVt?=
- =?utf-8?B?TTdqTWNCUTRYSDB2aVlqZS8vMVk1OEVBcVh0Q2s3YWFURUhrN21TZEl2WHow?=
- =?utf-8?B?eVFDUHdvSWhuc24zT1hQekdwTURQN2xBeWQxQkJ3aFZ4ZitCTWowcTcxNzF6?=
- =?utf-8?B?bStvM1h6RlNqbGF1aVl2NTZjYzBQWHFqQUhZMFdwdUVza0cvbWZTaGx5eGh0?=
- =?utf-8?B?S1o0Q0IrRjVVeXNQSElHL1hSSE9ueUJab0RzelFFOFRyeTdJMTNRc2NhVXVU?=
- =?utf-8?B?YkRFNjF3dUZrVFZLR2tKckEwWHlpaFFaVDQ1Ymo4QU96bWhDU3YyYU8xQm9R?=
- =?utf-8?B?YnYxQ3JReDVpMGRvN0pqTHA4ZUtldUlwUUJwNmhjSU4zWVd5Uk1lMDBCb09Q?=
- =?utf-8?B?RG5aS1AzRE9UdUl6d0RidkIxaTRNakRJNXhuR0s0VDIrdUI2UmYwbnZ6cFJM?=
- =?utf-8?B?ZHFIcTJYcGZvN3FCR3pQektNdzJZK3VEcG5NMWw5QkZwTHNrbTlTU0E1MGww?=
- =?utf-8?B?K0RmNmhSOEk1OXdReXJIN0ZNeTVFT2tyblUydHA4Mkg1ZWhhNWtaSDBCbTQ4?=
- =?utf-8?Q?vim5BCKIYpS+eAzb9orGZSqGq?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18f4fe6c-114b-4f59-ec13-08dab0592497
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 16:03:34.1516
+X-Microsoft-Antispam-Message-Info: XchQpoDxzEphVOR50lLD1cS94JCe19NyUDTwj6c6hNWbHk4fv6RwTTToUbpLSgGBjiDk5kxORWOjm4t5xM21UwmChTvCUg7zOvu4F+nFr+G4CpWMsUeRgTkZGJ8OJys3y+yjfvdzL7jFyVzGYKVQ6pedTYLiqGLrrEISoIMNR/kmNJgItH4hDCuWxzIdx+QVYUXDKtovuV3EJYJtQmYa0rNyATkUGgNBARWZqRXuPS6Q0QosTJD5/uQp+mIf/GJHNKfzJKeqPTE9EhLOEsJhgYcYXfKg2T2IJw7KFWZ6sUTu4OPZEGb2hciTCXnK4RHfZk2M2LGINNWTnHJ5gCrA9v1SBxRewFBS0sO3KcLEuPrZbx4/fNfoPtHMgRCdjq9MVFQOb5fG0YELq6cdeMp42dVRo+AW4j43e5AJd9711I9WTJ+EmdLL0MFk22umrlF91Hn6BLtOoGn9Iyz6bvs4lN7YRIKL73sb/tqQjUiUdqCF/gtGJfPxERf28Uec4AFKf+QtST1liDthNe0U3fns1gLA6nphwT02Iz26Ey+99GXsMo2qzu22Kj/3hRIUxJ+ytX0dgxl0oWMEjz6HZ8HWPKO7BcF1wEC1W1iiFo1S5LSdmt575LGm6IE6bxXpCG5xU0YggCWy8VE5yLvqDcti5PxJj0pYTkCOlFjCNYlEf/KDfIRROg+ivX/Cb4IPXfcVnjmwnyx6Lm1LeiqWwIynr/5lZBCwoOyvjB4uy+aScPggkcOxTqxGinknQd9hWXQEN9NDA/w0HItdNhGFqaEVFg==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199015)(40470700004)(46966006)(36840700001)(26005)(41300700001)(40460700003)(107886003)(186003)(2616005)(336012)(478600001)(82310400005)(36756003)(2906002)(7696005)(86362001)(8936002)(5660300002)(82740400003)(36860700001)(110136005)(54906003)(316002)(40480700001)(47076005)(426003)(8676002)(4326008)(83380400001)(70586007)(356005)(7636003)(70206006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 17:08:07.2651
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uhIANqzsN5UtPumPiS6Hwf6dZjzq4JVFfsIxFDXWkoEg7erSDMx99I99uLTdaHOvFgF6gxNZ9PDk8U4JC7MHdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4565
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d1ce5ad-2218-4f8e-6f60-08dab0622972
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT004.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5593
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/17/2022 10:37, Hans de Goede wrote:
-> Hi,
-> 
-> On 10/17/22 17:20, Jorge Lopez wrote:
->> Hi Hans,
->>
->> On Mon, Oct 17, 2022 at 9:37 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>>
->>> Hi,
->>>
->>> On 10/17/22 16:29, Limonciello, Mario wrote:
->>>> FYI When you submit v3, you don't need to add "new patches on top" for your feedbacks to the new driver, they can roll into the patch introducing hp-cfg.  Just make sure you include a changelog under your cut line to indicate you changed these from vX->vY
->>>>
->>>> I suspect that Hans will also want you to split the driver up into smaller bite-size patches to make his review easier as well, but I'll let him advise how he wants it done.
->>>>
->>>> On 10/17/2022 09:11, Jorge Lopez wrote:
->>>>> ''Hi Mario,
->>>>>
->>>>> Please see comments to previous source comments.
->>>> <snip>
->>>>
->>>>>>> Thanks.  If you make this change for v2, I can make the matching change
->>>>>>> in fwupd so that if it notices current_value permissions like this that
->>>>>>> it shows read only there too.
->>>>>>
->>>>>> Submitted the recommended changes for review in v2
->>>>>>
->>>>
->>>> Thanks, looks good.
->>>>
->>>>>> Submitted a patch to improve the friendly display name for
->>>>>> few numbers of attributes associated with ‘Schedule Power-ON.’  BIOS
->>>>>> assign names such ‘Tuesday’ to an attribute. The name is correct, but
->>>>>> it is not descriptive enough for the user.  Under those
->>>>>> conditions a portion of the path data value is appended to the attribute
->>>>>> name to create a user-friendly display name.
->>>>>>
->>>>>> For instance, the attribute name is ‘Tuesday,’ and the display name
->>>>>> value is ‘Schedule Power-ON – Tuesday’
->>>>
->>>> Looks good
->>>>
->>>>>>>>>
->>>>>>>>> Presumably if this is going into it's own directory you should move all
->>>>>>>>> platform-x86 HP drivers to this directory earlier in the series too.
->>>>>
->>>>> The other drivers named HP-WMI and HP_ACCEL  were written by third
->>>>> party members and not by HP.   It is for this reason and because of
->>>>> the number of files, only hp-bioscfg was placed in a separate
->>>>> directory.   Let me know If my reasoning is not valid enough  and I
->>>>> will keep the files in a separate directory and move the selection to
->>>>> the main list.    In addition, Moving  HP-WMI and HP_ACCEL drivers
->>>>> from x86 directories fall outside of the scope of these changes,
->>>>> Correct?
->>>>>
->>>>
->>>> There is no distinction who writes a driver.  I think either you keep this driver in the root of drivers/platform/x86 or you put all the HP drivers in drivers/platform/x86/hp.
->>>>
->>>> I think if you're going to put this driver in the sub-directory "hp", then the first patch in this series should be to move those drivers to that sub-directory.  The second patch should be to introduce your new driver.
->>>
->>> I see this driver has a lot of separate files, so what should happen here IMHO is:
->>>
->>> 1. a preparation patch adding a hp subdir moving the existing hp drivers there
->>
->> This will be a separate patch but not an obstacle to gain approval of
->> hp-bioscfg driver, correct?
-> 
-> Right, this is just shuffling things around a bit because as we get
-> more and more drivers having them all in one dir becomes a bit
-> unwieldly.
+BlueField-3 uses the same control registers in tmfifo access but
+at different addresses. This commit replaces the offset reference
+with pointers, and set up these pointers in the probe functions
+accordingly.
 
-The AMD drivers just underwent this very recently too, as did Intel 
-about 6 months before.  If you want an example of what they did you can 
-use this to reference the AMD one:
+Signed-off-by: Liming Sun <limings@nvidia.com>
+Reviewed-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo-regs.h | 10 +++
+ drivers/platform/mellanox/mlxbf-tmfifo.c      | 86 ++++++++++++++-----
+ 2 files changed, 74 insertions(+), 22 deletions(-)
 
-https://github.com/torvalds/linux/commit/ef233eafe5adc54ddc39a1b6cc483dddc744bf97
-
-> 
->>
->>> 2. but this driver in a subdir of the hp subdir, so put all its files under:
->>>
->>> drivers/platform/x86/hp/hp-bioscfg
->>>
->>> so as to keep the files together and separate from other hp drivers.
->>
->> Can you please clarify..
->>
->> Do I need to start a new review with only two patches described earlier?
->>
->> 1. a preparation patch adding a hp subdir moving the existing hp drivers there
->> 2. Squash (current version v1 and v2 changes) into one
-> 
-> Ah, no, splitting step 2 as you did into multiple patches is fine,
-> reviewing multiple small patches typically also is easier. So keeping
-> the addition of the hp-bioscfg split into multiple patches is good.
-
-The split right now is along changes requested on v1 -> v2 rather than 
-along making the driver into functional pieces.
-
-> 
-> The point which I was trying to make is to put all the files
-> for hp-bioscfg in their own sub-sub-dir and not mix them with
-> the other driver files in a single hp dir.
-> 
-> Regards,
-> 
-> Hans
-> 
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo-regs.h b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
+index e4f0d2eda714..44fb8c5b1484 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
++++ b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
+@@ -60,4 +60,14 @@
+ #define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_RMASK		GENMASK_ULL(8, 0)
+ #define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK		GENMASK_ULL(40, 32)
+ 
++/* BF3 register offsets within resource 0. */
++#define MLXBF_TMFIFO_RX_DATA_BF3	0x0000
++#define MLXBF_TMFIFO_TX_DATA_BF3	0x1000
++
++/* BF3 register offsets within resource 1. */
++#define MLXBF_TMFIFO_RX_STS_BF3		0x0000
++#define MLXBF_TMFIFO_RX_CTL_BF3		0x0008
++#define MLXBF_TMFIFO_TX_STS_BF3		0x0100
++#define MLXBF_TMFIFO_TX_CTL_BF3		0x0108
++
+ #endif /* !defined(__MLXBF_TMFIFO_REGS_H__) */
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 1ae3c56b66b0..91a077c35b8b 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -47,6 +47,9 @@
+ /* Message with data needs at least two words (for header & data). */
+ #define MLXBF_TMFIFO_DATA_MIN_WORDS		2
+ 
++/* ACPI UID for BlueField-3. */
++#define TMFIFO_BF3_UID				1
++
+ struct mlxbf_tmfifo;
+ 
+ /**
+@@ -136,12 +139,26 @@ struct mlxbf_tmfifo_irq_info {
+ 	int index;
+ };
+ 
++/**
++ * mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
++ * @ctl: control register offset (TMFIFO_RX_CTL / TMFIFO_TX_CTL)
++ * @sts: status register offset (TMFIFO_RX_STS / TMFIFO_TX_STS)
++ * @data: data register offset (TMFIFO_RX_DATA / TMFIFO_TX_DATA)
++ */
++struct mlxbf_tmfifo_io {
++	void __iomem *ctl;
++	void __iomem *sts;
++	void __iomem *data;
++};
++
+ /**
+  * mlxbf_tmfifo - Structure of the TmFifo
+  * @vdev: array of the virtual devices running over the TmFifo
+  * @lock: lock to protect the TmFifo access
+- * @rx_base: mapped register base address for the Rx FIFO
+- * @tx_base: mapped register base address for the Tx FIFO
++ * @res0: mapped resource block 0
++ * @res1: mapped resource block 1
++ * @rx: rx io resource
++ * @tx: tx io resource
+  * @rx_fifo_size: number of entries of the Rx FIFO
+  * @tx_fifo_size: number of entries of the Tx FIFO
+  * @pend_events: pending bits for deferred events
+@@ -155,8 +172,10 @@ struct mlxbf_tmfifo_irq_info {
+ struct mlxbf_tmfifo {
+ 	struct mlxbf_tmfifo_vdev *vdev[MLXBF_TMFIFO_VDEV_MAX];
+ 	struct mutex lock;		/* TmFifo lock */
+-	void __iomem *rx_base;
+-	void __iomem *tx_base;
++	void __iomem *res0;
++	void __iomem *res1;
++	struct mlxbf_tmfifo_io rx;
++	struct mlxbf_tmfifo_io tx;
+ 	int rx_fifo_size;
+ 	int tx_fifo_size;
+ 	unsigned long pend_events;
+@@ -472,7 +491,7 @@ static int mlxbf_tmfifo_get_rx_avail(struct mlxbf_tmfifo *fifo)
+ {
+ 	u64 sts;
+ 
+-	sts = readq(fifo->rx_base + MLXBF_TMFIFO_RX_STS);
++	sts = readq(fifo->rx.sts);
+ 	return FIELD_GET(MLXBF_TMFIFO_RX_STS__COUNT_MASK, sts);
+ }
+ 
+@@ -489,7 +508,7 @@ static int mlxbf_tmfifo_get_tx_avail(struct mlxbf_tmfifo *fifo, int vdev_id)
+ 	else
+ 		tx_reserve = 1;
+ 
+-	sts = readq(fifo->tx_base + MLXBF_TMFIFO_TX_STS);
++	sts = readq(fifo->tx.sts);
+ 	count = FIELD_GET(MLXBF_TMFIFO_TX_STS__COUNT_MASK, sts);
+ 	return fifo->tx_fifo_size - tx_reserve - count;
+ }
+@@ -525,7 +544,7 @@ static void mlxbf_tmfifo_console_tx(struct mlxbf_tmfifo *fifo, int avail)
+ 	/* Write header. */
+ 	hdr.type = VIRTIO_ID_CONSOLE;
+ 	hdr.len = htons(size);
+-	writeq(*(u64 *)&hdr, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
++	writeq(*(u64 *)&hdr, fifo->tx.data);
+ 
+ 	/* Use spin-lock to protect the 'cons->tx_buf'. */
+ 	spin_lock_irqsave(&fifo->spin_lock[0], flags);
+@@ -542,7 +561,7 @@ static void mlxbf_tmfifo_console_tx(struct mlxbf_tmfifo *fifo, int avail)
+ 			memcpy((u8 *)&data + seg, cons->tx_buf.buf,
+ 			       sizeof(u64) - seg);
+ 		}
+-		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
++		writeq(data, fifo->tx.data);
+ 
+ 		if (size >= sizeof(u64)) {
+ 			cons->tx_buf.tail = (cons->tx_buf.tail + sizeof(u64)) %
+@@ -573,7 +592,7 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
+ 
+ 	/* Read a word from FIFO for Rx. */
+ 	if (is_rx)
+-		data = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
++		data = readq(fifo->rx.data);
+ 
+ 	if (vring->cur_len + sizeof(u64) <= len) {
+ 		/* The whole word. */
+@@ -595,7 +614,7 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
+ 
+ 	/* Write the word into FIFO for Tx. */
+ 	if (!is_rx)
+-		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
++		writeq(data, fifo->tx.data);
+ }
+ 
+ /*
+@@ -617,7 +636,7 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
+ 	/* Read/Write packet header. */
+ 	if (is_rx) {
+ 		/* Drain one word from the FIFO. */
+-		*(u64 *)&hdr = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
++		*(u64 *)&hdr = readq(fifo->rx.data);
+ 
+ 		/* Skip the length 0 packets (keepalive). */
+ 		if (hdr.len == 0)
+@@ -661,7 +680,7 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
+ 		hdr.type = (vring->vdev_id == VIRTIO_ID_NET) ?
+ 			    VIRTIO_ID_NET : VIRTIO_ID_CONSOLE;
+ 		hdr.len = htons(vring->pkt_len - hdr_len);
+-		writeq(*(u64 *)&hdr, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
++		writeq(*(u64 *)&hdr, fifo->tx.data);
+ 	}
+ 
+ 	vring->cur_len = hdr_len;
+@@ -1157,7 +1176,7 @@ static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
+ 	u64 ctl;
+ 
+ 	/* Get Tx FIFO size and set the low/high watermark. */
+-	ctl = readq(fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
++	ctl = readq(fifo->tx.ctl);
+ 	fifo->tx_fifo_size =
+ 		FIELD_GET(MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_MASK, ctl);
+ 	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__LWM_MASK) |
+@@ -1166,17 +1185,17 @@ static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
+ 	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__HWM_MASK) |
+ 		FIELD_PREP(MLXBF_TMFIFO_TX_CTL__HWM_MASK,
+ 			   fifo->tx_fifo_size - 1);
+-	writeq(ctl, fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
++	writeq(ctl, fifo->tx.ctl);
+ 
+ 	/* Get Rx FIFO size and set the low/high watermark. */
+-	ctl = readq(fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
++	ctl = readq(fifo->rx.ctl);
+ 	fifo->rx_fifo_size =
+ 		FIELD_GET(MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK, ctl);
+ 	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__LWM_MASK) |
+ 		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__LWM_MASK, 0);
+ 	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__HWM_MASK) |
+ 		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__HWM_MASK, 1);
+-	writeq(ctl, fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
++	writeq(ctl, fifo->rx.ctl);
+ }
+ 
+ static void mlxbf_tmfifo_cleanup(struct mlxbf_tmfifo *fifo)
+@@ -1197,8 +1216,15 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
+ 	struct virtio_net_config net_config;
+ 	struct device *dev = &pdev->dev;
+ 	struct mlxbf_tmfifo *fifo;
++	u64 dev_id;
+ 	int i, rc;
+ 
++	rc = acpi_dev_uid_to_integer(ACPI_COMPANION(dev), &dev_id);
++	if (rc) {
++		dev_err(dev, "Cannot retrieve UID\n");
++		return rc;
++	}
++
+ 	fifo = devm_kzalloc(dev, sizeof(*fifo), GFP_KERNEL);
+ 	if (!fifo)
+ 		return -ENOMEM;
+@@ -1209,14 +1235,30 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
+ 	mutex_init(&fifo->lock);
+ 
+ 	/* Get the resource of the Rx FIFO. */
+-	fifo->rx_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(fifo->rx_base))
+-		return PTR_ERR(fifo->rx_base);
++	fifo->res0 = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(fifo->res0))
++		return PTR_ERR(fifo->res0);
+ 
+ 	/* Get the resource of the Tx FIFO. */
+-	fifo->tx_base = devm_platform_ioremap_resource(pdev, 1);
+-	if (IS_ERR(fifo->tx_base))
+-		return PTR_ERR(fifo->tx_base);
++	fifo->res1 = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(fifo->res1))
++		return PTR_ERR(fifo->res1);
++
++	if (dev_id == TMFIFO_BF3_UID) {
++		fifo->rx.ctl = fifo->res1 + MLXBF_TMFIFO_RX_CTL_BF3;
++		fifo->rx.sts = fifo->res1 + MLXBF_TMFIFO_RX_STS_BF3;
++		fifo->rx.data = fifo->res0 + MLXBF_TMFIFO_RX_DATA_BF3;
++		fifo->tx.ctl = fifo->res1 + MLXBF_TMFIFO_TX_CTL_BF3;
++		fifo->tx.sts = fifo->res1 + MLXBF_TMFIFO_TX_STS_BF3;
++		fifo->tx.data = fifo->res0 + MLXBF_TMFIFO_TX_DATA_BF3;
++	} else {
++		fifo->rx.ctl = fifo->res0 + MLXBF_TMFIFO_RX_CTL;
++		fifo->rx.sts = fifo->res0 + MLXBF_TMFIFO_RX_STS;
++		fifo->rx.data = fifo->res0 + MLXBF_TMFIFO_RX_DATA;
++		fifo->tx.ctl = fifo->res1 + MLXBF_TMFIFO_TX_CTL;
++		fifo->tx.sts = fifo->res1 + MLXBF_TMFIFO_TX_STS;
++		fifo->tx.data = fifo->res1 + MLXBF_TMFIFO_TX_DATA;
++	}
+ 
+ 	platform_set_drvdata(pdev, fifo);
+ 
+-- 
+2.30.1
 
