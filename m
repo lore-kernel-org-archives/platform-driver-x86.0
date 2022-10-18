@@ -2,46 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201E3C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Oct 2022 09:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6341C43219
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Oct 2022 10:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbiJRJ4a (ORCPT
+        id S230355AbiJRKKU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Oct 2022 05:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59350 "EHLO
+        Tue, 18 Oct 2022 06:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiJRJ4R (ORCPT
+        with ESMTP id S230321AbiJRKKK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Oct 2022 05:56:17 -0400
-X-Greylist: delayed 13237 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 18 Oct 2022 02:56:12 PDT
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E9DA2A85;
-        Tue, 18 Oct 2022 02:56:12 -0700 (PDT)
-X-QQ-mid: bizesmtp73t1666086939tfc7fd05
-Received: from localhost.localdomain ( [58.240.82.166])
+        Tue, 18 Oct 2022 06:10:10 -0400
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410896C964;
+        Tue, 18 Oct 2022 03:10:02 -0700 (PDT)
+X-QQ-mid: bizesmtp88t1666087780toqcpdz3
+Received: from [10.4.23.219] ( [58.240.82.166])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Tue, 18 Oct 2022 17:55:33 +0800 (CST)
-X-QQ-SSF: 01400000000000C0K000000A0000000
-X-QQ-FEAT: bQsUcYFpAAYBiBHsWQunkLgscl2cKPYwrjfuIFuXB3Pw4YAWydLHFD4pq8yv0
-        zIRhg0mXP01fi/51RsWMDou+7Owr+a6it+uOQrgIl18ujr9zJOMJLdQvyLM2U7rjvk/G5Dy
-        LqDck9PlY82qvKp5A+cOakwn0HgxryTKmGxR/PlzBaXtuPZ1X1jfErf07zrqbLq0ncmV79Z
-        UTV7qOSZ7+G7DMnEelIc0cA7NLRzow894pbHbGNbWXXlPJWY7ENgYm5RZWyaoWH7/3lcU+K
-        Ypx+xwizF0w3mzwsML0/tV9ddY0vmW71Pt6H8pM3XAgVyIXN4RVSBWV6/Jt54VIadcGvPU8
-        iB9W3w6aH93s5ApGKmIKDWgzhzTiz74my/Am+xGKAuDr9KSEuPfQmExXJyt/F1PcmUc9TFT
-        W5HOny0lpG8=
+        id ; Tue, 18 Oct 2022 18:09:39 +0800 (CST)
+X-QQ-SSF: 00400000000000C0K000000A0000000
+X-QQ-FEAT: TFgy1zK7+HXgfcYLTLlK3TQ03kfXa1/Vu1sUv9tj8xWm8nuVPhGBMcffgoaXY
+        dJItXYor6NypQ0nVlq8AzAovpNvU+Ril7DgWyqxU07mEiKQzTy/bN8vYS9yu+tjUx0jtGR0
+        ZTLcZug8GNChdPGYN70smlMMKawiaS+r+rFLV0nDfGUGCc94IzMIn9ViHqzUIUkA94U90tC
+        N3g3zsJZ63ZfVmLwRCv1lswXFrMUN5raBOhXSLIeDSziEopPY0lSVZVfDRmzP0tGGxF9HRb
+        CT3Lt4v2HoLxeZKJT/f5NLpAOu8zLhohp5a8we6YMX4kXwUPSUw1tVH2QF177CPf+vd9rIP
+        LMJwgY0VOd3i80BKeRtLlGvutFyXH9vFvFhmvMZrP4Tljwo8Gt2oGhLoiewRXtLB9Dvv3ce
+        UhADstclphE=
 X-QQ-GoodBg: 1
-From:   Manyi Li <limanyi@uniontech.com>
-To:     hdegoede@redhat.com
-Cc:     ike.pan@canonical.com, limanyi@uniontech.com,
-        linux-kernel@vger.kernel.org, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86: ideapad-laptop: Disable touchpad_switch
-Date:   Tue, 18 Oct 2022 17:53:23 +0800
-Message-Id: <20221018095323.14591-1-limanyi@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <bade32f9-594c-3efd-d6da-ea6a4a433948@redhat.com>
-References: <bade32f9-594c-3efd-d6da-ea6a4a433948@redhat.com>
+Message-ID: <29BB6624DF28611B+45506374-c2c6-109c-df13-17531f7b1937@uniontech.com>
+Date:   Tue, 18 Oct 2022 18:09:39 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Disable touchpad_switch
+To:     Hans de Goede <hdegoede@redhat.com>, ike.pan@canonical.com,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221018061457.26937-1-limanyi@uniontech.com>
+ <bade32f9-594c-3efd-d6da-ea6a4a433948@redhat.com>
+From:   Manyi Li <limanyi@uniontech.com>
+In-Reply-To: <bade32f9-594c-3efd-d6da-ea6a4a433948@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr4
@@ -49,60 +50,85 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Ideapads for "Lenovo Yoga 3 Pro 1370" and "ZhaoYang K4e-IML" do not
-use EC to switch touchpad.
 
-Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
-unexpectedly.
 
-Signed-off-by: Manyi Li <limanyi@uniontech.com>
----
- drivers/platform/x86/ideapad-laptop.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+在 2022/10/18 15:48, Hans de Goede 写道:
+> Hi,
+> 
+> On 10/18/22 08:14, Manyi Li wrote:
+>> Ideapads for "Lenovo Yoga 3 Pro 1370" and "ZhaoYang K4e-IML" do not
+>> use EC to switch touchpad.
+>>
+>> Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
+>> unexpectedly.
+>>
+>> Signed-off-by: Manyi Li <limanyi@uniontech.com>
+>> ---
+>>   drivers/platform/x86/ideapad-laptop.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>> index abd0c81d62c4..20b8a94934b4 100644
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -1533,6 +1533,24 @@ static const struct dmi_system_id hw_rfkill_list[] = {
+>>   	{}
+>>   };
+>>   
+>> +static const struct dmi_system_id no_touchpad_switch_list[] = {
+>> +	{
+>> +	.ident = "Lenovo Yoga 3 Pro 1370",
+>> +	.matches = {
+>> +		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> +		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
+>> +		},
+>> +	},
+>> +	{
+>> +	.ident = "ZhaoYang K4e-IML",
+>> +	.matches = {
+>> +		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> +		DMI_MATCH(DMI_PRODUCT_VERSION, "ZhaoYang K4e-IML"),
+>> +		},
+>> +	},
+>> +	{}
+>> +};
+>> +
+>>   static void ideapad_check_features(struct ideapad_private *priv)
+>>   {
+>>   	acpi_handle handle = priv->adev->handle;
+>> @@ -1542,6 +1560,7 @@ static void ideapad_check_features(struct ideapad_private *priv)
+>>   
+>>   	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
+>>   	priv->features.touchpad_ctrl_via_ec = !acpi_dev_present("ELAN0634", NULL, -1);
+>> +	priv->features.touchpad_ctrl_via_ec = !dmi_check_system(no_touchpad_switch_list);
+> 
+> This needs to be:
+> 
+> 	priv->features.touchpad_ctrl_via_ec =
+> 		!acpi_dev_present("ELAN0634", NULL, -1) &&
+> 		!dmi_check_system(no_touchpad_switch_list);
+> 
+> Otherwise you over overriding the results of the ELAN0634 check. Also I wonder if there
+> is not a better way to check for this (for both cases) ?
+> 
+> Is the touchpad on these devices perhaps connected over I2C ? Maybe we need to figure
+> out a way to check for that.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index abd0c81d62c4..33b3dfdd1b08 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1533,6 +1533,24 @@ static const struct dmi_system_id hw_rfkill_list[] = {
- 	{}
- };
- 
-+static const struct dmi_system_id no_touchpad_switch_list[] = {
-+	{
-+	.ident = "Lenovo Yoga 3 Pro 1370",
-+	.matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
-+		},
-+	},
-+	{
-+	.ident = "ZhaoYang K4e-IML",
-+	.matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "ZhaoYang K4e-IML"),
-+		},
-+	},
-+	{}
-+};
-+
- static void ideapad_check_features(struct ideapad_private *priv)
- {
- 	acpi_handle handle = priv->adev->handle;
-@@ -1541,7 +1559,12 @@ static void ideapad_check_features(struct ideapad_private *priv)
- 	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
- 
- 	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
--	priv->features.touchpad_ctrl_via_ec = !acpi_dev_present("ELAN0634", NULL, -1);
-+	if (acpi_dev_present("ELAN0634", NULL, -1))
-+		priv->features.touchpad_ctrl_via_ec = 0;
-+	else if (dmi_check_system(no_touchpad_switch_list))
-+		priv->features.touchpad_ctrl_via_ec = 0;
-+	else
-+		priv->features.touchpad_ctrl_via_ec = 1;
- 
- 	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
- 		priv->features.fan_mode = true;
+Yes,the touchpad on these devices is connected over I2C.
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>>   
+>>   	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
+>>   		priv->features.fan_mode = true;
+> 
+> 
+
 -- 
-2.20.1
+Manyi Li
 
