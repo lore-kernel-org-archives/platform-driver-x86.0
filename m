@@ -2,93 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B967EC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Oct 2022 19:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55E8C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Oct 2022 21:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiJSTsM (ORCPT
+        id S230154AbiJSV2n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 Oct 2022 15:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58830 "EHLO
+        Wed, 19 Oct 2022 17:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbiJSTsL (ORCPT
+        with ESMTP id S230139AbiJSV2m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Oct 2022 15:48:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC3B19E02C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Oct 2022 12:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666208890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=q8LWh3QngN9OL9D2jujOS5NbJlfk+Uy+ONdBorOD2mc=;
-        b=Qkilqa4KnatRjK5AevUPHZJD4prJhcAFcCX4XaHKmrFgBGWi9YjL7X+3AkgWlP9svUkOJe
-        KYQN+LMySiltU5ofPqTjeVximgBdVL1iXhOHqXJNYy6/RiVjUlsDRRVhfhv75gAn3004zN
-        MMIQXL1Vo2SnxJyBszQEEDvW61HLk6Y=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-390-7vzzJbKzNIywwo3yNl4o6g-1; Wed, 19 Oct 2022 15:48:08 -0400
-X-MC-Unique: 7vzzJbKzNIywwo3yNl4o6g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 19 Oct 2022 17:28:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8079B192B8D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Oct 2022 14:28:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D160833A06;
-        Wed, 19 Oct 2022 19:48:08 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.192.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD40A112131B;
-        Wed, 19 Oct 2022 19:48:07 +0000 (UTC)
-From:   Jelle van der Waa <jvanderwaa@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jelle van der Waa <jvanderwaa@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Mark Pearson <markpearson@lenovo.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: skip invalid fan speed
-Date:   Wed, 19 Oct 2022 21:47:51 +0200
-Message-Id: <20221019194751.5392-1-jvanderwaa@redhat.com>
-In-Reply-To: <20221014211709.6322-2-jvanderwaa@redhat.com>
-References: <20221014211709.6322-2-jvanderwaa@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2357B61A0D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Oct 2022 21:28:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F689C4314C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Oct 2022 21:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666214920;
+        bh=I4azNbvV+BMHjCfFQxhGFNC2+0mAs7WeArNCfjcCCgA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=aDwbhhMwfuBIN6WIstbD7Adb0j+qWDVF3SuXb9TwEvr9FXBmQIljxbORnNjaD17DK
+         p64WrMGowqgJx6lBjVYU+ODysvgQBp5gwKoiT7L7FdQk5KOuTGyQXva2Hk9g5pqFhP
+         nxItRzLCl2LZ6u7nfWLHobxObcNY/4xqcPXViOyu4HnVWw6NMWwD/8ls+cDOKdeJck
+         8asNs8Sbiucu9Q9Zp/CjQ+MvamY4YL1WLLTj7ecrnfNzZVHYehMOnV9GTDzhRZKnJO
+         7m0MMDnRKVrP+Yjts4qcrcWhsK0TTI+OtX4o0aXG7q3psCl44Ji7BzkplzwJwBlQG2
+         f58Q80yBHNSyg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 6F71DC433E7; Wed, 19 Oct 2022 21:28:40 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 19 Oct 2022 21:28:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-jm1mnvN6Ns@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-65535 is most likely an invalid read.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
+Denis Pauk (pauk.denis@gmail.com) changed:
 
----
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #303031|0                           |1
+        is obsolete|                            |
 
-Cc: Mark Pearson <markpearson@lenovo.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--- Comment #263 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 303045
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303045&action=3Dedit
+Asus WMI for nct6775 v5.20 base (2022.10.20)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 6a823b850a77..20e5c043a8e8 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -263,6 +263,8 @@ enum tpacpi_hkey_event_t {
- #define TPACPI_DBG_BRGHT	0x0020
- #define TPACPI_DBG_MIXER	0x0040
- 
-+#define FAN_NOT_PRESENT		65535
-+
- #define strlencmp(a, b) (strncmp((a), (b), strlen(b)))
- 
- 
-@@ -8876,7 +8878,7 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 			/* Try and probe the 2nd fan */
- 			tp_features.second_fan = 1; /* needed for get_speed to work */
- 			res = fan2_get_speed(&speed);
--			if (res >= 0) {
-+			if (res >= 0 && speed != FAN_NOT_PRESENT) {
- 				/* It responded - so let's assume it's there */
- 				tp_features.second_fan = 1;
- 				tp_features.second_fan_ctl = 1;
--- 
-2.38.1
+Updated patch with X670 board support, based on patch from Ahmad Khalifa,
 
+https://patchwork.kernel.org/project/linux-hwmon/patch/20221018173428.71080=
+-1-ahmad@khalifa.ws/
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
