@@ -2,235 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64FEFA373D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Oct 2022 18:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEB5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Oct 2022 20:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbiJUSRk (ORCPT
+        id S229520AbiJUUjx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Oct 2022 14:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
+        Fri, 21 Oct 2022 16:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbiJUSRj (ORCPT
+        with ESMTP id S229515AbiJUUjw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Oct 2022 14:17:39 -0400
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37707275DD7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Oct 2022 11:17:38 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 18:17:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1666376255; x=1666635455;
-        bh=hU1jG4+4bfiyz3ps13nOs9qtdN8m1L3HJlbHb0yOj2I=;
-        h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-         Subject:Reply-To:Feedback-ID:Message-ID;
-        b=Ow/SF+2FWRRi6f/ZKZ2VoEYQniMW7hnRH3t79MbNsb3tmkqvfDK+WpbzZNecRI6zZ
-         PHHJkyHXivYJykYhKVxPYATJ9Pn3dwt5ovUQqKQa0pf9d6palcK5y2rKCCEzUkhvhf
-         v9cn6oFw0ca/4RPKwvU8s9i2FwhtJKFFA/Vr2QkaOEUbV4oYmQrN1fzgYEQfcdiGg4
-         2dZPVUbGsAFjrFp8nNrM4sHjtQYypqknMjV1eprygS/zQ+L7e0APPr+QSXJdynQNn9
-         M8TvNvKuLSTFtz9DfUEkzHPxAIj0DAlNJ5X2a5r6K5emK5YF4kH2XP/no3Vlm5wtR5
-         qTxcEf0hsMohA==
-To:     platform-driver-x86@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v1] platform/x86: thinkpad_acpi: use strstarts()
-Message-ID: <20221021180007.55535-1-pobrn@protonmail.com>
-Feedback-ID: 20568564:user:proton
+        Fri, 21 Oct 2022 16:39:52 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF5542ADC;
+        Fri, 21 Oct 2022 13:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666384790; x=1697920790;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xvwzs6JdNeO32KfigzubT6fCl2jWmlRjaM5tQL1JZ1I=;
+  b=VMp3Oo68kqkwgrIWYmgQKfR7kIZ42hvUK/+xaHxeY69PPRA3EqpRyZu7
+   cA17nQI2fU4ouzFtikJhhbv3vJdm0D2QXmdJhqRZ/kPkFtEd6rDD3nkv8
+   AP6KnE8+IY925c2p9k9YcGc1R1tl8LXaqyp5LfaMCEj5sc8mnGKDOmoso
+   9K9SOg9pgqOrxpSnoU68CU9GfMahoLDxRsBfX3UJ6+IRzZKNp1nHtip/w
+   RH6Jp9zVndupCREd7a9LWklekyiZJ5FBIxxKA7IO/AcyacWCsQiS/T4R1
+   2rQpjs+toipqvHgPO9YObQXDyCIf6VYyMCx7/oLqGNufNGORGCrWwl4uC
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369161168"
+X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
+   d="scan'208";a="369161168"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 13:35:33 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="735700991"
+X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
+   d="scan'208";a="735700991"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 13:35:33 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com
+Subject: [PATCH 00/14] IFS multi test image support and misc changes
+Date:   Fri, 21 Oct 2022 13:33:59 -0700
+Message-Id: <20221021203413.1220137-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-There is a function, `strstarts()`, in linux/string.h
-to check if a string is prefix of another. So remove
-the custom version from the driver.
+Initial implementation of IFS driver assumed a single IFS test image
+file with a fixed name.
 
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 58 +++++++++++++---------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
+Subsequently, it became evident that supporting more than one
+test image file is needed to provide more comprehensive
+test coverage. (Test coverage in this scenario refers to testing
+more transistors in the core to identify faults).
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
-inkpad_acpi.c
-index 6a823b850a77..7a1d5402697e 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -263,9 +263,6 @@ enum tpacpi_hkey_event_t {
- #define TPACPI_DBG_BRGHT=090x0020
- #define TPACPI_DBG_MIXER=090x0040
+This series makes the driver aware of multiple scan test image files,
+modifies IFS test image file headers to make it fully compatible
+with microcode headers and adds a few other bug fixes and changes.
 
--#define strlencmp(a, b) (strncmp((a), (b), strlen(b)))
--
--
- /*************************************************************************=
-***
-  * Driver-wide structs and misc. variables
-  */
-@@ -1333,9 +1330,9 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_=
-rfk_id id, char *buf)
- =09=09return -ENODEV;
+Patch organization:
+Patches 1, 2, and 3: bug fixes
+Patch 4: Removes image loading during init path 
+Patch 5, 6 and 7: exports a couple of microcode/intel.c functions
+                  for use by driver
+Patch 8: Adds Meta-data support in microcode file
 
- =09while ((cmd =3D strsep(&buf, ","))) {
--=09=09if (strlencmp(cmd, "enable") =3D=3D 0)
-+=09=09if (strstarts(cmd, "enable"))
- =09=09=09status =3D TPACPI_RFK_RADIO_ON;
--=09=09else if (strlencmp(cmd, "disable") =3D=3D 0)
-+=09=09else if (strstarts(cmd, "disable"))
- =09=09=09status =3D TPACPI_RFK_RADIO_OFF;
- =09=09else
- =09=09=09return -EINVAL;
-@@ -4196,12 +4193,12 @@ static int hotkey_write(char *buf)
+Rest of them are IFS driver changes
+Patches 9 and 10: IFS header format changes to make it fully compatible
+ to intel microcode header format
+Patches 11, 12 and 13: native support for multiple scan test image files
+Patch 14: reverts the broken flag
 
- =09res =3D 0;
- =09while ((cmd =3D strsep(&buf, ","))) {
--=09=09if (strlencmp(cmd, "enable") =3D=3D 0) {
-+=09=09if (strstarts(cmd, "enable")) {
- =09=09=09hotkey_enabledisable_warn(1);
--=09=09} else if (strlencmp(cmd, "disable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "disable")) {
- =09=09=09hotkey_enabledisable_warn(0);
- =09=09=09res =3D -EPERM;
--=09=09} else if (strlencmp(cmd, "reset") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "reset")) {
- =09=09=09mask =3D (hotkey_all_mask | hotkey_source_mask)
- =09=09=09=09& ~hotkey_reserved_mask;
- =09=09} else if (sscanf(cmd, "0x%x", &mask) =3D=3D 1) {
-@@ -5223,33 +5220,33 @@ static int video_write(char *buf)
- =09disable =3D 0;
+Ashok Raj (1):
+  x86/microcode/intel: Meta-data support in microcode file
 
- =09while ((cmd =3D strsep(&buf, ","))) {
--=09=09if (strlencmp(cmd, "lcd_enable") =3D=3D 0) {
-+=09=09if (strstarts(cmd, "lcd_enable")) {
- =09=09=09enable |=3D TP_ACPI_VIDEO_S_LCD;
--=09=09} else if (strlencmp(cmd, "lcd_disable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "lcd_disable")) {
- =09=09=09disable |=3D TP_ACPI_VIDEO_S_LCD;
--=09=09} else if (strlencmp(cmd, "crt_enable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "crt_enable")) {
- =09=09=09enable |=3D TP_ACPI_VIDEO_S_CRT;
--=09=09} else if (strlencmp(cmd, "crt_disable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "crt_disable")) {
- =09=09=09disable |=3D TP_ACPI_VIDEO_S_CRT;
- =09=09} else if (video_supported =3D=3D TPACPI_VIDEO_NEW &&
--=09=09=09   strlencmp(cmd, "dvi_enable") =3D=3D 0) {
-+=09=09=09   strstarts(cmd, "dvi_enable")) {
- =09=09=09enable |=3D TP_ACPI_VIDEO_S_DVI;
- =09=09} else if (video_supported =3D=3D TPACPI_VIDEO_NEW &&
--=09=09=09   strlencmp(cmd, "dvi_disable") =3D=3D 0) {
-+=09=09=09   strstarts(cmd, "dvi_disable")) {
- =09=09=09disable |=3D TP_ACPI_VIDEO_S_DVI;
--=09=09} else if (strlencmp(cmd, "auto_enable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "auto_enable")) {
- =09=09=09res =3D video_autosw_set(1);
- =09=09=09if (res)
- =09=09=09=09return res;
--=09=09} else if (strlencmp(cmd, "auto_disable") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "auto_disable")) {
- =09=09=09res =3D video_autosw_set(0);
- =09=09=09if (res)
- =09=09=09=09return res;
--=09=09} else if (strlencmp(cmd, "video_switch") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "video_switch")) {
- =09=09=09res =3D video_outputsw_cycle();
- =09=09=09if (res)
- =09=09=09=09return res;
--=09=09} else if (strlencmp(cmd, "expand_toggle") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "expand_toggle")) {
- =09=09=09res =3D video_expand_toggle();
- =09=09=09if (res)
- =09=09=09=09return res;
-@@ -5642,9 +5639,9 @@ static int light_write(char *buf)
- =09=09return -ENODEV;
+Jithu Joseph (13):
+  platform/x86/intel/ifs: Remove unused selection
+  platform/x86/intel/ifs: Propagate load failure error code
+  platform/x86/intel/ifs: return a more appropriate Error code
+  platform/x86/intel/ifs: Remove image loading during init
+  x86/microcode/intel: Expose find_matching_signature() for IFS
+  x86/microcode/intel: Use appropriate type in microcode_sanity_check()
+  x86/microcode/intel: Expose microcode_sanity_check()
+  platform/x86/intel/ifs: Use generic microcode headers and functions
+  platform/x86/intel/ifs: Add metadata validation
+  platform/x86/intel/ifs: Remove reload sysfs entry
+  platform/x86/intel/ifs: Add current_batch sysfs entry
+  Documentation/ABI: Update IFS ABI doc
+  Revert "platform/x86/intel/ifs: Mark as BROKEN"
 
- =09while ((cmd =3D strsep(&buf, ","))) {
--=09=09if (strlencmp(cmd, "on") =3D=3D 0) {
-+=09=09if (strstarts(cmd, "on")) {
- =09=09=09newstatus =3D 1;
--=09=09} else if (strlencmp(cmd, "off") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "off")) {
- =09=09=09newstatus =3D 0;
- =09=09} else
- =09=09=09return -EINVAL;
-@@ -7115,10 +7112,10 @@ static int brightness_write(char *buf)
- =09=09return level;
+ arch/x86/include/asm/microcode_intel.h        |  25 ++-
+ drivers/platform/x86/intel/ifs/ifs.h          |  27 ++-
+ arch/x86/kernel/cpu/microcode/intel.c         |  81 ++++++--
+ drivers/platform/x86/intel/ifs/core.c         |   7 +-
+ drivers/platform/x86/intel/ifs/load.c         | 174 +++++++++---------
+ drivers/platform/x86/intel/ifs/runtest.c      |  10 +-
+ drivers/platform/x86/intel/ifs/sysfs.c        |  41 +++--
+ .../ABI/testing/sysfs-platform-intel-ifs      |  30 +--
+ drivers/platform/x86/intel/ifs/Kconfig        |   4 -
+ 9 files changed, 243 insertions(+), 156 deletions(-)
 
- =09while ((cmd =3D strsep(&buf, ","))) {
--=09=09if (strlencmp(cmd, "up") =3D=3D 0) {
-+=09=09if (strstarts(cmd, "up")) {
- =09=09=09if (level < bright_maxlvl)
- =09=09=09=09level++;
--=09=09} else if (strlencmp(cmd, "down") =3D=3D 0) {
-+=09=09} else if (strstarts(cmd, "down")) {
- =09=09=09if (level > 0)
- =09=09=09=09level--;
- =09=09} else if (sscanf(cmd, "level %d", &level) =3D=3D 1 &&
-@@ -7867,13 +7864,13 @@ static int volume_write(char *buf)
 
- =09while ((cmd =3D strsep(&buf, ","))) {
- =09=09if (!tp_features.mixer_no_level_control) {
--=09=09=09if (strlencmp(cmd, "up") =3D=3D 0) {
-+=09=09=09if (strstarts(cmd, "up")) {
- =09=09=09=09if (new_mute)
- =09=09=09=09=09new_mute =3D 0;
- =09=09=09=09else if (new_level < TP_EC_VOLUME_MAX)
- =09=09=09=09=09new_level++;
- =09=09=09=09continue;
--=09=09=09} else if (strlencmp(cmd, "down") =3D=3D 0) {
-+=09=09=09} else if (strstarts(cmd, "down")) {
- =09=09=09=09if (new_mute)
- =09=09=09=09=09new_mute =3D 0;
- =09=09=09=09else if (new_level > 0)
-@@ -7885,9 +7882,9 @@ static int volume_write(char *buf)
- =09=09=09=09continue;
- =09=09=09}
- =09=09}
--=09=09if (strlencmp(cmd, "mute") =3D=3D 0)
-+=09=09if (strstarts(cmd, "mute"))
- =09=09=09new_mute =3D TP_EC_AUDIO_MUTESW_MSK;
--=09=09else if (strlencmp(cmd, "unmute") =3D=3D 0)
-+=09=09else if (strstarts(cmd, "unmute"))
- =09=09=09new_mute =3D 0;
- =09=09else
- =09=09=09return -EINVAL;
-@@ -9110,10 +9107,9 @@ static int fan_write_cmd_level(const char *cmd, int =
-*rc)
- {
- =09int level;
-
--=09if (strlencmp(cmd, "level auto") =3D=3D 0)
-+=09if (strstarts(cmd, "level auto"))
- =09=09level =3D TP_EC_FAN_AUTO;
--=09else if ((strlencmp(cmd, "level disengaged") =3D=3D 0) ||
--=09=09=09(strlencmp(cmd, "level full-speed") =3D=3D 0))
-+=09else if (strstarts(cmd, "level disengaged") || strstarts(cmd, "level fu=
-ll-speed"))
- =09=09level =3D TP_EC_FAN_FULLSPEED;
- =09else if (sscanf(cmd, "level %d", &level) !=3D 1)
- =09=09return 0;
-@@ -9131,7 +9127,7 @@ static int fan_write_cmd_level(const char *cmd, int *=
-rc)
-
- static int fan_write_cmd_enable(const char *cmd, int *rc)
- {
--=09if (strlencmp(cmd, "enable") !=3D 0)
-+=09if (!strstarts(cmd, "enable"))
- =09=09return 0;
-
- =09*rc =3D fan_set_enable();
-@@ -9146,7 +9142,7 @@ static int fan_write_cmd_enable(const char *cmd, int =
-*rc)
-
- static int fan_write_cmd_disable(const char *cmd, int *rc)
- {
--=09if (strlencmp(cmd, "disable") !=3D 0)
-+=09if (!strstarts(cmd, "disable"))
- =09=09return 0;
-
- =09*rc =3D fan_set_disable();
---
-2.38.1
-
+base-commit: f76349cf41451c5c42a99f18a9163377e4b364ff
+-- 
+2.25.1
 
