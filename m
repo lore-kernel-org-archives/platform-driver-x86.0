@@ -2,41 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F02EC38A2D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8196DC3A59D
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Oct 2022 20:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiJUUkU (ORCPT
+        id S230096AbiJUUkT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Oct 2022 16:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44650 "EHLO
+        Fri, 21 Oct 2022 16:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229861AbiJUUkL (ORCPT
+        with ESMTP id S229904AbiJUUkL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 21 Oct 2022 16:40:11 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301CD98370;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306EA9A9D0;
         Fri, 21 Oct 2022 13:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1666384800; x=1697920800;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=sr0b38xXZ200FAk2bInFJdfJNKcjZ4q1uNqY7iCbQH8=;
-  b=Bmbxgweg1QwBJ/TXvIdRzNgRDoW8TApnKfSu8zRPVCt56UdqD9bIbFtB
-   +27uxEGzAJpjsYyZfnEGEUt07VKnwe2g9+y36NHH5auNCWdT7NYXvuS1e
-   2dJe1+k2ZizI8QpwL5sfH8l83VYfiJQk7VqIbtHjZgoLiomVikaBUfJIB
-   +jDYtPZECo/JIgL8/DcGeeeoKPU2qk+seXE6PHpXUXuhp2WtPxeHAtoxa
-   9ye1Nuz3gU3NXYsluvwKmNf3KtKAVR2RW15/eKEE3zwNd9Qe45nteZSy+
-   XB3j7pnmHH6C4Y6V8DD7xzSh1xATmGmG8banrwISfTBpi+uuKdEUswKLs
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369161187"
+  bh=ieAw6DOi25+M/PVVeqIKsG7UFRjhjw4Kz3UXCTTfxEQ=;
+  b=CMbYtpihPhC9398J+dEVDSR1aQ+Nm/lV9atyaFHFHOQVe9o/mhMpTWRc
+   UBjHu+eSOdBXTcdu9HzuuZ5NQ7ZAdJthRRGZ2nloUxJEfQAsRSFSQZ2xR
+   UwoNciOKr3vdnwmqHfWeI7D2fhTrSJ/mpuDklgpF9W5dWdDu8H1rMxHjO
+   +fRQzSfCUrj9qfHsvl4LaJoXWca4kvhiaPdJr6bN+NrZDGFqEC0wHkJlN
+   a9e716SSEROyNcF7TVDlzObBJq10XJwK1MEbqG2n/a35CJDrsa5/zAPa5
+   vw2DgEM9POXESHvbaAN5wbU5N3qt4b7xdjs6bW++tPRihGkkJ+PntxaTL
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369161192"
 X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
-   d="scan'208";a="369161187"
+   d="scan'208";a="369161192"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 13:35:36 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="735701033"
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 13:35:37 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="735701044"
 X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
-   d="scan'208";a="735701033"
+   d="scan'208";a="735701044"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
   by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 13:35:36 -0700
 From:   Jithu Joseph <jithu.joseph@intel.com>
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com
-Subject: [PATCH 11/14] platform/x86/intel/ifs: Remove reload sysfs entry
-Date:   Fri, 21 Oct 2022 13:34:10 -0700
-Message-Id: <20221021203413.1220137-12-jithu.joseph@intel.com>
+Subject: [PATCH 13/14] Documentation/ABI: Update IFS ABI doc
+Date:   Fri, 21 Oct 2022 13:34:12 -0700
+Message-Id: <20221021203413.1220137-14-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221021203413.1220137-1-jithu.joseph@intel.com>
 References: <20221021203413.1220137-1-jithu.joseph@intel.com>
@@ -60,60 +60,75 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Reload sysfs entry is replaced by current_batch, drop it.
+Remove reload documentation and add current_batch documentation.
+Update the kernel version and date for all the entries.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- drivers/platform/x86/intel/ifs/sysfs.c | 28 --------------------------
- 1 file changed, 28 deletions(-)
+ .../ABI/testing/sysfs-platform-intel-ifs      | 30 ++++++++++---------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-index 766cee651bd6..e077910c5d28 100644
---- a/drivers/platform/x86/intel/ifs/sysfs.c
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -87,33 +87,6 @@ static ssize_t run_test_store(struct device *dev,
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+index 486d6d2ff8a0..f74df3abee57 100644
+--- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
++++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+@@ -1,39 +1,41 @@
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Write <cpu#> to trigger IFS test for one online core.
+ 		Note that the test is per core. The cpu# can be
+ 		for any thread on the core. Running on one thread
+ 		completes the test for the core containing that thread.
+ 		Example: to test the core containing cpu5: echo 5 >
+-		/sys/devices/platform/intel_ifs.<N>/run_test
++		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
  
- static DEVICE_ATTR_WO(run_test);
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/status
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	The status of the last test. It can be one of "pass", "fail"
+ 		or "untested".
  
--/*
-- * Reload the IFS image. When user wants to install new IFS image
-- */
--static ssize_t reload_store(struct device *dev,
--			    struct device_attribute *attr,
--			    const char *buf, size_t count)
--{
--	bool res;
--	int rc;
--
--	if (kstrtobool(buf, &res))
--		return -EINVAL;
--	if (!res)
--		return count;
--
--	if (down_interruptible(&ifs_sem))
--		return -EINTR;
--
--	rc = ifs_load_firmware(dev);
--
--	up(&ifs_sem);
--
--	return (rc == 0) ? count : rc;
--}
--
--static DEVICE_ATTR_WO(reload);
--
- /*
-  * Display currently loaded IFS image version.
-  */
-@@ -135,7 +108,6 @@ static struct attribute *plat_ifs_attrs[] = {
- 	&dev_attr_details.attr,
- 	&dev_attr_status.attr,
- 	&dev_attr_run_test.attr,
--	&dev_attr_reload.attr,
- 	&dev_attr_image_version.attr,
- 	NULL
- };
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/details
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Additional information regarding the last test. The details file reports
+ 		the hex value of the SCAN_STATUS MSR. Note that the error_code field
+ 		may contain driver defined software code not defined in the Intel SDM.
+ 
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/image_version
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Version (hexadecimal) of loaded IFS binary image. If no scan image
+ 		is loaded reports "none".
+ 
+-What:		/sys/devices/virtual/misc/intel_ifs_<N>/reload
+-Date:		April 21 2022
+-KernelVersion:	5.19
++What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+-Description:	Write "1" (or "y" or "Y") to reload the IFS image from
+-		/lib/firmware/intel/ifs/ff-mm-ss.scan.
++Description:	Write a number less than or equal to 0xff to load an IFS test image.
++		The number written treated as the 2 digit suffix in the following file name:
++		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
++		Reading the file will provide the suffix of the currently loaded IFS test image.
 -- 
 2.25.1
 
