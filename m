@@ -2,184 +2,235 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC82C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Oct 2022 09:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64FEFA373D
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Oct 2022 18:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbiJUJ6m (ORCPT
+        id S229928AbiJUSRk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Oct 2022 05:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
+        Fri, 21 Oct 2022 14:17:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbiJUJ6j (ORCPT
+        with ESMTP id S230056AbiJUSRj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Oct 2022 05:58:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40172591FC
-        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Oct 2022 02:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666346317;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PDp3pjUHLMb0BayuCEe4by55GyjbnGvv6ScgCkhmq58=;
-        b=XH6uzZmqS/TU9lUdK9Z9m3aIjkWoQWTJKpPFpdNAQwQC/QInrhj5ppcSrn/hjFyE2VA5wU
-        zFzaS9+4mXy5HljRldOoB8T8o3iinukS30Bi3Q0trek/9tHtt8XzNFw9i3yCc4ZBpn/Yid
-        J2SOode3N/xDHeMVOLZ/BKBRRDaWUfA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-59-vBibOD0sN4uAmymmwy-44Q-1; Fri, 21 Oct 2022 05:58:36 -0400
-X-MC-Unique: vBibOD0sN4uAmymmwy-44Q-1
-Received: by mail-ed1-f71.google.com with SMTP id dz9-20020a0564021d4900b0045d9a3aded4so1829909edb.22
-        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Oct 2022 02:58:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PDp3pjUHLMb0BayuCEe4by55GyjbnGvv6ScgCkhmq58=;
-        b=pY69OcT9jqnSYelbXJxfx/zN14cl35fOpkEEQRVqBgJZVUOCphFvU3YCck4YLbmKot
-         KlWIIud3iBLjUM0N80UVDG74O07SLUgIfvV068Va9X8raaNS+Ex7OHlO9UV5QLc8c3Ax
-         Je66dz+zPv+Y/V8FxUD/ww47DZHW0lxofEuRVmeNO/gIKUZNZHxwMEL7IfBdQfiQ2Sx4
-         fkWpc7Z6RjcOwFEY4Fb7nI+ypacCxiLW0OzbOOaBcUAvmztzryuzdDpN+yorbxdEFG95
-         KLSEybt+CeQUVVkP5T9Cewb3LB5FUXhp4PXARHyQ0kOOeomHWdX1S/LLVYYahwkXK70h
-         dzhQ==
-X-Gm-Message-State: ACrzQf1gS6Sb5BjD70j7nnuNbNrFWacHflgHvRdjorfOoKPxiub+XnFy
-        xPbGKYZZ7NIy/hsPFFUVEol7tyUIS9dSrTVmHQjGOyjTktyXFAAVIgWyqIZtW+GbsGeQ2LVQ7CY
-        0QYDtJyXoi+I349QZkHdDetoGiDDNHM504A==
-X-Received: by 2002:a50:baec:0:b0:461:4c59:12bf with SMTP id x99-20020a50baec000000b004614c5912bfmr1721382ede.54.1666346314935;
-        Fri, 21 Oct 2022 02:58:34 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7IpllFfSlcsB9cnniC+JkU6q8pFaj/gj2gDvVFmCHYZPU1i9Aa2yLQTTT6VSP9K119azM6cA==
-X-Received: by 2002:a50:baec:0:b0:461:4c59:12bf with SMTP id x99-20020a50baec000000b004614c5912bfmr1721358ede.54.1666346314652;
-        Fri, 21 Oct 2022 02:58:34 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id b17-20020a1709063cb100b007867dcd3f15sm11416600ejh.104.2022.10.21.02.58.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Oct 2022 02:58:33 -0700 (PDT)
-Message-ID: <ca8222fe-4b15-eb1f-46be-2e8288ea1cd1@redhat.com>
-Date:   Fri, 21 Oct 2022 11:58:32 +0200
+        Fri, 21 Oct 2022 14:17:39 -0400
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37707275DD7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Oct 2022 11:17:38 -0700 (PDT)
+Date:   Fri, 21 Oct 2022 18:17:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1666376255; x=1666635455;
+        bh=hU1jG4+4bfiyz3ps13nOs9qtdN8m1L3HJlbHb0yOj2I=;
+        h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+         Subject:Reply-To:Feedback-ID:Message-ID;
+        b=Ow/SF+2FWRRi6f/ZKZ2VoEYQniMW7hnRH3t79MbNsb3tmkqvfDK+WpbzZNecRI6zZ
+         PHHJkyHXivYJykYhKVxPYATJ9Pn3dwt5ovUQqKQa0pf9d6palcK5y2rKCCEzUkhvhf
+         v9cn6oFw0ca/4RPKwvU8s9i2FwhtJKFFA/Vr2QkaOEUbV4oYmQrN1fzgYEQfcdiGg4
+         2dZPVUbGsAFjrFp8nNrM4sHjtQYypqknMjV1eprygS/zQ+L7e0APPr+QSXJdynQNn9
+         M8TvNvKuLSTFtz9DfUEkzHPxAIj0DAlNJ5X2a5r6K5emK5YF4kH2XP/no3Vlm5wtR5
+         qTxcEf0hsMohA==
+To:     platform-driver-x86@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: [PATCH v1] platform/x86: thinkpad_acpi: use strstarts()
+Message-ID: <20221021180007.55535-1-pobrn@protonmail.com>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2 2/2] platform/x86: dell: Add new dell-wmi-ddv driver
-Content-Language: en-US, nl
-To:     Armin Wolf <W_Armin@gmx.de>, rafael@kernel.org
-Cc:     markgross@kernel.org, lenb@kernel.org, hmh@hmh.eng.br,
-        matan@svgalib.org, corentin.chary@gmail.com, jeremy@system76.com,
-        productdev@system76.com, mario.limonciello@amd.com,
-        pobrn@protonmail.com, coproscefalo@gmail.com,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-References: <20220927204521.601887-1-W_Armin@gmx.de>
- <20220927204521.601887-3-W_Armin@gmx.de>
- <YzQmQw0hEwzXV/iz@smile.fi.intel.com>
- <34774c9d-1210-0015-f78e-97fdf717480c@gmx.de>
- <YzVqbSBHm3OrjIaQ@smile.fi.intel.com>
- <bf84f13d-f76a-c0ac-8a1f-f4e1b55e6f51@redhat.com>
- <11964cd1-94b5-dc6a-a6c9-7fd5fe335ed4@gmx.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <11964cd1-94b5-dc6a-a6c9-7fd5fe335ed4@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin, Rafael,
+There is a function, `strstarts()`, in linux/string.h
+to check if a string is prefix of another. So remove
+the custom version from the driver.
 
-On 10/21/22 11:34, Armin Wolf wrote:
-> Am 29.09.22 um 15:12 schrieb Hans de Goede:
-> 
->> Hi,
->>
->> On 9/29/22 11:50, Andy Shevchenko wrote:
->>> On Wed, Sep 28, 2022 at 10:57:16PM +0200, Armin Wolf wrote:
->>>> Am 28.09.22 um 12:47 schrieb Andy Shevchenko:
->>>>> On Tue, Sep 27, 2022 at 10:45:21PM +0200, Armin Wolf wrote:
->>> ...
->>>
->>>>>> +static void dell_wmi_ddv_debugfs_init(struct wmi_device *wdev)
->>>>> Strictly speaking this should return int (see below).
->>>>>
->>>>>> +{
->>>>>> +    struct dentry *entry;
->>>>>> +    char name[64];
->>>>>> +Fujitsu Academy
->>>>>>
->>>>>> +    scnprintf(name, ARRAY_SIZE(name), "%s-%s", DRIVER_NAME, dev_name(&wdev->dev));
->>>>>> +    entry = debugfs_create_dir(name, NULL);
->>>>>> +
->>>>>> +    debugfs_create_devm_seqfile(&wdev->dev, "fan_sensor_information", entry,
->>>>>> +                    dell_wmi_ddv_fan_read);
->>>>>> +    debugfs_create_devm_seqfile(&wdev->dev, "thermal_sensor_information", entry,
->>>>>> +                    dell_wmi_ddv_temp_read);
->>>>>> +
->>>>>> +    devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_debugfs_remove, entry);
->>>>> return devm...
->>>>>
->>>>> This is not related to debugfs and there is no rule to avoid checking error
->>>>> codes from devm_add_action_or_reset().
->>>>>
->>>> According to the documentation of debugfs_create_dir(), drivers should work fine if debugfs
->>>> initialization fails. Thus the the return value of dell_wmi_ddv_debugfs_init() would be ignored
->>>> when called, which means that returning an error would serve no purpose.
->>>> Additionally, devm_add_action_or_reset() automatically executes the cleanup function if devres
->>>> registration fails, so we do not have to care about that.
->>> The problem with your code that if devm_ call fails and you ain't stop probing
->>> the remove-insert module (or unbind-bind) cycle will fail, because of existing
->>> (leaked) debugfs dentries.
->> No it won't if the devm_ call fails then it will directly call
->> the passed in handler so in this case we can simply continue
->> without debugfs entries (which will have been removed by the
->> handler). The directly calling of the action handler on
->> failure is the whole difference between devm_add_action()
->> and devm_add_action_or_reset()
->>
->> So using it this way in the case of a debugfs init function
->> is fine.
->>
->>>>>> +        .name = DRIVER_NAME,
->>>>> I would use explicit literal since this is a (semi-) ABI, and having it as
->>>>> a define feels not fully right.
->>>> The driver name is used in two places (init and debugfs), so having a define for it
->>>> avoids problems in case someone forgets to change both.
->>> Which is exactly what we must prevent developer to do. If changing debugfs it
->>> mustn't change the driver name, because the latter is ABI, while the former is
->>> not.
->> Arguably both are not really ABI. Drivers have been renamed in the past
->> without issues for userspace.
->>
->> Regards,
->>
->> Hans
->>
-> What is the current status of this patch set?
+Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 58 +++++++++++++---------------
+ 1 file changed, 27 insertions(+), 31 deletions(-)
 
-I indicated to Rafael (ACPI subsys maintainer) that I consider this ready
-for merging and tried to coordinate this with Rafael, but that email
-seems to have fallen through the cracks, likely due to it being pretty
-close to the 6.1 merge window. So lets try again:
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 6a823b850a77..7a1d5402697e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -263,9 +263,6 @@ enum tpacpi_hkey_event_t {
+ #define TPACPI_DBG_BRGHT=090x0020
+ #define TPACPI_DBG_MIXER=090x0040
 
-Rafael, from my pov this patch-set is ready for merging, since 2/2 depends
-on "[PATCH v2 1/2] ACPI: battery: Pass battery hook pointer to hook callbacks"
-we need to coordinate this.
+-#define strlencmp(a, b) (strncmp((a), (b), strlen(b)))
+-
+-
+ /*************************************************************************=
+***
+  * Driver-wide structs and misc. variables
+  */
+@@ -1333,9 +1330,9 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_=
+rfk_id id, char *buf)
+ =09=09return -ENODEV;
 
-Since even patch 1/2 mostly touches files under drivers/platform/x86 I would
-prefer to merge this through the pdx86 tree, may I have your ack for this ?
+ =09while ((cmd =3D strsep(&buf, ","))) {
+-=09=09if (strlencmp(cmd, "enable") =3D=3D 0)
++=09=09if (strstarts(cmd, "enable"))
+ =09=09=09status =3D TPACPI_RFK_RADIO_ON;
+-=09=09else if (strlencmp(cmd, "disable") =3D=3D 0)
++=09=09else if (strstarts(cmd, "disable"))
+ =09=09=09status =3D TPACPI_RFK_RADIO_OFF;
+ =09=09else
+ =09=09=09return -EINVAL;
+@@ -4196,12 +4193,12 @@ static int hotkey_write(char *buf)
 
-> If necessary, i can submit an v3 patch set which includes the
-> patch regarding the minor style fixes. I also tested the driver on my Dell Insprion 3505 for some time, so
-> i can proof it works.
+ =09res =3D 0;
+ =09while ((cmd =3D strsep(&buf, ","))) {
+-=09=09if (strlencmp(cmd, "enable") =3D=3D 0) {
++=09=09if (strstarts(cmd, "enable")) {
+ =09=09=09hotkey_enabledisable_warn(1);
+-=09=09} else if (strlencmp(cmd, "disable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "disable")) {
+ =09=09=09hotkey_enabledisable_warn(0);
+ =09=09=09res =3D -EPERM;
+-=09=09} else if (strlencmp(cmd, "reset") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "reset")) {
+ =09=09=09mask =3D (hotkey_all_mask | hotkey_source_mask)
+ =09=09=09=09& ~hotkey_reserved_mask;
+ =09=09} else if (sscanf(cmd, "0x%x", &mask) =3D=3D 1) {
+@@ -5223,33 +5220,33 @@ static int video_write(char *buf)
+ =09disable =3D 0;
 
-I can squash the follow up patch into 2/2 when merging this myself. From
-my pov no action is needed from you on this at this moment on time. But
-it is good that you send a friendly ping about this :)
+ =09while ((cmd =3D strsep(&buf, ","))) {
+-=09=09if (strlencmp(cmd, "lcd_enable") =3D=3D 0) {
++=09=09if (strstarts(cmd, "lcd_enable")) {
+ =09=09=09enable |=3D TP_ACPI_VIDEO_S_LCD;
+-=09=09} else if (strlencmp(cmd, "lcd_disable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "lcd_disable")) {
+ =09=09=09disable |=3D TP_ACPI_VIDEO_S_LCD;
+-=09=09} else if (strlencmp(cmd, "crt_enable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "crt_enable")) {
+ =09=09=09enable |=3D TP_ACPI_VIDEO_S_CRT;
+-=09=09} else if (strlencmp(cmd, "crt_disable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "crt_disable")) {
+ =09=09=09disable |=3D TP_ACPI_VIDEO_S_CRT;
+ =09=09} else if (video_supported =3D=3D TPACPI_VIDEO_NEW &&
+-=09=09=09   strlencmp(cmd, "dvi_enable") =3D=3D 0) {
++=09=09=09   strstarts(cmd, "dvi_enable")) {
+ =09=09=09enable |=3D TP_ACPI_VIDEO_S_DVI;
+ =09=09} else if (video_supported =3D=3D TPACPI_VIDEO_NEW &&
+-=09=09=09   strlencmp(cmd, "dvi_disable") =3D=3D 0) {
++=09=09=09   strstarts(cmd, "dvi_disable")) {
+ =09=09=09disable |=3D TP_ACPI_VIDEO_S_DVI;
+-=09=09} else if (strlencmp(cmd, "auto_enable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "auto_enable")) {
+ =09=09=09res =3D video_autosw_set(1);
+ =09=09=09if (res)
+ =09=09=09=09return res;
+-=09=09} else if (strlencmp(cmd, "auto_disable") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "auto_disable")) {
+ =09=09=09res =3D video_autosw_set(0);
+ =09=09=09if (res)
+ =09=09=09=09return res;
+-=09=09} else if (strlencmp(cmd, "video_switch") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "video_switch")) {
+ =09=09=09res =3D video_outputsw_cycle();
+ =09=09=09if (res)
+ =09=09=09=09return res;
+-=09=09} else if (strlencmp(cmd, "expand_toggle") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "expand_toggle")) {
+ =09=09=09res =3D video_expand_toggle();
+ =09=09=09if (res)
+ =09=09=09=09return res;
+@@ -5642,9 +5639,9 @@ static int light_write(char *buf)
+ =09=09return -ENODEV;
 
-Regards,
+ =09while ((cmd =3D strsep(&buf, ","))) {
+-=09=09if (strlencmp(cmd, "on") =3D=3D 0) {
++=09=09if (strstarts(cmd, "on")) {
+ =09=09=09newstatus =3D 1;
+-=09=09} else if (strlencmp(cmd, "off") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "off")) {
+ =09=09=09newstatus =3D 0;
+ =09=09} else
+ =09=09=09return -EINVAL;
+@@ -7115,10 +7112,10 @@ static int brightness_write(char *buf)
+ =09=09return level;
 
-Hans
+ =09while ((cmd =3D strsep(&buf, ","))) {
+-=09=09if (strlencmp(cmd, "up") =3D=3D 0) {
++=09=09if (strstarts(cmd, "up")) {
+ =09=09=09if (level < bright_maxlvl)
+ =09=09=09=09level++;
+-=09=09} else if (strlencmp(cmd, "down") =3D=3D 0) {
++=09=09} else if (strstarts(cmd, "down")) {
+ =09=09=09if (level > 0)
+ =09=09=09=09level--;
+ =09=09} else if (sscanf(cmd, "level %d", &level) =3D=3D 1 &&
+@@ -7867,13 +7864,13 @@ static int volume_write(char *buf)
 
+ =09while ((cmd =3D strsep(&buf, ","))) {
+ =09=09if (!tp_features.mixer_no_level_control) {
+-=09=09=09if (strlencmp(cmd, "up") =3D=3D 0) {
++=09=09=09if (strstarts(cmd, "up")) {
+ =09=09=09=09if (new_mute)
+ =09=09=09=09=09new_mute =3D 0;
+ =09=09=09=09else if (new_level < TP_EC_VOLUME_MAX)
+ =09=09=09=09=09new_level++;
+ =09=09=09=09continue;
+-=09=09=09} else if (strlencmp(cmd, "down") =3D=3D 0) {
++=09=09=09} else if (strstarts(cmd, "down")) {
+ =09=09=09=09if (new_mute)
+ =09=09=09=09=09new_mute =3D 0;
+ =09=09=09=09else if (new_level > 0)
+@@ -7885,9 +7882,9 @@ static int volume_write(char *buf)
+ =09=09=09=09continue;
+ =09=09=09}
+ =09=09}
+-=09=09if (strlencmp(cmd, "mute") =3D=3D 0)
++=09=09if (strstarts(cmd, "mute"))
+ =09=09=09new_mute =3D TP_EC_AUDIO_MUTESW_MSK;
+-=09=09else if (strlencmp(cmd, "unmute") =3D=3D 0)
++=09=09else if (strstarts(cmd, "unmute"))
+ =09=09=09new_mute =3D 0;
+ =09=09else
+ =09=09=09return -EINVAL;
+@@ -9110,10 +9107,9 @@ static int fan_write_cmd_level(const char *cmd, int =
+*rc)
+ {
+ =09int level;
+
+-=09if (strlencmp(cmd, "level auto") =3D=3D 0)
++=09if (strstarts(cmd, "level auto"))
+ =09=09level =3D TP_EC_FAN_AUTO;
+-=09else if ((strlencmp(cmd, "level disengaged") =3D=3D 0) ||
+-=09=09=09(strlencmp(cmd, "level full-speed") =3D=3D 0))
++=09else if (strstarts(cmd, "level disengaged") || strstarts(cmd, "level fu=
+ll-speed"))
+ =09=09level =3D TP_EC_FAN_FULLSPEED;
+ =09else if (sscanf(cmd, "level %d", &level) !=3D 1)
+ =09=09return 0;
+@@ -9131,7 +9127,7 @@ static int fan_write_cmd_level(const char *cmd, int *=
+rc)
+
+ static int fan_write_cmd_enable(const char *cmd, int *rc)
+ {
+-=09if (strlencmp(cmd, "enable") !=3D 0)
++=09if (!strstarts(cmd, "enable"))
+ =09=09return 0;
+
+ =09*rc =3D fan_set_enable();
+@@ -9146,7 +9142,7 @@ static int fan_write_cmd_enable(const char *cmd, int =
+*rc)
+
+ static int fan_write_cmd_disable(const char *cmd, int *rc)
+ {
+-=09if (strlencmp(cmd, "disable") !=3D 0)
++=09if (!strstarts(cmd, "disable"))
+ =09=09return 0;
+
+ =09*rc =3D fan_set_disable();
+--
+2.38.1
 
 
