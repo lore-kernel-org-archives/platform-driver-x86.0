@@ -2,183 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F23DC67871
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 19:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C96CC67871
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 20:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233637AbiJXTvz (ORCPT
+        id S232151AbiJXUMW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Oct 2022 15:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
+        Mon, 24 Oct 2022 16:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232665AbiJXTv0 (ORCPT
+        with ESMTP id S232746AbiJXUMB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2022 15:51:26 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B48A27A33F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 11:16:59 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id h10so7009800qvq.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 11:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5+lNDU/7OVWZdRTzaQ0NNoHLmGlotseKeYdhpqFhZHk=;
-        b=ELM7yD3oiyJMNZjuq6+6Ex/rHcrMTY9mQ5tNeBwzHLydPg0gZHlF7XsvW1qorqNXit
-         +1clr9lF9YGe2kf2wSGlmcErC4WdUV2mJclhDusQXllPYQIVafBWeC2hY7DTDFJEA/gy
-         DHTUn82tj8FzO+vABFXg6YciJQBhFtT4OT6DVBod8WTp9mMJhhSI6vwxWE2MV7uVC1M9
-         CWg6mZN5LUXqiYcB5E6m33jGN8tYNt1DVe63+GyxUqJbAScwDkeBxMOxAxBg8Z/D9LBC
-         /rqOoSynJrCwt1BDkHRnNol0Ycqz9wssry5CJatx+rOA9oWm9IQ5GyMCZ7LZm+IMtk07
-         j8eQ==
+        Mon, 24 Oct 2022 16:12:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4135E7EFE9
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 11:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666636147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y5YZaxL1oMnz09mWsUSZRYvvuUIE5nQnPiEikkuSV6Y=;
+        b=HPN8kMxMnZIT5DZ/SfN7CrIgLNT4HbfZdSPU7q/YWKpxMaJyPROfMNBfEH9Gj2XKVaSpCs
+        gEYA8agmHgwrgKBW6PPrh9YSu9laieK3i+8KR0HBJkQOOCrHI2cH3f8DszDDYTTHzVGd4b
+        SbY7H20uVyUDyj3jGU3WJN4d/es4rUU=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-550-IJcA6ogwOqum3gQiPxheuQ-1; Mon, 24 Oct 2022 09:58:11 -0400
+X-MC-Unique: IJcA6ogwOqum3gQiPxheuQ-1
+Received: by mail-ed1-f69.google.com with SMTP id y14-20020a056402270e00b0045d1baf4951so9824553edd.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 06:58:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5+lNDU/7OVWZdRTzaQ0NNoHLmGlotseKeYdhpqFhZHk=;
-        b=AKnXdLDyr8X0kTrQ1YHRDlrKcCpV7zv5c98htbUgvM9ENLn/mlf9jbReOaO1XDiJ4A
-         AeJMjmYIAQBVb/rlFz7JADULGHg+j+4iYjOb51rpO3jBSVxGOOi5juyGpXNfJetAETmf
-         nTM3uOTxcg5dhRtfqMy91+ZJo072MJVTxEKZTpLEOIN4EqjJCQoxOiMvbUCBrLtgCvzf
-         kEoo1n6F1dtAkRZ97Ifu2qYGFhjf22YdbVG7Wt4TzigYA/wrPoV7Ia7xNKbhQx2FjueD
-         xk8ZMVEFPgaBiDRR34oMmOVI9RlqB59M99ZQbEFI2cGzs8N6jz6FegljwWcuLLkV/+Ex
-         zy3g==
-X-Gm-Message-State: ACrzQf053yf2oRZVEXPhDqd1EFaTrShOSNoE5Ytw9f9YACrKoA3Ff780
-        oRNr2Oa2tKuMbgrdOgnsd/LSAlVSSX8VZCao
-X-Google-Smtp-Source: AMsMyM52yf+fvqYPvZeS1DKLnZf/VX+KNJmRf5dcZ02xlrYFrlYIJNW33UZRrKUu0oE/cElVDg23zg==
-X-Received: by 2002:aa7:8011:0:b0:567:70cc:5b78 with SMTP id j17-20020aa78011000000b0056770cc5b78mr29115949pfi.29.1666612581441;
-        Mon, 24 Oct 2022 04:56:21 -0700 (PDT)
-Received: from ?IPV6:2400:4050:c360:8200:8ae8:3c4:c0da:7419? ([2400:4050:c360:8200:8ae8:3c4:c0da:7419])
-        by smtp.gmail.com with ESMTPSA id on16-20020a17090b1d1000b0020b21019086sm18524378pjb.3.2022.10.24.04.56.13
+        bh=y5YZaxL1oMnz09mWsUSZRYvvuUIE5nQnPiEikkuSV6Y=;
+        b=chsOOCBS6bpstzVpzBAuJzvssEAsT7J6xg88ILmH9ElpF0/rmAC39BoUa0ZfUPV/Ii
+         3jys991FZZO/rWxTHd3AEwN9ujaHMZyn6kFNN2/mIqZSXYMAQKL976QS3hhSokpdBlHE
+         l9+Mrp6+8p5nHxvtridyWpdbFzoLj7MjnXN/GmDgOPMCCKhcj5EyfN/6I5kyaj69WK+K
+         irv+Tc9nBwXn7aO+bI/RRw4IR2P+NPd+R1LGC0LdYnzNd7fh8koDe8cdNAWT3ZKLhnKU
+         S51tjfCbog9UF5HakUhCR2KQbRxjD2M4Fb4RJnGRb8uz+hxUwLajZuMjCopVx0mqpFlw
+         dyug==
+X-Gm-Message-State: ACrzQf0EPu77z67X3ayLz9TY4sWh9zNas+DgySILyuu6sfENE7tPmZC1
+        1XmrBLUOo3v6kzBD0Gr5WcsESoC96oU21ZKgPGLiQXTpFtiDzpWSNKtZYm2h8BWpW/ZlLDB5YqO
+        v7RJktXLPrH2etIK2JbuU+Qu6zn77y0Vb7A==
+X-Received: by 2002:a17:907:9710:b0:791:8aa6:18bb with SMTP id jg16-20020a170907971000b007918aa618bbmr27159487ejc.279.1666619890259;
+        Mon, 24 Oct 2022 06:58:10 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6M86ueEZcPTUi2KLtqWd0TWYCio4RjiOdeK3EtdOkwJ9Duagj1VkJ9BPCMyVc0lYQxG5fT9Q==
+X-Received: by 2002:a17:907:9710:b0:791:8aa6:18bb with SMTP id jg16-20020a170907971000b007918aa618bbmr27159477ejc.279.1666619890041;
+        Mon, 24 Oct 2022 06:58:10 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id de13-20020a1709069bcd00b0078d957e65b6sm15541991ejc.23.2022.10.24.06.58.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Oct 2022 04:56:20 -0700 (PDT)
-Message-ID: <18478739-625b-0c16-cd5a-e05c5372a74a@daynix.com>
-Date:   Mon, 24 Oct 2022 20:56:11 +0900
+        Mon, 24 Oct 2022 06:58:09 -0700 (PDT)
+Message-ID: <6c47276e-cbca-dcde-6a8a-721f34c0755e@redhat.com>
+Date:   Mon, 24 Oct 2022 15:58:08 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH 00/22] Fallback to native backlight
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Jonathan Woithe <jwoithe@just42.net>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Robert Moore <robert.moore@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        ibm-acpi-devel@lists.sourceforge.net, linux-fbdev@vger.kernel.org,
-        devel@acpica.org
-References: <20221024113513.5205-1-akihiko.odaki@daynix.com>
- <87tu3te92n.fsf@intel.com>
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v1 1/3] platform/x86: huawei-wmi: do not hard-code sizes
 Content-Language: en-US
-From:   Akihiko Odaki <akihiko.odaki@daynix.com>
-In-Reply-To: <87tu3te92n.fsf@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+References: <20221005150032.173198-1-pobrn@protonmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221005150032.173198-1-pobrn@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2022/10/24 20:48, Jani Nikula wrote:
-> On Mon, 24 Oct 2022, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
->> Commit 2600bfa3df99 ("ACPI: video: Add acpi_video_backlight_use_native()
->> helper") and following commits made native backlight unavailable if
->> CONFIG_ACPI_VIDEO is set and the backlight feature of ACPI video is
->> unavailable, which broke the backlight functionality on Lenovo ThinkPad
->> C13 Yoga Chromebook. Allow to fall back to native backlight in such
->> cases.
-> 
-> Where's the bug report with relevant logs, kconfigs, etc?
+Hi,
 
-I haven't filed one. Should I? Please tell me where to report and what 
-information you would need (to bugzilla.kernel.org with things mentioned 
-in Documentation/admin-guide/reporting-issues.rst?)
+On 10/5/22 17:00, Barnabás Pőcze wrote:
+> Use `sizeof()` and `ARRAY_SIZE()` instead of
+> hard-coding buffer sizes and indices.
+> 
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
+
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
-Akihiko Odaki
 
+Hans
+
+
+> ---
+>  drivers/platform/x86/huawei-wmi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> BR,
-> Jani.
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> index eac3e6b4ea11..66b53b90188f 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -323,12 +323,12 @@ static int huawei_wmi_battery_get(int *start, int *end)
+>  	u8 ret[0x100];
+>  	int err, i;
 > 
->>
->> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
->>
->> Akihiko Odaki (22):
->>    drm/i915/opregion: Improve backlight request condition
->>    ACPI: video: Introduce acpi_video_get_backlight_types()
->>    LoongArch: Use acpi_video_get_backlight_types()
->>    platform/x86: acer-wmi: Use acpi_video_get_backlight_types()
->>    platform/x86: asus-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: asus-wmi: Use acpi_video_get_backlight_types()
->>    platform/x86: compal-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: eeepc-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: fujitsu-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: ideapad-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: msi-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: msi-wmi: Use acpi_video_get_backlight_types()
->>    platform/x86: nvidia-wmi-ec-backlight: Use
->>      acpi_video_get_backlight_types()
->>    platform/x86: panasonic-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: samsung-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: sony-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: thinkpad_acpi: Use acpi_video_get_backlight_types()
->>    platform/x86: toshiba_acpi: Use acpi_video_get_backlight_types()
->>    platform/x86: dell-laptop: Use acpi_video_get_backlight_types()
->>    platform/x86: intel_oaktrail: Use acpi_video_get_backlight_types()
->>    ACPI: video: Remove acpi_video_get_backlight_type()
->>    ACPI: video: Fallback to native backlight
->>
->>   Documentation/gpu/todo.rst                    |  8 +--
->>   drivers/acpi/acpi_video.c                     |  2 +-
->>   drivers/acpi/video_detect.c                   | 54 ++++++++++---------
->>   drivers/gpu/drm/i915/display/intel_opregion.c |  3 +-
->>   drivers/platform/loongarch/loongson-laptop.c  |  4 +-
->>   drivers/platform/x86/acer-wmi.c               |  2 +-
->>   drivers/platform/x86/asus-laptop.c            |  2 +-
->>   drivers/platform/x86/asus-wmi.c               |  4 +-
->>   drivers/platform/x86/compal-laptop.c          |  2 +-
->>   drivers/platform/x86/dell/dell-laptop.c       |  2 +-
->>   drivers/platform/x86/eeepc-laptop.c           |  2 +-
->>   drivers/platform/x86/fujitsu-laptop.c         |  4 +-
->>   drivers/platform/x86/ideapad-laptop.c         |  2 +-
->>   drivers/platform/x86/intel/oaktrail.c         |  2 +-
->>   drivers/platform/x86/msi-laptop.c             |  2 +-
->>   drivers/platform/x86/msi-wmi.c                |  2 +-
->>   .../platform/x86/nvidia-wmi-ec-backlight.c    |  2 +-
->>   drivers/platform/x86/panasonic-laptop.c       |  2 +-
->>   drivers/platform/x86/samsung-laptop.c         |  2 +-
->>   drivers/platform/x86/sony-laptop.c            |  2 +-
->>   drivers/platform/x86/thinkpad_acpi.c          |  4 +-
->>   drivers/platform/x86/toshiba_acpi.c           |  2 +-
->>   drivers/video/backlight/backlight.c           | 18 +++++++
->>   include/acpi/video.h                          | 21 ++++----
->>   include/linux/backlight.h                     |  1 +
->>   25 files changed, 85 insertions(+), 66 deletions(-)
+> -	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
+> +	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, sizeof(ret));
+>  	if (err)
+>  		return err;
 > 
+>  	/* Find the last two non-zero values. Return status is ignored. */
+> -	i = 0xff;
+> +	i = ARRAY_SIZE(ret) - 1;
+>  	do {
+>  		if (start)
+>  			*start = ret[i-1];
+> --
+> 2.38.0
+> 
+> 
+
