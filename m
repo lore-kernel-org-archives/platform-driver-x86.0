@@ -2,112 +2,167 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B88FFA373F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 19:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA28C67871
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 19:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232283AbiJXTow (ORCPT
+        id S232561AbiJXTue (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Oct 2022 15:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
+        Mon, 24 Oct 2022 15:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233507AbiJXToE (ORCPT
+        with ESMTP id S234275AbiJXTuM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2022 15:44:04 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CA7194219;
-        Mon, 24 Oct 2022 11:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666635141; x=1698171141;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=5z5J6hyo+xzhPJHRSqQ2l3yOfGRRo8+TjXETgVVrD8A=;
-  b=CTreJ/NTlalPXaOM+VYIQ30+UirYB0cafgqkos+0j5oy3cgHWYw7LuOZ
-   H46KTgzh4inW7Y4JY3enkMEmQ4/H1dlplhzmigdzxecUwDWqD/4ENtikS
-   MwoRzhj3NtFCfUMVT/oxF71d3HPGerykryaksqMgcFQu2btBXj5aOtubb
-   r3ZCCUugQ8xKTDDKAyn6oX7tNUDDmhZoOb/2OveaOVrnDCMEx1Q6+khI0
-   ptZhdXud2mHLmsXw48XlobER/BC++TMPpW/sLVwCZb4bmjteJ3B+Hi932
-   krtHztMHY9HLvk4quni6YmhdKxT/cHBkDkI8PeiJz+gE47LrRq+5qUkuz
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="393805616"
-X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="393805616"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 11:11:22 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="609286400"
-X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
-   d="scan'208";a="609286400"
-Received: from emontau-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.52.221])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 11:11:11 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Akihiko Odaki <akihiko.odaki@daynix.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>, Mark Gross <markgross@kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
-        Jonathan Woithe <jwoithe@just42.net>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Robert Moore <robert.moore@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        ibm-acpi-devel@lists.sourceforge.net, linux-fbdev@vger.kernel.org,
-        devel@acpica.org
-Subject: Re: [PATCH 00/22] Fallback to native backlight
-In-Reply-To: <78ad5d7b-4078-0b8e-f4aa-6c8113631359@daynix.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20221024113513.5205-1-akihiko.odaki@daynix.com>
- <746e5cc6-516f-8f69-9d4b-8fe237de8fd6@redhat.com>
- <edec5950-cec8-b647-ccb1-ba48f9b3bbb0@daynix.com>
- <60672af8-05d2-113c-12b9-d635608be0dd@redhat.com>
- <ea69242c-0bc8-c7bb-9602-c7489bb69684@daynix.com>
- <7373e258-f7cc-4416-9b1c-c8c9dab59ada@daynix.com>
- <ae3497ed-b68d-c36a-6b6f-f7b9771d9238@redhat.com>
- <78ad5d7b-4078-0b8e-f4aa-6c8113631359@daynix.com>
-Date:   Mon, 24 Oct 2022 21:11:08 +0300
-Message-ID: <87o7u1drcz.fsf@intel.com>
+        Mon, 24 Oct 2022 15:50:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0541C5E16
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 11:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666635309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ebv5PfsZX2R6eh39y9WmbJdsnetujUEQgGrB9f3X2I=;
+        b=gev7xcvrJStgxollKyBZ4C1tmH/NBRPHQHC1XgrR3tDSjFLrHfHc6b0IuA6Yyn98xO0D0Q
+        LeTTFvxigavXD8WpnI4hSZPIIRXs0I9qRmziSogcNICcbnY46OSXzG3T/XGDpdI8M/TQwH
+        NxWxzsRB/u5brOjO4F0LttmgU3HXJls=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-513-pZn7s446Pc-pqKP10KwsYg-1; Mon, 24 Oct 2022 09:47:40 -0400
+X-MC-Unique: pZn7s446Pc-pqKP10KwsYg-1
+Received: by mail-ed1-f69.google.com with SMTP id x18-20020a05640226d200b00461e027f704so2058371edd.7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 06:47:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ebv5PfsZX2R6eh39y9WmbJdsnetujUEQgGrB9f3X2I=;
+        b=R9kdnU1DYAxwSuIEd7IUhm5LclUc6pL+v2en6Kq5SqB8Jyw3tsJObWJpSHRX+rXohT
+         FulcL0I0J+mgRC1PFLgKn9DF8GbyI/vFbnSgvBzhJXHfcu9MOryG0GG2FxywqrHnbg+X
+         Fg0w0SA+yMzLTcTTmlkPFdCqbCAZ7277eJbYe5cPPjTn+QU6ToBByZ543EBLrMbqhdjl
+         DlIDP3jrRSS5AEyqSf7RmQVk2ysVl/vQoHF5OqCCf0Ij2WICleUUdzZYWFMAbZXddPdM
+         KIZbSNL1VXL/Z3hXrFJrVNsBNKIXwvT1gw6s/4AYlIxOKjMLPXcQN9pZub1Fq1J05O9V
+         JxkA==
+X-Gm-Message-State: ACrzQf2acNE34CjxNekVbswEzdVX9oUuPBOu2xZd/lhukkJ5gCKlBaZf
+        peMiJ2671j326r8v+6MbgETB/KZbJMYxYqqp/viC/J2no9F/WADvqgfwOnUD9CjDhT5ASMEYVwv
+        5NhSqqINm2eDVfDS3rnnxAqqsSkOJDjy4IQ==
+X-Received: by 2002:a17:907:a067:b0:7a7:dc5e:eb2d with SMTP id ia7-20020a170907a06700b007a7dc5eeb2dmr4709573ejc.121.1666619259238;
+        Mon, 24 Oct 2022 06:47:39 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7oLEXiE5I2sif+CugVS4fAFykp7aZ+J8hwrp6+8o79Py19z5YlVBnOblcNVHSJKIVCIbJM4Q==
+X-Received: by 2002:a17:907:a067:b0:7a7:dc5e:eb2d with SMTP id ia7-20020a170907a06700b007a7dc5eeb2dmr4709548ejc.121.1666619259029;
+        Mon, 24 Oct 2022 06:47:39 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id ck5-20020a0564021c0500b00461b169c02csm2670629edb.91.2022.10.24.06.47.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Oct 2022 06:47:38 -0700 (PDT)
+Message-ID: <a70f951c-98d2-5b48-e8c0-08067a7a535c@redhat.com>
+Date:   Mon, 24 Oct 2022 15:47:37 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2] platform/x86: dell-ddv: Minor style fixes
+Content-Language: en-US
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
+Cc:     andriy.shevchenko@intel.com, rafael@kernel.org, lenb@kernel.org,
+        hmh@hmh.eng.br, matan@svgalib.org, corentin.chary@gmail.com,
+        jeremy@system76.com, productdev@system76.com,
+        mario.limonciello@amd.com, pobrn@protonmail.com,
+        coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220928221501.3823-1-W_Armin@gmx.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220928221501.3823-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 25 Oct 2022, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
-> That aside, the first patch in this series can be applied without the 
-> later patches so you may have a look at it. It's fine if you don't merge 
-> it though since it does not fix really a pragmatic bug as its message says.
+Hi,
 
-I think it's problematic because it needlessly ties i915 backlight
-operation to existence of backlight devices that may not be related to
-Intel GPU at all. The direction should be multiple supported backlight
-devices, across GPUs and connectors, but only one per display.
+On 9/29/22 00:15, Armin Wolf wrote:
+> Fix some style issues found during review to improve
+> code maintainability, no functional changes.
+> 
+> Tested on a Dell Inspiron 3505.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
-BR,
-Jani.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+> ---
+> Changes in v2:
+> - change commit message
+> ---
+>  drivers/platform/x86/dell/dell-wmi-ddv.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> index 6ccce90f475d..699feae3c435 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> @@ -1,13 +1,12 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+> - * dell-wmi-ddv.c -- Linux driver for WMI sensor information on Dell notebooks.
+> + * Linux driver for WMI sensor information on Dell notebooks.
+>   *
+>   * Copyright (C) 2022 Armin Wolf <W_Armin@gmx.de>
+>   */
+> 
+>  #define pr_format(fmt) KBUILD_MODNAME ": " fmt
+> 
+> -#include <acpi/battery.h>
+>  #include <linux/acpi.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+> @@ -21,6 +20,8 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/wmi.h>
+> 
+> +#include <acpi/battery.h>
+> +
+>  #define DRIVER_NAME	"dell-wmi-ddv"
+> 
+>  #define DELL_DDV_SUPPORTED_INTERFACE 2
+> @@ -52,7 +53,8 @@ enum dell_ddv_method {
+> 
+>  struct dell_wmi_ddv_data {
+>  	struct acpi_battery_hook hook;
+> -	struct device_attribute temp_attr, eppid_attr;
+> +	struct device_attribute temp_attr;
+> +	struct device_attribute eppid_attr;
+>  	struct wmi_device *wdev;
+>  };
+> 
+> @@ -153,8 +155,9 @@ static int dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_meth
+> 
+>  static int dell_wmi_ddv_battery_index(struct acpi_device *acpi_dev, u32 *index)
+>  {
+> -	const char *uid_str = acpi_device_uid(acpi_dev);
+> +	const char *uid_str;
+> 
+> +	uid_str = acpi_device_uid(acpi_dev);
+>  	if (!uid_str)
+>  		return -ENODEV;
+> 
+> --
+> 2.30.2
+> 
+
