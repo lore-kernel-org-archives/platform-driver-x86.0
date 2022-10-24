@@ -2,131 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C96CC67871
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 20:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D849C38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 20:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232151AbiJXUMW (ORCPT
+        id S234160AbiJXUQ4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Oct 2022 16:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43492 "EHLO
+        Mon, 24 Oct 2022 16:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232746AbiJXUMB (ORCPT
+        with ESMTP id S234135AbiJXUQV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2022 16:12:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4135E7EFE9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 11:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666636147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=y5YZaxL1oMnz09mWsUSZRYvvuUIE5nQnPiEikkuSV6Y=;
-        b=HPN8kMxMnZIT5DZ/SfN7CrIgLNT4HbfZdSPU7q/YWKpxMaJyPROfMNBfEH9Gj2XKVaSpCs
-        gEYA8agmHgwrgKBW6PPrh9YSu9laieK3i+8KR0HBJkQOOCrHI2cH3f8DszDDYTTHzVGd4b
-        SbY7H20uVyUDyj3jGU3WJN4d/es4rUU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-550-IJcA6ogwOqum3gQiPxheuQ-1; Mon, 24 Oct 2022 09:58:11 -0400
-X-MC-Unique: IJcA6ogwOqum3gQiPxheuQ-1
-Received: by mail-ed1-f69.google.com with SMTP id y14-20020a056402270e00b0045d1baf4951so9824553edd.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 06:58:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y5YZaxL1oMnz09mWsUSZRYvvuUIE5nQnPiEikkuSV6Y=;
-        b=chsOOCBS6bpstzVpzBAuJzvssEAsT7J6xg88ILmH9ElpF0/rmAC39BoUa0ZfUPV/Ii
-         3jys991FZZO/rWxTHd3AEwN9ujaHMZyn6kFNN2/mIqZSXYMAQKL976QS3hhSokpdBlHE
-         l9+Mrp6+8p5nHxvtridyWpdbFzoLj7MjnXN/GmDgOPMCCKhcj5EyfN/6I5kyaj69WK+K
-         irv+Tc9nBwXn7aO+bI/RRw4IR2P+NPd+R1LGC0LdYnzNd7fh8koDe8cdNAWT3ZKLhnKU
-         S51tjfCbog9UF5HakUhCR2KQbRxjD2M4Fb4RJnGRb8uz+hxUwLajZuMjCopVx0mqpFlw
-         dyug==
-X-Gm-Message-State: ACrzQf0EPu77z67X3ayLz9TY4sWh9zNas+DgySILyuu6sfENE7tPmZC1
-        1XmrBLUOo3v6kzBD0Gr5WcsESoC96oU21ZKgPGLiQXTpFtiDzpWSNKtZYm2h8BWpW/ZlLDB5YqO
-        v7RJktXLPrH2etIK2JbuU+Qu6zn77y0Vb7A==
-X-Received: by 2002:a17:907:9710:b0:791:8aa6:18bb with SMTP id jg16-20020a170907971000b007918aa618bbmr27159487ejc.279.1666619890259;
-        Mon, 24 Oct 2022 06:58:10 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6M86ueEZcPTUi2KLtqWd0TWYCio4RjiOdeK3EtdOkwJ9Duagj1VkJ9BPCMyVc0lYQxG5fT9Q==
-X-Received: by 2002:a17:907:9710:b0:791:8aa6:18bb with SMTP id jg16-20020a170907971000b007918aa618bbmr27159477ejc.279.1666619890041;
-        Mon, 24 Oct 2022 06:58:10 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id de13-20020a1709069bcd00b0078d957e65b6sm15541991ejc.23.2022.10.24.06.58.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Oct 2022 06:58:09 -0700 (PDT)
-Message-ID: <6c47276e-cbca-dcde-6a8a-721f34c0755e@redhat.com>
-Date:   Mon, 24 Oct 2022 15:58:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v1 1/3] platform/x86: huawei-wmi: do not hard-code sizes
-Content-Language: en-US
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Mon, 24 Oct 2022 16:16:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E00C150F88;
+        Mon, 24 Oct 2022 11:33:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0FA1612E7;
+        Mon, 24 Oct 2022 13:14:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11F4C433C1;
+        Mon, 24 Oct 2022 13:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666617295;
+        bh=3nE0pujKjkKrAG3Zlhw1YeJuPRfB3mFezLZb6lzLCGA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LMm2+6OBEsQawTDmuHx79XkDRpx8g9QS54i0VAgQtCk02UkomS95/vMkOooCKFRX3
+         xxQEe24yv/tDtsQYrTGmzauMv0Jh6zHqana1EL/TBHlmO6GXulViaDuIlAEYGkafKP
+         kqE4fIBr817hQoEx/xF9wYtGawey5ywjjoX7MjRMntvcbUYm0BK0RPqRrLUuuXw2Nk
+         nhWxKTcWwM9VEt4aM7KgAIT39FftcsQukjfpyyfLMkVVk5XzPzt3H5NCVm2IIV71GR
+         WEwDHsAVQ/xfBG0zYbWT3h7jEZyT/78B/fc3OPRLq/euFmv9sbHup10WXUReRUbepL
+         1J6fTEisi4WTg==
+Received: by pali.im (Postfix)
+        id 060EE82F; Mon, 24 Oct 2022 15:14:51 +0200 (CEST)
+Date:   Mon, 24 Oct 2022 15:14:51 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        "Lee, Chun-Yi" <jlee@suse.com>, Mark Gross <markgross@kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Jonathan Woithe <jwoithe@just42.net>,
+        Ike Panhc <ike.pan@canonical.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Mattia Dongili <malattia@linux.it>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Azael Avalos <coproscefalo@gmail.com>,
+        Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Robert Moore <robert.moore@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>
-References: <20221005150032.173198-1-pobrn@protonmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221005150032.173198-1-pobrn@protonmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        acpi4asus-user@lists.sourceforge.net,
+        ibm-acpi-devel@lists.sourceforge.net, linux-fbdev@vger.kernel.org,
+        devel@acpica.org
+Subject: Re: [PATCH 00/22] Fallback to native backlight
+Message-ID: <20221024131451.lvkesdg3kvyvbi7n@pali>
+References: <20221024113513.5205-1-akihiko.odaki@daynix.com>
+ <746e5cc6-516f-8f69-9d4b-8fe237de8fd6@redhat.com>
+ <edec5950-cec8-b647-ccb1-ba48f9b3bbb0@daynix.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <edec5950-cec8-b647-ccb1-ba48f9b3bbb0@daynix.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Monday 24 October 2022 21:58:57 Akihiko Odaki wrote:
+> Regarding the second limitation, I don't even understand the difference
+> between vendor and native. My guess is that a vendor backlight device uses
+> vendor-specific ACPI interface, and a native one directly uses hardware
+> registers. If my guess is correct, the difference between vendor and native
+> does not imply that both of them are likely to exist at the same time. As
+> the conclusion, there is no more motivation to try to de-duplicate the
+> vendor/native combination than to try to de-duplicate combination of devices
+> with a single type.
 
-On 10/5/22 17:00, Barnabás Pőcze wrote:
-> Use `sizeof()` and `ARRAY_SIZE()` instead of
-> hard-coding buffer sizes and indices.
-> 
-> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
-
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/platform/x86/huawei-wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-> index eac3e6b4ea11..66b53b90188f 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -323,12 +323,12 @@ static int huawei_wmi_battery_get(int *start, int *end)
->  	u8 ret[0x100];
->  	int err, i;
-> 
-> -	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
-> +	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, sizeof(ret));
->  	if (err)
->  		return err;
-> 
->  	/* Find the last two non-zero values. Return status is ignored. */
-> -	i = 0xff;
-> +	i = ARRAY_SIZE(ret) - 1;
->  	do {
->  		if (start)
->  			*start = ret[i-1];
-> --
-> 2.38.0
-> 
-> 
-
+Hello! I just want to point one thing. On some Dell laptops there are
+3 different ways (= 3 different APIs) how to control display backlight.
+There is ACPI driver (uses ACPI), GPU/DRM driver (i915.ko; uses directly
+HW) and platform vendor driver (dell-laptop.ko; uses vendor BIOS or
+firmware API). Just every driver has different pre-calculated scaling
+values. So sometimes user wants to choose different driver just because
+it allows to set backlight level with "better" granularity. Registering
+all 3 device drivers is bad as user does not want to see 3 display
+panels and forcing registration of specific one without runtime option
+is also bad (some of those drivers do not have to be suitable or has
+worse granularity as other).
