@@ -2,145 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C07C67871
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 23:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A48C67871
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 23:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229997AbiJXXMT (ORCPT
+        id S230075AbiJXXVJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Oct 2022 19:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+        Mon, 24 Oct 2022 19:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbiJXXLh (ORCPT
+        with ESMTP id S230121AbiJXXUz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2022 19:11:37 -0400
+        Mon, 24 Oct 2022 19:20:55 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9867738C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 14:32:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B99CE983
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 14:41:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666647099;
+        s=mimecast20190719; t=1666647669;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Sa227/HWN+mg/M9GF8z0s+pXLCfMWbPNsK+iHgKq07I=;
-        b=cqS7OLkmY/rp6cBJbM0FmLGSFAfBi/CbHiDfUI+MnSJsDlUKWsDl2R6JmfJKe3C7p9Gz26
-        4vlcxGbfQKL0JCzAaDAGznQ5bKsHyVfDRrmUigd+YLSLOHUxMQKUg1X4VlQjhWP1CxRZ5Q
-        m+46dgrVQz3Izq7jqzgNPTYi5M+gqgc=
+        bh=61ONWJblhKykTdnnWFJPLzFrI2GgQTtZLaYgVl5PSEo=;
+        b=I0s90pV7UVq2bG3d6YBVefPf6d9hX1CO7T4q5YyBk+QzViUbXI1pKV0fqcmAElxVrzKUBl
+        Svq5FI6f613b/y0zJOk/oA1h6PlFwhH9xEpSB6lAusXcF9lVHhfoMjk0NRXi/b68vC79Ly
+        hsRqrrJEEtI+UFjBCApof+XTCzhGpXw=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-111-pX3QKQUiNwSwnF6Q5X8rYg-1; Mon, 24 Oct 2022 07:53:08 -0400
-X-MC-Unique: pX3QKQUiNwSwnF6Q5X8rYg-1
-Received: by mail-ed1-f69.google.com with SMTP id z15-20020a05640240cf00b00461b253c220so3224325edb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 04:53:08 -0700 (PDT)
+ us-mta-402-yn2drGgtMl6tLDnJCfz5aw-1; Mon, 24 Oct 2022 10:06:50 -0400
+X-MC-Unique: yn2drGgtMl6tLDnJCfz5aw-1
+Received: by mail-ed1-f69.google.com with SMTP id e15-20020a056402190f00b00461b0576620so3692556edz.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 07:06:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sa227/HWN+mg/M9GF8z0s+pXLCfMWbPNsK+iHgKq07I=;
-        b=Il/tbAi4jnTEJRl7L8GEN2NafJKG8Eyw1EiNJRL2hpE2B5zFE0gTDhKYAZMmC7f0nV
-         JzPH2r3diJg5cAtciB4iHJbqG7sbQCRRnjsOa9am4+Xs5/vXy7KEfmkZImKFUMG+0qxT
-         Om4tIVBnIUQHbZzn+wOpjpijD4CAiglEyDqGjItaj9DgTZrm4A1bowSBmUQZOfs6hqUY
-         nPiZrIFs9hOCXnCv/w7TybezZe7sSPIUVt2KadB0DznsT64vUd8lux+jp7amXX2pUSTZ
-         y8NiE45HzrxRvGWeQ7bgBztCEzpUIaRVUsR/IvjMp0VlMkTc9jJLKr6pVU2eTp/GtRvX
-         bbwA==
-X-Gm-Message-State: ACrzQf3pjnbPhC0B+ARCF7VtZY7e5qFgVMsWUM0nda9bL3AtBLLrmWMI
-        benq7ZxWnTO9yPHgTvakRJgs+eUBbKFBkeCgoN8j+G5VUqZny/BFZMVK+LUoOTIJ3UPZoZBGl2C
-        pEsBc2BhaHJmkYaVhQ2OwJlK6Eok/wnzf+g==
-X-Received: by 2002:a17:907:608f:b0:78e:1b60:60e2 with SMTP id ht15-20020a170907608f00b0078e1b6060e2mr27603507ejc.382.1666612387309;
-        Mon, 24 Oct 2022 04:53:07 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6rKjf9vFNIG71zIVFmhWoGUssYXpRCR0TKoudwiSS8QTCTafqY38Nm8/FfK1Fy5krk9VAMgg==
-X-Received: by 2002:a17:907:608f:b0:78e:1b60:60e2 with SMTP id ht15-20020a170907608f00b0078e1b6060e2mr27603473ejc.382.1666612387069;
-        Mon, 24 Oct 2022 04:53:07 -0700 (PDT)
+        bh=61ONWJblhKykTdnnWFJPLzFrI2GgQTtZLaYgVl5PSEo=;
+        b=Mq7lhnT1G7DEzAmMUNk/wdI89/AWtWS39WZelW0ogQG25DBIiaTCw/7JptRstEEMLr
+         ucsKoUGtiWIaB+M5+Kj7N6f8mJZHQHHSUTncovJ23CITURtJ0hoGWS184XhbIb5B+Qh5
+         nASLoiEYQ4pETMcOfPThZUqWC6Yliw4mw02yLrYHOcUB5BB2AlZYa7F0RsB23iEzsxZ4
+         rZauqtN8xrV2to16odSEv/oxL3JTTOGEYhSPaLHEnGZ+4rINh2d4gHlpBSyTjRJbxmlF
+         53Nzj0RkYzH4A+7/LZT/ewf6QlMBIQXsscjz3QD/hoNKSx08GWRss3LRz33NpL1V5fgR
+         HH4w==
+X-Gm-Message-State: ACrzQf2idFfy4QeqKV7W71qeqGUr6m9m4nRe1LLAtNFJpNUike0DqrBQ
+        kkiPqqsYZ82Gjk2dzXSJ4ijmI77SDoCxLgtCBMCDlYwmbgY4Gy1o/aLqLOHFt9k2/j0iMt38ZTQ
+        baHFMNGyuD/ShqnU4Tmw3Qh+WOU8YVOFLTA==
+X-Received: by 2002:a17:906:9b83:b0:730:b3ae:343 with SMTP id dd3-20020a1709069b8300b00730b3ae0343mr28814888ejc.670.1666620408961;
+        Mon, 24 Oct 2022 07:06:48 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4F6Ovxer5z8nqFLbjl91mu9iIhrga9lNSTAEq2gyu682xI+X6JZNjFoK1Q7oLcdoko/lhY6A==
+X-Received: by 2002:a17:906:9b83:b0:730:b3ae:343 with SMTP id dd3-20020a1709069b8300b00730b3ae0343mr28814872ejc.670.1666620408733;
+        Mon, 24 Oct 2022 07:06:48 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id h3-20020a1709070b0300b007ab2d744801sm17394ejl.190.2022.10.24.04.53.05
+        by smtp.gmail.com with ESMTPSA id dn2-20020a05640222e200b00459cf672a65sm18655822edb.71.2022.10.24.07.06.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Oct 2022 04:53:06 -0700 (PDT)
-Message-ID: <746e5cc6-516f-8f69-9d4b-8fe237de8fd6@redhat.com>
-Date:   Mon, 24 Oct 2022 13:53:05 +0200
+        Mon, 24 Oct 2022 07:06:48 -0700 (PDT)
+Message-ID: <f98a33a7-08d6-e1fa-f00c-05b7fa96a919@redhat.com>
+Date:   Mon, 24 Oct 2022 16:06:47 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH 00/22] Fallback to native backlight
+Subject: Re: [PATCH] acerhdf: remove unneeded semicolon
 Content-Language: en-US
-To:     Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>, Mark Gross <markgross@kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Jonathan Woithe <jwoithe@just42.net>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Robert Moore <robert.moore@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        ibm-acpi-devel@lists.sourceforge.net, linux-fbdev@vger.kernel.org,
-        devel@acpica.org
-References: <20221024113513.5205-1-akihiko.odaki@daynix.com>
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, peter@piie.net
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+References: <20221008070411.51859-1-jiapeng.chong@linux.alibaba.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221024113513.5205-1-akihiko.odaki@daynix.com>
+In-Reply-To: <20221008070411.51859-1-jiapeng.chong@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Akihiko,
+Hi,
 
-On 10/24/22 13:34, Akihiko Odaki wrote:
-> Commit 2600bfa3df99 ("ACPI: video: Add acpi_video_backlight_use_native()
-> helper") and following commits made native backlight unavailable if
-> CONFIG_ACPI_VIDEO is set and the backlight feature of ACPI video is
-> unavailable, which broke the backlight functionality on Lenovo ThinkPad
-> C13 Yoga Chromebook. Allow to fall back to native backlight in such
-> cases.
+On 10/8/22 09:04, Jiapeng Chong wrote:
+> ./drivers/platform/x86/acerhdf.c:344:2-3: Unneeded semicolon.
+> 
+> Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2271
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-I appreciate your work on this, but what this in essence does is
-it allows 2 backlight drivers (vendor + native) to get registered
-for the same panel again. While the whole goal of the backlight refactor
-series landing in 6.1 was to make it so that there always is only
-*1* backlight device registered instead of (possibly) registering
-multiple and letting userspace figure it out. It is also important
-to only always have 1 backlight device per panel for further
-upcoming changes.
+This patch does not apply:
 
-So nack for this solution, sorry.
+[hans@x1 platform-drivers-x86]$ git am -s ~/1.eml
+Applying: acerhdf: remove unneeded semicolon
+error: patch failed: drivers/platform/x86/acerhdf.c:341
+error: drivers/platform/x86/acerhdf.c: patch does not apply
+Patch failed at 0001 acerhdf: remove unneeded semicolon
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
 
-I am aware that this breaks backlight control on some Chromebooks,
-this was already reported and I wrote a long reply explaining why
-things are done the way they are done now and also suggesting
-2 possible (much simpler) fixes, see:
-https://lore.kernel.org/linux-acpi/42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com/
+Please make sure that you base this on the latest version of
+the acerhdf code from:
 
-Unfortunately the reported has not followed-up on this and
-I don't have the hardware to test this myself.
-
-Can you please try implementing 1 of the fixes suggested there
-and then submit that upstream ?
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
 
 Regards,
 
@@ -148,65 +108,21 @@ Hans
 
 
 
-
-
-
-
-
-
+> ---
+>  drivers/platform/x86/acerhdf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-> 
-> Akihiko Odaki (22):
->   drm/i915/opregion: Improve backlight request condition
->   ACPI: video: Introduce acpi_video_get_backlight_types()
->   LoongArch: Use acpi_video_get_backlight_types()
->   platform/x86: acer-wmi: Use acpi_video_get_backlight_types()
->   platform/x86: asus-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: asus-wmi: Use acpi_video_get_backlight_types()
->   platform/x86: compal-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: eeepc-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: fujitsu-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: ideapad-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: msi-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: msi-wmi: Use acpi_video_get_backlight_types()
->   platform/x86: nvidia-wmi-ec-backlight: Use
->     acpi_video_get_backlight_types()
->   platform/x86: panasonic-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: samsung-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: sony-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: thinkpad_acpi: Use acpi_video_get_backlight_types()
->   platform/x86: toshiba_acpi: Use acpi_video_get_backlight_types()
->   platform/x86: dell-laptop: Use acpi_video_get_backlight_types()
->   platform/x86: intel_oaktrail: Use acpi_video_get_backlight_types()
->   ACPI: video: Remove acpi_video_get_backlight_type()
->   ACPI: video: Fallback to native backlight
-> 
->  Documentation/gpu/todo.rst                    |  8 +--
->  drivers/acpi/acpi_video.c                     |  2 +-
->  drivers/acpi/video_detect.c                   | 54 ++++++++++---------
->  drivers/gpu/drm/i915/display/intel_opregion.c |  3 +-
->  drivers/platform/loongarch/loongson-laptop.c  |  4 +-
->  drivers/platform/x86/acer-wmi.c               |  2 +-
->  drivers/platform/x86/asus-laptop.c            |  2 +-
->  drivers/platform/x86/asus-wmi.c               |  4 +-
->  drivers/platform/x86/compal-laptop.c          |  2 +-
->  drivers/platform/x86/dell/dell-laptop.c       |  2 +-
->  drivers/platform/x86/eeepc-laptop.c           |  2 +-
->  drivers/platform/x86/fujitsu-laptop.c         |  4 +-
->  drivers/platform/x86/ideapad-laptop.c         |  2 +-
->  drivers/platform/x86/intel/oaktrail.c         |  2 +-
->  drivers/platform/x86/msi-laptop.c             |  2 +-
->  drivers/platform/x86/msi-wmi.c                |  2 +-
->  .../platform/x86/nvidia-wmi-ec-backlight.c    |  2 +-
->  drivers/platform/x86/panasonic-laptop.c       |  2 +-
->  drivers/platform/x86/samsung-laptop.c         |  2 +-
->  drivers/platform/x86/sony-laptop.c            |  2 +-
->  drivers/platform/x86/thinkpad_acpi.c          |  4 +-
->  drivers/platform/x86/toshiba_acpi.c           |  2 +-
->  drivers/video/backlight/backlight.c           | 18 +++++++
->  include/acpi/video.h                          | 21 ++++----
->  include/linux/backlight.h                     |  1 +
->  25 files changed, 85 insertions(+), 66 deletions(-)
-> 
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 1956469c3457..6cf7f2a8a074 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -341,7 +341,7 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+>  		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
+>  		       fanoff, fanon, fanon);
+>  		fanoff = fanon;
+> -	};
+> +	}
+>  
+>  	trips[0].temperature = fanon;
+>  	trips[0].hysteresis  = fanon - fanoff;
 
