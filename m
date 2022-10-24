@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C780ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 11:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A901C38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Oct 2022 11:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231294AbiJXLkA (ORCPT
+        id S231337AbiJXLkG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Oct 2022 07:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
+        Mon, 24 Oct 2022 07:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231414AbiJXLjL (ORCPT
+        with ESMTP id S231450AbiJXLjS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2022 07:39:11 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8656E2D6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 04:38:25 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id i3so8690338pfc.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 04:38:25 -0700 (PDT)
+        Mon, 24 Oct 2022 07:39:18 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BDC6AA26
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 04:38:41 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id p3so7258592pld.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Oct 2022 04:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=daynix-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aTWnIAAWrGsxFWyDKsfKu5xKbLpsLEHl3kQR801HKCo=;
-        b=MRe/lYU3QcRg+eNbrdoMjeONSL07r0OuDkWzCVk6tpzA20LxxB9dtVNP6GAZVtqzIg
-         /Ydi6DIu3Wy5fZXEZmacOcz+NqXiSg1SXC5+xE40BzARxzxxK4lzIbVbKWJmk00nhUWL
-         J95wLECXE4yV76gl9zFLYhn0sUtCfGQd7MZ3fPt+5gVvmN0pleQRDgrqZg3vefZrijSa
-         Yr0OxSWw7RuG0IesV0KfRF12UlNsEctSBC+ObKy3MmlA9Ekq0p3IRfhEG3FwtLPaqAOb
-         tgPmTvcjcO2SHlUmacRidezoVVwplJ41JEut0A62tZuMt+eaVkdbww0tkfz+m4Yo8zhg
-         FlhQ==
+        bh=XAyFJiVGXrC/KZsleNIpi2nk4bcxYAI8Wjviz1KFor4=;
+        b=ZPJNNmG2CfyinfqrhsHlV+g/2spcGsRR6OA3gQWYXOOaD6Gsxx/0ZTZ/2WSEOwyYxr
+         EDCpJh40XMtG2OTdgXJL02/X5omijLCV9JB2NHXHkDrLv9wNx5a9fXGjfKUy3F0lhTEe
+         hmnXBdrKvxVeJ2M5hNGsU2bRRaZU/yeF/d2yhPBZ/vbo5qMU7Pf/Zeu4xzQd/tILMGUf
+         9wVa7xUimRQsMhs8I2ooWhyIiW91jtGl8d73AU5DZCPbAW2aJV7S8knDGzccvSCFIAGK
+         XYYnZNcK+zvSZs4S+oTEJp9GvLNjfNv3+EpEB1BBZw+e91dYFNlfBeXNg4N+ATQRyNH9
+         j2NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aTWnIAAWrGsxFWyDKsfKu5xKbLpsLEHl3kQR801HKCo=;
-        b=i9xb60FSrUSRDzcg5aOLg4kK4IcT/eLTZJgJbb69Vwdz/s2sdkOUSMDV5Try27kHU7
-         8nVVVRqni7QLrfTlKBHHsgswFaHHCHkp7nITewcz0P0mAcATAqz28fqQrkXMrkjhbzI2
-         EvQnJgwhGnhmmdhXM3bRapQNQ9hArG8M0G9OdyaJw8UUqcehDf7rrRI6YBWR+YiZlzNG
-         HUJ/dRXgkyRyz2cQPATFoA/oD4GaQvbNuiUG+s7br99eyhGwc3UBDW7HHNL994o/UMg3
-         9LK1+oFlisHoIOID/wk1+ZM1EEXeUtk9rrdhGwnPyUU6e18CRAFAIyGGOa/fcTsMYY5I
-         E24w==
-X-Gm-Message-State: ACrzQf0+drZbb7SDNiw1kphNfjQJuMXpZKp8ycVw8Le99subTiJYa1Lj
-        oDQqRYGcTJ/dchChU+YnXwWsVw==
-X-Google-Smtp-Source: AMsMyM4YJ5urGf6JLjky27R9T5sFwrnmf9RBCYrtUNpAE3TI6fc6EtzOOV4rZk9R6ICHsHu1MQHt3A==
-X-Received: by 2002:a63:64d:0:b0:46b:158f:102e with SMTP id 74-20020a63064d000000b0046b158f102emr28740541pgg.150.1666611408492;
-        Mon, 24 Oct 2022 04:36:48 -0700 (PDT)
+        bh=XAyFJiVGXrC/KZsleNIpi2nk4bcxYAI8Wjviz1KFor4=;
+        b=zWJrUzv9C6TpJd0mR24KPNMq4mml9+pM10xwUVUifyt1ZJagakqtqMcKiYh6YDsTO1
+         XyyEviy/QApVZq+v5VUkvFuJ75P3si6kAM4oQjg6kVQrFTqNCWk1L1+FBaPzqsHxeglg
+         /PJf7gvM1DoxCLyiXyw+Njg2Y4z+nQ2yAeELzfcmZ4zzq62ocx6KYRjGm3dl0l5C3W+d
+         dzypTD8LjxadpBdsPSEXnt5SUDIN1nfolTV97sTUkYC0j6EAMQlV5nrKWwGkJsxa6sg0
+         JGoucZEAOmg7hRqByePH6Iuvwds2yATDZFsWm6uqGEcmSSbMfMMHCG6sOIHDH+lc37fe
+         HpEA==
+X-Gm-Message-State: ACrzQf2RKxYe+7HbwRicPSGjZ2PGKh4TzaGfPlQpFBKE3rMWkMxfjpxd
+        e9qpMxoVMwv75XVsSaDCPeUk5KPXjUzPGOzL
+X-Google-Smtp-Source: AMsMyM7j6rudLQ3oDGLiRJvO3ouLKzXkm11wgePZ/bzYxd0/dczcHVPABhvm+nv5ewjBPX37znVsPw==
+X-Received: by 2002:a17:903:1c6:b0:185:47ce:f4f0 with SMTP id e6-20020a17090301c600b0018547cef4f0mr33699248plh.132.1666611442110;
+        Mon, 24 Oct 2022 04:37:22 -0700 (PDT)
 Received: from fedora.flets-east.jp ([2400:4050:c360:8200:8ae8:3c4:c0da:7419])
-        by smtp.gmail.com with ESMTPSA id b8-20020a170903228800b001830ed575c3sm19475075plh.117.2022.10.24.04.36.40
+        by smtp.gmail.com with ESMTPSA id b8-20020a170903228800b001830ed575c3sm19475075plh.117.2022.10.24.04.37.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 04:36:47 -0700 (PDT)
+        Mon, 24 Oct 2022 04:37:21 -0700 (PDT)
 From:   Akihiko Odaki <akihiko.odaki@daynix.com>
 Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -89,9 +89,9 @@ Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
         acpi4asus-user@lists.sourceforge.net,
         ibm-acpi-devel@lists.sourceforge.net, linux-fbdev@vger.kernel.org,
         devel@acpica.org, Akihiko Odaki <akihiko.odaki@daynix.com>
-Subject: [PATCH 08/22] platform/x86: eeepc-laptop: Use acpi_video_get_backlight_types()
-Date:   Mon, 24 Oct 2022 20:34:59 +0900
-Message-Id: <20221024113513.5205-9-akihiko.odaki@daynix.com>
+Subject: [PATCH 12/22] platform/x86: msi-wmi: Use acpi_video_get_backlight_types()
+Date:   Mon, 24 Oct 2022 20:35:03 +0900
+Message-Id: <20221024113513.5205-13-akihiko.odaki@daynix.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20221024113513.5205-1-akihiko.odaki@daynix.com>
 References: <20221024113513.5205-1-akihiko.odaki@daynix.com>
@@ -106,22 +106,22 @@ acpi_video_get_backlight_type() is now deprecated.
 
 Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
 ---
- drivers/platform/x86/eeepc-laptop.c | 2 +-
+ drivers/platform/x86/msi-wmi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index a388a28b6f2a..91dea49f7c3d 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -1400,7 +1400,7 @@ static int eeepc_acpi_add(struct acpi_device *device)
- 	if (result)
- 		goto fail_platform;
+diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+index fd318cdfe313..3a74f0135fae 100644
+--- a/drivers/platform/x86/msi-wmi.c
++++ b/drivers/platform/x86/msi-wmi.c
+@@ -309,7 +309,7 @@ static int __init msi_wmi_init(void)
+ 	}
  
--	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
-+	if ((acpi_video_get_backlight_types() & ACPI_BACKLIGHT_VENDOR)) {
- 		result = eeepc_backlight_init(eeepc);
- 		if (result)
- 			goto fail_backlight;
+ 	if (wmi_has_guid(MSIWMI_BIOS_GUID) &&
+-	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
++	    (acpi_video_get_backlight_types() & ACPI_BACKLIGHT_VENDOR)) {
+ 		err = msi_wmi_backlight_setup();
+ 		if (err) {
+ 			pr_err("Unable to setup backlight device\n");
 -- 
 2.37.3
 
