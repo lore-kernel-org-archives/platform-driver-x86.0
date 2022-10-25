@@ -2,108 +2,245 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22775C38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Oct 2022 14:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01625C38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Oct 2022 18:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232439AbiJYOMO (ORCPT
+        id S229714AbiJYSvM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Oct 2022 10:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
+        Tue, 25 Oct 2022 14:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233025AbiJYOL6 (ORCPT
+        with ESMTP id S233023AbiJYSvJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Oct 2022 10:11:58 -0400
+        Tue, 25 Oct 2022 14:51:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81227DD8A1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Oct 2022 07:11:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 757D9C589A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Oct 2022 11:51:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666707100;
+        s=mimecast20190719; t=1666723866;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=cIUfJhZvEmBc78Kyt66BJc2thu8HBBAQMCpUxu7T638=;
-        b=FccajYlbSABS7eQwQGgR5KZZmEbUpfdbiiwySTK8aihwYTPlzx65jG1Fw7FURLa4R2xNjs
-        NJhxwxNd54js4xvBRzp7KYOtnfyOfXN+Af5YxzCNx7dtnGAcW5MY453xLYzN/ojDLLytqp
-        4Ji2Z7JgHGo34rmGbmoespfSWODG3vM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-580-0tkugEWmMMuMRIXk-Tvjog-1; Tue, 25 Oct 2022 10:11:37 -0400
-X-MC-Unique: 0tkugEWmMMuMRIXk-Tvjog-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5ECB0800B23;
-        Tue, 25 Oct 2022 14:11:36 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A27710197;
-        Tue, 25 Oct 2022 14:11:32 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the RCA Cambio W101 v2 2-in-1
-Date:   Tue, 25 Oct 2022 16:11:31 +0200
-Message-Id: <20221025141131.509211-1-hdegoede@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X4AgKJfraUOsPz3IaqgXDaTFp4AXZH1ZD31CAhgpw7g=;
+        b=S6HAhqxOs/oIwW0SUR4hQr55nXtsLUDZ35yZLQiF4WxzxQPdRsRVfq7DmxszMR0sS2ciTy
+        4A5mr6DEs2PePX98GaSo+9EoxfObHDiPSqWirL7Fb3oxBYIbJP9ew0Hgp1Pyfis3jV3083
+        WLVA1uEI6eSBUauwXNYjXJkj2x3DEb8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-640-l-2jDJkWN8yrb4oZxDITVg-1; Tue, 25 Oct 2022 14:51:04 -0400
+X-MC-Unique: l-2jDJkWN8yrb4oZxDITVg-1
+Received: by mail-ej1-f69.google.com with SMTP id nb9-20020a1709071c8900b0078d858f15c1so3269460ejc.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Oct 2022 11:51:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X4AgKJfraUOsPz3IaqgXDaTFp4AXZH1ZD31CAhgpw7g=;
+        b=loN2clslq04L4DqCyP0G+Ru2sfvEi3tBohm+xzDMH1ML2YqcVOTaD6+zeMNFt6zxDQ
+         jsAEl3LcDbUkig1tqbe1vrB0PxS7tHF/PIDFQuCnDPgnPl9CUuha5S0AFvhi0fXme4Xv
+         oc2q+Lfg5wwz5brO6jWZGwKJgy2E0eRULo0CnQ/ZCed6jQVh7fAByfm08nihWBgudqKU
+         DC34aBHJnr25B6O/jNGbm0EBS2d2w2IsaOnw5+HXVBbqhytc7AZ2IsSD4tLjZBkMYXnP
+         /aTSSzZ5MbCFVuYBTJxYrs/yNWVsTuE0JskITAvNXA4Jq4g0jBqYb5E36U+G+3cafgOv
+         z0Bw==
+X-Gm-Message-State: ACrzQf2ARI6S6chy3zcon+EPIoc6E6QjUpJQgSuPwtz2bAxsvbXCJsmQ
+        y6U07eWrk22YkU+wTf/ZYG9A+dqifyPFuLOLJQFxGmVueBDTQjkiX5YPLEqhGiHlV2y05geopVl
+        0Cg60uq6kksBuIPBxUVUSPV68XcfaJ+FYBA==
+X-Received: by 2002:a17:907:8a24:b0:795:bb7d:643b with SMTP id sc36-20020a1709078a2400b00795bb7d643bmr28237614ejc.115.1666723863765;
+        Tue, 25 Oct 2022 11:51:03 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7+1cKY8mWLWZ9ZOJBRjb26mTKGhU8d2NvRoh1pdtCnyY5nFv4Rr2Wf3KkTj2dkWsEMUnUIxA==
+X-Received: by 2002:a17:907:8a24:b0:795:bb7d:643b with SMTP id sc36-20020a1709078a2400b00795bb7d643bmr28237601ejc.115.1666723863548;
+        Tue, 25 Oct 2022 11:51:03 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id y18-20020a17090668d200b0079e11b8e891sm1802322ejr.125.2022.10.25.11.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Oct 2022 11:51:02 -0700 (PDT)
+Message-ID: <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+Date:   Tue, 25 Oct 2022 20:50:54 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Content-Language: en-US, nl
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+References: <20220825143726.269890-1-hdegoede@redhat.com>
+ <20220825143726.269890-3-hdegoede@redhat.com>
+ <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+ <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
+ <20221024203057.GA28675@srcf.ucam.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221024203057.GA28675@srcf.ucam.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add touchscreen info for the RCA Cambio W101 v2 2-in-1.
+Hi,
 
-Link: https://github.com/onitake/gsl-firmware/discussions/193
+On 10/24/22 22:30, Matthew Garrett wrote:
+> On Tue, Sep 27, 2022 at 01:04:52PM +0200, Hans de Goede wrote:
+> 
+>> So to fix this we need to make acpi_video_get_backlight_type()
+>> return native on the Acer Chromebook Spin 713.
+> 
+> Isn't the issue broader than that? Unless the platform is Windows 8 or 
+> later, we'll *always* (outside of some corner cases) return 
+> acpi_backlight_vendor if there's no ACPI video interface. This is broken 
+> for any platform that implements ACPI but relies on native video 
+> control, which is going to include a range of Coreboot platforms, not 
+> just Chromebooks.
+
+That is a valid point, but keep in mind that this is only used on ACPI
+platforms and then only on devices with a builtin LCD panel and then
+only by GPU drivers which actually call acpi_video_get_backlight_type(),
+so e.g. not by all the ARM specific display drivers.
+
+So I believe that Chromebooks quite likely are the only devices with
+this issue.
+
+We could do something like the patch which I have pasted at the end
+of this email, but as its commit message notes there is a real
+good chance this will cause regressions on some laptops.
+
+So if we ever decide to go with something like the patch below,
+I think we should at a minimum wait for the next cycle with that,
+because 6.1 already significantly reworks the ACPI backlight
+detect handling and I don't want to throw this into the mix
+on top of those changes.
+
+> I think for this to work correctly you need to have 
+> the infrastructure be aware of whether or not a vendor interface exists, 
+> which means having to handle cleanup if a vendor-specific module gets 
+> loaded later.
+
+Getting rid of the whole ping-ponging of which backlight drivers
+get loaded during boot was actually one of the goals of the rework
+which landed in 6.1 this actually allowed us to remove some quirks
+because some hw/firmware did not like us changing our mind and
+switching backlight interfaces after first poking another one.
+So we definitely don't want to go back to the ping-pong thing.
+
+Regards,
+
+Hans
+
+
+
+>From 67ee5d7163e33e65dca06887befd0639b0345883 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Tue, 25 Oct 2022 20:38:56 +0200
+Subject: [PATCH] ACPI: video: Simplify __acpi_video_get_backlight_type()
+
+Simplify __acpi_video_get_backlight_type() removing a nested if which
+makes the flow harder to follow.
+
+Note this will cause a behavior change on devices which do not have
+ACPI video support but do have both a vendor and native backlight
+driver available. This change will cause these devices to switch
+from vendor to native.
+
+This may not be desirable in all cases, this is likely to happen
+on significantly older laptops, where there very well might be
+cases where the native driver does not work because the backlight is
+controlled by the EC.
+
+This removes the need for the special handling of Chromebooks,
+these will now hit the if (native_available) return acpi_backlight_native;
+path.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/acpi/video_detect.c | 36 +++++++++++-------------------------
+ 1 file changed, 11 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index bc97bfa8e8a6..baae3120efd0 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -770,6 +770,22 @@ static const struct ts_dmi_data predia_basic_data = {
- 	.properties	= predia_basic_props,
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 9cd8797d12bb..9bd85b159e02 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -668,11 +668,6 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 	{ },
  };
  
-+static const struct property_entry rca_cambio_w101_v2_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1644),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 874),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rca-cambio-w101-v2.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
+-static bool google_cros_ec_present(void)
+-{
+-	return acpi_dev_found("GOOG0004");
+-}
+-
+ /*
+  * Determine which type of backlight interface to use on this system,
+  * First check cmdline, then dmi quirks, then do autodetect.
+@@ -718,30 +713,21 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
+ 	if (apple_gmux_present())
+ 		return acpi_backlight_apple_gmux;
+ 
+-	/* On systems with ACPI video use either native or ACPI video. */
+-	if (video_caps & ACPI_VIDEO_BACKLIGHT) {
+-		/*
+-		 * Windows 8 and newer no longer use the ACPI video interface,
+-		 * so it often does not work. If the ACPI tables are written
+-		 * for win8 and native brightness ctl is available, use that.
+-		 *
+-		 * The native check deliberately is inside the if acpi-video
+-		 * block on older devices without acpi-video support native
+-		 * is usually not the best choice.
+-		 */
+-		if (acpi_osi_is_win8() && native_available)
+-			return acpi_backlight_native;
+-		else
+-			return acpi_backlight_video;
+-	}
+-
+ 	/*
+-	 * Chromebooks that don't have backlight handle in ACPI table
+-	 * are supposed to use native backlight if it's available.
++	 * Pre Windows 8, Windows uses ACPI video, so prefer that over native
++	 * on pre-win8 systems (Windows 8+ no longer uses ACPI video).
+ 	 */
+-	if (google_cros_ec_present() && native_available)
++	if ((video_caps & ACPI_VIDEO_BACKLIGHT) && !acpi_osi_is_win8())
++		return acpi_backlight_video;
 +
-+static const struct ts_dmi_data rca_cambio_w101_v2_data = {
-+	.acpi_name = "MSSL1680:00",
-+	.properties = rca_cambio_w101_v2_props,
-+};
++	/* Use native backlight control if available */
++	if (native_available)
+ 		return acpi_backlight_native;
+ 
++	/* Use the ACPI video interface if available */
++	if (video_caps & ACPI_VIDEO_BACKLIGHT)
++		return acpi_backlight_video;
 +
- static const struct property_entry rwc_nanote_p8_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 46),
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-@@ -1409,6 +1425,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
- 		},
- 	},
-+	{
-+		/* RCA Cambio W101 v2 */
-+		/* https://github.com/onitake/gsl-firmware/discussions/193 */
-+		.driver_data = (void *)&rca_cambio_w101_v2_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "RCA"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "W101SA23T1"),
-+		},
-+	},
- 	{
- 		/* RWC NANOTE P8 */
- 		.driver_data = (void *)&rwc_nanote_p8_data,
+ 	/* No ACPI video (old hw), use vendor specific fw methods. */
+ 	return acpi_backlight_vendor;
+ }
 -- 
 2.37.3
+
 
