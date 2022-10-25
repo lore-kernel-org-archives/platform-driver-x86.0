@@ -2,71 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91EBC38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Oct 2022 19:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0033DC38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Oct 2022 19:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbiJYTWE (ORCPT
+        id S231639AbiJYTdE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Oct 2022 15:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
+        Tue, 25 Oct 2022 15:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231244AbiJYTWD (ORCPT
+        with ESMTP id S231193AbiJYTdE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Oct 2022 15:22:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFD2B0B16;
-        Tue, 25 Oct 2022 12:22:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CAEE3B81DA0;
-        Tue, 25 Oct 2022 19:22:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7EF67C433D6;
-        Tue, 25 Oct 2022 19:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666725719;
-        bh=hWmgKuYiXRBbz8jLtG/QsBFDSU/1fVxWBZZlSiPmT1Y=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=rGX9cXJP7cMnZIR+9OLGOBp/xrchZVSZbQkAoaPcPZZo12hm1mV+3zKxgEIfklXL4
-         OGvEXighLNdfZbUUgeKpit/kDof3VZzLin9Gpz9SZWC0WJxJZWvpsLmkwK+s4tYXNQ
-         u9gQ4rnryBpcbvZ8hBMbtD7Eo/ghZZvVhet599OTFtJy9eD66tUpBvdZ6HoBsPh9XR
-         vRG5cecNAhFF+qCf54Jmc/ZDJmg8mDgGHlbAix+yr636Ty+s2s/6G1jfWYpV3s64SM
-         o32vyYEBX9uc4g27kvHHB00k5VpWaNf/pHFJ9ge2NNqUHuS8y91QmH3BQZd0F34/us
-         qLT42dDr5+wNw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D561E45192;
-        Tue, 25 Oct 2022 19:21:59 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.1-2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <9256cedf-151d-724b-1e39-fe016fce8a44@redhat.com>
-References: <9256cedf-151d-724b-1e39-fe016fce8a44@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <9256cedf-151d-724b-1e39-fe016fce8a44@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-2
-X-PR-Tracked-Commit-Id: e9cf4d9b9a6fdb1df6401a59f5ac5d24006bfeae
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4dc12f37a8e98e1dca5521c14625c869537b50b6
-Message-Id: <166672571943.8691.2995875890569106220.pr-tracker-bot@kernel.org>
-Date:   Tue, 25 Oct 2022 19:21:59 +0000
+        Tue, 25 Oct 2022 15:33:04 -0400
+Received: from cavan.codon.org.uk (irc.codon.org.uk [IPv6:2a00:1098:84:22e::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1944DBE77;
+        Tue, 25 Oct 2022 12:32:51 -0700 (PDT)
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+        id 6C71B4245C; Tue, 25 Oct 2022 20:32:48 +0100 (BST)
+Date:   Tue, 25 Oct 2022 20:32:48 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Message-ID: <20221025193248.GA21457@srcf.ucam.org>
+References: <20220825143726.269890-1-hdegoede@redhat.com>
+ <20220825143726.269890-3-hdegoede@redhat.com>
+ <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+ <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
+ <20221024203057.GA28675@srcf.ucam.org>
+ <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Tue, 25 Oct 2022 11:52:49 +0200:
+On Tue, Oct 25, 2022 at 08:50:54PM +0200, Hans de Goede wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-2
+> That is a valid point, but keep in mind that this is only used on ACPI
+> platforms and then only on devices with a builtin LCD panel and then
+> only by GPU drivers which actually call acpi_video_get_backlight_type(),
+> so e.g. not by all the ARM specific display drivers.
+> 
+> So I believe that Chromebooks quite likely are the only devices with
+> this issue.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4dc12f37a8e98e1dca5521c14625c869537b50b6
+My laptop is, uh, weird, but it falls into this category.
+ 
+> > I think for this to work correctly you need to have 
+> > the infrastructure be aware of whether or not a vendor interface exists, 
+> > which means having to handle cleanup if a vendor-specific module gets 
+> > loaded later.
+> 
+> Getting rid of the whole ping-ponging of which backlight drivers
+> get loaded during boot was actually one of the goals of the rework
+> which landed in 6.1 this actually allowed us to remove some quirks
+> because some hw/firmware did not like us changing our mind and
+> switching backlight interfaces after first poking another one.
+> So we definitely don't want to go back to the ping-pong thing.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Defaulting to native but then having a vendor driver be able to disable 
+native drivers seems easiest? It shouldn't be a regression over the 
+previous state of affairs since both drivers were being loaded already.
