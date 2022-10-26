@@ -2,122 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13E7FA373D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Oct 2022 23:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD38C38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 07:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233069AbiJYXl7 (ORCPT
+        id S233141AbiJZHce (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Oct 2022 19:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
+        Wed, 26 Oct 2022 03:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232706AbiJYXlm (ORCPT
+        with ESMTP id S233139AbiJZHcc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Oct 2022 19:41:42 -0400
-Received: from cavan.codon.org.uk (cavan.codon.org.uk [176.126.240.207])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900995D135;
-        Tue, 25 Oct 2022 16:40:42 -0700 (PDT)
-Received: by cavan.codon.org.uk (Postfix, from userid 1000)
-        id 9794340A8A; Wed, 26 Oct 2022 00:40:40 +0100 (BST)
-Date:   Wed, 26 Oct 2022 00:40:40 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
-        Jani Nikula <jani.nikula@intel.com>,
-        nouveau@lists.freedesktop.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
- backlight should be used (v2)
-Message-ID: <20221025234040.GA27673@srcf.ucam.org>
-References: <20220825143726.269890-1-hdegoede@redhat.com>
- <20220825143726.269890-3-hdegoede@redhat.com>
- <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
- <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
- <20221024203057.GA28675@srcf.ucam.org>
- <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
- <20221025193248.GA21457@srcf.ucam.org>
- <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
- <20221025204043.GA23306@srcf.ucam.org>
- <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
+        Wed, 26 Oct 2022 03:32:32 -0400
+X-Greylist: delayed 376 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 26 Oct 2022 00:32:29 PDT
+Received: from mail-m11874.qiye.163.com (mail-m11874.qiye.163.com [115.236.118.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86197A50F5;
+        Wed, 26 Oct 2022 00:32:29 -0700 (PDT)
+Received: from caicai-HWPC.. (unknown [IPV6:240e:36a:141c:3700:9049:ecf7:8648:6a1c])
+        by mail-m11874.qiye.163.com (Hmail) with ESMTPA id 94E973C052D;
+        Wed, 26 Oct 2022 15:26:09 +0800 (CST)
+From:   Yupeng Li <liyupeng@zbhlos.com>
+To:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        caizp2008@163.com, Yupeng Li <liyupeng@zbhlos.com>
+Subject: [PATCH 1/1] platform/x86/amd: Fix pmc compile dependency errors.
+Date:   Wed, 26 Oct 2022 15:25:31 +0800
+Message-Id: <20221026072531.346013-1-liyupeng@zbhlos.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSR5JVhhNQ0NCTR1MS0gYHVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSE0aQUpPShhBSExLS0FCS09CQR4YHUxBQ01PQ0FNGkoYWVdZFhoPEhUdFF
+        lBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTo6Cyo*KT0aLR0fS0w0LEw0
+        GixPFElVSlVKTU1NTE1CSkxLSk9KVTMWGhIXVRcSAg4LHhUcOwEZExcUCFUYFBZFWVdZEgtZQVlJ
+        T0seQUhNGkFKT0oYQUhMS0tBQktPQkEeGB1MQUNNT0NBTRpKGFlXWQgBWUFISkhONwY+
+X-HM-Tid: 0a84132f2d632eb0kusn94e973c052d
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 01:27:25AM +0200, Hans de Goede wrote:
+When disabled CONFIG_SUSPEND and CONFIG_DEBUG_FS, get_metrics_table
+and amd_pmc_idlemask_read is defined under two conditions of this,
+pmc build with implicit declaration of function error.Some build error
+messages are as follows:
 
-> this code should actually set the ACPI_VIDEO_BACKLIGHT flag:
-> drivers/acpi/scan.c:
-> 
-> static acpi_status
-> acpi_backlight_cap_match(acpi_handle handle, u32 level, void *context,
->                           void **return_value)
-> {
->         long *cap = context;
-> 
->         if (acpi_has_method(handle, "_BCM") &&
->             acpi_has_method(handle, "_BCL")) {
->                 acpi_handle_debug(handle, "Found generic backlight support\n");
->                 *cap |= ACPI_VIDEO_BACKLIGHT;
->                 /* We have backlight support, no need to scan further */
->                 return AE_CTRL_TERMINATE;
->         }
->         return 0;
-> }
+ CC [M]  drivers/platform/x86/amd/pmc.o
+drivers/platform/x86/amd/pmc.c: In function ‘smu_fw_info_show’:
+drivers/platform/x86/amd/pmc.c:436:6: error: implicit declaration of function ‘get_metrics_table’ [-Werror=implicit-function-declaration]
+  436 |  if (get_metrics_table(dev, &table))
+      |      ^~~~~~~~~~~~~~~~~
+drivers/platform/x86/amd/pmc.c: In function ‘amd_pmc_idlemask_show’:
+drivers/platform/x86/amd/pmc.c:508:8: error: implicit declaration of function ‘amd_pmc_idlemask_read’; did you mean ‘amd_pmc_idlemask_show’? [-Werror=implicit-function-declaration]
+  508 |   rc = amd_pmc_idlemask_read(dev, NULL, s);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+      |        amd_pmc_idlemask_show
+cc1: some warnings being treated as errors
 
-Ah, yeah, my local tree no longer matches the upstream behaviour because 
-I've hacked the EC firmware to remove the backlight trigger because it 
-had an extremely poor brightness curve and also automatically changed it 
-on AC events - as a result I removed the backlight code from the DSDT 
-and just fell back to the native control. Like I said I'm a long way 
-from the normal setup, but this did previously work.
+Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
+Reviewed-by: Caicai <caizp2008@163.com>
+---
+ drivers/platform/x86/amd/pmc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The "right" logic here seems pretty simple: if ACPI backlight control is 
-expected to work, use it. If it isn't, but there's a vendor interface, 
-use it. If there's no vendor interface, use the native interface. The 
-problem you're dealing with is that the knowledge of whether or not 
-there's a vendor interface isn't something the core kernel code knows 
-about. What you're proposing here is effectively for us to expose 
-additional information about whether or not there's a vendor interface 
-in the system firmware, but since we're talking in some cases about 
-hardware that's almost 20 years old, we're not realistically going to 
-get those old machines fixed. So, it feels like there's two choices:
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index ce859b300712..2b08039921b8 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -433,8 +433,10 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
+ 	struct smu_metrics table;
+ 	int idx;
+ 
++#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
+ 	if (get_metrics_table(dev, &table))
+ 		return -EINVAL;
++#endif
+ 
+ 	seq_puts(s, "\n=== SMU Statistics ===\n");
+ 	seq_printf(s, "Table Version: %d\n", table.table_version);
+@@ -503,11 +505,12 @@ static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
+ 		if (rc)
+ 			return rc;
+ 	}
+-
+ 	if (dev->major > 56 || (dev->major >= 55 && dev->minor >= 37)) {
++#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
+ 		rc = amd_pmc_idlemask_read(dev, NULL, s);
+ 		if (rc)
+ 			return rc;
++#endif
+ 	} else {
+ 		seq_puts(s, "Unsupported SMU version for Idlemask\n");
+ 	}
+-- 
+2.34.1
 
-1) Make a default policy decision, but then allow that decision to be 
-altered later on (eg, when a vendor-specific platform driver has been 
-loaded) - you've said this poses additional complexities.
-
-2) Move the knowledge of whether or not there's a vendor interface into 
-the core code. Basically take every platform driver that exposes a 
-vendor interface, and move the detection code into the core.
-
-I think any other approach is going to result in machines that 
-previously worked no longer working (and you can't just make the 
-vendor/native split dependent on the Coreboot DMI BIOS string, because 
-there are some Coreboot platforms that implement the vendor interface 
-for compatibility, and you also can't ask all Coreboot users to update 
-their firmware to fix things)
