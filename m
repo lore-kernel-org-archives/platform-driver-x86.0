@@ -2,99 +2,254 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD38C38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 07:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E49C38A2D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 09:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233141AbiJZHce (ORCPT
+        id S233055AbiJZJ7y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Oct 2022 03:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        Wed, 26 Oct 2022 05:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233139AbiJZHcc (ORCPT
+        with ESMTP id S232488AbiJZJ7v (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Oct 2022 03:32:32 -0400
-X-Greylist: delayed 376 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 26 Oct 2022 00:32:29 PDT
-Received: from mail-m11874.qiye.163.com (mail-m11874.qiye.163.com [115.236.118.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86197A50F5;
-        Wed, 26 Oct 2022 00:32:29 -0700 (PDT)
-Received: from caicai-HWPC.. (unknown [IPV6:240e:36a:141c:3700:9049:ecf7:8648:6a1c])
-        by mail-m11874.qiye.163.com (Hmail) with ESMTPA id 94E973C052D;
-        Wed, 26 Oct 2022 15:26:09 +0800 (CST)
-From:   Yupeng Li <liyupeng@zbhlos.com>
-To:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        caizp2008@163.com, Yupeng Li <liyupeng@zbhlos.com>
-Subject: [PATCH 1/1] platform/x86/amd: Fix pmc compile dependency errors.
-Date:   Wed, 26 Oct 2022 15:25:31 +0800
-Message-Id: <20221026072531.346013-1-liyupeng@zbhlos.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 26 Oct 2022 05:59:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC9DE016
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Oct 2022 02:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666778382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=88clgiauNntAl3Wz7H3JYTecCEZyzTGGOgZ+LgOj43I=;
+        b=XsxtcTG5gd+z3lWdmuQTC5jcSHPCQvPAqh+SZvsDYqXJIpNKJ4E5myNQWGfuZbP8hf+Btl
+        JRdj4BlniyK6QeypWXMdFyFJ21HNCpiNjMJuFDAqTZ4h7wShsrQSaKJ3WgqWi5NK+L4S6X
+        pItdpx9T8vcXUc/pEUOceGED132MSuM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-446--mJKrnoAPkyHQXNczzpLpQ-1; Wed, 26 Oct 2022 05:59:33 -0400
+X-MC-Unique: -mJKrnoAPkyHQXNczzpLpQ-1
+Received: by mail-ej1-f71.google.com with SMTP id nc4-20020a1709071c0400b0078a5ceb571bso4230031ejc.4
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Oct 2022 02:59:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=88clgiauNntAl3Wz7H3JYTecCEZyzTGGOgZ+LgOj43I=;
+        b=qUDkYoZNKm/n4TD5IbjTcVArsR3Ku9kE876QA8aD43gR6A74OX78C1fq9YR4skzess
+         JE4BCuevAH8lGB0m7clvfFyCUvU6rlrn04DN1zz2OASnEXyVDRD3kcgBhaqSgVVi3wro
+         WGPkAT2r1eDk3MNmFe7T8xeIs+W3sdEtDctgO8XVA6iOvGBMyKr/ZxLsq64i3XCW3eXl
+         2vapZbdbwjveZ5PlodYu8CZkaolSSvhxWIFKbOn/j3XzfVEIi+zdU3eJBWqum4BG6v93
+         k9zc0FQ88hw2YdTbZNc4SgKXj7TlfOGdUDYfGGRRBIzjbgyoClHPb3wNHtwSUdafvwyA
+         Zjng==
+X-Gm-Message-State: ACrzQf2aUDrVtw0rEnKDZomBIo8cQx/+haBiVGwdYYEfbxM/EnoYt6xy
+        4bCjbZqQzYc5eTX1kZ7c10f83euZBeWt3lBltvNlwzXqjoJUegVHQoJ8/VNOaLTDIehzvFtURGH
+        vkIoYacjSJaGuTBi3xHKA9WPfIhPsUiiZiA==
+X-Received: by 2002:a17:906:fe04:b0:777:b13d:30a6 with SMTP id wy4-20020a170906fe0400b00777b13d30a6mr36058264ejb.248.1666778372051;
+        Wed, 26 Oct 2022 02:59:32 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM778dCSL7x8318qzKenTU6R7Jp/heP0pFWsLg0Zjgt4GfqQod/XgRUMTGVY4TA8QIvtp3pSAg==
+X-Received: by 2002:a17:906:fe04:b0:777:b13d:30a6 with SMTP id wy4-20020a170906fe0400b00777b13d30a6mr36058246ejb.248.1666778371810;
+        Wed, 26 Oct 2022 02:59:31 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id x10-20020a1709060eea00b007415f8ffcbbsm2706055eji.98.2022.10.26.02.59.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Oct 2022 02:59:29 -0700 (PDT)
+Message-ID: <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
+Date:   Wed, 26 Oct 2022 11:59:28 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Content-Language: en-US, nl
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+References: <20220825143726.269890-1-hdegoede@redhat.com>
+ <20220825143726.269890-3-hdegoede@redhat.com>
+ <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+ <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
+ <20221024203057.GA28675@srcf.ucam.org>
+ <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+ <20221025193248.GA21457@srcf.ucam.org>
+ <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
+ <20221025204043.GA23306@srcf.ucam.org>
+ <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
+ <20221025234040.GA27673@srcf.ucam.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221025234040.GA27673@srcf.ucam.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSR5JVhhNQ0NCTR1MS0gYHVUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUlPSx5BSE0aQUpPShhBSExLS0FCS09CQR4YHUxBQ01PQ0FNGkoYWVdZFhoPEhUdFF
-        lBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTo6Cyo*KT0aLR0fS0w0LEw0
-        GixPFElVSlVKTU1NTE1CSkxLSk9KVTMWGhIXVRcSAg4LHhUcOwEZExcUCFUYFBZFWVdZEgtZQVlJ
-        T0seQUhNGkFKT0oYQUhMS0tBQktPQkEeGB1MQUNNT0NBTRpKGFlXWQgBWUFISkhONwY+
-X-HM-Tid: 0a84132f2d632eb0kusn94e973c052d
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When disabled CONFIG_SUSPEND and CONFIG_DEBUG_FS, get_metrics_table
-and amd_pmc_idlemask_read is defined under two conditions of this,
-pmc build with implicit declaration of function error.Some build error
-messages are as follows:
+Hi,
 
- CC [M]  drivers/platform/x86/amd/pmc.o
-drivers/platform/x86/amd/pmc.c: In function ‘smu_fw_info_show’:
-drivers/platform/x86/amd/pmc.c:436:6: error: implicit declaration of function ‘get_metrics_table’ [-Werror=implicit-function-declaration]
-  436 |  if (get_metrics_table(dev, &table))
-      |      ^~~~~~~~~~~~~~~~~
-drivers/platform/x86/amd/pmc.c: In function ‘amd_pmc_idlemask_show’:
-drivers/platform/x86/amd/pmc.c:508:8: error: implicit declaration of function ‘amd_pmc_idlemask_read’; did you mean ‘amd_pmc_idlemask_show’? [-Werror=implicit-function-declaration]
-  508 |   rc = amd_pmc_idlemask_read(dev, NULL, s);
-      |        ^~~~~~~~~~~~~~~~~~~~~
-      |        amd_pmc_idlemask_show
-cc1: some warnings being treated as errors
+On 10/26/22 01:40, Matthew Garrett wrote:
+> On Wed, Oct 26, 2022 at 01:27:25AM +0200, Hans de Goede wrote:
+> 
+>> this code should actually set the ACPI_VIDEO_BACKLIGHT flag:
+>> drivers/acpi/scan.c:
+>>
+>> static acpi_status
+>> acpi_backlight_cap_match(acpi_handle handle, u32 level, void *context,
+>>                           void **return_value)
+>> {
+>>         long *cap = context;
+>>
+>>         if (acpi_has_method(handle, "_BCM") &&
+>>             acpi_has_method(handle, "_BCL")) {
+>>                 acpi_handle_debug(handle, "Found generic backlight support\n");
+>>                 *cap |= ACPI_VIDEO_BACKLIGHT;
+>>                 /* We have backlight support, no need to scan further */
+>>                 return AE_CTRL_TERMINATE;
+>>         }
+>>         return 0;
+>> }
+> 
+> Ah, yeah, my local tree no longer matches the upstream behaviour because 
+> I've hacked the EC firmware to remove the backlight trigger because it 
+> had an extremely poor brightness curve and also automatically changed it 
+> on AC events - as a result I removed the backlight code from the DSDT 
+> and just fell back to the native control. Like I said I'm a long way 
+> from the normal setup, but this did previously work.
 
-Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
-Reviewed-by: Caicai <caizp2008@163.com>
----
- drivers/platform/x86/amd/pmc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Ok, so this is a local customization to what is already a custom BIOS
+for a custom motherboard. There is a lot of custom in that sentence and
+TBH at some point things might become too custom for them to be expected
+to work OOTB.
 
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index ce859b300712..2b08039921b8 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -433,8 +433,10 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
- 	struct smu_metrics table;
- 	int idx;
- 
-+#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
- 	if (get_metrics_table(dev, &table))
- 		return -EINVAL;
-+#endif
- 
- 	seq_puts(s, "\n=== SMU Statistics ===\n");
- 	seq_printf(s, "Table Version: %d\n", table.table_version);
-@@ -503,11 +505,12 @@ static int amd_pmc_idlemask_show(struct seq_file *s, void *unused)
- 		if (rc)
- 			return rc;
- 	}
--
- 	if (dev->major > 56 || (dev->major >= 55 && dev->minor >= 37)) {
-+#if defined(CONFIG_SUSPEND) || defined(CONFIG_DEBUG_FS)
- 		rc = amd_pmc_idlemask_read(dev, NULL, s);
- 		if (rc)
- 			return rc;
-+#endif
- 	} else {
- 		seq_puts(s, "Unsupported SMU version for Idlemask\n");
- 	}
--- 
-2.34.1
+Note that you can always just override the choses made by the heuristisc/
+quirks on the kernel commandline by adding:
+
+acpi_backlight=native   (I think you want this one?)
+
+or if you want the old thinkpad_acpi module vendor/EC interface:
+
+acpi_backlight=vendor
+
+Asking you to pass this on the commandline does not seem like a huge
+stretch given the large amount of hw/firmware customization you have done ?
+
+> The "right" logic here seems pretty simple: if ACPI backlight control is 
+> expected to work, use it. If it isn't, but there's a vendor interface, 
+> use it. If there's no vendor interface, use the native interface.
+
+I'm afraid things are not that simple. I assume that with
+"if ACPI backlight control is expected to work" you mean don't
+use ACPI backlight control when (acpi_osi_is_win8() && native_available)
+evaluates to true because it is known to be broken on some of
+those systems because Windows 8 stopped using it ?
+
+Unfortunately something similar applies to vendor interfaces,
+When Windows XP started using (and mandating for certification
+IIRC) ACPI backlight control, vendors still kept their own
+vendor specific EC/smbios/ACPI/WMI backlight interfaces around for
+a long long time, except they were often no longer tested.
+
+So basically we have 3 major backlight control methods:
+
+1. native GPU backlight control, which sometimes does not work
+on older laptops because the backlight is connected to the EC
+rather then the GPU there, yet often still enabled in the
+video-bios-tables so the GPU drivers will still try to use it.
+
+2. ACPI -> known to be always present on recent Windows laptops
+because mandated by the hardware certification requirements
+(even on Windows 8+), but regularly broken on Windows 8+ because
+their backlight control was moved from the core-os to the GPU
+drivers and those typically use the native method.
+
+3. Vendor specific EC/smbios/ACPI/WMI interfaces which work
+on older laptops, but are often present on newer laptops
+despite them no longer working and to get working backlight
+control either 1. or 2. should be used.
+
+So basically non of the 3 main backlight control methods can
+be trusted even if they are present. Which is why need to have
+a combination of heuristics + quirks.
+
+And I have been working on moving all this into a central
+place in drivers/acpi/video_detect.c because having
+the heuristics + quirks spread out all over the place does
+not help.
+
+> The 
+> problem you're dealing with is that the knowledge of whether or not 
+> there's a vendor interface isn't something the core kernel code knows 
+> about. What you're proposing here is effectively for us to expose 
+> additional information about whether or not there's a vendor interface 
+> in the system firmware, but since we're talking in some cases about 
+> hardware that's almost 20 years old, we're not realistically going to 
+> get those old machines fixed.
+
+I don't understand why you keep talking about the old vendor interfaces,
+at least for the chromebook part of this thread the issue is that
+the i915 driver no longer registers the intel_backlight device which
+is a native device type, which is caused by the patch this email
+thread is about (and old vendor interfaces do not come into play
+at all here). So AFAICT this is a native vs acpi backlight control
+issue ?
+
+I really want to resolve your bug, but I still lack a lot of info,
+like what backlight interface you were actually using in 6.0 ?
+
+Can you please provide the following info for your laptop:
+
+1. Output of "ls /sys/class/backlight" with 6.0  (working setup)
+2. Output of "ls /sys/class/backlight" with 6.1  (non-working setup)
+3. dmidecode output, so that I can check if this quirk:
+
+        {
+         .callback = video_detect_force_video,
+         /* ThinkPad X201s */
+         .matches = {
+                DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+                DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X201s"),
+                },
+        },
+
+will trigger.
+
+4. An acpidump. Although you already said that you have removed the
+ACPI video bus bits, so I guess I can just assume that
+the ACPI_VIDEO_BACKLIGHT flag won't get set.
+
+Regards,
+
+Hans
+
+
+p.s.
+
+This thread has made me wonder if the 6.1 changes don't cause
+regressions on other laptops flashed with a CoreOS BIOS, I will
+start a mail-thread asking for testing on the CoreOS mailinglist.
 
