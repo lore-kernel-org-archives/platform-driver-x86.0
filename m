@@ -2,238 +2,143 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E86EC38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F98ECDFA1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 20:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234609AbiJZTDo (ORCPT
+        id S234623AbiJZUtb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Oct 2022 15:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38488 "EHLO
+        Wed, 26 Oct 2022 16:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233788AbiJZTDL (ORCPT
+        with ESMTP id S234612AbiJZUta (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Oct 2022 15:03:11 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71861213FC;
-        Wed, 26 Oct 2022 12:01:19 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 21so9182689edv.3;
-        Wed, 26 Oct 2022 12:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFFOZJ/VadBNjE26xEB3SXj8jNBR5pKnqYBmJKPPaoI=;
-        b=VVUaU8P58x2uWpriSK+QJTdSu6sPvez31gYpX8vt5AcwLa8R1dGZK0SGG8OVQvbpU3
-         LDvLtme+1it9dkDEASp+iphuJ/pWpbJw+MN+k+JftJ/9EApWzCuBHqjWgWyPeogiQbzB
-         BtHiK0JjO8WMXviLW1RvGXGMFzaG5XdpHp+w1MeP4nFueM8uRA/HjJvlyhj4Ul2JWNaE
-         ho7x+AcvCGPAO+Rl809Dlz1HMTj2tGnGKvjES5NevbmJyXf8ZXI/Iro5yYn3zJPa2c32
-         pLyBnnz51hzLiwlmp2BdpC7rlLVfZlSqcaIgFEa/ah4Y/nGqDXl+mGV1SqC46I8iegrs
-         qGwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oFFOZJ/VadBNjE26xEB3SXj8jNBR5pKnqYBmJKPPaoI=;
-        b=eo1aAaLir/aF9VjJ6WsdMLxaAfnhkWKPOHX17c3bbkvMmWbATeSBMlZdhPLl0WEGwA
-         6PdukPMt0hvcn7JlfHVRjBffk5RyZtsk+rXUIPY+JEo6Z3c/eU8Uy1nIUzpMKW2ekpqF
-         RFORYMmYI7uxobgSxgfyufB7G9Fdj+sM6mOmapo2h1OYTFP7UwKlRCIhkKKnkP6aCpWX
-         W4bG24LYRiyZpgc6Yl1yjndGjwGJW9umvtpE3BZ/tq6XYrofqpkrLc1d+P0kP3+EEK/M
-         HAyENkKJsDaLY+PXn7H5kkBwwtWEv9Wsb1cEnD4oRdBwLj+fT6RyT5/ojVN5TiOZFEmd
-         UOkg==
-X-Gm-Message-State: ACrzQf3Nx/pmSH8CxO4Q3cJdj6Qtwice0WGjkNMck/U3xZTl3UuyrpXt
-        p1ssjxHvfChDcRA9tOK85BLAth0bCVBl5A==
-X-Google-Smtp-Source: AMsMyM4TTmpDq0EIr1Nameij72nB33a84SDhB5xmTXiBFKWJ1JC1fEcF66fKvCvi1MbsSdEl0RSKZg==
-X-Received: by 2002:a05:6402:274c:b0:461:9921:60cf with SMTP id z12-20020a056402274c00b00461992160cfmr20464459edd.353.1666810877183;
-        Wed, 26 Oct 2022 12:01:17 -0700 (PDT)
-Received: from eray-Lenovo-Z50-70.. ([188.132.247.187])
-        by smtp.googlemail.com with ESMTPSA id r18-20020a1709063d7200b0076ff600bf2csm3342945ejf.63.2022.10.26.12.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 12:01:16 -0700 (PDT)
-From:   =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        ike.pan@canonical.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
-Subject: [PATCH 6/6] platform/x86: ideapad-laptop: Keyboard backlight support for more IdeaPads
-Date:   Wed, 26 Oct 2022 22:01:06 +0300
-Message-Id: <20221026190106.28441-7-erayorcunus@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221026190106.28441-1-erayorcunus@gmail.com>
-References: <20221026190106.28441-1-erayorcunus@gmail.com>
+        Wed, 26 Oct 2022 16:49:30 -0400
+Received: from cavan.codon.org.uk (cavan.codon.org.uk [176.126.240.207])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A39148FDC;
+        Wed, 26 Oct 2022 13:49:22 -0700 (PDT)
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+        id CF10840A8A; Wed, 26 Oct 2022 21:49:20 +0100 (BST)
+Date:   Wed, 26 Oct 2022 21:49:20 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Message-ID: <20221026204920.GA15326@srcf.ucam.org>
+References: <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+ <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
+ <20221024203057.GA28675@srcf.ucam.org>
+ <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+ <20221025193248.GA21457@srcf.ucam.org>
+ <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
+ <20221025204043.GA23306@srcf.ucam.org>
+ <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
+ <20221025234040.GA27673@srcf.ucam.org>
+ <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-IdeaPads with HALS_KBD_BL_SUPPORT_BIT have full keyboard light support,
-and they send an event via ACPI on light state change. Whereas some
-IdeaPads that don't have this bit set, i.e. 520-15ikb, 330-17ich and
-5 (15), don't send an event, yet they still support switching keyboard
-light via KBLO object on DSDT. Detect these IdeaPads with searching for
-KBLO object, set their kbd_bl_partial to true and register led device
-for them. Tested on 520-15ikb.
+On Wed, Oct 26, 2022 at 11:59:28AM +0200, Hans de Goede wrote:
 
-Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
----
- drivers/platform/x86/ideapad-laptop.c | 79 ++++++++++++++++++++++++---
- 1 file changed, 70 insertions(+), 9 deletions(-)
+> Ok, so this is a local customization to what is already a custom BIOS
+> for a custom motherboard. There is a lot of custom in that sentence and
+> TBH at some point things might become too custom for them to be expected
+> to work OOTB.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 65eea2e65bbe..c30bbe0ca156 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -149,6 +149,7 @@ struct ideapad_private {
- 		bool fn_lock              : 1;
- 		bool hw_rfkill_switch     : 1;
- 		bool kbd_bl               : 1;
-+		bool kbd_bl_partial       : 1;
- 		bool cam_ctrl_via_ec      : 1;
- 		bool touchpad_ctrl_via_ec : 1;
- 		bool usb_charging         : 1;
-@@ -157,6 +158,9 @@ struct ideapad_private {
- 		bool initialized;
- 		struct led_classdev led;
- 		unsigned int last_brightness;
-+		/* Below are used only if kbd_bl_partial is set */
-+		acpi_handle lfcm_mutex;
-+		acpi_handle kblo_obj;
- 	} kbd_bl;
- };
- 
-@@ -1302,19 +1306,52 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
- 		backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
- }
- 
-+#define IDEAPAD_ACPI_MUTEX_TIMEOUT 1500
-+
- /*
-  * keyboard backlight
-  */
- static int ideapad_kbd_bl_brightness_get(struct ideapad_private *priv)
- {
--	unsigned long hals;
-+	unsigned long ret_val;
- 	int err;
-+	acpi_status status;
- 
--	err = eval_hals(priv->adev->handle, &hals);
-+	/*
-+	 * Some IdeaPads with partially implemented keyboard lights don't give
-+	 * us the light state on HALS_KBD_BL_STATE_BIT in the return value of HALS,
-+	 * i.e. 5 (15) and 330-17ich. Fortunately we know how to gather it.
-+	 * Even if it won't work, we will still give HALS a try, because
-+	 * some IdeaPads with kbd_bl_partial, i.e. 520-15ikb,
-+	 * correctly sets HALS_KBD_BL_STATE_BIT in HALS return value.
-+	 */
-+
-+	if (priv->features.kbd_bl_partial &&
-+	    priv->kbd_bl.lfcm_mutex != NULL && priv->kbd_bl.kblo_obj != NULL) {
-+
-+		status = acpi_acquire_mutex(priv->kbd_bl.lfcm_mutex, NULL,
-+					    IDEAPAD_ACPI_MUTEX_TIMEOUT);
-+
-+		if (ACPI_SUCCESS(status)) {
-+			err = eval_int(priv->kbd_bl.kblo_obj, NULL, &ret_val);
-+
-+			status = acpi_release_mutex(priv->kbd_bl.lfcm_mutex, NULL);
-+			if (ACPI_FAILURE(status))
-+				dev_err(&priv->platform_device->dev,
-+					"Failed to release LFCM mutex");
-+
-+			if (err)
-+				return err;
-+
-+			return !!ret_val;
-+		}
-+	}
-+
-+	err = eval_hals(priv->adev->handle, &ret_val);
- 	if (err)
- 		return err;
- 
--	return !!test_bit(HALS_KBD_BL_STATE_BIT, &hals);
-+	return !!test_bit(HALS_KBD_BL_STATE_BIT, &ret_val);
- }
- 
- static enum led_brightness ideapad_kbd_bl_led_cdev_brightness_get(struct led_classdev *led_cdev)
-@@ -1331,7 +1368,8 @@ static int ideapad_kbd_bl_brightness_set(struct ideapad_private *priv, unsigned
- 	if (err)
- 		return err;
- 
--	priv->kbd_bl.last_brightness = brightness;
-+	if (!priv->features.kbd_bl_partial)
-+		priv->kbd_bl.last_brightness = brightness;
- 
- 	return 0;
- }
-@@ -1351,6 +1389,9 @@ static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
- 	if (!priv->kbd_bl.initialized)
- 		return;
- 
-+	if (priv->features.kbd_bl_partial)
-+		return;
-+
- 	brightness = ideapad_kbd_bl_brightness_get(priv);
- 	if (brightness < 0)
- 		return;
-@@ -1373,17 +1414,20 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (WARN_ON(priv->kbd_bl.initialized))
- 		return -EEXIST;
- 
--	brightness = ideapad_kbd_bl_brightness_get(priv);
--	if (brightness < 0)
--		return brightness;
-+	/* IdeaPads with kbd_bl_partial don't have keyboard backlight event */
-+	if (!priv->features.kbd_bl_partial) {
-+		brightness = ideapad_kbd_bl_brightness_get(priv);
-+		if (brightness < 0)
-+			return brightness;
- 
--	priv->kbd_bl.last_brightness = brightness;
-+		priv->kbd_bl.last_brightness         = brightness;
-+		priv->kbd_bl.led.flags               = LED_BRIGHT_HW_CHANGED;
-+	}
- 
- 	priv->kbd_bl.led.name                    = "platform::" LED_FUNCTION_KBD_BACKLIGHT;
- 	priv->kbd_bl.led.max_brightness          = 1;
- 	priv->kbd_bl.led.brightness_get          = ideapad_kbd_bl_led_cdev_brightness_get;
- 	priv->kbd_bl.led.brightness_set_blocking = ideapad_kbd_bl_led_cdev_brightness_set;
--	priv->kbd_bl.led.flags                   = LED_BRIGHT_HW_CHANGED;
- 
- 	err = led_classdev_register(&priv->platform_device->dev, &priv->kbd_bl.led);
- 	if (err)
-@@ -1595,8 +1639,25 @@ static void ideapad_check_features(struct ideapad_private *priv)
- 			if (test_bit(HALS_FNLOCK_SUPPORT_BIT, &val))
- 				priv->features.fn_lock = true;
- 
-+			/*
-+			 * IdeaPads with HALS_KBD_BL_SUPPORT_BIT have full keyboard
-+			 * light support, and they send an event via ACPI on light
-+			 * state change. Whereas some IdeaPads, at least 520-15ikb
-+			 * and 5 (15), don't send an event, yet they still have
-+			 * KBLO object. In this case, set kbd_bl_partial to true
-+			 * and cache the LFCM mutex, it might be useful while
-+			 * getting the brightness.
-+			 */
-+
- 			if (test_bit(HALS_KBD_BL_SUPPORT_BIT, &val))
- 				priv->features.kbd_bl = true;
-+			else if (ACPI_SUCCESS(acpi_get_handle(handle, "^KBLO",
-+							      &priv->kbd_bl.kblo_obj))) {
-+				priv->features.kbd_bl = true;
-+				priv->features.kbd_bl_partial = true;
-+				(void)acpi_get_handle(handle, "^LFCM",
-+						      &priv->kbd_bl.lfcm_mutex);
-+			}
- 
- 			if (test_bit(HALS_USB_CHARGING_SUPPORT_BIT, &val))
- 				priv->features.usb_charging = true;
--- 
-2.34.1
+But it *did* work OOTB before. You broke it. I accept that I'm a 
+ludicrously weird corner case here, but there are going to be other 
+systems that are also affected by this.
 
+> I'm afraid things are not that simple. I assume that with
+> "if ACPI backlight control is expected to work" you mean don't
+> use ACPI backlight control when (acpi_osi_is_win8() && native_available)
+> evaluates to true because it is known to be broken on some of
+> those systems because Windows 8 stopped using it ?
+
+Correct.
+
+> Unfortunately something similar applies to vendor interfaces,
+> When Windows XP started using (and mandating for certification
+> IIRC) ACPI backlight control, vendors still kept their own
+> vendor specific EC/smbios/ACPI/WMI backlight interfaces around for
+> a long long time, except they were often no longer tested.
+
+The current situation (both before your patchset and with its current 
+implementation) is that vendor is preferred to native, so if the vendor 
+interface is present then we're already using it.
+
+> > The 
+> > problem you're dealing with is that the knowledge of whether or not 
+> > there's a vendor interface isn't something the core kernel code knows 
+> > about. What you're proposing here is effectively for us to expose 
+> > additional information about whether or not there's a vendor interface 
+> > in the system firmware, but since we're talking in some cases about 
+> > hardware that's almost 20 years old, we're not realistically going to 
+> > get those old machines fixed.
+> 
+> I don't understand why you keep talking about the old vendor interfaces,
+> at least for the chromebook part of this thread the issue is that
+> the i915 driver no longer registers the intel_backlight device which
+> is a native device type, which is caused by the patch this email
+> thread is about (and old vendor interfaces do not come into play
+> at all here). So AFAICT this is a native vs acpi backlight control
+> issue ?
+
+I'm referring to your proposed patch that changed the default from 
+backlight_vendor to backlight_native, which would fix my machine and 
+Chromebooks but break anything that relies on the vendor interfaces.
+
+> I really want to resolve your bug, but I still lack a lot of info,
+> like what backlight interface you were actually using in 6.0 ?
+
+Native.
+
+>         {
+>          .callback = video_detect_force_video,
+>          /* ThinkPad X201s */
+>          .matches = {
+>                 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>                 DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X201s"),
+>                 },
+>         },
+> 
+> will trigger.
+
+In this case you'd break anyone else running the system who isn't using 
+the hacked EC and different ACPI tables - obviously there's ways round 
+this, but realistically since I'm (as far as I know) the only person in 
+this situation it makes more sense for me to add a kernel parameter than 
+carry around an exceedingly niche DMI quirk. I'm fine with that. But the 
+point I'm trying to make is that the machines *are* telling you whether 
+they'd prefer vendor or native, and you're not taking that into account 
+in the video_detect code.
