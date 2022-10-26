@@ -2,124 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D74C38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC07C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Oct 2022 19:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233976AbiJZOs0 (ORCPT
+        id S234659AbiJZTDR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Oct 2022 10:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56470 "EHLO
+        Wed, 26 Oct 2022 15:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234031AbiJZOsW (ORCPT
+        with ESMTP id S234516AbiJZTCy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Oct 2022 10:48:22 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDA8119BD7;
-        Wed, 26 Oct 2022 07:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666795701; x=1698331701;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fLSv77D7+BpnQGBb1c2MahawwzWfUMVmEmx2oaf4MA8=;
-  b=HR0eL3ha/r3V2+1C1pBXEDkLGaWQZViq8IAXMIegvFGAvJnYT4a8eEsh
-   /FAh6ZqYv67mnzvWUEXTSOPAlAnIxfSC1jgSdlGYQBuaAzrF3ek27v7t5
-   +Lra1jbqKS9sgZmX9IqITsFAKLD8bna6JEluoBcyCA7yZsuKznQz98Mny
-   1aVVtst0gzpo4wC8gMgGfqV//+sxZrdbqUmapzIW/caKY9sROcK0ZXj18
-   3cxbTVT2Umvu4ldwVZTdg4nBRV4eqUDushJEFrCdJNoW1/eoNahzbTTxS
-   tRRoH9Yvl2oOPhoJUjvmJ2fto4Fu8h+VtopshCJsrSjwRZQg1Uq62VKpa
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="287677707"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="287677707"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 07:48:19 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="609977863"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="609977863"
-Received: from gkammela-mobl.amr.corp.intel.com (HELO [10.251.31.245]) ([10.251.31.245])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 07:48:19 -0700
-Message-ID: <6fef55d0-5111-bde2-c4c2-8cb5b2794026@linux.intel.com>
-Date:   Wed, 26 Oct 2022 07:48:18 -0700
+        Wed, 26 Oct 2022 15:02:54 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3873C107CEC;
+        Wed, 26 Oct 2022 12:01:10 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id a67so43123821edf.12;
+        Wed, 26 Oct 2022 12:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uVp9n/kVER+VHvkwBhBhQyKmLv1czPmLLZnhVZn4h0I=;
+        b=jdQ6bWUp4ihIWn2iY8KJ5prz7qe0slVPLJmvONt/mg44/xJl25jLht/uzJ32nhMJd1
+         0YIpx+E5JbTOvMSuly03TMyuKZRLDfRErR2838Q57vaneEYJh2H3nV2mofc40KRQf/a4
+         VdeiCkNwEoU/5ni2Xc64+YyIUUxqazOdZhxUZK3i7r2HMICDW3WkWJHK4ZpnZGOqXJfG
+         6c3rrzPNYxjwLSHKBzTxhbPh7J/fMsv9Z/YTMlGzwh+cjdgpq675eYq/zUP4tgyoEeS7
+         Cs+aNgjploAjbcod/brMVnxoFdIvpzM2xxbyqc+TE46ALmD58Izzkdd79PFQ9NxY7R9v
+         SjsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uVp9n/kVER+VHvkwBhBhQyKmLv1czPmLLZnhVZn4h0I=;
+        b=L4ES4ce5ii3bVV20BjzzyhBVs0LbaUekIfhqSIE53fZZvmyqi3Tfkejj3bOleXuEYt
+         kTaOGcFounVaIHzgrlwCoa6jXygd5GkWpEUKhNaFy1cjltM5k9o0p1LVQjj+dZXb6AmX
+         UqcAg6K5mfantPARW5mamZnlVA1wYrdFyRZwG0ZdIDPp/1GQxhtUyufENlZy4CJ4sXg2
+         zoo+UYQ5SwiZ25Dy561Ud/mRtTfNUAAus6uZL9j/s2MC/pnSqR1krVF2/7CYe+udYqLO
+         OW9R4rWzbjKKLamYCmlPVt1TSy9drJZZPoSr/lxEU33iusRoklHGr1qJL+ruQZpo523c
+         0qrA==
+X-Gm-Message-State: ACrzQf27Zl4Xq7f9zb7i7XVFqHuJEmI0sl09UmaGZSmSbRfyGJcW9kLn
+        Fn8uenpoONSP4BG1CDfhsBskV734ROvo0A==
+X-Google-Smtp-Source: AMsMyM55kmHvDms5/QjkRR4qr7fMryms40WqN7L1WYcBTxSRQ16lW3j1dns6IlaHk8mUUQQGGR1sLg==
+X-Received: by 2002:a05:6402:280a:b0:461:9845:d9c9 with SMTP id h10-20020a056402280a00b004619845d9c9mr20967169ede.268.1666810868749;
+        Wed, 26 Oct 2022 12:01:08 -0700 (PDT)
+Received: from eray-Lenovo-Z50-70.. ([188.132.247.187])
+        by smtp.googlemail.com with ESMTPSA id r18-20020a1709063d7200b0076ff600bf2csm3342945ejf.63.2022.10.26.12.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 12:01:08 -0700 (PDT)
+From:   =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        ike.pan@canonical.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
+Subject: [PATCH 0/6] Add camera access keys, IdeaPad driver improvements
+Date:   Wed, 26 Oct 2022 22:01:00 +0300
+Message-Id: <20221026190106.28441-1-erayorcunus@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v2 2/2] platform/x86/intel: pmc/core: Add Raptor Lake
- support to pmc core driver
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, irenic.rajneesh@gmail.com,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Box <david.e.box@intel.com>
-References: <20220912233307.409954-1-gayatri.kammela@linux.intel.com>
- <20220912233307.409954-2-gayatri.kammela@linux.intel.com>
- <3537fa63-9015-c63d-2321-a77062e24d6f@redhat.com>
- <58855ea9-0d89-e17d-349a-657512068663@kernel.org>
- <8957290c-9499-a399-3e4e-e0276caccd65@redhat.com>
-Content-Language: en-US
-From:   "Kammela, Gayatri" <gayatri.kammela@linux.intel.com>
-In-Reply-To: <8957290c-9499-a399-3e4e-e0276caccd65@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Nowadays many laptops have camera access keys, yet there is no usage codes
+mapped to them, even though it's introduced in HUTRR72. Start point of
+this patch series was adding it and making IdeaPads send it to userspace.
+But later I discovered that camera_power attribute of ideapad-laptop
+driver on my IdeaPad 520-15IKB doesn't work, so I can't toggle it with
+that. I managed to find a way to check whether an IdeaPad supports
+camera_power attribute (which sends VPCCMD_W_CAMERA to EC), don't expose
+it to sysfs so userspace will know that it can't toggle camera access via
+camera_power, in my case, after receiving KEY_CAMERA_ACCESS_TOGGLE.
 
-On 10/24/2022 2:46 AM, Hans de Goede wrote:
-> Hi,
->
-> On 10/14/22 09:50, Jiri Slaby wrote:
->> On 19. 09. 22, 13:41, Hans de Goede wrote:
->>
->>> On 9/13/22 00:33, Gayatri Kammela wrote:
->>>> Add Raptor Lake client parts (both RPL and RPL_S) support to pmc core
->>>> driver. Raptor Lake client parts reuse all the Alder Lake PCH IPs.
->>>>
->>>> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
->>>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>>> Cc: David Box <david.e.box@intel.com>
->>>> Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
->>>> Acked-by: Hans de Goede <hdegoede@redhat.com>
->>>> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
->>>> ---
->>>> Changes since v1:
->>>> 1) Added a dependency patch- ea902bcc1943f7539200ec464de3f54335588774 :
->>>>    "x86/cpu: Add new Raptor Lake CPU model number".
->>>> 2) Rebased the above patch on v6.0-rc1 with "Acked-by" from Hans and
->>>>    Rajneesh.
->>> I still cannot take this, since patch 1/2 is *already merged* through
->>> another tree, so me cherry-picking it leads to potential conflicts.
->>>
->>> As I have already explained twice you need to submit this upstream
->>> throuh the same tree which has the original merge of patch 1/2.
->> Hi, friendly ping: has this ever happened, Gayatri?
-> Since the necessary change are in 6.1-rc1 now, I have merged this
-> patch now and I'll include this in the pdx86 fixes pull-req which
-> I'm preparing for 6.1-rc3:
->
-> Thank you for your patch, I've applied this patch to my review-hans
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
+Along the way I discovered that old IdeaPads, like S10-3, may not be able
+to toggle their touchpad as a regression of a commit aimed for newer
+IdeaPads, so I reverted it.
 
-hi Hans,
+Also I noticed that I can get/set the state of my keyboard light,
+so one of the patches also adds supports for this kind of keyboard lights,
+which I call "partially supported keyboard lights". I expect that commit
+to add keyboard light support for 520-15IKB, 330-17ICH, 5 (15) and more.
+Currently only tested on 520-15IKB. 
 
-Thank you for merging this patch. I was planning on sending this patch 
-to combine with other series as this could be dependency. Apologies for 
-my late reply. Thank you!
+Eray Orçunus (6):
+  Revert "platform/x86: ideapad-laptop: check for touchpad support in
+    _CFG"
+  HID: add mapping for camera access keys
+  platform/x86: ideapad-laptop: Report KEY_CAMERA_ACCESS_TOGGLE instead
+    of KEY_CAMERA
+  platform/x86: ideapad-laptop: Add new _CFG bit numbers for future use
+  platform/x86: ideapad-laptop: Expose camera_power only if supported
+  platform/x86: ideapad-laptop: Keyboard backlight support for more
+    IdeaPads
 
->
+ drivers/hid/hid-debug.c                |   3 +
+ drivers/hid/hid-input.c                |   3 +
+ drivers/platform/x86/ideapad-laptop.c  | 163 ++++++++++++++++++++++---
+ include/uapi/linux/input-event-codes.h |   3 +
+ 4 files changed, 157 insertions(+), 15 deletions(-)
+
+
+base-commit: d9db04c1dec6189413701c52b9498a7a56c96445
+-- 
+2.34.1
+
