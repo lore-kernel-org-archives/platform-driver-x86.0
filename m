@@ -2,140 +2,183 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603FDECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 16:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4A2FA3740
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 19:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236636AbiJ0Qhv (ORCPT
+        id S236019AbiJ0Tnl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Oct 2022 12:37:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54252 "EHLO
+        Thu, 27 Oct 2022 15:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235105AbiJ0Qhs (ORCPT
+        with ESMTP id S236423AbiJ0Tni (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2022 12:37:48 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0C918F0CF;
-        Thu, 27 Oct 2022 09:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666888667; x=1698424667;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=/bDgqOzVVsJUOBkelcoR0s1rsT8mVJ/fXVFXACV4Xhs=;
-  b=VlqZKLKflkoUuLPABKy/pW+UChmSRpAWbbicJkOjozevhPKxy5BlTqDr
-   +u/PN0ZPf43yhpMTHmPeLhHpl6QNmAbi4xeFlI+rdxbbVTbNyP0HkTVCM
-   16yd3kpI+RqEG+vkYAOZaWPMCUpXSYUuqzstfD9bBciZP41eLa9xGq7m4
-   Vn1M0frCr3Z1x/ZWWT1S6tEGaEd/24+qPxxs/dyh2kRYrR5zgt6UTl1HD
-   MWjtDXXoZPqyeOY1GLh7ZimhI0tCvt0ErZGJaeEi9LI+M2aW/kCwaPMki
-   5Aeo83j3iXsWz7DHomAS8aJGyf61jinDN5OZ1mqGW5JWv/Pko31PI7yga
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="370340905"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="370340905"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 09:37:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="877645362"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="877645362"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Oct 2022 09:37:45 -0700
-Received: from [10.54.75.144] (debox1-desk1.jf.intel.com [10.54.75.144])
-        by linux.intel.com (Postfix) with ESMTP id D1915580AE2;
-        Thu, 27 Oct 2022 09:37:45 -0700 (PDT)
-Message-ID: <9b49ea5aeb6c54fd86bf3c02668bf21dd880fd12.camel@linux.intel.com>
-Subject: Re: [PATCH v1] platform/x86: intel_pmc_core: promote S0ix failure
- warn() to WARN()
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Sven van Ashbrook <svenva@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Rafael J Wysocki <rjw@rjwysocki.net>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Thu, 27 Oct 2022 09:37:45 -0700
-In-Reply-To: <4b7304c0-8dd5-9add-7c84-4e9f0aa9396b@redhat.com>
-References: <20221027151908.v1.1.I295e65357f06f162b46ea6fc6c03be37e3978bdc@changeid>
-         <4b7304c0-8dd5-9add-7c84-4e9f0aa9396b@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        Thu, 27 Oct 2022 15:43:38 -0400
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1680580BD8;
+        Thu, 27 Oct 2022 12:43:37 -0700 (PDT)
+Date:   Thu, 27 Oct 2022 19:43:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1666899814; x=1667159014;
+        bh=ecgD3ocjBEk+64IIiypXst5XSaocPXz3+0qtVTaMWVI=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID:BIMI-Selector;
+        b=cMLCdIjgewQmJOSr9cpH7ECdKF4NZgyINOCz1RjriHSVAx+XP9spIUfAdYfmsBJBM
+         /vBC5lxVAeeKro4izPbktEgGmat9nEoSBbzD8kXpG2RWINpK8kx2DTQkku1DPPapYc
+         GnQ6PDkNO8TUO0aKPDbDWgU8V1c5uiS88Yduwk7aNInKS7JysqyXo35XsjXcPKKX1s
+         GdzXZ8XrSHZKKv0I5FYOd+/acVfhcW94XNV4DCfIgdQMcsLR77RNujCT/eaTELMbfi
+         mEdfObfstqCzwie8K3UNMxHobTBlMGzjDYwQkXXRZ9G6BIquAFpI2BUsmJuADmxS8A
+         0AImlSC+vTHTA==
+To:     =?utf-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, ike.pan@canonical.com,
+        jikos@kernel.org, benjamin.tissoires@redhat.com,
+        dmitry.torokhov@gmail.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Subject: Re: [PATCH 5/6] platform/x86: ideapad-laptop: Expose camera_power only if supported
+Message-ID: <NVuCQsVF6HONw3-eRplxrMgWlvEu6AwKlrXqouYOw1FSFucZ9oprZoUeXzBCsrdzFStLjWP4DSl9wOXTe1pS19MZovS9fDmmtVuRD_prCvQ=@protonmail.com>
+In-Reply-To: <20221026190106.28441-6-erayorcunus@gmail.com>
+References: <20221026190106.28441-1-erayorcunus@gmail.com> <20221026190106.28441-6-erayorcunus@gmail.com>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2022-10-27 at 17:40 +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 10/27/22 17:19, Sven van Ashbrook wrote:
-> > The "failure to enter S0ix" warning is critically important for monitor=
-ing
-> > and debugging power regressions, both in the field and in the test lab.
-> >=20
-> > Promote from lower-case warn() to upper-case WARN() so that it becomes
-> > more prominent, and gets picked up as part of existing monitoring
-> > infrastructure, which typically focuses on WARN() and ignores warn()
-> > type log messages.
-> >=20
-> > Signed-off-by: Sven van Ashbrook <svenva@chromium.org>
->=20
-> WARN() is really only intended for internal kernel bugs and not for
-> hw misbehaving, so I'm not a fan of the change you are suggesting here.
->=20
-> Intel folks, do you have an opinion on this ?
+Hi
 
-I agree that not entering s0ix is a critical failure, but this is a hardwar=
-e
-suspend failure. How we treat this should be akin to how we treat failure t=
-o
-enter S3 or deeper. S0ix support is indicated by the S0 Low Power Idle bit =
-in
-the ACPI FADT table. It's better IMO to create some framework in the suspen=
-d or
-ACPI core that allows platforms to report whether they have achieved the
-hardware state indicated by having this bit set. Rafael, your thoughts?
 
-David
+2022. okt=C3=B3ber 26., szerda 21:01 keltez=C3=A9ssel, Eray Or=C3=A7unus =
+=C3=ADrta:
+
+> IdeaPads dropped support for VPCCMD_W_CAMERA somewhere between 2014-2016,
+> none of the IdeaPads produced after that I tested supports it. Fortunatel=
+y
+> I found a way to check it; if the DSDT has camera device(s) defined, it
+> shouldn't have working VPCCMD_W_CAMERA, thus camera_power shouldn't be
+> exposed to sysfs. To accomplish this, walk the ACPI namespace in
+> ideapad_check_features and check the devices starting with "CAM".
+> Tested on 520-15IKB and Legion Y520, which successfully didn't expose
+> the camera_power attribute.
+>=20
+> Link: https://www.spinics.net/lists/platform-driver-x86/msg26147.html
+> Signed-off-by: Eray Or=C3=A7unus <erayorcunus@gmail.com>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 53 ++++++++++++++++++++++++++-
+>  1 file changed, 52 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86=
+/ideapad-laptop.c
+> index f3d4f2beda07..65eea2e65bbe 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -149,6 +149,7 @@ struct ideapad_private {
+>  =09=09bool fn_lock              : 1;
+>  =09=09bool hw_rfkill_switch     : 1;
+>  =09=09bool kbd_bl               : 1;
+> +=09=09bool cam_ctrl_via_ec      : 1;
+>  =09=09bool touchpad_ctrl_via_ec : 1;
+>  =09=09bool usb_charging         : 1;
+>  =09} features;
+> @@ -163,6 +164,26 @@ static bool no_bt_rfkill;
+>  module_param(no_bt_rfkill, bool, 0444);
+>  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
+>=20
+> +static char *cam_device_prefix =3D "CAM";
+> +
+> +static acpi_status acpi_find_device_callback(acpi_handle handle, u32 lev=
+el,
+> +=09=09=09=09=09     void *context, void **return_value)
+> +{
+> +=09char buffer[8];
+> +=09struct acpi_buffer ret_buf;
+> +
+> +=09ret_buf.length =3D sizeof(buffer);
+> +=09ret_buf.pointer =3D buffer;
+> +
+> +=09if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &ret_buf)))
+> +=09=09if (strncmp(ret_buf.pointer, context, strlen(context)) =3D=3D 0) {
+
+Please use `strstarts()` here. Is there any reason why you decided not to
+simply "inline" the "CAM" string here (or even in the function call)?
+
+
+> +=09=09=09*return_value =3D handle;
+> +=09=09=09return AE_CTRL_TERMINATE;
+> +=09=09}
+> +
+> +=09return AE_OK;
+> +}
+> +
+>  /*
+>   * ACPI Helpers
+>   */
+> @@ -675,7 +696,7 @@ static umode_t ideapad_is_visible(struct kobject *kob=
+j,
+>  =09bool supported =3D true;
+>=20
+>  =09if (attr =3D=3D &dev_attr_camera_power.attr)
+> -=09=09supported =3D test_bit(CFG_CAP_CAM_BIT, &priv->cfg);
+> +=09=09supported =3D priv->features.cam_ctrl_via_ec;
+>  =09else if (attr =3D=3D &dev_attr_conservation_mode.attr)
+>  =09=09supported =3D priv->features.conservation_mode;
+>  =09else if (attr =3D=3D &dev_attr_fan_mode.attr)
+> @@ -1523,10 +1544,40 @@ static const struct dmi_system_id hw_rfkill_list[=
+] =3D {
+>  static void ideapad_check_features(struct ideapad_private *priv)
+>  {
+>  =09acpi_handle handle =3D priv->adev->handle;
+> +=09acpi_handle pci_handle;
+> +=09acpi_handle temp_handle =3D NULL;
+>  =09unsigned long val;
+> +=09acpi_status status;
+
+It is a small thing, but I believe it is best to define these variables
+in the block of that `if` since they are not used outside of it.
+
 
 >=20
-> Regards,
+>  =09priv->features.hw_rfkill_switch =3D dmi_check_system(hw_rfkill_list);
 >=20
-> Hans
+> +=09/*
+> +=09 * Some IdeaPads have camera switch via EC (mostly older ones),
+> +=09 * some don't. Fortunately we know that if DSDT contains device
+> +=09 * object for the camera, camera isn't switchable via EC.
+> +=09 * So, let's walk the namespace and try to find CAM* object.
+> +=09 * If we can't find it, set cam_ctrl_via_ec to true.
+> +=09 */
+> +
+> +=09priv->features.cam_ctrl_via_ec =3D false;
+> +
+> +=09if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg)) {
+> +=09=09status =3D acpi_get_handle(handle, "^^^", &pci_handle);
+> +=09=09if (ACPI_SUCCESS(status)) {
+> +=09=09=09status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE, pci_handle,
+> +=09=09=09=09=09=09     ACPI_UINT32_MAX,
+> +=09=09=09=09=09=09     acpi_find_device_callback,
+> +=09=09=09=09=09=09     NULL, cam_device_prefix,
+> +=09=09=09=09=09=09     &temp_handle);
+> +
+> +=09=09=09if (ACPI_SUCCESS(status) && temp_handle =3D=3D NULL)
+> +=09=09=09=09priv->features.cam_ctrl_via_ec =3D true;
+> +
+> +=09=09} else
+> +=09=09=09dev_warn(&priv->platform_device->dev,
+> +=09=09=09=09"Could not find PCI* node in the namespace\n");
+> +=09}
+> +
+>  =09/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch =
+*/
+>  =09priv->features.touchpad_ctrl_via_ec =3D !acpi_dev_present("ELAN0634",=
+ NULL, -1);
 >=20
->=20
-> > ---
-> > Against v6.1-rc2
-> >=20
-> > =C2=A0drivers/platform/x86/intel/pmc/core.c | 2 +-
-> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/pmc/core.c
-> > b/drivers/platform/x86/intel/pmc/core.c
-> > index a1fe1e0dcf4a5..834f0352c0edf 100644
-> > --- a/drivers/platform/x86/intel/pmc/core.c
-> > +++ b/drivers/platform/x86/intel/pmc/core.c
-> > @@ -2125,7 +2125,7 @@ static __maybe_unused int pmc_core_resume(struct
-> > device *dev)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* The real interesting=
- case - S0ix failed - lets ask PMC why. */
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_warn(dev, "CPU did not e=
-nter SLP_S0!!! (S0ix cnt=3D%llu)\n",
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_WARN(dev, "CPU did not e=
-nter SLP_S0!!! (S0ix cnt=3D%llu)\n",
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmcdev->s0ix_counter);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pmcdev->map->slps0_=
-dbg_maps)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_slps0_display(pmcdev, dev, NULL);
+> --
+> 2.34.1
 >=20
 
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
