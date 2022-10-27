@@ -2,139 +2,223 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AD0C38A2D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 07:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E102FA373D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 08:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233473AbiJ0Hr6 (ORCPT
+        id S234733AbiJ0Ivw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Oct 2022 03:47:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43686 "EHLO
+        Thu, 27 Oct 2022 04:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233971AbiJ0Hrp (ORCPT
+        with ESMTP id S233295AbiJ0Ivv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2022 03:47:45 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563D4169CCE;
-        Thu, 27 Oct 2022 00:47:33 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id y4so632158plb.2;
-        Thu, 27 Oct 2022 00:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MPFuBE4E9kW+bYrPyyrowXtRIsOozuoW5hrinvbPpzM=;
-        b=eiHbwOfI86K5EUY2CDGsGfsLuduchKoPDVtYnIxj3jtV6JNMiHsSuRUp/+AbwAlZg/
-         3ZDf9+XfNsMPE3vsN1xyiDOF33A/2akzhA+s4U300CgqMpq4Nev+MhhnoisfiIHWdBcc
-         2/eS1wRkjhbdhXZuaTAYhqT6jIrtI9yt5EWlThMmEqdGGSnz1jtgJI4SlDFD77M6Cae9
-         pv+AYG03zKnjF94Zq7sCn9AQ/bwbuOD/F8th+xp7o8OTX4tLHuz2HfRjBBmIgwGSOheU
-         iQGFX7yImc37oA7FR45li53Wci0ArpBljAOTkEdAzlP/WvID/xC3+hkOS6qB1PI8kIFZ
-         G7wA==
+        Thu, 27 Oct 2022 04:51:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C509115DB1B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Oct 2022 01:51:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666860710;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=piG9yqT6xAhiMXdKpX5Y3Qo1FGMuiTJ1yFwdVO4p5IY=;
+        b=dwYz04UHrcf076Jv8JUz4W+UlHiqJpRkLArwBwh941B4c60JCcws4VKI3lrXPKHIrPipNN
+        PSzjnMNiqHj0lTgV8iq+z9JITdG5PxlAevhXNPbCit9kI+ryXfrbSgm94zSPEF+EC5o3fi
+        xf5oRbDnfe3FY92iAKZxWszEUnHssNM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-286-yomtMNXvOlqs3Zq7ngwUug-1; Thu, 27 Oct 2022 04:51:48 -0400
+X-MC-Unique: yomtMNXvOlqs3Zq7ngwUug-1
+Received: by mail-ej1-f71.google.com with SMTP id xj11-20020a170906db0b00b0077b6ecb23fcso608403ejb.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Oct 2022 01:51:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MPFuBE4E9kW+bYrPyyrowXtRIsOozuoW5hrinvbPpzM=;
-        b=2Kv46d+2r3QQquzac0s3kl/IjBpGRDw2gFFEgWqccKdu7FAsgvSLVSh9C9Cn2M6eQI
-         7xwb0BRobPvls5dgSIT+leoqzUV2Ga7pNDxcEghtlTZ1BBxp4+NpUeD7pth8xqPQgS1Q
-         9oEqdUwgY8wN+DzGGXebpBaC3VRvNv9exuuN+OmzPPOTaMhR9KxZcnyXulHbmEA9+DRJ
-         ajBkQt+iqXk6/XYScrf23m8iXR9R++OYZQ1g/pAzpRdBKx/aAgdxwtvugtrQFvJ/DRzm
-         hh8PgkcX7+3aslPuUG2DuglSK8rl7JWilwzLlRPpnHELJMYBH8SlKQrRTlI4sVhDPb4L
-         0K0w==
-X-Gm-Message-State: ACrzQf2dZQSgzxfmJvGFZO+FSG623mbdSYXt69lM+Pl1Rv952mV434n9
-        rGx1rLFADrO7GW+aKwRDAxo=
-X-Google-Smtp-Source: AMsMyM6xa8Lta67AJWp6N9Y1WAPd8h/FnJ9YZEt5csSK5XrKvsxSLXkcDPV2s9a+oaqwHqZugE4+0w==
-X-Received: by 2002:a17:902:8215:b0:178:6946:a282 with SMTP id x21-20020a170902821500b001786946a282mr48749884pln.162.1666856852603;
-        Thu, 27 Oct 2022 00:47:32 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:99d6:ae15:f9aa:1819])
-        by smtp.gmail.com with ESMTPSA id h6-20020a17090aea8600b00209a12b3879sm496984pjz.37.2022.10.27.00.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Oct 2022 00:47:32 -0700 (PDT)
-Date:   Thu, 27 Oct 2022 00:47:29 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Eray =?iso-8859-1?Q?Or=E7unus?= <erayorcunus@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, ike.pan@canonical.com,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, mgross@linux.intel.com
-Subject: Re: [PATCH 2/6] HID: add mapping for camera access keys
-Message-ID: <Y1o3kVxNCWBbdXJr@google.com>
-References: <20221026190106.28441-1-erayorcunus@gmail.com>
- <20221026190106.28441-3-erayorcunus@gmail.com>
+        bh=piG9yqT6xAhiMXdKpX5Y3Qo1FGMuiTJ1yFwdVO4p5IY=;
+        b=nYXrBkBgpBqLolJEDcxfrNsQtJ2KI4qrWrQtOD8s3962nJ1f7AD6vfBfev90nJCznE
+         nHjkvE6WpALG6znKKP1FQeXYjEc3Sw3FzxWYeWnDyRg+c9DYdtHli1xQ2s1L2S8Fg2oR
+         FyPzTM9hJMwpwE8egggvAJ6PMnUDdTTSMqTj9vdev9I8K4EN7ub34NEXklb3jUHQVlxF
+         iwbQkBDQcNTHZN8Gyq0FkP4bZSy5AiqjTU3ngMzZigYONXoqgjLsoAAnuWK4Hhm0Ykds
+         5+2ehhQ+kU45N6iezEFiscxUpjBjXiyVXjkSovt29CE+/9yg257a01zulWxq8YBHczic
+         FfRw==
+X-Gm-Message-State: ACrzQf0220HAl1T6AC6sIAy4sQAYRbetw/OpD3BmrIUb4xQQsD2wUSeU
+        vvmx8J2kvN29ChGrjUjd7bJwCEWdhYUSbjjo7vK5uWBofeimjeOba9IVPH8NofWmUI+bfe+GZBZ
+        NgfVVEHFf8g+jAOzb0maCgli3KFH4saYk6w==
+X-Received: by 2002:a05:6402:ea0:b0:454:38bf:aa3d with SMTP id h32-20020a0564020ea000b0045438bfaa3dmr19108194eda.291.1666860707413;
+        Thu, 27 Oct 2022 01:51:47 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4M97BY+DJtCFsy6QaUdWwayGL+u3zLh+pSJfoHcV6/8JnsSecEzthndHQaTneGvNUsC3XcVA==
+X-Received: by 2002:a05:6402:ea0:b0:454:38bf:aa3d with SMTP id h32-20020a0564020ea000b0045438bfaa3dmr19108164eda.291.1666860707189;
+        Thu, 27 Oct 2022 01:51:47 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id w15-20020a056402268f00b004615bea1d5bsm635132edd.35.2022.10.27.01.51.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Oct 2022 01:51:46 -0700 (PDT)
+Message-ID: <099dee98-8aeb-af36-828c-110f5ac6e9a3@redhat.com>
+Date:   Thu, 27 Oct 2022 10:51:45 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221026190106.28441-3-erayorcunus@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+References: <f914ceb3-94bd-743c-f8b6-0334086e731a@gmail.com>
+ <42a5f2c9-a1dc-8fc0-7334-fe6c390ecfbb@redhat.com>
+ <20221024203057.GA28675@srcf.ucam.org>
+ <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+ <20221025193248.GA21457@srcf.ucam.org>
+ <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
+ <20221025204043.GA23306@srcf.ucam.org>
+ <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
+ <20221025234040.GA27673@srcf.ucam.org>
+ <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
+ <20221026204920.GA15326@srcf.ucam.org>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221026204920.GA15326@srcf.ucam.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 10:01:02PM +0300, Eray Orçunus wrote:
-> HUTRR72 added 3 new usage codes for keys that are supposed to enable,
-> disable and toggle camera access. These are useful, considering many
-> laptops today have key(s) for toggling access to camera.
-> 
-> This patch adds new key definitions for KEY_CAMERA_ACCESS_ENABLE,
-> KEY_CAMERA_ACCESS_DISABLE and KEY_CAMERA_ACCESS_TOGGLE. Additionally
-> hid-debug is adjusted to recognize this new usage codes as well.
-> 
-> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
+Hi,
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-> ---
->  drivers/hid/hid-debug.c                | 3 +++
->  drivers/hid/hid-input.c                | 3 +++
->  include/uapi/linux/input-event-codes.h | 3 +++
->  3 files changed, 9 insertions(+)
+On 10/26/22 22:49, Matthew Garrett wrote:
+> On Wed, Oct 26, 2022 at 11:59:28AM +0200, Hans de Goede wrote:
 > 
-> diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-> index f48d3534e020..991f880fdbd4 100644
-> --- a/drivers/hid/hid-debug.c
-> +++ b/drivers/hid/hid-debug.c
-> @@ -936,6 +936,9 @@ static const char *keys[KEY_MAX + 1] = {
->  	[KEY_ASSISTANT] = "Assistant",
->  	[KEY_KBD_LAYOUT_NEXT] = "KbdLayoutNext",
->  	[KEY_EMOJI_PICKER] = "EmojiPicker",
-> +	[KEY_CAMERA_ACCESS_ENABLE] = "CameraAccessEnable",
-> +	[KEY_CAMERA_ACCESS_DISABLE] = "CameraAccessDisable",
-> +	[KEY_CAMERA_ACCESS_TOGGLE] = "CameraAccessToggle",
->  	[KEY_DICTATE] = "Dictate",
->  	[KEY_BRIGHTNESS_MIN] = "BrightnessMin",
->  	[KEY_BRIGHTNESS_MAX] = "BrightnessMax",
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index f197aed6444a..f8e6513e77b8 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -995,6 +995,9 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
->  		case 0x0cd: map_key_clear(KEY_PLAYPAUSE);	break;
->  		case 0x0cf: map_key_clear(KEY_VOICECOMMAND);	break;
->  
-> +		case 0x0d5: map_key_clear(KEY_CAMERA_ACCESS_ENABLE);		break;
-> +		case 0x0d6: map_key_clear(KEY_CAMERA_ACCESS_DISABLE);		break;
-> +		case 0x0d7: map_key_clear(KEY_CAMERA_ACCESS_TOGGLE);		break;
->  		case 0x0d8: map_key_clear(KEY_DICTATE);		break;
->  		case 0x0d9: map_key_clear(KEY_EMOJI_PICKER);	break;
->  
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 7989d9483ea7..ef392d0f943f 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -614,6 +614,9 @@
->  #define KEY_KBD_LAYOUT_NEXT	0x248	/* AC Next Keyboard Layout Select */
->  #define KEY_EMOJI_PICKER	0x249	/* Show/hide emoji picker (HUTRR101) */
->  #define KEY_DICTATE		0x24a	/* Start or Stop Voice Dictation Session (HUTRR99) */
-> +#define KEY_CAMERA_ACCESS_ENABLE	0x24b	/* Enables programmatic access to camera devices. (HUTRR72) */
-> +#define KEY_CAMERA_ACCESS_DISABLE	0x24c	/* Disables programmatic access to camera devices. (HUTRR72) */
-> +#define KEY_CAMERA_ACCESS_TOGGLE	0x24d	/* Toggles the current state of the camera access control. (HUTRR72) */
->  
->  #define KEY_BRIGHTNESS_MIN		0x250	/* Set Brightness to Minimum */
->  #define KEY_BRIGHTNESS_MAX		0x251	/* Set Brightness to Maximum */
-> -- 
-> 2.34.1
+>> Ok, so this is a local customization to what is already a custom BIOS
+>> for a custom motherboard. There is a lot of custom in that sentence and
+>> TBH at some point things might become too custom for them to be expected
+>> to work OOTB.
 > 
+> But it *did* work OOTB before. You broke it. I accept that I'm a 
+> ludicrously weird corner case here, but there are going to be other 
+> systems that are also affected by this.
+> 
+>> I'm afraid things are not that simple. I assume that with
+>> "if ACPI backlight control is expected to work" you mean don't
+>> use ACPI backlight control when (acpi_osi_is_win8() && native_available)
+>> evaluates to true because it is known to be broken on some of
+>> those systems because Windows 8 stopped using it ?
+> 
+> Correct.
+> 
+>> Unfortunately something similar applies to vendor interfaces,
+>> When Windows XP started using (and mandating for certification
+>> IIRC) ACPI backlight control, vendors still kept their own
+>> vendor specific EC/smbios/ACPI/WMI backlight interfaces around for
+>> a long long time, except they were often no longer tested.
+> 
+> The current situation (both before your patchset and with its current 
+> implementation) is that vendor is preferred to native, so if the vendor 
+> interface is present then we're already using it.
 
--- 
-Dmitry
+All vendor drivers that I'm aware of have:
+
+	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+		return;
+
+In their backlight register paths and this has been present since
+circa 2015.
+
+So both before and after my 6.1 refactor vendor is only preferred
+on devices which don't implement the ACPI video bus control method.
+
+>>> The 
+>>> problem you're dealing with is that the knowledge of whether or not 
+>>> there's a vendor interface isn't something the core kernel code knows 
+>>> about. What you're proposing here is effectively for us to expose 
+>>> additional information about whether or not there's a vendor interface 
+>>> in the system firmware, but since we're talking in some cases about 
+>>> hardware that's almost 20 years old, we're not realistically going to 
+>>> get those old machines fixed.
+>>
+>> I don't understand why you keep talking about the old vendor interfaces,
+>> at least for the chromebook part of this thread the issue is that
+>> the i915 driver no longer registers the intel_backlight device which
+>> is a native device type, which is caused by the patch this email
+>> thread is about (and old vendor interfaces do not come into play
+>> at all here). So AFAICT this is a native vs acpi backlight control
+>> issue ?
+> 
+> I'm referring to your proposed patch that changed the default from 
+> backlight_vendor to backlight_native, which would fix my machine and 
+> Chromebooks but break anything that relies on the vendor interfaces.
+
+I see. I agree that preferring native over vendor on machines
+which do not have ACPI video backlight control will cause issues
+on older machines. Avoiding this scenario is exactly why currently
+the native check is conditional on the presence of ACPI video
+backlight control.
+
+>> I really want to resolve your bug, but I still lack a lot of info,
+>> like what backlight interface you were actually using in 6.0 ?
+> 
+> Native.
+> 
+>>         {
+>>          .callback = video_detect_force_video,
+>>          /* ThinkPad X201s */
+>>          .matches = {
+>>                 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>>                 DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X201s"),
+>>                 },
+>>         },
+>>
+>> will trigger.
+> 
+> In this case you'd break anyone else running the system who isn't using 
+> the hacked EC and different ACPI tables - obviously there's ways round 
+> this, but realistically since I'm (as far as I know) the only person in 
+> this situation it makes more sense for me to add a kernel parameter than 
+> carry around an exceedingly niche DMI quirk. I'm fine with that. But the 
+> point I'm trying to make is that the machines *are* telling you whether 
+> they'd prefer vendor or native.
+
+I wish that that ("telling you whether they'd prefer vendor or native")
+were true. But that does not match my experience at all and I've been
+working on making the kernel pick the right backlight interface on
+laptops since 2014.
+
+Just because a vendor interface is present does not mean that it will
+work. Unfortunately for none of the 3 main native/acpi_video/vendor
+backlight control methods the control method being present also guarantees
+that it will work. Which completely sucks, but it is the reality we
+have to deal with.
+
+> , and you're not taking that into account 
+> in the video_detect code.
+
+Regards,
+
+Hans
+
