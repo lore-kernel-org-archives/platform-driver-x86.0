@@ -2,90 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97284FA3747
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 08:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A9FA373D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 09:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234728AbiJ0I5l (ORCPT
+        id S235307AbiJ0JNA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Oct 2022 04:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
+        Thu, 27 Oct 2022 05:13:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234137AbiJ0I5j (ORCPT
+        with ESMTP id S235305AbiJ0JMm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2022 04:57:39 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72560B03E3;
-        Thu, 27 Oct 2022 01:57:38 -0700 (PDT)
-Received: from zn.tnic (p200300ea9733e7cb329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e7cb:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B7CC11EC0304;
-        Thu, 27 Oct 2022 10:57:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1666861056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+Dn95uGpUyy1KhkBzIVhKQkCCrUE6w8O6ZoG0Tkf6u8=;
-        b=WojIgMNXOqeXZOqiCZOflOU3lezPYEHMfd6YrCKkeVZv++P42OddnBZvTyqtS1XBWzys7n
-        jctQye88xdiJWKoUKNVVce4O2CtcNIA5rPtDcPUKWK7HEmREnJvOrey6nTqqF9U7ME68CA
-        hhGZInPyavGa4AN+nEjZVVpKL0AvCJI=
-Date:   Thu, 27 Oct 2022 10:57:32 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Martin Fernandez <martin.fernandez@eclypsium.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-        dvhart@infradead.org, andy@infradead.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org, rppt@kernel.org,
-        akpm@linux-foundation.org, daniel.gutson@eclypsium.com,
-        hughsient@gmail.com, alex.bazhaniuk@eclypsium.com,
-        alison.schofield@intel.com, keescook@chromium.org
-Subject: Re: [PATCH v9 0/9] x86: Show in sysfs if a memory node is able to do
- encryption
-Message-ID: <Y1pH/DuYJeo7Kyo5@zn.tnic>
-References: <20220704135833.1496303-1-martin.fernandez@eclypsium.com>
- <Y0hrhzprPFTK+VWV@zn.tnic>
- <CAKgze5ajp-z0+F+8Qo2z=834=i=HNa5=s54MLyrk16wQVnxCzQ@mail.gmail.com>
+        Thu, 27 Oct 2022 05:12:42 -0400
+Received: from cavan.codon.org.uk (irc.codon.org.uk [IPv6:2a00:1098:84:22e::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC6116D551;
+        Thu, 27 Oct 2022 02:11:25 -0700 (PDT)
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+        id 780B740A8B; Thu, 27 Oct 2022 10:11:23 +0100 (BST)
+Date:   Thu, 27 Oct 2022 10:11:23 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Pan@freedesktop.org, Xinhui <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        Jani Nikula <jani.nikula@intel.com>,
+        nouveau@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
+ backlight should be used (v2)
+Message-ID: <20221027091123.GA28089@srcf.ucam.org>
+References: <20221024203057.GA28675@srcf.ucam.org>
+ <8f53b8b6-ead2-22f5-16f7-65b31f7cc05c@redhat.com>
+ <20221025193248.GA21457@srcf.ucam.org>
+ <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
+ <20221025204043.GA23306@srcf.ucam.org>
+ <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
+ <20221025234040.GA27673@srcf.ucam.org>
+ <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
+ <20221026204920.GA15326@srcf.ucam.org>
+ <099dee98-8aeb-af36-828c-110f5ac6e9a3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgze5ajp-z0+F+8Qo2z=834=i=HNa5=s54MLyrk16wQVnxCzQ@mail.gmail.com>
+In-Reply-To: <099dee98-8aeb-af36-828c-110f5ac6e9a3@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 06:00:58PM -0300, Martin Fernandez wrote:
-> That's bad, because it would be nice if that attribute only depended
-> on the hardware and not on some setting.
+On Thu, Oct 27, 2022 at 10:51:45AM +0200, Hans de Goede wrote:
 
-Why would that be bad?
-
-You want to be able to disable encryption for whatever reason sometimes.
-
-> The plan of this patch was, as you mentioned just to report
-> EFI_MEMORY_CPU_CRYPTO in a per node level.
+> In their backlight register paths and this has been present since
+> circa 2015.
 > 
-> Now, I think I will need to check for tme/sme and only if those are
-> active then show the file in sysfs, otherwise not show it at all,
-> because it would be misleading. Any other idea?
+> So both before and after my 6.1 refactor vendor is only preferred
+> on devices which don't implement the ACPI video bus control method.
 
-Well, I still think this is not going to work in all cases. SME/TME can
-be enabled but the kernel can go - and for whatever reason - map a bunch
-of memory unencrypted.
+Sorry, yes, that's the case I meant.
 
-So I don't know what the goal of this fwupd checking whether users have
-configured memory encryption properly is. It might end up giving that
-false sense of security...
+> Just because a vendor interface is present does not mean that it will
+> work. Unfortunately for none of the 3 main native/acpi_video/vendor
+> backlight control methods the control method being present also guarantees
+> that it will work. Which completely sucks, but it is the reality we
+> have to deal with.
 
-> You mean that EFI_MEMORY_CPU_CRYPTO means nothing on an AMD system?
-
-I mean, you still can disable memory encryption.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+But traditionally that's been logic that we've encoded into the vendor 
+drivers, which can take other factors into account when determining 
+whether the exposed interface works. You've now discarded that 
+knowledge. The only way you can maintain the degree of functionality 
+that 6.0 had is to move that determination into core code, or 
+alternatively support dynamic reattachment of backlight interfaces based 
+on vendor drivers loading later. An alternative would be to just revert 
+all of this, and instead only use this logic for the output property 
+interface (which would still result in different outcomes, but only for 
+userland that's choosing to use the new interface, so that's a different 
+problem).
