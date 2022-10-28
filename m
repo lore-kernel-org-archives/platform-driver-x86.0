@@ -2,183 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4A2FA3740
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Oct 2022 19:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D2AECAAA1
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Oct 2022 15:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236019AbiJ0Tnl (ORCPT
+        id S229707AbiJ1Pzb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Oct 2022 15:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58706 "EHLO
+        Fri, 28 Oct 2022 11:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236423AbiJ0Tni (ORCPT
+        with ESMTP id S229613AbiJ1Pza (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2022 15:43:38 -0400
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1680580BD8;
-        Thu, 27 Oct 2022 12:43:37 -0700 (PDT)
-Date:   Thu, 27 Oct 2022 19:43:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1666899814; x=1667159014;
-        bh=ecgD3ocjBEk+64IIiypXst5XSaocPXz3+0qtVTaMWVI=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID:BIMI-Selector;
-        b=cMLCdIjgewQmJOSr9cpH7ECdKF4NZgyINOCz1RjriHSVAx+XP9spIUfAdYfmsBJBM
-         /vBC5lxVAeeKro4izPbktEgGmat9nEoSBbzD8kXpG2RWINpK8kx2DTQkku1DPPapYc
-         GnQ6PDkNO8TUO0aKPDbDWgU8V1c5uiS88Yduwk7aNInKS7JysqyXo35XsjXcPKKX1s
-         GdzXZ8XrSHZKKv0I5FYOd+/acVfhcW94XNV4DCfIgdQMcsLR77RNujCT/eaTELMbfi
-         mEdfObfstqCzwie8K3UNMxHobTBlMGzjDYwQkXXRZ9G6BIquAFpI2BUsmJuADmxS8A
-         0AImlSC+vTHTA==
-To:     =?utf-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, ike.pan@canonical.com,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        dmitry.torokhov@gmail.com, hdegoede@redhat.com,
-        mgross@linux.intel.com
-Subject: Re: [PATCH 5/6] platform/x86: ideapad-laptop: Expose camera_power only if supported
-Message-ID: <NVuCQsVF6HONw3-eRplxrMgWlvEu6AwKlrXqouYOw1FSFucZ9oprZoUeXzBCsrdzFStLjWP4DSl9wOXTe1pS19MZovS9fDmmtVuRD_prCvQ=@protonmail.com>
-In-Reply-To: <20221026190106.28441-6-erayorcunus@gmail.com>
-References: <20221026190106.28441-1-erayorcunus@gmail.com> <20221026190106.28441-6-erayorcunus@gmail.com>
-Feedback-ID: 20568564:user:proton
+        Fri, 28 Oct 2022 11:55:30 -0400
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9614B7695F;
+        Fri, 28 Oct 2022 08:55:29 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-13be3ef361dso6701999fac.12;
+        Fri, 28 Oct 2022 08:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Szxxr+qfaXpGQuF2CmkZ3hvRQy5GRhL2g4OW24nDsmQ=;
+        b=o+yDDs/H92eNLAMm/fHQS6lY9Ha+3H9XZqJ1VEUj5BnuxtdjcoPc1f2t7fy+3Ya7xK
+         3MI6LBvqaQV19s3f6bt3s8cGHRxpgR2oYQZlfoeu2lKQsJeolcevfwvplyEfJ8GnRKry
+         0W0LzmfaGKv8Sh6OYj6gCqSN2rBMCrmpqpeAfI0cVwYd1LVW9yZKoeLwT/QfFDwM8syZ
+         L6IabJtpV6oKD8zu8ARHqdAAQbNNkrcEZ4Uf7KVotKHfQ4I6E6avWBF7Gkvp4gWpYy+E
+         HdqDRWK8PEFV6VaTvU8RenG1PQfbZDWP+/8Hsnl57F8yj2mfaDpPvNz5R1dW8yZJi0JK
+         Jecg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Szxxr+qfaXpGQuF2CmkZ3hvRQy5GRhL2g4OW24nDsmQ=;
+        b=sS1zucPfq5YnaWlLwXCxfxWET7ov02eOsnIz7zYfZ92n1VmCmCmH2G1/CGnLcLv/rV
+         prD9plabBr44LiS2aTosFvWz94xDdudAGl7eaErHtXF/stG/yf9nZ27w+V3+ohY8faV1
+         ZCtHAbAxHYZHr9VD3MQov/NDAzuTFYdyzmel6LAgplKxOAhGJ35sIC7p9aJI7aQ++vmq
+         iuTq1bGRb1G1nV0nYcdHB4KCXGl8Kq4dhniNuUT1gqDMX9JQ1NYj5pSE6Q9b1uE3hDpa
+         ou4O5B63Bca28Jl2AhGdSxhUe2eW8oV3Ag7P6CArbqvjg0gvMQZeDEc6wbswf8OhLhAU
+         e9Eg==
+X-Gm-Message-State: ACrzQf0UjVwQmZvxfp512yc7YdTlgvN1Ep/N0r+jiA3v5zOVf6FEKu6j
+        +ItV3T4N1ejFFIAw4bTyVD09aNJzRfk=
+X-Google-Smtp-Source: AMsMyM6f6q0iaRA9rBp5xdUcVvsD7pIWzH95B6UoEDKDp3o/ck7hEUj2K9Jyij174sLM7BMhdfrIXw==
+X-Received: by 2002:a05:6870:9625:b0:13b:65ff:2ff8 with SMTP id d37-20020a056870962500b0013b65ff2ff8mr9966685oaq.292.1666972528870;
+        Fri, 28 Oct 2022 08:55:28 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:c120:b306:638c:958])
+        by smtp.gmail.com with ESMTPSA id 125-20020a4a1483000000b0047f8ceca22bsm1689807ood.15.2022.10.28.08.55.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Oct 2022 08:55:28 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, balalic.enver@gmail.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     markgross@kernel.org
+Subject: [PATCH v1] hp_wmi causing rfkill soft blocked wifi
+Date:   Fri, 28 Oct 2022 10:55:27 -0500
+Message-Id: <20221028155527.7724-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+After upgrading BIOS to U82 01.02.01 Rev.A, the console is flooded
+strange char "^@" which printed out every second and makes login
+nearly impossible. Also the below messages were shown both in console
+and journal/dmesg every second:
 
+usb 1-3: Device not responding to setup address.
+usb 1-3: device not accepting address 4, error -71
+usb 1-3: device descriptor read/all, error -71
+usb usb1-port3: unable to enumerate USB device
 
-2022. okt=C3=B3ber 26., szerda 21:01 keltez=C3=A9ssel, Eray Or=C3=A7unus =
-=C3=ADrta:
+Wifi is soft blocked by checking rfkill. When unblocked manually,
+after few seconds it would be soft blocked again. So I was suspecting
+something triggered rfkill to soft block wifi.  At the end it was
+fixed by removing hp_wmi module.
 
-> IdeaPads dropped support for VPCCMD_W_CAMERA somewhere between 2014-2016,
-> none of the IdeaPads produced after that I tested supports it. Fortunatel=
-y
-> I found a way to check it; if the DSDT has camera device(s) defined, it
-> shouldn't have working VPCCMD_W_CAMERA, thus camera_power shouldn't be
-> exposed to sysfs. To accomplish this, walk the ACPI namespace in
-> ideapad_check_features and check the devices starting with "CAM".
-> Tested on 520-15IKB and Legion Y520, which successfully didn't expose
-> the camera_power attribute.
->=20
-> Link: https://www.spinics.net/lists/platform-driver-x86/msg26147.html
-> Signed-off-by: Eray Or=C3=A7unus <erayorcunus@gmail.com>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 53 ++++++++++++++++++++++++++-
->  1 file changed, 52 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86=
-/ideapad-laptop.c
-> index f3d4f2beda07..65eea2e65bbe 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -149,6 +149,7 @@ struct ideapad_private {
->  =09=09bool fn_lock              : 1;
->  =09=09bool hw_rfkill_switch     : 1;
->  =09=09bool kbd_bl               : 1;
-> +=09=09bool cam_ctrl_via_ec      : 1;
->  =09=09bool touchpad_ctrl_via_ec : 1;
->  =09=09bool usb_charging         : 1;
->  =09} features;
-> @@ -163,6 +164,26 @@ static bool no_bt_rfkill;
->  module_param(no_bt_rfkill, bool, 0444);
->  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
->=20
-> +static char *cam_device_prefix =3D "CAM";
-> +
-> +static acpi_status acpi_find_device_callback(acpi_handle handle, u32 lev=
-el,
-> +=09=09=09=09=09     void *context, void **return_value)
-> +{
-> +=09char buffer[8];
-> +=09struct acpi_buffer ret_buf;
-> +
-> +=09ret_buf.length =3D sizeof(buffer);
-> +=09ret_buf.pointer =3D buffer;
-> +
-> +=09if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &ret_buf)))
-> +=09=09if (strncmp(ret_buf.pointer, context, strlen(context)) =3D=3D 0) {
+The root cause is the way hp-wmi driver handles command 1B on
+post-2009 BIOS.  In pre-2009 BIOS, command 1Bh return 0x4 to indicate
+that BIOS no longer controls the power for the wireless devices.
 
-Please use `strstarts()` here. Is there any reason why you decided not to
-simply "inline" the "CAM" string here (or even in the function call)?
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
+---
+Based on the latest platform-drivers-x86.git/for-next
+---
+ drivers/platform/x86/hp-wmi.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-> +=09=09=09*return_value =3D handle;
-> +=09=09=09return AE_CTRL_TERMINATE;
-> +=09=09}
-> +
-> +=09return AE_OK;
-> +}
-> +
->  /*
->   * ACPI Helpers
->   */
-> @@ -675,7 +696,7 @@ static umode_t ideapad_is_visible(struct kobject *kob=
-j,
->  =09bool supported =3D true;
->=20
->  =09if (attr =3D=3D &dev_attr_camera_power.attr)
-> -=09=09supported =3D test_bit(CFG_CAP_CAM_BIT, &priv->cfg);
-> +=09=09supported =3D priv->features.cam_ctrl_via_ec;
->  =09else if (attr =3D=3D &dev_attr_conservation_mode.attr)
->  =09=09supported =3D priv->features.conservation_mode;
->  =09else if (attr =3D=3D &dev_attr_fan_mode.attr)
-> @@ -1523,10 +1544,40 @@ static const struct dmi_system_id hw_rfkill_list[=
-] =3D {
->  static void ideapad_check_features(struct ideapad_private *priv)
->  {
->  =09acpi_handle handle =3D priv->adev->handle;
-> +=09acpi_handle pci_handle;
-> +=09acpi_handle temp_handle =3D NULL;
->  =09unsigned long val;
-> +=09acpi_status status;
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 627a6d0eaf83..29cd4e437d97 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -1300,8 +1300,15 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	wwan_rfkill = NULL;
+ 	rfkill2_count = 0;
+ 
+-	if (hp_wmi_rfkill_setup(device))
+-		hp_wmi_rfkill2_setup(device);
++	/*
++	 * In pre-2009 BIOS, command 1Bh return 0x4 to indicate that
++	 * BIOS no longer controls the power for the wireless
++	 * devices. All features supported by this command will no
++	 * longer be supported.
++	 */
++	if (!hp_wmi_bios_2009_later())
++		if (hp_wmi_rfkill_setup(device))
++			hp_wmi_rfkill2_setup(device);
+ 
+ 	err = hp_wmi_hwmon_init();
+ 
+-- 
+2.34.1
 
-It is a small thing, but I believe it is best to define these variables
-in the block of that `if` since they are not used outside of it.
-
-
->=20
->  =09priv->features.hw_rfkill_switch =3D dmi_check_system(hw_rfkill_list);
->=20
-> +=09/*
-> +=09 * Some IdeaPads have camera switch via EC (mostly older ones),
-> +=09 * some don't. Fortunately we know that if DSDT contains device
-> +=09 * object for the camera, camera isn't switchable via EC.
-> +=09 * So, let's walk the namespace and try to find CAM* object.
-> +=09 * If we can't find it, set cam_ctrl_via_ec to true.
-> +=09 */
-> +
-> +=09priv->features.cam_ctrl_via_ec =3D false;
-> +
-> +=09if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg)) {
-> +=09=09status =3D acpi_get_handle(handle, "^^^", &pci_handle);
-> +=09=09if (ACPI_SUCCESS(status)) {
-> +=09=09=09status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE, pci_handle,
-> +=09=09=09=09=09=09     ACPI_UINT32_MAX,
-> +=09=09=09=09=09=09     acpi_find_device_callback,
-> +=09=09=09=09=09=09     NULL, cam_device_prefix,
-> +=09=09=09=09=09=09     &temp_handle);
-> +
-> +=09=09=09if (ACPI_SUCCESS(status) && temp_handle =3D=3D NULL)
-> +=09=09=09=09priv->features.cam_ctrl_via_ec =3D true;
-> +
-> +=09=09} else
-> +=09=09=09dev_warn(&priv->platform_device->dev,
-> +=09=09=09=09"Could not find PCI* node in the namespace\n");
-> +=09}
-> +
->  =09/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch =
-*/
->  =09priv->features.touchpad_ctrl_via_ec =3D !acpi_dev_present("ELAN0634",=
- NULL, -1);
->=20
-> --
-> 2.34.1
->=20
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
