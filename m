@@ -2,332 +2,190 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ABBFA3744
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 21:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D49FA3741
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 21:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbiJaVaT (ORCPT
+        id S229477AbiJaVwA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 17:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41218 "EHLO
+        Mon, 31 Oct 2022 17:52:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiJaVaS (ORCPT
+        with ESMTP id S229457AbiJaVv7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 17:30:18 -0400
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1E610556;
-        Mon, 31 Oct 2022 14:30:17 -0700 (PDT)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1322d768ba7so14899944fac.5;
-        Mon, 31 Oct 2022 14:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H7yyVKrhqqvVqV1d1yXkbJ7Ox0NpIlCTZqJ5HqW3FFs=;
-        b=bQTohbsepgB+h2/ijnMFeJDUet6cVdPneWNfkJgpSOF7SvVV6iSbXliTdKv5u0znAw
-         CJMfrhCsu+G3TMt6t1rQ7TcxyGyyvpdUat1qIBJ8zfS8qhKAa5bVVM8XZZ8X3hN8VQi/
-         i+dGCo7C3AzFAy2DvinODclOVPnF7HWVqPznpS2tQcrxGZdIAzm+v5BYzjtZS1n28jEj
-         TLKBaqBthonbxrJj4Q7+ZLk+jU/+Z2Qfy9qmyefowqpvI/qY7HIhuCJtzkHrnfGmn1II
-         xuO/mz3qIPSKTAYmhPdSl8LwPhz6ayIJEXo52YMgmoBbJ57WcCDVQxeWVoNPfXXhrSSW
-         BBXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7yyVKrhqqvVqV1d1yXkbJ7Ox0NpIlCTZqJ5HqW3FFs=;
-        b=YGi/YpkNvSgRZ8nM6eUsHgheh/96TxNVgyweNtfaZSsEngqCrKRX4vPNILdZgwOwPU
-         zAJgZsk1dzqPK3KeRReu8R6caYzwoplB6CHRv8xB2oiWpcMAzcYS7ey59n6QkXpo25QX
-         C601zjJNuTm8uvirjaveIUKnWIipPP2oJMAqZRmDMwlAQt6Q6X4oBkURaeBRjyCEGkPB
-         8R7unxXapBZKWrj9puVyTV8xzOxUbnDQeYeXDvo9E72qE3+jx5af5p9hSIelBN0tW643
-         8wmn//nw59fD0X17YEZrbHSAenJ4LxkBAZetmD9LlxqFkmbTeGLMSffW1ott2P+Qw1TY
-         K6hg==
-X-Gm-Message-State: ACrzQf0C0Lf5LP2biiaL2Re5qsKWhm6gePyTJ7LYkHRPvuhtju4nsYRn
-        T/l5eXas37Y/BmmrfWuuw7M=
-X-Google-Smtp-Source: AMsMyM4XpqReJ7IIkCGQdxNnBWmreZPM61FIfnWEd6h9T+Wi6ibcJgyqlYKdjxh0dkMF40wbk/DXPw==
-X-Received: by 2002:a05:6870:63aa:b0:13a:fe6c:5ed0 with SMTP id t42-20020a05687063aa00b0013afe6c5ed0mr8865191oap.257.1667251816466;
-        Mon, 31 Oct 2022 14:30:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m11-20020a056870058b00b0013125e6a60fsm3535723oap.58.2022.10.31.14.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 14:30:15 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Mon, 31 Oct 2022 14:30:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joaquin Aramendia <samsagax@gmail.com>
-Cc:     pobrn@protonmail.com, hdegoede@redhat.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] Add OneXPlayer mini AMD sensors driver
-Message-ID: <20221031213014.GA272079@roeck-us.net>
-References: <2FNQOCFdvTS7N-ylJhxGWzZjeji-nVCF09tbDr7lt80R8c8_pyp9hbK0iJHTFPevJ4la-YDd3lW5CZK85kYF1_dDZo6h1akO0f8jFTzIScA=@protonmail.com>
- <20221031145308.341776-1-samsagax@gmail.com>
- <20221031195609.GA2006109@roeck-us.net>
- <CABgtM3g-qOB2HZXwRhG7kEhsz0934DZuVC3oKH=qKcqLUw_eMg@mail.gmail.com>
+        Mon, 31 Oct 2022 17:51:59 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AB610FD3;
+        Mon, 31 Oct 2022 14:51:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lYtex55BK2ubrlHEnqxrlI4/DqUTjVZbSC7IMhhrYMSOW1nq0xdJDNqpilz3bUcBTqZKmF5zQDS8auhjrfvT9t33UQKZXvRpHDm6fsc3ZFS5NKKEIXwYg5AXojJFOXRtE8Nd0XPSxTDG2gTnLf5hjekWJJDQIhCiWDOfdUkIqIiZUzjsWrlzRM5YDS+j4rANhDbxKkZNsgw5T+cSwOSA217swYRmykvagQEidxHFuMMwQlWXRfrqZD9R/15h5NI03n00Chh9PqSIRbRCyp7hls0Y4cIVpV/tsablDbGQd5xb0Luk1XyvTX/Lh/naaDDlfWZkaytFc8+ACNCqCtp0OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9ureep4TDDdDF3PoSot1pX5qFfCMiVzXhgATOm823Tg=;
+ b=U3YS3j3VtCaDpUMuV3KBVQmy9hyXXkZ8HL4MxG8JMeYoY0689RGZHjIe4HA/dmrlxw1GxIkD9H5Cw7a9hqOidC23nIVfd3hJDbiAzVZ0gH7N1nhXKZVY/Mn0qoMdqZ4WR3r/jx6Vg9GXUZDDm1mKvpQne847Pgc4udKerwfqQ6pBN0dh14xQwvs7jDxDWUITmidpfvtufY/naO7c0dfwUXxM4Xg6A6WiqrffyVgoqXtnUK6rCQohvEKhX1PJHV0W7tfRyWJc/ivEwvC1dFrQxu67tjA64RnUQoTODwElfJfVsP3gQq4dZOunzxEW63Mjc9sjKD9BRIez0anISOJtGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9ureep4TDDdDF3PoSot1pX5qFfCMiVzXhgATOm823Tg=;
+ b=Cyql5TBEiVftXtNggrYOuM7Dm+3ny9JvjDCGgVbO10yRRRsebXFCVD8klvuz5JshdtUKEaptsFwnWCMqkPjodcYGhB0Jw1uDwFMKh9TGxkx8hyV3fUKgy1HHReH/xKGtiwLbLS6zCl8aqGNsQk61XntLGqCGaz2CQEuRrDVEjJo=
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH3PR12MB7666.namprd12.prod.outlook.com (2603:10b6:610:152::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15; Mon, 31 Oct
+ 2022 21:51:56 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f8c0:db03:2d30:792c]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f8c0:db03:2d30:792c%3]) with mapi id 15.20.5769.016; Mon, 31 Oct 2022
+ 21:51:56 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Dadap <ddadap@nvidia.com>
+CC:     Len Brown <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH] ACPI: video: Add backlight=native DMI quirk for Dell G15
+ 5515
+Thread-Topic: [PATCH] ACPI: video: Add backlight=native DMI quirk for Dell G15
+ 5515
+Thread-Index: AQHY7W+EsPpR43M85k6TtXj7ov7Zla4pCrLA
+Date:   Mon, 31 Oct 2022 21:51:55 +0000
+Message-ID: <MN0PR12MB6101C2BD5FAEC45B51B61667E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
+References: <20221031212556.401618-1-hdegoede@redhat.com>
+In-Reply-To: <20221031212556.401618-1-hdegoede@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-10-31T21:50:29Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=9b4e9d76-feca-4b61-9844-b9bdaa58c298;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-10-31T21:51:54Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: 44ba9e2c-b95d-44ca-b7c5-7c8747207292
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|CH3PR12MB7666:EE_
+x-ms-office365-filtering-correlation-id: 29393747-97a7-473c-a312-08dabb8a210a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EASheHFBk8nB52XTR8jUsX/wiwGur7q2nqMgyPERqfwprRIFdP97m4y5F6k+bLuCrtfJFhVaQnLIzyXN7zWr6bibqs1ynPXTsPoNOk90UtAvps1kq62Xexw/WKg7s3sOPnvWtrbhu9y1x2+TzZPGjjL4zVhipgHcDu0wjMyvYrZaiXt2W825I7+U/k4T6ieuthYw9V+oCQRi0yTGN+XKL9SJ8geI4Cccp8YvW0HujFvdf+54eCmAMT9d5VrC5hdABGbuW7JJY6rgFb04Kr0tIKBkqHpFhw+PF0Ro710IUQs6uFoDWgVWuYEDc+83BGLdLfoSMzBR0WQgl90t7uvWE1gUDCpiDPNuRXmUWYN6U1GQmrVfCRI304NJIPwtMvSuW6WqEin7gFQ4q3gbJo5kpJedeS2KYU5cJz4ZCi2D23vYwvyTOIamQQx2l7q4M/jR6E9sCacm0JpWTk+a8CFdnT2oc5b6yK60w8lev4Jd26po8I1GhqvU2KVcXNmWWfzhM0UUOfeuqPByrqIgzx+qMU+rZs2oAQHY6apPM6dvmDdRn1UxEFJnG8TK9obZZ1aAY1x2PYd+YcyFxJDr9MbbrQN3TX2Gf2eN9wINHR54l629Y4sKfvXsUMdCWGHTEtWo5K7evrR7bk5MFuhkWZu4FKSGopeqNqsGgGvrLXLqGSWpd9N0ie12XBcOPQw982XizRCmLzDIqr9F6UAav/gnwBe6OprL5IFVrgRy7IdcmCrFsI8j0REq2738m/yiG6wWBj4i1IQ0CLMLi4UgEGoXYA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(451199015)(9686003)(6506007)(55016003)(7696005)(478600001)(186003)(53546011)(2906002)(83380400001)(110136005)(76116006)(316002)(66446008)(54906003)(52536014)(66556008)(5660300002)(4326008)(8936002)(41300700001)(66946007)(64756008)(66476007)(8676002)(71200400001)(86362001)(38100700002)(122000001)(33656002)(38070700005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YTCoYZLt2HuQtaDkxnr5B/FsA4RTRABZoiDaWsD6uyvlXvtFe0MdgLF1u1a3?=
+ =?us-ascii?Q?/onr5evqbjIoPi8F1o7sGK/QI/yICFQTIowhQfSJiwwcurU8KXvwMxIMWX1x?=
+ =?us-ascii?Q?yhoBdR5UVXi34ZDwd/Extr3Ni/BNaxYY854HzGwJLvSpswR4oUL8yq+SLqNT?=
+ =?us-ascii?Q?74eVBtTXXb/rWfgO7VHf8ZgVL6G5vONteOAGsOw+3vYlreLoqZOkLvMxomMt?=
+ =?us-ascii?Q?IBagih4oGtUF+7cKGcvgOfAfcWuGkIQxz8AX7ovMP2LWlk0XjheBX2zd6mKA?=
+ =?us-ascii?Q?PhIgg7g+Adriq0UBaWxv7iXydYAdw4vacGL7pfa8vQZW3/dE2V3qOu3noXC5?=
+ =?us-ascii?Q?UKsMR/ZriS7eZVt80KchfVdwnekUy2dBZrGzOPEea7+3iAwthSUiyjtAJnce?=
+ =?us-ascii?Q?5vLypyJEMLBBmP8VLQuw2AiIZspbrepKE/wwOYzGembHXnlTP7ev8kCsk4cr?=
+ =?us-ascii?Q?C9oI/Fh7lqzr/Nh27VDWj/9gos6aBDctiiG3UGuSwW1ReHYwENsG3iSwACqY?=
+ =?us-ascii?Q?y8RCydc9TPWgXMxHBiICV2tHAQ2FeJKcGV5HGi94kJsFdpYH8H9L0b4lAINw?=
+ =?us-ascii?Q?L8BQVhu7TqS8JhDXRzsBKf8yYfmWvZWuYTj4enjoEZouMLBfmQO0CZs/QQCc?=
+ =?us-ascii?Q?93Yr/XrXQQ4T73Z1kOapF4W180Us1ak9N2zXwy/z4dij74PLGjgWhzwy89an?=
+ =?us-ascii?Q?A0KPqrc36RXjEBnBoZCDCNAMteCqpPXGA+cxkNWA9dekBpvmE4gRCxDDGkM4?=
+ =?us-ascii?Q?+rF7L5QExz/jg6jtm2jsYisVVeIJPtS6ronaHclESrCbAm28CXmGB7JPdoRd?=
+ =?us-ascii?Q?tZZBZkPw7dsKw1zmODKQVNDKE/BU8iH2BnVhUuRhuGAfIQeet3v1U033FYf4?=
+ =?us-ascii?Q?zuLm6adlOUmPrte6ud1foNxoOvm9peAQOaMTrxoCXjvYllSMyHBEQupjafet?=
+ =?us-ascii?Q?YQJEVuEk+aq7EuIodu9lkbfNzmoKjUTYkQsYPzA7mdMXWqhXS2/4XfP1ocS1?=
+ =?us-ascii?Q?07cpexPcrXQFHAlvPnNjw3Flqa20agwCHMZr9/sZErqVF5kz7DJG2EEc5DFv?=
+ =?us-ascii?Q?ZBtbu0+7zQQOxJr6hJ0sLSG0gfUrgyHxa7LYtP1Z3Wz5DoU4sFhh4EWwlqli?=
+ =?us-ascii?Q?8L52MPtQsYDn7ZAJnZ3w36ZBNR0Kb+XslTnQjIJQpjkOzmsVHQV2KQFvu4hV?=
+ =?us-ascii?Q?RhB669VwYHGf6xKej48qu03hsYdXWX7G0+4j86hsUuIfb/q5ygvXVJHql+qC?=
+ =?us-ascii?Q?shQnWAvoKjkCpam/afKGdot7To1KkPFi8LPSQdTTGDKukBT3yRCeCfDmW46G?=
+ =?us-ascii?Q?+MPZKYF12ZcU8LDJQ4FLA7wg78qh9a3tvgtkc0rApOam3jep9NDBFymG+q+i?=
+ =?us-ascii?Q?m/MaizBys41cDkUqOFCmHobXtvAtZ1jw16NbVALsOTKj/CPmr7c1bZl+OBjq?=
+ =?us-ascii?Q?TRnApgDtxBh018kP9vYHeGdU7prYI2KpuyBM9ojltsdn6WGsBAO23JJU3V4/?=
+ =?us-ascii?Q?Vvl+RFmXkuDzXOscprnNkJOrdyYpEcR+iMgk98D9DU4rUJwTol7+hMcpeRos?=
+ =?us-ascii?Q?Si1t2ijVE8f69CJfRjy0JVC8DHMve8QVASkJ77jeEKK/gAQ2aUe2BH0alq7n?=
+ =?us-ascii?Q?kwew/igFXDXM4mZ5AgsE7i4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgtM3g-qOB2HZXwRhG7kEhsz0934DZuVC3oKH=qKcqLUw_eMg@mail.gmail.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29393747-97a7-473c-a312-08dabb8a210a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2022 21:51:55.9947
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oMsUp224rxDKhfID2KNtAoQGC8HHoT5lki2NCiPV2DPXBBUVnyOvtuabdAmHgqyNreyqJe5M5O3OgUnIZQCVjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7666
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 05:53:20PM -0300, Joaquin Aramendia wrote:
-> Thanks for your time and review. I'll follow your advice and
-> corrections. Should I send the next patch version in a separate
-> thread? Or should I answer to this one?
-> 
-> El lun, 31 oct 2022 a la(s) 16:56, Guenter Roeck (linux@roeck-us.net) escribió:
-> >
-> > On Mon, Oct 31, 2022 at 11:53:08AM -0300, Joaquín Ignacio Aramendía wrote:
-> > > Sensors driver for OXP Handhelds from One-Netbook that expose fan reading
-> > > and control via hwmon sysfs.
-> > >
-> > > As far as I could gather all OXP boards have the same DMI strings and
-> > > they are told appart by the boot cpu vendor (Intel/AMD).
-> > > Currently only AMD boards are supported.
-> > >
-> > > Fan control is provided via pwm interface in the range [0-255]. AMD
-> > > boards have [0-100] as range in the EC, the written value is scaled to
-> > > accommodate for that.
-> > >
-> > > Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
-> >
-> > Please run "checkpatch --strict" on your patch and fix the CHECK
-> > messages. Also see Documentation/hwmon/submitting-patches.rst.
-> 
-> There is a Warning about MAINTAINERS to be updated. Should I add
-> myself to it? If yes, Should it be under a new header?
-> 
-Feel free to do so if you like, but that one isn't mandatory.
+[Public]
 
-> > > ---
-> > > Removed fan_control reference in comment.
-> > > Bugfix MIX/MIN reporting not available
-> > > Bugfix pwm_enable register set wrong
-> > > ---
-> > >  drivers/hwmon/Kconfig       |  13 +-
-> > >  drivers/hwmon/Makefile      |   1 +
-> > >  drivers/hwmon/oxp-sensors.c | 277 ++++++++++++++++++++++++++++++++++++
-> >
-> > Also needs Documentation/hwmon/oxp-sensors.rst
-> 
-> Will add.
-> 
-> > >  3 files changed, 290 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/hwmon/oxp-sensors.c
-> > >
-> > > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > > index 7ac3daaf59ce..a1cdb03b4d13 100644
-> > > --- a/drivers/hwmon/Kconfig
-> > > +++ b/drivers/hwmon/Kconfig
-> > > @@ -1607,6 +1607,17 @@ config SENSORS_NZXT_SMART2
-> > >
-> > >  source "drivers/hwmon/occ/Kconfig"
-> > >
-> > > +config SENSORS_OXP
-> > > +     tristate "OneXPlayer EC fan control"
-> > > +     depends on ACPI
-> > > +     depends on X86
-> > > +     help
-> > > +             If you say yes here you get support for fan readings and control over
-> > > +             OneXPlayer handheld devices. Only OneXPlayer mini AMD handheld variant
-> > > +             boards are supported.
-> > > +
-> > > +             Can also be built as a module. In that case it will be called oxp-sensors.
-> > > +
-> > >  config SENSORS_PCF8591
-> > >       tristate "Philips PCF8591 ADC/DAC"
-> > >       depends on I2C
-> > > @@ -1957,7 +1968,7 @@ config SENSORS_ADS7871
-> > >
-> > >  config SENSORS_AMC6821
-> > >       tristate "Texas Instruments AMC6821"
-> > > -     depends on I2C
-> > > +     depends on I2C
-> >
-> > Please refrain from making unrelated changes. If you want to fix the extra
-> > space, submit a separate patch.
-> 
-> Sorry this must have been vim removing trailing spaces. Will remove
-> this chunk from the patch.
-> 
-> > >       help
-> > >         If you say yes here you get support for the Texas Instruments
-> > >         AMC6821 hardware monitoring chips.
-> > > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > > index 11d076cad8a2..35824f8be455 100644
-> > > --- a/drivers/hwmon/Makefile
-> > > +++ b/drivers/hwmon/Makefile
-> > > @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_NSA320)      += nsa320-hwmon.o
-> > >  obj-$(CONFIG_SENSORS_NTC_THERMISTOR) += ntc_thermistor.o
-> > >  obj-$(CONFIG_SENSORS_NZXT_KRAKEN2) += nzxt-kraken2.o
-> > >  obj-$(CONFIG_SENSORS_NZXT_SMART2) += nzxt-smart2.o
-> > > +obj-$(CONFIG_SENSORS_OXP) += oxp-sensors.o
-> > >  obj-$(CONFIG_SENSORS_PC87360)        += pc87360.o
-> > >  obj-$(CONFIG_SENSORS_PC87427)        += pc87427.o
-> > >  obj-$(CONFIG_SENSORS_PCF8591)        += pcf8591.o
-> > > diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-> > > new file mode 100644
-> > > index 000000000000..f5895dc11094
-> > > --- /dev/null
-> > > +++ b/drivers/hwmon/oxp-sensors.c
-> > > @@ -0,0 +1,277 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Platform driver for OXP Handhelds that expose fan reading and control
-> > > + * via hwmon sysfs.
-> > > + *
-> > > + * All boards have the same DMI strings and they are told appart by the
-> > > + * boot cpu vendor (Intel/AMD). Currently only AMD boards are supported
-> > > + * but the code is made to be simple to add other handheld boards in the
-> > > + * future.
-> > > + * Fan control is provided via pwm interface in the range [0-255]. AMD
-> > > + * boards use [0-100] as range in the EC, the written value is scaled to
-> > > + * accommodate for that.
-> > > + *
-> > > + * Copyright (C) 2022 Joaquín I. Aramendía <samsagax@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/acpi.h>
-> > > +#include <linux/dev_printk.h>
-> > > +#include <linux/dmi.h>
-> > > +#include <linux/hwmon.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/processor.h>
-> > > +
-> > > +#define ACPI_LOCK_DELAY_MS   500
-> > > +
-> > > +/* Handle ACPI lock mechanism */
-> > > +struct lock_data {
-> > > +     u32 mutex;
-> > > +     bool (*lock)(struct lock_data *data);
-> > > +     bool (*unlock)(struct lock_data *data);
-> > > +};
-> > > +
-> > > +static bool lock_global_acpi_lock(struct lock_data *data)
-> > > +{
-> > > +     return ACPI_SUCCESS(acpi_acquire_global_lock(ACPI_LOCK_DELAY_MS,
-> > > +                                                              &data->mutex));
-> > > +}
-> > > +
-> > > +static bool unlock_global_acpi_lock(struct lock_data *data)
-> > > +{
-> > > +     return ACPI_SUCCESS(acpi_release_global_lock(data->mutex));
-> > > +}
-> > > +
-> > > +#define OXP_SENSOR_FAN_REG           0x76 /* Fan reading is 2 registers long */
-> > > +#define OXP_SENSOR_PWM_ENABLE_REG    0x4A /* PWM enable is 1 register long */
-> > > +#define OXP_SENSOR_PWM_REG           0x4B /* PWM reading is 1 register long */
-> > > +
-> > > +static const struct dmi_system_id dmi_table[] = {
-> > > +     {
-> > > +             .matches = {
-> > > +                     DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
-> > > +                                     "ONE-NETBOOK TECHNOLOGY CO., LTD."),
-> > > +             },
-> > > +     },
-> > > +     {
-> > > +             .matches = {
-> > > +                     DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
-> > > +                                     "ONE-NETBOOK"),
-> >
-> > Are there any others devices which start with "ONE-NETBOOK" but are not
-> > supported ? If not a single entry with DMI_MATCH() woud be sufficient.
-> > Either case I would like to see some additional entry or entries here.
-> > Just matching on the vendor name seems risky. At the very least there
-> > should also be a match for the "ONE XPLAYER" sku.
-> 
-> I would add a match for the board name instead of the sku if that is
-> ok. The rest will be added.
-> 
+> -----Original Message-----
+> From: Hans de Goede <hdegoede@redhat.com>
+> Sent: Monday, October 31, 2022 16:26
+> To: Rafael J . Wysocki <rafael@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>; Len Brown
+> <lenb@kernel.org>; linux-acpi@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; Daniel Dadap <ddadap@nvidia.com>
+> Subject: [PATCH] ACPI: video: Add backlight=3Dnative DMI quirk for Dell G=
+15
+> 5515
+>=20
+> The Dell G15 5515 has the WMI interface (and WMI call returns) expected
+> by the nvidia-wmi-ec-backlight interface. But the backlight class device
+> registered by the nvidia-wmi-ec-backlight driver does not actually work.
+>=20
 
-Sure, if it contains useful information.
+Is there a way to detect this from nvidia-wmi-ec-backlight?  I would think =
+it's
+cleaner to have that driver return -ENODEV so you end up with just the "wor=
+king"
+amdgpu_bl0.
 
-> > > +             },
-> > > +     },
-> > > +     {},
-> > > +};
-> > > +
-> > > +struct oxp_status {
-> > > +     struct lock_data lock_data;
-> > > +};
-> > > +
-> > > +/* Helper functions to handle EC read/write */
-> > > +static int read_from_ec(u8 reg, int size, long *val)
-> > > +{
-> > > +     int i;
-> > > +     int ret;
-> > > +     u8 buffer;
-> > > +
-> > > +     *val = 0;
-> > > +     for (i = 0; i < size; i++) {
-> > > +             ret = ec_read(reg + i, &buffer);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             (*val) <<= i * 8;
-> >
-> > Unnecessary ( )
-> 
-> Will remove.
-> 
-> > > +             *val += buffer;
-> > > +     }
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int write_to_ec(const struct device *dev, u8 reg, u8 value)
-> > > +{
-> > > +     struct oxp_status *state = dev_get_drvdata(dev);
-> > > +     int ret;
-> > > +
-> > > +     if (!state->lock_data.lock(&state->lock_data)) {
-> > > +             dev_warn(dev, "Failed to acquire mutex");
-> >
-> > Is that message necessary ? If so it should be dev_err().
-> > If it is expected, ie if acquiring the lock is observed
-> > to fail sometimes, there should be no log message.
-> 
-> The messages are there in case this fails, never failed on me,
-> honestly, but I've seen it in other ec-sensors drivers and adopted it
-> as a "good practice", I guess? Anyway I'll add a _once error message
-> and return error if it fails.
-
-It is not a good practice, it is developers inisisting to add noise.
-It makes me cringe each time I see it, but I often let it go because
-arguing about it is not worth wasting my time.
-
-> 
-> > > +             return -EBUSY;
-> > > +     }
-> > > +
-> > > +     ret = ec_write(reg, value);
-> > > +
-> > > +     if (!state->lock_data.unlock(&state->lock_data))
-> > > +             dev_err(dev, "Failed to release mutex");
-> >
-> > No error return ? Then it is not an error and should not be
-> > logged as one.
-> >
-> > I am a bit concerned about those error messages. If they are seen
-> > the errors are either sporadic and there should be no log,
-> > or they are persistent and would clog the kernel log. If you think
-> > that will indeed happen, is not normal operation, and that the
-> > message is essential enough to be logged, please at least consider
-> > using _once variants of the message to avoid clogging the kernel
-> > log.
-> 
-> Never saw those errors in about a month I used this driver on my own
-> device. As said, I saw the practice in other drivers. I think the best
-> way is to check for it and return an error while reporting it with the
-> _once variant if that is ok.
-> 
-I'd prefer to not have a message at all, but then again it is not worth
-wasting my time over it.
-
-Thanks,
-Guenter
+> The amdgpu_bl0 native GPU backlight class device does actually work,
+> add a backlight=3Dnative DMI quirk for this.
+>=20
+> Cc: Daniel Dadap <ddadap@nvidia.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/acpi/video_detect.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+> index 841f6213b4de..88acc09773bb 100644
+> --- a/drivers/acpi/video_detect.c
+> +++ b/drivers/acpi/video_detect.c
+> @@ -645,6 +645,16 @@ static const struct dmi_system_id
+> video_detect_dmi_table[] =3D {
+>  		},
+>  	},
+>=20
+> +	/* Models which have nvidia-ec-wmi support, but should not use it.
+> */
+> +	{
+> +	 .callback =3D video_detect_force_native,
+> +	 /* Dell G15 5515 */
+> +	 .matches =3D {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
+> +		},
+> +	},
+> +
+>  	/*
+>  	 * Desktops which falsely report a backlight and which our heuristics
+>  	 * for this do not catch.
+> --
+> 2.37.3
