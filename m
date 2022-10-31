@@ -2,121 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3539C38A02
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 05:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE90C38A02
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 10:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbiJaFiX (ORCPT
+        id S230157AbiJaK7G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 01:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
+        Mon, 31 Oct 2022 06:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbiJaFiW (ORCPT
+        with ESMTP id S229787AbiJaK7F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 01:38:22 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B214C00;
-        Sun, 30 Oct 2022 22:38:22 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id 4so9864666pli.0;
-        Sun, 30 Oct 2022 22:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/UHrfjKiovZQc+3fmk0jidTcvkQd82+qbKUFsraZYBE=;
-        b=bUYKMiFON/+UE5LVAf6OaGkaCyF7WfivvqRu+3318rElHvQeGS7pRsYUSdXAxXW2rS
-         +jx5o/Fk/rv4CH+zxbMrReDSYAdOPqi9FS+U56bJUJjkmRXioOQDuXeVPsutdfCIJk6v
-         snQ9pG+qu2DBRRrEpzyJPChpPzEEFZb5h0KEKEmoQ9VKgIXD3ZVdE+1U/kaNN9RQAvln
-         3AOM3d2DZt8GlYJWEdwoiUc+oPJ66O4qh75FJT7N7PaExSPLz2TEtZjY/gx3oADQs/KS
-         zPJIegCI1tmZHkqjCpAHVb9vQL4o9cMGYoC5toN7P7kH7+x7DAJ+VGxUQzaELJXN+9D+
-         +PDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/UHrfjKiovZQc+3fmk0jidTcvkQd82+qbKUFsraZYBE=;
-        b=SSY78AUxGnLA4Qg1+z0Ne672zRPq+J64MB2LVUBH7umSVZSk+ei1WaNat7WGEaYpPE
-         emVt93jjyRc24iwisnQliGvt35j/KwZnzdJVPeS7a7cgbTf6n9IdvGgZH7qP6If85qh/
-         UR+12GaJA3CE/YB6nqGKITDJ2kmvqf+9HBO4Lfvme0n0j+OQUD8rO+m0X+X8Do0kuDZy
-         XfO9zCT82zXWaNmexCl/rxkCddNClem/PNx+pZK085xWODahdLT8Cc2QqOfKWjFAXkec
-         ajvGXYbff1mZU7URj7pnPguN4vkr6Jk5jKXmn5Co4bpkbZ5YF3H9UY2MrgpADC/oOPjc
-         ir7Q==
-X-Gm-Message-State: ACrzQf1w0A5JdvxiVIo766HAVto15LTe+K7po/PVJJ8jXsZxLZ0HhWNk
-        C3UKqw6tRA3lLt8YqHNwj98=
-X-Google-Smtp-Source: AMsMyM6ECFSRrJ8RFE/9nnWqZ59bDZQk1HMdwHi++AgaN63UnU1jJiELqNrKBYXy0xwumLK2CNUtEQ==
-X-Received: by 2002:a17:902:f641:b0:17f:3633:5439 with SMTP id m1-20020a170902f64100b0017f36335439mr12865125plg.94.1667194700472;
-        Sun, 30 Oct 2022 22:38:20 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id j4-20020a170902c3c400b001754064ac31sm3517555plj.280.2022.10.30.22.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Oct 2022 22:38:19 -0700 (PDT)
-Date:   Sun, 30 Oct 2022 22:38:16 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lucas Tanure <tanureal@opensource.cirrus.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 07/10] hda: cs35l41: Add support for CS35L41 in HDA
- systems
-Message-ID: <Y19fSL2Z6xq8TCFS@google.com>
-References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
- <20211217115708.882525-8-tanureal@opensource.cirrus.com>
- <CAHp75VdQGBixkUStPiq3VuoL+9TJo946ObfRA-L-D72DaFHnrw@mail.gmail.com>
+        Mon, 31 Oct 2022 06:59:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2337E40
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 03:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667213892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5qLs47oVwtr7+w7xRDGzPpBO5DwD8OUxaThOJZl1MAM=;
+        b=K8pURn0JHWbwNa7F3fp45h46Y2P51j87YBXU/8Mi5puuxoUvUC2al3ljgpaQkjJoSXBTmF
+        nG0vwhDgZtTAnrM6yKHg28Oz81wbhFOoimlFGRM5LdvhPwB8nW7vBipn4R2SVUq9nvzcBc
+        DtUtGSwJzp2BKrMeWVic+hY7cKFNm5I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-563-dq8Qbg_CMH6hn78hxNTEVw-1; Mon, 31 Oct 2022 06:58:08 -0400
+X-MC-Unique: dq8Qbg_CMH6hn78hxNTEVw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32FB2185A79C;
+        Mon, 31 Oct 2022 10:58:08 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.145])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43943111E3E4;
+        Mon, 31 Oct 2022 10:58:07 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        "Mr . Chromebox" <mrchromebox@gmail.com>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH] ACPI: video: Improve Chromebook checks
+Date:   Mon, 31 Oct 2022 11:58:06 +0100
+Message-Id: <20221031105806.370672-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdQGBixkUStPiq3VuoL+9TJo946ObfRA-L-D72DaFHnrw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Sorry for resurrecting old thread...
+2 improvements for the Chromebook handling in
+acpi_video_get_backlight_type():
 
-On Thu, Jan 06, 2022 at 02:29:58PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 17, 2021 at 5:45 PM Lucas Tanure
-> <tanureal@opensource.cirrus.com> wrote:
-> >
-> > Add support for CS35L41 using a new separated driver
-> > that can be used in all upcoming designs
+1. Also check for the "GOOG000C" ACPI HID used on some models
+2. Move the Chromebook check to above the ACPI-video check normally
+   Chromebooks don't have ACPI video backlight support, but when
+   flashed with upstream coreboot builds they may have ACPI video
+   backlight support, but native should still be used/preferred then.
 
-...
+Suggested-by: Mr. Chromebox <mrchromebox@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/video_detect.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-> > +       /* No devm_ version as CLSA0100, in no_acpi_dsd case, can't use devm version */
-> 
-> Can you elaborate why devm can't be used?
-> 
-> > +       cs35l41->reset_gpio = fwnode_gpiod_get_index(&adev->fwnode, "reset", cs35l41->index,
-> 
-> Please, do not dereference fwnode pointers.
-> Also, why can't you use the device instead of fwnode?
-
-We are doing "acpi_dev_put(adev);" a few lines above, so using adev in
-the call to fwnode_gpiod_get_index() is technically use-after-free,
-isn't it?
-
-Also, why can't we do
-
-	cs35l41->reset_gpio = gpiod_get_index(acpi_dev, "reset",
-					      cs35l41->index,
-					      GPIOD_OUT_LOW);
-
-since acpi_dev is device structure corresponding to adev and we are
-getting the rest of the properties from it?
-
-I saw downthread that there was supposed to be a patch addressing
-several issues raised by Andy, was it ever submitted?
-
-Thanks.
-
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 9cd8797d12bb..841f6213b4de 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -670,7 +670,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 
+ static bool google_cros_ec_present(void)
+ {
+-	return acpi_dev_found("GOOG0004");
++	return acpi_dev_found("GOOG0004") || acpi_dev_found("GOOG000C");
+ }
+ 
+ /*
+@@ -718,6 +718,10 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
+ 	if (apple_gmux_present())
+ 		return acpi_backlight_apple_gmux;
+ 
++	/* Chromebooks should always use native backlight control. */
++	if (google_cros_ec_present() && native_available)
++		return acpi_backlight_native;
++
+ 	/* On systems with ACPI video use either native or ACPI video. */
+ 	if (video_caps & ACPI_VIDEO_BACKLIGHT) {
+ 		/*
+@@ -735,13 +739,6 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
+ 			return acpi_backlight_video;
+ 	}
+ 
+-	/*
+-	 * Chromebooks that don't have backlight handle in ACPI table
+-	 * are supposed to use native backlight if it's available.
+-	 */
+-	if (google_cros_ec_present() && native_available)
+-		return acpi_backlight_native;
+-
+ 	/* No ACPI video (old hw), use vendor specific fw methods. */
+ 	return acpi_backlight_vendor;
+ }
 -- 
-Dmitry
+2.37.3
+
