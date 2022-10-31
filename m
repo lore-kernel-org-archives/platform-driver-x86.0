@@ -2,80 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D77BECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 12:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EC7C38A02
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 13:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231184AbiJaMma (ORCPT
+        id S229719AbiJaNIF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 08:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58854 "EHLO
+        Mon, 31 Oct 2022 09:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbiJaMm2 (ORCPT
+        with ESMTP id S231394AbiJaNIE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 08:42:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98255F588
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 05:42:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E8C1611F6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 12:42:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E282C433D6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 12:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667220146;
-        bh=/Gy+UeDV5Qs6YLau5a4xJVhk8C6BHh591sXZyjzXh2A=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=h/LShYtzkf07RYX2m2WNF5AosGqZjOnS6dNijq0vnAKmssoRh6WuO9t7Tw+KADLZk
-         U2K1ceZWbHDGuzefYIZDDww+sEBYOU377cl9HPaXABRewMqxdLjhWnYxGlK95IbafT
-         Jldr/nWSAk6VGHTRoHpdgFOxzHJKFEx2gPHALCIiQAFqhpG6yhcnuLC/j/0B1FJcXD
-         MhB33rKeEXiX7eKG2XKx3rO+uDTOaJreylq/Lj2DLUzCyJTcP5l6ubHUMjE7A5zqhW
-         9nAqb8S4p5XKEZNxJuAtcsTwdDsNjoDrtmHemJVPaOWnKtLL+wNEOvC1IRqC+E1YfW
-         BnmLUKrtvEp5w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 5C1F1C433E4; Mon, 31 Oct 2022 12:42:26 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216574] Hybrid System Suspend broken HP EliteBook 845 G8
- (a.k.a. Hybrid Sleep / s2both) (s2idle Notebook)
-Date:   Mon, 31 Oct 2022 12:42:26 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216574-215701-1JVdRjsrlJ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216574-215701@https.bugzilla.kernel.org/>
-References: <bug-216574-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 31 Oct 2022 09:08:04 -0400
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5A5264F;
+        Mon, 31 Oct 2022 06:07:59 -0700 (PDT)
+Received: by mail-oi1-x22e.google.com with SMTP id g10so12702382oif.10;
+        Mon, 31 Oct 2022 06:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7+zhmhrWt+z6+8BUqzwq+wjZ9aZH+3dPptpflgAZl0=;
+        b=EHvNfR8gyy5RjKlJH0zp/ZgjH2m6mIXO7Do/9Rr3+8G5aQGM2TNlD+jGH+yoZmQvQK
+         gRU16ffmCLpcwg+ZUVD7AlrS0z/9zv0VPqmLtd5Zv9rnq92JjlKRHidAccdwM4jJj1WK
+         lLZMPZWYJPxPzs+I6cERc1jJqXzIN1+lc+ibFSQzL6DkYv+lioHXChUPQkpgdPKKDoFj
+         EYRGF+Mzh1KxXRLVMLv8d+kUsOc4z4cOFOW1JPW7AUCnLSGcvCfH2wgKZ7qDty+53RcW
+         FeeyHalkVDPF6lD4YpX3nj7vBNhCstjG7hi0kaAN0dXyLJxRmwGEvjo9WqQItxi+8+Fc
+         k/mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7+zhmhrWt+z6+8BUqzwq+wjZ9aZH+3dPptpflgAZl0=;
+        b=rBmBNCUpOAWL7MmuTGKnGzQgEftgprovZ0g9g2J50/JNeNIc78vhVz1OeqB7/gvUEE
+         U2qFCoEPBx5kaKWoQJPBkwHg3oHp/2vqOhId9VzbPfLwN1Xi9+f2vkeSKb+x+Y5SDdCL
+         1VYGylyMka2w1YPah8IiynI4MS0aMgJyQKEaswipOVZo60u8Pk/dC++2mMC2Kpo9ZXJx
+         /vDTkYY5dQ38ABHaYH5+XSu6inGOzx2yKlU2uOrn7rpmolZDrGazjjTrcuEyyseeds+3
+         hCMj4GwUaEK1lWBtG/uMUqMhO1DvxnFjlzZO+2yOdNP5dDfjrbU/0LPZ7Rm4jHdkDrDY
+         N5vg==
+X-Gm-Message-State: ACrzQf2M7T37OvP30uhFs0SXasRjiajEyFynLVNzkoH+NALm1HCvhJuJ
+        L/jHMh3SKVEfTQnDtswryXo=
+X-Google-Smtp-Source: AMsMyM751ZY+bNFhD5aMGrQZmY/PCfbtjFW/FGkzWCQoYSsh/kXpDNvhoplUmXjYIf6DX4F1Oqn2PA==
+X-Received: by 2002:a05:6808:3008:b0:350:fad2:458d with SMTP id ay8-20020a056808300800b00350fad2458dmr14428948oib.93.1667221678812;
+        Mon, 31 Oct 2022 06:07:58 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h14-20020a4adcce000000b00499527def25sm2300176oou.47.2022.10.31.06.07.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Oct 2022 06:07:57 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 31 Oct 2022 06:07:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joaquin Aramendia <samsagax@gmail.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] Add OneXPlayer mini AMD board driver
+Message-ID: <20221031130756.GA400664@roeck-us.net>
+References: <20221029225051.1171795-1-samsagax@gmail.com>
+ <506a6e7f-4566-2dcf-37f3-0f41f4ce983b@roeck-us.net>
+ <CABgtM3jk4wuEMA1NL+WTySowokRD3XqzdSAUbkQCuLreSrvaJg@mail.gmail.com>
+ <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
+ <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216574
+On Mon, Oct 31, 2022 at 08:45:35AM -0300, Joaquin Aramendia wrote:
+> Hello again and thanks for the review. I submitted the patch again and
+> needs some polish before it can be accepted. I had one question left:
+> 
+> El dom, 30 oct 2022 a la(s) 00:24, Guenter Roeck (linux@roeck-us.net) escribió:
+> >
+> > >>> +/* Callbacks for hwmon interface */
+> > >>> +static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
+> > >>> +                                     enum hwmon_sensor_types type, u32 attr, int channel)
+> > >>> +{
+> > >>> +     switch (type) {
+> > >>> +             case hwmon_fan:
+> > >>> +                     return S_IRUGO;
+> > >>> +             case hwmon_pwm:
+> > >>> +                     return S_IRUGO | S_IWUSR;
+> > >>
+> > >> Please use 0444 and 0644 directly. Checkpatch will tell.
+> > >
+> > > Oh. I did as the documentation suggested. I must confess I didn't run
+> > > checkpatch, will don in the next submission.
+> > >
+> >
+> > That is long ago. Octal values are and have been preferred for
+> > several years.
+> 
+> I've read this form here[1]. Should I send a patch to the
+> Documentation to reflect the preference?
+> 
+Sure, patches are always welcome.
 
---- Comment #4 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Fixed in 6.1-rc3 and also will trickle into stable kernels.
-https://github.com/torvalds/linux/commit/85850af4fc47132f3f2f0dd698b90f6790=
-6600b4
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Guenter
