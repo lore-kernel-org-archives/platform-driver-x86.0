@@ -2,110 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE90C38A02
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 10:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680B9C38A02
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 11:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230157AbiJaK7G (ORCPT
+        id S231192AbiJaLq1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 06:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
+        Mon, 31 Oct 2022 07:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbiJaK7F (ORCPT
+        with ESMTP id S231207AbiJaLqC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 06:59:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2337E40
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 03:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667213892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=5qLs47oVwtr7+w7xRDGzPpBO5DwD8OUxaThOJZl1MAM=;
-        b=K8pURn0JHWbwNa7F3fp45h46Y2P51j87YBXU/8Mi5puuxoUvUC2al3ljgpaQkjJoSXBTmF
-        nG0vwhDgZtTAnrM6yKHg28Oz81wbhFOoimlFGRM5LdvhPwB8nW7vBipn4R2SVUq9nvzcBc
-        DtUtGSwJzp2BKrMeWVic+hY7cKFNm5I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-563-dq8Qbg_CMH6hn78hxNTEVw-1; Mon, 31 Oct 2022 06:58:08 -0400
-X-MC-Unique: dq8Qbg_CMH6hn78hxNTEVw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32FB2185A79C;
-        Mon, 31 Oct 2022 10:58:08 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.194.145])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43943111E3E4;
-        Mon, 31 Oct 2022 10:58:07 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        "Mr . Chromebox" <mrchromebox@gmail.com>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] ACPI: video: Improve Chromebook checks
-Date:   Mon, 31 Oct 2022 11:58:06 +0100
-Message-Id: <20221031105806.370672-1-hdegoede@redhat.com>
+        Mon, 31 Oct 2022 07:46:02 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436C7F00B;
+        Mon, 31 Oct 2022 04:45:47 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id z192so13413937yba.0;
+        Mon, 31 Oct 2022 04:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSLIi/DN8vLaFa7kFWWB3sJRC2ihIsIpffXiaAfT4nE=;
+        b=hdy5TVFEJ43D6GDWp9IgDFvJkttVVAq6n++DWvBrsOUFlEXDC9TtHXubmGbYl9w/OX
+         w8GTyBHsefoVJKNHgp2Jd07HF3vsF1xRNHrDUlQA0lUvrOjGIVv/c6zVEjd86/S3nwXq
+         0KGBGRzxyyT/r3V/NnyFK7j/2yQFcRG+Eo4mUmYQdgO1EVNfHnX/F1F1QtmxN57RU1Kg
+         VWqhMQ7seZONlv8smFS8wdtKNPXTokGyP2L7f6easpC2t4vGZIciIvmr7EOJ3GB7R538
+         omlFRIo7l4uPAv9xrXhazrMP6LrjK2jIvwdE2FXryeXe/080fbDPyQtaCiKfm4H3vmjt
+         ceyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cSLIi/DN8vLaFa7kFWWB3sJRC2ihIsIpffXiaAfT4nE=;
+        b=BqQExVPmcUOdeRpk93FuVVFnHH3xxRH1lHFo7kEkMkg9ePRc9krut31hF7W5JcQKVS
+         fR/GbiMtdcY2HQK2hKYdefiBEBYVsQ4p1cEmt6k/SrwrCF/3hF8+JXk+/DrgNxPVNDHS
+         oVb5+dkjx00VWtlwViade9XHONmymq9gEkZ8US/+ohvxUaS05LvGtQ/jQTqJseMbRAyo
+         RHf5S3t9wBcttGApB8Hh0eXj+IDr8bD5/i9DkcyL6EcqY/zoW8xma7JPMFCrfWSH5bhE
+         raMILgcgs1nTV17AhZJV4olpg2SVcqLkhVctaYRC4q3okaups0z02BceAYh84Fd0Kzh1
+         ti+A==
+X-Gm-Message-State: ACrzQf1DJBf2s/gZHn2R9Am1dfnnoq/pqkkZEWHNAEejg3J1fAPWwEGv
+        pQ2wnTWwRTyrBzAxYr6KEYmByg7fcxSNOk3JIio=
+X-Google-Smtp-Source: AMsMyM7hlu5Jqzbt5KIHU38pm5ltgtJSll6em5d43eo+8W5QpGZxnEevrXoBJIZleUYF0hzWy79chujykdL/2mpsuWc=
+X-Received: by 2002:a05:6902:70f:b0:6ca:7254:c2ea with SMTP id
+ k15-20020a056902070f00b006ca7254c2eamr13379125ybt.476.1667216746485; Mon, 31
+ Oct 2022 04:45:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+References: <20221029225051.1171795-1-samsagax@gmail.com> <506a6e7f-4566-2dcf-37f3-0f41f4ce983b@roeck-us.net>
+ <CABgtM3jk4wuEMA1NL+WTySowokRD3XqzdSAUbkQCuLreSrvaJg@mail.gmail.com> <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
+In-Reply-To: <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
+From:   Joaquin Aramendia <samsagax@gmail.com>
+Date:   Mon, 31 Oct 2022 08:45:35 -0300
+Message-ID: <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
+Subject: Re: [PATCH] Add OneXPlayer mini AMD board driver
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2 improvements for the Chromebook handling in
-acpi_video_get_backlight_type():
+Hello again and thanks for the review. I submitted the patch again and
+needs some polish before it can be accepted. I had one question left:
 
-1. Also check for the "GOOG000C" ACPI HID used on some models
-2. Move the Chromebook check to above the ACPI-video check normally
-   Chromebooks don't have ACPI video backlight support, but when
-   flashed with upstream coreboot builds they may have ACPI video
-   backlight support, but native should still be used/preferred then.
+El dom, 30 oct 2022 a la(s) 00:24, Guenter Roeck (linux@roeck-us.net) escri=
+bi=C3=B3:
+>
+> >>> +/* Callbacks for hwmon interface */
+> >>> +static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
+> >>> +                                     enum hwmon_sensor_types type, u=
+32 attr, int channel)
+> >>> +{
+> >>> +     switch (type) {
+> >>> +             case hwmon_fan:
+> >>> +                     return S_IRUGO;
+> >>> +             case hwmon_pwm:
+> >>> +                     return S_IRUGO | S_IWUSR;
+> >>
+> >> Please use 0444 and 0644 directly. Checkpatch will tell.
+> >
+> > Oh. I did as the documentation suggested. I must confess I didn't run
+> > checkpatch, will don in the next submission.
+> >
+>
+> That is long ago. Octal values are and have been preferred for
+> several years.
 
-Suggested-by: Mr. Chromebox <mrchromebox@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/video_detect.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+I've read this form here[1]. Should I send a patch to the
+Documentation to reflect the preference?
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 9cd8797d12bb..841f6213b4de 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -670,7 +670,7 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 
- static bool google_cros_ec_present(void)
- {
--	return acpi_dev_found("GOOG0004");
-+	return acpi_dev_found("GOOG0004") || acpi_dev_found("GOOG000C");
- }
- 
- /*
-@@ -718,6 +718,10 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
- 	if (apple_gmux_present())
- 		return acpi_backlight_apple_gmux;
- 
-+	/* Chromebooks should always use native backlight control. */
-+	if (google_cros_ec_present() && native_available)
-+		return acpi_backlight_native;
-+
- 	/* On systems with ACPI video use either native or ACPI video. */
- 	if (video_caps & ACPI_VIDEO_BACKLIGHT) {
- 		/*
-@@ -735,13 +739,6 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
- 			return acpi_backlight_video;
- 	}
- 
--	/*
--	 * Chromebooks that don't have backlight handle in ACPI table
--	 * are supposed to use native backlight if it's available.
--	 */
--	if (google_cros_ec_present() && native_available)
--		return acpi_backlight_native;
--
- 	/* No ACPI video (old hw), use vendor specific fw methods. */
- 	return acpi_backlight_vendor;
- }
--- 
-2.37.3
-
+[1]https://www.kernel.org/doc/html/latest/hwmon/hwmon-kernel-api.html#drive=
+r-callback-functions
