@@ -2,351 +2,526 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DB8ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 16:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A1EECAAA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 18:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231961AbiJaQnJ (ORCPT
+        id S229695AbiJaS6J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 12:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35604 "EHLO
+        Mon, 31 Oct 2022 14:58:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231969AbiJaQnF (ORCPT
+        with ESMTP id S229819AbiJaS6H (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 12:43:05 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2071.outbound.protection.outlook.com [40.107.212.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2447712AC5;
-        Mon, 31 Oct 2022 09:43:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fGifbcmw0jHBnZFxRuxn2n+Uj5huBfDSX2nXxhN5o1fVc1A9pWdZM9bImaGpI9oPeEd1PtYMT3xt+GPhkKEDdbaXXtemN+zCL5N+CCkxHBOJG0zZJHUTw14GuS4PzNCEzXQ4BARqQMxdIuaYwOlWWP9cW1j1ebsA8V8BAy8xwbr+cICISZoXAgXHhH6UnapIfsJwWAllVTuQ90vM0Mgu4dcOguhWIqCCL08SzlHaO9JyPt2GIYUGy7gDXrOO5dNAUjtnr6LRA5zJ/Wlko86L9SYhVfeZwqeO+80EKuAxY0irYlG99qiKb2z6Ix6GEmAtVcgKjaUYc4F9RW2HULxguw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P059dBGyC70aiYWSifkeUH+cTy68vRNGWJNPyy6O1+s=;
- b=mnXYCQLxY4y6zt1RoqCIMCpHPFnbxb+oPv5hv5JEzxarPU0u79fUMEHDriGhugQW7pYUMrhCP3W7CspdVlfHplRVOVlDkSFxtf9Dccn8TR0hezu2QI7cbfAxK0qbJOogGHkLBJu9NJmLCJRR3Li5LOdBx+WbJV9/yRSalJkT2xkhdVhNakSzw7qAOivFF5BPpe1BtNz6aE/4xVoZj1Q3XOrPdhoSBH/72h05rTEPsG2MbJWPDr4BeilRXHUZOldh3W1Xmv4jrc+19PxJqrYFwnLobzs9LX8i82B9Pdj/gyyFlrjJcerJuIhU+fLrabKaYp4tETy9oG/PaNnzuyjzEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P059dBGyC70aiYWSifkeUH+cTy68vRNGWJNPyy6O1+s=;
- b=Fhz1K6YHL7jBAIJ3vMlvY3rfF6dDRdIu55O13SuCHuREw/08B6/OwyX729dMO39xwr4msG09Y/6SdePnjQRMqMqtT+5X8mRf26pVWDIeWtCSn5ZkiKRy8jzBz7RVxZ6N3X+jpWDDLvCZeeeS70dr91H+mvsHf1txgyHloANI0Uc=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH0PR12MB5434.namprd12.prod.outlook.com (2603:10b6:510:d5::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Mon, 31 Oct
- 2022 16:43:00 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::f8c0:db03:2d30:792c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::f8c0:db03:2d30:792c%3]) with mapi id 15.20.5769.016; Mon, 31 Oct 2022
- 16:43:00 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To:     =?utf-8?B?Sm9hcXXDrW4gSWduYWNpbyBBcmFtZW5kw61h?= 
-        <samsagax@gmail.com>, "pobrn@protonmail.com" <pobrn@protonmail.com>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        Mon, 31 Oct 2022 14:58:07 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B727DFD3;
+        Mon, 31 Oct 2022 11:58:00 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-36a4b86a0abso116610317b3.7;
+        Mon, 31 Oct 2022 11:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k+Bt7sgx3eRUUAV85okMSLAB9X2BD95B+xtG2gikQF8=;
+        b=E3gTYdGV+4HDU/41cFkAmxSMRa1J0UWLbjLugX1KZP5kejd8UhcOco5PJS3KDjFtKx
+         bZDdXtlWnLfeN36jVAS6gJ0AxKmslLEgDbRLtH/pxGr+2FIMbEG4V5tWJlXSPGLg5ad6
+         edlsGOqAa7EwQjfzTKiiRk2Z2nzj7lQMi0UqSHuj5n5F2o4gEyQGmb9lqCoctEssZ/98
+         /9aBhmWiKDqm0s+D8WVu/UpfWoDCUlKJsykvHgqCKlDnhvCy0RyIWxG+zm/C3pu25zgG
+         rxlH3JQSF9fxsPiUjL6Rz3LCRVsMIpQunoJ2dykBFso5WXjMvBcHDg/doSv0vU1qrdQi
+         gm8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k+Bt7sgx3eRUUAV85okMSLAB9X2BD95B+xtG2gikQF8=;
+        b=PeH6xDG6F9QgC34nkIypC4aWruH0Lvg7xY37vCJwJzNiwSY2v5rH6jRcb2shjbs2qW
+         MdVwDliwS0aPKPacqN0/yG4PO4GPdKhV8SYGtfe0H/OKuUNhuAdYurUmcaZDLUP254FQ
+         UC6YLF8R1udu41HR5Q6rtReiBHWdOxtda6wI1ypnPhEdAxaW1dkZBB/k3V+HvLDKRgJl
+         GpsFattDui6soOHrYmL7sWorwVS1JMmOzpAtz8NZTOlrHy/PhpaMC4UWCRzOyQ/Y3D0H
+         PaNmhzrQFdGgK9E2hAomhLPUwHnofqNlHrUYfcUJEVb2OjWt0TKnelLlHowijukjBPIR
+         mIJw==
+X-Gm-Message-State: ACrzQf1zpfMXx2P9WOg8HRMAfDhlsuL2HLcxu1JT7obRZm4nOx2WxYD1
+        VzvryZFTEbzvHlIzJMcN4Wr69XQLIXEt4t6mdaE=
+X-Google-Smtp-Source: AMsMyM6rS9nLlolE08WdWsnUqDmjaId81UuHx3AoS+RrAYiXRIZDhMvk7EWQ2KeFVlCcVP4+KKEfjL4Baq12zsqlk0Y=
+X-Received: by 2002:a81:5045:0:b0:36c:662:7202 with SMTP id
+ e66-20020a815045000000b0036c06627202mr14022169ywb.147.1667242679333; Mon, 31
+ Oct 2022 11:57:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <2FNQOCFdvTS7N-ylJhxGWzZjeji-nVCF09tbDr7lt80R8c8_pyp9hbK0iJHTFPevJ4la-YDd3lW5CZK85kYF1_dDZo6h1akO0f8jFTzIScA=@protonmail.com>
+ <20221031145308.341776-1-samsagax@gmail.com> <MN0PR12MB6101E68C68270C670A854B62E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <MN0PR12MB6101E68C68270C670A854B62E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
+From:   Joaquin Aramendia <samsagax@gmail.com>
+Date:   Mon, 31 Oct 2022 15:57:48 -0300
+Message-ID: <CABgtM3g7MquMfQckFw4DHeEZjMrOxfJcZkW4kHeT3c6aiZxk9g@mail.gmail.com>
+Subject: Re: [PATCH v3] Add OneXPlayer mini AMD sensors driver
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "jdelvare@suse.com" <jdelvare@suse.com>,
         "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
         "linux@roeck-us.net" <linux@roeck-us.net>,
         "markgross@kernel.org" <markgross@kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: RE: [PATCH v3] Add OneXPlayer mini AMD sensors driver
-Thread-Topic: [PATCH v3] Add OneXPlayer mini AMD sensors driver
-Thread-Index: AQHY7TiLEIuKKpct20SQ8y0jWWUUSK4os2qg
-Date:   Mon, 31 Oct 2022 16:43:00 +0000
-Message-ID: <MN0PR12MB6101E68C68270C670A854B62E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
-References: <2FNQOCFdvTS7N-ylJhxGWzZjeji-nVCF09tbDr7lt80R8c8_pyp9hbK0iJHTFPevJ4la-YDd3lW5CZK85kYF1_dDZo6h1akO0f8jFTzIScA=@protonmail.com>
- <20221031145308.341776-1-samsagax@gmail.com>
-In-Reply-To: <20221031145308.341776-1-samsagax@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-10-31T16:36:31Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=654f454a-3839-4cc9-8196-3b2cf64affe5;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-10-31T16:42:58Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: 6100ab96-cc98-402f-96f8-0a862645a243
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|PH0PR12MB5434:EE_
-x-ms-office365-filtering-correlation-id: 9fd41d20-c71d-4974-80ac-08dabb5ef8c9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v59fHtNreqKFDegnCl5Tw/7SNobu6RWTszO8rPo7vXnZ3ukl3BSt4RMHNnbEjwNfDptO9CtNlnlZWkNtn8PdhoTiVdFMSdUlAybvLC5hYepmvaIbdItV24Z0Apc7+IuJLwR7MottXvh2XDuAjLeYwO6cEus6XvtH+KRV4W2DemLmjuWIqiF22nfZcv386o2PmezU7Z8W1KvcuSyyKMWUiAVEYRwz/RJsOLZSCo+heGNHyfYA0oN2Sppo5honuDqvb7gGemL134Hb6XzQS1Mj8pbHHfBrJpgKMVlVuhM0sn96CBdpPGd5m9Bl+e2+K8/uJXZsq6T2ihRl6pRCVlDQxeHiCS6cAqtixsFR4Ah3gi2XbzHqY+akz5YuPF8a784Tk010jGL27bANwVeghTJ4RlCcm80pquziFiM73zUpasiK5r1ZzLs7EHOBP8tbnNH+C96ZK6I7hr3caE5UJ09GhR2EnmudCjJd1xFWMuDh9+Q+TeiIYfrHqRYU3y8IDTGeI0b6HGN3lU+k26mADxKyh4VNsFfvgz5NINIT0mXgE/nv8TH2WIXfMsjOxbdKiqOJmgUcLZOdd0nsonpG/rhHMSH2Ph0TJ8tlMGX/3aQNx1nZxWEOL4hbpCPPJ4i/WoocdhdQYHLZnwyNuRCCCB7KEAu1kQLTlkS5HNyef1Cc0HlAN2ZnHKI/n4wC/YcnBL0LfyP1O63ImPaE2BZgYp9v5m2oMGRfGgOydL9Z27Pb4dLDbdyFpdgRXSA8Zr6ZODz//GwgpJi4lgOSCU+AdR7nKA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(396003)(346002)(136003)(366004)(451199015)(83380400001)(2906002)(30864003)(186003)(5660300002)(66574015)(41300700001)(9686003)(122000001)(86362001)(54906003)(110136005)(316002)(33656002)(38070700005)(66446008)(38100700002)(478600001)(76116006)(64756008)(8676002)(66476007)(66946007)(71200400001)(66556008)(52536014)(8936002)(55016003)(4326008)(7696005)(53546011)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WG8rQlB2QUdydXduUm16eVRiV1hON3Fxem5EYXNoUzdFU25QbGh6c0hmQmhJ?=
- =?utf-8?B?dnI4NE5nOVpXazBRUEdZRGlUS3Q4OUNtVHB1YkplRllVYlRNRDdnWUlMd3oz?=
- =?utf-8?B?RjFmdG9UREhUN3lzb09sdHlEcGFIcnBDWnlmTmNHT214T0JFZFV0b01vL1Qx?=
- =?utf-8?B?N2xodGtEblA1N0R6ZkxvV3BKTEV4M1RwdWZwYU5xeEN3MWtnenM4a2l3WVND?=
- =?utf-8?B?bHVDOUQ0Mm1VRWJ1N1FmQkxzMUdhNHEyRkpNbWhlTVRRYldvaVJsRERMZWJl?=
- =?utf-8?B?aktHR25UcnU3SGVLZ1B3SVBJclFJSVovbHliSk5yWSswZTNEQlVKQlRwUnEr?=
- =?utf-8?B?QytVQkVBcThqMktma01YZjBYVnliaVBvYmVPSFNncW52S0J0SUZFeUM4cWNZ?=
- =?utf-8?B?eHlmbU9LQUROYURMQm9yalVwVHdCeVdTVWxLRURIaWVPcE5IU1lZcU5MVGl4?=
- =?utf-8?B?SkdvcmNid3RhTlhNTE82NmV1c3NqSVByLys2aEE2d294eXV1U0MwTnV3Rllm?=
- =?utf-8?B?ZXdGZGdiNUVnVWN5OEVaWStPRjZkMG9GZzBhOWVHR3pUZy9SNDhjbytjMFlN?=
- =?utf-8?B?VU9wcVJPS0EzbjdnZ1EwMXd4bnNyRkd4UXpuNS9ITHVCK2VydmdocitMbVRK?=
- =?utf-8?B?MFhqM0tQckR5M0xOb3ZkbWp0Y2kxWUQ5V0lCWkJ2Y0hFdWRaTkd3M091TFRo?=
- =?utf-8?B?cHhVNDFjUyswSEFzc01PRjN2SzVZM3FFdkJwTGpXTHBLT1psNzU1OHpmVHZI?=
- =?utf-8?B?NTc1OStvd1B4KzBpSUJEZ1dmYkZqOTRWRnNqWTRETjFzekRIaDYyMU1SQzhQ?=
- =?utf-8?B?Y09nLzdXWnpzZjVQaWMyNUFkbWNIVGF3ZHYzbzk2eU1hUXhrbUFHNVRHeGtW?=
- =?utf-8?B?cHJJazFsOVlqUnQvekt0NGJCUzQ1SUlTbUpJRXJkZWlrTTUzYXBuYkxCR2VL?=
- =?utf-8?B?Z29IZ1I3RjZTemNkem5YcVYrMXhQa3puSXpPSjhrcHVpdURVakNVY3dQd1VS?=
- =?utf-8?B?V1NTN0lqOGhlYVVmUVhMdXI5OTV4SnNtMEx0M2hBMVZ1NVhaMVZHSEVTUzA4?=
- =?utf-8?B?WDUyU1FOUS8xQWt1SC8yV2JJMmxQZFhOWmZOTXlzSmx2NVl2V0ZLaGpUbGVX?=
- =?utf-8?B?b3ZwUDdTdDBZWldGM0pLaUpqR3hubkxMK2VNdGJRQW5BOTNsOVQ2Q2srMDlH?=
- =?utf-8?B?ay9BOHV2WjAvSzV6aTh0UDJoY3gvUEc0TWZDZ2ZTNkxwNEJuOVRsUktOWFBv?=
- =?utf-8?B?cVdXUENzOTh5VzdrTHRNWVdndFl6cEF5U0EwbFdYeGlsZFlyaEwrQWdBWXFJ?=
- =?utf-8?B?dUcyNXIwcnNyREVxMVBoM2NRWUIzSDZZTmZMbmhrelJqeTNqc1FxN3g5U0Zw?=
- =?utf-8?B?K3czMThUMHYvM2pqZzRvWTR5b04wV0F6RDNxV3gweEhIeVNYRUlXd0dwaTRL?=
- =?utf-8?B?di8vbXdSL2hjMDh1a2VvT2Y0d1YyVlRCM2dFRHJwcXBjN3hTM3h6ZEw2ZVpq?=
- =?utf-8?B?ajBiNnkzYUhsaDBOM0hnLy9GVDFIL3k2R2VqN01VUHlDWER5NzhsSmZYU3ht?=
- =?utf-8?B?UVI4cnVTZUg5cTNpTmdESnN5ZnY4M3k4bXZrOWxpc040ZFlRZHNzVGpUbjF1?=
- =?utf-8?B?WUpKUHgreWV4b05RN0hmQzJnQkwwMWY3Tlh2ckJZbFNoZlhZbFFsZ2VFS21O?=
- =?utf-8?B?OUpSSGJNSGlyMHJrWGlsSzlPQnQ3V25wSTRFVjdiSnJtMnV1ZXZlaGN5blNm?=
- =?utf-8?B?T2daTWhjR0J0a1czR0k2dThadnBsNXFQYWNZU1crMjBaSjBWS0dVQzZ4VVFC?=
- =?utf-8?B?KzNvQ25xak13ZE0yWWdweEZLbG9DVjFVeXI0OG5WVFFaaDhCWHB2QWdEWmdF?=
- =?utf-8?B?L0s3QVhpT3dtKzhOUFZqUDR2Q2hRenVLOXdaQ3c3THIrOUpWT2pUWVh6TFRq?=
- =?utf-8?B?b0FJT2cyYkRhamRhNkZGYUJrWW9BSkxlWjBpOVNPOUJDb0d0UjNndWExbk5M?=
- =?utf-8?B?bVEwNnRFY1JyY2U0NkpDd2swZFNJMktHMk0wZmxSeHp4K2F6RXlEYzU1ZDlo?=
- =?utf-8?B?bEFSa01yeTZhc0VqdjErK0Y5M1B3cUlzaVY5WVpqVE5qWUlpNE55WVp2UHBr?=
- =?utf-8?B?WW8zaW14aTlGOUEzdm51ZzE1R0Q5Y3lUQ0JybjdtOEoyRy9ZVzB2TWJiQndR?=
- =?utf-8?Q?glqqH30P/FMi+gOj6+2tocg=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fd41d20-c71d-4974-80ac-08dabb5ef8c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2022 16:43:00.1465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qfskf0KT9bmz0ZhWFmnCuwZzXEZ7HUDQkeZwXCUV7vSapSdXL30uHd/eFfrP6u1CVYd4IP80AkqDK0N2QricTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5434
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-W1B1YmxpY10NCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9h
-cXXDrW4gSWduYWNpbyBBcmFtZW5kw61hIDxzYW1zYWdheEBnbWFpbC5jb20+DQo+IFNlbnQ6IE1v
-bmRheSwgT2N0b2JlciAzMSwgMjAyMiAwOTo1Mw0KPiBUbzogcG9icm5AcHJvdG9ubWFpbC5jb20N
-Cj4gQ2M6IGhkZWdvZWRlQHJlZGhhdC5jb207IGpkZWx2YXJlQHN1c2UuY29tOyBsaW51eC0NCj4g
-aHdtb25Admdlci5rZXJuZWwub3JnOyBsaW51eEByb2Vjay11cy5uZXQ7IG1hcmtncm9zc0BrZXJu
-ZWwub3JnOw0KPiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgSm9hcXXDrW4g
-SWduYWNpbyBBcmFtZW5kw61hDQo+IDxzYW1zYWdheEBnbWFpbC5jb20+DQo+IFN1YmplY3Q6IFtQ
-QVRDSCB2M10gQWRkIE9uZVhQbGF5ZXIgbWluaSBBTUQgc2Vuc29ycyBkcml2ZXINCj4gDQo+IFNl
-bnNvcnMgZHJpdmVyIGZvciBPWFAgSGFuZGhlbGRzIGZyb20gT25lLU5ldGJvb2sgdGhhdCBleHBv
-c2UgZmFuDQo+IHJlYWRpbmcNCj4gYW5kIGNvbnRyb2wgdmlhIGh3bW9uIHN5c2ZzLg0KPiANCj4g
-QXMgZmFyIGFzIEkgY291bGQgZ2F0aGVyIGFsbCBPWFAgYm9hcmRzIGhhdmUgdGhlIHNhbWUgRE1J
-IHN0cmluZ3MgYW5kDQo+IHRoZXkgYXJlIHRvbGQgYXBwYXJ0IGJ5IHRoZSBib290IGNwdSB2ZW5k
-b3IgKEludGVsL0FNRCkuDQo+IEN1cnJlbnRseSBvbmx5IEFNRCBib2FyZHMgYXJlIHN1cHBvcnRl
-ZC4NCj4gDQo+IEZhbiBjb250cm9sIGlzIHByb3ZpZGVkIHZpYSBwd20gaW50ZXJmYWNlIGluIHRo
-ZSByYW5nZSBbMC0yNTVdLiBBTUQNCj4gYm9hcmRzIGhhdmUgWzAtMTAwXSBhcyByYW5nZSBpbiB0
-aGUgRUMsIHRoZSB3cml0dGVuIHZhbHVlIGlzIHNjYWxlZCB0bw0KPiBhY2NvbW1vZGF0ZSBmb3Ig
-dGhhdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpvYXF1w61uIElnbmFjaW8gQXJhbWVuZMOtYSA8
-c2Ftc2FnYXhAZ21haWwuY29tPg0KPiAtLS0NCj4gUmVtb3ZlZCBmYW5fY29udHJvbCByZWZlcmVu
-Y2UgaW4gY29tbWVudC4NCj4gQnVnZml4IE1JWC9NSU4gcmVwb3J0aW5nIG5vdCBhdmFpbGFibGUN
-Cj4gQnVnZml4IHB3bV9lbmFibGUgcmVnaXN0ZXIgc2V0IHdyb25nDQo+IC0tLQ0KPiAgZHJpdmVy
-cy9od21vbi9LY29uZmlnICAgICAgIHwgIDEzICstDQo+ICBkcml2ZXJzL2h3bW9uL01ha2VmaWxl
-ICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9od21vbi9veHAtc2Vuc29ycy5jIHwgMjc3DQo+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCAy
-OTAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvaHdtb24vb3hwLXNlbnNvcnMuYw0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdt
-b24vS2NvbmZpZyBiL2RyaXZlcnMvaHdtb24vS2NvbmZpZw0KPiBpbmRleCA3YWMzZGFhZjU5Y2Uu
-LmExY2RiMDNiNGQxMyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9od21vbi9LY29uZmlnDQo+ICsr
-KyBiL2RyaXZlcnMvaHdtb24vS2NvbmZpZw0KPiBAQCAtMTYwNyw2ICsxNjA3LDE3IEBAIGNvbmZp
-ZyBTRU5TT1JTX05aWFRfU01BUlQyDQo+IA0KPiAgc291cmNlICJkcml2ZXJzL2h3bW9uL29jYy9L
-Y29uZmlnIg0KPiANCj4gK2NvbmZpZyBTRU5TT1JTX09YUA0KPiArCXRyaXN0YXRlICJPbmVYUGxh
-eWVyIEVDIGZhbiBjb250cm9sIg0KPiArCWRlcGVuZHMgb24gQUNQSQ0KPiArCWRlcGVuZHMgb24g
-WDg2DQo+ICsJaGVscA0KPiArCQlJZiB5b3Ugc2F5IHllcyBoZXJlIHlvdSBnZXQgc3VwcG9ydCBm
-b3IgZmFuIHJlYWRpbmdzIGFuZA0KPiBjb250cm9sIG92ZXINCj4gKwkJT25lWFBsYXllciBoYW5k
-aGVsZCBkZXZpY2VzLiBPbmx5IE9uZVhQbGF5ZXIgbWluaSBBTUQNCj4gaGFuZGhlbGQgdmFyaWFu
-dA0KPiArCQlib2FyZHMgYXJlIHN1cHBvcnRlZC4NCj4gKw0KPiArCQlDYW4gYWxzbyBiZSBidWls
-dCBhcyBhIG1vZHVsZS4gSW4gdGhhdCBjYXNlIGl0IHdpbGwgYmUgY2FsbGVkIG94cC0NCj4gc2Vu
-c29ycy4NCj4gKw0KPiAgY29uZmlnIFNFTlNPUlNfUENGODU5MQ0KPiAgCXRyaXN0YXRlICJQaGls
-aXBzIFBDRjg1OTEgQURDL0RBQyINCj4gIAlkZXBlbmRzIG9uIEkyQw0KPiBAQCAtMTk1Nyw3ICsx
-OTY4LDcgQEAgY29uZmlnIFNFTlNPUlNfQURTNzg3MQ0KPiANCj4gIGNvbmZpZyBTRU5TT1JTX0FN
-QzY4MjENCj4gIAl0cmlzdGF0ZSAiVGV4YXMgSW5zdHJ1bWVudHMgQU1DNjgyMSINCj4gLQlkZXBl
-bmRzIG9uIEkyQw0KPiArCWRlcGVuZHMgb24gSTJDDQo+ICAJaGVscA0KPiAgCSAgSWYgeW91IHNh
-eSB5ZXMgaGVyZSB5b3UgZ2V0IHN1cHBvcnQgZm9yIHRoZSBUZXhhcyBJbnN0cnVtZW50cw0KPiAg
-CSAgQU1DNjgyMSBoYXJkd2FyZSBtb25pdG9yaW5nIGNoaXBzLg0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9od21vbi9NYWtlZmlsZSBiL2RyaXZlcnMvaHdtb24vTWFrZWZpbGUNCj4gaW5kZXggMTFk
-MDc2Y2FkOGEyLi4zNTgyNGY4YmU0NTUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaHdtb24vTWFr
-ZWZpbGUNCj4gKysrIGIvZHJpdmVycy9od21vbi9NYWtlZmlsZQ0KPiBAQCAtMTY3LDYgKzE2Nyw3
-IEBAIG9iai0kKENPTkZJR19TRU5TT1JTX05TQTMyMCkJKz0gbnNhMzIwLQ0KPiBod21vbi5vDQo+
-ICBvYmotJChDT05GSUdfU0VOU09SU19OVENfVEhFUk1JU1RPUikJKz0gbnRjX3RoZXJtaXN0b3Iu
-bw0KPiAgb2JqLSQoQ09ORklHX1NFTlNPUlNfTlpYVF9LUkFLRU4yKSArPSBuenh0LWtyYWtlbjIu
-bw0KPiAgb2JqLSQoQ09ORklHX1NFTlNPUlNfTlpYVF9TTUFSVDIpICs9IG56eHQtc21hcnQyLm8N
-Cj4gK29iai0kKENPTkZJR19TRU5TT1JTX09YUCkgKz0gb3hwLXNlbnNvcnMubw0KPiAgb2JqLSQo
-Q09ORklHX1NFTlNPUlNfUEM4NzM2MCkJKz0gcGM4NzM2MC5vDQo+ICBvYmotJChDT05GSUdfU0VO
-U09SU19QQzg3NDI3KQkrPSBwYzg3NDI3Lm8NCj4gIG9iai0kKENPTkZJR19TRU5TT1JTX1BDRjg1
-OTEpCSs9IHBjZjg1OTEubw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9veHAtc2Vuc29y
-cy5jIGIvZHJpdmVycy9od21vbi9veHAtc2Vuc29ycy5jDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjU4OTVkYzExMDk0DQo+IC0tLSAvZGV2L251bGwNCj4g
-KysrIGIvZHJpdmVycy9od21vbi9veHAtc2Vuc29ycy5jDQo+IEBAIC0wLDAgKzEsMjc3IEBADQo+
-ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsNCj4gKy8qDQo+ICsgKiBQbGF0
-Zm9ybSBkcml2ZXIgZm9yIE9YUCBIYW5kaGVsZHMgdGhhdCBleHBvc2UgZmFuIHJlYWRpbmcgYW5k
-IGNvbnRyb2wNCj4gKyAqIHZpYSBod21vbiBzeXNmcy4NCj4gKyAqDQo+ICsgKiBBbGwgYm9hcmRz
-IGhhdmUgdGhlIHNhbWUgRE1JIHN0cmluZ3MgYW5kIHRoZXkgYXJlIHRvbGQgYXBwYXJ0IGJ5IHRo
-ZQ0KPiArICogYm9vdCBjcHUgdmVuZG9yIChJbnRlbC9BTUQpLiBDdXJyZW50bHkgb25seSBBTUQg
-Ym9hcmRzIGFyZSBzdXBwb3J0ZWQNCj4gKyAqIGJ1dCB0aGUgY29kZSBpcyBtYWRlIHRvIGJlIHNp
-bXBsZSB0byBhZGQgb3RoZXIgaGFuZGhlbGQgYm9hcmRzIGluIHRoZQ0KPiArICogZnV0dXJlLg0K
-PiArICogRmFuIGNvbnRyb2wgaXMgcHJvdmlkZWQgdmlhIHB3bSBpbnRlcmZhY2UgaW4gdGhlIHJh
-bmdlIFswLTI1NV0uIEFNRA0KPiArICogYm9hcmRzIHVzZSBbMC0xMDBdIGFzIHJhbmdlIGluIHRo
-ZSBFQywgdGhlIHdyaXR0ZW4gdmFsdWUgaXMgc2NhbGVkIHRvDQo+ICsgKiBhY2NvbW1vZGF0ZSBm
-b3IgdGhhdC4NCg0KV2hhdCBoYXBwZW5zIG9uIHRoZSBJbnRlbCB2YXJpYW50IHdpdGggdGhpcyBj
-b2RlPyAgQXJlIHRoZXkgbm90IHRoZSBzYW1lIEVDPw0KV2h5IGRvZXNuJ3QgaXQgd29yayB0aGVy
-ZT8gIElmIHlvdSBrZWVwIHRoZSBBTUQgY2hlY2sgaW4gdGhlIGNvZGUsIEkgdGhpbmsgaXQNCndv
-dWxkIGJlIGdvb2QgdG8gZG9jdW1lbnQgdGhlIHByb2JsZW1zIHdpdGggdGhlIEludGVsIG9uZSBh
-dCBsZWFzdC4NCg0KPiArICoNCj4gKyAqIENvcHlyaWdodCAoQykgMjAyMiBKb2FxdcOtbiBJLiBB
-cmFtZW5kw61hIDxzYW1zYWdheEBnbWFpbC5jb20+DQo+ICsgKi8NCj4gKw0KPiArI2luY2x1ZGUg
-PGxpbnV4L2FjcGkuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9kZXZfcHJpbnRrLmg+DQo+ICsjaW5j
-bHVkZSA8bGludXgvZG1pLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvaHdtb24uaD4NCj4gKyNpbmNs
-dWRlIDxsaW51eC9pbml0Lmg+DQo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ICsjaW5j
-bHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNl
-Lmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcHJvY2Vzc29yLmg+DQo+ICsNCj4gKyNkZWZpbmUgQUNQ
-SV9MT0NLX0RFTEFZX01TCTUwMA0KPiArDQo+ICsvKiBIYW5kbGUgQUNQSSBsb2NrIG1lY2hhbmlz
-bSAqLw0KPiArc3RydWN0IGxvY2tfZGF0YSB7DQo+ICsJdTMyIG11dGV4Ow0KPiArCWJvb2wgKCps
-b2NrKShzdHJ1Y3QgbG9ja19kYXRhICpkYXRhKTsNCj4gKwlib29sICgqdW5sb2NrKShzdHJ1Y3Qg
-bG9ja19kYXRhICpkYXRhKTsNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBib29sIGxvY2tfZ2xvYmFs
-X2FjcGlfbG9jayhzdHJ1Y3QgbG9ja19kYXRhICpkYXRhKQ0KPiArew0KPiArCXJldHVybg0KPiBB
-Q1BJX1NVQ0NFU1MoYWNwaV9hY3F1aXJlX2dsb2JhbF9sb2NrKEFDUElfTE9DS19ERUxBWV9NUywN
-Cj4gKwkJCQkJCQkJICZkYXRhLQ0KPiA+bXV0ZXgpKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIGJv
-b2wgdW5sb2NrX2dsb2JhbF9hY3BpX2xvY2soc3RydWN0IGxvY2tfZGF0YSAqZGF0YSkNCj4gK3sN
-Cj4gKwlyZXR1cm4gQUNQSV9TVUNDRVNTKGFjcGlfcmVsZWFzZV9nbG9iYWxfbG9jayhkYXRhLT5t
-dXRleCkpOw0KPiArfQ0KPiArDQo+ICsjZGVmaW5lIE9YUF9TRU5TT1JfRkFOX1JFRwkJMHg3NiAv
-KiBGYW4gcmVhZGluZyBpcyAyDQo+IHJlZ2lzdGVycyBsb25nICovDQo+ICsjZGVmaW5lIE9YUF9T
-RU5TT1JfUFdNX0VOQUJMRV9SRUcJMHg0QSAvKiBQV00gZW5hYmxlIGlzIDENCj4gcmVnaXN0ZXIg
-bG9uZyAqLw0KPiArI2RlZmluZSBPWFBfU0VOU09SX1BXTV9SRUcJCTB4NEIgLyogUFdNIHJlYWRp
-bmcgaXMgMQ0KPiByZWdpc3RlciBsb25nICovDQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-ZG1pX3N5c3RlbV9pZCBkbWlfdGFibGVbXSA9IHsNCj4gKwl7DQo+ICsJCS5tYXRjaGVzID0gew0K
-PiArCQkJRE1JX0VYQUNUX01BVENIKERNSV9CT0FSRF9WRU5ET1IsDQo+ICsJCQkJCSJPTkUtTkVU
-Qk9PSyBURUNITk9MT0dZIENPLiwNCj4gTFRELiIpLA0KPiArCQl9LA0KPiArCX0sDQo+ICsJew0K
-PiArCQkubWF0Y2hlcyA9IHsNCj4gKwkJCURNSV9FWEFDVF9NQVRDSChETUlfQk9BUkRfVkVORE9S
-LA0KPiArCQkJCQkiT05FLU5FVEJPT0siKSwNCj4gKwkJfSwNCj4gKwl9LA0KPiArCXt9LA0KPiAr
-fTsNCj4gKw0KPiArc3RydWN0IG94cF9zdGF0dXMgew0KPiArCXN0cnVjdCBsb2NrX2RhdGEgbG9j
-a19kYXRhOw0KPiArfTsNCj4gKw0KPiArLyogSGVscGVyIGZ1bmN0aW9ucyB0byBoYW5kbGUgRUMg
-cmVhZC93cml0ZSAqLw0KPiArc3RhdGljIGludCByZWFkX2Zyb21fZWModTggcmVnLCBpbnQgc2l6
-ZSwgbG9uZyAqdmFsKQ0KPiArew0KPiArCWludCBpOw0KPiArCWludCByZXQ7DQo+ICsJdTggYnVm
-ZmVyOw0KPiArDQo+ICsJKnZhbCA9IDA7DQo+ICsJZm9yIChpID0gMDsgaSA8IHNpemU7IGkrKykg
-ew0KPiArCQlyZXQgPSBlY19yZWFkKHJlZyArIGksICZidWZmZXIpOw0KPiArCQlpZiAocmV0KQ0K
-PiArCQkJcmV0dXJuIHJldDsNCj4gKwkJKCp2YWwpIDw8PSBpICogODsNCj4gKwkJKnZhbCArPSBi
-dWZmZXI7DQo+ICsJfQ0KPiArCXJldHVybiByZXQ7DQoNCkRvbid0IHlvdSBuZWVkIHRvIGFjcXVp
-cmUgeW91ciBtdXRleCBmb3IgcmVhZGluZyB0b28/DQpPdGhlcndpc2UgeW91IGNvdWxkIHBvdGVu
-dGlhbGx5IGhhdmUgdXNlcnNwYWNlIHRyeWluZyB0byByZWFkIA0KYW5kIHdyaXRlIGFub3RoZXIg
-YXQgdGhlIHNhbWUgdGltZSBhbmQgZ2V0IGluZGV0ZXJtaW5hdGUgcmVzdWx0cy4NCg0KPiArfQ0K
-PiArDQo+ICtzdGF0aWMgaW50IHdyaXRlX3RvX2VjKGNvbnN0IHN0cnVjdCBkZXZpY2UgKmRldiwg
-dTggcmVnLCB1OCB2YWx1ZSkNCj4gK3sNCj4gKwlzdHJ1Y3Qgb3hwX3N0YXR1cyAqc3RhdGUgPSBk
-ZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJaWYgKCFzdGF0ZS0+
-bG9ja19kYXRhLmxvY2soJnN0YXRlLT5sb2NrX2RhdGEpKSB7DQo+ICsJCWRldl93YXJuKGRldiwg
-IkZhaWxlZCB0byBhY3F1aXJlIG11dGV4Iik7DQo+ICsJCXJldHVybiAtRUJVU1k7DQo+ICsJfQ0K
-PiArDQo+ICsJcmV0ID0gZWNfd3JpdGUocmVnLCB2YWx1ZSk7DQo+ICsNCj4gKwlpZiAoIXN0YXRl
-LT5sb2NrX2RhdGEudW5sb2NrKCZzdGF0ZS0+bG9ja19kYXRhKSkNCj4gKwkJZGV2X2VycihkZXYs
-ICJGYWlsZWQgdG8gcmVsZWFzZSBtdXRleCIpOw0KPiArDQo+ICsJcmV0dXJuIHJldDsNCj4gK30N
-Cj4gKw0KPiArc3RhdGljIGludCBveHBfcHdtX2VuYWJsZShjb25zdCBzdHJ1Y3QgZGV2aWNlICpk
-ZXYpDQo+ICt7DQo+ICsJcmV0dXJuIHdyaXRlX3RvX2VjKGRldiwgT1hQX1NFTlNPUl9QV01fRU5B
-QkxFX1JFRywgMHgwMSk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgb3hwX3B3bV9kaXNhYmxl
-KGNvbnN0IHN0cnVjdCBkZXZpY2UgKmRldikNCj4gK3sNCj4gKwlyZXR1cm4gd3JpdGVfdG9fZWMo
-ZGV2LCBPWFBfU0VOU09SX1BXTV9FTkFCTEVfUkVHLCAweDAwKTsNCj4gK30NCj4gKw0KPiArLyog
-Q2FsbGJhY2tzIGZvciBod21vbiBpbnRlcmZhY2UgKi8NCj4gK3N0YXRpYyB1bW9kZV90IG94cF9l
-Y19od21vbl9pc192aXNpYmxlKGNvbnN0IHZvaWQgKmRydmRhdGEsDQo+ICsJCQkJCWVudW0gaHdt
-b25fc2Vuc29yX3R5cGVzIHR5cGUsDQo+IHUzMiBhdHRyLCBpbnQgY2hhbm5lbCkNCj4gK3sNCj4g
-Kwlzd2l0Y2ggKHR5cGUpIHsNCj4gKwljYXNlIGh3bW9uX2ZhbjoNCj4gKwkJcmV0dXJuIDA0NDQ7
-DQo+ICsJY2FzZSBod21vbl9wd206DQo+ICsJCXJldHVybiAwNjQ0Ow0KPiArCWRlZmF1bHQ6DQo+
-ICsJCXJldHVybiAwOw0KPiArCX0NCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGlj
-IGludCBveHBfcGxhdGZvcm1fcmVhZChzdHJ1Y3QgZGV2aWNlICpkZXYsIGVudW0NCj4gaHdtb25f
-c2Vuc29yX3R5cGVzIHR5cGUsDQo+ICsJCQkgICAgIHUzMiBhdHRyLCBpbnQgY2hhbm5lbCwgbG9u
-ZyAqdmFsKQ0KPiArew0KPiArCWludCByZXQ7DQo+ICsNCj4gKwlzd2l0Y2ggKHR5cGUpIHsNCj4g
-KwljYXNlIGh3bW9uX2ZhbjoNCj4gKwkJc3dpdGNoIChhdHRyKSB7DQo+ICsJCWNhc2UgaHdtb25f
-ZmFuX2lucHV0Og0KPiArCQkJcmV0dXJuIHJlYWRfZnJvbV9lYyhPWFBfU0VOU09SX0ZBTl9SRUcs
-DQo+ICsJCQkJCSAgIDIsDQo+ICsJCQkJCSAgIHZhbCk7DQo+ICsJCWRlZmF1bHQ6DQo+ICsJCQlk
-ZXZfZGJnKGRldiwgIlVua25vd24gYXR0cmlidXRlIGZvciB0eXBlICVkOg0KPiAlZFxuIiwgdHlw
-ZSwgYXR0cik7DQo+ICsJCQlyZXR1cm4gLUVPUE5PVFNVUFA7DQo+ICsJCX0NCj4gKwljYXNlIGh3
-bW9uX3B3bToNCj4gKwkJc3dpdGNoIChhdHRyKSB7DQo+ICsJCWNhc2UgaHdtb25fcHdtX2lucHV0
-Og0KPiArCQkJcmV0ID0gcmVhZF9mcm9tX2VjKE9YUF9TRU5TT1JfUFdNX1JFRywNCj4gKwkJCQkJ
-ICAgMiwgdmFsKTsNCj4gKwkJCSp2YWwgPSAoKnZhbCAqIDI1NSkgLyAxMDA7DQo+ICsJCQlyZXR1
-cm4gcmV0Ow0KPiArCQljYXNlIGh3bW9uX3B3bV9lbmFibGU6DQo+ICsJCQlyZXR1cm4NCj4gcmVh
-ZF9mcm9tX2VjKE9YUF9TRU5TT1JfUFdNX0VOQUJMRV9SRUcsIDEsIHZhbCk7DQo+ICsJCWRlZmF1
-bHQ6DQo+ICsJCQlkZXZfZGJnKGRldiwgIlVua25vd24gYXR0cmlidXRlIGZvciB0eXBlICVkOg0K
-PiAlZFxuIiwgdHlwZSwgYXR0cik7DQo+ICsJCQlyZXR1cm4gLUVPUE5PVFNVUFA7DQo+ICsJCX0N
-Cj4gKwlkZWZhdWx0Og0KPiArCQlkZXZfZGJnKGRldiwgIlVua25vd24gc2Vuc29yIHR5cGUgJWQu
-XG4iLCB0eXBlKTsNCj4gKwkJcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiArCX0NCj4gK30NCj4gKw0K
-PiArc3RhdGljIGludCBveHBfcGxhdGZvcm1fd3JpdGUoc3RydWN0IGRldmljZSAqZGV2LCBlbnVt
-DQo+IGh3bW9uX3NlbnNvcl90eXBlcyB0eXBlLA0KPiArCQl1MzIgYXR0ciwgaW50IGNoYW5uZWws
-IGxvbmcgdmFsKQ0KPiArew0KPiArCXN3aXRjaCAodHlwZSkgew0KPiArCWNhc2UgaHdtb25fcHdt
-Og0KPiArCQlzd2l0Y2ggKGF0dHIpIHsNCj4gKwkJY2FzZSBod21vbl9wd21fZW5hYmxlOg0KPiAr
-CQkJaWYgKHZhbCA9PSAxKQ0KPiArCQkJCXJldHVybiBveHBfcHdtX2VuYWJsZShkZXYpOw0KPiAr
-CQkJZWxzZSBpZiAodmFsID09IDApDQo+ICsJCQkJcmV0dXJuIG94cF9wd21fZGlzYWJsZShkZXYp
-Ow0KPiArCQkJZWxzZQ0KPiArCQkJCXJldHVybiAtRUlOVkFMOw0KPiArCQljYXNlIGh3bW9uX3B3
-bV9pbnB1dDoNCj4gKwkJCWlmICh2YWwgPCAwIHx8IHZhbCA+IDI1NSkNCj4gKwkJCQlyZXR1cm4g
-LUVJTlZBTDsNCj4gKwkJCXZhbCA9ICh2YWwgKiAxMDApIC8gMjU1Ow0KPiArCQkJcmV0dXJuIHdy
-aXRlX3RvX2VjKGRldiwgT1hQX1NFTlNPUl9QV01fUkVHLA0KPiB2YWwpOw0KPiArCQlkZWZhdWx0
-Og0KPiArCQkJZGV2X2RiZyhkZXYsICJVbmtub3duIGF0dHJpYnV0ZSBmb3IgdHlwZSAlZDogJWQi
-LA0KPiB0eXBlLCBhdHRyKTsNCj4gKwkJCXJldHVybiAtRU9QTk9UU1VQUDsNCj4gKwkJfQ0KPiAr
-CWRlZmF1bHQ6DQo+ICsJCWRldl9kYmcoZGV2LCAiVW5rbm93biBzZW5zb3IgdHlwZTogJWQiLCB0
-eXBlKTsNCj4gKwkJcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiArCX0NCj4gKwlyZXR1cm4gLUVJTlZB
-TDsNCg0KQ2FuIHlvdSBhY3R1YWxseSBoaXQgdGhpcyBzY2VuYXJpbz8gIEkgd291bGQgdGhpbmsg
-bm90OyB5b3UnbGwgaGl0ICJkZWZhdWx0IiBhbmQgcmV0dXJuIC1FT1BOT1RTVVBQLg0KTWF5YmUg
-aXQncyBiZXR0ZXIgdG8ganVzdCBkcm9wIHRoZSBkZWZhdWx0IGxhYmVsIGFuZCB0aGVuIG91dHNp
-ZGUgdGhlIHN3aXRjaC9jYXNlIGRvIHRoaXM6DQoNCglkZXZfZGJnKGRldiwgIlVua25vd24gc2Vu
-c29yIHR5cGU6ICVkIiwgdHlwZSk7DQoJcmV0dXJuIC1FT1BOT1RTVVBQOw0KDQo+ICt9DQo+ICsN
-Cj4gKy8qIEtub3duIHNlbnNvcnMgaW4gdGhlIE9YUCBFQyBjb250cm9sbGVycyAqLw0KPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBod21vbl9jaGFubmVsX2luZm8gKm94cF9wbGF0Zm9ybV9zZW5zb3Jz
-W10gPSB7DQo+ICsJSFdNT05fQ0hBTk5FTF9JTkZPKGZhbiwNCj4gKwkJSFdNT05fRl9JTlBVVCks
-DQo+ICsJSFdNT05fQ0hBTk5FTF9JTkZPKHB3bSwNCj4gKwkJSFdNT05fUFdNX0lOUFVUIHwgSFdN
-T05fUFdNX0VOQUJMRSksDQo+ICsJTlVMTCwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgaHdtb25fb3BzIG94cF9lY19od21vbl9vcHMgPSB7DQo+ICsJLmlzX3Zpc2libGUgPSBv
-eHBfZWNfaHdtb25faXNfdmlzaWJsZSwNCj4gKwkucmVhZCA9IG94cF9wbGF0Zm9ybV9yZWFkLA0K
-PiArCS53cml0ZSA9IG94cF9wbGF0Zm9ybV93cml0ZSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgaHdtb25fY2hpcF9pbmZvIG94cF9lY19jaGlwX2luZm8gPSB7DQo+ICsJLm9w
-cyA9ICZveHBfZWNfaHdtb25fb3BzLA0KPiArCS5pbmZvID0gb3hwX3BsYXRmb3JtX3NlbnNvcnMs
-DQo+ICt9Ow0KPiArDQo+ICsvKiBJbml0aWFsaXphdGlvbiBsb2dpYyAqLw0KPiArc3RhdGljIGlu
-dCBveHBfcGxhdGZvcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gK3sN
-Cj4gKwljb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCAqZG1pX2VudHJ5Ow0KPiArCXN0cnVjdCBk
-ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJc3RydWN0IGRldmljZSAqaHdkZXY7DQo+ICsJ
-c3RydWN0IG94cF9zdGF0dXMgKnN0YXRlOw0KPiArDQo+ICsJLyogSGF2ZSB0byBjaGVjayBmb3Ig
-QU1EIHByb2Nlc3NvciBoZXJlICovDQo+ICsJZG1pX2VudHJ5ID0gZG1pX2ZpcnN0X21hdGNoKGRt
-aV90YWJsZSk7DQo+ICsJaWYgKCFkbWlfZW50cnkgfHwgYm9vdF9jcHVfZGF0YS54ODZfdmVuZG9y
-ICE9IFg4Nl9WRU5ET1JfQU1EKQ0KPiArCQlyZXR1cm4gLUVOT0RFVjsNCg0KU28gaXQncyBzaGFy
-ZWQgRE1JIGRhdGEgdmFsdWVzIGZvciB0aGUgSW50ZWwgYW5kIEFNRCB2YXJpYW50cyBvZiB0aGlz
-IHBsYXRmb3JtPyAgV2hhdA0KaGFwcGVucyBpZiB5b3UgcnVuIGFsbCB0aGlzIGNvZGUgb24gdGhl
-IEludGVsIG9uZT8NCg0KPiArDQo+ICsJc3RhdGUgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2Yo
-c3RydWN0IG94cF9zdGF0dXMpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIXN0YXRlKQ0KPiArCQly
-ZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArCXN0YXRlLT5sb2NrX2RhdGEubXV0ZXggPSAwOw0KPiAr
-CXN0YXRlLT5sb2NrX2RhdGEubG9jayA9IGxvY2tfZ2xvYmFsX2FjcGlfbG9jazsNCj4gKwlzdGF0
-ZS0+bG9ja19kYXRhLnVubG9jayA9IHVubG9ja19nbG9iYWxfYWNwaV9sb2NrOw0KPiArDQo+ICsJ
-aHdkZXYgPSBkZXZtX2h3bW9uX2RldmljZV9yZWdpc3Rlcl93aXRoX2luZm8oZGV2LCAib3hwZWMi
-LA0KPiBzdGF0ZSwNCj4gKwkJCQkJCQkmb3hwX2VjX2NoaXBfaW5mbywNCj4gTlVMTCk7DQo+ICsN
-Cj4gKwlyZXR1cm4gUFRSX0VSUl9PUl9aRVJPKGh3ZGV2KTsNCj4gK30NCj4gKw0KPiArc3RhdGlj
-IHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgb3hwX3BsYXRmb3JtX2RyaXZlciA9IHsNCj4gKwkuZHJp
-dmVyID0gew0KPiArCQkubmFtZSA9ICJveHAtcGxhdGZvcm0iLA0KPiArCX0sDQo+ICsJLnByb2Jl
-ID0gb3hwX3BsYXRmb3JtX3Byb2JlLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKm94cF9wbGF0Zm9ybV9kZXZpY2U7DQo+ICsNCj4gK3N0YXRpYyBpbnQgX19p
-bml0IG94cF9wbGF0Zm9ybV9pbml0KHZvaWQpDQo+ICt7DQo+ICsJb3hwX3BsYXRmb3JtX2Rldmlj
-ZSA9DQo+ICsJCXBsYXRmb3JtX2NyZWF0ZV9idW5kbGUoJm94cF9wbGF0Zm9ybV9kcml2ZXIsDQo+
-ICsJCQkJICAgICAgIG94cF9wbGF0Zm9ybV9wcm9iZSwgTlVMTCwgMCwgTlVMTCwgMCk7DQo+ICsN
-Cj4gKwlpZiAoSVNfRVJSKG94cF9wbGF0Zm9ybV9kZXZpY2UpKQ0KPiArCQlyZXR1cm4gUFRSX0VS
-UihveHBfcGxhdGZvcm1fZGV2aWNlKTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+
-ICtzdGF0aWMgdm9pZCBfX2V4aXQgb3hwX3BsYXRmb3JtX2V4aXQodm9pZCkNCj4gK3sNCj4gKwlw
-bGF0Zm9ybV9kZXZpY2VfdW5yZWdpc3RlcihveHBfcGxhdGZvcm1fZGV2aWNlKTsNCj4gKwlwbGF0
-Zm9ybV9kcml2ZXJfdW5yZWdpc3Rlcigmb3hwX3BsYXRmb3JtX2RyaXZlcik7DQo+ICt9DQo+ICsN
-Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUoZG1pLCBkbWlfdGFibGUpOw0KPiArbW9kdWxlX2luaXQo
-b3hwX3BsYXRmb3JtX2luaXQpOw0KPiArbW9kdWxlX2V4aXQob3hwX3BsYXRmb3JtX2V4aXQpOw0K
-PiArDQo+ICtNT0RVTEVfQVVUSE9SKCJKb2FxdcOtbiBJZ25hY2lvIEFyYW1lbmTDrWEgPHNhbXNh
-Z2F4QGdtYWlsLmNvbT4iKTsNCj4gK01PRFVMRV9ERVNDUklQVElPTigNCj4gKwkiUGxhdGZvcm0g
-ZHJpdmVyIHRoYXQgaGFuZGxlcyBBQ1BJIEVDIG9mIE9uZVhQbGF5ZXIgZGV2aWNlcyIpOw0KPiAr
-TU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiAtLQ0KPiAyLjM4LjENCg==
+El lun, 31 oct 2022 a la(s) 13:43, Limonciello, Mario
+(Mario.Limonciello@amd.com) escribi=C3=B3:
+>
+> [Public]
+>
+>
+>
+> > -----Original Message-----
+> > From: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
+> > Sent: Monday, October 31, 2022 09:53
+> > To: pobrn@protonmail.com
+> > Cc: hdegoede@redhat.com; jdelvare@suse.com; linux-
+> > hwmon@vger.kernel.org; linux@roeck-us.net; markgross@kernel.org;
+> > platform-driver-x86@vger.kernel.org; Joaqu=C3=ADn Ignacio Aramend=C3=AD=
+a
+> > <samsagax@gmail.com>
+> > Subject: [PATCH v3] Add OneXPlayer mini AMD sensors driver
+> >
+> > Sensors driver for OXP Handhelds from One-Netbook that expose fan
+> > reading
+> > and control via hwmon sysfs.
+> >
+> > As far as I could gather all OXP boards have the same DMI strings and
+> > they are told appart by the boot cpu vendor (Intel/AMD).
+> > Currently only AMD boards are supported.
+> >
+> > Fan control is provided via pwm interface in the range [0-255]. AMD
+> > boards have [0-100] as range in the EC, the written value is scaled to
+> > accommodate for that.
+> >
+> > Signed-off-by: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
+> > ---
+> > Removed fan_control reference in comment.
+> > Bugfix MIX/MIN reporting not available
+> > Bugfix pwm_enable register set wrong
+> > ---
+> >  drivers/hwmon/Kconfig       |  13 +-
+> >  drivers/hwmon/Makefile      |   1 +
+> >  drivers/hwmon/oxp-sensors.c | 277
+> > ++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 290 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/hwmon/oxp-sensors.c
+> >
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 7ac3daaf59ce..a1cdb03b4d13 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -1607,6 +1607,17 @@ config SENSORS_NZXT_SMART2
+> >
+> >  source "drivers/hwmon/occ/Kconfig"
+> >
+> > +config SENSORS_OXP
+> > +     tristate "OneXPlayer EC fan control"
+> > +     depends on ACPI
+> > +     depends on X86
+> > +     help
+> > +             If you say yes here you get support for fan readings and
+> > control over
+> > +             OneXPlayer handheld devices. Only OneXPlayer mini AMD
+> > handheld variant
+> > +             boards are supported.
+> > +
+> > +             Can also be built as a module. In that case it will be ca=
+lled oxp-
+> > sensors.
+> > +
+> >  config SENSORS_PCF8591
+> >       tristate "Philips PCF8591 ADC/DAC"
+> >       depends on I2C
+> > @@ -1957,7 +1968,7 @@ config SENSORS_ADS7871
+> >
+> >  config SENSORS_AMC6821
+> >       tristate "Texas Instruments AMC6821"
+> > -     depends on I2C
+> > +     depends on I2C
+> >       help
+> >         If you say yes here you get support for the Texas Instruments
+> >         AMC6821 hardware monitoring chips.
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index 11d076cad8a2..35824f8be455 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_NSA320)      +=3D nsa320-
+> > hwmon.o
+> >  obj-$(CONFIG_SENSORS_NTC_THERMISTOR) +=3D ntc_thermistor.o
+> >  obj-$(CONFIG_SENSORS_NZXT_KRAKEN2) +=3D nzxt-kraken2.o
+> >  obj-$(CONFIG_SENSORS_NZXT_SMART2) +=3D nzxt-smart2.o
+> > +obj-$(CONFIG_SENSORS_OXP) +=3D oxp-sensors.o
+> >  obj-$(CONFIG_SENSORS_PC87360)        +=3D pc87360.o
+> >  obj-$(CONFIG_SENSORS_PC87427)        +=3D pc87427.o
+> >  obj-$(CONFIG_SENSORS_PCF8591)        +=3D pcf8591.o
+> > diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+> > new file mode 100644
+> > index 000000000000..f5895dc11094
+> > --- /dev/null
+> > +++ b/drivers/hwmon/oxp-sensors.c
+> > @@ -0,0 +1,277 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Platform driver for OXP Handhelds that expose fan reading and contr=
+ol
+> > + * via hwmon sysfs.
+> > + *
+> > + * All boards have the same DMI strings and they are told appart by th=
+e
+> > + * boot cpu vendor (Intel/AMD). Currently only AMD boards are supporte=
+d
+> > + * but the code is made to be simple to add other handheld boards in t=
+he
+> > + * future.
+> > + * Fan control is provided via pwm interface in the range [0-255]. AMD
+> > + * boards use [0-100] as range in the EC, the written value is scaled =
+to
+> > + * accommodate for that.
+>
+> What happens on the Intel variant with this code?  Are they not the same =
+EC?
+> Why doesn't it work there?  If you keep the AMD check in the code, I thin=
+k it
+> would be good to document the problems with the Intel one at least.
+
+I don't own an intel board but a friend of mine does. It won't work.
+The EC registers are different, even though they have the same DMI
+strings for board manufacturer and board name. There is also a variant
+for the board vendor that is programmed here "ONE-NETBOOK" and
+"ONE-NETBOOK TECHNOLOGY CO., LTD." for the same device.
+The explanation for the Intel issue is I couldn't figure out the EC
+registers and values to read/write. I have a version of this on my
+repo with a non-functional Intel case. I can document it in a code
+comment over the amd cpu check.
+
+> > + *
+> > + * Copyright (C) 2022 Joaqu=C3=ADn I. Aramend=C3=ADa <samsagax@gmail.c=
+om>
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/dev_printk.h>
+> > +#include <linux/dmi.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/processor.h>
+> > +
+> > +#define ACPI_LOCK_DELAY_MS   500
+> > +
+> > +/* Handle ACPI lock mechanism */
+> > +struct lock_data {
+> > +     u32 mutex;
+> > +     bool (*lock)(struct lock_data *data);
+> > +     bool (*unlock)(struct lock_data *data);
+> > +};
+> > +
+> > +static bool lock_global_acpi_lock(struct lock_data *data)
+> > +{
+> > +     return
+> > ACPI_SUCCESS(acpi_acquire_global_lock(ACPI_LOCK_DELAY_MS,
+> > +                                                              &data-
+> > >mutex));
+> > +}
+> > +
+> > +static bool unlock_global_acpi_lock(struct lock_data *data)
+> > +{
+> > +     return ACPI_SUCCESS(acpi_release_global_lock(data->mutex));
+> > +}
+> > +
+> > +#define OXP_SENSOR_FAN_REG           0x76 /* Fan reading is 2
+> > registers long */
+> > +#define OXP_SENSOR_PWM_ENABLE_REG    0x4A /* PWM enable is 1
+> > register long */
+> > +#define OXP_SENSOR_PWM_REG           0x4B /* PWM reading is 1
+> > register long */
+> > +
+> > +static const struct dmi_system_id dmi_table[] =3D {
+> > +     {
+> > +             .matches =3D {
+> > +                     DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
+> > +                                     "ONE-NETBOOK TECHNOLOGY CO.,
+> > LTD."),
+> > +             },
+> > +     },
+> > +     {
+> > +             .matches =3D {
+> > +                     DMI_EXACT_MATCH(DMI_BOARD_VENDOR,
+> > +                                     "ONE-NETBOOK"),
+> > +             },
+> > +     },
+> > +     {},
+> > +};
+> > +
+> > +struct oxp_status {
+> > +     struct lock_data lock_data;
+> > +};
+> > +
+> > +/* Helper functions to handle EC read/write */
+> > +static int read_from_ec(u8 reg, int size, long *val)
+> > +{
+> > +     int i;
+> > +     int ret;
+> > +     u8 buffer;
+> > +
+> > +     *val =3D 0;
+> > +     for (i =3D 0; i < size; i++) {
+> > +             ret =3D ec_read(reg + i, &buffer);
+> > +             if (ret)
+> > +                     return ret;
+> > +             (*val) <<=3D i * 8;
+> > +             *val +=3D buffer;
+> > +     }
+> > +     return ret;
+>
+> Don't you need to acquire your mutex for reading too?
+> Otherwise you could potentially have userspace trying to read
+> and write another at the same time and get indeterminate results.
+
+Will add since it doesn't seem to hurt. I added the mutex to the write
+case only since it can indeed present an issue.
+
+> > +}
+> > +
+> > +static int write_to_ec(const struct device *dev, u8 reg, u8 value)
+> > +{
+> > +     struct oxp_status *state =3D dev_get_drvdata(dev);
+> > +     int ret;
+> > +
+> > +     if (!state->lock_data.lock(&state->lock_data)) {
+> > +             dev_warn(dev, "Failed to acquire mutex");
+> > +             return -EBUSY;
+> > +     }
+> > +
+> > +     ret =3D ec_write(reg, value);
+> > +
+> > +     if (!state->lock_data.unlock(&state->lock_data))
+> > +             dev_err(dev, "Failed to release mutex");
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int oxp_pwm_enable(const struct device *dev)
+> > +{
+> > +     return write_to_ec(dev, OXP_SENSOR_PWM_ENABLE_REG, 0x01);
+> > +}
+> > +
+> > +static int oxp_pwm_disable(const struct device *dev)
+> > +{
+> > +     return write_to_ec(dev, OXP_SENSOR_PWM_ENABLE_REG, 0x00);
+> > +}
+> > +
+> > +/* Callbacks for hwmon interface */
+> > +static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
+> > +                                     enum hwmon_sensor_types type,
+> > u32 attr, int channel)
+> > +{
+> > +     switch (type) {
+> > +     case hwmon_fan:
+> > +             return 0444;
+> > +     case hwmon_pwm:
+> > +             return 0644;
+> > +     default:
+> > +             return 0;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static int oxp_platform_read(struct device *dev, enum
+> > hwmon_sensor_types type,
+> > +                          u32 attr, int channel, long *val)
+> > +{
+> > +     int ret;
+> > +
+> > +     switch (type) {
+> > +     case hwmon_fan:
+> > +             switch (attr) {
+> > +             case hwmon_fan_input:
+> > +                     return read_from_ec(OXP_SENSOR_FAN_REG,
+> > +                                        2,
+> > +                                        val);
+> > +             default:
+> > +                     dev_dbg(dev, "Unknown attribute for type %d:
+> > %d\n", type, attr);
+> > +                     return -EOPNOTSUPP;
+> > +             }
+> > +     case hwmon_pwm:
+> > +             switch (attr) {
+> > +             case hwmon_pwm_input:
+> > +                     ret =3D read_from_ec(OXP_SENSOR_PWM_REG,
+> > +                                        2, val);
+> > +                     *val =3D (*val * 255) / 100;
+> > +                     return ret;
+> > +             case hwmon_pwm_enable:
+> > +                     return
+> > read_from_ec(OXP_SENSOR_PWM_ENABLE_REG, 1, val);
+> > +             default:
+> > +                     dev_dbg(dev, "Unknown attribute for type %d:
+> > %d\n", type, attr);
+> > +                     return -EOPNOTSUPP;
+> > +             }
+> > +     default:
+> > +             dev_dbg(dev, "Unknown sensor type %d.\n", type);
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +}
+> > +
+> > +static int oxp_platform_write(struct device *dev, enum
+> > hwmon_sensor_types type,
+> > +             u32 attr, int channel, long val)
+> > +{
+> > +     switch (type) {
+> > +     case hwmon_pwm:
+> > +             switch (attr) {
+> > +             case hwmon_pwm_enable:
+> > +                     if (val =3D=3D 1)
+> > +                             return oxp_pwm_enable(dev);
+> > +                     else if (val =3D=3D 0)
+> > +                             return oxp_pwm_disable(dev);
+> > +                     else
+> > +                             return -EINVAL;
+> > +             case hwmon_pwm_input:
+> > +                     if (val < 0 || val > 255)
+> > +                             return -EINVAL;
+> > +                     val =3D (val * 100) / 255;
+> > +                     return write_to_ec(dev, OXP_SENSOR_PWM_REG,
+> > val);
+> > +             default:
+> > +                     dev_dbg(dev, "Unknown attribute for type %d: %d",
+> > type, attr);
+> > +                     return -EOPNOTSUPP;
+> > +             }
+> > +     default:
+> > +             dev_dbg(dev, "Unknown sensor type: %d", type);
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +     return -EINVAL;
+>
+> Can you actually hit this scenario?  I would think not; you'll hit "defau=
+lt" and return -EOPNOTSUPP.
+> Maybe it's better to just drop the default label and then outside the swi=
+tch/case do this:
+>
+>         dev_dbg(dev, "Unknown sensor type: %d", type);
+>         return -EOPNOTSUPP;
+>
+It shouldn't since there are no other attributes present. I can
+simplify this logic by a catch all case as you stated.
+
+> > +}
+> > +
+> > +/* Known sensors in the OXP EC controllers */
+> > +static const struct hwmon_channel_info *oxp_platform_sensors[] =3D {
+> > +     HWMON_CHANNEL_INFO(fan,
+> > +             HWMON_F_INPUT),
+> > +     HWMON_CHANNEL_INFO(pwm,
+> > +             HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+> > +     NULL,
+> > +};
+> > +
+> > +static const struct hwmon_ops oxp_ec_hwmon_ops =3D {
+> > +     .is_visible =3D oxp_ec_hwmon_is_visible,
+> > +     .read =3D oxp_platform_read,
+> > +     .write =3D oxp_platform_write,
+> > +};
+> > +
+> > +static const struct hwmon_chip_info oxp_ec_chip_info =3D {
+> > +     .ops =3D &oxp_ec_hwmon_ops,
+> > +     .info =3D oxp_platform_sensors,
+> > +};
+> > +
+> > +/* Initialization logic */
+> > +static int oxp_platform_probe(struct platform_device *pdev)
+> > +{
+> > +     const struct dmi_system_id *dmi_entry;
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct device *hwdev;
+> > +     struct oxp_status *state;
+> > +
+> > +     /* Have to check for AMD processor here */
+> > +     dmi_entry =3D dmi_first_match(dmi_table);
+> > +     if (!dmi_entry || boot_cpu_data.x86_vendor !=3D X86_VENDOR_AMD)
+> > +             return -ENODEV;
+>
+> So it's shared DMI data values for the Intel and AMD variants of this pla=
+tform?  What
+> happens if you run all this code on the Intel one?
+>
+Yeah... These devices have all the same DMI strings. In facto all the
+OneXPlayers have the same DMI model name also "ONEXPLAYER".
+Running this code on Intel won't work, the EC registers and values
+seem to differ.
+
+> > +
+> > +     state =3D devm_kzalloc(dev, sizeof(struct oxp_status), GFP_KERNEL=
+);
+> > +     if (!state)
+> > +             return -ENOMEM;
+> > +
+> > +     state->lock_data.mutex =3D 0;
+> > +     state->lock_data.lock =3D lock_global_acpi_lock;
+> > +     state->lock_data.unlock =3D unlock_global_acpi_lock;
+> > +
+> > +     hwdev =3D devm_hwmon_device_register_with_info(dev, "oxpec",
+> > state,
+> > +                                                     &oxp_ec_chip_info=
+,
+> > NULL);
+> > +
+> > +     return PTR_ERR_OR_ZERO(hwdev);
+> > +}
+> > +
+> > +static struct platform_driver oxp_platform_driver =3D {
+> > +     .driver =3D {
+> > +             .name =3D "oxp-platform",
+> > +     },
+> > +     .probe =3D oxp_platform_probe,
+> > +};
+> > +
+> > +static struct platform_device *oxp_platform_device;
+> > +
+> > +static int __init oxp_platform_init(void)
+> > +{
+> > +     oxp_platform_device =3D
+> > +             platform_create_bundle(&oxp_platform_driver,
+> > +                                    oxp_platform_probe, NULL, 0, NULL,=
+ 0);
+> > +
+> > +     if (IS_ERR(oxp_platform_device))
+> > +             return PTR_ERR(oxp_platform_device);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void __exit oxp_platform_exit(void)
+> > +{
+> > +     platform_device_unregister(oxp_platform_device);
+> > +     platform_driver_unregister(&oxp_platform_driver);
+> > +}
+> > +
+> > +MODULE_DEVICE_TABLE(dmi, dmi_table);
+> > +module_init(oxp_platform_init);
+> > +module_exit(oxp_platform_exit);
+> > +
+> > +MODULE_AUTHOR("Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com=
+>");
+> > +MODULE_DESCRIPTION(
+> > +     "Platform driver that handles ACPI EC of OneXPlayer devices");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.38.1
+
+
+
+--=20
+Joaqu=C3=ADn I. Aramend=C3=ADa
