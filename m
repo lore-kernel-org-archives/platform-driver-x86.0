@@ -2,105 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EC7C38A02
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA6ECAAA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 14:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbiJaNIF (ORCPT
+        id S231589AbiJaOex (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 09:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
+        Mon, 31 Oct 2022 10:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbiJaNIE (ORCPT
+        with ESMTP id S231514AbiJaOew (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 09:08:04 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5A5264F;
-        Mon, 31 Oct 2022 06:07:59 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id g10so12702382oif.10;
-        Mon, 31 Oct 2022 06:07:59 -0700 (PDT)
+        Mon, 31 Oct 2022 10:34:52 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12281C7;
+        Mon, 31 Oct 2022 07:34:51 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id i12so8460748qvs.2;
+        Mon, 31 Oct 2022 07:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7+zhmhrWt+z6+8BUqzwq+wjZ9aZH+3dPptpflgAZl0=;
-        b=EHvNfR8gyy5RjKlJH0zp/ZgjH2m6mIXO7Do/9Rr3+8G5aQGM2TNlD+jGH+yoZmQvQK
-         gRU16ffmCLpcwg+ZUVD7AlrS0z/9zv0VPqmLtd5Zv9rnq92JjlKRHidAccdwM4jJj1WK
-         lLZMPZWYJPxPzs+I6cERc1jJqXzIN1+lc+ibFSQzL6DkYv+lioHXChUPQkpgdPKKDoFj
-         EYRGF+Mzh1KxXRLVMLv8d+kUsOc4z4cOFOW1JPW7AUCnLSGcvCfH2wgKZ7qDty+53RcW
-         FeeyHalkVDPF6lD4YpX3nj7vBNhCstjG7hi0kaAN0dXyLJxRmwGEvjo9WqQItxi+8+Fc
-         k/mA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kKV7aE0TxR3j7oQ5UpL5QeWqb8LMrLP1KR71Ce0rJdQ=;
+        b=Rhf10q6s3JMCa80g+eJaEamzQZpN1yURXdbXndhTf19Lbs3ezO4iuqo9uCGZW7Qm5P
+         OHoKidMajn+7raOR+VijMDz1lfTx5Ij4kHzoiy5yHFJetjbXtPUKr40IOUzdPieqj/JQ
+         RIghApZkawv0hVCb5r00KXhtyRLVm2JqKOHXnh0tlHrGvUaBs8dJ5ilwrXDVyzSqewrV
+         w67gXZBGThncWtznOjXrW65E/z9KhCBsp5JNzgC5/hXUDVWl7jrlGaGrm9uD+lASH20f
+         eEVc2pKGC2je1ff8W3kyK9KtemtXtOpACjwljeIdHdw93OfVeDEmLhb8vp96rVVDZBTJ
+         MnoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7+zhmhrWt+z6+8BUqzwq+wjZ9aZH+3dPptpflgAZl0=;
-        b=rBmBNCUpOAWL7MmuTGKnGzQgEftgprovZ0g9g2J50/JNeNIc78vhVz1OeqB7/gvUEE
-         U2qFCoEPBx5kaKWoQJPBkwHg3oHp/2vqOhId9VzbPfLwN1Xi9+f2vkeSKb+x+Y5SDdCL
-         1VYGylyMka2w1YPah8IiynI4MS0aMgJyQKEaswipOVZo60u8Pk/dC++2mMC2Kpo9ZXJx
-         /vDTkYY5dQ38ABHaYH5+XSu6inGOzx2yKlU2uOrn7rpmolZDrGazjjTrcuEyyseeds+3
-         hCMj4GwUaEK1lWBtG/uMUqMhO1DvxnFjlzZO+2yOdNP5dDfjrbU/0LPZ7Rm4jHdkDrDY
-         N5vg==
-X-Gm-Message-State: ACrzQf2M7T37OvP30uhFs0SXasRjiajEyFynLVNzkoH+NALm1HCvhJuJ
-        L/jHMh3SKVEfTQnDtswryXo=
-X-Google-Smtp-Source: AMsMyM751ZY+bNFhD5aMGrQZmY/PCfbtjFW/FGkzWCQoYSsh/kXpDNvhoplUmXjYIf6DX4F1Oqn2PA==
-X-Received: by 2002:a05:6808:3008:b0:350:fad2:458d with SMTP id ay8-20020a056808300800b00350fad2458dmr14428948oib.93.1667221678812;
-        Mon, 31 Oct 2022 06:07:58 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h14-20020a4adcce000000b00499527def25sm2300176oou.47.2022.10.31.06.07.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 06:07:57 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Mon, 31 Oct 2022 06:07:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joaquin Aramendia <samsagax@gmail.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] Add OneXPlayer mini AMD board driver
-Message-ID: <20221031130756.GA400664@roeck-us.net>
-References: <20221029225051.1171795-1-samsagax@gmail.com>
- <506a6e7f-4566-2dcf-37f3-0f41f4ce983b@roeck-us.net>
- <CABgtM3jk4wuEMA1NL+WTySowokRD3XqzdSAUbkQCuLreSrvaJg@mail.gmail.com>
- <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
- <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kKV7aE0TxR3j7oQ5UpL5QeWqb8LMrLP1KR71Ce0rJdQ=;
+        b=IBbu/lQa6fVZhjRLtaleWndsn0qnLX6dqftGX3XdmJ0PeoZviDmkNod/mrZEfCetRA
+         IcdrApNr2peS4r80gDoahw9bKTQepMNZM5urHCYdn6VNGD2HYWYVA6VMlUGbWp+qWyII
+         +WTkEYqDsW1pTnHLfL+n9IQD96X6347EQtJFLAoYTlReQSkZiKCwmjS4SGt+niwJDNPt
+         UE7k9vIg672k/2oW9MeSrvSBDjjsqiOWbhz2QSb1mATnhiZJ+9R42Ogeizrq1KDRlbU2
+         2lxXln40sZ/D91BcQmAAeT2B771cgy0QBGIU1ilu7GyCwYvu+YVMgIsVnK7lA8rpvlse
+         +cfg==
+X-Gm-Message-State: ACrzQf1eoao/n5aGP7eqPIASrceRZ8ZqIG4H+RCfk1f8vtUyzH2Az06m
+        25SAFcU0/gHWX2nM+oVQhZaznopz5xaJwE14iWw=
+X-Google-Smtp-Source: AMsMyM4y1ykqVDED54Le5Jc1Sa/VyglNecTz9VeFpLkd8G+tt9SRPN/a7OQaD8oOiHi640FBB8gcp0b+oCBxz/xd/D4=
+X-Received: by 2002:a0c:f00f:0:b0:4bb:6167:d338 with SMTP id
+ z15-20020a0cf00f000000b004bb6167d338mr11256789qvk.11.1667226891093; Mon, 31
+ Oct 2022 07:34:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
+References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
+ <20211217115708.882525-8-tanureal@opensource.cirrus.com> <CAHp75VdQGBixkUStPiq3VuoL+9TJo946ObfRA-L-D72DaFHnrw@mail.gmail.com>
+ <Y19fSL2Z6xq8TCFS@google.com>
+In-Reply-To: <Y19fSL2Z6xq8TCFS@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 31 Oct 2022 16:34:14 +0200
+Message-ID: <CAHp75VfwqsiiRM-=BGii45-kX_6v4CHxDMTgwPnG5SBwu6655w@mail.gmail.com>
+Subject: Re: [PATCH v6 07/10] hda: cs35l41: Add support for CS35L41 in HDA systems
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Lucas Tanure <tanureal@opensource.cirrus.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 08:45:35AM -0300, Joaquin Aramendia wrote:
-> Hello again and thanks for the review. I submitted the patch again and
-> needs some polish before it can be accepted. I had one question left:
-> 
-> El dom, 30 oct 2022 a la(s) 00:24, Guenter Roeck (linux@roeck-us.net) escribió:
-> >
-> > >>> +/* Callbacks for hwmon interface */
-> > >>> +static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
-> > >>> +                                     enum hwmon_sensor_types type, u32 attr, int channel)
-> > >>> +{
-> > >>> +     switch (type) {
-> > >>> +             case hwmon_fan:
-> > >>> +                     return S_IRUGO;
-> > >>> +             case hwmon_pwm:
-> > >>> +                     return S_IRUGO | S_IWUSR;
-> > >>
-> > >> Please use 0444 and 0644 directly. Checkpatch will tell.
-> > >
-> > > Oh. I did as the documentation suggested. I must confess I didn't run
-> > > checkpatch, will don in the next submission.
-> > >
-> >
-> > That is long ago. Octal values are and have been preferred for
-> > several years.
-> 
-> I've read this form here[1]. Should I send a patch to the
-> Documentation to reflect the preference?
-> 
-Sure, patches are always welcome.
+On Mon, Oct 31, 2022 at 7:38 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Thu, Jan 06, 2022 at 02:29:58PM +0200, Andy Shevchenko wrote:
+> > On Fri, Dec 17, 2021 at 5:45 PM Lucas Tanure
+> > <tanureal@opensource.cirrus.com> wrote:
 
-Guenter
+...
+
+> > > +       cs35l41->reset_gpio = fwnode_gpiod_get_index(&adev->fwnode, "reset", cs35l41->index,
+> >
+> > Please, do not dereference fwnode pointers.
+> > Also, why can't you use the device instead of fwnode?
+>
+> We are doing "acpi_dev_put(adev);" a few lines above, so using adev in
+> the call to fwnode_gpiod_get_index() is technically use-after-free,
+> isn't it?
+
+Right, but I believe this is in response to the author and not to me.
+
+> Also, why can't we do
+>
+>         cs35l41->reset_gpio = gpiod_get_index(acpi_dev, "reset",
+>                                               cs35l41->index,
+>                                               GPIOD_OUT_LOW);
+>
+> since acpi_dev is device structure corresponding to adev and we are
+> getting the rest of the properties from it?
+
+I remembered that I have also stumbled over that, but IIRC the point
+here is that ACPI tables might be broken (since the multi-instance
+device is a gray area to begin with). So we need clarification from
+Cirrus to understand what the cases they want to cover with this
+twisted code to get a GPIO.
+
+> I saw downthread that there was supposed to be a patch addressing
+> several issues raised by Andy, was it ever submitted?
+
+-- 
+With Best Regards,
+Andy Shevchenko
