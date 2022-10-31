@@ -2,116 +2,139 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA6ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE73DFA3741
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 14:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231589AbiJaOex (ORCPT
+        id S231252AbiJaOuJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 10:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
+        Mon, 31 Oct 2022 10:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231514AbiJaOew (ORCPT
+        with ESMTP id S230224AbiJaOuI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 10:34:52 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12281C7;
-        Mon, 31 Oct 2022 07:34:51 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id i12so8460748qvs.2;
-        Mon, 31 Oct 2022 07:34:51 -0700 (PDT)
+        Mon, 31 Oct 2022 10:50:08 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4E810FE5;
+        Mon, 31 Oct 2022 07:50:07 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id i127so13916076ybc.11;
+        Mon, 31 Oct 2022 07:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kKV7aE0TxR3j7oQ5UpL5QeWqb8LMrLP1KR71Ce0rJdQ=;
-        b=Rhf10q6s3JMCa80g+eJaEamzQZpN1yURXdbXndhTf19Lbs3ezO4iuqo9uCGZW7Qm5P
-         OHoKidMajn+7raOR+VijMDz1lfTx5Ij4kHzoiy5yHFJetjbXtPUKr40IOUzdPieqj/JQ
-         RIghApZkawv0hVCb5r00KXhtyRLVm2JqKOHXnh0tlHrGvUaBs8dJ5ilwrXDVyzSqewrV
-         w67gXZBGThncWtznOjXrW65E/z9KhCBsp5JNzgC5/hXUDVWl7jrlGaGrm9uD+lASH20f
-         eEVc2pKGC2je1ff8W3kyK9KtemtXtOpACjwljeIdHdw93OfVeDEmLhb8vp96rVVDZBTJ
-         MnoA==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TLBxKnt2hZjq4hXfnpGIBk32nFNiC1bZx8lYRgix0Ao=;
+        b=il1wfUvTPm8Exbjub3X6USsiHHO+7lOX/NZkZPu/roEmkHkrFIBYrGQ/a+x2S6gutx
+         RzEWMjh7MQhT/R/gWkn7N7l92PEdD+6kyK013TAX725w0V2MZXTqm91BCqMOe2X0jTI4
+         sLgqa5m2BV5NS9IT4gjtllwHuqyav/jo2wdXTc0Pv4ziD5CctPedzjcoJxYZ0irlpobt
+         Aeim2AnGkVsHb1DSMinHPevP10jMsGaOYdc3RtlhSNERRqAddzZuu6lJVZNWlKvE5nLb
+         LFgM2KuFmEb420WDH0eWWhg9RsEmHDv1Q5t6zVqSQwB0XgBVTGdODdDhkq5D78SBT7c9
+         yLmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kKV7aE0TxR3j7oQ5UpL5QeWqb8LMrLP1KR71Ce0rJdQ=;
-        b=IBbu/lQa6fVZhjRLtaleWndsn0qnLX6dqftGX3XdmJ0PeoZviDmkNod/mrZEfCetRA
-         IcdrApNr2peS4r80gDoahw9bKTQepMNZM5urHCYdn6VNGD2HYWYVA6VMlUGbWp+qWyII
-         +WTkEYqDsW1pTnHLfL+n9IQD96X6347EQtJFLAoYTlReQSkZiKCwmjS4SGt+niwJDNPt
-         UE7k9vIg672k/2oW9MeSrvSBDjjsqiOWbhz2QSb1mATnhiZJ+9R42Ogeizrq1KDRlbU2
-         2lxXln40sZ/D91BcQmAAeT2B771cgy0QBGIU1ilu7GyCwYvu+YVMgIsVnK7lA8rpvlse
-         +cfg==
-X-Gm-Message-State: ACrzQf1eoao/n5aGP7eqPIASrceRZ8ZqIG4H+RCfk1f8vtUyzH2Az06m
-        25SAFcU0/gHWX2nM+oVQhZaznopz5xaJwE14iWw=
-X-Google-Smtp-Source: AMsMyM4y1ykqVDED54Le5Jc1Sa/VyglNecTz9VeFpLkd8G+tt9SRPN/a7OQaD8oOiHi640FBB8gcp0b+oCBxz/xd/D4=
-X-Received: by 2002:a0c:f00f:0:b0:4bb:6167:d338 with SMTP id
- z15-20020a0cf00f000000b004bb6167d338mr11256789qvk.11.1667226891093; Mon, 31
- Oct 2022 07:34:51 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TLBxKnt2hZjq4hXfnpGIBk32nFNiC1bZx8lYRgix0Ao=;
+        b=hTZ1Awg8IutkHijSFztcZVwO0vsJ75y+cGpEL4DNbKBMuoTdB/lE7shgRYYHHmO+jA
+         YvetV1KDHaqpUrMx0c9FtvofhoTgYcvw/GzA1015xAXYtkNr7N1PERtaP9fYY692kqBC
+         lfQFB7Y0iLGPNewaD5CGUoWeprtztL9WmGd4xwbB8BPxgg6rOjl8k8MpHEUv/S4CWjAS
+         SMrZux0u0GTc8RAN24dpEWLyNjnuqpEpmXC3uye/rN2HESx9wzg2wfHMjuSoXyW3BGDz
+         wzr0C3TiqNDvFt2rHUJqL5+ocEzTkl8Ud9OM/ziTYnERzJDP4ecn7P5ouWdzcYS9MS8x
+         QpcQ==
+X-Gm-Message-State: ACrzQf17ui+9fhDQ0C9xb7tEmjdef0FWOcIvx8ml+LsvbrKSyEAzfuov
+        ed+wd7TkO25Jv8t8+EVx8k3LMG5CWc8eqFIA7z0=
+X-Google-Smtp-Source: AMsMyM47WJSTzUFSrpR78YxQd8ATbdrqZe/eCRNigDbd+IbgjnRioID1Ks6NsSZAFXkkfAkB8d4ZlzzNEMB11xz1dIQ=
+X-Received: by 2002:a05:6902:1367:b0:6cb:bca3:e3bb with SMTP id
+ bt7-20020a056902136700b006cbbca3e3bbmr13756190ybb.196.1667227806882; Mon, 31
+ Oct 2022 07:50:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211217115708.882525-1-tanureal@opensource.cirrus.com>
- <20211217115708.882525-8-tanureal@opensource.cirrus.com> <CAHp75VdQGBixkUStPiq3VuoL+9TJo946ObfRA-L-D72DaFHnrw@mail.gmail.com>
- <Y19fSL2Z6xq8TCFS@google.com>
-In-Reply-To: <Y19fSL2Z6xq8TCFS@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 31 Oct 2022 16:34:14 +0200
-Message-ID: <CAHp75VfwqsiiRM-=BGii45-kX_6v4CHxDMTgwPnG5SBwu6655w@mail.gmail.com>
-Subject: Re: [PATCH v6 07/10] hda: cs35l41: Add support for CS35L41 in HDA systems
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Lucas Tanure <tanureal@opensource.cirrus.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
+ <20221030203248.15485-1-samsagax@gmail.com> <2FNQOCFdvTS7N-ylJhxGWzZjeji-nVCF09tbDr7lt80R8c8_pyp9hbK0iJHTFPevJ4la-YDd3lW5CZK85kYF1_dDZo6h1akO0f8jFTzIScA=@protonmail.com>
+In-Reply-To: <2FNQOCFdvTS7N-ylJhxGWzZjeji-nVCF09tbDr7lt80R8c8_pyp9hbK0iJHTFPevJ4la-YDd3lW5CZK85kYF1_dDZo6h1akO0f8jFTzIScA=@protonmail.com>
+From:   Joaquin Aramendia <samsagax@gmail.com>
+Date:   Mon, 31 Oct 2022 11:49:55 -0300
+Message-ID: <CABgtM3g611wKz6wzOmGP=q0hFqydfMe+bu8W+qbN5Kde1MdnoA@mail.gmail.com>
+Subject: Re: [PATCH v2] Add OneXPlayer mini AMD sensors driver
+To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 7:38 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Thu, Jan 06, 2022 at 02:29:58PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 17, 2021 at 5:45 PM Lucas Tanure
-> > <tanureal@opensource.cirrus.com> wrote:
-
-...
-
-> > > +       cs35l41->reset_gpio = fwnode_gpiod_get_index(&adev->fwnode, "reset", cs35l41->index,
+El dom, 30 oct 2022 a la(s) 21:03, Barnab=C3=A1s P=C5=91cze
+(pobrn@protonmail.com) escribi=C3=B3:
+>
+> Hi
+>
+>
+> 2022. okt=C3=B3ber 30., vas=C3=A1rnap 21:32 keltez=C3=A9ssel, Joaqu=C3=AD=
+n Ignacio Aramend=C3=ADa =C3=ADrta:
+>
+> > Sensors driver for OXP Handhelds from One-Netbook that expose fan readi=
+ng
+> > and control via hwmon sysfs.
 > >
-> > Please, do not dereference fwnode pointers.
-> > Also, why can't you use the device instead of fwnode?
+> > As far as I could gather all OXP boards have the same DMI strings and
+> > they are told appart by the boot cpu vendor (Intel/AMD).
+> > Currently only AMD boards are supported.
+> >
+> > Fan control is provided via pwm interface in the range [0-255]. AMD
+> > boards have [0-100] as range in the EC, the written value is scaled to
+> > accommodate for that.
+> >
+> > Signed-off-by: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
+> > ---
+> > Rewritten the driver according to feedback, checkpatch passes, removed
+> > unnecessary complexity and moved the driver to hwmon
+> > ---
+> >  drivers/hwmon/Kconfig       |  13 +-
+> >  drivers/hwmon/Makefile      |   1 +
+> >  drivers/hwmon/oxp-sensors.c | 278 ++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 291 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/hwmon/oxp-sensors.c
+> >
+> > [...]
+> > diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+> > new file mode 100644
+> > index 000000000000..128fdf4c46e2
+> > --- /dev/null
+> > +++ b/drivers/hwmon/oxp-sensors.c
+> > @@ -0,0 +1,278 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Platform driver for OXP Handhelds that expose fan reading and contr=
+ol
+> > + * via hwmon sysfs.
+> > + *
+> > + * All boards have the same DMI strings and they are told appart by th=
+e
+> > + * boot cpu vendor (Intel/AMD). Currently only AMD boards are supporte=
+d
+> > + * but the code is made to be simple to add other handheld boards in t=
+he
+> > + * future.
+> > + * Fan control is provided via pwm interface in the range [0-255]. AMD
+> > + * boards use [0-100] as range in the EC, the written value is scaled =
+to
+> > + * accommodate for that.
+> > + *
+> > + * PWM control is disabled by default, can be enabled via module param=
+eter.
 >
-> We are doing "acpi_dev_put(adev);" a few lines above, so using adev in
-> the call to fwnode_gpiod_get_index() is technically use-after-free,
-> isn't it?
+> As far as I can see this is not true anymore.
 
-Right, but I believe this is in response to the author and not to me.
-
-> Also, why can't we do
+True. Will remove that. Also I found a typo on my registers that needs
+to be fixed
 >
->         cs35l41->reset_gpio = gpiod_get_index(acpi_dev, "reset",
->                                               cs35l41->index,
->                                               GPIOD_OUT_LOW);
->
-> since acpi_dev is device structure corresponding to adev and we are
-> getting the rest of the properties from it?
+> Also, have you checked if there is maybe a WMI interface for this?
 
-I remembered that I have also stumbled over that, but IIRC the point
-here is that ACPI tables might be broken (since the multi-instance
-device is a gray area to begin with). So we need clarification from
-Cirrus to understand what the cases they want to cover with this
-twisted code to get a GPIO.
+There is not as far as I can tell. Even on Windows the fan control app
+uses EC registers directly.
 
-> I saw downthread that there was supposed to be a patch addressing
-> several issues raised by Andy, was it ever submitted?
-
--- 
-With Best Regards,
-Andy Shevchenko
+--=20
+Joaqu=C3=ADn I. Aramend=C3=ADa
