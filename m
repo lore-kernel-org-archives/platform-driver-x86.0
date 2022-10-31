@@ -2,97 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680B9C38A02
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 11:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D77BECAAA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Oct 2022 12:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231192AbiJaLq1 (ORCPT
+        id S231184AbiJaMma (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Oct 2022 07:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41728 "EHLO
+        Mon, 31 Oct 2022 08:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231207AbiJaLqC (ORCPT
+        with ESMTP id S231195AbiJaMm2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Oct 2022 07:46:02 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436C7F00B;
-        Mon, 31 Oct 2022 04:45:47 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id z192so13413937yba.0;
-        Mon, 31 Oct 2022 04:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cSLIi/DN8vLaFa7kFWWB3sJRC2ihIsIpffXiaAfT4nE=;
-        b=hdy5TVFEJ43D6GDWp9IgDFvJkttVVAq6n++DWvBrsOUFlEXDC9TtHXubmGbYl9w/OX
-         w8GTyBHsefoVJKNHgp2Jd07HF3vsF1xRNHrDUlQA0lUvrOjGIVv/c6zVEjd86/S3nwXq
-         0KGBGRzxyyT/r3V/NnyFK7j/2yQFcRG+Eo4mUmYQdgO1EVNfHnX/F1F1QtmxN57RU1Kg
-         VWqhMQ7seZONlv8smFS8wdtKNPXTokGyP2L7f6easpC2t4vGZIciIvmr7EOJ3GB7R538
-         omlFRIo7l4uPAv9xrXhazrMP6LrjK2jIvwdE2FXryeXe/080fbDPyQtaCiKfm4H3vmjt
-         ceyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cSLIi/DN8vLaFa7kFWWB3sJRC2ihIsIpffXiaAfT4nE=;
-        b=BqQExVPmcUOdeRpk93FuVVFnHH3xxRH1lHFo7kEkMkg9ePRc9krut31hF7W5JcQKVS
-         fR/GbiMtdcY2HQK2hKYdefiBEBYVsQ4p1cEmt6k/SrwrCF/3hF8+JXk+/DrgNxPVNDHS
-         oVb5+dkjx00VWtlwViade9XHONmymq9gEkZ8US/+ohvxUaS05LvGtQ/jQTqJseMbRAyo
-         RHf5S3t9wBcttGApB8Hh0eXj+IDr8bD5/i9DkcyL6EcqY/zoW8xma7JPMFCrfWSH5bhE
-         raMILgcgs1nTV17AhZJV4olpg2SVcqLkhVctaYRC4q3okaups0z02BceAYh84Fd0Kzh1
-         ti+A==
-X-Gm-Message-State: ACrzQf1DJBf2s/gZHn2R9Am1dfnnoq/pqkkZEWHNAEejg3J1fAPWwEGv
-        pQ2wnTWwRTyrBzAxYr6KEYmByg7fcxSNOk3JIio=
-X-Google-Smtp-Source: AMsMyM7hlu5Jqzbt5KIHU38pm5ltgtJSll6em5d43eo+8W5QpGZxnEevrXoBJIZleUYF0hzWy79chujykdL/2mpsuWc=
-X-Received: by 2002:a05:6902:70f:b0:6ca:7254:c2ea with SMTP id
- k15-20020a056902070f00b006ca7254c2eamr13379125ybt.476.1667216746485; Mon, 31
- Oct 2022 04:45:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221029225051.1171795-1-samsagax@gmail.com> <506a6e7f-4566-2dcf-37f3-0f41f4ce983b@roeck-us.net>
- <CABgtM3jk4wuEMA1NL+WTySowokRD3XqzdSAUbkQCuLreSrvaJg@mail.gmail.com> <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
-In-Reply-To: <c6c16bc6-d86b-84ca-e49a-0788f9c80006@roeck-us.net>
-From:   Joaquin Aramendia <samsagax@gmail.com>
-Date:   Mon, 31 Oct 2022 08:45:35 -0300
-Message-ID: <CABgtM3g9_-hpDfdb=kDqOerQAj+kn3pEbOcvmG_Lve3ETAXFfA@mail.gmail.com>
-Subject: Re: [PATCH] Add OneXPlayer mini AMD board driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+        Mon, 31 Oct 2022 08:42:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98255F588
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 05:42:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E8C1611F6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 12:42:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E282C433D6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2022 12:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667220146;
+        bh=/Gy+UeDV5Qs6YLau5a4xJVhk8C6BHh591sXZyjzXh2A=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=h/LShYtzkf07RYX2m2WNF5AosGqZjOnS6dNijq0vnAKmssoRh6WuO9t7Tw+KADLZk
+         U2K1ceZWbHDGuzefYIZDDww+sEBYOU377cl9HPaXABRewMqxdLjhWnYxGlK95IbafT
+         Jldr/nWSAk6VGHTRoHpdgFOxzHJKFEx2gPHALCIiQAFqhpG6yhcnuLC/j/0B1FJcXD
+         MhB33rKeEXiX7eKG2XKx3rO+uDTOaJreylq/Lj2DLUzCyJTcP5l6ubHUMjE7A5zqhW
+         9nAqb8S4p5XKEZNxJuAtcsTwdDsNjoDrtmHemJVPaOWnKtLL+wNEOvC1IRqC+E1YfW
+         BnmLUKrtvEp5w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 5C1F1C433E4; Mon, 31 Oct 2022 12:42:26 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216574] Hybrid System Suspend broken HP EliteBook 845 G8
+ (a.k.a. Hybrid Sleep / s2both) (s2idle Notebook)
+Date:   Mon, 31 Oct 2022 12:42:26 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216574-215701-1JVdRjsrlJ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216574-215701@https.bugzilla.kernel.org/>
+References: <bug-216574-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello again and thanks for the review. I submitted the patch again and
-needs some polish before it can be accepted. I had one question left:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216574
 
-El dom, 30 oct 2022 a la(s) 00:24, Guenter Roeck (linux@roeck-us.net) escri=
-bi=C3=B3:
->
-> >>> +/* Callbacks for hwmon interface */
-> >>> +static umode_t oxp_ec_hwmon_is_visible(const void *drvdata,
-> >>> +                                     enum hwmon_sensor_types type, u=
-32 attr, int channel)
-> >>> +{
-> >>> +     switch (type) {
-> >>> +             case hwmon_fan:
-> >>> +                     return S_IRUGO;
-> >>> +             case hwmon_pwm:
-> >>> +                     return S_IRUGO | S_IWUSR;
-> >>
-> >> Please use 0444 and 0644 directly. Checkpatch will tell.
-> >
-> > Oh. I did as the documentation suggested. I must confess I didn't run
-> > checkpatch, will don in the next submission.
-> >
->
-> That is long ago. Octal values are and have been preferred for
-> several years.
+--- Comment #4 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Fixed in 6.1-rc3 and also will trickle into stable kernels.
+https://github.com/torvalds/linux/commit/85850af4fc47132f3f2f0dd698b90f6790=
+6600b4
 
-I've read this form here[1]. Should I send a patch to the
-Documentation to reflect the preference?
+--=20
+You may reply to this email to add a comment.
 
-[1]https://www.kernel.org/doc/html/latest/hwmon/hwmon-kernel-api.html#drive=
-r-callback-functions
+You are receiving this mail because:
+You are watching the assignee of the bug.=
