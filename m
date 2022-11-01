@@ -2,180 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2049FFA373D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 09:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62BBFA3743
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 11:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbiKAJ4t (ORCPT
+        id S230457AbiKALsM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Nov 2022 05:56:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
+        Tue, 1 Nov 2022 07:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbiKAJ4r (ORCPT
+        with ESMTP id S231313AbiKALrz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2022 05:56:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B42D1903F
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 02:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667296553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OJmHcYA2N2DrTvtWY7W09B5EQ1oCozKKT2Lm1WdA1Gk=;
-        b=GwimDc2lmcDB+vRg/WVlMi57QX/ypUrbHPMNRfCdaqpsCEPU3rvif1laN/z0MSDIdn0Z6M
-        XFafZ6AdSkGichtDIhlrEX3bJSNBIZ5+nUygpPtPptwdpqPAaHHD4Z8QSNd4c9/q5BQbE1
-        GNsAo9IZouyW1iqS3J5i8kC3Yw+uDrY=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-44-aDimU0sFP5q61_JaucVqjQ-1; Tue, 01 Nov 2022 05:55:52 -0400
-X-MC-Unique: aDimU0sFP5q61_JaucVqjQ-1
-Received: by mail-ej1-f72.google.com with SMTP id sg37-20020a170907a42500b007adaedb5ba2so4239945ejc.18
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 02:55:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OJmHcYA2N2DrTvtWY7W09B5EQ1oCozKKT2Lm1WdA1Gk=;
-        b=3KSzLPPvbcm9fhoihUGKis+DKX2SE40IqOcBxY4NP/7ozZ8BPOffAsgo+tULObtiPi
-         M/jCOKjzzux3e5sDYWUJpSfAG+Orc7T0PQv+t5UYeJV0McTDMNk/1AZUjnoUsVv90rV7
-         rI8v3+K1h6RxQV+xcp8vS9cnt2Ad0JZXnz4nuBSMKX8RSkol3U7LoAWlxRRmsDmInbub
-         U4ipvSBVf9Qw18AwH0vGClcE7IugnybHJCxWx97lXd/oa78fm+ZVfOP5EZc2TqSiwU1v
-         t2Ke87Iyz8yuLS9m6CwN/6ts42zkbIwX2F7dLkyz33RS2E3rxD3/uS3NufJ9wPYATmwx
-         2qKg==
-X-Gm-Message-State: ACrzQf06fXDiuI+GSKHJQ/cQTWbrvmcF76vYJ3/hYONGxruZHuhSTs1h
-        ZGpACef54r8x5tOsCXCFGMftvFoV5++GDwxSUnqlBK6Z/2l7gK8nAMOOUtCAyndMPDav+KZJ9gV
-        vjJZtZMydQV8p7O5nczWtJmpclIctZI9zIg==
-X-Received: by 2002:a17:907:70a:b0:750:bf91:caa3 with SMTP id xb10-20020a170907070a00b00750bf91caa3mr17574140ejb.711.1667296551214;
-        Tue, 01 Nov 2022 02:55:51 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7YlkpL1VXKsBRlm3DctdBo/qJTJ2vMsT+W0orSGBojh0BfvR6eYhFW/vFy+GnF78w+ghaX2Q==
-X-Received: by 2002:a17:907:70a:b0:750:bf91:caa3 with SMTP id xb10-20020a170907070a00b00750bf91caa3mr17574128ejb.711.1667296551036;
-        Tue, 01 Nov 2022 02:55:51 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id q4-20020a056402248400b004623028c594sm4311786eda.49.2022.11.01.02.55.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Nov 2022 02:55:50 -0700 (PDT)
-Message-ID: <c3c7ca66-979d-a5fa-a116-9fa2926a271d@redhat.com>
-Date:   Tue, 1 Nov 2022 10:55:49 +0100
+        Tue, 1 Nov 2022 07:47:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A541B9FF
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 04:40:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7325160B2D
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 11:40:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D7ABAC433D6
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 11:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667302832;
+        bh=JTPYsyTTon96iRf5ZUuGhnkyeJyRPyW+L9sSB9GmjxM=;
+        h=From:To:Subject:Date:From;
+        b=cwzE8MgvvsxdvSSOQ6C35IT/pcmfgp8j3Eif0ngrENbJmh9oKA97rsZZbpJGeYvWi
+         eCiAhEMXuQNNus/HM/MLpoWRUTL3hUv18GLMY6FLGsUfo4NXTKj0ragfbhupFdxqGu
+         LjGtWB52B7tB4ZnYeDoydTf7WniNe99z1FZmtf/PKBq94B08bR6aeC98+V2qFxGL9g
+         lN+sMmqaBb+TMBKbPY0M1/McFr3OBIJ0hWJJD/iNudmKo8h9teqze2nc2VCEshB74f
+         LKV98FMtEnz5Sxwe8S68AfFcCzwby++zCc680z7wV6MiDPnTX22zHPrEnDz+YSrinO
+         1NX2ra+k1QUfg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id A48B3C433E6; Tue,  1 Nov 2022 11:40:32 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216647] New: first hibernate to disk fails on HP EliteBook 845
+ G8
+Date:   Tue, 01 Nov 2022 11:40:31 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: kolAflash@kolahilft.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-216647-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH] ACPI: video: Add backlight=native DMI quirk for Dell G15
- 5515
-Content-Language: en-US, nl
-To:     Daniel Dadap <ddadap@nvidia.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20221031212556.401618-1-hdegoede@redhat.com>
- <MN0PR12MB6101C2BD5FAEC45B51B61667E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
- <Y2BKSVzCON8PZctU@lenny>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y2BKSVzCON8PZctU@lenny>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216647
 
-On 10/31/22 23:20, Daniel Dadap wrote:
-> On Mon, Oct 31, 2022 at 09:51:55PM +0000, Limonciello, Mario wrote:
->> [Public]
->>
->>> -----Original Message-----
->>> From: Hans de Goede <hdegoede@redhat.com>
->>> Sent: Monday, October 31, 2022 16:26
->>> To: Rafael J . Wysocki <rafael@kernel.org>
->>> Cc: Hans de Goede <hdegoede@redhat.com>; Len Brown
->>> <lenb@kernel.org>; linux-acpi@vger.kernel.org; platform-driver-
->>> x86@vger.kernel.org; Daniel Dadap <ddadap@nvidia.com>
->>> Subject: [PATCH] ACPI: video: Add backlight=native DMI quirk for Dell G15
->>> 5515
->>>
->>> The Dell G15 5515 has the WMI interface (and WMI call returns) expected
->>> by the nvidia-wmi-ec-backlight interface. But the backlight class device
->>> registered by the nvidia-wmi-ec-backlight driver does not actually work.
->>>
->>
->> Is there a way to detect this from nvidia-wmi-ec-backlight?  I would think it's
->> cleaner to have that driver return -ENODEV so you end up with just the "working"
->> amdgpu_bl0.
-> 
-> That would be ideal, although I'm not certain whether this would work
-> with the new backlight control type selection model where video.ko
-> determines what type of backlight interface the system is supposed to
-> have. I am assuming that the below patch is against a kernel predating
-> the recent changes that Hans made to rework the backlight subsystem,
-> because IIUC it shouldn't be possible for both the EC backlight driver
-> and the iGPU's native one to both be active at the same time. I would
-> expect that without this patch, there would be no working backlight
-> interfaces on this system when running a newer kernel, since
-> __acpi_video_get_backlight_type() would return
-> acpi_backlight_nvidia_wmi_ec, which means
-> acpi_video_backlight_use_native() would return false, and the iGPU
-> native driver should not be registering a brightness handler.
+            Bug ID: 216647
+           Summary: first hibernate to disk fails on HP EliteBook 845 G8
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 6.0.6
+          Hardware: AMD
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: kolAflash@kolahilft.de
+        Regression: No
 
-The reporter needs to blacklist the nvidia-wmi-ec-backlight module
-because with 6.0 they otherwise get both that backlight + the native
-amdgpu backlight in /sys/class/backlight and then userspace will
-prefer the nvidia-wmi-ec-backlight one which according to the reporter
-does not work.
+Created attachment 303115
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303115&action=3Dedit
+dmesg log (kernel.org 6.0.6)
 
-You are correct that with 6.1 the issue is that the native driver
-now honors the acpi_video_get_backlight_type() return and no longer
-registers. This is fixed by this patch.
+On my HP EliteBook 845 G8 the first hibernate to disk after a fresh boot of=
+ten
+fails.
 
-The good news is that with 6.1 nvidia-wmi-ec-backlight now also honors
-acpi_video_get_backlight_type() so the quirk also avoids the need
-to blacklist nvidia-wmi-ec-backlight and with the quirk in 6.1 everything
-just works OOTB (with the current BIOS settings for the GPU mode).
-
-Regards,
-
-Hans
+See attached dmesg log at position 141.752276.
+The second hibernate to disk at position 161.315363 is successful.
 
 
->  
->>> The amdgpu_bl0 native GPU backlight class device does actually work,
->>> add a backlight=native DMI quirk for this.
->>>
->>> Cc: Daniel Dadap <ddadap@nvidia.com>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>  drivers/acpi/video_detect.c | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
->>> index 841f6213b4de..88acc09773bb 100644
->>> --- a/drivers/acpi/video_detect.c
->>> +++ b/drivers/acpi/video_detect.c
->>> @@ -645,6 +645,16 @@ static const struct dmi_system_id
->>> video_detect_dmi_table[] = {
->>>  		},
->>>  	},
->>>
->>> +	/* Models which have nvidia-ec-wmi support, but should not use it.
->>> */
->>> +	{
->>> +	 .callback = video_detect_force_native,
->>> +	 /* Dell G15 5515 */
->>> +	 .matches = {
->>> +		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->>> +		DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
->>> +		},
->>> +	},
->>> +
->>>  	/*
->>>  	 * Desktops which falsely report a backlight and which our heuristics
->>>  	 * for this do not catch.
->>> --
->>> 2.37.3
-> 
 
+=3D System =3D
+
+Model: HP EliteBook 845 G8 (notebook)
+CPU+GPU: Ryzen 5650U incl. Radeon GPU
+Kernel: 6.0.6 compiled from kernel.org
+OS: openSUSE-15.4
+Memory: 64 GB
+SWAP: 64 GB in a file: /swap
+
+Partitions:
+NAME                MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
+nvme0n1             259:0    0  1,8T  0 disk=20=20
+=E2=94=9C=E2=94=80nvme0n1p1         259:1    0  512M  0 part  /boot/efi
+=E2=94=9C=E2=94=80nvme0n1p2         259:2    0   16M  0 part=20=20
+=E2=94=9C=E2=94=80nvme0n1p3         259:3    0    2G  0 part  /boot
+=E2=94=94=E2=94=80nvme0n1p4         259:4    0  1,8T  0 part=20=20
+  =E2=94=94=E2=94=80nvme0n1p4_crypt 254:0    0  1,8T  0 crypt /
+(nvme0n1p2 is a "BIOS boot" partition)
+
+
+
+Maybe related:
+Bug 216516 - s2ram freezes screen (Ryzen-5650U incl. Radeon GPU)
+Bug 216574 - Hybrid System Suspend broken HP EliteBook 845 G8 (a.k.a. Hybrid
+Sleep / s2both) (s2idle Notebook)
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
