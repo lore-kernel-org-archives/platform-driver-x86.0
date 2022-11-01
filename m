@@ -2,95 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652E5ECAAA1
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 13:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B2DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 13:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiKANUs (ORCPT
+        id S230018AbiKANuq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Nov 2022 09:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51910 "EHLO
+        Tue, 1 Nov 2022 09:50:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiKANUr (ORCPT
+        with ESMTP id S229975AbiKANum (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2022 09:20:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3EFD08
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 06:20:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 99721B81D8D
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 13:20:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B208C433D7
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 13:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667308843;
-        bh=t38wugJrvthCDP/f7ZVORzlGxLVdrbdzRf27DaYKNNo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=JAR4XcaWAO0YpwVGHJf6spkxvp2lbFDrp6sWtXE2QNOhf5KyyxF8ZwmE/VHaTZYPh
-         mrvXxP6HXe2SLVWavsVkXquLcM2S7hyLqrrJ1Ke/fChloUarjObpwe+kQPfjXgZVZU
-         OcbAWAnHrei3Qs9tkKqhm1l4pBeKFnmDUC/6iNDAkE36mvQJ4z9RO++HZWkuGF+c22
-         xpbjwvR7KY9eXSvb7GgUq+eIpq2uGYSWKQFTib9CoevEvkDvgDz1dU2eeeGf24rpqT
-         C/G5XN9i/zkW3H7kF5WYzinDqJdL0gBuf3Wx/BnLkUxR8obh/SS4EtrlnXfYyd/T+X
-         pacc7sMy8T7aw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0D18BC433E6; Tue,  1 Nov 2022 13:20:43 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216647] first hibernate to disk fails on HP EliteBook 845 G8
-Date:   Tue, 01 Nov 2022 13:20:42 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-216647-215701-NlAi4s0X52@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216647-215701@https.bugzilla.kernel.org/>
-References: <bug-216647-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 1 Nov 2022 09:50:42 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971856179
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 06:50:41 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id l11so20648771edb.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 06:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QQAnjt+7XG8p++j0HFBqJ1i4IPg+WyhF6FRul3d1/9M=;
+        b=hesLDdylycooTsz6aCItyOr7PtE299wGrzDAYVq5R34UZo3QscVnl8OQaus4HSG6AK
+         Mdk1ppaD67TQP3cDlAYo9APgzs+RmxBeuxxRVjavusi51UKc1MYMzXMjUVHxKbCg5vI8
+         VUExyH4qUIkhWDbZmocLqwRhLD+gdvCFrB9qM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QQAnjt+7XG8p++j0HFBqJ1i4IPg+WyhF6FRul3d1/9M=;
+        b=LmHo7YXT+MY0Yt+Yc0A9+oAtrm3Lwe+lPcxvrsmmJc4Q6+nmBBhwCtvD30N2p8XMz4
+         DZaQaET1idBXqy/GMeHJMRXaIehXT/jwHSpVCfoM+cGQ8nEfmRCv6Fa5sX/MlT1AGBVG
+         pjrc3uanW7tuTtShYpRAqGil2Q4l0pVjfIzQgIGjd0QZhodx8Sv+MQlbc3ah0m7tpf8I
+         JFwuIePIUn73ZuOS91cfDuGdpbMyc9Xo8PLgV/1WkD5HkHFA29fMfrTkxM6rq2SCCD8P
+         wQJVRsz1olUekNKvtleWEuczuHKQx8Qgp2cQP9dcrIiGrMMo80ewJs/AXFQe9egc26tK
+         23oA==
+X-Gm-Message-State: ACrzQf33QEjR7T6Vpx4CTbBqzycHKfbyll2W7A9YUZgam9y9RUb85qe2
+        elWLkehBZqnJ/ULXjnbX1NGvkSUND78Ewr5C
+X-Google-Smtp-Source: AMsMyM6ciyrewN+WeNDTtaQusRLNGSIlXqCd1rsa3D5kbV9Vumv7xaRNT7hKVregtmPEiywyh3DzqA==
+X-Received: by 2002:aa7:da42:0:b0:461:9465:b019 with SMTP id w2-20020aa7da42000000b004619465b019mr19856730eds.144.1667310639962;
+        Tue, 01 Nov 2022 06:50:39 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id r10-20020a17090609ca00b00780ab5a9116sm4186509eje.211.2022.11.01.06.50.38
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Nov 2022 06:50:38 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id b2so37185344eja.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 06:50:38 -0700 (PDT)
+X-Received: by 2002:a17:907:75f1:b0:78a:f935:647d with SMTP id
+ jz17-20020a17090775f100b0078af935647dmr18150379ejc.587.1667310637954; Tue, 01
+ Nov 2022 06:50:37 -0700 (PDT)
 MIME-Version: 1.0
+References: <20221027151908.v1.1.I295e65357f06f162b46ea6fc6c03be37e3978bdc@changeid>
+ <4b7304c0-8dd5-9add-7c84-4e9f0aa9396b@redhat.com> <MN0PR12MB6101BCCA364437A76FED924AE2339@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CAG-rBijvNoN3ppz6bdkEUofYPPBxCtFfo1nWBK5TdG69fcKMnA@mail.gmail.com>
+ <CAE2upjS6qRGRcuVYuAB5DMf66A7VcfCKKYEkpsr1My7RnKDFtQ@mail.gmail.com>
+ <CAG-rBihDRq1y61tAp56yYCoTOSZXO9OZNzn7gXb_y8XaiO_zqg@mail.gmail.com>
+ <MN0PR12MB610109F448E3FC8CE71FBA76E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <CAG-rBijSASfbfWQNarjGqj2UxQDOSdwM-qj5YA5A9ur=DNJf-g@mail.gmail.com> <cb5ab68e-5034-d937-e28e-e838e50172a8@amd.com>
+In-Reply-To: <cb5ab68e-5034-d937-e28e-e838e50172a8@amd.com>
+From:   Sven van Ashbrook <svenva@chromium.org>
+Date:   Tue, 1 Nov 2022 09:50:26 -0400
+X-Gmail-Original-Message-ID: <CAM7w-FW2Yer3B+Z6giP8Jc8i5xEMueFKzY=R172drWaYtRHwQg@mail.gmail.com>
+Message-ID: <CAM7w-FW2Yer3B+Z6giP8Jc8i5xEMueFKzY=R172drWaYtRHwQg@mail.gmail.com>
+Subject: Re: [PATCH v1] platform/x86: intel_pmc_core: promote S0ix failure
+ warn() to WARN()
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "rrangel@chromium.org" <rrangel@chromium.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Rafael J Wysocki <rjw@rjwysocki.net>,
+        Rajat Jain <rajatja@google.com>,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216647
+On Mon, Oct 31, 2022 at 9:58 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> I actually thought that by putting the duration of time put in
+> last_hw_deepest_state you'll be able to catch this by comparing the
+> duration of the suspend to the duration of last_hw_deepest_state.
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+I'm not sure if this method would catch all or even most suspend
+failures. That's why the EC monitoring of S0ix was devised. I will
+circulate this internally, see what comes back.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |mario.limonciello@amd.com
+> >
+> > Is the light worth the candle?
+>
+> I wrote an RFC that I sent out for it with my ideas at least.
+>
 
---- Comment #1 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-2022-10-31T14:01:20.603318+01:00 myhost kernel: [  150.051133][ T5939] amdg=
-pu
-0000:05:00.0: amdgpu: 00000000604fe5dc pin failed
-2022-10-31T14:01:20.603321+01:00 myhost kernel: [  150.051137][ T5939]
-[drm:dm_plane_helper_prepare_fb [amdgpu]] *ERROR* Failed to pin framebuffer
-with error -19
+That is much appreciated ! Yet even for good ideas, it's often
+necessary to weigh the benefits and downsides of the intervention.
+Perhaps we can get some pros/cons feedback from other stakeholders ?
 
-This is probably at least partially:
-
-https://gitlab.freedesktop.org/drm/amd/-/issues/2213
-
-You should keep an eye for when the solution for that comes around if it
-improves your problem.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Sven
