@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B2BC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 19:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C750C43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 19:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230340AbiKATLC (ORCPT
+        id S230348AbiKATLD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Nov 2022 15:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38666 "EHLO
+        Tue, 1 Nov 2022 15:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbiKATK7 (ORCPT
+        with ESMTP id S230345AbiKATLC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2022 15:10:59 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E211C416;
-        Tue,  1 Nov 2022 12:10:58 -0700 (PDT)
+        Tue, 1 Nov 2022 15:11:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1769C1DF27;
+        Tue,  1 Nov 2022 12:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667329858; x=1698865858;
+  t=1667329861; x=1698865861;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VmV32OVHi9fb2P0Ej7w8R1hN8TMIjIqdcfI5b5Yocxo=;
-  b=EoxOxxFaImcqZbbqPs4Xzk5aLUMLiSZqFqTFsMMJsfsGELJfYOydusTj
-   eyAUMq+W1+sf+Ltj4lKMRuuQ9gPz5qn81IH1iIvAii1fYp/CSwUTo79yt
-   np0+KlbBA0U+h9juYBjF1fL18RKV7Ibyn87+BJraG2ozn7MWqtLMsBwv1
-   Coip9y5ZYktYvlru2ijBTmZMIXeadV7rnj7n7lwgYC1CVfSSGDNG7bK6y
-   OT+yRV2Mv8N2rqrA1FiazyD3l092HzX0fyQ0hSMq0gC3aRq2XbOBWC4Mx
-   1uwbCcufEUEDV0hIt25SzRM7HF9QKMQFKtjLu7mFj5rPOIuQAoUbuRJYo
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="373440772"
+  bh=BsFd6K0vbA/ZPFxh0y/0GJ1X/IwutzDVqy/9HTmBpgE=;
+  b=LHBz2zh5RtuycRJshqoxKUvr2A9qkS4Nh5I9xC7v7NAnKLZwPiG1EazY
+   55SYqltL97Feu1Z/oNCk+GmOxKycGngtGGkbDpQhKNL7jsQ8zHZlFOtbS
+   bzxLcJYkiLPYDnafcp7/iaunwKlaF/xfVj+Of8EFFY+x2wF62SQ2Bp2dm
+   HVQP3sqJZNAlb3fsbsbLQTPNzzn4v4ZUpZqvlK7TitaJIdrTtlwQbyHp/
+   GcWgo9/qf9Ox40qEMZHc2BdjJLOfaTLaBNB3V01Y+SOGeLuPoeH54to5w
+   1UUrucSFp30tzEvSegcpDeyhDzwi911BrlF5wJyFbVk1ybzdjWOHcl2EW
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="310932227"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="373440772"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 12:10:28 -0700
+   d="scan'208";a="310932227"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 12:10:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="776605740"
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="611951132"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="776605740"
+   d="scan'208";a="611951132"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Nov 2022 12:10:28 -0700
+  by orsmga006.jf.intel.com with ESMTP; 01 Nov 2022 12:10:26 -0700
 Received: from debox1-desk4.intel.com (unknown [10.212.195.64])
-        by linux.intel.com (Postfix) with ESMTP id 95675580C99;
-        Tue,  1 Nov 2022 12:10:27 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 15303580B9D;
+        Tue,  1 Nov 2022 12:10:26 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] tools/arch/x86: intel_sdsi: Add support for reading meter certificates
-Date:   Tue,  1 Nov 2022 12:10:23 -0700
-Message-Id: <20221101191023.4150315-10-david.e.box@linux.intel.com>
+Subject: [PATCH 1/9] platform/x86/intel/sdsi: Add Intel On Demand text
+Date:   Tue,  1 Nov 2022 12:10:15 -0700
+Message-Id: <20221101191023.4150315-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221101191023.4150315-1-david.e.box@linux.intel.com>
 References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
@@ -60,202 +60,130 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add option to read and decode On Demand meter certificates.
-
-Link: https://github.com/intel/intel-sdsi/blob/master/meter-certificate.rst
+Intel Software Defined Silicon (SDSi) is now officially known as Intel
+On Demand. Add On Demand to the description in the kconfig, documentation,
+and driver source.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- tools/arch/x86/intel_sdsi/intel_sdsi.c | 110 ++++++++++++++++++++++++-
- 1 file changed, 107 insertions(+), 3 deletions(-)
+ .../ABI/testing/sysfs-driver-intel_sdsi       | 37 ++++++++++---------
+ drivers/platform/x86/intel/Kconfig            |  8 ++--
+ drivers/platform/x86/intel/sdsi.c             |  4 +-
+ 3 files changed, 25 insertions(+), 24 deletions(-)
 
-diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-index 0680eda78b1a..ebf076ee6ef8 100644
---- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-+++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-@@ -39,8 +39,10 @@
- #define GUID_V2			0xF210D9EF
- #define REGISTERS_MIN_SIZE	72
- #define STATE_CERT_MAX_SIZE	4096
-+#define METER_CERT_MAX_SIZE	4096
- #define STATE_MAX_NUM_LICENSES	16
- #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-+#define METER_MAX_NUM_BUNDLES	8
+diff --git a/Documentation/ABI/testing/sysfs-driver-intel_sdsi b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
+index 96b92c105ec4..9d77f30d9b9a 100644
+--- a/Documentation/ABI/testing/sysfs-driver-intel_sdsi
++++ b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
+@@ -4,21 +4,21 @@ KernelVersion:	5.18
+ Contact:	"David E. Box" <david.e.box@linux.intel.com>
+ Description:
+ 		This directory contains interface files for accessing Intel
+-		Software Defined Silicon (SDSi) features on a CPU. X
+-		represents the socket instance (though not the socket ID).
+-		The socket ID is determined by reading the registers file
+-		and decoding it per the specification.
++		On Demand (formerly Software Defined Silicon or SDSi) features
++		on a CPU. X represents the socket instance (though not the
++		socket ID). The socket ID is determined by reading the
++		registers file and decoding it per the specification.
  
- #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
- #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-@@ -150,6 +152,21 @@ struct bundle_encoding {
- 	uint32_t encoding_rsvd[7];
- };
+-		Some files communicate with SDSi hardware through a mailbox.
+-		Should the operation fail, one of the following error codes
+-		may be returned:
++		Some files communicate with On Demand hardware through a
++		mailbox. Should the operation fail, one of the following error
++		codes may be returned:
  
-+struct meter_certificate {
-+	uint32_t block_signature;
-+	uint32_t counter_unit;
-+	uint64_t ppin;
-+	uint32_t bundle_length;
-+	uint32_t reserved;
-+	uint32_t mmrc_encoding;
-+	uint32_t mmrc_counter;
-+};
-+
-+struct bundle_encoding_counter {
-+	uint32_t encoding;
-+	uint32_t counter;
-+};
-+
- struct sdsi_dev {
- 	struct sdsi_regs regs;
- 	struct state_certificate sc;
-@@ -160,6 +177,7 @@ struct sdsi_dev {
+ 		==========	=====
+ 		Error Code	Cause
+ 		==========	=====
+ 		EIO		General mailbox failure. Log may indicate cause.
+ 		EBUSY		Mailbox is owned by another agent.
+-		EPERM		SDSI capability is not enabled in hardware.
++		EPERM		On Demand capability is not enabled in hardware.
+ 		EPROTO		Failure in mailbox protocol detected by driver.
+ 				See log for details.
+ 		EOVERFLOW	For provision commands, the size of the data
+@@ -54,8 +54,8 @@ KernelVersion:	5.18
+ Contact:	"David E. Box" <david.e.box@linux.intel.com>
+ Description:
+ 		(WO) Used to write an Authentication Key Certificate (AKC) to
+-		the SDSi NVRAM for the CPU. The AKC is used to authenticate a
+-		Capability Activation Payload. Mailbox command.
++		the On Demand NVRAM for the CPU. The AKC is used to authenticate
++		a Capability Activation Payload. Mailbox command.
  
- enum command {
- 	CMD_SOCKET_INFO,
-+	CMD_METER_CERT,
- 	CMD_STATE_CERT,
- 	CMD_PROV_AKC,
- 	CMD_PROV_CAP,
-@@ -306,6 +324,86 @@ static void get_feature(uint32_t encoding, char *feature)
- 	feature[0] = name[3];
- }
+ What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/provision_cap
+ Date:		Feb 2022
+@@ -63,17 +63,18 @@ KernelVersion:	5.18
+ Contact:	"David E. Box" <david.e.box@linux.intel.com>
+ Description:
+ 		(WO) Used to write a Capability Activation Payload (CAP) to the
+-		SDSi NVRAM for the CPU. CAPs are used to activate a given CPU
+-		feature. A CAP is validated by SDSi hardware using a previously
+-		provisioned AKC file. Upon successful authentication, the CPU
+-		configuration is updated. A cold reboot is required to fully
+-		activate the feature. Mailbox command.
++		On Demand NVRAM for the CPU. CAPs are used to activate a given
++		CPU feature. A CAP is validated by On Demand hardware using a
++		previously provisioned AKC file. Upon successful authentication,
++		the CPU configuration is updated. A cold reboot is required to
++		fully activate the feature. Mailbox command.
  
-+static int sdsi_meter_cert_show(struct sdsi_dev *s)
-+{
-+	char buf[METER_CERT_MAX_SIZE] = {0};
-+	struct bundle_encoding_counter *bec;
-+	struct meter_certificate *mc;
-+	uint32_t count = 0;
-+	FILE *cert_ptr;
-+	int ret, size;
-+
-+	ret = sdsi_update_registers(s);
-+	if (ret)
-+		return ret;
-+
-+	if (!s->regs.en_features.sdsi) {
-+		fprintf(stderr, "SDSi feature is present but not enabled.\n");
-+		fprintf(stderr, " Unable to read meter certificate\n");
-+		return -1;
-+	}
-+
-+	if (!s->regs.en_features.metering) {
-+		fprintf(stderr, "Metering not supporting on this socket.\n");
-+		return -1;
-+	}
-+
-+	ret = chdir(s->dev_path);
-+	if (ret == -1) {
-+		perror("chdir");
-+		return ret;
-+	}
-+
-+	cert_ptr = fopen("meter_certificate", "r");
-+	if (!cert_ptr) {
-+		perror("Could not open 'meter_certificate' file");
-+		return -1;
-+	}
-+
-+	size = fread(buf, 1, sizeof(buf), cert_ptr);
-+	if (!size) {
-+		fprintf(stderr, "Could not read 'meter_certificate' file\n");
-+		fclose(cert_ptr);
-+		return -1;
-+	}
-+	fclose(cert_ptr);
-+
-+	mc = (struct meter_certificate *)buf;
-+
-+	printf("\n");
-+	printf("Meter certificate for device %s\n", s->dev_name);
-+	printf("\n");
-+	printf("Block Signature:       0x%x\n", mc->block_signature);
-+	printf("Count Unit:            %dms\n", mc->counter_unit);
-+	printf("PPIN:                  0x%lx\n", mc->ppin);
-+	printf("Feature Bundle Length: %d\n", mc->bundle_length);
-+	printf("MMRC encoding:         %d\n", mc->mmrc_encoding);
-+	printf("MMRC counter:          %d\n", mc->mmrc_counter);
-+	if (mc->bundle_length % 8) {
-+		fprintf(stderr, "Invalid bundle length\n");
-+		return -1;
-+	}
-+
-+	if (mc->bundle_length > METER_MAX_NUM_BUNDLES * 8)  {
-+		fprintf(stderr, "More the %d bundles: %d\n",
-+			METER_MAX_NUM_BUNDLES, mc->bundle_length / 8);
-+		return -1;
-+	}
-+
-+	bec = (void *)(mc) + sizeof(mc);
-+
-+	printf("Number of Feature Counters:          %d\n", mc->bundle_length / 8);
-+	while (count++ < mc->bundle_length / 8) {
-+		char feature[5];
-+
-+		feature[4] = '\0';
-+		get_feature(bec[count].encoding, feature);
-+		printf("    %s:          %d\n", feature, bec[count].counter);
-+	}
-+
-+	return 0;
-+}
-+
- static int sdsi_state_cert_show(struct sdsi_dev *s)
- {
- 	char buf[STATE_CERT_MAX_SIZE] = {0};
-@@ -625,7 +723,7 @@ static void sdsi_free_dev(struct sdsi_dev *s)
+ What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/state_certificate
+ Date:		Feb 2022
+ KernelVersion:	5.18
+ Contact:	"David E. Box" <david.e.box@linux.intel.com>
+ Description:
+-		(RO) Used to read back the current State Certificate for the CPU
+-		from SDSi hardware. The State Certificate contains information
+-		about the current licenses on the CPU. Mailbox command.
++		(RO) Used to read back the current state certificate for the CPU
++		from On Demand hardware. The state certificate contains
++		information about the current licenses on the CPU. Mailbox
++		command.
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 794968bda115..d5a33473e838 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -157,13 +157,13 @@ config INTEL_RST
+ 	  as usual.
  
- static void usage(char *prog)
- {
--	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-a FILE] [-c FILE]]\n", prog);
-+	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m] [-a FILE] [-c FILE]]\n", prog);
- }
+ config INTEL_SDSI
+-	tristate "Intel Software Defined Silicon Driver"
++	tristate "Intel On Demand (Software Defined Silicon) Driver"
+ 	depends on INTEL_VSEC
+ 	depends on X86_64
+ 	help
+-	  This driver enables access to the Intel Software Defined Silicon
+-	  interface used to provision silicon features with an authentication
+-	  certificate and capability license.
++	  This driver enables access to the Intel On Demand (formerly Software
++	  Defined Silicon) interface used to provision silicon features with an
++	  authentication certificate and capability license.
  
- static void show_help(void)
-@@ -635,6 +733,7 @@ static void show_help(void)
- 	printf("  %-18s\t%s\n", "-d, --devno DEVNO",    "On Demand device number");
- 	printf("  %-18s\t%s\n", "-i, --info",           "show socket information");
- 	printf("  %-18s\t%s\n", "-s, --state",          "show state certificate");
-+	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate");
- 	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
- 	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
- }
-@@ -656,6 +755,7 @@ int main(int argc, char *argv[])
- 		{"help",	no_argument,		0, 'h'},
- 		{"info",	no_argument,		0, 'i'},
- 		{"list",	no_argument,		0, 'l'},
-+		{"meter",	no_argument,		0, 'm'},
- 		{"state",	no_argument,		0, 's'},
- 		{0,		0,			0, 0 }
- 	};
-@@ -663,7 +763,7 @@ int main(int argc, char *argv[])
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_sdsi.
+diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+index c830e98dfa38..32793919473d 100644
+--- a/drivers/platform/x86/intel/sdsi.c
++++ b/drivers/platform/x86/intel/sdsi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Intel Software Defined Silicon driver
++ * Intel On Demand (Software Defined Silicon) driver
+  *
+  * Copyright (c) 2022, Intel Corporation.
+  * All Rights Reserved.
+@@ -586,5 +586,5 @@ static struct auxiliary_driver sdsi_aux_driver = {
+ module_auxiliary_driver(sdsi_aux_driver);
  
- 	progname = argv[0];
- 
--	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hils", long_options,
-+	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hilms", long_options,
- 			&option_index)) != -1) {
- 		switch (opt) {
- 		case 'd':
-@@ -676,8 +776,9 @@ int main(int argc, char *argv[])
- 		case 'i':
- 			command = CMD_SOCKET_INFO;
- 			break;
-+		case 'm':
- 		case 's':
--			command = CMD_STATE_CERT;
-+			command = (opt == 'm') ? CMD_METER_CERT : CMD_STATE_CERT;
- 			break;
- 		case 'a':
- 		case 'c':
-@@ -713,6 +814,9 @@ int main(int argc, char *argv[])
- 		case CMD_SOCKET_INFO:
- 			ret = sdsi_read_reg(s);
- 			break;
-+		case CMD_METER_CERT:
-+			ret = sdsi_meter_cert_show(s);
-+			break;
- 		case CMD_STATE_CERT:
- 			ret = sdsi_state_cert_show(s);
- 			break;
+ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
+-MODULE_DESCRIPTION("Intel Software Defined Silicon driver");
++MODULE_DESCRIPTION("Intel On Demand (SDSi) driver");
+ MODULE_LICENSE("GPL");
 -- 
 2.25.1
 
