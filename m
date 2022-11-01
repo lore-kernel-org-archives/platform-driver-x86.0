@@ -2,109 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B2DC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD64C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 14:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbiKANuq (ORCPT
+        id S229880AbiKAOKE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Nov 2022 09:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49862 "EHLO
+        Tue, 1 Nov 2022 10:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiKANum (ORCPT
+        with ESMTP id S229628AbiKAOKB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2022 09:50:42 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971856179
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 06:50:41 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id l11so20648771edb.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 06:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QQAnjt+7XG8p++j0HFBqJ1i4IPg+WyhF6FRul3d1/9M=;
-        b=hesLDdylycooTsz6aCItyOr7PtE299wGrzDAYVq5R34UZo3QscVnl8OQaus4HSG6AK
-         Mdk1ppaD67TQP3cDlAYo9APgzs+RmxBeuxxRVjavusi51UKc1MYMzXMjUVHxKbCg5vI8
-         VUExyH4qUIkhWDbZmocLqwRhLD+gdvCFrB9qM=
+        Tue, 1 Nov 2022 10:10:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4717B1AF2B
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Nov 2022 07:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667311748;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fVSeLqpEVoToYlNB+tKBI6A4oOh8H8g9nR5Hfp9ngAc=;
+        b=BP6A7EndqBLa/wBWqhPvhVhQg3HSJwlJXLQBJd4kMnI8gMaAYpso5ByFlDzcdqIif3MTk/
+        R4i1DErAibwtaB+uE5+GIptTwIV59J6/wrkuzuWvJTRYi0fetWwx9Hay4LWlGXpI9wpNX9
+        P8RCUAmL6uil0AgL8ldV6/O1S8smDzc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-660-S7fSA9LpNoGDoYX0mbCdhA-1; Tue, 01 Nov 2022 10:09:07 -0400
+X-MC-Unique: S7fSA9LpNoGDoYX0mbCdhA-1
+Received: by mail-ed1-f72.google.com with SMTP id z15-20020a05640240cf00b00461b253c220so9972694edb.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 07:09:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QQAnjt+7XG8p++j0HFBqJ1i4IPg+WyhF6FRul3d1/9M=;
-        b=LmHo7YXT+MY0Yt+Yc0A9+oAtrm3Lwe+lPcxvrsmmJc4Q6+nmBBhwCtvD30N2p8XMz4
-         DZaQaET1idBXqy/GMeHJMRXaIehXT/jwHSpVCfoM+cGQ8nEfmRCv6Fa5sX/MlT1AGBVG
-         pjrc3uanW7tuTtShYpRAqGil2Q4l0pVjfIzQgIGjd0QZhodx8Sv+MQlbc3ah0m7tpf8I
-         JFwuIePIUn73ZuOS91cfDuGdpbMyc9Xo8PLgV/1WkD5HkHFA29fMfrTkxM6rq2SCCD8P
-         wQJVRsz1olUekNKvtleWEuczuHKQx8Qgp2cQP9dcrIiGrMMo80ewJs/AXFQe9egc26tK
-         23oA==
-X-Gm-Message-State: ACrzQf33QEjR7T6Vpx4CTbBqzycHKfbyll2W7A9YUZgam9y9RUb85qe2
-        elWLkehBZqnJ/ULXjnbX1NGvkSUND78Ewr5C
-X-Google-Smtp-Source: AMsMyM6ciyrewN+WeNDTtaQusRLNGSIlXqCd1rsa3D5kbV9Vumv7xaRNT7hKVregtmPEiywyh3DzqA==
-X-Received: by 2002:aa7:da42:0:b0:461:9465:b019 with SMTP id w2-20020aa7da42000000b004619465b019mr19856730eds.144.1667310639962;
-        Tue, 01 Nov 2022 06:50:39 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id r10-20020a17090609ca00b00780ab5a9116sm4186509eje.211.2022.11.01.06.50.38
-        for <platform-driver-x86@vger.kernel.org>
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fVSeLqpEVoToYlNB+tKBI6A4oOh8H8g9nR5Hfp9ngAc=;
+        b=suc2IX7YQDcnU/fCqgBI8SZBvLNPt1LJJ7JTP92y35pemGwafHmf6KyRH4KBVCJG/R
+         7EfGcbuhjkUDzROwlF+afZcBSpDV3c+VSJLz5vtDJdIjztZqp8E0w7a0lhSKo24OMgeN
+         PWzDDkFH7x1pRLlS08ByuINqsouPlGRk83lsTvyAOCJ5ZB5lF7K2Ot3Cm9KKwe3hRcK2
+         zazqbpgA5f5ET1xiW6kwzuqAA2NQTU0iaq/lr49rqffhsFyhmcKV9TdOmLzK+YwKS0Xk
+         FiPDEp9KPdqN7/8010IgdSU1ZIKGd3Xf4EciOLiEyTxeol50Hfa1l/EVwVPIwbCaQ4Mv
+         7hLg==
+X-Gm-Message-State: ACrzQf0JQmwWTFlbEI52S6x/eF+3DIv248mXBgghKwMJpWJLIbyEM1DH
+        iqkkp+w07+Q6Hu+/C3aekJGyxDYMaiBFnVrcAhIa7AhfIYmWgSWz6T635n6LE1kTvM9zJXvZLmB
+        W3+J/kJtNwU/YqAC6tcwY7RDQR2rbX60HuQ==
+X-Received: by 2002:a05:6402:2550:b0:462:38d7:a6e1 with SMTP id l16-20020a056402255000b0046238d7a6e1mr19667151edb.337.1667311745801;
+        Tue, 01 Nov 2022 07:09:05 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5S5mVcDyO7NrTT7mMA5hRTBT5QtYNZB/bXn+Byv+W3Kdzn9nZnmDtCt27JDD/HMDZZJlx/qQ==
+X-Received: by 2002:a05:6402:2550:b0:462:38d7:a6e1 with SMTP id l16-20020a056402255000b0046238d7a6e1mr19667118edb.337.1667311745537;
+        Tue, 01 Nov 2022 07:09:05 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id q7-20020a17090676c700b007ad94422cf6sm4220162ejn.198.2022.11.01.07.09.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Nov 2022 06:50:38 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id b2so37185344eja.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Nov 2022 06:50:38 -0700 (PDT)
-X-Received: by 2002:a17:907:75f1:b0:78a:f935:647d with SMTP id
- jz17-20020a17090775f100b0078af935647dmr18150379ejc.587.1667310637954; Tue, 01
- Nov 2022 06:50:37 -0700 (PDT)
+        Tue, 01 Nov 2022 07:09:04 -0700 (PDT)
+Message-ID: <0cd572ac-fdda-f364-8558-2b6da9a0b901@redhat.com>
+Date:   Tue, 1 Nov 2022 15:09:04 +0100
 MIME-Version: 1.0
-References: <20221027151908.v1.1.I295e65357f06f162b46ea6fc6c03be37e3978bdc@changeid>
- <4b7304c0-8dd5-9add-7c84-4e9f0aa9396b@redhat.com> <MN0PR12MB6101BCCA364437A76FED924AE2339@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CAG-rBijvNoN3ppz6bdkEUofYPPBxCtFfo1nWBK5TdG69fcKMnA@mail.gmail.com>
- <CAE2upjS6qRGRcuVYuAB5DMf66A7VcfCKKYEkpsr1My7RnKDFtQ@mail.gmail.com>
- <CAG-rBihDRq1y61tAp56yYCoTOSZXO9OZNzn7gXb_y8XaiO_zqg@mail.gmail.com>
- <MN0PR12MB610109F448E3FC8CE71FBA76E2379@MN0PR12MB6101.namprd12.prod.outlook.com>
- <CAG-rBijSASfbfWQNarjGqj2UxQDOSdwM-qj5YA5A9ur=DNJf-g@mail.gmail.com> <cb5ab68e-5034-d937-e28e-e838e50172a8@amd.com>
-In-Reply-To: <cb5ab68e-5034-d937-e28e-e838e50172a8@amd.com>
-From:   Sven van Ashbrook <svenva@chromium.org>
-Date:   Tue, 1 Nov 2022 09:50:26 -0400
-X-Gmail-Original-Message-ID: <CAM7w-FW2Yer3B+Z6giP8Jc8i5xEMueFKzY=R172drWaYtRHwQg@mail.gmail.com>
-Message-ID: <CAM7w-FW2Yer3B+Z6giP8Jc8i5xEMueFKzY=R172drWaYtRHwQg@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86: intel_pmc_core: promote S0ix failure
- warn() to WARN()
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "rrangel@chromium.org" <rrangel@chromium.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Rafael J Wysocki <rjw@rjwysocki.net>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>,
-        Mark Gross <markgross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] ACPI: video: Add backlight=native DMI quirk for Dell G15
+ 5515
+To:     Daniel Dadap <ddadap@nvidia.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20221031212556.401618-1-hdegoede@redhat.com>
+ <Y2BHpKxWitLSMFER@lenny>
+Content-Language: en-US, nl
+In-Reply-To: <Y2BHpKxWitLSMFER@lenny>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 9:58 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> I actually thought that by putting the duration of time put in
-> last_hw_deepest_state you'll be able to catch this by comparing the
-> duration of the suspend to the duration of last_hw_deepest_state.
+Hi Daniel,
 
-I'm not sure if this method would catch all or even most suspend
-failures. That's why the EC monitoring of S0ix was devised. I will
-circulate this internally, see what comes back.
+On 10/31/22 23:09, Daniel Dadap wrote:
+> Thanks, Hans:
+> 
+> On Mon, Oct 31, 2022 at 10:25:56PM +0100, Hans de Goede wrote:
+>> The Dell G15 5515 has the WMI interface (and WMI call returns) expected
+>> by the nvidia-wmi-ec-backlight interface. But the backlight class device
+>> registered by the nvidia-wmi-ec-backlight driver does not actually work.
+>>
+>> The amdgpu_bl0 native GPU backlight class device does actually work,
+>> add a backlight=native DMI quirk for this.
+> 
+> I'm not certain whether you have direct access to the system, but I am
+> curious as to what mode the system is in when it exposes a non-working
+> WMI backlight interface. The expectation is that the WMI EC backlight
+> interface should only be exposed when the system is in dynamic mode
+> (different vendors may call this differeint things in the EFI setup
+> menus), and the native backlight interfaces for the GPUs, be they
+> discrete or integrated, should only be exposed when a mode that keeps
+> only one of the GPUs connected to the panel; i.e., in discrete-only mode
+> the discrete GPU should have a working native backlight interface, and
+> in integrated-only mode, or a hybrid mode which does not allow dynamic
+> mux switching, the integrated GPU should have a working native backlight
+> interface.
+> 
+> For this notebook the AMD GPU would be the integrated one, so if the
+> system is *not* in dynamic switch mode, and the WMI interface is
+> reporting that the backlight should be handled by the EC, then that is
+> certainly a bug in the system, and this would be the correct workaround,
+> when the system is operating in an iGPU-only or non-dynamic hybrid mode.
+> However, if the system is switched to a dynamic mode, then this would
+> break the EC backlight, which should be the corect backlight interface
+> for that case. Another possible system bug would be if the condition
+> described in the change description occurs when the system *is* in a
+> dynamic mode, but is routing backlight control to the iGPU anyway. That
+> would be a messier bug to deal with, since it would also be necessary to
+> determine which backlight interface is functional when the display is
+> switched over to the dGPU.
+> 
+> If it's not too much trouble could you (or the reporter, if you don't
+> have the system) check which backlight interfaces are exposed, and which
+> of those actually work, for each of the different hybrid GPU modes? I am
+> not certain what they would be called on the setup screen, but the
+> possible modes should be:
+> 
+> * Integrated only
+> * Discrete only
+> * Hybrid, without dynamic switching
+> * Hybrid, with dynamic switching
+> 
+> , or a subset thereof. Usually I would expect the minimal subset to be
+> discrete only plus one or both of the hybrid modes. Since we're not sure
+> what these are called on the setup screen it is probably best to simply
+> report the names of the mode as they are listed in the UI.
 
-> >
-> > Is the light worth the candle?
->
-> I wrote an RFC that I sent out for it with my ideas at least.
->
+I have heard back from the reporter about this and they report that
+there is no option in the BIOS to select the mode. And currently the
+machine is running in Hybrid mode, with it being unclear if this
+supports dynamic switching or not.
 
-That is much appreciated ! Yet even for good ideas, it's often
-necessary to weigh the benefits and downsides of the intervention.
-Perhaps we can get some pros/cons feedback from other stakeholders ?
+Regards,
 
-Sven
+Hans
+
+
+
+> 
+>> Cc: Daniel Dadap <ddadap@nvidia.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  drivers/acpi/video_detect.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+>> index 841f6213b4de..88acc09773bb 100644
+>> --- a/drivers/acpi/video_detect.c
+>> +++ b/drivers/acpi/video_detect.c
+>> @@ -645,6 +645,16 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+>>  		},
+>>  	},
+>>  
+>> +	/* Models which have nvidia-ec-wmi support, but should not use it. */
+>> +	{
+>> +	 .callback = video_detect_force_native,
+>> +	 /* Dell G15 5515 */
+>> +	 .matches = {
+>> +		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>> +		DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5515"),
+>> +		},
+>> +	},
+>> +
+>>  	/*
+>>  	 * Desktops which falsely report a backlight and which our heuristics
+>>  	 * for this do not catch.
+>> -- 
+>> 2.37.3
+>>
+> 
+
+
