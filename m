@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C750C43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 19:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21633C43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Nov 2022 19:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbiKATLD (ORCPT
+        id S230389AbiKATLR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Nov 2022 15:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
+        Tue, 1 Nov 2022 15:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230345AbiKATLC (ORCPT
+        with ESMTP id S230358AbiKATLD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2022 15:11:02 -0400
+        Tue, 1 Nov 2022 15:11:03 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1769C1DF27;
-        Tue,  1 Nov 2022 12:11:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469861CB10;
+        Tue,  1 Nov 2022 12:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667329861; x=1698865861;
+  t=1667329862; x=1698865862;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BsFd6K0vbA/ZPFxh0y/0GJ1X/IwutzDVqy/9HTmBpgE=;
-  b=LHBz2zh5RtuycRJshqoxKUvr2A9qkS4Nh5I9xC7v7NAnKLZwPiG1EazY
-   55SYqltL97Feu1Z/oNCk+GmOxKycGngtGGkbDpQhKNL7jsQ8zHZlFOtbS
-   bzxLcJYkiLPYDnafcp7/iaunwKlaF/xfVj+Of8EFFY+x2wF62SQ2Bp2dm
-   HVQP3sqJZNAlb3fsbsbLQTPNzzn4v4ZUpZqvlK7TitaJIdrTtlwQbyHp/
-   GcWgo9/qf9Ox40qEMZHc2BdjJLOfaTLaBNB3V01Y+SOGeLuPoeH54to5w
-   1UUrucSFp30tzEvSegcpDeyhDzwi911BrlF5wJyFbVk1ybzdjWOHcl2EW
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="310932227"
+  bh=psz8zJlgYjfUL1vT/RFKZgOUtluJ4XfLpI5eSvucdXk=;
+  b=MY5VKUgOqvAM/BRNal/JK9XebHNOLNLfxI0jSCCrUyT9wpJMO5WTtCqx
+   ikOVo4qohmMghtLfBicGO9zNahmBBl8bCMCMtjZYafFKhPlJPeCgXNL8V
+   FMZCuTd6oaT9PzgkGE1uwPVHPvARmYP1SaiqptfI5wzNpalTp3Aw6Dhd8
+   2asPwt6NtXsI+1kBFwde4M/D1NxBLirp87vP7jwAKcZe4kXIBnQ4x2IDs
+   yZF6q+UQqoBIVViYbnQ9S3byuoMwOHtlsLu/54hUyi0huhr95s+hTm9I+
+   UzwXoFdaYIGKvWmwPvAIk/w0KwI0sDRDha7GY4l6mN10arhCelBKi5YN5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="310932234"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="310932227"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 12:10:26 -0700
+   d="scan'208";a="310932234"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 12:10:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="611951132"
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="963233021"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="611951132"
+   d="scan'208";a="963233021"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 01 Nov 2022 12:10:26 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 01 Nov 2022 12:10:27 -0700
 Received: from debox1-desk4.intel.com (unknown [10.212.195.64])
-        by linux.intel.com (Postfix) with ESMTP id 15303580B9D;
+        by linux.intel.com (Postfix) with ESMTP id CCBE9580C99;
         Tue,  1 Nov 2022 12:10:26 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] platform/x86/intel/sdsi: Add Intel On Demand text
-Date:   Tue,  1 Nov 2022 12:10:15 -0700
-Message-Id: <20221101191023.4150315-2-david.e.box@linux.intel.com>
+Subject: [PATCH 5/9] tools/arch/x86: intel_sdsi: Add support for reading state certificates
+Date:   Tue,  1 Nov 2022 12:10:19 -0700
+Message-Id: <20221101191023.4150315-6-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221101191023.4150315-1-david.e.box@linux.intel.com>
 References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
@@ -60,130 +60,421 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Intel Software Defined Silicon (SDSi) is now officially known as Intel
-On Demand. Add On Demand to the description in the kconfig, documentation,
-and driver source.
+Add option to read and decode On Demand state certificates.
+
+Link: https://github.com/intel/intel-sdsi/blob/master/state-certificate-encoding.rst
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- .../ABI/testing/sysfs-driver-intel_sdsi       | 37 ++++++++++---------
- drivers/platform/x86/intel/Kconfig            |  8 ++--
- drivers/platform/x86/intel/sdsi.c             |  4 +-
- 3 files changed, 25 insertions(+), 24 deletions(-)
+ tools/arch/x86/intel_sdsi/intel_sdsi.c | 268 ++++++++++++++++++-------
+ 1 file changed, 198 insertions(+), 70 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-intel_sdsi b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-index 96b92c105ec4..9d77f30d9b9a 100644
---- a/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-+++ b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-@@ -4,21 +4,21 @@ KernelVersion:	5.18
- Contact:	"David E. Box" <david.e.box@linux.intel.com>
- Description:
- 		This directory contains interface files for accessing Intel
--		Software Defined Silicon (SDSi) features on a CPU. X
--		represents the socket instance (though not the socket ID).
--		The socket ID is determined by reading the registers file
--		and decoding it per the specification.
-+		On Demand (formerly Software Defined Silicon or SDSi) features
-+		on a CPU. X represents the socket instance (though not the
-+		socket ID). The socket ID is determined by reading the
-+		registers file and decoding it per the specification.
+diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+index c0e2f2349db4..9dd94014a672 100644
+--- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
++++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+@@ -22,11 +22,24 @@
  
--		Some files communicate with SDSi hardware through a mailbox.
--		Should the operation fail, one of the following error codes
--		may be returned:
-+		Some files communicate with On Demand hardware through a
-+		mailbox. Should the operation fail, one of the following error
-+		codes may be returned:
+ #include <sys/types.h>
  
- 		==========	=====
- 		Error Code	Cause
- 		==========	=====
- 		EIO		General mailbox failure. Log may indicate cause.
- 		EBUSY		Mailbox is owned by another agent.
--		EPERM		SDSI capability is not enabled in hardware.
-+		EPERM		On Demand capability is not enabled in hardware.
- 		EPROTO		Failure in mailbox protocol detected by driver.
- 				See log for details.
- 		EOVERFLOW	For provision commands, the size of the data
-@@ -54,8 +54,8 @@ KernelVersion:	5.18
- Contact:	"David E. Box" <david.e.box@linux.intel.com>
- Description:
- 		(WO) Used to write an Authentication Key Certificate (AKC) to
--		the SDSi NVRAM for the CPU. The AKC is used to authenticate a
--		Capability Activation Payload. Mailbox command.
-+		the On Demand NVRAM for the CPU. The AKC is used to authenticate
-+		a Capability Activation Payload. Mailbox command.
++#ifndef __packed
++#define __packed __attribute__((packed))
++#endif
++
++#define min(x, y) ({                            \
++	typeof(x) _min1 = (x);                  \
++	typeof(y) _min2 = (y);                  \
++	(void) (&_min1 == &_min2);              \
++	_min1 < _min2 ? _min1 : _min2; })
++
+ #define SDSI_DEV		"intel_vsec.sdsi"
+ #define AUX_DEV_PATH		"/sys/bus/auxiliary/devices/"
+ #define SDSI_PATH		(AUX_DEV_DIR SDSI_DEV)
+ #define GUID			0x6dd191
+ #define REGISTERS_MIN_SIZE	72
++#define STATE_CERT_MAX_SIZE	4096
++#define STATE_MAX_NUM_LICENSES	16
++#define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
  
- What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/provision_cap
- Date:		Feb 2022
-@@ -63,17 +63,18 @@ KernelVersion:	5.18
- Contact:	"David E. Box" <david.e.box@linux.intel.com>
- Description:
- 		(WO) Used to write a Capability Activation Payload (CAP) to the
--		SDSi NVRAM for the CPU. CAPs are used to activate a given CPU
--		feature. A CAP is validated by SDSi hardware using a previously
--		provisioned AKC file. Upon successful authentication, the CPU
--		configuration is updated. A cold reboot is required to fully
--		activate the feature. Mailbox command.
-+		On Demand NVRAM for the CPU. CAPs are used to activate a given
-+		CPU feature. A CAP is validated by On Demand hardware using a
-+		previously provisioned AKC file. Upon successful authentication,
-+		the CPU configuration is updated. A cold reboot is required to
-+		fully activate the feature. Mailbox command.
+ #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+ #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
+@@ -49,6 +62,7 @@ struct availability {
+ 	uint64_t reserved:48;
+ 	uint64_t available:3;
+ 	uint64_t threshold:3;
++	uint64_t reserved2:10;
+ };
  
- What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X/state_certificate
- Date:		Feb 2022
- KernelVersion:	5.18
- Contact:	"David E. Box" <david.e.box@linux.intel.com>
- Description:
--		(RO) Used to read back the current State Certificate for the CPU
--		from SDSi hardware. The State Certificate contains information
--		about the current licenses on the CPU. Mailbox command.
-+		(RO) Used to read back the current state certificate for the CPU
-+		from On Demand hardware. The state certificate contains
-+		information about the current licenses on the CPU. Mailbox
-+		command.
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 794968bda115..d5a33473e838 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -157,13 +157,13 @@ config INTEL_RST
- 	  as usual.
+ struct sdsi_regs {
+@@ -63,17 +77,55 @@ struct sdsi_regs {
+ 	uint64_t socket_id;
+ };
  
- config INTEL_SDSI
--	tristate "Intel Software Defined Silicon Driver"
-+	tristate "Intel On Demand (Software Defined Silicon) Driver"
- 	depends on INTEL_VSEC
- 	depends on X86_64
- 	help
--	  This driver enables access to the Intel Software Defined Silicon
--	  interface used to provision silicon features with an authentication
--	  certificate and capability license.
-+	  This driver enables access to the Intel On Demand (formerly Software
-+	  Defined Silicon) interface used to provision silicon features with an
-+	  authentication certificate and capability license.
++#define CONTENT_TYPE_LK_ENC		0xD
++#define CONTENT_TYPE_LK_BLOB_ENC	0xE
++
++struct state_certificate {
++	uint32_t content_type;
++	uint32_t region_rev_id;
++	uint32_t header_size;
++	uint32_t total_size;
++	uint32_t key_size;
++	uint32_t num_licenses;
++};
++
++struct license_key_info {
++	uint32_t key_rev_id;
++	uint64_t key_image_content[6];
++} __packed;
++
++#define LICENSE_BLOB_SIZE(l)	(((l) & 0x7fffffff) * 4)
++#define LICENSE_VALID(l)	(!!((l) & 0x80000000))
++
++// License Group Types
++#define LBT_ONE_TIME_UPGRADE	1
++#define LBT_METERED_UPGRADE	2
++
++struct license_blob_content {
++	uint32_t type;
++	uint64_t id;
++	uint64_t ppin;
++	uint64_t previous_ppin;
++	uint32_t rev_id;
++	uint32_t num_bundles;
++} __packed;
++
++struct bundle_encoding {
++	uint32_t encoding;
++	uint32_t encoding_rsvd[7];
++};
++
+ struct sdsi_dev {
+ 	struct sdsi_regs regs;
++	struct state_certificate sc;
+ 	char *dev_name;
+ 	char *dev_path;
+ 	int guid;
+ };
  
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called intel_sdsi.
-diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-index c830e98dfa38..32793919473d 100644
---- a/drivers/platform/x86/intel/sdsi.c
-+++ b/drivers/platform/x86/intel/sdsi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Intel Software Defined Silicon driver
-+ * Intel On Demand (Software Defined Silicon) driver
-  *
-  * Copyright (c) 2022, Intel Corporation.
-  * All Rights Reserved.
-@@ -586,5 +586,5 @@ static struct auxiliary_driver sdsi_aux_driver = {
- module_auxiliary_driver(sdsi_aux_driver);
+ enum command {
+-	CMD_NONE,
+ 	CMD_SOCKET_INFO,
+-	CMD_DUMP_CERT,
++	CMD_STATE_CERT,
+ 	CMD_PROV_AKC,
+ 	CMD_PROV_CAP,
+ };
+@@ -168,20 +220,56 @@ static int sdsi_read_reg(struct sdsi_dev *s)
+ 	return 0;
+ }
  
- MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
--MODULE_DESCRIPTION("Intel Software Defined Silicon driver");
-+MODULE_DESCRIPTION("Intel On Demand (SDSi) driver");
- MODULE_LICENSE("GPL");
+-static int sdsi_certificate_dump(struct sdsi_dev *s)
++static char *license_blob_type(uint32_t type)
++{
++	switch (type) {
++	case LBT_ONE_TIME_UPGRADE:
++		return "One time upgrade";
++	case LBT_METERED_UPGRADE:
++		return "Metered upgrade";
++	default:
++		return "Unknown license blob type";
++	}
++}
++
++static char *content_type(uint32_t type)
++{
++	switch (type) {
++	case  CONTENT_TYPE_LK_ENC:
++		return "Licencse key encoding";
++	case CONTENT_TYPE_LK_BLOB_ENC:
++		return "License key + Blob encoding";
++	default:
++		return "Unknown content type";
++	}
++}
++
++static void get_feature(uint32_t encoding, char *feature)
++{
++	char *name = (char *)&encoding;
++
++	feature[3] = name[0];
++	feature[2] = name[1];
++	feature[1] = name[2];
++	feature[0] = name[3];
++}
++
++static int sdsi_state_cert_show(struct sdsi_dev *s)
+ {
+-	uint64_t state_certificate[512] = {0};
+-	bool first_instance;
+-	uint64_t previous;
++	char buf[STATE_CERT_MAX_SIZE] = {0};
++	struct state_certificate *sc;
++	struct license_key_info *lki;
++	uint32_t offset = 0;
++	uint32_t count = 0;
+ 	FILE *cert_ptr;
+-	int i, ret, size;
++	int ret, size;
+ 
+ 	ret = sdsi_update_registers(s);
+ 	if (ret)
+ 		return ret;
+ 
+ 	if (!s->regs.en_features.sdsi) {
+-		fprintf(stderr, "SDSi feature is present but not enabled.");
++		fprintf(stderr, "On Demand feature is present but not enabled.");
+ 		fprintf(stderr, " Unable to read state certificate");
+ 		return -1;
+ 	}
+@@ -198,32 +286,74 @@ static int sdsi_certificate_dump(struct sdsi_dev *s)
+ 		return -1;
+ 	}
+ 
+-	size = fread(state_certificate, 1, sizeof(state_certificate), cert_ptr);
++	size = fread(buf, 1, sizeof(buf), cert_ptr);
+ 	if (!size) {
+ 		fprintf(stderr, "Could not read 'state_certificate' file\n");
+ 		fclose(cert_ptr);
+ 		return -1;
+ 	}
++	fclose(cert_ptr);
+ 
+-	printf("%3d: 0x%lx\n", 0, state_certificate[0]);
+-	previous = state_certificate[0];
+-	first_instance = true;
++	sc = (struct state_certificate *)buf;
+ 
+-	for (i = 1; i < (int)(round_up(size, sizeof(uint64_t))/sizeof(uint64_t)); i++) {
+-		if (state_certificate[i] == previous) {
+-			if (first_instance) {
+-				puts("*");
+-				first_instance = false;
+-			}
+-			continue;
++	/* Print register info for this guid */
++	printf("\n");
++	printf("State certificate for device %s\n", s->dev_name);
++	printf("\n");
++	printf("Content Type:          %s\n", content_type(sc->content_type));
++	printf("Region Revision ID:    %d\n", sc->region_rev_id);
++	printf("Header Size:           %d\n", sc->header_size * 4);
++	printf("Total Size:            %d\n", sc->total_size);
++	printf("OEM Key Size:          %d\n", sc->key_size * 4);
++	printf("Number of Licenses:    %d\n", sc->num_licenses);
++
++	/* Skip over the license sizes 4 bytes per license) to get the license key info */
++	lki = (void *)sc + sizeof(*sc) + (4 * sc->num_licenses);
++
++	printf("License blob Info:\n");
++	printf("    License Key Revision ID:    0x%x\n", lki->key_rev_id);
++	printf("    License Key Image Content:  0x%lx%lx%lx%lx%lx%lx\n",
++	       lki->key_image_content[5], lki->key_image_content[4],
++	       lki->key_image_content[3], lki->key_image_content[2],
++	       lki->key_image_content[1], lki->key_image_content[0]);
++
++	while (count++ < sc->num_licenses) {
++		uint32_t blob_size_field = *(uint32_t *)(buf + 0x14 + count * 4);
++		uint32_t blob_size = LICENSE_BLOB_SIZE(blob_size_field);
++		bool license_valid = LICENSE_VALID(blob_size_field);
++		struct license_blob_content *lbc =
++			(void *)(sc) +			// start of the state certificate
++			sizeof(*sc) +			// size of the state certificate
++			(4 * sc->num_licenses) +	// total size of the blob size blocks
++			sizeof(*lki) +			// size of the license key info
++			offset;				// offset to this blob content
++		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
++		char feature[5];
++		uint32_t i;
++
++		printf("     Blob %d:\n", count - 1);
++		printf("        License blob size:          %u\n", blob_size);
++		printf("        License is valid:           %s\n", license_valid ? "Yes" : "No");
++		printf("        License blob type:          %s\n", license_blob_type(lbc->type));
++		printf("        License blob ID:            0x%lx\n", lbc->id);
++		printf("        PPIN:                       0x%lx\n", lbc->ppin);
++		printf("        Previous PPIN:              0x%lx\n", lbc->previous_ppin);
++		printf("        Blob revision ID:           %u\n", lbc->rev_id);
++		printf("        Number of Features:         %u\n", lbc->num_bundles);
++
++		feature[4] = '\0';
++
++		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
++			get_feature(bundle[i].encoding, feature);
++			printf("                 Feature %d:         %s\n", i, feature);
+ 		}
+-		printf("%3d: 0x%lx\n", i, state_certificate[i]);
+-		previous = state_certificate[i];
+-		first_instance = true;
+-	}
+-	printf("%3d\n", i);
+ 
+-	fclose(cert_ptr);
++		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
++			fprintf(stderr, "        Warning: %d > %d licenses in bundle reported.\n",
++				lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE);
++
++		offset += blob_size;
++	};
+ 
+ 	return 0;
+ }
+@@ -231,7 +361,7 @@ static int sdsi_certificate_dump(struct sdsi_dev *s)
+ static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command command)
+ {
+ 	int bin_fd, prov_fd, size, ret;
+-	char buf[4096] = { 0 };
++	char buf[STATE_CERT_MAX_SIZE] = { 0 };
+ 	char cap[] = "provision_cap";
+ 	char akc[] = "provision_akc";
+ 	char *prov_file;
+@@ -266,7 +396,7 @@ static int sdsi_provision(struct sdsi_dev *s, char *bin_file, enum command comma
+ 	}
+ 
+ 	/* Read the binary file into the buffer */
+-	size = read(bin_fd, buf, 4096);
++	size = read(bin_fd, buf, STATE_CERT_MAX_SIZE);
+ 	if (size == -1) {
+ 		close(bin_fd);
+ 		close(prov_fd);
+@@ -443,25 +573,26 @@ static void sdsi_free_dev(struct sdsi_dev *s)
+ 
+ static void usage(char *prog)
+ {
+-	printf("Usage: %s [-l] [-d DEVNO [-iD] [-a FILE] [-c FILE]]\n", prog);
++	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-a FILE] [-c FILE]]\n", prog);
+ }
+ 
+ static void show_help(void)
+ {
+ 	printf("Commands:\n");
+-	printf("  %-18s\t%s\n", "-l, --list",		"list available sdsi devices");
+-	printf("  %-18s\t%s\n", "-d, --devno DEVNO",	"sdsi device number");
+-	printf("  %-18s\t%s\n", "-i --info",		"show socket information");
+-	printf("  %-18s\t%s\n", "-D --dump",		"dump state certificate data");
+-	printf("  %-18s\t%s\n", "-a --akc FILE",	"provision socket with AKC FILE");
+-	printf("  %-18s\t%s\n", "-c --cap FILE>",	"provision socket with CAP FILE");
++	printf("  %-18s\t%s\n", "-l, --list",           "list available On Demand devices");
++	printf("  %-18s\t%s\n", "-d, --devno DEVNO",    "On Demand device number");
++	printf("  %-18s\t%s\n", "-i, --info",           "show socket information");
++	printf("  %-18s\t%s\n", "-s, --state",          "show state certificate");
++	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
++	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
+ }
+ 
+ int main(int argc, char *argv[])
+ {
+ 	char bin_file[PATH_MAX], *dev_no = NULL;
++	bool device_selected = false;
+ 	char *progname;
+-	enum command command = CMD_NONE;
++	enum command command = -1;
+ 	struct sdsi_dev *s;
+ 	int ret = 0, opt;
+ 	int option_index = 0;
+@@ -470,21 +601,22 @@ int main(int argc, char *argv[])
+ 		{"akc",		required_argument,	0, 'a'},
+ 		{"cap",		required_argument,	0, 'c'},
+ 		{"devno",	required_argument,	0, 'd'},
+-		{"dump",	no_argument,		0, 'D'},
+ 		{"help",	no_argument,		0, 'h'},
+ 		{"info",	no_argument,		0, 'i'},
+ 		{"list",	no_argument,		0, 'l'},
++		{"state",	no_argument,		0, 's'},
+ 		{0,		0,			0, 0 }
+ 	};
+ 
+ 
+ 	progname = argv[0];
+ 
+-	while ((opt = getopt_long_only(argc, argv, "+a:c:d:Da:c:h", long_options,
++	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hils", long_options,
+ 			&option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'd':
+ 			dev_no = optarg;
++			device_selected = true;
+ 			break;
+ 		case 'l':
+ 			sdsi_list_devices();
+@@ -492,8 +624,8 @@ int main(int argc, char *argv[])
+ 		case 'i':
+ 			command = CMD_SOCKET_INFO;
+ 			break;
+-		case 'D':
+-			command = CMD_DUMP_CERT;
++		case 's':
++			command = CMD_STATE_CERT;
+ 			break;
+ 		case 'a':
+ 		case 'c':
+@@ -520,39 +652,35 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	if (!dev_no) {
+-		if (command != CMD_NONE)
+-			fprintf(stderr, "Missing device number, DEVNO, for this command\n");
+-		usage(progname);
+-		return -1;
+-	}
++	if (device_selected) {
++		s = sdsi_create_dev(dev_no);
++		if (!s)
++			return -1;
+ 
+-	s = sdsi_create_dev(dev_no);
+-	if (!s)
+-		return -1;
++		switch (command) {
++		case CMD_SOCKET_INFO:
++			ret = sdsi_read_reg(s);
++			break;
++		case CMD_STATE_CERT:
++			ret = sdsi_state_cert_show(s);
++			break;
++		case CMD_PROV_AKC:
++			ret = sdsi_provision_akc(s, bin_file);
++			break;
++		case CMD_PROV_CAP:
++			ret = sdsi_provision_cap(s, bin_file);
++			break;
++		default:
++			fprintf(stderr, "No command specified\n");
++			return -1;
++		}
++
++		sdsi_free_dev(s);
+ 
+-	/* Run the command */
+-	switch (command) {
+-	case CMD_NONE:
+-		fprintf(stderr, "Missing command for device %s\n", dev_no);
+-		usage(progname);
+-		break;
+-	case CMD_SOCKET_INFO:
+-		ret = sdsi_read_reg(s);
+-		break;
+-	case CMD_DUMP_CERT:
+-		ret = sdsi_certificate_dump(s);
+-		break;
+-	case CMD_PROV_AKC:
+-		ret = sdsi_provision_akc(s, bin_file);
+-		break;
+-	case CMD_PROV_CAP:
+-		ret = sdsi_provision_cap(s, bin_file);
+-		break;
+-	}
+-
+-
+-	sdsi_free_dev(s);
++	} else {
++		fprintf(stderr, "No device specified\n");
++		return -1;
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.25.1
 
