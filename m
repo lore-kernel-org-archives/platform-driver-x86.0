@@ -2,112 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D51C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Nov 2022 10:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A975C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Nov 2022 10:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230158AbiKBKoo (ORCPT
+        id S229761AbiKBKsD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Nov 2022 06:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
+        Wed, 2 Nov 2022 06:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbiKBKoj (ORCPT
+        with ESMTP id S229553AbiKBKsC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Nov 2022 06:44:39 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0051C205C4;
-        Wed,  2 Nov 2022 03:44:38 -0700 (PDT)
+        Wed, 2 Nov 2022 06:48:02 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DAF205C4;
+        Wed,  2 Nov 2022 03:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667385879; x=1698921879;
+  t=1667386081; x=1698922081;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=cJ3Y4C/MhfSQfBxw7jsHZujVpv2WrFsLiudBIJN2Ldc=;
-  b=OWBGsJf96lRmMc7p75l96dhq1t4BiIATbgnqkTvTeO0xHJCFf+KXqlRl
-   o+7BOrf6jVZdyyIFblcEmzjbVzuq43yWtzRUao7FK3unenE6/VRLEuDvA
-   nFadlna7TtHlWrjf2H3fXWOrY/zqpx1ClvNraiPWBy7tmO6s3lw6v8yA9
-   xYxGWOAEql4OoSt4Wi/zNLc6dvfhK3AX+9qM1dVCal5A6iDi7XHGo+ewe
-   rb50f0fWwh3eC3ct0tAqzjBnylWu5nsp3ARQOtNZkysV4MhnKNaQx6iiA
-   YLJJWXyg9sD0i6LBb0co2cNEkYbUYOvnDdqcy+rNJr4j/+BLIHwP1PcAS
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="310477847"
+  bh=5HpjhhA0R1oJOP96S1an4MPyb9380u4PF3dy8awj8RQ=;
+  b=ijiW8mxVW5SzORUdMCLasCsFV2RDkeBgm5LnbBxXMeQ1yj+ngA8Pt8cA
+   iBz8UoCyMCUp4Oqlb9Hl21Anv/lPB0iC3/mZndMXO5r0hEDsFXzbrGtR7
+   N6M2GABvhITprO1G8r3Er3KZHteYECexNrfchZcqVIUM13+DZIZg4xKDL
+   mSGjO2XxcOrdqzlCGQuhlgKHWUQ8BAeLLMBgyjF/Av5/UKr1pciPxrIm8
+   MNOixaJvljvbkOhJ5AwuHEeGOPbUuWddyhjzb89e1kKjLpO7AcQWk6Wr7
+   5KxWSA5nTL2HecgekYFHizSJ45vwlcH0VuZN5eRHHkC4va4lEQ3gflKKv
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="371464162"
 X-IronPort-AV: E=Sophos;i="5.95,232,1661842800"; 
-   d="scan'208";a="310477847"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 03:44:38 -0700
+   d="scan'208";a="371464162"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 03:46:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="776846592"
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="809236359"
 X-IronPort-AV: E=Sophos;i="5.95,232,1661842800"; 
-   d="scan'208";a="776846592"
+   d="scan'208";a="809236359"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Nov 2022 03:44:36 -0700
+  by orsmga005.jf.intel.com with ESMTP; 02 Nov 2022 03:46:53 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oqBEY-0068Mu-2c;
-        Wed, 02 Nov 2022 12:44:34 +0200
-Date:   Wed, 2 Nov 2022 12:44:34 +0200
+        id 1oqBGl-0068SS-2s;
+        Wed, 02 Nov 2022 12:46:51 +0200
+Date:   Wed, 2 Nov 2022 12:46:51 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] platform/x86/intel/sdsi: Support different GUIDs
-Message-ID: <Y2JKEjSridtRubSm@smile.fi.intel.com>
+Subject: Re: [PATCH 4/9] platform/x86/intel/sdsi: Add meter certificate
+ support
+Message-ID: <Y2JKm/TPgVAku93M@smile.fi.intel.com>
 References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
- <20221101191023.4150315-4-david.e.box@linux.intel.com>
+ <20221101191023.4150315-5-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221101191023.4150315-4-david.e.box@linux.intel.com>
+In-Reply-To: <20221101191023.4150315-5-david.e.box@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 12:10:17PM -0700, David E. Box wrote:
-> Newer versions of Intel On Demand hardware may have an expanded list of
-> registers to support new features. The register layout is identified by a
-> unique GUID that's read during driver probe. Add support for handling
-> different GUIDs and add support for current GUIDs [1].
-
-> [1] https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
+On Tue, Nov 01, 2022 at 12:10:18PM -0700, David E. Box wrote:
+> Add support for reading the meter certificate from Intel On Demand
+> hardware.  The meter certificate [1] is used to access the utilization
+> metrics of enabled features in support of the Intel On Demand consumption
+> model. Similar to the state certificate, the meter certificate is read by
+> mailbox command.
+> 
+> [1] https://github.com/intel-sandbox/debox1.intel_sdsi/blob/gnr-review/meter-certificate.rst
 
 Link: tag?
 
 ...
 
->  #define SDSI_MIN_SIZE_DWORDS		276
-> -#define SDSI_SIZE_CONTROL		8
->  #define SDSI_SIZE_MAILBOX		1024
-> -#define SDSI_SIZE_REGS			72
-> +#define SDSI_SIZE_REGS			80
->  #define SDSI_SIZE_CMD			sizeof(u64)
+>  static BIN_ATTR(state_certificate, 0400, state_certificate_read, NULL, SDSI_SIZE_READ_MSG);
 
-> +#define SDSI_SIZE_MAILBOX		1024
-
-Why do you need this second time?
+BIN_ATTR_ADMiN_RO() ?
 
 ...
 
-> +static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
-> +{
-> +	switch (table->guid) {
-> +	case SDSI_GUID_V1:
-> +		priv->control_size = 8;
-> +		priv->registers_size = 72;
-> +		break;
-> +	case SDSI_GUID_V2:
-> +		priv->control_size = 16;
-> +		priv->registers_size = 80;
+> +static BIN_ATTR(meter_certificate, 0400, meter_certificate_read, NULL, SDSI_SIZE_READ_MSG);
 
-Maybe it makes sense to use previously defined constants here instead of magics?
-
-> +		break;
-> +	default:
-> +		dev_err(priv->dev, "Unrecognized GUID 0x%x\n", table->guid);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
+Ditto.
 
 -- 
 With Best Regards,
