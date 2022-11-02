@@ -2,126 +2,189 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811C8C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Nov 2022 21:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AB0C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Nov 2022 21:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbiKBVXv (ORCPT
+        id S229590AbiKBVcV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Nov 2022 17:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59404 "EHLO
+        Wed, 2 Nov 2022 17:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbiKBVXu (ORCPT
+        with ESMTP id S229709AbiKBVcU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Nov 2022 17:23:50 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A5B3B3;
-        Wed,  2 Nov 2022 14:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1667424221; bh=563YttvuumXCAkFcYzDRK3i2GybkAFkEzHBYksZEWqI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=anaXfdO/64IuThV7el5fQKM6XEYNbXrxkvTzU9lCSvuCyyHwnyKd9o0MYshpj8JP2
-         +XeGoWCsNbne5eCdIcjJDTQXNtnvRAgXdwordeZ8hjl3xHy4ukpx31VC/qKmbV4W0g
-         w2rYh+p3jT7M5voi9LJvsCpeRSO6QiAHy0lFH7/2aH2R+KN5FnyRk36rXO3fq04Qn6
-         OTLaWIFMuUy+TUXZYtKN87R0wwFELtyDYMndzOCfJgU7uYTzwF2Fytkrwjkq/PW2U5
-         1YY1hmpSM4LyWoBfYrWHLGX0y7HLkXY32A6egrTahuYkKE8+lh8CQ5Z0b3vYA8ieZ5
-         PcC5jWZ6f4ZQg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MrhUK-1pM77w3KIW-00niY3; Wed, 02 Nov 2022 22:23:40 +0100
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: dell-ddv: Warn if ePPID has a suspicious length
-Date:   Wed,  2 Nov 2022 22:23:36 +0100
-Message-Id: <20221102212336.380257-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221102212336.380257-1-W_Armin@gmx.de>
-References: <20221102212336.380257-1-W_Armin@gmx.de>
+        Wed, 2 Nov 2022 17:32:20 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A39E1089;
+        Wed,  2 Nov 2022 14:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667424739; x=1698960739;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=g5IvRkEQoyuTxFhgJhNikF8K/x4jyzcAv/6cAUODrvo=;
+  b=e9L2Go09laW3jyR9KDkvFKQGNTv7Fxm4SB55+lnC8wGuFqBwnk51y+2c
+   HFEZI3MigV2P6ZMA5do0NjSj4kmMAHBkm2P4uQnXcr+FGFMY2Zx0GZi2d
+   jsWZ5gZFeFlpxHDJR7kgFHjKK/85kwQs+guGXR4KENCVKshNsJmA6LjCn
+   PJHJGgfMFVTjCa41X0K+iodV6UvU5/8AlqTXypphZXeLAL2A+bmF0+D9q
+   k3EUXzAQY2GMOVSet6L1ppTVZDszRrHcsHq3xsJ7bVZQbRB0SNIy4C/Vj
+   Hiw2ryNJ/rj/4SIfktjxaPuFu3gTmwHtF+5W7JoMMVppSJZ/krW7iyad9
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="289235811"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="289235811"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 14:32:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="963690822"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="963690822"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Nov 2022 14:32:18 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 2 Nov 2022 14:32:18 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Wed, 2 Nov 2022 14:32:18 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Wed, 2 Nov 2022 14:32:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kTv1RclhmrZ7C/laz9P2kmfVincAbR2UFCjHbZMSEUSkpCZ1RJNOpBsBKfcin4QBmQuuqIkPHwxIC6/c3fn2GKbM4gd9HySjpJ2O4TUWswCHQYqtIU7brqJya+OC8HDSjS8J4VQyQ97ouZLyBxsubx/JzqgDtB2qn3kIg7fhiP8csy40xC7gXc1XbvimG1RPYixb7InlfeyqC1ohA7oC+440NmsIf8yEqfWr0VufYLXyGggMGtMBD6Qs+0SLPHUgP2z5XKMOM7EFkBvhxxyfTC7B1Wnrbi0IQxj7/LdddhuHgjaYMHAtIteD/WbO8nk43PpUafVFaotbF8hBs5ZhZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uypGApwBapD4iPJ4mE6fEzdcjvq89Q2JMlpfqtZSOlU=;
+ b=l/MJcqKaUGfJv8C9t0BHDDe7DEWKzgk/K9ARAZ6ba7r/9dOmoDKmUZI3ULHJqIWDedNZKy3BH2qJCm+zirEX8I5qwWlw5j020V0n54RRQvAyYKo4snWqyKyc8BfsrLTSnQ/3JOyRSGqn88LZRTOfD0XvEalUFjbK80+oA9jOMYHASXNtN3GY8cbMqmmJ//hg5edysl5zDS0EY+fQ0fH4uMcv5ANz4nv44Pa3eofNu6RokfuLBJNs5UdTfScNj3KgzdBtLeDkhCDYOSeEfXWN0lcqLSKab6ghhs/QrB/kFbUuVTbFlgwCYwAEwpDV9j3LUkI+yrVgovuRv/O4Sr4tug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com (2603:10b6:a03:fa::20)
+ by CO1PR11MB5074.namprd11.prod.outlook.com (2603:10b6:303:97::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22; Wed, 2 Nov
+ 2022 21:32:15 +0000
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::f980:8dbd:ddf0:11c0]) by BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::f980:8dbd:ddf0:11c0%4]) with mapi id 15.20.5769.021; Wed, 2 Nov 2022
+ 21:32:15 +0000
+Message-ID: <667a6ae1-7c2a-5be6-afad-d8f3e2f059fe@intel.com>
+Date:   Wed, 2 Nov 2022 14:32:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH 05/14] x86/microcode/intel: Expose
+ find_matching_signature() for IFS
+Content-Language: en-US
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <gregkh@linuxfoundation.org>, <ashok.raj@intel.com>,
+        <tony.luck@intel.com>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <patches@lists.linux.dev>,
+        <ravi.v.shankar@intel.com>, <thiago.macieira@intel.com>,
+        <athenas.jimenez.gonzalez@intel.com>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com>
+ <20221021203413.1220137-6-jithu.joseph@intel.com> <Y2K+9jfb5xiYE3eU@zn.tnic>
+From:   "Joseph, Jithu" <jithu.joseph@intel.com>
+In-Reply-To: <Y2K+9jfb5xiYE3eU@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0267.namprd04.prod.outlook.com
+ (2603:10b6:303:88::32) To BYAPR11MB3768.namprd11.prod.outlook.com
+ (2603:10b6:a03:fa::20)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bPHFCUaFM4G5bc43gyqGc0rmvo24NZRgRlCSd6py95bDNiEWccD
- opHe4nHaVq/OJ2fpBiIfvfpI1/ldnvgOn0bQFIN10f/dX3bLkueAmGKjaWomXeoEpid/QBM
- mHHBvur28rmqRrzEDAKuw4tB6O849oEIiUuYQmz635ivFYzkMNNTIIZukSmPev7F+UD2kub
- bgbYHLjBFU0e1xefThLMQ==
-UI-OutboundReport: notjunk:1;M01:P0:PoCCcPMRsyQ=;IHRoRgARaxt+hB6bwzo1YPqX1B/
- EKiXMZBDgCXEDhwNIzxYlrcCdpHu/PmqYY43U4i1+d2HhCsZMBBoZp5ft+e9SmcIDRZXa8txR
- 3KQrBCJHYf1ekuxFmtJ6w2XneOlBXxANwYsePGWoKRt0pBXATFnxtnrRkEPlwnGBBqT1BW4OD
- YYwj1oALeMoFmeD+S+Tggd0JVWRLT6xPZwbUG4ruRpkZeSIU+OYnxaq/QjUMQ4kKEBqqK27yH
- Te5Y4cCzsBYjG1wAj2keHaC4Y47gXoDdFMC98ztVz0gbUGp/DcqVpsl3GNkpwbgsdI5blVxhQ
- oNkMBH5FXyiPbow4hYGuifyGFud+0LpmYTtqY9rpafLuqSc2lneK4BzRV08H8gxEn82pTpU/C
- H3DM22Mx5URnuUjjfyu+VLgO6utZ8g/jIU6WSkP73AL1VdgW0ASYzW9b08wMs6q8CNaN/hZaj
- g5eEcQMSgaRkIR1JQaHX5OKJaxYb9yTX9UIb43DLKQQ0LteeSSNsTGY490JWRik5OTdL5vfyQ
- 4cj+u0RHtdcvuwnF5TrbKGYlRjacSyIc8nK0Gdae2I3/s61aDxO5pgnciYADGAaPsqSKltWYS
- F/7coQK5rtOdpU6PbY2hwzOq5cNjw7HNEqNPF36XXomAbqbQ7shgc2/R2wQayHjje7M9MeA5t
- /6nygh0Hd4MyvwU95hftxpw2IaZHYYCJfqMbMLLfCUdq1zYtWLoUyXRszftyTL/UcAUgeA85c
- v7Jmn39qLmMX9282IX/eYXm1BoKlVjdEYI3vDti95Rv6mJD6yM8M/9umuBctepxlDopxsysh+
- +f8MUHmGhfTQkhna6gQ5/nY98h3DlE5mChSzWPn+GhUh8YxGkc5zeb/Kt18StJoey0RNir/zR
- chSjOLeejtNbpgn4jY9MmalFF8j9B66LOw+LJFOYHYyo10RCmuagHXqyVU6p0Hi8cPMcgAMiR
- F3x0ulRF2V0cQJbB7vCIvUFKIF4=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3768:EE_|CO1PR11MB5074:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5309931-45fe-4573-eb34-08dabd19b644
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sTH7JxL8zeP+vfXsmaaIDOjCt8G1eMYDyRTRltChL1HfXgHhl57SNbtbIIi+wia9iBKSUnzxcp2IIBGkQrmlXjiCM6GQhuKEyXMcW/GyflHqjOoE2CZQ7xCRyYrT6JNjuzxOoUkvgo2hsM8koPMI9Dufo4nylS4V8QfDgpwsitr1aHq8oblEW2ykhnjJAuMnC4Lug4EuWURRpa8QHRvK4UQNYaDqRLtF78CNqdQvp7bKEnjMxpXJEGxHm8r/tSCL4A+Ag5LBHY8CpmpJwCE3ja+TY5PZd38tdNTGHWj8rMBiPeqFg2MX3nR52hwb8MWzlQmOwFcEU30XxfOBCEYXwP4EUUEOTiUR+Aea2UQTVp2a5mDXuEBO+c+4DgM7rY8Pc/cgz5gVhcGGwBG31QCocHYN4R7gJFZ+RWWn8xe/lUsTo7eUTKftVVmV6OgIkK+Vl54FCfr6rBlG5BEOiqFARcbSfhEVbMgcMSj5VhFCirP05/2krqmrB1+1JnTO0fV2NTURHPyAwuHBIJiSs1rentGbFkspLJdcsLb6cOGHdFkMlSfPB0gjjMh0vZ/KaaAwN0jXiFrP4elpz78sAOXyn89cCFD2MXpryL+3KSGTppWjSOQggAZFAnSjzgot+dQATnmN/mYtRz7QQpz3r1Rx6pzr1TNIxlZQKShyFjJ0b48zbx0iBDiWr0Ii3X/i6c5pDeLlLizFhobsLikL7dLmhOx+I4sEEJmTBYM6mZmLZxGNcdbRVnMW42nqa5/QqZysRrYrJFt3tWQVTvVtR/AmlYlsEUtCV5E+w0YnwX3p8NM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3768.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(346002)(396003)(39860400002)(366004)(136003)(451199015)(31686004)(2906002)(86362001)(31696002)(66946007)(6512007)(6506007)(26005)(41300700001)(8936002)(316002)(6916009)(7416002)(8676002)(4326008)(66476007)(66556008)(5660300002)(36756003)(82960400001)(478600001)(6486002)(38100700002)(6666004)(83380400001)(2616005)(53546011)(186003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U041aEtJUW9vV0k3SXlMQUN0TCtiM0lPNVo4ZkVSUnNFTFZ6WmdXNGdTRmJo?=
+ =?utf-8?B?OG5ZUFArSjhkeFd0RUZpeXg3ZUtaUUNHRkMvMFV6TWV5R251NUk3V3BqZ09r?=
+ =?utf-8?B?OFR0d3J3NW5aeXFlRmltNGQ4ZG1FUWYzRzNGZ3RKWnpkZTlzUzJneXEwOVBK?=
+ =?utf-8?B?OUxBZ21Ib1JGRTJLaEQ4bzRreFkvckwwbk9HaGo4eUtPZnByejdlU0poSFB2?=
+ =?utf-8?B?SlI4aTUzTEs3UFpVVVFJMktoMVN2M0w5dnJDUW1QeGw3QjRnSUM3ZDNrVm4v?=
+ =?utf-8?B?cVd2a0NMSktLamkyZUxsbUJxY3NhRTIzNlpUWDhSY2I0QnVQYWpQdTY0QzVU?=
+ =?utf-8?B?b2pqVTVzUFZ5d2oxZVQvdjZ3K2dJa2xkeHdTUU5BbTd1d2lSaHV2aURYa3dt?=
+ =?utf-8?B?VE02MXhSTklYVVdmVEVyWHRsS255T1NZdWxSQ0ZFWkt4TUFzWjZsZnBzOXFH?=
+ =?utf-8?B?RzZUa1hLT3QwdFlEWE1DdDF4TWdTdlpCeXdvTFNINDNqczVWN3psR3lwMExy?=
+ =?utf-8?B?bXZ3M1c2MWppeUg3SVNSVi9ZclRISVFHUGlaR2dFNGEydGR6RE9uNStLSVpO?=
+ =?utf-8?B?cUtiYW1MYnFrS2NBM3dQU1F0T0xNWEdEV1V3NWNleFhkOEc2cjV5eXRIK1hj?=
+ =?utf-8?B?aENpeWtoZ3JVTUViZFRFcXBCb2cyZXd6ZS92b0FjSWtoNU1iU1A2SGZPYmJh?=
+ =?utf-8?B?cyt1cWtpUEFYaWxCWmxlUElSNUNzODRSZWo4Rmx5L2xOVVM0SWFsOW5BeWQ0?=
+ =?utf-8?B?SVhISXB2YUJwd0JINEQ4K3hhcEIvWlYzR3ZKS0NVNksya2tqY09ucUhHMGpZ?=
+ =?utf-8?B?K2dvYlEydFVSS1oyb2FNSkE2WUpzcytUZ1MvVlh2MU5GbnFqRG9qRVhTVy9l?=
+ =?utf-8?B?SkpmaVVINnpDUnRtaEV0bTMrK3BHeDQzNlIyMXNCZDN1VWpDeGN6ZTh3dk5P?=
+ =?utf-8?B?dUpIb2dNRnlNS0Urek5RTGpwVFlrRld3K2cxQmREbEhjVTVYUkFJT1VOZkxH?=
+ =?utf-8?B?dXFrTFRZRGhVWm5GREc4cXpOU0IrcWU4S0JZNlBUckd4dWR4VmdEY1RCL0Jn?=
+ =?utf-8?B?SmsxNWdseWlKbkdiOUNFMWcvMm1FTzJheFlhWVZZSlhoelpvY2dzWmdNSEs0?=
+ =?utf-8?B?US9hMFlGS0t6bU9yTWR6NUdUZURxNG9UQ0V0Wi91QXpsYldiQk4wWnhKUEcz?=
+ =?utf-8?B?TUY4ZXhHWFJKcjlqdzRVWlBmLzVDZjVNa2ZFNUJVTjl3NmJIN0h4WW1kdGhX?=
+ =?utf-8?B?RDV6cUN3ZVhrcG5DcE9nR1VnMGFaQVNxNkhoVGVGL0V0VHFlbmEwakdqdWpF?=
+ =?utf-8?B?d054WXZESFN3cTJsbUo0aTVubGdFdHdJMzd4eHp2SDlYTjh0N1AwSnNrUEVu?=
+ =?utf-8?B?eUdGY3crMTRIazNGZlRNREZTeHpGbHFBSGhUVXdjSHZEOERFNVlETGNackFi?=
+ =?utf-8?B?VE1hOW40WkdMVE5wT2h6TkVKQ25kSUEwZGExUHZmNlErbko2dS8wUGFINlY0?=
+ =?utf-8?B?ZjU5dWpFeUNibloxK2ErK2VpU2ZHVDNyM1RCV0VSbVM4dzFNSHFUcm1OTjVk?=
+ =?utf-8?B?V296dXFoN1RPc2g4ZzhVRXpXRDRjYUZXdjg4Mk5XR25heWtmby9uaURaUTg1?=
+ =?utf-8?B?T1o2TUUrakhpdkZ4Y25LOXcxUmNvNExLVXVtWDh6SVpITjdUZkcwTjBMQ0J5?=
+ =?utf-8?B?SFVFUXh3ekV1OURrdGdhWDR2QUZMZmVLcXZFZFBkVEJjTWExRXJFdkdBT0dM?=
+ =?utf-8?B?QThmWTIzQnduRGpxc3hnNE5MK09wWVE4MkFLZVFKcksvRzVMS1dtdzVrOWJv?=
+ =?utf-8?B?M1BKejdSZmRrN2NLNVA2RXg0TmlVdEhPRUVvVVREYWRleUNrZnFIODZRdmZB?=
+ =?utf-8?B?ZjNyVDhQci9hTDJuNGV4ditORklEY2hLSHVBdTM0RUVsTkFEY1pqNkxXdmdU?=
+ =?utf-8?B?cVlleHROV2RyeWx1dHVhMHZqTXJ6NUZ6SXcrMTJMdnpjQXM3bnVpTkpmZzd2?=
+ =?utf-8?B?NFdpeEVmNkJ2aFBicjBVYXhZL29OdzR0eVk2QnFBV0swV3hoWkpIOG5Td0hN?=
+ =?utf-8?B?ajZ6YzcrcHBMcExGVDJxRFF3TlhGNUlXMWRXVG9mUlgzRUF6UkpUVGRqR1Zs?=
+ =?utf-8?B?aFplMHV3bVpFc1VscEFNRit1VFF6THJmQW94UkxmWXU3K0ZMNktROS8vUXkr?=
+ =?utf-8?B?c1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5309931-45fe-4573-eb34-08dabd19b644
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3768.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2022 21:32:15.7554
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gbOVrkmjyluCMsbDmJ2ZrTtjgplD/hgNCnLV+6SlPicYswVAqppKkQ26YxDedqSj7eUM4SJ9iU0ta+PYsNYo9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5074
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On some systems (like the Dell Inspiron 3505), the acpi operation
-region holding the ePPID string is two bytes too short, causing
-acpi functions like ToString() to omit the last two bytes.
-This does not happen on Windows, supposedly due to their implementation
-of ToString() ignoring buffer boundaries.
-Inform users if the ePPID length differs from the Dell specification
-so they can complain to Dell to fix their BIOS.
 
-Tested on a Dell Inspiron 3505.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-ddv.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 11/2/2022 12:03 PM, Borislav Petkov wrote:
+> On Fri, Oct 21, 2022 at 01:34:04PM -0700, Jithu Joseph wrote:
+>> IFS uses 'scan test images' provided by Intel that can be regarded as
+>> firmware. IFS test image carries microcode header with extended signature
+>> table.
+>>
+>> Expose find_matching_signature() for verifying if the test image
+>> header or the extended signature table indicate whether an IFS test image
+>> is fit to run on a system. Add microcode_intel_ prefix to the
+>> function name.
+> 
+> This doesn't look like the right design to me:
+> 
+> If this is going to be generic CPU-vendor related code which other
+> facilities like the microcode loader can use, then the prefix should be
+> intel_<bla>. Just like intel_cpu_signatures_match().
+> 
+> Then that code should either be in a lib-like compilation unit or simply
+> in arch/x86/kernel/cpu/intel.c. Just like intel_cpu_signatures_match().
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 1a001296e8c6..2bb449845d14 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -10,12 +10,14 @@
- #include <linux/acpi.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
-+#include <linux/dev_printk.h>
- #include <linux/kernel.h>
- #include <linux/kstrtox.h>
- #include <linux/math.h>
- #include <linux/module.h>
- #include <linux/limits.h>
- #include <linux/power_supply.h>
-+#include <linux/printk.h>
- #include <linux/seq_file.h>
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
-@@ -27,6 +29,9 @@
- #define DELL_DDV_SUPPORTED_INTERFACE 2
- #define DELL_DDV_GUID	"8A42EA14-4F2A-FD45-6422-0087F7A7E608"
+Will rename the function to intel_find_matching_signature() and move it to
+to arch/x86/kernel/cpu/intel.c as you suggest above and add its declaration
+to arch/x86/include/asm/cpu.h (where intel_cpu_signatures_match() is defined)
 
-+#define DELL_EPPID_LENGTH	20
-+#define DELL_EPPID_EXT_LENGTH	23
-+
- enum dell_ddv_method {
- 	DELL_DDV_BATTERY_DESIGN_CAPACITY	=3D 0x01,
- 	DELL_DDV_BATTERY_FULL_CHARGE_CAPACITY	=3D 0x02,
-@@ -196,6 +201,10 @@ static ssize_t eppid_show(struct device *dev, struct =
-device_attribute *attr, cha
- 	if (ret < 0)
- 		return ret;
-
-+	if (obj->string.length !=3D DELL_EPPID_LENGTH && obj->string.length !=3D=
- DELL_EPPID_EXT_LENGTH)
-+		dev_info_once(&data->wdev->dev, FW_INFO "Suspicious ePPID length (%d)\n=
-",
-+			      obj->string.length);
-+
- 	ret =3D sysfs_emit(buf, "%s\n", obj->string.pointer);
-
- 	kfree(obj);
-=2D-
-2.30.2
-
+Jithu
