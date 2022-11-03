@@ -2,95 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFF5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Nov 2022 01:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96107C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Nov 2022 03:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiKCBmJ (ORCPT
+        id S229850AbiKCDNG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Nov 2022 21:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44614 "EHLO
+        Wed, 2 Nov 2022 23:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiKCBmI (ORCPT
+        with ESMTP id S229548AbiKCDNE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Nov 2022 21:42:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635DC1114D
-        for <platform-driver-x86@vger.kernel.org>; Wed,  2 Nov 2022 18:42:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0250B61CE7
-        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Nov 2022 01:42:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 62024C43144
-        for <platform-driver-x86@vger.kernel.org>; Thu,  3 Nov 2022 01:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667439725;
-        bh=uMwzNvBWqQ8aizFHYrFGOzHs+W22p98GJ4gNa7nzKxI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=s7Et2Ek4kF48aecg+oOL6aE13XpqznIJWv3cnNx9E3biU1rn1J5nU4gALt1qOh8Qy
-         JJtXAgp7yxb6Fc+iuDzfcR06RT5Rd6JSBOcNEw181CbczSaBWTRy4hn2UTxKdBcPu7
-         s2Xg1xkZ51zzDrt1QZ6IbRZ1cVOJMv6ANgkYWGL2Z7sICNdURR1ziSpiiyxOtX93Xg
-         pZFQIss7G4AROgLqqkIfDQ810d+Tu2Unua1LK/99BrJ921j1nR95awQpx9dRmhEh0c
-         K93+etzcTjkEhFAfHNjLp0oYJKo0lHMH9+BovsuMyL65glw8++GhhIpeHYRwfOFqAo
-         gzf1yqhMc4wkQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 50412C433E4; Thu,  3 Nov 2022 01:42:05 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204913] LG gram 14'' laptop extra features
-Date:   Thu, 03 Nov 2022 01:42:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: nicomu.net@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: platform_x86_64@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204913-215701-Og8u06AKJs@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204913-215701@https.bugzilla.kernel.org/>
-References: <bug-204913-215701@https.bugzilla.kernel.org/>
+        Wed, 2 Nov 2022 23:13:04 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452031402B;
+        Wed,  2 Nov 2022 20:12:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667445181; x=1698981181;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=K0vI5uOf/x137Tle9H7IRzeDNxM47nec6nZEZGKSQEc=;
+  b=BJgtm6+RP+ibeDtXJMZcYtN5o3UX0WNp9oElYehs3GW4p729ai/3Dv+5
+   UZAyks4qURAKXcz0gyqGz6nuORsNQa9a0vXNC6ZmetWLO73wZInvq2wD3
+   dGE8VAns/xwJIPocZZABZhgMJt/xLtltIgeoY18FjaeDke9JXKY9m4vMF
+   oT/ZXMEx8AclOi4NHOIHtyLA0GPlrakDs+OLF6mbGn4LeEET5Q2QrkDiT
+   bK2R7be90lB3P3FJat7P/zmNuo9bEhNDTl2uATB0dCNyGbZQPsx9IcvXw
+   F/bN1s0d5/E3qCrnBcC2eC675HRLe7I7ChrIuA0xQ9vCvnPFeIu1ASLz0
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="297027442"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="297027442"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 20:12:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="723787972"
+X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
+   d="scan'208";a="723787972"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Nov 2022 20:12:58 -0700
+Received: from dshivaku-MOBL.amr.corp.intel.com (unknown [10.212.195.54])
+        by linux.intel.com (Postfix) with ESMTP id 794A4580D42;
+        Wed,  2 Nov 2022 20:12:58 -0700 (PDT)
+Message-ID: <f33ef0981a808e9f1c9a4446f68ddbe3c2497a68.camel@linux.intel.com>
+Subject: Re: [PATCH 3/9] platform/x86/intel/sdsi: Support different GUIDs
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 02 Nov 2022 20:12:58 -0700
+In-Reply-To: <Y2JKEjSridtRubSm@smile.fi.intel.com>
+References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
+         <20221101191023.4150315-4-david.e.box@linux.intel.com>
+         <Y2JKEjSridtRubSm@smile.fi.intel.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204913
+On Wed, 2022-11-02 at 12:44 +0200, Andy Shevchenko wrote:
+> On Tue, Nov 01, 2022 at 12:10:17PM -0700, David E. Box wrote:
+> > Newer versions of Intel On Demand hardware may have an expanded list of
+> > registers to support new features. The register layout is identified by a
+> > unique GUID that's read during driver probe. Add support for handling
+> > different GUIDs and add support for current GUIDs [1].
+> > [1] https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
+> 
+> Link: tag?
 
-nicomu.net@gmail.com changed:
+Ack
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |nicomu.net@gmail.com
+> 
+> ...
+> 
+> >  #define SDSI_MIN_SIZE_DWORDS		276
+> > -#define SDSI_SIZE_CONTROL		8
+> >  #define SDSI_SIZE_MAILBOX		1024
+> > -#define SDSI_SIZE_REGS			72
+> > +#define SDSI_SIZE_REGS			80
+> >  #define SDSI_SIZE_CMD			sizeof(u64)
+> > +#define SDSI_SIZE_MAILBOX		1024
+> 
+> Why do you need this second time?
 
---- Comment #4 from nicomu.net@gmail.com ---
-LG Control Center on Windows now has 3 fan modes. "Silent", "Normal" and
-"Performance".=20
-Linux has just two, "Silent" and "Normal". It would be really nice to have
-"Performance" mode too.=20
+typo
 
-I'd like to add feature myself, but I barely understand how ACPI works.=20
+> 
+> ...
+> 
+> > +static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table
+> > *table)
+> > +{
+> > +	switch (table->guid) {
+> > +	case SDSI_GUID_V1:
+> > +		priv->control_size = 8;
+> > +		priv->registers_size = 72;
+> > +		break;
+> > +	case SDSI_GUID_V2:
+> > +		priv->control_size = 16;
+> > +		priv->registers_size = 80;
+> 
+> Maybe it makes sense to use previously defined constants here instead of
+> magics?
 
-I think that calling
+The constant is used for the file size, which since is static is set to the max.
+But I'll add defines for these.
 
-lg_wmab(189, WM_SET, value);=20
-// from (/drivers/platform/x86/lg-laptop.c)
+> 
+> > +		break;
+> > +	default:
+> > +		dev_err(priv->dev, "Unrecognized GUID 0x%x\n", table->guid);
+> > +		return -EINVAL;
+> > +	}
+> > +	return 0;
+> > +}
 
-would toggle performance mode, but I am not sure, nor I have tried it.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
