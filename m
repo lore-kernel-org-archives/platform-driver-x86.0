@@ -2,72 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E230C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Nov 2022 08:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAAFC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Nov 2022 10:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbiKDIgl (ORCPT
+        id S231420AbiKDKu5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Nov 2022 04:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54292 "EHLO
+        Fri, 4 Nov 2022 06:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbiKDIgk (ORCPT
+        with ESMTP id S231319AbiKDKu4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Nov 2022 04:36:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D39111C;
-        Fri,  4 Nov 2022 01:36:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Fri, 4 Nov 2022 06:50:56 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A692B272;
+        Fri,  4 Nov 2022 03:50:53 -0700 (PDT)
+Received: from zn.tnic (p200300ea9733e72b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e72b:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4EA4EB82BE6;
-        Fri,  4 Nov 2022 08:36:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3994C433C1;
-        Fri,  4 Nov 2022 08:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667550997;
-        bh=47FBA33VGpTyXxdfNI47sIEI5c7uBK+g44tvgfL+w5Y=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=MTygu3Ms9uz5CYlM0ARFuZA6GWVZY1A84c0NRPvMib94hwxcW25YSkvCPktiLIQIa
-         C/1b1GZlT+4xKn84AdlaGt18H+ldCNoPbcl9Qa0Wx3WBtHcjmJgEJ8AzE4RwvskYsi
-         dHe5HReiaCLHfGO6LmN0eNzIUmy2rHERBXDJF9TyJE4F2o+AIVhFNILSIFMQdYoGnM
-         K8LNZsTeHGmD6D0+AMl9dNXC3AFAbvicPrMcbdVX1n7pOgGmvjOl6Cm9xvPFLSWvzv
-         dx0Ce9aeyff8rc5wVoWP3BiwHneomEZad5Xx3hzNrx5ZzyYb4mKEETWM/bReF0wV9t
-         SeJKPgBPw1aqA==
-Date:   Fri, 4 Nov 2022 09:36:33 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     =?ISO-8859-15?Q?Eray_Or=E7unus?= <erayorcunus@gmail.com>
-cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, ike.pan@canonical.com,
-        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, pobrn@protonmail.com
-Subject: Re: [PATCH v2 2/7] HID: add mapping for camera access keys
-In-Reply-To: <20221029120311.11152-3-erayorcunus@gmail.com>
-Message-ID: <nycvar.YFH.7.76.2211040936220.29912@cbobk.fhfr.pm>
-References: <20221029120311.11152-1-erayorcunus@gmail.com> <20221029120311.11152-3-erayorcunus@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F8A81EC02DD;
+        Fri,  4 Nov 2022 11:50:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1667559052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M8WImQ7ZL8KrObKcbD6n0+VmHllyJCHfdjTe3x0R7HQ=;
+        b=dN/GvTKKqzlUUDakXZilCZ4uSdGe5CAJbJl40VQolvuHhJtQW1xcdTi0YDrLS0QZB0jMhb
+        eQaBUuNsI7Q4vIQY40V9Yc40Te46X3x4T3b1lTvnHpVMUlN4ouXzHpCyZ5uFQO1dFeSUuO
+        ij0Xzs8AtZKYfBUg49QCf7gN02IzTqM=
+Date:   Fri, 4 Nov 2022 11:50:47 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, gregkh@linuxfoundation.org, ashok.raj@intel.com,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, thiago.macieira@intel.com,
+        athenas.jimenez.gonzalez@intel.com
+Subject: Re: [PATCH 07/14] x86/microcode/intel: Expose
+ microcode_sanity_check()
+Message-ID: <Y2TuhwiGFJ1M1V7u@zn.tnic>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com>
+ <20221021203413.1220137-8-jithu.joseph@intel.com>
+ <Y2OnHuSHgIMGxcUH@zn.tnic>
+ <a4107510-add4-3d85-ed2f-2f5e8c32a350@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4107510-add4-3d85-ed2f-2f5e8c32a350@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 29 Oct 2022, Eray Orçunus wrote:
+On Thu, Nov 03, 2022 at 11:15:12PM -0700, Joseph, Jithu wrote:
+> If these doesn’t alleviate your concern, I will post v2 without
+> exporting the aforementioned functions and implementing them
+> separately in IFS driver as you suggested.
 
-> HUTRR72 added 3 new usage codes for keys that are supposed to enable,
-> disable and toggle camera access. These are useful, considering many
-> laptops today have key(s) for toggling access to camera.
-> 
-> This patch adds new key definitions for KEY_CAMERA_ACCESS_ENABLE,
-> KEY_CAMERA_ACCESS_DISABLE and KEY_CAMERA_ACCESS_TOGGLE. Additionally
-> hid-debug is adjusted to recognize this new usage codes as well.
-> 
-> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+So tglx persuaded me yesterday that we should do code sharing after
+all, so that all blob loading remains consistent. So let's try the
+cpu/intel.c thing and see what breaks, how and when.
 
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+As to patch 8, that metadata checking should not be part of
+microcode_intel_sanity_check() but a separate function. Along with
+microcode_intel_find_meta_data() - all those should go into the IFS
+thing.
+
+When microcode loading ends up really needing metadata, *then*
+that functionality should be lifted into a more fitting place like
+cpu/intel.c
+
+Thx.
 
 -- 
-Jiri Kosina
-SUSE Labs
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
