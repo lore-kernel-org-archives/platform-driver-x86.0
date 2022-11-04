@@ -2,254 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368AEC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Nov 2022 16:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07C6C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Nov 2022 17:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbiKDQYc (ORCPT
+        id S231547AbiKDRXU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Nov 2022 12:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
+        Fri, 4 Nov 2022 13:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbiKDQYb (ORCPT
+        with ESMTP id S231443AbiKDRXD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Nov 2022 12:24:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0247C4732C
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Nov 2022 09:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667579013;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pp1gAvCv0S7a0+LbSi7mwLtPne5YYp7ectQ1uCFFxiU=;
-        b=L6HsM5ivEw9LkL+eV7jSvjPWqezNwRECElHQBwxKAtQEzARasJRqpJanRCoCHX2wXTXzyx
-        EqsVwINOCtAbfjPPHV4294rhiI5HWwT0jbN6GcKBDg2ZvPDEWHvUh88D8mAh0QvMzyH2ur
-        g5Zh7VjrU8/4ZxqDtgqULpAuTT7q5Nc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-463-YRp9C9ogM8epCXirtBRtuw-1; Fri, 04 Nov 2022 12:23:32 -0400
-X-MC-Unique: YRp9C9ogM8epCXirtBRtuw-1
-Received: by mail-ed1-f70.google.com with SMTP id v18-20020a056402349200b004622e273bbbso3913593edc.14
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Nov 2022 09:23:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pp1gAvCv0S7a0+LbSi7mwLtPne5YYp7ectQ1uCFFxiU=;
-        b=GvFne6oT2Y+sVjb38ZVS3dMen2bQ/tW+2mmpAqv/FqfmCVOl2on+qc6iE160AanAuP
-         q9UwqSzQef3u0EtwvF/xIfwPHumfyYCqNAQJ23rs12M4mpUbLcSRVHyYRThC5ELIfQPk
-         53piqWzUO852pM6iD9aktXH7gxkDIA0T4wiX0ixTt/WG5lz3G51zJL19Sp1MUg8yXxiS
-         ht8xTz1siHiw/pnl3U1AAddXaWekfzAOXxkZPjvCdlQh1S31RH80q0VNga9I/a79S9Yh
-         bpqlM7c1q5numPv+95GzVB1MQPVgHFacHlwgXvLV8s27fpOz88F+dr2KIApTH1tKP51g
-         81Dg==
-X-Gm-Message-State: ACrzQf1AM5uCkbadB6v2MM+Wcbxsvqr0g1mWuvZbhawrLsvgzcnJEAg9
-        2iNGg56CWtrJ0OvjpmjxfE5sx0iZwVh5ZokxWX9W2jQarlGvVTmBMYOdjkgXs5DW+cuPe6JyBgj
-        8GwbOK7G5QX9+CsLcGd4GeWAf8GD7O7AQbw==
-X-Received: by 2002:a05:6402:616:b0:463:e2cd:a88d with SMTP id n22-20020a056402061600b00463e2cda88dmr16819425edv.400.1667579010672;
-        Fri, 04 Nov 2022 09:23:30 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4/8CDlsJM8kAPum5+A8l+FVPBOMe0EiU2tBjdUeoP0F0C41kd0gCeOXJ3Aca9vhGBJ4ehIWQ==
-X-Received: by 2002:a05:6402:616:b0:463:e2cd:a88d with SMTP id n22-20020a056402061600b00463e2cda88dmr16819392edv.400.1667579010403;
-        Fri, 04 Nov 2022 09:23:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id j1-20020a17090623e100b0078d46aa3b82sm1988678ejg.21.2022.11.04.09.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Nov 2022 09:23:29 -0700 (PDT)
-Message-ID: <09408910-e806-cf4d-1377-82ab5b2990d5@redhat.com>
-Date:   Fri, 4 Nov 2022 17:23:28 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 02/31] drm/i915: Don't register backlight when another
- backlight should be used (v2)
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>, Lyude <lyude@redhat.com>,
-        Daniel Dadap <ddadap@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Xinhui <Xinhui.Pan@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
+        Fri, 4 Nov 2022 13:23:03 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E854386F;
+        Fri,  4 Nov 2022 10:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667582556; x=1699118556;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=efPIZNMJfQFj5AFyIXMUtT8fAkFrSQrZCsQAcNWzKCI=;
+  b=Pd+JiAoPrudQZKx0vCNv37Xc5aP/USBTJDjpHxRByekMEZN0pYAf8LH7
+   xzdByA0wNxQAslSe7cki48ROzpCcgIwjWHcqWr8SxC4gZVJR2GrYlVA+9
+   UpP1olSBH6AQSVBfSAj4Mo9/EA9rTiOmpxFpof8RowhAWQhpcq+eaYpEP
+   D0wqwcR4Ifadmr/czXk84QIAHZTq311ofmaDsKC/gsaMbzoWSPQRMdSlH
+   0FX5bF48o3/T+jKQcubyo/Hk/F1GBEq+pmnghtQZwda+sj8UvHJrNmuDL
+   51ONjkPP7JQbdCZtAelrHOZSWw1ks1onVUrgi5vOV+XyFbh5kZNnfP9bE
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="290411543"
+X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
+   d="scan'208";a="290411543"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 10:22:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="704159400"
+X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
+   d="scan'208";a="704159400"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Nov 2022 10:22:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1or0On-007T0L-0o;
+        Fri, 04 Nov 2022 19:22:33 +0200
+Date:   Fri, 4 Nov 2022 19:22:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
-        Jani Nikula <jani.nikula@intel.com>,
-        nouveau@lists.freedesktop.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        David Airlie <airlied@redhat.com>, Len Brown <lenb@kernel.org>
-References: <20221025193248.GA21457@srcf.ucam.org>
- <144cd47e-42dc-2b84-1a90-ea5e080e08a3@redhat.com>
- <20221025204043.GA23306@srcf.ucam.org>
- <cb5add36-c13c-ccd5-1b4b-71b45163a170@redhat.com>
- <20221025234040.GA27673@srcf.ucam.org>
- <fa6cc1d9-6740-b495-2c72-cae18c429ca6@redhat.com>
- <20221026204920.GA15326@srcf.ucam.org>
- <099dee98-8aeb-af36-828c-110f5ac6e9a3@redhat.com>
- <20221027091123.GA28089@srcf.ucam.org>
- <933be908-0bc2-56cc-8d6f-38f2d208ef20@redhat.com>
- <20221027095249.GA28666@srcf.ucam.org>
- <6df2016d-ed2d-57fa-dcad-48537732895f@redhat.com>
- <CAJZ5v0jM1JAySagv=u2be1bAmfTt3jJgVnOEjGzskBvZY7k6aw@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAJZ5v0jM1JAySagv=u2be1bAmfTt3jJgVnOEjGzskBvZY7k6aw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Don't fail if unknown CPU is
+ found
+Message-ID: <Y2VKWJlFvixnFu/p@smile.fi.intel.com>
+References: <20221104154916.35231-1-andriy.shevchenko@linux.intel.com>
+ <MN0PR12MB6101C1FEA748E52D42CBC734E23B9@MN0PR12MB6101.namprd12.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN0PR12MB6101C1FEA748E52D42CBC734E23B9@MN0PR12MB6101.namprd12.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Matthew, Rafael,
+On Fri, Nov 04, 2022 at 03:58:22PM +0000, Limonciello, Mario wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Sent: Friday, November 4, 2022 10:49
 
-On 10/27/22 14:09, Rafael J. Wysocki wrote:
-> On Thu, Oct 27, 2022 at 12:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 10/27/22 11:52, Matthew Garrett wrote:
->>> On Thu, Oct 27, 2022 at 11:39:38AM +0200, Hans de Goede wrote:
->>>
->>>> The *only* behavior which actually is new in 6.1 is the native GPU
->>>> drivers now doing the equivalent of:
->>>>
->>>>      if (acpi_video_get_backlight_type() != acpi_backlight_native)
->>>>              return;
->>>>
->>>> In their backlight register paths (i), which is causing the native
->>>> backlight to disappear on your custom laptop setup and on Chromebooks
->>>> (with the Chromebooks case being already solved I hope.).
->>>
->>> It's causing the backlight control to vanish on any machine that isn't
->>> ((acpi_video || vendor interface) || !acpi). Most machines that fall
->>> into that are either weird or Chromebooks or old, but there are machines
->>> that fall into that.
->>
->> I acknowledge that their are machines that fall into this category,
->> but I expect / hope there to be so few of them that we can just DMI
->> quirk our way out if this.
->>
->> I believe the old group to be small because:
->>
->> 1. Generally speaking the "native" control method is usually not
->> present on the really old (pre ACPI video spec) mobile GPUs.
->>
->> 2. On most old laptops I would still expect there to be a vendor
->> interface too, and if both get registered standard desktop environments
->> will prefer the vendor one, so then we need a native DMI quirk to
->> disable the vendor interface anyways and we already have a bunch of
->> those, so some laptops in this group are already covered by DMI quirks.
->>
->> And a fix for the Chromebook case is already in Linus' tree, which
->> just leaves the weird case, of which there will hopefully be only
->> a few.
->>
->> I do share your worry that this might break some machines, but
->> the only way to really find out is to get this code out there
->> I'm afraid.
->>
->> I have just written a blog post asking for people to check if
->> their laptop might be affected; and to report various details
->> to me of their laptop is affected:
->>
->> https://hansdegoede.dreamwidth.org/26548.html
->>
->> Lets wait and see how this goes. If I get (too) many reports then
->> I will send a revert of the addition of the:
->>
->>         if (acpi_video_get_backlight_type() != acpi_backlight_native)
->>                 return;
->>
->> check to the i915 / radeon / amd / nouveau drivers.
->>
->> (And if I only get a couple of reports I will probably just submit
->> DMI quirks for the affected models).
+...
+
+> > We have accessing P2SB from a very few places for quite known hardware.
+> > 
+> > When a new SoC appears in intel-family.h it's not obvious that it needs
+> > to be added to p2sb.c as well. Instead, provide default BDF and refactor
+> > p2sb_get_devfn() to always succeed. If in the future we would need to
+> > exclude something, we may add a list of unsupported IDs.
+> > 
+> > Without this change the iTCO on Intel Commet Lake SoCs became
 > 
-> Sounds reasonable to me, FWIW.
+> Isn't it "Comet Lake"?
 
-I have received quite a few test reports as a result of my blogpost
-(and of the blogpost's mention in an arstechnica article).
+Right, thanks!
 
-Long story short, Matthew, you are right. Quite a few laptop models
-will end up with an empty /sys/class/backlight because of the native
-backlight class devices no longer registering when
-acpi_video_backlight_use_native() returns false.
+In any case I would like to have Jarkko's Tested-by before proceeding with
+this. Hence v2 is warranted to appear.
 
-I will submit a patch-set later today to fix this (by making 
-cpi_video_backlight_use_native() always return true for now).
+> > unavailable:
+> > 
+> >   i801_smbus 0000:00:1f.4: failed to create iTCO device
 
-More detailed summary/analysis of the received test reports:
+-- 
+With Best Regards,
+Andy Shevchenko
 
--30 unaffected models
-
--The following laptop models:
- Acer Aspire 1640
- Apple MacBook 2.1
- Apple MacBook 4.1
- Apple MacBook Pro 7.1 (uses nv_backligh instead of intel_backlight!)
- HP Compaq nc6120
- IBM ThinkPad X40
- System76 Starling Star1
-
- All only have a native intel_backlight interface and the heuristics from
- acpi_video_get_backlight_type() return acpi_backlight_vendor there causing
- the changes in 6.1 to not register native backlights when
- acpi_video_backlight_use_native() returns false resulting in an empty
- /sys/class/backlight, breaking users ability to control their laptop
- panel's brightness.
-
- I will submit a patch to always make acpi_video_backlight_use_native()
- return true for now to work around this for 6.1.
-
- I do plan to try to re-introduce that change again later. First I need to
- change the heuristics to still native on more models so that on models
- where the native backlight is the only (working) entry they will
- return native.
-
--The Dell N1410 has acpi_video support and acpi_osi_is_win8() returns false
- so acpi_video_get_backlight_type() returns acpi_video, but acpi_video
- fails to register a backlight device due to a_BCM eval error.
- The intel_backlight interface works fine, but this model is going to need
- a DMI-use-native-quirk to avoid intel_backlight disappearing when
- acpi_video_backlight_use_native() is changed back.
-
--The following laptop models actually use a vendor backlight control method,
- while also having a native backlight entry under /sys/class/backlight:
-
- Asus EeePC 901       -> native backlight confirmed to also work
- Dell Latitude D610   -> native backlight confirmed to work better then vendor
- Sony Vaio PCG-FRV3   -> native backlight not tested
-
- Note these will keep working the same as before in 6.1, independent of
- the revert. I've tracked these seperately because they will likely be
- affected by future changes to the heuristics.
-
-
-Regards,
-
-Hans
-
-
-p.s.
-
-My plan is to try again with 6.2 by making native be preferred over vendor
-(when native is available).  It looks like native tends to work well when
-available even on systems so old that the don't have acpi_video
-backlight control support.
-
-I do plan to do another blogpost asking people to explicitly test
-that native works on laptops with a combination of vendor + native
-backlight control available.
 
