@@ -2,74 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BD6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Nov 2022 22:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E07C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Nov 2022 03:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiKDWO2 (ORCPT
+        id S229505AbiKEDsG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Nov 2022 18:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
+        Fri, 4 Nov 2022 23:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbiKDWO1 (ORCPT
+        with ESMTP id S229469AbiKEDsD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Nov 2022 18:14:27 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F011429B8;
-        Fri,  4 Nov 2022 15:14:26 -0700 (PDT)
-Received: from zn.tnic (p200300ea9733e7a4329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e7a4:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A8D821EC02DD;
-        Fri,  4 Nov 2022 23:14:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1667600064;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ecezFjV64/LD06J6jguRRXZl22Q3tcFx+db0PLVvgdI=;
-        b=qJ9EzN5E1tRwW+/5g4DykyP+6H7FDc8rEd4+5XkwNMX7Ge9cskSIhebAZcuEXBsFPSDrdZ
-        V2+9hv+kpnXecyKREX149KhAAmic9mpikaoE5CatmsWroS8HFQ47mbqeWFvVYRSjzfI15A
-        BYJrMhT38FkgH3McnP3Qaa5HQHZz1A4=
-Date:   Fri, 4 Nov 2022 23:14:24 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, gregkh@linuxfoundation.org, ashok.raj@intel.com,
-        tony.luck@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, thiago.macieira@intel.com,
-        athenas.jimenez.gonzalez@intel.com
-Subject: Re: [PATCH 07/14] x86/microcode/intel: Expose
- microcode_sanity_check()
-Message-ID: <Y2WOwEkjg4jR1rN8@zn.tnic>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <20221021203413.1220137-8-jithu.joseph@intel.com>
- <Y2OnHuSHgIMGxcUH@zn.tnic>
- <a4107510-add4-3d85-ed2f-2f5e8c32a350@intel.com>
- <Y2TuhwiGFJ1M1V7u@zn.tnic>
- <4ee6073a-461e-562d-5c00-d1b371288b63@intel.com>
+        Fri, 4 Nov 2022 23:48:03 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952F430F57;
+        Fri,  4 Nov 2022 20:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667620082; x=1699156082;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ys34ez7ZeKmkHIVhh+N4ZKBlxYKVu++wIiRaYVAo3bw=;
+  b=bo6VOOrKGvBG912t8A2FrbujQCvKcejzwy6yXWoVo9Sq0k85T839xD7b
+   T8GUGrEhKzic7fGbxwrasnVn10H+Wku9LGjPxbqgFedSkL0ZLl8kzdlmh
+   J/qMWSamQd2obESnwVMIheIRxQoEPUOuODQpe1V9CXdIxYDny5WC3ftTD
+   LUjIyNCCE78BKdEDnvZ7+7DBhlfpVREUqwZp7v2/wfPTaU52HNDQpNjko
+   yDcc0l86SngCCj4lU8RkAgt5AKQZK8CYjpFQE5YkX6D8X+YM1BU/UhmHY
+   aPC687hl9Ss6DMfljE51aotYTM0xzN7RW4q2+7CdYwEPuENxsLTBYxlnU
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="290515084"
+X-IronPort-AV: E=Sophos;i="5.96,139,1665471600"; 
+   d="scan'208";a="290515084"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 20:42:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="586392680"
+X-IronPort-AV: E=Sophos;i="5.96,139,1665471600"; 
+   d="scan'208";a="586392680"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 04 Nov 2022 20:42:29 -0700
+Received: from debox1-desk4.intel.com (unknown [10.212.242.20])
+        by linux.intel.com (Postfix) with ESMTP id 2CD08580BDB;
+        Fri,  4 Nov 2022 20:42:29 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/pmt: Sapphire Rapids PMT errata fix
+Date:   Fri,  4 Nov 2022 20:42:28 -0700
+Message-Id: <20221105034228.1376677-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4ee6073a-461e-562d-5c00-d1b371288b63@intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 04, 2022 at 03:02:42PM -0700, Joseph, Jithu wrote:
-> Wanted to check with you, if it is okay to rename the first "reserved"
-> field in microcode_header_intel to "metasize" today (as shown in the
-> diff below) or would you prefer to do that too at a later point ?
-> (doing so today will help to avoid redefining an IFS specific header
-> struct, with this as the only change )
+On Sapphire Rapids, due to a hardware issue affecting the PUNIT telemetry
+region, reads that are not done in QWORD quantities and alignment may
+return incorrect data. Use a custom 64-bit copy for this region.
 
-No objections - it is not used by the microcode loader anyway.
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmt/class.c | 31 +++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-Thx.
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index 53d7fd2943b4..46598dcb634a 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/kernel.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/module.h>
+ #include <linux/mm.h>
+ #include <linux/pci.h>
+@@ -19,6 +20,7 @@
+ #define PMT_XA_START		0
+ #define PMT_XA_MAX		INT_MAX
+ #define PMT_XA_LIMIT		XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
++#define GUID_SPR_PUNIT		0x9956f43f
+ 
+ bool intel_pmt_is_early_client_hw(struct device *dev)
+ {
+@@ -33,6 +35,29 @@ bool intel_pmt_is_early_client_hw(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(intel_pmt_is_early_client_hw);
+ 
++static inline int
++pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
++{
++	int i, remain;
++	u64 *buf = to;
++
++	if (!IS_ALIGNED((unsigned long)from, 8))
++		return -EFAULT;
++
++	for (i = 0; i < count/8; i++)
++		buf[i] = readq(&from[i]);
++
++	/* Copy any remaining bytes */
++	remain = count % 8;
++	if (remain) {
++		u64 tmp = readq(&from[i]);
++
++		memcpy(&buf[i], &tmp, remain);
++	}
++
++	return count;
++}
++
+ /*
+  * sysfs
+  */
+@@ -54,7 +79,11 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+ 	if (count > entry->size - off)
+ 		count = entry->size - off;
+ 
+-	memcpy_fromio(buf, entry->base + off, count);
++	if (entry->guid == GUID_SPR_PUNIT)
++		/* PUNIT on SPR only supports aligned 64-bit read */
++		count = pmt_memcpy64_fromio(buf, entry->base + off, count);
++	else
++		memcpy_fromio(buf, entry->base + off, count);
+ 
+ 	return count;
+ }
 
+base-commit: 225469d4acbcb873358d7618bad6e0203b67b964
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
