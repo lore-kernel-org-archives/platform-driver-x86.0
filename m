@@ -2,118 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3DBC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Nov 2022 16:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A819C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Nov 2022 17:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbiKFQzN (ORCPT
+        id S230364AbiKFRFx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Nov 2022 11:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
+        Sun, 6 Nov 2022 12:05:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiKFQzL (ORCPT
+        with ESMTP id S230367AbiKFRFQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Nov 2022 11:55:11 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA43D2C6
-        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Nov 2022 08:55:10 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oriuk-0002rz-RM; Sun, 06 Nov 2022 17:54:30 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oriuc-002h3E-6Q; Sun, 06 Nov 2022 17:54:23 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oriuc-00EnGf-DQ; Sun, 06 Nov 2022 17:54:22 +0100
-Date:   Sun, 6 Nov 2022 17:54:22 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Dawei Li <set_pte_at@outlook.com>
-Cc:     rafael@kernel.org, gregkh@linuxfoundation.org,
-        dvhart@infradead.org, andy@infradead.org, lenb@kernel.org,
-        arnd@arndb.de, peterhuewe@gmx.de, kys@microsoft.com,
-        kronos.it@gmail.com, dmitry.torokhov@gmail.com,
-        bleung@chromium.org, sujith.thomas@intel.com, vithampi@vmware.com,
-        lee@kernel.org, wim@linux-watchdog.org, jgross@suse.com,
-        davem@davemloft.net, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] acpi: make remove callback of acpi driver void
-Message-ID: <20221106165422.nzfw36oj5q2splnc@pengutronix.de>
-References: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
+        Sun, 6 Nov 2022 12:05:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BD610FD6;
+        Sun,  6 Nov 2022 09:04:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05E8760C3F;
+        Sun,  6 Nov 2022 17:04:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52A8BC4347C;
+        Sun,  6 Nov 2022 17:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667754292;
+        bh=XArU3TO7AQ2vdLMZAPZu9OOgf+sON8XbgI7gyApuQII=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=glYNFu3LoME3x4rn7zxIAUjy4AHOtWtQ14MeN6duWTCuCvkfYxOQel+bbBxfPHfsz
+         XUJ81ZSaYW58jIWoPVKst52kThXOaB/MjuxDm8wsLVDbFrX/NuCo7lecicvosWB8h2
+         qhQDswbbbSspLzHdLvCffJgUKlOw/ceT2LtwdhEdDJ8bPkWNj4fGRLeigT7+n8D0mD
+         v2J2y0HRZUyY1euxZGo64Ew2/aC1V8P4yxRFTE+r+qaMCcpCIZXxTaTxaHCs3mgN2+
+         ygHZFtavc+xIfxTxIB09l3grE+qL2MvNru2oL/sljigjLbiWgC4Ps7IkpmsoFNspDN
+         YWmOOI21VmpjA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gayatri Kammela <gayatri.kammela@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Box <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 26/30] platform/x86/intel: pmc/core: Add Raptor Lake support to pmc core driver
+Date:   Sun,  6 Nov 2022 12:03:38 -0500
+Message-Id: <20221106170345.1579893-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221106170345.1579893-1-sashal@kernel.org>
+References: <20221106170345.1579893-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5moduzi7cpupfm5g"
-Content-Disposition: inline
-In-Reply-To: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 
---5moduzi7cpupfm5g
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 555a68dd681b7437a2708001d465c85f6dfa6955 ]
 
-Hello,
+Add Raptor Lake client parts (both RPL and RPL_S) support to pmc core
+driver. Raptor Lake client parts reuse all the Alder Lake PCH IPs.
 
-On Sun, Nov 06, 2022 at 10:57:53PM +0800, Dawei Li wrote:
-> For bus-based driver, device removal is implemented as:
-> 1 device_remove()->
-> 2   bus->remove()->
-> 3     driver->remove()
->=20
-> Driver core needs _no_ inform from callee(bus driver) about the
-> result of remove callback. In that case,
-> commit <fc7a6209d571> ("bus: Make remove callback return void")
-> forces struct bus_type::remove() be void-returned.
->=20
-> Now we have the situation that both 1 & 2 of calling chain are
-> void-returned, so it does _not_ make much sense for 3(driver->remove)
-> to return non-void to its caller.
->=20
-> So the basic idea behind this change is making remove() callback of
-> any bus-based driver to be void-returned.
->=20
-> This change itself, is for device drivers based on acpi-bus.
->=20
-> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Link: https://lore.kernel.org/r/20220912233307.409954-2-gayatri.kammela@linux.intel.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel/pmc/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Nice,
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index a1fe1e0dcf4a..17ec5825d13d 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1914,6 +1914,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
+ 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_reg_map),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_reg_map),
+ 	{}
+ };
+ 
+-- 
+2.35.1
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-It might be worth to point out that the callers of the remove callback
-(i.e. acpi_device_probe and acpi_device_remove) silently ignore the
-return value already today and even since before commit fc7a6209d571
-("bus: Make remove callback return void").
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5moduzi7cpupfm5g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNn5rUACgkQwfwUeK3K
-7AlTjQf+K0rkXg+pdZx8uSNDOuTNU9kQ72zhGVpvKFigssmjZaOEF/wS3Oo1tevR
-vGR5P6PS0KxA9M8H7DnALX6kZzdCzshaPOm9DIpr3HsouslN7IPEiUzM9NJuq4ln
-TFlBJWxxcZgevgQJ2UlzE8uPEFEyfAsBlfuhBMhfd0zrmfnskphEhyxaGT9FesZ3
-LwMnVGzRAT4KHsAS+TkVh3200gQVpBCjZz3ZcVRcjJ72faWxdpXaDYtvTgWRid2X
-QmEXwBMpcMjUWtdbNbFzev4DY/dW4INYKejXKYeG8Kjn7dtdVxzRWGlz8NjHWuD2
-wI3uD23kdo0lU3Ls+bxqVidZP0w9Wg==
-=flOm
------END PGP SIGNATURE-----
-
---5moduzi7cpupfm5g--
