@@ -2,82 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D86C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 07:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209C3C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 08:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbiKGH3t (ORCPT
+        id S230298AbiKGIUo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Nov 2022 02:29:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
+        Mon, 7 Nov 2022 03:20:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbiKGH3d (ORCPT
+        with ESMTP id S229586AbiKGIUn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Nov 2022 02:29:33 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77911E2A;
-        Sun,  6 Nov 2022 23:28:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667806103; x=1699342103;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RVVZwPv9xI3vAAY4CJDjah66RkUABieq8JbrCVHaIZw=;
-  b=jqtgWo+GPpuWKlcqhqN9tlP6l0K1b/kNTBC58qxHjifY7hW6CeW+a/lF
-   NiEt/m+M/8RlmVTlRJdxgrA/nfr9Wd3KpctsfhsC6WqB9yykBIwHdH5LM
-   BdIUDwuEFtRfyomrIIXb2addbsoULsK2TbAzuR+20x7bJ9/fWSXI9zecd
-   TUcJq+OMQk3zUOFvoIVDF57iMDxaKMmbBX5JEiGPkaXD3Q/y40uSYNdFH
-   SlUU7StOAhu6KGmHs+AF3M4KruxX7KEueCYQi6sbx/W3uLWCZxD3wVual
-   uYdDTIbcaRCs3quxf+nzCIlJ8CUXSguv/2y8VRzZF/ooJLlgbKhQjKYso
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="311480074"
-X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
-   d="scan'208";a="311480074"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 23:28:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="669040361"
-X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
-   d="scan'208";a="669040361"
-Received: from mylly.fi.intel.com (HELO [10.237.72.55]) ([10.237.72.55])
-  by orsmga001.jf.intel.com with ESMTP; 06 Nov 2022 23:28:17 -0800
-Message-ID: <dfa28659-033f-f694-cddf-ebb049c293ba@linux.intel.com>
-Date:   Mon, 7 Nov 2022 09:28:16 +0200
+        Mon, 7 Nov 2022 03:20:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1BDE24;
+        Mon,  7 Nov 2022 00:20:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 23382B80E34;
+        Mon,  7 Nov 2022 08:20:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7194BC433C1;
+        Mon,  7 Nov 2022 08:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667809239;
+        bh=HsumuHWGEkVvYRJ9gfr46c7MJjHktceqJIjdDmY63pQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hhgh6OeHVpRaa1eETr2Fq35BwwgvCURF3ehZ26Z4+wA6YYGGi5pYgeOZF8CDgrc9f
+         w7kzJ5KJkDmmskVaaC5wfP4CZ+XqEz8UMFc+CNBDOhc4xVRE+x1UFjg6CLKQa3qbIZ
+         FxmG2ChDjQxtKYvfHIa5eBJjCe+eBz4+NOAEzb/XQD28O9Tcfjwue3kfHzE33+L2CN
+         2jRdn7+eFhTSUlZYmkcnvgcOIVrGF3R2byH9L0QkkGkoixH6+Gb/VXHn5fL0ulaf0l
+         kv+WscTG0c6qmxqUefWxlDwfgI/Gm9cW5osIFPgp1OSjjOibbVKKwEWBWkz5MQdhW6
+         NXYPRqg652E/A==
+Date:   Mon, 7 Nov 2022 08:20:31 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Dawei Li <set_pte_at@outlook.com>
+Cc:     rafael@kernel.org, gregkh@linuxfoundation.org,
+        u.kleine-koenig@pengutronix.de, dvhart@infradead.org,
+        andy@infradead.org, lenb@kernel.org, arnd@arndb.de,
+        peterhuewe@gmx.de, kys@microsoft.com, kronos.it@gmail.com,
+        dmitry.torokhov@gmail.com, bleung@chromium.org,
+        sujith.thomas@intel.com, vithampi@vmware.com,
+        wim@linux-watchdog.org, jgross@suse.com, davem@davemloft.net,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] acpi: make remove callback of acpi driver void
+Message-ID: <Y2i/zy8CVzTb6qdE@google.com>
+References: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Don't fail if unknown CPU is
- found
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Gross <markgross@kernel.org>
-References: <20221104154916.35231-1-andriy.shevchenko@linux.intel.com>
- <MN0PR12MB6101C1FEA748E52D42CBC734E23B9@MN0PR12MB6101.namprd12.prod.outlook.com>
- <Y2VKWJlFvixnFu/p@smile.fi.intel.com>
-Content-Language: en-US
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <Y2VKWJlFvixnFu/p@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Sun, 06 Nov 2022, Dawei Li wrote:
 
-On 11/4/22 19:22, Andy Shevchenko wrote:
-> On Fri, Nov 04, 2022 at 03:58:22PM +0000, Limonciello, Mario wrote:
->> Isn't it "Comet Lake"?
+> For bus-based driver, device removal is implemented as:
+> 1 device_remove()->
+> 2   bus->remove()->
+> 3     driver->remove()
 > 
-> Right, thanks!
+> Driver core needs _no_ inform from callee(bus driver) about the
+> result of remove callback. In that case,
+> commit <fc7a6209d571> ("bus: Make remove callback return void")
+> forces struct bus_type::remove() be void-returned.
 > 
-> In any case I would like to have Jarkko's Tested-by before proceeding with
-> this. Hence v2 is warranted to appear.
+> Now we have the situation that both 1 & 2 of calling chain are
+> void-returned, so it does _not_ make much sense for 3(driver->remove)
+> to return non-void to its caller.
 > 
-Yes, iTCO registration works again with this patch and is functioning, 
-i.e. able to reset the machine.
+> So the basic idea behind this change is making remove() callback of
+> any bus-based driver to be void-returned.
+> 
+> This change itself, is for device drivers based on acpi-bus.
+> 
+> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
+> ---
+>  arch/ia64/hp/common/aml_nfw.c                 |  4 ++--
+>  arch/x86/platform/olpc/olpc-xo15-sci.c        |  3 +--
+>  drivers/acpi/ac.c                             |  8 +++-----
+>  drivers/acpi/acpi_pad.c                       |  3 +--
+>  drivers/acpi/acpi_video.c                     |  8 +++-----
+>  drivers/acpi/battery.c                        |  5 ++---
+>  drivers/acpi/button.c                         |  5 ++---
+>  drivers/acpi/ec.c                             |  5 ++---
+>  drivers/acpi/hed.c                            |  3 +--
+>  drivers/acpi/nfit/core.c                      |  3 +--
+>  drivers/acpi/sbs.c                            |  9 ++++-----
+>  drivers/acpi/sbshc.c                          |  7 +++----
+>  drivers/acpi/thermal.c                        |  7 +++----
+>  drivers/acpi/tiny-power-button.c              | 10 +++++++---
+>  drivers/char/sonypi.c                         |  3 +--
+>  drivers/char/tpm/tpm_crb.c                    |  4 +---
+>  drivers/hv/vmbus_drv.c                        |  4 +---
+>  drivers/hwmon/acpi_power_meter.c              |  5 ++---
+>  drivers/hwmon/asus_atk0110.c                  |  6 ++----
+>  drivers/input/misc/atlas_btns.c               |  4 +---
+>  drivers/net/fjes/fjes_main.c                  |  4 +---
+>  .../platform/chrome/chromeos_privacy_screen.c |  3 +--
+>  drivers/platform/chrome/wilco_ec/event.c      |  4 +---
+>  drivers/platform/surface/surfacepro3_button.c |  3 +--
+>  drivers/platform/x86/asus-laptop.c            |  3 +--
+>  drivers/platform/x86/asus-wireless.c          |  3 +--
+>  drivers/platform/x86/classmate-laptop.c       | 20 +++++++++----------
+>  drivers/platform/x86/dell/dell-rbtn.c         |  6 ++----
+>  drivers/platform/x86/eeepc-laptop.c           |  3 +--
+>  drivers/platform/x86/fujitsu-laptop.c         |  4 +---
+>  drivers/platform/x86/fujitsu-tablet.c         |  3 +--
+>  drivers/platform/x86/intel/rst.c              |  4 +---
+>  drivers/platform/x86/lg-laptop.c              |  4 +---
+>  drivers/platform/x86/panasonic-laptop.c       |  8 +++-----
+>  drivers/platform/x86/sony-laptop.c            |  9 +++------
+>  drivers/platform/x86/system76_acpi.c          |  4 +---
+>  drivers/platform/x86/topstar-laptop.c         |  3 +--
+>  drivers/platform/x86/toshiba_acpi.c           |  4 +---
+>  drivers/platform/x86/toshiba_bluetooth.c      |  6 +++---
+>  drivers/platform/x86/toshiba_haps.c           |  4 +---
+>  drivers/platform/x86/wireless-hotkey.c        |  3 +--
+>  drivers/platform/x86/xo15-ebook.c             |  3 +--
+>  drivers/ptp/ptp_vmw.c                         |  3 +--
+>  drivers/thermal/intel/intel_menlow.c          |  8 +++-----
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+>  drivers/video/backlight/apple_bl.c            |  3 +--
+
+Acked-by: Lee Jones <lee@kernel.org>
+
+>  drivers/watchdog/ni903x_wdt.c                 |  4 +---
+>  drivers/xen/xen-acpi-pad.c                    |  3 +--
+>  include/acpi/acpi_bus.h                       |  2 +-
+>  48 files changed, 88 insertions(+), 149 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
