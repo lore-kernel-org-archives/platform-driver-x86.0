@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EC8C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 22:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72505C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 22:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232690AbiKGWyt (ORCPT
+        id S229534AbiKGWys (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Nov 2022 17:54:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
+        Mon, 7 Nov 2022 17:54:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232494AbiKGWyr (ORCPT
+        with ESMTP id S231657AbiKGWyq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Nov 2022 17:54:47 -0500
+        Mon, 7 Nov 2022 17:54:46 -0500
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FEB226481;
-        Mon,  7 Nov 2022 14:54:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25D31571D;
+        Mon,  7 Nov 2022 14:54:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667861687; x=1699397687;
+  t=1667861685; x=1699397685;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Zb6DFxJeoRkypDZP83pg8o1HUltF1td45iw5cJt0xA4=;
-  b=frxQU7hedYdI1/tLDZELMXnTzCFu85PO7Z9W56305HkvwaegKSQXZFza
-   ZWQewH5oDkpUrw5AW/z1W9gcsZzhATvtxmSuGGw31tQ8NWLchJaPvm+Jz
-   nSbnA/DCn9NRLL7etUi5Iiy1mDV1EJ3zAemHFYgKfFNrSUk5kmFimGEjL
-   WLWGFweBU7OBI3UeyejkjtZmcGRSeM3s82F+7c9pPLFBH9mCKBqblMQFA
-   4V9ITB8UGXI8wMq/HOzxJULApxJsd2+tUgsW8n3zzJqwlhERzXn72tSI7
-   3dxf54fM9Hnthi9SvChuNkUwAAqXvc+vFJNCyX4tQ6FOr3Fr1LPI0TD94
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="293911828"
+  bh=MHFgE7gyjINPZEVbivHQy+5kAf7Oj4xtRrBdTlwN9uw=;
+  b=bqfrtf8Qv4LtAXFyVnzQZskyqFrq+3Fw72JMD9qJ7GKDgSZYmqS3rhuE
+   7hQ6rWeJ6IHf0lZy/iUw49FAPXPv/Z19RTufgC/lgf0OIzP9mqfal84f/
+   5j0HVFV8OPaTLoM+OEdyY7+/VdyrTlniG6hDpDHP7Khri39e8T7rL6iAQ
+   w9hcVeJSXYxAgBhcKMsHbl+OivSLOXx+yhVq8A8TwEF352+jezoWj17bo
+   N2yjIpy0WDrN+G1h25KGPG1DNOx3aMnzSRjEZHd/5A8Aj63tvpxFptek/
+   OyDo0r4pxIWv0aTSuGNCuOKiksj5VCCN7Sl7OA6eyUEhn/DuqfJ5nPZc2
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="293911819"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="293911828"
+   d="scan'208";a="293911819"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="811012970"
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:45 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="811012952"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="811012970"
+   d="scan'208";a="811012952"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:46 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:44 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v2 05/14] x86/microcode/intel: Use appropriate type in microcode_sanity_check()
-Date:   Mon,  7 Nov 2022 14:53:14 -0800
-Message-Id: <20221107225323.2733518-6-jithu.joseph@intel.com>
+Subject: [PATCH v2 01/14] platform/x86/intel/ifs: Remove unused selection
+Date:   Mon,  7 Nov 2022 14:53:10 -0800
+Message-Id: <20221107225323.2733518-2-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221107225323.2733518-1-jithu.joseph@intel.com>
 References: <20221021203413.1220137-1-jithu.joseph@intel.com>
@@ -62,50 +62,27 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The data type of print_err parameter used by microcode_sanity_check()
-is int. In prepration for exporting this function, to be used by
-the IFS driver, Convert it to a more appropriate bool type for readability.
-
-No functional change intended.
+CONFIG_INTEL_IFS_DEVICE is not used anywhere. The selection in
+Kconfig is therefore pointless. Delete it.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- arch/x86/kernel/cpu/microcode/intel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/ifs/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-index 4e611a708718..234b163806ea 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -135,7 +135,7 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
- 		intel_ucode_patch = p->data;
- }
- 
--static int microcode_sanity_check(void *mc, int print_err)
-+static int microcode_sanity_check(void *mc, bool print_err)
- {
- 	unsigned long total_size, data_size, ext_table_size;
- 	struct microcode_header_intel *mc_header = mc;
-@@ -253,7 +253,7 @@ scan_microcode(void *data, size_t size, struct ucode_cpu_info *uci, bool save)
- 		mc_size = get_totalsize(mc_header);
- 		if (!mc_size ||
- 		    mc_size > size ||
--		    microcode_sanity_check(data, 0) < 0)
-+		    microcode_sanity_check(data, false) < 0)
- 			break;
- 
- 		size -= mc_size;
-@@ -792,7 +792,7 @@ static enum ucode_state generic_load_microcode(int cpu, struct iov_iter *iter)
- 		memcpy(mc, &mc_header, sizeof(mc_header));
- 		data = mc + sizeof(mc_header);
- 		if (!copy_from_iter_full(data, data_size, iter) ||
--		    microcode_sanity_check(mc, 1) < 0) {
-+		    microcode_sanity_check(mc, true) < 0) {
- 			break;
- 		}
- 
+diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
+index c341a27cc1a3..89152d46deee 100644
+--- a/drivers/platform/x86/intel/ifs/Kconfig
++++ b/drivers/platform/x86/intel/ifs/Kconfig
+@@ -4,7 +4,6 @@ config INTEL_IFS
+ 	# Discussion on the list has shown that the sysfs API needs a bit
+ 	# more work, mark this as broken for now
+ 	depends on BROKEN
+-	select INTEL_IFS_DEVICE
+ 	help
+ 	  Enable support for the In Field Scan capability in select
+ 	  CPUs. The capability allows for running low level tests via
 -- 
 2.25.1
 
