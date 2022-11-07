@@ -2,41 +2,41 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8073FC43217
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 22:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33864C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 22:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232841AbiKGWzG (ORCPT
+        id S232847AbiKGWzH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Nov 2022 17:55:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
+        Mon, 7 Nov 2022 17:55:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232755AbiKGWyv (ORCPT
+        with ESMTP id S232748AbiKGWyv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 7 Nov 2022 17:54:51 -0500
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E962B61F;
-        Mon,  7 Nov 2022 14:54:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37C02A264;
+        Mon,  7 Nov 2022 14:54:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667861691; x=1699397691;
+  t=1667861689; x=1699397689;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DyrS883OR7AFX4gN5EeEXTzT5dUJ/TdR0BLm14KTOTM=;
-  b=IM1Zga1Ppta/6CWnZJJiVS1nc52O4WgmVQNMmqYtlG9nn7u0BzoaNo2d
-   dUyzCebOi5PRi567CEBCiJTWNyaclkLZtLUJJKnEWM/kl3zQbXnBBG3xT
-   U53SvrvFX2QrIgm34eXwbXgMb9j263Is4Tzy9v3J2onqU/WujFUrPxa2B
-   Zr2kUAUs0pLHJFgZ89Ixi0V9ax9bSAq4qyic4GcVpX9JZ6mi1rISVlUsK
-   9IKvkGLygMwlLHA5nMZ2X7uCmhGT6Ue9BFwoFxs9p2qpSxIsBMZcJXBmA
-   f2TNhCS5S8JMLqVnmGtZMr8hcoQzllJu7rRYpBzQ5TW2c3/lWsH53HRv5
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="293911843"
+  bh=ieAw6DOi25+M/PVVeqIKsG7UFRjhjw4Kz3UXCTTfxEQ=;
+  b=jLNXKJI2oqzj1JklbJ3UsotsSG4GhMX5OiI+gaJXWCWjxbVN2I1egimE
+   DFTnhE4Z7D32QRkDvb7JVDmhSmo6SZOyB0w95kd4JEcDtBv8ZMebGqNpW
+   vY4BkgwBwEHW9ep1unP/rRp/bLUQbN6bScPaFLLiSL9Lhk0IhThVto6E1
+   thCkJBYKLdGt/wVsugygUj1CJeVj/XvZ6R9Eik3CewERNeUxCapcgO+B8
+   DDbAX8Zk1jEtjlBy6u/o/Slw92UMO3uobMo/q64fLr11qzN6quOl56UCg
+   XJ90YExw/vhWwJ1uRXlVEgdyi+yugfDsidlwEbRrhLPlxCtc+K+1BbGS2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="293911842"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="293911843"
+   d="scan'208";a="293911842"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:50 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="811013001"
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="811012997"
 X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="811013001"
+   d="scan'208";a="811012997"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 14:54:49 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v2 14/14] Revert "platform/x86/intel/ifs: Mark as BROKEN"
-Date:   Mon,  7 Nov 2022 14:53:23 -0800
-Message-Id: <20221107225323.2733518-15-jithu.joseph@intel.com>
+Subject: [PATCH v2 13/14] Documentation/ABI: Update IFS ABI doc
+Date:   Mon,  7 Nov 2022 14:53:22 -0800
+Message-Id: <20221107225323.2733518-14-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221107225323.2733518-1-jithu.joseph@intel.com>
 References: <20221021203413.1220137-1-jithu.joseph@intel.com>
@@ -62,32 +62,75 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Issues with user interface [1] to load scan test images
-has been addressed, so the following can be reverted.
-commit c483e7ea10fa ("platform/x86/intel/ifs: Mark as BROKEN")
-
-Link: https://lore.kernel.org/lkml/26102aca-a730-ddf8-d024-2e7367696757@redhat.com/ [1]
+Remove reload documentation and add current_batch documentation.
+Update the kernel version and date for all the entries.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- drivers/platform/x86/intel/ifs/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
+ .../ABI/testing/sysfs-platform-intel-ifs      | 30 ++++++++++---------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
-index 89152d46deee..3eded966757e 100644
---- a/drivers/platform/x86/intel/ifs/Kconfig
-+++ b/drivers/platform/x86/intel/ifs/Kconfig
-@@ -1,9 +1,6 @@
- config INTEL_IFS
- 	tristate "Intel In Field Scan"
- 	depends on X86 && CPU_SUP_INTEL && 64BIT && SMP
--	# Discussion on the list has shown that the sysfs API needs a bit
--	# more work, mark this as broken for now
--	depends on BROKEN
- 	help
- 	  Enable support for the In Field Scan capability in select
- 	  CPUs. The capability allows for running low level tests via
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+index 486d6d2ff8a0..f74df3abee57 100644
+--- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
++++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+@@ -1,39 +1,41 @@
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Write <cpu#> to trigger IFS test for one online core.
+ 		Note that the test is per core. The cpu# can be
+ 		for any thread on the core. Running on one thread
+ 		completes the test for the core containing that thread.
+ 		Example: to test the core containing cpu5: echo 5 >
+-		/sys/devices/platform/intel_ifs.<N>/run_test
++		/sys/devices/virtual/misc/intel_ifs_<N>/run_test
+ 
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/status
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	The status of the last test. It can be one of "pass", "fail"
+ 		or "untested".
+ 
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/details
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Additional information regarding the last test. The details file reports
+ 		the hex value of the SCAN_STATUS MSR. Note that the error_code field
+ 		may contain driver defined software code not defined in the Intel SDM.
+ 
+ What:		/sys/devices/virtual/misc/intel_ifs_<N>/image_version
+-Date:		April 21 2022
+-KernelVersion:	5.19
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+ Description:	Version (hexadecimal) of loaded IFS binary image. If no scan image
+ 		is loaded reports "none".
+ 
+-What:		/sys/devices/virtual/misc/intel_ifs_<N>/reload
+-Date:		April 21 2022
+-KernelVersion:	5.19
++What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
++Date:		Sept 30 2022
++KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+-Description:	Write "1" (or "y" or "Y") to reload the IFS image from
+-		/lib/firmware/intel/ifs/ff-mm-ss.scan.
++Description:	Write a number less than or equal to 0xff to load an IFS test image.
++		The number written treated as the 2 digit suffix in the following file name:
++		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
++		Reading the file will provide the suffix of the currently loaded IFS test image.
 -- 
 2.25.1
 
