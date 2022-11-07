@@ -2,95 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9755C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 15:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9509BC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 18:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232301AbiKGPCt (ORCPT
+        id S232708AbiKGS2v (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Nov 2022 10:02:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
+        Mon, 7 Nov 2022 13:28:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232592AbiKGPCX (ORCPT
+        with ESMTP id S232768AbiKGS2u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Nov 2022 10:02:23 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698061EAFC
-        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Nov 2022 07:02:07 -0800 (PST)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N5Z9Z72sJzpW7g;
-        Mon,  7 Nov 2022 22:58:26 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 7 Nov 2022 23:02:05 +0800
-Received: from [10.174.178.174] (10.174.178.174) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 7 Nov 2022 23:02:04 +0800
-Subject: Re: [PATCH] platform/x86: asus-tf103c-dock: fix possible memory leak
- in tf103c_dock_probe()
-To:     Hans de Goede <hdegoede@redhat.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <acpi4asus-user@lists.sourceforge.net>
-CC:     <corentin.chary@gmail.com>, <yangyingliang@huawei.com>
-References: <20221029062759.2581143-1-yangyingliang@huawei.com>
- <7123941b-1e71-f31c-b635-8f8f89f75ee9@redhat.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <4794ccf4-051c-8b1f-07ac-9696632d058c@huawei.com>
-Date:   Mon, 7 Nov 2022 23:02:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <7123941b-1e71-f31c-b635-8f8f89f75ee9@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.178.174]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
+        Mon, 7 Nov 2022 13:28:50 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E021181C;
+        Mon,  7 Nov 2022 10:28:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 96DE3B81618;
+        Mon,  7 Nov 2022 18:28:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 486D9C433D6;
+        Mon,  7 Nov 2022 18:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667845727;
+        bh=IvxViwUlIhKa6gb9BUMOrTSyMdG1bgRL0cXTw7n1Yrw=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=bh9VlMwXYLGzWUK6cHHn/si8sVXBzNyfxyq2K6858WOfTq6/9VeDMyGpUn5TPbHV+
+         Z50YALNL/neeB0bUlg5w4Ls998E9Ncz+1VWwVcETmoVWDmW79zsMx0N0DTos/jDV0o
+         Dn8woRQSxfAWQDn3rk2PJxlcomUPNcF/MvSCh4zctgP37C+CRbRZsswjjnIpEsjt+B
+         fJFdaYvAsU8Lo0fwluQd/6MeG9upITGg+OBZr4p1uHDj3B2TKm5GyMXc+swvF+vw9a
+         dTVtuSmWJmPA844aG5Lj2oGfptWT1wmbbTsR7vpF0+9CnTFCstWK2+g7vD+0m2qGrh
+         XkEbThDsY5/tA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2D109C41671;
+        Mon,  7 Nov 2022 18:28:47 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.1-3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <bab3412a-6328-953e-81c2-cea423908c21@redhat.com>
+References: <bab3412a-6328-953e-81c2-cea423908c21@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <bab3412a-6328-953e-81c2-cea423908c21@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-3
+X-PR-Tracked-Commit-Id: 53eb64c88f17b14b324fbdfd417f56c5d3fa6fee
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a1de832bd3243577de365222d8bc92708005ebf3
+Message-Id: <166784572717.16899.16268147170381402440.pr-tracker-bot@kernel.org>
+Date:   Mon, 07 Nov 2022 18:28:47 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The pull request you sent on Mon, 7 Nov 2022 13:17:07 +0100:
 
-On 2022/11/7 22:28, Hans de Goede wrote:
-> Hi Yang,
->
-> On 10/29/22 08:27, Yang Yingliang wrote:
->> If hid_add_device() returns error, it should call hid_destroy_device()
->> to free the hid which is allocated in hid_allocate_device().
->>
->> Fixes: 0a6509b0926d ("platform/x86: Add Asus TF103C dock driver")
->> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->> ---
->>   drivers/platform/x86/asus-tf103c-dock.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform/x86/asus-tf103c-dock.c
->> index 62310e06282b..f81d58dfd322 100644
->> --- a/drivers/platform/x86/asus-tf103c-dock.c
->> +++ b/drivers/platform/x86/asus-tf103c-dock.c
->> @@ -850,8 +850,10 @@ static int tf103c_dock_probe(struct i2c_client *client)
->>   	strscpy(dock->hid->phys, dev_name(dev), sizeof(dock->hid->phys));
->>   
->>   	ret = hid_add_device(dock->hid);
->> -	if (ret)
->> +	if (ret) {
->> +		hid_destroy_device(dock->hid);
->>   		return dev_err_probe(dev, ret, "adding hid dev\n");
->> +	}
-> hid_destroy_device() is already called by tf103c_dock_non_devm_cleanup()
-> which is registered early on as a cleanup handler through
-> devm_add_action_or_reset().
-Thanks for correcting me.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-3
 
-Yang
->
-> Regards,
->
-> Hans
->
->
-> .
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a1de832bd3243577de365222d8bc92708005ebf3
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
