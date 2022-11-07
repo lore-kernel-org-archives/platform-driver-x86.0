@@ -2,74 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B6C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 10:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13433C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 11:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231700AbiKGKuy (ORCPT
+        id S229778AbiKGLZy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Nov 2022 05:50:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
+        Mon, 7 Nov 2022 06:25:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231439AbiKGKux (ORCPT
+        with ESMTP id S229680AbiKGLZx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Nov 2022 05:50:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4923CF9
-        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Nov 2022 02:50:04 -0800 (PST)
+        Mon, 7 Nov 2022 06:25:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C3818B05
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Nov 2022 03:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667818203;
+        s=mimecast20190719; t=1667820300;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=B8xCaDjq+dyP2Kfrhc9Kj718Mofe9WPQnaMWa6lVbPk=;
-        b=bqngmtVMMvRjUzxV6Z8CuhrNhMHrHW2oUUitM8xx0fuqMq3JXEOhhb2i+yUGI8DzHLmg5n
-        C5YZ6fpcBtqnCH5bizZTNJ9cY7DU9NKUxOX0+qRqY/cq+vPZHBXWxPDEIZyc0xuMn5FQyL
-        h3xnXwvFAohXCq4m5Zzi1tCJEyofcg0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=hutdt2b2zeKy7OYI4K1JmV0ps00YTwE6Wdz0pL2yeQU=;
+        b=KM5UtgGQWJHsgrQjD93L6CV2wg5DaBF78eDfStk9xmdhAxg+1EPCeUIwdqjKQB8NSh733T
+        30rOWG/IIqGX13HORpbstojb3vpwtFUgRMh5tDokzmAddpPY1BUUypvJYQlYVkB5Aa2XPP
+        DzLSwZycGJEu2v7PDiPprau/2hx6/Ns=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-500-qREziOUoPIq0yeI2CnTapg-1; Mon, 07 Nov 2022 05:50:02 -0500
-X-MC-Unique: qREziOUoPIq0yeI2CnTapg-1
-Received: by mail-ed1-f70.google.com with SMTP id l18-20020a056402255200b004633509768bso7963887edb.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Nov 2022 02:50:02 -0800 (PST)
+ us-mta-2-vdjnewdEM_KoCyzg-1CF-A-1; Mon, 07 Nov 2022 06:23:47 -0500
+X-MC-Unique: vdjnewdEM_KoCyzg-1CF-A-1
+Received: by mail-ed1-f69.google.com with SMTP id f17-20020a056402355100b00466481256f6so2394064edd.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Nov 2022 03:23:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8xCaDjq+dyP2Kfrhc9Kj718Mofe9WPQnaMWa6lVbPk=;
-        b=BQEP5SYlleTywiDkOC7kt5d2grMfp15HYZ1Lr1Q4+B4FovmaQ+3rRN2Upl3ynqvGbM
-         5eAwLI2Cpyvap4cB8Ym8i7jEujhc7ipo/J2EPPzvhGh6IcrF/qJqHL4JAwkUb4IDJaFL
-         V39EB+dblVjKlKPbFSSze6/eM9h6h2cPfAOUyb7tF5V9t5IaaJXmgH2u1nZZgSLMpEKV
-         bLnWKLW3Vwrd6e5gxwiuhaWmkeqtfOJcEKk9HC4en9PvLyruTsJIfnEzIbjSvH6ae0re
-         027G9T9sMlX0LMfhRXoUGlhY0vSccDHG/XglRxJRYlI1+im6OWkjk3tQvdpckVCE07NW
-         SXww==
-X-Gm-Message-State: ACrzQf1Jk4hvrUqiPuJjE6wKk+sdWnV28uC7tVKORCKNW6qyt0h+ELVC
-        FqJWC4QxJYVTVMslnsEjIRVfZUV6ua5n3sZLkKK1eZHEVsbHnWg0HDX4qEqkz0KJzflfOnBj4ZH
-        CeRiRfl+lZAVg2yoH+mXoDI6Fm9fh+Gv+jA==
-X-Received: by 2002:a17:907:6d12:b0:7ae:3b9b:4554 with SMTP id sa18-20020a1709076d1200b007ae3b9b4554mr14650153ejc.307.1667818201090;
-        Mon, 07 Nov 2022 02:50:01 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM78WGHQOvUieOQpSHURTNyNPuY81hBiDH1LV7kd+Av1VjZAyI9TLNT2XS7dlczJAu3c/+QR+g==
-X-Received: by 2002:a17:907:6d12:b0:7ae:3b9b:4554 with SMTP id sa18-20020a1709076d1200b007ae3b9b4554mr14650145ejc.307.1667818200918;
-        Mon, 07 Nov 2022 02:50:00 -0800 (PST)
+        bh=hutdt2b2zeKy7OYI4K1JmV0ps00YTwE6Wdz0pL2yeQU=;
+        b=RL2wzIwbwAhJ9xfUgCVus1ZxvgTppdmlMSsLetXZpOaupJEByObjkSM7OJkGjjH9+z
+         X0o04rTogbhjaSXqN+Xx5X24Yj1c5WfRUqwtWHWxEuW/1INEYWkna2tVhG3/MPSrLVUI
+         xYaNab4gUMXEZ73EE7VK608nTKNlqzq8gNIQIQqrYmb4DtZJWdfgpRcA9nFfobF8F2Kh
+         aen5PvUY1SsagXJqdq2i0cHAUfGbtcasN5vua51l32hBm/h2tIsg7baOoZVFaxM/mVNk
+         72W5SonGmfAgFbHNPwfRIW4uX875bpc7CKZMC52JMQPcQTBewllFGjIubZ53Smk9XGNy
+         uUsQ==
+X-Gm-Message-State: ACrzQf0XOjs7HFrD7yu0KbOTh2Lx6fSEhowUpnQamRhEklNrensgDQWQ
+        s3Momyp5k0qXDfwLM2IX82tOwfDu7RmMCknXlEdtseF3ic55Tn92QXzYwuQvHN4vFkl8B30wpwi
+        Yba21tmlNC3o7hlCYUbyLvlh2k2XMPEdedg==
+X-Received: by 2002:a50:cc07:0:b0:453:4427:a918 with SMTP id m7-20020a50cc07000000b004534427a918mr50041933edi.121.1667820226208;
+        Mon, 07 Nov 2022 03:23:46 -0800 (PST)
+X-Google-Smtp-Source: AMsMyM4fYJi1/SwA6LMBqIMykwtjeej5rPZlI3rCD0qmPp5eOIKxD3rIsrNsqe5MZuK5MVHNiJ9ycg==
+X-Received: by 2002:a50:cc07:0:b0:453:4427:a918 with SMTP id m7-20020a50cc07000000b004534427a918mr50041920edi.121.1667820226040;
+        Mon, 07 Nov 2022 03:23:46 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ca21-20020aa7cd75000000b004580862ffdbsm4015075edb.59.2022.11.07.02.50.00
+        by smtp.gmail.com with ESMTPSA id qw8-20020a1709066a0800b0073d7ab84375sm3340770ejc.92.2022.11.07.03.23.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Nov 2022 02:50:00 -0800 (PST)
-Message-ID: <ece4214d-cec5-940d-eb9d-837ca9f413cd@redhat.com>
-Date:   Mon, 7 Nov 2022 11:49:59 +0100
+        Mon, 07 Nov 2022 03:23:45 -0800 (PST)
+Message-ID: <dbc29603-30f6-e8ea-83d9-5b776daa7dea@redhat.com>
+Date:   Mon, 7 Nov 2022 12:23:44 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH] platform/x86/intel: hid: add some ACPI device IDs
+Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Don't fail if unknown CPU is
+ found
 Content-Language: en-US
-To:     Ivan Hu <ivan.hu@canonical.com>, alex.hung@amd.com
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221102020548.5225-1-ivan.hu@canonical.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+References: <20221104154916.35231-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221102020548.5225-1-ivan.hu@canonical.com>
+In-Reply-To: <20221104154916.35231-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,45 +80,73 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/2/22 03:05, Ivan Hu wrote:
-> Add INTC1076 (JasonLake), INTC1077 (MeteorLake) and INTC1078 (RaptorLake)
-> devices IDs.
+On 11/4/22 16:49, Andy Shevchenko wrote:
+> We have accessing P2SB from a very few places for quite known hardware.
 > 
-> Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
+> When a new SoC appears in intel-family.h it's not obvious that it needs
+> to be added to p2sb.c as well. Instead, provide default BDF and refactor
+> p2sb_get_devfn() to always succeed. If in the future we would need to
+> exclude something, we may add a list of unsupported IDs.
+> 
+> Without this change the iTCO on Intel Commet Lake SoCs became unavailable:
+> 
+>   i801_smbus 0000:00:1f.4: failed to create iTCO device
+> 
+> Fixes: 5c7b9167ddf8 ("i2c: i801: convert to use common P2SB accessor")
+> Reported-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Thanks. I've merged this now, with the Commet Lake spelling error
+fixed and with Jarko's Tested-by added.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I'll include this in my upcoming fixes pull-req to Linus.
 
 Regards,
 
 Hans
 
 
+
+
 > ---
->  drivers/platform/x86/intel/hid.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/platform/x86/p2sb.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 79cff1fc675c..b6313ecd190c 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -27,6 +27,9 @@ static const struct acpi_device_id intel_hid_ids[] = {
->  	{"INTC1051", 0},
->  	{"INTC1054", 0},
->  	{"INTC1070", 0},
-> +	{"INTC1076", 0},
-> +	{"INTC1077", 0},
-> +	{"INTC1078", 0},
->  	{"", 0},
+> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+> index 384d0962ae93..1cf2471d54dd 100644
+> --- a/drivers/platform/x86/p2sb.c
+> +++ b/drivers/platform/x86/p2sb.c
+> @@ -19,26 +19,23 @@
+>  #define P2SBC			0xe0
+>  #define P2SBC_HIDE		BIT(8)
+>  
+> +#define P2SB_DEVFN_DEFAULT	PCI_DEVFN(31, 1)
+> +
+>  static const struct x86_cpu_id p2sb_cpu_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	PCI_DEVFN(13, 0)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	PCI_DEVFN(31, 1)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_D,	PCI_DEVFN(31, 1)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		PCI_DEVFN(31, 1)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		PCI_DEVFN(31, 1)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		PCI_DEVFN(31, 1)),
+> -	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		PCI_DEVFN(31, 1)),
+>  	{}
 >  };
->  MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
+>  
+>  static int p2sb_get_devfn(unsigned int *devfn)
+>  {
+> +	unsigned int fn = P2SB_DEVFN_DEFAULT;
+>  	const struct x86_cpu_id *id;
+>  
+>  	id = x86_match_cpu(p2sb_cpu_ids);
+> -	if (!id)
+> -		return -ENODEV;
+> +	if (id)
+> +		fn = (unsigned int)id->driver_data;
+>  
+> -	*devfn = (unsigned int)id->driver_data;
+> +	*devfn = fn;
+>  	return 0;
+>  }
+>  
 
