@@ -2,99 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE3EC43217
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  6 Nov 2022 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D86C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Nov 2022 07:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbiKFRFy (ORCPT
+        id S229680AbiKGH3t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Nov 2022 12:05:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38266 "EHLO
+        Mon, 7 Nov 2022 02:29:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230369AbiKFRFQ (ORCPT
+        with ESMTP id S230209AbiKGH3d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Nov 2022 12:05:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C6110FE4;
-        Sun,  6 Nov 2022 09:04:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 338F8B80C6D;
-        Sun,  6 Nov 2022 17:04:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5FC8C433D7;
-        Sun,  6 Nov 2022 17:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667754290;
-        bh=GBvxC92X5aZMOeIL3/LdoqGdqXcHCSF6AmwTzSf1DqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ctINbgcnuEkbaOGsJI45YC6XuqcL81sJ4ciAzHxqiNuFB5c7Jf8VSeHECAnDPqAWL
-         RmIxpExusH+fYt1yfMqp1JL894BRKycSdsKm2iN3iU7EwikXom1D47tk2L0Rj1ebxy
-         JCd3T8yQs49RxjE3ZsnY0s5IEbLYxta9MX4BOHT8dxc8O6mfZXrwEayVMbbXPCyaSO
-         17PxeNAsiASBj+YDxa470HA1/DNLgZN3Vj+eJYfnFkOq3vS0Ngpu4hMZC/rdkfxBRv
-         V/CVjht00VXzR+Hp3QtwbfLO4M5PBJWMKUEqd6n0npwhZIoneJPgI3pzHlX4vstozX
-         z6/ArrtHuqMXA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jelle van der Waa <jvanderwaa@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
-        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 25/30] platform/x86: thinkpad_acpi: Fix reporting a non present second fan on some models
-Date:   Sun,  6 Nov 2022 12:03:37 -0500
-Message-Id: <20221106170345.1579893-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221106170345.1579893-1-sashal@kernel.org>
-References: <20221106170345.1579893-1-sashal@kernel.org>
+        Mon, 7 Nov 2022 02:29:33 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77911E2A;
+        Sun,  6 Nov 2022 23:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667806103; x=1699342103;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RVVZwPv9xI3vAAY4CJDjah66RkUABieq8JbrCVHaIZw=;
+  b=jqtgWo+GPpuWKlcqhqN9tlP6l0K1b/kNTBC58qxHjifY7hW6CeW+a/lF
+   NiEt/m+M/8RlmVTlRJdxgrA/nfr9Wd3KpctsfhsC6WqB9yykBIwHdH5LM
+   BdIUDwuEFtRfyomrIIXb2addbsoULsK2TbAzuR+20x7bJ9/fWSXI9zecd
+   TUcJq+OMQk3zUOFvoIVDF57iMDxaKMmbBX5JEiGPkaXD3Q/y40uSYNdFH
+   SlUU7StOAhu6KGmHs+AF3M4KruxX7KEueCYQi6sbx/W3uLWCZxD3wVual
+   uYdDTIbcaRCs3quxf+nzCIlJ8CUXSguv/2y8VRzZF/ooJLlgbKhQjKYso
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="311480074"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="311480074"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 23:28:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="669040361"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="669040361"
+Received: from mylly.fi.intel.com (HELO [10.237.72.55]) ([10.237.72.55])
+  by orsmga001.jf.intel.com with ESMTP; 06 Nov 2022 23:28:17 -0800
+Message-ID: <dfa28659-033f-f694-cddf-ebb049c293ba@linux.intel.com>
+Date:   Mon, 7 Nov 2022 09:28:16 +0200
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.1
+Subject: Re: [PATCH v1 1/1] platform/x86: p2sb: Don't fail if unknown CPU is
+ found
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Gross <markgross@kernel.org>
+References: <20221104154916.35231-1-andriy.shevchenko@linux.intel.com>
+ <MN0PR12MB6101C1FEA748E52D42CBC734E23B9@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <Y2VKWJlFvixnFu/p@smile.fi.intel.com>
+Content-Language: en-US
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <Y2VKWJlFvixnFu/p@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jelle van der Waa <jvanderwaa@redhat.com>
+Hi
 
-[ Upstream commit a10d50983f7befe85acf95ea7dbf6ba9187c2d70 ]
+On 11/4/22 19:22, Andy Shevchenko wrote:
+> On Fri, Nov 04, 2022 at 03:58:22PM +0000, Limonciello, Mario wrote:
+>> Isn't it "Comet Lake"?
+> 
+> Right, thanks!
+> 
+> In any case I would like to have Jarkko's Tested-by before proceeding with
+> this. Hence v2 is warranted to appear.
+> 
+Yes, iTCO registration works again with this patch and is functioning, 
+i.e. able to reset the machine.
 
-thinkpad_acpi was reporting 2 fans on a ThinkPad T14s gen 1, even though
-the laptop has only 1 fan.
-
-The second, not present fan always reads 65535 (-1 in 16 bit signed),
-ignore fans which report 65535 to avoid reporting the non present fan.
-
-Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
-Link: https://lore.kernel.org/r/20221019194751.5392-1-jvanderwaa@redhat.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 2dbb9fc011a7..353507d18e11 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -263,6 +263,8 @@ enum tpacpi_hkey_event_t {
- #define TPACPI_DBG_BRGHT	0x0020
- #define TPACPI_DBG_MIXER	0x0040
- 
-+#define FAN_NOT_PRESENT		65535
-+
- #define strlencmp(a, b) (strncmp((a), (b), strlen(b)))
- 
- 
-@@ -8876,7 +8878,7 @@ static int __init fan_init(struct ibm_init_struct *iibm)
- 			/* Try and probe the 2nd fan */
- 			tp_features.second_fan = 1; /* needed for get_speed to work */
- 			res = fan2_get_speed(&speed);
--			if (res >= 0) {
-+			if (res >= 0 && speed != FAN_NOT_PRESENT) {
- 				/* It responded - so let's assume it's there */
- 				tp_features.second_fan = 1;
- 				tp_features.second_fan_ctl = 1;
--- 
-2.35.1
-
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
