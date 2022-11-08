@@ -2,186 +2,150 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE7C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Nov 2022 15:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BCCC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Nov 2022 15:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbiKHPAa (ORCPT
+        id S234240AbiKHPKx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Nov 2022 10:00:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        Tue, 8 Nov 2022 10:10:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233500AbiKHPA3 (ORCPT
+        with ESMTP id S234165AbiKHPKv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Nov 2022 10:00:29 -0500
+        Tue, 8 Nov 2022 10:10:51 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2490310B7D
-        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Nov 2022 06:59:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE1C17E3F
+        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Nov 2022 07:09:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667919569;
+        s=mimecast20190719; t=1667920188;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fdYoJUtgTUxnYrukYc9p7hbQdOdGOdRMetFx2HBQGkY=;
-        b=gmdvU8ZoL5EQo3f9zqmb4se2CalJUGBPXBFD+vZf9oQWKLGQTsNqHoebgqyo/OdBIKnoSN
-        5GjZSYwB01fJuH9C+QX/YtGJ7JEJJPbNFAAETNXrK7/Aahw9Km4zwmwHSbuCXtqx/izNuT
-        7ghmhgJxeVOu9l6PzCv7LwTj2i5mRys=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xx8DSoSqPeiCR+L6dCFIgvpc7UX9vd69Eqa8YxShRjs=;
+        b=WheZyUqUYiN/TLpy4DG+dNNN8oWuruOuQmNkvwuqUyJRx/ytxRi3/0px4e7TUFue6xYkSq
+        /ssFAZSd3Nyl6+BS8t1EVWV+5UDo6SfjzcnicCXoulgCkmR3rPt81RroP2GUtUK0zwgRit
+        YJ6Bhwn1DSScu9+b81SWS+L9V0WcRYw=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-220-L9tYEwU_PxymDJZmydkmxA-1; Tue, 08 Nov 2022 09:59:28 -0500
-X-MC-Unique: L9tYEwU_PxymDJZmydkmxA-1
-Received: by mail-ej1-f71.google.com with SMTP id xc12-20020a170907074c00b007416699ea14so8529185ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Nov 2022 06:59:27 -0800 (PST)
+ us-mta-590-QschJAPMMoGKJ5Rh3Oueug-1; Tue, 08 Nov 2022 10:09:45 -0500
+X-MC-Unique: QschJAPMMoGKJ5Rh3Oueug-1
+Received: by mail-ej1-f70.google.com with SMTP id qa14-20020a170907868e00b007ae24f77742so7733994ejc.8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Nov 2022 07:09:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdYoJUtgTUxnYrukYc9p7hbQdOdGOdRMetFx2HBQGkY=;
-        b=smeIfF20+ziQvD15SV2QA9Ncu2Ipdha7jDn1P6XDJoUjhIaWBfSBG8YMHcFnZ+aaED
-         bkdxSmaRQSgYs4q7q5bzBOlJ3EM/LEuVoCG7OgQoMf+9UIiXSlMaH8gsQ8vOQhdXd3RR
-         hLBksx34UToNnbnc5IeSgsrr/jeqESqqmq8u8g3Iuegh0rIkaPotZj1+eYoHl/iPm6XD
-         q7UORADNaVkpZfLYbXRtPXlfw5wE2wYvfzvfBITia/kyBRNUbMR3hihKopiDULquCnYZ
-         smQgfPXL+tRzOxauOLa8cKUTUarw3CfudAJukbUsqo+HTxiKPTBK4jYFllLrd8qMYmAb
-         zjYQ==
-X-Gm-Message-State: ACrzQf0aY+O+hwPKYoapfdCujJHz771YY0TXpbGrj8Acvon2duKZ1ujk
-        p9D+4zK+3WznVypu1npboqhaG/vxfgLvMetAvgY4WLw58CCDDSqU51lz+4MghZiqaSagaG3Wvl4
-        DE7rb+OzmwDQLb8qUmbGnFVYCoBzP5A2RUQ==
-X-Received: by 2002:a17:907:1de0:b0:7a7:6a8:1e61 with SMTP id og32-20020a1709071de000b007a706a81e61mr52661641ejc.468.1667919566510;
-        Tue, 08 Nov 2022 06:59:26 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM71Qfmpbr3ExvxJ8g22YkO/fvbruHyrsKrDYMElBmVZhqj41nttZBU2FnzLQyx0+RqThfN44w==
-X-Received: by 2002:a17:907:1de0:b0:7a7:6a8:1e61 with SMTP id og32-20020a1709071de000b007a706a81e61mr52661627ejc.468.1667919566308;
-        Tue, 08 Nov 2022 06:59:26 -0800 (PST)
+        bh=xx8DSoSqPeiCR+L6dCFIgvpc7UX9vd69Eqa8YxShRjs=;
+        b=YE4IgSQ7ONXqZ1CpdH4Crsg0zwebZsso1GstbrluIVpLqDvs3yeYcvbm1JNpT7x+gi
+         f4PtfWElyJ+PCjPJzr4mWK5tElQkzq1On2KAqGj7v3lD9ItF7xAuSLwtGlwMvt/xn8bs
+         ZIU7giwd66QWPKBaJJMJ9HPW2mR36MOBQ3HbummDKd3CSQlzsEmZQrbUklr3YD0+7HJE
+         SLhh1HLFv3c7y0kT6XM0Sl3hcwx7jQdAumm0bsfE7BKHJaAAztRtHimlOThKIoWIqN4R
+         aBNmQXH13rssn1OhuoPNQuzN5va/sfCysgQrJ872zzkEwhKyV26wEpTgGGyysYbCxE/W
+         TLpA==
+X-Gm-Message-State: ACrzQf0FLCMUfpN0wCWOzg1EFKPJaRIEWpXHPYq9zS4e5MMGcppJoeTS
+        lKrDI3njXDpmyX2wNpmwmjL6Cs7kH/K8hH+zHQIMlGy8bZb03K7gGVG8PR3gu8rBgwJTkDkxdVa
+        pwbRYCtU20qnifyTtfwWIgCAfY9rgZkf9Eg==
+X-Received: by 2002:a17:907:60c8:b0:78d:bc56:8f04 with SMTP id hv8-20020a17090760c800b0078dbc568f04mr52467085ejc.560.1667920183969;
+        Tue, 08 Nov 2022 07:09:43 -0800 (PST)
+X-Google-Smtp-Source: AMsMyM685x1/pcWzxnBB1hF/ciAtR7cTKDpGouxFzRsiH4/aMHgXZ9Ocrs9lP363ydVQ66TeCiz8zw==
+X-Received: by 2002:a17:907:60c8:b0:78d:bc56:8f04 with SMTP id hv8-20020a17090760c800b0078dbc568f04mr52467067ejc.560.1667920183754;
+        Tue, 08 Nov 2022 07:09:43 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id en6-20020a056402528600b0044e937ddcabsm5659929edb.77.2022.11.08.06.59.25
+        by smtp.gmail.com with ESMTPSA id ee2-20020a056402290200b004614fd33789sm5639349edb.18.2022.11.08.07.09.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Nov 2022 06:59:25 -0800 (PST)
-Message-ID: <4a7d3347-4eff-1a56-5703-ff8bfe91981e@redhat.com>
-Date:   Tue, 8 Nov 2022 15:59:24 +0100
+        Tue, 08 Nov 2022 07:09:43 -0800 (PST)
+Message-ID: <c5773d2f-da0d-ef73-694e-a7ae9d98610d@redhat.com>
+Date:   Tue, 8 Nov 2022 16:09:42 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH v4 0/6] Introduction of HP-BIOSCFG driver
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Fix fn-lock LED on Yoga
+ 14ITL5 laptops
 Content-Language: en-US, nl
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20221020201033.12790-1-jorge.lopez2@hp.com>
+To:     Ike Panhc <ike.pan@canonical.com>,
+        "Rawat, Arnav" <arnavr3@illinois.edu>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        Meng Dong <whenov@gmail.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <4785687.31r3eYUQgx@fedora>
+ <0bbca08c-6caf-e830-ca3d-105cf72015d5@canonical.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221020201033.12790-1-jorge.lopez2@hp.com>
+In-Reply-To: <0bbca08c-6caf-e830-ca3d-105cf72015d5@canonical.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge,
+Hi,
 
-On 10/20/22 22:10, Jorge Lopez wrote:
-> Version 4 restructures the patches submitted in previous versions.
-> Earlier hp-bioscfg patches were squashed together before creating
-> the new split.
+On 11/8/22 06:58, Ike Panhc wrote:
+> On 11/8/22 07:25, Rawat, Arnav wrote:
+>> From 5bce4f5860d54e125715d896f144add831d19483 Mon Sep 17 00:00:00 2001
+>> From: Arnav Rawat <arnavr3@illinois.edu>
+>> Date: Mon, 7 Nov 2022 17:12:41 -0600
+>> Subject: [PATCH] platform/x86: ideapad-laptop: Fix fn-lock LED on Yoga 14ITL5
+>>  laptops
+>>
+>> The commit 3ae86d2d4704796ee658a34245cb86e68c40c5d7: Fix Legion 5 Fnlock LED
+>> set the WMI id for the fn-lock event on some Legion 5 laptops. However,
+>> the same WMI ID is also sent on some Yoga laptops. Here, setting the fn-lock
+>> state is not valid behavior, and causes the ec to spam interrupts until the
+>> laptop is rebooted, so include a check for this line of laptops.
+>>
+>> Signed-off-by: Arnav Rawat <arnavr3@illinois.edu>
 > 
-> Version 4.0 breaks down the changes as follows:
+> Thanks.
 > 
-> 1. Moving existing HP drivers to a central location
-
-I have merged this patch, so you can drop this for version 5
-of the patchset.
-
-> The driver files were broken down in 5 patches of 3 files each
-> with exception of patch 6/6
+> But I will be more comfortable if we also check DMI_BOARD_NAME or
+> DMI_PRODUCT_VERSION, not just DMI_PRODUCT_NAME.
 > 
-> 2. Introduction of HP-BIOSCFG driver - Set 1
+> and it will be good to create a table like ideapad_dytc_v4_allow_table.
+> I have a feeling that your ideapad is not the only one has this issue.
 
-I've done a detailed review of this single patches. This has
-found quite a few things to improve. Note that many of the
-remarks and especially the remarks about enum-attributes.c
-also apply to the other files (to the other *-attributes.c
-files).
+I agree IMHO it would be better to find out the DMI strings of the
+laptop for which this fix was added and then only do the:
 
-Please prepare a version 5 taking all remarks into account
-for all files of the driver and then I will continue the
-review from there.
+	exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
 
-One thing which I did already notice for the last patch
-in the series, please drop the "depends on DMI" from the
-Kconfig bits and drop "include/dmi.h", you are not using
-any DMI functions so these are not necessary.
+call on that model. So move to an allow-list model, rather then using
+a deny-list model.
 
-And please add a:
+Especially also since the behavior without the call is a LED not turning on,
+which is something we can live with.
 
-L:      platform-driver-x86@vger.kernel.org
+Where as the behavior when doing the call on the wrong model is an interrupt
+storm which is a much bigger problem.
 
-line to the MAINTAINERS entry.
+I have added Meng Dong the author of the patch adding the:
+
+	exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
+
+call to the To list of this email.
+
+The commit msg of 3ae86d2d4704796 ("platform/x86: ideapad-laptop: Fix Legion 5 Fn lock LED")
+
+mentions this bug:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=212671
+
+So we may want to ask the reporter to test any fixes we come up with here.
+
+The commit msg says the fix was needed on a Legion 5 (R7000P)
+
+I have found this dmidecode for this laptop model, which should
+give us enough info to start a DMI based allow-list for this:
+
+https://github.com/linuxhw/DMI/blob/master/Notebook/Lenovo/Legion/Legion%20R7000P2020H%2082GR/D5E3FD9569F2
 
 Regards,
 
 Hans
 
 
-
-
-
-> 3. HP BIOSCFG driver - set 2
-> 4. HP BIOSCFG driver - set 3
-> 5. HP BIOSCFG driver - set 4
-> 6. HP BIOSCFG driver - remaining components
-> 
-> --
-> 
-> 
-> Jorge Lopez (6):
->   Moving existing HP drivers to a central location
->   Introduction of HP-BIOSCFG driver
->   HP BIOSCFG driver - set 2
->   HP BIOSCFG driver - set 3
->   HP BIOSCFG driver - set 4
->   HP BIOSCFG driver - remaining components
-> 
->  .../testing/sysfs-class-firmware-attributes   |  181 ++-
->  MAINTAINERS                                   |   15 +-
->  drivers/platform/x86/Kconfig                  |   80 +-
->  drivers/platform/x86/Makefile                 |    4 +-
->  drivers/platform/x86/hp/Kconfig               |   81 ++
->  drivers/platform/x86/hp/Makefile              |   11 +
->  drivers/platform/x86/hp/hp-bioscfg/Makefile   |   19 +
->  .../x86/hp/hp-bioscfg/biosattr-interface.c    |  285 +++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 1064 +++++++++++++++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  671 +++++++++++
->  .../x86/hp/hp-bioscfg/enum-attributes.c       |  521 ++++++++
->  .../x86/hp/hp-bioscfg/int-attributes.c        |  478 ++++++++
->  .../x86/hp/hp-bioscfg/ordered-attributes.c    |  586 +++++++++
->  .../x86/hp/hp-bioscfg/passwdattr-interface.c  |   50 +
->  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  |  647 ++++++++++
->  .../x86/hp/hp-bioscfg/spmobj-attributes.c     |  408 +++++++
->  .../x86/hp/hp-bioscfg/string-attributes.c     |  457 +++++++
->  .../x86/hp/hp-bioscfg/sureadmin-attributes.c  | 1014 ++++++++++++++++
->  .../x86/hp/hp-bioscfg/surestart-attributes.c  |  145 +++
->  drivers/platform/x86/{ => hp}/hp-wmi.c        |    0
->  drivers/platform/x86/{ => hp}/hp_accel.c      |    0
->  drivers/platform/x86/{ => hp}/tc1100-wmi.c    |    0
->  22 files changed, 6647 insertions(+), 70 deletions(-)
->  create mode 100644 drivers/platform/x86/hp/Kconfig
->  create mode 100644 drivers/platform/x86/hp/Makefile
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/sureadmin-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
->  rename drivers/platform/x86/{ => hp}/hp-wmi.c (100%)
->  rename drivers/platform/x86/{ => hp}/hp_accel.c (100%)
->  rename drivers/platform/x86/{ => hp}/tc1100-wmi.c (100%)
-> 
-> --
-> 2.34.1
-> 
 
