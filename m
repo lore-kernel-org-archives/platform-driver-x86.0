@@ -2,108 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A199C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37732C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 13:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbiKIM6b (ORCPT
+        id S229848AbiKINpR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Nov 2022 07:58:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
+        Wed, 9 Nov 2022 08:45:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbiKIM63 (ORCPT
+        with ESMTP id S229527AbiKINpQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Nov 2022 07:58:29 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0243CDEE;
-        Wed,  9 Nov 2022 04:58:25 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id b2so46433525eja.6;
-        Wed, 09 Nov 2022 04:58:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SQHgfqffbVgla+88Htum6DFfKPDcz14zpacfU/5ZRZ8=;
-        b=Zz15VJmKPUWGTaf43DGvgv79gH9V2SMiMUI2cJQwldlE9ouewC+mskB9a+scsomex6
-         Bjv0D9jIo4JKylBaXsOJ8pGAmsqKKBbW9QlwIE3fbCUGPvLlYaxZRB1MqVWkLfAh1jO+
-         gkUfkt4vB9oLqDaI1DRhYXrUrU41EjBHFSksl6zfbv/PBRbDJAOOJwE43QeExpkmTaiC
-         n9GQj6L+VcbFYNw+Y1zGGMew/WsxV+y6oXkUVLnnD094HbBFmb/Yn63uJmAPWgNg3bX0
-         mGuj52GGDtDk3MMdhMsh2QjrPoxyV6CDH4BKXuIlXHVgP2UCisED9n/75C9Kgm7Mhgj4
-         DrJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SQHgfqffbVgla+88Htum6DFfKPDcz14zpacfU/5ZRZ8=;
-        b=jF6CEPPsDtaDtiLV9XOLYZk4DrkBlEtPOZ7eJKQy0hrGBk7F/PrpbnhvUTt3ebH0qj
-         wrjB7cSBhy4bq9XDUg1ydvt6Gw0HH+J4GXxfBIoFd+hpCpSbdopJjtH+xEI1PbbSR/lv
-         5DJJ1Ry6DLugF2Qt5OxjCSLcHjPYqX1Ib66niAGw+9mKX9Xxvh6RSqjm7+RpDTM2A5bO
-         fY3SFx0Gb0J9UXh6OX3fsA1H/RB8fHirZ/XbQWOHL84lDn5pBO0+92b7dMK3xNRh+O1o
-         KiLxUDNcZlGAyP6Ueor8w5fTrSqNxxAcistyq9/xVByfU1asI8s6ruFwrsGsA2FNx0l4
-         bFqg==
-X-Gm-Message-State: ACrzQf1z4U4kx3zFnzu+L1hR57athwh9He9IkHiL5zDYyL8EIImpCPZO
-        gq8hNsN/2TPxYP5d4/RQFzo=
-X-Google-Smtp-Source: AMsMyM7xsDMSs3xrAO5j9GXB59+YuBqN1/C8t/WbaD09iXDj5xe4+wjxtiONP2okqHabAlzjAVVjHQ==
-X-Received: by 2002:a17:907:a429:b0:7a6:a48b:5e52 with SMTP id sg41-20020a170907a42900b007a6a48b5e52mr55841066ejc.411.1667998704453;
-        Wed, 09 Nov 2022 04:58:24 -0800 (PST)
-Received: from eray-Lenovo-Z50-70.. ([188.132.247.187])
-        by smtp.googlemail.com with ESMTPSA id b1-20020a1709063ca100b007ae566edb8bsm5380645ejh.73.2022.11.09.04.58.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 04:58:24 -0800 (PST)
-From:   =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
-To:     ike.pan@canonical.com
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        erayorcunus@gmail.com, hdegoede@redhat.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        pobrn@protonmail.com
-Subject: Re: [PATCH v2 0/7] Add camera access keys, IdeaPad driver improvements
-Date:   Wed,  9 Nov 2022 15:58:20 +0300
-Message-Id: <20221109125820.14879-1-erayorcunus@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0b298830-47cc-bb94-0e73-493e4e9244f7@canonical.com>
-References: <20221029120311.11152-1-erayorcunus@gmail.com> <0b298830-47cc-bb94-0e73-493e4e9244f7@canonical.com>
+        Wed, 9 Nov 2022 08:45:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329BD13D47;
+        Wed,  9 Nov 2022 05:45:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE1CEB81EC6;
+        Wed,  9 Nov 2022 13:45:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A91C433D6;
+        Wed,  9 Nov 2022 13:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1668001513;
+        bh=E27wU8CHwv3ph1+Lgq64qqtraNEyNswv/8Z7MWYYWxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pq2FSoOQFazxaPMW/IG7R+nPNOQZwBB6RzA4oHece//Rw6OlsnZpWUBcnZ9GIaikT
+         5AfEKyeL8SpUgaHcBK0HKvns8BHwK/5dlvIdd88q7hx8+osRPeyqmKcNm3dcNJ49bj
+         +jpUmZznxU+eVTxvrl3DkbLgyhTN1eXZ/IFBzS+k=
+Date:   Wed, 9 Nov 2022 14:45:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dawei Li <set_pte_at@outlook.com>
+Cc:     rafael@kernel.org, u.kleine-koenig@pengutronix.de,
+        dvhart@infradead.org, andy@infradead.org, lenb@kernel.org,
+        arnd@arndb.de, peterhuewe@gmx.de, kys@microsoft.com,
+        kronos.it@gmail.com, dmitry.torokhov@gmail.com,
+        bleung@chromium.org, sujith.thomas@intel.com, vithampi@vmware.com,
+        lee@kernel.org, wim@linux-watchdog.org, jgross@suse.com,
+        davem@davemloft.net, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] acpi: make remove callback of acpi driver void
+Message-ID: <Y2uu5Q7mLzS0w9VR@kroah.com>
+References: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYCP286MB232348AC39E6F4966FA9494BCA3D9@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/08/22 06:56, Ike Panhc wrote:
-> On 10/29/22 20:03, Eray Orçunus wrote:
-> > Nowadays many laptops have camera access keys, yet there is no usage codes
-> > mapped to them, even though it's introduced in HUTRR72. Start point of
-> > this patch series was adding it and making IdeaPads send it to userspace.
-> > But later I discovered that camera_power attribute of ideapad-laptop
-> > driver on my IdeaPad 520-15IKB doesn't work, so I can't toggle it with
-> > that. I managed to find a way to check whether an IdeaPad supports
-> > camera_power attribute (which sends VPCCMD_W_CAMERA to EC), don't expose
-> > it to sysfs so userspace will know that it can't toggle camera access via
-> > camera_power, in my case, after receiving KEY_CAMERA_ACCESS_TOGGLE.
-> > 
-> > Along the way I discovered that old IdeaPads, like S10-3, may not be able
-> > to toggle their touchpad as a regression of a commit aimed for newer
-> > IdeaPads, so I reverted it.
-> > 
-> > Also I noticed that I can get/set the state of my keyboard light,
-> > so one of the patches also adds supports for this kind of keyboard lights,
-> > which I call "partially supported keyboard lights". I expect that commit
-> > to add keyboard light support for 520-15IKB, 330-17ICH, 5 (15) and more.
-> > Currently only tested on 520-15IKB.
+On Sun, Nov 06, 2022 at 10:57:53PM +0800, Dawei Li wrote:
+> For bus-based driver, device removal is implemented as:
+> 1 device_remove()->
+> 2   bus->remove()->
+> 3     driver->remove()
 > 
-> Thanks. Also test on my ideapad s410 and it looks good.
+> Driver core needs _no_ inform from callee(bus driver) about the
+> result of remove callback. In that case,
+> commit <fc7a6209d571> ("bus: Make remove callback return void")
+> forces struct bus_type::remove() be void-returned.
 > 
-> Acked-by: Ike Panhc <ike.pan@canonical.com>
+> Now we have the situation that both 1 & 2 of calling chain are
+> void-returned, so it does _not_ make much sense for 3(driver->remove)
+> to return non-void to its caller.
+> 
+> So the basic idea behind this change is making remove() callback of
+> any bus-based driver to be void-returned.
+> 
+> This change itself, is for device drivers based on acpi-bus.
+> 
+> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
 
+As RFC patches don't mean to be applied, I'll wait for a real version to
+be submitted before reviewing this.
 
-Thank you :)
+thanks,
 
-I need some advice since I'm new in here, sadly another patch has been
-merged to ideapad-laptop along the way and currently it's not possible to
-merge patch #7, does that mean I should send v3 of my patch series?
-And whom should I wait for merge, x86 platform drivers maintainers?
-I think that is the only subsystem whose maintainers haven't replied yet.
-
--eray
+greg k-h
