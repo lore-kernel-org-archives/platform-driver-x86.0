@@ -2,145 +2,175 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55901C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 16:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F582C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 16:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbiKIQPe (ORCPT
+        id S229447AbiKIQjH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Nov 2022 11:15:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58754 "EHLO
+        Wed, 9 Nov 2022 11:39:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbiKIQPa (ORCPT
+        with ESMTP id S230454AbiKIQjB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Nov 2022 11:15:30 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75E36459;
-        Wed,  9 Nov 2022 08:15:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668010527; x=1699546527;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kZC10f7fSVGcH04eIzQAsQzGAOCoZ7dwf+5x6YWkadk=;
-  b=KLj+wGcRqgLgWs8DYTFdZ4UICQCYQPrLZJ2zjXlBWEHJK19R+6+rwAC/
-   snkbcqlSpkLMKWA+H3jjct2jmEOhKVZtqmVj/kTg83MnoOuSTaXj/tNrh
-   8wIRci9ubTCXeV7056bZ+7LbQb1nlW6lT3S+rVoYV5XkS+JGmaZfKlVkn
-   X6xE8NfxQvXycmjifHrxE5CDF1rOFby1Nee/uHfD3mF5Lf2lKhaDgKYJ1
-   AE3Bu1DxzdJbuRy755uXs0YCfDwrYwT0jNfKYIAG7Yjm+unZz32umTs2S
-   CW/FTTezu6x6o+G35kluypnntaO05AYbubd3shUD3g/dx03MSsqjUuiJy
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="298543599"
-X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
-   d="scan'208";a="298543599"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 08:15:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="761930600"
-X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
-   d="scan'208";a="761930600"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 09 Nov 2022 08:15:19 -0800
-Received: from sookyeen-mobl2.amr.corp.intel.com (sookyeen-mobl2.amr.corp.intel.com [10.251.11.176])
-        by linux.intel.com (Postfix) with ESMTP id 8FA7F580B0E;
-        Wed,  9 Nov 2022 08:15:19 -0800 (PST)
-Message-ID: <bc25b31f7af527511599145954615a0d0a6078cf.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: don't unconditionally attach Intel PMC
- when virtualized
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 09 Nov 2022 08:15:19 -0800
-In-Reply-To: <20221109151632.71495-1-roger.pau@citrix.com>
-References: <20221109151632.71495-1-roger.pau@citrix.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Wed, 9 Nov 2022 11:39:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3067A1AF15
+        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Nov 2022 08:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668011891;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RakO7xvoptPhAzAI7Z/09/yTP105OR0vezqrM2s9nU0=;
+        b=IUarMSbns2SXPaw4nANME3SepWHnKImt3W537SHMuM1x624L+BPVYAk8GZ8VOQTbzrQkjJ
+        SwXxsHu14CzEV6OFdzFAQdNIYpxabDZdSMV/A5qVInADnvlTX2Ev+dU71wqg3e8ChoC0RH
+        JQitLJ0H8FOVVkcqGSZCAL4M2B/J20Q=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-163-nKnJ82yaMFaTufbt88NSBQ-1; Wed, 09 Nov 2022 11:38:10 -0500
+X-MC-Unique: nKnJ82yaMFaTufbt88NSBQ-1
+Received: by mail-ej1-f70.google.com with SMTP id xc12-20020a170907074c00b007416699ea14so10564710ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Nov 2022 08:38:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RakO7xvoptPhAzAI7Z/09/yTP105OR0vezqrM2s9nU0=;
+        b=t+9f445ehll92J2Bq85EF8sDzTSK67uNIf4aKFnB/mO1mm7igLHle6YWIPiGpD7ACC
+         7X3yrIg4jDRBB1QqCAQ7CWYG4+jH8p5gzDZnRMqpamzCjRr+2EliM6YSxCEHlThr5pIR
+         jfq/lm4ezr+xha6vLu93YxuqBTwtkF3rPluQhguVQa1tYJcvVxi4RrwS1hFoUG3nzyVk
+         804aiD80pwYgDjbqg5I4QnqUc2n2ck1ETVDJFPsF7ojlQ+Nyf72PVJX4li02klJuVdAV
+         zHw/1JIQzR4eSox36udvjp3Z2bSH0F1ouVRWjTplj+ExYEFnCJyZVLGnL7rGkefmoMca
+         kijg==
+X-Gm-Message-State: ACrzQf094Y7ZAlJONVp/Y2DI2BeWhas0m2R94zm3KxfulViZ8M5WnjG5
+        DvKPZzRuwrOkW1qFLoo+GLIebMt5FvN7TeHWow6EBq7/hSFNRRC8iLGnvfk2DOaYBJYFtbvbXzb
+        EHUIGdTHjAymgvAHpxGfVu9HbZKz0nDIg0w==
+X-Received: by 2002:a17:907:847:b0:77f:f489:cc25 with SMTP id ww7-20020a170907084700b0077ff489cc25mr56622689ejb.80.1668011888937;
+        Wed, 09 Nov 2022 08:38:08 -0800 (PST)
+X-Google-Smtp-Source: AMsMyM5rUJmp94nC0ehd7im5gWVdfQAMxqQOJAJcn4XoG/vccxBnrjXGntMKIwJdt4xIFC1qQg+Ngw==
+X-Received: by 2002:a17:907:847:b0:77f:f489:cc25 with SMTP id ww7-20020a170907084700b0077ff489cc25mr56622677ejb.80.1668011888742;
+        Wed, 09 Nov 2022 08:38:08 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id a16-20020a170906369000b0078d9c2c8250sm6012273ejc.84.2022.11.09.08.38.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Nov 2022 08:38:08 -0800 (PST)
+Message-ID: <9e0074f8-4cbf-e390-6680-39fe3649bbc4@redhat.com>
+Date:   Wed, 9 Nov 2022 17:38:07 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 0/7] Add camera access keys, IdeaPad driver
+ improvements
+Content-Language: en-US, nl
+To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
+        ike.pan@canonical.com
+Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
+References: <20221029120311.11152-1-erayorcunus@gmail.com>
+ <0b298830-47cc-bb94-0e73-493e4e9244f7@canonical.com>
+ <20221109125820.14879-1-erayorcunus@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221109125820.14879-1-erayorcunus@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2022-11-09 at 16:16 +0100, Roger Pau Monne wrote:
-> The current logic in the Intel PMC driver will forcefully attach it
-> when detecting any CPU on the intel_pmc_core_platform_ids array,
-> even if the matching ACPI device is not present.
-> 
-> There's no checking in pmc_core_probe() to assert that the PMC device
-> is present, and hence on virtualized environments the PMC device
-> probes successfully, even if the underlying registers are not present.
-> Previous to 21ae43570940 the driver would check for the presence of a
-> specific PCI device, and that prevented the driver from attaching when
-> running virtualized.
+Hi Eray,
 
-Yeah, that PCI device was short lived. It was available on Skylake/Kabylake but
-then removed on future generations. When this happened we changed the driver to
-use ACPI binding instead. But there were several generations of ChromeOS/coreboo
-t platforms (listed in intel_pmc_core_platform_ids) that did not have the ACPI
-device present in their firmware. This file exists specifically to support those
-platforms and uses the forced binding because (given that there's actual
-silicon) we know the PMC will be there.
+Sorry for the long silence, I have not done any pdx86 patch review
+the last 2 weeks due to personal circumstances.
 
+On 11/9/22 13:58, Eray Orçunus wrote:
+> On 11/08/22 06:56, Ike Panhc wrote:
+>> On 10/29/22 20:03, Eray Orçunus wrote:
+>>> Nowadays many laptops have camera access keys, yet there is no usage codes
+>>> mapped to them, even though it's introduced in HUTRR72. Start point of
+>>> this patch series was adding it and making IdeaPads send it to userspace.
+>>> But later I discovered that camera_power attribute of ideapad-laptop
+>>> driver on my IdeaPad 520-15IKB doesn't work, so I can't toggle it with
+>>> that. I managed to find a way to check whether an IdeaPad supports
+>>> camera_power attribute (which sends VPCCMD_W_CAMERA to EC), don't expose
+>>> it to sysfs so userspace will know that it can't toggle camera access via
+>>> camera_power, in my case, after receiving KEY_CAMERA_ACCESS_TOGGLE.
+>>>
+>>> Along the way I discovered that old IdeaPads, like S10-3, may not be able
+>>> to toggle their touchpad as a regression of a commit aimed for newer
+>>> IdeaPads, so I reverted it.
+>>>
+>>> Also I noticed that I can get/set the state of my keyboard light,
+>>> so one of the patches also adds supports for this kind of keyboard lights,
+>>> which I call "partially supported keyboard lights". I expect that commit
+>>> to add keyboard light support for 520-15IKB, 330-17ICH, 5 (15) and more.
+>>> Currently only tested on 520-15IKB.
+>>
+>> Thanks. Also test on my ideapad s410 and it looks good.
+>>
+>> Acked-by: Ike Panhc <ike.pan@canonical.com>
 > 
-> Fix by only forcefully attaching the PMC device when not running
-> virtualized.  Note that virtualized platforms can still get the device
-> to load if the appropriate ACPI device is present on the tables
-> provided to the VM.
 > 
-> Make an exception for the Xen initial domain, which does have full
-> hardware access, and hence can attach to the PMC if present.
+> Thank you :)
 > 
-> Fixes: 21ae43570940 ('platform/x86: intel_pmc_core: Substitute PCI with CPUID
-> enumeration')
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-> Cc: David E Box <david.e.box@intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
->  drivers/platform/x86/intel/pmc/pltdrv.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/pltdrv.c
-> b/drivers/platform/x86/intel/pmc/pltdrv.c
-> index 15ca8afdd973..e284fd34ffdf 100644
-> --- a/drivers/platform/x86/intel/pmc/pltdrv.c
-> +++ b/drivers/platform/x86/intel/pmc/pltdrv.c
-> @@ -18,6 +18,8 @@
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
->  
-> +#include <xen/xen.h>
-> +
->  static void intel_pmc_core_release(struct device *dev)
->  {
->  	kfree(dev);
-> @@ -53,6 +55,14 @@ static int __init pmc_core_platform_init(void)
->  	if (acpi_dev_present("INT33A1", NULL, -1))
->  		return -ENODEV;
->  
-> +	/*
-> +	 * Skip forcefully attaching the device for VMs. Make an exception for
-> +	 * Xen dom0, which does have full hardware access.
-> +	 */
-> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR) &&
-> +	    !xen_initial_domain())
-> +		return -ENODEV;
-> +
->  	if (!x86_match_cpu(intel_pmc_core_platform_ids))
->  		return -ENODEV;
->  
+> I need some advice since I'm new in here, sadly another patch has been
+> merged to ideapad-laptop along the way and currently it's not possible to
+> merge patch #7, does that mean I should send v3 of my patch series?
 
-Acked-by: David E. Box <david.e.box@linux.intel.com>
+No that is not necessary, I can rework it to apply on top of the other
+patch.
+
+But TBH I think we really need to work on a different solution for
+the problem with the touchpad issues with ideapad-laptop we cannot
+just keep adding touchpad and/or DMI ids because the driver is
+breaking touchpad functionality left and right.
+
+I will send out an email after this one to all authors of recent
+patches which all do "priv->features.touchpad_ctrl_via_ec = 0"
+in some way.
+
+With a request to gather some more info of why exactly this is
+necessary and to see if we cannot come up with a more generic fix.
+
+> And whom should I wait for merge, x86 platform drivers maintainers?
+
+I'm the x86 platform drivers maintainer.
+
+I believe it makes sense to merge this series through the
+x86 platform drivers git tree.
+
+I need to coordinate the merging of patch 2/7 with wDmitry
+(the input subsystem maintainer) I'll send him an email
+about this. After that I can likely merge patches 2-6.
+
+For the touchpad patches I would first like to get
+a better handle on how to fix things more generic.
+
+Specifically patch 1/7 will cause priv->features.touchpad_ctrl_via_ec
+to get set to 1 on more models and since that is causing issues
+I don't think that is a good idea (even though the patch does
+make sense) and for 7/7 I hope to come up with something
+more generic.
+
+If you can run the tests from the touchpad mail soon that
+would really help!
+
+Note I do plan to send 7/7 out as a fix for 6.1 if we
+run out of time wrt coming up with a recent fix. Getting
+at least some fix out the door is also why I already
+merged the other patch using the DMI ids.
+
+> I think that is the only subsystem whose maintainers haven't replied yet.
+
+Correct, but I have replied now :)
+
+Regards,
+
+Hans
+
+
 
