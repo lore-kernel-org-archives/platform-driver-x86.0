@@ -2,241 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117CC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 21:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22552C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Nov 2022 23:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231169AbiKIVjd (ORCPT
+        id S232123AbiKIXLN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Nov 2022 16:39:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
+        Wed, 9 Nov 2022 18:11:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiKIVjc (ORCPT
+        with ESMTP id S232128AbiKIXK4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Nov 2022 16:39:32 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C36129342
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Nov 2022 13:39:31 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id 13so268948ejn.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Nov 2022 13:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ILqYlTVUwnLIj8I8GKzN3PoFG+i9OejmWMerTRAgXU=;
-        b=g0XV+rlWM/WCpVD+CaIVWQr9Zcg6LD2rMv4BNENT5ous+f+lHLc8128GTLbl5/VBgt
-         6Bi78dVbXtfFWzaYH1S7Xs1rj+s8Uq+2xpMg785eVGxbegDjNpJTQnIfLur0eMtbw5wZ
-         6kPjPad/5J8mGGiHhGieeBUUsouuv5BSztXV+HA6FMHg5j7XBv6+6W+bxqNQ4BMFHFeo
-         29JUzwSowpFIYa2mAmPW/Ij2pObsFcGACwdIZQHOmZVgk9ZXc8ClM0+oUS9urMUobok+
-         +jKUxatvtF16J1nR7sPtXiBPqrY35kMjoVRsqDX8j2vLy5Sgtq1+7vljrGi3RsP7NRfA
-         LWGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ILqYlTVUwnLIj8I8GKzN3PoFG+i9OejmWMerTRAgXU=;
-        b=qgTNojd9fR8A3twUDifm2+qXWNj3ZRbUh+R4Yhh4gIWTu+PZ1rRaXUov1LLMo2ovCI
-         RqHiFRUrn1Hzt2bZrS1NGArcI36gP3rpX1SQ2aAn45gTggH2/d8yX0a/geGtZJzLyNcv
-         +oSukY1s/vR6DhAWup1sRUlNWefxYitF6YS7bc0AOF+aYt8Ag1dFiuGJnqTtlEJaQg0E
-         teSNh3Chwt26RVgjAcjtXoLutFs42WJhon0818Jhg9Zt0gWXccrMg03OKc133uMtEN2z
-         aVqmLtT7yX2Yr6bH+TKKMoyNGH1V0jC4oK9ePbK3To4Vs+pCXNPzE8yBRyqNTEyh861v
-         IegA==
-X-Gm-Message-State: ACrzQf37jYacsBPeVftGsdjpG2tYRaZFKI6lFgXg90lM5hiw9IRyOlqA
-        z7m5I1R7nFzsbAiaIZDpQu2gliSWRG3IT3JpTSwYoiW+g88=
-X-Google-Smtp-Source: AMsMyM61UrkiCWP8QDeDwqQzoc56Zhw7T7+rCF5FKLmlKn1xGZMjY55SN0entMtnUM6GF6xpdT6PqV2SsfOT4NRXXAo=
-X-Received: by 2002:a17:907:271b:b0:7ad:b748:63df with SMTP id
- w27-20020a170907271b00b007adb74863dfmr55492553ejk.639.1668029969690; Wed, 09
- Nov 2022 13:39:29 -0800 (PST)
+        Wed, 9 Nov 2022 18:10:56 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD7B2CE32;
+        Wed,  9 Nov 2022 15:10:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668035442; x=1699571442;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=24Ek6PsGVWO0nCtHmkK13OO4VH9Cg2Hkdu97iuHEI+c=;
+  b=P+XQbCQxvOrpqg+CeGI814BhzjPeq2QxJhdgbLNquEi0MNVOUQeTBQHA
+   Ok+EcFloP/kXChPS1kVV3GzabZJloh/5pvLwI8kHYJEahumZXoW8VydcD
+   CR4kefQFOmkm1PNQZu7QgflCGQHYmTGmdxUqo+bUiUHQyhBtqwrAd2Ps8
+   yKLLN+R2/n6KLH4/bGn5NnuE447F2IVsoNX9ft0fuG0w6rkV49jD0M3FY
+   4ZSnLpalAxiGHD1xpPFd57cvaU7Lz+u2QnOOfAQcjO7LCkE2d7cJY6gdc
+   692Ny63Led220cTIzV+wv1HOLABBaR/uJhJB+/Mh7imjlpWEqYQ5sTPw3
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="290867736"
+X-IronPort-AV: E=Sophos;i="5.96,152,1665471600"; 
+   d="scan'208";a="290867736"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 15:10:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="700556662"
+X-IronPort-AV: E=Sophos;i="5.96,152,1665471600"; 
+   d="scan'208";a="700556662"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Nov 2022 15:10:41 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 9 Nov 2022 15:10:41 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 9 Nov 2022 15:10:40 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Wed, 9 Nov 2022 15:10:40 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Wed, 9 Nov 2022 15:10:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BYkYCMEdPQpAfWt1HhRct1xH/IwJSnaB3USx80v6XsrN2bvZQVOFY8WbbulIJ1pgNafBkELIBFR8NsOi5UwoTJgfOUbYM7q3Q9D3yDlMm4SRLvCx6CduyyC9sEIk7MmKMe+rtSdfgrWIoR/Nsmt+J+GI21GC00eC1F2Pee1G3cuYqKOObYfwUVuJvsb9mw1QtECe/xMsp/vPlwl9oEYEMbQ93lMyIYuLF+ha3kuVzb67lshd2eRtrzm8KJHn0UGCevGW4Xt57WW2Mdngl9ROhKnFHVxy0XZppHn6QPufRSzp+55pIZGTIgyoswgS//D3Ytc7cE68rJzAv7JMUUhr6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Frd7T8LbEWzcxzcJuKpvkJvqK7tNkRZVmXD3VENcWyA=;
+ b=KIdjjlUbPEAYv0x2YJeM769LBeDFuvWRK69N9PEMqQgIpc/i1osHvyvwQxZdiiM8UTJukYaWhRNIL5c66MKiwdBgCXpsWicWGRMiMAULZwrfWW5oC63jCZk9Yf/lH0oVP7nvB9HhaFnLrMU7nNemNQmwcl1ocut2KPxr9giNrsVcwt1p+fw2A/j5Hb8HmoxVyTwgq+dtg25sOuB2dXocWaGEy29KzTZdraJR6mLsSJdLbZoxwO1YepooxUQ1PGf3CPyeGIwJZN5BDwN5EFztqUfZlaq48K00X1QPDjbqCqGR+hvFMeq2pn5JHNfkbrVnoqCdTNR8NQNVy/KSOKLc1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by CY5PR11MB6140.namprd11.prod.outlook.com (2603:10b6:930:28::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.26; Wed, 9 Nov
+ 2022 23:10:38 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e475:190a:6680:232]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e475:190a:6680:232%7]) with mapi id 15.20.5791.027; Wed, 9 Nov 2022
+ 23:10:38 +0000
+Message-ID: <affc2b90-9410-1757-d9e7-6dfe2a3e5be9@intel.com>
+Date:   Wed, 9 Nov 2022 15:10:36 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH 10/14] platform/x86/intel/ifs: Add metadata validation
+Content-Language: en-US
+To:     Jithu Joseph <jithu.joseph@intel.com>, <hdegoede@redhat.com>,
+        <markgross@kernel.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <gregkh@linuxfoundation.org>, <ashok.raj@intel.com>,
+        <tony.luck@intel.com>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <patches@lists.linux.dev>,
+        <ravi.v.shankar@intel.com>, <thiago.macieira@intel.com>,
+        <athenas.jimenez.gonzalez@intel.com>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com>
+ <20221021203413.1220137-11-jithu.joseph@intel.com>
+From:   Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <20221021203413.1220137-11-jithu.joseph@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0212.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::7) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 MIME-Version: 1.0
-References: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com>
-In-Reply-To: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com>
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-Date:   Wed, 9 Nov 2022 23:39:03 +0200
-Message-ID: <CAKErNvqfH-C7xJU3F7ga68o3AK-_ae-K2ggKcUOp1iqtmdSYdw@mail.gmail.com>
-Subject: Re: ideapad-laptop touchpad handling problems, request for help
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     GOESSEL Guillaume <g_goessel@outlook.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Manyi Li <limanyi@uniontech.com>,
-        =?UTF-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        =?UTF-8?B?S3J5xaF0b2YgxIxlcm7DvQ==?= <cleverline1mc@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|CY5PR11MB6140:EE_
+X-MS-Office365-Filtering-Correlation-Id: cfd63b77-e678-4812-a401-08dac2a79d60
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qQo2xugNw05sh2mdnAVrbMfXuAReYJ8MiNWBS0btVtB9n9n4U+GIsb6xiE1YIoew7TULRn1XuRFZzJ+OhxESmFKGZs+9nyL47ckYxCGpQhXjy951P0HnfvY3FA03uEzqJFhj7Ohy19FzTdRQwJYvrTlkFiGx6LC6sG9BpkgM0RtMCt4YUc9/OEac097IzG/jAscq1baEFf3KerbrmsAKoc5jcA59jgl+6o6zphP0Of2/ht585r2/9IIBESpMeqGlkwKB81wXzbfWlhZWVyhzfXM+hLHHpve9DhZ9K0GNDOK/OuWenaQdQr2Pr3/HWstonG73ZOw3ca4l1enXoeGN3fd5lUQB/WQjZ4mXSMPcmz1LplMhT3VfX+2rdaG1TM7mZDocJsUQ/GtR2ffAR0yPWag451JGtFTu9qy5fWj+ENHyxdUVohuHCYt5bMH6AVooe8A93wAZs1LyYn9UfHBhdsbBkIp09sHJlCPXiy1/8BKihQTbkb3Oe6YXecOXFzv5vbfYmch0mVPsS+dgawJmzlyew+2XqjEV9bDM8gvEqqEA/JUzVXpqSzhnHk3L3JHjrr59BxEWXzaiqp/3N7XLqR0BWSUW8eLPe0reIPb/rgkLVZHb3QHxSbqYNJKsb2qDtQDWmWtsq7+zBUCYa9Bb0Tb7RGqKFdQ/anWyg21YJVYGP9rlEL+sVampocuXItbaUWXGcuBwyp73lK59lpL4my1Xhl3R1NFqtqODcgIEVYkrNA8s/IT12oa4Mi064j83KEgknTgSuBpzQwH5SqzCfaxOhbU9TrfCHWavrq21nu0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39860400002)(396003)(376002)(366004)(136003)(451199015)(36756003)(31686004)(31696002)(86362001)(41300700001)(7416002)(44832011)(4744005)(82960400001)(38100700002)(53546011)(6506007)(2906002)(83380400001)(2616005)(186003)(26005)(6512007)(66946007)(66476007)(8676002)(5660300002)(478600001)(316002)(4326008)(8936002)(66556008)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V3ZCdnhYdWg4b2FGR2VFWFROQVY4Sk9FL0o4ZTFWQlJzZGlsU2hOT24zM3JN?=
+ =?utf-8?B?YnprT0s2ZUswVTZrb09mc3pFNnZwTkFvaVF0L2o5ZmdWNUpjVlpUT0NUd0w3?=
+ =?utf-8?B?Q0szQk5Nbm5seDRjY1BuQ1hRZEY2a3FIeFBxb3ZZYkMzajFxMmhXTUwvNFV6?=
+ =?utf-8?B?M3VmSE5Tazd3NDVhYW1hR3ZVUnFXM3VVNE1tVWJub09nQjNhbU9BZnd1cjB4?=
+ =?utf-8?B?WG8vRG8zbjFjYkNQV3E3R280NkoxOWoxR2xGaGQ1cUdiWm1LdTNKVXd3RzdM?=
+ =?utf-8?B?L1pKY1h3NTdDZmthRzhCL0hvVUpSRkhZWDNGdjE1KzcwU1ZYc040bkZIOW1q?=
+ =?utf-8?B?OXpPT0tkUUxlSzIwU2hKN0xjUUlyQ05rSGdESUh4VjVMcjFvOFZhTjFSNkpt?=
+ =?utf-8?B?YnBHWVppbjRxSmM0RHRvUllGaUVqdFlFTGVZN2JSL1FlV0QwR1o1K0xGWXBL?=
+ =?utf-8?B?ZDBoM3NZR2FZUS9qK3ROTVBuRkowaHQwaE5JOWdnTWErVm1QS0N1M3BlZ1p4?=
+ =?utf-8?B?Zk9jaWdxM0prRHJ0MFh6ZTlXT29vU3BqWlc1Y1F1WTh5VHluZUZzRVRpU2Yw?=
+ =?utf-8?B?eVVBc0RHK0pYL01Uc0dnUVlORUNZZkpZNXNkaFV1eHFOSjVUekZTTTVobW9i?=
+ =?utf-8?B?enVMcFRvWHFOL1VuZnJWTWp6SnJ0dURrRUJpdDU0Z29KYnBPRGNLbGQ2cU5O?=
+ =?utf-8?B?alBoV1FLVE5IdHUrSkVlZkptYWEvdFF2cXcvMVROT3kvMElnNHNJckpFWW1V?=
+ =?utf-8?B?VVpIQW1LaTc5WCtsRlU0YkIyWWZjYnYrSXZJVkxqczdRamc0a21XNjZBR2Iw?=
+ =?utf-8?B?VmlMRkJYVXE3UG9pQmRjLzY4MWNSOGZkM0dxRi9nSUd0TmhzdmM1TTdOeUVG?=
+ =?utf-8?B?K1VGYThmZFphb0RHKzk5dnBsNkJjL1BkMTd3OXBFazd3ZjMwVmlhQ1RJU3R0?=
+ =?utf-8?B?cS81eGQxYVUvaHFmTldMd1dtNk1GWXZqMzliRkJ0eWx2SEtHM0FXREJtNExC?=
+ =?utf-8?B?ZWs4N2Vkc2s1cWhudmNwY0twL0dkUzROZU5QZ01McXd5eENIdVVyZUU0MWhS?=
+ =?utf-8?B?b3JhMy9LaEpZOUNvMTRpeGhhbW9GZ1Urby95TGdva2xwVFNjYlhMcXVJYXBs?=
+ =?utf-8?B?aHhJNUp1THpvbTJJcHA0M0twK3laaVkwQ2RtTUtBYjg3dWtaRkJSbTFRWEZ1?=
+ =?utf-8?B?WWdzaGoycXcyWFNVZWRsUWFmZXdiQjNLRjBqZTk0REI0OXppOCs1VlNvQ3Mx?=
+ =?utf-8?B?d3RHUHpGY3VUQjdMdVNEM1JqUHoxOVRFWW9kdmZTZ1drSG1ZM1BtaVRIMUl2?=
+ =?utf-8?B?UEZacEIydEt6elFweGxnU2ZDeGd5cTNua0FaT0RVOWRqaTR1OHFUMGdyOG1R?=
+ =?utf-8?B?eWZvZ2xaR1dMTm1VZFNCVnVXd2tRMFlLNXRYM05FRzVjS3AwdWFReUdkckhQ?=
+ =?utf-8?B?bDJLQW5jTW13eE1mMnRoL0FpR242YXp4ZXRoNU54SXNnM1AyV0VKbHhCcVFa?=
+ =?utf-8?B?dEVsam1DMzlMWE1wdmszMXh1SHZYODNidVBuYUluZXkyUVlOTmpMREhSOEp0?=
+ =?utf-8?B?OFNBaEs2NmhDVlNDSDJoczBjMHBDelJrbno4VnVmUzRqWVlPd0l5b3I2RU1t?=
+ =?utf-8?B?U3VuamRSUU0xUE1GVzVyV1pHWnNRSGUzTXA5REhuVGpjRXlsKzdRQTBwK2th?=
+ =?utf-8?B?bkpqVmhOZ2p0SldrbkJGemkvUm1maVJ4bFFBZEMrZmVaenc3dm5OLzQ4MlVa?=
+ =?utf-8?B?QTFwRS9QUnE2ZDc5dFFXbE93NStvTnBOL0RlL3RsSWphSWJZTXcxWml2WWNr?=
+ =?utf-8?B?TExjTDF2VzlvVU1YaW0zWlpRR2M5NmxhVG5DUmhwS0daRk5IN2h0SGo2WmU0?=
+ =?utf-8?B?aFFaQmRrcTE4V2pGOHg0OGVwblJNQklyMUVIdDhSM1h1cXhZTUdVbENkWDVr?=
+ =?utf-8?B?U1NBT0VySEN3MXUzamhDcEhKanZFMk1DM09Vdk00WThKK2JlM2JZVmsxVWFP?=
+ =?utf-8?B?dXpCQTE1QlA1L0JFUU1McW5PSFdaTkQ3eGxBNTFvSy9PbGh6YThXUG8zcnF1?=
+ =?utf-8?B?TWJEZXpmekNEdEFNS0NST09IZmVpbEgwQkpZZHAxUGZyRS9Hd2J5cmwyRDU4?=
+ =?utf-8?B?REJ5K0lrWUpiZXljNWNjSmFXVGhCRW1rYnh5UGxUQjBLeUNvSThSN0Y3anZH?=
+ =?utf-8?B?YlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfd63b77-e678-4812-a401-08dac2a79d60
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 23:10:38.3123
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JZ5P5AyK4WAe95ldkxIyutXrEAZlA5+X3SVBBYcbNmF3f5k78g+DqsMWLtCzTj97qFh6u4sqX5DIFDEIWTHmkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6140
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 9 Nov 2022 at 22:59, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi All,
->
-> I'm emailing you all because you have written patches or
-> reported bugs related to the ideapad-laptop touchpad
-> handling the past.
->
-> 1. History
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> I have done a bit of digging into the history of
-> the touchpad handling:
->
-> What I believe is the troublesome part of the touchpad handling
-> started in 2012 with:
->
-> 07a4a4fc83dd ("ideapad: add Lenovo IdeaPad Z570 support (part 2)")
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D07a4a4fc83dd
->
-> Which added the ideapad_sync_touchpad_state() function which depending
-> on the result of reading VPCCMD_R_TOUCHPAD send an i8042 command to
-> enable/disable the aux port of the ps2 controller *and* which sends
-> KEY_TOUCHPAD_OFF/KEY_TOUCHPAD_ON events to userspace to let userspace
-> know the state of the touchpad.
+On 10/21/2022 1:34 PM, Jithu Joseph wrote:
+> The data portion of IFS test image file contains a meta-data
+> structure in addition to test data and hashes.
+> 
+> Introduce the layout of this meta_data structure and validate
+> the sanity of certain fields of the new-image before loading.
+> 
+> Tweak references to IFS test image chunks to reflect the updated
+> layout of the test image.
+> 
 
-For the reference, this cumbersome solution was needed in the first
-place, because Z570 has an LED, and EC toggles the LED on each
-touchpad toggle button press, but EC only controls the LED, it doesn't
-actually disable the touchpad. Normally, when EC doesn't disable the
-touchpad, we can send KEY_TOUCHPAD_TOGGLE and leave the action to the
-DE. However, as Z570 has this LED, which will get out of sync with the
-touchpad state, we can't use KEY_TOUCHPAD_TOGGLE.
+Can you provide some more information on the updated layout of the 
+metadata structure?
 
-That leads to the following idea: if newer Lenovos have issues with
-VPCCMD_R_TOUCHPAD and they don't have the touchpad LED, we can just
-use KEY_TOUCHPAD_TOGGLE for them. However, if it turns out that some
-Lenovo model does actually disable the touchpad in hardware, this also
-needs to be taken into account.
-
-However, this idea doesn't answer the question of how to detect such
-laptops. I wonder how the Windows driver does it.
-
-By the way, newer Lenovos also have other incompatibilities, for
-example, fan modes are no longer relevant on some models, and I don't
-know how to detect those either.
-
->
-> The first commit to optionally disable ideapad_sync_touchpad_state()
-> was actually written by me in 2014, for a "Lenovo Yoga 2 11":
->
-> f79a901331a8 ("ideapad-laptop: Disable touchpad interface on Yoga models"=
-)
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Df79a901331a8
->
-> The problem on the "Lenovo Yoga 2 11" was a spurious KEY_TOUCHPAD_OFF
-> event on resume, other then that there were no bad side effects.
->
-> This patch got reverted soon afterwards in commit 3b264d279e72 because
-> it stopped the touchpad enable/disable button from working on
-> a "Lenovo Yoga 2 13".
->
-> Then in 2021 a patch was added to again disable ideapad_sync_touchpad_sta=
-te()
-> on some models, this time based on the ACPI HID (ELAN0634) of the touchpa=
-d:
->
-> d69cd7eea93e ("platform/x86: ideapad-laptop: Disable touchpad_switch for =
-ELAN0634")
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd69cd7eea93e
->
-> And the last couple of weeks the following 2 patches were added to disabl=
-e
-> ideapad_sync_touchpad_state() on more models based on DMI ids for the fir=
-st
-> patch (already merged) + adding a new ACPI HID for the second patch:
->
-> a231224a601c ("platform/x86: ideapad-laptop: Disable touchpad_switch")
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Da231224a601c
->
-> https://patchwork.kernel.org/project/platform-driver-x86/patch/2022102912=
-0311.11152-8-erayorcunus@gmail.com/
->
-> As mentioned in the commit msg of d69cd7eea93e ("platform/x86:
-> ideapad-laptop: Disable touchpad_switch for ELAN0634") part of
-> the problem is VPCCMD_R_TOUCHPAD returning 0 leading to the aux
-> ps/2 port getting turned off.
->
-> This can be a problem even on devices where the touchpad shows up as
-> an i2c/smbus device because often on those devices the touchpad is
-> connected over both ps/2 + i2c and at least for synaptics devices
-> the touchpad needs to be contacted over i2c within a couple of
-> 100s of ms of doing a ps/2 reset for it to switch to i2c mode.
->
->
-> 2. Possible solutions
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> 1. Do something with BIOS date to only enable touchpad_ctrl_via_ec on
-> older models. Problem is that BIOS updates happen and those can be
-> of much later date then the production year of the model
->
-> 2. Move to an allow list for setting touchpad_ctrl_via_ec to true, given
-> how soon after my initial patch to disable touchpad_ctrl_via_ec I got
-> a bug report about this, which even was due to a deny-list DMI entry
-> not being narrow enough this seems like a bad idea. OTOH missing
-> the ability to turn the touchpad on/off is less of a big deal
-> then a non working touchpad. So if we fail to find a better
-> solution this might be the best thing to do.
->
-> 3. Since the problems are caused when VPCCMD_R_TOUCHPAD reads as 0 at
-> boot, causing ideapad_sync_touchpad_state() to turn off the ps/2 aux port
-> and since the touchpad is normally on at boot, we can check for
-> VPCCMD_R_TOUCHPAD reading as 0 at boot and if that happens assume that
-> means touchpad-ctrl via the EC is not available. I have attached
-> a patch implementing this approach.
-
-I need to check it, but it's entirely possible that the touchpad state
-is preserved after reboot. In that case, reading VPCCMD_R_TOUCHPAD as
-0 on boot would be normal. I think it's also possible that the user can
-disable the touchpad before Linux starts. This approach looks problematic.
-
->
->
-> 3. Please test
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> If you have ideapads where touchpad_ctrl_via_ec should be 1 because
-> it is needed to toggle the touchpad on/off with the hotkey.
-
-I still own my Z570, but it's located in another city. I can do some
-testing on it, though. I can also provide the DSDT dump along with the
-BIOS version.
-
-Also adding Kry=C5=A1tof to this thread, who is a Lenovo Yoga 720-15ikb use=
-r.
-
-It would be perfect if someone could reverse engineer what the Windows
-driver does in order to distinguish the old and the new interfaces.
-With a proper detection mechanism, we could:
-
-1. Just send KEY_TOUCHPAD_ON/OFF if EC disables the touchpad (any
-known models?).
-
-2. Disable the touchpad in the driver if the laptop has the LED and EC
-doesn't disable the touchpad (Z570).
-
-3. Just send KEY_TOUCHPAD_TOGGLE if the laptop doesn't have the LED
-and EC doesn't disable the touchpad (any known models?).
-
->
-> Or the exact opposite you have ideapads where it should be disabled
-> because ideapad_sync_touchpad_state() turning off the ps/2 aux port
-> is causing problems.
->
-> Then please give the attached patch a try. Note this applies on
-> top of Torvald's current master, or on top of 6.0 with :
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Da231224a601c
-> added.
->
-> Regards,
->
-> Hans
->
+Some parts of validate_ifs_metadata() like the ifs_test_image_ptr 
+calculation would be easier to follow with that.
