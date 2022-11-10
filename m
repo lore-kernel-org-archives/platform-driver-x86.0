@@ -2,67 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04597C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 21:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32B9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 21:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231801AbiKJVFH (ORCPT
+        id S231431AbiKJVFy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Nov 2022 16:05:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57558 "EHLO
+        Thu, 10 Nov 2022 16:05:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231714AbiKJVFF (ORCPT
+        with ESMTP id S231659AbiKJVFw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Nov 2022 16:05:05 -0500
+        Thu, 10 Nov 2022 16:05:52 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5CAC14
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 13:04:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205005FC5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 13:04:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668114241;
+        s=mimecast20190719; t=1668114296;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1QfUTLoo8KZyk/UmwYhDRfw7upAhiWcoYA8QgblVYZo=;
-        b=hyNLPTMjUrXewJBI4PsanyCrF9MudGC5rUKCzdwPQhEa0xCQH3mIGJzuq+Xk3plMzTLVjw
-        wXYl0n+80dKzlikyar8+PLSSJmK11Z2lTzjPX81O2tRwgxsEYB0rfeq3jiBs9qWgyJF+w3
-        mzV8pTbsjRdLozqvZDr5WF2NO+Bhe8Y=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ESV0EBIfdSkKVU9C1MpNbQrrf3Hjd+qZEwZ6K/0lz/0=;
+        b=Rqat9azifWp4aOWJcrg1KWrXnS7wZ9SEDVgndDrIx/jJZGn+KHT16Q1vl4LWKaHNOMoXdl
+        jL+BPoFKaiNpQn71kBFP16aLB2Ebd0l5bZuUGYzP94vqrl0m5fmCPROIKpWvrhOFFwrEuO
+        Krpau/C38MQiJ3V0luSV0iPp0sGw8jM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-313-6_1IKD1nP_GMggzjI2qTvA-1; Thu, 10 Nov 2022 16:04:00 -0500
-X-MC-Unique: 6_1IKD1nP_GMggzjI2qTvA-1
-Received: by mail-ed1-f70.google.com with SMTP id s15-20020a056402520f00b0046321fff42dso2302167edd.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 13:04:00 -0800 (PST)
+ us-mta-625-p6vFUKbXPfWycgOO3ZVzZQ-1; Thu, 10 Nov 2022 16:04:54 -0500
+X-MC-Unique: p6vFUKbXPfWycgOO3ZVzZQ-1
+Received: by mail-ed1-f71.google.com with SMTP id w17-20020a056402269100b00461e28a75ccso2290623edd.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 13:04:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1QfUTLoo8KZyk/UmwYhDRfw7upAhiWcoYA8QgblVYZo=;
-        b=epjWQBY7VE5TUhC7mMkaHtn3NwlzEFtxO5W6P5ctIBz2kRL2VfRMYcm4vnRxPyVKpf
-         YnkhUXbbinIPjm6lwHfU5xo6LVjNWpFu5OtZI8x4Up8du7aodEmBSCHzFp7l8Pw+ppQj
-         /09qUCiWs9Lmck7dKDu8DfeCdpYDAotu9QAtXSqmIf92cSy3JDjnLScxQuINW+hwKMdU
-         /F3ze0FxSzIshZMoeIr97MmPhBowykjvo9SJBf/Ab9f1mBZctvmd5EkDJ6bIydWA0QWh
-         e2M5iJdrK3pwSDWwyD9qNXm15lZu4EbjFNTa7ZhqONXE8q/5vAMFBYc7PRQ2RWqy+/9q
-         /+rg==
-X-Gm-Message-State: ACrzQf3RchjUnLjvPwwebPpCjExrR9m5uQwQwsmgVgo45ODXySLlzm1b
-        d7aGjudpsczf2zoGwnp3ntyP6ZtmxZneD812eJ0kI/aDR0H0Hok4jShON7wZrz/6EyzXT0ZpgNr
-        TbEw6zvtq7Lkqkvu2Of/AQBTLQHdG7Hstpw==
-X-Received: by 2002:a50:ec8f:0:b0:461:f919:caa4 with SMTP id e15-20020a50ec8f000000b00461f919caa4mr3484888edr.255.1668114239099;
-        Thu, 10 Nov 2022 13:03:59 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM60lzCeZXfSRx4OZ88TfurkkBOoWJgHUAZxFcNaBDri3o3LrZKlUiOtI33RvYqQwthK2FbxCg==
-X-Received: by 2002:a50:ec8f:0:b0:461:f919:caa4 with SMTP id e15-20020a50ec8f000000b00461f919caa4mr3484876edr.255.1668114238922;
-        Thu, 10 Nov 2022 13:03:58 -0800 (PST)
+        bh=ESV0EBIfdSkKVU9C1MpNbQrrf3Hjd+qZEwZ6K/0lz/0=;
+        b=nK1cf+qsfoKp9tbcAYRX0wDnT21VDBjwYX8wwTnksbed9jrNN5sB6RQNcpA3tHDUof
+         OoVrZgJM1782+sr8wCgv+TuZICHjd0RaPVkMfibGemCLVNedbB9QqFX/iYItWtoRP6vA
+         1mrAVPqVAzsayPtIBECPuNRSZcqvjUdTc72eyFS426Hgx+fzMZZ0FFdwB8Rm30CRpUPz
+         HSjRBKjzdRS/UI3d/tYdapSGXhyXs8bKZoRt2N00IXs/QvfSx84ur8oasgot5hPcIH/J
+         p9mp6pFjAI8bFTQ5YM6ceVgBGoupB+yFM+lgcJB9R4yEC8h9WTNjnaIR5eQF4j312175
+         Ignw==
+X-Gm-Message-State: ACrzQf0Rm7zS/bPcvaLSNyQ13gL4hjlMKlTAEG25ZVRX0MNHoCLvjy+D
+        z20Og1zTdG47Hgbf1cs1Q56sXjG+n2GJB8GxOLz70wOHfUhDYxjwPMa0vBuIhENHMqKOn6aOBEp
+        F8DL24AO9eC8FhDHBX2E6dLW/kiP+7hHRKQ==
+X-Received: by 2002:a17:906:2743:b0:78e:1046:c52a with SMTP id a3-20020a170906274300b0078e1046c52amr3947083ejd.713.1668114293747;
+        Thu, 10 Nov 2022 13:04:53 -0800 (PST)
+X-Google-Smtp-Source: AMsMyM7RVJLiRUIkFjzfkOCm1t81pUWwfRE35mn+LHOh9gGPoY+OKEbHC0q7S17LQtUVgd7GMW9JYQ==
+X-Received: by 2002:a17:906:2743:b0:78e:1046:c52a with SMTP id a3-20020a170906274300b0078e1046c52amr3947055ejd.713.1668114293544;
+        Thu, 10 Nov 2022 13:04:53 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id oz36-20020a1709077da400b007ae4717bef1sm155820ejc.15.2022.11.10.13.03.57
+        by smtp.gmail.com with ESMTPSA id r18-20020a1709061bb200b0078d4e39d87esm98563ejg.225.2022.11.10.13.04.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 13:03:58 -0800 (PST)
-Message-ID: <6798b3bc-125a-220d-3f37-71dcdf522f0d@redhat.com>
-Date:   Thu, 10 Nov 2022 22:03:57 +0100
+        Thu, 10 Nov 2022 13:04:53 -0800 (PST)
+Message-ID: <6107283a-ec3f-9873-9f1a-e43a3e5808ea@redhat.com>
+Date:   Thu, 10 Nov 2022 22:04:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH v2 01/14] platform/x86/intel/ifs: Remove unused selection
+Subject: Re: [PATCH v2 02/14] platform/x86/intel/ifs: return a more
+ appropriate Error code
 Content-Language: en-US, nl
 To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -74,9 +75,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         athenas.jimenez.gonzalez@intel.com, sohil.mehta@intel.com
 References: <20221021203413.1220137-1-jithu.joseph@intel.com>
  <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-2-jithu.joseph@intel.com>
+ <20221107225323.2733518-3-jithu.joseph@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221107225323.2733518-2-jithu.joseph@intel.com>
+In-Reply-To: <20221107225323.2733518-3-jithu.joseph@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -86,8 +87,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 11/7/22 23:53, Jithu Joseph wrote:
-> CONFIG_INTEL_IFS_DEVICE is not used anywhere. The selection in
-> Kconfig is therefore pointless. Delete it.
+> scan_chunks_sanity_check() returns -ENOMEM if it encounters
+> an error while copying IFS test image from memory to Secure Memory.
+> 
+> Return -EIO in this scenario, as it is more appropriate.
 > 
 > Reviewed-by: Tony Luck <tony.luck@intel.com>
 > Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
@@ -100,20 +103,26 @@ Regards,
 
 Hans
 
+
+
 > ---
->  drivers/platform/x86/intel/ifs/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/platform/x86/intel/ifs/load.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
-> index c341a27cc1a3..89152d46deee 100644
-> --- a/drivers/platform/x86/intel/ifs/Kconfig
-> +++ b/drivers/platform/x86/intel/ifs/Kconfig
-> @@ -4,7 +4,6 @@ config INTEL_IFS
->  	# Discussion on the list has shown that the sysfs API needs a bit
->  	# more work, mark this as broken for now
->  	depends on BROKEN
-> -	select INTEL_IFS_DEVICE
->  	help
->  	  Enable support for the In Field Scan capability in select
->  	  CPUs. The capability allows for running low level tests via
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+> index d056617ddc85..89ce265887ea 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -157,8 +157,10 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  		INIT_WORK(&local_work.w, copy_hashes_authenticate_chunks);
+>  		schedule_work_on(cpu, &local_work.w);
+>  		wait_for_completion(&ifs_done);
+> -		if (ifsd->loading_error)
+> +		if (ifsd->loading_error) {
+> +			ret = -EIO;
+>  			goto out;
+> +		}
+>  		package_authenticated[curr_pkg] = 1;
+>  	}
+>  	ret = 0;
 
