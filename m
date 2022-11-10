@@ -2,123 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C02C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 14:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A24C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 14:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbiKJOUE (ORCPT
+        id S231137AbiKJOpT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Nov 2022 09:20:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        Thu, 10 Nov 2022 09:45:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiKJOUC (ORCPT
+        with ESMTP id S230442AbiKJOpS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Nov 2022 09:20:02 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33604165AF;
-        Thu, 10 Nov 2022 06:20:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668090002; x=1699626002;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=RHhT2VxJ8li5Rw6AgHiZP5xYVQLOtbkBiRZO9kF6oZU=;
-  b=dDLeYgTk8DQUz9CLxrOx7VRUrktJMEYFMI0iT9TMwSejT2In/ccUZgEy
-   xtKFBk46lUboe2vCZDkw4PM19LQt/OSEZd9Bw8SKPrrcZT3z5PHpnZyUx
-   ggmwBL85qOkM1zsUgXOpkk61431eUEo8ilE3a4ydDfOkGXmu1SYJpIgtX
-   bkpm0ZA4BS+KlEth5TE6fvJLZFEQcwvXpwfqAOLNjIpgeZ3rMgEbqRLUw
-   UA6ZKZz7ilkSSX3R7ub5HTXspZxUbYpScukZ+HDtfuAMD5kOLsTEDzZoU
-   BMbtKsnmS/nn26x77ftrhjKcFUmaXOnb0EFU9z4dlyHCrJmzFPtSx6hTP
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373437823"
-X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="373437823"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 06:20:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="742868446"
-X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="742868446"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Nov 2022 06:19:58 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ot8PM-00ABIs-2K;
-        Thu, 10 Nov 2022 16:19:56 +0200
-Date:   Thu, 10 Nov 2022 16:19:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Roger Pau Monne <roger.pau@citrix.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        platform-driver-x86@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2] platform/x86: don't unconditionally attach Intel PMC
- when virtualized
-Message-ID: <Y20IjBPSXE+kqOZS@smile.fi.intel.com>
-References: <20221110133335.78442-1-roger.pau@citrix.com>
+        Thu, 10 Nov 2022 09:45:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFD145A06
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 06:45:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AA3E4B8221B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 14:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D865C433B5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 14:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668091514;
+        bh=gWr0GC9yE8fv7orrftDOM7Nxk+0XZR8e/IDa4LIb23k=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=PNFO4Wd7oZHFyfSvy4bIVxHxvTqJzoSBL+fKLx5YXrBS9DyGtV3YgPEY8KqHJ1f9i
+         VwNBM+pjnrdjDEknOTj74l1qmk59zY8hV71bREZfTnJX17y6I4+33vkufXvva8494L
+         s9UowY3GvnDkq4ThI4680qk+b/s4HRmItEJd8z+Me4dzAsqUDoRI0EvwHro7Up5D3N
+         +7bCvEPBRQ31ErZYU01KXYPQ9aQivkbT9dAgCllKO2vYv5gwgN4b4YRqGguSdMB17a
+         zWwBXFhP7QGZAc5J0ddUSKgybG0SD+BnQFCBEIN9Hf9ks+Sosv/Q23VL5WSHd0+Qf/
+         XOUMJ0t0Acsng==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 3034FC433EA; Thu, 10 Nov 2022 14:45:14 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 10 Nov 2022 14:45:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mundanedefoliation@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-BpZ1nh7sjH@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221110133335.78442-1-roger.pau@citrix.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 02:33:35PM +0100, Roger Pau Monne wrote:
-> The current logic in the Intel PMC driver will forcefully attach it
-> when detecting any CPU on the intel_pmc_core_platform_ids array,
-> even if the matching ACPI device is not present.
-> 
-> There's no checking in pmc_core_probe() to assert that the PMC device
-> is present, and hence on virtualized environments the PMC device
-> probes successfully, even if the underlying registers are not present.
-> Previous to 21ae43570940 the driver would check for the presence of a
-> specific PCI device, and that prevented the driver from attaching when
-> running virtualized.
-> 
-> Fix by only forcefully attaching the PMC device when not running
-> virtualized.  Note that virtualized platforms can still get the device
-> to load if the appropriate ACPI device is present on the tables
-> provided to the VM.
-> 
-> Make an exception for the Xen initial domain, which does have full
-> hardware access, and hence can attach to the PMC if present.
-> 
-> Fixes: 21ae43570940 ('platform/x86: intel_pmc_core: Substitute PCI with CPUID enumeration')
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> Acked-by: David E. Box <david.e.box@linux.intel.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-> Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-> Cc: David E Box <david.e.box@intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: xen-devel@lists.xenproject.org
+yutesdb (mundanedefoliation@gmail.com) changed:
 
-You may use --cc to the sending tool, instead of polluting a commit message
-with that. Moreover, the Cc list will be archived on lore.kernel.org anyway,
-in case you really need it to be recorded.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |mundanedefoliation@gmail.co
+                   |                            |m
 
-...
+--- Comment #268 from yutesdb (mundanedefoliation@gmail.com) ---
+can add support TUF GAMING B550M-PLUS WIFI II?
 
-> +	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
-> +	    !xen_initial_domain())
+I tried add parameter acpi_enforce_resources=3Dlax, it works.
 
-One line? It's 81 character only and we have no strong 80 here, IIRC.
-
-> +		return -ENODEV;
-
--- 
-With Best Regards,
-Andy Shevchenko
+# dmidecode 3.4
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+        Manufacturer: ASUSTeK COMPUTER INC.
+        Product Name: TUF GAMING B550M-PLUS WIFI II
+        Version: Rev X.0x
+        Serial Number: 220909970904631
+        Asset Tag: Default string
+        Features:
+                Board is a hosting board
+                Board is replaceable
+        Location In Chassis: Default string
+        Chassis Handle: 0x0003
+        Type: Motherboard
+        Contained Object Handles: 0
 
 
+cat /sys/class/dmi/id/board_name
+TUF GAMING B550M-PLUS WIFI II
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
