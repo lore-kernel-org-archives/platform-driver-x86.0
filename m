@@ -2,148 +2,443 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CDFC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C68C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 20:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbiKJTTc (ORCPT
+        id S230266AbiKJUDJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Nov 2022 14:19:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
+        Thu, 10 Nov 2022 15:03:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231229AbiKJTTZ (ORCPT
+        with ESMTP id S229559AbiKJUDI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Nov 2022 14:19:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34FF13E0D
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 11:18:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668107913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mQwHAl7OYzLJWCe4PcxTh4i6X5/u7wOLyGaDC339ksI=;
-        b=Id0pIoejBj0FoxyUZS6fmvfbfJjMX1KBPzUm/nrKUOQ8/I78TxtZzXS17FxPvhkZh66t1o
-        vxA+QqIODucbHwEp95bVqyPMjS8vvS6I+zAyYj+uWIyGCo5I6Y9lzbjC+rqXTabJsQO6Oo
-        BMf+0haB60RLzfu9GVQ7IwR9Ue76BF0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-561-HArptN8eNJeAz3krNmYUSA-1; Thu, 10 Nov 2022 14:18:32 -0500
-X-MC-Unique: HArptN8eNJeAz3krNmYUSA-1
-Received: by mail-ej1-f71.google.com with SMTP id sh31-20020a1709076e9f00b007ae32b7eb51so1755014ejc.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 11:18:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQwHAl7OYzLJWCe4PcxTh4i6X5/u7wOLyGaDC339ksI=;
-        b=EwpChQ+W9oZytAjR7FGVLn6T7rhUwE1PVDOr9RquzRwF3DB0tjGrW457VKP7z4ajxO
-         oGRWeCaVxRMGgV1JNlp0zp3OFFYVgabqZbL31NaXJ6943k/H2+D7TZvon9bZgDXTL/C+
-         aVk2vXmLdJSW21YVX5xPY67/Iia0j+ylY/lcd5G7ahFG2yBffSAbz9xT5J4LcYHzaPxG
-         DMRTJ6cXNBJIYfuR3XFaCxel7yxtrjdFhQe4L5qISiMV1EbvZQHKbxSD8MZjwsU/f8pa
-         6ghVsxkpGni3un+UYYwIUOu0mde+UnaN+3LhrtFET5NN91PEN95O2JXjDllEFkKwWqlP
-         WGoA==
-X-Gm-Message-State: ACrzQf3pjUyYE/HBmFVwGJF6jKTkoEbajU8ZxpqLoEQSFPglKeFV6B52
-        6dwFmaR/ZMxjD26HsST9H4Ex4ewGQTX0GPoeZTZA7FHcyFqAa2fqfyH3JySLdLu2C6HMGCbtEsp
-        wqsh0t+Zwx1tmlazw+RuJjWBTALMw64uECQ==
-X-Received: by 2002:aa7:ce88:0:b0:461:ea0c:e151 with SMTP id y8-20020aa7ce88000000b00461ea0ce151mr3082431edv.376.1668107911446;
-        Thu, 10 Nov 2022 11:18:31 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM6fGMNqRiT8Ls2q/qrD69W5LVrOwg4i1od6eNMRaKSk/8sZRBr0Ca021svvDx8cttJxz5IhSw==
-X-Received: by 2002:aa7:ce88:0:b0:461:ea0c:e151 with SMTP id y8-20020aa7ce88000000b00461ea0ce151mr3082421edv.376.1668107911283;
-        Thu, 10 Nov 2022 11:18:31 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id x3-20020aa7cd83000000b00463cd6d55f5sm204224edv.10.2022.11.10.11.18.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 11:18:30 -0800 (PST)
-Message-ID: <d86d9c20-6f5c-0de9-2c09-7667080dd65c@redhat.com>
-Date:   Thu, 10 Nov 2022 20:18:29 +0100
+        Thu, 10 Nov 2022 15:03:08 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4097AA1B4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 12:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
+        t=1668110577; bh=yWLpYuJO90+xcTOt7cKVTiFJzXBOtkM5Lr7xoSWgXbQ=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=CfLfHoIa9rXOagwE3jb1bPxT7HSVOLyJxjqophkwMGl2g+FyuDnye74Sm6zokg2Kl
+         CENu96DltTiiTs4zauHzdlW2YU97I3MgW/FBLeejWNvMwPRL/g0layae64lolwcvHK
+         m0lNrzaOom8n/uaZob0RjJH3ydBOHV6XynxQZ+bPS3OXYEmtp7rhA13+TRxBsv04bf
+         866Iq0sF24lX7PF1nn4FXMkoS12AMYyr78a9zwEjGNaOPAR1vwD36dBsELexBDBXr/
+         LNMkOZPtcbniSMhRDnGtNSSNyo3kytAqJ/OTaco4UHUnadpGf9vzJgq7xVw/drDAzs
+         huvhbeP+N3/gg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.224.253] ([46.114.152.51]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgNcz-1pTucp1WPP-00hu7X; Thu, 10
+ Nov 2022 21:02:57 +0100
+Message-ID: <362cfa1aa490d226218b30d10d2b392fd7e96abb.camel@gmx.net>
+Subject: Re: [PATCH] Add IdeaPad WMI Fn Keys driver
+From:   Philipp Jungkamp <p.jungkamp@gmx.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+Date:   Thu, 10 Nov 2022 21:02:50 +0100
+In-Reply-To: <c251e107-2ad2-417d-c184-b67e778b905a@redhat.com>
+References: <20220911160404.21692-1-p.jungkamp@gmx.net>
+         <6c38ca87-d427-d34b-73d1-edb6df75af1b@redhat.com>
+         <c251e107-2ad2-417d-c184-b67e778b905a@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: ideapad-laptop touchpad handling problems, request for help
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
-        maxtram95@gmail.com
-Cc:     cleverline1mc@gmail.com, g_goessel@outlook.com,
-        ike.pan@canonical.com, jiaxun.yang@flygoat.com,
-        limanyi@uniontech.com, mjg59@srcf.ucam.org,
-        platform-driver-x86@vger.kernel.org
-References: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com>
- <CAKErNvqfH-C7xJU3F7ga68o3AK-_ae-K2ggKcUOp1iqtmdSYdw@mail.gmail.com>
- <20221110120022.35041-1-erayorcunus@gmail.com>
- <4bcf4e6b-ae2f-0e22-a291-7faa6731e6c7@redhat.com>
- <20221110164220.46640-1-erayorcunus@gmail.com>
- <CAKErNvo+fh6sXUOPj9sCucuzUOKybOUgBo5riCfLpCF_8t9_uA@mail.gmail.com>
- <20221110184709.52768-1-erayorcunus@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221110184709.52768-1-erayorcunus@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:hnxPnzcoHMo5+dy+nmWWVk5u/wDjl3wvI4BmKPFuj4/HMTgKuMR
+ ewliktxSXgs8o4Wa26wlYS2mUWQt4apiWbqZwKjzzzLbuFHvyanKepFiSLWcp6KvGMHl2sP
+ TV2NmOVDaSS65BDZNCxEba6bD9DRVe4qjhDMwix1vDw/xYxWOOKtCtmQ3Cj+dNy4mwqL/pB
+ DayHQEhIYdu0sk93gE5lA==
+UI-OutboundReport: notjunk:1;M01:P0:UXYbup8ZjbE=;eTXH5U7deDc4BmJPpPv6DOVxq3z
+ EsU5/Sc6Qjs+ZE/YS/EzlnWMHljjrbcm5CuKBydmUrRQOCc9Zl09YmHhKAHofZWvlre9O42jx
+ 4ndoWkq23YbkjgbQrEE97RYqOW1uSnYnmmFm56AtQ5JbZ6DaP4bde/P0S6c0WDZrT1IbfKFPD
+ 3/07EOTFbPrjbD7lN3BWgNc0ZNqDP+BojvtVyGRnid1C886ZXoq6HaqapKNzDQrYKVmfNCJlI
+ N0wqTUJWjEJzjOmoKBSnWGcdORmW8ynTeqERPu62egCI7cjueAdVUJepxSrwnOaAUGJpVc+G3
+ x/+sWbU3vH6fCV9Fw+gfSlWKhrq27vH3rm5WrnRt1JhOHoT+PJ86OALUuh3Rkx9PB3Bq/3RJ9
+ NwPUgg3bzFS0/QJnx2xA/+8lVuxGYs3+NocYAANS6f8lCWoF/GMwNcsRF+hdNlET4wf56/Kv9
+ F/na/QepYHDrkeBkYabR6h8QM2g7aXSSbdb+req+MPI86lEgijmhwGhjz58y0pp6H0YmUdyDH
+ tgE/HTR9TgRNEbMKMWfvK1kZSE6Ua3K2IFvMuOoYmeeovYoTedEmWiqFlHNuxmHccUOVSaC2n
+ 6Um/p8/Q5iCkOHlkUHUjTkMlA+HIjMKCruNHJGJSfoMIqjcrEeM8bBqUVCwnETLQknC3KfECK
+ W/BBK4QRYrjGSTDtWX1mUHcKCZkINu5rmFxdOn3fScBBIw6PqIWRty6LLSf8zyDxuXbVNi7nc
+ SNBpq3EzQDMv+GgpD2XPd7BurO2lmfJlBGB7wd34an6oeEz8srDytJ/eKq9JCsmQOdghr5MdS
+ JEhqlrpfyT8ay3Z4Ae9nnMoeA+gBq+ZdBcm05cWmnQPyPB3hU3aqrzAWUCTv2Hfa8n8Riyu42
+ tMgKtz/xvZiKaTLxkvx4ald3JnLbtJ01pvO3ACBl3VRSzsSo1qAz0yAS1Paf91TMYqUlNWuDB
+ H7yeTHPsCcriG4+QsMPoTJd2gd0=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Eray,
+On Mon, 2022-09-19 at 08:54 +0100, Hans de Goede wrote:
+> Hi again,
+>=20
+> On 9/11/22 17:18, Hans de Goede wrote:
+> > Hi Philipp,
+> >=20
+> > On 9/11/22 18:04, Philipp Jungkamp wrote:
+> > > Create an input device for WMI events corresponding to some
+> > > special
+> > > keys on the 'Lenovo Yoga' line.
+> > >=20
+> > > This include the 3 keys to the right on the 'Lenovo Yoga9 14IAP7'
+> > > and
+> > > additionally the 'Lenovo Support' and 'Lenovo Favorites' (star
+> > > with 'S'
+> > > inside) in the fn key row as well as the event emitted on 'Fn+R'
+> > > which
+> > > toggles between 60Hz and 90Hz display refresh rate on windows.
+> > >=20
+> > > Signed-off-by: Philipp Jungkamp <p.jungkamp@gmx.net>
+> > > ---
+> > > I found this patch by poking in the DSDT. I have not submitted
+> > > any
+> > > notable patches yet and hope you can help me improve in case I
+> > > make
+> > > unfortunate choices during submission.
+> >=20
+> > No worries at a first glance (I have not looked at this in any
+> > detail yet) this looks pretty good for a first submission.
+> >=20
+> > And thank you for contributing to the Linux kernel!
+> >=20
+> >=20
+> > > Philipp Jungkamp
+> > >=20
+> > >  drivers/platform/x86/Kconfig       |  13 +++
+> > >  drivers/platform/x86/Makefile      |   1 +
+> > >  drivers/platform/x86/ideapad-wmi.c | 153
+> > > +++++++++++++++++++++++++++++
+> > >  3 files changed, 167 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/ideapad-wmi.c
+> > >=20
+> > > diff --git a/drivers/platform/x86/Kconfig
+> > > b/drivers/platform/x86/Kconfig
+> > > index f2f98e942cf2..e7c5148e5cb4 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -140,6 +140,19 @@ config YOGABOOK_WMI
+> > >           To compile this driver as a module, choose M here: the
+> > > module will
+> > >           be called lenovo-yogabook-wmi.
+> > >=20
+> > > +config IDEAPAD_WMI
+> > > +       tristate "Lenovo IdeaPad WMI Fn Keys"
+> > > +       depends on ACPI_WMI
+> > > +       depends on INPUT
+> > > +       select INPUT_SPARSEKMAP
+> > > +       help
+> > > +         Say Y here if you want to receive key presses from some
+> > > lenovo
+> > > +         specific keys. (Star Key, Support Key, Virtual
+> > > Background,
+> > > +         Dark Mode Toggle, ...)
+> > > +
+> > > +         To compile this driver as a module, choose M here: the
+> > > module will
+> > > +         be called ideapad-wmi.
+> > > +
+> > >  config ACERHDF
+> > >         tristate "Acer Aspire One temperature and fan driver"
+> > >         depends on ACPI && THERMAL
+> > > diff --git a/drivers/platform/x86/Makefile
+> > > b/drivers/platform/x86/Makefile
+> > > index 5a428caa654a..d8bec884d6bc 100644
+> > > --- a/drivers/platform/x86/Makefile
+> > > +++ b/drivers/platform/x86/Makefile
+> > > @@ -16,6 +16,7 @@ obj-
+> > > $(CONFIG_PEAQ_WMI)                        +=3D peaq-wmi.o
+> > >  obj-$(CONFIG_XIAOMI_WMI)               +=3D xiaomi-wmi.o
+> > >  obj-$(CONFIG_GIGABYTE_WMI)             +=3D gigabyte-wmi.o
+> > >  obj-$(CONFIG_YOGABOOK_WMI)             +=3D lenovo-yogabook-wmi.o
+> > > +obj-$(CONFIG_IDEAPAD_WMI)              +=3D ideapad-wmi.o
+> > >=20
+> > >  # Acer
+> > >  obj-$(CONFIG_ACERHDF)          +=3D acerhdf.o
+> > > diff --git a/drivers/platform/x86/ideapad-wmi.c
+> > > b/drivers/platform/x86/ideapad-wmi.c
+> > > new file mode 100644
+> > > index 000000000000..38f7b3d0c171
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/ideapad-wmi.c
+> > > @@ -0,0 +1,153 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * ideapad-wmi.c - Ideapad WMI fn keys driver
+> > > + *
+> > > + * Copyright (C) 2022 Philipp Jungkamp <p.jungkamp@gmx.net>
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > > +
+> > > +#include <linux/acpi.h>
+> > > +#include <linux/input.h>
+> > > +#include <linux/input/sparse-keymap.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/wmi.h>
+> > > +
+> > > +#define IDEAPAD_FN_KEY_EVENT_GUID      "8FC0DE0C-B4E4-43FD-B0F3-
+> > > 8871711C1294"
+> >=20
+> > At a first hunch (basically huh, don't we have a driver for that
+> > already?) I grepped through the kernel sources and found:
+> >=20
+> > drivers/platform/x86/ideapad-laptop.c
+> >=20
+> > can you see if you can make things work with that driver?
+>=20
+> So I have taken a quick look at this and it seems to me that this
+> really should be able to work with the existing ideapad-laptop.c code
+> ?
+>=20
+> For starters you could add a debug printk / dev_info to this block,
+>=20
+> #if IS_ENABLED(CONFIG_ACPI_WMI)
+>         for (i =3D 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
+>                 status =3D
+> wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
+>                                                   =20
+> ideapad_wmi_notify, priv);
+>                 if (ACPI_SUCCESS(status)) {
+>                         priv->fnesc_guid =3D
+> ideapad_wmi_fnesc_events[i];
+>                         break;
+>                 }
+>         }
+>=20
+>         if (ACPI_FAILURE(status) && status !=3D AE_NOT_EXIST) {
+>                 err =3D -EIO;
+>                 goto notification_failed_wmi;
+>         }
+> #endif
+>=20
+> checking which event GUID ideapad-laptop binds to on your laptop.
+> Assuming that
+> it does bind to the GUID this driver is binding to too, then it would
+> be
+> a matter of extending the existing ideapad_wmi_notify() to do the
+> same
+> as your notify function in this stand-alone driver. Note you can get
+> the
+> the equivalend of the union acpi_object *data argument in your wmi
+> handler
+> by calling wmi_get_event_data().
+>=20
+> Regards,
+>=20
+> Hans
+>=20
 
-On 11/10/22 19:47, Eray Orçunus wrote:
-> Hi,
-> 
-> On 10 Nov 2022 at 21:09, Maxim Mikityanskiy <maxtram95@gmail.com>  wrote:
->> A small note on the DMI allow-list: I don't think Z570 is the only
->> laptop where EC fails to disable the touchpad. While I would like this
->> hack to affect as few laptops as possible, I would expect that other
->> similar models produced in the same time period suffer from the same
->> issue, and I don't think we have the full list of them.
-> 
-> I just checked Z570 ACPI table, and this is what it does when it receives
-> VPCCMD_R_TOUCHPAD:
-> 
-> 	VDAT = TPEN /* \_SB_.PCI0.LPCB.EC0_.TPEN */
-> 	If ((TPEN == One))
-> 	{
-> 	    GL04 |= 0x02
-> 	}
-> 	Else
-> 	{
-> 	    GL04 &= 0xFD
-> 	}
-> 
-> VDAT is the data returned to user.
-> So we can say that TPEN is the logical state of touchpad key, and GL04
-> is state of touchpad LED or series of LEDs.
-> 
-> VPCCMD_W_TOUCHPAD is nulled, it doesn't work.
-> 
-> I also checked which DSDTs I have (13 DSDTs from 2008 to this year)
-> contain TPEN, and turned out it was only S12, from 2009. It also had
-> nulled VPCCMD_W_TOUCHPAD, and returns TPEN on VPCCMD_R_TOUCHPAD, except
-> it doesn't have an LED or GL04.
-> 
-> So, it's possible that we can only check if TPEN exists on ACPI table,
-> instead of having a white-list.
+Hello Hans,
 
-Hmm, lets keep that idea in case it turns out the allow-list based
-approach turns out to cause issue/grow out of control. I would rather
-not rely on ACPI variables having a specific name for something like
-this, but you might be on to something.
+I did actually start by doing that.
+The problem lies with the wmi_get_event_data() function not working
+for my ACPI.
 
-I have checked my own collection of acpidumps and the only DSDT
-which I have which has a TPEN variable is for an Ideapad D330.
+wmi_get_event_data() takes the event notify_id as input and is supposed
+to give the data associated with the event back. This occures by
+calling _WED on the first WMI block that contains said notify_id.
 
-Funny enough that is a 2-in-1 with a detachable USB keyboard.
-I would not be surprised if the ideapad driver does not load
-on those devices at all since there are no embedded-controller
-handled hotkeys, as the keyboard is fully USB/HID and not
-connected to the EC at all.
+drivers/platform/x86/wmi.c:657:
+	list_for_each_entry(wblock, &wmi_block_list, list) {
+		struct guid_block *gblock =3D &wblock->gblock;
 
-I'll send you the acpidump in a private email.
+		if ((gblock->flags & ACPI_WMI_EVENT) && gblock-
+>notify_id =3D=3D event)
+			return get_event_data(wblock, out);
+	}
+
+The ACPI of the Lenovo Yoga 9 14IAP7 contains multiple WMI event
+blocks hat contain the same notify_id 0xD0.
+
+Here are two of the four WMI objects found in the DSDT:
+
+in _WDG of block WMIY:
+	06129D99-6083-4164-81AD-F092F9D773A6:
+		notify_id: 0xD0
+		instance_count: 1
+		flags: 0x8 ACPI_WMI_EVENT
+
+in _WDG of block WMIU:
+	8FC0DE0C-B4E4-43FD-B0F3-8871711C1294:
+		notify_id: 0xD0
+		instance_count: 1
+		flags: 0x8 ACPI_WMI_EVENT
+
+These event block belong to different WMI devices and report
+unrelated values from different _WED handlers. WMIY for example
+triggers its event on "mode changes", e.g. laptop/tablet/tent based
+on the accelometers/hinge.
+WMIU is the WMI block with the event which reports the special keys
+I'm interested in.
+
+WMIY comes before WMIU in the wmi_block_list.
+Calling wmi_get_event_data() in ideapad_wmi_notify() calls the wrong
+_WED (the one of WMIY) and thus returns the wrong event data.
+
+I noticed that the wmi_driver interface does not incur the problem
+with the event because it binds to a wmi_block and calls the _WED
+directly without searching through other WMI devices.
+
+I thought of changing the signature of wmi_get_event_data() to include
+the GUID of the correct WMI block, but chose wmi_driver instead.
+Would you consider adding a wmi_get_event_data_for_guid() function to
+the wmi module and using that in the ideapad_wmi_notify function to be
+a better solution than the one in the patch presented here?
 
 Regards,
+Philipp
 
-Hans
-
-
-
+>=20
+>=20
+> > > +
+> > > +struct ideapad_wmi_private {
+> > > +       struct wmi_device *wmi_device;
+> > > +       struct input_dev *input_dev;
+> > > +};
+> > > +
+> > > +static const struct key_entry ideapad_wmi_fn_key_keymap[] =3D {
+> > > +       /* FnLock (handled by the firmware) */
+> > > +       { KE_IGNORE,    0x02 },
+> > > +       /* Customizable Lenovo Hotkey ("star" with 'S' inside) */
+> > > +       { KE_KEY,       0x01, { KEY_FAVORITES } },
+> > > +       /* Dark mode toggle */
+> > > +       { KE_KEY,       0x13, { KEY_PROG1 } },
+> > > +       /* Sound profile switch */
+> > > +       { KE_KEY,       0x12, { KEY_PROG2 } },
+> > > +       /* Lenovo Virtual Background application */
+> > > +       { KE_KEY,       0x28, { KEY_PROG3 } },
+> > > +       /* Lenovo Support */
+> > > +       { KE_KEY,       0x27, { KEY_HELP } },
+> > > +       /* Refresh Rate Toggle */
+> > > +       { KE_KEY,       0x0a, { KEY_DISPLAYTOGGLE } },
+> > > +       { KE_END },
+> > > +};
+> > > +
+> > > +static int ideapad_wmi_input_init(struct ideapad_wmi_private
+> > > *priv)
+> > > +{
+> > > +       struct input_dev *input_dev;
+> > > +       int err;
+> > > +
+> > > +       input_dev =3D input_allocate_device();
+> > > +       if (!input_dev) {
+> > > +               return -ENOMEM;
+> > > +       }
+> > > +
+> > > +       input_dev->name =3D "Ideapad WMI Fn Keys";
+> > > +       input_dev->phys =3D IDEAPAD_FN_KEY_EVENT_GUID "/input0";
+> > > +       input_dev->id.bustype =3D BUS_HOST;
+> > > +       input_dev->dev.parent =3D &priv->wmi_device->dev;
+> > > +
+> > > +       err =3D sparse_keymap_setup(input_dev,
+> > > ideapad_wmi_fn_key_keymap, NULL);
+> > > +       if (err) {
+> > > +               dev_err(&priv->wmi_device->dev,
+> > > +                       "Could not set up input device keymap:
+> > > %d\n", err);
+> > > +               goto err_free_dev;
+> > > +       }
+> > > +
+> > > +       err =3D input_register_device(input_dev);
+> > > +       if (err) {
+> > > +               dev_err(&priv->wmi_device->dev,
+> > > +                       "Could not register input device: %d\n",
+> > > err);
+> > > +               goto err_free_dev;
+> > > +       }
+> > > +
+> > > +       priv->input_dev =3D input_dev;
+> > > +       return 0;
+> > > +
+> > > +err_free_dev:
+> > > +       input_free_device(input_dev);
+> > > +       return err;
+> > > +}
+> > > +
+> > > +static void ideapad_wmi_input_exit(struct ideapad_wmi_private
+> > > *priv)
+> > > +{
+> > > +       input_unregister_device(priv->input_dev);
+> > > +       priv->input_dev =3D NULL;
+> > > +}
+> > > +
+> > > +static void ideapad_wmi_input_report(struct ideapad_wmi_private
+> > > *priv,
+> > > +                                    unsigned int scancode)
+> > > +{
+> > > +       sparse_keymap_report_event(priv->input_dev, scancode, 1,
+> > > true);
+> > > +}
+> > > +
+> > > +static int ideapad_wmi_probe(struct wmi_device *wdev, const void
+> > > *ctx)
+> > > +{
+> > > +       struct ideapad_wmi_private *priv;
+> > > +       int err;
+> > > +
+> > > +       priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv),
+> > > GFP_KERNEL);
+> > > +       if (!priv)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       dev_set_drvdata(&wdev->dev, priv);
+> > > +
+> > > +       priv->wmi_device =3D wdev;
+> > > +
+> > > +       err =3D ideapad_wmi_input_init(priv);
+> > > +       if (err)
+> > > +               return err;
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static void ideapad_wmi_remove(struct wmi_device *wdev)
+> > > +{
+> > > +       struct ideapad_wmi_private *priv =3D dev_get_drvdata(&wdev-
+> > > >dev);
+> > > +
+> > > +       ideapad_wmi_input_exit(priv);
+> > > +}
+> > > +
+> > > +static void ideapad_wmi_notify(struct wmi_device *wdev, union
+> > > acpi_object *data)
+> > > +{
+> > > +       struct ideapad_wmi_private *priv =3D dev_get_drvdata(&wdev-
+> > > >dev);
+> > > +
+> > > +       if(data->type !=3D ACPI_TYPE_INTEGER) {
+> > > +               dev_warn(&priv->wmi_device->dev,
+> > > +                       "WMI event data is not an integer\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       ideapad_wmi_input_report(priv, data->integer.value);
+> > > +}
+> > > +
+> > > +static const struct wmi_device_id ideapad_wmi_id_table[] =3D {
+> > > +       {       /* Special Keys on the Yoga 9 14IAP7 */
+> > > +               .guid_string =3D IDEAPAD_FN_KEY_EVENT_GUID
+> > > +       },
+> > > +       { }
+> > > +};
+> > > +
+> > > +static struct wmi_driver ideapad_wmi_driver =3D {
+> > > +       .driver =3D {
+> > > +               .name =3D "ideapad-wmi",
+> > > +       },
+> > > +       .id_table =3D ideapad_wmi_id_table,
+> > > +       .probe =3D ideapad_wmi_probe,
+> > > +       .remove =3D ideapad_wmi_remove,
+> > > +       .notify =3D ideapad_wmi_notify,
+> > > +};
+> > > +
+> > > +module_wmi_driver(ideapad_wmi_driver);
+> > > +
+> > > +MODULE_DEVICE_TABLE(wmi, ideapad_wmi_id_table);
+> > > +MODULE_AUTHOR("Philipp Jungkamp <p.jungkamp@gmx.net>");
+> > > +MODULE_DESCRIPTION("Ideapad WMI fn keys driver");
+> > > +MODULE_LICENSE("GPL");
+> > > --
+> > > 2.37.3
+> > >=20
+>=20
 
