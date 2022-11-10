@@ -2,233 +2,217 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3938C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 16:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B67FC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Nov 2022 16:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbiKJQdM (ORCPT
+        id S232011AbiKJQm2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:33:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
+        Thu, 10 Nov 2022 11:42:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231670AbiKJQdL (ORCPT
+        with ESMTP id S231978AbiKJQm2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:33:11 -0500
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Nov 2022 08:33:09 PST
-Received: from esa5.hc3370-68.iphmx.com (esa5.hc3370-68.iphmx.com [216.71.155.168])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBC632070;
-        Thu, 10 Nov 2022 08:33:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1668097989;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=/ajotvBabRkAJRa8WyNoPM3w5dHVQCnNTELU9LsS+qQ=;
-  b=PX8lK+UASA4bjdERL9gL/tka2s2CfFekS7cGIzOK6e8j5a1LJYymJNUB
-   Al4JfYMHbfiNLRnRAP91Kgc5O2f0/qEos1VdBEfSt8ECjMzHrZonpPHh/
-   cOfsHBI7jQfHzi/CoYmoyOFdAynUbY3LxJHWtTvuTy/VHp2ZkmsPq8w8t
-   M=;
-X-IronPort-RemoteIP: 104.47.55.172
-X-IronPort-MID: 83651182
-X-IronPort-Reputation: None
-X-IronPort-Listener: OutboundMail
-X-IronPort-SenderGroup: RELAY_O365
-X-IronPort-MailFlowPolicy: $RELAYED
-IronPort-Data: A9a23:xxNJlq1BWPIEkHSv9/bD5c9xkn2cJEfYwER7XKvMYLTBsI5bpzwGz
- jQaWjyDOfeCM2Twed8lOoW/9kkGvcKBzdAyHVA+pC1hF35El5HIVI+TRqvS04F+DeWYFR46s
- J9OAjXkBJppJpMJjk71atANlVEliefTAOK5ULSfUsxIbVcMYD87jh5+kPIOjIdtgNyoayuAo
- tq3qMDEULOf82cc3lk8tuTS9nuDgNyo4GlC5wVnPagQ1LPjvyJ94Kw3dPnZw0TQGuG4LsbiL
- 87fwbew+H/u/htFIrtJRZ6iLyXm6paLVeS/oiI+t5qK23CulQRrukoPD9IOaF8/ttm8t4sZJ
- OOhF3CHYVxB0qXkwIzxWvTDes10FfUuFLTveRBTvSEPpqFvnrSFL/hGVSkL0YMkFulfCkpxx
- NckDjs3c0rbiaWRnaK6dPMyr5F2RCXrFNt3VnBI6xj8VKxja7aTBqLA6JlfwSs6gd1IEbDGf
- c0FZDFzbRPGJRpSJlMQD5F4l+Ct7pX9W2QA9BTJ+uxqvi6Kk1YZPLvFabI5fvSQQspYhACAr
- 3/u9GXlGBAKcteYzFJp91r83bGSxHqrAur+EpW4zK53nFOUn1ciGQMkfwOckOKzlQmHDoc3x
- 0s8v3BGQbIJ3EiqSMTtGh61uniJujYCVNdKVe438geAzuzT+QnxLngJSHtNZcIrsOcyRCc2z
- RmZktXxHzttvbaJD3WH+d+8rzyoPjMOBXQffiJCRgwAi/HvqZ8yglTCCNxkAIaxj9voCXfxx
- SyHqG41gLB7pc8R2qO69hbdijCqq5XSTiY64wzWWiSu6QYRTIKseY2kr1Wd5/FQBIefUlSF+
- nMDnqC27OwDApaAmCGlWugBHLi1of2CNVX0hFd1HJY78C+2032uZ4Zd5Hd5PkgBGs8CdSXoc
- QnIuQ5P759eOnitRat2ZZ+hTcUs0aXkU9/iU5j8dcBPZJlvfRTB5ChoaVSNwWnhmWAokKciK
- dGad9qhCTARDqEP5CKyTvsT1qUugywkxH3eX9Xrn0qPz7WTfjiWRK0DPV/Iafo2hJ5ouy3Q+
- tdbcsGMmxNWVbSkZjGNqNFJa1cXMXI8GJb67dRNcfKOKRZnH2dnDOLNxbQmeMpumKE9evr0w
- 0xRk3RwkDLX7UAr4y3RApy/QNsDhapCkE8=
-IronPort-HdrOrdr: A9a23:hBLtdq4lm0A39770MAPXwSeBI+orL9Y04lQ7vn2ZFiY5TiXIra
- qTdaogviMc6Ax/ZJjvo6HjBEDmewKlyXcV2/hpAV7GZmXbUQSTXeVfBOfZowEIeBeOi9K1q5
- 0QFJSWYeeYZTYasS+T2njDLz9K+qjjzEnHv5a88587JjsaEJ2Ioj0JfjqzIwlTfk1rFJA5HJ
- 2T6o5uoCehQ20eaoCeCmMeV+bOitXXnNa+CCR2cSIP2U2rt3eF+bT6Gx+X0lM3VC5O+64r9S
- zgnxbi7quunvmnwlv31nPV7b5RhNz9o+Ezc/Cku4wwEHHBmwyobINuV/mruy00mvim7BIQnN
- zFs34bTrdOwkKUWlvwjQrm2gHm3jprwWTl00WkjXzqptG8bC4mCuJa7LgpOCfx2g4FhpVRwa
- hL12WWu958FhXbhhnw4NDOSlVDile0m3w/iuQe5kYvGrf2UIUh4bD3wXklX6vpREnBmc4a+a
- hVfYnhDc9tAB6nhyuzhBgv/DSuNk5DbituDHJy+vB96AIm4kyR/3FouPD3oU1wi67VM6M0gd
- gsEp4Y5o2mHfVmGJ5VNaMmffadLFDrbFblDF+ySG6XZZ3vfUi94qLK3A==
-X-IronPort-AV: E=Sophos;i="5.96,154,1665460800"; 
-   d="scan'208";a="83651182"
-Received: from mail-bn8nam12lp2172.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.172])
-  by ob1.hc3370-68.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Nov 2022 11:32:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3oXtMg77lXL9aexkF0fEWovV60EY6CZfI++HBlXsWzr/Z/DSi+/Bs7dcr6vMW+LGj5DgKOPRl7ufyLPxJlR4lFo8/53E5SkoH3DW+c/t5RkqClUx+jHa12FeqnhgRRqmrhWeWayq3hZiBvi6Vssa6gxTZu/ee8iANttu9Cc8bsP3gPypzC1kiLOkV2klxacLjYsuwY7AnXgnCvAcjhh9xSpnnhoMBpa1fUHP3B7VR0fKagVZOzZbfuVcwv8oZvFYXsiJQ4UXUE+xvCKB1t9/ipdV5bLKp/eTko58lKf4dC/OC6XAqlZ2WeHaeH0Dc+aG9YpPQO9HzfVB9kUMQI7+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=anhVgeEpURpP2uRlzZ2W5M+ywycrkzKb3c1lNsONauU=;
- b=ODH52CuwS8nvfMmbbLeYwQb2zkEJ0MWvEo5MjZyx+dWrg4PBRQZYzWrM/ifHPGjVyR0z49C+DJt460xwaBKIzT10Sy9brexzLWbbnGxPbErEnD0EXKOAFVREz/ZLA1EPMYvCVgR+k4ZcCmStGDmNx32x1l5i2oYegs/5VwpKS6/8Xn/m0l0XM3cTqX+b4dUeCF5TwCGKI8K7J/aSxWnbFoL5lP+j/eeubQ0n6xo55JzdTF0KjcG7Mlb5XnhnQJNZAWvOq95I99Yadnkq4G9vs9+WRDxx5QQfwN5TJel1Qswmx6P38yRJLBXnutsqpKIQL8BDT1tFIX0h4XlFXAf/qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
+        Thu, 10 Nov 2022 11:42:28 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B56A42F49
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 08:42:25 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id kt23so6429384ejc.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Nov 2022 08:42:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=anhVgeEpURpP2uRlzZ2W5M+ywycrkzKb3c1lNsONauU=;
- b=M+yd9u8UCzTeCFoJKiz50I7VGVcfXZyZhMje8EbZvnqB74dHbV+c0N6v+WSJ3o6KotR++e85V4LEuZ7txrBezbhf5OhWVRkAHe8TnP+WxqQPGNXBcamnDe9+tN2aNi9RTP+E+QpDdd/63DC3wqwtJgefKfYOASkqfPHv1WG0MdE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-Received: from SJ0PR03MB6360.namprd03.prod.outlook.com (2603:10b6:a03:395::11)
- by SA1PR03MB6545.namprd03.prod.outlook.com (2603:10b6:806:1c4::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.13; Thu, 10 Nov
- 2022 16:32:01 +0000
-Received: from SJ0PR03MB6360.namprd03.prod.outlook.com
- ([fe80::d197:992c:4dca:3c4c]) by SJ0PR03MB6360.namprd03.prod.outlook.com
- ([fe80::d197:992c:4dca:3c4c%6]) with mapi id 15.20.5791.025; Thu, 10 Nov 2022
- 16:32:01 +0000
-From:   Roger Pau Monne <roger.pau@citrix.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, jgross@suse.com,
-        Roger Pau Monne <roger.pau@citrix.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=utqw5haG7wqGhF5lk/9o/lJWm9QPpVcKGHSOJkwctUs=;
+        b=LYjbD9xLZZ5IZS3XSwrTUrSmYpoveZGZhcW0REcBHpbNaWADrWPLLXVeSmNQXLIaQ2
+         beu3c/6ON2pSRZ7ELktd22sJranIfSH2SLBWWUVdIOd3j9I25+VslYScwEe1oXuYfdlF
+         1pXqjNyR2bugmMTWWAIMi1UwH/f/DrivQxVqXQGZpHhfkvN9EVS3wiAdoqp+jb9rLZd7
+         9u4nxLY0pCA4l10iV9AalGSbYfJ8ZWjAwaB0Rj2b5ra99Brf5geGJJFIakPk+oFZnni6
+         tlM3v3Ev/RcV7wSV/bgzzUXKUyN5Wm+PmKaKv+FcyXJ16pG1+vxYPyLWIkVxM0LU1gvL
+         tNBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=utqw5haG7wqGhF5lk/9o/lJWm9QPpVcKGHSOJkwctUs=;
+        b=sLdCm3qkQISq3CjHXpj+iCdCt5mVp7Gi2Z//9bP5VcLnz6pmGfKpJ0Emy1HUq8FlvO
+         FVKP/M8HjUgUUky636WJhBUm2p+Pry/NqCoXgQmR9DfxDcL/EaSNTJMSJmdq6uMg0MjH
+         POcjomenHeQgdlSPBcdRgQ5dxQ6pJ3+FZm16E39AplrCCMGHE11ByGSKvlkMj5tFL/Bu
+         IM0arr8YCjj8/e7HjXIMeJN2WzrlOdZuCOWo7+TbdM3cuLKzfcOanhvnu/3lGrwEOx3b
+         dmqdy4hCcIHJINt2V9ezzzd+RLfdcGVaXX+ePwVeAC0TWuxG/ot8tUDXigJbVz4wYqZI
+         yZoQ==
+X-Gm-Message-State: ACrzQf2tJk1KFF4DjQCBYdkwNWJqF0qEqaktLEGz9x80mISdos0DSKDt
+        QlrOw4QKH1cvCLfbJtu4GPn0+kJWKBvqCQ==
+X-Google-Smtp-Source: AMsMyM4GPk3DaB2gO7kEhkmclC4wF5T9pp4HYunBBe+vPj5qFxj7Iz9PgOddP8Ygho68nXAGHYwu1w==
+X-Received: by 2002:a17:906:b009:b0:78c:fda3:c025 with SMTP id v9-20020a170906b00900b0078cfda3c025mr3157146ejy.461.1668098543927;
+        Thu, 10 Nov 2022 08:42:23 -0800 (PST)
+Received: from eray-Lenovo-Z50-70.. ([188.132.247.187])
+        by smtp.googlemail.com with ESMTPSA id ca26-20020a170906a3da00b0078b03d57fa7sm7306927ejb.34.2022.11.10.08.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 08:42:23 -0800 (PST)
+From:   =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     cleverline1mc@gmail.com, erayorcunus@gmail.com,
+        g_goessel@outlook.com, ike.pan@canonical.com,
+        jiaxun.yang@flygoat.com, limanyi@uniontech.com,
+        maxtram95@gmail.com, mjg59@srcf.ucam.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3] platform/x86: don't unconditionally attach Intel PMC when virtualized
-Date:   Thu, 10 Nov 2022 17:31:44 +0100
-Message-Id: <20221110163145.80374-1-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.37.3
+Subject: Re: ideapad-laptop touchpad handling problems, request for help
+Date:   Thu, 10 Nov 2022 19:42:20 +0300
+Message-Id: <20221110164220.46640-1-erayorcunus@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <4bcf4e6b-ae2f-0e22-a291-7faa6731e6c7@redhat.com>
+References: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com> <CAKErNvqfH-C7xJU3F7ga68o3AK-_ae-K2ggKcUOp1iqtmdSYdw@mail.gmail.com> <20221110120022.35041-1-erayorcunus@gmail.com> <4bcf4e6b-ae2f-0e22-a291-7faa6731e6c7@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO2P265CA0340.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::16) To SJ0PR03MB6360.namprd03.prod.outlook.com
- (2603:10b6:a03:395::11)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR03MB6360:EE_|SA1PR03MB6545:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb50074d-7b0f-416a-6aba-08dac339181c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3eBEcCx3nG7+hZ0i7ZYqER5qRygPZtLH0anPwtWdKqLGpQEok8n4K6xR/UeVnjx48OSx8IPx9tQa6tdqgKcX27xq4rRV1JP4A4cP21q7bOyAQJInINL47oHgZJHN8x9MHEPvRE7wlyXx1gba/8FERhqzTNstbvfF7leyGZH+xuysy6sKu2eqB1m2M+YkY9EUFRAzeQ6ZOcX5IvtzU4SG/TKuGZPzgkXgSophPb1XGCu/lWOc+FYueO1ySN+Vp3YvsZV5aeYOpqSqwW5zTxihdpRSNCGSDAAoTjnrEyOz4BDZjA7jm3suKjVyhlJH4BGI0XMKjCNE5Ii03SLVhHyxOY5mMDOhK8Y/yRoUdnlHtfXVTNiivvJT2xp20fvn6n0CgotlZiOtF15u8n9fbwThXtKW0LsYexYvBgsJnbR5MXC4K51jR2Bu5l47xvWEH7W+PdeQ7N41HWXeLPN3TMKv3v2RUy8VwsUaDgSO7QYIoMkTG1ZNxIUEu6Wf6DptgMY5IosnC28t50pYA7t4ti+uau+vkCfvHZQSCb2n0vIlumdW9VECbELC827ktdueyaUKm1yWFXqmPp5JSA0yx65Y9036EDGOynBopDyjaKJO/lawTTajLw+aKJhJnp54T2hWD103EMBSRVZ/kI+tgZCjSb4DV0JM8FVIr0JSPzkm1fnyY0QAIgr+3fAYnT1wGwWMHCqtagao1QeMVaBgNrWlCw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR03MB6360.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199015)(82960400001)(38100700002)(66946007)(6666004)(66556008)(8676002)(4326008)(66476007)(41300700001)(2616005)(5660300002)(7416002)(316002)(86362001)(6486002)(478600001)(54906003)(6916009)(1076003)(186003)(83380400001)(8936002)(2906002)(6506007)(6512007)(26005)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGhpNnVaeG12aGdUcjRyNUZ2L0FpaVRHUHZwMWdVWG81eDRDWHJDMmUwTnY0?=
- =?utf-8?B?dXFpOThUK0tmK1JSenp0TDF6NXR6Tk03YlVSNW82dnhRWGF4RVVaVDNOWFVv?=
- =?utf-8?B?WU42TkRIcDNLZEM2YmN3OFZxMDIvQVhIaU03cmxHZW50clV6QmxUcWFacXN4?=
- =?utf-8?B?WGhTaGRlODFGYmxuNUdyZ3Zkais5NjhPZGNLUXBSaEZGS0hVcmZPcGZWMm9v?=
- =?utf-8?B?UDltT2JzZXRLNlJsOHhPUUM1Nit4VDJQcVFIakRDRXgrV1NFSEFuMmZza21P?=
- =?utf-8?B?TUc0ZTBHNysrdEdMaXhuZUd1U3F6SFBJN0pvQTF4SVB2M2RVdXRSMkhqV1lZ?=
- =?utf-8?B?Tm1yOEdUZWxWT0tIQkUyUVVCbEh0dmFsVytXMjh6bldrMGRRdXQ3WkFHRmIx?=
- =?utf-8?B?ZU8xdnozZkxubXZjci9nL3ZLVWZMY2lYN2cza2tleVNyTWtQZ3RzemVZZ2RP?=
- =?utf-8?B?blJ2VHoxRXJDYkZpUkpXNVhUSktEYjVORDRsQ3RyRHRUWExNOFh2VGMyWTJs?=
- =?utf-8?B?eXduSTVBR1BYajZTTDlxMzhHak9RdG53ZUs2R0NOaURLSVl6cmtXcENpaVRC?=
- =?utf-8?B?ZEFUa0ZRQmxPK3pYRERRcm50SHN5RGIwMmo4UjJWRlA3R083R045TUU0Z09j?=
- =?utf-8?B?UjhqYlNaeUthL3A3WmdEMkY4K1MvYVl3cVNDZitIY2E5Z0FNazRTN1Jwckx0?=
- =?utf-8?B?Ung5ajFxSmsxWnlxVWczd3c4cGxyRldVZ2IreGtCYnVUWlpvUWJlanRyUGYy?=
- =?utf-8?B?aURQb09WL2VFOWl5SHRjY0J1Y0RnNmEvbGxjZi9US3hGNXRSYjlJSkQ1ME9n?=
- =?utf-8?B?WlJaY3ZWaW1IRXFqZGtmaXlacTZFbGdpUm1jb0xCR3ord1hLU0dWcU5EL0Jm?=
- =?utf-8?B?S0x3a1E3Y0JLbkpsaVFGUG5VL0tpQTZ5VFNyQUlFRHNSUlFaU3NDRGsvcmNJ?=
- =?utf-8?B?dk50cG0yRERta2hJL1lZcTgxWGxRaWNjL2NJeVlBSXc5VzJnSWRya1FiNFc1?=
- =?utf-8?B?eEN3ZkZGcVBkMGtsUjhydTRnUmZWOHg5Z28wdGxZaEF4T25TVGI2K0JUbDRp?=
- =?utf-8?B?OGxPNWdONnNSSG1oTktxWGxoOU55L3BWd3NCVXk4Z01kb1J1Y3B1Y1B1UE5K?=
- =?utf-8?B?ZHlsbC9tQ2ovMnVXcnUzcitYM2tRQTE0Tm94RkxkMU9Mc1BGL0xENS81RlRT?=
- =?utf-8?B?blZyYk52ZUNDc0JnRzZFRWJ4TFFWUlFCQnhDcFZnL1RoU1A3U0hjWU1RUGN2?=
- =?utf-8?B?WldGWlhHMFF4am9YdmlFKzBiWFhtSXJGZVhLS3ZlTU1ITDZPdFpoQWk3N2RK?=
- =?utf-8?B?RTRvVnUzQTh4aXE4RzgvcUx1Y3pZZmRKYktuSUhoT2RKU204YXNhQTh6aEN2?=
- =?utf-8?B?cXRKUHlqOE8vUno3Nmt0ZW9ueVNaN0NIQmlzNCs5dDV4L1hhWXpRVExQMk50?=
- =?utf-8?B?QU51cVEzNDNSVFJpUVdKVmpWYkJZMUZGc1VkdURIWlB2bGo4MHlxYk1HTGFY?=
- =?utf-8?B?OGMraFl6cWttcUs4dFFyTnNKU2p6a25LaHVZZXlieTcwRXlNbnY3RzBxWENl?=
- =?utf-8?B?b1lRUGJTcU1GNkhIMDNsK1UzZ01NSllkd2QyZjhYSmZmUzJDWGxEbEhITTdK?=
- =?utf-8?B?QXliOUtYM3lXZUZZMUtvemZQYWpQVysyMXFmQnRzN1Z6Z1FoOHJ2Z3VlZ1Fm?=
- =?utf-8?B?NEhHSXkycnZ2RUNOaG53d2FTVDBlRTg3ZVlBcGZETnpLSkNtRWFHRzM4V3l0?=
- =?utf-8?B?WDJ0eDJPL1g5TjVlNncyb0ZaUWFCc1hCci9DWFkxSmZyd2dUZlBTWUV6akx6?=
- =?utf-8?B?eDZRK1F1TG5oUVJJb2VpaTZYMGdNNzJEQ2N0TnZGZmZOajRhek1lOW9PQVdp?=
- =?utf-8?B?MGNuTUdiSVpSU0luZmJRUEl3eWZWL2xwRUdxOStkREZvWWxXNFVxQnZUaW5L?=
- =?utf-8?B?bCtib3dpYmUzalZSdUgvNnFET2hlRGkyNnhIaU9vUmVWMVpkWkJOQUdLM29P?=
- =?utf-8?B?SjlYaU9BYzA1cXlBM3JrSGtzWDlWWHRiODBCRFVXM2tXVDM0aU90OGl3T2w2?=
- =?utf-8?B?UlM3ZVh1T0tEb1JCU0s5STVacXJtQVlGcEpxOEtrV1F5dU5qQjY0RmRFTXp4?=
- =?utf-8?Q?3PRxgG5LElyEcln+tGovTnwk1?=
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb50074d-7b0f-416a-6aba-08dac339181c
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR03MB6360.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2022 16:32:01.3913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uz8xCiazrWtnLry56VlovYblzxRaMoZzgPw6qcCxWQdDJui1lTe3yuJxWY+byHmQ3TXarxL+mPbclyFsoau+/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR03MB6545
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The current logic in the Intel PMC driver will forcefully attach it
-when detecting any CPU on the intel_pmc_core_platform_ids array,
-even if the matching ACPI device is not present.
+Hi Hans,
 
-There's no checking in pmc_core_probe() to assert that the PMC device
-is present, and hence on virtualized environments the PMC device
-probes successfully, even if the underlying registers are not present.
-Previous to 21ae43570940 the driver would check for the presence of a
-specific PCI device, and that prevented the driver from attaching when
-running virtualized.
+On 10 Nov 2022 at 15:37, Hans de Goede <hdegoede@redhat.com> wrote:
+> On 11/10/22 13:00, Eray Orçunus wrote:
+> > While I agree with your findings(and thanks for your effort, I also tried
+> > to solve this but later gave up), they doesn't apply to one type of
+> > IdeaPads (like my 520-15IKB), so I'm sure this patch won't work on me.
+> > This is because my IdeaPad has this features:
+> > 
+> > - i8042.noaux doesn't affect touchpad, and it's connected over i2c
+> > - There is no touchpad LED, and touchpad hotkey only sends "key pressed"
+> >   ACPI event, doesn't do anything else
+> > - VPCCMD_W_TOUCHPAD does nothing (also confirmed on Windows)
+> > - Sending 1 to VPCCMD_W_TOUCHPAD on boot is not needed
+> > - VPCCMD_R_TOUCHPAD always returns 1 (this is interesting)
+> 
+> So if i8042.noaux does not do anything, then why do you want to add
+> "SYNA2B33" to the list of ACPI HIDs for which we set:
+> 
+> features.touchpad_ctrl_via_ec=0;
+> 
+> ?
+> 
+> IOW what bad effects / behavior are you seeing with touchpad_ctrl_via_ec=1?
+> 
+> Or are you seeing bad behavior on some other modes? If yes, then what
+> is the bad behavior you are seeing on other models ?
 
-Fix by only forcefully attaching the PMC device when not running
-virtualized.  Note that virtualized platforms can still get the device
-to load if the appropriate ACPI device is present on the tables
-provided to the VM.
+It was just because I didn't want to have a not working "touchpad"
+attribute :) I used/still using several GNOME extensions and they show
+me "Touchpad" toggle just because I have "touchpad" attribute exposed
+there, which is doing nothing, and misleading.
 
-Make an exception for the Xen initial domain, which does have full
-hardware access, and hence can attach to the PMC if present.
+But I would understand if you don't want to touch it at that stage, and
+you would rather prefer not working "touchpad" attributes to not
+exposed "touchpad" attributes that would have been perfectly working.
 
-Fixes: 21ae43570940 ('platform/x86: intel_pmc_core: Substitute PCI with CPUID enumeration')
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Acked-by: David E. Box <david.e.box@linux.intel.com>
----
-Changes since v2:
- - Don't split condition line.
+> I'm guessing that this part:
+> 
+>                 unsigned char param;
+>                 /*
+>                  * Some IdeaPads don't really turn off touchpad - they only
+>                  * switch the LED state. We (de)activate KBC AUX port to turn
+>                  * touchpad off and on. We send KEY_TOUCHPAD_OFF and
+>                  * KEY_TOUCHPAD_ON to not to get out of sync with LED
+>                  */
+>                 i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
+> 
+> May cause issues on some models. It definitely feels fishy and
+> I would like to disable this except on models where:
+> 
+> 1. There is a LED controlled by some touchpad on/off hotkey; and
+> 2. The EC fails to disable the touchpad itself
+> 
+> Which would currently mean only enable this bit on Maxim's Z570
+> using a DMI based allow list.
 
-Changes since v1:
- - Use cpu_feature_enabled() instead of boot_cpu_has().
----
- drivers/platform/x86/intel/pmc/pltdrv.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Agreed, but do you mean "and" or "or"? I mean we can also include the
+models that toggle touchpad value while not really toggling the touchpad
+(just as you described below) and don't have a touchpad LED (but I don't
+know if such model exists really), this way they won't go out of sync
+regardless of is there a touchpad LED or not.
 
-diff --git a/drivers/platform/x86/intel/pmc/pltdrv.c b/drivers/platform/x86/intel/pmc/pltdrv.c
-index 15ca8afdd973..ddfba38c2104 100644
---- a/drivers/platform/x86/intel/pmc/pltdrv.c
-+++ b/drivers/platform/x86/intel/pmc/pltdrv.c
-@@ -18,6 +18,8 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- 
-+#include <xen/xen.h>
-+
- static void intel_pmc_core_release(struct device *dev)
- {
- 	kfree(dev);
-@@ -53,6 +55,13 @@ static int __init pmc_core_platform_init(void)
- 	if (acpi_dev_present("INT33A1", NULL, -1))
- 		return -ENODEV;
- 
-+	/*
-+	 * Skip forcefully attaching the device for VMs. Make an exception for
-+	 * Xen dom0, which does have full hardware access.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !xen_initial_domain())
-+		return -ENODEV;
-+
- 	if (!x86_match_cpu(intel_pmc_core_platform_ids))
- 		return -ENODEV;
- 
--- 
-2.37.3
+> At least on Maxim's Z570 the laptop does toggle the value
+> returned by VPCCMD_R_TOUCHPAD and the LED it self, while at the
+> same time not actually disabling the touchpad.
+> The problem is this all relies on being able to detect i2c vs ps/2
+> touchpads which is not as simple as it sounds. Specifically many
+> new touchpad are connected to both busses at the same time, offering
+> a ps/2 mode by default for compatibility with older software / os-es
+> and being able to switch to a modern i2c/smbus mode for better performance.
+> 
+> I've asked Benjamin Tissoires, the kernel expert on this about this
+> and his answer was that it is almost impossible to determine if
+> a touchpad is going to be using ps/2 or i2c without first waiting
+> for the whole driver stack to have initialized and then see which
+> driver(s) are attached and I guess even then the touchpad might
+> show up as both ps/2 + i2c with only one of them actually generating
+> events:
+> 
+> https://lore.kernel.org/linux-input/ae50236e-1ce8-b526-9c17-7bc0463ebb86@redhat.com/T/#u
+> 
+> So based on Benjamin's answer I'm afraid that trying to differentiate
+> between i2c vs ps2 is not really doable.
 
+Thanks for the explanation and the link, but as Benjamin said, I believe
+we can use ACPI table for detecting PS/2 devices. I believe the DSDTs
+with PS2M(and probably MSS[0-9] too) devices probably have PS/2 touchpad,
+and have working EC and i8042 commands. Yet this still needs
+confirmation/testing, and I think should be resorted if your suggestion
+below won't work - your suggestion looks better and easier.
+
+> 1: Fixing undesirable i8042_command(... I8042_CMD_AUX_DISABLE) calls
+> --------------------------------------------------------------------
+> 
+> My suggestion is to move to an allow-list for this and for now
+> populate that list with only the DMI strings for Maxim's Z570 and see
+> from there.
+
+Agreed.
+
+> 
+> 2: Fixing wrong/spurious KEY_TOUCHPAD_OFF / KEY_TOUCHPAD_ON events
+> ------------------------------------------------------------------
+> 
+> There are 2 subcases here:
+> 
+> 2.1: Fix sending of KEY_TOUCHPAD_OFF/_ON events at probe/resume
+> ---------------------------------------------------------------
+> 
+> We can simply fix this by giving ideapad_sync_touchpad_state()
+> a parameter to let it know if events should be send at all and
+> set that parameter to false when called on probe/resume
+
+Agreed.
+
+> 2.2: Sending wrong KEY_TOUCHPAD_OFF/_ON events at toggle time
+> -------------------------------------------------------------
+> 
+> On models where the EC does not control the touchpad at all,
+> currently we still do ideapad_sync_touchpad_state() and then
+> send either KEY_TOUCHPAD_OFF or _ON based on the value read
+> from VPCCMD_R_TOUCHPAD.
+> 
+> But on these models VPCCMD_R_TOUCHPAD always returns 0 or 1,
+> so we always send KEY_TOUCHPAD_OFF or always send KEY_TOUCHPAD_ON,
+> instead of toggling the state / asking userspace to toggle
+> its sw touchpad on/off state.
+> 
+> I believe we can detect this case by checking that
+> the value read from VPCCMD_R_TOUCHPAD has not changed
+> despite us receiving a notify with bit 5 being set in
+> the value read from VPCCMD_R_VPC1.
+> 
+> My suggestion to fix this case is to detect when the value
+> read from VPCCMD_R_TOUCHPAD does not change and in that
+> case send KEY_TOUCHPAD_TOGGLE to userspace.
+
+While this is an awesome idea, what about doing this at boot?
+Like we will send 0 first, then check if it reads 0, then send 1,
+and confirm if it reads 1. This would be the ultimate solution, and
+would also fix my "cosmetic" concerns :)
+
+Best,
+Eray
