@@ -2,74 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8C3C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 09:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC6C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 11:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233350AbiKKJtW (ORCPT
+        id S229461AbiKKLRx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Nov 2022 04:49:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
+        Fri, 11 Nov 2022 06:17:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233425AbiKKJtV (ORCPT
+        with ESMTP id S229675AbiKKLRr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Nov 2022 04:49:21 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07ACB78
-        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Nov 2022 01:49:20 -0800 (PST)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N7v6X4T6JzHvn2;
-        Fri, 11 Nov 2022 17:48:52 +0800 (CST)
-Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 11 Nov 2022 17:49:19 +0800
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 11 Nov 2022 17:49:18 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <luke@ljones.dev>, <corentin.chary@gmail.com>,
-        <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <acpi4asus-user@lists.sourceforge.net>,
-        <platform-driver-x86@vger.kernel.org>, <wangxiongfeng2@huawei.com>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH] platform/x86: asus-wmi: add missing pci_dev_put() in asus_wmi_set_xusb2pr()
-Date:   Fri, 11 Nov 2022 18:07:52 +0800
-Message-ID: <20221111100752.134311-1-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 11 Nov 2022 06:17:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E232A69DDA
+        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Nov 2022 03:16:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668165405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=chD6zCPxO1PLTM43h6L+f/BaOTc790CQueoQCSEiEkM=;
+        b=I7qH52GaSprjXbGrQX0HHLFtuJoq4M3SzbUT1kvXfGZvKBgUv1kGH3P/pk8mruFs5zUoaY
+        qQ37ULptEBOQBi3qMfnNY9BBFqzAbJcOQd1BtxVAXhN9VnBVBrM24vuXMcPqaWFpIGlyOG
+        k9+Y2d9Ebz+DWOLxRcq4diSQFrV/GoM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-48-gId4YwHHPjiOgdqNb5KGcA-1; Fri, 11 Nov 2022 06:16:41 -0500
+X-MC-Unique: gId4YwHHPjiOgdqNb5KGcA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9777A101A56C;
+        Fri, 11 Nov 2022 11:16:41 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C125A20182B3;
+        Fri, 11 Nov 2022 11:16:40 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Rudolf Polzer <rpolzer@google.com>
+Subject: [PATCH] platform/x86: acer-wmi: Enable SW_TABLET_MODE on Switch V 10 (SW5-017)
+Date:   Fri, 11 Nov 2022 12:16:39 +0100
+Message-Id: <20221111111639.35730-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500002.china.huawei.com (7.185.36.229)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-pci_get_device() will increase the reference count for the returned
-pci_dev. We need to use pci_dev_put() to decrease the reference count
-before asus_wmi_set_xusb2pr() returns.
+Like the Acer Switch 10 (SW5-012) and Acer Switch 10 (S1003) models
+the Acer Switch V 10 (SW5-017) supports reporting SW_TABLET_MODE
+through acer-wmi.
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Add a DMI quirk for the SW5-017 setting force_caps to ACER_CAP_KBD_DOCK
+(these devices have no other acer-wmi based functionality).
+
+Cc: Rudolf Polzer <rpolzer@google.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/asus-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/acer-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 6e8e093f96b3..872efc1d5b36 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1738,6 +1738,8 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
- 	pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
- 				cpu_to_le32(ports_available));
- 
-+	pci_dev_put(xhci_pdev);
-+
- 	pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
- 			orig_ports_available, ports_available);
- }
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 18224f9a5bc0..ee67efdd5499 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -564,6 +564,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = (void *)ACER_CAP_KBD_DOCK,
+ 	},
++	{
++		.callback = set_force_caps,
++		.ident = "Acer Aspire Switch V 10 SW5-017",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SW5-017"),
++		},
++		.driver_data = (void *)ACER_CAP_KBD_DOCK,
++	},
+ 	{
+ 		.callback = set_force_caps,
+ 		.ident = "Acer One 10 (S1003)",
 -- 
-2.20.1
+2.37.3
 
