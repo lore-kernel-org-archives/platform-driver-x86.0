@@ -2,70 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C5CC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 15:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81DC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 16:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232177AbiKKPjl (ORCPT
+        id S233655AbiKKQQ5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Nov 2022 10:39:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
+        Fri, 11 Nov 2022 11:16:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234012AbiKKPjc (ORCPT
+        with ESMTP id S233883AbiKKQQ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Nov 2022 10:39:32 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71DF978788;
-        Fri, 11 Nov 2022 07:39:20 -0800 (PST)
+        Fri, 11 Nov 2022 11:16:56 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1647A658C;
+        Fri, 11 Nov 2022 08:16:56 -0800 (PST)
 Received: from zn.tnic (p200300ea9733e727329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e727:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D48991EC0531;
-        Fri, 11 Nov 2022 16:39:18 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47D7E1EC042F;
+        Fri, 11 Nov 2022 17:16:54 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1668181158;
+        t=1668183414;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TdG7wb8HM5MgOVAWd4BsZgaZcW/gFrUw0L4OXVxvb+U=;
-        b=NzKVxiLo2bw/ysdw5HhuMvpGG9Lg5g3HMV0ZC93TbjFNIfn8RAiAM7kPRrQ+LAletjbQEn
-        NQONnYAOX28IuSCDnv0On3Y7rYydW6SgChHr4S9nYjpl72lrdq+ysCiIG+xtcN/r3RmKcz
-        R3il+dxO0gl1sqDpFtGFgp77kv8LpP8=
-Date:   Fri, 11 Nov 2022 16:39:14 +0100
+        bh=eMsQDKWlL6uraJj5HUJ5zGvCAF7tvNGuIrG9jb/77bQ=;
+        b=VyMmcjUcFzrEj87XvYgjPWlJQ/nyBUi8rvS6Ssa/rQLLvz5ySP90o3+lLi470c2UGCJH4Q
+        XHMNVCYWD8K8q5Bdj+yxPeozoc4uL0Sna1f5+BEWGNiCz8qNA230r0nmeJxcwutsJB+XOh
+        w1RL933kcSGlhMUDsr4IHlBsuIY72JE=
+Date:   Fri, 11 Nov 2022 17:16:48 +0100
 From:   Borislav Petkov <bp@alien8.de>
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Yupeng Li <liyupeng@zbhlos.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "caizp2008@163.com" <caizp2008@163.com>,
-        "smf-linux@virginmedia.com" <smf-linux@virginmedia.com>
-Subject: Re: [PATCH 1/1] platform/x86/amd: Fix pmc compile dependency errors.
-Message-ID: <Y25sohHGkdAn5OZD@zn.tnic>
-References: <20221026072531.346013-1-liyupeng@zbhlos.com>
- <0910bcc4-d55f-6f3a-b2df-4e30d164aeeb@redhat.com>
- <721f6a1a-1144-4fe4-e722-2ba2d7200680@amd.com>
- <Y25m8tPTtyfHOCfK@zn.tnic>
- <MN0PR12MB6101AB9F2AD8A41CE3EC5650E2009@MN0PR12MB6101.namprd12.prod.outlook.com>
+To:     Jithu Joseph <jithu.joseph@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, gregkh@linuxfoundation.org, ashok.raj@intel.com,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, thiago.macieira@intel.com,
+        athenas.jimenez.gonzalez@intel.com, sohil.mehta@intel.com
+Subject: Re: [PATCH v2 08/14] platform/x86/intel/ifs: Add metadata support
+Message-ID: <Y251cGhb+x7Lqk9W@zn.tnic>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com>
+ <20221107225323.2733518-1-jithu.joseph@intel.com>
+ <20221107225323.2733518-9-jithu.joseph@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <MN0PR12MB6101AB9F2AD8A41CE3EC5650E2009@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <20221107225323.2733518-9-jithu.joseph@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 03:16:10PM +0000, Limonciello, Mario wrote:
-> I sent up a patch for it, but Hans hasn't applied it.
-> https://patchwork.kernel.org/project/platform-driver-x86/patch/20221108023323.19304-1-mario.limonciello@amd.com/
+On Mon, Nov 07, 2022 at 02:53:17PM -0800, Jithu Joseph wrote:
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+> index 89ce265887ea..60ba5a057f91 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -44,6 +44,38 @@ static const char * const scan_authentication_status[] = {
+>  	[2] = "Chunk authentication error. The hash of chunk did not match expected value"
+>  };
+>  
+> +#define META_TYPE_END		(0)
 
-Yap, that fixes it.
+MC_HEADER_META_TYPE_END
 
-So yeah, Hans, make sure to Cc: stable too when applying.
+> +
+> +struct metadata_header {
+> +	unsigned int		type;
+> +	unsigned int		blk_size;
+> +};
+> +
+> +static struct metadata_header *ifs_find_meta_data(void *ucode, unsigned int meta_type)
 
-Thx.
+It's a static function - no need for the ifs_ prefix.
+
+> +{
+> +	struct metadata_header *meta_header;
+> +	unsigned long data_size, total_meta;
+> +	unsigned long meta_size = 0;
+> +
+> +	data_size = get_datasize(ucode);
+> +	total_meta = ((struct microcode_intel *)ucode)->hdr.metasize;
+> +
+
+
+^ Superfluous newline.
+
+> +	if (!total_meta)
+> +		return NULL;
+> +
+> +	meta_header = (ucode + MC_HEADER_SIZE + data_size) - total_meta;
+> +
+> +	while ((meta_header->type != META_TYPE_END) && meta_header->blk_size &&
+
+You don't need the brackets.
+
+> +	       meta_size < total_meta) {
+
+And you can align all three conditions vertically for better readability:
+
+        while (meta_header->type != META_TYPE_END && 
+               meta_header->blk_size &&
+               meta_size < total_meta) {
+
+...
 
 -- 
 Regards/Gruss,
