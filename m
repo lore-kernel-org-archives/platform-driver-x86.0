@@ -2,35 +2,35 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81DC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 16:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA321C43219
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 16:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233655AbiKKQQ5 (ORCPT
+        id S232841AbiKKQXx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Nov 2022 11:16:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48206 "EHLO
+        Fri, 11 Nov 2022 11:23:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233883AbiKKQQ4 (ORCPT
+        with ESMTP id S234215AbiKKQXv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Nov 2022 11:16:56 -0500
+        Fri, 11 Nov 2022 11:23:51 -0500
 Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1647A658C;
-        Fri, 11 Nov 2022 08:16:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE79E10FC2;
+        Fri, 11 Nov 2022 08:23:49 -0800 (PST)
 Received: from zn.tnic (p200300ea9733e727329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e727:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47D7E1EC042F;
-        Fri, 11 Nov 2022 17:16:54 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 69FBD1EC042F;
+        Fri, 11 Nov 2022 17:23:48 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1668183414;
+        t=1668183828;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=eMsQDKWlL6uraJj5HUJ5zGvCAF7tvNGuIrG9jb/77bQ=;
-        b=VyMmcjUcFzrEj87XvYgjPWlJQ/nyBUi8rvS6Ssa/rQLLvz5ySP90o3+lLi470c2UGCJH4Q
-        XHMNVCYWD8K8q5Bdj+yxPeozoc4uL0Sna1f5+BEWGNiCz8qNA230r0nmeJxcwutsJB+XOh
-        w1RL933kcSGlhMUDsr4IHlBsuIY72JE=
-Date:   Fri, 11 Nov 2022 17:16:48 +0100
+        bh=RQAgICrjFnZQrLGvUgI/C7Q9GLfgPJ4P+LW0OtdT8rs=;
+        b=moouNAFTAV7IcV/mP/nZqLe47DxjlL2ZUaRES6YJT6CZgM57NspuSpLyzVWCPkqJ6rbcKk
+        xY4bYHmZCLalHnrmbMD8dlM6xo8pYJ/OsbcktfAFK7mP9LgQI0vvRWlWMcxxoEg28NyBwv
+        ww4At+bFDSflMdaQCtpe9l4jVRdxDdY=
+Date:   Fri, 11 Nov 2022 17:23:48 +0100
 From:   Borislav Petkov <bp@alien8.de>
 To:     Jithu Joseph <jithu.joseph@intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
@@ -40,70 +40,46 @@ Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com, thiago.macieira@intel.com,
         athenas.jimenez.gonzalez@intel.com, sohil.mehta@intel.com
-Subject: Re: [PATCH v2 08/14] platform/x86/intel/ifs: Add metadata support
-Message-ID: <Y251cGhb+x7Lqk9W@zn.tnic>
+Subject: Re: [PATCH v2 09/14] platform/x86/intel/ifs: Use generic microcode
+ headers and functions
+Message-ID: <Y253FKtLnmV3r7Kj@zn.tnic>
 References: <20221021203413.1220137-1-jithu.joseph@intel.com>
  <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-9-jithu.joseph@intel.com>
+ <20221107225323.2733518-10-jithu.joseph@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221107225323.2733518-9-jithu.joseph@intel.com>
+In-Reply-To: <20221107225323.2733518-10-jithu.joseph@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Nov 07, 2022 at 02:53:17PM -0800, Jithu Joseph wrote:
-> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-> index 89ce265887ea..60ba5a057f91 100644
-> --- a/drivers/platform/x86/intel/ifs/load.c
-> +++ b/drivers/platform/x86/intel/ifs/load.c
-> @@ -44,6 +44,38 @@ static const char * const scan_authentication_status[] = {
->  	[2] = "Chunk authentication error. The hash of chunk did not match expected value"
->  };
+On Mon, Nov 07, 2022 at 02:53:18PM -0800, Jithu Joseph wrote:
+>  static int scan_chunks_sanity_check(struct device *dev)
+>  {
+> -	int metadata_size, curr_pkg, cpu, ret = -ENOMEM;
+>  	struct ifs_data *ifsd = ifs_get_data(dev);
+> +	int curr_pkg, cpu, ret = -ENOMEM;
+>  	bool *package_authenticated;
+>  	struct ifs_work local_work;
+> -	char *test_ptr;
 >  
-> +#define META_TYPE_END		(0)
+>  	package_authenticated = kcalloc(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+>  	if (!package_authenticated)
+>  		return ret;
 
-MC_HEADER_META_TYPE_END
+Bah, how big is that thing so that you can't simply do a bitfield on the
+stack here instead of kcalloc-ing?
 
-> +
-> +struct metadata_header {
-> +	unsigned int		type;
-> +	unsigned int		blk_size;
-> +};
-> +
-> +static struct metadata_header *ifs_find_meta_data(void *ucode, unsigned int meta_type)
+> @@ -203,67 +174,33 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  	return ret;
+>  }
+>  
+> -static int ifs_sanity_check(struct device *dev,
+> -			    const struct microcode_header_intel *mc_header)
+> +static int ifs_image_sanity_check(struct device *dev, const struct microcode_header_intel *data)
 
-It's a static function - no need for the ifs_ prefix.
-
-> +{
-> +	struct metadata_header *meta_header;
-> +	unsigned long data_size, total_meta;
-> +	unsigned long meta_size = 0;
-> +
-> +	data_size = get_datasize(ucode);
-> +	total_meta = ((struct microcode_intel *)ucode)->hdr.metasize;
-> +
-
-
-^ Superfluous newline.
-
-> +	if (!total_meta)
-> +		return NULL;
-> +
-> +	meta_header = (ucode + MC_HEADER_SIZE + data_size) - total_meta;
-> +
-> +	while ((meta_header->type != META_TYPE_END) && meta_header->blk_size &&
-
-You don't need the brackets.
-
-> +	       meta_size < total_meta) {
-
-And you can align all three conditions vertically for better readability:
-
-        while (meta_header->type != META_TYPE_END && 
-               meta_header->blk_size &&
-               meta_size < total_meta) {
+Yet another static function - no need for the ifs_ prefix.
 
 ...
 
