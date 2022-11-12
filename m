@@ -2,72 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53751C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Nov 2022 23:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B05C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Nov 2022 08:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233980AbiKKXAq (ORCPT
+        id S230344AbiKLIbW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Nov 2022 18:00:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38292 "EHLO
+        Sat, 12 Nov 2022 03:31:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230105AbiKKXAp (ORCPT
+        with ESMTP id S230327AbiKLIbV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Nov 2022 18:00:45 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D594E11C0D
-        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Nov 2022 15:00:43 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id k8so8195148wrh.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Nov 2022 15:00:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H4hz464PTduUisDyOrNV9PbscjwoVWJWzPXGLA9kB9k=;
-        b=SEjc93w0c8Nbbc3iHH9cN1spggyte0sMYyGlz/FaWQAKg0KRhaNBXqAjHM5mZQwc3n
-         GuGW5UXPFq5D3X0W3V0iLZM+sOz54rRXERoBS/giJ+i9sdmeWD61yZ8zEOT32Tei8TGn
-         mTvAO5i/oCu+pXAIw1zoySf2JCThfvYjx08zoZ0Kw73zOO6oNYDa5N5E+5iJ9fzDpg5M
-         NhASYb7Pwv4K7J9PSIbZqQolTopUNrmI5WWHyCkOYEhaJwnq/5P/XkILnDcEoexjvesb
-         dvLepFMZLmM0OZ5BzZJk0d8ayIKgNe5AGz2aeWaNxyk0+GL+EzckpqUZn5Zy20HLK5ec
-         MRew==
+        Sat, 12 Nov 2022 03:31:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24801D66E
+        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Nov 2022 00:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668241825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yfcsGBviLepzlXNiNgBWrpvsgbrGuHgD6xKsL34KUOk=;
+        b=AyYBeDTMBGlZvGcUP4gqdU5TbsJvVZOIybiapOyDANnB38ls+F4owRC7WQiDhCrmvLOqzm
+        vNiOhJSDQwrVew7etpMNVbLs/TLp2norArOoVl8tDio4cpWmIaFjbvPwJPozBc0GnEMV8C
+        JjNGwPlS+cAdN4Udy7+Dx6pyL9scpec=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-44-uLwaefF2PwCB6Ez6R1JZDA-1; Sat, 12 Nov 2022 03:30:21 -0500
+X-MC-Unique: uLwaefF2PwCB6Ez6R1JZDA-1
+Received: by mail-ed1-f71.google.com with SMTP id dz9-20020a0564021d4900b0045d9a3aded4so5059724edb.22
+        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Nov 2022 00:30:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H4hz464PTduUisDyOrNV9PbscjwoVWJWzPXGLA9kB9k=;
-        b=iocFK4ba9Y6+7RrZr9uWVD7EvpAn0e/GxKgrPtpN8KMTu6O7q2YVhVeAhcsdwC/0yN
-         tM+FrbkqH328lMflkfLviNhTZ4JLl3l3s5WIEYzAJNRAmLFTuhw9N4p61C+8lzYelpVF
-         Npl2M8zDaJ5I8+tCRIFOmquZgeotXUuYLg9M0sTjp+cdTF5feU8uWXsA/pbNoYorKvOA
-         rHwR+MPFLsOEaSY2RWIQ003P0FgszkCVLvzAmZyJoLP0ClMLo0OdIQrpe6CEjDou853Z
-         50oANOk+r8zcSBjP2a/MiUo9r+Qwvtu7ylCk+kpCpIkgmm5jYSNS95B/mFX+wR300Jo9
-         fgdA==
-X-Gm-Message-State: ANoB5pkt+vMcwjJySYro6xw0C67JJjBYvJJPyT/9Mu0Be/ay8t7i4pK3
-        sQPNUmpeK0ddaADbJKruDgkcBxInTdkFTdHHG9Qg5YA1
-X-Google-Smtp-Source: AA0mqf4UlPXk/z6hIGooUzAzJgvrgf06i4ATPUDHVm3Bieu8KlnIubmZO3bmILsz3x+YLfdGUDuqzZtRjcTe5hcWcnE=
-X-Received: by 2002:adf:fa02:0:b0:23e:245b:edf1 with SMTP id
- m2-20020adffa02000000b0023e245bedf1mr2231804wrr.142.1668207642327; Fri, 11
- Nov 2022 15:00:42 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfcsGBviLepzlXNiNgBWrpvsgbrGuHgD6xKsL34KUOk=;
+        b=e9hykHbgrpitwd9R9owgsiu28hMGGPPyii3cZLJjp5fdr9dPv1vMlKoCZBqbEdqTE1
+         9i78GGmSCxRVKY5Mkt7A70T+hatCtrXL/hwMdKDcgy4D2T+EtLzuijsDcJlmxN994Nu+
+         6Il9a3mB744VETeL5SK44sbLes17MSq6EpHPSmEsGSsAgtmRbX9bVba7rtfIrtzZZbTE
+         +5nzivZdnGgW/nB5Mp55j02S30FTTWhou/AGkMWRJVplvzSpSOyBlkT5MI6mGelQB2Bm
+         giUTfbJTv05Uc4HPNM+yHz91wfePEOtVVNi9n4NP5HniImkUH2V3lnebknIzMod4bych
+         oZ3g==
+X-Gm-Message-State: ANoB5pnrhm8IAsa4fdbL6YM+/fQT5nNvAb0w5Eb1IK2IzhCF9sWxurGq
+        9UxEVcFnTP+dZqAKUys4WkMwLfILfk3ggVBEwjNj9LZOky95ut3XHgzKlbqiUliSCkn6N1gN3KK
+        37gZYOtjcybSFqfcgJoQgN2Yk9FhB4BVPIA==
+X-Received: by 2002:a17:906:793:b0:78c:ad86:d3 with SMTP id l19-20020a170906079300b0078cad8600d3mr4531772ejc.643.1668241820160;
+        Sat, 12 Nov 2022 00:30:20 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf45yxUPDKAZVkjQBAMr4h9D6jahxDFU6UImH4MlmvjYkHm8d6UhdrEeM7/q/X587f8a1MfDGg==
+X-Received: by 2002:a17:906:793:b0:78c:ad86:d3 with SMTP id l19-20020a170906079300b0078cad8600d3mr4531768ejc.643.1668241820019;
+        Sat, 12 Nov 2022 00:30:20 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id g19-20020a170906539300b007812ba2a360sm1710784ejo.149.2022.11.12.00.30.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Nov 2022 00:30:19 -0800 (PST)
+Message-ID: <38afe79b-0c23-cfbb-30a8-71ce9fcd794b@redhat.com>
+Date:   Sat, 12 Nov 2022 09:30:18 +0100
 MIME-Version: 1.0
-References: <20221020201033.12790-1-jorge.lopez2@hp.com> <20221020201033.12790-3-jorge.lopez2@hp.com>
- <dd8b494c-114c-e27e-4dcd-08dcb8b31d9d@redhat.com>
-In-Reply-To: <dd8b494c-114c-e27e-4dcd-08dcb8b31d9d@redhat.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 11 Nov 2022 17:00:30 -0600
-Message-ID: <CAOOmCE9YT3VxEbuMMX3MCvxEinHugvvYkGHgrnRN1fHVSy7cWw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
 Subject: Re: [PATCH v4 2/6] Introduction of HP-BIOSCFG driver
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
 Cc:     platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20221020201033.12790-1-jorge.lopez2@hp.com>
+ <20221020201033.12790-3-jorge.lopez2@hp.com>
+ <dd8b494c-114c-e27e-4dcd-08dcb8b31d9d@redhat.com>
+ <CAOOmCE9YT3VxEbuMMX3MCvxEinHugvvYkGHgrnRN1fHVSy7cWw@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAOOmCE9YT3VxEbuMMX3MCvxEinHugvvYkGHgrnRN1fHVSy7cWw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-A quick note to check the next step.   The changes requested for
-enum-attributes,c and several supporting functions will impact other
-source files.  To save reviewing time,  I am planning to introduce the
-same changes across all source files and then proceed to submit the
-review.   Is this option acceptable?.
+On 11/12/22 00:00, Jorge Lopez wrote:
+> Hi Hans,
+> 
+> A quick note to check the next step.   The changes requested for
+> enum-attributes,c and several supporting functions will impact other
+> source files.  To save reviewing time,  I am planning to introduce the
+> same changes across all source files and then proceed to submit the
+> review.   Is this option acceptable?.
+
+Yes applying the same changes to all the source files is
+the *intention*. This is why I stopped reviewing after
+reviewing the first set of files.
 
 Regards,
+
+Hans
+
+
