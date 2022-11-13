@@ -2,117 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CBCC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 02:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0483C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 03:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233999AbiKMCf2 (ORCPT
+        id S230170AbiKMDiV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 12 Nov 2022 21:35:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        Sat, 12 Nov 2022 22:38:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231972AbiKMCf1 (ORCPT
+        with ESMTP id S229584AbiKMDiU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Nov 2022 21:35:27 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F4FFD39;
-        Sat, 12 Nov 2022 18:35:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668306925; x=1699842925;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gT7wBumMbUVlYyDmNw4XcR4Yfyh5B4WGurYATeDlOJU=;
-  b=V+XbQS5eYtwDBuglgHhFY9IXZT8XaEAUOLxMxkknEqX45oUXLfSh8v8M
-   4yncRCogrIqnwOCrl8vDZsQROEgapzj/j37OfVXBHv+XzEhW3ne8Gm3d4
-   4PfNzATt2v6VRHJWLZAm1yW158lRAoqujNj20PBfe0jd0O7uhoqcRlWzn
-   /A5RtH6Rvv+R6a5I86bXHUAAQDDr+EgqdHzeewQz2MnMCXwhQoE39A+ja
-   Zd9UAns+sOxajfsazv3oXSqsoSWEkChg2fsu990dD7ya0qKcQmRR9Vrnm
-   tng9lt/0EXF/MLTEnJTMeLs/sGpCO6ZWXkcohkFiCbzkcgMrqcngQ5+Eo
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="309400071"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="309400071"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 18:35:25 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="701589635"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="701589635"
-Received: from fkabir-mobl.amr.corp.intel.com (HELO tjmaciei-mobl5.localnet) ([10.255.228.60])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 18:35:24 -0800
-From:   Thiago Macieira <thiago.macieira@intel.com>
-To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs entry
-Date:   Sat, 12 Nov 2022 18:35:23 -0800
-Message-ID: <2687702.9iZYToFQE1@tjmaciei-mobl5>
-Organization: Intel Corporation
-In-Reply-To: <B12A4934-AD7A-4F8E-A2FB-229542C1A098@intel.com>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com> <Y2/z0yY3zcKmR5BN@zn.tnic> <B12A4934-AD7A-4F8E-A2FB-229542C1A098@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Sat, 12 Nov 2022 22:38:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806FF13F35
+        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Nov 2022 19:38:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6C7E9B80B8A
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Nov 2022 03:38:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBD9FC43162
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Nov 2022 03:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668310696;
+        bh=XMxQ5urXNeWuROzQhBu2yMuQU3tMkkFf1I4TMRZ2Tfs=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=JK1SSmzM8be+Pmm0AHEhZSd36/N8mHmqtBqBy/AyvYw+otAe+p3ta344oWx+R8eY9
+         7jrcBVUXmM93KVEHwRq3Vu27X/kG+kLI3QQlwpBt70xA7++cIuZcHOUl+3R8sHrYDC
+         LB4VurHsrWsEFydvgtaSxOf12JRRInIFC0htPSY+4QW0XQrogOBhdAJ2+8a/iqqGHe
+         zFv79fKOLvlLrQjHYnJo6JNFgqVfposiIJ6aDrKDqdePJfyyO0H4oJxGgzVHcAAyM6
+         5gac5B8Hdxn1OZcIj04w399ceiOig+prTuCotnNGi+Y/ABX2z7wvLhhM6GF0AI7fJU
+         2e6EnPh+znuxA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id DD8DEC433E6; Sun, 13 Nov 2022 03:38:15 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 13 Nov 2022 03:38:14 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mundanedefoliation@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-piYKEICFWu@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Saturday, 12 November 2022 15:32:47 PST Luck, Tony wrote:
-> > Because if this is going to be run during downtime, as Thiago says, then
-> > you can just as well use debugfs for this. And then there's no need to
-> > cast any API in stone and so on.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+
+--- Comment #270 from yutesdb (mundanedefoliation@gmail.com) ---
+(In reply to Denis Pauk from comment #269)
+> Created attachment 303161 [details]
+> Asus WMI for nct6775 v6.0 base (2022.11.12)
 >=20
-> Did Thiago say =E2=80=9Cduring downtime=E2=80=9D? I think
-> he talked about some users opportunistic
-> use of scan tests. But that=E2=80=99s far from only
-> during downtime. We fully expect CSPs to
-> run these scans periodically on production
-> machines.
+> (In reply to yutesdb from comment #268)
+> > can add support TUF GAMING B550M-PLUS WIFI II?
+> >=20
+> > I tried add parameter acpi_enforce_resources=3Dlax, it works.
+>=20
+> Could you please now?
 
-Let me clarify. I did not mean full system downtime for maintenance, but I =
-did=20
-mean that there's a gap in consumer workload, for both threads of one or mo=
-re=20
-cores. As Tony said, it should have little observable effect on any other c=
-ore,=20
-meaning an IFS run can be scheduled *as* any other workload (albeit a=20
-privileged one) for a subset of the machine, while the rest of the system=20
-remains in production. This allows them a lot of flexibility and is the rea=
-son=20
-I am talking about containers, with the implied constraint that the=20
-container's view of the filesystem is narrower than the kernel's.
+thanks, it works, only compile hwmon modules, without
+acpi_enforce_resources=3Dlax parameter.
 
-There'll be some coordination required to get all cores to have run all tes=
-ts,=20
-but it should be doable over a period of time, and I'm thinking days, not=20
-years. This should still be short enough to reveal if the system can detect=
- a=20
-defect or wear-out before any real workload is impacted by it.
+--=20
+You may reply to this email to add a comment.
 
-If an issue is detected, the admin can decide whether to offline the core(s=
-)=20
-reporting problems but keep the rest serving workloads and generating reven=
-ue,=20
-or offline the entire machine for full maintenance and to run more invasive=
- and=20
-time-consuming tests.
-
-=2D-=20
-Thiago Macieira - thiago.macieira (AT) intel.com
-  Cloud Software Architect - Intel DCAI Cloud Engineering
-
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
