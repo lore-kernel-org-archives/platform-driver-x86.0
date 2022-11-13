@@ -2,48 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB400C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 21:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD1C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 21:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234152AbiKMVVv (ORCPT
+        id S234149AbiKMVdy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Nov 2022 16:21:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
+        Sun, 13 Nov 2022 16:33:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232799AbiKMVVu (ORCPT
+        with ESMTP id S229692AbiKMVdx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Nov 2022 16:21:50 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8487FD19;
-        Sun, 13 Nov 2022 13:21:49 -0800 (PST)
+        Sun, 13 Nov 2022 16:33:53 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1ADA1A7;
+        Sun, 13 Nov 2022 13:33:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668374509; x=1699910509;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8I6vKZArkiJeRn6HbKXPPaIQ6La44IOkt0n5HuZBRNs=;
-  b=cEFGu+goS6HiIHkDjwOsuyiMAOi7EFzVTmNGiASMdu31OBxrnRsYw7vC
-   hIPJALpslvqaplXjS15eoyFkJVmEUzvDq1Sov6l4Bf1H/g1jmO80VieWA
-   /Wmfw3+GuOUo7Gx5729YwAa757JxzBcCkDIVwlAUFvkIfey2p/BzuULKz
-   qqZBrY9vJMryB2mZ589/AcLJrqr0kJsjQ3H/9pc6EuNNkcoBrXJoLY1qn
-   Dr1kVm9lEawn28jhDXZP8RMuVUgCslz6R9GQcsVatG/2NPX0d7+01Owzq
-   B930CxitxSQ37u7g5WzZoUT7YWx6Q99W94DFwhzfXn4xoOqE6pmGThIqH
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="292240956"
+  t=1668375232; x=1699911232;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gDsXd/OK/i8ZazYsmMhzsAb7ml0526jel4iO8E7C1A4=;
+  b=lY2r250vlLioCXMAX7u1Ml/lC4xRm7lfSJH9Gs4CUvQhMw0XzTsSkvdU
+   qjcwWKHq86Do2ajlNVEGgHWwTl8pFYHmWpGeyAfe9LyzsMNq0v1D4rV7r
+   YoqlR0AE48mwzrTleU/QSJpKrTFvRB98h5D6u3iVYMsubPUarw7RiiVb6
+   /fBmwJ/2FOTM27L3hsB5FPyL21nBSVUkJZP8hc5EzuzjsQaEX+bnWvHHQ
+   wz1NT1TrJQmjpkjbqsI2oNZDpcuBDKGBlvQ4sS1iQRDprTgHeRuK98IyQ
+   wHYP9SlSxnK/T2hbLo4/OTbVp0uXW3ZpNr1G3c4lIODc70EwAM67UQfFt
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="373970396"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="292240956"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:21:49 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="883308898"
+   d="scan'208";a="373970396"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:33:52 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="616053966"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="883308898"
-Received: from perwin-mobl.amr.corp.intel.com (HELO tjmaciei-mobl5.localnet) ([10.212.163.208])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:21:49 -0800
-From:   Thiago Macieira <thiago.macieira@intel.com>
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Luck, Tony" <tony.luck@intel.com>,
+   d="scan'208";a="616053966"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:33:51 -0800
+Date:   Sun, 13 Nov 2022 13:33:50 -0800
+From:   Tony Luck <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Thiago Macieira <thiago.macieira@intel.com>,
         "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
@@ -58,84 +59,79 @@ Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
         "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
         "Mehta, Sohil" <sohil.mehta@intel.com>
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs entry
-Date:   Sun, 13 Nov 2022 13:21:41 -0800
-Message-ID: <2206677.iZASKD2KPV@tjmaciei-mobl5>
-Organization: Intel Corporation
-In-Reply-To: <Y3EiKUzpShqwzEf6@zn.tnic>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com> <5e65889d-d68c-b29d-6cea-7b4ce4c87b4a@intel.com> <Y3EiKUzpShqwzEf6@zn.tnic>
+Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs
+ entry
+Message-ID: <Y3Fivuffbh2QE/s6@agluck-desk3.sc.intel.com>
+References: <20221107225323.2733518-1-jithu.joseph@intel.com>
+ <20221107225323.2733518-13-jithu.joseph@intel.com>
+ <Y2/JNAmSoYlLKq3A@zn.tnic>
+ <CC3629D6-B205-4150-80E5-FC7A7A76DD25@intel.com>
+ <Y3CevK2zhAmiUyG9@kroah.com>
+ <Y3DZmKYV+8HBtZ+Q@zn.tnic>
+ <5e65889d-d68c-b29d-6cea-7b4ce4c87b4a@intel.com>
+ <Y3EiKUzpShqwzEf6@zn.tnic>
+ <f307b37f-26de-cb8f-e199-f327f2c7f807@intel.com>
+ <Y3E3DkX4wHRgSUlJ@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y3E3DkX4wHRgSUlJ@zn.tnic>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sunday, 13 November 2022 08:58:17 PST Borislav Petkov wrote:
-> * if f/m/s matches, you execute
+On Sun, Nov 13, 2022 at 07:27:26PM +0100, Borislav Petkov wrote:
+> On Sun, Nov 13, 2022 at 09:55:00AM -0800, Joseph, Jithu wrote:
+> > Then we were told not to specify a filename via sysfs file (apologies
+> > for being repetitive)
 > 
->     if still within the timeout, you return -EAGAIN from
->     current_batch_store() to tell userspace, take a nap and try again.
-> 
-> * if the f/m/s doesn't match you return -EINVAL to say, wrong filename,
-> try the next one.
+> Yeah, I'm unclear on why that is either and am hoping that Greg will
+> clarify. He fears that there will be file path resolution which I'm not
+> even thinking about.
 
-But if it matches but is corrupt or the HW fails to accept it, you also get an 
-error. So you now need to differentiate a failure to load a candidate file and 
-an attempt to load a non-candidate.
+Summarizing the competing proposals here:
 
-I'm assuming that the kernel would provide different error conditions for 
-those. But handling those in shell scripting is very difficult: you'd need to 
-start a subshell and parse stderr. It's MUCH easier in C, of course, but 
-incrementing a number is magnitudes easier in C than performing a globbing.
+Option 1 (patches as currently posted)
 
-Either way, incrementing a number in shell is pretty easy too. The simplest 
-script with just the numbers would be:
+	User writes the batch number to the sysfs file:
 
-i=0
-while echo $i > /sys/devices/virtual/misc/intel_ifs_0/current_batch; do
-    test_all_cpus
-done
+	# echo 4 > /sys/devices/virtual/misc/intel_ifs_0/current_batch
 
-It's four lines and does not need to know about where the scan files are 
-located, how they're named and if some files it may find are not to be used. But 
-I've hidden a lot of complexity in the test_all_cpus shell function, which 
-would be common to either solution of how we specify the batch to be loaded.
+	Driver turns that into a *partial* path (with test type, family-model-stepping
+	and batch number filled in):
 
-And this is part of my argument of why it's unlikely people will use their 
-shells to do this. That shell function is easily another 10 lines of 
-scripting, if it's meant to do its job properly. To make that easier, we've 
-developed two tools, one of them the OpenDCDiag tool I linked to, but both 
-just happen to be written in C and C++ instead of shell.
+		"intel/ifs_%d/%02x-%02x-%02x-%02x.scan"
 
-> For all Intel employees here on the thread, there's a world outside
-> Intel and people do not talk (family model stepping) tuples like we do.
-> All they wanna do is run their damn tests.
+	Feeds that to request_firmware_direct() (which looks in /lib/firmware)
 
-Indeed they do. I have personally been in contact with the few that will 
-represent over 90% of the deployment of this feature for the next few years. 
-They want this functionality to integrate with their existing health-check 
-scanning methodology. This is where OpenDCDiag comes in, because it does 
-integrate with their workflows, like logging. For another example, it obeys the 
-cpuset that the parent process may have set with sched_setaffinity() or alike 
-tools (taskset(1) or schedtool(8)). I have zero clue how to do that with shell 
-scripting.
+Option 2 (proposed by Boris)
 
-Which actually means I am the maintainer of the tool that is going to be 
-driving 99% or more of all scans (that's why I was cc'ed in the submission). I 
-am your user.
+	User writes a filename to the sysfs file:
 
-I'm not saying I am the only user. I definitely want to see the best interface 
-so that others could write tools too if they want to. And I don't want there 
-to be a kludge that we need to keep compatibility with for a decade, or to set 
-a bad precedent. But I am giving you the constraints that I need to work under 
-and the kernel interface to support me. I am telling you this is very good 
-right now and your proposal makes it worse for me, not better, for little 
-apparent gain.
+	# echo 06-8f-06-04.scan > /sys/devices/virtual/misc/intel_ifs_0/current_batch
 
--- 
-Thiago Macieira - thiago.macieira (AT) intel.com
-  Cloud Software Architect - Intel DCAI Cloud Engineering
+	Driver parses that:
+		If family-mode-stepping does not match current CPU, then
+		fail with -EINVAL
+		If filename doesn't end with a ".scan" suffix, also
+		fails with -EINVAL
+
+	Otherwise proceeds in similar manner to above. Constructs partial
+	pathname (just fills in test type and filename:
+
+		"intel/ifs_%d/%s"
+
+	Feeds that to request_firmware_direct() (which looks in /lib/firmware)
 
 
+IMHO option 1 is following the microcode precedent of having the kernel
+construct the filename based on the {x86,model,stepping} fields of
+struct cpuinfo_x86.
 
+I think option 2 isn't really doing the user any favors. Having them
+feed all the *.scan files they find in /lib/firmware/intel/ifs_0 to the
+driver to see which ones work becomes progressively worse in every CPU
+generation. Any script/app running tests is likely to do the ff-mm-ss
+filter itself ... so why have the kernel do it too?
+
+-Tony
