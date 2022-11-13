@@ -2,158 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F31C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 20:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05507C43217
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 20:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235411AbiKMUaw (ORCPT
+        id S234152AbiKMUmS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Nov 2022 15:30:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
+        Sun, 13 Nov 2022 15:42:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230525AbiKMUau (ORCPT
+        with ESMTP id S229692AbiKMUmS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Nov 2022 15:30:50 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2672712608
-        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Nov 2022 12:30:48 -0800 (PST)
+        Sun, 13 Nov 2022 15:42:18 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFAE42A7;
+        Sun, 13 Nov 2022 12:42:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1668371440; bh=swbK7YxEmrqiCw4vmZyK4igs8pEzOy7yOJ25cvwv/a8=;
+        t=1668372113; bh=9WtOxHZnv4TWmnTY+DZYbVcLWfzSpaBUBAwrjRqn/GY=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=aay9swxRPZ95vUrqvgY7JgnPUY0sPrv0JcKhufNIgE6OztJVe03jppHGIwPFPgxQP
-         /uMOJlbiy6xhnI1H0y6R2aKVSKRCbwrcevMa6AhPmO92KtWnsNx7kDYrSTzVBuz3fk
-         qoKSdzwLgIxW4QpUMvGoWr4YX7/N4GCaSSaXNV0ipfRCMOWIqVYSy1X7fv3kRTw7PI
-         3MxT64uOP385O/FUPU+skKoGGgCZt3jcD3DjuKGwf2Cot8KlQWqyKF/H3Yz/BaiAHo
-         PD+U+vQBzVLSechSPU6jIH+D85hYDu7xUY9L0cZAtHHIlh9PBpr2LCA/XpAoQdj7kG
-         7oGzNclgFMtOw==
+        b=UIBHm0TL0Rbl3BQHpcwFfvZDrdhp9nlAWHXIwDNWiNEdxv5a+r5Wv/SMK6c0Am6xh
+         T3oaMDrR4vdIzSg13cVhHUkGLbBeRNwdhooI0YAszPWg+HpttKRJw/UVl8QKX9eQpL
+         fZikdsGWZmofs0FSpqt0azHMdA9cZvkNaq5b5Awfoggi4zWrqKvj1l5DSKAkkyYf/v
+         t+EIVnCEMe03XiOAkc7FLt3INAE7fICCr7Uq++HYRkBW1YnVC2TNrCPuxSQO0wuD7s
+         av5RUE/bsDb+KQ+HCa4RfdcRsPM5u0JTaexOA/nlNjh54M8BgvtMKabYwwPDHdtPff
+         nV7mM/EUMypAA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mqs0R-1pGBxx0zmT-00mvkJ; Sun, 13
- Nov 2022 21:30:40 +0100
-Subject: Re: [PATCH v2 1/2] platform/x86: wmi: Disambiguate WMI event data on
- some ACPI tables
-To:     Philipp Jungkamp <p.jungkamp@gmx.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <8d54fbbb-0933-aaea-5f66-bb7807f5506d@redhat.com>
- <20221113121259.14895-1-p.jungkamp@gmx.net>
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MA7GS-1ooJGU3uI6-00BeDQ; Sun, 13
+ Nov 2022 21:41:53 +0100
+Subject: Re: [PATCH v6] hwmon: add OneXPlayer mini AMD sensors driver
+To:     =?UTF-8?Q?Joaqu=c3=adn_Ignacio_Aramend=c3=ada?= 
+        <samsagax@gmail.com>, pobrn@protonmail.com
+Cc:     hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, linux@roeck-us.net,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+References: <20221104140659.593608-1-samsagax@gmail.com>
 From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <828b7403-40a2-0da4-6bd2-b2370f05f998@gmx.de>
-Date:   Sun, 13 Nov 2022 21:30:39 +0100
+Message-ID: <5b7fdb3d-7874-feb3-ad0b-c20201b5a871@gmx.de>
+Date:   Sun, 13 Nov 2022 21:41:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20221113121259.14895-1-p.jungkamp@gmx.net>
+In-Reply-To: <20221104140659.593608-1-samsagax@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-X-Provags-ID: V03:K1:IhP1syQs99wNP1BQZOB7dnXafvboIpGj3Gm0yVX53294bI58z0C
- 6abY7cQxYAw/A5UqJ4uEnX6PBDjh4PffVuRd9XrXwWPFnz9dj0D0ReqlEyNCaRNGP6lG6Zd
- egTdVoo1Qe2nHl3UqgirEkCM8XVAIjNK4nZIWxxSYl7vACZsLWy1vqwOwyzaHbYuAv+lewp
- ASABGrmbHIMvWJ9ys3YIg==
-UI-OutboundReport: notjunk:1;M01:P0:Rssv5hV7P6E=;5bcJD8N2vt3NKQVicPo1ygJ2BPr
- 2VxVMh4Rksb1/HUKKUHYIOiu1HwRsGWJqmz5WKQmudJ5ECzPVd74IB/8fUBRdStzQBwsNXPbD
- jwqIFY3pYyx5PmsOmcl3GIhiGnuk1JHZ7peIcWQ8ysMtyr4v4SaADWGnPu8BG5sAPhKPXcgQw
- BjrcUXEeYkcDevFoNCgG5QbcBnhaJKNWGU27vg3wW66+HUV+Odej6KdKALOvx5R9Adz5TkVCW
- XXNZUUZM3k5Bo/eYCVVXD6eaMFFMg2DTDoncrBEX+ctqoW4vUXC+Mj/sJspSNI1E+dGZQ9IyU
- n2kVDVhNbtnXjHXZ/GXc4c0cngXmnYkV59akQ4o4G9IcSjca26fBD+3nkj46w9D7Ykq72DWuk
- EPH+LTVg+tG/nCkoVpjgyjqZOCGLWw/iYXDreC23ZuQ3hIy1FtgQXmse/HvuT0y6yLQ1PzHZR
- ph9Hv6G1P6CthkZDzSyupZZVY6PVneybz6vmH8B/ZQizcQjJtgkY8r3qHp7GMdKrGDSgkAVtI
- UQ22fGj/imVzt5kXc60yHHhDCBSlFFt2jyw7w0i4S63uwIRmtRAf7gkDIf7oeyyi3c7dzjRPl
- gzAls3RkrSruXcEz+M+R+JYTw1ha6S3Y6NLUwS6AruUGm3rj9/IyHFqeUXSEDRw5RQWV3AdjV
- eWbZRTYe7XF7Yn9fMRFQ0Egq3YpyRB9BV1roe8SCmSymXGElNfk8/PkmbsDwDnSRpzuH6Z+4y
- Xp79kGRbcsuFTbKQoVQze5YgTkGVztRuToihH2vZ19o2CaIQc7M/YmiEEoLz0wlYNXMDjYF3h
- KefY+V0ofiF+KPwJWWtZdG/iMTNzcKK+eqX4keqy9AyfXpcBnnf1Avxj7HxBcMCbSJCTkXuAz
- c3Z02MegsBnyslA2sxBqG+RTQfgDtsEsC0tHC6FiD2T+WcUwdrnhOYwENhBPLjOhCMhvGkvfO
- J+qKKQYSmzOhFgUAVp6RAp2RVFM=
+X-Provags-ID: V03:K1:iab1DwP0TEX7K+2bbCgD9OE7UM2Tvtq3nq83VJCTtQmc8fvg+SS
+ 5jzzTJAa3q7LgQclpcyxP+dM7eEybRaUTkeF261VppYsaaVhV//ZNlybvRORGRvako23nDc
+ 89iOy2WA5LpXr/XsrlE8Z+r9D5GQ0KqbQC8t78tsamksanN+3sarCT595VSWpR/7q+hUyBg
+ +skIAdYjdbGxifiARzyEg==
+UI-OutboundReport: notjunk:1;M01:P0:mudQtIBa284=;pjzLj2LOC3p6LxsHFJcuDValyMu
+ Jp6WZPaD2wYudDQrXuPND13f4hKQIYInxOgq+E3kdOnJVOkp0U/mblipKYw1l9+/9a9RzPbyJ
+ 9UVNlrUOxRzZe9zo1TwBHj/07wBpIm7SVi2Jb+JgJnxmuExv5xkYhIq3GkPptbh3VsTpxJVuq
+ dhxeUCDqVI64ZZNX1xrPoNsWTaz2/eNfWTcpn0ZgrEWolSwUqbym9GAS82JfZFCWX8BXr41/x
+ MP6XQNJnI1WlYCebI678sZ6Qqy5QrXhA2fzfDpIyGgQcPc33Kp5FBfnKv/liRMn+EDC45i2ad
+ +80UkdRcO0WI2FtTIv5WxoS9p7kz5PgKwn0TcHDjtNKiLhjYgM8TEQkMoDKYScSWpYS9bLIZO
+ 6j1/65yalM7rQhslBoNnxTf4B6ChvyKSauPCfp8gqIjsWv6GH4Y1xF9RM0IcwR8ymMP+a5ON/
+ A1kvcM7nKZLQPkgW0jCV8lrYquOC0Ax4rQIIdw+H+gy/pnfa5EufDcWeiUgnsd7CJMhXKYY3k
+ R2XQENnIwJMLyZSOOctAJC10M4ND8kLMr8++qnXQO5QAVGHfP8UbpRvg77sNj1tYpfYoPR//T
+ iXrN7qTshlNui++rk66yGX4mcKHwTL8GIM7uy7l7bgNvwHYbrUs6BMbOt+3fMhvXdBnVX+F6O
+ RywzTlQaUgNU92S2H6qFchWVFNDx5QKHtDJcQ1gezh4yEIkU4XsYHvYc1IxRzP/ErRdMKrb6p
+ fHTvlk9EKqkWH7ceDgmKGj71I3A9Mvelyh2cKGu0aZnWvLbs1A3MNpesH4lMTUO8qyc/YuTsh
+ 1xVBERymHjsKoRg/GhDe23iBWLkfp4EGBr14NycFa8XkZNkGKS1E+QEV70pvapryYQMo/kKMS
+ PyytsOA2jcmj3vsM5S/HavuKaTngK3zRJ5Ye0pmLaw0eJxo6wM4NGp+teH/oO5FDM6tBJVlkP
+ EN4rbCg1IRzasJoFLr9XNjEk7zY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 13.11.22 um 13:12 schrieb Philipp Jungkamp:
+Am 04.11.22 um 15:07 schrieb Joaqu=C3=ADn Ignacio Aramend=C3=ADa:
 
-> The ACPI DSDT table includes multiple WMI blocks which emit events with
-> the same notify_id. The wmi_get_event_data() function chooses the
-> wmi_block with the _WED handler to call based on the notify_id. This
-> function may call the wrong _WED event handler based on the order the
-> WMI blocks are parsed.
+> Sensors driver for OXP Handhelds from One-Netbook that expose fan readin=
+g
+> and control via hwmon sysfs.
 >
-> This introduces wmi_get_event_data_with_guid() to diambiguate the _WED
-> call to get metadata for an event. The GUID here is the one of the
-> containing WMI block, not the one of the WMI event itself.
+> As far as I could gather all OXP boards have the same DMI strings and
+> they can be told appart only by the boot cpu vendor (Intel/AMD).
+> Currently only AMD boards are supported since Intel have different EC
+> registers and values to read/write.
+>
+> Fan control is provided via pwm interface in the range [0-255]. AMD
+> boards have [0-100] as range in the EC, the written value is scaled to
+> accommodate for that.
+>
+> Signed-off-by: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
+
+...
+
+> +/*
+> + * module_platform_driver() may be used here but somehow it breaks the =
+module
+> + * either by preventing it from loading or not exposing hwmon attribute=
+s.
+> + * Either way I'm not smart enough to figure it out so I'll leave init/=
+exit
+> + * macros for now.
+> + */
+> +module_init(oxp_platform_init);
+> +module_exit(oxp_platform_exit);
+> +
 
 Hello,
 
-maybe it would be better to instead rewrite the driver to utilize the WMI bus infrastructure?
-Because a GUID is not guaranteed to be unique inside a system, there would still be a chance
-to call the wrong _WED handler.
-AFAIK only utilizing the WMI bus infrastructure would fully disambiguate the WMI event data.
+i know i am a bit late to point that out, but AFAIK module_platform_driver=
+() only registers a platform driver,
+not the corresponding platform device. With the platform device missing, t=
+he platform driver will never load.
+This is the reason why platform_create_bundle() exists, it basically regis=
+ters a platform driver and
+a platform device together.
+
+Should i send a separate patch to remove the comment?.
 
 Armin Wolf
 
-> Signed-off-by: Philipp Jungkamp <p.jungkamp@gmx.net>
-> ---
-> Was separating this change into it's own commit correct?
->
->   drivers/platform/x86/wmi.c | 30 ++++++++++++++++++++++++++++++
->   include/linux/acpi.h       |  3 +++
->   2 files changed, 33 insertions(+)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 223550a10d4d..56b666f4b40b 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -659,6 +659,36 @@ acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)
->   }
->   EXPORT_SYMBOL_GPL(wmi_get_event_data);
->
-> +/**
-> + * wmi_get_event_data_with_guid - Get WMI data associated with an event by guid
-> + *
-> + * Consider using this instead of wmi_get_event_data() when the notify_id
-> + * of the WMI event may not be unique among all WMI blocks of a device.
-> + *
-> + * @guid: GUID of the WMI block for this event
-> + * @event: Event to find
-> + * @out: Buffer to hold event data. out->pointer should be freed with kfree()
-> + *
-> + * Returns extra data associated with an event in WMI.
-> + */
-> +acpi_status wmi_get_event_data_with_guid(const char *guid, u32 event, struct acpi_buffer *out)
-> +{
-> +	struct wmi_block *wblock = NULL;
-> +	struct guid_block *gblock;
-> +	acpi_status status;
-> +
-> +	status = find_guid(guid, &wblock);
-> +	if (ACPI_FAILURE(status))
-> +		return AE_NOT_FOUND;
-> +
-> +	gblock = &wblock->gblock;
-> +	if ((gblock->flags & ACPI_WMI_EVENT) && gblock->notify_id == event)
-> +		return get_event_data(wblock, out);
-> +
-> +	return AE_NOT_FOUND;
-> +}
-> +EXPORT_SYMBOL_GPL(wmi_get_event_data_with_guid);
-> +
->   /**
->    * wmi_has_guid - Check if a GUID is available
->    * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 3015235d65e3..51ac4d6bcae1 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -423,6 +423,9 @@ extern acpi_status wmi_set_block(const char *guid, u8 instance,
->   extern acpi_status wmi_install_notify_handler(const char *guid,
->   					wmi_notify_handler handler, void *data);
->   extern acpi_status wmi_remove_notify_handler(const char *guid);
-> +extern acpi_status wmi_get_event_data_with_guid(const char *guid,
-> +						u32 event,
-> +						struct acpi_buffer *out);
->   extern acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out);
->   extern bool wmi_has_guid(const char *guid);
->   extern char *wmi_get_acpi_device_uid(const char *guid);
+> +MODULE_AUTHOR("Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>=
+");
+> +MODULE_DESCRIPTION("Platform driver that handles EC sensors of OneXPlay=
+er devices");
+> +MODULE_LICENSE("GPL");
 > --
 > 2.38.1
 >
