@@ -2,124 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05507C43217
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB400C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 21:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234152AbiKMUmS (ORCPT
+        id S234152AbiKMVVv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Nov 2022 15:42:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
+        Sun, 13 Nov 2022 16:21:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbiKMUmS (ORCPT
+        with ESMTP id S232799AbiKMVVu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Nov 2022 15:42:18 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFAE42A7;
-        Sun, 13 Nov 2022 12:42:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1668372113; bh=9WtOxHZnv4TWmnTY+DZYbVcLWfzSpaBUBAwrjRqn/GY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=UIBHm0TL0Rbl3BQHpcwFfvZDrdhp9nlAWHXIwDNWiNEdxv5a+r5Wv/SMK6c0Am6xh
-         T3oaMDrR4vdIzSg13cVhHUkGLbBeRNwdhooI0YAszPWg+HpttKRJw/UVl8QKX9eQpL
-         fZikdsGWZmofs0FSpqt0azHMdA9cZvkNaq5b5Awfoggi4zWrqKvj1l5DSKAkkyYf/v
-         t+EIVnCEMe03XiOAkc7FLt3INAE7fICCr7Uq++HYRkBW1YnVC2TNrCPuxSQO0wuD7s
-         av5RUE/bsDb+KQ+HCa4RfdcRsPM5u0JTaexOA/nlNjh54M8BgvtMKabYwwPDHdtPff
-         nV7mM/EUMypAA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MA7GS-1ooJGU3uI6-00BeDQ; Sun, 13
- Nov 2022 21:41:53 +0100
-Subject: Re: [PATCH v6] hwmon: add OneXPlayer mini AMD sensors driver
-To:     =?UTF-8?Q?Joaqu=c3=adn_Ignacio_Aramend=c3=ada?= 
-        <samsagax@gmail.com>, pobrn@protonmail.com
-Cc:     hdegoede@redhat.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, linux@roeck-us.net,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-References: <20221104140659.593608-1-samsagax@gmail.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <5b7fdb3d-7874-feb3-ad0b-c20201b5a871@gmx.de>
-Date:   Sun, 13 Nov 2022 21:41:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Sun, 13 Nov 2022 16:21:50 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8487FD19;
+        Sun, 13 Nov 2022 13:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668374509; x=1699910509;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8I6vKZArkiJeRn6HbKXPPaIQ6La44IOkt0n5HuZBRNs=;
+  b=cEFGu+goS6HiIHkDjwOsuyiMAOi7EFzVTmNGiASMdu31OBxrnRsYw7vC
+   hIPJALpslvqaplXjS15eoyFkJVmEUzvDq1Sov6l4Bf1H/g1jmO80VieWA
+   /Wmfw3+GuOUo7Gx5729YwAa757JxzBcCkDIVwlAUFvkIfey2p/BzuULKz
+   qqZBrY9vJMryB2mZ589/AcLJrqr0kJsjQ3H/9pc6EuNNkcoBrXJoLY1qn
+   Dr1kVm9lEawn28jhDXZP8RMuVUgCslz6R9GQcsVatG/2NPX0d7+01Owzq
+   B930CxitxSQ37u7g5WzZoUT7YWx6Q99W94DFwhzfXn4xoOqE6pmGThIqH
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="292240956"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="292240956"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:21:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="883308898"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="883308898"
+Received: from perwin-mobl.amr.corp.intel.com (HELO tjmaciei-mobl5.localnet) ([10.212.163.208])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 13:21:49 -0800
+From:   Thiago Macieira <thiago.macieira@intel.com>
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>
+Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs entry
+Date:   Sun, 13 Nov 2022 13:21:41 -0800
+Message-ID: <2206677.iZASKD2KPV@tjmaciei-mobl5>
+Organization: Intel Corporation
+In-Reply-To: <Y3EiKUzpShqwzEf6@zn.tnic>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com> <5e65889d-d68c-b29d-6cea-7b4ce4c87b4a@intel.com> <Y3EiKUzpShqwzEf6@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20221104140659.593608-1-samsagax@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:iab1DwP0TEX7K+2bbCgD9OE7UM2Tvtq3nq83VJCTtQmc8fvg+SS
- 5jzzTJAa3q7LgQclpcyxP+dM7eEybRaUTkeF261VppYsaaVhV//ZNlybvRORGRvako23nDc
- 89iOy2WA5LpXr/XsrlE8Z+r9D5GQ0KqbQC8t78tsamksanN+3sarCT595VSWpR/7q+hUyBg
- +skIAdYjdbGxifiARzyEg==
-UI-OutboundReport: notjunk:1;M01:P0:mudQtIBa284=;pjzLj2LOC3p6LxsHFJcuDValyMu
- Jp6WZPaD2wYudDQrXuPND13f4hKQIYInxOgq+E3kdOnJVOkp0U/mblipKYw1l9+/9a9RzPbyJ
- 9UVNlrUOxRzZe9zo1TwBHj/07wBpIm7SVi2Jb+JgJnxmuExv5xkYhIq3GkPptbh3VsTpxJVuq
- dhxeUCDqVI64ZZNX1xrPoNsWTaz2/eNfWTcpn0ZgrEWolSwUqbym9GAS82JfZFCWX8BXr41/x
- MP6XQNJnI1WlYCebI678sZ6Qqy5QrXhA2fzfDpIyGgQcPc33Kp5FBfnKv/liRMn+EDC45i2ad
- +80UkdRcO0WI2FtTIv5WxoS9p7kz5PgKwn0TcHDjtNKiLhjYgM8TEQkMoDKYScSWpYS9bLIZO
- 6j1/65yalM7rQhslBoNnxTf4B6ChvyKSauPCfp8gqIjsWv6GH4Y1xF9RM0IcwR8ymMP+a5ON/
- A1kvcM7nKZLQPkgW0jCV8lrYquOC0Ax4rQIIdw+H+gy/pnfa5EufDcWeiUgnsd7CJMhXKYY3k
- R2XQENnIwJMLyZSOOctAJC10M4ND8kLMr8++qnXQO5QAVGHfP8UbpRvg77sNj1tYpfYoPR//T
- iXrN7qTshlNui++rk66yGX4mcKHwTL8GIM7uy7l7bgNvwHYbrUs6BMbOt+3fMhvXdBnVX+F6O
- RywzTlQaUgNU92S2H6qFchWVFNDx5QKHtDJcQ1gezh4yEIkU4XsYHvYc1IxRzP/ErRdMKrb6p
- fHTvlk9EKqkWH7ceDgmKGj71I3A9Mvelyh2cKGu0aZnWvLbs1A3MNpesH4lMTUO8qyc/YuTsh
- 1xVBERymHjsKoRg/GhDe23iBWLkfp4EGBr14NycFa8XkZNkGKS1E+QEV70pvapryYQMo/kKMS
- PyytsOA2jcmj3vsM5S/HavuKaTngK3zRJ5Ye0pmLaw0eJxo6wM4NGp+teH/oO5FDM6tBJVlkP
- EN4rbCg1IRzasJoFLr9XNjEk7zY=
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 04.11.22 um 15:07 schrieb Joaqu=C3=ADn Ignacio Aramend=C3=ADa:
+On Sunday, 13 November 2022 08:58:17 PST Borislav Petkov wrote:
+> * if f/m/s matches, you execute
+> 
+>     if still within the timeout, you return -EAGAIN from
+>     current_batch_store() to tell userspace, take a nap and try again.
+> 
+> * if the f/m/s doesn't match you return -EINVAL to say, wrong filename,
+> try the next one.
 
-> Sensors driver for OXP Handhelds from One-Netbook that expose fan readin=
-g
-> and control via hwmon sysfs.
->
-> As far as I could gather all OXP boards have the same DMI strings and
-> they can be told appart only by the boot cpu vendor (Intel/AMD).
-> Currently only AMD boards are supported since Intel have different EC
-> registers and values to read/write.
->
-> Fan control is provided via pwm interface in the range [0-255]. AMD
-> boards have [0-100] as range in the EC, the written value is scaled to
-> accommodate for that.
->
-> Signed-off-by: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>
+But if it matches but is corrupt or the HW fails to accept it, you also get an 
+error. So you now need to differentiate a failure to load a candidate file and 
+an attempt to load a non-candidate.
 
-...
+I'm assuming that the kernel would provide different error conditions for 
+those. But handling those in shell scripting is very difficult: you'd need to 
+start a subshell and parse stderr. It's MUCH easier in C, of course, but 
+incrementing a number is magnitudes easier in C than performing a globbing.
 
-> +/*
-> + * module_platform_driver() may be used here but somehow it breaks the =
-module
-> + * either by preventing it from loading or not exposing hwmon attribute=
-s.
-> + * Either way I'm not smart enough to figure it out so I'll leave init/=
-exit
-> + * macros for now.
-> + */
-> +module_init(oxp_platform_init);
-> +module_exit(oxp_platform_exit);
-> +
+Either way, incrementing a number in shell is pretty easy too. The simplest 
+script with just the numbers would be:
 
-Hello,
+i=0
+while echo $i > /sys/devices/virtual/misc/intel_ifs_0/current_batch; do
+    test_all_cpus
+done
 
-i know i am a bit late to point that out, but AFAIK module_platform_driver=
-() only registers a platform driver,
-not the corresponding platform device. With the platform device missing, t=
-he platform driver will never load.
-This is the reason why platform_create_bundle() exists, it basically regis=
-ters a platform driver and
-a platform device together.
+It's four lines and does not need to know about where the scan files are 
+located, how they're named and if some files it may find are not to be used. But 
+I've hidden a lot of complexity in the test_all_cpus shell function, which 
+would be common to either solution of how we specify the batch to be loaded.
 
-Should i send a separate patch to remove the comment?.
+And this is part of my argument of why it's unlikely people will use their 
+shells to do this. That shell function is easily another 10 lines of 
+scripting, if it's meant to do its job properly. To make that easier, we've 
+developed two tools, one of them the OpenDCDiag tool I linked to, but both 
+just happen to be written in C and C++ instead of shell.
 
-Armin Wolf
+> For all Intel employees here on the thread, there's a world outside
+> Intel and people do not talk (family model stepping) tuples like we do.
+> All they wanna do is run their damn tests.
 
-> +MODULE_AUTHOR("Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.com>=
-");
-> +MODULE_DESCRIPTION("Platform driver that handles EC sensors of OneXPlay=
-er devices");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.38.1
->
+Indeed they do. I have personally been in contact with the few that will 
+represent over 90% of the deployment of this feature for the next few years. 
+They want this functionality to integrate with their existing health-check 
+scanning methodology. This is where OpenDCDiag comes in, because it does 
+integrate with their workflows, like logging. For another example, it obeys the 
+cpuset that the parent process may have set with sched_setaffinity() or alike 
+tools (taskset(1) or schedtool(8)). I have zero clue how to do that with shell 
+scripting.
+
+Which actually means I am the maintainer of the tool that is going to be 
+driving 99% or more of all scans (that's why I was cc'ed in the submission). I 
+am your user.
+
+I'm not saying I am the only user. I definitely want to see the best interface 
+so that others could write tools too if they want to. And I don't want there 
+to be a kludge that we need to keep compatibility with for a decade, or to set 
+a bad precedent. But I am giving you the constraints that I need to work under 
+and the kernel interface to support me. I am telling you this is very good 
+right now and your proposal makes it worse for me, not better, for little 
+apparent gain.
+
+-- 
+Thiago Macieira - thiago.macieira (AT) intel.com
+  Cloud Software Architect - Intel DCAI Cloud Engineering
+
+
+
