@@ -2,176 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D0DC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 11:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A226C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 12:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235252AbiKMLsu (ORCPT
+        id S235242AbiKMMNV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Nov 2022 06:48:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57046 "EHLO
+        Sun, 13 Nov 2022 07:13:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbiKMLst (ORCPT
+        with ESMTP id S233792AbiKMMNU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Nov 2022 06:48:49 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBEB2A465;
-        Sun, 13 Nov 2022 03:48:47 -0800 (PST)
-Received: from zn.tnic (p200300ea9733e71a329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e71a:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3EF181EC05DE;
-        Sun, 13 Nov 2022 12:48:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1668340126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6rBi4qpHb53yThXNbSMZrkQBQAZAg4yKat497BxwlIQ=;
-        b=hBFuAdZ1StgbH6614oYPBjeUN56VXXa/bqwa3hiPFFaylHXfmYNIdkKgHu3bQx9cEk3hRS
-        2XnYO+/vNlajmpIFEfzeBkJqOdfWYuvTSMFoIO+7Yi00MmGyh0sRVivOVXBOSXrWL9JGzW
-        AsVktaEkN8/rW8wW3Dn6KsrdFVD2wus=
-Date:   Sun, 13 Nov 2022 12:48:40 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Thiago Macieira <thiago.macieira@intel.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Macieira, Thiago" <thiago.macieira@intel.com>,
-        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs
- entry
-Message-ID: <Y3DZmKYV+8HBtZ+Q@zn.tnic>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-13-jithu.joseph@intel.com>
- <Y2/JNAmSoYlLKq3A@zn.tnic>
- <CC3629D6-B205-4150-80E5-FC7A7A76DD25@intel.com>
- <Y3CevK2zhAmiUyG9@kroah.com>
+        Sun, 13 Nov 2022 07:13:20 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D4D11444
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Nov 2022 04:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
+        t=1668341591; bh=b0ELlfN/u7KSHLTcCyzjscFJkygA0yhOJIROrtbG38s=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=oojhjaeP3k4oJi75/ed45BhX4tj6MxQ4RLcFnXoD+EZv0sO4sooDs/U0MsmR3kMtS
+         ayP6B8g8Dnjr4yMDC/mG5fiHC+l53qwjxNhyZi7ZSZHPhzfQU7hlGXyjqwo0JaAudH
+         R/rnHywwTQWwpBTROinc3PxMwIZy2xQatFVbM+PmgQaqJ0k1VoFErE8UTgf4GWaxrx
+         aRnXbjWPu65jElnVZlg1yoUqXOprmg70udalE55EPgmLqBmM96wn5X3ZRLJOXxUx5f
+         DzcVFoVcKb4IjqvxRVDCss80PP/Ffmqw+ID38fnFc5vBKKOMpdvu4Hs7yO0hSqp/r8
+         XLK/hRRzodt3w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from yoga9.fritz.box ([88.130.60.234]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mdeb5-1pTWbv3abJ-00ZfX9; Sun, 13
+ Nov 2022 13:13:10 +0100
+From:   Philipp Jungkamp <p.jungkamp@gmx.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Philipp Jungkamp <p.jungkamp@gmx.net>
+Subject: [PATCH v2 1/2] platform/x86: wmi: Disambiguate WMI event data on some ACPI tables
+Date:   Sun, 13 Nov 2022 13:12:58 +0100
+Message-Id: <20221113121259.14895-1-p.jungkamp@gmx.net>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <8d54fbbb-0933-aaea-5f66-bb7807f5506d@redhat.com>
+References: <8d54fbbb-0933-aaea-5f66-bb7807f5506d@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y3CevK2zhAmiUyG9@kroah.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Ag1WeeyxHI0VkPnjYfkofYqsORYfpJLVynLgsT5Iz5bzG2BfBGi
+ 5ZkAMB4tkei/098CJQ2ggkzPaAO7ym6mQ39XaR64C63rjrIQjGkLOmpNZ3dREiYHtfLomJA
+ vLGyGYydlBGUPEPslfiYdeb+CEpFwE/iXIkeJYcBBQf+EvfRlMkLS0xEK3SI63UQfJfCXuQ
+ v8J25zz77/+7C2KPyxEDg==
+UI-OutboundReport: notjunk:1;M01:P0:5F3rtlBct/0=;aO8N5tj4+yitFE0QImHaUTv7Jb1
+ pfldbUCEVCQbMjPYeO6N0T5lshjmXXWpjvpP60EGfplVoOlFIGFhGZpbi0bVvxLOOC6G1Jtu+
+ 0zJydnK1kOK3p/8QWXYpvW1T5ItNMi++ii9Vm2EE/pKbrBvUDj2dmmS4rx3CdDy54t0Emc1rh
+ LBPpd7FeuRhy8o16OLi6nh8jsyXMMBUD57+82/Gf4xjLisISOB/CwueXYZ79SSBsaf3WRfTh4
+ M5CEwnbHflPwGw9GPNWqSc2kVp8f/aGy+Wu9iOqnq0MUhQ0egj96Atn6dDDbk5JT6lKf89VcS
+ AO8G/+z6CdFk2phwfPpD0jGZr6oq8Z5bnmXwN+WV+lnYRRsNKJBG6oTXT1agfSpSal7U1RGOh
+ 3de4shngRIx8agyzME0a7bnG9JpPVIMNZU+roIBS/3hD4rv43HvNFg2+M4MQHOYC422ngpbvt
+ 5NjKbrZmRUkrkx84B+SyTdblEUpwQnZDSqtG8kTOWxNzOnHYowkMOuJAagKy6qI+76iMlXtJO
+ w/oX7TOooLrbEC2CGNvHNNecBl3aez2arCuWhjIw/RwGdtUcZhfbtg8sLkkb3nQ+aNuzhz7Pc
+ uFjRAL1hT9Hjc1+Hv4sDkWP8DIIat0sXl40zZD99Nxc6oXE81xR9NsHYMcqfpIeahTIPM38w6
+ PGu7PDQFDuqS0OykcKxEdiFIrAzRHHBBSMut5StOXzyex9KsOnpUtWsXA4x2p3nUXY5bJTrVB
+ izvahqb2FMXgMJpPVU5K+/M4oiHvmsC2ONH97wnZc2IP0b323r43EvpBpEPtfgVwHBPGY3CJs
+ Fb1HEAAD4NPhm7Ab7te0DgCwEpSBhpQqglBIFbn1XYAQ5YGpkPgRcWR7bQHN5oNgFVjeoS7bA
+ GNV4Ca1mchYoBzMm7mE++b7lzYicrzh5+Gfh6lS107R7hUhi6Op2P1J8YmqA2we639PsXnh8y
+ natU1v+sUBHBJQ3AksakZVXDhuA=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Replying to both with one mail because it still feels like there's a
-misunderstanding.
+The ACPI DSDT table includes multiple WMI blocks which emit events with
+the same notify_id. The wmi_get_event_data() function chooses the
+wmi_block with the _WED handler to call based on the notify_id. This
+function may call the wrong _WED event handler based on the order the
+WMI blocks are parsed.
 
-On Sun, Nov 13, 2022 at 08:37:32AM +0100, gregkh@linuxfoundation.org wrote:
-> No, please do not force the driver to resolve a filename path in the
-> kernel.
+This introduces wmi_get_event_data_with_guid() to diambiguate the _WED
+call to get metadata for an event. The GUID here is the one of the
+containing WMI block, not the one of the WMI event itself.
 
-No, I don't mean to do any filename path resolving - all I suggest is to
-echo into sysfs the full filename instead of the number. I.e., this:
+Signed-off-by: Philipp Jungkamp <p.jungkamp@gmx.net>
+=2D--
+Was separating this change into it's own commit correct?
 
-for i in $(ls /lib/firmware/intel/ifs_0/*.scan);
-do
-	echo $i /sys/devices/virtual/misc/intel_ifs_0/current_batch
-done
+ drivers/platform/x86/wmi.c | 30 ++++++++++++++++++++++++++++++
+ include/linux/acpi.h       |  3 +++
+ 2 files changed, 33 insertions(+)
 
-What you end up echoing inside is only the full filename - *not* the
-absolute filename - instead of a number. So those in a succession:
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 223550a10d4d..56b666f4b40b 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -659,6 +659,36 @@ acpi_status wmi_get_event_data(u32 event, struct acpi=
+_buffer *out)
+ }
+ EXPORT_SYMBOL_GPL(wmi_get_event_data);
 
-06-8f-06-00.scan
-06-8f-06-01.scan
-06-8f-06-02.scan
-06-8f-06-03.scan
-06-8f-06-04.scan
-06-8f-06-05.scan
++/**
++ * wmi_get_event_data_with_guid - Get WMI data associated with an event b=
+y guid
++ *
++ * Consider using this instead of wmi_get_event_data() when the notify_id
++ * of the WMI event may not be unique among all WMI blocks of a device.
++ *
++ * @guid: GUID of the WMI block for this event
++ * @event: Event to find
++ * @out: Buffer to hold event data. out->pointer should be freed with kfr=
+ee()
++ *
++ * Returns extra data associated with an event in WMI.
++ */
++acpi_status wmi_get_event_data_with_guid(const char *guid, u32 event, str=
+uct acpi_buffer *out)
++{
++	struct wmi_block *wblock =3D NULL;
++	struct guid_block *gblock;
++	acpi_status status;
++
++	status =3D find_guid(guid, &wblock);
++	if (ACPI_FAILURE(status))
++		return AE_NOT_FOUND;
++
++	gblock =3D &wblock->gblock;
++	if ((gblock->flags & ACPI_WMI_EVENT) && gblock->notify_id =3D=3D event)
++		return get_event_data(wblock, out);
++
++	return AE_NOT_FOUND;
++}
++EXPORT_SYMBOL_GPL(wmi_get_event_data_with_guid);
++
+ /**
+  * wmi_has_guid - Check if a GUID is available
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
+f2f49ba
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 3015235d65e3..51ac4d6bcae1 100644
+=2D-- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -423,6 +423,9 @@ extern acpi_status wmi_set_block(const char *guid, u8 =
+instance,
+ extern acpi_status wmi_install_notify_handler(const char *guid,
+ 					wmi_notify_handler handler, void *data);
+ extern acpi_status wmi_remove_notify_handler(const char *guid);
++extern acpi_status wmi_get_event_data_with_guid(const char *guid,
++						u32 event,
++						struct acpi_buffer *out);
+ extern acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)=
+;
+ extern bool wmi_has_guid(const char *guid);
+ extern char *wmi_get_acpi_device_uid(const char *guid);
+=2D-
+2.38.1
 
-The advantage being, you don't need to remember which file sequence and
-which family/model/stepping.
-
-For all Intel employees here on the thread, there's a world outside
-Intel and people do not talk (family model stepping) tuples like we do.
-All they wanna do is run their damn tests.
-
-So instead of what the code does now:
-
-+	snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%02x.scan",
-+		 ifsd->test_num, boot_cpu_data.x86, boot_cpu_data.x86_model,
-+		 boot_cpu_data.x86_stepping, ifsd->cur_batch);
-
-It would still use the *same* scan_path - /lib/firmware/intel/ifs_0/ -
-no one is proposing to give a full path name - it would only use the
-filename string - 06-8f-06-00.scan, for example - instead of the "0" in
-it to build that string.
-
-And, ofcourse it would check the format of that string against family,
-model, stepping and sequence number (btw this way you drop your
-limitation of 256 for the sequence number which you don't really need
-either).
-
-And then if the format passes, it would check the headers.
-
-And only if those pass too, then it would load.
-
-> Right, it's no different from echoing file names, but it's much
-> simpler to increment a number than do a directory listing and sort the
-> file names, so it can pick up from where it left off.
-
-It is no different - you still need to remember where you are in the
-sequence wrt to testing.
-
-So if you want to deal with the timeout, that same script above will
-check the status and wait. Not rocket science.
-
-As to this Thiago:
-
-> You can't do it with a three-line shell script, but we're not
-> expecting that shell scripts are the means to use this feature in the
-> first place.
-
-I consider it a serious design mistake of having to have a *special*
-tool. A special tool is *always* a burden. You need to build it, supply
-it, make sure it is installable on the target system and so on.
-
-And I'm telling you this with my Linux distributor hat on. It is always
-a pain - trust me.
-
-For example, there's a reason why you can still control ftrace from the
-command line and you don't need any tool. You *can* use a tool but you
-don't have to. IOW, the KISS philosophy.
-
-IOW, I really think that designing our interfaces with user friendliness
-in mind should be of much more higher importance. And requiring the user
-to remember or figure out anything she doesn't really need to, in order
-to run the test is a burden.
-
-Just look at microcode loading: early loading works automatically - you
-only need to install the blobs in /lib/firmware/intel-ucode/. The initrd
-builder figures out which to add to the image.
-
-And not even that is required - I have a script which adds *all* blobs
-to my image. It still loads the right one.
-
-Late loading works also trivially:
-
-echo 1 > /sys/devices/system/cpu/microcode/reload
-
-And it goes and builds the filename from f/m/s and loads it from the
-hardcoded path - no filename resolving.
-
-But it doesn't ask the user to give a f/m/s or a sequence number.
-
-I sincerely hope that makes more sense.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
