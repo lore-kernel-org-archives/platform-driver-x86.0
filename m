@@ -2,155 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D268BC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 18:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3BCC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Nov 2022 19:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235419AbiKMSmE (ORCPT
+        id S235539AbiKMTAD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Nov 2022 13:42:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35402 "EHLO
+        Sun, 13 Nov 2022 14:00:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235341AbiKMSmD (ORCPT
+        with ESMTP id S235532AbiKMTAC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Nov 2022 13:42:03 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4EC1004F;
-        Sun, 13 Nov 2022 10:42:02 -0800 (PST)
-Received: from zn.tnic (p200300ea9733e71a329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e71a:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD0CB1EC0391;
-        Sun, 13 Nov 2022 19:42:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1668364920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=nHVO2ZEo31Z8PfeL8SyoetYiSGutrzrm7MJ7D0K36Gk=;
-        b=nYY3Mwp9CCSmvBnKIAiOm5EJi3yCcmKE5/2RtFYjP+Iun+wQZBmwgntg9fsC9Kj8OR9Sp1
-        1gRpgwMd4w7pKQTe/ksjK4nz9VVCPxr6AC2YdZCD9buLLmk/rXF8r7OphhenshmKKBATdN
-        0DUp4VkIastgBf4hm+ucEy/kl6Lc9t8=
-Date:   Sun, 13 Nov 2022 19:41:56 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Thiago Macieira <thiago.macieira@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs
- entry
-Message-ID: <Y3E6dKTy+xos4pSi@zn.tnic>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-13-jithu.joseph@intel.com>
- <Y2/JNAmSoYlLKq3A@zn.tnic>
- <CC3629D6-B205-4150-80E5-FC7A7A76DD25@intel.com>
- <Y3CevK2zhAmiUyG9@kroah.com>
- <Y3DZmKYV+8HBtZ+Q@zn.tnic>
- <Y3EJ93xzgC/1v0WV@a4bf019067fa.jf.intel.com>
- <Y3EUPKWDefnkeObR@zn.tnic>
- <Y3Ei7Nc+1wGOF6fk@a4bf019067fa.jf.intel.com>
+        Sun, 13 Nov 2022 14:00:02 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AD9A1BB;
+        Sun, 13 Nov 2022 11:00:01 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id v27so14429031eda.1;
+        Sun, 13 Nov 2022 11:00:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8m5wRLYsxEq7AelfE/7w31+qv6bELSvLoZTg6CoYHe4=;
+        b=VWu+I6w5v0li2zX8CHeFV0iUxKuPfMECxNxbP6M7mWzAtX5n06OHbzeCIhYGrmS3W+
+         mC+XcDA0mqCbuy3Zg9k/wxn7dIvi/1pX7m6VnLSZZM3GCXqIjL8/izdCn7e0icCWbN9s
+         3hPpS3oVX1ZjWhrnBIfqpwMzszVHxuPlidvODbEFuHnJ5E9xMsWcp64VnVK3oTQibkn2
+         d6FdcyDGsR7l6q//9ysTjdJ1I5VJKJLY5CN1fm4I9XeJmWsFRRxF0YgFVfmzokc26wvC
+         uCeoivztWXC7W2npQ6NX9uP6+XwSyptAOrqVQ7iqWhZO+1MQli71ohpz6EtO44F9jtMf
+         glAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8m5wRLYsxEq7AelfE/7w31+qv6bELSvLoZTg6CoYHe4=;
+        b=wrgdBYNVE7niIePpQPMdLHjCqllQAL7YrvY+G19P9X07nBhf71KHhJJ4py9YKVuz0r
+         zcupWzzOivKVtKwFRwegJIYN2s3/nab9IR93jfGa6fNzZpwjF2BT8LbPXoY1nXCJR9PV
+         kdqwPjtaT+AaGYjb/dAFnK4tnOxcxLmKQ94ubB6rNWaC0bMWDXh9gPSSeuCX+QqHSav/
+         41AQWWIksQIhLZ1GkGnBDHoIH7DBcxQo9kfp/4KnEDKt7gAWRvVcMXdnqlP8FHjufRYy
+         V7mJ+ys11RQVVDQDafofX1Shf1fqmBtroxMvDH9txszvSPO1k/sKx4q5YClbRqdaaGTU
+         mqfw==
+X-Gm-Message-State: ANoB5pmFIVGqoB+lUfujI7XxRsUFfUoBoOafZGE7YddVUrk1bxZyRsdu
+        5+CFgtKSNEJdw0ZbKeVxlKU=
+X-Google-Smtp-Source: AA0mqf6i2NE1kRGaeRr1vpRYkktEBxESq/GJVI+LMOWXnBR7i+J5Oh8tS5ApF8q7q8jtHly48rIL2g==
+X-Received: by 2002:a05:6402:b32:b0:461:a130:ea3c with SMTP id bo18-20020a0564020b3200b00461a130ea3cmr8536838edb.272.1668365999547;
+        Sun, 13 Nov 2022 10:59:59 -0800 (PST)
+Received: from xws.localdomain ([37.120.217.162])
+        by smtp.gmail.com with ESMTPSA id p9-20020a170906140900b007a9a56e2a07sm3233809ejc.49.2022.11.13.10.59.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Nov 2022 10:59:58 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 1/2] platform/surface: aggregator: Do not check for repeated unsequenced packets
+Date:   Sun, 13 Nov 2022 19:59:50 +0100
+Message-Id: <20221113185951.224759-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y3Ei7Nc+1wGOF6fk@a4bf019067fa.jf.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Nov 13, 2022 at 09:01:32AM -0800, Ashok Raj wrote:
-> If it's Ok to ask a question. "You" above is the kernel?
+Currently, we check any received packet whether we have already seen it
+previously, regardless of the packet type (sequenced / unsequenced). We
+do this by checking the sequence number. This assumes that sequence
+numbers are valid for both sequenced and unsequenced packets. However,
+this assumption appears to be incorrect.
 
-Of course the kernel. If you think about it, it makes sense only for the
-kernel to do any checking. As it is enforcing that only the proper blobs
-are loaded. Just like microcode.
+On some devices, the sequence number field of unsequenced packets (in
+particular HID input events on the Surface Pro 9) is always zero. As a
+result, the current retransmission check kicks in and discards all but
+the first unsequenced packet, breaking (among other things) keyboard and
+touchpad input.
 
-Userspace is only doing the triggering of the actions.
+Note that we have, so far, only seen packets being retransmitted in
+sequenced communication. In particular, this happens when there is an
+ACK timeout, causing the EC (or us) to re-send the packet waiting for an
+ACK. Arguably, retransmission / duplication of unsequenced packets
+should not be an issue as there is no logical condition (such as an ACK
+timeout) to determine when a packet should be sent again.
 
-> Microcode has no such functionality today right? User space 
-> never inputs a filename, only performs echo 1 > reload.
+Therefore, remove the retransmission check for unsequenced packets
+entirely to resolve the issue.
 
-Yes, because it is as user-friendly as possible. Users should not care
-about filenames. But microcode needs only a single file.
+Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ .../surface/aggregator/ssh_packet_layer.c     | 24 +++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-If you have multiple files like IFS, you could just as well supply them
-and the kernel would check every aspect before loading them.
-
-> If a file name composed by the kernel exists, then it checks the header
-> validity before proceeding.
-
-Yes.
-
-> So some of the files will work, some will fail, and user space doesn't
-> care?
-
-See my reply to Jithu:
-
-https://lore.kernel.org/r/Y3EiKUzpShqwzEf6@zn.tnic
-
-> You are reviewing the code and I'm simply discussing what each person
-> means. I hope its OK to have a dialog.
-
-I say
-
-| Late loading works also trivially:
-| 
-| echo 1 > /sys/devices/system/cpu/microcode/reload
-| 
-| And it goes and builds the filename from f/m/s and loads it from the
-| hardcoded path - no filename resolving.
-| 
-| But it doesn't ask the user to give a f/m/s or a sequence number.
-
-You reply with
-
-| I don't think the current proposed interface expects a f/m/s. The
-| entire IFS design was sort of mimicking the microcode interface."
-| 
-| and you go on to explain what it used to do. I read what it used to do.
-
-So how does your reply have any relevance to what I'm saying?
-
-I go and give the full spiel on how it is important to support command
-line loading and how you don't really need a special tool, you say
-
-|The utility is more like icing, to run a simple test all you need is a
-|simple script. It is not a baseline requirement."
-
-which feels like you didn't read this part *at* *all*:
-
-| A special tool is *always* a burden. You need to build it, supply
-| it, make sure it is installable on the target system and so on.
-| 
-| And I'm telling you this with my Linux distributor hat on. It is always
-| a pain - trust me.
-| 
-| For example, there's a reason why you can still control ftrace from the
-| command line and you don't need any tool. You *can* use a tool but you
-| don't have to. IOW, the KISS philosophy.
-
-So now I ended up pasting practically the most of my text again.
-
-Why?
-
-Because your reply doesn't give me *any* signs that you actually read
-what I said.
-
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+index 6748fe4ac5d5..def8d7ac541f 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+@@ -1596,16 +1596,32 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
+ 		ssh_ptl_tx_wakeup_packet(ptl);
+ }
+ 
+-static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, u8 seq)
++static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, const struct ssh_frame *frame)
+ {
+ 	int i;
+ 
++	/*
++	 * Ignore unsequenced packets. On some devices (notably Surface Pro 9),
++	 * unsequenced events will always be sent with SEQ=0x00. Attempting to
++	 * detect retransmission would thus just block all events.
++	 *
++	 * While sequence numbers would also allow detection of retransmitted
++	 * packets in unsequenced communication, they have only ever been used
++	 * to cover edge-cases in sequenced transmission. In particular, the
++	 * only instance of packets being retransmitted (that we are aware of)
++	 * is due to an ACK timeout. As this does not happen in unsequenced
++	 * communication, skip the retransmission check for those packets
++	 * entirely.
++	 */
++	if (frame->type == SSH_FRAME_TYPE_DATA_NSQ)
++		return false;
++
+ 	/*
+ 	 * Check if SEQ has been seen recently (i.e. packet was
+ 	 * re-transmitted and we should ignore it).
+ 	 */
+ 	for (i = 0; i < ARRAY_SIZE(ptl->rx.blocked.seqs); i++) {
+-		if (likely(ptl->rx.blocked.seqs[i] != seq))
++		if (likely(ptl->rx.blocked.seqs[i] != frame->seq))
+ 			continue;
+ 
+ 		ptl_dbg(ptl, "ptl: ignoring repeated data packet\n");
+@@ -1613,7 +1629,7 @@ static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, u8 seq)
+ 	}
+ 
+ 	/* Update list of blocked sequence IDs. */
+-	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = seq;
++	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = frame->seq;
+ 	ptl->rx.blocked.offset = (ptl->rx.blocked.offset + 1)
+ 				  % ARRAY_SIZE(ptl->rx.blocked.seqs);
+ 
+@@ -1624,7 +1640,7 @@ static void ssh_ptl_rx_dataframe(struct ssh_ptl *ptl,
+ 				 const struct ssh_frame *frame,
+ 				 const struct ssam_span *payload)
+ {
+-	if (ssh_ptl_rx_retransmit_check(ptl, frame->seq))
++	if (ssh_ptl_rx_retransmit_check(ptl, frame))
+ 		return;
+ 
+ 	ptl->ops.data_received(ptl, payload);
 -- 
-Regards/Gruss,
-    Boris.
+2.38.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
