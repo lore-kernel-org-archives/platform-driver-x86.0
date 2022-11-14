@@ -2,58 +2,56 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE6C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0564C43219
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 18:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238206AbiKNSNM (ORCPT
+        id S238222AbiKNSNN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Nov 2022 13:13:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
+        Mon, 14 Nov 2022 13:13:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238227AbiKNSMq (ORCPT
+        with ESMTP id S238263AbiKNSNI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Nov 2022 13:12:46 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6ECA24976;
-        Mon, 14 Nov 2022 10:12:45 -0800 (PST)
+        Mon, 14 Nov 2022 13:13:08 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A880E27FCF;
+        Mon, 14 Nov 2022 10:13:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668449565; x=1699985565;
+  t=1668449586; x=1699985586;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=v8ktWPCQxOcOq1xO3BnSVMNmnc14R0+VcwCvbZeVecY=;
-  b=Jvjl5EpjVvVShouyXyMpKgvC1W/piSn6Un36il5zcN0NBRnMoSnD8HMf
-   W1pPdH1NnsgguI5ceOTjviZk+ZFSYrO20AOE4vDIS1sL6pq/tdUvMqYyF
-   jYoU5m+amgmuAXn7kQBFIFRuTdYur9O10Hm6cc5y0e2fjuiTvAaiJbQfq
-   wYwKytQQqSDFv2uRULHKotvf7u7RhFODSNaLgZM/RrD3Qi+nIsK5hq73Z
-   4JCcwF/VBNvJNfpqsQMPjI70HTchXhHwhECVsLd/QiscUDZxaTPPTjsmI
-   ZWzaMcaliE7eJeEoVSy392C/+atmLCPxjb+TLhAQXGzBalcpf2G79GxMI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="310751748"
+  bh=eKMJ7LyFPJ5X6+VzY2jfBd5iMgbFHvueZsgtG6paIVk=;
+  b=hb9Hg72kI/uxJq4C9gwVjA1TNMJVa/3xqTI0U08mzcKRMt+Jf3sPmTNR
+   y5rphe+GCabcfOOSF32gGX9mEcj6EopMNHzPVIhztgcNXgL+1l+Ki2Bv2
+   uUfow8wpZiJ883nat4AXEaIZOvF0LG699i+C/nxiEhsX4EginAkGuMQfq
+   siZruOSnY8vRSIWPNgXnKxE4xeIWY6Z0p5Psl7LAcwCGSMfXbYu4FVbn7
+   lnBl+biscpaDYLbktKqA57Cb13mT+78XwByhzXHtsvnBGsivUOlvWnleR
+   fCzJpUYhEdzssrGcLxsW56Sw1zYdnvXzIkrn0P8IbtYvAStnnRIIm7PxF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="292440597"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="310751748"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 10:12:45 -0800
+   d="scan'208";a="292440597"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 10:13:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="967672973"
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="727626771"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="967672973"
+   d="scan'208";a="727626771"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Nov 2022 10:12:45 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Nov 2022 10:13:00 -0800
 Received: from otcpl-manager.jf.intel.com (otcpl-manager.jf.intel.com [10.54.77.21])
-        by linux.intel.com (Postfix) with ESMTP id 05057580A5F;
-        Mon, 14 Nov 2022 10:12:45 -0800 (PST)
+        by linux.intel.com (Postfix) with ESMTP id 0136358097C;
+        Mon, 14 Nov 2022 10:13:00 -0800 (PST)
 From:   Gayatri Kammela <gayatri.kammela@linux.intel.com>
 To:     hdegoede@redhat.com
 Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         sukumar.ghorai@intel.com, xi.pardee@intel.com,
-        rajvi.jingar@intel.com,
-        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
-        David E Box <david.e.box@linux.intel.com>
-Subject: [PATCH v3 1/8] platform/x86: intel/pmc: Replace all the reg_map with init functions
-Date:   Mon, 14 Nov 2022 10:12:00 -0800
-Message-Id: <20221114181207.2062901-2-gayatri.kammela@linux.intel.com>
+        rajvi.jingar@intel.com, David E Box <david.e.box@linux.intel.com>
+Subject: [PATCH v3 5/8] platform/x86: intel/pmc: Relocate Ice Lake PCH support
+Date:   Mon, 14 Nov 2022 10:12:04 -0800
+Message-Id: <20221114181207.2062901-6-gayatri.kammela@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,245 +59,183 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The current implementation of pmc core driver has the reg_map assigned
-to the CPUID of each platform. Replace the reg_map with init functions
-that are defined for each platform.
+From: Xi Pardee <xi.pardee@intel.com>
 
-This is a preparatory patch for redesigning the pmc core driver.
+Create icl.c for Ice Lake PCH specific structures and init().
+This file supports Ice Lake, Ice Lake NNPI and Jasper Lake platforms.
+There are no functional changes involved.
 
 Cc: David E Box <david.e.box@linux.intel.com>
 Reviewed-by: "David E. Box" <david.e.box@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: "David E. Box" <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmc/core.c | 114 +++++++++++++++++---------
- drivers/platform/x86/intel/pmc/core.h |  13 +++
- 2 files changed, 90 insertions(+), 37 deletions(-)
+ drivers/platform/x86/intel/pmc/Makefile |  2 +-
+ drivers/platform/x86/intel/pmc/core.c   | 45 --------------------
+ drivers/platform/x86/intel/pmc/core.h   |  3 ++
+ drivers/platform/x86/intel/pmc/icl.c    | 56 +++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+), 46 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/icl.c
 
+diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
+index 2b6d4a8dd2bb..6d153e368da1 100644
+--- a/drivers/platform/x86/intel/pmc/Makefile
++++ b/drivers/platform/x86/intel/pmc/Makefile
+@@ -3,7 +3,7 @@
+ # Intel x86 Platform-Specific Drivers
+ #
+ 
+-intel_pmc_core-y			:= core.o spt.o cnp.o
++intel_pmc_core-y			:= core.o spt.o cnp.o icl.o
+ obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
+ intel_pmc_core_pltdrv-y			:= pltdrv.o
+ obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
 diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 17ec5825d13d..b434cf5b094b 100644
+index 1cce586035f9..d75e8cbaf40c 100644
 --- a/drivers/platform/x86/intel/pmc/core.c
 +++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -19,7 +19,6 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/pci.h>
--#include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/uaccess.h>
-@@ -1895,27 +1894,73 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+@@ -60,28 +60,6 @@ const struct pmc_bit_map msr_map[] = {
+ 	{}
+ };
+ 
+-static const struct pmc_bit_map icl_pfear_map[] = {
+-	{"RES_65",		BIT(0)},
+-	{"RES_66",		BIT(1)},
+-	{"RES_67",		BIT(2)},
+-	{"TAM",			BIT(3)},
+-	{"GBETSN",		BIT(4)},
+-	{"TBTLSX",		BIT(5)},
+-	{"RES_71",		BIT(6)},
+-	{"RES_72",		BIT(7)},
+-	{}
+-};
+-
+-static const struct pmc_bit_map *ext_icl_pfear_map[] = {
+-	/*
+-	 * Check intel_pmc_core_ids[] users of icl_reg_map for
+-	 * a list of core SoCs using this.
+-	 */
+-	cnp_pfear_map,
+-	icl_pfear_map,
+-	NULL
+-};
+-
+ static const struct pmc_bit_map tgl_pfear_map[] = {
+ 	{"PSF9",		BIT(0)},
+ 	{"RES_66",		BIT(1)},
+@@ -103,24 +81,6 @@ static const struct pmc_bit_map *ext_tgl_pfear_map[] = {
+ 	NULL
+ };
+ 
+-static const struct pmc_reg_map icl_reg_map = {
+-	.pfear_sts = ext_icl_pfear_map,
+-	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
+-	.slp_s0_res_counter_step = ICL_PMC_SLP_S0_RES_COUNTER_STEP,
+-	.slps0_dbg_maps = cnp_slps0_dbg_maps,
+-	.ltr_show_sts = cnp_ltr_show_map,
+-	.msr_sts = msr_map,
+-	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
+-	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+-	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+-	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
+-	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
+-	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+-	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+-	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+-	.etr3_offset = ETR3_OFFSET,
+-};
+-
+ static const struct pmc_bit_map tgl_clocksource_status_map[] = {
+ 	{"USB2PLL_OFF_STS",			BIT(18)},
+ 	{"PCIe/USB3.1_Gen2PLL_OFF_STS",		BIT(19)},
+@@ -1589,11 +1549,6 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
  	}
  }
  
-+void spt_core_init(struct pmc_dev *pmcdev)
-+{
-+	pmcdev->map = &spt_reg_map;
-+}
+-void icl_core_init(struct pmc_dev *pmcdev)
+-{
+-	pmcdev->map = &icl_reg_map;
+-}
+-
+ void tgl_core_configure(struct pmc_dev *pmcdev)
+ {
+ 	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 2b7d681588cb..2ca564878341 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -351,6 +351,9 @@ extern const struct pmc_bit_map cnp_slps0_dbg2_map[];
+ extern const struct pmc_bit_map *cnp_slps0_dbg_maps[];
+ extern const struct pmc_bit_map cnp_ltr_show_map[];
+ extern const struct pmc_reg_map cnp_reg_map;
++extern const struct pmc_bit_map icl_pfear_map[];
++extern const struct pmc_bit_map *ext_icl_pfear_map[];
++extern const struct pmc_reg_map icl_reg_map;
+ 
+ void spt_core_init(struct pmc_dev *pmcdev);
+ void cnp_core_init(struct pmc_dev *pmcdev);
+diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+new file mode 100644
+index 000000000000..2f11b1a6daeb
+--- /dev/null
++++ b/drivers/platform/x86/intel/pmc/icl.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This file contains platform specific structure definitions
++ * and init function used by Ice Lake PCH.
++ *
++ * Copyright (c) 2022, Intel Corporation.
++ * All Rights Reserved.
++ *
++ */
 +
-+void cnp_core_init(struct pmc_dev *pmcdev)
-+{
-+	pmcdev->map = &cnp_reg_map;
-+}
++#include "core.h"
++
++const struct pmc_bit_map icl_pfear_map[] = {
++	{"RES_65",		BIT(0)},
++	{"RES_66",		BIT(1)},
++	{"RES_67",		BIT(2)},
++	{"TAM",			BIT(3)},
++	{"GBETSN",		BIT(4)},
++	{"TBTLSX",		BIT(5)},
++	{"RES_71",		BIT(6)},
++	{"RES_72",		BIT(7)},
++	{}
++};
++
++const struct pmc_bit_map *ext_icl_pfear_map[] = {
++	/*
++	 * Check intel_pmc_core_ids[] users of icl_reg_map for
++	 * a list of core SoCs using this.
++	 */
++	cnp_pfear_map,
++	icl_pfear_map,
++	NULL
++};
++
++const struct pmc_reg_map icl_reg_map = {
++	.pfear_sts = ext_icl_pfear_map,
++	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
++	.slp_s0_res_counter_step = ICL_PMC_SLP_S0_RES_COUNTER_STEP,
++	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
++	.msr_sts = msr_map,
++	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
++	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
++	.regmap_length = CNP_PMC_MMIO_REG_LEN,
++	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
++	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
++	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
++	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
++	.etr3_offset = ETR3_OFFSET,
++};
 +
 +void icl_core_init(struct pmc_dev *pmcdev)
 +{
 +	pmcdev->map = &icl_reg_map;
 +}
-+
-+void tgl_core_configure(struct pmc_dev *pmcdev)
-+{
-+	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
-+	/* Due to a hardware limitation, the GBE LTR blocks PC10
-+	 * when a cable is attached. Tell the PMC to ignore it.
-+	 */
-+	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
-+	pmc_core_send_ltr_ignore(pmcdev, 3);
-+}
-+
-+void tgl_core_init(struct pmc_dev *pmcdev)
-+{
-+	pmcdev->map = &tgl_reg_map;
-+	pmcdev->core_configure = tgl_core_configure;
-+}
-+
-+void adl_core_configure(struct pmc_dev *pmcdev)
-+{
-+	/* Due to a hardware limitation, the GBE LTR blocks PC10
-+	 * when a cable is attached. Tell the PMC to ignore it.
-+	 */
-+	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
-+	pmc_core_send_ltr_ignore(pmcdev, 3);
-+}
-+
-+void adl_core_init(struct pmc_dev *pmcdev)
-+{
-+	pmcdev->map = &adl_reg_map;
-+	pmcdev->core_configure = adl_core_configure;
-+}
-+
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&spt_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&spt_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&spt_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&spt_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&cnp_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&icl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&cnp_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&cnp_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&icl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &tgl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_reg_map),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_reg_map),
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		spt_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		spt_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		spt_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		spt_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	cnp_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		icl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	icl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		cnp_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		cnp_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	icl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		adl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        tgl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		adl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	adl_core_init),
- 	{}
- };
- 
-@@ -1975,6 +2020,7 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	static bool device_initialized;
- 	struct pmc_dev *pmcdev;
- 	const struct x86_cpu_id *cpu_id;
-+	void (*core_init)(struct pmc_dev *pmcdev);
- 	u64 slp_s0_addr;
- 
- 	if (device_initialized)
-@@ -1985,20 +2031,25 @@ static int pmc_core_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, pmcdev);
-+	pmcdev->pdev = pdev;
- 
- 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
- 	if (!cpu_id)
- 		return -ENODEV;
- 
--	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
-+	core_init = (void  (*)(struct pmc_dev *))cpu_id->driver_data;
- 
- 	/*
- 	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
- 	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
- 	 * in this case.
- 	 */
--	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
--		pmcdev->map = &cnp_reg_map;
-+	if (core_init == spt_core_init && !pci_dev_present(pmc_pci_ids))
-+		core_init = cnp_core_init;
-+
-+	mutex_init(&pmcdev->lock);
-+	core_init(pmcdev);
-+
- 
- 	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-@@ -2014,24 +2065,13 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (!pmcdev->regbase)
- 		return -ENOMEM;
- 
--	mutex_init(&pmcdev->lock);
-+	if (pmcdev->core_configure)
-+		pmcdev->core_configure(pmcdev);
- 
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
- 	pmc_core_get_low_power_modes(pdev);
- 	pmc_core_do_dmi_quirks(pmcdev);
- 
--	if (pmcdev->map == &tgl_reg_map)
--		pmc_core_get_tgl_lpm_reqs(pdev);
--
--	/*
--	 * On TGL and ADL, due to a hardware limitation, the GBE LTR blocks PC10
--	 * when a cable is attached. Tell the PMC to ignore it.
--	 */
--	if (pmcdev->map == &tgl_reg_map || pmcdev->map == &adl_reg_map) {
--		dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
--		pmc_core_send_ltr_ignore(pmcdev, 3);
--	}
--
- 	pmc_core_dbgfs_register(pmcdev);
- 
- 	device_initialized = true;
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 4c7e77f1ccac..e64b33e46397 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -13,6 +13,7 @@
- #define PMC_CORE_H
- 
- #include <linux/bits.h>
-+#include <linux/platform_device.h>
- 
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
- 
-@@ -312,6 +313,7 @@ struct pmc_reg_map {
-  * @regbase:		pointer to io-remapped memory location
-  * @map:		pointer to pmc_reg_map struct that contains platform
-  *			specific attributes
-+ * @pdev:		pointer to platform_device struct
-  * @dbgfs_dir:		path to debugfs interface
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-@@ -322,6 +324,7 @@ struct pmc_reg_map {
-  * @num_lpm_modes:	Count of enabled modes
-  * @lpm_en_modes:	Array of enabled modes from lowest to highest priority
-  * @lpm_req_regs:	List of substate requirements
-+ * @core_configure:	Function pointer to configure the platform
-  *
-  * pmc_dev contains info about power management controller device.
-  */
-@@ -330,6 +333,7 @@ struct pmc_dev {
- 	void __iomem *regbase;
- 	const struct pmc_reg_map *map;
- 	struct dentry *dbgfs_dir;
-+	struct platform_device *pdev;
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
- 
-@@ -339,8 +343,17 @@ struct pmc_dev {
- 	int num_lpm_modes;
- 	int lpm_en_modes[LPM_MAX_NUM_MODES];
- 	u32 *lpm_req_regs;
-+	void (*core_configure)(struct pmc_dev *pmcdev);
- };
- 
-+void spt_core_init(struct pmc_dev *pmcdev);
-+void cnp_core_init(struct pmc_dev *pmcdev);
-+void icl_core_init(struct pmc_dev *pmcdev);
-+void tgl_core_init(struct pmc_dev *pmcdev);
-+void adl_core_init(struct pmc_dev *pmcdev);
-+void tgl_core_configure(struct pmc_dev *pmcdev);
-+void adl_core_configure(struct pmc_dev *pmcdev);
-+
- #define pmc_for_each_mode(i, mode, pmcdev)		\
- 	for (i = 0, mode = pmcdev->lpm_en_modes[i];	\
- 	     i < pmcdev->num_lpm_modes;			\
 -- 
 2.25.1
 
