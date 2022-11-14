@@ -2,116 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCF2C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 08:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3014CC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 14:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236395AbiKNI3N (ORCPT
+        id S229909AbiKNONk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Nov 2022 03:29:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
+        Mon, 14 Nov 2022 09:13:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236377AbiKNI3M (ORCPT
+        with ESMTP id S236931AbiKNONi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Nov 2022 03:29:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD821AF02
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 00:28:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668414499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0cKHoFafz+LP1S2CBddADOVNwHT2k+gOLa+MKsB3ptw=;
-        b=TGQ68CpZmQ5Df9fPH7bEsnd1Dz3rfzJsON1L54s35mio8qYTQsRQgJzY8utviqmNr+MkgE
-        kFll9IoybN2/XEMGGsMCpWaEQ6YzHiawGMaUFAA3EmCERw5XMa8EkCACzQK5FuUk+Lz0Cj
-        963a1z2Qx82huv36n/8f6zeZKiMoGfY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-480-RJ8ZUBPbMcGOQ7HskE_odA-1; Mon, 14 Nov 2022 03:28:17 -0500
-X-MC-Unique: RJ8ZUBPbMcGOQ7HskE_odA-1
-Received: by mail-ej1-f71.google.com with SMTP id nc4-20020a1709071c0400b0078a5ceb571bso4969064ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 00:28:17 -0800 (PST)
+        Mon, 14 Nov 2022 09:13:38 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184E8BCF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 06:13:37 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id v1so18457930wrt.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 06:13:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2UHH7r8UFjTS3ZiZafPyZyy9VrSealpYk9TZbOOO5a4=;
+        b=XhVX2dZMZktDbR4mPqe/rEoMNW73fTyGaKyrpPxJAabkrdYY2qLyey45rfHKP8IU0N
+         PtSjKMU9OkhphMz/a7ipUOGvAMOBw3W4TwK2cU/FLwI1IguQmegAoYtOOGGcl29NfKVU
+         vQeQweszFeWL3iHPcqRx6yvptBH7fI110aRrd9fqGwKZIxOe9KskEYH7OUFRUNXjQ973
+         vwnjKu5R6/YjhcveFeAMcm3x90eWIQYmSMjdorL4073hnkkOn+X5MaHWZNBRqW+lV5xM
+         py6s7+Cf1SUBFiatwYTTu+E0s1wnmBHCvlTnY7/qUC19JUuKozeq6uYc2bgwas9MsTyj
+         LC5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0cKHoFafz+LP1S2CBddADOVNwHT2k+gOLa+MKsB3ptw=;
-        b=dKRjg8kG1iOTCRnHJ7TePK096kTryMyMcxyql7q9rTLQhOidaiAvE2nO3h+69exBVR
-         TdrDvNvhFjYqxxnTGYdeGqa3OMZITWnd0fAxpBMLGt4rDennLVMlhUIRxLsoagbLZ4Be
-         yvqJuSwoqrr7dPyuK4vhy3Yh3b19Cj4I9DqUeHYfNd4418GshxQoDbUBtvASKsF6rb4M
-         PGBegHXkvJBKQySOpZFaRDZwfFCUM3V8I2OAfwJuhfTcULYTxQUkSAbc8miPAl2/1g3m
-         G7bgjUQNNbHxL4ziUaiCOQsyoBmiUWfF1I1494DaLgHsRXh59tRxM5FIQaC+PvPuhCvn
-         lvLw==
-X-Gm-Message-State: ANoB5pmf+Ifls0OfQqPyavBguZwamL33jeCKrN93QoxMydPJU++GxRXL
-        VLCh4PueqoX8PfndW1PessEa41p38Re0kEM/u822mLyvu/eMvVKE8yvkDO52niarIYCDa1h4Uyj
-        /U9IlOztakQjS2XYAq3b18pTPf8I8ODnwhg==
-X-Received: by 2002:a17:906:a148:b0:79e:9d9b:d41f with SMTP id bu8-20020a170906a14800b0079e9d9bd41fmr9465083ejb.404.1668414496894;
-        Mon, 14 Nov 2022 00:28:16 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6llvFfjsia9EdK19bkvVH34sDfeBmnZsD9XX/oHCPsIbjxTUEgWIQrbHxvv3fFbacyGd35kg==
-X-Received: by 2002:a17:906:a148:b0:79e:9d9b:d41f with SMTP id bu8-20020a170906a14800b0079e9d9bd41fmr9465074ejb.404.1668414496703;
-        Mon, 14 Nov 2022 00:28:16 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id sz15-20020a1709078b0f00b0073cf6ec3276sm3840583ejc.207.2022.11.14.00.28.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Nov 2022 00:28:15 -0800 (PST)
-Message-ID: <ab0db3fa-4106-da16-7771-8ab50aa0f3b5@redhat.com>
-Date:   Mon, 14 Nov 2022 09:28:14 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2UHH7r8UFjTS3ZiZafPyZyy9VrSealpYk9TZbOOO5a4=;
+        b=po5zh8D4P0dpuumwCI248ssdx+TPoFFRjSnPPLgF6L6Bittg9D/8Oq1l3OvcnZOdhO
+         v+G+pbu7u/i7HOtj0BSlFM4JveTW4RBCLA/gbvs7LIo71N0PSMR78yZYNNP7f+asmqGu
+         h0GoFzcQ7MUmMnFZ0W8/keHvI3gNamW070befPppQaxWNJrwjScuirI8JJgjufl04qOW
+         56t7yfami7m/MXOPjYfrw8oiW0w+FGBQJa8NaItLKEmal6iDxLyIpca9KzSjMm3ylJP7
+         g7pyuATivqOeog5XAOOUhCvgu70k2aMH+cJycabKij9L0xkdwyrJyKaSgSKi0Hr5KOhx
+         6UBg==
+X-Gm-Message-State: ANoB5pmzW5QHNKnAyX57/zUpwdRpuVv72NWPdrbep0J4qJW2HqUYGnPp
+        np4Z6Ou9Fe3Q33l4HAzc40oZfhgfwuQENSpzs+ohTTnA
+X-Google-Smtp-Source: AA0mqf5DAe6AkOTqRJZl0dKXzu5ihrZmjo9DT82XyZIGw4IY90S7J5XvbFB7WeFMKkxPRY8L5xxJ7wiVAAb8G6eP2ac=
+X-Received: by 2002:a5d:5481:0:b0:235:a4a5:8e91 with SMTP id
+ h1-20020a5d5481000000b00235a4a58e91mr7893996wrv.404.1668435215530; Mon, 14
+ Nov 2022 06:13:35 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs
- entry
-Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>,
-        Thiago Macieira <thiago.macieira@intel.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <Y3CevK2zhAmiUyG9@kroah.com> <Y3DZmKYV+8HBtZ+Q@zn.tnic>
- <2537334.Lt9SDvczpP@tjmaciei-mobl5> <Y3F4Uq+1qi5tnmeG@zn.tnic>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y3F4Uq+1qi5tnmeG@zn.tnic>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20221020201033.12790-1-jorge.lopez2@hp.com> <20221020201033.12790-3-jorge.lopez2@hp.com>
+ <dd8b494c-114c-e27e-4dcd-08dcb8b31d9d@redhat.com> <CAOOmCE9YT3VxEbuMMX3MCvxEinHugvvYkGHgrnRN1fHVSy7cWw@mail.gmail.com>
+ <38afe79b-0c23-cfbb-30a8-71ce9fcd794b@redhat.com>
+In-Reply-To: <38afe79b-0c23-cfbb-30a8-71ce9fcd794b@redhat.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 14 Nov 2022 08:13:24 -0600
+Message-ID: <CAOOmCE-bUW_kxTHr+v2GBwKf77RqTV-UrRv+PL==+PkvZkHFNg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] Introduction of HP-BIOSCFG driver
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Sat, Nov 12, 2022 at 2:30 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 11/12/22 00:00, Jorge Lopez wrote:
+> > Hi Hans,
+> >
+> > A quick note to check the next step.   The changes requested for
+> > enum-attributes,c and several supporting functions will impact other
+> > source files.  To save reviewing time,  I am planning to introduce the
+> > same changes across all source files and then proceed to submit the
+> > review.   Is this option acceptable?.
+>
+> Yes applying the same changes to all the source files is
+> the *intention*. This is why I stopped reviewing after
+> reviewing the first set of files.
+>
 
-On 11/14/22 00:05, Borislav Petkov wrote:
-> On Sun, Nov 13, 2022 at 01:51:56PM -0800, Thiago Macieira wrote:
->> Anyway, we can update the tool to print "%02x-%02x-%02x-%02x.%s" instead of 
->> "%d". That's trivial to us. I just don't think it's a worthwhile change, 
-> 
-> As I wrote to Tony, "I guess time will show whether the sequence number
-> thing was a good idea."
+That was understanding but I wanted to make sure.
+Thanks for the confirmation.
 
-Just for the record: I've read the entire thread and I'm fine with doing
-things either way.
-
-If I understand this last email correctly then the plan is to move
-ahead with the patches as-is, with writing only the batch-number and
-have the kernel create the filename. This was and still is fine with me.
-
-Regards,
-
-Hans
-
+> Regards,
+>
+> Hans
+>
+>
