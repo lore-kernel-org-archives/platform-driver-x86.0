@@ -2,94 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F61C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 07:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADD9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 07:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235789AbiKNHQD (ORCPT
+        id S235717AbiKNHjj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Nov 2022 02:16:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
+        Mon, 14 Nov 2022 02:39:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235493AbiKNHQD (ORCPT
+        with ESMTP id S235617AbiKNHjj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Nov 2022 02:16:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940FEDE9E;
-        Sun, 13 Nov 2022 23:16:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 14 Nov 2022 02:39:39 -0500
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33524113;
+        Sun, 13 Nov 2022 23:39:37 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 252FA60DE4;
-        Mon, 14 Nov 2022 07:16:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0292BC433C1;
-        Mon, 14 Nov 2022 07:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1668410161;
-        bh=QZ2hDN7ENnP9xgo+76D84xuEYJANb+AhzKCDG45trzc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mTLTwTou6gugHVLBfC5kKM/9XlWijH3RpGVEbYyOow99SXMMh9K3DeJa/JNLR/8T3
-         cvvCuWUoRzz/ACbIYI1HsoNKcxa0DFHjk4almwRjVnbhJ0WtFtkE0+xrOuZtsEJo9w
-         bG6yp73fWu/4Bx+XuQoYoUf+DbeW5xUzNC/S7EzQ=
-Date:   Mon, 14 Nov 2022 08:15:58 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thiago Macieira <thiago.macieira@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
-Subject: Re: [PATCH v2 12/14] platform/x86/intel/ifs: Add current_batch sysfs
- entry
-Message-ID: <Y3HrLpTdxqUPWW3F@kroah.com>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-13-jithu.joseph@intel.com>
- <Y2/JNAmSoYlLKq3A@zn.tnic>
- <CC3629D6-B205-4150-80E5-FC7A7A76DD25@intel.com>
- <Y3CevK2zhAmiUyG9@kroah.com>
- <Y3DZmKYV+8HBtZ+Q@zn.tnic>
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id B68194237F;
+        Mon, 14 Nov 2022 07:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1668411572;
+        bh=d7HYXsrjbhkYPHejCgZK/7KqFi0JzRgbIXzSOTLTu7A=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=PfmGUmwB+Z5H5Ap4lwk7IwLS8YrjlfxN4lqauV9bTe4DYVBr4moz3nzKOdv51C9ho
+         aUS23Jpjk+5D7SSART5XV4vjSCjsOnoB9t1uj+jWsibmI+KdesdS7cTyAbs1VCSwMB
+         CWOeoXlAEUukZOkpslQgnkjdjHFXolgYnodjKKsVjft3aePiXrwMlkEcqddMv9/nJk
+         OyVls4dQcsHqwmBgqD6LvF81MU+dGiHb07lazosCO3V1WzjP8aH+mBaVp+iomgF8dO
+         +RRytVX6K7QHwr0mjsi3b2xNk4o3XQaeTJxUymgYfGgVBO1/+DG8e5uwreaqe1p/N6
+         43UWOYsUTtMvg==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Ignore Smart Experience App event
+Date:   Mon, 14 Nov 2022 15:38:41 +0800
+Message-Id: <20221114073842.205392-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3DZmKYV+8HBtZ+Q@zn.tnic>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Nov 13, 2022 at 12:48:40PM +0100, Borislav Petkov wrote:
-> Replying to both with one mail because it still feels like there's a
-> misunderstanding.
-> 
-> On Sun, Nov 13, 2022 at 08:37:32AM +0100, gregkh@linuxfoundation.org wrote:
-> > No, please do not force the driver to resolve a filename path in the
-> > kernel.
-> 
-> No, I don't mean to do any filename path resolving - all I suggest is to
-> echo into sysfs the full filename instead of the number. I.e., this:
-> 
-> for i in $(ls /lib/firmware/intel/ifs_0/*.scan);
-> do
-> 	echo $i /sys/devices/virtual/misc/intel_ifs_0/current_batch
-> done
+Sometimes hp-wmi driver complains on system resume:
+[ 483.116451] hp_wmi: Unknown event_id - 33 - 0x0
 
-Sorry, yes, that is fine, I was objecting to the previous "write any
-path/file to the sysfs entry and the kernel will parse it" that was
-happening in the original series.  A filename, without a path, that
-always loads from the existing in-kernel firmware path locations is
-fine.
+According to HP it's a feature called "HP Smart Experience App" and it's
+safe to be ignored.
 
-thanks,
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/platform/x86/hp-wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-greg k-h
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 12449038bed12..0a99058be8130 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -90,6 +90,7 @@ enum hp_wmi_event_ids {
+ 	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+ 	HPWMI_SANITIZATION_MODE		= 0x17,
++	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
+ };
+ 
+ /*
+@@ -859,6 +860,8 @@ static void hp_wmi_notify(u32 value, void *context)
+ 		break;
+ 	case HPWMI_SANITIZATION_MODE:
+ 		break;
++	case HPWMI_SMART_EXPERIENCE_APP:
++		break;
+ 	default:
+ 		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
+ 		break;
+-- 
+2.34.1
+
