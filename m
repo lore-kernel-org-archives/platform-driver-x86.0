@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E026EC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 16:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD070C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Nov 2022 16:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235936AbiKNQQI (ORCPT
+        id S237801AbiKNQmz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Nov 2022 11:16:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51816 "EHLO
+        Mon, 14 Nov 2022 11:42:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiKNQQH (ORCPT
+        with ESMTP id S237736AbiKNQmy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Nov 2022 11:16:07 -0500
+        Mon, 14 Nov 2022 11:42:54 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2D22034E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 08:15:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9AC10AD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 08:41:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668442513;
+        s=mimecast20190719; t=1668444098;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lqfsJV7dPgqVx27qmgyKnfrpb21PpAlrqPXKtFaOkws=;
-        b=K08Xif+ju0sdimOO36JQbYJcIu6IeRRrjBY/LJucVzO2tqGUJm8G2cQl0d8P22pi5SYfsd
-        YtPgVUFvZjpdEwbwNtsVdfweShyyCU+X9ugoGo7LhCKj8/fYR6d7El8d0JTNtB0kVTBoEN
-        KPIkQep8JLQ2fTZ7fmTpP553XP3sDqk=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8r0f0P2OBHAKa+0311skOx2typ786L6dN+1iAhLHNfU=;
+        b=cDdbR1QO9K2L1QCZGENubKaAteEH2qHkk4Glu0PhrUkoDdyNlNsCCaSXndkJbo9YBugTSP
+        h54GA6PBm6TZSwhsQFqfYRnYm+J6xBQmQnqlrr4Mi5LGpcPApf1gWOZTWetcLc9ZbM76yb
+        rY5K7sFfsPNOiPPv0sImku68SVztvOE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-584-WGBJl4KMOiWWnu1wfTSpSw-1; Mon, 14 Nov 2022 11:15:12 -0500
-X-MC-Unique: WGBJl4KMOiWWnu1wfTSpSw-1
-Received: by mail-ej1-f72.google.com with SMTP id sb4-20020a1709076d8400b007ae596eac08so5801033ejc.22
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 08:15:12 -0800 (PST)
+ us-mta-370-u-lZi4ZfNbSbo3eKR6Z_BQ-1; Mon, 14 Nov 2022 11:41:37 -0500
+X-MC-Unique: u-lZi4ZfNbSbo3eKR6Z_BQ-1
+Received: by mail-ej1-f69.google.com with SMTP id oz34-20020a1709077da200b007adc8d68e90so5701035ejc.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Nov 2022 08:41:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqfsJV7dPgqVx27qmgyKnfrpb21PpAlrqPXKtFaOkws=;
-        b=4ZBVOZN444LzRzY7EUCNLai7SEhwe2lVfGWLyf8rolOLqCAZSruwbQpA0RhvsalBRv
-         2Ob0mBaxJDaf63lKcOp49Unfu+QyQZARn+RcGj5Uj8HAtXgyqt5Iyl2d5/kxsnw7gU6r
-         TS9hYV4UkfQu/hVGcUeRb+HwDuzEG9DMbu26vp9zK4CZJpPbrLXR8lViG1ZhokPDMiz5
-         8p2rUeFluSD4l4x2deEdqWiw0aduxBBOcthEfprs2fOKkH6YkXRUQ6cy+XUe0RKAcipK
-         nIRIWmNzTfc/HUCi4sVNbNTV/tcUcDxc93ZG2HP+MK06CeRhzwnJ8TdGewPXDdhxmQvR
-         XTxg==
-X-Gm-Message-State: ANoB5pkinfEl0pqQZQ46VpaMG724AoP7Sg2T5wcfC+3MDAxgAPkAKNoQ
-        Bxoa1tJoWueyKzbnEG6bXJEa4OrYvkuuUaixm73BzRhPW7QscI19auFySKAkRPkkOG28YiX7A0E
-        wLOh3eImY/zz2LjMx3+2rKTd8uTP83wBHtQ==
-X-Received: by 2002:a17:907:76f1:b0:7ae:129b:2d3a with SMTP id kg17-20020a17090776f100b007ae129b2d3amr10567477ejc.552.1668442510838;
-        Mon, 14 Nov 2022 08:15:10 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4UJzEFF73jP7RIZP8bYiC2W3jC2BVNmT4XYADdcTh2wMbcqhKMw1MY/CmmgSPvq/usJM1qSQ==
-X-Received: by 2002:a17:907:76f1:b0:7ae:129b:2d3a with SMTP id kg17-20020a17090776f100b007ae129b2d3amr10567466ejc.552.1668442510609;
-        Mon, 14 Nov 2022 08:15:10 -0800 (PST)
+        bh=8r0f0P2OBHAKa+0311skOx2typ786L6dN+1iAhLHNfU=;
+        b=hcmu43cyujGVmTOMBC0eHRxdvSc66Fv+lPx4johmx0ge/o52PqtvY4QTOjs0S8f0gv
+         yPw6GGqWzuH+68ak5HpKa2krgQqhRkb7jRA/FNon3BNR0gfC+UzGZywaADThrMJQPd0G
+         p5bx+VscBdnl1CgReZ2tDmVsqzX4ZknAmieKyNiJUcrlWpYhBr+tPU6Z/+r2agyBtLJt
+         C+BLxpMwNOn267VcPuH7mWSr67tMLtKgbCzhK6L50DddUcUGu9e+7eQv/ARwsv0yweNV
+         f7MDxVtN41SEYy0MxnlL4qyq+S+aWctFbMdUwlR1VKd55nCLNOcQxCp1e5gt45hrtPS9
+         gZvQ==
+X-Gm-Message-State: ANoB5pnbTB3gU/WaNmD+3vhlNBxy7lL838ydji3K0NUb6vdpobub3y07
+        STepDdqOHXp2aWdQ488Ko29pgJWoJjZungk9RSxpyjlKHVt45Q54jAtoXzgybxltBv7JTxCIeBx
+        M76XHp49ax/Oa0gmoW7X2ibmF4W8ho6bbAw==
+X-Received: by 2002:a17:907:2a11:b0:78d:1cc8:9fa0 with SMTP id fd17-20020a1709072a1100b0078d1cc89fa0mr11116594ejc.666.1668444096027;
+        Mon, 14 Nov 2022 08:41:36 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6qhWTStT1vvVOxqxEuOFAuMeF0yM5StLVRrbBoA4jU/6j04PF3Sos0OxgUQyLemZJeYk/1oQ==
+X-Received: by 2002:a17:907:2a11:b0:78d:1cc8:9fa0 with SMTP id fd17-20020a1709072a1100b0078d1cc89fa0mr11116579ejc.666.1668444095789;
+        Mon, 14 Nov 2022 08:41:35 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id q21-20020a17090676d500b007826c0a05ecsm4279911ejn.209.2022.11.14.08.15.09
+        by smtp.gmail.com with ESMTPSA id u1-20020a1709061da100b0078bfff89de4sm4406175ejh.58.2022.11.14.08.41.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Nov 2022 08:15:10 -0800 (PST)
-Message-ID: <777e0ff5-e10a-c9b0-2ca9-c480d7232b9f@redhat.com>
-Date:   Mon, 14 Nov 2022 17:15:09 +0100
+        Mon, 14 Nov 2022 08:41:34 -0800 (PST)
+Message-ID: <7e263715-e759-9293-ec53-27033a79a2bc@redhat.com>
+Date:   Mon, 14 Nov 2022 17:41:33 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
@@ -78,7 +78,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Philiph,
+Hi,
 
 On 11/14/22 15:41, Philipp Jungkamp wrote:
 > The event data of the WMI event 0xD0, which is assumed to be the
@@ -102,17 +102,67 @@ On 11/14/22 15:41, Philipp Jungkamp wrote:
 > I preferred it over allocating a single int for the device or casting an enum
 > to a void *. This additionally removes the need for a remove funtion.
 
-Thank you for both the v2 and this new interesting approach. Unfortunately
-I have a bit of a patch backlog so I'm not sure when I will get around to
-this. I will try to get this reviewed / commented on no later then sometime
-next week.
+I decided just take quick peek and I think the cleanest solution here would
+be to add a driver-data struct with the lookup result of:
+
+	struct ideapad_private *priv = container_of(wdrv,
+						    struct ideapad_private,
+						    wmi_drv);
+
+Stored in there + the enum value and then alloc it with devm_kzalloc
+to avoid the need for a remove callback.
+
+I'm also wondering if we could then maybe not move some other variables
+only used in the wmi_notify callback to that driver-data struct ?
+(I did not check if there are any candidates).
+
+Also this is going to need a big fat warning (comment) that the cute trick
+with registering a wmi_driver struct embedded inside the platform_driver
+data struct very much relies on there being only one platform_device
+instance to which the platform_driver will bind ever, otherwise
+we will get multiple wmi_driver's registered for the same WMI GUIDs
+and then the container-off will likely return the driver-data of the
+first platform device ...
+
+Which makes me wonder if it would not be cleaner to just use a global
+pointer for this ?   Note this is an honest open question.
+
+Actually since the platform_device gets instantiated by the ACPI
+core there is no guarantee there will be only 1. So I think that
+the container_of on the wmi-driver trick needs to go, instead
+introduce:
+
+1. A global ideapad_private_data_mutex mutex
+2. A global ideapad_private_data pointer
+
+And:
+
+1. In ideapad_acpi_add:
+lock the mutex
+check that ideapad_private_data is not already set and if it is bail with an error
+set ideapad_private_data
+unlock the mutex
+
+2. in ideapad_acpi_remove:
+lock the mutex
+clear the golbal pointer
+unlock the mutex
+
+3. In the wmi-driver's notify method:
+lock the mutex
+check ideapad_private_data is not NULL
+process event
+unlock the mutex
+
+4. replace module_platform_driver with normal module init + exit
+functions which register both drivers / unregister both drivers.
+
+I believe that this will be a more clean approach then the embedded
+wmi_driver struct cuteness.
 
 Regards,
 
 Hans
-
-
-
 
 
 
