@@ -2,76 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA33C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 16:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6054C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 16:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238628AbiKOQSQ (ORCPT
+        id S229978AbiKOQY3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Nov 2022 11:18:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37334 "EHLO
+        Tue, 15 Nov 2022 11:24:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238632AbiKOQRz (ORCPT
+        with ESMTP id S238601AbiKOQYW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Nov 2022 11:17:55 -0500
+        Tue, 15 Nov 2022 11:24:22 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736FA2AE2A
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 08:17:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0256221
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 08:23:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668529023;
+        s=mimecast20190719; t=1668529403;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XDgT+hgY0n5Xo5QJsDJ/FMhFBT9jyY5U73j3jzri3M8=;
-        b=IkA06xqFNlWG6g1F2MUvo04RjlSQbKbYSc3zrpGMxnf0ihpZvXaVGRnz41JmTDgUFX38W3
-        vukI3eu5erS//1sTXsrJcFJWs6jboUZ20inVJJixIxk+l3vIodBNTmngEcVeEIvc8T/4Dd
-        MYKdlZXC6UsaRMKVKyZMqKOFxTpGc4Q=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ci9vEZZd7PIXQiAbPPazeWj16pxvXWYEaZMVH28k3eg=;
+        b=h2UBsPYm6117zn9Xj39zeaiGJIeCeJA5iJIAHKPhJLCk3rAi5utHrmw3CDAJdzFUqbxkBa
+        CN1CbL24gpAiH8pU9y8bWJQ/QSTaQhrMN8yvQU82Xq2ir/9LilTbCJ7A+ma6tCIb8MnXUg
+        OqrAtRQGqEZeCzYcZ3HNlftCp9LP04Q=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-214-EjsbeVL4OkWN81QCRNeWbw-1; Tue, 15 Nov 2022 11:17:01 -0500
-X-MC-Unique: EjsbeVL4OkWN81QCRNeWbw-1
-Received: by mail-ed1-f72.google.com with SMTP id h9-20020a05640250c900b00461d8ee12e2so10342414edb.23
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 08:17:01 -0800 (PST)
+ us-mta-562-uMNqt-x7Pz2tCXksdfi6rw-1; Tue, 15 Nov 2022 11:23:22 -0500
+X-MC-Unique: uMNqt-x7Pz2tCXksdfi6rw-1
+Received: by mail-ej1-f72.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso7558398ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 08:23:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XDgT+hgY0n5Xo5QJsDJ/FMhFBT9jyY5U73j3jzri3M8=;
-        b=G7XBtNspJ4dDlbThTBkLkZJK5ynEDav70JrKtn52/SHi4g2i9SfP/N/bm0H0PVsj03
-         ER3qJ3CpFpd3iKczmOclTQor8UrK0+AAqjfdpK8T2Zj/ZXfyrMOhEPLoy1qEfnyDC7+k
-         fyEu1tyGGsVcVRz3LyFEaFQe28Y+ZlpjCjnO3iKTgKjnswz3DnMIHm57wQPkf/yeunKv
-         yvEAMXfI72IiiT6Y1lFI6v+3TDbdflh1+joKlhP9okZ+JSZGSmb9l/ga5DPXwUXZFCmi
-         ucamkcOamprgETkIpxZ1Tc1SItg6A0egkf/U1qH4lH8+6OlhD5QuSMv3UrpFWOicqp/5
-         kTzQ==
-X-Gm-Message-State: ANoB5pm+xTGuOlvCbcFkZtepIkuf/GcOd+i3x2mbqOUm4cDLWDUhH+d/
-        vEtFLKiF6/c3TwMECYTvLvYK1tX2SFk8j/bkm7/N6j5J6crZtawydRdMUInN6h5wf/M9U2ENKWo
-        nyeqEgdCbe0bw2YKkoQ/zKdQIeWdujGj7Lg==
-X-Received: by 2002:a17:906:3a9b:b0:7ad:dc7e:1b8d with SMTP id y27-20020a1709063a9b00b007addc7e1b8dmr14138926ejd.276.1668529019788;
-        Tue, 15 Nov 2022 08:16:59 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5DQXNXpGw0jTeP4M7J28ODDSm5WTMzJAsZ6eIFdJqF9Qm2Ff7+YVEglvO55lSJNDrCnesNoA==
-X-Received: by 2002:a17:906:3a9b:b0:7ad:dc7e:1b8d with SMTP id y27-20020a1709063a9b00b007addc7e1b8dmr14138908ejd.276.1668529019556;
-        Tue, 15 Nov 2022 08:16:59 -0800 (PST)
+        bh=ci9vEZZd7PIXQiAbPPazeWj16pxvXWYEaZMVH28k3eg=;
+        b=KQSq64slreKERYJGPFLTXt0hKygbctYjxxFvgrz1J9cS9jTGCWS0WEnXHJKNuGUXhO
+         wsEVRE/57da3rgjiN59uBySodaNvMkvutJ9vxrT6jT2E7rVL3lHRmfjAzfa4YxsKbspH
+         vEjZtK/NsyWvPnuzhyiRoTOc5z6mA/eH1b2PScvWZWNjDBv/QPw9TmO+G5SPXKeWwRpk
+         C72+86rTEfWeaFwpWkwGpCAyxhjIXfEEyZzRJS8PzPmDsr/0XLTdw1P1UdPbubunPo5A
+         TV4dHs36OJPP6gxOfVFPaPBag/fHXmtGRnUh01rUH/LRkxEyEVY8p0uM0AoHU4CcAPlL
+         gNWw==
+X-Gm-Message-State: ANoB5plJwtvLEoXG61e3m/GmgvbTZ3kO8RKQSdVtOzoFYBuNQisvr2Hk
+        ZcBLC36hPz8p2juwQ6njcRNVw2AcD52OF/y5X0Smxx1FrJt1+Vk3T9oPyTN4W2Zc5S4mykGXLQi
+        CPCORGoYPhMm016A5jrwzc2dYaz3Q51ucOw==
+X-Received: by 2002:a50:9e43:0:b0:461:8dc1:10b with SMTP id z61-20020a509e43000000b004618dc1010bmr15799163ede.113.1668529400607;
+        Tue, 15 Nov 2022 08:23:20 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5XyDm+yixzRI15F63g79qoETPymzFpi8YahRFdLxhZdAJ5pQYy/PBdlbLy+eAOetK9Ug4gOw==
+X-Received: by 2002:a50:9e43:0:b0:461:8dc1:10b with SMTP id z61-20020a509e43000000b004618dc1010bmr15799142ede.113.1668529400392;
+        Tue, 15 Nov 2022 08:23:20 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id rl24-20020a170907217800b00770880dfc4fsm5702078ejb.29.2022.11.15.08.16.58
+        by smtp.gmail.com with ESMTPSA id d16-20020a170906305000b0078d21574986sm5613288ejd.203.2022.11.15.08.23.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Nov 2022 08:16:59 -0800 (PST)
-Message-ID: <32184965-8f8c-a4da-6df7-26ae7ad985fa@redhat.com>
-Date:   Tue, 15 Nov 2022 17:16:58 +0100
+        Tue, 15 Nov 2022 08:23:19 -0800 (PST)
+Message-ID: <7f906ecf-f115-c102-35b6-0974d98d65e1@redhat.com>
+Date:   Tue, 15 Nov 2022 17:23:19 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH] platform/x86: acer-wmi: Enable SW_TABLET_MODE on Switch V
- 10 (SW5-017)
+Subject: Re: [PATCH 1/2] platform/surface: aggregator: Do not check for
+ repeated unsequenced packets
 Content-Language: en-US, nl
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Rudolf Polzer <rpolzer@google.com>
-References: <20221111111639.35730-1-hdegoede@redhat.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221113185951.224759-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221111111639.35730-1-hdegoede@redhat.com>
+In-Reply-To: <20221113185951.224759-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,45 +79,105 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/11/22 12:16, Hans de Goede wrote:
-> Like the Acer Switch 10 (SW5-012) and Acer Switch 10 (S1003) models
-> the Acer Switch V 10 (SW5-017) supports reporting SW_TABLET_MODE
-> through acer-wmi.
+On 11/13/22 19:59, Maximilian Luz wrote:
+> Currently, we check any received packet whether we have already seen it
+> previously, regardless of the packet type (sequenced / unsequenced). We
+> do this by checking the sequence number. This assumes that sequence
+> numbers are valid for both sequenced and unsequenced packets. However,
+> this assumption appears to be incorrect.
 > 
-> Add a DMI quirk for the SW5-017 setting force_caps to ACER_CAP_KBD_DOCK
-> (these devices have no other acer-wmi based functionality).
+> On some devices, the sequence number field of unsequenced packets (in
+> particular HID input events on the Surface Pro 9) is always zero. As a
+> result, the current retransmission check kicks in and discards all but
+> the first unsequenced packet, breaking (among other things) keyboard and
+> touchpad input.
 > 
-> Cc: Rudolf Polzer <rpolzer@google.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Note that we have, so far, only seen packets being retransmitted in
+> sequenced communication. In particular, this happens when there is an
+> ACK timeout, causing the EC (or us) to re-send the packet waiting for an
+> ACK. Arguably, retransmission / duplication of unsequenced packets
+> should not be an issue as there is no logical condition (such as an ACK
+> timeout) to determine when a packet should be sent again.
+> 
+> Therefore, remove the retransmission check for unsequenced packets
+> entirely to resolve the issue.
+> 
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-I've added this to my fixes branch now.
+Thank you for your patch-series, I've applied this series to my
+fixes branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this series in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
 > ---
->  drivers/platform/x86/acer-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../surface/aggregator/ssh_packet_layer.c     | 24 +++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 18224f9a5bc0..ee67efdd5499 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -564,6 +564,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
->  		},
->  		.driver_data = (void *)ACER_CAP_KBD_DOCK,
->  	},
-> +	{
-> +		.callback = set_force_caps,
-> +		.ident = "Acer Aspire Switch V 10 SW5-017",
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SW5-017"),
-> +		},
-> +		.driver_data = (void *)ACER_CAP_KBD_DOCK,
-> +	},
->  	{
->  		.callback = set_force_caps,
->  		.ident = "Acer One 10 (S1003)",
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 6748fe4ac5d5..def8d7ac541f 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -1596,16 +1596,32 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
+>  		ssh_ptl_tx_wakeup_packet(ptl);
+>  }
+>  
+> -static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, u8 seq)
+> +static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, const struct ssh_frame *frame)
+>  {
+>  	int i;
+>  
+> +	/*
+> +	 * Ignore unsequenced packets. On some devices (notably Surface Pro 9),
+> +	 * unsequenced events will always be sent with SEQ=0x00. Attempting to
+> +	 * detect retransmission would thus just block all events.
+> +	 *
+> +	 * While sequence numbers would also allow detection of retransmitted
+> +	 * packets in unsequenced communication, they have only ever been used
+> +	 * to cover edge-cases in sequenced transmission. In particular, the
+> +	 * only instance of packets being retransmitted (that we are aware of)
+> +	 * is due to an ACK timeout. As this does not happen in unsequenced
+> +	 * communication, skip the retransmission check for those packets
+> +	 * entirely.
+> +	 */
+> +	if (frame->type == SSH_FRAME_TYPE_DATA_NSQ)
+> +		return false;
+> +
+>  	/*
+>  	 * Check if SEQ has been seen recently (i.e. packet was
+>  	 * re-transmitted and we should ignore it).
+>  	 */
+>  	for (i = 0; i < ARRAY_SIZE(ptl->rx.blocked.seqs); i++) {
+> -		if (likely(ptl->rx.blocked.seqs[i] != seq))
+> +		if (likely(ptl->rx.blocked.seqs[i] != frame->seq))
+>  			continue;
+>  
+>  		ptl_dbg(ptl, "ptl: ignoring repeated data packet\n");
+> @@ -1613,7 +1629,7 @@ static bool ssh_ptl_rx_retransmit_check(struct ssh_ptl *ptl, u8 seq)
+>  	}
+>  
+>  	/* Update list of blocked sequence IDs. */
+> -	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = seq;
+> +	ptl->rx.blocked.seqs[ptl->rx.blocked.offset] = frame->seq;
+>  	ptl->rx.blocked.offset = (ptl->rx.blocked.offset + 1)
+>  				  % ARRAY_SIZE(ptl->rx.blocked.seqs);
+>  
+> @@ -1624,7 +1640,7 @@ static void ssh_ptl_rx_dataframe(struct ssh_ptl *ptl,
+>  				 const struct ssh_frame *frame,
+>  				 const struct ssam_span *payload)
+>  {
+> -	if (ssh_ptl_rx_retransmit_check(ptl, frame->seq))
+> +	if (ssh_ptl_rx_retransmit_check(ptl, frame))
+>  		return;
+>  
+>  	ptl->ops.data_received(ptl, payload);
 
