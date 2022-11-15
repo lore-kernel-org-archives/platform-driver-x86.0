@@ -2,287 +2,406 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484D3C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 10:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C66C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 11:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbiKOKdq (ORCPT
+        id S232852AbiKOLVN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Nov 2022 05:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        Tue, 15 Nov 2022 06:21:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229779AbiKOKdk (ORCPT
+        with ESMTP id S232708AbiKOLVB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Nov 2022 05:33:40 -0500
+        Tue, 15 Nov 2022 06:21:01 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAB723153
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 02:32:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C207E328
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 03:20:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668508356;
+        s=mimecast20190719; t=1668511202;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bbJbC3373kkrEOKgcv9UmDhvbvwdApWRUuMA85jnOVI=;
-        b=RXAZYpm8ifvStOeXjpESVzO5Kex617X+mZh1hwvJZzrhxj0crw73XCag5tNyQV9wZw72hn
-        G1gDzWzok0HesjjhwUTUwiJHyvtnLQc0+cBi0zKXr9V2m5eJix709kLem3g7TBzlCwWnqg
-        OfOJSuCdKqdaCnaVxr/r2Gso8wlunT4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=6dcTdsvLy1TuIGfBjZqdH4n2CKx/QLw0klOIVTn8wu0=;
+        b=TUtoNMV4H4hs4UZLpa10gfXYxYp56KnypszXE/O5NCmgfRqKvAiLeNDswSjU+JmzqQjQEu
+        pJCW3h4eT3tc96QME60n3Le7ixREqAJCkpavRGdJtUuSSWrx8DNP5Y7dbg91QR1HgKlaNl
+        LAU+EPyiIvD7md8iIKu6pKbOmydFCv8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-604-dehfMqqWPaemggBKQXEuuw-1; Tue, 15 Nov 2022 05:32:35 -0500
-X-MC-Unique: dehfMqqWPaemggBKQXEuuw-1
-Received: by mail-ed1-f70.google.com with SMTP id w17-20020a056402269100b00461e28a75ccso9715943edd.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 02:32:34 -0800 (PST)
+ us-mta-424-IiFOhLTUOyi57XGQKM39Xg-1; Tue, 15 Nov 2022 06:20:01 -0500
+X-MC-Unique: IiFOhLTUOyi57XGQKM39Xg-1
+Received: by mail-ej1-f70.google.com with SMTP id hq18-20020a1709073f1200b007ade8dd3494so7020186ejc.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 03:20:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bbJbC3373kkrEOKgcv9UmDhvbvwdApWRUuMA85jnOVI=;
-        b=MCK8gIlSCkdtoKQieKJfiD6BK+kvv4AX4hA2jJ0qtRNL6wdbmxAkK7JNvnh1/eKg3B
-         mcQDesNKrBnRUleFLjhYfTVnS/t+H7kzMFbU/wtXwJI7cn483h5K6SfMYKmTbSxgBjqX
-         0RhNRRgNGWVSAb8P/iSESRsJb+DN88WfDMKrmYvFm3YOhxXcmkt3SWBbLrJ+X8RJLO7R
-         u73WCCLbJYFEcvqq4zByCie6pac8+h44eKzsobwUcD+EhdxV9qijdAZKARKYPZUDBywE
-         sCslK3VWpDVkQhQHDcn+uJ5FEpcCa/yF4UMp3QqFYMB3vvMuEbfP685DRt9x/mPrWL6D
-         OWuA==
-X-Gm-Message-State: ANoB5pkjGuYACZ1HUFY4TJpDJMSxchOXzq+vF8fQIk/LjetVaUIw7xJw
-        /+vfe5suZ0kukBQ0HmRACZnQ269v4kqUoNWxZ3YaOftyXuuajIbBECgcxBOqNuyJa1uo4luTfRd
-        FtsgdPplwO+ngGMm3B4fpTO+/oOEvxw/5ZQ==
-X-Received: by 2002:a17:906:7c8d:b0:7af:1233:948d with SMTP id w13-20020a1709067c8d00b007af1233948dmr4023492ejo.698.1668508353978;
-        Tue, 15 Nov 2022 02:32:33 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4wJ1VOZdGGU5QOI9zqTMoKSncxewGjF9i9ZaLSzmNXClbiU2E5pCuqCEjPlbmtEutNDNaugQ==
-X-Received: by 2002:a17:906:7c8d:b0:7af:1233:948d with SMTP id w13-20020a1709067c8d00b007af1233948dmr4023481ejo.698.1668508353756;
-        Tue, 15 Nov 2022 02:32:33 -0800 (PST)
+        bh=6dcTdsvLy1TuIGfBjZqdH4n2CKx/QLw0klOIVTn8wu0=;
+        b=HyRV7xGRItzgNR/vNP4hcW/sPpBJt/DVpv2yFOmAe/jWVJ5LUgHn4ExiXrdY9l3VZ7
+         mzw2AOtN7cSIdosYBsesug7lAqVVZAID6tVSx5kqkKp2ucox4N3D7wqeLa2dxFySyCFr
+         txAaqb2eJ4azgaYScqrb71sC86st1gveHZerdteC809sDZTuyUcgAMjQY2CMsBhaRxkf
+         OpOxEDYm0bK/s+1PcysotEu9uHFLZlwgwojRBAYW0EZyaZpW96b4kIOAbzo1es94IHlu
+         82sXhUekOmzPHZ0TkuBMt8J4hIO9Fy22VvbAgJnT05l8T+Gc1y7aIEQIED6EgZwuAZ3y
+         i1XA==
+X-Gm-Message-State: ANoB5pkd+0m4kDgQINWtb4cf2VAhKwrTLqx4Egn75ko9dcfE1026IUuu
+        HTZ+Vddz5FTd62y1Djd5iKir0Gz9m1pz1sFK/pDd/CP4g5xLguKErhrGXvVmAN075N0/1J4x7DK
+        KN75Np31xL02xu8ZFBz8odA0F15E1vPTl0w==
+X-Received: by 2002:a17:906:c182:b0:781:f37a:f50e with SMTP id g2-20020a170906c18200b00781f37af50emr13414817ejz.468.1668511200088;
+        Tue, 15 Nov 2022 03:20:00 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5BMCH1QsskyosSzbaFLWYZX2LzxO6qDGJS7QemQigd2aJasxFRJ4xqXvIDUOt9z393dOsq8w==
+X-Received: by 2002:a17:906:c182:b0:781:f37a:f50e with SMTP id g2-20020a170906c18200b00781f37af50emr13414802ejz.468.1668511199701;
+        Tue, 15 Nov 2022 03:19:59 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id i34-20020a0564020f2200b00458947539desm6050012eda.78.2022.11.15.02.32.32
+        by smtp.gmail.com with ESMTPSA id fd4-20020a1709072a0400b0078d3a075525sm5386491ejc.56.2022.11.15.03.19.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Nov 2022 02:32:33 -0800 (PST)
-Message-ID: <f1bff724-252c-e403-f02b-2fff49b2283f@redhat.com>
-Date:   Tue, 15 Nov 2022 11:32:32 +0100
+        Tue, 15 Nov 2022 03:19:59 -0800 (PST)
+Message-ID: <e59fa079-1d72-2bb6-6ffc-dddc0095dd27@redhat.com>
+Date:   Tue, 15 Nov 2022 12:19:58 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [RFC v2 1/3] PM: Add a sysfs files to represent sleep duration
+Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: support for more special
+ keys in WMI
 Content-Language: en-US, nl
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sven van Ashbrook <svenva@chromium.org>,
-        Rafael J Wysocki <rafael@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        John Stultz <jstultz@google.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "rrangel@chromium.org" <rrangel@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20221110064723.8882-1-mario.limonciello@amd.com>
- <20221110064723.8882-2-mario.limonciello@amd.com> <871qq6tnqx.ffs@tglx>
- <MN0PR12MB6101BB92574BEF0A0AE2AB11E2059@MN0PR12MB6101.namprd12.prod.outlook.com>
+To:     Armin Wolf <W_Armin@gmx.de>, Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <6794a6cc-6049-66bf-cee8-a35105669fcb@gmx.de>
+ <20221114144140.5054-1-p.jungkamp@gmx.net>
+ <7e263715-e759-9293-ec53-27033a79a2bc@redhat.com>
+ <5e4de9fa-e23a-417d-fef2-9fa225cbd008@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <MN0PR12MB6101BB92574BEF0A0AE2AB11E2059@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <5e4de9fa-e23a-417d-fef2-9fa225cbd008@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+Hi Armin,
 
-On 11/14/22 20:12, Limonciello, Mario wrote:
-> [Public]
+On 11/15/22 03:27, Armin Wolf wrote:
+> Am 14.11.22 um 17:41 schrieb Hans de Goede:
 > 
-> Thanks! Appreciate the comments.
-> At least conceptually is there agreement to this idea for the two sysfs files
-> and userspace can use them to do this comparison?
+>> Hi,
+>>
+>> On 11/14/22 15:41, Philipp Jungkamp wrote:
+>>> The event data of the WMI event 0xD0, which is assumed to be the
+>>> fn_lock, is used to indicate several special keys on newer Yoga 7/9
+>>> laptops.
+>>>
+>>> The notify_id 0xD0 is non-unique in the DSDT of the Yoga 9 14IAP7, this
+>>> causes wmi_get_event_data() to report wrong values.
+>>> Port the ideapad-laptop WMI code to the wmi bus infrastructure which
+>>> does not suffer from the shortcomings of wmi_get_event_data().
+>>>
+>>> Signed-off-by: Philipp Jungkamp <p.jungkamp@gmx.net>
+>>> ---
+>>> Hello,
+>>>
+>>> is this about right? It works for me.
+>>>
+>>> What I don't really like here is the dev_set_drvdata() which takes a non-const
+>>> void * and I pass it a const pointer. I do cast the value of dev_get_drvdata()
+>>> back to a const pointer, but this seems rather ugly.
+>>> I preferred it over allocating a single int for the device or casting an enum
+>>> to a void *. This additionally removes the need for a remove funtion.
+>> I decided just take quick peek and I think the cleanest solution here would
+>> be to add a driver-data struct with the lookup result of:
+>>
+>>     struct ideapad_private *priv = container_of(wdrv,
+>>                             struct ideapad_private,
+>>                             wmi_drv);
+>>
+>> Stored in there + the enum value and then alloc it with devm_kzalloc
+>> to avoid the need for a remove callback.
+>>
+>> I'm also wondering if we could then maybe not move some other variables
+>> only used in the wmi_notify callback to that driver-data struct ?
+>> (I did not check if there are any candidates).
+>>
+>> Also this is going to need a big fat warning (comment) that the cute trick
+>> with registering a wmi_driver struct embedded inside the platform_driver
+>> data struct very much relies on there being only one platform_device
+>> instance to which the platform_driver will bind ever, otherwise
+>> we will get multiple wmi_driver's registered for the same WMI GUIDs
+>> and then the container-off will likely return the driver-data of the
+>> first platform device ...
+> 
+> Hello,
+> 
+> i think this is not going to be the case. For each platform device instance,
+> a separate ideapad_private struct is allocated and initialized. This means
+> that for each platform device instance, a separate WMI driver is registered,
+> so each WMI driver will access the private data of its platform device when
+> using container_of(), not just the private data of the first one.
+> 
+> AFAIK, WMI drivers cannot bind to an already bound WMI device, otherwise the
+> WMI bus would need to create multiple devices for a single GUID instance, which
+> is, as far as i know, not the case.
 
-First of all let me say that I think that having some generic mechanism
-which allows userspace to check if deep enough sleep-state were reached
-is a good idea.  And thank you for working on this!
+Right that is true, this will only be a problem if a WMI device with
+a matching GUID shows up after the driver has been registered, which
+could happen if the driver is builtin and thus probed during enumaration
+which means the platform device(s) get enumerated before the WMI devices.
 
-I wonder though if it would not be better to have some mechanism
-where a list of sleep states + time spend in each time is printed ?
+This is all quite unlikely, but the whole trick of embedding a driver
+structure inside a device-data struct and then using container_of
+on it just goes against the whole Linux driver model and gives me
+what I can only describe as "an uncomfortable feeling".
 
-E.g. I know that on Intel Bay Trail and Cherry Trail devices (just an
-example I'm familiar with) there are S0i0 - S0i3 and we really want
-to reach S0i3 during suspend.
+I see that you've already posted a v4 using the global shared pointer
+approach. This very much is not pretty (either), but at least it is easy
+to reason about / easy to follow what is going on without having to
+worry about various lifetimes, etc. Much appreciated!
 
-Sometimes on S0i1 or S0i2 is reached due to some part of the hw
-not getting suspended properly.
-
-So then we have reached "a hardware sleep state over s2idle"
-but no the one we want.
-
-OTOH I can image that if we start adding support for functionality
-like standby-connect under Linux that then we may not always
-reach the deepest hw sleep-state.
-
-So I'm a bit worried that having just a single number for
-last_hw_state_residency is not enough.
-
-I think that it might be better to have a mechanism to set
-a set of names for hw-states (once) and then set the residency
-per state (*) after resume and have the sysfs file print
-the entire list.
-
-This list could then also always include the total suspend time,
-also avoiding the need for a second sysfs file and we could also
-use the same format for non s2idle suspend having it print
-only the total suspend time when no hw-state names are set.
+I'll try to review v4 soonish but as mentioned before chances are
+I will not get around to this until next week.
 
 Regards,
 
 Hans
 
 
-*) Using an array, so up to MAX_HW_RESIDENCY_STATES
 
-
-> 
-> A few nested replies below, but I'll clean it up for
-> RFC v3 or submit as PATCH v1 if there is conceptual alignment before then.
-> 
->> On Thu, Nov 10 2022 at 00:47, Mario Limonciello wrote:
+>> Which makes me wonder if it would not be cleaner to just use a global
+>> pointer for this ?   Note this is an honest open question.
 >>
->> 'Add a sysfs files'?
+>> Actually since the platform_device gets instantiated by the ACPI
+>> core there is no guarantee there will be only 1. So I think that
+>> the container_of on the wmi-driver trick needs to go, instead
+>> introduce:
 >>
->> Can you please decide whether that's 'a file' or 'multiple files'?
-> 
-> Yup thanks; bad find and replace in the commit message when I added
-> the second file.
-> 
+>> 1. A global ideapad_private_data_mutex mutex
+>> 2. A global ideapad_private_data pointer
 >>
->>> Both AMD and Intel SoCs have a concept of reporting whether the
->> hardware
->>> reached a hardware sleep state over s2idle as well as how much
->>> time was spent in such a state.
+>> And:
 >>
->> Nice, but ...
+>> 1. In ideapad_acpi_add:
+>> lock the mutex
+>> check that ideapad_private_data is not already set and if it is bail with an error
+>> set ideapad_private_data
+>> unlock the mutex
 >>
->>> This information is valuable to both chip designers and system designers
->>> as it helps to identify when there are problems with power consumption
->>> over an s2idle cycle.
+>> 2. in ideapad_acpi_remove:
+>> lock the mutex
+>> clear the golbal pointer
+>> unlock the mutex
+>>
+>> 3. In the wmi-driver's notify method:
+>> lock the mutex
+>> check ideapad_private_data is not NULL
+>> process event
+>> unlock the mutex
+>>
+>> 4. replace module_platform_driver with normal module init + exit
+>> functions which register both drivers / unregister both drivers.
+>>
+>> I believe that this will be a more clean approach then the embedded
+>> wmi_driver struct cuteness.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> Regards,
+>>> Philipp
 >>>
->>> To make the information discoverable, create a new sysfs file and a symbol
->>> that drivers from supported manufacturers can use to advertise this
->>> information. This file will only be exported when the system supports low
->>> power idle in the ACPI table.
+>>>   drivers/platform/x86/ideapad-laptop.c | 109 +++++++++++++++++++-------
+>>>   1 file changed, 80 insertions(+), 29 deletions(-)
 >>>
->>> In order to effectively use this information you will ideally want to
->>> compare against the total duration of sleep, so export a second sysfs file
->>> that will show total time. This file will be exported on all systems and
->>> used both for s2idle and s3.
->>
->> The above is incomprehensible word salad. Can you come up with some
->> coherent explanation of what you are trying to achieve please?
->>
->>> +void pm_set_hw_state_residency(u64 duration)
->>> +{
->>> +	suspend_stats.last_hw_state_residency = duration;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pm_set_hw_state_residency);
+>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>> index 33b3dfdd1b08..6d35a9e961cf 100644
+>>> --- a/drivers/platform/x86/ideapad-laptop.c
+>>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> @@ -30,6 +30,7 @@
+>>>   #include <linux/seq_file.h>
+>>>   #include <linux/sysfs.h>
+>>>   #include <linux/types.h>
+>>> +#include <linux/wmi.h>
+>>>
+>>>   #include <acpi/video.h>
+>>>
+>>> @@ -38,10 +39,19 @@
+>>>   #define IDEAPAD_RFKILL_DEV_NUM    3
+>>>
+>>>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+>>> -static const char *const ideapad_wmi_fnesc_events[] = {
+>>> -    "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
+>>> -    "56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
+>>> -    "8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
+>>> +enum ideapad_wmi_event_type {
+>>> +    IDEAPAD_WMI_EVENT_ESC,
+>>> +    IDEAPAD_WMI_EVENT_FN_KEYS,
+>>> +};
 >>> +
->>> +void pm_account_suspend_type(const struct timespec64 *t)
->>> +{
->>> +	suspend_stats.last_suspend_total += (s64)t->tv_sec *
->> USEC_PER_SEC +
->>> +						 t->tv_nsec /
->> NSEC_PER_USEC;
->>
->> Conversion functions for timespecs to scalar nanoseconds exist for a
->> reason. Why does this need special treatment and open code it?
-> 
-> Will fixup to use conversion functions.
-> 
->>
->>> +}
->>> +EXPORT_SYMBOL_GPL(pm_account_suspend_type);
->>
->> So none of these functions has any kind of documentation. kernel-doc
->> exists for a reason especially for exported functions.
->>
->> That said, what's the justification to export any of these functions at
->> all? AFAICT pm_account_suspend_type() is only used by builtin code...
-> 
-> I think you're right; they shouldn't export; will fix.
-> 
->>
->>> +static umode_t suspend_attr_is_visible(struct kobject *kobj, struct
->> attribute *attr, int idx)
->>> +{
->>> +	if (attr != &last_hw_state_residency.attr)
->>> +		return 0444;
->>> +#ifdef CONFIG_ACPI
->>> +	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
->>> +		return 0444;
->>> +#endif
->>> +	return 0;
+>>> +enum ideapad_wmi_event_type ideapad_wmi_esc = IDEAPAD_WMI_EVENT_ESC,
+>>> +enum ideapad_wmi_event_type ideapad_wmi_fn_keys = IDEAPAD_WMI_EVENT_FN_KEYS;
+>>> +
+>>> +static const struct wmi_device_id ideapad_wmi_id_table[] = {
+>>> +    { "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", &ideapad_wmi_esc }, /* Yoga 3 */
+>>> +    { "56322276-8493-4CE8-A783-98C991274F5E", &ideapad_wmi_esc }, /* Yoga 700 */
+>>> +    { "8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", &ideapad_wmi_fn_keys }, /* Legion 5 */
+>>> +    {}
+>>>   };
+>>>   #endif
+>>>
+>>> @@ -130,7 +140,7 @@ struct ideapad_private {
+>>>       struct ideapad_dytc_priv *dytc;
+>>>       struct dentry *debug;
+>>>       unsigned long cfg;
+>>> -    const char *fnesc_guid;
+>>> +    struct wmi_driver wmi_drv;
+>>>       struct {
+>>>           bool conservation_mode    : 1;
+>>>           bool dytc                 : 1;
+>>> @@ -1074,6 +1084,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
+>>>   /*
+>>>    * input device
+>>>    */
+>>> +#define IDEAPAD_WMI_KEY 0x100
+>>>   static const struct key_entry ideapad_keymap[] = {
+>>>       { KE_KEY,   6, { KEY_SWITCHVIDEOMODE } },
+>>>       { KE_KEY,   7, { KEY_CAMERA } },
+>>> @@ -1087,6 +1098,26 @@ static const struct key_entry ideapad_keymap[] = {
+>>>       { KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
+>>>       { KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+>>>       { KE_KEY, 128, { KEY_ESC } },
+>>> +
+>>> +    /*
+>>> +     * WMI keys
+>>> +     */
+>>> +
+>>> +    /* FnLock (handled by the firmware) */
+>>> +    { KE_IGNORE,    0x02 | IDEAPAD_WMI_KEY },
+>>> +    /* Customizable Lenovo Hotkey ("star" with 'S' inside) */
+>>> +    { KE_KEY,    0x01 | IDEAPAD_WMI_KEY, { KEY_FAVORITES } },
+>>> +    /* Dark mode toggle */
+>>> +    { KE_KEY,    0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+>>> +    /* Sound profile switch */
+>>> +    { KE_KEY,    0x12 | IDEAPAD_WMI_KEY, { KEY_PROG2 } },
+>>> +    /* Lenovo Virtual Background application */
+>>> +    { KE_KEY,    0x28 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+>>> +    /* Lenovo Support */
+>>> +    { KE_KEY,    0x27 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+>>> +    /* Refresh Rate Toggle */
+>>> +    { KE_KEY,    0x0a | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
+>>> +
+>>>       { KE_END },
+>>>   };
+>>>
+>>> @@ -1491,25 +1522,47 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>>>   }
+>>>
+>>>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+>>> -static void ideapad_wmi_notify(u32 value, void *context)
+>>> +static int ideapad_wmi_probe(struct wmi_device *wdev, const void *context)
+>>>   {
+>>> -    struct ideapad_private *priv = context;
+>>> +    dev_set_drvdata(&wdev->dev, (void *) context);
+>>> +    return 0;
 >>> +}
 >>> +
->>>  static const struct attribute_group suspend_attr_group = {
->>>  	.name = "suspend_stats",
->>>  	.attrs = suspend_attrs,
->>> +	.is_visible = suspend_attr_is_visible,
->>
->> How is this change related to the changelog above? We are not hiding
->> subtle changes to the existing code in some conglomorate patch. See
->> Documentation/process/...
-> 
-> It was from feedback from RFC v1 from David Box that this file should only
-> be visible when s2idle is supported on the hardware.  Will adjust commit
-> message to make it clearer.
-> 
->>
->>> --- a/kernel/time/timekeeping.c
->>> +++ b/kernel/time/timekeeping.c
->>> @@ -24,6 +24,7 @@
->>>  #include <linux/compiler.h>
->>>  #include <linux/audit.h>
->>>  #include <linux/random.h>
->>> +#include <linux/suspend.h>
->>>
->>>  #include "tick-internal.h"
->>>  #include "ntp_internal.h"
->>> @@ -1698,6 +1699,7 @@ static void
->> __timekeeping_inject_sleeptime(struct timekeeper *tk,
->>>  	tk_set_wall_to_mono(tk, timespec64_sub(tk->wall_to_monotonic,
->> *delta));
->>>  	tk_update_sleep_time(tk, timespec64_to_ktime(*delta));
->>>  	tk_debug_account_sleep_time(delta);
->>> +	pm_account_suspend_type(delta);
->>
->> That function name is really self explaining - NOT !
->>
->>      pm_account_suspend_type(delta);
->>
->> So this will account a suspend type depending on the time spent in
->> suspend, right?
->>
->> It's totally obvious that the suspend type (whatever it is) depends on
->> the time delta argument... especially when the function at hand has
->> absolutely nothing to do with a type:
->>
-> 
-> I fat fingered this.  In my mind I thought I wrote pm_account_suspend_time()
-> Will fix.
-> 
->>> +void pm_account_suspend_type(const struct timespec64 *t)
+>>> +static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
 >>> +{
->>> +	suspend_stats.last_suspend_total += (s64)t->tv_sec *
->> USEC_PER_SEC +
->>> +						 t->tv_nsec /
->> NSEC_PER_USEC;
->>> +}
->>
->> Sigh....
->>
->> Thanks,
->>
->>         tglx
+>>> +    struct wmi_driver *wdrv = container_of(wdev->dev.driver,
+>>> +                           struct wmi_driver,
+>>> +                           driver);
+>>> +    struct ideapad_private *priv = container_of(wdrv,
+>>> +                            struct ideapad_private,
+>>> +                            wmi_drv);
+>>> +    const enum ideapad_wmi_event_type *event = dev_get_drvdata(&wdev->dev);
+>>>       unsigned long result;
+>>>
+>>> -    switch (value) {
+>>> -    case 128:
+>>> -        ideapad_input_report(priv, value);
+>>> +    switch (*event) {
+>>> +    case IDEAPAD_WMI_EVENT_ESC:
+>>> +        ideapad_input_report(priv, 128);
+>>>           break;
+>>> -    case 208:
+>>> +    case IDEAPAD_WMI_EVENT_FN_KEYS:
+>>>           if (!eval_hals(priv->adev->handle, &result)) {
+>>>               bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
+>>>
+>>>               exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
+>>>           }
+>>> +
+>>> +        if (data->type != ACPI_TYPE_INTEGER) {
+>>> +            dev_warn(&wdev->dev,
+>>> +                 "WMI event data is not an integer\n");
+>>> +            break;
+>>> +        }
+>>> +
+>>> +        dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+>>> +            data->integer.value);
+>>> +
+>>> +        ideapad_input_report(priv,
+>>> +                     data->integer.value | IDEAPAD_WMI_KEY);
+>>> +
+>>>           break;
+>>> -    default:
+>>> -        dev_info(&priv->platform_device->dev,
+>>> -             "Unknown WMI event: %u\n", value);
+>>>       }
+>>>   }
+>>>   #endif
+>>> @@ -1671,25 +1724,24 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>>>       }
+>>>
+>>>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+>>> -    for (i = 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
+>>> -        status = wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
+>>> -                            ideapad_wmi_notify, priv);
+>>> -        if (ACPI_SUCCESS(status)) {
+>>> -            priv->fnesc_guid = ideapad_wmi_fnesc_events[i];
+>>> -            break;
+>>> -        }
+>>> -    }
+>>> +    priv->wmi_drv = (struct wmi_driver) {
+>>> +        .driver = {
+>>> +            .name = "ideapad-wmi-fn-keys",
+>>> +        },
+>>> +        .id_table = ideapad_wmi_id_table,
+>>> +        .probe = ideapad_wmi_probe,
+>>> +        .notify = ideapad_wmi_notify,
+>>> +    };
+>>>
+>>> -    if (ACPI_FAILURE(status) && status != AE_NOT_EXIST) {
+>>> -        err = -EIO;
+>>> -        goto notification_failed_wmi;
+>>> -    }
+>>> +    err = wmi_driver_register(&priv->wmi_drv);
+>>> +    if (err)
+>>> +        goto register_failed_wmi;
+>>>   #endif
+>>>
+>>>       return 0;
+>>>
+>>>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+>>> -notification_failed_wmi:
+>>> +register_failed_wmi:
+>>>       acpi_remove_notify_handler(priv->adev->handle,
+>>>                      ACPI_DEVICE_NOTIFY,
+>>>                      ideapad_acpi_notify);
+>>> @@ -1720,8 +1772,7 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
+>>>       int i;
+>>>
+>>>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+>>> -    if (priv->fnesc_guid)
+>>> -        wmi_remove_notify_handler(priv->fnesc_guid);
+>>> +    wmi_driver_unregister(&priv->wmi_drv);
+>>>   #endif
+>>>
+>>>       acpi_remove_notify_handler(priv->adev->handle,
+>>> -- 
+>>> 2.38.1
+>>>
 > 
 
