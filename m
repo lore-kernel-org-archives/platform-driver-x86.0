@@ -2,110 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79912C43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 20:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0E7C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 20:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbiKOUhe (ORCPT
+        id S229796AbiKOUi5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Nov 2022 15:37:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
+        Tue, 15 Nov 2022 15:38:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231149AbiKOUhD (ORCPT
+        with ESMTP id S231406AbiKOUhm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Nov 2022 15:37:03 -0500
+        Tue, 15 Nov 2022 15:37:42 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD6629805
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:33:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEF727A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:36:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668544433;
+        s=mimecast20190719; t=1668544610;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VVhrvYGZTZ9CuRZyU7m2CWqpbNzAXMXlYEZ9jNaCYQQ=;
-        b=gtrDOw5obo6hRELqOadyYoh9zPAies91O2xsxjetyffGPSeLiMhqLDo4B8nWFYt2gDZM5S
-        9yW5uDJU2TxKXoDmcLgHpWuw9gC07lGIVWwMgzEuUeDvUDkOSdRF2fjJg+qL+PiBIBzlqX
-        jJP6sUU1X3twbgQx93KXMgBRbibboNk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=MnCwkJuBrbQi4jFAnLoKxJdQqDQ2wVkd4vbCMgrgnTI=;
+        b=LUbwJdy5P+s92JDUBr8RHnwc7CcD94VP3G9225kep5X18MwCyL3/wld6wubXLw4dSexIB5
+        fdoULbVuKlE0xTKUiq8nlgARYPwt1ApYIjAozbVySMTwSvy6oWjXk25PXYyyUZFY3Gcv7a
+        CDXlXU+bo5Iydl1ce/Fv+6MBgTFTfP8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-454-xAyFElq7PGS4QZ6Eem-2pA-1; Tue, 15 Nov 2022 15:33:52 -0500
-X-MC-Unique: xAyFElq7PGS4QZ6Eem-2pA-1
-Received: by mail-ej1-f69.google.com with SMTP id ne36-20020a1709077ba400b007aeaf3dcbcaso7492577ejc.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:33:51 -0800 (PST)
+ us-mta-602-CcrlWIhOPyiEIwOLlOiuJQ-1; Tue, 15 Nov 2022 15:36:48 -0500
+X-MC-Unique: CcrlWIhOPyiEIwOLlOiuJQ-1
+Received: by mail-ej1-f70.google.com with SMTP id sb4-20020a1709076d8400b007ae596eac08so8250650ejc.22
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:36:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VVhrvYGZTZ9CuRZyU7m2CWqpbNzAXMXlYEZ9jNaCYQQ=;
-        b=cYlrxRV8OGYWaBHiLnoIJO+QUwONgz20V00LaB/HvT4GIFvEPoZTc7macCsA/Yfy5E
-         eu0Kx7/1a9RQBjO6NTmMacJAmg9E0psWOLWDUeZ5ZKCSQWNP5uGe/4sTbTiuz8O1fxKl
-         o0Z8k84J1k+I4kYQi5F+3SpMUUrTeLS+OUqPT+QQlXyjdTOdCDV/hA0TCTUSAnX34z0v
-         9XW8TraABXfVr7f3nXHoMhspYaNJo4ROMpwn9LVigfI8D+aoxKHmsyGukHp/ntzfuf/x
-         /coy9WReAiUzdXbUA9v6/F146enmgQ8E40pZGxV8edx2mbeyNBqHYv3ZwZE/xbSbqi1X
-         N0xg==
-X-Gm-Message-State: ANoB5pljVKyLIRC+4A+kVr7D0FhIxv6a5T7llPvPlvQFlujl9DAXZGle
-        l63j6hVWXOYgeNEUhqlyWr0Ls1sxjjIPJaeqPXATzveUzWA8+ezEqDMdmyAFExgdUnz04TaGInQ
-        eKgrnqR/2hKr9WwV8okBC30WRCBr7ka1ebg==
-X-Received: by 2002:a17:907:80c5:b0:7ad:f43a:cb07 with SMTP id io5-20020a17090780c500b007adf43acb07mr14926773ejc.562.1668544430559;
-        Tue, 15 Nov 2022 12:33:50 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4S4colGM0tju7JziGafsLeOa86LQ77NWGN8k/GwvIPubzSP+mStQZmQY2YAMgEPilGOieF/A==
-X-Received: by 2002:a17:907:80c5:b0:7ad:f43a:cb07 with SMTP id io5-20020a17090780c500b007adf43acb07mr14926761ejc.562.1668544430383;
-        Tue, 15 Nov 2022 12:33:50 -0800 (PST)
+        bh=MnCwkJuBrbQi4jFAnLoKxJdQqDQ2wVkd4vbCMgrgnTI=;
+        b=si1QaFeEn2UU5NdL9DRp2Bzu0IMmriyrsm9sqf+5NtxkZiTmx3lT5FDlbDrjVIR8wH
+         9z7ktk6xQiN4TXEi/i9+MnalRDpbFHLpQkyU0LNZWsNQgM2GewOiJfKwRwOzp9lS7Vu6
+         Q2NtxBQCkpos3Ppb7uRLzO/UFZNGi755R5AIY7ODQJeoYr2kSmaziIMSq/ELteg5/b3b
+         YxrIa9GdpDFmW2H7MSC/fW8qLRpMQJGglVpBr7YqfKTJ+yDtLJAy6g3pMST+tP0D+MWE
+         1FHEMvUoNE87AKZQmSTgR+dfB8jR/8iBf3V/vxyOiI7GfTh3gOHGTj6wuMvoJDHoswxe
+         Rjig==
+X-Gm-Message-State: ANoB5pm9ycckI+WwIuX7Xw2jfFpt5oB8TewYOTp1Wfdh8SszSKcE1yOt
+        apLDTP7PupnVJyXTaZegkGn434nHBl6vcm7EOQsfP15IIu3n/S3RPCWSjRTGM7zicYgpaVge4+B
+        qKFvgFkkBJoZh65uYf9noRyZovlmIYTfCKw==
+X-Received: by 2002:a05:6402:378c:b0:463:ab06:f338 with SMTP id et12-20020a056402378c00b00463ab06f338mr16529262edb.371.1668544607119;
+        Tue, 15 Nov 2022 12:36:47 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5Pp8BVmKktgBH1+0vE/L+7q8G0Q9+JLckU7Dj4vlKkOtDNKwnZoysRUMitXJunf1kp928WJA==
+X-Received: by 2002:a05:6402:378c:b0:463:ab06:f338 with SMTP id et12-20020a056402378c00b00463ab06f338mr16529249edb.371.1668544606872;
+        Tue, 15 Nov 2022 12:36:46 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id z4-20020a1709063ac400b007acd04fcedcsm5968943ejd.46.2022.11.15.12.33.49
+        by smtp.gmail.com with ESMTPSA id c2-20020a17090618a200b007ad96726c42sm3434659ejf.91.2022.11.15.12.36.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Nov 2022 12:33:49 -0800 (PST)
-Message-ID: <4f6e561b-12d7-0163-5f26-05d47a72d6cb@redhat.com>
-Date:   Tue, 15 Nov 2022 21:33:49 +0100
+        Tue, 15 Nov 2022 12:36:46 -0800 (PST)
+Message-ID: <d1532665-25f4-9d32-b276-c23077b34cbd@redhat.com>
+Date:   Tue, 15 Nov 2022 21:36:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH v2 2/7] HID: add mapping for camera access keys
+Subject: Re: [PATCH v2 4/7] platform/x86: ideapad-laptop: Add new _CFG bit
+ numbers for future use
 Content-Language: en-US, nl
 To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
-        platform-driver-x86@vger.kernel.org, dmitry.torokhov@gmail.com
+        platform-driver-x86@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
         ike.pan@canonical.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, mgross@linux.intel.com,
-        pobrn@protonmail.com
+        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        mgross@linux.intel.com, pobrn@protonmail.com
 References: <20221029120311.11152-1-erayorcunus@gmail.com>
- <20221029120311.11152-3-erayorcunus@gmail.com>
+ <20221029120311.11152-5-erayorcunus@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221029120311.11152-3-erayorcunus@gmail.com>
+In-Reply-To: <20221029120311.11152-5-erayorcunus@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dmitry,
+Hi,
 
 On 10/29/22 14:03, Eray Orçunus wrote:
-> HUTRR72 added 3 new usage codes for keys that are supposed to enable,
-> disable and toggle camera access. These are useful, considering many
-> laptops today have key(s) for toggling access to camera.
-> 
-> This patch adds new key definitions for KEY_CAMERA_ACCESS_ENABLE,
-> KEY_CAMERA_ACCESS_DISABLE and KEY_CAMERA_ACCESS_TOGGLE. Additionally
-> hid-debug is adjusted to recognize this new usage codes as well.
+> Later IdeaPads report various things in last 8 bits of _CFG, at least
+> 5 of them represent supported on-screen-displays. Add those bit numbers
+> to the enum, and use CFG_OSD_ as prefix of their names. Also expose
+> the values of these bits to debugfs, since they can be useful.
 > 
 > Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I have rejected the drivers/platform/x86 patch which depends
-on this, because it changes current behavior, potentially
-breaking userspace.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Since this means I won't be taking any patches depending on
-this I believe it is best if this is merged through the input tree.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Note this also has a:
-
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-
-tag given in this email thread.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -113,54 +109,59 @@ Hans
 
 
 
-
-
 > ---
->  drivers/hid/hid-debug.c                | 3 +++
->  drivers/hid/hid-input.c                | 3 +++
->  include/uapi/linux/input-event-codes.h | 3 +++
->  3 files changed, 9 insertions(+)
+>  drivers/platform/x86/ideapad-laptop.c | 33 +++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-> index f48d3534e020..991f880fdbd4 100644
-> --- a/drivers/hid/hid-debug.c
-> +++ b/drivers/hid/hid-debug.c
-> @@ -936,6 +936,9 @@ static const char *keys[KEY_MAX + 1] = {
->  	[KEY_ASSISTANT] = "Assistant",
->  	[KEY_KBD_LAYOUT_NEXT] = "KbdLayoutNext",
->  	[KEY_EMOJI_PICKER] = "EmojiPicker",
-> +	[KEY_CAMERA_ACCESS_ENABLE] = "CameraAccessEnable",
-> +	[KEY_CAMERA_ACCESS_DISABLE] = "CameraAccessDisable",
-> +	[KEY_CAMERA_ACCESS_TOGGLE] = "CameraAccessToggle",
->  	[KEY_DICTATE] = "Dictate",
->  	[KEY_BRIGHTNESS_MIN] = "BrightnessMin",
->  	[KEY_BRIGHTNESS_MAX] = "BrightnessMax",
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index f197aed6444a..f8e6513e77b8 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -995,6 +995,9 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
->  		case 0x0cd: map_key_clear(KEY_PLAYPAUSE);	break;
->  		case 0x0cf: map_key_clear(KEY_VOICECOMMAND);	break;
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 0ef40b88b240..f3d4f2beda07 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -46,10 +46,22 @@ static const char *const ideapad_wmi_fnesc_events[] = {
+>  #endif
 >  
-> +		case 0x0d5: map_key_clear(KEY_CAMERA_ACCESS_ENABLE);		break;
-> +		case 0x0d6: map_key_clear(KEY_CAMERA_ACCESS_DISABLE);		break;
-> +		case 0x0d7: map_key_clear(KEY_CAMERA_ACCESS_TOGGLE);		break;
->  		case 0x0d8: map_key_clear(KEY_DICTATE);		break;
->  		case 0x0d9: map_key_clear(KEY_EMOJI_PICKER);	break;
+>  enum {
+> -	CFG_CAP_BT_BIT   = 16,
+> -	CFG_CAP_3G_BIT   = 17,
+> -	CFG_CAP_WIFI_BIT = 18,
+> -	CFG_CAP_CAM_BIT  = 19,
+> +	CFG_CAP_BT_BIT       = 16,
+> +	CFG_CAP_3G_BIT       = 17,
+> +	CFG_CAP_WIFI_BIT     = 18,
+> +	CFG_CAP_CAM_BIT      = 19,
+> +
+> +	/*
+> +	 * These are OnScreenDisplay support bits that can be useful to determine
+> +	 * whether a hotkey exists/should show OSD. But they aren't particularly
+> +	 * meaningful since they were introduced later, i.e. 2010 IdeaPads
+> +	 * don't have these, but they still have had OSD for hotkeys.
+> +	 */
+> +	CFG_OSD_NUMLK_BIT    = 27,
+> +	CFG_OSD_CAPSLK_BIT   = 28,
+> +	CFG_OSD_MICMUTE_BIT  = 29,
+> +	CFG_OSD_TOUCHPAD_BIT = 30,
+> +	CFG_OSD_CAM_BIT      = 31,
+>  };
 >  
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 7989d9483ea7..ef392d0f943f 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -614,6 +614,9 @@
->  #define KEY_KBD_LAYOUT_NEXT	0x248	/* AC Next Keyboard Layout Select */
->  #define KEY_EMOJI_PICKER	0x249	/* Show/hide emoji picker (HUTRR101) */
->  #define KEY_DICTATE		0x24a	/* Start or Stop Voice Dictation Session (HUTRR99) */
-> +#define KEY_CAMERA_ACCESS_ENABLE	0x24b	/* Enables programmatic access to camera devices. (HUTRR72) */
-> +#define KEY_CAMERA_ACCESS_DISABLE	0x24c	/* Disables programmatic access to camera devices. (HUTRR72) */
-> +#define KEY_CAMERA_ACCESS_TOGGLE	0x24d	/* Toggles the current state of the camera access control. (HUTRR72) */
+>  enum {
+> @@ -368,6 +380,19 @@ static int debugfs_cfg_show(struct seq_file *s, void *data)
+>  		seq_puts(s, " camera");
+>  	seq_puts(s, "\n");
 >  
->  #define KEY_BRIGHTNESS_MIN		0x250	/* Set Brightness to Minimum */
->  #define KEY_BRIGHTNESS_MAX		0x251	/* Set Brightness to Maximum */
+> +	seq_puts(s, "OSD support:");
+> +	if (test_bit(CFG_OSD_NUMLK_BIT, &priv->cfg))
+> +		seq_puts(s, " num-lock");
+> +	if (test_bit(CFG_OSD_CAPSLK_BIT, &priv->cfg))
+> +		seq_puts(s, " caps-lock");
+> +	if (test_bit(CFG_OSD_MICMUTE_BIT, &priv->cfg))
+> +		seq_puts(s, " mic-mute");
+> +	if (test_bit(CFG_OSD_TOUCHPAD_BIT, &priv->cfg))
+> +		seq_puts(s, " touchpad");
+> +	if (test_bit(CFG_OSD_CAM_BIT, &priv->cfg))
+> +		seq_puts(s, " camera");
+> +	seq_puts(s, "\n");
+> +
+>  	seq_puts(s, "Graphics: ");
+>  	switch (priv->cfg & 0x700) {
+>  	case 0x100:
 
