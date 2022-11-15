@@ -2,178 +2,202 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED155C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 20:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E109AC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Nov 2022 20:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbiKOUob (ORCPT
+        id S231222AbiKOUoq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Nov 2022 15:44:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50976 "EHLO
+        Tue, 15 Nov 2022 15:44:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231806AbiKOUo1 (ORCPT
+        with ESMTP id S231645AbiKOUol (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Nov 2022 15:44:27 -0500
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5083721817
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:44:26 -0800 (PST)
-Received: by mail-vs1-xe2d.google.com with SMTP id k67so15945299vsk.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:44:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fki+0TCoTrte3/BJmTglaCbQEGDgk5B9kayNvnzRPWM=;
-        b=Q+lW7U/1515XSKweAMw5eX05XaxUGZTKGcd7QsyfGV2BIVZ4vO6qOo11M9Bddjyytv
-         DDMWMCivk2+y76oMjBHBSQY+HCarazuvA/bDaWBvlCpuPgBu0JOWsyEeHaZhNQHuBJo7
-         Hvvh2Ow2EfGNHbJVM3I0K9wIbuiRYtl+5vKvUEA3VjNprdirOnD5UCchWEm1zfcR4U+6
-         DuB+MotSK2WwN6SB3IjLk3AuQHc1sb7c4FnPUax24E9fyf75hTVceol07USJCGppACm+
-         AjJKpvCwJUjosvIouvjLNOlPczSbirv331O5CJLTyrLn371E5IS1QZKMs9IfyhMR0XGi
-         uNvw==
+        Tue, 15 Nov 2022 15:44:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 925E76460
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668545019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eYbltNUTzC+ZTm36iUyIznZBpyhokfqXoPOARw2dPJE=;
+        b=H4tG4hk34P5CzsNqSOLwXYC7Xluq6MH2/qkp5iPCUfCN92NL/iozN5j5GygEz+h3kzUZGV
+        aGXmTnPIzcckX1GWcc/SW+r6ho1HIqP/Z7ZDjWW1RAzc6ud4Iq1fjnAAjK+dQulzyknvcV
+        yETHxqB3nixc8BmcvLikXgiHOU+FPiI=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-362-hHvVzZEAO5yku_zOqd315A-1; Tue, 15 Nov 2022 15:43:38 -0500
+X-MC-Unique: hHvVzZEAO5yku_zOqd315A-1
+Received: by mail-ed1-f71.google.com with SMTP id z9-20020a05640235c900b0046358415c4fso10697150edc.9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Nov 2022 12:43:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fki+0TCoTrte3/BJmTglaCbQEGDgk5B9kayNvnzRPWM=;
-        b=X2cKeIgw2Z0EyUzQK56NGJXCvU16Ysj4UcYw7aHwVfu4yich66zJbK9/v9FJLprMDK
-         33okgOgSHIjjKVv4GlQ8AXwONFcH+GBIdmY/cg5yuykTtEUFN/eVPMhYvAE5nURO57Mk
-         QFpO0pWAamNDVaPe9fdh6Ts5A8S9YHnYA9+H5FJKKcCLYK3KtVnKKPS5PrdtiE5G7LG8
-         RufRYwn+BG14lngbLkmBtWnNvSv4p15vlzhu0pqrlyzRRFr5q6BxZPqMPLORMk0iD0uF
-         OHiUQLjf+uLXVDWno+ZkEfsmcLHBtvjciTeL94dABXHP6Y727KBC1LlG2gmdVh3EUC6q
-         Mh9w==
-X-Gm-Message-State: ANoB5plsROMNvGB7m1dSQwj6KlWshqGvEjPQeRORkEHM1IW0DF4DjvnS
-        ydafcC4K24p/2btwevY4kZ5MLr8jtx59o0+RZu/t
-X-Google-Smtp-Source: AA0mqf49L62DSbkOhy5QdhSFkosUgoRxnZccam6+NPCc0pWQN1kIdQqfHb6qw+qOMl9/YLMbHuvo2aGXdUCt3JVCiug=
-X-Received: by 2002:a05:6102:3224:b0:3aa:8846:b9a with SMTP id
- x4-20020a056102322400b003aa88460b9amr9477748vsf.58.1668545065335; Tue, 15 Nov
- 2022 12:44:25 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYbltNUTzC+ZTm36iUyIznZBpyhokfqXoPOARw2dPJE=;
+        b=BtQbZ8cM82ZedKF39E2zCR1KPZEAv2Qp4qo5Dyh+bybUBpf3YIjW4CD6jHr/twovUI
+         GLvxJdm5uvg2Yoknutx5DqAmpzEeSwJNWe5fuDhv3S6KfSX6EmhU3vHCZUAKnfW06lma
+         tT/8izGNyYrD5UbKHSz/viVAUlU3duerKRt5P1wluNSdpSQqjcOQSifdoK6e+/0ACCLN
+         fGZSLA9dlfOuwOkwBL5RLDciQouFIwwsYbWhfSA80+KvUVGbDI5SQtFVYBCI+8Z7TRh5
+         ZXFvHgI12JUUszoXOA3y/AybmA+nq7R0ZLzlM/F/Bt17uRhZXmy+kUH4T+fANG5gmEi6
+         psTA==
+X-Gm-Message-State: ANoB5pne/3hKaRp2r39jdmyCbVSJYxdPKtFbwDEtkAhV4OiXjCwoN8Xm
+        s3mgnmRiCGiyXc209vwNLHcKhjAJdf4Y3L+IQR9f2dMUWq9Z3LsBODdSNciLrqmCoUdSegYT+ww
+        02QbosR2tNNGkltPPxt++ytZ0KOJ9eT19nA==
+X-Received: by 2002:a17:906:c013:b0:78d:ff14:63f9 with SMTP id e19-20020a170906c01300b0078dff1463f9mr14929422ejz.516.1668545017067;
+        Tue, 15 Nov 2022 12:43:37 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7tsEoP9ppl43X85kim3kXTdE5g1JBrmdDOTh29MX8gL0DJOSRo5m5jKetdoBqO83osSSuKWA==
+X-Received: by 2002:a17:906:c013:b0:78d:ff14:63f9 with SMTP id e19-20020a170906c01300b0078dff1463f9mr14929409ejz.516.1668545016816;
+        Tue, 15 Nov 2022 12:43:36 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id qq18-20020a17090720d200b00773f3ccd989sm5947811ejb.68.2022.11.15.12.43.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Nov 2022 12:43:36 -0800 (PST)
+Message-ID: <dde0d934-45be-8b12-bdf6-0c3de7321731@redhat.com>
+Date:   Tue, 15 Nov 2022 21:43:35 +0100
 MIME-Version: 1.0
-References: <20221115200156.12218-1-mario.limonciello@amd.com> <20221115200156.12218-2-mario.limonciello@amd.com>
-In-Reply-To: <20221115200156.12218-2-mario.limonciello@amd.com>
-From:   John Stultz <jstultz@google.com>
-Date:   Tue, 15 Nov 2022 12:44:14 -0800
-Message-ID: <CANDhNCqPWV_dC_wo-CCqBuO0J=5TcRAh5AX335PLft2+w19_tQ@mail.gmail.com>
-Subject: Re: [RFC v3 1/4] PM: Add a sysfs file to represent the total sleep duration
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sven van Ashbrook <svenva@chromium.org>,
-        Raul Rangel <rrangel@chromium.org>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 5/7] platform/x86: ideapad-laptop: Expose camera_power
+ only if supported
+Content-Language: en-US, nl
+To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        ike.pan@canonical.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        mgross@linux.intel.com, pobrn@protonmail.com
+References: <20221029120311.11152-1-erayorcunus@gmail.com>
+ <20221029120311.11152-6-erayorcunus@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221029120311.11152-6-erayorcunus@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 12:02 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> For userspace to be able to analyze how much of a suspend cycle was spent
-> in the hardware sleep states userspace software has to use kernel trace
-> points paired with the file `low_power_idle_system_residency_us` on
-> supported systems.
->
-> To make this information more discoverable, introduce a new sysfs file
-> to represent the duration spent in a sleep state.
-> This file will be present and updated during resume for all suspend
-> types.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Hi Eray,
+
+On 10/29/22 14:03, Eray Orçunus wrote:
+> IdeaPads dropped support for VPCCMD_W_CAMERA somewhere between 2014-2016,
+> none of the IdeaPads produced after that I tested supports it. Fortunately
+> I found a way to check it; if the DSDT has camera device(s) defined, it
+> shouldn't have working VPCCMD_W_CAMERA, thus camera_power shouldn't be
+> exposed to sysfs. To accomplish this, walk the ACPI namespace in
+> ideapad_check_features and check the devices starting with "CAM".
+> Tested on 520-15IKB and Legion Y520, which successfully didn't expose
+> the camera_power attribute.
+> 
+> Link: https://www.spinics.net/lists/platform-driver-x86/msg26147.html
+> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
 > ---
-> RFC v2->v3
->  * Drop one of the sysfs files
->  * Use sysfs_emit instead
->  * Fix symbol name (s/type/time/)
->  * Drop is_visible
->  * Use timespec64 type for suspend stats
->  * Update documentation
->  * Update sysfs file name
-> ---
->  Documentation/ABI/testing/sysfs-power |  8 ++++++++
->  include/linux/suspend.h               |  2 ++
->  kernel/power/main.c                   | 15 +++++++++++++++
->  kernel/power/suspend.c                |  2 ++
->  kernel/time/timekeeping.c             |  2 ++
->  5 files changed, 29 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index f99d433ff311..3abe20c47e08 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -413,6 +413,14 @@ Description:
->                 The /sys/power/suspend_stats/last_failed_step file contains
->                 the last failed step in the suspend/resume path.
->
-> +What:          /sys/power/suspend_stats/last_total
-> +Date:          December 2022
-> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
-> +Description:
-> +               The /sys/power/suspend_stats/last_total file contains
-> +               the total duration of the sleep cycle.
-> +               This is measured in microseconds.
+>  drivers/platform/x86/ideapad-laptop.c | 52 ++++++++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index f3d4f2beda07..e8c088e7a53d 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -149,6 +149,7 @@ struct ideapad_private {
+>  		bool fn_lock              : 1;
+>  		bool hw_rfkill_switch     : 1;
+>  		bool kbd_bl               : 1;
+> +		bool cam_ctrl_via_ec      : 1;
+>  		bool touchpad_ctrl_via_ec : 1;
+>  		bool usb_charging         : 1;
+>  	} features;
+> @@ -163,6 +164,24 @@ static bool no_bt_rfkill;
+>  module_param(no_bt_rfkill, bool, 0444);
+>  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
+>  
+> +static acpi_status acpi_find_device_callback(acpi_handle handle, u32 level,
+> +					     void *context, void **return_value)
+> +{
+> +	struct acpi_buffer ret_buf;
+> +	char buffer[8];
 > +
-
-Nit/bikeshed: "last_total" seems less straightforward then it should
-be? Maybe "total_suspend_time" instead?
-
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index 31ec4a9b9d70..f33012860699 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -6,6 +6,7 @@
->   * Copyright (c) 2003 Open Source Development Lab
+> +	ret_buf.length = sizeof(buffer);
+> +	ret_buf.pointer = buffer;
+> +
+> +	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &ret_buf)))
+> +		if (strstarts(ret_buf.pointer, context)) {
+> +			*return_value = handle;
+> +			return AE_CTRL_TERMINATE;
+> +		}
+> +
+> +	return AE_OK;
+> +}
+> +
+>  /*
+>   * ACPI Helpers
 >   */
->
-> +#include <linux/acpi.h>
->  #include <linux/export.h>
->  #include <linux/kobject.h>
->  #include <linux/string.h>
-> @@ -54,6 +55,11 @@ void unlock_system_sleep(unsigned int flags)
->  }
->  EXPORT_SYMBOL_GPL(unlock_system_sleep);
->
-> +void pm_account_suspend_time(const struct timespec64 t)
-> +{
-> +       suspend_stats.last_total = timespec64_add(suspend_stats.last_total, t);
-> +}
+> @@ -675,7 +694,7 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+>  	bool supported = true;
+>  
+>  	if (attr == &dev_attr_camera_power.attr)
+> -		supported = test_bit(CFG_CAP_CAM_BIT, &priv->cfg);
+> +		supported = priv->features.cam_ctrl_via_ec;
+>  	else if (attr == &dev_attr_conservation_mode.attr)
+>  		supported = priv->features.conservation_mode;
+>  	else if (attr == &dev_attr_fan_mode.attr)
+> @@ -1527,6 +1546,37 @@ static void ideapad_check_features(struct ideapad_private *priv)
+>  
+>  	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+>  
+> +	/*
+> +	 * Some IdeaPads have camera switch via EC (mostly older ones),
+> +	 * some don't. Fortunately we know that if DSDT contains device
+> +	 * object for the camera, camera isn't switchable via EC.
+> +	 * So, let's walk the namespace and try to find CAM* object.
+> +	 * If we can't find it, set cam_ctrl_via_ec to true.
+> +	 */
 > +
->  void ksys_sync_helper(void)
->  {
->         ktime_t start;
-> @@ -377,6 +383,14 @@ static ssize_t last_failed_step_show(struct kobject *kobj,
->  }
->  static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
->
-> +static ssize_t last_total_show(struct kobject *kobj,
-> +               struct kobj_attribute *attr, char *buf)
-> +{
-> +       return sysfs_emit(buf, "%llu\n",
-> +                         timespec64_to_ns(&suspend_stats.last_total) / NSEC_PER_USEC);
-> +}
-> +static struct kobj_attribute last_total = __ATTR_RO(last_total);
+> +	priv->features.cam_ctrl_via_ec = false;
+
+There is no need to explicitly set this to false since the entire
+struct is allocated with kzalloc() and a bunch of other features
+flags are also not explicitly set to false. Please drop this line.
+
 > +
->  static struct attribute *suspend_attrs[] = {
->         &success.attr,
->         &fail.attr,
-> @@ -391,6 +405,7 @@ static struct attribute *suspend_attrs[] = {
->         &last_failed_dev.attr,
->         &last_failed_errno.attr,
->         &last_failed_step.attr,
-> +       &last_total.attr,
->         NULL,
->  };
+> +	if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg)) {
+> +		acpi_handle temp_handle = NULL;
+> +		acpi_handle pci_handle;
+> +		acpi_status status;
+> +
+> +		status = acpi_get_handle(handle, "^^^", &pci_handle);
+> +		if (ACPI_SUCCESS(status)) {
+> +			status = acpi_walk_namespace(ACPI_TYPE_DEVICE, pci_handle,
+> +						     ACPI_UINT32_MAX,
+> +						     acpi_find_device_callback,
+> +						     NULL, "CAM",
+> +						     &temp_handle);
 
-While not identical, this has some overlap with the logic in
-kernel/time/timekeeping_debug.c
-I wonder if it would make sense to consolidate some of this accounting?
+Why not just use acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT, ... ?
 
-thanks
--john
+The PCI root is usually pretty much the only object under the root anyways
+and this way you can avoid the acpi_get_handle() call + its error handling,
+so using ACPI_ROOT_OBJECT would lead to a nice cleanup.
+
+> +
+> +			if (ACPI_SUCCESS(status) && temp_handle == NULL)
+> +				priv->features.cam_ctrl_via_ec = true;
+> +
+> +		} else
+> +			dev_warn(&priv->platform_device->dev,
+> +				"Could not find PCI* node in the namespace\n");
+> +	}
+> +
+>  	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
+>  	priv->features.touchpad_ctrl_via_ec = !acpi_dev_present("ELAN0634", NULL, -1);
+>  
+
+Regards,
+
+Hans
+
+
