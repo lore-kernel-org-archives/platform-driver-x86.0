@@ -2,112 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83208C43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76153C43217
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 18:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229868AbiKPR03 (ORCPT
+        id S231437AbiKPSxp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 12:26:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42826 "EHLO
+        Wed, 16 Nov 2022 13:53:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234037AbiKPR01 (ORCPT
+        with ESMTP id S239237AbiKPSxR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 12:26:27 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91D82BD7;
-        Wed, 16 Nov 2022 09:26:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668619586; x=1700155586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=o1iIaX+edOL6x2mU3GukuAAteHiHRtQuPyP7zogbaFQ=;
-  b=iSukFpOmJUGShJ/Z/jlF+2beYmcwuL9uldQNZKv/AF8N4zw1pTjLLpc9
-   iTEskiFXF4smuxkB/qmyTLYeXjA1hbkZnDwl6sgjlZY9fypBEqcS546f0
-   1gK86SVdL9Fu3Bw2aF4AcZcmP09o9vMjCfIxd0lUny5QiYMN+AVBgXhAx
-   tlyQvA1xbil226UsyhfIK1D01974Me5RFmBTSzNxofF3cbnHhi9V7YS0l
-   px1mWbckg3iSm4jTMFhyDY2EBgvVAwklZ4TuI/C8dem/mZJr/q/i13RwN
-   URmGXGyJVKDp8o/CQswuzFbBAcRzqSCDtz2ZECKKtq+mHmhswKgfgQkrL
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="313759160"
-X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="313759160"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 09:26:25 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="617253213"
-X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="617253213"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.78])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 09:26:21 -0800
-Date:   Wed, 16 Nov 2022 09:26:19 -0800
-From:   Tony Luck <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, ashok.raj@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-Subject: Re: [PATCH v2 09/14] platform/x86/intel/ifs: Use generic microcode
- headers and functions
-Message-ID: <Y3UdO8/oaEnlEk7s@agluck-desk3.sc.intel.com>
-References: <20221021203413.1220137-1-jithu.joseph@intel.com>
- <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221107225323.2733518-10-jithu.joseph@intel.com>
- <Y253FKtLnmV3r7Kj@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y253FKtLnmV3r7Kj@zn.tnic>
+        Wed, 16 Nov 2022 13:53:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC94E654C1;
+        Wed, 16 Nov 2022 10:51:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6EA75B81E51;
+        Wed, 16 Nov 2022 18:51:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 21FE9C433D6;
+        Wed, 16 Nov 2022 18:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668624687;
+        bh=UhNCDZTfECOu2XHFbojTpPYpkhdXTT/+wgxn1c2zwUo=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=pb8KxTM71uHeyFwJNvSEkWKPnZ+PWSgciVP2HIa9424UF3GQBNCgPawQKMyrpkwM2
+         mZzXD1Ix8w4zqXCs8OuZAWlx5OoBCu1gPexBhHgvs2mVrIva18rhr7Y2M+a1RK4FMQ
+         nAhhQ0qTsVdFwXANW0EbSD7XZSsyZnjUBax5sobMDP/4akJr7sYPhY55kK5lQ9j8AS
+         o5edZl7QIegHloDgtTDOkF4jJuPPagj0yXE6F24TjpMgHngzzbCaYOR+7b4mvOx2MG
+         g+l3BSB5GdDvqk/YQdlUgdgoVnVH4aYpClxtv3pWmPwSHy0BcjjOmaJuIvu9QrumwJ
+         h/Xq2gTHDbp5w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 02F7AE21EFD;
+        Wed, 16 Nov 2022 18:51:27 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.1-4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
+References: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-4
+X-PR-Tracked-Commit-Id: b44fd994e45112b58b6c1dec4451d9a925784589
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 941209ef89e3f5e5fd75bffdafe8e74d5c2d4d92
+Message-Id: <166862468700.19828.18143695869834816826.pr-tracker-bot@kernel.org>
+Date:   Wed, 16 Nov 2022 18:51:27 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 05:23:48PM +0100, Borislav Petkov wrote:
-> On Mon, Nov 07, 2022 at 02:53:18PM -0800, Jithu Joseph wrote:
-> >  static int scan_chunks_sanity_check(struct device *dev)
-> >  {
-> > -	int metadata_size, curr_pkg, cpu, ret = -ENOMEM;
-> >  	struct ifs_data *ifsd = ifs_get_data(dev);
-> > +	int curr_pkg, cpu, ret = -ENOMEM;
-> >  	bool *package_authenticated;
-> >  	struct ifs_work local_work;
-> > -	char *test_ptr;
-> >  
-> >  	package_authenticated = kcalloc(topology_max_packages(), sizeof(bool), GFP_KERNEL);
-> >  	if (!package_authenticated)
-> >  		return ret;
-> 
-> Bah, how big is that thing so that you can't simply do a bitfield on the
-> stack here instead of kcalloc-ing?
+The pull request you sent on Wed, 16 Nov 2022 11:48:12 +0100:
 
-Kernel is built with gcc options that prevent a variable sized local
-array. So:
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-4
 
-	DECLARE_BITMAP(auth, topology_max_packages());
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/941209ef89e3f5e5fd75bffdafe8e74d5c2d4d92
 
-grumbles:
+Thank you!
 
-drivers/platform/x86/intel/ifs/load.c:196:2: warning: ISO C90 forbids variable length array ‘ifs_auth2’ [-Wvla]
-
-We could pick a likely big enough static number:
-
-#define MAX_SUPPORTED_PACKAGES	128
-
-	DECLARE_BITMAP(auth, MAX_SUPPORTED_PACKAGES);
-
-and error out of this code if SGI or someone build a monster machine:
-
-	if (topology_max_packages() > MAX_SUPPORTED_PACKAGES) {
-		pr_error_once("IFS driver needs update to support this machine\n");
-		return -E2BIG;
-	}
-
-That avoids the kcalloc() and making sure to kfree() in all error paths.
-
-But seems a bit hacky.  Other ideas?
-
--Tony
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
