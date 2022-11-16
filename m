@@ -2,135 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C0C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 15:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D3C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 16:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbiKPPn7 (ORCPT
+        id S230145AbiKPQIf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:43:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
+        Wed, 16 Nov 2022 11:08:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231313AbiKPPn4 (ORCPT
+        with ESMTP id S230204AbiKPQIe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:43:56 -0500
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2066.outbound.protection.outlook.com [40.107.101.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3776260DE;
-        Wed, 16 Nov 2022 07:43:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JSWZGjs2+cfRJufwn8ovpsDxwQ6PNokjPeXgUAOygyvhuKvc14fVpo6D93ljkiPBjGBY31SOJB+NfDzUIShRm9qhOgvk0iMBaORxX5IOqIEKtx6DlFTSAC/Xp6LmdeoB1pRJg3ySdpr1VfroyxEgqWqWXX/2Me1noNblaUOUYxLjyw7NkYpXrqZE+izl1vk30M+R25q5O+s/3JM8rZdPyEZGg8bNQDPRaOBgc0gYmi+y2VYYg6X1SR0H3ziMZOHvucyNmwF0U+rsZmTqSshr7f2w5gqny2zXUK6TcS99ot71W3Le/GN6iTGx5iV+imc4U/m5MllR6a3HqJd689mKDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=STTiHUo8HIMpX7pk6HDBH9HnJDDNVjYT7KMdGMeEF7k=;
- b=ZPX7wkSDST3i1S0XVweNS8Rr4dG8pF59hTfGiirB9+r5xJhjRMXX/yhR2JBHpBcCeg4ZyU5JVPf9dVZZrSJNhwFheUXeSzWI3RhAmxTdrJ3UA0Xed9IFSlUlYH6y8I9dxXjp0asosYLSlZcQiaxcjQtex0QcwDqDG+g21bRTYKeggZcHjnhdh3k3+8RPHj567pRRbtIph6AfDaQnfhq6kR32zTp1TGUre7rDztysBtJXRqxikzcFKZmaa2P1dbmypXgmHkrqwswrllMv7J0J28zzqIfUagor08LqFUUPBhe7NiI6hawpP9mCvB9LMw4z0HW5qAldoFcYLHumkdzLUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=STTiHUo8HIMpX7pk6HDBH9HnJDDNVjYT7KMdGMeEF7k=;
- b=mx2F5EcPUW5ix6oT4IdMWAWjRtcWs60JPVqkUvuruSZvKRVuHatSzzfGWdr0Sw1UVAWNWCe1ATerWvXsdnhHbQL8ymvBofEfLPYB4t7REI0vHiubR5si686z36JitrxBxaI4eYhOPkcBvX9ZaKj3vCrLrU6XmUFuYr0H6hu3Wpo=
-Received: from DS7PR03CA0121.namprd03.prod.outlook.com (2603:10b6:5:3b4::6) by
- DM6PR12MB4577.namprd12.prod.outlook.com (2603:10b6:5:2aa::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5813.18; Wed, 16 Nov 2022 15:43:53 +0000
-Received: from DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3b4:cafe::7c) by DS7PR03CA0121.outlook.office365.com
- (2603:10b6:5:3b4::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
- Transport; Wed, 16 Nov 2022 15:43:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT113.mail.protection.outlook.com (10.13.173.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Wed, 16 Nov 2022 15:43:52 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 16 Nov
- 2022 09:43:51 -0600
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-CC:     Mario Limonciello <mario.limonciello@amd.com>,
-        "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>,
-        Raul Rangel <rrangel@chromium.org>,
-        Mark Gross <markgross@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] platform/x86/amd: pmc: Add a workaround for an s0i3 issue on Cezanne
-Date:   Wed, 16 Nov 2022 09:43:41 -0600
-Message-ID: <20221116154341.13382-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 16 Nov 2022 11:08:34 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A8D13F6D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 08:08:30 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id d9so25964313wrm.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 08:08:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mHZCGRQ2gIOBiFJ7IS1DjoDFcxvo6qnzlXU9FwRwr0I=;
+        b=ELUdV+5n3C1TSA4XDUU9/rsv0aUF2O1h5X74rzlsjPutpg+HrWnXaOltsIKvxbBf/V
+         Xr88lg4IdpKqJGAVkATbdvJzjeMrcCU77AWzXZ1ed4Ch5gP9pZ/kCHY+CwD7MTTtDBbf
+         4YtWtjUHZVoHM6/DFlmbySafy6UZKQCAHJO+PR91u0dK3nfYSBEzl+AhoPNaik/5Rhkk
+         zRqIcRK8yRPxxBn1INi2o3LkhtasiG5mqaZDopjlyPnCgrTSjc9pwV/KwPsCqGZ2gAQ6
+         LgiyTTFU/FU00LnP9MVBDu/+vQCVYAezVlacPCHmT2dpFHi/maeJbIi+cARBmLe27FMP
+         VA7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mHZCGRQ2gIOBiFJ7IS1DjoDFcxvo6qnzlXU9FwRwr0I=;
+        b=ZjUhd9ajSNqgC4tWh5OSHBOGrLb9htYRYXnMG2xTVv5hXIJ+l9jVN14RnkazN7O8qv
+         jmlqTnoad/w7DNR1FbPkqGw24W+xhCzlSX4ABIuBIA8E4qd8oLzcSkrMLe0imNFuA2UO
+         mZkw2jTlzXXsV/c2GCsUSN3FKOBRm1WuKPjjkeUqWE5tnlA7JRJQupIPrqEDlHMwRJlY
+         jBgYZ6sW+3mUpi8DwNpP9H37rOSIS5Bp+oFrt5j7UGGELbbN/Zejs2ndPTPjPRyf10qs
+         v98DkjvPlCVVFMAZTmZrfd9vGrjZxiB2pWoBRZBB715owD8v9+O8my4ROz076JCAo+b/
+         DrdA==
+X-Gm-Message-State: ANoB5pn1m1v/9J9t2d/sfq7ZUY8+ZywDWp6zz694+fyxQ62lnZQPxx3g
+        zIxnkZu7+SAiPa8j15WI0k0=
+X-Google-Smtp-Source: AA0mqf4Tpzy6gKR4XaUiRtynyv+S2GxofrgiFOy2wpVQDGnH7wJAuMmcB3lCq0Fd/WjE4Gn1GkgsjA==
+X-Received: by 2002:a5d:4910:0:b0:22e:589:4dd2 with SMTP id x16-20020a5d4910000000b0022e05894dd2mr13873101wrq.236.1668614908783;
+        Wed, 16 Nov 2022 08:08:28 -0800 (PST)
+Received: from eray-Lenovo-Z50-70.. ([188.132.247.187])
+        by smtp.googlemail.com with ESMTPSA id j7-20020a5d4527000000b00236545edc91sm15562347wra.76.2022.11.16.08.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 08:08:28 -0800 (PST)
+From:   =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>
+To:     hdegoede@redhat.com
+Cc:     andy@kernel.org, arnavr3@illinois.edu, erayorcunus@gmail.com,
+        felix@eckhofer.com, g_goessel@outlook.com, ike.pan@canonical.com,
+        jiaxun.yang@flygoat.com, kai.heng.feng@canonical.com,
+        kelly@xilka.com, limanyi@uniontech.com, markgross@kernel.org,
+        maxtram95@gmail.com, p.jungkamp@gmx.net,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com,
+        whenov@gmail.com
+Subject: Re: [PATCH 0/3] platform/x86: ideapad-laptop: Rework touchpad control code
+Date:   Wed, 16 Nov 2022 19:08:25 +0300
+Message-Id: <20221116160825.16120-1-erayorcunus@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221116152448.698707-1-hdegoede@redhat.com>
+References: <20221116152448.698707-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT113:EE_|DM6PR12MB4577:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9ede0d5-6542-4e80-141c-08dac7e95cdf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x10UUJ8Jx8mH6pwcy0diDKkfslVsvd/zOKOuQhgdz/Q4Oe5FQtZU2W8Peq/pV0An2KsW+yzXyZY4OtxzDDU3hLBRleZLZ9snSIfc+lUSlZCGKD2X71iWt3KC5ZuxaW1UvZfk+zKICs+IQEpZfGWlUqpHKzuCZPgpqK2qDKdhZQ6v907dlbbkwjNsykrz1nuYyZJ7iH2D6SYgf613YOQ4ex9J4QsNNQ4jYGXJNmUfTdvplc1uogcWEPv5Ol8vierxJ0kmfQqjos1WfMBFFEVF/niWnoUUQLCI9prA2M8g6Q9VIGmVa3vyZarsuUIIIe4Rxy/WjQ2Lo1HoEfJRcIbEHGRdtwDW4dLJnowctr7nJrzDuEkMIzAGaoihctOajVy5MfMWSxSrZAedFiJFtsJglC4C7bl+SqVzs0/eyp1Y14A+kTmkYm8MHdwOaNYbJEh9YYzqQwJMTPPNqZbjRaSNMH0JoBJ38y6CeMl8uAXJzXmVY/SPdpJDNNNMizTvtf+xrpOgM98GHvq+9k1nejd3JXX6Xec8PVP8wreBJr6Vj4GYp0av97Ij2GNX35IVNGKNrTObBS7Zcz7k8tRz1yNBvkZp1WiuQeM15EtBOccZQlstNLxFGAVcC7bjcM4lBsCCsNufWNqQb+3oH6HFjQt9V3sY4qqhcx8aMDgMCn1nw7eJOxRGahL6xdhJvhzWLtr88iW0Ul8ux8afjyWK7mTyOnL4ikRaQx8gueN3kDI7iDn1NV28kRUj3FybBVL95skB5uPxHb5RtxSR7RaLg08v2ZjN8IVSHRXQQXFrqptpU1DoQ4+cAegJOam3xlUvhDwF
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(396003)(451199015)(40470700004)(36840700001)(46966006)(86362001)(40480700001)(82310400005)(4326008)(8676002)(40460700003)(41300700001)(36756003)(16526019)(2616005)(186003)(426003)(336012)(1076003)(70206006)(70586007)(8936002)(5660300002)(44832011)(47076005)(110136005)(6666004)(26005)(7696005)(478600001)(54906003)(2906002)(82740400003)(356005)(81166007)(316002)(6636002)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 15:43:52.4996
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9ede0d5-6542-4e80-141c-08dac7e95cdf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4577
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Cezanne platforms under the right circumstances have a synchronization
-problem where attempting to enter s2idle may fail if the x86 cores are
-put into HLT before hardware resume from the previous attempt has
-completed.
+Hi,
 
-To avoid this issue add a 10-20ms delay before entering s2idle another
-time. This workaround will only be applied on interrupts that wake the
-hardware but don't break the s2idle loop.
+On Thu, 16 Nov 2022 at 18:25, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi All,
+> 
+> Here are my proposed changes from the "ideapad-laptop touchpad handling
+> problems, request for help" email thread as proper patches:
+> https://lore.kernel.org/platform-driver-x86/bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com/
+> 
+> Note this applies on top of my review-hans branch which has seen a bunch
+> of other ideapad-laptop changes land recently:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> 
+> As suggested by Maxim, the third patch now has a module parameter to
+> allow users to easily re-enable the i8042 aux-port enabling/disabling
+> on models other then the Z570.
+> 
+> Eray, you mentioned in another email that you have some concerns about
+> the approach in this series?
 
-Cc: "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>
-Cc: "Raul Rangel" <rrangel@chromium.org>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes, thanks for mentioning. My concerns are these:
 
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index ef4ae977b8e0..439d282aafd1 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -739,8 +739,14 @@ static void amd_pmc_s2idle_prepare(void)
- static void amd_pmc_s2idle_check(void)
- {
- 	struct amd_pmc_dev *pdev = &pmc;
-+	struct smu_metrics table;
- 	int rc;
- 
-+	/* CZN: Ensure that future s0i3 entry attempts at least 10ms passed */
-+	if (pdev->cpu_id == AMD_CPU_ID_CZN && !get_metrics_table(pdev, &table) &&
-+	    table.s0i3_last_entry_status)
-+		usleep_range(10000, 20000);
-+
- 	/* Dump the IdleMask before we add to the STB */
- 	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
- 
--- 
-2.34.1
+- Users of laptops with ELAN0634 (like Yoga 14s and 720s), Lenovo
+  Yoga 3 Pro 1370 and ZhaoYang K4e-IML will start to see non-working
+  "touchpad" sysfs attribute on their ideapad-laptop driver. I see this
+  as a regression. Also it's easy to fix; we can just test for if
+  VPCCMD_W_TOUCHPAD works at the boot - with sending 0 first and verify the
+  VPCCMD_R_TOUCHPAD result, and then sending 1 and again verify the
+  VPCCMD_R_TOUCHPAD result. Later we can remove "touchpad" attribute if it
+  doesn't work, with the exception of devices with ctrl_ps2_aux_port,
+  since these laptops have working VPCCMD_R_TOUCHPAD.
 
+- You removed sending 1 to VPCCMD_W_TOUCHPAD at the boot, are we sure
+  there are no laptops needing that? I don't think we talked about that
+  in previous e-mail thread.
+
+- There is no i8042 cmd on touchpad_store, which may make the function
+  ineffective on laptops with ctrl_ps2_aux_port.
+
+- r_touchpad_val isn't set at touchpad_store and/or touchpad_read, which
+  can make it out of sync when "touchpad" attr is accessed.
+
+Best,
+Eray
