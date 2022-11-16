@@ -2,127 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4B3C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 15:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E868C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 15:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232138AbiKPPjc (ORCPT
+        id S229923AbiKPPlI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52602 "EHLO
+        Wed, 16 Nov 2022 10:41:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiKPPjb (ORCPT
+        with ESMTP id S232575AbiKPPkq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:39:31 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6512A6387
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:38:35 -0800 (PST)
+        Wed, 16 Nov 2022 10:40:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C1EB0F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:39:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668613114;
+        s=mimecast20190719; t=1668613196;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dA8kycjEcEKBcXjM8Cw63fd3Zn/LLumxDKZJffvjjQU=;
-        b=PSGH3b/CGXXvvpwGX7qFeOlzm0RxP87NIG/h5iYWND1A/CHtBOSG28V4juxtIS2t+T+yq7
-        ikrFK4fSHE7HmtFlV0On6BBiHsE0Z272RMN/7iuzEqGgPYQdcIww92/kX550itQq59mqYo
-        Vbs6JLl+dGzzdYVntQBdlHMqaUeIrHw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=LN7qIxV9HlSLZ1pc9dnXjNldf+vBoEMzdufIgxzjJwM=;
+        b=g0e8FGlUGzWf8b0hdCdjsfsTpky5ccCSGnNVnjC9a979IGnaM/Bu0eGO1+JbNa4QyP+2P+
+        +dRT6GSmGnFOWJHoOPsyyCv8Js3c69keb1P0l/+okhF1us/VhymdOy55HzPmrldfRBLY2M
+        0Awl6gJOy6ngHyb6YA/DTn7kdY3gM24=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-453-as9ZjnmNPZCxIva3NXkPoQ-1; Wed, 16 Nov 2022 10:38:33 -0500
-X-MC-Unique: as9ZjnmNPZCxIva3NXkPoQ-1
-Received: by mail-ej1-f70.google.com with SMTP id ga41-20020a1709070c2900b007aef14e8fd7so6180565ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:38:32 -0800 (PST)
+ us-mta-146-UUwuVi07OPOL_Eqi4XZz1A-1; Wed, 16 Nov 2022 10:39:54 -0500
+X-MC-Unique: UUwuVi07OPOL_Eqi4XZz1A-1
+Received: by mail-ej1-f69.google.com with SMTP id qa14-20020a170907868e00b007ae24f77742so10108103ejc.8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:39:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dA8kycjEcEKBcXjM8Cw63fd3Zn/LLumxDKZJffvjjQU=;
-        b=FL9FIMSbIXH2UM842tCrYYmyP4TdGve+BgoXwVtsOJmQe2mBpTASE0egiuytauijMT
-         9WDyy0YwvEgH6hGcEjH7OdfSHTMqzwPnQh3UfveZS/Hbw9Hgrbe2VdztIzqpQ6no7e5T
-         VpsUGY4451JFfy4RFqfw1oSndvac/Ik70paGyEWBUKcmR/a+gvMMQ5wmHG42CGbGM1PL
-         WWST4Qk6OY5smuCyjMm3/55Qo9FM5gvvOr51vauEr+4tYOsImZspGLv2YRKXOqqXFE+a
-         WuhEX6JCutAmjRT9V6/ShIhk3Ngd9qGMIXl84CrAfjjtZUYZJS8IvKpe+KoqRsM3EK+H
-         IwqA==
-X-Gm-Message-State: ANoB5pkpyPZvjoh4k3pTWglNfLslBh6Xwssopdh43LwrL58qmXae9jXz
-        wo+bI3IuzFllnHVg9T1dll/4+T2+Ka+oDDXnTENSqj1ZeS1LvQnxC5uiqBLPv6WSqUDr4IcH5X0
-        3BY5AwD/kGjFUjRdX9Fev7/zSwKme5Lc0/Q==
-X-Received: by 2002:aa7:c603:0:b0:460:fab2:c31f with SMTP id h3-20020aa7c603000000b00460fab2c31fmr20175765edq.335.1668613111008;
-        Wed, 16 Nov 2022 07:38:31 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf77U3wMi7XY8YIK2iOAUZc8DIpIWRRROd93SPQaQY7r1xsZUBaevATjo2+NHcYrERhFhXDyGQ==
-X-Received: by 2002:aa7:c603:0:b0:460:fab2:c31f with SMTP id h3-20020aa7c603000000b00460fab2c31fmr20175750edq.335.1668613110855;
-        Wed, 16 Nov 2022 07:38:30 -0800 (PST)
+        bh=LN7qIxV9HlSLZ1pc9dnXjNldf+vBoEMzdufIgxzjJwM=;
+        b=PK/lpLsGDHzjitkaplx9KFJV5dL9/PpXOS85scsj0LsT/F5pJSzQEbk1Q72Vh0KN/w
+         FVqdOmhAxCXzmna1XYVcqzlpfs16Va9tldbpTuiaFvQWXdErHhPZyzab8DBBWTtKW7zN
+         tVWrRK4Z6ZjD/LBulH5GIl1rOWPjYXwu/4CiF52j9eRvaN2cGs6FAsREDs9avwh7XcdU
+         9bNfLmalhnCeCFLT8BzvQIfuUs6B+E5oiA1mLAlUNqmTgWMGo98c+pziMqtfpFCioKzS
+         hvHyLHZq7bysE2qmXq16ey/oD+n1QsQrxY2M5uqyze5ILQc6IWyBo8/72KCHnBJUC8l8
+         mdiA==
+X-Gm-Message-State: ANoB5pmfz6ch5BQZrUULltlLcErFGuTZSjsX+gYxDNqLruBCxGIfubYN
+        hl9r/ybcfkPcGQeczNdRx8orP0YZdKfBfEJDulPDq8baIdu9D5n/9BeFai1MkaMZrVBg/Tkqxlt
+        lfVE88aWzqa1/sCXHGty2dZCBa3/782XUuw==
+X-Received: by 2002:a05:6402:1506:b0:461:79ee:ee8 with SMTP id f6-20020a056402150600b0046179ee0ee8mr19363703edw.194.1668613193723;
+        Wed, 16 Nov 2022 07:39:53 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7bxC9Cgs36C5mzoOjaen4QSgP/qjpL3VkFF0BAmN7ZE/42z/Zagyt1vbtZ/KXPMW9c84JIJQ==
+X-Received: by 2002:a05:6402:1506:b0:461:79ee:ee8 with SMTP id f6-20020a056402150600b0046179ee0ee8mr19363684edw.194.1668613193554;
+        Wed, 16 Nov 2022 07:39:53 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170906318d00b0077e6be40e4asm7078939ejy.175.2022.11.16.07.38.30
+        by smtp.gmail.com with ESMTPSA id y1-20020a170906470100b007ae1e52805dsm6954943ejq.103.2022.11.16.07.39.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 07:38:30 -0800 (PST)
-Message-ID: <3271ec19-f865-9222-ef36-b41c14c9337d@redhat.com>
-Date:   Wed, 16 Nov 2022 16:38:29 +0100
+        Wed, 16 Nov 2022 07:39:52 -0800 (PST)
+Message-ID: <d2124ddc-7e62-96af-62c5-2c44f181fe66@redhat.com>
+Date:   Wed, 16 Nov 2022 16:39:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: ideapad-laptop touchpad handling problems, request for help
+Subject: Re: [PATCH v2 5/7] platform/x86: ideapad-laptop: Expose camera_power
+ only if supported
 Content-Language: en-US, nl
-To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>
-Cc:     cleverline1mc@gmail.com, g_goessel@outlook.com,
-        ike.pan@canonical.com, jiaxun.yang@flygoat.com,
-        limanyi@uniontech.com, maxtram95@gmail.com, mjg59@srcf.ucam.org,
-        platform-driver-x86@vger.kernel.org
-References: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com>
- <CAKErNvqfH-C7xJU3F7ga68o3AK-_ae-K2ggKcUOp1iqtmdSYdw@mail.gmail.com>
- <20221110120022.35041-1-erayorcunus@gmail.com>
- <4bcf4e6b-ae2f-0e22-a291-7faa6731e6c7@redhat.com>
- <20221110164220.46640-1-erayorcunus@gmail.com>
- <CAKErNvo+fh6sXUOPj9sCucuzUOKybOUgBo5riCfLpCF_8t9_uA@mail.gmail.com>
- <20221110184709.52768-1-erayorcunus@gmail.com>
- <d86d9c20-6f5c-0de9-2c09-7667080dd65c@redhat.com>
- <CAKErNvquRV9M6CU2RTO7nj1X=vwnByomk7Xndg2eGLN4DBh4uw@mail.gmail.com>
- <51b68bf6-94d5-8ae3-6da4-58136d49c36e@redhat.com>
- <20221116153403.14670-1-erayorcunus@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221116153403.14670-1-erayorcunus@gmail.com>
+To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        ike.pan@canonical.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        mgross@linux.intel.com, pobrn@protonmail.com
+References: <20221029120311.11152-1-erayorcunus@gmail.com>
+ <20221029120311.11152-6-erayorcunus@gmail.com>
+ <dde0d934-45be-8b12-bdf6-0c3de7321731@redhat.com>
+In-Reply-To: <dde0d934-45be-8b12-bdf6-0c3de7321731@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Eray,
 
-On 11/16/22 16:34, Eray Orçunus wrote:
-> On Thu, 16 Nov 2022 at 18:19, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
+On 11/15/22 21:43, Hans de Goede wrote:
+> Hi Eray,
 > 
-> Hi, sorry for the late reply.
-> 
->> On 11/11/22 12:44, Maxim Mikityanskiy wrote:
->>> Maybe also add a module parameter to force the i8042 workaround? This
->>> change is likely to break the touchpad toggle for some devices similar
->>> to Z570 (maybe Z580? Y580? idk), so people would at least have an
->>> option to force enable it using the module parameter, before the
->>> relevant entry gets added to the DMI table, the patch gets merged, and
->>> the kernel gets updated.
+> On 10/29/22 14:03, Eray Orçunus wrote:
+>> IdeaPads dropped support for VPCCMD_W_CAMERA somewhere between 2014-2016,
+>> none of the IdeaPads produced after that I tested supports it. Fortunately
+>> I found a way to check it; if the DSDT has camera device(s) defined, it
+>> shouldn't have working VPCCMD_W_CAMERA, thus camera_power shouldn't be
+>> exposed to sysfs. To accomplish this, walk the ACPI namespace in
+>> ideapad_check_features and check the devices starting with "CAM".
+>> Tested on 520-15IKB and Legion Y520, which successfully didn't expose
+>> the camera_power attribute.
 >>
->> That is a good idea. I'm about to send out this as a proper patch-series
->> and I've added a module parameter to the version.
-> 
-> Alright, I will continue the discussion from there then.
-> 
->> BTW did you ever try simply writing back the value returned from
->> VPCCMD_R_TOUCHPAD to VPCCMD_W_TOUCHPAD ?
+>> Link: https://www.spinics.net/lists/platform-driver-x86/msg26147.html
+>> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
+>> ---
+>>  drivers/platform/x86/ideapad-laptop.c | 52 ++++++++++++++++++++++++++-
+>>  1 file changed, 51 insertions(+), 1 deletion(-)
 >>
->> Eray has been looking at what the Windows tools do and according
->> to Eray they always call VPCCMD_W_TOUCHPAD on touchpad toggle
->> events. So maybe just writing back the value is enough to actually
->> disable the touchpad ?
+>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>> index f3d4f2beda07..e8c088e7a53d 100644
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -149,6 +149,7 @@ struct ideapad_private {
+>>  		bool fn_lock              : 1;
+>>  		bool hw_rfkill_switch     : 1;
+>>  		bool kbd_bl               : 1;
+>> +		bool cam_ctrl_via_ec      : 1;
+>>  		bool touchpad_ctrl_via_ec : 1;
+>>  		bool usb_charging         : 1;
+>>  	} features;
+>> @@ -163,6 +164,24 @@ static bool no_bt_rfkill;
+>>  module_param(no_bt_rfkill, bool, 0444);
+>>  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
+>>  
+>> +static acpi_status acpi_find_device_callback(acpi_handle handle, u32 level,
+>> +					     void *context, void **return_value)
+>> +{
+>> +	struct acpi_buffer ret_buf;
+>> +	char buffer[8];
+>> +
+>> +	ret_buf.length = sizeof(buffer);
+>> +	ret_buf.pointer = buffer;
+>> +
+>> +	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &ret_buf)))
+>> +		if (strstarts(ret_buf.pointer, context)) {
+>> +			*return_value = handle;
+>> +			return AE_CTRL_TERMINATE;
+>> +		}
+>> +
+>> +	return AE_OK;
+>> +}
+>> +
+>>  /*
+>>   * ACPI Helpers
+>>   */
+>> @@ -675,7 +694,7 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+>>  	bool supported = true;
+>>  
+>>  	if (attr == &dev_attr_camera_power.attr)
+>> -		supported = test_bit(CFG_CAP_CAM_BIT, &priv->cfg);
+>> +		supported = priv->features.cam_ctrl_via_ec;
+>>  	else if (attr == &dev_attr_conservation_mode.attr)
+>>  		supported = priv->features.conservation_mode;
+>>  	else if (attr == &dev_attr_fan_mode.attr)
+>> @@ -1527,6 +1546,37 @@ static void ideapad_check_features(struct ideapad_private *priv)
+>>  
+>>  	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+>>  
+>> +	/*
+>> +	 * Some IdeaPads have camera switch via EC (mostly older ones),
+>> +	 * some don't. Fortunately we know that if DSDT contains device
+>> +	 * object for the camera, camera isn't switchable via EC.
+>> +	 * So, let's walk the namespace and try to find CAM* object.
+>> +	 * If we can't find it, set cam_ctrl_via_ec to true.
+>> +	 */
+>> +
+>> +	priv->features.cam_ctrl_via_ec = false;
 > 
-> It isn't, as I said before, VPCCMD_W_TOUCHPAD is nulled/empty on Z570 and
-> S12, so it won't work.
+> There is no need to explicitly set this to false since the entire
+> struct is allocated with kzalloc() and a bunch of other features
+> flags are also not explicitly set to false. Please drop this line.
+> 
+>> +
+>> +	if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg)) {
+>> +		acpi_handle temp_handle = NULL;
+>> +		acpi_handle pci_handle;
+>> +		acpi_status status;
+>> +
+>> +		status = acpi_get_handle(handle, "^^^", &pci_handle);
+>> +		if (ACPI_SUCCESS(status)) {
+>> +			status = acpi_walk_namespace(ACPI_TYPE_DEVICE, pci_handle,
+>> +						     ACPI_UINT32_MAX,
+>> +						     acpi_find_device_callback,
+>> +						     NULL, "CAM",
+>> +						     &temp_handle);
+> 
+> Why not just use acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT, ... ?
+> 
+> The PCI root is usually pretty much the only object under the root anyways
+> and this way you can avoid the acpi_get_handle() call + its error handling,
+> so using ACPI_ROOT_OBJECT would lead to a nice cleanup.
 
-A right, I forgot that you mentioned that, sorry.
-
-Maxim, that means there is no need to try doing this.
+Note when you send out a new version of this patch + patch 6/7,
+please base it on top of my current review-hans branch since
+a bunch of other ideapad-laptop changes have landed there.
 
 Regards,
 
