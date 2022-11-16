@@ -2,72 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76153C43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 18:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCE4C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 18:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbiKPSxp (ORCPT
+        id S233528AbiKPSzW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 13:53:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
+        Wed, 16 Nov 2022 13:55:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239237AbiKPSxR (ORCPT
+        with ESMTP id S239294AbiKPSzB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 13:53:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC94E654C1;
-        Wed, 16 Nov 2022 10:51:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 16 Nov 2022 13:55:01 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEEAC63CFB;
+        Wed, 16 Nov 2022 10:53:52 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e74b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e74b:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6EA75B81E51;
-        Wed, 16 Nov 2022 18:51:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 21FE9C433D6;
-        Wed, 16 Nov 2022 18:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668624687;
-        bh=UhNCDZTfECOu2XHFbojTpPYpkhdXTT/+wgxn1c2zwUo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=pb8KxTM71uHeyFwJNvSEkWKPnZ+PWSgciVP2HIa9424UF3GQBNCgPawQKMyrpkwM2
-         mZzXD1Ix8w4zqXCs8OuZAWlx5OoBCu1gPexBhHgvs2mVrIva18rhr7Y2M+a1RK4FMQ
-         nAhhQ0qTsVdFwXANW0EbSD7XZSsyZnjUBax5sobMDP/4akJr7sYPhY55kK5lQ9j8AS
-         o5edZl7QIegHloDgtTDOkF4jJuPPagj0yXE6F24TjpMgHngzzbCaYOR+7b4mvOx2MG
-         g+l3BSB5GdDvqk/YQdlUgdgoVnVH4aYpClxtv3pWmPwSHy0BcjjOmaJuIvu9QrumwJ
-         h/Xq2gTHDbp5w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 02F7AE21EFD;
-        Wed, 16 Nov 2022 18:51:27 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.1-4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
-References: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <5e425476-5f04-23e2-03e0-1f8ea57c1a55@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-4
-X-PR-Tracked-Commit-Id: b44fd994e45112b58b6c1dec4451d9a925784589
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 941209ef89e3f5e5fd75bffdafe8e74d5c2d4d92
-Message-Id: <166862468700.19828.18143695869834816826.pr-tracker-bot@kernel.org>
-Date:   Wed, 16 Nov 2022 18:51:27 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 927B01EC0138;
+        Wed, 16 Nov 2022 19:53:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1668624831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MSdPW6OrtrtBqmP5DI/tn3YS/Mof56eQgXuX0RIR0II=;
+        b=AXwVzczv8jCLT57tq15qcizFkAwpVgR727jL/HviHxFKq2d/qJ9n6TUrxsFAxFyL+V2Tlw
+        cyD09oGY1/TEQda3C/1nJ675FwSATONGyWGFg2MgFecZJWR9TqbCVK+K88AYsD4DWif8Ed
+        3080BBVVOSXzif9Y008DbeGWLQmmQyE=
+Date:   Wed, 16 Nov 2022 19:53:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, ashok.raj@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: Re: [PATCH v2 09/14] platform/x86/intel/ifs: Use generic microcode
+ headers and functions
+Message-ID: <Y3UxvAD+rKKQBsYs@zn.tnic>
+References: <20221021203413.1220137-1-jithu.joseph@intel.com>
+ <20221107225323.2733518-1-jithu.joseph@intel.com>
+ <20221107225323.2733518-10-jithu.joseph@intel.com>
+ <Y253FKtLnmV3r7Kj@zn.tnic>
+ <Y3UdO8/oaEnlEk7s@agluck-desk3.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y3UdO8/oaEnlEk7s@agluck-desk3.sc.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Wed, 16 Nov 2022 11:48:12 +0100:
+On Wed, Nov 16, 2022 at 09:26:19AM -0800, Tony Luck wrote:
+> But seems a bit hacky.  Other ideas?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.1-4
+Yeah, that looks not too optimal.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/941209ef89e3f5e5fd75bffdafe8e74d5c2d4d92
+How about you still allocate but at driver init time, ifs_init() or so?
 
-Thank you!
+And deallocate it at driver removal so that its always present during
+the driver's lifetime and can be reused each time the sanity check is
+called.
+
+And you call ifs_load_firmware() under the ifs_sem so you already got
+sync too.
+
+Hmmm.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
