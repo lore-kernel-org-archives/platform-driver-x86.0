@@ -2,197 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E868C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 15:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C0C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Nov 2022 15:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiKPPlI (ORCPT
+        id S229939AbiKPPn7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:41:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
+        Wed, 16 Nov 2022 10:43:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232575AbiKPPkq (ORCPT
+        with ESMTP id S231313AbiKPPn4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:40:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C1EB0F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:39:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668613196;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LN7qIxV9HlSLZ1pc9dnXjNldf+vBoEMzdufIgxzjJwM=;
-        b=g0e8FGlUGzWf8b0hdCdjsfsTpky5ccCSGnNVnjC9a979IGnaM/Bu0eGO1+JbNa4QyP+2P+
-        +dRT6GSmGnFOWJHoOPsyyCv8Js3c69keb1P0l/+okhF1us/VhymdOy55HzPmrldfRBLY2M
-        0Awl6gJOy6ngHyb6YA/DTn7kdY3gM24=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-146-UUwuVi07OPOL_Eqi4XZz1A-1; Wed, 16 Nov 2022 10:39:54 -0500
-X-MC-Unique: UUwuVi07OPOL_Eqi4XZz1A-1
-Received: by mail-ej1-f69.google.com with SMTP id qa14-20020a170907868e00b007ae24f77742so10108103ejc.8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2022 07:39:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LN7qIxV9HlSLZ1pc9dnXjNldf+vBoEMzdufIgxzjJwM=;
-        b=PK/lpLsGDHzjitkaplx9KFJV5dL9/PpXOS85scsj0LsT/F5pJSzQEbk1Q72Vh0KN/w
-         FVqdOmhAxCXzmna1XYVcqzlpfs16Va9tldbpTuiaFvQWXdErHhPZyzab8DBBWTtKW7zN
-         tVWrRK4Z6ZjD/LBulH5GIl1rOWPjYXwu/4CiF52j9eRvaN2cGs6FAsREDs9avwh7XcdU
-         9bNfLmalhnCeCFLT8BzvQIfuUs6B+E5oiA1mLAlUNqmTgWMGo98c+pziMqtfpFCioKzS
-         hvHyLHZq7bysE2qmXq16ey/oD+n1QsQrxY2M5uqyze5ILQc6IWyBo8/72KCHnBJUC8l8
-         mdiA==
-X-Gm-Message-State: ANoB5pmfz6ch5BQZrUULltlLcErFGuTZSjsX+gYxDNqLruBCxGIfubYN
-        hl9r/ybcfkPcGQeczNdRx8orP0YZdKfBfEJDulPDq8baIdu9D5n/9BeFai1MkaMZrVBg/Tkqxlt
-        lfVE88aWzqa1/sCXHGty2dZCBa3/782XUuw==
-X-Received: by 2002:a05:6402:1506:b0:461:79ee:ee8 with SMTP id f6-20020a056402150600b0046179ee0ee8mr19363703edw.194.1668613193723;
-        Wed, 16 Nov 2022 07:39:53 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7bxC9Cgs36C5mzoOjaen4QSgP/qjpL3VkFF0BAmN7ZE/42z/Zagyt1vbtZ/KXPMW9c84JIJQ==
-X-Received: by 2002:a05:6402:1506:b0:461:79ee:ee8 with SMTP id f6-20020a056402150600b0046179ee0ee8mr19363684edw.194.1668613193554;
-        Wed, 16 Nov 2022 07:39:53 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id y1-20020a170906470100b007ae1e52805dsm6954943ejq.103.2022.11.16.07.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 07:39:52 -0800 (PST)
-Message-ID: <d2124ddc-7e62-96af-62c5-2c44f181fe66@redhat.com>
-Date:   Wed, 16 Nov 2022 16:39:52 +0100
+        Wed, 16 Nov 2022 10:43:56 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2066.outbound.protection.outlook.com [40.107.101.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3776260DE;
+        Wed, 16 Nov 2022 07:43:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JSWZGjs2+cfRJufwn8ovpsDxwQ6PNokjPeXgUAOygyvhuKvc14fVpo6D93ljkiPBjGBY31SOJB+NfDzUIShRm9qhOgvk0iMBaORxX5IOqIEKtx6DlFTSAC/Xp6LmdeoB1pRJg3ySdpr1VfroyxEgqWqWXX/2Me1noNblaUOUYxLjyw7NkYpXrqZE+izl1vk30M+R25q5O+s/3JM8rZdPyEZGg8bNQDPRaOBgc0gYmi+y2VYYg6X1SR0H3ziMZOHvucyNmwF0U+rsZmTqSshr7f2w5gqny2zXUK6TcS99ot71W3Le/GN6iTGx5iV+imc4U/m5MllR6a3HqJd689mKDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=STTiHUo8HIMpX7pk6HDBH9HnJDDNVjYT7KMdGMeEF7k=;
+ b=ZPX7wkSDST3i1S0XVweNS8Rr4dG8pF59hTfGiirB9+r5xJhjRMXX/yhR2JBHpBcCeg4ZyU5JVPf9dVZZrSJNhwFheUXeSzWI3RhAmxTdrJ3UA0Xed9IFSlUlYH6y8I9dxXjp0asosYLSlZcQiaxcjQtex0QcwDqDG+g21bRTYKeggZcHjnhdh3k3+8RPHj567pRRbtIph6AfDaQnfhq6kR32zTp1TGUre7rDztysBtJXRqxikzcFKZmaa2P1dbmypXgmHkrqwswrllMv7J0J28zzqIfUagor08LqFUUPBhe7NiI6hawpP9mCvB9LMw4z0HW5qAldoFcYLHumkdzLUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=STTiHUo8HIMpX7pk6HDBH9HnJDDNVjYT7KMdGMeEF7k=;
+ b=mx2F5EcPUW5ix6oT4IdMWAWjRtcWs60JPVqkUvuruSZvKRVuHatSzzfGWdr0Sw1UVAWNWCe1ATerWvXsdnhHbQL8ymvBofEfLPYB4t7REI0vHiubR5si686z36JitrxBxaI4eYhOPkcBvX9ZaKj3vCrLrU6XmUFuYr0H6hu3Wpo=
+Received: from DS7PR03CA0121.namprd03.prod.outlook.com (2603:10b6:5:3b4::6) by
+ DM6PR12MB4577.namprd12.prod.outlook.com (2603:10b6:5:2aa::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5813.18; Wed, 16 Nov 2022 15:43:53 +0000
+Received: from DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b4:cafe::7c) by DS7PR03CA0121.outlook.office365.com
+ (2603:10b6:5:3b4::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
+ Transport; Wed, 16 Nov 2022 15:43:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT113.mail.protection.outlook.com (10.13.173.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5834.8 via Frontend Transport; Wed, 16 Nov 2022 15:43:52 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 16 Nov
+ 2022 09:43:51 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+CC:     Mario Limonciello <mario.limonciello@amd.com>,
+        "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>,
+        Raul Rangel <rrangel@chromium.org>,
+        Mark Gross <markgross@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] platform/x86/amd: pmc: Add a workaround for an s0i3 issue on Cezanne
+Date:   Wed, 16 Nov 2022 09:43:41 -0600
+Message-ID: <20221116154341.13382-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v2 5/7] platform/x86: ideapad-laptop: Expose camera_power
- only if supported
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        ike.pan@canonical.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        mgross@linux.intel.com, pobrn@protonmail.com
-References: <20221029120311.11152-1-erayorcunus@gmail.com>
- <20221029120311.11152-6-erayorcunus@gmail.com>
- <dde0d934-45be-8b12-bdf6-0c3de7321731@redhat.com>
-In-Reply-To: <dde0d934-45be-8b12-bdf6-0c3de7321731@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT113:EE_|DM6PR12MB4577:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9ede0d5-6542-4e80-141c-08dac7e95cdf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x10UUJ8Jx8mH6pwcy0diDKkfslVsvd/zOKOuQhgdz/Q4Oe5FQtZU2W8Peq/pV0An2KsW+yzXyZY4OtxzDDU3hLBRleZLZ9snSIfc+lUSlZCGKD2X71iWt3KC5ZuxaW1UvZfk+zKICs+IQEpZfGWlUqpHKzuCZPgpqK2qDKdhZQ6v907dlbbkwjNsykrz1nuYyZJ7iH2D6SYgf613YOQ4ex9J4QsNNQ4jYGXJNmUfTdvplc1uogcWEPv5Ol8vierxJ0kmfQqjos1WfMBFFEVF/niWnoUUQLCI9prA2M8g6Q9VIGmVa3vyZarsuUIIIe4Rxy/WjQ2Lo1HoEfJRcIbEHGRdtwDW4dLJnowctr7nJrzDuEkMIzAGaoihctOajVy5MfMWSxSrZAedFiJFtsJglC4C7bl+SqVzs0/eyp1Y14A+kTmkYm8MHdwOaNYbJEh9YYzqQwJMTPPNqZbjRaSNMH0JoBJ38y6CeMl8uAXJzXmVY/SPdpJDNNNMizTvtf+xrpOgM98GHvq+9k1nejd3JXX6Xec8PVP8wreBJr6Vj4GYp0av97Ij2GNX35IVNGKNrTObBS7Zcz7k8tRz1yNBvkZp1WiuQeM15EtBOccZQlstNLxFGAVcC7bjcM4lBsCCsNufWNqQb+3oH6HFjQt9V3sY4qqhcx8aMDgMCn1nw7eJOxRGahL6xdhJvhzWLtr88iW0Ul8ux8afjyWK7mTyOnL4ikRaQx8gueN3kDI7iDn1NV28kRUj3FybBVL95skB5uPxHb5RtxSR7RaLg08v2ZjN8IVSHRXQQXFrqptpU1DoQ4+cAegJOam3xlUvhDwF
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(396003)(451199015)(40470700004)(36840700001)(46966006)(86362001)(40480700001)(82310400005)(4326008)(8676002)(40460700003)(41300700001)(36756003)(16526019)(2616005)(186003)(426003)(336012)(1076003)(70206006)(70586007)(8936002)(5660300002)(44832011)(47076005)(110136005)(6666004)(26005)(7696005)(478600001)(54906003)(2906002)(82740400003)(356005)(81166007)(316002)(6636002)(36860700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 15:43:52.4996
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9ede0d5-6542-4e80-141c-08dac7e95cdf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4577
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Eray,
+Cezanne platforms under the right circumstances have a synchronization
+problem where attempting to enter s2idle may fail if the x86 cores are
+put into HLT before hardware resume from the previous attempt has
+completed.
 
-On 11/15/22 21:43, Hans de Goede wrote:
-> Hi Eray,
-> 
-> On 10/29/22 14:03, Eray Orçunus wrote:
->> IdeaPads dropped support for VPCCMD_W_CAMERA somewhere between 2014-2016,
->> none of the IdeaPads produced after that I tested supports it. Fortunately
->> I found a way to check it; if the DSDT has camera device(s) defined, it
->> shouldn't have working VPCCMD_W_CAMERA, thus camera_power shouldn't be
->> exposed to sysfs. To accomplish this, walk the ACPI namespace in
->> ideapad_check_features and check the devices starting with "CAM".
->> Tested on 520-15IKB and Legion Y520, which successfully didn't expose
->> the camera_power attribute.
->>
->> Link: https://www.spinics.net/lists/platform-driver-x86/msg26147.html
->> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
->> ---
->>  drivers/platform/x86/ideapad-laptop.c | 52 ++++++++++++++++++++++++++-
->>  1 file changed, 51 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->> index f3d4f2beda07..e8c088e7a53d 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -149,6 +149,7 @@ struct ideapad_private {
->>  		bool fn_lock              : 1;
->>  		bool hw_rfkill_switch     : 1;
->>  		bool kbd_bl               : 1;
->> +		bool cam_ctrl_via_ec      : 1;
->>  		bool touchpad_ctrl_via_ec : 1;
->>  		bool usb_charging         : 1;
->>  	} features;
->> @@ -163,6 +164,24 @@ static bool no_bt_rfkill;
->>  module_param(no_bt_rfkill, bool, 0444);
->>  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
->>  
->> +static acpi_status acpi_find_device_callback(acpi_handle handle, u32 level,
->> +					     void *context, void **return_value)
->> +{
->> +	struct acpi_buffer ret_buf;
->> +	char buffer[8];
->> +
->> +	ret_buf.length = sizeof(buffer);
->> +	ret_buf.pointer = buffer;
->> +
->> +	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &ret_buf)))
->> +		if (strstarts(ret_buf.pointer, context)) {
->> +			*return_value = handle;
->> +			return AE_CTRL_TERMINATE;
->> +		}
->> +
->> +	return AE_OK;
->> +}
->> +
->>  /*
->>   * ACPI Helpers
->>   */
->> @@ -675,7 +694,7 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
->>  	bool supported = true;
->>  
->>  	if (attr == &dev_attr_camera_power.attr)
->> -		supported = test_bit(CFG_CAP_CAM_BIT, &priv->cfg);
->> +		supported = priv->features.cam_ctrl_via_ec;
->>  	else if (attr == &dev_attr_conservation_mode.attr)
->>  		supported = priv->features.conservation_mode;
->>  	else if (attr == &dev_attr_fan_mode.attr)
->> @@ -1527,6 +1546,37 @@ static void ideapad_check_features(struct ideapad_private *priv)
->>  
->>  	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
->>  
->> +	/*
->> +	 * Some IdeaPads have camera switch via EC (mostly older ones),
->> +	 * some don't. Fortunately we know that if DSDT contains device
->> +	 * object for the camera, camera isn't switchable via EC.
->> +	 * So, let's walk the namespace and try to find CAM* object.
->> +	 * If we can't find it, set cam_ctrl_via_ec to true.
->> +	 */
->> +
->> +	priv->features.cam_ctrl_via_ec = false;
-> 
-> There is no need to explicitly set this to false since the entire
-> struct is allocated with kzalloc() and a bunch of other features
-> flags are also not explicitly set to false. Please drop this line.
-> 
->> +
->> +	if (test_bit(CFG_CAP_CAM_BIT, &priv->cfg)) {
->> +		acpi_handle temp_handle = NULL;
->> +		acpi_handle pci_handle;
->> +		acpi_status status;
->> +
->> +		status = acpi_get_handle(handle, "^^^", &pci_handle);
->> +		if (ACPI_SUCCESS(status)) {
->> +			status = acpi_walk_namespace(ACPI_TYPE_DEVICE, pci_handle,
->> +						     ACPI_UINT32_MAX,
->> +						     acpi_find_device_callback,
->> +						     NULL, "CAM",
->> +						     &temp_handle);
-> 
-> Why not just use acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT, ... ?
-> 
-> The PCI root is usually pretty much the only object under the root anyways
-> and this way you can avoid the acpi_get_handle() call + its error handling,
-> so using ACPI_ROOT_OBJECT would lead to a nice cleanup.
+To avoid this issue add a 10-20ms delay before entering s2idle another
+time. This workaround will only be applied on interrupts that wake the
+hardware but don't break the s2idle loop.
 
-Note when you send out a new version of this patch + patch 6/7,
-please base it on top of my current review-hans branch since
-a bunch of other ideapad-laptop changes have landed there.
+Cc: "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>
+Cc: "Raul Rangel" <rrangel@chromium.org>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/amd/pmc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Regards,
-
-Hans
-
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index ef4ae977b8e0..439d282aafd1 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -739,8 +739,14 @@ static void amd_pmc_s2idle_prepare(void)
+ static void amd_pmc_s2idle_check(void)
+ {
+ 	struct amd_pmc_dev *pdev = &pmc;
++	struct smu_metrics table;
+ 	int rc;
+ 
++	/* CZN: Ensure that future s0i3 entry attempts at least 10ms passed */
++	if (pdev->cpu_id == AMD_CPU_ID_CZN && !get_metrics_table(pdev, &table) &&
++	    table.s0i3_last_entry_status)
++		usleep_range(10000, 20000);
++
+ 	/* Dump the IdleMask before we add to the STB */
+ 	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+ 
+-- 
+2.34.1
 
