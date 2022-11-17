@@ -2,233 +2,195 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD266C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 08:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A3BC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 09:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239419AbiKQIwj (ORCPT
+        id S239263AbiKQJ7U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 03:52:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51338 "EHLO
+        Thu, 17 Nov 2022 04:59:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234421AbiKQIwi (ORCPT
+        with ESMTP id S233096AbiKQJ66 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 03:52:38 -0500
+        Thu, 17 Nov 2022 04:58:58 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1611011172
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 00:51:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE474877A
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 01:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668675102;
+        s=mimecast20190719; t=1668679006;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9Myyg+bLdQelD4D9kVUB3s2sr8LVncKivkUt152IISU=;
-        b=G62ru3VCQ3LLEggeRTHgvF59Qk2CbOWhkrcLqleAZKXvIgJnSkY4TiIZ+ifqKWHWV5uAkI
-        fnrB5280Yh8LJtvVrTnkPXkRbzaxgthRjywCVrX+uwxIewhYW4u1VfUphlT8WxzEXxhyyS
-        6FZOnF0jwJZUtt/F1l2CWT7mLIFoIQs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Jh1QBXJHWhTjnnV7TnPjpK5IcBvyMz+FkPZqkzKMV3M=;
+        b=JTyhst3iEceOwIqJ5JLyN53pJc7zuWA64W+LzA8Q5tzHKhqggsrnJLBJAMhgiht+sxWeCS
+        B3vD1D5mO7WJQj33rNW9DhKdC+DmvmG+j0blXHNznAe7lLJ4f1UGOS/f81Ci7QWHSbIYzl
+        L/SnRtvTuWdheFafdfbomjQ3HEZzA7M=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-286-fPs5BamkOEiQaTK8pL52ag-1; Thu, 17 Nov 2022 03:51:33 -0500
-X-MC-Unique: fPs5BamkOEiQaTK8pL52ag-1
-Received: by mail-ej1-f71.google.com with SMTP id dn14-20020a17090794ce00b007ae5d040ca8so728937ejc.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 00:51:33 -0800 (PST)
+ us-mta-466-zO-B4KDOOqy6EAcGu9_6PQ-1; Thu, 17 Nov 2022 04:56:45 -0500
+X-MC-Unique: zO-B4KDOOqy6EAcGu9_6PQ-1
+Received: by mail-ed1-f69.google.com with SMTP id z11-20020a056402274b00b00461dba91468so888442edd.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 01:56:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Myyg+bLdQelD4D9kVUB3s2sr8LVncKivkUt152IISU=;
-        b=nqRmrj2Md7vHPqZcgx+1OTH/HBVuOaZDjkhSG9A7l9eokd+q5pVnJjYGJK+9SyLZPP
-         D1equuvXi01s2LNNmBTsXHvQqjVMmOl2kz7cjFFAX3D8J6vaZtTsYNT8eu/tOqjLHcVx
-         wYJ8Yy5M4Qf5C2qPGRNv1GUSzTbVDOdMmcL2KswE7Pev+woECcS0fwFrXRI/tMjKuisu
-         JGWQLVY2+7yrcxb2Ns38I8pS15tyywaf20DySGP9QuI61Q9bhjShCFfrY6LZW1OSx3uZ
-         koYriUj2LtzetZH4yMEYAclVO1F2/ClbVRV+01+4JyuYFdL9AdEau/1PLClzI6DPlK/c
-         6FaQ==
-X-Gm-Message-State: ANoB5pnzWoHe7vUlCuULnGx6aWJAs+AkNBDnbXbYoGMwE9XtqmFb6IMX
-        YfhdeGSWiyOQNCmDrs9JZijgAsS68PYu/RX1UhCZ4oEHVkZwz7seP9AlYAFJs3tuDkOMAMiGTyO
-        tiqk45z9KV6F4kTGJdKaPpyt/sOUGtrqhEQ==
-X-Received: by 2002:aa7:d8ca:0:b0:463:4dd8:d6ea with SMTP id k10-20020aa7d8ca000000b004634dd8d6eamr1288369eds.426.1668675092078;
-        Thu, 17 Nov 2022 00:51:32 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4AbtghDuouRfYwOLZ7J+FiQixeQt31XlxfhiSlzeSAYIlyHGD8PPjDd5Mjma+532HHuV7GAw==
-X-Received: by 2002:aa7:d8ca:0:b0:463:4dd8:d6ea with SMTP id k10-20020aa7d8ca000000b004634dd8d6eamr1288357eds.426.1668675091923;
-        Thu, 17 Nov 2022 00:51:31 -0800 (PST)
+        bh=Jh1QBXJHWhTjnnV7TnPjpK5IcBvyMz+FkPZqkzKMV3M=;
+        b=cpFBjj9/wHhmmfMM+rEjKCvni9/+XhtFKh2+OBx/iBvnPpXA6eXUQVGauTbAq6QcQ7
+         WQcNsTld9wnA4s3/BOdSu1aTP2IWCflhMCGYzfFoIhvIUfTnpgzD8tC7InYu3wD0CQZ1
+         ZUaK/Nl3y0YONyGIWdyhHeXmmDpXIbe2tJy+Wbw4TrMs0tiJhmRzeNpVg9BvyLMToE2C
+         NadEctmYA8x56PZHwrSKWoEW+ZCnpyi2HK+V6Cp2uDcCktKIUQRBNvNGXIxC7vQhkjTq
+         A4yCBHt2xKVKJ948mJ/F7bVOKkXGT80kDVmjgseJrf9NSHnSSTtGIEdTwqmm94aKdzoU
+         XqQA==
+X-Gm-Message-State: ANoB5pn0NvHa6rqCHr9T/+sOA6Lr9bfrfNveFUGeUDP9Ov1//iIR93FI
+        gGG2M38Bo8W5q058lUAWbHmUPNNdj/+WFMFfSbK5MEKo/nANkyVmZ/wFXkuQtfO9W42NZATdm+9
+        49a7/B0T2a4OitCVMNAmvVOj8T4cadyKVZQ==
+X-Received: by 2002:a17:906:1811:b0:7ae:5a4:5356 with SMTP id v17-20020a170906181100b007ae05a45356mr1483381eje.748.1668679003891;
+        Thu, 17 Nov 2022 01:56:43 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7f+0P7EVVVGeFxTgmz0pD1r7ZjLmgT0xxTtEh9+eGODkydEqCPFw5qY7Tye1TxFOC6uw7zqQ==
+X-Received: by 2002:a17:906:1811:b0:7ae:5a4:5356 with SMTP id v17-20020a170906181100b007ae05a45356mr1483369eje.748.1668679003707;
+        Thu, 17 Nov 2022 01:56:43 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id u9-20020a1709061da900b007317f017e64sm73516ejh.134.2022.11.17.00.51.30
+        by smtp.gmail.com with ESMTPSA id cq17-20020a056402221100b0045ce419ecffsm314138edb.58.2022.11.17.01.56.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 00:51:31 -0800 (PST)
-Message-ID: <77e9d0f2-12d9-fc7a-2161-c579b7bbd673@redhat.com>
-Date:   Thu, 17 Nov 2022 09:51:30 +0100
+        Thu, 17 Nov 2022 01:56:43 -0800 (PST)
+Message-ID: <d9423b7f-c874-c8ca-0602-abb25ca4e560@redhat.com>
+Date:   Thu, 17 Nov 2022 10:56:42 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: [PATCH v3 04/16] platform/x86/intel/ifs: Remove memory allocation
- from load path
+Subject: Re: [PATCH 0/3] platform/x86: ideapad-laptop: Rework touchpad control
+ code
 Content-Language: en-US, nl
-To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, ashok.raj@intel.com,
-        tony.luck@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, thiago.macieira@intel.com,
-        athenas.jimenez.gonzalez@intel.com, sohil.mehta@intel.com
-References: <20221107225323.2733518-1-jithu.joseph@intel.com>
- <20221117035935.4136738-1-jithu.joseph@intel.com>
- <20221117035935.4136738-5-jithu.joseph@intel.com>
+To:     =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>
+Cc:     andy@kernel.org, arnavr3@illinois.edu, felix@eckhofer.com,
+        g_goessel@outlook.com, ike.pan@canonical.com,
+        jiaxun.yang@flygoat.com, kai.heng.feng@canonical.com,
+        kelly@xilka.com, limanyi@uniontech.com, markgross@kernel.org,
+        maxtram95@gmail.com, p.jungkamp@gmx.net,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com,
+        whenov@gmail.com
+References: <20221116152448.698707-1-hdegoede@redhat.com>
+ <20221116160825.16120-1-erayorcunus@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221117035935.4136738-5-jithu.joseph@intel.com>
+In-Reply-To: <20221116160825.16120-1-erayorcunus@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Eray,
 
-On 11/17/22 04:59, Jithu Joseph wrote:
-> IFS requires tests to be authenticated once for each CPU socket
-> on a system.
+On 11/16/22 17:08, Eray Orçunus wrote:
+> Hi,
 > 
-> scan_chunks_sanity_check() was dynamically allocating memory
-> to store the state of whether tests have been authenticated on
-> each socket for every load operation.
+> On Thu, 16 Nov 2022 at 18:25, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi All,
+>>
+>> Here are my proposed changes from the "ideapad-laptop touchpad handling
+>> problems, request for help" email thread as proper patches:
+>> https://lore.kernel.org/platform-driver-x86/bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com/
+>>
+>> Note this applies on top of my review-hans branch which has seen a bunch
+>> of other ideapad-laptop changes land recently:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>>
+>> As suggested by Maxim, the third patch now has a module parameter to
+>> allow users to easily re-enable the i8042 aux-port enabling/disabling
+>> on models other then the Z570.
+>>
+>> Eray, you mentioned in another email that you have some concerns about
+>> the approach in this series?
 > 
-> Move the memory allocation to init path.
+> Yes, thanks for mentioning. My concerns are these:
 > 
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> ---
->  drivers/platform/x86/intel/ifs/ifs.h  |  2 ++
->  drivers/platform/x86/intel/ifs/core.c | 13 +++++++++++--
->  drivers/platform/x86/intel/ifs/load.c | 14 ++++----------
->  3 files changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index 3ff1d9aaeaa9..3a051890d9e7 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -229,4 +229,6 @@ void ifs_load_firmware(struct device *dev);
->  int do_core_test(int cpu, struct device *dev);
->  const struct attribute_group **ifs_get_groups(void);
->  
-> +extern bool *ifs_pkg_auth;
-> +
+> - Users of laptops with ELAN0634 (like Yoga 14s and 720s), Lenovo
+>   Yoga 3 Pro 1370 and ZhaoYang K4e-IML will start to see non-working
+>   "touchpad" sysfs attribute on their ideapad-laptop driver. I see this
+>   as a regression. Also it's easy to fix; we can just test for if
+>   VPCCMD_W_TOUCHPAD works at the boot - with sending 0 first and verify the
+>   VPCCMD_R_TOUCHPAD result, and then sending 1 and again verify the
+>   VPCCMD_R_TOUCHPAD result. Later we can remove "touchpad" attribute if it
+>   doesn't work,
 
-This is not necessary and ugly, nack for this patch as-is (sorry).
+I'm not 100% sure if this will work everywhere and I'm a bit worried the
+VPCCMD_W_TOUCHPAD calls might cause problems on some devices. You did
+mention that the ideapad windows software seems to always make
+VPCCMD_W_TOUCHPAD calls.
 
-You can simply add this pointer to "struct ifs_data" and then
-alloc it in ifs_init() before the misc_register call.
+But still, one of my goals with this series is to have the ideapad-laptop
+driver poke less at the hw, to avoid the poking potentially causes issues.
 
-scan_chunks_sanity_check() already has a "struct ifs_data *ifsd",
-so it can easily access ifs_pkg_auth through that when you make
-ifs_pkg_auth part of "struct ifs_data".
+Where as your suggested auto-detection makes the driver poke the hw more,
+not less.
+
+Thinking more about this makes me wonder: "why not just
+entirely remove the whole touchpad sysfs attribute?"
+
+Just removing the entire touchpad sysfs attribute will greatly simplify
+things and normal userspace does not depend on it at all. Its only
+potential users are custom user scripts and ideapad specific control
+panels or some such.
+
+And the custom control panels already need to deal with the touchpad
+sysfs attribute not always being there.
+
+I do realize that removing it might be a bit too big of a hammer,
+so instead I plan to have it hidden by default and allow enabling
+it through a module parameter.
+
+Serr the next version of this patch-set (coming up soon).
+
+Gating this with a module parameter will reduce all the maintenance
+burden of having allow-lists are fragile auto-detect code for
+a feature which I believe hardly anyone uses at all.
+
+>   with the exception of devices with ctrl_ps2_aux_port,
+>   since these laptops have working VPCCMD_R_TOUCHPAD.
+
+I don't agree with having the touchpad sysfs attr visible on
+the ctrl_ps2_aux_port devices, writing it will do nothing and as you
+mentioned yourself some ideapad specific tools will show a touchpad
+on/off option when this file is visible, which then will not work.
+
+Note that just hiding the touchpad sysfs attr be default makes
+this whole discussion mute though.
+
+> - You removed sending 1 to VPCCMD_W_TOUCHPAD at the boot, are we sure
+>   there are no laptops needing that? I don't think we talked about that
+>   in previous e-mail thread.
+
+This was only added recently (until recently there was no touchpad_ctrl_via_ec
+flag at all) and seems to be copied and pasted from the rfkill code, where
+we know that manually disabling the hw-rfkill bit is actually needed on
+some models without an actual hw-rfkill switch...
+
+> - There is no i8042 cmd on touchpad_store, which may make the function
+>   ineffective on laptops with ctrl_ps2_aux_port.
+
+This is not a problem introduced by this patch-set, touchpad-store never
+controlled the ps2-aux port.
+
+As mentioned above IMHO just hiding the touchpad sysfs attr here is better
+(avoids the need to make touch-store have a special case for this).
+
+These devices have a working touchpad-toggle hotkey + a LED to indicate
+the status, so there really is no need for the sysfs attr.
+
+(which makes me realize there is really little need for the sysfs attr
+at all, so just always hiding it is easier, avoiding all sorts of possible
+issues, see above).
+
+> - r_touchpad_val isn't set at touchpad_store and/or touchpad_read, which
+>   can make it out of sync when "touchpad" attr is accessed.
+
+I've fixed this in the next version of my patch set.
 
 Regards,
 
 Hans
-\
-
-
->  #endif
-> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-> index 5fb7f655c291..4b39f2359180 100644
-> --- a/drivers/platform/x86/intel/ifs/core.c
-> +++ b/drivers/platform/x86/intel/ifs/core.c
-> @@ -4,6 +4,7 @@
->  #include <linux/module.h>
->  #include <linux/kdev_t.h>
->  #include <linux/semaphore.h>
-> +#include <linux/slab.h>
->  
->  #include <asm/cpu_device_id.h>
->  
-> @@ -30,6 +31,8 @@ static struct ifs_device ifs_device = {
->  	},
->  };
->  
-> +bool *ifs_pkg_auth;
-> +
->  static int __init ifs_init(void)
->  {
->  	const struct x86_cpu_id *m;
-> @@ -51,8 +54,13 @@ static int __init ifs_init(void)
->  	ifs_device.misc.groups = ifs_get_groups();
->  
->  	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
-> -	    !misc_register(&ifs_device.misc))
-> -		return 0;
-> +	    !misc_register(&ifs_device.misc)) {
-> +		ifs_pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
-> +		if (!ifs_pkg_auth)
-> +			return -ENOMEM;
-> +		else
-> +			return 0;
-> +	}
->  
->  	return -ENODEV;
->  }
-> @@ -60,6 +68,7 @@ static int __init ifs_init(void)
->  static void __exit ifs_exit(void)
->  {
->  	misc_deregister(&ifs_device.misc);
-> +	kfree(ifs_pkg_auth);
->  }
->  
->  module_init(ifs_init);
-> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-> index 89ce265887ea..c914e4d359db 100644
-> --- a/drivers/platform/x86/intel/ifs/load.c
-> +++ b/drivers/platform/x86/intel/ifs/load.c
-> @@ -3,7 +3,6 @@
->  
->  #include <linux/firmware.h>
->  #include <asm/cpu.h>
-> -#include <linux/slab.h>
->  #include <asm/microcode_intel.h>
->  
->  #include "ifs.h"
-> @@ -118,16 +117,12 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
->   */
->  static int scan_chunks_sanity_check(struct device *dev)
->  {
-> -	int metadata_size, curr_pkg, cpu, ret = -ENOMEM;
-> +	int metadata_size, curr_pkg, cpu, ret;
->  	struct ifs_data *ifsd = ifs_get_data(dev);
-> -	bool *package_authenticated;
->  	struct ifs_work local_work;
->  	char *test_ptr;
->  
-> -	package_authenticated = kcalloc(topology_max_packages(), sizeof(bool), GFP_KERNEL);
-> -	if (!package_authenticated)
-> -		return ret;
-> -
-> +	memset(ifs_pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
->  	metadata_size = ifs_header_ptr->metadata_size;
->  
->  	/* Spec says that if the Meta Data Size = 0 then it should be treated as 2000 */
-> @@ -150,7 +145,7 @@ static int scan_chunks_sanity_check(struct device *dev)
->  	cpus_read_lock();
->  	for_each_online_cpu(cpu) {
->  		curr_pkg = topology_physical_package_id(cpu);
-> -		if (package_authenticated[curr_pkg])
-> +		if (ifs_pkg_auth[curr_pkg])
->  			continue;
->  		reinit_completion(&ifs_done);
->  		local_work.dev = dev;
-> @@ -161,12 +156,11 @@ static int scan_chunks_sanity_check(struct device *dev)
->  			ret = -EIO;
->  			goto out;
->  		}
-> -		package_authenticated[curr_pkg] = 1;
-> +		ifs_pkg_auth[curr_pkg] = 1;
->  	}
->  	ret = 0;
->  out:
->  	cpus_read_unlock();
-> -	kfree(package_authenticated);
->  
->  	return ret;
->  }
 
