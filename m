@@ -2,292 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B40C43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 14:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74FCC43217
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 14:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239649AbiKQOAB (ORCPT
+        id S240160AbiKQODA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 09:00:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37962 "EHLO
+        Thu, 17 Nov 2022 09:03:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233502AbiKQOAA (ORCPT
+        with ESMTP id S240101AbiKQOC4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 09:00:00 -0500
+        Thu, 17 Nov 2022 09:02:56 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DC051316
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 05:58:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C337240916
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 06:01:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668693538;
+        s=mimecast20190719; t=1668693719;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qiJ6CzrxH2WCE62u+R1t9vC1j8zkfSIF2Zo4SZ38F/U=;
-        b=AJiLP4PSbbA142KjlMnKxWpKsp1ynGCYlSwH0wQ5quZ2zJjJzSVzbFHFqd33nj1OjzLgno
-        y795Fg0OZN6NyiZD2mrZByZZs3KFVssnuLMEbWfIwDpAjDDc2rUZVARLdeMZrSES8hq35L
-        QwWDFGWJu916SZ4JjFmZUFJnHWkeqfY=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=qVerHlGBTcU6VxEyDbbP9m6atBo8xVhYwqwi4Apy7QY=;
+        b=Mwt1dCNL7A4YAwbZAdqcgL0ZZ0aKX8x6gqlTgDRvzdTEnWJqRv81LqPYCJsO4dAR8iq8Ev
+        r7xPMhEI/Zgcj6Dr1EXgQHc8JyeHGJTpEPGz0KTsGSVoAm//PDekNVqKveMnpQlYkIj7rb
+        puFSMVdvOjo6ZJVTm0+045wfiOqAYCM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-145-8AgPuVH_P8-COEnbgJR30g-1; Thu, 17 Nov 2022 08:58:57 -0500
-X-MC-Unique: 8AgPuVH_P8-COEnbgJR30g-1
-Received: by mail-ed1-f72.google.com with SMTP id z15-20020a05640240cf00b00461b253c220so1275768edb.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 05:58:57 -0800 (PST)
+ us-mta-475-WKdwKcD6OGSicMVmJ8Tnhw-1; Thu, 17 Nov 2022 09:01:57 -0500
+X-MC-Unique: WKdwKcD6OGSicMVmJ8Tnhw-1
+Received: by mail-ed1-f69.google.com with SMTP id e15-20020a056402190f00b00461b0576620so1276182edz.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 06:01:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qiJ6CzrxH2WCE62u+R1t9vC1j8zkfSIF2Zo4SZ38F/U=;
-        b=5Pwty1CXEARBgP6aYeZFlsCDkGt18CeG7fKYhcWCk8LkourROhOznfhp3ioftpN25R
-         9YyV8snkhVHAYvdE8isp1LSLPPOQHqdGZBQG1Kdp5DX6ptz5z4QWDH8I2ef+Hfpre8da
-         IJrKrYcTUWeZ6ltwBmw7gSJp3OgQ7H+Vskt6FTdFn3x37io4UtsZnJhID0mWzhzDT+G/
-         oXwu3hg7iHrXJjlHCRLaLYZmSKYn/LGL5kFHmYwEl5THCPAwNmrWVd6Gm89LAOrXRL3T
-         yhfpr9SxHwuiNJqt3VhRFCf+Myu2XL4f5+30bPwlkrM2PFB9Km3Lks1jBI0SstPNNLs0
-         63Lw==
-X-Gm-Message-State: ANoB5pneHmOujb8vyxkNhgTEQxgfzVYlWalCgoVuTQ3GVI1crp09TQSe
-        L5h/0NN2BONxe4zjpF3XHJCAyuaxCzR/jtDcvxcvGuP9KHweqHgHNPG89KE2V60uAooC/NBntPj
-        a6RlI2LfCxPvre5yVmkG/fkgRyPLdNjR90Q==
-X-Received: by 2002:a05:6402:4011:b0:461:96ba:b9c with SMTP id d17-20020a056402401100b0046196ba0b9cmr2242878eda.353.1668693536132;
-        Thu, 17 Nov 2022 05:58:56 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4p9LbCCuQjivxrS8d8F09KLSLDPML23d+fURreyDYJwIgdIv6D4e5yWRupbPMx9K0LDeE5Dw==
-X-Received: by 2002:a05:6402:4011:b0:461:96ba:b9c with SMTP id d17-20020a056402401100b0046196ba0b9cmr2242866eda.353.1668693535959;
-        Thu, 17 Nov 2022 05:58:55 -0800 (PST)
+        bh=qVerHlGBTcU6VxEyDbbP9m6atBo8xVhYwqwi4Apy7QY=;
+        b=zrcQLZWTgNpW4G3uHS9xIpKM+WfRPgPruxK4LfNKiG6hwx19x2R/q5db/qocBCZo4N
+         2gXhM1HwciDHVSKWaaZN458+poW1kAKNCW4hI6MyYqOH+vBMD5TMIg2vU00xP52UJsxP
+         amY/hK7wpVoY4UXseXgtAhsHBMjekLXLgZCeQI/xE6D0LwOQQ2tNbytWKS10vMhewOke
+         eodUgYolKkqbhqFTOgjNxnQSSJM8I/nVGB4/FpHrYToq4SgWX7nVHJBbojFMGC4Y7bov
+         N8LQO9rv8WqQ5YdIjhMpCEJIw6gNm0xmjA8Xt0iJCAv4U4hmINUfZn3R8VqTpRDKBmL5
+         DCsg==
+X-Gm-Message-State: ANoB5pmmiKxyx4SGODwqSgDSjOP40exlVg0tswuhU7Ds/MUtslKam2zl
+        5yiXVSHy3jI5FFcfOOKJF48yLwIo66Y3/tqCUIEt8YmCaOl+Fpc1NI+MkrKuQk7MxwuStwIwJOy
+        1lPG1fwNGE+SbCe9/nSr9rMVi6sJyyPtNfQ==
+X-Received: by 2002:a05:6402:2d6:b0:461:8efb:3f84 with SMTP id b22-20020a05640202d600b004618efb3f84mr2251908edx.210.1668693714637;
+        Thu, 17 Nov 2022 06:01:54 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4p4VFzcRuLpjxSxAwfOnJBCndcIjNQLs3EtUaIqkL62sgB7jIdtINShELBOUgcD9IsvR2iXA==
+X-Received: by 2002:a05:6402:2d6:b0:461:8efb:3f84 with SMTP id b22-20020a05640202d600b004618efb3f84mr2251841edx.210.1668693713878;
+        Thu, 17 Nov 2022 06:01:53 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id a13-20020a17090682cd00b0078d424e8c09sm405308ejy.77.2022.11.17.05.58.55
+        by smtp.gmail.com with ESMTPSA id f4-20020a17090631c400b00730bfe6adc4sm416785ejf.37.2022.11.17.06.01.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 05:58:55 -0800 (PST)
-Message-ID: <afa1b8cd-65fa-c31d-38e6-d8456df4c4f5@redhat.com>
-Date:   Thu, 17 Nov 2022 14:58:54 +0100
+        Thu, 17 Nov 2022 06:01:53 -0800 (PST)
+Message-ID: <267ebc83-04a8-4421-732d-7a329bc0fa9a@redhat.com>
+Date:   Thu, 17 Nov 2022 15:01:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: [PATCH 9/9] tools/arch/x86: intel_sdsi: Add support for reading
- meter certificates
+Subject: Re: [PATCH 0/9] Extend Intel On Demand (SDSi) support
 Content-Language: en-US, nl
 To:     "David E. Box" <david.e.box@linux.intel.com>, markgross@kernel.org,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
- <20221101191023.4150315-10-david.e.box@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221101191023.4150315-10-david.e.box@linux.intel.com>
+In-Reply-To: <20221101191023.4150315-1-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi David,
 
 On 11/1/22 20:10, David E. Box wrote:
-> Add option to read and decode On Demand meter certificates.
+> Intel Software Defined Silicon (SDSi) is now known as Intel On Demand. The
+> following patches do the following:
 > 
-> Link: https://github.com/intel/intel-sdsi/blob/master/meter-certificate.rst
+> 1. Identify the driver/tools as Intel On Demand. Only text descriptions are
+> changed. Kconfig and filenames remain the same.
+> 2. Perform some attribute cleanup by preventing the showing of files when
+> features are not supported.
+> 3. Adds support for a new GUID. GUIDs are used to identify the layout of
+> the On Demand registers in sysfs. Layouts are described in the
+> documentation on github [1].
+> 4. Add support for reading On Demand meter certificates in sysfs.
+> 5. The rest of the patches modify the existing tool to support discovery
+> and reading of On Demand registers and the meter certificate.
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  tools/arch/x86/intel_sdsi/intel_sdsi.c | 110 ++++++++++++++++++++++++-
->  1 file changed, 107 insertions(+), 3 deletions(-)
+> [1] https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
 > 
-> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> index 0680eda78b1a..ebf076ee6ef8 100644
-> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> @@ -39,8 +39,10 @@
->  #define GUID_V2			0xF210D9EF
->  #define REGISTERS_MIN_SIZE	72
->  #define STATE_CERT_MAX_SIZE	4096
-> +#define METER_CERT_MAX_SIZE	4096
->  #define STATE_MAX_NUM_LICENSES	16
->  #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-> +#define METER_MAX_NUM_BUNDLES	8
->  
->  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
->  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-> @@ -150,6 +152,21 @@ struct bundle_encoding {
->  	uint32_t encoding_rsvd[7];
->  };
->  
-> +struct meter_certificate {
-> +	uint32_t block_signature;
-> +	uint32_t counter_unit;
-> +	uint64_t ppin;
-> +	uint32_t bundle_length;
-> +	uint32_t reserved;
-> +	uint32_t mmrc_encoding;
-> +	uint32_t mmrc_counter;
-> +};
-> +
-> +struct bundle_encoding_counter {
-> +	uint32_t encoding;
-> +	uint32_t counter;
-> +};
-> +
->  struct sdsi_dev {
->  	struct sdsi_regs regs;
->  	struct state_certificate sc;
-> @@ -160,6 +177,7 @@ struct sdsi_dev {
->  
->  enum command {
->  	CMD_SOCKET_INFO,
-> +	CMD_METER_CERT,
->  	CMD_STATE_CERT,
->  	CMD_PROV_AKC,
->  	CMD_PROV_CAP,
-> @@ -306,6 +324,86 @@ static void get_feature(uint32_t encoding, char *feature)
->  	feature[0] = name[3];
->  }
->  
-> +static int sdsi_meter_cert_show(struct sdsi_dev *s)
-> +{
-> +	char buf[METER_CERT_MAX_SIZE] = {0};
-> +	struct bundle_encoding_counter *bec;
-> +	struct meter_certificate *mc;
-> +	uint32_t count = 0;
-> +	FILE *cert_ptr;
-> +	int ret, size;
-> +
-> +	ret = sdsi_update_registers(s);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!s->regs.en_features.sdsi) {
-> +		fprintf(stderr, "SDSi feature is present but not enabled.\n");
-> +		fprintf(stderr, " Unable to read meter certificate\n");
-> +		return -1;
-> +	}
-> +
-> +	if (!s->regs.en_features.metering) {
-> +		fprintf(stderr, "Metering not supporting on this socket.\n");
-> +		return -1;
-> +	}
-> +
-> +	ret = chdir(s->dev_path);
-> +	if (ret == -1) {
-> +		perror("chdir");
-> +		return ret;
-> +	}
-> +
-> +	cert_ptr = fopen("meter_certificate", "r");
-> +	if (!cert_ptr) {
-> +		perror("Could not open 'meter_certificate' file");
-> +		return -1;
-> +	}
-> +
-> +	size = fread(buf, 1, sizeof(buf), cert_ptr);
-> +	if (!size) {
-> +		fprintf(stderr, "Could not read 'meter_certificate' file\n");
-> +		fclose(cert_ptr);
-> +		return -1;
-> +	}
-> +	fclose(cert_ptr);
-> +
-> +	mc = (struct meter_certificate *)buf;
-> +
-> +	printf("\n");
-> +	printf("Meter certificate for device %s\n", s->dev_name);
-> +	printf("\n");
-> +	printf("Block Signature:       0x%x\n", mc->block_signature);
-> +	printf("Count Unit:            %dms\n", mc->counter_unit);
-> +	printf("PPIN:                  0x%lx\n", mc->ppin);
-> +	printf("Feature Bundle Length: %d\n", mc->bundle_length);
-> +	printf("MMRC encoding:         %d\n", mc->mmrc_encoding);
-> +	printf("MMRC counter:          %d\n", mc->mmrc_counter);
-> +	if (mc->bundle_length % 8) {
-> +		fprintf(stderr, "Invalid bundle length\n");
-> +		return -1;
-> +	}
-> +
-> +	if (mc->bundle_length > METER_MAX_NUM_BUNDLES * 8)  {
-> +		fprintf(stderr, "More the %d bundles: %d\n",
-> +			METER_MAX_NUM_BUNDLES, mc->bundle_length / 8);
-> +		return -1;
-> +	}
-> +
-> +	bec = (void *)(mc) + sizeof(mc);
-> +
-> +	printf("Number of Feature Counters:          %d\n", mc->bundle_length / 8);
-> +	while (count++ < mc->bundle_length / 8) {
-> +		char feature[5];
-> +
-> +		feature[4] = '\0';
-> +		get_feature(bec[count].encoding, feature);
-> +		printf("    %s:          %d\n", feature, bec[count].counter);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int sdsi_state_cert_show(struct sdsi_dev *s)
->  {
->  	char buf[STATE_CERT_MAX_SIZE] = {0};
-> @@ -625,7 +723,7 @@ static void sdsi_free_dev(struct sdsi_dev *s)
->  
->  static void usage(char *prog)
->  {
-> -	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-a FILE] [-c FILE]]\n", prog);
-> +	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m] [-a FILE] [-c FILE]]\n", prog);
->  }
->  
->  static void show_help(void)
-> @@ -635,6 +733,7 @@ static void show_help(void)
->  	printf("  %-18s\t%s\n", "-d, --devno DEVNO",    "On Demand device number");
->  	printf("  %-18s\t%s\n", "-i, --info",           "show socket information");
->  	printf("  %-18s\t%s\n", "-s, --state",          "show state certificate");
-> +	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate");
->  	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
->  	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
->  }
-> @@ -656,6 +755,7 @@ int main(int argc, char *argv[])
->  		{"help",	no_argument,		0, 'h'},
->  		{"info",	no_argument,		0, 'i'},
->  		{"list",	no_argument,		0, 'l'},
-> +		{"meter",	no_argument,		0, 'm'},
->  		{"state",	no_argument,		0, 's'},
->  		{0,		0,			0, 0 }
->  	};
-> @@ -663,7 +763,7 @@ int main(int argc, char *argv[])
->  
->  	progname = argv[0];
->  
-> -	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hils", long_options,
-> +	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hilms", long_options,
->  			&option_index)) != -1) {
->  		switch (opt) {
->  		case 'd':
-> @@ -676,8 +776,9 @@ int main(int argc, char *argv[])
->  		case 'i':
->  			command = CMD_SOCKET_INFO;
->  			break;
-> +		case 'm':
->  		case 's':
-> -			command = CMD_STATE_CERT;
-> +			command = (opt == 'm') ? CMD_METER_CERT : CMD_STATE_CERT;
->  			break;
+> David E. Box (9):
+>   platform/x86/intel/sdsi: Add Intel On Demand text
+>   platform/x86/intel/sdsi: Hide attributes if hardware doesn't support
+>   platform/x86/intel/sdsi: Support different GUIDs
+>   platform/x86/intel/sdsi: Add meter certificate support
+>   tools/arch/x86: intel_sdsi: Add support for reading state certificates
+>   tools/arch/x86: intel_sdsi: Add Intel On Demand text
+>   tools/arch/x86: intel_sdsi: Read more On Demand registers
+>   tools/arch/x86: intel_sdsi: Add support for new GUID
+>   tools/arch/x86: intel_sdsi: Add support for reading meter certificates
 
-please just make this 2 separate cases rather then testing opt after
-just having done a switch-case on opt.
+Thank you, over all this looks good. I have some small remarks
+on patches 4, 8 and 9 see my replies to those.
 
-Other then that this looks good to me, so with that fixed:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Please prepare a v2 addressing Andy's + my review remarks and get
+that v2 to me no later then next week Tuesday, then I can still
+merge this in time for 6.2 .
 
 Regards,
 
 Hans
 
-
->  		case 'a':
->  		case 'c':
-> @@ -713,6 +814,9 @@ int main(int argc, char *argv[])
->  		case CMD_SOCKET_INFO:
->  			ret = sdsi_read_reg(s);
->  			break;
-> +		case CMD_METER_CERT:
-> +			ret = sdsi_meter_cert_show(s);
-> +			break;
->  		case CMD_STATE_CERT:
->  			ret = sdsi_state_cert_show(s);
->  			break;
 
