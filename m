@@ -2,172 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A622C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 14:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD92DC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 16:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234758AbiKQOLd (ORCPT
+        id S240052AbiKQQBL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 09:11:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        Thu, 17 Nov 2022 11:01:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240198AbiKQOLV (ORCPT
+        with ESMTP id S240048AbiKQQAt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 09:11:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7342A6204F
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 06:10:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668694229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZOfT5eurCDMRxlkmRM+KtqZ95XT89veQx2mLMpeWx5s=;
-        b=CLSV3SpJGhwvtmUhPoWN6QciGKUlPdgWCFeM/Coxpp7UAtyMjhw4CQLJpO909I6zLqB86e
-        W8BtOZ3BBn6ab/gJ3VZtSKk8HHR0BQcCXi1u7449mbldS4aCJLsY+P3q16M/Uss6PrL4c1
-        UsTP9hpa0uhdZkb4s4lWjH+nkMiu1NA=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-594-zF__M67HNZeWwjcVm2b0uA-1; Thu, 17 Nov 2022 09:10:28 -0500
-X-MC-Unique: zF__M67HNZeWwjcVm2b0uA-1
-Received: by mail-ed1-f69.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so1299134edz.21
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 06:10:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZOfT5eurCDMRxlkmRM+KtqZ95XT89veQx2mLMpeWx5s=;
-        b=b5rgXDCbU/9YcvfaD3iPhYfi51xRHb3P44AeyoMLRICM6i0Gk3c3N1fu9Uwduil+za
-         07WsB5sNy14GHVQnQjc0sd/ZaFWVjBoZ/vznNNHw93MdZ+VF1Lv/wSxAdy9hRtHMAqW8
-         dHnxaYdNlWFH0cSPkFCBnAtnoKRqTaRiOelWj5abOlITXmEv3z24Ysb1drwUOhaOXROB
-         1/KI6a5I7il7+IHF9br//nWw5ubwdL/110Zh75OCY772tj2IwTthylIQfzuZmO+8Mjzp
-         7ngd6EcMvl5oBx2/nWTLe6b1gSdP4VPeT7wGB9sjMc7SSRtoRhkyfYe1DgUnDs76grLv
-         HT+A==
-X-Gm-Message-State: ANoB5pkAGQg8KXy4ERJRDy+ugABrQ7TCOMQRX94e/qUai7j7GQWk1hDl
-        A87adVkFXMCoQWv3bhPqDk2x25y11a0ukruxjb2jiCOe6aHPedwu0BCz66Cr1d404KE2WSnVkgO
-        nWhME0JBZ0f/TLPeR29E26fI8vl3/qXtQqQ==
-X-Received: by 2002:a17:906:a0d7:b0:7b2:7af0:c231 with SMTP id bh23-20020a170906a0d700b007b27af0c231mr2246806ejb.240.1668694227322;
-        Thu, 17 Nov 2022 06:10:27 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5yZNP1T9Ajp8UDXy9301jUiAy463N9N6Tnb93rlCZ5crLe0F9/d4DGRRfgxna+qFpfi0BKgg==
-X-Received: by 2002:a17:906:a0d7:b0:7b2:7af0:c231 with SMTP id bh23-20020a170906a0d700b007b27af0c231mr2246782ejb.240.1668694227137;
-        Thu, 17 Nov 2022 06:10:27 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id b2-20020a1709063ca200b007acd04fcedcsm413829ejh.46.2022.11.17.06.10.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 06:10:26 -0800 (PST)
-Message-ID: <de3aae46-58bd-7041-df49-10cfb6be1603@redhat.com>
-Date:   Thu, 17 Nov 2022 15:10:25 +0100
+        Thu, 17 Nov 2022 11:00:49 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1082253F;
+        Thu, 17 Nov 2022 08:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668700847; x=1700236847;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=BuUmPgqr1gKGWjTUN8g9tLoojOhBbprvA2Zcib8Mm6k=;
+  b=QJz22JKdj9Ns5vhsaP8MwLwfusIV2ccOT1p4jdf/Etpbb3UcGsjm3eEe
+   Kjre/ALZAsQsgq7mAf1YPzhW3e15DCb8ciZa/gwA4F4NXabR48dsM3blj
+   tSPO/gz2sWIRk9yJoHGQkrUgW6KdfCmGnCizb1fm1c4dDPHogMsRCW5MN
+   IJtCHgvVIf4UENp7sX2C1otMVV4Hm9ZZ6lDfjNQx4J/cbIoo8E3tY8Ahf
+   npsgb0WmPDEbVPt1aFQPmGmqPvh4oPYea41ShEVKeb1DTbNurPEdrqxak
+   m33BE3jxb9OFLKgsVVt4RAnB3kLOAOrPFskf+QEFl/rLeytnM3dl0ttKC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="311592482"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="311592482"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 08:00:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="708665301"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="708665301"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Nov 2022 08:00:42 -0800
+Received: from sulochan-mobl.amr.corp.intel.com (unknown [10.212.246.182])
+        by linux.intel.com (Postfix) with ESMTP id 9B45A580BBE;
+        Thu, 17 Nov 2022 08:00:42 -0800 (PST)
+Message-ID: <a21a7a1b749d0c7e8f7942fe02dd4b6fcd3e97f6.camel@linux.intel.com>
+Subject: Re: [PATCH 0/9] Extend Intel On Demand (SDSi) support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 17 Nov 2022 08:00:42 -0800
+In-Reply-To: <267ebc83-04a8-4421-732d-7a329bc0fa9a@redhat.com>
+References: <20221101191023.4150315-1-david.e.box@linux.intel.com>
+         <267ebc83-04a8-4421-732d-7a329bc0fa9a@redhat.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [RFC v3 0/4] Make it easier to measure % in HW sleep state
-Content-Language: en-US, nl
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sven van Ashbrook <svenva@chromium.org>,
-        Raul Rangel <rrangel@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>
-References: <20221115200156.12218-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221115200156.12218-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, 2022-11-17 at 15:01 +0100, Hans de Goede wrote:
+> Hi David,
+>=20
+> On 11/1/22 20:10, David E. Box wrote:
+> > Intel Software Defined Silicon (SDSi) is now known as Intel On Demand. =
+The
+> > following patches do the following:
+> >=20
+> > 1. Identify the driver/tools as Intel On Demand. Only text descriptions=
+ are
+> > changed. Kconfig and filenames remain the same.
+> > 2. Perform some attribute cleanup by preventing the showing of files wh=
+en
+> > features are not supported.
+> > 3. Adds support for a new GUID. GUIDs are used to identify the layout o=
+f
+> > the On Demand registers in sysfs. Layouts are described in the
+> > documentation on github [1].
+> > 4. Add support for reading On Demand meter certificates in sysfs.
+> > 5. The rest of the patches modify the existing tool to support discover=
+y
+> > and reading of On Demand registers and the meter certificate.
+> >=20
+> > [1] https://github.com/intel/intel-sdsi/blob/master/os-interface.rst
+> >=20
+> > David E. Box (9):
+> > =C2=A0 platform/x86/intel/sdsi: Add Intel On Demand text
+> > =C2=A0 platform/x86/intel/sdsi: Hide attributes if hardware doesn't sup=
+port
+> > =C2=A0 platform/x86/intel/sdsi: Support different GUIDs
+> > =C2=A0 platform/x86/intel/sdsi: Add meter certificate support
+> > =C2=A0 tools/arch/x86: intel_sdsi: Add support for reading state certif=
+icates
+> > =C2=A0 tools/arch/x86: intel_sdsi: Add Intel On Demand text
+> > =C2=A0 tools/arch/x86: intel_sdsi: Read more On Demand registers
+> > =C2=A0 tools/arch/x86: intel_sdsi: Add support for new GUID
+> > =C2=A0 tools/arch/x86: intel_sdsi: Add support for reading meter certif=
+icates
+>=20
+> Thank you, over all this looks good. I have some small remarks
+> on patches 4, 8 and 9 see my replies to those.
+>=20
+> Please prepare a v2 addressing Andy's + my review remarks and get
+> that v2 to me no later then next week Tuesday, then I can still
+> merge this in time for 6.2 .
 
-On 11/15/22 21:01, Mario Limonciello wrote:
-> Sven van Ashbrook brought a patch to the kernel mailing list that
-> attempted to change the reporting level of a s0ix entry issue to a
-> different debugging level so that infastructure used by Google could
-> better scan logs to catch problems.
-> 
-> This approach was rejected, but during the conversation another
-> suggestion was made by David E. Box to introduce some infrastructure
-> into the kernel to report this information.
-> 
-> As it's information that is reported by both AMD and Intel platforms
-> over s2idle, this seems to make sense.
-> 
-> RFC v1 and v2 introduced two new sysfs files to report the information, but
-> Rafael pointed out that there was already a file that could be used on
-> Intel platforms: `low_power_idle_system_residency_us`.
-> 
-> RFC v3 creates this file for AMD platforms and also introduces another file
-> that can be used to determine total sleep time:
-> `/sys/power/suspend_stats/last_total`.
-> 
-> With these two files a simple shell script can be run after suspend to
-> calculate the percentage.
-> 
-> ```
->  #!/bin/sh
-> total=$(cat /sys/power/suspend_stats/last_total)
-> hw=$(cat /sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us)
-> percent=$(awk -v hw=$hw -v total=$total 'BEGIN { printf "%.2f%%", (hw/total*100) }')
-> echo "Last ${total}us suspend cycle spent $percent of the time in a hardware sleep state."
-> ```
-> 
-> A sample run on an AMD platform that was just sleeping with this series on
-> top of 6.1-rc5 shows the following:
->  # ./compare.sh
-> Last 15699838us suspend cycle spent 98.63% of the time in a hardware sleep state.
-> 
-> Further discussion to be expected on this series:
-> 
-> * What last_total will represent from the suspend cycle
-> 
-> * Whether the semantics of all platforms will be the same for
->   `low_power_idle_system_residency_us`
->   - AMD platforms reset this counter before s2idle entry.  Do Intel? Others?
-> 
-> * Maybe the *kernel* should be responsible to do the calculation and export
->   a `last_hw_sleep_percent` file instead. Platform differences can be
->   abstracted then within individual drivers.
+Will do. Thanks Hans, Andy.
 
-That (`last_hw_sleep_percent` file) is an interesting proposal,
-I can see that being a better interface because as you say this allows
-the kernel / platform-drivers to take care of any platform quirks /
-weirdness, avoiding any userspace monitoring of this to possibly
-give false positive warnings.
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
-> Mario Limonciello (4):
->   PM: Add a sysfs file to represent the total sleep duration
->   platform/x86/intel/pmc: core: Drop check_counters
->   platform/x86/amd: pmc: Report duration of time in deepest hw state
->   platform/x86/amd: pmc: Populate cpuidle sysfs file with hw sleep data
-> 
->  Documentation/ABI/testing/sysfs-amd-pmc |  6 ++++++
->  Documentation/ABI/testing/sysfs-power   |  8 ++++++++
->  drivers/platform/x86/amd/pmc.c          | 27 ++++++++++++++++++++++---
->  drivers/platform/x86/intel/pmc/core.c   |  7 ++-----
->  drivers/platform/x86/intel/pmc/core.h   |  1 -
->  include/linux/suspend.h                 |  2 ++
->  kernel/power/main.c                     | 15 ++++++++++++++
->  kernel/power/suspend.c                  |  2 ++
->  kernel/time/timekeeping.c               |  2 ++
->  9 files changed, 61 insertions(+), 9 deletions(-)
-> 
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
 
