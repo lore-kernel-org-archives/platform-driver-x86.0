@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956BFC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239073AbiKQEBI (ORCPT
+        id S234040AbiKQEBM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 23:01:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
+        Wed, 16 Nov 2022 23:01:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234195AbiKQEA6 (ORCPT
+        with ESMTP id S234495AbiKQEA7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 23:00:58 -0500
+        Wed, 16 Nov 2022 23:00:59 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C240A25C4F;
-        Wed, 16 Nov 2022 20:00:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D1941992;
+        Wed, 16 Nov 2022 20:00:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668657657; x=1700193657;
+  t=1668657658; x=1700193658;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GOVqqmB/udIpGjOieUk0ZM7mu9Vt8k1erZYYzlDXV9w=;
-  b=Kpd9dKuspfyxp3SM6CdwoVaFSy/hftcNWiIWMgx8cTNevAHmZkLVm89m
-   feGSeYFX6wLMQ1w3SY45pYZmlxJgyZnHEG4lD91T8TvEOilXjJPQ1GegG
-   2yC9N+QxMbXETXr8B9lqa13WL4UqM16/YIkyki/I7376V50OGpOLlpl3g
-   JmF3XQ8A9TUckrWGsztsqjb8PbvTRreONwhmYN5tszDKhKkYUu1hLijKq
-   hkXWXbmqOkOSZjl4DzDyJt7+tpO+vNqvHrva9R/uNEkIyTu3ZWnGvgt2J
-   +QihzIEY+EWMitGB6+87B5BL6ATf+45Tvp9nHVRXwYUlofrHbvAGSgwKu
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455961"
+  bh=u9Rornpn2IRVhlMZez6eTlRt7/YpDQ3KZjhhPoPTdn8=;
+  b=Ct9H1tNCHYq8vbD2pmgUScCU+kFtmcd/UDs4TDToBsScIEuuUPPaKj+o
+   qM0VdvJbRYwe2q2iYwNB05bSnmPfZm6aKwH7IlpG21IZ+r+C/YxW52MCP
+   LgW/YSKPIQ6o9ohKgCLfye3asOprdxzzYkMON+n3IvHRjssRECj/uuK1W
+   7Vfd4Sniqbue7YAdHyB3Ca3ILd8Kl6HabasF/WZDihVbM4F3I3kI/8yU6
+   u+B53uDkiLTi8Mggd7Oh9Yb7NxQH51ZoNgXLsB5VEAlxM9dI8bR72aVWl
+   lLWt8FZlm4nvqrcAM2OBjxhCQzdjMaIV3/drOM03wgzB4vV5Cbkyj1foL
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455970"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="292455961"
+   d="scan'208";a="292455970"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:57 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462678"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462694"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="590462678"
+   d="scan'208";a="590462694"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:56 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:58 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 05/16] x86/microcode/intel: Reuse find_matching_signature()
-Date:   Wed, 16 Nov 2022 19:59:24 -0800
-Message-Id: <20221117035935.4136738-6-jithu.joseph@intel.com>
+Subject: [PATCH v3 09/16] x86/microcode/intel: Use a reserved field for metasize
+Date:   Wed, 16 Nov 2022 19:59:28 -0800
+Message-Id: <20221117035935.4136738-10-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221117035935.4136738-1-jithu.joseph@intel.com>
 References: <20221107225323.2733518-1-jithu.joseph@intel.com>
@@ -62,167 +62,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-IFS uses test images provided by Intel that can be regarded as
-firmware. IFS test image carries microcode header with extended signature
-table.
+Intel is using microcode file format for IFS test images too.
 
-Reuse find_matching_signature() for verifying if the test image
-header or the extended signature table indicate whether an IFS test image
-is fit to run on a system.
+IFS test images use one of the existing reserved fields in microcode
+header to indicate the size of the region in the file allocated for
+metadata structures.
 
-No functional change
+In preparation for this, rename first of the existing reserved fields
+in microcode header to metasize. In subsequent patches IFS specific
+code will make use of this field while parsing IFS images.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- arch/x86/include/asm/cpu.h            |  1 +
- arch/x86/kernel/cpu/intel.c           | 29 ++++++++++++++++++
- arch/x86/kernel/cpu/microcode/intel.c | 44 +++++----------------------
- 3 files changed, 38 insertions(+), 36 deletions(-)
+ arch/x86/include/asm/microcode_intel.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index b472ef76826a..e853440b5c65 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -95,5 +95,6 @@ static inline bool intel_cpu_signatures_match(unsigned int s1, unsigned int p1,
- }
+diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
+index 2a999bf91ef0..6af1e703cb2e 100644
+--- a/arch/x86/include/asm/microcode_intel.h
++++ b/arch/x86/include/asm/microcode_intel.h
+@@ -14,7 +14,8 @@ struct microcode_header_intel {
+ 	unsigned int            pf;
+ 	unsigned int            datasize;
+ 	unsigned int            totalsize;
+-	unsigned int            reserved[3];
++	unsigned int            metasize;
++	unsigned int            reserved[2];
+ };
  
- extern u64 x86_read_arch_cap_msr(void);
-+int intel_find_matching_signature(void *mc, unsigned int csig, int cpf);
- 
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 2d7ea5480ec3..b6f9210fb31a 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -216,6 +216,35 @@ int intel_cpu_collect_info(struct ucode_cpu_info *uci)
- }
- EXPORT_SYMBOL_GPL(intel_cpu_collect_info);
- 
-+/*
-+ * Returns 1 if update has been found, 0 otherwise.
-+ */
-+int intel_find_matching_signature(void *mc, unsigned int csig, int cpf)
-+{
-+	struct microcode_header_intel *mc_hdr = mc;
-+	struct extended_sigtable *ext_hdr;
-+	struct extended_signature *ext_sig;
-+	int i;
-+
-+	if (intel_cpu_signatures_match(csig, cpf, mc_hdr->sig, mc_hdr->pf))
-+		return 1;
-+
-+	/* Look for ext. headers: */
-+	if (get_totalsize(mc_hdr) <= get_datasize(mc_hdr) + MC_HEADER_SIZE)
-+		return 0;
-+
-+	ext_hdr = mc + get_datasize(mc_hdr) + MC_HEADER_SIZE;
-+	ext_sig = (void *)ext_hdr + EXT_HEADER_SIZE;
-+
-+	for (i = 0; i < ext_hdr->count; i++) {
-+		if (intel_cpu_signatures_match(csig, cpf, ext_sig->sig, ext_sig->pf))
-+			return 1;
-+		ext_sig++;
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(intel_find_matching_signature);
-+
- static void early_init_intel(struct cpuinfo_x86 *c)
- {
- 	u64 misc_enable;
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-index 1fcbd671f1df..4e611a708718 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -45,34 +45,6 @@ static struct microcode_intel *intel_ucode_patch;
- /* last level cache size per core */
- static int llc_size_per_core;
- 
--/*
-- * Returns 1 if update has been found, 0 otherwise.
-- */
--static int find_matching_signature(void *mc, unsigned int csig, int cpf)
--{
--	struct microcode_header_intel *mc_hdr = mc;
--	struct extended_sigtable *ext_hdr;
--	struct extended_signature *ext_sig;
--	int i;
--
--	if (intel_cpu_signatures_match(csig, cpf, mc_hdr->sig, mc_hdr->pf))
--		return 1;
--
--	/* Look for ext. headers: */
--	if (get_totalsize(mc_hdr) <= get_datasize(mc_hdr) + MC_HEADER_SIZE)
--		return 0;
--
--	ext_hdr = mc + get_datasize(mc_hdr) + MC_HEADER_SIZE;
--	ext_sig = (void *)ext_hdr + EXT_HEADER_SIZE;
--
--	for (i = 0; i < ext_hdr->count; i++) {
--		if (intel_cpu_signatures_match(csig, cpf, ext_sig->sig, ext_sig->pf))
--			return 1;
--		ext_sig++;
--	}
--	return 0;
--}
--
- /*
-  * Returns 1 if update has been found, 0 otherwise.
-  */
-@@ -83,7 +55,7 @@ static int has_newer_microcode(void *mc, unsigned int csig, int cpf, int new_rev
- 	if (mc_hdr->rev <= new_rev)
- 		return 0;
- 
--	return find_matching_signature(mc, csig, cpf);
-+	return intel_find_matching_signature(mc, csig, cpf);
- }
- 
- static struct ucode_patch *memdup_patch(void *data, unsigned int size)
-@@ -117,7 +89,7 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
- 		sig	     = mc_saved_hdr->sig;
- 		pf	     = mc_saved_hdr->pf;
- 
--		if (find_matching_signature(data, sig, pf)) {
-+		if (intel_find_matching_signature(data, sig, pf)) {
- 			prev_found = true;
- 
- 			if (mc_hdr->rev <= mc_saved_hdr->rev)
-@@ -149,7 +121,7 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
- 	if (!p)
- 		return;
- 
--	if (!find_matching_signature(p->data, uci->cpu_sig.sig, uci->cpu_sig.pf))
-+	if (!intel_find_matching_signature(p->data, uci->cpu_sig.sig, uci->cpu_sig.pf))
- 		return;
- 
- 	/*
-@@ -286,8 +258,8 @@ scan_microcode(void *data, size_t size, struct ucode_cpu_info *uci, bool save)
- 
- 		size -= mc_size;
- 
--		if (!find_matching_signature(data, uci->cpu_sig.sig,
--					     uci->cpu_sig.pf)) {
-+		if (!intel_find_matching_signature(data, uci->cpu_sig.sig,
-+						   uci->cpu_sig.pf)) {
- 			data += mc_size;
- 			continue;
- 		}
-@@ -652,9 +624,9 @@ static struct microcode_intel *find_patch(struct ucode_cpu_info *uci)
- 		if (phdr->rev <= uci->cpu_sig.rev)
- 			continue;
- 
--		if (!find_matching_signature(phdr,
--					     uci->cpu_sig.sig,
--					     uci->cpu_sig.pf))
-+		if (!intel_find_matching_signature(phdr,
-+						   uci->cpu_sig.sig,
-+						   uci->cpu_sig.pf))
- 			continue;
- 
- 		return iter->data;
+ struct microcode_intel {
 -- 
 2.25.1
 
