@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D99C43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E210C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232521AbiKQEBQ (ORCPT
+        id S239029AbiKQEBS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 23:01:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
+        Wed, 16 Nov 2022 23:01:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234651AbiKQEBA (ORCPT
+        with ESMTP id S234771AbiKQEBB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 23:01:00 -0500
+        Wed, 16 Nov 2022 23:01:01 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6614149B5D;
-        Wed, 16 Nov 2022 20:00:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2965825C4F;
+        Wed, 16 Nov 2022 20:01:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668657659; x=1700193659;
+  t=1668657660; x=1700193660;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VUNG8NIAa9pCK7zUL68UQaJAiq+0V2MYRuzo+MnCPyY=;
-  b=LYct/lRo7EvxahFnHnklzKa1D39bQEDy7xdb7KnUO5SQ/6vSv6c36oez
-   PuM2cUN6H9OKePC2c05XyxTMYO6woeZltwO5OR81rgeyE9sqw65+2MX2M
-   9RtC/80Lyx/uoXgugRimRvFzHMWhL4E06jhVusf4sE4sf//xdE57PjLl8
-   q+3dvtlns9uw60MW8MEen5or9sciMj5WQE8o61nK0MpSU0QTNBzruraA/
-   BTv6Cly4XJdE6lrhGQgqKiA1a5U5e8oUPdyDPJmWSX/Rz+Vbbn+8m7ilD
-   JZEc/Mq4GCpw8Shb7aOHDq2WIv0z1ZnLVSKHzTC1JdgMwp51TKdAX1s0b
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455972"
+  bh=bJNZRB1a44pHjOnEv3/4PjZugHE4Knh67eBC+s5ZKfM=;
+  b=SsMNQtPkQZabXqBPGTpJAnQa2jtUFp1mzJbv6RrWqQU9itASEbGjnrkh
+   Fi36wlnYYS1LoPha2cuIBCwIrVz7xqcqjhdR/elvTXpZjyh5EBh8k2hzr
+   dXk3WomQpAraWFFS5Wg6l7tOfUth6No9rbZkcm7y/vY2+fn5CAiOhNz27
+   SmiPBa6L8NzwPGx+CeaKE9UsjySM2p8yqEnjNVvxLNHRm8RuHs69NehLc
+   A820udfxGyrh/+KFnAjsQGHP4fA0LUVeNH2fyTPTC7HmoXfiG0glAcUQr
+   lKctQwBh3MIE0l+w4lR3Yrk8UaPQ6dZK4ghC05gUAK91Uff07mQ7LrJIj
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455978"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="292455972"
+   d="scan'208";a="292455978"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:59 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462701"
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462712"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="590462701"
+   d="scan'208";a="590462712"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:58 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:59 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 10/16] platform/x86/intel/ifs: Add metadata support
-Date:   Wed, 16 Nov 2022 19:59:29 -0800
-Message-Id: <20221117035935.4136738-11-jithu.joseph@intel.com>
+Subject: [PATCH v3 12/16] platform/x86/intel/ifs: Add metadata validation
+Date:   Wed, 16 Nov 2022 19:59:31 -0800
+Message-Id: <20221117035935.4136738-13-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221117035935.4136738-1-jithu.joseph@intel.com>
 References: <20221107225323.2733518-1-jithu.joseph@intel.com>
@@ -62,122 +62,168 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+The data portion of IFS test image file contains a metadata
+region containing possibly multiple metadata structures in
+addition to test data and hashes.
 
-One of the existing reserved fields in microcode header has been
-allocated to indicate the size for metadata structures.
+    IFS Metadata layout
+   +----------------------+  0
+   |META_TYPE_IFS (=1)    |
+   +----------------------+
+   |meta_size             |
+   +----------------------+
+   |test type             |
+   +----------------------+
+   |fusa info             |
+   +----------------------+
+   |total images          |
+   +----------------------+
+   |current image#        |
+   +----------------------+
+   |total chunks          |
+   +----------------------+
+   |starting chunk        |
+   +----------------------+
+   |size per chunk        |
+   +----------------------+
+   |chunks per stride     |
+   +----------------------+
+   |Reserved[54]          |
+   +----------------------+ 256
+   |                      |
+   |                      |
+   |                      |
+   |                      |
+   |Test Data/Chunks      |
+   |                      |
+   |                      |
+   |                      |
+   |                      |
+   +----------------------+  meta_size
+   |   META_TYPE_END (=0) |
+   +----------------------+  meta_size + 4
+   |   size of end (=8)   |
+   |                      |
+   +----------------------+  meta_size + 8
 
-The location of metadata section within microcode header is as shown
-below:
+Introduce the layout of this meta_data structure and validate
+the sanity of certain fields of the new image before loading.
 
-    Microcode Format
-   +----------------------+  Base
-   |Header Version        |
-   +----------------------+
-   |Update revision       |
-   +----------------------+
-   |Date DDMMYYYY         |
-   +----------------------+
-   |Sig                   |
-   +----------------------+
-   |Checksum              |
-   +----------------------+
-   |Loader Version        |
-   +----------------------+
-   |Processor Flags       |
-   +----------------------+
-   |Data Size             |
-   +----------------------+
-   |Total Size            |
-   +----------------------+
-   |Meta Size             |
-   +----------------------+
-   |Reserved              |
-   +----------------------+
-   |Reserved              |
-   +----------------------+  Base+48
-   |                      |
-   |                      |
-   |                      |
-   |                      |
-   |    Microcode         |
-   |                      |
-   |     Data             |
-   |                      |
-   |                      |
-   +----------------------+  Base+48+data_size-
-   |                      |     meta_size
-   |   Meta Data          |
-   |   structure(s)       |
-   |                      |
-   +----------------------+  Base+48+data_size
-   |   Extended Signature |
-   |        Table         |
-   |                      |
-   |                      |
-   |                      |
-   |                      |
-   |                      |
-   +----------------------+  Base+total_size
-
-Add an accessor function which will return a pointer to the
-start of a specific meta_type being queried.
-
-Upcoming changes will introduce the layout of IFS metadata
-structure and will make use of metadata section.
+Tweak references to IFS test image chunks to reflect the updated
+layout of the test image.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/platform/x86/intel/ifs/ifs.h  |  2 +
+ drivers/platform/x86/intel/ifs/load.c | 57 +++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index c914e4d359db..713f18ce00a1 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -43,6 +43,38 @@ static const char * const scan_authentication_status[] = {
- 	[2] = "Chunk authentication error. The hash of chunk did not match expected value"
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 3a051890d9e7..e3e8210ebd57 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -196,6 +196,7 @@ union ifs_status {
+  * @valid_chunks: number of chunks which could be validated.
+  * @status: it holds simple status pass/fail/untested
+  * @scan_details: opaque scan status code from h/w
++ * @cur_batch: number indicating the currently loaded test file
+  */
+ struct ifs_data {
+ 	int	integrity_cap_bit;
+@@ -205,6 +206,7 @@ struct ifs_data {
+ 	int	valid_chunks;
+ 	int	status;
+ 	u64	scan_details;
++	u32	cur_batch;
  };
  
-+#define MC_HEADER_META_TYPE_END		(0)
-+
-+struct metadata_header {
-+	unsigned int		type;
-+	unsigned int		blk_size;
+ struct ifs_work {
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index 6caa98cc6cac..3f1de9d4cf4b 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -7,7 +7,25 @@
+ 
+ #include "ifs.h"
+ 
++#define IFS_CHUNK_ALIGNMENT	256
++union meta_data {
++	struct {
++		u32 meta_type;		// metadata type
++		u32 meta_size;		// size of this entire struct including hdrs.
++		u32 test_type;		// IFS test type
++		u32 fusa_info;		// Fusa info
++		u32 total_images;	// Total number of images
++		u32 current_image;	// Current Image #
++		u32 total_chunks;	// Total number of chunks in this image
++		u32 starting_chunk;	// Starting chunk number in this image
++		u32 size_per_chunk;	// size of each chunk
++		u32 chunks_per_stride;	// number of chunks in a stride
++	};
++	u8 padding[IFS_CHUNK_ALIGNMENT];
 +};
 +
-+static struct metadata_header *find_meta_data(void *ucode, unsigned int meta_type)
+ #define IFS_HEADER_SIZE	(sizeof(struct microcode_header_intel))
++#define META_TYPE_IFS	1
+ static  struct microcode_header_intel *ifs_header_ptr;	/* pointer to the ifs image header */
+ static u64 ifs_hash_ptr;			/* Address of ifs metadata (hash) */
+ static u64 ifs_test_image_ptr;			/* 256B aligned address of test pattern */
+@@ -128,6 +146,41 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 	complete(&ifs_done);
+ }
+ 
++static int validate_ifs_metadata(struct device *dev)
 +{
-+	struct metadata_header *meta_header;
-+	unsigned long data_size, total_meta;
-+	unsigned long meta_size = 0;
++	struct ifs_data *ifsd = ifs_get_data(dev);
++	union meta_data *ifs_meta;
++	char test_file[64];
++	int ret = -EINVAL;
 +
-+	data_size = get_datasize(ucode);
-+	total_meta = ((struct microcode_intel *)ucode)->hdr.metasize;
-+	if (!total_meta)
-+		return NULL;
++	snprintf(test_file, sizeof(test_file), "%02x-%02x-%02x-%02x.scan",
++		 boot_cpu_data.x86, boot_cpu_data.x86_model,
++		 boot_cpu_data.x86_stepping, ifsd->cur_batch);
 +
-+	meta_header = (ucode + MC_HEADER_SIZE + data_size) - total_meta;
-+
-+	while (meta_header->type != MC_HEADER_META_TYPE_END &&
-+	       meta_header->blk_size &&
-+	       meta_size < total_meta) {
-+		meta_size += meta_header->blk_size;
-+		if (meta_header->type == meta_type)
-+			return meta_header;
-+
-+		meta_header = (void *)meta_header + meta_header->blk_size;
++	ifs_meta = (union meta_data *)find_meta_data(ifs_header_ptr, META_TYPE_IFS);
++	if (!ifs_meta) {
++		dev_err(dev, "IFS Metadata missing in file %s\n", test_file);
++		return ret;
 +	}
-+	return NULL;
++
++	ifs_test_image_ptr = (u64)ifs_meta + sizeof(union meta_data);
++
++	/* Scan chunk start must be 256 byte aligned */
++	if (!IS_ALIGNED(ifs_test_image_ptr, IFS_CHUNK_ALIGNMENT)) {
++		dev_err(dev, "Scan pattern is not aligned on %d bytes aligned in %s\n",
++			IFS_CHUNK_ALIGNMENT, test_file);
++		return ret;
++	}
++
++	if (ifs_meta->current_image != ifsd->cur_batch) {
++		dev_warn(dev, "Mismatch between filename %s and batch metadata 0x%02x\n",
++			 test_file, ifs_meta->current_image);
++		return ret;
++	}
++
++	return 0;
 +}
 +
  /*
-  * To copy scan hashes and authenticate test chunks, the initiating cpu must point
-  * to the EDX:EAX to the test image in linear address.
+  * IFS requires scan chunks authenticated per each socket in the platform.
+  * Once the test chunk is authenticated, it is automatically copied to secured memory
+@@ -140,6 +193,10 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 	int curr_pkg, cpu, ret;
+ 
+ 	memset(ifs_pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
++	ret = validate_ifs_metadata(dev);
++	if (ret)
++		return ret;
++
+ 	ifsd->loading_error = false;
+ 	ifsd->loaded_version = ifs_header_ptr->rev;
+ 
 -- 
 2.25.1
 
