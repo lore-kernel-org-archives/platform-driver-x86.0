@@ -2,131 +2,217 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B290C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 18:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B5CC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 20:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240548AbiKQS1G (ORCPT
+        id S240461AbiKQUBa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 13:27:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33596 "EHLO
+        Thu, 17 Nov 2022 15:01:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235041AbiKQS0v (ORCPT
+        with ESMTP id S234246AbiKQUBZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 13:26:51 -0500
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D168514D
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 10:26:49 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id E1C213201B99;
-        Thu, 17 Nov 2022 13:26:45 -0500 (EST)
-Received: from imap44 ([10.202.2.94])
-  by compute4.internal (MEProxy); Thu, 17 Nov 2022 13:26:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1668709605; x=
-        1668796005; bh=tMPoliM4yDmDhiELiEEmXmd8iLvQa8ia5XXAiZC3Epc=; b=P
-        oYP86upO5qNHh3ZHwkOro4KkoHK83bd9xQVvyJGg32Fv57Dlpvey1s91KBeOZ3md
-        prXkLulHTv8BiZB+Ut+560mfIlO6xak1VeYmMwc+crrBI0UtbcK3oE++UsNqSnNW
-        A5EKj6g2KTbBasJgeinJnWBmaahUd2q8BhgZAyEVOLMk6TmFdqyKoo4z9L04XB4y
-        mgKm4sjrXq4UaXCuoScCjhXbzTSsJi5eQua8spo5BYkK7OVOBAzp/kWnC1B5SEeU
-        VClptQrxUl+Be+7+JaUe4R4OngEVgxR7y46cqQBf/6pWvEVVvJWb1un3c/18IkaH
-        ibBF/IzrHaYud+KNJ2ruw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1668709605; x=
-        1668796005; bh=tMPoliM4yDmDhiELiEEmXmd8iLvQa8ia5XXAiZC3Epc=; b=u
-        4M4+u2fWINsvdeTVmjCSF/fQ1oTV++AYYU33vuFtiNM94/TRDUd+SD5yf3AlcIm1
-        uD/hcURb6owcUE5hFe019zkMGLJGJRPTLqPQjLC/Ow7YFFgDkQaJuyX4ySuRJJpC
-        jcAl3jRvr2LNwumUyXfehGk4SFc6US2m0CrxmgNSVfu1fiDbm0mqN7Zb2S7dtztl
-        2jFLKh449MbIdpwQuwVh6uSY1ZqViPIr75oln8aAqGF173A927lXQestX0qzKHcz
-        agztFQ9hCKmbpems+ui2oDhQdcG17wnK5ywLr66H+Tm53qm6YfEB5yCmqOCBuhzD
-        5/MhMQxVz9gcIIqNqKKtg==
-X-ME-Sender: <xms:5Hx2Y-_nfgLBLR1kg6PUqRO0Dsf9KU2Y4zhfdm4iR9pETpA8k02woA>
-    <xme:5Hx2Y-uWs25PmoUTfoYhfIWmw-CLi2Pi5K_3rtJ2fQNm8gmSVNOJGGsrnJd5jtVWI
-    6OVE_dM4uVmOxsEpe4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgeekgdduuddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:5Hx2Y0C8El4Neq8bUZROVnt-ntyrgacbkNo00NY_iXyVw8Q2H-VAGg>
-    <xmx:5Hx2Y2cT_zJCLTz8CMscsfqyeb8CR-VbWoCvdJG1OTTqoKSu73eW8Q>
-    <xmx:5Hx2YzORQVMIa14UN48zq1z79tGnh6WYZ35pSoeUjfrCQlqqkTSxMg>
-    <xmx:5Xx2YxsmEztQja015ok5f1Dcqgmcda4p98nQHZz7GrlFFZUBR6L0rA>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 72D8636A0073; Thu, 17 Nov 2022 13:26:44 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <4738204e-303a-4280-9644-1d5f69155637@app.fastmail.com>
-In-Reply-To: <20221117110244.67811-1-hdegoede@redhat.com>
-References: <20221117110244.67811-1-hdegoede@redhat.com>
-Date:   Thu, 17 Nov 2022 18:26:24 +0000
-From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To:     "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        "Andy Shevchenko" <andy@kernel.org>
-Cc:     =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
-        "Kai Heng Feng" <kai.heng.feng@canonical.com>,
-        "Maxim Mikityanskiy" <maxtram95@gmail.com>,
-        "GOESSEL Guillaume" <g_goessel@outlook.com>,
-        "Manyi Li" <limanyi@uniontech.com>,
-        =?UTF-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>,
-        "Philipp Jungkamp" <p.jungkamp@gmx.net>,
-        "Arnav Rawat" <arnavr3@illinois.edu>,
-        "Kelly Anderson" <kelly@xilka.com>, "Meng Dong" <whenov@gmail.com>,
-        "Felix Eckhofer" <felix@eckhofer.com>,
-        "Ike Panhc" <ike.pan@canonical.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] platform/x86: ideapad-laptop: Rework touchpad control code
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 17 Nov 2022 15:01:25 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F2A7EC9A;
+        Thu, 17 Nov 2022 12:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668715284; x=1700251284;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JZAqYHXX3Zowv4qFiLkNY0ZQXmYsKWrL4YoY5pdFWWs=;
+  b=V3/9tyNNkFj8QO6S5WoFOi+iFaAR5ys3GCC7F8LD8iBjxzjeoycMGimt
+   BRnTUMG1UV8zb0O4ebvGLkEYGUxnwUKFfnT9Y45EXSYQ97biN8oX84f/H
+   JwdMVkrKCZM52E4Pkhhuhclo4A61yc99m7bE/gxBGsnYE9zEzCTUlydIy
+   OTZaDWfvv+rwVjo3/YZTCW5h+jguCIizlQP5lFaTJPHEdCizdhtJ6oVbY
+   08BiUj0JCYxBKMnRV2BXO0cFLpBL4HeVMQNZqHUnw/OTPo5aXDpvXx+zB
+   l2LzzrjjAvEis7peCM82Lt8jGXWk3J5Kb9YWWY+2DiFgfemhWzJy9UO+m
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="292664330"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="292664330"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 12:01:20 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="782372429"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="782372429"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 12:01:20 -0800
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: [PATCH v3 04/16] platform/x86/intel/ifs: Remove memory allocation from load path
+Date:   Thu, 17 Nov 2022 11:59:57 -0800
+Message-Id: <20221117195957.28225-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <c7414e8b-c113-eff8-b435-ddde705a6f6c@redhat.com>
+References: <c7414e8b-c113-eff8-b435-ddde705a6f6c@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+IFS requires tests to be authenticated once for each CPU socket
+on a system.
 
+scan_chunks_sanity_check() was dynamically allocating memory
+to store the state of whether tests have been authenticated on
+each socket for every load operation.
 
-=E5=9C=A82022=E5=B9=B411=E6=9C=8817=E6=97=A5=E5=8D=81=E4=B8=80=E6=9C=88 =
-=E4=B8=8A=E5=8D=8811:02=EF=BC=8CHans de Goede=E5=86=99=E9=81=93=EF=BC=9A
-> Hi All,
->
-> Here is v2 of my series to rework the ideapad-laptop touchpad control =
-code.
->
-> New in v2:
-> - Split patch 3/3 in to 3 patches (3-5/6) since it was doing to much a=
-t once
->   - Update r_touchpad_val on sysfs read/writes
->   - Drop the write(VPCCMD_W_TOUCHPAD, 1) call at probe in a separate p=
-atch
->     and document why this is done in the commit msg
-> - Add a new patch (6/6) to hide the touchpad sysfs attribute behind a
->   module-parameter which is disabled by default, see the commit message
->   for why this is done.
->
+Move the memory allocation to init path and store the pointer
+in ifs_data struct.
 
-For the whole series:
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Also rearrange the adjacent error checking in init for a
+more simplified and natural flow.
 
-Can confirm this approach works fine on my problematic ideaPad Yoga 14s.
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+---
+ - Replaced global pkg_auth pointer to struct ifs_data (Hans)
+ - Rearrange the adjacent error checking flow in ifs_init (Hans)
+ - With this change there are conflicts in patches 11 and 12 (I will
+    post the updated 11 and 12 if this is satisfactory)
 
-Thanks
-- Jiaxun
+ drivers/platform/x86/intel/ifs/ifs.h  |  2 ++
+ drivers/platform/x86/intel/ifs/core.c | 20 ++++++++++++++++----
+ drivers/platform/x86/intel/ifs/load.c | 14 ++++----------
+ 3 files changed, 22 insertions(+), 14 deletions(-)
 
->
-> --=20
-> 2.38.1
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 3ff1d9aaeaa9..8de1952a1b7b 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -191,6 +191,7 @@ union ifs_status {
+  * struct ifs_data - attributes related to intel IFS driver
+  * @integrity_cap_bit: MSR_INTEGRITY_CAPS bit enumerating this test
+  * @loaded_version: stores the currently loaded ifs image version.
++ * @pkg_auth: array of bool storing per package auth status
+  * @loaded: If a valid test binary has been loaded into the memory
+  * @loading_error: Error occurred on another CPU while loading image
+  * @valid_chunks: number of chunks which could be validated.
+@@ -199,6 +200,7 @@ union ifs_status {
+  */
+ struct ifs_data {
+ 	int	integrity_cap_bit;
++	bool	*pkg_auth;
+ 	int	loaded_version;
+ 	bool	loaded;
+ 	bool	loading_error;
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 5fb7f655c291..943eb2a17c64 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -4,6 +4,7 @@
+ #include <linux/module.h>
+ #include <linux/kdev_t.h>
+ #include <linux/semaphore.h>
++#include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
+ 
+@@ -34,6 +35,7 @@ static int __init ifs_init(void)
+ {
+ 	const struct x86_cpu_id *m;
+ 	u64 msrval;
++	int ret;
+ 
+ 	m = x86_match_cpu(ifs_cpu_ids);
+ 	if (!m)
+@@ -50,16 +52,26 @@ static int __init ifs_init(void)
+ 
+ 	ifs_device.misc.groups = ifs_get_groups();
+ 
+-	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
+-	    !misc_register(&ifs_device.misc))
+-		return 0;
++	if (!(msrval & BIT(ifs_device.data.integrity_cap_bit)))
++		return -ENODEV;
++
++	ifs_device.data.pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
++	if (!ifs_device.data.pkg_auth)
++		return -ENOMEM;
++
++	ret = misc_register(&ifs_device.misc);
++	if (ret) {
++		kfree(ifs_device.data.pkg_auth);
++		return ret;
++	}
+ 
+-	return -ENODEV;
++	return 0;
+ }
+ 
+ static void __exit ifs_exit(void)
+ {
+ 	misc_deregister(&ifs_device.misc);
++	kfree(ifs_device.data.pkg_auth);
+ }
+ 
+ module_init(ifs_init);
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index 89ce265887ea..8423c486d11b 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -3,7 +3,6 @@
+ 
+ #include <linux/firmware.h>
+ #include <asm/cpu.h>
+-#include <linux/slab.h>
+ #include <asm/microcode_intel.h>
+ 
+ #include "ifs.h"
+@@ -118,16 +117,12 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+  */
+ static int scan_chunks_sanity_check(struct device *dev)
+ {
+-	int metadata_size, curr_pkg, cpu, ret = -ENOMEM;
++	int metadata_size, curr_pkg, cpu, ret;
+ 	struct ifs_data *ifsd = ifs_get_data(dev);
+-	bool *package_authenticated;
+ 	struct ifs_work local_work;
+ 	char *test_ptr;
+ 
+-	package_authenticated = kcalloc(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+-	if (!package_authenticated)
+-		return ret;
+-
++	memset(ifsd->pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
+ 	metadata_size = ifs_header_ptr->metadata_size;
+ 
+ 	/* Spec says that if the Meta Data Size = 0 then it should be treated as 2000 */
+@@ -150,7 +145,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+ 		curr_pkg = topology_physical_package_id(cpu);
+-		if (package_authenticated[curr_pkg])
++		if (ifsd->pkg_auth[curr_pkg])
+ 			continue;
+ 		reinit_completion(&ifs_done);
+ 		local_work.dev = dev;
+@@ -161,12 +156,11 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 			ret = -EIO;
+ 			goto out;
+ 		}
+-		package_authenticated[curr_pkg] = 1;
++		ifsd->pkg_auth[curr_pkg] = 1;
+ 	}
+ 	ret = 0;
+ out:
+ 	cpus_read_unlock();
+-	kfree(package_authenticated);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
---=20
-- Jiaxun
