@@ -2,179 +2,199 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD58CC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10C9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 17:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234762AbiKQQLO (ORCPT
+        id S239605AbiKQRbe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 11:11:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        Thu, 17 Nov 2022 12:31:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234885AbiKQQLN (ORCPT
+        with ESMTP id S240363AbiKQRb1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 11:11:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAB4C21
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 08:10:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668701412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CTydP8D68mFHBn/QMPq/BVX9AdVep5BUs2AxfXVsOWk=;
-        b=ReWKP0RIdL/l8elurRNs/MryrB5a83/cweqa96SkCF2atssZy/QUD/cnM7GiOeb5Poz2Wl
-        qB2oWHUz/mCkMMXQxWa6t7gwsvbKPMhREqvt3fOG5ZMF+NLKsedce+w4skVxfyWU1Ock4Y
-        qgyc2qnfraDsZ7zKGaC5P45WCd/nBjA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-2-TeMgnMP9ODKxYRhZ7y4JOg-1; Thu, 17 Nov 2022 11:09:06 -0500
-X-MC-Unique: TeMgnMP9ODKxYRhZ7y4JOg-1
-Received: by mail-ed1-f70.google.com with SMTP id q13-20020a056402518d00b00462b0599644so1532847edd.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 08:09:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CTydP8D68mFHBn/QMPq/BVX9AdVep5BUs2AxfXVsOWk=;
-        b=SdoXb/S2zUaYxIXEH6iR6/I+fYN/guDD2TY8ZrArK3AjC4ZEf9/ZKngBYh/55aKDom
-         Ay+mwgzniojSTbWZWu/qOhOMRKQennfN8qhmfeCaPiYsU5luf99h+AkGESK8/DMAduPL
-         17g6mt3evXbZoSSfvvKaX34vfk7ediEodiHfNDP4EjoHzijpwPylN0j/44w5vEHI3h+2
-         0jOLzV1ubLJPe9CD7zNW6zdp4dba926528bRJaNGV//Juh1Xco+2qGELwhehfYf1xkvT
-         Hn26uOVqT+NeEHCgw2ld7jUlUXJzaFnNgfRmZ1JZ5AQH5S8heFeV5/sWMmaqdCDz3RoY
-         3NHg==
-X-Gm-Message-State: ANoB5pkEPSIibLJnOd2ymLNbJ6EXhhJP66oLnkQr5bin5DNeQs0wR7pB
-        m1Xm3MDh6jKKT2eSa3yph3B/QWx972FxHvFwGNInhwy7ntmzVtdn/z65oCFj3fNgB6TSTyFBmr5
-        BeszBBARabL/2PCja2UAK/4Su4r66MEX81A==
-X-Received: by 2002:a05:6402:4311:b0:458:c66a:3664 with SMTP id m17-20020a056402431100b00458c66a3664mr2750777edc.79.1668701345728;
-        Thu, 17 Nov 2022 08:09:05 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7OqedPTWE1KhaRZF8u06wf7CTyTqcmJQezsFirWy+OSvIjZmkh36n9rrUoIjhMP/4mr8S3eQ==
-X-Received: by 2002:a05:6402:4311:b0:458:c66a:3664 with SMTP id m17-20020a056402431100b00458c66a3664mr2750755edc.79.1668701345484;
-        Thu, 17 Nov 2022 08:09:05 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id f4-20020a17090631c400b00730bfe6adc4sm551618ejf.37.2022.11.17.08.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 08:09:04 -0800 (PST)
-Message-ID: <22d62cb7-17f4-c8d2-40fa-987bb2a4a0fa@redhat.com>
-Date:   Thu, 17 Nov 2022 17:09:04 +0100
+        Thu, 17 Nov 2022 12:31:27 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3655679E14;
+        Thu, 17 Nov 2022 09:31:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668706285; x=1700242285;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JtQf+wYmqZJM4WTnOnjVIvXY+Y6w+bPb1VhRTxHhJIo=;
+  b=lFxXl/OSPlowDb1TZ/3EanHK4jPxzalDpwC5+kkuqS+oeQiukHUv90Lj
+   8clSZ4n9kuEWX1Bq2efSVbsBdRmF7/g7vLLG6/iZKlo6ecVlk87FuyoKV
+   w2kQtaNaqRGRqmTeiIeeiNtevVyHFUlZuik3/91Q80no/Zh3xJF7VtNH5
+   GS8Mg2wfWAYsWb7sCMGKBKXEKAX3je19ZnOGgctoMYj48xftLEVrFHKxk
+   ev9qan+HXvXA68UOz/8JPjPwbiso4AV1bG0HSnzk1WQfze3ZFB1/r+9OO
+   tscULHpoH3XcUd3njxiMF3sG3F8htpw7SyVqU120DMc1CUZewh7K4Seek
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="312934136"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="312934136"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 09:31:22 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="745632076"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="745632076"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 09:31:22 -0800
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, jithu.joseph@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: [PATCH v3 04/16] platform/x86/intel/ifs: Remove memory allocation from load path
+Date:   Thu, 17 Nov 2022 09:29:58 -0800
+Message-Id: <20221117172958.4172029-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <77e9d0f2-12d9-fc7a-2161-c579b7bbd673@redhat.com>
+References: <77e9d0f2-12d9-fc7a-2161-c579b7bbd673@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH] platform/x86/amd: pmc: Add a workaround for an s0i3 issue
- on Cezanne
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>
-Cc:     "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>,
-        Raul Rangel <rrangel@chromium.org>,
-        Mark Gross <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20221116154341.13382-1-mario.limonciello@amd.com>
- <0d9f8f8c-3b45-dd6a-008b-6d9ffe8ccc93@redhat.com>
- <MN0PR12MB6101F972282D66202C95C0F2E2069@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <MN0PR12MB6101F972282D66202C95C0F2E2069@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+IFS requires tests to be authenticated once for each CPU socket
+on a system.
 
-On 11/17/22 17:06, Limonciello, Mario wrote:
-> [Public]
-> 
-> 
-> 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Thursday, November 17, 2022 08:06
->> To: Limonciello, Mario <Mario.Limonciello@amd.com>; S-k, Shyam-sundar
->> <Shyam-sundar.S-k@amd.com>
->> Cc: Mahapatra, Rajib <Rajib.Mahapatra@amd.com>; Raul Rangel
->> <rrangel@chromium.org>; Mark Gross <markgross@kernel.org>; platform-
->> driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] platform/x86/amd: pmc: Add a workaround for an s0i3
->> issue on Cezanne
->>
->> Hi Mario,
->>
->> On 11/16/22 16:43, Mario Limonciello wrote:
->>> Cezanne platforms under the right circumstances have a synchronization
->>> problem where attempting to enter s2idle may fail if the x86 cores are
->>> put into HLT before hardware resume from the previous attempt has
->>> completed.
->>>
->>> To avoid this issue add a 10-20ms delay before entering s2idle another
->>> time. This workaround will only be applied on interrupts that wake the
->>> hardware but don't break the s2idle loop.
->>>
->>> Cc: "Mahapatra, Rajib" <Rajib.Mahapatra@amd.com>
->>> Cc: "Raul Rangel" <rrangel@chromium.org>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Thank you for your patch, I've applied this patch to my review-hans
->> branch:
->> https://git.k
- ernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpdx86%2Fplatform-
->> drivers-x86.git%2Flog%2F%3Fh%3Dreview-
->> hans&amp;data=05%7C01%7Cmario.limonciello%40amd.com%7C674f8bf7a8
->> 114f83a3b408dac8a4d941%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C
->> 0%7C638042907591739047%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj
->> AwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%
->> 7C%7C&amp;sdata=XYwl%2FOvUFy%2Bgz9EY9oa35M%2BkLf%2Bud8PKXynQ
->> FlrUdoE%3D&amp;reserved=0
->>
->> Please let me know if it important to get this as a fix into 6.1,
->> I wasn't really planning on doing any more fixes pull-reqs for 6.1,
->> but I can do one if necessary.
->>
-> 
-> AFAIK it's a corner case.  I think it can wait until 6.2, but I think it should probably
-> be Cc to 6.1 stable (which has the ability to run code in the check()) phase.
+scan_chunks_sanity_check() was dynamically allocating memory
+to store the state of whether tests have been authenticated on
+each socket for every load operation.
 
-Ok, I have added a:
+Move the memory allocation to init path and store the pointer
+in ifs_data struct.
 
-Cc: stable@vger.kernel.org # 6.1
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+---
+ - Replaced global pkg_auth pointer to struct ifs_data (Hans)
+ - With this change there are conflicts in patches 11 and 12 (I will
+    post the updated 11 and 12 if this is satisfactory)
 
-to the commit msg.
+ drivers/platform/x86/intel/ifs/ifs.h  |  2 ++
+ drivers/platform/x86/intel/ifs/core.c | 12 ++++++++++--
+ drivers/platform/x86/intel/ifs/load.c | 14 ++++----------
+ 3 files changed, 16 insertions(+), 12 deletions(-)
 
-Regards,
-
-Hans
-
-
-
->>> ---
->>>  drivers/platform/x86/amd/pmc.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/amd/pmc.c
->> b/drivers/platform/x86/amd/pmc.c
->>> index ef4ae977b8e0..439d282aafd1 100644
->>> --- a/drivers/platform/x86/amd/pmc.c
->>> +++ b/drivers/platform/x86/amd/pmc.c
->>> @@ -739,8 +739,14 @@ static void amd_pmc_s2idle_prepare(void)
->>>  static void amd_pmc_s2idle_check(void)
->>>  {
->>>  	struct amd_pmc_dev *pdev = &pmc;
->>> +	struct smu_metrics table;
->>>  	int rc;
->>>
->>> +	/* CZN: Ensure that future s0i3 entry attempts at least 10ms passed
->> */
->>> +	if (pdev->cpu_id == AMD_CPU_ID_CZN &&
->> !get_metrics_table(pdev, &table) &&
->>> +	    table.s0i3_last_entry_status)
->>> +		usleep_range(10000, 20000);
->>> +
->>>  	/* Dump the IdleMask before we add to the STB */
->>>  	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
->>>
-> 
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 3ff1d9aaeaa9..8de1952a1b7b 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -191,6 +191,7 @@ union ifs_status {
+  * struct ifs_data - attributes related to intel IFS driver
+  * @integrity_cap_bit: MSR_INTEGRITY_CAPS bit enumerating this test
+  * @loaded_version: stores the currently loaded ifs image version.
++ * @pkg_auth: array of bool storing per package auth status
+  * @loaded: If a valid test binary has been loaded into the memory
+  * @loading_error: Error occurred on another CPU while loading image
+  * @valid_chunks: number of chunks which could be validated.
+@@ -199,6 +200,7 @@ union ifs_status {
+  */
+ struct ifs_data {
+ 	int	integrity_cap_bit;
++	bool	*pkg_auth;
+ 	int	loaded_version;
+ 	bool	loaded;
+ 	bool	loading_error;
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 5fb7f655c291..6980a31e9786 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -4,6 +4,7 @@
+ #include <linux/module.h>
+ #include <linux/kdev_t.h>
+ #include <linux/semaphore.h>
++#include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
+ 
+@@ -51,8 +52,14 @@ static int __init ifs_init(void)
+ 	ifs_device.misc.groups = ifs_get_groups();
+ 
+ 	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
+-	    !misc_register(&ifs_device.misc))
+-		return 0;
++	    !misc_register(&ifs_device.misc)) {
++		ifs_device.data.pkg_auth = kmalloc_array(topology_max_packages(),
++							 sizeof(bool), GFP_KERNEL);
++		if (!ifs_device.data.pkg_auth)
++			return -ENOMEM;
++		else
++			return 0;
++	}
+ 
+ 	return -ENODEV;
+ }
+@@ -60,6 +67,7 @@ static int __init ifs_init(void)
+ static void __exit ifs_exit(void)
+ {
+ 	misc_deregister(&ifs_device.misc);
++	kfree(ifs_device.data.pkg_auth);
+ }
+ 
+ module_init(ifs_init);
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index 89ce265887ea..8423c486d11b 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -3,7 +3,6 @@
+ 
+ #include <linux/firmware.h>
+ #include <asm/cpu.h>
+-#include <linux/slab.h>
+ #include <asm/microcode_intel.h>
+ 
+ #include "ifs.h"
+@@ -118,16 +117,12 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+  */
+ static int scan_chunks_sanity_check(struct device *dev)
+ {
+-	int metadata_size, curr_pkg, cpu, ret = -ENOMEM;
++	int metadata_size, curr_pkg, cpu, ret;
+ 	struct ifs_data *ifsd = ifs_get_data(dev);
+-	bool *package_authenticated;
+ 	struct ifs_work local_work;
+ 	char *test_ptr;
+ 
+-	package_authenticated = kcalloc(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+-	if (!package_authenticated)
+-		return ret;
+-
++	memset(ifsd->pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
+ 	metadata_size = ifs_header_ptr->metadata_size;
+ 
+ 	/* Spec says that if the Meta Data Size = 0 then it should be treated as 2000 */
+@@ -150,7 +145,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+ 		curr_pkg = topology_physical_package_id(cpu);
+-		if (package_authenticated[curr_pkg])
++		if (ifsd->pkg_auth[curr_pkg])
+ 			continue;
+ 		reinit_completion(&ifs_done);
+ 		local_work.dev = dev;
+@@ -161,12 +156,11 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 			ret = -EIO;
+ 			goto out;
+ 		}
+-		package_authenticated[curr_pkg] = 1;
++		ifsd->pkg_auth[curr_pkg] = 1;
+ 	}
+ 	ret = 0;
+ out:
+ 	cpus_read_unlock();
+-	kfree(package_authenticated);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
