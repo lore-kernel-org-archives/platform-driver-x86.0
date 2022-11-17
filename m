@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523FDC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28EDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234664AbiKQEBA (ORCPT
+        id S234756AbiKQEBB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 23:01:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
+        Wed, 16 Nov 2022 23:01:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232809AbiKQEA5 (ORCPT
+        with ESMTP id S233725AbiKQEA6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 23:00:57 -0500
+        Wed, 16 Nov 2022 23:00:58 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71A629C89;
-        Wed, 16 Nov 2022 20:00:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E3D49B5D;
+        Wed, 16 Nov 2022 20:00:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668657656; x=1700193656;
+  t=1668657657; x=1700193657;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uPEjBcX35onzk13t+gpBWDfzAecGrtv8ptzMtVu7P4k=;
-  b=Z/bX+us8bv5DWUNvRjFsYCCpO9n+ConDAA+tO8c8udRP+M7gg+qppuoW
-   xPJkwLi6DyQIOuCfh+dNM1APGaydMZFAibu5WP0yk7QOr9Eg3Acd8UgBS
-   eafpy07NUL/+otHQZUsCH6rYGyGdTP3ANkvL3sJda4ISWyV/eeS9g10tc
-   WX9VxBGMxNxAmZb8PJxE1ao02L2C+nJ5PP23GSKL2b+VXNi+v+6hBxD02
-   UAo67vfWNi4xxV1bDd9BW/MzUbeN0pV07y/Mfet/eAc2Z3+RgU4/6hWW9
-   TK/tRmEP1tmyLtf9JraNWubTfwmp5LceHpYtyc6KMzsroG8de+iYahZf+
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455950"
+  bh=lLTFw+V6vyszKv4M2RjEw7P6+Set2pKhk2NNretCihw=;
+  b=LNe8Ziz/krf930Q7OiDT+I6HjH1iyV1e31cS3tu8YeIQZYPdzxIqYohL
+   IwEsX2hE3exH6PhVw4HRNVmFUKR9EFmz/yUaWutKCHFAZoFPS03RLg9/v
+   YdmcTIpW4LD4nZXlKN57MFHXi0IN5i2hMCeipZxtEJC+gGK6gUNhQZ5DO
+   LfgUkFZkfeFAK4/mIxuXhJSkhPzkSNrRYNTgNt/49jaEfPoMHWj3U5hFL
+   Qr89p9Wj1AtaHGm04YJ34NpHJv3mUBrYi1NodYjsGYFnYtHo9un0aUOJK
+   GT8I8P/cZFq6fCLdLgDvILZrvoM3CQXfEtvD05ogOZL8PzZV7OS7jE7vO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455956"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="292455950"
+   d="scan'208";a="292455956"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:55 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462644"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:56 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462670"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="590462644"
+   d="scan'208";a="590462670"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:55 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:56 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 01/16] platform/x86/intel/ifs: Remove unused selection
-Date:   Wed, 16 Nov 2022 19:59:20 -0800
-Message-Id: <20221117035935.4136738-2-jithu.joseph@intel.com>
+Subject: [PATCH v3 03/16] platform/x86/intel/ifs: Remove image loading during init
+Date:   Wed, 16 Nov 2022 19:59:22 -0800
+Message-Id: <20221117035935.4136738-4-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221117035935.4136738-1-jithu.joseph@intel.com>
 References: <20221107225323.2733518-1-jithu.joseph@intel.com>
@@ -62,29 +62,65 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-CONFIG_INTEL_IFS_DEVICE is not used anywhere. The selection in
-Kconfig is therefore pointless. Delete it.
+IFS test image is unnecessarily loaded during driver initialization.
+Drop image loading during ifs_init() and improve module load time.
+With this change, user has to load one when starting the tests.
+
+As a consequence, make ifs_sem static as it is only used within sysfs.c
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- drivers/platform/x86/intel/ifs/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/intel/ifs/ifs.h   | 2 --
+ drivers/platform/x86/intel/ifs/core.c  | 6 +-----
+ drivers/platform/x86/intel/ifs/sysfs.c | 2 +-
+ 3 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/Kconfig b/drivers/platform/x86/intel/ifs/Kconfig
-index c341a27cc1a3..89152d46deee 100644
---- a/drivers/platform/x86/intel/ifs/Kconfig
-+++ b/drivers/platform/x86/intel/ifs/Kconfig
-@@ -4,7 +4,6 @@ config INTEL_IFS
- 	# Discussion on the list has shown that the sysfs API needs a bit
- 	# more work, mark this as broken for now
- 	depends on BROKEN
--	select INTEL_IFS_DEVICE
- 	help
- 	  Enable support for the In Field Scan capability in select
- 	  CPUs. The capability allows for running low level tests via
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 73c8e91cf144..3ff1d9aaeaa9 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -229,6 +229,4 @@ void ifs_load_firmware(struct device *dev);
+ int do_core_test(int cpu, struct device *dev);
+ const struct attribute_group **ifs_get_groups(void);
+ 
+-extern struct semaphore ifs_sem;
+-
+ #endif
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 27204e3d674d..5fb7f655c291 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -51,12 +51,8 @@ static int __init ifs_init(void)
+ 	ifs_device.misc.groups = ifs_get_groups();
+ 
+ 	if ((msrval & BIT(ifs_device.data.integrity_cap_bit)) &&
+-	    !misc_register(&ifs_device.misc)) {
+-		down(&ifs_sem);
+-		ifs_load_firmware(ifs_device.misc.this_device);
+-		up(&ifs_sem);
++	    !misc_register(&ifs_device.misc))
+ 		return 0;
+-	}
+ 
+ 	return -ENODEV;
+ }
+diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
+index 37d8380d6fa8..65dd6fea5342 100644
+--- a/drivers/platform/x86/intel/ifs/sysfs.c
++++ b/drivers/platform/x86/intel/ifs/sysfs.c
+@@ -13,7 +13,7 @@
+  * Protects against simultaneous tests on multiple cores, or
+  * reloading can file while a test is in progress
+  */
+-DEFINE_SEMAPHORE(ifs_sem);
++static DEFINE_SEMAPHORE(ifs_sem);
+ 
+ /*
+  * The sysfs interface to check additional details of last test
 -- 
 2.25.1
 
