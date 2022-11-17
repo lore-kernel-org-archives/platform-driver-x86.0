@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D99C43219
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 04:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239127AbiKQEBO (ORCPT
+        id S232521AbiKQEBQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Nov 2022 23:01:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
+        Wed, 16 Nov 2022 23:01:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234454AbiKQEA7 (ORCPT
+        with ESMTP id S234651AbiKQEBA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Nov 2022 23:00:59 -0500
+        Wed, 16 Nov 2022 23:01:00 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B1214C248;
-        Wed, 16 Nov 2022 20:00:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6614149B5D;
+        Wed, 16 Nov 2022 20:00:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668657658; x=1700193658;
+  t=1668657659; x=1700193659;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3H6t5AxADTI7uec2GmddnFXYVAjGLBJeGJq+yHqIGqY=;
-  b=GZF17p93OAF0k848pMpmQMdMLIf58L5UGP3RfWvjLOZqoBClF2bqa654
-   ZO6g1RJWn8YJ/I/tgaE0JvozW+QxBJ9QoBaH2OiQG87cnAOuQE2C22h4Y
-   QoRUulLmcBJbn2jHbfakMZvFFLt0IVjVvK0pu4wxKaR/MlZ2DydXsFXW3
-   hAARSoKNVCCUm/drHlAT8sweaR6z1CNDXBSlVYsqJ5EqpVf8GvIIlY950
-   tXsK74zmD3GHFPAAIoE3jV+qzQAL6AJ53In3jkFEzt9RuaSxG0O3vF/NI
-   xbY5BRMUk1R3l871vuaW1EjVID7kwaCeSPKaOqlPn83+k0HCiXwuksZkE
+  bh=VUNG8NIAa9pCK7zUL68UQaJAiq+0V2MYRuzo+MnCPyY=;
+  b=LYct/lRo7EvxahFnHnklzKa1D39bQEDy7xdb7KnUO5SQ/6vSv6c36oez
+   PuM2cUN6H9OKePC2c05XyxTMYO6woeZltwO5OR81rgeyE9sqw65+2MX2M
+   9RtC/80Lyx/uoXgugRimRvFzHMWhL4E06jhVusf4sE4sf//xdE57PjLl8
+   q+3dvtlns9uw60MW8MEen5or9sciMj5WQE8o61nK0MpSU0QTNBzruraA/
+   BTv6Cly4XJdE6lrhGQgqKiA1a5U5e8oUPdyDPJmWSX/Rz+Vbbn+8m7ilD
+   JZEc/Mq4GCpw8Shb7aOHDq2WIv0z1ZnLVSKHzTC1JdgMwp51TKdAX1s0b
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455966"
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="292455972"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="292455966"
+   d="scan'208";a="292455972"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:57 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462686"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="590462701"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="590462686"
+   d="scan'208";a="590462701"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:57 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 20:00:58 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 07/16] x86/microcode/intel: Reuse microcode_sanity_check()
-Date:   Wed, 16 Nov 2022 19:59:26 -0800
-Message-Id: <20221117035935.4136738-8-jithu.joseph@intel.com>
+Subject: [PATCH v3 10/16] platform/x86/intel/ifs: Add metadata support
+Date:   Wed, 16 Nov 2022 19:59:29 -0800
+Message-Id: <20221117035935.4136738-11-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221117035935.4136738-1-jithu.joseph@intel.com>
 References: <20221107225323.2733518-1-jithu.joseph@intel.com>
@@ -62,270 +62,122 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-IFS test image carries the same microcode header as regular Intel
-microcode blobs.
+From: Ashok Raj <ashok.raj@intel.com>
 
-microcode_sanity_check() can be used by IFS driver to perform
-sanity check of the IFS test images too.
+One of the existing reserved fields in microcode header has been
+allocated to indicate the size for metadata structures.
+
+The location of metadata section within microcode header is as shown
+below:
+
+    Microcode Format
+   +----------------------+  Base
+   |Header Version        |
+   +----------------------+
+   |Update revision       |
+   +----------------------+
+   |Date DDMMYYYY         |
+   +----------------------+
+   |Sig                   |
+   +----------------------+
+   |Checksum              |
+   +----------------------+
+   |Loader Version        |
+   +----------------------+
+   |Processor Flags       |
+   +----------------------+
+   |Data Size             |
+   +----------------------+
+   |Total Size            |
+   +----------------------+
+   |Meta Size             |
+   +----------------------+
+   |Reserved              |
+   +----------------------+
+   |Reserved              |
+   +----------------------+  Base+48
+   |                      |
+   |                      |
+   |                      |
+   |                      |
+   |    Microcode         |
+   |                      |
+   |     Data             |
+   |                      |
+   |                      |
+   +----------------------+  Base+48+data_size-
+   |                      |     meta_size
+   |   Meta Data          |
+   |   structure(s)       |
+   |                      |
+   +----------------------+  Base+48+data_size
+   |   Extended Signature |
+   |        Table         |
+   |                      |
+   |                      |
+   |                      |
+   |                      |
+   |                      |
+   +----------------------+  Base+total_size
+
+Add an accessor function which will return a pointer to the
+start of a specific meta_type being queried.
+
+Upcoming changes will introduce the layout of IFS metadata
+structure and will make use of metadata section.
 
 Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- arch/x86/include/asm/cpu.h            |   1 +
- arch/x86/kernel/cpu/intel.c           |  99 +++++++++++++++++++++++++
- arch/x86/kernel/cpu/microcode/intel.c | 102 +-------------------------
- 3 files changed, 102 insertions(+), 100 deletions(-)
+ drivers/platform/x86/intel/ifs/load.c | 32 +++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index e853440b5c65..9e3ac95acf2d 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -96,5 +96,6 @@ static inline bool intel_cpu_signatures_match(unsigned int s1, unsigned int p1,
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index c914e4d359db..713f18ce00a1 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -43,6 +43,38 @@ static const char * const scan_authentication_status[] = {
+ 	[2] = "Chunk authentication error. The hash of chunk did not match expected value"
+ };
  
- extern u64 x86_read_arch_cap_msr(void);
- int intel_find_matching_signature(void *mc, unsigned int csig, int cpf);
-+int intel_microcode_sanity_check(void *mc, bool print_err);
- 
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index b6f9210fb31a..01e73ec1d585 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -245,6 +245,105 @@ int intel_find_matching_signature(void *mc, unsigned int csig, int cpf)
- }
- EXPORT_SYMBOL_GPL(intel_find_matching_signature);
- 
-+int intel_microcode_sanity_check(void *mc, bool print_err)
++#define MC_HEADER_META_TYPE_END		(0)
++
++struct metadata_header {
++	unsigned int		type;
++	unsigned int		blk_size;
++};
++
++static struct metadata_header *find_meta_data(void *ucode, unsigned int meta_type)
 +{
-+	unsigned long total_size, data_size, ext_table_size;
-+	struct microcode_header_intel *mc_header = mc;
-+	struct extended_sigtable *ext_header = NULL;
-+	u32 sum, orig_sum, ext_sigcount = 0, i;
-+	struct extended_signature *ext_sig;
++	struct metadata_header *meta_header;
++	unsigned long data_size, total_meta;
++	unsigned long meta_size = 0;
 +
-+	total_size = get_totalsize(mc_header);
-+	data_size = get_datasize(mc_header);
++	data_size = get_datasize(ucode);
++	total_meta = ((struct microcode_intel *)ucode)->hdr.metasize;
++	if (!total_meta)
++		return NULL;
 +
-+	if (data_size + MC_HEADER_SIZE > total_size) {
-+		if (print_err)
-+			pr_err("Error: bad microcode data file size.\n");
-+		return -EINVAL;
++	meta_header = (ucode + MC_HEADER_SIZE + data_size) - total_meta;
++
++	while (meta_header->type != MC_HEADER_META_TYPE_END &&
++	       meta_header->blk_size &&
++	       meta_size < total_meta) {
++		meta_size += meta_header->blk_size;
++		if (meta_header->type == meta_type)
++			return meta_header;
++
++		meta_header = (void *)meta_header + meta_header->blk_size;
 +	}
-+
-+	if (mc_header->ldrver != 1 || mc_header->hdrver != 1) {
-+		if (print_err)
-+			pr_err("Error: invalid/unknown microcode update format.\n");
-+		return -EINVAL;
-+	}
-+
-+	ext_table_size = total_size - (MC_HEADER_SIZE + data_size);
-+	if (ext_table_size) {
-+		u32 ext_table_sum = 0;
-+		u32 *ext_tablep;
-+
-+		if (ext_table_size < EXT_HEADER_SIZE ||
-+		    ((ext_table_size - EXT_HEADER_SIZE) % EXT_SIGNATURE_SIZE)) {
-+			if (print_err)
-+				pr_err("Error: truncated extended signature table.\n");
-+			return -EINVAL;
-+		}
-+
-+		ext_header = mc + MC_HEADER_SIZE + data_size;
-+		if (ext_table_size != exttable_size(ext_header)) {
-+			if (print_err)
-+				pr_err("Error: extended signature table size mismatch.\n");
-+			return -EFAULT;
-+		}
-+
-+		ext_sigcount = ext_header->count;
-+
-+		/*
-+		 * Check extended table checksum: the sum of all dwords that
-+		 * comprise a valid table must be 0.
-+		 */
-+		ext_tablep = (u32 *)ext_header;
-+
-+		i = ext_table_size / sizeof(u32);
-+		while (i--)
-+			ext_table_sum += ext_tablep[i];
-+
-+		if (ext_table_sum) {
-+			if (print_err)
-+				pr_warn("Bad extended signature table checksum, aborting.\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	/*
-+	 * Calculate the checksum of update data and header. The checksum of
-+	 * valid update data and header including the extended signature table
-+	 * must be 0.
-+	 */
-+	orig_sum = 0;
-+	i = (MC_HEADER_SIZE + data_size) / sizeof(u32);
-+	while (i--)
-+		orig_sum += ((u32 *)mc)[i];
-+
-+	if (orig_sum) {
-+		if (print_err)
-+			pr_err("Bad microcode data checksum, aborting.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!ext_table_size)
-+		return 0;
-+
-+	/*
-+	 * Check extended signature checksum: 0 => valid.
-+	 */
-+	for (i = 0; i < ext_sigcount; i++) {
-+		ext_sig = (void *)ext_header + EXT_HEADER_SIZE +
-+			  EXT_SIGNATURE_SIZE * i;
-+
-+		sum = (mc_header->sig + mc_header->pf + mc_header->cksum) -
-+		      (ext_sig->sig + ext_sig->pf + ext_sig->cksum);
-+		if (sum) {
-+			if (print_err)
-+				pr_err("Bad extended signature checksum, aborting.\n");
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
++	return NULL;
 +}
-+EXPORT_SYMBOL_GPL(intel_microcode_sanity_check);
 +
- static void early_init_intel(struct cpuinfo_x86 *c)
- {
- 	u64 misc_enable;
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-index 234b163806ea..af7134073e65 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -135,104 +135,6 @@ static void save_microcode_patch(struct ucode_cpu_info *uci, void *data, unsigne
- 		intel_ucode_patch = p->data;
- }
- 
--static int microcode_sanity_check(void *mc, bool print_err)
--{
--	unsigned long total_size, data_size, ext_table_size;
--	struct microcode_header_intel *mc_header = mc;
--	struct extended_sigtable *ext_header = NULL;
--	u32 sum, orig_sum, ext_sigcount = 0, i;
--	struct extended_signature *ext_sig;
--
--	total_size = get_totalsize(mc_header);
--	data_size = get_datasize(mc_header);
--
--	if (data_size + MC_HEADER_SIZE > total_size) {
--		if (print_err)
--			pr_err("Error: bad microcode data file size.\n");
--		return -EINVAL;
--	}
--
--	if (mc_header->ldrver != 1 || mc_header->hdrver != 1) {
--		if (print_err)
--			pr_err("Error: invalid/unknown microcode update format.\n");
--		return -EINVAL;
--	}
--
--	ext_table_size = total_size - (MC_HEADER_SIZE + data_size);
--	if (ext_table_size) {
--		u32 ext_table_sum = 0;
--		u32 *ext_tablep;
--
--		if ((ext_table_size < EXT_HEADER_SIZE)
--		 || ((ext_table_size - EXT_HEADER_SIZE) % EXT_SIGNATURE_SIZE)) {
--			if (print_err)
--				pr_err("Error: truncated extended signature table.\n");
--			return -EINVAL;
--		}
--
--		ext_header = mc + MC_HEADER_SIZE + data_size;
--		if (ext_table_size != exttable_size(ext_header)) {
--			if (print_err)
--				pr_err("Error: extended signature table size mismatch.\n");
--			return -EFAULT;
--		}
--
--		ext_sigcount = ext_header->count;
--
--		/*
--		 * Check extended table checksum: the sum of all dwords that
--		 * comprise a valid table must be 0.
--		 */
--		ext_tablep = (u32 *)ext_header;
--
--		i = ext_table_size / sizeof(u32);
--		while (i--)
--			ext_table_sum += ext_tablep[i];
--
--		if (ext_table_sum) {
--			if (print_err)
--				pr_warn("Bad extended signature table checksum, aborting.\n");
--			return -EINVAL;
--		}
--	}
--
--	/*
--	 * Calculate the checksum of update data and header. The checksum of
--	 * valid update data and header including the extended signature table
--	 * must be 0.
--	 */
--	orig_sum = 0;
--	i = (MC_HEADER_SIZE + data_size) / sizeof(u32);
--	while (i--)
--		orig_sum += ((u32 *)mc)[i];
--
--	if (orig_sum) {
--		if (print_err)
--			pr_err("Bad microcode data checksum, aborting.\n");
--		return -EINVAL;
--	}
--
--	if (!ext_table_size)
--		return 0;
--
--	/*
--	 * Check extended signature checksum: 0 => valid.
--	 */
--	for (i = 0; i < ext_sigcount; i++) {
--		ext_sig = (void *)ext_header + EXT_HEADER_SIZE +
--			  EXT_SIGNATURE_SIZE * i;
--
--		sum = (mc_header->sig + mc_header->pf + mc_header->cksum) -
--		      (ext_sig->sig + ext_sig->pf + ext_sig->cksum);
--		if (sum) {
--			if (print_err)
--				pr_err("Bad extended signature checksum, aborting.\n");
--			return -EINVAL;
--		}
--	}
--	return 0;
--}
--
  /*
-  * Get microcode matching with BSP's model. Only CPUs with the same model as
-  * BSP can stay in the platform.
-@@ -253,7 +155,7 @@ scan_microcode(void *data, size_t size, struct ucode_cpu_info *uci, bool save)
- 		mc_size = get_totalsize(mc_header);
- 		if (!mc_size ||
- 		    mc_size > size ||
--		    microcode_sanity_check(data, false) < 0)
-+		    intel_microcode_sanity_check(data, false) < 0)
- 			break;
- 
- 		size -= mc_size;
-@@ -792,7 +694,7 @@ static enum ucode_state generic_load_microcode(int cpu, struct iov_iter *iter)
- 		memcpy(mc, &mc_header, sizeof(mc_header));
- 		data = mc + sizeof(mc_header);
- 		if (!copy_from_iter_full(data, data_size, iter) ||
--		    microcode_sanity_check(mc, true) < 0) {
-+		    intel_microcode_sanity_check(mc, true) < 0) {
- 			break;
- 		}
- 
+  * To copy scan hashes and authenticate test chunks, the initiating cpu must point
+  * to the EDX:EAX to the test image in linear address.
 -- 
 2.25.1
 
