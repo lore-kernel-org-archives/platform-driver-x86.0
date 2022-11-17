@@ -2,264 +2,144 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC2AC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 22:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8480CC43217
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Nov 2022 22:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbiKQWwU (ORCPT
+        id S239778AbiKQW6d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:52:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
+        Thu, 17 Nov 2022 17:58:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240766AbiKQWwA (ORCPT
+        with ESMTP id S234959AbiKQW61 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:52:00 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673317209B;
-        Thu, 17 Nov 2022 14:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668725516; x=1700261516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2mVyduCExykA+2bwSdGSvpAIft8UkWR80/PgyQPChDY=;
-  b=mFGiq0Nrn57mtv/V3yaLiMMohtRdnoXepwU0JCLrNLBk+bjZdMIjThFk
-   as/ZTRtiYKsbaUVNpXoxNcqEQ5A25/qy9OlGxynjMLnfeNmVUVO+3yQRM
-   7wBBjVVDweRhm+MVZXXBdyMIOWatmUmc1YqxCPmx985Z2T8zwOZpXDCJX
-   N5k8Sj0s5uRd03loggE92TWSIoV2K9/NSwjbFnBljt9J7Pq3OBuCaRrpb
-   MikqXiQx72XFLmnqg9tzolMmNK9rqb5rUc5ywkzXIVKwK7DiOE+n0BnHQ
-   jA/14kOUrlPmLqhiBwN1efnRLrqc6FrOQ6SVjJTGPpwQfFXP29NzoTF51
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="313008549"
-X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="313008549"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 14:51:56 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="969056528"
-X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="969056528"
-Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 14:51:56 -0800
-From:   Jithu Joseph <jithu.joseph@intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, jithu.joseph@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-Subject: [PATCH v3 11/16] platform/x86/intel/ifs: Use generic microcode headers and functions
-Date:   Thu, 17 Nov 2022 14:50:39 -0800
-Message-Id: <20221117225039.30166-1-jithu.joseph@intel.com>
+        Thu, 17 Nov 2022 17:58:27 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2055.outbound.protection.outlook.com [40.107.95.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD538BE7;
+        Thu, 17 Nov 2022 14:58:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T/D5ibYfcstD7fYEsTLJkPgkewGSFG0i9zYgpOu9p2r/g5rl2xUZQYdWiUl//iUzHjvzMSs/OLjpDQgrp6Hgy8cis+AU6hUyKv5CWTTm1rtkeXFHHPdmFGMMwYB3iHyi5r4QvquEcS01Q6movkpBn9jOjDZ94LBSq94+znTel+ZfsdX/M9G7re2I2FEar+iyVcCfrra34CHLkgu/441TjWm4WQPWWwLjcO5LcPCUgL1xJ/sq7nhkPYroS55Wc2iJmdpq/BtRN7KuC+xoHn2xGPx3R/muK2N+8WmTt6dD8x48pCIDJ6CTtlLbmAPntHmu/+zPI5c/X2Bs8Eb46MNL+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ocLZXIJYcu3CkhHbhC7rN5Jyxs8/Fp6OzDs23ZD1sig=;
+ b=TXa9Ny1cEmpTjMwqEYSztGHGJYjd4yGOBWSZ5MqUdM4BtuelvpF9/tPvBu+BvbMvj23hxBkemJvXL7pPKmqjiEeQ9iiR7bgI02Ilt0BGrcSdNjLIigWLVz1wNcb3PSYkQ6fBA9+5Glz9WOo0hPCqo6i2XlPHeuPQg0OP/3cEoJty58FhmWzqlzS1Cg8IBKs8DS9FbGDJtWIkiUBa9gWPse7ZWad6XhEk8uc3oR5Bsn8+1Hj0sEyJEk2dhGe1VQIJrBMVAcOp8TAnAd0yL+hXJZsl+6jhdqaV5UI0kpqhYMz97/XCeBx5CHKc04uqELfArAoop7Xjs9SsEsCvIy9HRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ocLZXIJYcu3CkhHbhC7rN5Jyxs8/Fp6OzDs23ZD1sig=;
+ b=rNnswfGds9k4YraoEa4gZh9kJ2sGQ/dRucYOsC+oew2Y9x6eOfv30rsT/6ve7gY2INlsW3zKk0E92l0JwXUqtromZEcadg/9GtJFLvkqxSLLJ4qgC9r/Vl7neFjbjtW47rVKk8OdQyHtI9LT23lBLoiKhO2Mt36q5K19vVlk1s0=
+Received: from MW4PR04CA0214.namprd04.prod.outlook.com (2603:10b6:303:87::9)
+ by BL0PR12MB4945.namprd12.prod.outlook.com (2603:10b6:208:1c4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Thu, 17 Nov
+ 2022 22:58:25 +0000
+Received: from CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:87:cafe::a5) by MW4PR04CA0214.outlook.office365.com
+ (2603:10b6:303:87::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
+ Transport; Thu, 17 Nov 2022 22:58:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT057.mail.protection.outlook.com (10.13.174.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5834.8 via Frontend Transport; Thu, 17 Nov 2022 22:58:24 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 17 Nov
+ 2022 16:58:22 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Sven van Ashbrook <svenva@chromium.org>,
+        Raul Rangel <rrangel@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        "S-k Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Rajat Jain <rajatja@google.com>,
+        David E Box <david.e.box@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [RFC v4 0/5] Report percentage of time in hardware sleep state
+Date:   Thu, 17 Nov 2022 16:58:16 -0600
+Message-ID: <20221117225822.16154-1-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221117035935.4136738-12-jithu.joseph@intel.com>
-References: <20221117035935.4136738-12-jithu.joseph@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT057:EE_|BL0PR12MB4945:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e64e8c0-7b95-4086-0e1c-08dac8ef3b4b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Eqx6LvRN66ZDWOojZiH4kAVJEk2/pm3wiuMz3VjUz2CJ4aQEl4galIPOOPwPVr7Zb3THU1qAUCtxKIuhS+gR9ierY3rkWsKH0jRGx/OItpTf81g88243x7WiPmlku3MS/oF7xWI7+E5K1qfZjhd9xxPKxFHMLHk58DurXWm4v8V8tD+0ndxbHbI/MDaZhvuo8mwms2W8ztCDRng/uC3qJ3x4kfzNktH5EBfFUFXNJRZamzDBjvpNbGLvfpCnMQV2DhGjMYhd9L1ruxp+V/YblqQ+7SLmOwba1Y/wp6xbtfZ78jbxZ6yYY3tJZziVhrEkF5r6RbZ6pf13COXKDysbiBcRnRYqD8DZrKTr4GdxBGt5AjoWtIM4w9i37wKMKA4BfQTfJnsGiqcAy3cjOtKczxGxRNRoFm1GiSRXvolZbvAwJ+3My2JsudxIin2+DlH+alBUH3pIqyjn3f4KY5ecQpARrsZewLTL+hWAIN93ZQW7ole7uyWqKfOcuFJfRGZFiTN2of3I9ATxIzy22x+RYvDhbNqbohxg5pDWRFG4WSLZbT7By5p5l2RQOQsK+i0yi4t2jXbqZvR6WbRhx/uEW4L/e6t1G5sOc5oDVqCEUmO5QfL2oZ1FALx2tUJwpZeDMbTt1+wBi4k/gKxw3uqphg+gBD+5sXv+zWniA19yifA/0O0334KRR/D84/oWeJjdcHbD0sJiEhiiwhjYvt5UQ1OxARXKb7mtHuNUdHrHlcw=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(396003)(376002)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(2906002)(4326008)(47076005)(7696005)(26005)(44832011)(8676002)(7416002)(1076003)(336012)(8936002)(426003)(5660300002)(316002)(70586007)(2616005)(70206006)(36756003)(41300700001)(356005)(86362001)(81166007)(82310400005)(83380400001)(186003)(82740400003)(40460700003)(478600001)(6666004)(16526019)(54906003)(36860700001)(40480700001)(110136005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 22:58:24.2453
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e64e8c0-7b95-4086-0e1c-08dac8ef3b4b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4945
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Existing implementation (broken) of IFS used a header format (for IFS
-test images) which was very similar to microcode format, but didn’t
-accommodate extended signatures. This meant same IFS test image had to
-be duplicated for different steppings and the validation code in the
-driver was only looking at the primary header parameters. Going forward
-IFS test image headers has been tweaked to become fully compatible with
-microcode format.
+Sven van Ashbrook brought a patch to the kernel mailing list that
+attempted to change the reporting level of a s0ix entry issue to a
+different debugging level so that infastructure used by Google could
+better scan logs to catch problems.
 
-Newer IFS test image headers will use  microcode_header_intel->hdrver = 2,
-so as to distinguish it from microcode images and older IFS test images.
+This approach was rejected, but during the conversation another
+suggestion was made by David E. Box to introduce some infrastructure
+into the kernel to report this information.
 
-In light of the above, reuse struct microcode_header_intel directly in
-IFS driver and reuse microcode functions for validation and sanity
-checking.
+One idea suggested in RFC v3 was to report the percentage of time instead
+of the raw numbers.  This allows the details to how much time to be reported
+to be abstracted by individual drivers instead.
 
-More IFS specific checks will be added subsequently.
+RFC v3->v4:
+ * Switch to percentage reporting
+ * More changes to Intel drivers to hopefully report this properly.
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
----
-  - Rebased to apply alongside the updated 4/16 patch
+Mario Limonciello (5):
+  PM: Add a sysfs file to represent the percentage of sleep in hardware
+    state
+  platform/x86/amd: pmc: Report duration of time in deepest hw state
+  platform/x86/intel/pmc: core: Drop check_counters
+  platform/x86/intel/pmc: core: Always capture counters on suspend
+  platform/x86/intel/pmc: core: Report duration of time in HW sleep
+    state
 
- arch/x86/include/asm/microcode_intel.h |   1 +
- drivers/platform/x86/intel/ifs/load.c  | 104 +++++--------------------
- 2 files changed, 21 insertions(+), 84 deletions(-)
+ Documentation/ABI/testing/sysfs-power |  9 +++++++
+ drivers/platform/x86/amd/pmc.c        |  5 ++--
+ drivers/platform/x86/intel/pmc/core.c | 13 +++-------
+ drivers/platform/x86/intel/pmc/core.h |  1 -
+ include/linux/suspend.h               |  2 ++
+ include/linux/timekeeping.h           |  1 +
+ kernel/power/main.c                   | 36 +++++++++++++++++++++++++++
+ kernel/time/timekeeping.c             | 20 ++++++++++++---
+ 8 files changed, 70 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
-index 6af1e703cb2e..f1fa979e05bf 100644
---- a/arch/x86/include/asm/microcode_intel.h
-+++ b/arch/x86/include/asm/microcode_intel.h
-@@ -43,6 +43,7 @@ struct extended_sigtable {
- #define EXT_HEADER_SIZE		(sizeof(struct extended_sigtable))
- #define EXT_SIGNATURE_SIZE	(sizeof(struct extended_signature))
- #define MC_HEADER_TYPE_MICROCODE	1
-+#define MC_HEADER_TYPE_IFS		2
- 
- #define get_totalsize(mc) \
- 	(((struct microcode_intel *)mc)->hdr.datasize ? \
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 9228da560736..83434160bc4c 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -7,22 +7,8 @@
- 
- #include "ifs.h"
- 
--struct ifs_header {
--	u32 header_ver;
--	u32 blob_revision;
--	u32 date;
--	u32 processor_sig;
--	u32 check_sum;
--	u32 loader_rev;
--	u32 processor_flags;
--	u32 metadata_size;
--	u32 total_size;
--	u32 fusa_info;
--	u64 reserved;
--};
--
--#define IFS_HEADER_SIZE	(sizeof(struct ifs_header))
--static struct ifs_header *ifs_header_ptr;	/* pointer to the ifs image header */
-+#define IFS_HEADER_SIZE	(sizeof(struct microcode_header_intel))
-+static  struct microcode_header_intel *ifs_header_ptr;	/* pointer to the ifs image header */
- static u64 ifs_hash_ptr;			/* Address of ifs metadata (hash) */
- static u64 ifs_test_image_ptr;			/* 256B aligned address of test pattern */
- static DECLARE_COMPLETION(ifs_done);
-@@ -149,29 +135,14 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
-  */
- static int scan_chunks_sanity_check(struct device *dev)
- {
--	int metadata_size, curr_pkg, cpu, ret;
- 	struct ifs_data *ifsd = ifs_get_data(dev);
- 	struct ifs_work local_work;
--	char *test_ptr;
--
--	memset(ifsd->pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
--	metadata_size = ifs_header_ptr->metadata_size;
-+	int curr_pkg, cpu, ret;
- 
--	/* Spec says that if the Meta Data Size = 0 then it should be treated as 2000 */
--	if (metadata_size == 0)
--		metadata_size = 2000;
- 
--	/* Scan chunk start must be 256 byte aligned */
--	if ((metadata_size + IFS_HEADER_SIZE) % 256) {
--		dev_err(dev, "Scan pattern offset within the binary is not 256 byte aligned\n");
--		return -EINVAL;
--	}
--
--	test_ptr = (char *)ifs_header_ptr + IFS_HEADER_SIZE + metadata_size;
-+	memset(ifsd->pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
- 	ifsd->loading_error = false;
--
--	ifs_test_image_ptr = (u64)test_ptr;
--	ifsd->loaded_version = ifs_header_ptr->blob_revision;
-+	ifsd->loaded_version = ifs_header_ptr->rev;
- 
- 	/* copy the scan hash and authenticate per package */
- 	cpus_read_lock();
-@@ -197,67 +168,33 @@ static int scan_chunks_sanity_check(struct device *dev)
- 	return ret;
- }
- 
--static int ifs_sanity_check(struct device *dev,
--			    const struct microcode_header_intel *mc_header)
-+static int image_sanity_check(struct device *dev, const struct microcode_header_intel *data)
- {
--	unsigned long total_size, data_size;
--	u32 sum, *mc;
--
--	total_size = get_totalsize(mc_header);
--	data_size = get_datasize(mc_header);
-+	struct ucode_cpu_info uci;
- 
--	if ((data_size + MC_HEADER_SIZE > total_size) || (total_size % sizeof(u32))) {
--		dev_err(dev, "bad ifs data file size.\n");
-+	/* Provide a specific error message when loading an older/unsupported image */
-+	if (data->hdrver != MC_HEADER_TYPE_IFS) {
-+		dev_err(dev, "Header version %d not supported\n", data->hdrver);
- 		return -EINVAL;
- 	}
- 
--	if (mc_header->ldrver != 1 || mc_header->hdrver != 1) {
--		dev_err(dev, "invalid/unknown ifs update format.\n");
-+	if (intel_microcode_sanity_check((void *)data, true, MC_HEADER_TYPE_IFS)) {
-+		dev_err(dev, "sanity check failed\n");
- 		return -EINVAL;
- 	}
- 
--	mc = (u32 *)mc_header;
--	sum = 0;
--	for (int i = 0; i < total_size / sizeof(u32); i++)
--		sum += mc[i];
-+	intel_cpu_collect_info(&uci);
- 
--	if (sum) {
--		dev_err(dev, "bad ifs data checksum, aborting.\n");
-+	if (!intel_find_matching_signature((void *)data,
-+					   uci.cpu_sig.sig,
-+					   uci.cpu_sig.pf)) {
-+		dev_err(dev, "cpu signature, processor flags not matching\n");
- 		return -EINVAL;
- 	}
- 
- 	return 0;
- }
- 
--static bool find_ifs_matching_signature(struct device *dev, struct ucode_cpu_info *uci,
--					const struct microcode_header_intel *shdr)
--{
--	unsigned int mc_size;
--
--	mc_size = get_totalsize(shdr);
--
--	if (!mc_size || ifs_sanity_check(dev, shdr) < 0) {
--		dev_err(dev, "ifs sanity check failure\n");
--		return false;
--	}
--
--	if (!intel_cpu_signatures_match(uci->cpu_sig.sig, uci->cpu_sig.pf, shdr->sig, shdr->pf)) {
--		dev_err(dev, "ifs signature, pf not matching\n");
--		return false;
--	}
--
--	return true;
--}
--
--static bool ifs_image_sanity_check(struct device *dev, const struct microcode_header_intel *data)
--{
--	struct ucode_cpu_info uci;
--
--	intel_cpu_collect_info(&uci);
--
--	return find_ifs_matching_signature(dev, &uci, data);
--}
--
- /*
-  * Load ifs image. Before loading ifs module, the ifs image must be located
-  * in /lib/firmware/intel/ifs and named as {family/model/stepping}.{testname}.
-@@ -278,12 +215,11 @@ void ifs_load_firmware(struct device *dev)
- 		goto done;
- 	}
- 
--	if (!ifs_image_sanity_check(dev, (struct microcode_header_intel *)fw->data)) {
--		dev_err(dev, "ifs header sanity check failed\n");
-+	ret = image_sanity_check(dev, (struct microcode_header_intel *)fw->data);
-+	if (ret)
- 		goto release;
--	}
- 
--	ifs_header_ptr = (struct ifs_header *)fw->data;
-+	ifs_header_ptr = (struct microcode_header_intel *)fw->data;
- 	ifs_hash_ptr = (u64)(ifs_header_ptr + 1);
- 
- 	ret = scan_chunks_sanity_check(dev);
 -- 
-2.25.1
+2.34.1
 
