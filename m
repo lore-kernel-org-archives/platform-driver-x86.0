@@ -2,140 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E0C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Nov 2022 00:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED3EC43219
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Nov 2022 17:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239518AbiKRAll (ORCPT
+        id S235329AbiKRRcM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Nov 2022 19:41:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46276 "EHLO
+        Fri, 18 Nov 2022 12:32:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233266AbiKRAlk (ORCPT
+        with ESMTP id S241877AbiKRRbr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Nov 2022 19:41:40 -0500
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F79C74AAD
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 16:41:39 -0800 (PST)
-Received: by mail-vs1-xe34.google.com with SMTP id t14so3286073vsr.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Nov 2022 16:41:39 -0800 (PST)
+        Fri, 18 Nov 2022 12:31:47 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A4C920BA
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Nov 2022 09:31:45 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id n21so14676607ejb.9
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Nov 2022 09:31:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BFnNrvB7M9HLtSs2vrwNNPnwibdPIPOAQwcqKMr9VQ0=;
-        b=mFWHTnQ5IkJPKUG3miicfUcXpN+wUXiKowOjse0QQU2UFPzn2p9T/zvlSzj8K+SyQY
-         fFBw4WzvCxnJwv4N2rP1gyPcD4wBSvo7hbwEXgocm/i7436cfu0p1EyNDlYuLuUe5i1B
-         08lOKJwMiT/DxC0GTaI1ZJCzxyN1lcvV077KKJqJ2uoBV7d0LxEZBgSvNyVmaj+bNYaQ
-         N/orf+RNkz4lI0ZQ55jBwaoI154MT+GkeN4E4kDpbpVqv/6piWZr6kqC0VC7fOFnPu7p
-         GmD5DZya50+3VMgBS1JG4OGvywzVaCO9T1OzQauYXOWyT60owITtFs1E5wo7fnyyKiND
-         Sy8Q==
+        bh=bus9+8uJnT/HLJE3AXsoa8LpTS0X5s602gJKkls9pCA=;
+        b=PdK2vrzElmYj1Nm8K0jfUm9dxmNK/UUjnDR04M/ExvvxtAzCIT2XiJPJZsEo156kts
+         Jp/MWkYGMsLIX/Qtk4nDjq3FvG0rwpR4lRmxcZN69r7WABEbNJRptfAc6mw6XoJUuNKq
+         M/FO7NjCuGO009Spk4TNNJtBP/rBtKPqVs5ooEh+zFkCb2S0Ssi82ixj2/nJHxIh4CPn
+         ReQKcbZfaXBXBs66INtFcz/gFiWmbv8qcB++x54b79/L2VFQ2w77qkrRmmnS/VJw9suu
+         lnVD3jmghN/tVIMTPkeNcNU0YXOksG3U/io+kwU24GIE4sMCixkPcBKkkXm3sOY1fN7f
+         ND/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BFnNrvB7M9HLtSs2vrwNNPnwibdPIPOAQwcqKMr9VQ0=;
-        b=OPkpAKAye3fgBFcYTrxWz0xdy+iegMSN8QvxaTvDB26ocjcgrhAmMsiWI06h6qZOc4
-         wIp0oJjvwYpLYUHl7ve/APpMF0oVBW+cLe8NVHdbhQOk/ACUW0HCmcJOdvKo2MOAEBRH
-         /z+Gv/T+7SS17aNy2UBHp9gPXoENluG35CKgs/eL6UCXvIvBtDdXZapCAqOyBo8I9gvr
-         xZ5biqhj3rDNd9SQObeBHrXW6lORwpz9xiwrfmJH59yhtL0vKS80xBPXz7gRZLYqfk0Q
-         yEi0BFBAcJt29r/xass2cHI095fjmAARx+PZ5DF/l6ro1GwvYcoW3cBdXIPIbormTuV6
-         vJSw==
-X-Gm-Message-State: ANoB5plfdlYrmPLsM0AZu7FHZga3krDVoUmghlb3z5S3eK/zGdcqUMUs
-        8dfMb554Zgd3N17rlH63NwBy4yDmm1FqmX1f2xs8
-X-Google-Smtp-Source: AA0mqf72w7D3AH0S+YamAwp5brz3apOfoM2jqpP8aFAgZKzX4kAL7nDVBn6Bpc13g5m1VAseGmNh7x0BRi4wW/UBDPk=
-X-Received: by 2002:a05:6102:c0d:b0:3af:2b1c:9908 with SMTP id
- x13-20020a0561020c0d00b003af2b1c9908mr3460712vss.18.1668732098236; Thu, 17
- Nov 2022 16:41:38 -0800 (PST)
+        bh=bus9+8uJnT/HLJE3AXsoa8LpTS0X5s602gJKkls9pCA=;
+        b=kW2EOhhqe0X3e+Xiaf98uB0V2oZ4OA/yC0I6SQNd0AFUl6S8tt6l/ua6mZt1ayGXCp
+         L1RKsCsXAndkZC5R2Zevr0K7b7fPOLenObvq/fXvFkBrJiN1VVXe3TvEdHm0JxE7q5fh
+         BwGP95D9rrxL9kE0MZwLXNM+5PpuTfMotjz/3BGCkAr50eFEitqL9ZdlGTQlbf5Ka/4V
+         pCJZ0CEyMhy5p1SrQCT3iYDdzWveuvWXJOfhr5VbTV59fMckPJs/XdZbpqZeKmuxjSYl
+         Z8mjfL5Ib3iutZEego572zMSoR3HI1blM8wS5JSE8cPbQz/+wlZ0Uq0o1uYLJbEWChBV
+         Sl8g==
+X-Gm-Message-State: ANoB5pmtPatwazlCykhIYmZ9/bdjDLIuOOQoCK4Xll/a+PKx9j7kNHfX
+        2mDTq7tM/93lW2XtebI+szPQ23s7+FLxiiVCkTM=
+X-Google-Smtp-Source: AA0mqf743tvqRCRTgss4532LsIMrFdVS3RKFPJG3ZePXl8g4hEqpPpTUAxbfJIJizF2c3g83UbnQcuT1F9+UJr4bwOo=
+X-Received: by 2002:a17:906:80da:b0:7ae:5473:3c76 with SMTP id
+ a26-20020a17090680da00b007ae54733c76mr6866247ejx.752.1668792704288; Fri, 18
+ Nov 2022 09:31:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20221117225822.16154-1-mario.limonciello@amd.com> <20221117225822.16154-2-mario.limonciello@amd.com>
-In-Reply-To: <20221117225822.16154-2-mario.limonciello@amd.com>
-From:   John Stultz <jstultz@google.com>
-Date:   Thu, 17 Nov 2022 16:41:27 -0800
-Message-ID: <CANDhNCpvcZj2OL542+NvAC1z-_FAPY5V+Rm-Su5LjxqbEADnDA@mail.gmail.com>
-Subject: Re: [RFC v4 1/5] PM: Add a sysfs file to represent the percentage of
- sleep in hardware state
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sven van Ashbrook <svenva@chromium.org>,
-        Raul Rangel <rrangel@chromium.org>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Rajat Jain <rajatja@google.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
+References: <20221117110244.67811-1-hdegoede@redhat.com>
+In-Reply-To: <20221117110244.67811-1-hdegoede@redhat.com>
+From:   =?UTF-8?B?0JzQsNC60YHQuNC8?= <maxtram95@gmail.com>
+Date:   Fri, 18 Nov 2022 19:31:17 +0200
+Message-ID: <CAKErNvrfbkgmwe_S96rinLRyLY+Kq5y+P0Bz-2TWJicAA3+pgg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] platform/x86: ideapad-laptop: Rework touchpad
+ control code
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        GOESSEL Guillaume <g_goessel@outlook.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Manyi Li <limanyi@uniontech.com>,
+        =?UTF-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>,
+        Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Arnav Rawat <arnavr3@illinois.edu>,
+        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
+        Felix Eckhofer <felix@eckhofer.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 2:58 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index f72b9f1de178..49119a942cb2 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1806,16 +1806,16 @@ void timekeeping_resume(void)
->         cycle_now = tk_clock_read(&tk->tkr_mono);
->         nsec = clocksource_stop_suspend_timing(clock, cycle_now);
->         if (nsec > 0) {
-> -               ts_delta = ns_to_timespec64(nsec);
-> +               timekeeping_suspend_time = ns_to_timespec64(nsec);
->                 inject_sleeptime = true;
->         } else if (timespec64_compare(&ts_new, &timekeeping_suspend_time) > 0) {
-> -               ts_delta = timespec64_sub(ts_new, timekeeping_suspend_time);
-> +               timekeeping_suspend_time = timespec64_sub(ts_new, timekeeping_suspend_time);
->                 inject_sleeptime = true;
->         }
+On Thu, 17 Nov 2022 at 13:02, Hans de Goede <hdegoede@redhat.com> wrote:
 >
->         if (inject_sleeptime) {
->                 suspend_timing_needed = false;
-> -               __timekeeping_inject_sleeptime(tk, &ts_delta);
-> +               __timekeeping_inject_sleeptime(tk, &timekeeping_suspend_time);
->         }
+> Hi All,
 >
->         /* Re-base the last cycle value */
-> @@ -2232,6 +2232,18 @@ void update_wall_time(void)
->                 clock_was_set_delayed();
->  }
+> Here is v2 of my series to rework the ideapad-laptop touchpad control code.
 >
-> +/**
-> + * get_suspend_duration_ns - Return the duration of a system suspend.
-> + *
-> + * Returns the calculation of the duration of time that passed while a
-> + * system was suspended.
-> + *
-> + */
-> +u64 get_suspend_duration_ns(void)
-> +{
-> +       return timespec64_to_ns(&timekeeping_suspend_time);
-> +}
-> +
+> New in v2:
+> - Split patch 3/3 in to 3 patches (3-5/6) since it was doing to much at once
+>   - Update r_touchpad_val on sysfs read/writes
+>   - Drop the write(VPCCMD_W_TOUCHPAD, 1) call at probe in a separate patch
+>     and document why this is done in the commit msg
+> - Add a new patch (6/6) to hide the touchpad sysfs attribute behind a
+>   module-parameter which is disabled by default, see the commit message
+>   for why this is done.
 
-Hey Mario, thanks for sending out this patch!
+I'll try to take a look at this series and test it on Z570 over the
+weekend (I've had major issues with electricity supply for the last
+few days...)
 
-Though, I feel like this overloads the meaning of
-timekeeping_suspend_time in a confusing way.  It's supposed to be the
-time from the persistent clock that we started suspend.
-But this patch overloads it to also keep track of the time in suspend,
-but only for the last suspend event. I'd avoid overloading variables
-in this way.
+>
+> Note this applies on top of my review-hans branch which has seen a bunch
+> of other ideapad-laptop changes land recently:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>
+> Regards,
+>
+> Hans
+>
+>
+> Hans de Goede (6):
+>   platform/x86: ideapad-laptop: Refactor ideapad_sync_touchpad_state()
+>   platform/x86: ideapad-laptop: Do not send KEY_TOUCHPAD* events on
+>     probe / resume
+>   platform/x86: ideapad-laptop: Only toggle ps2 aux port on/off on
+>     select models
+>   platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models
+>   platform/x86: ideapad-laptop: Stop writing VPCCMD_W_TOUCHPAD at probe
+>     time
 
-Further, I think this will miss suspend time accounting on systems
-that do not have a persistent clock (see drivers/rtc/class.c's use of
-timekeeping_inject_sleeptime64).
+IIRC, the touchpad gets enabled on boot on Z570 if it was disabled
+before rebooting. I'll test if it's still the case after this patch
+(given that VPCCMD_W_TOUCHPAD seems to be a no-op).
 
-get_suspend_duration_ns() also is confusing as it doesn't clearly
-indicate if it should return cumulative time-in-suspend or the last
-time-in-suspend.
-
-I think the earlier version of this patch that hooked into
-__timekeeping_inject_sleeptime was a better general approach.
-
-thanks
--john
+>   platform/x86: ideapad-laptop: Make touchpad_ctrl_via_ec a module
+>     option
+>
+>  drivers/platform/x86/ideapad-laptop.c | 98 +++++++++++++++++----------
+>  1 file changed, 61 insertions(+), 37 deletions(-)
+>
+> --
+> 2.38.1
+>
