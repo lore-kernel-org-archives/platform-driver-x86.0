@@ -2,134 +2,210 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E46C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Nov 2022 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73807C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Nov 2022 16:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233556AbiKSNAn (ORCPT
+        id S234810AbiKSQ0G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 19 Nov 2022 08:00:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
+        Sat, 19 Nov 2022 11:26:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231843AbiKSNAm (ORCPT
+        with ESMTP id S234725AbiKSQZr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 19 Nov 2022 08:00:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A871775DA7
-        for <platform-driver-x86@vger.kernel.org>; Sat, 19 Nov 2022 04:59:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668862780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UM5/eK0x4588vJ74t5BQpzCz6Kkx7HScHipjUXodFbQ=;
-        b=Kaw/dvP+dwlxGhOQRVHTf3IqgKDAj6gDAqCDtTEF590ug/M7be5CY+MJ9q4F6lTPEwYG/W
-        3569GSpNvSgoVdbBKzZN6uBX9rkYpB+8HcR7uN5wsFbFnNxh4APaIaDafYZVqHGwcmb75N
-        ZLYGjdEqFql1HIBwauNdMBCjufvxFnU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-145-2jS5yLHSND-5fhwWzXHjIQ-1; Sat, 19 Nov 2022 07:59:38 -0500
-X-MC-Unique: 2jS5yLHSND-5fhwWzXHjIQ-1
-Received: by mail-ed1-f70.google.com with SMTP id h9-20020a05640250c900b00461d8ee12e2so4158758edb.23
-        for <platform-driver-x86@vger.kernel.org>; Sat, 19 Nov 2022 04:59:38 -0800 (PST)
+        Sat, 19 Nov 2022 11:25:47 -0500
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E44898EE;
+        Sat, 19 Nov 2022 08:24:41 -0800 (PST)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-13c2cfd1126so9335544fac.10;
+        Sat, 19 Nov 2022 08:24:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d5hTeburqR8Hae/XZ97a/QxzyOgDZB34hQSyr/XEb3c=;
+        b=SFVLbX+Iwz4D7pir+petUJoaeC8WYjW04P+tB87Ef8KaVtEGKVubh8VudCndZ5StJ5
+         DhYfaCmL6RrqR32W1EWZyT7z9laCSoD9LhX62ktvSyMyjoevsXbQfdUJdImfFunpWxOA
+         XXcAHKXYDX5o7zS+vY7A6SNj80DTeDL5UCAfPJYxAVXHujE3BiSynkgE8PiUFcxf5l4e
+         94NL+M3O1ccQ1YtWZN+IW/iNfU22SJBntyYmXoGdNraJ6nIht5Ol4Edq4MhR9nj2baJo
+         mh1bCpDvEL1u+n1266Koo9qXqXyuN8liAPdZZmmkkPmbu4wkuIuuhOcATfIppZ6514c2
+         5dXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UM5/eK0x4588vJ74t5BQpzCz6Kkx7HScHipjUXodFbQ=;
-        b=tNzmIKYncLU7blLl5+JwlClYkn5xLkI4xoFjid3VSPZIdX5e1qgJz8mFF+SD6gzY+X
-         lIXSLqSgGwGizr6ky98i7uM9AOEO6v2Qn/cNCadBUMe3kUra1sNZ6uhcuFRBrOdcK+5Y
-         Zy371ibJXKhcc6PmYn0M46giQiYF420KomTA+Jv1dvaoo3JKLYj8JfIPVHH/SpwlFVeZ
-         8LXu0QpAQrTtvDBAumY2TBN1diDMCQw/xfrUZ1d9oqZp5Wk4ehectjpt0oS/vAU2DFDx
-         iXAPW8ls+grvBCaDoofJsHAYoRCf3PlOQ2ohW0t9+JWVp/+cxRhnxf+55uks71nuKgzB
-         XScg==
-X-Gm-Message-State: ANoB5plClT/+tWdf7XvCxDuzkmcfUEzqriLREBoA2khHekOXtm7FsAeE
-        jCMwTETRkOtWIxHnUBxR8YNC6P0kmkjdHMkv6OSlHjl+wUcemSWdgR5TvexxkzQN22AZZLPyW5P
-        ASdADf7MlQYs3IiIL6eeB7qNTgJmA20eZTA==
-X-Received: by 2002:aa7:d5c9:0:b0:463:c64e:bc75 with SMTP id d9-20020aa7d5c9000000b00463c64ebc75mr9669436eds.205.1668862777663;
-        Sat, 19 Nov 2022 04:59:37 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4006RzPisPmLsYq2FV4QIzE0awfpDSgLwy2GRRpncZj22swQXn47+gtoldOQ8YsQPVXmBsAg==
-X-Received: by 2002:aa7:d5c9:0:b0:463:c64e:bc75 with SMTP id d9-20020aa7d5c9000000b00463c64ebc75mr9669421eds.205.1668862777490;
-        Sat, 19 Nov 2022 04:59:37 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id d12-20020a056402078c00b0045b3853c4b7sm2950296edy.51.2022.11.19.04.59.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Nov 2022 04:59:36 -0800 (PST)
-Message-ID: <4e3deedc-40f1-0bf9-798b-88185bd89be8@redhat.com>
-Date:   Sat, 19 Nov 2022 13:59:36 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d5hTeburqR8Hae/XZ97a/QxzyOgDZB34hQSyr/XEb3c=;
+        b=KpEKkufBzoR39RXaXs6yGsCVqtqWMJgLIJRisCVCbU82609HneiaBu1VokgyjAnUZ4
+         Owpr2U8YhTPQubDA/fzlmnActZmA1e+LCIJKGOadva5lPI8pNGB3fSH9Vmwl4nh9/Ru/
+         ZMK8/rYV/mMjg2HQZmBkHlOZsaQfTfehPuV1bvYk6oI7patG6RnCrLW8+IS8Mdbdwyot
+         1/nSJGuksYTg0b6JbfwvJ0d+rsPf9xEJZUdR4di8ZL9S1XlYdkwcD/km01LYDh6P4kQr
+         zhDHTnESdlUKKfdPtUI/2Qy7dOZmCkwNaDD97C4PuH0pSwuOY+lzNlPbU+Q2FGNwn4ws
+         mVxQ==
+X-Gm-Message-State: ANoB5pmp+vKKZV/zJe7cVimwB+pZkwM86Y5nnyOQZwLmArXmqd/VsgPJ
+        Cfb7ZgP/7hYS6N7AextQBb57/15Cdag=
+X-Google-Smtp-Source: AA0mqf46lY7T+fjR7rRB3B5nMHw+UOq8AxVxyGYkUkObUHag1TkAgUyKaboU/2/Ui38oU54Hi3SU4A==
+X-Received: by 2002:a05:6870:970d:b0:13c:19bc:1350 with SMTP id n13-20020a056870970d00b0013c19bc1350mr6765530oaq.226.1668875080473;
+        Sat, 19 Nov 2022 08:24:40 -0800 (PST)
+Received: from smeagol.fibertel.com.ar ([201.235.4.68])
+        by smtp.gmail.com with ESMTPSA id h5-20020a9d5545000000b0066cb9069e0bsm2899626oti.42.2022.11.19.08.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Nov 2022 08:24:39 -0800 (PST)
+From:   =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
+        <samsagax@gmail.com>
+To:     w_armin@gmx.de
+Cc:     hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, linux@roeck-us.net,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        pobrn@protonmail.com,
+        =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
+        <samsagax@gmail.com>
+Subject: [PATCH] hwmon: (oxp-sensors) Add AOK ZOE and Mini PRO
+Date:   Sat, 19 Nov 2022 13:23:48 -0300
+Message-Id: <20221119162347.36698-1-samsagax@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 257/606] Input: silead - Convert to i2c's .probe_new()
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221118224540.619276-258-uwe@kleine-koenig.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221118224540.619276-258-uwe@kleine-koenig.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Add support for the AOK ZOE A1 and OXP Mini PRO handheld devices.
+DMI strings are added to this driver since the same EC layout is used and
+has similar specs as the OXP mini AMD.
 
-On 11/18/22 23:39, Uwe Kleine-König wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> .probe_new() doesn't get the i2c_device_id * parameter, so determine
-> that explicitly in the probe function.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+The added devices are:
+- OneXPlayer mini PRO (AMD 6800U)
+- AOK ZOE A1 (AMD 5800U)
 
-Thanks, patch looks good to me:
+Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
+---
+ Documentation/hwmon/oxp-sensors.rst | 16 ++++++++---
+ drivers/hwmon/oxp-sensors.c         | 41 ++++++++++++++++++++++++-----
+ 2 files changed, 48 insertions(+), 9 deletions(-)
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+diff --git a/Documentation/hwmon/oxp-sensors.rst b/Documentation/hwmon/oxp-sensors.rst
+index f612dddc964a..39c588ec5c50 100644
+--- a/Documentation/hwmon/oxp-sensors.rst
++++ b/Documentation/hwmon/oxp-sensors.rst
+@@ -12,9 +12,19 @@ Description:
+ One X Player devices from One Netbook provide fan readings and fan control
+ through its Embedded Controller.
 
-Regards,
+-Currently only supports AMD boards from the One X Player lineup. Intel boards
+-could be supported if we could figure out the EC registers and values to write
+-to since the EC layout and model is different.
++Currently only supports AMD boards from the One X Player and AOK ZOE lineup.
++Intel boards could be supported if we could figure out the EC registers and
++values to write to since the EC layout and model is different.
++
++Supported devices
++-----------------
++
++Currently the driver supports the following handhelds:
++
++ - AOK ZOE A1
++ - OneXPlayer AMD
++ - OneXPlayer mini AMD
++ - OneXPlayer mini AMD PRO
 
-Hans
+ Sysfs entries
+ -------------
+diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+index da54a38f4454..23e575479d1a 100644
+--- a/drivers/hwmon/oxp-sensors.c
++++ b/drivers/hwmon/oxp-sensors.c
+@@ -3,13 +3,14 @@
+  * Platform driver for OXP Handhelds that expose fan reading and control
+  * via hwmon sysfs.
+  *
+- * All boards have the same DMI strings and they are told appart by the
++ * Old boards have the same DMI strings and they are told appart by the
+  * boot cpu vendor (Intel/AMD). Currently only AMD boards are supported
+  * but the code is made to be simple to add other handheld boards in the
+  * future.
+- * Fan control is provided via pwm interface in the range [0-255]. AMD
+- * boards use [0-100] as range in the EC, the written value is scaled to
+- * accommodate for that.
++ * Fan control is provided via pwm interface in the range [0-255].
++ * Old AMD boards use [0-100] as range in the EC, the written value is
++ * scaled to accommodate for that. Newer boards like the mini PRO and
++ * AOK ZOE are not scaled but have the same EC layout.
+  *
+  * Copyright (C) 2022 Joaquín I. Aramendía <samsagax@gmail.com>
+  */
+@@ -39,16 +40,39 @@ static bool unlock_global_acpi_lock(void)
+ 	return ACPI_SUCCESS(acpi_release_global_lock(oxp_mutex));
+ }
+
++enum oxp_board {
++	aok_zoe_a1 = 1,
++	oxp_mini_amd,
++	oxp_mini_amd_pro,
++};
++
++static enum oxp_board board;
++
+ #define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
+ #define OXP_SENSOR_PWM_ENABLE_REG	0x4A /* PWM enable is 1 register long */
+ #define OXP_SENSOR_PWM_REG		0x4B /* PWM reading is 1 register long */
+
+ static const struct dmi_system_id dmi_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
++		},
++		.driver_data = (void *) &(enum oxp_board) {aok_zoe_a1},
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONE XPLAYER"),
+ 		},
++		.driver_data = (void *) &(enum oxp_board) {oxp_mini_amd},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER Mini Pro"),
++		},
++		.driver_data = (void *) &(enum oxp_board) {oxp_mini_amd_pro},
+ 	},
+ 	{},
+ };
+@@ -137,7 +161,8 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
+ 			ret = read_from_ec(OXP_SENSOR_PWM_REG, 2, val);
+ 			if (ret)
+ 				return ret;
+-			*val = (*val * 255) / 100;
++			if (board == oxp_mini_amd)
++				*val = (*val * 255) / 100;
+ 			return 0;
+ 		case hwmon_pwm_enable:
+ 			return read_from_ec(OXP_SENSOR_PWM_ENABLE_REG, 1, val);
+@@ -166,7 +191,8 @@ static int oxp_platform_write(struct device *dev, enum hwmon_sensor_types type,
+ 		case hwmon_pwm_input:
+ 			if (val < 0 || val > 255)
+ 				return -EINVAL;
+-			val = (val * 100) / 255;
++			if (board == oxp_mini_amd)
++				val = (val * 100) / 255;
+ 			return write_to_ec(dev, OXP_SENSOR_PWM_REG, val);
+ 		default:
+ 			break;
+@@ -216,6 +242,9 @@ static int oxp_platform_probe(struct platform_device *pdev)
+ 	if (!dmi_entry || boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+ 		return -ENODEV;
+
++	board = *((enum oxp_board *) dmi_entry->driver_data);
++	dev_info(dev, "Board: %i", board);
++
+ 	hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
+ 						     &oxp_ec_chip_info, NULL);
 
 
-> ---
->  drivers/input/touchscreen/silead.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-> index 3eef8c01090f..8a7351c4414c 100644
-> --- a/drivers/input/touchscreen/silead.c
-> +++ b/drivers/input/touchscreen/silead.c
-> @@ -652,9 +652,9 @@ static void silead_disable_regulator(void *arg)
->  	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
->  }
->  
-> -static int silead_ts_probe(struct i2c_client *client,
-> -			   const struct i2c_device_id *id)
-> +static int silead_ts_probe(struct i2c_client *client)
->  {
-> +	const struct i2c_device_id *id = i2c_client_get_device_id(client);
->  	struct silead_ts_data *data;
->  	struct device *dev = &client->dev;
->  	int error;
-> @@ -826,7 +826,7 @@ MODULE_DEVICE_TABLE(of, silead_ts_of_match);
->  #endif
->  
->  static struct i2c_driver silead_ts_driver = {
-> -	.probe = silead_ts_probe,
-> +	.probe_new = silead_ts_probe,
->  	.id_table = silead_ts_id,
->  	.driver = {
->  		.name = SILEAD_TS_NAME,
+base-commit: 27fea302952d8c90cafbdbee96bafeca03544401
+--
+2.38.1
 
