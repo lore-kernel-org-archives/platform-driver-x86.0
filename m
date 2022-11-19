@@ -2,96 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EF5C43217
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Nov 2022 01:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7D3C43217
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Nov 2022 02:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbiKSBXh (ORCPT
+        id S232851AbiKSCNb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Nov 2022 20:23:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        Fri, 18 Nov 2022 21:13:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232804AbiKSBWw (ORCPT
+        with ESMTP id S232869AbiKSCMg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Nov 2022 20:22:52 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8B427B0C;
-        Fri, 18 Nov 2022 16:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668817431; x=1700353431;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0bmYOnuCSTXVBe9yuKReGBo1+E+J2YeGU85B2raXA/E=;
-  b=YQkwviDPDZ5AI9eL2xn8VlmbZrk0/loeQSusosx04UJuyHVtVp0rc3if
-   5R6EhgVZKiaFrfo0BAL31coR/r81qfrBlnbcUtyu2Mot9DNLDyOtgZJDQ
-   0QhmtJyDATafsFnggLvbnmp+hyazOGfMCf4PPQUHJIX0rdqbPSbKN/gqO
-   llE71M8C8NY+dtuZm+vM6Hy0mD17UsneMNFV6hwSgegHUFxMUlLYnZyUZ
-   SmnSi3UKTngrHW1J0vv31eaOQth6Zn3TbK1JTRCwIZWhe/6faxh7jXG8u
-   jxF2GlHI8nDYHhGt8YWC1Zl6i2WAzAlniMn4DsRj79/d+nzXS9oJKwOgY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="292979931"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="292979931"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 16:23:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="885495010"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="885495010"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2022 16:23:45 -0800
-Received: from debox1-desk4.lan (unknown [10.252.138.169])
-        by linux.intel.com (Postfix) with ESMTP id 50549580DDF;
-        Fri, 18 Nov 2022 16:23:45 -0800 (PST)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
-        markgross@kernel.org, andriy.shevchenko@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 0/9] Extend Intel On Demand (SDSi) support
-Date:   Fri, 18 Nov 2022 16:23:34 -0800
-Message-Id: <20221119002343.1281885-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 18 Nov 2022 21:12:36 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0603232BB2;
+        Fri, 18 Nov 2022 18:12:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 93AF9B82670;
+        Sat, 19 Nov 2022 02:12:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64043C433C1;
+        Sat, 19 Nov 2022 02:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668823924;
+        bh=tRv5WwdaxG97eI2KuLkHEG9zd4M/A14LtI9mB7OzuRg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aActzYwjbUDUWiQixdjgZIChy/s6wBSRzOE61hY2hAOXYNSQgUI76vHw28ttwGdvx
+         X0kQ3k+Bavlf00fA2UgUfj8bIcQSWfOdtsfj1BjShxvZ5nh6ePb+EgcCfxAw3Z7jk6
+         JVsA7H+iAFjyAGs1aIqtQYNJohfX9uQ8TnYl7MAGJlYdNWFIJWZ9AfLQRKuY484kKh
+         aqmqG1tWtwMAvxTSJM11wGHPyxlYna4GkyDR1RoZc9fItiEeiJ5EtW5JEaW/9fp+fK
+         SOp85AXU/xNim3VBvIrQpvA2RE5N0B4eJMXo45Y2LvmpoHYzO04YF0ns9RmUzws4lM
+         Rjp1S2S3cjpow==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Manyi Li <limanyi@uniontech.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, ike.pan@canonical.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 19/44] platform/x86: ideapad-laptop: Disable touchpad_switch
+Date:   Fri, 18 Nov 2022 21:10:59 -0500
+Message-Id: <20221119021124.1773699-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221119021124.1773699-1-sashal@kernel.org>
+References: <20221119021124.1773699-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Intel Software Defined Silicon (SDSi) is now known as Intel On Demand. The
-following patches do the following:
+From: Manyi Li <limanyi@uniontech.com>
 
-1. Identify the driver/tools as Intel On Demand. Only text descriptions are
-changed. Kconfig and filenames remain the same.
-2. Perform some attribute cleanup by preventing the showing of files when
-features are not supported.
-3. Adds support for a new GUID. GUIDs are used to identify the layout of
-the On Demand registers in sysfs. Layouts are described in the
-documentation on github [1].
-4. Add support for reading On Demand meter certificates in sysfs.
-5. The rest of the patches modify the existing tool to support discovery
-and reading of On Demand registers and the meter certificate.
+[ Upstream commit a231224a601c1924b9df620281ad04472900d75f ]
 
-Link: https://github.com/intel/intel-sdsi/blob/master/os-interface.rst [1]
+Ideapads for "Lenovo Yoga 3 Pro 1370" and "ZhaoYang K4e-IML" do not
+use EC to switch touchpad.
 
-David E. Box (9):
-  platform/x86/intel/sdsi: Add Intel On Demand text
-  platform/x86/intel/sdsi: Hide attributes if hardware doesn't support
-  platform/x86/intel/sdsi: Support different GUIDs
-  platform/x86/intel/sdsi: Add meter certificate support
-  tools/arch/x86: intel_sdsi: Add support for reading state certificates
-  tools/arch/x86: intel_sdsi: Add Intel On Demand text
-  tools/arch/x86: intel_sdsi: Read more On Demand registers
-  tools/arch/x86: intel_sdsi: Add support for new GUID
-  tools/arch/x86: intel_sdsi: Add support for reading meter certificates
+Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
+unexpectedly.
 
- .../ABI/testing/sysfs-driver-intel_sdsi       |  47 +-
- drivers/platform/x86/intel/Kconfig            |   8 +-
- drivers/platform/x86/intel/sdsi.c             | 136 +++++-
- tools/arch/x86/intel_sdsi/intel_sdsi.c        | 462 ++++++++++++++----
- 4 files changed, 516 insertions(+), 137 deletions(-)
+Signed-off-by: Manyi Li <limanyi@uniontech.com>
+Link: https://lore.kernel.org/r/20221018095323.14591-1-limanyi@uniontech.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/ideapad-laptop.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-
-base-commit: 260ad3de718301ed8c22e28558e3a31c99f54cf6
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index abd0c81d62c4..33b3dfdd1b08 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1533,6 +1533,24 @@ static const struct dmi_system_id hw_rfkill_list[] = {
+ 	{}
+ };
+ 
++static const struct dmi_system_id no_touchpad_switch_list[] = {
++	{
++	.ident = "Lenovo Yoga 3 Pro 1370",
++	.matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
++		},
++	},
++	{
++	.ident = "ZhaoYang K4e-IML",
++	.matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "ZhaoYang K4e-IML"),
++		},
++	},
++	{}
++};
++
+ static void ideapad_check_features(struct ideapad_private *priv)
+ {
+ 	acpi_handle handle = priv->adev->handle;
+@@ -1541,7 +1559,12 @@ static void ideapad_check_features(struct ideapad_private *priv)
+ 	priv->features.hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+ 
+ 	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
+-	priv->features.touchpad_ctrl_via_ec = !acpi_dev_present("ELAN0634", NULL, -1);
++	if (acpi_dev_present("ELAN0634", NULL, -1))
++		priv->features.touchpad_ctrl_via_ec = 0;
++	else if (dmi_check_system(no_touchpad_switch_list))
++		priv->features.touchpad_ctrl_via_ec = 0;
++	else
++		priv->features.touchpad_ctrl_via_ec = 1;
+ 
+ 	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
+ 		priv->features.fan_mode = true;
 -- 
-2.34.1
+2.35.1
 
