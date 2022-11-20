@@ -2,198 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D105C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Nov 2022 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6864FC43217
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Nov 2022 19:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiKTP36 (ORCPT
+        id S229757AbiKTTn5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Nov 2022 10:29:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
+        Sun, 20 Nov 2022 14:43:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiKTP35 (ORCPT
+        with ESMTP id S229449AbiKTTns (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Nov 2022 10:29:57 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F125B2B610
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Nov 2022 07:29:55 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id g12so16434891wrs.10
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Nov 2022 07:29:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BThqvxdM/AQBjq/OXPxC1zRSvflY5nEQCNuC2HUcmek=;
-        b=bGNbMvITg5EixGpi4stJ0dNnSwGHWr3ATYSEKCiY2RC+rIKsV2LOLMXDXPR2GkB4su
-         UHXTXSfZoOvChtebXT+QzxkC7r5Bc1KlfDLngxlA8tckGN1ujWmBMz39osVyx+2TCMGS
-         JHou+FABmB/+/o74ltuCxeYm8CO0j/8da1Gdv//2pJ9vFYufghvqqwGZAQZPOJDPNZLz
-         rfm3CpgIsHBwWAfgZL1FR1Js7NQmjF4RUZ2DnHWQNw38mQIEKMxlPej4xLIvdIwfDbYF
-         qVhDEgh4iMNeRrxz6nUHHY5duQtBuqg9+OXP3Tb+SeSAVYNxyhSyGB3nP73qsIeZZn1n
-         Rd1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BThqvxdM/AQBjq/OXPxC1zRSvflY5nEQCNuC2HUcmek=;
-        b=2rwoTxNdr7+vLeWzBoAWg9dAVWE+HaJWpsLzIOLkUBl1mIDRcBPDfmIYzhRZFru9pN
-         rJ+ykj5r/+LwyKIAk0FCR0xcBxzW2LgmQDXNOa9N0XS/8B/8TvSUta0/CUso3mrxAxLX
-         CjRekNMybl/XUB3V+sTXGFqbayYYP0g6Imsrz8aSA5wHYaNQ/DFqYqQrW1MglMBEHuJw
-         JRa3hEm5ZQK3NBUYryk7GcjwNTCt7uycYhDREisqXvJ4W/kCZ9RceUfbOQ+Chsf4tyH9
-         wzOVpcYIqBRSD2QSIUOBdhUfqn3YGdHsxqSITZyYxlAgHg8OsQJepwxCau9XwVkQ4dkX
-         pq8A==
-X-Gm-Message-State: ANoB5pkMIp2rtD8wVFnWYxxpzo/+3Q2R7Xyx4+lQZojlXqh4MeAwa5Qo
-        UXSpG49bmGLg8w0aX2iz1vKZmM26DLVPISYnEqE=
-X-Google-Smtp-Source: AA0mqf4fmW0msQmKwaNCe2sy+HgpZ3N8sfykMbUC5ocDP1gtBWFpLVuavNHz8edpHeNt1tb8nEjGPjwBKFuWhYUrYLY=
-X-Received: by 2002:a5d:4a08:0:b0:236:6e2a:ac17 with SMTP id
- m8-20020a5d4a08000000b002366e2aac17mr8884147wrq.345.1668958194292; Sun, 20
- Nov 2022 07:29:54 -0800 (PST)
+        Sun, 20 Nov 2022 14:43:48 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703BD1EC46;
+        Sun, 20 Nov 2022 11:43:47 -0800 (PST)
+Received: from mercury (unknown [185.209.196.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 981D16602381;
+        Sun, 20 Nov 2022 19:43:45 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1668973425;
+        bh=T3nU7r4TDRBfUE21qBPtx6/vbbqNd5aTZrUhEKVEpe8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eTDOl2wCVRsu/tyZH+YPJZtqzX+lTk+zyDWIOt7B5OERtVQXV05JqgkECzvZaxhvq
+         GWHynwzbAdTGjQc4EiizPb4JzuNJErOOA6MGMcIE1OOBJsR2nJxdyKqik4rZXW8I8S
+         YL9hLYJH9B0qYNlv0ofE25pkedfO3Zr0ukRr6nTWoiYIF0ElBn0uG1ehB/KKpnJkB6
+         LmHZCe95IKsjPugXIHsbUyR3TPbe/Uz/FTgEe5YV5fHfIiRZ+dwYB8lU4/MgAmu4vM
+         BZjO4bgM9A0wAKu6Ub+wy7zE/lgrgtzyeA/1iFwakjmg/vd8UL0auYvToqpQCZqsxv
+         +Bmg67/Ow+Rwg==
+Received: by mercury (Postfix, from userid 1000)
+        id 1C1D2106F223; Sun, 20 Nov 2022 20:43:43 +0100 (CET)
+Date:   Sun, 20 Nov 2022 20:43:43 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grant Likely <grant.likely@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        kernel@pengutronix.de, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-actions@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
+        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net
+Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
+Message-ID: <20221120194343.nnpzhgjapep7iwqk@mercury.elektranox.org>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-References: <20221117110244.67811-1-hdegoede@redhat.com> <20221117110244.67811-4-hdegoede@redhat.com>
-In-Reply-To: <20221117110244.67811-4-hdegoede@redhat.com>
-From:   =?UTF-8?B?0JzQsNC60YHQuNC8?= <maxtram95@gmail.com>
-Date:   Sun, 20 Nov 2022 17:29:27 +0200
-Message-ID: <CAKErNvq42Cs8SK=3K0+X=aSJfx=njyLqW4cobjt0xaZZk1yeqg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] platform/x86: ideapad-laptop: Only toggle ps2 aux
- port on/off on select models
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        GOESSEL Guillaume <g_goessel@outlook.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Manyi Li <limanyi@uniontech.com>,
-        =?UTF-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>,
-        Philipp Jungkamp <p.jungkamp@gmx.net>,
-        Arnav Rawat <arnavr3@illinois.edu>,
-        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
-        Felix Eckhofer <felix@eckhofer.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wvm2z6appxwdd5fa"
+Content-Disposition: inline
+In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 17 Nov 2022 at 13:03, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Recently there have been multiple patches to disable the ideapad-laptop's
-> touchpad control code, because it is causing issues on various laptops:
->
-> Commit d69cd7eea93e ("platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634")
-> Commit a231224a601c ("platform/x86: ideapad-laptop: Disable touchpad_switch")
->
-> The turning on/off of the ps2 aux port was added specifically for
-> the IdeaPad Z570, where the EC does toggle the touchpad on/off LED and
-> toggles the value returned by reading VPCCMD_R_TOUCHPAD, but it does not
-> actually turn on/off the touchpad.
->
-> The ideapad-laptop code really should not be messing with the i8042
-> controller on all devices just for this special case.
->
-> Add a new ctrl_ps2_aux_port flag set based on a DMI based allow-list
-> for devices which need this workaround, populating it with just
-> the Ideapad Z570 for now.
->
-> This also adds a module parameter so that this behavior can easily
-> be enabled on other models which may need it.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-On Z570:
+--wvm2z6appxwdd5fa
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Hi,
 
-A few notes for Z570:
+On Fri, Nov 18, 2022 at 11:35:34PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
+> call-back type") from 2016 there is a "temporary" alternative probe
+> callback for i2c drivers.
+>=20
+> This series completes all drivers to this new callback (unless I missed
+> something). It's based on current next/master.
+> A part of the patches depend on commit 662233731d66 ("i2c: core:
+> Introduce i2c_client_get_device_id helper function"), there is a branch t=
+hat
+> you can pull into your tree to get it:
+>=20
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/client=
+_device_id_helper-immutable
+>=20
+> I don't think it's feasable to apply this series in one go, so I ask the
+> maintainers of the changed files to apply via their tree. I guess it
+> will take a few kernel release iterations until all patch are in, but I
+> think a single tree creates too much conflicts.
+>=20
+> The last patch changes i2c_driver::probe, all non-converted drivers will
+> fail to compile then. So I hope the build bots will tell me about any
+> driver I missed to convert. This patch is obviously not for application
+> now.
+>=20
+> I dropped most individuals from the recipents of this mail to not
+> challenge the mail servers and mailing list filters too much. Sorry if
+> you had extra efforts to find this mail.
+>=20
+> Best regards
+> Uwe
 
-1. Touchpad toggle still works properly after this series of patches.
+=2E..
 
-2. My laptop's EC reenables the touchpad on boot and on resume, and
-this behavior still works after this series.
+>   power: supply: adp5061: Convert to i2c's .probe_new()
+>   power: supply: bq2415x: Convert to i2c's .probe_new()
+>   power: supply: bq24190: Convert to i2c's .probe_new()
+>   power: supply: bq24257: Convert to i2c's .probe_new()
+>   power: supply: bq24735: Convert to i2c's .probe_new()
+>   power: supply: bq2515x: Convert to i2c's .probe_new()
+>   power: supply: bq256xx: Convert to i2c's .probe_new()
+>   power: supply: bq25890: Convert to i2c's .probe_new()
+>   power: supply: bq25980: Convert to i2c's .probe_new()
+>   power: supply: bq27xxx: Convert to i2c's .probe_new()
+>   power: supply: ds2782: Convert to i2c's .probe_new()
+>   power: supply: lp8727: Convert to i2c's .probe_new()
+>   power: supply: ltc2941: Convert to i2c's .probe_new()
+>   power: supply: ltc4162-l: Convert to i2c's .probe_new()
+>   power: supply: max14656: Convert to i2c's .probe_new()
+>   power: supply: max17040: Convert to i2c's .probe_new()
+>   power: supply: max17042_battery: Convert to i2c's .probe_new()
+>   power: supply: rt5033_battery: Convert to i2c's .probe_new()
+>   power: supply: rt9455: Convert to i2c's .probe_new()
+>   power: supply: sbs: Convert to i2c's .probe_new()
+>   power: supply: sbs-manager: Convert to i2c's .probe_new()
+>   power: supply: smb347: Convert to i2c's .probe_new()
+>   power: supply: ucs1002: Convert to i2c's .probe_new()
+>   power: supply: z2_battery: Convert to i2c's .probe_new()
+>   [...]
 
-3. Patch 2 stops sending "spurious" key press events on resume, which
-actually make sense on my laptop, when the touchpad is reenabled on
-resume. Maybe we should send a key press, but only if the state
-changed? (However, for some reason I don't see the OSD for this even
-before this series.)
+Thanks, I queued patches 513-536 to the power-supply subsystem.
 
-4. The sysfs attribute for touchpad doesn't exist on my laptop, but it
-would still make sense if we made it read only. Right now there is a
-module parameter to force enable this sysfs attribute, but it's
-created as read-write, and writes are no-op.
+-- Sebastian
 
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 29 ++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index eb0b1ec32c13..1d86fb988d56 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -143,6 +143,7 @@ struct ideapad_private {
->                 bool hw_rfkill_switch     : 1;
->                 bool kbd_bl               : 1;
->                 bool touchpad_ctrl_via_ec : 1;
-> +               bool ctrl_ps2_aux_port    : 1;
->                 bool usb_charging         : 1;
->         } features;
->         struct {
-> @@ -174,6 +175,12 @@ MODULE_PARM_DESC(set_fn_lock_led,
->         "Enable driver based updates of the fn-lock LED on fn-lock changes. "
->         "If you need this please report this to: platform-driver-x86@vger.kernel.org");
->
-> +static bool ctrl_ps2_aux_port;
-> +module_param(ctrl_ps2_aux_port, bool, 0444);
-> +MODULE_PARM_DESC(ctrl_ps2_aux_port,
-> +       "Enable driver based PS/2 aux port en-/dis-abling on touchpad on/off toggle. "
-> +       "If you need this please report this to: platform-driver-x86@vger.kernel.org");
-> +
->  /*
->   * shared data
->   */
-> @@ -1507,7 +1514,8 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
->          * touchpad off and on. We send KEY_TOUCHPAD_OFF and
->          * KEY_TOUCHPAD_ON to not to get out of sync with LED
->          */
-> -       i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
-> +       if (priv->features.ctrl_ps2_aux_port)
-> +               i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
->
->         if (send_events) {
->                 ideapad_input_report(priv, value ? 67 : 66);
-> @@ -1615,6 +1623,23 @@ static const struct dmi_system_id hw_rfkill_list[] = {
->         {}
->  };
->
-> +/*
-> + * On some models the EC toggles the touchpad muted LED on touchpad toggle
-> + * hotkey presses, but the EC does not actually disable the touchpad itself.
-> + * On these models the driver needs to explicitly enable/disable the i8042
-> + * (PS/2) aux port.
-> + */
-> +static const struct dmi_system_id ctrl_ps2_aux_port_list[] = {
-> +       {
-> +       /* Lenovo Ideapad Z570 */
-> +       .matches = {
-> +               DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +               DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad Z570"),
-> +               },
-> +       },
-> +       {}
-> +};
-> +
->  static const struct dmi_system_id no_touchpad_switch_list[] = {
->         {
->         .ident = "Lenovo Yoga 3 Pro 1370",
-> @@ -1642,6 +1667,8 @@ static void ideapad_check_features(struct ideapad_private *priv)
->                 set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
->         priv->features.hw_rfkill_switch =
->                 hw_rfkill_switch || dmi_check_system(hw_rfkill_list);
-> +       priv->features.ctrl_ps2_aux_port =
-> +               ctrl_ps2_aux_port || dmi_check_system(ctrl_ps2_aux_port_list);
->
->         /* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
->         if (acpi_dev_present("ELAN0634", NULL, -1))
-> --
-> 2.38.1
->
+--wvm2z6appxwdd5fa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmN6g2YACgkQ2O7X88g7
++pocPA/+MG7rp45xJuAH0zlIFTM8ovBviXnLvra0hpvK+vMB8SVdh4K8vRCAoeoT
+lxML9oRVfhraHzo/3X6+7V87cw+QzEx3GZbYsIasGqic46MoFYkbA2i3Q8s8hS5y
+qpAcKn/efXJaBtdIxWQnOc0xU0YCiteiIik8Idb9MjHFupUspLxtIjCzTAmvKQ0k
+hJ5u5cqv3d/MP6VpsOCUYPDet9nS9ByPeg8Kr9Ux1a0WEldPYUO+dU0ObqRdhliZ
+agftaEtCvFYkfO9k8ubBL/x00gTn002xOB7gp+5s0V0D3wKfT5EPVYOoUZbeYMIu
+QOZaLHkNkBtV85kGm18h7IFdQZQY9ahcaGTYZplyz/YzHlK/AlfjA2umKS1+rs5m
+A+DDqnAkuWw9fLg0MJ4dLSPwOSPX3VfgmVS3By3Do2gotQkCqXsRdhrG1cIoE1aL
+AZYpSwLTn2rAYF59poL3rgSqx/MhgrLwmKQOH3fjwZ3R7PIAWFhYP1We2UtKdCEM
+Gjpr7QfAUiOuXDKi5OrBbWr4m2eX26A4uifwR62OyldwH8pUWAq3umgkw3rotQAA
+hdwOOPM+cHTyLbtP8kaP1XSR6u0ybuTbw8OQE/XPDNVceoMqR4XxUSYbs0Q0UzY6
+fwljGfbakuGbaNlb7s2LBsy0ESZuiz64Za/0gfJhI5rP1eNRR1U=
+=Dh+o
+-----END PGP SIGNATURE-----
+
+--wvm2z6appxwdd5fa--
