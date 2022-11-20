@@ -2,131 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58269C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Nov 2022 22:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD8DC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Nov 2022 22:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbiKTWso (ORCPT
+        id S229498AbiKTWtb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Nov 2022 17:48:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
+        Sun, 20 Nov 2022 17:49:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbiKTWsn (ORCPT
+        with ESMTP id S229449AbiKTWtb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Nov 2022 17:48:43 -0500
+        Sun, 20 Nov 2022 17:49:31 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9711B9CA
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Nov 2022 14:47:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681A225EBD
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Nov 2022 14:48:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668984468;
+        s=mimecast20190719; t=1668984514;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PPVLzNZ/iSQ7mXj9sw3pYm8ZbQIXY1b5i7yu8t4NX3Q=;
-        b=N+Y0R4As0qQZPrdBlBrRttUNwOP5NluZ1YfBjvn/HOZClzGIazfGs8Kwb3KnPQ1+4JGjLT
-        XFTBVtyFWo9qXtet/lrZw+a5rYzCMnGKpbwKFomBYI1ywfWt7eojlJFHiI8YBQttiPx2Lq
-        OnyPM6gDLl2/EGoLvyz78BDsNISQXGY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-304-FAILS3npPqylavIiPid1HQ-1; Sun, 20 Nov 2022 17:47:46 -0500
-X-MC-Unique: FAILS3npPqylavIiPid1HQ-1
-Received: by mail-ed1-f70.google.com with SMTP id f17-20020a056402355100b00466481256f6so5539750edd.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Nov 2022 14:47:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PPVLzNZ/iSQ7mXj9sw3pYm8ZbQIXY1b5i7yu8t4NX3Q=;
-        b=GamM2HMmgbKb4/uF4Rgb53+fGGpkejbaKwwXlNAi+0+zLv1BPfs+qmjGpDcS73965Z
-         g7TOgXFLuOjwtcu7N4CiX7MyiwAvQu1masCOOMTySL6K8tHr3N2jlnY4Pb1bS3EaGSp2
-         +7yynG/iGEbqGLJSCMQhzsz7fPHdWT8nwuUbqaKDy30GgfVRQNrvYPd5oKmoMWw2u3TB
-         riC2wLmqD44rBtcKJtitgxI6sfun/guZvKjv//zGF/jH3tfM/tg4hZfNrsGNT95CO/ev
-         Ckq3Jp5n4ZXKmoRVWl399/kWcMBqlfR6RZVmSiuOqplVSvSx4II34Dv6vpd8oSSgVQ+W
-         TFcA==
-X-Gm-Message-State: ANoB5pn1BcqofAEpzuvSQgvJHjD3qqgYiDG/jia7yXHOMR2cOgHm1qbS
-        TRFD+w0+zOewyJKU8Pm8+oYQmRtdmXRr8lFHP5BrOezcN/8S8DQZjYEUvp/wLSrDxJ9IsSupwVC
-        h89v/4PLMx6Ub0Q336mmS3SM7x6jDoyKSEA==
-X-Received: by 2002:a17:906:17c9:b0:782:fd8e:9298 with SMTP id u9-20020a17090617c900b00782fd8e9298mr2121398eje.640.1668984465689;
-        Sun, 20 Nov 2022 14:47:45 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf43KC9vGbfI1mP4YDjCGquSZmgYAGKOEKQ2aBd2V9x+VfpC1/LSvO1gDK5LW9orljhH6W69NQ==
-X-Received: by 2002:a17:906:17c9:b0:782:fd8e:9298 with SMTP id u9-20020a17090617c900b00782fd8e9298mr2121390eje.640.1668984465453;
-        Sun, 20 Nov 2022 14:47:45 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id jl24-20020a17090775d800b0073cf6ec3276sm4314479ejc.207.2022.11.20.14.47.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Nov 2022 14:47:44 -0800 (PST)
-Message-ID: <0940b44b-9dd2-0ce9-0456-b3e374175905@redhat.com>
-Date:   Sun, 20 Nov 2022 23:47:44 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH] platform/x86/intel/hid: Add module-params for 5 button
- array + SW_TABLET_MODE reporting
-Content-Language: en-US, nl
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20221118092550.48389-1-hdegoede@redhat.com>
- <Y3djFvrET/4meoq/@smile.fi.intel.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cs/CScwDFSY1xCrkuND+30EfyDTBWRMsz+oh+auzFi8=;
+        b=bY5PvcX2GhIREwB6qoUtxUzQg8+CAl8KEgmg903qm1tVtPY6OGcjZS6jmGmTaRGos29oaY
+        1hrALeBqh08Y3uOx3Dz67D3e5gLTstL4pFiHe2Fe49rlHb7bH0vJ4pgntGwwCIda0e69pp
+        JuD90OJHtyUufJCdLsRph5UEsD1WhL0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-624-20dy24oIMUWqAjcwIkkBpA-1; Sun, 20 Nov 2022 17:48:31 -0500
+X-MC-Unique: 20dy24oIMUWqAjcwIkkBpA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4FAA71C0691D;
+        Sun, 20 Nov 2022 22:48:31 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AE662027062;
+        Sun, 20 Nov 2022 22:48:30 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y3djFvrET/4meoq/@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/hid: Add module-params for 5 button array + SW_TABLET_MODE reporting
+Date:   Sun, 20 Nov 2022 23:48:20 +0100
+Message-Id: <20221120224820.746478-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The driver has DMI-quirk tables for force-enabling 5 button array support
+and for 2 different ways of enabling SW_TABLET_MODE reporting.
 
-On 11/18/22 11:48, Andy Shevchenko wrote:
-> On Fri, Nov 18, 2022 at 10:25:50AM +0100, Hans de Goede wrote:
->> The driver has DMI-quirk tables for force-enabling 5 button array support
->> and for 2 different ways of enabling SW_TABLET_MODE reporting.
->>
->> Add module parameters to allow user to enable the driver behavior currently
->> only available through DMI quirks.
->>
->> This is useful for users to test this in bug-reports and for users to use
->> as a workaround while new DMI quirks find their way upstream.
-> 
-> Lately you have been adding tons of module parameters here and there.
+Add module parameters to allow user to enable the driver behavior currently
+only available through DMI quirks.
 
-I'm not sure I would call it "tons of" I've added a few parameters to
-allow users to test behavior which before then was only available through
-DMI quirk tables. 
+This is useful for users to test this in bug-reports and for users to use
+as a workaround while new DMI quirks find their way upstream.
 
-This is useful for users to easily check if their model needs to be added
-to a DMI quirk table.
+Link: https://gitlab.freedesktop.org/libinput/libinput/-/issues/822
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/hid.c | 36 +++++++++++++++++++++++++++-----
+ 1 file changed, 31 insertions(+), 5 deletions(-)
 
-> Taking into account that we discourage to do that, but at the same time
-> understanding your point, wouldn't be better before doing that, provide
-> a new type of the module parameters "for debug purposes only". One way
-> is to provide necessary macros
-> 
-> MODULE_PARAM_DEBUG()
-> 
-> And always have the parameters suffixed with _debug. OR introduce an additional
-> option that user may put before "open" debugging module / kernel command line
-> parameters?
-> 
-> In this case we delimit the old/existing parameters with the parameters for
-> debugging. Moreover, it may be excluded by introducing Kconfig option at compile
-> time.
-
-Adding special infrastructure for just these 5-6 module parameters which I
-have added recently seems a bit too much to me.
-
-Regards,
-
-Hans
-
-
-p.s.
-
-I notice that I have forgotten to Cc the list when submitting that
-patch, I've added the list to the Cc now and I'll resend the patch
-with the list in the Cc.
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index b6313ecd190c..b6c06b37862e 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -16,6 +16,25 @@
+ #include <linux/suspend.h>
+ #include "../dual_accel_detect.h"
+ 
++enum intel_hid_tablet_sw_mode {
++	TABLET_SW_AUTO = -1,
++	TABLET_SW_OFF  = 0,
++	TABLET_SW_AT_EVENT,
++	TABLET_SW_AT_PROBE,
++};
++
++static bool enable_5_button_array;
++module_param(enable_5_button_array, bool, 0444);
++MODULE_PARM_DESC(enable_5_button_array,
++	"Enable 5 Button Array support. "
++	"If you need this please report this to: platform-driver-x86@vger.kernel.org");
++
++static int enable_sw_tablet_mode = TABLET_SW_AUTO;
++module_param(enable_sw_tablet_mode, int, 0444);
++MODULE_PARM_DESC(enable_sw_tablet_mode,
++	"Enable SW_TABLET_MODE reporting -1:auto 0:off 1:at-first-event 2:at-probe. "
++	"If you need this please report this to: platform-driver-x86@vger.kernel.org");
++
+ /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
+ #define TABLET_MODE_FLAG BIT(6)
+ 
+@@ -157,7 +176,6 @@ struct intel_hid_priv {
+ 	struct input_dev *array;
+ 	struct input_dev *switches;
+ 	bool wakeup_mode;
+-	bool auto_add_switch;
+ };
+ 
+ #define HID_EVENT_FILTER_UUID	"eeec56b3-4442-408f-a792-4edd4d758054"
+@@ -487,7 +505,8 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	 * SW_TABLET_MODE report, in these cases we enable support when receiving
+ 	 * the first event instead of during driver setup.
+ 	 */
+-	if (!priv->switches && priv->auto_add_switch && (event == 0xcc || event == 0xcd)) {
++	if (!priv->switches && enable_sw_tablet_mode == TABLET_SW_AT_EVENT &&
++	    (event == 0xcc || event == 0xcd)) {
+ 		dev_info(&device->dev, "switch event received, enable switches supports\n");
+ 		err = intel_hid_switches_setup(device);
+ 		if (err)
+@@ -592,7 +611,7 @@ static bool button_array_present(struct platform_device *device)
+ 			return true;
+ 	}
+ 
+-	if (dmi_check_system(button_array_table))
++	if (enable_5_button_array || dmi_check_system(button_array_table))
+ 		return true;
+ 
+ 	return false;
+@@ -629,7 +648,14 @@ static int intel_hid_probe(struct platform_device *device)
+ 	dev_set_drvdata(&device->dev, priv);
+ 
+ 	/* See dual_accel_detect.h for more info on the dual_accel check. */
+-	priv->auto_add_switch = dmi_check_system(dmi_auto_add_switch) && !dual_accel_detect();
++	if (enable_sw_tablet_mode == TABLET_SW_AUTO) {
++		if (dmi_check_system(dmi_vgbs_allow_list))
++			enable_sw_tablet_mode = TABLET_SW_AT_PROBE;
++		else if (dmi_check_system(dmi_auto_add_switch) && !dual_accel_detect())
++			enable_sw_tablet_mode = TABLET_SW_AT_EVENT;
++		else
++			enable_sw_tablet_mode = TABLET_SW_OFF;
++	}
+ 
+ 	err = intel_hid_input_setup(device);
+ 	if (err) {
+@@ -646,7 +672,7 @@ static int intel_hid_probe(struct platform_device *device)
+ 	}
+ 
+ 	/* Setup switches for devices that we know VGBS return correctly */
+-	if (dmi_check_system(dmi_vgbs_allow_list)) {
++	if (enable_sw_tablet_mode == TABLET_SW_AT_PROBE) {
+ 		dev_info(&device->dev, "platform supports switches\n");
+ 		err = intel_hid_switches_setup(device);
+ 		if (err)
+-- 
+2.38.1
 
