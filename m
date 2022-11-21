@@ -2,178 +2,201 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF957C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Nov 2022 09:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAD7C4708B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Nov 2022 09:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbiKUJpn (ORCPT
+        id S231247AbiKUJyN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Nov 2022 04:45:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53048 "EHLO
+        Mon, 21 Nov 2022 04:54:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230356AbiKUJpk (ORCPT
+        with ESMTP id S230493AbiKUJxj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Nov 2022 04:45:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6B994A74
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 01:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669023876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=su7TSQ7LdZLfUe5cDAl60Bz9Qg3+yC/LHFZinyPivK0=;
-        b=f4L4ZvJIqzUVf1YJcsB2+69BiGh8bCry2nau6Hj1sJ1TM8CCO2pWWhdlyhuFse6q8qefz+
-        ir3P+noY/bNhvtCKJRYJ73c7KOptpGHQ99BFBkqhuz4bOrQg1hDBRB5lf/3PfXCT2AC6AH
-        SQWIIacG6oskG+z/z3Qnxy7gSbyhmI4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-417-XIOhykFaOlqZ1yGRlmg9yw-1; Mon, 21 Nov 2022 04:44:35 -0500
-X-MC-Unique: XIOhykFaOlqZ1yGRlmg9yw-1
-Received: by mail-ed1-f70.google.com with SMTP id m13-20020a056402510d00b0046913fa9291so4377759edd.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 01:44:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=su7TSQ7LdZLfUe5cDAl60Bz9Qg3+yC/LHFZinyPivK0=;
-        b=NQs5PuGsCvXl7+sbIHTk1K+p8+TBJHK1X267iyRauvKPE5dNRHqHs/8eDnTJOWOl9C
-         PtgHiikFyFqmqumsdbP0mAo+QRomCPtYkS4Dlz3k8ja00dDh1ll2WVQNCrDyDl5hnMp1
-         tbAlgnNCPvYJj/i1rGx/ZuJmI7pj0tv8+uz2rzLvsFaLSkA/Y+VsVeetnmgSznhnji5+
-         p+EQtdDF68VYUeutWp+HBIMRg8x/fXIwNYBQlaOcar3nuCVyZK5RlO5TXud3CfWBYSA2
-         mipM1DNoG/Ze1euTvYeOacJHVJyVIEtMfQjcaBpTGiCXQmbe8QhMy8jGDIoSOPwfmKon
-         WGaw==
-X-Gm-Message-State: ANoB5pkLfPUpgLUgs4bKQ4tyQjfIIzhNf5Yu/94S1GdDA4dVUFOjSivD
-        45SiFqiqUTb3JPGZDJWIbHmIY7TforLlSrP9FhO8+gtp0NA/gyIzMtkfjveMaAeR8C7x7z4YOYW
-        G2s+/Z1DHK0tez9rjhN3yZmcD4HrK0ozwyQ==
-X-Received: by 2002:a17:906:3fce:b0:7ad:bb54:75d3 with SMTP id k14-20020a1709063fce00b007adbb5475d3mr14418654ejj.484.1669023873844;
-        Mon, 21 Nov 2022 01:44:33 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5CQ4s6u6deYOuzxXR2uxz5DzRtJuc3s5n3j6ZpmqxQNgHFMMoBtAiz6lQg6ylfpO2JOXtkYw==
-X-Received: by 2002:a17:906:3fce:b0:7ad:bb54:75d3 with SMTP id k14-20020a1709063fce00b007adbb5475d3mr14418637ejj.484.1669023873597;
-        Mon, 21 Nov 2022 01:44:33 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id i10-20020aa7c9ca000000b00461a6997c5dsm4990751edt.83.2022.11.21.01.44.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 01:44:33 -0800 (PST)
-Message-ID: <2a3f8cc5-4c6e-7bb9-5a09-1dc20929271e@redhat.com>
-Date:   Mon, 21 Nov 2022 10:44:32 +0100
+        Mon, 21 Nov 2022 04:53:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E226FA1B4;
+        Mon, 21 Nov 2022 01:53:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44AFD60F9B;
+        Mon, 21 Nov 2022 09:53:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F83C433C1;
+        Mon, 21 Nov 2022 09:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669024397;
+        bh=m9yZHwnTEqGasYZNomMe1mRJHVzf8B7M3LDSNHYcXeA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Opj/itLbJtFE0syJxd+qkemdvm+GfbfZ1pccF1SGR++3DJnkeyD3YQtGhN+blIjub
+         US8fX8iushvScwunkPr7LKirCchaNKKAU/twl0oVnqHEwdHsHxi0M0d/wgtlpEZqG7
+         k4ovt/Znm0DICj47Y+N6I+Yw47E1MyyiN0e/92S2h9qHrb149jszKe3FalK/2rVJQ+
+         ZppAyMp4v8rjq+XBX9JSBl1ysXWpcIvX0EVYeK13kfbg9IEzo070nVbf9UiCPP9DpS
+         bXABnzNPLB0lPKqHS3KQR0EQyUsQW7BynY23b8Z2+QTbLFxJQgHRN0fjhkCpVJB9+z
+         k93zjyweI0uEQ==
+Date:   Mon, 21 Nov 2022 09:53:05 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grant Likely <grant.likely@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        kernel@pengutronix.de, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-actions@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
+        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net
+Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
+Message-ID: <Y3tKgXPJP7S48i3j@google.com>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v1 0/8] Redesign the pmc core driver
-Content-Language: en-US
-To:     Gayatri Kammela <gayatri.kammela@linux.intel.com>
-Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        sukumar.ghorai@intel.com, xi.pardee@intel.com,
-        rajvi.jingar@intel.com,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        David E Box <david.e.box@linux.intel.com>
-References: <20221114183257.2067662-1-gayatri.kammela@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221114183257.2067662-1-gayatri.kammela@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, 18 Nov 2022, Uwe Kleine-König wrote:
 
-On 11/14/22 19:32, Gayatri Kammela wrote:
-> This patch series focuses on redesigning the PMC core driver for
-> maintainability and readability. Moving PCH specific structures and
-> functions to separate c files, simplifies core.c file and makes it
-> easier to add new platforms in future. The series includes two
-> preparatory patches that lays the ground work for the redesign. The
-> patch series also adds legacy support for Meteor Lake.
+> Hello,
 > 
-> This redesign adds following c files to support different PCHs. There
-> are no functional changes involved for the already supported platforms.
+> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
+> call-back type") from 2016 there is a "temporary" alternative probe
+> callback for i2c drivers.
+
+Oh yeah, this!  Thanks for picking this up Uwe, I guess I've been
+distracted for the past 6 years or so. :)
+
+> This series completes all drivers to this new callback (unless I missed
+> something). It's based on current next/master.
+> A part of the patches depend on commit 662233731d66 ("i2c: core:
+> Introduce i2c_client_get_device_id helper function"), there is a branch that
+> you can pull into your tree to get it:
 > 
-> spt.c: Sunrise Point PCH supports: Sky Lake, Sky Lake L, Kaby Lake,
-> Kaby Lake L
-> cnp.c: Cannon Lake Point PCH supports: Cannon Lake L, Comet Lake,
-> Comet Lake L
-> icl.c: Ice Lake PCH supports: Ice Lake L, Ice Lake NNPI, Jasper Lake
-> tgl.c: Tiger Lake PCH supports: Tiger Lake, Tiger Lake L, Alder Lake L,
-> Alder Lake N, Rocket Lake, Raptor Lake P, Elkhart Lake
-> adl.c: Alder Lake PCH supports: Alder Lake, Raptor Lake, Raptor Lake S
-> mtl.c: Meteor Lake PCH supports: Meteor Lake
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/client_device_id_helper-immutable
 > 
-> Patch 1: platform/x86: intel/pmc: Replace all the reg_map with init
-> functions
-> Patch 2: platform/x86: intel/pmc: Move variable declarations and
-> definitions to header and core.c
-> Patch 3: platform/x86: intel/pmc: Relocate Sunrise Point PCH support
-> Patch 4: platform/x86: intel/pmc: Relocate Cannon Lake Point PCH
-> support
-> Patch 5: platform/x86: intel/pmc: Relocate Ice Lake PCH support
-> Patch 6: platform/x86: intel/pmc: Relocate Tiger Lake PCH support
-> Patch 7: platform/x86: intel/pmc: Relocate Alder Lake PCH support
-> Patch 8: platform/x86: intel/pmc: Add Meteor Lake support to pmc core
-> driver
-
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-> Gayatri Kammela (4):
->   platform/x86: intel/pmc: Replace all the reg_map with init functions
->   platform/x86: intel/pmc: Relocate Tiger Lake PCH support
->   platform/x86: intel/pmc: Relocate Alder Lake PCH support
->   platform/x86: intel/pmc/core: Add Meteor Lake support to pmc core
->     driver
+> I don't think it's feasable to apply this series in one go, so I ask the
+> maintainers of the changed files to apply via their tree. I guess it
+> will take a few kernel release iterations until all patch are in, but I
+> think a single tree creates too much conflicts.
 > 
-> Rajvi Jingar (1):
->   platform/x86: intel/pmc: Relocate Sunrise Point PCH support
+> The last patch changes i2c_driver::probe, all non-converted drivers will
+> fail to compile then. So I hope the build bots will tell me about any
+> driver I missed to convert. This patch is obviously not for application
+> now.
 > 
-> Xi Pardee (3):
->   platform/x86: intel/pmc: Move variable declarations and definitions to
->     header and core.c
->   platform/x86: intel/pmc: Relocate Cannon Lake Point PCH support
->   platform/x86: intel/pmc: Relocate Ice Lake PCH support
-> 
->  drivers/platform/x86/intel/pmc/Makefile |   3 +-
->  drivers/platform/x86/intel/pmc/adl.c    | 325 ++++++++
->  drivers/platform/x86/intel/pmc/cnp.c    | 210 +++++
->  drivers/platform/x86/intel/pmc/core.c   | 994 ++----------------------
->  drivers/platform/x86/intel/pmc/core.h   |  89 ++-
->  drivers/platform/x86/intel/pmc/icl.c    |  56 ++
->  drivers/platform/x86/intel/pmc/mtl.c    |  52 ++
->  drivers/platform/x86/intel/pmc/spt.c    | 140 ++++
->  drivers/platform/x86/intel/pmc/tgl.c    | 269 +++++++
->  9 files changed, 1183 insertions(+), 955 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/pmc/adl.c
->  create mode 100644 drivers/platform/x86/intel/pmc/cnp.c
->  create mode 100644 drivers/platform/x86/intel/pmc/icl.c
->  create mode 100644 drivers/platform/x86/intel/pmc/mtl.c
->  create mode 100644 drivers/platform/x86/intel/pmc/spt.c
->  create mode 100644 drivers/platform/x86/intel/pmc/tgl.c
-> 
-> 
-> base-commit: 309e0a6ed6e3fdb4febacc3e91aeb268500b90c6
-> 
-> Cc: Xi Pardee <xi.pardee@intel.com>
-> Cc: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-> Cc: David E Box <david.e.box@linux.intel.com>
+> I dropped most individuals from the recipents of this mail to not
+> challenge the mail servers and mailing list filters too much. Sorry if
+> you had extra efforts to find this mail.
 
+[...]
+
+>  drivers/mfd/88pm800.c                            |  5 ++---
+>  drivers/mfd/88pm805.c                            |  5 ++---
+>  drivers/mfd/aat2870-core.c                       |  5 ++---
+>  drivers/mfd/act8945a.c                           |  5 ++---
+>  drivers/mfd/adp5520.c                            |  6 +++---
+>  drivers/mfd/arizona-i2c.c                        |  6 +++---
+>  drivers/mfd/as3711.c                             |  5 ++---
+>  drivers/mfd/as3722.c                             |  5 ++---
+>  drivers/mfd/atc260x-i2c.c                        |  5 ++---
+>  drivers/mfd/axp20x-i2c.c                         |  5 ++---
+>  drivers/mfd/bcm590xx.c                           |  5 ++---
+>  drivers/mfd/bd9571mwv.c                          |  5 ++---
+>  drivers/mfd/da903x.c                             |  6 +++---
+>  drivers/mfd/da9052-i2c.c                         |  6 +++---
+>  drivers/mfd/da9055-i2c.c                         |  5 ++---
+>  drivers/mfd/da9062-core.c                        |  6 +++---
+>  drivers/mfd/da9063-i2c.c                         |  6 +++---
+>  drivers/mfd/da9150-core.c                        |  5 ++---
+>  drivers/mfd/khadas-mcu.c                         |  5 ++---
+>  drivers/mfd/lm3533-core.c                        |  5 ++---
+>  drivers/mfd/lp3943.c                             |  4 ++--
+>  drivers/mfd/lp873x.c                             |  5 ++---
+>  drivers/mfd/lp87565.c                            |  5 ++---
+>  drivers/mfd/lp8788.c                             |  4 ++--
+>  drivers/mfd/madera-i2c.c                         |  6 +++---
+>  drivers/mfd/max14577.c                           |  6 +++---
+>  drivers/mfd/max77620.c                           |  6 +++---
+>  drivers/mfd/max77693.c                           |  6 +++---
+>  drivers/mfd/max77843.c                           |  6 +++---
+>  drivers/mfd/max8907.c                            |  5 ++---
+>  drivers/mfd/max8925-i2c.c                        |  5 ++---
+>  drivers/mfd/max8997.c                            |  6 +++---
+>  drivers/mfd/max8998.c                            |  6 +++---
+>  drivers/mfd/mc13xxx-i2c.c                        |  6 +++---
+>  drivers/mfd/menelaus.c                           |  5 ++---
+>  drivers/mfd/menf21bmc.c                          |  4 ++--
+>  drivers/mfd/palmas.c                             |  5 ++---
+>  drivers/mfd/pcf50633-core.c                      |  5 ++---
+>  drivers/mfd/rc5t583.c                            |  5 ++---
+>  drivers/mfd/retu-mfd.c                           |  4 ++--
+>  drivers/mfd/rk808.c                              |  5 ++---
+>  drivers/mfd/rohm-bd718x7.c                       |  5 ++---
+>  drivers/mfd/rsmu_i2c.c                           |  6 +++---
+>  drivers/mfd/rt5033.c                             |  5 ++---
+>  drivers/mfd/sec-core.c                           |  5 ++---
+>  drivers/mfd/si476x-i2c.c                         |  6 +++---
+>  drivers/mfd/sky81452.c                           |  5 ++---
+>  drivers/mfd/stmfx.c                              |  5 ++---
+>  drivers/mfd/stmpe-i2c.c                          |  5 +++--
+>  drivers/mfd/stpmic1.c                            |  5 ++---
+>  drivers/mfd/stw481x.c                            |  5 ++---
+>  drivers/mfd/tc3589x.c                            |  6 +++---
+>  drivers/mfd/ti-lmu.c                             |  5 +++--
+>  drivers/mfd/tps6105x.c                           |  5 ++---
+>  drivers/mfd/tps65010.c                           |  6 +++---
+>  drivers/mfd/tps6507x.c                           |  5 ++---
+>  drivers/mfd/tps65086.c                           |  5 ++---
+>  drivers/mfd/tps65090.c                           |  5 ++---
+>  drivers/mfd/tps65218.c                           |  5 ++---
+>  drivers/mfd/tps6586x.c                           |  5 ++---
+>  drivers/mfd/tps65910.c                           |  6 +++---
+>  drivers/mfd/tps65912-i2c.c                       |  5 ++---
+>  drivers/mfd/twl-core.c                           |  5 +++--
+>  drivers/mfd/twl6040.c                            |  5 ++---
+>  drivers/mfd/wl1273-core.c                        |  5 ++---
+>  drivers/mfd/wm831x-i2c.c                         |  6 +++---
+>  drivers/mfd/wm8350-i2c.c                         |  5 ++---
+>  drivers/mfd/wm8400-core.c                        |  5 ++---
+>  drivers/mfd/wm8994-core.c                        |  6 +++---
+
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee@kernel.org>
+
+>  drivers/video/backlight/adp8860_bl.c             |  6 +++---
+>  drivers/video/backlight/adp8870_bl.c             |  6 +++---
+>  drivers/video/backlight/arcxcnn_bl.c             |  4 ++--
+>  drivers/video/backlight/bd6107.c                 |  5 ++---
+>  drivers/video/backlight/lm3630a_bl.c             |  5 ++---
+>  drivers/video/backlight/lm3639_bl.c              |  5 ++---
+>  drivers/video/backlight/lp855x_bl.c              |  5 +++--
+>  drivers/video/backlight/lv5207lp.c               |  5 ++---
+>  drivers/video/backlight/tosa_bl.c                |  5 ++---
+>  drivers/video/fbdev/matrox/matroxfb_maven.c      |  5 ++---
+
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-Backlight-by: Lee Jones <lee@kernel.org>
+
+-- 
+Lee Jones [李琼斯]
