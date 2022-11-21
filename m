@@ -2,189 +2,282 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Nov 2022 10:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC3C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Nov 2022 10:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231265AbiKUKUO (ORCPT
+        id S229795AbiKUK4F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Nov 2022 05:20:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56776 "EHLO
+        Mon, 21 Nov 2022 05:56:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbiKUKUN (ORCPT
+        with ESMTP id S229593AbiKUK4E (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Nov 2022 05:20:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD1A8CF0D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 02:19:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669025950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+190EvLFQt36QwwjQnDgJqhbzPJQqNgXZwpiS/bb6is=;
-        b=WT/eRjSRZYpAH55JtFboCmDGWPcMU5Qp3GymRJTbbrZF7tBp3bJevu5NDcS2RI2RwjNp6Q
-        O5EOlYtPWIxuIT0CEeWSP9gAWWCZ3C+VSukN+159YJXdpMeL87hbUALx2HMtAAMqxXk0tz
-        X1XHAYdY6Y5gw4aePfanXfdwguIAaRc=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-658-us4clnprN7u_teMfBy11Ig-1; Mon, 21 Nov 2022 05:19:06 -0500
-X-MC-Unique: us4clnprN7u_teMfBy11Ig-1
-Received: by mail-ed1-f72.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so6603730edz.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 02:19:05 -0800 (PST)
+        Mon, 21 Nov 2022 05:56:04 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B277D2AE20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 02:56:02 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id s5so2048222wru.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Nov 2022 02:56:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9s46gK1F3CKWqp5QyxGROepUPZGDXeJppuWXghEvWhY=;
+        b=IvCR+KTUKRCutf6aN7L6Hipvpvcv3uQIzWbyo/baqJOXe5uzVO/tQMYEMc37QHFRf7
+         LNJGfjNKtU3CTFnCFApB7bj1Hgai6uF539+LcuLpAI4KmDqtGrE8JG8sDfEwzq2ZO0KD
+         XvM2a+AAdgPtIwjeV/Yrpi0Occ+VraT7fCx/1iYlfygPUq3DFxReebzkuhC4Bhl41xZ7
+         8vC5yBNgijBqNE18VUBDPCFIACf3bm4PGtMBSiYb2GCeatnz43r/BkYwRlCPNwn4TL8T
+         1ZCjcDspJmLQe6+PwLruB5hCzcN1ziNsTB+P65fS/VyO58ZqXNrbuMPLu6JgGzbAY1Mn
+         7rbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+190EvLFQt36QwwjQnDgJqhbzPJQqNgXZwpiS/bb6is=;
-        b=p3Nm2o9kv6xYmDqXBJw2sYbfL7wT9VMpO7kK+D818wAf7GPskXybVx+pDZFBs/n27i
-         WDQQ8IdGCIi2G5L8SLPCkvOur+9VFU/VHgxCkJIK7V3i0OhlYGoW2oofp2pNFxkODf5t
-         qRGPqTrYOOzkdbN2hSSJQEYVQKaha5AyS4QbbPd31R61Iva0h3I3tx3lONmtTcbYNT9h
-         gx0ITg08qu+jpsSqYGR1AZ05SJwj16Bn5EoqfmwJR+hhGdkBUaOPKKzwwWTCXfaM5v+M
-         v2vlKvUzI0khkDfLaJYe6WHFyfJSCCKo+bf/c2JzoIk/dtNWKthIYvx2yLKj2RafKU3b
-         z8DQ==
-X-Gm-Message-State: ANoB5pl4+ZoIqTmieBpxQRzklsSpi8mSKQTd2xI1hKYzxfQEugV8z5Hv
-        lT7qmN1SoQ1Q/jORmJo3im5qm9VgZVn0cCU2KMx2k2VHV6AWyhi7uagX+lRYqYgaqsTRS3AQei2
-        c/vjZb8YiNrZV9EAevQQCLOsvNGL2zpDQPg==
-X-Received: by 2002:a05:6402:28a9:b0:461:f5ce:a478 with SMTP id eg41-20020a05640228a900b00461f5cea478mr15511121edb.304.1669025945000;
-        Mon, 21 Nov 2022 02:19:05 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7arJakm1YhvDrKOiofiBKpK2u7KzFGl+QYDL0V5eGdTzyj4035YlKY5iT/sLNAzI62KOIEWg==
-X-Received: by 2002:a05:6402:28a9:b0:461:f5ce:a478 with SMTP id eg41-20020a05640228a900b00461f5cea478mr15511106edb.304.1669025944705;
-        Mon, 21 Nov 2022 02:19:04 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id v27-20020a17090606db00b0078175601630sm4841846ejb.79.2022.11.21.02.19.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 02:19:04 -0800 (PST)
-Message-ID: <83bc07a4-6989-c1c6-276f-d83acbd740c0@redhat.com>
-Date:   Mon, 21 Nov 2022 11:19:03 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9s46gK1F3CKWqp5QyxGROepUPZGDXeJppuWXghEvWhY=;
+        b=xGS9XygJAyPYyToumzHOcaPkfK3GaciVk8ZWu/sJFkU3H5TiDOBboyiMTqgnrlRONF
+         PM0+vtfblaElRn4PWWAyUiPsCjfkksAfOnXsN3FNS/T8+dA+86dGoUktyAJhqyDv34g0
+         kEozi532p4U9EEgXkfpNt6byPXkbxVKVkMmFV19izHPj5HU5L2IBZRHnU9qF/uCYJQDy
+         YcF/o4OnPQ+LIDAdWLrhL8nmnNl1bke4LbzVISZQJLxRg16XUKp9agjOfB6L/0dGq1MO
+         YGRagoTKfp0W6qhiEKndxHZDHzZr5PKpBvovcK/mV3etczHKPYMeNw2cA2xd5+Ir9rx/
+         ge/A==
+X-Gm-Message-State: ANoB5pk4aLste97K43EAWOdl3sNwJTHi/t/mIPn+8BVtgaJp4wsnUPC1
+        MstzC6iYmNQoJ9xZR3q2Zg4Z3G9hYmNSHIHnVYI=
+X-Google-Smtp-Source: AA0mqf7zPbqNMOFlGxgMZERfXMSJPVMPvYbEbYUQ0q8iVGGRu7pkFvEiOeC2aDYk7WlJBe6FvEDL7Q4mAqhlmZS46x4=
+X-Received: by 2002:adf:e74e:0:b0:241:c0f1:a9d with SMTP id
+ c14-20020adfe74e000000b00241c0f10a9dmr8210693wrn.217.1669028161062; Mon, 21
+ Nov 2022 02:56:01 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH] platform/x86/intel/hid: Add module-params for 5 button
- array + SW_TABLET_MODE reporting
-Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20221120224820.746478-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221120224820.746478-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20221117110244.67811-1-hdegoede@redhat.com> <20221117110244.67811-4-hdegoede@redhat.com>
+ <CAKErNvq42Cs8SK=3K0+X=aSJfx=njyLqW4cobjt0xaZZk1yeqg@mail.gmail.com> <ba2ca2d1-d422-552a-ece8-ae9488b93307@redhat.com>
+In-Reply-To: <ba2ca2d1-d422-552a-ece8-ae9488b93307@redhat.com>
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+Date:   Mon, 21 Nov 2022 12:55:34 +0200
+Message-ID: <CAKErNvou4FG1MaaDPntgrOVV4U+cra=pO_GHSod12AcBXMZSjw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] platform/x86: ideapad-laptop: Only toggle ps2 aux
+ port on/off on select models
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        GOESSEL Guillaume <g_goessel@outlook.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Manyi Li <limanyi@uniontech.com>,
+        =?UTF-8?Q?Eray_Or=C3=A7unus?= <erayorcunus@gmail.com>,
+        Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Arnav Rawat <arnavr3@illinois.edu>,
+        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
+        Felix Eckhofer <felix@eckhofer.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi all,
+On Mon, 21 Nov 2022 at 12:07, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi =D0=9C=D0=B0=D0=BA=D1=81=D0=B8=D0=BC,
+>
+> On 11/20/22 16:29, =D0=9C=D0=B0=D0=BA=D1=81=D0=B8=D0=BC wrote:
+> > On Thu, 17 Nov 2022 at 13:03, Hans de Goede <hdegoede@redhat.com> wrote=
+:
+> >>
+> >> Recently there have been multiple patches to disable the ideapad-lapto=
+p's
+> >> touchpad control code, because it is causing issues on various laptops=
+:
+> >>
+> >> Commit d69cd7eea93e ("platform/x86: ideapad-laptop: Disable touchpad_s=
+witch for ELAN0634")
+> >> Commit a231224a601c ("platform/x86: ideapad-laptop: Disable touchpad_s=
+witch")
+> >>
+> >> The turning on/off of the ps2 aux port was added specifically for
+> >> the IdeaPad Z570, where the EC does toggle the touchpad on/off LED and
+> >> toggles the value returned by reading VPCCMD_R_TOUCHPAD, but it does n=
+ot
+> >> actually turn on/off the touchpad.
+> >>
+> >> The ideapad-laptop code really should not be messing with the i8042
+> >> controller on all devices just for this special case.
+> >>
+> >> Add a new ctrl_ps2_aux_port flag set based on a DMI based allow-list
+> >> for devices which need this workaround, populating it with just
+> >> the Ideapad Z570 for now.
+> >>
+> >> This also adds a module parameter so that this behavior can easily
+> >> be enabled on other models which may need it.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > On Z570:
+> >
+> > Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+>
+> Thank you for testing!
+>
+> > A few notes for Z570:
+> >
+> > 1. Touchpad toggle still works properly after this series of patches.
+> >
+> > 2. My laptop's EC reenables the touchpad on boot and on resume, and
+> > this behavior still works after this series.
+> >
+> > 3. Patch 2 stops sending "spurious" key press events on resume, which
+> > actually make sense on my laptop, when the touchpad is reenabled on
+> > resume. Maybe we should send a key press, but only if the state
+> > changed? (However, for some reason I don't see the OSD for this even
+> > before this series.)
+>
+> I'm not sure if sending the key-press and thus showing the OSd makes
+> sense in resume even if the state did change.
 
-On 11/20/22 23:48, Hans de Goede wrote:
-> The driver has DMI-quirk tables for force-enabling 5 button array support
-> and for 2 different ways of enabling SW_TABLET_MODE reporting.
-> 
-> Add module parameters to allow user to enable the driver behavior currently
-> only available through DMI quirks.
-> 
-> This is useful for users to test this in bug-reports and for users to use
-> as a workaround while new DMI quirks find their way upstream.
-> 
-> Link: https://gitlab.freedesktop.org/libinput/libinput/-/issues/822
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On one hand, if the state changes, it makes sense to send an event. On
+the other hand, there was no real key press, so we shouldn't send
+KEY_TOUCHPAD_ON, a key press event. I'm not sure which of these
+behaviors is standard, so it's up to you to decide.
 
-I have added this to my review-hans branch now.
+> The OSD typically is
+> used to confirm an action by the user. If the touchpad is always
+> re-enabled after resume then the user will get uses to that quick enough
+> and showing an OSD for this will just be a distraction IMHO.
 
-Regards,
+For some reason, I don't see the OSD on resume, even if the driver
+sends KEY_TOUCHPAD_ON.
 
-Hans
+>
+> > 4. The sysfs attribute for touchpad doesn't exist on my laptop, but it
+> > would still make sense if we made it read only. Right now there is a
+> > module parameter to force enable this sysfs attribute, but it's
+> > created as read-write, and writes are no-op.
+>
+> Hmm, since the sysfs attr is normally not there at all (now) and
+> since the module option help text says:
+> "This may not work on all models."
+>
+> I think that having writing to the sysfs file succeed but not do anything
+> is not really a problem.
+>
+> I guess we could change the sysfs attr visibility to 444 on models
+> with priv->features.ctrl_ps2_aux_port set, but that seems making
+> the code unnecessarily complicated given that the sysfs attr is hidden
+> by default now anyways.
 
+The initial default was to show the sysfs attribute everywhere, not
+sure why it was hidden afterwards...
 
+BTW, I forgot to mention that I found out that there is the
+conservation_mode sysfs attribute that shows on Z570, but it's a
+no-op. Probably the following condition is not enough to discover this
+feature reliably:
 
+        if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBM=
+C"))
+                priv->features.conservation_mode =3D true;
 
-> ---
->  drivers/platform/x86/intel/hid.c | 36 +++++++++++++++++++++++++++-----
->  1 file changed, 31 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index b6313ecd190c..b6c06b37862e 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -16,6 +16,25 @@
->  #include <linux/suspend.h>
->  #include "../dual_accel_detect.h"
->  
-> +enum intel_hid_tablet_sw_mode {
-> +	TABLET_SW_AUTO = -1,
-> +	TABLET_SW_OFF  = 0,
-> +	TABLET_SW_AT_EVENT,
-> +	TABLET_SW_AT_PROBE,
-> +};
-> +
-> +static bool enable_5_button_array;
-> +module_param(enable_5_button_array, bool, 0444);
-> +MODULE_PARM_DESC(enable_5_button_array,
-> +	"Enable 5 Button Array support. "
-> +	"If you need this please report this to: platform-driver-x86@vger.kernel.org");
-> +
-> +static int enable_sw_tablet_mode = TABLET_SW_AUTO;
-> +module_param(enable_sw_tablet_mode, int, 0444);
-> +MODULE_PARM_DESC(enable_sw_tablet_mode,
-> +	"Enable SW_TABLET_MODE reporting -1:auto 0:off 1:at-first-event 2:at-probe. "
-> +	"If you need this please report this to: platform-driver-x86@vger.kernel.org");
-> +
->  /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
->  #define TABLET_MODE_FLAG BIT(6)
->  
-> @@ -157,7 +176,6 @@ struct intel_hid_priv {
->  	struct input_dev *array;
->  	struct input_dev *switches;
->  	bool wakeup_mode;
-> -	bool auto_add_switch;
->  };
->  
->  #define HID_EVENT_FILTER_UUID	"eeec56b3-4442-408f-a792-4edd4d758054"
-> @@ -487,7 +505,8 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	 * SW_TABLET_MODE report, in these cases we enable support when receiving
->  	 * the first event instead of during driver setup.
->  	 */
-> -	if (!priv->switches && priv->auto_add_switch && (event == 0xcc || event == 0xcd)) {
-> +	if (!priv->switches && enable_sw_tablet_mode == TABLET_SW_AT_EVENT &&
-> +	    (event == 0xcc || event == 0xcd)) {
->  		dev_info(&device->dev, "switch event received, enable switches supports\n");
->  		err = intel_hid_switches_setup(device);
->  		if (err)
-> @@ -592,7 +611,7 @@ static bool button_array_present(struct platform_device *device)
->  			return true;
->  	}
->  
-> -	if (dmi_check_system(button_array_table))
-> +	if (enable_5_button_array || dmi_check_system(button_array_table))
->  		return true;
->  
->  	return false;
-> @@ -629,7 +648,14 @@ static int intel_hid_probe(struct platform_device *device)
->  	dev_set_drvdata(&device->dev, priv);
->  
->  	/* See dual_accel_detect.h for more info on the dual_accel check. */
-> -	priv->auto_add_switch = dmi_check_system(dmi_auto_add_switch) && !dual_accel_detect();
-> +	if (enable_sw_tablet_mode == TABLET_SW_AUTO) {
-> +		if (dmi_check_system(dmi_vgbs_allow_list))
-> +			enable_sw_tablet_mode = TABLET_SW_AT_PROBE;
-> +		else if (dmi_check_system(dmi_auto_add_switch) && !dual_accel_detect())
-> +			enable_sw_tablet_mode = TABLET_SW_AT_EVENT;
-> +		else
-> +			enable_sw_tablet_mode = TABLET_SW_OFF;
-> +	}
->  
->  	err = intel_hid_input_setup(device);
->  	if (err) {
-> @@ -646,7 +672,7 @@ static int intel_hid_probe(struct platform_device *device)
->  	}
->  
->  	/* Setup switches for devices that we know VGBS return correctly */
-> -	if (dmi_check_system(dmi_vgbs_allow_list)) {
-> +	if (enable_sw_tablet_mode == TABLET_SW_AT_PROBE) {
->  		dev_info(&device->dev, "platform supports switches\n");
->  		err = intel_hid_switches_setup(device);
->  		if (err)
-
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+> >
+> >> ---
+> >>  drivers/platform/x86/ideapad-laptop.c | 29 ++++++++++++++++++++++++++=
+-
+> >>  1 file changed, 28 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/=
+x86/ideapad-laptop.c
+> >> index eb0b1ec32c13..1d86fb988d56 100644
+> >> --- a/drivers/platform/x86/ideapad-laptop.c
+> >> +++ b/drivers/platform/x86/ideapad-laptop.c
+> >> @@ -143,6 +143,7 @@ struct ideapad_private {
+> >>                 bool hw_rfkill_switch     : 1;
+> >>                 bool kbd_bl               : 1;
+> >>                 bool touchpad_ctrl_via_ec : 1;
+> >> +               bool ctrl_ps2_aux_port    : 1;
+> >>                 bool usb_charging         : 1;
+> >>         } features;
+> >>         struct {
+> >> @@ -174,6 +175,12 @@ MODULE_PARM_DESC(set_fn_lock_led,
+> >>         "Enable driver based updates of the fn-lock LED on fn-lock cha=
+nges. "
+> >>         "If you need this please report this to: platform-driver-x86@v=
+ger.kernel.org");
+> >>
+> >> +static bool ctrl_ps2_aux_port;
+> >> +module_param(ctrl_ps2_aux_port, bool, 0444);
+> >> +MODULE_PARM_DESC(ctrl_ps2_aux_port,
+> >> +       "Enable driver based PS/2 aux port en-/dis-abling on touchpad =
+on/off toggle. "
+> >> +       "If you need this please report this to: platform-driver-x86@v=
+ger.kernel.org");
+> >> +
+> >>  /*
+> >>   * shared data
+> >>   */
+> >> @@ -1507,7 +1514,8 @@ static void ideapad_sync_touchpad_state(struct i=
+deapad_private *priv, bool send_
+> >>          * touchpad off and on. We send KEY_TOUCHPAD_OFF and
+> >>          * KEY_TOUCHPAD_ON to not to get out of sync with LED
+> >>          */
+> >> -       i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD=
+_AUX_DISABLE);
+> >> +       if (priv->features.ctrl_ps2_aux_port)
+> >> +               i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I=
+8042_CMD_AUX_DISABLE);
+> >>
+> >>         if (send_events) {
+> >>                 ideapad_input_report(priv, value ? 67 : 66);
+> >> @@ -1615,6 +1623,23 @@ static const struct dmi_system_id hw_rfkill_lis=
+t[] =3D {
+> >>         {}
+> >>  };
+> >>
+> >> +/*
+> >> + * On some models the EC toggles the touchpad muted LED on touchpad t=
+oggle
+> >> + * hotkey presses, but the EC does not actually disable the touchpad =
+itself.
+> >> + * On these models the driver needs to explicitly enable/disable the =
+i8042
+> >> + * (PS/2) aux port.
+> >> + */
+> >> +static const struct dmi_system_id ctrl_ps2_aux_port_list[] =3D {
+> >> +       {
+> >> +       /* Lenovo Ideapad Z570 */
+> >> +       .matches =3D {
+> >> +               DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> >> +               DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad Z570"),
+> >> +               },
+> >> +       },
+> >> +       {}
+> >> +};
+> >> +
+> >>  static const struct dmi_system_id no_touchpad_switch_list[] =3D {
+> >>         {
+> >>         .ident =3D "Lenovo Yoga 3 Pro 1370",
+> >> @@ -1642,6 +1667,8 @@ static void ideapad_check_features(struct ideapa=
+d_private *priv)
+> >>                 set_fn_lock_led || dmi_check_system(set_fn_lock_led_li=
+st);
+> >>         priv->features.hw_rfkill_switch =3D
+> >>                 hw_rfkill_switch || dmi_check_system(hw_rfkill_list);
+> >> +       priv->features.ctrl_ps2_aux_port =3D
+> >> +               ctrl_ps2_aux_port || dmi_check_system(ctrl_ps2_aux_por=
+t_list);
+> >>
+> >>         /* Most ideapads with ELAN0634 touchpad don't use EC touchpad =
+switch */
+> >>         if (acpi_dev_present("ELAN0634", NULL, -1))
+> >> --
+> >> 2.38.1
+> >>
+> >
+>
