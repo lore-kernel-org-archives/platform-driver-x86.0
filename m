@@ -2,89 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A307C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Nov 2022 13:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99688C43217
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Nov 2022 15:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbiKVNmh (ORCPT
+        id S233691AbiKVPcG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Nov 2022 08:42:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41128 "EHLO
+        Tue, 22 Nov 2022 10:32:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232550AbiKVNmd (ORCPT
+        with ESMTP id S233283AbiKVPcD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Nov 2022 08:42:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E4F117D
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Nov 2022 05:42:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A2D5BB81B41
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Nov 2022 13:42:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61807C4314D
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Nov 2022 13:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669124547;
-        bh=9oYKSrT5tJhT7ZFiVFym6cv0iFe8YcP6QWACFkztq5E=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=je2jO9CNYJfeV8xVeKBHuWyZ4TK8LJ3PAatjom/3fCcpNizbNh2n54HN+JrHLMcWj
-         rtN82MRAGGThU8yG6U5YNVHwTitfJEATq0qNgkdUgDQMq6HhAZ1ygFtIO69yxdNzZS
-         DLm6mXzDddepBupDro/pklQWwO37c9ynnVl/5UEy9SZK4ws2r58t+uKWbAa+tCC02e
-         WNUKCtijamCveXAUsn4h+7JxWkubz/QaZj757YpJI48UyYOEs+VhVQIGGsnm5LvJX6
-         4asnWsVQnjIgrA/rwmcFP2V8Uks/nkdqSUp+lVz1CBnCGMNuzavt2Gt1Dg7h8Bz2xC
-         T+H67AY5wT7iA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 51EA6C05FCF; Tue, 22 Nov 2022 13:42:27 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Tue, 22 Nov 2022 13:42:25 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: sst@poczta.fm
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-VdBpt4ODZl@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 22 Nov 2022 10:32:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E417D69DF4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Nov 2022 07:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669131064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M9Rq8NAw1T2YjzVTECZnA2JWS2PTg96PRA2tMjqGKL8=;
+        b=Xboar2RhCdbNFdmP2C4+wlxtmm3rgCBwY7AFRfjHCRZaM1pDltSLfFuKkijMQxCj3BGBU/
+        bZyRT86W9uZstRECnua8UR8tyfLKrlussO1AvkSC2JJzAGwsZp64kJSEPy9OjNbFRX00Tn
+        hvyiT120TrnhbJ/AbOhWEezjfwmYYfI=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-258-fH6abX-rNmqRVvJlT8s0-A-1; Tue, 22 Nov 2022 10:31:02 -0500
+X-MC-Unique: fH6abX-rNmqRVvJlT8s0-A-1
+Received: by mail-ed1-f71.google.com with SMTP id v18-20020a056402349200b004622e273bbbso8960126edc.14
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Nov 2022 07:31:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M9Rq8NAw1T2YjzVTECZnA2JWS2PTg96PRA2tMjqGKL8=;
+        b=ySMNzI0FruVhka/4y41ijWr1ONTt+syfPwIivRZrBSnRZgyOwzmnQQVVARtlESIo+S
+         qixGMhPsV5OwZgL96/GHTsbW2+TVztHYI/U8Mxbv+HkN3ULRxlNOCgK8E/YTH9JIfUH7
+         CglHMl6pdQjHSSV2ND6R/UWvRimxv1Hyaj1d5O0eKeZvVloGJFoUxfWme+DttsZ4aANq
+         6zKIoVcSQv7lA5iMo7Gb6Wvc7T3FaDin8B8eYsFcrYh3RwJZVIgLN6bUQbZc4ax2ucIu
+         YcrlbXPcnUrD+L81Uc91qZfPz9oecFgQAgc4AJfOUCLssJy/H54V6MQbGitaJhJuMD6r
+         a7Uw==
+X-Gm-Message-State: ANoB5pk3orH/y3ylZE57RBCng80gN1KGMqtJ2OPKzfWkFvbRZhRWBTtH
+        i2egn/IOVbQ18bM//gVuPWyvFJKZmQw+RdA1tFW0Plb09aRUjNdZgHw0B9qSCVE8kUkA6tXeg3B
+        BRdpLsxf8HqRl8oaS+ufX+7uklQKqwj4qLQ==
+X-Received: by 2002:a05:6402:1118:b0:467:a8cb:10c9 with SMTP id u24-20020a056402111800b00467a8cb10c9mr6837306edv.123.1669131061176;
+        Tue, 22 Nov 2022 07:31:01 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4CH+Vx3pIPif4bvQ7VvOOVeImcHVPAHjQC8cn+lp8ryOJqSR/ruqW5OSSaZonQqQi7ybLLrw==
+X-Received: by 2002:a05:6402:1118:b0:467:a8cb:10c9 with SMTP id u24-20020a056402111800b00467a8cb10c9mr6837287edv.123.1669131060931;
+        Tue, 22 Nov 2022 07:31:00 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id u26-20020a170906409a00b0078ddb518a90sm6132853ejj.223.2022.11.22.07.31.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Nov 2022 07:31:00 -0800 (PST)
+Message-ID: <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
+Date:   Tue, 22 Nov 2022 16:30:59 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
+ Rapids support
+Content-Language: en-US, nl
+To:     Artem Bityutskiy <dedekind1@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Linux PM Mailing List <linux-pm@vger.kernel.org>
+References: <20221122070014.3639277-1-dedekind1@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221122070014.3639277-1-dedekind1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi,
 
-Slawomir Stepien (sst@poczta.fm) changed:
+On 11/22/22 08:00, Artem Bityutskiy wrote:
+> From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> 
+> Make Intel uncore frequency driver support Emerald Rapids by adding its CPU
+> model to the match table. Emerald Rapids uncore frequency control is the same
+> as in Sapphire Rapids.
+> 
+> Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> 
+> Re-sending the same patch, but added X86 platform maintainers.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |sst@poczta.fm
+There are 3 different issues with this patch, next time please
+check your patch a bit more thorough before submitting it:
 
---- Comment #271 from Slawomir Stepien (sst@poczta.fm) ---
-Created attachment 303265
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303265&action=3Dedit
-Add support for ROG STRIX B660-I GAMING WIFI
+1. This is the first time I see this, or that the platform-driver-x86@vger.kernel.org
+list sees this. Next time please make sure you address the patch to the right
+people the first time you send it:
 
-This adds support for ROG STRIX B660-I GAMING WIFI into the "Asus WMI for
-nct6775 v6.0 base (2022.11.12)" patch.
+[hans@shalem platform-drivers-x86]$ scripts/get_maintainer.pl -f drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> (maintainer:INTEL UNCORE FREQUENCY CONTROL)
+Hans de Goede <hdegoede@redhat.com> (maintainer:X86 PLATFORM DRIVERS)
+Mark Gross <markgross@kernel.org> (maintainer:X86 PLATFORM DRIVERS)
+platform-driver-x86@vger.kernel.org (open list:INTEL UNCORE FREQUENCY CONTROL)
+linux-kernel@vger.kernel.org (open list)
 
---=20
-You may reply to this email to add a comment.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+2. This has checkpatch warnings which are easily fixable:
+
+[hans@shalem platform-drivers-x86]$ scripts/checkpatch.pl 0001-platform-x86-intel-uncore-freq-add-Emerald-Rapids-su.patch 
+WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+#7: 
+model to the match table. Emerald Rapids uncore frequency control is the same
+
+total: 0 errors, 1 warnings, 7 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+0001-platform-x86-intel-uncore-freq-add-Emerald-Rapids-su.patch has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+
+3. This fails to build on top of:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
+which is the branch on which this needs to be applied to get upstream, so this is also
+the branch on which you should base the patch (and build test it) before submitting it
+upstream:
+
+In file included from drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c:21:
+./arch/x86/include/asm/cpu_device_id.h:161:46: error: ‘INTEL_FAM6_EMERALDRAPIDS_X’ undeclared here (not in a function); did you mean ‘INTEL_FAM6_SAPPHIRERAPIDS_X’?
+  161 |         X86_MATCH_VENDOR_FAM_MODEL(INTEL, 6, INTEL_FAM6_##model, data)
+      |                                              ^~~~~~~~~~~
+./arch/x86/include/asm/cpu_device_id.h:46:27: note: in definition of macro ‘X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE’
+   46 |         .model          = _model,                                       \
+      |                           ^~~~~~
+./arch/x86/include/asm/cpu_device_id.h:129:9: note: in expansion of macro ‘X86_MATCH_VENDOR_FAM_MODEL_FEATURE’
+  129 |         X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model,       \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./arch/x86/include/asm/cpu_device_id.h:161:9: note: in expansion of macro ‘X86_MATCH_VENDOR_FAM_MODEL’
+  161 |         X86_MATCH_VENDOR_FAM_MODEL(INTEL, 6, INTEL_FAM6_##model, data)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c:206:9: note: in expansion of macro ‘X86_MATCH_INTEL_FAM6_MODEL’
+  206 |         X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+make[6]: *** [scripts/Makefile.build:250: drivers/platform/x86/intel/uncore-frequency/uncore-frequency.o] Error 1
+
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> 
+>  drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> index 8f9c571d7257..00ac7e381441 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> @@ -203,6 +203,7 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,	NULL),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,	NULL),
+>  	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
+
