@@ -2,161 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02580C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Nov 2022 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41DCC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Nov 2022 07:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbiKUSBT (ORCPT
+        id S232241AbiKVHAU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Nov 2022 13:01:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50118 "EHLO
+        Tue, 22 Nov 2022 02:00:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiKUSBJ (ORCPT
+        with ESMTP id S229750AbiKVHAT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Nov 2022 13:01:09 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2112014095;
-        Mon, 21 Nov 2022 10:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669053665; x=1700589665;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=k6/eLSPB+iMLB76eCgiF5UKnnzVZJqpZbnIt3RtAOrc=;
-  b=FbaRj4W8Nr4XZagcwIqxFS/sZrKHnPEN54YCPGWtvm3EzUla1sF6i/Iq
-   ctJZS/Mq+VHcmZhVF35aJwS2mZz1nY5DUr7Npe/9WrzFXOOf4IICGQiWv
-   1HIvru0B6Xe1NEW7vkgi88/Wsur7mEFlcY2sFH7ctQJ1CTsXBGYg62SJX
-   I6CrxWygetwOFXt23agRVf6apN6g72i+mRj8DOjTfyvMVPZEd3b9FXduj
-   rUElSCEDexiRk5505kE+0v2pJ451wWnhBB/eJRQCPQ/jlPrqPKUNML80V
-   cnr+BIjlM4a8x8TJqdh7/SH4AbreTkOvfySAiCRqJCcHRkpDbbS3lCCTl
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="312324683"
-X-IronPort-AV: E=Sophos;i="5.96,182,1665471600"; 
-   d="scan'208";a="312324683"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 10:01:03 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="709900214"
-X-IronPort-AV: E=Sophos;i="5.96,182,1665471600"; 
-   d="scan'208";a="709900214"
-Received: from gkammela-mobl.amr.corp.intel.com (HELO [10.212.164.188]) ([10.212.164.188])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 10:01:02 -0800
-Message-ID: <1e08361f-74f8-15a6-e22b-9215d61ec6bd@linux.intel.com>
-Date:   Mon, 21 Nov 2022 10:00:52 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v1 0/8] Redesign the pmc core driver
+        Tue, 22 Nov 2022 02:00:19 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B0623BF0;
+        Mon, 21 Nov 2022 23:00:18 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="315569508"
+X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
+   d="scan'208";a="315569508"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 23:00:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="635448177"
+X-IronPort-AV: E=Sophos;i="5.96,183,1665471600"; 
+   d="scan'208";a="635448177"
+Received: from powerlab.fi.intel.com ([10.237.71.25])
+  by orsmga007.jf.intel.com with ESMTP; 21 Nov 2022 23:00:15 -0800
+From:   Artem Bityutskiy <dedekind1@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        sukumar.ghorai@intel.com, xi.pardee@intel.com,
-        rajvi.jingar@intel.com,
-        Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        David E Box <david.e.box@linux.intel.com>
-References: <20221114183257.2067662-1-gayatri.kammela@linux.intel.com>
- <2a3f8cc5-4c6e-7bb9-5a09-1dc20929271e@redhat.com>
-Content-Language: en-US
-From:   "Kammela, Gayatri" <gayatri.kammela@linux.intel.com>
-In-Reply-To: <2a3f8cc5-4c6e-7bb9-5a09-1dc20929271e@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Linux PM Mailing List <linux-pm@vger.kernel.org>
+Subject: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald Rapids support
+Date:   Tue, 22 Nov 2022 09:00:14 +0200
+Message-Id: <20221122070014.3639277-1-dedekind1@gmail.com>
+X-Mailer: git-send-email 2.37.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/21/2022 1:44 AM, Hans de Goede wrote:
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 
-> Hi,
->
-> On 11/14/22 19:32, Gayatri Kammela wrote:
->> This patch series focuses on redesigning the PMC core driver for
->> maintainability and readability. Moving PCH specific structures and
->> functions to separate c files, simplifies core.c file and makes it
->> easier to add new platforms in future. The series includes two
->> preparatory patches that lays the ground work for the redesign. The
->> patch series also adds legacy support for Meteor Lake.
->>
->> This redesign adds following c files to support different PCHs. There
->> are no functional changes involved for the already supported platforms.
->>
->> spt.c: Sunrise Point PCH supports: Sky Lake, Sky Lake L, Kaby Lake,
->> Kaby Lake L
->> cnp.c: Cannon Lake Point PCH supports: Cannon Lake L, Comet Lake,
->> Comet Lake L
->> icl.c: Ice Lake PCH supports: Ice Lake L, Ice Lake NNPI, Jasper Lake
->> tgl.c: Tiger Lake PCH supports: Tiger Lake, Tiger Lake L, Alder Lake L,
->> Alder Lake N, Rocket Lake, Raptor Lake P, Elkhart Lake
->> adl.c: Alder Lake PCH supports: Alder Lake, Raptor Lake, Raptor Lake S
->> mtl.c: Meteor Lake PCH supports: Meteor Lake
->>
->> Patch 1: platform/x86: intel/pmc: Replace all the reg_map with init
->> functions
->> Patch 2: platform/x86: intel/pmc: Move variable declarations and
->> definitions to header and core.c
->> Patch 3: platform/x86: intel/pmc: Relocate Sunrise Point PCH support
->> Patch 4: platform/x86: intel/pmc: Relocate Cannon Lake Point PCH
->> support
->> Patch 5: platform/x86: intel/pmc: Relocate Ice Lake PCH support
->> Patch 6: platform/x86: intel/pmc: Relocate Tiger Lake PCH support
->> Patch 7: platform/x86: intel/pmc: Relocate Alder Lake PCH support
->> Patch 8: platform/x86: intel/pmc: Add Meteor Lake support to pmc core
->> driver
-> Thank you for your patch-series, I've applied the series to my
-> review-hans branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
-Thank you Hans!
->
->
->
->
->
->> Gayatri Kammela (4):
->>    platform/x86: intel/pmc: Replace all the reg_map with init functions
->>    platform/x86: intel/pmc: Relocate Tiger Lake PCH support
->>    platform/x86: intel/pmc: Relocate Alder Lake PCH support
->>    platform/x86: intel/pmc/core: Add Meteor Lake support to pmc core
->>      driver
->>
->> Rajvi Jingar (1):
->>    platform/x86: intel/pmc: Relocate Sunrise Point PCH support
->>
->> Xi Pardee (3):
->>    platform/x86: intel/pmc: Move variable declarations and definitions to
->>      header and core.c
->>    platform/x86: intel/pmc: Relocate Cannon Lake Point PCH support
->>    platform/x86: intel/pmc: Relocate Ice Lake PCH support
->>
->>   drivers/platform/x86/intel/pmc/Makefile |   3 +-
->>   drivers/platform/x86/intel/pmc/adl.c    | 325 ++++++++
->>   drivers/platform/x86/intel/pmc/cnp.c    | 210 +++++
->>   drivers/platform/x86/intel/pmc/core.c   | 994 ++----------------------
->>   drivers/platform/x86/intel/pmc/core.h   |  89 ++-
->>   drivers/platform/x86/intel/pmc/icl.c    |  56 ++
->>   drivers/platform/x86/intel/pmc/mtl.c    |  52 ++
->>   drivers/platform/x86/intel/pmc/spt.c    | 140 ++++
->>   drivers/platform/x86/intel/pmc/tgl.c    | 269 +++++++
->>   9 files changed, 1183 insertions(+), 955 deletions(-)
->>   create mode 100644 drivers/platform/x86/intel/pmc/adl.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/cnp.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/icl.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/mtl.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/spt.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/tgl.c
->>
->>
->> base-commit: 309e0a6ed6e3fdb4febacc3e91aeb268500b90c6
->>
->> Cc: Xi Pardee <xi.pardee@intel.com>
->> Cc: Rajvi Jingar <rajvi.jingar@linux.intel.com>
->> Cc: David E Box <david.e.box@linux.intel.com>
+Make Intel uncore frequency driver support Emerald Rapids by adding its CPU
+model to the match table. Emerald Rapids uncore frequency control is the same
+as in Sapphire Rapids.
+
+Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+
+Re-sending the same patch, but added X86 platform maintainers.
+
+ drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 8f9c571d7257..00ac7e381441 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -203,6 +203,7 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,	NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,	NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
+-- 
+2.37.3
+
