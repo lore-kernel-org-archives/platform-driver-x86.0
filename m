@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E2C4708A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12F7C46467
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 12:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238053AbiKWMxe (ORCPT
+        id S238100AbiKWMxe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Wed, 23 Nov 2022 07:53:34 -0500
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238177AbiKWMvh (ORCPT
+        with ESMTP id S238629AbiKWMxJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 07:51:37 -0500
+        Wed, 23 Nov 2022 07:53:09 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5E784320;
-        Wed, 23 Nov 2022 04:44:24 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA308DA55;
+        Wed, 23 Nov 2022 04:45:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AFE01B81F5D;
-        Wed, 23 Nov 2022 12:44:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E16C4314A;
-        Wed, 23 Nov 2022 12:44:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EE427B81F70;
+        Wed, 23 Nov 2022 12:45:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3FEC433D7;
+        Wed, 23 Nov 2022 12:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669207450;
-        bh=uXpxl+oNrqOgw8cAenGOZxGgnyLWKKoZP9SOwKNlytg=;
+        s=k20201202; t=1669207508;
+        bh=qB5XqF5nkXDbgvjE1KWxNlmDbGiUjFpQU0Hoc+cvTRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwQdS7WGJSG1PLgt+UMnMQ1WJ5eun8uXI4yQIDZF1yopI6d62igIPo8rUIvpb6ex7
-         I15/GZdg4/NvIdsk4bNDL1NrtdcbnWbxtrPYEXBioYt8WEfKe0uunt8lBkY8GufXFx
-         ZijVugfAMaUFo2qAjN3QNZvgsgf1JiMVUbd/3H2wDkofVPyzmiNGEp7rfYjUDfCfHP
-         inUA/aOMlsgernyWvyfXSDUkHEkTjjQEg31CTt1fBznhdAUr6J78jFdiDhKMlgKAzc
-         LGz/C7e9Myo67rl1vvVEfRKwe1322Po19E0oO8X9aLR71jexg6HQInt7IdioKHw4Bd
-         tPEC8pnPzNWNQ==
+        b=H2nCRVmEnXBCjtXcQXQpA7Pw82sBDgwSW0UfEgeOzvkRWJyHPGAiHh/jc4gb4KeK7
+         uS5Bk5SMe0IXJRVOuSE8ojlMiEdJf3khRUiQosVNI+HMWtLeWNnRPomApop+kduNCi
+         IEp0Q5Mwna6XZrjRI9ZuFoTWZKsnT4py/HoTxgf2jXm8mWgHW6XGn7KxMpzqPwBp/V
+         2pa9f5Ov6dKfhxSIJ60KrTPUUNwZDkXrlzeZOiyWLUTYX5jPPX5BAmOD6wvGF2551s
+         y+Y4rlxegVDc8ikPVyZgj+29uiGzz3cuZo4RRUHbR3ZksH43N8TxjmeBqYA85Ve3f3
+         Y5I9Rx6zB+0Fw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
@@ -40,12 +40,12 @@ Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
         markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 11/22] platform/x86: asus-wmi: add missing pci_dev_put() in asus_wmi_set_xusb2pr()
-Date:   Wed, 23 Nov 2022 07:43:26 -0500
-Message-Id: <20221123124339.265912-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/11] platform/x86: asus-wmi: add missing pci_dev_put() in asus_wmi_set_xusb2pr()
+Date:   Wed, 23 Nov 2022 07:44:49 -0500
+Message-Id: <20221123124458.266492-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221123124339.265912-1-sashal@kernel.org>
-References: <20221123124339.265912-1-sashal@kernel.org>
+In-Reply-To: <20221123124458.266492-1-sashal@kernel.org>
+References: <20221123124458.266492-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,10 +72,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 39e1a6396e08..db369cf26111 100644
+index 339b753ba447..3723ae37993d 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1212,6 +1212,8 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
+@@ -1176,6 +1176,8 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
  	pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
  				cpu_to_le32(ports_available));
  
