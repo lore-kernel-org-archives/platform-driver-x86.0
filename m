@@ -2,200 +2,201 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CE4C47089
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 15:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC0C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 15:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238813AbiKWPx1 (ORCPT
+        id S239001AbiKWP4q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 10:53:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
+        Wed, 23 Nov 2022 10:56:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238772AbiKWPwz (ORCPT
+        with ESMTP id S238316AbiKWP4R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 10:52:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB32457B76;
-        Wed, 23 Nov 2022 07:52:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 57703B82172;
-        Wed, 23 Nov 2022 15:52:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFB3C433D6;
-        Wed, 23 Nov 2022 15:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669218768;
-        bh=/DumSgjbm3+bFjW/YII5HB+37hZffmS6RIQzxFus23A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Axk59HaPRU6B2o8/sQ2xV/J3QDnuJbllXINFmP+zTkfGNyl9/NsBA856568zy/Zy0
-         ziibqVHor7E2pImZW09H3fsO0rmk5lAkiY8/xImxvEPWF1JugZkU42k7XZp/1gGlxF
-         YjrYDdmJl0DMzZ+GHnRpj/dpCWN4eBZtN+hiAE0Q=
-Date:   Wed, 23 Nov 2022 16:52:45 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jilin Yuan <yuanjilin@cdjrlc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
- const *
-Message-ID: <Y35BzXYg8/WGqf6V@kroah.com>
-References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
- <20221123122523.1332370-3-gregkh@linuxfoundation.org>
- <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
- <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
- <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
- <Y34zyzdbRUdyOSkA@casper.infradead.org>
- <Y34+V2bCDdqujBDk@kroah.com>
- <b93a9fcd-0d7b-14fd-1018-bba35f961a27@gmail.com>
+        Wed, 23 Nov 2022 10:56:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D001D942E2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 07:54:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669218896;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NKN0MLsksCCqIP5KT53Fp7WFaXDe8oqfVKQvl/+1F5k=;
+        b=YMq+pkKXX5mpIwZnAKx1tMW85yjpFG/+Kfun5b/JQ38S8GrattqGfoagPA0MnOCsLIpYsK
+        0ICNFG7p5eYk6yP2I1P7pfRK+EoQ1gQD76XLcSi1lo7eNfG6cW7p63S+DAH2QC91KPHKEg
+        QKn1aJLZnG13MkzFlb1q1lRL74clkfA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-6-jQwra5iFNr-ldPcWzfo2EQ-1; Wed, 23 Nov 2022 10:54:54 -0500
+X-MC-Unique: jQwra5iFNr-ldPcWzfo2EQ-1
+Received: by mail-ej1-f71.google.com with SMTP id hr21-20020a1709073f9500b007b29ccd1228so10148416ejc.16
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 07:54:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NKN0MLsksCCqIP5KT53Fp7WFaXDe8oqfVKQvl/+1F5k=;
+        b=zNifK+c/4PeXH3hgzG0VcXqsud0XfAKTkuFESTkP7MPnC4gWcol3vRnKKWP4222iZr
+         Ju9SuTh6BFLcBz3B60JkDN2Xieq5v5NY9CnK4PdgGdjyskKsOUmZ4q+OZpkuMqD9Bea8
+         qSECwCxQ6cNEtgoryOmwEdJhKjxAWph4LrnyI1yaHSPmqpqvqBWuYKlun/ERtXJPSepi
+         wNAa69nQZHJzHejit4gsZ/6hLuVt4j3iW0TS87eEyobStPitO5CwAzK9MM5HWpDiWQNR
+         kXuwM5/hZTNhxqfXUkTOtaI/6B4iqToxRsuHlqTLwd5dFkB3kO75RluJaTecxit7Ufug
+         AQzg==
+X-Gm-Message-State: ANoB5pmd/6bfCCWd4nvUIsEZ5E1m9T15hp2x/6TowT2dIrPvATuJ2roh
+        WypD2Klqz2E4m6kGDBFrag5wAlsMDTjezLj/ejTOi8Su3cAnfL6dQNFHjXyv8QarKtspA/c9O7u
+        xP6MHaAWgE/c6CQ13ZuGDqruVEz4bML3/Cw==
+X-Received: by 2002:a17:906:708d:b0:7ad:b45c:dbe7 with SMTP id b13-20020a170906708d00b007adb45cdbe7mr23860929ejk.617.1669218893490;
+        Wed, 23 Nov 2022 07:54:53 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4LK1NplGnNEY91T3+qiA6I2zQbm0g206Oe0B8qIw3K8Q6/ttMKXUUiPNn782ljfRMIXRj7ag==
+X-Received: by 2002:a17:906:708d:b0:7ad:b45c:dbe7 with SMTP id b13-20020a170906708d00b007adb45cdbe7mr23860909ejk.617.1669218893200;
+        Wed, 23 Nov 2022 07:54:53 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:2625:d256:70bd:577e? (2001-1c00-0c1e-bf00-2625-d256-70bd-577e.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:2625:d256:70bd:577e])
+        by smtp.gmail.com with ESMTPSA id s22-20020a1709067b9600b0077205dd15basm7275766ejo.66.2022.11.23.07.54.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Nov 2022 07:54:52 -0800 (PST)
+Message-ID: <ee34cb44-9782-9c91-3ec8-3b9d37353b10@redhat.com>
+Date:   Wed, 23 Nov 2022 16:54:51 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b93a9fcd-0d7b-14fd-1018-bba35f961a27@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
+ Rapids support
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Linux PM Mailing List <linux-pm@vger.kernel.org>
+References: <20221122070014.3639277-1-dedekind1@gmail.com>
+ <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
+ <635d481206b8945db751ea036cf789fe13b9698e.camel@gmail.com>
+ <01c732b1-7211-8298-61da-0a6892988743@redhat.com>
+ <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 04:48:41PM +0100, Maximilian Luz wrote:
-> On 11/23/22 16:37, Greg Kroah-Hartman wrote:
-> > On Wed, Nov 23, 2022 at 02:52:59PM +0000, Matthew Wilcox wrote:
-> > > On Wed, Nov 23, 2022 at 02:59:00PM +0100, Maximilian Luz wrote:
-> > > > On 11/23/22 14:34, Andy Shevchenko wrote:
-> > > > > On Wed, Nov 23, 2022 at 02:14:31PM +0100, Maximilian Luz wrote:
-> > > > > > On 11/23/22 13:25, Greg Kroah-Hartman wrote:
-> > > > > > > The uevent() callback in struct device_type should not be modifying the
-> > > > > > > device that is passed into it, so mark it as a const * and propagate the
-> > > > > > > function signature changes out into all relevant subsystems that use
-> > > > > > > this callback.
-> > > > > 
-> > > > > [...]
-> > > > > 
-> > > > > > > -static inline struct ssam_device *to_ssam_device(struct device *d)
-> > > > > > > +static inline struct ssam_device *to_ssam_device(const struct device *d)
-> > > > > > >     {
-> > > > > > >     	return container_of(d, struct ssam_device, dev);
-> > > > > > >     }
-> > > > > > 
-> > > > > > I am slightly conflicted about this change as that now more or less
-> > > > > > implicitly drops the const. So I'm wondering if it wouldn't be better to
-> > > > > > either create a function specifically for const pointers or to just
-> > > > > > open-code it in the instance above.
-> > > > > > 
-> > > > > > I guess we could also convert this to a macro. Then at least there
-> > > > > > wouldn't be an explicit and potentially misleading const-conversion
-> > > > > > indicated in the function signature.
-> > > > > 
-> > > > > This is an intermediate step as far as I know since moving container_of to
-> > > > > recognize const is a bit noisy right now. I guess you can find a discussion
-> > > > > on the topic between Greg and Sakari.
-> > > > 
-> > > > Thanks! I assume you are referring to the following?
-> > > > 
-> > > > 	https://lore.kernel.org/lkml/4218173bd72b4f1899d4c41a8e251f0d@AcuMS.aculab.com/T/
-> > > > 
-> > > > As far as I can tell this is only a warning in documentation, not
-> > > > compile time (which would probably be impossible?).
-> > > > 
-> > > > As I've said I'd be fine with converting the function to a macro (and
-> > > > preferably adding a similar warning like the one proposed in that
-> > > > thread). The point that irks me up is just that, as proposed, the
-> > > > function signature would now advertise a conversion that should never be
-> > > > happening.
-> > > > 
-> > > > Having two separate functions would create a compile-time guarantee, so
-> > > > I'd prefer that, but I can understand if that might be considered too
-> > > > noisy in code. Or if there is a push to make container_of() emit a
-> > > > compile-time warning I'd also be perfectly happy with converting it to a
-> > > > macro now as that'd alleviate the need for functions in the future.
-> > > 
-> > > Can't we do:
-> > > 
-> > > static inline const struct ssam_device *to_ssam_device(const struct device *d)
-> > > {
-> > > 	return container_of(d, const struct ssam_device, dev);
-> > > }
-> > > 
-> > 
-> > You could, if you can always handle a const pointer coming out of this
-> > function, but I don't think you can.
-> > 
-> > What you might want to do instead, and I'll be glad to do it for all of
-> > the functions like this I change, is to do what we have for struct
-> > device now:
-> > 
-> > static inline struct device *__kobj_to_dev(struct kobject *kobj)
-> > {
-> >          return container_of(kobj, struct device, kobj);
-> > }
-> > 
-> > static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
-> > {
-> >          return container_of(kobj, const struct device, kobj);
-> > }
-> > 
-> > /*
-> >   * container_of() will happily take a const * and spit back a non-const * as it
-> >   * is just doing pointer math.  But we want to be a bit more careful in the
-> >   * driver code, so manually force any const * of a kobject to also be a const *
-> >   * to a device.
-> >   */
-> > #define kobj_to_dev(kobj)                                       \
-> >          _Generic((kobj),                                        \
-> >                   const struct kobject *: __kobj_to_dev_const,   \
-> >                   struct kobject *: __kobj_to_dev)(kobj)
-> > 
-> > 
-> > Want me to do the same thing here as well?
+Hi Rafael,
+
+On 11/23/22 15:59, Rafael J. Wysocki wrote:
+> On Wed, Nov 23, 2022 at 3:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 11/23/22 09:45, Artem Bityutskiy wrote:
+>>> Hello Hans,
+>>>
+>>> On Tue, 2022-11-22 at 16:30 +0100, Hans de Goede wrote:
+>>> There are 3 different issues with this patch, next time please
+>>> check your patch a bit more thorough before submitting it:
+>>>
+>>> 1. This is the first time I see this, or that the
+>>> platform-driver-x86@vger.kernel.org
+>>> list sees this. Next time please make sure you address the patch to the right
+>>> people the first time you send it:
+>>>
+>>> sure, thanks.
+>>>
+>>> 2. This has checkpatch warnings which are easily fixable:
+>>>
+>>> [hans@shalem platform-drivers-x86]$ scripts/checkpatch.pl 0001-platform-x86-
+>>> intel-uncore-freq-add-Emerald-Rapids-su.patch
+>>> WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per
+>>> line)
+>>>
+>>> OK.
+>>>
+>>> 3. This fails to build on top of:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
+>>>
+>>> OK, thanks for the pointer. I'd need platfrom-drivers-x86 git tree to include
+>>> this upstream commit:
+>>>
+>>> 7beade0dd41d x86/cpu: Add several Intel server CPU model numbers
+>>>
+>>> Would you please consider updating?
+>>
+>> Ugh, no, *NO*! I really expect Intel to do better here!
+>>
+>> As I repeated explained with the
+>>
+>> "platform/x86/intel: pmc/core: Add Raptor Lake support to pmc core driver"
+>>
+>> patch I cannot just go and cherry-pick random patches merged through other trees
+>> because that may cause conflicts and will cause the merge to look really
+>> funky.
 > 
-> That looks great! Thanks!
+> I don't think this is about requesting a cherry-pick though.
 > 
-> I would very much prefer that.
+>> There are proper ways to do this and this is not it!
+>>
+>> This is something which Intel really *must* do correctly next time because
+>> having this discussion over and over again is becoming very tiresome!
+>>
+>> So the proper way to do starts with realizing *beforehand* that things
+>> will not build on top of pdx86/for-next. By like actually doing
+>> a build-test based on top of pdx86/for-next instead of this nonsense of
+>> repeatedly sending me broken patches.
+> 
+> This patch is based on the mainline.  The requisite commit has been
+> included into the Linus' tree since at least 6.1-rc4 AFAICS and I
+> suppose that it has been tested on top of that.
 
-Ok, will respin this patch as at least 2 individual patches, one that
-does the change to to_ssam_device() and the next that does the bus-wide
-changes.
+Ah, I did not know that; and that is typically info which I would
+have expected to be explicitly mentioned in the non-existing cover-letter
+for this patch.
 
-I'll review the other container_of() users in this patch as well to see
-if they can be converted as well.
+> 
+> You could in principle create a temporary branch based on 6.1-rc4 (or
+> a later -rc), apply the patch on top of it, merge your current branch
+> on top of that and merge it back into your current branch (that should
+> result in a fast-forward merge, so the temporary branch can be deleted
+> after it).
 
-thanks,
+Yes I could merge rc4 into my for-next, but I'm not really a big fan
+of back-merges like this. I try to keep my for-next history linear
+based on the last rc1, because I find seeing what is going on
+a lot easier that way. But if this happens more often I guess
+I may need to get used to doing back-merges more often then
+just after rc1 is out.
 
-greg k-h
+What I don't understand is why this patch was not send as a part of
+the series starting which also had the
+"7beade0dd41d x86/cpu: Add several Intel server CPU model numbers"
+patch. That patch just adds a couple #define-s presumably there
+were more patches in that series actually using those defines.
+
+Things would have been cleaner / easier if this patch had simply
+been a part of that series and if it was merged in one go with
+that series...
+
+Btw this new CPU ID is also missing from:
+drivers/platform/x86/intel/pmc/core.c
+drivers/platform/x86/intel/ifs/core.c
+
+At least I assume it will need to be added there too, although
+I guess it might not be as simple as only adding the CPU-id
+match there ?
+
+> Alternatively, if you'd rather not do that, I can merge the Artem's
+> patch through the PM tree (it is PM-related after all).
+
+If you can do that, that would be great, thank you.
+
+> I suppose that your ACK would be applicable for that too?
+
+Yes.
+
+Regards,
+
+Hans
+
+
