@@ -2,112 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B8C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 21:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4F2C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 21:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235379AbiKWVPO (ORCPT
+        id S235400AbiKWV2B (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 16:15:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35326 "EHLO
+        Wed, 23 Nov 2022 16:28:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiKWVPN (ORCPT
+        with ESMTP id S235295AbiKWV17 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 16:15:13 -0500
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAA099EA2;
-        Wed, 23 Nov 2022 13:15:12 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3a4c2c83300so90680237b3.13;
-        Wed, 23 Nov 2022 13:15:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FNzSaNWKzCvqjSV6/7MnFEiI66UOQhTq7qtIvSZpSdE=;
-        b=ab5irNWeBEPBvhWEE7KLuv+OcU1j+C+N2SJprxcjGxB3ebOKx/WiNfZt8yI1Yb9h3U
-         NxSUGn18InN2yOVwXD3Eo7T8W0rbTF9lsizlrEllo0yicxMc0XwiTKHio4Ym2K65cA2i
-         u4Cd63lSW6qMNiMHcqQJmopD3Uj4nBb8mD+E/cwCjYdoQfmd2ZMKIbsL6ndk8GywVNaa
-         1XZiUO38jh1ZaOJoV87gW4yCuSm3bHTQbiS1HB3CjLLSE5t5zjepK/Z2KYYUxNNm87zH
-         VCcf4KxPyDVyh+FieOL8vdkZiyzt1wJQ83MuA/SIDqWVDLRGDC0QRkv7DRI05/JTwwEs
-         Pyag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FNzSaNWKzCvqjSV6/7MnFEiI66UOQhTq7qtIvSZpSdE=;
-        b=vMgs5KmKxIaPv5VmrvktY6VqOCHzJO3o3tokF95i2HZv4DRGTDE781UiRiSxN8X2+l
-         Hi7QEVm+t1+ch+GJlGP9GHPQhD7mSkkl2mr7Itfs/RVBcU+m/rQ2rCV+tFNJXggmf1aj
-         VrUn/2jPOzphGFMe448UjyoaMp+ZlDmY1X/aZvJx0BHNRdvYS7tup9CagOjyqOqPtLNH
-         zw46Fn0rxJj1yrihOriXSKHxNmoxuU3eWOuwruyU58iBq2znnpaDLz0Y7RyREvyCODE9
-         sVL1a7Un5g0TcEqFL7QeLcK9mElTAIlvj9T8mXknftC2fHmA25bwa82ltTZAjoLEQRhi
-         92YA==
-X-Gm-Message-State: ANoB5pkN/jO0bBQeFsAxztkEyh6iCbcerJUVAaSCX47ZG6TtvqPkwyp6
-        KFf9n9sSndcQKe5tKhj13RsDKekr+XVGqYyFklTnjzhcWSg=
-X-Google-Smtp-Source: AA0mqf78BLoJM0EN7+QQxprIQfWSzgWV2siKH6tQWKerUmhg1mHTB/Dz+fbaFy4ay9ZvHqMvBHjEbDGPL/WxSWtEMm8=
-X-Received: by 2002:a05:690c:38d:b0:3b3:bcb7:7423 with SMTP id
- bh13-20020a05690c038d00b003b3bcb77423mr1426714ywb.341.1669238112139; Wed, 23
- Nov 2022 13:15:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20221119162347.36698-1-samsagax@gmail.com> <20221120134650.GA1787156@roeck-us.net>
- <CABgtM3g+g9PSXaTxaywJLQ18Y7pZybeDDrvycN-KzCczZ_0UPg@mail.gmail.com> <20221123162220.GA3019010@roeck-us.net>
-In-Reply-To: <20221123162220.GA3019010@roeck-us.net>
-From:   Joaquin Aramendia <samsagax@gmail.com>
-Date:   Wed, 23 Nov 2022 18:15:01 -0300
-Message-ID: <CABgtM3j-V-z1o+-q3AjZRDH99Uo1NWmtJ2KaNp8=S6uhOm+PrQ@mail.gmail.com>
-Subject: Re: [PATCH] hwmon: (oxp-sensors) Add AOK ZOE and Mini PRO
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     w_armin@gmx.de, hdegoede@redhat.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
+        Wed, 23 Nov 2022 16:27:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE8861525
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 13:27:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED19661F55
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 21:27:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 58BF6C43149
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 21:27:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669238877;
+        bh=wRFVKfgkPZGd3Eqjog3Nt17MQx4oo7ahvtd3o9vK358=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=MUqLnxD/Z4FLfBjmvmMci1j/xtJa4hHdCpxvwjgaW5AUeiWh6RuKmL8Eu98O3SAxe
+         /6l1vlc9Nvg1M6Uo4draQcXxiCjsLzDiobXXUqhhpjZeMHImhv7ajFAemDWW4Cz3Dp
+         NFFPNQhpRVt6M3tvPmAmHPVT+TfT+/pCacsMwDvBnjlyJ57TBOajmtpu5Al/FBHnbW
+         cWO7M5Z+1QC/dgDkA4zZ6bteHn8ThNCQkr9jhKsb9iUzXYV4DJDqcwSukfBGnAJj0o
+         RrYlRLcf6/4S+FuG1rkVcu5RP4MyKU525qqTPr9w1HAuUeBTRz2Lv8y222ervccOEA
+         SnoJNuWDg/3ew==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 4B393C433E7; Wed, 23 Nov 2022 21:27:57 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 23 Nov 2022 21:27:55 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-4U0Thgemv5@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-El mi=C3=A9, 23 nov 2022 a la(s) 13:22, Guenter Roeck (linux@roeck-us.net) =
-escribi=C3=B3:
->
-> On Sun, Nov 20, 2022 at 10:01:09PM -0300, Joaquin Aramendia wrote:
-> > El dom, 20 nov 2022 a la(s) 10:46, Guenter Roeck (linux@roeck-us.net) e=
-scribi=C3=B3:
-> > >
-> > > On Sat, Nov 19, 2022 at 01:23:48PM -0300, Joaqu=C3=ADn Ignacio Aramen=
-d=C3=ADa wrote:
-> > > > Add support for the AOK ZOE A1 and OXP Mini PRO handheld devices.
-> > > > DMI strings are added to this driver since the same EC layout is us=
-ed and
-> > > > has similar specs as the OXP mini AMD.
-> > > >
-> > > > The added devices are:
-> > > > - OneXPlayer mini PRO (AMD 6800U)
-> > > > - AOK ZOE A1 (AMD 5800U)
-> > > >
-> > > > Signed-off-by: Joaqu=C3=ADn Ignacio Aramend=C3=ADa <samsagax@gmail.=
-com>
-> > >
-> > > Applied to hwmon-next.
-> > >
-> > > Thanks,
-> > > Guenter
-> >
-> > Oh, great! Thanks Guenter. I just realized I made a typo in the commit
-> > message. Would you mind if I correct it and resend a v2 of the patch?
->
-> I don't mind, but I don't see the typo. What is it ?
->
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-The AOK ZOE A1 has a 6800U APU. Also there is an unhelpful info
-message I should get rid of in init function. Will be sending v2
-shortly.
+--- Comment #272 from Denis Pauk (pauk.denis@gmail.com) ---
+(In reply to Slawomir Stepien from comment #271)
+> Created attachment 303265 [details]
+> Add support for ROG STRIX B660-I GAMING WIFI
+>=20
+> This adds support for ROG STRIX B660-I GAMING WIFI into the "Asus WMI for
+> nct6775 v6.0 base (2022.11.12)" patch.
 
-> Guenter
->
-> > --
-> > Joaqu=C3=ADn I. Aramend=C3=ADa
+Thank you! I will add your code to the next patch version.
 
+Just for recheck, could you please share error place on init when you added
+your board to asus_acpi_boards(x670 generation methods) or
+asus_wmi_boards(b550/x570 generation methods)? Are both of methods of access
+failed?=20
 
+I have hoped B660 boards have same access method as x670 boards at least :-(
 
 --=20
-Joaqu=C3=ADn I. Aramend=C3=ADa
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
