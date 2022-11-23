@@ -2,167 +2,162 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A57CC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 17:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F025EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 17:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238981AbiKWRaV (ORCPT
+        id S238968AbiKWRrm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 12:30:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
+        Wed, 23 Nov 2022 12:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239054AbiKWRaA (ORCPT
+        with ESMTP id S239144AbiKWRrl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 12:30:00 -0500
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC1E8DA6F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 09:29:58 -0800 (PST)
-Received: by mail-qt1-x82b.google.com with SMTP id w9so11648820qtv.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 09:29:58 -0800 (PST)
+        Wed, 23 Nov 2022 12:47:41 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DA72CE03
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 09:47:38 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id l8so22184316ljh.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 09:47:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6abR5j0hlMc008eliuHFOuiB/x1h/HoL7zgQ4kEGBMg=;
-        b=QdimsGNfTzv5cy4RlQtfTKKDVSVgL8yuEuK366wzZaMiRqxQeXrAmjllaGNMyScpdc
-         MsNj5mbl3pLDNd2BV325hkTwPL9BYOzi+kSwJtllQ0DULWANmidzNeIUXiQk3VoNfo/E
-         4ptv6rfZ5hd4J7x9tjAwSNGafLibrKF4EVw5LGSe1ZZy6+s8bRLN4jhguOSkiDMu6QPi
-         wPTI6VMOMjq510vQvLMtGptkpvLXdJgY7O2FNJzlSZh8JHnJa/Z4WKXEodaMMk2QwC7K
-         RiiKOKWHUqu9/c7mJwob6VF0WfIK7heBoUcwO8au92H5yk7bWPYSDK9PEgWhaqz377vC
-         k3ug==
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9nz9iEcY2kdM43iSCySU+3LqfVVEhngM0To5eDK7hgY=;
+        b=UUHKkbK6uQco9NM+AqOONI3WNrPyE0Yr1XzCwOEODPgoPGwx+Vig7iVCLBwNiZHLDo
+         ir6ISsc/BuhvKmkj3e1wOurKH/RJ+Ej27fjYPAq++SHiLYQ3TKsxe2N/twlxywySmx2o
+         z/So/hLQpoIc9YOhNIqL6V2/pgzumHnREHPTY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6abR5j0hlMc008eliuHFOuiB/x1h/HoL7zgQ4kEGBMg=;
-        b=tfMwos9GV82skBJctjt9fsxOGSEmObLZNmya4u0BDxlgiqFH2Iys6WFbKiuaXvQ5Fw
-         eY+7GHvw2QBMVl7G5uHvWDMXUJ45vsRzWFEajCk6gf3/yV+1m3XQAkKkqUwNgQfsLgH+
-         wn/DGsn+M6xyp5/28t1kpTc55x1azfTCEcwnkE7rcBdOVXZuyAmU/Aa6BWw1XtN454Az
-         iMGQ/39dfQrVZTxM8pKho5VjrIkhnuIGYJfbDcANdQ+c/AUeu6h7V7zcvTWoj/dGv1Kq
-         IYJxXGXPalnPSei+v9l1CC+WhmYHSsruwaYv5mSGqpjT3JeaSNDdYPdwvkwnHyqiAAlb
-         X/KA==
-X-Gm-Message-State: ANoB5pn22COdNSWwTtISAC+A0mn6zS9jK1MEaQCr25Mwmz9D+BoGoXdn
-        eh0FDRz41neBep02JkDuuns3rw==
-X-Google-Smtp-Source: AA0mqf6VK9T3mvV/iEAQivkf3Os9vtgvXBxWtvIIq8G+B7LGY/huw6PyHSkg/FXOahM3VUH5qsITeg==
-X-Received: by 2002:a05:622a:5819:b0:3a5:5d34:66a9 with SMTP id fg25-20020a05622a581900b003a55d3466a9mr11256824qtb.623.1669224598066;
-        Wed, 23 Nov 2022 09:29:58 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-122-23.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.122.23])
-        by smtp.gmail.com with ESMTPSA id bq30-20020a05620a469e00b006ef1a8f1b81sm12581219qkb.5.2022.11.23.09.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 09:29:56 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1oxtZM-00ATfh-9i;
-        Wed, 23 Nov 2022 13:29:56 -0400
-Date:   Wed, 23 Nov 2022 13:29:56 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jilin Yuan <yuanjilin@cdjrlc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
- const *
-Message-ID: <Y35YlI93UBuTfgYy@ziepe.ca>
-References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
- <20221123122523.1332370-3-gregkh@linuxfoundation.org>
- <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
- <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
- <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
- <Y34zyzdbRUdyOSkA@casper.infradead.org>
- <Y34+V2bCDdqujBDk@kroah.com>
- <Y35JfNJDppRp5bLX@ziepe.ca>
- <Y35R+/eQJYI7VaDS@kroah.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9nz9iEcY2kdM43iSCySU+3LqfVVEhngM0To5eDK7hgY=;
+        b=gXeZ4LJ4a8PkmUu1B6NzlDpE65V1lOnEUppXFALM3y2l4IdcBwT6Dp65k7PN7Zg+Oi
+         1Rv0xeqMojZBPI1InM13oyy9M5ih+FPh7pgIs3FnrrRkIJEXs0E5QuYYGqRu6kZpik7C
+         PoAPcMAioZwpPTe8r+hhqrUqkZrSdgwhKkqOpAg3J3X8Wt4weajoJK481D87BfGSr6Bl
+         GbGDHIGHnjVZDHGzdC3CvzU88+PFHFqJ83R2XPl0z2hlnP5p1uPvNwFMz+Z7gbGTNVz4
+         fnU3i+2bpnMY3tR2boAarQRqxXVW7jNdrOCT/OYKNTEOm2kgl+3LVV/tdmoIJrL2+c3X
+         aGMg==
+X-Gm-Message-State: ANoB5pl67D0o0UrzS01syv5FEeAZGdl100HjWxevN/k598RT3JJmvHCl
+        zPydGOUDj5ks7q7ngZCQ7Xce3ArKKNYNoQ==
+X-Google-Smtp-Source: AA0mqf5B/zBGbV3pU4IOo52V2QxZ3kOP2JL1DgtHklYr2BiVl3XTIDWuUXyuwb24XxEgPeBkYdJaGw==
+X-Received: by 2002:a2e:940f:0:b0:277:5df:9728 with SMTP id i15-20020a2e940f000000b0027705df9728mr3186003ljh.337.1669225656157;
+        Wed, 23 Nov 2022 09:47:36 -0800 (PST)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id z9-20020a0565120c0900b004a25468d86asm2977211lfu.68.2022.11.23.09.47.35
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Nov 2022 09:47:35 -0800 (PST)
+Received: by mail-lf1-f52.google.com with SMTP id f13so7698253lfa.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 09:47:35 -0800 (PST)
+X-Received: by 2002:ac2:47ec:0:b0:4a7:8b6b:2320 with SMTP id
+ b12-20020ac247ec000000b004a78b6b2320mr3309100lfp.267.1669225654599; Wed, 23
+ Nov 2022 09:47:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y35R+/eQJYI7VaDS@kroah.com>
+References: <20221117225822.16154-1-mario.limonciello@amd.com> <20221117225822.16154-4-mario.limonciello@amd.com>
+In-Reply-To: <20221117225822.16154-4-mario.limonciello@amd.com>
+From:   Sven van Ashbrook <svenva@chromium.org>
+Date:   Wed, 23 Nov 2022 12:47:23 -0500
+X-Gmail-Original-Message-ID: <CAM7w-FW8fGPxv0djzkzt4B88xcsMhjXJZ4i6n2ueaC81h4giaw@mail.gmail.com>
+Message-ID: <CAM7w-FW8fGPxv0djzkzt4B88xcsMhjXJZ4i6n2ueaC81h4giaw@mail.gmail.com>
+Subject: Re: [RFC v4 3/5] platform/x86/intel/pmc: core: Drop check_counters
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Raul Rangel <rrangel@chromium.org>, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Rajat Jain <rajatja@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 06:01:47PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Nov 23, 2022 at 12:25:32PM -0400, Jason Gunthorpe wrote:
-> > On Wed, Nov 23, 2022 at 04:37:59PM +0100, Greg Kroah-Hartman wrote:
-> > > static inline struct device *__kobj_to_dev(struct kobject *kobj)
-> > > {
-> > >         return container_of(kobj, struct device, kobj);
-> > > }
-> > > 
-> > > static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
-> > > {
-> > >         return container_of(kobj, const struct device, kobj);
-> > > }
-> > > 
-> > > /*
-> > >  * container_of() will happily take a const * and spit back a non-const * as it
-> > >  * is just doing pointer math.  But we want to be a bit more careful in the
-> > >  * driver code, so manually force any const * of a kobject to also be a const *
-> > >  * to a device.
-> > >  */
-> > > #define kobj_to_dev(kobj)                                       \
-> > >         _Generic((kobj),                                        \
-> > >                  const struct kobject *: __kobj_to_dev_const,   \
-> > >                  struct kobject *: __kobj_to_dev)(kobj)
-> > > 
-> > > 
-> > > Want me to do the same thing here as well?
-> > 
-> > It would be nice to have a shared macro code gen all of the above
-> > instead of copy and pasting it. Then maybe other cases beyond struct
-> > device could adopt const too..
-> 
-> I think I tried to create such a beast, but failed, so ended up
-> open-coding it in a few places in the USB headers already.  I can try it
-> again, but the redirection gets tricky (defines creating defines...)
+Hi Mario, comments below.
 
-This seems OK:
+On Thu, Nov 17, 2022 at 5:58 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> `check_counters` is a stateful variable for indicating whether or
+> not to be checking if counters incremented on resume from s2idle.
+>
+> As the module already has code to gate whether to check the counters
+> that will fail the suspend when this is enabled, use that instead.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> RFC v3->v4:
+>  * No changes
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 7 ++-----
+>  drivers/platform/x86/intel/pmc/core.h | 1 -
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 17ec5825d13d..adc2cae4db28 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -2059,8 +2059,6 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
+>  {
+>         struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+>
+> -       pmcdev->check_counters = false;
+> -
+>         /* No warnings on S0ix failures */
+>         if (!warn_on_s0ix_failures)
+>                 return 0;
+> @@ -2077,7 +2075,6 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
+>         if (pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
+>                 return -EIO;
+>
+> -       pmcdev->check_counters = true;
+>         return 0;
+>  }
+>
+> @@ -2113,10 +2110,10 @@ static __maybe_unused int pmc_core_resume(struct device *dev)
+>         const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
+>         int offset = pmcdev->map->lpm_status_offset;
+>
+> -       if (!pmcdev->check_counters)
+> +       if (!pmc_core_is_s0ix_failed(pmcdev))
 
-#define generic_container_of(in_type, in, out_type, out_member) \
-	_Generic(in,                                        \
-                  const in_type *: ((const out_type *)container_of(in, out_type, out_member)),   \
-                  in_type *: ((out_type *)container_of(in, out_type, out_member)) \
-		  )
+Will this break the "CPU did not enter SLP_S0!!!" warning?
 
-#define kobj_to_dev(__kobj) \
-	generic_container_of(struct kobject, __kobj, struct device, kobj)
+As far as I can tell,
+If an Intel system uses S3 instead of S0ix, pmcdev->s0ix_counter will
+not get updated in the
+suspend callback. In the resume callback, the counter check in
+pmc_core_is_s0ix_failed()
+no longer makes any sense. It either fails all the time (if
+pmcdev->s0ix_counter was inited with a non-
+zero value) or succeeds all the time (if pmcdev->s0ix_counter was zero-inited).
 
-Jason
+>                 return 0;
+>
+> -       if (!pmc_core_is_s0ix_failed(pmcdev))
+> +       if (!warn_on_s0ix_failures)
+>                 return 0;
+>
+>         if (pmc_core_is_pc10_failed(pmcdev)) {
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index 7a059e02c265..5687e91e884c 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -316,7 +316,6 @@ struct pmc_reg_map {
+>   * @pmc_xram_read_bit: flag to indicate whether PMC XRAM shadow registers
+>   *                     used to read MPHY PG and PLL status are available
+>   * @mutex_lock:                mutex to complete one transcation
+> - * @check_counters:    On resume, check if counters are getting incremented
+>   * @pc10_counter:      PC10 residency counter
+>   * @s0ix_counter:      S0ix residency (step adjusted)
+>   * @num_lpm_modes:     Count of enabled modes
+> --
+> 2.34.1
+>
