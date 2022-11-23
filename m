@@ -2,136 +2,188 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6723FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 15:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC6DC47089
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 15:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238739AbiKWPWv (ORCPT
+        id S238900AbiKWPie (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 10:22:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59774 "EHLO
+        Wed, 23 Nov 2022 10:38:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237870AbiKWPWa (ORCPT
+        with ESMTP id S239005AbiKWPiN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 10:22:30 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90462E1;
-        Wed, 23 Nov 2022 07:22:28 -0800 (PST)
-Received: by mail-qk1-f174.google.com with SMTP id x21so12650842qkj.0;
-        Wed, 23 Nov 2022 07:22:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LKLiu8mvQqLVm/5twakOnq9ApBtwsaynO3ONlkGE+yo=;
-        b=m7isEkAZFUPFk32Z7aHsqYSO8UD0u01VpUflEKI17nQlxjcmw2MFlrfI0OgCc3zF+S
-         i/5zptCSDzJ+GfWblT1vO22xjLUYPAwmvml+mAMmajVY2+erxSr6giKcWl/MHAL2bKQz
-         d+UDuSghEqVy67tcuXfRiwa4qmR0n/pY/U6IcH8HfWCxrJHTio85R8nK+TYp0ZWGwY8K
-         MVRgTXZEGnHTGSWKej8wHEdr2i16QT6JLZLAzsKX820Rvt8CmHPPEydo389yT2uMc/ea
-         EttlyhvRtjVX8M+LKHSsWr8wgS4FBYn4jG7NuXA1PSq1gETBqqcvlGIO94DQ9xHNy4oM
-         in4w==
-X-Gm-Message-State: ANoB5pkzK316VS6qNxTBPOflK/AOxurf//vlNy2TW0SDOnp1OE7AswJC
-        XI0GmBjXb4sOtq+wtIiWySSR/BnosywtqBPSgGORJGj/
-X-Google-Smtp-Source: AA0mqf6MEB5xnEeqXHk4nvmmdJZJTWwJv4S83b9ceNvqFpJB9uOw4Y+/hQJSbsIheXZhvDMZ7QUp9+krLMOc0nUTwWo=
-X-Received: by 2002:a05:620a:4611:b0:6fa:af7e:927c with SMTP id
- br17-20020a05620a461100b006faaf7e927cmr24969054qkb.443.1669216947973; Wed, 23
- Nov 2022 07:22:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20221122070014.3639277-1-dedekind1@gmail.com> <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
- <635d481206b8945db751ea036cf789fe13b9698e.camel@gmail.com>
- <01c732b1-7211-8298-61da-0a6892988743@redhat.com> <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Nov 2022 16:22:17 +0100
-Message-ID: <CAJZ5v0idhsaTxOFG5ncpV2fmFTnGd8yoNPY5c1+hWG4Y-ticnQ@mail.gmail.com>
-Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
- Rapids support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
+        Wed, 23 Nov 2022 10:38:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4624942CF;
+        Wed, 23 Nov 2022 07:38:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 74841B8216C;
+        Wed, 23 Nov 2022 15:38:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1979BC433B5;
+        Wed, 23 Nov 2022 15:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1669217883;
+        bh=fs5VkTgkSMThkRfwYHbvZbd9KBWsoqyzg9ciy8gus2Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h0ZAf34Hn5punisJHBW8LcbCQTw15cHF2JJX4ocDW62QTgSy6qJjtysjjdNvwu0ox
+         57RZmpe0+53Ztv/B01KCVB9FOl0MHv8tq8EoRdlsf0O30ZxuR+2QlY2BhD12bWW0TB
+         l8Nw7ylhiySZzmT0dyMoM2hjY9v4O3HQ5H0j6noM=
+Date:   Wed, 23 Nov 2022 16:37:59 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Linux PM Mailing List <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
+ const *
+Message-ID: <Y34+V2bCDdqujBDk@kroah.com>
+References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
+ <20221123122523.1332370-3-gregkh@linuxfoundation.org>
+ <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
+ <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
+ <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
+ <Y34zyzdbRUdyOSkA@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y34zyzdbRUdyOSkA@casper.infradead.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 3:59 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Nov 23, 2022 at 3:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 11/23/22 09:45, Artem Bityutskiy wrote:
-> > > Hello Hans,
-> > >
-> > > On Tue, 2022-11-22 at 16:30 +0100, Hans de Goede wrote:
-> > > There are 3 different issues with this patch, next time please
-> > > check your patch a bit more thorough before submitting it:
-> > >
-> > > 1. This is the first time I see this, or that the
-> > > platform-driver-x86@vger.kernel.org
-> > > list sees this. Next time please make sure you address the patch to the right
-> > > people the first time you send it:
-> > >
-> > > sure, thanks.
-> > >
-> > > 2. This has checkpatch warnings which are easily fixable:
-> > >
-> > > [hans@shalem platform-drivers-x86]$ scripts/checkpatch.pl 0001-platform-x86-
-> > > intel-uncore-freq-add-Emerald-Rapids-su.patch
-> > > WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per
-> > > line)
-> > >
-> > > OK.
-> > >
-> > > 3. This fails to build on top of:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
-> > >
-> > > OK, thanks for the pointer. I'd need platfrom-drivers-x86 git tree to include
-> > > this upstream commit:
-> > >
-> > > 7beade0dd41d x86/cpu: Add several Intel server CPU model numbers
-> > >
-> > > Would you please consider updating?
-> >
-> > Ugh, no, *NO*! I really expect Intel to do better here!
-> >
-> > As I repeated explained with the
-> >
-> > "platform/x86/intel: pmc/core: Add Raptor Lake support to pmc core driver"
-> >
-> > patch I cannot just go and cherry-pick random patches merged through other trees
-> > because that may cause conflicts and will cause the merge to look really
-> > funky.
->
-> I don't think this is about requesting a cherry-pick though.
->
-> > There are proper ways to do this and this is not it!
-> >
-> > This is something which Intel really *must* do correctly next time because
-> > having this discussion over and over again is becoming very tiresome!
-> >
-> > So the proper way to do starts with realizing *beforehand* that things
-> > will not build on top of pdx86/for-next. By like actually doing
-> > a build-test based on top of pdx86/for-next instead of this nonsense of
-> > repeatedly sending me broken patches.
->
-> This patch is based on the mainline.  The requisite commit has been
-> included into the Linus' tree since at least 6.1-rc4 AFAICS and I
-> suppose that it has been tested on top of that.
->
-> You could in principle create a temporary branch based on 6.1-rc4 (or
-> a later -rc), apply the patch on top of it, merge your current branch
-> on top of that and merge it back into your current branch (that should
-> result in a fast-forward merge, so the temporary branch can be deleted
-> after it).
->
-> I do such things on a regular basis and no complaints so far.
+On Wed, Nov 23, 2022 at 02:52:59PM +0000, Matthew Wilcox wrote:
+> On Wed, Nov 23, 2022 at 02:59:00PM +0100, Maximilian Luz wrote:
+> > On 11/23/22 14:34, Andy Shevchenko wrote:
+> > > On Wed, Nov 23, 2022 at 02:14:31PM +0100, Maximilian Luz wrote:
+> > > > On 11/23/22 13:25, Greg Kroah-Hartman wrote:
+> > > > > The uevent() callback in struct device_type should not be modifying the
+> > > > > device that is passed into it, so mark it as a const * and propagate the
+> > > > > function signature changes out into all relevant subsystems that use
+> > > > > this callback.
+> > > 
+> > > [...]
+> > > 
+> > > > > -static inline struct ssam_device *to_ssam_device(struct device *d)
+> > > > > +static inline struct ssam_device *to_ssam_device(const struct device *d)
+> > > > >    {
+> > > > >    	return container_of(d, struct ssam_device, dev);
+> > > > >    }
+> > > > 
+> > > > I am slightly conflicted about this change as that now more or less
+> > > > implicitly drops the const. So I'm wondering if it wouldn't be better to
+> > > > either create a function specifically for const pointers or to just
+> > > > open-code it in the instance above.
+> > > > 
+> > > > I guess we could also convert this to a macro. Then at least there
+> > > > wouldn't be an explicit and potentially misleading const-conversion
+> > > > indicated in the function signature.
+> > > 
+> > > This is an intermediate step as far as I know since moving container_of to
+> > > recognize const is a bit noisy right now. I guess you can find a discussion
+> > > on the topic between Greg and Sakari.
+> > 
+> > Thanks! I assume you are referring to the following?
+> > 
+> > 	https://lore.kernel.org/lkml/4218173bd72b4f1899d4c41a8e251f0d@AcuMS.aculab.com/T/
+> > 
+> > As far as I can tell this is only a warning in documentation, not
+> > compile time (which would probably be impossible?).
+> > 
+> > As I've said I'd be fine with converting the function to a macro (and
+> > preferably adding a similar warning like the one proposed in that
+> > thread). The point that irks me up is just that, as proposed, the
+> > function signature would now advertise a conversion that should never be
+> > happening.
+> > 
+> > Having two separate functions would create a compile-time guarantee, so
+> > I'd prefer that, but I can understand if that might be considered too
+> > noisy in code. Or if there is a push to make container_of() emit a
+> > compile-time warning I'd also be perfectly happy with converting it to a
+> > macro now as that'd alleviate the need for functions in the future.
+> 
+> Can't we do:
+> 
+> static inline const struct ssam_device *to_ssam_device(const struct device *d)
+> {
+> 	return container_of(d, const struct ssam_device, dev);
+> }
+> 
 
-Alternatively, if you'd rather not do that, I can merge the Artem's
-patch through the PM tree (it is PM-related after all).
+You could, if you can always handle a const pointer coming out of this
+function, but I don't think you can.
 
-I suppose that your ACK would be applicable for that too?
+What you might want to do instead, and I'll be glad to do it for all of
+the functions like this I change, is to do what we have for struct
+device now:
+
+static inline struct device *__kobj_to_dev(struct kobject *kobj)
+{
+        return container_of(kobj, struct device, kobj);
+}
+
+static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
+{
+        return container_of(kobj, const struct device, kobj);
+}
+
+/*
+ * container_of() will happily take a const * and spit back a non-const * as it
+ * is just doing pointer math.  But we want to be a bit more careful in the
+ * driver code, so manually force any const * of a kobject to also be a const *
+ * to a device.
+ */
+#define kobj_to_dev(kobj)                                       \
+        _Generic((kobj),                                        \
+                 const struct kobject *: __kobj_to_dev_const,   \
+                 struct kobject *: __kobj_to_dev)(kobj)
+
+
+Want me to do the same thing here as well?
+
+thanks,
+
+greg k-h
+
+
+
