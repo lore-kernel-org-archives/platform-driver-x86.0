@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FC0C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 12:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222A8C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 12:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237894AbiKWMxb (ORCPT
+        id S237928AbiKWMxc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 07:53:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34218 "EHLO
+        Wed, 23 Nov 2022 07:53:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238197AbiKWMvg (ORCPT
+        with ESMTP id S238451AbiKWMwf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 07:51:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5F185152;
-        Wed, 23 Nov 2022 04:44:23 -0800 (PST)
+        Wed, 23 Nov 2022 07:52:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3478C086;
+        Wed, 23 Nov 2022 04:44:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B44C61CAE;
-        Wed, 23 Nov 2022 12:44:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E92C433C1;
-        Wed, 23 Nov 2022 12:44:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6D7B3B81F73;
+        Wed, 23 Nov 2022 12:44:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C620C43470;
+        Wed, 23 Nov 2022 12:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669207451;
-        bh=bvxefQTvaK5KtzYdS8OroZp3L97TDlXZv1Iqvn5SU2o=;
+        s=k20201202; t=1669207488;
+        bh=n3WXNclQKGusouCtHgIHOqYn5lUMO3pXBnPDiucItow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWeT2VjmQVjdUBtV5D8KqHWedG5HyRXYduZ5DJWxT8esR0Mb5owe+8wJEd0tor5vg
-         EmExEgLiHZWI2NAqdSa8MNa+/0zYw+YdnFRKxU510G/appxhKnnfTowRWu/knPUur2
-         EMSD+u49xuT9rzUT9dZLOQfm2zSI7pB5Q1ahho9c1HNVPlkc1Q8ThNcZRXn6K2PE5u
-         bTGoHMREZ80nSrqlCgpouYBGAyasMVxaaeoFavLApab5OGybrxjlYofzNJYJNPaadd
-         3nIdRBxPM369PdfXQGu4r12ui99BW9QD71ASHb6Mq6+R/ZzNzPNewqxXn+/gDd8cuZ
-         zca+UdgrtGxqg==
+        b=OCw5kqm2OHpwqTC6dnueWkdip4SYlDryPIU0NgrbmB2+hTKlx/5KHeVN3iY23y5Xo
+         9k4xTaKES8DM8TuzqTc584/NdiXe6L21KgonsDimEgHkw388IABP8D50hNvPvxq4oU
+         RMMtCCdlCU12ehIFz19ESlCLR6G95RMPDVGnUQXNx+DNkoOckvU7Tjrpxx5TArxds1
+         tdFNZUyR+Qwn9oVX4N3JMz9vjwLjWLW9f7l3vuZcuR+MzqvFVmgmQLhcZ0TyQzHipP
+         xJnzF9D/OjxO5A+vMfrsGnDrk1bhPpqdGd7OLPMeX7i9bTyBeMNLYLbflNbgoeCKgb
+         mi4VO9mNn6RbA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Rudolf Polzer <rpolzer@google.com>,
-        Sasha Levin <sashal@kernel.org>, jlee@suse.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 12/22] platform/x86: acer-wmi: Enable SW_TABLET_MODE on Switch V 10 (SW5-017)
-Date:   Wed, 23 Nov 2022 07:43:27 -0500
-Message-Id: <20221123124339.265912-12-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/15] platform/x86: hp-wmi: Ignore Smart Experience App event
+Date:   Wed, 23 Nov 2022 07:44:19 -0500
+Message-Id: <20221123124427.266286-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221123124339.265912-1-sashal@kernel.org>
-References: <20221123124339.265912-1-sashal@kernel.org>
+In-Reply-To: <20221123124427.266286-1-sashal@kernel.org>
+References: <20221123124427.266286-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -53,45 +53,46 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 1e817b889c7d8c14e7005258e15fec62edafe03c ]
+[ Upstream commit 8b9b6a044b408283b086702b1d9e3cf4ba45b426 ]
 
-Like the Acer Switch 10 (SW5-012) and Acer Switch 10 (S1003) models
-the Acer Switch V 10 (SW5-017) supports reporting SW_TABLET_MODE
-through acer-wmi.
+Sometimes hp-wmi driver complains on system resume:
+[ 483.116451] hp_wmi: Unknown event_id - 33 - 0x0
 
-Add a DMI quirk for the SW5-017 setting force_caps to ACER_CAP_KBD_DOCK
-(these devices have no other acer-wmi based functionality).
+According to HP it's a feature called "HP Smart Experience App" and it's
+safe to be ignored.
 
-Cc: Rudolf Polzer <rpolzer@google.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20221114073842.205392-1-kai.heng.feng@canonical.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20221111111639.35730-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/acer-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/hp-wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 8e696262215f..ebec49957ed0 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -536,6 +536,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = (void *)ACER_CAP_KBD_DOCK,
- 	},
-+	{
-+		.callback = set_force_caps,
-+		.ident = "Acer Aspire Switch V 10 SW5-017",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SW5-017"),
-+		},
-+		.driver_data = (void *)ACER_CAP_KBD_DOCK,
-+	},
- 	{
- 		.callback = set_force_caps,
- 		.ident = "Acer One 10 (S1003)",
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index c3fdb0ecad96..27ca10bba19c 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -63,6 +63,7 @@ enum hp_wmi_event_ids {
+ 	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+ 	HPWMI_SANITIZATION_MODE		= 0x17,
++	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
+ };
+ 
+ struct bios_args {
+@@ -632,6 +633,8 @@ static void hp_wmi_notify(u32 value, void *context)
+ 		break;
+ 	case HPWMI_SANITIZATION_MODE:
+ 		break;
++	case HPWMI_SMART_EXPERIENCE_APP:
++		break;
+ 	default:
+ 		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
+ 		break;
 -- 
 2.35.1
 
