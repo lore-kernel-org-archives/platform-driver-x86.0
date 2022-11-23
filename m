@@ -2,93 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5C5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 18:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54357C4708A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 19:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239736AbiKWS3s convert rfc822-to-8bit (ORCPT
+        id S239629AbiKWTG0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 13:29:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
+        Wed, 23 Nov 2022 14:06:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238849AbiKWS3b (ORCPT
+        with ESMTP id S236590AbiKWTGY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 13:29:31 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BF91039;
-        Wed, 23 Nov 2022 10:29:29 -0800 (PST)
-Received: by mail-qt1-f178.google.com with SMTP id h24so11776990qta.9;
-        Wed, 23 Nov 2022 10:29:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dsfzpsvEfdcI9CvvzszRzTXDzyFxBt5oFZ6I9d30cN4=;
-        b=EQgLsa0V6JWSTTnkVZ1zOIL0hNZxEmTgsNr1elhU/jLMI2nl5KOa12SmdDitOO4LRq
-         1gtTbHzFvZYmfu7kQjQDzqxeR2/5kmychNQVhLqKRcqj5GeuNzvURcV4v04vssrzUKwN
-         DfaNeLcdGb+Z4Yv09YhtiCBbvEi4EdT4XpZibU0rXElEmm88jY5IZ0RrQiwPRF+lIavw
-         XHvKagJt7davw1i8rP8N7xfr943NIGQNPsgLz6XurWO6wTF1oGG8WDVp7+vqvb4+LYsC
-         zAHLWTLEw9UE6NQgoou4eDsa6GPplQMe8jxDB4IjmdxtVUT/7Qqxm3grjCfPCK/9X4Kn
-         N3ig==
-X-Gm-Message-State: ANoB5pncgfz7eAD1pHPgJnZ/G2F3ZsIiHhOzxgG8szuwtlDjEu7KwXCM
-        RfJ9Nz18LHddsFwbEwTZaMHEaugXmCrppWFvRok=
-X-Google-Smtp-Source: AA0mqf5ZpJMMPblx9yNvIFnKauwtR7arezg4/1XgYsmT2uGdGDdg0YCJQntrnvKUNiI480FE4ydc/Sze2y2lXj3j8oo=
-X-Received: by 2002:ac8:1482:0:b0:3a5:1e6f:7e05 with SMTP id
- l2-20020ac81482000000b003a51e6f7e05mr10093865qtj.357.1669228168694; Wed, 23
- Nov 2022 10:29:28 -0800 (PST)
+        Wed, 23 Nov 2022 14:06:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC46F922D2;
+        Wed, 23 Nov 2022 11:06:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 586E161EBE;
+        Wed, 23 Nov 2022 19:06:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7968C433D6;
+        Wed, 23 Nov 2022 19:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1669230382;
+        bh=imibZHjJL9cpBpAGiGFcUllw5xFRNIsDuHu6Y+fwag4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V2GZdWHPvr+u9NV42kW3apisS1jk4Cp6h19MZ6qfaWIUGIVJV5gV2ha39zpYgwqP7
+         WIt60wd9b8FvKniDUGYZZUiLCvZQFxPf+YdmrcSFnI46/b/EWX33zlFDz2TQxA125f
+         2aOS9p5Y/Iiz28acyMaujccSu8U/Ol2yQw6Symkw=
+Date:   Wed, 23 Nov 2022 20:06:20 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
+ const *
+Message-ID: <Y35vLAWWfezPvGSm@kroah.com>
+References: <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
+ <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
+ <Y34zyzdbRUdyOSkA@casper.infradead.org>
+ <Y34+V2bCDdqujBDk@kroah.com>
+ <Y35JfNJDppRp5bLX@ziepe.ca>
+ <Y35R+/eQJYI7VaDS@kroah.com>
+ <Y35YlI93UBuTfgYy@ziepe.ca>
+ <Y35dMIaNYSE0Cykd@casper.infradead.org>
+ <Y35iKfYf3ThdVvaR@kroah.com>
+ <Y35lt+0jXrOKynL5@ziepe.ca>
 MIME-Version: 1.0
-References: <TYCP286MB23236DCB8906D61FAC7A508CCA029@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
- <e78ddf03-b67e-a045-cd72-f0edbc586cb2@gmail.com>
-In-Reply-To: <e78ddf03-b67e-a045-cd72-f0edbc586cb2@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Nov 2022 19:29:17 +0100
-Message-ID: <CAJZ5v0jwY-cH1F3iJzGakzQG7v-ex7_-AC3cm6tUkfTd81_srw@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: make remove callback of ACPI driver void
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Dawei Li <set_pte_at@outlook.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        u.kleine-koenig@pengutronix.de, dvhart@infradead.org,
-        andy@infradead.org, lenb@kernel.org, arnd@arndb.de,
-        peterhuewe@gmx.de, kys@microsoft.com, kronos.it@gmail.com,
-        dmitry.torokhov@gmail.com, bleung@chromium.org,
-        sujith.thomas@intel.com, vithampi@vmware.com, lee@kernel.org,
-        wim@linux-watchdog.org, jgross@suse.com, davem@davemloft.net,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y35lt+0jXrOKynL5@ziepe.ca>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 10:00 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->
-> On 11/13/22 17:26, Dawei Li wrote:
-> > For bus-based driver, device removal is implemented as:
-> > 1 device_remove()->
-> > 2   bus->remove()->
-> > 3     driver->remove()
-> >
-> > Driver core needs no inform from callee(bus driver) about the
-> > result of remove callback. In that case, commit fc7a6209d571
-> > ("bus: Make remove callback return void") forces bus_type::remove
-> > be void-returned.
-> >
-> > Now we have the situation that both 1 & 2 of calling chain are
-> > void-returned, so it does not make much sense for 3(driver->remove)
-> > to return non-void to its caller.
-> >
-> > So the basic idea behind this change is making remove() callback of
-> > any bus-based driver to be void-returned.
-> >
-> > This change, for itself, is for device drivers based on acpi-bus.
-> >
-> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Acked-by: Lee Jones <lee@kernel.org>
-> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > Signed-off-by: Dawei Li <set_pte_at@outlook.com>
->
-> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>  # for drivers/platform/surface/*
+On Wed, Nov 23, 2022 at 02:25:59PM -0400, Jason Gunthorpe wrote:
+> On Wed, Nov 23, 2022 at 07:10:49PM +0100, Greg Kroah-Hartman wrote:
+> > On Wed, Nov 23, 2022 at 05:49:36PM +0000, Matthew Wilcox wrote:
+> > > On Wed, Nov 23, 2022 at 01:29:56PM -0400, Jason Gunthorpe wrote:
+> > > > #define generic_container_of(in_type, in, out_type, out_member) \
+> > > > 	_Generic(in,                                        \
+> > > >                   const in_type *: ((const out_type *)container_of(in, out_type, out_member)),   \
+> > > >                   in_type *: ((out_type *)container_of(in, out_type, out_member)) \
+> > > > 		  )
+> > > 
+> > > There's a neat trick I found in seqlock.h:
+> > > 
+> > > #define generic_container_of(in_t, in, out_t, m)			\
+> > > 	_Generic(*(in),							\
+> > > 		const in_t: ((const out_t *)container_of(in, out_t, m)), \
+> > > 		in_t: ((out_t *)container_of(in, out_type, m))	\
+> > > 	)
+> > > 
+> > > and now it fits in 80 columns ;-)
+> > 
+> > Nice trick!  Dropping the inline functions is a bit different, let me
+> > see if that still gives a sane error if we pass an incorrect type or
+> > mess with the const * the wrong way.  I'll run some tests tomorrow
+> > afternoon...
+> 
+> The errors in some cases are very verbose, but it is somewhat
+> understandable - the worst is when _Generic fails to match anything,
+> but also at least clang partially expanded container_of and it throws
+> other assertions too.
+> 
+> I also wonder if this could just be rolled into the normal
+> container_of.
 
-Applied as 6.2 material, thanks!
+I think we might be able to now, my previous attempts with inline
+functions prevented that.  I'll beat on that tomorrow...
+
+> in_type would have to be derived like:
+> 
+>   in_type = typeof((out_type *)NULL)->out_member)
+> 
+> But I don't know if you can use typeof in a generic type matching expression..
+
+Maybe that is what threw me before, I can't remember.  I do know we
+tried a number of different attempts, can't recall the failed ones...
+
+thanks,
+
+greg k-h
