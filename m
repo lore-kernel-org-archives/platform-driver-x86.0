@@ -2,47 +2,46 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDCCC3A59F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56954C47088
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 12:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236514AbiKWMoG (ORCPT
+        id S236979AbiKWMoH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 07:44:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48868 "EHLO
+        Wed, 23 Nov 2022 07:44:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237197AbiKWMnO (ORCPT
+        with ESMTP id S237556AbiKWMnU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 07:43:14 -0500
+        Wed, 23 Nov 2022 07:43:20 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E442B6D975;
-        Wed, 23 Nov 2022 04:41:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518B967F59;
+        Wed, 23 Nov 2022 04:41:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 90D84B81F38;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0950AB81F40;
+        Wed, 23 Nov 2022 12:41:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB97C433C1;
         Wed, 23 Nov 2022 12:41:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69214C433C1;
-        Wed, 23 Nov 2022 12:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669207313;
-        bh=GnznFkeWz1BM6kc4uNtVvw6nzrk+kR5vHJan/6Yl2AE=;
+        s=k20201202; t=1669207315;
+        bh=VxTm3MxpMPyyN/3fO9f250rjVnY+Vey+f1Yno6Te7mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4ENGVcTcsr96ZvkS9Jrk5oJ2tfqBEkbRCQFffpCxoNn4T7Rs8XEz6+jPt0Wh5V2w
-         q8MrHcylE7Hb7ClVNFoDTm6T7CYcoDkvXJ7EB+ALF0XSYwO/PIw0lAoXz1+hq0V8C3
-         utQ2tNYqotGXIGmp+PDG4fi+Aa+VEaJsng2uR732lnYfP42zBUtad7c7flHAo3jR2F
-         C0mXORGD+DpiS8iF/fNdIi2DaECDtYGSUI1RL8PmC8kLe0+KF1+zrEW7eceCaKushX
-         QSXZ7nseDl5Qh3ElhkIHx5aJZ03bIK35tu3FybYAoahakwqCrXsW99E8nmCrpKTkNp
-         Xq3nQB1PjIYLw==
+        b=HgAovSxRLj2F0hl8GpZHEjwAwgeQYQTtTIq/Jn2NOnaQ5sM8r8NWrsWvs+K3e635M
+         spPql5eatS/DRatTrvU3QDOgriskHdxZDHjqt/vnnKMx91FD5f65HC/9s53soH9D7V
+         9/puNyl1UP9SI0OUYdQMa6nuk5uTiG11AW16Glp5CLfxz6h+Y+siY7USS+kij3S8vz
+         gGW57ffEcta8uD4caK1QnUD5ziVworVIGmeVmmTJ0tTan1CStqpObuifxaxjgeADRz
+         z0KmtkyAEfw1v0QmT8JcfxLZUSPb2dN0eIh67/o6TYJ4/sIfsUir0x/tuGdgKWmgM+
+         h69oBpp3N5sUg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 23/44] platform/x86: asus-wmi: add missing pci_dev_put() in asus_wmi_set_xusb2pr()
-Date:   Wed, 23 Nov 2022 07:40:32 -0500
-Message-Id: <20221123124057.264822-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.0 25/44] platform/surface: aggregator_registry: Add support for Surface Pro 9
+Date:   Wed, 23 Nov 2022 07:40:34 -0500
+Message-Id: <20221123124057.264822-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20221123124057.264822-1-sashal@kernel.org>
 References: <20221123124057.264822-1-sashal@kernel.org>
@@ -54,36 +53,76 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Maximilian Luz <luzmaximilian@gmail.com>
 
-[ Upstream commit d0cdd85046b15089df71a50548617ac1025300d0 ]
+[ Upstream commit d076f30957b1d026e9f6340691624926db0d369d ]
 
-pci_get_device() will increase the reference count for the returned
-pci_dev. We need to use pci_dev_put() to decrease the reference count
-before asus_wmi_set_xusb2pr() returns.
+Add device nodes to enable support for battery and charger status, the
+ACPI platform profile, as well as internal and type-cover HID devices
+(including sensors, touchpad, keyboard, and other miscellaneous devices)
+on the Surface Pro 9.
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/20221111100752.134311-1-wangxiongfeng2@huawei.com
+This does not include support for a tablet-mode switch yet, as that is
+now handled via the POS subsystem (unlike the Surface Pro 8, where it is
+handled via the KIP subsystem) and therefore needs further changes.
+
+While we're at it, also add the missing comment for the Surface Pro 8.
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Link: https://lore.kernel.org/r/20221113185951.224759-2-luzmaximilian@gmail.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../surface/surface_aggregator_registry.c     | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index eec7d0ed7cf2..8e1979b477a7 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1656,6 +1656,8 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
- 	pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
- 				cpu_to_le32(ports_available));
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index 585911020cea..db82c2a7c567 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -268,6 +268,7 @@ static const struct software_node *ssam_node_group_sp7[] = {
+ 	NULL,
+ };
  
-+	pci_dev_put(xhci_pdev);
++/* Devices for Surface Pro 8 */
+ static const struct software_node *ssam_node_group_sp8[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_hub_kip,
+@@ -284,6 +285,23 @@ static const struct software_node *ssam_node_group_sp8[] = {
+ 	NULL,
+ };
+ 
++/* Devices for Surface Pro 9 */
++static const struct software_node *ssam_node_group_sp9[] = {
++	&ssam_node_root,
++	&ssam_node_hub_kip,
++	&ssam_node_bat_ac,
++	&ssam_node_bat_main,
++	&ssam_node_tmp_pprof,
++	/* TODO: Tablet mode switch (via POS subsystem) */
++	&ssam_node_hid_kip_keyboard,
++	&ssam_node_hid_kip_penstash,
++	&ssam_node_hid_kip_touchpad,
++	&ssam_node_hid_kip_fwupd,
++	&ssam_node_hid_sam_sensors,
++	&ssam_node_hid_sam_ucm_ucsi,
++	NULL,
++};
 +
- 	pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
- 			orig_ports_available, ports_available);
- }
+ 
+ /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+ 
+@@ -303,6 +321,9 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
+ 	/* Surface Pro 8 */
+ 	{ "MSHW0263", (unsigned long)ssam_node_group_sp8 },
+ 
++	/* Surface Pro 9 */
++	{ "MSHW0343", (unsigned long)ssam_node_group_sp9 },
++
+ 	/* Surface Book 2 */
+ 	{ "MSHW0107", (unsigned long)ssam_node_group_gen5 },
+ 
 -- 
 2.35.1
 
