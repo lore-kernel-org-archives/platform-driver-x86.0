@@ -2,132 +2,173 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB5C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 17:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DD1C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 17:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237235AbiKWRBz (ORCPT
+        id S237496AbiKWRZL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 12:01:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
+        Wed, 23 Nov 2022 12:25:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235738AbiKWRBx (ORCPT
+        with ESMTP id S236917AbiKWRZL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 12:01:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E20E32B9B;
-        Wed, 23 Nov 2022 09:01:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E04F561DFD;
-        Wed, 23 Nov 2022 17:01:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BCC433D6;
-        Wed, 23 Nov 2022 17:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669222911;
-        bh=o3haMfaeHZfYTyEePRwp9h5E4unKgpaM0OuqyhoXnp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qo8vJIErhb/ipCwuy4gwV/i9YmIAaJMojUiZPS4IOOd8yQY7LyT3VrOZMJTKRDS9x
-         i8L49I9CCW+G4gWPmwXnGTUcpWsWu7OwHPDHLjbFVstIHlX3U3iCwopRHJdZmvOcLy
-         DUuQU3VjRGKHYyj8ctniAuEtEhb8ztF3vFHL+6eY=
-Date:   Wed, 23 Nov 2022 18:01:47 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Wed, 23 Nov 2022 12:25:11 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8B18E0AF;
+        Wed, 23 Nov 2022 09:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669224310; x=1700760310;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aHPTRHcVkUFTZr5J3tL/G7ryRw1ZZyMFvn0MlXiPpPk=;
+  b=lEI9u7QCt9G99XEEpih+lKUJDypC1BiYweccJtN2DDsHxdaO6DMzkMHI
+   v3oQblHbUw/fHCA611oP0Mr25EadrfJ6cwULb1Prf6FmZWYb3Lyz2eASR
+   lrnejQyIm3m10EWRG86UgsQA/DbuyBPBm7niGXgRmydm+BzTlk31pcJab
+   9s6iu+v5mTtsfkbakeTRjmjQl3MJrL1FiBMS6XliRCn2rAbkqwrJQe0tG
+   4/n3HW5cbQAochYo7oYMzE3JUj6HfpMEYEeA2RiaVPxJJV9/f53jmBmxc
+   AZ6u3SoSiZZfOXEWZYtVramMpSAV8WxVg+BrAmxqyjvcWdmBUlXhFYQ+c
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="312818625"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="312818625"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 09:25:09 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="747878276"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="747878276"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 09:25:09 -0800
+Message-ID: <d0f51fe4d653c47d7fb9b464c19b58a866f58459.camel@linux.intel.com>
+Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
+ Rapids support
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
         Mark Gross <markgross@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jilin Yuan <yuanjilin@cdjrlc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
- const *
-Message-ID: <Y35R+/eQJYI7VaDS@kroah.com>
-References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
- <20221123122523.1332370-3-gregkh@linuxfoundation.org>
- <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
- <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
- <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
- <Y34zyzdbRUdyOSkA@casper.infradead.org>
- <Y34+V2bCDdqujBDk@kroah.com>
- <Y35JfNJDppRp5bLX@ziepe.ca>
+        platform-driver-x86@vger.kernel.org,
+        Linux PM Mailing List <linux-pm@vger.kernel.org>
+Date:   Wed, 23 Nov 2022 09:25:08 -0800
+In-Reply-To: <ee34cb44-9782-9c91-3ec8-3b9d37353b10@redhat.com>
+References: <20221122070014.3639277-1-dedekind1@gmail.com>
+         <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
+         <635d481206b8945db751ea036cf789fe13b9698e.camel@gmail.com>
+         <01c732b1-7211-8298-61da-0a6892988743@redhat.com>
+         <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
+         <ee34cb44-9782-9c91-3ec8-3b9d37353b10@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y35JfNJDppRp5bLX@ziepe.ca>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 12:25:32PM -0400, Jason Gunthorpe wrote:
-> On Wed, Nov 23, 2022 at 04:37:59PM +0100, Greg Kroah-Hartman wrote:
-> > static inline struct device *__kobj_to_dev(struct kobject *kobj)
-> > {
-> >         return container_of(kobj, struct device, kobj);
-> > }
+Hi Hans,
+
+> > > 
+
+[...]
+
+> > > Ugh, no, *NO*! I really expect Intel to do better here!
+> > > 
+Sorry, I didn't realize the CPUID is not added to rc1. Our internal
+tree constantly gets rebased. So difficult to catch.
+
+As you rule, I will communicate internally that apply on top of 
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
+ 
+If doesn't build atleast add that to the patch notes.
+
+BTW, I send my PULL from this tree and branch always.
+
+Thanks,
+Srinivas
+
+> > > As I repeated explained with the
+> > > 
+> > > "platform/x86/intel: pmc/core: Add Raptor Lake support to pmc core
+> > > driver"
+> > > 
+> > > patch I cannot just go and cherry-pick random patches merged
+> > > through other trees
+> > > because that may cause conflicts and will cause the merge to look
+> > > really
+> > > funky.
 > > 
-> > static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
-> > {
-> >         return container_of(kobj, const struct device, kobj);
-> > }
+> > I don't think this is about requesting a cherry-pick though.
 > > 
-> > /*
-> >  * container_of() will happily take a const * and spit back a non-const * as it
-> >  * is just doing pointer math.  But we want to be a bit more careful in the
-> >  * driver code, so manually force any const * of a kobject to also be a const *
-> >  * to a device.
-> >  */
-> > #define kobj_to_dev(kobj)                                       \
-> >         _Generic((kobj),                                        \
-> >                  const struct kobject *: __kobj_to_dev_const,   \
-> >                  struct kobject *: __kobj_to_dev)(kobj)
+> > > There are proper ways to do this and this is not it!
+> > > 
+> > > This is something which Intel really *must* do correctly next time
+> > > because
+> > > having this discussion over and over again is becoming very
+> > > tiresome!
+> > > 
+> > > So the proper way to do starts with realizing *beforehand* that
+> > > things
+> > > will not build on top of pdx86/for-next. By like actually doing
+> > > a build-test based on top of pdx86/for-next instead of this
+> > > nonsense of
+> > > repeatedly sending me broken patches.
 > > 
-> > 
-> > Want me to do the same thing here as well?
+> > This patch is based on the mainline.  The requisite commit has been
+> > included into the Linus' tree since at least 6.1-rc4 AFAICS and I
+> > suppose that it has been tested on top of that.
 > 
-> It would be nice to have a shared macro code gen all of the above
-> instead of copy and pasting it. Then maybe other cases beyond struct
-> device could adopt const too..
+> Ah, I did not know that; and that is typically info which I would
+> have expected to be explicitly mentioned in the non-existing cover-
+> letter
+> for this patch.
+> 
+> > 
+> > You could in principle create a temporary branch based on 6.1-rc4 (or
+> > a later -rc), apply the patch on top of it, merge your current branch
+> > on top of that and merge it back into your current branch (that
+> > should
+> > result in a fast-forward merge, so the temporary branch can be
+> > deleted
+> > after it).
+> 
+> Yes I could merge rc4 into my for-next, but I'm not really a big fan
+> of back-merges like this. I try to keep my for-next history linear
+> based on the last rc1, because I find seeing what is going on
+> a lot easier that way. But if this happens more often I guess
+> I may need to get used to doing back-merges more often then
+> just after rc1 is out.
+> 
+> What I don't understand is why this patch was not send as a part of
+> the series starting which also had the
+> "7beade0dd41d x86/cpu: Add several Intel server CPU model numbers"
+> patch. That patch just adds a couple #define-s presumably there
+> were more patches in that series actually using those defines.
+> 
+> Things would have been cleaner / easier if this patch had simply
+> been a part of that series and if it was merged in one go with
+> that series...
+> 
+> Btw this new CPU ID is also missing from:
+> drivers/platform/x86/intel/pmc/core.c
+> drivers/platform/x86/intel/ifs/core.c
+> 
+> At least I assume it will need to be added there too, although
+> I guess it might not be as simple as only adding the CPU-id
+> match there ?
+> 
+> > Alternatively, if you'd rather not do that, I can merge the Artem's
+> > patch through the PM tree (it is PM-related after all).
+> 
+> If you can do that, that would be great, thank you.
+> 
+> > I suppose that your ACK would be applicable for that too?
+> 
+> Yes.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
 
-I think I tried to create such a beast, but failed, so ended up
-open-coding it in a few places in the USB headers already.  I can try it
-again, but the redirection gets tricky (defines creating defines...)
 
-thanks,
-
-greg k-h
