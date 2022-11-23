@@ -2,176 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6C6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 15:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F987C43217
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 16:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239044AbiKWP61 (ORCPT
+        id S237809AbiKWQWZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 10:58:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46274 "EHLO
+        Wed, 23 Nov 2022 11:22:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238811AbiKWP6L (ORCPT
+        with ESMTP id S238271AbiKWQWX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 10:58:11 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93835CB9D6;
-        Wed, 23 Nov 2022 07:57:18 -0800 (PST)
-Received: by mail-qk1-f173.google.com with SMTP id x21so12731019qkj.0;
-        Wed, 23 Nov 2022 07:57:18 -0800 (PST)
+        Wed, 23 Nov 2022 11:22:23 -0500
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6968F3F6;
+        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-142612a5454so20712471fac.2;
+        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJIRLpu6ZgoR6Ullt/AKW3jUuRoGfuYCFpIP5fDX8i8=;
+        b=eOe4rfwulZ7w+wGOSfNP2iJH73IEpX251lzrXrmErDCu7rvlcNhFOltBri4bQZxBqI
+         tJvpGp2YRFJtkPxtr7kOfxXqRM5jNu8reKaiHtoBfxkL4CIDygVH7S9QquyRCmGohd5u
+         I2i5N8bTF5fAueX5BqEZtF7/30kgYlfbAOTc5R/SvJASAYvqbuwKc48SYWIfj80eOZAi
+         mtTCSEaKND30OelgxGbZKNKeOFXImRP0i8GWFj6PoPKNQyNVccEE0HkmI4+dwqMvRy7P
+         W4MhS5+NfeiUpOG9+WOT8Ll1TLGpAbCqldJ4Vf2emznKQV8wCr0QHqGXnZdfhMOA0x7c
+         HKQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6EJSBmYoSSSmNh31enrB/3qdGl3C0nH6Q10DeSYW0No=;
-        b=POwyjhEhkkRIljDTGT8JUFtic7T86vmisQjpUJsdiErMBn02r5wrY0Dt/OoZzLETAZ
-         U+7YV3l4mxvXsk4ArCK9grNmcdq89wlQnISjV5WtFo7hkB0x9zXbBGLJY08iAUY6qhXq
-         oj45NpmGyPBxxL1p4ka1n7llmZX+FPDQzaQv2EZI8Q2Tzr9WsucYBUn3bRaFgC0RNL+2
-         SNp1Bp17HfMSaxC+NRHOS+JalHb7maPoQBseLJb1LHjWTKQfd4hga28cLrsFaK92yktW
-         ioTuocBcGG6Q+pgZaDKovcY7uSTWwLJqiGCH7a2Y7dSbR0jG8xTll5b76Jlok0o9kEjr
-         xZqw==
-X-Gm-Message-State: ANoB5pkKmNsMCqFcG0i/pvvIRPn+7+a2/0jvQIP1kLYA3vCKWbkqOEV+
-        aPpf1FmwSi6zFMTwj2Qask6CAK0pxT0tmv7qnOw=
-X-Google-Smtp-Source: AA0mqf4Sc8lvYEYVrjXBOrqllEusAJ9pFQTXsKDTgyWjQtHTtF4M+EbNbmERuKSaEw9s4qUfQI89hRIS/Ozcdp5zugc=
-X-Received: by 2002:a05:620a:51ca:b0:6ec:fa04:d97c with SMTP id
- cx10-20020a05620a51ca00b006ecfa04d97cmr9384412qkb.764.1669219037340; Wed, 23
- Nov 2022 07:57:17 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJIRLpu6ZgoR6Ullt/AKW3jUuRoGfuYCFpIP5fDX8i8=;
+        b=Icgt2emL9VVoyaKnZZjS8jfDcTCoQJu79uRlbwA0neQcUHlzfGG6axty2IOAhoeyO4
+         teB4FR75UKEF/e/OKf78Msbi7DLgJfHTVy2+Qt1ZmAR2DjiCnhOyBunDpzJC/OxNu0Ej
+         Rbu5VH6FAZDvJDpZYukBxX435KdIiWA/LiGpymAoRVWdedgaJCau3FHYJe7B70852UaX
+         imWfcSPnuCtGmUkyvjk71FzQCOGW9o893jOs8sa7KSo65W/pemAWsvP190TepVbmoyGi
+         /V+88+ly5rDBIyP+cnBs7MjsTTsiuIkMuDPEz4z+PL4avIc+/5ss/bFEAOLP2DSdnUvz
+         EQig==
+X-Gm-Message-State: ANoB5pkxjfB9C/fQ78UmDV7Hkcq+XqMm5P4GbaYsDUKd7oud2NzUhE4F
+        UA/OrxeL+/sKxMN7Wscy/VA=
+X-Google-Smtp-Source: AA0mqf4GRI36OOFuoDFTUbo9s4kEkUuCA7LFIdHA14zp5+yFctHTwXW2k3e5XQ/gIkggCmfTwICpmQ==
+X-Received: by 2002:a05:6870:a2cd:b0:132:8d60:358f with SMTP id w13-20020a056870a2cd00b001328d60358fmr8757629oak.102.1669220542008;
+        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id bd32-20020a056870d7a000b0013d6d924995sm9344370oab.19.2022.11.23.08.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 08:22:21 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 23 Nov 2022 08:22:20 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joaquin Aramendia <samsagax@gmail.com>
+Cc:     w_armin@gmx.de, hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
+Subject: Re: [PATCH] hwmon: (oxp-sensors) Add AOK ZOE and Mini PRO
+Message-ID: <20221123162220.GA3019010@roeck-us.net>
+References: <20221119162347.36698-1-samsagax@gmail.com>
+ <20221120134650.GA1787156@roeck-us.net>
+ <CABgtM3g+g9PSXaTxaywJLQ18Y7pZybeDDrvycN-KzCczZ_0UPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20221122070014.3639277-1-dedekind1@gmail.com> <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
- <635d481206b8945db751ea036cf789fe13b9698e.camel@gmail.com>
- <01c732b1-7211-8298-61da-0a6892988743@redhat.com> <CAJZ5v0gqmZNRQ61LiG-HKVLLciC9=7MPUB9di0LhuUe_tjHJGg@mail.gmail.com>
- <ee34cb44-9782-9c91-3ec8-3b9d37353b10@redhat.com>
-In-Reply-To: <ee34cb44-9782-9c91-3ec8-3b9d37353b10@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Nov 2022 16:57:06 +0100
-Message-ID: <CAJZ5v0gJAQfZVvrAfvvF0vjeAQPnwHbpFcnvCG8Jxo2McxyYwA@mail.gmail.com>
-Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
- Rapids support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Linux PM Mailing List <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgtM3g+g9PSXaTxaywJLQ18Y7pZybeDDrvycN-KzCczZ_0UPg@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 4:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Rafael,
->
-> On 11/23/22 15:59, Rafael J. Wysocki wrote:
-> > On Wed, Nov 23, 2022 at 3:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 11/23/22 09:45, Artem Bityutskiy wrote:
-> >>> Hello Hans,
-> >>>
-> >>> On Tue, 2022-11-22 at 16:30 +0100, Hans de Goede wrote:
-> >>> There are 3 different issues with this patch, next time please
-> >>> check your patch a bit more thorough before submitting it:
-> >>>
-> >>> 1. This is the first time I see this, or that the
-> >>> platform-driver-x86@vger.kernel.org
-> >>> list sees this. Next time please make sure you address the patch to the right
-> >>> people the first time you send it:
-> >>>
-> >>> sure, thanks.
-> >>>
-> >>> 2. This has checkpatch warnings which are easily fixable:
-> >>>
-> >>> [hans@shalem platform-drivers-x86]$ scripts/checkpatch.pl 0001-platform-x86-
-> >>> intel-uncore-freq-add-Emerald-Rapids-su.patch
-> >>> WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per
-> >>> line)
-> >>>
-> >>> OK.
-> >>>
-> >>> 3. This fails to build on top of:
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
-> >>>
-> >>> OK, thanks for the pointer. I'd need platfrom-drivers-x86 git tree to include
-> >>> this upstream commit:
-> >>>
-> >>> 7beade0dd41d x86/cpu: Add several Intel server CPU model numbers
-> >>>
-> >>> Would you please consider updating?
-> >>
-> >> Ugh, no, *NO*! I really expect Intel to do better here!
-> >>
-> >> As I repeated explained with the
-> >>
-> >> "platform/x86/intel: pmc/core: Add Raptor Lake support to pmc core driver"
-> >>
-> >> patch I cannot just go and cherry-pick random patches merged through other trees
-> >> because that may cause conflicts and will cause the merge to look really
-> >> funky.
+On Sun, Nov 20, 2022 at 10:01:09PM -0300, Joaquin Aramendia wrote:
+> El dom, 20 nov 2022 a la(s) 10:46, Guenter Roeck (linux@roeck-us.net) escribió:
 > >
-> > I don't think this is about requesting a cherry-pick though.
+> > On Sat, Nov 19, 2022 at 01:23:48PM -0300, Joaquín Ignacio Aramendía wrote:
+> > > Add support for the AOK ZOE A1 and OXP Mini PRO handheld devices.
+> > > DMI strings are added to this driver since the same EC layout is used and
+> > > has similar specs as the OXP mini AMD.
+> > >
+> > > The added devices are:
+> > > - OneXPlayer mini PRO (AMD 6800U)
+> > > - AOK ZOE A1 (AMD 5800U)
+> > >
+> > > Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
 > >
-> >> There are proper ways to do this and this is not it!
-> >>
-> >> This is something which Intel really *must* do correctly next time because
-> >> having this discussion over and over again is becoming very tiresome!
-> >>
-> >> So the proper way to do starts with realizing *beforehand* that things
-> >> will not build on top of pdx86/for-next. By like actually doing
-> >> a build-test based on top of pdx86/for-next instead of this nonsense of
-> >> repeatedly sending me broken patches.
+> > Applied to hwmon-next.
 > >
-> > This patch is based on the mainline.  The requisite commit has been
-> > included into the Linus' tree since at least 6.1-rc4 AFAICS and I
-> > suppose that it has been tested on top of that.
->
-> Ah, I did not know that; and that is typically info which I would
-> have expected to be explicitly mentioned in the non-existing cover-letter
-> for this patch.
->
-> >
-> > You could in principle create a temporary branch based on 6.1-rc4 (or
-> > a later -rc), apply the patch on top of it, merge your current branch
-> > on top of that and merge it back into your current branch (that should
-> > result in a fast-forward merge, so the temporary branch can be deleted
-> > after it).
->
-> Yes I could merge rc4 into my for-next, but I'm not really a big fan
-> of back-merges like this. I try to keep my for-next history linear
-> based on the last rc1, because I find seeing what is going on
-> a lot easier that way. But if this happens more often I guess
-> I may need to get used to doing back-merges more often then
-> just after rc1 is out.
->
-> What I don't understand is why this patch was not send as a part of
-> the series starting which also had the
-> "7beade0dd41d x86/cpu: Add several Intel server CPU model numbers"
-> patch. That patch just adds a couple #define-s presumably there
-> were more patches in that series actually using those defines.
->
-> Things would have been cleaner / easier if this patch had simply
-> been a part of that series and if it was merged in one go with
-> that series...
->
-> Btw this new CPU ID is also missing from:
-> drivers/platform/x86/intel/pmc/core.c
-> drivers/platform/x86/intel/ifs/core.c
->
-> At least I assume it will need to be added there too, although
-> I guess it might not be as simple as only adding the CPU-id
-> match there ?
->
-> > Alternatively, if you'd rather not do that, I can merge the Artem's
-> > patch through the PM tree (it is PM-related after all).
->
-> If you can do that, that would be great, thank you.
+> > Thanks,
+> > Guenter
+> 
+> Oh, great! Thanks Guenter. I just realized I made a typo in the commit
+> message. Would you mind if I correct it and resend a v2 of the patch?
 
-No problem.
+I don't mind, but I don't see the typo. What is it ?
 
-> > I suppose that your ACK would be applicable for that too?
->
-> Yes.
+Guenter
 
-Thanks!
+> -- 
+> Joaquín I. Aramendía
