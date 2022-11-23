@@ -2,61 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998BC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 16:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB5C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 17:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239063AbiKWQZu (ORCPT
+        id S237235AbiKWRBz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 11:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        Wed, 23 Nov 2022 12:01:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239058AbiKWQZh (ORCPT
+        with ESMTP id S235738AbiKWRBx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 11:25:37 -0500
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC1C8FB10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 08:25:34 -0800 (PST)
-Received: by mail-qt1-x835.google.com with SMTP id cg5so11512729qtb.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 08:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PhJSJnLVsP1vBula4KCFSx5kBTht7CuZrspFHU0N884=;
-        b=ebGDyq+q12UGY7Qk5Tupc9qhDLGyIcTZVkm5UZYo/563kMYJJqyAeOt5CzUtM4J8DZ
-         3trFHny8FIDylUgXR9JjN8PS72NcWsvrDfr1Nd1Q7FDnTR43onbW+jw1+Ctw0cwtwrCd
-         T18F6CTTWbwHWY6WrhS9prZWxtXaTjwzs7IQnIsjaZTmFdCmKdzeecD0BbnuyMQqVQVg
-         z0s4POzfjTxMQ62r8mCHZM0rSmjmaRN4hzlYV7zdZbP1xMXxym5gxZ3SKz4kt6tgYYum
-         EfCUt6/g2D4WDco0MNWeSPD0NJ6lencxZ7NqZJCJlD8ikZ4WiUl7N0yJnMd2Q4wIPSG2
-         7pnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PhJSJnLVsP1vBula4KCFSx5kBTht7CuZrspFHU0N884=;
-        b=r2F/xOq3nBofTX/Hi0ygb1Nu8U5BQFRVdJj355cNyvRwFpjSpFn7NtGl+1Rr42wfn1
-         JTwmLwmEiTjM9xGbSiEQoUIQEeoFCb2bWO2dykAo2woI/ZEmOI1N0cZqeaZg0wWywCoc
-         EsOpT2nLoUFXMp/tB3/azmryKjrC+Z4sudxiyjxxiZWtti13avy/cb8fNxmzA5yoDHZY
-         0Z+DgECuGa1LrLk7wLZbhcwzeZs4i2E7tBbKLTchTJFTLNuRjY9quMg2ocvvGylII65/
-         8YKmhQkBKOo/ktKnCKMSiux9VyW0gxqmR3hqFOvJ88EQkSEr6HkbzzpCFfFfSUGIrLQs
-         jJCQ==
-X-Gm-Message-State: ANoB5pk20iHoo+aqahgS7agYB7GAHZg90ZZp0QikSxBwks2y8DaMLCno
-        WjncqoBTMenE+wxSIWBuXUnjXQ==
-X-Google-Smtp-Source: AA0mqf7URgWK3LZKBiCOJvrYX2BcRTBThzd2VlaYXoILbXTQHzjAWJMWnGzlcI0wVuCFvjEWzX6GjA==
-X-Received: by 2002:ac8:60c:0:b0:3a6:37bd:ace5 with SMTP id d12-20020ac8060c000000b003a637bdace5mr14127789qth.426.1669220734011;
-        Wed, 23 Nov 2022 08:25:34 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-122-23.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.122.23])
-        by smtp.gmail.com with ESMTPSA id q7-20020a05620a0d8700b006f8665f483fsm12561497qkl.85.2022.11.23.08.25.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 08:25:33 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1oxsZ2-00AOLL-MZ;
-        Wed, 23 Nov 2022 12:25:32 -0400
-Date:   Wed, 23 Nov 2022 12:25:32 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Wed, 23 Nov 2022 12:01:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E20E32B9B;
+        Wed, 23 Nov 2022 09:01:52 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E04F561DFD;
+        Wed, 23 Nov 2022 17:01:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BCC433D6;
+        Wed, 23 Nov 2022 17:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1669222911;
+        bh=o3haMfaeHZfYTyEePRwp9h5E4unKgpaM0OuqyhoXnp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qo8vJIErhb/ipCwuy4gwV/i9YmIAaJMojUiZPS4IOOd8yQY7LyT3VrOZMJTKRDS9x
+         i8L49I9CCW+G4gWPmwXnGTUcpWsWu7OwHPDHLjbFVstIHlX3U3iCwopRHJdZmvOcLy
+         DUuQU3VjRGKHYyj8ctniAuEtEhb8ztF3vFHL+6eY=
+Date:   Wed, 23 Nov 2022 18:01:47 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     Matthew Wilcox <willy@infradead.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -101,7 +77,7 @@ Cc:     Matthew Wilcox <willy@infradead.org>,
         platform-driver-x86@vger.kernel.org
 Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
  const *
-Message-ID: <Y35JfNJDppRp5bLX@ziepe.ca>
+Message-ID: <Y35R+/eQJYI7VaDS@kroah.com>
 References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
  <20221123122523.1332370-3-gregkh@linuxfoundation.org>
  <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
@@ -109,41 +85,49 @@ References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
  <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
  <Y34zyzdbRUdyOSkA@casper.infradead.org>
  <Y34+V2bCDdqujBDk@kroah.com>
+ <Y35JfNJDppRp5bLX@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y34+V2bCDdqujBDk@kroah.com>
+In-Reply-To: <Y35JfNJDppRp5bLX@ziepe.ca>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 04:37:59PM +0100, Greg Kroah-Hartman wrote:
-> static inline struct device *__kobj_to_dev(struct kobject *kobj)
-> {
->         return container_of(kobj, struct device, kobj);
-> }
+On Wed, Nov 23, 2022 at 12:25:32PM -0400, Jason Gunthorpe wrote:
+> On Wed, Nov 23, 2022 at 04:37:59PM +0100, Greg Kroah-Hartman wrote:
+> > static inline struct device *__kobj_to_dev(struct kobject *kobj)
+> > {
+> >         return container_of(kobj, struct device, kobj);
+> > }
+> > 
+> > static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
+> > {
+> >         return container_of(kobj, const struct device, kobj);
+> > }
+> > 
+> > /*
+> >  * container_of() will happily take a const * and spit back a non-const * as it
+> >  * is just doing pointer math.  But we want to be a bit more careful in the
+> >  * driver code, so manually force any const * of a kobject to also be a const *
+> >  * to a device.
+> >  */
+> > #define kobj_to_dev(kobj)                                       \
+> >         _Generic((kobj),                                        \
+> >                  const struct kobject *: __kobj_to_dev_const,   \
+> >                  struct kobject *: __kobj_to_dev)(kobj)
+> > 
+> > 
+> > Want me to do the same thing here as well?
 > 
-> static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
-> {
->         return container_of(kobj, const struct device, kobj);
-> }
-> 
-> /*
->  * container_of() will happily take a const * and spit back a non-const * as it
->  * is just doing pointer math.  But we want to be a bit more careful in the
->  * driver code, so manually force any const * of a kobject to also be a const *
->  * to a device.
->  */
-> #define kobj_to_dev(kobj)                                       \
->         _Generic((kobj),                                        \
->                  const struct kobject *: __kobj_to_dev_const,   \
->                  struct kobject *: __kobj_to_dev)(kobj)
-> 
-> 
-> Want me to do the same thing here as well?
+> It would be nice to have a shared macro code gen all of the above
+> instead of copy and pasting it. Then maybe other cases beyond struct
+> device could adopt const too..
 
-It would be nice to have a shared macro code gen all of the above
-instead of copy and pasting it. Then maybe other cases beyond struct
-device could adopt const too..
+I think I tried to create such a beast, but failed, so ended up
+open-coding it in a few places in the USB headers already.  I can try it
+again, but the redirection gets tricky (defines creating defines...)
 
-Jason
+thanks,
+
+greg k-h
