@@ -2,129 +2,174 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F8C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 23:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4440DC46467
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 23:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiKWXBg (ORCPT
+        id S229535AbiKWXYo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 18:01:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
+        Wed, 23 Nov 2022 18:24:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbiKWXBf (ORCPT
+        with ESMTP id S229936AbiKWXYj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 18:01:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9490359170
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 15:01:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 26A68B82566
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 23:01:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C1157C4FEB7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 23:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669244490;
-        bh=Abb3dVynIPo+tte4Vi2sd5o3H7kKE38yxw6YDe+t4vM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=BQBoBHrJPeEjlifVuZuMtAt3/eBwaNDCIv6LylK/11H+8N7+xYuNONu5DSz/uRQFr
-         Pw8T6hEW5qCIXu+H1zKgPcNavr+NsT79F6kyLCkzKG6dgtKdxcRPUokJh3xi/v43nl
-         /yDB7MnxKWKTc0lFTFifm+t6OXQDf2SYmgUGAuBqENYtIz/pjIHJqbP9RwOgkDXiaD
-         VbIXsq9AqlKrB/8hzohl13h4FTAWF244YVz7bG6BkXISgA/W/oU792u7XH1XraYjMF
-         zOfbz8v0uUETUBoOF/1phprzBxAPWcIk/c7hJkHrmkFUqpoMhpXmIku3Dbr2A1SqmF
-         b/Q2BADnfXcHQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id B29ECC433E6; Wed, 23 Nov 2022 23:01:30 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Wed, 23 Nov 2022 23:01:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-tuuI9R626z@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 23 Nov 2022 18:24:39 -0500
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61EA2107E56;
+        Wed, 23 Nov 2022 15:24:37 -0800 (PST)
+Date:   Wed, 23 Nov 2022 23:24:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1669245874; x=1669505074;
+        bh=4D7H7t9cQFG+vEXPzrmjxP0kBkCA637MqCW+lh8xlvo=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID:BIMI-Selector;
+        b=hPbJVkIuL1M0qEmL0bT4PuPpgSPCUAu33Y+Qb7tdeEgjcQqAn2P9/FpfK16HEA2EM
+         7vjsfHf0eS2PmoRXdPNGezpmX314hJ02XB0zpjgzVkJDzPqhEL7AMChGfIwFpiPwIA
+         NF7ZZEj1iGDIHy5p8DLkWQw2m5Qldpno4e6/JtLA16r0ZaA4hkUD/VeqWm5hbTdlnb
+         BxWDFCkr77h+K0/o8YNYsqjLGq0ZWGeFJce25BsYm5wcKn9VpmO0zKAO32OE9aTevx
+         yfP5UsPCKW2I3bqPQKJL7FqD0bhsWsXV2qxdqiRQ7WsVWh4oHNK9TFNBq0m4+w4lGn
+         bmQFT/VhhjM8A==
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a const *
+Message-ID: <tx7-rd-SyCXl_K0mh2tDzOLPmogI631IJQJRNK8dMW_GVZiy5AHHVN7-b_Ib3P1L_dLTCRPEw8dAhDbMAPGg8QTKs4p1XFoNHlEZpAnWcCw=@protonmail.com>
+In-Reply-To: <Y35vLAWWfezPvGSm@kroah.com>
+References: <Y34hgIW8p1RlQTBB@smile.fi.intel.com> <Y34+V2bCDdqujBDk@kroah.com> <Y35JfNJDppRp5bLX@ziepe.ca> <Y35R+/eQJYI7VaDS@kroah.com> <Y35YlI93UBuTfgYy@ziepe.ca> <Y35dMIaNYSE0Cykd@casper.infradead.org> <Y35iKfYf3ThdVvaR@kroah.com> <Y35lt+0jXrOKynL5@ziepe.ca> <Y35vLAWWfezPvGSm@kroah.com>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #275 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Slawomir Stepien from comment #274)
-> (In reply to Slawomir Stepien from comment #273)
-> > (In reply to Denis Pauk from comment #272)
-> > > (In reply to Slawomir Stepien from comment #271)
-> > > > Created attachment 303265 [details]
-> > > > Add support for ROG STRIX B660-I GAMING WIFI
-> > > >=20
-> > > > This adds support for ROG STRIX B660-I GAMING WIFI into the "Asus W=
-MI
-> for
-> > > > nct6775 v6.0 base (2022.11.12)" patch.
-> > >=20
-> > > Thank you! I will add your code to the next patch version.
-> > >=20
-> > > Just for recheck, could you please share error place on init when you
-> added
-> > > your board to asus_acpi_boards(x670 generation methods) or
-> > > asus_wmi_boards(b550/x570 generation methods)? Are both of methods of
-> > access
-> > > failed?=20
-> > >=20
-> > > I have hoped B660 boards have same access method as x670 boards at le=
-ast
-> > :-(
+Hi
+
+
+2022. november 23., szerda 20:06 keltez=C3=A9ssel, Greg Kroah-Hartman =
+=C3=ADrta:
+
+
+> On Wed, Nov 23, 2022 at 02:25:59PM -0400, Jason Gunthorpe wrote:
+>=20
+> > On Wed, Nov 23, 2022 at 07:10:49PM +0100, Greg Kroah-Hartman wrote:
 > >=20
-> > [93233.798384] nct6775: Can't read ChipID by Asus WMI.
-> > [93233.798386] nct6775: No dmi definition `ROG STRIX B660-I GAMING
-> > WIFI`:`ASUSTeK COMPUTER INC.`
-> > [93233.798446] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-> > [93233.798449] ACPI Warning: SystemIO range
-> > 0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-> > 0x0000000000000290-0x0000000000000299 (\RMTW.SHWM) (20220331/utaddress-=
-204)
-> > [93233.798452] ACPI: OSL: Resource conflict; ACPI support missing from
-> > driver?
+> > > On Wed, Nov 23, 2022 at 05:49:36PM +0000, Matthew Wilcox wrote:
+> > >=20
+> > > > On Wed, Nov 23, 2022 at 01:29:56PM -0400, Jason Gunthorpe wrote:
+> > > >=20
+> > > > > #define generic_container_of(in_type, in, out_type, out_member) \
+> > > > > _Generic(in, \
+> > > > > const in_type *: ((const out_type *)container_of(in, out_type, ou=
+t_member)), \
+> > > > > in_type *: ((out_type *)container_of(in, out_type, out_member)) \
+> > > > > )
+> > > >=20
+> > > > There's a neat trick I found in seqlock.h:
+> > > >=20
+> > > > #define generic_container_of(in_t, in, out_t, m) \
+> > > > _Generic(*(in), \
+> > > > const in_t: ((const out_t *)container_of(in, out_t, m)), \
+> > > > in_t: ((out_t *)container_of(in, out_type, m)) \
+> > > > )
+> > > >=20
+> > > > and now it fits in 80 columns ;-)
+> > >=20
+> > > Nice trick! Dropping the inline functions is a bit different, let me
+> > > see if that still gives a sane error if we pass an incorrect type or
+> > > mess with the const * the wrong way. I'll run some tests tomorrow
+> > > afternoon...
+> >=20
+> > The errors in some cases are very verbose, but it is somewhat
+> > understandable - the worst is when _Generic fails to match anything,
+> > but also at least clang partially expanded container_of and it throws
+> > other assertions too.
+> >=20
+> > I also wonder if this could just be rolled into the normal
+> > container_of.
 >=20
-> But if I add the board to the asus_acpi_boards, it works but with:
 >=20
-> [93515.558164] nct6775: Using Asus ACPI to access 0xc1 chip.
-> [93515.558166] nct6775: No dmi definition `ROG STRIX B660-I GAMING
-> WIFI`:`ASUSTeK COMPUTER INC.`
-> [93515.558229] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+> I think we might be able to now, my previous attempts with inline
+> functions prevented that. I'll beat on that tomorrow...
 >=20
-> So I guess this is a better approach for my case?
+> > in_type would have to be derived like:
+> >=20
+> > in_type =3D typeof((out_type *)NULL)->out_member)
+> >=20
+> > But I don't know if you can use typeof in a generic type matching expre=
+ssion..
+>=20
+>=20
+> Maybe that is what threw me before, I can't remember. I do know we
+> tried a number of different attempts, can't recall the failed ones...
+>=20
 
-It should be, its near to correct way as its designed by ASUS. Its not clear
-for now how to make such calls by WMI, i suppose that they have changed WMI
-method ID to some different or hide it behind other methods.=20=20
+I am sorry I haven't followed the previous discussion,
+but has something like the following been considered?
 
-Look to the X670 patch discussion:
-https://patchwork.kernel.org/project/linux-hwmon/patch/20221018173428.71080=
--1-ahmad@khalifa.ws/
+  #define container_of2(ptr, type, member) \
+  =09_Generic((ptr), \
+  =09=09typeof_member(const type, member) *: container_of((ptr), const type=
+, member), \
+  =09=09const void *: container_of((ptr), const type, member), \
+  =09=09default: container_of((ptr), type, member) \
+  =09)
 
---=20
-You may reply to this email to add a comment.
+This is not perfect by any means, but I believe it is a reasonable
+improvement. It only really works reliably if the member type and
+the specified `type` in the arguments are unqualified,
+but I believe that should cover the majority of cases.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+I have tried to build an x86-64 defconfig with this and there are
+numerous const violations, but I haven't seen any false positives.
+
+
+> [...]
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
