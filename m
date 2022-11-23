@@ -2,101 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F987C43217
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 16:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998BC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Nov 2022 16:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237809AbiKWQWZ (ORCPT
+        id S239063AbiKWQZu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Nov 2022 11:22:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
+        Wed, 23 Nov 2022 11:25:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238271AbiKWQWX (ORCPT
+        with ESMTP id S239058AbiKWQZh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Nov 2022 11:22:23 -0500
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6968F3F6;
-        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-142612a5454so20712471fac.2;
-        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
+        Wed, 23 Nov 2022 11:25:37 -0500
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC1C8FB10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 08:25:34 -0800 (PST)
+Received: by mail-qt1-x835.google.com with SMTP id cg5so11512729qtb.12
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Nov 2022 08:25:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJIRLpu6ZgoR6Ullt/AKW3jUuRoGfuYCFpIP5fDX8i8=;
-        b=eOe4rfwulZ7w+wGOSfNP2iJH73IEpX251lzrXrmErDCu7rvlcNhFOltBri4bQZxBqI
-         tJvpGp2YRFJtkPxtr7kOfxXqRM5jNu8reKaiHtoBfxkL4CIDygVH7S9QquyRCmGohd5u
-         I2i5N8bTF5fAueX5BqEZtF7/30kgYlfbAOTc5R/SvJASAYvqbuwKc48SYWIfj80eOZAi
-         mtTCSEaKND30OelgxGbZKNKeOFXImRP0i8GWFj6PoPKNQyNVccEE0HkmI4+dwqMvRy7P
-         W4MhS5+NfeiUpOG9+WOT8Ll1TLGpAbCqldJ4Vf2emznKQV8wCr0QHqGXnZdfhMOA0x7c
-         HKQg==
+        d=ziepe.ca; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PhJSJnLVsP1vBula4KCFSx5kBTht7CuZrspFHU0N884=;
+        b=ebGDyq+q12UGY7Qk5Tupc9qhDLGyIcTZVkm5UZYo/563kMYJJqyAeOt5CzUtM4J8DZ
+         3trFHny8FIDylUgXR9JjN8PS72NcWsvrDfr1Nd1Q7FDnTR43onbW+jw1+Ctw0cwtwrCd
+         T18F6CTTWbwHWY6WrhS9prZWxtXaTjwzs7IQnIsjaZTmFdCmKdzeecD0BbnuyMQqVQVg
+         z0s4POzfjTxMQ62r8mCHZM0rSmjmaRN4hzlYV7zdZbP1xMXxym5gxZ3SKz4kt6tgYYum
+         EfCUt6/g2D4WDco0MNWeSPD0NJ6lencxZ7NqZJCJlD8ikZ4WiUl7N0yJnMd2Q4wIPSG2
+         7pnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJIRLpu6ZgoR6Ullt/AKW3jUuRoGfuYCFpIP5fDX8i8=;
-        b=Icgt2emL9VVoyaKnZZjS8jfDcTCoQJu79uRlbwA0neQcUHlzfGG6axty2IOAhoeyO4
-         teB4FR75UKEF/e/OKf78Msbi7DLgJfHTVy2+Qt1ZmAR2DjiCnhOyBunDpzJC/OxNu0Ej
-         Rbu5VH6FAZDvJDpZYukBxX435KdIiWA/LiGpymAoRVWdedgaJCau3FHYJe7B70852UaX
-         imWfcSPnuCtGmUkyvjk71FzQCOGW9o893jOs8sa7KSo65W/pemAWsvP190TepVbmoyGi
-         /V+88+ly5rDBIyP+cnBs7MjsTTsiuIkMuDPEz4z+PL4avIc+/5ss/bFEAOLP2DSdnUvz
-         EQig==
-X-Gm-Message-State: ANoB5pkxjfB9C/fQ78UmDV7Hkcq+XqMm5P4GbaYsDUKd7oud2NzUhE4F
-        UA/OrxeL+/sKxMN7Wscy/VA=
-X-Google-Smtp-Source: AA0mqf4GRI36OOFuoDFTUbo9s4kEkUuCA7LFIdHA14zp5+yFctHTwXW2k3e5XQ/gIkggCmfTwICpmQ==
-X-Received: by 2002:a05:6870:a2cd:b0:132:8d60:358f with SMTP id w13-20020a056870a2cd00b001328d60358fmr8757629oak.102.1669220542008;
-        Wed, 23 Nov 2022 08:22:22 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id bd32-20020a056870d7a000b0013d6d924995sm9344370oab.19.2022.11.23.08.22.21
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PhJSJnLVsP1vBula4KCFSx5kBTht7CuZrspFHU0N884=;
+        b=r2F/xOq3nBofTX/Hi0ygb1Nu8U5BQFRVdJj355cNyvRwFpjSpFn7NtGl+1Rr42wfn1
+         JTwmLwmEiTjM9xGbSiEQoUIQEeoFCb2bWO2dykAo2woI/ZEmOI1N0cZqeaZg0wWywCoc
+         EsOpT2nLoUFXMp/tB3/azmryKjrC+Z4sudxiyjxxiZWtti13avy/cb8fNxmzA5yoDHZY
+         0Z+DgECuGa1LrLk7wLZbhcwzeZs4i2E7tBbKLTchTJFTLNuRjY9quMg2ocvvGylII65/
+         8YKmhQkBKOo/ktKnCKMSiux9VyW0gxqmR3hqFOvJ88EQkSEr6HkbzzpCFfFfSUGIrLQs
+         jJCQ==
+X-Gm-Message-State: ANoB5pk20iHoo+aqahgS7agYB7GAHZg90ZZp0QikSxBwks2y8DaMLCno
+        WjncqoBTMenE+wxSIWBuXUnjXQ==
+X-Google-Smtp-Source: AA0mqf7URgWK3LZKBiCOJvrYX2BcRTBThzd2VlaYXoILbXTQHzjAWJMWnGzlcI0wVuCFvjEWzX6GjA==
+X-Received: by 2002:ac8:60c:0:b0:3a6:37bd:ace5 with SMTP id d12-20020ac8060c000000b003a637bdace5mr14127789qth.426.1669220734011;
+        Wed, 23 Nov 2022 08:25:34 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-122-23.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.122.23])
+        by smtp.gmail.com with ESMTPSA id q7-20020a05620a0d8700b006f8665f483fsm12561497qkl.85.2022.11.23.08.25.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 08:22:21 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 23 Nov 2022 08:22:20 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joaquin Aramendia <samsagax@gmail.com>
-Cc:     w_armin@gmx.de, hdegoede@redhat.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
-Subject: Re: [PATCH] hwmon: (oxp-sensors) Add AOK ZOE and Mini PRO
-Message-ID: <20221123162220.GA3019010@roeck-us.net>
-References: <20221119162347.36698-1-samsagax@gmail.com>
- <20221120134650.GA1787156@roeck-us.net>
- <CABgtM3g+g9PSXaTxaywJLQ18Y7pZybeDDrvycN-KzCczZ_0UPg@mail.gmail.com>
+        Wed, 23 Nov 2022 08:25:33 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1oxsZ2-00AOLL-MZ;
+        Wed, 23 Nov 2022 12:25:32 -0400
+Date:   Wed, 23 Nov 2022 12:25:32 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
+ const *
+Message-ID: <Y35JfNJDppRp5bLX@ziepe.ca>
+References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
+ <20221123122523.1332370-3-gregkh@linuxfoundation.org>
+ <711d5275-7e80-c00d-0cdc-0f3d52175361@gmail.com>
+ <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
+ <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
+ <Y34zyzdbRUdyOSkA@casper.infradead.org>
+ <Y34+V2bCDdqujBDk@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgtM3g+g9PSXaTxaywJLQ18Y7pZybeDDrvycN-KzCczZ_0UPg@mail.gmail.com>
+In-Reply-To: <Y34+V2bCDdqujBDk@kroah.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Nov 20, 2022 at 10:01:09PM -0300, Joaquin Aramendia wrote:
-> El dom, 20 nov 2022 a la(s) 10:46, Guenter Roeck (linux@roeck-us.net) escribió:
-> >
-> > On Sat, Nov 19, 2022 at 01:23:48PM -0300, Joaquín Ignacio Aramendía wrote:
-> > > Add support for the AOK ZOE A1 and OXP Mini PRO handheld devices.
-> > > DMI strings are added to this driver since the same EC layout is used and
-> > > has similar specs as the OXP mini AMD.
-> > >
-> > > The added devices are:
-> > > - OneXPlayer mini PRO (AMD 6800U)
-> > > - AOK ZOE A1 (AMD 5800U)
-> > >
-> > > Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
-> >
-> > Applied to hwmon-next.
-> >
-> > Thanks,
-> > Guenter
+On Wed, Nov 23, 2022 at 04:37:59PM +0100, Greg Kroah-Hartman wrote:
+> static inline struct device *__kobj_to_dev(struct kobject *kobj)
+> {
+>         return container_of(kobj, struct device, kobj);
+> }
 > 
-> Oh, great! Thanks Guenter. I just realized I made a typo in the commit
-> message. Would you mind if I correct it and resend a v2 of the patch?
+> static inline const struct device *__kobj_to_dev_const(const struct kobject *kobj)
+> {
+>         return container_of(kobj, const struct device, kobj);
+> }
+> 
+> /*
+>  * container_of() will happily take a const * and spit back a non-const * as it
+>  * is just doing pointer math.  But we want to be a bit more careful in the
+>  * driver code, so manually force any const * of a kobject to also be a const *
+>  * to a device.
+>  */
+> #define kobj_to_dev(kobj)                                       \
+>         _Generic((kobj),                                        \
+>                  const struct kobject *: __kobj_to_dev_const,   \
+>                  struct kobject *: __kobj_to_dev)(kobj)
+> 
+> 
+> Want me to do the same thing here as well?
 
-I don't mind, but I don't see the typo. What is it ?
+It would be nice to have a shared macro code gen all of the above
+instead of copy and pasting it. Then maybe other cases beyond struct
+device could adopt const too..
 
-Guenter
-
-> -- 
-> Joaquín I. Aramendía
+Jason
