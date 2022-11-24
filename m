@@ -2,92 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128E1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 07:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26242C43219
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 11:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbiKXHMc (ORCPT
+        id S229852AbiKXLHw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Nov 2022 02:12:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
+        Thu, 24 Nov 2022 06:07:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbiKXHMR (ORCPT
+        with ESMTP id S229947AbiKXLHv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Nov 2022 02:12:17 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CE6CFEAD;
-        Wed, 23 Nov 2022 23:17:05 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="315383055"
-X-IronPort-AV: E=Sophos;i="5.96,189,1665471600"; 
-   d="scan'208";a="315383055"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 23:04:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="674991824"
-X-IronPort-AV: E=Sophos;i="5.96,189,1665471600"; 
-   d="scan'208";a="674991824"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 23 Nov 2022 23:04:30 -0800
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.79])
-        by linux.intel.com (Postfix) with ESMTP id 03D7B580B9E;
-        Wed, 23 Nov 2022 23:04:28 -0800 (PST)
-Message-ID: <3fc564b6ad31ec8026102dda1a8bd4fbb27161c1.camel@gmail.com>
-Subject: Re: [PATCH resend] platform/x86: intel-uncore-freq: add Emerald
- Rapids support
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Linux PM Mailing List <linux-pm@vger.kernel.org>
-Date:   Thu, 24 Nov 2022 09:04:27 +0200
-In-Reply-To: <01c732b1-7211-8298-61da-0a6892988743@redhat.com>
-References: <20221122070014.3639277-1-dedekind1@gmail.com>
-         <0b867f52-5fe8-f0e8-3f05-746b1db0059e@redhat.com>
-         <635d481206b8945db751ea036cf789fe13b9698e.camel@gmail.com>
-         <01c732b1-7211-8298-61da-0a6892988743@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Thu, 24 Nov 2022 06:07:51 -0500
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3927A24BFE;
+        Thu, 24 Nov 2022 03:07:49 -0800 (PST)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AO7LNJS015819;
+        Thu, 24 Nov 2022 05:07:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=PODMain02222019;
+ bh=MUgtFemw9mzys2LF+P1154GAYh2HscnFbiU7ai50jsM=;
+ b=MeHXoUqIMuOg3cycTuD4gsB053mgOXXamO21I+tA0MZNyBU3obed1qZE/NHgy1vk0Qh7
+ ZlAU12ynGS1uEl1APXMElucwMK2jggKYZ2ftDzGsh6N5M4ovZ+ZcOxqQGDtFBfGHFIWb
+ EmcrJwMsmlX5rbA9HvCz/3x8mq3U0AloaQeQ/kXjPtbnXzM7eWg7CZC3ndFAu2rE8LXp
+ btOTZv1RJj303n+qdZZG8JqLFuV6eoJe07wk7aREN5Yw1AzZjY94xBVkJpUIx75AhUol
+ z8PZCLfrrHJ3yDa+s/vo7vz9K7oRHSxiSwep8T5P0QVU2ZIXfc7dRuROm/PyT0o7g26S iA== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3kxwe6x2du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Nov 2022 05:07:24 -0600
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.20; Thu, 24 Nov
+ 2022 05:07:22 -0600
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.20 via Frontend
+ Transport; Thu, 24 Nov 2022 05:07:22 -0600
+Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.90.202.160])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 85BD7B10;
+        Thu, 24 Nov 2022 11:07:22 +0000 (UTC)
+From:   Stefan Binding <sbinding@opensource.cirrus.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        Stefan Binding <sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 1/2] platform/x86: serial-multi-instantiate: Set fwnode for i2c
+Date:   Thu, 24 Nov 2022 11:07:17 +0000
+Message-ID: <20221124110718.3925934-2-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221124110718.3925934-1-sbinding@opensource.cirrus.com>
+References: <20221124110718.3925934-1-sbinding@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: oibzOdWpY9mctqOdzlYetaHUXXSPowin
+X-Proofpoint-GUID: oibzOdWpY9mctqOdzlYetaHUXXSPowin
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+This allows the i2c driver to obtain the ACPI_COMPANION.
 
-On Wed, 2022-11-23 at 15:37 +0100, Hans de Goede wrote:
-> Ugh, no, *NO*! I really expect Intel to do better here!
-...
-> patch I cannot just go and cherry-pick random patches merged through other trees
-> because that may cause conflicts and will cause the merge to look really
-> funky.
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ drivers/platform/x86/serial-multi-instantiate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I did not suggest or imply to cherry-pick.
-
-Back when I was a kernel subsystem maintainer, I did merge Linus' master
-sometimes, when there was a good reason. And this is what I implied by asking if
-you'd consider updating: the referenced patch is in Linus' tree.
-
-Also, just to be clear. I did accept the criticism in your first reply. This e-
-mail seems to partially repeat the criticism, so let me do better job explicitly
-addressing it.
-
-1. I apologize for sending this patch against a wrong tree. It was my mistake.
-This caused confusion. Sorry for this, and I do mean it. I do realize this
-caused troubles and you wasted your time because of this.
-2. I apologize for the commit message with more than 75 characters per line. I
-acknowledge that I should have followed checkpatch.pl suggestion. Personally, I
-do not think it is a big deal, but I do understand that it is not that difficult
-to just follow checkpatch.pl suggestions.
-
-I did not participate in kernel community much for the last 7 or so years, and
-some of my knowledge/skills are rust/out-of-date. I acknowledge that too. But
-basics like "won't cherry pick random patches" I do understand.
-
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Thank you, this is appreciated.
-
-Artem.
+diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+index 5362f1a7b77c..15ef2f3c442e 100644
+--- a/drivers/platform/x86/serial-multi-instantiate.c
++++ b/drivers/platform/x86/serial-multi-instantiate.c
+@@ -194,6 +194,7 @@ static int smi_i2c_probe(struct platform_device *pdev, struct smi *smi,
+ 		strscpy(board_info.type, inst_array[i].type, I2C_NAME_SIZE);
+ 		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev), inst_array[i].type, i);
+ 		board_info.dev_name = name;
++		board_info.fwnode = acpi_fwnode_handle(adev);
+ 
+ 		ret = smi_get_irq(pdev, adev, &inst_array[i]);
+ 		if (ret < 0)
+-- 
+2.34.1
 
