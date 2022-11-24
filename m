@@ -2,103 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB204C43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 20:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A4C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 20:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbiKXUOa (ORCPT
+        id S229652AbiKXUVa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Nov 2022 15:14:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
+        Thu, 24 Nov 2022 15:21:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiKXUOa (ORCPT
+        with ESMTP id S229648AbiKXUV3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Nov 2022 15:14:30 -0500
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42510B0400;
-        Thu, 24 Nov 2022 12:14:25 -0800 (PST)
-Received: by mail-qk1-x735.google.com with SMTP id z17so1523709qki.11;
-        Thu, 24 Nov 2022 12:14:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KaKGr4TBNARNGcREV+UlehkFv1+CQxpw8wXkwoKhVdo=;
-        b=WEfsEZQAxqVPIAkWLaQJ0lkYJDfsnpUiOnlwD+PWL/pIyp+jB7uyBkHUpZYk0B74Tg
-         94alGAifcTMoSZV9B+hMMKBBUSK3QVA5w3A+A1VwgIV/PNdVXCks8u1czrfWIIdJidVM
-         p3ReJU0pUzJWch1G06z9BacA5apRWKOeThllY7EXONNQcVNb0pk1izrUetxWIDdsj/gZ
-         Vf+7vo7mXTl5VNQROViIEcMGSllfVH0xyEsFu5XhuH3+Q3+gXu2QVgHj0mOJTZC/3IZz
-         wvzI0DPUuCMcepX06vSgYld3a3rufJryKSg7FxP3v94hpBYDt+8KZkfBe/H4IpuceEHU
-         qqug==
+        Thu, 24 Nov 2022 15:21:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD74897379
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 12:20:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669321235;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7SgGz8B6Itg0j9xWA1UexLrHBvcMI06ThigEcp9530=;
+        b=LTCGPqszEay47BFlHsw7GqpG95M+1wp2GWl3NG6wNIpTlxhVn0LF7tZt/4i+omhP6XtxvE
+        GN4htKYmafGuAJaz5cjIqPakkj+F5rHZfolRcpLJUAO3Z+8UbWbQhFyLELTFFgqGU+VZBl
+        bCGtbhJgADs/jnqYPgxa8UPsacZxRl4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-562-IbxEW4SINpmfmErApxPKwQ-1; Thu, 24 Nov 2022 15:20:33 -0500
+X-MC-Unique: IbxEW4SINpmfmErApxPKwQ-1
+Received: by mail-ed1-f69.google.com with SMTP id r12-20020a05640251cc00b00463699c95aeso1389761edd.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 12:20:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KaKGr4TBNARNGcREV+UlehkFv1+CQxpw8wXkwoKhVdo=;
-        b=zTQgUtZ31qvOlux2mpvjPBDVRzbH2Il5ADpDr6d6YEkclKvJGSZ8gs6YkZi8XTLFDR
-         QBCJP+EhjyOsbKFSsASFITb3+zSb8FRprGl/8o4JFfVThBzQ4W/L3JVGJqOGvdyKB8Tx
-         RsYVP3OV36qBw4f0VU+UGA2brK3f01hx4ZxCofD0t5XtHtR5FWWc7b5Y//NfQ4+3T25k
-         n6iAayiR+GTCEGtVGDJD/YufcarSNQx/62d113akWEJAYXLzzejR5+b5jZoAvP+/KN2o
-         0ME8S4STIszwpAJzXVVJT03Qp0FhYZ3DC28nD39k3gwkB++BcKetndXXW71+zPveKUmZ
-         Dxtg==
-X-Gm-Message-State: ANoB5pmH1BIq/P4W3Ojzc8TDpFbL4AMkUtj49d3FrMdX+XZTeNnb01fM
-        mXvYoGYnXCuL34Y2/XTVcOt5rc6z2o4hJCAVn7051lplYh2IaA==
-X-Google-Smtp-Source: AA0mqf4V+yYQLnCrlfwdCYscLtuPc966eZ1QPmuENexKaHi3raR8mEsWJ96cYU/1S5mguRup4OaqRBEBgJGCFoU0YXE=
-X-Received: by 2002:a37:f504:0:b0:6cf:5fa1:15f8 with SMTP id
- l4-20020a37f504000000b006cf5fa115f8mr30846306qkk.748.1669320864320; Thu, 24
- Nov 2022 12:14:24 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7SgGz8B6Itg0j9xWA1UexLrHBvcMI06ThigEcp9530=;
+        b=wN9xgNIJR/DAZTbzi9nKLd6X89WpIoafzCY7HyMrwucUhAqvLiokubNF7BrNzTT1ut
+         oQBLe0Op1VIih85/7nL9iL5SpauMw7k/Cfe4RWmd+ybS86kOVY74mlM2xVYD48nAiQkj
+         iFDtrXMlxU8NTUMbBX9ad3//ywM+iO/CErtEcgPUH7sqms5xIzeBet2jCYUhKkjlgJm/
+         jDLSvoHGQgcWKx56uzn0TD3wo+NIgqNij0e2vsNR0yfFhixD6E1q//t8tqA1/90z9YjR
+         N33/zuav9nDdwAFde4jQrsrnCIpK0Hdo/TT/jY6Is+hiUOmG8eo/7OXbAfgzUcS3xM6M
+         RtyA==
+X-Gm-Message-State: ANoB5pml9Ir75v4YremDVnfPXDAxFaGU1HUjwe8HnjtlIjMg9BVaOuB+
+        S4nq7UxWJSAqWzJUdPCzcrpP7uL0KhJgnSTSqpdbq3YZlUmqWuZTB+VT81RG4Sh2AAiJSM9uusE
+        vz6jyRbha6bgc91TgZM3fBQhTWQtnBN491w==
+X-Received: by 2002:a17:906:b04c:b0:78d:9b0a:7b0b with SMTP id bj12-20020a170906b04c00b0078d9b0a7b0bmr29173945ejb.197.1669321232603;
+        Thu, 24 Nov 2022 12:20:32 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7aYxRRn2N/AP15AOTenR50qeEFUz3yRXR9+Y57bevOqG6qDVO9U9yDbFFScm6v+dsE9ySLVQ==
+X-Received: by 2002:a17:906:b04c:b0:78d:9b0a:7b0b with SMTP id bj12-20020a170906b04c00b0078d9b0a7b0bmr29173939ejb.197.1669321232424;
+        Thu, 24 Nov 2022 12:20:32 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id c9-20020aa7d609000000b0046150ee13besm884315edr.65.2022.11.24.12.20.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Nov 2022 12:20:31 -0800 (PST)
+Message-ID: <e82b11bf-a872-a83e-6b02-7acfedcaf24b@redhat.com>
+Date:   Thu, 24 Nov 2022 21:20:31 +0100
 MIME-Version: 1.0
-References: <20221124200007.390901-1-hdegoede@redhat.com> <20221124200007.390901-3-hdegoede@redhat.com>
-In-Reply-To: <20221124200007.390901-3-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 24 Nov 2022 22:13:48 +0200
-Message-ID: <CAHp75VcgRN=3O7cYsxVxcJ6PuSpDuZAs3ex0rhedaE94DBwBzg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] platform/x86: int3472/discrete: Get the polarity from
- the _DSM entry
-To:     Hans de Goede <hdegoede@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 1/3] platform/x86: int3472/discrete: Refactor GPIO to
+ sensor mapping
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
         Daniel Scally <djrscally@gmail.com>,
         platform-driver-x86@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20221124200007.390901-1-hdegoede@redhat.com>
+ <20221124200007.390901-2-hdegoede@redhat.com>
+ <CAHp75VdWWXCvHnVaE3pYuntXyeP7zPOc6PpcQaXWFkEEPf+QxA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VdWWXCvHnVaE3pYuntXyeP7zPOc6PpcQaXWFkEEPf+QxA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 24, 2022 at 10:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> The out of tree IPU6 driver has moved to also using the in kernel INT3472
-> code for doing power-ctrl rather then doing their own thing (good!).
->
-> On IPU6 the polarity is encoded in the _DSM entry rather then being
-> hardcoded to GPIO_ACTIVE_LOW.
->
-> Using the _DSM entry for this on IPU3 leads to regressions, so only
-> use the _DSM entry for this on non IPU3 devices.
->
-> Note there is a whole bunch of PCI-ids for the IPU6 which is why
-> the check is for the IPU3-CIO2, because the CIO2 there has a unique
-> PCI-id which can be used for this.
+Hi,
 
-...
+Thank you for the reviews!
 
-> +/* IPU3 vs IPU6 needs to be handled differently */
-> +#define IPU3_CIO2_PCI_ID                               0x9d32
+On 11/24/22 21:09, Andy Shevchenko wrote:
+> On Thu, Nov 24, 2022 at 10:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Make the GPIO to sensor mapping more generic and fold the
+>> INT3472_GPIO_TYPE_RESET and INT3472_GPIO_TYPE_POWERDOWN cases into
+>> a single generic case.
+>>
+>> This is a preparation patch for further GPIO mapping changes.
+> 
+> ...
+> 
+>> +static const char *int3472_dsm_type_to_func(u8 type)
+>> +{
+>> +       switch (type) {
+>> +       case INT3472_GPIO_TYPE_RESET:
+>> +               return "reset";
+>> +       case INT3472_GPIO_TYPE_POWERDOWN:
+>> +               return "powerdown";
+>> +       case INT3472_GPIO_TYPE_CLK_ENABLE:
+>> +               return "clken";
+>> +       case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +               return "pled";
+>> +       case INT3472_GPIO_TYPE_POWER_ENABLE:
+>> +               return "power-enable";
+> 
+> default:
+>   return "unknown";
+> 
+> ?
+> 
+>> +       }
+>> +
+>> +       return "unknown";
+>> +}
+> 
 
-If it makes more than a single driver, perhaps pci_ids.h is a good
-place to keep it there?
+In the passed some compiler versions complained about the non-void
+function not ending with a return statement.
 
-...
+I guess I can give your variant a try (I agree it is more readable)
+and of we get compiler warnings we can switch back.
 
-> +       dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
-> +               agpio->resource_source.string_ptr, agpio->pin_table[0],
+I'll fix this up in the next version or when merging this,
+depending on further feedback on the series.
 
-> +               (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
+Regards,
 
-Parentheses are not needed, right?
+Hans
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+
+
