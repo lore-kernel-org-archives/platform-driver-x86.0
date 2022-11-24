@@ -2,83 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A77C43219
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 11:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B57C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 12:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiKXLwT (ORCPT
+        id S230220AbiKXMCV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Nov 2022 06:52:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        Thu, 24 Nov 2022 07:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbiKXLwR (ORCPT
+        with ESMTP id S229662AbiKXMCT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Nov 2022 06:52:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D57193F9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 03:51:25 -0800 (PST)
+        Thu, 24 Nov 2022 07:02:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C6ECFA64
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 04:01:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669290684;
+        s=mimecast20190719; t=1669291276;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Upa7JOhV8Luz6o/HTdRR+MHYLEnrm6+OGyDErM/vu0g=;
-        b=QDjxo4sE84VOllEKBJlVyle9JiMZx6XSdL1Yun5TFg297T3vz+USUIsciHT5G8lUoJjBdf
-        neewczBiet5RyQkcCBzeBqS4GhJ/OmYxCNvRjxcF0C06yrLPV86By7VQS76blFQ9FL7/Mv
-        rmauesn+QfYPnTufsi0zonDRovlDqe8=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=f7HcxW31PlGqZ7LlVewBN3n/M3SlRfqDtsg/jo2QUmA=;
+        b=bOmzpeg2yvMvk3B5f3xZtyRUDItBwCdy3OdO9NJsf2pPa/zIOeLiWPeEQh11/rGrcpRhjV
+        ISG/1/ScKb2aGkMeeHCaCSTVa74e2xUlnrYgIPnPhmMIAjvR7GGJVZ3PN03RidyYFwcOYH
+        kKwieQo44//OYum7WwX29b9ayIQ9fcQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-133-v-Tp4rdVNHS5q4SG2lxoaA-1; Thu, 24 Nov 2022 06:51:20 -0500
-X-MC-Unique: v-Tp4rdVNHS5q4SG2lxoaA-1
-Received: by mail-ed1-f71.google.com with SMTP id x18-20020a05640226d200b00461e027f704so840871edd.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 03:51:20 -0800 (PST)
+ us-mta-336-IkCdKez1OLeUZC-pVopTFQ-1; Thu, 24 Nov 2022 07:01:15 -0500
+X-MC-Unique: IkCdKez1OLeUZC-pVopTFQ-1
+Received: by mail-ej1-f69.google.com with SMTP id dn14-20020a17090794ce00b007ae5d040ca8so1072106ejc.17
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Nov 2022 04:01:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Upa7JOhV8Luz6o/HTdRR+MHYLEnrm6+OGyDErM/vu0g=;
-        b=vjzsgguFXDtHccK8IY7zXcIEjzPYnCLRKYH/T/5yKWRa4v+10LNqewSKQRJ5np+NV9
-         VDU23Ii/THNIOA0+fac8psrpiOyrj4eYLx1c2bltjnRbWZV8OVdX8bH5G453bLOSAiie
-         j+JxWf/YhNo3mSH6+Hxnkd+x3GcO0uU0xAZShgoOuHUpYmfO+wGxnBaxYsUiH9KyaHCu
-         gRT/GxkPrZJWO1D+fVQ2ihHloUe/Rqo549O4Jph5ha0/B862FUhu6SKw1usE6F9tmO9m
-         toUZOafVXNO6EUOgcUcTitwlFZ35ekrekao209GD4+eBsvyQm/a85/ba37qJXbiVhwsU
-         hONA==
-X-Gm-Message-State: ANoB5pmhLBSI0eP8sCdCOdAwWFWa8mkY24QAS803I8WohzpinEFO5ays
-        Q6H2qlS3Nb/xtExL/Ogd6+lxANUCEq3d/jl0+P/ZyldTdXCPg3P1MRhsdbkUvX1NvDg25MRrHKf
-        zov7ZaskIop9caEF4s+Kg8FiVUZarzcnd8Q==
-X-Received: by 2002:a17:907:c208:b0:7ad:79c0:547a with SMTP id ti8-20020a170907c20800b007ad79c0547amr17271770ejc.41.1669290679386;
-        Thu, 24 Nov 2022 03:51:19 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7zp90EmFXWu2AS+2jsyvw0RuEY/wCJ10Tp+dpiidAQoL7O6kxjm7Rv5tek7hY2r2UaBlb51g==
-X-Received: by 2002:a17:907:c208:b0:7ad:79c0:547a with SMTP id ti8-20020a170907c20800b007ad79c0547amr17271757ejc.41.1669290679217;
-        Thu, 24 Nov 2022 03:51:19 -0800 (PST)
+        bh=f7HcxW31PlGqZ7LlVewBN3n/M3SlRfqDtsg/jo2QUmA=;
+        b=7ZYiFl2QC37EU39barI82W5b+vOe/lNc2K2yEMFuemfDZgNdIM4e7acMiGfQo0fkgz
+         XElNYTcBToEjo9DZwijX+dm99rkuTmz7BlqX79yORIZv7mOgRL7MOf84BvPil9xNQXug
+         qD/lCaVTjwCDG/QfjyKHVdLb4WbdvIAul9gcMb6nvGOTaW2FVYhIwoHtC7WR2a6LKOAO
+         b0KNWxBo+YFiIbTo9mk2O5Hp4ijIM56rO5BisPRT7SAKbLuBhCV269Dh4xoi8jrUwCPH
+         FTpi/EBXKdTvmn8FlEbkQmi5/S700bkMhReW6PNE7aPKAaHEVrwn6H4T9MX2ekkDPX49
+         LlXQ==
+X-Gm-Message-State: ANoB5pnCIxEQ3DMLGnw3bSYZKg7pMfjHmT86tAUg85VfTc1gXxa0Bq+P
+        t4gqIgNybuXWrINcFY7UQT+mY8ESlZpjih6K1EWmd2dX4EYBKRLZWr2n3E8Oy9KwxWB7+EtI8kY
+        RfAIjqDMMzu45X8U+0vehgt/VuxsouWOBSA==
+X-Received: by 2002:a17:906:d297:b0:7b8:4c22:2d6c with SMTP id ay23-20020a170906d29700b007b84c222d6cmr10938685ejb.144.1669291274166;
+        Thu, 24 Nov 2022 04:01:14 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4x9Sj81lq09gOSoHAzFPNhr4rAt+DBUjnmtvn9lIcQAf+nTTggjtPgq7oHPmWJVGJcaL1OIw==
+X-Received: by 2002:a17:906:d297:b0:7b8:4c22:2d6c with SMTP id ay23-20020a170906d29700b007b84c222d6cmr10938668ejb.144.1669291273909;
+        Thu, 24 Nov 2022 04:01:13 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id hs32-20020a1709073ea000b007a8de84ce36sm337523ejc.206.2022.11.24.03.51.18
+        by smtp.gmail.com with ESMTPSA id g8-20020a1709064e4800b007a97a616f3fsm344759ejw.196.2022.11.24.04.01.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Nov 2022 03:51:18 -0800 (PST)
-Message-ID: <51f80121-2e8c-0e8e-6f89-a7dc214207b0@redhat.com>
-Date:   Thu, 24 Nov 2022 12:51:17 +0100
+        Thu, 24 Nov 2022 04:01:13 -0800 (PST)
+Message-ID: <72d5aa86-c097-d022-942a-f7299e8aa1ef@redhat.com>
+Date:   Thu, 24 Nov 2022 13:01:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
 Subject: Re: [PATCH v1 1/2] platform/x86: serial-multi-instantiate: Set fwnode
  for i2c
 Content-Language: en-US, nl
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Stefan Binding <sbinding@opensource.cirrus.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Gross <markgross@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@opensource.cirrus.com
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com
 References: <20221124110718.3925934-1-sbinding@opensource.cirrus.com>
  <20221124110718.3925934-2-sbinding@opensource.cirrus.com>
- <CAHp75VfUqkxyB7J8fbfQKCMaSa55q4zqt7btNb_n5E3-NWhQyg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VfUqkxyB7J8fbfQKCMaSa55q4zqt7btNb_n5E3-NWhQyg@mail.gmail.com>
+ <1b548284-baa3-26e0-2e8f-a8d853788e5c@redhat.com>
+In-Reply-To: <1b548284-baa3-26e0-2e8f-a8d853788e5c@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -87,30 +86,133 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/24/22 12:35, Andy Shevchenko wrote:
-> On Thu, Nov 24, 2022 at 1:07 PM Stefan Binding
-> <sbinding@opensource.cirrus.com> wrote:
->>
->> This allows the i2c driver to obtain the ACPI_COMPANION.
+On 11/24/22 12:47, Hans de Goede wrote:
+> Hi Stefan,
 > 
-> As far as I get how it's done in the SPI case the real fix should lie
-> among i2c_acpi_new_device_by_fwnode(), right?
+> On 11/24/22 12:07, Stefan Binding wrote:
+>> This allows the i2c driver to obtain the ACPI_COMPANION.
+>>
+>> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+>> ---
+>>  drivers/platform/x86/serial-multi-instantiate.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+>> index 5362f1a7b77c..15ef2f3c442e 100644
+>> --- a/drivers/platform/x86/serial-multi-instantiate.c
+>> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+>> @@ -194,6 +194,7 @@ static int smi_i2c_probe(struct platform_device *pdev, struct smi *smi,
+>>  		strscpy(board_info.type, inst_array[i].type, I2C_NAME_SIZE);
+>>  		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev), inst_array[i].type, i);
+>>  		board_info.dev_name = name;
+>> +		board_info.fwnode = acpi_fwnode_handle(adev);
+>>  
+>>  		ret = smi_get_irq(pdev, adev, &inst_array[i]);
+>>  		if (ret < 0)
+> 
+> I'm afraid that making this change is not as straight forward as it looks.
+> 
+> I know that I have tried to do this in the past and it failed.
+> 
+> IIRC there were 3 problems:
+> 
+> 1. I was expecting this to also allow the driver for the instantiated
+> i2c-client to be able to bind using an acpi_match_table but that
+> unfortunately does not work. acpi_match_table matches only work for
+> the first physical_node linked under
+> /sys/bus/acpi/devices/xxxx:xx/physical_node and that is the platform
+> device to which serial-multi-instantiate.c binds. The i2c_client becomes
+> the second physical node.  Note this is not really an issue,
+> just something to be aware of.
+> 
+> 
+> 2. This causes the i2c-core to use the first IRQ resource in the ACPI
+> fwnode as client->irq for any clients for which we do not set an
+> IRQ when instantiating. Which may very well be wrong. Sometimes that
+> IRQ is only valid for the first i2c-client which we instantiate; and
+> not for the others! And sometimes it is a problem because it may
+> point to an irqchip for which we never wrote a driver leading to
+> all probes of the i2c-client failing with -EPROBE_DEFER, see:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d1d84bb95364ed604015c2b788caaf3dbca0262f
+> 
+> Note that patch has been reverted since that specific -EPROBE_DEFER
+> issue has been solved by making the ACPI core instantiate a
+> platform_device instead of an i2c_client (in this case we
+> did not need the actual i2c_client at all).
+> 
+> The current i2c-core code has a (!client-irq) test guarding its
+> code of trying to use the first ACPI fwnode IRQ resource.
+> 
+> So we could disable this by setting client->irq = -ENOENT in
+> serial-multi-instantiate.c when (inst->flags & IRQ_RESOURCE_TYPE) ==
+> IRQ_RESOURCE_NONE). But that will introduce a new problem. Many
+> i2c-drivers check if there is an IRQ for them to use by doing:
+> "if (client->irq) request_irq(client->irq, ...)" but then with
+> error checking/so setting client->irq to -ENOENT will cause
+> the request_irq to fail, leading the probe to fail.
+> 
+> So before you can write a patch setting client->irq = -ENOENT
+> when (inst->flags & IRQ_RESOURCE_TYPE) == IRQ_RESOURCE_NONE),
+> you would first need to patch all i2c-drivers for clients
+> instantiated through serial-multi-instantiate.c changing:
+> 
+> 	if (client->irq) {
+> 		...
+> 	}
+> 
+> to:
+> 
+> 	if (client->irq > 0) {
+> 		...
+> 	}
+> 
+> Note this is not as bad as it sounds, since there are only
+> a few drivers for clients instantiated by serial-multi-instantiate.c .
 
-Eventually maybe, but not for the initial change.
+Possibly a  nicer way to fix this would be to make the i2c-core change
+client->irq to 0 if it is -ENOENT before calling the i2c_driver's
+probe method, thus fixing things centrally for all i2c-drivers without
+needing to audit/patch them all. Specifically in:
 
-It is complicated, making this change has side-effects
-and we want to limit those side-effects to only i2c-clients
-instantiated from serial-multi-instantiate for now, see
-my other reply to this patch.
+drivers/i2c/i2c-core-base.c: i2c_device_probe() change:
 
-I do believe that we eventually want to make this change,
-to easily give drivers access to all sorts of info
-(e.g. _DSM methods) from the matching ACPI fw-node,
-but as I said it is complicated...
+	if (!client->irq) {
+		...
+	}
+
+to:
+
+	if (!client->irq) {
+		...
+	} else if (client->irq == -ENOENT) {
+		client->irq = 0; /* Drivers expect 0 for "no-IRQ" */
+	}
+
+And maybe as Andy suggested, handle at least the IRQ in
+i2c_acpi_new_device_by_fwnode() by adding something like that there:
+
+	/* Disable the i2c-core attempting to get an IRQ from ACPI itself */
+	if (!board_info->irq)
+		board_info->irq= -ENOENT;
+
+I also agree with Andy that setting board_info->fw_node would be done
+there ideally too. But then you would need to extend the audit of
+impacted drivers mentioned below to also include drivers for
+i2c-clients instantiated through other code-paths calling
+i2c_acpi_new_device_by_fwnode()  (of which there are not many,
+but there are a few others).
+
+> 3. Some drivers may check for an ACPI companion device and then
+> change their behavior. So all drivers for clients instantiated
+> through serial-multi-instantiate.c will need to be audited for
+> this (and a summary of this audit needs to be added to the commit
+> msg).
 
 Regards,
 
 Hans
+
 
 
 
