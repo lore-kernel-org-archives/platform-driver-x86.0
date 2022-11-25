@@ -2,215 +2,217 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E489AC43219
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 14:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE63C43217
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 15:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbiKYOrN (ORCPT
+        id S229688AbiKYPpU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Nov 2022 09:47:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        Fri, 25 Nov 2022 10:45:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbiKYOrM (ORCPT
+        with ESMTP id S229618AbiKYPpN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Nov 2022 09:47:12 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42573B29;
-        Fri, 25 Nov 2022 06:47:11 -0800 (PST)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 477CB496;
-        Fri, 25 Nov 2022 15:47:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1669387629;
-        bh=GBPRMlL5dnm5+IJfAKIVoeWuuneyHMEKPUkvT5uR5XU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KMt09JpMkb0NAV8p1yfCtQojmAAkEgjiyWSFtfgl2V84SJyFOaeh/2xGG1EZXXxkj
-         f4vIitDwMXjMpPbb2kzBWfRCB0LYMK2IfLTzDTkCvuW0gYhlnpBsXruyE5KYJT23xX
-         4+gjvGe6h0SqF49u6uZIQ+jn7UBSPTr1x+E8FQXk=
-Date:   Fri, 25 Nov 2022 16:46:53 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Dan Scally <dan.scally@ideasonboard.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
- IPU6
-Message-ID: <Y4DVXT2TlTYkUHEr@pendragon.ideasonboard.com>
-References: <20221124200007.390901-1-hdegoede@redhat.com>
- <e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com>
- <Y4Cf5tLWsBDTndei@pendragon.ideasonboard.com>
- <636c471d-d7ee-d184-7a9d-fbfd0545059c@redhat.com>
+        Fri, 25 Nov 2022 10:45:13 -0500
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E90346672;
+        Fri, 25 Nov 2022 07:45:12 -0800 (PST)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-13bd2aea61bso5632148fac.0;
+        Fri, 25 Nov 2022 07:45:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qoc8a9uTe+h3RoaDiypNi6chRC1rLmrrHQjfRNQj5SA=;
+        b=iQ9e884gyeLQs0h7zW5aq7Cb4LdGBCcE9qLh2O+wJGbKZHlcWmh7RsuA2QFJuuKutS
+         h5bf529jyvmOW60C674PTunRrA33eLWQzFqFTP5BN6IzVmERBmL5/54SbBnAkCql1b+q
+         5omK8T7YWHfXZJeOO2lzv/NBPFW8rM7XTF++4OrKUBDsF1A5zNebiaQkAwFd3xNwK8hU
+         8byupVeuDhcvZogVpOuMcpaWNLfplKWH06I5Nta+8mjABytevykLWq4L6cJKM6Q0scfS
+         GCb0xDv/EJPb0c/nb+B6A3L1AGBISx5UbXGZ7ya1etwGP+NPbiJEXO1dlYdCKDX3u3zR
+         x95w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qoc8a9uTe+h3RoaDiypNi6chRC1rLmrrHQjfRNQj5SA=;
+        b=C0GXbsvV4TospzHVFNadfsMLgUNQgrrV1xue7yMeWh6l8YVX5vVaC59AfcLe2mrABb
+         FETD3faqibLWJItbJD+FzV1++jFxpjPM66rjSoBLgjwc+MhBxwFcvHscx3ex5kPgA17N
+         M8eVl/bMCaVFv2avkidSahyxp4E8XWOcnRC7jrT8RKYUtSsa4afDqlseBJabocdmNKD+
+         wrxeZtZAgmv9wwLLorgb8/VjmPXp2yJb6TyHElWqnKHTh0WbIvcQ6MeIgYgfop75eFbL
+         3QKakEk+AwnQq3rT7RsKv9auz94k6fjUQmibYpEGlWMhO2FVIsic+PB55lIKCEFUxAi0
+         b89g==
+X-Gm-Message-State: ANoB5plptD3kxd9iiZXgM/IawIJecLb9gQAR7YXsMcneLS2NKHopfod8
+        Mn5M9ap14GGVy0hJKrhyLEmtSW20ZLk=
+X-Google-Smtp-Source: AA0mqf7h+JhwolkoO0n3BcpoYVimgkjuGHagbJyOXuNcwFewosL60wY5ef/gDmymkYoxgWODBhVffg==
+X-Received: by 2002:a05:6870:e8f:b0:143:6465:31db with SMTP id mm15-20020a0568700e8f00b00143646531dbmr3474067oab.79.1669391111078;
+        Fri, 25 Nov 2022 07:45:11 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r14-20020a056870178e00b00130e66a7644sm2225545oae.25.2022.11.25.07.45.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Nov 2022 07:45:10 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Fri, 25 Nov 2022 07:45:09 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     =?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>
+Cc:     w_armin@gmx.de, hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
+Subject: Re: [PATCH v2] hwmon: (oxp-sensors) Add AOK ZOE and Mini PRO
+Message-ID: <20221125154509.GA1169236@roeck-us.net>
+References: <20221125114901.11309-1-samsagax@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <636c471d-d7ee-d184-7a9d-fbfd0545059c@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221125114901.11309-1-samsagax@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
-
-On Fri, Nov 25, 2022 at 12:15:57PM +0100, Hans de Goede wrote:
-> On 11/25/22 11:58, Laurent Pinchart wrote:
-> > On Fri, Nov 25, 2022 at 10:17:17AM +0000, Dan Scally wrote:
-> >> Morning Hans - thanks for the set
-> >>
-> >> On 24/11/2022 20:00, Hans de Goede wrote:
-> >>> Hi All,
-> >>>
-> >>> Here is a small set of patches to make the int3472/discrete code
-> >>> work with the sensor drivers bundled with the (unfortunately out of tree)
-> >>> IPU6 driver.
-> >>>
-> >>> There are parts of the out of tree IPU6 code, like the sensor drivers,
-> >>> which can be moved to the mainline and I do plan to work on this at some
-> >>> point and then some of this might need to change. But for now the goal is
-> >>> to make the out of tree driver work with standard mainline distro kernels
-> >>> through e.g. dkms. Otherwise users need to run a patched kernel just for
-> >>> a couple of small differences.
-> >>>
-> >>> This is basically a rewrite of this patch:
-> >>> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
-> >>>
-> >>> Wich users who want to use the IPU6 driver so far have had to manually
-> >>> apply to their kernels which is quite inconvenient.
-> >>>
-> >>> This rewrite makes 2 significant changes:
-> >>>
-> >>> 1. Don't break things on IPU3 platforms
-> >>>
-> >>> 2. Instead of extending the int3472_sensor_configs[] quirks table for each
-> >>> model which needs "clken" and "pled" GPIOs, do this based on matching
-> >>> the ACPI HID of the ACPI device describing the sensor.
-> >>>
-> >>> The need for these GPIOs is a property of the specific sensor driver which
-> >>> binds using this same HID, so by using this we avoid having to extend the
-> >>> int3472_sensor_configs[] quirks table all the time.
-> >>>
-> >>> This allows roling back the behavior to at least use a clk-framework
-> >>> clk instead of clken GPIO on a per sensor(-driver) basis as we mainline
-> >>> the sensor drivers, assuming that the drivers are switched over to the
-> >>> clk framework as part of their mainlining.
-> >>>
-> >>> A bigger question is what to do with the privacy-led GPIO on IPU3
-> >>> we so far have turned the LED on/off at the same as te clock,
-> >>> but at least on some IPU6 models this won't work, because they only
-> >>> have a privacy-led GPIO and no clk_en GPIO (there is no sensor
-> >>> clk-control at all on some models).
-> >>
-> >> Ah how annoying, we hadn't come across any situations for IPU3 with a 
-> >> privacy LED but no clock GPIO
-> >>
-> >>> I think we should maybe move all models, including IPU3 based
-> >>> models over to using a normal GPIO for controlling the privacy-led
-> >>> to make things consistent.
-> >>
-> >> I think they probably should be represented as LED devices then, and 
-> >> have the media subsytem call some framework to find associated LEDs and 
-> >> cycle them at power on time in the sensor drivers. I know there's the 
-> >> v4l2_flash structure at the moment, but not sure if a privacy one exists.
-> > 
-> > The whole point of a privacy LED is to be controlled automatically (and
-> > ideally without software intervention, but that's a different story).
-> > Can the LED framework be used without having the LED exposed to
-> > userspace ?
+On Fri, Nov 25, 2022 at 08:49:01AM -0300, Joaquín Ignacio Aramendía wrote:
+> Add support for the AOK ZOE A1 and OXP Mini PRO handheld devices.
+> DMI strings are added to this driver since the same EC layout is used and
+> has similar specs as the OXP mini AMD.
 > 
-> AFAIK using the LED framework will automatically expose the LED
-> to userspace; and using triggers as I mentioned in my other email
-> will also allow the user to unset the trigger or even use a different
-> trigger.
+> The added devices are:
+> - OneXPlayer mini PRO (AMD 6800U)
+> - AOK ZOE A1 (AMD 6800U)
 > 
-> I understand where you are coming from, but I was actually seeing
-> this (exposed to userspace) as a feature. Users may want to repurpose
-> the LED, maybe make it blink when the camera is on for extra obviousness
-> the camera is on. Maybe always have it off because it is too annoying,
-> etc...  ?
+> Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
 
-One use case for turning it off is avoiding reflection in glasses. I
-however think this is outweighted by the privacy concerns. If the
-privacy LED can be controlled from userspace, at least by default, then
-it could as well be dropped completely.
+Dropped v1 and applied v2.
 
-> My vision here is that ideally the LED should be hardwired to go on
-> together with some enable pin or power-supply of the sensor.
+Guenter
 
-To make it secure it should be controlled by the hardware, yes.
-
-> But if it is actually just a GPIO, then there is something to be said
-> for giving the user full-control. OTOH this would make writing spy-ware
-> where the LED never goes on a lot easier...
+> ---
+> Corrected commit message (AOK ZOE description)
+> Removed unhelpful dev_info message
+> ---
+>  Documentation/hwmon/oxp-sensors.rst | 16 +++++++++---
+>  drivers/hwmon/oxp-sensors.c         | 40 ++++++++++++++++++++++++-----
+>  2 files changed, 47 insertions(+), 9 deletions(-)
 > 
-> Typing this out I'm afraid that I have to agree with you and that
-> the spyware argument likely wins over how giving the user more control
-> would be nice :(
-
-I also wish we could get both privacy and flexibility :-( I'm not
-necessarily opposed to making it controllable by userspace, but that
-shouldn't be the default. It could be controlled by a kernel command
-line argument for instance. I doubt that would be worth it though.
-
-> Which would bring us back to just making it a GPIO, which would then
-> need to be turned on+off by the sensor driver I guess.
 > 
-> There seems to be a bunch of GPIO/clk/regulator boilerplate duplicated
-> in all the sensor drivers. I think a little helper-library  for this might
-> be in order. E.g. Something like this (in the .h file)
-
-I fully agree that camera sensor helpers would be good to have.
-
-> struct camera_sensor_pwr_helper {
-> 	// bunch of stuff here, this should be fixed size so that the
-> 	// sensor drivers can embed it into their driver-data struct
-> };
+> base-commit: 27fea302952d8c90cafbdbee96bafeca03544401
+> --
+> 2.38.1
 > 
-> int camera_sensor_pwr_helper_init(struct camera_sensor_pwr_helper *helper,
-> 				  const char *supply_names, int supply_count,
-> 				  const char* clk_name.
-> 				  /* other stuff which I'm probably forgetting right now */);
-
-There are all kind of constraints on the power on/off sequences, I don't
-think we would be able to model this in a generic way without making it
-so complicated that it would outweight the benefits.
-
-What I think could help is moving all camera sensor drivers to runtime
-PM, and having helpers to properly enable runtime PM in probe() in a way
-that works on both ACPI and DT systems, with or without CONFIG_PM
-enabled. It's way more complicated than it sounds.
-
-> // turn_on_privacy_led should be false when called from probe(), must be true when
-> // called on stream_on().
-> int camera_sensor_pwr_helper_on(struct camera_sensor_pwr_helper *helper, bool turn_on_privacy_led);
-> int camera_sensor_pwr_helper_off(struct camera_sensor_pwr_helper *helper);
+> diff --git a/Documentation/hwmon/oxp-sensors.rst b/Documentation/hwmon/oxp-sensors.rst
+> index f612dddc964a..39c588ec5c50 100644
+> --- a/Documentation/hwmon/oxp-sensors.rst
+> +++ b/Documentation/hwmon/oxp-sensors.rst
+> @@ -12,9 +12,19 @@ Description:
+>  One X Player devices from One Netbook provide fan readings and fan control
+>  through its Embedded Controller.
 > 
-> // maybe, or make everything devm managed? :
-> int camera_sensor_pwr_helper_exit(struct camera_sensor_pwr_helper *helper);
+> -Currently only supports AMD boards from the One X Player lineup. Intel boards
+> -could be supported if we could figure out the EC registers and values to write
+> -to since the EC layout and model is different.
+> +Currently only supports AMD boards from the One X Player and AOK ZOE lineup.
+> +Intel boards could be supported if we could figure out the EC registers and
+> +values to write to since the EC layout and model is different.
+> +
+> +Supported devices
+> +-----------------
+> +
+> +Currently the driver supports the following handhelds:
+> +
+> + - AOK ZOE A1
+> + - OneXPlayer AMD
+> + - OneXPlayer mini AMD
+> + - OneXPlayer mini AMD PRO
 > 
-> Just is just a really really quick n dirty design. For one I could use
-> suggestions for a better name for the thing :)
+>  Sysfs entries
+>  -------------
+> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+> index da54a38f4454..a2bfcf3f9909 100644
+> --- a/drivers/hwmon/oxp-sensors.c
+> +++ b/drivers/hwmon/oxp-sensors.c
+> @@ -3,13 +3,14 @@
+>   * Platform driver for OXP Handhelds that expose fan reading and control
+>   * via hwmon sysfs.
+>   *
+> - * All boards have the same DMI strings and they are told appart by the
+> + * Old boards have the same DMI strings and they are told appart by the
+>   * boot cpu vendor (Intel/AMD). Currently only AMD boards are supported
+>   * but the code is made to be simple to add other handheld boards in the
+>   * future.
+> - * Fan control is provided via pwm interface in the range [0-255]. AMD
+> - * boards use [0-100] as range in the EC, the written value is scaled to
+> - * accommodate for that.
+> + * Fan control is provided via pwm interface in the range [0-255].
+> + * Old AMD boards use [0-100] as range in the EC, the written value is
+> + * scaled to accommodate for that. Newer boards like the mini PRO and
+> + * AOK ZOE are not scaled but have the same EC layout.
+>   *
+>   * Copyright (C) 2022 Joaquín I. Aramendía <samsagax@gmail.com>
+>   */
+> @@ -39,16 +40,39 @@ static bool unlock_global_acpi_lock(void)
+>  	return ACPI_SUCCESS(acpi_release_global_lock(oxp_mutex));
+>  }
 > 
-> I think something like this will be helpfull to reduce a whole bunch
-> of boilerplate code related to powering on/off the sensor in all
-> the drivers; and it would give us a central place to drive an
-> (optional) privacy-led GPIO.
+> +enum oxp_board {
+> +	aok_zoe_a1 = 1,
+> +	oxp_mini_amd,
+> +	oxp_mini_amd_pro,
+> +};
+> +
+> +static enum oxp_board board;
+> +
+>  #define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
+>  #define OXP_SENSOR_PWM_ENABLE_REG	0x4A /* PWM enable is 1 register long */
+>  #define OXP_SENSOR_PWM_REG		0x4B /* PWM reading is 1 register long */
 > 
-> >>> And likewise (eventually) completely drop the "clken" GPIO this
-> >>> patch series introduces (with some sensors) and instead always model
-> >>> this through the clk-framework.
-> >>>
-> >>> Hans de Goede (3):
-> >>>    platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
-> >>>    platform/x86: int3472/discrete: Get the polarity from the _DSM entry
-> >>>    platform/x86: int3472/discrete: Add support for sensor-drivers which
-> >>>      expect clken + pled GPIOs
-> >>>
-> >>>   drivers/platform/x86/intel/int3472/common.h   |  2 +-
-> >>>   drivers/platform/x86/intel/int3472/discrete.c | 92 ++++++++++++++++---
-> >>>   2 files changed, 78 insertions(+), 16 deletions(-)
-
--- 
-Regards,
-
-Laurent Pinchart
+>  static const struct dmi_system_id dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
+> +		},
+> +		.driver_data = (void *) &(enum oxp_board) {aok_zoe_a1},
+> +	},
+>  	{
+>  		.matches = {
+>  			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+>  			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONE XPLAYER"),
+>  		},
+> +		.driver_data = (void *) &(enum oxp_board) {oxp_mini_amd},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER Mini Pro"),
+> +		},
+> +		.driver_data = (void *) &(enum oxp_board) {oxp_mini_amd_pro},
+>  	},
+>  	{},
+>  };
+> @@ -137,7 +161,8 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
+>  			ret = read_from_ec(OXP_SENSOR_PWM_REG, 2, val);
+>  			if (ret)
+>  				return ret;
+> -			*val = (*val * 255) / 100;
+> +			if (board == oxp_mini_amd)
+> +				*val = (*val * 255) / 100;
+>  			return 0;
+>  		case hwmon_pwm_enable:
+>  			return read_from_ec(OXP_SENSOR_PWM_ENABLE_REG, 1, val);
+> @@ -166,7 +191,8 @@ static int oxp_platform_write(struct device *dev, enum hwmon_sensor_types type,
+>  		case hwmon_pwm_input:
+>  			if (val < 0 || val > 255)
+>  				return -EINVAL;
+> -			val = (val * 100) / 255;
+> +			if (board == oxp_mini_amd)
+> +				val = (val * 100) / 255;
+>  			return write_to_ec(dev, OXP_SENSOR_PWM_REG, val);
+>  		default:
+>  			break;
+> @@ -216,6 +242,8 @@ static int oxp_platform_probe(struct platform_device *pdev)
+>  	if (!dmi_entry || boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+>  		return -ENODEV;
+> 
+> +	board = *((enum oxp_board *) dmi_entry->driver_data);
+> +
+>  	hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
+>  						     &oxp_ec_chip_info, NULL);
