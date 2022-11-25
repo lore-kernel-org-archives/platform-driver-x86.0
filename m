@@ -2,138 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AECC43217
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 11:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E116CC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 11:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbiKYLEE (ORCPT
+        id S230193AbiKYLGK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Nov 2022 06:04:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59304 "EHLO
+        Fri, 25 Nov 2022 06:06:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbiKYLEB (ORCPT
+        with ESMTP id S229498AbiKYLGJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Nov 2022 06:04:01 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5AD4B9BD;
-        Fri, 25 Nov 2022 03:04:00 -0800 (PST)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BCEBE6D6;
-        Fri, 25 Nov 2022 12:03:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1669374239;
-        bh=L1pUvW7cPNM8Xx9zsClHfeZis6mlvjGC5+/2A6n6D7c=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=g0tfPxAleYqVOs2mVynxmAmP4q9pjDkJnDUog+EhQ90beIimOcUuGrW//RTRHTg3p
-         X4tmcjA66R+MYmCsWWz4fNXPk462G9bCydl5Gs5SBMPcfqHh/uq8IFFubC0x2f/2OT
-         QrSOvBL/YPkl1Fk3Dv8T4Ee6SgmD+AfirFAgAUjc=
-Message-ID: <d48aad66-eca0-18bd-4c05-dad4abbda784@ideasonboard.com>
-Date:   Fri, 25 Nov 2022 11:03:56 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
- IPU6
-Content-Language: en-US
+        Fri, 25 Nov 2022 06:06:09 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CD54D5C7;
+        Fri, 25 Nov 2022 03:06:08 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="314496495"
+X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
+   d="scan'208";a="314496495"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 03:06:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="706036494"
+X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
+   d="scan'208";a="706036494"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Nov 2022 03:06:06 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1oyWWy-00HCRj-2L;
+        Fri, 25 Nov 2022 13:06:04 +0200
+Date:   Fri, 25 Nov 2022 13:06:04 +0200
+From:   Andy Shevchenko <andy@kernel.org>
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Cc:     Dan Scally <dan.scally@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
         Daniel Scally <djrscally@gmail.com>,
         platform-driver-x86@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
+ IPU6
+Message-ID: <Y4ChnCHkV9RufccT@smile.fi.intel.com>
 References: <20221124200007.390901-1-hdegoede@redhat.com>
  <e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com>
  <Y4Cf5tLWsBDTndei@pendragon.ideasonboard.com>
-From:   Dan Scally <dan.scally@ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <Y4Cf5tLWsBDTndei@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-On 25/11/2022 10:58, Laurent Pinchart wrote:
+On Fri, Nov 25, 2022 at 12:58:46PM +0200, Laurent Pinchart wrote:
 > On Fri, Nov 25, 2022 at 10:17:17AM +0000, Dan Scally wrote:
->> Morning Hans - thanks for the set
->>
->> On 24/11/2022 20:00, Hans de Goede wrote:
->>> Hi All,
->>>
->>> Here is a small set of patches to make the int3472/discrete code
->>> work with the sensor drivers bundled with the (unfortunately out of tree)
->>> IPU6 driver.
->>>
->>> There are parts of the out of tree IPU6 code, like the sensor drivers,
->>> which can be moved to the mainline and I do plan to work on this at some
->>> point and then some of this might need to change. But for now the goal is
->>> to make the out of tree driver work with standard mainline distro kernels
->>> through e.g. dkms. Otherwise users need to run a patched kernel just for
->>> a couple of small differences.
->>>
->>> This is basically a rewrite of this patch:
->>> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
->>>
->>> Wich users who want to use the IPU6 driver so far have had to manually
->>> apply to their kernels which is quite inconvenient.
->>>
->>> This rewrite makes 2 significant changes:
->>>
->>> 1. Don't break things on IPU3 platforms
->>>
->>> 2. Instead of extending the int3472_sensor_configs[] quirks table for each
->>> model which needs "clken" and "pled" GPIOs, do this based on matching
->>> the ACPI HID of the ACPI device describing the sensor.
->>>
->>> The need for these GPIOs is a property of the specific sensor driver which
->>> binds using this same HID, so by using this we avoid having to extend the
->>> int3472_sensor_configs[] quirks table all the time.
->>>
->>> This allows roling back the behavior to at least use a clk-framework
->>> clk instead of clken GPIO on a per sensor(-driver) basis as we mainline
->>> the sensor drivers, assuming that the drivers are switched over to the
->>> clk framework as part of their mainlining.
->>>
->>> A bigger question is what to do with the privacy-led GPIO on IPU3
->>> we so far have turned the LED on/off at the same as te clock,
->>> but at least on some IPU6 models this won't work, because they only
->>> have a privacy-led GPIO and no clk_en GPIO (there is no sensor
->>> clk-control at all on some models).
->> Ah how annoying, we hadn't come across any situations for IPU3 with a
->> privacy LED but no clock GPIO
->>
->>> I think we should maybe move all models, including IPU3 based
->>> models over to using a normal GPIO for controlling the privacy-led
->>> to make things consistent.
->> I think they probably should be represented as LED devices then, and
->> have the media subsytem call some framework to find associated LEDs and
->> cycle them at power on time in the sensor drivers. I know there's the
->> v4l2_flash structure at the moment, but not sure if a privacy one exists.
-> The whole point of a privacy LED is to be controlled automatically (and
-> ideally without software intervention, but that's a different story).
+
+...
+
 > Can the LED framework be used without having the LED exposed to
 > userspace ?
 
+I believe the correct question here is "can the states of some leds be
+read-only from user perspective" (this way any changes into led subsystems
+looks less intrusive, esp. taking into account that subsystem is de facto
+unmaintained).
 
-I think that's what led_sysfs_disable() is for, though I haven't gotten 
-far enough down that route to know that for sure.
+-- 
+With Best Regards,
+Andy Shevchenko
 
->>> And likewise (eventually) completely drop the "clken" GPIO this
->>> patch series introduces (with some sensors) and instead always model
->>> this through the clk-framework.
->>>
->>> Regards,
->>>
->>> Hans
->>>
->>>
->>> Hans de Goede (3):
->>>     platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
->>>     platform/x86: int3472/discrete: Get the polarity from the _DSM entry
->>>     platform/x86: int3472/discrete: Add support for sensor-drivers which
->>>       expect clken + pled GPIOs
->>>
->>>    drivers/platform/x86/intel/int3472/common.h   |  2 +-
->>>    drivers/platform/x86/intel/int3472/discrete.c | 92 ++++++++++++++++---
->>>    2 files changed, 78 insertions(+), 16 deletions(-)
+
