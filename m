@@ -2,119 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7AAC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Nov 2022 22:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E4C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 10:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbiKXWTs (ORCPT
+        id S229673AbiKYKRZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Nov 2022 17:19:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        Fri, 25 Nov 2022 05:17:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiKXWTs (ORCPT
+        with ESMTP id S229626AbiKYKRX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Nov 2022 17:19:48 -0500
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997004EC28;
-        Thu, 24 Nov 2022 14:19:47 -0800 (PST)
-Received: by mail-qk1-x736.google.com with SMTP id d7so1675712qkk.3;
-        Thu, 24 Nov 2022 14:19:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KbCGMNNqpFrPkTMKq+/YTKVUVh717cxsdv12SaO2YPk=;
-        b=go/AXR4dyEKduPBH6rb98qkBeaIcz8hj/2a4dC54EM3yg+hHdj34bpKUyPAdqhOEvM
-         R0KG4wtsaGn9TWze9yKCOCiPYZoKFK8utjjIUL6oiKMgis+Y2Be65Dv6dbxj2W2B3Sm7
-         8unPLF4nJd+sJRgYPK4E9CAzdeqzO9H8GXbwK0Kn3nbzhWnfKm9kFEgaXSAPtzsfO3ul
-         Q5ms+YhH+1X1fyBH+a8mfGSG/4GigD7TZytDVQkKJo9a2wwFBDV041YrWQWJiZZffRDS
-         VNHx9Qh0y8rEWSGMDmhM5trBC61nL/wt5r7gCbIu188FLpVRtFjIJTnKoV8WjtjWMWMz
-         8DuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KbCGMNNqpFrPkTMKq+/YTKVUVh717cxsdv12SaO2YPk=;
-        b=PAGe33Sid+5OgvoyWT6P357p/nULN3teCRWlK8aEm5N8d4BlT8ouiMCzXKbFN7jkSh
-         jFTXp1Csgd2CTyeoAkn9fJ/C+QLFAI+j9iPot3aZuaUbdvzOGbtVfuLd1VrIxYAHzhFO
-         TytnVUie3a+lBxte9C9YHQa+XsLa3tAHKBSEuAlPRp3bCt5y/lKfUFWTIt8zvXgmjrh3
-         Vi2FeNiNEbOZ6QNwRXlUqixVZ5JoiWgx/JJY86Qt9HxBA99l22g4u4k+HhvemdkB/jGu
-         Mn+BscpkKCK2rpPz0wZLV8xKCByLxgxkdrDFMhwLueUd0U8GSTOwUsJSC5JVuIqFVUa+
-         WVxA==
-X-Gm-Message-State: ANoB5pkKRJU4WjR3Yk7jQqqB1iCZ65W7N6EvoYy29ai+3dqaHeAo3hKl
-        G/xUt9zRfj+XTup5yMnPDBSpfTt8yJ4NuzLdxiM=
-X-Google-Smtp-Source: AA0mqf50TPZ4HoTzd1iZ46fYGRC7zD1bDJcgVEGGLVk+sH8QCpp5ayepufYG3ruP0DlcZVu5eDgFvaPKLxTqxgTN1hs=
-X-Received: by 2002:a37:b404:0:b0:6fa:4a82:1152 with SMTP id
- d4-20020a37b404000000b006fa4a821152mr32072603qkf.504.1669328386656; Thu, 24
- Nov 2022 14:19:46 -0800 (PST)
+        Fri, 25 Nov 2022 05:17:23 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430943FBA4;
+        Fri, 25 Nov 2022 02:17:22 -0800 (PST)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 94AAF4D5;
+        Fri, 25 Nov 2022 11:17:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1669371440;
+        bh=BJhaICRBgfaSf7h+OmNGmYjHumdvJkHAQNyJKFnAHsk=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
+        b=JjsWOE5TRVC96HwbveGsi5XNGcGhdHoxRnfdivv8Wxn0pg6nB3r8VjF5h+Y/eWI5H
+         DSDhgyXG+/8WNrIM3CSsuiPPC/3vcGvGJcIp7wJy35E3AbE+92suvAQV/oCZwRnMhU
+         llgjF7cK9l1FBh7FWuziyQKcZK7kAX1PczPovqro=
+Message-ID: <e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com>
+Date:   Fri, 25 Nov 2022 10:17:17 +0000
 MIME-Version: 1.0
-References: <20221124200007.390901-1-hdegoede@redhat.com> <20221124200007.390901-2-hdegoede@redhat.com>
- <CAHp75VdWWXCvHnVaE3pYuntXyeP7zPOc6PpcQaXWFkEEPf+QxA@mail.gmail.com> <e82b11bf-a872-a83e-6b02-7acfedcaf24b@redhat.com>
-In-Reply-To: <e82b11bf-a872-a83e-6b02-7acfedcaf24b@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 25 Nov 2022 00:19:10 +0200
-Message-ID: <CAHp75VfoPtFZVCZyMtOpnOxq-7HDb7aQ5iEXenkbB1082OxTtA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] platform/x86: int3472/discrete: Refactor GPIO to
- sensor mapping
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
+        Daniel Scally <djrscally@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20221124200007.390901-1-hdegoede@redhat.com>
+Content-Language: en-US
+From:   Dan Scally <dan.scally@ideasonboard.com>
+Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
+ IPU6
+In-Reply-To: <20221124200007.390901-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 24, 2022 at 10:20 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/24/22 21:09, Andy Shevchenko wrote:
-> > On Thu, Nov 24, 2022 at 10:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Morning Hans - thanks for the set
 
-...
-
-> >> +static const char *int3472_dsm_type_to_func(u8 type)
-> >> +{
-> >> +       switch (type) {
-> >> +       case INT3472_GPIO_TYPE_RESET:
-> >> +               return "reset";
-> >> +       case INT3472_GPIO_TYPE_POWERDOWN:
-> >> +               return "powerdown";
-> >> +       case INT3472_GPIO_TYPE_CLK_ENABLE:
-> >> +               return "clken";
-> >> +       case INT3472_GPIO_TYPE_PRIVACY_LED:
-> >> +               return "pled";
-> >> +       case INT3472_GPIO_TYPE_POWER_ENABLE:
-> >> +               return "power-enable";
-> >
-> > default:
-> >   return "unknown";
-> >
-> > ?
-> >
-> >> +       }
-> >> +
-> >> +       return "unknown";
-> >> +}
-> >
+On 24/11/2022 20:00, Hans de Goede wrote:
+> Hi All,
 >
-> In the passed some compiler versions complained about the non-void
-> function not ending with a return statement.
+> Here is a small set of patches to make the int3472/discrete code
+> work with the sensor drivers bundled with the (unfortunately out of tree)
+> IPU6 driver.
 >
-> I guess I can give your variant a try (I agree it is more readable)
-> and of we get compiler warnings we can switch back.
+> There are parts of the out of tree IPU6 code, like the sensor drivers,
+> which can be moved to the mainline and I do plan to work on this at some
+> point and then some of this might need to change. But for now the goal is
+> to make the out of tree driver work with standard mainline distro kernels
+> through e.g. dkms. Otherwise users need to run a patched kernel just for
+> a couple of small differences.
 >
-> I'll fix this up in the next version or when merging this,
-> depending on further feedback on the series.
+> This is basically a rewrite of this patch:
+> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
+>
+> Wich users who want to use the IPU6 driver so far have had to manually
+> apply to their kernels which is quite inconvenient.
+>
+> This rewrite makes 2 significant changes:
+>
+> 1. Don't break things on IPU3 platforms
+>
+> 2. Instead of extending the int3472_sensor_configs[] quirks table for each
+> model which needs "clken" and "pled" GPIOs, do this based on matching
+> the ACPI HID of the ACPI device describing the sensor.
+>
+> The need for these GPIOs is a property of the specific sensor driver which
+> binds using this same HID, so by using this we avoid having to extend the
+> int3472_sensor_configs[] quirks table all the time.
+>
+> This allows roling back the behavior to at least use a clk-framework
+> clk instead of clken GPIO on a per sensor(-driver) basis as we mainline
+> the sensor drivers, assuming that the drivers are switched over to the
+> clk framework as part of their mainlining.
+>
+> A bigger question is what to do with the privacy-led GPIO on IPU3
+> we so far have turned the LED on/off at the same as te clock,
+> but at least on some IPU6 models this won't work, because they only
+> have a privacy-led GPIO and no clk_en GPIO (there is no sensor
+> clk-control at all on some models).
 
-I believe it's not the case for a long time. (Esp. when the kernel
-requires GCC 5.1 as bare minimum). We have a lot of (relatively) new
-code that uses switch-cases like I suggested and I have heard none of
-the complains from anybody, including all CIs crawling through the
-kernel code.
+
+Ah how annoying, we hadn't come across any situations for IPU3 with a 
+privacy LED but no clock GPIO
+
+>
+> I think we should maybe move all models, including IPU3 based
+> models over to using a normal GPIO for controlling the privacy-led
+> to make things consistent.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+I think they probably should be represented as LED devices then, and 
+have the media subsytem call some framework to find associated LEDs and 
+cycle them at power on time in the sensor drivers. I know there's the 
+v4l2_flash structure at the moment, but not sure if a privacy one exists.
+
+>
+> And likewise (eventually) completely drop the "clken" GPIO this
+> patch series introduces (with some sensors) and instead always model
+> this through the clk-framework.
+>
+> Regards,
+>
+> Hans
+>
+>
+> Hans de Goede (3):
+>    platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+>    platform/x86: int3472/discrete: Get the polarity from the _DSM entry
+>    platform/x86: int3472/discrete: Add support for sensor-drivers which
+>      expect clken + pled GPIOs
+>
+>   drivers/platform/x86/intel/int3472/common.h   |  2 +-
+>   drivers/platform/x86/intel/int3472/discrete.c | 92 ++++++++++++++++---
+>   2 files changed, 78 insertions(+), 16 deletions(-)
+>
