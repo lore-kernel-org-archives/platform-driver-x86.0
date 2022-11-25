@@ -2,131 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E4C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 10:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B88C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Nov 2022 10:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiKYKRZ (ORCPT
+        id S229585AbiKYKnA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Nov 2022 05:17:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
+        Fri, 25 Nov 2022 05:43:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiKYKRX (ORCPT
+        with ESMTP id S229538AbiKYKm5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Nov 2022 05:17:23 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430943FBA4;
-        Fri, 25 Nov 2022 02:17:22 -0800 (PST)
+        Fri, 25 Nov 2022 05:42:57 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15E91C901;
+        Fri, 25 Nov 2022 02:42:55 -0800 (PST)
 Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 94AAF4D5;
-        Fri, 25 Nov 2022 11:17:19 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4EE8625B;
+        Fri, 25 Nov 2022 11:42:53 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1669371440;
-        bh=BJhaICRBgfaSf7h+OmNGmYjHumdvJkHAQNyJKFnAHsk=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-        b=JjsWOE5TRVC96HwbveGsi5XNGcGhdHoxRnfdivv8Wxn0pg6nB3r8VjF5h+Y/eWI5H
-         DSDhgyXG+/8WNrIM3CSsuiPPC/3vcGvGJcIp7wJy35E3AbE+92suvAQV/oCZwRnMhU
-         llgjF7cK9l1FBh7FWuziyQKcZK7kAX1PczPovqro=
-Message-ID: <e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com>
-Date:   Fri, 25 Nov 2022 10:17:17 +0000
+        s=mail; t=1669372973;
+        bh=qqeLik6STwfgOWZed0SK8Nma42uOo01IV8pt3qWWMKE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=O3CgybIp12IBarUhUi6YXUahoLZ9H21gi6/rBs7KVUUqu1rF/fz/rGuFQgroKXQ00
+         kwafzP5TH5GtBF7yjObEPrsL6iPzW3azt8peNMnVTcDg8hVy6mdb3Wp30nBceQephb
+         JTZkQ9gJcxhEXBMefMYmvCeKqse1aZ0HSeIhJneI=
+Message-ID: <1d5944a3-8d06-d95a-fa7e-347ac41a858a@ideasonboard.com>
+Date:   Fri, 25 Nov 2022 10:42:51 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
+Subject: Re: [PATCH 2/3] platform/x86: int3472/discrete: Get the polarity from
+ the _DSM entry
+Content-Language: en-US
 To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
+        Daniel Scally <djrscally@gmail.com>,
+        platform-driver-x86@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
 References: <20221124200007.390901-1-hdegoede@redhat.com>
-Content-Language: en-US
+ <20221124200007.390901-3-hdegoede@redhat.com>
+ <CAHp75VcgRN=3O7cYsxVxcJ6PuSpDuZAs3ex0rhedaE94DBwBzg@mail.gmail.com>
+ <8da77836-c53b-8468-13ee-dc02eabfc8a5@redhat.com>
 From:   Dan Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
- IPU6
-In-Reply-To: <20221124200007.390901-1-hdegoede@redhat.com>
+In-Reply-To: <8da77836-c53b-8468-13ee-dc02eabfc8a5@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Morning Hans - thanks for the set
+Hello
 
-On 24/11/2022 20:00, Hans de Goede wrote:
-> Hi All,
+On 24/11/2022 20:26, Hans de Goede wrote:
+> Hi,
 >
-> Here is a small set of patches to make the int3472/discrete code
-> work with the sensor drivers bundled with the (unfortunately out of tree)
-> IPU6 driver.
->
-> There are parts of the out of tree IPU6 code, like the sensor drivers,
-> which can be moved to the mainline and I do plan to work on this at some
-> point and then some of this might need to change. But for now the goal is
-> to make the out of tree driver work with standard mainline distro kernels
-> through e.g. dkms. Otherwise users need to run a patched kernel just for
-> a couple of small differences.
->
-> This is basically a rewrite of this patch:
-> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
->
-> Wich users who want to use the IPU6 driver so far have had to manually
-> apply to their kernels which is quite inconvenient.
->
-> This rewrite makes 2 significant changes:
->
-> 1. Don't break things on IPU3 platforms
->
-> 2. Instead of extending the int3472_sensor_configs[] quirks table for each
-> model which needs "clken" and "pled" GPIOs, do this based on matching
-> the ACPI HID of the ACPI device describing the sensor.
->
-> The need for these GPIOs is a property of the specific sensor driver which
-> binds using this same HID, so by using this we avoid having to extend the
-> int3472_sensor_configs[] quirks table all the time.
->
-> This allows roling back the behavior to at least use a clk-framework
-> clk instead of clken GPIO on a per sensor(-driver) basis as we mainline
-> the sensor drivers, assuming that the drivers are switched over to the
-> clk framework as part of their mainlining.
->
-> A bigger question is what to do with the privacy-led GPIO on IPU3
-> we so far have turned the LED on/off at the same as te clock,
-> but at least on some IPU6 models this won't work, because they only
-> have a privacy-led GPIO and no clk_en GPIO (there is no sensor
-> clk-control at all on some models).
+> On 11/24/22 21:13, Andy Shevchenko wrote:
+>> On Thu, Nov 24, 2022 at 10:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>> The out of tree IPU6 driver has moved to also using the in kernel INT3472
+>>> code for doing power-ctrl rather then doing their own thing (good!).
+>>>
+>>> On IPU6 the polarity is encoded in the _DSM entry rather then being
+>>> hardcoded to GPIO_ACTIVE_LOW.
+>>>
+>>> Using the _DSM entry for this on IPU3 leads to regressions, so only
+>>> use the _DSM entry for this on non IPU3 devices.
+>>>
+>>> Note there is a whole bunch of PCI-ids for the IPU6 which is why
+>>> the check is for the IPU3-CIO2, because the CIO2 there has a unique
+>>> PCI-id which can be used for this.
+>> ...
+>>
+>>> +/* IPU3 vs IPU6 needs to be handled differently */
+>>> +#define IPU3_CIO2_PCI_ID                               0x9d32
+>> If it makes more than a single driver, perhaps pci_ids.h is a good
+>> place to keep it there?
+> Yes, I've added a note to my TODO to clean this up in a follow-up
+> patch (the pci-ids.h maintainers want to see multiple users of
+> an id before accepting new ids in there).
 
 
-Ah how annoying, we hadn't come across any situations for IPU3 with a 
-privacy LED but no clock GPIO
+fwiw this in drivers/media/pci/intel/ipu3/ipu3-cio2.h already as 
+CIO2_PCI_ID, so it will have multiple users with this change.
 
->
-> I think we should maybe move all models, including IPU3 based
-> models over to using a normal GPIO for controlling the privacy-led
-> to make things consistent.
+>> ...
+>>
+>>> +       dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
+>>> +               agpio->resource_source.string_ptr, agpio->pin_table[0],
+>>> +               (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
+>> Parentheses are not needed, right?
+> Right, but I prefer to use them in conditional statements like these,
+> because I personally find that they make things easier to read.
 
 
-I think they probably should be represented as LED devices then, and 
-have the media subsytem call some framework to find associated LEDs and 
-cycle them at power on time in the sensor drivers. I know there's the 
-v4l2_flash structure at the moment, but not sure if a privacy one exists.
+Seconded.
 
->
-> And likewise (eventually) completely drop the "clken" GPIO this
-> patch series introduces (with some sensors) and instead always model
-> this through the clk-framework.
->
 > Regards,
 >
 > Hans
 >
->
-> Hans de Goede (3):
->    platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
->    platform/x86: int3472/discrete: Get the polarity from the _DSM entry
->    platform/x86: int3472/discrete: Add support for sensor-drivers which
->      expect clken + pled GPIOs
->
->   drivers/platform/x86/intel/int3472/common.h   |  2 +-
->   drivers/platform/x86/intel/int3472/discrete.c | 92 ++++++++++++++++---
->   2 files changed, 78 insertions(+), 16 deletions(-)
 >
