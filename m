@@ -2,256 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8700EC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 10:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C9CC43217
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 10:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbiK1KFe (ORCPT
+        id S229945AbiK1KU7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 05:05:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Mon, 28 Nov 2022 05:20:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbiK1KFc (ORCPT
+        with ESMTP id S229681AbiK1KU6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 05:05:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923071A212
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:04:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669629874;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0kptGvMGHSAx6t8nlMnrJ0d9wUMVGi1jatn/SMhdc8M=;
-        b=impGzpQsu8cA3F5ndUj3maCDrBARJutxZiE6LQStczvWu96o/UC4maQSjItFncsqZ+/znW
-        TLSI0dNo07O3a/PMnia/otF8rqHXEnHa0EnBupsDlk+du1azJ5s23wEPM3sjbKWzhUMOKz
-        14JvGyyIU9FWgmQocQEF1+tAqoAsRqI=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-357-eoP0KUj2Ou-jn_LFlbvdJA-1; Mon, 28 Nov 2022 05:04:33 -0500
-X-MC-Unique: eoP0KUj2Ou-jn_LFlbvdJA-1
-Received: by mail-ej1-f69.google.com with SMTP id nc4-20020a1709071c0400b0078a5ceb571bso4022854ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:04:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0kptGvMGHSAx6t8nlMnrJ0d9wUMVGi1jatn/SMhdc8M=;
-        b=42Somgs0Ym8lnMDwj91U9EgoQmEs4b6LhMfTkVx/Emn2PWdbHFL1t1nULbF5GIK/US
-         L6ytRgiiEhxuZuiCwRVBIe3TH5D1FDd3+u+ykfEk/34vcY+MFUITAXLaMzPjob03Xd9A
-         IPsZX7OcEBn9TSm8pVca/W+u6BxGpd4yupAyLA1BB9o4yh677lesSiag6qnNr5m+Mes2
-         J9hBW2etUmEJKNxHcE/kk7IIFL6hSym8XyMuWfH7CB1EGPAzN8uTOSr70Al7sVd8KxSP
-         SCfioGPwq3oSmIZFZJT5Kuf9p/DHE6/4aCyy4YrL7PDhkSs/nYRfIdpPo818U2ZdfQoo
-         t7oA==
-X-Gm-Message-State: ANoB5pngBSSk31V5F8RKVWc/FUB9s7PZ3ssgVoKKaGaKt07coIDFxH/D
-        37PW6CiY1TmfwJNmWFr4xAAwiTtRlLvNgEtynguiYQKhfPVhSp71sQTXKFHMPWhibA6yHMhF86r
-        NysZb7Vnu+vwERO+nwDu2nZ8tCyw75RM3PQ==
-X-Received: by 2002:a17:906:3a14:b0:7ad:79c0:4662 with SMTP id z20-20020a1709063a1400b007ad79c04662mr42930019eje.400.1669629871627;
-        Mon, 28 Nov 2022 02:04:31 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4knslyJvMRk31JYSg0uvVLf7rjFniYPZio6qp3KHO4qybsVK7fEvuG2Qij7p6HZSe0jOdtmw==
-X-Received: by 2002:a17:906:3a14:b0:7ad:79c0:4662 with SMTP id z20-20020a1709063a1400b007ad79c04662mr42929995eje.400.1669629871327;
-        Mon, 28 Nov 2022 02:04:31 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id g3-20020a170906538300b0078cb06c2ef9sm4747116ejo.8.2022.11.28.02.04.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 02:04:30 -0800 (PST)
-Message-ID: <3606640b-14bf-28c3-cf2a-b8cc93bad07f@redhat.com>
-Date:   Mon, 28 Nov 2022 11:04:29 +0100
+        Mon, 28 Nov 2022 05:20:58 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038441A386
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:20:58 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="294500512"
+X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
+   d="scan'208";a="294500512"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 02:20:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="785573922"
+X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
+   d="scan'208";a="785573922"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Nov 2022 02:20:56 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1ozbFv-0014eN-0g;
+        Mon, 28 Nov 2022 12:20:55 +0200
+Date:   Mon, 28 Nov 2022 12:20:54 +0200
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Add Lenovo Yoga Tab 3
+ (YT3-X90F) charger + fuel-gauge data
+Message-ID: <Y4SLhlW1t5epgamh@smile.fi.intel.com>
+References: <20221127182458.104528-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH 3/3] platform/x86: int3472/discrete: Add support for
- sensor-drivers which expect clken + pled GPIOs
-Content-Language: en-US
-To:     Dan Scally <dan.scally@ideasonboard.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-References: <20221124200007.390901-1-hdegoede@redhat.com>
- <20221124200007.390901-4-hdegoede@redhat.com>
- <0fa6d92a-9b3b-cec9-c834-1b530ffe7a68@ideasonboard.com>
- <e7fb85f9-9e39-e33e-61b7-14e02cfafb88@redhat.com>
- <df65983e-547a-5ed7-0a49-812f6e227549@ideasonboard.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <df65983e-547a-5ed7-0a49-812f6e227549@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221127182458.104528-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 11/28/22 08:39, Dan Scally wrote:
-> Morning Hans
+On Sun, Nov 27, 2022 at 07:24:58PM +0100, Hans de Goede wrote:
+> The Lenovo Yoga Tab 3 (YT3-X90F) is an Intel Cherry Trail based tablet
+> which ships with Android as Factory OS. Its DSDT contains a bunch of I2C
+> devices which are not actually there, causing various resource conflicts.
+> Use acpi_quirk_skip_i2c_client_enumeration() to not enumerate these.
 > 
-> On 25/11/2022 18:38, Hans de Goede wrote:
->> Hi,
->>
->> On 11/25/22 17:07, Dan Scally wrote:
->>> Hi Hans
->>>
->>> On 24/11/2022 20:00, Hans de Goede wrote:
->>>> The hm11b1 and ov01a1s sensor drivers shipped with the out of tree IPU6
->>>> driver, expect the clk_en GPIO to be modelled as a "clken" GPIO rather
->>>> then using the clk framework; and the hm11b1, ov01a1s and ov2740 driver
->>>> all 3 expect the privacy-led to be modelled as a "pled" GPIO, rather then
->>>> it being turned on/off at the same time as the clk.
->>>>
->>>> Adjust how we handle the GPIOs on these sensors accordingly, for now at
->>>> least, so that the out of tree driver can work with standard distro kernels
->>>> through e.g. dkms. Otherwise users need to run a patched kernel just for
->>>> this small difference.
->>>>
->>>> This of course needs to be revisited when we mainline these sensor drivers,
->>>> I can imagine the drivers getting clk-framework support when they are
->>>> mainlined and then at that same time their acpi HID can be dropped from
->>>> the use_gpio_for_clk_acpi_ids[] array.
->>>>
->>>> Note there already is a mainline driver for the ov2740, but that is not
->>>> impacted by this change since atm it uses neither the clk framework nor
->>>> a "clken" GPIO.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>> Maybe we should patch the sensor drivers for sensors supported with
->>>> the IPU3 to also expect the privacy-led to always be a separate GPIO?
->>>>
->>>> This way we can also avoid the camera LED briefly going on at boot,
->>>> when the driver is powering things up to read the sensor's ID register.
->>>>
->>>> And I have also put looking at making the mainline ov2740 driver suitable
->>>> for use with the (out of tree) IPU6 driver on my TODO list.
->>>> ---
->>>>    drivers/platform/x86/intel/int3472/common.h   |  2 +-
->>>>    drivers/platform/x86/intel/int3472/discrete.c | 37 +++++++++++++++----
->>>>    2 files changed, 31 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
->>>> index 53270d19c73a..58647d3084b9 100644
->>>> --- a/drivers/platform/x86/intel/int3472/common.h
->>>> +++ b/drivers/platform/x86/intel/int3472/common.h
->>>> @@ -23,7 +23,7 @@
->>>>    #define INT3472_GPIO_TYPE_PRIVACY_LED                0x0d
->>>>      #define INT3472_PDEV_MAX_NAME_LEN                23
->>>> -#define INT3472_MAX_SENSOR_GPIOS                3
->>>> +#define INT3472_MAX_SENSOR_GPIOS                4
->>>>      #define GPIO_REGULATOR_NAME_LENGTH                21
->>>>    #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH            9
->>>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->>>> index 9159291be28a..bfcf8184db16 100644
->>>> --- a/drivers/platform/x86/intel/int3472/discrete.c
->>>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->>>> @@ -216,6 +216,26 @@ static const char *int3472_dsm_type_to_func(u8 type)
->>>>        return "unknown";
->>>>    }
->>>>    +/*
->>>> + * The hm11b1 and ov01a1s sensor drivers shipped with the out of tree IPU6 driver,
->>>> + * expect the clk_en GPIO to be modelled as a "clken" GPIO rather then as a clk and
->>>> + * the hm11b1, ov01a1s and ov2740 driver all 3 expect the privacy-led to be modelled
->>>> + * as a "pled" GPIO, rather then it being turned on/off at the same time as the clk.
->>>> + *
->>>> + * Note there also is a mainline driver for the ov2740, but that does not use
->>>> + * the clk framework atm either.
->>>> + *
->>>> + * Adjust how we handle the GPIOs on these sensors accordingly, for now at least.
->>>> + * This needs to be revisited when we mainline these sensor drivers / when we merge
->>>> + * the necessary changes in the ov2740 sensor driver so that it can work on the IPU6.
->>>> + */
->>>
->>> I'm not really sure about this one though; wouldn't it be better to alter those sensor drivers to use the clock framework properly?
->> Yes, Laurent more or less said the same thing; and I was already starting
->> to think in this direction myself when typing the cover letter.
->>
->> So yes I agree with you and Laurent. That still leaves the question of what to do
->> with devices with just a privacy LED without a clk-en though.
->>
->> Dan, do you have a list of sensors which currently are known to work / be used
->> together with the IPU3 (and the int3472 discrete code) ?
->>
->> I know I will need to modifi the ov5693 code, but I wonder what other drivers
->> I will need to modify ?
+> The YT3-X90F has quite a bit of exotic hardware, this adds initial
+> support by manually instantiating the i2c-clients for the 2 charger +
+> 2 fuel-gauge chips used for the 2 batteries.
 > 
-> 
-> The ov5693, ov8865 and ov7251 are the upstream working ones. There's a couple more that need changes upstreaming, but I can handle those during that process.
+> Support for other parts of the hw will be added by follow-up patches.
 
-Ok thanks.
+...
 
->> I think I might just move those sensor-drivers over to using a GPIO
->> for the privacy LED and just always register a GPIO for the privacy LED
->> pin, does that sound like a good idea to you ?
-> 
-> 
-> Well if we can't handle it during the int3472 code then yes - I certainly don't have  a better idea.
+> +	/*
+> +	 * The "bq25892_0" charger IC has its /CE (Charge-Enable) and OTG pins
+> +	 * connected to GPIOs, rather then having them hardwired to the correct
+> +	 * values as is normally done.
+> +	 *
+> +	 * The bq25890_charger driver controls these through I2C, but this only
+> +	 * works if not overridden by the pins. Set these pins here:
+> +	 * 1. Set /CE to 0 to allow charging.
 
-I will patch the 3 sensors listed above to take an optional privacy LED GPIO then.
+If I read this correctly then the /CE is an active low pin and setting to 0
+means active state which...
 
-I do plan to work on the sensor_power helper library which I discussed
-soon-ish since that should make things a lot easier, but for now I'll
-just do this the quick and dirty way, also to make backporting easier
-for distros (so that they can have a kernel which works with both
-IPU3 and the out-of-tree IPU6 stuff).
+> +	 * 2. Set OTG to 0 disable V5 boost output since the 5V boost output of
+> +	 *    the main "bq25892_1" charger is used when necessary.
+> +	 */
+> +
+> +	/* /CE pin */
+> +	ret = x86_android_tablet_get_gpiod("INT33FF:02", 22, &gpiod);
+> +	if (ret < 0)
+> +		return ret;
 
-Regards,
+> +	gpiod_set_value(gpiod, 0);
 
-Hans
+...contradicts with the virtual state here. Perhaps you missed the
+corresponding flag to enable negation?
 
+> +	/* OTG pin */
+> +	ret = x86_android_tablet_get_gpiod("INT33FF:03", 19, &gpiod);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	gpiod_set_value(gpiod, 0);
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-
-
-> 
->> Anyways it is weekend now and I've already worked too many hours this week,
->> so I'll take a look at this on Monday.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>> +static const struct acpi_device_id use_gpio_for_clk_acpi_ids[] = {
->>>> +    { "HIMX11B1" }, /* hm11b1 */
->>>> +    { "OVTI01AS" }, /* ov01a1s */
->>>> +    { "INT3474" },  /* ov2740 */
->>>> +    {}
->>>> +};
->>>> +
->>>>    /**
->>>>     * skl_int3472_handle_gpio_resources: Map PMIC resources to consuming sensor
->>>>     * @ares: A pointer to a &struct acpi_resource
->>>> @@ -293,19 +313,22 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>>>            (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
->>>>          switch (type) {
->>>> +    case INT3472_GPIO_TYPE_CLK_ENABLE:
->>>> +    case INT3472_GPIO_TYPE_PRIVACY_LED:
->>>> +        if (!acpi_match_device_ids(int3472->adev, use_gpio_for_clk_acpi_ids)) {
->>>> +            ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
->>>> +            if (ret)
->>>> +                err_msg = "Failed to map GPIO to clock\n";
->>>> +
->>>> +            break;
->>>> +        }
->>>> +        fallthrough;
->>>>        case INT3472_GPIO_TYPE_RESET:
->>>>        case INT3472_GPIO_TYPE_POWERDOWN:
->>>>            ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, polarity);
->>>>            if (ret)
->>>>                err_msg = "Failed to map GPIO pin to sensor\n";
->>>>    -        break;
->>>> -    case INT3472_GPIO_TYPE_CLK_ENABLE:
->>>> -    case INT3472_GPIO_TYPE_PRIVACY_LED:
->>>> -        ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
->>>> -        if (ret)
->>>> -            err_msg = "Failed to map GPIO to clock\n";
->>>> -
->>>>            break;
->>>>        case INT3472_GPIO_TYPE_POWER_ENABLE:
->>>>            ret = skl_int3472_register_regulator(int3472, agpio);
-> 
 
