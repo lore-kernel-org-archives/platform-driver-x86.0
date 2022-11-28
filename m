@@ -2,92 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE7FC47088
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 21:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E41C4321E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 22:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233919AbiK1Vs5 (ORCPT
+        id S234546AbiK1WTR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 16:48:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
+        Mon, 28 Nov 2022 17:19:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbiK1Vst (ORCPT
+        with ESMTP id S234545AbiK1WTJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 16:48:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B082F02E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 13:47:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669672076;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w6RkPyT4Az4Oqk+MW9n0yAQ0aGyPFE38zf6k639wdOg=;
-        b=Hyc3pBK1rh/7NRJTRl/+9K5Nv9NdpZ3TQKW+MMxwpswU2CKyP4LSQW7SofKbyVgNO+OGNO
-        wkqyJQ36kuS3yJHI3foasU7VrRTOw0ByuRsjIdA/LUgooZbAGYzibQlkuabm19KVo2xIg0
-        CyfezCsRSQbr1W3Y7b/zBbbZ8KG51Mw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-650-_v_EHgyHOMiDWvbifqOSjQ-1; Mon, 28 Nov 2022 16:44:22 -0500
-X-MC-Unique: _v_EHgyHOMiDWvbifqOSjQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4803101245C;
-        Mon, 28 Nov 2022 21:44:21 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4865340C6EC2;
-        Mon, 28 Nov 2022 21:44:20 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: int3472: Add support for the back privacy LED on Surface Go models
-Date:   Mon, 28 Nov 2022 22:44:08 +0100
-Message-Id: <20221128214408.165726-6-hdegoede@redhat.com>
-In-Reply-To: <20221128214408.165726-1-hdegoede@redhat.com>
-References: <20221128214408.165726-1-hdegoede@redhat.com>
+        Mon, 28 Nov 2022 17:19:09 -0500
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514293057C;
+        Mon, 28 Nov 2022 14:19:08 -0800 (PST)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-1433ef3b61fso14812736fac.10;
+        Mon, 28 Nov 2022 14:19:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pu0q+HWxwnLB/rXjaRUFdWxXMpSKVwg7Nrm/lHOYDIk=;
+        b=huMNvsvLNpauKzxhlT93lfa2kSazpUtaBVmMGrzgJH2HbHfe+AucVovkDF6ZVJS666
+         kc2FeYEIGq3JmGlThXJUhiiYnfWcyTZc1uFx01Wel1Sj9RDf/fwpf1yfivMEyJENGNkW
+         emMaqyZo8DV79wdmM2u1zTcsA/h52kXkJwvsrG6fvTYW5KzmftIhX1Bzqpaajb1gFWy3
+         9W/ME5EymNu1bVeLO2e0wqb5mWD9HjD+eklJh1xadf2tPt/O7uAQY4QLQTTKeUTqy+Vg
+         1QOcNYqMK7KAvithR0rTD/UG4NKcPLY4xZHfLEDkZ78iOI7dlGiAZyZt1LhHdyWyXTgY
+         gk1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pu0q+HWxwnLB/rXjaRUFdWxXMpSKVwg7Nrm/lHOYDIk=;
+        b=JP5lEoq3KTiH1MnAbK36rsO9JvqTPgcar+kTisezEPe/n6xBZrHqK7CdXbsUy0p1x1
+         T/Wigw3K9FBahigLccRuFyigJxG7l2Ory7ZQ1iIUrfYtDPR+tIDZlFedKHspIILz4Ipx
+         aB7THZPvCYEwDYhGi3LIym1OOVk2FPl62M7DMwazVLNQztNXvh2LujlCWY1FOgJ5Hcqb
+         PV99aC2iZWga4QSKpwlbTae6ttrrc0THQ09AZghn97mDmf/rQsxYxsE1lYbJN/IlbJt4
+         Cgm/HG31bL78EAogAeV7Yi7PqYD2RQNUm+EW9OpbsqSAagAH3yLUL0IQKyHQFjRf2p8O
+         flMQ==
+X-Gm-Message-State: ANoB5pm73jmTcVPd8uN4VNMI3cMchNFKI0eX8owupyfmtYeVYpajRsL6
+        aOW7j+rcD+ZYa227mdPDl0M=
+X-Google-Smtp-Source: AA0mqf4cShUIWxmSfAvWYismzxA0c9l/1WUuAO0i+loxg4tMvHUYBKddzVL75y0dMwJT0BL7Sr/54g==
+X-Received: by 2002:a05:6870:5387:b0:143:58c3:e6c5 with SMTP id h7-20020a056870538700b0014358c3e6c5mr12547979oan.182.1669673947690;
+        Mon, 28 Nov 2022 14:19:07 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k4-20020a9d1984000000b00661ad8741b4sm5268086otk.24.2022.11.28.14.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Nov 2022 14:19:07 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 28 Nov 2022 14:19:06 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     =?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>
+Cc:     w_armin@gmx.de, hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
+Subject: Re: [PATCH] hwmon: (oxp-sensors) Bugfix pwm reading
+Message-ID: <20221128221906.GA1882598@roeck-us.net>
+References: <20221128185206.212022-1-samsagax@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+In-Reply-To: <20221128185206.212022-1-samsagax@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The back camera on the Surface Go series has a privacy LED too,
-this is connected to the indicator-LED-A output of the tps68470 PMIC.
+On Mon, Nov 28, 2022 at 03:52:06PM -0300, Joaquín Ignacio Aramendía wrote:
+> PWM reading is only 1 register long.
+> 
+> Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
 
-Add a GPIO mapping for this. Together with the patches to add support
-for the indicator-LED outputs to the gpio-tps68470 driver + the patch to
-add privacy LED support to the ov8865 drivers this fixes the back privacy
-LED on the Surface Go models not turning on when the back camera is
-active.
+Applied.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel/int3472/tps68470_board_data.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
+Guenter
 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-index 309eab9c0558..ac40fdc13876 100644
---- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-@@ -134,6 +134,7 @@ static struct gpiod_lookup_table surface_go_int347a_gpios = {
- 	.table = {
- 		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("tps68470-gpio", 10, "privacy-led", GPIO_ACTIVE_HIGH),
- 		{ }
- 	}
- };
--- 
-2.38.1
-
+> ---
+>  drivers/hwmon/oxp-sensors.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> 
+> base-commit: 9494c53e1389b120ba461899207ac8a3aab2632c
+> 
+> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+> index c04277676b72..f84ec8f8eda9 100644
+> --- a/drivers/hwmon/oxp-sensors.c
+> +++ b/drivers/hwmon/oxp-sensors.c
+> @@ -158,7 +158,7 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_pwm:
+>  		switch (attr) {
+>  		case hwmon_pwm_input:
+> -			ret = read_from_ec(OXP_SENSOR_PWM_REG, 2, val);
+> +			ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+>  			if (ret)
+>  				return ret;
+>  			if (board == oxp_mini_amd)
