@@ -2,96 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D276C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 18:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07412C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 21:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232767AbiK1SwT (ORCPT
+        id S233015AbiK1VpN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 13:52:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55770 "EHLO
+        Mon, 28 Nov 2022 16:45:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232334AbiK1SwT (ORCPT
+        with ESMTP id S231950AbiK1VpM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 13:52:19 -0500
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420BC18B07;
-        Mon, 28 Nov 2022 10:52:18 -0800 (PST)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-13bd2aea61bso14203189fac.0;
-        Mon, 28 Nov 2022 10:52:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4d6e/poia8EJLhp/tI1ugk9yl6fSii07DeeYRHBuBKM=;
-        b=AkSl7pbbC7gxPQsyfK9IRFQjP0ZsGb38KcqF+RcguOtxCaztlv8szuQDErf1ewCn7d
-         XJheoDTh4rCqVjm8/PcNJm5ZEvyAZn+mqVzrPG7rbJ20o+qDmKWBqCM8LxXN2VFlkbR9
-         TUpX7BSxQtxP9niHx5g/ACN6su8dyfzJ8/g3NE8lXkoSvJqaOPQkqzgB7zHsAp9GlO+w
-         2X3h3mV/Yhiy1PJyryP3snm7EqKEQWUgb6F5Q3i4Lggcd90o4cw7ujpb+abq47ieqhCl
-         x0N7QFg0CtnIzdMROYkSMRLLZgZxV/sEGCO32cSGCUf3NFufxW9KH9/5dphiRqeVay/K
-         bAbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4d6e/poia8EJLhp/tI1ugk9yl6fSii07DeeYRHBuBKM=;
-        b=0jCf7MzVYnvw5UZ9TH1oi1AlkyT6nLey2OJS+zVp2uUqRQ81Gq6qbWL4erNWX7Q9Df
-         Jyy1Jfi6U2ZQOI7Cqg135qK0SBkbH2Dj13UsGhuoTfwvuWOryea0KK49eDwyl/CO8pMH
-         pJhqWt7aY9AO3W0LrlYM1LkCrk7Wi8EMeK0GyWngzYcoR66kmzhWD4SYQlQkzZ+uY0um
-         CK6CXsCRbEk1JCkwk7cR5kxA+cmuRFq3Wst/n1Zpn4+YmP9CdiqkohvV93X5fTlFgQIL
-         nSk9eknIw1VhgTF5RZM/AKJFOZOMowF0ELblaKr8iKvJYOTm01YDkfUj2PcaONL/vDCW
-         yQwQ==
-X-Gm-Message-State: ANoB5pmNv/BiMliYjnOkudy57HJ/qvLXlbByFjfJLSRQufxAx13DoFDm
-        ZMy5xr3NK4XD1G3hZbVrs2QXgMYmvmI=
-X-Google-Smtp-Source: AA0mqf6+uMeW5QMdcGRKxwjPKFFYoUZ9wxLKFY1AqBoi5c64KnitblUO2RHgpGoy0AjxQqSPb6ha/Q==
-X-Received: by 2002:a05:6870:e88:b0:142:9422:84e4 with SMTP id mm8-20020a0568700e8800b00142942284e4mr21032215oab.57.1669661537513;
-        Mon, 28 Nov 2022 10:52:17 -0800 (PST)
-Received: from smeagol.fibertel.com.ar ([201.235.4.68])
-        by smtp.gmail.com with ESMTPSA id s191-20020acaa9c8000000b003546fada8f6sm4615340oie.12.2022.11.28.10.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Nov 2022 10:52:16 -0800 (PST)
-From:   =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
-        <samsagax@gmail.com>
-To:     w_armin@gmx.de
-Cc:     hdegoede@redhat.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, linux@roeck-us.net,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        pobrn@protonmail.com,
-        =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
-        <samsagax@gmail.com>
-Subject: [PATCH] hwmon: (oxp-sensors) Bugfix pwm reading
-Date:   Mon, 28 Nov 2022 15:52:06 -0300
-Message-Id: <20221128185206.212022-1-samsagax@gmail.com>
-X-Mailer: git-send-email 2.38.1
+        Mon, 28 Nov 2022 16:45:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090A32B615
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 13:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669671858;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HYgpL2606mVfO+98npo7eaosHXY5I8deinLTWhiViEE=;
+        b=SozgTE4t+V2EvkMHIkAe+Nu6s/pDrW+MJ5WoSWW4GQOACsmp8PX4tQZzufBOeSKAmwVsSX
+        lmS9rmXYJ6gP6L3gsAJTu5upA1BqCSREw60krIBSFQq5ZeqPV/k60JCVCYMaFKQV11BRFa
+        fsg3gXgGGPc3CAVZwMTUeI/G+F+U0ak=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-197-XIfB4YCLNIye0mUOA4KgEA-1; Mon, 28 Nov 2022 16:44:15 -0500
+X-MC-Unique: XIfB4YCLNIye0mUOA4KgEA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD33286C177;
+        Mon, 28 Nov 2022 21:44:14 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23AFD40C6EC2;
+        Mon, 28 Nov 2022 21:44:13 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Subject: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from the wrong register
+Date:   Mon, 28 Nov 2022 22:44:04 +0100
+Message-Id: <20221128214408.165726-2-hdegoede@redhat.com>
+In-Reply-To: <20221128214408.165726-1-hdegoede@redhat.com>
+References: <20221128214408.165726-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PWM reading is only 1 register long.
+For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+so that the actual value of the pin is read, rather then the value the pin
+would output when put in output mode.
 
-Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/hwmon/oxp-sensors.c | 2 +-
+ drivers/gpio/gpio-tps68470.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-index c04277676b72..f84ec8f8eda9 100644
---- a/drivers/hwmon/oxp-sensors.c
-+++ b/drivers/hwmon/oxp-sensors.c
-@@ -158,7 +158,7 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_pwm:
- 		switch (attr) {
- 		case hwmon_pwm_input:
--			ret = read_from_ec(OXP_SENSOR_PWM_REG, 2, val);
-+			ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
- 			if (ret)
- 				return ret;
- 			if (board == oxp_mini_amd)
-
-base-commit: 9494c53e1389b120ba461899207ac8a3aab2632c
+diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+index aaddcabe9b35..778a72cf800c 100644
+--- a/drivers/gpio/gpio-tps68470.c
++++ b/drivers/gpio/gpio-tps68470.c
+@@ -30,7 +30,7 @@ static int tps68470_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
+ 	struct regmap *regmap = tps68470_gpio->tps68470_regmap;
+-	unsigned int reg = TPS68470_REG_GPDO;
++	unsigned int reg = TPS68470_REG_GPDI;
+ 	int val, ret;
+ 
+ 	if (offset >= TPS68470_N_REGULAR_GPIO) {
 -- 
 2.38.1
 
