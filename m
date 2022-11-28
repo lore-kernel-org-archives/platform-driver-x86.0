@@ -2,156 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAE4C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 18:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D276C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 18:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233130AbiK1S3x (ORCPT
+        id S232767AbiK1SwT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 13:29:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39048 "EHLO
+        Mon, 28 Nov 2022 13:52:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233407AbiK1S3h (ORCPT
+        with ESMTP id S232334AbiK1SwT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 13:29:37 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570C8D9F;
-        Mon, 28 Nov 2022 10:22:37 -0800 (PST)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E15E856D;
-        Mon, 28 Nov 2022 19:22:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1669659756;
-        bh=GKwo/jr4IO4MGyrIhs+IuvV2L3spl2h6vEe+4IIYIAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G/DONe1tNYdw5f5bi/QVSd5eFqePWTXcre2Ol5DYtpndDFaK6LO3qUjvaI+18wc/k
-         kCKlyf9SOhk3pftLzm0VKgYLezGpnV43XbYtWoQeV5bx2zu1CvSv22kiz2x94jMrki
-         9mEjb8hvRUn//iSOnbU5oXW/tzZ2xXfTXvxEFCnA=
-Date:   Mon, 28 Nov 2022 20:22:21 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Dan Scally <dan.scally@ideasonboard.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/3] platform/x86: int3472/discrete: Make it work with
- IPU6
-Message-ID: <Y4T8XQ6UFYooVLf9@pendragon.ideasonboard.com>
-References: <20221124200007.390901-1-hdegoede@redhat.com>
- <e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com>
- <Y4Cf5tLWsBDTndei@pendragon.ideasonboard.com>
- <636c471d-d7ee-d184-7a9d-fbfd0545059c@redhat.com>
- <Y4DVXT2TlTYkUHEr@pendragon.ideasonboard.com>
- <27b71261-ac9b-c103-88af-2ca53477317a@redhat.com>
+        Mon, 28 Nov 2022 13:52:19 -0500
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420BC18B07;
+        Mon, 28 Nov 2022 10:52:18 -0800 (PST)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-13bd2aea61bso14203189fac.0;
+        Mon, 28 Nov 2022 10:52:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4d6e/poia8EJLhp/tI1ugk9yl6fSii07DeeYRHBuBKM=;
+        b=AkSl7pbbC7gxPQsyfK9IRFQjP0ZsGb38KcqF+RcguOtxCaztlv8szuQDErf1ewCn7d
+         XJheoDTh4rCqVjm8/PcNJm5ZEvyAZn+mqVzrPG7rbJ20o+qDmKWBqCM8LxXN2VFlkbR9
+         TUpX7BSxQtxP9niHx5g/ACN6su8dyfzJ8/g3NE8lXkoSvJqaOPQkqzgB7zHsAp9GlO+w
+         2X3h3mV/Yhiy1PJyryP3snm7EqKEQWUgb6F5Q3i4Lggcd90o4cw7ujpb+abq47ieqhCl
+         x0N7QFg0CtnIzdMROYkSMRLLZgZxV/sEGCO32cSGCUf3NFufxW9KH9/5dphiRqeVay/K
+         bAbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4d6e/poia8EJLhp/tI1ugk9yl6fSii07DeeYRHBuBKM=;
+        b=0jCf7MzVYnvw5UZ9TH1oi1AlkyT6nLey2OJS+zVp2uUqRQ81Gq6qbWL4erNWX7Q9Df
+         Jyy1Jfi6U2ZQOI7Cqg135qK0SBkbH2Dj13UsGhuoTfwvuWOryea0KK49eDwyl/CO8pMH
+         pJhqWt7aY9AO3W0LrlYM1LkCrk7Wi8EMeK0GyWngzYcoR66kmzhWD4SYQlQkzZ+uY0um
+         CK6CXsCRbEk1JCkwk7cR5kxA+cmuRFq3Wst/n1Zpn4+YmP9CdiqkohvV93X5fTlFgQIL
+         nSk9eknIw1VhgTF5RZM/AKJFOZOMowF0ELblaKr8iKvJYOTm01YDkfUj2PcaONL/vDCW
+         yQwQ==
+X-Gm-Message-State: ANoB5pmNv/BiMliYjnOkudy57HJ/qvLXlbByFjfJLSRQufxAx13DoFDm
+        ZMy5xr3NK4XD1G3hZbVrs2QXgMYmvmI=
+X-Google-Smtp-Source: AA0mqf6+uMeW5QMdcGRKxwjPKFFYoUZ9wxLKFY1AqBoi5c64KnitblUO2RHgpGoy0AjxQqSPb6ha/Q==
+X-Received: by 2002:a05:6870:e88:b0:142:9422:84e4 with SMTP id mm8-20020a0568700e8800b00142942284e4mr21032215oab.57.1669661537513;
+        Mon, 28 Nov 2022 10:52:17 -0800 (PST)
+Received: from smeagol.fibertel.com.ar ([201.235.4.68])
+        by smtp.gmail.com with ESMTPSA id s191-20020acaa9c8000000b003546fada8f6sm4615340oie.12.2022.11.28.10.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Nov 2022 10:52:16 -0800 (PST)
+From:   =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
+        <samsagax@gmail.com>
+To:     w_armin@gmx.de
+Cc:     hdegoede@redhat.com, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, linux@roeck-us.net,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        pobrn@protonmail.com,
+        =?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= 
+        <samsagax@gmail.com>
+Subject: [PATCH] hwmon: (oxp-sensors) Bugfix pwm reading
+Date:   Mon, 28 Nov 2022 15:52:06 -0300
+Message-Id: <20221128185206.212022-1-samsagax@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <27b71261-ac9b-c103-88af-2ca53477317a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+PWM reading is only 1 register long.
 
-On Mon, Nov 28, 2022 at 05:11:52PM +0100, Hans de Goede wrote:
-> On 11/25/22 15:46, Laurent Pinchart wrote:
-> 
-> <snip>
-> 
-> >> There seems to be a bunch of GPIO/clk/regulator boilerplate duplicated
-> >> in all the sensor drivers. I think a little helper-library  for this might
-> >> be in order. E.g. Something like this (in the .h file)
-> > 
-> > I fully agree that camera sensor helpers would be good to have.
-> > 
-> >> struct camera_sensor_pwr_helper {
-> >> 	// bunch of stuff here, this should be fixed size so that the
-> >> 	// sensor drivers can embed it into their driver-data struct
-> >> };
-> >>
-> >> int camera_sensor_pwr_helper_init(struct camera_sensor_pwr_helper *helper,
-> >> 				  const char *supply_names, int supply_count,
-> >> 				  const char* clk_name.
-> >> 				  /* other stuff which I'm probably forgetting right now */);
-> > 
-> > There are all kind of constraints on the power on/off sequences, I don't
-> > think we would be able to model this in a generic way without making it
-> > so complicated that it would outweight the benefits.
-> 
-> I know that for some ICs the power sequence can be quite complicated,
-> but I think that for most this order should work fine:
-> 
-> 0. Force enable/reset GPIOs to disabled / reset-asserted (do this at GPIO request time ?)
-> 1. Enable clk(s)
-> 2. Enable regulators (using the bulk API, with supply-names passed
-> in by the sensor drivers, 
-> 3. Set enable/reset GPIOs to enabled / reset de-asserted
-> 
-> I guess on some models we may need to swap 1 and 2, there could be
-> a flag for that.
+Signed-off-by: Joaquín Ignacio Aramendía <samsagax@gmail.com>
+---
+ drivers/hwmon/oxp-sensors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are also various delays that may be needed between the different
-steps, including between bringing up (and down) the different power
-rails.
+diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+index c04277676b72..f84ec8f8eda9 100644
+--- a/drivers/hwmon/oxp-sensors.c
++++ b/drivers/hwmon/oxp-sensors.c
+@@ -158,7 +158,7 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
+ 	case hwmon_pwm:
+ 		switch (attr) {
+ 		case hwmon_pwm_input:
+-			ret = read_from_ec(OXP_SENSOR_PWM_REG, 2, val);
++			ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+ 			if (ret)
+ 				return ret;
+ 			if (board == oxp_mini_amd)
 
-> Anything more complicated should just be coded out in the driver, but
-> I think just supporting this common pattern will already save us
-> quite a bit of code duplication.
-
-There was an old attempt to code generic power sequences in DT which
-didn't lead anywhere. I'm not quite sure doing so in a camera sensor
-helper will have a much better fate. We can of course give it a try, but
-as mentioned before, I think effort would be better focussed on first
-moving sensor drivers to runtime PM (and runtime PM autosuspend).
-
-> > What I think could help is moving all camera sensor drivers to runtime
-> > PM, and having helpers to properly enable runtime PM in probe() in a way
-> > that works on both ACPI and DT systems, with or without CONFIG_PM
-> > enabled. It's way more complicated than it sounds.
-> 
-> I agree that we should move to runtime-pm and put the power-sequence
-> in the suspend/resume callback. This will be necessary for any sensors
-> used on atomisp2 devices, where there are actually ACPI _PS0 and _PS3
-> methods and/or ACPI power-resources doing the PM for us.
-> 
-> Note for some reason the current staging atomisp driver does not use this,
-> likely because it was developed for Android boards with broken ACPI
-> tables. But after having sampled the ACPI tables of a bunch of atomisp
-> windows devices I believe this should work fine for those.
-> 
-> >> // turn_on_privacy_led should be false when called from probe(), must be true when
-> >> // called on stream_on().
-> >> int camera_sensor_pwr_helper_on(struct camera_sensor_pwr_helper *helper, bool turn_on_privacy_led);
-> >> int camera_sensor_pwr_helper_off(struct camera_sensor_pwr_helper *helper);
-> >>
-> >> // maybe, or make everything devm managed? :
-> >> int camera_sensor_pwr_helper_exit(struct camera_sensor_pwr_helper *helper);
-> >>
-> >> Just is just a really really quick n dirty design. For one I could use
-> >> suggestions for a better name for the thing :)
-> >>
-> >> I think something like this will be helpfull to reduce a whole bunch
-> >> of boilerplate code related to powering on/off the sensor in all
-> >> the drivers; and it would give us a central place to drive an
-> >> (optional) privacy-led GPIO.
-> >>
-> >>>>> And likewise (eventually) completely drop the "clken" GPIO this
-> >>>>> patch series introduces (with some sensors) and instead always model
-> >>>>> this through the clk-framework.
-> >>>>>
-> >>>>> Hans de Goede (3):
-> >>>>>    platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
-> >>>>>    platform/x86: int3472/discrete: Get the polarity from the _DSM entry
-> >>>>>    platform/x86: int3472/discrete: Add support for sensor-drivers which
-> >>>>>      expect clken + pled GPIOs
-> >>>>>
-> >>>>>   drivers/platform/x86/intel/int3472/common.h   |  2 +-
-> >>>>>   drivers/platform/x86/intel/int3472/discrete.c | 92 ++++++++++++++++---
-> >>>>>   2 files changed, 78 insertions(+), 16 deletions(-)
-
+base-commit: 9494c53e1389b120ba461899207ac8a3aab2632c
 -- 
-Regards,
+2.38.1
 
-Laurent Pinchart
