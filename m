@@ -2,133 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D87C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 10:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A33C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Nov 2022 10:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230341AbiK1Kpm (ORCPT
+        id S229913AbiK1K5T (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 05:45:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
+        Mon, 28 Nov 2022 05:57:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230156AbiK1Kpk (ORCPT
+        with ESMTP id S229729AbiK1K5S (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 05:45:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1205FDE97
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:44:41 -0800 (PST)
+        Mon, 28 Nov 2022 05:57:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A056175BF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669632281;
+        s=mimecast20190719; t=1669632987;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Bt7OiEjK1VQXFk7k6ihVJjVjUzZK8p7n2i61oTRo808=;
-        b=Ka39i7A946DgbSE2HLYtNSUE9kqRVZk4EWTxmbaQyZSAtDtdEzLkPHPUyDgrZlyaZENuwn
-        9hKUJ37IGI6YmW0uGji5a3RtVTGn0HbZqGsKU9ctggz9ofNuW/hBWk4jph3CQ3mML9qzay
-        xHpEN+6iGitDwlw5Avlv+3F2Naw9FzA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nk3OrspnVFzJiR0DKBogoVbxeD1WBIfwWUFGrVsa388=;
+        b=Rx2r5DIllcoMXP9RpENLkp+MVeby21aPQwFddVFkUEwSGWFEHxvQ9IRIncu655u0O559Ll
+        sEbNOjfN8BzZWnTJJTbovD+IQrKsGv+oOXeVAA2bi08UGEEYvxRMf44XJiEqHbmImjXBSB
+        jQrn22lqNqq95Y87s/BpH4//u5lylzg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-634-f5o2NdsgNpSm9K5cZWKb_Q-1; Mon, 28 Nov 2022 05:44:39 -0500
-X-MC-Unique: f5o2NdsgNpSm9K5cZWKb_Q-1
-Received: by mail-ed1-f71.google.com with SMTP id b13-20020a056402350d00b00464175c3f1eso6319671edd.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:44:39 -0800 (PST)
+ us-mta-513-wyEAZ-b0NrqBqLQ_G1CyyA-1; Mon, 28 Nov 2022 05:56:25 -0500
+X-MC-Unique: wyEAZ-b0NrqBqLQ_G1CyyA-1
+Received: by mail-ej1-f69.google.com with SMTP id xc12-20020a170907074c00b007416699ea14so4104618ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Nov 2022 02:56:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bt7OiEjK1VQXFk7k6ihVJjVjUzZK8p7n2i61oTRo808=;
-        b=F4VI/G831C091D1dwk/UGuqZHY1v68tF627hMDrRH49yA3Y2y1YGdJZJCsFLRMmVlG
-         T8QSKxMThefziujhAnsIl/hph8gajM9+GB0zDxh6o6mBo8kPP3NAcUZ/RigiqT0H1c6U
-         6474z3XbZpWbT6hPlG++RFdf/Wb7cQ2kIOUFqRjzU/WVWsEfLhrU8gRoT3M3TcQGeAn1
-         SazdKDNZp6I4ywjr2pUqxKR4ABa4oPNC29xatinnB/zKpX+4GDqMk5CtcMjAp1pq61zf
-         6qLnmyxX9py98WNn329HUEAkuwxcUbpiwKcC2Yg7Ab37DCXdf/sEhPrMgc0X48J9WIfy
-         bV5A==
-X-Gm-Message-State: ANoB5pmVU3SzoIXhZaXYaIXLfU9wGliUZ0C8/FbtjZPyMY4km7B5mq0f
-        EYzIBETAffDe2EZjh7FE27zvczCwu5+QYBQOWMFMp30GZz2iJwIkb5yCnRvuRqxOX0mjaZ+RNF8
-        g3mUTWAHhR9viZA8RryW0eNbiXuTvk9iRlA==
-X-Received: by 2002:a17:906:d9b:b0:7bc:c85f:bbde with SMTP id m27-20020a1709060d9b00b007bcc85fbbdemr12972504eji.271.1669632278273;
-        Mon, 28 Nov 2022 02:44:38 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5uJ0JDvBDM6dQylTL/3TbHjy/LYeN2wP09LmCD/yY0zDOnj7s3VRuufgbVORIEnGJPxICnUQ==
-X-Received: by 2002:a17:906:d9b:b0:7bc:c85f:bbde with SMTP id m27-20020a1709060d9b00b007bcc85fbbdemr12972488eji.271.1669632278023;
-        Mon, 28 Nov 2022 02:44:38 -0800 (PST)
+        bh=nk3OrspnVFzJiR0DKBogoVbxeD1WBIfwWUFGrVsa388=;
+        b=gTbdDJ1wwvZmawg+urvFTUQ/2iKVgS5yaPqh6EZDdXYIOQY7YRfo1kGHkCvXMRE+k8
+         J3HkcmWkuY2cvBAGSUJ39KrYoXpqHGSmtsXY3RB3UoGUqPkWdvn0guB4fr4ItnbNtZQ9
+         zjp5H2PqnTvYCinMG9IxCkhBFzAHE9vubXZ1nJhPDZIrLkt2FooUrwPUDklcvbYmCQRO
+         X89I+WZYb6BC+jFiumpDJD8nQAM0vIZSY+zSZ+TYaNAFR4GNhgcxSbiQsMsjTPHMKRI6
+         yUokuadUUt3wu+tFCIZGJ3zvHvwyVIuiI4IAH6GpTx1tIi1DPU8Bmv68H4oFgOpXk+zM
+         /ATA==
+X-Gm-Message-State: ANoB5pnLdgFkPJYLIoswAE3MWCioSpQTLM8+B9yRYJ/FeoFFwezz7s0X
+        VDhpdisqJwQ4M9+3fr7wQpMPzuCj6mSLYPXkZBJFuH8m8TStlLJjOXjYyK3E/0Qy0Lir+MxsaP6
+        5nzoYp/i0pJa2L1s6DPOMxNLuXJepwzo1Nw==
+X-Received: by 2002:a17:906:448d:b0:7ae:37aa:6bf with SMTP id y13-20020a170906448d00b007ae37aa06bfmr42231550ejo.481.1669632984747;
+        Mon, 28 Nov 2022 02:56:24 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5q4Ls5Gy0uVir883nkBNCYLQ2g4Oj+TCkygSsPY1cD7dpzVtQcllrlCXYoWul/osoPAM3Law==
+X-Received: by 2002:a17:906:448d:b0:7ae:37aa:6bf with SMTP id y13-20020a170906448d00b007ae37aa06bfmr42231523ejo.481.1669632984567;
+        Mon, 28 Nov 2022 02:56:24 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cw14-20020a056402228e00b00467481df198sm5080642edb.48.2022.11.28.02.44.37
+        by smtp.gmail.com with ESMTPSA id d2-20020a1709063ce200b0077f324979absm4795205ejh.67.2022.11.28.02.56.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 02:44:37 -0800 (PST)
-Message-ID: <58a7f20d-dd47-1ffc-f7b2-f1d30a0a7d69@redhat.com>
-Date:   Mon, 28 Nov 2022 11:44:36 +0100
+        Mon, 28 Nov 2022 02:56:24 -0800 (PST)
+Message-ID: <30d0f7ab-a5a7-d18e-4dcf-49a59032867e@redhat.com>
+Date:   Mon, 28 Nov 2022 11:56:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: Add Lenovo Yoga Tab 3
- (YT3-X90F) charger + fuel-gauge data
+Subject: Re: [PATCH 1/3] platform/x86: int3472/discrete: Refactor GPIO to
+ sensor mapping
 Content-Language: en-US
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20221127182458.104528-1-hdegoede@redhat.com>
- <Y4SLhlW1t5epgamh@smile.fi.intel.com>
+To:     Dan Scally <dan.scally@ideasonboard.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+References: <20221124200007.390901-1-hdegoede@redhat.com>
+ <20221124200007.390901-2-hdegoede@redhat.com>
+ <6ee3d17c-3481-b33f-682d-ac4a1e03061c@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y4SLhlW1t5epgamh@smile.fi.intel.com>
+In-Reply-To: <6ee3d17c-3481-b33f-682d-ac4a1e03061c@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+Hi,
 
-On 11/28/22 11:20, Andy Shevchenko wrote:
-> On Sun, Nov 27, 2022 at 07:24:58PM +0100, Hans de Goede wrote:
->> The Lenovo Yoga Tab 3 (YT3-X90F) is an Intel Cherry Trail based tablet
->> which ships with Android as Factory OS. Its DSDT contains a bunch of I2C
->> devices which are not actually there, causing various resource conflicts.
->> Use acpi_quirk_skip_i2c_client_enumeration() to not enumerate these.
+On 11/25/22 17:00, Dan Scally wrote:
+> Hi Hans
+> 
+> On 24/11/2022 20:00, Hans de Goede wrote:
+>> Make the GPIO to sensor mapping more generic and fold the
+>> INT3472_GPIO_TYPE_RESET and INT3472_GPIO_TYPE_POWERDOWN cases into
+>> a single generic case.
 >>
->> The YT3-X90F has quite a bit of exotic hardware, this adds initial
->> support by manually instantiating the i2c-clients for the 2 charger +
->> 2 fuel-gauge chips used for the 2 batteries.
+>> This is a preparation patch for further GPIO mapping changes.
 >>
->> Support for other parts of the hw will be added by follow-up patches.
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
 > 
-> ...
 > 
->> +	/*
->> +	 * The "bq25892_0" charger IC has its /CE (Charge-Enable) and OTG pins
->> +	 * connected to GPIOs, rather then having them hardwired to the correct
->> +	 * values as is normally done.
->> +	 *
->> +	 * The bq25890_charger driver controls these through I2C, but this only
->> +	 * works if not overridden by the pins. Set these pins here:
->> +	 * 1. Set /CE to 0 to allow charging.
+> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 > 
-> If I read this correctly then the /CE is an active low pin and setting to 0
-> means active state
+> Tested-by: Daniel Scally <dan.scally@ideasonboard.com>
 
-Correct.
+Thank you.
 
-> which...
-> 
->> +	 * 2. Set OTG to 0 disable V5 boost output since the 5V boost output of
->> +	 *    the main "bq25892_1" charger is used when necessary.
->> +	 */
->> +
->> +	/* /CE pin */
->> +	ret = x86_android_tablet_get_gpiod("INT33FF:02", 22, &gpiod);
->> +	if (ret < 0)
->> +		return ret;
-> 
->> +	gpiod_set_value(gpiod, 0);
-> 
-> ...contradicts with the virtual state here. Perhaps you missed the
-> corresponding flag to enable negation?
-
-x86_android_tablet_get_gpiod() gets the GPIO directly from
-the gpio-chip using gpiochip_get_desc() since these GPIOs are
-not described in ACPI. There is no option to pass a gpio_lookup_flags
-flag like GPIO_ACTIVE_LOW this way since we are not doing an actual lookup.
+Note I have made some (not insignificant) changes to this patch for the v2
+series which I'm working on, so I have decided to not add these tags
+because of the changes.
 
 Regards,
 
@@ -136,13 +115,65 @@ Hans
 
 
 
-
 > 
->> +	/* OTG pin */
->> +	ret = x86_android_tablet_get_gpiod("INT33FF:03", 19, &gpiod);
->> +	if (ret < 0)
->> +		return ret;
+>>   drivers/platform/x86/intel/int3472/discrete.c | 31 ++++++++++++++-----
+>>   1 file changed, 23 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+>> index 974a132db651..bc6c62f3f3bf 100644
+>> --- a/drivers/platform/x86/intel/int3472/discrete.c
+>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+>> @@ -184,6 +184,24 @@ static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+>>       return 0;
+>>   }
+>>   +static const char *int3472_dsm_type_to_func(u8 type)
+>> +{
+>> +    switch (type) {
+>> +    case INT3472_GPIO_TYPE_RESET:
+>> +        return "reset";
+>> +    case INT3472_GPIO_TYPE_POWERDOWN:
+>> +        return "powerdown";
+>> +    case INT3472_GPIO_TYPE_CLK_ENABLE:
+>> +        return "clken";
+>> +    case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +        return "pled";
+>> +    case INT3472_GPIO_TYPE_POWER_ENABLE:
+>> +        return "power-enable";
+>> +    }
 >> +
->> +	gpiod_set_value(gpiod, 0);
+>> +    return "unknown";
+>> +}
+>> +
+>>   /**
+>>    * skl_int3472_handle_gpio_resources: Map PMIC resources to consuming sensor
+>>    * @ares: A pointer to a &struct acpi_resource
+>> @@ -223,6 +241,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>>       struct acpi_resource_gpio *agpio;
+>>       union acpi_object *obj;
+>>       const char *err_msg;
+>> +    const char *func;
+>>       int ret;
+>>       u8 type;
+>>   @@ -246,19 +265,15 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>>         type = obj->integer.value & 0xff;
+>>   +    func = int3472_dsm_type_to_func(type);
+>> +
+>>       switch (type) {
+>>       case INT3472_GPIO_TYPE_RESET:
+>> -        ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "reset",
+>> -                             GPIO_ACTIVE_LOW);
+>> -        if (ret)
+>> -            err_msg = "Failed to map reset pin to sensor\n";
+>> -
+>> -        break;
+>>       case INT3472_GPIO_TYPE_POWERDOWN:
+>> -        ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "powerdown",
+>> +        ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func,
+>>                                GPIO_ACTIVE_LOW);
+>>           if (ret)
+>> -            err_msg = "Failed to map powerdown pin to sensor\n";
+>> +            err_msg = "Failed to map GPIO pin to sensor\n";
+>>             break;
+>>       case INT3472_GPIO_TYPE_CLK_ENABLE:
 > 
 
