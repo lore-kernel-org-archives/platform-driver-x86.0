@@ -2,60 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C54DC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 12:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1AEC47089
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 12:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233660AbiK2MBr (ORCPT
+        id S233794AbiK2MVF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Nov 2022 07:01:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
+        Tue, 29 Nov 2022 07:21:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233429AbiK2MAr (ORCPT
+        with ESMTP id S233806AbiK2MVC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Nov 2022 07:00:47 -0500
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2971A5CD08;
-        Tue, 29 Nov 2022 04:00:34 -0800 (PST)
-Received: by mail-qk1-x730.google.com with SMTP id i9so9498989qkl.5;
-        Tue, 29 Nov 2022 04:00:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ye/jdZEmZA++LNdEUd8a+Tg3GQWyQjg8OouT2UQGFzg=;
-        b=c1lVCrVMoyI6YzsWOnisq0diXTPPWuBDXnGQKsCisStbvpDQxx95YNR3tG9mROSIe9
-         IZ9Y/yFoIjLtoN4kdGfmmncWRWM89dBSHiFJ5ulBfbFAF0ni2beDZKdQA8tsQ/q6xoHG
-         SkVVg3BCOHzY8l0hEVCXt6qOABDU4/kiX3TyUul4f2PF2OGOrN75H4adjzVVwAja3vbO
-         moS1VM4/ZdNMwnLGUxJaFTOZEQUK7AG2j7xWz2YxVLuUnlUM91oKrgOwzfK6Aoo2n1TS
-         jORcXKIcCFqNi47ODjXWB1DPev3ZNp/7HUsfULaKBWTXEFOzbqZc0b1E4iMQGi0GDTPg
-         AtAA==
+        Tue, 29 Nov 2022 07:21:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CEF15D68A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Nov 2022 04:20:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669724401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h+VylQnPU570h37x9UjTHWMzANF3h54ZhxETOQFnrz0=;
+        b=MKpBRtXFtR8cjVM+tO0Y9MTPRifC4xqFuzUuCSHAZ0W7jKTET76MndetKLTZLCZuw88I0B
+        Fr5zz4RYBrUayyZ9eT/Lz9D0gzLw+rDjSGXtLOqyJQNuXOTeoOEUWFzNy8GcmqyhXseaem
+        Ur8PyUJjIkdFpI0KBUDqQD/BjBIG5M0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-82-jUlbEscHNDSGNxrDrdrxSA-1; Tue, 29 Nov 2022 07:19:59 -0500
+X-MC-Unique: jUlbEscHNDSGNxrDrdrxSA-1
+Received: by mail-ed1-f71.google.com with SMTP id y2-20020a056402440200b00469c41d5367so8066827eda.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Nov 2022 04:19:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ye/jdZEmZA++LNdEUd8a+Tg3GQWyQjg8OouT2UQGFzg=;
-        b=QKbvCVPplZD1OVjAOzPM1MponhbCxfBN3c2yzRfEZz9z3pdw1PlDvW4SSLGP3TwMsy
-         JYYEcu5RDGT9Q2V2v9qMfex4Rrzc1mCFiwvNS6XDq3+LuKzvvbGX3Ts3HbCsLWg6Z1VS
-         o/jPV3x+aCZpiHfj7MaXcH7EUQUP+umusiUmVANDHo65OzGGaSMZibN+D2tNdxs6MlVy
-         cOdqAo9wxhBjaY22Np58nSGgwecOyLNCDotP0JyQ80q+o9EWv4ZfIhSAHil+C7odXgWj
-         Zh+sZL24EvSAFreoKZeDdr6ccEDArPgP07wctX83+O3uoFPEzaCUL7OeaXivmgDncVRj
-         nfkA==
-X-Gm-Message-State: ANoB5plsd9XkP8O7qIYtM6T1fjJdsGVXWqcqY+lZEnbLqIVlY435pWXa
-        1/gwSSmqDnnw7HuiD+BWmjnuUL2+23H4Jj0pLD4=
-X-Google-Smtp-Source: AA0mqf6jM6EwTnIln7Mw1I4Yy0xUkIKvGYtO65UY6uUFY6THGY/zrS6Jod3OnhYlmtiakQS8bRRPOZ3llok9UVJDdGE=
-X-Received: by 2002:a37:f504:0:b0:6cf:5fa1:15f8 with SMTP id
- l4-20020a37f504000000b006cf5fa115f8mr50253452qkk.748.1669723233162; Tue, 29
- Nov 2022 04:00:33 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h+VylQnPU570h37x9UjTHWMzANF3h54ZhxETOQFnrz0=;
+        b=qpsx0NBtkh2zEY7samIdwZ8/VJw+jv0Qdh0ove5nCwKQCXgqMQ4Taha8las0Mqncpf
+         K0FR/zypbsi5xEbTTg4JpACnRaoZHWLROHzz2sOpIJhlGzpwtnTI2/B7clwXgAgRSC+W
+         1DnY3IwwzlcEPfjL8n3debpQy1ts1n3s0Pv3g6O7CHU56JHy07nDecnfdeLYFUl6jQ7y
+         gbqdr6/0phQx6h2pWVMaEghh06dQ+eNy8vPLFvu+kcVAyO3pf6RKoB8YHJhdyzgb3Fk7
+         GsTZY3Fgr9CkNtlRVeyjYh6QiNrHPkqVg2TY5SeIVD+9eUJ46lxPQvTw5aH/QiGgAwPV
+         faWg==
+X-Gm-Message-State: ANoB5plxzdcAHbY+T9WgTA+GrsbTMKd+tL5UwGTmLEmBim/QMlnrJrbf
+        Wg57G1JXNx/vDKEFQ650QZUG3II3K+xRsl2uVEJetbPvopPAmJzPcrMrHLb3RZ+QAeU//EYMbFE
+        /+k0SqBDveYdqmYHTX6W0rJVoKTQ59FPpkA==
+X-Received: by 2002:a17:906:9718:b0:7bf:1090:ded6 with SMTP id k24-20020a170906971800b007bf1090ded6mr9925695ejx.577.1669724398862;
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7AHtlWkiqkj0UM5H1WUvDEAl7vxBq2J7zflwfg6xETHeUCVzMRyvKFjB4eYzNpFz3dqSSvNA==
+X-Received: by 2002:a17:906:9718:b0:7bf:1090:ded6 with SMTP id k24-20020a170906971800b007bf1090ded6mr9925685ejx.577.1669724398673;
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id d25-20020a50fe99000000b004588ef795easm6138657edt.34.2022.11.29.04.19.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+Message-ID: <1eb61f7a-3b93-32a1-21bf-6929bbb40d36@redhat.com>
+Date:   Tue, 29 Nov 2022 13:19:57 +0100
 MIME-Version: 1.0
-References: <20221128214408.165726-1-hdegoede@redhat.com> <20221128214408.165726-4-hdegoede@redhat.com>
- <CAHp75VcJJtYsxbAYt2FjqSEJGhjpok7Dsh3vp46VyOm3=5_2FQ@mail.gmail.com> <007a6345-62e7-20ee-1a48-4adb4a9fa9df@redhat.com>
-In-Reply-To: <007a6345-62e7-20ee-1a48-4adb4a9fa9df@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 29 Nov 2022 13:59:57 +0200
-Message-ID: <CAHp75VdxRbFmqUzjmMbtmh1tDGMXre+A+2u-hz5H3HSLEBX+OQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] gpio: tps68470: Add support for the indicator LED outputs
-To:     Hans de Goede <hdegoede@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
+ the wrong register
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -65,52 +75,89 @@ Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <20221128214408.165726-2-hdegoede@redhat.com>
+ <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
+ <9a4336d1-3222-fe50-f234-93ab175d606a@redhat.com>
+ <CAHp75VdEd2-YMm2kGdRh2n7WwTJDEmOk68O4ydHU1m3W+Z83Lg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VdEd2-YMm2kGdRh2n7WwTJDEmOk68O4ydHU1m3W+Z83Lg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 1:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/29/22 11:28, Andy Shevchenko wrote:
-> > On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> The tps68470 has support for 2 indicator LED outputs called
-> >> ileda and iledb, at support for these as GPIO pins 10 + 11.
-> >
-> > add ?
->
-> This models ileda and iledb outputs *as* GPIO pins 10 + 11
-> on the linux gpiochip.
->
-> But yes it also adds gpio pins 10 + 11 to the gpiochip, so
-> either one works I guess :)
+Hi,
 
-I had to be a bit more precise. 'at support'?! Perhaps it should be
-'add support'?
+On 11/29/22 12:56, Andy Shevchenko wrote:
+> On Tue, Nov 29, 2022 at 1:27 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 11/29/22 11:22, Andy Shevchenko wrote:
+>>> On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+>>>> so that the actual value of the pin is read, rather then the value the pin
+>>>
+>>> than
+>>
+>> Ack.
+>>
+>>>> would output when put in output mode.
+>>>
+>>> I don't see it here and haven't checked the context, but the idea is
+>>> to check the direction and return either input (if pin is in input
+>>> mode) or [cached] output.If it's the case, the patch looks good to me.
+>>
+>> No the idea is to always actually use the input register when reading
+>> the pins, independent of the input/output mode. Instead of always
+>> reading the [cached] output register value.
+> 
+> But why? This makes a little sense to me.
 
-...
+I don't understand what your problem is with this patch ?
 
-> >> +static void tps68470_gpio_get_reg_and_mask(bool get, unsigned int offset,
-> >> +                                          unsigned int *reg, int *mask)
-> >
-> > Hmm... Usual way is to put the get/set flag at the end of the list of
-> > parameters.
->
-> For functions returning values by reference I always follow the
-> pattern of input parameters first, then output parameters.
->
-> > Also why not naming it as 'dir' to avoid confusion with the _get in
-> > the function name?
->
-> Because dir is meaningless without an enum to to define what a dir
-> of 0/false means. Where as get is clear without such an enum.
-> get is set to true when this function is called from
-> tps68470_gpio_get() and false when it is called from
-> tps68470_gpio_set(). It does not get more straight forward then that.
+This is standard behavior for GPIO drivers, the get() callback
+always reads the actual pin values when there is a registers
+to get the actual pin-values. AFAIK this is no different from what
+countless other GPIO drivers do ?
 
-But it's about the buffer (in hw sense) to read value from. What about
-naming it out_or_in?
+>> The input buffer will still work when the device is in output mode
+> 
+> Does this hardware support HiZ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes the 7 standard GPIO pins can be put in input mode, aka HiZ mode.
+
+>> and if somehow an external force is pushing the pin low/high against
+>> the output value then the input buffer will correctly reflect this
+>> (assuming the output is current limited and thus the magic smoke
+>> stays inside the chip).
+> 
+> Exactly, when smoke comes out, the hardware is broken and code,
+> whatever is it, makes no difference at all.
+
+The GPIO part of the TPS68470 supports open-drain outputs, to correctly
+get the actual value on the pin from the get() callback, the GPDI
+register must be used. And being able to detect some outside chip
+forcing the line low in open-drain mode is important to be able to
+e.g. implement a software I2C master.
+
+As I mentioned above actually using the input buffer value in
+the get() method is standard behavior for GPIO drivers, exactly
+for reasons like allowing a sw I2C master implementation to
+detect clock stretching or conflicts (in the multi master case).
+
+I really don't understand what is so controversial about this
+patch?
+
+Note the datasheet describes the GPDO / GPDI bit 0  values as:
+
+GPDO bit 0: "Control of the GPIO0 output"
+GPDI bit 0: "State of the GPIO0 input"
+
+So clearly GPDI is the correct register to use for the get()
+callback, which is what this patch is doing.
+
+Regards,
+
+Hans
+
