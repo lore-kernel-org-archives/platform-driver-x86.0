@@ -2,97 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E87FC43217
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 01:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D98AC46467
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 10:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234930AbiK2BNb (ORCPT
+        id S232564AbiK2KX3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Nov 2022 20:13:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45160 "EHLO
+        Tue, 29 Nov 2022 05:23:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234898AbiK2BNa (ORCPT
+        with ESMTP id S231673AbiK2KXB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Nov 2022 20:13:30 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CCF193FA;
-        Mon, 28 Nov 2022 17:13:28 -0800 (PST)
-Received: from dggpeml500021.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NLkpm4RkGz15Mxb;
-        Tue, 29 Nov 2022 09:12:48 +0800 (CST)
-Received: from dggpeml500003.china.huawei.com (7.185.36.200) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 29 Nov 2022 09:13:26 +0800
-Received: from huawei.com (10.175.103.91) by dggpeml500003.china.huawei.com
- (7.185.36.200) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 29 Nov
- 2022 09:13:26 +0800
-From:   Yu Liao <liaoyu15@huawei.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <liaoyu15@huawei.com>, <airlied@redhat.com>, <mjg@redhat.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <liwei391@huawei.com>
-Subject: [PATCH] platform/x86: mxm-wmi: fix memleak in mxm_wmi_call_mx[ds|mx]()
-Date:   Tue, 29 Nov 2022 09:11:01 +0800
-Message-ID: <20221129011101.2042315-1-liaoyu15@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 29 Nov 2022 05:23:01 -0500
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8B163E1;
+        Tue, 29 Nov 2022 02:22:58 -0800 (PST)
+Received: by mail-qk1-x732.google.com with SMTP id k4so9346914qkj.8;
+        Tue, 29 Nov 2022 02:22:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LO8RI0jr7bJrxY0cMQR0w9JdTdn6jpW6eDbtgUcb5TM=;
+        b=g/3uxiW2w6dm6n5CQ4DjHRjR2mK4VLwrG8YR3Zr5cVrpiR5RcxsllHD+j9QOIGhVZf
+         BDozoOL8Ck4CGIlItLS+97x8ayxG1fND3Hj9rXXCQsWT5nahLDXDfqZ/XXHRC0wEgHIr
+         HiXTHTBwcSb+6epR7p50lvM4CLx3SeBRL+kd1r4oDrlAsBARCOTgQKtlpfkRlM8/UVJ9
+         2QD6bCg2dbEmIAnkB0ofDjRKzPwoacLNeFS2do7sLE3NCFvkrQTjmItb12K3QXJllEZP
+         xWkQ2PwyQp+yQU3wa1b0i5q0rdzL+5BWU70BlpEu4cGblPK0ZmD+kh1Z/aFtlI3BPbcW
+         3FKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LO8RI0jr7bJrxY0cMQR0w9JdTdn6jpW6eDbtgUcb5TM=;
+        b=rOLOZxxfI99nyqkkIaatGNRq1M7OPmkHH5GjsfwZPqxNytWlaUmzS61rpheYzSExus
+         gtcEYNRxUE73HQtZU25WJuw5HoX9gSwpJAjf8v2xzB4cYL/rNsXROy85c+jexr1qfmM3
+         zDg/UttI99ZHQ6a7PgBJ2QZ4Ua0uv8Mx+UeH6sJTWqw4EfIE1AQFKcj5pTlFxn40FLNu
+         8HVun3E8FKFNF8R/mUFqm+6o8AChjpYgVF0vY+Lj0yCpj14HP6d0MKKP9zAQLiNUI1B7
+         ffZVes0/pARtXCRJou++0YuQ9kwjSeppKCUDqrnYJvUUETl7QlavDcGKyAVuQSa96hoz
+         04RA==
+X-Gm-Message-State: ANoB5pkMRnEY4hxCySiVtJJ3XRPlPRboDGkiM/SAsowe+3Y6TykSvM4x
+        quq8kLrj7Ay8ZJHn2mcaGdxWUnQdELYGK5mlfjk=
+X-Google-Smtp-Source: AA0mqf6U2varNApHDZTWUqBYkp99y+gnTiId4wt8LQ4sHtS5r98TBSQgiCD8zmhudYzc8pwjJPs5IE4JHPNH6Ruhl3E=
+X-Received: by 2002:a37:b404:0:b0:6fa:4a82:1152 with SMTP id
+ d4-20020a37b404000000b006fa4a821152mr51095200qkf.504.1669717377965; Tue, 29
+ Nov 2022 02:22:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500003.china.huawei.com (7.185.36.200)
-X-CFilter-Loop: Reflected
+References: <20221128214408.165726-1-hdegoede@redhat.com> <20221128214408.165726-2-hdegoede@redhat.com>
+In-Reply-To: <20221128214408.165726-2-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 29 Nov 2022 12:22:20 +0200
+Message-ID: <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
+ the wrong register
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPI buffer memory (out.pointer) returned by wmi_evaluate_method()
-is not freed after the call, so it leads to memory leak.
+On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+> so that the actual value of the pin is read, rather then the value the pin
 
-The method results in ACPI buffer is not used, so just pass NULL to
-wmi_evaluate_method() which fixes the memory leak.
+than
 
-Fixes: 99b38b4acc0d ("platform/x86: add MXM WMI driver.")
-Signed-off-by: Yu Liao <liaoyu15@huawei.com>
----
- drivers/platform/x86/mxm-wmi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+> would output when put in output mode.
 
-diff --git a/drivers/platform/x86/mxm-wmi.c b/drivers/platform/x86/mxm-wmi.c
-index 9a19fbd2f734..9a457956025a 100644
---- a/drivers/platform/x86/mxm-wmi.c
-+++ b/drivers/platform/x86/mxm-wmi.c
-@@ -35,13 +35,11 @@ int mxm_wmi_call_mxds(int adapter)
- 		.xarg = 1,
- 	};
- 	struct acpi_buffer input = { (acpi_size)sizeof(args), &args };
--	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_status status;
- 
- 	printk("calling mux switch %d\n", adapter);
- 
--	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
--				     &output);
-+	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input, NULL);
- 
- 	if (ACPI_FAILURE(status))
- 		return status;
-@@ -60,13 +58,11 @@ int mxm_wmi_call_mxmx(int adapter)
- 		.xarg = 1,
- 	};
- 	struct acpi_buffer input = { (acpi_size)sizeof(args), &args };
--	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_status status;
- 
- 	printk("calling mux switch %d\n", adapter);
- 
--	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
--				     &output);
-+	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input, NULL);
- 
- 	if (ACPI_FAILURE(status))
- 		return status;
+I don't see it here and haven't checked the context, but the idea is
+to check the direction and return either input (if pin is in input
+mode) or [cached] output.If it's the case, the patch looks good to me.
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpio/gpio-tps68470.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+> index aaddcabe9b35..778a72cf800c 100644
+> --- a/drivers/gpio/gpio-tps68470.c
+> +++ b/drivers/gpio/gpio-tps68470.c
+> @@ -30,7 +30,7 @@ static int tps68470_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>  {
+>         struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
+>         struct regmap *regmap = tps68470_gpio->tps68470_regmap;
+> -       unsigned int reg = TPS68470_REG_GPDO;
+> +       unsigned int reg = TPS68470_REG_GPDI;
+>         int val, ret;
+>
+>         if (offset >= TPS68470_N_REGULAR_GPIO) {
+> --
+> 2.38.1
+>
+
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
