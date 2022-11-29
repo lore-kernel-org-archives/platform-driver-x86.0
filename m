@@ -2,70 +2,61 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D2BC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 11:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C91AC46467
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Nov 2022 11:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231267AbiK2Lee (ORCPT
+        id S233711AbiK2L56 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Nov 2022 06:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40486 "EHLO
+        Tue, 29 Nov 2022 06:57:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232678AbiK2LeO (ORCPT
+        with ESMTP id S233523AbiK2L5l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Nov 2022 06:34:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811055B85B
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Nov 2022 03:33:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669721592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+hLXlKa4C2EAhgeQhlgk3w8DjF6p1JfcYdCXzEa7rn8=;
-        b=fLsGGBTtXWFoEL+NybR9FDRaYJKFsk1wHaqMFuH9GE6C+IV0WUqW+wSV2GWvN1L8weihK9
-        7LIYPc5GZa/57XabJivHPN3Dtw+WwkW4KLmzpjaTFEv2LG0IqTlPX3BrXNGb6CXHsSZEre
-        YPvqaV70Wf2HVbI1uHhDD+9p5S0aYww=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-54-pnBg3KNdMDaW_AC8DI-TFQ-1; Tue, 29 Nov 2022 06:33:11 -0500
-X-MC-Unique: pnBg3KNdMDaW_AC8DI-TFQ-1
-Received: by mail-ej1-f70.google.com with SMTP id hb35-20020a170907162300b007ae6746f240so6268759ejc.12
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Nov 2022 03:33:11 -0800 (PST)
+        Tue, 29 Nov 2022 06:57:41 -0500
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1105EFB7;
+        Tue, 29 Nov 2022 03:57:18 -0800 (PST)
+Received: by mail-qk1-x72e.google.com with SMTP id d7so9497264qkk.3;
+        Tue, 29 Nov 2022 03:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k/qaur6fm6SxJBVO5r7Os92xrCw8v3SLIgp9savh3Sw=;
+        b=d7Z42eq5GdrqFaltYXs/aJ0ZCkrgNqEOowbLwW63YbElI0x3WfmWQ5VJM/yACVsj+Q
+         I9ErwuJdYGTeCY6mrTOvJw4jRTFkW9114t/Rnd332V//uXZv8X9Pwuwh9KA0poQrRHkp
+         Ss4ppil0s6GG7DbGTfnJ6CzXDvVobD0lIfV5Ue0AZ0zAZajpDmgNItYgX9nRjq5lh51Z
+         YWncPMvWScjaB4tLicJCYPQ13rV6HaOQuEwRzA1hSVteuNrGPoy5S9tgv5R0RrMTue9k
+         t5oViGiP4lq9IVXCL1gltaImrjdkIpE2bXUPEbTC8GRLvVZ5X7NCla47UY5Zs1HxGS9R
+         Th9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+hLXlKa4C2EAhgeQhlgk3w8DjF6p1JfcYdCXzEa7rn8=;
-        b=Q6ZCY+3UwVDWdDkWMonvruJs4bD6Qmv8SexwOgN4+AW+SROWSWouVwAcsibJi7yiIW
-         ISsXozo6NK1BE+udMLijarNvtJUyCm5iw0i8U4hSB/Wnr0TICGu+qKunQ/H7Lid/Yp8d
-         zx/oRIeAzRX44HjICQfzVkonF3uDak2be09c9HSo8N3F+N7n6z2Xd2+bImO5eE7TTtV1
-         cOHKtsL26ijPsEQ2AGgRmiQyAJU5AZ966hFjvYLUhL5EKzWT89Z3V1lBr5GxD62te2Hk
-         +eY7rZFRvk/69oMa/1IJz75L+EZSv0Q3y1ZzFRUx1BTyL8O6Q+48SyWdA6K3177A4KvC
-         i3bw==
-X-Gm-Message-State: ANoB5pkYGz7h603qXjKDPBYXliCHN0ksSLlO0QfpIJM5lJN5qo+RFBc6
-        agNWU/T2PIBPneA2d/AU4r77KvnvdIJdeHLUhpUCzeP2ftk+RozPmKSPtV0I8TWMgh+9h8B4R/X
-        E2LG1acK6t51VHjCbSbX5xifAtd6Q4sYheQ==
-X-Received: by 2002:a17:906:ae99:b0:7c0:82d8:243a with SMTP id md25-20020a170906ae9900b007c082d8243amr3459325ejb.230.1669721589763;
-        Tue, 29 Nov 2022 03:33:09 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5pGKGWOqZ812E/sE3+nFHL+aCdS/k52LLxvRmt4/2/hkJ/cO20KTx6sgSR8Fii3oaDe96CiA==
-X-Received: by 2002:a17:906:ae99:b0:7c0:82d8:243a with SMTP id md25-20020a170906ae9900b007c082d8243amr3459310ejb.230.1669721589585;
-        Tue, 29 Nov 2022 03:33:09 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id kw11-20020a170907770b00b007add28659b0sm6080790ejc.140.2022.11.29.03.33.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 03:33:09 -0800 (PST)
-Message-ID: <1e9ca819-a5d0-4059-1a44-a7004a2c5cb0@redhat.com>
-Date:   Tue, 29 Nov 2022 12:33:08 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k/qaur6fm6SxJBVO5r7Os92xrCw8v3SLIgp9savh3Sw=;
+        b=T9TjF9XmsMNFl+AxvB/nqzs7lxtfKnPBo2rwvu0e7YZJGSYB4F/v0OWPwnX46BxkQf
+         /0rImtickjr/uiN+jxvISJbvpxX4ceVWl8gAZ0L7LXIe6BjQHUD60DvZC9/zVBb9C7P7
+         tfF7e7Q1gUlxaRTprxr3fVg7pr/BmQ9qTbST+YJfxUeVWDS7vYZeJwWfrKbmsM2VHkeF
+         Opb3JnTbNPTZeB+7y/EqrFdM1WtPV2rvBJl6W3FNH9u+JAmTS+DhDMQGMvryDjdBx+sX
+         sIxXFMMTYAesMZNe39jBaUddyqlik26j3kuPKQXVZvxfmAv1iTCHDBfVsbEwgm27cGej
+         dsOA==
+X-Gm-Message-State: ANoB5pkTBOXRnXQh3l8V6X/QyXyUyQava/A1+AtfT9plrkJabhS8HBaL
+        VBoK6aPkNTbYxATJnbCwik8jde37rirG1ru8OP8=
+X-Google-Smtp-Source: AA0mqf7NKY01uPE5yr8p6yZosW5NXQyLzm0uprJiSd7kEqSfPgMu2RWCXA1ov/qS9/YkoMADlN0BrnHJ9cxNabHz7ok=
+X-Received: by 2002:a05:620a:21ce:b0:6fa:d149:6d47 with SMTP id
+ h14-20020a05620a21ce00b006fad1496d47mr33200615qka.734.1669723037619; Tue, 29
+ Nov 2022 03:57:17 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 2/5] gpio: tps68470: Make tps68470_gpio_output() always
- set the initial value
-Content-Language: en-US, nl
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20221128214408.165726-1-hdegoede@redhat.com> <20221128214408.165726-2-hdegoede@redhat.com>
+ <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com> <9a4336d1-3222-fe50-f234-93ab175d606a@redhat.com>
+In-Reply-To: <9a4336d1-3222-fe50-f234-93ab175d606a@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 29 Nov 2022 13:56:41 +0200
+Message-ID: <CAHp75VdEd2-YMm2kGdRh2n7WwTJDEmOk68O4ydHU1m3W+Z83Lg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
+ the wrong register
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -75,70 +66,46 @@ Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-References: <20221128214408.165726-1-hdegoede@redhat.com>
- <20221128214408.165726-3-hdegoede@redhat.com>
- <CAHp75Vc=8CqOPURA=ot9UMSOJknM7LJLqqX70Qu_NjmAKs2pig@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vc=8CqOPURA=ot9UMSOJknM7LJLqqX70Qu_NjmAKs2pig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Tue, Nov 29, 2022 at 1:27 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 11/29/22 11:22, Andy Shevchenko wrote:
+> > On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+> >> so that the actual value of the pin is read, rather then the value the pin
+> >
+> > than
+>
+> Ack.
+>
+> >> would output when put in output mode.
+> >
+> > I don't see it here and haven't checked the context, but the idea is
+> > to check the direction and return either input (if pin is in input
+> > mode) or [cached] output.If it's the case, the patch looks good to me.
+>
+> No the idea is to always actually use the input register when reading
+> the pins, independent of the input/output mode. Instead of always
+> reading the [cached] output register value.
 
-On 11/29/22 11:24, Andy Shevchenko wrote:
-> On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Make tps68470_gpio_output() call tps68470_gpio_set() for output-only pins
->> too, so that the initial value passed to gpiod_direction_output() is
->> honored for these pins too.
-> 
-> This smells like a fix. Shouldn't be the Fixes tag?
+But why? This makes a little sense to me.
 
-Ack, and the same really goes for 1/3 too. I'll add a fixed tag
-there for v2 too.
+> The input buffer will still work when the device is in output mode
 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Does this hardware support HiZ?
 
-Thanks.
+> and if somehow an external force is pushing the pin low/high against
+> the output value then the input buffer will correctly reflect this
+> (assuming the output is current limited and thus the magic smoke
+> stays inside the chip).
 
-Regards,
+Exactly, when smoke comes out, the hardware is broken and code,
+whatever is it, makes no difference at all.
 
-Hans
-
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/gpio/gpio-tps68470.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
->> index 778a72cf800c..2ca86fbe1d84 100644
->> --- a/drivers/gpio/gpio-tps68470.c
->> +++ b/drivers/gpio/gpio-tps68470.c
->> @@ -91,13 +91,13 @@ static int tps68470_gpio_output(struct gpio_chip *gc, unsigned int offset,
->>         struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
->>         struct regmap *regmap = tps68470_gpio->tps68470_regmap;
->>
->> +       /* Set the initial value */
->> +       tps68470_gpio_set(gc, offset, value);
->> +
->>         /* rest are always outputs */
->>         if (offset >= TPS68470_N_REGULAR_GPIO)
->>                 return 0;
->>
->> -       /* Set the initial value */
->> -       tps68470_gpio_set(gc, offset, value);
->> -
->>         return regmap_update_bits(regmap, TPS68470_GPIO_CTL_REG_A(offset),
->>                                  TPS68470_GPIO_MODE_MASK,
->>                                  TPS68470_GPIO_MODE_OUT_CMOS);
->> --
->> 2.38.1
->>
-> 
-> 
-
+-- 
+With Best Regards,
+Andy Shevchenko
