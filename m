@@ -2,196 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0781C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 16:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF9C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 18:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbiK3Qf4 (ORCPT
+        id S231223AbiK3Sl3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Nov 2022 11:35:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
+        Wed, 30 Nov 2022 13:41:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbiK3Qfx (ORCPT
+        with ESMTP id S231201AbiK3SlU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Nov 2022 11:35:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1064842D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 08:35:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669826099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ykv46HoHJsKjboHcMm93CTGhjBNnlsrLv9WEv8+JXlk=;
-        b=AlAzIOXaR9ElqL2dvx7nEwZ3/UjyPFf2xlBYvzs5oHkOurget8N6R7VrpdYKkIrOCRBRLx
-        Zm9J1GYUY9VP5pkCxfBpqG53m0WQ0lQ5LDelp1rDQTL0Fyh/Bu6vLe+HkgT+BtErbghk1J
-        PMDuZHgm8GwQ8qIGhEBPPAelklHmfAs=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-363-BuDXJUesMliRm05qDdGB9w-1; Wed, 30 Nov 2022 11:34:58 -0500
-X-MC-Unique: BuDXJUesMliRm05qDdGB9w-1
-Received: by mail-ej1-f70.google.com with SMTP id qk16-20020a1709077f9000b007c080a6b4ddso4680952ejc.18
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 08:34:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ykv46HoHJsKjboHcMm93CTGhjBNnlsrLv9WEv8+JXlk=;
-        b=wpM1ayaB9n3iNdSj16gCbMv2ghrHL9hkOEqDS1DHhfibRAU7tE509f2m4G2e3jcKph
-         jzdeuf3H0WtTp2s042auSl7N6G1b7HapEs20gxBBljLi3lTphfLE6OnFm2OjVkKPvlfY
-         Lp4oF/oF4Y8Vep9NqZq9fryVOur1FycaLxL+mASmIncbIBKB+YAS/pOONeOqp27Fmouu
-         fWIOmmkEcD2xImQijmFUfvLPn+AatM/Br6GmTrx9mIkzjvl2e1nWrFR6DUmNzPf6EQ1W
-         2K72flOFozhleE7ixY1gEKoSFlbXL/l8eKxJL0EL6scFVfgRJpEbyrJax3i1Nfw2Wybh
-         l2ZA==
-X-Gm-Message-State: ANoB5pmsg7b1mTEe6qBrMHP8E27D3wZtHDT77mu3vVJ5ZVg/mnOLwxIs
-        +NntQFwtC3idA4S6zOmuYZHQgcMi/Bxuxg4plYtNMyiSXbFQy5IFxerWJaSMlJHykynpUpDVzFD
-        ENQ9aFxYOwXBBd/ckPCOySVGXV4Qpg8uPhg==
-X-Received: by 2002:a17:906:490:b0:7c0:7efe:7ba4 with SMTP id f16-20020a170906049000b007c07efe7ba4mr10171762eja.521.1669826097188;
-        Wed, 30 Nov 2022 08:34:57 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4avfUWAc3t4pAmJnNoo0hVhwRymTwXpXlMqoOhlkyWQeX/a1Z14ayB1E9utbEdwlsupIUeOA==
-X-Received: by 2002:a17:906:490:b0:7c0:7efe:7ba4 with SMTP id f16-20020a170906049000b007c07efe7ba4mr10171751eja.521.1669826096968;
-        Wed, 30 Nov 2022 08:34:56 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id x10-20020a1709060a4a00b007c073be0127sm797258ejf.202.2022.11.30.08.34.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Nov 2022 08:34:56 -0800 (PST)
-Message-ID: <fef2a014-1ef9-049a-2516-539ea14abdac@redhat.com>
-Date:   Wed, 30 Nov 2022 17:34:55 +0100
+        Wed, 30 Nov 2022 13:41:20 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6117A98947;
+        Wed, 30 Nov 2022 10:41:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1669833667; bh=vgKVPXmvYqutJBkLIGS/n+sdxLzPLkmkKPGB9sgdkpE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=eLTGK2Crx7cXcz72ruhuZmROWdSjeQL/tU6MqQ2/ltbrLWebl/By1SoGSWw5dDrT6
+         d/HsUWWiDNuYfY1c1Di0y+Rzjkjr0UYdGIpe976fqNeyPOCOQagUoxfom2U7JuL0CR
+         RpYvI0Amu+1GwoFh+MzX6WsDeYZyOt8P0QF7bIi01UbUo3JAv9pnUONlMX1rAVibPs
+         GgFfqBXlveNQXbKhnXJAPmNc0cj5InLXCaVAFv7jmfBMsFhXCbHJZLhjoZslTG/r2u
+         BcHlDEPQV4H42DfqXMdGnEUMBLT3kmENSpxGXrEAq9sgNCxsDLx4z+q97vd17sjQwd
+         NTfpRXDAZfHfg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N3siG-1orY150AVs-00zl5t; Wed, 30 Nov 2022 19:41:07 +0100
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     rafael@kernel.org, hdegoede@redhat.com
+Cc:     lenb@kernel.org, markgross@kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: battery: Call power_supply_changed() when adding hooks
+Date:   Wed, 30 Nov 2022 19:41:01 +0100
+Message-Id: <20221130184101.357899-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 1/6] media: ov5693: Add support for a privacy-led GPIO
-Content-Language: en-US, nl
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        linux-media@vger.kernel.org
-References: <20221129231149.697154-1-hdegoede@redhat.com>
- <20221129231149.697154-2-hdegoede@redhat.com>
- <Y4ddgnRbRyUDSPFI@paasikivi.fi.intel.com>
- <ad9d01b6-de08-b54c-d300-cf133df90536@redhat.com>
- <Y4duQpP/GrfFQkwS@paasikivi.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y4duQpP/GrfFQkwS@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:v2Ti+bj8vLJsIA+n83Ulg5oP9sdjSkk1OPNXdaafMgk/8ZrVwh2
+ S+E+4dEVKzZ2jX9/oZGnbbLkLWZJ/vlR7ICG1Z/m2rNXg2Pk1OobQVC5ehL9lQEMd5yXzYi
+ zjLK3LinzUrvF7Paom8nUZFQoytz8Ha9EsJ6hlkmYBUeNSrPRKex4sh0VdwyGzZlW+xAvh7
+ IYKmZkCjfw3rcp+R4uEHw==
+UI-OutboundReport: notjunk:1;M01:P0:ZtWMprlq8Yw=;YMr0KkNagjdwMnP8KTCm2Xs2czT
+ UuA5vfEyiaETVpKK1VOkbVTWB/1UB2VYnJpIK7CtltFRdD8VYIlncGd00d8BqsQMQ88iu/Pvd
+ GzBUdAbQqgqH3hxsX9Id8gLNax4GI08u841WDIyZAGFFJVnrFK6Yj8XKMZOordlFfpoXAUaaJ
+ KGZCeepArsVvld8B8Bi+vMl5TyaYrciA0s3SXFS7hX+9AqQ6c/IZKM4nnMY2AF9AmD7N0hRgW
+ uzp0DkEwbPIEqC/m6IBFjd6cCB8xSINnjvQ7Rw5OZkb426AwqMoe/ib5y/tUHgAkmX60jRdt4
+ aQIJ8UGbdXP2VHu4VDqoRu4iHUwaJri9w42JXXRxxGwhM8ra+Ob2V5HajlvEq5+8jkULDcdYd
+ Mih0DF/HF+xSToPeMuehZcU0+FWRHLGLFUUO1mrtk/sQhB8HL4xZChcTeviBJOi/RutXyi9w1
+ EFQ7R/o422ghOR/qdDlTrnWjC9TfirT3WKKVArcJ+hNDNPs/OVev+oaikM25z69PfBfZp2zbD
+ hgGhnGqR5364AWIFEYJB6rITMgkrcT6gqc9H1fSfrL1qIreCww6KfX3hyPZPlm5VSH/0v0Uu3
+ SKWDq+j3obV/kTAWIvsrONElafTslXU8C2DKLsAhK8Fk3pclrV0WzQnu16JE1YsMAgBopsw29
+ iwhzezMSvIdZE7fFJFye98l7IgmYO22LsoETpw1FAGa88n+SASVVH765wEAY3AtyjoMn0mpOv
+ x1lHm1y0KjlSAi+yfyaka0j6oCNJxlprxn6INmT6XIJSWiZjRKj3pUuzUP1gMGswCNrPP7++H
+ ZTCl3DzXX9TLWP2DQbw0lzr9rKPf4ScZ5K6Yx52phKkpRuTD/H5eEMf/KyUtLc0cUf00weW6U
+ xAzJ8h5y3Jvj9xHHa8OXR1g4vbCqXLUG9JdvZbN8lmoWbuIp24NWuEJ2uQxZ+Qb8ajypW1m1M
+ 7kSVUpUQGDEa/8ATFqUzzGn5CCI=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+If a battery hook is added to a battery, userspace software
+is not informed that the available properties of the battery
+might have changed. This for example causes upower to react
+slowly if a new battery hook is added during runtime.
 
-On 11/30/22 15:52, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Wed, Nov 30, 2022 at 02:56:46PM +0100, Hans de Goede wrote:
->> Hi Sakari,
->>
->> On 11/30/22 14:41, Sakari Ailus wrote:
->>> Hi Hans,
->>>
->>> On Wed, Nov 30, 2022 at 12:11:44AM +0100, Hans de Goede wrote:
->>>> Add support for a privacy-led GPIO.
->>>>
->>>> Making the privacy LED to controlable from userspace, as using the LED
->>>> class subsystem would do, would make it too easy for spy-ware to disable
->>>> the LED.
->>>>
->>>> To avoid this have the sensor driver directly control the LED.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>> Note an additional advantage of directly controlling the GPIO is that
->>>> GPIOs are tied directly to consumer devices. Where as with a LED class
->>>> device, there would need to be some mechanism to tie the right LED
->>>> (e.g front or back) to the right sensor.
->>>
->>> Thanks for the patch.
->>>
->>> This approach has the drawback that support needs to be added for each
->>> sensor separately. Any idea how many sensor drivers might need this?
->>
->> Quite a few probably. But as discussed here I plan to write a generic
->> sensor_power helper library since many sensor drivers have a lot of
->> boilerplate code to get clks + regulators + enable/reset gpios. The plan
->> is to add support for a "privacy-led" to this library so that all sensors
->> which use this get support for free.
-> 
-> I'm not sure how well this could be generalised. While most sensors do
-> something similar there are subtle differences. If those can be taken into
-> account I guess it should be doable. But would it simplify things or reduce
-> the number of lines of code as a whole?
-> 
-> The privacy LED is separate from sensor, including its power on/off
-> sequences which suggests it could be at least as well be handled
-> separately.
-> 
->>
->> Laurent pointed out that some sensors may have more complex power-up
->> sequence demands, which is true. But looking at existing drivers
->> then many follow a std simple pattern which can be supported in
->> a helper-library.
->>
->>> Most implementations have privacy LED hard-wired to the sensor's power
->>> rails so it'll be lit whenever the sensor is powered on.
->>>
->>> If there would be more than just a couple of these I'd instead create a LED
->>> class device and hook it up to the sensor in V4L2.
->>
->>
->> A LED cladd device will allow userspace to override the privacy-led
->> value which is considered bad from a privacy point of view. This
->> was actually already discussed here:
->>
->> https://lore.kernel.org/platform-driver-x86/e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com/
->>
->> See the part of the thread on the cover-letter with Dan, Laurent
->> and me participating.
->>
->> And a LED class device also will be a challenge to bind to the right
->> sensor on devices with more then one sensor, where as mentioned
->> above using GPIO-mappings give us the binding to the right sensor
->> for free.
-> 
-> Whether the privacy LED is controlled via the LED framework or GPIO doesn't
-> really matter from this PoV, it could be controlled via the V4L2 framework
-> in both cases. It might not be very pretty but I think I'd prefer that than
-> putting this in either drivers or some sensor power sequence helper
-> library.
+Fix this by calling power_supply_changed() if a battery hook
+was successfully added/removed.
 
-In sensors described in ACPI, esp. the straight forward described sensors
-on atomisp2 devices, the GPIO resources inluding the LED one are listed
-as resources of the i2c_client for the sensor.
+Tested on a Dell Inspiron 3505.
 
-And in a sense the same applies to later IPU3 / IPU6 devices where there
-is a separate INT3472 device describing all the GPIOS which is also
-tied to a specific sensor and we currently map all the GPIOs from
-the INT3472 device to the sensor.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/acpi/battery.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-So it looks like that at least for x86/ACPI windows devices if the
-LED has its own GPIO the hardware description clearly counts that
-as part of the sensor's GPIOs. So the sensor driver has direct
-access to this, where as any v4l2 framework driver would needed
-to start poking inside the fwnode of the sensor which really
-isn't pretty.
-
-Where as if you look at this patch set adding the privacy-LED GPIO
-from the INT3472 (IPU3 / IPU6) to the sensor fwnode is a 1 line change.
-
-This really by far is the most KISS solution and we have so much
-other things which need work that I believe that over-engineering
-this is not doing ourselves any favours.
-
-Regards,
-
-Hans
-
-
-
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index 9482b0b6eadc..bf99053e5021 100644
+=2D-- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -696,7 +696,8 @@ static void __battery_hook_unregister(struct acpi_batt=
+ery_hook *hook, int lock)
+ 	if (lock)
+ 		mutex_lock(&hook_mutex);
+ 	list_for_each_entry(battery, &acpi_battery_list, list) {
+-		hook->remove_battery(battery->bat, hook);
++		if (!hook->remove_battery(battery->bat, hook))
++			power_supply_changed(battery->bat);
+ 	}
+ 	list_del(&hook->list);
+ 	if (lock)
+@@ -735,6 +736,8 @@ void battery_hook_register(struct acpi_battery_hook *h=
+ook)
+ 			__battery_hook_unregister(hook, 0);
+ 			goto end;
+ 		}
++
++		power_supply_changed(battery->bat);
+ 	}
+ 	pr_info("new extension: %s\n", hook->name);
+ end:
+=2D-
+2.30.2
 
