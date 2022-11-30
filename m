@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8E4C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 10:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB293C352A1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 10:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiK3KlJ (ORCPT
+        id S230415AbiK3Kla (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Nov 2022 05:41:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39176 "EHLO
+        Wed, 30 Nov 2022 05:41:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233789AbiK3Kku (ORCPT
+        with ESMTP id S232519AbiK3KlK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Nov 2022 05:40:50 -0500
+        Wed, 30 Nov 2022 05:41:10 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E1194842D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 02:39:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA00B48771
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 02:40:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669804787;
+        s=mimecast20190719; t=1669804814;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IWf7oyH1nHYeZwWc6j8aR0Iwv4vleAhnmkH4VGWDvEs=;
-        b=bT+ALZLYURmAxIitByV5O+uUIOjhe7EMx1beJmixwBoo3cvkh261GveKr86LaJ0i8kdgUs
-        PlD7eCOjyg2bh948TI7SLv8JXRyLkOE67dPIDxXn5KKA8cIdS4Kp3qBAVeNtCMksmeX9+y
-        xU4WS8RXZ9kuB9G1r7eJ51nMf1Njcyo=
+        bh=7Vk1FqfCcICKfYuqkvngzsGKlc11CHuP4gerE2kg8bs=;
+        b=BiaZHA1JRxFpXw0dq+NC/3bslOvsq0sHCGDtIvhdDgU/tfG6ucclqNeMilLM1tcCp1jgrC
+        x9m6AbvVN9Z2Mj86Qz7ILscMsXOrXTuNdSViTenKXj/HfVhrkfhwBCbNV83DeepJJSneXl
+        Q9NMa3M8XB4jwh7AAIh3JYb0HblFov0=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-425-i-mtkSWIMZe4O_00uKlIDw-1; Wed, 30 Nov 2022 05:39:45 -0500
-X-MC-Unique: i-mtkSWIMZe4O_00uKlIDw-1
-Received: by mail-ej1-f70.google.com with SMTP id ga41-20020a1709070c2900b007aef14e8fd7so8399597ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 02:39:44 -0800 (PST)
+ us-mta-629-DM-4Tum6Mw22TEzWL5xiSA-1; Wed, 30 Nov 2022 05:40:13 -0500
+X-MC-Unique: DM-4Tum6Mw22TEzWL5xiSA-1
+Received: by mail-ej1-f70.google.com with SMTP id sh37-20020a1709076ea500b007c09b177cd1so1453527ejc.12
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Nov 2022 02:40:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IWf7oyH1nHYeZwWc6j8aR0Iwv4vleAhnmkH4VGWDvEs=;
-        b=DcGNh/aJpJuTrEfH6eUFkg/6D0GrIt+UDHPSSS5rQXWggCdv+arY95WB1vrNeZ2fwE
-         baleQukXN/fFEpWOqo6602iUKSft2VXfWffsszc9Ye/0LodGyjmUIMR4krsOLFODjaTc
-         LRFrtk0b5uiNeZfSMEMw9CXTwJcFZ1Zrjkm0zdntvb36DIUz6mGQ/Rr1EMYh7u53MXj9
-         Hzi8mHuX2x5t72OmbzQXMowzQ6/CU1RRTso+vRKt5/b2Ci0vkW/ciO+ZIS7/U0Vc4z1L
-         t7BcHYnNSPN8cFx95osay+yqqurBUoEBpyaDWTI86S45BUmWmut8qW+PZ9Vsz9g1dPDs
-         akMA==
-X-Gm-Message-State: ANoB5plwXRcuO7QqNK2vzc198BOLkHsGWMAr8JDpTXw7+oNgAsP1GZUf
-        6Kka5GIq6JsUyeW0MOtV6bcCJopgV0eyUzvzhRaduBkTu5eSFO36m/1Po8QpK234uvHkIWUCM1a
-        +kBYDhy27hgUK0PiR/cy+CTVdFNExvxJXYQ==
-X-Received: by 2002:a05:6402:143:b0:463:f8aa:d2bf with SMTP id s3-20020a056402014300b00463f8aad2bfmr55814977edu.358.1669804783982;
-        Wed, 30 Nov 2022 02:39:43 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7kmkSrBlsiz/30NQQFxM7yD9+xU/ZEz0cwBtyd9mLmwtMvRyxTGjP3C3EuY8upT7kkmJAyJg==
-X-Received: by 2002:a05:6402:143:b0:463:f8aa:d2bf with SMTP id s3-20020a056402014300b00463f8aad2bfmr55814961edu.358.1669804783770;
-        Wed, 30 Nov 2022 02:39:43 -0800 (PST)
+        bh=7Vk1FqfCcICKfYuqkvngzsGKlc11CHuP4gerE2kg8bs=;
+        b=I4Ir5LPbv/ZUTze6t0OEq1Bp3OW5f3wxiBoo31NmSSmTBxIyDV8ULa8eR0EWgu9vmB
+         Vnf3ppWbZO5YW0u+Svju1QNiERIJ2R8itfokl3iF2Ax4VI2ZVpa838roCjEtx/3dil5k
+         k7zLTsVL++ZICopgm3XudKKuTFWPW6rx5EjsdCEEPSAc2iwN/KRcU6dMIxFgAIQOb98K
+         TRP/ZFV+q7W+etWZq+Z1gxrv+Iu17cbUQr2BCX2rROHIX8mM7nngS4a3mJuUTKfV5HsC
+         bcMw7tEs5fsdEK28gHvncTvhut76kBcs16FapAmorU/JqVPqd7LZ3lfzYbAsWfWsalpO
+         2VtQ==
+X-Gm-Message-State: ANoB5pmKWRs4QM2Cm65LxC2v+Sb209r8+LMabtmoJhEQHX3rVIxe3EyW
+        ly7ubbAJsqgSs2gW715xyjVuG0yMYxaQbcyMkHxWQ6GFWEz3EC2/tnpQRLF3VW4S0Ecyjr/abSk
+        M9rxTjJe4CWPFZmRkkpjxJDJ53bdhomRXGQ==
+X-Received: by 2002:a17:906:99cd:b0:7be:9340:b3e4 with SMTP id s13-20020a17090699cd00b007be9340b3e4mr2053473ejn.402.1669804812060;
+        Wed, 30 Nov 2022 02:40:12 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7hGztIHuc21ep0jbDgWGdWXhOLRuYKwnbySeYhsmmhR/PhfAGHUdJ42GeuL1/MK8Ryn3sQhA==
+X-Received: by 2002:a17:906:99cd:b0:7be:9340:b3e4 with SMTP id s13-20020a17090699cd00b007be9340b3e4mr2053467ejn.402.1669804811892;
+        Wed, 30 Nov 2022 02:40:11 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id l20-20020aa7d954000000b00459f4974128sm479269eds.50.2022.11.30.02.39.43
+        by smtp.gmail.com with ESMTPSA id c17-20020a17090618b100b007a8de84ce36sm478523ejf.206.2022.11.30.02.40.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Nov 2022 02:39:43 -0800 (PST)
-Message-ID: <7a110978-268d-811d-daa6-39f78f802e2c@redhat.com>
-Date:   Wed, 30 Nov 2022 11:39:42 +0100
+        Wed, 30 Nov 2022 02:40:11 -0800 (PST)
+Message-ID: <4b67b558-90df-6e41-6e00-66ade6d59fd9@redhat.com>
+Date:   Wed, 30 Nov 2022 11:40:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH 6/6] platform/x86: int3472/discrete: Get the polarity from
- the _DSM entry
+Subject: Re: [PATCH 0/6] ov5693/int3472: Privacy LED handling changes + IPU6
+ compatibility
 Content-Language: en-US, nl
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
@@ -76,10 +76,9 @@ Cc:     Mark Gross <markgross@kernel.org>,
         Mark Pearson <markpearson@lenovo.com>,
         linux-media@vger.kernel.org
 References: <20221129231149.697154-1-hdegoede@redhat.com>
- <20221129231149.697154-7-hdegoede@redhat.com>
- <CAHp75Vc2nYtvHhrsNPe8JwbK_665F5_Z6bMDfvmtBKr0HomycA@mail.gmail.com>
+ <CAHp75Vfvsefb8M-yZXxu18PQwnN7b0NgCSJKpQ4Qcdkv5Tu9-Q@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vc2nYtvHhrsNPe8JwbK_665F5_Z6bMDfvmtBKr0HomycA@mail.gmail.com>
+In-Reply-To: <CAHp75Vfvsefb8M-yZXxu18PQwnN7b0NgCSJKpQ4Qcdkv5Tu9-Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -88,56 +87,56 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/30/22 11:01, Andy Shevchenko wrote:
+On 11/30/22 11:03, Andy Shevchenko wrote:
 > On Wed, Nov 30, 2022 at 1:12 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> According to:
->> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
+>> Hi All,
 >>
->> Bits 31-24 of the _DSM pin entry integer value codes the active-value,
->> that is the actual physical signal (0 or 1) which needs to be output on
->> the pin to turn the sensor chip on (to make it active).
+>> The out of tree IPU6 driver has moved to using the in kernel INT3472
+>> code for doing power-ctrl rather then doing their own thing (good!).
+> 
+> than
+> 
+>> Some of the IPU6 devices with a discrete INT3472 ACPI device have a
+>> privacy-led GPIO. but no clk-enable GPIO. To make this work this series
+>> moves the privacy LED control from being integrated with the clk-provider
+>> to modelling the privacy LED as a separate GPIO. This also brings the
+>> discrete INT3472 ACPI device privacy LED handling inline with the privacy
+>> LED handling for INT3472 TPS68470 PMIC devices which I posted here:
 >>
->> So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
->> pin needs to be 0 to take the chip out of reset. IOW in this case the reset
->> signal is active-high rather then the default active-low.
+>> https://lore.kernel.org/platform-driver-x86/20221128214408.165726-1-hdegoede@redhat.com/
 >>
->> And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
->> pin needs to be 0 to enable the clk. So in this case the clk-en signal
->> is active-low rather then the default active-high.
+>> This obsoletes my previous "[PATCH 0/3] platform/x86: int3472/discrete:
+>> Make it work with IPU6" series:
 >>
->> IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
->> is inverted.
+>> https://lore.kernel.org/platform-driver-x86/20221124200007.390901-1-hdegoede@redhat.com/
 >>
->> Add a check for this and also propagate this new polarity to the clock
->> registration.
+>> Mauro since laptops with IPU6 cameras are becoming more and more
+>> popular I would like to get this merged for 6.2 so that with 6.2
+>> users will be able to build the out of tree IPU6 driver without
+>> requiring patching their main kernel. I realize we are a bit
+>> late in the cycle, but can you please still take the ov5693 patch
+>> for 6.2 ? It is quite small / straight-forward and since it used
+>> gpiod_get_optional() it is a no-op without the rest of this series.
+>>
+>> This series has been tested on:
+>>
+>> - Lenovo ThinkPad X1 Yoga gen 7, IPU6, front: ov2740 with privacy LED
+>> - Dell Latitude 9420, IPU 6 with privacy LED on front
+>> - Mirosoft Surface Go, IPU3, front: ov5693 with privacy LED,
 > 
-> I like it in this form, thanks!
-> 
-> ...
-> 
->> +               (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
-> 
-> Perhaps
-> 
-> static inline str_high_low(bool v)
-> {
->   return v ? "high" : "low";
-> }
-> 
-> In the string_helpers.h? If you are okay with the idea, you may use my
-> tag ahead for that patch.
+> Microsoft?
 
-That is an interesting idea. but IMHO best done in a follow-up series
-after checking for similar code in the rest of the kernel.
+Ack.
 
-This is based on the assumption that "selling" this new helper to
-the string_helpers.h maintainer will be easier if there are multiple
-consumers of it right away.
+>>                               back: ov8865 with privacy LED
+> 
+> I like this series! Minimum invasion and code.
+
+I'm glad you like it and thank you for the review.
 
 Regards,
 
 Hans
-
 
 
