@@ -2,59 +2,59 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6E1C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 09:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2FC352A1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 10:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232345AbiK3J7r (ORCPT
+        id S234277AbiK3KCe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Nov 2022 04:59:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59788 "EHLO
+        Wed, 30 Nov 2022 05:02:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbiK3J7q (ORCPT
+        with ESMTP id S235263AbiK3KCe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Nov 2022 04:59:46 -0500
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8152F38E;
-        Wed, 30 Nov 2022 01:59:45 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id d2so6640778qvp.12;
-        Wed, 30 Nov 2022 01:59:45 -0800 (PST)
+        Wed, 30 Nov 2022 05:02:34 -0500
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25510DD4;
+        Wed, 30 Nov 2022 02:02:33 -0800 (PST)
+Received: by mail-qt1-x831.google.com with SMTP id r19so690160qtx.6;
+        Wed, 30 Nov 2022 02:02:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gvd/UsTkZXhKMSN0l+cJA3z1P3QGNDytMulpPdf28ok=;
-        b=bczKfFiIRdLnf7fOdZ9h9H5x/IONcQQwNcjJZNLsbGN1t2VTBG3I8PmqPU1T3NFs2W
-         9RKfMpyPs3wUtYZ74evNJ9l/kxiBmcimm+CWtzHvbyfnMR5vMy0Ht8OEic6Zz83qmarO
-         nqt41Aw/SFxdRbykCzv6qn37OEFtuXzXTE7g/PJPOFF17j4Mjc8dzh4q7z6Sr5aAQrAd
-         2jV0EtHZWrQMB0F2xVNM2LTQmQERQNsidzFv4So+7qLdkoi2dXUDNo73I8Uvx8eyobTA
-         Ao40PYL/9w/S+azrQG1JXO3LI0uGJZI0KoroCSr/7k39yEtstTFzecD/qjLVRQ9dTIAE
-         fHrw==
+        bh=mHWjGUutZvu8frMTpQcEffMDOgN6Ykcc4XU27MSKLpE=;
+        b=hab7k5udL3w5GIpgm6MkZ533MiVm3fSmAhKrbwplfOzD+gmRkJyLQ+EpFwXJ8W8CF/
+         s+QfudLqU0D/GJzlrrbsbVeudGS0WJ23EEEIofFt6sU+sio44HHb0c4gULblGFbnV2oI
+         qkGG2wfYys/3SpVbG3g/xs8Da4AFYtkwwjFvd2L2/5Nb5P5LEJC2vDHhRuau7XXUFRjT
+         L+z9YmCa7klhDuHaYq5yPR42SNlC92yJdkIhnTuAvrR4hm0vvQt9D/yzV6lb9SwYuyyV
+         L61/+ARI24aSSQsd0TrCn+uARMG0qEdD+tiv3F+6GxH3Rch4498l/UYcbhdP9lTgHag+
+         mgLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Gvd/UsTkZXhKMSN0l+cJA3z1P3QGNDytMulpPdf28ok=;
-        b=6q2uY1NRP0mhtuPKam3ZGgUngCCVtppi+uivmjW0aGqosJ5P8DTya9afek66UuKiQ1
-         Ckil1YQfXeiHyA7/JtpFF8aNsrXrl4weknhiVozYxauDxgl3GHauHwzCFaBIwYWaLXEX
-         xpyi4vtdDd+pMiwPxh/WWEzVN5NnJe87r89/ICN6BWvscn/1d2wxsslQaPFcb53+4o79
-         C8VwvyjbnOuUAs9m04lo9gCZVpZM94fC1405vzA7/E4N8lzULB0PW0Sj8p8EPVPwS0TK
-         Bjl122xNcypEpMvHOzRONjvCr22hbzj1l9Avfr2DXnMMA9BuIvfPdr5yNa3ePm/PwXJP
-         VI9A==
-X-Gm-Message-State: ANoB5plAsqmGK4MX2MRSx/OsfpCX1UY5scx7UfpUHrf+to8D1Z5OwEr2
-        9bLhVz9Ths2XsOSCbbBIn22g5+6eSim0vnywrRk=
-X-Google-Smtp-Source: AA0mqf429vvSdIdmxi3xgsA14GJGrXZiyGdBzPHGGOVdmepQUfnTDlC+ed4s0TqGQ0aQguShr+zMNuwpnZA4swDV3Wk=
-X-Received: by 2002:a05:6214:5cc2:b0:4c6:a622:cb4f with SMTP id
- lk2-20020a0562145cc200b004c6a622cb4fmr46050535qvb.97.1669802384974; Wed, 30
- Nov 2022 01:59:44 -0800 (PST)
+        bh=mHWjGUutZvu8frMTpQcEffMDOgN6Ykcc4XU27MSKLpE=;
+        b=allYv0WhbL6kGzMYf7j0q+dj50jvo4YshPA6dNxEgtQi+kboBNXn/7sTXx+iAKyABw
+         EIJbLH6gEk7oN4ui5h9a1X5nC/7IjPrEHF4hCQpALHJ6dpds3YuOTl6Mqhp5cziwNCfD
+         5yBOCLw0QoO6Pa3jTuzIBDLD+kZO7KpYAuVIr1zWvJeov9D9bTGi6uuvjeqf4ay7gD89
+         Xhj0aKK/eY8mNPiPvmrglKfpqrOlReJZ3PBxmT/t7CoNAm7kp3UWO8qzQqaLOnmzIA8b
+         Fry4AnkDbRZ+xIu1iTc0oJX3DUMbcAXxNf+s2vhzbdWK0P/8+vUJh7KqWV3YTPGbgiIo
+         nubg==
+X-Gm-Message-State: ANoB5pn03U8dlzfAxKH8CKoKZyvRCO/OcLMn4tuupfnQ7vxLkFCXsy+O
+        FkDSzDyfq3nxl9Eeu6etQRdO81fDZHXs3+7TtoI=
+X-Google-Smtp-Source: AA0mqf7J6vr2fxLt7gDxlIFH9YpJD0f+PqW7ziZz0kgIKiww3b+1M5DmzvBoJVNsnRSt+Iu+lL2mrOFGMwHCTMf4yL8=
+X-Received: by 2002:ac8:4cd1:0:b0:3a5:1940:a027 with SMTP id
+ l17-20020ac84cd1000000b003a51940a027mr54900469qtv.195.1669802552185; Wed, 30
+ Nov 2022 02:02:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20221129231149.697154-1-hdegoede@redhat.com> <20221129231149.697154-6-hdegoede@redhat.com>
-In-Reply-To: <20221129231149.697154-6-hdegoede@redhat.com>
+References: <20221129231149.697154-1-hdegoede@redhat.com> <20221129231149.697154-7-hdegoede@redhat.com>
+In-Reply-To: <20221129231149.697154-7-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 30 Nov 2022 11:59:09 +0200
-Message-ID: <CAHp75VdQqJu1YRozd5-qKKn5W9Rk_fLyzfHm0+HVDcgg0heCDA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] platform/x86: int3472/discrete: Ensure the clk/power
- enable pins are in output mode
+Date:   Wed, 30 Nov 2022 12:01:56 +0200
+Message-ID: <CAHp75Vc2nYtvHhrsNPe8JwbK_665F5_Z6bMDfvmtBKr0HomycA@mail.gmail.com>
+Subject: Re: [PATCH 6/6] platform/x86: int3472/discrete: Get the polarity from
+ the _DSM entry
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -72,34 +72,42 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Wed, Nov 30, 2022 at 1:12 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> acpi_get_and_request_gpiod() does not take a gpio_lookup_flags argument
-> specifying that the pins direction should be initialized to a specific
-> value.
+> According to:
+> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
 >
-> This means that in some cases the pins might be left in input mode, causing
-> the gpiod_set() calls made to enable the clk / regulator to not work.
+> Bits 31-24 of the _DSM pin entry integer value codes the active-value,
+> that is the actual physical signal (0 or 1) which needs to be output on
+> the pin to turn the sensor chip on (to make it active).
 >
-> One example of this problem is the clk-enable GPIO for the ov01a1s sensor
-> on a Dell Latitude 9420 being left in input mode causing the clk to
-> never get enabled.
+> So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
+> pin needs to be 0 to take the chip out of reset. IOW in this case the reset
+> signal is active-high rather then the default active-low.
 >
-> Explicitly set the direction of the pins to output to fix this.
+> And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
+> pin needs to be 0 to enable the clk. So in this case the clk-en signal
+> is active-low rather then the default active-high.
+>
+> IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
+> is inverted.
+>
+> Add a check for this and also propagate this new polarity to the clock
+> registration.
+
+I like it in this form, thanks!
 
 ...
 
-> +       /* Ensure the pin is in output mode */
+> +               (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
 
-...in output mode and non-active state */
+Perhaps
 
-> +       gpiod_direction_output(int3472->clock.ena_gpio, 0);
+static inline str_high_low(bool v)
+{
+  return v ? "high" : "low";
+}
 
-...
-
-> +       /* Ensure the pin is in output mode */
-> +       gpiod_direction_output(int3472->regulator.gpio, 0);
-
-So, previously it was AS IS and now it's non-active state. I believe
-this makes no regressions for the other laptops / platforms.
+In the string_helpers.h? If you are okay with the idea, you may use my
+tag ahead for that patch.
 
 -- 
 With Best Regards,
