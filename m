@@ -2,135 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F5AC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 15:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD557C4321E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 16:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbiK3PUc (ORCPT
+        id S229981AbiK3QEj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Nov 2022 10:20:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
+        Wed, 30 Nov 2022 11:04:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiK3PUb (ORCPT
+        with ESMTP id S229689AbiK3QEj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Nov 2022 10:20:31 -0500
+        Wed, 30 Nov 2022 11:04:39 -0500
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6137CA8E;
-        Wed, 30 Nov 2022 07:20:28 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3FC192D8;
-        Wed, 30 Nov 2022 16:20:27 +0100 (CET)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D724EC39;
+        Wed, 30 Nov 2022 08:04:37 -0800 (PST)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BD48855A;
+        Wed, 30 Nov 2022 17:04:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1669821627;
-        bh=hIOi8Sc38u7dB6vD6eJhqzXcrKP1cvsOXtQAVKEzmW8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QPMlUz/kwITYtWW+FomGWpGAEQrjeMwXtPLPaW/SckdDPPdxliY6CgyK5GYODOjFS
-         4g6jcid8jOeQcsjqJXjSpIIaJebzg9Q7tCNkHv6CNRSvXlC0tlKREjfDU1DBExDicS
-         RkjQbgKKv/4U33zVY1owTPFMIMQEocW71sp/hS7M=
-Date:   Wed, 30 Nov 2022 17:20:11 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        s=mail; t=1669824275;
+        bh=z+OtyC6ComNYR6b7H26z27lJ/WPYV8XQen6xTiq6ROk=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=IVN7NAPzLP1x2UuastFQewC34wxQmT0w6ZbwUcaBnqTtnZyeTJzFLOb5+9bFkPfoB
+         D+JPMfEV16IPAhI3zr7cUDzewN78yHbsfdObU1BmFs0G46LZMkwTpiFk4Lj1pkebYl
+         xf/lm2lye5HPbZsPkX9uAjyo0xsNpZMDOMC/SZYU=
+Message-ID: <0137a8bd-9fda-f1e4-8c59-d8c1dab8cf83@ideasonboard.com>
+Date:   Wed, 30 Nov 2022 16:04:31 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 2/5] gpio: tps68470: Make tps68470_gpio_output() always
+ set the initial value
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
-        platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 1/6] media: ov5693: Add support for a privacy-led GPIO
-Message-ID: <Y4d0q08KXoUBD+t6@pendragon.ideasonboard.com>
-References: <20221129231149.697154-1-hdegoede@redhat.com>
- <20221129231149.697154-2-hdegoede@redhat.com>
- <Y4ddgnRbRyUDSPFI@paasikivi.fi.intel.com>
- <ad9d01b6-de08-b54c-d300-cf133df90536@redhat.com>
- <Y4duQpP/GrfFQkwS@paasikivi.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y4duQpP/GrfFQkwS@paasikivi.fi.intel.com>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <20221128214408.165726-3-hdegoede@redhat.com>
+From:   Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20221128214408.165726-3-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 02:52:50PM +0000, Sakari Ailus wrote:
-> On Wed, Nov 30, 2022 at 02:56:46PM +0100, Hans de Goede wrote:
-> > On 11/30/22 14:41, Sakari Ailus wrote:
-> > > On Wed, Nov 30, 2022 at 12:11:44AM +0100, Hans de Goede wrote:
-> > >> Add support for a privacy-led GPIO.
-> > >>
-> > >> Making the privacy LED to controlable from userspace, as using the LED
-> > >> class subsystem would do, would make it too easy for spy-ware to disable
-> > >> the LED.
-> > >>
-> > >> To avoid this have the sensor driver directly control the LED.
-> > >>
-> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > >> ---
-> > >> Note an additional advantage of directly controlling the GPIO is that
-> > >> GPIOs are tied directly to consumer devices. Where as with a LED class
-> > >> device, there would need to be some mechanism to tie the right LED
-> > >> (e.g front or back) to the right sensor.
-> > > 
-> > > Thanks for the patch.
-> > > 
-> > > This approach has the drawback that support needs to be added for each
-> > > sensor separately. Any idea how many sensor drivers might need this?
-> > 
-> > Quite a few probably. But as discussed here I plan to write a generic
-> > sensor_power helper library since many sensor drivers have a lot of
-> > boilerplate code to get clks + regulators + enable/reset gpios. The plan
-> > is to add support for a "privacy-led" to this library so that all sensors
-> > which use this get support for free.
-> 
-> I'm not sure how well this could be generalised. While most sensors do
-> something similar there are subtle differences. If those can be taken into
-> account I guess it should be doable. But would it simplify things or reduce
-> the number of lines of code as a whole?
+Hi Hans
 
-While I think we need a camera sensor helper, I also doubt managing the
-power sequence in the helper would help much. The privacy LED, however,
-could be handled there.
+On 28/11/2022 21:44, Hans de Goede wrote:
+> Make tps68470_gpio_output() call tps68470_gpio_set() for output-only pins
+> too, so that the initial value passed to gpiod_direction_output() is
+> honored for these pins too.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> The privacy LED is separate from sensor, including its power on/off
-> sequences which suggests it could be at least as well be handled
-> separately.
 
-And if the privacy LED is controllable through a GPIO, I think it should
-be turned on at stream on time, not at power on time. That would allow
-things like reading the OTP data from the sensor without flashing the
-privacy LED.
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 
-> > Laurent pointed out that some sensors may have more complex power-up
-> > sequence demands, which is true. But looking at existing drivers
-> > then many follow a std simple pattern which can be supported in
-> > a helper-library.
-> > 
-> > > Most implementations have privacy LED hard-wired to the sensor's power
-> > > rails so it'll be lit whenever the sensor is powered on.
-> > > 
-> > > If there would be more than just a couple of these I'd instead create a LED
-> > > class device and hook it up to the sensor in V4L2.
-> > 
-> > A LED cladd device will allow userspace to override the privacy-led
-> > value which is considered bad from a privacy point of view. This
-> > was actually already discussed here:
-> > 
-> > https://lore.kernel.org/platform-driver-x86/e5d8913c-13ba-3b11-94bc-5d1ee1d736b0@ideasonboard.com/
-> > 
-> > See the part of the thread on the cover-letter with Dan, Laurent
-> > and me participating.
-> > 
-> > And a LED class device also will be a challenge to bind to the right
-> > sensor on devices with more then one sensor, where as mentioned
-> > above using GPIO-mappings give us the binding to the right sensor
-> > for free.
-> 
-> Whether the privacy LED is controlled via the LED framework or GPIO doesn't
-> really matter from this PoV, it could be controlled via the V4L2 framework
-> in both cases. It might not be very pretty but I think I'd prefer that than
-> putting this in either drivers or some sensor power sequence helper
-> library.
+Tested-by: Daniel Scally <dan.scally@ideasonboard.com>
 
--- 
-Regards,
-
-Laurent Pinchart
+> ---
+>   drivers/gpio/gpio-tps68470.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+> index 778a72cf800c..2ca86fbe1d84 100644
+> --- a/drivers/gpio/gpio-tps68470.c
+> +++ b/drivers/gpio/gpio-tps68470.c
+> @@ -91,13 +91,13 @@ static int tps68470_gpio_output(struct gpio_chip *gc, unsigned int offset,
+>   	struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
+>   	struct regmap *regmap = tps68470_gpio->tps68470_regmap;
+>   
+> +	/* Set the initial value */
+> +	tps68470_gpio_set(gc, offset, value);
+> +
+>   	/* rest are always outputs */
+>   	if (offset >= TPS68470_N_REGULAR_GPIO)
+>   		return 0;
+>   
+> -	/* Set the initial value */
+> -	tps68470_gpio_set(gc, offset, value);
+> -
+>   	return regmap_update_bits(regmap, TPS68470_GPIO_CTL_REG_A(offset),
+>   				 TPS68470_GPIO_MODE_MASK,
+>   				 TPS68470_GPIO_MODE_OUT_CMOS);
