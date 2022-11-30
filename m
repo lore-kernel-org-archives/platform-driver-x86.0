@@ -2,83 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F938C4708A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 11:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CBDC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Nov 2022 11:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233498AbiK3LuG (ORCPT
+        id S233719AbiK3LuH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Nov 2022 06:50:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41638 "EHLO
+        Wed, 30 Nov 2022 06:50:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233147AbiK3LuF (ORCPT
+        with ESMTP id S233443AbiK3LuF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 30 Nov 2022 06:50:05 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C283E0A0;
-        Wed, 30 Nov 2022 03:50:04 -0800 (PST)
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C3E3E0B9;
+        Wed, 30 Nov 2022 03:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669809004; x=1701345004;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6wimyYQbsxLPBuz4Yl1fOGCJ7Sk/b97+f3lsZ3q38XY=;
-  b=MAoRtzYTjQRwJVwyXb/RntzeXhsdBna8BVu7DATW/ssE6Vs/ow9W9vef
-   nj7mluIybWVtTd5pQZZAMySaGt5/fooE3mJuPrC9a6gxTQI/Tj5bgaqe9
-   tMyWcVb5sZPriGPkUjXkVVBM4ULvPjIgB9ihtu32Gvd+DEA0YE5hN/sec
-   2qOmGnnTW75FQxhAAMF2OYG9oM3OnzfUkzwZo96W3+Fi4IpX+a5IjrVxf
-   FK/+O2D0RxZT8udZ5yQWKFZz673xU/2jg31ToOfj4lAqORnNBOqzk+bPQ
-   f7C0eL4oXzhrd2gRVsapzVkfqW2my6f0zt78cig87eEK7rP8u5cJNTN4D
+  t=1669809005; x=1701345005;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SU/NorHp8bte8kSzQBB60nH7d9fJQrjLciVnA/+O99s=;
+  b=YcIG8rzeP0u04+Z/4OPAQP5wzeLtomFlYIJZ3NQ6sgdZ955/4seyi2Ij
+   Ndt/BjFM9TofIve4d9Eqj4xT/+xEDbZjFsR5eUhtiaRDXOmH0cTZ+Fr4P
+   pk0PiT0j0EyTAu3zwEnZ9VsApE/SKmT2bKlyRBg+VVncEVnTJ3AmCNNHR
+   P8vNkFD8pBwplmdT7PEpgoHxCnfM7edw4ISonIQ4g/ArUn94sgyJ0l98k
+   xZf3o73r4TXOosdNn10i9DmwSeLd2vuSLY80ER35EAes6atxqwujhAHrK
+   houqioOTL7vb7tBNiM+mohqMPRIr1c5iriVIGDTsAFUtoFsugiz2PGFCn
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="295739717"
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="298748038"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="295739717"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 03:50:04 -0800
+   d="scan'208";a="298748038"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 03:50:04 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="712779990"
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="732959311"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="712779990"
+   d="scan'208";a="732959311"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Nov 2022 03:50:02 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Nov 2022 03:50:02 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C600B10E; Wed, 30 Nov 2022 13:50:29 +0200 (EET)
+        id DF038184; Wed, 30 Nov 2022 13:50:29 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andy@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 1/3] lib/string_helpers: Add missing header files to MAINTAINERS database
-Date:   Wed, 30 Nov 2022 13:50:20 +0200
-Message-Id: <20221130115022.68956-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/3] lib/string_helpers: Split out string_choices.h
+Date:   Wed, 30 Nov 2022 13:50:22 +0200
+Message-Id: <20221130115022.68956-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221130115022.68956-1-andriy.shevchenko@linux.intel.com>
+References: <20221130115022.68956-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The header files string.h and string_helpers.h are missing in
-the MAINTAINERS. Add them.
+Some users may only need the string choice APIs. Split
+the respective header, i.e. string_choices.h. Include
+it in the string_helpers.h.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS                    |  1 +
+ include/linux/string_choices.h | 37 ++++++++++++++++++++++++++++++++++
+ include/linux/string_helpers.h | 31 +---------------------------
+ 3 files changed, 39 insertions(+), 30 deletions(-)
+ create mode 100644 include/linux/string_choices.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 331dc0e3e5f9..c1f0310dae18 100644
+index c1f0310dae18..b16c2488f05a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -8721,6 +8721,8 @@ F:	drivers/input/touchscreen/resistive-adc-touch.c
- GENERIC STRING LIBRARY
+@@ -8722,6 +8722,7 @@ GENERIC STRING LIBRARY
  R:	Andy Shevchenko <andy@kernel.org>
  S:	Maintained
-+F:	include/linux/string.h
-+F:	include/linux/string_helpers.h
+ F:	include/linux/string.h
++F:	include/linux/string_choices.h
+ F:	include/linux/string_helpers.h
  F:	lib/string.c
  F:	lib/string_helpers.c
- F:	lib/test_string.c
+diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
+new file mode 100644
+index 000000000000..ff7e202808a9
+--- /dev/null
++++ b/include/linux/string_choices.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_STRING_CHOICES_H_
++#define _LINUX_STRING_CHOICES_H_
++
++#include <linux/types.h>
++
++static inline const char *str_enable_disable(bool v)
++{
++	return v ? "enable" : "disable";
++}
++
++static inline const char *str_enabled_disabled(bool v)
++{
++	return v ? "enabled" : "disabled";
++}
++
++static inline const char *str_high_low(bool v)
++{
++	return v ? "high" : "low";
++}
++
++static inline const char *str_read_write(bool v)
++{
++	return v ? "read" : "write";
++}
++
++static inline const char *str_on_off(bool v)
++{
++	return v ? "on" : "off";
++}
++
++static inline const char *str_yes_no(bool v)
++{
++	return v ? "yes" : "no";
++}
++
++#endif
+diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+index fd72393e7975..88fb8e1d0421 100644
+--- a/include/linux/string_helpers.h
++++ b/include/linux/string_helpers.h
+@@ -5,6 +5,7 @@
+ #include <linux/bits.h>
+ #include <linux/ctype.h>
+ #include <linux/string.h>
++#include <linux/string_choices.h>
+ #include <linux/types.h>
+ 
+ struct device;
+@@ -108,34 +109,4 @@ void kfree_strarray(char **array, size_t n);
+ 
+ char **devm_kasprintf_strarray(struct device *dev, const char *prefix, size_t n);
+ 
+-static inline const char *str_yes_no(bool v)
+-{
+-	return v ? "yes" : "no";
+-}
+-
+-static inline const char *str_on_off(bool v)
+-{
+-	return v ? "on" : "off";
+-}
+-
+-static inline const char *str_enable_disable(bool v)
+-{
+-	return v ? "enable" : "disable";
+-}
+-
+-static inline const char *str_enabled_disabled(bool v)
+-{
+-	return v ? "enabled" : "disabled";
+-}
+-
+-static inline const char *str_high_low(bool v)
+-{
+-	return v ? "high" : "low";
+-}
+-
+-static inline const char *str_read_write(bool v)
+-{
+-	return v ? "read" : "write";
+-}
+-
+ #endif
 -- 
 2.35.1
 
