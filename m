@@ -2,81 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225BEC43217
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Dec 2022 12:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7975C47090
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Dec 2022 18:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiLAMSv (ORCPT
+        id S230330AbiLASn1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Dec 2022 07:18:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59874 "EHLO
+        Thu, 1 Dec 2022 13:43:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbiLAMSs (ORCPT
+        with ESMTP id S230103AbiLASnZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Dec 2022 07:18:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F08DA85FE
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Dec 2022 04:18:45 -0800 (PST)
+        Thu, 1 Dec 2022 13:43:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293C9934C2;
+        Thu,  1 Dec 2022 10:43:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DE3F2B81F10
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Dec 2022 12:18:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 89246C433C1
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Dec 2022 12:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669897121;
-        bh=esU1os2WPzUyG4/my6wRAhER8OHbadcRPI/QPBEXh1E=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=aMdVuYNZG8wNgUrqJ58bMBJvheJHf3Y10T3FAEw7xqhKUoRShPNKbs7xHtqrE/l0F
-         9vNAKomf7m+WfBnnmbPf4L5rZ0wMFN0IkO1aIu8ulQzG9iUxNjyEWENvMvutyolp9G
-         kAaDA7BdcrPqycsPe5JsZjv9mPP7hB8TY1y5boT+WuKkjl0PEoysVOF8ZE/XA36arv
-         kIQ30vhae8qA3PjZBz/BJXNgiW8iENxYtm1L1RhnUpsutamdY70TBHNDTd8C2kDitc
-         nckh6oCIVsnmlko2Win2tMBeNESTTFcnnxMscUPIJRi6Oig/7w7DkxcpXcI6Gv9bER
-         G71/b+25TWm2w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 36F83C433E4; Thu,  1 Dec 2022 12:18:41 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 211741] amd-hid: add support for SW_TABLET_MODE
-Date:   Thu, 01 Dec 2022 12:18:40 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-211741-215701-P7f2p3ixwY@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-211741-215701@https.bugzilla.kernel.org/>
-References: <bug-211741-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BC797620B3;
+        Thu,  1 Dec 2022 18:43:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208F8C433D6;
+        Thu,  1 Dec 2022 18:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1669920204;
+        bh=p4GYPrcLemfL1H4zQdK4YSafqKxYl8uzcCcsuNR5Mug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a2BoPen065qBe8Og5canw6L1zfhJNTp7AhJG9KCJ6kiqz0PbaFOGVhFTqYEHLQC/3
+         txrNOo/kDMMWMmzGqvPwfOzgrz6vwm2Q1DicWoYbq+xwADN5A7BOVkCSHc8BU+fkbm
+         ahiTJmpUWGq4d9z7eAd6F7xiHvrsPEH9AaFENflI=
+Date:   Thu, 1 Dec 2022 19:43:20 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/5] driver core: make struct device_type.uevent() take a
+ const *
+Message-ID: <Y4j1yPD4Ypze7jx5@kroah.com>
+References: <Y34hgIW8p1RlQTBB@smile.fi.intel.com>
+ <97be39ed-3cea-d55a-caa6-c2652baef399@gmail.com>
+ <Y34zyzdbRUdyOSkA@casper.infradead.org>
+ <Y34+V2bCDdqujBDk@kroah.com>
+ <Y35JfNJDppRp5bLX@ziepe.ca>
+ <Y35R+/eQJYI7VaDS@kroah.com>
+ <Y35YlI93UBuTfgYy@ziepe.ca>
+ <Y35dMIaNYSE0Cykd@casper.infradead.org>
+ <Y35enjI+dhhqiG3B@ziepe.ca>
+ <Y35ftyYlE8FX8xQO@casper.infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y35ftyYlE8FX8xQO@casper.infradead.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D211741
+On Wed, Nov 23, 2022 at 06:00:23PM +0000, Matthew Wilcox wrote:
+> On Wed, Nov 23, 2022 at 01:55:42PM -0400, Jason Gunthorpe wrote:
+> > On Wed, Nov 23, 2022 at 05:49:36PM +0000, Matthew Wilcox wrote:
+> > > On Wed, Nov 23, 2022 at 01:29:56PM -0400, Jason Gunthorpe wrote:
+> > > > #define generic_container_of(in_type, in, out_type, out_member) \
+> > > > 	_Generic(in,                                        \
+> > > >                   const in_type *: ((const out_type *)container_of(in, out_type, out_member)),   \
+> > > >                   in_type *: ((out_type *)container_of(in, out_type, out_member)) \
+> > > > 		  )
+> > > 
+> > > There's a neat trick I found in seqlock.h:
+> > > 
+> > > #define generic_container_of(in_t, in, out_t, m)			\
+> > > 	_Generic(*(in),							\
+> > > 		const in_t: ((const out_t *)container_of(in, out_t, m)), \
+> > > 		in_t: ((out_t *)container_of(in, out_type, m))	\
+> > > 	)
+> > >
+> > > and now it fits in 80 columns ;-)
+> > 
+> > Aside from less letters, is their another benifit to using *(in) ?
+> 
+> I don't think so.  It just looks nicer to me than putting the star in
+> each case.  If I'd thought of it, I would have done it to page_folio(),
+> but I won't change it now.
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+Ah, but your trick will not work, that blows up and will not build.  The
+original one from Jason here does work.  _Generic is tricky...
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|REJECTED                    |REOPENED
-         Resolution|INSUFFICIENT_DATA           |---
+thanks,
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+greg k-h
