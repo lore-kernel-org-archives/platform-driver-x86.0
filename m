@@ -2,61 +2,61 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1D9C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 17:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62587C47090
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 17:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234079AbiLBRge (ORCPT
+        id S233151AbiLBRgg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Dec 2022 12:36:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
+        Fri, 2 Dec 2022 12:36:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233911AbiLBRgc (ORCPT
+        with ESMTP id S234132AbiLBRge (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Dec 2022 12:36:32 -0500
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA408D8278
-        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 09:36:22 -0800 (PST)
-Received: by mail-oi1-x235.google.com with SMTP id e205so5980643oif.11
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Dec 2022 09:36:22 -0800 (PST)
+        Fri, 2 Dec 2022 12:36:34 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EF1E8E03
+        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 09:36:25 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id v19-20020a9d5a13000000b0066e82a3872dso1314405oth.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Dec 2022 09:36:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XHJ+nJq0zu7TMQThZcr7Sl3oCLPnRI7z3xRXWskQtUQ=;
-        b=jgJ2d7bsPb2yLV+oCWdKdeaPx78HRNQe4/cquX8UGUD+4HPT5/ExO4mLHZ/Zz7a+tX
-         FzrMG2TBn0VWICSYXx+bGgR0OXMtYTGHb+jAGZ/p47dyTaUbyXDxgaVhRsFw3YmRa7IO
-         yS5EePZnci13ZgnqYRcWuCq03gq9czXKziWRvEbzzdkKexd0wm6OVSeoCVqDRUWHtpsp
-         jNoHiyga0oYyO3yL2yBpFfYI/g8KjQYXRSGhzZrbEzsAztCGCXcrBxLoL7P5qOVTQyTG
-         dA5oOmiRViIDUkQu/ou7O/Mhl2Oa5WTkxGK257UHStjT4jzvHzWHAhVNYaWBl942m570
-         Z7Kw==
+        bh=On8Y7tXoD1wJ86UVO6bflBUKhsb1Cih1YdP/Z3PfHwo=;
+        b=eX3q7qZqgu/9GaNRWehNdRtYsaYDO42rwsK7QWH6zcw9WE5pbvkd3o2vLAj1GyoQ0l
+         xgTH+QSuTkBj77om2SfewVLMdPCzF4urKpJUdm/imhiYUQQSZa9rtwnMktO+UWrv+JCI
+         97RfvrwfBYzzG+Y9Q0hC1V/sRCsMwn4hLrry++jKjw1peuyrQLsgpWA6zgCncwHdXukJ
+         gJifS2NUOitOO5S0qxiHAJMb7E0oSYRknVC4WVVI8YCMqM7Amp3MNpo0Ao1fS4h0CBGz
+         mSRqXMDmFiYXTRIM842Ch9HnITjn7cxaTizjg833Dn2GO9PyNYDuvZvHbHajrt9kZxav
+         7esQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XHJ+nJq0zu7TMQThZcr7Sl3oCLPnRI7z3xRXWskQtUQ=;
-        b=dv0fbue3bTZN5c1ydtnYmHzLodT1tWI1CnyP4yr//CqgEcIR/VZC7m9U6jQUkf7jTk
-         XdVkbwX/oWwiwABalbpOun6eqIdmX8mcJaCecJEgBdS6Vz7YxD38oNHXPKS7FhjL7J8V
-         09Ja3W/ShWZmE2A3SymdOTqChpParz42CO/qTd0YVzK9GQUGqRkH/UVbfDlRJQYs5mj8
-         pMrDbjO4UA8fomInUvRE2T/DgPZds8KLnlCKK99G6iJHQ6Yw/fhFIqmHoXkMX5lvGFBr
-         JiG62O9EIQWWso+eIgz7d0w7RstYOirl947KsPbb02ldJfibMda8i1DKXfrJ+72iDRso
-         m3Hw==
-X-Gm-Message-State: ANoB5pk5pzvMr+j4b6BSGeaDs/m5A4jzUCDLhbz/qFpnHUAMPX9asb6L
-        m2wprwkVivYNys03uWWovNG+XnZ2/ABoZg==
-X-Google-Smtp-Source: AA0mqf52czMWHmVmTWXaCgCV2JSgEY1dpSlKPekHLcKIY3fTUVloCuC8tavYGG84XIdQfy7DNb9jjQ==
-X-Received: by 2002:aca:da45:0:b0:355:3cb7:b77 with SMTP id r66-20020acada45000000b003553cb70b77mr37686119oig.37.1670002581868;
-        Fri, 02 Dec 2022 09:36:21 -0800 (PST)
+        bh=On8Y7tXoD1wJ86UVO6bflBUKhsb1Cih1YdP/Z3PfHwo=;
+        b=T9+baX2eGNcJMuhZfeT0w2WjtOh6AyJpKdFmSJ7YVijd5Q7oe7nRiNTvqayfEVv5aH
+         Bj7HZ14fSCm7kopway1jlNKmtcTjWn/DIINXQVGkLDeURe+9qKzPpSB7QWJfCwm8X15I
+         c8EjgWGgBCCFrHQS2QmTmK7BLBvsVrnUHj+0lV8/TBn1ecWD7hvzk1T71Fr/gc8zlGMs
+         DzX2MamWRT1tbLPuTaUomo5+bEn1TBT+A3pBecjCc0RfsdsLZgkQ5zn/Il8NVLWGxxGi
+         WDjXsmZjfejqIUXb/54eJn/hE7ZC+t06202r0lR92SCZbmCrnuI89r5D3fTxZzeRjvy8
+         mTlQ==
+X-Gm-Message-State: ANoB5ploF4AbrVcJoGjhDi9evWbf022nyR453AQ/AHmHcpDVOcKAjKMj
+        pghlIe3UOXdX1fxeVUWv5gPdQrq3AFGI7w==
+X-Google-Smtp-Source: AA0mqf7i/Id/2W8hlxBP+23PlyPVG2T01leBCqHvw1cNztlvEE5P+S6p3Ri+nZrfyl2jyqx0CP7WQA==
+X-Received: by 2002:a9d:4f03:0:b0:66e:6f16:8bb1 with SMTP id d3-20020a9d4f03000000b0066e6f168bb1mr6177633otl.203.1670002583821;
+        Fri, 02 Dec 2022 09:36:23 -0800 (PST)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:bec7:8390:5104:e759])
-        by smtp.gmail.com with ESMTPSA id n7-20020a056870558700b0013cd709659dsm4371692oao.52.2022.12.02.09.36.21
+        by smtp.gmail.com with ESMTPSA id n7-20020a056870558700b0013cd709659dsm4371692oao.52.2022.12.02.09.36.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 09:36:21 -0800 (PST)
+        Fri, 02 Dec 2022 09:36:23 -0800 (PST)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 3/5] Introduction of HP-BIOSCFG driver (3)
-Date:   Fri,  2 Dec 2022 11:36:14 -0600
-Message-Id: <20221202173616.180108-4-jorge.lopez2@hp.com>
+Subject: [PATCH v5 5/5] Introduction of HP-BIOSCFG driver (5)
+Date:   Fri,  2 Dec 2022 11:36:16 -0600
+Message-Id: <20221202173616.180108-6-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221202173616.180108-1-jorge.lopez2@hp.com>
 References: <20221202173616.180108-1-jorge.lopez2@hp.com>
@@ -116,683 +116,167 @@ Version 5
 	Address review changes proposed in Version 4
 	Reorganize all patches number and file order
 ---
- .../x86/hp/hp-bioscfg/enum-attributes.c       | 499 ++++++++++++++++
- .../x86/hp/hp-bioscfg/int-attributes.c        | 450 ++++++++++++++
- .../x86/hp/hp-bioscfg/ordered-attributes.c    | 549 ++++++++++++++++++
- 3 files changed, 1498 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+ .../x86/hp/hp-bioscfg/string-attributes.c     |  425 +++++++
+ .../x86/hp/hp-bioscfg/sureadmin-attributes.c  | 1014 +++++++++++++++++
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  |  149 +++
+ 3 files changed, 1588 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/sureadmin-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
 new file mode 100644
-index 000000000000..5ef81daf0099
+index 000000000000..ad20e8af3844
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -0,0 +1,499 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+@@ -0,0 +1,425 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to enumeration type attributes under
-+ * BIOS Enumeration GUID for use with hp-bioscfg driver.
++ * Functions corresponding to string type attributes under
++ * HP_WMI_BIOS_STRING_GUID for use with hp-bioscfg driver.
 + *
-+ *  Copyright (c) 2022 HP Development Company, L.P.
++ * Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
 +
-+get_instance_id(enumeration);
++#define WMI_STRING_TYPE "HPBIOS_BIOSString"
++
++get_instance_id(string);
 +
 +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	int instance_id = get_enumeration_instance_id(kobj);
-+	ssize_t ret;
-+
-+	if (instance_id < 0)
-+		return -EIO;
-+
-+	ret = sysfs_emit(buf, "%s\n",
-+			    bioscfg_drv.enumeration_data[instance_id].current_value);
-+
-+	return ret;
-+}
-+
-+/*
-+ * validate_enumeration_input() -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_enumeration_input(int instance_id, const char *buf)
-+{
-+	char *options = NULL;
-+	char *p;
-+	int ret = 0;
-+	int found = 0;
-+
-+	/* Is it a read only attribute */
-+	if (bioscfg_drv.enumeration_data[instance_id].is_readonly)
-+		return -EIO;
-+
-+	options = kstrdup(bioscfg_drv.enumeration_data[instance_id].possible_values,
-+			  GFP_KERNEL);
-+
-+	if (!options) {
-+		ret = -ENOMEM;
-+		goto exit_validate_enum_input;
-+	}
-+
-+
-+	while ((p = strsep(&options, ";")) != NULL) {
-+		if (!*p)
-+			continue;
-+
-+		if (!strcasecmp(p, buf)) {
-+			found = 1;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		ret = -EINVAL;
-+		goto exit_validate_enum_input;
-+	}
-+
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.enumeration_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
-+
-+exit_validate_enum_input:
-+	kfree(options);
-+	return ret;
-+}
-+
-+static void update_enumeration_value(int instance_id, char *attr_value)
-+{
-+	strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
-+		attr_value,
-+		sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
-+}
-+
-+
-+attribute_s_property_show(display_name_language_code, enumeration);
-+static struct kobj_attribute enumeration_display_langcode =
-+		__ATTR_RO(display_name_language_code);
-+
-+attribute_s_property_show(display_name, enumeration);
-+static struct kobj_attribute  enumeration_display_name =
-+		__ATTR_RO(display_name);
-+
-+attribute_property_store(current_value, enumeration);
-+static struct kobj_attribute enumeration_current_val =
-+	__ATTR_RW_MODE(current_value, 0644);
-+
-+attribute_s_property_show(possible_values, enumeration);
-+static struct kobj_attribute  enumeration_poss_val =
-+		__ATTR_RO(possible_values);
-+
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	return sysfs_emit(buf, "enumeration\n");
-+}
-+static struct kobj_attribute enumeration_type =
-+		__ATTR_RO(type);
-+
-+static struct attribute *enumeration_attrs[] = {
-+	&enumeration_display_langcode.attr,
-+	&enumeration_display_name.attr,
-+	&enumeration_current_val.attr,
-+	&enumeration_poss_val.attr,
-+	&enumeration_type.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group enumeration_attr_group = {
-+	.attrs = enumeration_attrs,
-+};
-+
-+int alloc_enumeration_data(void)
-+{
-+	int ret = 0;
-+
-+	bioscfg_drv.enumeration_instances_count =
-+		get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
-+
-+	bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
-+					sizeof(struct enumeration_data), GFP_KERNEL);
-+	if (!bioscfg_drv.enumeration_data) {
-+		bioscfg_drv.enumeration_instances_count = 0;
-+		ret = -ENOMEM;
-+	}
-+	return ret;
-+}
-+
-+/*
-+ * populate_enumeration_package_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @enum_obj: ACPI object with enumeration data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int populate_enumeration_package_data(union acpi_object *enum_obj, int instance_id,
-+			struct kobject *attr_name_kobj)
-+{
-+	bioscfg_drv.enumeration_data[instance_id].type = HPWMI_ENUMERATION_TYPE;
-+	bioscfg_drv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	populate_enumeration_elements_from_package(enum_obj, instance_id, HPWMI_ENUMERATION_TYPE);
-+	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].is_readonly,
-+				     &enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY".  Friendly
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	friendly_user_name_update(bioscfg_drv.enumeration_data[instance_id].path,
-+				  attr_name_kobj->name,
-+				   bioscfg_drv.enumeration_data[instance_id].display_name,
-+				   sizeof(bioscfg_drv.enumeration_data[instance_id].display_name));
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-+}
-+
-+int populate_enumeration_elements_from_package(union acpi_object *enum_obj,
-+					   int instance_id,
-+					   enum hp_wmi_data_type type)
-+{
-+	char *str_value = NULL;
-+	int value_len;
-+	int status = 0;
-+	u32 size = 0;
-+	u32 int_value;
-+	int elem = 0;
-+	int reqs;
-+	int eloc;
-+	int pos_values;
-+
-+	strscpy(bioscfg_drv.enumeration_data[instance_id].display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.enumeration_data[instance_id].display_name_language_code));
-+
-+	for (elem = 1, eloc = 1; elem < hp_wmi_elements_count[type]; elem++, eloc++) {
-+
-+		switch (enum_obj[elem].type) {
-+		case ACPI_TYPE_STRING:
-+
-+			if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
-+				status = convert_hexstr_to_str(&enum_obj[elem].string.pointer,
-+							       enum_obj[elem].string.length,
-+							       &str_value, &value_len);
-+				if (ACPI_FAILURE(status))
-+					continue;
-+
-+			}
-+			break;
-+		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)enum_obj[elem].integer.value;
-+			break;
-+		default:
-+			pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
-+			continue;
-+		}
-+
-+		/* stop if extra counter is greater than total number
-+		 * of elements for enumeration type
-+		 */
-+		if (eloc == hp_wmi_elements_count[type])
-+			goto exit_enumeration_package;
-+
-+		/* Assign appropriate element value to corresponding field*/
-+		switch (eloc) {
-+		case VALUE:
-+			break;
-+		case PATH:
-+			strscpy(bioscfg_drv.enumeration_data[instance_id].path, str_value,
-+				sizeof(bioscfg_drv.enumeration_data[instance_id].path));
-+			break;
-+		case IS_READONLY:
-+			bioscfg_drv.enumeration_data[instance_id].is_readonly = int_value;
-+			break;
-+		case DISPLAY_IN_UI:
-+			bioscfg_drv.enumeration_data[instance_id].display_in_ui = int_value;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.enumeration_data[instance_id].requires_physical_presence = int_value;
-+			break;
-+		case SEQUENCE:
-+			bioscfg_drv.enumeration_data[instance_id].sequence = int_value;
-+			break;
-+		case PREREQUISITE_SIZE:
-+			bioscfg_drv.enumeration_data[instance_id].prerequisitesize = int_value;
-+			if (int_value > 20)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			/*
-+			 * prerequisites element is omitted when
-+			 * prerequisitesSize value is zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
-+		case PREREQUISITES:
-+			size = bioscfg_drv.enumeration_data[instance_id].prerequisitesize;
-+
-+			for (reqs = 0; reqs < size; reqs++) {
-+				status = convert_hexstr_to_str(&enum_obj[elem].string.pointer,
-+							       enum_obj[elem].string.length,
-+							       &str_value, &value_len);
-+				if (ACPI_FAILURE(status))
-+					break;
-+
-+				strlcat(bioscfg_drv.enumeration_data[instance_id].prerequisites,
-+					str_value,
-+					sizeof(bioscfg_drv.enumeration_data[instance_id].prerequisites));
-+				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.enumeration_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.enumeration_data[instance_id].prerequisites));
-+
-+				kfree(str_value);
-+				str_value = NULL;
-+			}
-+			break;
-+
-+		case SECURITY_LEVEL:
-+			bioscfg_drv.enumeration_data[instance_id].security_level = int_value;
-+			break;
-+
-+		case ENUM_CURRENT_VALUE:
-+			strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
-+				str_value, sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
-+			break;
-+		case ENUM_SIZE:
-+			bioscfg_drv.enumeration_data[instance_id].size = int_value;
-+			break;
-+		case ENUM_POSSIBLE_VALUES:
-+			size = bioscfg_drv.enumeration_data[instance_id].size;
-+			for (pos_values = 0; pos_values < size; pos_values++) {
-+				status = convert_hexstr_to_str(&enum_obj[elem + pos_values].string.pointer,
-+							       enum_obj[elem  + pos_values].string.length,
-+							       &str_value, &value_len);
-+				if (ACPI_FAILURE(status))
-+					break;
-+
-+				strlcat(bioscfg_drv.enumeration_data[instance_id].possible_values,
-+					str_value,
-+					sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values));
-+				if (pos_values < (size - 1))
-+					strlcat(bioscfg_drv.enumeration_data[instance_id].possible_values, ";",
-+						sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values));
-+				kfree(str_value);
-+				str_value = NULL;
-+			}
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+
-+		kfree(str_value);
-+		str_value = NULL;
-+	}
-+
-+exit_enumeration_package:
-+		kfree(str_value);
-+		str_value = NULL;
-+	return 0;
-+}
-+
-+/*
-+ * populate_enumeration_buffer_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @buffer_ptr: Buffer pointer
-+ * @buffer_size: Buffer size
-+ * @enum_obj: ACPI object with enumeration data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ * @enumeration_property_count: Total properties count under enumeration type
-+ */
-+int populate_enumeration_buffer_data(u8 *buffer_ptr, int *buffer_size,
-+				     int instance_id,
-+				     struct kobject *attr_name_kobj)
-+{
-+
-+	bioscfg_drv.enumeration_data[instance_id].type = HPWMI_ENUMERATION_TYPE;
-+	bioscfg_drv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	/* Populate enumeration elements */
-+	populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size,
-+						  instance_id,
-+						  HPWMI_ENUMERATION_TYPE);
-+
-+	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].is_readonly,
-+				    &enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". A Friendlier
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	friendly_user_name_update(bioscfg_drv.enumeration_data[instance_id].path,
-+				  attr_name_kobj->name,
-+				   bioscfg_drv.enumeration_data[instance_id].display_name,
-+				   sizeof(bioscfg_drv.enumeration_data[instance_id].display_name));
-+
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-+}
-+
-+int populate_enumeration_elements_from_buffer(u8 *buffer_ptr, int *buffer_size,
-+					      int instance_id,
-+					      enum hp_wmi_data_type type)
-+{
-+	int status;
-+	char *str = NULL;
-+	int elem;
-+	int reqs;
-+	int integer;
-+	int size = 0;
-+	int values;
-+
-+	elem = 0;
-+
-+	strscpy(bioscfg_drv.enumeration_data[instance_id].display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.enumeration_data[instance_id].display_name_language_code));
-+
-+	for (elem = 1; elem < 3; elem++) {
-+
-+		status = get_string_from_buffer((u16 **)&buffer_ptr,
-+						buffer_size, &str);
-+		if (status < 0)
-+			continue;
-+
-+		switch (elem) {
-+		case VALUE:
-+			/* Skip 'Value' since 'CurrentValue' is reported. */
-+			break;
-+		case PATH:
-+			strscpy(bioscfg_drv.enumeration_data[instance_id].path,
-+				str, sizeof(bioscfg_drv.enumeration_data[instance_id].path));
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+
-+		kfree(str);
-+		str = NULL;
-+	}
-+
-+	for (elem = 3; elem < hp_wmi_elements_count[type]; elem++) {
-+		if (PREREQUISITES != elem && ENUM_CURRENT_VALUE != elem && ENUM_POSSIBLE_VALUES != elem) {
-+			status = get_integer_from_buffer((int **)&buffer_ptr, buffer_size, (int *)&integer);
-+			if (status < 0)
-+				continue;
-+		}
-+
-+		switch (elem) {
-+		case IS_READONLY:
-+			bioscfg_drv.enumeration_data[instance_id].is_readonly = integer;
-+			break;
-+		case DISPLAY_IN_UI:
-+			bioscfg_drv.enumeration_data[instance_id].display_in_ui = integer;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.enumeration_data[instance_id].requires_physical_presence = integer;
-+			break;
-+		case SEQUENCE:
-+			bioscfg_drv.enumeration_data[instance_id].sequence = integer;
-+			break;
-+		case PREREQUISITE_SIZE:
-+			bioscfg_drv.enumeration_data[instance_id].prerequisitesize = integer;
-+			if (integer > 20)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			break;
-+		case PREREQUISITES:
-+			size = bioscfg_drv.enumeration_data[instance_id].prerequisitesize;
-+			for (reqs = 0; reqs < size; reqs++) {
-+				status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
-+				if (status < 0)
-+					continue;
-+
-+				strlcat(bioscfg_drv.enumeration_data[instance_id].prerequisites,
-+					str,
-+					sizeof(bioscfg_drv.enumeration_data[instance_id].prerequisites));
-+				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.enumeration_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.enumeration_data[instance_id].prerequisites));
-+				kfree(str);
-+				str = NULL;
-+			}
-+			break;
-+		case SECURITY_LEVEL:
-+			bioscfg_drv.enumeration_data[instance_id].security_level = integer;
-+			break;
-+		case ENUM_CURRENT_VALUE:
-+			status = get_string_from_buffer((u16 **)&buffer_ptr,
-+							buffer_size, &str);
-+			if (status < 0)
-+				continue;
-+
-+			strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
-+				str,
-+				sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
-+			break;
-+		case ENUM_SIZE:
-+			bioscfg_drv.enumeration_data[instance_id].size = integer;
-+			break;
-+		case ENUM_POSSIBLE_VALUES:
-+			size = bioscfg_drv.enumeration_data[instance_id].size;
-+			for (values = 0; values < size; values++) {
-+				status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
-+				if (status < 0)
-+					continue;
-+
-+				strlcat(bioscfg_drv.enumeration_data[instance_id].possible_values,
-+					str,
-+					sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values));
-+				if (values != (size - 1))
-+					strlcat(bioscfg_drv.enumeration_data[instance_id].possible_values, ";",
-+						sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values));
-+				kfree(str);
-+				str = NULL;
-+			}
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+		kfree(str);
-+		str = NULL;
-+	}
-+	kfree(str);
-+
-+	return 0;
-+}
-+
-+/**
-+ * exit_enumeration_attributes() - Clear all attribute data
-+ *
-+ * Clears all data allocated for this group of attributes
-+ */
-+void exit_enumeration_attributes(void)
-+{
-+	int instance_id;
-+
-+	for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count; instance_id++) {
-+		if (bioscfg_drv.enumeration_data[instance_id].attr_name_kobj)
-+			sysfs_remove_group(bioscfg_drv.enumeration_data[instance_id].attr_name_kobj,
-+					   &enumeration_attr_group);
-+	}
-+	bioscfg_drv.enumeration_instances_count = 0;
-+
-+	kfree(bioscfg_drv.enumeration_data);
-+	bioscfg_drv.enumeration_data = NULL;
-+}
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-new file mode 100644
-index 000000000000..c7ab6e5c2b7a
---- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-@@ -0,0 +1,450 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Functions corresponding to integer type attributes under
-+ * BIOS Enumeration GUID for use with hp-bioscfg driver.
-+ *
-+ *  Copyright (c) 2022 Hewlett-Packard Inc.
-+ */
-+
-+#include "bioscfg.h"
-+
-+get_instance_id(integer);
-+
-+static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	int instance_id = get_integer_instance_id(kobj);
++	int instance_id = get_string_instance_id(kobj);
 +	union acpi_object *obj = NULL;
 +	ssize_t ret;
 +
 +	if (instance_id < 0)
-+		return instance_id;
++		return -EIO;
 +
 +	/* need to use specific instance_id and guid combination to get right data */
-+	obj = get_wmiobj_pointer(instance_id, HP_WMI_BIOS_INTEGER_GUID);
++	obj = get_wmiobj_pointer(instance_id, HP_WMI_BIOS_STRING_GUID);
 +	if (!obj)
 +		return -EIO;
 +
-+	ret = sysfs_emit(buf, "%d\n",  bioscfg_drv.integer_data[instance_id].current_value);
++	ret = sysfs_emit(buf, "%s\n",
++		       bioscfg_drv.string_data[instance_id].current_value);
 +
 +	kfree(obj);
 +	return ret;
 +}
 +
 +/*
-+ * validate_integer_input() -
-+ * Validate input of current_value against lower and upper bound
++ * validate_string_input() -
++ * Validate input of current_value against min and max lengths
 + *
 + * @instance_id: The instance on which input is validated
 + * @buf: Input value
 + */
-+static int validate_integer_input(int instance_id, char *buf)
++static int validate_string_input(int instance_id, const char *buf)
 +{
-+	int in_val;
-+	int ret;
++	int in_len = strlen(buf);
 +
 +	/* BIOS treats it as a read only attribute */
-+	if (bioscfg_drv.integer_data[instance_id].is_readonly)
++	if (bioscfg_drv.string_data[instance_id].is_readonly)
 +		return -EIO;
 +
-+	ret = kstrtoint(buf, 10, &in_val);
-+	if (in_val < bioscfg_drv.integer_data[instance_id].lower_bound ||
-+			in_val > bioscfg_drv.integer_data[instance_id].upper_bound)
++	if ((in_len < bioscfg_drv.string_data[instance_id].min_length) ||
++	    (in_len > bioscfg_drv.string_data[instance_id].max_length))
 +		return -EINVAL;
 +
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.integer_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
 +	return 0;
 +}
 +
-+static void update_integer_value(int instance_id, char *attr_value)
++static void update_string_value(int instance_id, char *attr_value)
 +{
-+	int in_val;
-+	int ret;
-+
-+	ret = kstrtoint(attr_value, 10, &in_val);
-+	bioscfg_drv.integer_data[instance_id].current_value = in_val;
++	/* Write settings to BIOS */
++	strscpy(bioscfg_drv.string_data[instance_id].current_value,
++		attr_value,
++		sizeof(bioscfg_drv.string_data[instance_id].current_value));
 +}
 +
-+attribute_s_property_show(display_name_language_code, integer);
-+static struct kobj_attribute integer_display_langcode =
-+	__ATTR_RO(display_name_language_code);
++attribute_s_property_show(display_name_language_code, string);
++static struct kobj_attribute string_display_langcode =
++		__ATTR_RO(display_name_language_code);
 +
-+attribute_s_property_show(display_name, integer);
-+static struct kobj_attribute integer_display_name =
-+	__ATTR_RO(display_name);
++attribute_s_property_show(display_name, string);
++static struct kobj_attribute string_display_name =
++		__ATTR_RO(display_name);
 +
-+attribute_property_store(current_value, integer);
-+static struct kobj_attribute integer_current_val =
-+	__ATTR_RW_MODE(current_value, 0644);
++attribute_property_store(current_value, string);
++static struct kobj_attribute string_current_val =
++		__ATTR_RW_MODE(current_value, 0644);
 +
-+attribute_n_property_show(lower_bound, integer);
-+static struct kobj_attribute integer_lower_bound =
-+	__ATTR_RO(lower_bound);
++attribute_n_property_show(min_length, string);
++static struct kobj_attribute string_min_length =
++		__ATTR_RO(min_length);
 +
-+attribute_n_property_show(upper_bound, integer);
-+static struct kobj_attribute integer_upper_bound =
-+	__ATTR_RO(upper_bound);
-+
-+attribute_n_property_show(scalar_increment, integer);
-+static struct kobj_attribute integer_scalar_increment =
-+	__ATTR_RO(scalar_increment);
++attribute_n_property_show(max_length, string);
++static struct kobj_attribute string_max_length =
++		__ATTR_RO(max_length);
 +
 +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
 +			 char *buf)
 +{
-+	return sysfs_emit(buf, "integer\n");
++	return sysfs_emit(buf, "string\n");
 +}
-+static struct kobj_attribute integer_type =
++
++static struct kobj_attribute string_type =
 +	__ATTR_RO(type);
 +
-+static struct attribute *integer_attrs[] = {
-+	&integer_display_langcode.attr,
-+	&integer_display_name.attr,
-+	&integer_current_val.attr,
-+	&integer_lower_bound.attr,
-+	&integer_upper_bound.attr,
-+	&integer_scalar_increment.attr,
-+	&integer_type.attr,
-+	NULL,
++static struct attribute *string_attrs[] = {
++	&string_display_langcode.attr,
++	&string_display_name.attr,
++	&string_current_val.attr,
++	&string_min_length.attr,
++	&string_max_length.attr,
++	&string_type.attr,
++	NULL
 +};
 +
-+static const struct attribute_group integer_attr_group = {
-+	.attrs = integer_attrs,
++static const struct attribute_group string_attr_group = {
++	.attrs = string_attrs,
 +};
 +
-+int alloc_integer_data(void)
++int alloc_string_data(void)
 +{
 +	int ret = 0;
 +
-+	bioscfg_drv.integer_instances_count = get_instance_count(HP_WMI_BIOS_INTEGER_GUID);
-+	bioscfg_drv.integer_data = kcalloc(bioscfg_drv.integer_instances_count,
-+					sizeof(struct integer_data), GFP_KERNEL);
-+	if (!bioscfg_drv.integer_data) {
-+		bioscfg_drv.integer_instances_count = 0;
++	bioscfg_drv.string_instances_count = get_instance_count(HP_WMI_BIOS_STRING_GUID);
++	bioscfg_drv.string_data = kcalloc(bioscfg_drv.string_instances_count,
++					sizeof(struct string_data), GFP_KERNEL);
++	if (!bioscfg_drv.string_data) {
++		bioscfg_drv.string_instances_count = 0;
 +		ret = -ENOMEM;
 +	}
 +	return ret;
 +}
 +
 +/*
-+ * populate_int_data() -
-+ * Populate all properties of an instance under integer attribute
++ * populate_string_package_data() -
++ * Populate all properties of an instance under string attribute
 + *
-+ * @elements: ACPI object with integer data
++ * @elements: ACPI object with string data
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int populate_integer_package_data(union acpi_object *elements, int instance_id,
++int populate_string_package_data(union acpi_object *elements, int instance_id,
 +			struct kobject *attr_name_kobj)
 +{
++	bioscfg_drv.string_data[instance_id].type = HPWMI_STRING_TYPE;
++	bioscfg_drv.string_data[instance_id].attr_name_kobj = attr_name_kobj;
 +
-+	bioscfg_drv.integer_data[instance_id].type = HPWMI_INTEGER_TYPE;
-+	bioscfg_drv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	populate_integer_elements_from_package(elements, instance_id, HPWMI_INTEGER_TYPE);
-+	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].is_readonly,
-+				    &integer_current_val);
-+	friendly_user_name_update(bioscfg_drv.integer_data[instance_id].path,
++	populate_string_elements_from_package(elements, instance_id, HPWMI_STRING_TYPE);
++	update_attribute_permissions(bioscfg_drv.string_data[instance_id].is_readonly,
++				    &string_current_val);
++	friendly_user_name_update(bioscfg_drv.string_data[instance_id].path,
 +				  attr_name_kobj->name,
-+				   bioscfg_drv.integer_data[instance_id].display_name,
-+				   sizeof(bioscfg_drv.integer_data[instance_id].display_name));
-+	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
++				  bioscfg_drv.string_data[instance_id].display_name,
++				  sizeof(bioscfg_drv.string_data[instance_id].display_name));
++	return sysfs_create_group(attr_name_kobj, &string_attr_group);
 +}
 +
-+int populate_integer_elements_from_package(union acpi_object *elements,
++int populate_string_elements_from_package(union acpi_object *elements,
 +					   int instance_id,
 +					   enum hp_wmi_data_type type)
 +{
@@ -808,9 +292,9 @@ index 000000000000..c7ab6e5c2b7a
 +	if (!elements)
 +		return -EINVAL;
 +
-+	strscpy(bioscfg_drv.integer_data[instance_id].display_name_language_code,
++	strscpy(bioscfg_drv.string_data[instance_id].display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.integer_data[instance_id].display_name_language_code));
++		sizeof(bioscfg_drv.string_data[instance_id].display_name_language_code));
 +
 +	for (elem = 1, eloc = 1; elem < hp_wmi_elements_count[type]; elem++, eloc++) {
 +
@@ -833,43 +317,41 @@ index 000000000000..c7ab6e5c2b7a
 +			pr_warn("Unsupported object type [%d]\n", elements[elem].type);
 +			continue;
 +		}
++
 +		/*
 +		 * Stop if extra counter is greater than total number
-+		 * of elements for integer type.
++		 * of elements for string type
 +		 */
 +		if (eloc == hp_wmi_elements_count[type])
-+			goto exit_integer_package;
++			goto exit_string_package;
 +
 +		/* Assign appropriate element value to corresponding field*/
 +		switch (eloc) {
 +		case VALUE:
-+			status = kstrtoint(str_value, 10, &int_value);
-+			if (status)
-+				continue;
-+
-+			bioscfg_drv.integer_data[instance_id].current_value = int_value;
++			strscpy(bioscfg_drv.string_data[instance_id].current_value,
++				str_value, sizeof(bioscfg_drv.string_data[instance_id].current_value));
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.integer_data[instance_id].path, str_value,
-+				sizeof(bioscfg_drv.integer_data[instance_id].path));
++			strscpy(bioscfg_drv.string_data[instance_id].path, str_value,
++				sizeof(bioscfg_drv.string_data[instance_id].path));
 +			break;
 +		case IS_READONLY:
-+			bioscfg_drv.integer_data[instance_id].is_readonly = int_value;
++			bioscfg_drv.string_data[instance_id].is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.integer_data[instance_id].display_in_ui = int_value;
++			bioscfg_drv.string_data[instance_id].display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.integer_data[instance_id].requires_physical_presence = int_value;
++			bioscfg_drv.string_data[instance_id].requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.integer_data[instance_id].sequence = int_value;
++			bioscfg_drv.string_data[instance_id].sequence = int_value;
 +			break;
 +		case PREREQUISITE_SIZE:
-+			bioscfg_drv.integer_data[instance_id].prerequisitesize = int_value;
-+
-+			if (int_value > 20)
++			bioscfg_drv.string_data[instance_id].prerequisitesize = int_value;
++			if (size > 20)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++
 +			/*
 +			 * prerequisites element is omitted when
 +			 * prerequisitesSize value is zero.
@@ -878,7 +360,8 @@ index 000000000000..c7ab6e5c2b7a
 +				eloc++;
 +			break;
 +		case PREREQUISITES:
-+			size = bioscfg_drv.integer_data[instance_id].prerequisitesize;
++			size = bioscfg_drv.string_data[instance_id].prerequisitesize;
++
 +			for (reqs = 0; reqs < size; reqs++) {
 +				status = convert_hexstr_to_str(&elements[elem].string.pointer,
 +							       elements[elem].string.length,
@@ -887,12 +370,13 @@ index 000000000000..c7ab6e5c2b7a
 +				if (ACPI_FAILURE(status))
 +					continue;
 +
-+				strlcat(bioscfg_drv.integer_data[instance_id].prerequisites,
++				strlcat(bioscfg_drv.string_data[instance_id].prerequisites,
 +					str_value,
-+					sizeof(bioscfg_drv.integer_data[instance_id].prerequisites));
++					sizeof(bioscfg_drv.string_data[instance_id].prerequisites));
++
 +				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.integer_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.integer_data[instance_id].prerequisites));
++					strlcat(bioscfg_drv.string_data[instance_id].prerequisites, ";",
++						sizeof(bioscfg_drv.string_data[instance_id].prerequisites));
 +
 +				kfree(str_value);
 +				str_value = NULL;
@@ -900,96 +384,83 @@ index 000000000000..c7ab6e5c2b7a
 +			break;
 +
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.integer_data[instance_id].security_level = int_value;
++			bioscfg_drv.string_data[instance_id].security_level = int_value;
 +			break;
-+		case INT_LOWER_BOUND:
-+			bioscfg_drv.integer_data[instance_id].lower_bound = int_value;
++		case STR_MIN_LENGTH:
++			bioscfg_drv.string_data[instance_id].min_length = int_value;
 +			break;
-+		case INT_UPPER_BOUND:
-+			bioscfg_drv.integer_data[instance_id].upper_bound = int_value;
++		case STR_MAX_LENGTH:
++			bioscfg_drv.string_data[instance_id].max_length = int_value;
 +			break;
-+		case INT_SCALAR_INCREMENT:
-+			bioscfg_drv.integer_data[instance_id].scalar_increment = int_value;
-+			break;
-+
 +		default:
-+			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +		kfree(str_value);
 +		str_value = NULL;
 +	}
-+exit_integer_package:
++exit_string_package:
 +	kfree(str_value);
 +	str_value = NULL;
++
 +	return 0;
 +}
 +
-+
 +/*
-+ * populate_integer_buffer_data() -
-+ * Populate all properties of an instance under integer attribute
++ * populate_string_data() -
++ * Populate all properties of an instance under string attribute
 + *
 + * @buffer_ptr: Buffer pointer
 + * @buffer_size: Buffer size
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int populate_integer_buffer_data(u8 *buffer_ptr, int *buffer_size, int instance_id,
-+			struct kobject *attr_name_kobj)
++int populate_string_buffer_data(u8 *buffer_ptr, int *buffer_size, int instance_id, struct kobject *attr_name_kobj)
 +{
-+	bioscfg_drv.integer_data[instance_id].type = HPWMI_INTEGER_TYPE;
-+	bioscfg_drv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
++	bioscfg_drv.string_data[instance_id].type = HPWMI_STRING_TYPE;
++	bioscfg_drv.string_data[instance_id].attr_name_kobj = attr_name_kobj;
 +
-+	/* Populate integer elements */
-+	populate_integer_elements_from_buffer(buffer_ptr, buffer_size,
-+					      instance_id, HPWMI_INTEGER_TYPE);
-+	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].is_readonly,
-+				    &integer_current_val);
-+	friendly_user_name_update(bioscfg_drv.integer_data[instance_id].path,
++	populate_string_elements_from_buffer(buffer_ptr, buffer_size,
++					     instance_id, HPWMI_STRING_TYPE);
++	update_attribute_permissions(bioscfg_drv.string_data[instance_id].is_readonly,
++				    &string_current_val);
++	friendly_user_name_update(bioscfg_drv.string_data[instance_id].path,
 +				  attr_name_kobj->name,
-+				   bioscfg_drv.integer_data[instance_id].display_name,
-+				   sizeof(bioscfg_drv.integer_data[instance_id].display_name));
-+
-+	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
++				  bioscfg_drv.string_data[instance_id].display_name,
++				  sizeof(bioscfg_drv.string_data[instance_id].display_name));
++	return sysfs_create_group(attr_name_kobj, &string_attr_group);
 +}
 +
-+int populate_integer_elements_from_buffer(u8 *buffer_ptr, int *buffer_size,
-+					  int instance_id, enum hp_wmi_data_type type)
++int populate_string_elements_from_buffer(u8 *buffer_ptr, int *buffer_size,
++					 int instance_id, enum hp_wmi_data_type type)
 +{
 +	int status;
 +	char *str = NULL;
 +	int elem;
 +	int reqs;
-+	int integer;
++	int int_value;
 +	int size = 0;
-+	int ret;
 +
-+	elem = 0;
-+	strscpy(bioscfg_drv.integer_data[instance_id].display_name_language_code,
++	strscpy(bioscfg_drv.string_data[instance_id].display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.integer_data[instance_id].display_name_language_code));
++		sizeof(bioscfg_drv.string_data[instance_id].display_name_language_code));
 +
 +	for (elem = 1; elem < 3; elem++) {
-+
 +		status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
 +		if (status < 0)
 +			continue;
 +
 +		switch (elem) {
 +		case VALUE:
-+			ret = kstrtoint(str, 10, &integer);
-+			if (ret)
-+				continue;
-+
-+			bioscfg_drv.integer_data[instance_id].current_value = integer;
++			strscpy(bioscfg_drv.string_data[instance_id].current_value,
++				str, sizeof(bioscfg_drv.string_data[instance_id].current_value));
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.integer_data[instance_id].path, str,
-+				sizeof(bioscfg_drv.integer_data[instance_id].path));
++			strscpy(bioscfg_drv.string_data[instance_id].path, str,
++				sizeof(bioscfg_drv.string_data[instance_id].path));
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +		kfree(str);
@@ -999,616 +470,61 @@ index 000000000000..c7ab6e5c2b7a
 +	for (elem = 3; elem < hp_wmi_elements_count[type]; elem++) {
 +
 +		if (elem != PREREQUISITES) {
-+			status = get_integer_from_buffer((int **)&buffer_ptr, buffer_size, (int *)&integer);
++			status = get_integer_from_buffer((int **)&buffer_ptr,
++							 buffer_size,
++							 (int *)&int_value);
 +			if (status < 0)
 +				continue;
 +		}
 +
 +		switch (elem) {
-+
 +		case IS_READONLY:
-+			bioscfg_drv.integer_data[instance_id].is_readonly = integer;
++			bioscfg_drv.string_data[instance_id].is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.integer_data[instance_id].display_in_ui = integer;
++			bioscfg_drv.string_data[instance_id].display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.integer_data[instance_id].requires_physical_presence = integer;
++			bioscfg_drv.string_data[instance_id].requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.integer_data[instance_id].sequence = integer;
++			bioscfg_drv.string_data[instance_id].sequence = int_value;
 +			break;
 +		case PREREQUISITE_SIZE:
-+			bioscfg_drv.integer_data[instance_id].prerequisitesize = integer;
-+			size = integer;
-+			if (size > 20)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+
-+			break;
-+		case PREREQUISITES:
-+			for (reqs = 0; reqs < size; reqs++) {
-+				status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
-+				if (status < 0)
-+					continue;
-+
-+				strlcat(bioscfg_drv.integer_data[instance_id].prerequisites,
-+					str,
-+					sizeof(bioscfg_drv.integer_data[instance_id].prerequisites));
-+				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.integer_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.integer_data[instance_id].prerequisites));
-+
-+				kfree(str);
-+				str = NULL;
-+			}
-+			break;
-+
-+		case SECURITY_LEVEL:
-+			bioscfg_drv.integer_data[instance_id].security_level = integer;
-+			break;
-+		case INT_LOWER_BOUND:
-+			bioscfg_drv.integer_data[instance_id].lower_bound = integer;
-+			break;
-+		case INT_UPPER_BOUND:
-+			bioscfg_drv.integer_data[instance_id].upper_bound = integer;
-+			break;
-+		case INT_SCALAR_INCREMENT:
-+			bioscfg_drv.integer_data[instance_id].scalar_increment = integer;
-+			break;
-+
-+		default:
-+			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+		kfree(str);
-+		str = NULL;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * exit_integer_attributes() - Clear all attribute data
-+ *
-+ * Clears all data allocated for this group of attributes
-+ */
-+void exit_integer_attributes(void)
-+{
-+	int instance_id;
-+
-+	for (instance_id = 0; instance_id < bioscfg_drv.integer_instances_count; instance_id++) {
-+		if (bioscfg_drv.integer_data[instance_id].attr_name_kobj)
-+			sysfs_remove_group(bioscfg_drv.integer_data[instance_id].attr_name_kobj,
-+					   &integer_attr_group);
-+	}
-+	bioscfg_drv.integer_instances_count = 0;
-+
-+	kfree(bioscfg_drv.integer_data);
-+	bioscfg_drv.integer_data = NULL;
-+}
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
-new file mode 100644
-index 000000000000..727cc01ed022
---- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
-@@ -0,0 +1,549 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Functions corresponding to ordered list type attributes under
-+ * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
-+ *
-+ *  Copyright (c) 2022 HP Development Company, L.P.
-+ */
-+
-+#include "bioscfg.h"
-+
-+get_instance_id(ordered_list);
-+
-+static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	int instance_id = get_ordered_list_instance_id(kobj);
-+	union acpi_object *obj = NULL;
-+	ssize_t ret;
-+
-+	if (instance_id < 0)
-+		return -EIO;
-+
-+	/* need to use specific instance_id and guid combination to get right data */
-+	obj = get_wmiobj_pointer(instance_id, HP_WMI_BIOS_ORDERED_LIST_GUID);
-+	if (!obj)
-+		return -EIO;
-+
-+	ret = sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.ordered_list_data[instance_id].current_value);
-+
-+	kfree(obj);
-+	return ret;
-+}
-+
-+/*
-+ * validate_ordered_list_value -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_ordered_list_values(int instance_id, const char *buf)
-+{
-+	char *options = NULL;
-+	char *p;
-+	int ret = 0;
-+	int found = 0;
-+	char *new_values = NULL;
-+	char *value;
-+	int elem;
-+	int elem_found = 0;
-+
-+	/* Is it a read only attribute */
-+	if (bioscfg_drv.ordered_list_data[instance_id].is_readonly)
-+		return -EIO;
-+
-+	options = kstrdup(bioscfg_drv.ordered_list_data[instance_id].elements,
-+				 GFP_KERNEL);
-+	new_values = kstrdup(buf, GFP_KERNEL);
-+
-+	if (!options || !new_values) {
-+		ret = -ENOMEM;
-+		goto validate_ordered_list_value_exit;
-+	}
-+
-+	/*
-+	 * Changes to ordered list values require checking that new
-+	 * values are found in the list of elements.
-+	 */
-+	for (elem = 0; elem < bioscfg_drv.ordered_list_data[instance_id].size; elem++) {
-+
-+		value = strsep(&new_values, ",");
-+		if (value != NULL) {
-+			if (!*value)
-+				continue;
-+			elem_found++;
-+		}
-+
-+		while ((p = strsep(&options, ";")) != NULL) {
-+			if (!*p)
-+				continue;
-+
-+			if (!strcasecmp(p, value)) {
-+				found = 1;
-+				break;
-+			}
-+		}
-+
-+		if (!found) {
-+			ret = -EINVAL;
-+			goto validate_ordered_list_value_exit;
-+		}
-+	}
-+
-+	if (elem_found == bioscfg_drv.ordered_list_data[instance_id].size) {
-+		pr_warn("Number of new values is not equal to number of ordered list elements (%d)\n",
-+			bioscfg_drv.ordered_list_data[instance_id].size);
-+		ret = -EINVAL;
-+		goto validate_ordered_list_value_exit;
-+	}
-+
-+validate_ordered_list_value_exit:
-+	kfree(options);
-+	kfree(new_values);
-+	return ret;
-+}
-+
-+/*
-+ * validate_ordered_input() -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_ordered_list_input(int instance_id, const char *buf)
-+{
-+	int ret = 0;
-+
-+	ret = validate_ordered_list_values(instance_id, buf);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
-+	 */
-+	if (bioscfg_drv.ordered_list_data[instance_id].requires_physical_presence)
-+		bioscfg_drv.pending_reboot = TRUE;
-+
-+	return ret;
-+}
-+
-+static void update_ordered_list_value(int instance_id, char *attr_value)
-+{
-+	strscpy(bioscfg_drv.ordered_list_data[instance_id].current_value,
-+		attr_value,
-+		sizeof(bioscfg_drv.ordered_list_data[instance_id].current_value));
-+}
-+
-+attribute_s_property_show(display_name_language_code, ordered_list);
-+static struct kobj_attribute ordered_list_display_langcode =
-+		__ATTR_RO(display_name_language_code);
-+
-+attribute_s_property_show(display_name, ordered_list);
-+static struct kobj_attribute ordered_list_display_name =
-+		__ATTR_RO(display_name);
-+
-+attribute_property_store(current_value, ordered_list);
-+static struct kobj_attribute ordered_list_current_val =
-+		__ATTR_RW_MODE(current_value, 0644);
-+
-+attribute_s_property_show(elements, ordered_list);
-+static struct kobj_attribute ordered_list_elements_val =
-+		__ATTR_RO(elements);
-+
-+attribute_n_property_show(size, ordered_list);
-+static struct kobj_attribute ordered_list_size_val =
-+		__ATTR_RO(size);
-+
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	return sysfs_emit(buf, "ordered-list\n");
-+}
-+static struct kobj_attribute ordered_list_type =
-+		__ATTR_RO(type);
-+
-+static struct attribute *ordered_list_attrs[] = {
-+	&ordered_list_display_langcode.attr,
-+	&ordered_list_display_name.attr,
-+	&ordered_list_current_val.attr,
-+	&ordered_list_elements_val.attr,
-+	&ordered_list_size_val.attr,
-+	&ordered_list_type.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group ordered_list_attr_group = {
-+	.attrs = ordered_list_attrs,
-+};
-+
-+int alloc_ordered_list_data(void)
-+{
-+	int ret = 0;
-+
-+	bioscfg_drv.ordered_list_instances_count =
-+		get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
-+	bioscfg_drv.ordered_list_data = kcalloc(bioscfg_drv.ordered_list_instances_count,
-+					sizeof(struct ordered_list_data), GFP_KERNEL);
-+	if (!bioscfg_drv.ordered_list_data) {
-+		bioscfg_drv.ordered_list_instances_count = 0;
-+		ret = -ENOMEM;
-+	}
-+	return ret;
-+}
-+
-+/*
-+ * populate_ordered_list_package_data() -
-+ * Populate all properties of an instance under ordered_list attribute
-+ *
-+ * @order_obj: ACPI object with ordered_list data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
-+				       struct kobject *attr_name_kobj)
-+{
-+	bioscfg_drv.ordered_list_data[instance_id].type = HPWMI_ORDERED_LIST_TYPE;
-+	bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	populate_ordered_list_elements_from_package(order_obj, instance_id, HPWMI_ORDERED_LIST_TYPE);
-+	update_attribute_permissions(bioscfg_drv.ordered_list_data[instance_id].is_readonly,
-+				    &ordered_list_current_val);
-+	friendly_user_name_update(bioscfg_drv.ordered_list_data[instance_id].path,
-+				  attr_name_kobj->name,
-+				   bioscfg_drv.ordered_list_data[instance_id].display_name,
-+				  sizeof(bioscfg_drv.ordered_list_data[instance_id].display_name));
-+	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
-+}
-+
-+int populate_ordered_list_elements_from_package(union acpi_object *order_obj,
-+					   int instance_id,
-+					   enum hp_wmi_data_type type)
-+{
-+	char *str_value = NULL;
-+	int value_len;
-+	int status = 0;
-+	u32 size = 0;
-+	u32 int_value;
-+	int elem = 0;
-+	int reqs;
-+	int eloc;
-+	char *tmpstr = NULL;
-+	char *part_tmp = NULL;
-+	int tmp_len = 0;
-+	char *part = NULL;
-+
-+	strscpy(bioscfg_drv.ordered_list_data[instance_id].display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.ordered_list_data[instance_id].display_name_language_code));
-+
-+	for (elem = 1, eloc = 1; elem < hp_wmi_elements_count[type]; elem++, eloc++) {
-+
-+		switch (order_obj[elem].type) {
-+		case ACPI_TYPE_STRING:
-+
-+			if (elem != PREREQUISITES) {
-+				status = convert_hexstr_to_str(&order_obj[elem].string.pointer,
-+							       order_obj[elem].string.length,
-+							       &str_value, &value_len);
-+				if (ACPI_FAILURE(status))
-+					continue;
-+
-+			}
-+			break;
-+		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)order_obj[elem].integer.value;
-+			break;
-+		default:
-+			pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
-+			continue;
-+		}
-+
-+		/*
-+		 * Stop if extra counter is greater than total number
-+		 * of elements for ordered list type
-+		 */
-+		if (eloc == hp_wmi_elements_count[type])
-+			goto exit_ordered_list_package;
-+
-+
-+		/* Assign appropriate element value to corresponding field*/
-+		switch (eloc) {
-+		case VALUE:
-+			strscpy(bioscfg_drv.ordered_list_data[instance_id].current_value,
-+				str_value, sizeof(bioscfg_drv.ordered_list_data[instance_id].current_value));
-+			break;
-+		case PATH:
-+			strscpy(bioscfg_drv.ordered_list_data[instance_id].path, str_value,
-+				sizeof(bioscfg_drv.ordered_list_data[instance_id].path));
-+			break;
-+		case IS_READONLY:
-+			bioscfg_drv.ordered_list_data[instance_id].is_readonly = int_value;
-+			break;
-+		case DISPLAY_IN_UI:
-+			bioscfg_drv.ordered_list_data[instance_id].display_in_ui = int_value;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.ordered_list_data[instance_id].requires_physical_presence = int_value;
-+			break;
-+		case SEQUENCE:
-+			bioscfg_drv.ordered_list_data[instance_id].sequence = int_value;
-+			break;
-+		case PREREQUISITE_SIZE:
-+			bioscfg_drv.ordered_list_data[instance_id].prerequisitesize = int_value;
++			bioscfg_drv.string_data[instance_id].prerequisitesize = int_value;
 +			if (int_value > 20)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			/*
-+			 * prerequisites element is omitted when
-+			 * prerequisitesSize value is zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
 +			break;
 +		case PREREQUISITES:
-+			size = bioscfg_drv.ordered_list_data[instance_id].prerequisitesize;
-+			for (reqs = 0; reqs < size; reqs++) {
-+				status = convert_hexstr_to_str(&order_obj[elem].string.pointer,
-+							       order_obj[elem].string.length,
-+							       &str_value, &value_len);
-+
-+				if (ACPI_FAILURE(status))
-+					continue;
-+
-+				strlcat(bioscfg_drv.ordered_list_data[instance_id].prerequisites,
-+					str_value,
-+					sizeof(bioscfg_drv.ordered_list_data[instance_id].prerequisites));
-+
-+				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.ordered_list_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.ordered_list_data[instance_id].prerequisites));
-+
-+				kfree(str_value);
-+				str_value = NULL;
-+			}
-+			break;
-+
-+		case SECURITY_LEVEL:
-+			bioscfg_drv.ordered_list_data[instance_id].security_level = int_value;
-+			break;
-+
-+		case ORD_LIST_SIZE:
-+			bioscfg_drv.ordered_list_data[instance_id].size = int_value;
-+			break;
-+		case ORD_LIST_ELEMENTS:
-+			size = bioscfg_drv.ordered_list_data[instance_id].size;
-+
-+			/*
-+			 * Ordered list data is stored in hex and comma separated format
-+			 * Convert the data and split it to show each element
-+			 */
-+			status = convert_hexstr_to_str(&str_value, value_len, &tmpstr, &tmp_len);
-+			if (ACPI_FAILURE(status))
-+				goto exit_ordered_list_package;
-+
-+			part_tmp = tmpstr;
-+			part = strsep(&part_tmp, ",");
-+			if (!part)
-+				strscpy(bioscfg_drv.ordered_list_data[instance_id].elements,
-+					tmpstr, sizeof(bioscfg_drv.ordered_list_data[instance_id].elements));
-+
-+			while (part) {
-+				strlcat(bioscfg_drv.ordered_list_data[instance_id].elements,
-+					part, sizeof(bioscfg_drv.ordered_list_data[instance_id].elements));
-+
-+				part = strsep(&part_tmp, ",");
-+				if (part)
-+					strlcat(bioscfg_drv.ordered_list_data[instance_id].elements, ";",
-+						sizeof(bioscfg_drv.ordered_list_data[instance_id].elements));
-+			}
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Ordered_List attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+		kfree(tmpstr);
-+		tmpstr = NULL;
-+		kfree(str_value);
-+		str_value = NULL;
-+	}
-+
-+exit_ordered_list_package:
-+	kfree(tmpstr);
-+	tmpstr = NULL;
-+	kfree(str_value);
-+	str_value = NULL;
-+	return 0;
-+}
-+
-+/*
-+ * populate_ordered_list_data() - Populate all properties of an
-+ * instance under ordered list attribute
-+ *
-+ * @buffer_ptr: Buffer pointer
-+ * @buffer_size: Buffer size
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ * @enum_property_count: Total properties count under ordered list type
-+ */
-+int populate_ordered_list_buffer_data(u8 *buffer_ptr, int *buffer_size, int instance_id,
-+			struct kobject *attr_name_kobj)
-+{
-+
-+	bioscfg_drv.ordered_list_data[instance_id].type = HPWMI_ORDERED_LIST_TYPE;
-+	bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	/* Populate ordered list elements */
-+	populate_ordered_list_elements_from_buffer(buffer_ptr, buffer_size, instance_id, HPWMI_ORDERED_LIST_TYPE);
-+	update_attribute_permissions(bioscfg_drv.ordered_list_data[instance_id].is_readonly,
-+				    &ordered_list_current_val);
-+	friendly_user_name_update(bioscfg_drv.ordered_list_data[instance_id].path,
-+				  attr_name_kobj->name,
-+				   bioscfg_drv.ordered_list_data[instance_id].display_name,
-+				  sizeof(bioscfg_drv.ordered_list_data[instance_id].display_name));
-+
-+	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
-+}
-+
-+int populate_ordered_list_elements_from_buffer(u8 *buffer_ptr, int *buffer_size,
-+					       int instance_id, enum hp_wmi_data_type type)
-+{
-+	int status;
-+	char *str = NULL;
-+	int elem;
-+	int reqs;
-+	int integer;
-+	int size = 0;
-+	int values;
-+
-+	elem = 0;
-+	strscpy(bioscfg_drv.ordered_list_data[instance_id].display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.ordered_list_data[instance_id].display_name_language_code));
-+
-+	for (elem = 1; elem < 3; elem++) {
-+
-+		status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
-+		if (status < 0)
-+			continue;
-+
-+		switch (elem) {
-+		case VALUE:
-+			strscpy(bioscfg_drv.ordered_list_data[instance_id].current_value,
-+				str, sizeof(bioscfg_drv.ordered_list_data[instance_id].current_value));
-+			break;
-+		case PATH:
-+			strscpy(bioscfg_drv.ordered_list_data[instance_id].path, str,
-+				sizeof(bioscfg_drv.ordered_list_data[instance_id].path));
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Ordered list attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+		kfree(str);
-+		str = NULL;
-+	}
-+	for (elem = 3; elem < hp_wmi_elements_count[type]; elem++) {
-+
-+		if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
-+			status = get_integer_from_buffer((int **)&buffer_ptr, buffer_size, (int *)&integer);
-+			if (status < 0)
-+				continue;
-+		}
-+
-+		switch (elem) {
-+
-+		case IS_READONLY:
-+			bioscfg_drv.ordered_list_data[instance_id].is_readonly = integer;
-+			break;
-+		case DISPLAY_IN_UI:
-+			bioscfg_drv.ordered_list_data[instance_id].display_in_ui = integer;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.ordered_list_data[instance_id].requires_physical_presence = integer;
-+			break;
-+		case SEQUENCE:
-+			bioscfg_drv.ordered_list_data[instance_id].sequence = integer;
-+			break;
-+		case PREREQUISITE_SIZE:
-+			bioscfg_drv.ordered_list_data[instance_id].prerequisitesize = integer;
-+			if (integer > 20)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			break;
-+		case PREREQUISITES:
-+			size = bioscfg_drv.ordered_list_data[instance_id].prerequisitesize;
++			size = bioscfg_drv.string_data[instance_id].prerequisitesize;
 +			for (reqs = 0; reqs < size; reqs++) {
 +				status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
 +				if (status < 0)
 +					continue;
 +
-+				strlcat(bioscfg_drv.ordered_list_data[instance_id].prerequisites,
++				strlcat(bioscfg_drv.string_data[instance_id].prerequisites,
 +					str,
-+					sizeof(bioscfg_drv.ordered_list_data[instance_id].prerequisites));
++					sizeof(bioscfg_drv.string_data[instance_id].prerequisites));
 +
 +				if (reqs != (size - 1))
-+					strlcat(bioscfg_drv.ordered_list_data[instance_id].prerequisites, ";",
-+						sizeof(bioscfg_drv.ordered_list_data[instance_id].prerequisites));
++					strlcat(bioscfg_drv.string_data[instance_id].prerequisites, ";",
++						sizeof(bioscfg_drv.string_data[instance_id].prerequisites));
 +
 +				kfree(str);
 +				str = NULL;
 +			}
 +			break;
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.ordered_list_data[instance_id].security_level = integer;
++			bioscfg_drv.string_data[instance_id].security_level = int_value;
 +			break;
-+		case ORD_LIST_SIZE:
-+			bioscfg_drv.ordered_list_data[instance_id].size = integer;
++		case STR_MIN_LENGTH:
++			bioscfg_drv.string_data[instance_id].min_length = int_value;
 +			break;
-+		case ORD_LIST_ELEMENTS:
-+			size = bioscfg_drv.ordered_list_data[instance_id].size;
-+			for (values = 0; values < size; values++) {
-+				status = get_string_from_buffer((u16 **)&buffer_ptr, buffer_size, &str);
-+				if (status < 0)
-+					continue;
-+
-+				strlcat(bioscfg_drv.ordered_list_data[instance_id].elements,
-+					str,
-+					sizeof(bioscfg_drv.ordered_list_data[instance_id].elements));
-+
-+				if (values != (size - 1))
-+					strlcat(bioscfg_drv.ordered_list_data[instance_id].elements, ";",
-+						sizeof(bioscfg_drv.ordered_list_data[instance_id].elements));
-+
-+				kfree(str);
-+				str = NULL;
-+			}
++		case STR_MAX_LENGTH:
++			bioscfg_drv.string_data[instance_id].max_length = int_value;
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Ordered list attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +		kfree(str);
@@ -1620,25 +536,1199 @@ index 000000000000..727cc01ed022
 +	return 0;
 +}
 +
-+
 +/*
-+ * exit_ordered_list_attributes() - Clear all attribute data
++ * exit_string_attributes() - Clear all attribute data
 + *
 + * Clears all data allocated for this group of attributes
 + */
-+void exit_ordered_list_attributes(void)
++void exit_string_attributes(void)
 +{
 +	int instance_id;
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.ordered_list_instances_count; instance_id++) {
-+		if (bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj)
-+			sysfs_remove_group(bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj,
-+								&ordered_list_attr_group);
++	for (instance_id = 0; instance_id < bioscfg_drv.string_instances_count; instance_id++) {
++		if (bioscfg_drv.string_data[instance_id].attr_name_kobj)
++			sysfs_remove_group(bioscfg_drv.string_data[instance_id].attr_name_kobj,
++					   &string_attr_group);
 +	}
-+	bioscfg_drv.ordered_list_instances_count = 0;
++	bioscfg_drv.string_instances_count = 0;
 +
-+	kfree(bioscfg_drv.ordered_list_data);
-+	bioscfg_drv.ordered_list_data = NULL;
++	kfree(bioscfg_drv.string_data);
++	bioscfg_drv.string_data = NULL;
++}
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/sureadmin-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/sureadmin-attributes.c
+new file mode 100644
+index 000000000000..d00269cbf8b7
+--- /dev/null
++++ b/drivers/platform/x86/hp/hp-bioscfg/sureadmin-attributes.c
+@@ -0,0 +1,1014 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Functions corresponding to sure admin object type attributes under
++ * BIOS for use with hp-bioscfg driver
++ *
++ *  Copyright (c) 2022 HP Development Company, L.P.
++ */
++
++#include "bioscfg.h"
++
++static int bios_settings_size;
++static int buf_alloc_size;
++static char *bios_settings_buffer;
++
++const char *hp_wmi_classes[] = {
++	"HPBIOS_BIOSString",
++	"HPBIOS_BIOSInteger",
++	"HPBIOS_BIOSEnumeration",
++	"HPBIOS_BIOSOrderedList",
++	"HPBIOS_BIOSPassword"
++};
++
++get_instance_id_for_attribute(string);
++get_instance_id_for_attribute(integer);
++get_instance_id_for_attribute(enumeration);
++get_instance_id_for_attribute(ordered_list);
++
++static ssize_t sure_admin_settings_write(struct file *filp, struct kobject *kobj,
++					 struct bin_attribute *attr,
++					 char *buf, loff_t off, size_t count)
++{
++	int status = 0;
++	char *part = NULL;
++	char *attr_name = NULL;
++	char *attr_value = NULL;
++	int part_len = 0;
++	unsigned short *buffer = NULL;
++	unsigned short *tmpstr = NULL;
++	int buffer_size = (count + strlen(UTF_PREFIX)) * sizeof(unsigned short);
++
++	buffer = kmalloc(buffer_size, GFP_KERNEL);
++	if (!buffer)
++		return -ENOMEM;
++
++	tmpstr = buffer;
++	part = strsep(&buf, ",");
++	if (!part) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++	// Save attr_name
++	attr_name = kmalloc(strlen(part) + 1, GFP_KERNEL);
++	if (!attr_name) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++	strncpy(attr_name, part, strlen(part));
++
++	tmpstr = ascii_to_utf16_unicode(tmpstr, part);
++	part = strsep(&buf, ",");
++	if (!part) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++
++	part_len = strlen(part);
++
++	/* Add extra buffer space when encountering an empty string */
++	if (!part_len) {
++		buffer_size += sizeof(unsigned short);
++		part_len += sizeof(unsigned short);
++	}
++
++	// Save attr_value
++	attr_value = kmalloc(part_len + 1, GFP_KERNEL);
++	if (!attr_value) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++	strncpy(attr_value, part, part_len);
++
++	tmpstr = ascii_to_utf16_unicode(tmpstr, part);
++	part = strsep(&buf, ",");
++	if (!part) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++	part_len = strlen(part) - 1;
++	part[part_len] = '\0';
++
++	if (strncmp(part, BEAM_PREFIX, strlen(BEAM_PREFIX)) == 0) {
++	       /*
++		* BEAM_PREFIX is append to buffer when a signature
++		* is provided and Sure Admin is enabled in BIOS
++		*/
++		// BEAM_PREFIX found, convert part to unicode
++		tmpstr = ascii_to_utf16_unicode(tmpstr, part);
++		// decrease buffer size allocated initially for UTF_PREFIX
++		buffer_size -= strlen(UTF_PREFIX) * sizeof(unsigned short);
++	} else {
++		/*
++		 * UTF-16 prefix is append to the * buffer when a BIOS
++		 * admin password is configured in BIOS
++		 */
++
++		// append UTF_PREFIX to part and then convert it to unicode
++		part = kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX, part);
++		if (!part)
++			goto exit_settings;
++
++		tmpstr = ascii_to_utf16_unicode(tmpstr, part);
++		kfree(part);
++	}
++
++	part = strsep(&buf, ",");
++	if (part) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++
++	status = hp_wmi_set_bios_setting(buffer, buffer_size);
++	if (ACPI_FAILURE(status)) {
++		status = -EINVAL;
++		goto exit_settings;
++	}
++
++	if (attr_name == NULL)
++		pr_warn("Name is null\n");
++	if (attr_value == NULL)
++		pr_warn("Value is null\n");
++
++	update_attribute_value(attr_name, attr_value);
++
++
++exit_settings:
++	kfree(buffer);
++	kfree(attr_name);
++	kfree(attr_value);
++
++	if (ACPI_SUCCESS(status))
++		return count;
++
++	return status;
++}
++
++int update_attribute_value(char *attr_name, char *attr_value)
++{
++	int instance = -EIO;
++	int int_val;
++	int ret;
++
++	if (!attr_name || !attr_value)
++		return -EIO;
++
++	/* update value for the attribute */
++	instance = get_instance_id_for_string(attr_name);
++	if (instance >= 0) {
++		strscpy(bioscfg_drv.string_data[instance].current_value,
++			attr_value,
++			sizeof(bioscfg_drv.string_data[instance].current_value));
++
++		/*
++		 * set pending reboot flag depending on
++		 * "RequiresPhysicalPresence" value
++		 */
++		if (bioscfg_drv.string_data[instance].requires_physical_presence)
++			bioscfg_drv.pending_reboot = TRUE;
++		goto exit_update_attribute;
++	}
++
++	instance = get_instance_id_for_integer(attr_name);
++	if (instance >= 0) {
++		ret = kstrtoint(attr_value, 10, &int_val);
++		if (!ret) {
++			bioscfg_drv.integer_data[instance].current_value = int_val;
++			/*
++			 * set pending reboot flag depending on
++			 * "RequiresPhysicalPresence" value
++			 */
++			if (bioscfg_drv.integer_data[instance].requires_physical_presence)
++				bioscfg_drv.pending_reboot = TRUE;
++		}
++
++		goto exit_update_attribute;
++	}
++
++	instance = get_instance_id_for_enumeration(attr_name);
++	if (instance >= 0) {
++		strscpy(bioscfg_drv.enumeration_data[instance].current_value,
++			attr_value,
++			sizeof(bioscfg_drv.enumeration_data[instance].current_value));
++		/*
++		 * set pending reboot flag depending on
++		 * "RequiresPhysicalPresence" value
++		 */
++		if (bioscfg_drv.enumeration_data[instance].requires_physical_presence)
++			bioscfg_drv.pending_reboot = TRUE;
++
++		goto exit_update_attribute;
++	}
++	instance = get_instance_id_for_ordered_list(attr_name);
++	if (instance >= 0) {
++		strscpy(bioscfg_drv.ordered_list_data[instance].current_value,
++			attr_value,
++			sizeof(bioscfg_drv.ordered_list_data[instance].current_value));
++
++		/*
++		 * set pending reboot flag depending on
++		 * "RequiresPhysicalPresence" value
++		 */
++		if (bioscfg_drv.ordered_list_data[instance].requires_physical_presence)
++			bioscfg_drv.pending_reboot = TRUE;
++	}
++
++exit_update_attribute:
++	return instance;
++}
++
++static ssize_t sure_admin_settings_read(struct file *filp, struct kobject *kobj,
++					struct bin_attribute *attr, char *buf,
++					loff_t off, size_t count)
++{
++	ssize_t ret;
++
++	/* clear the buffer when offset is pointing to the last position */
++	if (off >= bios_settings_size && bios_settings_size > 0) {
++		hp_bios_settings_free_buffer();
++		return 0;
++	}
++
++	/* clear the buffer whenever the read starts from the first position */
++	if (off == 0 && bios_settings_size > 0)
++		hp_bios_settings_free_buffer();
++
++	if (bios_settings_size == 0)
++		hp_bios_settings_fill_buffer();
++
++	mutex_lock(&bioscfg_drv.mutex);
++	ret = memory_read_from_buffer(buf, count, &off, bios_settings_buffer,
++				      bios_settings_size);
++	mutex_unlock(&bioscfg_drv.mutex);
++
++	return ret;
++}
++
++HPWMI_BINATTR_RW(sure_admin, settings, 0);
++
++static struct bin_attribute *sure_admin_binattrs[] = {
++	&sure_admin_settings,
++	NULL,
++};
++
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
++			 char *buf)
++{
++	return sysfs_emit(buf, "sure-admin\n");
++}
++static struct kobj_attribute sure_admin_type = __ATTR_RO(type);
++
++static ssize_t display_name_language_code_show(struct kobject *kobj,
++					       struct kobj_attribute *attr,
++					       char *buf)
++{
++	return sysfs_emit(buf, "%s\n", LANG_CODE_STR);
++}
++
++static struct kobj_attribute sure_admin_display_langcode =
++		__ATTR_RO(display_name_language_code);
++
++
++static ssize_t display_name_show(struct kobject *kobj,
++				 struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%s\n", SURE_ADMIN_DESC);
++}
++static struct kobj_attribute sure_admin_display_name = __ATTR_RO(display_name);
++
++static struct attribute *sure_admin_attrs[] = {
++	&sure_admin_display_name.attr,
++	&sure_admin_display_langcode.attr,
++	&sure_admin_type.attr,
++	NULL,
++};
++
++static const struct attribute_group sure_admin_attr_group = {
++	.attrs = sure_admin_attrs,
++	.bin_attrs = sure_admin_binattrs,
++};
++
++void exit_sure_admin_attributes(void)
++{
++	sysfs_remove_group(bioscfg_drv.sure_admin_attr_kobj, &sure_admin_attr_group);
++}
++
++int populate_sure_admin_data(struct kobject *attr_name_kobj)
++{
++	bioscfg_drv.sure_admin_attr_kobj = attr_name_kobj;
++	return sysfs_create_group(attr_name_kobj, &sure_admin_attr_group);
++}
++
++int hp_bios_settings_fill_buffer(void)
++{
++	int status = 0;
++	int initial_buffer_size = 20 * PAGE_SIZE;
++
++	mutex_lock(&bioscfg_drv.mutex);
++	bios_settings_buffer = kmalloc(initial_buffer_size, GFP_KERNEL);
++	mutex_unlock(&bioscfg_drv.mutex);
++	if (!bios_settings_buffer)
++		return -ENOMEM;
++
++	mutex_lock(&bioscfg_drv.mutex);
++	buf_alloc_size = ksize(bios_settings_buffer);
++	memset(bios_settings_buffer, 0x00, buf_alloc_size);
++	bios_settings_size = snprintf(bios_settings_buffer,
++					buf_alloc_size, "[\n");
++	mutex_unlock(&bioscfg_drv.mutex);
++
++	status = append_read_settings(HPWMI_STRING_TYPE,
++					   &bios_settings_buffer,
++					   &bios_settings_size,
++					   &buf_alloc_size);
++	if (ACPI_FAILURE(status))
++		pr_err("error 0x%x occurred retrieving string instances\n", status);
++
++	status = append_read_settings(HPWMI_INTEGER_TYPE,
++					   &bios_settings_buffer,
++					   &bios_settings_size,
++					   &buf_alloc_size);
++	if (ACPI_FAILURE(status))
++		pr_err("error 0x%x occurred retrieving integer instances\n", status);
++
++	status = append_read_settings(HPWMI_ENUMERATION_TYPE,
++					   &bios_settings_buffer,
++					   &bios_settings_size,
++					   &buf_alloc_size);
++	if (ACPI_FAILURE(status))
++		pr_err("error 0x%x occurred retrieving enumeration instances\n", status);
++
++	status = append_read_settings(HPWMI_ORDERED_LIST_TYPE,
++					   &bios_settings_buffer,
++					   &bios_settings_size,
++					   &buf_alloc_size);
++	if (ACPI_FAILURE(status))
++		pr_err("error 0x%x occurred retrieving ordered list instances\n", status);
++
++	status = append_read_settings(HPWMI_PASSWORD_TYPE,
++					   &bios_settings_buffer,
++					   &bios_settings_size,
++					   &buf_alloc_size);
++	if (ACPI_FAILURE(status))
++		pr_err("error 0x%x occurred retrieving password list instances\n", status);
++
++	mutex_lock(&bioscfg_drv.mutex);
++	/*
++	 * remove trailing comma
++	 */
++	if (bios_settings_size >= 3) {
++		if (bios_settings_buffer[bios_settings_size - 2] == ',')
++			bios_settings_buffer[bios_settings_size - 2] = ' ';
++	}
++	bios_settings_size = snprintf(bios_settings_buffer,
++					buf_alloc_size, "%s]\n",
++					bios_settings_buffer);
++	mutex_unlock(&bioscfg_drv.mutex);
++
++	return bios_settings_size;
++}
++
++int hp_bios_settings_free_buffer(void)
++{
++	mutex_lock(&bioscfg_drv.mutex);
++	kfree(bios_settings_buffer);
++	bios_settings_size = 0;
++	buf_alloc_size = 0;
++	mutex_unlock(&bioscfg_drv.mutex);
++
++	return 0;
++}
++int hp_bios_settings_realloc_buffer(char **buf, int *buf_size, int *alloc_size)
++{
++	int new_buffer_size;
++	char *new_buf = NULL;
++	int ret = 0;
++
++	if (*buf_size + PAGE_SIZE >= *alloc_size) {
++		new_buffer_size = buf_alloc_size + 2 * PAGE_SIZE;
++
++		mutex_lock(&bioscfg_drv.mutex);
++		new_buf = krealloc(*buf, new_buffer_size, GFP_KERNEL);
++		mutex_unlock(&bioscfg_drv.mutex);
++		if (new_buf) {
++			mutex_lock(&bioscfg_drv.mutex);
++			*buf = new_buf;
++			*alloc_size = ksize(new_buf);
++			mutex_unlock(&bioscfg_drv.mutex);
++		} else {
++			hp_bios_settings_free_buffer();
++			ret = -ENOMEM;
++		}
++	}
++
++	return ret;
++}
++
++int append_read_settings(enum hp_wmi_data_type type, char **buf,
++			 int *buf_size, int *alloc_size)
++{
++	int ret = 0;
++	int status = 0;
++	int instance = 0;
++	int instance_count = 0;
++
++	switch (type) {
++	case HPWMI_STRING_TYPE:
++		instance_count = bioscfg_drv.string_instances_count;
++		break;
++	case HPWMI_INTEGER_TYPE:
++		instance_count = bioscfg_drv.integer_instances_count;
++		break;
++	case HPWMI_ENUMERATION_TYPE:
++		instance_count = bioscfg_drv.enumeration_instances_count;
++		break;
++	case HPWMI_ORDERED_LIST_TYPE:
++		instance_count = bioscfg_drv.ordered_list_instances_count;
++		break;
++	case HPWMI_PASSWORD_TYPE:
++		instance_count = bioscfg_drv.password_instances_count;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/*
++	 * Query all the instances
++	 */
++	for (instance = 0; instance < instance_count; instance++) {
++		mutex_lock(&bioscfg_drv.mutex);
++		status = append_read_attributes(buf, *alloc_size,
++						     instance, type);
++		if (status > 0)
++			*buf_size = status;
++
++		mutex_unlock(&bioscfg_drv.mutex);
++
++		ret = hp_bios_settings_realloc_buffer(buf, buf_size,
++						      alloc_size);
++	}
++	return ret;
++}
++
++int append_read_attributes(char **buf, int alloc_size,
++			   int instance, enum hp_wmi_data_type type)
++{
++	int status = 0;
++
++	switch (type) {
++	case HPWMI_STRING_TYPE:
++		status = append_read_string_attributes(*buf, alloc_size,
++						       instance, type);
++		break;
++	case HPWMI_INTEGER_TYPE:
++		status = append_read_integer_attributes(*buf, alloc_size,
++							instance, type);
++		break;
++	case HPWMI_ENUMERATION_TYPE:
++		status = append_read_enumeration_attributes(*buf,
++							    alloc_size,
++							    instance, type);
++		break;
++	case HPWMI_ORDERED_LIST_TYPE:
++		status = append_read_ordered_list_attributes(*buf,
++							     alloc_size,
++							     instance, type);
++		break;
++	case HPWMI_PASSWORD_TYPE:
++		status = append_read_password_attributes(*buf,
++							 alloc_size,
++							 instance, type);
++		break;
++	default:
++		status = -EINVAL;
++		break;
++	}
++	return status;
++}
++
++
++int append_read_string_attributes(char *buf, int alloc_size,
++				  int instance,
++				  enum hp_wmi_data_type type)
++{
++	int buf_size;
++	char *part_tmp = NULL;
++	char *part = NULL;
++
++	if (type >= ARRAY_SIZE(hp_wmi_classes) || !buf)
++		return -EINVAL;
++
++	buf_size = snprintf(buf, alloc_size, "%s{\n", buf);
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Class\": \"%s\",\n",
++			    buf, hp_wmi_classes[type]);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Name\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].display_name);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Value\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].current_value);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Path\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].path);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsReadOnly\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].is_readonly);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"DisplayInUI\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].display_in_ui);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"RequiresPhysicalPresence\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].requires_physical_presence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Sequence\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].sequence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"PrerequisiteSize\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].prerequisitesize);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Prerequisites\": [\n", buf);
++
++	if (bioscfg_drv.string_data[instance].prerequisitesize) {
++		part_tmp = kstrdup(bioscfg_drv.string_data[instance].prerequisites,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"SecurityLevel\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].security_level);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"MinLength\": %d,\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].min_length);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"MaxLength\": %d\n",
++			    buf,
++			    bioscfg_drv.string_data[instance].max_length);
++
++	return snprintf(buf, alloc_size, "%s},\n", buf);
++}
++
++
++int append_read_integer_attributes(char *buf, int alloc_size,
++				   int instance,
++				   enum hp_wmi_data_type type)
++{
++	int buf_size;
++	char *part_tmp = NULL;
++	char *part = NULL;
++
++	if (type >= ARRAY_SIZE(hp_wmi_classes) || !buf)
++		return -EINVAL;
++
++	buf_size = snprintf(buf, alloc_size, "%s{\n", buf);
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Class\": \"%s\",\n",
++			    buf, hp_wmi_classes[type]);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Name\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].display_name);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Value\": \"%d\",\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].current_value);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Path\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].path);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsReadOnly\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].is_readonly);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"DisplayInUI\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].display_in_ui);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"RequiresPhysicalPresence\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].requires_physical_presence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Sequence\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].sequence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"PrerequisiteSize\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].prerequisitesize);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Prerequisites\": [\n", buf);
++
++	if (bioscfg_drv.integer_data[instance].prerequisitesize) {
++		part_tmp = kstrdup(bioscfg_drv.integer_data[instance].prerequisites,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"SecurityLevel\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].security_level);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"LowerBound\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].lower_bound);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"UpperBound\": %d,\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].upper_bound);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IntValue\": %d\n",
++			    buf,
++			    bioscfg_drv.integer_data[instance].scalar_increment);
++
++	return snprintf(buf, alloc_size, "%s},\n", buf);
++}
++
++int append_read_enumeration_attributes(char *buf, int alloc_size,
++				       int instance,
++				       enum hp_wmi_data_type type)
++{
++	int buf_size;
++	char *part_tmp = NULL;
++	char *part = NULL;
++
++	if (type >= ARRAY_SIZE(hp_wmi_classes) || !buf)
++		return -EINVAL;
++
++	buf_size = snprintf(buf, alloc_size, "%s{\n", buf);
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Class\": \"%s\",\n",
++			    buf, hp_wmi_classes[type]);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Name\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].display_name);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Path\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].path);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsReadOnly\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].is_readonly);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"DisplayInUI\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].display_in_ui);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"RequiresPhysicalPresence\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].requires_physical_presence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Sequence\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].sequence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"PrerequisiteSize\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].prerequisitesize);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Prerequisites\": [\n", buf);
++
++	if (bioscfg_drv.enumeration_data[instance].prerequisitesize) {
++		part_tmp = kstrdup(bioscfg_drv.enumeration_data[instance].prerequisites,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"SecurityLevel\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].security_level);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Value\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].current_value);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Size\": %d,\n",
++			    buf,
++			    bioscfg_drv.enumeration_data[instance].size);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"PossibleValues\": [\n", buf);
++
++	if (bioscfg_drv.enumeration_data[instance].size) {
++		part_tmp = kstrdup(bioscfg_drv.enumeration_data[instance].possible_values,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t]\n", buf);
++
++	return snprintf(buf, alloc_size, "%s},\n", buf);
++}
++
++int append_read_ordered_list_attributes(char *buf, int alloc_size,
++					int instance,
++					enum hp_wmi_data_type type)
++{
++	int buf_size;
++	char *part_tmp = NULL;
++	char *part = NULL;
++
++	if (type >= ARRAY_SIZE(hp_wmi_classes) || !buf)
++		return -EINVAL;
++
++	buf_size = snprintf(buf, alloc_size, "%s{\n", buf);
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Class\": \"%s\",\n",
++			    buf, hp_wmi_classes[type]);
++
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Name\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].display_name);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Value\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].current_value);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Path\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].path);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsReadOnly\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].is_readonly);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"DisplayInUI\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].display_in_ui);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"RequiresPhysicalPresence\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].requires_physical_presence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Sequence\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].sequence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"PrerequisiteSize\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].prerequisitesize);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Prerequisites\": [\n", buf);
++
++	if (bioscfg_drv.ordered_list_data[instance].prerequisitesize) {
++		part_tmp = kstrdup(bioscfg_drv.ordered_list_data[instance].prerequisites,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"SecurityLevel\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].security_level);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Size\": %d,\n",
++			    buf,
++			    bioscfg_drv.ordered_list_data[instance].size);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Elements\": [\n", buf);
++
++	if (bioscfg_drv.ordered_list_data[instance].size) {
++		part_tmp = kstrdup(bioscfg_drv.ordered_list_data[instance].elements,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t]\n", buf);
++
++	return snprintf(buf, alloc_size, "%s},\n", buf);
++}
++
++
++int append_read_password_attributes(char *buf, int alloc_size,
++				    int instance,
++				    enum hp_wmi_data_type type)
++{
++	int buf_size;
++	char *part_tmp = NULL;
++	char *part = NULL;
++
++	if (type >= ARRAY_SIZE(hp_wmi_classes) || !buf)
++		return -EINVAL;
++
++	buf_size = snprintf(buf, alloc_size, "%s{\n", buf);
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Class\": \"%s\",\n",
++			    buf, hp_wmi_classes[type]);
++
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Name\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].display_name);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Value\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].current_password);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Path\": \"%s\",\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].path);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsReadOnly\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].is_readonly);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"DisplayInUI\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].display_in_ui);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"RequiresPhysicalPresence\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].requires_physical_presence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Sequence\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].sequence);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"PrerequisiteSize\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].prerequisitesize);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"Prerequisites\": [\n", buf);
++
++	if (bioscfg_drv.password_data[instance].prerequisitesize) {
++		part_tmp = kstrdup(bioscfg_drv.password_data[instance].prerequisites,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"SecurityLevel\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].security_level);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"MinLength\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].min_password_length);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"MaxLength\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].max_password_length);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"Size\": %d,\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].encoding_size);
++
++	buf_size = snprintf(buf, alloc_size, "%s\t\"SupportedEncoding\": [\n", buf);
++
++	if (bioscfg_drv.password_data[instance].encoding_size) {
++		part_tmp = kstrdup(bioscfg_drv.password_data[instance].supported_encoding,
++				   GFP_KERNEL);
++		part = strsep(&part_tmp, ";");
++		while (part) {
++			buf_size = snprintf(buf, alloc_size, "%s\t\t\"%s\"", buf, part);
++			part = strsep(&part_tmp, ";");
++			if (part)
++				buf_size = snprintf(buf, alloc_size, "%s,\n", buf);
++			else
++				buf_size = snprintf(buf, alloc_size, "%s\n", buf);
++		}
++		kfree(part_tmp);
++		part_tmp = NULL;
++	}
++	buf_size = snprintf(buf, alloc_size, "%s\t],\n", buf);
++
++	buf_size = snprintf(buf, alloc_size,
++			    "%s\t\"IsSet\": %d\n",
++			    buf,
++			    bioscfg_drv.password_data[instance].is_enabled);
++
++	return snprintf(buf, alloc_size, "%s},\n", buf);
++}
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+new file mode 100644
+index 000000000000..f142d5e0a8fe
+--- /dev/null
++++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Functions corresponding to sure start object type attributes under
++ * BIOS for use with hp-bioscfg driver
++ *
++ *  Copyright (c) 2022 HP Development Company, L.P.
++ */
++
++#include "bioscfg.h"
++#include <asm-generic/posix_types.h>
++
++#define LOG_MAX_ENTRIES	254
++#define LOG_ENTRY_SIZE	16
++
++/*
++ * audit_log_entry_count_show - Reports the number of
++ *				existing audit log entries available
++ *				to be read
++ *
++ * @kobj:  Pointer to a kernel object of things that show up as directory
++ *	   in the sysfs filesystem.
++ * @attr:  Pointer to list of attributes for the operation
++ * @buf:   Pointer to buffer
++ *
++ * Returns number of existing audit log entries available to be read,
++ *         audit log entry size, and maximum number of entries
++ *         supported. Otherwise, an HP WMI query specific error code
++ *         (which is negative)
++ *
++ *         [No of entries],[log entry size],[Max number of entries supported]
++ */
++static ssize_t audit_log_entry_count_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
++{
++	int ret;
++	u32 count = 0;
++
++	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
++				   HPWMI_SURESTART,
++				   &count, 0, sizeof(count));
++	if (ret < 0)
++		return ret;
++
++	return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
++			  LOG_MAX_ENTRIES);
++}
++
++/*
++ * audit_log_entries_show() - Return all entries found in log file
++ *
++ * @kobj:  Pointer to a kernel object of things that show up as
++ *	   directory in the sysfs filesystem.
++ * @attr:  Pointer to list of attributes for the operation
++ * @buf:   Pointer to buffer
++ *
++ * Returns number of bytes needed to read all audit logs entries to be read.
++ *         Otherwise, an HP WMI query specific error code (which is negative)
++ *	   -EFAULT if the audit logs size exceeds 4KB
++ *
++ */
++static ssize_t audit_log_entries_show(struct kobject *kobj,
++				      struct kobj_attribute *attr, char *buf)
++{
++	int ret;
++	int i;
++	u32 count = 0;
++
++	// Get the number of event logs
++	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
++				   HPWMI_SURESTART,
++				   &count, 1, 4);
++
++	/*
++	 * The show() api will not work if the audit logs ever go
++	 *  beyond 4KB
++	 */
++	if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
++		return -EFAULT;
++
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * We are guaranteed the buffer is 4KB so today all the event
++	 * logs will fit
++	 */
++	for (i = 0; ((i < count) & (ret >= 0)); i++) {
++		*buf = (i + 1);
++		ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
++					   HPWMI_SURESTART,
++					   buf, 1, 128);
++		if (ret >= 0)
++			buf += LOG_ENTRY_SIZE;
++	}
++	return (count * LOG_ENTRY_SIZE);
++}
++
++static struct kobj_attribute sure_start_audit_log_entry_count = __ATTR_RO(audit_log_entry_count);
++struct kobj_attribute sure_start_audit_log_entries = __ATTR_RO(audit_log_entries);
++
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
++			 char *buf)
++{
++	return sysfs_emit(buf, "sure-start\n");
++}
++static struct kobj_attribute sure_start_type = __ATTR_RO(type);
++
++static ssize_t display_name_language_code_show(struct kobject *kobj,
++					       struct kobj_attribute *attr,
++					       char *buf)
++{
++	return sysfs_emit(buf, "%s\n", LANG_CODE_STR);
++}
++
++static struct kobj_attribute sure_start_display_langcode =
++		__ATTR_RO(display_name_language_code);
++
++
++static ssize_t display_name_show(struct kobject *kobj,
++				 struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%s\n", SURE_START_DESC);
++}
++static struct kobj_attribute sure_start_display_name = __ATTR_RO(display_name);
++
++static struct attribute *sure_start_attrs[] = {
++	&sure_start_display_name.attr,
++	&sure_start_display_langcode.attr,
++	&sure_start_audit_log_entry_count.attr,
++	&sure_start_audit_log_entries.attr,
++	&sure_start_type.attr,
++	NULL,
++};
++
++static const struct attribute_group sure_start_attr_group = {
++	.attrs = sure_start_attrs,
++};
++
++void exit_sure_start_attributes(void)
++{
++	sysfs_remove_group(bioscfg_drv.sure_start_attr_kobj,
++			   &sure_start_attr_group);
++}
++
++int populate_sure_start_data(struct kobject *attr_name_kobj)
++{
++	bioscfg_drv.sure_start_attr_kobj = attr_name_kobj;
++	return sysfs_create_group(attr_name_kobj, &sure_start_attr_group);
 +}
 -- 
 2.34.1
