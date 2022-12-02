@@ -2,114 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62732C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 22:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2380C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 23:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234672AbiLBWe0 (ORCPT
+        id S234931AbiLBXww (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Dec 2022 17:34:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        Fri, 2 Dec 2022 18:52:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234940AbiLBWeO (ORCPT
+        with ESMTP id S234934AbiLBXwg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Dec 2022 17:34:14 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBF2FB88C;
-        Fri,  2 Dec 2022 14:33:49 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id ha10so14700296ejb.3;
-        Fri, 02 Dec 2022 14:33:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g/p1+V/z+oR39h38nh1M5hCwPSL3t8Y/qdykCOeejV0=;
-        b=a+50oLwNxjPhsywArY16tosqg875B9DBC57M3kQPZvQ+ach28oR8C+aEWIz01Ccabg
-         JRJNW+YyvhAS29M1sSxSY4AP8LPgHVzlv/sfvH7AR2FLW+JDImaeGzMEO6OdqHIdam8f
-         fVjwEog2vr3o+97yDA8vz5/rWSdFeYl+qS4DvtnXZ6L30K8tFX9nZeasfF3VQ5AX0og1
-         0mN/BQ8vzzaMM4spCCz58L9rnWSD85eshQgniJqcPMoVCeDlUbTu3JT+WibZ/5S+P1cK
-         Y8TCh6+uSiz3UCAIw1PwWtH023IO6f7z+foESvBcwVXWWTJFRhLNO/Z8li4EA9hkc1JK
-         e4DA==
+        Fri, 2 Dec 2022 18:52:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D379CFB8B2
+        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 15:51:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670025101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=91+N7TaxeFvwsM4JrbKlZLvXSnLrW2mm53buGh2zOoY=;
+        b=aHB/DcV3dQYGX70QAzhY4SRdaSH5SIagxWYM/hPFP9kiMad/MqP+m54V260GCiEObcO1XW
+        1LkqPQZDl1GubfQKRWcWmhYLAcRXSN13N0xJrbewj2U0zEO0W6StcyCkm9vnZ4TkXIdUma
+        hb1LeQgrpk9GFse9/wfarEigSvNMb/E=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-282-0f53NfWaPHS1YipR3xI2HQ-1; Fri, 02 Dec 2022 18:51:37 -0500
+X-MC-Unique: 0f53NfWaPHS1YipR3xI2HQ-1
+Received: by mail-ej1-f70.google.com with SMTP id gb8-20020a170907960800b007bef177dddeso4295179ejc.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Dec 2022 15:51:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g/p1+V/z+oR39h38nh1M5hCwPSL3t8Y/qdykCOeejV0=;
-        b=Xv1b/LuYLayVNGEFBXSGhVGLBNYGiepNRo9Ua3H05rftwJHamKS6Ofrf6/4En13pvQ
-         w10VegqAxV/yYxryzwVoJzdQUNH9fGgumOtQglZjeC5p6Pe6aqEZNJYAgIz4YyV9d+Sz
-         lc3XcjHLivwHqArmynfeILg0zQtgqajVOvjbQPTc7XEBiL8foEGmLCGBZKeViY4aIy1p
-         wV46P29OtPD4+vQmBuZWAuI8Sv4RVyCep+ghAvsdtra4oCoaz6sv2Xc2xn/wL8pqUSOA
-         YpuvHHNrsUKLNgq4+u1omXAwHGVRoZetWYr0ihRVSBRZdurv9jjPU9Z3e3GeZt3s4E51
-         3yGg==
-X-Gm-Message-State: ANoB5pnHRjFnIGEwV6lFOfiE0p/uL14BbqIGRPxG6DAdCxWRyh9I6pWo
-        VBwR6BPhC68H0kzTJotzWHBJY7F+b6PhXg==
-X-Google-Smtp-Source: AA0mqf4BHmpLiknHAc13V79dFatrRncPt6Rt7EdPxLr6NgmamON5IQzNkObb/askcObyCVkvHs2aSA==
-X-Received: by 2002:a17:907:d60b:b0:7bc:dbd8:184b with SMTP id wd11-20020a170907d60b00b007bcdbd8184bmr31632110ejc.110.1670020428205;
-        Fri, 02 Dec 2022 14:33:48 -0800 (PST)
-Received: from xws.localdomain ([37.120.217.162])
-        by smtp.gmail.com with ESMTPSA id j17-20020a17090623f100b007c0d0dad9c6sm575340ejg.108.2022.12.02.14.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 14:33:47 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] platform/surface: aggregator_registry: Fix target-ID of base-hub
-Date:   Fri,  2 Dec 2022 23:33:27 +0100
-Message-Id: <20221202223327.690880-10-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221202223327.690880-1-luzmaximilian@gmail.com>
-References: <20221202223327.690880-1-luzmaximilian@gmail.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=91+N7TaxeFvwsM4JrbKlZLvXSnLrW2mm53buGh2zOoY=;
+        b=7REUlTC2RzFVObXAh6/m3rbBggJJPX9f50oh20QpRFK2ZLykEJMUXuamJxLIYRuu/p
+         b0NWCDvGeMmFomNdoe8Msnh7k7ZdB4wUUhuOkfbFkhT6XF0K6NWd7m2ak45lIvuTZWdx
+         aoBbySVya+5gdmEqEuXdje/5hlp0EbFxC93FWZcQ1O1+Z8ReID3u5dmao9deMaR4j6ki
+         hgtVtqSweW9vM5t7FDjx/qL1reV/P9EUg1AhmuOSEnDNgsfqwPN3honcolXI8vumSuxe
+         4YFVgaaiUL6SSWiFqafcyeG1Sd8sMX7E2wAaUmmBZrZNmd5G9lDzdNOeYqH4X/kDNzkB
+         vGpA==
+X-Gm-Message-State: ANoB5pklXHtHN70Uq0EfkUnFP9eNg7n4BaFr2Z0WPm3beMDJ2LsVvh4r
+        jLcZhHEf8Sto3RFFoDRcDA09tmoLAVUMc/cLex6o07cbvHkEF1zlPviHR4TPNr4LnksvTyVLjHw
+        KGJNxGPOpLWI4HNoKPS9q8fTYmoACoVZIUA==
+X-Received: by 2002:a17:906:39c8:b0:7ad:79c0:5482 with SMTP id i8-20020a17090639c800b007ad79c05482mr52292739eje.730.1670025096886;
+        Fri, 02 Dec 2022 15:51:36 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6/ofwo0VQIXwcZofZ6BE8JYZnBgs7ubLgoqfMPNOEoVwvFiWneisnGmeh/uqksGZq3/nRgqA==
+X-Received: by 2002:a17:906:39c8:b0:7ad:79c0:5482 with SMTP id i8-20020a17090639c800b007ad79c05482mr52292727eje.730.1670025096643;
+        Fri, 02 Dec 2022 15:51:36 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id z3-20020a170906240300b007aef930360asm3585578eja.59.2022.12.02.15.51.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Dec 2022 15:51:36 -0800 (PST)
+Message-ID: <011865e7-33aa-d707-ff2f-a74f27037ab6@redhat.com>
+Date:   Sat, 3 Dec 2022 00:51:35 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 6/6] platform/x86: int3472/discrete: Get the polarity from
+ the _DSM entry
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        linux-media@vger.kernel.org
+References: <20221129231149.697154-1-hdegoede@redhat.com>
+ <20221129231149.697154-7-hdegoede@redhat.com>
+ <CAHp75Vc2nYtvHhrsNPe8JwbK_665F5_Z6bMDfvmtBKr0HomycA@mail.gmail.com>
+ <7a110978-268d-811d-daa6-39f78f802e2c@redhat.com>
+ <Y4c5PVBkWA3lHoqR@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y4c5PVBkWA3lHoqR@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The target ID of the base hub is currently set to KIP (keyboard/
-peripherals). However, even though it manages such devices with the KIP
-target ID, the base hub itself is actually accessed via the SAM target
-ID. So set it accordingly.
+Hi,
 
-Note that the target ID of the hub can be chosen arbitrarily and does
-not directly correspond to any physical or virtual component of the EC.
-This change is only a code improvement intended for consistency and
-clarity, it does not fix an actual bug.
+On 11/30/22 12:06, Andy Shevchenko wrote:
+> On Wed, Nov 30, 2022 at 11:39:42AM +0100, Hans de Goede wrote:
+>> On 11/30/22 11:01, Andy Shevchenko wrote:
+>>> On Wed, Nov 30, 2022 at 1:12 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> According to:
+>>>> https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
+>>>>
+>>>> Bits 31-24 of the _DSM pin entry integer value codes the active-value,
+>>>> that is the actual physical signal (0 or 1) which needs to be output on
+>>>> the pin to turn the sensor chip on (to make it active).
+>>>>
+>>>> So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
+>>>> pin needs to be 0 to take the chip out of reset. IOW in this case the reset
+>>>> signal is active-high rather then the default active-low.
+>>>>
+>>>> And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
+>>>> pin needs to be 0 to enable the clk. So in this case the clk-en signal
+>>>> is active-low rather then the default active-high.
+>>>>
+>>>> IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
+>>>> is inverted.
+>>>>
+>>>> Add a check for this and also propagate this new polarity to the clock
+>>>> registration.
+>>>
+>>> I like it in this form, thanks!
+>>>
+>>> ...
+>>>
+>>>> +               (polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
+>>>
+>>> Perhaps
+>>>
+>>> static inline str_high_low(bool v)
+>>> {
+>>>   return v ? "high" : "low";
+>>> }
+>>>
+>>> In the string_helpers.h? If you are okay with the idea, you may use my
+>>> tag ahead for that patch.
+>>
+>> That is an interesting idea. but IMHO best done in a follow-up series
+>> after checking for similar code in the rest of the kernel.
+>>
+>> This is based on the assumption that "selling" this new helper to
+>> the string_helpers.h maintainer will be easier if there are multiple
+>> consumers of it right away.
+> 
+> strings_helper.h maintainer is any known kernel subsystem maintainer + me
+> (as a reviewer / main contributor to that library). That's why I proposed
+> the solution and my tag would be enough to route it via your tree.
+> 
+> So, offer still stays.
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/platform/surface/surface_aggregator_hub.c      | 2 +-
- drivers/platform/surface/surface_aggregator_registry.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Ok I'll add your patch adding the str_high_low() helper to the next
+version of this series (or when I merge it, depending on how things go)
+and then move this over to use the str_high_low() helper.
 
-diff --git a/drivers/platform/surface/surface_aggregator_hub.c b/drivers/platform/surface/surface_aggregator_hub.c
-index 6abd1efe2088..8b8b80228c14 100644
---- a/drivers/platform/surface/surface_aggregator_hub.c
-+++ b/drivers/platform/surface/surface_aggregator_hub.c
-@@ -349,7 +349,7 @@ static const struct ssam_hub_desc kip_hub = {
- 
- static const struct ssam_device_id ssam_hub_match[] = {
- 	{ SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_KIP, 0x00), (unsigned long)&kip_hub  },
--	{ SSAM_VDEV(HUB, KIP, SSAM_SSH_TC_BAS, 0x00), (unsigned long)&base_hub },
-+	{ SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_BAS, 0x00), (unsigned long)&base_hub },
- 	{ }
- };
- MODULE_DEVICE_TABLE(ssam, ssam_hub_match);
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 023f126121d7..296f72d52e6a 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -46,7 +46,7 @@ static const struct software_node ssam_node_hub_kip = {
- 
- /* Base device hub (devices attached to Surface Book 3 base). */
- static const struct software_node ssam_node_hub_base = {
--	.name = "ssam:00:00:02:11:00",
-+	.name = "ssam:00:00:01:11:00",
- 	.parent = &ssam_node_root,
- };
- 
--- 
-2.38.1
+Regards,
+
+Hans
+
 
