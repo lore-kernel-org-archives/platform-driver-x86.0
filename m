@@ -2,64 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37592C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 09:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6602FC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 09:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232524AbiLBJQl (ORCPT
+        id S232190AbiLBJXl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Dec 2022 04:16:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
+        Fri, 2 Dec 2022 04:23:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232438AbiLBJQk (ORCPT
+        with ESMTP id S233054AbiLBJXV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Dec 2022 04:16:40 -0500
-X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Dec 2022 01:16:38 PST
-Received: from mail.glencoeaur.com (mail.glencoeaur.com [217.61.97.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B19DAC6FB
-        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 01:16:38 -0800 (PST)
-Received: by mail.glencoeaur.com (Postfix, from userid 1001)
-        id E1C688198E; Fri,  2 Dec 2022 09:10:31 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=glencoeaur.com;
-        s=mail; t=1669972235;
-        bh=0BgaW9t8GFER5QecxVkFsHrVi3gO/4V5KAZgJaiRYBs=;
-        h=Date:From:To:Subject:From;
-        b=hfAUsNwvU77r8cWMrVq7zIUF1/GCjiTRkNjT1MgU70j5bijqjCaAseqYhZGg8ioLI
-         /d/xDni1k0rvueG++shPiokWlMe+IJn+xW4IF2+Zej0SMCqi6l3oQbx0t44wPYF8xv
-         7Z0IOx57yZ4v5PmvJswFD8D2R9P9eOtcf3e88kwHpFXuDXruMUx6tCEhL5AWptjp8T
-         zzOzXLPjoDxEjSJT4NHN6Yh9bJOCyWBX9fLdusYFuHJ/FnCoHaAX2rl1x1/9XkBurS
-         JTo763rLYslMDjqL00ohIXkzy8l6nW+D6kPCDgTSCbTFyiRl6SXl/LAIguq9RQWExV
-         rJraMUZK4nC8A==
-Received: by mail.glencoeaur.com for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 09:10:21 GMT
-Message-ID: <20221202074500-0.1.8.8vk.0.5dn23hgv4a@glencoeaur.com>
-Date:   Fri,  2 Dec 2022 09:10:21 GMT
-From:   "Zbynek Spacek" <zbynek.spacek@glencoeaur.com>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: Silikonmischungen
-X-Mailer: mail.glencoeaur.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 2 Dec 2022 04:23:21 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E57C7D29;
+        Fri,  2 Dec 2022 01:22:09 -0800 (PST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NNnWz5v70z8RTZL;
+        Fri,  2 Dec 2022 17:22:07 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.40.50])
+        by mse-fl2.zte.com.cn with SMTP id 2B29LqdK063118;
+        Fri, 2 Dec 2022 17:21:52 +0800 (+08)
+        (envelope-from ye.xingchen@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+        by mapi (Zmail) with MAPI id mid31;
+        Fri, 2 Dec 2022 17:21:54 +0800 (CST)
+Date:   Fri, 2 Dec 2022 17:21:54 +0800 (CST)
+X-Zmail-TransId: 2af96389c3b25295ad21
+X-Mailer: Zmail v1.0
+Message-ID: <202212021721543696124@zte.com.cn>
+Mime-Version: 1.0
+From:   <ye.xingchen@zte.com.cn>
+To:     <hdegoede@redhat.com>
+Cc:     <markgross@kernel.org>, <pobrn@protonmail.com>,
+        <dell.client.kernel@dell.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIXSBwbGF0Zm9ybS94ODY6IGRlbGw6IHVzZSBzeXNmc19lbWl0KCkgdG8gaW5zdGVhZCBvZsKgc2NucHJpbnRmKCk=?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl2.zte.com.cn 2B29LqdK063118
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 6389C3BF.002 by FangMail milter!
+X-FangMail-Envelope: 1669972927/4NNnWz5v70z8RTZL/6389C3BF.002/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<ye.xingchen@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6389C3BF.002/4NNnWz5v70z8RTZL
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Good morning,
+From: ye xingchen <ye.xingchen@zte.com.cn>
 
-do you need intermediates for processing, plastics (e.g. rubber) or silic=
-one mixtures?
+Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+should only use sysfs_emit() or sysfs_emit_at() when formatting the
+value to be returned to user space.
 
-We provide a wide range of silicone rubbers with various properties, sili=
-cone mixtures from renowned manufacturers such as Wacker, Elastosil LR an=
-d dyes, stabilizers, primers and anti-adhesive additives.
+Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 41 +++++++++--------------
+ 1 file changed, 16 insertions(+), 25 deletions(-)
 
-We also produce technical silicone compounds with increased resistance to=
- oils, resistant to high temperatures and water vapor, conductive and man=
-y more.
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index a34e07ef2c79..a9477e5432e4 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -398,10 +398,10 @@ static ssize_t show_control_state(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
+ {
+ 	if (lighting_control_state == LEGACY_BOOTING)
+-		return scnprintf(buf, PAGE_SIZE, "[booting] running suspend\n");
++		return sysfs_emit(buf, "[booting] running suspend\n");
+ 	else if (lighting_control_state == LEGACY_SUSPEND)
+-		return scnprintf(buf, PAGE_SIZE, "booting running [suspend]\n");
+-	return scnprintf(buf, PAGE_SIZE, "booting [running] suspend\n");
++		return sysfs_emit(buf, "booting running [suspend]\n");
++	return sysfs_emit(buf, "booting [running] suspend\n");
+ }
 
-We provide fast order fulfillment, timely deliveries and cost optimizatio=
-n.
+ static ssize_t store_control_state(struct device *dev,
+@@ -547,14 +547,12 @@ static ssize_t show_hdmi_cable(struct device *dev,
+ 				   (u32 *) &out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "[unconnected] connected unknown\n");
++			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+ 		else if (out_data == 1)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "unconnected [connected] unknown\n");
++			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+ 	}
+ 	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", status);
+-	return scnprintf(buf, PAGE_SIZE, "unconnected connected [unknown]\n");
++	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+ }
 
-Can I introduce what we can offer you?
+ static ssize_t show_hdmi_source(struct device *dev,
+@@ -571,14 +569,12 @@ static ssize_t show_hdmi_source(struct device *dev,
 
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 1)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "[input] gpu unknown\n");
++			return sysfs_emit(buf, "[input] gpu unknown\n");
+ 		else if (out_data == 2)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "input [gpu] unknown\n");
++			return sysfs_emit(buf, "input [gpu] unknown\n");
+ 	}
+ 	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+-	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
++	return sysfs_emit(buf, "input gpu [unknown]\n");
+ }
 
-Zbynek Spacek
+ static ssize_t toggle_hdmi_source(struct device *dev,
+@@ -652,14 +648,12 @@ static ssize_t show_amplifier_status(struct device *dev,
+ 				   (u32 *) &out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "[unconnected] connected unknown\n");
++			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+ 		else if (out_data == 1)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "unconnected [connected] unknown\n");
++			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+ 	}
+ 	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
+-	return scnprintf(buf, PAGE_SIZE, "unconnected connected [unknown]\n");
++	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+ }
+
+ static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
+@@ -706,17 +700,14 @@ static ssize_t show_deepsleep_status(struct device *dev,
+ 					(u32 *) &out_data);
+ 	if (ACPI_SUCCESS(status)) {
+ 		if (out_data == 0)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "[disabled] s5 s5_s4\n");
++			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+ 		else if (out_data == 1)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "disabled [s5] s5_s4\n");
++			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+ 		else if (out_data == 2)
+-			return scnprintf(buf, PAGE_SIZE,
+-					 "disabled s5 [s5_s4]\n");
++			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+ 	}
+ 	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
+-	return scnprintf(buf, PAGE_SIZE, "disabled s5 s5_s4 [unknown]\n");
++	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+ }
+
+ static ssize_t toggle_deepsleep(struct device *dev,
+-- 
+2.25.1
