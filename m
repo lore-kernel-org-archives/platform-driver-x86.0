@@ -2,133 +2,64 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC20C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 09:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37592C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Dec 2022 09:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbiLBJFd (ORCPT
+        id S232524AbiLBJQl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Dec 2022 04:05:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33470 "EHLO
+        Fri, 2 Dec 2022 04:16:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231578AbiLBJFb (ORCPT
+        with ESMTP id S232438AbiLBJQk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Dec 2022 04:05:31 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FB525CC;
-        Fri,  2 Dec 2022 01:05:30 -0800 (PST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NNn8n16BMz5BNS0;
-        Fri,  2 Dec 2022 17:05:29 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.40.50])
-        by mse-fl2.zte.com.cn with SMTP id 2B295Avb031743;
-        Fri, 2 Dec 2022 17:05:10 +0800 (+08)
-        (envelope-from ye.xingchen@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-        by mapi (Zmail) with MAPI id mid31;
-        Fri, 2 Dec 2022 17:05:12 +0800 (CST)
-Date:   Fri, 2 Dec 2022 17:05:12 +0800 (CST)
-X-Zmail-TransId: 2af96389bfc805f2c885
-X-Mailer: Zmail v1.0
-Message-ID: <202212021705128095546@zte.com.cn>
-Mime-Version: 1.0
-From:   <ye.xingchen@zte.com.cn>
-To:     <hdegoede@redhat.com>
-Cc:     <justin.ernst@hpe.com>, <markgross@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?B?W1BBVENIXSBwbGF0Zm9ybS94ODY6IHVzZSBzeXNmc19lbWl0KCkgdG8gaW5zdGVhZCBvZiBzY25wcmludGYoKQ==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2B295Avb031743
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.138.novalocal with ID 6389BFD9.001 by FangMail milter!
-X-FangMail-Envelope: 1669971929/4NNn8n16BMz5BNS0/6389BFD9.001/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<ye.xingchen@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6389BFD9.001/4NNn8n16BMz5BNS0
+        Fri, 2 Dec 2022 04:16:40 -0500
+X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Dec 2022 01:16:38 PST
+Received: from mail.glencoeaur.com (mail.glencoeaur.com [217.61.97.113])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B19DAC6FB
+        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 01:16:38 -0800 (PST)
+Received: by mail.glencoeaur.com (Postfix, from userid 1001)
+        id E1C688198E; Fri,  2 Dec 2022 09:10:31 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=glencoeaur.com;
+        s=mail; t=1669972235;
+        bh=0BgaW9t8GFER5QecxVkFsHrVi3gO/4V5KAZgJaiRYBs=;
+        h=Date:From:To:Subject:From;
+        b=hfAUsNwvU77r8cWMrVq7zIUF1/GCjiTRkNjT1MgU70j5bijqjCaAseqYhZGg8ioLI
+         /d/xDni1k0rvueG++shPiokWlMe+IJn+xW4IF2+Zej0SMCqi6l3oQbx0t44wPYF8xv
+         7Z0IOx57yZ4v5PmvJswFD8D2R9P9eOtcf3e88kwHpFXuDXruMUx6tCEhL5AWptjp8T
+         zzOzXLPjoDxEjSJT4NHN6Yh9bJOCyWBX9fLdusYFuHJ/FnCoHaAX2rl1x1/9XkBurS
+         JTo763rLYslMDjqL00ohIXkzy8l6nW+D6kPCDgTSCbTFyiRl6SXl/LAIguq9RQWExV
+         rJraMUZK4nC8A==
+Received: by mail.glencoeaur.com for <platform-driver-x86@vger.kernel.org>; Fri,  2 Dec 2022 09:10:21 GMT
+Message-ID: <20221202074500-0.1.8.8vk.0.5dn23hgv4a@glencoeaur.com>
+Date:   Fri,  2 Dec 2022 09:10:21 GMT
+From:   "Zbynek Spacek" <zbynek.spacek@glencoeaur.com>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: Silikonmischungen
+X-Mailer: mail.glencoeaur.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: ye xingchen <ye.xingchen@zte.com.cn>
+Good morning,
 
-Follow the advice of the Documentation/filesystems/sysfs.rst and show()
-should only use sysfs_emit() or sysfs_emit_at() when formatting the
-value to be returned to user space.
+do you need intermediates for processing, plastics (e.g. rubber) or silic=
+one mixtures?
 
-Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
----
- drivers/platform/x86/uv_sysfs.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+We provide a wide range of silicone rubbers with various properties, sili=
+cone mixtures from renowned manufacturers such as Wacker, Elastosil LR an=
+d dyes, stabilizers, primers and anti-adhesive additives.
 
-diff --git a/drivers/platform/x86/uv_sysfs.c b/drivers/platform/x86/uv_sysfs.c
-index 625b0b79d185..73fc38ee7430 100644
---- a/drivers/platform/x86/uv_sysfs.c
-+++ b/drivers/platform/x86/uv_sysfs.c
-@@ -119,12 +119,12 @@ struct uv_hub {
+We also produce technical silicone compounds with increased resistance to=
+ oils, resistant to high temperatures and water vapor, conductive and man=
+y more.
 
- static ssize_t hub_name_show(struct uv_bios_hub_info *hub_info, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", hub_info->name);
-+	return sysfs_emit(buf, "%s\n", hub_info->name);
- }
+We provide fast order fulfillment, timely deliveries and cost optimizatio=
+n.
 
- static ssize_t hub_location_show(struct uv_bios_hub_info *hub_info, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", hub_info->location);
-+	return sysfs_emit(buf, "%s\n", hub_info->location);
- }
+Can I introduce what we can offer you?
 
- static ssize_t hub_partition_show(struct uv_bios_hub_info *hub_info, char *buf)
-@@ -460,12 +460,12 @@ struct uv_pci_top_obj {
 
- static ssize_t uv_pci_type_show(struct uv_pci_top_obj *top_obj, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->type);
-+	return sysfs_emit(buf, "%s\n", top_obj->type);
- }
-
- static ssize_t uv_pci_location_show(struct uv_pci_top_obj *top_obj, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->location);
-+	return sysfs_emit(buf, "%s\n", top_obj->location);
- }
-
- static ssize_t uv_pci_iio_stack_show(struct uv_pci_top_obj *top_obj, char *buf)
-@@ -475,7 +475,7 @@ static ssize_t uv_pci_iio_stack_show(struct uv_pci_top_obj *top_obj, char *buf)
-
- static ssize_t uv_pci_ppb_addr_show(struct uv_pci_top_obj *top_obj, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->ppb_addr);
-+	return sysfs_emit(buf, "%s\n", top_obj->ppb_addr);
- }
-
- static ssize_t uv_pci_slot_show(struct uv_pci_top_obj *top_obj, char *buf)
-@@ -737,7 +737,7 @@ static ssize_t coherence_id_show(struct kobject *kobj,
- static ssize_t uv_type_show(struct kobject *kobj,
- 			struct kobj_attribute *attr, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", uv_type_string());
-+	return sysfs_emit(buf, "%s\n", uv_type_string());
- }
-
- static ssize_t uv_archtype_show(struct kobject *kobj,
-@@ -749,13 +749,13 @@ static ssize_t uv_archtype_show(struct kobject *kobj,
- static ssize_t uv_hub_type_show(struct kobject *kobj,
- 			struct kobj_attribute *attr, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_hub_type());
-+	return sysfs_emit(buf, "0x%x\n", uv_hub_type());
- }
-
- static ssize_t uv_hubless_show(struct kobject *kobj,
- 			struct kobj_attribute *attr, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_get_hubless_system());
-+	return sysfs_emit(buf, "0x%x\n", uv_get_hubless_system());
- }
-
- static struct kobj_attribute partition_id_attr =
--- 
-2.25.1
+Zbynek Spacek
