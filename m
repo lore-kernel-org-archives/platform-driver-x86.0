@@ -2,96 +2,194 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE05C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Dec 2022 12:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD714C47088
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Dec 2022 12:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbiLCMTn (ORCPT
+        id S229502AbiLCM3U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 3 Dec 2022 07:19:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
+        Sat, 3 Dec 2022 07:29:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiLCMTj (ORCPT
+        with ESMTP id S229630AbiLCM3S (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Dec 2022 07:19:39 -0500
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187351A39C;
-        Sat,  3 Dec 2022 04:19:38 -0800 (PST)
-Received: by mail-qv1-xf30.google.com with SMTP id mn15so5144722qvb.13;
-        Sat, 03 Dec 2022 04:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OrAUu7Ff3xgokUXDmmKP6mhi/0QSxx1iup4Fo4DXL7o=;
-        b=O/Cc03u8Z1p5p75/IwB6FdLM/KSdWwo9G6jO010hcbWdiTwpbCC9fl5eSHek1fSw+a
-         uSIlk++1rziLI9fNPXpuNnvposE/kN+sQKTymXKT0FFISwZW21/HFAgZWmsl8tPXVeyq
-         9wZstA4V7Xb5SxRSgkUi8d+bn45EBaI/MIEtPNNRLCSB2HyKDPubqM5yURWL18V8dgcd
-         3DXDWzH4Y/BCAnNoaj8tk1txh73zQKlyDENwfkMnWGI3ooWNQGrGKn+3hItuDdZmT/Pz
-         M34OU3+xCHlz8IR09dPg47LjEaoRl+ktEaiai7x9UoLWQFMcMCtTbPrKOwxI/LwZSkas
-         I13A==
+        Sat, 3 Dec 2022 07:29:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1657818E21
+        for <platform-driver-x86@vger.kernel.org>; Sat,  3 Dec 2022 04:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670070495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=59luDbOiMKxKctSq5vQdKkfPCytrueeeP3Jshzqy+ps=;
+        b=hVczSBh5ZdkjvNV9gP05kephRyHoPWoXlMsJiWjR08ajL5VUi3szvCgjlXrEY5ST1sPCmK
+        lQENIr6DgFjn5kQ5OtFgF9FJovhkj4Bo2FAIhU/TFlikIKLg5jXbG09TyzRMeSOdSr5jFE
+        SEd3a25L85DudU32wmidkcbkFAefZq0=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-554-HHCz18vzP96HSpHr3RjIHw-1; Sat, 03 Dec 2022 07:28:14 -0500
+X-MC-Unique: HHCz18vzP96HSpHr3RjIHw-1
+Received: by mail-ej1-f70.google.com with SMTP id qw20-20020a1709066a1400b007af13652c92so5141653ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2022 04:28:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OrAUu7Ff3xgokUXDmmKP6mhi/0QSxx1iup4Fo4DXL7o=;
-        b=cgXcmSgTBj+u7FuXzhrp0wKGskZdze4CnB7+ox3OYSzy2+PLbbd6QpUqxQFJcRrhGG
-         5V0nHgfXhHvmp4MSNJnJcwR4ejMyzBqJGW86YvH9qKNDZNKTEy5OIpthicEWW2yOaLyl
-         Sq8J/UIRjNKm6Sdb5YIlL3kaJIOcme5GH3JAk4e5M3ehmsNCWW10Ys0FiBu2Db6Lm1cT
-         tDQ0oVbKkYeLuYC18s1G2ayzpbGEFBsjEsAqK+XioHNHk0nF5wGpX/s2sRhZ8lETwQIh
-         WlBHarcu7VP+sxdJCfbvLmRHVAxcIFvwpsDw1FkY+zgdJR9LoTtz6Xs+nyXPIl3XMR8i
-         qWdg==
-X-Gm-Message-State: ANoB5pkGWNM4Qc7wWuOu87jyib28aTyDHkKlS/UesRZiQgQZz/MGUxu9
-        enu3wu73y2Q0K6g9dddm0zwlZ3zIL6SE1ejWIac=
-X-Google-Smtp-Source: AA0mqf6obvAdCmgnaE5I5dygMI8fFX/UgdQnVHs501p8+Dr41VsgeED1uWfPZoSQNR8BeuViburK3yMN9sj8aDQagV8=
-X-Received: by 2002:ad4:57aa:0:b0:4c6:f83c:4741 with SMTP id
- g10-20020ad457aa000000b004c6f83c4741mr29888828qvx.11.1670069977099; Sat, 03
- Dec 2022 04:19:37 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=59luDbOiMKxKctSq5vQdKkfPCytrueeeP3Jshzqy+ps=;
+        b=wdqRRUhvSOLVeV2BuVaY3XZ9+ikJ32rLtwzXDNKluqZsbl9PMl9WJY9LgVn5WtZ0uE
+         5KP4aI4Q9fbGS6noYNLo72UAFmPiPYg4yRxTuzfKqHaXoEzgk2CGJzquiCF32weqikUC
+         DXtQAipeBwHkaBnlHCHLFCyV3D0D7m+ynhzPVavvp64iV31pYhk1t6SPkRwg2zs4X4Mx
+         egzb1rZHdJ5uRN3TmBHEWfrcd0U7Pg0U98OHw6UE8ZYLpDAPJlD1GNooM6NKcj29Eutc
+         +z9prbHJn5va0DUavrLbxCOPoB/a1hHjJAl1cwUB78l04maBw/lMK4FGU3KPTzV7WkGW
+         wl4A==
+X-Gm-Message-State: ANoB5pkytk1Dpo7Ri5csf+k8MiN4od6jgL5Y5/QtZjfHAX9+NkBJKyJR
+        9OqxcF5WJzgA4zSvjI2RgCqESsF0g/n29Of4RnVwOWPz7uxkf6hqgDBv/rjeWcToTU7M+YT5KNJ
+        Wj9k1VL4A0B9j+U3iy6QGT7uhVBMbR7BTaQ==
+X-Received: by 2002:a17:906:6ac1:b0:7c0:9a3:87ff with SMTP id q1-20020a1709066ac100b007c009a387ffmr23578795ejs.505.1670070492947;
+        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6Phk4/EX1QwDCEUsGg/HEG78cVvaFcy9t2WdeDrCuBWsltrBIbyFacHn1OHh//Eu74QVivxg==
+X-Received: by 2002:a17:906:6ac1:b0:7c0:9a3:87ff with SMTP id q1-20020a1709066ac100b007c009a387ffmr23578782ejs.505.1670070492677;
+        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id v18-20020a170906293200b0077b2b0563f4sm4181611ejd.173.2022.12.03.04.28.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
+Message-ID: <f79b9397-64af-894a-411c-5595fa136008@redhat.com>
+Date:   Sat, 3 Dec 2022 13:28:11 +0100
 MIME-Version: 1.0
-References: <202212031424175433783@zte.com.cn> <CAHp75Vch84NZhZa_Gy4qNO1-6ZJq3GBGmJXHSDurW5jeoYzhdQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vch84NZhZa_Gy4qNO1-6ZJq3GBGmJXHSDurW5jeoYzhdQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 3 Dec 2022 14:19:01 +0200
-Message-ID: <CAHp75VdRs5jwY749bMME1ciPFyETv5C8L-ECqoJPer3QeP+5jA@mail.gmail.com>
-Subject: Re: [PATCH linux-next] x86/platform/uv: use strscpy to instead of strncpy()
-To:     yang.yang29@zte.com.cn
-Cc:     steve.wahl@hpe.com, mike.travis@hpe.com, dimitri.sivanich@hpe.com,
-        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xu.panda@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 0/5] gpio/media/int3472: Add support for tps68470
+ privacy-LED output
+Content-Language: en-US, nl
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <CACRpkda+3e6jLq4WkyiCFcvL_rO1tAf_TvO5B9kikkii+6vSnA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CACRpkda+3e6jLq4WkyiCFcvL_rO1tAf_TvO5B9kikkii+6vSnA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Dec 3, 2022 at 2:15 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Dec 3, 2022 at 8:24 AM <yang.yang29@zte.com.cn> wrote:
+Hi,
 
-...
+On 12/3/22 10:32, Linus Walleij wrote:
+> On Mon, Nov 28, 2022 at 10:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+>> Patches 1-2: 2 small bugfixes to the gpio-tps68470 code
+> 
+> Good, please merge this.
+> 
+>> Patch3:      Add support for the indicator LED outputs on the tps68470 as GPIOs
+>> Patch4:      Add support for a privacy LED to the ov8865 sensor driver
+>> Patch5:      Add gpio-lookup table entry for the privacy LED.
+> 
+> OK so I have to call out the hippo in the room:
+> 
+> these "gpios" are not called "gpios" anywhere else than in this
+> patch. General purpose input/output, remember. These are special
+> purpose LED control registers.
+> 
+> So can you provide a good explanation why these registers aren't
+> handled in the drivers/led subsystem instead?
 
-> >         /* (remove possible '\n') */
-> > -       strncpy(arg, val, ACTION_LEN - 1);
-> > -       arg[ACTION_LEN - 1] = '\0';
-> > +       strscpy(arg, val, ACTION_LEN - 1);
->
-> Should be ACTION_LEN here, no?
->
-> >         p = strchr(arg, '\n');
-> >         if (p)
-> >                 *p = '\0';
->
-> Wouldn't be better to refactor this
->
-> p = strnchrnul(val, ACTION_LEN, '\n');
-> strscpy(arg, val, p - val);
+This was discussed in another thread:
 
-Or even drop p completely
+https://lore.kernel.org/platform-driver-x86/20221124200007.390901-1-hdegoede@redhat.com/
 
-strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
+There were 2 problems identified which has lead to the current
+direction of just modelling at as an (output only) GPIO:
 
--- 
-With Best Regards,
-Andy Shevchenko
+1. The LED class allows userspace control of the LED which is
+bad from a privacy pov. This will make it easy, too easy
+(was the conclusion) for spy-ware to turn on the camera without
+the LED turning on.
+
+Later in the thread it was pointed out that there is a flag to
+suspend userspace control, we could use this to permanently disable
+userspace control which I guess would be some what of a solution,
+although we would then also need to look into disallow changing
+triggers, because I think those could still be used as a way around
+this.
+
+2. GPIO(s) can be tied directly to the device so that on a device
+with both front and back privacy-LEDs (real world example) doing
+ gpiod_get(dev, "privacy-led") gets us the right privacy-led,
+where as with LED class devices tying the sensor and LED class
+device is going to be tricky.
+
+> IIUC the leds subsystem has gained support for leds as resources.
+
+Interesting that would mitigate problem 2 from above and since
+people keep circling back to "its a LED please use the LED class",
+this is definitely worth looking into.
+
+Do you have any pointers / examples about led class devices as
+resources?
+
+###
+
+Note though that these indicator LED outputs, both functionality
+wise as well as at the register level of this PMIC only support
+turning them on/off. So this maps pretty well to the GPIO subsystem
+and all the functionality of the LED class subsystem is mostly
+functionality which we want to avoid since we don't want userspace
+control, neither directly through sysfs or by attaching triggers.
+
+So this does map pretty well to just modelling it as a GPIO,
+if we model this as a LED then we end up having to workaround
+a bunch of stuff the LED subsytem does which we do not want in
+this case. And this may even require patches to the LED subsystem
+to disallow userspace changing the trigger (I would need to check).
+
+So from my pov modelling this as an output-only GPIO pin is
+actually a more KISS solution then involving the LED subsystem...
+
+> I don't mind a LED driver inside of the GPIO driver if that is what
+> it takes as a compromise, just that it should be handled by the right
+> subsystem.
+
+The PMIC already is a MFD device, so if we go the LED class route
+we can just add a separate MFD child device for the new LED driver
+to bind to.
+
+> Given that flash leds which are used by cameras are already in
+> drivers/leds/flash this should be no different and there will be more
+> cameras with these privacy leds.
+
+Actually this patch is for the back camera privacy LED on a
+Microsoft Surface Go tablet. The front camera privacy LED is
+directly attached to a GPIO of the main SoC. So for that camera
+just adding a GPIO lookup table entry to map the ACPI provided
+GPIO info to a "privacy-led" GPIO on the sensor i2c_client device
+(which we already do for the "reset" and "powerdown" gpios) also
+by far is the most KISS approach.
+
+Doing things this way in the code translating the ACPI "magic"
+to standard Linux device-model stuff is literary a single line
+of code (add an extra case: to an existing list of cases in a
+switch-case). Where as instantiating a LED class device for this
+and then somehow tying that to the i2c_client for the sensor will
+be more code.
+
+So again treating these on/off only LEDs, where we want to
+*disallow* userspace control, as a GPIO is by far the most KISS
+solution.
+
+Regards,
+
+Hans
+
