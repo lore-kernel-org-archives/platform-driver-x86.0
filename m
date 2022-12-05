@@ -2,92 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28265C4708D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 11:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3EC4321E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 13:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbiLELnA (ORCPT
+        id S232113AbiLENOG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Dec 2022 06:43:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
+        Mon, 5 Dec 2022 08:14:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231421AbiLELmV (ORCPT
+        with ESMTP id S231952AbiLENOC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Dec 2022 06:42:21 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B609A1A212;
-        Mon,  5 Dec 2022 03:42:10 -0800 (PST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NQhV92nnZz8RTZG;
-        Mon,  5 Dec 2022 19:42:09 +0800 (CST)
-Received: from szxlzmapp07.zte.com.cn ([10.5.230.251])
-        by mse-fl1.zte.com.cn with SMTP id 2B5Bg4xo053795;
-        Mon, 5 Dec 2022 19:42:04 +0800 (+08)
-        (envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp02[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Mon, 5 Dec 2022 19:42:08 +0800 (CST)
-Date:   Mon, 5 Dec 2022 19:42:08 +0800 (CST)
-X-Zmail-TransId: 2b04638dd91003fa7628
-X-Mailer: Zmail v1.0
-Message-ID: <202212051942082259437@zte.com.cn>
-Mime-Version: 1.0
-From:   <yang.yang29@zte.com.cn>
-To:     <steve.wahl@hpe.com>
-Cc:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
-        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        <hpa@zytor.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
-        <yang.yang29@zte.com.cn>, <andy.shevchenko@gmail.com>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjJdIHg4Ni9wbGF0Zm9ybS91djogdXNlIHN0cnNjcHkgdG8gaW5zdGVhZCBvZiBzdHJuY3B5KCk=?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 2B5Bg4xo053795
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 638DD911.001 by FangMail milter!
-X-FangMail-Envelope: 1670240529/4NQhV92nnZz8RTZG/638DD911.001/10.5.228.132/[10.5.228.132]/mse-fl1.zte.com.cn/<yang.yang29@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 638DD911.001/4NQhV92nnZz8RTZG
+        Mon, 5 Dec 2022 08:14:02 -0500
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DE9D132;
+        Mon,  5 Dec 2022 05:14:01 -0800 (PST)
+Received: by mail-qv1-xf32.google.com with SMTP id e18so8160475qvs.1;
+        Mon, 05 Dec 2022 05:14:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JCSTPwGV8OAXCug3QnDBPm3zXv9tZlARCqDy61HFGi0=;
+        b=E7gbu1LvMyZIRCnVhLV53Ryh5udwwN2TZjwaV/3o0iLzMAJNjI8LVR6y2Q6KJL5Ieh
+         4dMApO3I7G/9EHy+D8oG/X62yYlmWuWvxZ1EiXCgMjs1ypXKV+Hh5IqpnrGFMVMMQ7ck
+         s7idnPmnYqOD/Rt4n31hqI072Tdqtr5gW+rGOi58wiUMnI3Xjl1GggJvkFA1L6rJeCVZ
+         BheJaxUnyYga+9eDBm8LQRlW3Jo73Ly0QfrQNxeUtq9MqzGHmc8ueERhCD5N4b9QChEQ
+         rrJv6PmzD5zr2EEXIJFbfcYIFhMI6Q+LO4MfuSoJnSqRNWg3uAtSRdo4QgR1BFH8wzEV
+         68kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JCSTPwGV8OAXCug3QnDBPm3zXv9tZlARCqDy61HFGi0=;
+        b=xAEunCCaf9VbWQZlkU9MOGVk7vBUVtv3nSmbTFOCWyEgeOUgMTX8DqZ9z3xqq48Gn+
+         m8nXAl4gNhDxZXhVybGtSaum3Y+szZfb4Mi9WtZV+WnHNy/ZBCn00XLvCpzsTF18EJPw
+         nCd9rRnPPM1OaC8wZn2JVHp1myFvECvetel5umETMSZjtb9qIj8wTuVXj2tHTW1qGZDv
+         CPe5n+F8CEwrbwgODQEOU5Y2nX1mZHvwX3dxfLSEy7nySRdmm6QzDEKHPi4ekmU+Lkd7
+         wrBEC74cRF9D9nkjBoOYM4xDlHJkcjmMd5bKg79OTwDN3xyqT5lDGV/xoW9Rf0//DV8A
+         MrpA==
+X-Gm-Message-State: ANoB5pkatBk7d2R+R52BNvU01xGRbLtSJvAi3uGeE2pvm9S5moyMpYXE
+        SCFrwu6cpVKrzmUPR1gc+A+feVfKHpP7qlIiuyk=
+X-Google-Smtp-Source: AA0mqf6b30lUrz9VODmoS6ytEhykCwbmIPtoYRuxo6Bguic2qF/nyCjv6tphJKS9fmu9uPnKNBv8NtNDa6D3bq7Rm/Q=
+X-Received: by 2002:ad4:57aa:0:b0:4c6:f83c:4741 with SMTP id
+ g10-20020ad457aa000000b004c6f83c4741mr36552859qvx.11.1670246040341; Mon, 05
+ Dec 2022 05:14:00 -0800 (PST)
+MIME-Version: 1.0
+References: <202212051942082259437@zte.com.cn>
+In-Reply-To: <202212051942082259437@zte.com.cn>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 5 Dec 2022 15:13:24 +0200
+Message-ID: <CAHp75Vc-gMuv=HpiF-LURrpy+0MDiQUe0hVv24pRezhQg2E-Lw@mail.gmail.com>
+Subject: Re: [PATCH linux-next v2] x86/platform/uv: use strscpy to instead of strncpy()
+To:     yang.yang29@zte.com.cn
+Cc:     steve.wahl@hpe.com, mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xu.panda@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xu Panda <xu.panda@zte.com.cn>
+On Mon, Dec 5, 2022 at 1:42 PM <yang.yang29@zte.com.cn> wrote:
+>
+> From: Xu Panda <xu.panda@zte.com.cn>
 
-The implementation of strscpy() is more robust and safer.
-That's now the recommended way to copy NUL terminated strings.
----
-change for v2
- - fix the mistake and make the code better and simpler,
-thanks to Andy Shevchenko.
----
+Thank you for an update, my comments below.
 
-Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-Signed-off-by: Yang Yang <yang.yang29@zte.com>
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- arch/x86/platform/uv/uv_nmi.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+> The implementation of strscpy() is more robust and safer.
+> That's now the recommended way to copy NUL terminated strings.
+> ---
+> change for v2
+>  - fix the mistake and make the code better and simpler,
+> thanks to Andy Shevchenko.
+> ---
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index a60af0230e27..d94140842aa3 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -205,11 +205,7 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
- 	char arg[ACTION_LEN], *p;
+This is (the changelog) in the wrong place.
 
- 	/* (remove possible '\n') */
--	strncpy(arg, val, ACTION_LEN - 1);
--	arg[ACTION_LEN - 1] = '\0';
--	p = strchr(arg, '\n');
--	if (p)
--		*p = '\0';
-+	strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
+> Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+> Signed-off-by: Yang Yang <yang.yang29@zte.com>
 
- 	for (i = 0; i < n; i++)
- 		if (!strcmp(arg, valid_acts[i].action))
+> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+No, I haven't given you this tag, sorry. The changelog is enough to give credit.
+
+...
+
+>         char arg[ACTION_LEN], *p;
+>
+>         /* (remove possible '\n') */
+> -       strncpy(arg, val, ACTION_LEN - 1);
+> -       arg[ACTION_LEN - 1] = '\0';
+> -       p = strchr(arg, '\n');
+> -       if (p)
+> -               *p = '\0';
+> +       strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
+
+And even better is to replace ACTION_LEN by sizeof(arg).
+
 -- 
-2.15.2
+With Best Regards,
+Andy Shevchenko
