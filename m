@@ -2,120 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D40C4321E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 09:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28265C4708D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 11:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231573AbiLEJ7e (ORCPT
+        id S229982AbiLELnA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Dec 2022 04:59:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41100 "EHLO
+        Mon, 5 Dec 2022 06:43:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231487AbiLEJ73 (ORCPT
+        with ESMTP id S231421AbiLELmV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Dec 2022 04:59:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F46E024
-        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Dec 2022 01:59:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Mon, 5 Dec 2022 06:42:21 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B609A1A212;
+        Mon,  5 Dec 2022 03:42:10 -0800 (PST)
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B6158B80DF3
-        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Dec 2022 09:59:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5ABA2C433C1
-        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Dec 2022 09:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670234366;
-        bh=w13Sd0WC7JSn46PiceGa4fPYPtYtqTAb6bewAsLGPSs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oEfQduLnz817Lo/ii3DfbLpQo5eBuQstCN02j8NtFX1qPkROeDe+oZ6A/eCAIykAY
-         NqtaeBvfqM/cpo9O555pnjxjs/+wXmCJpqwxEGPEd7x0kQaX0TVHB9fytG/O19DhT2
-         1sAKDXh24PKzv+KUwenZk1oLmSfK3LwE3+XdaHaXd0F87kjFSVHF1D9wSFbW4sGoRe
-         Cv1kSVDLLv188wP/CTb77Wini7p+4Q+Xg7r6sKBmYX2821qyHmxcSZHFQwaBD9IWGi
-         PiXMpJlS+xSEWeJjf9fJVsc4HF0N0yo3Y5BM6+7FafAlGPxWUqJHJulBu9UGfSZ3gQ
-         sbOH0HY+wGaOA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 40426C433E6; Mon,  5 Dec 2022 09:59:26 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216647] first hibernate to disk fails on HP EliteBook 845 G8
-Date:   Mon, 05 Dec 2022 09:59:26 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kolAflash@kolahilft.de
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-216647-215701-4ynhlOELsM@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216647-215701@https.bugzilla.kernel.org/>
-References: <bug-216647-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NQhV92nnZz8RTZG;
+        Mon,  5 Dec 2022 19:42:09 +0800 (CST)
+Received: from szxlzmapp07.zte.com.cn ([10.5.230.251])
+        by mse-fl1.zte.com.cn with SMTP id 2B5Bg4xo053795;
+        Mon, 5 Dec 2022 19:42:04 +0800 (+08)
+        (envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp02[null])
+        by mapi (Zmail) with MAPI id mid14;
+        Mon, 5 Dec 2022 19:42:08 +0800 (CST)
+Date:   Mon, 5 Dec 2022 19:42:08 +0800 (CST)
+X-Zmail-TransId: 2b04638dd91003fa7628
+X-Mailer: Zmail v1.0
+Message-ID: <202212051942082259437@zte.com.cn>
+Mime-Version: 1.0
+From:   <yang.yang29@zte.com.cn>
+To:     <steve.wahl@hpe.com>
+Cc:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
+        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
+        <yang.yang29@zte.com.cn>, <andy.shevchenko@gmail.com>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjJdIHg4Ni9wbGF0Zm9ybS91djogdXNlIHN0cnNjcHkgdG8gaW5zdGVhZCBvZiBzdHJuY3B5KCk=?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl1.zte.com.cn 2B5Bg4xo053795
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 638DD911.001 by FangMail milter!
+X-FangMail-Envelope: 1670240529/4NQhV92nnZz8RTZG/638DD911.001/10.5.228.132/[10.5.228.132]/mse-fl1.zte.com.cn/<yang.yang29@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 638DD911.001/4NQhV92nnZz8RTZG
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216647
+From: Xu Panda <xu.panda@zte.com.cn>
 
---- Comment #7 from kolAflash (kolAflash@kolahilft.de) ---
-Created attachment 303358
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303358&action=3Dedit
-kernel log for hibernation with platform (Linux 6.0.11)
+The implementation of strscpy() is more robust and safer.
+That's now the recommended way to copy NUL terminated strings.
+---
+change for v2
+ - fix the mistake and make the code better and simpler,
+thanks to Andy Shevchenko.
+---
 
-Hi Mario,
+Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+Signed-off-by: Yang Yang <yang.yang29@zte.com>
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ arch/x86/platform/uv/uv_nmi.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-thank you very much for your patience!
+diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
+index a60af0230e27..d94140842aa3 100644
+--- a/arch/x86/platform/uv/uv_nmi.c
++++ b/arch/x86/platform/uv/uv_nmi.c
+@@ -205,11 +205,7 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
+ 	char arg[ACTION_LEN], *p;
 
+ 	/* (remove possible '\n') */
+-	strncpy(arg, val, ACTION_LEN - 1);
+-	arg[ACTION_LEN - 1] = '\0';
+-	p = strchr(arg, '\n');
+-	if (p)
+-		*p = '\0';
++	strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
 
-(In reply to Mario Limonciello (AMD) from comment #6)
-> Can you please better describe the symptoms of the failure you're seeing
-> with "platform".  I don't see anything immediately obvious jumping out.
-
-With "platform" the system doesn't really enter hibernation. So the notebook
-stays on and doesn't turn off as expected for hibernation. (power led stays=
- on)
-
-The screen just becomes black for a few seconds. But then the system contin=
-ues
-normally. (not crashed, still usable, but not powered off as expected for
-hibernation)
-
-
-You can see that there are just 10 seconds between
-  PM: hibernation: hibernation entry
-and
-  PM: hibernation: hibernation exit
-in the
-  hibernate_broken_via_platform_v6.0.9.txt
-(see attachment 303251 in comment 5)
-In this time the screen was black.
-
-
-
-> You can try to take these two commits and see if it helps.
-> https://github.com/torvalds/linux/commit/
-> 4f2bea62cf3874c5a58e987b0b472f9fb57117a2
-> https://patchwork.freedesktop.org/patch/512917/
-
-I've just tested 6.0.11.
-Looks like both commits are already included in 6.0.11. So I didn't apply t=
-hem.
-
-Problem persists. See attached log.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ 	for (i = 0; i < n; i++)
+ 		if (!strcmp(arg, valid_acts[i].action))
+-- 
+2.15.2
