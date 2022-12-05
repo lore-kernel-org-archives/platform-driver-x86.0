@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3EC4321E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 13:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9006C4321E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 13:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbiLENOG (ORCPT
+        id S230505AbiLENQ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Dec 2022 08:14:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        Mon, 5 Dec 2022 08:16:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231952AbiLENOC (ORCPT
+        with ESMTP id S232124AbiLENQZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Dec 2022 08:14:02 -0500
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DE9D132;
-        Mon,  5 Dec 2022 05:14:01 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id e18so8160475qvs.1;
-        Mon, 05 Dec 2022 05:14:01 -0800 (PST)
+        Mon, 5 Dec 2022 08:16:25 -0500
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD8B13D45;
+        Mon,  5 Dec 2022 05:16:24 -0800 (PST)
+Received: by mail-qk1-x734.google.com with SMTP id v8so4841808qkg.12;
+        Mon, 05 Dec 2022 05:16:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCSTPwGV8OAXCug3QnDBPm3zXv9tZlARCqDy61HFGi0=;
-        b=E7gbu1LvMyZIRCnVhLV53Ryh5udwwN2TZjwaV/3o0iLzMAJNjI8LVR6y2Q6KJL5Ieh
-         4dMApO3I7G/9EHy+D8oG/X62yYlmWuWvxZ1EiXCgMjs1ypXKV+Hh5IqpnrGFMVMMQ7ck
-         s7idnPmnYqOD/Rt4n31hqI072Tdqtr5gW+rGOi58wiUMnI3Xjl1GggJvkFA1L6rJeCVZ
-         BheJaxUnyYga+9eDBm8LQRlW3Jo73Ly0QfrQNxeUtq9MqzGHmc8ueERhCD5N4b9QChEQ
-         rrJv6PmzD5zr2EEXIJFbfcYIFhMI6Q+LO4MfuSoJnSqRNWg3uAtSRdo4QgR1BFH8wzEV
-         68kQ==
+        bh=1IEd4mI8XLAQBexIi+9IpqUT3OWzPJE+9etDyFsEtDA=;
+        b=oE4GEmTdC5yMQ2N4/NNW936SbQWyASzL2GuhCgJV06hdVm6aJV1VE+JWgnNKKaeEfo
+         sNEfc0zY8Q4FnCXI+p0D7cXW5Atsp9oZJtjSe0d3OhOvJ8SKC9o43u5rA+4Xkt8+mGgm
+         Ti4wx1Dz8q8Tcw951dsL7GPoSCVh+hqMEQ9i+BAO1UbkFAyFQLpifCAlIqZ89C4gkVHL
+         01nWkpKl09O9Tigi+S9k+tLIO+N+BCVbWrVclaS9+Cj2YZYVbovBP8eqlynW72hrYtt0
+         hp1iSQwBJ2fqvaLioSbqT0M4pAbEJkRL/GWK7oH2E6ojmEXRMneyPE05JXf+HlZU20AJ
+         0hyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JCSTPwGV8OAXCug3QnDBPm3zXv9tZlARCqDy61HFGi0=;
-        b=xAEunCCaf9VbWQZlkU9MOGVk7vBUVtv3nSmbTFOCWyEgeOUgMTX8DqZ9z3xqq48Gn+
-         m8nXAl4gNhDxZXhVybGtSaum3Y+szZfb4Mi9WtZV+WnHNy/ZBCn00XLvCpzsTF18EJPw
-         nCd9rRnPPM1OaC8wZn2JVHp1myFvECvetel5umETMSZjtb9qIj8wTuVXj2tHTW1qGZDv
-         CPe5n+F8CEwrbwgODQEOU5Y2nX1mZHvwX3dxfLSEy7nySRdmm6QzDEKHPi4ekmU+Lkd7
-         wrBEC74cRF9D9nkjBoOYM4xDlHJkcjmMd5bKg79OTwDN3xyqT5lDGV/xoW9Rf0//DV8A
-         MrpA==
-X-Gm-Message-State: ANoB5pkatBk7d2R+R52BNvU01xGRbLtSJvAi3uGeE2pvm9S5moyMpYXE
-        SCFrwu6cpVKrzmUPR1gc+A+feVfKHpP7qlIiuyk=
-X-Google-Smtp-Source: AA0mqf6b30lUrz9VODmoS6ytEhykCwbmIPtoYRuxo6Bguic2qF/nyCjv6tphJKS9fmu9uPnKNBv8NtNDa6D3bq7Rm/Q=
-X-Received: by 2002:ad4:57aa:0:b0:4c6:f83c:4741 with SMTP id
- g10-20020ad457aa000000b004c6f83c4741mr36552859qvx.11.1670246040341; Mon, 05
- Dec 2022 05:14:00 -0800 (PST)
+        bh=1IEd4mI8XLAQBexIi+9IpqUT3OWzPJE+9etDyFsEtDA=;
+        b=q0XPZU+GalljuOBJa+88px4QEhIn3355JVzqiyYam8Dk6PEX+4AqCYRsY65TFBhp24
+         YcoZAZn5aQ5U8w6jcBTVNcjvNLOFQcuzaxQPlPSJwLNVEFTYgmSMbcj3Jr4vX4N4Ff6g
+         l3lTuUeIzkJ/yg3PyxtR3f7ZiVg6se7z2v2scVm0Vp8qgztv/EGbIm4QKuTuKJ9KYd4k
+         UEWBaGusC0+J+BVTN28MLgAe3uCtZSCo8MWpGpSZ3mSuQEJgZE3cRX43HVB2jWlegj1I
+         G2eCHAmPQvmxtxsChbk5yQeLz3THc6VOxsCEVMOPe1EgpjGuR3vJRTRxROKAEPOJvbxe
+         MZVg==
+X-Gm-Message-State: ANoB5pkR8Fd/o8KfBjUZYAems3yGl/YgSetyoHcyKm+0dTF+U4wNw71h
+        ngHz1GXB8nW84L97HG8nyx8P1+zi6o5LHQIwBp2BgLCmppg14Q==
+X-Google-Smtp-Source: AA0mqf5TkqKS5PRYCTdZo/ape7Psorn6DyU3gXrBcn4hxmOu1OKIkxxU/2lykVYJOjas/5oWPAneioPTyI0njsujhq0=
+X-Received: by 2002:a05:620a:2053:b0:6fc:abc1:d154 with SMTP id
+ d19-20020a05620a205300b006fcabc1d154mr14630302qka.320.1670246183553; Mon, 05
+ Dec 2022 05:16:23 -0800 (PST)
 MIME-Version: 1.0
-References: <202212051942082259437@zte.com.cn>
-In-Reply-To: <202212051942082259437@zte.com.cn>
+References: <202212051942082259437@zte.com.cn> <CAHp75Vc-gMuv=HpiF-LURrpy+0MDiQUe0hVv24pRezhQg2E-Lw@mail.gmail.com>
+In-Reply-To: <CAHp75Vc-gMuv=HpiF-LURrpy+0MDiQUe0hVv24pRezhQg2E-Lw@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Dec 2022 15:13:24 +0200
-Message-ID: <CAHp75Vc-gMuv=HpiF-LURrpy+0MDiQUe0hVv24pRezhQg2E-Lw@mail.gmail.com>
+Date:   Mon, 5 Dec 2022 15:15:47 +0200
+Message-ID: <CAHp75VfLGUF4vqeObEOjRKzc+R+oYgsUZSdvVd+Echnq2DNRqw@mail.gmail.com>
 Subject: Re: [PATCH linux-next v2] x86/platform/uv: use strscpy to instead of strncpy()
 To:     yang.yang29@zte.com.cn
 Cc:     steve.wahl@hpe.com, mike.travis@hpe.com, dimitri.sivanich@hpe.com,
@@ -66,42 +66,26 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 5, 2022 at 1:42 PM <yang.yang29@zte.com.cn> wrote:
->
-> From: Xu Panda <xu.panda@zte.com.cn>
-
-Thank you for an update, my comments below.
-
-> The implementation of strscpy() is more robust and safer.
-> That's now the recommended way to copy NUL terminated strings.
-> ---
-> change for v2
->  - fix the mistake and make the code better and simpler,
-> thanks to Andy Shevchenko.
-> ---
-
-This is (the changelog) in the wrong place.
-
-> Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-> Signed-off-by: Yang Yang <yang.yang29@zte.com>
-
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-No, I haven't given you this tag, sorry. The changelog is enough to give credit.
+On Mon, Dec 5, 2022 at 3:13 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Dec 5, 2022 at 1:42 PM <yang.yang29@zte.com.cn> wrote:
 
 ...
 
->         char arg[ACTION_LEN], *p;
+> >         char arg[ACTION_LEN], *p;
+> >
+> >         /* (remove possible '\n') */
+> > -       strncpy(arg, val, ACTION_LEN - 1);
+> > -       arg[ACTION_LEN - 1] = '\0';
+> > -       p = strchr(arg, '\n');
+> > -       if (p)
+> > -               *p = '\0';
+> > +       strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
 >
->         /* (remove possible '\n') */
-> -       strncpy(arg, val, ACTION_LEN - 1);
-> -       arg[ACTION_LEN - 1] = '\0';
-> -       p = strchr(arg, '\n');
-> -       if (p)
-> -               *p = '\0';
-> +       strscpy(arg, val, strnchrnul(val, ACTION_LEN, '\n') - val);
+> And even better is to replace ACTION_LEN by sizeof(arg).
 
-And even better is to replace ACTION_LEN by sizeof(arg).
+Btw, have you compiled this with `make W=1 ...`? I believe you will
+get a new warning after your change.
 
 -- 
 With Best Regards,
