@@ -2,194 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD714C47088
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Dec 2022 12:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFCCC4708D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Dec 2022 09:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiLCM3U (ORCPT
+        id S230243AbiLEJS0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 3 Dec 2022 07:29:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41730 "EHLO
+        Mon, 5 Dec 2022 04:18:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbiLCM3S (ORCPT
+        with ESMTP id S230193AbiLEJSZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Dec 2022 07:29:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1657818E21
-        for <platform-driver-x86@vger.kernel.org>; Sat,  3 Dec 2022 04:28:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670070495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=59luDbOiMKxKctSq5vQdKkfPCytrueeeP3Jshzqy+ps=;
-        b=hVczSBh5ZdkjvNV9gP05kephRyHoPWoXlMsJiWjR08ajL5VUi3szvCgjlXrEY5ST1sPCmK
-        lQENIr6DgFjn5kQ5OtFgF9FJovhkj4Bo2FAIhU/TFlikIKLg5jXbG09TyzRMeSOdSr5jFE
-        SEd3a25L85DudU32wmidkcbkFAefZq0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-554-HHCz18vzP96HSpHr3RjIHw-1; Sat, 03 Dec 2022 07:28:14 -0500
-X-MC-Unique: HHCz18vzP96HSpHr3RjIHw-1
-Received: by mail-ej1-f70.google.com with SMTP id qw20-20020a1709066a1400b007af13652c92so5141653ejc.20
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2022 04:28:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=59luDbOiMKxKctSq5vQdKkfPCytrueeeP3Jshzqy+ps=;
-        b=wdqRRUhvSOLVeV2BuVaY3XZ9+ikJ32rLtwzXDNKluqZsbl9PMl9WJY9LgVn5WtZ0uE
-         5KP4aI4Q9fbGS6noYNLo72UAFmPiPYg4yRxTuzfKqHaXoEzgk2CGJzquiCF32weqikUC
-         DXtQAipeBwHkaBnlHCHLFCyV3D0D7m+ynhzPVavvp64iV31pYhk1t6SPkRwg2zs4X4Mx
-         egzb1rZHdJ5uRN3TmBHEWfrcd0U7Pg0U98OHw6UE8ZYLpDAPJlD1GNooM6NKcj29Eutc
-         +z9prbHJn5va0DUavrLbxCOPoB/a1hHjJAl1cwUB78l04maBw/lMK4FGU3KPTzV7WkGW
-         wl4A==
-X-Gm-Message-State: ANoB5pkytk1Dpo7Ri5csf+k8MiN4od6jgL5Y5/QtZjfHAX9+NkBJKyJR
-        9OqxcF5WJzgA4zSvjI2RgCqESsF0g/n29Of4RnVwOWPz7uxkf6hqgDBv/rjeWcToTU7M+YT5KNJ
-        Wj9k1VL4A0B9j+U3iy6QGT7uhVBMbR7BTaQ==
-X-Received: by 2002:a17:906:6ac1:b0:7c0:9a3:87ff with SMTP id q1-20020a1709066ac100b007c009a387ffmr23578795ejs.505.1670070492947;
-        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6Phk4/EX1QwDCEUsGg/HEG78cVvaFcy9t2WdeDrCuBWsltrBIbyFacHn1OHh//Eu74QVivxg==
-X-Received: by 2002:a17:906:6ac1:b0:7c0:9a3:87ff with SMTP id q1-20020a1709066ac100b007c009a387ffmr23578782ejs.505.1670070492677;
-        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id v18-20020a170906293200b0077b2b0563f4sm4181611ejd.173.2022.12.03.04.28.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Dec 2022 04:28:12 -0800 (PST)
-Message-ID: <f79b9397-64af-894a-411c-5595fa136008@redhat.com>
-Date:   Sat, 3 Dec 2022 13:28:11 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 0/5] gpio/media/int3472: Add support for tps68470
- privacy-LED output
-Content-Language: en-US, nl
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Mon, 5 Dec 2022 04:18:25 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C521260E;
+        Mon,  5 Dec 2022 01:18:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670231903; x=1701767903;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=id2QpeunLoL/GwF3eD1EcwAHBc8SwBuv+Uk51QZf5tQ=;
+  b=Jwiu3kuVdDGxYES3CzUNkTaPcTwi3myl71yK1yvb7G8DwzPIcrYX76k/
+   LGxAKuSKEXXiVi1O4X1oDGTg299jt3fAPi5uLcVrXaLMKemM97eZwmXcg
+   NNA/ilzYDd2f9afDj2BEQuS9EMAGi24u1nKR03T2aFDXmCqea5Q6s0TO0
+   73/q1TyPXmkLpLIf+gIDgrV5NCxy5i8s+191nGobd7DtRuA5xYXwft/07
+   FhNkUxyQAyhW7z+4G9mAkrhspkKui2ER+nys8AKT6IkAs9g4vYRGem2hf
+   sPzbm72pHHzQhE8depsbZbmmA/fR4Ej+w9aDuaAoRLHXJErFhDKQHJcO8
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10551"; a="296659661"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="296659661"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 01:18:23 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10551"; a="714330536"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="714330536"
+Received: from punajuuri.fi.intel.com (HELO paasikivi.fi.intel.com) ([10.237.72.43])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 01:18:21 -0800
+Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
+        by paasikivi.fi.intel.com (Postfix) with SMTP id AA3102033F;
+        Mon,  5 Dec 2022 11:18:18 +0200 (EET)
+Date:   Mon, 5 Dec 2022 09:18:18 +0000
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/5] gpio/media/int3472: Add support for tps68470
+ privacy-LED output
+Message-ID: <Y423WoW/QksbCwIK@paasikivi.fi.intel.com>
 References: <20221128214408.165726-1-hdegoede@redhat.com>
- <CACRpkda+3e6jLq4WkyiCFcvL_rO1tAf_TvO5B9kikkii+6vSnA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CACRpkda+3e6jLq4WkyiCFcvL_rO1tAf_TvO5B9kikkii+6vSnA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221128214408.165726-1-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On 12/3/22 10:32, Linus Walleij wrote:
-> On Mon, Nov 28, 2022 at 10:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Nov 28, 2022 at 10:44:03PM +0100, Hans de Goede wrote:
+> Hi All,
 > 
->> Patches 1-2: 2 small bugfixes to the gpio-tps68470 code
+> While working on the earlier discussed changes for dealing with
+> the privacy LED for "discrete" INT3472 ACPI devices I was wondering
+> "how are we dealing with the privacy LED when the INT3472 ACPI device
+> is a tps68470?".
 > 
-> Good, please merge this.
+> Well it turns out we were not dealing with this at all, leading to
+> the privacy LED on the back of the Surface Go series not lighting up
+> when the back camera is on.
+
+The tps68470 on ACPI was originally only supported via the OP region
+interface and on all of those systems the privacy LED was hard wired. So
+the LED outputs were not supported. Thanks for adding them.
+
 > 
->> Patch3:      Add support for the indicator LED outputs on the tps68470 as GPIOs
->> Patch4:      Add support for a privacy LED to the ov8865 sensor driver
->> Patch5:      Add gpio-lookup table entry for the privacy LED.
+> This series fixes this, it consists of:
 > 
-> OK so I have to call out the hippo in the room:
+> Patches 1-2: 2 small bugfixes to the gpio-tps68470 code
+> Patch3:      Add support for the indicator LED outputs on the tps68470 as GPIOs
+> Patch4:      Add support for a privacy LED to the ov8865 sensor driver
+> Patch5:      Add gpio-lookup table entry for the privacy LED.
 > 
-> these "gpios" are not called "gpios" anywhere else than in this
-> patch. General purpose input/output, remember. These are special
-> purpose LED control registers.
+> There is one small issue here, I believe that patches 1-3 need to land before
+> 4 + 5 do. Once 4 + 5 have landed the ov8865 driver will try to get a
+> GPIO with pin number 10 from the gpio-tps68470 provider and without patch 3,
+> that will fail because only pins 0-9 exist until patch 3 lands.
 > 
-> So can you provide a good explanation why these registers aren't
-> handled in the drivers/led subsystem instead?
+> The easiest way to avoid this issue would be for me to merge patches 1-3 +
+> 5 through the pdx86 tree. GPIO subsystem maintainers, may I have your ack
+> for this ?
+> 
+> Note patch 4 is not a problem without patch 5, it uses gpiod_get_optional,
+> so as long as there is no lookup entry for a "privacy-led" GPIO it is
+> a no-op.
 
-This was discussed in another thread:
+For the patches:
 
-https://lore.kernel.org/platform-driver-x86/20221124200007.390901-1-hdegoede@redhat.com/
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-There were 2 problems identified which has lead to the current
-direction of just modelling at as an (output only) GPIO:
+Although I'd still like to see another, better scaling solution for
+controlling privacy LEDs.
 
-1. The LED class allows userspace control of the LED which is
-bad from a privacy pov. This will make it easy, too easy
-(was the conclusion) for spy-ware to turn on the camera without
-the LED turning on.
+-- 
+Kind regards,
 
-Later in the thread it was pointed out that there is a flag to
-suspend userspace control, we could use this to permanently disable
-userspace control which I guess would be some what of a solution,
-although we would then also need to look into disallow changing
-triggers, because I think those could still be used as a way around
-this.
-
-2. GPIO(s) can be tied directly to the device so that on a device
-with both front and back privacy-LEDs (real world example) doing
- gpiod_get(dev, "privacy-led") gets us the right privacy-led,
-where as with LED class devices tying the sensor and LED class
-device is going to be tricky.
-
-> IIUC the leds subsystem has gained support for leds as resources.
-
-Interesting that would mitigate problem 2 from above and since
-people keep circling back to "its a LED please use the LED class",
-this is definitely worth looking into.
-
-Do you have any pointers / examples about led class devices as
-resources?
-
-###
-
-Note though that these indicator LED outputs, both functionality
-wise as well as at the register level of this PMIC only support
-turning them on/off. So this maps pretty well to the GPIO subsystem
-and all the functionality of the LED class subsystem is mostly
-functionality which we want to avoid since we don't want userspace
-control, neither directly through sysfs or by attaching triggers.
-
-So this does map pretty well to just modelling it as a GPIO,
-if we model this as a LED then we end up having to workaround
-a bunch of stuff the LED subsytem does which we do not want in
-this case. And this may even require patches to the LED subsystem
-to disallow userspace changing the trigger (I would need to check).
-
-So from my pov modelling this as an output-only GPIO pin is
-actually a more KISS solution then involving the LED subsystem...
-
-> I don't mind a LED driver inside of the GPIO driver if that is what
-> it takes as a compromise, just that it should be handled by the right
-> subsystem.
-
-The PMIC already is a MFD device, so if we go the LED class route
-we can just add a separate MFD child device for the new LED driver
-to bind to.
-
-> Given that flash leds which are used by cameras are already in
-> drivers/leds/flash this should be no different and there will be more
-> cameras with these privacy leds.
-
-Actually this patch is for the back camera privacy LED on a
-Microsoft Surface Go tablet. The front camera privacy LED is
-directly attached to a GPIO of the main SoC. So for that camera
-just adding a GPIO lookup table entry to map the ACPI provided
-GPIO info to a "privacy-led" GPIO on the sensor i2c_client device
-(which we already do for the "reset" and "powerdown" gpios) also
-by far is the most KISS approach.
-
-Doing things this way in the code translating the ACPI "magic"
-to standard Linux device-model stuff is literary a single line
-of code (add an extra case: to an existing list of cases in a
-switch-case). Where as instantiating a LED class device for this
-and then somehow tying that to the i2c_client for the sensor will
-be more code.
-
-So again treating these on/off only LEDs, where we want to
-*disallow* userspace control, as a GPIO is by far the most KISS
-solution.
-
-Regards,
-
-Hans
-
+Sakari Ailus
