@@ -2,80 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E784C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924CCC3A5A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 15:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbiLHPLR (ORCPT
+        id S229851AbiLHPMT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 10:11:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54960 "EHLO
+        Thu, 8 Dec 2022 10:12:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiLHPLQ (ORCPT
+        with ESMTP id S230077AbiLHPMO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 10:11:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99819A13FA
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 07:10:11 -0800 (PST)
+        Thu, 8 Dec 2022 10:12:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4821498EB2
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 07:11:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670512210;
+        s=mimecast20190719; t=1670512275;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FE57oxXa4i/1Vz7TH/Wp70vVhdGBPQCVO1nCrJ34Zkk=;
-        b=Yp1BP0cuf9Olez2i/qpyzhyFm4TWSTeWu9cUmDIyCqgPtsfvuUygbpZAlHIM2VHV+xBLOS
-        m1TucOiaIqdLUF3S6El1xv1E8+RCKcJscv+YHuGZCxozEzewAzU3p1fyJ4FokVt5IGktOJ
-        ArbN9dAOrka0BDk71S3mjG1wJhrZlGY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=pMbXWoFnDtz3F9v1T4KHhPMeZKRZpcYXC2eRIPU5qHU=;
+        b=TlR2Q32neTdDaHVOZTxrTh7IJwqAqTQEu0DVyPJDcKV0fxvNiFRg+SZ/pF8dVZCLSslU+T
+        xxKtgeV7fXOVYg37vPnz0S2Gb7J8LOOgBvCQJEE7r5vxmpp/gM7vrfCJyoIJSo3i8tfy7N
+        LXPj0KFXvDYgtZOgSmURs12cIiX197o=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-275-oSfG5ltVNvWpud63sSD7DQ-1; Thu, 08 Dec 2022 10:10:01 -0500
-X-MC-Unique: oSfG5ltVNvWpud63sSD7DQ-1
-Received: by mail-ej1-f71.google.com with SMTP id hq42-20020a1709073f2a00b007c100387d64so1347695ejc.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 07:10:01 -0800 (PST)
+ us-mta-528-b_tQsneYN7-7wGudR0CIRA-1; Thu, 08 Dec 2022 10:11:14 -0500
+X-MC-Unique: b_tQsneYN7-7wGudR0CIRA-1
+Received: by mail-ed1-f72.google.com with SMTP id y18-20020a056402359200b004635f8b1bfbso1083113edc.17
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 07:11:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FE57oxXa4i/1Vz7TH/Wp70vVhdGBPQCVO1nCrJ34Zkk=;
-        b=LN0reYtzLRyo4pwveyScLkAhab25JVZvlUTyYihTTwC4SiXAquVy8TjLYZFwCIMCkJ
-         3Hsje3IaSqMnZ5bv1BasJtVBeM5p0a4MPDmypFHmynLhYnF854tisw20lWCGiigGIc1R
-         POk1msieoSKk6jaR9E6Em9cYi7LOkPvSvMGj64/SLDuRmyzIZlokzXSBLjmE8Kbyow7b
-         Cfqa/DrI2bAUhAYowKXRR4HlqjElHzeH5Z/8qGYXMmM7fc3vsWXywG11DnWgkLaciPjy
-         wJvtH0TmFdS6loehpHWuxoE77clb+UIRJvVoDyFa3Az4/u/PduYkfmnY2kABFKZ5f/Wo
-         UOkQ==
-X-Gm-Message-State: ANoB5pk8KSQzXTZIBEB7eput9CoeWEd4ZnXh8CB5yA1CZCmYGjkTBRNe
-        /sYKVEwPJ6cH3JPMEpUPRZTJ1VGjJSCh5KUgxURmDmwSRNMShtEJ9bq10vwM3E9LIgJaUQSVgnE
-        ut/mTpPmdTczwh80SA7WSE9iqhrePEm5LNw==
-X-Received: by 2002:a17:906:b114:b0:78d:f455:b4b6 with SMTP id u20-20020a170906b11400b0078df455b4b6mr2275728ejy.29.1670512200757;
-        Thu, 08 Dec 2022 07:10:00 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf60fkiAwj01kDopgWlZGSPMfNRxmC8gbbbvAvg1FqhxRPAu9W0sYlxj6BSRp/WgQIZzdjanEw==
-X-Received: by 2002:a17:906:b114:b0:78d:f455:b4b6 with SMTP id u20-20020a170906b11400b0078df455b4b6mr2275721ejy.29.1670512200490;
-        Thu, 08 Dec 2022 07:10:00 -0800 (PST)
+        bh=pMbXWoFnDtz3F9v1T4KHhPMeZKRZpcYXC2eRIPU5qHU=;
+        b=4ZoHwijCoavRkcc1aEFLEKYQ7OtZ1vRDBLHpsLRioTNKsYgcZBnV5WTy6aRPegmk7R
+         tKoeenDu5OCKTcK4WCspGnFrI36U1CBqASpc7wZ+VAeG+q5JUcC5FJkLthkOy67QcvCm
+         25+medYt6cUK9EnMzSB84aS98uRDPpTaVvmuOaGd0H4iDak1ZiOttQgYYXU583PA3LgE
+         /yi0XL/9MR3qN9pCluzodtUTZi3ciA9OBJM5qd6sv3TsBkPRhxQErVdh7+Bo2JCTeTKy
+         YetLYAUOknSd5LfRWkKUAqNEYQ/TwJqQzUcPaJZ1+rZO7xgzT+1isVzNn/q07pUTn2Fs
+         f63A==
+X-Gm-Message-State: ANoB5pkOD3jpdbt6C3aXcPNV4tOuWtD9utJoSD6JMYsZk2ta5yOYpz3r
+        TWFOt+2N9IIX2p8JFiN17ljmGazLYBAJ3rXaKO46+GJe6Cn9dehZHnLEhED82RAMWyrg44isQS9
+        uQ77yJD0wWmSKPq7QbARRvqjzUdnrq1zzUA==
+X-Received: by 2002:a17:906:c44c:b0:7c1:ee:5bca with SMTP id ck12-20020a170906c44c00b007c100ee5bcamr2099576ejb.73.1670512273091;
+        Thu, 08 Dec 2022 07:11:13 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4bKe6itUe3bMslsx0HruxeBA9+AiLMj78SBwSgJAqWLvd3MQSlPIuBpzsQDQ0Wzqy31fAHYQ==
+X-Received: by 2002:a17:906:c44c:b0:7c1:ee:5bca with SMTP id ck12-20020a170906c44c00b007c100ee5bcamr2099565ejb.73.1670512272851;
+        Thu, 08 Dec 2022 07:11:12 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id k9-20020a17090646c900b0072af4af2f46sm9770006ejs.74.2022.12.08.07.09.58
+        by smtp.gmail.com with ESMTPSA id e10-20020a170906314a00b007bfc5cbaee8sm9916265eje.17.2022.12.08.07.11.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 07:09:58 -0800 (PST)
-Message-ID: <56426127-f897-e4ed-de9e-34235f638ad6@redhat.com>
-Date:   Thu, 8 Dec 2022 16:09:58 +0100
+        Thu, 08 Dec 2022 07:11:12 -0800 (PST)
+Message-ID: <696fd8c2-5458-96c9-e78d-ffd14dd68510@redhat.com>
+Date:   Thu, 8 Dec 2022 16:11:11 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: Add Lenovo Yoga Tab 3
- (YT3-X90F) charger + fuel-gauge data
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Add Advantech MICA-071
+ extra button
 Content-Language: en-US, nl
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20221127182458.104528-1-hdegoede@redhat.com>
- <Y4SLhlW1t5epgamh@smile.fi.intel.com>
- <58a7f20d-dd47-1ffc-f7b2-f1d30a0a7d69@redhat.com>
- <Y4SVh6qV7Se2Qc3k@smile.fi.intel.com>
- <0c686ea2-338b-28cf-688f-13d99ca92611@redhat.com>
- <Y4Sdp8AMOYAbRbil@smile.fi.intel.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20221127221928.123660-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y4Sdp8AMOYAbRbil@smile.fi.intel.com>
+In-Reply-To: <20221127221928.123660-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -84,93 +79,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/28/22 12:38, Andy Shevchenko wrote:
-> On Mon, Nov 28, 2022 at 12:24:59PM +0100, Hans de Goede wrote:
->> On 11/28/22 12:03, Andy Shevchenko wrote:
->>> On Mon, Nov 28, 2022 at 11:44:36AM +0100, Hans de Goede wrote:
->>>> On 11/28/22 11:20, Andy Shevchenko wrote:
->>>>> On Sun, Nov 27, 2022 at 07:24:58PM +0100, Hans de Goede wrote:
+On 11/27/22 23:19, Hans de Goede wrote:
+> The Advantech MICA-071 is a standard Windows tablet, but it has an extra
+> "quick launch" button which is not described in the ACPI tables in anyway.
 > 
-> ...
+> Use the x86-android-tablets infra to create a gpio-button device for this.
 > 
->>>>>> +	/*
->>>>>> +	 * The "bq25892_0" charger IC has its /CE (Charge-Enable) and OTG pins
->>>>>> +	 * connected to GPIOs, rather then having them hardwired to the correct
->>>>>> +	 * values as is normally done.
->>>>>> +	 *
->>>>>> +	 * The bq25890_charger driver controls these through I2C, but this only
->>>>>> +	 * works if not overridden by the pins. Set these pins here:
->>>>>> +	 * 1. Set /CE to 0 to allow charging.
->>>>>
->>>>> If I read this correctly then the /CE is an active low pin and setting to 0
->>>>> means active state
->>>>
->>>> Correct.
->>>>
->>>>> which...
->>>>>
->>>>>> +	 * 2. Set OTG to 0 disable V5 boost output since the 5V boost output of
->>>>>> +	 *    the main "bq25892_1" charger is used when necessary.
->>>>>> +	 */
->>>>>> +
->>>>>> +	/* /CE pin */
->>>>>> +	ret = x86_android_tablet_get_gpiod("INT33FF:02", 22, &gpiod);
->>>>>> +	if (ret < 0)
->>>>>> +		return ret;
->>>>>
->>>>>> +	gpiod_set_value(gpiod, 0);
->>>>>
->>>>> ...contradicts with the virtual state here. Perhaps you missed the
->>>>> corresponding flag to enable negation?
->>>>
->>>> x86_android_tablet_get_gpiod() gets the GPIO directly from
->>>> the gpio-chip using gpiochip_get_desc() since these GPIOs are
->>>> not described in ACPI. There is no option to pass a gpio_lookup_flags
->>>> flag like GPIO_ACTIVE_LOW this way since we are not doing an actual lookup.
->>>
->>> gpiod_toggle_active_low() is your friend, no?
->>
->> Note that the GPIO is never actually requested and doing
->> gpiod_toggle_active_low() on a non requested gpio_desc is not nice.
->>
->> Normally the GPIO_ACTIVE_LOW flag gets cleared on gpiod_free() to
->> leave it in a clean state for any future users, so we would need to
->> do something like:
->>
->> gpiod_toggle_active_low(gpiod);
->> gpiod_set_value(gpiod, 1);
->> gpiod_toggle_active_low(gpiod);
->>
->> or actually request the GPIO, which means adding an lenovo_yt3_exit()
->> to unrequest them; and adding a global lenovo_yt3_gpios[] variable
->> to store the descs in between init + exit.
->>
->> This is something which I did consider, since it would also list
->> the GPIOs in /sys/kernel/debug/gpio which would be somewhat nice,
->> otoh it is a bunch of extra code just for getting the GPIOs
->> listed in  debugfs file.
->>
->> Still if you really want me to mark it as active-low I believe
->> that doing a proper request of the GPIO + free on exit() is
->> the right way to go here.  That or just leave this as is in
->> this version 1 of this patch.
->>
->> Please let me know how you want to proceed with this.
-> 
-> I do not insist, but my objection here is the terminology (active state,
-> inactive state vs. 0, 1 or other way around) and inconsistency with what you
-> put as a value and what comment says taking into account / (or
-> negation) of the real signal.
-> 
-> Ideally yes, would be nice to have it indeed requested since it's in use even
-> from the Linux kernel perspective (one may debug its usage or see via user
-> space, note as well that non-requested pin maybe easily altered in the Linux).
-> 
-> But if you guarantee nothing of this happens, feel free to amend the comment
-> to make it more clear and proceed.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Ok, I've amended the comment to make things more clear and merged this
-into my review-hans branch now.
+I've added this to my review-hans (soon to be for-next) branch now.
 
 Regards,
 
@@ -178,12 +95,84 @@ Hans
 
 
 
-
+> ---
+>  drivers/platform/x86/x86-android-tablets.c | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 > 
->>>>>> +	ret = x86_android_tablet_get_gpiod("INT33FF:03", 19, &gpiod);
->>>>>> +	if (ret < 0)
->>>>>> +		return ret;
->>>>>> +
->>>>>> +	gpiod_set_value(gpiod, 0);
-> 
+> diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+> index 916e37a4f85e..5a7adcc76b1e 100644
+> --- a/drivers/platform/x86/x86-android-tablets.c
+> +++ b/drivers/platform/x86/x86-android-tablets.c
+> @@ -265,6 +265,56 @@ static struct gpiod_lookup_table int3496_gpo2_pin22_gpios = {
+>  	},
+>  };
+>  
+> +/*
+> + * Advantech MICA-071
+> + * This is a standard Windows tablet, but it has an extra "quick launch" button
+> + * which is not described in the ACPI tables in anyway.
+> + * Use the x86-android-tablets infra to create a gpio-button device for this.
+> + */
+> +static struct gpio_keys_button advantech_mica_071_button = {
+> +	.code = KEY_PROG1,
+> +	/* .gpio gets filled in by advantech_mica_071_init() */
+> +	.active_low = true,
+> +	.desc = "prog1_key",
+> +	.type = EV_KEY,
+> +	.wakeup = false,
+> +	.debounce_interval = 50,
+> +};
+> +
+> +static const struct gpio_keys_platform_data advantech_mica_071_button_pdata __initconst = {
+> +	.buttons = &advantech_mica_071_button,
+> +	.nbuttons = 1,
+> +	.name = "prog1_key",
+> +};
+> +
+> +static const struct platform_device_info advantech_mica_071_pdevs[] __initconst = {
+> +	{
+> +		.name = "gpio-keys",
+> +		.id = PLATFORM_DEVID_AUTO,
+> +		.data = &advantech_mica_071_button_pdata,
+> +		.size_data = sizeof(advantech_mica_071_button_pdata),
+> +	},
+> +};
+> +
+> +static int __init advantech_mica_071_init(void)
+> +{
+> +	struct gpio_desc *gpiod;
+> +	int ret;
+> +
+> +	ret = x86_android_tablet_get_gpiod("INT33FC:00", 2, &gpiod);
+> +	if (ret < 0)
+> +		return ret;
+> +	advantech_mica_071_button.gpio = desc_to_gpio(gpiod);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct x86_dev_info advantech_mica_071_info __initconst = {
+> +	.pdev_info = advantech_mica_071_pdevs,
+> +	.pdev_count = ARRAY_SIZE(advantech_mica_071_pdevs),
+> +	.init = advantech_mica_071_init,
+> +};
+> +
+>  /* Asus ME176C and TF103C tablets shared data */
+>  static struct gpio_keys_button asus_me176c_tf103c_lid = {
+>  	.code = SW_LID,
+> @@ -1379,6 +1429,14 @@ static const struct x86_dev_info xiaomi_mipad2_info __initconst = {
+>  };
+>  
+>  static const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+> +	{
+> +		/* Advantech MICA-071 */
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Advantech"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MICA-071"),
+> +		},
+> +		.driver_data = (void *)&advantech_mica_071_info,
+> +	},
+>  	{
+>  		/* Asus MeMO Pad 7 ME176C */
+>  		.matches = {
 
