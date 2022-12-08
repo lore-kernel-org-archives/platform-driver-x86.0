@@ -2,181 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BD1C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 11:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ADFC3A5A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 13:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbiLHLIO (ORCPT
+        id S229937AbiLHNBO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 06:08:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
+        Thu, 8 Dec 2022 08:01:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230003AbiLHLHw (ORCPT
+        with ESMTP id S229709AbiLHNBN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 06:07:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD65A10B
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 03:02:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670497351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=q0GTT9NhhbOU+AzsfZ/WjhsSQaWmMFA+fQWTnIof7FI=;
-        b=XXvoHtYaTLiCLOJZuyqZb8pXC+MPVtOfHtj/juzUUExp8V5jZPAwABfIrAphqStA4jxSUz
-        ic9Mg8rLbeoTJnnqHSk31hDNt8sGSyjll6sVSiBBXEjRRI4yw0olpqEovVo/13FuRELLbV
-        GPcYitcPGpXyjrIHfkVOMP7hq3ByPSM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-226-h6644K96Pp-TkUWj8aQnpQ-1; Thu, 08 Dec 2022 06:02:28 -0500
-X-MC-Unique: h6644K96Pp-TkUWj8aQnpQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 58FB8380670E;
-        Thu,  8 Dec 2022 11:02:28 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.194.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6144A1121331;
-        Thu,  8 Dec 2022 11:02:27 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: x86-android-tablets: Add Medion Lifetab S10346 data
-Date:   Thu,  8 Dec 2022 12:02:24 +0100
-Message-Id: <20221208110224.107354-1-hdegoede@redhat.com>
+        Thu, 8 Dec 2022 08:01:13 -0500
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6678D66E;
+        Thu,  8 Dec 2022 05:01:11 -0800 (PST)
+Received: by mail-qv1-xf29.google.com with SMTP id e18so894225qvs.1;
+        Thu, 08 Dec 2022 05:01:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fekV9oATPpFDs1lXKps2/TiD0fsHdaC60pqXyCCT6CA=;
+        b=HrnMNcLFVA9+1T8Kv9eFSiQOYSSJnL5i9412wnnuT/Zle1WIPEIHTlcplWMr0KCRE0
+         w3OZl4AafO4x7wNiEEtbSTPLuyuDUzkaDXvUFFMpB2qI5GyJwSg9admPrPTJb+bS2dx5
+         W8azC1pq0vLf84sj9NPC1S6ptUIrges3JfOgls77oK8hWRWQdN66MUc+mE0nieaa+YsH
+         QnEsIhdelRoAt7v9eYaeydX8Q8zBbx6Ucx/SPsM6iYs9y2vMNhdYSwxpmXxSEnmmK+OD
+         MiyOY3vLLkNTmR7TNxJKepJvLC0cvtzFkcuGpi4rRjoVlTYO8WtjeT8k+PZosek913od
+         jEbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fekV9oATPpFDs1lXKps2/TiD0fsHdaC60pqXyCCT6CA=;
+        b=u20M5JOlyeCJ0whm8dNwYtUSh0d98OWDhQOzDuXUpW6lNaD9poT0FL0bNOnocpFkFg
+         7/glfFkmvfYtafD4g0NF7fZbsqc9Y7bjrsBDNTZPQrYyK4zyhvkCVeE8qQK9Z4kDl5OX
+         3ZnqVKW1vCgSBG1/SG1f1dLeUgimYdff083sQqmlpD1OJITn8cwQ+BRwPqiRNpoUewfR
+         ZomwcwM5pNnwwVHU6rZW4X7Gd7cVL4SXkj7CzihL1xS91GPUefvi0MND6SSti4ukrjMN
+         h8N+EW4rN9UBZsbRVmsqS5vdm5fG9t8S+DUMG81RED+Tubp1+C6ILt1mnixFfYb9o8qT
+         9E4g==
+X-Gm-Message-State: ANoB5pnG+eX47Oqvlpragr+mvKmuAj6joaV4ReKy8lbmtOO7R/QJEK9C
+        0fUq4FsAa2Oge31KJPqcRxRtPBoZEfMMfluZm0iie3kmC8I=
+X-Google-Smtp-Source: AA0mqf5IAq6OQH+V7WtQp87dAj/PAN5PzrOY6psk/23zLQDByhuFLl7u/aWjqt/iwn45EgKa7icd5S5lT1oLmafkaRw=
+X-Received: by 2002:ad4:5366:0:b0:4c6:73ac:5a5 with SMTP id
+ e6-20020ad45366000000b004c673ac05a5mr85807965qvv.48.1670504470503; Thu, 08
+ Dec 2022 05:01:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+References: <20221208110202.107326-1-hdegoede@redhat.com>
+In-Reply-To: <20221208110202.107326-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 8 Dec 2022 15:00:34 +0200
+Message-ID: <CAHp75VdADDeXbu6ERc8ng8AdacHK4=uZeqb5jy0Vx_z3_=ZQmQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: x86: Add skip i2c clients quirk for Medion
+ Lifetab S10346
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Medion Lifetab S10346 is a x86 ACPI tablet which ships with Android
-x86 as factory OS. Its DSDT contains a bunch of I2C devices which are not
-actually there, causing various resource conflicts. Enumeration of these
-is skipped through the acpi_quirk_skip_i2c_client_enumeration().
+On Thu, Dec 8, 2022 at 1:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> The Medion Lifetab S10346 is a x86 tablet which ships with Android x86 as
+> factory OS. The Android x86 kernel fork ignores I2C devices described in
+> the DSDT, except for the PMIC and Audio codecs.
+>
+> As usual the Medion Lifetab S10346's DSDT contains a bunch of extra I2C
+> devices which are not actually there, causing various resource conflicts.
+> Add an ACPI_QUIRK_SKIP_I2C_CLIENTS quirk for the Medion Lifetab S10346 to
+> the acpi_quirk_skip_dmi_ids table to woraround this.
 
-Add support for manually instantiating the I2C devices which are
-actually present on this tablet by adding the necessary device info to
-the x86-android-tablets module.
+workaround
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets.c | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
 
-diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
-index 4acd6fa8d43b..f04e06eeb958 100644
---- a/drivers/platform/x86/x86-android-tablets.c
-+++ b/drivers/platform/x86/x86-android-tablets.c
-@@ -987,6 +987,88 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
- 	}
- }
- 
-+/* Medion Lifetab S10346 tablets have an Android factory img with everything hardcoded */
-+static const char * const medion_lifetab_s10346_accel_mount_matrix[] = {
-+	"0", "1", "0",
-+	"1", "0", "0",
-+	"0", "0", "1"
-+};
-+
-+static const struct property_entry medion_lifetab_s10346_accel_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", medion_lifetab_s10346_accel_mount_matrix),
-+	{ }
-+};
-+
-+static const struct software_node medion_lifetab_s10346_accel_node = {
-+	.properties = medion_lifetab_s10346_accel_props,
-+};
-+
-+/* Note the LCD panel is mounted upside down, this is correctly indicated in the VBT */
-+static const struct property_entry medion_lifetab_s10346_touchscreen_props[] = {
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	{ }
-+};
-+
-+static const struct software_node medion_lifetab_s10346_touchscreen_node = {
-+	.properties = medion_lifetab_s10346_touchscreen_props,
-+};
-+
-+static const struct x86_i2c_client_info medion_lifetab_s10346_i2c_clients[] __initconst = {
-+	{
-+		/* kxtj21009 accel */
-+		.board_info = {
-+			.type = "kxtj21009",
-+			.addr = 0x0f,
-+			.dev_name = "kxtj21009",
-+			.swnode = &medion_lifetab_s10346_accel_node,
-+		},
-+		.adapter_path = "\\_SB_.I2C3",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FC:02",
-+			.index = 23,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}, {
-+		/* goodix touchscreen */
-+		.board_info = {
-+			.type = "GDIX1001:00",
-+			.addr = 0x14,
-+			.dev_name = "goodix_ts",
-+			.swnode = &medion_lifetab_s10346_touchscreen_node,
-+		},
-+		.adapter_path = "\\_SB_.I2C4",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_APIC,
-+			.index = 0x44,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_LOW,
-+		},
-+	},
-+};
-+
-+static struct gpiod_lookup_table medion_lifetab_s10346_goodix_gpios = {
-+	.dev_id = "i2c-goodix_ts",
-+	.table = {
-+		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("INT33FC:02", 3, "irq", GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static struct gpiod_lookup_table * const medion_lifetab_s10346_gpios[] = {
-+	&medion_lifetab_s10346_goodix_gpios,
-+	NULL
-+};
-+
-+static const struct x86_dev_info medion_lifetab_s10346_info __initconst = {
-+	.i2c_client_info = medion_lifetab_s10346_i2c_clients,
-+	.i2c_client_count = ARRAY_SIZE(medion_lifetab_s10346_i2c_clients),
-+	.gpiod_lookup_tables = medion_lifetab_s10346_gpios,
-+};
-+
- /* Nextbook Ares 8 tablets have an Android factory img with everything hardcoded */
- static const char * const nextbook_ares8_accel_mount_matrix[] = {
- 	"0", "-1", "0",
-@@ -1245,6 +1327,16 @@ static const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		},
- 		.driver_data = (void *)&lenovo_yoga_tab2_830_1050_info,
- 	},
-+	{
-+		/* Medion Lifetab S10346 */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
-+			/* Above strings are much too generic, also match on BIOS date */
-+			DMI_MATCH(DMI_BIOS_DATE, "10/22/2015"),
-+		},
-+		.driver_data = (void *)&medion_lifetab_s10346_info,
-+	},
- 	{
- 		/* Nextbook Ares 8 */
- 		.matches = {
+Both look good to me,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+Side note. We adding a lot of DMI matching information here and there
+in the drivers and often it gets duplicated in handful of times, Maybe
+at some point we can create a global enum and matching table, let's
+say driver/platform/x86/dmi-platforms.c with
+include/linux/platform_data/x86/platform.h with global enum of the
+platforms?
+
 -- 
-2.38.1
-
+With Best Regards,
+Andy Shevchenko
