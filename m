@@ -2,194 +2,141 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C09BC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 16:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC04C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 16:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbiLHQZX (ORCPT
+        id S229723AbiLHQdd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 11:25:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
+        Thu, 8 Dec 2022 11:33:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230189AbiLHQZS (ORCPT
+        with ESMTP id S229478AbiLHQda (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 11:25:18 -0500
+        Thu, 8 Dec 2022 11:33:30 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C42D46650
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 08:24:19 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B07654D
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 08:32:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670516658;
+        s=mimecast20190719; t=1670517155;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DOVvOqJbqLIZ2AhZtG8cGPrhcnZ2LRyU5svGNQICX+U=;
-        b=JfuORu6XlatX5EiCKvnRxDtS5fi7iIrNlMREkwzeWqA94lXo+jovymZcAzHKVwd6F4Tlo3
-        UJfMGc4e2vG4+VrhY5PNo2RIK8GXahEApsdlfSy9TRj2W9Nh4wbsTF/NXEB1WvDfMEGauo
-        HVJ8TPPJ55Xa3XcNf9CnVBF0ZNyRVMk=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=gwyXN9AyJCfUq7SYZ9lwVdPug8mXVxtE2Rq8B8I5K5Y=;
+        b=Cb7pVsCnt3yUtG1RjD1HxNHz8zZPXvadGZV1HtR+0gANlauFSb4jRtdFWCmQRBt8mv6GmB
+        Aho1U1xVXclzYwvi194zBBVWJp3fI23zAseHIhF1GwHIz9KzE8IWa8po0lA3rqZeLzXytq
+        yulRBlOLSffcKyMHRsl00NThRfAIFdw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-636-LcP-KnxpMkKIWIfLymolLw-1; Thu, 08 Dec 2022 11:24:17 -0500
-X-MC-Unique: LcP-KnxpMkKIWIfLymolLw-1
-Received: by mail-il1-f199.google.com with SMTP id z10-20020a921a4a000000b0030349fa9653so1717582ill.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 08:24:17 -0800 (PST)
+ us-mta-368-OcJ_15IJMHCvbSmflkwKsg-1; Thu, 08 Dec 2022 11:32:34 -0500
+X-MC-Unique: OcJ_15IJMHCvbSmflkwKsg-1
+Received: by mail-ed1-f71.google.com with SMTP id y20-20020a056402271400b0046c9a6ec30fso1215605edd.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 08:32:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DOVvOqJbqLIZ2AhZtG8cGPrhcnZ2LRyU5svGNQICX+U=;
-        b=lmXzUMokR4g9oa02uPhQmq97L8ctH1NGaZHlu8xKyi8Px8R7/8uk5UddnUNtCfyKIn
-         +zicLpr/47uk2ipWE/vx35EF38nhg9LMu55y9Jt/eAsH4q154DtAwMXFQ5sz5EXjP40h
-         H03UFjcUREYjuW+V10q5WYG6FIvNsxbaZztTxI/EPzzrKZJPff3iA3SGU4IgKHh0Oqot
-         sYDLopqtLKMfg7VlE7CI9oXVrNf0UriTdd546RZcEwJoKlFd4fIZic32J8FaJYQ2hlw7
-         bqJKudbb2DKIyz4e3BWMzL9eIBDS08w/ybDZ7iQlMvACPC6LsbqJxU2LhxVEDvQzBHDT
-         nkqg==
-X-Gm-Message-State: ANoB5pkn9w+wP3+8A3eU3g9qSDAXVlElY7kCP5ZwVNFeVVAya3i1qN7N
-        3W1XS2nw9B5M3uFyasV6ytWy6niP2KMS6SyABZwnmDK/w9AWu+PUDiUAUwsSM17gv42y8L5nj5h
-        C8QP+9Gkx7tLTrm7NLoEcxOQnA5ARyoNPzAtIFuJ0wnVt8uk2Vw==
-X-Received: by 2002:a92:da48:0:b0:302:ebf5:a7ae with SMTP id p8-20020a92da48000000b00302ebf5a7aemr32196410ilq.34.1670516656856;
-        Thu, 08 Dec 2022 08:24:16 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7Udv+66R4PY489KYK6uqupbMm3pq26p9nW3CFM8lXhyRn0ECXJZkRltfUaVhLCYBfeqsKfZB0RTc8vTPJrYHk=
-X-Received: by 2002:a92:da48:0:b0:302:ebf5:a7ae with SMTP id
- p8-20020a92da48000000b00302ebf5a7aemr32196398ilq.34.1670516656630; Thu, 08
- Dec 2022 08:24:16 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gwyXN9AyJCfUq7SYZ9lwVdPug8mXVxtE2Rq8B8I5K5Y=;
+        b=CG9C0Z7mhnbKKhw7fR7n7Eo8UbK4W1cFiEHKFCj3U4C4G/2udK6VC/fwlf/WkpZOnJ
+         0Od8KSBDGEY8agQaiGdZzgzm4jBIzzgt7vSeWRrH8z/mKtmiGBBGzw3Tdo7drrgNbiE3
+         V9JHAI3JIbgxIG4DFAOBmLv6G/Cu8BKLSqc1b36aj7L8VB2gdrLt4ZG6zpo3JCljpWhu
+         OwmiqUA2H7mYQCm4vyHwD2mlUtcjpjM0tvrdavVWYfAEkP6sENWNfGaUOIVQkHppEVys
+         LUKmdrBThC1fVt7D547HfA8WTU+ibUlOxWFhR2Jjr5By4LwIhkBCF245qEg+CZr5CjZb
+         3gzw==
+X-Gm-Message-State: ANoB5pkVVOsN3NB/9hgVDDYtlCrlG23GMlrgyUYD+z2sFTH+vcj6ha2H
+        xgTxeb/EAWrjyUkP5UR5hzNYjNn+KauWxeSRYotE9Tho1bbopQdPZELpFLT59lt+SmOcyxqB/BX
+        waLOBhW2cTH2CmewRjlB4mHfem0AmyZJsGg==
+X-Received: by 2002:a05:6402:248e:b0:464:1b51:f85c with SMTP id q14-20020a056402248e00b004641b51f85cmr958727eda.25.1670517150283;
+        Thu, 08 Dec 2022 08:32:30 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5QNK02SqRex45/L+1I16WeAAGRh2xDOaOPYOH3Kpz3x+lfBBShXrLuusgwwrfpnclomxsz8g==
+X-Received: by 2002:a05:6402:248e:b0:464:1b51:f85c with SMTP id q14-20020a056402248e00b004641b51f85cmr958715eda.25.1670517150131;
+        Thu, 08 Dec 2022 08:32:30 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id u14-20020a056402110e00b0046af63521a2sm3548747edv.29.2022.12.08.08.32.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Dec 2022 08:32:29 -0800 (PST)
+Message-ID: <27423188-10ed-be55-3080-570a476b2899@redhat.com>
+Date:   Thu, 8 Dec 2022 17:32:28 +0100
 MIME-Version: 1.0
-References: <20221202223327.690880-1-luzmaximilian@gmail.com> <c09c9cef-14ac-2ab3-5e01-13189823a053@redhat.com>
-In-Reply-To: <c09c9cef-14ac-2ab3-5e01-13189823a053@redhat.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 8 Dec 2022 17:24:05 +0100
-Message-ID: <CAO-hwJLHzRCJF96gKJwj7zCCPxRLoEw=cQ2w8=yLBOfyZz-c8w@mail.gmail.com>
-Subject: Re: [PATCH 0/9] platform/surface: aggregator: Improve target/source
- handling in SSH messages
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] platform/x86: sony-laptop: Convert to use sysfs_emit_at()
+ API
+Content-Language: en-US, nl
+To:     ye.xingchen@zte.com.cn
+Cc:     malattia@linux.it, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202212081545178689771@zte.com.cn>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <202212081545178689771@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 8, 2022 at 5:03 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Maximilian,
->
-> On 12/2/22 23:33, Maximilian Luz wrote:
-> > We have some new insights into the Serial Hub protocol, obtained through
-> > reverse engineering. In particular, regarding the command structure. The
-> > input/output target IDs actually represent source and target IDs of
-> > (what looks like) physical entities (specifically: host, SAM EC, KIP EC,
-> > debug connector, and SurfLink connector).
-> >
-> > This series aims to improve handling of messages with regards to those
-> > new findings and, mainly, improve clarity of the documentation and usage
-> > around those fields.
-> >
-> > See the discussion in
-> >
-> >     https://github.com/linux-surface/surface-aggregator-module/issues/64
-> >
-> > for more details.
-> >
-> > There are a couple of standouts:
-> >
-> > - Patch 1 ensures that we only handle commands actually intended for us.
-> >   It's possible that we receive messages not intended for us when we
-> >   enable debugging. I've kept it intentionally minimal to simplify
-> >   backporting. The rest of the series patch 9 focuses more on clarity
-> >   and documentation, which is probably too much to backport.
-> >
-> > - Patch 8 touches on multiple subsystems. The intention is to enforce
-> >   proper usage and documentation of target IDs in the SSAM_SDEV() /
-> >   SSAM_VDEV() macros. As it directly touches those macros I
-> >   unfortunately can't split it up by subsystem.
-> >
-> > - Patch 9 is a loosely connected cleanup for consistency.
->
-> Thank you for the patches. Unfortunately I don't have time atm to
-> review this.
->
-> And the next 2 weeks are the merge window, followed by 2 weeks
-> of christmas vacation.
->
-> So I'm afraid that I likely won't get around to reviewing
-> this until the week of January 9th.
->
-> > Hans, Jiri, Benjamin, Sebastian: While patch 8 ("platform/surface:
-> > aggregator: Enforce use of target-ID enum in device ID macros") touches
-> > multiple subsystems, it should be possible to take the whole series
-> > through the pdx86 tree. The changes in other subsystems are fairly
-> > limited.
->
-> I agree that it will be best to take all of this upstream through the
-> pdx86 tree. Sebastian thank you for the ack for patch 8/9.
->
-> Jiri or Benjamin may we have your ack for merging patch 7/9 + 8/9
-> through the pdx86 tree ?
+Hi,
 
-I can give you an ack for taking those through your tree, but I can
-not review the patches themselves because I was only CC-ed to those 2,
-and so was linux-input. Given that SSAM_SSH_TID_KIP is not in my
-current tree I assume it comes from this series.
+On 12/8/22 08:45, ye.xingchen@zte.com.cn wrote:
+> From: ye xingchen <ye.xingchen@zte.com.cn>
+> 
+> Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+> should only use sysfs_emit() or sysfs_emit_at() when formatting the
+> value to be returned to user space.
+> 
+> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 
-Anyway, enough ranting :)
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-If you think the patches are OK, they are really small concerning the
-HID part, so feel free to take them through your tree Hans.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Cheers,
-Benjamin
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
->
-> Regards,
->
-> Hans
->
->
->
->
-> > Maximilian Luz (9):
-> >   platform/surface: aggregator: Ignore command messages not intended for
-> >     us
-> >   platform/surface: aggregator: Improve documentation and handling of
-> >     message target and source IDs
-> >   platform/surface: aggregator: Add target and source IDs to command
-> >     trace events
-> >   platform/surface: aggregator_hub: Use target-ID enum instead of
-> >     hard-coding values
-> >   platform/surface: aggregator_tabletsw: Use target-ID enum instead of
-> >     hard-coding values
-> >   platform/surface: dtx: Use target-ID enum instead of hard-coding
-> >     values
-> >   HID: surface-hid: Use target-ID enum instead of hard-coding values
-> >   platform/surface: aggregator: Enforce use of target-ID enum in device
-> >     ID macros
-> >   platform/surface: aggregator_registry: Fix target-ID of base-hub
-> >
-> >  .../driver-api/surface_aggregator/client.rst  |  4 +-
-> >  .../driver-api/surface_aggregator/ssh.rst     | 36 ++++-----
-> >  drivers/hid/surface-hid/surface_hid.c         |  2 +-
-> >  drivers/hid/surface-hid/surface_kbd.c         |  2 +-
-> >  .../platform/surface/aggregator/controller.c  | 12 +--
-> >  .../platform/surface/aggregator/ssh_msgb.h    |  4 +-
-> >  .../surface/aggregator/ssh_request_layer.c    | 15 ++++
-> >  drivers/platform/surface/aggregator/trace.h   | 73 +++++++++++++++++--
-> >  .../platform/surface/surface_aggregator_hub.c |  8 +-
-> >  .../surface/surface_aggregator_registry.c     |  2 +-
-> >  .../surface/surface_aggregator_tabletsw.c     | 10 +--
-> >  drivers/platform/surface/surface_dtx.c        | 20 ++---
-> >  .../surface/surface_platform_profile.c        |  2 +-
-> >  drivers/power/supply/surface_battery.c        |  4 +-
-> >  drivers/power/supply/surface_charger.c        |  2 +-
-> >  include/linux/surface_aggregator/controller.h |  4 +-
-> >  include/linux/surface_aggregator/device.h     | 50 ++++++-------
-> >  include/linux/surface_aggregator/serial_hub.h | 40 ++++++----
-> >  18 files changed, 191 insertions(+), 99 deletions(-)
-> >
->
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/sony-laptop.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index a19aac70252f..7156ae2ad196 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -820,10 +820,9 @@ static ssize_t sony_nc_handles_show(struct device *dev,
+>  	int i;
+> 
+>  	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
+> -		len += scnprintf(buffer + len, PAGE_SIZE - len, "0x%.4x ",
+> -				handles->cap[i]);
+> +		len += sysfs_emit_at(buffer, len, "0x%.4x ", handles->cap[i]);
+>  	}
+> -	len += scnprintf(buffer + len, PAGE_SIZE - len, "\n");
+> +	len += sysfs_emit_at(buffer, len, "\n");
+> 
+>  	return len;
+>  }
+> @@ -2173,10 +2172,9 @@ static ssize_t sony_nc_thermal_profiles_show(struct device *dev,
+> 
+>  	for (cnt = 0; cnt < THM_PROFILE_MAX; cnt++) {
+>  		if (!cnt || (th_handle->profiles & cnt))
+> -			idx += scnprintf(buffer + idx, PAGE_SIZE - idx, "%s ",
+> -					snc_thermal_profiles[cnt]);
+> +			idx += sysfs_emit_at(buffer, idx, "%s ", snc_thermal_profiles[cnt]);
+>  	}
+> -	idx += scnprintf(buffer + idx, PAGE_SIZE - idx, "\n");
+> +	idx += sysfs_emit_at(buffer, idx, "\n");
+> 
+>  	return idx;
+>  }
 
