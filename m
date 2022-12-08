@@ -2,76 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EB8C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 15:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38056C3A5A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 15:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbiLHPgA (ORCPT
+        id S229841AbiLHPz5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 10:36:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47198 "EHLO
+        Thu, 8 Dec 2022 10:55:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiLHPfo (ORCPT
+        with ESMTP id S229734AbiLHPzr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 10:35:44 -0500
+        Thu, 8 Dec 2022 10:55:47 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB457E41C
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 07:33:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485C878682
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 07:54:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670513569;
+        s=mimecast20190719; t=1670514882;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ch+bMl5xfA9Hf3nS+/biOqToHC0qb1UdXSnrlmsi/Rc=;
-        b=KDNA8rL0L6X1CZS5mPHrpBLaki1y65QbJi1fnbtxPsNXxtK5OKJpXrpPoB0iKX0xvO/E4t
-        gNJpu/txD9YEe1iZnMnCBKfCT0fXpWGnVsKzHpWY96noxmceAjoFC2yloLyQpc6im53P5w
-        yxDmhdV6h+NS0xz2q9D1G5RFUfeUdQc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=HSwQIAXLEgbSONcjNq/ffInSzmU0ybWtoXdJxeVOOUE=;
+        b=QBcJ24RjvKrPo9w2qgNtbAYyGOt8R8pMtkyw7eeD9rC/1tYuwTZQKvg1wopFXIgtc69fZG
+        jTfXqs0Aqr68QfGPpa3GCTFRYwbNy8ks4jcc2ig9/GAjrT8cSQLIK0VlR0PzGU2dEWen5H
+        a9Hy8tHbea3DbRRXdUoTDhpvSyV19PM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-536-loF9p4NBPBOgr4BSVvBzTg-1; Thu, 08 Dec 2022 10:32:48 -0500
-X-MC-Unique: loF9p4NBPBOgr4BSVvBzTg-1
-Received: by mail-ej1-f71.google.com with SMTP id hq42-20020a1709073f2a00b007c100387d64so1385371ejc.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 07:32:48 -0800 (PST)
+ us-mta-100-5rDzq3s5MeipWsrwoL0w3A-1; Thu, 08 Dec 2022 10:54:41 -0500
+X-MC-Unique: 5rDzq3s5MeipWsrwoL0w3A-1
+Received: by mail-ej1-f69.google.com with SMTP id hq42-20020a1709073f2a00b007c100387d64so1420151ejc.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 07:54:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ch+bMl5xfA9Hf3nS+/biOqToHC0qb1UdXSnrlmsi/Rc=;
-        b=DXIbzVme2aTUrJ7aVV3G/2yfvyCjASESEgznCDstoHi3+/P9EDrKqhFhvjQQnT5O97
-         B9VeE3xXTc7grXBm8dHedDnSBN1UOy2A6CgtWZQIun0Q2pn7McFdTC9hsXK18qpTiYTZ
-         PW9wXNPYJhrZLV0MqY4PVmqSp1p6ZZ460A6aQst+Ls0bIGwlXgH1hSCWorx+SqXuCv5m
-         wzKpmO1EGCwjYZvEMxQqTBXTDjp1tliS7L7XUyHQ0q8ySx+HVdqaWczMOWeEEwbk8VV4
-         EGBmky7wY6Ril+Nrw1gSnBqJfbUw1d+58LbgNPVg75PEQVQS8CGAzQTDgjfvAPtQrFcn
-         /lAw==
-X-Gm-Message-State: ANoB5pm0PE+sUSc9ggXIALkkWjQKL6ejFCul7zf82VeaH6HAL3aTqJoE
-        Xge2NmulVLWPnccTLq/rCMTzo4pY5AINncHxCNaFBWfHjBfl5Bjj9tSOQ4AUkzO5pJg3JNYUQGB
-        4PfVFBXy5rjXq7viFiyYmME9VhPet6SYWOA==
-X-Received: by 2002:a05:6402:10c3:b0:462:9baa:e3b6 with SMTP id p3-20020a05640210c300b004629baae3b6mr2330563edu.29.1670513567379;
-        Thu, 08 Dec 2022 07:32:47 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6P5yoOOuo2f0PZ+KC9fdSNgnGA/vUIF5+EZ/cxnnP+CruEtg/L+db1HtLIcam7aP48WyAgTQ==
-X-Received: by 2002:a05:6402:10c3:b0:462:9baa:e3b6 with SMTP id p3-20020a05640210c300b004629baae3b6mr2330545edu.29.1670513567178;
-        Thu, 08 Dec 2022 07:32:47 -0800 (PST)
+        bh=HSwQIAXLEgbSONcjNq/ffInSzmU0ybWtoXdJxeVOOUE=;
+        b=wE+0yCGAGlm+SC6PsA0QwUh5ykPZD6o36aBtZk0cQ+x4nKzwuIsH5jOp5QMeDCXKzd
+         X/7w9WkfYYYzehAjDtpIXnLKsV4M6HZJA6/FPl/y9Chp453unfD7w+4Z/UL9I89Aif/T
+         rV9T4YsIolFM8cdROG0RQdX6G23SSBzBRn3i4//Ny9VUBCtmnsGfsSTEiNFb5EZQl9V4
+         rNeInMVMLuvgBkbxLIDGdRYlG7svWlbLIfjCdkHftv8GhKUKaviPfuiN+S8bKFgvtN2f
+         FscKLF7mkX6GdQHdfMviUrW+TQINV8dKu2bAdKz/ZImBxvfOjoOPFKX+LPn+f4cfCuLx
+         Y7kA==
+X-Gm-Message-State: ANoB5pksIPaXdPFgx8G1T9wCzM2W3MfanZE8XkXb2CWHAaqE+iynxqe0
+        sSx/JoNzarna4N8O7m/ib8AUCG+UmYj6jqfqpvIETssiMVS5g8cFwuspU8WTFj+DDr4X2g1Xdxl
+        /ip1sTpaF6fJuR1GAhjRCkdjeo4D+QooNGg==
+X-Received: by 2002:a17:906:8d08:b0:7c1:700:1e2d with SMTP id rv8-20020a1709068d0800b007c107001e2dmr3868528ejc.20.1670514879827;
+        Thu, 08 Dec 2022 07:54:39 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7uyODccxwLAE5cE71HeJzAASQ7LjigkQuWhvT5lurqfTHE9bYPSHxRpQ+7nhoSVBNL6mhyqA==
+X-Received: by 2002:a17:906:8d08:b0:7c1:700:1e2d with SMTP id rv8-20020a1709068d0800b007c107001e2dmr3868512ejc.20.1670514879579;
+        Thu, 08 Dec 2022 07:54:39 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id b20-20020aa7dc14000000b00457b5ba968csm3480779edu.27.2022.12.08.07.32.46
+        by smtp.gmail.com with ESMTPSA id f19-20020a17090631d300b007c0a90663d5sm9127485ejf.162.2022.12.08.07.54.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 07:32:46 -0800 (PST)
-Message-ID: <87f62d40-9b2d-8a99-0758-cf2a482ef56d@redhat.com>
-Date:   Thu, 8 Dec 2022 16:32:45 +0100
+        Thu, 08 Dec 2022 07:54:39 -0800 (PST)
+Message-ID: <5428fc7d-4f03-8643-58c0-431963693133@redhat.com>
+Date:   Thu, 8 Dec 2022 16:54:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH] platform/x86: mxm-wmi: fix memleak in
- mxm_wmi_call_mx[ds|mx]()
+Subject: Re: [PATCH] platform/x86: use sysfs_emit() to instead of scnprintf()
 Content-Language: en-US, nl
-To:     Yu Liao <liaoyu15@huawei.com>, markgross@kernel.org
-Cc:     airlied@redhat.com, mjg@redhat.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liwei391@huawei.com
-References: <20221129011101.2042315-1-liaoyu15@huawei.com>
+To:     ye.xingchen@zte.com.cn
+Cc:     justin.ernst@hpe.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202212021705128095546@zte.com.cn>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221129011101.2042315-1-liaoyu15@huawei.com>
+In-Reply-To: <202212021705128095546@zte.com.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,15 +78,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/29/22 02:11, Yu Liao wrote:
-> The ACPI buffer memory (out.pointer) returned by wmi_evaluate_method()
-> is not freed after the call, so it leads to memory leak.
+On 12/2/22 10:05, ye.xingchen@zte.com.cn wrote:
+> From: ye xingchen <ye.xingchen@zte.com.cn>
 > 
-> The method results in ACPI buffer is not used, so just pass NULL to
-> wmi_evaluate_method() which fixes the memory leak.
+> Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+> should only use sysfs_emit() or sysfs_emit_at() when formatting the
+> value to be returned to user space.
 > 
-> Fixes: 99b38b4acc0d ("platform/x86: add MXM WMI driver.")
-> Signed-off-by: Yu Liao <liaoyu15@huawei.com>
+> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -107,43 +104,76 @@ Regards,
 Hans
 
 
-
 > ---
->  drivers/platform/x86/mxm-wmi.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/uv_sysfs.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/mxm-wmi.c b/drivers/platform/x86/mxm-wmi.c
-> index 9a19fbd2f734..9a457956025a 100644
-> --- a/drivers/platform/x86/mxm-wmi.c
-> +++ b/drivers/platform/x86/mxm-wmi.c
-> @@ -35,13 +35,11 @@ int mxm_wmi_call_mxds(int adapter)
->  		.xarg = 1,
->  	};
->  	struct acpi_buffer input = { (acpi_size)sizeof(args), &args };
-> -	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	acpi_status status;
->  
->  	printk("calling mux switch %d\n", adapter);
->  
-> -	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
-> -				     &output);
-> +	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input, NULL);
->  
->  	if (ACPI_FAILURE(status))
->  		return status;
-> @@ -60,13 +58,11 @@ int mxm_wmi_call_mxmx(int adapter)
->  		.xarg = 1,
->  	};
->  	struct acpi_buffer input = { (acpi_size)sizeof(args), &args };
-> -	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	acpi_status status;
->  
->  	printk("calling mux switch %d\n", adapter);
->  
-> -	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
-> -				     &output);
-> +	status = wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input, NULL);
->  
->  	if (ACPI_FAILURE(status))
->  		return status;
+> diff --git a/drivers/platform/x86/uv_sysfs.c b/drivers/platform/x86/uv_sysfs.c
+> index 625b0b79d185..73fc38ee7430 100644
+> --- a/drivers/platform/x86/uv_sysfs.c
+> +++ b/drivers/platform/x86/uv_sysfs.c
+> @@ -119,12 +119,12 @@ struct uv_hub {
+> 
+>  static ssize_t hub_name_show(struct uv_bios_hub_info *hub_info, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", hub_info->name);
+> +	return sysfs_emit(buf, "%s\n", hub_info->name);
+>  }
+> 
+>  static ssize_t hub_location_show(struct uv_bios_hub_info *hub_info, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", hub_info->location);
+> +	return sysfs_emit(buf, "%s\n", hub_info->location);
+>  }
+> 
+>  static ssize_t hub_partition_show(struct uv_bios_hub_info *hub_info, char *buf)
+> @@ -460,12 +460,12 @@ struct uv_pci_top_obj {
+> 
+>  static ssize_t uv_pci_type_show(struct uv_pci_top_obj *top_obj, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->type);
+> +	return sysfs_emit(buf, "%s\n", top_obj->type);
+>  }
+> 
+>  static ssize_t uv_pci_location_show(struct uv_pci_top_obj *top_obj, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->location);
+> +	return sysfs_emit(buf, "%s\n", top_obj->location);
+>  }
+> 
+>  static ssize_t uv_pci_iio_stack_show(struct uv_pci_top_obj *top_obj, char *buf)
+> @@ -475,7 +475,7 @@ static ssize_t uv_pci_iio_stack_show(struct uv_pci_top_obj *top_obj, char *buf)
+> 
+>  static ssize_t uv_pci_ppb_addr_show(struct uv_pci_top_obj *top_obj, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", top_obj->ppb_addr);
+> +	return sysfs_emit(buf, "%s\n", top_obj->ppb_addr);
+>  }
+> 
+>  static ssize_t uv_pci_slot_show(struct uv_pci_top_obj *top_obj, char *buf)
+> @@ -737,7 +737,7 @@ static ssize_t coherence_id_show(struct kobject *kobj,
+>  static ssize_t uv_type_show(struct kobject *kobj,
+>  			struct kobj_attribute *attr, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", uv_type_string());
+> +	return sysfs_emit(buf, "%s\n", uv_type_string());
+>  }
+> 
+>  static ssize_t uv_archtype_show(struct kobject *kobj,
+> @@ -749,13 +749,13 @@ static ssize_t uv_archtype_show(struct kobject *kobj,
+>  static ssize_t uv_hub_type_show(struct kobject *kobj,
+>  			struct kobj_attribute *attr, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_hub_type());
+> +	return sysfs_emit(buf, "0x%x\n", uv_hub_type());
+>  }
+> 
+>  static ssize_t uv_hubless_show(struct kobject *kobj,
+>  			struct kobj_attribute *attr, char *buf)
+>  {
+> -	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_get_hubless_system());
+> +	return sysfs_emit(buf, "0x%x\n", uv_get_hubless_system());
+>  }
+> 
+>  static struct kobj_attribute partition_id_attr =
 
