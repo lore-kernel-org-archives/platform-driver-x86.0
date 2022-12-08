@@ -2,185 +2,206 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A49C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 16:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7955CC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 16:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiLHQFF (ORCPT
+        id S230023AbiLHQJG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 11:05:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        Thu, 8 Dec 2022 11:09:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbiLHQFB (ORCPT
+        with ESMTP id S229769AbiLHQJF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 11:05:01 -0500
+        Thu, 8 Dec 2022 11:09:05 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B55189D2EB
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 08:04:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18302E012
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 08:07:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670515445;
+        s=mimecast20190719; t=1670515679;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IXsbEpWWvRn6V4K4AQAglneXzBPO0+xjG/LZYZe3/qc=;
-        b=crH632wXj9oLGRX1dPl/alcrnYgIx0lqufzAa+d0tjULq+6pcHvxd8LsHe0iiEI3U0NFw1
-        +S/Du4698lfepMFOSAWQHB1cmgi82HGbjT3h4S35mnQprkC90NUV+JLBiDAB/iwawsWzdL
-        wdLoYa5uAyRKmeWrpx30p6mGNUJoKb0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nlsYGkc0CMR12o/ECV5C5ZdADL5vOxF17xBChMXabTs=;
+        b=isf7RcRIySrLmlSGeBzlh8aUP1SYFUf4cR9c3REitPRtDe+NUM4ZH4N5qp+7autXRFdqZY
+        FfsmtGGs8HLg1R6NqTVVVUIG3KR0gKSYWAagu2R5WqXKzrO+MTchz0oChDfg9ICPb7bX2r
+        uggWOeRRFFLN6AFJAW+MBmiu6sYhBHs=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-375-5PxMmgt5PROguYVsq-PzCg-1; Thu, 08 Dec 2022 11:03:42 -0500
-X-MC-Unique: 5PxMmgt5PROguYVsq-PzCg-1
-Received: by mail-ej1-f71.google.com with SMTP id xj11-20020a170906db0b00b0077b6ecb23fcso1446084ejb.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 08:03:41 -0800 (PST)
+ us-mta-175-csG2zLHmOtyx_KECyCwELw-1; Thu, 08 Dec 2022 11:07:58 -0500
+X-MC-Unique: csG2zLHmOtyx_KECyCwELw-1
+Received: by mail-ed1-f71.google.com with SMTP id y20-20020a056402271400b0046c9a6ec30fso1173906edd.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 08:07:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IXsbEpWWvRn6V4K4AQAglneXzBPO0+xjG/LZYZe3/qc=;
-        b=kGaO+BKQ8VnZd3aoBQFArYkpvk1/EiZ8MfXwpP4HPq5wliDL/LzdWRQE9sEgUzyl5K
-         FZnvQSMBV47BOzowueANx/Sy70XlswjgHzbsW9UOB8Gu7nm0nPxJm4lrxdhZ0wLfF89n
-         1DQt5RL3NnQe10sNokCmwcyg6k8aF0PlnP2XBfmygiiITziLy32zLbLC87j+7/PKO4Td
-         aa8+nOJtL1UG1gMxh9zoa0bORl4O072uwYDzhsrG6ujPiXbz2B/2wxp7P7Iz/Sy5rhzS
-         OJLYXQt6iF/cqqtY5d+fxdXEEaOetNKcmNXGZWO33fMynZrvvgBzRwit4OVoqsSVugSi
-         Jc/A==
-X-Gm-Message-State: ANoB5pmwhXleOjONf0kk9dGt4z9PPuQzSAJAMx2U2+BDu3yFCDWhT1rE
-        HC7c9aqP8G+VA2Rxrfyeou8T8ifmDDdPdh+m7t87EMuFlHkPXxKZgSg/TLDy/d226APwWdrxCW7
-        qt9IlKSjZebyCLmvsjX1AOhIq26RWrRdZDA==
-X-Received: by 2002:a17:906:c51:b0:7b2:91e8:1553 with SMTP id t17-20020a1709060c5100b007b291e81553mr2320262ejf.20.1670515420127;
-        Thu, 08 Dec 2022 08:03:40 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6uLmr2ps/eoyIFTKExf/xJaLtd19e4nt+MMsCSb4MkIRG9XBk/nHAPLf9ph+m7OFZKDow9IA==
-X-Received: by 2002:a17:906:c51:b0:7b2:91e8:1553 with SMTP id t17-20020a1709060c5100b007b291e81553mr2320247ejf.20.1670515419917;
-        Thu, 08 Dec 2022 08:03:39 -0800 (PST)
+        bh=nlsYGkc0CMR12o/ECV5C5ZdADL5vOxF17xBChMXabTs=;
+        b=CqXgf14dMpGKC6rwUQC4HACdo5IXabzguDAW0hYxSWxY47MxkGGwjWc26ET+bn+Tm1
+         p5nuiF9eVSi0k4vvyZ3U9yNgXLqjFx1xvUF/hyrdTA5bddapkHZDdDLXDLfioQgrNhnF
+         PxmwKAKH6SqiIeGbica7EUSE5Haq+alZXWa4BaTifGF3gYs/FvNYQZaBUkZAqyZPgPmA
+         4ZMy/1A4hWycmAawy5If7IcY8+zwmkFyIHN95+wC32B66YmN4jtyRoS6V7m6Hwqum35Y
+         f99EyoL2AwDsMZR6MmGZlxyad8JJgCnH+T4zCfV7F1ycBgs3LO4hNCkT3am2pVy2slq8
+         Pkew==
+X-Gm-Message-State: ANoB5pkBNni7pma1yZZ37NBbFHBtcmqLaljmq2QCgcZ5yNIT70MUVg/D
+        HGkH2bbIb8scSQlxdOZYZtynThb2ezNX0R/8g8kL6WeogsNZJ+tmkatIKXMXuVbPKvz043wr4BL
+        3FPWbmqoOuNZebhbfvrLUzsIc+AvR0veTOA==
+X-Received: by 2002:a17:907:1256:b0:7c1:1adc:46fd with SMTP id wc22-20020a170907125600b007c11adc46fdmr1927680ejb.34.1670515676489;
+        Thu, 08 Dec 2022 08:07:56 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5dV3rX6uhyn/a444iQ3gOPin7ZA0gZYGEOBZrd22MyTmlGgrDMZgU4oMr2x8sG+lT/2xxINg==
+X-Received: by 2002:a17:907:1256:b0:7c1:1adc:46fd with SMTP id wc22-20020a170907125600b007c11adc46fdmr1927666ejb.34.1670515676258;
+        Thu, 08 Dec 2022 08:07:56 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id fe17-20020a1709072a5100b0077a8fa8ba55sm9850087ejc.210.2022.12.08.08.03.38
+        by smtp.gmail.com with ESMTPSA id 19-20020a170906329300b007af75e6b6fesm9975218ejw.147.2022.12.08.08.07.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 08:03:39 -0800 (PST)
-Message-ID: <c09c9cef-14ac-2ab3-5e01-13189823a053@redhat.com>
-Date:   Thu, 8 Dec 2022 17:03:38 +0100
+        Thu, 08 Dec 2022 08:07:55 -0800 (PST)
+Message-ID: <034a882b-e6fc-b20a-25fb-8aaa02f1b1bc@redhat.com>
+Date:   Thu, 8 Dec 2022 17:07:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH 0/9] platform/surface: aggregator: Improve target/source
- handling in SSH messages
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_platform/x86=3a_dell=3a_use_sysfs=5femi?=
+ =?UTF-8?B?dCgpIHRvIGluc3RlYWQgb2bCoHNjbnByaW50Zigp?=
 Content-Language: en-US, nl
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
+To:     ye.xingchen@zte.com.cn
+Cc:     markgross@kernel.org, pobrn@protonmail.com,
+        dell.client.kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20221202223327.690880-1-luzmaximilian@gmail.com>
+References: <202212021721543696124@zte.com.cn>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221202223327.690880-1-luzmaximilian@gmail.com>
+In-Reply-To: <202212021721543696124@zte.com.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Maximilian,
+Hi,
 
-On 12/2/22 23:33, Maximilian Luz wrote:
-> We have some new insights into the Serial Hub protocol, obtained through
-> reverse engineering. In particular, regarding the command structure. The
-> input/output target IDs actually represent source and target IDs of
-> (what looks like) physical entities (specifically: host, SAM EC, KIP EC,
-> debug connector, and SurfLink connector).
+On 12/2/22 10:21, ye.xingchen@zte.com.cn wrote:
+> From: ye xingchen <ye.xingchen@zte.com.cn>
 > 
-> This series aims to improve handling of messages with regards to those
-> new findings and, mainly, improve clarity of the documentation and usage
-> around those fields.
+> Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+> should only use sysfs_emit() or sysfs_emit_at() when formatting the
+> value to be returned to user space.
 > 
-> See the discussion in
-> 
->     https://github.com/linux-surface/surface-aggregator-module/issues/64
-> 
-> for more details.
-> 
-> There are a couple of standouts:
-> 
-> - Patch 1 ensures that we only handle commands actually intended for us.
->   It's possible that we receive messages not intended for us when we
->   enable debugging. I've kept it intentionally minimal to simplify
->   backporting. The rest of the series patch 9 focuses more on clarity
->   and documentation, which is probably too much to backport.
-> 
-> - Patch 8 touches on multiple subsystems. The intention is to enforce
->   proper usage and documentation of target IDs in the SSAM_SDEV() /
->   SSAM_VDEV() macros. As it directly touches those macros I
->   unfortunately can't split it up by subsystem.
-> 
-> - Patch 9 is a loosely connected cleanup for consistency.
+> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 
-Thank you for the patches. Unfortunately I don't have time atm to
-review this.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-And the next 2 weeks are the merge window, followed by 2 weeks
-of christmas vacation.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-So I'm afraid that I likely won't get around to reviewing
-this until the week of January 9th.
-
-> Hans, Jiri, Benjamin, Sebastian: While patch 8 ("platform/surface:
-> aggregator: Enforce use of target-ID enum in device ID macros") touches
-> multiple subsystems, it should be possible to take the whole series
-> through the pdx86 tree. The changes in other subsystems are fairly
-> limited.
-
-I agree that it will be best to take all of this upstream through the
-pdx86 tree. Sebastian thank you for the ack for patch 8/9.
-
-Jiri or Benjamin may we have your ack for merging patch 7/9 + 8/9
-through the pdx86 tree ?
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
-
-> Maximilian Luz (9):
->   platform/surface: aggregator: Ignore command messages not intended for
->     us
->   platform/surface: aggregator: Improve documentation and handling of
->     message target and source IDs
->   platform/surface: aggregator: Add target and source IDs to command
->     trace events
->   platform/surface: aggregator_hub: Use target-ID enum instead of
->     hard-coding values
->   platform/surface: aggregator_tabletsw: Use target-ID enum instead of
->     hard-coding values
->   platform/surface: dtx: Use target-ID enum instead of hard-coding
->     values
->   HID: surface-hid: Use target-ID enum instead of hard-coding values
->   platform/surface: aggregator: Enforce use of target-ID enum in device
->     ID macros
->   platform/surface: aggregator_registry: Fix target-ID of base-hub
+> ---
+>  drivers/platform/x86/dell/alienware-wmi.c | 41 +++++++++--------------
+>  1 file changed, 16 insertions(+), 25 deletions(-)
 > 
->  .../driver-api/surface_aggregator/client.rst  |  4 +-
->  .../driver-api/surface_aggregator/ssh.rst     | 36 ++++-----
->  drivers/hid/surface-hid/surface_hid.c         |  2 +-
->  drivers/hid/surface-hid/surface_kbd.c         |  2 +-
->  .../platform/surface/aggregator/controller.c  | 12 +--
->  .../platform/surface/aggregator/ssh_msgb.h    |  4 +-
->  .../surface/aggregator/ssh_request_layer.c    | 15 ++++
->  drivers/platform/surface/aggregator/trace.h   | 73 +++++++++++++++++--
->  .../platform/surface/surface_aggregator_hub.c |  8 +-
->  .../surface/surface_aggregator_registry.c     |  2 +-
->  .../surface/surface_aggregator_tabletsw.c     | 10 +--
->  drivers/platform/surface/surface_dtx.c        | 20 ++---
->  .../surface/surface_platform_profile.c        |  2 +-
->  drivers/power/supply/surface_battery.c        |  4 +-
->  drivers/power/supply/surface_charger.c        |  2 +-
->  include/linux/surface_aggregator/controller.h |  4 +-
->  include/linux/surface_aggregator/device.h     | 50 ++++++-------
->  include/linux/surface_aggregator/serial_hub.h | 40 ++++++----
->  18 files changed, 191 insertions(+), 99 deletions(-)
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index a34e07ef2c79..a9477e5432e4 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -398,10 +398,10 @@ static ssize_t show_control_state(struct device *dev,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+>  	if (lighting_control_state == LEGACY_BOOTING)
+> -		return scnprintf(buf, PAGE_SIZE, "[booting] running suspend\n");
+> +		return sysfs_emit(buf, "[booting] running suspend\n");
+>  	else if (lighting_control_state == LEGACY_SUSPEND)
+> -		return scnprintf(buf, PAGE_SIZE, "booting running [suspend]\n");
+> -	return scnprintf(buf, PAGE_SIZE, "booting [running] suspend\n");
+> +		return sysfs_emit(buf, "booting running [suspend]\n");
+> +	return sysfs_emit(buf, "booting [running] suspend\n");
+>  }
 > 
+>  static ssize_t store_control_state(struct device *dev,
+> @@ -547,14 +547,12 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>  				   (u32 *) &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "[unconnected] connected unknown\n");
+> +			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+>  		else if (out_data == 1)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "unconnected [connected] unknown\n");
+> +			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+>  	}
+>  	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", status);
+> -	return scnprintf(buf, PAGE_SIZE, "unconnected connected [unknown]\n");
+> +	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>  }
+> 
+>  static ssize_t show_hdmi_source(struct device *dev,
+> @@ -571,14 +569,12 @@ static ssize_t show_hdmi_source(struct device *dev,
+> 
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 1)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "[input] gpu unknown\n");
+> +			return sysfs_emit(buf, "[input] gpu unknown\n");
+>  		else if (out_data == 2)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "input [gpu] unknown\n");
+> +			return sysfs_emit(buf, "input [gpu] unknown\n");
+>  	}
+>  	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+> -	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+> +	return sysfs_emit(buf, "input gpu [unknown]\n");
+>  }
+> 
+>  static ssize_t toggle_hdmi_source(struct device *dev,
+> @@ -652,14 +648,12 @@ static ssize_t show_amplifier_status(struct device *dev,
+>  				   (u32 *) &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "[unconnected] connected unknown\n");
+> +			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+>  		else if (out_data == 1)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "unconnected [connected] unknown\n");
+> +			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+>  	}
+>  	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
+> -	return scnprintf(buf, PAGE_SIZE, "unconnected connected [unknown]\n");
+> +	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>  }
+> 
+>  static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
+> @@ -706,17 +700,14 @@ static ssize_t show_deepsleep_status(struct device *dev,
+>  					(u32 *) &out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "[disabled] s5 s5_s4\n");
+> +			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+>  		else if (out_data == 1)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "disabled [s5] s5_s4\n");
+> +			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+>  		else if (out_data == 2)
+> -			return scnprintf(buf, PAGE_SIZE,
+> -					 "disabled s5 [s5_s4]\n");
+> +			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+>  	}
+>  	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
+> -	return scnprintf(buf, PAGE_SIZE, "disabled s5 s5_s4 [unknown]\n");
+> +	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+>  }
+> 
+>  static ssize_t toggle_deepsleep(struct device *dev,
 
