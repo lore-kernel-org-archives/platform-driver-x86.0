@@ -2,225 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CF6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 10:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B32C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 11:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229781AbiLHKzI (ORCPT
+        id S229677AbiLHLH1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 05:55:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
+        Thu, 8 Dec 2022 06:07:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbiLHKyk (ORCPT
+        with ESMTP id S229753AbiLHLFu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 05:54:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D8D5BD55
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 02:46:43 -0800 (PST)
+        Thu, 8 Dec 2022 06:05:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401B15C77D
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Dec 2022 03:02:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670496402;
+        s=mimecast20190719; t=1670497328;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WJniLawt8jbDwOjRoX+ouOMbgkHh/IAUmwppHXOgvg8=;
-        b=c1VsqR5moYUsHGIZrSBcNtxUkW3C0lJNLxXVvRqYMt4xYBctO0/ninxCUUTpu3zlB+EuO7
-        deDSbWdJZvYlmTd9RsyxPL6oQ1hrh+ScTejlkAnV/HKI0MuKEzXsw5YKfmZwj96gO7q0LM
-        BwedNPoQ7FIxetaqdLvdyPNPOxOdIhk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-302-Mh65zY5fMyukx7Ktw0iZZQ-1; Thu, 08 Dec 2022 05:46:41 -0500
-X-MC-Unique: Mh65zY5fMyukx7Ktw0iZZQ-1
-Received: by mail-ej1-f71.google.com with SMTP id sb2-20020a1709076d8200b007bdea97e799so832851ejc.22
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Dec 2022 02:46:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WJniLawt8jbDwOjRoX+ouOMbgkHh/IAUmwppHXOgvg8=;
-        b=lQAGmdKOZzzfgHPcAEhp12uMNHxjlheQHskDRyfvNVXsqY3zgZk7fosGpktTxGL4W7
-         /pJWoj17FO3Z3gWQAEMpGANVd4Fdx0r1NTnYrsWAnYQiH8zZ58/PCdidXtPre0ILLyN/
-         +QB8VM8MTrkKmIY+x7TcKpnNGaPr5n/uD8UEX9ApIfuvx5LoCW2cx8H+qtWuxHGuLw3l
-         Tte83REEJjMEIXugUBDnnc8/r9Cp3g+FZi2ghwxhIikICdGulnccVAgAEH6KThinlDJN
-         jsBz3dD8beVCfAy8bBDt4SDCrQabS9Qe5UFOp1UNHiqxMkvpXTc5BLViyafroX/URQW4
-         RAeQ==
-X-Gm-Message-State: ANoB5pmrcVNaRywHDUhlfLkEkn/YCivK8FkW4IqE+hTatVvfMpw/LMCU
-        Oe8WMyKd3LOyMSkDYGeXw0B+PBSKLwBWxop0fkrRXiOe6UiLPlJsHsOjcC9ucek6CHpZn8tjTEW
-        NAWtp5XJDQrm+BiLcWU2xJzLkYy/vyWPmyg==
-X-Received: by 2002:a17:906:c1d0:b0:7b4:64d3:e6f4 with SMTP id bw16-20020a170906c1d000b007b464d3e6f4mr31696055ejb.594.1670496400497;
-        Thu, 08 Dec 2022 02:46:40 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7aauXaaZBf6bSW0TLzYtPnY0vzYhyBEznsHqGrZ0XOPPRGv72C8wiohDbp09gCEGY2I/6n1g==
-X-Received: by 2002:a17:906:c1d0:b0:7b4:64d3:e6f4 with SMTP id bw16-20020a170906c1d000b007b464d3e6f4mr31696049ejb.594.1670496400292;
-        Thu, 08 Dec 2022 02:46:40 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id kx24-20020a170907775800b007c127e1511dsm1078172ejc.220.2022.12.08.02.46.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 02:46:39 -0800 (PST)
-Message-ID: <d527316d-fec8-a212-b0be-f9184b9b416d@redhat.com>
-Date:   Thu, 8 Dec 2022 11:46:38 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] platform/x86: wireless-hotkey: use ACPI HID as phys
-To:     Alex Hung <alex.hung@amd.com>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Alex Hung <alexhung@gmail.com>
-References: <20221127004617.722553-1-alex.hung@amd.com>
-Content-Language: en-US, nl
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qmIxJ22pSrNj/106k4AQL1cH6VSrEp/zffl6yUlbmCQ=;
+        b=EOAAPZfZEcoiOpXhI0bBfUTRywQy57AQ7eQxTA21F7WPD4iGdz8CB5/+flXsL0jJcL74Y4
+        gDiATbhHpuUFi+T2rbpIrWC99rBctK5XFa9SWYEfHil6OGUjsPWlNbDS1Xrigtw/FVXsvY
+        8LjIHJx1cO0w6OqNxxM86NawInGSk4I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-543-jmZ5xtEdN9am0jKSW-s-xA-1; Thu, 08 Dec 2022 06:02:06 -0500
+X-MC-Unique: jmZ5xtEdN9am0jKSW-s-xA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75C46185A78B;
+        Thu,  8 Dec 2022 11:02:06 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76AE917582;
+        Thu,  8 Dec 2022 11:02:05 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221127004617.722553-1-alex.hung@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] ACPI: x86: Add skip i2c clients quirk for Medion Lifetab S10346
+Date:   Thu,  8 Dec 2022 12:02:02 +0100
+Message-Id: <20221208110202.107326-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The Medion Lifetab S10346 is a x86 tablet which ships with Android x86 as
+factory OS. The Android x86 kernel fork ignores I2C devices described in
+the DSDT, except for the PMIC and Audio codecs.
 
-On 11/27/22 01:46, Alex Hung wrote:
-> From: Alex Hung <alexhung@gmail.com>
-> 
-> Removed the hardcoded "hpq6001" as phys but uses ACPI HID instead.
-> 
-> Signed-off-by: Alex Hung <alexhung@gmail.com>
+As usual the Medion Lifetab S10346's DSDT contains a bunch of extra I2C
+devices which are not actually there, causing various resource conflicts.
+Add an ACPI_QUIRK_SKIP_I2C_CLIENTS quirk for the Medion Lifetab S10346 to
+the acpi_quirk_skip_dmi_ids table to woraround this.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/x86/utils.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/wireless-hotkey.c | 60 +++++++++++++++++---------
->  1 file changed, 40 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/wireless-hotkey.c b/drivers/platform/x86/wireless-hotkey.c
-> index 11c60a273446..eb48ca060bad 100644
-> --- a/drivers/platform/x86/wireless-hotkey.c
-> +++ b/drivers/platform/x86/wireless-hotkey.c
-> @@ -20,7 +20,10 @@ MODULE_ALIAS("acpi*:HPQ6001:*");
->  MODULE_ALIAS("acpi*:WSTADEF:*");
->  MODULE_ALIAS("acpi*:AMDI0051:*");
->  
-> -static struct input_dev *wl_input_dev;
-> +struct wl_button {
-> +	struct input_dev *input_dev;
-> +	char phys[32];
-> +};
->  
->  static const struct acpi_device_id wl_ids[] = {
->  	{"HPQ6001", 0},
-> @@ -29,63 +32,80 @@ static const struct acpi_device_id wl_ids[] = {
->  	{"", 0},
->  };
->  
-> -static int wireless_input_setup(void)
-> +static int wireless_input_setup(struct acpi_device *device)
->  {
-> +	struct wl_button *button = acpi_driver_data(device);
->  	int err;
->  
-> -	wl_input_dev = input_allocate_device();
-> -	if (!wl_input_dev)
-> +	button->input_dev = input_allocate_device();
-> +	if (!button->input_dev)
->  		return -ENOMEM;
->  
-> -	wl_input_dev->name = "Wireless hotkeys";
-> -	wl_input_dev->phys = "hpq6001/input0";
-> -	wl_input_dev->id.bustype = BUS_HOST;
-> -	wl_input_dev->evbit[0] = BIT(EV_KEY);
-> -	set_bit(KEY_RFKILL, wl_input_dev->keybit);
-> +	snprintf(button->phys, sizeof(button->phys), "%s/input0", acpi_device_hid(device));
-> +
-> +	button->input_dev->name = "Wireless hotkeys";
-> +	button->input_dev->phys = button->phys;
-> +	button->input_dev->id.bustype = BUS_HOST;
-> +	button->input_dev->evbit[0] = BIT(EV_KEY);
-> +	set_bit(KEY_RFKILL, button->input_dev->keybit);
->  
-> -	err = input_register_device(wl_input_dev);
-> +	err = input_register_device(button->input_dev);
->  	if (err)
->  		goto err_free_dev;
->  
->  	return 0;
->  
->  err_free_dev:
-> -	input_free_device(wl_input_dev);
-> +	input_free_device(button->input_dev);
->  	return err;
->  }
->  
-> -static void wireless_input_destroy(void)
-> +static void wireless_input_destroy(struct acpi_device *device)
->  {
-> -	input_unregister_device(wl_input_dev);
-> +	struct wl_button *button = acpi_driver_data(device);
-> +
-> +	input_unregister_device(button->input_dev);
-> +	kfree(button);
->  }
->  
->  static void wl_notify(struct acpi_device *acpi_dev, u32 event)
->  {
-> +	struct wl_button *button = acpi_driver_data(acpi_dev);
-> +
->  	if (event != 0x80) {
->  		pr_info("Received unknown event (0x%x)\n", event);
->  		return;
->  	}
->  
-> -	input_report_key(wl_input_dev, KEY_RFKILL, 1);
-> -	input_sync(wl_input_dev);
-> -	input_report_key(wl_input_dev, KEY_RFKILL, 0);
-> -	input_sync(wl_input_dev);
-> +	input_report_key(button->input_dev, KEY_RFKILL, 1);
-> +	input_sync(button->input_dev);
-> +	input_report_key(button->input_dev, KEY_RFKILL, 0);
-> +	input_sync(button->input_dev);
->  }
->  
->  static int wl_add(struct acpi_device *device)
->  {
-> +	struct wl_button *button;
->  	int err;
->  
-> -	err = wireless_input_setup();
-> -	if (err)
-> +	button = kzalloc(sizeof(struct wl_button), GFP_KERNEL);
-> +	if (!button)
-> +		return -ENOMEM;
-> +
-> +	device->driver_data = button;
-> +
-> +	err = wireless_input_setup(device);
-> +	if (err) {
->  		pr_err("Failed to setup wireless hotkeys\n");
-> +		kfree(button);
-> +	}
->  
->  	return err;
->  }
->  
->  static int wl_remove(struct acpi_device *device)
->  {
-> -	wireless_input_destroy();
-> +	wireless_input_destroy(device);
->  	return 0;
->  }
->  
+diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+index 635de40b5822..4e816bb402f6 100644
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -329,6 +329,17 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+ 					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
+ 	},
++	{
++		/* Medion Lifetab S10346 */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
++			/* Way too generic, also match on BIOS data */
++			DMI_MATCH(DMI_BIOS_DATE, "10/22/2015"),
++		},
++		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
++					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
++	},
+ 	{
+ 		/* Nextbook Ares 8 */
+ 		.matches = {
+-- 
+2.38.1
 
