@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF950C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4261C04FDE
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbiLIOFb (ORCPT
+        id S230045AbiLIOFc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Dec 2022 09:05:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
+        Fri, 9 Dec 2022 09:05:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbiLIOFU (ORCPT
+        with ESMTP id S229947AbiLIOFV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Dec 2022 09:05:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075D473F69;
+        Fri, 9 Dec 2022 09:05:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0774977209;
         Fri,  9 Dec 2022 06:05:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 18EE362275;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3206862277;
         Fri,  9 Dec 2022 14:05:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37EFC433F1;
-        Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9572C4332B;
+        Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670594714;
-        bh=Vr1RWEE1BLL3F5ODipwAjwleNPdE5gnPm2mw3W0gbGQ=;
+        s=k20201202; t=1670594713;
+        bh=oPl4pvwV1ibYKGzWqPE8Z/9v5b9TU2RoMS/4leBXqsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DzsRaw4wb2Khse5EZuyLvwhozm4UKC6pAm6PodJFWnWXqIY2vIqI4cSbO+bcuQA0w
-         6mmTvv7Hgz9bwJhJbDPPtyi8oQLGdeFB3WZh4lZXvURZq53QUY7jzMa7K0kEtwVjGO
-         8zRT9wdLd5cMpvYSbELaa3pZJ/5QQJe/nx6695C/EmvdwmHuHRbO/JH0axDFI3aisK
-         Y/S2J3HgcQ/lZ32vCRTLbBSu0hKr0IElmOwNkkboTWMJClv9SIj7vgBukvKaKbI7bt
-         NuIe87GrS6Kbv++RUtf2Ps53UltTalh4qxbmQXWyW2/r7M+/fx1/KU1Mr+8PMMaBCi
-         bPlNFlVv+wrPw==
+        b=VKfmdud8A78pJzExYNYQ+U4s3u8OKfVXagECsOzWHPXy66/hT0yis1zPJ5bTEJwkf
+         2TESlFeolRO7vpH0WOyJMkk8sAelvUHhlQO1sAHQXs5T9fpSjE83hgDCOciThGTXRe
+         ht/FDTPHI4NWTkn9AGNi8YcGcAF/HTLYotvk/fj/fx8R2K/JnTnsZi1CsW8b4RAgQx
+         SX+/rbaGDuMlw1Te7sM12DSA/1p54pRAYqpeIAhhrdMeAuZ2i9uuKOw/xN/hFqLpZC
+         YYrDjw3kP8pMZ1yrdqn2w+tBGSbHZ2lDiUdJMSODa46qWfH7wmrOpPMNRjomDPr6Vk
+         EMlo4QMH46JXA==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0J-0000SG-T5; Fri, 09 Dec 2022 15:05:31 +0100
+        id 1p3e0J-0000Rp-21; Fri, 09 Dec 2022 15:05:31 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
@@ -43,9 +43,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 19/19] irqdomain: Switch to per-domain locking
-Date:   Fri,  9 Dec 2022 15:01:50 +0100
-Message-Id: <20221209140150.1453-20-johan+linaro@kernel.org>
+Subject: [PATCH v3 10/19] irqdomain: Clean up irq_domain_push/pop_irq()
+Date:   Fri,  9 Dec 2022 15:01:41 +0100
+Message-Id: <20221209140150.1453-11-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -55,246 +55,161 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The IRQ domain structures are currently protected by the global
-irq_domain_mutex. Switch to using more fine-grained per-domain locking,
-which may potentially speed up parallel probing somewhat.
+The irq_domain_push_irq() interface is used to add a new (outmost) level
+to a hierarchical domain after IRQs have been allocated.
 
-Note that the domain lock of the root domain (innermost domain) must be
-used for hierarchical domains. For non-hierarchical domain (as for root
-domains), the new root pointer is set to the domain itself so that
-domain->root->mutex can be used in shared code paths.
+Possibly due to differing mental images of hierarchical domains, the
+names used for the irq_data variables make these functions much harder
+to understand than what they need to be.
 
-Also note that hierarchical domains should be constructed using
-irq_domain_create_hierarchy() (or irq_domain_add_hierarchy()) to avoid
-poking at irqdomain internals.
+Rename the struct irq_data pointer to the data embedded in the
+descriptor as simply 'irq_data' and refer to the data allocated by this
+interface as 'parent_irq_data' so that the names reflect how
+hierarchical domains are implemented.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- include/linux/irqdomain.h |  4 ++++
- kernel/irq/irqdomain.c    | 48 ++++++++++++++++++++++-----------------
- 2 files changed, 31 insertions(+), 21 deletions(-)
+ kernel/irq/irqdomain.c | 65 +++++++++++++++++++++---------------------
+ 1 file changed, 32 insertions(+), 33 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 16399de00b48..cad47737a052 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -125,6 +125,8 @@ struct irq_domain_chip_generic;
-  *		core code.
-  * @flags:	Per irq_domain flags
-  * @mapcount:	The number of mapped interrupts
-+ * @mutex:	Domain lock, hierarhical domains use root domain's lock
-+ * @root:	Pointer to root domain, or containing structure if non-hierarchical
-  *
-  * Optional elements:
-  * @fwnode:	Pointer to firmware node associated with the irq_domain. Pretty easy
-@@ -152,6 +154,8 @@ struct irq_domain {
- 	void				*host_data;
- 	unsigned int			flags;
- 	unsigned int			mapcount;
-+	struct mutex			mutex;
-+	struct irq_domain		*root;
- 
- 	/* Optional data */
- 	struct fwnode_handle		*fwnode;
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 6f2b8a1248e1..3faea8b66120 100644
+index 7232947eee3e..6f2b8a1248e1 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -217,6 +217,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
+@@ -1571,8 +1571,8 @@ static void irq_domain_fix_revmap(struct irq_data *d)
+  */
+ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+ {
+-	struct irq_data *child_irq_data;
+-	struct irq_data *root_irq_data = irq_get_irq_data(virq);
++	struct irq_data *irq_data = irq_get_irq_data(virq);
++	struct irq_data *parent_irq_data;
+ 	struct irq_desc *desc;
+ 	int rv = 0;
  
- 	/* Fill structure */
- 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
-+	mutex_init(&domain->mutex);
- 	domain->ops = ops;
- 	domain->host_data = host_data;
- 	domain->hwirq_max = hwirq_max;
-@@ -227,6 +228,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
- 	domain->revmap_size = size;
+@@ -1597,45 +1597,44 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+ 	if (WARN_ON(!irq_domain_is_hierarchy(domain)))
+ 		return -EINVAL;
  
- 	irq_domain_check_hierarchy(domain);
-+	domain->root = domain;
+-	if (!root_irq_data)
++	if (!irq_data)
+ 		return -EINVAL;
+ 
+-	if (domain->parent != root_irq_data->domain)
++	if (domain->parent != irq_data->domain)
+ 		return -EINVAL;
+ 
+-	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
+-				      irq_data_get_node(root_irq_data));
+-	if (!child_irq_data)
++	parent_irq_data = kzalloc_node(sizeof(*parent_irq_data), GFP_KERNEL,
++				       irq_data_get_node(irq_data));
++	if (!parent_irq_data)
+ 		return -ENOMEM;
  
  	mutex_lock(&irq_domain_mutex);
- 	debugfs_add_domain_dir(domain);
-@@ -503,7 +505,7 @@ static bool irq_domain_is_nomap(struct irq_domain *domain)
- static void irq_domain_clear_mapping(struct irq_domain *domain,
- 				     irq_hw_number_t hwirq)
- {
--	lockdep_assert_held(&irq_domain_mutex);
-+	lockdep_assert_held(&domain->root->mutex);
  
- 	if (irq_domain_is_nomap(domain))
- 		return;
-@@ -518,7 +520,7 @@ static void irq_domain_set_mapping(struct irq_domain *domain,
- 				   irq_hw_number_t hwirq,
- 				   struct irq_data *irq_data)
- {
--	lockdep_assert_held(&irq_domain_mutex);
-+	lockdep_assert_held(&domain->root->mutex);
- 
- 	if (irq_domain_is_nomap(domain))
- 		return;
-@@ -540,7 +542,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 
- 	hwirq = irq_data->hwirq;
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->mutex);
- 
- 	irq_set_status_flags(irq, IRQ_NOREQUEST);
- 
-@@ -562,7 +564,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 	/* Clear reverse map for this hwirq */
- 	irq_domain_clear_mapping(domain, hwirq);
- 
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->mutex);
- }
- 
- static int __irq_domain_associate(struct irq_domain *domain, unsigned int virq,
-@@ -612,9 +614,9 @@ int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
- {
- 	int ret;
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->mutex);
- 	ret = __irq_domain_associate(domain, virq, hwirq);
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->mutex);
- 
- 	return ret;
- }
-@@ -731,7 +733,7 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
- 		return 0;
- 	}
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->mutex);
- 
- 	/* Check if mapping already exists */
- 	virq = irq_find_mapping(domain, hwirq);
-@@ -742,7 +744,7 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
- 
- 	virq = __irq_create_mapping_affinity(domain, hwirq, affinity);
- out:
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->mutex);
- 
- 	return virq;
- }
-@@ -811,7 +813,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- 	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
- 		type &= IRQ_TYPE_SENSE_MASK;
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->root->mutex);
+ 	/* Copy the original irq_data. */
+-	*child_irq_data = *root_irq_data;
++	*parent_irq_data = *irq_data;
  
  	/*
- 	 * If we've already configured this interrupt,
-@@ -864,11 +866,11 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- 	/* Store trigger type */
- 	irqd_set_trigger_type(irq_data, type);
- out:
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->root->mutex);
+-	 * Overwrite the root_irq_data, which is embedded in struct
+-	 * irq_desc, with values for this domain.
++	 * Overwrite the irq_data, which is embedded in struct irq_desc, with
++	 * values for this domain.
+ 	 */
+-	root_irq_data->parent_data = child_irq_data;
+-	root_irq_data->domain = domain;
+-	root_irq_data->mask = 0;
+-	root_irq_data->hwirq = 0;
+-	root_irq_data->chip = NULL;
+-	root_irq_data->chip_data = NULL;
++	irq_data->parent_data = parent_irq_data;
++	irq_data->domain = domain;
++	irq_data->mask = 0;
++	irq_data->hwirq = 0;
++	irq_data->chip = NULL;
++	irq_data->chip_data = NULL;
  
- 	return virq;
- err:
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->root->mutex);
+ 	/* May (probably does) set hwirq, chip, etc. */
+ 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
+ 	if (rv) {
+ 		/* Restore the original irq_data. */
+-		*root_irq_data = *child_irq_data;
+-		kfree(child_irq_data);
++		*irq_data = *parent_irq_data;
++		kfree(parent_irq_data);
+ 		goto error;
+ 	}
+ 
+-	irq_domain_fix_revmap(child_irq_data);
+-	irq_domain_set_mapping(domain, root_irq_data->hwirq, root_irq_data);
+-
++	irq_domain_fix_revmap(parent_irq_data);
++	irq_domain_set_mapping(domain, irq_data->hwirq, irq_data);
+ error:
+ 	mutex_unlock(&irq_domain_mutex);
+ 
+@@ -1653,8 +1652,8 @@ EXPORT_SYMBOL_GPL(irq_domain_push_irq);
+  */
+ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
+ {
+-	struct irq_data *root_irq_data = irq_get_irq_data(virq);
+-	struct irq_data *child_irq_data;
++	struct irq_data *irq_data = irq_get_irq_data(virq);
++	struct irq_data *parent_irq_data;
+ 	struct irq_data *tmp_irq_data;
+ 	struct irq_desc *desc;
+ 
+@@ -1676,37 +1675,37 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
+ 	if (domain == NULL)
+ 		return -EINVAL;
+ 
+-	if (!root_irq_data)
++	if (!irq_data)
+ 		return -EINVAL;
+ 
+ 	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
+ 
+ 	/* We can only "pop" if this domain is at the top of the list */
+-	if (WARN_ON(root_irq_data != tmp_irq_data))
++	if (WARN_ON(irq_data != tmp_irq_data))
+ 		return -EINVAL;
+ 
+-	if (WARN_ON(root_irq_data->domain != domain))
++	if (WARN_ON(irq_data->domain != domain))
+ 		return -EINVAL;
+ 
+-	child_irq_data = root_irq_data->parent_data;
+-	if (WARN_ON(!child_irq_data))
++	parent_irq_data = irq_data->parent_data;
++	if (WARN_ON(!parent_irq_data))
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&irq_domain_mutex);
+ 
+-	root_irq_data->parent_data = NULL;
++	irq_data->parent_data = NULL;
+ 
+-	irq_domain_clear_mapping(domain, root_irq_data->hwirq);
++	irq_domain_clear_mapping(domain, irq_data->hwirq);
+ 	irq_domain_free_irqs_hierarchy(domain, virq, 1);
+ 
+ 	/* Restore the original irq_data. */
+-	*root_irq_data = *child_irq_data;
++	*irq_data = *parent_irq_data;
+ 
+-	irq_domain_fix_revmap(root_irq_data);
++	irq_domain_fix_revmap(irq_data);
+ 
+ 	mutex_unlock(&irq_domain_mutex);
+ 
+-	kfree(child_irq_data);
++	kfree(parent_irq_data);
  
  	return 0;
  }
-@@ -1132,6 +1134,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
- 	else
- 		domain = irq_domain_create_tree(fwnode, ops, host_data);
- 	if (domain) {
-+		domain->root = parent->root;
- 		domain->parent = parent;
- 		domain->flags |= flags;
- 	}
-@@ -1528,10 +1531,10 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 			return -EINVAL;
- 	}
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->root->mutex);
- 	ret = ___irq_domain_alloc_irqs(domain, irq_base, nr_irqs, node, arg,
- 				       realloc, affinity);
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->root->mutex);
- 
- 	return ret;
- }
-@@ -1542,7 +1545,7 @@ static void irq_domain_fix_revmap(struct irq_data *d)
- {
- 	void __rcu **slot;
- 
--	lockdep_assert_held(&irq_domain_mutex);
-+	lockdep_assert_held(&d->domain->root->mutex);
- 
- 	if (irq_domain_is_nomap(d->domain))
- 		return;
-@@ -1608,7 +1611,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	if (!parent_irq_data)
- 		return -ENOMEM;
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->root->mutex);
- 
- 	/* Copy the original irq_data. */
- 	*parent_irq_data = *irq_data;
-@@ -1636,7 +1639,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	irq_domain_fix_revmap(parent_irq_data);
- 	irq_domain_set_mapping(domain, irq_data->hwirq, irq_data);
- error:
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->root->mutex);
- 
- 	return rv;
- }
-@@ -1691,7 +1694,7 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- 	if (WARN_ON(!parent_irq_data))
- 		return -EINVAL;
- 
--	mutex_lock(&irq_domain_mutex);
-+	mutex_lock(&domain->root->mutex);
- 
- 	irq_data->parent_data = NULL;
- 
-@@ -1703,7 +1706,7 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- 
- 	irq_domain_fix_revmap(irq_data);
- 
--	mutex_unlock(&irq_domain_mutex);
-+	mutex_unlock(&domain->root->mutex);
- 
- 	kfree(parent_irq_data);
- 
-@@ -1719,17 +1722,20 @@ EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
- void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
- {
- 	struct irq_data *data = irq_get_irq_data(virq);
-+	struct irq_domain *domain;
- 	int i;
- 
- 	if (WARN(!data || !data->domain || !data->domain->ops->free,
- 		 "NULL pointer, cannot free irq\n"))
- 		return;
- 
--	mutex_lock(&irq_domain_mutex);
-+	domain = data->domain;
-+
-+	mutex_lock(&domain->root->mutex);
- 	for (i = 0; i < nr_irqs; i++)
- 		irq_domain_remove_irq(virq + i);
--	irq_domain_free_irqs_hierarchy(data->domain, virq, nr_irqs);
--	mutex_unlock(&irq_domain_mutex);
-+	irq_domain_free_irqs_hierarchy(domain, virq, nr_irqs);
-+	mutex_unlock(&domain->root->mutex);
- 
- 	irq_domain_free_irq_data(virq, nr_irqs);
- 	irq_free_descs(virq, nr_irqs);
 -- 
 2.37.4
 
