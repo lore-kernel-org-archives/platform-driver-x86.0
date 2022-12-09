@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C99AC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC20AC4708D
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbiLIOFs (ORCPT
+        id S230098AbiLIOFu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Dec 2022 09:05:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
+        Fri, 9 Dec 2022 09:05:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiLIOFV (ORCPT
+        with ESMTP id S229950AbiLIOFV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 9 Dec 2022 09:05:21 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73EDB7683F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCC97869E;
         Fri,  9 Dec 2022 06:05:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 603476227D;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7972762284;
         Fri,  9 Dec 2022 14:05:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BDEC433D2;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71032C432C6;
         Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1670594714;
-        bh=9AtJSfDyD2LZYkx9jto+1enajKmHrHjk2oxsdGhfsTI=;
+        bh=4RPPmHlyjmlFUoLHUFxMf8HvCeMtaA+C0YRncoYi5r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQH/23aQv5CuTQY+WSVZhYoXYYPKe6yGP1JpGCGS4WwGIs95UD34/oFrns8IfdXbb
-         kjRAvMWLf3p5JqVYlg10HwURYxs7WqpDpqDM5cK2SGKIrxzHrv1v+C6g0N340RjwSw
-         2eLqhphBx0Pww1X072puzRf/Ag9/cpnverpYZS444l2SEsNGj70hDSF3MgQhNYF83k
-         r0aIP18jRdwkwi+9SRwUDPoeEbCscYT2eW0fWFVqLej9t5pHUkPUzqiQHl0KsIe9kR
-         gEdFN0uxhpNhLBIrhQKvvGmOTyOH6TSY9b5gRuxSNk538JAR6veJDICDg0zoLfCPoM
-         oN3icrx9blW0g==
+        b=I9U1EWXH4g5czfiJcl1sznKHcybwXhDHSvBNWqKAoKXukqvbk9CcBWG6iNGfjlgsu
+         zDW5xeYGQe2Z6XJmQXKV2lG7bkPVFqR10B/YTiDFu+wL3blgNxOYtlxgkkSXPBZA4V
+         NDOHRvSCTENf4pJ0802Q0WI51jPP8l5IdCI7KFftI/9WBagQZziZAaILSb8B8XvQ6I
+         eYq3s3TwJwJRGUC0ZbZ3phmicN64cDLZfjnoJGtmY8ZmZzqRBo4IDPP2GTSGSUaQNA
+         Pooze409PSzu4gDkgEIa3EYs+BWgusMT1PdLk9xUqhqIdBYVdq6Ku9Q4BPRar0NVEi
+         IUBq3zuqxbTWQ==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0J-0000Ry-Bh; Fri, 09 Dec 2022 15:05:31 +0100
+        id 1p3e0J-0000SA-Nb; Fri, 09 Dec 2022 15:05:31 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
@@ -43,9 +43,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 13/19] irqchip/alpine-msi: Use irq_domain_add_hierarchy()
-Date:   Fri,  9 Dec 2022 15:01:44 +0100
-Message-Id: <20221209140150.1453-14-johan+linaro@kernel.org>
+Subject: [PATCH v3 17/19] irqchip/loongson-pch-msi: Use irq_domain_create_hierarchy()
+Date:   Fri,  9 Dec 2022 15:01:48 +0100
+Message-Id: <20221209140150.1453-18-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -55,39 +55,40 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the irq_domain_add_hierarchy() helper to create the hierarchical
+Use the irq_domain_create_hierarchy() helper to create the hierarchical
 domain, which both serves as documentation and avoids poking at
 irqdomain internals.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/irqchip/irq-alpine-msi.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-loongson-pch-msi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-msi.c
-index 5ddb8e578ac6..604459372fdd 100644
---- a/drivers/irqchip/irq-alpine-msi.c
-+++ b/drivers/irqchip/irq-alpine-msi.c
-@@ -204,16 +204,14 @@ static int alpine_msix_init_domains(struct alpine_msix_data *priv,
- 		return -ENXIO;
- 	}
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index a72ede90ffc6..6e1e1f011bb2 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -163,16 +163,15 @@ static int pch_msi_init_domains(struct pch_msi_data *priv,
+ {
+ 	struct irq_domain *middle_domain, *msi_domain;
  
--	middle_domain = irq_domain_add_tree(NULL,
--					    &alpine_msix_middle_domain_ops,
--					    priv);
-+	middle_domain = irq_domain_add_hierarchy(gic_domain, 0, 0, NULL,
-+						 &alpine_msix_middle_domain_ops,
-+						 priv);
+-	middle_domain = irq_domain_create_linear(domain_handle,
+-						priv->num_irqs,
+-						&pch_msi_middle_domain_ops,
+-						priv);
++	middle_domain = irq_domain_create_hierarchy(parent, 0, priv->num_irqs,
++						    domain_handle,
++						    &pch_msi_middle_domain_ops,
++						    priv);
  	if (!middle_domain) {
- 		pr_err("Failed to create the MSIX middle domain\n");
+ 		pr_err("Failed to create the MSI middle domain\n");
  		return -ENOMEM;
  	}
  
--	middle_domain->parent = gic_domain;
--
- 	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
- 					       &alpine_msix_domain_info,
- 					       middle_domain);
+-	middle_domain->parent = parent;
+ 	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
+ 
+ 	msi_domain = pci_msi_create_irq_domain(domain_handle,
 -- 
 2.37.4
 
