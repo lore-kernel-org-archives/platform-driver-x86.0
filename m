@@ -2,174 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313EFC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Dec 2022 22:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61059C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 07:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbiLHWMN (ORCPT
+        id S229776AbiLIHpr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Dec 2022 17:12:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
+        Fri, 9 Dec 2022 02:45:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230043AbiLHWMD (ORCPT
+        with ESMTP id S229460AbiLIHpp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Dec 2022 17:12:03 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2DB27DE5;
-        Thu,  8 Dec 2022 14:12:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670537522; x=1702073522;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vvU4PeGKvcYxDi2SGTd4kcVlxgzXOYX6SRbtggkIuPw=;
-  b=ae/SWJ3Y2JnS7cvEQi/jUCcnM9H3ovnCOnSuo5XnjS2ZTOdnis1B91md
-   FMdKCzIpvlogbG/vPfNg+1wHILv+6ct98S+mtFwUrvHYGcpywy0HKsBDa
-   G8aQ9yLza194DmtqYwdWXYURLvxY0xXrx4ot03b9bV83VRHpYRbnzfQzw
-   I3ioZFJwGG81Ku7RtDzuN476HFzBMksfGHNLpTPHMxHAH0ooxZLGlQDux
-   ir7dLf+qXBRcXqzvK/dHNkMzId+VkmuhDcDacfr1oJcymsBg96dJJ4uew
-   dzYVfnSh1XjW8QiOkktGkjbzjzghgOVbKNBQX89S0k10EPu6NLFBJHm11
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="300735872"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="300735872"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 14:11:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="649335508"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="649335508"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Dec 2022 14:11:56 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C3423433; Fri,  9 Dec 2022 00:12:24 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 2/2] efi/earlycon: Speed up scrolling by skiping moving empty space
-Date:   Fri,  9 Dec 2022 00:12:17 +0200
-Message-Id: <20221208221217.56354-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221208221217.56354-1-andriy.shevchenko@linux.intel.com>
-References: <20221208221217.56354-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 9 Dec 2022 02:45:45 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C789540900;
+        Thu,  8 Dec 2022 23:45:44 -0800 (PST)
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NT33W18jGz8QrkZ;
+        Fri,  9 Dec 2022 15:45:43 +0800 (CST)
+Received: from szxlzmapp02.zte.com.cn ([10.5.231.79])
+        by mse-fl1.zte.com.cn with SMTP id 2B97jScJ046261;
+        Fri, 9 Dec 2022 15:45:28 +0800 (+08)
+        (envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp04[null])
+        by mapi (Zmail) with MAPI id mid14;
+        Fri, 9 Dec 2022 15:45:31 +0800 (CST)
+Date:   Fri, 9 Dec 2022 15:45:31 +0800 (CST)
+X-Zmail-TransId: 2b066392e79b6cce31ed
+X-Mailer: Zmail v1.0
+Message-ID: <202212091545310085328@zte.com.cn>
+Mime-Version: 1.0
+From:   <yang.yang29@zte.com.cn>
+To:     <steve.wahl@hpe.com>
+Cc:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
+        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
+        <yang.yang29@zte.com.cn>, <andy.shevchenko@gmail.com>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjNdIHg4Ni9wbGF0Zm9ybS91djogdXNlIHN0cnNjcHkgdG8gaW5zdGVhZCBvZiBzdHJuY3B5KCk=?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl1.zte.com.cn 2B97jScJ046261
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 6392E7A7.000 by FangMail milter!
+X-FangMail-Envelope: 1670571943/4NT33W18jGz8QrkZ/6392E7A7.000/10.5.228.132/[10.5.228.132]/mse-fl1.zte.com.cn/<yang.yang29@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6392E7A7.000/4NT33W18jGz8QrkZ
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently the scroll copies the full screen which is slow on
-the hi-resolution displays. At the same time most of the screen
-is an empty space which has no need to be copied over and over.
+From: Xu Panda <xu.panda@zte.com.cn>
 
-Optimize the scrolling algorithm by caching the x coordinates
-of the last printed lines and scroll in accordance with the
-maximum x in that cache.
+The implementation of strscpy() is more robust and safer.
+That's now the recommended way to copy NUL terminated strings.
 
-On my Microsoft Surface Book (the first version) this produces
-a significant speedup of the console 90 seconds vs. 168 seconds
-with the kernel command line having
-
-	ignore_loglevel earlycon=efifb keep_bootcon
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+Signed-off-by: Yang Yang <yang.yang29@zte.com>
 ---
- drivers/firmware/efi/earlycon.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+change for v3
+ - remove the remaining definition of p, and fix the mistake
+which leads to eating one character. Thanks to Andy Shevchenko again.
+---
+ arch/x86/platform/uv/uv_nmi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
-index be7c83b6cd10..f54e6fdf08e2 100644
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -16,6 +16,8 @@
- 
- static const struct console *earlycon_console __initdata;
- static const struct font_desc *font;
-+static u16 cur_line_y, max_line_y;
-+static u32 efi_x_array[1024];
- static u32 efi_x, efi_y;
- static u64 fb_base;
- static bool fb_wb;
-@@ -86,9 +88,17 @@ static void efi_earlycon_clear_scanline(unsigned int y)
- static void efi_earlycon_scroll_up(void)
+diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
+index a60af0230e27..a55550b779e1 100644
+--- a/arch/x86/platform/uv/uv_nmi.c
++++ b/arch/x86/platform/uv/uv_nmi.c
+@@ -202,14 +202,10 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
  {
- 	unsigned long *dst, *src;
-+	u16 maxlen = 0;
- 	u16 len;
- 	u32 i, height;
- 
-+	/* Find the cached maximum x coordinate */
-+	for (i = 0; i < max_line_y; i++) {
-+		if (efi_x_array[i] > maxlen)
-+			maxlen = efi_x_array[i];
-+	}
-+	maxlen *= 4;
-+
- 	len = screen_info.lfb_linelength;
- 	height = screen_info.lfb_height;
- 
-@@ -103,7 +113,7 @@ static void efi_earlycon_scroll_up(void)
- 			return;
- 		}
- 
--		memmove(dst, src, len);
-+		memmove(dst, src, maxlen);
- 
- 		efi_earlycon_unmap(src, len);
- 		efi_earlycon_unmap(dst, len);
-@@ -136,6 +146,7 @@ static void
- efi_earlycon_write(struct console *con, const char *str, unsigned int num)
- {
- 	struct screen_info *si;
-+	u32 cur_efi_x = efi_x;
- 	unsigned int len;
- 	const char *s;
- 	void *dst;
-@@ -176,6 +187,7 @@ efi_earlycon_write(struct console *con, const char *str, unsigned int num)
- 		str += count;
- 
- 		if (num > 0 && *s == '\n') {
-+			cur_efi_x = efi_x;
- 			efi_x = 0;
- 			efi_y += font->height;
- 			str++;
-@@ -183,6 +195,7 @@ efi_earlycon_write(struct console *con, const char *str, unsigned int num)
- 		}
- 
- 		if (efi_x + font->width > si->lfb_width) {
-+			cur_efi_x = efi_x;
- 			efi_x = 0;
- 			efi_y += font->height;
- 		}
-@@ -190,6 +203,9 @@ efi_earlycon_write(struct console *con, const char *str, unsigned int num)
- 		if (efi_y + font->height > si->lfb_height) {
- 			u32 i;
- 
-+			efi_x_array[cur_line_y] = cur_efi_x;
-+			cur_line_y = (cur_line_y + 1) % max_line_y;
-+
- 			efi_y -= font->height;
- 			efi_earlycon_scroll_up();
- 
-@@ -230,7 +246,15 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
- 	if (!font)
- 		return -ENODEV;
- 
--	efi_y = rounddown(yres, font->height) - font->height;
-+	/* Fill the cache with maximum possible value of x coordinate */
-+	memset32(efi_x_array, rounddown(xres, font->width), ARRAY_SIZE(efi_x_array));
-+	efi_y = rounddown(yres, font->height);
-+
-+	/* Make sure we have cache for the x coordinate for the full screen */
-+	max_line_y = efi_y / font->height + 1;
-+	cur_line_y = 0;
-+
-+	efi_y -= font->height;
- 	for (i = 0; i < (yres - efi_y) / font->height; i++)
- 		efi_earlycon_scroll_up();
- 
+ 	int i;
+ 	int n = ARRAY_SIZE(valid_acts);
+-	char arg[ACTION_LEN], *p;
++	char arg[ACTION_LEN];
+
+ 	/* (remove possible '\n') */
+-	strncpy(arg, val, ACTION_LEN - 1);
+-	arg[ACTION_LEN - 1] = '\0';
+-	p = strchr(arg, '\n');
+-	if (p)
+-		*p = '\0';
++	strscpy(arg, val, strnchrnul(val, ACTION_LEN - 1, '\n') - val + 1);
+
+ 	for (i = 0; i < n; i++)
+ 		if (!strcmp(arg, valid_acts[i].action))
 -- 
-2.35.1
-
+2.15.2
