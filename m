@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4261C04FDE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A81C2D0CB
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbiLIOFc (ORCPT
+        id S229749AbiLIOFc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Fri, 9 Dec 2022 09:05:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbiLIOFV (ORCPT
+        with ESMTP id S229948AbiLIOFV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 9 Dec 2022 09:05:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0774977209;
-        Fri,  9 Dec 2022 06:05:16 -0800 (PST)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFDD7616D;
+        Fri,  9 Dec 2022 06:05:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3206862277;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6395F6227E;
         Fri,  9 Dec 2022 14:05:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9572C4332B;
-        Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D30CC4333B;
+        Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670594713;
-        bh=oPl4pvwV1ibYKGzWqPE8Z/9v5b9TU2RoMS/4leBXqsM=;
+        s=k20201202; t=1670594714;
+        bh=1R69EjNecFlegnni2yXQZM+277REaHNNTHY/K11udy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKfmdud8A78pJzExYNYQ+U4s3u8OKfVXagECsOzWHPXy66/hT0yis1zPJ5bTEJwkf
-         2TESlFeolRO7vpH0WOyJMkk8sAelvUHhlQO1sAHQXs5T9fpSjE83hgDCOciThGTXRe
-         ht/FDTPHI4NWTkn9AGNi8YcGcAF/HTLYotvk/fj/fx8R2K/JnTnsZi1CsW8b4RAgQx
-         SX+/rbaGDuMlw1Te7sM12DSA/1p54pRAYqpeIAhhrdMeAuZ2i9uuKOw/xN/hFqLpZC
-         YYrDjw3kP8pMZ1yrdqn2w+tBGSbHZ2lDiUdJMSODa46qWfH7wmrOpPMNRjomDPr6Vk
-         EMlo4QMH46JXA==
+        b=Mnf9JEUD7JHMYGBYApLf75+mZmAgrtsrYJ02sdm8UKC2Sf9WiJgIm5/9s58scqcLB
+         iMtYck+IjZHQ5NGdTeNIiuJmq3Ddep6kGCG41Gs/xqAKBavdghFv838rjjAeEhNPIc
+         sIvb9Iea8qtCGCdJNHMyAKMcVdsw5vLT1BvE2KC5o0q16uJRIeuvQY0R2Rk5qClBx1
+         2G+qwGLcc78nH8cD+NXIR9d1vIvzGqZk6E7N6W4bBb6F4pCELIgbRmNirC7MizYes4
+         0RrKS9vJeFfKyuIQnaUo2mBhmMC5AcRArr+t8fATrWgBEKxPZuZsCwpSJ4hEJLgBwO
+         xnQDtiWmGSYcA==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0J-0000Rp-21; Fri, 09 Dec 2022 15:05:31 +0100
+        id 1p3e0J-0000S7-KN; Fri, 09 Dec 2022 15:05:31 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
@@ -43,9 +43,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 10/19] irqdomain: Clean up irq_domain_push/pop_irq()
-Date:   Fri,  9 Dec 2022 15:01:41 +0100
-Message-Id: <20221209140150.1453-11-johan+linaro@kernel.org>
+Subject: [PATCH v3 16/19] irqchip/gic-v3-mbi: Use irq_domain_create_hierarchy()
+Date:   Fri,  9 Dec 2022 15:01:47 +0100
+Message-Id: <20221209140150.1453-17-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -55,161 +55,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The irq_domain_push_irq() interface is used to add a new (outmost) level
-to a hierarchical domain after IRQs have been allocated.
-
-Possibly due to differing mental images of hierarchical domains, the
-names used for the irq_data variables make these functions much harder
-to understand than what they need to be.
-
-Rename the struct irq_data pointer to the data embedded in the
-descriptor as simply 'irq_data' and refer to the data allocated by this
-interface as 'parent_irq_data' so that the names reflect how
-hierarchical domains are implemented.
+Use the irq_domain_create_hierarchy() helper to create the hierarchical
+domain, which both serves as documentation and avoids poking at
+irqdomain internals.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 65 +++++++++++++++++++++---------------------
- 1 file changed, 32 insertions(+), 33 deletions(-)
+ drivers/irqchip/irq-gic-v3-mbi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 7232947eee3e..6f2b8a1248e1 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1571,8 +1571,8 @@ static void irq_domain_fix_revmap(struct irq_data *d)
-  */
- int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- {
--	struct irq_data *child_irq_data;
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
- 	struct irq_desc *desc;
- 	int rv = 0;
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
+index e1efdec9e9ac..dbb8b1efda44 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -233,13 +233,12 @@ static int mbi_allocate_domains(struct irq_domain *parent)
+ 	struct irq_domain *nexus_domain, *pci_domain, *plat_domain;
+ 	int err;
  
-@@ -1597,45 +1597,44 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	if (WARN_ON(!irq_domain_is_hierarchy(domain)))
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!irq_data)
- 		return -EINVAL;
- 
--	if (domain->parent != root_irq_data->domain)
-+	if (domain->parent != irq_data->domain)
- 		return -EINVAL;
- 
--	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
--				      irq_data_get_node(root_irq_data));
--	if (!child_irq_data)
-+	parent_irq_data = kzalloc_node(sizeof(*parent_irq_data), GFP_KERNEL,
-+				       irq_data_get_node(irq_data));
-+	if (!parent_irq_data)
+-	nexus_domain = irq_domain_create_tree(parent->fwnode,
+-					      &mbi_domain_ops, NULL);
++	nexus_domain = irq_domain_create_hierarchy(parent, 0, 0, parent->fwnode,
++						   &mbi_domain_ops, NULL);
+ 	if (!nexus_domain)
  		return -ENOMEM;
  
- 	mutex_lock(&irq_domain_mutex);
+ 	irq_domain_update_bus_token(nexus_domain, DOMAIN_BUS_NEXUS);
+-	nexus_domain->parent = parent;
  
- 	/* Copy the original irq_data. */
--	*child_irq_data = *root_irq_data;
-+	*parent_irq_data = *irq_data;
+ 	err = mbi_allocate_pci_domain(nexus_domain, &pci_domain);
  
- 	/*
--	 * Overwrite the root_irq_data, which is embedded in struct
--	 * irq_desc, with values for this domain.
-+	 * Overwrite the irq_data, which is embedded in struct irq_desc, with
-+	 * values for this domain.
- 	 */
--	root_irq_data->parent_data = child_irq_data;
--	root_irq_data->domain = domain;
--	root_irq_data->mask = 0;
--	root_irq_data->hwirq = 0;
--	root_irq_data->chip = NULL;
--	root_irq_data->chip_data = NULL;
-+	irq_data->parent_data = parent_irq_data;
-+	irq_data->domain = domain;
-+	irq_data->mask = 0;
-+	irq_data->hwirq = 0;
-+	irq_data->chip = NULL;
-+	irq_data->chip_data = NULL;
- 
- 	/* May (probably does) set hwirq, chip, etc. */
- 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
- 	if (rv) {
- 		/* Restore the original irq_data. */
--		*root_irq_data = *child_irq_data;
--		kfree(child_irq_data);
-+		*irq_data = *parent_irq_data;
-+		kfree(parent_irq_data);
- 		goto error;
- 	}
- 
--	irq_domain_fix_revmap(child_irq_data);
--	irq_domain_set_mapping(domain, root_irq_data->hwirq, root_irq_data);
--
-+	irq_domain_fix_revmap(parent_irq_data);
-+	irq_domain_set_mapping(domain, irq_data->hwirq, irq_data);
- error:
- 	mutex_unlock(&irq_domain_mutex);
- 
-@@ -1653,8 +1652,8 @@ EXPORT_SYMBOL_GPL(irq_domain_push_irq);
-  */
- int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- {
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
--	struct irq_data *child_irq_data;
-+	struct irq_data *irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
- 	struct irq_data *tmp_irq_data;
- 	struct irq_desc *desc;
- 
-@@ -1676,37 +1675,37 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- 	if (domain == NULL)
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!irq_data)
- 		return -EINVAL;
- 
- 	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
- 
- 	/* We can only "pop" if this domain is at the top of the list */
--	if (WARN_ON(root_irq_data != tmp_irq_data))
-+	if (WARN_ON(irq_data != tmp_irq_data))
- 		return -EINVAL;
- 
--	if (WARN_ON(root_irq_data->domain != domain))
-+	if (WARN_ON(irq_data->domain != domain))
- 		return -EINVAL;
- 
--	child_irq_data = root_irq_data->parent_data;
--	if (WARN_ON(!child_irq_data))
-+	parent_irq_data = irq_data->parent_data;
-+	if (WARN_ON(!parent_irq_data))
- 		return -EINVAL;
- 
- 	mutex_lock(&irq_domain_mutex);
- 
--	root_irq_data->parent_data = NULL;
-+	irq_data->parent_data = NULL;
- 
--	irq_domain_clear_mapping(domain, root_irq_data->hwirq);
-+	irq_domain_clear_mapping(domain, irq_data->hwirq);
- 	irq_domain_free_irqs_hierarchy(domain, virq, 1);
- 
- 	/* Restore the original irq_data. */
--	*root_irq_data = *child_irq_data;
-+	*irq_data = *parent_irq_data;
- 
--	irq_domain_fix_revmap(root_irq_data);
-+	irq_domain_fix_revmap(irq_data);
- 
- 	mutex_unlock(&irq_domain_mutex);
- 
--	kfree(child_irq_data);
-+	kfree(parent_irq_data);
- 
- 	return 0;
- }
 -- 
 2.37.4
 
