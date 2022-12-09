@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16033C04FDE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19D1C4708D
 	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbiLIOFU (ORCPT
+        id S229952AbiLIOFV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Dec 2022 09:05:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33720 "EHLO
+        Fri, 9 Dec 2022 09:05:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229908AbiLIOFQ (ORCPT
+        with ESMTP id S229902AbiLIOFQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 9 Dec 2022 09:05:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23C97721E;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A229975BC2;
         Fri,  9 Dec 2022 06:05:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1ED8162268;
-        Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CA4C433A4;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F408562253;
+        Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC5AC433D2;
         Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1670594713;
-        bh=qRyAyv7DCxYIOlxXXpgDgiVYhhrQXHLZUca0t02tYg4=;
+        bh=SjCpvljZm9XNVxL3XT6AlbBdKw5R8JeaSMnpPTwki1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apXAddBPyF6ckd0fDxOBEFwwBJ2g70bsaR1CLhiYv+piyP9cSESieLYxOYZxSrJvW
-         m1dHEWfEiXxuRJyQXw8FpL00gTyyam2gdB3keU9cyqNIGIKWwTKrxE0/e0OiTbahoQ
-         h31gMUBYiyEplfhe1FdMbzi4e1F0ELhItaHiJ5/1tdHOqjl9wBm+vkXNIAaI3CiJjG
-         weMap5GGQzy1lCDTA6rQx4w5/ILV9iqO6kWfr9pfi1f5CyOrIeD6QyiqmlTrwImOhd
-         n3H524YFaH8qYx5qu3hAm8KRGhGIxOBNbJBEIeio4awfyrwuyJcYmvSOefJot3OYLV
-         +vEGZ+Lxh0bFA==
+        b=nSaWAlAUrqEG5ELDFmUcCWJPu5CdS+h5m0QCJd8D1jkUxpD1G0JIVdf98aHAE5jSS
+         4xcm5Y55UxqCaqkWKa1VD8XoV6lT4PICg4nL75h4zYyjRuBV3z5evo0gXQVbGBJXvv
+         IMAY1rMNgetBFtaxQohto8eRNKsqc6HobhtXWDqlCt4LhgTEPJTca+UtoTlfljiOGo
+         nTHEV39C9ACQWgg2XCivAoqu+6UpJoOaWSUJBZ97VfV9EGjbNLCq/2xcUhykx8IzWW
+         v7w2vmkA1YIoyDL7cnJtXGQCxvX3CvqiKbNiJms4JkSfhsI9P56O9wb6GHW4vdhN6G
+         2qND3lMvL9kpQ==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0I-0000RZ-Hc; Fri, 09 Dec 2022 15:05:30 +0100
+        id 1p3e0I-0000RP-6n; Fri, 09 Dec 2022 15:05:30 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
@@ -43,9 +43,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 05/19] irqdomain: Fix disassociation race
-Date:   Fri,  9 Dec 2022 15:01:36 +0100
-Message-Id: <20221209140150.1453-6-johan+linaro@kernel.org>
+Subject: [PATCH v3 01/19] irqdomain: Drop bogus fwspec-mapping error handling
+Date:   Fri,  9 Dec 2022 15:01:32 +0100
+Message-Id: <20221209140150.1453-2-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -55,44 +55,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The global irq_domain_mutex is held when mapping interrupts from
-non-hierarchical domains but currently not when disposing them.
+In case a newly allocated IRQ ever ends up not having any associated
+struct irq_data it would not even be possible to dispose the mapping.
 
-This specifically means that updates of the domain mapcount is racy
-(currently only used for statistics in debugfs).
+Replace the bogus disposal with a WARN_ON().
 
-Make sure to hold the global irq_domain_mutex also when disposing
-mappings from non-hierarchical domains.
-
-Fixes: 9dc6be3d4193 ("genirq/irqdomain: Add map counter")
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/irq/irqdomain.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index b2087f55a1ac..23f5919e58b7 100644
+index 8fe1da9614ee..bf67de1733ee 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -537,6 +537,9 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 		return;
+@@ -833,13 +833,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 	}
  
- 	hwirq = irq_data->hwirq;
-+
-+	mutex_lock(&irq_domain_mutex);
-+
- 	irq_set_status_flags(irq, IRQ_NOREQUEST);
+ 	irq_data = irq_get_irq_data(virq);
+-	if (!irq_data) {
+-		if (irq_domain_is_hierarchy(domain))
+-			irq_domain_free_irqs(virq, 1);
+-		else
+-			irq_dispose_mapping(virq);
++	if (WARN_ON(!irq_data))
+ 		return 0;
+-	}
  
- 	/* remove chip and handler */
-@@ -556,6 +559,8 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 
- 	/* Clear reverse map for this hwirq */
- 	irq_domain_clear_mapping(domain, hwirq);
-+
-+	mutex_unlock(&irq_domain_mutex);
- }
- 
- static int __irq_domain_associate(struct irq_domain *domain, unsigned int virq,
+ 	/* Store trigger type */
+ 	irqd_set_trigger_type(irq_data, type);
 -- 
 2.37.4
 
