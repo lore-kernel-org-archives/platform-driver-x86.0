@@ -2,50 +2,52 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D4BC2D0CD
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29721C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbiLIOFX (ORCPT
+        id S229955AbiLIOFX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Fri, 9 Dec 2022 09:05:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbiLIOFR (ORCPT
+        with ESMTP id S229876AbiLIOFR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 9 Dec 2022 09:05:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210387682B;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB367722C;
         Fri,  9 Dec 2022 06:05:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AFD346226F;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C28CE62270;
         Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84661C433AC;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B410BC43322;
         Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1670594713;
-        bh=1UsTmUxkh2RO4JtVXWdoi0GSvnFbd1ZBNIWS//6pOwo=;
+        bh=TMyLqWF3g4BsvWN/vPIOrQXHZItfyvQpoJNh+QahnCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lesnMst8ZMnQFRl6LMW0T4LFSGmVlDGTS8EafxqYjlGQsJC81FBUeJt8WMsuJ/TDz
-         r+PPCTtfBNWzTB76qamYg8zRlBxoDn9bsJBFIGPAPFH5f2qLUSRFh7kAtaDtV1GDG0
-         I4WhkZGYz1CsaMtfC5SLmZczWBFUpSZwSMAtwpcbR/t3PwfJFmEQlpdNpniL7KID4q
-         PBpQi8zys3EBMtQ6wc+5PCp2ZMy++T49fhpcgZ0VufYyx5xmKB0uvGN9h0lmXYy+Dn
-         GlTZEe23TEc+tqeqb7YzcTjZJMROSQ7XmL/VwUuZfzmeDwyIvO4u/egCcM1fTWeqvd
-         kC+qduj1gftsA==
+        b=hXF3sBDMaTy2y9hAwRc40/AkC5aUSb78OM0u4aKmhoYp5Qy0aGxoKWhRUqzRio/3y
+         ON8IwOiMehMqprgc0pLH3BmaZV9mhTD3K0Mxczv+7V2o3pzBzhUFM+73LWnhUKkUbS
+         QIr/hVdZ5/v9+LMRq2X4h1sT36/vzh0+NBsJaqVcGCTleI4s6F+mhVj0es6GaZXxwF
+         31W0aik7quS84VpvU1l78bdo26WSmlP+qu78XWc5UtOa6oPPVl9o+XMgzpHj2vf2eV
+         5gDHYleGO0V4x4b7PPDAh2P22j8ty1wPtAPAt99AB3daJvII3vYynBE83MYD08ZOOZ
+         BGkwWHqbtZcpg==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0I-0000Rg-Nl; Fri, 09 Dec 2022 15:05:30 +0100
+        id 1p3e0I-0000Rm-Ud; Fri, 09 Dec 2022 15:05:30 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 07/19] irqdomain: Look for existing mapping only once
-Date:   Fri,  9 Dec 2022 15:01:38 +0100
-Message-Id: <20221209140150.1453-8-johan+linaro@kernel.org>
+        Johan Hovold <johan+linaro@kernel.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v3 09/19] irqdomain: Fix mapping-creation race
+Date:   Fri,  9 Dec 2022 15:01:40 +0100
+Message-Id: <20221209140150.1453-10-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -55,117 +57,153 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Avoid looking for an existing mapping twice when creating a new mapping
-using irq_create_fwspec_mapping() by factoring out the actual allocation
-which is shared with irq_create_mapping_affinity().
+Parallel probing (e.g. due to asynchronous probing) of devices that share
+interrupts can currently result in two mappings for the same hardware
+interrupt to be created.
 
+Make sure to hold the irq_domain_mutex when creating mappings so that
+looking for an existing mapping before creating a new one is done
+atomically.
+
+Fixes: 765230b5f084 ("driver-core: add asynchronous probing support for drivers")
+Fixes: b62b2cf5759b ("irqdomain: Fix handling of type settings for existing mappings")
+Cc: Dmitry Torokhov <dtor@chromium.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/YuJXMHoT4ijUxnRb@hovoldconsulting.com
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 60 +++++++++++++++++++++++-------------------
- 1 file changed, 33 insertions(+), 27 deletions(-)
+ kernel/irq/irqdomain.c | 47 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 36 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 248e6acfafbe..894bc6ee6348 100644
+index d6139b0218d4..7232947eee3e 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -675,6 +675,34 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
- EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
- #endif
+@@ -25,6 +25,9 @@ static DEFINE_MUTEX(irq_domain_mutex);
  
-+static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
-+						  irq_hw_number_t hwirq,
-+						  const struct irq_affinity_desc *affinity)
-+{
-+	struct device_node *of_node = irq_domain_get_of_node(domain);
-+	int virq;
-+
-+	pr_debug("irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
-+
-+	/* Allocate a virtual interrupt number */
-+	virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
-+				      affinity);
-+	if (virq <= 0) {
-+		pr_debug("-> virq allocation failed\n");
-+		return 0;
-+	}
-+
-+	if (irq_domain_associate(domain, virq, hwirq)) {
-+		irq_free_desc(virq);
-+		return 0;
-+	}
-+
-+	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
-+		hwirq, of_node_full_name(of_node), virq);
-+
-+	return virq;
-+}
-+
- /**
-  * irq_create_mapping_affinity() - Map a hardware interrupt into linux irq space
-  * @domain: domain owning this hardware interrupt or NULL for default domain
-@@ -687,14 +715,11 @@ EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
-  * on the number returned from that call.
-  */
- unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
--				       irq_hw_number_t hwirq,
--				       const struct irq_affinity_desc *affinity)
-+					 irq_hw_number_t hwirq,
-+					 const struct irq_affinity_desc *affinity)
- {
--	struct device_node *of_node;
- 	int virq;
+ static struct irq_domain *irq_default_domain;
  
--	pr_debug("irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
--
- 	/* Look for default domain if necessary */
- 	if (domain == NULL)
- 		domain = irq_default_domain;
-@@ -702,34 +727,15 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
- 		WARN(1, "%s(, %lx) called with NULL domain\n", __func__, hwirq);
++static int ___irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
++				    unsigned int nr_irqs, int node, void *arg,
++				    bool realloc, const struct irq_affinity_desc *affinity);
+ static void irq_domain_check_hierarchy(struct irq_domain *domain);
+ 
+ struct irqchip_fwid {
+@@ -692,7 +695,7 @@ static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
  		return 0;
  	}
--	pr_debug("-> using domain @%p\n", domain);
--
--	of_node = irq_domain_get_of_node(domain);
  
+-	if (irq_domain_associate(domain, virq, hwirq)) {
++	if (__irq_domain_associate(domain, virq, hwirq)) {
+ 		irq_free_desc(virq);
+ 		return 0;
+ 	}
+@@ -728,14 +731,20 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
+ 		return 0;
+ 	}
+ 
++	mutex_lock(&irq_domain_mutex);
++
  	/* Check if mapping already exists */
  	virq = irq_find_mapping(domain, hwirq);
  	if (virq) {
--		pr_debug("-> existing mapping on virq %d\n", virq);
-+		pr_debug("existing mapping on virq %d\n", virq);
- 		return virq;
+ 		pr_debug("existing mapping on virq %d\n", virq);
+-		return virq;
++		goto out;
  	}
  
--	/* Allocate a virtual interrupt number */
--	virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
--				      affinity);
--	if (virq <= 0) {
--		pr_debug("-> virq allocation failed\n");
--		return 0;
--	}
--
--	if (irq_domain_associate(domain, virq, hwirq)) {
--		irq_free_desc(virq);
--		return 0;
--	}
--
--	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
--		hwirq, of_node_full_name(of_node), virq);
--
--	return virq;
-+	return __irq_create_mapping_affinity(domain, hwirq, affinity);
+-	return __irq_create_mapping_affinity(domain, hwirq, affinity);
++	virq = __irq_create_mapping_affinity(domain, hwirq, affinity);
++out:
++	mutex_unlock(&irq_domain_mutex);
++
++	return virq;
  }
  EXPORT_SYMBOL_GPL(irq_create_mapping_affinity);
  
-@@ -834,7 +840,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- 			return 0;
+@@ -802,6 +811,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
+ 		type &= IRQ_TYPE_SENSE_MASK;
+ 
++	mutex_lock(&irq_domain_mutex);
++
+ 	/*
+ 	 * If we've already configured this interrupt,
+ 	 * don't do it again, or hell will break loose.
+@@ -814,7 +825,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 		 * interrupt number.
+ 		 */
+ 		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
+-			return virq;
++			goto out;
+ 
+ 		/*
+ 		 * If the trigger type has not been set yet, then set
+@@ -823,36 +834,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
+ 			irq_data = irq_get_irq_data(virq);
+ 			if (!irq_data)
+-				return 0;
++				goto err;
+ 
+ 			irqd_set_trigger_type(irq_data, type);
+-			return virq;
++			goto out;
+ 		}
+ 
+ 		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
+ 			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
+-		return 0;
++		goto err;
+ 	}
+ 
+ 	if (irq_domain_is_hierarchy(domain)) {
+-		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
++		virq = ___irq_domain_alloc_irqs(domain, -1, 1, NUMA_NO_NODE,
++						fwspec, false, NULL);
+ 		if (virq <= 0)
+-			return 0;
++			goto err;
  	} else {
  		/* Create mapping */
--		virq = irq_create_mapping(domain, hwirq);
-+		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
+ 		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
  		if (!virq)
- 			return virq;
+-			return virq;
++			goto err;
  	}
+ 
+ 	irq_data = irq_get_irq_data(virq);
+ 	if (WARN_ON(!irq_data))
+-		return 0;
++		goto err;
+ 
+ 	/* Store trigger type */
+ 	irqd_set_trigger_type(irq_data, type);
++out:
++	mutex_unlock(&irq_domain_mutex);
+ 
+ 	return virq;
++err:
++	mutex_unlock(&irq_domain_mutex);
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
+ 
+@@ -1877,6 +1895,13 @@ void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
+ 	irq_set_handler_data(virq, handler_data);
+ }
+ 
++static int ___irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
++				    unsigned int nr_irqs, int node, void *arg,
++				    bool realloc, const struct irq_affinity_desc *affinity)
++{
++	return -EINVAL;
++}
++
+ static void irq_domain_check_hierarchy(struct irq_domain *domain)
+ {
+ }
 -- 
 2.37.4
 
