@@ -2,94 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61059C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 07:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392C2C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 09:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbiLIHpr (ORCPT
+        id S229761AbiLIJPM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Dec 2022 02:45:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46294 "EHLO
+        Fri, 9 Dec 2022 04:15:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiLIHpp (ORCPT
+        with ESMTP id S229915AbiLIJPG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Dec 2022 02:45:45 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C789540900;
-        Thu,  8 Dec 2022 23:45:44 -0800 (PST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NT33W18jGz8QrkZ;
-        Fri,  9 Dec 2022 15:45:43 +0800 (CST)
-Received: from szxlzmapp02.zte.com.cn ([10.5.231.79])
-        by mse-fl1.zte.com.cn with SMTP id 2B97jScJ046261;
-        Fri, 9 Dec 2022 15:45:28 +0800 (+08)
-        (envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp04[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Fri, 9 Dec 2022 15:45:31 +0800 (CST)
-Date:   Fri, 9 Dec 2022 15:45:31 +0800 (CST)
-X-Zmail-TransId: 2b066392e79b6cce31ed
-X-Mailer: Zmail v1.0
-Message-ID: <202212091545310085328@zte.com.cn>
-Mime-Version: 1.0
-From:   <yang.yang29@zte.com.cn>
-To:     <steve.wahl@hpe.com>
-Cc:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
-        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        <hpa@zytor.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
-        <yang.yang29@zte.com.cn>, <andy.shevchenko@gmail.com>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjNdIHg4Ni9wbGF0Zm9ybS91djogdXNlIHN0cnNjcHkgdG8gaW5zdGVhZCBvZiBzdHJuY3B5KCk=?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 2B97jScJ046261
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 6392E7A7.000 by FangMail milter!
-X-FangMail-Envelope: 1670571943/4NT33W18jGz8QrkZ/6392E7A7.000/10.5.228.132/[10.5.228.132]/mse-fl1.zte.com.cn/<yang.yang29@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6392E7A7.000/4NT33W18jGz8QrkZ
+        Fri, 9 Dec 2022 04:15:06 -0500
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 662FB63BB7;
+        Fri,  9 Dec 2022 01:15:05 -0800 (PST)
+Received: by mail-qk1-x734.google.com with SMTP id m5so2029567qkg.0;
+        Fri, 09 Dec 2022 01:15:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vkNH16lJK5cpr24W+e3TLKkQ6NF2d3FSfHC2JAxh0HQ=;
+        b=Vf7EfaprR2FWXYZoEFr4nULXvhAg4vH8fh190XoleOgARKjNI6S/4gBKL+lr7kpPCA
+         k6ZYcRYGca2Z6aEQJ9BhJQAMSgRCP1hNO0/u1IjGXeeWEJUsvesHDOhZmqQpw/dMT0uo
+         MEINBE9gU5aypPv0dsAuRSUYpvIE3JvRWFB6EgV2OP3v7WTwfKAustfbnW+N/7k5n3ME
+         Xg02XDDsh3RMWW97xp0dawrQ3l2kWh2uZ0GXkGJgLEjmgTszL0jHokHt8AzUDv72f1uC
+         yqu1Y61pSnjVgMioJt7GPK9R5EyAtAVEt6hrHvurPpxPg3dYqKZhkGLwX51CtPNYOW42
+         jz0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vkNH16lJK5cpr24W+e3TLKkQ6NF2d3FSfHC2JAxh0HQ=;
+        b=WJzca9eR2aYdL+6IkcrpZhSbvcWy9Sa974Tjx4l01Cqg64TQZ1DhI2QJgW/BM5Jnc0
+         +bvfFfTskM3rCOPgpeXNszYmU+oZZ7ph4VUB5KiVNPMjkwH6kqC+C/BuGUuKbUGJZ3Iz
+         gktRrAP34C7D500MnGIBl7bW3jDcIVLkm6luIGuP26zYz2kzOP5FA1bGaf8W0Eyda7/8
+         XtZvKeRT2zinrEyPLKienjXAohdeuVpQTni95e4lRsXA46n1NaPuvdPzbrH1tcEwEpBz
+         wylssH+1YaTrryfq6LSF1UNbVrLtgBwST4xQ/TrXKF8Sm4Ol7OsYUCIfGmmaUSvYRa1h
+         KKIA==
+X-Gm-Message-State: ANoB5plcDx6LDAZlWM/grpyfQIZ772dlT6R4Buy2sunXiXQcPoaEFd1T
+        G0p2cK2TduKQ/3jQpeEaDYPp5oM0fMYh37mZGe0=
+X-Google-Smtp-Source: AA0mqf76KaU82jdzpPytS9dB0ixtuhTvtbM0RObogfcPc99c9cNqkOE5Bgt9rgcbICQRaUjO5wAFpKRZTLcL+7HlVlM=
+X-Received: by 2002:a05:620a:1aa3:b0:6fa:b56f:7ede with SMTP id
+ bl35-20020a05620a1aa300b006fab56f7edemr83702189qkb.383.1670577304190; Fri, 09
+ Dec 2022 01:15:04 -0800 (PST)
+MIME-Version: 1.0
+References: <202212091545310085328@zte.com.cn>
+In-Reply-To: <202212091545310085328@zte.com.cn>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 9 Dec 2022 11:14:27 +0200
+Message-ID: <CAHp75Vcp_RmibkkSW1dCcypKU3okyRXbj8JrbRVFtErhuuAWJg@mail.gmail.com>
+Subject: Re: [PATCH linux-next v3] x86/platform/uv: use strscpy to instead of strncpy()
+To:     yang.yang29@zte.com.cn
+Cc:     steve.wahl@hpe.com, mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xu.panda@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xu Panda <xu.panda@zte.com.cn>
+On Fri, Dec 9, 2022 at 9:45 AM <yang.yang29@zte.com.cn> wrote:
+>
+> From: Xu Panda <xu.panda@zte.com.cn>
+>
+> The implementation of strscpy() is more robust and safer.
+> That's now the recommended way to copy NUL terminated strings.
 
-The implementation of strscpy() is more robust and safer.
-That's now the recommended way to copy NUL terminated strings.
+...
 
-Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-Signed-off-by: Yang Yang <yang.yang29@zte.com>
----
-change for v3
- - remove the remaining definition of p, and fix the mistake
-which leads to eating one character. Thanks to Andy Shevchenko again.
----
- arch/x86/platform/uv/uv_nmi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+> +       strscpy(arg, val, strnchrnul(val, ACTION_LEN - 1, '\n') - val + 1);
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index a60af0230e27..a55550b779e1 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -202,14 +202,10 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
- {
- 	int i;
- 	int n = ARRAY_SIZE(valid_acts);
--	char arg[ACTION_LEN], *p;
-+	char arg[ACTION_LEN];
+Instead of  -1 +1 you should simply use the sizeof(arg) as I mentioned.
 
- 	/* (remove possible '\n') */
--	strncpy(arg, val, ACTION_LEN - 1);
--	arg[ACTION_LEN - 1] = '\0';
--	p = strchr(arg, '\n');
--	if (p)
--		*p = '\0';
-+	strscpy(arg, val, strnchrnul(val, ACTION_LEN - 1, '\n') - val + 1);
+       strscpy(arg, val, strnchrnul(val, sizeof(arg), '\n') - val);
 
- 	for (i = 0; i < n; i++)
- 		if (!strcmp(arg, valid_acts[i].action))
+The returned pointer by strnchrnul() either points to the '\n' or to
+'\0' and when we subtract pointer to the start we will get the exact
+length of the string. In case it equals ACTION_LEN the last character
+will be replaced by '\0'.
+
+Where am I mistaken?
+
 -- 
-2.15.2
+With Best Regards,
+Andy Shevchenko
