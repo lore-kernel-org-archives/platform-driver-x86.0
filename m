@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB90C04FDE
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5CC3DA6E
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Dec 2022 14:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbiLIOF3 (ORCPT
+        id S230028AbiLIOFa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Dec 2022 09:05:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
+        Fri, 9 Dec 2022 09:05:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbiLIOFT (ORCPT
+        with ESMTP id S229917AbiLIOFT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 9 Dec 2022 09:05:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076FD76828;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0766D75BCA;
         Fri,  9 Dec 2022 06:05:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EFDE062273;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEB426226A;
         Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3025DC43335;
-        Fri,  9 Dec 2022 14:05:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D964CC4332C;
+        Fri,  9 Dec 2022 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670594714;
-        bh=ZKlz/YPbyRCy6KkXCyyH1Wjmy+f6XTvrp78tKhH71kY=;
+        s=k20201202; t=1670594713;
+        bh=WgkN5Je4cNOPVZ/hkI2lCqO1EkpEAYkIqXZpsz/aHt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFDsvV4JYL8Ufghpt0gvE1GAPsID7hham9gDxCAssbxD3BSmwFSu70uNDmc8A4KbX
-         aR01ktHPCbycG/+w58ceoDDD6kKLgN+CAmJb6XoZq+ycC3q3lWubq6iOc8RnaQ1SoR
-         8u8SOsRcqTQsETEw4p5j9ZayGV+LmsgThr04Bg9SGvIiQLcIptkFZADYUP/y2TSNC8
-         lX6F+EbVLGujT6fVX0X1+AU79BqwnKVSUZDwMfYsp7C0IiaSsTnCvquFznxpOvu/gg
-         UbAHQlvJfFLzabTGFGPE3Bs36RCjY7BMhTsU/v3Q6DGW5J2ePx7pd0dGr4AVipCNyu
-         tff9fLn0RHH4A==
+        b=kt/0JpLZVVFNgMrMfpluMRkkS1efDFdyD9NG2ZAWI0Yy86pZT9zhcPVjSD6Q5JhQC
+         VOhYIkAxut3lwd51nXIxbqzhfnpeeOraosktgApMH6WlqmkxwkGBA45z8IlaLPjz5F
+         /7OsANSOCDKqf6/C0788t7x6G/3JNYbCsRtXsFXd3q9N6dOdlRfcOhyRCsDtpdZpRY
+         596PPCham19J1eMFCGq3Xd7G8daWN9xx9UI3vLCYwKDmnx528mpZvoGzMSgBQWhvOI
+         KQNBEB3XnMIPDhOs9rx//GTKhS8q15YLJl8NktAiHzRTPSqaJhDl0AXmIEpl/gGbDa
+         ubTCupgoJr0qg==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1p3e0J-0000S1-Ee; Fri, 09 Dec 2022 15:05:31 +0100
+        id 1p3e0J-0000Rs-5E; Fri, 09 Dec 2022 15:05:31 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
@@ -43,9 +43,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 14/19] irqchip/gic-v2m: Use irq_domain_create_hierarchy()
-Date:   Fri,  9 Dec 2022 15:01:45 +0100
-Message-Id: <20221209140150.1453-15-johan+linaro@kernel.org>
+Subject: [PATCH v3 11/19] x86/ioapic: Use irq_domain_create_hierarchy()
+Date:   Fri,  9 Dec 2022 15:01:42 +0100
+Message-Id: <20221209140150.1453-12-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
 References: <20221209140150.1453-1-johan+linaro@kernel.org>
@@ -61,31 +61,35 @@ irqdomain internals.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/irqchip/irq-gic-v2m.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index f4d7eeb13951..f1e75b35a52a 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -287,15 +287,14 @@ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
- 	if (!v2m)
- 		return 0;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index a868b76cd3d4..9cc4c8e0c3c4 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2364,9 +2364,9 @@ static int mp_irqdomain_create(int ioapic)
+ 		return -ENODEV;
+ 	}
  
--	inner_domain = irq_domain_create_tree(v2m->fwnode,
--					      &gicv2m_domain_ops, v2m);
-+	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-+						   &gicv2m_domain_ops, v2m);
- 	if (!inner_domain) {
- 		pr_err("Failed to create GICv2m domain\n");
+-	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+-						 (void *)(long)ioapic);
+-
++	ip->irqdomain = irq_domain_create_hierarchy(parent, 0, hwirqs, fn,
++						    cfg->ops,
++						    (void *)(long)ioapic);
+ 	if (!ip->irqdomain) {
+ 		/* Release fw handle if it was allocated above */
+ 		if (!cfg->dev)
+@@ -2374,8 +2374,6 @@ static int mp_irqdomain_create(int ioapic)
  		return -ENOMEM;
  	}
  
- 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
--	inner_domain->parent = parent;
- 	pci_domain = pci_msi_create_irq_domain(v2m->fwnode,
- 					       &gicv2m_msi_domain_info,
- 					       inner_domain);
+-	ip->irqdomain->parent = parent;
+-
+ 	if (cfg->type == IOAPIC_DOMAIN_LEGACY ||
+ 	    cfg->type == IOAPIC_DOMAIN_STRICT)
+ 		ioapic_dynirq_base = max(ioapic_dynirq_base,
 -- 
 2.37.4
 
