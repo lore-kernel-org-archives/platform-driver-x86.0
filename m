@@ -2,104 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3A2C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Dec 2022 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7084C00145
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Dec 2022 16:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbiLLPLK (ORCPT
+        id S232653AbiLLQST (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Dec 2022 10:11:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
+        Mon, 12 Dec 2022 11:18:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbiLLPLJ (ORCPT
+        with ESMTP id S232672AbiLLQSQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Dec 2022 10:11:09 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A16512D2C
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Dec 2022 07:11:07 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id ja17so2771936wmb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Dec 2022 07:11:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugbkO/yM9HgKH0V9IJHHkJHrC/RrKAOEffXfUGaZoAM=;
-        b=Spz2j5iebq0SeHJbzOXxWHeTqZd5Jvo193Vk3xjqx8hN47v0oB3+8NgPiv66tA04as
-         T6mbCEdFnAMTi+THHDjCriEtdy4rIT2oNg8DBlbzwjSXnAzg3GQ/imkioKLlpf0LCXhl
-         EJ/4y0UMF0revGzVjbwcGE9+4hY+UM3gTqydIfdIIyNkwjvQc2C/9psnFUpZSnn1NVrp
-         mhNO7Nogkuk7exv6K68gtcGF6aZS0GMk3QFpPZknrzhXPQOcSc3xxfMcXUmbENOBtOiV
-         JpmTEr7S96AUrg3TRu0G3NFwasRxf5Jl8cta+vYt1FDpfEyATHNIIv0VhsUnpDI8fdEO
-         98mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ugbkO/yM9HgKH0V9IJHHkJHrC/RrKAOEffXfUGaZoAM=;
-        b=5vzxF5pwP1A7jW5cJLcBft93bMwQ1K1ZfTFT7ssCR+NmBq6axG3H0tDHcIZgw2K/Ft
-         zbctHpS2AYd27hHBTEBROBSOpnXD+6FTmEsVDWmolAZVcFzUW9t8EmXYW49LvddAkmAE
-         qL7idtPfyD35uGR+fAvpZ2e1uii/Ld9yE/yBkZINJvbE75CmjeaejS1BCHJNBENQdVWx
-         Ezk9UeRQbZv1ZPCM6z6s+FIIpwyq9GF9d3ly2bFCUte9iA9RvfI0FYm1iifiOC+yHw4Y
-         OJ7dwZPGaTD0PGFgRxca/5S1Cr9kE8T6QvyVmG3+eEuQu4qyP61N7GapUtdkwXY6fyeP
-         372w==
-X-Gm-Message-State: ANoB5pmT6RLLq6MGe8gtvK5UWWNLJQUR4bssk7Qn8weOgXFcz6AlZ+nP
-        5GA76eV1XbYqV9tFJkIZcFGs6SCvXQyO69EXTsaqaqP5
-X-Google-Smtp-Source: AA0mqf4LzXoN9SYAjlHT626NCvO3dY7ytEE0Kzs1rQLdtoAhpzJRsH4vE+gkpxLOF38WaMDPGh83aHjJ1HnVXTxV+ZM=
-X-Received: by 2002:a05:600c:54cf:b0:3d1:fd0b:93b2 with SMTP id
- iw15-20020a05600c54cf00b003d1fd0b93b2mr3166508wmb.65.1670857865989; Mon, 12
- Dec 2022 07:11:05 -0800 (PST)
+        Mon, 12 Dec 2022 11:18:16 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F79B13E28;
+        Mon, 12 Dec 2022 08:18:14 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1670861892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xj018pjLW2UkgQnmqILBUEjAhXT9K6CF9xEj+xIiOFE=;
+        b=dKy70Zi3FiVNICZwR1ZmCUEpDQ3v/TY50J/4hvfbOePjz8inPzy3fENnG8eMjkELCHMY8U
+        38zyt11Ffk1cmTWmB6ToWEZTugFnAY0I7ngiTNgllZaM+/f27zmb/uveKuqeVZZtLLbUow
+        LstYVR6VpXbY5gzJ6o+xdFVwAJ7GacdIDVFJjzkpdqszoQeGW9ekwsbN1D4np6IJBnA+xT
+        pjKnMILuN78kgX48D5Bulitb2TWj3LZFduti5L8HN3wQ0lBZZnak79HXBCp0UMxtM7ypeL
+        Q7GZi2E0KgDgV3rqQzfI+t1XG7SPNTWwb6uP+Tgd3EH0S9TO5mmr8mO4QLsFOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1670861892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xj018pjLW2UkgQnmqILBUEjAhXT9K6CF9xEj+xIiOFE=;
+        b=wyzDgR0jttlml3luJKS9Im9oim6JOrsphSFktX57nGApgGMBCUL4+A9pqaB+oEGsO9mRnw
+        m6hOMh+W+d1iIFBw==
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 19/19] irqdomain: Switch to per-domain locking
+In-Reply-To: <Y5c6z3t+sV/kIMjF@hovoldconsulting.com>
+References: <20221209140150.1453-1-johan+linaro@kernel.org>
+ <20221209140150.1453-20-johan+linaro@kernel.org> <87mt7sbtf9.ffs@tglx>
+ <Y5c6z3t+sV/kIMjF@hovoldconsulting.com>
+Date:   Mon, 12 Dec 2022 17:18:11 +0100
+Message-ID: <878rjcbnp8.ffs@tglx>
 MIME-Version: 1.0
-References: <20221202173616.180108-1-jorge.lopez2@hp.com> <b632a7f2-6f6d-9dec-a245-9f9d21268d80@redhat.com>
-In-Reply-To: <b632a7f2-6f6d-9dec-a245-9f9d21268d80@redhat.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 12 Dec 2022 09:10:54 -0600
-Message-ID: <CAOOmCE-9gBjgZvYPChdaQM9LRnEWXRREezbfUCcTTO3KDK4JfQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Introduction of HP-BIOSCFG driver
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 8, 2022 at 9:58 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Dec 12 2022 at 15:29, Johan Hovold wrote:
+> On Mon, Dec 12, 2022 at 03:14:34PM +0100, Thomas Gleixner wrote:
+>> On Fri, Dec 09 2022 at 15:01, Johan Hovold wrote:
+>> > The IRQ domain structures are currently protected by the global
+>> > irq_domain_mutex. Switch to using more fine-grained per-domain locking,
+>> > which may potentially speed up parallel probing somewhat.
+>> >
+>> > Note that the domain lock of the root domain (innermost domain) must be
+>> > used for hierarchical domains. For non-hierarchical domain (as for root
+>> > domains), the new root pointer is set to the domain itself so that
+>> > domain->root->mutex can be used in shared code paths.
+>> >
+>> > Also note that hierarchical domains should be constructed using
+>> > irq_domain_create_hierarchy() (or irq_domain_add_hierarchy()) to avoid
+>> > poking at irqdomain internals.
+>> 
+>> While I agree in principle, this change really makes me nervous.
+>> 
+>> Any fail in setting up domain->root correctly, e.g. by not using
+>> irq_domain_create_hierarchy(), cannot be detected and creates nasty to
+>> debug race conditions.
+>> 
+>> So we need some debug mechanism which allows to validate that
+>> domain->root is set up correctly when domain->parent != NULL.
 >
-> Hi Jorge,
+> Lockdep will catch that due to the
 >
-> On 12/2/22 18:36, Jorge Lopez wrote:
-> > Version 5 restructures the patches submitted in previous versions.
-> > Earlier hp-bioscfg patches were squashed together before creating
-> > the new split.
-> >
-> > Version 5.0 breaks down the changes into 5 patches
-> >
-> > The driver files were broken down in 5 patches of 3 files each
-> > with exception of patch 1/5
-> >
-> > Jorge Lopez (5):
-> >   Introduction of HP-BIOSCFG driver (1)
-> >   Introduction of HP-BIOSCFG driver (2)
-> >   Introduction of HP-BIOSCFG driver (3)
-> >   Introduction of HP-BIOSCFG driver (4)
-> >   Introduction of HP-BIOSCFG driver (5)
+> 	lockdep_assert_held(&domain->root->mutex);
 >
-> Thank you for the new version. Unfortunately I
-> don't have time atm to review this.
->
-> And the next 2 weeks are the merge window,
-> followed by 2 weeks of christmas vacation.
->
-> So I'm afraid that I likely won't get around to reviewing
-> this until the week of January 9th.
->
-> Regards,
->
-> Hans
->
+> I added to irq_domain_set_mapping() and which is is called for each
+> (inner) domain in a hierarchy when allocating an IRQ.
 
-Completely understandable.  Wishing you and your loved ones a happy
-and healthy Merry Christmas.  May the new year bring you lots of
-health, happiness, and prosperity.
+Hmm. Indeed that should do the trick.
 
-Regards,
+Some comments would be appreciated as the rules around domain->root are
+far from obvious.
 
-Jorge
+Thanks,
+
+        tglx
