@@ -2,62 +2,63 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F73CC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Dec 2022 14:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2BDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Dec 2022 14:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235459AbiLMOTX (ORCPT
+        id S235701AbiLMO3J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Dec 2022 09:19:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45810 "EHLO
+        Tue, 13 Dec 2022 09:29:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230316AbiLMOTW (ORCPT
+        with ESMTP id S235468AbiLMO3I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2022 09:19:22 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A19D15A01;
-        Tue, 13 Dec 2022 06:19:20 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id b24-20020a05600c4a9800b003d21efdd61dso6562196wmp.3;
-        Tue, 13 Dec 2022 06:19:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5G/W/pA5c77Ozx/lB9t1wWPCHBNjkAyhIac3Hljze3s=;
-        b=hoVtgwqRx2OgdKO+29kxFa9pe9KTPPft85ySdMPXAY90L6m1SSWYKAjE7l2FwEwVpg
-         u3jpgseZXSt5f09MFGkIH/vj6j01mCcSQc/WNTQXg69mGlyug2TZIWoXYBUnEatZyDJ4
-         4Q2FdgCm3DYVhGKrmnq74LzK484iwLACvpyLDbb4nk9hsivlKhp7gyY3tMucOV2CCHp9
-         dHiOkTWPg9/aukKDHdHz+SNwzi6jSL/xIZGGrUdRbosciL7X9qEiMPSk+Nd4F5znFCf3
-         NKDaRDthicZmOk/68PqwfGJeFPozsw4wo3x4B4bZ6NpCcIknA9B+bHLJJkAMFosJw91u
-         B2Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5G/W/pA5c77Ozx/lB9t1wWPCHBNjkAyhIac3Hljze3s=;
-        b=hwt1liPoLPJe+Ntj8cXyW1msAXi9Z3thJENYZb1eUbd2YDI00j2pWcufY+b7eGS8Ri
-         mFYL5Vxi/1QrXpJei5+9Hs59NUQfqVrTMJHlUHimlRXzDlxMdMgezVardWcMiQxeUprs
-         yNzL+zEO2U9uQN1FiGfxDONlcqRxQdH3FeELq0RXDQWe1CpEoWDRZp9Z5QtVlC9W6bfT
-         0A/iOyi7qB8UpyabWy3i17uc1deao4kAQwEpOG/SRX3qFldB6PiG0E3BogZI5wfZbJ6Q
-         b68diGL0RsdYVBjvqbh6FD7PVsYQXU67snUUebawyhaJtXijS7zPIY92/Lp9Ixfn4cF7
-         nooQ==
-X-Gm-Message-State: ANoB5pmSE0eRpYGuZ5dHmtOqHodK387xBADw5Z2U+uLvMuLQGuTFUHlb
-        AugFlc7O1A3hsrSGvKDzUjl7WVN0TVkn5Hb0G4Y=
-X-Google-Smtp-Source: AA0mqf4MmrQhFjfwhKMrUpvFumuZLYrNGjnNtx8wi+H/cF5KWjh30ZrrdiWAtTcbjRSIeSVer/GCaIZB/B7OOZDA2Vc=
-X-Received: by 2002:a05:600c:3d94:b0:3d2:2b70:f307 with SMTP id
- bi20-20020a05600c3d9400b003d22b70f307mr245503wmb.153.1670941158482; Tue, 13
- Dec 2022 06:19:18 -0800 (PST)
+        Tue, 13 Dec 2022 09:29:08 -0500
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10A2DFFB
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Dec 2022 06:29:05 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20221213142902euoutp02387e8251f456202574150584cb3296c0~wYKlnG92l2986029860euoutp02D
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Dec 2022 14:29:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20221213142902euoutp02387e8251f456202574150584cb3296c0~wYKlnG92l2986029860euoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1670941742;
+        bh=A0aMYzhvxttoR0ntW0RUwD+aMshHkFSR+FGPq6TJT3A=;
+        h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+        b=UXyBaxCBl+1P4vygYl24hEomJYFypF7UvGGTzEL0uyu2UEIm8LJlNNfGE5ZHb+XVI
+         l234JSS4nmkRH5ZEDSq5m2dWTK6OEIjEGsjGIZJNKruRkUU5eQyvzbwFdS9hj6cHTO
+         PO8Af14KORuBEuubL2rh7Bj3HLjH3qKdFgmYXY3o=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20221213142901eucas1p15c2b76a11df701dfe7e95780b4e6d92d~wYKlCMoxe0169101691eucas1p1A;
+        Tue, 13 Dec 2022 14:29:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3F.8B.09549.D2C88936; Tue, 13
+        Dec 2022 14:29:01 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20221213142901eucas1p1ced478d962433fd4cdbb21e61f1a26c4~wYKkaZ_r20174701747eucas1p1y;
+        Tue, 13 Dec 2022 14:29:01 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20221213142901eusmtrp1f8fd575c3e326846efd2d13d3cc69789~wYKkZRRKO3072130721eusmtrp1S;
+        Tue, 13 Dec 2022 14:29:01 +0000 (GMT)
+X-AuditID: cbfec7f5-f5dff7000000254d-fb-63988c2d6bb3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 98.36.09026.C2C88936; Tue, 13
+        Dec 2022 14:29:00 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20221213142900eusmtip132c7b7564ddd5f685cc741ed2db1b13d~wYKjiJNFo0100401004eusmtip1J;
+        Tue, 13 Dec 2022 14:29:00 +0000 (GMT)
+Message-ID: <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
+Date:   Tue, 13 Dec 2022 15:29:00 +0100
 MIME-Version: 1.0
-References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
- <1670311341-32664-1-git-send-email-u0084500@gmail.com> <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
-In-Reply-To: <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
-From:   ChiYuan Huang <u0084500@gmail.com>
-Date:   Tue, 13 Dec 2022 22:19:06 +0800
-Message-ID: <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0)
+        Gecko/20100101 Thunderbird/102.5.1
 Subject: Re: [PATCH v2] regulator: core: Use different devices for resource
  allocation and DT lookup
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Language: en-US
+To:     ChiYuan Huang <u0084500@gmail.com>
 Cc:     broonie@kernel.org, djrscally@gmail.com, hdegoede@redhat.com,
         markgross@kernel.org, lgirdwood@gmail.com,
         mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
@@ -67,137 +68,161 @@ Cc:     broonie@kernel.org, djrscally@gmail.com, hdegoede@redhat.com,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
         ChiYuan Huang <cy_huang@richtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDKsWRmVeSWpSXmKPExsWy7djPc7q6PTOSDd4c1rb4+XIao8XUh0/Y
+        LNae1Lf4sqef1WLb4XesFk96zrFavDk+ncni25UOJotNj6+xWlzeNYfNouvaE1aLA1OnMVvM
+        +7uW1WL1nhfMFpPW3WOy2PLpGpODgMfT/q3sHjtn3WX3aDnyltVj06pONo/NS+o93u+7yuYx
+        49MUNo+D+ww9Pm+SC+CM4rJJSc3JLEst0rdL4Mr42f6KqeCNUsXel1tZGhhfS3YxcnBICJhI
+        nP8MZHJxCAmsYJRY3PCLpYuRE8j5wiix7IwXROIzo8TvPUtZQRIgDWvO3mSFSCxnlPg6s5cZ
+        wvnIKHH94Rewdl4BO4mdD+ewgdgsAqoSX05shYoLSpyc+QTMFhVIkTiw8ywTiC0skCbxbH8r
+        WD2zgLjErSfzweIiAmoSa35fYQFZwCywkVni3/OPYGewCRhKdL3tAmvgFAiU2HdvMgtEs7xE
+        89bZYBdJCOzmlOjp/MYCcbeLxJozXewQtrDEq+NboGwZidOTe1ggGtoZJRb8vs8E4UxglGh4
+        fosRospa4s65X2ygIGMW0JRYv0sfIuwocfT9MTZISPJJ3HgrCHEEn8SkbdOZIcK8Eh1tQhDV
+        ahKzjq+DW3vwwiXmCYxKs5DCZRaS/2cheWcWwt4FjCyrGMVTS4tz01OLjfNSy/WKE3OLS/PS
+        9ZLzczcxAhPg6X/Hv+5gXPHqo94hRiYOxkOMEhzMSiK8qhrTkoV4UxIrq1KL8uOLSnNSiw8x
+        SnOwKInzrpjSkSwkkJ5YkpqdmlqQWgSTZeLglGpg4pi55K/EnQ+5c/wFT1fKqM3vczGW7Drb
+        o+aiybT8F6+/lNb/tz5aObcerZgSsZEvIb6yJ9T81plrVpr/DKaaqkifvH5BweRw+cF02RsX
+        Lbe2HJR2d1o3eX9A2oZ7J9NnXgm8qDzn59Z696BXyT1R7ur1B5aqJy5X/dTqPkH/fvS6TUuP
+        CDBK7rijzLru2cUDT78f6MzeuFK1vnLeoc9CjQY5N/8vn3RHsuJK1U++VYG5v6NYPY8zV9Z5
+        TfYw+bmyb2VSQVXyhkXV3g4hvAJG1+/dv3bL+X/B1V3fk/eU2Ad2K0q+V9wqfNZVbHcf18PK
+        SdN+sa3ZKrf0yFHT6IXt5w0ks3kOJ3x5ve7wEaFb85VYijMSDbWYi4oTAVSuyFjvAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xu7q6PTOSDRpULX6+nMZoMfXhEzaL
+        tSf1Lb7s6We12Hb4HavFk55zrBZvjk9nsvh2pYPJYtPja6wWl3fNYbPouvaE1eLA1GnMFvP+
+        rmW1WL3nBbPFpHX3mCy2fLrG5CDg8bR/K7vHzll32T1ajrxl9di0qpPNY/OSeo/3+66yecz4
+        NIXN4+A+Q4/Pm+QCOKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJS
+        czLLUov07RL0Mn62v2IqeKNUsfflVpYGxteSXYycHBICJhJrzt5k7WLk4hASWMoosaPzCAtE
+        Qkbi5LQGVghbWOLPtS42iKL3jBL/vu9hBknwCthJ7Hw4hw3EZhFQlfhyYisLRFxQ4uTMJ2C2
+        qECKRHvPPyYQW1ggTeLZ/lawemYBcYlbT+aDxUUE1CTW/L7CArKAWWAjs0TzuxXMENsmMUl8
+        XfQe7Aw2AUOJrrddYN2cAoES++5NZoGYZCbRtbWLEcKWl2jeOpt5AqPQLCSHzEKycBaSlllI
+        WhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjPltx35u2cG48tVHvUOMTByMhxglOJiV
+        RHhVNaYlC/GmJFZWpRblxxeV5qQWH2I0BYbGRGYp0eR8YNLJK4k3NDMwNTQxszQwtTQzVhLn
+        9SzoSBQSSE8sSc1OTS1ILYLpY+LglGpgUvfZLOdmd8Hlpsv5mNfqZ1jqp0a7zpv2pnXVy4nV
+        pS8LO67eOrC1PuJgN1/t3E83e2zfLJ3LdGPN4cXvRdlOaYZP/WxTcvDVtNkLjV90n6/t32C/
+        d4J8q9ilWY6pCh0Kzxd7bE+5/6UrveVk59te547k93wWvbVTi7ds8N03m/+O7vfDH6rfP2bc
+        pNR8dpXYMhPvpur5wqdSfnlELXmjyhL36KNeh+DitRV6RmVpfDodU94xcF16Ub7+neX7TdK/
+        DPbzTojbK3Zu041mzW9ZF+Mb5C/mLxeNZH62lGuliuk7tq+SYlZNs/WOvN66QevrPWaLi7VX
+        lRewbt98itufSyInq+JXSubi1gWbbX6zblViKc5INNRiLipOBACDiw0nggMAAA==
+X-CMS-MailID: 20221213142901eucas1p1ced478d962433fd4cdbb21e61f1a26c4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0
+References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
+        <1670311341-32664-1-git-send-email-u0084500@gmail.com>
+        <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
+        <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HI,
+Hi,
 
-Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2022=E5=B9=B412=E6=9C=
-=8813=E6=97=A5 =E9=80=B1=E4=BA=8C =E6=99=9A=E4=B8=8A7:33=E5=AF=AB=E9=81=93=
-=EF=BC=9A
+On 13.12.2022 15:19, ChiYuan Huang wrote:
+> Marek Szyprowski <m.szyprowski@samsung.com> 於 2022年12月13日 週二 晚上7:33寫道：
+>> On 06.12.2022 08:22, cy_huang wrote:
+>>> From: ChiYuan Huang <cy_huang@richtek.com>
+>>>
+>>> Following by the below discussion, there's the potential UAF issue
+>>> between regulator and mfd.
+>>> https://lore.kernel.org/all/20221128143601.1698148-1-yangyingliang@huawei.com/
+>>>
+>>> >From the analysis of Yingliang
+>>>
+>>> CPU A                         |CPU B
+>>> mt6370_probe()                        |
+>>>     devm_mfd_add_devices()     |
+>>>                                |mt6370_regulator_probe()
+>>>                                |  regulator_register()
+>>>                                |    //allocate init_data and add it to devres
+>>>                                |    regulator_of_get_init_data()
+>>> i2c_unregister_device()               |
+>>>     device_del()                       |
+>>>       devres_release_all()     |
+>>>         // init_data is freed  |
+>>>         release_nodes()                |
+>>>                                |  // using init_data causes UAF
+>>>                                |  regulator_register()
+>>>
+>>> It's common to use mfd core to create child device for the regulator.
+>>> In order to do the DT lookup for init data, the child that registered
+>>> the regulator would pass its parent as the parameter. And this causes
+>>> init data resource allocated to its parent, not itself. The issue happen
+>>> when parent device is going to release and regulator core is still doing
+>>> some operation of init data constraint for the regulator of child device.
+>>>
+>>> To fix it, this patch expand 'regulator_register' API to use the
+>>> different devices for init data allocation and DT lookup.
+>>>
+>>> Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+>>> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+>>
+>> This patch landed in linux-next 202212 as commit 8f3cbcd6b440
+>> ("regulator: core: Use different devices for resource allocation and DT
+>> lookup"). Unfortunately it causes serious regression on my test systems.
+>> It looks that some supplies are not resolved correctly and then turned
+>> off as 'unused', even if they provide power to other core regulators in
+>> the system. I've observed this issue on Samsung Chromebook Peach-Pit and
+>> Peach-Pi (ARM 32bit Exynos based). The symptoms are somehow similar to
+>> the issue reported here some time ago:
+>>
+>> https://lore.kernel.org/all/58b92e75-f373-dae7-7031-8abd465bb874@samsung.com/
+>>
+>> I've post more information once I analyze this issue further.
+>>
+> It seems the issue occurs in 'regulator register' resolve supply.
+> Due to the parent device don't have the of_node, to resolve the
+> supply, it may need to get the
+> dt node by recursively finding child regulator.
+> Like this
+> parent {
+>    regulators {
+>       xxx-supply = <&vdd12-ldo>;
+>       vdd12-ldo: vdd12-ldo {
+>           regulator-name = "xxx";
+>           regulator-min-microvolts = <xxxxx>;
+>           regulator-max-microvolts = <xxxxx>;
+>        }
+>    };
+> };
+> >From this case, 'resolve supply' need to parse at least the more top
+> level like 'regulators'.
+> But now, it only take 'vdd12-ldo' as the node or its child to parse its supply.
 >
-> Dear All,
+> Below's the fix I guess.
+> It'll make the parent of the regulator the same as the dev parameter
+> in 'regulator_config'.
 >
-> On 06.12.2022 08:22, cy_huang wrote:
-> > From: ChiYuan Huang <cy_huang@richtek.com>
-> >
-> > Following by the below discussion, there's the potential UAF issue
-> > between regulator and mfd.
-> > https://lore.kernel.org/all/20221128143601.1698148-1-yangyingliang@huaw=
-ei.com/
-> >
-> > >From the analysis of Yingliang
-> >
-> > CPU A                         |CPU B
-> > mt6370_probe()                        |
-> >    devm_mfd_add_devices()     |
-> >                               |mt6370_regulator_probe()
-> >                               |  regulator_register()
-> >                               |    //allocate init_data and add it to d=
-evres
-> >                               |    regulator_of_get_init_data()
-> > i2c_unregister_device()               |
-> >    device_del()                       |
-> >      devres_release_all()     |
-> >        // init_data is freed  |
-> >        release_nodes()                |
-> >                               |  // using init_data causes UAF
-> >                               |  regulator_register()
-> >
-> > It's common to use mfd core to create child device for the regulator.
-> > In order to do the DT lookup for init data, the child that registered
-> > the regulator would pass its parent as the parameter. And this causes
-> > init data resource allocated to its parent, not itself. The issue happe=
-n
-> > when parent device is going to release and regulator core is still doin=
-g
-> > some operation of init data constraint for the regulator of child devic=
-e.
-> >
-> > To fix it, this patch expand 'regulator_register' API to use the
-> > different devices for init data allocation and DT lookup.
-> >
-> > Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index ea4a720..7c5036e 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -5526,7 +5526,7 @@ regulator_register(struct device *dev,
 >
+>          /* register with sysfs */
+>          rdev->dev.class = &regulator_class;
+> -       rdev->dev.parent = dev;
+> +       rdev->dev.parent = config->dev;
+>          dev_set_name(&rdev->dev, "regulator.%lu",
+>                      (unsigned long) atomic_inc_return(&regulator_no));
+>          dev_set_drvdata(&rdev->dev, rdev);
 >
-> This patch landed in linux-next 202212 as commit 8f3cbcd6b440
-> ("regulator: core: Use different devices for resource allocation and DT
-> lookup"). Unfortunately it causes serious regression on my test systems.
-> It looks that some supplies are not resolved correctly and then turned
-> off as 'unused', even if they provide power to other core regulators in
-> the system. I've observed this issue on Samsung Chromebook Peach-Pit and
-> Peach-Pi (ARM 32bit Exynos based). The symptoms are somehow similar to
-> the issue reported here some time ago:
->
-> https://lore.kernel.org/all/58b92e75-f373-dae7-7031-8abd465bb874@samsung.=
-com/
->
-> I've post more information once I analyze this issue further.
->
-It seems the issue occurs in 'regulator register' resolve supply.
-Due to the parent device don't have the of_node, to resolve the
-supply, it may need to get the
-dt node by recursively finding child regulator.
-Like this
-parent {
-  regulators {
-     xxx-supply =3D <&vdd12-ldo>;
-     vdd12-ldo: vdd12-ldo {
-         regulator-name =3D "xxx";
-         regulator-min-microvolts =3D <xxxxx>;
-         regulator-max-microvolts =3D <xxxxx>;
-      }
-  };
-};
-From this case, 'resolve supply' need to parse at least the more top
-level like 'regulators'.
-But now, it only take 'vdd12-ldo' as the node or its child to parse its sup=
-ply.
+> I don't have the board. Could you help to test this change to see
+> whether it's been fixed or not?
 
-Below's the fix I guess.
-It'll make the parent of the regulator the same as the dev parameter
-in 'regulator_config'.
+The above change fixes the issue. Thanks! Feel free to add following 
+tags to the final patch:
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index ea4a720..7c5036e 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5526,7 +5526,7 @@ regulator_register(struct device *dev,
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-        /* register with sysfs */
-        rdev->dev.class =3D &regulator_class;
--       rdev->dev.parent =3D dev;
-+       rdev->dev.parent =3D config->dev;
-        dev_set_name(&rdev->dev, "regulator.%lu",
-                    (unsigned long) atomic_inc_return(&regulator_no));
-        dev_set_drvdata(&rdev->dev, rdev);
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-I don't have the board. Could you help to test this change to see
-whether it's been fixed or not?
->
-> > ---
-> > loop Yang Yingliang in cc list.
-> >
-> > Since v2
-> > - Fix typo 'int3742' to 'int3472' for kernel build test
-> >
-> > ---
-> >   drivers/platform/x86/intel/int3472/clk_and_regulator.c | 3 ++-
-> >   drivers/regulator/core.c                               | 8 ++++----
-> >   drivers/regulator/devres.c                             | 2 +-
-> >   drivers/regulator/of_regulator.c                       | 2 +-
-> >   drivers/regulator/stm32-vrefbuf.c                      | 2 +-
-> >   include/linux/regulator/driver.h                       | 3 ++-
-> >   6 files changed, 11 insertions(+), 9 deletions(-)
-> >
-> > ...
->
-> Best regards
-> --
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
->
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
