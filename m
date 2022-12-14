@@ -2,135 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12592C001B2
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Dec 2022 09:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A66C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Dec 2022 13:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237896AbiLNJtj (ORCPT
+        id S238154AbiLNNcc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Dec 2022 04:49:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
+        Wed, 14 Dec 2022 08:32:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237925AbiLNJth (ORCPT
+        with ESMTP id S237841AbiLNNc1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Dec 2022 04:49:37 -0500
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B609912AC1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Dec 2022 01:49:34 -0800 (PST)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-14455716674so15939593fac.7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Dec 2022 01:49:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yH6RoPx9LOXfbrkQ1OmroRT7KPGqJmsMcWvJFewb/oY=;
-        b=R8wZ54jygSdwKyfPouSY1lrSyST5hHHJxi+A5CY3IpmCWwl38dgawm0IJrnKHs11G7
-         Rz2rAzlSXAc0g4h/20gxevF1L35H8F9KeT8SbvoJXpDh9ZU8CkrNEJfpGAdYyuEDqQa6
-         jw3ajiM3m2o5HwS/l6/q78duA+29Y/8/LcSlMSZL5jbePV1NEBhf1KikFphMKg9UfM3a
-         sHcT8c42Yvo8cHT743oOqwkPqeG5nSuzKJwFONZ+VDx5bbc3HiC5R1KhmbFCfy/+DRUi
-         TEgCh/8Y9rE609h21WgU2/1T1sG0x0W9pr96M8FhPhySi1tdVyQQDTNXTia+8pHEZSyx
-         o86g==
-X-Gm-Message-State: AFqh2ko1JxgqnbdYJHN/jPoA6y5TpH9hRWTvnaNpbQGzvdHQUu31b5NS
-        ObdNjHoXl1J5gIrfWmjuS69zOJEP7BwQqWYSW2E=
-X-Google-Smtp-Source: AMrXdXuGcaxEdLpxMmt0g+NoRG7kQwUbOJ9e7JcFm6L+cesR3/+vGh+/CAruZBBYNSGtnI1IaRTVC6GrqDp4Z4r7dcA=
-X-Received: by 2002:a05:6870:d68a:b0:148:119:3a77 with SMTP id
- z10-20020a056870d68a00b0014801193a77mr184612oap.217.1671011373883; Wed, 14
- Dec 2022 01:49:33 -0800 (PST)
+        Wed, 14 Dec 2022 08:32:27 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE226435;
+        Wed, 14 Dec 2022 05:32:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8874961A69;
+        Wed, 14 Dec 2022 13:32:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B222AC433D2;
+        Wed, 14 Dec 2022 13:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671024745;
+        bh=MH89dE30fHEW9T6Oa4Zq7WWD3qJmqKbN+HrFHeVqGa0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gROYi2pCcBfsJRz2vgYRVSxAT+uujou8Kho151TO608zjks/78vyDHlhU2VoBjzWC
+         gQt72/0A09av4cHS6mk+M+f8VaQp+4R7jcyzBJsL5+uf7kfOrJGIqgLjES90X+up6G
+         V6Ddw+JMvaeb25fsUw+hYyVJIFyHHceWw+5TvPSA0b8O3SQttbgoGctdiEz/uteXqB
+         7vpzZZ0hIaK+fWpMC2ah5vyDJi61/QcdxeH7Wg3se5XZIgQ8hTqwUbjjTW5z7pRX88
+         DUWFn91dHTaHaoBa3FXZ7qA+jJozFrSXc7KDoSqGJhzuLqnLd/Jvpu/ta78HTxrJwZ
+         Zinj7u0uXaIeQ==
+Date:   Wed, 14 Dec 2022 13:32:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     ChiYuan Huang <u0084500@gmail.com>, djrscally@gmail.com,
+        hdegoede@redhat.com, markgross@kernel.org, lgirdwood@gmail.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        yangyingliang@huawei.com, gene_chen@richtek.com,
+        chiaen_wu@richtek.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        ChiYuan Huang <cy_huang@richtek.com>
+Subject: Re: [PATCH v2] regulator: core: Use different devices for resource
+ allocation and DT lookup
+Message-ID: <Y5nQYom7SsbFnir+@sirena.org.uk>
+References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
+ <1670311341-32664-1-git-send-email-u0084500@gmail.com>
+ <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
+ <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com>
+ <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
+ <Y5ipFd8BfU361QzN@sirena.org.uk>
+ <be56fd97-08b5-8a7a-2630-371c83dcab18@samsung.com>
 MIME-Version: 1.0
-References: <20221213122943.11123-1-hdegoede@redhat.com> <CANER=bYHYNSi3fTwqAt89n-6uS5dSV+o+6H4oD6doeSzgtoZoQ@mail.gmail.com>
- <f2cc7aaf-3a2d-f3f0-9a65-1a67ac780131@redhat.com>
-In-Reply-To: <f2cc7aaf-3a2d-f3f0-9a65-1a67ac780131@redhat.com>
-From:   Mattia Dongili <malattia@linux.it>
-Date:   Wed, 14 Dec 2022 18:49:22 +0900
-Message-ID: <CANER=bb5wxxvUJfGDZHquExeC1Q=k8HdUmPmb2HxmUwrsNMbRg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: sony-laptop: Don't turn off 0x153 keyboard
- backlight during probe
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FQkxBF8HaAaafbeu"
+Content-Disposition: inline
+In-Reply-To: <be56fd97-08b5-8a7a-2630-371c83dcab18@samsung.com>
+X-Cookie: I disagree with unanimity.
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 14 Dec 2022 at 18:13, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Mattia,
->
-> On 12/14/22 09:55, Mattia Dongili wrote:
-> > On Tue, 13 Dec 2022 at 21:29, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
-> >
-> >     The 0x153 version of the kbd backlight control SNC handle has no separate
-> >     address to probe if the backlight is there.
-> >
-> >     This turns the probe call into a set keyboard backlight call with a value
-> >     of 0 turning off the keyboard backlight.
-> >
-> >     Skip probing when there is no separate probe address to avoid this.
-> >
-> >     Link: https://bugzilla.redhat.com/show_bug.cgi?id=1583752 <https://bugzilla.redhat.com/show_bug.cgi?id=1583752>
-> >     Fixes: 800f20170dcf ("Keyboard backlight control for some Vaio Fit models")
-> >     Signed-off-by: Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>>
-> >
-> >
-> > Signed-off-by: Mattia Dongili <malattia@linux.it <mailto:malattia@linux.it>>
-> >
-> >
-> >     ---
-> >      drivers/platform/x86/sony-laptop.c | 21 ++++++++++++++-------
-> >      1 file changed, 14 insertions(+), 7 deletions(-)
-> >
-> >     diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> >     index 765fcaba4d12..5ff5aaf92b56 100644
-> >     --- a/drivers/platform/x86/sony-laptop.c
-> >     +++ b/drivers/platform/x86/sony-laptop.c
-> >     @@ -1888,14 +1888,21 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
-> >                     break;
-> >             }
-> >
-> >     -       ret = sony_call_snc_handle(handle, probe_base, &result);
-> >     -       if (ret)
-> >     -               return ret;
-> >     +       /*
-> >     +        * Only probe if there is a separate probe_base, otherwise the probe call
-> >     +        * is equivalent to __sony_nc_kbd_backlight_mode_set(0), resulting in
-> >     +        * the keyboard backlight being turned off.
-> >     +        */
-> >     +       if (probe_base) {
-> >     +               ret = sony_call_snc_handle(handle, probe_base, &result);
-> >     +               if (ret)
-> >     +                       return ret;
-> >
-> >     -       if ((handle == 0x0137 && !(result & 0x02)) ||
-> >     -                       !(result & 0x01)) {
-> >     -               dprintk("no backlight keyboard found\n");
-> >     -               return 0;
-> >     +               if ((handle == 0x0137 && !(result & 0x02)) ||
-> >     +                               !(result & 0x01)) {
-> >     +                       dprintk("no backlight keyboard found\n");
-> >     +                       return 0;
-> >     +               }
-> >             }
-> >
-> >             kbdbl_ctl = kzalloc(sizeof(*kbdbl_ctl), GFP_KERNEL);
-> >     --
-> >     2.38.1
-> >
-> > ---
-> >
-> > Aha, looking at the bug report and the commit that caused it I think this fix makes sense.
-> > You can add my sign-off too.
->
-> I think you mean Reviewed-by? Singed-off-by: is only for patches passing
-> through you. E.g. it was send to you personally and you then submit it
-> to the list.
 
-Sigh yeah... It's been too long.
+--FQkxBF8HaAaafbeu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Mattia Dongili <malattia@linux.it>
+On Tue, Dec 13, 2022 at 11:23:01PM +0100, Marek Szyprowski wrote:
+> On 13.12.2022 17:32, Mark Brown wrote:
 
-Thanks for pointing this out and most importantly for the fix!
--- 
-mattia
-:wq!
+> > Thanks for jumping on this so quickly!  Marek, are these boards (or
+> > similar ones) generally available?  They seem great at showing up issues
+> > so it'd be good if I could get them into my CI and spot problems earlier
+> > (or something like kernelci.org would be about as good)?
+
+> Well, they are quite old, but I've seen some used ones on eBay. Just=20
+> look for "Samsung Chomebook XE503C12" (Peach-Pit) or XE503C32 (Peach-Pi,=
+=20
+> very rare).
+
+> Getting it integrated into the CI requires a bit of manual work. You=20
+> have to solder UART lines to the test points on the motherboard. The=20
+> board can be fully controlled via so called Embedded Controller, what in=
+=20
+> practice means that you can turn power on/off by sending commands to the=
+=20
+> dedicated EC UART. The kernel console UART uses 1.8V, while the EC UART=
+=20
+> - 3.3V. Let me know if you need more details.
+
+Ah, oh dear - I'm afraid my soldering ability isn't up to that sort of
+modification.
+
+> Peach-Pi was used on kernelci.org some time ago, but I have no idea what=
+=20
+> has happened to it.
+
+I suspect it might've fallen off the end of the ChromeOS support window=20
+and got pulled, I'll see if I can find out.  Perhaps there's some
+modified boards kicking about that didn't get thrown out.
+
+--FQkxBF8HaAaafbeu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmOZ0GEACgkQJNaLcl1U
+h9CWxQf/en9YwkNqoWhy3SMuNx5UdiC3UE/SUjy+OweHxP1Vg4uYfkWwo+DyZ1F6
+x2U+wVmZDsAG4Sajt8r1xn3sMc4Mzm4By0pL2+k8dKlxtEEyvnJ1F3VimgNgACKk
+NekHDfvbcxJgaDzP19XcLzHQNFJ3PvHTxr63S3zvr+b3cfPqx5NXcvhsG4YzNJrR
+rjsOXYYPrulhvt5jpWdM+tTzpW5+xBuzCKDnoTg0yeQT/xnI+M9KBgCk1L4Os7kZ
+FsHWf5yiut7mtfORGoH4E7YUvNgqXCfsL0shqwIHjuXPaPLRih1yu4p3ZYFU7rdf
+oyshvv1XBLeguFobrvGxUxXwZE/yYg==
+=3Ppm
+-----END PGP SIGNATURE-----
+
+--FQkxBF8HaAaafbeu--
