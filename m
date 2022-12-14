@@ -2,202 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50381C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Dec 2022 00:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97132C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Dec 2022 09:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237869AbiLNAjB (ORCPT
+        id S229836AbiLNJNs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Dec 2022 19:39:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
+        Wed, 14 Dec 2022 04:13:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237548AbiLNAie (ORCPT
+        with ESMTP id S229806AbiLNJNr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2022 19:38:34 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8514227CC4;
-        Tue, 13 Dec 2022 16:35:49 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so9542056wms.2;
-        Tue, 13 Dec 2022 16:35:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CwOOzI6378k5zR3Mxw4FbFTi85HMYmdqVxdJz1WIibc=;
-        b=GZHz7WgN+XOt5/kC/999OwX7pe8Eo5jBi1BKlH7Rnfcank49MrLpRE33QyVVr+TMy9
-         Fm+r+Dl2Ul8rt9mnnJ/4tnKcURjjTsirOP5RViOnbyzjBTtYS9MCFEBgaXfb2m4yeetn
-         RIdSZTZGpdlukPLXLO4QvJKIMtSNTSmBynyDr/wqoBp6NsPPY4lQYGpIR25ABYRUettw
-         dLBN4kQttmD7XtD4GIZldI6HEuBboMn5BK7xTUp7TXtICG57tvaQ8jPJ9wHUhWat1B+V
-         aF1EnNW+zkZOJJzthA3df6z+8NxWR7P8Nx4jUXMNl02PVfXNad49kkD9Qh10wtA5dFC5
-         34Ww==
+        Wed, 14 Dec 2022 04:13:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA3B6587
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Dec 2022 01:13:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1671009180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HsJGjBLMgROuD+/oqPR1+obvho6Y8Z7VClnuHTwkTTU=;
+        b=YClGL8tw0Y35/eu/NJQDAp70bTXBM+yEllbF0clthvbSOOqAbAo8DbNFRe//F3ZHPgNYrV
+        WIAfLAtaJ6JuZbc21XZiQaPZ5PkYX/7c8kcpzwlz7w/DmxjVcBuIzmauxeDffDl5JdWPfs
+        C5nZmuU8/q9Kc1z404ugu2MXjrtuLJ4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-626-qMn09IwLMoeqhE4k8Hb9Ig-1; Wed, 14 Dec 2022 04:12:58 -0500
+X-MC-Unique: qMn09IwLMoeqhE4k8Hb9Ig-1
+Received: by mail-ed1-f71.google.com with SMTP id w15-20020a05640234cf00b0046d32d7b153so8960599edc.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Dec 2022 01:12:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CwOOzI6378k5zR3Mxw4FbFTi85HMYmdqVxdJz1WIibc=;
-        b=ccu6k9yEaAYDeiCB9DcdmkAKgmkc5maHrfbblyBxeaQ40sXju7rAri6BuyVC5595Fu
-         nyUqpLpo8721igGw8tr+JTak75/F6Eq4gFcbeJso9E/TG7PS+PpqS8jIqpwyYESGlsYV
-         B3dCWvYeRQMDdbxrXNUtltRtRnZ8mGfRCBVL/vExTActTrPVy0YV2kuQLXpLq8x6/Tre
-         /A3JlmrIT6Wja3h3nBx33J+012OjT+fDa7qStGXnJY1609B1ylbQz8/8sbWvI26dgTyu
-         /KJ0xyD4/LlXxP7gdkkurGbffU3zSSiM+AJ2cvsEqFdOxO7RyFBsI2f3lN/tY9EnzHFy
-         ax7g==
-X-Gm-Message-State: ANoB5pm66tKePsVICGTscuMiu/Te4ZPCNm3g5H1WYPazbTGHdh9yOaHD
-        gBeo4E/8A4eP2hmUjaJxa17q4mN73ZiEegnkPgQ=
-X-Google-Smtp-Source: AA0mqf5bw2CZOHff1M9ghZjQpkBPI0Fwl3B4Z4cVcz+CM1fpg7V+lCr8Z/p0RLbsaTV++pVaMSInAFlrQ2XewTovylY=
-X-Received: by 2002:a05:600c:713:b0:3cc:a9be:d9e9 with SMTP id
- i19-20020a05600c071300b003cca9bed9e9mr32019wmn.173.1670978144486; Tue, 13 Dec
- 2022 16:35:44 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HsJGjBLMgROuD+/oqPR1+obvho6Y8Z7VClnuHTwkTTU=;
+        b=h0WaSl0opz5JfPAtmjicz71mTObVwxmlDib6UyRN4wJDd2WSRW93Avvn5Ps1dGRTcU
+         gOGkNv3+TI5QjcKPacTj0TrAiyarDAX/qzkpv4kCZiTEh91Nes7TciSWa0il3j2kI3QX
+         GSVzF0Zm0WYGw66bKdSExAf5q0HGJD425Sxwq4FGCzzfIivw4AoUMIGpNkeNi9pv8Pxi
+         aPZ/9HF7qKI8bblUMyfcmr2o6dWWlWJwkGcwVJZ0VedgfBFH7/Mr6Z5c+Z3JUVYYOUoJ
+         jUcUWBd7RvyBTpFtaodBJde47cCsttDsIkTj8zHew+S2Rh82Bdko9+ph21Wg9bQZqi+7
+         F7DQ==
+X-Gm-Message-State: ANoB5plidiBePOE3wpRVjoysopT4fSS9gsiGZnC0OcN2MP8GoTJXqGE2
+        0EwdlpJDtI3tMgHqsDv4hMXEXIR2rDFEtoNmIEvyOg3fw/OPIq6aIwSXXdTbt2OtOTgNYxIQidq
+        Sow4vuIosNyV/iV3nUMpA616noJ+iecRS0w==
+X-Received: by 2002:a17:906:dfed:b0:7c1:3f04:efa2 with SMTP id lc13-20020a170906dfed00b007c13f04efa2mr16702163ejc.29.1671009177417;
+        Wed, 14 Dec 2022 01:12:57 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6VvF0ZaI5mOQIa+IJUycXPXLq5Gu++WuE6yRWeGnOyZrVmhG1ZV3KsPe/rSFa7uDW6sJ9BKg==
+X-Received: by 2002:a17:906:dfed:b0:7c1:3f04:efa2 with SMTP id lc13-20020a170906dfed00b007c13f04efa2mr16702158ejc.29.1671009177255;
+        Wed, 14 Dec 2022 01:12:57 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id n24-20020a170906689800b007bd9e683639sm5465483ejr.130.2022.12.14.01.12.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Dec 2022 01:12:56 -0800 (PST)
+Message-ID: <f2cc7aaf-3a2d-f3f0-9a65-1a67ac780131@redhat.com>
+Date:   Wed, 14 Dec 2022 10:12:55 +0100
 MIME-Version: 1.0
-References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
- <1670311341-32664-1-git-send-email-u0084500@gmail.com> <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
- <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com> <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
-In-Reply-To: <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
-From:   ChiYuan Huang <u0084500@gmail.com>
-Date:   Wed, 14 Dec 2022 08:35:32 +0800
-Message-ID: <CADiBU3_+T1QiTHVkDbby_eoCS7Jg-AfCA5PS=rWhx_L9d_OAjA@mail.gmail.com>
-Subject: Re: [PATCH v2] regulator: core: Use different devices for resource
- allocation and DT lookup
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     broonie@kernel.org, djrscally@gmail.com, hdegoede@redhat.com,
-        markgross@kernel.org, lgirdwood@gmail.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        yangyingliang@huawei.com, gene_chen@richtek.com,
-        chiaen_wu@richtek.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        ChiYuan Huang <cy_huang@richtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] platform/x86: sony-laptop: Don't turn off 0x153 keyboard
+ backlight during probe
+To:     Mattia Dongili <malattia@linux.it>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20221213122943.11123-1-hdegoede@redhat.com>
+ <CANER=bYHYNSi3fTwqAt89n-6uS5dSV+o+6H4oD6doeSzgtoZoQ@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CANER=bYHYNSi3fTwqAt89n-6uS5dSV+o+6H4oD6doeSzgtoZoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2022=E5=B9=B412=E6=9C=
-=8813=E6=97=A5 =E9=80=B1=E4=BA=8C =E6=99=9A=E4=B8=8A10:29=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Hi,
->
-> On 13.12.2022 15:19, ChiYuan Huang wrote:
-> > Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2022=E5=B9=B412=
-=E6=9C=8813=E6=97=A5 =E9=80=B1=E4=BA=8C =E6=99=9A=E4=B8=8A7:33=E5=AF=AB=E9=
-=81=93=EF=BC=9A
-> >> On 06.12.2022 08:22, cy_huang wrote:
-> >>> From: ChiYuan Huang <cy_huang@richtek.com>
-> >>>
-> >>> Following by the below discussion, there's the potential UAF issue
-> >>> between regulator and mfd.
-> >>> https://lore.kernel.org/all/20221128143601.1698148-1-yangyingliang@hu=
-awei.com/
-> >>>
-> >>> >From the analysis of Yingliang
-> >>>
-> >>> CPU A                         |CPU B
-> >>> mt6370_probe()                        |
-> >>>     devm_mfd_add_devices()     |
-> >>>                                |mt6370_regulator_probe()
-> >>>                                |  regulator_register()
-> >>>                                |    //allocate init_data and add it t=
-o devres
-> >>>                                |    regulator_of_get_init_data()
-> >>> i2c_unregister_device()               |
-> >>>     device_del()                       |
-> >>>       devres_release_all()     |
-> >>>         // init_data is freed  |
-> >>>         release_nodes()                |
-> >>>                                |  // using init_data causes UAF
-> >>>                                |  regulator_register()
-> >>>
-> >>> It's common to use mfd core to create child device for the regulator.
-> >>> In order to do the DT lookup for init data, the child that registered
-> >>> the regulator would pass its parent as the parameter. And this causes
-> >>> init data resource allocated to its parent, not itself. The issue hap=
-pen
-> >>> when parent device is going to release and regulator core is still do=
-ing
-> >>> some operation of init data constraint for the regulator of child dev=
-ice.
-> >>>
-> >>> To fix it, this patch expand 'regulator_register' API to use the
-> >>> different devices for init data allocation and DT lookup.
-> >>>
-> >>> Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-> >>> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> >>
-> >> This patch landed in linux-next 202212 as commit 8f3cbcd6b440
-> >> ("regulator: core: Use different devices for resource allocation and D=
-T
-> >> lookup"). Unfortunately it causes serious regression on my test system=
-s.
-> >> It looks that some supplies are not resolved correctly and then turned
-> >> off as 'unused', even if they provide power to other core regulators i=
-n
-> >> the system. I've observed this issue on Samsung Chromebook Peach-Pit a=
-nd
-> >> Peach-Pi (ARM 32bit Exynos based). The symptoms are somehow similar to
-> >> the issue reported here some time ago:
-> >>
-> >> https://lore.kernel.org/all/58b92e75-f373-dae7-7031-8abd465bb874@samsu=
-ng.com/
-> >>
-> >> I've post more information once I analyze this issue further.
-> >>
-> > It seems the issue occurs in 'regulator register' resolve supply.
-> > Due to the parent device don't have the of_node, to resolve the
-> > supply, it may need to get the
-> > dt node by recursively finding child regulator.
-> > Like this
-> > parent {
-> >    regulators {
-> >       xxx-supply =3D <&vdd12-ldo>;
-> >       vdd12-ldo: vdd12-ldo {
-> >           regulator-name =3D "xxx";
-> >           regulator-min-microvolts =3D <xxxxx>;
-> >           regulator-max-microvolts =3D <xxxxx>;
-> >        }
-> >    };
-> > };
-> > >From this case, 'resolve supply' need to parse at least the more top
-> > level like 'regulators'.
-> > But now, it only take 'vdd12-ldo' as the node or its child to parse its=
- supply.
-> >
-> > Below's the fix I guess.
-> > It'll make the parent of the regulator the same as the dev parameter
-> > in 'regulator_config'.
-> >
-> > diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> > index ea4a720..7c5036e 100644
-> > --- a/drivers/regulator/core.c
-> > +++ b/drivers/regulator/core.c
-> > @@ -5526,7 +5526,7 @@ regulator_register(struct device *dev,
-> >
-> >          /* register with sysfs */
-> >          rdev->dev.class =3D &regulator_class;
-> > -       rdev->dev.parent =3D dev;
-> > +       rdev->dev.parent =3D config->dev;
-> >          dev_set_name(&rdev->dev, "regulator.%lu",
-> >                      (unsigned long) atomic_inc_return(&regulator_no));
-> >          dev_set_drvdata(&rdev->dev, rdev);
-> >
-> > I don't have the board. Could you help to test this change to see
-> > whether it's been fixed or not?
->
-> The above change fixes the issue. Thanks! Feel free to add following
-> tags to the final patch:
->
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->
-Thanks.
-I'll submit the change to fix it.
+Hi Mattia,
 
->
-> Best regards
-> --
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
->
+On 12/14/22 09:55, Mattia Dongili wrote:
+> On Tue, 13 Dec 2022 at 21:29, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
+> 
+>     The 0x153 version of the kbd backlight control SNC handle has no separate
+>     address to probe if the backlight is there.
+> 
+>     This turns the probe call into a set keyboard backlight call with a value
+>     of 0 turning off the keyboard backlight.
+> 
+>     Skip probing when there is no separate probe address to avoid this.
+> 
+>     Link: https://bugzilla.redhat.com/show_bug.cgi?id=1583752 <https://bugzilla.redhat.com/show_bug.cgi?id=1583752>
+>     Fixes: 800f20170dcf ("Keyboard backlight control for some Vaio Fit models")
+>     Signed-off-by: Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>>
+> 
+> 
+> Signed-off-by: Mattia Dongili <malattia@linux.it <mailto:malattia@linux.it>>
+>  
+> 
+>     ---
+>      drivers/platform/x86/sony-laptop.c | 21 ++++++++++++++-------
+>      1 file changed, 14 insertions(+), 7 deletions(-)
+> 
+>     diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+>     index 765fcaba4d12..5ff5aaf92b56 100644
+>     --- a/drivers/platform/x86/sony-laptop.c
+>     +++ b/drivers/platform/x86/sony-laptop.c
+>     @@ -1888,14 +1888,21 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
+>                     break;
+>             }
+> 
+>     -       ret = sony_call_snc_handle(handle, probe_base, &result);
+>     -       if (ret)
+>     -               return ret;
+>     +       /*
+>     +        * Only probe if there is a separate probe_base, otherwise the probe call
+>     +        * is equivalent to __sony_nc_kbd_backlight_mode_set(0), resulting in
+>     +        * the keyboard backlight being turned off.
+>     +        */
+>     +       if (probe_base) {
+>     +               ret = sony_call_snc_handle(handle, probe_base, &result);
+>     +               if (ret)
+>     +                       return ret;
+> 
+>     -       if ((handle == 0x0137 && !(result & 0x02)) ||
+>     -                       !(result & 0x01)) {
+>     -               dprintk("no backlight keyboard found\n");
+>     -               return 0;
+>     +               if ((handle == 0x0137 && !(result & 0x02)) ||
+>     +                               !(result & 0x01)) {
+>     +                       dprintk("no backlight keyboard found\n");
+>     +                       return 0;
+>     +               }
+>             }
+> 
+>             kbdbl_ctl = kzalloc(sizeof(*kbdbl_ctl), GFP_KERNEL);
+>     -- 
+>     2.38.1
+> 
+> ---
+> 
+> Aha, looking at the bug report and the commit that caused it I think this fix makes sense.
+> You can add my sign-off too.
+
+I think you mean Reviewed-by? Singed-off-by: is only for patches passing
+through you. E.g. it was send to you personally and you then submit it
+to the list.
+
+Regards,
+
+Hans
+
+
