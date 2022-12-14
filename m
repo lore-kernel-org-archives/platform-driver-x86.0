@@ -2,65 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366C2C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Dec 2022 22:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50381C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Dec 2022 00:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235278AbiLMWXU (ORCPT
+        id S237869AbiLNAjB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Dec 2022 17:23:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        Tue, 13 Dec 2022 19:39:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236664AbiLMWXI (ORCPT
+        with ESMTP id S237548AbiLNAie (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2022 17:23:08 -0500
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CACD3896
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Dec 2022 14:23:06 -0800 (PST)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20221213222303euoutp02b26536fc10b2fa457e5bb907f79ec8b2~weodklj622157321573euoutp02I
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Dec 2022 22:23:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20221213222303euoutp02b26536fc10b2fa457e5bb907f79ec8b2~weodklj622157321573euoutp02I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1670970183;
-        bh=2EZqbcx0W4vqGwh+HQvv99s9jy1fUMLoBIMNmNisezo=;
-        h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-        b=vIwO5khUbwG3OuKUfHbgVQDFLgzBzE2/wFMJiIqvD66NlK5rIMJLufcFiza39vSkB
-         +L1fDddX+/g4n5ePblph3pmp5kKPHVZPBO9cqolBkaKXbFGlUcwniPCMO7m+NSwabj
-         DUSjB78s1AHWZg09T79mdMtsD+vah80a8sDADnbw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20221213222302eucas1p13c33b2064912f308b52c50b6f7f0c892~weocY2bJN0957309573eucas1p1e;
-        Tue, 13 Dec 2022 22:23:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 75.9F.09549.64BF8936; Tue, 13
-        Dec 2022 22:23:02 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20221213222301eucas1p1c7ef09661b9c127fc3fb2d76bbeba440~weobtXRXg2919029190eucas1p12;
-        Tue, 13 Dec 2022 22:23:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20221213222301eusmtrp2ab471d61bad2b6a99ef67e498f7ce15b~weobslrj42509225092eusmtrp2I;
-        Tue, 13 Dec 2022 22:23:01 +0000 (GMT)
-X-AuditID: cbfec7f5-f47ff7000000254d-33-6398fb464993
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 0B.02.09026.54BF8936; Tue, 13
-        Dec 2022 22:23:01 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20221213222300eusmtip18c852a573ff877b224a1b093f69b1b2d~weoa1e1N82385523855eusmtip1N;
-        Tue, 13 Dec 2022 22:23:00 +0000 (GMT)
-Message-ID: <be56fd97-08b5-8a7a-2630-371c83dcab18@samsung.com>
-Date:   Tue, 13 Dec 2022 23:23:01 +0100
+        Tue, 13 Dec 2022 19:38:34 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8514227CC4;
+        Tue, 13 Dec 2022 16:35:49 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so9542056wms.2;
+        Tue, 13 Dec 2022 16:35:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CwOOzI6378k5zR3Mxw4FbFTi85HMYmdqVxdJz1WIibc=;
+        b=GZHz7WgN+XOt5/kC/999OwX7pe8Eo5jBi1BKlH7Rnfcank49MrLpRE33QyVVr+TMy9
+         Fm+r+Dl2Ul8rt9mnnJ/4tnKcURjjTsirOP5RViOnbyzjBTtYS9MCFEBgaXfb2m4yeetn
+         RIdSZTZGpdlukPLXLO4QvJKIMtSNTSmBynyDr/wqoBp6NsPPY4lQYGpIR25ABYRUettw
+         dLBN4kQttmD7XtD4GIZldI6HEuBboMn5BK7xTUp7TXtICG57tvaQ8jPJ9wHUhWat1B+V
+         aF1EnNW+zkZOJJzthA3df6z+8NxWR7P8Nx4jUXMNl02PVfXNad49kkD9Qh10wtA5dFC5
+         34Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CwOOzI6378k5zR3Mxw4FbFTi85HMYmdqVxdJz1WIibc=;
+        b=ccu6k9yEaAYDeiCB9DcdmkAKgmkc5maHrfbblyBxeaQ40sXju7rAri6BuyVC5595Fu
+         nyUqpLpo8721igGw8tr+JTak75/F6Eq4gFcbeJso9E/TG7PS+PpqS8jIqpwyYESGlsYV
+         B3dCWvYeRQMDdbxrXNUtltRtRnZ8mGfRCBVL/vExTActTrPVy0YV2kuQLXpLq8x6/Tre
+         /A3JlmrIT6Wja3h3nBx33J+012OjT+fDa7qStGXnJY1609B1ylbQz8/8sbWvI26dgTyu
+         /KJ0xyD4/LlXxP7gdkkurGbffU3zSSiM+AJ2cvsEqFdOxO7RyFBsI2f3lN/tY9EnzHFy
+         ax7g==
+X-Gm-Message-State: ANoB5pm66tKePsVICGTscuMiu/Te4ZPCNm3g5H1WYPazbTGHdh9yOaHD
+        gBeo4E/8A4eP2hmUjaJxa17q4mN73ZiEegnkPgQ=
+X-Google-Smtp-Source: AA0mqf5bw2CZOHff1M9ghZjQpkBPI0Fwl3B4Z4cVcz+CM1fpg7V+lCr8Z/p0RLbsaTV++pVaMSInAFlrQ2XewTovylY=
+X-Received: by 2002:a05:600c:713:b0:3cc:a9be:d9e9 with SMTP id
+ i19-20020a05600c071300b003cca9bed9e9mr32019wmn.173.1670978144486; Tue, 13 Dec
+ 2022 16:35:44 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0)
-        Gecko/20100101 Thunderbird/102.5.1
+References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
+ <1670311341-32664-1-git-send-email-u0084500@gmail.com> <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
+ <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com> <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
+In-Reply-To: <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
+From:   ChiYuan Huang <u0084500@gmail.com>
+Date:   Wed, 14 Dec 2022 08:35:32 +0800
+Message-ID: <CADiBU3_+T1QiTHVkDbby_eoCS7Jg-AfCA5PS=rWhx_L9d_OAjA@mail.gmail.com>
 Subject: Re: [PATCH v2] regulator: core: Use different devices for resource
  allocation and DT lookup
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
-Cc:     ChiYuan Huang <u0084500@gmail.com>, djrscally@gmail.com,
-        hdegoede@redhat.com, markgross@kernel.org, lgirdwood@gmail.com,
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     broonie@kernel.org, djrscally@gmail.com, hdegoede@redhat.com,
+        markgross@kernel.org, lgirdwood@gmail.com,
         mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
         yangyingliang@huawei.com, gene_chen@richtek.com,
         chiaen_wu@richtek.com, platform-driver-x86@vger.kernel.org,
@@ -68,89 +68,136 @@ Cc:     ChiYuan Huang <u0084500@gmail.com>, djrscally@gmail.com,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
         ChiYuan Huang <cy_huang@richtek.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <Y5ipFd8BfU361QzN@sirena.org.uk>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLKsWRmVeSWpSXmKPExsWy7djPc7puv2ckG6xbI2zx8+U0RoupD5+w
-        Waw9qW/xZU8/q8W2w+9YLZ70nGO1eHN8OpPFtysdTBabHl9jtbi8aw6bRde1J6wWB6ZOY7aY
-        93ctq8XqPS+YLSatu8dkseXTNSYHAY+n/VvZPXbOusvu0XLkLavHplWdbB6bl9R7vN93lc1j
-        xqcpbB4H9xl6fN4kF8AZxWWTkpqTWZZapG+XwJVxs+sdW8E77opdH98xNzDu4+xi5OSQEDCR
-        mL15A3sXIxeHkMAKRok133oZIZwvjBIzf7+Ccj4zSnTd+8EC0/J07jyoxHJGiYv9i5lBEkIC
-        HxklfkyvArF5BewkvnR1MILYLAKqEvMPz2KCiAtKnJz5BGyQqECKxIGdZ8HiwgJpEs/2t7KB
-        2MwC4hK3nswHi4sIKEtc/b6XBWQZs8BBZomtnfdYQRJsAoYSXW+7wBo4BXQltp6aB9UsL7H9
-        7RxmkAYJge2cEuvPX2KFONtF4siiRmYIW1ji1fEt7BC2jMT/nSDbQBraGSUW/L4P5UxglGh4
-        fosRospa4s65X0ArOIBWaEqs36UPEXaUOPr+GFhYQoBP4sZbQYgj+CQmbZvODBHmlehoE4Ko
-        VpOYdXwd3NqDFy4xT2BUmoUULrOQ/D8LyTuzEPYuYGRZxSieWlqcm55abJyXWq5XnJhbXJqX
-        rpecn7uJEZgCT/87/nUH44pXH/UOMTJxMB5ilOBgVhLhVdWYlizEm5JYWZValB9fVJqTWnyI
-        UZqDRUmcd8WUjmQhgfTEktTs1NSC1CKYLBMHp1QDk1thwd4Ffgt26U+eMNXyld6Vfo3l9ma/
-        Web7f3zuyrM7aMcPAxaTv6rltdc/7r3pnNrxsS+hlvmYDnvW95PR91jruXVWFU5qtVq/I8Pw
-        s23vSWGlNYuv7l9xLlstYUe2vaO6z9U1kbcXKL8sz3W4b9w990jitPatrX2Oae/UrubtLTf+
-        qHRiqWay9N2GrXuPcvQ9NTLb1HvmqdvbaQGt3yNyim1u/7DfK/vn+za30tXsAb+1TSpeWBr/
-        reDbZWVaom9wTvheurRSwa5zhWeb626Yci/nazq4NJY56MjpyDDXs/Gt501+SlmITlrOHS4g
-        /dBn+jMjlqMmXtWPn1osEUmetmmd2F0r4a+fZjl2KrEUZyQaajEXFScCAF81X4HwAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xu7quv2ckG7xYLG/x8+U0RoupD5+w
-        Waw9qW/xZU8/q8W2w+9YLZ70nGO1eHN8OpPFtysdTBabHl9jtbi8aw6bRde1J6wWB6ZOY7aY
-        93ctq8XqPS+YLSatu8dkseXTNSYHAY+n/VvZPXbOusvu0XLkLavHplWdbB6bl9R7vN93lc1j
-        xqcpbB4H9xl6fN4kF8AZpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eT
-        kpqTWZZapG+XoJdxs+sdW8E77opdH98xNzDu4+xi5OSQEDCReDp3HiOILSSwlFFi34Z8iLiM
-        xMlpDawQtrDEn2tdbF2MXEA17xkljl5+xASS4BWwk/jS1QHWzCKgKjH/8CyouKDEyZlPWEBs
-        UYEUifaef2BxYYE0iWf7W9lAbGYBcYlbT+aDxUUElCWuft/LArKAWeAgs8TGBzOZIba9YpJY
-        2bACrINNwFCi620XmM0poCux9dQ8qElmEl1buxghbHmJ7W/nME9gFJqF5JBZSBbOQtIyC0nL
-        AkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIExv+3Yzy07GFe++qh3iJGJg/EQowQHs5II
-        r6rGtGQh3pTEyqrUovz4otKc1OJDjKbA0JjILCWanA9MOnkl8YZmBqaGJmaWBqaWZsZK4rye
-        BR2JQgLpiSWp2ampBalFMH1MHJxSDUzSfAyLXG9PTl6Zy+v6zHjZ34tNDrJVJ9ds++Xx2VTM
-        6JRT65mpJUpSzFfiTl/QvHOt5OvG5u+nXRWr93+wC2T8etH1X+DqRPvni9cUTf8uVVt+/mmn
-        gChPafhu058e2V85ElXzam9ssMt+vlqnTOdFrXS0nPK3NWsMM4Lm5515p7eucZbxqbD40ouJ
-        dimzg42l13/erH9cU1C1+CGjrf3F+zMuKj+0eHRb1GF+jN2OXZsOXFsTwvGrj2HxehGNNU3Z
-        LOyMTkLiYXvV7683vzqLb3bdds8tiiL3lSfUppY7BZxjTzMX3xQmYVSnVvR9sbqJ+u2cvH3n
-        uOef/ZWRMj/Aa+arg0nhmUufNZzkylBiKc5INNRiLipOBABi/y0NggMAAA==
-X-CMS-MailID: 20221213222301eucas1p1c7ef09661b9c127fc3fb2d76bbeba440
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0
-References: <CGME20221213113259eucas1p1c224898772bc5e59de90c1aa65a34de0@eucas1p1.samsung.com>
-        <1670311341-32664-1-git-send-email-u0084500@gmail.com>
-        <dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com>
-        <CADiBU39-FUD787RmV9Z+jsSrb2Se66A6FrLWGxf78q2Ud-SrjA@mail.gmail.com>
-        <dc6c80f1-f34d-eaab-d561-32caa7fa140c@samsung.com>
-        <Y5ipFd8BfU361QzN@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 13.12.2022 17:32, Mark Brown wrote:
-> On Tue, Dec 13, 2022 at 03:29:00PM +0100, Marek Szyprowski wrote:
->> On 13.12.2022 15:19, ChiYuan Huang wrote:
->>> I don't have the board. Could you help to test this change to see
->>> whether it's been fixed or not?
->> The above change fixes the issue. Thanks! Feel free to add following
->> tags to the final patch:
->> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Thanks for jumping on this so quickly!  Marek, are these boards (or
-> similar ones) generally available?  They seem great at showing up issues
-> so it'd be good if I could get them into my CI and spot problems earlier
-> (or something like kernelci.org would be about as good)?
+Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2022=E5=B9=B412=E6=9C=
+=8813=E6=97=A5 =E9=80=B1=E4=BA=8C =E6=99=9A=E4=B8=8A10:29=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Hi,
+>
+> On 13.12.2022 15:19, ChiYuan Huang wrote:
+> > Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2022=E5=B9=B412=
+=E6=9C=8813=E6=97=A5 =E9=80=B1=E4=BA=8C =E6=99=9A=E4=B8=8A7:33=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> >> On 06.12.2022 08:22, cy_huang wrote:
+> >>> From: ChiYuan Huang <cy_huang@richtek.com>
+> >>>
+> >>> Following by the below discussion, there's the potential UAF issue
+> >>> between regulator and mfd.
+> >>> https://lore.kernel.org/all/20221128143601.1698148-1-yangyingliang@hu=
+awei.com/
+> >>>
+> >>> >From the analysis of Yingliang
+> >>>
+> >>> CPU A                         |CPU B
+> >>> mt6370_probe()                        |
+> >>>     devm_mfd_add_devices()     |
+> >>>                                |mt6370_regulator_probe()
+> >>>                                |  regulator_register()
+> >>>                                |    //allocate init_data and add it t=
+o devres
+> >>>                                |    regulator_of_get_init_data()
+> >>> i2c_unregister_device()               |
+> >>>     device_del()                       |
+> >>>       devres_release_all()     |
+> >>>         // init_data is freed  |
+> >>>         release_nodes()                |
+> >>>                                |  // using init_data causes UAF
+> >>>                                |  regulator_register()
+> >>>
+> >>> It's common to use mfd core to create child device for the regulator.
+> >>> In order to do the DT lookup for init data, the child that registered
+> >>> the regulator would pass its parent as the parameter. And this causes
+> >>> init data resource allocated to its parent, not itself. The issue hap=
+pen
+> >>> when parent device is going to release and regulator core is still do=
+ing
+> >>> some operation of init data constraint for the regulator of child dev=
+ice.
+> >>>
+> >>> To fix it, this patch expand 'regulator_register' API to use the
+> >>> different devices for init data allocation and DT lookup.
+> >>>
+> >>> Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+> >>> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> >>
+> >> This patch landed in linux-next 202212 as commit 8f3cbcd6b440
+> >> ("regulator: core: Use different devices for resource allocation and D=
+T
+> >> lookup"). Unfortunately it causes serious regression on my test system=
+s.
+> >> It looks that some supplies are not resolved correctly and then turned
+> >> off as 'unused', even if they provide power to other core regulators i=
+n
+> >> the system. I've observed this issue on Samsung Chromebook Peach-Pit a=
+nd
+> >> Peach-Pi (ARM 32bit Exynos based). The symptoms are somehow similar to
+> >> the issue reported here some time ago:
+> >>
+> >> https://lore.kernel.org/all/58b92e75-f373-dae7-7031-8abd465bb874@samsu=
+ng.com/
+> >>
+> >> I've post more information once I analyze this issue further.
+> >>
+> > It seems the issue occurs in 'regulator register' resolve supply.
+> > Due to the parent device don't have the of_node, to resolve the
+> > supply, it may need to get the
+> > dt node by recursively finding child regulator.
+> > Like this
+> > parent {
+> >    regulators {
+> >       xxx-supply =3D <&vdd12-ldo>;
+> >       vdd12-ldo: vdd12-ldo {
+> >           regulator-name =3D "xxx";
+> >           regulator-min-microvolts =3D <xxxxx>;
+> >           regulator-max-microvolts =3D <xxxxx>;
+> >        }
+> >    };
+> > };
+> > >From this case, 'resolve supply' need to parse at least the more top
+> > level like 'regulators'.
+> > But now, it only take 'vdd12-ldo' as the node or its child to parse its=
+ supply.
+> >
+> > Below's the fix I guess.
+> > It'll make the parent of the regulator the same as the dev parameter
+> > in 'regulator_config'.
+> >
+> > diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> > index ea4a720..7c5036e 100644
+> > --- a/drivers/regulator/core.c
+> > +++ b/drivers/regulator/core.c
+> > @@ -5526,7 +5526,7 @@ regulator_register(struct device *dev,
+> >
+> >          /* register with sysfs */
+> >          rdev->dev.class =3D &regulator_class;
+> > -       rdev->dev.parent =3D dev;
+> > +       rdev->dev.parent =3D config->dev;
+> >          dev_set_name(&rdev->dev, "regulator.%lu",
+> >                      (unsigned long) atomic_inc_return(&regulator_no));
+> >          dev_set_drvdata(&rdev->dev, rdev);
+> >
+> > I don't have the board. Could you help to test this change to see
+> > whether it's been fixed or not?
+>
+> The above change fixes the issue. Thanks! Feel free to add following
+> tags to the final patch:
+>
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>
+Thanks.
+I'll submit the change to fix it.
 
-Well, they are quite old, but I've seen some used ones on eBay. Just 
-look for "Samsung Chomebook XE503C12" (Peach-Pit) or XE503C32 (Peach-Pi, 
-very rare).
-
-Getting it integrated into the CI requires a bit of manual work. You 
-have to solder UART lines to the test points on the motherboard. The 
-board can be fully controlled via so called Embedded Controller, what in 
-practice means that you can turn power on/off by sending commands to the 
-dedicated EC UART. The kernel console UART uses 1.8V, while the EC UART 
-- 3.3V. Let me know if you need more details.
-
-Peach-Pi was used on kernelci.org some time ago, but I have no idea what 
-has happened to it.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>
