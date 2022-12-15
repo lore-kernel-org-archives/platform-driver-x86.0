@@ -2,88 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25617C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Dec 2022 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D2C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Dec 2022 23:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiLOPpQ (ORCPT
+        id S229549AbiLOXVN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Dec 2022 10:45:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60074 "EHLO
+        Thu, 15 Dec 2022 18:21:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbiLOPpD (ORCPT
+        with ESMTP id S229547AbiLOXVN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Dec 2022 10:45:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0764BEBD
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Dec 2022 07:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671119058;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8/7DNt4nEznT0LKyS7pGOutiwZ9Ynds/frWa78MF7dU=;
-        b=ivWgbJzNMxZHpc9cptKc6noKaCE3kyiZ2Vd5tPjqj+7t5htyS065rAt5SCCr+wFXFR0p7J
-        mWBBt29qrAON1akw/rw/wcqiYkHpoB1gySZjLJAGjpFIuhSsm9oFq7Fq7QgfRPhhDNHgEC
-        lBf2rbZdltOVsI+7x67tfvPoFXLPuWc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-1hPUY-NKNvmJU79jesoo6g-1; Thu, 15 Dec 2022 10:44:09 -0500
-X-MC-Unique: 1hPUY-NKNvmJU79jesoo6g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C9D4100F92E;
-        Thu, 15 Dec 2022 15:44:09 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.193.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5665040C2064;
-        Thu, 15 Dec 2022 15:44:08 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ike Panhc <ike.pan@canonical.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: ideapad-laptop: Add Legion 5 15ARH05 DMI id to set_fn_lock_led_list[]
-Date:   Thu, 15 Dec 2022 16:43:57 +0100
-Message-Id: <20221215154357.123876-1-hdegoede@redhat.com>
+        Thu, 15 Dec 2022 18:21:13 -0500
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C79BDFBF;
+        Thu, 15 Dec 2022 15:21:11 -0800 (PST)
+Received: from rustam-GF63-Thin-9RCX.. (unknown [93.175.1.130])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 70FD040D403D;
+        Thu, 15 Dec 2022 23:21:07 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 70FD040D403D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+        s=default; t=1671146467;
+        bh=H5crU78K2zee4DdEMLmYCKLNeQWcvsMzZNn++UaUCUw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TW3AGIqCEXiBI6wHJW24PtJsv3PGrEj7RLl0TKUh5C3MzIW2cR6Xgi3YPwZq+hMjH
+         8fce9uRpLjyyLEtabNcGWUobcFY4Tf4R3xsyJ2RVLwaPWYus+DOD3XLRk6GopVBIia
+         Jqp6fP+8+j+q7qtJkVFua0mRcfBbQ+Qi34ueT+wM=
+From:   Rustam Subkhankulov <subkhankulov@ispras.ru>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Rustam Subkhankulov <subkhankulov@ispras.ru>,
+        Mark Gross <markgross@kernel.org>,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>
+Subject: [PATCH] dell-smbios: fix double free in dell_smbios_init() and fixes in dell_smbios_exit()
+Date:   Fri, 16 Dec 2022 02:17:41 +0300
+Message-Id: <20221215231741.154355-1-subkhankulov@ispras.ru>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Lenovo Legion 5 15ARH05 needs ideapad-laptop to call SALS_FNLOCK_ON /
-SALS_FNLOCK_OFF on Fn-lock state change to get the LED in the Fn key to
-correctly reflect the Fn-lock state.
+If an error occurs in function build_tokens_sysfs(), then all the memory
+that has been allocated is correctly freed at certain labels at the end
+of this function.
 
-Add a DMI match for the Legion 5 15ARH05 to the set_fn_lock_led_list[]
-table for this.
+build_tokens_sysfs() returns a non-zero value on error, function
+free_group() is called, resulting in a double-free. Removing
+free_group() function call will fix this problem.
 
-Fixes: 81a5603a0f50 ("platform/x86: ideapad-laptop: Fix interrupt storm on fn-lock toggle on some Yoga laptops")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Also, it seems that instead of free_group() call, there should be
+exit_dell_smbios_smm() and exit_dell_smbios_wmi() calls, since there is
+initialization, but there is no release of resources in case of an error.
+
+Since calling 'exit' functions for 'smm' and 'wmi' is unsafe if
+initialization failed, in dell_smbios_exit() and dell_smbios_init()
+we need to call 'exit' only if initialization before was successful.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Rustam Subkhankulov <subkhankulov@ispras.ru>
+Fixes: 25d47027e100 ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
 ---
- drivers/platform/x86/ideapad-laptop.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/dell/dell-smbios-base.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 435d2d3d903b..0eb5bfdd823a 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1621,6 +1621,12 @@ static const struct dmi_system_id set_fn_lock_led_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion R7000P2020H"),
- 		}
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion 5 15ARH05"),
-+		}
-+	},
- 	{}
- };
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+index fc086b66f70b..cfef8cdd1215 100644
+--- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -29,6 +29,8 @@ static struct device_attribute *token_location_attrs;
+ static struct device_attribute *token_value_attrs;
+ static struct attribute **token_attrs;
+ static DEFINE_MUTEX(smbios_mutex);
++static bool wmi_initialized;
++static bool smm_initialized;
  
+ struct smbios_device {
+ 	struct list_head list;
+@@ -607,6 +609,9 @@ static int __init dell_smbios_init(void)
+ 			goto fail_sysfs;
+ 	}
+ 
++	wmi_initialized = !(wmi);
++	smm_initialized = !(smm);
++
+ 	return 0;
+ 
+ fail_sysfs:
+@@ -628,8 +633,16 @@ static int __init dell_smbios_init(void)
+ 
+ static void __exit dell_smbios_exit(void)
+ {
+-	exit_dell_smbios_wmi();
+-	exit_dell_smbios_smm();
++	if (wmi_initialized) {
++		exit_dell_smbios_wmi();
++		wmi_initialized = 0;
++	}
++
++	if (smm_initialized) {
++		exit_dell_smbios_smm();
++		smm_initialized = 0;
++	}
++
+ 	mutex_lock(&smbios_mutex);
+ 	if (platform_device) {
+ 		if (da_tokens)
 -- 
-2.38.1
+2.34.1
 
