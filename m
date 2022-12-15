@@ -2,141 +2,139 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA91C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Dec 2022 09:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C390EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Dec 2022 09:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbiLOJcV (ORCPT
+        id S229854AbiLOJmk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Dec 2022 04:32:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
+        Thu, 15 Dec 2022 04:42:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbiLOJbw (ORCPT
+        with ESMTP id S229726AbiLOJmj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Dec 2022 04:31:52 -0500
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA91F12AB1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Dec 2022 01:31:50 -0800 (PST)
-Received: by mail-qv1-xf35.google.com with SMTP id d2so1533276qvp.12
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Dec 2022 01:31:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a3EptiNNYz54B6ALuBWXOFkTd9baua/QSniBYKYKUZY=;
-        b=d341/ShCuNm10nw7YXEAqsyxMI1C9+zYWCuxWP6KtFLWgNL1luRsAMab4cG331bjiF
-         ecGvAPHxwavOY3dWh/uHTy6ZzCeHYX5xarp1CBq2xRMd+YM2rUqUkQ81muxHi6hq9AvS
-         8XitkIVk/iec2mh+T3HoI3VF7oe4e27dAcGlk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a3EptiNNYz54B6ALuBWXOFkTd9baua/QSniBYKYKUZY=;
-        b=04TegYdazH8z+ZWpXcxhYZM5dchg7g3sqtIHB73EtGipzPfoQrAGUpaAe6kshUi0NH
-         eBVfgaqv6gdUBW5yC/MYIuZg/o23+HyOvENBZFvhxhOT1+czPmBC34dw3efz/vpm5L+O
-         q4O8oNLvHhVlWuos4HC+yYf3e90Zlj3bzwC1xPm4I/0TsJE0GFSaLy2om5LyHA6t8VqQ
-         wG9zMj29rJZM5U/UXqyNIy3yEqEzkgTqfFQ0n4VGot5zSvBbpIeyL5GYXvChq5ccraND
-         ipcpZ+46Pv/uGNjf57vYFDC0KHoHAUAqv8tTIv7fCdYeKgndcJErJgNshKEv+4GzL94t
-         UndA==
-X-Gm-Message-State: ANoB5pmLMdKswpm+3n5dJWUTyBVq8ZpDGb8yz+jYnWh5Q0Czzhnsr/aw
-        2xAWah+i62WwaOCJ0B62v22smgeM03H3fmnUUn5tWA==
-X-Google-Smtp-Source: AA0mqf4MjWdBgRV6+uwFHEh1nlyzpA7P1m0VMHF4xYlbLdYqgj/mBMj62ZjpW/dyQJKfHN5RHUtk2CKEOv5B6fQnj7w=
-X-Received: by 2002:a05:6214:4281:b0:4c6:8e11:b1ea with SMTP id
- og1-20020a056214428100b004c68e11b1eamr69618854qvb.18.1671096709828; Thu, 15
- Dec 2022 01:31:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20221209140150.1453-1-johan+linaro@kernel.org>
-In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 15 Dec 2022 17:31:24 +0800
-Message-ID: <CAJMQK-ht8_dvdCOQXfUMGGa6ZcPJSXf_AjDd0OLi79WF43NYGA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/19] irqdomain: fix mapping race and clean up locking
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Thu, 15 Dec 2022 04:42:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D12262B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Dec 2022 01:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1671097312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1BG7uuSnGPV79muqIARaa573ojSEFReXOVoQVHexFwI=;
+        b=Fz2h1ct6Ik2KOHwnqXGMp5lE/grlX2lP2pMd8bRktXddd0esfKXk7YjIvdbidogTs+LiD3
+        KHinsNTOsduiZHPHmhcKj8l+wVyqZ0pJRdwUN4lFcRffweWsA4FdaeylhBgYYUYSP5co1z
+        jGgrp9y/ZZ6wisZ9Ee/Q7IJp429wAFc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-372-CTPDtuV8OTOv598Mvja6Hg-1; Thu, 15 Dec 2022 04:41:47 -0500
+X-MC-Unique: CTPDtuV8OTOv598Mvja6Hg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E3C8886C14C;
+        Thu, 15 Dec 2022 09:41:46 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.193.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1860B14171BE;
+        Thu, 15 Dec 2022 09:41:45 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Aditya Garg <gargaditya08@live.com>
+Subject: [PATCH] ACPI: video: Fix Apple GMUX backlight detection
+Date:   Thu, 15 Dec 2022 10:41:38 +0100
+Message-Id: <20221215094138.7120-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 5:22 PM Johan Hovold <johan+linaro@kernel.org> wrote:
->
-> Parallel probing (e.g. due to asynchronous probing) of devices that
-> share interrupts can currently result in two mappings for the same
-> hardware interrupt to be created.
->
-> This series fixes this mapping race and clean up the irqdomain locking
-> so that in the end the global irq_domain_mutex is only used for managing
-> the likewise global irq_domain_list, while domain operations (e.g.
-> IRQ allocations) use per-domain (hierarchy) locking.
->
-> Johan
->
->
-> Changes in v2
->  - split out redundant-lookup cleanup (1/4)
->  - use a per-domain mutex to address mapping race (2/4)
->  - move kernel-doc to exported function (2/4)
->  - fix association race (3/4, new)
->  - use per-domain mutex for associations (4/4, new)
->
-> Changes in v3
->  - drop dead and bogus code (1--3/19, new)
->  - fix racy mapcount accesses (5/19, new)
->  - drop revmap mutex (6/19, new)
->  - use irq_domain_mutex to address mapping race (9/19)
->  - clean up irq_domain_push/pop_irq() (10/19, new)
->  - use irq_domain_create_hierarchy() to construct hierarchies
->    (11--18/19, new)
->  - switch to per-domain locking (19/19, new)
->
->
-> Johan Hovold (19):
->   irqdomain: Drop bogus fwspec-mapping error handling
->   irqdomain: Drop dead domain-name assignment
->   irqdomain: Drop leftover brackets
->   irqdomain: Fix association race
->   irqdomain: Fix disassociation race
->   irqdomain: Drop revmap mutex
->   irqdomain: Look for existing mapping only once
->   irqdomain: Refactor __irq_domain_alloc_irqs()
->   irqdomain: Fix mapping-creation race
->   irqdomain: Clean up irq_domain_push/pop_irq()
->   x86/ioapic: Use irq_domain_create_hierarchy()
->   x86/apic: Use irq_domain_create_hierarchy()
->   irqchip/alpine-msi: Use irq_domain_add_hierarchy()
->   irqchip/gic-v2m: Use irq_domain_create_hierarchy()
->   irqchip/gic-v3-its: Use irq_domain_create_hierarchy()
->   irqchip/gic-v3-mbi: Use irq_domain_create_hierarchy()
->   irqchip/loongson-pch-msi: Use irq_domain_create_hierarchy()
->   irqchip/mvebu-odmi: Use irq_domain_create_hierarchy()
->   irqdomain: Switch to per-domain locking
->
->  arch/x86/kernel/apic/io_apic.c         |   8 +-
->  arch/x86/platform/uv/uv_irq.c          |   7 +-
->  drivers/irqchip/irq-alpine-msi.c       |   8 +-
->  drivers/irqchip/irq-gic-v2m.c          |   5 +-
->  drivers/irqchip/irq-gic-v3-its.c       |  13 +-
->  drivers/irqchip/irq-gic-v3-mbi.c       |   5 +-
->  drivers/irqchip/irq-loongson-pch-msi.c |   9 +-
->  drivers/irqchip/irq-mvebu-odmi.c       |  13 +-
->  include/linux/irqdomain.h              |   6 +-
->  kernel/irq/irqdomain.c                 | 328 ++++++++++++++-----------
->  10 files changed, 220 insertions(+), 182 deletions(-)
->
-> --
+The apple-gmux driver only binds to old GMUX devices which have an
+IORESOURCE_IO resource (using inb()/outb()) rather then memory-mapped
+IO (IORESOURCE_MEM).
 
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+T2 MacBooks use the new style GMUX devices (with IORESOURCE_MEM access),
+so these are not supported by the apple-gmux driver. This is not a problem
+since they have working ACPI video backlight support.
 
-The series solves a race issue when having non-populated 2nd source
-components that share the same irq on ARM devices:
-Previously we would see
-[    0.476357] irq: type mismatch, failed to map hwirq-11 for pinctrl@10005000!
-and the component failed to probe.
+But the apple_gmux_present() helper only checks if an ACPI device with
+the "APP000B" HID is present, causing acpi_video_get_backlight_type()
+to return acpi_backlight_apple_gmux disabling the acpi_video backlight
+device.
 
+Add a new apple_gmux_backlight_present() helper which checks that
+the "APP000B" device actually is an old GMUX device with an IORESOURCE_IO
+resource.
 
-> 2.37.4
->
+This fixes the acpi_video0 backlight no longer registering on T2 MacBooks.
+
+Note people are working to add support for the new style GMUX to Linux:
+https://github.com/kekrby/linux-t2/commits/wip/hybrid-graphics
+
+Once this lands this patch should be reverted so that
+acpi_video_get_backlight_type() also prefers the gmux on new style GMUX
+MacBooks, but for now this is necessary to avoid regressing backlight
+control on T2 Macs.
+
+Fixes: 21245df307cb ("ACPI: video: Add Apple GMUX brightness control detection")
+Reported-and-tested-by: Aditya Garg <gargaditya08@live.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/video_detect.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index a934bbc9dd37..1b78c7434492 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -34,6 +34,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/platform_data/x86/nvidia-wmi-ec-backlight.h>
++#include <linux/pnp.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+ #include <acpi/video.h>
+@@ -105,6 +106,26 @@ static bool nvidia_wmi_ec_supported(void)
+ }
+ #endif
+ 
++static bool apple_gmux_backlight_present(void)
++{
++	struct acpi_device *adev;
++	struct device *dev;
++
++	adev = acpi_dev_get_first_match_dev(GMUX_ACPI_HID, NULL, -1);
++	if (!adev)
++		return false;
++
++	dev = acpi_get_first_physical_node(adev);
++	if (!dev)
++		return false;
++
++	/*
++	 * drivers/platform/x86/apple-gmux.c only supports old style
++	 * Apple GMUX with an IO-resource.
++	 */
++	return pnp_get_resource(to_pnp_dev(dev), IORESOURCE_IO, 0) != NULL;
++}
++
+ /* Force to use vendor driver when the ACPI device is known to be
+  * buggy */
+ static int video_detect_force_vendor(const struct dmi_system_id *d)
+@@ -767,7 +788,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
+ 	if (nvidia_wmi_ec_present)
+ 		return acpi_backlight_nvidia_wmi_ec;
+ 
+-	if (apple_gmux_present())
++	if (apple_gmux_backlight_present())
+ 		return acpi_backlight_apple_gmux;
+ 
+ 	/* Use ACPI video if available, except when native should be preferred. */
+-- 
+2.38.1
+
