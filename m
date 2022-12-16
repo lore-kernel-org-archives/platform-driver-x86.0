@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A4C3DA78
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 11:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BECC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 11:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiLPLbk (ORCPT
+        id S231235AbiLPLbt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Dec 2022 06:31:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
+        Fri, 16 Dec 2022 06:31:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbiLPLbh (ORCPT
+        with ESMTP id S231236AbiLPLbp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Dec 2022 06:31:37 -0500
+        Fri, 16 Dec 2022 06:31:45 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F5C1400C
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 03:30:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5156CED
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 03:30:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671190241;
+        s=mimecast20190719; t=1671190256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Yvf6qZW2ovKLOTQd2ZUlYb1ftgRwQmzMm5+ccXiLrCI=;
-        b=CmrE1qzMuJmFmD6/RCJvgwTO6qwX3p6OcldV0Tuov+ePNywP/IkOcNbocVwOzV8gyt8Rdq
-        D8oMF0F1wNvZ6K/ZWwUw+Lold75VN2fRPvUoTO3jg9zPSRp0dPc7YcyP1KDXtXS+FgFeyH
-        zKiiGAVB0aj0weN+mdZ/E/U+IAp3ouU=
+        bh=ucZDaECuZe/lFWW6Z/530BTwkympFWSoR7nDccMR+V8=;
+        b=EpPxYnNgnswZa8k0oUulgLWjWE8MPl9z9RQEn4W+0KLWvuNevPcMkKvpMQAf0ZASfWivL1
+        fSIxKlPl3x/X7Oi8z0DklUd8kEJag2D0CQOtAxLMw1ud5SlHMhR2IGGNaNzdMpzFsISCEX
+        ROI1qK1KB0VQIDABb3bweRvMSQmfO7Y=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-112-XklrP0VSM6SvzpUJwpvEqA-1; Fri, 16 Dec 2022 06:30:38 -0500
-X-MC-Unique: XklrP0VSM6SvzpUJwpvEqA-1
+ us-mta-658-EaGKl1k2PI2zkmfkuvBVZw-1; Fri, 16 Dec 2022 06:30:53 -0500
+X-MC-Unique: EaGKl1k2PI2zkmfkuvBVZw-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DD0E1C02D52;
-        Fri, 16 Dec 2022 11:30:37 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 60AA71C07542;
+        Fri, 16 Dec 2022 11:30:52 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED2D3400F58;
-        Fri, 16 Dec 2022 11:30:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FBFC49BB6A;
+        Fri, 16 Dec 2022 11:30:48 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -54,9 +54,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH v3 05/11] leds: led-class: Add generic [devm_]led_get()
-Date:   Fri, 16 Dec 2022 12:30:07 +0100
-Message-Id: <20221216113013.126881-6-hdegoede@redhat.com>
+Subject: [PATCH v3 09/11] platform/x86: int3472/discrete: Move GPIO request to skl_int3472_register_clock()
+Date:   Fri, 16 Dec 2022 12:30:11 +0100
+Message-Id: <20221216113013.126881-10-hdegoede@redhat.com>
 In-Reply-To: <20221216113013.126881-1-hdegoede@redhat.com>
 References: <20221216113013.126881-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,174 +66,155 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a generic [devm_]led_get() method which can be used on both devicetree
-and non devicetree platforms to get a LED classdev associated with
-a specific function on a specific device, e.g. the privacy LED associated
-with a specific camera sensor.
+Move the requesting of the clk-enable GPIO to skl_int3472_register_clock()
+(and move the gpiod_put to unregister).
 
-Note unlike of_led_get() this takes a string describing the function
-rather then an index. This is done because e.g. camera sensors might
-have a privacy LED, or a flash LED, or both and using an index
-approach leaves it unclear what the function of index 0 is if there is
-only 1 LED. The existing of support is extended to also support
-getting a LED by function-name using the standard devicetree pattern
-of adding a -names string array to map names to the indexes.
-
-For non devicetree platforms a lookup-table mechanism is added to
-allow the platform code to map specific LED class_dev-s to specific
-device,function combinations this way.
+This mirrors the GPIO handling in skl_int3472_register_regulator() and
+allows removing skl_int3472_map_gpio_to_clk() from discrete.c .
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/leds/led-class.c | 91 ++++++++++++++++++++++++++++++++++++++++
- include/linux/leds.h     | 18 ++++++++
- 2 files changed, 109 insertions(+)
+ .../x86/intel/int3472/clk_and_regulator.c     | 26 +++++++++++++++--
+ drivers/platform/x86/intel/int3472/common.h   |  3 +-
+ drivers/platform/x86/intel/int3472/discrete.c | 28 ++-----------------
+ 3 files changed, 28 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 6e25c411ba35..76b3ab66eb88 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -23,6 +23,8 @@
- #include "leds.h"
- 
- static struct class *leds_class;
-+static DEFINE_MUTEX(leds_lookup_lock);
-+static LIST_HEAD(leds_lookup_list);
- 
- static ssize_t brightness_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
-@@ -329,6 +331,95 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_of_led_get);
- 
-+/**
-+ * led_get() - request a LED device via the LED framework
-+ * @dev: device for which to get the LED device
-+ * @function: string describing the function of the LED device
-+ *
-+ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
-+ */
-+struct led_classdev *led_get(struct device *dev, char *function)
-+{
-+	struct led_lookup_data *lookup;
-+	struct led_classdev *led_cdev;
-+	const char *led_name = NULL;
-+	struct device *led_dev;
-+
-+	if (dev->of_node) {
-+		led_cdev = __of_led_get(dev->of_node, -1, function);
-+		if (!IS_ERR(led_cdev) || PTR_ERR(led_cdev) != -ENOENT)
-+			return led_cdev;
-+	}
-+
-+	mutex_lock(&leds_lookup_lock);
-+	list_for_each_entry(lookup, &leds_lookup_list, list) {
-+		if (!strcmp(lookup->consumer_dev_name, dev_name(dev)) &&
-+		    !strcmp(lookup->consumer_function, function)) {
-+			led_name = kstrdup(lookup->led_name, GFP_KERNEL);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&leds_lookup_lock);
-+
-+	if (!led_name)
-+		return ERR_PTR(-ENOENT);
-+
-+	led_dev = class_find_device_by_name(leds_class, led_name);
-+	kfree(led_name);
-+
-+	return __led_get(led_dev);
-+}
-+EXPORT_SYMBOL_GPL(led_get);
-+
-+/**
-+ * devm_led_get() - request a LED device via the LED framework
-+ * @dev: device for which to get the LED device
-+ * @function: string describing the function of the LED device
-+ *
-+ * The LED device returned from this function is automatically released
-+ * on driver detach.
-+ *
-+ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
-+ */
-+struct led_classdev *devm_led_get(struct device *dev, char *function)
-+{
-+	struct led_classdev *led;
-+
-+	led = led_get(dev, function);
-+	if (IS_ERR(led))
-+		return led;
-+
-+	return __devm_led_get(dev, led);
-+}
-+EXPORT_SYMBOL_GPL(devm_led_get);
-+
-+/**
-+ * led_add_lookup() - Add a LED lookup table entry
-+ * @led_lookup: the lookup table entry to add
-+ *
-+ * Add a LED lookup table entry. On systems without devicetree the lookup table
-+ * is used by led_get() to find LEDs.
-+ */
-+void led_add_lookup(struct led_lookup_data *led_lookup)
-+{
-+	mutex_lock(&leds_lookup_lock);
-+	list_add_tail(&led_lookup->list, &leds_lookup_list);
-+	mutex_unlock(&leds_lookup_lock);
-+}
-+EXPORT_SYMBOL_GPL(led_add_lookup);
-+
-+/**
-+ * led_remove_lookup() - Remove a LED lookup table entry
-+ * @led_lookup: the lookup table entry to remove
-+ */
-+void led_remove_lookup(struct led_lookup_data *led_lookup)
-+{
-+	mutex_lock(&leds_lookup_lock);
-+	list_del(&led_lookup->list);
-+	mutex_unlock(&leds_lookup_lock);
-+}
-+EXPORT_SYMBOL_GPL(led_remove_lookup);
-+
- static int led_classdev_next_name(const char *init_name, char *name,
- 				  size_t len)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index ba4861ec73d3..e44fc5ec7c9a 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -39,6 +39,18 @@ enum led_default_state {
- 	LEDS_DEFSTATE_KEEP	= 2,
+diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+index e61119b17677..4b4d77db44ce 100644
+--- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
++++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+@@ -86,18 +86,32 @@ static const struct clk_ops skl_int3472_clock_ops = {
+ 	.recalc_rate = skl_int3472_clk_recalc_rate,
  };
  
-+/*
-+ * This is used to tell led_get() device which led_classdev to return for
-+ * a specific consumer device-name, function pair on non devicetree platforms.
-+ * Note all strings must be set.
-+ */
-+struct led_lookup_data {
-+	struct list_head list;
-+	const char *led_name;
-+	const char *consumer_dev_name;
-+	const char *consumer_function;
-+};
-+
- struct led_init_data {
- 	/* device fwnode handle */
- 	struct fwnode_handle *fwnode;
-@@ -211,6 +223,12 @@ void devm_led_classdev_unregister(struct device *parent,
- void led_classdev_suspend(struct led_classdev *led_cdev);
- void led_classdev_resume(struct led_classdev *led_cdev);
+-int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
++int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
++			       struct acpi_resource_gpio *agpio)
+ {
++	char *path = agpio->resource_source.string_ptr;
+ 	struct clk_init_data init = {
+ 		.ops = &skl_int3472_clock_ops,
+ 		.flags = CLK_GET_RATE_NOCACHE,
+ 	};
+ 	int ret;
  
-+void led_add_lookup(struct led_lookup_data *led_lookup);
-+void led_remove_lookup(struct led_lookup_data *led_lookup);
++	if (int3472->clock.cl)
++		return -EBUSY;
 +
-+struct led_classdev *__must_check led_get(struct device *dev, char *function);
-+struct led_classdev *__must_check devm_led_get(struct device *dev, char *function);
++	int3472->clock.ena_gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
++							     "int3472,clk-enable");
++	if (IS_ERR(int3472->clock.ena_gpio)) {
++		ret = PTR_ERR(int3472->clock.ena_gpio);
++		return dev_err_probe(int3472->dev, ret, "getting regulator GPIO\n");
++	}
 +
- extern struct led_classdev *of_led_get(struct device_node *np, int index);
- extern void led_put(struct led_classdev *led_cdev);
- struct led_classdev *__must_check devm_of_led_get(struct device *dev,
+ 	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+ 			      acpi_dev_name(int3472->adev));
+-	if (!init.name)
+-		return -ENOMEM;
++	if (!init.name) {
++		ret = -ENOMEM;
++		goto out_put_gpio;
++	}
+ 
+ 	int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
+ 
+@@ -123,14 +137,20 @@ int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
+ 	clk_unregister(int3472->clock.clk);
+ out_free_init_name:
+ 	kfree(init.name);
++out_put_gpio:
++	gpiod_put(int3472->clock.ena_gpio);
+ 
+ 	return ret;
+ }
+ 
+ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
+ {
++	if (!int3472->clock.cl)
++		return;
++
+ 	clkdev_drop(int3472->clock.cl);
+ 	clk_unregister(int3472->clock.clk);
++	gpiod_put(int3472->clock.ena_gpio);
+ }
+ 
+ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+index e106bbfe8ffa..5ec89038ae07 100644
+--- a/drivers/platform/x86/intel/int3472/common.h
++++ b/drivers/platform/x86/intel/int3472/common.h
+@@ -121,7 +121,8 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
+ 					 struct acpi_device **sensor_adev_ret,
+ 					 const char **name_ret);
+ 
+-int skl_int3472_register_clock(struct int3472_discrete_device *int3472);
++int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
++			       struct acpi_resource_gpio *agpio);
+ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
+ 
+ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1a1e0b196bfa..b7752c2b798d 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -2,8 +2,6 @@
+ /* Author: Dan Scally <djrscally@gmail.com> */
+ 
+ #include <linux/acpi.h>
+-#include <linux/clkdev.h>
+-#include <linux/clk-provider.h>
+ #include <linux/device.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/machine.h>
+@@ -154,22 +152,6 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+ 	return 0;
+ }
+ 
+-static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+-				       struct acpi_resource_gpio *agpio)
+-{
+-	char *path = agpio->resource_source.string_ptr;
+-	u16 pin = agpio->pin_table[0];
+-	struct gpio_desc *gpio;
+-
+-	gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+-	if (IS_ERR(gpio))
+-		return (PTR_ERR(gpio));
+-
+-	int3472->clock.ena_gpio = gpio;
+-
+-	return skl_int3472_register_clock(int3472);
+-}
+-
+ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
+ {
+ 	switch (type) {
+@@ -275,9 +257,9 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 
+ 		break;
+ 	case INT3472_GPIO_TYPE_CLK_ENABLE:
+-		ret = skl_int3472_map_gpio_to_clk(int3472, agpio);
++		ret = skl_int3472_register_clock(int3472, agpio);
+ 		if (ret)
+-			err_msg = "Failed to map GPIO to clock\n";
++			err_msg = "Failed to register clock\n";
+ 
+ 		break;
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+@@ -340,11 +322,7 @@ static int skl_int3472_discrete_remove(struct platform_device *pdev)
+ 
+ 	gpiod_remove_lookup_table(&int3472->gpios);
+ 
+-	if (int3472->clock.cl)
+-		skl_int3472_unregister_clock(int3472);
+-
+-	gpiod_put(int3472->clock.ena_gpio);
+-
++	skl_int3472_unregister_clock(int3472);
+ 	skl_int3472_unregister_pled(int3472);
+ 	skl_int3472_unregister_regulator(int3472);
+ 
 -- 
 2.38.1
 
