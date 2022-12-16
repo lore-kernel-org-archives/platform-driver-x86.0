@@ -2,74 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE2C001B2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 15:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B0BC001B2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 15:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbiLPPXA (ORCPT
+        id S229863AbiLPPq3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Dec 2022 10:23:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46448 "EHLO
+        Fri, 16 Dec 2022 10:46:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbiLPPWw (ORCPT
+        with ESMTP id S231396AbiLPPq1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Dec 2022 10:22:52 -0500
+        Fri, 16 Dec 2022 10:46:27 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD5853EC3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:22:11 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083C160377
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:45:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671204130;
+        s=mimecast20190719; t=1671205534;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XLjDVQMOaQDf9kCy2gWjQIFoZeoTcfdAcAIX6l6ffTc=;
-        b=IhjvQojXygza1z6Vlagp6KKoKluULMhzm9zlOEnv6QIVzD8mjbiI2GsA7OV7sL9F3FJLfL
-        Pv57gzmxqw3bqNm06rWUgl0lkZBpqy6TD67MBbyeaeKzwQgkbldQ4JazSDBZ3BPN/4i3cI
-        5y0bV6g0FnAKNTpv9QE6FjhvWZ2lHSM=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=v/mfmqygSSxomqvcf853XFI/ztzKlnj6HYo+ll19ia4=;
+        b=U3xwNMcigAwLH0ZjY5nkrtdQmNzrHB1BlvmPhj4Op6bMMmpQawSkhDZ4Ac5N0TqnhIRZK8
+        IOgfQR1UMG6d6nmdDMQVc2AceIikjPzFS6eHZSOhlh/pO6WV9BoYpwy7/k2N+dZCpUKicY
+        XgqDMJD+IVGagrAvUw75XY2YDv3Thi4=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-27-IE5-cLA2PdCPNldeVG_2UQ-1; Fri, 16 Dec 2022 10:22:09 -0500
-X-MC-Unique: IE5-cLA2PdCPNldeVG_2UQ-1
-Received: by mail-ed1-f72.google.com with SMTP id e14-20020a056402190e00b0047005d4c3e9so2106624edz.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:22:08 -0800 (PST)
+ us-mta-433-pEBC2luUN1G28duqZlAR1Q-1; Fri, 16 Dec 2022 10:45:32 -0500
+X-MC-Unique: pEBC2luUN1G28duqZlAR1Q-1
+Received: by mail-ej1-f69.google.com with SMTP id nb4-20020a1709071c8400b007c18ba778e9so2078504ejc.16
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:45:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XLjDVQMOaQDf9kCy2gWjQIFoZeoTcfdAcAIX6l6ffTc=;
-        b=xHyZa8T+84Rxz6NW68ORrKIaB6Z+6P4Zq9g6ZxQ1/1zd5G2F4noNHfQ8rpxKtWBeiY
-         tFnR3t7u29LPysIqb7GtoMW9gVr4l7npDdFt3rqh3a/bGDitHMCTtWdBC0RoGpjdSDB6
-         hdd4ltcHh00Y05EUpnwvAA2TpFcF4Jm7fOm09CGbuSSCBIYPCjfQV/jGlOl2owb5Tmqc
-         I81F1wF3Qg+ht5RwgoIBW5cYJLGZlrrxdwaRf0/iF4A9736zJV/eE4d+WL4exOSin5m2
-         pP0DUWbJG4ukWm+GRdHO2QW8ggUyCPlVowrQAAtfWGbU3GS9TUbXwSyqAiR8YJ8DI+5b
-         wt4Q==
-X-Gm-Message-State: ANoB5pmLXcoRyeg8/gNxyNOU9aKq/WRnxS7jmRe39wL3+6bhqmEa793U
-        exY5HM1NezJ+pvp4mbgsoLoduFv3AuR2fD2tomdqfy1x/qN73tFyoO1BF4BkZ/b7l2C7fX9pj3Q
-        rElbxQXozRMDZVKsEYaL3ab1pD1JNopVo2Q==
-X-Received: by 2002:a17:906:3890:b0:7b2:8a6d:e946 with SMTP id q16-20020a170906389000b007b28a6de946mr28045631ejd.30.1671204128012;
-        Fri, 16 Dec 2022 07:22:08 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7YYX/dyJtVTWTDIjqC/iuZkmA+xylzHt6PG1KRCEos6AnmV3ZVyXX7leNzo2uc0QR61mFheQ==
-X-Received: by 2002:a17:906:3890:b0:7b2:8a6d:e946 with SMTP id q16-20020a170906389000b007b28a6de946mr28045612ejd.30.1671204127847;
-        Fri, 16 Dec 2022 07:22:07 -0800 (PST)
+        bh=v/mfmqygSSxomqvcf853XFI/ztzKlnj6HYo+ll19ia4=;
+        b=q64Y+Y7cWIac0HEH6q4quumdymF25s9CKgfBJY0OeBBI2v5ja51VoaOC2saSdrtbJr
+         Yu0qHgyCeAzSazkmYT6p2Z0lm7YbBnV1KLlHurCqRt14t9Riln0puCBx9GlzSUAYsl+k
+         6s7nYLymWf3SGL7btMwVc259NHLD8zl/dpyq+5briP1R3gAN3Glgk/BcuixvlUuYRu3n
+         turA+eJ1WTa3qIdtsNlIR6pIvh6DSJoxvjhrA0LLzZrTq5ufZ0TEIM2J7xb9PfvvS3iT
+         OYqImRcSvcgA2wIYO4zDOKiT91HoLquyPH1JH4X23ZChjHEd4ivinVZPC0UCQ6fRldox
+         /0Hg==
+X-Gm-Message-State: ANoB5pn+K8qKEvZ7r8uCrU1JcOALqcGXnwgXzr63YWpxPmbCov0eqWMH
+        aJMSq8WYCfR+wKgrpZQVu758OaD1Uj6ETwzq9sdv7Jl2gKF1G6WjbfpCNJqQT33C1txwY0PtVaK
+        b8xNtcMjRqTyHAzkMYQx/QzasyJ2aJ9Uz/A==
+X-Received: by 2002:a17:907:20f2:b0:7c1:bb4:ea20 with SMTP id rh18-20020a17090720f200b007c10bb4ea20mr25059626ejb.71.1671205531542;
+        Fri, 16 Dec 2022 07:45:31 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf58NbCZfT9fRq89iuM3GGac0kaHbGsXMz084tiVxgFhMkpvH14+4RUbyCXqwyDEKxIxIsGbmA==
+X-Received: by 2002:a17:907:20f2:b0:7c1:bb4:ea20 with SMTP id rh18-20020a17090720f200b007c10bb4ea20mr25059605ejb.71.1671205531312;
+        Fri, 16 Dec 2022 07:45:31 -0800 (PST)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id kv5-20020a17090778c500b007b29eb8a4dbsm987367ejc.13.2022.12.16.07.22.06
+        by smtp.gmail.com with ESMTPSA id d19-20020a170906305300b007c4f8bc322asm945597ejd.196.2022.12.16.07.45.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Dec 2022 07:22:07 -0800 (PST)
-Message-ID: <1f784f94-cbb1-79db-3796-ec5c21c9e8e2@redhat.com>
-Date:   Fri, 16 Dec 2022 16:22:05 +0100
+        Fri, 16 Dec 2022 07:45:30 -0800 (PST)
+Message-ID: <c0fc35eb-9b26-c1c6-3f85-234acbee0ff8@redhat.com>
+Date:   Fri, 16 Dec 2022 16:45:29 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH v3 01/11] leds: led-class: Add missing put_device() to
- led_put()
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+Subject: Re: [PATCH v3 06/11] v4l: subdev: Make the v4l2-subdev core code
+ enable/disable the privacy LED if present
+Content-Language: en-US
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
@@ -78,11 +79,10 @@ Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
         linux-media@vger.kernel.org
 References: <20221216113013.126881-1-hdegoede@redhat.com>
- <20221216113013.126881-2-hdegoede@redhat.com>
- <Y5x0IdXiczdc73qV@smile.fi.intel.com> <Y5x4z6N5ZjdomP4c@smile.fi.intel.com>
-Content-Language: en-US
+ <20221216113013.126881-7-hdegoede@redhat.com>
+ <Y5x5D4kTnEpcHzsT@pendragon.ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y5x4z6N5ZjdomP4c@smile.fi.intel.com>
+In-Reply-To: <Y5x5D4kTnEpcHzsT@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -91,42 +91,140 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/16/22 14:55, Andy Shevchenko wrote:
-> On Fri, Dec 16, 2022 at 03:35:29PM +0200, Andy Shevchenko wrote:
->> On Fri, Dec 16, 2022 at 12:30:03PM +0100, Hans de Goede wrote:
+On 12/16/22 14:56, Laurent Pinchart wrote:
+> Hi Hans,
 > 
-> ...
+> Thank you for the patch.
 > 
->>>  	led_cdev = dev_get_drvdata(led_dev);
->>>  
->>> -	if (!try_module_get(led_cdev->dev->parent->driver->owner))
->>> +	if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
->>> +		put_device(led_cdev->dev);
->>>  		return ERR_PTR(-ENODEV);
->>> +	}
->>>  
->>>  	return led_cdev;
+> On Fri, Dec 16, 2022 at 12:30:08PM +0100, Hans de Goede wrote:
+>> Extend the call_s_stream() wrapper to enable/disable sensor privacy LEDs
+>> for sensors with a privacy LED, rather then having to duplicate this code
+>> in all the sensor drivers.
 >>
->> ...
+>> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  drivers/media/v4l2-core/v4l2-subdev.c | 40 +++++++++++++++++++++++++++
+>>  include/media/v4l2-subdev.h           |  3 ++
+>>  2 files changed, 43 insertions(+)
 >>
->>>  void led_put(struct led_classdev *led_cdev)
->>>  {
->>>  	module_put(led_cdev->dev->parent->driver->owner);
->>> +	put_device(led_cdev->dev);
->>
->> Hmm... It was in the original submission.
->>
->> https://lore.kernel.org/linux-leds/1443605522-1118-2-git-send-email-tomi.valkeinen@ti.com/
+>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+>> index 4988a25bd8f4..7344f6cd58b7 100644
+>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+>> @@ -318,10 +318,44 @@ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
+>>  	       sd->ops->pad->get_mbus_config(sd, pad, config);
+>>  }
+>>  
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +#include <linux/leds.h>
 > 
-> ...
-> 
->> Nevertheless, shouldn't you put device before putting module? (It may need to
->> save the owner of the driver, I think.)
-> 
-> I think this is wrong, the symmetry is kept correct in your patch.
+> Can this be moved to the top of the file ? It doesn't have to be
+> conditionally compiled there.
 
-Right, the line above dereferences led_cdev->dev, so the put()
-must be done after that line.
+You mean just the #include right? Ack to that.
+
+> 
+>> +
+>> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable)
+>> +{
+>> +	if (!sd->dev)
+>> +		return;
+>> +
+>> +	/* Try to get privacy-led once, at first s_stream() */
+>> +	if (!sd->privacy_led)
+>> +		sd->privacy_led = led_get(sd->dev, "privacy-led");
+> 
+> I'm not sure I like this much. If the LED provider isn't available
+> (yet), the LED will stay off. That's a privacy concern.
+
+At first I tried to put the led_get() inside v4l2_async_register_subdev_sensor(),
+which could then return an error like -EPROBE_DEFER if the led_get()
+fails (and nicely limits the led_get() to sensors).
+
+The problem which I hit is that v4l2-fwnode.c is build according to
+CONFIG_V4L2_FWNODE where as v4l2-subdev.c is build according to
+CONFIG_VIDEO_DEV 
+
+And e.g. CONFIG_VIDEO_DEV could be builtin while CONFIG_V4L2_FWNODE
+could be a module and then having the #if IS_REACHABLE(CONFIG_LEDS_CLASS)
+spread over the 2 could result in different answers in the different
+files ...
+
+One solution here could be to change CONFIG_V4L2_FWNODE and V4L2_ASYNC
+to bools and link the (quite small) objects for these 2 into videodev.ko:
+
+videodev-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
+videodev-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
+
+
+
+
+
+
+> 
+>> +
+>> +	if (IS_ERR(sd->privacy_led))
+>> +		return;
+>> +
+>> +	mutex_lock(&sd->privacy_led->led_access);
+>> +
+>> +	if (enable) {
+>> +		led_sysfs_disable(sd->privacy_led);
+>> +		led_trigger_remove(sd->privacy_led);
+>> +		led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
+>> +	} else {
+>> +		led_set_brightness(sd->privacy_led, 0);
+>> +		led_sysfs_enable(sd->privacy_led);
+> 
+> I don't think you should reenable control through sysfs here. I don't
+> really see a use case, and you've removed the trigger anyway, so the
+> behaviour would be quite inconsistent.
+
+Hmm, I thought this was a good compromise, this way the LED
+can be used for other purposes when the sensor is off if users
+want to.
+
+Right if users want to use a trigger then they would need
+to re-attach the trigger after using the camera.
+
+But this way at least they can use the LED for other purposes
+which since many users don't use their webcam that often
+might be interesting for some users ...
+
+And this is consistent with how flash LEDs are handled.
+
+> Also, I think it would be better if the LED device was marked as "no
+> sysfs" when it is registered.
+
+If we decide to permanently disallow userspace access then
+yes this is an option. Or maybe better (to keep the LED
+drivers generic), do the disable directly after the led_get() ?
+
+
+
+> 
+>> +	}
+>> +
+>> +	mutex_unlock(&sd->privacy_led->led_access);
+>> +}
+>> +#else
+>> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable) {}
+>> +#endif
+>> +
+>>  static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>>  {
+>>  	int ret;
+>>  
+>> +	call_s_stream_update_pled(sd, enable);
+>> +
+>>  	ret = sd->ops->video->s_stream(sd, enable);
+>>  
+>>  	if (!enable && ret < 0) {
+> 
+> You need to turn the LED off when enabling if .s_stream() fails.
+
+Ack.
 
 Regards,
 
