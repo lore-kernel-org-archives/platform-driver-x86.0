@@ -2,116 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D2C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Dec 2022 23:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E77C001B2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 11:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiLOXVN (ORCPT
+        id S230498AbiLPLbP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Dec 2022 18:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
+        Fri, 16 Dec 2022 06:31:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiLOXVN (ORCPT
+        with ESMTP id S229583AbiLPLbK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Dec 2022 18:21:13 -0500
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C79BDFBF;
-        Thu, 15 Dec 2022 15:21:11 -0800 (PST)
-Received: from rustam-GF63-Thin-9RCX.. (unknown [93.175.1.130])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 70FD040D403D;
-        Thu, 15 Dec 2022 23:21:07 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 70FD040D403D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1671146467;
-        bh=H5crU78K2zee4DdEMLmYCKLNeQWcvsMzZNn++UaUCUw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TW3AGIqCEXiBI6wHJW24PtJsv3PGrEj7RLl0TKUh5C3MzIW2cR6Xgi3YPwZq+hMjH
-         8fce9uRpLjyyLEtabNcGWUobcFY4Tf4R3xsyJ2RVLwaPWYus+DOD3XLRk6GopVBIia
-         Jqp6fP+8+j+q7qtJkVFua0mRcfBbQ+Qi34ueT+wM=
-From:   Rustam Subkhankulov <subkhankulov@ispras.ru>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Rustam Subkhankulov <subkhankulov@ispras.ru>,
-        Mark Gross <markgross@kernel.org>,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: [PATCH] dell-smbios: fix double free in dell_smbios_init() and fixes in dell_smbios_exit()
-Date:   Fri, 16 Dec 2022 02:17:41 +0300
-Message-Id: <20221215231741.154355-1-subkhankulov@ispras.ru>
-X-Mailer: git-send-email 2.34.1
+        Fri, 16 Dec 2022 06:31:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7675C773
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 03:30:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1671190223;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=us2r/Cka/DVYppZUWMqDY3fKam1bvS45Ua8aIbvfMVA=;
+        b=LTOTmuV6yjH+jNiTp4/8XVG1MlJuhoxia49CXmK1fe1fG6IbbBJTZ/E7yHuGJAf+baCcKP
+        Umx0a9I8U8Z8C0Ucphrznv0nEGgBGWcga3+XWbpiAqkfBd3SHQ3DFQMVnw0kzeoujc0h+s
+        XdA+gG1AngCNtbwZ+e3NZR/6z8Uwzu8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-341-RgHZAHtvNzyjKwP8I_HhQg-1; Fri, 16 Dec 2022 06:30:19 -0500
+X-MC-Unique: RgHZAHtvNzyjKwP8I_HhQg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 488C8101A52E;
+        Fri, 16 Dec 2022 11:30:18 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1CB7400F58;
+        Fri, 16 Dec 2022 11:30:14 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v3 00/11] leds: lookup-table support + int3472/media privacy LED support
+Date:   Fri, 16 Dec 2022 12:30:02 +0100
+Message-Id: <20221216113013.126881-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If an error occurs in function build_tokens_sysfs(), then all the memory
-that has been allocated is correctly freed at certain labels at the end
-of this function.
+Hi All,
 
-build_tokens_sysfs() returns a non-zero value on error, function
-free_group() is called, resulting in a double-free. Removing
-free_group() function call will fix this problem.
+Here is my 3th attempt at adjusting the INT3472 code's handling of
+the privacy LED on x86 laptops with MIPI camera(s) so that it will also
+work on devices which have a privacy-LED GPIO but not a clk-enable GPIO
+(so that we cannot just tie the LED state to the clk-enable state).
 
-Also, it seems that instead of free_group() call, there should be
-exit_dell_smbios_smm() and exit_dell_smbios_wmi() calls, since there is
-initialization, but there is no release of resources in case of an error.
+Due to popular request by multiple people this new version now models
+the privacy LED as a LED class device. This requires being able to
+"tie" the LED class device to a specific camera sensor (some devices
+have multiple sensors + privacy-LEDs).
 
-Since calling 'exit' functions for 'smm' and 'wmi' is unsafe if
-initialization failed, in dell_smbios_exit() and dell_smbios_init()
-we need to call 'exit' only if initialization before was successful.
+Patches 1-5 are LED subsystem patches for this. 1 is a bug fix, 2-4
+is a bit of refactoring in preparation for patch 5 which adds
+generic (non devicetree specific) led_get() and devm_led_get() function
+(which will also work with devicetree) and lookup table support to
+allow platform code to add LED class-device <-> consumer-dev,function
+lookups for non devicetree platforms.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Patch 6 adds generic privacy-LED support to the v4l2-core/v4l2-subdev.c
+code automatically enabling the privacy-LED when s_stream(subdev, 1)
+is called. So that we don't need to privacy-LED code to all the
+camera sensor drivers separately (as requested by Sakari).
 
-Signed-off-by: Rustam Subkhankulov <subkhankulov@ispras.ru>
-Fixes: 25d47027e100 ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
----
- drivers/platform/x86/dell/dell-smbios-base.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+These are all new patches in version 3. Patches 7-11 are patches
+to the platform specific INT3472 code to register privacy-LED class
+devices + lookup table entries for privacy-LEDs described in
+the special INT3472 ACPI nodes found on x86 devices with MIPI
+cameras (+ prep work + some other INT3472 fixes).
 
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-index fc086b66f70b..cfef8cdd1215 100644
---- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -29,6 +29,8 @@ static struct device_attribute *token_location_attrs;
- static struct device_attribute *token_value_attrs;
- static struct attribute **token_attrs;
- static DEFINE_MUTEX(smbios_mutex);
-+static bool wmi_initialized;
-+static bool smm_initialized;
- 
- struct smbios_device {
- 	struct list_head list;
-@@ -607,6 +609,9 @@ static int __init dell_smbios_init(void)
- 			goto fail_sysfs;
- 	}
- 
-+	wmi_initialized = !(wmi);
-+	smm_initialized = !(smm);
-+
- 	return 0;
- 
- fail_sysfs:
-@@ -628,8 +633,16 @@ static int __init dell_smbios_init(void)
- 
- static void __exit dell_smbios_exit(void)
- {
--	exit_dell_smbios_wmi();
--	exit_dell_smbios_smm();
-+	if (wmi_initialized) {
-+		exit_dell_smbios_wmi();
-+		wmi_initialized = 0;
-+	}
-+
-+	if (smm_initialized) {
-+		exit_dell_smbios_smm();
-+		smm_initialized = 0;
-+	}
-+
- 	mutex_lock(&smbios_mutex);
- 	if (platform_device) {
- 		if (da_tokens)
+Assuming the LED and media maintainers are happy with the approach
+suggested here (if you are please give your Ack / Reviewed-by) we
+need to talk about how to merge this since patches 6 and 7-11
+depend on the LED subsystem changes. I think it would be best if
+the LED subsystem can provide an immutable branch with patches 1-5
+(on top of 6.2-rc1 once it is out) and then the media folks and I
+can merge that branch and then apply the other patches on top.
+
+This series has been tested on:
+
+- Lenovo ThinkPad X1 Yoga gen 7, IPU6, front: ov2740 with privacy LED
+- Dell Latitude 9420, IPU 6, front: ov01a1s with privacy LED
+- Mirosoft Surface Go, IPU3, front: ov5693 with privacy LED
+                              back: ov8865 with privacy LED (pled not yet supported)
+
+Regards,
+
+Hans
+
+
+Hans de Goede (11):
+  leds: led-class: Add missing put_device() to led_put()
+  leds: led-class: Add __led_get() helper function
+  leds: led-class: Add __of_led_get() helper
+  leds: led-class: Add __devm_led_get() helper
+  leds: led-class: Add generic [devm_]led_get()
+  v4l: subdev: Make the v4l2-subdev core code enable/disable the privacy
+    LED if present
+  platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+  platform/x86: int3472/discrete: Create a LED class device for the
+    privacy LED
+  platform/x86: int3472/discrete: Move GPIO request to
+    skl_int3472_register_clock()
+  platform/x86: int3472/discrete: Ensure the clk/power enable pins are
+    in output mode
+  platform/x86: int3472/discrete: Get the polarity from the _DSM entry
+
+ drivers/leds/led-class.c                      | 174 +++++++++++++++---
+ drivers/media/v4l2-core/v4l2-subdev.c         |  40 ++++
+ drivers/platform/x86/intel/int3472/Makefile   |   2 +-
+ .../x86/intel/int3472/clk_and_regulator.c     |  35 +++-
+ drivers/platform/x86/intel/int3472/common.h   |  18 +-
+ drivers/platform/x86/intel/int3472/discrete.c |  96 +++++-----
+ drivers/platform/x86/intel/int3472/led.c      |  75 ++++++++
+ include/linux/leds.h                          |  18 ++
+ include/media/v4l2-subdev.h                   |   3 +
+ 9 files changed, 371 insertions(+), 90 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/int3472/led.c
+
 -- 
-2.34.1
+2.38.1
 
