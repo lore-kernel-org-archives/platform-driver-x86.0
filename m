@@ -2,67 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D995C001B2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 15:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40779C3DA78
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 15:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231422AbiLPPrH (ORCPT
+        id S231499AbiLPPxz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Dec 2022 10:47:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55238 "EHLO
+        Fri, 16 Dec 2022 10:53:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbiLPPrG (ORCPT
+        with ESMTP id S231527AbiLPPxk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Dec 2022 10:47:06 -0500
+        Fri, 16 Dec 2022 10:53:40 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AFC57B63
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:46:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F696F0E1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:52:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671205581;
+        s=mimecast20190719; t=1671205957;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9miN79vuneG4+xiAXBKAhjQmKbcytEgoN1Q0VxUiPr0=;
-        b=VeOJ2TdaftxTqRXvPDC7/znNZ8PBG3PyAmzFaFgRaIj1yzI7NrHqNPpZAdzoi5AEp9REhr
-        HdO1m4FqbWUYmvK1YaJq8gNsV7Nr+PsG14TUC8cvifU2QDrnTCExEsaikYZIrda9OMDXqu
-        z0C4wadQEqaFfEb+kqg3XZ1NkIUHHTU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4e34CNHCsWFD7B+Us3y8CmVn17rfdvEA/dBGFbJ5AwU=;
+        b=Co/WVElhTBNFetN6RoaNPrBe4MfmTghwpofsz2xD/y16Ytfl4LYv83o0YoQ1xvcLNdaWTq
+        5ZcLlV4kqogd+YicSQL4haD5pZrVB8F2VdWCdHzGGlVkx5W2EkPggwicUALBNdS2RAj67J
+        8GQIIrKuwU0j/hCIW4ZRuTEIGNkbL+U=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-245-IWr8nO34OWCW5WD7gjp8jA-1; Fri, 16 Dec 2022 10:46:17 -0500
-X-MC-Unique: IWr8nO34OWCW5WD7gjp8jA-1
-Received: by mail-ed1-f71.google.com with SMTP id v4-20020a056402348400b0046cbbc786bdso2160879edc.7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:46:16 -0800 (PST)
+ us-mta-445-pP0d4pdmMP6eAsQJvdD7sw-1; Fri, 16 Dec 2022 10:52:36 -0500
+X-MC-Unique: pP0d4pdmMP6eAsQJvdD7sw-1
+Received: by mail-ed1-f72.google.com with SMTP id b18-20020a056402351200b004761159f677so1160258edd.6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 07:52:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9miN79vuneG4+xiAXBKAhjQmKbcytEgoN1Q0VxUiPr0=;
-        b=n1V8lswubcy0EO7Z340e8/XrJ7Zr/Q+bC0bymJHXg5tm/eAtp0PCUAIoQVC5/+mX7R
-         0ThEuYHL/3DkZafu0i/JuNRZMzefYscufHg3qjcQglguHHdJIgmDsBFf79h58SQg/O7f
-         yGT5RYvJNkbOoMrG49KrD3jkH0Nin+lhcBKuQLn7cRSVN6rOnhfoLN3vg4XKbx5JTp/5
-         /4QJNznCSPzaemxaqb+57yaygzS9ypk/XSJJMzubvcw4j+Ns20puA1BEDmicizLDH3Ud
-         PJ5RYK9Z+6S5RiiHOBbe4m1/CeGllWoZtJEUbpUJO0iD5qJyNI0ORbkryYuwEZLgAohK
-         DwJg==
-X-Gm-Message-State: AFqh2kqRONc8b3cF4niGVSWfcRyLrMm1/Rl2Y0H3hUEdUfNsG4VUFW/2
-        nUEasnVp2GGT+rPu3kgA7sgdK1meRs8oNONsEB2a8h7zyKphEock2xA77U9UeGHZpQ646M5dl2g
-        9vXaGWjhfjIIiFdsI+P1D7wlZThei9ngzVw==
-X-Received: by 2002:a17:906:6b13:b0:7ae:29fa:ba8f with SMTP id q19-20020a1709066b1300b007ae29faba8fmr18501454ejr.2.1671205575484;
-        Fri, 16 Dec 2022 07:46:15 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXt1F+qGVMz5rlxsdm1cVTC00+hNjjzyZuB6NkuP4nyFnjpBc63rkQq2R/tNIbj6f9TJ3hqZGA==
-X-Received: by 2002:a17:906:6b13:b0:7ae:29fa:ba8f with SMTP id q19-20020a1709066b1300b007ae29faba8fmr18501435ejr.2.1671205575286;
-        Fri, 16 Dec 2022 07:46:15 -0800 (PST)
+        bh=4e34CNHCsWFD7B+Us3y8CmVn17rfdvEA/dBGFbJ5AwU=;
+        b=kQkIiqEJzK08Fs1tsTqvcAq8lg2IZW7Ktgx9RAxGSwA3DixriqTvXWM8NXy+IPUvpd
+         kU6L8Vw5X4mkMnqn6QdketpExS7OtM7wgLLoHCceig9YUMkuLLJieQDBow7ne0p+/ICi
+         kxEzMlYaCTMOR7zZfdKjBPadjDqAspEg0oaMRHSDxbj77Albx8syn7+P7ROkZaCFm31J
+         CIWFAszMzXVCQ1z7qdh5hA0+Mm82ud+ULkoxgCHr5dyOTpiPNmTMgdLF04WRCKTEotsG
+         8bpJIKVc6qHAY11kOZtvysrN6bIJXxrsZwuBG46hD+gWshhWiUQXXgZmcBbxWFm1aZM3
+         elOA==
+X-Gm-Message-State: AFqh2kqaSh042IVbdnRcU6qMx77m3WdujN12fmxbgQwicX4xD4wLvWWX
+        hQ2IAYsqxATjn/WeAcWv/Itqp77bn9dgy1oqtF5q+BcZSJaJuY/keJz3b2incTpCgE0rq420Mt6
+        8iCrC2MGeg6eLjqBfGBlxconiZYTQacxmlQ==
+X-Received: by 2002:a17:906:4ccc:b0:7aa:7598:128c with SMTP id q12-20020a1709064ccc00b007aa7598128cmr2775232ejt.37.1671205955222;
+        Fri, 16 Dec 2022 07:52:35 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvyWTgGteDkvAr/0x5IdZx6K6SEQrMj7L6z3T0/VFD2ajwRyYwp+RMubECIDDut854nbfoMXQ==
+X-Received: by 2002:a17:906:4ccc:b0:7aa:7598:128c with SMTP id q12-20020a1709064ccc00b007aa7598128cmr2775219ejt.37.1671205955042;
+        Fri, 16 Dec 2022 07:52:35 -0800 (PST)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170906308500b007be696512ecsm965332ejv.187.2022.12.16.07.46.14
+        by smtp.gmail.com with ESMTPSA id w5-20020a17090652c500b007c4fbb79535sm976419ejn.82.2022.12.16.07.52.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Dec 2022 07:46:14 -0800 (PST)
-Message-ID: <143dc036-ed98-871f-57d9-e94bfa84ea5d@redhat.com>
-Date:   Fri, 16 Dec 2022 16:46:13 +0100
+        Fri, 16 Dec 2022 07:52:34 -0800 (PST)
+Message-ID: <d2c93d0a-9c89-7b3f-4cd0-b49dc8fac911@redhat.com>
+Date:   Fri, 16 Dec 2022 16:52:33 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH v3 02/11] leds: led-class: Add __led_get() helper function
+Subject: Re: [PATCH v3 03/11] leds: led-class: Add __of_led_get() helper
 Content-Language: en-US
 To:     Andy Shevchenko <andy@kernel.org>
 Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -78,10 +78,10 @@ Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
         linux-media@vger.kernel.org
 References: <20221216113013.126881-1-hdegoede@redhat.com>
- <20221216113013.126881-3-hdegoede@redhat.com>
- <Y5x4mcv4rft2Wc+l@smile.fi.intel.com>
+ <20221216113013.126881-4-hdegoede@redhat.com>
+ <Y5x3smYGNoIOkc+o@smile.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y5x4mcv4rft2Wc+l@smile.fi.intel.com>
+In-Reply-To: <Y5x3smYGNoIOkc+o@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -90,43 +90,43 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/16/22 14:54, Andy Shevchenko wrote:
-> On Fri, Dec 16, 2022 at 12:30:04PM +0100, Hans de Goede wrote:
->> Split out part of of_led_get() into a generic __led_get() helper function.
->>
->> This is a preparation patch for adding a generic (non devicetree specific)
->> led_get() function.
+On 12/16/22 14:50, Andy Shevchenko wrote:
+> On Fri, Dec 16, 2022 at 12:30:05PM +0100, Hans de Goede wrote:
+>> Turn of_led_get() into a more generic __of_led_get() helper function,
+>> which can lookup LEDs in devicetree by either name or index.
 > 
 > ...
 > 
->> +static struct led_classdev *__led_get(struct device *led_dev)
->> +{
->> +	struct led_classdev *led_cdev;
->> +
->> +	if (!led_dev)
->> +		return ERR_PTR(-EPROBE_DEFER);
->> +
->> +	led_cdev = dev_get_drvdata(led_dev);
->> +
->> +	if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
->> +		put_device(led_cdev->dev);
->> +		return ERR_PTR(-ENODEV);
->> +	}
->> +
->> +	return led_cdev;
->> +}
+>> +	/*
+>> +	 * For named LEDs, first look up the name in the "leds-names" property.
+>> +	 * If it cannot be found, then of_parse_phandle() will propagate the error.
+>> +	 */
+>> +	if (name)
+>> +		index = of_property_match_string(np, "leds-names", name);
 > 
-> If I'm not mistaken, the entire series leaves this function as is.
-> At the end I found three _get functions:
->  __led_get
->  led_get
->  __devm_led_get
-> 
-> 
-> As far as I can see the above can be named more precisely, i.e.
-> led_module_get(). Or alike if this sounds not good either.
+> I can't find this property anywhere in the kernel. Is it new?
 
-led_module_get() sounds good, I will rename this for v4.
+Yes and no, adding a foo-names property for foo[] arrays to be
+able to get members by name is a standard template for devicetree
+bindings. See e.g. the clock bindings:
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+> If so, where is the bindings?
+
+As for why not document this, there are currently no devicetree users
+and the devicetree maintainers have repeatedly let me know not to
+submit new bindings for fwnode x86 bindings ...
+
+> And why entire code can't be converted
+> to use fwnode for this case?
+
+This is a trivial change to allow the new functions to work
+with devicetree. Note this series does not introduce any devicetree
+users, hence no bindings. But it is good to have compatibility backed in
+from day 1.
+
+Converting to fwnode APIs would be more involved and I cannot test
+those changes.
 
 Regards,
 
