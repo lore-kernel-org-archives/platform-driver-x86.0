@@ -2,33 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0F5C3DA71
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 16:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6739AC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Dec 2022 16:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbiLPQpA (ORCPT
+        id S231493AbiLPQxg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Dec 2022 11:45:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
+        Fri, 16 Dec 2022 11:53:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbiLPQou (ORCPT
+        with ESMTP id S231475AbiLPQxe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Dec 2022 11:44:50 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCDDBB;
-        Fri, 16 Dec 2022 08:44:48 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B0A48A31;
-        Fri, 16 Dec 2022 17:44:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1671209086;
-        bh=sj9dmbw9ICtXedrShhJNo50U1BdPZxgShqW1TYdLY54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=leleJKtBkxXGoPPleI38QY15WOmGZekccQ/UI5YGGIwDhTJ7qBmAlvkoRigN4P8Ti
-         pAIVW4yJMVsaQNYhyBP7uckR82iVZ8hw9IwSAa4J/nGlDjIFmQiFDt5HUdkH2nOwVk
-         BP/kOmcffS0OmXUAnu04/muVRrsuGJJt8NGdNt5o=
-Date:   Fri, 16 Dec 2022 18:44:42 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+        Fri, 16 Dec 2022 11:53:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2132AC7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 08:52:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1671209569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kja3SmecApGMN61IK4pCNwdjsbD0sNLmT1vc6A1JaUY=;
+        b=TSsrlYcUKtmJZeAKgZoU+1VNECYG7K/ks9YK2pJBLoFHQtglYCy95NrTCAKiLNgTD1z2tR
+        zjVuromEUhOWofwVs/UanXG0dXbQ0LUwcHXoXXeIclBEH79flsPVBMnS8mNyPRqiJA/YLV
+        HtAV4Bfxv9JJ5ON+97S94oYl6whQGtk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-651-f7iAl4ZhPASYydImqB3liw-1; Fri, 16 Dec 2022 11:52:47 -0500
+X-MC-Unique: f7iAl4ZhPASYydImqB3liw-1
+Received: by mail-ed1-f71.google.com with SMTP id y10-20020a056402358a00b0046fc5125069so2276066edc.23
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Dec 2022 08:52:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kja3SmecApGMN61IK4pCNwdjsbD0sNLmT1vc6A1JaUY=;
+        b=qCjvv+UXNPDHoFX7hlMjyuz55Yt9BjC25uImv6lQpkCPS2zPqulDL1uKvHtQkfNNFz
+         TNkKMtX+Fz4l07/5d8QpDEMsm/Lvxy91R/L46DKi8vZWLz4SfGCFmoDdLxUqpyH+IIA6
+         anEsFsEVZxpF9ufOgZa9Mh4z851e6ClqAwt2M4QOo9Ga9VfZiMTEWyvLZCRuJ65a6Q8w
+         qsO81FWicR6oFCAlXcuB1WHN1ER9e82SIugccoc/ACGt1ADzSq/jXTCqaki8BFPpbJyi
+         4orkyd3PcLyR9ttuJXGPNq0EADSJVUUI8H3h6xkxL1fjoCzfLvFyLA3pdJj5a2dcTM7u
+         JGYg==
+X-Gm-Message-State: ANoB5pmpENuJfJqRcgrUhcMmp8ZLiYSnPfNgB/X3qupfJ1Y71IUmf9Jc
+        JXVgD2hLXG5n8Bhz+qxATNYkvLrx63QkHZGRHTyVGgO5F4uFz70OebQwsC2ADFaebCzXBweT5Db
+        Wc7X+UbXeS02QVnQGLDZGiLUSPTiT/gHv/g==
+X-Received: by 2002:a17:907:c295:b0:78d:f455:c398 with SMTP id tk21-20020a170907c29500b0078df455c398mr17377362ejc.62.1671209566790;
+        Fri, 16 Dec 2022 08:52:46 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5WWxTV0JYtZ3TMrkOYvf0JwKwvXkcY0xL7zTiDLfTkOMDCQwGw4d6CiPXcNcUJFXAvP9l8+Q==
+X-Received: by 2002:a17:907:c295:b0:78d:f455:c398 with SMTP id tk21-20020a170907c29500b0078df455c398mr17377348ejc.62.1671209566593;
+        Fri, 16 Dec 2022 08:52:46 -0800 (PST)
+Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
+        by smtp.gmail.com with ESMTPSA id 27-20020a170906301b00b00782539a02absm1033118ejz.194.2022.12.16.08.52.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Dec 2022 08:52:46 -0800 (PST)
+Message-ID: <a01dfb96-9d70-e3ce-36e7-b06b8fe60911@redhat.com>
+Date:   Fri, 16 Dec 2022 17:52:45 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v3 06/11] v4l: subdev: Make the v4l2-subdev core code
+ enable/disable the privacy LED if present
+Content-Language: en-US
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>,
@@ -41,161 +78,174 @@ Cc:     Mark Gross <markgross@kernel.org>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
         linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 06/11] v4l: subdev: Make the v4l2-subdev core code
- enable/disable the privacy LED if present
-Message-ID: <Y5ygegq9zrHNIlFM@pendragon.ideasonboard.com>
 References: <20221216113013.126881-1-hdegoede@redhat.com>
  <20221216113013.126881-7-hdegoede@redhat.com>
  <Y5x5D4kTnEpcHzsT@pendragon.ideasonboard.com>
  <c0fc35eb-9b26-c1c6-3f85-234acbee0ff8@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c0fc35eb-9b26-c1c6-3f85-234acbee0ff8@redhat.com>
+ <Y5ygegq9zrHNIlFM@pendragon.ideasonboard.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y5ygegq9zrHNIlFM@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-On Fri, Dec 16, 2022 at 04:45:29PM +0100, Hans de Goede wrote:
-> On 12/16/22 14:56, Laurent Pinchart wrote:
-> > On Fri, Dec 16, 2022 at 12:30:08PM +0100, Hans de Goede wrote:
-> >> Extend the call_s_stream() wrapper to enable/disable sensor privacy LEDs
-> >> for sensors with a privacy LED, rather then having to duplicate this code
-> >> in all the sensor drivers.
-> >>
-> >> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>  drivers/media/v4l2-core/v4l2-subdev.c | 40 +++++++++++++++++++++++++++
-> >>  include/media/v4l2-subdev.h           |  3 ++
-> >>  2 files changed, 43 insertions(+)
-> >>
-> >> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >> index 4988a25bd8f4..7344f6cd58b7 100644
-> >> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >> @@ -318,10 +318,44 @@ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
-> >>  	       sd->ops->pad->get_mbus_config(sd, pad, config);
-> >>  }
-> >>  
-> >> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> >> +#include <linux/leds.h>
-> > 
-> > Can this be moved to the top of the file ? It doesn't have to be
-> > conditionally compiled there.
+On 12/16/22 17:44, Laurent Pinchart wrote:
+> Hi Hans,
 > 
-> You mean just the #include right? Ack to that.
+> On Fri, Dec 16, 2022 at 04:45:29PM +0100, Hans de Goede wrote:
+>> On 12/16/22 14:56, Laurent Pinchart wrote:
+>>> On Fri, Dec 16, 2022 at 12:30:08PM +0100, Hans de Goede wrote:
+>>>> Extend the call_s_stream() wrapper to enable/disable sensor privacy LEDs
+>>>> for sensors with a privacy LED, rather then having to duplicate this code
+>>>> in all the sensor drivers.
+>>>>
+>>>> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>> ---
+>>>>  drivers/media/v4l2-core/v4l2-subdev.c | 40 +++++++++++++++++++++++++++
+>>>>  include/media/v4l2-subdev.h           |  3 ++
+>>>>  2 files changed, 43 insertions(+)
+>>>>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+>>>> index 4988a25bd8f4..7344f6cd58b7 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+>>>> @@ -318,10 +318,44 @@ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
+>>>>  	       sd->ops->pad->get_mbus_config(sd, pad, config);
+>>>>  }
+>>>>  
+>>>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>>>> +#include <linux/leds.h>
+>>>
+>>> Can this be moved to the top of the file ? It doesn't have to be
+>>> conditionally compiled there.
+>>
+>> You mean just the #include right? Ack to that.
+> 
+> Yes, that's what I meant.
+> 
+>>>> +
+>>>> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable)
+>>>> +{
+>>>> +	if (!sd->dev)
+>>>> +		return;
+>>>> +
+>>>> +	/* Try to get privacy-led once, at first s_stream() */
+>>>> +	if (!sd->privacy_led)
+>>>> +		sd->privacy_led = led_get(sd->dev, "privacy-led");
+>>>
+>>> I'm not sure I like this much. If the LED provider isn't available
+>>> (yet), the LED will stay off. That's a privacy concern.
+>>
+>> At first I tried to put the led_get() inside v4l2_async_register_subdev_sensor(),
+>> which could then return an error like -EPROBE_DEFER if the led_get()
+>> fails (and nicely limits the led_get() to sensors).
+>>
+>> The problem which I hit is that v4l2-fwnode.c is build according to
+>> CONFIG_V4L2_FWNODE where as v4l2-subdev.c is build according to
+>> CONFIG_VIDEO_DEV 
+>>
+>> And e.g. CONFIG_VIDEO_DEV could be builtin while CONFIG_V4L2_FWNODE
+>> could be a module and then having the #if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> spread over the 2 could result in different answers in the different
+>> files ...
+>>
+>> One solution here could be to change CONFIG_V4L2_FWNODE and V4L2_ASYNC
+>> to bools and link the (quite small) objects for these 2 into videodev.ko:
+>>
+>> videodev-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
+>> videodev-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
+> 
+> There's a long overdue simplification of Kconfig symbols in the
+> subsystem. Another option would be to compile both in a single module,
+> as they're often used together. I'll let Sakari chime in, I don't have a
+> strong preference.
+> 
+>>>> +
+>>>> +	if (IS_ERR(sd->privacy_led))
+>>>> +		return;
+>>>> +
+>>>> +	mutex_lock(&sd->privacy_led->led_access);
+>>>> +
+>>>> +	if (enable) {
+>>>> +		led_sysfs_disable(sd->privacy_led);
+>>>> +		led_trigger_remove(sd->privacy_led);
+>>>> +		led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
+>>>> +	} else {
+>>>> +		led_set_brightness(sd->privacy_led, 0);
+>>>> +		led_sysfs_enable(sd->privacy_led);
+>>>
+>>> I don't think you should reenable control through sysfs here. I don't
+>>> really see a use case, and you've removed the trigger anyway, so the
+>>> behaviour would be quite inconsistent.
+>>
+>> Hmm, I thought this was a good compromise, this way the LED
+>> can be used for other purposes when the sensor is off if users
+>> want to.
+>>
+>> Right if users want to use a trigger then they would need
+>> to re-attach the trigger after using the camera.
+>>
+>> But this way at least they can use the LED for other purposes
+>> which since many users don't use their webcam that often
+>> might be interesting for some users ...
+> 
+> If the privacy LED starts being used for other purposes, users may get
+> used to seeing it on at random times, which defeats the point of the
+> privacy LED in the first place.
 
-Yes, that's what I meant.
+Using it for other purposes it not something which I expect
+e.g. distros to do OOTB, so normal users won't see the LED used
+in another way.  But it may be useful for tinkerers who do this
+as a local modification, in which case they know the LED
+behavior.
 
-> >> +
-> >> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable)
-> >> +{
-> >> +	if (!sd->dev)
-> >> +		return;
-> >> +
-> >> +	/* Try to get privacy-led once, at first s_stream() */
-> >> +	if (!sd->privacy_led)
-> >> +		sd->privacy_led = led_get(sd->dev, "privacy-led");
-> > 
-> > I'm not sure I like this much. If the LED provider isn't available
-> > (yet), the LED will stay off. That's a privacy concern.
-> 
-> At first I tried to put the led_get() inside v4l2_async_register_subdev_sensor(),
-> which could then return an error like -EPROBE_DEFER if the led_get()
-> fails (and nicely limits the led_get() to sensors).
-> 
-> The problem which I hit is that v4l2-fwnode.c is build according to
-> CONFIG_V4L2_FWNODE where as v4l2-subdev.c is build according to
-> CONFIG_VIDEO_DEV 
-> 
-> And e.g. CONFIG_VIDEO_DEV could be builtin while CONFIG_V4L2_FWNODE
-> could be a module and then having the #if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> spread over the 2 could result in different answers in the different
-> files ...
-> 
-> One solution here could be to change CONFIG_V4L2_FWNODE and V4L2_ASYNC
-> to bools and link the (quite small) objects for these 2 into videodev.ko:
-> 
-> videodev-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
-> videodev-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
+With that said I'm fine with just disabling the sysfs interface
+once at probe / register time.
 
-There's a long overdue simplification of Kconfig symbols in the
-subsystem. Another option would be to compile both in a single module,
-as they're often used together. I'll let Sakari chime in, I don't have a
-strong preference.
-
-> >> +
-> >> +	if (IS_ERR(sd->privacy_led))
-> >> +		return;
-> >> +
-> >> +	mutex_lock(&sd->privacy_led->led_access);
-> >> +
-> >> +	if (enable) {
-> >> +		led_sysfs_disable(sd->privacy_led);
-> >> +		led_trigger_remove(sd->privacy_led);
-> >> +		led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
-> >> +	} else {
-> >> +		led_set_brightness(sd->privacy_led, 0);
-> >> +		led_sysfs_enable(sd->privacy_led);
-> > 
-> > I don't think you should reenable control through sysfs here. I don't
-> > really see a use case, and you've removed the trigger anyway, so the
-> > behaviour would be quite inconsistent.
-> 
-> Hmm, I thought this was a good compromise, this way the LED
-> can be used for other purposes when the sensor is off if users
-> want to.
-> 
-> Right if users want to use a trigger then they would need
-> to re-attach the trigger after using the camera.
-> 
-> But this way at least they can use the LED for other purposes
-> which since many users don't use their webcam that often
-> might be interesting for some users ...
-
-If the privacy LED starts being used for other purposes, users may get
-used to seeing it on at random times, which defeats the point of the
-privacy LED in the first place.
-
-> And this is consistent with how flash LEDs are handled.
-> 
-> > Also, I think it would be better if the LED device was marked as "no
-> > sysfs" when it is registered.
-> 
-> If we decide to permanently disallow userspace access then
-> yes this is an option. Or maybe better (to keep the LED
-> drivers generic), do the disable directly after the led_get() ?
-
-I suppose the small race condition wouldn't be a big issue, but if we
-decide that the privacy LED should really not be used for user purposes,
-then I'd still rather disable userspace access when registering the LED.
-
-> >> +	}
-> >> +
-> >> +	mutex_unlock(&sd->privacy_led->led_access);
-> >> +}
-> >> +#else
-> >> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable) {}
-> >> +#endif
-> >> +
-> >>  static int call_s_stream(struct v4l2_subdev *sd, int enable)
-> >>  {
-> >>  	int ret;
-> >>  
-> >> +	call_s_stream_update_pled(sd, enable);
-> >> +
-> >>  	ret = sd->ops->video->s_stream(sd, enable);
-> >>  
-> >>  	if (!enable && ret < 0) {
-> > 
-> > You need to turn the LED off when enabling if .s_stream() fails.
-> 
-> Ack.
-
--- 
 Regards,
 
-Laurent Pinchart
+Hans
+
+
+> 
+>> And this is consistent with how flash LEDs are handled.
+>>
+>>> Also, I think it would be better if the LED device was marked as "no
+>>> sysfs" when it is registered.
+>>
+>> If we decide to permanently disallow userspace access then
+>> yes this is an option. Or maybe better (to keep the LED
+>> drivers generic), do the disable directly after the led_get() ?
+> 
+> I suppose the small race condition wouldn't be a big issue, but if we
+> decide that the privacy LED should really not be used for user purposes,
+> then I'd still rather disable userspace access when registering the LED.
+> 
+>>>> +	}
+>>>> +
+>>>> +	mutex_unlock(&sd->privacy_led->led_access);
+>>>> +}
+>>>> +#else
+>>>> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable) {}
+>>>> +#endif
+>>>> +
+>>>>  static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>>>>  {
+>>>>  	int ret;
+>>>>  
+>>>> +	call_s_stream_update_pled(sd, enable);
+>>>> +
+>>>>  	ret = sd->ops->video->s_stream(sd, enable);
+>>>>  
+>>>>  	if (!enable && ret < 0) {
+>>>
+>>> You need to turn the LED off when enabling if .s_stream() fails.
+>>
+>> Ack.
+> 
+
