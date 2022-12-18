@@ -2,87 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF606C10F1E
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Dec 2022 18:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2050FC10F1E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Dec 2022 23:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbiLRSb1 (ORCPT
+        id S230331AbiLRXUa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 18 Dec 2022 13:31:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
+        Sun, 18 Dec 2022 18:20:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbiLRSat (ORCPT
+        with ESMTP id S230008AbiLRXU2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Dec 2022 13:30:49 -0500
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5EFCE1D;
-        Sun, 18 Dec 2022 10:21:58 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A6E281C09DB; Sun, 18 Dec 2022 19:21:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1671387715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mG5YlQYa6fZvoTrpxjawF7DHB0JYdQEby7Dow5wZ2+M=;
-        b=ZqFeHdNaRSXSFdRpQKLyTT02XtTxjjhO9ZSj4l3OvETN9ynOxpxZ4EmmTUHh76ONch6+6u
-        pLkE46K9Mti318V7EXku0qEDyPHMgEFBRPq9qtZAFsSjxeiF33VL6JHZBmM4hj+e3Tuxno
-        pCcCvsB1TFxAqKlYabbzJG1crCBsy4A=
-Date:   Sun, 18 Dec 2022 19:21:55 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 0/9] Extend Intel On Demand (SDSi) support
-Message-ID: <Y59aQ5hIZeLGx7hn@duo.ucw.cz>
-References: <20221119002343.1281885-1-david.e.box@linux.intel.com>
+        Sun, 18 Dec 2022 18:20:28 -0500
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC1126F3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Dec 2022 15:20:26 -0800 (PST)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-1445ca00781so9751263fac.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Dec 2022 15:20:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wbAsaTImJVgmrVm658lQUrdfZSlK0Ns3idroAe7BrvU=;
+        b=R+JYsSCD9k6WuKbYbMKI2oxfB77KlY0RbiSomelCRtsIaQcwmGgmqDq8puiimaOOJd
+         8lAFXHeEzUsYRDzASFYYQgk92+ANIviDpXGJE57dT8BGie6QzBZIE1h+rFXaZyHxtQDo
+         GXD6bdFTgusGWkA9ef5fxr7eUvitjFY5pTk9MTvLjgPMEP3I0Wis4SH5Kq+Eo6BI/sM1
+         QE6nwBZ1c7Lu3cCpsky8/hyWJE9cMnzgSx70CcAj4V9QxLjnNEiH9kGzv6sLTynxo9ml
+         x3pcSHVXENohzrkkLaPpIlfxKjm3SSOM6nvFEd6d4FTedgHYa91PhNcWy2yU8oNHvrHx
+         /OHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wbAsaTImJVgmrVm658lQUrdfZSlK0Ns3idroAe7BrvU=;
+        b=fq7dm1UWepl98oFqALaU9PZO55yC3c6eQKuf+pT6LyhDCip6GsB9NTNtxFjE5DtKxV
+         xjX+VhqfPEXSrU0NIliZaSA5HKmRqpZ6/rgcNPTP4P5dbc9wOj3+j1rJSkkkVZwvYpol
+         C8jSaOqHmozTBkwzXlxxg5UWXLlNOWtf9NPPTG+zVdFbTj3+YK+9uUx55qXQs9gODcRV
+         JRF9xIYkBlaZoFBmcg6W1WBYa1iK+PKM54DDKtNktK42mZJ0nszJ4Ka4DdFSO9Y/xNal
+         ek3qJ6hJPlA0f7iMJMFkfsNXe0OVr2uh9WNfr+XdR3X2YcdsZEDeEYfiEdLSdE53yX6Y
+         /omA==
+X-Gm-Message-State: AFqh2kobdw1pF5/i2+EjZ4/avTBdTboLvs+Beh4xpO/VmynSO5PcRcIg
+        le/G+0CbV+HyyYu5aNDswDnBoNZBqoWnAAdSRbtoIw==
+X-Google-Smtp-Source: AMrXdXtwOt8c7JBdmZzDOZAuTLq2KaUwZMFGracg7VgJqYzrRgSHx9x4f6NnRV5TJCc1e6dNNS0FrYAatPDL/+sBF9A=
+X-Received: by 2002:a05:6870:b96:b0:14b:c9ab:66e9 with SMTP id
+ lg22-20020a0568700b9600b0014bc9ab66e9mr925663oab.42.1671405626013; Sun, 18
+ Dec 2022 15:20:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sd6k+wBVQurr7X90"
-Content-Disposition: inline
-In-Reply-To: <20221119002343.1281885-1-david.e.box@linux.intel.com>
+References: <20221216113013.126881-1-hdegoede@redhat.com> <20221216113013.126881-6-hdegoede@redhat.com>
+In-Reply-To: <20221216113013.126881-6-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 19 Dec 2022 00:20:11 +0100
+Message-ID: <CACRpkdZKcVE5jJuG4D0CqzM=W6UtuVZwxcTr-hMaiuqVOWZx5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 05/11] leds: led-class: Add generic [devm_]led_get()
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Fri, Dec 16, 2022 at 12:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
---sd6k+wBVQurr7X90
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add a generic [devm_]led_get() method which can be used on both devicetree
+> and non devicetree platforms to get a LED classdev associated with
+> a specific function on a specific device, e.g. the privacy LED associated
+> with a specific camera sensor.
+>
+> Note unlike of_led_get() this takes a string describing the function
+> rather then an index. This is done because e.g. camera sensors might
+> have a privacy LED, or a flash LED, or both and using an index
+> approach leaves it unclear what the function of index 0 is if there is
+> only 1 LED. The existing of support is extended to also support
+> getting a LED by function-name using the standard devicetree pattern
+> of adding a -names string array to map names to the indexes.
+>
+> For non devicetree platforms a lookup-table mechanism is added to
+> allow the platform code to map specific LED class_dev-s to specific
+> device,function combinations this way.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-On Fri 2022-11-18 16:23:34, David E. Box wrote:
-> Intel Software Defined Silicon (SDSi) is now known as Intel On Demand. The
-> following patches do the following:
->=20
-> 1. Identify the driver/tools as Intel On Demand. Only text descriptions a=
-re
-> changed. Kconfig and filenames remain the same.
-> 2. Perform some attribute cleanup by preventing the showing of files when
-> features are not supported.
-> 3. Adds support for a new GUID. GUIDs are used to identify the layout of
-> the On Demand registers in sysfs. Layouts are described in the
-> documentation on github [1].
-> 4. Add support for reading On Demand meter certificates in sysfs.
-> 5. The rest of the patches modify the existing tool to support discovery
-> and reading of On Demand registers and the meter certificate.
+I see you need to iron out some details but the concept is
+clean cut and this is exactly what we want to do.
 
-Intel should not be allowed to double-charge their customers.
+I think it was Bjorn Andersson who pointed out to me years
+and years ago "why can't we do that, like any other
+resource?" and here it is.
 
-NAK.
-								Pavel
-							=09
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---sd6k+wBVQurr7X90
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCY59aQwAKCRAw5/Bqldv6
-8jrjAJ48dx6lAZ2QYvZ8SZQYN1yWgqfolACfSnldJnpxhYmCL0gYABHxIXspzhI=
-=M0vV
------END PGP SIGNATURE-----
-
---sd6k+wBVQurr7X90--
+Yours,
+Linus Walleij
