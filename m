@@ -2,132 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5B2C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Dec 2022 03:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1467C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Dec 2022 12:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbiLTDay (ORCPT
+        id S233256AbiLTMUu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Dec 2022 22:30:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57202 "EHLO
+        Tue, 20 Dec 2022 07:20:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232444AbiLTDay (ORCPT
+        with ESMTP id S230235AbiLTMUo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Dec 2022 22:30:54 -0500
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2731154;
-        Mon, 19 Dec 2022 19:30:47 -0800 (PST)
-X-UUID: 75e0fbb66a1a4df2badb6ea42cae5b38-20221220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=T+zbj0FiGEVmFNF2y0DWDBR6s5YDkdyhMts5oqZTM20=;
-        b=mJVOPZD21Jlvpph1p1C8n1xsH2sLQLDvcQ9zhMten8jeNIgZ1WA7+8G7kJpSrv3k2ml8xl8o+tyDN/QHCnDey3dEWqVBKJj/YMF1UdQzLQeb7gjl7Vz03CdYYxOSKuJ02kQ8qNqiINWoKNkPUnSvusbOcaQhBvrRZaxmZjn/KEI=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.14,REQID:06a7866e-cb6c-4d30-8c6a-3da2e83986b9,IP:0,U
-        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-        release,TS:0
-X-CID-META: VersionHash:dcaaed0,CLOUDID:92b265f3-ff42-4fb0-b929-626456a83c14,B
-        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-X-UUID: 75e0fbb66a1a4df2badb6ea42cae5b38-20221220
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1128956095; Tue, 20 Dec 2022 11:30:43 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
- Tue, 20 Dec 2022 11:30:42 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.792.15 via Frontend Transport; Tue, 20 Dec 2022 11:30:42 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <johan+linaro@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        <maz@kernel.org>, <platform-driver-x86@vger.kernel.org>,
-        <tglx@linutronix.de>, <x86@kernel.org>, <yj.chiang@mediatek.com>,
-        <phil.chang@mediatek.com>, <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v3 0/19] irqdomain: fix mapping race and clean up locking
-Date:   Tue, 20 Dec 2022 11:30:42 +0800
-Message-ID: <20221220033042.27724-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20221209140150.1453-1-johan+linaro@kernel.org>
-References: <20221209140150.1453-1-johan+linaro@kernel.org>
+        Tue, 20 Dec 2022 07:20:44 -0500
+X-Greylist: delayed 569 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 20 Dec 2022 04:20:37 PST
+Received: from mx.mvz-labor-lb.de (mx.mvz-labor-lb.de [IPv6:2a01:4f8:c2c:899::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA2D18B05;
+        Tue, 20 Dec 2022 04:20:37 -0800 (PST)
+Received: from webmail.labor (p57803e15.dip0.t-ipconnect.de [87.128.62.21])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.mvz-labor-lb.de (Postfix) with ESMTPSA id 9D07B3E8A6;
+        Tue, 20 Dec 2022 13:11:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mvz-labor-lb.de;
+        s=mvz1903; t=1671538265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=MeF+loUfLla3SLpOMCygh1/fpaH0ayyGK6IQfRkdgm4=;
+        b=I9UHBq/v2G0mw3TRViJ+kz895YLKuZjmnzFJUn/XBYQ0QNWIbUWXcrXcFgris490OqDZAG
+        iIPh91gJ+PPEwdQSjnW0Ypd7TCwp/E9B3zGsNc38lbu/Vk0+caJoPRHHkXi5xaww6OI37U
+        Be7wQgA5/K4lnbMbpt6Xi/GzQ0kTI1I=
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by webmail.labor (Postfix) with ESMTP id 144A4300C002;
+        Tue, 20 Dec 2022 13:11:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mvz-labor-lb.de
+Received: from webmail.labor ([127.0.0.1])
+        by localhost (webmail.labor [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id sidZv4dgWY0o; Tue, 20 Dec 2022 13:11:05 +0100 (CET)
+Received: from LLGMVZLB-0037 (LLGMVZLB-0037.mvz.labor [10.30.4.35])
+        by webmail.labor (Postfix) with ESMTPS id E7E30300C001;
+        Tue, 20 Dec 2022 13:11:04 +0100 (CET)
+Date:   Tue, 20 Dec 2022 13:11:03 +0100
+From:   Michael Klein <m.klein@mvz-labor-lb.de>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the CSL Panther
+ Tab HD
+Message-ID: <20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> Parallel probing (e.g. due to asynchronous probing) of devices that
-> share interrupts can currently result in two mappings for the same
-> hardware interrupt to be created.
-> 
-> This series fixes this mapping race and clean up the irqdomain locking
-> so that in the end the global irq_domain_mutex is only used for managing
-> the likewise global irq_domain_list, while domain operations (e.g.
-> IRQ allocations) use per-domain (hierarchy) locking.
-> 
-> Johan
-> 
-> 
-> Changes in v2
->  - split out redundant-lookup cleanup (1/4)
->  - use a per-domain mutex to address mapping race (2/4)
->  - move kernel-doc to exported function (2/4)
->  - fix association race (3/4, new)
->  - use per-domain mutex for associations (4/4, new)
-> 
-> Changes in v3
->  - drop dead and bogus code (1--3/19, new)
->  - fix racy mapcount accesses (5/19, new)
->  - drop revmap mutex (6/19, new)
->  - use irq_domain_mutex to address mapping race (9/19)
->  - clean up irq_domain_push/pop_irq() (10/19, new)
->  - use irq_domain_create_hierarchy() to construct hierarchies
->    (11--18/19, new)
->  - switch to per-domain locking (19/19, new)
-> 
-> 
-> Johan Hovold (19):
->   irqdomain: Drop bogus fwspec-mapping error handling
->   irqdomain: Drop dead domain-name assignment
->   irqdomain: Drop leftover brackets
->   irqdomain: Fix association race
->   irqdomain: Fix disassociation race
->   irqdomain: Drop revmap mutex
->   irqdomain: Look for existing mapping only once
->   irqdomain: Refactor __irq_domain_alloc_irqs()
->   irqdomain: Fix mapping-creation race
->   irqdomain: Clean up irq_domain_push/pop_irq()
->   x86/ioapic: Use irq_domain_create_hierarchy()
->   x86/apic: Use irq_domain_create_hierarchy()
->   irqchip/alpine-msi: Use irq_domain_add_hierarchy()
->   irqchip/gic-v2m: Use irq_domain_create_hierarchy()
->   irqchip/gic-v3-its: Use irq_domain_create_hierarchy()
->   irqchip/gic-v3-mbi: Use irq_domain_create_hierarchy()
->   irqchip/loongson-pch-msi: Use irq_domain_create_hierarchy()
->   irqchip/mvebu-odmi: Use irq_domain_create_hierarchy()
->   irqdomain: Switch to per-domain locking
-> 
->  arch/x86/kernel/apic/io_apic.c         |   8 +-
->  arch/x86/platform/uv/uv_irq.c          |   7 +-
->  drivers/irqchip/irq-alpine-msi.c       |   8 +-
->  drivers/irqchip/irq-gic-v2m.c          |   5 +-
->  drivers/irqchip/irq-gic-v3-its.c       |  13 +-
->  drivers/irqchip/irq-gic-v3-mbi.c       |   5 +-
->  drivers/irqchip/irq-loongson-pch-msi.c |   9 +-
->  drivers/irqchip/irq-mvebu-odmi.c       |  13 +-
->  include/linux/irqdomain.h              |   6 +-
->  kernel/irq/irqdomain.c                 | 328 ++++++++++++++-----------
->  10 files changed, 220 insertions(+), 182 deletions(-)
-> 
-> -- 
-> 2.37.4
+Add touchscreen info for the CSL Panther Tab HD.
 
-Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Signed-off-by: Michael Klein <m.klein@mvz-labor-lb.de>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-We have the same issue and this patch series fix that.
-Thanks!
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index baae3120efd0..f00995390fdf 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -264,6 +264,23 @@ static const struct ts_dmi_data connect_tablet9_data = {
+ 	.properties     = connect_tablet9_props,
+ };
+ 
++static const struct property_entry csl_panther_tab_hd_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-csl-panther-tab-hd.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data csl_panther_tab_hd_data = {
++	.acpi_name      = "MSSL1680:00",
++	.properties     = csl_panther_tab_hd_props,
++};
++
+ static const struct property_entry cube_iwork8_air_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+@@ -1124,6 +1141,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
+ 		},
+ 	},
++	{
++		/* CSL Panther Tab HD */
++		.driver_data = (void *)&csl_panther_tab_hd_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "CSL Computer GmbH & Co. KG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CSL Panther Tab HD"),
++		},
++	},
+ 	{
+ 		/* CUBE iwork8 Air */
+ 		.driver_data = (void *)&cube_iwork8_air_data,
+-- 
+2.37.2
 
-Link: https://lore.kernel.org/lkml/20221219130620.21092-1-mark-pk.tsai@mediatek.com/
