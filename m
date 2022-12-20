@@ -2,610 +2,169 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CACC41535
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Dec 2022 17:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6CAC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Dec 2022 22:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233665AbiLTR4e (ORCPT
+        id S234169AbiLTWcd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Dec 2022 12:56:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45568 "EHLO
+        Tue, 20 Dec 2022 17:32:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233117AbiLTR4c (ORCPT
+        with ESMTP id S234140AbiLTWc3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Dec 2022 12:56:32 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5870D113E;
-        Tue, 20 Dec 2022 09:56:30 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id m5-20020a7bca45000000b003d2fbab35c6so9435155wml.4;
-        Tue, 20 Dec 2022 09:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5kJi60gyNl4vOWh2qkNjesWcj3F4raPrJ4zGZO5DkXA=;
-        b=e8iBypxUZgZtcbEL8EpvF8Ss/jFWdwfW1yDuM/JzslzL4vf+RQqb6QfNaD57Aa1E1L
-         0NsLJCrdUj948YpvKboR/gTf/apbQAWMJz8zRdfE2X2yWa6p8yWmgJlaQEfBWtd5tL5o
-         KksM3nsHyY6Vif2vibFKVzwoX4A5G3jYiJky7Hq1d9YQLk9WUQ8HOZFJjUY3350dJbap
-         4B5/uz8q/KCYCnjF1p0zHj2HJirQv3oVtuL4hH+YyPkMkui41k3VM6D2vJPR6H4fNDvO
-         vwBfCu4BFUCuK2/wzjPUXrJsiMMBXXwr9uIL7Soho7n+fX1r9E5GsQVkUV/JFvHRtzfd
-         Xkyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5kJi60gyNl4vOWh2qkNjesWcj3F4raPrJ4zGZO5DkXA=;
-        b=kF8CSArNXY8Kc2geXelJ4OAxaHvWEJ0zEoakIeeYgdQhWEWhaKQ4OmHVFKIku4cBDs
-         LgGUR45NNwfWUqXI08w7JUckwNoROwuIlivAWd4MH98PseEkT3vvlYkSHqi9PmXsSn07
-         dLFRUcDn8QK65dMZQqK8p+vieNziomypTZjDMP55pBpNy/vpgdiQN9QZ+i6Py4yqTzud
-         7Ly/cNBI2cqDDSBw4zPWl0CGKJQVl0c9pXxUelCN7QFNini9JLhH47e8kQb3lq2WQ8cW
-         iJGq+VuJlb1UmcH0CRUWHlKk0vbYVtf6ebZTf8sAe4qcjvinOaML03QpIjjumOvf7nIO
-         e/xA==
-X-Gm-Message-State: AFqh2kqMSflEcwNOZhIDmHSoO8ECNcyVsgOGGyM5nqNopc3b4Gooau52
-        3Ibe8f4GuQCrRdRt2/pASDY=
-X-Google-Smtp-Source: AMrXdXtYNrBycZR5dzrP5kix0ruh3Jny5N0M7sDeXlBMe1/AgKxrnzoUskBtKGE2J4+sL3biV6XhHQ==
-X-Received: by 2002:a05:600c:3ba5:b0:3d5:3ab1:d630 with SMTP id n37-20020a05600c3ba500b003d53ab1d630mr2391276wms.8.1671558988473;
-        Tue, 20 Dec 2022 09:56:28 -0800 (PST)
-Received: from xws.localdomain ([194.126.177.41])
-        by smtp.gmail.com with ESMTPSA id u18-20020adfeb52000000b002423dc3b1a9sm13206300wrn.52.2022.12.20.09.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 09:56:27 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/surface: aggregator: Rename top-level request functions to avoid ambiguities
-Date:   Tue, 20 Dec 2022 18:56:08 +0100
-Message-Id: <20221220175608.1436273-2-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20221220175608.1436273-1-luzmaximilian@gmail.com>
-References: <20221220175608.1436273-1-luzmaximilian@gmail.com>
+        Tue, 20 Dec 2022 17:32:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7331DA4A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 14:32:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 131ADB81A21
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 22:32:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C429AC433EF
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 22:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671575542;
+        bh=/1ohOBsZ/IWBi6k3opmprdG93vUe1N8P2HFxO4nFcFs=;
+        h=From:To:Subject:Date:From;
+        b=laYjzvMKbE8E4zxcjS4Y8Ew/VicYpokxJAa+aZmfp+51DfxAU0VLnp/KMchqOcXgQ
+         VsdCtRS8Rv59U3oKLpWuP0jguh7k4ftBChZlWm0WQ23Z00Mxrr9YkmKojXGoWZanWY
+         IfYNEAfJGkjD9WqXfwQChBeybs3daanKAR062Qq0t5YhPUTvyu/FtsIgTPSKooel9Q
+         cgXO9K/O6B30EmOsabSnzx/JtUHPPutKIWx6DGEqKVr7e4ofyFRftC0fJwNXTey31X
+         f2p6kojHOJXom+6FvXGkKNsufhgaSlTW5mCW/8SRXf1FLwy2IUTEUDhKoT6/nGSswh
+         q6fKvdM8ZV5kw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id A7217C43142; Tue, 20 Dec 2022 22:32:22 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216824] New: Some laptop hotkeys don't work
+Date:   Tue, 20 Dec 2022 22:32:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: andretiagob@protonmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-216824-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-We currently have a struct ssam_request_sync and a function
-ssam_request_sync(). While this is valid C, there are some downsides to
-it.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
 
-One of these is that current Sphinx versions (>= 3.0) cannot
-disambiguate between the two (see disucssion and pull request linked
-below). It instead emits a "WARNING: Duplicate C declaration" and links
-for the struct and function in the resulting documentation link to the
-same entry (i.e. both to either function or struct documentation)
-instead of their respective own entries.
+            Bug ID: 216824
+           Summary: Some laptop hotkeys don't work
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 6.0
+          Hardware: Intel
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: andretiagob@protonmail.com
+        Regression: No
 
-While we could just ignore that and wait for a fix, there's also a point
-to be made that the current naming can be somewhat confusing when
-searching (e.g. via grep) or trying to understand the levels of
-abstraction at play:
+Created attachment 303436
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303436&action=3Dedit
+Laptop hotkeys
 
-We currently have struct ssam_request_sync and associated functions
-ssam_request_sync_[alloc|free|init|wait|...]() operating on this struct.
-However, function ssam_request_sync() is one abstraction level above
-this. Similarly, ssam_request_sync_with_buffer() is not a function
-operating on struct ssam_request_sync, but rather a sibling to
-ssam_request_sync(), both using the struct under the hood.
+This bug was filed at the request of Hans de Goede, he as been super helpfu=
+l:=20
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/822
 
-Therefore, rename the top level request functions:
 
-  ssam_request_sync() -> ssam_request_do_sync()
-  ssam_request_sync_with_buffer() -> ssam_request_do_sync_with_buffer()
-  ssam_request_sync_onstack() -> ssam_request_do_sync_onstack()
+I have a couple of hotkeys on my MSI Summit E16 Flip laptop that don't work=
+. I
+attached a picture with the keys in question.
 
-Link: https://lore.kernel.org/all/085e0ada65c11da9303d07e70c510dc45f21315b.1656756450.git.mchehab@kernel.org/
-Link: https://github.com/sphinx-doc/sphinx/pull/8313
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- .../driver-api/surface_aggregator/client.rst  |  8 +--
- drivers/hid/surface-hid/surface_hid.c         |  6 +-
- drivers/hid/surface-hid/surface_kbd.c         |  6 +-
- drivers/platform/surface/aggregator/bus.c     |  6 +-
- .../platform/surface/aggregator/controller.c  | 32 +++++------
- .../platform/surface/surface_acpi_notify.c    |  2 +-
- .../surface/surface_aggregator_cdev.c         |  6 +-
- .../surface/surface_aggregator_tabletsw.c     |  2 +-
- include/linux/surface_aggregator/controller.h | 56 +++++++++----------
- include/linux/surface_aggregator/device.h     |  8 +--
- 10 files changed, 66 insertions(+), 66 deletions(-)
+Keys number in the picture:
 
-diff --git a/Documentation/driver-api/surface_aggregator/client.rst b/Documentation/driver-api/surface_aggregator/client.rst
-index 27f95abdbe99..dd96f8eb6578 100644
---- a/Documentation/driver-api/surface_aggregator/client.rst
-+++ b/Documentation/driver-api/surface_aggregator/client.rst
-@@ -19,7 +19,7 @@
- .. |ssam_notifier_unregister| replace:: :c:func:`ssam_notifier_unregister`
- .. |ssam_device_notifier_register| replace:: :c:func:`ssam_device_notifier_register`
- .. |ssam_device_notifier_unregister| replace:: :c:func:`ssam_device_notifier_unregister`
--.. |ssam_request_sync| replace:: :c:func:`ssam_request_sync`
-+.. |ssam_request_do_sync| replace:: :c:func:`ssam_request_do_sync`
- .. |ssam_event_mask| replace:: :c:type:`enum ssam_event_mask <ssam_event_mask>`
- 
- 
-@@ -209,12 +209,12 @@ data received from it is converted from little-endian to host endianness.
-             * with the SSAM_REQUEST_HAS_RESPONSE flag set in the specification
-             * above.
-             */
--           status = ssam_request_sync(ctrl, &rqst, &resp);
-+           status = ssam_request_do_sync(ctrl, &rqst, &resp);
- 
-            /*
-             * Alternatively use
-             *
--            *   ssam_request_sync_onstack(ctrl, &rqst, &resp, sizeof(arg_le));
-+            *   ssam_request_do_sync_onstack(ctrl, &rqst, &resp, sizeof(arg_le));
-             *
-             * to perform the request, allocating the message buffer directly
-             * on the stack as opposed to allocation via kzalloc().
-@@ -230,7 +230,7 @@ data received from it is converted from little-endian to host endianness.
-            return status;
-    }
- 
--Note that |ssam_request_sync| in its essence is a wrapper over lower-level
-+Note that |ssam_request_do_sync| in its essence is a wrapper over lower-level
- request primitives, which may also be used to perform requests. Refer to its
- implementation and documentation for more details.
- 
-diff --git a/drivers/hid/surface-hid/surface_hid.c b/drivers/hid/surface-hid/surface_hid.c
-index d4aa8c81903a..bcb6ffd0e6ff 100644
---- a/drivers/hid/surface-hid/surface_hid.c
-+++ b/drivers/hid/surface-hid/surface_hid.c
-@@ -80,7 +80,7 @@ static int ssam_hid_get_descriptor(struct surface_hid_device *shid, u8 entry, u8
- 
- 		rsp.length = 0;
- 
--		status = ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp,
-+		status = ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp,
- 				    sizeof(*slice));
- 		if (status)
- 			return status;
-@@ -131,7 +131,7 @@ static int ssam_hid_set_raw_report(struct surface_hid_device *shid, u8 rprt_id,
- 
- 	buf[0] = rprt_id;
- 
--	return ssam_retry(ssam_request_sync, shid->ctrl, &rqst, NULL);
-+	return ssam_retry(ssam_request_do_sync, shid->ctrl, &rqst, NULL);
- }
- 
- static int ssam_hid_get_raw_report(struct surface_hid_device *shid, u8 rprt_id, u8 *buf, size_t len)
-@@ -151,7 +151,7 @@ static int ssam_hid_get_raw_report(struct surface_hid_device *shid, u8 rprt_id,
- 	rsp.length = 0;
- 	rsp.pointer = buf;
- 
--	return ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(rprt_id));
-+	return ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(rprt_id));
- }
- 
- static u32 ssam_hid_event_fn(struct ssam_event_notifier *nf, const struct ssam_event *event)
-diff --git a/drivers/hid/surface-hid/surface_kbd.c b/drivers/hid/surface-hid/surface_kbd.c
-index 0635341bc517..7ca8038026ce 100644
---- a/drivers/hid/surface-hid/surface_kbd.c
-+++ b/drivers/hid/surface-hid/surface_kbd.c
-@@ -49,7 +49,7 @@ static int ssam_kbd_get_descriptor(struct surface_hid_device *shid, u8 entry, u8
- 	rsp.length = 0;
- 	rsp.pointer = buf;
- 
--	status = ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(entry));
-+	status = ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(entry));
- 	if (status)
- 		return status;
- 
-@@ -75,7 +75,7 @@ static int ssam_kbd_set_caps_led(struct surface_hid_device *shid, bool value)
- 	rqst.length = sizeof(value_u8);
- 	rqst.payload = &value_u8;
- 
--	return ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, NULL, sizeof(value_u8));
-+	return ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, NULL, sizeof(value_u8));
- }
- 
- static int ssam_kbd_get_feature_report(struct surface_hid_device *shid, u8 *buf, size_t len)
-@@ -97,7 +97,7 @@ static int ssam_kbd_get_feature_report(struct surface_hid_device *shid, u8 *buf,
- 	rsp.length = 0;
- 	rsp.pointer = buf;
- 
--	status = ssam_retry(ssam_request_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(payload));
-+	status = ssam_retry(ssam_request_do_sync_onstack, shid->ctrl, &rqst, &rsp, sizeof(payload));
- 	if (status)
- 		return status;
- 
-diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-index de539938896e..7004eb4a63a2 100644
---- a/drivers/platform/surface/aggregator/bus.c
-+++ b/drivers/platform/surface/aggregator/bus.c
-@@ -136,9 +136,9 @@ int ssam_device_add(struct ssam_device *sdev)
- 	 * is always valid and can be used for requests as long as the client
- 	 * device we add here is registered as child under it. This essentially
- 	 * guarantees that the client driver can always expect the preconditions
--	 * for functions like ssam_request_sync (controller has to be started
--	 * and is not suspended) to hold and thus does not have to check for
--	 * them.
-+	 * for functions like ssam_request_do_sync() (controller has to be
-+	 * started and is not suspended) to hold and thus does not have to check
-+	 * for them.
- 	 *
- 	 * Note that for this to work, the controller has to be a parent device.
- 	 * If it is not a direct parent, care has to be taken that the device is
-diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-index c6537a1b3a2e..9c43b9665a2c 100644
---- a/drivers/platform/surface/aggregator/controller.c
-+++ b/drivers/platform/surface/aggregator/controller.c
-@@ -1674,7 +1674,7 @@ int ssam_request_sync_submit(struct ssam_controller *ctrl,
- EXPORT_SYMBOL_GPL(ssam_request_sync_submit);
- 
- /**
-- * ssam_request_sync() - Execute a synchronous request.
-+ * ssam_request_do_sync() - Execute a synchronous request.
-  * @ctrl: The controller via which the request will be submitted.
-  * @spec: The request specification and payload.
-  * @rsp:  The response buffer.
-@@ -1686,9 +1686,9 @@ EXPORT_SYMBOL_GPL(ssam_request_sync_submit);
-  *
-  * Return: Returns the status of the request or any failure during setup.
-  */
--int ssam_request_sync(struct ssam_controller *ctrl,
--		      const struct ssam_request *spec,
--		      struct ssam_response *rsp)
-+int ssam_request_do_sync(struct ssam_controller *ctrl,
-+			 const struct ssam_request *spec,
-+			 struct ssam_response *rsp)
- {
- 	struct ssam_request_sync *rqst;
- 	struct ssam_span buf;
-@@ -1722,10 +1722,10 @@ int ssam_request_sync(struct ssam_controller *ctrl,
- 	ssam_request_sync_free(rqst);
- 	return status;
- }
--EXPORT_SYMBOL_GPL(ssam_request_sync);
-+EXPORT_SYMBOL_GPL(ssam_request_do_sync);
- 
- /**
-- * ssam_request_sync_with_buffer() - Execute a synchronous request with the
-+ * ssam_request_do_sync_with_buffer() - Execute a synchronous request with the
-  * provided buffer as back-end for the message buffer.
-  * @ctrl: The controller via which the request will be submitted.
-  * @spec: The request specification and payload.
-@@ -1738,17 +1738,17 @@ EXPORT_SYMBOL_GPL(ssam_request_sync);
-  * SSH_COMMAND_MESSAGE_LENGTH() macro can be used to compute the required
-  * message buffer size.
-  *
-- * This function does essentially the same as ssam_request_sync(), but instead
-- * of dynamically allocating the request and message data buffer, it uses the
-- * provided message data buffer and stores the (small) request struct on the
-- * heap.
-+ * This function does essentially the same as ssam_request_do_sync(), but
-+ * instead of dynamically allocating the request and message data buffer, it
-+ * uses the provided message data buffer and stores the (small) request struct
-+ * on the heap.
-  *
-  * Return: Returns the status of the request or any failure during setup.
-  */
--int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
--				  const struct ssam_request *spec,
--				  struct ssam_response *rsp,
--				  struct ssam_span *buf)
-+int ssam_request_do_sync_with_buffer(struct ssam_controller *ctrl,
-+				     const struct ssam_request *spec,
-+				     struct ssam_response *rsp,
-+				     struct ssam_span *buf)
- {
- 	struct ssam_request_sync rqst;
- 	ssize_t len;
-@@ -1772,7 +1772,7 @@ int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
- 
- 	return status;
- }
--EXPORT_SYMBOL_GPL(ssam_request_sync_with_buffer);
-+EXPORT_SYMBOL_GPL(ssam_request_do_sync_with_buffer);
- 
- 
- /* -- Internal SAM requests. ------------------------------------------------ */
-@@ -1864,7 +1864,7 @@ static int __ssam_ssh_event_request(struct ssam_controller *ctrl,
- 	result.length = 0;
- 	result.pointer = &buf;
- 
--	status = ssam_retry(ssam_request_sync_onstack, ctrl, &rqst, &result,
-+	status = ssam_retry(ssam_request_do_sync_onstack, ctrl, &rqst, &result,
- 			    sizeof(params));
- 
- 	return status < 0 ? status : buf;
-diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-index 50500e562963..897cdd9c3aae 100644
---- a/drivers/platform/surface/surface_acpi_notify.c
-+++ b/drivers/platform/surface/surface_acpi_notify.c
-@@ -590,7 +590,7 @@ static acpi_status san_rqst(struct san_data *d, struct gsb_buffer *buffer)
- 		return san_rqst_fixup_suspended(d, &rqst, buffer);
- 	}
- 
--	status = __ssam_retry(ssam_request_sync_onstack, SAN_REQUEST_NUM_TRIES,
-+	status = __ssam_retry(ssam_request_do_sync_onstack, SAN_REQUEST_NUM_TRIES,
- 			      d->ctrl, &rqst, &rsp, SAN_GSB_MAX_RQSX_PAYLOAD);
- 
- 	if (!status) {
-diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
-index 492c82e69182..07f0ed658369 100644
---- a/drivers/platform/surface/surface_aggregator_cdev.c
-+++ b/drivers/platform/surface/surface_aggregator_cdev.c
-@@ -302,8 +302,8 @@ static long ssam_cdev_request(struct ssam_cdev_client *client, struct ssam_cdev_
- 		 * theoretical maximum (SSH_COMMAND_MAX_PAYLOAD_SIZE) of the
- 		 * underlying protocol (note that nothing remotely this size
- 		 * should ever be allocated in any normal case). This size is
--		 * validated later in ssam_request_sync(), for allocation the
--		 * bound imposed by u16 should be enough.
-+		 * validated later in ssam_request_do_sync(), for allocation
-+		 * the bound imposed by u16 should be enough.
- 		 */
- 		spec.payload = kzalloc(spec.length, GFP_KERNEL);
- 		if (!spec.payload) {
-@@ -342,7 +342,7 @@ static long ssam_cdev_request(struct ssam_cdev_client *client, struct ssam_cdev_
- 	}
- 
- 	/* Perform request. */
--	status = ssam_request_sync(client->cdev->ctrl, &spec, &rsp);
-+	status = ssam_request_do_sync(client->cdev->ctrl, &spec, &rsp);
- 	if (status)
- 		goto out;
- 
-diff --git a/drivers/platform/surface/surface_aggregator_tabletsw.c b/drivers/platform/surface/surface_aggregator_tabletsw.c
-index 27d95a6a7851..c3a5b7f56c8f 100644
---- a/drivers/platform/surface/surface_aggregator_tabletsw.c
-+++ b/drivers/platform/surface/surface_aggregator_tabletsw.c
-@@ -382,7 +382,7 @@ static int ssam_pos_get_sources_list(struct ssam_tablet_sw *sw, struct ssam_sour
- 	rsp.length = 0;
- 	rsp.pointer = (u8 *)sources;
- 
--	status = ssam_retry(ssam_request_sync_onstack, sw->sdev->ctrl, &rqst, &rsp, 0);
-+	status = ssam_retry(ssam_request_do_sync_onstack, sw->sdev->ctrl, &rqst, &rsp, 0);
- 	if (status)
- 		return status;
- 
-diff --git a/include/linux/surface_aggregator/controller.h b/include/linux/surface_aggregator/controller.h
-index d11a1c6e3186..350d6c6c0a1d 100644
---- a/include/linux/surface_aggregator/controller.h
-+++ b/include/linux/surface_aggregator/controller.h
-@@ -207,17 +207,17 @@ static inline int ssam_request_sync_wait(struct ssam_request_sync *rqst)
- 	return rqst->status;
- }
- 
--int ssam_request_sync(struct ssam_controller *ctrl,
--		      const struct ssam_request *spec,
--		      struct ssam_response *rsp);
-+int ssam_request_do_sync(struct ssam_controller *ctrl,
-+			 const struct ssam_request *spec,
-+			 struct ssam_response *rsp);
- 
--int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
--				  const struct ssam_request *spec,
--				  struct ssam_response *rsp,
--				  struct ssam_span *buf);
-+int ssam_request_do_sync_with_buffer(struct ssam_controller *ctrl,
-+				     const struct ssam_request *spec,
-+				     struct ssam_response *rsp,
-+				     struct ssam_span *buf);
- 
- /**
-- * ssam_request_sync_onstack - Execute a synchronous request on the stack.
-+ * ssam_request_do_sync_onstack - Execute a synchronous request on the stack.
-  * @ctrl: The controller via which the request is submitted.
-  * @rqst: The request specification.
-  * @rsp:  The response buffer.
-@@ -227,7 +227,7 @@ int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
-  * fully initializes it via the provided request specification, submits it,
-  * and finally waits for its completion before returning its status. This
-  * helper macro essentially allocates the request message buffer on the stack
-- * and then calls ssam_request_sync_with_buffer().
-+ * and then calls ssam_request_do_sync_with_buffer().
-  *
-  * Note: The @payload_len parameter specifies the maximum payload length, used
-  * for buffer allocation. The actual payload length may be smaller.
-@@ -235,12 +235,12 @@ int ssam_request_sync_with_buffer(struct ssam_controller *ctrl,
-  * Return: Returns the status of the request or any failure during setup, i.e.
-  * zero on success and a negative value on failure.
-  */
--#define ssam_request_sync_onstack(ctrl, rqst, rsp, payload_len)			\
-+#define ssam_request_do_sync_onstack(ctrl, rqst, rsp, payload_len)		\
- 	({									\
- 		u8 __data[SSH_COMMAND_MESSAGE_LENGTH(payload_len)];		\
- 		struct ssam_span __buf = { &__data[0], ARRAY_SIZE(__data) };	\
- 										\
--		ssam_request_sync_with_buffer(ctrl, rqst, rsp, &__buf);		\
-+		ssam_request_do_sync_with_buffer(ctrl, rqst, rsp, &__buf);	\
- 	})
- 
- /**
-@@ -349,7 +349,7 @@ struct ssam_request_spec_md {
-  * zero on success and negative on failure. The ``ctrl`` parameter is the
-  * controller via which the request is being sent.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_N(name, spec...)				\
-@@ -366,7 +366,7 @@ struct ssam_request_spec_md {
- 		rqst.length = 0;						\
- 		rqst.payload = NULL;						\
- 										\
--		return ssam_request_sync_onstack(ctrl, &rqst, NULL, 0);		\
-+		return ssam_request_do_sync_onstack(ctrl, &rqst, NULL, 0);	\
- 	}
- 
- /**
-@@ -389,7 +389,7 @@ struct ssam_request_spec_md {
-  * parameter is the controller via which the request is sent. The request
-  * argument is specified via the ``arg`` pointer.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_W(name, atype, spec...)			\
-@@ -406,8 +406,8 @@ struct ssam_request_spec_md {
- 		rqst.length = sizeof(atype);					\
- 		rqst.payload = (u8 *)arg;					\
- 										\
--		return ssam_request_sync_onstack(ctrl, &rqst, NULL,		\
--						 sizeof(atype));		\
-+		return ssam_request_do_sync_onstack(ctrl, &rqst, NULL,		\
-+						    sizeof(atype));		\
- 	}
- 
- /**
-@@ -430,7 +430,7 @@ struct ssam_request_spec_md {
-  * the controller via which the request is sent. The request's return value is
-  * written to the memory pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_R(name, rtype, spec...)			\
-@@ -453,7 +453,7 @@ struct ssam_request_spec_md {
- 		rsp.length = 0;							\
- 		rsp.pointer = (u8 *)ret;					\
- 										\
--		status = ssam_request_sync_onstack(ctrl, &rqst, &rsp, 0);	\
-+		status = ssam_request_do_sync_onstack(ctrl, &rqst, &rsp, 0);	\
- 		if (status)							\
- 			return status;						\
- 										\
-@@ -491,7 +491,7 @@ struct ssam_request_spec_md {
-  * request argument is specified via the ``arg`` pointer. The request's return
-  * value is written to the memory pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_WR(name, atype, rtype, spec...)		\
-@@ -514,7 +514,7 @@ struct ssam_request_spec_md {
- 		rsp.length = 0;							\
- 		rsp.pointer = (u8 *)ret;					\
- 										\
--		status = ssam_request_sync_onstack(ctrl, &rqst, &rsp, sizeof(atype)); \
-+		status = ssam_request_do_sync_onstack(ctrl, &rqst, &rsp, sizeof(atype)); \
- 		if (status)							\
- 			return status;						\
- 										\
-@@ -550,7 +550,7 @@ struct ssam_request_spec_md {
-  * parameter is the controller via which the request is sent, ``tid`` the
-  * target ID for the request, and ``iid`` the instance ID.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_MD_N(name, spec...)				\
-@@ -567,7 +567,7 @@ struct ssam_request_spec_md {
- 		rqst.length = 0;						\
- 		rqst.payload = NULL;						\
- 										\
--		return ssam_request_sync_onstack(ctrl, &rqst, NULL, 0);		\
-+		return ssam_request_do_sync_onstack(ctrl, &rqst, NULL, 0);	\
- 	}
- 
- /**
-@@ -592,7 +592,7 @@ struct ssam_request_spec_md {
-  * ``tid`` the target ID for the request, and ``iid`` the instance ID. The
-  * request argument is specified via the ``arg`` pointer.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_MD_W(name, atype, spec...)			\
-@@ -609,7 +609,7 @@ struct ssam_request_spec_md {
- 		rqst.length = sizeof(atype);					\
- 		rqst.payload = (u8 *)arg;					\
- 										\
--		return ssam_request_sync_onstack(ctrl, &rqst, NULL,		\
-+		return ssam_request_do_sync_onstack(ctrl, &rqst, NULL,		\
- 						 sizeof(atype));		\
- 	}
- 
-@@ -635,7 +635,7 @@ struct ssam_request_spec_md {
-  * the target ID for the request, and ``iid`` the instance ID. The request's
-  * return value is written to the memory pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_MD_R(name, rtype, spec...)			\
-@@ -658,7 +658,7 @@ struct ssam_request_spec_md {
- 		rsp.length = 0;							\
- 		rsp.pointer = (u8 *)ret;					\
- 										\
--		status = ssam_request_sync_onstack(ctrl, &rqst, &rsp, 0);	\
-+		status = ssam_request_do_sync_onstack(ctrl, &rqst, &rsp, 0);	\
- 		if (status)							\
- 			return status;						\
- 										\
-@@ -698,7 +698,7 @@ struct ssam_request_spec_md {
-  * The request argument is specified via the ``arg`` pointer. The request's
-  * return value is written to the memory pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_MD_WR(name, atype, rtype, spec...)		\
-@@ -722,7 +722,7 @@ struct ssam_request_spec_md {
- 		rsp.length = 0;							\
- 		rsp.pointer = (u8 *)ret;					\
- 										\
--		status = ssam_request_sync_onstack(ctrl, &rqst, &rsp, sizeof(atype)); \
-+		status = ssam_request_do_sync_onstack(ctrl, &rqst, &rsp, sizeof(atype)); \
- 		if (status)							\
- 			return status;						\
- 										\
-diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
-index 46c45d1b6368..0e353f5cc2e6 100644
---- a/include/linux/surface_aggregator/device.h
-+++ b/include/linux/surface_aggregator/device.h
-@@ -456,7 +456,7 @@ static inline int ssam_device_register_clients(struct ssam_device *sdev)
-  * device of the request and by association the controller via which the
-  * request is sent.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_CL_N(name, spec...)			\
-@@ -490,7 +490,7 @@ static inline int ssam_device_register_clients(struct ssam_device *sdev)
-  * which the request is sent. The request's argument is specified via the
-  * ``arg`` pointer.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_CL_W(name, atype, spec...)		\
-@@ -524,7 +524,7 @@ static inline int ssam_device_register_clients(struct ssam_device *sdev)
-  * the request is sent. The request's return value is written to the memory
-  * pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_CL_R(name, rtype, spec...)		\
-@@ -560,7 +560,7 @@ static inline int ssam_device_register_clients(struct ssam_device *sdev)
-  * specified via the ``arg`` pointer. The request's return value is written to
-  * the memory pointed to by the ``ret`` parameter.
-  *
-- * Refer to ssam_request_sync_onstack() for more details on the behavior of
-+ * Refer to ssam_request_do_sync_onstack() for more details on the behavior of
-  * the generated function.
-  */
- #define SSAM_DEFINE_SYNC_REQUEST_CL_WR(name, atype, rtype, spec...)		\
--- 
-2.39.0
+1. This button doesn't work: mute/unmute the microfone;
 
+2. This button works: enable/disable webcam. There's also a physical switch=
+ on
+the side of the laptop that enables/disables the webcam and it also works;
+
+3. This button doesn't work: changes between power modes on Windows using t=
+he
+provided MSI app MSIControl Center Pro;
+
+4. This button doesn't work: rotate the screen 45=C2=BA/90=C2=AA/180=C2=AA.
+
+
+
+I also booted with wmi.debug_dump_wdg=3D1 and wmi.debug_event=3D1 on the ke=
+rnel
+commandline to check if there was any events.
+I did the sudo evtest test and the hotkeys in question registered. I select=
+ed
+number 3 in the list (see evtest.txt).
+
+These are the events of the hotkeys in question:
+
+Hotkey number 1 Microphone:
+
+Event: time 1671569327.276408, type 4 (EV_MSC), code 4 (MSC_SCAN), value f1
+Event: time 1671569327.276408, -------------- SYN_REPORT ------------
+Event: time 1671569327.349220, type 4 (EV_MSC), code 4 (MSC_SCAN), value f1
+
+Hotkey number 2 Camera:
+
+Event: time 1671569327.656812, type 4 (EV_MSC), code 4 (MSC_SCAN), value ee
+Event: time 1671569327.656812, type 1 (EV_KEY), code 212 (KEY_CAMERA), valu=
+e 1
+Event: time 1671569327.656812, -------------- SYN_REPORT ------------
+Event: time 1671569327.729626, type 4 (EV_MSC), code 4 (MSC_SCAN), value ee
+Event: time 1671569327.729626, type 1 (EV_KEY), code 212 (KEY_CAMERA), valu=
+e 0
+
+(Note, ignore this one since the key actually works)
+
+Hotkey number 3 Power Mode:
+
+Event: time 1671569328.108543, type 4 (EV_MSC), code 4 (MSC_SCAN), value 91
+Event: time 1671569328.108543, -------------- SYN_REPORT ------------
+Event: time 1671569328.110873, type 4 (EV_MSC), code 4 (MSC_SCAN), value 91
+
+Hotkey number 4 Screen Rotation:
+
+Event: time 1671569329.374406, type 4 (EV_MSC), code 4 (MSC_SCAN), value f2
+Event: time 1671569329.374406, -------------- SYN_REPORT ------------
+Event: time 1671569329.446527, type 4 (EV_MSC), code 4 (MSC_SCAN), value f2=
+=20
+
+
+
+MSI Summit E16 Flip (A12UCT model) Alder Lake generation
+OS Fedora 37
+KDE Plasma Version: 5.26.4
+KDE Frameworks Version: 5.101.0
+Qt Version: 5.15.7
+Kernel: 6.0.13
+Wayland
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
