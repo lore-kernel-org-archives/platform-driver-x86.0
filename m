@@ -2,53 +2,50 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F2FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 22:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF113C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 22:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbiLUWIZ (ORCPT
+        id S230395AbiLUWI1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 17:08:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
+        Wed, 21 Dec 2022 17:08:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbiLUWIY (ORCPT
+        with ESMTP id S230319AbiLUWI0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Dec 2022 17:08:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3971A38F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 14:07:37 -0800 (PST)
+        Wed, 21 Dec 2022 17:08:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548331A822
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 14:07:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671660456;
+        s=mimecast20190719; t=1671660459;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ninGwoPLjB6u8dDjHaJ7uoqmUYLWyZVar3nn3buV4jI=;
-        b=Est7J0hOF8cCGyS4dSjksbgfK3tlDnA/Ohl23TpFxNOy/8R9yWS83ZUNrg4f4bASfBS03K
-        A8uOcoMc4cpm01mDJtjPbx7q165VXDL/cmLcbSQphzpw7vHbdWPFVo74qv8e2fFKKV8nhX
-        jN71EYza/fEcjG1UkfmdrKStKKXJ2uk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WghiOn+UacOkRZNSD+p+30/KlcKlQpDG2IXMwILxPoU=;
+        b=RNdgdE45E6jsvM84faiOIQ6vnTOt9oBXZ6r4wKx9rN2YL3O2aU/uKii5sVvaqrMIeFb69t
+        mbbliyj8hHulbosfq89Jn6xcg1GFsNzwrFRDpl7e8Rz4scihh1QB46Bl4lpTnoPb1/mx/r
+        KwAGmZEeExgn7Xz6g3m/Uzo64kv6xtk=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-462--pSh4-CDOJGA53IJoPfAVA-1; Wed, 21 Dec 2022 17:07:35 -0500
-X-MC-Unique: -pSh4-CDOJGA53IJoPfAVA-1
+ us-mta-583-lKqFJ2jhOoCKgZsUYJdf2w-1; Wed, 21 Dec 2022 17:07:33 -0500
+X-MC-Unique: lKqFJ2jhOoCKgZsUYJdf2w-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 80BE918E0A60;
-        Wed, 21 Dec 2022 22:07:34 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA4D5492C14;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 734B129AA3BA;
         Wed, 21 Dec 2022 22:07:33 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9998C492C14;
+        Wed, 21 Dec 2022 22:07:32 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: dell-privacy: Only register SW_CAMERA_LENS_COVER if present
-Date:   Wed, 21 Dec 2022 23:07:24 +0100
-Message-Id: <20221221220724.119594-2-hdegoede@redhat.com>
-In-Reply-To: <20221221220724.119594-1-hdegoede@redhat.com>
-References: <20221221220724.119594-1-hdegoede@redhat.com>
+Subject: [PATCH 1/2] platform/x86: dell-privacy: Fix SW_CAMERA_LENS_COVER reporting
+Date:   Wed, 21 Dec 2022 23:07:23 +0100
+Message-Id: <20221221220724.119594-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
@@ -56,62 +53,77 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Unlike keys where userspace only reacts to keypresses, userspace may act
-on switches in both (0 and 1) of their positions.
+Use KE_VSW instead of KE_SW for the SW_CAMERA_LENS_COVER key_entry
+and get the value of the switch from the status field when handling
+SW_CAMERA_LENS_COVER events, instead of always reporting 0.
 
-For example if a SW_TABLET_MODE switch is registered then GNOME will not
-automatically show the onscreen keyboard when a text field gets focus on
-touchscreen devices when SW_TABLET_MODE reports 0 and when SW_TABLET_MODE
-reports 1 libinput will block (filter out) builtin keyboard and touchpad
-events.
-
-So to avoid unwanted side-effects EV_SW type inputs should only be
-registered if they are actually present, only register SW_CAMERA_LENS_COVER
-if it is actually there.
+Also correctly set the initial SW_CAMERA_LENS_COVER value.
 
 Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell hardware privacy")
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/dell/dell-wmi-privacy.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/platform/x86/dell/dell-wmi-privacy.c | 22 ++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platform/x86/dell/dell-wmi-privacy.c
-index 915d5deeb971..c517bd45dd32 100644
+index c82b3d6867c5..915d5deeb971 100644
 --- a/drivers/platform/x86/dell/dell-wmi-privacy.c
 +++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
-@@ -296,7 +296,7 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct privacy_wmi_data *priv;
- 	struct key_entry *keymap;
--	int ret, i;
-+	int ret, i, j;
+@@ -61,7 +61,7 @@ static const struct key_entry dell_wmi_keymap_type_0012[] = {
+ 	/* privacy mic mute */
+ 	{ KE_KEY, 0x0001, { KEY_MICMUTE } },
+ 	/* privacy camera mute */
+-	{ KE_SW,  0x0002, { SW_CAMERA_LENS_COVER } },
++	{ KE_VSW, 0x0002, { SW_CAMERA_LENS_COVER } },
+ 	{ KE_END, 0},
+ };
  
- 	ret = wmi_has_guid(DELL_PRIVACY_GUID);
- 	if (!ret)
-@@ -327,9 +327,20 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
- 	/* remap the keymap code with Dell privacy key type 0x12 as prefix
- 	 * KEY_MICMUTE scancode will be reported as 0x120001
- 	 */
--	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
--		keymap[i] = dell_wmi_keymap_type_0012[i];
--		keymap[i].code |= (0x0012 << 16);
-+	for (i = 0, j = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
-+		/*
-+		 * Unlike keys where only presses matter, userspace may act
-+		 * on switches in both of their positions. Only register
-+		 * SW_CAMERA_LENS_COVER if it is actually there.
-+		 */
-+		if (dell_wmi_keymap_type_0012[i].type == KE_VSW &&
-+		    dell_wmi_keymap_type_0012[i].sw.code == SW_CAMERA_LENS_COVER &&
-+		    !(priv->features_present & BIT(DELL_PRIVACY_TYPE_CAMERA)))
-+			continue;
-+
-+		keymap[j] = dell_wmi_keymap_type_0012[i];
-+		keymap[j].code |= (0x0012 << 16);
-+		j++;
+@@ -115,11 +115,15 @@ bool dell_privacy_process_event(int type, int code, int status)
+ 
+ 	switch (code) {
+ 	case DELL_PRIVACY_AUDIO_EVENT: /* Mic mute */
+-	case DELL_PRIVACY_CAMERA_EVENT: /* Camera mute */
+ 		priv->last_status = status;
+ 		sparse_keymap_report_entry(priv->input_dev, key, 1, true);
+ 		ret = true;
+ 		break;
++	case DELL_PRIVACY_CAMERA_EVENT: /* Camera mute */
++		priv->last_status = status;
++		sparse_keymap_report_entry(priv->input_dev, key, !(status & CAMERA_STATUS), false);
++		ret = true;
++		break;
+ 	default:
+ 		dev_dbg(&priv->wdev->dev, "unknown event type 0x%04x 0x%04x\n", type, code);
  	}
- 	ret = sparse_keymap_setup(priv->input_dev, keymap, NULL);
- 	kfree(keymap);
+@@ -304,6 +308,11 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
+ 
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 	priv->wdev = wdev;
++
++	ret = get_current_status(priv->wdev);
++	if (ret)
++		return ret;
++
+ 	/* create evdev passing interface */
+ 	priv->input_dev = devm_input_allocate_device(&wdev->dev);
+ 	if (!priv->input_dev)
+@@ -331,11 +340,12 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
+ 	priv->input_dev->name = "Dell Privacy Driver";
+ 	priv->input_dev->id.bustype = BUS_HOST;
+ 
+-	ret = input_register_device(priv->input_dev);
+-	if (ret)
+-		return ret;
++	/* Report initial camera-cover status */
++	if (priv->features_present & BIT(DELL_PRIVACY_TYPE_CAMERA))
++		input_report_switch(priv->input_dev, SW_CAMERA_LENS_COVER,
++				    !(priv->last_status & CAMERA_STATUS));
+ 
+-	ret = get_current_status(priv->wdev);
++	ret = input_register_device(priv->input_dev);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.38.1
 
