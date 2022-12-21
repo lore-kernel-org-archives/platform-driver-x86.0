@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBBC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 13:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C29C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 13:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbiLUNSE (ORCPT
+        id S233274AbiLUNS2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 08:18:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59774 "EHLO
+        Wed, 21 Dec 2022 08:18:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiLUNSD (ORCPT
+        with ESMTP id S229522AbiLUNS1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Dec 2022 08:18:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4241EEFC
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 05:18:02 -0800 (PST)
+        Wed, 21 Dec 2022 08:18:27 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2005121884
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 05:18:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0CC4861787
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 13:18:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 68540C433EF
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 13:18:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C627AB81AF5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 13:18:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 475BFC433D2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 13:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671628681;
-        bh=r9jx2BxasQsqn9WwRV8om9CP0UCHH43GfomfcmGW+hY=;
+        s=k20201202; t=1671628704;
+        bh=WQwVsc+9DVVxAGLtp9QHKSmClTSSiMwfnBAWqka308o=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DBaIuGYg9HrvYHvZnqFhXSdc7TSvsnoQeZCK2QIypiD0fDNeoHWgvbNqZJLWA/VdW
-         IT6bxGzVECAbMRETL/xHta5T7E4iPIscfqe7KEsqBlv0qjOzetnr3RwOmwj2Z7StI2
-         ifqSI69O/gU1WaEKE8thAhpODFXmX5H3RSys+UnBOu+T4NX49y6EpftPxD2BF78ekv
-         yKjOo/QhPDMer2mDgHQbOwGHIEtsNitz68z0BdosvqRtfjxx0tulmK4BCpOZukwfki
-         yxap6Oenn12enjeA6c7LnMU79eROpoYwqU6lgDpwMzf+GbsovKXAFtbXTwhXS8f+2O
-         BMtBQsB34fjoA==
+        b=QOPunMTXuMPfoaexGGhNVM9+XrbROidCpiQJfn6x+AZNa4BwOmDBcKG7naA+F0zxt
+         QICetRIfw3KZWX9MsXlFujXVJpdlL8KxRxJXVaaJtMFwpxSSPO2qVh/31flGMYAA7F
+         0/5+ahcR83du3KRZihhvduE+fRgeLYFjS19i/+zmDqmghZGJDstzQXJslcTxblt59N
+         fVZBuR8l3BelxkPiFXnJBD3SRyLzKct2DJq+fCgjY0kRRirjY/thT+BtJPTP68VqGg
+         Q9wBbfXUIhky+yLzuGscy4QldJy31/fbYgKcojepY5u5aFyNrQCUMjgWKxH6ijXg7Y
+         z5YLhQzXUV4vg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 2F5FBC43142; Wed, 21 Dec 2022 13:18:01 +0000 (UTC)
+        id 2375DC43142; Wed, 21 Dec 2022 13:18:24 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 216824] Some laptop hotkeys don't work
-Date:   Wed, 21 Dec 2022 13:18:00 +0000
+Date:   Wed, 21 Dec 2022 13:18:23 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -53,8 +53,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216824-215701-GjcIHPiQ5P@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-216824-215701-TDBkFzsLyJ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216824-215701@https.bugzilla.kernel.org/>
 References: <bug-216824-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,23 +68,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
 
---- Comment #10 from Andr=C3=A9 Barata (andretiagob@protonmail.com) ---
-I found out that the rotation screen key now also works but it's not associ=
-ated
-with any keyboard shortcut in system settings.
-
-So to summarize, hotkeys that now work: 1. Mute/Unmute Microphone, 2. Camera
-On/Off (KDE doesn't notify the change), 3. Opens up System Settings (as a
-keyboard shortcut), 4. Screen Rotation Hotkey (Nothing happens because it's
-probably not associated with any keyboard shortcut).
-
-
-So i think they are all working now Hans!
-
-Just noticed something else (it's not that important). Some of the hotkeys =
-have
-a led that doesn't turn on when i press them (see the led.jpg and led 2.jpg
-images).
+--- Comment #11 from Andr=C3=A9 Barata (andretiagob@protonmail.com) ---
+Created attachment 303445
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303445&action=3Dedit
+key led
 
 --=20
 You may reply to this email to add a comment.
