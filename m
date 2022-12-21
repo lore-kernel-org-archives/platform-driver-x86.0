@@ -2,128 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF113C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 22:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37921C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 22:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbiLUWI1 (ORCPT
+        id S229620AbiLUWty (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 17:08:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
+        Wed, 21 Dec 2022 17:49:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbiLUWI0 (ORCPT
+        with ESMTP id S229578AbiLUWtx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Dec 2022 17:08:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548331A822
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 14:07:39 -0800 (PST)
+        Wed, 21 Dec 2022 17:49:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB3962180B
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 14:49:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671660459;
+        s=mimecast20190719; t=1671662944;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=WghiOn+UacOkRZNSD+p+30/KlcKlQpDG2IXMwILxPoU=;
-        b=RNdgdE45E6jsvM84faiOIQ6vnTOt9oBXZ6r4wKx9rN2YL3O2aU/uKii5sVvaqrMIeFb69t
-        mbbliyj8hHulbosfq89Jn6xcg1GFsNzwrFRDpl7e8Rz4scihh1QB46Bl4lpTnoPb1/mx/r
-        KwAGmZEeExgn7Xz6g3m/Uzo64kv6xtk=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-583-lKqFJ2jhOoCKgZsUYJdf2w-1; Wed, 21 Dec 2022 17:07:33 -0500
-X-MC-Unique: lKqFJ2jhOoCKgZsUYJdf2w-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 734B129AA3BA;
-        Wed, 21 Dec 2022 22:07:33 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9998C492C14;
-        Wed, 21 Dec 2022 22:07:32 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86: dell-privacy: Fix SW_CAMERA_LENS_COVER reporting
-Date:   Wed, 21 Dec 2022 23:07:23 +0100
-Message-Id: <20221221220724.119594-1-hdegoede@redhat.com>
+        bh=MkYdowqSsnhKJx4DXhnvmYyyNmKzLB7vdV8jhQr3yJY=;
+        b=cd0Db/6tR2mWTOwKweqhKRIJn/8/AjrMipdwDcer/eReOuufucnFljwfYs2mvgGSdk2gbM
+        PGeAc2XD6TekKO2GPKMZohM0iiWjMNGQrJgJwi0DAIUK0vb2yB58vXKusVzUdZfZdO2iUV
+        wbRcT5epBChf4F9WtaUlyucONOy0Psk=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-32-xrlus-xoOSCmEdnKE2kU7A-1; Wed, 21 Dec 2022 17:49:02 -0500
+X-MC-Unique: xrlus-xoOSCmEdnKE2kU7A-1
+Received: by mail-ed1-f70.google.com with SMTP id f15-20020a056402354f00b00475a6378738so245337edd.8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 14:49:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MkYdowqSsnhKJx4DXhnvmYyyNmKzLB7vdV8jhQr3yJY=;
+        b=Y21HIfQxaj/sNak/OamMJVk7D6vRjahaP0Q/1G5aNLa7/QyJFGR71oxXSqnTC+61Ty
+         9a9JaLn+Uw5t1R3V/OECqM34Jq3+Y43h3DKrjbJgj+VoN83jCNuWdInsOdFNh70hXuV1
+         FB9txl0r3ypEaxYmcha3A6CgEi21qGE5Her85FyQ2Vdcc/haj2R/6ToW+bpOVpD0Km0s
+         HhGScqrAG6CzZ+TDCzqmqOpiQZxXOOW/Wbx0c/krOVce9u4bp+fIvO+rD1sQj69yI9a2
+         u6qwY2WsNtgy73OeiNpo7Km9duXVs6/vJlcPvCJ02531w0KTNw8DferpModQiPJ+sm3Z
+         SOCg==
+X-Gm-Message-State: AFqh2ko0LZOLoGcsH1Mj3wFOQR/i6YVWOWcpNvjAQ6sO8u34CCKUEhl3
+        SL7xWdDg+V0Ts23vShwnvFWdjlgsclxu6KWeHn7jxp6lyIdqfbiq/DA/K2/wsCFn37YopjmuOiD
+        Rp2Q80ICv14bt1DKKg8/480bbgcNSUBI9Ji2ClYwjm1Tn4LAHBcUg0/zXZknoB/AxFuHa5wsvun
+        YZoLGqKqVzBw==
+X-Received: by 2002:a17:906:7254:b0:7ad:bc7e:3ffd with SMTP id n20-20020a170906725400b007adbc7e3ffdmr3099909ejk.42.1671662941357;
+        Wed, 21 Dec 2022 14:49:01 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvojSc9Wk+lGULdkJd1ZBihoAH6SJr7T8VmJI558wMb2Prw3Nx+1h3i7UDGl61DobJz6M24Vg==
+X-Received: by 2002:a17:906:7254:b0:7ad:bc7e:3ffd with SMTP id n20-20020a170906725400b007adbc7e3ffdmr3099904ejk.42.1671662941155;
+        Wed, 21 Dec 2022 14:49:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id ss1-20020a170907c00100b007c0d41736c0sm7626856ejc.39.2022.12.21.14.49.00
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Dec 2022 14:49:00 -0800 (PST)
+Message-ID: <77a626b9-3483-6c75-9905-96ddfd65cf8a@redhat.com>
+Date:   Wed, 21 Dec 2022 23:49:00 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Content-Language: en-US, nl
+To:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: Hans not reading email for the next 2 weeks
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use KE_VSW instead of KE_SW for the SW_CAMERA_LENS_COVER key_entry
-and get the value of the switch from the status field when handling
-SW_CAMERA_LENS_COVER events, instead of always reporting 0.
+Hi All,
 
-Also correctly set the initial SW_CAMERA_LENS_COVER value.
+Starting tomorrow I'm taking time of from work for 2 weeks
+and I won't be reading email during that time.
 
-Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell hardware privacy")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/dell/dell-wmi-privacy.c | 22 ++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+So if you are wondering why I'm quiet / not responding to
+your patches that is why :)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platform/x86/dell/dell-wmi-privacy.c
-index c82b3d6867c5..915d5deeb971 100644
---- a/drivers/platform/x86/dell/dell-wmi-privacy.c
-+++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
-@@ -61,7 +61,7 @@ static const struct key_entry dell_wmi_keymap_type_0012[] = {
- 	/* privacy mic mute */
- 	{ KE_KEY, 0x0001, { KEY_MICMUTE } },
- 	/* privacy camera mute */
--	{ KE_SW,  0x0002, { SW_CAMERA_LENS_COVER } },
-+	{ KE_VSW, 0x0002, { SW_CAMERA_LENS_COVER } },
- 	{ KE_END, 0},
- };
- 
-@@ -115,11 +115,15 @@ bool dell_privacy_process_event(int type, int code, int status)
- 
- 	switch (code) {
- 	case DELL_PRIVACY_AUDIO_EVENT: /* Mic mute */
--	case DELL_PRIVACY_CAMERA_EVENT: /* Camera mute */
- 		priv->last_status = status;
- 		sparse_keymap_report_entry(priv->input_dev, key, 1, true);
- 		ret = true;
- 		break;
-+	case DELL_PRIVACY_CAMERA_EVENT: /* Camera mute */
-+		priv->last_status = status;
-+		sparse_keymap_report_entry(priv->input_dev, key, !(status & CAMERA_STATUS), false);
-+		ret = true;
-+		break;
- 	default:
- 		dev_dbg(&priv->wdev->dev, "unknown event type 0x%04x 0x%04x\n", type, code);
- 	}
-@@ -304,6 +308,11 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
- 
- 	dev_set_drvdata(&wdev->dev, priv);
- 	priv->wdev = wdev;
-+
-+	ret = get_current_status(priv->wdev);
-+	if (ret)
-+		return ret;
-+
- 	/* create evdev passing interface */
- 	priv->input_dev = devm_input_allocate_device(&wdev->dev);
- 	if (!priv->input_dev)
-@@ -331,11 +340,12 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
- 	priv->input_dev->name = "Dell Privacy Driver";
- 	priv->input_dev->id.bustype = BUS_HOST;
- 
--	ret = input_register_device(priv->input_dev);
--	if (ret)
--		return ret;
-+	/* Report initial camera-cover status */
-+	if (priv->features_present & BIT(DELL_PRIVACY_TYPE_CAMERA))
-+		input_report_switch(priv->input_dev, SW_CAMERA_LENS_COVER,
-+				    !(priv->last_status & CAMERA_STATUS));
- 
--	ret = get_current_status(priv->wdev);
-+	ret = input_register_device(priv->input_dev);
- 	if (ret)
- 		return ret;
- 
--- 
-2.38.1
+I'll "see" you all in 2 weeks.
+
+Merry Christmas and a happy new year!
+
+Regards,
+
+Hans
+
 
