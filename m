@@ -2,36 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B634CC10F1D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 18:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC57C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 18:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbiLUSAH (ORCPT
+        id S229728AbiLUSAG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 13:00:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56396 "EHLO
+        Wed, 21 Dec 2022 13:00:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230057AbiLUSAC (ORCPT
+        with ESMTP id S232468AbiLUSAC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 21 Dec 2022 13:00:02 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5412724BC3;
-        Wed, 21 Dec 2022 10:00:00 -0800 (PST)
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548C224BCB;
+        Wed, 21 Dec 2022 10:00:01 -0800 (PST)
 From:   Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
         s=mail; t=1671645598;
-        bh=DHzQpmWJLFTqwBAVXLFg5D5O5N+Kl9i3nR9nIThPLww=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=dYAO+UHzW5wXut+nOIQHrC2wo6lmHyElQIRI3ngQoD1uu7CGf8qlsuU11Z4T3bNDU
-         alABiGCHrlwhXIGV24XZjLqysz9C7LwQ0mB2zJzSZ9lEzaw/IiNkJ/QGMg8Om7bF5u
-         MzYWEsN+/qotALjcBkMA/v+TsnGD9T4r8+LQ2AtM=
-Date:   Wed, 21 Dec 2022 17:59:51 +0000
-Subject: [PATCH 3/3] platform/x86: asus-wmi: Don't load fan curves without fan
+        bh=SdgSWth07klhr4Skhg4H8tcWIzAhkIpCxA9sSKEowlA=;
+        h=From:Subject:Date:To:Cc:From;
+        b=bm7kMjkect4hXM7VFoVj9ePOv4DYaHMEt+FPQvOTNd6Q6OGww+4hpWi3bQcdpCyLc
+         KeFSRa8vL4en7JrXnqXUTarb3Eu9eDKnshX57Mn2unwdt9mJrGDC7+A/WP0LausvoO
+         PIeHjo5ljC+I1s9frvMdP1iWScTOPbrYvKpyGej0=
+Subject: [PATCH 0/3] platform/x86: asus-wmi: Fix issues on fanless device
+Date:   Wed, 21 Dec 2022 17:59:49 +0000
+Message-Id: <20221221-asus-fan-v1-0-e07f3949725b@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20221221-asus-fan-v1-3-e07f3949725b@weissschuh.net>
-References: <20221221-asus-fan-v1-0-e07f3949725b@weissschuh.net>
-In-Reply-To: <20221221-asus-fan-v1-0-e07f3949725b@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAJZJo2MC/x2MwQqDQAxEf0VyNlAXarG/UnqIMVsDEmWDIiz+e
+ 4Mwlze8mQouRcXh3VQocqjragFd2wDPZD9BnYIhPVLqIki+O2YyHEiIX9Nz4J4h9JFccCxkPMfA
+ 9mWJciuS9bz/P9/r+gOFtIjTbwAAAA==
 To:     Corentin Chary <corentin.chary@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
@@ -40,43 +41,42 @@ Cc:     acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.11.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1671645591; l=968;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1671645591; l=989;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=DHzQpmWJLFTqwBAVXLFg5D5O5N+Kl9i3nR9nIThPLww=;
- b=0lNvk6oQrIRPYyinJtYvmunAkwZDHlhbE8W8EwaIJNnKGwRrg5brZHoLaHbTFN06zZU2Gr/kS68z
- hJdfJkugBqlv/GytiG5L3tHo39rJBGxTFp0+6Zwuxe3AG5+AOJog
+ bh=SdgSWth07klhr4Skhg4H8tcWIzAhkIpCxA9sSKEowlA=;
+ b=Jxb19dQToMI7qIU0WOvGr4omd+zQDpc2gGwq+NGABvp32ptIn8y6qdcSB8taH3/nT4BJFlIus9L1
+ vRuZQQH2Al4rLVDQOwNngc4C+0iguE23HHlRjmo8Pf9WkPvXJK8e
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If we do not have a fan it does not make sense to load curves for it.
-This removes the following warnings from the kernel log:
+This series fixes issues experienced on a fanless ASUS VivoBook E410MA.
 
-asus_wmi: fan_curve_get_factory_default (0x00110024) failed: -19
-asus_wmi: fan_curve_get_factory_default (0x00110025) failed: -19
-
-Fixes: a2bdf10ce96e ("platform/x86: asus-wmi: Increase FAN_CURVE_BUF_LEN to 32")
+To: Corentin Chary <corentin.chary@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+To: Mark Gross <markgross@kernel.org>
+To: "Luke D. Jones" <luke@ljones.dev>
+Cc: acpi4asus-user@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+
 ---
- drivers/platform/x86/asus-wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thomas Weißschuh (3):
+      platform/x86: asus-wmi: Add quirk wmi_ignore_fan
+      platform/x86: asus-wmi: Ignore fan on E410MA
+      platform/x86: asus-wmi: Don't load fan curves without fan
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 4a289ca7e76c..104188d70988 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2438,6 +2438,9 @@ static int fan_curve_check_present(struct asus_wmi *asus, bool *available,
- 
- 	*available = false;
- 
-+	if (asus->fan_type == FAN_TYPE_NONE)
-+		return 0;
-+
- 	err = fan_curve_get_factory_default(asus, fan_dev);
- 	if (err) {
- 		return 0;
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  7 ++++++-
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 20 insertions(+), 1 deletion(-)
+---
+base-commit: b6bb9676f2165d518b35ba3bea5f1fcfc0d969bf
+change-id: 20221221-asus-fan-9aeac7d59c6c
 
+Best regards,
 -- 
-2.39.0
+Thomas Weißschuh <linux@weissschuh.net>
