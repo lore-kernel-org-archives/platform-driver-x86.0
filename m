@@ -2,105 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E8C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 15:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39E6C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 18:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230057AbiLUPvK (ORCPT
+        id S234296AbiLUSAC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 10:51:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        Wed, 21 Dec 2022 13:00:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbiLUPvJ (ORCPT
+        with ESMTP id S229620AbiLUSAB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Dec 2022 10:51:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC31192AC
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 07:51:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 574D1617D0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 15:51:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B12C8C433F0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 15:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671637866;
-        bh=fJ21D/fzCHm2cy0/4zl7eiTMMcRohOIjbP7Xmm+RrMA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Eq9o94RP10Yq2Jg8J7/5zlytkNK1YgyiPQtvW8afcl7M2pG3vRJEQK1IdSO7R4oQ2
-         gunw2Ks4Nq7Szx4a2VqY4nRgNpKof2EaXxjnCPR8+X27BWO6GQOjhMwrByASe9/wOJ
-         eAMSgT9Jj+iSThWYrwL2it2VcDUy8WuK9PI8vDhWVMB0SR2qbaK94+lBBXAjyu98XB
-         gA9ogV3kSiEg6Y7GBXF7T8iIgrZ5Izy8tb+7UWTrt8m5A02eVxF2JfDGw4/7eQ0W+I
-         97uThBAFJ8YltLt1vUd0EPGq5HuOU6DPFbDbbYFKvHvez2ZzLnvMs6QW4k7sfpUiht
-         N7ZGmAvNUBT2A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 93172C43142; Wed, 21 Dec 2022 15:51:06 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216824] Some laptop hotkeys don't work
-Date:   Wed, 21 Dec 2022 15:51:06 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andretiagob@protonmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216824-215701-rtdb4LHV9a@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216824-215701@https.bugzilla.kernel.org/>
-References: <bug-216824-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 21 Dec 2022 13:00:01 -0500
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C8E24BC2;
+        Wed, 21 Dec 2022 10:00:00 -0800 (PST)
+From:   Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1671645598;
+        bh=6GqkRUcKuJwMJo72qVD9f/Gx/0oC7Cwj+9937ZraC8U=;
+        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+        b=eF8CmCCFfRQRyq96H5YPy2zQhG11HnEGg9Zz+Kkq6PXoPld3lna9OQhzM5XkmDaFq
+         vgg5So5htnyqdBd/0io2IM+6KLg8JZhFtFf+0OZj+wSc1Cf8/dYdplUm41IKXxX40D
+         PXa4T6I+dcSseQCo6xgs+lKrR1OPCIgAgnHQOc5g=
+Date:   Wed, 21 Dec 2022 17:59:49 +0000
+Subject: [PATCH 1/3] platform/x86: asus-wmi: Add quirk wmi_ignore_fan
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Message-Id: <20221221-asus-fan-v1-1-e07f3949725b@weissschuh.net>
+References: <20221221-asus-fan-v1-0-e07f3949725b@weissschuh.net>
+In-Reply-To: <20221221-asus-fan-v1-0-e07f3949725b@weissschuh.net>
+To:     Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        "Luke D. Jones" <luke@ljones.dev>
+Cc:     acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.11.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1671645591; l=1566;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=6GqkRUcKuJwMJo72qVD9f/Gx/0oC7Cwj+9937ZraC8U=;
+ b=2tJc6DdqWrSkjnXYGSw8yaqYHBQu5/Z3B5QJ0VkOvuyF1+Qm8E8EBzmDmgCLGOBQQo/uNfLdaaJQ
+ RaPrQD+8BZPt5OmCmoDeI3lPts7nCNe+oZN9MiwYEqlSIQdXPC5R
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
+Some laptops have a fan device listed in their ACPI tables but do not
+actually contain a fan.
+Introduce a quirk that can be used to override the fan detection logic.
 
---- Comment #14 from Andr=C3=A9 Barata (andretiagob@protonmail.com) ---
-(In reply to Hans de Goede from comment #13)
-> Good to hear that the hotkeys work now.
->=20
-> As for the mic/speaker mute LEDs, those are tricky. They can be either
-> attached to the embedded-controller and then we would need support to
-> register them under /sys/class/leds with their default triggers setup
-> correctly, after which the kernel's HDA code shoould control them for us.
->=20
-> Or they may be directly connected to some GPIOs on the HDA part of the ma=
-in
-> SoC or on the codec.
->=20
-> And the Fn-lock LED typically just works automatically (controller by the
-> EC) if you toggle the Fn-lock by pressing Fn + escape?  Although sometimes
-> it too needs to be controller in software.
->=20
-> Figuring out the LEDs really requires someone with significant hw-enablem=
-ent
-> experience to actually have the laptop in their hands and then they will
-> hopefully be able to figure things out.
->=20
-> I have submitted the fixes for the hotkeys upstream here:
-> https://github.com/systemd/systemd/pull/25824
+This was observed with a ASUS VivoBook E410MA running firmware
+E410MAB.304.
 
-Yeah if i FN + Escape tu led turns on :)
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/platform/x86/asus-wmi.c | 4 +++-
+ drivers/platform/x86/asus-wmi.h | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-Well, what mattered was the hotkeys themselves and they are working now!
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 6f81b2844dcb..4a289ca7e76c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2243,7 +2243,9 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
+ 	asus->fan_type = FAN_TYPE_NONE;
+ 	asus->agfn_pwm = -1;
+ 
+-	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CPU_FAN_CTRL))
++	if (asus->driver->quirks->wmi_ignore_fan)
++		asus->fan_type = FAN_TYPE_NONE;
++	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CPU_FAN_CTRL))
+ 		asus->fan_type = FAN_TYPE_SPEC83;
+ 	else if (asus_wmi_has_agfn_fan(asus))
+ 		asus->fan_type = FAN_TYPE_AGFN;
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 65316998b898..a478ebfd34df 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -38,6 +38,7 @@ struct quirk_entry {
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
++	bool wmi_ignore_fan;
+ 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+ 	int wapf;
+ 	/*
 
-Thank you Hans!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+2.39.0
