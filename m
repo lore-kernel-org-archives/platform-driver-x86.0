@@ -2,77 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D43C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Dec 2022 22:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0A5C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 03:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbiLTWdz (ORCPT
+        id S229727AbiLUDuJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Dec 2022 17:33:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
+        Tue, 20 Dec 2022 22:50:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbiLTWdy (ORCPT
+        with ESMTP id S229482AbiLUDuI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Dec 2022 17:33:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A05C13F9E
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 14:33:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A204A615D8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 22:33:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 11EEBC433D2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Dec 2022 22:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671575632;
-        bh=xXabqRpA8D1oyg1cLSVcgiSsSum/vpAg2PECCxYaqpw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=pGtms02G426QDixpPI7oOHqe46xTmupqgHw62tvq1W9vTOxomY6FW6bAB6ZSC2mG+
-         EcVZrCNPuO0ZpvOmmgS7+tGXf09IX7nVTGBwmCWJYPVhZrjH1zc6fm789M3HvClhRi
-         pFKI52l5XWo9prrKSWYaIRLblLwBpsaoYUS6aCNetrnt/2rjaL2yaDYLtHPXGsPi38
-         iFv7sBa13P8YRqy2TJ7d47LOf7aT7P1dRYPW/AN6jcKMgTsWswTejGtUY6FzpX5jrK
-         wEZaPCukRXOkTehM+A6Q+2XSQQdkcDYoLr4bqvRYUVzoD9hSunWYBc046DOKrKXcZH
-         E8niMNE5xPxXg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 016CDC43142; Tue, 20 Dec 2022 22:33:52 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216824] Some laptop hotkeys don't work
-Date:   Tue, 20 Dec 2022 22:33:51 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andretiagob@protonmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216824-215701-ilZSq7O2um@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216824-215701@https.bugzilla.kernel.org/>
-References: <bug-216824-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 20 Dec 2022 22:50:08 -0500
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DA1BE6;
+        Tue, 20 Dec 2022 19:50:07 -0800 (PST)
+From:   Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1671594605;
+        bh=vm8LMVsbwRZQxgihhWF8na4eZeHZD1RVft5RuFXZE+c=;
+        h=From:Date:Subject:To:Cc:From;
+        b=PYir1pHBLyivz5JXOkNmuNwSywDHvABj4NSGsP+boTCMvDWEJ92L4Tj/1Zl+W9317
+         nm6C0b6z+93LS8zAz4v/rSxCfa5S9VzHulxMTgSQ4rL2HknI15EC90f8iJK4vi5VuI
+         ry9X9pu0ehjaeMByRUUma1uM6z8RxBZP6wEjK7Es=
+Date:   Wed, 21 Dec 2022 03:49:59 +0000
+Subject: [PATCH] platform/x86: asus-nb-wmi: Add alternate mapping for KEY_CAMERA
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Message-Id: <20221216-asus-key-v1-1-45da124119a3@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAGeComMC/w2LQQqAIBAAvyJ7biE3SOg3altKYuBiENLf28McB
+ mYGCLfMApsZ0PjJku+qYicDMfl6MuZdHWgmsmRX9NIFL34xLOFQIrFzoHnwwhiarzHpUHsp3/cD
+ l+zOXV8AAAA=
+To:     Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas =?utf-8?q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.11.0-dev-e429b
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1671594602; l=1123;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=vm8LMVsbwRZQxgihhWF8na4eZeHZD1RVft5RuFXZE+c=;
+ b=09P9ObfPmPrh6SciSdjxoGA+sQ4g3LcPnn8Q2oW1VdDbgqHqnOqjFjbiei8ugHVInOCyi//h/voI
+ EWUFoJQLAEsXBzzKAIuAsGOveNezNS3N4wc9VhFHeYYOvYomuWuR
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
+This keycode is emitted on a Asus VivoBook E410MAB with firmware
+E410MAB.304.
 
---- Comment #3 from Andr=C3=A9 Barata (andretiagob@protonmail.com) ---
-3 files annexed: image, evtest.txt and dmseg.txt
+The physical key has a strikken-through camera printed on it.
 
---=20
-You may reply to this email to add a comment.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index c685a705b73d..8ee5d108e9e0 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -544,6 +544,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
+ 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } }, /* Bluetooth Disable */
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
++	{ KE_KEY, 0x85, { KEY_CAMERA } },
+ 	{ KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
+ 	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+ 	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
+
+---
+base-commit: b6bb9676f2165d518b35ba3bea5f1fcfc0d969bf
+change-id: 20221216-asus-key-b3bfb3bc2e77
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
