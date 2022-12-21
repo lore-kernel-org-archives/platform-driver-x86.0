@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551C6C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 11:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25CDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Dec 2022 11:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbiLULiY (ORCPT
+        id S233321AbiLULip (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Dec 2022 06:38:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
+        Wed, 21 Dec 2022 06:38:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiLULiX (ORCPT
+        with ESMTP id S229448AbiLULio (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Dec 2022 06:38:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3761272D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 03:38:22 -0800 (PST)
+        Wed, 21 Dec 2022 06:38:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9553A272D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 03:38:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3ABC9B81B6A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 11:38:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D126EC433EF
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 11:38:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5145FB81AF5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 11:38:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19A35C433D2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Dec 2022 11:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671622699;
-        bh=kYVJs2O1O3ttT2CGd6VnmCICdTKs9njX76SrQE8V5WE=;
+        s=k20201202; t=1671622721;
+        bh=gEN58Bd7prBQDhX/B6GFG7K7Z23P64Yr6GUpGyb+fMU=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Zbi+GvnlGsOXD25/kqj4N1GTeRu0/uFx2dUTLI+0GLNGWnhwAXsGlmbVLBes6Pl1A
-         WRHp8ZnAh58Wq6rsUJZ8o9m36vuqmGcqqQIkJTd7MEIFtZh49kF/MPNXU2bHZBb2qy
-         7U2rRwQZ3cNXYTT+S1LVvmEr7upBMKbDgsepD+oMkTlcnqqZWczPJe0GMrq4NbXgy4
-         zhT1IomXgZncQ3o10ED0GC8JYnXGYeA7RiaXt2limpG61ixxhC+8QwjDaaeJMg/P++
-         0OBhgJgcGgkddPawqzx/Kp3zSr25/yibVSipWzXLRZScMZLMYirNqDPoWEibEYQgZh
-         J3gyIqhqZl/5A==
+        b=critICK8UNpcWn3HF1A8aLzdMPLajw6rTX9gwyLMn0EvEZp3haG+OS+D3y+J9eFPN
+         eomRrc029qAm/CaQKu8wUJaVbej8Q32u9pWbSWAvAsnpjec253THumZ5LnhpVe5wEY
+         R7BWvO860XL0glZENW8RQ9KvPIdamGyR/4zhZEqry3h5/dVxPCAHwXkYV49J9raacn
+         WI/Frq0Jbl8qDzIlCtE0L5b8Ipg3XrjOGTR6U2OwOBmvrqB1i7wHc9WnBjXlYk+Rrr
+         tDYuTyYKXzeyAz++FBcuPES9swl8v4DP5P0dXWviV3t0e6HxvIVVX6VAk+Ks77NW2Z
+         pEV0FArdt7ifg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id AEC70C43142; Wed, 21 Dec 2022 11:38:19 +0000 (UTC)
+        id 0988FC43141; Wed, 21 Dec 2022 11:38:41 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 216824] Some laptop hotkeys don't work
-Date:   Wed, 21 Dec 2022 11:38:19 +0000
+Date:   Wed, 21 Dec 2022 11:38:40 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -53,8 +53,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-216824-215701-AGRpN0rM4c@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-216824-215701-oGRhgioqsr@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216824-215701@https.bugzilla.kernel.org/>
 References: <bug-216824-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,29 +68,10 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
-
---- Comment #4 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Thank you for the bug report.
-
-Getting the 3 keys which don't send any events to work should be a matter of
-adding mappings for the MSI custom atkbd scancodes for these.
-
-I'm going to attach a 60-keyboard.hwdb file here. Please copy this file to
-/etc/udev/hwdb.d and then run:
-
-sudo systemd-hwdb update
-sudo udevadm trigger /dev/input/event*
-
-After this run "sudo evtest" again and select the "AT Translated Set 2
-keyboard" again. Now all 4 keys should generate events.
-
-And hopefully your desktop-environment will also respond to these events.
+--- Comment #5 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Created attachment 303443
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303443&action=3Dedit
+60-keyboard.hwdb
 
 --=20
 You may reply to this email to add a comment.
