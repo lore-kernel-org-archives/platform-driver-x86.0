@@ -2,89 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263EDC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Dec 2022 16:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF824C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 24 Dec 2022 00:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbiLVQpy (ORCPT
+        id S231137AbiLXAfb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Dec 2022 11:45:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
+        Fri, 23 Dec 2022 19:35:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235065AbiLVQpx (ORCPT
+        with ESMTP id S230458AbiLXAfa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Dec 2022 11:45:53 -0500
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0673410AF;
-        Thu, 22 Dec 2022 08:45:53 -0800 (PST)
-Received: by mail-qv1-f54.google.com with SMTP id q10so1569556qvt.10;
-        Thu, 22 Dec 2022 08:45:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3V+V/RxVzQmiAleBn5pDq7PcTx4x79d2e+VRXiuewIo=;
-        b=D0Kh2D33rA08h9oAtpZLyXEDdC2mi8q/UKV7VdsOZqXgHEVaLilqTcZM4KvlVHQksR
-         i611FhtWnF7QAMVWQ/axWBL4hj5Rar7V8QU8xtYqr+a91NpZI/o+i7Ps8O39//6zC5Xv
-         c71wNHerxwm6LTTnumT2y4LfTJPDTbmr9jsC4RolxBc1l8MEzROQkNVP5CrzgLF6MVuC
-         I4CiZRFE5dpy6j3aIWN5hXWopMU2gKGOgyZ4B2SRNIqXscy1kMSe1D9f5PgtAWrSn+To
-         a09/gYHNtggRAbUIcq5AThuRkeFRfguREW6y4uKiMqTX1VHB/4TL1cl5d5OGwr1aPKuk
-         xKYQ==
-X-Gm-Message-State: AFqh2kpKYOtYqLDcaNmUNL/U4Sb1hFu9cxnAJBmctoXPZKfBa287ItEP
-        xV7mDhS8B1H3YVJkj6jDw/960Hn5r/cJ0mXLKe4=
-X-Google-Smtp-Source: AMrXdXufR5CWNI5qpC1KftZBMF/jf+zlhokSALHiyd6CDSS5P2DLg6WV4GE/jdMvuZ2GiL9jIR0eA6+r974Ga1yrOic=
-X-Received: by 2002:a05:6214:328f:b0:4b1:8429:a8a7 with SMTP id
- mu15-20020a056214328f00b004b18429a8a7mr365563qvb.52.1671727552188; Thu, 22
- Dec 2022 08:45:52 -0800 (PST)
+        Fri, 23 Dec 2022 19:35:30 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87F21B9D3;
+        Fri, 23 Dec 2022 16:35:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F56EB821B4;
+        Sat, 24 Dec 2022 00:35:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D04C433EF;
+        Sat, 24 Dec 2022 00:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671842126;
+        bh=LLpp2PZGZ3P0jsNiT1jPH0C8VaOxHKoP9r3oMSLo0UI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jSbHXPTiElo1NJ6miNJKdAE8sMAVnHpWLd4GYXOeyP5OpxT0c9oTR0lS16/W2czmd
+         zmZo8NfSvM8hcBWVWa+rglOsD+2QwrQ3yrtCeOQ3+aChhjfqj4b1kH3/UVA37zLfUV
+         SUTA++yRFAc9yYQsi9jQ6DqpnpbrFV0BXqSjH9vAJ2+r4TjncZLZg23UiKXQWnoxKs
+         mcdYg9MLfz7U5L7z6Jt3vu//BXWS4qlN7IvIgBdWz8Q9q+i0Yy9tInKed8Qjtu/me7
+         EAuPLXWx4Q8QkE7uAoPziijjcLEOEtF9MDPijOd5R79hOeNIFj6x0I+l2WvxpkrbEe
+         n5rlHZWvgoyDA==
+Date:   Fri, 23 Dec 2022 19:35:25 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     ChiYuan Huang <u0084500@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        ChiYuan Huang <cy_huang@richtek.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Mark Brown <broonie@kernel.org>, djrscally@gmail.com,
+        hdegoede@redhat.com, markgross@kernel.org, lgirdwood@gmail.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        platform-driver-x86@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 6.0 70/73] regulator: core: Use different devices
+ for resource allocation and DT lookup
+Message-ID: <Y6ZJTXFod+4agKiR@sashalap>
+References: <20221218160741.927862-1-sashal@kernel.org>
+ <20221218160741.927862-70-sashal@kernel.org>
+ <20221219010656.GA6977@cyhuang-hp-elitebook-840-g3.rt>
 MIME-Version: 1.0
-References: <20221215094443.7466-1-hdegoede@redhat.com>
-In-Reply-To: <20221215094443.7466-1-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 22 Dec 2022 17:45:41 +0100
-Message-ID: <CAJZ5v0hrqca-fqSqGDXXKBonsCTOjHHBgOtjqv85oxQQ1hkVyA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: resource: Add Asus ExpertBook B2502 to Asus quirks
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221219010656.GA6977@cyhuang-hp-elitebook-840-g3.rt>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 10:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Dec 19, 2022 at 09:07:01AM +0800, ChiYuan Huang wrote:
+>On Sun, Dec 18, 2022 at 11:07:38AM -0500, Sasha Levin wrote:
+>Hi,
+>  Thanks, but there's one more case not considered.
+>  It may cause a unexpected regulator shutdown by regulator core.
 >
-> The Asus ExpertBook B2502 has the same keyboard issue as Asus Vivobook
-> K3402ZA/K3502ZA. The kernel overrides IRQ 1 to Edge_High when it
-> should be Active_Low.
+>  Here's the discussion link that reported from Marek Szyprowski.
+>  https://lore.kernel.org/lkml/dd329b51-f11a-2af6-9549-c8a014fd5a71@samsung.com/
 >
-> This patch adds the ExpertBook B2502 model to the existing
-> quirk list of Asus laptops with this issue.
->
-> Fixes: b5f9223a105d ("ACPI: resource: Skip IRQ override on Asus Vivobook S5602ZA")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=2142574
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/acpi/resource.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index f27914aedbd5..e721f2ec014f 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -432,6 +432,13 @@ static const struct dmi_system_id asus_laptop[] = {
->                         DMI_MATCH(DMI_BOARD_NAME, "S5602ZA"),
->                 },
->         },
-> +       {
-> +               .ident = "Asus ExpertBook B2502",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "B2502CBA"),
-> +               },
-> +       },
->         { }
->  };
->
-> --
+>  I have post a patch to fix it.
+>  You may need to cherry-pick the below patch also.
+>  0debed5b117d ("regulator: core: Fix resolve supply lookup issue")
 
-Applied as 6.2-rc material, thanks!
+I'll take it too, thanks!
+
+-- 
+Thanks,
+Sasha
