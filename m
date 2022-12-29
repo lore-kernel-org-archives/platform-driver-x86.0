@@ -2,86 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A761C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Dec 2022 23:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90683C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Dec 2022 07:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbiL1XGn (ORCPT
+        id S229673AbiL2HZq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Dec 2022 18:06:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        Thu, 29 Dec 2022 02:25:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232747AbiL1XGW (ORCPT
+        with ESMTP id S229669AbiL2HZo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Dec 2022 18:06:22 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E39B4A7;
-        Wed, 28 Dec 2022 15:06:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672268780; x=1703804780;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fSjIrcQRDvNG1vFngsj4HSl+5G2ZZUeVKEwFTd28l/k=;
-  b=dJlagJZkeG7AWPEeESDcMuG0Wom2QDsUO0v9xSg12et5IQAfLuKdAbsX
-   K00jd1/BGDx/A/trhxGrbOmm2sFrtOpNOkJ66jcC5u9FkT0t5nzQJwmJP
-   s0CLYCHQ8z9kgBiZJiQOfQrHPK85ZEbz1rUEtXQrd+lU8wNGnCarQfVNe
-   K0Fx4Q0DHDPSk1ve8K5rl1/pxPnvQ7MJlR/QwucmtCrdvtOMnMajQ6BIc
-   BZgn7EMbe69cZ1jG9o5vsqy72/DZWscuAGSO3lTmLb66fXoWGd8k34okV
-   qnLNd8UT0uvnbAtGuMKjpudK++mHUQUS/LENo3LqO5CmooXQVa3okHBbW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="322928064"
-X-IronPort-AV: E=Sophos;i="5.96,282,1665471600"; 
-   d="scan'208";a="322928064"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2022 15:06:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="760779484"
-X-IronPort-AV: E=Sophos;i="5.96,282,1665471600"; 
-   d="scan'208";a="760779484"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Dec 2022 15:06:02 -0800
-Received: from otcpl-manager.jf.intel.com (otcpl-manager.jf.intel.com [10.54.77.21])
-        by linux.intel.com (Postfix) with ESMTP id 60FDD580BF0;
-        Wed, 28 Dec 2022 15:06:02 -0800 (PST)
-From:   Gayatri Kammela <gayatri.kammela@linux.intel.com>
-To:     hdegoede@redhat.com
-Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
-        David E Box <david.e.box@linux.intel.com>
-Subject: [PATCH v1] platform/x86: intel/pmc/core: Add Meteor Lake mobile support
-Date:   Wed, 28 Dec 2022 15:05:53 -0800
-Message-Id: <20221228230553.2497183-1-gayatri.kammela@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+        Thu, 29 Dec 2022 02:25:44 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAD72BB;
+        Wed, 28 Dec 2022 23:25:43 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id m4so18205739pls.4;
+        Wed, 28 Dec 2022 23:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XMmjpNuQhfnjEBg0iRS3fgyiOsvlVGYZtXowsGaPpY4=;
+        b=XlJp8yXFhT4hyvoX3Uk/oVEkgPHpakO9wCFNHG7R0VHAyFMOK0J1Q2LuhOdzSiSfKB
+         gvwpJfIHFJ+N43entFnS6WXbYcGG5XYdV+8DCVQvaEDBs6Qu6d1PKtWZxtzjMx0sitV9
+         hHqdNA2vhCqTJ6O9pfRjp3Rr+sBf+mjU8pvEmvqRq0taocaHms2P+sywRMj9jHhfBAsh
+         X9mTxQc6X6KTe5fv2WsnB+IUl3+EhHmeJ82UiHg6WRxfkb7NvuVUzTzSk7XadnPp0R8o
+         sTVVfXMI+XI/1CAzVJO+0oesbfqiNOlQNEDKp4yAhDHf2o7Ls6Dfyn/GWNGuV89Cagjn
+         eaFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XMmjpNuQhfnjEBg0iRS3fgyiOsvlVGYZtXowsGaPpY4=;
+        b=BeSCSo59uSDydeohBi482jUinFyxMgjTHmbaIdRn53yzEjkfN2JMIhvJzYL//MEpQT
+         RzlGByD2gLcDOJeK3oub+NP6MqsKYcbPalubLtPrEZhFGYDuDCIdKRwYY7C1DXokgOPF
+         rGnsjIjYB7JG1HDyisjoR2my2e+An14koygp6ousAgImUEbLbZp3k5Cmdm/rJtYIN1UF
+         zQzO5TEeO1Jfun1O0ZcZ0713I0yLU8KKgmkeag/s41dIJKlhovTT1+1cOUGnraxDYNZ5
+         Z7S1nRSp1hLP3xZwWBvfJUHv/0LD2QiRAECUiBzURht5DuP/DVT1ZdEw11vsjwq+aaHF
+         Ttyw==
+X-Gm-Message-State: AFqh2kpPa3eeScKf4u6JjkXwToDm8clU0Tp4wG3syE7prDAolysK6pC5
+        yHE07ieKiGgF9XQOauPV2Hc=
+X-Google-Smtp-Source: AMrXdXt/i8/rj5UqycTrZ4qAD/p59uTsapxNXRjspv7Z9q3mQYPSUvZfJLReN84nvT8zGo24YgARHw==
+X-Received: by 2002:a17:90a:c24a:b0:225:f3e6:424e with SMTP id d10-20020a17090ac24a00b00225f3e6424emr13350914pjx.17.1672298743124;
+        Wed, 28 Dec 2022 23:25:43 -0800 (PST)
+Received: from localhost.localdomain ([202.120.234.246])
+        by smtp.googlemail.com with ESMTPSA id f62-20020a17090a28c400b00225c9afdba4sm9052116pjd.38.2022.12.28.23.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Dec 2022 23:25:42 -0800 (PST)
+From:   Miaoqian Lin <linmq006@gmail.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linmq006@gmail.com
+Subject: [PATCH] platform/x86/amd: Fix refcount leak in amd_pmc_probe
+Date:   Thu, 29 Dec 2022 11:25:33 +0400
+Message-Id: <20221229072534.1381432-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add Meteor Lake mobile support to pmc core driver. Meteor Lake mobile
-parts reuse all the Meteor Lake PCH IPs.
+pci_get_domain_bus_and_slot() takes reference, the caller should release
+the reference by calling pci_dev_put() after use. Call pci_dev_put() in
+the error path to fix this.
 
-Cc: David E Box <david.e.box@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Fixes: 3d7d407dfb05 ("platform/x86: amd-pmc: Add support for AMD Spill to DRAM STB feature")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
- drivers/platform/x86/intel/pmc/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/amd/pmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index f1d802f6ec3f..3a15d32d7644 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1029,6 +1029,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		adl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	adl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,          mtl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	mtl_core_init),
- 	{}
- };
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index 439d282aafd1..8d924986381b 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -932,7 +932,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	if (enable_stb && (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)) {
+ 		err = amd_pmc_s2d_init(dev);
+ 		if (err)
+-			return err;
++			goto err_pci_dev_put;
+ 	}
  
-
-base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+ 	platform_set_drvdata(pdev, dev);
 -- 
-2.38.1
+2.25.1
 
