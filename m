@@ -2,25 +2,25 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC7DC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Jan 2023 23:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A3DC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Jan 2023 06:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjAAXYo (ORCPT
+        id S229481AbjABGzf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 1 Jan 2023 18:24:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42444 "EHLO
+        Mon, 2 Jan 2023 01:55:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjAAXYm (ORCPT
+        with ESMTP id S229460AbjABGzc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Jan 2023 18:24:42 -0500
+        Mon, 2 Jan 2023 01:55:32 -0500
 Received: from mail.redfish-solutions.com (mail.redfish-solutions.com [24.116.100.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650971115;
-        Sun,  1 Jan 2023 15:24:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49ECDBF4;
+        Sun,  1 Jan 2023 22:55:31 -0800 (PST)
 Received: from ubuntu22.redfish-solutions.com (ubuntu22.redfish-solutions.com [192.168.8.33])
         (authenticated bits=0)
-        by mail.redfish-solutions.com (8.17.1/8.16.1) with ESMTPSA id 301NODLE588306
+        by mail.redfish-solutions.com (8.17.1/8.16.1) with ESMTPSA id 3026sme9589465
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sun, 1 Jan 2023 16:24:13 -0700
+        Sun, 1 Jan 2023 23:54:48 -0700
 From:   "Philip Prindeville" <philipp@redfish-solutions.com>
 To:     platform-driver-x86@vger.kernel.org, linux-x86_64@vger.kernel.org
 Cc:     Ed Wildgoose <lists@wildgooses.com>,
@@ -28,9 +28,9 @@ Cc:     Ed Wildgoose <lists@wildgooses.com>,
         Andreas Eberlein <foodeas@aeberlein.de>,
         Paul Spooren <paul@spooren.de>,
         Philip Prindeville <philipp@redfish-solutions.com>
-Subject: [PATCH v2 1/1] PCEngines make a number of SBC. APU5 has 5 mpcie slots + MSATA
-Date:   Sun,  1 Jan 2023 16:24:13 -0700
-Message-Id: <20230101232413.3193694-1-philipp@redfish-solutions.com>
+Subject: [PATCH v3 1/1] x86: Support APU5 in PCEngines platform driver
+Date:   Sun,  1 Jan 2023 23:54:47 -0700
+Message-Id: <20230102065447.3447284-1-philipp@redfish-solutions.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,6 +41,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Philip Prindeville <philipp@redfish-solutions.com>
 
+PCEngines make a number of SBC. APU5 has 5 mpcie slots + MSATA.
 It also has support for 3x LTE modems with 6x SIM slots (pairs with a
 SIM switch device). Each mpcie slot for modems has a reset GPIO
 
@@ -58,6 +59,20 @@ modems/resets/sim-swap lines to breakout.
 
 Also added APU6, which is essentially APU4 with a different ethernet
 interface and SFP cage on eth0.
+
+Revision history:
+
+v1: originally titled, "apu6: add apu6 variation to apu2 driver family"
+this dealt only with detecting the APUv6, which is otherwise identical
+to the v4 excepting the SFP cage on eth0.
+
+v2: at Ed's request, merged with his previous pull-request titled
+"x86: Support APU5 in PCEngines platform driver", and some cleanup
+to that changeset (including dropping the table "apu5_driver_data"
+which did not have a defined type "struct apu_driver_data"), but got
+mistitled when the Subject of that commit got accidentally dropped.
+
+v3: retitled to match Ed's previous pull-request.
 
 Cc: platform-driver-x86@vger.kernel.org
 Cc: linux-x86_64@vger.kernel.org
