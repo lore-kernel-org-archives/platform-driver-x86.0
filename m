@@ -2,156 +2,172 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3673C46467
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Jan 2023 20:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C092AC54EBE
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Jan 2023 16:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232416AbjAGU5N (ORCPT
+        id S232950AbjAHQvL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 7 Jan 2023 15:57:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
+        Sun, 8 Jan 2023 11:51:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbjAGU5M (ORCPT
+        with ESMTP id S230052AbjAHQvJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Jan 2023 15:57:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B3343E48
-        for <platform-driver-x86@vger.kernel.org>; Sat,  7 Jan 2023 12:57:11 -0800 (PST)
+        Sun, 8 Jan 2023 11:51:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9790E646F;
+        Sun,  8 Jan 2023 08:51:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E04D60C06
-        for <platform-driver-x86@vger.kernel.org>; Sat,  7 Jan 2023 20:57:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2E01C433F0
-        for <platform-driver-x86@vger.kernel.org>; Sat,  7 Jan 2023 20:57:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3A61EB80B57;
+        Sun,  8 Jan 2023 16:51:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8226CC433D2;
+        Sun,  8 Jan 2023 16:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673125030;
-        bh=aDN9LweX+G3YfgaKm0sGcyXCTF1xqonndcPSt4FKwjg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ct/9RAi7ayO6ef0LPOey/nAWWBISzPK58KIdX6qmBwCBnfLNheJRMDz+N6A0589rb
-         4F4ysZgwC+8plfMjGafmltgAdxsNkRGkAHfxnd7F0jO5SIziCcL/Hi4LGvVbdg8thQ
-         6dif5QHvp3UzZk2LniGcAQwuCK/keYgaBlEhGQewPNvmgDieVjK+BdF1NJBvEYBvIe
-         N6LSp4ETLR6cPltUQcpLLhlBVDneDiJg+sGXFiUgyZoXX1FhWMLC3mQywNNVc6dmAp
-         rCRsFaSqMH9q7csaid8aDdIeRo+g6Pp5/G/0gvpB1DZ43VaQaT9yw/9hbtw+fV3GNZ
-         MefgXhAdrXlyg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D2C51C43143; Sat,  7 Jan 2023 20:57:10 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sat, 07 Jan 2023 20:57:08 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jeroen@beerstra.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-eqqtbfMXHK@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1673196661;
+        bh=Qe/eO9zN1m73qj2kFmidTrQ9cFufjLEB3fslciiYZs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BtebHmmqrThyQ1nswpd1Xn9WtSyyL3ea2mf1WfLNjmglnsJNbDmuWJ6ko1LEgYmXC
+         PZ4OT6gM2JbWCL67GifNyHhySNe7V3TQ5y8K8/YQHKflYi5khRP52dymRfHWnBcPtk
+         y8YO9CM10bkbTkpZABs3BAQgkdk3nGyPPT97DsyFmfiqF4rSQfVCX1e8HCPaOcsVek
+         bPbh2R+rcX57lUzndqdcxEgM1wFtyKEMjanSZcTBDNzw+cm1L4KCX6rpWr+bRXvPBJ
+         uKS13hWoKkLm8qUTBCwlyNwENMJJgH4SauhiBw0fDEQZfTCVQbA589gPZAZfIOnz0O
+         owXuZ6ha7SgoA==
+Date:   Sun, 8 Jan 2023 18:50:45 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Aaron Thompson <dev@aaront.org>
+Cc:     linux-mm@kvack.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kasan-dev@googlegroups.com, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v3 1/1] mm: Always release pages to the buddy allocator
+ in memblock_free_late().
+Message-ID: <Y7r0ZRlwvCK0xOnQ@kernel.org>
+References: <20230106222222.1024-1-dev@aaront.org>
+ <01010185892de53e-e379acfb-7044-4b24-b30a-e2657c1ba989-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01010185892de53e-e379acfb-7044-4b24-b30a-e2657c1ba989-000000@us-west-2.amazonses.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+On Fri, Jan 06, 2023 at 10:22:44PM +0000, Aaron Thompson wrote:
+> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, memblock_free_pages()
+> only releases pages to the buddy allocator if they are not in the
+> deferred range. This is correct for free pages (as defined by
+> for_each_free_mem_pfn_range_in_zone()) because free pages in the
+> deferred range will be initialized and released as part of the deferred
+> init process. memblock_free_pages() is called by memblock_free_late(),
+> which is used to free reserved ranges after memblock_free_all() has
+> run. All pages in reserved ranges have been initialized at that point,
+> and accordingly, those pages are not touched by the deferred init
+> process. This means that currently, if the pages that
+> memblock_free_late() intends to release are in the deferred range, they
+> will never be released to the buddy allocator. They will forever be
+> reserved.
+> 
+> In addition, memblock_free_pages() calls kmsan_memblock_free_pages(),
+> which is also correct for free pages but is not correct for reserved
+> pages. KMSAN metadata for reserved pages is initialized by
+> kmsan_init_shadow(), which runs shortly before memblock_free_all().
+> 
+> For both of these reasons, memblock_free_pages() should only be called
+> for free pages, and memblock_free_late() should call __free_pages_core()
+> directly instead.
+> 
+> One case where this issue can occur in the wild is EFI boot on
+> x86_64. The x86 EFI code reserves all EFI boot services memory ranges
+> via memblock_reserve() and frees them later via memblock_free_late()
+> (efi_reserve_boot_services() and efi_free_boot_services(),
+> respectively). If any of those ranges happens to fall within the
+> deferred init range, the pages will not be released and that memory will
+> be unavailable.
+> 
+> For example, on an Amazon EC2 t3.micro VM (1 GB) booting via EFI:
+> 
+> v6.2-rc2:
+>   # grep -E 'Node|spanned|present|managed' /proc/zoneinfo
+>   Node 0, zone      DMA
+>           spanned  4095
+>           present  3999
+>           managed  3840
+>   Node 0, zone    DMA32
+>           spanned  246652
+>           present  245868
+>           managed  178867
+> 
+> v6.2-rc2 + patch:
+>   # grep -E 'Node|spanned|present|managed' /proc/zoneinfo
+>   Node 0, zone      DMA
+>           spanned  4095
+>           present  3999
+>           managed  3840
+>   Node 0, zone    DMA32
+>           spanned  246652
+>           present  245868
+>           managed  222816   # +43,949 pages
+> 
+> Fixes: 3a80a7fa7989 ("mm: meminit: initialise a subset of struct pages if CONFIG_DEFERRED_STRUCT_PAGE_INIT is set")
+> Signed-off-by: Aaron Thompson <dev@aaront.org>
 
---- Comment #282 from Jeroen Beerstra (jeroen@beerstra.org) ---
-Looks good to me:
+Applied, thanks!
 
-$ sensors
-k10temp-pci-00c3
-Adapter: PCI adapter
-Tctl:         +64.0=C2=B0C=20=20
-Tccd1:        +35.4=C2=B0C=20=20
-Tccd2:        +35.1=C2=B0C=20=20
+> ---
+>  mm/memblock.c                     | 8 +++++++-
+>  tools/testing/memblock/internal.h | 4 ++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 511d4783dcf1..fc3d8fbd2060 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1640,7 +1640,13 @@ void __init memblock_free_late(phys_addr_t base, phys_addr_t size)
+>  	end = PFN_DOWN(base + size);
+>  
+>  	for (; cursor < end; cursor++) {
+> -		memblock_free_pages(pfn_to_page(cursor), cursor, 0);
+> +		/*
+> +		 * Reserved pages are always initialized by the end of
+> +		 * memblock_free_all() (by memmap_init() and, if deferred
+> +		 * initialization is enabled, memmap_init_reserved_pages()), so
+> +		 * these pages can be released directly to the buddy allocator.
+> +		 */
+> +		__free_pages_core(pfn_to_page(cursor), 0);
+>  		totalram_pages_inc();
+>  	}
+>  }
+> diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
+> index fdb7f5db7308..85973e55489e 100644
+> --- a/tools/testing/memblock/internal.h
+> +++ b/tools/testing/memblock/internal.h
+> @@ -15,6 +15,10 @@ bool mirrored_kernelcore = false;
+>  
+>  struct page {};
+>  
+> +void __free_pages_core(struct page *page, unsigned int order)
+> +{
+> +}
+> +
+>  void memblock_free_pages(struct page *page, unsigned long pfn,
+>  			 unsigned int order)
+>  {
+> -- 
+> 2.30.2
+> 
 
-nct6799-isa-0290
-Adapter: ISA adapter
-in0:                        1.37 V  (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
-ALARM
-in2:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in3:                        3.34 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in4:                        1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in5:                        1.03 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in6:                      752.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in7:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in8:                        3.30 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in9:                        1.67 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in10:                     560.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in11:                     560.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in12:                       1.03 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in13:                     496.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in14:                     424.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-fan1:                      755 RPM  (min =3D    0 RPM)
-fan2:                      819 RPM  (min =3D    0 RPM)
-fan3:                      712 RPM  (min =3D    0 RPM)
-fan4:                        0 RPM  (min =3D    0 RPM)
-fan5:                      674 RPM  (min =3D    0 RPM)
-fan7:                        0 RPM  (min =3D    0 RPM)
-SYSTIN:                    +31.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                    +36.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                   +39.5=C2=B0C    sensor =3D thermistor
-AUXTIN1:                   +19.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                   +20.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                   +73.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0 Calibration:  +54.0=C2=B0C=20=20
-PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
-TSI0_TEMP:                 +64.5=C2=B0C=20=20
-intrusion0:               ALARM
-intrusion1:               ALARM
-beep_enable:              disabled
-
-amdgpu-pci-0e00
-Adapter: PCI adapter
-vddgfx:        1.34 V=20=20
-vddnb:         1.01 V=20=20
-edge:         +41.0=C2=B0C=20=20
-PPT:          55.25 W=20=20
-
-Linux beerstra 6.1.4-1.el9_1.beerstra.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Jan=
-  7
-19:36:39 CET 2023 x86_64 x86_64 x86_64 GNU/Linux
-
-The patch didn't apply cleanly to 6.1.4 though, but that is because some bo=
-ards
-were already included. Voltages seem off though.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Sincerely yours,
+Mike.
