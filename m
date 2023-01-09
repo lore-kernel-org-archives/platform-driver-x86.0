@@ -2,172 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C092AC54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Jan 2023 16:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619CEC54EBD
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Jan 2023 10:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232950AbjAHQvL (ORCPT
+        id S229689AbjAIKQU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 8 Jan 2023 11:51:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
+        Mon, 9 Jan 2023 05:16:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbjAHQvJ (ORCPT
+        with ESMTP id S236199AbjAIKPZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Jan 2023 11:51:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9790E646F;
-        Sun,  8 Jan 2023 08:51:04 -0800 (PST)
+        Mon, 9 Jan 2023 05:15:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3AD11455
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 02:14:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3A61EB80B57;
-        Sun,  8 Jan 2023 16:51:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8226CC433D2;
-        Sun,  8 Jan 2023 16:50:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF51660FD1
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 502CAC433D2
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673196661;
-        bh=Qe/eO9zN1m73qj2kFmidTrQ9cFufjLEB3fslciiYZs4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BtebHmmqrThyQ1nswpd1Xn9WtSyyL3ea2mf1WfLNjmglnsJNbDmuWJ6ko1LEgYmXC
-         PZ4OT6gM2JbWCL67GifNyHhySNe7V3TQ5y8K8/YQHKflYi5khRP52dymRfHWnBcPtk
-         y8YO9CM10bkbTkpZABs3BAQgkdk3nGyPPT97DsyFmfiqF4rSQfVCX1e8HCPaOcsVek
-         bPbh2R+rcX57lUzndqdcxEgM1wFtyKEMjanSZcTBDNzw+cm1L4KCX6rpWr+bRXvPBJ
-         uKS13hWoKkLm8qUTBCwlyNwENMJJgH4SauhiBw0fDEQZfTCVQbA589gPZAZfIOnz0O
-         owXuZ6ha7SgoA==
-Date:   Sun, 8 Jan 2023 18:50:45 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Aaron Thompson <dev@aaront.org>
-Cc:     linux-mm@kvack.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Marco Elver <elver@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kasan-dev@googlegroups.com, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v3 1/1] mm: Always release pages to the buddy allocator
- in memblock_free_late().
-Message-ID: <Y7r0ZRlwvCK0xOnQ@kernel.org>
-References: <20230106222222.1024-1-dev@aaront.org>
- <01010185892de53e-e379acfb-7044-4b24-b30a-e2657c1ba989-000000@us-west-2.amazonses.com>
+        s=k20201202; t=1673259297;
+        bh=5oGDLD/SfgE5ZgYmu1/MKwTN4+l+DgLfJ4bgHQsrKHk=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=R3vOoU9hm0O2yiQpLRcaG0sIr7qjERDvE0Y7zrOQdEZg2fTvFbBvgjqf6LUNkTP/T
+         Y+2gHljQmwNlfLmftIZEHfgMnir4f3Bue7t8bTXejqHVg4NIS2qqvFPqFvGQoIe8gX
+         QSd5nmw1NJ9s++CAf8VnxCEHhzH0oUiVV/6aJvTo5HuYi59yLPCrhzI7ZYLU6SCqr8
+         FL3C/I1pwTDl+QXnVvvIn9vYOM+teqdTysQ6z5tJIhFQ+IXjAaNDo3+DMzD2v+lct6
+         Zd153o9nAx9j7bVmvTSdUcggQBk+BLej6II1h4lic1OPn7Un84cl1rZaM+L4KhymiX
+         d3DH8N+H7FvKg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 3B2D5C43143; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 114161] pinctrl-baytrail: Potential Error: Setting GPIO with
+ direct_irq_en to output
+Date:   Mon, 09 Jan 2023 10:14:57 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status resolution
+Message-ID: <bug-114161-215701-rbzkAVH0oW@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-114161-215701@https.bugzilla.kernel.org/>
+References: <bug-114161-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01010185892de53e-e379acfb-7044-4b24-b30a-e2657c1ba989-000000@us-west-2.amazonses.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 06, 2023 at 10:22:44PM +0000, Aaron Thompson wrote:
-> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, memblock_free_pages()
-> only releases pages to the buddy allocator if they are not in the
-> deferred range. This is correct for free pages (as defined by
-> for_each_free_mem_pfn_range_in_zone()) because free pages in the
-> deferred range will be initialized and released as part of the deferred
-> init process. memblock_free_pages() is called by memblock_free_late(),
-> which is used to free reserved ranges after memblock_free_all() has
-> run. All pages in reserved ranges have been initialized at that point,
-> and accordingly, those pages are not touched by the deferred init
-> process. This means that currently, if the pages that
-> memblock_free_late() intends to release are in the deferred range, they
-> will never be released to the buddy allocator. They will forever be
-> reserved.
-> 
-> In addition, memblock_free_pages() calls kmsan_memblock_free_pages(),
-> which is also correct for free pages but is not correct for reserved
-> pages. KMSAN metadata for reserved pages is initialized by
-> kmsan_init_shadow(), which runs shortly before memblock_free_all().
-> 
-> For both of these reasons, memblock_free_pages() should only be called
-> for free pages, and memblock_free_late() should call __free_pages_core()
-> directly instead.
-> 
-> One case where this issue can occur in the wild is EFI boot on
-> x86_64. The x86 EFI code reserves all EFI boot services memory ranges
-> via memblock_reserve() and frees them later via memblock_free_late()
-> (efi_reserve_boot_services() and efi_free_boot_services(),
-> respectively). If any of those ranges happens to fall within the
-> deferred init range, the pages will not be released and that memory will
-> be unavailable.
-> 
-> For example, on an Amazon EC2 t3.micro VM (1 GB) booting via EFI:
-> 
-> v6.2-rc2:
->   # grep -E 'Node|spanned|present|managed' /proc/zoneinfo
->   Node 0, zone      DMA
->           spanned  4095
->           present  3999
->           managed  3840
->   Node 0, zone    DMA32
->           spanned  246652
->           present  245868
->           managed  178867
-> 
-> v6.2-rc2 + patch:
->   # grep -E 'Node|spanned|present|managed' /proc/zoneinfo
->   Node 0, zone      DMA
->           spanned  4095
->           present  3999
->           managed  3840
->   Node 0, zone    DMA32
->           spanned  246652
->           present  245868
->           managed  222816   # +43,949 pages
-> 
-> Fixes: 3a80a7fa7989 ("mm: meminit: initialise a subset of struct pages if CONFIG_DEFERRED_STRUCT_PAGE_INIT is set")
-> Signed-off-by: Aaron Thompson <dev@aaront.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D114161
 
-Applied, thanks!
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-> ---
->  mm/memblock.c                     | 8 +++++++-
->  tools/testing/memblock/internal.h | 4 ++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 511d4783dcf1..fc3d8fbd2060 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1640,7 +1640,13 @@ void __init memblock_free_late(phys_addr_t base, phys_addr_t size)
->  	end = PFN_DOWN(base + size);
->  
->  	for (; cursor < end; cursor++) {
-> -		memblock_free_pages(pfn_to_page(cursor), cursor, 0);
-> +		/*
-> +		 * Reserved pages are always initialized by the end of
-> +		 * memblock_free_all() (by memmap_init() and, if deferred
-> +		 * initialization is enabled, memmap_init_reserved_pages()), so
-> +		 * these pages can be released directly to the buddy allocator.
-> +		 */
-> +		__free_pages_core(pfn_to_page(cursor), 0);
->  		totalram_pages_inc();
->  	}
->  }
-> diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
-> index fdb7f5db7308..85973e55489e 100644
-> --- a/tools/testing/memblock/internal.h
-> +++ b/tools/testing/memblock/internal.h
-> @@ -15,6 +15,10 @@ bool mirrored_kernelcore = false;
->  
->  struct page {};
->  
-> +void __free_pages_core(struct page *page, unsigned int order)
-> +{
-> +}
-> +
->  void memblock_free_pages(struct page *page, unsigned long pfn,
->  			 unsigned int order)
->  {
-> -- 
-> 2.30.2
-> 
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|REOPENED                    |RESOLVED
+         Resolution|---                         |CODE_FIX
 
--- 
-Sincerely yours,
-Mike.
+--- Comment #10 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to Andy Shevchenko from comment #9)
+> I believe this is something which Hans (Cc'ed now) has fixed a couple of
+> years ago.
+
+Correct, this if fixed by:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3De2b74419e5cc7cfc58f3e785849f73f8fa0af5b3
+
+So lets close this bug.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
