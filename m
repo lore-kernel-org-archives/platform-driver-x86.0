@@ -2,94 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619CEC54EBD
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Jan 2023 10:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0CEC46467
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Jan 2023 13:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjAIKQU (ORCPT
+        id S232507AbjAJN1c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Jan 2023 05:16:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        Tue, 10 Jan 2023 08:27:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236199AbjAIKPZ (ORCPT
+        with ESMTP id S238441AbjAJN0p (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Jan 2023 05:15:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3AD11455
-        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 02:14:58 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DF51660FD1
-        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 502CAC433D2
-        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673259297;
-        bh=5oGDLD/SfgE5ZgYmu1/MKwTN4+l+DgLfJ4bgHQsrKHk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=R3vOoU9hm0O2yiQpLRcaG0sIr7qjERDvE0Y7zrOQdEZg2fTvFbBvgjqf6LUNkTP/T
-         Y+2gHljQmwNlfLmftIZEHfgMnir4f3Bue7t8bTXejqHVg4NIS2qqvFPqFvGQoIe8gX
-         QSd5nmw1NJ9s++CAf8VnxCEHhzH0oUiVV/6aJvTo5HuYi59yLPCrhzI7ZYLU6SCqr8
-         FL3C/I1pwTDl+QXnVvvIn9vYOM+teqdTysQ6z5tJIhFQ+IXjAaNDo3+DMzD2v+lct6
-         Zd153o9nAx9j7bVmvTSdUcggQBk+BLej6II1h4lic1OPn7Un84cl1rZaM+L4KhymiX
-         d3DH8N+H7FvKg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 3B2D5C43143; Mon,  9 Jan 2023 10:14:57 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 114161] pinctrl-baytrail: Potential Error: Setting GPIO with
- direct_irq_en to output
-Date:   Mon, 09 Jan 2023 10:14:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-114161-215701-rbzkAVH0oW@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-114161-215701@https.bugzilla.kernel.org/>
-References: <bug-114161-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 10 Jan 2023 08:26:45 -0500
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC01D431B9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jan 2023 05:26:40 -0800 (PST)
+Date:   Tue, 10 Jan 2023 13:26:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+        s=protonmail; t=1673357196; x=1673616396;
+        bh=zJPgx18sfNNY+dVsPt8olfzwY0xnBc+qWD13vLdabeY=;
+        h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+         Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+        b=i2SQmUs/gL54b79i03NhhJzqfR6g9T/VycY917GtHoiFoo1SwbGcKbnJNxPQ5BQs8
+         g04rQ190L9YYACUY6D1YLm5CVL3DJl6Z9x9HgfxgiPiuQ7imb0HNIw03zng6y81qrg
+         k8BDpaXvN6wgBrOxE7CguxqNmjjZIGixChA59b0IgrWTSfiO5/+l17rld6dKkzxMFG
+         /cHMX9jrilugNSsZuW5plbpGQCsFzQDxZA/Wg66rtsRLKlkb8GzczS3nhEy+8zIiJS
+         jyU4M2NnwaP2cV1khNXPbqiQrfhcMT9U2noRchNpHkAtNW8eXm+Di4iMrttM2Alwi+
+         /Ax6aagyouHiQ==
+To:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "ike.pan@canonical.com" <ike.pan@canonical.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+From:   John Martens <john.martens4@proton.me>
+Subject: New Lenovo Legion Fan, Temperature, Power Mode Driver
+Message-ID: <cchW8yA1BnN-yMnXp0EY8oKubzPC721jNMylHVzSVuf5C0YAhC7gYkSjhxIpZMv7K9hMw4ezLbxGEtEd7Gs_bAIoDizRSQG2V3Ql5nl5G_0=@proton.me>
+Feedback-ID: 65421997:user:proton
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D114161
+Dear Kernel devs, Mr. Hans de Goede, Mr. Ike Panhc,
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
+I am currently working on a driver for fan control, fan speed, temperature =
+sensors, and power mode (platform profile) for Lenovo Legion Laptops. Switc=
+hing iGPU/dGPU could also be possible. It is a port of the closed and open =
+tools in Windows LenovoLegionToolkit, Vantage, LegionFanControl. I am testi=
+ng it on different laptops with the help of a forum/chat and its working qu=
+ite good.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|REOPENED                    |RESOLVED
-         Resolution|---                         |CODE_FIX
+There is a README (https://github.com/johnfanv2/LenovoLegionLinux) and code=
+ (https://github.com/johnfanv2/LenovoLegionLinux/blob/main/kernel_module/le=
+gion-laptop.c).
 
---- Comment #10 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Andy Shevchenko from comment #9)
-> I believe this is something which Hans (Cc'ed now) has fixed a couple of
-> years ago.
+I would be interested to get your opinion.
 
-Correct, this if fixed by:
+Questions
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3De2b74419e5cc7cfc58f3e785849f73f8fa0af5b3
+Should this extend ideapad_laptop.c or a new file?
+    - pro:
+        - both access parts of the same hardware
+    - con:
+        - both files are already quite large
+        - it only works on Lenovo Legion laptops that have this=20
+          custom control firmware in the embedded controller (EC)
+        - there is almost no reuse of code
 
-So lets close this bug.
+Which method do you prefer writing to EC memory for older models? With iore=
+map or outb?=20
+    - To use ioremap one needs to get the start address. It is
+      different on Intel vs AMD. It is the same as a OperationRegion
+      in the ACPI tables, e.g. "OperationRegion (ERAX, SystemMemory, =20
+      0xFE00D400, 0xFF)". However, I have found no kernel functions =20
+      to get the address (here 0xFE00D400) of a  OperationRegion. =20
+      One could also hardcode it for each model/firmware.
+    - alternative (which I am currently using) is sending commands   =20
+      to IO ports 0x4E/0x4F (Super IO controller).=20
 
---=20
-You may reply to this email to add a comment.
+Background
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+The laptops come with an embedded controller (EC) from ITE. These usually c=
+ome with a 3 point fan curve in ROM, but also can be flashed with a small a=
+dditional custom program. Lenovo implemented implemented a 10 point fan cur=
+ve. The program is also shipped with each EFI update.
+
+The fan curve can be edited by writing to some memory locations in the EC. =
+These locations are
+
+The driver works by:
+- directly writing/reading embedded controller memory
+    - older models (2020-2021): there are two possibilities
+        - the EC memory is already memory mapped, so one can=20
+          use ioremap
+        - one can use outb/inb and write sequenc of commands to=20
+          port 0x43, 0x4F (super IO ports)
+        - ideapad_laptop.c writes to some parts of EC memory=20
+          with ACPI methods VPCR, VPCW. However, these do not seem =20
+          to work in the memory region with the fan curve.
+    - newer models (2022): these provide ACPI/WMI methods =20
+      setFanCurve/getFanCurve to write to these regions. However, I =20
+      have implemented that and have no models for testing
+
+The driver works for the models 2020-2022. The code layout is heavily inspi=
+red by the ideapad_laptop driver.
+
+Best regards,
+
+John Martens
+
