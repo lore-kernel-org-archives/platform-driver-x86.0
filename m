@@ -2,70 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB54C54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Jan 2023 14:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481A4C54EBC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Jan 2023 14:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234267AbjAJOPy (ORCPT
+        id S238734AbjAJO4p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Jan 2023 09:15:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38390 "EHLO
+        Tue, 10 Jan 2023 09:56:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233467AbjAJOPq (ORCPT
+        with ESMTP id S237888AbjAJO4o (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Jan 2023 09:15:46 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B872DF4;
-        Tue, 10 Jan 2023 06:15:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 8E1D3CE178F;
-        Tue, 10 Jan 2023 14:15:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D262CC433A1;
-        Tue, 10 Jan 2023 14:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673360141;
-        bh=QCMqb710Vb2qR8xQ9o5XLbvRa0QoV7APy78TNWBPGtU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N+Dj0Y6x+d/XA8heNnvIJJ9HFdF6ObvNejgdnlKTnjYoHhvKJQMiBaheSEkjIJmhO
-         FCZnF8LFn4LsRRjAbUDPWzCBrXhICRxekE9lTD5QSnqQwUPZTppOd6Df++W/UNuX/U
-         qRbDViNjPk1ki9LYt8KzniWNbmcudUZvwe/TD1RVvuWGinJaHYgSJfyY6rz6WALoid
-         RN7hBQHoj/jOLXXwTSLnwJS5mL8QdvRSZGKjs1VOKQ1Mg8eXouGIDXFinQJxJXSfP5
-         XFWkvU/Ln6v/P7RFnYviCoBEHvnmAQ8zaZbMAEN0DwYCmen1nB0wGyArs2disAwiZH
-         JTbd8n7bwPY0g==
-Received: by mail-lf1-f46.google.com with SMTP id bq39so18679555lfb.0;
-        Tue, 10 Jan 2023 06:15:41 -0800 (PST)
-X-Gm-Message-State: AFqh2kobrGGarY678SA2RixYCLRm6tgyDaPdxdOLJZF4NxuossuQfijF
-        tv4wWyDdA4p5PrOCcfOBuNIFTVYpFPfg9UQ7tE0=
-X-Google-Smtp-Source: AMrXdXvRSvgcrKUl+cRp4ITDJtAmYYlkzzcEbCFzT6kt5rOnxeWPTNprfhIok8q16FYnewS0coJKRnO3uo7N2P6dDC8=
-X-Received: by 2002:ac2:5d4e:0:b0:4b5:964d:49a4 with SMTP id
- w14-20020ac25d4e000000b004b5964d49a4mr6013598lfd.637.1673360139832; Tue, 10
- Jan 2023 06:15:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20221208221217.56354-1-andriy.shevchenko@linux.intel.com> <Y71u/Hn+khg/Nuj7@smile.fi.intel.com>
-In-Reply-To: <Y71u/Hn+khg/Nuj7@smile.fi.intel.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 10 Jan 2023 15:15:28 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEWLcBTR5z0aC9=n1rLT=Z2yMNW8D-HpLd6e8YCz1hMJA@mail.gmail.com>
-Message-ID: <CAMj1kXEWLcBTR5z0aC9=n1rLT=Z2yMNW8D-HpLd6e8YCz1hMJA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] efi/earlycon: Replace open coded strnchrnul()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Tue, 10 Jan 2023 09:56:44 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FABB1081;
+        Tue, 10 Jan 2023 06:56:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673362603; x=1704898603;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eBfaUhZOLcHd/sdh/6tGQyQ/jHfPZIRMgOQy3o8072o=;
+  b=VWIL84QuHQwmX7QeN4Y5YVQ9jRki3fxJ4G+YwRBIYK/8A/YfHjI0SLtZ
+   oeuaFlxyK2GcAAM1a8G8OjqeJu6m//rbQs+QIoySMk4Q4D7mA7dRwk0SW
+   zeq477NrrX+cQxSTu5KsX6HXtQ7KZ0QweHtd8VOPe4k18WMIxLXATNUfO
+   /AZQqv4THNGoVITEkhtifLEWVFvwuyScYTUbiFbIEE/OWyLUGtIrXr4lc
+   1LGQXv6agaWel6t7W3KqdGcG1MPXgf4Ieea7ybOw+OP829C5Wt6i5CTWx
+   wnvT0peMJNXSszKq7AZZQ+j37QU0wF7eVTu/gGD++KdreT1Jjs7s8yiSF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="324399807"
+X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
+   d="scan'208";a="324399807"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 06:56:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="689421438"
+X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
+   d="scan'208";a="689421438"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 10 Jan 2023 06:56:41 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pFG3M-00751G-06;
+        Tue, 10 Jan 2023 16:56:40 +0200
+Date:   Tue, 10 Jan 2023 16:56:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 1/2] efi/earlycon: Replace open coded strnchrnul()
+Message-ID: <Y718p+yuKza/hJr7@smile.fi.intel.com>
+References: <20221208221217.56354-1-andriy.shevchenko@linux.intel.com>
+ <Y71u/Hn+khg/Nuj7@smile.fi.intel.com>
+ <CAMj1kXEWLcBTR5z0aC9=n1rLT=Z2yMNW8D-HpLd6e8YCz1hMJA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEWLcBTR5z0aC9=n1rLT=Z2yMNW8D-HpLd6e8YCz1hMJA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 10 Jan 2023 at 14:58, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Dec 09, 2022 at 12:12:16AM +0200, Andy Shevchenko wrote:
-> > strnchrnul() can be called in the early stages. Replace
-> > open coded variant in the EFI early console driver.
->
-> Any comments on the series?
->
+On Tue, Jan 10, 2023 at 03:15:28PM +0100, Ard Biesheuvel wrote:
+> On Tue, 10 Jan 2023 at 14:58, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Dec 09, 2022 at 12:12:16AM +0200, Andy Shevchenko wrote:
+> > > strnchrnul() can be called in the early stages. Replace
+> > > open coded variant in the EFI early console driver.
+> >
+> > Any comments on the series?
+> 
+> Looks fine to me. Queued up in efi/next now.
 
-Looks fine to me. Queued up in efi/next now.
+Thank you and HNY!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
