@@ -2,92 +2,227 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A309BC5479D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 11:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAF0C677F1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 11:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236548AbjAKLcA (ORCPT
+        id S231806AbjAKLkM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Jan 2023 06:32:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
+        Wed, 11 Jan 2023 06:40:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234100AbjAKLb3 (ORCPT
+        with ESMTP id S232120AbjAKLjl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Jan 2023 06:31:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B466AE6B;
-        Wed, 11 Jan 2023 03:31:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 647D561C52;
-        Wed, 11 Jan 2023 11:31:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB18C433EF;
-        Wed, 11 Jan 2023 11:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1673436684;
-        bh=pM+8n3r7RlbZn8/vOlXhyjyToBZb91WLLHBBqD470gk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mfu+dPBTJLWWzZi1+oiqMyofu84JKE5/CwaXEV/175ufzEC0ZX0dke3j4Fg9JYu33
-         FyXY5k+WRRxfa8FmOYzfQA5sZAlH2YpU9HA6bVwryQ1TWufxu4ifJOtLXvcbZZxg9i
-         ve+5pHGNuhDibmJTyqyI+tB0EXCQscc/iJafnBMo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 09/16] platform/x86: wmi: move dev_to_wblock() and dev_to_wdev to use container_of_const()
-Date:   Wed, 11 Jan 2023 12:30:11 +0100
-Message-Id: <20230111113018.459199-10-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230111113018.459199-1-gregkh@linuxfoundation.org>
-References: <20230111113018.459199-1-gregkh@linuxfoundation.org>
+        Wed, 11 Jan 2023 06:39:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098E01AA2C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 03:35:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673436937;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aHM2nrq0s6Ww2GRqx6ysR7XCOFH9LRjdLLMrpgZ0h6U=;
+        b=GszriPKtmEULQZmluhbNQItDIFMwAxXPGUtMt5oENiSais9Szn5v6Hqd/pNE1uyx3rXtK1
+        zS7gSSNHJ4c3NW+xuQ5MO8jUvL5IECsp2yIbCDDa0H83ZcB4App1FGKYOFxF/waK/3g0bw
+        QcHt3erf+BerfahFKfT0GTIvrLgFPhQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-594-hVV7PXQROc6IvlxaI0Sd4A-1; Wed, 11 Jan 2023 06:35:36 -0500
+X-MC-Unique: hVV7PXQROc6IvlxaI0Sd4A-1
+Received: by mail-ej1-f72.google.com with SMTP id qa18-20020a170907869200b007df87611618so9878932ejc.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 03:35:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aHM2nrq0s6Ww2GRqx6ysR7XCOFH9LRjdLLMrpgZ0h6U=;
+        b=oNwXRtoKft0kwZEiMWxHxSVQ1uugTJvf7RkhHWA71Ca2Fdouqt6J5BC2F5hpWoJHnf
+         C4nGD78b94K8i4CN5zndxQFYXGuP4nFdycNNhy9lTITZpTZIBTdw5PeQssNG+D2DuBy0
+         Qj+TqqVcmObLxFJ7Xhc7N2FX5FgEyG0SWUhZ54opzZVciVezUWDNLS617G8vhmKb4JlR
+         YfMHXVpLaeFtJXzwaQtpcjZHEYgokvCf92Adv8zgYVOVkxe8PHTE7hOUzvbwi8o+Qbcz
+         AmM9V79D1CxffGoE4Kwl0FIGDyvj32fjYj2BmIL9HWY0jh1BCUixAqgiJo3tcKIKg9id
+         GvVg==
+X-Gm-Message-State: AFqh2kpD+Y+tlgdg7mOQWkz14jxaoCr7Cptg29Tyg3zZLvlnbwjyfDgy
+        Yr97xchIUH50AxrxDidZXpMAk+mhMkRKa//hp5conEQyrfKqOwk4+yIRtHlhnK+Ejumhf/1rldb
+        w7VPXXsRxlXefD9+2hNEt9amnwtm5F70Pgg==
+X-Received: by 2002:a17:906:a19a:b0:7c1:6d65:4718 with SMTP id s26-20020a170906a19a00b007c16d654718mr62940112ejy.33.1673436935054;
+        Wed, 11 Jan 2023 03:35:35 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXugso+wPAehAcdGPV3PaQJQuAyz1wjv3Cn6uo0v71xo5Wz6pAe3kQp44xPM4llry88QH/tdnQ==
+X-Received: by 2002:a17:906:a19a:b0:7c1:6d65:4718 with SMTP id s26-20020a170906a19a00b007c16d654718mr62940100ejy.33.1673436934864;
+        Wed, 11 Jan 2023 03:35:34 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a3-20020aa7cf03000000b0049019b48373sm5959303edy.85.2023.01.11.03.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jan 2023 03:35:34 -0800 (PST)
+Message-ID: <7bd5d013-d0d8-8020-d91a-39917fa61f33@redhat.com>
+Date:   Wed, 11 Jan 2023 12:35:33 +0100
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1435; i=gregkh@linuxfoundation.org; h=from:subject; bh=pM+8n3r7RlbZn8/vOlXhyjyToBZb91WLLHBBqD470gk=; b=owGbwMvMwCRo6H6F97bub03G02pJDMn75p5o6T/EzfL4f/ZDcd78ffPFLFzmX7r0wmzz1P7wPT8X nlZf3RHLwiDIxCArpsjyZRvP0f0VhxS9DG1Pw8xhZQIZwsDFKQATWePNMD/0iFnByeRPbjwlRUwnwr pO/mHYt59hnuWBB8387LNn8rLdut6+8uQBGTE+cwA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3 08/11] platform/x86: int3472/discrete: Create a LED
+ class device for the privacy LED
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
+        linux-media@vger.kernel.org
+References: <20221216113013.126881-1-hdegoede@redhat.com>
+ <20221216113013.126881-9-hdegoede@redhat.com>
+ <Y5x9uHm8NnVHc0Lv@smile.fi.intel.com>
+ <d3d28b30-a364-66eb-7870-06c43d683bb7@redhat.com>
+ <Y5ynWBqkhLB2cHYU@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y5ynWBqkhLB2cHYU@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The driver core is changing to pass some pointers as const, so move the
-dev_to_wdev() and dev_to_wblock() functions to use container_of_const()
-to handle this change.
+Hi,
 
-Both of these functions now properly keep the const-ness of the pointer
-passed into it, while as before it could be lost.
+On 12/16/22 18:14, Andy Shevchenko wrote:
+> On Fri, Dec 16, 2022 at 05:29:13PM +0100, Hans de Goede wrote:
+>> On 12/16/22 15:16, Andy Shevchenko wrote:
+>>> On Fri, Dec 16, 2022 at 12:30:10PM +0100, Hans de Goede wrote:
+> 
+> ...
+> 
+>>>> +	if (IS_ERR(int3472->pled.gpio)) {
+>>>> +		ret = PTR_ERR(int3472->pled.gpio);
+>>>> +		return dev_err_probe(int3472->dev, ret, "getting privacy LED GPIO\n");
+>>>
+>>> 	return dev_err_probe(...);
+>>
+>> That goes over 100 chars.
+> 
+> The point is you don't need ret to be initialized. Moreover, no-one prevents
+> you to split the line to two.
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/x86/wmi.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+The compiler is perfectly capable of optimizing away the store
+in ret if that is not necessary; and splitting the line instead
+of doing it above will just make the code harder to read.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 5ffc00480aef..46d1edc08f20 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -693,15 +693,8 @@ char *wmi_get_acpi_device_uid(const char *guid_string)
- }
- EXPORT_SYMBOL_GPL(wmi_get_acpi_device_uid);
- 
--static struct wmi_block *dev_to_wblock(struct device *dev)
--{
--	return container_of(dev, struct wmi_block, dev.dev);
--}
--
--static struct wmi_device *dev_to_wdev(struct device *dev)
--{
--	return container_of(dev, struct wmi_device, dev);
--}
-+#define dev_to_wblock(__dev)	container_of_const(__dev, struct wmi_block, dev.dev)
-+#define dev_to_wdev(__dev)	container_of_const(__dev, struct wmi_device, dev)
- 
- static inline struct wmi_driver *drv_to_wdrv(struct device_driver *drv)
- {
--- 
-2.39.0
+Also this really is bikeshedding...
+
+> 
+>>>> +	}
+> 
+> ...
+> 
+>>>> +	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
+>>>> +	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
+>>>> +		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
+>>>
+>>>> +	for (i = 0; int3472->pled.name[i]; i++) {
+>>>> +		if (int3472->pled.name[i] == ':') {
+>>>> +			int3472->pled.name[i] = '_';
+>>>> +			break;
+>>>> +		}
+>>>> +	}
+>>>
+>>> NIH strreplace().
+>>
+>> Please look more careful, quoting from the strreplace() docs:
+>>
+>>  * strreplace - Replace all occurrences of character in string.
+>>
+>> Notice the *all* and we only want to replace the first ':' here,
+>> because the ':' char has a special meaning in LED class-device-names.
+> 
+> It's still possible to use that, but anyway, the above is still
+> something NIH.
+> 
+> 	char *p;
+> 
+> 	p = strchr(name, ':');
+> 	*p = '_';
+
+Ok, In will switch to this for the next version.
+
+> But either code has an issue if by some reason you need to check if : is ever
+> present in acpi_dev_name().
+
+acpi device names are set by this code:
+
+        result = ida_alloc(instance_ida, GFP_KERNEL);
+        if (result < 0)
+                return result;
+
+        device->pnp.instance_no = result;
+        dev_set_name(&device->dev, "%s:%02x", acpi_device_bus_id->bus_id, result);
+
+And the bus_id cannot have a : in it, so there always is a single :.
+
+
+> 
+> The more robust is either to copy acpi_dev_name(), call strreplace(), so you
+> will be sure that _all_ : from ACPI device name will be covered and then attach
+> the rest.
+> 
+> ...
+> 
+>>>> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
+>>>> +{
+>>>> +	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
+>>>> +		return;
+>>>
+>>> This dups the check inside the _unregister() below, right?
+>>
+>> Right.
+>>
+>>>> +	led_remove_lookup(&int3472->pled.lookup);
+>>>
+>>> With list_del_init() I believe the above check can be droped.
+>>
+>> No it cannot, list_del_init() inside led_remove_lookup() would
+>> protect against double led_remove_lookup() calls.
+>>
+>> But here we may have a completely uninitialized list_head on
+>> devices without an INT3472 privacy-led, which will trigger
+>> either __list_del_entry_valid() errors or lead to NULL
+>> pointer derefs.
+> 
+> But we can initialize that as well...
+
+The standard pattern in the kernel is that INIT_LIST_HEAD()
+is only used for list_head-s which are actually used as the head
+of the list. list_head-s used to track members of the list are
+usually not initialized until they are added to the list.
+
+Doing multiple list-init-s in multiple cases, including
+one in *subsystem core code* just to drop an if here seems
+counter productive.
+
+Also checking that we can move forward with the unregister
+is a good idea regardless of all the called functions being
+able to run safely if the register never happened, because
+future changes to the unregister function might end up
+doing something which is unsafe when the LED was never
+registered in the first place.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+>>>> +	led_classdev_unregister(&int3472->pled.classdev);
+>>>> +	gpiod_put(int3472->pled.gpio);
+>>>> +}
+> 
 
