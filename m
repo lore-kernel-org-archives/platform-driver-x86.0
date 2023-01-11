@@ -2,140 +2,67 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C2C46467
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 18:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2A6C54EBC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 18:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232992AbjAKSEy (ORCPT
+        id S234213AbjAKS33 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Jan 2023 13:04:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50736 "EHLO
+        Wed, 11 Jan 2023 13:29:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbjAKSEx (ORCPT
+        with ESMTP id S238754AbjAKS2k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Jan 2023 13:04:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6111056E
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 10:04:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3FA12B81BB5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 18:04:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F267FC433EF
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 18:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673460290;
-        bh=e3YU0oRYM0ehqUH+jriwNv4wCjsJgKlhNwK0W9pUbsw=;
-        h=From:To:Subject:Date:From;
-        b=Wps+p4bmy8anWjvdE0zaL5YQx93ja36GBO/8sgdVot7piyRofgCf062yOb7Zwq9gk
-         1EAbQVKWFEnGCZgdiX2o6+tjPlSGrPTOaw46U4hk8GbvAoyrlmFF3BVFSzea2m2Dai
-         sOq7QwZQMhU0UNBKdbOOpCetQKmhG+4w610eafChZPDTlm23RCnuG+zcun3b574NuF
-         dfhPNQbpFwFxeadVcPdB5CAlVM+bbbvMqvJN84u5leElhCLAzo++arU1wNMB40x/3j
-         JiPdDu+23FXFCTpWjGhmDU4op7c7w/7oDbQo/NgPz+O1derctuLxr35KUZfX/0B5De
-         h0VbVPA/1byQQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E0640C43141; Wed, 11 Jan 2023 18:04:49 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216917] New: hibernation regression since 6.0.18 (Ryzen-5650U
- incl. Radeon GPU)
-Date:   Wed, 11 Jan 2023 18:04:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kolAflash@kolahilft.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-216917-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 11 Jan 2023 13:28:40 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AA932E8A;
+        Wed, 11 Jan 2023 10:28:37 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1673461716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XbHz+r4gS67P31F5u+ZSysVNdDYKMiNjdT2EucbKd3E=;
+        b=lXvvoQHKqOwihWoCJuyJb72HKyLp5RP/InGDCYN8zYLAmIvUi6cu1Inbm6IMGqnsum/sng
+        MhLJhGsbPX62sryYcJ3vS+Pzfl5DkG2gyl06GVpuwE3ODaPSMmpVJ+ztuFZ0j1w89XuZpI
+        LsanNEv/7SgUUTcidB51fTnqX28nyOXlHRKNBJqjbHJxciEr9ZnRK1q1vkc66bER3fl0R0
+        Iw0j/ZI0cUggH6MH6snMiievoZ+/BfWSKtOZV1KDYIdEerva/DkVILSrId6iqm20+qOZmi
+        2vvq+My7nwEc1dLjT8uSSjvTD9BQxzPK8ZEie0xM6KXOYo0Ae0nL/7Bfpf95xg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1673461716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XbHz+r4gS67P31F5u+ZSysVNdDYKMiNjdT2EucbKd3E=;
+        b=0zLjVYnmGPMoqdCm1kV1PGYNKkXR61UrEyJJqOJ/3o4IwHpYaJJxSavLzAipZyd3eayY7b
+        D4Kdqlno/G3WH4Bw==
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 19/19] irqdomain: Switch to per-domain locking
+In-Reply-To: <878rjcbnp8.ffs@tglx>
+References: <20221209140150.1453-1-johan+linaro@kernel.org>
+ <20221209140150.1453-20-johan+linaro@kernel.org> <87mt7sbtf9.ffs@tglx>
+ <Y5c6z3t+sV/kIMjF@hovoldconsulting.com> <878rjcbnp8.ffs@tglx>
+Date:   Wed, 11 Jan 2023 19:28:35 +0100
+Message-ID: <871qo1hqng.ffs@tglx>
 MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216917
+On Mon, Dec 12 2022 at 17:18, Thomas Gleixner wrote:
+> On Mon, Dec 12 2022 at 15:29, Johan Hovold wrote:
+>> I added to irq_domain_set_mapping() and which is is called for each
+>> (inner) domain in a hierarchy when allocating an IRQ.
+>
+> Hmm. Indeed that should do the trick.
+>
+> Some comments would be appreciated as the rules around domain->root are
+> far from obvious.
 
-            Bug ID: 216917
-           Summary: hibernation regression since 6.0.18 (Ryzen-5650U incl.
-                    Radeon GPU)
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 6.0.18
-          Hardware: AMD
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: kolAflash@kolahilft.de
-        Regression: No
-
-Since Linux-6.0.18 hibernation isn't working anymore. 6.0.17 was working fi=
-ne.
-
-When doing
-  systemctl start hibernate.target
-the screen turns black, but the system doesn't power down.
-Same problem for "platform" and "shutdown" in /etc/systemd/sleep.conf =3D>
-HibernateMode.
-
-Force rebooting the system makes GRUB skip the boot menu (like normal when
-waking from hibernation), but the system just boots up freshly, not restori=
-ng
-the old state.
-
-
-=3D System =3D
-Model: HP EliteBook 845 G8 (notebook)
-CPU+GPU: Ryzen 5650U incl. Radeon GPU
-OS: openSUSE-15.4
-Kernel: compiled from kernel.org
-The HP EliteBook 845 G8 uses s0ix/s2idle.
-
-
-Sadly I don't know how to provide helpful logs. After reboot there's nothing
-helpful in /var/log/messages
-Just this:
-2023-01-11T18:45:51.208584+01:00 myhost systemd[1]: Reached target Sleep.
-2023-01-11T18:45:51.224615+01:00 myhost systemd[1]: Starting Hibernate...
-2023-01-11T18:45:51.253804+01:00 myhost systemd-sleep[1998]: INFO: running
-/usr/lib/systemd/system-sleep/grub2.sleep for hibernate
-2023-01-11T18:45:51.253875+01:00 myhost systemd-sleep[1998]: INFO: Running
-prepare-grub ..
-2023-01-11T18:45:51.322933+01:00 myhost systemd-sleep[1998]:   running kern=
-el
-is grub menu entry openSUSE Leap 15.4 (vmlinuz-6.0.18-v6.0.18-myhost)
-2023-01-11T18:45:51.323010+01:00 myhost systemd-sleep[1998]:   preparing
-boot-loader: selecting entry openSUSE Leap 15.4, kernel
-/boot/6.0.18-v6.0.18-myhost
-2023-01-11T18:45:51.331546+01:00 myhost systemd-sleep[1998]:   running
-/usr/sbin/grub2-once "openSUSE Leap 15.4"
-2023-01-11T18:45:51.585503+01:00 myhost systemd-sleep[1998]:     time needed
-for sync: 0.0 seconds, time needed for grub: 0.2 seconds.
-2023-01-11T18:45:51.585585+01:00 myhost systemd-sleep[1998]: INFO: Done.
-2023-01-11T18:45:51.586273+01:00 myhost systemd-sleep[1996]: Entering sleep
-state 'hibernate'...
-2023-01-11T18:45:51.588025+01:00 myhost kernel: [   39.640758][ T1996] PM:
-hibernation: hibernation entry
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Any update on this one?
