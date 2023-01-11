@@ -2,67 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2A6C54EBC
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 18:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEA6C5479D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 18:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234213AbjAKS33 (ORCPT
+        id S233380AbjAKSuq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Jan 2023 13:29:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36490 "EHLO
+        Wed, 11 Jan 2023 13:50:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238754AbjAKS2k (ORCPT
+        with ESMTP id S233512AbjAKSuo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Jan 2023 13:28:40 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AA932E8A;
-        Wed, 11 Jan 2023 10:28:37 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673461716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XbHz+r4gS67P31F5u+ZSysVNdDYKMiNjdT2EucbKd3E=;
-        b=lXvvoQHKqOwihWoCJuyJb72HKyLp5RP/InGDCYN8zYLAmIvUi6cu1Inbm6IMGqnsum/sng
-        MhLJhGsbPX62sryYcJ3vS+Pzfl5DkG2gyl06GVpuwE3ODaPSMmpVJ+ztuFZ0j1w89XuZpI
-        LsanNEv/7SgUUTcidB51fTnqX28nyOXlHRKNBJqjbHJxciEr9ZnRK1q1vkc66bER3fl0R0
-        Iw0j/ZI0cUggH6MH6snMiievoZ+/BfWSKtOZV1KDYIdEerva/DkVILSrId6iqm20+qOZmi
-        2vvq+My7nwEc1dLjT8uSSjvTD9BQxzPK8ZEie0xM6KXOYo0Ae0nL/7Bfpf95xg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673461716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XbHz+r4gS67P31F5u+ZSysVNdDYKMiNjdT2EucbKd3E=;
-        b=0zLjVYnmGPMoqdCm1kV1PGYNKkXR61UrEyJJqOJ/3o4IwHpYaJJxSavLzAipZyd3eayY7b
-        D4Kdqlno/G3WH4Bw==
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 19/19] irqdomain: Switch to per-domain locking
-In-Reply-To: <878rjcbnp8.ffs@tglx>
-References: <20221209140150.1453-1-johan+linaro@kernel.org>
- <20221209140150.1453-20-johan+linaro@kernel.org> <87mt7sbtf9.ffs@tglx>
- <Y5c6z3t+sV/kIMjF@hovoldconsulting.com> <878rjcbnp8.ffs@tglx>
-Date:   Wed, 11 Jan 2023 19:28:35 +0100
-Message-ID: <871qo1hqng.ffs@tglx>
+        Wed, 11 Jan 2023 13:50:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD3C3C71C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 10:50:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 71A9061DD9
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 18:50:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1C08C433D2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 18:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673463042;
+        bh=F3381Bgbcu2Kbwbk8lfXC+vf+5ZhJDM3ajm8mn9LXGU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=QJlAXNYbzmaMtstYdDjUJJlCUZbjtWdLBpjKVMq2Wdf7GKTX5gyIPd+dkAP5x+8xN
+         HzmIqL5ct0cns0LXz/aT37JBlHKUmdVmxi7UnQjsqT3UMpsmssYcINKNg2c2gd2V5k
+         iP7ZBtkQThJLSQfjJwo5IdkawEfA5NZYU6VDr+MbwXe6mUlmvu3ocrSMnMa6Km1Yzq
+         AGtt3idfySovZ0Ca2UiQJ5jygUJKTR/4nMfHPbciaI+OQxR1J4Ol2ppjLP/PBQxYSX
+         lukmFICgskfqYBQv0CV13ywodVBYaPIiUI/QDYbbRwfR1PRW9Tup9BezTCn3AiSKqT
+         exxRJmDyUFtag==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id B885AC43141; Wed, 11 Jan 2023 18:50:42 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216917] hibernation regression since 6.0.18 (Ryzen-5650U incl.
+ Radeon GPU)
+Date:   Wed, 11 Jan 2023 18:50:42 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: kolAflash@kolahilft.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216917-215701-ZXMw2wMlB6@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216917-215701@https.bugzilla.kernel.org/>
+References: <bug-216917-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 12 2022 at 17:18, Thomas Gleixner wrote:
-> On Mon, Dec 12 2022 at 15:29, Johan Hovold wrote:
->> I added to irq_domain_set_mapping() and which is is called for each
->> (inner) domain in a hierarchy when allocating an IRQ.
->
-> Hmm. Indeed that should do the trick.
->
-> Some comments would be appreciated as the rules around domain->root are
-> far from obvious.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216917
 
-Any update on this one?
+--- Comment #1 from kolAflash (kolAflash@kolahilft.de) ---
+I've narrowed the problem down to somewhen between 6fc4c0cd9 (last known go=
+od)
+and v6.0.18
+
+Linux-6.1.4 is fine.
+(i just can't use it productively because of
+https://gitlab.freedesktop.org/drm/amd/-/issues/2171 )
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
