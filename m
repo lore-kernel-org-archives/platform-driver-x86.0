@@ -2,135 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05174C63797
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 12:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A880CC5479D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Jan 2023 12:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbjAKMQw (ORCPT
+        id S232958AbjAKMes (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Jan 2023 07:16:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        Wed, 11 Jan 2023 07:34:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238173AbjAKMQf (ORCPT
+        with ESMTP id S232120AbjAKMeo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Jan 2023 07:16:35 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DAAA7656
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 04:15:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673439347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yFAkQuK5J6VynRmWh5QJhjwoVHbQgVeBD61MItSLDEM=;
-        b=hNLXZv38LtdP+FhHRWZGLaYPZRuGxftlByWR/XiltwlNfi+2Jz8jaLDGq3IiMfWgWi6Wx9
-        ZNHrxaGnMT7gt0mxRB9gSkVqyAMhPRTZkRxd9Pv/XgV3Ibh4opTu8a2i6Pxo0rrChtFd5W
-        UTBeMERiaBIZBjXTQF+sz0Hr/+1dEBI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-483--r7zWII6PPCZfFE_6sgg7w-1; Wed, 11 Jan 2023 07:15:46 -0500
-X-MC-Unique: -r7zWII6PPCZfFE_6sgg7w-1
-Received: by mail-ej1-f70.google.com with SMTP id qb2-20020a1709077e8200b00842b790008fso10202923ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jan 2023 04:15:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yFAkQuK5J6VynRmWh5QJhjwoVHbQgVeBD61MItSLDEM=;
-        b=74arrWlWTiGHJAqh8HRzvw2ikEylBHeKrCRcrzFQHDiiJlzBpUUnqt/K4ksrHLzBK0
-         Ldc3Vfj+9cMBY4S/MR+wtkpVoVlCjFVTjCebLdPmvCmF4wAiLt4dNQZP+9Lub5thYUj0
-         6wAp98hJsgcEeWjtYZQN1zXRAtWMFpaiX0Rizlnrn5zQWhsjyqHKFSGYEFzH3wkTOPDl
-         G+rFxI2Tvu3fxpmbyQR1qpbcBmpKYrjxidASSWUx5OElf2EOczW5GSpQMuRmaKPnOfQx
-         ZCdD1/2ghLScWWuG86xjS4sPZbQlUQ1f0zRDgkOGU4JetHAEQPz3VLWVGFTYTZHIFrUD
-         Actg==
-X-Gm-Message-State: AFqh2kp/ER0KPOYmK/1XJGIM1xgifGG0ffnDM82RcFusZkp3pe7lL7JC
-        An6rqvUyOymvuxpOrVgb8sCSGzlEkJdrQuJo1uPhH/MLbOgeke7fYaGKKfnXmf5uTTeQGC9jLvI
-        j+MgdYa6aKMQwP/Iu+8K4Ii4hciOjzIousw==
-X-Received: by 2002:a17:907:80ca:b0:7c1:20ff:c044 with SMTP id io10-20020a17090780ca00b007c120ffc044mr62441348ejc.27.1673439344786;
-        Wed, 11 Jan 2023 04:15:44 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuNpH4xqot6t0evlmhZpFZTpoa8mnkGSUeADqTRM85jhsp/Q7VbBT1hGrxbYxAdbSD0CclpOQ==
-X-Received: by 2002:a17:907:80ca:b0:7c1:20ff:c044 with SMTP id io10-20020a17090780ca00b007c120ffc044mr62441334ejc.27.1673439344579;
-        Wed, 11 Jan 2023 04:15:44 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id b21-20020a17090630d500b0084f7d38713esm2689685ejb.108.2023.01.11.04.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 04:15:44 -0800 (PST)
-Message-ID: <4656f2a5-9a81-58b1-742e-f466fd5c5128@redhat.com>
-Date:   Wed, 11 Jan 2023 13:15:43 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 03/16] platform/surface: aggregator: move
- to_ssam_device() to use container_of_const()
-Content-Language: en-US, nl
+        Wed, 11 Jan 2023 07:34:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEFD12613;
+        Wed, 11 Jan 2023 04:34:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48D5261CD8;
+        Wed, 11 Jan 2023 12:34:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B26C433F0;
+        Wed, 11 Jan 2023 12:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673440482;
+        bh=8ECPtl95jMrSYLYK0fQjZE4iX607dsXxBcoAptHSDRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F+WPq2If4Vxd4uFQRjL2LkRRf9V8pa09IzqQRBW1tQo12YsZ1tw3NnSEdj9rdOG24
+         PlCE940j1Xm70AovSQjfwjaDDjU4jllNsj+2/T2FJ+xuUK4kBbks+hXC9XM2NrDpAx
+         GkYicY+nCOlqpN3y4fxSE+L6XAx0BM4IfXvweS2eE86TUtape8hhIHhCRO5cFGxpr/
+         JgjCveVG/zIMVxMJqsZ3Utrc+is98aUhzP09TtW5wCbk1KgWabOxtcqzLvXaFhkSr+
+         EDXqcOQnVTHpAdbyBw2cG64blL2y1hSKYqaiIGyfC+rOBco0FxTU45nRspsjwWgIFb
+         FtTn4Xzb8jzOg==
+Date:   Wed, 11 Jan 2023 18:04:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Len Brown <lenb@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
-        platform-driver-x86@vger.kernel.org
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v2 05/16] driver core: make struct device_type.uevent()
+ take a const *
+Message-ID: <Y76s3tgPkfGhUzEr@matsya>
 References: <20230111113018.459199-1-gregkh@linuxfoundation.org>
- <20230111113018.459199-4-gregkh@linuxfoundation.org>
- <cc8125e0-a52e-f804-8e57-c3a1372ee6fc@redhat.com>
- <Y76oFmWJzEJv68yr@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y76oFmWJzEJv68yr@kroah.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20230111113018.459199-6-gregkh@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230111113018.459199-6-gregkh@linuxfoundation.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On 11-01-23, 12:30, Greg Kroah-Hartman wrote:
+> The uevent() callback in struct device_type should not be modifying the
+> device that is passed into it, so mark it as a const * and propagate the
+> function signature changes out into all relevant subsystems that use
+> this callback.
 
-On 1/11/23 13:14, Greg Kroah-Hartman wrote:
-> On Wed, Jan 11, 2023 at 12:54:54PM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 1/11/23 12:30, Greg Kroah-Hartman wrote:
->>> The driver core is changing to pass some pointers as const, so move
->>> to_ssam_device() to use container_of_const() to handle this change.
->>> to_ssam_device() now properly keeps the const-ness of the pointer passed
->>> into it, while as before it could be lost.
->>>
->>> Cc: Maximilian Luz <luzmaximilian@gmail.com>
->>> Cc: platform-driver-x86@vger.kernel.org
->>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> ---
->>>  include/linux/surface_aggregator/device.h | 5 +----
->>>  1 file changed, 1 insertion(+), 4 deletions(-)
->>>
->>> diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
->>> index 46c45d1b6368..24151a0e2c96 100644
->>> --- a/include/linux/surface_aggregator/device.h
->>> +++ b/include/linux/surface_aggregator/device.h
->>> @@ -229,10 +229,7 @@ static inline bool is_ssam_device(struct device *d)
->>>   * Return: Returns a pointer to the &struct ssam_device wrapping the given
->>>   * device @d.
->>>   */
->>> -static inline struct ssam_device *to_ssam_device(struct device *d)
->>> -{
->>> -	return container_of(d, struct ssam_device, dev);
->>> -}
->>> +#define to_ssam_device(d)	container_of_const(d, struct ssam_device, dev)
->>
->> There is a kernel-doc comment for this helper, I'm not sure if sphinx is going
->> to like changing this from a static inline to a #define ?
->>
->> At a minimum I guess the generated docs are going to loose some type info
->> by switching to a define. Can we keep this as a static inline ?
-> 
-> No, container_of_const() will not work properly as an inline function as
-> you don't know the return type until the preprocessor runs.  I thought
-> kerneldoc should still work just fine here as it does work for defines
-> in other places.
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-Ok then this is fine as is. Thanks for clarifying why the switch to
-a #define is necessary.
-
-Regards,
-
-Hans
-
-
-
+-- 
+~Vinod
