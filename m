@@ -2,157 +2,168 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB46DC54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 19:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7528FC61DB3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 21:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbjALT1D (ORCPT
+        id S240439AbjALVCK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Jan 2023 14:27:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Thu, 12 Jan 2023 16:02:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230379AbjALT0e (ORCPT
+        with ESMTP id S240502AbjALVAN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Jan 2023 14:26:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08556C33
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 11:17:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673551056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3zrO0MhvjfxNfy/rQQheAEOMwtegzNmHoe3wimSn828=;
-        b=XGZHJ6mXvM9po2l5fNZTvk6WDZWqx7m7iHQ7DEhJIPpvBv6Lg93LgevOMIAyQv03D8mEKt
-        f36Tnb+j5SAPYvV3RGsAhB9B6/O0YfWLfA6riXKuMlGD5Qmz0ZKpG44gMF8a0UhOCGfSr5
-        KF4A4Yye0pk+uJOss27yaRW6vUPuGFA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-247-8qsaRIYpOrqLQrHiIKvjXw-1; Thu, 12 Jan 2023 14:17:34 -0500
-X-MC-Unique: 8qsaRIYpOrqLQrHiIKvjXw-1
-Received: by mail-ed1-f70.google.com with SMTP id b15-20020a056402350f00b0048477a5114bso12786059edd.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 11:17:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3zrO0MhvjfxNfy/rQQheAEOMwtegzNmHoe3wimSn828=;
-        b=44zBQKQJazuHfJr2hHdJHyNFZipkkp4U/3GmnF31UHRD30MXCXGmxwY5p0MpHXJRi3
-         Pdzz5vWaKQar6h2xf0++7Yez+P2SG5lNOVFgF30TbZO+QXLtptZQWfBtWiodGAqY7xkJ
-         VYiqCWoVRsmev1M2CfxDLZelq7gyn3lOFe5o1DG79/xQ0XQI6PQzVtx17mBsmZiBKEaC
-         GJkei6MrKarP54XbaOSf/Kk/CDzuRXfJqPKtG4kN9j/mh/q0sxDBJZPCBOVKw4tXW2Al
-         6X6lcf0KcdeOKks1xVVKU8CQJUjQgMDH6cqA1k7Gfg/4YR+PhJ7YNmHeEvD6mK+q/Wxh
-         +9GA==
-X-Gm-Message-State: AFqh2kr5vsrdKeasW0/zx67vUYdwQJ+yOr50+vCr9WWFZPv/r4VzYf+2
-        dUOEaKrC+MLqQPFrrpqRWddP356NjxOcvJrCsGTZiy8nWkNMCr+vaRCY7NzicMVac+yu+yurTLK
-        HeG5pV7hs0+eKIStaTatJKyKcxoKfOMyXuQ==
-X-Received: by 2002:a17:906:944a:b0:7c1:23f2:5b51 with SMTP id z10-20020a170906944a00b007c123f25b51mr431971ejx.60.1673551053420;
-        Thu, 12 Jan 2023 11:17:33 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuqs2TxvjJdh1PhlUR1SoSIXBXthjZcKNsU2vDHK9zf7j7tMMGJuM/Xb11ZLayCGR8SFW3G0Q==
-X-Received: by 2002:a17:906:944a:b0:7c1:23f2:5b51 with SMTP id z10-20020a170906944a00b007c123f25b51mr431964ejx.60.1673551053228;
-        Thu, 12 Jan 2023 11:17:33 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id jv21-20020a170907769500b0077a201f6d1esm7672557ejc.87.2023.01.12.11.17.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jan 2023 11:17:32 -0800 (PST)
-Message-ID: <31194c75-b366-2b8e-5836-8b2c60c9690e@redhat.com>
-Date:   Thu, 12 Jan 2023 20:17:31 +0100
+        Thu, 12 Jan 2023 16:00:13 -0500
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A249FD4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 12:45:21 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 585AD5C0126;
+        Thu, 12 Jan 2023 15:45:19 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 12 Jan 2023 15:45:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1673556319; x=1673642719; bh=pj
+        n1W6K0BjFyb36RWaXrdfxBFdNrxOAKuHP5ZTBXTpY=; b=bkrDFX5Y9BlbkrEdyY
+        cJgJ0rRytvYrQrLWGgr5dvZu5KmJz5F+XWP6YtSfIXkSzKy7NxBsCMTLzL/jBkZq
+        ExUGdcETME2eaqS4CptFkKXor8wnER1mlkT7yLYk1qUZ9IIsGl1uuuB7V7Yaquq3
+        dM8ILTnOf0vSkjEJ5indyl/BZNYk3YCNJDpL4QjgW93U5KHoZiimxK1LdoBgHEx6
+        F+8mGdsl0k4/+/j7u+R6DetTvzHvnfIQzVNaPBaeQKF/NE11vedb5OWGFOz7MDtx
+        BSWQUS3ZZTjaqsr90EqUd1Tj7J8dihhNXaelCASTfNBpsS/ctlUgw4LilicOUWQv
+        dZqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1673556319; x=1673642719; bh=pjn1W6K0BjFyb
+        36RWaXrdfxBFdNrxOAKuHP5ZTBXTpY=; b=AUwtq+yP3nh5Ele6KBsbuXkaVu/pO
+        UQ7mZ+0/OwfjnnpZ8GCRwIkssIpBo/NsgCs5R31cTWtbktAlIoUqFhHE/uXo13hF
+        fkFcx/Bpb6fvSFmoN4M8kZjhCkaaBuyocr4lMAMQqq/kixiGK8CJ55A5Nuxjgk1M
+        66ZOk49N/XjmY7Jw8K9agy7+sy9d1Vo6/Dsc4g3UzuhAen5BDpYuEqauZsOiBx02
+        Pry9ObnewomOPGy4gWonXcQX1tPC4cci0AJ7jqsTnEqVnLf6i3s59inE8NyDs+pi
+        WTEavwKOmuxsZF5amBR0ySfTdiLS1m4mfHKF65RYy724gtUuDexiQO/Ug==
+X-ME-Sender: <xms:X3HAY_jac18m39gQlo5Fz9EJAOt0rd3IeKaJkbQSuuSHdV0udllHKw>
+    <xme:X3HAY8Anpe9gAkEZXo30MrVh--1rabXC0SM0B9vwDJNErhfNwfa75E0ydC_5JcQG_
+    tU2thnkJaTvTYkcQYs>
+X-ME-Received: <xmr:X3HAY_HEaIdWkKdSXqTrjFhEoU1Y5SkGne5YGG8OilPmeVsM0kaYXLLRR-NcGwKiNbM7EY3sze7G5f7ZukT9JS48pJvW0j2m-Bpi0UhtCCnJi-JarcLlr5BqzmrRs2qZ_SVoYhM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrleeigddugeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
+    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:X3HAY8TMm5mRIrmf5f7amv9nItkQcZOliaYspzEcnTBTJ6aP0Y7XYg>
+    <xmx:X3HAY8wLQlrql7ha3vCNCKq7MS6NOtuH8vXUD_EWASZKxHgaCkHrYw>
+    <xmx:X3HAYy7qrg2NKytsnpMRIWPotEjyAo3vZKcv55TWXnhiksjTy7e7uQ>
+    <xmx:X3HAY48nTbdsCGNCSC9Iag3uBTT_0WC8jmS82Ub97Lyb82tqAjgIjw>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Jan 2023 15:45:18 -0500 (EST)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, mario.limonciello@amd.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Remove AMT enablement
+Date:   Thu, 12 Jan 2023 15:45:01 -0500
+Message-Id: <20230112204501.487920-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: ideapad-laptop touchpad handling problems, request for help
-Content-Language: en-US, nl
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        GOESSEL Guillaume <g_goessel@outlook.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Manyi Li <limanyi@uniontech.com>,
-        =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
-        Ike Panhc <ike.pan@canonical.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <bc1202d1-d85d-4173-5979-237bb1ee9254@redhat.com>
- <a4cd28eb-2dc3-4cdc-bea4-5abed60ae108@app.fastmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <a4cd28eb-2dc3-4cdc-bea4-5abed60ae108@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Recently AMT mode was enabled (somewhat unexpectedly) on the Lenovo
+Z13 platform. The FW is advertising it is available and the driver tries
+to use it - unfortunately it reports the profile mode incorrectly.
 
-On 1/11/23 17:38, Jiaxun Yang wrote:
-> 
-> 
-> 在2022年11月9日十一月 下午8:59，Hans de Goede写道：
->> Hi All,
->>
->> I'm emailing you all because you have written patches or
->> reported bugs related to the ideapad-laptop touchpad
->> handling the past.
-> 
-> Hi all,
-> 
-> Sorry for chime in this old thread, but I'm able to get some input from a
-> Lenovo engineer.
-> 
-> Quoting him:
-> 
-> "For newer Lenovo laptops we use TPRD/TPWR methods under touchpad's ACPI I2C HID
-> device to sync touchpad state with EC. TPRD will return current touchpad state known
-> by EC and OS can use TPWR to switch EC's touchpad state. This state will be used by EC
-> to control LEDs and touchpad power saving signals."
-> 
-> According to my understanding we only need replace read write to VPCCMD_R_TOUCHPAD
-> with calling TPRD/TPWR methods to get all new ideapads work.
-> 
-> As per my reverse engineering on ASLs this method actually reads a flag from EC's
-> LPC memory space and it do work on some early ideapads (The earliest one I can
-> trace is Ideapad 320-15ISK which is released on 2018).
-> 
-> I'm going to try to implement it in kernel. Though I haven't decide which part of
-> driver should handle this, as those methods are under ACPI I2C HID device perhaps
-> we should put this function under i2c-hid-acpi driver. However as the method is very
-> ideated specific, putting in ideapad-acpi seems more reasonable... Any thoughts?
+Note, there is also some extra work needed to enable the dynamic aspect
+of AMT support that I will be following up with; but more testing is
+needed first. This patch just fixes things so the profiles are reported
+correctly.
 
-This really should be handled in ideapad-acpi, but that means figuring out a way
-to find the touchpad device in ideapad-apci. For starters you can search for
-ACPI devs which match:
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-static const struct acpi_device_id i2c_hid_acpi_match[] = {
-        {"ACPI0C50", 0 },
-        {"PNP0C50", 0 },
-        { },
-};
-
-And then check if they have the TPRD/TPWR methods. This does risk piking
-another device then the actual touchpad though, most likely a touchscreen
-(in case where the ACPI tables accidentally also have TPRD/TPWR methods
-on the touchscreen).
-
-Once you have find the right ACPI device, we can call the methods
-(when found) from:
-
-ideapad_sync_touchpad_state()
-
-Note that only ever reads the touchpad state... 
-
-> He also told me how to get VPC2004 device's BIOS interface version, though the
-> differences between versions remains unclear to me. I think we can expose it
-> in dmesg and debugfs to help with future debugging and hopefully reduce the amount
-> of DMI quirks.
-
-Yes reading + logging (in dmesg) the BIOS interface version would be good.
-
-Thank you for all your work on this!
-
-Regards,
-
-Hans
-
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 1195293b22fd..a95946800ae9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10311,9 +10311,11 @@ static DEFINE_MUTEX(dytc_mutex);
+ static int dytc_capabilities;
+ static bool dytc_mmc_get_available;
+ 
+-static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
++static int convert_dytc_to_profile(int funcmode, int dytcmode,
++		enum platform_profile_option *profile)
+ {
+-	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
++	switch (funcmode) {
++	case DYTC_FUNCTION_MMC:
+ 		switch (dytcmode) {
+ 		case DYTC_MODE_MMC_LOWPOWER:
+ 			*profile = PLATFORM_PROFILE_LOW_POWER;
+@@ -10329,8 +10331,7 @@ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *p
+ 			return -EINVAL;
+ 		}
+ 		return 0;
+-	}
+-	if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
++	case DYTC_FUNCTION_PSC:
+ 		switch (dytcmode) {
+ 		case DYTC_MODE_PSC_LOWPOWER:
+ 			*profile = PLATFORM_PROFILE_LOW_POWER;
+@@ -10344,6 +10345,14 @@ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *p
+ 		default: /* Unknown mode */
+ 			return -EINVAL;
+ 		}
++		return 0;
++	case DYTC_FUNCTION_AMT:
++		/* For now return balanced. It's the closest we have to 'auto' */
++		*profile =  PLATFORM_PROFILE_BALANCED;
++		return 0;
++	default:
++		/* Unknown function */
++		return -EOPNOTSUPP;
+ 	}
+ 	return 0;
+ }
+@@ -10492,6 +10501,7 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
+ 		if (err)
+ 			goto unlock;
++
+ 		/* system supports AMT, activate it when on balanced */
+ 		if (dytc_capabilities & BIT(DYTC_FC_AMT))
+ 			dytc_control_amt(profile == PLATFORM_PROFILE_BALANCED);
+@@ -10507,7 +10517,7 @@ static void dytc_profile_refresh(void)
+ {
+ 	enum platform_profile_option profile;
+ 	int output, err = 0;
+-	int perfmode;
++	int perfmode, funcmode;
+ 
+ 	mutex_lock(&dytc_mutex);
+ 	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
+@@ -10522,8 +10532,9 @@ static void dytc_profile_refresh(void)
+ 	if (err)
+ 		return;
+ 
++	funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
+ 	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+-	convert_dytc_to_profile(perfmode, &profile);
++	convert_dytc_to_profile(funcmode, perfmode, &profile);
+ 	if (profile != dytc_current_profile) {
+ 		dytc_current_profile = profile;
+ 		platform_profile_notify();
+-- 
+2.39.0
 
