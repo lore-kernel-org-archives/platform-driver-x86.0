@@ -2,79 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725E1C61DB3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 17:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702CAC61DB3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 17:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233829AbjALRAB (ORCPT
+        id S235189AbjALRlF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Jan 2023 12:00:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        Thu, 12 Jan 2023 12:41:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241140AbjALQ6y (ORCPT
+        with ESMTP id S235295AbjALRkf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Jan 2023 11:58:54 -0500
+        Thu, 12 Jan 2023 12:40:35 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D501D6C7D1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:42:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48ECA6D50B
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673541661;
+        s=mimecast20190719; t=1673542746;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eJOxkN8927tnEj4ZfQyHiTgr5i+wmZJvSnDXmvUIIRc=;
-        b=OoSfVLWEOBX0VI01+XQJB589ugzmZUetou0cPQA5QF7byRMWMhL24eACk+UIAgQOFzd5TM
-        QI0k7RVdq5oMP7FrMq2rcNLWlQGS26EEP8OK+fJRlEEi9OWYjsLoLi7+miitRrZu22zqDc
-        Kt/S05rpWnrSjmZaICb3TxJzYH30WXs=
+        bh=+r/hXDRD0/hcU6hWbPEHUg56pIsqoho5eKzvwcPaPp4=;
+        b=h6QxG3rmB0s1RMv5TIjOxtBlbgk65D8ixSvoAQAMUZIT1zrLr382qVUMKpoWlRYotlNuzy
+        7GyNJC6oK9G1Xxmqi6FdSy2RJAQ+uJCjiT3pomG8tIxkjFMDpjNpReWiweBDh4vMOJzQWj
+        2Zey8VdO9J/6MYnSSXXO6PfEIGkR0io=
 Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
  [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-16-A8JkqPTgP82Y9rom-Hj0JQ-1; Thu, 12 Jan 2023 11:41:00 -0500
-X-MC-Unique: A8JkqPTgP82Y9rom-Hj0JQ-1
-Received: by mail-ej1-f69.google.com with SMTP id qa18-20020a170907869200b007df87611618so12944681ejc.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:41:00 -0800 (PST)
+ us-mta-352-3QHmsz5kMz6Sqx39OJFLtQ-1; Thu, 12 Jan 2023 11:45:41 -0500
+X-MC-Unique: 3QHmsz5kMz6Sqx39OJFLtQ-1
+Received: by mail-ej1-f69.google.com with SMTP id qf12-20020a1709077f0c00b008656383a970so2147741ejc.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:45:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJOxkN8927tnEj4ZfQyHiTgr5i+wmZJvSnDXmvUIIRc=;
-        b=CEmKjjbzjOIkLzo6IVCNzrXvfgWPd4jpsw72g37c/0GaqYSvOrQT+Bs+h6Bg6L8kXh
-         GxITIgq2341oHxd1buVZ597kBtYsglZbTG4TlZjZaSD4hGncWnXh2BPwiT5oJtPExDBZ
-         kcNGgsfBj5WVmq+OLSTNCcTTM95JFytTE4Ip0xzwbZNDMEci95xUHMTts7xF/KAOXjl6
-         w282LKunxzarwlrrxzoV0jQWHlU13qK1ot7HQDnYNLVW8mlkhKeMqVmInLvcADoqDi+9
-         6v4hSOtld+6VIBrjmTy/5r8Ats71RVCuFVYySkjHAMWxbrCPmG8AY8ZujvL+ZQ92M67N
-         vUAQ==
-X-Gm-Message-State: AFqh2kqiCDLVI0LkeN/6O3hvzZEA4/7T0+YK9QB0kw98veTsV8d5Hkah
-        zm5B8KKOSSYoWNxwnhpnYaK0ZWjybEv4YspJzJDpbjYh/0APmvgjV3lHc0pEzhtwWh2prkOxK28
-        cMSaSyAQpiXIWV920WvzTDxyI8LnDzpzvqw==
-X-Received: by 2002:a05:6402:2420:b0:463:a84c:6805 with SMTP id t32-20020a056402242000b00463a84c6805mr72404049eda.15.1673541659455;
-        Thu, 12 Jan 2023 08:40:59 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXsSifSqx/0Hoj/B9OhNbDfeP6kFYOCC9Z88oZrvAET0YY4nVBR5FuPZPs/QoCkumgS6SlY98A==
-X-Received: by 2002:a05:6402:2420:b0:463:a84c:6805 with SMTP id t32-20020a056402242000b00463a84c6805mr72404031eda.15.1673541659255;
-        Thu, 12 Jan 2023 08:40:59 -0800 (PST)
+        bh=+r/hXDRD0/hcU6hWbPEHUg56pIsqoho5eKzvwcPaPp4=;
+        b=T324Di3/HyDoReTXSrO8pipMHNmQClsKaWd7xXIBD0CihjjAZzDYNmt71wcZ4KYoXk
+         YJ9oMDDWe7tto/0FrTJu9RpcjFR9bLFBMWN5R78NvL7R7EBmHmRRSRNyb1TbvIfL82Fj
+         XAcSlNO682V1uB8ajgNxtb+7KAJTihjP8q6TcfrpnnCm6vkJYUhSLR2v3v3zCrm5F8W2
+         XRumyYsOHLQ+hGgaxaISS1JkqvTA+igld7NL8wKudsImC0g7uVfHLz1LFabz8QwFovyV
+         OfWvjgR6amYGZE4+2E1LaFyHj6peZQZdzUGChwjVZHR/N6v/ZlyqnP1iH9jDdblNPy0e
+         dshg==
+X-Gm-Message-State: AFqh2kr+0Yh1TJbJX2KfSrAVlTvuaONKbs7S/4yYVK+e6Q1BH1AerVqc
+        yer9EduWj4AMZDNRQs90jLU4zAJDuEi82/HR7EGHFuvAtLQJkIoKWKTMDlYiu/OS+Rr6NCbzWLo
+        r/9zkYiEF7Ln4DwXt7AZywZEx/JWMvSkM8w==
+X-Received: by 2002:a05:6402:550a:b0:47f:bc9b:46ec with SMTP id fi10-20020a056402550a00b0047fbc9b46ecmr58228728edb.7.1673541940728;
+        Thu, 12 Jan 2023 08:45:40 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtRYPCHtPxgfBu2NjQVazdJUM1l0A2rkq+Yvs5GMxjRsWo61/WLz2yRlHT8LDFL0nFXshrMQQ==
+X-Received: by 2002:a05:6402:550a:b0:47f:bc9b:46ec with SMTP id fi10-20020a056402550a00b0047fbc9b46ecmr58228716edb.7.1673541940564;
+        Thu, 12 Jan 2023 08:45:40 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x13-20020aa7cd8d000000b0047e6fdbf81csm7360238edv.82.2023.01.12.08.40.58
+        by smtp.gmail.com with ESMTPSA id i12-20020aa7dd0c000000b0047021294426sm7301988edv.90.2023.01.12.08.45.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jan 2023 08:40:58 -0800 (PST)
-Message-ID: <83323dac-3bb7-91a5-5e44-b78141fe63c5@redhat.com>
-Date:   Thu, 12 Jan 2023 17:40:57 +0100
+        Thu, 12 Jan 2023 08:45:39 -0800 (PST)
+Message-ID: <9b4cea4f-46dd-86da-d54a-0aa43bd00b4d@redhat.com>
+Date:   Thu, 12 Jan 2023 17:45:39 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] dell-smbios: fix double free in dell_smbios_init() and
- fixes in dell_smbios_exit()
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the CSL
+ Panther Tab HD
 Content-Language: en-US, nl
-To:     Rustam Subkhankulov <subkhankulov@ispras.ru>
-Cc:     Mark Gross <markgross@kernel.org>,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>
-References: <20221215231741.154355-1-subkhankulov@ispras.ru>
+To:     Michael Klein <m.klein@mvz-labor-lb.de>,
+        Mark Gross <markgross@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20221215231741.154355-1-subkhankulov@ispras.ru>
+In-Reply-To: <20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -83,45 +79,20 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/16/22 00:17, Rustam Subkhankulov wrote:
-> If an error occurs in function build_tokens_sysfs(), then all the memory
-> that has been allocated is correctly freed at certain labels at the end
-> of this function.
+On 12/20/22 13:11, Michael Klein wrote:
+> Add touchscreen info for the CSL Panther Tab HD.
 > 
-> build_tokens_sysfs() returns a non-zero value on error, function
-> free_group() is called, resulting in a double-free. Removing
-> free_group() function call will fix this problem.
+> Signed-off-by: Michael Klein <m.klein@mvz-labor-lb.de>
 
-You say that removing the free_group() function call will fix this problem
-and I agree, but the patch does not actually remove the free_group()
-call.
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-> Also, it seems that instead of free_group() call, there should be
-> exit_dell_smbios_smm() and exit_dell_smbios_wmi() calls, since there is
-> initialization, but there is no release of resources in case of an error.
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
-This is correct too, but again not what the patch does ...
-
-Please submit a new patch which actually replaces the free_group
-call in this error-path with calling exit_dell_smbios_wmi() +
-exit_dell_smbios_smm()
-
-> Since calling 'exit' functions for 'smm' and 'wmi' is unsafe if
-> initialization failed, in dell_smbios_exit() and dell_smbios_init()
-> we need to call 'exit' only if initialization before was successful.
-
-This is actually not correct, exit_dell_smbios_wmi() checks
-an internal wmi_supported flag and exit_dell_smbios_smm()
-checks if init_dell_smbios_smm() has created its platform_device.
-
-There are some error-exit paths in init_dell_smbios_wmi() and
-exit_dell_smbios_smm() which do not properly clear wmi_supported
-resp. platform_device. Fixing those would be good, but adding new
-variables inside dell-smbios-base.c to track this is not necessary.
-
-Note the fix clearing wmi_supported / platform_device should
-be done in a separate patch from the one replacing the free_group()
-call.
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
@@ -129,57 +100,51 @@ Hans
 
 
 
-
-
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Signed-off-by: Rustam Subkhankulov <subkhankulov@ispras.ru>
-> Fixes: 25d47027e100 ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
 > ---
->  drivers/platform/x86/dell/dell-smbios-base.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-> index fc086b66f70b..cfef8cdd1215 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -29,6 +29,8 @@ static struct device_attribute *token_location_attrs;
->  static struct device_attribute *token_value_attrs;
->  static struct attribute **token_attrs;
->  static DEFINE_MUTEX(smbios_mutex);
-> +static bool wmi_initialized;
-> +static bool smm_initialized;
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index baae3120efd0..f00995390fdf 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -264,6 +264,23 @@ static const struct ts_dmi_data connect_tablet9_data = {
+>  	.properties     = connect_tablet9_props,
+>  };
 >  
->  struct smbios_device {
->  	struct list_head list;
-> @@ -607,6 +609,9 @@ static int __init dell_smbios_init(void)
->  			goto fail_sysfs;
->  	}
->  
-> +	wmi_initialized = !(wmi);
-> +	smm_initialized = !(smm);
+> +static const struct property_entry csl_panther_tab_hd_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-csl-panther-tab-hd.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	{ }
+> +};
 > +
->  	return 0;
->  
->  fail_sysfs:
-> @@ -628,8 +633,16 @@ static int __init dell_smbios_init(void)
->  
->  static void __exit dell_smbios_exit(void)
->  {
-> -	exit_dell_smbios_wmi();
-> -	exit_dell_smbios_smm();
-> +	if (wmi_initialized) {
-> +		exit_dell_smbios_wmi();
-> +		wmi_initialized = 0;
-> +	}
+> +static const struct ts_dmi_data csl_panther_tab_hd_data = {
+> +	.acpi_name      = "MSSL1680:00",
+> +	.properties     = csl_panther_tab_hd_props,
+> +};
 > +
-> +	if (smm_initialized) {
-> +		exit_dell_smbios_smm();
-> +		smm_initialized = 0;
-> +	}
-> +
->  	mutex_lock(&smbios_mutex);
->  	if (platform_device) {
->  		if (da_tokens)
+>  static const struct property_entry cube_iwork8_air_props[] = {
+>  	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+>  	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+> @@ -1124,6 +1141,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
+>  		},
+>  	},
+> +	{
+> +		/* CSL Panther Tab HD */
+> +		.driver_data = (void *)&csl_panther_tab_hd_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "CSL Computer GmbH & Co. KG"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CSL Panther Tab HD"),
+> +		},
+> +	},
+>  	{
+>  		/* CUBE iwork8 Air */
+>  		.driver_data = (void *)&cube_iwork8_air_data,
 
