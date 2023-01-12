@@ -2,86 +2,170 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A69FC54EBC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 12:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A2DC54EBD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Jan 2023 16:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbjALM2v (ORCPT
+        id S239173AbjALQcH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Jan 2023 07:28:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
+        Thu, 12 Jan 2023 11:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232627AbjALM2b (ORCPT
+        with ESMTP id S235533AbjALQa5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Jan 2023 07:28:31 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1971150149;
-        Thu, 12 Jan 2023 04:28:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673526490; x=1705062490;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vKlg9b+f3vPRjQBcpzZxNKbPtYfKobk3idf/1bw4PuU=;
-  b=fe8+vrWQNhwgsMeNblAd2M0Oglx13V8FYA1Rzn+LxrTWBLfu95Aqn3ie
-   8TPWxQ+fa3m6gVokU2/IbiapHz7Xy2OvZK5PnzZsCwbZYuNECwhhHV+D7
-   c/q9hkfvgk4O4vFXNnJrdPrq5pjbqfy4qyZ4IEVT9IDXR+PUFCyoblE2O
-   nelR521f8p9TaX4Xx+V29IKuEnjf2rjHTwOgKULz/no2M6k9e+kfVpPh5
-   GFL3RjO78rbMqj3bN32E6QHmm+DMJItGzgccBzOFwZglLoQihGgbLJCdE
-   Srqd/KmQbxWlfWIW33QvioMuzfbxf0OnhQay9u1lo7CpjLHBU8tWfnbui
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="307213282"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="307213282"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 04:28:09 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10587"; a="607766135"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="607766135"
-Received: from punajuuri.fi.intel.com (HELO paasikivi.fi.intel.com) ([10.237.72.43])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 04:28:03 -0800
-Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
-        by paasikivi.fi.intel.com (Postfix) with SMTP id 69D6D2010E;
-        Thu, 12 Jan 2023 14:28:01 +0200 (EET)
-Date:   Thu, 12 Jan 2023 12:28:01 +0000
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+        Thu, 12 Jan 2023 11:30:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABEF460E5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:29:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673540971;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F8QFx6rD0tZGXtw+3YejuZrVA8epe8wgxFVyC2mwSi8=;
+        b=OMOiOseY6AVyfYdwyeUXV7r512MgBHjUBrE9eh17rlqeql2RhuWv8XZg11Vv1yfY2toPSj
+        qe0JmkHurbRhJ+2RVWEINfbX8NVK2AmjJH2h7U3c4GBUU3/5jfkK+43hbpo8iLX1gKtXf+
+        A9+5AvI+GdMlcGUMieVNSbfdslyj5ag=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-596-nCm2hVrjM726XFbK2IEK_A-1; Thu, 12 Jan 2023 11:29:30 -0500
+X-MC-Unique: nCm2hVrjM726XFbK2IEK_A-1
+Received: by mail-ed1-f69.google.com with SMTP id z3-20020a05640235c300b0048ed61c1394so12669294edc.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jan 2023 08:29:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8QFx6rD0tZGXtw+3YejuZrVA8epe8wgxFVyC2mwSi8=;
+        b=1RwSzdGvz881Ot+qEkqig+sWGeggclHUIXZtJsFb3uSvaCHmz2BGWlC/rWPhAGMWcN
+         cpwWO2LbXHkrguXxK893cdlesTmNf1kDLqHeA+aWb8b7aXuFb+0pfsDeSnPJ91eDn8r9
+         ZTd91bomKsEKpQ7ftDH8HSr42I6jP4b7mtSXHO5ZpLFLhb7B0H0jS5pERiI+bfaz/ANp
+         pBrkMjyiMrcv55rvndZ19WRBN7cMeSp/uTlofhsDrTGoZIO9wXLo+BO55uawrZhnvQMA
+         /q0BN3wXUN9/KZpsslagUb4GHeNDyWGGc0hjmu5yuGphJXi2yA6BrBoam2F3rwwn0ERH
+         8HLQ==
+X-Gm-Message-State: AFqh2kroCr1TizC+OJnkOoqnzYPQaJxaIriiZHNFijAoPX87WOkHRNT7
+        /glVmqPLa9j6X4y1AodNwQfWbHqS4siIdXzuEIaITrHBI0EEL51jkjYpBFLIfm5yf5e9FUfxtti
+        PGbZzngH4J/Pt2hP3dQQBsU98bWCwpO9/Qg==
+X-Received: by 2002:a17:907:c388:b0:849:e96f:51f4 with SMTP id tm8-20020a170907c38800b00849e96f51f4mr58246913ejc.23.1673540969368;
+        Thu, 12 Jan 2023 08:29:29 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvZSC1Wa4LCrtCOkbTupGR6XMS+zg5T5j2iCYuycXiuwzfyDJ+QcyOLUSpBxiiJ9X7ozf7E8Q==
+X-Received: by 2002:a17:907:c388:b0:849:e96f:51f4 with SMTP id tm8-20020a170907c38800b00849e96f51f4mr58246900ejc.23.1673540969154;
+        Thu, 12 Jan 2023 08:29:29 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id v27-20020a17090606db00b0081d2d9a0b45sm7545480ejb.186.2023.01.12.08.29.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jan 2023 08:29:28 -0800 (PST)
+Message-ID: <b642fb9c-5184-92ce-4406-96a5f9bbde29@redhat.com>
+Date:   Thu, 12 Jan 2023 17:29:28 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] platform/x86: sony-laptop: Don't turn off 0x153 keyboard
+ backlight during probe
+Content-Language: en-US, nl
+To:     Mattia Dongili <malattia@linux.it>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, linux-media@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: int3472/discrete: Ensure the clk/power
- enable pins are in output mode
-Message-ID: <Y7/80agpEC/dsls7@paasikivi.fi.intel.com>
-References: <20230111201426.947853-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230111201426.947853-1-hdegoede@redhat.com>
+        platform-driver-x86@vger.kernel.org
+References: <20221213122943.11123-1-hdegoede@redhat.com>
+ <CANER=bYHYNSi3fTwqAt89n-6uS5dSV+o+6H4oD6doeSzgtoZoQ@mail.gmail.com>
+ <f2cc7aaf-3a2d-f3f0-9a65-1a67ac780131@redhat.com>
+ <CANER=bb5wxxvUJfGDZHquExeC1Q=k8HdUmPmb2HxmUwrsNMbRg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CANER=bb5wxxvUJfGDZHquExeC1Q=k8HdUmPmb2HxmUwrsNMbRg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 09:14:26PM +0100, Hans de Goede wrote:
-> acpi_get_and_request_gpiod() does not take a gpio_lookup_flags argument
-> specifying that the pins direction should be initialized to a specific
-> value.
-> 
-> This means that in some cases the pins might be left in input mode, causing
-> the gpiod_set() calls made to enable the clk / regulator to not work.
-> 
-> One example of this problem is the clk-enable GPIO for the ov01a1s sensor
-> on a Dell Latitude 9420 being left in input mode causing the clk to
-> never get enabled.
-> 
-> Explicitly set the direction of the pins to output to fix this.
-> 
-> Fixes: 5de691bffe57 ("platform/x86: Add intel_skl_int3472 driver")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi,
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On 12/14/22 10:49, Mattia Dongili wrote:
+> On Wed, 14 Dec 2022 at 18:13, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Mattia,
+>>
+>> On 12/14/22 09:55, Mattia Dongili wrote:
+>>> On Tue, 13 Dec 2022 at 21:29, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
+>>>
+>>>     The 0x153 version of the kbd backlight control SNC handle has no separate
+>>>     address to probe if the backlight is there.
+>>>
+>>>     This turns the probe call into a set keyboard backlight call with a value
+>>>     of 0 turning off the keyboard backlight.
+>>>
+>>>     Skip probing when there is no separate probe address to avoid this.
+>>>
+>>>     Link: https://bugzilla.redhat.com/show_bug.cgi?id=1583752 <https://bugzilla.redhat.com/show_bug.cgi?id=1583752>
+>>>     Fixes: 800f20170dcf ("Keyboard backlight control for some Vaio Fit models")
+>>>     Signed-off-by: Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>>
+>>>
+>>>
+>>> Signed-off-by: Mattia Dongili <malattia@linux.it <mailto:malattia@linux.it>>
+>>>
+>>>
+>>>     ---
+>>>      drivers/platform/x86/sony-laptop.c | 21 ++++++++++++++-------
+>>>      1 file changed, 14 insertions(+), 7 deletions(-)
+>>>
+>>>     diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+>>>     index 765fcaba4d12..5ff5aaf92b56 100644
+>>>     --- a/drivers/platform/x86/sony-laptop.c
+>>>     +++ b/drivers/platform/x86/sony-laptop.c
+>>>     @@ -1888,14 +1888,21 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
+>>>                     break;
+>>>             }
+>>>
+>>>     -       ret = sony_call_snc_handle(handle, probe_base, &result);
+>>>     -       if (ret)
+>>>     -               return ret;
+>>>     +       /*
+>>>     +        * Only probe if there is a separate probe_base, otherwise the probe call
+>>>     +        * is equivalent to __sony_nc_kbd_backlight_mode_set(0), resulting in
+>>>     +        * the keyboard backlight being turned off.
+>>>     +        */
+>>>     +       if (probe_base) {
+>>>     +               ret = sony_call_snc_handle(handle, probe_base, &result);
+>>>     +               if (ret)
+>>>     +                       return ret;
+>>>
+>>>     -       if ((handle == 0x0137 && !(result & 0x02)) ||
+>>>     -                       !(result & 0x01)) {
+>>>     -               dprintk("no backlight keyboard found\n");
+>>>     -               return 0;
+>>>     +               if ((handle == 0x0137 && !(result & 0x02)) ||
+>>>     +                               !(result & 0x01)) {
+>>>     +                       dprintk("no backlight keyboard found\n");
+>>>     +                       return 0;
+>>>     +               }
+>>>             }
+>>>
+>>>             kbdbl_ctl = kzalloc(sizeof(*kbdbl_ctl), GFP_KERNEL);
+>>>     --
+>>>     2.38.1
+>>>
+>>> ---
+>>>
+>>> Aha, looking at the bug report and the commit that caused it I think this fix makes sense.
+>>> You can add my sign-off too.
+>>
+>> I think you mean Reviewed-by? Singed-off-by: is only for patches passing
+>> through you. E.g. it was send to you personally and you then submit it
+>> to the list.
+> 
+> Sigh yeah... It's been too long.
+> 
+> Reviewed-by: Mattia Dongili <malattia@linux.it>
 
--- 
-Sakari Ailus
+Thanks.
+
+I've added this to my review-hans (soon to be for-next) branch now.
+
+Regards,
+
+Hans
+
+
