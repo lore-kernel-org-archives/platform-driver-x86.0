@@ -2,164 +2,361 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B2C54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFF4C3DA78
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 23:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234620AbjAMOEr (ORCPT
+        id S229854AbjAMXGV convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Jan 2023 09:04:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58216 "EHLO
+        Fri, 13 Jan 2023 18:06:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241532AbjAMOD1 (ORCPT
+        with ESMTP id S231316AbjAMXGS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Jan 2023 09:03:27 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47AA410FDF;
-        Fri, 13 Jan 2023 06:02:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673618533; x=1705154533;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=X8yP8ue7Mjwmum3hdTB2a0jxS4tJ1ITCtpEQuehUOg8=;
-  b=YeoyMKE/sWguMTH9nDKeSlXsCU0HA9HMWEnsgmcmHBFbWjQ2aKG/nMUe
-   lVw+9E5q353OLCJBhWCTK+iQdN0gt2kmPP2nUvBTvgUsSh8LVo/sK3XVB
-   qaSKYvAE3oAXonq9XgWVFeZxTLcdE61dxNqLd5EFPqwot73f+ne8mCs8/
-   jYrtgLAV9yA6uaGWmcJxMpiyTkjHyYWSaR8Jcr+MUEETgY8M8ZhSvWXek
-   zxEfRwaQplOv8HPU0EsZBhHlF04+aSPEYIC6x/fOIwhZUqyVUcZShwL3R
-   Q3J7bst04VWNmOgkQK5Gs4kefqKBhMkZEZ6VSdnypHrmTyVY67q9RSl/1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="388492989"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="388492989"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 06:02:12 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="987008075"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="987008075"
-Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 06:02:09 -0800
-From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
-        hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajat.khandelwal@intel.com,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-Subject: [PATCH] platform/x86/intel/pmc: core: Add support to show LTR-ignored components
-Date:   Fri, 13 Jan 2023 19:32:12 +0530
-Message-Id: <20230113140212.3905361-1-rajat.khandelwal@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Jan 2023 18:06:18 -0500
+Received: from mail.redfish-solutions.com (mail.redfish-solutions.com [24.116.100.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEAF3A1;
+        Fri, 13 Jan 2023 15:05:54 -0800 (PST)
+Received: from smtpclient.apple (macbook3-2.redfish-solutions.com [192.168.8.12])
+        (authenticated bits=0)
+        by mail.redfish-solutions.com (8.17.1/8.16.1) with ESMTPSA id 30DN559s669406
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Jan 2023 16:05:05 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [PATCH v3 1/1] x86: Support APU5 in PCEngines platform driver
+From:   Philip Prindeville <philipp@redfish-solutions.com>
+In-Reply-To: <01dbd065-693b-e5fe-5aaf-d74971d6fe7d@redhat.com>
+Date:   Fri, 13 Jan 2023 16:04:46 -0700
+Cc:     platform-driver-x86@vger.kernel.org, linux-x86_64@vger.kernel.org,
+        Enrico Weigelt <info@metux.net>,
+        Ed Wildgoose <lists@wildgooses.com>,
+        Andres Salomon <dilinger@queued.net>,
+        Andreas Eberlein <foodeas@aeberlein.de>,
+        Paul Spooren <paul@spooren.de>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <AA8BB3C5-8101-4DE2-8FE2-87EBF5329BA3@redfish-solutions.com>
+References: <20230102065447.3447284-1-philipp@redfish-solutions.com>
+ <01dbd065-693b-e5fe-5aaf-d74971d6fe7d@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
+X-Scanned-By: MIMEDefang 3.2 on 192.168.8.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
-if there are components whose LTR values have been ignored.
 
-This patch adds the feature to print out such components, if they exist.
 
-Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 47 ++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 12 deletions(-)
+> On Jan 12, 2023, at 11:57 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> Hi,
+> 
+> On 1/2/23 07:54, Philip Prindeville wrote:
+>> From: Philip Prindeville <philipp@redfish-solutions.com>
+>> 
+>> PCEngines make a number of SBC. APU5 has 5 mpcie slots + MSATA.
+>> It also has support for 3x LTE modems with 6x SIM slots (pairs with a
+>> SIM switch device). Each mpcie slot for modems has a reset GPIO
+>> 
+>> To ensure that the naming is sane between APU2-6 the GPIOS are
+>> renamed to be modem1-reset, modem2-reset, etc. This is significant
+>> because the slots that can be reset change between APU2 and APU3/4
+>> 
+>> GPIO for simswap is moved to the end of the list as it could be dropped
+>> for APU2 boards (but causes no harm to leave it in, hardware could be
+>> added to a future rev of the board).
+>> 
+>> Structure of the GPIOs for APU5 is extremely similar to APU2-4, but
+>> many lines are moved around and there are simply more
+>> modems/resets/sim-swap lines to breakout.
+>> 
+>> Also added APU6, which is essentially APU4 with a different ethernet
+>> interface and SFP cage on eth0.
+>> 
+>> Revision history:
+>> 
+>> v1: originally titled, "apu6: add apu6 variation to apu2 driver family"
+>> this dealt only with detecting the APUv6, which is otherwise identical
+>> to the v4 excepting the SFP cage on eth0.
+>> 
+>> v2: at Ed's request, merged with his previous pull-request titled
+>> "x86: Support APU5 in PCEngines platform driver", and some cleanup
+>> to that changeset (including dropping the table "apu5_driver_data"
+>> which did not have a defined type "struct apu_driver_data"), but got
+>> mistitled when the Subject of that commit got accidentally dropped.
+>> 
+>> v3: retitled to match Ed's previous pull-request.
+>> 
+>> Cc: platform-driver-x86@vger.kernel.org
+>> Cc: linux-x86_64@vger.kernel.org
+>> Reviewed-by: Andreas Eberlein <foodeas@aeberlein.de>
+>> Reviewed-by: Paul Spooren <paul@spooren.de>
+>> Signed-off-by: Ed Wildgoose <lists@wildgooses.com>
+>> Sighed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
+> 
+> Hmm, squashing the 2 patches for APU5 and APU6 support together
+> really is not helpful. this really should be
+> a series with 2 separate patches.
+> 
+> Also I would really like to have Enrico's input about this,
+> IIRC last time this was looked at there were some none trivial
+> compatibility issues...
+> 
+> Regards,
+> 
+> Hans
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index a1fe1e0dcf4a..30fff4461807 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -129,6 +129,14 @@ static const struct pmc_bit_map *ext_spt_pfear_map[] = {
- 	NULL
- };
- 
-+struct ltr_entry {
-+	u32 comp_index;
-+	const char *comp_name;
-+	struct list_head node;
-+};
-+
-+static LIST_HEAD(ltr_ignore_list);
-+
- static const struct pmc_bit_map spt_ltr_show_map[] = {
- 	{"SOUTHPORT_A",		SPT_PMC_LTR_SPA},
- 	{"SOUTHPORT_B",		SPT_PMC_LTR_SPB},
-@@ -1327,27 +1335,18 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
- 
--static int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
-+static void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
- {
- 	const struct pmc_reg_map *map = pmcdev->map;
- 	u32 reg;
--	int err = 0;
- 
- 	mutex_lock(&pmcdev->lock);
- 
--	if (value > map->ltr_ignore_max) {
--		err = -EINVAL;
--		goto out_unlock;
--	}
--
- 	reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
- 	reg |= BIT(value);
- 	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
- 
--out_unlock:
- 	mutex_unlock(&pmcdev->lock);
--
--	return err;
- }
- 
- static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-@@ -1356,6 +1355,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
- {
- 	struct seq_file *s = file->private_data;
- 	struct pmc_dev *pmcdev = s->private;
-+	const struct pmc_reg_map *map = pmcdev->map;
-+	struct ltr_entry *entry;
- 	u32 buf_size, value;
- 	int err;
- 
-@@ -1365,13 +1366,35 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
- 	if (err)
- 		return err;
- 
--	err = pmc_core_send_ltr_ignore(pmcdev, value);
-+	if (value > map->ltr_ignore_max)
-+		return -EINVAL;
- 
--	return err == 0 ? count : err;
-+	list_for_each_entry(entry, &ltr_ignore_list, node) {
-+		if (entry->comp_index == value)
-+			return -EEXIST;
-+	}
-+
-+	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->comp_name = map->ltr_show_sts[value].name;
-+	entry->comp_index = value;
-+	list_add_tail(&entry->node, &ltr_ignore_list);
-+
-+	pmc_core_send_ltr_ignore(pmcdev, value);
-+
-+	return count;
- }
- 
- static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
- {
-+	struct ltr_entry *entry;
-+
-+	list_for_each_entry(entry, &ltr_ignore_list, node) {
-+		seq_printf(s, "%s\n", entry->comp_name);
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.34.1
+
+My read of Enrico's comments were that using ACPI information to map
+the GPIO lines would break backward compatibility.  This part of the
+effort was dropped.
+
+Are there other concerns?
+
+-Philip
+
+
+> 
+> 
+>> ---
+>> drivers/leds/leds-apu.c                |   2 +-
+>> drivers/platform/x86/Kconfig           |   4 +-
+>> drivers/platform/x86/pcengines-apuv2.c | 118 ++++++++++++++++++++++---
+>> 3 files changed, 107 insertions(+), 17 deletions(-)
+>> 
+>> diff --git a/drivers/leds/leds-apu.c b/drivers/leds/leds-apu.c
+>> index c409b80c236d7182c79944225dd4b9e5d32f0a9f..fb3332863c36241e4b7f75f89213171ec0c0dd04 100644
+>> --- a/drivers/leds/leds-apu.c
+>> +++ b/drivers/leds/leds-apu.c
+>> @@ -183,7 +183,7 @@ static int __init apu_led_init(void)
+>> 
+>> if (!(dmi_match(DMI_SYS_VENDOR, "PC Engines") &&
+>>       (dmi_match(DMI_PRODUCT_NAME, "APU") || dmi_match(DMI_PRODUCT_NAME, "apu1")))) {
+>> - pr_err("No PC Engines APUv1 board detected. For APUv2,3 support, enable CONFIG_PCENGINES_APU2\n");
+>> + pr_err("No PC Engines APUv1 board detected. For APUv2,3,4,5,6 support, enable CONFIG_PCENGINES_APU2\n");
+>> return -ENODEV;
+>> }
+>> 
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index 5692385e2d26fed92785488ce1c6e88449c54c78..f930d5dd3efee11fbad4ad9508eb288bb4181bab 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -698,7 +698,7 @@ config XO1_RFKILL
+>>   laptop.
+>> 
+>> config PCENGINES_APU2
+>> - tristate "PC Engines APUv2/3 front button and LEDs driver"
+>> + tristate "PC Engines APUv2/3/4/5/6 front button and LEDs driver"
+>> depends on INPUT && INPUT_KEYBOARD && GPIOLIB
+>> depends on LEDS_CLASS
+>> select GPIO_AMD_FCH
+>> @@ -706,7 +706,7 @@ config PCENGINES_APU2
+>> select LEDS_GPIO
+>> help
+>>   This driver provides support for the front button and LEDs on
+>> -   PC Engines APUv2/APUv3 board.
+>> +   PC Engines APUv2/APUv3/APUv4/APUv5/APUv6 board.
+>> 
+>>   To compile this driver as a module, choose M here: the module
+>>   will be called pcengines-apuv2.
+>> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+>> index d063d91db9bcbe5ceb2ac641d3105df37651ac4d..bd58d5294f0146088d435f1c9df83eb218b67b0c 100644
+>> --- a/drivers/platform/x86/pcengines-apuv2.c
+>> +++ b/drivers/platform/x86/pcengines-apuv2.c
+>> @@ -1,10 +1,12 @@
+>> // SPDX-License-Identifier: GPL-2.0+
+>> 
+>> /*
+>> - * PC-Engines APUv2/APUv3 board platform driver
+>> + * PC-Engines APUv2-6 board platform driver
+>>  * for GPIO buttons and LEDs
+>>  *
+>>  * Copyright (C) 2018 metux IT consult
+>> + * Copyright (C) 2022 Ed Wildgoose <lists@wildgooses.com>
+>> + * Copyright (C) 2022 Philip Prindeville <philipp@redfish-solutions.com>
+>>  * Author: Enrico Weigelt <info@metux.net>
+>>  */
+>> 
+>> @@ -22,38 +24,70 @@
+>> #include <linux/platform_data/gpio/gpio-amd-fch.h>
+>> 
+>> /*
+>> - * NOTE: this driver only supports APUv2/3 - not APUv1, as this one
+>> + * NOTE: this driver only supports APUv2-6 - not APUv1, as this one
+>>  * has completely different register layouts.
+>>  */
+>> 
+>> +/*
+>> + * There are a number of APU variants, with differing features
+>> + * APU2 has SIM slots 1/2 mapping to mPCIe sockets 1/2
+>> + * APU3/4 moved SIM slot 1 to mPCIe socket 3, ie logically reversed
+>> + * However, most APU3/4 have a SIM switch which we default on to reverse
+>> + * the order and keep physical SIM order matching physical modem order
+>> + * APU6 is approximately the same as APU4 with different ethernet layout
+>> + *
+>> + * APU5 has 3x SIM sockets, all with a SIM switch
+>> + * several GPIOs are shuffled (see schematic), including MODESW
+>> + */
+>> +
+>> /* Register mappings */
+>> #define APU2_GPIO_REG_LED1 AMD_FCH_GPIO_REG_GPIO57
+>> #define APU2_GPIO_REG_LED2 AMD_FCH_GPIO_REG_GPIO58
+>> #define APU2_GPIO_REG_LED3 AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
+>> #define APU2_GPIO_REG_MODESW AMD_FCH_GPIO_REG_GPIO32_GE1
+>> #define APU2_GPIO_REG_SIMSWAP AMD_FCH_GPIO_REG_GPIO33_GE2
+>> -#define APU2_GPIO_REG_MPCIE2 AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+>> -#define APU2_GPIO_REG_MPCIE3 AMD_FCH_GPIO_REG_GPIO51
+>> +#define APU2_GPIO_REG_RESETM1 AMD_FCH_GPIO_REG_GPIO51
+>> +#define APU2_GPIO_REG_RESETM2 AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+>> +
+>> +#define APU5_GPIO_REG_MODESW AMT_FCH_GPIO_REG_GEVT22
+>> +#define APU5_GPIO_REG_SIMSWAP1 AMD_FCH_GPIO_REG_GPIO68
+>> +#define APU5_GPIO_REG_SIMSWAP2 AMD_FCH_GPIO_REG_GPIO32_GE1
+>> +#define APU5_GPIO_REG_SIMSWAP3 AMD_FCH_GPIO_REG_GPIO33_GE2
+>> +#define APU5_GPIO_REG_RESETM1 AMD_FCH_GPIO_REG_GPIO51
+>> +#define APU5_GPIO_REG_RESETM2 AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+>> +#define APU5_GPIO_REG_RESETM3 AMD_FCH_GPIO_REG_GPIO64
+>> 
+>> /* Order in which the GPIO lines are defined in the register list */
+>> #define APU2_GPIO_LINE_LED1 0
+>> #define APU2_GPIO_LINE_LED2 1
+>> #define APU2_GPIO_LINE_LED3 2
+>> #define APU2_GPIO_LINE_MODESW 3
+>> -#define APU2_GPIO_LINE_SIMSWAP 4
+>> -#define APU2_GPIO_LINE_MPCIE2 5
+>> -#define APU2_GPIO_LINE_MPCIE3 6
+>> +#define APU2_GPIO_LINE_RESETM1 4
+>> +#define APU2_GPIO_LINE_RESETM2 5
+>> +#define APU2_GPIO_LINE_SIMSWAP 6
+>> +
+>> +#define APU5_GPIO_LINE_LED1 0
+>> +#define APU5_GPIO_LINE_LED2 1
+>> +#define APU5_GPIO_LINE_LED3 2
+>> +#define APU5_GPIO_LINE_MODESW 3
+>> +#define APU5_GPIO_LINE_RESETM1 4
+>> +#define APU5_GPIO_LINE_RESETM2 5
+>> +#define APU5_GPIO_LINE_RESETM3 6
+>> +#define APU5_GPIO_LINE_SIMSWAP1 7
+>> +#define APU5_GPIO_LINE_SIMSWAP2 8
+>> +#define APU5_GPIO_LINE_SIMSWAP3 9
+>> 
+>> -/* GPIO device */
+>> +
+>> +/* GPIO device - APU2/3/4/6 */
+>> 
+>> static int apu2_gpio_regs[] = {
+>> [APU2_GPIO_LINE_LED1] = APU2_GPIO_REG_LED1,
+>> [APU2_GPIO_LINE_LED2] = APU2_GPIO_REG_LED2,
+>> [APU2_GPIO_LINE_LED3] = APU2_GPIO_REG_LED3,
+>> [APU2_GPIO_LINE_MODESW] = APU2_GPIO_REG_MODESW,
+>> + [APU2_GPIO_LINE_RESETM1] = APU2_GPIO_REG_RESETM1,
+>> + [APU2_GPIO_LINE_RESETM2] = APU2_GPIO_REG_RESETM2,
+>> [APU2_GPIO_LINE_SIMSWAP] = APU2_GPIO_REG_SIMSWAP,
+>> - [APU2_GPIO_LINE_MPCIE2] = APU2_GPIO_REG_MPCIE2,
+>> - [APU2_GPIO_LINE_MPCIE3] = APU2_GPIO_REG_MPCIE3,
+>> };
+>> 
+>> static const char * const apu2_gpio_names[] = {
+>> @@ -61,9 +95,9 @@ static const char * const apu2_gpio_names[] = {
+>> [APU2_GPIO_LINE_LED2] = "front-led2",
+>> [APU2_GPIO_LINE_LED3] = "front-led3",
+>> [APU2_GPIO_LINE_MODESW] = "front-button",
+>> + [APU2_GPIO_LINE_RESETM1] = "modem1-reset",
+>> + [APU2_GPIO_LINE_RESETM2] = "modem2-reset",
+>> [APU2_GPIO_LINE_SIMSWAP] = "simswap",
+>> - [APU2_GPIO_LINE_MPCIE2] = "mpcie2_reset",
+>> - [APU2_GPIO_LINE_MPCIE3] = "mpcie3_reset",
+>> };
+>> 
+>> static const struct amd_fch_gpio_pdata board_apu2 = {
+>> @@ -72,6 +106,40 @@ static const struct amd_fch_gpio_pdata board_apu2 = {
+>> .gpio_names = apu2_gpio_names,
+>> };
+>> 
+>> +/* GPIO device - APU5 */
+>> +
+>> +static int apu5_gpio_regs[] = {
+>> + [APU5_GPIO_LINE_LED1] = APU2_GPIO_REG_LED1,
+>> + [APU5_GPIO_LINE_LED2] = APU2_GPIO_REG_LED2,
+>> + [APU5_GPIO_LINE_LED3] = APU2_GPIO_REG_LED3,
+>> + [APU5_GPIO_LINE_MODESW] = APU5_GPIO_REG_MODESW,
+>> + [APU5_GPIO_LINE_RESETM1] = APU5_GPIO_REG_RESETM1,
+>> + [APU5_GPIO_LINE_RESETM2] = APU5_GPIO_REG_RESETM2,
+>> + [APU5_GPIO_LINE_RESETM3] = APU5_GPIO_REG_RESETM3,
+>> + [APU5_GPIO_LINE_SIMSWAP1] = APU5_GPIO_REG_SIMSWAP1,
+>> + [APU5_GPIO_LINE_SIMSWAP2] = APU5_GPIO_REG_SIMSWAP2,
+>> + [APU5_GPIO_LINE_SIMSWAP3] = APU5_GPIO_REG_SIMSWAP3,
+>> +};
+>> +
+>> +static const char * const apu5_gpio_names[] = {
+>> + [APU5_GPIO_LINE_LED1] = "front-led1",
+>> + [APU5_GPIO_LINE_LED2] = "front-led2",
+>> + [APU5_GPIO_LINE_LED3] = "front-led3",
+>> + [APU5_GPIO_LINE_MODESW] = "front-button",
+>> + [APU5_GPIO_LINE_RESETM1] = "modem1-reset",
+>> + [APU5_GPIO_LINE_RESETM2] = "modem2-reset",
+>> + [APU5_GPIO_LINE_RESETM3] = "modem3-reset",
+>> + [APU5_GPIO_LINE_SIMSWAP1] = "simswap1",
+>> + [APU5_GPIO_LINE_SIMSWAP2] = "simswap2",
+>> + [APU5_GPIO_LINE_SIMSWAP3] = "simswap3",
+>> +};
+>> +
+>> +static const struct amd_fch_gpio_pdata board_apu5 = {
+>> + .gpio_num = ARRAY_SIZE(apu5_gpio_regs),
+>> + .gpio_reg = apu5_gpio_regs,
+>> + .gpio_names = apu5_gpio_names,
+>> +};
+>> +
+>> /* GPIO LEDs device */
+>> 
+>> static const struct gpio_led apu2_leds[] = {
+>> @@ -215,6 +283,24 @@ static const struct dmi_system_id apu_gpio_dmi_table[] __initconst = {
+>> },
+>> .driver_data = (void *)&board_apu2,
+>> },
+>> + /* APU5 w/ mainline BIOS */
+>> + {
+>> + .ident = "apu5",
+>> + .matches = {
+>> + DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
+>> + DMI_MATCH(DMI_BOARD_NAME, "apu5")
+>> + },
+>> + .driver_data = (void *)&board_apu5,
+>> + },
+>> + /* APU6 w/ mainline BIOS */
+>> + {
+>> + .ident = "apu6",
+>> + .matches = {
+>> + DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
+>> + DMI_MATCH(DMI_BOARD_NAME, "apu6")
+>> + },
+>> + .driver_data = (void *)&board_apu2,
+>> + },
+>> {}
+>> };
+>> 
+>> @@ -249,7 +335,7 @@ static int __init apu_board_init(void)
+>> 
+>> id = dmi_first_match(apu_gpio_dmi_table);
+>> if (!id) {
+>> - pr_err("failed to detect APU board via DMI\n");
+>> + pr_err("No APU board detected via DMI\n");
+>> return -ENODEV;
+>> }
+>> 
+>> @@ -288,8 +374,12 @@ module_init(apu_board_init);
+>> module_exit(apu_board_exit);
+>> 
+>> MODULE_AUTHOR("Enrico Weigelt, metux IT consult <info@metux.net>");
+>> -MODULE_DESCRIPTION("PC Engines APUv2/APUv3 board GPIO/LEDs/keys driver");
+>> +MODULE_DESCRIPTION("PC Engines APUv2-6 board GPIO/LEDs/keys driver");
+>> MODULE_LICENSE("GPL");
+>> MODULE_DEVICE_TABLE(dmi, apu_gpio_dmi_table);
+>> MODULE_ALIAS("platform:pcengines-apuv2");
+>> +MODULE_ALIAS("platform:pcengines-apuv3");
+>> +MODULE_ALIAS("platform:pcengines-apuv4");
+>> +MODULE_ALIAS("platform:pcengines-apuv5");
+>> +MODULE_ALIAS("platform:pcengines-apuv6");
+>> MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME " platform:leds-gpio platform:gpio_keys_polled");
+
 
