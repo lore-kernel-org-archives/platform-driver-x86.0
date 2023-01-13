@@ -2,201 +2,71 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3807C54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 11:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE68CC61DB3
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 14:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241369AbjAMLfL (ORCPT
+        id S241591AbjAMOCC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Jan 2023 06:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53632 "EHLO
+        Fri, 13 Jan 2023 09:02:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240122AbjAMLdq (ORCPT
+        with ESMTP id S241622AbjAMOBX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Jan 2023 06:33:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDF954720
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jan 2023 03:07:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673608052;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=j1viz+m73p83+dF2CKzyciv4KLNjvt2LElLXL8ePhho=;
-        b=QYXk7TNldKSw2lNsZ5I2HPsNvF31CN3MZY8Ka2Ok1Z/HUV+lj+fizh86dl9Cn44NyVCTaX
-        VypVbVSLYq/ygOdAjy8dSR/3sTBgLstgUJGiURSZZZu05GQKjZY1OyXLSFoxP2YecujxLM
-        bOd4qnVa4/zopEZeBoDYpP71kHRkCUQ=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-360-sf126Mv8M1KTAuAUVMszpg-1; Fri, 13 Jan 2023 06:07:31 -0500
-X-MC-Unique: sf126Mv8M1KTAuAUVMszpg-1
-Received: by mail-ej1-f72.google.com with SMTP id qw20-20020a1709066a1400b007c1727f7c55so14704443ejc.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jan 2023 03:07:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j1viz+m73p83+dF2CKzyciv4KLNjvt2LElLXL8ePhho=;
-        b=gXchAZB9b6+ct+JT7HC36VWhxt7Wg6k2D4hAPm2c0t2pwcZpnxoNHoVdYWQuNnzdgB
-         GXhCL1g3x8f7kpQPhQ2F7PfCQpJCMg+nF7SdyvDnWw2cN2TIWDgU32xfMn1Gfaai+pP8
-         jA7rUTNOdifi3ijnHFszH9o5+zXHw5/GZs6rwSJVmaTQVl3htqv7L/FobpI+2f//oWHZ
-         J2GpFUSBKOLkUHDjIKeRISFZMp7SFeB9eOfe45I3Na4zMEk7X2fLGAKgUJg11XmMpJst
-         b4hMzo6a5HTfMPeyu8Ojz9uokKTphTUss+p84ihv/SFSJXmi+S7577P8gP6wnj9dG1aM
-         f3LA==
-X-Gm-Message-State: AFqh2kpWcBmr/Do8XajB4wEU07IdAYCY2lsEXql28t6mISoShUO4ZFf/
-        JUjEoFnjWOvh25WxIvW/tg1ytAkKIiy+hJdceNEBbBuL6Ip7jQvpqhoChgQfVCn2xhSQIPm3yAp
-        uBqATgt7yoqNagSgbf4Aq91NxDBip/v1WMQ==
-X-Received: by 2002:aa7:c78a:0:b0:498:f2d:f52e with SMTP id n10-20020aa7c78a000000b004980f2df52emr21664100eds.21.1673608050290;
-        Fri, 13 Jan 2023 03:07:30 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXv8vJX/eFCzo/3Ow5GaVX46ffUpouhJeOnvlcMDGgQUTUf+JsrvwTFIjqQgDwya+03G6J+Jlg==
-X-Received: by 2002:aa7:c78a:0:b0:498:f2d:f52e with SMTP id n10-20020aa7c78a000000b004980f2df52emr21664087eds.21.1673608050060;
-        Fri, 13 Jan 2023 03:07:30 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id o11-20020a170906768b00b0084d242d07ffsm8097390ejm.8.2023.01.13.03.07.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jan 2023 03:07:29 -0800 (PST)
-Message-ID: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
-Date:   Fri, 13 Jan 2023 12:07:28 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.2-2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
+        Fri, 13 Jan 2023 09:01:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4837E10FDF;
+        Fri, 13 Jan 2023 05:58:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D890461DD3;
+        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 485B4C433D2;
+        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673618308;
+        bh=9x0uUpVVYoI0r99eTM71l1XwqIGcddwEwKLzauh1dzk=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=kKwXz2Cp+u92VCiIq6wXxDWfYHKsBpt7cjmgy+MI5fa5VXiYMQCTu/WAILAA2VEGh
+         iUcr6BUTYoyeg4fKdrfA8esuL4uy6mfGKtpC47esG2tNUflwh1cJxVCEPk8ALtUY2B
+         dQwPpcQv1Bm7uD4cD4eJDihV60CvmM8RrGPYz841AHNTreyJxbg07QHL9AosWxByCc
+         NH+PkPXLiKwhw+w/ElRtsceI9V/VHiibCCxTw0id6RkF6TUC9NSgYdgnJSslDrdvPF
+         bhoGpmIdJBspU9G2qvrt/TgAXYxKbJ07/Ald3y5Ziss4qfusvGzgc9EoSy1zhs4m7A
+         ejXOvmfrlgvJQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3449BE21EE0;
+        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.2-2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
+References: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-2
+X-PR-Tracked-Commit-Id: fde5f74ccfc771941b018b5415fa9664426e10ad
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0d0833e0399efecf3d75b54c3bc277660166d9a4
+Message-Id: <167361830821.16011.5654691306196291892.pr-tracker-bot@kernel.org>
+Date:   Fri, 13 Jan 2023 13:58:28 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Fri, 13 Jan 2023 12:07:28 +0100:
 
-Here is the first round of fixes for platform-drivers-x86 for 6.2.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-2
 
-Nothing special to report just various small fixes and
-hardware-id additions.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0d0833e0399efecf3d75b54c3bc277660166d9a4
 
-Regards,
+Thank you!
 
-Hans
-
-
-The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
-
-  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-2
-
-for you to fetch changes up to fde5f74ccfc771941b018b5415fa9664426e10ad:
-
-  platform/x86: thinkpad_acpi: Fix profile mode display in AMT mode (2023-01-13 11:40:30 +0100)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.2-2
-
-A small set of assorted fixes and hardware-id additions for 6.2.
-
-The following is an automated git shortlog grouped by driver:
-
-asus-nb-wmi:
- -  Add alternate mapping for KEY_SCREENLOCK
- -  Add alternate mapping for KEY_CAMERA
-
-asus-wmi:
- -  Don't load fan curves without fan
- -  Ignore fan on E410MA
- -  Add quirk wmi_ignore_fan
-
-dell-privacy:
- -  Only register SW_CAMERA_LENS_COVER if present
- -  Fix SW_CAMERA_LENS_COVER reporting
-
-ideapad-laptop:
- -  Add Legion 5 15ARH05 DMI id to set_fn_lock_led_list[]
-
-int3472/discrete:
- -  Ensure the clk/power enable pins are in output mode
-
-intel/pmc/core:
- -  Add Meteor Lake mobile support
-
-platform/surface:
- -  aggregator: Add missing call to ssam_request_sync_free()
- -  aggregator: Ignore command messages not intended for us
-
-platform/x86/amd:
- -  Fix refcount leak in amd_pmc_probe
-
-simatic-ipc:
- -  add another model
- -  correct name of a model
-
-sony-laptop:
- -  Don't turn off 0x153 keyboard backlight during probe
-
-thinkpad_acpi:
- -  Fix profile mode display in AMT mode
-
-touchscreen_dmi:
- -  Add info for the CSL Panther Tab HD
-
-----------------------------------------------------------------
-Gayatri Kammela (1):
-      platform/x86: intel/pmc/core: Add Meteor Lake mobile support
-
-Hans de Goede (6):
-      platform/x86: sony-laptop: Don't turn off 0x153 keyboard backlight during probe
-      platform/x86: ideapad-laptop: Add Legion 5 15ARH05 DMI id to set_fn_lock_led_list[]
-      platform/x86: asus-nb-wmi: Add alternate mapping for KEY_SCREENLOCK
-      platform/x86: dell-privacy: Fix SW_CAMERA_LENS_COVER reporting
-      platform/x86: dell-privacy: Only register SW_CAMERA_LENS_COVER if present
-      platform/x86: int3472/discrete: Ensure the clk/power enable pins are in output mode
-
-Henning Schild (2):
-      platform/x86: simatic-ipc: correct name of a model
-      platform/x86: simatic-ipc: add another model
-
-Mark Pearson (1):
-      platform/x86: thinkpad_acpi: Fix profile mode display in AMT mode
-
-Maximilian Luz (2):
-      platform/surface: aggregator: Ignore command messages not intended for us
-      platform/surface: aggregator: Add missing call to ssam_request_sync_free()
-
-Miaoqian Lin (1):
-      platform/x86/amd: Fix refcount leak in amd_pmc_probe
-
-Michael Klein (1):
-      platform/x86: touchscreen_dmi: Add info for the CSL Panther Tab HD
-
-Thomas Weißschuh (4):
-      platform/x86: asus-nb-wmi: Add alternate mapping for KEY_CAMERA
-      platform/x86: asus-wmi: Add quirk wmi_ignore_fan
-      platform/x86: asus-wmi: Ignore fan on E410MA
-      platform/x86: asus-wmi: Don't load fan curves without fan
-
- drivers/platform/surface/aggregator/controller.c   |  4 ++-
- .../surface/aggregator/ssh_request_layer.c         | 14 ++++++++
- drivers/platform/x86/amd/pmc.c                     |  2 +-
- drivers/platform/x86/asus-nb-wmi.c                 | 15 ++++++++
- drivers/platform/x86/asus-wmi.c                    |  7 +++-
- drivers/platform/x86/asus-wmi.h                    |  1 +
- drivers/platform/x86/dell/dell-wmi-privacy.c       | 41 ++++++++++++++++------
- drivers/platform/x86/ideapad-laptop.c              |  6 ++++
- .../platform/x86/intel/int3472/clk_and_regulator.c |  3 ++
- drivers/platform/x86/intel/int3472/discrete.c      |  4 +++
- drivers/platform/x86/intel/pmc/core.c              |  1 +
- drivers/platform/x86/simatic-ipc.c                 |  3 +-
- drivers/platform/x86/sony-laptop.c                 | 21 +++++++----
- drivers/platform/x86/thinkpad_acpi.c               | 23 ++++++++----
- drivers/platform/x86/touchscreen_dmi.c             | 25 +++++++++++++
- include/linux/platform_data/x86/simatic-ipc.h      |  3 +-
- 16 files changed, 145 insertions(+), 28 deletions(-)
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
