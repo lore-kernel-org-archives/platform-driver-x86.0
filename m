@@ -2,71 +2,164 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE68CC61DB3
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 14:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B2C54EBE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Jan 2023 14:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241591AbjAMOCC (ORCPT
+        id S234620AbjAMOEr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Jan 2023 09:02:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
+        Fri, 13 Jan 2023 09:04:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241622AbjAMOBX (ORCPT
+        with ESMTP id S241532AbjAMOD1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Jan 2023 09:01:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4837E10FDF;
-        Fri, 13 Jan 2023 05:58:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D890461DD3;
-        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 485B4C433D2;
-        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673618308;
-        bh=9x0uUpVVYoI0r99eTM71l1XwqIGcddwEwKLzauh1dzk=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=kKwXz2Cp+u92VCiIq6wXxDWfYHKsBpt7cjmgy+MI5fa5VXiYMQCTu/WAILAA2VEGh
-         iUcr6BUTYoyeg4fKdrfA8esuL4uy6mfGKtpC47esG2tNUflwh1cJxVCEPk8ALtUY2B
-         dQwPpcQv1Bm7uD4cD4eJDihV60CvmM8RrGPYz841AHNTreyJxbg07QHL9AosWxByCc
-         NH+PkPXLiKwhw+w/ElRtsceI9V/VHiibCCxTw0id6RkF6TUC9NSgYdgnJSslDrdvPF
-         bhoGpmIdJBspU9G2qvrt/TgAXYxKbJ07/Ald3y5Ziss4qfusvGzgc9EoSy1zhs4m7A
-         ejXOvmfrlgvJQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3449BE21EE0;
-        Fri, 13 Jan 2023 13:58:28 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.2-2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
-References: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <2d040d2d-4f4d-f106-49ba-317142e0ce74@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-2
-X-PR-Tracked-Commit-Id: fde5f74ccfc771941b018b5415fa9664426e10ad
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0d0833e0399efecf3d75b54c3bc277660166d9a4
-Message-Id: <167361830821.16011.5654691306196291892.pr-tracker-bot@kernel.org>
-Date:   Fri, 13 Jan 2023 13:58:28 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
+        Fri, 13 Jan 2023 09:03:27 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47AA410FDF;
+        Fri, 13 Jan 2023 06:02:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673618533; x=1705154533;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=X8yP8ue7Mjwmum3hdTB2a0jxS4tJ1ITCtpEQuehUOg8=;
+  b=YeoyMKE/sWguMTH9nDKeSlXsCU0HA9HMWEnsgmcmHBFbWjQ2aKG/nMUe
+   lVw+9E5q353OLCJBhWCTK+iQdN0gt2kmPP2nUvBTvgUsSh8LVo/sK3XVB
+   qaSKYvAE3oAXonq9XgWVFeZxTLcdE61dxNqLd5EFPqwot73f+ne8mCs8/
+   jYrtgLAV9yA6uaGWmcJxMpiyTkjHyYWSaR8Jcr+MUEETgY8M8ZhSvWXek
+   zxEfRwaQplOv8HPU0EsZBhHlF04+aSPEYIC6x/fOIwhZUqyVUcZShwL3R
+   Q3J7bst04VWNmOgkQK5Gs4kefqKBhMkZEZ6VSdnypHrmTyVY67q9RSl/1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="388492989"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="388492989"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 06:02:12 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="987008075"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="987008075"
+Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 06:02:09 -0800
+From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
+        hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajat.khandelwal@intel.com,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/pmc: core: Add support to show LTR-ignored components
+Date:   Fri, 13 Jan 2023 19:32:12 +0530
+Message-Id: <20230113140212.3905361-1-rajat.khandelwal@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Fri, 13 Jan 2023 12:07:28 +0100:
+Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
+if there are components whose LTR values have been ignored.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-2
+This patch adds the feature to print out such components, if they exist.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0d0833e0399efecf3d75b54c3bc277660166d9a4
+Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/core.c | 47 ++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index a1fe1e0dcf4a..30fff4461807 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -129,6 +129,14 @@ static const struct pmc_bit_map *ext_spt_pfear_map[] = {
+ 	NULL
+ };
+ 
++struct ltr_entry {
++	u32 comp_index;
++	const char *comp_name;
++	struct list_head node;
++};
++
++static LIST_HEAD(ltr_ignore_list);
++
+ static const struct pmc_bit_map spt_ltr_show_map[] = {
+ 	{"SOUTHPORT_A",		SPT_PMC_LTR_SPA},
+ 	{"SOUTHPORT_B",		SPT_PMC_LTR_SPB},
+@@ -1327,27 +1335,18 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+ 
+-static int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
++static void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+ {
+ 	const struct pmc_reg_map *map = pmcdev->map;
+ 	u32 reg;
+-	int err = 0;
+ 
+ 	mutex_lock(&pmcdev->lock);
+ 
+-	if (value > map->ltr_ignore_max) {
+-		err = -EINVAL;
+-		goto out_unlock;
+-	}
+-
+ 	reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+ 	reg |= BIT(value);
+ 	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
+ 
+-out_unlock:
+ 	mutex_unlock(&pmcdev->lock);
+-
+-	return err;
+ }
+ 
+ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+@@ -1356,6 +1355,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ {
+ 	struct seq_file *s = file->private_data;
+ 	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_reg_map *map = pmcdev->map;
++	struct ltr_entry *entry;
+ 	u32 buf_size, value;
+ 	int err;
+ 
+@@ -1365,13 +1366,35 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ 	if (err)
+ 		return err;
+ 
+-	err = pmc_core_send_ltr_ignore(pmcdev, value);
++	if (value > map->ltr_ignore_max)
++		return -EINVAL;
+ 
+-	return err == 0 ? count : err;
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		if (entry->comp_index == value)
++			return -EEXIST;
++	}
++
++	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
++	if (!entry)
++		return -ENOMEM;
++
++	entry->comp_name = map->ltr_show_sts[value].name;
++	entry->comp_index = value;
++	list_add_tail(&entry->node, &ltr_ignore_list);
++
++	pmc_core_send_ltr_ignore(pmcdev, value);
++
++	return count;
+ }
+ 
+ static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
+ {
++	struct ltr_entry *entry;
++
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		seq_printf(s, "%s\n", entry->comp_name);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
