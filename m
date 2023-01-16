@@ -2,50 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CCC678DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D03C54EBE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbjAPOJa (ORCPT
+        id S232380AbjAPOMn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 09:09:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45774 "EHLO
+        Mon, 16 Jan 2023 09:12:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbjAPOHd (ORCPT
+        with ESMTP id S232312AbjAPOLn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Jan 2023 09:07:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B881227B3;
-        Mon, 16 Jan 2023 06:03:52 -0800 (PST)
+        Mon, 16 Jan 2023 09:11:43 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063E92BF14;
+        Mon, 16 Jan 2023 06:04:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E2981B80F91;
-        Mon, 16 Jan 2023 14:03:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF92BC433D2;
-        Mon, 16 Jan 2023 14:03:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AB34460FD4;
+        Mon, 16 Jan 2023 14:04:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B074C433F0;
+        Mon, 16 Jan 2023 14:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877829;
-        bh=77KplAP5lL7akWe6eWM7jdiQX+igqDEEes8wVXMiKQU=;
+        s=k20201202; t=1673877878;
+        bh=0Y5dm+HJ4aQevXVOywoqYnql3XcEy8PlMga3aBP0owk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcheukejpYqtZDW5DGVx6a8SvhcW7EnCvi1LzB2x51Wr+LgUl8bJjFtYtPyvcHAtn
-         brMuBQP7LDL4xSX1ZxBvsQZMpROWOGW4y0Mw0tMhv5ST2s/vWeR5jP1BID1nvTVUGN
-         36c4f12f+H+FLe6q9lLDnWrED51S0P179rgKMOI4BYlDTsuD1i+OeOZTBjCJYac5Rk
-         4XAlJkGnBoIHw4k5EUdTn2YYMHv8qaUjiYVPKqazJ3cldPyjBtF3tN50xtcIpySEck
-         IwgQEPOAVdE2RLwoQDWZqVZJk5ga9f17NgfU39LSy/pmOu71jijnazEB53WR4NKwTN
-         hMj3qT0UFvt/Q==
+        b=X+dUcs7eVHg8/1rhls/QMaUmiYDBwwNHCiQOMbGx4oRqOD66kFxlxBkb055SdUJfs
+         RFx8LvmOpTs+QA/FhJdtutFt/sF2YlVwoDCrvWfiPlRJbTHhQ+6OcRT/UFB+GDrpw5
+         9ugwTSTXq48nPzpqHjJnl4N2hbBTvBC5pcCdppiOXiEEq2ve4uWXbA4yBmX1y7k+C7
+         4nancTg+wyQghvsCno8lsp6ZLydjOAhcbezUfIFGHrnBjgq30ICuAUoys4lLR4GOOV
+         1Y0EiqVv7XQaj6CEzMiutVeEhiW7MsBr6Suu1PZVtIH1ZMfcJNKJYQH7+eAVeteCp9
+         P3loDQ57mIKbA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Henning Schild <henning.schild@siemens.com>,
+Cc:     Michael Klein <m.klein@mvz-labor-lb.de>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 50/53] platform/x86: simatic-ipc: add another model
-Date:   Mon, 16 Jan 2023 09:01:50 -0500
-Message-Id: <20230116140154.114951-50-sashal@kernel.org>
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 21/24] platform/x86: touchscreen_dmi: Add info for the CSL Panther Tab HD
+Date:   Mon, 16 Jan 2023 09:03:56 -0500
+Message-Id: <20230116140359.115716-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230116140154.114951-1-sashal@kernel.org>
-References: <20230116140154.114951-1-sashal@kernel.org>
+In-Reply-To: <20230116140359.115716-1-sashal@kernel.org>
+References: <20230116140359.115716-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -54,46 +53,64 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Henning Schild <henning.schild@siemens.com>
+From: Michael Klein <m.klein@mvz-labor-lb.de>
 
-[ Upstream commit d348b1d761e358a4ba03fb34aa7e3dbd278db236 ]
+[ Upstream commit 36c2b9d6710427f802494ba070621cb415198293 ]
 
-Add IPC PX-39A support.
+Add touchscreen info for the CSL Panther Tab HD.
 
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
-Link: https://lore.kernel.org/r/20221222103720.8546-3-henning.schild@siemens.com
+Signed-off-by: Michael Klein <m.klein@mvz-labor-lb.de>
+Link: https://lore.kernel.org/r/20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/simatic-ipc.c            | 1 +
- include/linux/platform_data/x86/simatic-ipc.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-index 2ab1f8da32b0..b3622419cd1a 100644
---- a/drivers/platform/x86/simatic-ipc.c
-+++ b/drivers/platform/x86/simatic-ipc.c
-@@ -47,6 +47,7 @@ static struct {
- 	{SIMATIC_IPC_IPC427E, SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_427E},
- 	{SIMATIC_IPC_IPC477E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_427E},
- 	{SIMATIC_IPC_IPCBX_39A, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
-+	{SIMATIC_IPC_IPCPX_39A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G},
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 3d0790263fa7..93671037fd59 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -255,6 +255,23 @@ static const struct ts_dmi_data connect_tablet9_data = {
+ 	.properties     = connect_tablet9_props,
  };
  
- static int register_platform_devices(u32 station_id)
-diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-index a4a6cba412cb..a48bb5240977 100644
---- a/include/linux/platform_data/x86/simatic-ipc.h
-+++ b/include/linux/platform_data/x86/simatic-ipc.h
-@@ -33,6 +33,7 @@ enum simatic_ipc_station_ids {
- 	SIMATIC_IPC_IPC127E = 0x00000D01,
- 	SIMATIC_IPC_IPC227G = 0x00000F01,
- 	SIMATIC_IPC_IPCBX_39A = 0x00001001,
-+	SIMATIC_IPC_IPCPX_39A = 0x00001002,
- };
- 
- static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
++static const struct property_entry csl_panther_tab_hd_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-csl-panther-tab-hd.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data csl_panther_tab_hd_data = {
++	.acpi_name      = "MSSL1680:00",
++	.properties     = csl_panther_tab_hd_props,
++};
++
+ static const struct property_entry cube_iwork8_air_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+@@ -1100,6 +1117,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
+ 		},
+ 	},
++	{
++		/* CSL Panther Tab HD */
++		.driver_data = (void *)&csl_panther_tab_hd_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "CSL Computer GmbH & Co. KG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CSL Panther Tab HD"),
++		},
++	},
+ 	{
+ 		/* CUBE iwork8 Air */
+ 		.driver_data = (void *)&cube_iwork8_air_data,
 -- 
 2.35.1
 
