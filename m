@@ -2,261 +2,532 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F36C46467
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Jan 2023 23:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECF1C46467
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 12:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbjAOXBx (ORCPT
+        id S229530AbjAPMGR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 15 Jan 2023 18:01:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56990 "EHLO
+        Mon, 16 Jan 2023 07:06:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231381AbjAOXBv (ORCPT
+        with ESMTP id S229586AbjAPMGQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 15 Jan 2023 18:01:51 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206E210428;
-        Sun, 15 Jan 2023 15:01:50 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9so28564805pll.9;
-        Sun, 15 Jan 2023 15:01:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AWNlysJq0lnDtbSKvo7T7muCSIE9cK6qJbiITiHffwM=;
-        b=ds0/Dsx056A9dQBoiIZArdP2boxGzDMZcKAYB5MQp1vG0Uc2I+YscriDmut/gQBUSM
-         v6Kkvg9GmH/xejXlYOg7JCtKgq9J9Ay/C3MnHK7f06KjX4c5tntXfAwdv0KReDSdB8gc
-         Sbt7k3TM5QH6BlSkQWkXiBFdp5gmzhPA2yEtWCRgQXNV56xYamfsjSSsAMfEnp8dyfxM
-         IHemzc9BpULy8RAn3sgVePK+WBdLTmgsD7Zzbf52lS2fOSXdMO8tA6YCeY07z5Hdi/Oa
-         crashmkPTsbwKLnFozkZUX6SZQkyb5lBGH8+zHZh1Xk8NdV9HLiBHFlEn1jhqE4oyucG
-         tPVQ==
+        Mon, 16 Jan 2023 07:06:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204CF196BF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Jan 2023 04:05:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673870728;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TdXMyq6qFhGIH6cpWmSdnBDJrjh5oL1y4Bla2B/eulE=;
+        b=OPaKkkXaxzMLs3oqoXzVG6MWydkB4kmJECSF2RWua+COfLG7QxH2dlI2MOmNCdbz8WcH1X
+        jq5EvKIVzaNWEYDh6csKp4/8GqWxjzD0sWlEil2w+LojqB7Ju7dMPOeJjGzjEIeo7+0uGr
+        VshXMQ3XGx2y+uMyl0mP5Sni+xrP0s8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-558-_ZZDVxbMNJGAcD_MeQNTeA-1; Mon, 16 Jan 2023 07:05:25 -0500
+X-MC-Unique: _ZZDVxbMNJGAcD_MeQNTeA-1
+Received: by mail-ed1-f72.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so1364938edc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Jan 2023 04:05:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWNlysJq0lnDtbSKvo7T7muCSIE9cK6qJbiITiHffwM=;
-        b=CGJw2GHiqRJAXVzmQXsgYZ67lO31O2tX8oxv4ZjwwsMmJnPSTVqluGYgEXzhu+teFS
-         HP1ib44nsi064Wc91CaukxvW03nwuVudBNpTBKilr3yl135AqM3lOsYvGxT+vfR9xA8U
-         lhNcq5VbfVwHPvN6iIkVlR00qWVopG/Te1GNk9WfBVQYQIuvbGH06e/7GfGiELJa3+K3
-         Vjt/zqj+M4jmQwTGjN9/tDTDKPU1BSfxA5oprCZ+D1m/5YS63wszyhNQzQcFUEU4hSkT
-         8fdC6n68TQCXNW4IA0n87+1RuU6n/UGKayN1zWrSnOR2qwGac24+ciSJYCnkQ3xO3idr
-         VNHg==
-X-Gm-Message-State: AFqh2kovoGYkhFKj0XF3z2IR+3foJa3Vd+duwJ8J6s/+gjeEN4F7U1cU
-        Hr0uig1yk2WWduDquTh1aCGgqH2kzhP54B7P
-X-Google-Smtp-Source: AMrXdXuO6o2CBDXDhZhy5lfSBGHQNlupsXAhE4S02tsSIHSZk/2mWziKsU8ST+nPZO1f7pPn0ACJoQ==
-X-Received: by 2002:a17:902:c814:b0:193:a5b:ccf6 with SMTP id u20-20020a170902c81400b001930a5bccf6mr21683890plx.0.1673823709041;
-        Sun, 15 Jan 2023 15:01:49 -0800 (PST)
-Received: from rishit-OMEN-Laptop-15-en0xxx ([171.76.81.196])
-        by smtp.gmail.com with ESMTPSA id d17-20020a170902ced100b00168dadc7354sm17907377plg.78.2023.01.15.15.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Jan 2023 15:01:48 -0800 (PST)
-Date:   Mon, 16 Jan 2023 04:31:44 +0530
-From:   Rishit Bansal <rishitbansal0@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: Support omen backlight control
- wmi-acpi methods
-Message-ID: <Y8SF2Os/NcWZkUMo@rishit-OMEN-Laptop-15-en0xxx>
+        bh=TdXMyq6qFhGIH6cpWmSdnBDJrjh5oL1y4Bla2B/eulE=;
+        b=MfmeWISD7e98Jzlhtut9AFF03CbxHzOsjEhAV6picDOPRz80AnhPKFXgqxJJcw/BJo
+         63b+ImJCm5+/LUN9HsKncgh3QhW0e8rT3o8f5kxveXr1gkPumkf5oh5S0iYIkbI9MUx+
+         OuGbuqfXT6ppJ0+s4qANSiUoL6Aliu28azcAKvpibLInq+WLPueKifj1mMSf+jskEgJy
+         KduVvrDYaEzYVd8pdCfQwKaddLid8gGR3aqv18v+9GuD3eeZ94b/EsBUON3/0lvo679u
+         MtSvFjQXA8RhAdy0KLyOkteqnsgNhPzh5C/h5C44bF3Lz2Dz5Hv6E838s9VA7q9+liRR
+         NYKg==
+X-Gm-Message-State: AFqh2koMH17aN7ZVfsBcpPDE2C4oiOzwtPHlYlOi5jezafv6YBmD1GYS
+        vzW6+/iDHC8EjegCKLuB6kaFLjvddVNa8r6yPxtxOBVGlTwvai4nZxdkT9HRixw67d2s5peFX+P
+        d3x9xfEZ7M+dcxzMzqlyAuPcrLxAZwrEchg==
+X-Received: by 2002:a17:906:39d8:b0:847:410:ecff with SMTP id i24-20020a17090639d800b008470410ecffmr71419810eje.16.1673870723337;
+        Mon, 16 Jan 2023 04:05:23 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXub39BHup0aBygGSAju7IJ/I51UHrdF4u5tn2YPs01QQL+zhoq2ZocKXzmvesh0SSP5GTrZYQ==
+X-Received: by 2002:a17:906:39d8:b0:847:410:ecff with SMTP id i24-20020a17090639d800b008470410ecffmr71419782eje.16.1673870722943;
+        Mon, 16 Jan 2023 04:05:22 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l3-20020a17090615c300b008566b807d8asm7696467ejd.73.2023.01.16.04.05.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jan 2023 04:05:22 -0800 (PST)
+Message-ID: <f797db3d-feaf-5c03-428e-595ec5f4e3a3@redhat.com>
+Date:   Mon, 16 Jan 2023 13:05:21 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v5 1/5] Introduction of HP-BIOSCFG driver (1)
+To:     Jorge Lopez <jorgealtxwork@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20221202173616.180108-1-jorge.lopez2@hp.com>
+ <20221202173616.180108-2-jorge.lopez2@hp.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20221202173616.180108-2-jorge.lopez2@hp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The HP Omen Command Studio application includes a Light Studio feature
-which can be used to control various features related to the keyboard
-backlight via the 0x20009 command.
+Hi Jorge,
 
-The command supports the following queries:
+On 12/2/22 18:36, Jorge Lopez wrote:
+> The purpose for this patch is submit HP BIOSCFG driver to be list of
+> HP Linux kernel drivers.  The driver include a total of 12 files
+> broken in several patches.  This is set 1 of 4.
+> 
+> HP BIOS Configuration driver purpose is to provide a driver supporting
+> the latest sysfs class firmware attributes framework allowing the user
+> to change BIOS settings and security solutions on HP Inc.’s commercial
+> notebooks.
+> 
+> Many features of HP Commercial PC’s can be managed using Windows
+> Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> Enterprise Management (WBEM) that provides a standards-based interface
+> for changing and monitoring system settings.  HP BISOCFG driver provides
+> a native Linux solution and the exposed features facilitates the
+> migration to Linux environments.
+> 
+> The Linux security features to be provided in hp-bioscfg driver enables
+> managing the BIOS settings and security solutions via sysfs, a virtual
+> filesystem that can be used by user-mode applications.   The new
+> documentation cover features such Secure Platform Management, Sure
+> Admin, and Sure Start.  Each section provides security feature
+> description and identifies sysfs directories and files exposed by
+> the driver.
+> 
+> Many HP Commercial PC’s include a feature called Secure Platform
+> Management (SPM), which replaces older password-based BIOS settings
+> management with public key cryptography. PC secure product management
+> begins when a target system is provisioned with cryptographic keys
+> that are used to ensure the integrity of communications between system
+> management utilities and the BIOS.
+> 
+> HP Commercial PC’s have several BIOS settings that control its behaviour
+> and capabilities, many of which are related to security. To prevent
+> unauthorized changes to these settings, the system can be configured
+> to use a Sure Admin cryptographic signature-based authorization string
+> that the BIOS will use to verify authorization to modify the setting.
+> 
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> 
+> ---
+> Based on the latest platform-drivers-x86.git/for-next
+> 
+> History
+> 
+> Version 5
+> 	Remove version 4 patch 1
+> 	Address review changes proposed in Version 4
+> 	Reorganize all patches number and file order
+> ---
+>  .../testing/sysfs-class-firmware-attributes   | 181 +++++++++++++++++-
+>  MAINTAINERS                                   |   6 +
+>  drivers/platform/x86/hp/Kconfig               |  16 ++
+>  drivers/platform/x86/hp/Makefile              |   1 +
+>  drivers/platform/x86/hp/hp-bioscfg/Makefile   |  19 ++
 
-- 0x1: Checks if keyboard lighting is supported
-- 0x2: Get the zone colors of each of the 4 zones on the keyboard
-- 0x3: Set the zone colors of each of the 4 zones on the keyboard
-- 0x4: Gets the state (on/off) of the backlight
-- 0x5: Sets the state (on/off) of the backlight
+This patch really should be the last patch in the series since
+the Makefile points to a bunch of files which don't exist
+until the other patches are merged.
 
-This patch introduces a new sysfs led class called
-"hp_omen::kbd_backlight" which can be used to control the state of the
-backlight. It also includes a sysfs RW attribute called "backlight_color"
-which can be used to get/set the current color of each zone.
+>  5 files changed, 221 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 4cdba3477176..da8e06d9bb43 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -22,6 +22,13 @@ Description:
+>  			- integer: a range of numerical values
+>  			- string
+>  
+> +		HP specific types
+> +		-----------------
+> +			- ordered-list - a set of ordered list valid values
+> +			- sure-admin
+> +			- sure-start
+> +
+> +
+>  		All attribute types support the following values:
+>  
+>  		current_value:
+> @@ -126,6 +133,67 @@ Description:
+>  					value will not be effective through sysfs until this rule is
+>  					met.
+>  
+> +		HP specific class extensions
+> +		------------------------------
+> +
+> +		On HP systems the following additional attributes are available:
+> +
+> +		"ordered-list"-type specific properties:
+> +
+> +		elements:
+> +					A file that can be read to obtain the possible
+> +					list of values of the <attr>. Values are separated using
+> +					semi-colon (``;``). The order individual elements are listed
+> +					according to their priority.  An Element listed first has the
+> +					hightest priority. Writing the list in a different order to
+> +					current_value alters the priority order for the particular
+> +					attribute.
 
-The patch has been tested on an HP Omen 15-en0037AX (AMD) laptop.
+Ok, this new ordered-list type is fine.
 
-Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 110 +++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+> +
+> +		"sure-admin"-type specific properties:
+> +
+> +		settings:
+> +					A file associated with Sure Admin. BIOS settings can
+> +					be read or written through the Sure Admin settings file in sysfs.
+> +
+> +					[BIOS setting],[new value],[auth token]
+> +
+> +					Sample settings reported data
+> +
+> +					{
+> +						"Class": "HPBIOS_BIOSEnumeration",
+> +						"Name": "USB Storage Boot",
+> +						"Path": "\\Advanced\\Boot Options",
+> +						"IsReadOnly": 0,
+> +						...
+> +						"Value": "Enable",
+> +						"Size": 2,
+> +						"PossibleValues": [
+> +							"Disable",
+> +							"Enable"
+> +							]
+> +					}
+> +
+> +					This file can also be written to in order to update
+> +					the value sof a <attr> using a CMSL generated payload.
+> +					For example:
+> +
+> +					<attr>,[value],[CMSL generated payload]
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 0a99058be813..0dd6f1b6d9e1 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -27,6 +27,7 @@
- #include <linux/rfkill.h>
- #include <linux/string.h>
- #include <linux/dmi.h>
-+#include <linux/leds.h>
- 
- MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
- MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
-@@ -136,6 +137,7 @@ enum hp_wmi_command {
- 	HPWMI_WRITE	= 0x02,
- 	HPWMI_ODM	= 0x03,
- 	HPWMI_GM	= 0x20008,
-+	HPWMI_KB    = 0x20009,
- };
- 
- enum hp_wmi_hardware_mask {
-@@ -734,12 +736,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
-+static ssize_t kbd_rgb_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	u8 val[128];
-+
-+	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
-+				       zero_if_sup(val), sizeof(val));
-+
-+	if (ret)
-+		return ret;
-+
-+	strncat(buf, &val[25], 12);
-+
-+	return strlen(buf);
-+}
-+
-+static ssize_t kbd_rgb_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	u8 val[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
-+				   zero_if_sup(val), sizeof(val));
-+
-+	if (ret)
-+		return ret;
-+
-+	if (count != 12)
-+		return -1;
-+
-+	strncpy(&val[25], buf, count);
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
-+				   0);
-+
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
- static DEVICE_ATTR_RO(display);
- static DEVICE_ATTR_RO(hddtemp);
- static DEVICE_ATTR_RW(als);
- static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
-+static DEVICE_ATTR_RW(kbd_rgb);
- 
- static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_display.attr,
-@@ -748,6 +794,7 @@ static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_dock.attr,
- 	&dev_attr_tablet.attr,
- 	&dev_attr_postcode.attr,
-+	&dev_attr_kbd_rgb.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(hp_wmi);
-@@ -1294,6 +1341,63 @@ static int thermal_profile_setup(void)
- 
- static int hp_wmi_hwmon_init(void);
- 
-+static struct led_classdev omen_kbd_led;
-+
-+static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
-+{
-+	u8 val;
-+
-+	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
-+
-+	if (ret)
-+		return ret;
-+
-+	return (val & 0x80) ? LED_ON : LED_OFF;
-+}
-+
-+static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
-+{
-+	char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
-+
-+	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
-+				       sizeof(buffer), 0);
-+}
-+
-+
-+static bool is_omen_lighting_supported(void)
-+{
-+	u8 val;
-+
-+	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
-+
-+	if (ret)
-+		return false;
-+
-+	return (val & 1) == 1;
-+}
-+
-+static int omen_backlight_init(struct device *dev)
-+{
-+	int ret;
-+
-+	omen_kbd_led.name = "hp_omen::kbd_backlight";
-+	omen_kbd_led.brightness_set = set_omen_backlight_brightness;
-+	omen_kbd_led.brightness_get = get_omen_backlight_brightness;
-+	omen_kbd_led.max_brightness = 1;
-+
-+	ret = devm_led_classdev_register(dev, &omen_kbd_led);
-+
-+	if (ret < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static void omen_backlight_exit(struct device *dev)
-+{
-+	devm_led_classdev_unregister(dev, &omen_kbd_led);
-+}
-+
- static int __init hp_wmi_bios_setup(struct platform_device *device)
- {
- 	int err;
-@@ -1321,6 +1425,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 
- 	thermal_profile_setup();
- 
-+	if (is_omen_lighting_supported())
-+		omen_backlight_init(&device->dev);
-+
- 	return 0;
- }
- 
-@@ -1349,6 +1456,9 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
- 	if (platform_profile_support)
- 		platform_profile_remove();
- 
-+	if (is_omen_lighting_supported())
-+		omen_backlight_exit(&device->dev);
-+
- 	return 0;
- }
- 
--- 
-2.37.2
+
+This is basically a run-around around the actual firmware attributes API,
+so NACK for this.
+
+Looking at how sure_admin_settings_write() encodes things I don't see any
+difference between how auth-tokens/CFML-payloads are handled vs regular passwords
+inside hp_set_attribute().
+
+Except for the BEAM_PREFIX thing, which can be added to calculate_security_buffer() /
+populate_security_buffer() too and in that case all 3 of the following should simply
+work, taking a boot-delay integer attribute as example:
+
+echo "password" > /sys/class/firmware-attributes/hp-bioscfg/"Setup Password"/current_password
+echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-delay/current_value
+
+echo "auth-token" > /sys/class/firmware-attributes/hp-bioscfg/"Setup Password"/current_password
+echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-delay/current_value
+
+cat csml-payload.file > /sys/class/firmware-attributes/hp-bioscfg/"Setup Password"/current_password
+echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-delay/current_value
+
+The only reason why this would not work is if things may get bigger then the size of a single
+memory page (bigger then 4096 bytes).
+
+But in that case you should just change the code implementing current_password to
+use the bin_attribute interface and replace the static buffer for storing it
+with a pointer to kmalloc-ed memory, which is NULL when the password is not set.
+
+This will also remove a lot of finicky parsing which is currently done inside
+sure_admin_settings_write()
+
+###
+
+As for the reading which returns a large large list of data blocks like this:
+
+					{
+						"Class": "HPBIOS_BIOSEnumeration",
+						"Name": "USB Storage Boot",
+						"Path": "\\Advanced\\Boot Options",
+						"IsReadOnly": 0,
+						...
+						"Value": "Enable",
+						"Size": 2,
+						"PossibleValues": [
+							"Disable",
+							"Enable"
+							]
+					}
+
+This sort of thing really does not belong in the kernel. I see that this does
+export some info which is not available in the standard firmware-attributes interface,
+like path and prerequisites and physical-presence.
+
+If you want to export that info please just add extra HP specific attributes to
+the integer, string, etc. attributes sets. Like how Dell has the dell_modifier
+thing.
+
+And if you have some consumers for data in the above format then give your users
+a shell or python script or small C program which uses the sysfs interface
+to output the information in the above format. Generating this format does
+not belong in the kernel.
+
+
+> +
+> +		"sure-start"-type specific properties:
+> +
+> +		audit_log_entries:
+> +					A read-only file that returns the events in the log.
+> +
+> +					Audit log entry format
+> +
+> +					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+> +					Byte 16-127: Unused
+> +
+> +		audit_log_entry_count:
+> +					A read-only file that returns the number of existing audit log events available to be read.
+> +
+> +					[No of entries],[log entry size],[Max number of entries supported]
+> +
+>  What:		/sys/class/firmware-attributes/*/authentication/
+>  Date:		February 2021
+>  KernelVersion:	5.11
+> @@ -206,7 +274,7 @@ Description:
+>  		Drivers may emit a CHANGE uevent when a password is set or unset
+>  		userspace may check it again.
+>  
+> -		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
+> +		On Dell, Lenovo, and HP systems, if Admin password is set, then all BIOS attributes
+>  		require password validation.
+>  		On Lenovo systems if you change the Admin password the new password is not active until
+>  		the next boot.
+> @@ -296,6 +364,15 @@ Description:
+>  						echo "signature" > authentication/Admin/signature
+>  						echo "password" > authentication/Admin/certificate_to_password
+>  
+> +		HP specific class extensions
+> +		--------------------------------
+> +
+> +		On HP systems the following additional settings are available:
+> +
+> +		role: enhanced-bios-auth:
+> +					This role is specific to Secure Platform Management (SPM) attribute.
+> +					It requires configuring an endorsement (kek) and signing certificate (sk).
+> +
+>  
+>  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+>  Date:		February 2021
+> @@ -311,7 +388,7 @@ Description:
+>  			==	=========================================
+>  			0	All BIOS attributes setting are current
+>  			1	A reboot is necessary to get pending BIOS
+> -			        attribute changes applied
+> +				attribute changes applied
+>  			==	=========================================
+>  
+>  		Note, userspace applications need to follow below steps for efficient
+> @@ -364,3 +441,103 @@ Description:
+>  		use it to enable extra debug attributes or BIOS features for testing purposes.
+>  
+>  		Note that any changes to this attribute requires a reboot for changes to take effect.
+> +
+> +
+> +		HP specific class extensions
+> +		--------------------------------
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'kek' is a write-only file that can be used to configure the
+> +		RSA public key that will be used by the BIOS to verify
+> +		signatures when setting the signing key.  When written,
+> +		the bytes should correspond to the KEK certificate
+> +		(x509 .DER format containing an OU).  The size of the
+> +		certificate must be less than or equal to 4095 bytes.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'sk' is a write-only file that can be used to configure the RSA
+> +		public key that will be used by the BIOS to verify signatures
+> +		when configuring BIOS settings and security features.  When
+> +		written, the bytes should correspond to the modulus of the
+> +		public key.  The exponent is assumed to be 0x10001.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/status
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'status' is a read-only file that returns ASCII text reporting
+> +		the status information.
+> +
+> +		  State:  Not Provisioned / Provisioned / Provisioning in progress
+> +		  Version:  Major.   Minor
+> +		  Feature Bit Mask: <16-bit unsigned number display in hex>
+> +		  SPM Counter: <16-bit unsigned number display in base 10>
+> +		  Signing Key Public Key Modulus (base64):
+> +		  KEK Public Key Modulus (base64):
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'statusbin' is a read-only file that returns identical status
+> +		information reported by 'status' file in binary format.
+
+The above is all fine.
+
+
+The sure-admin thing needs to go away as already mentioned.
+
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/attributes/Sure_Admin/settings
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'settings' is a file associated with Sure Admin. BIOS settings can
+> +		be read or written through the Sure Admin settings file in sysfs.
+> +
+> +		Expected data format to update BIOS setting
+> +
+> +		  [BIOS setting],[new value],[auth token]
+> +
+> +		Sample settings reported data
+> +
+> +		  {
+> +			  "Class": "HPBIOS_BIOSEnumeration",
+> +			  "Name": "USB Storage Boot",
+> +			  "Path": "\\Advanced\\Boot Options",
+> +			  "IsReadOnly": 0,
+> +			  ...
+> +			  "Value": "Enable",
+> +			  "Size": 2,
+> +			  "PossibleValues": [
+> +				"Disable",
+> +				"Enable"
+> +				]
+> +		  }
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/attributes/Sure_Start/audit_log_entry_count
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	audit_log_entry_count is a read-only file that returns the
+> +		number of existing audit log events available to be read.
+> +
+> +		  [No of entries],[log entry size],[Max number of entries supported]
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/attributes/Sure_Start/audit_log_entries
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	audit_log_entries is a read-only file that returns the events
+> +		in the log.
+> +
+> +		Audit log entry format
+> +
+> +		  Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+> +		  Byte 16-127: Unused
+
+
+This audit_log info is duplicate with the documentation already added for this above,
+please drop these entries.
+
+
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 893c63e8beef..6cc9dd0c9ec2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9363,6 +9363,12 @@ S:	Obsolete
+>  W:	http://w1.fi/hostap-driver.html
+>  F:	drivers/net/wireless/intersil/hostap/
+>  
+> +HP BIOSCFG DRIVER
+> +M:	Jorge Lopez <jorge.lopez2@hp.com>
+> +S:	Maintained
+> +L:      platform-driver-x86@vger.kernel.org
+> +F:	drivers/platform/x86/hp/hp-bioscfg/
+> +
+>  HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Orphan
+> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+> index ae165955311c..7fef4f12e498 100644
+> --- a/drivers/platform/x86/hp/Kconfig
+> +++ b/drivers/platform/x86/hp/Kconfig
+> @@ -60,4 +60,20 @@ config TC1100_WMI
+>  	  This is a driver for the WMI extensions (wireless and bluetooth power
+>  	  control) of the HP Compaq TC1100 tablet.
+>  
+> +config HP_BIOSCFG
+> +	tristate "HP BIOS Configuration Driver"
+> +	default m
+> +	depends on ACPI_WMI
+> +	select NLS
+> +	select FW_ATTR_CLASS
+> +	help
+> +	  This driver enables administrators to securely manage BIOS settings
+> +	  using digital certificates and public-key cryptography that eliminate
+> +	  the need for passwords for both remote and local management. It supports
+> +	  changing BIOS settings on many HP machines from 2018 and newer without
+> +	  the use of any additional software.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called hp-bioscfg.
+> +
+>  endif # X86_PLATFORM_DRIVERS_HP
+> diff --git a/drivers/platform/x86/hp/Makefile b/drivers/platform/x86/hp/Makefile
+> index db1eed4cd7c7..e4f908a61acf 100644
+> --- a/drivers/platform/x86/hp/Makefile
+> +++ b/drivers/platform/x86/hp/Makefile
+> @@ -8,3 +8,4 @@
+>  obj-$(CONFIG_HP_ACCEL)		+= hp_accel.o
+>  obj-$(CONFIG_HP_WMI)		+= hp-wmi.o
+>  obj-$(CONFIG_TC1100_WMI)	+= tc1100-wmi.o
+> +obj-$(CONFIG_HP_BIOSCFG)	+= hp-bioscfg/
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/Makefile b/drivers/platform/x86/hp/hp-bioscfg/Makefile
+> new file mode 100644
+> index 000000000000..cc1a613f9223
+> --- /dev/null
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/Makefile
+> @@ -0,0 +1,19 @@
+> +obj-$(CONFIG_HP_BIOSCFG) := hp-bioscfg.o
+> +
+> +hp-bioscfg-objs := bioscfg.o	\
+> +	enum-attributes.o	\
+> +	int-attributes.o	\
+> +	string-attributes.o	\
+> +	passwdobj-attributes.o	\
+> +	biosattr-interface.o	\
+> +	passwdattr-interface.o	\
+> +	ordered-attributes.o	\
+> +	surestart-attributes.o	\
+> +	spmobj-attributes.o	\
+> +	sureadmin-attributes.o
+
+Everything below here:
+
+> +
+> +default:
+> +	make -C /lib/modules/`uname -r`/build M=$(PWD) hp-bioscfg.ko
+> +
+> +clean:
+> +	make -C /lib/modules/`uname -r`/build M=$(PWD) clean
+
+Does not belong here, please drop it.
+
+Regards,
+
+Hans
 
