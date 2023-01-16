@@ -2,92 +2,82 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D273FC678D9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 13:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E57C46467
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 13:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbjAPNvM (ORCPT
+        id S230092AbjAPN5E (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:51:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60548 "EHLO
+        Mon, 16 Jan 2023 08:57:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231458AbjAPNuo (ORCPT
+        with ESMTP id S230053AbjAPN4k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Jan 2023 08:50:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5263E2197E;
-        Mon, 16 Jan 2023 05:50:43 -0800 (PST)
+        Mon, 16 Jan 2023 08:56:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38182CFCB;
+        Mon, 16 Jan 2023 05:53:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A52260FDB;
-        Mon, 16 Jan 2023 13:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CF4C43330;
-        Mon, 16 Jan 2023 13:50:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DE905B80F3B;
+        Mon, 16 Jan 2023 13:53:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C99C433D2;
+        Mon, 16 Jan 2023 13:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877041;
-        bh=ggk54ncazk/OvpoVopO401NRPXtbra5OsVaBMxjoHtE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/MJ4XiEWMNX1n/mFVQna8r9fFJUYXORoumXe4znvqaceuikdzQw77rAnz2v9g8/h
-         OpAH0kyZaZwdf/Q6OBpC8hBpkKEUoyEFj47at1nmrT2LZlA4t3su1m/VcoK3xpyRlu
-         rXfZiBdiU7jtv50ODGMmXKZenXWb2apkKf9U/N05j6VjdALzedKp7oZlnvu+Whi3w0
-         DyiqnBtAsHkOmcihxbOsIoe9iZKg9jAXMHvvQ7rhHkhzsuieNBV1HkrlTcMRbgpmXM
-         5OBru3m2h1spMeop4NRWTuh83tHuN21ZH+MVD2vs/hgfiH/S7t6/duY1K5BeMWd0vW
-         SXz0KzsulH7Hw==
+        s=k20201202; t=1673877190;
+        bh=/8FHND46nv69mmy17Nnbru1utyPLvPaIrYFKiLgjjl8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N2WM40DLGO1lztzykK7PIvVMi32p3yWdlWvFuxVYMX72ewFWHckK8V5MbnOp1PZjP
+         4Z6F5UNO79Ssw1sAQ4YYqnY0fnf2tpYPpVwvEq/wz9HIw0JJojZ4kkiYo99Ao5wCUF
+         jUKg3dMmyc76LcU7NW7TAlWq2JRoeNeLtOY2dTsppleNRyL5zO8LeXB312cFuthRGO
+         jjZWC4ZZgIiHlAzFHJEg9emEGEh+l4SI4UBV2onvKa++v+b624tGOHTqDYTogK9D2l
+         ih/2ZruyNUzfFSRYrVW7+HcLPEVh8GdNCT+Wd2DNMe/vgoaaok13vfzgX8R3rFOmqe
+         PapyB2OhgVTHw==
 Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1pHPt6-0003vG-ID; Mon, 16 Jan 2023 14:51:00 +0100
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        (envelope-from <johan@kernel.org>)
+        id 1pHPvV-00041g-Fz; Mon, 16 Jan 2023 14:53:29 +0100
+Date:   Mon, 16 Jan 2023 14:53:29 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v4 12/19] x86/apic: Use irq_domain_create_hierarchy()
-Date:   Mon, 16 Jan 2023 14:50:37 +0100
-Message-Id: <20230116135044.14998-13-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.38.2
-In-Reply-To: <20230116135044.14998-1-johan+linaro@kernel.org>
-References: <20230116135044.14998-1-johan+linaro@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/19] irqdomain: fix mapping race and clean up locking
+Message-ID: <Y8VW2XLQq0ttNzrL@hovoldconsulting.com>
+References: <20221209140150.1453-1-johan+linaro@kernel.org>
+ <CAJMQK-ht8_dvdCOQXfUMGGa6ZcPJSXf_AjDd0OLi79WF43NYGA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-ht8_dvdCOQXfUMGGa6ZcPJSXf_AjDd0OLi79WF43NYGA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the irq_domain_create_hierarchy() helper to create the hierarchical
-domain, which both serves as documentation and avoids poking at
-irqdomain internals.
+On Thu, Dec 15, 2022 at 05:31:24PM +0800, Hsin-Yi Wang wrote:
+> On Thu, Dec 15, 2022 at 5:22 PM Johan Hovold <johan+linaro@kernel.org> wrote:
+> >
+> > Parallel probing (e.g. due to asynchronous probing) of devices that
+> > share interrupts can currently result in two mappings for the same
+> > hardware interrupt to be created.
+> >
+> > This series fixes this mapping race and clean up the irqdomain locking
+> > so that in the end the global irq_domain_mutex is only used for managing
+> > the likewise global irq_domain_list, while domain operations (e.g.
+> > IRQ allocations) use per-domain (hierarchy) locking.
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/x86/platform/uv/uv_irq.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+> Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> 
+> The series solves a race issue when having non-populated 2nd source
+> components that share the same irq on ARM devices:
+> Previously we would see
+> [    0.476357] irq: type mismatch, failed to map hwirq-11 for pinctrl@10005000!
+> and the component failed to probe.
 
-diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
-index 1a536a187d74..ee21d6a36a80 100644
---- a/arch/x86/platform/uv/uv_irq.c
-+++ b/arch/x86/platform/uv/uv_irq.c
-@@ -166,10 +166,9 @@ static struct irq_domain *uv_get_irq_domain(void)
- 	if (!fn)
- 		goto out;
- 
--	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
--	if (uv_domain)
--		uv_domain->parent = x86_vector_domain;
--	else
-+	uv_domain = irq_domain_create_hierarchy(x86_vector_domain, 0, 0, fn,
-+						&uv_domain_ops, NULL);
-+	if (!uv_domain)
- 		irq_domain_free_fwnode(fn);
- out:
- 	mutex_unlock(&uv_lock);
--- 
-2.38.2
+Thanks again for testing. I just sent a v4 adding a couple of clarifying
+comments to the final patch.
 
+Johan
