@@ -2,50 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA30C46467
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26824C677F1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232389AbjAPOMx (ORCPT
+        id S232373AbjAPOOz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 09:12:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        Mon, 16 Jan 2023 09:14:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbjAPOLt (ORCPT
+        with ESMTP id S232568AbjAPON7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Jan 2023 09:11:49 -0500
+        Mon, 16 Jan 2023 09:13:59 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C1D21A10;
-        Mon, 16 Jan 2023 06:04:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290E323879;
+        Mon, 16 Jan 2023 06:05:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6799B80F91;
-        Mon, 16 Jan 2023 14:04:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A25C433D2;
-        Mon, 16 Jan 2023 14:04:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 94AA9B80F9D;
+        Mon, 16 Jan 2023 14:05:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B39AC433EF;
+        Mon, 16 Jan 2023 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877879;
-        bh=qEeeNhqywjQZyLbtQAV7sC+j639HI+TioMbDyrRQs0E=;
+        s=k20201202; t=1673877915;
+        bh=ZclT+Rr4Amqk2xxKYwoOwr98+nCPydHHUKNDuDbMQzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJ7qfY6m57MKYyr2myahYlgGqgE09O5f/3Ge2ICz681aujOgUtKp/mMXsrKBZUVsd
-         20QCOujeb3G9gTB031RXakiypD4VNn1z5hoVIjsn+I3WbpWOU8dBbxefgYMU4IDJ6s
-         TQ1TuH6mQAvjMt3MVjcHlIayMFgM1qJhKKpzWaUdOeiVB6KqXGvb0A4pYeT4OFXsYp
-         2gkoNgZKZS1io6kpRgdy6qsExBooyp8cUKFzf/hjXEjg4J6rKU9hIgP/EMTMnmtutP
-         2yCWoFDMZ+OHpeQYVS9giX8iim/5GTvLWg7UrKjCyCYVsOxCqC6zyelBoUGmKpITLx
-         PFDp1ypf59Uqw==
+        b=cSCRtzakXsovTWhVG3efGgdFW+fyx7ja+SqDnjfX5oRc/7uHTta1i5f5Dr4lotcxZ
+         f3To9Sz6kcEs7ALzqnKf8a65UY+YZ6mvdkNEw++lIw5fHl/RrxuAPbpMx3Fl5pKaIw
+         BVZ0tscMXk2OO8RfvUyqiGsoIPd1MCVFuIVnyHKhONOGn+nnS0jSOIP2hibs3ok/+z
+         qW0NOKMePE3H320mxpjQi0lyb4omd7C9IOk31O09M7OPYESX68RKHu9mIcl9zR6lXE
+         PHpHxeLHxLSALmcZcs6A0ea7EdFL4iRJt6eIJUR6kVy4ddnCmoG0xcYIxcQPVSafBS
+         k6YasPOwagm9A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Nemcev Aleksey <Nemcev_Aleksey@inbox.ru>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 22/24] platform/x86: asus-nb-wmi: Add alternate mapping for KEY_SCREENLOCK
-Date:   Mon, 16 Jan 2023 09:03:57 -0500
-Message-Id: <20230116140359.115716-22-sashal@kernel.org>
+Cc:     Michael Klein <m.klein@mvz-labor-lb.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 15/17] platform/x86: touchscreen_dmi: Add info for the CSL Panther Tab HD
+Date:   Mon, 16 Jan 2023 09:04:46 -0500
+Message-Id: <20230116140448.116034-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230116140359.115716-1-sashal@kernel.org>
-References: <20230116140359.115716-1-sashal@kernel.org>
+In-Reply-To: <20230116140448.116034-1-sashal@kernel.org>
+References: <20230116140448.116034-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -54,32 +53,64 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Michael Klein <m.klein@mvz-labor-lb.de>
 
-[ Upstream commit db9494895b405bf318dc7e563dee6daa51b3b6ed ]
+[ Upstream commit 36c2b9d6710427f802494ba070621cb415198293 ]
 
-The 0x33 keycode is emitted by Fn + F6 on a ASUS FX705GE laptop.
+Add touchscreen info for the CSL Panther Tab HD.
 
-Reported-by: Nemcev Aleksey <Nemcev_Aleksey@inbox.ru>
+Signed-off-by: Michael Klein <m.klein@mvz-labor-lb.de>
+Link: https://lore.kernel.org/r/20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20230112181841.84652-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index a81dc4b191b7..4d7327b67a7d 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -521,6 +521,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
- 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
-+	{ KE_KEY, 0x33, { KEY_SCREENLOCK } },
- 	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
- 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
- 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 110ff1e6ef81..bc26acace2c3 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -255,6 +255,23 @@ static const struct ts_dmi_data connect_tablet9_data = {
+ 	.properties     = connect_tablet9_props,
+ };
+ 
++static const struct property_entry csl_panther_tab_hd_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-csl-panther-tab-hd.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data csl_panther_tab_hd_data = {
++	.acpi_name      = "MSSL1680:00",
++	.properties     = csl_panther_tab_hd_props,
++};
++
+ static const struct property_entry cube_iwork8_air_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+@@ -1057,6 +1074,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
+ 		},
+ 	},
++	{
++		/* CSL Panther Tab HD */
++		.driver_data = (void *)&csl_panther_tab_hd_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "CSL Computer GmbH & Co. KG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CSL Panther Tab HD"),
++		},
++	},
+ 	{
+ 		/* CUBE iwork8 Air */
+ 		.driver_data = (void *)&cube_iwork8_air_data,
 -- 
 2.35.1
 
