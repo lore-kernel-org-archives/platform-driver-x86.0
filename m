@@ -2,50 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEA6C54EBE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA85CC63797
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 14:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232664AbjAPORA (ORCPT
+        id S232260AbjAPOR0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 09:17:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
+        Mon, 16 Jan 2023 09:17:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232260AbjAPOOx (ORCPT
+        with ESMTP id S232431AbjAPOPw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Jan 2023 09:14:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24372FCE9;
-        Mon, 16 Jan 2023 06:05:43 -0800 (PST)
+        Mon, 16 Jan 2023 09:15:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C468B23D89;
+        Mon, 16 Jan 2023 06:05:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3642A60FC9;
-        Mon, 16 Jan 2023 14:05:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C26C433F2;
-        Mon, 16 Jan 2023 14:05:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 73D0CB80F3B;
+        Mon, 16 Jan 2023 14:05:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D09C433F1;
+        Mon, 16 Jan 2023 14:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877942;
-        bh=ENBJXackha8omqNqOhEs9TxO3aOO2kDId+z48P+U3UU=;
+        s=k20201202; t=1673877945;
+        bh=pAmE34wYXIWTym+4baLdsEqTcL4DbbPNSxbNRFmc3Z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peZ4dV2rhfz5thHk+0oKxTqhr9VskkNXihVR34mOVLA6nGBZQoLjFWFpFzVNA0AFq
-         hgFgf85eF+GWkwQFBI9dtVsZs4wGvBxjVaDjIbYYMUuAwvnJ4eZ5vNvaQeblFu3XCP
-         FGxzKIS18XoiX3cnnCgRL9NLomGJMRWGD5qIy/X/7hrWmlR2PaYpgmcXu4UqzxkM8H
-         qpzjQHUJqjMXHJDSI+SARsYislUCB7SJBE+ej/Qr/YmmEgH6tVEEaSMsppE3lymz7+
-         dxf5hc1YBsALMu1tWJKxF1qOWLZ6I7Hu5xYno5gVAhdW6CzzeoWPNODNrNYn9p/0HM
-         Rjt/Zmvtzfdhw==
+        b=SNay35k7dbPIQAhwF5H1KI7BUZcQ2TXuMc7wIUrS83DM75wm1bRouGr1PoCrc0CN3
+         FbNwZOEMPmg+0ggZlq7UB5PDOFjUeTZACX9JPDSdfmrskb29+EciYK1Fk/kSZphdJS
+         pz1fS7zjRrtl6EQ6nz6Ld1/xWNw00kPHr99i64/XR978HTvOyUiRCh8nHH6IaYJuJ6
+         t75HcKL9NCs1+BcoghMZtT4awAnx0k4uT478DeBOuipMKKLDKveziNy5bEkzjvXKE7
+         yNseFJInSsR1XBBBY24GmTMGR71Mku/uby3dqS9Nfijmsc1NYLeOHpYA0COF9VtHAj
+         gj84SzWTQyv9w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Klein <m.klein@mvz-labor-lb.de>,
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/16] platform/x86: touchscreen_dmi: Add info for the CSL Panther Tab HD
-Date:   Mon, 16 Jan 2023 09:05:16 -0500
-Message-Id: <20230116140520.116257-13-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 15/16] platform/x86: asus-wmi: Ignore fan on E410MA
+Date:   Mon, 16 Jan 2023 09:05:18 -0500
+Message-Id: <20230116140520.116257-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230116140520.116257-1-sashal@kernel.org>
 References: <20230116140520.116257-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -53,64 +55,54 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Michael Klein <m.klein@mvz-labor-lb.de>
+From: Thomas Weißschuh <linux@weissschuh.net>
 
-[ Upstream commit 36c2b9d6710427f802494ba070621cb415198293 ]
+[ Upstream commit 82cc5c6c624c63f7b57214e325e2ea685d924e89 ]
 
-Add touchscreen info for the CSL Panther Tab HD.
+The ASUS VivoBook has a fan device described in its ACPI tables but does
+not actually contain any physical fan.
+Use the quirk to inhibit fan handling.
 
-Signed-off-by: Michael Klein <m.klein@mvz-labor-lb.de>
-Link: https://lore.kernel.org/r/20221220121103.uiwn5l7fii2iggct@LLGMVZLB-0037
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: https://lore.kernel.org/r/20221221-asus-fan-v1-2-e07f3949725b@weissschuh.net
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 515c66ca1aec..61cb1a4a8257 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -169,6 +169,23 @@ static const struct ts_dmi_data connect_tablet9_data = {
- 	.properties     = connect_tablet9_props,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 6424bdb33d2f..15328c03c41b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -120,6 +120,10 @@ static struct quirk_entry quirk_asus_ga502i = {
+ 	.wmi_backlight_set_devstate = true,
  };
  
-+static const struct property_entry csl_panther_tab_hd_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 20),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-csl-panther-tab-hd.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
++static struct quirk_entry quirk_asus_ignore_fan = {
++	.wmi_ignore_fan = true,
 +};
 +
-+static const struct ts_dmi_data csl_panther_tab_hd_data = {
-+	.acpi_name      = "MSSL1680:00",
-+	.properties     = csl_panther_tab_hd_props,
-+};
-+
- static const struct property_entry cube_iwork8_air_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
-@@ -721,6 +738,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -493,6 +497,15 @@ static const struct dmi_system_id asus_quirks[] = {
  		},
+ 		.driver_data = &quirk_asus_ga502i,
  	},
 +	{
-+		/* CSL Panther Tab HD */
-+		.driver_data = (void *)&csl_panther_tab_hd_data,
++		.callback = dmi_matched,
++		.ident = "ASUS VivoBook E410MA",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "CSL Computer GmbH & Co. KG"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "CSL Panther Tab HD"),
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "E410MA"),
 +		},
++		.driver_data = &quirk_asus_ignore_fan,
 +	},
- 	{
- 		/* CUBE iwork8 Air */
- 		.driver_data = (void *)&cube_iwork8_air_data,
+ 	{},
+ };
+ 
 -- 
 2.35.1
 
