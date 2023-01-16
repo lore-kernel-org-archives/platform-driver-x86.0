@@ -2,100 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CC5C678D9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC88DC678DF
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 13:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231579AbjAPNvB (ORCPT
+        id S229767AbjAPNvC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:51:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
+        Mon, 16 Jan 2023 08:51:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231488AbjAPNup (ORCPT
+        with ESMTP id S231543AbjAPNup (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 16 Jan 2023 08:50:45 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202B321972;
-        Mon, 16 Jan 2023 05:50:44 -0800 (PST)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777C021A0C;
+        Mon, 16 Jan 2023 05:50:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 86905CE1161;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 47FB560FE1;
         Mon, 16 Jan 2023 13:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F39C433F1;
-        Mon, 16 Jan 2023 13:50:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B443DC4322E;
+        Mon, 16 Jan 2023 13:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877040;
-        bh=8NK6cMAg/Gp7SlI9n2MjOR/D97yEutmk49eysprJ2C4=;
+        s=k20201202; t=1673877041;
+        bh=nlxLr7M1e3sPAGKO79refaH63FrFXT94UU3Vpzwqemc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PjndJlSRpc1AnDOK4A7FI2Z6RWqNy6J9qyKZmOdPvNenH5WFdsKvUMZHDUCeh9/kS
-         PA0jeJtbIeypY/8vQqex1EAw5WbNKZVhUmQmEePAm5WC17QIPH/4GBs6i4K3ps/L6P
-         XgiFidY+Yg+6FafT2Dd2v8IxrjaH6zzHRqpBZSoSXLA5fDMeRg4jvk+EPUVze3MbqE
-         OUu4iInoSzrbZYCsOXa/I0y0M4Pmds7Vj+8lwmUDrTpAhEUueX9lRvcOvNwdiEuhy1
-         SHvHTZKc5iDS0sGAqx68AmQXRRj6ZHMJnxoltE5upKUY0IRk0g/Kn1YseplcgiXfvB
-         hyIZp2C4lxgcg==
+        b=lbf7fa2tZbpeVfBK6+e27SiZIYIPL1Naxz33L0nLt84RxNJ1hoR39PrisqR1X/37R
+         33TOcM/FZ8iEdZ4mfOYSVj6Wl7wgUscP71KunXbpaLF2ufmxP7zqAFWKoqrN6L1vet
+         T/JwIxIMq+1GBMOWcgof6EKvwiZBKL4ud3N3LJqz9iBHmZ4E8XpXHXrMeWjxOC6GZb
+         0rLron/ZW1/2GqYdXR/t49omPmZzwfjx7EUnkD82sIDkr7vKx23oWcoPgnZaS50oaM
+         5PR1it7wREqawHTHchbYwXtlr8kNUPqkotI5Wxf+cSc0izc60QweYgk89cHLmFOkgW
+         Df47QkoVuUghA==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1pHPt5-0003uu-TT; Mon, 16 Jan 2023 14:50:59 +0100
+        id 1pHPt7-0003vX-2z; Mon, 16 Jan 2023 14:51:01 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v4 05/19] irqdomain: Fix disassociation race
-Date:   Mon, 16 Jan 2023 14:50:30 +0100
-Message-Id: <20230116135044.14998-6-johan+linaro@kernel.org>
+Subject: [PATCH v4 18/19] irqchip/mvebu-odmi: Use irq_domain_create_hierarchy()
+Date:   Mon, 16 Jan 2023 14:50:43 +0100
+Message-Id: <20230116135044.14998-19-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.38.2
 In-Reply-To: <20230116135044.14998-1-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The global irq_domain_mutex is held when mapping interrupts from
-non-hierarchical domains but currently not when disposing them.
+Use the irq_domain_create_hierarchy() helper to create the hierarchical
+domain, which both serves as documentation and avoids poking at
+irqdomain internals.
 
-This specifically means that updates of the domain mapcount is racy
-(currently only used for statistics in debugfs).
-
-Make sure to hold the global irq_domain_mutex also when disposing
-mappings from non-hierarchical domains.
-
-Fixes: 9dc6be3d4193 ("genirq/irqdomain: Add map counter")
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/irqchip/irq-mvebu-odmi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index b2087f55a1ac..23f5919e58b7 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -537,6 +537,9 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 		return;
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index dc4145abdd6f..108091533e10 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -161,7 +161,7 @@ static struct msi_domain_info odmi_msi_domain_info = {
+ static int __init mvebu_odmi_init(struct device_node *node,
+ 				  struct device_node *parent)
+ {
+-	struct irq_domain *inner_domain, *plat_domain;
++	struct irq_domain *parent_domain, *inner_domain, *plat_domain;
+ 	int ret, i;
  
- 	hwirq = irq_data->hwirq;
+ 	if (of_property_read_u32(node, "marvell,odmi-frames", &odmis_count))
+@@ -197,16 +197,17 @@ static int __init mvebu_odmi_init(struct device_node *node,
+ 		}
+ 	}
+ 
+-	inner_domain = irq_domain_create_linear(of_node_to_fwnode(node),
+-						odmis_count * NODMIS_PER_FRAME,
+-						&odmi_domain_ops, NULL);
++	parent_domain = irq_find_host(parent);
 +
-+	mutex_lock(&irq_domain_mutex);
-+
- 	irq_set_status_flags(irq, IRQ_NOREQUEST);
++	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
++						   odmis_count * NODMIS_PER_FRAME,
++						   of_node_to_fwnode(node),
++						   &odmi_domain_ops, NULL);
+ 	if (!inner_domain) {
+ 		ret = -ENOMEM;
+ 		goto err_unmap;
+ 	}
  
- 	/* remove chip and handler */
-@@ -556,6 +559,8 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 
- 	/* Clear reverse map for this hwirq */
- 	irq_domain_clear_mapping(domain, hwirq);
-+
-+	mutex_unlock(&irq_domain_mutex);
- }
- 
- static int __irq_domain_associate(struct irq_domain *domain, unsigned int virq,
+-	inner_domain->parent = irq_find_host(parent);
+-
+ 	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
+ 						     &odmi_msi_domain_info,
+ 						     inner_domain);
 -- 
 2.38.2
 
