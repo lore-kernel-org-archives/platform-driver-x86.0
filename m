@@ -2,55 +2,57 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6694AC678DD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ACFC54EBE
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Jan 2023 13:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231615AbjAPNvH (ORCPT
+        id S231625AbjAPNvI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:51:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
+        Mon, 16 Jan 2023 08:51:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231548AbjAPNur (ORCPT
+        with ESMTP id S231477AbjAPNuq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Jan 2023 08:50:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D8521971;
+        Mon, 16 Jan 2023 08:50:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF8B21966;
         Mon, 16 Jan 2023 05:50:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 36D2DB80F98;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1FC13B80F97;
         Mon, 16 Jan 2023 13:50:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E978C433A0;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B838C43329;
         Mon, 16 Jan 2023 13:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1673877041;
-        bh=7j3QbaKo3LQZQVKIp6aKOuNy40ktCIOrZ3HeL+Rwf1A=;
+        bh=AK3VCepyLTeOpIFmxwgh5xFJYCJU4/85AqeI5PyR5Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EfKk9L9sqpnMZ3+AHb1HMoqZOhQNRwQ/oZkLjU7l3UA9rg17LEbiVel0eSSLhjMC2
-         zPG81JAv2b1s3VupJKrzR6KNrx0SlI2mJVlrR9cHwWgWsFsRE+qAboOoWXD6Vlr2jJ
-         pdXuNUtXhAtsfzTIJ6fDZhDFxwnsEsixuwaOiy0ihM4Oa8AAeGQtO5TSQQz3rvkP3T
-         mJrVuzeUOIKHwG0EuhhMilUXJWe3ikESXth5vKLBzCjJJj2bOefjqQkeMUPaNQu8Ho
-         cmBc6JyPLCm4u6Mp5q0flNNwB+fo/2enYScFNELZ67OutJgvUTKDkOz2QYFSyudsjK
-         XPSxv9rnDFCnQ==
+        b=iTchXNWY+z/sxVHLzD4M9BdaWIAa7SmM3hr6/+6zJyYYXMI2sIrT+/r0hUfT89Npw
+         LaH72M9fgR+oYmIuQYQuQwisq5c4J9r6sQb9RHYhYz+XZaDa1ZLerMd8v1fGI7tOv0
+         qx6WvR9CvBoci06yw9LLcxtLas/vfUw40VTU6YJ1pdAtvCGQHgp78iMFaxV/YLB1bb
+         Mq4sDq3xphF15PvtMC6HwRHussdS4e6ZR1WgWMgI+qhvgFPg+l1zljkLT1b9p1TLEB
+         f7/83DUqXVmnFnGpQTOIuWQAKR4vDmnB6ezPxzKbPx0AShuc5s8fM5nP1atvhZ8d/d
+         Z0KqzFzrSbEVw==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1pHPt6-0003vP-RB; Mon, 16 Jan 2023 14:51:00 +0100
+        id 1pHPt6-0003vD-FM; Mon, 16 Jan 2023 14:51:00 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v4 15/19] irqchip/gic-v3-its: Use irq_domain_create_hierarchy()
-Date:   Mon, 16 Jan 2023 14:50:40 +0100
-Message-Id: <20230116135044.14998-16-johan+linaro@kernel.org>
+Subject: [PATCH v4 11/19] x86/ioapic: Use irq_domain_create_hierarchy()
+Date:   Mon, 16 Jan 2023 14:50:36 +0100
+Message-Id: <20230116135044.14998-12-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.38.2
 In-Reply-To: <20230116135044.14998-1-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -60,47 +62,40 @@ Use the irq_domain_create_hierarchy() helper to create the hierarchical
 domain, which both serves as documentation and avoids poking at
 irqdomain internals.
 
-Note that the domain host_data was first set to the struct its_node
-during allocation only to immediately be overwritten with the struct
-msi_domain_info.
-
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 973ede0197e3..5634d29b644d 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4909,18 +4909,19 @@ static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
- 	if (!info)
- 		return -ENOMEM;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index a868b76cd3d4..9cc4c8e0c3c4 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2364,9 +2364,9 @@ static int mp_irqdomain_create(int ioapic)
+ 		return -ENODEV;
+ 	}
  
--	inner_domain = irq_domain_create_tree(handle, &its_domain_ops, its);
-+	info->ops = &its_msi_domain_ops;
-+	info->data = its;
-+
-+	inner_domain = irq_domain_create_hierarchy(its_parent,
-+						   its->msi_domain_flags, 0,
-+						   handle, &its_domain_ops,
-+						   info);
- 	if (!inner_domain) {
- 		kfree(info);
+-	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+-						 (void *)(long)ioapic);
+-
++	ip->irqdomain = irq_domain_create_hierarchy(parent, 0, hwirqs, fn,
++						    cfg->ops,
++						    (void *)(long)ioapic);
+ 	if (!ip->irqdomain) {
+ 		/* Release fw handle if it was allocated above */
+ 		if (!cfg->dev)
+@@ -2374,8 +2374,6 @@ static int mp_irqdomain_create(int ioapic)
  		return -ENOMEM;
  	}
  
--	inner_domain->parent = its_parent;
- 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
--	inner_domain->flags |= its->msi_domain_flags;
--	info->ops = &its_msi_domain_ops;
--	info->data = its;
--	inner_domain->host_data = info;
- 
- 	return 0;
- }
+-	ip->irqdomain->parent = parent;
+-
+ 	if (cfg->type == IOAPIC_DOMAIN_LEGACY ||
+ 	    cfg->type == IOAPIC_DOMAIN_STRICT)
+ 		ioapic_dynirq_base = max(ioapic_dynirq_base,
 -- 
 2.38.2
 
