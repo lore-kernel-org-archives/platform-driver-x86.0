@@ -2,99 +2,347 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB18C63797
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 12:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04961C3DA78
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 17:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236221AbjAQMep (ORCPT
+        id S231150AbjAQRIm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 07:34:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55496 "EHLO
+        Tue, 17 Jan 2023 12:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236103AbjAQMeo (ORCPT
+        with ESMTP id S233880AbjAQRI3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 07:34:44 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0FA35264
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2023 04:34:42 -0800 (PST)
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 7CF073F760
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2023 12:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1673958880;
-        bh=Dr9R5dfY2nTTstdwaC++TmcM/uDTBZdBUz78esGlC00=;
-        h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=RmLlJ3yB9hECoctWew2F4AlEb0NubEgeud2JD4koWPHTZhs4J8LZuQcahIpKQdEiY
-         WdyOanMF4rb6wrEU3wfk6GshoQ4knC+O2xTQ+N5TuXS1slqwY8X1sT5zhEn5j6pQ5w
-         LuIOWCi3bcG/pTpEcpu834J7I5IZ1+t/hWehlEfqOoK7lrQu+YoHOGw28mDdajGK60
-         fyKSvQLddg4c7xQHmvPUV+yJXQpGTLrnLOfkhwPWp0hB7GP39SeAdhsHNg8yacl1pV
-         IIarvEV9Z+DOIIa7oyrZvZi1k5oOoskWsIMeNgTEQlZZzNSvYZQQttlzHoSI239yL/
-         6fdy7S8imJqZg==
-Received: by mail-pg1-f200.google.com with SMTP id g32-20020a635660000000b00478c21b8095so13971767pgm.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2023 04:34:40 -0800 (PST)
+        Tue, 17 Jan 2023 12:08:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8DF2B0A2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2023 09:07:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673975261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hUAcxAV3HqtH+fwkD3kh+K//5e+iseTGh23h0lI9PEc=;
+        b=i0i7wU1cTdt0bRbNuWfzuyJlI5u2bm3KYvnDIEYYJ4kdezyRQmySTPsZBA1JFjYmB1J4qd
+        OJCwOCzAMnCP3WAc8rufqjmBzpjE5FKRS1yS1hZDCnq0brkJ99yscpK/xMgfOfmLZ/tb9m
+        K9aHojyz0uOG3RCwX/3uPdSSQb3KcVY=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-484-yi-ekfM8PVyUh-eRO5iWVQ-1; Tue, 17 Jan 2023 12:06:54 -0500
+X-MC-Unique: yi-ekfM8PVyUh-eRO5iWVQ-1
+Received: by mail-ej1-f70.google.com with SMTP id sc9-20020a1709078a0900b0086910fdf624so9640507ejc.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2023 09:06:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dr9R5dfY2nTTstdwaC++TmcM/uDTBZdBUz78esGlC00=;
-        b=ceNP8mQSxSKt11ItA3R36SRbgL1csqsvCeFHlAW+i9GBjO5WLcE9AgUN3WuZH67E/N
-         VunawgZwh6NWEc99jd1houtVx8MyHW/KzhfYr/gEL2hWNSXpTXxeoq316RAdyLWmLTWr
-         crjY4PbL1IHIkZEDWCE0CK5IwhjOJWINbgbYPnv/qQYZIN7uaUnTS/qSho+LgCiw0Dyp
-         MPDhS2SS9fVaRk3wy9dPGGVxMe/OuD9IseVylN4KPhL28R3EHz+flIBOE/fHQ7uoJM8p
-         ctkuoK3v/aecU2Cr6EviHe7tkUh7CFacR20Pd6a5y8GaZcMg/8Hx8k2bAd26hwId8mbo
-         cI2A==
-X-Gm-Message-State: AFqh2kq9RA0FkXJkPAzQ4/Wep0P0Q9d70E2LfV7jtKlJwc2gwHqVxrFL
-        uR08JUtSiqvMd3NwNNILm9u1qZh6olwL0vWvKmi/8fiJ43zzJUN3tcpkLVqxUJWK4fGS5KZs9dS
-        2Q8cVR0sueOIaDRyKpURGqY5NaLNaaI2l4iwpaX8637Upd7cAye8=
-X-Received: by 2002:a17:903:41d2:b0:194:8293:7aed with SMTP id u18-20020a17090341d200b0019482937aedmr4803360ple.6.1673958879123;
-        Tue, 17 Jan 2023 04:34:39 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvx1PIXSEHmS/z7z5lb8KgmnS5yWSwxFE1DXqNZzoijW82rL44xDXdWbSzbhs1ZKeFHCrvm3g==
-X-Received: by 2002:a17:903:41d2:b0:194:8293:7aed with SMTP id u18-20020a17090341d200b0019482937aedmr4803333ple.6.1673958878803;
-        Tue, 17 Jan 2023 04:34:38 -0800 (PST)
-Received: from canonical.com (2001-b011-3007-1498-1355-049d-ac04-c0c3.dynamic-ip6.hinet.net. [2001:b011:3007:1498:1355:49d:ac04:c0c3])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902bb8200b001949c680b52sm3090850pls.193.2023.01.17.04.34.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jan 2023 04:34:38 -0800 (PST)
-From:   Koba Ko <koba.ko@canonical.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-wmi: Add a keymap for KEY_MUTE in type 0x0010 table
-Date:   Tue, 17 Jan 2023 20:34:36 +0800
-Message-Id: <20230117123436.200440-1-koba.ko@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hUAcxAV3HqtH+fwkD3kh+K//5e+iseTGh23h0lI9PEc=;
+        b=YsUq2rB++vqBTQbit7BWFvo7+ZNVaVY02BUZBU4cp0EzYj8yLLcJLkhg3feuoeh0mh
+         AUzLSWXXcFt9MbQo5fSTmSG53LHsAOiSY9rVrZ7uuWYjJwC31L63IVPIBOWndXzoUyhz
+         BkiZCGKFKZTNNJEv6K88yh4fAUyga9Q6OFvlQlvGgWq7wC9Kw7Gfu6sMOqkXwLGGxzGS
+         0TQJibTcWinxER4CIB6BZu3xWNMrCh1E+pS5mvFzpPmeRuWjfyi4Qe1ucv/ajTx601cr
+         MB+JnPgknGt+mtlKkbpsaljatWAzwo3e0iYAVSXglh2OuvE3PshUSBqSDaoIvGI5diQf
+         4MMA==
+X-Gm-Message-State: AFqh2kojFADyHADWXWQvcFhdY/abbh6UWR5CSP5AFBqCzxcfyjyQe7V2
+        YnZ/16ngQ9t8YbewjVgLgXKd2Cz0UY/0IF7gGaJAsNSpg3/AZO0EIOgLV7thbug4aTp5cw5aYrX
+        vSDZhORVVZhr0KYHlH872Tu3aVnp+PAYC4g==
+X-Received: by 2002:a17:907:c20d:b0:86f:50ff:ef28 with SMTP id ti13-20020a170907c20d00b0086f50ffef28mr9703850ejc.36.1673975186762;
+        Tue, 17 Jan 2023 09:06:26 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXu/u0yKfhb3Yhgm1vCMeZEKp22J7UtBzSyfJ0A5b8v6RJWO6dLjSY9I4PQi/f1a9RoDIdlSZA==
+X-Received: by 2002:a17:907:c20d:b0:86f:50ff:ef28 with SMTP id ti13-20020a170907c20d00b0086f50ffef28mr9703839ejc.36.1673975186558;
+        Tue, 17 Jan 2023 09:06:26 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id sb25-20020a1709076d9900b0084c6581c16fsm13413881ejc.64.2023.01.17.09.06.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jan 2023 09:06:22 -0800 (PST)
+Message-ID: <c8aad30c-877d-7257-7b75-23a1c0dedb85@redhat.com>
+Date:   Tue, 17 Jan 2023 18:06:21 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v5 2/5] Introduction of HP-BIOSCFG driver (2)
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20221202173616.180108-1-jorge.lopez2@hp.com>
+ <20221202173616.180108-3-jorge.lopez2@hp.com>
+ <974687b1-540b-48ee-517f-d5aeb960ef5d@redhat.com>
+In-Reply-To: <974687b1-540b-48ee-517f-d5aeb960ef5d@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some platforms send the speaker-mute key from EC. dell-wmi can't
-recognize it.
+Hi Jorge,
 
-Add a new keymap for KEY_MUTE in type 0x0010 table.
+On 1/16/23 17:07, Hans de Goede wrote:
+> Hi Jorge,
+> 
+> First of all some generic remarks which apply to all patches:
+> 
+> 1. Quite a few non local / non static functions have generic names like e.g.
+> calculate_string_buffer().
+> 
+> If this code is build into the main kernel vmlinuz then these will
+> all be part of a global namespace, leading to potential symbol
+> collisions to avoid these please make the following 2 changes
+> 
+> i) Make functions which are only used in a single .c file static
+>    e.g. wmi_error_and_message()
+> ii) Prefix others with hp_bioscfg_, e.g. hp_bioscfg_calculate_string_buffer()
+>    to avoid possible symbol clashes
 
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
----
- drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
- 1 file changed, 3 insertions(+)
+One more generic remark. All the struct string_data, struct integer_data, etc.
+structs have an attribute_name member. But except for some leftover code
+filling (but never reading) that in spmobj-attributes.c there is no code using
+that. Please remove the attribute_name member from all the string_ / integer_ /
+enumeration_data, etc. structs.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-index 0a259a27459f6..502783a7adb11 100644
---- a/drivers/platform/x86/dell/dell-wmi-base.c
-+++ b/drivers/platform/x86/dell/dell-wmi-base.c
-@@ -261,6 +261,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
- 	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
- 	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
- 
-+	/*Speaker Mute*/
-+	{ KE_KEY, 0x109, { KEY_MUTE} },
-+
- 	/* Mic mute */
- 	{ KE_KEY, 0x150, { KEY_MICMUTE } },
- 
--- 
-2.34.1
+Also some more issues in this patch which I noticed while looking at patch 3/5:
+
+> +int get_integer_from_buffer(int **buffer, int *buffer_size, int *integer)
+> +{
+> +	int *ptr = PTR_ALIGN(*buffer, 4);
+
+This may move the ptr, but if it does, then buffer_size should be
+modified accordingly since you have just consumed some buffer-space
+by moving the pointer.
+
+So you will want to add something like this:
+
+	int align_size = (char *)ptr - (char *)(*buffer);
+
+
+> +
+> +	/* Ensure there is enough space remaining to read the integer */
+> +	if (*buffer_size < sizeof(int))
+> +		return -EINVAL;
+
+This check is not correct, because you are not taking the alignment
+adjustment which I mentioned above into account instead this should be:
+
+	if (*buffer_size < (sizeof(int) + align_size))
+		return -EINVAL;
+
+
+
+> +
+> +	*integer = *(ptr++);
+> +	*buffer = ptr;
+
+And this:
+
+> +	*buffer_size -= sizeof(int);
+
+Should be:
+
+	*buffer_size -= sizeof(int) + align_size;
+
+> +
+> +	return 0;
+> +}
+> +
+> +int get_string_from_buffer(u16 **buffer, int *buffer_size, char **str)
+> +{
+> +	u16 *ptr = *buffer;
+> +	u16 ptrlen;
+> +
+> +	u16 size;
+> +	int i;
+> +	char *output = NULL;
+> +	int escape = 0;
+> +
+
+What if *buffer_size is 0 at this point already, now you have
+just read past the end of the buffer.
+
+> +	ptrlen = *(ptr++);
+> +	size = ptrlen / 2;
+> +
+> +	/* Ensure there is enough space remaining to read and convert
+> +	 * the string
+> +	 */
+> +	if (*buffer_size < (size *  sizeof(u16)))
+
+Use " < ptrlen" here ?
+
+> +		return -EINVAL;
+> +
+> +
+> +	for (i = 0; i < size; i++)
+> +		if (ptr[i] == '\\' || ptr[i] == '\r' || ptr[i] == '\n' || ptr[i] == '\t')
+> +			escape++;
+> +
+
+There are a number of issues with the code below.
+
+> +	size += escape;
+
+This not only increases the allocated size, but also
+causes the for (i = 0; i < size; i++) to loop over the
+extra space allocated for escaping special chars, while
+it also does:
+
+		if (*ptr == '\\' || *ptr == '\r' || *ptr == '\n' || *ptr == '\t')
+			output[i++] = '\\';
+
+Which increases i, so in the end this will end up writing
+
+size + esc times to output even though the size of output is
+only size + 1.
+
+so I think you simply want to put the + escape inside the
+kcalloc like this:
+
+	*str = kcalloc(size + escape + 1, sizeof(char), GFP_KERNEL);
+
+And keep size at it was (instead of incrementing it with esc).
+	
+> +	*str = kcalloc(size + 1, sizeof(char), GFP_KERNEL);
+> +	if (!*str)
+> +		return -ENOMEM;
+> +
+> +	output = *str;
+> +
+> +	/*
+> +	 * convert from UTF-16 unicode to ASCII
+> +	 */
+> +	utf16s_to_utf8s(ptr, ptrlen, UTF16_HOST_ENDIAN, output, size);
+
+There are 4 issues with just this single line:
+
+1. The inlen parameter of utf16s_to_utf8s is in wchar_t-s not in bytes,
+   so you should pass size here, not ptrlen
+2. The size of the destination buffer is simply the number of u16-s in
+   the source string, but a single u16 may expand to a multi-byte UTF8 sequence
+   so that might be too small.
+3. In the for loop below you are completely overwriting the result of this
+   conversion, so you might just as well not have made this call at all
+4. You are not using the return value which may be different from size
+   because of the multi-byte sequence expansion.
+
+> +
+> +	for (i = 0; i < size; i++) {
+> +		if (*ptr == '\\' || *ptr == '\r' || *ptr == '\n' || *ptr == '\t')
+> +			output[i++] = '\\';
+> +
+> +		if (*ptr == '\r')
+> +			output[i] = 'r';
+> +		else if (*ptr == '\n')
+> +			output[i] = 'n';
+> +		else if (*ptr == '\t')
+> +			output[i] = 't';
+> +		else if (*ptr == '"')
+> +			output[i] = '\'';
+> +		else
+> +			output[i] = *ptr;
+> +		ptr++;
+> +	}
+
+You are not properly 0 terminating the string here, since you have
+kcalloc-ed the memory this will be fine (if we forget about the possible
+buffer overruns when escaping). But it would be better to use a
+regular malloc, avoiding needlessly clearing the mem and then explicitly
+add the 0 termination here.
+
+> +
+> +	*buffer = ptr;
+> +	*buffer_size -= size * sizeof(u16);
+
+This is not taking into account the 2 bytes used by the size header,
+those should also be subtracted.
+
+> +	return size;
+> +}
+
+
+As for determining outsize, I notice that in all the call sites
+of get_string_from_buffer() you are copying the returned string
+to a fixed-size destination buffer, so instead of allocating it here,
+you can just pass in that fixed size buffer right away, also
+removig a needless malloc + strcpy + free in the process.
+
+So all in all I think this function should look something like this
+(untested):
+
+int get_string_from_buffer(u8 **buffer, int *buffer_size, char *dst, int dst_size)
+{
+	u16 *src = (u16 *)(*buffer);
+	int in, out, src_size, len;
+
+	if (buffer_size < sizeof(u16))
+		return -EINVAL;
+
+	src_size = *src++;
+	*buffer_size -= sizeof(u16)
+
+	if (*buffer_size < src_size)
+		return -EINVAL;
+
+	/* convert size bytes -> u16 units */
+	src_size /= sizeof(u16);
+
+	in = 0;
+	out = 0;
+	while (in < src_size && out < dst_size) {
+		len = 0;
+		while (in + len < src_size && src[in + len] != '\\' && src[in + len] != '\r' && src[in + len] != '\n' && src[in + len] != '\t' && src[in + len] != '"')
+			len++;
+
+		if (len) {
+			out += utf16s_to_utf8s(src + in, len, UTF16_HOST_ENDIAN, dst + out, dst_size - out);
+			in += len;
+			continue;
+		}
+
+		/* Special case convert " -> ' */
+		if (src[in] == '"') {
+			dst[out++] = '\'';
+			in++;
+			continue;
+		}
+
+		dst[out++] = '\\';
+		if (out == dst_size)
+			break;
+
+		if (src[in] == '\\')
+			dst[out++] = '\\';
+		else if (src[in] == '\r')
+			dst[out++] = 'r';
+		else if (src[in] == '\n')
+			dst[out++] = 'n';
+		else if (src[in] == '\t')
+			dst[out++] = 't';
+
+		in++;
+	}
+
+	if (out == output_size) {
+		pr_warn("UTF16 string too long, truncated\n");
+		out--;
+	}
+
+	dst[out] = 0;
+
+	*buffer += src_size * sizeof(u16);
+	*buffer_size -= in * sizeof(u16);
+	return 0;
+}
+
+Note I have also changed the buffer function parameter type from u16 ** to u8**
+so that callers don't need to cast it.
+
+Regards,
+
+Hans
+
+
+
+I'll continue reviewing this patch-set later, not sure yet when ...
+
 
