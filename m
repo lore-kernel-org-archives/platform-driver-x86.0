@@ -2,73 +2,106 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD36C38142
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 22:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F2C00A5A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 22:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjAQW4f (ORCPT
+        id S229978AbjAQW7X (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 17:56:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
+        Tue, 17 Jan 2023 17:59:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbjAQWz4 (ORCPT
+        with ESMTP id S229846AbjAQW6y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 17:55:56 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885B659554;
-        Tue, 17 Jan 2023 13:42:18 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673991697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pjnVo30EwkdZMiQXoApdgvzG4xzAT8a665VwNTtK+J4=;
-        b=2I2N0NTW1TsDU1KAv/gGB973pE2Syyjwx4b6WZ9UdixYpDTGvHDxpAZ3GRimudNUiV3xEn
-        MjxPsn1G26qGpA39VtoxVzMQfJ3Q3pX49mLleMmCXi+9+HuvO1CmqD4jDMFKclDsu5oLg6
-        xd4NfdcR8L//4YnvVa3IeqUBlYoh84afxLuDpQRrP6lXlW4zPSQCCYFXqORuOFmswRQm24
-        MwBGEbM2IIOzP7COKWxqebnOJZx8GyccxaaSG8OSeBEvLLk4DHXYI52gQjOTN3LBDfBF10
-        NqrAytCobgV8e387ITz4mB7tnlgeFrJK8Ru1VYsOSrsOc4/32NtugTYSVzBakg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673991697;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pjnVo30EwkdZMiQXoApdgvzG4xzAT8a665VwNTtK+J4=;
-        b=beUKnEpt1WUsXSBhCWU0P+wMataT5eQFR+dj1V+D8rZcQ+YdMjej7Y5BHWdoOWpBDgsnKC
-        2cdJd1sU4h8IuTCQ==
-To:     Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 11/19] x86/ioapic: Use irq_domain_create_hierarchy()
-In-Reply-To: <20230116135044.14998-12-johan+linaro@kernel.org>
-References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-12-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:41:36 +0100
-Message-ID: <87pmbckfe7.ffs@tglx>
+        Tue, 17 Jan 2023 17:58:54 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77C525E0A;
+        Tue, 17 Jan 2023 14:39:03 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id z4-20020a17090a170400b00226d331390cso340065pjd.5;
+        Tue, 17 Jan 2023 14:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=33qaMlSpVSfTyxfYMwgop2tKVyisw8uFsAvqqsaRdvk=;
+        b=jnOaaN1ZJ+jI7rtdQVFeKIHLA5Bgl2QnrWRIpza+vVWBjGF9zqdyX2J97Ow4idXBKz
+         PZCpKVssc/3kDibdFs2pni6XMth3G4DUPkJOHUv2PbuEEv2UYaqZSpZBGH4qddsEIue2
+         3+C7p0ekGh7SZpJJzX9nFkTSuoVMkOqJkM5rLEV7DYFQCwm+eI0fECelUJUV5gCogcgu
+         FLc136xOAxeDnxwY9UXbg1WyGGyGbC+cKBgMpXKvfGCNNNvU/n50NOzrtnhrXRJnpWPj
+         F5OdBhdCZchMmNtBhTITsGauyIJkR6oLuQ0c6FOZ1E4e7B6mfcFzydestYXKpKvAF3S8
+         QTiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=33qaMlSpVSfTyxfYMwgop2tKVyisw8uFsAvqqsaRdvk=;
+        b=4/AwKoxdg8WPFzrc4knV+Q3Mv4iM9tL2OXLGJynqMlkvvC22gjkuIy+GN8mmaoyfzI
+         Ksb+Ycw9VQ3H5qFpwJ9jcUMJiRXwpoO2Me5PZorFsnQsNtfanNVEPyYjTT+c0vczxvwr
+         tFzIlgewCIEOQ9JBufzReyDR0aR2jqCKTFVOGxA//iCt0w0j3Ug7yagSMmavUCbj0eNA
+         7eyJkWYaTXJdXLNkawR64YzmRdqOcXF6WMAlUWsV8YoaV9RYmqq12w3Z5QekhaO99/2g
+         It/Gv7WrX3cSRVl3wF4ieyKW5ucSjgo7R0dvyePBcFptU2gqNyEpuwi/IKrzB43tlp6b
+         eiLw==
+X-Gm-Message-State: AFqh2kre4rIsWBGjTvxYjXypGyC+QSxXn8TtQ36x9Y9qnbu/jY2InAuZ
+        1upeSksMcR3RPol4ymzb5VUtJiAQ0ylf+NAZ
+X-Google-Smtp-Source: AMrXdXt4C6kjO2T6+c49XVLB0bVVMWwn7L5qESzp5w31Wgt7njrji5EcygySioKj07wy6DtQ25k9Qw==
+X-Received: by 2002:a17:902:e810:b0:189:e577:c83d with SMTP id u16-20020a170902e81000b00189e577c83dmr6582470plg.66.1673995142869;
+        Tue, 17 Jan 2023 14:39:02 -0800 (PST)
+Received: from rishit-OMEN-Laptop-15-en0xxx ([171.76.81.196])
+        by smtp.gmail.com with ESMTPSA id ix15-20020a170902f80f00b00192b23b8451sm21774791plb.108.2023.01.17.14.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jan 2023 14:39:02 -0800 (PST)
+Date:   Wed, 18 Jan 2023 04:08:58 +0530
+From:   Rishit Bansal <rishitbansal0@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Handle Omen Key event
+Message-ID: <Y8cjgu1ql+5+/NST@rishit-OMEN-Laptop-15-en0xxx>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
->  
-> -	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
-> -						 (void *)(long)ioapic);
-> -
-> +	ip->irqdomain = irq_domain_create_hierarchy(parent, 0, hwirqs, fn,
-> +						    cfg->ops,
-> +						    (void *)(long)ioapic);
+Add support to map the "HP Omen Key" to KEY_PROG2. Laptops in the HP
+Omen Series open the HP Omen Command Center application on windows. But,
+on linux it fails with the following message from the hp-wmi driver:
 
-The 80 character limit has been lifted quite some time ago. Please use
-the 100 which are now the norm.
+[ 5143.415714] hp_wmi: Unknown event_id - 29 - 0x21a5
 
-Thanks,
+Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-        tglx
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0a99058be813..d8ba3c483901 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -91,6 +91,7 @@ enum hp_wmi_event_ids {
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+ 	HPWMI_SANITIZATION_MODE		= 0x17,
+ 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
++	HPWMI_OMEN_KEY				= 0x1D,
+ };
+ 
+ /*
+@@ -219,6 +220,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
+ 	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 0x231b,  { KEY_HELP } },
++	{ KE_KEY, 0x21a5,  { KEY_PROG2 }}, /* HP Omen Key */
+ 	{ KE_END, 0 }
+ };
+ 
+@@ -810,6 +812,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 	case HPWMI_SMART_ADAPTER:
+ 		break;
+ 	case HPWMI_BEZEL_BUTTON:
++	case HPWMI_OMEN_KEY:
+ 		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
+ 		if (key_code < 0)
+ 			break;
+-- 
+2.37.2
+
