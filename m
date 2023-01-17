@@ -2,54 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28AFC38147
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46260C38147
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbjAQX0i (ORCPT
+        id S229571AbjAQXfC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 18:26:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        Tue, 17 Jan 2023 18:35:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjAQX0L (ORCPT
+        with ESMTP id S229928AbjAQXe0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 18:26:11 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04C838B4A;
-        Tue, 17 Jan 2023 13:23:21 -0800 (PST)
+        Tue, 17 Jan 2023 18:34:26 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2049F38039;
+        Tue, 17 Jan 2023 13:19:04 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673990600;
+        s=2020; t=1673990342;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=9cR92r6412sVEgsFseieEmbL64hVIExQVx/uajzRUqs=;
-        b=4gvMSIqJNtFm0M4IlaLBv7hv9uh6wP/jv5tuk+SV8v0eTmaYmF1JpftSG0ZJy0oBApIwa0
-        w+F2HouWmAJVKfl5R+L+cea7gKk3FrL+h9hnITaMdz3/IS66/In2gga9M+EUwbEsl+YbY+
-        vP94ozvjRJSEvNh4gJ4qLAtMLC8W3wy3+HGT+21nDnmwNeuIrRVwCTg4degx5NlUuPF31m
-        F+VGgGqJAqEJjJfZ9a84Fi65CQtT2qryxyGVmG3p4UNaVPZVmyLGFuWDQH6OMlHYT1zkU/
-        cL3/8dMghsZ2FdahcLDDPgj1rmU533JPtI/aFr+MJE1GmoVtAMRxk8wCIZmXtg==
+        bh=X1f5gUXW4GdEJ2AELrjEeeLKUWa1ivUIeoHpyGlEGpk=;
+        b=BkU3Rw+8ut8ppbytKf+MibQd+Et2Aa3VO2WYxbtoKvAm7D0BMdq9bHWQ89nAiei+wCAA17
+        AvNOLZnLNSjozxFEwHAHHRcZdGkNmxxuoIM2+SQQm4JeW4KWBZ4j2W0iGMi8iBZK9eW19Z
+        9098Nog8XyJPEs4kCwyvW6UjF24EwjmhrmCRs6XotbJB64rt522YOd17hNaBN6OP8YFKx4
+        b2oPkCPJr6MDledvDNlK/Mm1iQGgbCm16rkXa7DCfkhbb6cMzncijQcPZHq0aWF9Jy9wO6
+        1/855I4mWlRjMm4hPJ7z+eM3s4DyzKkfBJTOqI74Ra9rC1ikylqgySJYElaGGA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673990600;
+        s=2020e; t=1673990342;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=9cR92r6412sVEgsFseieEmbL64hVIExQVx/uajzRUqs=;
-        b=IazwIGkx4PC9hoLOSFvpMA991cbQcJeJhX2yOasyZlxAXJ+KRq46Q/ubauNBbC2xEC/u7P
-        tjfvpSXkS3vXS1CA==
+        bh=X1f5gUXW4GdEJ2AELrjEeeLKUWa1ivUIeoHpyGlEGpk=;
+        b=/dYMbeIHTnnYv/uIPBuybXtYmTYtzKQRsgissq2UwZbB+wl0riRj7okBMmnoFvB+r2b+0x
+        5mfhEZCpRaaZBxBw==
 To:     Johan Hovold <johan+linaro@kernel.org>,
         Marc Zyngier <maz@kernel.org>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 06/19] irqdomain: Drop revmap mutex
-In-Reply-To: <20230116135044.14998-7-johan+linaro@kernel.org>
+Subject: Re: [PATCH v4 03/19] irqdomain: Drop leftover brackets
+In-Reply-To: <20230116135044.14998-4-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-7-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:23:20 +0100
-Message-ID: <871qnslut3.ffs@tglx>
+ <20230116135044.14998-4-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:19:02 +0100
+Message-ID: <877cxklv09.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -57,22 +58,8 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
-> The global irq_domain_mutex is now held in all paths that update the
-> revmap structures so there is no longer any need for the revmap mutex.
+> Drop some unnecessary brackets that were left in place when the
+> corresponding code was updated.
 
-This can also go after the 3rd race fix, but ...
-
->  static void irq_domain_clear_mapping(struct irq_domain *domain,
->  				     irq_hw_number_t hwirq)
->  {
-> +	lockdep_assert_held(&irq_domain_mutex);
-
-these lockdep asserts want to be part of the [dis]association race
-fixes. They are completely unrelated to the removal of the revmap_mutex.
-
-Your race fixes change the locking and you want to ensure that all
-callers comply right there, no?
-
-Thanks,
-
-        tglx
+This is really the wrong patch order. Real fixes first, then the
+cleanups and cosmetics.
