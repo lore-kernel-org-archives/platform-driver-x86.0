@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810C2C00A5A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B21C00A5A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbjAQXfC (ORCPT
+        id S229994AbjAQXfD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 18:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
+        Tue, 17 Jan 2023 18:35:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjAQXeX (ORCPT
+        with ESMTP id S230051AbjAQXeb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 18:34:23 -0500
+        Tue, 17 Jan 2023 18:34:31 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946E54B88C;
-        Tue, 17 Jan 2023 13:18:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC3F10F2;
+        Tue, 17 Jan 2023 13:20:48 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673990298;
+        s=2020; t=1673990446;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=B62BoXuKja2yXSUTc2wRcK9JxACGJ+igWR23FLUv8oc=;
-        b=NOA4LvchfsO8YIXl2kyGT9PjMqeeA1Iz172AG1mCYnGDU+bzkYd6fb2uJhgK9irhGOua28
-        11tNfzgVmfZTTu9px2BdIRNni1QU8QJjejedNULa7UylqNFivD3bMLNpsgZ/nWiXgAZRm8
-        WAt3nBzbdH/GHHYFcky4LQdhaK6ldzjXfOKVpPTsQY+ny1xiNMp0wpV9lahwccGfZCrQ8r
-        vkHA6wTySMD+PUUxXQ7SDa7/klgQ+tNMB/nIpZtK2VlwVuLflq6P+A1AqVrXzcSs4T6xMT
-        lf9f66/a7/8YgX8odis5U5Z7OTHQCefEo4E2AQpCAcUdJjHraW5SPAZG8Xzocw==
+        bh=uFt1AJQ9n7qGyugZoMBl7mWBYMnX6oI/Uf8Kag8wje0=;
+        b=NvUPD+FWtELzTgMxbE9uDL2FKa1hRDnJvkJKh6TK1nwWJdESVKTzRLOtgwCAnRCZv94iG+
+        8YNU6ZRAyiWfB8WmDGifmKKfoQKiBJjTpCE1At9hpzbwQQXI0vT/k2mOZi8p6rzV01/KVs
+        cSxE7XL2+1bVq9jZdmzR+YztzHYBOh/Q9vWORgjXiYi9Yj187fbjctDCb11f+ubqKjKEqU
+        ZF23xjhRzJWOopLQlr71d5J6EsZDSYKBJWmq2o6CbZ1bbtZ6LoCVpGRw3W9IF83j3eTN+7
+        VhLkf2sBDdRShXWGyjbkuCQpbYmiujP7rTRBPGmiSiYSLf0USsqg8oZpmpKtVA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673990298;
+        s=2020e; t=1673990446;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=B62BoXuKja2yXSUTc2wRcK9JxACGJ+igWR23FLUv8oc=;
-        b=qgf0K2kHfrQMK7xtgbwsdJYKG/+9y6uekzVRh65BEOPsUMVHlcmEvNjhH/dwo0j2PawyFS
-        sxWNTrKN8k15wgCg==
+        bh=uFt1AJQ9n7qGyugZoMBl7mWBYMnX6oI/Uf8Kag8wje0=;
+        b=/Ktw//WEB6yelYeDZAO9repdpMW0rl4hya6E88cwj+07K0+gYzAbmtZI1P/iOX6LTBHEBN
+        IczWgVOGX/eVb0AQ==
 To:     Johan Hovold <johan+linaro@kernel.org>,
         Marc Zyngier <maz@kernel.org>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
@@ -44,12 +44,12 @@ Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 02/19] irqdomain: Drop dead domain-name assignment
-In-Reply-To: <20230116135044.14998-3-johan+linaro@kernel.org>
+Subject: Re: [PATCH v4 04/19] irqdomain: Fix association race
+In-Reply-To: <20230116135044.14998-5-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-3-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:18:18 +0100
-Message-ID: <87a62glv1h.ffs@tglx>
+ <20230116135044.14998-5-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:20:46 +0100
+Message-ID: <874jsoluxd.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -57,15 +57,22 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
-> Since commit d59f6617eef0 ("genirq: Allow fwnode to carry name
-> information only") an IRQ domain is always given a name during
-> allocation (e.g. used for the debugfs entry).
->
-> Drop the leftover name assignment when allocating the first IRQ.
+> The sanity check for an already mapped virq was done outside of the
 
-Wants a Fixes tag too for the same reason as before.
+s/was/is/
 
-Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+> irq_domain_mutex-protected section which meant that an (unlikely) racing
+
+s/meant/means/
+
+> association may not be detected.
+
+You describe the status quo and then correctly what the fix is:
+
+> Fix this by factoring out the association implementation, which will
+> also be used in follow-on changes to rework the locking.
+
+Otherwise your fix fixes something which existed in the past, no?
 
 Thanks,
 
