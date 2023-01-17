@@ -2,106 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F2C00A5A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 22:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A4C38147
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbjAQW7X (ORCPT
+        id S229546AbjAQXFt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 17:59:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
+        Tue, 17 Jan 2023 18:05:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbjAQW6y (ORCPT
+        with ESMTP id S230074AbjAQXEN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 17:58:54 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77C525E0A;
-        Tue, 17 Jan 2023 14:39:03 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id z4-20020a17090a170400b00226d331390cso340065pjd.5;
-        Tue, 17 Jan 2023 14:39:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=33qaMlSpVSfTyxfYMwgop2tKVyisw8uFsAvqqsaRdvk=;
-        b=jnOaaN1ZJ+jI7rtdQVFeKIHLA5Bgl2QnrWRIpza+vVWBjGF9zqdyX2J97Ow4idXBKz
-         PZCpKVssc/3kDibdFs2pni6XMth3G4DUPkJOHUv2PbuEEv2UYaqZSpZBGH4qddsEIue2
-         3+C7p0ekGh7SZpJJzX9nFkTSuoVMkOqJkM5rLEV7DYFQCwm+eI0fECelUJUV5gCogcgu
-         FLc136xOAxeDnxwY9UXbg1WyGGyGbC+cKBgMpXKvfGCNNNvU/n50NOzrtnhrXRJnpWPj
-         F5OdBhdCZchMmNtBhTITsGauyIJkR6oLuQ0c6FOZ1E4e7B6mfcFzydestYXKpKvAF3S8
-         QTiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=33qaMlSpVSfTyxfYMwgop2tKVyisw8uFsAvqqsaRdvk=;
-        b=4/AwKoxdg8WPFzrc4knV+Q3Mv4iM9tL2OXLGJynqMlkvvC22gjkuIy+GN8mmaoyfzI
-         Ksb+Ycw9VQ3H5qFpwJ9jcUMJiRXwpoO2Me5PZorFsnQsNtfanNVEPyYjTT+c0vczxvwr
-         tFzIlgewCIEOQ9JBufzReyDR0aR2jqCKTFVOGxA//iCt0w0j3Ug7yagSMmavUCbj0eNA
-         7eyJkWYaTXJdXLNkawR64YzmRdqOcXF6WMAlUWsV8YoaV9RYmqq12w3Z5QekhaO99/2g
-         It/Gv7WrX3cSRVl3wF4ieyKW5ucSjgo7R0dvyePBcFptU2gqNyEpuwi/IKrzB43tlp6b
-         eiLw==
-X-Gm-Message-State: AFqh2kre4rIsWBGjTvxYjXypGyC+QSxXn8TtQ36x9Y9qnbu/jY2InAuZ
-        1upeSksMcR3RPol4ymzb5VUtJiAQ0ylf+NAZ
-X-Google-Smtp-Source: AMrXdXt4C6kjO2T6+c49XVLB0bVVMWwn7L5qESzp5w31Wgt7njrji5EcygySioKj07wy6DtQ25k9Qw==
-X-Received: by 2002:a17:902:e810:b0:189:e577:c83d with SMTP id u16-20020a170902e81000b00189e577c83dmr6582470plg.66.1673995142869;
-        Tue, 17 Jan 2023 14:39:02 -0800 (PST)
-Received: from rishit-OMEN-Laptop-15-en0xxx ([171.76.81.196])
-        by smtp.gmail.com with ESMTPSA id ix15-20020a170902f80f00b00192b23b8451sm21774791plb.108.2023.01.17.14.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jan 2023 14:39:02 -0800 (PST)
-Date:   Wed, 18 Jan 2023 04:08:58 +0530
-From:   Rishit Bansal <rishitbansal0@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: Handle Omen Key event
-Message-ID: <Y8cjgu1ql+5+/NST@rishit-OMEN-Laptop-15-en0xxx>
+        Tue, 17 Jan 2023 18:04:13 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7DC3C22;
+        Tue, 17 Jan 2023 13:34:42 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1673991280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4AeA8HWTNyA+542Yy1mnW9CN08TqGtQG3B/ZL09l8uA=;
+        b=rPZbbB9sKHo88rdQ3OGBFgtrGJ9u+bOjIl1UgP8rccLaNOWw1AURrjE1FyttmcBp8WPkzM
+        w3Wd/bVVK5MGFa50151Bqa0BJzVN5nTIj0QfQ+6zfdj8Fs4oaSpZli4SAhzQK9MOHjsAX0
+        trASDeaGpvYDg8Q5wBbswi9BpRxvz1jNwMHv2np2Agtnz1bTwa+qNk5J/NgrS2XAEy2AqN
+        lqEjpxX2Q2QYSQXe4i64FZ4T+MpH6nRBUBKZ61rZa3zN6+rLz4J9UDOnHfg803nrqvyVgS
+        f6SEOJgcOY1UFUx9Fpb9biZe721ptRHSJdFS27fvIbED3PzZFT95lFDk7w/5rQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1673991280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4AeA8HWTNyA+542Yy1mnW9CN08TqGtQG3B/ZL09l8uA=;
+        b=8PeqowJt1eEpwm8buo/EdAdgx5K4vk8M25cJyKrjNd9GznhMFa+Id3HxZVjnX5ja/gmNyr
+        hW5dqFIElLwshyDw==
+To:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v4 08/19] irqdomain: Refactor __irq_domain_alloc_irqs()
+In-Reply-To: <20230116135044.14998-9-johan+linaro@kernel.org>
+References: <20230116135044.14998-1-johan+linaro@kernel.org>
+ <20230116135044.14998-9-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:34:40 +0100
+Message-ID: <87v8l4kfpr.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support to map the "HP Omen Key" to KEY_PROG2. Laptops in the HP
-Omen Series open the HP Omen Command Center application on windows. But,
-on linux it fails with the following message from the hp-wmi driver:
+On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
 
-[ 5143.415714] hp_wmi: Unknown event_id - 29 - 0x21a5
+> Refactor __irq_domain_alloc_irqs() so that it can be called internally
+> while holding the irq_domain_mutex.
+>
+> This will be used to fix a shared-interrupt mapping race.
 
-Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+No functional change. The split out internal function will be used to
+fix a shared interrupt mapping race. This change is therefore tagged
+with the same fixes tag.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 0a99058be813..d8ba3c483901 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -91,6 +91,7 @@ enum hp_wmi_event_ids {
- 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
- 	HPWMI_SANITIZATION_MODE		= 0x17,
- 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
-+	HPWMI_OMEN_KEY				= 0x1D,
- };
- 
- /*
-@@ -219,6 +220,7 @@ static const struct key_entry hp_wmi_keymap[] = {
- 	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
- 	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
- 	{ KE_KEY, 0x231b,  { KEY_HELP } },
-+	{ KE_KEY, 0x21a5,  { KEY_PROG2 }}, /* HP Omen Key */
- 	{ KE_END, 0 }
- };
- 
-@@ -810,6 +812,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_SMART_ADAPTER:
- 		break;
- 	case HPWMI_BEZEL_BUTTON:
-+	case HPWMI_OMEN_KEY:
- 		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
- 		if (key_code < 0)
- 			break;
--- 
-2.37.2
+Fixes: ....
 
+> -int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+> -			    unsigned int nr_irqs, int node, void *arg,
+> -			    bool realloc, const struct irq_affinity_desc *affinity)
+> +static int ___irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+> +				    unsigned int nr_irqs, int node, void *arg,
+> +				    bool realloc, const struct irq_affinity_desc *affinity)
+
+__ vs. ___ is almost undistinguishable.
+
+irq_domain_alloc_irqs_locked() nicely explains what this is about, no?
+
+Thanks,
+
+        tglx
