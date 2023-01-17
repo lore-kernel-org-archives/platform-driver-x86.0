@@ -2,55 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46260C38147
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810C2C00A5A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjAQXfC (ORCPT
+        id S229954AbjAQXfC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Tue, 17 Jan 2023 18:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229928AbjAQXe0 (ORCPT
+        with ESMTP id S229961AbjAQXeX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 18:34:26 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2049F38039;
-        Tue, 17 Jan 2023 13:19:04 -0800 (PST)
+        Tue, 17 Jan 2023 18:34:23 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946E54B88C;
+        Tue, 17 Jan 2023 13:18:20 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673990342;
+        s=2020; t=1673990298;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=X1f5gUXW4GdEJ2AELrjEeeLKUWa1ivUIeoHpyGlEGpk=;
-        b=BkU3Rw+8ut8ppbytKf+MibQd+Et2Aa3VO2WYxbtoKvAm7D0BMdq9bHWQ89nAiei+wCAA17
-        AvNOLZnLNSjozxFEwHAHHRcZdGkNmxxuoIM2+SQQm4JeW4KWBZ4j2W0iGMi8iBZK9eW19Z
-        9098Nog8XyJPEs4kCwyvW6UjF24EwjmhrmCRs6XotbJB64rt522YOd17hNaBN6OP8YFKx4
-        b2oPkCPJr6MDledvDNlK/Mm1iQGgbCm16rkXa7DCfkhbb6cMzncijQcPZHq0aWF9Jy9wO6
-        1/855I4mWlRjMm4hPJ7z+eM3s4DyzKkfBJTOqI74Ra9rC1ikylqgySJYElaGGA==
+        bh=B62BoXuKja2yXSUTc2wRcK9JxACGJ+igWR23FLUv8oc=;
+        b=NOA4LvchfsO8YIXl2kyGT9PjMqeeA1Iz172AG1mCYnGDU+bzkYd6fb2uJhgK9irhGOua28
+        11tNfzgVmfZTTu9px2BdIRNni1QU8QJjejedNULa7UylqNFivD3bMLNpsgZ/nWiXgAZRm8
+        WAt3nBzbdH/GHHYFcky4LQdhaK6ldzjXfOKVpPTsQY+ny1xiNMp0wpV9lahwccGfZCrQ8r
+        vkHA6wTySMD+PUUxXQ7SDa7/klgQ+tNMB/nIpZtK2VlwVuLflq6P+A1AqVrXzcSs4T6xMT
+        lf9f66/a7/8YgX8odis5U5Z7OTHQCefEo4E2AQpCAcUdJjHraW5SPAZG8Xzocw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673990342;
+        s=2020e; t=1673990298;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=X1f5gUXW4GdEJ2AELrjEeeLKUWa1ivUIeoHpyGlEGpk=;
-        b=/dYMbeIHTnnYv/uIPBuybXtYmTYtzKQRsgissq2UwZbB+wl0riRj7okBMmnoFvB+r2b+0x
-        5mfhEZCpRaaZBxBw==
+        bh=B62BoXuKja2yXSUTc2wRcK9JxACGJ+igWR23FLUv8oc=;
+        b=qgf0K2kHfrQMK7xtgbwsdJYKG/+9y6uekzVRh65BEOPsUMVHlcmEvNjhH/dwo0j2PawyFS
+        sxWNTrKN8k15wgCg==
 To:     Johan Hovold <johan+linaro@kernel.org>,
         Marc Zyngier <maz@kernel.org>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 03/19] irqdomain: Drop leftover brackets
-In-Reply-To: <20230116135044.14998-4-johan+linaro@kernel.org>
+Subject: Re: [PATCH v4 02/19] irqdomain: Drop dead domain-name assignment
+In-Reply-To: <20230116135044.14998-3-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-4-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:19:02 +0100
-Message-ID: <877cxklv09.ffs@tglx>
+ <20230116135044.14998-3-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:18:18 +0100
+Message-ID: <87a62glv1h.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -58,8 +57,16 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
-> Drop some unnecessary brackets that were left in place when the
-> corresponding code was updated.
+> Since commit d59f6617eef0 ("genirq: Allow fwnode to carry name
+> information only") an IRQ domain is always given a name during
+> allocation (e.g. used for the debugfs entry).
+>
+> Drop the leftover name assignment when allocating the first IRQ.
 
-This is really the wrong patch order. Real fixes first, then the
-cleanups and cosmetics.
+Wants a Fixes tag too for the same reason as before.
+
+Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+
+Thanks,
+
+        tglx
