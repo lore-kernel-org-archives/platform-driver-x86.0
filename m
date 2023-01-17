@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33A4C38147
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F598C38147
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbjAQXFt (ORCPT
+        id S229569AbjAQXIo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 18:05:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
+        Tue, 17 Jan 2023 18:08:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbjAQXEN (ORCPT
+        with ESMTP id S229777AbjAQXGj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 18:04:13 -0500
+        Tue, 17 Jan 2023 18:06:39 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7DC3C22;
-        Tue, 17 Jan 2023 13:34:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25423C1B;
+        Tue, 17 Jan 2023 13:34:09 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673991280;
+        s=2020; t=1673991248;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=4AeA8HWTNyA+542Yy1mnW9CN08TqGtQG3B/ZL09l8uA=;
-        b=rPZbbB9sKHo88rdQ3OGBFgtrGJ9u+bOjIl1UgP8rccLaNOWw1AURrjE1FyttmcBp8WPkzM
-        w3Wd/bVVK5MGFa50151Bqa0BJzVN5nTIj0QfQ+6zfdj8Fs4oaSpZli4SAhzQK9MOHjsAX0
-        trASDeaGpvYDg8Q5wBbswi9BpRxvz1jNwMHv2np2Agtnz1bTwa+qNk5J/NgrS2XAEy2AqN
-        lqEjpxX2Q2QYSQXe4i64FZ4T+MpH6nRBUBKZ61rZa3zN6+rLz4J9UDOnHfg803nrqvyVgS
-        f6SEOJgcOY1UFUx9Fpb9biZe721ptRHSJdFS27fvIbED3PzZFT95lFDk7w/5rQ==
+        bh=QIUMiMeO37HLXHmh1Ihwd/CfbMCTUhD4A8mHgM2Czpw=;
+        b=TMgeBVYqAtYPEdUD25oT5SMdrISlzChdtJSl+ZUFGSTag87Nb03Fck3z8eBuYfXvTUjUe0
+        B6C65sFML/MBmgBAaEpJAdOgl7806R+uzAAuiA2fAqWLbz6sDjYJNtgd01nkw5PSm7i2sg
+        hYmuYan8mvZTEtPPuFCztDeUGbj3lpcBwdhog8DEMEM5+zCmQ7ul0j7IanXG8ayKF2EGiY
+        cUAgImO7uposBpaa83UqdfwVTkyr58wVCB9FjQHoLcQLtr2oiDbiMB5uTP4g6LmodGheEU
+        wQY3t8WpjtD0yU5VaJvqnMnivZPROjajdz0RQomk9xo8KO+opoC3mZHCJz4TGA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673991280;
+        s=2020e; t=1673991248;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=4AeA8HWTNyA+542Yy1mnW9CN08TqGtQG3B/ZL09l8uA=;
-        b=8PeqowJt1eEpwm8buo/EdAdgx5K4vk8M25cJyKrjNd9GznhMFa+Id3HxZVjnX5ja/gmNyr
-        hW5dqFIElLwshyDw==
+        bh=QIUMiMeO37HLXHmh1Ihwd/CfbMCTUhD4A8mHgM2Czpw=;
+        b=s+GLdJwkzpwBSI8hb81AMVA4pKM7Xk7hlF4wgMUeQB2lMoApgWmnSBjHnMqfmh1xC4fW+0
+        PdBLHAuwtwYTpsAQ==
 To:     Johan Hovold <johan+linaro@kernel.org>,
         Marc Zyngier <maz@kernel.org>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
@@ -44,12 +44,12 @@ Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 08/19] irqdomain: Refactor __irq_domain_alloc_irqs()
-In-Reply-To: <20230116135044.14998-9-johan+linaro@kernel.org>
+Subject: Re: [PATCH v4 07/19] irqdomain: Look for existing mapping only once
+In-Reply-To: <20230116135044.14998-8-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-9-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:34:40 +0100
-Message-ID: <87v8l4kfpr.ffs@tglx>
+ <20230116135044.14998-8-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:34:07 +0100
+Message-ID: <87wn5kkfqo.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -57,28 +57,33 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+> Avoid looking for an existing mapping twice when creating a new mapping
+> using irq_create_fwspec_mapping() by factoring out the actual allocation
+> which is shared with irq_create_mapping_affinity().
 
-> Refactor __irq_domain_alloc_irqs() so that it can be called internally
-> while holding the irq_domain_mutex.
->
-> This will be used to fix a shared-interrupt mapping race.
+This changelog is incomplete and it took me a while to figure out why
+this is before the race fix.
 
-No functional change. The split out internal function will be used to
-fix a shared interrupt mapping race. This change is therefore tagged
-with the same fixes tag.
+The point is that you need __irq_create_mapping_affinity() later to fix
+the shared mapping race. The double check avoidance is just a nice side
+effect.
+
+So please spell it out and make it clear that this needs to be
+backported too, e.g. by adding:
+
+The split out internal function will be used to fix a shared interrupt
+mapping race. This change is therefore tagged with the same fixes tag.
 
 Fixes: ....
 
-> -int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
-> -			    unsigned int nr_irqs, int node, void *arg,
-> -			    bool realloc, const struct irq_affinity_desc *affinity)
-> +static int ___irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
-> +				    unsigned int nr_irqs, int node, void *arg,
-> +				    bool realloc, const struct irq_affinity_desc *affinity)
+>  
+> +static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
+> +						  irq_hw_number_t hwirq,
+> +						  const struct irq_affinity_desc *affinity)
 
-__ vs. ___ is almost undistinguishable.
-
-irq_domain_alloc_irqs_locked() nicely explains what this is about, no?
+Please rename to irq_create_mapping_affinity_locked() so it's clear what
+this is about and what the calling convention is. A lockdep assert to
+that effect would be nice too.
 
 Thanks,
 
