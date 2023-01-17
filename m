@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F598C38147
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C71C38142
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Jan 2023 23:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbjAQXIo (ORCPT
+        id S229674AbjAQXYX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Jan 2023 18:08:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58746 "EHLO
+        Tue, 17 Jan 2023 18:24:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbjAQXGj (ORCPT
+        with ESMTP id S229628AbjAQXX4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2023 18:06:39 -0500
+        Tue, 17 Jan 2023 18:23:56 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25423C1B;
-        Tue, 17 Jan 2023 13:34:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE54A45D5;
+        Tue, 17 Jan 2023 13:17:06 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1673991248;
+        s=2020; t=1673990224;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QIUMiMeO37HLXHmh1Ihwd/CfbMCTUhD4A8mHgM2Czpw=;
-        b=TMgeBVYqAtYPEdUD25oT5SMdrISlzChdtJSl+ZUFGSTag87Nb03Fck3z8eBuYfXvTUjUe0
-        B6C65sFML/MBmgBAaEpJAdOgl7806R+uzAAuiA2fAqWLbz6sDjYJNtgd01nkw5PSm7i2sg
-        hYmuYan8mvZTEtPPuFCztDeUGbj3lpcBwdhog8DEMEM5+zCmQ7ul0j7IanXG8ayKF2EGiY
-        cUAgImO7uposBpaa83UqdfwVTkyr58wVCB9FjQHoLcQLtr2oiDbiMB5uTP4g6LmodGheEU
-        wQY3t8WpjtD0yU5VaJvqnMnivZPROjajdz0RQomk9xo8KO+opoC3mZHCJz4TGA==
+        bh=CwRo+vqx7lsGAdCxZnp4PR6KcJNRCSVuz79Vo5hpT/c=;
+        b=pUqlEQY7RAB4LOYhsb75FhYjstnm+Q4UGqEGCdZpw74Lv+HWHnSaglSEiqxpXUfAQUP8qF
+        89v5BmsKARHNrxMaqabC+0Vv15+3PbKdxXnrt0xYxBm2DgOw8T2Wfr/jdsd5LYd3X89s27
+        3JIDHlixeabWECQOus0E1vntodEgMlQWIeeFXayd3y3WfHtuP8cPyJ5AdmL2y3zsDnVC/4
+        XqKpMAYPtmPC9uW+XtqZFe0iBDxt9W6iOqmvS3lIpcUmLlILP9xM+oKh/vz+wpDUGotLar
+        INLlLv5uJvGIKlEuMzrSNX/H3f6+SWx7Z0dOrRU6qTEmUYbf/RBXzQTH41KC/A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1673991248;
+        s=2020e; t=1673990224;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QIUMiMeO37HLXHmh1Ihwd/CfbMCTUhD4A8mHgM2Czpw=;
-        b=s+GLdJwkzpwBSI8hb81AMVA4pKM7Xk7hlF4wgMUeQB2lMoApgWmnSBjHnMqfmh1xC4fW+0
-        PdBLHAuwtwYTpsAQ==
+        bh=CwRo+vqx7lsGAdCxZnp4PR6KcJNRCSVuz79Vo5hpT/c=;
+        b=Z7KPACyVZicf25k3gLbejR2b8zwPfiR+rcW3tJXcnNvAw5ukjRGi44v/e84CxYqZVm9FRL
+        ff2zoua9a9U3VNCA==
 To:     Johan Hovold <johan+linaro@kernel.org>,
         Marc Zyngier <maz@kernel.org>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
@@ -44,12 +44,13 @@ Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 07/19] irqdomain: Look for existing mapping only once
-In-Reply-To: <20230116135044.14998-8-johan+linaro@kernel.org>
+Subject: Re: [PATCH v4 01/19] irqdomain: Drop bogus fwspec-mapping error
+ handling
+In-Reply-To: <20230116135044.14998-2-johan+linaro@kernel.org>
 References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-8-johan+linaro@kernel.org>
-Date:   Tue, 17 Jan 2023 22:34:07 +0100
-Message-ID: <87wn5kkfqo.ffs@tglx>
+ <20230116135044.14998-2-johan+linaro@kernel.org>
+Date:   Tue, 17 Jan 2023 22:17:03 +0100
+Message-ID: <87cz7clv3k.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -57,33 +58,18 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
-> Avoid looking for an existing mapping twice when creating a new mapping
-> using irq_create_fwspec_mapping() by factoring out the actual allocation
-> which is shared with irq_create_mapping_affinity().
+> In case a newly allocated IRQ ever ends up not having any associated
+> struct irq_data it would not even be possible to dispose the mapping.
+>
+> Replace the bogus disposal with a WARN_ON().
+>
 
-This changelog is incomplete and it took me a while to figure out why
-this is before the race fix.
+This lacks a Fixes tag especially because this ends up in the dependency
+chain of the race fixes.
 
-The point is that you need __irq_create_mapping_affinity() later to fix
-the shared mapping race. The double check avoidance is just a nice side
-effect.
+Fixes: 1e2a7d78499e ("irqdomain: Don't set type when mapping an IRQ")
 
-So please spell it out and make it clear that this needs to be
-backported too, e.g. by adding:
-
-The split out internal function will be used to fix a shared interrupt
-mapping race. This change is therefore tagged with the same fixes tag.
-
-Fixes: ....
-
->  
-> +static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
-> +						  irq_hw_number_t hwirq,
-> +						  const struct irq_affinity_desc *affinity)
-
-Please rename to irq_create_mapping_affinity_locked() so it's clear what
-this is about and what the calling convention is. A lockdep assert to
-that effect would be nice too.
+is not completely precise but close enough.
 
 Thanks,
 
