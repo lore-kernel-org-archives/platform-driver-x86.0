@@ -2,56 +2,58 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A004C46467
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A8FC004D4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjARKqv (ORCPT
+        id S229823AbjARKt2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Jan 2023 05:46:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
+        Wed, 18 Jan 2023 05:49:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbjARKpD (ORCPT
+        with ESMTP id S230093AbjARKs3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2023 05:45:03 -0500
+        Wed, 18 Jan 2023 05:48:29 -0500
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC707855F;
-        Wed, 18 Jan 2023 01:51:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED10422787;
+        Wed, 18 Jan 2023 01:54:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674035481; x=1705571481;
+  t=1674035654; x=1705571654;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=SAZuv1LTCdDrm63pGTGTDfWeIdGXMUVP06EZzEnNzss=;
-  b=UD1ma9nXvvH23mxZg/gY85K6l/+c1VhlUqrjSUpmUd8yhA+kmxq5vK+n
-   P65FiKMVNVdIU8NJRfUz+MEMl+/Cs/PD9AKxpgK8p+hpE3+VWp1SJVDJv
-   jb+LA5GvWivTFeFxav9+x7r5PM+YCXdhNQwi9XFGWGm+BxB/xB5G8XHWp
-   D92S9zkXSCK1Z/bT0k1F0sa0bvZf1eiFrp6KOU+KOp94aaySk09LmeKEe
-   rifqAlpe1pbbkmHPPpGHJDwOVqY6XpLc8y9ElDvkccv8tYuKIwM1wVbLd
-   EgirCz2O+qbIfJ3rY3kXPZ3Yl4pFseNhy6oLsfT+VAFmKee6LXo9igUQf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="352190678"
+  bh=BOTxY6LIKS8Qfh9o8JMIxVAK68ueeJgY2bTbXYW+tmI=;
+  b=OKTD+y9m1RzFBaqlzhZMwAXZKR0yIWzcWs/ssk8iNnnQd7XZ3P8Quit8
+   VlVUB7uzEjRqGKDjq3Ptzqk8z7p2nmKnOgNEdGtoIZDCfanoRzj6vxq0O
+   jUrrkj5eqkHzR+n3WIV841yTDQq8ettXCrOfpazwSaOLLIZCQMznIAsXn
+   2iZ3CjeIvdT5PtT+J6pw6hKTLxXQeYeMdxfXW3yXOgjMBXItellcxeGM8
+   7KxiO5ch/58W5ku0PqtdPBSrS/qnRWj/VwJHTwgcNVWvDbmP1FpEyGx1m
+   QA2SIPuAPTa22+F8PgOEEHsS+57pn6ct4fRObmSc4CNa7/7BY+1ghzap/
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="352191259"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="352190678"
+   d="scan'208";a="352191259"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 01:51:20 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 01:54:09 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="988475082"
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="988475708"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="988475082"
+   d="scan'208";a="988475708"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jan 2023 01:51:18 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jan 2023 01:54:07 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B0187368; Wed, 18 Jan 2023 11:51:53 +0200 (EET)
+        id 2066E368; Wed, 18 Jan 2023 11:54:41 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Shravan Sudhakar <s.shravan@intel.com>,
-        Intel Corporation <linuxwwan@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
         Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/1] platform/x86: int1092: Switch to use acpi_evaluate_dsm_typed()
-Date:   Wed, 18 Jan 2023 11:51:52 +0200
-Message-Id: <20230118095152.41427-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/x86: intel/pmc: Switch to use acpi_evaluate_dsm_typed()
+Date:   Wed, 18 Jan 2023 11:54:40 +0200
+Message-Id: <20230118095440.41634-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -64,47 +66,26 @@ object evaluated by _DSM call. Use it instead of open coded variant.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel/int1092/intel_sar.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel/pmc/tgl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index e03943e6380a..20499cafabcb 100644
---- a/drivers/platform/x86/intel/int1092/intel_sar.c
-+++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -133,14 +133,14 @@ static acpi_status sar_get_device_mode(struct platform_device *device)
- 	u32 rev = 0;
- 	int value;
+diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+index e3e50538465d..c245ada849d0 100644
+--- a/drivers/platform/x86/intel/pmc/tgl.c
++++ b/drivers/platform/x86/intel/pmc/tgl.c
+@@ -221,9 +221,9 @@ void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
  
--	out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
--				COMMAND_ID_DEV_MODE, NULL);
--	if (get_int_value(out, &value)) {
-+	out = acpi_evaluate_dsm_typed(context->handle, &context->guid, rev,
-+				      COMMAND_ID_DEV_MODE, NULL, ACPI_TYPE_INTEGER);
-+	if (!out) {
- 		dev_err(&device->dev, "DSM cmd:%d Failed to retrieve value\n", COMMAND_ID_DEV_MODE);
- 		status = AE_ERROR;
- 		goto dev_mode_error;
- 	}
--	context->sar_data.device_mode = value;
-+	context->sar_data.device_mode = out->integer.value;
- 	update_sar_data(context);
- 	sysfs_notify(&device->dev.kobj, NULL, SYSFS_DATANAME);
+ 	guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
  
-@@ -221,11 +221,11 @@ static void sar_get_data(int reg, struct wwan_sar_context *context)
+-	out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
+-				    ACPI_GET_LOW_MODE_REGISTERS, NULL);
+-	if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
++	out_obj = acpi_evaluate_dsm_typed(adev->handle, &s0ix_dsm_guid, 0,
++					  ACPI_GET_LOW_MODE_REGISTERS, NULL, ACPI_TYPE_BUFFER);
++	if (out_obj) {
+ 		u32 size = out_obj->buffer.length;
  
- 	req.type = ACPI_TYPE_INTEGER;
- 	req.integer.value = reg;
--	out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
--				COMMAND_ID_CONFIG_TABLE, &req);
-+	out = acpi_evaluate_dsm_typed(context->handle, &context->guid, rev,
-+				      COMMAND_ID_CONFIG_TABLE, &req, ACPI_TYPE_PACKAGE);
- 	if (!out)
- 		return;
--	if (out->type == ACPI_TYPE_PACKAGE && out->package.count >= 3 &&
-+	if (out->package.count >= 3 &&
- 	    out->package.elements[0].type == ACPI_TYPE_INTEGER &&
- 	    out->package.elements[1].type == ACPI_TYPE_INTEGER &&
- 	    out->package.elements[2].type == ACPI_TYPE_PACKAGE &&
+ 		if (size != lpm_size) {
 -- 
 2.39.0
 
