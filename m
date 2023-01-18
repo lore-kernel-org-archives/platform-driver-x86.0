@@ -2,160 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719BBC677F1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5DDC677F1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbjARKf5 (ORCPT
+        id S229834AbjARKom (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Jan 2023 05:35:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58928 "EHLO
+        Wed, 18 Jan 2023 05:44:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230038AbjARKfR (ORCPT
+        with ESMTP id S229935AbjARKm5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2023 05:35:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2BAC3824;
-        Wed, 18 Jan 2023 01:40:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 33457B81BA0;
-        Wed, 18 Jan 2023 09:40:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95B9C433EF;
-        Wed, 18 Jan 2023 09:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674034833;
-        bh=tTHcg/z9T99BPI6eUaM75jLrRAUzs67xHkkXXR/GIsk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=en2ki9TitjA9re2RPj4k2fvbiPi/ck3YT8R35kX3l0lXrNQQivGwFzrZXToiPbV3F
-         8gxILssBC53HB4YA61N56jY8/OyLzuoZZfq5ZCZjXggI9uy8VZRJ3dZEB5SiyzTbnL
-         g/afZldFS7UsN4MpeL63ER52kRKrRtv9UBXdqhoI9wxNu/GfSYJcpBbNpH96YGMBkU
-         k090SA3FiMS6x7qkW0/EbdynvWVsBvVZgCZq3fnxB5gC7U4XTx/RRYfklgz3t0XKar
-         MF4GzVa0pIqKRBvbNS5zCchyhCavvHK5JoGTdSXanfeeXjmynBREUHsq5LCR0Rmj4A
-         6lO0XNVq92U0g==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pI4wD-0001se-DC; Wed, 18 Jan 2023 10:40:58 +0100
-Date:   Wed, 18 Jan 2023 10:40:57 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@chromium.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 09/19] irqdomain: Fix mapping-creation race
-Message-ID: <Y8e+qfaC+ytx2LDv@hovoldconsulting.com>
-References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-10-johan+linaro@kernel.org>
- <87sfg8kfh4.ffs@tglx>
+        Wed, 18 Jan 2023 05:42:57 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEA32101;
+        Wed, 18 Jan 2023 01:48:09 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso1050774wms.3;
+        Wed, 18 Jan 2023 01:48:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YzZf1LOeJUJ3aYNXdqGuXA8Bu54sNOZGFFAWJSz1vB4=;
+        b=NxwB+Bks6L72C1uEFgdA5tAcEV8PFk8pzwoscBFQkK94V/aQy0cftmS1YfyO37bUNr
+         6oLV6HDKbtedd1k8YtNzu+1zg7jHHPFzPZ0CmEWA8lv3Et4k10Oz07iqIFEWQQh6lZkj
+         ypZzg0ldiWRzODCrLC/V7YB6tCPbSEam6V0Ny/8abKFPtgSjGpS62Lo+1ub5SemqrPdv
+         RyQ9RVexGSwYszhWz6KrVrkeuwbcDJTAgdElyxQ2G+SkZLYo8cUBsaGfr6mtlhuuAeMl
+         nSuFx0F1kIUCp9KFdXPaqt6+lvm93a/cADt4wI82urA1YqT3t7EVTVTlnu6/DUiSCUva
+         ujdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YzZf1LOeJUJ3aYNXdqGuXA8Bu54sNOZGFFAWJSz1vB4=;
+        b=5NOWasBqvpcao36J57I00RPp1aIx0ZsVqSkqAC5x0RvM2brffpEVJvRbtQNcWXCSrd
+         DxCpisatiqEXt3I/RMIllMGegthpAXX/lM5cmKVDE3ZFukU/5/Q+ajh15AiyIVcIfJ8o
+         +JzWpwJcT2Ajb0buzVkLAyqOYv1b/70luVfGe/ZDMi3ywVq42HcVF0C0AYn5Gwj6MzVi
+         lArHfbeFivXJeuGVfd4+c7UsAkEHOTqAOAHTmgVc8W9STC9osm+rlksL5BzaKdwb0UtN
+         nfvYuH2oMJqeoJLZ9pfpjaVPtP6L1MDvye7IrVrIjExSSqQ9AjPaLrrke58pKDxIMkA5
+         E49g==
+X-Gm-Message-State: AFqh2kovUKKxyUR3k7Y/SPFJhJ5ArsWHZ4URALf1sTJBiYPOFA+YXtBP
+        8x9Zd+QWxGZdgCiPMM0y5+RxgzFav1ngnQ==
+X-Google-Smtp-Source: AMrXdXtbOmN49Qnsek1dW3mxhucBX6xU3mvr1oneBz9H8Ti0TUF4EFAHwf7xzdTxvNuFpsU4j8cT5Q==
+X-Received: by 2002:a05:600c:4e50:b0:3da:4e:8dfe with SMTP id e16-20020a05600c4e5000b003da004e8dfemr5865917wmq.38.1674035287869;
+        Wed, 18 Jan 2023 01:48:07 -0800 (PST)
+Received: from [192.168.2.202] (pd9ea3221.dip0.t-ipconnect.de. [217.234.50.33])
+        by smtp.gmail.com with ESMTPSA id p18-20020a05600c359200b003db040f0d5esm1448371wmq.33.2023.01.18.01.48.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jan 2023 01:48:07 -0800 (PST)
+Message-ID: <e40d3977-17bd-be9c-8ea5-1e5f7c2d47b0@gmail.com>
+Date:   Wed, 18 Jan 2023 10:48:06 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sfg8kfh4.ffs@tglx>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v1 1/1] platform/surface: Switch to use
+ acpi_evaluate_dsm_typed()
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>
+References: <20230118093823.39679-1-andriy.shevchenko@linux.intel.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20230118093823.39679-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 10:39:51PM +0100, Thomas Gleixner wrote:
-> On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+On 1/18/23 10:38, Andy Shevchenko wrote:
+> The acpi_evaluate_dsm_typed() provides a way to check the type of the
+> object evaluated by _DSM call. Use it instead of open coded variant.
 > 
-> > Parallel probing (e.g. due to asynchronous probing) of devices that share
-> > interrupts can currently result in two mappings for the same hardware
-> > interrupt to be created.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+I think the reason I went with the non-typed version here was for the
+explicit error message. Specifically, to simplify debugging in case we'd
+get any new device that behaves differently. But since then I think MS
+discontinued the use of this driver (or at least this part) in their
+devices (no more detachable GPUs). Also, the likelihood of that
+interface changing is pretty small regardless.
+
+So I'm fine with changing that.
+
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+> ---
+>   drivers/platform/surface/surface_hotplug.c | 13 +++----------
+>   1 file changed, 3 insertions(+), 10 deletions(-)
 > 
-> This lacks an explanation why this can happen.
-
-The explanation is there (parallel probing), but I can amend it with the
-concrete example from the input subsystem if that's what you're after?
-
-Or do you mean that the above doesn't say that the current locking is
-incomplete? I believe that's covered by the next paragraph:
-
-    Make sure to hold the irq_domain_mutex when creating mappings so that
-    looking for an existing mapping before creating a new one is done
-    atomically.
- 
-> > @@ -802,6 +811,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> >  	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
-> >  		type &= IRQ_TYPE_SENSE_MASK;
-> >  
-> > +	mutex_lock(&irq_domain_mutex);
-> > +
-> >  	/*
-> >  	 * If we've already configured this interrupt,
-> >  	 * don't do it again, or hell will break loose.
-> > @@ -814,7 +825,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> >  		 * interrupt number.
-> >  		 */
-> >  		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
-> > -			return virq;
-> > +			goto out;
-> >  
-> >  		/*
-> >  		 * If the trigger type has not been set yet, then set
-> > @@ -823,36 +834,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> >  		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
-> >  			irq_data = irq_get_irq_data(virq);
-> >  			if (!irq_data)
-> > -				return 0;
-> > +				goto err;
-> >  
-> >  			irqd_set_trigger_type(irq_data, type);
-> > -			return virq;
-> > +			goto out;
-> >  		}
-> >  
-> >  		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
-> >  			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
-> > -		return 0;
-> > +		goto err;
-> >  	}
-> >  
-> >  	if (irq_domain_is_hierarchy(domain)) {
-> > -		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
-> > +		virq = ___irq_domain_alloc_irqs(domain, -1, 1, NUMA_NO_NODE,
-> > +						fwspec, false, NULL);
-> >  		if (virq <= 0)
-> > -			return 0;
-> > +			goto err;
-> >  	} else {
-> >  		/* Create mapping */
-> >  		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
-> >  		if (!virq)
-> > -			return virq;
-> > +			goto err;
-> >  	}
-> >  
-> >  	irq_data = irq_get_irq_data(virq);
-> >  	if (WARN_ON(!irq_data))
-> > -		return 0;
-> > +		goto err;
-> >  
-> >  	/* Store trigger type */
-> >  	irqd_set_trigger_type(irq_data, type);
-> > +out:
-> > +	mutex_unlock(&irq_domain_mutex);
-> >  
-> >  	return virq;
-> > +err:
-> > +	mutex_unlock(&irq_domain_mutex);
-> > +
-> > +	return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
-> 
-> You can spare that goto churn by renaming the existing function to
-> irq_create_fwspec_mapping_locked() and invoked that guarded by the
-> mutex, no?
-
-That may be possible, but I'm not sure it's better. It wasn't really
-obvious which of the above returns where error paths and which were
-success paths before this change.
-
-I'll try and see what it would look like.
-
-Johan
+> diff --git a/drivers/platform/surface/surface_hotplug.c b/drivers/platform/surface/surface_hotplug.c
+> index f004a2495201..7b6d887dccdb 100644
+> --- a/drivers/platform/surface/surface_hotplug.c
+> +++ b/drivers/platform/surface/surface_hotplug.c
+> @@ -101,18 +101,12 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
+>   	param.type = ACPI_TYPE_INTEGER;
+>   	param.integer.value = value;
+>   
+> -	result = acpi_evaluate_dsm(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
+> -				   shps_dsm_fn_for_irq(type), &param);
+> -
+> +	result = acpi_evaluate_dsm_typed(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
+> +					 shps_dsm_fn_for_irq(type), &param, ACPI_TYPE_BUFFER);
+>   	if (!result) {
+>   		dev_err(&pdev->dev, "IRQ notification via DSM failed (irq=%d, gpio=%d)\n",
+>   			type, value);
+>   
+> -	} else if (result->type != ACPI_TYPE_BUFFER) {
+> -		dev_err(&pdev->dev,
+> -			"IRQ notification via DSM failed: unexpected result type (irq=%d, gpio=%d)\n",
+> -			type, value);
+> -
+>   	} else if (result->buffer.length != 1 || result->buffer.pointer[0] != 0) {
+>   		dev_err(&pdev->dev,
+>   			"IRQ notification via DSM failed: unexpected result value (irq=%d, gpio=%d)\n",
+> @@ -121,8 +115,7 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
+>   
+>   	mutex_unlock(&sdev->lock[type]);
+>   
+> -	if (result)
+> -		ACPI_FREE(result);
+> +	ACPI_FREE(result);
+>   }
+>   
+>   static irqreturn_t shps_handle_irq(int irq, void *data)
