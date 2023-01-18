@@ -2,145 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DFDC38147
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1290DC32793
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 20:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231320AbjAROh7 (ORCPT
+        id S229749AbjARUQJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Jan 2023 09:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33826 "EHLO
+        Wed, 18 Jan 2023 15:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbjAROhl (ORCPT
+        with ESMTP id S229736AbjARUQI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2023 09:37:41 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D26366A3;
-        Wed, 18 Jan 2023 06:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674052017; x=1705588017;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bShIF2GzN0uCjfJDJnHZS1KX11YWPQMysT+sSLBfayw=;
-  b=epX4rTXnAtqmFGzxEYmG/Ivu0oLoT+HDjs4jvOTsoKWN6J43OlI/iVnG
-   Mg9vLyVKiUedBmtGXlur/J4FDF/hqc0oA6dLvEpN4Ucrg9Sxyk/dfXmyY
-   5mmMpq3x4nwE1uDPYavls4iq+J+8RlDrMAQ2uY2cQ93RDZM1ReFWAJ0h7
-   XcvF2n6QHHi/n47wlR6DTWev0f+S74hyJWwgUcgEJA4kkblSrLbLRHU/r
-   7hFuEtmywoNk2tTeauG+++YpStMg2tMyMRSdNZyHp9enWUsLfrIMPyN2v
-   vwmbKSjR2ivu3qlebifOwveJ54AouYs6jNizCydSgPm9lBz/uW724rAAA
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="323678285"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="323678285"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 06:26:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="652961213"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="652961213"
-Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 18 Jan 2023 06:26:51 -0800
-Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pI9Ot-0000Qe-0n;
-        Wed, 18 Jan 2023 14:26:51 +0000
-Date:   Wed, 18 Jan 2023 22:26:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Shravan Sudhakar <s.shravan@intel.com>,
-        Intel Corporation <linuxwwan@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/1] platform/x86: int1092: Switch to use
- acpi_evaluate_dsm_typed()
-Message-ID: <202301182233.vDnTdKEG-lkp@intel.com>
-References: <20230118095152.41427-1-andriy.shevchenko@linux.intel.com>
+        Wed, 18 Jan 2023 15:16:08 -0500
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B307E5D7FF;
+        Wed, 18 Jan 2023 12:16:07 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id l125so17666837vsc.2;
+        Wed, 18 Jan 2023 12:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=I4ilFk+1HdZgZljeEPe4BfQTGo6zmvKGQ3ASs4fGH4E=;
+        b=iHIkqiBpPvAE7ymZW+0WDNWZGWJ4jjZLpsnmWylDRABzpMA05FLxtS+3r9W+Bo2D3p
+         sEHc2xrxde+tthr/ESXE3BYOtj588RosREmOOU6yThaOXZGIPV2Y7XLO7JiO8q8mg1a9
+         HtciM/aZWKi4+wYpRaggOZ/SldcKVJZdnQqxh4bJzDoGxPPuqxxM3iScsOMfiFVRuoLR
+         +arU0tvvNirX0f3B1Y5lM4LpWnnlObo3MdhDR8hIDZTNa3Mw3Ips6vLhn3EfAwrzybMP
+         Nwd3jgVvodStsSRXYMyChVhQ3q7AJmB6W4FFpbeNS1SZ0NyZXcqamz6cuN7plMn4lOlF
+         /hQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I4ilFk+1HdZgZljeEPe4BfQTGo6zmvKGQ3ASs4fGH4E=;
+        b=Y+OjZ0Qy0w0UG3e1S+dK6MGpfI4ojTrQ9nWr/IAU7h/+og9wq+tATBJa4GwLxVXc3c
+         mLK3e4R7gfBJg7PAP83kzxUN607yl2MdNbIuhyuJj7nzpeSbgect77FDSibwOc/q8oje
+         txhYKMS+THqr4vl27YCq3CedbRoiWlps9033+DvAhMFhnKbQ3tsRUR8XLBbT9Xr18NYB
+         aAd9mIaVEz5sr0YDP+dz8Dgoe0LCJ7is0d/tK5QMDJqY2lz/oaWUohjUhYSD3SSQSEJa
+         kp8WBMMg2LrSCbCEYPxYnmsKHfC/zyggX9ejS/qIfwzEc+kQVseInH43kg5G16KBCGj4
+         gawQ==
+X-Gm-Message-State: AFqh2kp6xW28nqlYdOmZ+5jGPr+7YKN43yfEfMjHw9HWj3DjIKgVsI5o
+        S9Ob0M5BXwR8Zh2U+v2tPk2J3vpWeB45GWopiZw=
+X-Google-Smtp-Source: AMrXdXv47ndtBRK2U4O/8xM25+unbtJA5XsFxO7rDVlDQvBV/9IVN1yn3YcsN6+bFZ676VuMpo0++yno7KHA9uLRDnA=
+X-Received: by 2002:a67:d097:0:b0:3d0:cb3d:ad47 with SMTP id
+ s23-20020a67d097000000b003d0cb3dad47mr1312594vsi.76.1674072966756; Wed, 18
+ Jan 2023 12:16:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230118095152.41427-1-andriy.shevchenko@linux.intel.com>
+References: <20230118095440.41634-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230118095440.41634-1-andriy.shevchenko@linux.intel.com>
+From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Date:   Wed, 18 Jan 2023 15:15:40 -0500
+Message-ID: <CAE2upjSJ6CuNkpga1ThnDCmVHLSq30zN3A+UR89+nAkrhOaW5g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: intel/pmc: Switch to use acpi_evaluate_dsm_typed()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.2-rc4 next-20230118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/platform-x86-int1092-Switch-to-use-acpi_evaluate_dsm_typed/20230118-184845
-patch link:    https://lore.kernel.org/r/20230118095152.41427-1-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v1 1/1] platform/x86: int1092: Switch to use acpi_evaluate_dsm_typed()
-config: i386-randconfig-a004-20230116 (https://download.01.org/0day-ci/archive/20230118/202301182233.vDnTdKEG-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/6051c9fba08cdbd6ea1baeac8664b8f4462b427d
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Andy-Shevchenko/platform-x86-int1092-Switch-to-use-acpi_evaluate_dsm_typed/20230118-184845
-        git checkout 6051c9fba08cdbd6ea1baeac8664b8f4462b427d
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/x86/intel/int1092/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/intel/int1092/intel_sar.c:134:6: warning: unused variable 'value' [-Wunused-variable]
-           int value;
-               ^
-   1 warning generated.
+Looks good.
+Reviewed-by : Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 
 
-vim +/value +134 drivers/platform/x86/intel/int1092/intel_sar.c
+On Wed, Jan 18, 2023 at 4:54 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The acpi_evaluate_dsm_typed() provides a way to check the type of the
+> object evaluated by _DSM call. Use it instead of open coded variant.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/tgl.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+> index e3e50538465d..c245ada849d0 100644
+> --- a/drivers/platform/x86/intel/pmc/tgl.c
+> +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> @@ -221,9 +221,9 @@ void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
+>
+>         guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
+>
+> -       out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
+> -                                   ACPI_GET_LOW_MODE_REGISTERS, NULL);
+> -       if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
+> +       out_obj = acpi_evaluate_dsm_typed(adev->handle, &s0ix_dsm_guid, 0,
+> +                                         ACPI_GET_LOW_MODE_REGISTERS, NULL, ACPI_TYPE_BUFFER);
+> +       if (out_obj) {
+>                 u32 size = out_obj->buffer.length;
+>
+>                 if (size != lpm_size) {
+> --
+> 2.39.0
+>
 
-dcfbd31ef4bcf6 Shravan S       2021-07-24  117  
-dcfbd31ef4bcf6 Shravan S       2021-07-24  118  /**
-dcfbd31ef4bcf6 Shravan S       2021-07-24  119   * sar_get_device_mode: Extraction of information from BIOS via DSM calls
-dcfbd31ef4bcf6 Shravan S       2021-07-24  120   * @device: ACPI device for which to retrieve the data
-dcfbd31ef4bcf6 Shravan S       2021-07-24  121   *
-dcfbd31ef4bcf6 Shravan S       2021-07-24  122   * Retrieve the current device mode information from the BIOS.
-dcfbd31ef4bcf6 Shravan S       2021-07-24  123   *
-dcfbd31ef4bcf6 Shravan S       2021-07-24  124   * Return:
-dcfbd31ef4bcf6 Shravan S       2021-07-24  125   * AE_OK on success
-dcfbd31ef4bcf6 Shravan S       2021-07-24  126   * AE_ERROR on error
-dcfbd31ef4bcf6 Shravan S       2021-07-24  127   */
-dcfbd31ef4bcf6 Shravan S       2021-07-24  128  static acpi_status sar_get_device_mode(struct platform_device *device)
-dcfbd31ef4bcf6 Shravan S       2021-07-24  129  {
-dcfbd31ef4bcf6 Shravan S       2021-07-24  130  	struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
-dcfbd31ef4bcf6 Shravan S       2021-07-24  131  	acpi_status status = AE_OK;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  132  	union acpi_object *out;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  133  	u32 rev = 0;
-dcfbd31ef4bcf6 Shravan S       2021-07-24 @134  	int value;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  135  
-6051c9fba08cdb Andy Shevchenko 2023-01-18  136  	out = acpi_evaluate_dsm_typed(context->handle, &context->guid, rev,
-6051c9fba08cdb Andy Shevchenko 2023-01-18  137  				      COMMAND_ID_DEV_MODE, NULL, ACPI_TYPE_INTEGER);
-6051c9fba08cdb Andy Shevchenko 2023-01-18  138  	if (!out) {
-dcfbd31ef4bcf6 Shravan S       2021-07-24  139  		dev_err(&device->dev, "DSM cmd:%d Failed to retrieve value\n", COMMAND_ID_DEV_MODE);
-dcfbd31ef4bcf6 Shravan S       2021-07-24  140  		status = AE_ERROR;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  141  		goto dev_mode_error;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  142  	}
-6051c9fba08cdb Andy Shevchenko 2023-01-18  143  	context->sar_data.device_mode = out->integer.value;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  144  	update_sar_data(context);
-dcfbd31ef4bcf6 Shravan S       2021-07-24  145  	sysfs_notify(&device->dev.kobj, NULL, SYSFS_DATANAME);
-dcfbd31ef4bcf6 Shravan S       2021-07-24  146  
-dcfbd31ef4bcf6 Shravan S       2021-07-24  147  dev_mode_error:
-dcfbd31ef4bcf6 Shravan S       2021-07-24  148  	ACPI_FREE(out);
-dcfbd31ef4bcf6 Shravan S       2021-07-24  149  	return status;
-dcfbd31ef4bcf6 Shravan S       2021-07-24  150  }
-dcfbd31ef4bcf6 Shravan S       2021-07-24  151  
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Thanks,
+Rajneesh
