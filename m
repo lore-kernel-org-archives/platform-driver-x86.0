@@ -2,90 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A8FC004D4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F610C32793
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 11:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjARKt2 (ORCPT
+        id S229886AbjARLSk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Jan 2023 05:49:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
+        Wed, 18 Jan 2023 06:18:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjARKs3 (ORCPT
+        with ESMTP id S230032AbjARLQh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2023 05:48:29 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED10422787;
-        Wed, 18 Jan 2023 01:54:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674035654; x=1705571654;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BOTxY6LIKS8Qfh9o8JMIxVAK68ueeJgY2bTbXYW+tmI=;
-  b=OKTD+y9m1RzFBaqlzhZMwAXZKR0yIWzcWs/ssk8iNnnQd7XZ3P8Quit8
-   VlVUB7uzEjRqGKDjq3Ptzqk8z7p2nmKnOgNEdGtoIZDCfanoRzj6vxq0O
-   jUrrkj5eqkHzR+n3WIV841yTDQq8ettXCrOfpazwSaOLLIZCQMznIAsXn
-   2iZ3CjeIvdT5PtT+J6pw6hKTLxXQeYeMdxfXW3yXOgjMBXItellcxeGM8
-   7KxiO5ch/58W5ku0PqtdPBSrS/qnRWj/VwJHTwgcNVWvDbmP1FpEyGx1m
-   QA2SIPuAPTa22+F8PgOEEHsS+57pn6ct4fRObmSc4CNa7/7BY+1ghzap/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="352191259"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="352191259"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 01:54:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="988475708"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="988475708"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jan 2023 01:54:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2066E368; Wed, 18 Jan 2023 11:54:41 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v1 1/1] platform/x86: intel/pmc: Switch to use acpi_evaluate_dsm_typed()
-Date:   Wed, 18 Jan 2023 11:54:40 +0200
-Message-Id: <20230118095440.41634-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
+        Wed, 18 Jan 2023 06:16:37 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F8C5DC18;
+        Wed, 18 Jan 2023 02:30:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DCBB7B81BA1;
+        Wed, 18 Jan 2023 10:30:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EDABC433EF;
+        Wed, 18 Jan 2023 10:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674037854;
+        bh=JESyVLEBRskcOn6pGiXUzE4QX0hziwBDIa4wVXsbNCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fY97SJidlILMLeB4sgj157aP8uuTuwfnJ3d/HtvwBkbPYiHgwlpuWmXx90N3of1h0
+         uf/voAEVr0UlP89b+slzMHrEM3XCslwpk0/biuUMzwoanBCTAOQUPeXd9/WfBVWZa8
+         k3h1ra/S5PeiMKl1OXx5HGZ3eL7LOGliaqOEJ7StKCLQAFIsRQWog4pde6EJ+dR+m9
+         mCgBFSqMYTnfwqV6d2dMby9YBTewhHELGuF3S0e6O2wTeES1ytGvt7wqiDbbm079wV
+         geSf3eNhTn6PXkvUFhO+BZT5QDyymNrapcgQpPj7UpoUB4STS42103uJdzpS5Vh+7W
+         ylg9EEo9ickfg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pI5iw-000300-OB; Wed, 18 Jan 2023 11:31:18 +0100
+Date:   Wed, 18 Jan 2023 11:31:18 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v4 11/19] x86/ioapic: Use irq_domain_create_hierarchy()
+Message-ID: <Y8fKdl/kJJ/3Uymn@hovoldconsulting.com>
+References: <20230116135044.14998-1-johan+linaro@kernel.org>
+ <20230116135044.14998-12-johan+linaro@kernel.org>
+ <87pmbckfe7.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pmbckfe7.ffs@tglx>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The acpi_evaluate_dsm_typed() provides a way to check the type of the
-object evaluated by _DSM call. Use it instead of open coded variant.
+On Tue, Jan 17, 2023 at 10:41:36PM +0100, Thomas Gleixner wrote:
+> On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+> >  
+> > -	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+> > -						 (void *)(long)ioapic);
+> > -
+> > +	ip->irqdomain = irq_domain_create_hierarchy(parent, 0, hwirqs, fn,
+> > +						    cfg->ops,
+> > +						    (void *)(long)ioapic);
+> 
+> The 80 character limit has been lifted quite some time ago. Please use
+> the 100 which are now the norm.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/tgl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Not everyone agrees, including coding-style.rst:
 
-diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-index e3e50538465d..c245ada849d0 100644
---- a/drivers/platform/x86/intel/pmc/tgl.c
-+++ b/drivers/platform/x86/intel/pmc/tgl.c
-@@ -221,9 +221,9 @@ void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
- 
- 	guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
- 
--	out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
--				    ACPI_GET_LOW_MODE_REGISTERS, NULL);
--	if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
-+	out_obj = acpi_evaluate_dsm_typed(adev->handle, &s0ix_dsm_guid, 0,
-+					  ACPI_GET_LOW_MODE_REGISTERS, NULL, ACPI_TYPE_BUFFER);
-+	if (out_obj) {
- 		u32 size = out_obj->buffer.length;
- 
- 		if (size != lpm_size) {
--- 
-2.39.0
+	The preferred limit on the length of a single line is 80 columns.
 
+	Statements longer than 80 columns should be broken into sensible
+	chunks, unless exceeding 80 columns significantly increases
+	readability and does not hide information.
+
+I go above 80 chars when it improves readability, but it's still a soft
+limit for many of us.
+
+I'll change the above, but not sure trying too hard to fit everything in
+one line really improves things in cases like:
+
+-       uv_domain = irq_domain_create_hierarchy(x86_vector_domain, 0, 0, fn,
+-                                               &uv_domain_ops, NULL);
++       uv_domain = irq_domain_create_hierarchy(x86_vector_domain, 0, 0, fn, &uv_domain_ops, NULL);
+
+Johan
