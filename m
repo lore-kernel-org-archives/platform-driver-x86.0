@@ -2,129 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5DDC677F1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2200CC38147
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Jan 2023 10:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbjARKom (ORCPT
+        id S229736AbjARKpj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Jan 2023 05:44:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
+        Wed, 18 Jan 2023 05:45:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbjARKm5 (ORCPT
+        with ESMTP id S230330AbjARKpD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2023 05:42:57 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEA32101;
-        Wed, 18 Jan 2023 01:48:09 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso1050774wms.3;
-        Wed, 18 Jan 2023 01:48:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YzZf1LOeJUJ3aYNXdqGuXA8Bu54sNOZGFFAWJSz1vB4=;
-        b=NxwB+Bks6L72C1uEFgdA5tAcEV8PFk8pzwoscBFQkK94V/aQy0cftmS1YfyO37bUNr
-         6oLV6HDKbtedd1k8YtNzu+1zg7jHHPFzPZ0CmEWA8lv3Et4k10Oz07iqIFEWQQh6lZkj
-         ypZzg0ldiWRzODCrLC/V7YB6tCPbSEam6V0Ny/8abKFPtgSjGpS62Lo+1ub5SemqrPdv
-         RyQ9RVexGSwYszhWz6KrVrkeuwbcDJTAgdElyxQ2G+SkZLYo8cUBsaGfr6mtlhuuAeMl
-         nSuFx0F1kIUCp9KFdXPaqt6+lvm93a/cADt4wI82urA1YqT3t7EVTVTlnu6/DUiSCUva
-         ujdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YzZf1LOeJUJ3aYNXdqGuXA8Bu54sNOZGFFAWJSz1vB4=;
-        b=5NOWasBqvpcao36J57I00RPp1aIx0ZsVqSkqAC5x0RvM2brffpEVJvRbtQNcWXCSrd
-         DxCpisatiqEXt3I/RMIllMGegthpAXX/lM5cmKVDE3ZFukU/5/Q+ajh15AiyIVcIfJ8o
-         +JzWpwJcT2Ajb0buzVkLAyqOYv1b/70luVfGe/ZDMi3ywVq42HcVF0C0AYn5Gwj6MzVi
-         lArHfbeFivXJeuGVfd4+c7UsAkEHOTqAOAHTmgVc8W9STC9osm+rlksL5BzaKdwb0UtN
-         nfvYuH2oMJqeoJLZ9pfpjaVPtP6L1MDvye7IrVrIjExSSqQ9AjPaLrrke58pKDxIMkA5
-         E49g==
-X-Gm-Message-State: AFqh2kovUKKxyUR3k7Y/SPFJhJ5ArsWHZ4URALf1sTJBiYPOFA+YXtBP
-        8x9Zd+QWxGZdgCiPMM0y5+RxgzFav1ngnQ==
-X-Google-Smtp-Source: AMrXdXtbOmN49Qnsek1dW3mxhucBX6xU3mvr1oneBz9H8Ti0TUF4EFAHwf7xzdTxvNuFpsU4j8cT5Q==
-X-Received: by 2002:a05:600c:4e50:b0:3da:4e:8dfe with SMTP id e16-20020a05600c4e5000b003da004e8dfemr5865917wmq.38.1674035287869;
-        Wed, 18 Jan 2023 01:48:07 -0800 (PST)
-Received: from [192.168.2.202] (pd9ea3221.dip0.t-ipconnect.de. [217.234.50.33])
-        by smtp.gmail.com with ESMTPSA id p18-20020a05600c359200b003db040f0d5esm1448371wmq.33.2023.01.18.01.48.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 01:48:07 -0800 (PST)
-Message-ID: <e40d3977-17bd-be9c-8ea5-1e5f7c2d47b0@gmail.com>
-Date:   Wed, 18 Jan 2023 10:48:06 +0100
+        Wed, 18 Jan 2023 05:45:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23447A507;
+        Wed, 18 Jan 2023 01:51:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 92924B81BA0;
+        Wed, 18 Jan 2023 09:51:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47ACBC433D2;
+        Wed, 18 Jan 2023 09:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674035479;
+        bh=j/7pxZs99cf2pf1Bco/XMbeVzyp9qS8qcECcckzCgwI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sqmZoVeGBkzKKbVdNOT1zBosOWrD2+vFykeBgMmnJT82zWMD/Zf1AK1d39A2ygvdk
+         yLmefoW/XOjQndPkjz5vYkpLE9hG0BY4L7JWF9DhYKWZhBH8sZsXzrJjTBiia6f9tk
+         xJAwe/5LlE0JknRYXhNmGPWkj0m4cR/BAHbxXOlo0ncfuMtB1jSS3FavGrZmt2RoKS
+         0ZotIc9qe4fvw+qMe6SA2B+uTVlakxtncNHvvJ0LNRxEW9hQC5uFHt2ttZDZKmcERi
+         SnBt3eIrIFF/g4w480CdSN0DDwh2oEYIxmWwbT2c6IwdYBoQd2uGbXXDnRK1/iZyFE
+         LSGUPX8TnDi+w==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pI56d-00021s-KC; Wed, 18 Jan 2023 10:51:43 +0100
+Date:   Wed, 18 Jan 2023 10:51:43 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v4 19/19] irqdomain: Switch to per-domain locking
+Message-ID: <Y8fBL+h2l5Wsiq2Z@hovoldconsulting.com>
+References: <20230116135044.14998-1-johan+linaro@kernel.org>
+ <20230116135044.14998-20-johan+linaro@kernel.org>
+ <87mt6gkez4.ffs@tglx>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 1/1] platform/surface: Switch to use
- acpi_evaluate_dsm_typed()
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <markgross@kernel.org>
-References: <20230118093823.39679-1-andriy.shevchenko@linux.intel.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20230118093823.39679-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mt6gkez4.ffs@tglx>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 1/18/23 10:38, Andy Shevchenko wrote:
-> The acpi_evaluate_dsm_typed() provides a way to check the type of the
-> object evaluated by _DSM call. Use it instead of open coded variant.
+On Tue, Jan 17, 2023 at 10:50:39PM +0100, Thomas Gleixner wrote:
+> On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+> > The IRQ domain structures are currently protected by the global
+> > irq_domain_mutex. Switch to using more fine-grained per-domain locking,
+> > which may potentially speed up parallel probing somewhat.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-I think the reason I went with the non-typed version here was for the
-explicit error message. Specifically, to simplify debugging in case we'd
-get any new device that behaves differently. But since then I think MS
-discontinued the use of this driver (or at least this part) in their
-devices (no more detachable GPUs). Also, the likelihood of that
-interface changing is pretty small regardless.
-
-So I'm fine with changing that.
-
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-> ---
->   drivers/platform/surface/surface_hotplug.c | 13 +++----------
->   1 file changed, 3 insertions(+), 10 deletions(-)
+> Does it or not?
 > 
-> diff --git a/drivers/platform/surface/surface_hotplug.c b/drivers/platform/surface/surface_hotplug.c
-> index f004a2495201..7b6d887dccdb 100644
-> --- a/drivers/platform/surface/surface_hotplug.c
-> +++ b/drivers/platform/surface/surface_hotplug.c
-> @@ -101,18 +101,12 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
->   	param.type = ACPI_TYPE_INTEGER;
->   	param.integer.value = value;
->   
-> -	result = acpi_evaluate_dsm(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
-> -				   shps_dsm_fn_for_irq(type), &param);
-> -
-> +	result = acpi_evaluate_dsm_typed(handle, &shps_dsm_guid, SHPS_DSM_REVISION,
-> +					 shps_dsm_fn_for_irq(type), &param, ACPI_TYPE_BUFFER);
->   	if (!result) {
->   		dev_err(&pdev->dev, "IRQ notification via DSM failed (irq=%d, gpio=%d)\n",
->   			type, value);
->   
-> -	} else if (result->type != ACPI_TYPE_BUFFER) {
-> -		dev_err(&pdev->dev,
-> -			"IRQ notification via DSM failed: unexpected result type (irq=%d, gpio=%d)\n",
-> -			type, value);
-> -
->   	} else if (result->buffer.length != 1 || result->buffer.pointer[0] != 0) {
->   		dev_err(&pdev->dev,
->   			"IRQ notification via DSM failed: unexpected result value (irq=%d, gpio=%d)\n",
-> @@ -121,8 +115,7 @@ static void shps_dsm_notify_irq(struct platform_device *pdev, enum shps_irq_type
->   
->   	mutex_unlock(&sdev->lock[type]);
->   
-> -	if (result)
-> -		ACPI_FREE(result);
-> +	ACPI_FREE(result);
->   }
->   
->   static irqreturn_t shps_handle_irq(int irq, void *data)
+> If not then why adding all this churn for no real value?
+
+It probably doesn't make much difference, but Marc wanted per-domain
+locking:
+
+    > I'd really like to avoid a global mutex. At the very least this should
+    > be a per-domain mutex, otherwise this will serialise a lot more than
+    > what is needed.
+    
+    Yeah, I considered that too, but wanted to get your comments on this
+    first.
+    
+    Also note that the likewise global irq_domain_mutex (and
+    sparse_irq_lock) are taken in some of these paths so perhaps using finer
+    locking won't actually matter that much as this is mostly for parallel
+    probing.
+
+    https://lore.kernel.org/lkml/YuKHiZuNvN+K9NCc@hovoldconsulting.com/
+
+As part of fixing the races, this series has now replaced the per-domain
+revmap mutexes with the global irq_domain_mutex, which could possibly be
+perceived as a step in the wrong direction in this respect.
+
+This patch restores per-domain locking for non-hierarchical domains and
+extends it to hierarchical domains. This leaves the irq_domain_mutex to
+only be used for things that actually need a global lock such as the
+domain list.
+
+I consider this mostly a clean up, and I did intentionally place it last
+in order to not have the fixes depend on it.
+
+Johan
