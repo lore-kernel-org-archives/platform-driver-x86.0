@@ -2,74 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977DDC00A5A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Jan 2023 15:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CDDC004D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Jan 2023 18:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbjASPgg (ORCPT
+        id S229758AbjASSIn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Jan 2023 10:36:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
+        Thu, 19 Jan 2023 13:08:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbjASPgf (ORCPT
+        with ESMTP id S229606AbjASSIm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Jan 2023 10:36:35 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306423A85;
-        Thu, 19 Jan 2023 07:36:34 -0800 (PST)
-Date:   Thu, 19 Jan 2023 15:36:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1674142591;
-        bh=AtrJPt1hJwfWcnFIM6nDF3JL322v8i5h9vsF5NJEWZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sqi2Rxo2n+rCq0/VFskKdSqKVIAkpfBMVTh6q2UipjhMSSf1rSH2erZkkKD69l0ky
-         WdokZkf8TwXFLlvW85EWRBZlT36IUFX+NEglJiCR0ifl8rfp0mgTDQKBYa45DNMUTG
-         AXvD/VGDCcF0d5brwf3awH5wz7tkzq1rKvv8c3js=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Kevin Kuriakose <kevinmkuriakose@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
+        Thu, 19 Jan 2023 13:08:42 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D252D6923B;
+        Thu, 19 Jan 2023 10:08:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674151720; x=1705687720;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2HAQeZRGLc90JRhljo6mi9VHqdlbvFwzbqo8cX32v/0=;
+  b=AHYOqvsKPjG3X/qVVmvmxzjnOJvIxqOHBoiRNiZzk4FWpdXUa/k04AVh
+   dnRg1FKy73QgFQH618pzfVIfgRiHJH7Tyseu6jTVVAXfGQHDUFB0+RteF
+   G0cBkuwHKlCfQOhD3QUbNAKzFi5XS15UisOLa3DSzGNb9h/x5+0zSv+YG
+   /T4GJP9JAVtyU7UwQ5PIUFgfJg7/67JURujhR+T2GQwbdaKCQzPkynO8l
+   viIV4pQ5Ly1eh8gu/YDmdWRnVmuSfbS9RjgMfrn8OwYkIe2LZcnYProMa
+   6P3mNAO0bW0sqM5a6REQ98QG5bsoCm4wrgrM1i4wl7vAKZiodMd4vggrn
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="324056716"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="324056716"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 10:08:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="802733896"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="802733896"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jan 2023 10:08:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A144C36D; Thu, 19 Jan 2023 20:09:05 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add support for B450M DS3H
- WIFI-CF
-Message-ID: <20230119153628.ydfk7cbfeitycnew@t-8ch.de>
-References: <20230119150925.31962-1-kevinmkuriakose@gmail.com>
+Cc:     Shravan Sudhakar <s.shravan@intel.com>,
+        Intel Corporation <linuxwwan@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: [PATCH v2 1/1] platform/x86: int1092: Switch to use acpi_evaluate_dsm_typed()
+Date:   Thu, 19 Jan 2023 20:09:04 +0200
+Message-Id: <20230119180904.78446-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230119150925.31962-1-kevinmkuriakose@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 08:39:25PM +0530, Kevin Kuriakose wrote:
-> To the best of my knowledge this is the same board as the B450M DS3H-CF,
-> but with an added WiFi card. Name obtained using dmidecode, tested
-> with force_load on v6.1.6
-> 
-> Signed-off-by: Kevin Kuriakose <kevinmkuriakose@gmail.com>
+The acpi_evaluate_dsm_typed() provides a way to check the type of the
+object evaluated by _DSM call. Use it instead of open coded variant.
 
-Acked-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: removed unused variable (LKP)
+ drivers/platform/x86/intel/int1092/intel_sar.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-> ---
->  drivers/platform/x86/gigabyte-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 5e7e6659a..322cfaeda 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -141,6 +141,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
->  
->  static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
-> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
-> -- 
-> 2.39.0
+diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
+index e03943e6380a..352fc4596494 100644
+--- a/drivers/platform/x86/intel/int1092/intel_sar.c
++++ b/drivers/platform/x86/intel/int1092/intel_sar.c
+@@ -131,16 +131,15 @@ static acpi_status sar_get_device_mode(struct platform_device *device)
+ 	acpi_status status = AE_OK;
+ 	union acpi_object *out;
+ 	u32 rev = 0;
+-	int value;
+ 
+-	out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
+-				COMMAND_ID_DEV_MODE, NULL);
+-	if (get_int_value(out, &value)) {
++	out = acpi_evaluate_dsm_typed(context->handle, &context->guid, rev,
++				      COMMAND_ID_DEV_MODE, NULL, ACPI_TYPE_INTEGER);
++	if (!out) {
+ 		dev_err(&device->dev, "DSM cmd:%d Failed to retrieve value\n", COMMAND_ID_DEV_MODE);
+ 		status = AE_ERROR;
+ 		goto dev_mode_error;
+ 	}
+-	context->sar_data.device_mode = value;
++	context->sar_data.device_mode = out->integer.value;
+ 	update_sar_data(context);
+ 	sysfs_notify(&device->dev.kobj, NULL, SYSFS_DATANAME);
+ 
+@@ -221,11 +220,11 @@ static void sar_get_data(int reg, struct wwan_sar_context *context)
+ 
+ 	req.type = ACPI_TYPE_INTEGER;
+ 	req.integer.value = reg;
+-	out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
+-				COMMAND_ID_CONFIG_TABLE, &req);
++	out = acpi_evaluate_dsm_typed(context->handle, &context->guid, rev,
++				      COMMAND_ID_CONFIG_TABLE, &req, ACPI_TYPE_PACKAGE);
+ 	if (!out)
+ 		return;
+-	if (out->type == ACPI_TYPE_PACKAGE && out->package.count >= 3 &&
++	if (out->package.count >= 3 &&
+ 	    out->package.elements[0].type == ACPI_TYPE_INTEGER &&
+ 	    out->package.elements[1].type == ACPI_TYPE_INTEGER &&
+ 	    out->package.elements[2].type == ACPI_TYPE_PACKAGE &&
+-- 
+2.39.0
 
-Note: Patches should also always go to linux-kernel@vger.kernel.org.
-
-Thanks!
