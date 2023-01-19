@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C5C00A5A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Jan 2023 13:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E794AC46467
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Jan 2023 13:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbjASNC7 (ORCPT
+        id S230492AbjASNDS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Jan 2023 08:02:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44010 "EHLO
+        Thu, 19 Jan 2023 08:03:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjASNCU (ORCPT
+        with ESMTP id S230210AbjASNCj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Jan 2023 08:02:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B5A4AA61
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jan 2023 05:01:16 -0800 (PST)
+        Thu, 19 Jan 2023 08:02:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0166975705
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jan 2023 05:01:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674133276;
+        s=mimecast20190719; t=1674133291;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AiwDDQXpc/697ut9UoQ7GPS2h9P9OJTLU4WPLaJOKeM=;
-        b=fjVszVfy1e2g7/SIcaqe+bC7Tl1RJuv/K5ZRoD9dyy5f15cuI996z/l8X611oJAOM17rue
-        ErZNY2vMgC+gvk8zPuDMUmCBt7jgAjS5bE07l4iZ3aMBSZyK0QvV8YdZ3kI64sM1w8urwX
-        WNu8xF86vqAA45oFPx/cMC3+x9ha7cI=
+        bh=Ax+AszwJ1VLNH2BXUpHatwCYJD/kgCu/JEKN0OnYhyY=;
+        b=IH5e9V7K2RMCaMSFl0SYzmJ5cZ9YkedGpPpoctw5makiB1LS+GIY1yHE2CIUw7HI0F6+4T
+        WXhSTZETt86SNzhUHE4YBHPR0GHJVuR4U9TrgXjud2a3eECYaB9RBnF6K1VGAUOzC/xalE
+        aHUinHjn+SWuYhn4W5sL6BCT9scgow0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-275-LTu5mQ0aMU6qIXq2R4X-Fw-1; Thu, 19 Jan 2023 08:01:09 -0500
-X-MC-Unique: LTu5mQ0aMU6qIXq2R4X-Fw-1
+ us-mta-574-YgZnmQBOOpG5FPsnLtVRTg-1; Thu, 19 Jan 2023 08:01:26 -0500
+X-MC-Unique: YgZnmQBOOpG5FPsnLtVRTg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 932CC802BF5;
-        Thu, 19 Jan 2023 13:01:08 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 645A9857F82;
+        Thu, 19 Jan 2023 13:01:16 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.194.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A62C11415108;
-        Thu, 19 Jan 2023 13:01:05 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CE681415113;
+        Thu, 19 Jan 2023 13:01:12 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -54,9 +54,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH v4 01/11] leds: led-class: Add missing put_device() to led_put()
-Date:   Thu, 19 Jan 2023 14:00:43 +0100
-Message-Id: <20230119130053.111344-2-hdegoede@redhat.com>
+Subject: [PATCH v4 03/11] leds: led-class: Add __devm_led_get() helper
+Date:   Thu, 19 Jan 2023 14:00:45 +0100
+Message-Id: <20230119130053.111344-4-hdegoede@redhat.com>
 In-Reply-To: <20230119130053.111344-1-hdegoede@redhat.com>
 References: <20230119130053.111344-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,45 +66,70 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-led_put() is used to "undo" a successful of_led_get() call,
-of_led_get() uses class_find_device_by_of_node() which returns
-a reference to the device which must be free-ed with put_device()
-when the caller is done with it.
+Add a __devm_led_get() helper which registers a passed in led_classdev
+with devm for unregistration.
 
-Add a put_device() call to led_put() to free the reference returned
-by class_find_device_by_of_node().
-
-And also add a put_device() in the error-exit case of try_module_get()
-failing.
+This is a preparation patch for adding a generic (non devicetree specific)
+devm_led_get() function.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/leds/led-class.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/leds/led-class.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 6a8ea94834fa..7391d2cf1370 100644
+index 743d97b082dc..4904d140a560 100644
 --- a/drivers/leds/led-class.c
 +++ b/drivers/leds/led-class.c
-@@ -241,8 +241,10 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+@@ -274,6 +274,22 @@ static void devm_led_release(struct device *dev, void *res)
+ 	led_put(*p);
+ }
  
- 	led_cdev = dev_get_drvdata(led_dev);
- 
--	if (!try_module_get(led_cdev->dev->parent->driver->owner))
-+	if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
-+		put_device(led_cdev->dev);
- 		return ERR_PTR(-ENODEV);
++static struct led_classdev *__devm_led_get(struct device *dev, struct led_classdev *led)
++{
++	struct led_classdev **dr;
++
++	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *), GFP_KERNEL);
++	if (!dr) {
++		led_put(led);
++		return ERR_PTR(-ENOMEM);
 +	}
- 
- 	return led_cdev;
- }
-@@ -255,6 +257,7 @@ EXPORT_SYMBOL_GPL(of_led_get);
- void led_put(struct led_classdev *led_cdev)
++
++	*dr = led;
++	devres_add(dev, dr);
++
++	return led;
++}
++
+ /**
+  * devm_of_led_get - Resource-managed request of a LED device
+  * @dev:	LED consumer
+@@ -289,7 +305,6 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
+ 						  int index)
  {
- 	module_put(led_cdev->dev->parent->driver->owner);
-+	put_device(led_cdev->dev);
+ 	struct led_classdev *led;
+-	struct led_classdev **dr;
+ 
+ 	if (!dev)
+ 		return ERR_PTR(-EINVAL);
+@@ -298,17 +313,7 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
+ 	if (IS_ERR(led))
+ 		return led;
+ 
+-	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
+-			  GFP_KERNEL);
+-	if (!dr) {
+-		led_put(led);
+-		return ERR_PTR(-ENOMEM);
+-	}
+-
+-	*dr = led;
+-	devres_add(dev, dr);
+-
+-	return led;
++	return __devm_led_get(dev, led);
  }
- EXPORT_SYMBOL_GPL(led_put);
+ EXPORT_SYMBOL_GPL(devm_of_led_get);
  
 -- 
 2.39.0
