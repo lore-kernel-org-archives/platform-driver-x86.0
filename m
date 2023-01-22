@@ -2,97 +2,117 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F43C27C76
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Jan 2023 14:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0904C25B4E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Jan 2023 21:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230099AbjAVOeY (ORCPT
+        id S230014AbjAVVUn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 22 Jan 2023 09:34:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
+        Sun, 22 Jan 2023 16:20:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjAVOeX (ORCPT
+        with ESMTP id S229895AbjAVVUn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 22 Jan 2023 09:34:23 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995141A486;
-        Sun, 22 Jan 2023 06:34:22 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id ss4so24513608ejb.11;
-        Sun, 22 Jan 2023 06:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uZriZiMPIU2WK8xR5zBjT7oOvj2SaNCefYMZvu5k7X8=;
-        b=GYvBOT4U6mq8mXSWEu79oAfL4WBPJOUdBXg7VtPqRTqAOYR/xCFAr7jjl8SGUWtl2V
-         b/mSlsbxi6nPbCA5x2Xf1Ip4sITsQ+31z1BleRe3YJe0vRc/qb8ZEUjy0sDUIom24e8M
-         rGy/nrDp7Iz53WCD4DIm1JNB29j1MKHaWjAIg642bm821DRv/5mKrNXI7ptkAylpHwfJ
-         uIswh2lago45/QcOKab/n1WheVdje+FyrXJD4HZk8O9kohPjbbA8vcQ/TPxApQb0EIuA
-         N6U5CAuP04BmjHjJ5kySXouQ/llhoB0FvCoHSei1kv10XPTD86Wcgrso1y+X0WSu0JyG
-         eoCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uZriZiMPIU2WK8xR5zBjT7oOvj2SaNCefYMZvu5k7X8=;
-        b=NG3e2q0AKGq4HiZc/USL3em8Dzo9XZJX5LC/uprypaLHAdtlyhQLceVQEBU2AQx+Gw
-         pctTswRN8U61Qc0fT9Z8mFqC3oB9PXBYN1frCmFbd8hOQS4Kb0fRwTwUKg2/pIyC83bs
-         orbTqARmvPNYGxv5IUws0VlZ7tqssLOfzYRLd3Sc1IG/bCnbdHQv+x5B+yadUU4FMp3D
-         kCgKGFn6HsWVVvRJssPd6M5dtmG3bDXp6HdDq4Mt3JGcTs39f1rAtpZye3pI5GOysD2z
-         bMsagCzSOX3B13RTVPZ7jI0qcHX3ipiwU3/ltJiiWTQxGpG1+3AlSjzYcmJfa/FAB/zi
-         jRCQ==
-X-Gm-Message-State: AFqh2kq8a3x/s11NX1DEMe2G0KuuYPaEa3x5OHX4/i3ZhiAFfWxfsd4p
-        OgcG/G7fYF2jtGaFBldpXdE=
-X-Google-Smtp-Source: AMrXdXvR2IFO43ZwlaCswWZe5DBXi31YXU8sxZ3b0MrZCxWvpaMFvy2OUdfm3unbyNhTA44GtdP7iA==
-X-Received: by 2002:a17:906:95d2:b0:7c0:a6a9:64e9 with SMTP id n18-20020a17090695d200b007c0a6a964e9mr23141308ejy.36.1674398060953;
-        Sun, 22 Jan 2023 06:34:20 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id ov38-20020a170906fc2600b0084d4733c428sm18369508ejb.88.2023.01.22.06.34.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Jan 2023 06:34:20 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-        id 49626BE2EE8; Sun, 22 Jan 2023 15:34:19 +0100 (CET)
-Date:   Sun, 22 Jan 2023 15:34:19 +0100
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: amd_pmc module not autoloading on Thinkpad X13 Gen 2a
-Message-ID: <Y81Ja5Y/tgPXk5FA@eldamar.lan>
-References: <Y80NXKyaj25CtSBt@eldamar.lan>
- <MN0PR12MB6101ACCD8A5003CBB4BEF58DE2CB9@MN0PR12MB6101.namprd12.prod.outlook.com>
+        Sun, 22 Jan 2023 16:20:43 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3C512870
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jan 2023 13:20:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D218D60CFB
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jan 2023 21:20:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 40180C43338
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jan 2023 21:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674422441;
+        bh=ntdXDuXpfgekq3nOdW66DZBY0/U80qV0W3gEEf0F+dI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Q30eTe8fXocHetwUGc/w6RyB8oqiJiFSHVK7dhQrqxy2EAx53tOy851ZVKMDi/3N4
+         2ojU4oXAmqqXhOhNNByYvhtY4z9zGWTD1ogJ3FCoMBEqYoAJ0UOHg3oCX6Od0g1PKp
+         hJVUVf5BBNnE435RbBZz3jehTPhUGCSXBKaQuJZUBuBfs9ruKe+BtJhwxd5FyoywTG
+         kyMpfMZEXjJ0/Q5IICRCDhsiFxmv8uXh2aYeeZ8b5PTfHw3+bVU0LlP6KukHzFa7sf
+         wIzFFZA6XzhInKiVfkmkMYM0wkiQ5SZMCB2IePFJvudzpXaYPNLjTmC0vnKHcp6rGn
+         bwq4JNCAg61Ow==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 32378C43144; Sun, 22 Jan 2023 21:20:41 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 22 Jan 2023 21:20:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: nikodll@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-o0qmsNCOxY@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN0PR12MB6101ACCD8A5003CBB4BEF58DE2CB9@MN0PR12MB6101.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Thanks for your followup.
+nikodll@gmail.com changed:
 
-On Sun, Jan 22, 2023 at 02:08:00PM +0000, Limonciello, Mario wrote:
-> [AMD Official Use Only - General]
-> 
-> Salvatore,
-> 
-> The issue has been debugged to be an s3 issue not an s0ix issue.
-> This patch series has been submitted for it.
-> 
-> https://lore.kernel.org/linux-gpio/20230121134812.16637-1-mario.limonciello@amd.com/T/#t
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |nikodll@gmail.com
 
-Yes I'm aware of that (and planning for Debian to queue them up after
-acceptance). Sorry I was unclear maybe. The other part of the question
-is, would not autoloading amd_pmc be an issue, and what information
-would be helpful to gather to tackle this?
+--- Comment #284 from nikodll@gmail.com ---
+I have the same or related issue with Asus Pro WS W680-ACE IPMI motherboard.
+The following dmesg output is produced when I'm trying to "modprobe nct6775"
+and lm_sensors do not show any PWM fan/temp values from this chip:
 
-Regards,
-Salvatore
+[ 1001.509854] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+[ 1001.509868] ACPI Warning: SystemIO range
+0x0000000000000295-0x0000000000000296 conflicts with OpRegion
+0x0000000000000290-0x0000000000000299 (\RMTW.SHWM) (20220331/utaddress-204)
+[ 1001.509880] ACPI: OSL: Resource conflict; ACPI support missing from driv=
+er?
+
+$ cat /sys/class/dmi/id/board_name
+Pro WS W680-ACE IPMI
+
+$ zcat /proc/config.gz | grep -i asus
+CONFIG_USB_PEGASUS=3Dm
+CONFIG_TABLET_USB_PEGASUS=3Dm
+CONFIG_SENSORS_ASUS_WMI=3Dm
+CONFIG_SENSORS_ASUS_EC=3Dm
+CONFIG_HID_ASUS=3Dm
+CONFIG_ASUS_LAPTOP=3Dm
+CONFIG_ASUS_WIRELESS=3Dm
+CONFIG_ASUS_WMI=3Dm
+CONFIG_ASUS_NB_WMI=3Dm
+CONFIG_ASUS_TF103C_DOCK=3Dm
+
+$ lsmod | grep -i -E \(wmi\|asus\)
+wmi                    32768  1 video
+
+$ uname -a
+Linux calculate 6.1.7-gentoo-dist #1 SMP PREEMPT_DYNAMIC Wed Jan 18 12:31:42
+-00 2023 x86_64 13th Gen Intel(R) Core(TM) i9-13900 GenuineIntel GNU/Linux
+
+Is there any way how I can assist in resolving it, testing patches etc?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
