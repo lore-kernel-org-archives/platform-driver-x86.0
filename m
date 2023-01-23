@@ -2,83 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB1AC54E94
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 15:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BD1C38142
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 15:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbjAWPG1 (ORCPT
+        id S232226AbjAWPLM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 10:06:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
+        Mon, 23 Jan 2023 10:11:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231671AbjAWPG1 (ORCPT
+        with ESMTP id S232082AbjAWPLL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 10:06:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AAA829157
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:05:30 -0800 (PST)
+        Mon, 23 Jan 2023 10:11:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B784976F
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674486329;
+        s=mimecast20190719; t=1674486627;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fTYVbkyKdvuEmrdt1Pb2ChZH1pUOd1K3CR8rzj7RrTc=;
-        b=E6jCVbLpIIaeXD8Qak1Msgp/XC2QIPAayXqHPOwv3wG+5mE4kbxb1XTz782Bv3Oxc7LrDx
-        iriICmnsq5Jgn8w6uHvQLrIgnCaGdlei34fq17/UE3kWmOk9dvXN+wJBzeTWL2GV2lXwds
-        guZiScQdIjdXy1LuN4eoTNERpluGFVs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fmap69GAARLOEaTycvmFa7dlDHy8lvFIgVzaeRPkzcs=;
+        b=ZGUp1px6H7WVCTvETv4TT49fPS4RjnIextafIAJnxOxIMsnipPRmxogSVEmSCbfGlRwkOi
+        VObl9FFQKF33gFZ3fWYqIumN/MtLi+BJ5A/yWgtWSLElkYNIxluulIT1L3A0IAPTsD6xzz
+        +pGlUbNq9PX60ZBtCZ+1d0zgjM9l7Mg=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-641-uUqjr8vCNHuCNSrEmDYh2g-1; Mon, 23 Jan 2023 10:05:28 -0500
-X-MC-Unique: uUqjr8vCNHuCNSrEmDYh2g-1
-Received: by mail-ed1-f70.google.com with SMTP id h18-20020a056402281200b0049e5078a6c3so8660236ede.12
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:05:27 -0800 (PST)
+ us-mta-180-vC08Pu8BNyGk2NT9oBnkeQ-1; Mon, 23 Jan 2023 10:10:26 -0500
+X-MC-Unique: vC08Pu8BNyGk2NT9oBnkeQ-1
+Received: by mail-ed1-f72.google.com with SMTP id z2-20020a056402274200b0049e48d86760so8612361edd.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:10:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fTYVbkyKdvuEmrdt1Pb2ChZH1pUOd1K3CR8rzj7RrTc=;
-        b=A9B2DQpTyVhT0QoS5EnfllN86TnrTWlBcksS3zo/Od7EYz9vBZEGstHhxXzUi0Xder
-         G7RMYCc/PrQWE2rkLMjuauH/FgcXJsx14/VjsKl45VyaJPNpC3y+p6qiSFboV5EtJvSw
-         uEHuzzjzlG2YWWZs3wZj/wr0FKR539kIC9lfSfazD0V5WvAzsIT9J3fSGZCLz7HLnbjm
-         fPenBKdXPPMSyKjiCeOfPpLr+1rgCwZVZq8VQ4yL0gptB3E/DlUvby+Q/eq/GOiYiX7B
-         Xif8+JRH9yDoBVMv3XUIGyP98NUpGQ+HSpPhL08yG4tEPDtHs511cfRKJSW3ZZxGx/7X
-         vP5g==
-X-Gm-Message-State: AFqh2kr+Q8B5BivAAESUGPniX+WnYwycCNsGNe4uFFQDpbV2oeX4Ttxv
-        CILb28Nb+64eVnoaJk7t6eJ3BYAmDNkgWlYAMLILqt4Cc3tl+re2H5ZfzqmR7am7E2NlW6MH9co
-        TxMYvUi3xJ+oRwF4a9ZmVrgvl44Xef07o6w==
-X-Received: by 2002:a17:906:6d9:b0:7c0:bbab:22e5 with SMTP id v25-20020a17090606d900b007c0bbab22e5mr26447570ejb.16.1674486326735;
-        Mon, 23 Jan 2023 07:05:26 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXtaGb80KCnrGSq57l2+0T4QNJMwpzSTqJEVKoqBS/+WGl59/L/q9++NXn4Ao5pSBcZKRJIYwA==
-X-Received: by 2002:a17:906:6d9:b0:7c0:bbab:22e5 with SMTP id v25-20020a17090606d900b007c0bbab22e5mr26447546ejb.16.1674486326442;
-        Mon, 23 Jan 2023 07:05:26 -0800 (PST)
+        bh=fmap69GAARLOEaTycvmFa7dlDHy8lvFIgVzaeRPkzcs=;
+        b=k84jh0RxdGjwBlE3MK/beYIc5V9Udh0+dQq1OCnirNn9mkkE3HKd+k1V4I4dyE4eUn
+         0XsmKYmIa58WxEAWuocUwRbDELvwTYu2Z84nIhT9EpR5RFuxxMY9fGzaOmGlgWxo+0AX
+         WFjb4xg3oxWPuvwQPAEOcbeTxgdmsFYF0llbRxtjSHfuF3Je1+0IrKqKTPs6GESMA/Zf
+         4xavpo39UNbsdG6TtPetrYxd45Fez3g2l8d5uwAQ55PxBsuNxGl/TPLWeG9DzCG3z1br
+         znT6Sr1GBD6FALY6iJHFC6F+I20Ob9S1+uZeO310Eb/P0ADkZ+BNj+5EnCSUPiWolb6b
+         Ra3w==
+X-Gm-Message-State: AFqh2krBvz23xrdAQ/UkPVvDCKiBmH7u/q+yLKlS3+v9PF8rfitEH2Ha
+        3KAvSN1AagcwxLUn2GAw7zoxWC44cgYWPQNmaDixftmrNuisn/uyV0KU2WGk1xacNVVo/sDaIqZ
+        aaoGDET2+49IjjQhgqLcHEidGZOW8G9MdiA==
+X-Received: by 2002:a17:906:8d0f:b0:870:b950:18d4 with SMTP id rv15-20020a1709068d0f00b00870b95018d4mr28481232ejc.5.1674486625027;
+        Mon, 23 Jan 2023 07:10:25 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXv+mOXznbb9ctsRkLFnb1W9dMN1iRIkGODPHCo2RtV1KcMF0smb9ggMnQqPayBO1qTkPZ13Xg==
+X-Received: by 2002:a17:906:8d0f:b0:870:b950:18d4 with SMTP id rv15-20020a1709068d0f00b00870b95018d4mr28481221ejc.5.1674486624818;
+        Mon, 23 Jan 2023 07:10:24 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id y19-20020a1709060a9300b0084debc351b3sm18942475ejf.20.2023.01.23.07.05.25
+        by smtp.gmail.com with ESMTPSA id g21-20020a170906869500b0084d36fd208esm21416112ejx.18.2023.01.23.07.10.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 07:05:25 -0800 (PST)
-Message-ID: <8d087bd5-175a-67ab-22c6-1eb8e72c0485@redhat.com>
-Date:   Mon, 23 Jan 2023 16:05:25 +0100
+        Mon, 23 Jan 2023 07:10:24 -0800 (PST)
+Message-ID: <1db86ea3-a658-fe4f-53ae-cc16e5fa125c@redhat.com>
+Date:   Mon, 23 Jan 2023 16:10:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 0/3] ACPI: video/apple-gmux: Improve apple-gmux backlight
- detection
+Subject: Re: [PATCH 2/3] platform/x86: apple-gmux: Add apple_gmux_detect()
+ helper
 Content-Language: en-US
+From:   Hans de Goede <hdegoede@redhat.com>
 To:     Lukas Wunner <lukas@wunner.de>
 Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
         Aditya Garg <gargaditya08@live.com>,
         Mark Gross <mgross@linux.intel.com>,
         linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Emmanouil Kouroupakis <kartebi@gmail.com>
+        platform-driver-x86@vger.kernel.org
 References: <20230123113750.462144-1-hdegoede@redhat.com>
- <20230123120900.GA1924@wunner.de>
- <255bf66e-eb27-af2b-9a13-8b7d4b7b3c46@redhat.com>
- <20230123135827.GB2649@wunner.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230123135827.GB2649@wunner.de>
+ <20230123113750.462144-3-hdegoede@redhat.com>
+ <20230123134907.GA2649@wunner.de>
+ <9fc84f34-669e-a89c-52d9-c714fe8e4e49@redhat.com>
+ <20230123142335.GA31736@wunner.de>
+ <a02857d6-83c1-07f7-ebf0-f0b15b190f60@redhat.com>
+In-Reply-To: <a02857d6-83c1-07f7-ebf0-f0b15b190f60@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -87,90 +88,102 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/23/23 14:58, Lukas Wunner wrote:
-> On Mon, Jan 23, 2023 at 01:38:37PM +0100, Hans de Goede wrote:
->> On 1/23/23 13:09, Lukas Wunner wrote:
->>> On Mon, Jan 23, 2023 at 12:37:47PM +0100, Hans de Goede wrote:
->>>> Some apple laptop models have an ACPI device with a HID of APP000B
->>>> and that device has an IO resource (so it does not describe the new
->>>> unsupported MMIO based gmux type), but there actually is no gmux
->>>> in the laptop at all.
+On 1/23/23 16:05, Hans de Goede wrote:
+> Hi,
+> 
+> On 1/23/23 15:23, Lukas Wunner wrote:
+>> On Mon, Jan 23, 2023 at 03:13:28PM +0100, Hans de Goede wrote:
+>>> On 1/23/23 14:49, Lukas Wunner wrote:
+>>>> On Mon, Jan 23, 2023 at 12:37:49PM +0100, Hans de Goede wrote:
+>>>>> --- a/include/linux/apple-gmux.h
+>>>>> +++ b/include/linux/apple-gmux.h
+>>>> [...]
+>>>>> +static inline bool apple_gmux_is_indexed(unsigned long iostart)
+>>>>> +{
+>>>>> +	u16 val;
+>>>>> +
+>>>>> +	outb(0xaa, iostart + 0xcc);
+>>>>> +	outb(0x55, iostart + 0xcd);
+>>>>> +	outb(0x00, iostart + 0xce);
+>>>>> +
+>>>>> +	val = inb(iostart + 0xcc) | (inb(iostart + 0xcd) << 8);
+>>>>> +	if (val == 0x55aa)
+>>>>> +		return true;
+>>>>> +
+>>>>> +	return false;
+>>>>> +}
 >>>>
->>>> This patch-series improves the drivers/acpi/video_detect.c so that
->>>> it no longer tries to use the non present gmux in this case.
->>>>
->>>> Note I'm still waiting for testing feedback from the reporter of
->>>> this problem. But from the logs the problem is clear
->>>> (the logs show: "apple_gmux: gmux device not present")
+>>>> Something like this, and especially the large apple_gmux_detect() below,
+>>>> should not live in a header file.
 >>>
->>> Please provide a link to the original report.  I would also like to
->>> know the exact MacBook model used and I would like to see full dmesg
->>> output as well as an acpidump.
+>>> I understand where you are coming from, but these functions really
+>>> are not that large.
+>>>
+>>>> Why can't apple_gmux.ko just export a detection function which is used
+>>>> both internally and as a helper by the backlight detection?
+>>>
+>>> Both the acpi-video code and the apple-gmux code can be built as
+>>> modules. So this will break if the acpi-video code get builtin
+>>> and the apple-gmux code does not.
+>>>
+>>> This can be worked around in Kconfig by adding something like:
+>>>
+>>> 	depends on APPLE_GMUX || APPLE_GMUX=n
+>>>
+>>> to the ACPI_VIDEO Kconfig bits and then cross our fingers
+>>> we don't get some Kconfig circular dep thing causing things
+>>> to error out.
 >>
->> I only have a report by private email. This does include full dmesg
->> output and an acpidump. I will forward this to you in a private
->> email.
+>> Can we force APPLE_GMUX to be built-in if ACPI_VIDEO is?
 >>
->> The reporter describes their model as a macbookpro8,1.
->>
->>> What you're saying here is that there's a fake APP000B device present
->>> in DSDT
->>
->> Yes that is exactly what I'm saying.
+>> Would making APPLE_GMUX depend on ACPI_VIDEO (instead of
+>> "ACPI_VIDEO=n || ACPI_VIDEO") achieve that?  I believe
+>> APPLE_GMUX would then inherit the setting of ACPI_VIDEO?
 > 
-> That's a 2011 13" MacBook Pro which indeed does not have dual GPUs.
+> I'm afraid that won't work, make it depend on ACPI_VIDEO would not
+> make it inherit ACPI_VIDEO's setting instead it would be limited
+> to ACPI_VIDEO's setting.
 > 
-> I searched for other affected models and this seems to be more common
-> than I thought:
+> So if we make APPLE_GMUX "depends on ACPI_VIDEO" and ACPI_VIDEO=y
+> then APPLE_GMUX can be both Y or M, where as if ACPI_VIDEO=m
+> then APPLE_GMUX can only be m.
 > 
-> MacBookPro5,4
-> https://pastebin.com/8Xjq7RhS
+> Note that the APPLE_GMUX Kconfig "ACPI_VIDEO=n || ACPI_VIDEO"
+> bit is obsolete and should be dropped (I have already prepared
+> a patch for this), the apple_gmux code no longer depends on any
+> of the ACPI_VIDEO symbols.  Which does make it possible to
+> add a dependency the other way.
 > 
-> MacBookPro8,1
-> https://linux-hardware.org/?probe=e513cfbadb&log=dmesg
+> I just tried the following:
 > 
-> MacBookPro9,2
-> https://bugzilla.kernel.org/attachment.cgi?id=278961
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -210,6 +210,8 @@ config ACPI_VIDEO
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on INPUT
+>  	depends on ACPI_WMI || !X86
+> +	# ACPI_VIDEO uses symbols from APPLE_GMUX if that is enabled
+> +	depends on APPLE_GMUX || APPLE_GMUX=n
+>  	select THERMAL
+>  	help
+>  	  This driver implements the ACPI Extensions For Display Adapters
 > 
-> MacBookPro10,2
-> https://lkml.org/lkml/2014/9/22/657
-> 
-> MacBookPro11,2
-> https://forums.fedora-fr.org/viewtopic.php?id=70142
-> 
-> MacBookPro11,4
-> https://raw.githubusercontent.com/im-0/investigate-card-reader-suspend-problem-on-mbp11.4/master/test-16/dmesg
-> 
-> These are 13" and 15" models from the pre-retina and retina era
-> (2009 - 2015).  None of them have dual GPUs.  (Only a subset of
-> the 15" and 17" models had dual GPUs.)  Apple sloppily included
-> a GMUX device on all of them and it wasn't a problem so far
-> because the gmux driver detects non-presence and bails out,
-> but it throws off the new backlight algorithm.
-> 
-> This is really sad. :(
-> 
-> Please add a Reported-by to your commits
+> And that does not cause any circular dep issues it seems
 
-I was about to say that Emmanouil may want to keep their email
-private. But I see you've already added them to the Cc, so
-now the email is part of the platform-driver-x86 archives.
+And 10 seconds after hitting send I realized that things are not this simple,
+because a bunch of other Kconfig bits do "select ACPI_VIDEO" and Kconfig
+bits doing "select FOO" much make sure all the dependencies of FOO are met
+and we have just added a new dependency...
 
-Emmanouil, is it ok if I add a line like this:
+So all those other places then would need something similar. Kconfig is
+great, but with intra dependencies it really can get quite hairy.
 
-Reported-by: Emmanouil Kouroupakis <kartxxx@gmail.com>
-
-to the commit message of v2 of the patches ? This gives you credit
-for reporting the bug, but it also exposes your email address
-in public places.
-
-> as well as the list I've
-> provided above so that we've got a complete record in the git history.
-
-Ack, I'll add the list of devices to v2 of the patches.
+So IMHO the (really not that big) static inline detect function really
+is the best solution here.
 
 Regards,
 
 Hans
+
 
 
