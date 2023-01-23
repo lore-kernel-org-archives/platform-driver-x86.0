@@ -2,77 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCB2C38142
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 13:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644AFC05027
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 13:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbjAWN4B (ORCPT
+        id S230185AbjAWN4W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 08:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
+        Mon, 23 Jan 2023 08:56:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbjAWN4A (ORCPT
+        with ESMTP id S231584AbjAWN4W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 08:56:00 -0500
+        Mon, 23 Jan 2023 08:56:22 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6C214221
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:55:19 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D8212865
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674482118;
+        s=mimecast20190719; t=1674482140;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hAfU51i6h1AKqDjTc93qMy/AcUh5PR71ti/ig/qkQVo=;
-        b=W09PP4mNIZTpCzzxmzPapLIm1p6P1M1em4wP6RGbLkHlGUFiFPjEPS+D4yft7SDCOM3xWY
-        TtOGXlvz/TgFp3YViwSSQ8hyrwY7Z4DLjRq0bBWKzlUukmHcApflx2gk2u9Rikw9RkopFT
-        oIwoQp7/YEk+ar0UKFnnoavgPuhJXeA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=b5Oi99eeKZiuzk7Lt402pXDhGidunVt9wodCPyNuBp4=;
+        b=XHvkGdTz3P6qS+FDl5DtuN8NWHnBZix2PzLDzh0bsoO/VdQnQPK4UrN+e+KqtMBb1yv+Ip
+        3j62HD0+gvV9IEJfvSSmx5CxYJBJ91slIwJ32zeJVuhoZXqrcAy6XU2PPwxVn2DDVsGMY1
+        Rmna8h4yAoEtq9Ak9Tme+DGIgpFZb78=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-460-YU1k4naqMBSlyZep1J-YdA-1; Mon, 23 Jan 2023 08:55:17 -0500
-X-MC-Unique: YU1k4naqMBSlyZep1J-YdA-1
-Received: by mail-ej1-f72.google.com with SMTP id sa32-20020a1709076d2000b0084d4593797eso7772704ejc.16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:55:17 -0800 (PST)
+ us-mta-444-nklyodkSMpSWS4urQfqEBQ-1; Mon, 23 Jan 2023 08:55:39 -0500
+X-MC-Unique: nklyodkSMpSWS4urQfqEBQ-1
+Received: by mail-ed1-f72.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so8639345edc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:55:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hAfU51i6h1AKqDjTc93qMy/AcUh5PR71ti/ig/qkQVo=;
-        b=qSORkwXJls9SVErrVPEFnc/2kFleKZb5IzdkRJtyBdDUYuu+jhZ4OUmykvz6ST5+1n
-         c46r9CNSySKYNiKe7Czw24AxfeK/yXNao2r/Jg4d7Iaxb5AkADz5/eghKQlz81ePE8tL
-         yQFThDiPR2gZoa8BWMWo/oMy8Eidgx0/kFpJ6jxHti4aRWdi8iU/OQw7vXANGNQF8gdm
-         149jMAPbf9hWdgvRTBz9/WwrCwz/BfeEG5AY0bATZPnwxqtgZEpVXG64RB9c4AqnmcD/
-         5CZ2GM0W2eZtnY0MFVwQ5tZJJjnespx0DlYLZZtJIv9lUQw28/fikbZf5b9ywgH1GdQF
-         4LZQ==
-X-Gm-Message-State: AFqh2koFG4+0ngxwyB/7E5JrRgRi4oHEHaNOu4o4yGIDPWkCJEGlyM8o
-        i7Y2nFH0vF92khEASrXXF8bcHwnxadHQy6v7oQVMC9WAkkKrMeN8eNORHGrRkybR80UdThgAuRu
-        OZmV9VfhRepM4U1zP/gH/oGA3Cut+h6Ru5w==
-X-Received: by 2002:a05:6402:138c:b0:499:b53f:1c56 with SMTP id b12-20020a056402138c00b00499b53f1c56mr24771246edv.38.1674482116437;
-        Mon, 23 Jan 2023 05:55:16 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXv6Cs76d400bpnW0BaVuJZ3pPDbiiXsD8B9T6K1dY/QrG2pbjBeP06fatkrTTY9bw+L9N0OOg==
-X-Received: by 2002:a05:6402:138c:b0:499:b53f:1c56 with SMTP id b12-20020a056402138c00b00499b53f1c56mr24771230edv.38.1674482116206;
-        Mon, 23 Jan 2023 05:55:16 -0800 (PST)
+        bh=b5Oi99eeKZiuzk7Lt402pXDhGidunVt9wodCPyNuBp4=;
+        b=OYGjsqKtgWlGB0slztBk+9+m/vMnrlvzWdVOKQUI7Av1gzbE09oNe88wML4RTyRuS+
+         ZpWeP0tIyr5F77NKhKRWF13Il0K2JnaNJbpJrFtoancV5VgJRZAfvDOqW8q14ocfK6fM
+         lOABOfYfp7ZwsFhtdxSDZNcPPdcKFTLsZu2p5T1u0nZPmqrfhvtU61vZ9aS3LBgZt1Wp
+         q8nchvVpjrUv3c7uwRzQ911Q8NxwTi/PUKvb9H0YH3L6v5zztHvwWVdsZ3uTJ2B3DXGi
+         9Ehz9AuHMUSeJns+ao1BGFGAp36kW/PnrtfGVgTuUrz81aGpFBB5Vh465C9V7RSSN4U2
+         pMtQ==
+X-Gm-Message-State: AFqh2koJsCJxgf9tPl7P97ZdTsbP6NLnMzu67d/v4F2IdXahMv321uMY
+        y1Kb/dI1EVpCgQ9ruWm8V2amvWKkiTM1dMHCb1hFRq/FK+W7iRg/KfH+iEs9c3Y9RKHucR6oSfH
+        s+RmhEfkKHenAc05cLzCt61Q83xNnc3tGEA==
+X-Received: by 2002:a17:907:8b87:b0:877:91b2:b11a with SMTP id tb7-20020a1709078b8700b0087791b2b11amr13705515ejc.76.1674482137567;
+        Mon, 23 Jan 2023 05:55:37 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtGOy09GgPS3i8dzNkmyhPjZbGpXFQ/KruoeKvfMXEpZDppyPHGkjt0v0W6TKdhT5HfM3JtVw==
+X-Received: by 2002:a17:907:8b87:b0:877:91b2:b11a with SMTP id tb7-20020a1709078b8700b0087791b2b11amr13705499ejc.76.1674482137347;
+        Mon, 23 Jan 2023 05:55:37 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ed6-20020a056402294600b00499e5659988sm16090939edb.68.2023.01.23.05.55.15
+        by smtp.gmail.com with ESMTPSA id lb19-20020a170907785300b0084d1efe9af6sm21972880ejc.58.2023.01.23.05.55.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 05:55:15 -0800 (PST)
-Message-ID: <3e00de1c-4dc8-3032-b085-824056529b73@redhat.com>
-Date:   Mon, 23 Jan 2023 14:55:14 +0100
+        Mon, 23 Jan 2023 05:55:36 -0800 (PST)
+Message-ID: <74a63457-52fd-2f16-1b76-d3b3497b5a5d@redhat.com>
+Date:   Mon, 23 Jan 2023 14:55:36 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix kbd_dock_devid tablet-switch
- reporting
+Subject: Re: [PATCH 1/2] platform/x86: amd: pmc: Disable IRQ1 wakeup for
+ RN/CZN
 Content-Language: en-US
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-References: <20230120143441.527334-1-hdegoede@redhat.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc:     kai.heng.feng@canonical.com, xaver.hugl@gmail.com,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230120191519.15926-1-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230120143441.527334-1-hdegoede@redhat.com>
+In-Reply-To: <20230120191519.15926-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,87 +81,152 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/20/23 15:34, Hans de Goede wrote:
-> Commit 1ea0d3b46798 ("platform/x86: asus-wmi: Simplify tablet-mode-switch
-> handling") unified the asus-wmi tablet-switch handling, but it did not take
-> into account that the value returned for the kbd_dock_devid WMI method is
-> inverted where as the other ones are not inverted.
+On 1/20/23 20:15, Mario Limonciello wrote:
+> By default when the system is configured for low power idle in the FADT
+> the keyboard is set up as a wake source.  This matches the behavior that
+> Windows uses for Modern Standby as well.
 > 
-> This causes asus-wmi to report an inverted tablet-switch state for devices
-> which use the kbd_dock_devid, which causes libinput to ignore touchpad
-> events while the affected T10x model 2-in-1s are docked.
+> It has been reported that a variety of AMD based designs there are
+> spurious wakeups are happening where two IRQ sources are active.
 > 
-> Add inverting of the return value in the kbd_dock_devid case to fix this.
+> For example:
+> ```
+> PM: Triggering wakeup from IRQ 9
+> PM: Triggering wakeup from IRQ 1
+> ```
 > 
-> Fixes: 1ea0d3b46798 ("platform/x86: asus-wmi: Simplify tablet-mode-switch handling")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> In these designs IRQ 9 is the ACPI SCI and IRQ 1 is the keyboard.
+> One way to trigger this problem is to suspend the laptop and then unplug
+> the AC adapter.  The SOC will be in a hardware sleep state and plugging
+> in the AC adapter returns control to the kernel's s2idle loop.
+> 
+> Normally if just IRQ 9 was active the s2idle loop would advance any EC
+> transactions and no other IRQ being active would cause the s2idle loop
+> to put the SOC back into hardware sleep state.
+> 
+> When this bug occurred IRQ 1 is also active even if no keyboard activity
+> occurred. This causes the s2idle loop to break and the system to wake.
+> 
+> This is a platform firmware bug triggering IRQ1 without keyboard activity.
+> This occurs in Windows as well, but Windows will enter "SW DRIPS" and
+> then with no activity enters back into "HW DRIPS" (hardware sleep state).
+> 
+> This issue affects Renoir, Lucienne, Cezanne, and Barcelo platforms. It
+> does not happen on newer systems such as Mendocino or Rembrandt.
+> 
+> It's been fixed in newer platform firmware.  To avoid triggering the bug
+> on older systems check the SMU F/W version and adjust the policy at suspend
+> time for s2idle wakeup from keyboard on these systems. A lot of thought
+> and experimentation has been given around the timing of disabling IRQ1,
+> and to make it work the "suspend" PM callback is restored.
+> 
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Reported-by: Xaver Hugl <xaver.hugl@gmail.com>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2115
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1951
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-I have added this to my review-hans branch now.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
 > ---
->  drivers/platform/x86/asus-wmi.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+>  drivers/platform/x86/amd/pmc.c | 50 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 104188d70988..1038dfdcdd32 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -225,6 +225,7 @@ struct asus_wmi {
->  
->  	int tablet_switch_event_code;
->  	u32 tablet_switch_dev_id;
-> +	bool tablet_switch_inverted;
->  
->  	enum fan_type fan_type;
->  	enum fan_type gpu_fan_type;
-> @@ -493,6 +494,13 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
+> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+> index 8d924986381be..be1b49824edbd 100644
+> --- a/drivers/platform/x86/amd/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/rtc.h>
+> +#include <linux/serio.h>
+>  #include <linux/suspend.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/uaccess.h>
+> @@ -653,6 +654,33 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+>  	return -EINVAL;
 >  }
 >  
->  /* Input **********************************************************************/
-> +static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
+> +static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
 > +{
-> +	input_report_switch(asus->inputdev, SW_TABLET_MODE,
-> +			    asus->tablet_switch_inverted ? !value : value);
-> +	input_sync(asus->inputdev);
+> +	struct device *d;
+> +	int rc;
+> +
+> +	if (!pdev->major) {
+> +		rc = amd_pmc_get_smu_version(pdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	if (pdev->major > 64 || (pdev->major == 64 && pdev->minor > 65))
+> +		return 0;
+> +
+> +	d = bus_find_device_by_name(&serio_bus, NULL, "serio0");
+> +	if (!d)
+> +		return 0;
+> +	if (device_may_wakeup(d)) {
+> +		dev_info_once(d, "Disabling IRQ1 wakeup source to avoid platform firmware bug\n");
+> +		disable_irq_wake(1);
+> +		device_set_wakeup_enable(d, false);
+> +	}
+> +	put_device(d);
+> +
+> +	return 0;
 > +}
 > +
->  static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
+>  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
 >  {
->  	struct device *dev = &asus->platform_device->dev;
-> @@ -501,7 +509,7 @@ static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event
->  	result = asus_wmi_get_devstate_simple(asus, dev_id);
->  	if (result >= 0) {
->  		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
-> -		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> +		asus_wmi_tablet_sw_report(asus, result);
->  		asus->tablet_switch_dev_id = dev_id;
->  		asus->tablet_switch_event_code = event_code;
->  	} else if (result == -ENODEV) {
-> @@ -534,6 +542,7 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
->  	case asus_wmi_no_tablet_switch:
->  		break;
->  	case asus_wmi_kbd_dock_devid:
-> +		asus->tablet_switch_inverted = true;
->  		asus_wmi_tablet_sw_init(asus, ASUS_WMI_DEVID_KBD_DOCK, NOTIFY_KBD_DOCK_CHANGE);
->  		break;
->  	case asus_wmi_lid_flip_devid:
-> @@ -573,10 +582,8 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
->  		return;
+>  	struct rtc_device *rtc_device;
+> @@ -782,6 +810,25 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
+>  	.check = amd_pmc_s2idle_check,
+>  	.restore = amd_pmc_s2idle_restore,
+>  };
+> +
+> +static int __maybe_unused amd_pmc_suspend_handler(struct device *dev)
+> +{
+> +	struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
+> +
+> +	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
+> +		int rc = amd_pmc_czn_wa_irq1(pdev);
+> +
+> +		if (rc) {
+> +			dev_err(pdev->dev, "failed to adjust keyboard wakeup: %d\n", rc);
+> +			return rc;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler, NULL);
+> +
+>  #endif
 >  
->  	result = asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id);
-> -	if (result >= 0) {
-> -		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> -		input_sync(asus->inputdev);
-> -	}
-> +	if (result >= 0)
-> +		asus_wmi_tablet_sw_report(asus, result);
->  }
->  
->  /* dGPU ********************************************************************/
+>  static const struct pci_device_id pmc_pci_ids[] = {
+> @@ -980,6 +1027,9 @@ static struct platform_driver amd_pmc_driver = {
+>  		.name = "amd_pmc",
+>  		.acpi_match_table = amd_pmc_acpi_ids,
+>  		.dev_groups = pmc_groups,
+> +#ifdef CONFIG_SUSPEND
+> +		.pm = &amd_pmc_pm,
+> +#endif
+>  	},
+>  	.probe = amd_pmc_probe,
+>  	.remove = amd_pmc_remove,
 
