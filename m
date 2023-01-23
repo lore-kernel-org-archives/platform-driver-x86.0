@@ -2,143 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE269C38142
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 19:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1C4C25B50
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 21:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbjAWTVD (ORCPT
+        id S229791AbjAWVmo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 14:21:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        Mon, 23 Jan 2023 16:42:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjAWTVC (ORCPT
+        with ESMTP id S229514AbjAWVmn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 14:21:02 -0500
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D207A12F04;
-        Mon, 23 Jan 2023 11:20:58 -0800 (PST)
-Received: by mail-ej1-f52.google.com with SMTP id v6so33279971ejg.6;
-        Mon, 23 Jan 2023 11:20:58 -0800 (PST)
+        Mon, 23 Jan 2023 16:42:43 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6F610429;
+        Mon, 23 Jan 2023 13:42:42 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id z9-20020a17090a468900b00226b6e7aeeaso12244615pjf.1;
+        Mon, 23 Jan 2023 13:42:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDD135jW/NyYj2u2IXG8tYJYPCEObqA6m9pB/saDvpQ=;
+        b=h8PZTgkFjfM/+itkxqzflz2j/csRwrYZs15LZXlAf7S3MFY1Dpf3pqxTtPr11x3mKk
+         ipO5imVlWqmtemuf3Bzb8gukFpMF6Z3/hHV1xFpQGdi33mYVYPchDlzh++ovQkAY7s8w
+         5PomO59Db2Vnv9C6oMRj36uPUZG14J2JZnbf1B5MTfBhjOATos6kZv+O0VAbtDhJ/gdu
+         iX+hVLULXGIW0prqblDWT97b7+K3PSK5GQrqDVw5bJghl/OucQ7xqH3YF6yo9Ia94ync
+         EIhCOGGVQhP5K8PurZ/rkPMGxVxGl7z0Sisc+ci0qzvfZz4IV+n81f52ueoXD3JWDnh5
+         335w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MyveUL1w6/9AEHHX4H67XuRj9jaB5D6hXjnDA10SVdo=;
-        b=pG6LIBc4b1BbajaN3tjo4sqqgTO3jXxf6P4LZzeMA8JZhoR6b8Vm6QKZ+k0NbEUCpw
-         l66EMOPF+QDuRH9Dtz6PTNSVsHgpHbINOmOO66VOJWSXHBPxIIOiUZ7Msm/oRBg+AQU3
-         NsABWmu1sD5japXUsEY0DMVTtO0fXA2Qst3/N59pKQ39Qr6wVj3P4FZv6hIILYq2/KVM
-         FkF9lKnLQYUyOsl6yjuhrqbmcVyNy24MqnipzJHtZk17Bt8KLc/N371eMZbjhiE6MkDc
-         jkQ1k0kqicUZYHmcxLe02sQQX1sqgO4ZOuljLmF+C9iLsavhsqkyfJ72ORAUKHT6J99J
-         guHw==
-X-Gm-Message-State: AFqh2kqsITNS5vdkyLf7RTTaUcQhOtLSGEWRzpjJot5rlbtCItiVy/k/
-        k896Bpzd14Fikk3pkxoTlrqGZmasB0d3y/6AtNk=
-X-Google-Smtp-Source: AMrXdXv9boDRwSCBDEvZU+bHzhKD6a+TebngTyi0ePL1a+K7sI7Xd1wu3vI6hnLgFoe3BgoZLiF9HcSayGf5ZcQHrRE=
-X-Received: by 2002:a17:907:7855:b0:855:63bb:d3cb with SMTP id
- lb21-20020a170907785500b0085563bbd3cbmr2657732ejc.532.1674501657356; Mon, 23
- Jan 2023 11:20:57 -0800 (PST)
+        bh=FDD135jW/NyYj2u2IXG8tYJYPCEObqA6m9pB/saDvpQ=;
+        b=vZpUIDc7EolHW8yq5pkBdIh1IA/hDOMVqTnI3m4Vm/48M5csMuSSPlSGbRPC6Gdj72
+         1ZeNSV/i3JGaBN8F7GCYp4erM/umypRkdR5D1HmJxJEisZ+GyBdDiG49x3AlMm5UHUb0
+         gPAZQKOZzpjtYbVwv2LPCkNU6jzexkhPgjVWY2o52Cd4nJBjam/UUv96GNKtYeEcEsZm
+         Q7TLcJNPM60rjKXIrvV71DbpYIgRrA7LTdSWvEt2s71IpLugnUicheHTmrtkIurF4B6s
+         VsTcv42cPpZq5hk7WMBKoFF8hwcME/xwzdrnhH4DcBF9Xc3XUkcX+4w9eiBgFVnye0zQ
+         ml+g==
+X-Gm-Message-State: AFqh2kpNQhHAaDH6kfVUIyLKESBqUr6uoEL8Epuu2YhyA0L1BzzqqjCS
+        FWN6RM8NZ1QfsAssiG6HLi0=
+X-Google-Smtp-Source: AMrXdXs6R9T9aXKiTKwaa8gr76eWk3lG3Wi81m7YS3XqJInGMqZJLxglThM2t/EbLDK4zherRNsD3g==
+X-Received: by 2002:a17:90b:2347:b0:226:d727:4045 with SMTP id ms7-20020a17090b234700b00226d7274045mr27326599pjb.24.1674510161818;
+        Mon, 23 Jan 2023 13:42:41 -0800 (PST)
+Received: from rishit-OMEN-Laptop-15-en0xxx ([171.76.81.196])
+        by smtp.gmail.com with ESMTPSA id 12-20020a17090a08cc00b0020dc318a43esm110190pjn.25.2023.01.23.13.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 13:42:41 -0800 (PST)
+From:   Rishit Bansal <rishitbansal0@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rishit Bansal <rishitbansal0@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Ignore Win-Lock key events
+Date:   Tue, 24 Jan 2023 03:11:50 +0530
+Message-Id: <20230123214150.62597-1-rishitbansal0@gmail.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <20230123113750.462144-1-hdegoede@redhat.com> <20230123113750.462144-4-hdegoede@redhat.com>
-In-Reply-To: <20230123113750.462144-4-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 23 Jan 2023 20:20:46 +0100
-Message-ID: <CAJZ5v0j4AHHMJs79hNT2wkWVgisuZLDj9QJRq-DvEmvFGYJK2Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ACPI: video: Fix apple gmux detection
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-acpi@vger.kernel.org,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 12:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Some apple laptop models have an ACPI device with a HID of APP000B
-> and that device has an IO resource (so it does not describe the new
-> unsupported MMIO based gmux type), but there actually is no gmux
-> in the laptop at all.
->
-> The gmux_probe() function of the actual apple-gmux driver has code
-> to detect this, this code has been factored out into a new
-> apple_gmux_detect() helper in apple-gmux.h.
->
-> Use this new function to fix acpi_video_get_backlight_type() wrongly
-> returning apple_gmux as type on these new laptops.
->
-> Fixes: 21245df307cb ("ACPI: video: Add Apple GMUX brightness control detection")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Follow up from https://lore.kernel.org/all/20230120221214.24426-1-rishitbansal0@gmail.com/
 
-Please feel free to add
+There is a "Win-Lock" key on HP Omen Laptops which supports
+enabling and disabling the Windows key, which trigger commands 0x21a4
+and 0x121a4 respectively. Currently the hp-wmi driver throws warnings
+for this event. These can be ignored using KE_IGNORE as the
+functionality is handled by the keyboard firmware itself.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-to this one and route it through platform/x86, thanks!
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0a99058be813..009cf0bda756 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -216,6 +216,8 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_KEY, 0x213b,  { KEY_INFO } },
+ 	{ KE_KEY, 0x2169,  { KEY_ROTATE_DISPLAY } },
+ 	{ KE_KEY, 0x216a,  { KEY_SETUP } },
++	{ KE_IGNORE, 0x21a4, }, /* Win Lock On */
++	{ KE_IGNORE, 0x121a4, }, /* Win Lock Off */
+ 	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
+ 	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 0x231b,  { KEY_HELP } },
+-- 
+2.37.2
 
-> ---
->  drivers/acpi/video_detect.c | 24 +++---------------------
->  1 file changed, 3 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-> index 64eab35037c3..a8c02608dde4 100644
-> --- a/drivers/acpi/video_detect.c
-> +++ b/drivers/acpi/video_detect.c
-> @@ -110,26 +110,6 @@ static bool nvidia_wmi_ec_supported(void)
->  }
->  #endif
->
-> -static bool apple_gmux_backlight_present(void)
-> -{
-> -       struct acpi_device *adev;
-> -       struct device *dev;
-> -
-> -       adev = acpi_dev_get_first_match_dev(GMUX_ACPI_HID, NULL, -1);
-> -       if (!adev)
-> -               return false;
-> -
-> -       dev = acpi_get_first_physical_node(adev);
-> -       if (!dev)
-> -               return false;
-> -
-> -       /*
-> -        * drivers/platform/x86/apple-gmux.c only supports old style
-> -        * Apple GMUX with an IO-resource.
-> -        */
-> -       return pnp_get_resource(to_pnp_dev(dev), IORESOURCE_IO, 0) != NULL;
-> -}
-> -
->  /* Force to use vendor driver when the ACPI device is known to be
->   * buggy */
->  static int video_detect_force_vendor(const struct dmi_system_id *d)
-> @@ -791,6 +771,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
->  {
->         static DEFINE_MUTEX(init_mutex);
->         static bool nvidia_wmi_ec_present;
-> +       static bool apple_gmux_present;
->         static bool native_available;
->         static bool init_done;
->         static long video_caps;
-> @@ -804,6 +785,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
->                                     ACPI_UINT32_MAX, find_video, NULL,
->                                     &video_caps, NULL);
->                 nvidia_wmi_ec_present = nvidia_wmi_ec_supported();
-> +               apple_gmux_present = apple_gmux_detect(NULL, NULL);
->                 init_done = true;
->         }
->         if (native)
-> @@ -825,7 +807,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
->         if (nvidia_wmi_ec_present)
->                 return acpi_backlight_nvidia_wmi_ec;
->
-> -       if (apple_gmux_backlight_present())
-> +       if (apple_gmux_present)
->                 return acpi_backlight_apple_gmux;
->
->         /* Use ACPI video if available, except when native should be preferred. */
-> --
-> 2.39.0
->
