@@ -2,84 +2,81 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BD1C38142
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 15:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15ECC54EB4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 15:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbjAWPLM (ORCPT
+        id S232741AbjAWPiF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 10:11:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37628 "EHLO
+        Mon, 23 Jan 2023 10:38:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232082AbjAWPLL (ORCPT
+        with ESMTP id S232736AbjAWPiE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 10:11:11 -0500
+        Mon, 23 Jan 2023 10:38:04 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B784976F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:10:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA262A152
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:37:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674486627;
+        s=mimecast20190719; t=1674488234;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fmap69GAARLOEaTycvmFa7dlDHy8lvFIgVzaeRPkzcs=;
-        b=ZGUp1px6H7WVCTvETv4TT49fPS4RjnIextafIAJnxOxIMsnipPRmxogSVEmSCbfGlRwkOi
-        VObl9FFQKF33gFZ3fWYqIumN/MtLi+BJ5A/yWgtWSLElkYNIxluulIT1L3A0IAPTsD6xzz
-        +pGlUbNq9PX60ZBtCZ+1d0zgjM9l7Mg=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nrgSGGG2jivQORYVrLOlwmevh4Rgh/EU/neEY/ItRis=;
+        b=UezBIcQYjlrJANl9ydLaynFhxTNPh6Jk2LE9GljV+x1cyu6uWu5hxfzgj/YJX04AfuyXL2
+        3qUmGbMrQzH3iKTy2Lrer7w/ErTQcAcgEVRpDBQXgywXMc13afuqqKxR8AhkIrrAWYvWpu
+        XNJRz+ndYTSVB5ksvW87Y4orsS/0PRY=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-180-vC08Pu8BNyGk2NT9oBnkeQ-1; Mon, 23 Jan 2023 10:10:26 -0500
-X-MC-Unique: vC08Pu8BNyGk2NT9oBnkeQ-1
-Received: by mail-ed1-f72.google.com with SMTP id z2-20020a056402274200b0049e48d86760so8612361edd.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:10:25 -0800 (PST)
+ us-mta-630-SNnyG7QLNzCeGIoo-enKvg-1; Mon, 23 Jan 2023 10:37:12 -0500
+X-MC-Unique: SNnyG7QLNzCeGIoo-enKvg-1
+Received: by mail-ed1-f69.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so8850481edc.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 07:37:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fmap69GAARLOEaTycvmFa7dlDHy8lvFIgVzaeRPkzcs=;
-        b=k84jh0RxdGjwBlE3MK/beYIc5V9Udh0+dQq1OCnirNn9mkkE3HKd+k1V4I4dyE4eUn
-         0XsmKYmIa58WxEAWuocUwRbDELvwTYu2Z84nIhT9EpR5RFuxxMY9fGzaOmGlgWxo+0AX
-         WFjb4xg3oxWPuvwQPAEOcbeTxgdmsFYF0llbRxtjSHfuF3Je1+0IrKqKTPs6GESMA/Zf
-         4xavpo39UNbsdG6TtPetrYxd45Fez3g2l8d5uwAQ55PxBsuNxGl/TPLWeG9DzCG3z1br
-         znT6Sr1GBD6FALY6iJHFC6F+I20Ob9S1+uZeO310Eb/P0ADkZ+BNj+5EnCSUPiWolb6b
-         Ra3w==
-X-Gm-Message-State: AFqh2krBvz23xrdAQ/UkPVvDCKiBmH7u/q+yLKlS3+v9PF8rfitEH2Ha
-        3KAvSN1AagcwxLUn2GAw7zoxWC44cgYWPQNmaDixftmrNuisn/uyV0KU2WGk1xacNVVo/sDaIqZ
-        aaoGDET2+49IjjQhgqLcHEidGZOW8G9MdiA==
-X-Received: by 2002:a17:906:8d0f:b0:870:b950:18d4 with SMTP id rv15-20020a1709068d0f00b00870b95018d4mr28481232ejc.5.1674486625027;
-        Mon, 23 Jan 2023 07:10:25 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXv+mOXznbb9ctsRkLFnb1W9dMN1iRIkGODPHCo2RtV1KcMF0smb9ggMnQqPayBO1qTkPZ13Xg==
-X-Received: by 2002:a17:906:8d0f:b0:870:b950:18d4 with SMTP id rv15-20020a1709068d0f00b00870b95018d4mr28481221ejc.5.1674486624818;
-        Mon, 23 Jan 2023 07:10:24 -0800 (PST)
+        bh=nrgSGGG2jivQORYVrLOlwmevh4Rgh/EU/neEY/ItRis=;
+        b=G8FIx1ldXYHYF6gJE2rOFZCVliBvWiyNimkWKkBMg3k0WphNyCxcl1sRtUrQKft5qH
+         IlVvQ803FutdHVZdGqV0+5HcrpyhL/GBO/brWNo4TgfkNFxhdrt1+B5eLr27jElN6cfP
+         Iu+PK9C5kHPE6lQ4L8t9XQBLZ9NT4JEdZ3G0dSlirSl/VgxjgZv+KcnRcDZh0PbGVw5+
+         JK1bYcgQj4unggAb+3cIlnjMxzW76jLnQ0jBhHx8+i6GPm+g9GbdPPbpFYwja9Vf8TiQ
+         E5rA/KjUrJA7zB2YY6mTPCdy6xQCJZaHY4JytJQkmeUHtNInh2lfBhRX+Vdn7YpLDvCw
+         hw5g==
+X-Gm-Message-State: AFqh2koB5+JZRWzEsaNfTkgFbz7MJCy49TjbFrfb4b6jlkoBHSanuQb8
+        OB5pTe+NWTa8mYS0R9o6YgR2FvlCPdG1RpTgkBJXw9bXblk1AkN2+PZAqx6ZVXvuceMHvspYePP
+        svxpaILDfsRlXmd+AgvFm4xcrBGhdvdNIrA==
+X-Received: by 2002:a17:907:a601:b0:877:a7ec:5ff with SMTP id vt1-20020a170907a60100b00877a7ec05ffmr11987740ejc.10.1674488231732;
+        Mon, 23 Jan 2023 07:37:11 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtr1c6/aX5wLHbH7NQWaOi30A9xv9EkJz28AZBsNN6soWEYPWWpSZA9Zkp3Fm+NFpmtrXZwug==
+X-Received: by 2002:a17:907:a601:b0:877:a7ec:5ff with SMTP id vt1-20020a170907a60100b00877a7ec05ffmr11987725ejc.10.1674488231560;
+        Mon, 23 Jan 2023 07:37:11 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id g21-20020a170906869500b0084d36fd208esm21416112ejx.18.2023.01.23.07.10.23
+        by smtp.gmail.com with ESMTPSA id kz22-20020a17090777d600b007c1633cea13sm22618884ejc.12.2023.01.23.07.37.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 07:10:24 -0800 (PST)
-Message-ID: <1db86ea3-a658-fe4f-53ae-cc16e5fa125c@redhat.com>
-Date:   Mon, 23 Jan 2023 16:10:23 +0100
+        Mon, 23 Jan 2023 07:37:11 -0800 (PST)
+Message-ID: <33c497ad-2279-ccf6-016b-52b8e1b4783f@redhat.com>
+Date:   Mon, 23 Jan 2023 16:37:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 2/3] platform/x86: apple-gmux: Add apple_gmux_detect()
- helper
+Subject: Re: [PATCH 0/9] platform/surface: aggregator: Improve target/source
+ handling in SSH messages
 Content-Language: en-US
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20221202223327.690880-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20230123113750.462144-1-hdegoede@redhat.com>
- <20230123113750.462144-3-hdegoede@redhat.com>
- <20230123134907.GA2649@wunner.de>
- <9fc84f34-669e-a89c-52d9-c714fe8e4e49@redhat.com>
- <20230123142335.GA31736@wunner.de>
- <a02857d6-83c1-07f7-ebf0-f0b15b190f60@redhat.com>
-In-Reply-To: <a02857d6-83c1-07f7-ebf0-f0b15b190f60@redhat.com>
+In-Reply-To: <20221202223327.690880-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -88,102 +85,100 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/23/23 16:05, Hans de Goede wrote:
-> Hi,
+On 12/2/22 23:33, Maximilian Luz wrote:
+> We have some new insights into the Serial Hub protocol, obtained through
+> reverse engineering. In particular, regarding the command structure. The
+> input/output target IDs actually represent source and target IDs of
+> (what looks like) physical entities (specifically: host, SAM EC, KIP EC,
+> debug connector, and SurfLink connector).
 > 
-> On 1/23/23 15:23, Lukas Wunner wrote:
->> On Mon, Jan 23, 2023 at 03:13:28PM +0100, Hans de Goede wrote:
->>> On 1/23/23 14:49, Lukas Wunner wrote:
->>>> On Mon, Jan 23, 2023 at 12:37:49PM +0100, Hans de Goede wrote:
->>>>> --- a/include/linux/apple-gmux.h
->>>>> +++ b/include/linux/apple-gmux.h
->>>> [...]
->>>>> +static inline bool apple_gmux_is_indexed(unsigned long iostart)
->>>>> +{
->>>>> +	u16 val;
->>>>> +
->>>>> +	outb(0xaa, iostart + 0xcc);
->>>>> +	outb(0x55, iostart + 0xcd);
->>>>> +	outb(0x00, iostart + 0xce);
->>>>> +
->>>>> +	val = inb(iostart + 0xcc) | (inb(iostart + 0xcd) << 8);
->>>>> +	if (val == 0x55aa)
->>>>> +		return true;
->>>>> +
->>>>> +	return false;
->>>>> +}
->>>>
->>>> Something like this, and especially the large apple_gmux_detect() below,
->>>> should not live in a header file.
->>>
->>> I understand where you are coming from, but these functions really
->>> are not that large.
->>>
->>>> Why can't apple_gmux.ko just export a detection function which is used
->>>> both internally and as a helper by the backlight detection?
->>>
->>> Both the acpi-video code and the apple-gmux code can be built as
->>> modules. So this will break if the acpi-video code get builtin
->>> and the apple-gmux code does not.
->>>
->>> This can be worked around in Kconfig by adding something like:
->>>
->>> 	depends on APPLE_GMUX || APPLE_GMUX=n
->>>
->>> to the ACPI_VIDEO Kconfig bits and then cross our fingers
->>> we don't get some Kconfig circular dep thing causing things
->>> to error out.
->>
->> Can we force APPLE_GMUX to be built-in if ACPI_VIDEO is?
->>
->> Would making APPLE_GMUX depend on ACPI_VIDEO (instead of
->> "ACPI_VIDEO=n || ACPI_VIDEO") achieve that?  I believe
->> APPLE_GMUX would then inherit the setting of ACPI_VIDEO?
+> This series aims to improve handling of messages with regards to those
+> new findings and, mainly, improve clarity of the documentation and usage
+> around those fields.
 > 
-> I'm afraid that won't work, make it depend on ACPI_VIDEO would not
-> make it inherit ACPI_VIDEO's setting instead it would be limited
-> to ACPI_VIDEO's setting.
+> See the discussion in
 > 
-> So if we make APPLE_GMUX "depends on ACPI_VIDEO" and ACPI_VIDEO=y
-> then APPLE_GMUX can be both Y or M, where as if ACPI_VIDEO=m
-> then APPLE_GMUX can only be m.
+>     https://github.com/linux-surface/surface-aggregator-module/issues/64
 > 
-> Note that the APPLE_GMUX Kconfig "ACPI_VIDEO=n || ACPI_VIDEO"
-> bit is obsolete and should be dropped (I have already prepared
-> a patch for this), the apple_gmux code no longer depends on any
-> of the ACPI_VIDEO symbols.  Which does make it possible to
-> add a dependency the other way.
+> for more details.
 > 
-> I just tried the following:
+> There are a couple of standouts:
 > 
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -210,6 +210,8 @@ config ACPI_VIDEO
->  	depends on BACKLIGHT_CLASS_DEVICE
->  	depends on INPUT
->  	depends on ACPI_WMI || !X86
-> +	# ACPI_VIDEO uses symbols from APPLE_GMUX if that is enabled
-> +	depends on APPLE_GMUX || APPLE_GMUX=n
->  	select THERMAL
->  	help
->  	  This driver implements the ACPI Extensions For Display Adapters
+> - Patch 1 ensures that we only handle commands actually intended for us.
+>   It's possible that we receive messages not intended for us when we
+>   enable debugging. I've kept it intentionally minimal to simplify
+>   backporting. The rest of the series patch 9 focuses more on clarity
+>   and documentation, which is probably too much to backport.
 > 
-> And that does not cause any circular dep issues it seems
+> - Patch 8 touches on multiple subsystems. The intention is to enforce
+>   proper usage and documentation of target IDs in the SSAM_SDEV() /
+>   SSAM_VDEV() macros. As it directly touches those macros I
+>   unfortunately can't split it up by subsystem.
+> 
+> - Patch 9 is a loosely connected cleanup for consistency.
+> 
+> Hans, Jiri, Benjamin, Sebastian: While patch 8 ("platform/surface:
+> aggregator: Enforce use of target-ID enum in device ID macros") touches
+> multiple subsystems, it should be possible to take the whole series
+> through the pdx86 tree. The changes in other subsystems are fairly
+> limited.
 
-And 10 seconds after hitting send I realized that things are not this simple,
-because a bunch of other Kconfig bits do "select ACPI_VIDEO" and Kconfig
-bits doing "select FOO" much make sure all the dependencies of FOO are met
-and we have just added a new dependency...
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-So all those other places then would need something similar. Kconfig is
-great, but with intra dependencies it really can get quite hairy.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-So IMHO the (really not that big) static inline detect function really
-is the best solution here.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
+
+> 
+> 
+> Maximilian Luz (9):
+>   platform/surface: aggregator: Ignore command messages not intended for
+>     us
+>   platform/surface: aggregator: Improve documentation and handling of
+>     message target and source IDs
+>   platform/surface: aggregator: Add target and source IDs to command
+>     trace events
+>   platform/surface: aggregator_hub: Use target-ID enum instead of
+>     hard-coding values
+>   platform/surface: aggregator_tabletsw: Use target-ID enum instead of
+>     hard-coding values
+>   platform/surface: dtx: Use target-ID enum instead of hard-coding
+>     values
+>   HID: surface-hid: Use target-ID enum instead of hard-coding values
+>   platform/surface: aggregator: Enforce use of target-ID enum in device
+>     ID macros
+>   platform/surface: aggregator_registry: Fix target-ID of base-hub
+> 
+>  .../driver-api/surface_aggregator/client.rst  |  4 +-
+>  .../driver-api/surface_aggregator/ssh.rst     | 36 ++++-----
+>  drivers/hid/surface-hid/surface_hid.c         |  2 +-
+>  drivers/hid/surface-hid/surface_kbd.c         |  2 +-
+>  .../platform/surface/aggregator/controller.c  | 12 +--
+>  .../platform/surface/aggregator/ssh_msgb.h    |  4 +-
+>  .../surface/aggregator/ssh_request_layer.c    | 15 ++++
+>  drivers/platform/surface/aggregator/trace.h   | 73 +++++++++++++++++--
+>  .../platform/surface/surface_aggregator_hub.c |  8 +-
+>  .../surface/surface_aggregator_registry.c     |  2 +-
+>  .../surface/surface_aggregator_tabletsw.c     | 10 +--
+>  drivers/platform/surface/surface_dtx.c        | 20 ++---
+>  .../surface/surface_platform_profile.c        |  2 +-
+>  drivers/power/supply/surface_battery.c        |  4 +-
+>  drivers/power/supply/surface_charger.c        |  2 +-
+>  include/linux/surface_aggregator/controller.h |  4 +-
+>  include/linux/surface_aggregator/device.h     | 50 ++++++-------
+>  include/linux/surface_aggregator/serial_hub.h | 40 ++++++----
+>  18 files changed, 191 insertions(+), 99 deletions(-)
+> 
 
