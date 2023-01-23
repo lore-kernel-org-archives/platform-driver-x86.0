@@ -2,180 +2,82 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC78C38142
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 12:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFA2C38142
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 13:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231723AbjAWMji (ORCPT
+        id S229989AbjAWN3U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 07:39:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41872 "EHLO
+        Mon, 23 Jan 2023 08:29:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231716AbjAWMjg (ORCPT
+        with ESMTP id S231742AbjAWN3U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 07:39:36 -0500
+        Mon, 23 Jan 2023 08:29:20 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB34EC62
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 04:38:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0A22202E
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:28:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674477521;
+        s=mimecast20190719; t=1674480512;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=500lft1xlkAA4ADQWJUKJkyLFfmb0OAXtKVLwPd2khs=;
-        b=hor0KG/WfuJ0WEiWtwR70KzU/J6xfJPkeJZQXZO6gBV6O60XfeBSFNNfRE3lgIQAhklTAP
-        elCV8xGGn9CZI7TE2pUQCRTt/rvvOhXHTp5Nmo5e0uc9IabzZn/deZyHZgwkTqaWYG6wGS
-        b6kMOy8EKCKMCgzVPJjrrXld1P1U8n0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-544-qdyDS-flPhqpsaxG8IIGKA-1; Mon, 23 Jan 2023 07:38:39 -0500
-X-MC-Unique: qdyDS-flPhqpsaxG8IIGKA-1
-Received: by mail-ed1-f71.google.com with SMTP id z20-20020a05640240d400b0049e1b5f6175so8319679edb.8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 04:38:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=500lft1xlkAA4ADQWJUKJkyLFfmb0OAXtKVLwPd2khs=;
-        b=xeaojYMLzdRslgs6hL21Jegc77W6nkw/QaEzH+WU0Tjv3YlvKqAwjScEvwCsQplV3O
-         l2zgfc7xR80JYTX14nMMF0MtSN81yoFulgR4xJfP9FznQwgayyHOXBE6V4kQPiF04SUH
-         RIRBD/zZPz81y1OUIgbtbUB7lQpWfzFO6yR6XQA7UYmB1c8liXvUBIyOHvH+tukp+JTt
-         s/l5c99D6Cn/0tHmRt+yzvh0F01WS7V0rRr6XND8uwsVvHI8unPcgcAFfmyvasXje+0h
-         i8j5RYc8sygWcmkZWk6pqVvwJR/D0sgmhVkYhviTQueeapurG+5pZjceojmVdDnNOLTl
-         UCEg==
-X-Gm-Message-State: AFqh2koeBEGIFq4IW4sdcSxlzHIySFU47nL16wh8J8QGwBa5XCt3igX4
-        Yj/2Xix6hhXB+ZAoerTT6vNE7Am7l9ihyqoUsUnKX9fSLx0zUToPqKRk8VzhhAgCrgKm1TD5xBI
-        SiycjagGOnSjR2QquRA6Zt9zojMc5YiVCLA==
-X-Received: by 2002:a05:6402:3583:b0:49d:fd6d:925d with SMTP id y3-20020a056402358300b0049dfd6d925dmr33832285edc.23.1674477518754;
-        Mon, 23 Jan 2023 04:38:38 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvuOWILWyIKpbGeiNOwF5AhkJTKcGJdZUmCOXgIzYZwrHUVKpSY4sy3Drynrny/vZdHXvm++Q==
-X-Received: by 2002:a05:6402:3583:b0:49d:fd6d:925d with SMTP id y3-20020a056402358300b0049dfd6d925dmr33832267edc.23.1674477518562;
-        Mon, 23 Jan 2023 04:38:38 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id t32-20020a056402242000b0049148f6461dsm21379946eda.65.2023.01.23.04.38.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 04:38:38 -0800 (PST)
-Message-ID: <255bf66e-eb27-af2b-9a13-8b7d4b7b3c46@redhat.com>
-Date:   Mon, 23 Jan 2023 13:38:37 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 0/3] ACPI: video/apple-gmux: Improve apple-gmux backlight
- detection
-Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-acpi@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20230123113750.462144-1-hdegoede@redhat.com>
- <20230123120900.GA1924@wunner.de>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Dm2y8jjJLtAvoiWVSOdghsMUtICznIvuvh43SYxAC+4=;
+        b=f0p/r0kTUM3AtV/9MyNBE1XI++aZBdbMJE4rQLyoeBNs5Q3y9m0OcpvkQCwFBvjp1v/e3L
+        yHaOF38ZvXuUP0JyzItzSTaFgUMtkqfFXQmAlBYqSMwaZRLFMt1Pcz3Xz8Ng7ATMkc0NA3
+        RkUNDLH3Ue2JJbJP9FHjc+KrK7OCWGQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-418-ooKRr2lXNoGQldLGKWqH9g-1; Mon, 23 Jan 2023 08:28:27 -0500
+X-MC-Unique: ooKRr2lXNoGQldLGKWqH9g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 400D1100F935;
+        Mon, 23 Jan 2023 13:28:27 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.194.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA38C2166B32;
+        Mon, 23 Jan 2023 13:28:25 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230123120900.GA1924@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] platform/x86: hp-wmi: Fix cast to smaller integer type warning
+Date:   Mon, 23 Jan 2023 14:28:24 +0100
+Message-Id: <20230123132824.660062-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Fix the following compiler warning:
 
-On 1/23/23 13:09, Lukas Wunner wrote:
-> On Mon, Jan 23, 2023 at 12:37:47PM +0100, Hans de Goede wrote:
->> Some apple laptop models have an ACPI device with a HID of APP000B
->> and that device has an IO resource (so it does not describe the new
->> unsupported MMIO based gmux type), but there actually is no gmux
->> in the laptop at all.
->>
->> This patch-series improves the drivers/acpi/video_detect.c so that
->> it no longer tries to use the non present gmux in this case.
->>
->> Note I'm still waiting for testing feedback from the reporter of
->> this problem. But from the logs the problem is clear
->> (the logs show: "apple_gmux: gmux device not present")
-> 
-> Please provide a link to the original report.  I would also like to
-> know the exact MacBook model used and I would like to see full dmesg
-> output as well as an acpidump.
+drivers/platform/x86/hp/hp-wmi.c:551:24: warning: cast to smaller integer
+   type 'enum hp_wmi_radio' from 'void *' [-Wvoid-pointer-to-enum-cast]
 
-I only have a report by private email. This does include full dmesg
-output and an acpidump. I will forward this to you in a private
-email.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The reporter describes their model as a macbookpro8,1.
-
-> What you're saying here is that there's a fake APP000B device present
-> in DSDT
-
-Yes that is exactly what I'm saying.
-
-> and I have a hard time believng that.
-
-Yes that seems to be exactly what is happening. If you look at
-the drivers/platform/x86/apple-gmux.c code that is pretty much
-the only scenario which leads to the:
-
-apple_gmux: gmux device not present
-
-message getting logged; and it seems to me that the reason that
-check is there likely is exactly because of such machines
-actually existing.
-
-And /sys/class/backlight contains only intel_backlight
-suggesting that this is not a hybrid gfx machine. Which also
-matches with the specs which I can find for the  macbookpro8,1.
-
-Yet there is an APP000B device present in the DSDT, here is
-the relevant bit of the DSDT:
-
-                Device (GMUX)
-                {
-                    Name (_HID, EisaId ("APP000B"))  // _HID: Hardware ID
-                    Name (_CID, "gmux")  // _CID: Compatible ID
-                    Name (_STA, 0x0B)  // _STA: Status
-                    Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
-                    {
-                        IO (Decode16,
-                            0x0700,             // Range Minimum
-                            0x07FF,             // Range Maximum
-                            0x01,               // Alignment
-                            0xFF,               // Length
-                            )
-                    })
-                    Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
-                    {
-                        0x16, 
-                        0x03
-                    })
-                    Scope (\_GPE)
-                    {
-                        Method (_L16, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
-                        {
-                            Notify (\_SB.PCI0.LPCB.GMUX, 0x80) // Status Change
-                        }
-                    }
-
-                    Name (GMGP, 0x16)
-                    Method (GMSP, 1, NotSerialized)
-                    {
-                        If ((Arg0 <= 0x01))
-                        {
-                            GP06 |= Arg0
-                        }
-                    }
-
-                    Method (GMLV, 0, NotSerialized)
-                    {
-                        Return (GP06) /* \GP06 */
-                    }
-                }
-            }
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0a99058be813..9ac41950e4fc 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -548,7 +548,7 @@ static int __init hp_wmi_enable_hotkeys(void)
+ 
+ static int hp_wmi_set_block(void *data, bool blocked)
+ {
+-	enum hp_wmi_radio r = (enum hp_wmi_radio) data;
++	enum hp_wmi_radio r = (long)data;
+ 	int query = BIT(r + 8) | ((!blocked) << r);
+ 	int ret;
+ 
+-- 
+2.39.0
 
