@@ -2,74 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A6C61DA3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 13:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F129C38142
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Jan 2023 13:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232054AbjAWNa3 (ORCPT
+        id S229557AbjAWNde (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Jan 2023 08:30:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
+        Mon, 23 Jan 2023 08:33:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232030AbjAWNa2 (ORCPT
+        with ESMTP id S229436AbjAWNde (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Jan 2023 08:30:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EBC2202E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:29:45 -0800 (PST)
+        Mon, 23 Jan 2023 08:33:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0B3F4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674480585;
+        s=mimecast20190719; t=1674480763;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=h1pOiofCrgYVfSVCirt+sR1su5e7XxOWBxxQVEHlSxM=;
-        b=hUwZQPb6rDi69q6X+lfUIiC6zhjp32pMTGIXKdV4qL3NfjULQ8nvv4YW0pyhReYAFjS5mK
-        oe5ZGPYRKthHkDLCMBx7JEBfWJKj9lO4A8YpDbB95gWGYhCPxXn2fLCprD2p/B5y7zuUe0
-        6xDjNdrRqSimr1VbPY0ORX4NsxQk8aI=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4eVcLiMRTNGc9RZrnMABtj5RnG9xY1jbpv8mppSmEp0=;
+        b=JTEhtBTIUnPLwc/+l6QGdIU3yiHCMpL4c3sW2yvqn5C15sBtyxUH+XPV6O6xnj8IwPuMWs
+        NeOa5zWoWV0bM3vrULKcPVPA334FHzj3xmWHXSm+ubolYzX5QHSHC0Xs4IciW6X8FYEIVl
+        GqH/yBNaTOU/hQaTrwTvzNDsKeDayTM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-629-KDXD27dqPDaAPOqX8l60qw-1; Mon, 23 Jan 2023 08:29:43 -0500
-X-MC-Unique: KDXD27dqPDaAPOqX8l60qw-1
-Received: by mail-ed1-f69.google.com with SMTP id s14-20020a056402520e00b0049e0bea1c3fso8426889edd.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:29:43 -0800 (PST)
+ us-mta-374-ZqpBzPguM4mbrTYwqNxWsg-1; Mon, 23 Jan 2023 08:32:42 -0500
+X-MC-Unique: ZqpBzPguM4mbrTYwqNxWsg-1
+Received: by mail-ej1-f70.google.com with SMTP id fx8-20020a170906b74800b00877a89f965aso4154324ejb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jan 2023 05:32:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1pOiofCrgYVfSVCirt+sR1su5e7XxOWBxxQVEHlSxM=;
-        b=VlAN9G2aLisl1/JZ8TxXsiVHCHlL0n/i0mq88e6CD35NLVhpj3OJ/JBTk0/vvUqYut
-         u9rXxDR4vIGhwGeIlyLShUpKpAtx+k6w8CtKOuzVe9FMa/mikEPpdHX7YPGC/k8UnzVE
-         lb4q/2gp72e79AN6XEOh4EcGjZRH3jbdb/dxN6TWrPy/VsVMQNjz0MoHTHBGFDVbCh2Z
-         xNvqhFOPo61jYZBkjkc/J20FDrfqdiJPTzJrUhaNXW7nf9/h+YCNcsuCtof7XY1PpVw1
-         Wp5XVIhNt4rqekuWCx4TLkMnxbWMbE4INVNR/S7keIm4rBZjH1Id7QPRJ+a0gjD+Wj5y
-         oocQ==
-X-Gm-Message-State: AFqh2kqJdRVfvkde3dp2U0Eu9F2PofLX7bVXjyPaFNG+ozmZ/qlTVLrB
-        MAVRIuhdg37NsKao94b/zip7GIxjWZ8abthKdcOOy2cY2ShAk1JPE55ueVxpwjznMYjnZUQeEGY
-        OMGRLaD38pMUY3JTaliibAwMlD1RLvBdAbg==
-X-Received: by 2002:a17:906:33cb:b0:86d:7c0e:c816 with SMTP id w11-20020a17090633cb00b0086d7c0ec816mr33167272eja.27.1674480582344;
-        Mon, 23 Jan 2023 05:29:42 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvQAdUw2Rn+69YtZqpO6gSp02Et/yW29uGOMPmu897BKApMNZGbb85mwbFmpcXO0uyHAAv/bA==
-X-Received: by 2002:a17:906:33cb:b0:86d:7c0e:c816 with SMTP id w11-20020a17090633cb00b0086d7c0ec816mr33167258eja.27.1674480582140;
-        Mon, 23 Jan 2023 05:29:42 -0800 (PST)
+        bh=4eVcLiMRTNGc9RZrnMABtj5RnG9xY1jbpv8mppSmEp0=;
+        b=vA63F/ZwziTU78HS25bMcRQKT6slVK9TJ6Xzt5U4izY/d2+aoyBacz55n2YBf/vp4x
+         ODzbBTqn4bLkyJeBMYfODuQQdEjHVa3ngGre/q8an3qKwrg7q46AYKw+w9sAad6m9XZj
+         cHAlv8+htI4awg61D4GsN0hkaaugt9G7+Dnhv7xL4GZ+4rSxx/ENcIz0M3Pg2TUZsmvW
+         bZ9A3j62cFzVjggLLdLT100X1OF/zCmbcxqR72+L1BrHO3rBwU29MjAh9LJetIRak5Ke
+         x3tAZVXGnJKjeCRbJGJPKwLAm8GnR6Aa9ufwO3yAwXty90sHosyJ8Pvdqh0WJVesAODc
+         OC8g==
+X-Gm-Message-State: AFqh2kprR+Ks5V+ZRiJcWgDhcC638ij6TjPu7kD/MtCPN32lXAA+4iv0
+        BOnmrN8OWvzm3mIv4syn55RXCQYtFdNQEx3eHqjMD/kLEW5UPbJgcV0jwunm43VwDYXigFAAJHR
+        YrZzP4hPEDTdIxvB5b/7C2Js+4q8XRX8Y0g==
+X-Received: by 2002:a17:906:4d89:b0:86f:57d3:e3a7 with SMTP id s9-20020a1709064d8900b0086f57d3e3a7mr24278227eju.48.1674480759703;
+        Mon, 23 Jan 2023 05:32:39 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvC81R9tZpJ65aMGdZeENwiF1nbY/W2/d3f2eyACNqxIKpMZHfiN5hh5bwE8Q7La81dShIf8g==
+X-Received: by 2002:a17:906:4d89:b0:86f:57d3:e3a7 with SMTP id s9-20020a1709064d8900b0086f57d3e3a7mr24278218eju.48.1674480759466;
+        Mon, 23 Jan 2023 05:32:39 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id sy23-20020a1709076f1700b0086f5bf2b3a1sm12227191ejc.21.2023.01.23.05.29.41
+        by smtp.gmail.com with ESMTPSA id hq15-20020a1709073f0f00b0084c4b87a69csm22111132ejc.153.2023.01.23.05.32.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 05:29:41 -0800 (PST)
-Message-ID: <f4a85a55-429f-eb5e-3063-e5e79d4baef6@redhat.com>
-Date:   Mon, 23 Jan 2023 14:29:40 +0100
+        Mon, 23 Jan 2023 05:32:38 -0800 (PST)
+Message-ID: <919e1992-e1ca-cc7f-fcc1-23a01993b4b8@redhat.com>
+Date:   Mon, 23 Jan 2023 14:32:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] platform/x86: dell-wmi: Add a keymap for KEY_MUTE in type
- 0x0010 table
+Subject: Re: [PATCH] platform/x86: hp-wmi: Handle Omen Key event
 Content-Language: en-US
-To:     Koba Ko <koba.ko@canonical.com>, Mark Gross <markgross@kernel.org>,
+To:     Rishit Bansal <rishitbansal0@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230117123436.200440-1-koba.ko@canonical.com>
+References: <Y8cjgu1ql+5+/NST@rishit-OMEN-Laptop-15-en0xxx>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230117123436.200440-1-koba.ko@canonical.com>
+In-Reply-To: <Y8cjgu1ql+5+/NST@rishit-OMEN-Laptop-15-en0xxx>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,13 +78,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/17/23 13:34, Koba Ko wrote:
-> Some platforms send the speaker-mute key from EC. dell-wmi can't
-> recognize it.
+On 1/17/23 23:38, Rishit Bansal wrote:
+> Add support to map the "HP Omen Key" to KEY_PROG2. Laptops in the HP
+> Omen Series open the HP Omen Command Center application on windows. But,
+> on linux it fails with the following message from the hp-wmi driver:
 > 
-> Add a new keymap for KEY_MUTE in type 0x0010 table.
+> [ 5143.415714] hp_wmi: Unknown event_id - 29 - 0x21a5
 > 
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -104,21 +105,35 @@ Hans
 
 
 > ---
->  drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+>  drivers/platform/x86/hp/hp-wmi.c | 3 +++
 >  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-> index 0a259a27459f6..502783a7adb11 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-base.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
-> @@ -261,6 +261,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
->  	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
->  	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 0a99058be813..d8ba3c483901 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -91,6 +91,7 @@ enum hp_wmi_event_ids {
+>  	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+>  	HPWMI_SANITIZATION_MODE		= 0x17,
+>  	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
+> +	HPWMI_OMEN_KEY				= 0x1D,
+>  };
 >  
-> +	/*Speaker Mute*/
-> +	{ KE_KEY, 0x109, { KEY_MUTE} },
-> +
->  	/* Mic mute */
->  	{ KE_KEY, 0x150, { KEY_MICMUTE } },
+>  /*
+> @@ -219,6 +220,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+>  	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
+>  	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
+>  	{ KE_KEY, 0x231b,  { KEY_HELP } },
+> +	{ KE_KEY, 0x21a5,  { KEY_PROG2 }}, /* HP Omen Key */
+>  	{ KE_END, 0 }
+>  };
 >  
+> @@ -810,6 +812,7 @@ static void hp_wmi_notify(u32 value, void *context)
+>  	case HPWMI_SMART_ADAPTER:
+>  		break;
+>  	case HPWMI_BEZEL_BUTTON:
+> +	case HPWMI_OMEN_KEY:
+>  		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
+>  		if (key_code < 0)
+>  			break;
 
