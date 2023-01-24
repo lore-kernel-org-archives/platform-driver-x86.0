@@ -2,165 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB630C38142
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 10:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F3DC25B4E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 12:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjAXK7B (ORCPT
+        id S233959AbjAXMof (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Jan 2023 05:59:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
+        Tue, 24 Jan 2023 07:44:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233394AbjAXK65 (ORCPT
+        with ESMTP id S233952AbjAXMoe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Jan 2023 05:58:57 -0500
+        Tue, 24 Jan 2023 07:44:34 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BBD126EA
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 02:58:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A163B41B43
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 04:43:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674557886;
+        s=mimecast20190719; t=1674564226;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4b5SNYIXjjQOhFYbM58fT6s8i3UuoEENPwTGEaDKm2U=;
-        b=Wqv8C3WMrDchQO6jn68gZVtV/YHrSa3AuzW+eVEgGsysSKX0WmqjjEDWC/pZ4qxLQLywKJ
-        SqmMPAdhPa9vESveFXSAIhyLoLG6ti0xHMh7PRR48pnyWoeJuTVO4jkvyPZgvBQ3quDPG1
-        aXVSGsHStrQw2gDgftjZdZbeI+SzS0k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-301-rndxwYs6MQmAtcRkiDkvjA-1; Tue, 24 Jan 2023 05:58:02 -0500
-X-MC-Unique: rndxwYs6MQmAtcRkiDkvjA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2DC7B101A521;
-        Tue, 24 Jan 2023 10:58:02 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C90B40444C3;
-        Tue, 24 Jan 2023 10:58:00 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
-        Emmanouil Kouroupakis <kartebi@gmail.com>,
-        Aditya Garg <gargaditya08@live.com>,
-        Orlando Chamberlain <orlandoch.dev@gmail.com>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2 3/3] ACPI: video: Fix apple gmux detection
-Date:   Tue, 24 Jan 2023 11:57:54 +0100
-Message-Id: <20230124105754.62167-4-hdegoede@redhat.com>
-In-Reply-To: <20230124105754.62167-1-hdegoede@redhat.com>
-References: <20230124105754.62167-1-hdegoede@redhat.com>
+        bh=JvA72lC2y7yA+g3ktJNsMpev3T0uMvRX2bOhVwYebJI=;
+        b=aUJCrQjSLZA5DPSYcV3g1FvDSc03JP68OkVuBqRbjL0FSKpTN3Xd0tCU/4C8wU2e7wFPDG
+        CRGYLSARcM5NgfRCixfuYix+puxTx6mqZZqctH2vOO27+p07wIqaee3NJel1BX5ielZ2Vg
+        fmUEueS5OOWTzfbL6i2XAPsQr4v3dDA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-537-Rddj0LTqMN2QG7jMMr2B3Q-1; Tue, 24 Jan 2023 07:43:45 -0500
+X-MC-Unique: Rddj0LTqMN2QG7jMMr2B3Q-1
+Received: by mail-ed1-f71.google.com with SMTP id y2-20020a056402440200b0049e4d71f5dcso10628211eda.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 04:43:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JvA72lC2y7yA+g3ktJNsMpev3T0uMvRX2bOhVwYebJI=;
+        b=kIcv8lzqhXJuCyger5PFmyoEJ6o0MCT64voiAurfkeNm0tJxHB1ETgLX1uq5gVqsNg
+         m4iOS7YeFDdOiOLYcJ6b6xIcD1D46wmltDhfXVgSCvm2j89zUUoqKtJ8VVrUhFawSxxU
+         eh51p35RP9WE79GvOKVq/Z5T9SvsAuxY8+ZyxKL9lWVaHgDEcDwDUGGHUh/Ougxklypp
+         wsppZIMMuTIKE6CbxPJVS+uxNrnagS0J012D6QIYk48R4SGIKr07drABfcTOmtlZ7ymX
+         eAskF8+vIRGk7DSxPmn7BDABa2+RHOiQDnBkVkSbOP6tbnb3tBFEGiAb2XaILSCQUi56
+         k/sw==
+X-Gm-Message-State: AFqh2kooFq94iO3cKMaHFCdHnX6AtJzW6482fLeR8IeOZYhS4S/AZkOy
+        BOpPAD5giE9B0mX7e+BuSlAH4PIeAkVcLgVQzWmrxeoFeMdcD0OPhhYzhwiX2yU9BOw+02h7Hf+
+        Vh62KHhw5NrpeD9mAiVClkOKWhmnro/e/Kw==
+X-Received: by 2002:a17:906:9f03:b0:877:962f:be0a with SMTP id fy3-20020a1709069f0300b00877962fbe0amr15452431ejc.37.1674564224281;
+        Tue, 24 Jan 2023 04:43:44 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtck9VEMiadxtabJ8O0BcOlXlrYc6o9yw7xp1BvmU81Rwlyp1HSrONtYwjv37EYUPFunIpcPQ==
+X-Received: by 2002:a17:906:9f03:b0:877:962f:be0a with SMTP id fy3-20020a1709069f0300b00877962fbe0amr15452422ejc.37.1674564224081;
+        Tue, 24 Jan 2023 04:43:44 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id t5-20020a170906268500b0073d796a1043sm839770ejc.123.2023.01.24.04.43.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jan 2023 04:43:43 -0800 (PST)
+Message-ID: <09ea7085-48c6-cf44-2a34-c7a43e4be9b8@redhat.com>
+Date:   Tue, 24 Jan 2023 13:43:42 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] platform/x86: apple_gmux: Drop no longer used ACPI_VIDEO
+ Kconfig dependency
+Content-Language: en-US, nl
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20230123154512.852921-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230123154512.852921-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some apple laptop models have an ACPI device with a HID of APP000B
-and that device has an IO resource (so it does not describe the new
-unsupported MMIO based gmux type), but there actually is no gmux
-in the laptop at all.
+Hi,
 
-The gmux_probe() function of the actual apple-gmux driver has code
-to detect this, this code has been factored out into a new
-apple_gmux_detect() helper in apple-gmux.h.
+On 1/23/23 16:45, Hans de Goede wrote:
+> The apple_gmux code no longer uses any symbols from the ACPI_VIDEO code,
+> so that dependency can be dropped.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Use this new function to fix acpi_video_get_backlight_type() wrongly
-returning apple_gmux as type on the following laptops:
+I've added this to my review-hans (soon to be for-next) branch now.
 
-MacBookPro5,4
-https://pastebin.com/8Xjq7RhS
+Regards,
 
-MacBookPro8,1
-https://linux-hardware.org/?probe=e513cfbadb&log=dmesg
+Hans
 
-MacBookPro9,2
-https://bugzilla.kernel.org/attachment.cgi?id=278961
 
-MacBookPro10,2
-https://lkml.org/lkml/2014/9/22/657
-
-MacBookPro11,2
-https://forums.fedora-fr.org/viewtopic.php?id=70142
-
-MacBookPro11,4
-https://raw.githubusercontent.com/im-0/investigate-card-reader-suspend-problem-on-mbp11.4/mast
-
-Fixes: 21245df307cb ("ACPI: video: Add Apple GMUX brightness control detection")
-Link: https://lore.kernel.org/platform-driver-x86/20230123113750.462144-1-hdegoede@redhat.com/
-Reported-by: Emmanouil Kouroupakis <kartebi@gmail.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Add list of known affected Apple models (Lukas Wunner)
-- Add Reported-by and Link tags
----
- drivers/acpi/video_detect.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 64eab35037c3..a8c02608dde4 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -110,26 +110,6 @@ static bool nvidia_wmi_ec_supported(void)
- }
- #endif
- 
--static bool apple_gmux_backlight_present(void)
--{
--	struct acpi_device *adev;
--	struct device *dev;
--
--	adev = acpi_dev_get_first_match_dev(GMUX_ACPI_HID, NULL, -1);
--	if (!adev)
--		return false;
--
--	dev = acpi_get_first_physical_node(adev);
--	if (!dev)
--		return false;
--
--	/*
--	 * drivers/platform/x86/apple-gmux.c only supports old style
--	 * Apple GMUX with an IO-resource.
--	 */
--	return pnp_get_resource(to_pnp_dev(dev), IORESOURCE_IO, 0) != NULL;
--}
--
- /* Force to use vendor driver when the ACPI device is known to be
-  * buggy */
- static int video_detect_force_vendor(const struct dmi_system_id *d)
-@@ -791,6 +771,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
- {
- 	static DEFINE_MUTEX(init_mutex);
- 	static bool nvidia_wmi_ec_present;
-+	static bool apple_gmux_present;
- 	static bool native_available;
- 	static bool init_done;
- 	static long video_caps;
-@@ -804,6 +785,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
- 				    ACPI_UINT32_MAX, find_video, NULL,
- 				    &video_caps, NULL);
- 		nvidia_wmi_ec_present = nvidia_wmi_ec_supported();
-+		apple_gmux_present = apple_gmux_detect(NULL, NULL);
- 		init_done = true;
- 	}
- 	if (native)
-@@ -825,7 +807,7 @@ static enum acpi_backlight_type __acpi_video_get_backlight_type(bool native)
- 	if (nvidia_wmi_ec_present)
- 		return acpi_backlight_nvidia_wmi_ec;
- 
--	if (apple_gmux_backlight_present())
-+	if (apple_gmux_present)
- 		return acpi_backlight_apple_gmux;
- 
- 	/* Use ACPI video if available, except when native should be preferred. */
--- 
-2.39.0
+> ---
+>  drivers/platform/x86/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 5692385e2d26..ec7c2b4e1721 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -214,7 +214,6 @@ config APPLE_GMUX
+>  	depends on PNP
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
+> -	depends on ACPI_VIDEO=n || ACPI_VIDEO
+>  	help
+>  	  This driver provides support for the gmux device found on many
+>  	  Apple laptops, which controls the display mux for the hybrid
 
