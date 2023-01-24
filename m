@@ -2,61 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061DBC25B4E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 09:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD2C38142
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 09:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232815AbjAXJLZ (ORCPT
+        id S233642AbjAXJ2M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Jan 2023 04:11:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
+        Tue, 24 Jan 2023 04:28:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232655AbjAXJLY (ORCPT
+        with ESMTP id S233697AbjAXJ14 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Jan 2023 04:11:24 -0500
-X-Greylist: delayed 584 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 Jan 2023 01:11:21 PST
-Received: from mail.crawnon.pl (mail.crawnon.pl [51.68.198.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9D13E087
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 01:11:21 -0800 (PST)
-Received: by mail.crawnon.pl (Postfix, from userid 1002)
-        id 1C566A3331; Tue, 24 Jan 2023 09:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=crawnon.pl; s=mail;
-        t=1674550885; bh=C5hX24svv/9/TME4wPCHfYjl17BCtmuxEd1i9B4zdYs=;
-        h=Date:From:To:Subject:From;
-        b=ur/ASzrDBce7asf1Wly0ieCQzoaO877vP5s1vGV+I0UbfR1a6g8m6mrhOXFf2vpgr
-         qV+J873AIx6xYTMvc+xWni8lN/u4jjECFy/nob1W7rjEMbSdGl3McIrboy+twpv6Fx
-         lDl+vwynKgn0+xf1+iYWGI/wV4oMqAoUXnQxezU4I9sp/5d2lDQgzc7kwQLyshwTwr
-         Ym6FrIK7i6/X7yQnAHIEQxLgRalSi7kRJigsYEAtytnmNz4sFwLwBUFQy/LEcEtR5H
-         q2FcCBHbe2hmrslRZIkQj6BMJugI6AygJqCuPZd/bODYCnO1Yoeyd3yF84BhJq/qNm
-         WQYhIyU0JbSTQ==
-Received: by mail.crawnon.pl for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 09:00:48 GMT
-Message-ID: <20230124074500-0.1.8q.e414.0.2lo63vg34p@crawnon.pl>
-Date:   Tue, 24 Jan 2023 09:00:48 GMT
-From:   =?UTF-8?Q? "Miko=C5=82aj_Fiodorczyk" ?= 
-        <mikolaj.fiodorczyk@crawnon.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: Fotowoltaika - nowe warunki
-X-Mailer: mail.crawnon.pl
+        Tue, 24 Jan 2023 04:27:56 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0E242DCF;
+        Tue, 24 Jan 2023 01:27:18 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id tz11so37407653ejc.0;
+        Tue, 24 Jan 2023 01:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ri9z+xYMt218fYVVMTgtEzsjvMbOGDhhgvVh2Oo1De8=;
+        b=W3K8YVr1IJt2kf6zQVyQ0lGjB39bSPnyPcWb1aNfRHJ783tH83bdr066LTuIyrmqsn
+         DIvSkmkZrv9W0yhKsQNDUSSbQ3+9+iizwuMhTNIUejhs0ZUwKrYmu96D1DpGbM5LiBtF
+         gnQ1PhxzsRv2Kg6yKKTliJgTlQUNDYyiaSFqlNrELEL6cd6FjVTI88A6MJONnJ8Nyxu1
+         i9MOX0WG9VaPY+iM8uukCbe4ceNudde0DLGP3Ok2YlgjdcBW3w+bVCFVJSo5Qd2BWidg
+         Wg4cCyV1sMdO490g3XrGW0N95Rk8PqiSQ1rsd4j61wHE0kDYL5J43uptI/vWj9w97lOj
+         QCGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ri9z+xYMt218fYVVMTgtEzsjvMbOGDhhgvVh2Oo1De8=;
+        b=lLiFodZCRnYfWV9njZZBBtDX7Ugzi689hqFYD+VpKK6oFoDqUYqObwEeiN2VQAF6HR
+         W49TLy15FgFazTQ5mulE6hRE8pYBTC8C6jGzf50h2w+29Tws47BP9DF4Km9Ogo/wpl6T
+         bkvGeGM9o9CGan2YE8KNx94L77tAo5hKORf/zHhIB5IVfNiVMMPvXnjcVn0YzHWXxUFk
+         SgxZ1JgBnxN+hycpP1nPvzD0W/Dor9I3Djj2gBVoN853RPa3NATP2wdtAkMlAnoA+M+8
+         yQhbOtiH4bRsFzNwRrNAYoDwZ3CXqCN/ndTB4zJI9ixwWebBRdJKVmFN76gJTioD1M2S
+         pH1g==
+X-Gm-Message-State: AFqh2koTWXl5MZ0gOg/fXx07o21f80cQR96bpjYwhg0BJWWc64BpJF6G
+        2DQO9ij0qOSIjhUb/5bICN5wHuW/Wa3LBg==
+X-Google-Smtp-Source: AMrXdXsUj1glqQxDmzX1OGu4Y3daRhi/uusOo0IVPnQ+CKFKRQvRm9/clO/fhoqEcq77C00Yj1So7Q==
+X-Received: by 2002:a17:907:c319:b0:877:609c:edc3 with SMTP id tl25-20020a170907c31900b00877609cedc3mr26701799ejc.18.1674552435983;
+        Tue, 24 Jan 2023 01:27:15 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id fx18-20020a170906b75200b0084d35ffbc20sm639419ejb.68.2023.01.24.01.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jan 2023 01:27:15 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+        id A8861BE2DE0; Tue, 24 Jan 2023 10:27:14 +0100 (CET)
+Date:   Tue, 24 Jan 2023 10:27:14 +0100
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: amd_pmc module not autoloading on Thinkpad X13 Gen 2a
+Message-ID: <Y8+kclibAb32JCIp@eldamar.lan>
+References: <Y80NXKyaj25CtSBt@eldamar.lan>
+ <MN0PR12MB6101ACCD8A5003CBB4BEF58DE2CB9@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <Y81Ja5Y/tgPXk5FA@eldamar.lan>
+ <MN0PR12MB61019EC33FA0F91C0E79967BE2CB9@MN0PR12MB6101.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN0PR12MB61019EC33FA0F91C0E79967BE2CB9@MN0PR12MB6101.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi Mario,
 
-chcia=C5=82bym poinformowa=C4=87, i=C5=BC mog=C4=85 Pa=C5=84stwo uzyska=C4=
-=87 dofinansowanie na systemy fotowoltaiczne w ramach nowej edycji progra=
-mu M=C3=B3j Pr=C4=85d.
+On Sun, Jan 22, 2023 at 03:34:55PM +0000, Limonciello, Mario wrote:
+> [AMD Official Use Only - General]
+> 
+> Salvatore,
+> 
+> I don't think we have a bug here. The reporters said it's working
+> for s0ix.
+> 
+> It will only load by default when the system is set to Modern
+> Standby/s2idle mode in BIOS. On Lenovo systems they call this
+> "Windows" sleep mode for some systems.
 
-Program zapewnia 6000 z=C5=82 dofinansowania na instalacj=C4=99 paneli i =
-16 000 z=C5=82 na magazyn energii, ni=C5=BCsze cen pr=C4=85du i mo=C5=BCl=
-iwo=C5=9B=C4=87 odliczenia koszt=C3=B3w zwi=C4=85zanych z instalacj=C4=85=
- fotowoltaiki w ramach rozliczenia PIT (tzw. ulga termomodernizacyjna).
+Thanks, reporter confirmed that it's actually working (possibly just a
+confusion initially on testing the scenarios):
 
-Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
-temacie?
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1029356#74
 
+Thanks for your time looking into it,
 
-Pozdrawiam,
-Miko=C5=82aj Fiodorczyk
+Regards,
+Salvatore
