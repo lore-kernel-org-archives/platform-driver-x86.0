@@ -2,126 +2,143 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06594C54EAA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 12:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E22C25B4E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Jan 2023 15:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234062AbjAXMwj (ORCPT
+        id S234355AbjAXPhV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Jan 2023 07:52:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55382 "EHLO
+        Tue, 24 Jan 2023 10:37:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233882AbjAXMwW (ORCPT
+        with ESMTP id S234172AbjAXPhV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Jan 2023 07:52:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE44276BB
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 04:50:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674564515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mKlGGN/Cv/e/LCDkUt1uykWKamvG2Ui1ifnCT6XaOdM=;
-        b=jO1FbBraUjza6PFxu53p6dZgo6PdL4ggeAeYVH7RuPEuXV0cHB8Hmz8EnkV31aeBJqSxiI
-        TvAfsZouLo7KDwxtpX4kMcjRBjg86Kb5k1OhoQ3B/CBti+2YENmr3DdqM4cWHIJOlaRvHT
-        3nWOlwFLjmilenJ0cBTvDmX2hy4Vw2c=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-647-nljYRfkEPmC3kOQuOLC0Mg-1; Tue, 24 Jan 2023 07:48:34 -0500
-X-MC-Unique: nljYRfkEPmC3kOQuOLC0Mg-1
-Received: by mail-ej1-f69.google.com with SMTP id hp2-20020a1709073e0200b0084d47e3fe82so9711278ejc.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jan 2023 04:48:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mKlGGN/Cv/e/LCDkUt1uykWKamvG2Ui1ifnCT6XaOdM=;
-        b=07PrS9GPkgKOWY6GjahxhX0g8/dcJTvr0BiYTVTgI5wZs5LSqBdC7r+g2cI4hSAaxn
-         ymq3+btJkfPe+5QjcCUPzFQHPQ/RvA2upaVJaEbRXLnb6nT7Fb7GWTam+M+nF/J8/R4j
-         084JynbEyV5rk6vLfQSuLlLZ2osC6XcxlgZt7eLxosULVuu9tLZCkKEb/R2evCRh2R+B
-         GDK5XbBMOMuUGtWAK/zoFce9MGWDogT/QqkT7WRvH7GvFaR4OlNl7n3j1ccQsHeFnf7x
-         4B231iqC8g3m+7nYPmwCQdOQpFqhNiOkq3WYk7F+BuJST79uL3hkr+orayNgW/3fJtTs
-         7sJw==
-X-Gm-Message-State: AFqh2kp3E7I0ulp12N3epCn8Rbow3X4BMu1K39BP+hgylfGZd995/Qhm
-        a3qPfsux3rQsVzyFHm+UNmGl4nE4nKAiEeXX5Xppcj9NFjTILG7/6Ba2lTcdIBMOQtj2gmjTgGM
-        csuuBW5ykn7yl+gZza2DDBfb3DJmpkIzqBg==
-X-Received: by 2002:a17:906:4557:b0:84d:3a95:cdf5 with SMTP id s23-20020a170906455700b0084d3a95cdf5mr27820477ejq.10.1674564513149;
-        Tue, 24 Jan 2023 04:48:33 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuwf/QaQ7ssTfZKYy6xP8WjtnjSROX4nzzKhPAhI8xZEqFVaTmzVbtai61Rp493mGogj1b/Iw==
-X-Received: by 2002:a17:906:4557:b0:84d:3a95:cdf5 with SMTP id s23-20020a170906455700b0084d3a95cdf5mr27820466ejq.10.1674564512969;
-        Tue, 24 Jan 2023 04:48:32 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id m23-20020a1709060d9700b007aef930360asm861276eji.59.2023.01.24.04.48.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 04:48:32 -0800 (PST)
-Message-ID: <73853dc1-e925-de93-aefa-aebc1a23ccc2@redhat.com>
-Date:   Tue, 24 Jan 2023 13:48:31 +0100
+        Tue, 24 Jan 2023 10:37:21 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A48E4B4B5;
+        Tue, 24 Jan 2023 07:37:17 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 7606032009CA;
+        Tue, 24 Jan 2023 10:37:11 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 24 Jan 2023 10:37:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1674574631; x=1674661031; bh=Ln
+        1VijabIxlGKIfGtw6pw4bgh9TVRm1qkrRmVBkiKpQ=; b=mp4ZXwkB1w5HZeJX1w
+        FH/cZ2fcGKpaBIR2vPLNKaH747Y/Il5NtNd1nbfY8CQU/N8m1W4mtCo872PYbm9+
+        q0IP5+/2J1wKRUTLGZjHuthl9lJ9slxIvUZzt9Mzd7Ait2wi9J0uyGa1ngIfxptE
+        fTAgWbrtRqLqsBUh+lRlZAXvc0bDQZdvaXz7yuh16zldp2NbTTSP4nIiuEiOZQOH
+        ciDWXzcLy0/52VMObBQd7B8fPJLpqS2N2H/kdPiiuM+1l3pjfuXMSzgDQeaCKRV3
+        m+J5WgxFBHOjVubfmLOnkQt/EIoaktDr8oXv2Yom8sxVApFnyZWwuVRAvH64H7qq
+        /igA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1674574631; x=1674661031; bh=Ln1VijabIxlGK
+        IfGtw6pw4bgh9TVRm1qkrRmVBkiKpQ=; b=DA/0D+ne8WwskxxcLtDsBzk1qF7Sj
+        nuatnV0jh3lUYs0i3ydEt1isFMP+uIDMUMd9aPze+KGHYkArZJke/OrKv8Krc+o2
+        bEaQitrjt8mPQkMlIODkXH01WHzM6ElW7+H6G0CO3/dSi4O8Dv/dzAThIbB1DM5x
+        mv78zcdRplVsFeLikWbX8cq9KOc0QJSPn2qZe96ix0c3IuhiCEcp+ftsF8XfB3UU
+        fFp7f+TjaCfetWXn8fBeZG8xVm3Dvt0Iv+Uy/bfQc2c17Y32a95ZASCVD9LIQkS7
+        0Hso08uulLnCB2cF1b24IXJcCualb+IGZA2W9CumSbCXH298V56MtlblA==
+X-ME-Sender: <xms:JvvPY2F-6Kln338wfaWtx2Rt-joGGqIkPEpawTfBF6AqK5geXfdaiw>
+    <xme:JvvPY3UR6yB3TrPcdwSQra_uIWcDjPcB8WCMDcPDTx1foTWsD96539SEhThCQG956
+    poZyE6u1l4wnCKUpoc>
+X-ME-Received: <xmr:JvvPYwLlAbtZKuY-NLBM9ujx041pwyu-lfVFzI6AgMAp79HMCwv3TnH6X42GdxXliTV-K6W02mY1JlQDXHPhKElSGjILOZcslWJDE0rkxWEKakLH6FUVUxDioR7kjs21gLSG1IdAuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvtddgjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepvedtlefggefgjeettddvgfekhfeugfeutdekfeefudeuuddvieeutdel
+    jedvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:JvvPYwG6SXLGBV1ILWSMcorPrAGXIMhkIThfQZz-sjf7B2ZYIBV1qg>
+    <xmx:JvvPY8XcsHl0fwRADSXHcgmIkDiDwnqzYxxI3E8g9uwu0KtSTKNciQ>
+    <xmx:JvvPYzOaKZMVmX_TM0Pru9OpMGQaVabS55G2kciuHsJlhzNc7wUcyg>
+    <xmx:J_vPY6zk4LXYebLxR105YGGZULQdiMYs0JyHeCKdgSOhzCRrp26s-g>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 24 Jan 2023 10:37:10 -0500 (EST)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Fix profile modes on Intel platforms
+Date:   Tue, 24 Jan 2023 10:36:23 -0500
+Message-Id: <20230124153623.145188-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] platform/x86: hp-wmi: Ignore Win-Lock key events
-Content-Language: en-US, nl
-To:     Rishit Bansal <rishitbansal0@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230123214150.62597-1-rishitbansal0@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230123214150.62597-1-rishitbansal0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+My last commit to fix profile mode displays on AMD platforms caused
+an issue on Intel platforms - sorry!
 
-On 1/23/23 22:41, Rishit Bansal wrote:
-> Follow up from https://lore.kernel.org/all/20230120221214.24426-1-rishitbansal0@gmail.com/
-> 
-> There is a "Win-Lock" key on HP Omen Laptops which supports
-> enabling and disabling the Windows key, which trigger commands 0x21a4
-> and 0x121a4 respectively. Currently the hp-wmi driver throws warnings
-> for this event. These can be ignored using KE_IGNORE as the
-> functionality is handled by the keyboard firmware itself.
-> 
-> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
+In it I was reading the current functional mode (MMC, PSC, AMT) from
+the BIOS but didn't account for the fact that on some of our Intel
+platforms I use a different API which returns just the profile and not
+the functional mode.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+This commit fixes it so that on Intel platforms it knows the functional
+mode is always MMC.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+I also fixed a potential problem that a platform may try to set the mode
+for both MMC and PSC - which was incorrect.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Tested on X1 Carbon 9 (Intel) and Z13 (AMD).
 
-Regards,
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216963
+Fixes: fde5f74ccfc7 ("platform/x86: thinkpad_acpi: Fix profile mode display in AMT mode")
 
-Hans
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-
-
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 0a99058be813..009cf0bda756 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -216,6 +216,8 @@ static const struct key_entry hp_wmi_keymap[] = {
->  	{ KE_KEY, 0x213b,  { KEY_INFO } },
->  	{ KE_KEY, 0x2169,  { KEY_ROTATE_DISPLAY } },
->  	{ KE_KEY, 0x216a,  { KEY_SETUP } },
-> +	{ KE_IGNORE, 0x21a4, }, /* Win Lock On */
-> +	{ KE_IGNORE, 0x121a4, }, /* Win Lock Off */
->  	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
->  	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
->  	{ KE_KEY, 0x231b,  { KEY_HELP } },
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index a95946800ae9..6668d472df39 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10496,8 +10496,7 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 			if (err)
+ 				goto unlock;
+ 		}
+-	}
+-	if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
++	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
+ 		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
+ 		if (err)
+ 			goto unlock;
+@@ -10525,14 +10524,16 @@ static void dytc_profile_refresh(void)
+ 			err = dytc_command(DYTC_CMD_MMC_GET, &output);
+ 		else
+ 			err = dytc_cql_command(DYTC_CMD_GET, &output);
+-	} else if (dytc_capabilities & BIT(DYTC_FC_PSC))
++		funcmode = DYTC_FUNCTION_MMC;
++	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
+ 		err = dytc_command(DYTC_CMD_GET, &output);
+-
++		/*Check if we are PSC mode, or have AMT enabled */
++		funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
++	}
+ 	mutex_unlock(&dytc_mutex);
+ 	if (err)
+ 		return;
+ 
+-	funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
+ 	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+ 	convert_dytc_to_profile(funcmode, perfmode, &profile);
+ 	if (profile != dytc_current_profile) {
+-- 
+2.38.1
 
