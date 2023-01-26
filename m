@@ -2,144 +2,177 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE9FC05027
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Jan 2023 03:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99D0C54E94
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Jan 2023 14:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjAZDkA (ORCPT
+        id S231862AbjAZOBj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Jan 2023 22:40:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36226 "EHLO
+        Thu, 26 Jan 2023 09:01:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236001AbjAZDj4 (ORCPT
+        with ESMTP id S231783AbjAZOBM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Jan 2023 22:39:56 -0500
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on20621.outbound.protection.outlook.com [IPv6:2a01:111:f400:7ea9::621])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB22176A8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jan 2023 19:39:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AYWHm6RdVs69bIp6a+jM/NOEhMaytR675tO17L4SJGP4wPc8jaSR47nhxLeyhuk0qCm+YBC3MtakkxYV9QXkzwDmjWXkinOGtfnN2sv2/wfTvLws5t7o2nxjfuQEr8mDUAqlV4cb551XZL2bPqMKp9J3CdWbDCPEfg1nWsM/VQFaERjxnZ14966S8n9k4LxUYL8PRbCn0quTHV48OjXwPiFnHgKoSo3r6+Hegkbyn6WKiPaViZ6YV5Im3mWVacFYB8A7oHQdtWRUj1ik0bfpJzc2EdkevbXDKc931iQv0+ixcmB2c4xsnj72ofmCAI0GPijmT+jWkfpxju4a5HTq4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6dh3cw/zc4V1paY3Co2MBrvqFrloIHscIbZLBGSUL9U=;
- b=geGA3azkSJv848EbFe+pcgvLmxqaenki0idge55qxXNoq4pJBDp7zzEERPCXv1rzDe1tCNjK2Iw7jRCIi4qBAanZhOnWpnsC/bkeNhWO5pWQix0DssnnBPFCTv1TtGJiEqhu2Gs7pSn3ogRVTx7t4FhymBqcFx5nxf/Onuza3CNu7q24pIvq7eqX5WV7Ki0h4kGykD24Wbw1hzOhti99WCAw+RBE+QvnPuh4bp/dL8EmH1mjBVEgkZCFTO6wSPCPgizT3R0Vo2DNjmMRxMyceY9SWRkOnlpgx14WDCgRISSK4/m37gPIYhHnD8etbWLxS0J40ga560fzDsNN/76OgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6dh3cw/zc4V1paY3Co2MBrvqFrloIHscIbZLBGSUL9U=;
- b=GCYEyjzDYPKJ6PeATci6r+71RgWmuc0h2xzOGW9dDQMJmJCa2H6eY9Vexb+1IavbxkQvSq7rBPO1b0SbMVsz2Z+h8pV2VJDJZ9umUUk10AecOFtysj3fHhG3Ji39wn3nPnglNzVYbXmFEO3rZSl8SWdrLrdjr+LA7n0gXO3G9sY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH7PR12MB6658.namprd12.prod.outlook.com (2603:10b6:510:211::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Thu, 26 Jan
- 2023 03:39:53 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c%7]) with mapi id 15.20.6002.033; Thu, 26 Jan 2023
- 03:39:53 +0000
-Message-ID: <662fcfb1-b588-cd03-a8ba-978a9896735f@amd.com>
-Date:   Wed, 25 Jan 2023 21:39:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 0/5] platform/x86/amd/pmf: Updates to PMF driver
-Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20230125095936.3292883-1-Shyam-sundar.S-k@amd.com>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230125095936.3292883-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0205.namprd11.prod.outlook.com
- (2603:10b6:806:1bc::30) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        Thu, 26 Jan 2023 09:01:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C956D5E0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jan 2023 06:00:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674741603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=golVTvyAYMyqQTXL0A4vzvXwefTm1YQbAQTKoQROxVQ=;
+        b=FD5gKYrDYlhzuVzb7ZUHAiZukVkqJX6mIk9RjJGJaob4ChttE2KrIQwmNDy3J/3fyYIUzU
+        afmYGrHZqqUQ873br5n1kUy8y/qNaReJ1O8oXLIMf0nP3B4VoUYcCeywuHEuZW86xJME+2
+        SBFH5SCrLxFUKGOh637PMoNfigLiNyU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-589-ko_QR4HVOb-HXdMbIPxOaQ-1; Thu, 26 Jan 2023 09:00:02 -0500
+X-MC-Unique: ko_QR4HVOb-HXdMbIPxOaQ-1
+Received: by mail-ej1-f69.google.com with SMTP id nc27-20020a1709071c1b00b0086dae705676so1315764ejc.12
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jan 2023 06:00:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=golVTvyAYMyqQTXL0A4vzvXwefTm1YQbAQTKoQROxVQ=;
+        b=2B+y6qHKC/nAcqAqKdTQFlHbt5tWR72K5BgaS/OmutvOQH9eLHtfhjbZibrhEPw+N6
+         Kiv/n0QP/eePU0/xwVHIZ85kH4JvTpVk0VbrOucvYLWDMUkkie/w2fA1ptG1PEt0PFX5
+         UNcNfcmbj7pV4o+ZqNAnJ37rpEn4YSNbSahMVFCF4quQPZQnTw/lRZCYo/FN7Sz1yhIo
+         rByM4VPeg3KULCj8EvZjpjZfm0930m5kMlieiyLfHRuM6vNjfwfVmdP84S9YFwevsIXx
+         F2QndXN6y6wKFXiK1bh/fFZR+LkzTkObxgl25jA6peL5bcRwpO3H27n41LmQIQ/OQgMi
+         6Bjg==
+X-Gm-Message-State: AO0yUKXSHjDr8zrUMD2hdb/VFo5y7Uoq+uI2BDz4QfWSGvv2flPHKxdi
+        CriM7G3gtEaBDuqcdQP2rA/hiZDy1naW3JsYA7Y802C34BX9QHcMt3JXUytDAfiUNkA9T+Zg3cX
+        fT2G93R6hQ9c9FhUZfYsa4ZtfiF5cpDHg/w==
+X-Received: by 2002:a17:906:1290:b0:878:5da4:77a6 with SMTP id k16-20020a170906129000b008785da477a6mr2841362ejb.51.1674741601545;
+        Thu, 26 Jan 2023 06:00:01 -0800 (PST)
+X-Google-Smtp-Source: AK7set9i+i8oVPbwI2m3EAe737D5eqSwY72umpiASPA9QOU/tRuFqjGkSd6v7xXqSk4NzbP4w8Gzcw==
+X-Received: by 2002:a17:906:1290:b0:878:5da4:77a6 with SMTP id k16-20020a170906129000b008785da477a6mr2841347ejb.51.1674741601326;
+        Thu, 26 Jan 2023 06:00:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id h17-20020a1709066d9100b0087856bd9dbbsm642242ejt.97.2023.01.26.06.00.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 06:00:00 -0800 (PST)
+Message-ID: <4d44b351-d4bf-56dd-952b-97a70687fb68@redhat.com>
+Date:   Thu, 26 Jan 2023 14:59:59 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB6658:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59472d42-02c1-4593-cc29-08daff4efc36
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IDVg4YaQBM4FHhWxrooWf+BRrdYs89f3+O6dwpN+nExzdym/WlKCima6zEsIy/SAYir8NfbpBm2eu1x5VvdVnZLKlIdWzzyJL6NL/27j2a7NgyP72+Mr+EzitibjgIMDp9Q7ZaSp8YHwa4H5fL0Y+0527MY9JEyzKs4cTyRm1cXIQ6L55E7q1kgtZSQbeR8OihvxBIOhJ6boyieGCjhMsTGHHzugyvqVb3IRy3gScJVzjKu4kWO1RcYPGmrojmbz4NPAD6CPa9R17c4fn3b2weku+9GkvAzuAToY18Nphk343CUIO2CMttS2JTAmXttA+RNHstEsmH3r6sl+jv5T/Zxfv+yoJMiT2dbwT1VPi51bWsGVsZdxdLb1OVD2VaQLlfrtUawENnTaqNrO1duiy/dF033YNHXU49KAY8y4lR06TqFons9RxIlsaZINKP0IYREMfd5Fv8YqP09tthTPQNAJxtPXsQhwfpWviRgbeeSl3vgUhAMwzwZnFPEgAqMGfwD2Zco248PUHav9NfIiePrdNcH658MrWF22NvziQ4kJS3jOaVVPj2q9Xh7pEXacRpj09TAve5qu6yMKgAhF4j3kKqgs/GzscOhctRiv18mUiL++Ijix0cG1L38nvCGu5io3xog/Uao4qFXKP/bAC4hQUuIlnqxp84EPEynAQ5/gV5oUpqPcNfdK1a3atYVrvrO163i7kXn8ZfrS3niY0QgXrTxmwbGySP6biqtCC4E=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(451199018)(31696002)(4326008)(86362001)(6486002)(66946007)(66556008)(2616005)(186003)(316002)(2906002)(66476007)(8676002)(31686004)(36756003)(6506007)(15650500001)(478600001)(53546011)(83380400001)(38100700002)(8936002)(41300700001)(5660300002)(6512007)(4744005)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OUZBcDhKcGd4NDc3bTlWZm5nVFZtczdqb2RDeW1FQVRHcWJmbjZpbjdaNHh1?=
- =?utf-8?B?YVROZ0FraFJ4b3owWnBYZ2NQNmMzMS9vcUY5VGc4Q1RFSTRqNlBZZ242STZX?=
- =?utf-8?B?UWYrNE9HbFkwWEZvVlU4TE5XaXJhdlB3QzFpL3N0emtrZXBvSWp2Y3pINnVu?=
- =?utf-8?B?a0ZFUnpELzFSWkNhWlllTDdmNFpIZlJ5dXB5Vitta0VBNWthM2xYY0lFTit6?=
- =?utf-8?B?emxoVlh0bDZpMG1zc055SjcybGkrb3haUEhmNGg5QTJCSEFsb2NTb3pyVG8r?=
- =?utf-8?B?d0FJbFJiTUY2OG55dnl1WXZSd2N2aU0vbElRaXRPem81Yk1FYVhXVDFOMFhF?=
- =?utf-8?B?VktMKzd0WjcvSUxZUEhZVng1SWd3VXIxdHd6ajh1UjJyUEpiWXZYeVFsczZo?=
- =?utf-8?B?Y2Fkd0FMUS9WVzBPZkk5Nk8rMzA5Y3FSemEzUHBzR1FqcWd0VktHODZsWmpV?=
- =?utf-8?B?NnlQam84YVZzQzVmUXNBb2EycU1jeHdIanpxL056M2loVU55UXVmelBVbjVO?=
- =?utf-8?B?YUtMZzJsbmpOYjlDU2RHVHNYa0xxdlNmTXJpTFJLdHdYSjNQQmlSbVJqcjRr?=
- =?utf-8?B?MkQyT2xDNVE4WUV2aisveDhuRm5lelF6UjVnYlQwQ0ZyRk81N1Voa0dwemVW?=
- =?utf-8?B?eXdkSkNvWm1TOG9VdUQ1SW1iMHVCSDhxZ1Q3SDRTdmM0bC9wbms2Y0trZlZQ?=
- =?utf-8?B?dzB0eHJkdFJlbmE5STBzODR0SHBDMEJWM0svR3lMK2crNHl1ZW9iNXJqcFJK?=
- =?utf-8?B?QmNTbVFjbDFnWmJPaHVhaVVyam11bnBoRHZKbFRXWFhYR25BcWVYOE5tYUs4?=
- =?utf-8?B?cWpPTmtkaWJwbUYrRk1xdkZHb0pYVGV1Qndic0l4UWVuWk1IeEVJa2hUSnRP?=
- =?utf-8?B?aDlVQ25ibWpDdGpsaFYyQkFGOTZicjVWdkZoalV2dEJZOWs1TDNscld0M2FP?=
- =?utf-8?B?Q2Z0K1MrcGh2UUpWY0VPbGt5R1pnQXRvQ28zMlMxeld1c0xoZWRJK05UcC9W?=
- =?utf-8?B?R2ovQlhhdDVyTTdvc1BYSEc2ampzdnc4VzhsQzA0aHhLNjFGYlYzSnBkNzFm?=
- =?utf-8?B?QVFpYW1PbG9temZKTjZ0OWVPTHRmNmdsVVpTRkprZkZXVHVEdHlkN1M2QS9z?=
- =?utf-8?B?bVFvNTBkWjQwRWJ1NmxUaE9LNzlQYXE3blRQaFkybC90MDhKV3pyZVhCUWJE?=
- =?utf-8?B?TnUvejhrTVdKRDdQR0phTXJFck9ZekpRNWpHL2JGSCtyaUt1YVNKRnhTYlM0?=
- =?utf-8?B?Y2dJWXhLSlIzSXJ3UGMrQTF0NTRnYlpkNE1NeWZ1Kzk3Y01IM0xjQWVxS3Bx?=
- =?utf-8?B?RkdHU3Bhb0VWMWhlR2NyQWw2TmNPM3Q3VCtKTGswOHZmZE0zcFdmV0VMY1dk?=
- =?utf-8?B?a1o1UUVvS0Eva1NIV1JrOCtYSTlkbWdhemRDaXhQS1dzSzhTdmlEYm1xUkFJ?=
- =?utf-8?B?NUVpMkN2S05kRk1EQjZJRU5aQS9vU2lmNEwxUGlCNEd0UXV3OTNZUEtFSlBI?=
- =?utf-8?B?YmkvRXBLMWp2dUZHeUxNUUhreFh6eFNldko0RXR4bEFkd2U2dG5ZdVI2OHZF?=
- =?utf-8?B?SytXUHJ1RzNuSkF4eFhKcjh4Yzh6Z3FYandYdm5HL3BPbjdCZEtyOGZMSkhs?=
- =?utf-8?B?MFdheVBVaE9OeTVPYy9HaHNTS3VQVUVlSkFNblcyODR6YXBvYU1LZ0ZyeWZP?=
- =?utf-8?B?Tlo5TVc2YVY2Ri9RWHYvNXY5TnRMWEU3UWVicCtnSU82cmVYUXN2dHpJS2Rt?=
- =?utf-8?B?cHJ6TXFwYnpLdTVYQnF4SjEyVm5ZNGh1c3N3YjZkSUV2clhNcDk5czIwRk16?=
- =?utf-8?B?N2F1cnB2TDE0UzI4Z3pseW5OSXR2MGwwN0k2N3lQZjViejM1V2VrSDR5WlFk?=
- =?utf-8?B?ZjZtdXpkc0VNOFZncDRjZVRCaWMzcWVqbEI5K3BXVTM1dlVnVU9sdWxEVmNP?=
- =?utf-8?B?a3phc2JDOEQyVTVaRlFiclNXdEZZelhDdWhTV3o0ZTdmL1NzSXM0NmVTVDM2?=
- =?utf-8?B?c2dmV2VIRXR6RGFuT3laUVhPYnJLcFFEMlA4amdZQ3lDeDhtR1pSOU9Zcjlm?=
- =?utf-8?B?ZndHMWc5MExGR0N6bE5EbVkyZjZwK09iOHlLRUNzMk1NZGFNWU96WC9hbTJX?=
- =?utf-8?B?cUlsdFdmdnpRQnEydVZGRnFjSS9qZUdwK2pSS0lBRnNYUndCTGhwdmFQOW1k?=
- =?utf-8?Q?Hq5cUGYGv2mgiGDenLrNyCZuzaMqrefVq5HciDIuTwcs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59472d42-02c1-4593-cc29-08daff4efc36
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2023 03:39:53.2358
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hMewKspPAnI3kxtuCg8wPlrJAlosDHw8Zqw9yCL5+/4wt1r89emiOSR39GatkBVyGkKvHQ/ciSHKrDA3JFWXJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6658
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.2-3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 1/25/23 03:59, Shyam Sundar S K wrote:
-> This patch series includes general updates and bug fixes to amd_pmf
-> driver.
-> 
-> Shyam Sundar S K (5):
->    platform/x86/amd/pmf: Add helper routine to update SPS thermals
->    platform/x86/amd/pmf: Add helper routine to check pprof is balanced
->    platform/x86/amd/pmf: update to auto-mode limits only after AMT event
->    platform/x86/amd/pmf: Fix to update SPS default pprof thermals
->    platform/x86/amd/pmf: Fix to update SPS thermals when power supply
->      change
-> 
->   drivers/platform/x86/amd/pmf/auto-mode.c |  9 +-------
->   drivers/platform/x86/amd/pmf/cnqf.c      | 14 +++++-------
->   drivers/platform/x86/amd/pmf/core.c      | 23 +++++++++++++++++++
->   drivers/platform/x86/amd/pmf/pmf.h       |  3 +++
->   drivers/platform/x86/amd/pmf/sps.c       | 28 +++++++++++++++++++-----
->   5 files changed, 54 insertions(+), 23 deletions(-)
-> 
+Hi Linus,
 
-For the series:
+Here is the second round of fixes for platform-drivers-x86 for 6.2.
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Highlights:
+ -  Fix false positive apple_gmux backlight detection on older
+    iGPU only MacBook models
+ -  Various other small fixes and hardware-id additions
+
+The MacBook backlight fix includes a small change under drivers/acpi,
+this has been Acked by Rafael for merging through the pdx86 tree.
+
+Regards,
+
+Hans
+
+
+The following changes since commit 2241ab53cbb5cdb08a6b2d4688feb13971058f65:
+
+  Linux 6.2-rc5 (2023-01-21 16:27:01 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-3
+
+for you to fetch changes up to 1bc5d819f0b9784043ea08570e1b21107aa35739:
+
+  platform/x86: thinkpad_acpi: Fix profile modes on Intel platforms (2023-01-25 12:45:16 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.2-3
+
+Highlights:
+ -  Fix false positive apple_gmux backlight detection on older
+    iGPU only MacBook models
+ -  Various other small fixes and hardware-id additions
+
+The following is an automated git shortlog grouped by driver:
+
+ACPI:
+ -  video: Fix apple gmux detection
+
+apple-gmux:
+ -  Add apple_gmux_detect() helper
+ -  Move port defines to apple-gmux.h
+
+asus-wmi:
+ -  Fix kbd_dock_devid tablet-switch reporting
+
+dell-wmi:
+ -  Add a keymap for KEY_MUTE in type 0x0010 table
+
+gigabyte-wmi:
+ -  add support for B450M DS3H WIFI-CF
+
+hp-wmi:
+ -  Fix cast to smaller integer type warning
+ -  Handle Omen Key event
+
+platform/x86/amd:
+ -  pmc: Add a module parameter to disable workarounds
+ -  pmc: Disable IRQ1 wakeup for RN/CZN
+
+thinkpad_acpi:
+ -  Fix profile modes on Intel platforms
+
+----------------------------------------------------------------
+Hans de Goede (5):
+      platform/x86: asus-wmi: Fix kbd_dock_devid tablet-switch reporting
+      platform/x86: hp-wmi: Fix cast to smaller integer type warning
+      platform/x86: apple-gmux: Move port defines to apple-gmux.h
+      platform/x86: apple-gmux: Add apple_gmux_detect() helper
+      ACPI: video: Fix apple gmux detection
+
+Kevin Kuriakose (1):
+      platform/x86: gigabyte-wmi: add support for B450M DS3H WIFI-CF
+
+Koba Ko (1):
+      platform/x86: dell-wmi: Add a keymap for KEY_MUTE in type 0x0010 table
+
+Mario Limonciello (2):
+      platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN
+      platform/x86/amd: pmc: Add a module parameter to disable workarounds
+
+Mark Pearson (1):
+      platform/x86: thinkpad_acpi: Fix profile modes on Intel platforms
+
+Rishit Bansal (1):
+      platform/x86: hp-wmi: Handle Omen Key event
+
+ drivers/acpi/video_detect.c               |  24 +------
+ drivers/platform/x86/amd/pmc.c            |  58 +++++++++++++++-
+ drivers/platform/x86/apple-gmux.c         |  93 +++++--------------------
+ drivers/platform/x86/asus-wmi.c           |  17 +++--
+ drivers/platform/x86/dell/dell-wmi-base.c |   3 +
+ drivers/platform/x86/gigabyte-wmi.c       |   1 +
+ drivers/platform/x86/hp/hp-wmi.c          |   6 +-
+ drivers/platform/x86/thinkpad_acpi.c      |  11 +--
+ include/linux/apple-gmux.h                | 109 +++++++++++++++++++++++++++++-
+ 9 files changed, 211 insertions(+), 111 deletions(-)
+
