@@ -2,188 +2,193 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5F2C54E94
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Jan 2023 17:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B388DC05027
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Jan 2023 03:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235581AbjAYRnN (ORCPT
+        id S229458AbjAZD3e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Jan 2023 12:43:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
+        Wed, 25 Jan 2023 22:29:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234924AbjAYRnN (ORCPT
+        with ESMTP id S229475AbjAZD3d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Jan 2023 12:43:13 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D20415564
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jan 2023 09:43:12 -0800 (PST)
+        Wed, 25 Jan 2023 22:29:33 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2071.outbound.protection.outlook.com [40.107.223.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691D02B619
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jan 2023 19:29:32 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lFAm5r7NV6Jfcg3OP04XzORblItCua9MWHrj0+rI/0/gfLS5uD9sJbQ97MIJb6iLc8yHjKrS7RB6FW69SjRDsadctfEKup7tM+Z52YHS/9WHmx2ohQABsrlbRMx9I7DPmlI1wXgq/dfAsEgGuHJCosTKc3GcHzyqerQO7tT9SK9e2ojA60ZDcjmuD5XmMMmn+e4Kzdbu+i7gjy6iC2bY/0exlnzd+PIhfjVsoiXtKdj96gby5//0h8dlrfCc4v85KW+b619Q65K/gKhwi79FgA9EbV8FpR8msEEMIwIq2SHAiBURqw9h0MGfV3NQI/AbCzKUK+nQrcEZ4KxTWfoE3A==
+ b=Thkmua418CTx/0q7QahnlKDIhI4gJeIiD7DhZoz3F+zfK4YAgSBP2DBJhI7ffOb82hVTbjcJzm/vJg+kBzh32k/o1qXS8NCcINH2yy+ADdNCI+3tNAEtWf9xOjtdVHEYkcTTcK8PhY3NM6xQOKEWVXyZe3EEJz25a+Nnm8GFjtfobVMKqgKNYSnbUIKlzxlTUoAkLXT0fu+GlW92NWcNL9DII9412A1K2wFgSa8NI143+4VNyxcsgEpmNW2Fh9Esu64GR1V/LTniJmSaW3GiWxxziKqMegZEYnr8qJf7EkTGTMC6Cyj8RfwMLzVifQs7oLQqMuxwpTcwVDORK/0r+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QFsI+SQ5+0SgrTFfeAxdSqA2/UjOqx3b2YyKUx+B0Rw=;
- b=gbybbQaTN2I9iapL0CDaPBRvLCBlrUePnS0Veibf3uZ68x8FL7Vmd8oAFis3d/SYfjEM1u/dOJ1PLZxEEzUqTm1W2ET6xh80Cj8V84nh8vtXLjk9+ONOy1m2xzjeOYxLHrQDsdW4jcXby/VWnZjazDERLq87i1vgJIit1a+VuOrWDCIfrOJjDObru0eFPGWOEPsblDzFXTXMJlMTanOWiis27PNbXElU1BIaSUBH7hQnkOYsfU+g4P2AEnCWRs5VVbUGShK63EJHFZfnK65IeGRbIDcSJ3ii/frOEOGnEgQ3fwpFokAa9V6gf2O6Aj1aLMI1xqkmJVUdHYkSX6dH5Q==
+ bh=C1bJJm3Z+iGIJ7rIwIO5LjD0OxVP0IerFqYMva5vDgk=;
+ b=jghEh/1qyfjzm0KrhJxCzl3/Jd+Qam2MipF7EzVuuYXgipKvcvCgz/7Oy8vG4QbEQ6uUJ2PV/0+AQpxWR9AV8WEApwBXkAxCDaNliiDglMlyGR/tlDWaX1klbYbJsD+WY3HNyoZvMuBedu4OuZpXK7QUk6B75yziBA71WErNWRXj2TC5QgUe8s2yBHqFsHapG4kE4yREpRgwIuBhptUIlxEV+ZmKwdqDk+kSc64xGGBRGwPfpQtb3UPElCuDSCX3Dek0XTeBuxLLuYw+U1suxPM4Kv2enwFhA1h6SaAjFBHSkANu9Ty+sjw31VSAEsiTvnFWpeeaE94+LtY1D1sy6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFsI+SQ5+0SgrTFfeAxdSqA2/UjOqx3b2YyKUx+B0Rw=;
- b=SVYaRRWcyvV0SgVCbHZgeQTroa7EigIWouOYsKfvFefZbehEIu/INFaHdlm34Pjli3UYqRze2Zx3HwjvIWJtU4yLu5wgtuCnG02Dbs2FY0iFb74SKHLZyM9mAUwma+rO+GDPhG/4k0l+jiPcCbCRs/DEjgJDCoxz6bcdcl9aZQ0=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CY8PR12MB7538.namprd12.prod.outlook.com (2603:10b6:930:95::21) with
+ bh=C1bJJm3Z+iGIJ7rIwIO5LjD0OxVP0IerFqYMva5vDgk=;
+ b=tQvxZuE6mCP1KQ/0E5gN5oSfY6WcCGKJnmJivoNg9j6+oq9M+0+TiFsPhxCAhcDBH2cpaKm3KJHt/5SvxEMCv+aF+Kmm8HfKqWP2NDmC5BJSRJycNCfVzcsvGsB7bs/lX/+G4kO69NIVEWIGz6C5zO0O3q+Sou9LX1YlhNFcn9M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by MN2PR12MB4502.namprd12.prod.outlook.com (2603:10b6:208:263::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Wed, 25 Jan
- 2023 17:43:09 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c%7]) with mapi id 15.20.6002.033; Wed, 25 Jan 2023
- 17:43:08 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.22; Thu, 26 Jan
+ 2023 03:29:30 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::e7d8:1e35:79ac:d6e0]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::e7d8:1e35:79ac:d6e0%9]) with mapi id 15.20.6043.022; Thu, 26 Jan 2023
+ 03:29:24 +0000
+Message-ID: <908dc053-80d8-2665-8e78-888947b4c8dc@amd.com>
+Date:   Thu, 26 Jan 2023 08:59:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH 2/4] platform/x86/amd: pmc: Write dummy postcode into the
+ STB DRAM
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
         "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>
-CC:     "Goswami, Sanket" <Sanket.Goswami@amd.com>,
+Cc:     "Goswami, Sanket" <Sanket.Goswami@amd.com>,
         "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>
-Subject: RE: [PATCH 2/4] platform/x86/amd: pmc: Write dummy postcode into the
- STB DRAM
-Thread-Topic: [PATCH 2/4] platform/x86/amd: pmc: Write dummy postcode into the
- STB DRAM
-Thread-Index: AQHZMLC81ICiV930aESU33yajpfKMq6vZ1uA
-Date:   Wed, 25 Jan 2023 17:43:08 +0000
-Message-ID: <MN0PR12MB61016002AB38595C34C40770E2CE9@MN0PR12MB6101.namprd12.prod.outlook.com>
+        <platform-driver-x86@vger.kernel.org>
 References: <20230125113127.3862898-1-Shyam-sundar.S-k@amd.com>
  <20230125113127.3862898-3-Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20230125113127.3862898-3-Shyam-sundar.S-k@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-01-25T17:43:08Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=cd6c516e-3109-42c4-a482-0d50bfa4f51c;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2023-01-25T17:43:08Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: 7f0e9024-76c1-44ee-a347-362b0e48944f
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|CY8PR12MB7538:EE_
-x-ms-office365-filtering-correlation-id: 68da6295-d575-4b3c-36b8-08dafefb9f44
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sUcEkCLtMOL8TsH+spqJFrI+mxO6baciiiWSV6UFApQVJgB+PJ8WtESnpPdh+WgcEqmSvlf/LSlo62I8QPpv04md6RktS4iewjaV8FJ1HssYaU8O/Nc2uypszvahrkgyeSc6B3AebQoP8nkwkZmaymM83JgG6AuGhvmue4YsqPw55Rq230Amb85HX4XgtYQ8pwD2s7YRFC7SFjgX0vUSNAjLRZCokNroqVoqxk/NjzGziHhtbM83Q64vXP/3Von6ZqzM1H10H0mTHCcSbCYSEchCBpbADt3b+W2v+uT3HKOX7zmNdgbKOnTbbAYgSDBHORbz+pYycG7HdSuKauAjLf/qH9HofOJ5jeFVWRcdoyZpfjKKDiFKqFLv39xGqKSqweiAmJz3dLPA9R0Zw0T95qR71wY7tJHqAzlFkJvmmKdpkr81ankH39qn5PugQX8KHMdIjO/TEnUxP3FOcMrG0jRYHUpfz4kQrpnLss1+e8xUNUdsdMGH344B+7WoYW4L53DCXmI1S+Mms4pmFVj46KUpyG8xwqCFRZrNBuNUwKHWU0cV3e8qv6H1ki03E7QhreRA8wyNtAa/lFwBv+AwrsM/HHQ2FUtI7geOmwDy+0K4iQQEY2oPe4WItwdFADh5YNny8hTkmXarr/NZtLcsVQiWzAGe5H7PAw8ObWzGGG524umKBvRyUn5990h3T/5pcjD/XJRFdP25pW4acr7I8g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(39860400002)(136003)(376002)(366004)(451199018)(38100700002)(83380400001)(33656002)(5660300002)(7696005)(2906002)(41300700001)(55016003)(86362001)(4326008)(8936002)(52536014)(316002)(6506007)(186003)(8676002)(66476007)(66556008)(64756008)(53546011)(54906003)(478600001)(66446008)(110136005)(66946007)(71200400001)(9686003)(38070700005)(76116006)(122000001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?MEblM98/a3EhYhogHoYL3vQPVTuju8p1wrAaGPSzWxMOavAwQY1pEoN00D6a?=
- =?us-ascii?Q?/wqyeqtI+iRUwdPn+tfB7DwpC+n+IfF66MIw24v4zrQ26Ibz4rqgUnJgYB7B?=
- =?us-ascii?Q?fYiI6pQd/mNm5zhV63DAJOpSDvMXqPeNbk6W02vsFJHa7a01qMaOV14BPKza?=
- =?us-ascii?Q?GlqrKDj/RdBGMq5sEuqt1J5OIB5Y8QMXUSX+M17Tv02ziSnN62WNdG3ru72y?=
- =?us-ascii?Q?ncv/dJDfBUGH73p899GkvVYseICF/fafdr9yhdTidgXxJwRyhp6u14QDeQw2?=
- =?us-ascii?Q?IOVUxyIcOTvx+l3/6VAwl42IDmgib1x8zQk0h+Ig8MPr9k1/xPjgbnrIpcZq?=
- =?us-ascii?Q?5ctpLRRhu8nBT00kALjBOqDLL+3amlL9jaVHtTFc5wipgXFhU8W/xmhlxvHy?=
- =?us-ascii?Q?uXAXSp/V72Ln6uik+qVZaCx9zPvsOJ273RVOz32ywOw8D6pD9jyQ+Qp2IS91?=
- =?us-ascii?Q?GM6TxpF0naSF9LNPJkw4jPpEox/ukoaxw0t7URIeC2SeRGwk92isC8YkN7Jx?=
- =?us-ascii?Q?ZlMg3TsISOUMs79eP+bJDolClFoUDUi15sgn7TADjqwX7O1hL4JfEAs03ju8?=
- =?us-ascii?Q?3peATOnpiMAp0RNx66HlU0i83N60Me21BoLit1n1UuKTeqBeA5KuafUOfB5R?=
- =?us-ascii?Q?ejeWDvzUSzqUSvl9iUjIvfAHSS+I7pcsmxjBtTurp2XS8gicCJtWLLoPFUMr?=
- =?us-ascii?Q?pTDb8ieNGwRqH5bkqBVw8JVxWCWcMr+Dy41+vOh40m5quSDcDn4n0wUzgbmv?=
- =?us-ascii?Q?e6Xhp3UOluJTGFjioQBvdfcBtLfVdJwx0Hwu7Uxs4s/z6jNKYxDDn9UdrkIn?=
- =?us-ascii?Q?8B4gI2hbooy3g093JvVIooBaje+Jxm3XQ+XuQ3HVa2AKYykHBQk51Cb/6Mg0?=
- =?us-ascii?Q?v00lcJNZpmGUQ5XqZvcOFHj4jdIUpGPIhX3dvnLOMgSiq8InNj/RaFUiSgMz?=
- =?us-ascii?Q?KbuiZAnMRqFoPwYXrf9GTbx8SwY/t4KriyGVss2VpDwxNCJL/G2VswwBtne9?=
- =?us-ascii?Q?BDj48xVnvmaE0MQCs0KCXsY08dbOFV3x6pUjhovNe3W+ar9zK7gyTpBMaOKB?=
- =?us-ascii?Q?oPim1G0Fsv6yR2lEJJhUWU53lrn/goc7FHTwxwoBFV80gbmCK+gOV8m62OUr?=
- =?us-ascii?Q?GMmDZ6UMBklrB0pfA0ed3tVX21s8sJIndnAbYINHyMSdw8GYQ6E5sQ04p3uX?=
- =?us-ascii?Q?x5oJsMheaJ5Mk579ZA9HqcQSe/9TBct/83Pwpgv9VzwOVcQP2JN3lSRmORNn?=
- =?us-ascii?Q?wXGfrHrgfFrlI3npSXim0jMQpt4LK1ewAnR8i/VzdFQFHiiPezkpEekfDja0?=
- =?us-ascii?Q?yNmke4yqihowvq5ALK9ywC2JzyzdKWyeqe7c1Ou+GkB6xazSPxrXjN8/EAjv?=
- =?us-ascii?Q?IF8DjPscGfLC9TluPg5MLl/1pesX3IZhCIsP3alHIb6KpBnOhXcBYDK//K3U?=
- =?us-ascii?Q?Ivwyn8FXiUdBROdav+XGZey30dtjQDsGFqB1RaIvJCf6IKfzBBFJp/V/CkY8?=
- =?us-ascii?Q?YIRKEtKEoyYfzrtWyX1/62Sd0wBwnyomkLuDUI2V5xZGb/4LmTKYQFSNXU1S?=
- =?us-ascii?Q?tNXEjW5lFQu1uUSPF4Z3tFSQI2Pd8xLnjZxEqRV1uuOBhhZ5OWRbaHOK0s+j?=
- =?us-ascii?Q?6sxBshFgjtH4cpqjCaddkEo=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <MN0PR12MB61016002AB38595C34C40770E2CE9@MN0PR12MB6101.namprd12.prod.outlook.com>
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <MN0PR12MB61016002AB38595C34C40770E2CE9@MN0PR12MB6101.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0008.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25::13) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|MN2PR12MB4502:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7fa79244-0e7b-4935-fdc7-08daff4d8570
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: k0wzj6dk+8rg7821sc4/+7IukhP5C/XXRxUJDHqvtFkck8+BqtVOmoTSU4By5frVihCbj543iG7O4+FkHcIHe/p38LizegBXytkGUWyCB728pA9bKe7qEnmtm4i13zB7ZYqQKF26bEMYWOl2pPIDemwz8tVZeDk0OKR88lzqvSRnU89ZU+zC51K97W+jaEVMjomzIbT1YuXDrs9VCdqOSoBzYUhHwNzOPT95kFrrTP5HdGCrIzyLxD9axdHZD8BTsPMVIaNK+EuIgU4+f+eKXZ8MNk2PN6clZ9rLB5OMq6RbeQ9SY2qwZAzJ2HCg8pj4dhVT/yH2QqmkxRPgJPptT7haCa/4NfgpfXBJXp81bOa7lEfcf6WS7bTdkdOt5tT9iXsK4oBnz1afmoe+EYKpkjgPGCaVvw1r2/5vSdaXBdMHe1RibUXlOx7uAi+lZCa387UjUijjrm662ode48HO9cZYVvA/oXzbVXcbOmtyTZxXlERizDazx779+4CfFAY46WvwSgOwODiETDhLKT37oWbsL6GdZdCRkXCroysrDiYwAHj9I7mRCSmKLWkzgYM9b+ICqdpD7PbEGocifsNmb5/L3IRac52ILAoIs8nXpJvG7uM6wy2GKghTqRhbPUTcbwBxHlNOP1VOeO0n/OF4dTtiw2NuHBYAHGorNz0xMrzhwxzlwukWlmir8MLZ8NqS6Ov2sx5XCClpfAEQ1yYAbifzq4RjOKKigMdE35RRsmc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(39860400002)(366004)(396003)(346002)(451199018)(2616005)(38100700002)(2906002)(316002)(110136005)(6486002)(478600001)(54906003)(8936002)(36756003)(41300700001)(31686004)(86362001)(83380400001)(186003)(6512007)(6666004)(31696002)(53546011)(6506007)(4326008)(66946007)(8676002)(5660300002)(66476007)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aGJuVXhFa1hwZDlXSXFPVlRwVlpWWlhRSDlkdTU2REZVRjZMdnRkZnFzdE5u?=
+ =?utf-8?B?YjJ4VEUrcjhPWFpwRUdZeEtRdW9FWnhpd1hoaFFtYS95Q042WWRRMG9VV1c2?=
+ =?utf-8?B?dlFCUVBzV0lIY3JybWU0UXRmay8xcEJkZW5sTHIrcFlOcEY4L1NTZ0tDUmpJ?=
+ =?utf-8?B?dDg0UXZpajZDdUlUL3ZTeVpjWXhHMVNSeU52VWMrN3JOV0xJWGNpRU5ZTWlL?=
+ =?utf-8?B?WHFGNGxlSnFSZklBK0pkVU54T0IzWVFmbWF3OUVZK2FSM2hpMytQc1ptbmNw?=
+ =?utf-8?B?U0RicmJkdG92ZWNIemNJRlVyYnJoTHVlQWludkRlcm82Tm9HaFBMTGREZUJa?=
+ =?utf-8?B?Vk5Vc25sbEVuZVNuRXNMT0phZVp5VGlOaDhsODVxREdGSXdYQmVkUFIvS2Vk?=
+ =?utf-8?B?Y1FVdC92R2Zhd25tdkNkZExJVkRpS3dwb2lFUzlYTEZPcUhmSUdOK284c1g3?=
+ =?utf-8?B?WEhmSWF4bTJFTWNIeHhPUUNjZ0NTamQweHQ5VEIzK2lMdHJSUU14RG9rUFZV?=
+ =?utf-8?B?UXJNZVBSTlNET1ZrT0JTOW5raWlUQXYxamtaVXFDQWxJK1FqRnVvK2JIVnQz?=
+ =?utf-8?B?UW5abjRSZzhuNHJBUjU2TktSYnJ3UndSV2VROGJycGtZbm9OSms3WnRGcGlM?=
+ =?utf-8?B?ZXRFQXBVVUVUN2tiMmN1NHE4V3JmR1pmWGd4N0JpNUxJbmxFZDQxZ0htUGtY?=
+ =?utf-8?B?VTR6NEF3bXJvT3krcjlQRHBqWEt5V3VtU3g0OHJ2TWp5b3FqazBqYzd5cGhn?=
+ =?utf-8?B?bUsxdDlhc1c3Y3lQZkY2NVBnUDBBWUJPSWdiU2lDMjRqSWNwWVlnVU5qNVRp?=
+ =?utf-8?B?a1AvcDc0VVYyZ3BML3FaOWFLYUVhYzlRTE9BdCs2YjdjTHpld2hKVCtNbGFt?=
+ =?utf-8?B?ak5QMDZRbjFVUTlzY3VnVmtEUUNBZGZtVU9jR1lsSGFsbnRobEVnQkJaeDY5?=
+ =?utf-8?B?UlVkc1FQQzhDSUJ5TDhXdHpDRDE5SDRqQS9OWXZORk10T0VNaS9lWHUwSS9C?=
+ =?utf-8?B?V1MwM3NWd2JsQ2txRXRpWFhPcUlyelFZR1dENURhVjdZWWRVcVJhc3o2WDFW?=
+ =?utf-8?B?eTlTY2lySTZqaWZ1N3dlbk43U1VjeHlwNHcvbUpRZXc2Mlo2OEdwVzVlWXFx?=
+ =?utf-8?B?ZFdFTjFmbncvMFJjWWcwdS9LQThhVGo5V0JkdEU0Tnp0c3BoaFk0aHJ0L2F3?=
+ =?utf-8?B?Vk1nWWlJN05oT2FNNytDdXFwdGQvUWxhNCtSeWh0emc5N0FWMGtpaHBpREdB?=
+ =?utf-8?B?ejBMZlpvUlExVGVRZU92ZDY5bnZ1UExYNnBVc0lQcFcxaDVDb1Jxbkh6MG8r?=
+ =?utf-8?B?eGszSk8rOWczRHFQYjMzVUdESkYvNzhNcnQzd2NGRHZjZ0lISi93Q1lSRTFI?=
+ =?utf-8?B?eWpkSTdFTkZhdkpabXhXdk9KelVVRVY5eEZXVjB3ODVNSXJDZEV3ZnhrcUZ2?=
+ =?utf-8?B?RTRKVHp2Z2wyZUl0Vm9VZUc0UVRaZjFHdGk4YzlZME4rOUVJY0MzbHBLVHJR?=
+ =?utf-8?B?Y0NzUmowK0crWnBBOGZWbk82NEE5T3hNQW84aWdNbU03eElUcXJSdnljZ3Z0?=
+ =?utf-8?B?SHNhMmM4eTUvVWs1dTlNWmdVcTBHZ0xLNmpkZ0VBMmtKUmEzU1R2dStmbjhO?=
+ =?utf-8?B?T3BKSkNKNUNVOHEvMkZWZzFLTGxibVFwM2pad0o0b0FVTk9qWFRLMHJKNUhV?=
+ =?utf-8?B?eW95Y0xwYXFDYjQwTHFqRTBjZWFMdmNoRDNUWlVWUjFnRER4T1BVWFl2cTE2?=
+ =?utf-8?B?bVVBNnpSdE5EdU1wU080cDgrSjNENTJ5R1RQdUNCakpmN0NidkM2V0tCMzIw?=
+ =?utf-8?B?NFUzNmpUT2NjMUp5R2xicFlaTDZUTDQwM3F6WjdxbzNEWFRLTndLbW5QdXpr?=
+ =?utf-8?B?RlNtVGlLNTZpd1FHdVBtVFRrYjFQUWkySWlNdVVld2s5blQ2ek9pbmhqY0ZN?=
+ =?utf-8?B?SHBQdHQ5bHRMOUVScVBUUE1ubG5mOHNBMVh6MXNZdzNUN1Zacm5mbWo2RGNZ?=
+ =?utf-8?B?TGV3dmFweTI1U0dScnZJbllSZ205Z3dwbTk0UG0xTmExUUlGakZ5N28wcUdq?=
+ =?utf-8?B?USswZXZaS2ZrUm1VWjFGSkg3ZFJuVThwOXMwaXIvYUo5RndLakhkRzlMTEI4?=
+ =?utf-8?B?SXlKVGM1TEF2N3gzU252VHBXWkZLVFFLZStaVWo3K0V0TGM2cXJUSEZpQVVL?=
+ =?utf-8?Q?s7gKdE9M+XK+qdr66D+vL+x9XGmWwVZAfBbdNWCS5IXW?=
 X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fa79244-0e7b-4935-fdc7-08daff4d8570
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68da6295-d575-4b3c-36b8-08dafefb9f44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2023 17:43:08.8484
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2023 03:29:24.7229
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t0zWHo6YMvmNU/tohKz+LVvtacaLRb5lcQY0k9vRzuxPov1spWkRqLR8Tc+MXN3sTz6r9ZfBepvDe6THEdjukw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7538
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c9cSQqd8PIwdNOnBhMywniTQv7LDGcW3LJBE0mg2eyuMu0ZYU3UVGgDFgHOE2y5x7ejHDfwSYUnaPtEIwbrU2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4502
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-[Public]
 
 
+On 1/25/2023 11:13 PM, Limonciello, Mario wrote:
+> [Public]
+> 
+> 
+> 
+>> -----Original Message-----
+>> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Sent: Wednesday, January 25, 2023 05:31
+>> To: hdegoede@redhat.com; markgross@kernel.org
+>> Cc: Goswami, Sanket <Sanket.Goswami@amd.com>; platform-driver-
+>> x86@vger.kernel.org; S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>
+>> Subject: [PATCH 2/4] platform/x86/amd: pmc: Write dummy postcode into
+>> the STB DRAM
+>>
+>> Based on the recommendation from the PMFW team in order to get the
+>> recent telemetry data present on the STB DRAM the driver is required
+>> to send one dummy write to the STB buffer, so it internally triggers
+>> the PMFW to emit the latest telemetry data in the STB DRAM region.
+>>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/pmc.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmc.c
+>> b/drivers/platform/x86/amd/pmc.c
+>> index 01632e6b7820..0dd9fb576f09 100644
+>> --- a/drivers/platform/x86/amd/pmc.c
+>> +++ b/drivers/platform/x86/amd/pmc.c
+>> @@ -43,6 +43,7 @@
+>>  #define AMD_PMC_STB_S2IDLE_PREPARE	0xC6000001
+>>  #define AMD_PMC_STB_S2IDLE_RESTORE	0xC6000002
+>>  #define AMD_PMC_STB_S2IDLE_CHECK	0xC6000003
+>> +#define AMD_PMC_STB_DUMMY_PC		0xC6000007
+> 
+> Is there significance to this specific code? Any particular reason
+> not to pick an incremental code like 0xC6000004?
 
-> -----Original Message-----
-> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Sent: Wednesday, January 25, 2023 05:31
-> To: hdegoede@redhat.com; markgross@kernel.org
-> Cc: Goswami, Sanket <Sanket.Goswami@amd.com>; platform-driver-
-> x86@vger.kernel.org; S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>
-> Subject: [PATCH 2/4] platform/x86/amd: pmc: Write dummy postcode into
-> the STB DRAM
->=20
-> Based on the recommendation from the PMFW team in order to get the
-> recent telemetry data present on the STB DRAM the driver is required
-> to send one dummy write to the STB buffer, so it internally triggers
-> the PMFW to emit the latest telemetry data in the STB DRAM region.
->=20
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/amd/pmc.c
-> b/drivers/platform/x86/amd/pmc.c
-> index 01632e6b7820..0dd9fb576f09 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -43,6 +43,7 @@
->  #define AMD_PMC_STB_S2IDLE_PREPARE	0xC6000001
->  #define AMD_PMC_STB_S2IDLE_RESTORE	0xC6000002
->  #define AMD_PMC_STB_S2IDLE_CHECK	0xC6000003
-> +#define AMD_PMC_STB_DUMMY_PC		0xC6000007
+Wanted to just keep in inline with Windows code atleast w.r.t to this
+dummy postcode. However, if you think it does not make sense I can
+change it to incremental one.
 
-Is there significance to this specific code? Any particular reason
-not to pick an incremental code like 0xC6000004?
+Thanks,
+Shyam
 
->=20
->  /* STB S2D(Spill to DRAM) has different message port offset */
->  #define STB_SPILL_TO_DRAM		0xBE
-> @@ -250,6 +251,11 @@ static int amd_pmc_stb_debugfs_open_v2(struct
-> inode *inode, struct file *filp)
->  	u32 *buf, fsize, num_samples, stb_rdptr_offset =3D 0;
->  	int ret;
->=20
-> +	/* Write dummy postcode while reading the STB buffer */
-> +	ret =3D amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
-> +	if (ret)
-> +		dev_err(dev->dev, "error writing to STB: %d\n", ret);
-> +
->  	buf =3D kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
-> --
-> 2.25.1
+
+> 
+>>
+>>  /* STB S2D(Spill to DRAM) has different message port offset */
+>>  #define STB_SPILL_TO_DRAM		0xBE
+>> @@ -250,6 +251,11 @@ static int amd_pmc_stb_debugfs_open_v2(struct
+>> inode *inode, struct file *filp)
+>>  	u32 *buf, fsize, num_samples, stb_rdptr_offset = 0;
+>>  	int ret;
+>>
+>> +	/* Write dummy postcode while reading the STB buffer */
+>> +	ret = amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
+>> +	if (ret)
+>> +		dev_err(dev->dev, "error writing to STB: %d\n", ret);
+>> +
+>>  	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
+>>  	if (!buf)
+>>  		return -ENOMEM;
+>> --
+>> 2.25.1
