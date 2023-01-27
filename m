@@ -2,257 +2,170 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E03C38142
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 10:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1583CC61DA7
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 11:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231652AbjA0KbB (ORCPT
+        id S232665AbjA0LAK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 05:31:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
+        Fri, 27 Jan 2023 06:00:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbjA0KbA (ORCPT
+        with ESMTP id S230338AbjA0LAJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 05:31:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D55B761E1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:30:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674815403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
-        b=EOXHIp690phW620ccTk1cbWKxK51r5yyqHukCCzj6vRKiRDnoPky25dobF/E9MSD2/ZUAE
-        IhqdLy6sQ9T0hxNOIcOTASn292YQI3HwBA6ym2outq8PZf7eW5QfAhSz9aWEmuUmJBxmNL
-        y5qDjAUxaNR/yNX5BI+X758R4oqEVWA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-381-bubaxksZO6KqTDUtySVk9g-1; Fri, 27 Jan 2023 05:30:00 -0500
-X-MC-Unique: bubaxksZO6KqTDUtySVk9g-1
-Received: by mail-ej1-f69.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso3158623ejb.14
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:30:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
-        b=hcizXy8ftD7cweVnLmdtLQ9llNCo7Hoh8enm0ui7en9U/NC63jkbTx0yF5RIWTsJgK
-         t81UVWdB532HQE5gggS1mIn8J8PvLKk9K9YzLVQzs9/bg5nyT7ggKtOMJAeSnCx9EdDy
-         J+ySWqsW8uExBMHikL2q74H2/VDM9tQ+ZaZtKvjMuZQ+CG54bHL3bWt2berA806oKuuh
-         K9GWmJoLLYQ96E2SJjE4kboG5q5JREHYjn7lkxb4vC/PLndtoE72C4eh6j2MiZjdc0wS
-         57s/lVghjOXSWbsGRNlbCTVdTroXDMwflgNS2gKR+DbeMJ65kQhcoh2POt1xPUK7x5mv
-         zH9Q==
-X-Gm-Message-State: AFqh2ko+mwx6HG5xXlReIDpWTdan5x+rhJP8yurWDaevQPJFoJXtSpA/
-        QunAfJco4fSPM9vKO1W1GaA9gqWxzrCZaIQkQvJes1tSHFyqsG6kKfVOzdV3pGb7JMXusLgU0kP
-        4/cktsdPL3GsszbUkBlBE/KUqgBso3+pE1w==
-X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238759ejc.16.1674815399541;
-        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuzyQrTD3dqej2MVPnY3ccbE7JDKPp4j+9aQCkGOpgn6a51CB/LmnLf0aOYkbtDz+HMutse4Q==
-X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238730ejc.16.1674815399304;
-        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ss24-20020a170907039800b00878706e35acsm1976876ejb.95.2023.01.27.02.29.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 02:29:58 -0800 (PST)
-Message-ID: <cd2ca584-6914-0882-4cfc-c5edee0adf54@redhat.com>
-Date:   Fri, 27 Jan 2023 11:29:57 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v5 07/11] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Content-Language: en-US, nl
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+        Fri, 27 Jan 2023 06:00:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F091C40E5;
+        Fri, 27 Jan 2023 02:59:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8592361B04;
+        Fri, 27 Jan 2023 10:59:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D55C43442;
+        Fri, 27 Jan 2023 10:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674817190;
+        bh=/gHWqkY7YRT7jthNZnaDPMsPI2uZxEdBfVoNrDOdKZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZwzB721qVdzr0UDO8Axjrp5yh6NW2gApFj9DeDSSoZxEK5wXhYhUOeyHhlpXtVcam
+         bVvdOFHPokzCdEkbxTqh/WDAsp/OyEWpbQaKjEfcMhV+IiCVUkFfz0HIyJ4O722vHz
+         NPEM9k2rZCE19lW0o0wOHlE3G+eO/NWdEfa6OhlOfT1TXcwEKuVTvhItnv154q28J6
+         qJQvSPO5+wMNbg9/hXjv3/MJrtybRrIFDJA3CP6uu4H/TuUkhxvVYxv4U52S63Dh1F
+         kJ7WYvcwS5ZNmO1SUs9C2v+liis2Sg3i5Ct2IfThIFDhnddX+mJdmYvhcWBH+P8EcD
+         OIcwOKMeWuEjA==
+Date:   Fri, 27 Jan 2023 10:59:43 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
         linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
+        linux-media@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 05/11] [RFC] leds: led-class: Add devicetree support
+ to led_get()
+Message-ID: <Y9Oun95Yv85qiktU@google.com>
 References: <20230120114524.408368-1-hdegoede@redhat.com>
- <20230120114524.408368-8-hdegoede@redhat.com>
- <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20230120114524.408368-6-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230120114524.408368-6-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Sakari,
+On Fri, 20 Jan 2023, Hans de Goede wrote:
 
-On 1/20/23 13:51, Sakari Ailus wrote:
-> Hi Hans,
+> Turn of_led_get() into a more generic __of_led_get() helper function,
+> which can lookup LEDs in devicetree by either name or index.
 > 
-> On Fri, Jan 20, 2023 at 12:45:20PM +0100, Hans de Goede wrote:
->> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
->> associated with the sensor and extend the call_s_stream() wrapper to
->> enable/disable the privacy LED if found.
->>
->> This makes the core handle privacy LED control, rather then having to
->> duplicate this code in all the sensor drivers.
->>
->> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v4 (requested by Laurent Pinchart):
->> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
->>   make errors other then -ENOENT fail the register() call.
->> - Move the led_disable_sysfs() call to be done at led_get() time, instead
->>   of only disabling the sysfs interface when the sensor is streaming.
->> ---
->>  drivers/media/v4l2-core/v4l2-fwnode.c | 15 +++++++++++++++
->>  drivers/media/v4l2-core/v4l2-subdev.c | 18 ++++++++++++++++++
->>  include/media/v4l2-subdev.h           |  3 +++
->>  3 files changed, 36 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->> index c8a2264262bc..cfac1e2ae501 100644
->> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->> @@ -16,6 +16,7 @@
->>   */
->>  #include <linux/acpi.h>
->>  #include <linux/kernel.h>
->> +#include <linux/leds.h>
->>  #include <linux/mm.h>
->>  #include <linux/of.h>
->>  #include <linux/property.h>
->> @@ -1295,6 +1296,20 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->>  	if (WARN_ON(!sd->dev))
->>  		return -ENODEV;
->>  
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
->> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
->> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
->> +
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_disable(sd->privacy_led);
->> +		led_trigger_remove(sd->privacy_led);
->> +		led_set_brightness(sd->privacy_led, 0);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +	}
->> +#endif
->> +
->>  	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
->>  	if (!notifier)
->>  		return -ENOMEM;
->> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->> index 4988a25bd8f4..f33e943aab3f 100644
->> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->> @@ -9,6 +9,7 @@
->>   */
->>  
->>  #include <linux/ioctl.h>
->> +#include <linux/leds.h>
->>  #include <linux/mm.h>
->>  #include <linux/module.h>
->>  #include <linux/slab.h>
->> @@ -322,6 +323,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
->>  {
->>  	int ret;
->>  
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		if (enable)
->> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
->> +		else
->> +			led_set_brightness(sd->privacy_led, 0);
->> +	}
->> +#endif
->>  	ret = sd->ops->video->s_stream(sd, enable);
->>  
->>  	if (!enable && ret < 0) {
->> @@ -1050,6 +1059,14 @@ EXPORT_SYMBOL_GPL(__v4l2_subdev_init_finalize);
->>  
->>  void v4l2_subdev_cleanup(struct v4l2_subdev *sd)
+> And use this new helper to add devicetree support to the generic
+> (non devicetree specific) [devm_]led_get() function.
 > 
-> v4l2_subdev_cleanup() is currently called by drivers using V4L2 subdev
-> state at the moment, making it unsuitable for the purpose of releasing the
-> privacy led.
+> This uses the standard devicetree pattern of adding a -names string array
+> to map names to the indexes for an array of resources.
 > 
-> Could you move this to v4l2_async_unregister_subdev() instead?
+> Note the new led-names property for LED consumers is not added
+> to the devicetree documentation because there seems to be no
+> documentation for the leds property itself to extend it with this.
+> It seems that how LED consumers should be described is not documented
+> at all ATM.
+> 
+> This patch is marked as RFC because of both the missing devicetree
+> documentation and because there are no devicetree users of
+> the generic [devm_]led_get() function for now.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/leds/led-class.c | 37 ++++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 9 deletions(-)
 
-Good point.
-
-Looking into this also made me realize that I forgot to cleanup
-the LED reference (and re-enable sysfs control) in case of
-errors in v4l2_async_register_subdev_sensor() after getting it.
-
-Fixing this requires adding a v4l2_subdev_put_privacy_led()
-helper. At which point it makes sense to also put the code
-to get the led in a v4l2_subdev_get_privacy_led() helper
-and then all privacy-led code lives inside a v4l2-subdev.c
-removing the need for:
-
-[PATCH v5 06/11] media: v4l2-core: Built async and fwnode code into videodev.ko
-
-all together :)   So I'll drop that from v6 of this series to
-make the series simpler.
-
-Regards,
-
-Hans
-
-
-
-
+Reviewed-by: Lee Jones <lee@kernel.org>
 
 > 
->>  {
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_enable(sd->privacy_led);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +		led_put(sd->privacy_led);
->> +	}
->> +#endif
->>  	__v4l2_subdev_state_free(sd->active_state);
->>  	sd->active_state = NULL;
->>  }
->> @@ -1090,6 +1107,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
->>  	sd->grp_id = 0;
->>  	sd->dev_priv = NULL;
->>  	sd->host_priv = NULL;
->> +	sd->privacy_led = NULL;
->>  #if defined(CONFIG_MEDIA_CONTROLLER)
->>  	sd->entity.name = sd->name;
->>  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
->> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->> index b15fa9930f30..0547313f98cc 100644
->> --- a/include/media/v4l2-subdev.h
->> +++ b/include/media/v4l2-subdev.h
->> @@ -38,6 +38,7 @@ struct v4l2_subdev;
->>  struct v4l2_subdev_fh;
->>  struct tuner_setup;
->>  struct v4l2_mbus_frame_desc;
->> +struct led_classdev;
->>  
->>  /**
->>   * struct v4l2_decode_vbi_line - used to decode_vbi_line
->> @@ -982,6 +983,8 @@ struct v4l2_subdev {
->>  	 * appropriate functions.
->>  	 */
->>  
->> +	struct led_classdev *privacy_led;
->> +
->>  	/*
->>  	 * TODO: active_state should most likely be changed from a pointer to an
->>  	 * embedded field. For the time being it's kept as a pointer to more
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 0c4b8d8d2b4f..2f3af6e30208 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -234,19 +234,18 @@ static struct led_classdev *led_module_get(struct device *led_dev)
+>  	return led_cdev;
+>  }
+>  
+> -/**
+> - * of_led_get() - request a LED device via the LED framework
+> - * @np: device node to get the LED device from
+> - * @index: the index of the LED
+> - *
+> - * Returns the LED device parsed from the phandle specified in the "leds"
+> - * property of a device tree node or a negative error-code on failure.
+> - */
+> -struct led_classdev *of_led_get(struct device_node *np, int index)
+> +static struct led_classdev *__of_led_get(struct device_node *np, int index,
+> +					 const char *name)
+>  {
+>  	struct device *led_dev;
+>  	struct device_node *led_node;
+>  
+> +	/*
+> +	 * For named LEDs, first look up the name in the "led-names" property.
+> +	 * If it cannot be found, then of_parse_phandle() will propagate the error.
+> +	 */
+> +	if (name)
+> +		index = of_property_match_string(np, "led-names", name);
+>  	led_node = of_parse_phandle(np, "leds", index);
+>  	if (!led_node)
+>  		return ERR_PTR(-ENOENT);
+> @@ -256,6 +255,19 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+>  
+>  	return led_module_get(led_dev);
+>  }
+> +
+> +/**
+> + * of_led_get() - request a LED device via the LED framework
+> + * @np: device node to get the LED device from
+> + * @index: the index of the LED
+> + *
+> + * Returns the LED device parsed from the phandle specified in the "leds"
+> + * property of a device tree node or a negative error-code on failure.
+> + */
+> +struct led_classdev *of_led_get(struct device_node *np, int index)
+> +{
+> +	return __of_led_get(np, index, NULL);
+> +}
+>  EXPORT_SYMBOL_GPL(of_led_get);
+>  
+>  /**
+> @@ -329,9 +341,16 @@ EXPORT_SYMBOL_GPL(devm_of_led_get);
+>  struct led_classdev *led_get(struct device *dev, char *con_id)
+>  {
+>  	struct led_lookup_data *lookup;
+> +	struct led_classdev *led_cdev;
+>  	const char *provider = NULL;
+>  	struct device *led_dev;
+>  
+> +	if (dev->of_node) {
+> +		led_cdev = __of_led_get(dev->of_node, -1, con_id);
+> +		if (!IS_ERR(led_cdev) || PTR_ERR(led_cdev) != -ENOENT)
+> +			return led_cdev;
+> +	}
+> +
+>  	mutex_lock(&leds_lookup_lock);
+>  	list_for_each_entry(lookup, &leds_lookup_list, list) {
+>  		if (!strcmp(lookup->dev_id, dev_name(dev)) &&
+> -- 
+> 2.39.0
 > 
 
+-- 
+Lee Jones [李琼斯]
