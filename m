@@ -2,108 +2,157 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4653CC38142
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 20:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F1DC38142
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 20:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbjA0UPI (ORCPT
+        id S231886AbjA0Ui0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 15:15:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
+        Fri, 27 Jan 2023 15:38:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233437AbjA0UPA (ORCPT
+        with ESMTP id S231782AbjA0UiY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 15:15:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD0D2D50
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 12:14:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 27 Jan 2023 15:38:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9B37B78F
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 12:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674851859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=4OcSJzUj2LKvO6CfVFSR0SD1r9tiU8Fuk05jF+6fhPg=;
+        b=FnqUv74QBJoahGkgGjIlr+jmICE87z1WpyXl55+JxX1yzmFGkjrFne5Ecgrib7NMlOpqAW
+        djaV4NhwJ72hFHkbX5Uoqr+33yRv8MkIStQHagk1R3AGvMYgMitFoWJ3Va+igALsO0Z1sk
+        XA++imxoLMEAkznT6d7PuQoshqnc3w0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-549-M5gWZ24GPhS_vxMdCjl3cQ-1; Fri, 27 Jan 2023 15:37:36 -0500
+X-MC-Unique: M5gWZ24GPhS_vxMdCjl3cQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 91E42B821D3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 20:14:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 13B49C433A7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 20:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674850497;
-        bh=v47kvfwosodrNIsx5YLlWJq9DUP267KcWcvXon5B9ro=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=la09+67MMULPJUlBJvmqu3dlEfHeHO27tsWQXaR4jsDFPtTPpc7++uM4a1FaZjDBS
-         P3LLWHLw7uAeGrjQ+JRbd1oiyhrEsewoFgywSUzHsQiz2Bg32E+5ekJ/t9Y6pdo/fq
-         YJREW2mgnsyQUm0NsqAo6w2zRZlHyNsKztb2RB9suCNo3UYVlUCCdNJU9sotPZcmJr
-         cKG5qcjcPIyjladRRRBweEU36qeAbhay3VbzeWXZXQOcpOA4lRu8FrxRZMkPwHPnu/
-         y9ixJK0UpSslB5CnvBnumffw54pK9DWZ3WFaEhYs7RO4b+VaqOZHXvftzixMZP7paZ
-         MIlhuUc+Ypaxg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 055FDC43142; Fri, 27 Jan 2023 20:14:57 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Fri, 27 Jan 2023 20:14:51 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: robert.kling@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-xvdQKox2ub@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 803F8802C15;
+        Fri, 27 Jan 2023 20:37:35 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B040E492C14;
+        Fri, 27 Jan 2023 20:37:32 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v6 0/5] int3472/media privacy LED support
+Date:   Fri, 27 Jan 2023 21:37:24 +0100
+Message-Id: <20230127203729.10205-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi All,
 
-Robert Kling (robert.kling@gmail.com) changed:
+Here is version 6 of my series to adjust the INT3472 code's handling of
+the privacy LED on x86 laptops with MIPI camera(s) so that it will also
+work on devices which have a privacy-LED GPIO but not a clk-enable GPIO
+(so that we cannot just tie the LED state to the clk-enable state).
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |robert.kling@gmail.com
+Changes in v6:
+- The LED lookup series has been merged, immutable branch pull-req here:
+  https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
+- Rework the media-core changes to correctly free the LED reference,
+  this rework also allows dropping the patch to merge the async + fwnode
+  code into videodev.ko
+- Drop the patch merging the async + fwnode code into videodev.ko
 
---- Comment #287 from Robert Kling (robert.kling@gmail.com) ---
-Created attachment 303659
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303659&action=3Dedit
-dsdt.dat Z170 PRO GAMING/AURA
+Changes in v5:
+- Rename lookup-table names to match those from the gpio and reset lookups:
+  s/led_name/provider/
+  s/consumer_dev_name/dev_id/
+  s/consumer_function/con_id/
+- Add static inline wrappers for the v4l2_async debugfs init/exit funcs,
+  to fix build errors when CONFIG_V4L2_ASYNC is not enabled
 
-Hello, would it be possible to add support for Asus Z170 PRO GAMING/AURA?
+Changes in v4:
+- Rename new __led_get() helper to led_module_get()
+- Drop of/devicetree support from "led-class: Add generic [devm_]led_get()"
+- Add RFC patch to re-add of/devicetree support to show that the new
+  led_get() can easily be extended with dt support when the need for this
+  arises (proof-of-concept dt code, not intended for merging)
+- New patch to built async and fwnode code into videodev.ko,
+  to avoid issues with some of the new LED code getting builtin vs
+  other parts possibly being in a module
+- Move the led_get() call to v4l2_async_register_subdev_sensor()
+- Move the led_disable_sysfs() call to be done at led_get() time
+- Address some other minor review comments
 
-cat /sys/class/dmi/id/board_name:
-Z170 PRO GAMING/AURA
+Changes in v3:
+- Due to popular request by multiple people this new version now models
+  the privacy LED as a LED class device. This requires being able to
+  "tie" the LED class device to a specific camera sensor (some devices
+  have multiple sensors + privacy-LEDs).
 
-dmesg:
-2023-01-27T13:10:42+0100 kernel: nct6775: Enabling hardware monitor logical
-device mappings.
-2023-01-27T13:10:42+0100 kernel: nct6775: Found NCT6793D or compatible chip=
- at
-0x2e:0x290
-2023-01-27T13:10:42+0100 kernel: ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20220331/utaddress-204)
-2023-01-27T13:10:42+0100 kernel: ACPI: OSL: Resource conflict; ACPI support
-missing from driver?
+Patch 1 adds generic privacy-LED support to the v4l2-core/v4l2-subdev.c
+code automatically enabling the privacy-LED when s_stream(subdev, 1)
+is called. So that we don't need to add privacy-LED code to all the
+camera sensor drivers separately (as requested by Sakari).
 
-Setting acpi_enforce_resources=3Dlax kernel parameter results in 'sensors'
-returning much more data like fan speed, voltage etc.
+Patches 2-5 are patches to the platform specific INT3472 code to register
+privacy-LED class devices + lookup table entries for privacy-LEDs described
+in the special INT3472 ACPI nodes found on x86 devices with MIPI cameras.
 
-Thank you for your work!
+This depends on the just merged LED lookup code from:
+https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
 
---=20
-You may reply to this email to add a comment.
+This series has been tested on:
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+- Lenovo ThinkPad X1 Yoga gen 7, IPU6, front: ov2740 with privacy LED
+- Dell Latitude 9420, IPU 6, front: ov01a1s with privacy LED
+- Mirosoft Surface Go, IPU3, front: ov5693 with privacy LED
+                              back: ov8865 with privacy LED (pled not yet supported)
+
+Regards,
+
+Hans
+
+
+
+Hans de Goede (5):
+  media: v4l2-core: Make the v4l2-core code enable/disable the privacy
+    LED if present
+  platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+  platform/x86: int3472/discrete: Create a LED class device for the
+    privacy LED
+  platform/x86: int3472/discrete: Move GPIO request to
+    skl_int3472_register_clock()
+  platform/x86: int3472/discrete: Get the polarity from the _DSM entry
+
+ drivers/media/v4l2-core/v4l2-async.c          |   4 +
+ drivers/media/v4l2-core/v4l2-fwnode.c         |   7 ++
+ drivers/media/v4l2-core/v4l2-subdev-priv.h    |  14 +++
+ drivers/media/v4l2-core/v4l2-subdev.c         |  44 ++++++++
+ drivers/platform/x86/intel/int3472/Makefile   |   2 +-
+ .../x86/intel/int3472/clk_and_regulator.c     |  34 ++++--
+ drivers/platform/x86/intel/int3472/common.h   |  18 +++-
+ drivers/platform/x86/intel/int3472/discrete.c | 100 ++++++++----------
+ drivers/platform/x86/intel/int3472/led.c      |  74 +++++++++++++
+ include/media/v4l2-subdev.h                   |   3 +
+ 10 files changed, 234 insertions(+), 66 deletions(-)
+ create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
+ create mode 100644 drivers/platform/x86/intel/int3472/led.c
+
+-- 
+2.39.1
+
