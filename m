@@ -2,77 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D0DC38142
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23072C61D97
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 17:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233351AbjA0QcL (ORCPT
+        id S235050AbjA0ROf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 11:32:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58984 "EHLO
+        Fri, 27 Jan 2023 12:14:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234340AbjA0QcL (ORCPT
+        with ESMTP id S234381AbjA0ROd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 11:32:11 -0500
-Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F0F7D6F2;
-        Fri, 27 Jan 2023 08:32:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1674837114; bh=vj4kVhLtQ+dIiXMCosovvjgWH9gdE7UHMs5WyPLi7GM=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:MIME-Version:
-         Content-Type;
-        b=SUTL06j6soeiTZPjxv0txpD3o/EjY67wNH/yoRpD6SnydFK0jB+ijGn95wF/ppfAT
-         7WotvE+TODNm1WrMOZFHoImjlR520tha+re3AZKNeFKiOI2b6hLsDaXR97nBIpG2Wh
-         at/8inswS960IQ8DxeQcYZ2/COEQLJ5d5Srd98Yc=
-Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
-        via ip-206.mailobj.net [213.182.55.206]
-        Fri, 27 Jan 2023 17:31:54 +0100 (CET)
-X-EA-Auth: tyf9JgDjzN3rfr5CP8gcpmNTaF1BMh6woDDK9QoGkJQoCiklXKtXjoqg8earvIT8+DO+4t/LrVfQlV1h48bQjnn0vdoq/KMr
-Date:   Fri, 27 Jan 2023 22:01:49 +0530
-From:   Deepak R Varma <drv@mailo.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Subject: [PATCH] platform/x86: dell-smo8800: Use min_t() for comparison and
- assignment
-Message-ID: <Y9P8debIztOZXazW@ubun2204.myguest.virtualbox.org>
+        Fri, 27 Jan 2023 12:14:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB07013B;
+        Fri, 27 Jan 2023 09:14:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7540061D54;
+        Fri, 27 Jan 2023 17:14:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC12C433D2;
+        Fri, 27 Jan 2023 17:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674839671;
+        bh=p+a8OGgpraBX/ZldFFkNUfzskgq3bl7Tj0rZRDJNZJo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=berjOZ3TccsQkIfHgvIL0zQEb0Ssaqus6sAl5rbnnuRnm14SxX9c1Mit0ojW406Yb
+         UIxv/ZH/hDnCKKg8kBC8Mx8B5ukJCYp1LO0yxuzQDKFOapeTnpyux6lvDZnkwDE2W3
+         OwpVS0g79aJbgDNA0K6/d1QDCwapYpe/rSujf1lpZIvf/AepY4esepfP+eQC+b+ilx
+         qRfJTWiC+xql7ikM+3NDV5US5A94ZVWlmUv7GXOHvsuWGlUk0KH7p+ZrArYc/cJ4NW
+         xNFB3K4nlIs0Olvp0Bo7Y8ZdFMiVcCqrM/vcTuqNs1tdQxI0Xy2oMLdAC7f8UJyed3
+         uG/YLBq7FUd2A==
+Date:   Fri, 27 Jan 2023 17:14:24 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [GIT PULL] Immutable branch from LEDs due for the v6.3 merge window
+Message-ID: <Y9QGcA+9nlmOOy2d@google.com>
+References: <20230120114524.408368-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230120114524.408368-1-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Simplify code by using min_t helper macro for logical evaluation
-and value assignment. Use the _t variant of min macro since the
-variable types are not same.
-This issue is identified by coccicheck using the minmax.cocci file.
+Enjoy!
 
-Signed-off-by: Deepak R Varma <drv@mailo.com>
----
- drivers/platform/x86/dell/dell-smo8800.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
 
-diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
-index 3385e852104c..8d6b7a83cf24 100644
---- a/drivers/platform/x86/dell/dell-smo8800.c
-+++ b/drivers/platform/x86/dell/dell-smo8800.c
-@@ -67,10 +67,7 @@ static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
- 
- 	retval = 1;
- 
--	if (data < 255)
--		byte_data = data;
--	else
--		byte_data = 255;
-+	byte_data = min_t(u32, data, 255);
- 
- 	if (put_user(byte_data, buf))
- 		retval = -EFAULT;
+  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git tags/ib-leds-led_get-v6.3
+
+for you to fetch changes up to abc3100fcba6827444ef4bdb17065ac3b6619dff:
+
+  leds: led-class: Add generic [devm_]led_get() (2023-01-27 11:07:11 +0000)
+
+----------------------------------------------------------------
+Immutable branch from LEDs due for the v6.3 merge window
+
+----------------------------------------------------------------
+Hans de Goede (4):
+      leds: led-class: Add missing put_device() to led_put()
+      leds: led-class: Add led_module_get() helper
+      leds: led-class: Add __devm_led_get() helper
+      leds: led-class: Add generic [devm_]led_get()
+
+ drivers/leds/led-class.c | 138 ++++++++++++++++++++++++++++++++++++++++-------
+ include/linux/leds.h     |  21 ++++++++
+ 2 files changed, 139 insertions(+), 20 deletions(-)
+
 -- 
-2.34.1
-
-
-
+Lee Jones [李琼斯]
