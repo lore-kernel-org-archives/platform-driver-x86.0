@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC8C54EAA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 10:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E03C38142
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 10:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233076AbjA0KCF (ORCPT
+        id S231652AbjA0KbB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 05:02:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41772 "EHLO
+        Fri, 27 Jan 2023 05:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232786AbjA0KCD (ORCPT
+        with ESMTP id S231641AbjA0KbA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 05:02:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049765C0F9
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:01:15 -0800 (PST)
+        Fri, 27 Jan 2023 05:31:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D55B761E1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674813675;
+        s=mimecast20190719; t=1674815403;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iBonNxBex1x8EL+XVkksxs7UZFO/Rob9VHoqJQCH81o=;
-        b=UykMjABYanllKlH7sTzfz6p7W1fXunF4RhErSSDhec9o8ObZqDuAYqymfCiyXm+unzHINq
-        +vlVjVaNnLkZG4Nh6ylfL5s49s02622nvIoKShpx8Vr/fRQMm55IeXQXVmxZryVNlElR7V
-        e2jh4/OT1abo9hFyA325mr5YxO8sYa0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
+        b=EOXHIp690phW620ccTk1cbWKxK51r5yyqHukCCzj6vRKiRDnoPky25dobF/E9MSD2/ZUAE
+        IhqdLy6sQ9T0hxNOIcOTASn292YQI3HwBA6ym2outq8PZf7eW5QfAhSz9aWEmuUmJBxmNL
+        y5qDjAUxaNR/yNX5BI+X758R4oqEVWA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-68-02n4X8lxNXmUSvi7RbKD_A-1; Fri, 27 Jan 2023 05:01:14 -0500
-X-MC-Unique: 02n4X8lxNXmUSvi7RbKD_A-1
-Received: by mail-ed1-f69.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so3277369edc.20
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:01:13 -0800 (PST)
+ us-mta-381-bubaxksZO6KqTDUtySVk9g-1; Fri, 27 Jan 2023 05:30:00 -0500
+X-MC-Unique: bubaxksZO6KqTDUtySVk9g-1
+Received: by mail-ej1-f69.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso3158623ejb.14
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 02:30:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iBonNxBex1x8EL+XVkksxs7UZFO/Rob9VHoqJQCH81o=;
-        b=INwCHhi8dsVnfLlYpyYGPEWeo5NuwMCbNij70XR3Uzy6uEDMP8D2YLpaB0ICCvhi1R
-         yku+H8zXC4KpaeUfNZvP1vpzpGo4foVA3ymXBQWNOZZrdi0XigfMgdiBjIy4CVnjlzvZ
-         lezcIajIv87TJiGlj41DaQ3C1Q1eWTUtJAEsriZPI6IFYSoYeLHr1s8UmgDSW64UgaxK
-         MeM8a0Bp3G8ELRWsfLELoNgWNdyVTIDzBpwlTTIA62ERi4khJf/vhOFMl3SXkTwnR/8D
-         31+K4VFuX7prHQBlfutXnfuSgf3YPHe4VvQGs9HHTjoxJwHX/buRCOc01VqOEmSHoTke
-         y4kA==
-X-Gm-Message-State: AO0yUKX+moIlOlnWEQ/PY6VXNrGmoh/SGBBco9fTQh8BItGzROHV0wQG
-        Vw9w0A7hO3i0ef5RxTNal95JtEX+r4KsIPBrxZY7aqC7Pi3o4qAJJgLBxvHNY/MgBeWPgvDjitI
-        jPMzGQ/u7Y06jDVceCFOFzw0Jqa5NjEF/hA==
-X-Received: by 2002:a17:907:8e9b:b0:87a:542e:53b4 with SMTP id tx27-20020a1709078e9b00b0087a542e53b4mr2741568ejc.64.1674813670312;
-        Fri, 27 Jan 2023 02:01:10 -0800 (PST)
-X-Google-Smtp-Source: AK7set+NKo44xbJ+gnJ/owWan1M1+HyvIwAsjCM1JceB1GyVJkD38wHI5lqzixieQS2VnOSnvKwzxA==
-X-Received: by 2002:a17:907:8e9b:b0:87a:542e:53b4 with SMTP id tx27-20020a1709078e9b00b0087a542e53b4mr2741540ejc.64.1674813669966;
-        Fri, 27 Jan 2023 02:01:09 -0800 (PST)
+        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
+        b=hcizXy8ftD7cweVnLmdtLQ9llNCo7Hoh8enm0ui7en9U/NC63jkbTx0yF5RIWTsJgK
+         t81UVWdB532HQE5gggS1mIn8J8PvLKk9K9YzLVQzs9/bg5nyT7ggKtOMJAeSnCx9EdDy
+         J+ySWqsW8uExBMHikL2q74H2/VDM9tQ+ZaZtKvjMuZQ+CG54bHL3bWt2berA806oKuuh
+         K9GWmJoLLYQ96E2SJjE4kboG5q5JREHYjn7lkxb4vC/PLndtoE72C4eh6j2MiZjdc0wS
+         57s/lVghjOXSWbsGRNlbCTVdTroXDMwflgNS2gKR+DbeMJ65kQhcoh2POt1xPUK7x5mv
+         zH9Q==
+X-Gm-Message-State: AFqh2ko+mwx6HG5xXlReIDpWTdan5x+rhJP8yurWDaevQPJFoJXtSpA/
+        QunAfJco4fSPM9vKO1W1GaA9gqWxzrCZaIQkQvJes1tSHFyqsG6kKfVOzdV3pGb7JMXusLgU0kP
+        4/cktsdPL3GsszbUkBlBE/KUqgBso3+pE1w==
+X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238759ejc.16.1674815399541;
+        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuzyQrTD3dqej2MVPnY3ccbE7JDKPp4j+9aQCkGOpgn6a51CB/LmnLf0aOYkbtDz+HMutse4Q==
+X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238730ejc.16.1674815399304;
+        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h11-20020aa7de0b000000b004a21304f5a0sm206649edv.72.2023.01.27.02.01.09
+        by smtp.gmail.com with ESMTPSA id ss24-20020a170907039800b00878706e35acsm1976876ejb.95.2023.01.27.02.29.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 02:01:09 -0800 (PST)
-Message-ID: <5394cf3c-32d8-5098-9e35-55ff973e56c5@redhat.com>
-Date:   Fri, 27 Jan 2023 11:01:08 +0100
+        Fri, 27 Jan 2023 02:29:58 -0800 (PST)
+Message-ID: <cd2ca584-6914-0882-4cfc-c5edee0adf54@redhat.com>
+Date:   Fri, 27 Jan 2023 11:29:57 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH v5 06/11] media: v4l2-core: Built async and fwnode code
- into videodev.ko
+Subject: Re: [PATCH v5 07/11] media: v4l2-core: Make the v4l2-core code
+ enable/disable the privacy LED if present
 Content-Language: en-US, nl
 To:     Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc:     Mark Gross <markgross@kernel.org>,
@@ -79,188 +79,130 @@ Cc:     Mark Gross <markgross@kernel.org>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
         linux-media@vger.kernel.org
 References: <20230120114524.408368-1-hdegoede@redhat.com>
- <20230120114524.408368-7-hdegoede@redhat.com>
- <Y8qNausQs1j37/S4@paasikivi.fi.intel.com>
+ <20230120114524.408368-8-hdegoede@redhat.com>
+ <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y8qNausQs1j37/S4@paasikivi.fi.intel.com>
+In-Reply-To: <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Sakari,
 
-On 1/20/23 13:47, Sakari Ailus wrote:
+On 1/20/23 13:51, Sakari Ailus wrote:
 > Hi Hans,
 > 
-> Many thanks for working on this.
-
-You are welcome.
-
-> On Fri, Jan 20, 2023 at 12:45:19PM +0100, Hans de Goede wrote:
->> Currently the videodev.ko code may be builtin while e.g. v4l2-fwnode.ko
->> is build as a module.
+> On Fri, Jan 20, 2023 at 12:45:20PM +0100, Hans de Goede wrote:
+>> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
+>> associated with the sensor and extend the call_s_stream() wrapper to
+>> enable/disable the privacy LED if found.
 >>
->> This makes it hard to add code depending on other subsystems spanning
->> both videodev.ko and v4l2-fwnode.ko. Specifically this block adding code
->> depending on the LED subsystem.
+>> This makes the core handle privacy LED control, rather then having to
+>> duplicate this code in all the sensor drivers.
 >>
->> This is made even harder because CONFIG_V4L2_FWNODE is selected,
->> not depended on so it itself cannot depend on another subsystem without
->> editing all the Kconfig symbols selecting it to also list the dependency
->> and there are many of such symbols.
->>
->> Adding a "select LED_CLASS if NEW_LEDS" to CONFIG_V4L2_FWNODE leads
->> to Kconfig erroring out with "error: recursive dependency detected!".
->>
->> To fix this dependency mess, change the V4L2_FWNODE and V4L2_ASYNC
->> (which V4L2_FWNODE selects) Kconfig symbols from tristate to bools and
->> link their code into videodev.ko instead of making them separate modules.
->>
->> This will allow using IS_REACHABLE(LED_CLASS) for the new LED integration
->> code without needing to worry that it expands to 0 in some places and
->> 1 in other places because some of the code being builtin vs modular.
->>
->> On x86_64 this leads to the following size changes for videodev.ko
->>
->> [hans@shalem linux]$ size drivers/media/v4l2-core/videodev.ko
->>
->> Before:
->>    text	   data	    bss	    dec	    hex	filename
->>  218206	  14395	   2448	 235049	  39629 drivers/media/v4l2-core/videodev.ko
->> After:
->>    text	   data	    bss	    dec	    hex	filename
->>  243213	  17615	   2456	 263284	  40474	drivers/media/v4l2-core/videodev.ko
->>
->> So (as expected) there is some increase in size here, but it
->> really is not that much.
->>
->> And the uncompressed no-debuginfo .ko file disk-usage actually shrinks
->> by 17 KiB (comparing the slightly larger videodev.ko against the
->> 3 original modules) and loading time will also be better.
->>
+>> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 >> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >> ---
->> Changes in v5:
->> - Add a new v4l2-dev-priv.h for the async debugfs prototypes and add
->>   static inline wrappers there when CONFIG_V4L2_ASYNC is not enabled
->>
->> Changes in v4:
->> - New patch in v4 of this patch-set
+>> Changes in v4 (requested by Laurent Pinchart):
+>> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
+>>   make errors other then -ENOENT fail the register() call.
+>> - Move the led_disable_sysfs() call to be done at led_get() time, instead
+>>   of only disabling the sysfs interface when the sensor is streaming.
 >> ---
->>  drivers/media/v4l2-core/Kconfig         |  4 ++--
->>  drivers/media/v4l2-core/Makefile        |  4 ++--
->>  drivers/media/v4l2-core/v4l2-async.c    | 17 ++++-------------
->>  drivers/media/v4l2-core/v4l2-dev-priv.h | 19 +++++++++++++++++++
->>  drivers/media/v4l2-core/v4l2-dev.c      |  8 ++++++++
->>  drivers/media/v4l2-core/v4l2-fwnode.c   |  6 ------
->>  6 files changed, 35 insertions(+), 23 deletions(-)
->>  create mode 100644 drivers/media/v4l2-core/v4l2-dev-priv.h
+>>  drivers/media/v4l2-core/v4l2-fwnode.c | 15 +++++++++++++++
+>>  drivers/media/v4l2-core/v4l2-subdev.c | 18 ++++++++++++++++++
+>>  include/media/v4l2-subdev.h           |  3 +++
+>>  3 files changed, 36 insertions(+)
 >>
->> diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
->> index 348559bc2468..73574d946010 100644
->> --- a/drivers/media/v4l2-core/Kconfig
->> +++ b/drivers/media/v4l2-core/Kconfig
->> @@ -68,11 +68,11 @@ config V4L2_FLASH_LED_CLASS
->>  	  When in doubt, say N.
->>  
->>  config V4L2_FWNODE
->> -	tristate
->> +	bool
->>  	select V4L2_ASYNC
->>  
->>  config V4L2_ASYNC
->> -	tristate
->> +	bool
->>  
->>  # Used by drivers that need Videobuf modules
->>  config VIDEOBUF_GEN
->> diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
->> index 41d91bd10cf2..8c5a1ab8d939 100644
->> --- a/drivers/media/v4l2-core/Makefile
->> +++ b/drivers/media/v4l2-core/Makefile
->> @@ -15,7 +15,9 @@ videodev-objs	:=	v4l2-dev.o v4l2-ioctl.o v4l2-device.o v4l2-fh.o \
->>  
->>  # Please keep it alphabetically sorted by Kconfig name
->>  # (e. g. LC_ALL=C sort Makefile)
->> +videodev-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
->>  videodev-$(CONFIG_COMPAT) += v4l2-compat-ioctl32.o
->> +videodev-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
->>  videodev-$(CONFIG_MEDIA_CONTROLLER) += v4l2-mc.o
->>  videodev-$(CONFIG_SPI) += v4l2-spi.o
->>  videodev-$(CONFIG_TRACEPOINTS) += v4l2-trace.o
->> @@ -24,9 +26,7 @@ videodev-$(CONFIG_VIDEO_V4L2_I2C) += v4l2-i2c.o
->>  # Please keep it alphabetically sorted by Kconfig name
->>  # (e. g. LC_ALL=C sort Makefile)
->>  
->> -obj-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
->>  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
->> -obj-$(CONFIG_V4L2_FWNODE) += v4l2-fwnode.o
->>  obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
->>  obj-$(CONFIG_V4L2_JPEG_HELPER) += v4l2-jpeg.o
->>  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
->> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
->> index 2f1b718a9189..024d6b82b50a 100644
->> --- a/drivers/media/v4l2-core/v4l2-async.c
->> +++ b/drivers/media/v4l2-core/v4l2-async.c
->> @@ -11,7 +11,6 @@
->>  #include <linux/i2c.h>
->>  #include <linux/list.h>
+>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>> index c8a2264262bc..cfac1e2ae501 100644
+>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>> @@ -16,6 +16,7 @@
+>>   */
+>>  #include <linux/acpi.h>
+>>  #include <linux/kernel.h>
+>> +#include <linux/leds.h>
 >>  #include <linux/mm.h>
->> -#include <linux/module.h>
->>  #include <linux/mutex.h>
 >>  #include <linux/of.h>
->>  #include <linux/platform_device.h>
->> @@ -24,6 +23,8 @@
->>  #include <media/v4l2-fwnode.h>
->>  #include <media/v4l2-subdev.h>
+>>  #include <linux/property.h>
+>> @@ -1295,6 +1296,20 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
+>>  	if (WARN_ON(!sd->dev))
+>>  		return -ENODEV;
 >>  
->> +#include "v4l2-dev-priv.h"
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
+>> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
+>> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
 >> +
->>  static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
->>  				    struct v4l2_subdev *subdev,
->>  				    struct v4l2_async_subdev *asd)
->> @@ -900,25 +901,15 @@ DEFINE_SHOW_ATTRIBUTE(pending_subdevs);
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		mutex_lock(&sd->privacy_led->led_access);
+>> +		led_sysfs_disable(sd->privacy_led);
+>> +		led_trigger_remove(sd->privacy_led);
+>> +		led_set_brightness(sd->privacy_led, 0);
+>> +		mutex_unlock(&sd->privacy_led->led_access);
+>> +	}
+>> +#endif
+>> +
+>>  	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
+>>  	if (!notifier)
+>>  		return -ENOMEM;
+>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+>> index 4988a25bd8f4..f33e943aab3f 100644
+>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+>> @@ -9,6 +9,7 @@
+>>   */
 >>  
->>  static struct dentry *v4l2_async_debugfs_dir;
->>  
->> -static int __init v4l2_async_init(void)
->> +void __init v4l2_async_debugfs_init(void)
+>>  #include <linux/ioctl.h>
+>> +#include <linux/leds.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/module.h>
+>>  #include <linux/slab.h>
+>> @@ -322,6 +323,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
 >>  {
->>  	v4l2_async_debugfs_dir = debugfs_create_dir("v4l2-async", NULL);
->>  	debugfs_create_file("pending_async_subdevices", 0444,
->>  			    v4l2_async_debugfs_dir, NULL,
->>  			    &pending_subdevs_fops);
->> -
->> -	return 0;
->>  }
+>>  	int ret;
 >>  
->> -static void __exit v4l2_async_exit(void)
->> +void __exit v4l2_async_debugfs_exit(void)
->>  {
->>  	debugfs_remove_recursive(v4l2_async_debugfs_dir);
->>  }
->> -
->> -subsys_initcall(v4l2_async_init);
->> -module_exit(v4l2_async_exit);
->> -
->> -MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
->> -MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
->> -MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
->> -MODULE_LICENSE("GPL");
->> diff --git a/drivers/media/v4l2-core/v4l2-dev-priv.h b/drivers/media/v4l2-core/v4l2-dev-priv.h
->> new file mode 100644
->> index 000000000000..b5b1ee78be20
->> --- /dev/null
->> +++ b/drivers/media/v4l2-core/v4l2-dev-priv.h
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		if (enable)
+>> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
+>> +		else
+>> +			led_set_brightness(sd->privacy_led, 0);
+>> +	}
+>> +#endif
+>>  	ret = sd->ops->video->s_stream(sd, enable);
+>>  
+>>  	if (!enable && ret < 0) {
+>> @@ -1050,6 +1059,14 @@ EXPORT_SYMBOL_GPL(__v4l2_subdev_init_finalize);
+>>  
+>>  void v4l2_subdev_cleanup(struct v4l2_subdev *sd)
 > 
-> Could we call this v4l2-async-debugfs.h? I don't necessarily expect more
-> material here.
+> v4l2_subdev_cleanup() is currently called by drivers using V4L2 subdev
+> state at the moment, making it unsuitable for the purpose of releasing the
+> privacy led.
+> 
+> Could you move this to v4l2_async_unregister_subdev() instead?
 
-Renaming it is fine by my. I have renamed it to
-v4l2-async-debugfs.h for the upcoming v6 of this series.
+Good point.
+
+Looking into this also made me realize that I forgot to cleanup
+the LED reference (and re-enable sysfs control) in case of
+errors in v4l2_async_register_subdev_sensor() after getting it.
+
+Fixing this requires adding a v4l2_subdev_put_privacy_led()
+helper. At which point it makes sense to also put the code
+to get the led in a v4l2_subdev_get_privacy_led() helper
+and then all privacy-led code lives inside a v4l2-subdev.c
+removing the need for:
+
+[PATCH v5 06/11] media: v4l2-core: Built async and fwnode code into videodev.ko
+
+all together :)   So I'll drop that from v6 of this series to
+make the series simpler.
 
 Regards,
 
@@ -268,90 +210,49 @@ Hans
 
 
 
+
+
 > 
->> @@ -0,0 +1,19 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/*
->> + * Video capture interface for Linux version 2 private header.
->> + *
->> + * Copyright (C) 2023 Hans de Goede <hdegoede@redhat.com>
->> + */
->> +
->> +#ifndef _V4L2_DEV_PRIV_H_
->> +#define _V4L2_DEV_PRIV_H_
->> +
->> +#if IS_ENABLED(CONFIG_V4L2_ASYNC)
->> +void v4l2_async_debugfs_init(void);
->> +void v4l2_async_debugfs_exit(void);
->> +#else
->> +static inline void v4l2_async_debugfs_init(void) {}
->> +static inline void v4l2_async_debugfs_exit(void) {}
->> +#endif
->> +
->> +#endif
->> diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
->> index 397d553177fa..10ba2e4196a6 100644
->> --- a/drivers/media/v4l2-core/v4l2-dev.c
->> +++ b/drivers/media/v4l2-core/v4l2-dev.c
->> @@ -31,6 +31,8 @@
->>  #include <media/v4l2-ioctl.h>
->>  #include <media/v4l2-event.h>
->>  
->> +#include "v4l2-dev-priv.h"
->> +
->>  #define VIDEO_NUM_DEVICES	256
->>  #define VIDEO_NAME              "video4linux"
->>  
->> @@ -1190,6 +1192,7 @@ static int __init videodev_init(void)
->>  		return -EIO;
->>  	}
->>  
->> +	v4l2_async_debugfs_init();
->>  	return 0;
->>  }
->>  
->> @@ -1197,6 +1200,7 @@ static void __exit videodev_exit(void)
 >>  {
->>  	dev_t dev = MKDEV(VIDEO_MAJOR, 0);
->>  
->> +	v4l2_async_debugfs_exit();
->>  	class_unregister(&video_class);
->>  	unregister_chrdev_region(dev, VIDEO_NUM_DEVICES);
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		mutex_lock(&sd->privacy_led->led_access);
+>> +		led_sysfs_enable(sd->privacy_led);
+>> +		mutex_unlock(&sd->privacy_led->led_access);
+>> +		led_put(sd->privacy_led);
+>> +	}
+>> +#endif
+>>  	__v4l2_subdev_state_free(sd->active_state);
+>>  	sd->active_state = NULL;
 >>  }
->> @@ -1205,6 +1209,10 @@ subsys_initcall(videodev_init);
->>  module_exit(videodev_exit)
+>> @@ -1090,6 +1107,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
+>>  	sd->grp_id = 0;
+>>  	sd->dev_priv = NULL;
+>>  	sd->host_priv = NULL;
+>> +	sd->privacy_led = NULL;
+>>  #if defined(CONFIG_MEDIA_CONTROLLER)
+>>  	sd->entity.name = sd->name;
+>>  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
+>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+>> index b15fa9930f30..0547313f98cc 100644
+>> --- a/include/media/v4l2-subdev.h
+>> +++ b/include/media/v4l2-subdev.h
+>> @@ -38,6 +38,7 @@ struct v4l2_subdev;
+>>  struct v4l2_subdev_fh;
+>>  struct tuner_setup;
+>>  struct v4l2_mbus_frame_desc;
+>> +struct led_classdev;
 >>  
->>  MODULE_AUTHOR("Alan Cox, Mauro Carvalho Chehab <mchehab@kernel.org>, Bill Dirks, Justin Schoeman, Gerd Knorr");
->> +MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
->> +MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
->> +MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
->> +MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
->>  MODULE_DESCRIPTION("Video4Linux2 core driver");
->>  MODULE_LICENSE("GPL");
->>  MODULE_ALIAS_CHARDEV_MAJOR(VIDEO_MAJOR);
->> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->> index 3d9533c1b202..c8a2264262bc 100644
->> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->> @@ -17,7 +17,6 @@
->>  #include <linux/acpi.h>
->>  #include <linux/kernel.h>
->>  #include <linux/mm.h>
->> -#include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/property.h>
->>  #include <linux/slab.h>
->> @@ -1328,8 +1327,3 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->>  	return ret;
->>  }
->>  EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor);
->> -
->> -MODULE_LICENSE("GPL");
->> -MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
->> -MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
->> -MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
->> -- 
->> 2.39.0
->>
+>>  /**
+>>   * struct v4l2_decode_vbi_line - used to decode_vbi_line
+>> @@ -982,6 +983,8 @@ struct v4l2_subdev {
+>>  	 * appropriate functions.
+>>  	 */
+>>  
+>> +	struct led_classdev *privacy_led;
+>> +
+>>  	/*
+>>  	 * TODO: active_state should most likely be changed from a pointer to an
+>>  	 * embedded field. For the time being it's kept as a pointer to more
 > 
 
