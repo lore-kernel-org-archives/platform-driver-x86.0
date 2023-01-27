@@ -2,72 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC03C38142
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 20:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB13C38142
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 23:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233409AbjA0UmP (ORCPT
+        id S231354AbjA0X6Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 15:42:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46880 "EHLO
+        Fri, 27 Jan 2023 18:58:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233413AbjA0UmA (ORCPT
+        with ESMTP id S229495AbjA0X6Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 15:42:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD9A7E6BB;
-        Fri, 27 Jan 2023 12:41:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 27 Jan 2023 18:58:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4650A24D
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 15:57:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674863852;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5Q2V3PkoqgExC/1n/FtMboXJdTAKwrfJnKPmFWK0Yrc=;
+        b=QMBrBOiyH46TEpuiEkquR2RUeh64gCX+DFVPZAWRQUM5tNtuUjJ/C3LTZO3T6OzER7glDA
+        N5yLIAWRmrZfwAZArcWy6+BcVyuAkiZ0Imvk9o44nqzrheBZ9kJ38WvJ6Z/w+yDDgcdBp4
+        5hN43m0TACPe0FB3Vgjk3yHvacUMmvU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-639-ARjUG1DKNKOKeYIHvAggWg-1; Fri, 27 Jan 2023 18:57:30 -0500
+X-MC-Unique: ARjUG1DKNKOKeYIHvAggWg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 473C9B821F1;
-        Fri, 27 Jan 2023 20:40:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5075C433D2;
-        Fri, 27 Jan 2023 20:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674852047;
-        bh=gTQLS4ReNgKhHMUFilDECgdSGDa9JjxO1ZWH9JirkTY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=YSL2QMlApTiH8BpA0RVgqPLQ+cdnmAPr4sOpn8sjcOPEAeNngX3UCbYXdETi3Cw+K
-         gA4gO24t2uaBJn7K8iDBaYiZsfr5Bsph2cTT5zhe2DEvcP6CEDBXy1g9BNsN8yBFFF
-         HWz6plWFmzmJph+OehwfP1XAS4VffxY5xPNALji/gaFXmma5H4FQYbq2PyloNlbBNx
-         8BMAcwruPPt0Z1EGFml71uKB5S3Qg/upLoEhxLO4ofQte360jQUF3mUvwkV5D2E87F
-         THI6KTHPdJP+H1FcQ7mg8i3leLwi7pXn51LYAobwgI9WY3ky0lVFC6fkrdmsZk7oGl
-         2TC3ZQDZnNR7A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C866FE52504;
-        Fri, 27 Jan 2023 20:40:47 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.2-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <4d44b351-d4bf-56dd-952b-97a70687fb68@redhat.com>
-References: <4d44b351-d4bf-56dd-952b-97a70687fb68@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <4d44b351-d4bf-56dd-952b-97a70687fb68@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-3
-X-PR-Tracked-Commit-Id: 1bc5d819f0b9784043ea08570e1b21107aa35739
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 83abd4d4c4be8984ba5a3a813ccfedba79c7d6ad
-Message-Id: <167485204781.30356.12505576700828372422.pr-tracker-bot@kernel.org>
-Date:   Fri, 27 Jan 2023 20:40:47 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1CB7C8533A2;
+        Fri, 27 Jan 2023 23:57:30 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.195.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6330DC15BAD;
+        Fri, 27 Jan 2023 23:57:29 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Fix thinklight LED brightness returning 255
+Date:   Sat, 28 Jan 2023 00:57:23 +0100
+Message-Id: <20230127235723.412864-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Thu, 26 Jan 2023 14:59:59 +0100:
+Reading the thinklight LED brightnes while the LED is on returns
+255 (LED_FULL) but we advertise a max_brightness of 1, so this should
+be 1 (LED_ON).
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-3
+Fixes: db5e2a4ca0a7 ("platform/x86: thinkpad_acpi: Fix max_brightness of thinklight")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/83abd4d4c4be8984ba5a3a813ccfedba79c7d6ad
-
-Thank you!
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 02860c32625e..32c10457399e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5563,7 +5563,7 @@ static int light_sysfs_set(struct led_classdev *led_cdev,
+ 
+ static enum led_brightness light_sysfs_get(struct led_classdev *led_cdev)
+ {
+-	return (light_get_status() == 1) ? LED_FULL : LED_OFF;
++	return (light_get_status() == 1) ? LED_ON : LED_OFF;
+ }
+ 
+ static struct tpacpi_led_classdev tpacpi_led_thinklight = {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.0
+
