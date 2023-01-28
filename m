@@ -2,80 +2,168 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB13C38142
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Jan 2023 23:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832A4C27C76
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Jan 2023 07:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbjA0X6Q (ORCPT
+        id S233418AbjA1HZc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Jan 2023 18:58:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
+        Sat, 28 Jan 2023 02:25:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjA0X6Q (ORCPT
+        with ESMTP id S233272AbjA1HZ3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Jan 2023 18:58:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4650A24D
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jan 2023 15:57:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674863852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=5Q2V3PkoqgExC/1n/FtMboXJdTAKwrfJnKPmFWK0Yrc=;
-        b=QMBrBOiyH46TEpuiEkquR2RUeh64gCX+DFVPZAWRQUM5tNtuUjJ/C3LTZO3T6OzER7glDA
-        N5yLIAWRmrZfwAZArcWy6+BcVyuAkiZ0Imvk9o44nqzrheBZ9kJ38WvJ6Z/w+yDDgcdBp4
-        5hN43m0TACPe0FB3Vgjk3yHvacUMmvU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-639-ARjUG1DKNKOKeYIHvAggWg-1; Fri, 27 Jan 2023 18:57:30 -0500
-X-MC-Unique: ARjUG1DKNKOKeYIHvAggWg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1CB7C8533A2;
-        Fri, 27 Jan 2023 23:57:30 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.195.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6330DC15BAD;
-        Fri, 27 Jan 2023 23:57:29 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Fix thinklight LED brightness returning 255
-Date:   Sat, 28 Jan 2023 00:57:23 +0100
-Message-Id: <20230127235723.412864-1-hdegoede@redhat.com>
+        Sat, 28 Jan 2023 02:25:29 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B06C84B6A;
+        Fri, 27 Jan 2023 23:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674890728; x=1706426728;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bBDwQWuILdGbSqDjOuULlrnqbX7XKFkvjxkQmUDj2Zo=;
+  b=I7UPOHXEl1DKePya8tpCmk81hgSv1cRKA0KDWSfDmcGzmHofaSTNYAXu
+   GNodpcswDYxNQaqhp69eAO7WmhDg+Jx8cJ4EF6SnDvMucEntUvrJvuhFm
+   W3r2lpXF6RoBCkCaiaZkHDaow/lvZjNvDVM/h5366H4tCj3CSg9z6ireL
+   CUJ/XEF2IN/OkVuNHcth77Yz2W4YPfZKFlfEeWi2laTMsNJZWBix+8zrU
+   OBqkv+YmSKf/yibxGTxRwPqfSH0S1oyf/qlMtzHytUGkb1o+GxywyvRNM
+   KM3bb0FJlWun7D6+yOS2edUD5FgOhrYobDRSyTm8kxg2gccqonpi0ZvfK
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="315225913"
+X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
+   d="scan'208";a="315225913"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 23:25:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="663539347"
+X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
+   d="scan'208";a="663539347"
+Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 27 Jan 2023 23:25:22 -0800
+Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pLfaS-0000U3-33;
+        Sat, 28 Jan 2023 07:25:20 +0000
+Date:   Sat, 28 Jan 2023 15:24:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>
+Subject: Re: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED
+ class device for the privacy LED
+Message-ID: <202301281537.fKVHsgf4-lkp@intel.com>
+References: <20230127203729.10205-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230127203729.10205-4-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Reading the thinklight LED brightnes while the LED is on returns
-255 (LED_FULL) but we advertise a max_brightness of 1, so this should
-be 1 (LED_ON).
+Hi Hans,
 
-Fixes: db5e2a4ca0a7 ("platform/x86: thinkpad_acpi: Fix max_brightness of thinklight")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I love your patch! Yet something to improve:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 02860c32625e..32c10457399e 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5563,7 +5563,7 @@ static int light_sysfs_set(struct led_classdev *led_cdev,
- 
- static enum led_brightness light_sysfs_get(struct led_classdev *led_cdev)
- {
--	return (light_get_status() == 1) ? LED_FULL : LED_OFF;
-+	return (light_get_status() == 1) ? LED_ON : LED_OFF;
- }
- 
- static struct tpacpi_led_classdev tpacpi_led_thinklight = {
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.2-rc5]
+[cannot apply to media-tree/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+patch link:    https://lore.kernel.org/r/20230127203729.10205-4-hdegoede%40redhat.com
+patch subject: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED class device for the privacy LED
+config: i386-randconfig-r004-20230123 (https://download.01.org/0day-ci/archive/20230128/202301281537.fKVHsgf4-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/d71a1bce9c9ea0bd5b98920b2d72a5b0a36ca19d
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+        git checkout d71a1bce9c9ea0bd5b98920b2d72a5b0a36ca19d
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/platform/x86/intel/int3472/discrete.c:17:
+>> drivers/platform/x86/intel/int3472/common.h:107:40: error: field 'lookup' has incomplete type
+     107 |                 struct led_lookup_data lookup;
+         |                                        ^~~~~~
+--
+   In file included from drivers/platform/x86/intel/int3472/led.c:7:
+>> drivers/platform/x86/intel/int3472/common.h:107:40: error: field 'lookup' has incomplete type
+     107 |                 struct led_lookup_data lookup;
+         |                                        ^~~~~~
+   drivers/platform/x86/intel/int3472/led.c: In function 'skl_int3472_register_pled':
+>> drivers/platform/x86/intel/int3472/led.c:57:9: error: implicit declaration of function 'led_add_lookup'; did you mean 'd_can_lookup'? [-Werror=implicit-function-declaration]
+      57 |         led_add_lookup(&int3472->pled.lookup);
+         |         ^~~~~~~~~~~~~~
+         |         d_can_lookup
+   drivers/platform/x86/intel/int3472/led.c: In function 'skl_int3472_unregister_pled':
+>> drivers/platform/x86/intel/int3472/led.c:71:9: error: implicit declaration of function 'led_remove_lookup' [-Werror=implicit-function-declaration]
+      71 |         led_remove_lookup(&int3472->pled.lookup);
+         |         ^~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/lookup +107 drivers/platform/x86/intel/int3472/common.h
+
+    80	
+    81	struct int3472_discrete_device {
+    82		struct acpi_device *adev;
+    83		struct device *dev;
+    84		struct acpi_device *sensor;
+    85		const char *sensor_name;
+    86	
+    87		const struct int3472_sensor_config *sensor_config;
+    88	
+    89		struct int3472_gpio_regulator {
+    90			char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+    91			char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+    92			struct gpio_desc *gpio;
+    93			struct regulator_dev *rdev;
+    94			struct regulator_desc rdesc;
+    95		} regulator;
+    96	
+    97		struct int3472_gpio_clock {
+    98			struct clk *clk;
+    99			struct clk_hw clk_hw;
+   100			struct clk_lookup *cl;
+   101			struct gpio_desc *ena_gpio;
+   102			u32 frequency;
+   103		} clock;
+   104	
+   105		struct int3472_pled {
+   106			struct led_classdev classdev;
+ > 107			struct led_lookup_data lookup;
+   108			char name[INT3472_LED_MAX_NAME_LEN];
+   109			struct gpio_desc *gpio;
+   110		} pled;
+   111	
+   112		unsigned int ngpios; /* how many GPIOs have we seen */
+   113		unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
+   114		struct gpiod_lookup_table gpios;
+   115	};
+   116	
+
 -- 
-2.39.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
