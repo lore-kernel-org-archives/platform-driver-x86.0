@@ -2,51 +2,69 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C8C61DA7
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Jan 2023 08:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE24C38142
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Jan 2023 09:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233440AbjA1Isb (ORCPT
+        id S231304AbjA1JmD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 28 Jan 2023 03:48:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39322 "EHLO
+        Sat, 28 Jan 2023 04:42:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbjA1Isa (ORCPT
+        with ESMTP id S229599AbjA1JmC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 28 Jan 2023 03:48:30 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDFB1D91E;
-        Sat, 28 Jan 2023 00:48:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674895709; x=1706431709;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9qaJ07rCNgPUvNVIftD3GYtB6DL85fMLFtIdLTf/0NQ=;
-  b=I6AggZci+dHCCeD0bpkIMUNn8F4SLCuL8zETiOr3rgTp84328Hw2gBoF
-   rvdC7/nBkEGYVWfYxJ04N6CWI2k4744ZKpZ5u2nhGa/IHlAloBmhJmqW6
-   8ujnvQo4Vui8gLhdPu+dXOEUIW7GtucmKwz/NK1ht60YHFRrvYl1S4CHj
-   Pmjc+hgMMRMbPZbFN5MZGDegX01cPCD9ThcsIO1IApsODojZxzaWN/pBC
-   B63DU3hExAUSrIhSzN49nP9fBz3PWWvuc8U5oYWSM5+4hXTfCdVyfoE/d
-   7+UHnk4mAi48XK0EdablbbKvqXlpSX7bMphViLXXcgK2JCvAGOHqimf10
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="325948515"
-X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="325948515"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 00:48:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="695809435"
-X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="695809435"
-Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jan 2023 00:48:24 -0800
-Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pLgsp-0000Wz-1d;
-        Sat, 28 Jan 2023 08:48:23 +0000
-Date:   Sat, 28 Jan 2023 16:47:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
+        Sat, 28 Jan 2023 04:42:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAA52D63
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Jan 2023 01:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674898879;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k/+dGwbz0zDWDEkIhYFWgOukr6XgocaommysHbGNBvs=;
+        b=FNNu0H7nIxeb/ZDoL76lgYmPyrW1R9/98RCkSvTBArNwU8+WwgSbjwH4urVn5ypNYvqhSz
+        K6OVxPXzEROQCsGCLFmeyJZ3qcdXidxyG+Ig3l+i1er1poWrCcg3omj19cX4Ez6u3CD1NS
+        U++oCrWXm89bY/s3oM9yP/Q0k0Uw/Jo=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-9-qXwTpJwzNtOmt5Uxx6yUgg-1; Sat, 28 Jan 2023 04:41:18 -0500
+X-MC-Unique: qXwTpJwzNtOmt5Uxx6yUgg-1
+Received: by mail-ej1-f70.google.com with SMTP id nc27-20020a1709071c1b00b0086dae705676so4793013ejc.12
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Jan 2023 01:41:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k/+dGwbz0zDWDEkIhYFWgOukr6XgocaommysHbGNBvs=;
+        b=VNLHPAMlzClPWLR0ohD8Wt2WPrLNzhoJGsjXJRm/jEydnf/rC4VlxYqihtbOsBAAED
+         G8X9wzNm6uJKHe+5dk/Zs1tlHxB2PoFeiwaaysv/BR0x9okpZqCj/jGq/503eZLB0P0x
+         PwSvilP/FYoLe+txpc7d68Vp7Q+J3oahWbyvw4I8RYaiO5BAyqB2cb6160O4vYQ6jxMB
+         q140FpJdANKryrhMSa9X7avEifDG9F97IcX8Xb1oJyb9dlO0Wb3JclJTrvI0WwHeyHtp
+         ih1cGH9rdHbCI2eW9WtHgzYFz1dhbZDbPgcN972bsrkVP7g1XmDb7fzPOi+0x2sMPsrc
+         Nygw==
+X-Gm-Message-State: AFqh2krllOP2wh9FAvnmllXpm/F9C1n1YIXd9YUPMfpZbr2ZTNYDTJIR
+        i8FMuhpsU1vMBMtRK0kvegSAu7tLIhgaYRx2xATHECTfoLb3FyqlZFOxg+jYBHyolFXEFssuDg0
+        HvYch1OFra6yjX/G6vJpGqZtSTpnVCsD+IQ==
+X-Received: by 2002:a05:6402:189:b0:499:376e:6b27 with SMTP id r9-20020a056402018900b00499376e6b27mr44119992edv.5.1674898877067;
+        Sat, 28 Jan 2023 01:41:17 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvkr8z/9KKq2AYlcjqdBULj9zqbIQz12ZEaKsbRqhQk9ARLEd7wxrB+TnsmtMDNVq2t+/Hisg==
+X-Received: by 2002:a05:6402:189:b0:499:376e:6b27 with SMTP id r9-20020a056402018900b00499376e6b27mr44119972edv.5.1674898876844;
+        Sat, 28 Jan 2023 01:41:16 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l11-20020aa7d94b000000b004954c90c94bsm3709340eds.6.2023.01.28.01.41.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Jan 2023 01:41:16 -0800 (PST)
+Message-ID: <17f5f57e-0003-2b6b-bfaa-18b03a6d1874@redhat.com>
+Date:   Sat, 28 Jan 2023 10:41:15 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
+ enable/disable the privacy LED if present
+To:     kernel test robot <lkp@intel.com>,
         Mark Gross <mgross@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -54,91 +72,76 @@ To:     Hans de Goede <hdegoede@redhat.com>,
         Daniel Scally <djrscally@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>
-Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Message-ID: <202301281654.sPeSxigX-lkp@intel.com>
 References: <20230127203729.10205-2-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127203729.10205-2-hdegoede@redhat.com>
+ <202301281534.9Z8xRsrX-lkp@intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <202301281534.9Z8xRsrX-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-I love your patch! Perhaps something to improve:
+On 1/28/23 08:35, kernel test robot wrote:
+> Hi Hans,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v6.2-rc5]
+> [cannot apply to media-tree/master]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+> patch link:    https://lore.kernel.org/r/20230127203729.10205-2-hdegoede%40redhat.com
+> patch subject: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present
+> config: riscv-randconfig-r026-20230123 (https://download.01.org/0day-ci/archive/20230128/202301281534.9Z8xRsrX-lkp@intel.com/config)
+> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install riscv cross compiling tool for clang build
+>         # apt-get install binutils-riscv64-linux-gnu
+>         # https://github.com/intel-lab-lkp/linux/commit/000ccec1824b3256e3fc1a94079bb953f19faab5
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+>         git checkout 000ccec1824b3256e3fc1a94079bb953f19faab5
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv olddefconfig
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/media/v4l2-core/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> drivers/media/v4l2-core/v4l2-subdev.c:1124:20: error: call to undeclared function 'led_get'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>            sd->privacy_led = led_get(sd->dev, "privacy-led");
+>                              ^
+>>> drivers/media/v4l2-core/v4l2-subdev.c:1124:18: error: incompatible integer to pointer conversion assigning to 'struct led_classdev *' from 'int' [-Wint-conversion]
+>            sd->privacy_led = led_get(sd->dev, "privacy-led");
+>                            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    2 errors generated.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.2-rc5 next-20230127]
-[cannot apply to media-tree/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As mentioned in the cover-letter this series depends on this immutable-branch:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
-patch link:    https://lore.kernel.org/r/20230127203729.10205-2-hdegoede%40redhat.com
-patch subject: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present
-config: ia64-allyesconfig (https://download.01.org/0day-ci/archive/20230128/202301281654.sPeSxigX-lkp@intel.com/config)
-compiler: ia64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/000ccec1824b3256e3fc1a94079bb953f19faab5
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
-        git checkout 000ccec1824b3256e3fc1a94079bb953f19faab5
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/media/v4l2-core/
+https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
+That branch not being present in the base used by LKP is what is causing this
+error.
 
-All warnings (new ones prefixed by >>):
+Regards,
 
-   drivers/media/v4l2-core/v4l2-subdev.c: In function 'v4l2_subdev_get_privacy_led':
-   drivers/media/v4l2-core/v4l2-subdev.c:1124:27: error: implicit declaration of function 'led_get'; did you mean 'key_get'? [-Werror=implicit-function-declaration]
-    1124 |         sd->privacy_led = led_get(sd->dev, "privacy-led");
-         |                           ^~~~~~~
-         |                           key_get
->> drivers/media/v4l2-core/v4l2-subdev.c:1124:25: warning: assignment to 'struct led_classdev *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    1124 |         sd->privacy_led = led_get(sd->dev, "privacy-led");
-         |                         ^
-   cc1: some warnings being treated as errors
+Hans
 
-
-vim +1124 drivers/media/v4l2-core/v4l2-subdev.c
-
-  1120	
-  1121	int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
-  1122	{
-  1123	#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> 1124		sd->privacy_led = led_get(sd->dev, "privacy-led");
-  1125		if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
-  1126			return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
-  1127	
-  1128		if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-  1129			mutex_lock(&sd->privacy_led->led_access);
-  1130			led_sysfs_disable(sd->privacy_led);
-  1131			led_trigger_remove(sd->privacy_led);
-  1132			led_set_brightness(sd->privacy_led, 0);
-  1133			mutex_unlock(&sd->privacy_led->led_access);
-  1134		}
-  1135	#endif
-  1136		return 0;
-  1137	}
-  1138	EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
-  1139	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
