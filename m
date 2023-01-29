@@ -2,100 +2,115 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06014C61D97
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Jan 2023 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A35C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Jan 2023 15:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbjA2JsF (ORCPT
+        id S231429AbjA2PU5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Jan 2023 04:48:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
+        Sun, 29 Jan 2023 10:20:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjA2JsE (ORCPT
+        with ESMTP id S230191AbjA2PU5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Jan 2023 04:48:04 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F02CAD06;
-        Sun, 29 Jan 2023 01:48:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674985683; x=1706521683;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TP0zpb9R5uK7bNYIk1uNAfZNOdPTZzcFV0KLQLxMD44=;
-  b=SWsROLd/u+9LNZVsf1OO9sEygiHLmaR8hgp2ZRd50izFm4ZV5ypSnA/d
-   LRRQUCHSvHmvvrPgpgu6muakoCLrpjAfoVDQUBN8ZVtogDTknVoxYqcKl
-   xUbUxWJchIOezgAhG7ItLvjA0nT1sd2Fqu9cNa2bO8+gUmI1mh4JgGjkK
-   ngAi1tV7VgD9AgaQReBGugfCSqaa/ECPNQ1BO3/pwc0etJEUAXN3VZ3d8
-   DNT580k5tXLiRfpDO2JJEEpF5oc5J4vr18XihNLHgZu4YZMtGTzPTVkXx
-   W/hM9xBtSpTVTFUQ6WxpHAfYXbUnAXXqOmmvOysNILxGy5ZOe0sititv+
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="315339544"
-X-IronPort-AV: E=Sophos;i="5.97,256,1669104000"; 
-   d="scan'208";a="315339544"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2023 01:48:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="641217818"
-X-IronPort-AV: E=Sophos;i="5.97,256,1669104000"; 
-   d="scan'208";a="641217818"
-Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jan 2023 01:47:59 -0800
-Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pM4I2-0002gE-2b;
-        Sun, 29 Jan 2023 09:47:58 +0000
-Date:   Sun, 29 Jan 2023 17:47:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, jdelvare@suse.com,
-        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] platform/x86: dell-ddv: Add hwmon support
-Message-ID: <202301291705.JVYNKBnd-lkp@intel.com>
-References: <20230126194021.381092-6-W_Armin@gmx.de>
+        Sun, 29 Jan 2023 10:20:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D571557E
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 07:20:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F37ED60DDA
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 15:20:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 57288C433AE
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 15:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675005655;
+        bh=I30XcaFN8F37hWfviMOss4SgO74UcV+GSqYcunizzfo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=YhBrKFD2lbza0wxaM2JgE3tC0P5+xrbcNh6BQKA2748cFxLGu/wBsXcj6qtcaF9jG
+         w1FujRdjbPGVvcPYWPw4vxjElgbSK2qCbw7hN8l2EfagFtL8JBN8RUAHLIzb0ci0dn
+         nNr3IRLRTUgoveL58wBh+W7oPYfYHFyuIEpgoq3Nrr+k9UyjnueE9pQxYB9wJFYt7T
+         LSNTOTXYswa9NOe5AcDfxu8YnLfK9FzPZ6e5vNgSCWjTliVpyfaT1XUBACfk8RbmFS
+         GjNSG+larwOMviWq+9XH5QCDJ3g0xR+AVhmXmf4VnT1wpLKujoYn7uIPZKuysSV6be
+         g5QlnieeqhT3A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 43F62C43141; Sun, 29 Jan 2023 15:20:55 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 29 Jan 2023 15:20:52 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-cetBx0sQQ9@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126194021.381092-6-W_Armin@gmx.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-I love your patch! Yet something to improve:
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-[auto build test ERROR on groeck-staging/hwmon-next]
-[also build test ERROR on linus/master v6.2-rc5 next-20230127]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #303660|0                           |1
+        is obsolete|                            |
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Armin-Wolf/platform-x86-dell-ddv-Add-support-for-interface-version-3/20230128-153324
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20230126194021.381092-6-W_Armin%40gmx.de
-patch subject: [PATCH 5/5] platform/x86: dell-ddv: Add hwmon support
-config: i386-randconfig-c021 (https://download.01.org/0day-ci/archive/20230129/202301291705.JVYNKBnd-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/36be415c22eab400b1546b2c5a6737b28e847774
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Armin-Wolf/platform-x86-dell-ddv-Add-support-for-interface-version-3/20230128-153324
-        git checkout 36be415c22eab400b1546b2c5a6737b28e847774
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+--- Comment #290 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 303662
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303662&action=3Dedit
+Asus WMI for nct6775 v6.1.8 base (2023.01.29)
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
+(In reply to Robert Kling from comment #289)
+> dmesg showing:
+>=20
+> 2023-01-28T22:44:58+0100 kernel: nct6775: No such ASUS mutex: \_GPE.MUT0
+> 2023-01-28T22:44:58+0100 kernel: nct6775: Enabling hardware monitor logic=
+al
+> device mappings.
+> 2023-01-28T22:44:58+0100 kernel: nct6775: Found NCT6793D or compatible ch=
+ip
+> at 0x2e:0x290
+> 2023-01-28T22:44:58+0100 kernel: ACPI Warning: SystemIO range
+> 0x0000000000000295-0x0000000000000296 conflicts with OpRegion
+> 0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20220331/utaddress-204)
+> 2023-01-28T22:44:58+0100 kernel: ACPI: OSL: Resource conflict; ACPI suppo=
+rt
+> missing from driver?
+>=20
+> Not sure if I made an error, I'll try 6.1.0 when I have some more time.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Could you try with such one?
 
->> ERROR: modpost: "__umoddi3" [drivers/platform/x86/dell/dell-wmi-ddv.ko] undefined!
->> ERROR: modpost: "__udivdi3" [drivers/platform/x86/dell/dell-wmi-ddv.ko] undefined!
+Change with previous one is usage "\\_SB.PCI0.LPCB.SIO1.MUT0" mutex. Note -=
+ it
+will be unsafe, looks like your board doesn't use/export mutex before acces=
+s to
+sensors and change settings of fans. So code just uses IO lock available in
+dsdt.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
