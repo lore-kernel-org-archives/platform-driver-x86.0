@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C986C05027
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Jan 2023 16:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C6DC05027
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Jan 2023 21:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbjA2QLl (ORCPT
+        id S229741AbjA2VY4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Jan 2023 11:11:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
+        Sun, 29 Jan 2023 16:24:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjA2QLl (ORCPT
+        with ESMTP id S229549AbjA2VYz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Jan 2023 11:11:41 -0500
+        Sun, 29 Jan 2023 16:24:55 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E578D1E1FF
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 08:11:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B1B1259C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 13:24:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3FC3CB808D6
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 16:11:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5DC3C433EF
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 16:11:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 16DF4B80DC3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 21:24:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B9148C43443
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 21:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675008696;
-        bh=G960STQf677qQBE0QQIbmnl92SbNt2QkhZKb07V+yJk=;
+        s=k20201202; t=1675027491;
+        bh=WprYP5g+IMj+YXfrwRFoTKxd+rYbe6Nl/bp44Iwm0vI=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=us8XvGNAz+UvrKAtHBu+YBkUDSyAjPtmWwfFzhbEnilIqDI0q5mvHiD+8chsSy+sN
-         RgNlIF86Pmtwc9PoPGrfrx7ieePphebE+8ywRWlwzubUUKUPtJLJnJTqJdxuafpnU2
-         VW8gPhsVLi+dPLKrJUnSbZx6Mwt2XkqPEou1NsP0uCiFfFZc699AHxu9hGAQm+xvho
-         lZchFvZR1rLgTywzzNMADDcpEwNBJ4p49dLs5yJVbIt8KCcJPHwCNq/Na3/TRQQUbB
-         jpjijrCy36e+U08WjzHJaUayPWnQDwRw05uobMYIQl5qnZe3ZUqqyzKfBxUiFfTdsk
-         Lmwrv5VJiwbCw==
+        b=HntMQhg98XQFbRuY5B4cvBCAmBthk3xuKTsTJ5Y/ldmuBD/1WLcDTrQV6RYUWu/lA
+         F92eKTeFWRRTnXZYdMkXS0AphOwQ6aKQ+Jf2iC+5/A7xUQ65bN927oMLin65yTn0/g
+         q2A4cdJAFyR7a7T4DkfwuYoYHioQUQVSlJFgOLo7tklHX4m8/QtdcV7kJEXXk1qHGP
+         1Y6dH47ZOEbCWvDjLWFqPqWOKMTeGj3aiLHBsj33bxvOBu/16n2t0GPQWn9FOnktv8
+         TXlSM78SgApz/sK0w7yweLTW3/3Ra+mnRm8DkGFyDJjgN20LqPRI2UTikVd0jbqQJI
+         Aumi6m192+bFA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D5BCDC43145; Sun, 29 Jan 2023 16:11:36 +0000 (UTC)
+        id A749FC43143; Sun, 29 Jan 2023 21:24:51 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sun, 29 Jan 2023 16:11:33 +0000
+Date:   Sun, 29 Jan 2023 21:24:49 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,14 +48,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: robert.kling@gmail.com
+X-Bugzilla-Who: pauk.denis@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-nvqE8Ot0tW@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-p9XrGirg2A@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,36 +69,72 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #291 from Robert Kling (robert.kling@gmail.com) ---
-(In reply to Denis Pauk from comment #290)
-> Created attachment 303662 [details]
-> Asus WMI for nct6775 v6.1.8 base (2023.01.29)
->=20
-> Could you try with such one?
->=20
-> Change with previous one is usage "\\_SB.PCI0.LPCB.SIO1.MUT0" mutex. Note=
- -
-> it will be unsafe, looks like your board doesn't use/export mutex before
-> access to sensors and change settings of fans. So code just uses IO lock
-> available in dsdt.
+--- Comment #292 from Denis Pauk (pauk.denis@gmail.com) ---
+(In reply to Robert Kling from comment #291)
+> I let the mainboard/bios handle
+> cpu/aux fan speed, I'm not running any fan control programs at the moment.
+> Would that be fine?
 
-That seems to have done the trick!
+It depends on luck, bioses, hw schematic and so on. Main issue is bios does=
+ not
+provide known methods for sensor access and does not use global mutex before
+access to the region related to sensors, and mutual access could be not
+possible with such bios implementation. It works without known issues for o=
+ther
+boards with mutex lock (P8H67, X99-E WS/USB 3.1). Other boards could have
+issues, like example it can be such:
+https://github.com/electrified/asus-wmi-sensors#known-issues. Its different
+driver but issues could be the same.
 
-kernel: nct6775: Using Asus WMI mutex: \_SB.PCI0.LPCB.SIO1.MUT0
-kernel: nct6775: Enabling hardware monitor logical device mappings.
-kernel: nct6775: Found NCT6793D or compatible chip at 0x2e:0x290
+> The WMI implementation in some of Asus' BIOSes is buggy. This can result =
+in
+> fans stopping, fans getting stuck at max speed, or temperature readouts
+> getting stuck. This is not an issue with the driver, but the BIOS. The Pr=
+ime
+> X470 Pro seems particularly bad for this. The more frequently the WMI
+> interface is polled the greater the potential for this to happen. Until y=
+ou
+> have subjected your computer to an extended soak test while polling the
+> sensors frequently, don't leave you computer unattended. I can personally=
+ say
+> I've seen the issue on the Crosshair VII with BIOS 2606 and a Ryzen 2700X,
+> upgrading to 3004 rectified the issue.
 
-Not sure if more info from dmesg would be useful for you.
 
-sensors is outputting fan/voltage data from nct6793-isa-0290 now!
+Or https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c37
 
-I don't want to take up too much of your time for something that's not real=
-ly
-crucial, but how unsafe is it? I let the mainboard/bios handle cpu/aux fan
-speed, I'm not running any fan control programs at the moment. Would that be
-fine?
+> Sensor hardware frequently uses indexed addressing, which means that
+> accessing a sensor requires something like the following:
+>
+> 1) Write the desired sensor to the index register
+> 2) Read the sensor value from the data register
+>
+> These can't occur simultaneously, so if both the OS and the firmware are
+> accessing it you risk ending up with something like:
 
-Thank you very much for your help & time!
+> 1) Write sensor A to the index register (from the OS)
+> 2) Write sensor B to the index register (from the firmware)
+> 3) Read the sensor value from the data register (returns the value of sen=
+sor
+> B to the firmware)
+> 4) Read the sensor value from the data register (returns the value of sen=
+sor
+> B to the OS)
+
+
+Or https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c69
+> the lm_sensors sensors-detect script had overvolted his RAM ruining both =
+his
+> expensive high-end RAM as well as his expensive top of the line CPU. The =
+user
+> was surprisingly relaxed about all this, which I really appreciated.
+>
+> And that was while the script was not doing anything which we (the
+> developers) considered dangerous. But the motherboard had a funky setup
+> causing a SMbus *read* transaction to change the voltage.
+
+
+Thank you!
 
 --=20
 You may reply to this email to add a comment.
