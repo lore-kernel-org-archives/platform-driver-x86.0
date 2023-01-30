@@ -2,117 +2,236 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB78C54EED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 16:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859D3C54EED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 16:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236494AbjA3Qt6 (ORCPT
+        id S235575AbjA3Q4N (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 11:49:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
+        Mon, 30 Jan 2023 11:56:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237237AbjA3Qtt (ORCPT
+        with ESMTP id S229573AbjA3Q4M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 11:49:49 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2055.outbound.protection.outlook.com [40.107.243.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42F8EF85
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 08:49:47 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bbyqfHBG6k+QPWDMipvKXBnPh+7BMyQgk5YR0xR70xRD7XM3GsxtC3pAUp5CKmvWOGQAWaBd/V3QfJmapaM7G2lcMRYQwN6VLi7+wwj0FfTKc0a2ZMR91eCaYqSvVVrdkR86xd1/XoCcaZcpHPjdg9iS+2uEgiL4fbypnbVstcVfSb2TBIdBXRbB2oe9l+cwVlxi8ePNuWOu2XwUYN/pMhr4/qfwlC5NL+yOl2EUf9YNzHIa5Vo4VKj3dyHOmCDTk897Bpe8OuVTSQgNNwgUZst3OE+d7bpiHpo0rD/7HXveRXZtIisxl1d6/wkaaiqFTOZQz02Idm9bGlSL351Wgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q0ioLbqG47R5Aoj09C5GlC4uRZFhm8tM1XNt8tTlEQk=;
- b=GnWOadO5EKBg+ukhEijs/WBjWMnoDkCYJjkD+dlmNKM8tKgLWdE7qLgJgtsHUAz+MDw4sPwrD1BYT4uTE238tqD/rn+Fh7tVTUdNyIfeyp4JjN58WlJMRYIEJPUPChclaDAQoPJo6Tt+tF29TQI0PK6MspvQqzWwwlWrTeiH8LKV2TuDPpv7olgfatnFpcdwTteOCZ6kJNenS4ZUB8S9RyX8WOaTaiSBZIWngPro4EVn+UtGmIZMtTG+Vmm0HPI6IAozbiXqz3fyHx2Pk+rneu75VuCx1sxWB7sIcYZ5HmxOGZx+nk4oB+AQAII/U2yVi4P7ja0Jy98k/qTBmF2oug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q0ioLbqG47R5Aoj09C5GlC4uRZFhm8tM1XNt8tTlEQk=;
- b=GLHi8DKt9MAByXwPaBKmulVJq1VyKI3ALp9qfrnUFh2YQwvlGYhjw//zZdFoRHDHr+7HUJafetfjdciQ3UptUJ+ESMi7FNTpTN7nryaKfRM3EOZLKYcvtpRimpS5NPcESU12NVvcOYYzhMYzQ9ukrLzS3tU4cJqeRd8myO+DHGM=
-Received: from CY5P221CA0007.NAMP221.PROD.OUTLOOK.COM (2603:10b6:930:b::14) by
- CY8PR12MB7706.namprd12.prod.outlook.com (2603:10b6:930:85::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6043.36; Mon, 30 Jan 2023 16:49:44 +0000
-Received: from CY4PEPF0000C976.namprd02.prod.outlook.com
- (2603:10b6:930:b:cafe::6b) by CY5P221CA0007.outlook.office365.com
- (2603:10b6:930:b::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36 via Frontend
- Transport; Mon, 30 Jan 2023 16:49:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000C976.mail.protection.outlook.com (10.167.241.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6064.19 via Frontend Transport; Mon, 30 Jan 2023 16:49:42 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 30 Jan
- 2023 10:49:40 -0600
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>,
-        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v2 4/4] platform/x86/amd: pmc: Add line break for readability
-Date:   Mon, 30 Jan 2023 22:18:55 +0530
-Message-ID: <20230130164855.168437-5-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230130164855.168437-1-Shyam-sundar.S-k@amd.com>
-References: <20230130164855.168437-1-Shyam-sundar.S-k@amd.com>
+        Mon, 30 Jan 2023 11:56:12 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420813D931
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 08:56:08 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id cf42so19992542lfb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 08:56:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RHQiCMlsGMyMBQXdlDjGF0Bk+KPAn0Fk22NUA394UDU=;
+        b=mHeXXte2v1nwtG7esEu1lMTiA+jBueibctId5BJajzWVD60Iy6PJqgojs5mwNl4Q5d
+         1LNb21E5QFs+YLwmlkVxMvdjI52vycAtJI2ddppFoQQEgwU8xgKNEydG6kDBPPRGLYFF
+         6MBLSsyz7OQ39HOiNYdZ1OCNDRzVpMDA43KSwOgcWyyYl3n1yUv/LgtjIHKgnVk97O7s
+         unlJBpAZM82f2i0G2Ihll3EmgNH7+dJEzO4soTWvn7baqJEDHsEGi3SLUn2SWugfChKI
+         KDMmCZDVP8PG0qgJrkeF0ApAmCaqKuz0tW5RnFRBptlHC+/g6t89h7bPEzi6x3F758a7
+         fd9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RHQiCMlsGMyMBQXdlDjGF0Bk+KPAn0Fk22NUA394UDU=;
+        b=DktEEoemjS0BYYvilPWaB20kREXk1kYQ1V5OFe2dnlj9CLsHdMD12q4F4kzaZgMPSK
+         RdOSKqyYLkvf697FF2fY9WOwY+gEq4crKjGNIJ8q+BPTwq4VFYnhdO4urEKGufRr8Yme
+         Ju/LYtkbD8keTmU4mzz/pBpyZIpTKlSNV26FuYzZpTuAsqZ7jJuxiTeOkaWsVjv9drKH
+         ZHct9CQgclohe7MCx3e6kzPSpcFo/BKeYxKVENlRIhHsoJ2szaENUOXJ4F9cHTeL0iQE
+         /41IbBxUAtlf+uScFuubkiKBGXz1++LQKzLEfRu4JvAUO/mR+pQj14r0bqD3xf90BJ+R
+         +sBg==
+X-Gm-Message-State: AFqh2kodQ6jz2Fv80blx8ioU/ZatNDn/91GoGYLEMR8CR+2/iJovcdoc
+        cmAo2+tXWfcqhZhyW8PQOFx8Plbduo2LhEAdxYg0veHV
+X-Google-Smtp-Source: AMrXdXvm7hMwpqbt0YGbhuht0Ql3NcirMDZmLlUps4szvIn+ux0teTSJAuxfSZFOzIuoLGCSOieDbvdfSbfSMQ2HELU=
+X-Received: by 2002:ac2:5df3:0:b0:4cc:7f34:176a with SMTP id
+ z19-20020ac25df3000000b004cc7f34176amr4429983lfq.153.1675097766320; Mon, 30
+ Jan 2023 08:56:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000C976:EE_|CY8PR12MB7706:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6cba4a4-3be5-417d-a54e-08db02e1fc62
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2qPTt2bfsmmNnFNp50IMW0vJg3ybua/JydfEt/Di+jnlxvHrsmC2ocqsg7EpzeSDdG0rIRMAqT9YDac2gb3ndgVUVY3Fwnc02+CRnoF6hvpXMVbtG2dq6rXsuqrxM5MjX6WjkAxI/HHBEipTm+DXGXObUvpqxlkGFvyVRnFDsZ5XsSzuD9VKIKv3bq0fCoj/HiB/Kwl4BixW70RXPb0rr4fH/+Z6qzVsHRKZeWrKBV63nVJXJNhf2u1ipWBRveoECc1vq+XROSQq+OFT1x2weZOvVmAyqD9PeKA/yrSk3SXkPVh7s1WgKMqhjsEFAW1O459Ma/0zcJ8xAH23S/liEAJZPOVzLGPkrlpTM7zgXrYd6vkdpH+6SsQMMeuUFbF1Q5o4fxbKl4KZcYPqd2DPFtLxC55PewXdGs/Fh0sBQR+agFv7h8v0eo4EtsldkUlrbwu6jJVeB6h0zsGF4le2Aiy8MraZ904H/USDOxDi3MiLhGnDABWb9pyC1oLxTN9NqGJyhBSPJ5xHklMmWYlybTq/uzS3pqAcYOJujMAsp4eF9kihTaU4tqEwDOKKYTRhWFDmlaEYtylMEDvqUorhSdd6JgfZqsPb2LzBZuowI8zoE+tunqeTA41aMoCLB2o/VZ+3DcJeJH2/LgVvreJZ0DgVinLpHCAJgygnAgIWs8hSBNIYHRl8Z1rLeZUaCGeBoCWmxGy8IbaLgFZxwDwgvJcKM4WN6FFkRa/LonriBBI=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(396003)(39860400002)(136003)(451199018)(46966006)(40470700004)(36840700001)(8936002)(81166007)(41300700001)(356005)(40460700003)(86362001)(4744005)(5660300002)(426003)(47076005)(336012)(36860700001)(2616005)(110136005)(54906003)(82740400003)(316002)(70586007)(16526019)(70206006)(4326008)(40480700001)(8676002)(6666004)(26005)(1076003)(7696005)(186003)(36756003)(478600001)(82310400005)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 16:49:42.7184
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6cba4a4-3be5-417d-a54e-08db02e1fc62
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000C976.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7706
+References: <20221202173616.180108-1-jorge.lopez2@hp.com> <20221202173616.180108-2-jorge.lopez2@hp.com>
+ <f797db3d-feaf-5c03-428e-595ec5f4e3a3@redhat.com> <CAOOmCE--Prhn0xbGgcJyUkwESO6nE-R4NVarY0nvzRmWTr+qnA@mail.gmail.com>
+ <81f095db-4ca1-4baa-bee4-0ae52457e54b@app.fastmail.com> <CAOOmCE_bHLrq2Hd7RA9PYOdwJhgsJB-asgoadLiEC6D7NMOG1Q@mail.gmail.com>
+ <653c46ac-9f8b-f545-3026-85def34ffac1@redhat.com>
+In-Reply-To: <653c46ac-9f8b-f545-3026-85def34ffac1@redhat.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 30 Jan 2023 10:55:54 -0600
+Message-ID: <CAOOmCE9t0CGbABJdjseUTcu-6Rgutyt34THTY8Dj_OfbGmpcsw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] Introduction of HP-BIOSCFG driver (1)
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Pearson <mpearson@squebb.ca>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a line break for the code readability.
+Great, thanks!
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index 9c8d04a591ec..6a5ddd0f1e8c 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -105,6 +105,7 @@
- #define DELAY_MIN_US		2000
- #define DELAY_MAX_US		3000
- #define FIFO_SIZE		4096
-+
- enum amd_pmc_def {
- 	MSG_TEST = 0x01,
- 	MSG_OS_HINT_PCO,
--- 
-2.25.1
-
+On Mon, Jan 23, 2023 at 11:18 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 1/23/23 17:12, Jorge Lopez wrote:
+> > Hi Mark,
+> >
+> > On Fri, Jan 20, 2023 at 10:07 PM Mark Pearson <mpearson@squebb.ca> wrot=
+e:
+> >>
+> >> Hi Jorge,
+> >>
+> >> On Fri, Jan 20, 2023, at 4:58 PM, Jorge Lopez wrote:
+> >>
+> >> Hi Hans,
+> >>
+> >> <snip>
+> >>
+> >>
+> >> Yes. The handling of auth-tokens/CMSL-payloads vs regular passwords
+> >> are similar with the exception of their size.
+> >> auth-tokens/CMSL-payloads are in the size larger than 64 bytes while
+> >> passwords are limited to 64 bytes.
+> >>>
+> >>> Except for the BEAM_PREFIX thing, which can be added to calculate_sec=
+urity_buffer() /
+> >>> populate_security_buffer() too and in that case all 3 of the followin=
+g should simply
+> >>> work, taking a boot-delay integer attribute as example:
+> >>>
+> >>> echo "password" > /sys/class/firmware-attributes/hp-bioscfg/"Setup Pa=
+ssword"/current_password
+> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
+lay/current_value
+> >>>
+> >>> echo "auth-token" > /sys/class/firmware-attributes/hp-bioscfg/"Setup =
+Password"/current_password
+> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
+lay/current_value
+> >>>
+> >>> cat csml-payload.file > /sys/class/firmware-attributes/hp-bioscfg/"Se=
+tup Password"/current_password
+> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
+lay/current_value
+> >>
+> >> Last two cases cannot be handled by passing auth-token/CMSL payloads
+> >> values to the current password due to their possible sizes.
+> >> Passwords are limited to 64 bytes in size while
+> >> auth-tokens/CFML-payloads are in the size larger than 64 bytes
+> >> Here are examples of CMSL flow for your records.  Most of generated
+> >> payloads are stored remotely and signed by customer to ensure the data
+> >> integrity.   The full benefit of this process is better represented
+> >> when configuring Security settings in BIOS. (Sure Run, Sure Start,
+> >> Sure Recovery, etc)
+> >> .
+> >> 1. Customer generates a signed CMSL payload to set BIOS "USB Storage
+> >> Boot" value to "Enable"
+> >>
+> >> CMSL command:
+> >>
+> >> New-HPSureAdminBIOSSettingValuePayload -Name "USB Storage Boot" -Value
+> >> "Enable" -SigningKeyFile sk.pfx -SigningKeyPassword test
+> >>
+> >> Generated payload:
+> >>
+> >> {"timestamp":"2022-09-26T16:01:22.7887948-05:00","purpose":"hp:sureadm=
+in:biossetting","Data":[123,10,32,32,34,78,97,109,101,34,58,32,34,85,83,66,=
+32,83,116,111,114,97,103,101,32,66,111,111,116,34,44,10,32,32,34,86,97,108,=
+117,101,34,58,32,34,69,110,97,98,108,101,34,44,10,32,32,34,65,117,116,104,8=
+3,116,114,105,110,103,34,58,32,34,60,66,69,65,77,47,62,65,83,65,65,68,65,65=
+,65,73,120,77,121,89,119,72,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47=
+,47,47,47,47,47,68,85,78,87,111,74,67,117,122,51,73,69,71,57,75,51,80,113,1=
+07,103,121,76,52,108,100,119,83,67,79,69,65,83,47,98,108,68,122,111,116,47,=
+105,77,43,86,103,122,90,77,69,116,43,48,75,87,75,78,103,119,89,99,86,102,12=
+1,97,70,56,99,104,102,57,85,47,86,82,106,51,52,122,112,53,111,43,85,112,97,=
+119,97,116,106,50,74,103,115,97,105,104,113,54,90,53,84,48,101,49,114,56,78=
+,80,109,69,105,119,103,113,118,77,51,108,97,86,83,98,116,101,66,112,80,81,8=
+8,119,102,66,56,101,105,112,119,120,104,121,67,68,65,85,111,118,69,113,82,5=
+1,84,71,79,54,109,101,75,119,71,100,73,104,72,103,102,50,112,72,75,90,50,10=
+7,47,66,116,104,97,98,110,115,118,78,77,114,98,74,69,103,76,72,76,121,87,84=
+,119,98,76,74,87,108,101,106,112,71,121,47,70,100,83,105,74,114,101,66,114,=
+81,115,114,106,90,113,100,76,75,72,90,71,117,108,52,70,108,43,117,47,72,102=
+,107,48,119,121,81,69,106,121,97,99,51,52,57,105,90,55,97,104,49,72,56,50,8=
+5,97,50,49,55,109,74,51,88,56,87,113,80,111,50,86,72,65,85,57,71,102,47,113=
+,107,97,85,101,75,76,84,97,75,87,101,121,122,116,68,109,105,68,98,115,114,4=
+7,86,51,51,106,114,101,67,88,65,65,109,120,68,76,73,73,66,103,83,88,79,82,8=
+2,117,98,80,53,113,80,78,69,53,67,76,120,104,119,61,61,34,10,125],"Meta1":n=
+ull,"Meta2":null,"Meta3":null,"Meta4":null}
+> >>
+> >>
+> >> The application reads the CMSL payload and sends the command to the
+> >> driver.  The payload is translated to  [BIOS setting], [Value],
+> >> [Password || auth-token]
+> >>
+> >>
+> >> echo "USB Storage
+> >> Boot,Enable,<BEAM/>ASAADAAANZ9AYwH/////////////////////64bPg7ygUv4xano=
+HIFrzME9mIsxeJh32fkhR7sgHpXdEHjetMXxNVhEK/twhhXhHS93kp9JpGhsr+J6AMKV2ldE99i=
+JHo6ul1IxJQuBSxBoN1mf49Mm/ROCNll+IhsAn4ow+xlDwKQn2EzKtQc2Wf1eC646KPcl+ZCtiF=
+hvLzXZrGSXsB2hJy0+IzegUPzLY6jaN0lYyQMtQ0KpcyGnK6xZSKCKfotygWawWY8BD3oewyrVL=
+dKMGjrtX4HtHaeo5A9VVXVt89i7lZAmV3VkRtu70LEv240ue/SOhwrxGtydgNmtpV3dSn/ancnY=
+4ONbTxBRiw8cifObEiNOidYzhpQ=3D=3D"
+> >>> /sys/class/firmware-attributes/hp-bioscfg/attributes/Sure_Admin/setti=
+ngs'
+> >>
+> >> As you can see, the auth-token  "<BEAN/>.....=3D=3D" portion varies in
+> >> size depending on the signing certificate size used.
+> >>
+> >> A method that can be used to address your comments and allow the
+> >> driver to handle both auth-tokens and password using command
+> >>
+> >>        echo "auth-token" >
+> >> /sys/class/firmware-attributes/hp-bioscfg/"Setup
+> >> Password"/current_password
+> >>
+> >> is adding an modifier to indicate if the input is a password or auth-t=
+oken
+> >>
+> >> For instance...  using [Token] modifier to identify the data is an
+> >> authentication token
+> >>
+> >>      echo "[token] auth-token" >
+> >> /sys/class/firmware-attributes/hp-bioscfg/"Setup
+> >> Password"/current_password
+> >>
+> >> If the modifier is missing, the driver will treat the data as a passwo=
+rd.
+> >>
+> >> This new method will conform with the firmware class framework and
+> >> provide the flexibility needed for HP solution.
+> >>
+> >> Please advise.
+> >>
+> >> I don't know if this is helpful or not as I've not read your code in a=
+ny detail and was just being nosy whilst skimming the mailing list posts - =
+but I did similar for the Lenovo platforms recently.
+> >> In our case we added a 'signature' sysfs entry under authentication/Ad=
+min that is used for what is (I think) the equivalent of 'auth-token' when =
+certificate based authentication is enabled. We didn't try to re-use the pa=
+ssword entry.
+> >>
+> >> So if certificate authentication is enabled the user ends up doing:
+> >>     echo "crypto-string" > authentication/Admin/signature
+> >>     echo "value" > attribute/"setting"
+> >> and if password authentication is enabled
+> >>     echo "password" > authentication/Admin/password
+> >>     echo "value" > attribute/"setting"
+> >> and the thinklmi driver takes care of figuring out the rest to pass as=
+ WMI calls to the BIOS (for us this is done at init time and is only change=
+d by a reboot). Note for completeness - we have a signature and a save_sign=
+ature....for reasons of BIOS (sigh).
+> >>
+> > Thank you for your suggestion.   Separating 'password' and signature
+> > is a better approach and easier to implement since most of the
+> > supporting code is already implemented.
+>
+> Ok, using a separate signature file under authentication/Admin/signature
+> (or something similar) for this is fine with me.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
