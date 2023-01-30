@@ -2,305 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97596C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 10:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4276EC54EED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 11:53:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236338AbjA3KSR (ORCPT
+        id S235297AbjA3Lxy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 05:18:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
+        Mon, 30 Jan 2023 06:53:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236259AbjA3KSM (ORCPT
+        with ESMTP id S231127AbjA3Lxx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 05:18:12 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F187D2884D;
-        Mon, 30 Jan 2023 02:18:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675073885; x=1706609885;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fJ0z630gmwhZTyHyPQIkHmXLmd3BKr1+hnkSLqDqByQ=;
-  b=Xkqu5UiZM38ZUOgRA7DcwwmPS+26zmZU5iURdg0n+RKC+kjWA37J2K2U
-   5W6+IxjR381HQtOO1CYJrD0dBagbCM5aZwYApKpvHodEwJM4sstzvPiWV
-   3DxflbmE0+THddl6r4p5MSpXGN4d2VSMTHKspXvDNdChe+49u/B0hnMAL
-   69Mf0u7RxE3UK6h91qY0KTwmyvpgPEGP2pr8HFnH/ON6HHw01Hb/4+YRq
-   TzouPI+oh1rnJpYsfkENGm8PIVA7ihhDZBjtyyKQAysyRwBp7djVm0qL0
-   7HIW23iLKMEf+OdmAKvxSrSav1YhO1oetTwUcYueYIczUsHnlZ4beelkH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="413743074"
-X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
-   d="scan'208";a="413743074"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:18:04 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="641479185"
-X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
-   d="scan'208";a="641479185"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:18:00 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-        by kekkonen.fi.intel.com (Postfix) with SMTP id 2930D120243;
-        Mon, 30 Jan 2023 12:17:57 +0200 (EET)
-Date:   Mon, 30 Jan 2023 12:17:57 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org, hverkuil@xs4all.nl
-Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Message-ID: <Y9eZOmDAYW8lm/By@kekkonen.localdomain>
-References: <20230127203729.10205-1-hdegoede@redhat.com>
- <20230127203729.10205-2-hdegoede@redhat.com>
+        Mon, 30 Jan 2023 06:53:53 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47EC1350C;
+        Mon, 30 Jan 2023 03:53:51 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id t7so2446694wrp.5;
+        Mon, 30 Jan 2023 03:53:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hGloNujiL0CsgogRLovAVVyc6KEZFVadDdcOWuMAQsQ=;
+        b=DV8o93oCQ73nQnF6DKwI5AzadrxQNopoi9mYTUm8VXhAF/qN4J/4O5a5pBBbHw9+dy
+         ZtqDU02mUJOTkEW3lXS3R4n610Pein98fCIAQDcPn38n+/aaJTet9MP1WMw6Ww+6CLjl
+         5+F6klm8htSBwuIFCZuPNW8wrPHaMMr5XyxIO55Z5H/9Xdgn0JQLD7q/ME/fr/X2RCIK
+         mPYzzMe8sPJBT6nzlF/rTs46FncTH6ZMAuUjEgDxMl/Zh2q7TeWkqSU5R2ip/hnPFhMB
+         8SAFIo3GB6loDpJxArn2vu8S4eiM5GYSaLAh0+spfd730xZq+zplUPNsNfLeEnYM21aw
+         t2yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGloNujiL0CsgogRLovAVVyc6KEZFVadDdcOWuMAQsQ=;
+        b=f4N3SEpF4Mcj+lF7xc9uwHbUUos5kW2fYJvXxdPMVkZFMHbxWaZrvnuw1gK3qgKHmM
+         V2/vyAntBKyu3L5saSNee6mVH8CP7pqQWQsM9SWEnXrML9BVbNPaQFya5KTH5FDAyqwP
+         n+Mwe/FXYbGVTZgkfHd7QMDkxE7H4ghtn0AcNWGPaJhWf/0KU/oN7rKs3GhnCkhV0mRG
+         d7P70Tb9zlEOwb2XD0BI6b6nsdbIieIppafHDwC4SAciKux6njudZ1n6TTDxw8OJv/Ze
+         QGWcrCLdDES1KYS2B+UN9kEUUIOj0hD+5LRSzP+L4uk8bxRlHUXRVdUliHsxp4B0eXW9
+         QasA==
+X-Gm-Message-State: AO0yUKX3QQb7GO+IT5McX7rRE4nuwhm2rlQZxxpfSQhquLv4v+d4xDSo
+        zKQATo6G9X/pAzX2pFGMpvQ=
+X-Google-Smtp-Source: AK7set99aypYxsMEBlz2WZVjweCmV/hwIdnZNU+KENU9bagNUuU2UXoj/aDRU6yeJuS1ze7BTzlhow==
+X-Received: by 2002:adf:f8cb:0:b0:2bf:b047:d4af with SMTP id f11-20020adff8cb000000b002bfb047d4afmr19424812wrq.5.1675079630213;
+        Mon, 30 Jan 2023 03:53:50 -0800 (PST)
+Received: from [192.168.2.202] (pd9ea3cac.dip0.t-ipconnect.de. [217.234.60.172])
+        by smtp.gmail.com with ESMTPSA id t27-20020adfa2db000000b002366553eca7sm11594342wra.83.2023.01.30.03.53.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jan 2023 03:53:49 -0800 (PST)
+Message-ID: <4a196e8f-cbc9-7453-6e36-aad458549e25@gmail.com>
+Date:   Mon, 30 Jan 2023 12:53:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127203729.10205-2-hdegoede@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH 6/9] HID: surface-hid: Constify lowlevel HID driver
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        Basavaraj Natikar <basavaraj.natikar@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, greybus-dev@lists.linaro.org,
+        linux-staging@lists.linux.dev
+References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
+ <20230130-hid-const-ll-driver-v1-6-3fc282b3b1d0@weissschuh.net>
+Content-Language: en-US
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20230130-hid-const-ll-driver-v1-6-3fc282b3b1d0@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
-
-On Fri, Jan 27, 2023 at 09:37:25PM +0100, Hans de Goede wrote:
-> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
-> associated with the sensor and extend the call_s_stream() wrapper to
-> enable/disable the privacy LED if found.
+On 1/30/23 04:59, Thomas Weißschuh wrote:
+> Since commit 52d225346904 ("HID: Make lowlevel driver structs const")
+> the lowlevel HID drivers are only exposed as const.
 > 
-> This makes the core handle privacy LED control, rather then having to
-> duplicate this code in all the sensor drivers.
+> Take advantage of this to constify the underlying structure, too.
 > 
-> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Please wrap the lines over 80, unless there are tangible reasons to keep
-them as-is.
+Looks good to me.
 
-For this patch:
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-On my behalf it can be merged via another tree, I don't expect conflicts.
-Also cc Hans Verkuil.
-
-And the rest:
-
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Please also see my comment on the 3rd patch.
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
 > ---
-> Changes in v6:
-> - Add v4l2_subdev_privacy_led_get()/_put() helpers
-> - At least the _put helper is necessary for cleanup on errors later on in
->   v4l2_async_register_subdev_sensor()
-> - This puts all the LED related coded into a single file (v4l2-subdev.c)
->   removing the need to build the async + fwnode code into videodev.ko,
->   so that patch is dropped
-> - Move the (non-error-exit) cleanup from v4l2_subdev_cleanup() to
->    v4l2_async_unregister_subdev()
+>   drivers/hid/surface-hid/surface_hid_core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Changes in v4 (requested by Laurent Pinchart):
-> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
->   make errors other then -ENOENT fail the register() call.
-> - Move the led_disable_sysfs() call to be done at led_get() time, instead
->   of only disabling the sysfs interface when the sensor is streaming.
-> ---
->  drivers/media/v4l2-core/v4l2-async.c       |  4 ++
->  drivers/media/v4l2-core/v4l2-fwnode.c      |  7 ++++
->  drivers/media/v4l2-core/v4l2-subdev-priv.h | 14 +++++++
->  drivers/media/v4l2-core/v4l2-subdev.c      | 44 ++++++++++++++++++++++
->  include/media/v4l2-subdev.h                |  3 ++
->  5 files changed, 72 insertions(+)
->  create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
+> diff --git a/drivers/hid/surface-hid/surface_hid_core.c b/drivers/hid/surface-hid/surface_hid_core.c
+> index 87637f813de2..a3e9cceddfac 100644
+> --- a/drivers/hid/surface-hid/surface_hid_core.c
+> +++ b/drivers/hid/surface-hid/surface_hid_core.c
+> @@ -174,7 +174,7 @@ static int surface_hid_raw_request(struct hid_device *hid, unsigned char reportn
+>   	return -EIO;
+>   }
+>   
+> -static struct hid_ll_driver surface_hid_ll_driver = {
+> +static const struct hid_ll_driver surface_hid_ll_driver = {
+>   	.start       = surface_hid_start,
+>   	.stop        = surface_hid_stop,
+>   	.open        = surface_hid_open,
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 2f1b718a9189..d7e9ffc7aa23 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -24,6 +24,8 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
->  				    struct v4l2_subdev *subdev,
->  				    struct v4l2_async_subdev *asd)
-> @@ -822,6 +824,8 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  	if (!sd->async_list.next)
->  		return;
->  
-> +	v4l2_subdev_put_privacy_led(sd);
-> +
->  	mutex_lock(&list_lock);
->  
->  	__v4l2_async_nf_unregister(sd->subdev_notifier);
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 3d9533c1b202..049c2f2001ea 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -28,6 +28,8 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  static const struct v4l2_fwnode_bus_conv {
->  	enum v4l2_fwnode_bus_type fwnode_bus_type;
->  	enum v4l2_mbus_type mbus_type;
-> @@ -1302,6 +1304,10 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->  
->  	v4l2_async_nf_init(notifier);
->  
-> +	ret = v4l2_subdev_get_privacy_led(sd);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
->  	ret = v4l2_async_nf_parse_fwnode_sensor(sd->dev, notifier);
->  	if (ret < 0)
->  		goto out_cleanup;
-> @@ -1322,6 +1328,7 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->  	v4l2_async_nf_unregister(notifier);
->  
->  out_cleanup:
-> +	v4l2_subdev_put_privacy_led(sd);
->  	v4l2_async_nf_cleanup(notifier);
->  	kfree(notifier);
->  
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev-priv.h b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-> new file mode 100644
-> index 000000000000..52391d6d8ab7
-> --- /dev/null
-> +++ b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * V4L2 sub-device pivate header.
-> + *
-> + * Copyright (C) 2023 Hans de Goede <hdegoede@redhat.com>
-> + */
-> +
-> +#ifndef _V4L2_SUBDEV_PRIV_H_
-> +#define _V4L2_SUBDEV_PRIV_H_
-> +
-> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd);
-> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd);
-> +
-> +#endif
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 4988a25bd8f4..9fd183628285 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/ioctl.h>
-> +#include <linux/leds.h>
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -23,6 +24,8 @@
->  #include <media/v4l2-fh.h>
->  #include <media/v4l2-event.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
->  static int subdev_fh_init(struct v4l2_subdev_fh *fh, struct v4l2_subdev *sd)
->  {
-> @@ -322,6 +325,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
->  {
->  	int ret;
->  
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		if (enable)
-> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
-> +		else
-> +			led_set_brightness(sd->privacy_led, 0);
-> +	}
-> +#endif
->  	ret = sd->ops->video->s_stream(sd, enable);
->  
->  	if (!enable && ret < 0) {
-> @@ -1090,6 +1101,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
->  	sd->grp_id = 0;
->  	sd->dev_priv = NULL;
->  	sd->host_priv = NULL;
-> +	sd->privacy_led = NULL;
->  #if defined(CONFIG_MEDIA_CONTROLLER)
->  	sd->entity.name = sd->name;
->  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
-> @@ -1105,3 +1117,35 @@ void v4l2_subdev_notify_event(struct v4l2_subdev *sd,
->  	v4l2_subdev_notify(sd, V4L2_DEVICE_NOTIFY_EVENT, (void *)ev);
->  }
->  EXPORT_SYMBOL_GPL(v4l2_subdev_notify_event);
-> +
-> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
-> +{
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
-> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
-> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
-> +
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		mutex_lock(&sd->privacy_led->led_access);
-> +		led_sysfs_disable(sd->privacy_led);
-> +		led_trigger_remove(sd->privacy_led);
-> +		led_set_brightness(sd->privacy_led, 0);
-> +		mutex_unlock(&sd->privacy_led->led_access);
-> +	}
-> +#endif
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
-> +
-> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd)
-> +{
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		mutex_lock(&sd->privacy_led->led_access);
-> +		led_sysfs_enable(sd->privacy_led);
-> +		mutex_unlock(&sd->privacy_led->led_access);
-> +		led_put(sd->privacy_led);
-> +	}
-> +#endif
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_subdev_put_privacy_led);
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index b15fa9930f30..0547313f98cc 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -38,6 +38,7 @@ struct v4l2_subdev;
->  struct v4l2_subdev_fh;
->  struct tuner_setup;
->  struct v4l2_mbus_frame_desc;
-> +struct led_classdev;
->  
->  /**
->   * struct v4l2_decode_vbi_line - used to decode_vbi_line
-> @@ -982,6 +983,8 @@ struct v4l2_subdev {
->  	 * appropriate functions.
->  	 */
->  
-> +	struct led_classdev *privacy_led;
-> +
->  	/*
->  	 * TODO: active_state should most likely be changed from a pointer to an
->  	 * embedded field. For the time being it's kept as a pointer to more
-
--- 
-Kind regards,
-
-Sakari Ailus
