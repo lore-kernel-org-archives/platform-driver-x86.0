@@ -2,77 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A1C54EAA
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 13:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA54C54EED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 13:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236557AbjA3Nfl (ORCPT
+        id S232267AbjA3Nt6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 08:35:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48118 "EHLO
+        Mon, 30 Jan 2023 08:49:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236448AbjA3Nfh (ORCPT
+        with ESMTP id S229809AbjA3Nt5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 08:35:37 -0500
+        Mon, 30 Jan 2023 08:49:57 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF67610243
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:34:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD1736FEA
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:49:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675085693;
+        s=mimecast20190719; t=1675086550;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wBidcN355LgGDZ/WwxPjWGavaMBTZvOjDpvFtA2pY6Q=;
-        b=HehVoiKz8RvmBwEJsA92sHsugsHkW2ofd/3rdLTG7ZDZfcJI4rwcXyj/TygJWenc4Qjpst
-        xdEu9zAz0Xblwdxq6RDgwQoyTKKs7UkTqxk1oIubGcn2ecsa0m0kuuj1WvWIQKK6mtGkrP
-        WYsKuwjjnkkzB3CF/iVWWLB43xJcAFQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=khWUJvHdx5J4eL+21ybuf9aVnqAzPnJ5sS+uPDhULsw=;
+        b=PpxQkg1kAFJujS/tlTxogzORlUUmcwrGz2WBH7UZP/0MjrN4dC0asdTzHkmnFXiI68Ota+
+        ni9i1QpvbOWweVopjjPpBfVakgrTD0AEQu5fUIoraaXiuWmvnhuZGWARLkXe4lpGqiRrPh
+        lJtUlAt53PkzksJH5RQ6uXPreWzW6o8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-182-sCLqQbBOO2CrLfaXRRtJUw-1; Mon, 30 Jan 2023 08:34:52 -0500
-X-MC-Unique: sCLqQbBOO2CrLfaXRRtJUw-1
-Received: by mail-ed1-f70.google.com with SMTP id w3-20020a056402268300b00487e0d9b53fso8255997edd.10
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:34:52 -0800 (PST)
+ us-mta-580-n4ngCtCnM4aH5anL9S0faw-1; Mon, 30 Jan 2023 08:49:08 -0500
+X-MC-Unique: n4ngCtCnM4aH5anL9S0faw-1
+Received: by mail-ed1-f69.google.com with SMTP id m23-20020aa7c2d7000000b004a230f52c81so3131254edp.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:49:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wBidcN355LgGDZ/WwxPjWGavaMBTZvOjDpvFtA2pY6Q=;
-        b=DnQwR56wI2uS/n+9vqgsjw8x8DRxLaS5oNng5ThbjSbe9EUinvwiB4LdP0H4po2QP5
-         yLArihNDA12a2JEitUR9I3XDtLCKvsBspfqF3SwzzolsySZkh89NlTGAHZ6nf7b1vS+l
-         Iql08K0sHg/zOdmSTkHQJ6QlYZVR8ssTD1sbQs3+5Phb+A/cGsKnkrhnKreHDTMztFnt
-         VpXiUFoR4GVORozXb4JZCB6y0WG4stO/fHQ9yRwu3H8zQBQzfn25BT9ZrHiKvYx7i9J4
-         mQVSwccr8ScWKDjq4U7yRks3Ekwdq3VLjsA97Y93iiooUnVTEd6GKCsOwctREO8KtNBK
-         dX4g==
-X-Gm-Message-State: AO0yUKWXWehktdcI4cFFlhwTd8jm1jGFr1aw8WZ6xP7vh3tPg1RbJ8NN
-        FuhqOf4WkKcp6eJ42mbQMJmRLlh++3xZMjDdWRaaNhUdQpKNkvglA7jifcxW80sF5cTYBCPTXVp
-        EVsU5tecs17RpgOIMHejvg8Z8mOC5A3spLg==
-X-Received: by 2002:a17:906:8a5a:b0:88a:724:244c with SMTP id gx26-20020a1709068a5a00b0088a0724244cmr1572500ejc.71.1675085691492;
-        Mon, 30 Jan 2023 05:34:51 -0800 (PST)
-X-Google-Smtp-Source: AK7set+KI7swegxN8oLc8yfJgEQ5MDl6ktQBCiOdmdqynjEQDkJCyWdaqwGw/rB7CesS+aZutIFmfA==
-X-Received: by 2002:a17:906:8a5a:b0:88a:724:244c with SMTP id gx26-20020a1709068a5a00b0088a0724244cmr1572488ejc.71.1675085691283;
-        Mon, 30 Jan 2023 05:34:51 -0800 (PST)
+        bh=khWUJvHdx5J4eL+21ybuf9aVnqAzPnJ5sS+uPDhULsw=;
+        b=KyuyEgYL7TAjk/PWfLQtxwUIo2BZd7LoAY7Bql4xSWYSTDfbBL2iidOnCQF7ZKbmW1
+         9ys6xr9O0J/GCkCFI2fQTWkVK8G88DUpqko3VNpEUTi5EY+H++xF0VNL/jFGrbIgUL+E
+         qrXSb6wUZjiXbsVCp0MyM0jqBv3/OVLdSkfZw/14KQYrMEnLBkN63696O4HPDa/LFt/v
+         tP/eetfxX2Bx/TehKCam2qbSKqn+88YncoKHUlJFFjVXGqWvHYPhnDGN0lOvaR/nboN9
+         GccoiIgEK8JmcWf6PJAXAJNkJgFYj5yJDt4mMgzxs7IYz6Zl5c0F6lNAtAPdayePLkRe
+         /uow==
+X-Gm-Message-State: AFqh2kqLYgSv0GzjXk3eHFOCRy/RSK3P7hgSbBBI8Vudd3FGmMPMS1fk
+        x+m2IueJh/5eEDlv8yUQ7t7S7W63PNdpBxJEe6vLB3alLPLPVPLmm2l6BnTrxw5I+WmWZ5V4zu0
+        BxyD5lMjPsnTjCZ1WQo/cLAcTyb8a1HCkJQ==
+X-Received: by 2002:a17:906:150d:b0:7c1:458b:a947 with SMTP id b13-20020a170906150d00b007c1458ba947mr49429988ejd.26.1675086546317;
+        Mon, 30 Jan 2023 05:49:06 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtKQ5YvcJEu7Y7MnT4+vZ5jaAGs7KrILd3xUWQY7lxKVSkWxE+aWXcLuASciflewdh6Mbfkcw==
+X-Received: by 2002:a17:906:150d:b0:7c1:458b:a947 with SMTP id b13-20020a170906150d00b007c1458ba947mr49429977ejd.26.1675086546111;
+        Mon, 30 Jan 2023 05:49:06 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id fy15-20020a1709069f0f00b0084c62b7b7d8sm6806766ejc.187.2023.01.30.05.34.50
+        by smtp.gmail.com with ESMTPSA id rh16-20020a17090720f000b0087329ff593fsm6904225ejb.144.2023.01.30.05.49.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 05:34:50 -0800 (PST)
-Message-ID: <4f5e1fc2-ab18-30f7-b0d5-5b99be7a1a67@redhat.com>
-Date:   Mon, 30 Jan 2023 14:34:50 +0100
+        Mon, 30 Jan 2023 05:49:05 -0800 (PST)
+Message-ID: <ef698dd2-8620-7ebf-7e79-3280dada148e@redhat.com>
+Date:   Mon, 30 Jan 2023 14:49:05 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] platform/x86/amd: pmc: add CONFIG_SERIO dependency
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix thinklight LED
+ brightness returning 255
 Content-Language: en-US
-To:     Arnd Bergmann <arnd@kernel.org>, Mark Gross <markgross@kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Naveen Krishna Chatradhi <NaveenKrishna.Chatradhi@amd.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230127093950.2368575-1-arnd@kernel.org>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20230127235723.412864-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230127093950.2368575-1-arnd@kernel.org>
+In-Reply-To: <20230127235723.412864-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,51 +79,40 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/27/23 10:39, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 1/28/23 00:57, Hans de Goede wrote:
+> Reading the thinklight LED brightnes while the LED is on returns
+> 255 (LED_FULL) but we advertise a max_brightness of 1, so this should
+> be 1 (LED_ON).
 > 
-> Using the serio subsystem now requires the code to be reachable:
-> 
-> x86_64-linux-ld: drivers/platform/x86/amd/pmc.o: in function `amd_pmc_suspend_handler':
-> pmc.c:(.text+0x86c): undefined reference to `serio_bus'
-> 
-> Add the usual dependency: as other users of serio use 'select'
-> rather than 'depends on', use the same here.
-> 
-> Fixes: 8e60615e8932 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Fixes: db5e2a4ca0a7 ("platform/x86: thinkpad_acpi: Fix max_brightness of thinklight")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I've applied this to the pdx86 fixes branch now:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+and this will be included in my next fixes pull-req to Linus.
 
 Regards,
 
 Hans
 
 
+
 > ---
->  drivers/platform/x86/amd/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/thinkpad_acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index a825af8126c8..2ce8cb2170df 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -8,6 +8,7 @@ source "drivers/platform/x86/amd/pmf/Kconfig"
->  config AMD_PMC
->  	tristate "AMD SoC PMC driver"
->  	depends on ACPI && PCI && RTC_CLASS
-> +	select SERIO
->  	help
->  	  The driver provides support for AMD Power Management Controller
->  	  primarily responsible for S2Idle transactions that are driven from
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 02860c32625e..32c10457399e 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -5563,7 +5563,7 @@ static int light_sysfs_set(struct led_classdev *led_cdev,
+>  
+>  static enum led_brightness light_sysfs_get(struct led_classdev *led_cdev)
+>  {
+> -	return (light_get_status() == 1) ? LED_FULL : LED_OFF;
+> +	return (light_get_status() == 1) ? LED_ON : LED_OFF;
+>  }
+>  
+>  static struct tpacpi_led_classdev tpacpi_led_thinklight = {
 
