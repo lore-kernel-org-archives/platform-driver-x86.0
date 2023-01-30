@@ -2,236 +2,396 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859D3C54EED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A97CC54EAA
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 20:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235575AbjA3Q4N (ORCPT
+        id S229925AbjA3Uzt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 11:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
+        Mon, 30 Jan 2023 15:55:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjA3Q4M (ORCPT
+        with ESMTP id S229644AbjA3Uzs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 11:56:12 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420813D931
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 08:56:08 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id cf42so19992542lfb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 08:56:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RHQiCMlsGMyMBQXdlDjGF0Bk+KPAn0Fk22NUA394UDU=;
-        b=mHeXXte2v1nwtG7esEu1lMTiA+jBueibctId5BJajzWVD60Iy6PJqgojs5mwNl4Q5d
-         1LNb21E5QFs+YLwmlkVxMvdjI52vycAtJI2ddppFoQQEgwU8xgKNEydG6kDBPPRGLYFF
-         6MBLSsyz7OQ39HOiNYdZ1OCNDRzVpMDA43KSwOgcWyyYl3n1yUv/LgtjIHKgnVk97O7s
-         unlJBpAZM82f2i0G2Ihll3EmgNH7+dJEzO4soTWvn7baqJEDHsEGi3SLUn2SWugfChKI
-         KDMmCZDVP8PG0qgJrkeF0ApAmCaqKuz0tW5RnFRBptlHC+/g6t89h7bPEzi6x3F758a7
-         fd9g==
+        Mon, 30 Jan 2023 15:55:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F3C457C5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 12:55:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1675112099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMBTjf9dX7Thl50RTCE+QgN0YSOMd4ZkDeyqa4Eg9KE=;
+        b=eYhN8CFp9Xe3RCd5TCrOsKE35pqMslGVpVwvqT2PRCUUBiPHFXtNwk3lkl76S2oQ28bnOz
+        r9Q0oBjKH3A7/71RltDo+fMfF5HnWZWHEmomQdlA3f+dgPn43+QOn9zXnKKxfyyakG9k3Q
+        iyIOU/bsZ4NPtlWVWuqoJQXBBT4ShkI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-542-kTrCFvRIPUqATKNAbgnFxw-1; Mon, 30 Jan 2023 15:54:58 -0500
+X-MC-Unique: kTrCFvRIPUqATKNAbgnFxw-1
+Received: by mail-ej1-f72.google.com with SMTP id sc9-20020a1709078a0900b0086910fdf624so8226371ejc.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 12:54:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RHQiCMlsGMyMBQXdlDjGF0Bk+KPAn0Fk22NUA394UDU=;
-        b=DktEEoemjS0BYYvilPWaB20kREXk1kYQ1V5OFe2dnlj9CLsHdMD12q4F4kzaZgMPSK
-         RdOSKqyYLkvf697FF2fY9WOwY+gEq4crKjGNIJ8q+BPTwq4VFYnhdO4urEKGufRr8Yme
-         Ju/LYtkbD8keTmU4mzz/pBpyZIpTKlSNV26FuYzZpTuAsqZ7jJuxiTeOkaWsVjv9drKH
-         ZHct9CQgclohe7MCx3e6kzPSpcFo/BKeYxKVENlRIhHsoJ2szaENUOXJ4F9cHTeL0iQE
-         /41IbBxUAtlf+uScFuubkiKBGXz1++LQKzLEfRu4JvAUO/mR+pQj14r0bqD3xf90BJ+R
-         +sBg==
-X-Gm-Message-State: AFqh2kodQ6jz2Fv80blx8ioU/ZatNDn/91GoGYLEMR8CR+2/iJovcdoc
-        cmAo2+tXWfcqhZhyW8PQOFx8Plbduo2LhEAdxYg0veHV
-X-Google-Smtp-Source: AMrXdXvm7hMwpqbt0YGbhuht0Ql3NcirMDZmLlUps4szvIn+ux0teTSJAuxfSZFOzIuoLGCSOieDbvdfSbfSMQ2HELU=
-X-Received: by 2002:ac2:5df3:0:b0:4cc:7f34:176a with SMTP id
- z19-20020ac25df3000000b004cc7f34176amr4429983lfq.153.1675097766320; Mon, 30
- Jan 2023 08:56:06 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RMBTjf9dX7Thl50RTCE+QgN0YSOMd4ZkDeyqa4Eg9KE=;
+        b=U9/PKvQoscpBpZK1OZClgVHol0dRUhht9CXJz86T8KkVpvwPN8p9kshHcn+YGvOABz
+         6j+OKfD20Qr3eEHZRt5ybydt8Wl+lFPwYTMWdpiJQMbIj++mcJ5/8t7yvFzQ6iM+Ml5a
+         /Sj0AZuBll4OOuum/JfnueDYzQvO4RNQSdVzrIYI9Im3e0bp0ix7piykaENWEqlNU9YB
+         UUEDxHMSnFkg5VMfWy6zNB6jBPDkyP93Qf75KyZ8rxp3jrzMQyx8/R96LArmmA9B/Dew
+         uRsgOuKmuxENNGG+T7uhORb3/xMunTq4+BrEcKlHBiK3XjmChT1HVHzl82ka0lctdqZ9
+         11lQ==
+X-Gm-Message-State: AO0yUKVTgyR4iZlrOYSxzuH59QcfERqAsC2jFEisBNR7gZk6Ko8IIYy7
+        jZ09iqhSZdlqM+I+3vO+UkpuHMTmco2xD5h4jeHRFGkrJ9rvdRsQf7C9dCQEdr1zmnWrniAMLqT
+        eIUkXXpP1qmqL51oY2flx3hk/aQ4AGKVD/A==
+X-Received: by 2002:a17:906:aad0:b0:87b:d41b:67dc with SMTP id kt16-20020a170906aad000b0087bd41b67dcmr11874393ejb.74.1675112096949;
+        Mon, 30 Jan 2023 12:54:56 -0800 (PST)
+X-Google-Smtp-Source: AK7set93L3tVDZyk5rYWNsyfbay/gpIqz9wvCIeqpAV0PUVsMZvjAiRoxHs30ugUvYPmg8Op548DIw==
+X-Received: by 2002:a17:906:aad0:b0:87b:d41b:67dc with SMTP id kt16-20020a170906aad000b0087bd41b67dcmr11874370ejb.74.1675112096638;
+        Mon, 30 Jan 2023 12:54:56 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id mb18-20020a170906eb1200b0084f7d38713esm7357883ejb.108.2023.01.30.12.54.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jan 2023 12:54:55 -0800 (PST)
+Message-ID: <900ebfbc-5a8a-7aba-97b4-00dbc194beb5@redhat.com>
+Date:   Mon, 30 Jan 2023 21:54:55 +0100
 MIME-Version: 1.0
-References: <20221202173616.180108-1-jorge.lopez2@hp.com> <20221202173616.180108-2-jorge.lopez2@hp.com>
- <f797db3d-feaf-5c03-428e-595ec5f4e3a3@redhat.com> <CAOOmCE--Prhn0xbGgcJyUkwESO6nE-R4NVarY0nvzRmWTr+qnA@mail.gmail.com>
- <81f095db-4ca1-4baa-bee4-0ae52457e54b@app.fastmail.com> <CAOOmCE_bHLrq2Hd7RA9PYOdwJhgsJB-asgoadLiEC6D7NMOG1Q@mail.gmail.com>
- <653c46ac-9f8b-f545-3026-85def34ffac1@redhat.com>
-In-Reply-To: <653c46ac-9f8b-f545-3026-85def34ffac1@redhat.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 30 Jan 2023 10:55:54 -0600
-Message-ID: <CAOOmCE9t0CGbABJdjseUTcu-6Rgutyt34THTY8Dj_OfbGmpcsw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] Introduction of HP-BIOSCFG driver (1)
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Pearson <mpearson@squebb.ca>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED class
+ device for the privacy LED
+Content-Language: en-US, nl
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+References: <20230127203729.10205-1-hdegoede@redhat.com>
+ <20230127203729.10205-4-hdegoede@redhat.com>
+ <Y9eYKxdo7BvqI9sR@kekkonen.localdomain>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y9eYKxdo7BvqI9sR@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Great, thanks!
+Hi,
 
-On Mon, Jan 23, 2023 at 11:18 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 1/23/23 17:12, Jorge Lopez wrote:
-> > Hi Mark,
-> >
-> > On Fri, Jan 20, 2023 at 10:07 PM Mark Pearson <mpearson@squebb.ca> wrot=
-e:
-> >>
-> >> Hi Jorge,
-> >>
-> >> On Fri, Jan 20, 2023, at 4:58 PM, Jorge Lopez wrote:
-> >>
-> >> Hi Hans,
-> >>
-> >> <snip>
-> >>
-> >>
-> >> Yes. The handling of auth-tokens/CMSL-payloads vs regular passwords
-> >> are similar with the exception of their size.
-> >> auth-tokens/CMSL-payloads are in the size larger than 64 bytes while
-> >> passwords are limited to 64 bytes.
-> >>>
-> >>> Except for the BEAM_PREFIX thing, which can be added to calculate_sec=
-urity_buffer() /
-> >>> populate_security_buffer() too and in that case all 3 of the followin=
-g should simply
-> >>> work, taking a boot-delay integer attribute as example:
-> >>>
-> >>> echo "password" > /sys/class/firmware-attributes/hp-bioscfg/"Setup Pa=
-ssword"/current_password
-> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
-lay/current_value
-> >>>
-> >>> echo "auth-token" > /sys/class/firmware-attributes/hp-bioscfg/"Setup =
-Password"/current_password
-> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
-lay/current_value
-> >>>
-> >>> cat csml-payload.file > /sys/class/firmware-attributes/hp-bioscfg/"Se=
-tup Password"/current_password
-> >>> echo 5 > /sys/class/firmware-attributes/hp-bioscfg/attributes/boot-de=
-lay/current_value
-> >>
-> >> Last two cases cannot be handled by passing auth-token/CMSL payloads
-> >> values to the current password due to their possible sizes.
-> >> Passwords are limited to 64 bytes in size while
-> >> auth-tokens/CFML-payloads are in the size larger than 64 bytes
-> >> Here are examples of CMSL flow for your records.  Most of generated
-> >> payloads are stored remotely and signed by customer to ensure the data
-> >> integrity.   The full benefit of this process is better represented
-> >> when configuring Security settings in BIOS. (Sure Run, Sure Start,
-> >> Sure Recovery, etc)
-> >> .
-> >> 1. Customer generates a signed CMSL payload to set BIOS "USB Storage
-> >> Boot" value to "Enable"
-> >>
-> >> CMSL command:
-> >>
-> >> New-HPSureAdminBIOSSettingValuePayload -Name "USB Storage Boot" -Value
-> >> "Enable" -SigningKeyFile sk.pfx -SigningKeyPassword test
-> >>
-> >> Generated payload:
-> >>
-> >> {"timestamp":"2022-09-26T16:01:22.7887948-05:00","purpose":"hp:sureadm=
-in:biossetting","Data":[123,10,32,32,34,78,97,109,101,34,58,32,34,85,83,66,=
-32,83,116,111,114,97,103,101,32,66,111,111,116,34,44,10,32,32,34,86,97,108,=
-117,101,34,58,32,34,69,110,97,98,108,101,34,44,10,32,32,34,65,117,116,104,8=
-3,116,114,105,110,103,34,58,32,34,60,66,69,65,77,47,62,65,83,65,65,68,65,65=
-,65,73,120,77,121,89,119,72,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47,47=
-,47,47,47,47,47,68,85,78,87,111,74,67,117,122,51,73,69,71,57,75,51,80,113,1=
-07,103,121,76,52,108,100,119,83,67,79,69,65,83,47,98,108,68,122,111,116,47,=
-105,77,43,86,103,122,90,77,69,116,43,48,75,87,75,78,103,119,89,99,86,102,12=
-1,97,70,56,99,104,102,57,85,47,86,82,106,51,52,122,112,53,111,43,85,112,97,=
-119,97,116,106,50,74,103,115,97,105,104,113,54,90,53,84,48,101,49,114,56,78=
-,80,109,69,105,119,103,113,118,77,51,108,97,86,83,98,116,101,66,112,80,81,8=
-8,119,102,66,56,101,105,112,119,120,104,121,67,68,65,85,111,118,69,113,82,5=
-1,84,71,79,54,109,101,75,119,71,100,73,104,72,103,102,50,112,72,75,90,50,10=
-7,47,66,116,104,97,98,110,115,118,78,77,114,98,74,69,103,76,72,76,121,87,84=
-,119,98,76,74,87,108,101,106,112,71,121,47,70,100,83,105,74,114,101,66,114,=
-81,115,114,106,90,113,100,76,75,72,90,71,117,108,52,70,108,43,117,47,72,102=
-,107,48,119,121,81,69,106,121,97,99,51,52,57,105,90,55,97,104,49,72,56,50,8=
-5,97,50,49,55,109,74,51,88,56,87,113,80,111,50,86,72,65,85,57,71,102,47,113=
-,107,97,85,101,75,76,84,97,75,87,101,121,122,116,68,109,105,68,98,115,114,4=
-7,86,51,51,106,114,101,67,88,65,65,109,120,68,76,73,73,66,103,83,88,79,82,8=
-2,117,98,80,53,113,80,78,69,53,67,76,120,104,119,61,61,34,10,125],"Meta1":n=
-ull,"Meta2":null,"Meta3":null,"Meta4":null}
-> >>
-> >>
-> >> The application reads the CMSL payload and sends the command to the
-> >> driver.  The payload is translated to  [BIOS setting], [Value],
-> >> [Password || auth-token]
-> >>
-> >>
-> >> echo "USB Storage
-> >> Boot,Enable,<BEAM/>ASAADAAANZ9AYwH/////////////////////64bPg7ygUv4xano=
-HIFrzME9mIsxeJh32fkhR7sgHpXdEHjetMXxNVhEK/twhhXhHS93kp9JpGhsr+J6AMKV2ldE99i=
-JHo6ul1IxJQuBSxBoN1mf49Mm/ROCNll+IhsAn4ow+xlDwKQn2EzKtQc2Wf1eC646KPcl+ZCtiF=
-hvLzXZrGSXsB2hJy0+IzegUPzLY6jaN0lYyQMtQ0KpcyGnK6xZSKCKfotygWawWY8BD3oewyrVL=
-dKMGjrtX4HtHaeo5A9VVXVt89i7lZAmV3VkRtu70LEv240ue/SOhwrxGtydgNmtpV3dSn/ancnY=
-4ONbTxBRiw8cifObEiNOidYzhpQ=3D=3D"
-> >>> /sys/class/firmware-attributes/hp-bioscfg/attributes/Sure_Admin/setti=
-ngs'
-> >>
-> >> As you can see, the auth-token  "<BEAN/>.....=3D=3D" portion varies in
-> >> size depending on the signing certificate size used.
-> >>
-> >> A method that can be used to address your comments and allow the
-> >> driver to handle both auth-tokens and password using command
-> >>
-> >>        echo "auth-token" >
-> >> /sys/class/firmware-attributes/hp-bioscfg/"Setup
-> >> Password"/current_password
-> >>
-> >> is adding an modifier to indicate if the input is a password or auth-t=
-oken
-> >>
-> >> For instance...  using [Token] modifier to identify the data is an
-> >> authentication token
-> >>
-> >>      echo "[token] auth-token" >
-> >> /sys/class/firmware-attributes/hp-bioscfg/"Setup
-> >> Password"/current_password
-> >>
-> >> If the modifier is missing, the driver will treat the data as a passwo=
-rd.
-> >>
-> >> This new method will conform with the firmware class framework and
-> >> provide the flexibility needed for HP solution.
-> >>
-> >> Please advise.
-> >>
-> >> I don't know if this is helpful or not as I've not read your code in a=
-ny detail and was just being nosy whilst skimming the mailing list posts - =
-but I did similar for the Lenovo platforms recently.
-> >> In our case we added a 'signature' sysfs entry under authentication/Ad=
-min that is used for what is (I think) the equivalent of 'auth-token' when =
-certificate based authentication is enabled. We didn't try to re-use the pa=
-ssword entry.
-> >>
-> >> So if certificate authentication is enabled the user ends up doing:
-> >>     echo "crypto-string" > authentication/Admin/signature
-> >>     echo "value" > attribute/"setting"
-> >> and if password authentication is enabled
-> >>     echo "password" > authentication/Admin/password
-> >>     echo "value" > attribute/"setting"
-> >> and the thinklmi driver takes care of figuring out the rest to pass as=
- WMI calls to the BIOS (for us this is done at init time and is only change=
-d by a reboot). Note for completeness - we have a signature and a save_sign=
-ature....for reasons of BIOS (sigh).
-> >>
-> > Thank you for your suggestion.   Separating 'password' and signature
-> > is a better approach and easier to implement since most of the
-> > supporting code is already implemented.
->
-> Ok, using a separate signature file under authentication/Admin/signature
-> (or something similar) for this is fine with me.
->
-> Regards,
->
-> Hans
->
->
->
+On 1/30/23 11:12, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Fri, Jan 27, 2023 at 09:37:27PM +0100, Hans de Goede wrote:
+>> On some systems, e.g. the Lenovo ThinkPad X1 Yoga gen 7 and the ThinkPad
+>> X1 Nano gen 2 there is no clock-enable pin, triggering the:
+>> "No clk GPIO. The privacy LED won't work" warning and causing the privacy
+>> LED to not work.
+>>
+>> Fix this by modeling the privacy LED as a LED class device rather then
+>> integrating it with the registered clock.
+>>
+>> Note this relies on media subsys changes to actually turn the LED on/off
+>> when the sensor's v4l2_subdev's s_stream() operand gets called.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v4:
+>> - Make struct led_classdev the first member of the pled struct
+>> - Use strchr to replace the : with _ in the acpi_dev_name()
+>> ---
+>>  drivers/platform/x86/intel/int3472/Makefile   |  2 +-
+>>  .../x86/intel/int3472/clk_and_regulator.c     |  3 -
+>>  drivers/platform/x86/intel/int3472/common.h   | 15 +++-
+>>  drivers/platform/x86/intel/int3472/discrete.c | 58 ++++-----------
+>>  drivers/platform/x86/intel/int3472/led.c      | 74 +++++++++++++++++++
+>>  5 files changed, 105 insertions(+), 47 deletions(-)
+>>  create mode 100644 drivers/platform/x86/intel/int3472/led.c
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
+>> index cfec7784c5c9..9f16cb514397 100644
+>> --- a/drivers/platform/x86/intel/int3472/Makefile
+>> +++ b/drivers/platform/x86/intel/int3472/Makefile
+>> @@ -1,4 +1,4 @@
+>>  obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472_discrete.o \
+>>  					   intel_skl_int3472_tps68470.o
+>> -intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o common.o
+>> +intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o common.o
+>>  intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o common.o
+>> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+>> index 74dc2cff799e..e3b597d93388 100644
+>> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+>> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+>> @@ -23,8 +23,6 @@ static int skl_int3472_clk_prepare(struct clk_hw *hw)
+>>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>>  
+>>  	gpiod_set_value_cansleep(clk->ena_gpio, 1);
+>> -	gpiod_set_value_cansleep(clk->led_gpio, 1);
+>> -
+>>  	return 0;
+>>  }
+>>  
+>> @@ -33,7 +31,6 @@ static void skl_int3472_clk_unprepare(struct clk_hw *hw)
+>>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>>  
+>>  	gpiod_set_value_cansleep(clk->ena_gpio, 0);
+>> -	gpiod_set_value_cansleep(clk->led_gpio, 0);
+>>  }
+>>  
+>>  static int skl_int3472_clk_enable(struct clk_hw *hw)
+>> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+>> index 53270d19c73a..82dc37e08882 100644
+>> --- a/drivers/platform/x86/intel/int3472/common.h
+>> +++ b/drivers/platform/x86/intel/int3472/common.h
+>> @@ -6,6 +6,7 @@
+>>  
+>>  #include <linux/clk-provider.h>
+>>  #include <linux/gpio/machine.h>
+>> +#include <linux/leds.h>
+>>  #include <linux/regulator/driver.h>
+>>  #include <linux/regulator/machine.h>
+>>  #include <linux/types.h>
+>> @@ -28,6 +29,8 @@
+>>  #define GPIO_REGULATOR_NAME_LENGTH				21
+>>  #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
+>>  
+>> +#define INT3472_LED_MAX_NAME_LEN				32
+>> +
+>>  #define CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET			86
+>>  
+>>  #define INT3472_REGULATOR(_name, _supply, _ops)			\
+>> @@ -96,10 +99,16 @@ struct int3472_discrete_device {
+>>  		struct clk_hw clk_hw;
+>>  		struct clk_lookup *cl;
+>>  		struct gpio_desc *ena_gpio;
+>> -		struct gpio_desc *led_gpio;
+>>  		u32 frequency;
+>>  	} clock;
+>>  
+>> +	struct int3472_pled {
+>> +		struct led_classdev classdev;
+>> +		struct led_lookup_data lookup;
+>> +		char name[INT3472_LED_MAX_NAME_LEN];
+>> +		struct gpio_desc *gpio;
+>> +	} pled;
+>> +
+>>  	unsigned int ngpios; /* how many GPIOs have we seen */
+>>  	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
+>>  	struct gpiod_lookup_table gpios;
+>> @@ -119,4 +128,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+>>  				   struct acpi_resource_gpio *agpio);
+>>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
+>>  
+>> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
+>> +			      struct acpi_resource_gpio *agpio, u32 polarity);
+>> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
+>> +
+>>  #endif
+>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+>> index 708d51f9b41d..38b1372e0745 100644
+>> --- a/drivers/platform/x86/intel/int3472/discrete.c
+>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+>> @@ -155,37 +155,21 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+>>  }
+>>  
+>>  static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+>> -				       struct acpi_resource_gpio *agpio, u8 type)
+>> +				       struct acpi_resource_gpio *agpio)
+>>  {
+>>  	char *path = agpio->resource_source.string_ptr;
+>>  	u16 pin = agpio->pin_table[0];
+>>  	struct gpio_desc *gpio;
+>>  
+>> -	switch (type) {
+>> -	case INT3472_GPIO_TYPE_CLK_ENABLE:
+>> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+>> -		if (IS_ERR(gpio))
+>> -			return (PTR_ERR(gpio));
+>> -
+>> -		int3472->clock.ena_gpio = gpio;
+>> -		/* Ensure the pin is in output mode and non-active state */
+>> -		gpiod_direction_output(int3472->clock.ena_gpio, 0);
+>> -		break;
+>> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,privacy-led");
+>> -		if (IS_ERR(gpio))
+>> -			return (PTR_ERR(gpio));
+>> +	gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+>> +	if (IS_ERR(gpio))
+>> +		return (PTR_ERR(gpio));
+>>  
+>> -		int3472->clock.led_gpio = gpio;
+>> -		/* Ensure the pin is in output mode and non-active state */
+>> -		gpiod_direction_output(int3472->clock.led_gpio, 0);
+>> -		break;
+>> -	default:
+>> -		dev_err(int3472->dev, "Invalid GPIO type 0x%02x for clock\n", type);
+>> -		break;
+>> -	}
+>> +	int3472->clock.ena_gpio = gpio;
+>> +	/* Ensure the pin is in output mode and non-active state */
+>> +	gpiod_direction_output(int3472->clock.ena_gpio, 0);
+>>  
+>> -	return 0;
+>> +	return skl_int3472_register_clock(int3472);
+>>  }
+>>  
+>>  static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
+>> @@ -293,11 +277,16 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>>  
+>>  		break;
+>>  	case INT3472_GPIO_TYPE_CLK_ENABLE:
+>> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> -		ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
+>> +		ret = skl_int3472_map_gpio_to_clk(int3472, agpio);
+>>  		if (ret)
+>>  			err_msg = "Failed to map GPIO to clock\n";
+>>  
+>> +		break;
+>> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +		ret = skl_int3472_register_pled(int3472, agpio, polarity);
+>> +		if (ret)
+>> +			err_msg = "Failed to register LED\n";
+>> +
+>>  		break;
+>>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
+>>  		ret = skl_int3472_register_regulator(int3472, agpio);
+>> @@ -341,21 +330,6 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>>  
+>>  	acpi_dev_free_resource_list(&resource_list);
+>>  
+>> -	/*
+>> -	 * If we find no clock enable GPIO pin then the privacy LED won't work.
+>> -	 * We've never seen that situation, but it's possible. Warn the user so
+>> -	 * it's clear what's happened.
+>> -	 */
+>> -	if (int3472->clock.ena_gpio) {
+>> -		ret = skl_int3472_register_clock(int3472);
+>> -		if (ret)
+>> -			return ret;
+>> -	} else {
+>> -		if (int3472->clock.led_gpio)
+>> -			dev_warn(int3472->dev,
+>> -				 "No clk GPIO. The privacy LED won't work\n");
+>> -	}
+>> -
+>>  	int3472->gpios.dev_id = int3472->sensor_name;
+>>  	gpiod_add_lookup_table(&int3472->gpios);
+>>  
+>> @@ -372,8 +346,8 @@ static int skl_int3472_discrete_remove(struct platform_device *pdev)
+>>  		skl_int3472_unregister_clock(int3472);
+>>  
+>>  	gpiod_put(int3472->clock.ena_gpio);
+>> -	gpiod_put(int3472->clock.led_gpio);
+>>  
+>> +	skl_int3472_unregister_pled(int3472);
+>>  	skl_int3472_unregister_regulator(int3472);
+>>  
+>>  	return 0;
+>> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+>> new file mode 100644
+>> index 000000000000..251c6524458e
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/intel/int3472/led.c
+>> @@ -0,0 +1,74 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Author: Hans de Goede <hdegoede@redhat.com> */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/leds.h>
+>> +#include "common.h"
+>> +
+>> +static int int3472_pled_set(struct led_classdev *led_cdev,
+>> +				     enum led_brightness brightness)
+>> +{
+>> +	struct int3472_discrete_device *int3472 =
+>> +		container_of(led_cdev, struct int3472_discrete_device, pled.classdev);
+>> +
+>> +	gpiod_set_value_cansleep(int3472->pled.gpio, brightness);
+>> +	return 0;
+>> +}
+>> +
+>> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
+>> +			      struct acpi_resource_gpio *agpio, u32 polarity)
+>> +{
+>> +	char *p, *path = agpio->resource_source.string_ptr;
+>> +	int ret;
+>> +
+>> +	if (int3472->pled.classdev.dev)
+>> +		return -EBUSY;
+>> +
+>> +	int3472->pled.gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
+>> +							     "int3472,privacy-led");
+>> +	if (IS_ERR(int3472->pled.gpio))
+>> +		return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.gpio),
+>> +				     "getting privacy LED GPIO\n");
+>> +
+>> +	if (polarity == GPIO_ACTIVE_LOW)
+>> +		gpiod_toggle_active_low(int3472->pled.gpio);
+>> +
+>> +	/* Ensure the pin is in output mode and non-active state */
+>> +	gpiod_direction_output(int3472->pled.gpio, 0);
+>> +
+>> +	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
+>> +	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
+>> +		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
+>> +	p = strchr(int3472->pled.name, ':');
+>> +	*p = '_';
+> 
+> While I suppose ACPI device names generally are shorter than
+> sizeof(int3472->pled.name), it'd be nice to still check p is non-NULL here,
+> just to be sure.
+
+Sure, I've added a check for this while merging this.
+
+Regards,
+
+Hans
+
+
+
+> 
+>> +
+>> +	int3472->pled.classdev.name = int3472->pled.name;
+>> +	int3472->pled.classdev.max_brightness = 1;
+>> +	int3472->pled.classdev.brightness_set_blocking = int3472_pled_set;
+>> +
+>> +	ret = led_classdev_register(int3472->dev, &int3472->pled.classdev);
+>> +	if (ret)
+>> +		goto err_free_gpio;
+>> +
+>> +	int3472->pled.lookup.provider = int3472->pled.name;
+>> +	int3472->pled.lookup.dev_id = int3472->sensor_name;
+>> +	int3472->pled.lookup.con_id = "privacy-led";
+>> +	led_add_lookup(&int3472->pled.lookup);
+>> +
+>> +	return 0;
+>> +
+>> +err_free_gpio:
+>> +	gpiod_put(int3472->pled.gpio);
+>> +	return ret;
+>> +}
+>> +
+>> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
+>> +{
+>> +	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
+>> +		return;
+>> +
+>> +	led_remove_lookup(&int3472->pled.lookup);
+>> +	led_classdev_unregister(&int3472->pled.classdev);
+>> +	gpiod_put(int3472->pled.gpio);
+>> +}
+> 
+
