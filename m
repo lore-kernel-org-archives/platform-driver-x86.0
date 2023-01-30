@@ -2,357 +2,183 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D646EC54EAA
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 14:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF942C54EAA
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 14:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237233AbjA3OMJ (ORCPT
+        id S237810AbjA3Ocg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 09:12:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53594 "EHLO
+        Mon, 30 Jan 2023 09:32:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237179AbjA3OMI (ORCPT
+        with ESMTP id S237831AbjA3OcO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 09:12:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C333B66B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 06:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675087874;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zIrqd3J5hRsnQaxBAafMrajK/fmCqm3/aeryUUviUsA=;
-        b=dMOoJnruBO5R4Ug+zpSaB08eiF24k2oZCXlNZSqdAxuHwT9ya2tjEme3UtZp9nkvUbfsf5
-        jr8O0U52vEJHeirJJzwTaTcWvD+W3Pg8XFrxO4e1lSLLx7isJTFlhHn0SB7mW6r2aXujxI
-        l6Fqov6YvZC0gjprKPpeQ7mo7dZMThw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-399-jtvY4UEZMXSSV2fY96GEvQ-1; Mon, 30 Jan 2023 09:11:13 -0500
-X-MC-Unique: jtvY4UEZMXSSV2fY96GEvQ-1
-Received: by mail-ej1-f70.google.com with SMTP id js21-20020a17090797d500b008858509ff2aso2604419ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 06:11:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIrqd3J5hRsnQaxBAafMrajK/fmCqm3/aeryUUviUsA=;
-        b=KOOqq+ui0oba7RfaoAG/kznfgXW40rBJXCupcQyJztR3vpQsHsL0ry5YveX7JgNeBt
-         E0OKjgujnOlolTtJE8NBw5iWhtnelm++qoU0cFJhs1r6iJ9LTf2S/6HI0AdYVPo6NV8n
-         QsbojN8q7QE+ZKCN8ad09t5TGPDR4h9t1Fsirj0AJ9d7pAYqxkjjc+44G6/rE9+95Fix
-         7eCymjf1duVSVKuJglox5ZfreP2I5wSoLfJzbporeqsmm05yhM1ZhLKpG5tGUSUtB9js
-         p5Sfmfpy99aAvzmSU7Z1f4NW7fUSKq9wlsvrVYihAZkFcjjP2EQVidushN1Q6JWpERaV
-         INyQ==
-X-Gm-Message-State: AFqh2kp/iVQ92Sbx2IJZcR7UNPCE0d0ATfHjse64f9FmXliuz4vwduwb
-        gXOlcODUZd1hS39pXmscyIFv52ztc+tj52+AdbnxpqfXNBUsN40qLl6rItlQsLzOMR2PMrXYdQv
-        y6aFN79tBpMd2mMnBzEXl9oMC/hG9atOBUg==
-X-Received: by 2002:a17:906:299b:b0:84d:4394:e8e with SMTP id x27-20020a170906299b00b0084d43940e8emr48389156eje.41.1675087872340;
-        Mon, 30 Jan 2023 06:11:12 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuqPG49wfvFC3h6jqcZgdUPPVo3OUxrW3eUglGHXJH9+EpdftpsyFeYkN9nlgN3xVbzc28dZg==
-X-Received: by 2002:a17:906:299b:b0:84d:4394:e8e with SMTP id x27-20020a170906299b00b0084d43940e8emr48389132eje.41.1675087872019;
-        Mon, 30 Jan 2023 06:11:12 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id d27-20020a170906041b00b00887f6c39ac0sm2074694eja.98.2023.01.30.06.11.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 06:11:11 -0800 (PST)
-Message-ID: <908026af-de39-8475-b8a5-ceb82ab819cd@redhat.com>
-Date:   Mon, 30 Jan 2023 15:11:10 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2] platform/x86: hp-wmi: Support omen backlight control
- wmi-acpi methods
-Content-Language: en-US
-To:     Rishit Bansal <rishitbansal0@gmail.com>,
+        Mon, 30 Jan 2023 09:32:14 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2082.outbound.protection.outlook.com [40.107.94.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FC8FF20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 06:30:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AxIohm+jlXLGqWVW7i8ynl1oyJZn79n/6csxEY80XrL5t9kq7LHVIs5X9ukhhDA1BE9QLOK4/+0H1o+elQqsfjGFgkf27tYmSC8DW2sYH7EoNqJI+o1cLhf19nVwVeb/tBSzIQe+LgolMTSTedR1rwyEDZlL/fs2kcV8PZIjk88JNSktmvy+8hkFM5mIKZrZryA2ArTehTLLYaYmZu6+t6EUgqx9/whfIclNnQCPTR+0ETGTsOZ8Jn82eUPh9D8HJHAGJnKqDVCCQs2uckWc/7Km8ViqfqSGM3XqDlViCoVLvYePTU0v6fmhVgpeA90gqlMOfjMTsPboUrwrDplqyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RsSdTmU9qpxBOJD671eizEN8srjgwsrPTfMUo5ENCAs=;
+ b=kmaOPovrRR43WXXkiHeiAMOWXIZmUZJSAEozbm5KHCNVPELYQclnZEZk/qVHeyjhAFm2pjB39WFjHQzW/ITLFpGAceOIqdbj6KAxIzG2wqaUOcfSltFSooHY9nCHzf8SekZ1xQbCXrojC6yPxvMfYCmyNthPRtQPRWeCRDSCyFZIsym6QVhCHZwClPVJVXuWMpIhZT1rRDYHPb9qj47J0t+DjCgJuw8s69jECNUG0vS3eScf8hNjHWBwMwC1V3EUWJl38iCis6KhyMwa/MlbvrIb03STt40mpSP3AOAknwCDtbs6803buVc1uzvo2u8hm6O39sW9CIVMwkdq5WZpcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RsSdTmU9qpxBOJD671eizEN8srjgwsrPTfMUo5ENCAs=;
+ b=ZqALkTCyMhxnwxdP/AaIqSo/zg3dd9Tu7BvePGkuEmXKi8MZ9YKHYk2Cp4dOAw/1attWEZx6y+s36jUliLf2QxQvY6qb7WaqvoOb9wEk8nzr8lgIYDH3RytzgKUm3eBGiYbB44pmrD8/V3yz6+j7hUquIZ4+fTssrk6penmu0Vc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by DM4PR12MB5183.namprd12.prod.outlook.com (2603:10b6:5:396::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
+ 2023 14:30:57 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::e7d8:1e35:79ac:d6e0]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::e7d8:1e35:79ac:d6e0%9]) with mapi id 15.20.6043.036; Mon, 30 Jan 2023
+ 14:30:57 +0000
+Message-ID: <494db4a2-15c0-a8c3-8d59-c99489f53030@amd.com>
+Date:   Mon, 30 Jan 2023 20:00:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH 6/6] platform/x86/amd/pmf: Ensure mutexes are initialized
+ before use
+To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230120223908.28678-1-rishitbansal0@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230120223908.28678-1-rishitbansal0@gmail.com>
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20230130132554.696025-1-hdegoede@redhat.com>
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230130132554.696025-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0001.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:95::7) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DM4PR12MB5183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 727f82b4-3d3e-426e-5759-08db02ce9999
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: liyPUA7TUmOULBkFZWa0PxCz8gxBehK4wERuy3tgPbgPMqUnRuLcHCh0GO25zQBzhgiLsqsXPIdyKcenhBess2FlKdEvNPEz+lnWdCSU05ydOkprrGLxBl2DtvepNNfMVMPlSVOdYNE5WDjl5lbYuE5B/iJ2YbU61sWVbgrwm3owipcAZYjK4zH1Fu9ooOtLUeQddKmYst0jncu+z8RylI4MXGpJooKQshL9fn3n9bG2bHV4ulcSSd09F+vPrn/g+c4dnZFBJYT3snqDUdcrhTKXNvOe6PdsxnhjV0kIeZD2HIvWFqNFX1Tmh3Cn167VpMAwjYaJFJlixIfl9NOWnpGTHneXF3FOAdwPC0ki1vw4CU8t20xGVnml/jN7E47FUDDrA4NsQb1BPZkJYjWZ8copVVD/0UMYQzcBC2BUaH8MRdrJcTSRYj9BpSwWhXeD4sA7URxGh+MD7212Wlj4ejxRVvSkVQCoPy78VHvFr3hoTq96okiE1czsz2WbNzfzsmDhjkjvXWsJ9/5mh6HpBChSMib6e6YoZjN0ZYwFwvxfpkmivspHtQ58VTmva2JQRbwFfmpRbDI9tGJyMRraV+fpDV/SggQU+j1Pf40P5k2OPWKZkVH+jwfmG/0foEpBtD2Dpxrabd1kmjaerH9IpwGaE6na+QCglFGIgL6iWJtRakTmcfKFg86suvSPi5TV7OqJmVa+f4J/1nsrCVYmSC71gdrRv9A6xUbPS82DWmM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(451199018)(36756003)(5660300002)(38100700002)(2906002)(31686004)(478600001)(2616005)(6486002)(186003)(6506007)(6512007)(26005)(53546011)(31696002)(86362001)(83380400001)(110136005)(4326008)(66556008)(66946007)(66476007)(6666004)(8676002)(316002)(41300700001)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U3o5ZE1MOWR4Y1pIZXBHTVlYSTRzMzV1NVllbStQVWdOWDRVN1pSOFErTjBC?=
+ =?utf-8?B?NmJQYk5zLytZckxtUERDT3NDZUl4d3ZheFc0V1FRY1QyN1J4ZitjZ1R5Wnk0?=
+ =?utf-8?B?Z2hsMC93ZnNzV3lGTyt4WFlVbld4a0FKSHZaUXRGZUp5enBQR3ZuTktvUWF5?=
+ =?utf-8?B?dFpYMDFPNUV4bWdRVm96YlVSQjRiSGM4aHdDWE9kTkxxbDEwWTUzTVM4dy96?=
+ =?utf-8?B?YWRFZkJGMUFEaVVtNktxYTNFYWRPYTYxUGc3M21mWmZwRFpvTlh6ZVVydmJP?=
+ =?utf-8?B?eXc4S3BTeXNEcmtOYnZJY2FZa000M0VPOXA3SFdKM0VNQUpscFdabDZ6a3Fu?=
+ =?utf-8?B?d2dWbmtQWnlZUnhiSTdLZCtMdjlneUJGUTdSTFdoWWQrbHlnMDMxN0s3dWFC?=
+ =?utf-8?B?VytsK0dZcmFBMUpxM0Fnb1JCeFo3R1RyaWZGOTdSUVRUM2RvenMwbXJwSHhh?=
+ =?utf-8?B?TlpFekhCbzBoR0FZWUozeGVMNTNxTERqdHAxamt0WHpPTzhrYmhzWlhqM1ND?=
+ =?utf-8?B?VzNOaE85akZzcktNYUE5MkVhUENLMjFaaHpvRENkeUtyTVlWeHcyYk1xYmo5?=
+ =?utf-8?B?SjVkbVdiZzVRN0VYUXpuSmZSa3FDRXVYamVWM21odGp6N3dYeWdFWUN4eDBx?=
+ =?utf-8?B?Z0ZRSklMamg4RElEVFFqbDJlWkxScWlmRWI2T3B2SWhuU3FibGZOYWY4Z2hX?=
+ =?utf-8?B?allibVhWY09xZlNHOWsrTWplTzlmQ053SXBwZ1Q2RGx1MysyZ1lvN1dtbUlD?=
+ =?utf-8?B?eG96K01QWVkzMGN4WFU4TW5YVjJsdXJteTlnMzBZY0VkeGNqZ24xL1RnMkJx?=
+ =?utf-8?B?VGdISnNITzQ1akcwKzVQenVYdGUvVnR4RFNHNXh2UkJrc3dsUG9ybkVhOXlE?=
+ =?utf-8?B?d1BQeERxZ2Qxb04vRUVtZENNOXI2RDVpWVlwTXFoblc5UGM2NjduckR5VDV5?=
+ =?utf-8?B?cmt1K1FRN1Y1TVpuSzhCcE4xNkRqZzBZRkJuekFyVkszVGsza2dmdnJOazBp?=
+ =?utf-8?B?Tk5CaTU3Z0ptcSt1N3JSQktMQ2xISTJtMSsxUWgzUHQ4KzhwclFJdVRnaDVM?=
+ =?utf-8?B?TmtnWFc0bmllY2FwV2ZqOVcydFFyQUtXWWo4b3dmNDNpMHhVUkpQMkFyeHRC?=
+ =?utf-8?B?cXRHMU1tWFRSM1JLbHNaaUhYdDBtYzM2N2c5Y09PRWM5ZHl6TEg2MFh0RzVL?=
+ =?utf-8?B?TllVRTB0RDMrMTZDQlJKMk4rZUU5OXllTEoxME5iREdBVlk1RWt6ekxEQWYz?=
+ =?utf-8?B?QmxyWTI5ZW1qNnRLOVFlZDFuV2lScjBwWWlucTJRbkpVU1F1cmZBejMrRGxR?=
+ =?utf-8?B?VEU0SDJnNzRrMXNxWHNUdjF2NEhvMnN0SnFUUzdRbnR5akxQbkJRUTRrRDdT?=
+ =?utf-8?B?NGxkcXIvM3dDNWd0a2pIUThoOWJlZzV0WVFuTlZWNGI1ZjBMUzJwVkJqaStU?=
+ =?utf-8?B?d3k0b3FpRnlLS0tBM2VaTFZIREVoaDJMY0lmS1c5RTN2Z1lCSkpITWY5ZVZz?=
+ =?utf-8?B?Y2NDLzliQlM1NW1mTWlZZFByUm5adlcrWUNVR1ErdXdCTjErQXRnRFJEa2Ni?=
+ =?utf-8?B?Q2pyNi81WWR3N05acUY3LzV1amJkSHJYeWd0TU4xV1pCZnlTdWJIVWYwbi9O?=
+ =?utf-8?B?clBVMWxqblV1eXZKRzZQbitucEVNSmhBaHg3NS94cjZYbkhxWjNoc1ZvWlVC?=
+ =?utf-8?B?a0psTFdodWQ3MkJUVjl4d3FwaEJwZXhsbzVMVDFPNU5LOG9yZFg4WEUyS0hH?=
+ =?utf-8?B?QlRPdjdkcGx0U2JhOUpZRnVVZUwzNFRZcmN4aDVoOStXbkJScmhnbC9BeGM3?=
+ =?utf-8?B?aStkQ05sdk9CSFQ5R3g3MzcxOUdLMlZQVVFFQVllN1lMRXJ5Qkdyakd1U0xi?=
+ =?utf-8?B?eXZOd1lxS1B4UTE0NTJGbkZHMkRXUFliYWh6VUl6NEplM1RxVXBpanJvVGtF?=
+ =?utf-8?B?ZkxvM1BIemtEcHNCd1ZWOGE0SjlNdUZjUFR6L0lET3dNMWxLQlVya0s4cWE1?=
+ =?utf-8?B?TDE5YmtjRTdjYkx0WnlXc3o1Vm9vYkE2Z1NERUFmeFVrZG5FRWZyR05zWXJr?=
+ =?utf-8?B?aDFDdm1nRFZGZ3gxcEhVc3F1cHg1NVhscWQ5VWJLaGtBcm1WRnhkcHN2ckt0?=
+ =?utf-8?Q?NPVq/TGL9nyfXiAqRQQaW8aVz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 727f82b4-3d3e-426e-5759-08db02ce9999
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 14:30:57.0423
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 55nAP+lBgRbvSd4gdHRGsB9D7NyxRuHEeJ4hwNrxHy6mWT5MtN9Vm+8L+cbI2BL7GpDR+kw7G1zwbSIXY5GSAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5183
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/20/23 23:39, Rishit Bansal wrote:
-> The HP Omen Command Studio application includes a Light Studio feature
-> which can be used to control various features related to the keyboard
-> backlight via the 0x20009 command.
+On 1/30/2023 6:55 PM, Hans de Goede wrote:
+> As soon as the first handler or sysfs file is registered
+> the mutex may get used.
 > 
-> The command supports the following queries:
+> Move the initialization to before any handler registration /
+> sysfs file creation.
 > 
-> - 0x1: Checks if keyboard lighting is supported
-> - 0x2: Get the zone colors of each of the 4 zones on the keyboard
-> - 0x3: Set the zone colors of each of the 4 zones on the keyboard
-> - 0x4: Gets the state (on/off) of the backlight
-> - 0x5: Sets the state (on/off) of the backlight
+> Likewise move the destruction of the mutex to after all
+> the de-initialization is done.
 > 
-> This patch introduces a new sysfs led class called
-> "hp_omen::kbd_backlight" which can be used to control the state of the
-> backlight. It also includes a sysfs RW attribute called "kbd_rgb"
-> which can be used to get/set the current color of each zone.
-> 
-> Additionally, it also maps the backlight event to the KEY_KBDILLUMTOGGLE
-> key so it shows the correct notification on userspace.
-> 
-> The patch has been tested on an HP Omen 15-en0037AX (AMD) laptop.
-> 
-> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
+> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Looks good to me. Thank you.
+
+Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
 > ---
-> Changes since v1:
->  - Map backlight key to KEY_KBDILLUMTOGGLE
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 113 +++++++++++++++++++++++++++++++
->  1 file changed, 113 insertions(+)
+>  drivers/platform/x86/amd/pmf/core.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 0a99058be813..a9e2634a9d46 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -27,6 +27,7 @@
->  #include <linux/rfkill.h>
->  #include <linux/string.h>
->  #include <linux/dmi.h>
-> +#include <linux/leds.h>
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index c9f7bcef4ac8..da23639071d7 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -385,6 +385,9 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	if (!dev->regbase)
+>  		return -ENOMEM;
 >  
->  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->  MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
-> @@ -136,6 +137,7 @@ enum hp_wmi_command {
->  	HPWMI_WRITE	= 0x02,
->  	HPWMI_ODM	= 0x03,
->  	HPWMI_GM	= 0x20008,
-> +	HPWMI_KB    = 0x20009,
->  };
+> +	mutex_init(&dev->lock);
+> +	mutex_init(&dev->update_mutex);
+> +
+>  	apmf_acpi_init(dev);
+>  	platform_set_drvdata(pdev, dev);
+>  	amd_pmf_init_features(dev);
+> @@ -394,8 +397,6 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
+>  	power_supply_reg_notifier(&dev->pwr_src_notifier);
 >  
->  enum hp_wmi_hardware_mask {
-> @@ -219,6 +221,7 @@ static const struct key_entry hp_wmi_keymap[] = {
->  	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
->  	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
->  	{ KE_KEY, 0x231b,  { KEY_HELP } },
-> +	{ KE_KEY, KEY_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
-
-Please drop this entry (also see the comment about this below).
-
->  	{ KE_END, 0 }
->  };
+> -	mutex_init(&dev->lock);
+> -	mutex_init(&dev->update_mutex);
+>  	dev_info(dev->dev, "registered PMF device successfully\n");
 >  
-> @@ -734,12 +737,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->  	return count;
->  }
+>  	return 0;
+> @@ -406,11 +407,11 @@ static int amd_pmf_remove(struct platform_device *pdev)
+>  	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
 >  
-> +static ssize_t kbd_rgb_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	u8 val[128];
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
-> +				       zero_if_sup(val), sizeof(val));
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	strncat(buf, &val[25], 12);
-> +
-> +	return strlen(buf);
-
-strncat requires that the buffer is pre-zeroed which I'm not
-sure is always the case. Instead you should problably just do something
-like this:
-
-	strscpy(buf, 12, &val[25]);
-
-	return strlen(buf);
-
-Alos may I ask what the output of reading the new kbd_rgb file
-actually looks like ?
-
-And can you please start a new Documentation file:
-
-Documentation/ABI/testing/sysfs-platform-hp-wmi
-
-and document this new kbd_rgb file there?
-
-See for example:
-
-Documentation/ABI/testing/sysfs-platform-asus-wmi
-
-for what this file should look like.
-
-Bonus points if you also do a follow-up patch documenting more
-of the sysfs attributes used by this driver, but at a minimum
-lets start documenting any new files we add.
-
-
-
-> +}
-> +
-> +static ssize_t kbd_rgb_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	u8 val[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
-> +				   zero_if_sup(val), sizeof(val));
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (count != 12)
-> +		return -1;
-
-So what is the exact format here? and should we not do more error
-checking? Also we want 12 chars, then the show code above should use 13,
-so that the buffer gets 12 chars + a terminating 0.
-
-Also maybe add defines for the offset value of 25 and the buflen of 12 ?
-
-> +
-> +	strncpy(&val[25], buf, count);
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
-> +				   0);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
->  static DEVICE_ATTR_RO(display);
->  static DEVICE_ATTR_RO(hddtemp);
->  static DEVICE_ATTR_RW(als);
->  static DEVICE_ATTR_RO(dock);
->  static DEVICE_ATTR_RO(tablet);
->  static DEVICE_ATTR_RW(postcode);
-> +static DEVICE_ATTR_RW(kbd_rgb);
->  
->  static struct attribute *hp_wmi_attrs[] = {
->  	&dev_attr_display.attr,
-> @@ -748,6 +795,7 @@ static struct attribute *hp_wmi_attrs[] = {
->  	&dev_attr_dock.attr,
->  	&dev_attr_tablet.attr,
->  	&dev_attr_postcode.attr,
-> +	&dev_attr_kbd_rgb.attr,
->  	NULL,
->  };
->  ATTRIBUTE_GROUPS(hp_wmi);
-> @@ -853,6 +901,8 @@ static void hp_wmi_notify(u32 value, void *context)
->  	case HPWMI_PROXIMITY_SENSOR:
->  		break;
->  	case HPWMI_BACKLIT_KB_BRIGHTNESS:
-> +		sparse_keymap_report_event(hp_wmi_input_dev,
-> +						KEY_KBDILLUMTOGGLE, 1, true);
-
-Please just directly report the key instead of inserting a fake scancode into
-the parse-map:
-
-		input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
-		input_sync(hp_wmi_input_dev);
-		input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
-		input_sync(hp_wmi_input_dev);
->  		break;
->  	case HPWMI_PEAKSHIFT_PERIOD:
->  		break;
-> @@ -1294,6 +1344,63 @@ static int thermal_profile_setup(void)
->  
->  static int hp_wmi_hwmon_init(void);
->  
-> +static struct led_classdev omen_kbd_led;
-> +
-> +static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
-> +{
-> +	u8 val;
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return (val & 0x80) ? LED_ON : LED_OFF;
-> +}
-> +
-> +static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
-> +{
-> +	char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
-> +
-> +	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
-> +				       sizeof(buffer), 0);
-> +}
-> +
-> +
-> +static bool is_omen_lighting_supported(void)
-> +{
-> +	u8 val;
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
-> +
-> +	if (ret)
-> +		return false;
-> +
-> +	return (val & 1) == 1;
-> +}
-> +
-> +static int omen_backlight_init(struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	omen_kbd_led.name = "hp_omen::kbd_backlight";
-> +	omen_kbd_led.brightness_set = set_omen_backlight_brightness;
-> +	omen_kbd_led.brightness_get = get_omen_backlight_brightness;
-> +	omen_kbd_led.max_brightness = 1;
-> +
-> +	ret = devm_led_classdev_register(dev, &omen_kbd_led);
-> +
-> +	if (ret < 0)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +static void omen_backlight_exit(struct device *dev)
-> +{
-> +	devm_led_classdev_unregister(dev, &omen_kbd_led);
-> +}
-> +
-
-This is not necessary, the whole idea behin devm is that this
-will automatically get unegistered on driver unbind.
-
->  static int __init hp_wmi_bios_setup(struct platform_device *device)
->  {
->  	int err;
-> @@ -1321,6 +1428,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  
->  	thermal_profile_setup();
->  
-> +	if (is_omen_lighting_supported())
-> +		omen_backlight_init(&device->dev);
-> +
+>  	power_supply_unreg_notifier(&dev->pwr_src_notifier);
+> -	mutex_destroy(&dev->lock);
+> -	mutex_destroy(&dev->update_mutex);
+>  	amd_pmf_deinit_features(dev);
+>  	apmf_acpi_deinit(dev);
+>  	amd_pmf_dbgfs_unregister(dev);
+> +	mutex_destroy(&dev->lock);
+> +	mutex_destroy(&dev->update_mutex);
+>  	kfree(dev->buf);
 >  	return 0;
 >  }
->  
-> @@ -1349,6 +1459,9 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
->  	if (platform_profile_support)
->  		platform_profile_remove();
->  
-> +	if (is_omen_lighting_supported())
-> +		omen_backlight_exit(&device->dev);
-> +
-
-And this likewise thus is not necessary.
-
->  	return 0;
->  }
->  
-
-Regards,
-
-Hans
-
+> 
