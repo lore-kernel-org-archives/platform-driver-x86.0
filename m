@@ -2,142 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C6DC05027
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Jan 2023 21:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAA2C636CB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 04:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbjA2VY4 (ORCPT
+        id S235183AbjA3EAD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Jan 2023 16:24:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
+        Sun, 29 Jan 2023 23:00:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjA2VYz (ORCPT
+        with ESMTP id S230517AbjA3EAC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Jan 2023 16:24:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B1B1259C
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 13:24:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16DF4B80DC3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 21:24:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B9148C43443
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jan 2023 21:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675027491;
-        bh=WprYP5g+IMj+YXfrwRFoTKxd+rYbe6Nl/bp44Iwm0vI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=HntMQhg98XQFbRuY5B4cvBCAmBthk3xuKTsTJ5Y/ldmuBD/1WLcDTrQV6RYUWu/lA
-         F92eKTeFWRRTnXZYdMkXS0AphOwQ6aKQ+Jf2iC+5/A7xUQ65bN927oMLin65yTn0/g
-         q2A4cdJAFyR7a7T4DkfwuYoYHioQUQVSlJFgOLo7tklHX4m8/QtdcV7kJEXXk1qHGP
-         1Y6dH47ZOEbCWvDjLWFqPqWOKMTeGj3aiLHBsj33bxvOBu/16n2t0GPQWn9FOnktv8
-         TXlSM78SgApz/sK0w7yweLTW3/3Ra+mnRm8DkGFyDJjgN20LqPRI2UTikVd0jbqQJI
-         Aumi6m192+bFA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A749FC43143; Sun, 29 Jan 2023 21:24:51 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sun, 29 Jan 2023 21:24:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-p9XrGirg2A@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 29 Jan 2023 23:00:02 -0500
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06A912F22;
+        Sun, 29 Jan 2023 19:59:49 -0800 (PST)
+From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1675051187;
+        bh=ZbgbgVtlPFtq55TH0opkbq5iHNhesuWMDM9ZEPXeOsk=;
+        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+        b=IHtr2UuaboBduqdOMpA0Y3egWz4OZpz39J8oRqVw5iP94dUmf4mF7esWnJ84+m7BG
+         v9ZSNw7aALe7JMKpXu5UfKKC/CkAqZP0uuoIX5UMFMDfWoQXbsKtOPWkW6mwCBix+/
+         IYpZ5J2dlAz3+VJR98xDZi+ZP27wPkdLw/yy/V+k=
+Date:   Mon, 30 Jan 2023 03:59:40 +0000
+Subject: [PATCH 4/9] HID: steam: Constify lowlevel HID driver
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20230130-hid-const-ll-driver-v1-4-3fc282b3b1d0@weissschuh.net>
+References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
+In-Reply-To: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
+To:     Basavaraj Natikar <basavaraj.natikar@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        =?utf-8?q?Filipe_La=C3=ADns?= <lains@riseup.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, greybus-dev@lists.linaro.org,
+        linux-staging@lists.linux.dev,
+        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=865;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=ZbgbgVtlPFtq55TH0opkbq5iHNhesuWMDM9ZEPXeOsk=;
+ b=K+qvlSsOYKsG6L1e28n33S7oEbVaEzdLgqVh5PfopUoHLueDoSD6fx7F81Fsg5y17jqMq6D+mxFI
+ Dt3Tz0fCAsJAvZfHiHimUa8Deeuk9XNdvf/Yy+8GUczAZ45Nd/ii
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Since commit 52d225346904 ("HID: Make lowlevel driver structs const")
+the lowlevel HID drivers are only exposed as const.
 
---- Comment #292 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Robert Kling from comment #291)
-> I let the mainboard/bios handle
-> cpu/aux fan speed, I'm not running any fan control programs at the moment.
-> Would that be fine?
+Take advantage of this to constify the underlying structure, too.
 
-It depends on luck, bioses, hw schematic and so on. Main issue is bios does=
- not
-provide known methods for sensor access and does not use global mutex before
-access to the region related to sensors, and mutual access could be not
-possible with such bios implementation. It works without known issues for o=
-ther
-boards with mutex lock (P8H67, X99-E WS/USB 3.1). Other boards could have
-issues, like example it can be such:
-https://github.com/electrified/asus-wmi-sensors#known-issues. Its different
-driver but issues could be the same.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/hid/hid-steam.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> The WMI implementation in some of Asus' BIOSes is buggy. This can result =
-in
-> fans stopping, fans getting stuck at max speed, or temperature readouts
-> getting stuck. This is not an issue with the driver, but the BIOS. The Pr=
-ime
-> X470 Pro seems particularly bad for this. The more frequently the WMI
-> interface is polled the greater the potential for this to happen. Until y=
-ou
-> have subjected your computer to an extended soak test while polling the
-> sensors frequently, don't leave you computer unattended. I can personally=
- say
-> I've seen the issue on the Crosshair VII with BIOS 2606 and a Ryzen 2700X,
-> upgrading to 3004 rectified the issue.
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index 8ee43cb225fc..29ec8b34741a 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -674,7 +674,7 @@ static int steam_client_ll_raw_request(struct hid_device *hdev,
+ 			report_type, reqtype);
+ }
+ 
+-static struct hid_ll_driver steam_client_ll_driver = {
++static const struct hid_ll_driver steam_client_ll_driver = {
+ 	.parse = steam_client_ll_parse,
+ 	.start = steam_client_ll_start,
+ 	.stop = steam_client_ll_stop,
 
+-- 
+2.39.1
 
-Or https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c37
-
-> Sensor hardware frequently uses indexed addressing, which means that
-> accessing a sensor requires something like the following:
->
-> 1) Write the desired sensor to the index register
-> 2) Read the sensor value from the data register
->
-> These can't occur simultaneously, so if both the OS and the firmware are
-> accessing it you risk ending up with something like:
-
-> 1) Write sensor A to the index register (from the OS)
-> 2) Write sensor B to the index register (from the firmware)
-> 3) Read the sensor value from the data register (returns the value of sen=
-sor
-> B to the firmware)
-> 4) Read the sensor value from the data register (returns the value of sen=
-sor
-> B to the OS)
-
-
-Or https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c69
-> the lm_sensors sensors-detect script had overvolted his RAM ruining both =
-his
-> expensive high-end RAM as well as his expensive top of the line CPU. The =
-user
-> was surprisingly relaxed about all this, which I really appreciated.
->
-> And that was while the script was not doing anything which we (the
-> developers) considered dangerous. But the motherboard had a funky setup
-> causing a SMbus *read* transaction to change the voltage.
-
-
-Thank you!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
