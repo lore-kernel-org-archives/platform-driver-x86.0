@@ -2,87 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9CC54EAA
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 13:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF03C54EED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Jan 2023 13:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236164AbjA3Ndb (ORCPT
+        id S229965AbjA3Ndz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Jan 2023 08:33:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
+        Mon, 30 Jan 2023 08:33:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236024AbjA3Nda (ORCPT
+        with ESMTP id S230464AbjA3Ndy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2023 08:33:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F29D14EBB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:32:42 -0800 (PST)
+        Mon, 30 Jan 2023 08:33:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2983B2A99E
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:33:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675085561;
+        s=mimecast20190719; t=1675085589;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gal5Vl1U+0iw7FF90tqtetQNW3p0utvBJZzG/wtOvPQ=;
-        b=RsOps5fRBTW+7WREE395p9b6NpOdzp27LntPmJXdXwBP/sqlzM3vI7cf+hilG7WSOMEGda
-        ZLvjIkY1U0q/HteM9ZO0l90ilFMu5U+3/BfNHg5NUnDN2kHvd1gu3iT15SczJ9d/7+pO3C
-        doA4WiQUKZGum4SEuJeItp/rf6B5vlA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=tVG9YiScxOy/qQiZU4YwjgvyaJXb9ttCZgSJdq7g1F8=;
+        b=QSRg6A/GPNm4/kbw9r5sHI0vUI2TuqKyqgXUjD/A7QIwVbztXzBt2iTqOplv6LFW3W8fsL
+        GlmjuF27z/eYK7ErwsrN4p1A2KaL73WXNz0YoPmS2jTgv+JxSVC2lfRBruWEX8h+bnwYZ4
+        AroHzqY4Bvt8f7FM2UrGvhuvb192NeE=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-13-t8uqTD1dNTqYV2U5qvXZJg-1; Mon, 30 Jan 2023 08:32:37 -0500
-X-MC-Unique: t8uqTD1dNTqYV2U5qvXZJg-1
-Received: by mail-ed1-f71.google.com with SMTP id y21-20020a056402359500b0049e171c4ad0so8136404edc.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:32:37 -0800 (PST)
+ us-mta-156-TepaPLgVNK6cTvYOdzcOTA-1; Mon, 30 Jan 2023 08:33:08 -0500
+X-MC-Unique: TepaPLgVNK6cTvYOdzcOTA-1
+Received: by mail-ej1-f72.google.com with SMTP id sa8-20020a170906eda800b0087875c99e6bso6734258ejb.22
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2023 05:33:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gal5Vl1U+0iw7FF90tqtetQNW3p0utvBJZzG/wtOvPQ=;
-        b=jQhS3t/17K5dAR656SAkZZxy168DiZfrCEnm58dGkpMfky03bOCSVzXPgeskEtpvjp
-         x+3F6pYgnhBzKvQ1YVG14/nrKpIK2ghOn8mbBbeSI8/0g0RcTM29Lyykzqh7IXVyVWJt
-         154Pp++yFUw/gWR8oWH2VShVsjzhDDYJPDPf2g6me1l04V5qKhztYLS6SfFHwvl/t5Qm
-         97yLL3eTdQbxPwvP/hh5FUmOcZ5dipFsEJYd6NdlaRSxFXEDFdFvV4ZeeDjarkju1iSI
-         wUKTUDi1hbcnvVurKNsuJ5UdO7eJCu65wCZsXgf5iIQ1qOwZljACpf313Y5vN2k7USNR
-         V3hg==
-X-Gm-Message-State: AO0yUKWkXojf807nfcu2wlq82F4eHgYfGdRvu8WKYx0aL0+Evqw7lIyo
-        FmiQmRJHOu+Q4EIFeQdujDEXhSdd+IcJrDRUyrexHXd7pdHZaBKZxWTQnMWKTt3XHAw9ViNb9jr
-        70VOXV7xMsjQe4NgWkeeAMmpOnBg77EyFpg==
-X-Received: by 2002:a17:906:b55:b0:87b:db65:9f41 with SMTP id v21-20020a1709060b5500b0087bdb659f41mr12438791ejg.14.1675085556910;
-        Mon, 30 Jan 2023 05:32:36 -0800 (PST)
-X-Google-Smtp-Source: AK7set8iMoMVTMrHfE5HZUwyFi5VhC62pFfPrU1YHYRXSjeYR5M5+UXfQnxAnnlMiSzQLfGZDV5Ffw==
-X-Received: by 2002:a17:906:b55:b0:87b:db65:9f41 with SMTP id v21-20020a1709060b5500b0087bdb659f41mr12438785ejg.14.1675085556746;
-        Mon, 30 Jan 2023 05:32:36 -0800 (PST)
+        bh=tVG9YiScxOy/qQiZU4YwjgvyaJXb9ttCZgSJdq7g1F8=;
+        b=YRLlGhnE40mqhBzVrdPUm2Gx84USWXBSaBG8eLWD/l8X7qqGkGuQ9dLvVet+mO0WZm
+         d5mVxXX11ML+YohmMY7qpPZtRWb+hBUwA94Op6Jr/XGF20wu1RP9tfNc3ANM/ygsMvSZ
+         wbM96Wg83Ey7KM3t0ncjirN9tUrAr4NeySjpgKWdHtkLa2qE9bq8TPlSNcWTAQ63RoXw
+         rZAF86uHpiOFi42kBitXV82odLtsZFXRAVTPS/bdizTRviWRjuITMg+vI3aepy1spu4a
+         OxGlJ0HO627CHYQ6EII4CDbQLCrNEoc3qau2OMExg3OR3vgQ2KFI6yZqLBamVCJwdKju
+         xOIw==
+X-Gm-Message-State: AO0yUKUo0v56kjm2e1dCsNIbmKKN5J0cbYKfkRJeQEpdqk2CpTr8fpzs
+        g+/P9pJyIksKXmha4hOZTCqucDszcslbTbwMmmX06Ay5h498/g2NWyuLxs8TG9q0Ty60USlDODr
+        CH0ZXnVK6+A61XXkMHpfBVwRXZBJcBFbx5g==
+X-Received: by 2002:a17:906:84d:b0:889:1480:d908 with SMTP id f13-20020a170906084d00b008891480d908mr3236860ejd.17.1675085586964;
+        Mon, 30 Jan 2023 05:33:06 -0800 (PST)
+X-Google-Smtp-Source: AK7set9VAD+mEk4CBfOJosxc8/nwOL441j8Z0bs8bI4Xfqcw82WgG2qd3a1LlTKToA7rQICz3UjjKw==
+X-Received: by 2002:a17:906:84d:b0:889:1480:d908 with SMTP id f13-20020a170906084d00b008891480d908mr3236850ejd.17.1675085586791;
+        Mon, 30 Jan 2023 05:33:06 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id e6-20020a1709061e8600b0085e0882cd02sm6939805ejj.92.2023.01.30.05.32.36
+        by smtp.gmail.com with ESMTPSA id c12-20020a170906340c00b0088aadc18b69sm525861ejb.101.2023.01.30.05.33.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 05:32:36 -0800 (PST)
-Message-ID: <dc3c697d-9c37-fc01-8b96-161b4c7ae24d@redhat.com>
-Date:   Mon, 30 Jan 2023 14:32:35 +0100
+        Mon, 30 Jan 2023 05:33:06 -0800 (PST)
+Message-ID: <de5f8e3f-f406-7f9f-3112-cf73b42e9dba@redhat.com>
+Date:   Mon, 30 Jan 2023 14:33:05 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 0/5] platform/x86/amd/pmf: Updates to PMF driver
+Subject: Re: [PATCH 6/6] platform/x86/amd/pmf: Ensure mutexes are initialized
+ before use
 Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20230125095936.3292883-1-Shyam-sundar.S-k@amd.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20230130132554.696025-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230125095936.3292883-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230130132554.696025-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 1/25/23 10:59, Shyam Sundar S K wrote:
-> This patch series includes general updates and bug fixes to amd_pmf
-> driver.
+The subject prefix should be [PATCH 1/1], my bad.
 
-Thank you for your patch-series, I've applied the series to
-the pdx86 fixes branch:
+On 1/30/23 14:25, Hans de Goede wrote:
+> As soon as the first handler or sysfs file is registered
+> the mutex may get used.
+> 
+> Move the initialization to before any handler registration /
+> sysfs file creation.
+> 
+> Likewise move the destruction of the mutex to after all
+> the de-initialization is done.
+> 
+> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+I've applied this to the pdx86 fixes branch now:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
 and this will be included in my next fixes pull-req to Linus.
@@ -92,20 +106,46 @@ Regards,
 Hans
 
 
+
+> ---
+>  drivers/platform/x86/amd/pmf/core.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> Shyam Sundar S K (5):
->   platform/x86/amd/pmf: Add helper routine to update SPS thermals
->   platform/x86/amd/pmf: Add helper routine to check pprof is balanced
->   platform/x86/amd/pmf: update to auto-mode limits only after AMT event
->   platform/x86/amd/pmf: Fix to update SPS default pprof thermals
->   platform/x86/amd/pmf: Fix to update SPS thermals when power supply
->     change
-> 
->  drivers/platform/x86/amd/pmf/auto-mode.c |  9 +-------
->  drivers/platform/x86/amd/pmf/cnqf.c      | 14 +++++-------
->  drivers/platform/x86/amd/pmf/core.c      | 23 +++++++++++++++++++
->  drivers/platform/x86/amd/pmf/pmf.h       |  3 +++
->  drivers/platform/x86/amd/pmf/sps.c       | 28 +++++++++++++++++++-----
->  5 files changed, 54 insertions(+), 23 deletions(-)
-> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index c9f7bcef4ac8..da23639071d7 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -385,6 +385,9 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	if (!dev->regbase)
+>  		return -ENOMEM;
+>  
+> +	mutex_init(&dev->lock);
+> +	mutex_init(&dev->update_mutex);
+> +
+>  	apmf_acpi_init(dev);
+>  	platform_set_drvdata(pdev, dev);
+>  	amd_pmf_init_features(dev);
+> @@ -394,8 +397,6 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
+>  	power_supply_reg_notifier(&dev->pwr_src_notifier);
+>  
+> -	mutex_init(&dev->lock);
+> -	mutex_init(&dev->update_mutex);
+>  	dev_info(dev->dev, "registered PMF device successfully\n");
+>  
+>  	return 0;
+> @@ -406,11 +407,11 @@ static int amd_pmf_remove(struct platform_device *pdev)
+>  	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+>  
+>  	power_supply_unreg_notifier(&dev->pwr_src_notifier);
+> -	mutex_destroy(&dev->lock);
+> -	mutex_destroy(&dev->update_mutex);
+>  	amd_pmf_deinit_features(dev);
+>  	apmf_acpi_deinit(dev);
+>  	amd_pmf_dbgfs_unregister(dev);
+> +	mutex_destroy(&dev->lock);
+> +	mutex_destroy(&dev->update_mutex);
+>  	kfree(dev->buf);
+>  	return 0;
+>  }
 
