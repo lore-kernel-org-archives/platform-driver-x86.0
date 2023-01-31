@@ -2,52 +2,51 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3008DC636D3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Jan 2023 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFF8C38142
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Jan 2023 15:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232676AbjAaPBG (ORCPT
+        id S232228AbjAaPDW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 Jan 2023 10:01:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59940 "EHLO
+        Tue, 31 Jan 2023 10:03:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbjAaPAU (ORCPT
+        with ESMTP id S232524AbjAaPBy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Jan 2023 10:00:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB135354E;
-        Tue, 31 Jan 2023 07:00:18 -0800 (PST)
+        Tue, 31 Jan 2023 10:01:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6419054238;
+        Tue, 31 Jan 2023 07:00:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C01EBB81D46;
-        Tue, 31 Jan 2023 15:00:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D6CC433D2;
-        Tue, 31 Jan 2023 15:00:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E3B97B81D54;
+        Tue, 31 Jan 2023 15:00:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF02C433D2;
+        Tue, 31 Jan 2023 15:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675177215;
-        bh=fr2XPEu3yfYvYpqkODr4s7iX4TyA41IU475et1m4cf0=;
+        s=k20201202; t=1675177245;
+        bh=jpHRo+d8rMROvp+SBrqoTcJj1Ok4qJE42F0Z7PV3djM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XafT2pM4hON57PmVQESTjf02Z7Pue5BSo2MgL70HDJ5X3x/+rN7Lu4wu/uogaFokr
-         LjTd5W44PymPOLqMM+evk4auZdsDAl6Wq9uo5urOjShEtCMhz9JwACJexXyx9+g0Mf
-         LJWxNYr+frOJN0nspgn5Q8y9N+QWmoBdnvOItlQXZ7+u2HCJJEEYmM2/5sWN/daivY
-         fzw2HyEo7OVErmKDhI7/eVEoJ9wrCEXY6qoHnSZPVH2xCroH9w2ODdi3VPvFcIOUHm
-         5buqh4uGz4vq9EAg53exanS6825nYYlKlvylQWCX9U980R14W5gH3bSfOLM79EbWVF
-         A2ZZNT10onE9Q==
+        b=Q6gnmxHOQ6y1J33oI/QM54mnLNLi9XQmh0A/UsOmhhfWfsR1Za8z/jNXl/ZbiZhfa
+         tdqztuoYMBVreC1GWPAnc90Q233knmSk84Mi+fjMUeiYagIERuVRoVKnZsrZ4/Pm+z
+         2fh4xnS38mX1kmjFlF7IYz/ESkwa9uLjK1fikMb/ncTQW/jLOQ5v669pY+WJCRBRnN
+         0bNc60gSn8+9VqyDVovs3r+TVKe65bu49u5fwYBF578H7Qtx6rJbEwMAohuEzhcRrg
+         Z3NzbeLIb3FqTVh+gbFkpdPAaUL7GsDnoNgucME5IIPmS0tGwOKlxx315QlblqpNLM
+         hfa3/Ip4byXPQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Kuriakose <kevinmkuriakose@gmail.com>,
-        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+Cc:     Koba Ko <koba.ko@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, thomas@weissschuh.net,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 15/20] platform/x86: gigabyte-wmi: add support for B450M DS3H WIFI-CF
-Date:   Tue, 31 Jan 2023 09:59:41 -0500
-Message-Id: <20230131145946.1249850-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, mjg59@srcf.ucam.org,
+        pali@kernel.org, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 08/12] platform/x86: dell-wmi: Add a keymap for KEY_MUTE in type 0x0010 table
+Date:   Tue, 31 Jan 2023 10:00:26 -0500
+Message-Id: <20230131150030.1250104-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230131145946.1249850-1-sashal@kernel.org>
-References: <20230131145946.1249850-1-sashal@kernel.org>
+In-Reply-To: <20230131150030.1250104-1-sashal@kernel.org>
+References: <20230131150030.1250104-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -55,36 +54,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kevin Kuriakose <kevinmkuriakose@gmail.com>
+From: Koba Ko <koba.ko@canonical.com>
 
-[ Upstream commit a410429a3b7e748a9db9f357e71e2e085a21c902 ]
+[ Upstream commit 83bcf3e52e9cfc727df33f1055ef0618c91719d0 ]
 
-To the best of my knowledge this is the same board as the B450M DS3H-CF,
-but with an added WiFi card. Name obtained using dmidecode, tested
-with force_load on v6.1.6
+Some platforms send the speaker-mute key from EC. dell-wmi can't
+recognize it.
 
-Signed-off-by: Kevin Kuriakose <kevinmkuriakose@gmail.com>
-Acked-by: Thomas Weißschuh <linux@weissschuh.net>
-Link: https://lore.kernel.org/r/20230119150925.31962-1-kevinmkuriakose@gmail.com
+Add a new keymap for KEY_MUTE in type 0x0010 table.
+
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
+Link: https://lore.kernel.org/r/20230117123436.200440-1-koba.ko@canonical.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/gigabyte-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index 5e7e6659a849..322cfaeda17b 100644
---- a/drivers/platform/x86/gigabyte-wmi.c
-+++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -141,6 +141,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
+index 089c125e18f7..b83d6fa6e39b 100644
+--- a/drivers/platform/x86/dell/dell-wmi-base.c
++++ b/drivers/platform/x86/dell/dell-wmi-base.c
+@@ -260,6 +260,9 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
+ 	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+ 	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
  
- static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
-+	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
++	/*Speaker Mute*/
++	{ KE_KEY, 0x109, { KEY_MUTE} },
++
+ 	/* Mic mute */
+ 	{ KE_KEY, 0x150, { KEY_MICMUTE } },
+ 
 -- 
 2.39.0
 
