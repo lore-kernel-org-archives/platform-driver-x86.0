@@ -2,490 +2,196 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC65C636CD
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Feb 2023 14:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B2AC38142
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Feb 2023 17:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbjBAOAI (ORCPT
+        id S231433AbjBARYY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Feb 2023 09:00:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
+        Wed, 1 Feb 2023 12:24:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231752AbjBAN73 (ORCPT
+        with ESMTP id S230204AbjBARYX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Feb 2023 08:59:29 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39573BD90;
-        Wed,  1 Feb 2023 05:59:06 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id r18so12531964pgr.12;
-        Wed, 01 Feb 2023 05:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Beoogoqh1Pe7xwnOH5hZKFIa/1ESUtRz/VqYBvcrPx0=;
-        b=QvJ2Ub1408D8w9KaP2cU3kl5Bz0xqQdGKYuGXZTlCFVNTzuMY0HGQbEElppb6KvYu9
-         0ZK/RNJi/3W9gosbnuVOczt4uUCoH6n0svvjtAFzbNc4U+3TfyfPBzcur66ywwH7mz12
-         gJ/XLZv6nU8FCbs5rbu/2g06ljh4MVczKlotFgo9mQjZy5VWwrLcMA4RwWOuczmphI5S
-         paeJQtSPfcWtfIZ3bLAzN8/rpCkAcgLegsi52kriPrtLdeN8mTxbGH3ATogjR7m+ij0j
-         hLXKw78iEYgpwY6/AKgIPpE3f57tRmuFiiDIGbmTrHdL014MNRuPlVDstljNE8QY3HEt
-         hkoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Beoogoqh1Pe7xwnOH5hZKFIa/1ESUtRz/VqYBvcrPx0=;
-        b=LSUJk+g8FLJpAsrM4M0q252Ty6xGQsfjDiPS8lsXgD61shwPtQuB/R4JatShD68ObZ
-         IytEdKIlh4WaT6m4Uf6rQ1VIppIZAZx6qbKP5tZ4/7nwCp2qfUk4q30xw0MHcjZXug+L
-         3yIUKel3lVrqX7YY+9u+euhajFxdCw4uHUG8H9yrIt/xG4i76rY+zOEoWCzU+l0XpTeU
-         N6u93qhqNE/Blpyoi7ce9mMjsvpZmm8qzKwdi35AkO6SfNOvoTnQLwGQwxCGLnHBJNsA
-         fSAmlBHXE9sdzri7+kt660RGMZr6DVQQzmWjxRPuLbr4MXm0Wue+BLVC+UNfIIyXmm5M
-         ctZg==
-X-Gm-Message-State: AO0yUKW0k9Z3Jy2iZS3fraN3WU0clWch+6NH4+8pxnOidbqPxlG70s2s
-        o6i8RwD08wpVkxE5Z33q6ug=
-X-Google-Smtp-Source: AK7set93wbFHHQnWZDk0zThuOjISu2QXtZmviT/+bAn870jRhn8E6tD2ZMrD8NMAlxF1wTxs4Le7FA==
-X-Received: by 2002:a05:6a00:2150:b0:593:98cb:e6f6 with SMTP id o16-20020a056a00215000b0059398cbe6f6mr2358648pfk.9.1675259945691;
-        Wed, 01 Feb 2023 05:59:05 -0800 (PST)
-Received: from [192.168.1.137] ([171.76.81.196])
-        by smtp.gmail.com with ESMTPSA id o125-20020a62cd83000000b00575fbe1cf2esm11458200pfg.109.2023.02.01.05.59.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 05:59:05 -0800 (PST)
-From:   Rishit Bansal <rishitbansal0@gmail.com>
-X-Google-Original-From: Rishit Bansal <rishit.bansal0@gmail.com>
-Message-ID: <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
-Date:   Wed, 1 Feb 2023 19:29:01 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V3] platform/x86: hp-wmi: Support omen backlight control
- wmi-acpi methods
+        Wed, 1 Feb 2023 12:24:23 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C45E05B;
+        Wed,  1 Feb 2023 09:24:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675272262; x=1706808262;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=eIb4AzX4D0S2TKRx22niznt3pvbfZiGy0jVPF07j9Yk=;
+  b=b1YS1wQTxZvfIFdGsk1r2bbfC4eb6UnvvHpHtM1YklfCeAL35Rs+8BIs
+   WnXz/6iWwP/gprgdWb5Kgsh7BC9QOFMcCuVwld6Ens+sCi96OvDQzV+so
+   lJY45WBgjtQc2az4ufottFp4IbYow0wn8fUz+NOqmdu7nblz6EOvt1RMQ
+   W57S+rRLVRYKPFoa2agdjmT3DHbWTIC1O5X5dfmfWUj/n7dVBjky3mC2o
+   cPGoyvXXIvtCSOBa08kw967esKUcLH8QFm5pOQxJCTst7btUsH0qahMuv
+   xszNalEca+nt7u0KLW0NL2DycEuWTSuMGl+J6wqDh9unRpdtx8eGJXhR1
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="316207940"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="316207940"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 09:22:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="788964374"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="788964374"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga004.jf.intel.com with ESMTP; 01 Feb 2023 09:22:21 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 1 Feb 2023 09:22:20 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Wed, 1 Feb 2023 09:22:20 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Wed, 1 Feb 2023 09:22:20 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OVmLAbNo26owuYVRUogAgjPXhkoxqHNeIMk7/r6pV3gkdbKiBOOdp15mESZd3blkWbf0kF6mcQ1iMTR4qLuNDxZfA+KhdyPcqTDLrkloblGJC9Ipf5ctZPj2fgvcII8AFtaL4qiGLglHrBeAK6vvaXLISim/mnfM8u0ibA+/RZDCxGY+cANVtKizzE8T/JqAX+yuVkAaPk7H2d0SLqY+bzddSSbhro0rCrdtnootcR6h/GJei15Vrvqv2FgPO8cORri9GQfhPmJ6AT8xgG0rHrav+F7tsSQZuZsCJno50hJ64OYytg+CsTcMJ/rMkj95q4ikQrLUIoFzDm/20wsouA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s2bFQneMJq3vTuCAfRY9jewuLYDugNTD4pmXY5ADzPY=;
+ b=H1V8yLeHISbOgnJF6xoEY8R8intF19C4JzQbN9YsKMCI3cFFlqrHgYTqXlvcM9FyU5nGsXIE+AXArnLlOVMWJufMRNRMwNZyn87k4EuhRRPPy+4yexrqzZjBgwQ4r1QN2LGE7Q1ufR04iOxXiX//ZfeGXI0btzwxyAkvltCXzBLsoaSMOSvW3F3gCDaAbFP5bPis0rQcXZPBuFxmNfgROGIr0JUzr/YVxHOCwZEbx7i4OsBHDoefT6x9O+/btRX2E2qjFzRGCdjVZlY9fP5PdkJrk/5Y3J724XssvB5p0jGTGnifpvM7Jt8QRUNLjYQxX+XrHg4qb3NtUwJDzfBGqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by SN7PR11MB6602.namprd11.prod.outlook.com (2603:10b6:806:272::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Wed, 1 Feb
+ 2023 17:22:18 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::ee6a:b9b2:6f37:86a1]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::ee6a:b9b2:6f37:86a1%9]) with mapi id 15.20.6043.030; Wed, 1 Feb 2023
+ 17:22:18 +0000
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Macieira, Thiago" <thiago.macieira@intel.com>,
+        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>
+Subject: RE: [PATCH 4/5] platform/x86/intel/ifs: Implement Array BIST test
+Thread-Topic: [PATCH 4/5] platform/x86/intel/ifs: Implement Array BIST test
+Thread-Index: AQHZNc4J4EU3Q3ktD0OwChsEsRbA+K65iRqAgADKv3A=
+Date:   Wed, 1 Feb 2023 17:22:18 +0000
+Message-ID: <SJ1PR11MB6083EBD2D2826E0A247AF242FCD19@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20230131234302.3997223-1-jithu.joseph@intel.com>
+ <20230131234302.3997223-5-jithu.joseph@intel.com>
+ <Y9nyWVNtfBEny66w@kroah.com>
+In-Reply-To: <Y9nyWVNtfBEny66w@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Rishit Bansal <rishitbansal0@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
-In-Reply-To: <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|SN7PR11MB6602:EE_
+x-ms-office365-filtering-correlation-id: 8b7d8ea8-6472-4ae6-9a8e-08db0478deb7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U5oq1qLNWcxgmzGdqLkC0WcPVXFmvi7EqBmW8QzxG466FPvuxKIN1Bzudfkm8gOH0fhgTq7ZaC3GFMik5IWPm6I4udzFt6n0B8Vhq8ymFku0ddLabYdFrTGSwx+GfYVmah0aPKaMEv1E/mZQTsPw1gnBGQ8jIouRb9d6Qq3BPDROdc4gg9VKP2sSAiJAww+roTG25OL7Hs+8MHypDz2DypAth7gFul4ftLBPiSn7YRtY25zAeGfOoBDwDOLCWfBN73ac1S34FfVSmutbEKVDedqCLkPGLl1CA5ekSWdCi2HJECfEMWb6NFUl2al8CLkO8wwgg/P8gAASBy2ti17ee3oynSJMVDXbpKaRRkqfu9qbSiSGwCm+h2vXSpBGlDhtJgOgPdDkLtog8idRmuDHj+sSVWmqvx10mwWHSw/j//huQ0lqSJ3wEfGgK1nEMg0TkTGThSUekrVxJ5qVDnob9ZJ4pIhfHpo6d65vCUzRNP2ReMC+fjwhs7xTD7N/6/25cU4B52FJw0wZIIgRcyewIpsHDCQH6yScS/NGP0XJHZ44mGmCEVRhw5R7x+9gxmoZLjW/QF7uD5Pyt5Wh4OSB45vpIdREXOq1nVK8BTu/bWxTCgqsr0pCOmEO42h0GyfJ6wgEMsxycDNW1aAHM7nCMak2HgdFz/eJMW6lp04IFRoGJZo1TYcT3iLHFyV1ROOxevn7mVtNZxwDs4Po5hygbw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(136003)(366004)(346002)(376002)(396003)(451199018)(2906002)(86362001)(7696005)(38070700005)(82960400001)(83380400001)(7416002)(8936002)(41300700001)(54906003)(26005)(478600001)(186003)(9686003)(71200400001)(5660300002)(6506007)(52536014)(110136005)(66476007)(33656002)(4326008)(66446008)(122000001)(66946007)(66556008)(76116006)(64756008)(38100700002)(8676002)(316002)(6636002)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?VSFRx7U+LfZxti+6ZH4Pmp59hHtZ9LLeV+gmNaPD8aT2YeHbHaXVCu1lN/gz?=
+ =?us-ascii?Q?uPNxk7MfynSdRX84t9fCxtXy6L/YQkrR13UqvD1CPRSFy9kZhCrsV2S8Tcst?=
+ =?us-ascii?Q?CUyiEG4qP5QuiYyqBg1q4KdXfB7q1TrquQ/2nsO1yoI6yr9kImiadXup+Gjj?=
+ =?us-ascii?Q?KuqxF45a35PgCLy/zwvLcmRbyiAu+ZP4q83nykDK3CbZO5IkzjtAWnBlpaod?=
+ =?us-ascii?Q?bNTIop/dhXEDiTXBZXPL+ulpnJPx/Re76Y/kvjjt0zRKNhlJMBzJI9+tsN/Y?=
+ =?us-ascii?Q?XfeCcHX4+OQZQ/Ik3I3T45k+h0Hab++ZmKDVTPPKxtBlaGN0p3+baCGlYQc+?=
+ =?us-ascii?Q?2Z9f5kYoi3opaXNcZneYRut7zRcADOF4ulpC1B/kgRD8FiWt2BGhHvfjxUU0?=
+ =?us-ascii?Q?bQ9LeWQcO04I2AIFw9ex+jZtVgkfbiM3Y5rurRvjUqZV2aByHrH6CXAUFX7e?=
+ =?us-ascii?Q?lUkQa/Fm8/S0iPHb/fA8yyI2b80eezrEig5uuD8JehT4A9wquw6YLyVMapWP?=
+ =?us-ascii?Q?HxjeDkESF0DtPb3mSMAnaEo+upG0FA+M+YX4qM9deA2gEatMxjkIO61oVLH6?=
+ =?us-ascii?Q?xVgTQ6hJFRKsUCjgwuR+DCQOU880p9bNPAxHcBY3aYzJazCEXLS27b+/iJeW?=
+ =?us-ascii?Q?Pd1+OR6RhIi5bLh6B9vqSqC1YqQsbUBpZYMy15q6Re7MvbeqxMQTn4n4qFT4?=
+ =?us-ascii?Q?JlhoRUc/njAU6J8tM5wr/UKXHj/wjg2fVERWrP6L6cUWc0FKs8/on5/VElFU?=
+ =?us-ascii?Q?cZqhGfHOF7Ymv+78/31u8oHkbhag38/wcvMVIiCYztsKntga7z8W9Z2G9CTD?=
+ =?us-ascii?Q?pLUHjZHkgjdWIJcfgicUPCtxZuA3VsSlZRstQBlplsa0y7xDCGzki1kC3dLz?=
+ =?us-ascii?Q?IbjtbpwpV5x6qE33Ty8xllOkCeObDB1jhrAV0SoqAzDgWJACNIQXuIumChTJ?=
+ =?us-ascii?Q?uFp+OIhZRkQf2vznZH2nQQbz7WoLhX1X3aPh8no38u8+7OEKTUY4veBOhNvd?=
+ =?us-ascii?Q?MfB7ZJ9UJrkHNgC9sZOUgez++SuJ0+9Dk/Jm9ToDQwr6+N1yYCY1c4ypQABN?=
+ =?us-ascii?Q?JKJzc256tCMkZvnEBzOupqT4k/ESJsYvg1hrzFYozgGlCprm/q3rcuibwt5V?=
+ =?us-ascii?Q?BpLCntM1FROXcUxaen4iNzVmRFvVA9o5tL9Y/HvQ8ulB/5gAeubMnrg1ZN73?=
+ =?us-ascii?Q?eb0SjFKqjunTWLT45nOkChx0GTMPtds/O8wfNoCStlgkK1EWhivRpmITyTrH?=
+ =?us-ascii?Q?h48fUQoxNymu6zqYkz/wpk1AUdLm9J5i7WodJ29zqjVfctNCEBz2bV/j9j2V?=
+ =?us-ascii?Q?VIwUY8+OX+18c0vwRijg6mGi1JQN0onBUxQo8mDkFI6fLsIh44kUdW1pae6f?=
+ =?us-ascii?Q?qMWSHEmkxGCrzrf+uFJ/kQnEn2bCcRQUaO04SoHOkmJmgMsQQnC+RsLqsV5r?=
+ =?us-ascii?Q?wFpwt8rHPa2TOxShGMM0OiMxh0JmcYt05pnJksxjdMLAM5OCQ4Cwt1oTBF06?=
+ =?us-ascii?Q?7As21SG0GyfBS5AKv+M5HU8rBf8gvLmY5l23nZ7LcYyfe5qDYmozLogexgqG?=
+ =?us-ascii?Q?37hAUvmtRaLhz2xCq6+1Hijqcb8hcxA85bvAqct1?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7d8ea8-6472-4ae6-9a8e-08db0478deb7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2023 17:22:18.1749
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FEtT/myYVPyhtDX8usBJj4K1N0d+dGFlFnGbdi60YJY5qM/vdQHB3ocJVFrDHKINgNTVhBnjDOuiTFI5KfU3VA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6602
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+> > +/* MSR_ARRAY_BIST bit fields */
+> > +union ifs_array {
+> > +   u64     data;
+> > +   struct {
+> > +           u32     array_bitmask           :32;
+> > +           u32     array_bank              :16;
+> > +           u32     rsvd                    :15;
+> > +           u32     ctrl_result             :1;
+>
+> This isn't going to work well over time, just mask the bits you want off
+> properly, don't rely on the compiler to lay them out like this.
 
-On 01/02/23 13:47, Hans de Goede wrote:
-> Hi Rishit,
->
-> On 2/1/23 00:50, Rishit Bansal wrote:
->> The HP Omen Command Studio application includes a Light Studio feature
->> which can be used to control various features related to the keyboard
->> backlight via the 0x20009 command.
->>
->> The command supports the following queries:
->>
->> - 0x1: Checks if keyboard lighting is supported
->> - 0x2: Get the zone colors of each of the 4 zones on the keyboard
->> - 0x3: Set the zone colors of each of the 4 zones on the keyboard
->> - 0x4: Gets the state (on/off) of the backlight
->> - 0x5: Sets the state (on/off) of the backlight
->>
->> This patch introduces a new sysfs led class called
->> "hp_omen::kbd_backlight" which can be used to control the state of the
->> backlight. It also includes a sysfs RW attribute at the following
->> location:
->>
->> /sys/class/leds/hp_omen::kbd_backlight/zone_colors
->>
->> This file contains the color codes for each of the 4 zones of the
->> keyboard. Each zone's color is represented by R,G and B components, each
->> of which take a byte. Therefore, the total size of this file is always:
->>
->> 4 (zones) * 3 (components R,G,B) = 12 bytes
->>
->> An example output from this file is:
->>
->> $ xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
->> 00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
->>
->> The above output means that each zone has the following hex
->> color codes:
->> Zone 1: #01ff00
->> Zone 2: #ff01ff
->> Zone 3: #ffff01
->> Zone 4: #ff0101
->>
->> Colors can be set on the backlight by writing back to this file by
->> passing 12 bytes in the exact same format as above.
->>
->> Additionally this patch also maps the backlight event to the KEY_KBDILLUMTOGGLE
->> key so it shows the correct notification on userspace.
->>
->> The patch has been tested on an HP Omen 15-en0037AX (AMD) laptop.
->>
->> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
->> ---
->> Changes since v1:
->>   - Map backlight key to KEY_KBDILLUMTOGGLE
->>
->> Changes since v2:
->>   - Changes all str operations to memcpy() to handle null bytes edge
->>     cases
->>   - Renamed kbd_rgb to zone_colors, and moved it to inside the
->>     kbd_backlight directory
->>   - Added documentation for the zone_colors file
->>   - Removed KEY_KBDILLUMTOGGLE from the parse-map, and instead emitted
->>     directly
->>   - Remove logic to unregister from devm
->>   - Moved a few constants to #define
->>   - Updated path description with more details on zone_colors file format
->> ---
->>   .../ABI/testing/sysfs-platform-hp-wmi         |  33 +++++
->>   drivers/platform/x86/hp/hp-wmi.c              | 116 ++++++++++++++++++
->>   2 files changed, 149 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-platform-hp-wmi
->>
->> diff --git a/Documentation/ABI/testing/sysfs-platform-hp-wmi b/Documentation/ABI/testing/sysfs-platform-hp-wmi
->> new file mode 100644
->> index 000000000000..ccf2d29185ee
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-platform-hp-wmi
->> @@ -0,0 +1,33 @@
->> +What:		/sys/class/leds/hp_omen::kbd_backlight/zone_colors
->> +Date:		Feb 2023
->> +KernelVersion:	6.2
->> +Contact:	Rishit Bansal <rishitbansal0@gmail.com>
->> +Description:
->> +		This file stores the RGB color codes for each of
->> +		the 4 zones of the backlight on HP omen keyboards.
->> +
->> +		Each zone takes R,G,B values. The R,G,B values each can
->> +		range from 0-255. This means the whole state of the colors
->> +		can be represented in 12 bytes:
->> +
->> +		(4 zones * 3 color components (R,G,B) * 1 byte = 12 bytes)
->> +
->> +		Here is an example where we read the file:
->> +
->> +			xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
->> +			00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
->> +
->> +		The above output means that each zone has the following hex
->> +		color codes:
->> +		Zone 1: #01ff00
->> +		Zone 2: #ff01ff
->> +		Zone 3: #ffff01
->> +		Zone 4: #ff0101
->> +
->> +		The colors of the each of the zones can be set by writing
->> +		the same format to this file. For example to set all zones
->> +		to white, we would do:
->> +
->> +			echo -n -e '\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' | sudo tee /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
-> Thank you for the new version and thank you for writing this doc, that is
-> not only helpful for users but also for the review.
->
-> Looking at the above I think what you should do is create not 1 but 4
-> sysfs files like this:
->
-> /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
-> /sys/class/leds/hp_omen::kbd_backlight/zone2_colors
-> /sys/class/leds/hp_omen::kbd_backlight/zone3_colors
-> /sys/class/leds/hp_omen::kbd_backlight/zone4_colors
->
-> And then a user could do e.g.:
->
-> [hans@shalem ~]$ cat /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
-> #01ff00
-> [hans@shalem ~]$
->
-> And e.g.:
->
-> [hans@shalem ~]$ echo #ff0000 > /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
->
-> This will make it much easier for users to use and generally
-> speaking we try to avoid putting binary files in sysfs.
->
-> You can take a look at drivers/hid/hid-lg-g15.c and then the
-> color_store() function for an existing example of parsing
-> rgb colors in the form of #rrggbb.
->
-> Also if you look at lg_g510_kbd_led_write() you see there that
-> that driver actually emulates a brightness range of 0-255 for
+What is this "time" issue?  This driver is X86_64 specific (and it seems
+incredibly unlikely that some other architecture will copy this h/w
+interface so closely that they want to re-use this driver. There's an x86_6=
+4
+ABI that says how bitfields in C are allocated. So should not break moving
+to other C compilers.
 
+Is there going to be a "re-write all drivers in Rust" edict coming soon?
 
-I didn't think of the idea before to scale the RGB values based on the 
-brightness range of (0-255), that's really interesting! Did a small test 
-on my end, this does seem to function correctly, looks great. I'll 
-include this feature in my follow up patch.
+> Note, we have bitmask and bitfield operations, please use them.
 
+We do, but code written using them is not as easy to read (unless
+you wrap in even more macros, which has its own maintainability
+issues).
 
-> /sys/class/leds/hp_omen::kbd_backlight/brightness
->
-> by scaling the user requested zone values by the brightness
-> value, giving a bigger brightness range in a standard
-> sysfs interface which is e.g. supported by upower and by
-> some desktop environments using upower, so that even
-> without knowing how to control the specific zones users
-> can still control at least the brightness.
->
-> So I think that what you want to do is add:
->
-> struct hp_omen_kbd_led {
-> 	struct led_classdev cdev;
-> 	u8 red[4];
-> 	u8 green[4];
-> 	u8 blue[4];
-> 	enum led_brightness brightness;
-> };
->
-> struct hp_omen_kbd_led omen_kbd_led;
->
-> And then have 4 zone sysfs files which fill the red, green and blue
-> arrays (and also fill these with initial values at probe) and
-> then have an omen_kbd_led_update_zones() function which creates
-> the 12 bytes you need to send by for each zone calculating the
-> values similar to this lg_g510_kbd_led_write() code:
->
->          g15->transfer_buf[1] =
->                  DIV_ROUND_CLOSEST(g15_led->red * brightness, 255);
->          g15->transfer_buf[2] =
->                  DIV_ROUND_CLOSEST(g15_led->green * brightness, 255);
->          g15->transfer_buf[3] =
->                  DIV_ROUND_CLOSEST(g15_led->blue * brightness, 255);
->
-> And then on store of a zone, you update the red, green, blue values
-> for that zone and call omen_kbd_led_update_zones()
->
-> and from set_omen_backlight_brightness() you then:
->
-> 1. Store the brightness
-> 2. Do the on/off setting of the backlight as done already
-> 3. Call omen_kbd_led_update_zones() to update the zones for
->     the brightness change
->
-> I believe that this will give a much nicer user experience
-> then the current binary file which sets all 4 zones at once
-> approach.
->
-> Regards,
->
-> Hans
+There are already thousands of bitfields in Linux kernel source:
 
+$ git grep ':[1-9][0-9]*;' -- include/ | wc -l
+2251
 
-The format with the hex color codes is definitely more user friendly. 
-Just a small note, there is a side effect with having 4 different zone 
-files: With the current format, it is possible to set all the colors of 
-each zone using a single WMI method call, but with 4 different files, 
-setting all the zones may be slightly less performant as now we'll be 
-making 4 different WMI method calls (one for setting each zone). For 
-userspace software which may rapidly set the colors of each zones to 
-simulate certain effects, this would lead to an increase in the number 
-of calls we make, and also cause possible delays. (Though from my 
-testing, it seems the delays are negligible for most cases). Do you 
-think it may be better to have a single zone file, with 4 hex codes 
-instead, like the following:
+Has there been a change in attitude at the kernel maintainers summit?
 
-$ cat /sys/class/leds/hp_omen::kbd_backlight/zone_colors
-#01ff00
-#01ff00
-#01ff00
-#01ff00
-
-This would help us prevent the performance penalty and have it as a 
-single WMI call. What are your thoughts on this?
-
-
->
->
->
->
->
->
->
->> +
->> +
->> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->> index 0a99058be813..f86cb7feaad4 100644
->> --- a/drivers/platform/x86/hp/hp-wmi.c
->> +++ b/drivers/platform/x86/hp/hp-wmi.c
->> @@ -27,6 +27,7 @@
->>   #include <linux/rfkill.h>
->>   #include <linux/string.h>
->>   #include <linux/dmi.h>
->> +#include <linux/leds.h>
->>   
->>   MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->>   MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
->> @@ -136,6 +137,7 @@ enum hp_wmi_command {
->>   	HPWMI_WRITE	= 0x02,
->>   	HPWMI_ODM	= 0x03,
->>   	HPWMI_GM	= 0x20008,
->> +	HPWMI_KB	= 0x20009,
->>   };
->>   
->>   enum hp_wmi_hardware_mask {
->> @@ -254,6 +256,9 @@ static const char * const tablet_chassis_types[] = {
->>   
->>   #define DEVICE_MODE_TABLET	0x06
->>   
->> +#define OMEN_ZONE_COLOR_OFFSET 0x19
->> +#define OMEN_ZONE_COLOR_LEN 0x0c
->> +
->>   /* map output size to the corresponding WMI method id */
->>   static inline int encode_outsize_for_pvsz(int outsize)
->>   {
->> @@ -734,12 +739,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->>   	return count;
->>   }
->>   
->> +static ssize_t zone_colors_show(struct device *dev,
->> +				    struct device_attribute *attr, char *buf)
->> +{
->> +	u8 val[128];
->> +
->> +	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
->> +				       zero_if_sup(val), sizeof(val));
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	memcpy(buf, &val[OMEN_ZONE_COLOR_OFFSET], OMEN_ZONE_COLOR_LEN);
->> +
->> +	return OMEN_ZONE_COLOR_LEN;
->> +}
->> +
->> +static ssize_t zone_colors_store(struct device *dev,
->> +				     struct device_attribute *attr,
->> +				     const char *buf, size_t count)
->> +{
->> +	u8 val[128];
->> +	int ret;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
->> +				   zero_if_sup(val), sizeof(val));
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (count != OMEN_ZONE_COLOR_LEN)
->> +		return -1;
->> +
->> +	memcpy(&val[OMEN_ZONE_COLOR_OFFSET], buf, count);
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
->> +				   0);
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	return OMEN_ZONE_COLOR_LEN;
->> +}
->> +
->>   static DEVICE_ATTR_RO(display);
->>   static DEVICE_ATTR_RO(hddtemp);
->>   static DEVICE_ATTR_RW(als);
->>   static DEVICE_ATTR_RO(dock);
->>   static DEVICE_ATTR_RO(tablet);
->>   static DEVICE_ATTR_RW(postcode);
->> +static DEVICE_ATTR_RW(zone_colors);
->>   
->>   static struct attribute *hp_wmi_attrs[] = {
->>   	&dev_attr_display.attr,
->> @@ -752,6 +801,12 @@ static struct attribute *hp_wmi_attrs[] = {
->>   };
->>   ATTRIBUTE_GROUPS(hp_wmi);
->>   
->> +static struct attribute *omen_kbd_led_attrs[] = {
->> +	&dev_attr_zone_colors.attr,
->> +	NULL,
->> +};
->> +ATTRIBUTE_GROUPS(omen_kbd_led);
->> +
->>   static void hp_wmi_notify(u32 value, void *context)
->>   {
->>   	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
->> @@ -853,6 +908,10 @@ static void hp_wmi_notify(u32 value, void *context)
->>   	case HPWMI_PROXIMITY_SENSOR:
->>   		break;
->>   	case HPWMI_BACKLIT_KB_BRIGHTNESS:
->> +		input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
->> +		input_sync(hp_wmi_input_dev);
->> +		input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
->> +		input_sync(hp_wmi_input_dev);
->>   		break;
->>   	case HPWMI_PEAKSHIFT_PERIOD:
->>   		break;
->> @@ -1294,6 +1353,60 @@ static int thermal_profile_setup(void)
->>   
->>   static int hp_wmi_hwmon_init(void);
->>   
->> +static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
->> +{
->> +	u8 val;
->> +
->> +	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	return (val & 0x80) ? LED_ON : LED_OFF;
->> +}
->> +
->> +static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
->> +{
->> +	char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
->> +
->> +	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
->> +				       sizeof(buffer), 0);
->> +}
->> +
->> +static struct led_classdev omen_kbd_led = {
->> +	.name = "hp_omen::kbd_backlight",
->> +	.brightness_set = set_omen_backlight_brightness,
->> +	.brightness_get = get_omen_backlight_brightness,
->> +	.max_brightness = 1,
->> +	.groups = omen_kbd_led_groups,
->> +};
->> +
->> +static bool is_omen_lighting_supported(void)
->> +{
->> +	u8 val;
->> +
->> +	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
->> +
->> +	if (ret)
->> +		return false;
->> +
->> +	return (val & 1) == 1;
->> +}
->> +
->> +static int omen_backlight_init(struct device *dev)
->> +{
->> +	int ret;
->> +
->> +	input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
->> +
->> +	ret = devm_led_classdev_register(dev, &omen_kbd_led);
->> +
->> +	if (ret < 0)
->> +		return -1;
->> +
->> +	return 0;
->> +}
->> +
->>   static int __init hp_wmi_bios_setup(struct platform_device *device)
->>   {
->>   	int err;
->> @@ -1321,6 +1434,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->>   
->>   	thermal_profile_setup();
->>   
->> +	if (is_omen_lighting_supported())
->> +		omen_backlight_init(&device->dev);
->> +
->>   	return 0;
->>   }
->>   
+-Tony
