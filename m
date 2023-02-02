@@ -2,85 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B979C05027
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 01:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2091C05027
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 10:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229849AbjBBBJO (ORCPT
+        id S232736AbjBBKfQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:09:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        Thu, 2 Feb 2023 05:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbjBBBJF (ORCPT
+        with ESMTP id S232753AbjBBKfF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:09:05 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA331474C5;
-        Wed,  1 Feb 2023 17:09:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675300144; x=1706836144;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=r3hG+Ca6d73zopTx9WXAswSjukXC6pV6ULXWYPlyX0Y=;
-  b=iToKyzw60lBn0HRnLGALEPoDOAlAU0T41AuBLCmDcwOJmKZmjoGJe2Ku
-   QZf5jDUJxPXNpyDIwI9nrhqzBkTnQAeshT1Ch0x1T35FWAjzHGlnU5i6N
-   eGZKhExXr/wp39vJkDgunKCO+QYJYz5j+TnXOJaXZcRNUdWN4vBulrrP9
-   sm1rNgCOKW3GYr0kmON+WIIChoyd9jKKJ5eLmuE3Vk9tF2IKzCF841XVj
-   FAPvxe9e4teLvh0pkZpmigPWsdlh7a1VudYCqawgKNThAgXekdoiiGftc
-   cC0ZeFNodD1YCO5AVCVAQaphoqrigPdU/dSmWBLgVQ1ZerCnRKxibyKpQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="355654322"
-X-IronPort-AV: E=Sophos;i="5.97,266,1669104000"; 
-   d="scan'208";a="355654322"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 17:08:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="665087937"
-X-IronPort-AV: E=Sophos;i="5.97,266,1669104000"; 
-   d="scan'208";a="665087937"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2023 17:08:16 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 7/7] MAINTAINERS: Add entry for TPMI driver
-Date:   Wed,  1 Feb 2023 17:07:38 -0800
-Message-Id: <20230202010738.2186174-8-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
-References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
+        Thu, 2 Feb 2023 05:35:05 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B3D6EDD4
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Feb 2023 02:34:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1675334058;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sv5Lcu2ADnE3j8jrYGnMHmSz0jf7GvI/WF7EFBaXCps=;
+        b=Sdn+npyINWuG+5Wjx3VfeSI/vUfUkt2tvdsS0yuRFCAwn2LTwyw4sz2vhqJEwKG8yitCky
+        onQ9+ye3T5cCTwp37i7BnK7wJc1HmpFp2DceSUimiOBIEJr/DSJ3wzuD2cKq5MJq/cabsJ
+        k4cHyi37dMm65QOuC1vCY2bnc8+4rbY=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-91-Z4rYZh-jOEWkxKbQf0kc7Q-1; Thu, 02 Feb 2023 05:34:15 -0500
+X-MC-Unique: Z4rYZh-jOEWkxKbQf0kc7Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D4673811F3F;
+        Thu,  2 Feb 2023 10:34:15 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.194.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 98DFB2026D4B;
+        Thu,  2 Feb 2023 10:34:14 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add Chuwi Vi8 (CWI501) DMI match
+Date:   Thu,  2 Feb 2023 11:34:13 +0100
+Message-Id: <20230202103413.331459-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add entry for TPMI (Topology Aware Register and PM Capsule Interface)
-driver.
+Add a DMI match for the CWI501 version of the Chuwi Vi8 tablet,
+pointing to the same chuwi_vi8_data as the existing CWI506 version
+DMI match.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/touchscreen_dmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f61eb221415b..6f3aaa7161d6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10683,6 +10683,12 @@ S:	Maintained
- F:	arch/x86/include/asm/intel_telemetry.h
- F:	drivers/platform/x86/intel/telemetry/
- 
-+INTEL TPMI DRIVER
-+M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel/tpmi.c
-+
- INTEL UNCORE FREQUENCY CONTROL
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- L:	platform-driver-x86@vger.kernel.org
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index f00995390fdf..13802a3c3591 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -1097,6 +1097,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
+ 		},
+ 	},
++	{
++		/* Chuwi Vi8 (CWI501) */
++		.driver_data = (void *)&chuwi_vi8_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "i86"),
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.W86JLBNR01"),
++		},
++	},
+ 	{
+ 		/* Chuwi Vi8 (CWI506) */
+ 		.driver_data = (void *)&chuwi_vi8_data,
 -- 
-2.31.1
+2.39.1
 
