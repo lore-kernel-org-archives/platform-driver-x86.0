@@ -2,267 +2,348 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E746C05027
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 11:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E72C05027
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 12:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjBBLPT (ORCPT
+        id S232405AbjBBMpp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Feb 2023 06:15:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45426 "EHLO
+        Thu, 2 Feb 2023 07:45:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230454AbjBBLPP (ORCPT
+        with ESMTP id S231829AbjBBMpf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Feb 2023 06:15:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B51A1F5D9
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Feb 2023 03:14:32 -0800 (PST)
+        Thu, 2 Feb 2023 07:45:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02C8E043
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Feb 2023 04:44:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675336471;
+        s=mimecast20190719; t=1675341843;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wylVcVzSJ1eUethAiAkEp39Y7J/EMGPlYmXL7R4982o=;
-        b=gYWWXJLuiahbUkvtAvRb/cnAwdn7Z7gdGClPZ8uOCCl6E4ZZYJaNRn3LHh1bRvsmFajm8I
-        1aFpCV2x+b/P0y1VRGTM38M0JL3KkNQy0/W8LEXGVbDv7uHZGIf5c6zWVt/xs3kjey0U1T
-        sfH7RBuUz+bVQpyOcjm4OsgeqjaSR40=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nDU0zHfCn3XfqFXex1ZgavlON6vSGnPmPRoOwR3rZ0s=;
+        b=HHiqnQ8/cWPW8WF5HZ3zJdNxM8Zb9+rkPCzCNFsO69ARwRyD5MVMSFhDkBCQGDMQASNF+X
+        L/Jil0GyABYA/O8IZfs7DCvuHcQr/x+lI6js0S2FuivvlzPqFh2ISxd09FKUIRGSSkh/LE
+        yXkvwpxKnoIjIvyU1Q88H5WKLCDK0nI=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-45-38mvXCTYM_SJNhnJTV_wPQ-1; Thu, 02 Feb 2023 06:14:30 -0500
-X-MC-Unique: 38mvXCTYM_SJNhnJTV_wPQ-1
-Received: by mail-ej1-f71.google.com with SMTP id ae2-20020a17090725c200b0088d91fe7ec5so1328440ejc.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Feb 2023 03:14:30 -0800 (PST)
+ us-mta-372-fyojdPqFNIGArzqvuwubcA-1; Thu, 02 Feb 2023 07:44:02 -0500
+X-MC-Unique: fyojdPqFNIGArzqvuwubcA-1
+Received: by mail-ed1-f71.google.com with SMTP id bo27-20020a0564020b3b00b004a6c2f6a226so1174974edb.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Feb 2023 04:44:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wylVcVzSJ1eUethAiAkEp39Y7J/EMGPlYmXL7R4982o=;
-        b=PO2f7bG9HI8hOZ0XOHMBf7x1WBfit0jXu0moJh51A+g96Ymb4jz5aDHedV9B3c2hnO
-         eQmYvlQzaTMfBt7F+DoPdkM4LS1klyMbdmHeTF5qv3XqLaDw/q4BkmTk5BbnjhcIyQ4V
-         6yLS0/CR+JcoBhwBHWq7Lyc46py9lo+WG0p5+2KdHVWolZyN0+08epaCpZZaCTWx7/B3
-         wgGGZd+4HMMPo1HhSZlNRLZjwPuj/LCvpQO/JXm6yh4FIpcWYVgEvDhWVsgIOSq8hMDM
-         V6cW/XNlT4W3WFJW25K9Vynra9KqoKiGznXiCpqZ8m3WXr1nL/blbDyA96uCI9Cmsb/d
-         /pxw==
-X-Gm-Message-State: AO0yUKU6SD1o62R12aQ3M0AMipJnZN4LjJUdbc01eRC22ghdKcieXnFm
-        NOy6ij7NrmVJeRNLX+5MulTdRgePijVmQoXUeG8nRqinsewHh9Z7GDb8X2/6l7WaGZYy17vNiYq
-        m9Xmr1Rq9sVFXzPPfFwngsuk2HGuyK7T7Ag==
-X-Received: by 2002:a17:906:3ca1:b0:86f:ae1f:9234 with SMTP id b1-20020a1709063ca100b0086fae1f9234mr5624633ejh.7.1675336469413;
-        Thu, 02 Feb 2023 03:14:29 -0800 (PST)
-X-Google-Smtp-Source: AK7set9sC72NCdxwRq7eFwD+CrjxmFuKV/5Qbytk1PiNOfYH3Eu+UMiDY5ZKjgmCOj+BmzhrC9jD8g==
-X-Received: by 2002:a17:906:3ca1:b0:86f:ae1f:9234 with SMTP id b1-20020a1709063ca100b0086fae1f9234mr5624620ejh.7.1675336469203;
-        Thu, 02 Feb 2023 03:14:29 -0800 (PST)
+        bh=nDU0zHfCn3XfqFXex1ZgavlON6vSGnPmPRoOwR3rZ0s=;
+        b=w0CZJXqNMc9XPWrpNmd0WFuFPjKRM0DETjxbyvP4B87qzdYedDo3owkgJETlh6CMK6
+         FWHaxxxs0pan8unUvUF9alKuFQ/Fz8Ykcke/zQrwQOC5QIi9aGnPRkaZfQvSXhLjIbc2
+         aAkD+D0KplUUOcgPgFo0hbguev3geWGpalCv8Oq5Jof2se0sqmrXZOgKcHjVWYL8EU8M
+         E5d3lHwo/+UhF9CAAbuoRU1MgEqgvxR4jvoOE2UVtQ3vopv30+FX7I0DMPG5Vffycr0L
+         eY4JD2BKEBkzPgnpTRJKwlkps1XnKkb3cQouH1rIbF4Mv4BIij6DYczkY8RHxV7qkZ4q
+         nKJg==
+X-Gm-Message-State: AO0yUKWTByDVS96M+QUDMxbeDf1SPubsTv+l91NRgGP3sUsfM7GsiB+t
+        2KtyClZdI8s3UR31QvXQ0Z2Yfr8W9qFtOGpLuXznv3qCLOj+MoHrdgQyFTW5mwF28hBrJihVmJD
+        jVBf/X7vRHZ5XDJR6gu4wpYEWROlFMCBJvw==
+X-Received: by 2002:a17:906:4b57:b0:87b:d41b:67dc with SMTP id j23-20020a1709064b5700b0087bd41b67dcmr5222643ejv.74.1675341841017;
+        Thu, 02 Feb 2023 04:44:01 -0800 (PST)
+X-Google-Smtp-Source: AK7set8DLv3AMJy5MBHVpRS5ajiX8OFEZl5V6ZGxHFbJl6tjyL9zZbG7E3nyAJ+xghihd3w4GQsaoQ==
+X-Received: by 2002:a17:906:4b57:b0:87b:d41b:67dc with SMTP id j23-20020a1709064b5700b0087bd41b67dcmr5222629ejv.74.1675341840704;
+        Thu, 02 Feb 2023 04:44:00 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id r15-20020a1709067fcf00b0087fa83790d8sm9195695ejs.13.2023.02.02.03.14.28
+        by smtp.gmail.com with ESMTPSA id hz17-20020a1709072cf100b0087879f8c65asm11135670ejc.89.2023.02.02.04.43.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 03:14:28 -0800 (PST)
-Message-ID: <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
-Date:   Thu, 2 Feb 2023 12:14:27 +0100
+        Thu, 02 Feb 2023 04:44:00 -0800 (PST)
+Message-ID: <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
+Date:   Thu, 2 Feb 2023 13:43:59 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH v4 1/2] x86: Support APU5 & APU6 in PCEngines platform
- driver
+Subject: Re: [PATCH V3] platform/x86: hp-wmi: Support omen backlight control
+ wmi-acpi methods
 Content-Language: en-US, nl
-To:     Ed W <lists@wildgooses.com>,
-        Philip Prindeville <philipp@redfish-solutions.com>,
-        platform-driver-x86@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Andres Salomon <dilinger@queued.net>,
-        Andreas Eberlein <foodeas@aeberlein.de>,
-        Paul Spooren <paul@spooren.de>
-References: <20230113231139.436956-1-philipp@redfish-solutions.com>
- <00b4cd69-14ce-ce1f-2bec-83ecbb928cbc@redhat.com>
- <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
+To:     Rishit Bansal <rishitbansal0@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>
+References: <20230131235027.36304-1-rishitbansal0@gmail.com>
+ <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
+ <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
+In-Reply-To: <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Ed,
+Hi,
 
-On 1/20/23 20:18, Ed W wrote:
-> On 19/01/2023 10:22, Hans de Goede wrote:
+On 2/1/23 14:59, Rishit Bansal wrote:
+> Hi Hans,
 > 
->>>  /* Order in which the GPIO lines are defined in the register list */
->>>  #define APU2_GPIO_LINE_LED1		0
->>>  #define APU2_GPIO_LINE_LED2		1
->>>  #define APU2_GPIO_LINE_LED3		2
->>>  #define APU2_GPIO_LINE_MODESW		3
->>> -#define APU2_GPIO_LINE_SIMSWAP		4
->>> -#define APU2_GPIO_LINE_MPCIE2		5
->>> -#define APU2_GPIO_LINE_MPCIE3		6
->>> +#define APU2_GPIO_LINE_RESETM1		4
->>> +#define APU2_GPIO_LINE_RESETM2		5
->>> +#define APU2_GPIO_LINE_SIMSWAP		6
->> I don't think this changing of GPIO ordering, or
->> for that part the changing of the gpio_names from 
->> "mpcie2_reset" to "modem1-reset" is a good idea.
+> On 01/02/23 13:47, Hans de Goede wrote:
+>> Hi Rishit,
 >>
->> I'm not entirely sure how these GPIOs are supposed to be
->> consumed / used by userspace. But since they are not used
->> directly in this driver I assume userspace is supposed to
->> use either the (deprecated) sysfs GPIO API or the new ioctl
->> based GPIO API to toggle say "simswap" if it needs to.
+>> On 2/1/23 00:50, Rishit Bansal wrote:
+>>> The HP Omen Command Studio application includes a Light Studio feature
+>>> which can be used to control various features related to the keyboard
+>>> backlight via the 0x20009 command.
+>>>
+>>> The command supports the following queries:
+>>>
+>>> - 0x1: Checks if keyboard lighting is supported
+>>> - 0x2: Get the zone colors of each of the 4 zones on the keyboard
+>>> - 0x3: Set the zone colors of each of the 4 zones on the keyboard
+>>> - 0x4: Gets the state (on/off) of the backlight
+>>> - 0x5: Sets the state (on/off) of the backlight
+>>>
+>>> This patch introduces a new sysfs led class called
+>>> "hp_omen::kbd_backlight" which can be used to control the state of the
+>>> backlight. It also includes a sysfs RW attribute at the following
+>>> location:
+>>>
+>>> /sys/class/leds/hp_omen::kbd_backlight/zone_colors
+>>>
+>>> This file contains the color codes for each of the 4 zones of the
+>>> keyboard. Each zone's color is represented by R,G and B components, each
+>>> of which take a byte. Therefore, the total size of this file is always:
+>>>
+>>> 4 (zones) * 3 (components R,G,B) = 12 bytes
+>>>
+>>> An example output from this file is:
+>>>
+>>> $ xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
+>>> 00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
+>>>
+>>> The above output means that each zone has the following hex
+>>> color codes:
+>>> Zone 1: #01ff00
+>>> Zone 2: #ff01ff
+>>> Zone 3: #ffff01
+>>> Zone 4: #ff0101
+>>>
+>>> Colors can be set on the backlight by writing back to this file by
+>>> passing 12 bytes in the exact same format as above.
+>>>
+>>> Additionally this patch also maps the backlight event to the KEY_KBDILLUMTOGGLE
+>>> key so it shows the correct notification on userspace.
+>>>
+>>> The patch has been tested on an HP Omen 15-en0037AX (AMD) laptop.
+>>>
+>>> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
+>>> ---
+>>> Changes since v1:
+>>>   - Map backlight key to KEY_KBDILLUMTOGGLE
+>>>
+>>> Changes since v2:
+>>>   - Changes all str operations to memcpy() to handle null bytes edge
+>>>     cases
+>>>   - Renamed kbd_rgb to zone_colors, and moved it to inside the
+>>>     kbd_backlight directory
+>>>   - Added documentation for the zone_colors file
+>>>   - Removed KEY_KBDILLUMTOGGLE from the parse-map, and instead emitted
+>>>     directly
+>>>   - Remove logic to unregister from devm
+>>>   - Moved a few constants to #define
+>>>   - Updated path description with more details on zone_colors file format
+>>> ---
+>>>   .../ABI/testing/sysfs-platform-hp-wmi         |  33 +++++
+>>>   drivers/platform/x86/hp/hp-wmi.c              | 116 ++++++++++++++++++
+>>>   2 files changed, 149 insertions(+)
+>>>   create mode 100644 Documentation/ABI/testing/sysfs-platform-hp-wmi
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-platform-hp-wmi b/Documentation/ABI/testing/sysfs-platform-hp-wmi
+>>> new file mode 100644
+>>> index 000000000000..ccf2d29185ee
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-platform-hp-wmi
+>>> @@ -0,0 +1,33 @@
+>>> +What:        /sys/class/leds/hp_omen::kbd_backlight/zone_colors
+>>> +Date:        Feb 2023
+>>> +KernelVersion:    6.2
+>>> +Contact:    Rishit Bansal <rishitbansal0@gmail.com>
+>>> +Description:
+>>> +        This file stores the RGB color codes for each of
+>>> +        the 4 zones of the backlight on HP omen keyboards.
+>>> +
+>>> +        Each zone takes R,G,B values. The R,G,B values each can
+>>> +        range from 0-255. This means the whole state of the colors
+>>> +        can be represented in 12 bytes:
+>>> +
+>>> +        (4 zones * 3 color components (R,G,B) * 1 byte = 12 bytes)
+>>> +
+>>> +        Here is an example where we read the file:
+>>> +
+>>> +            xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
+>>> +            00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
+>>> +
+>>> +        The above output means that each zone has the following hex
+>>> +        color codes:
+>>> +        Zone 1: #01ff00
+>>> +        Zone 2: #ff01ff
+>>> +        Zone 3: #ffff01
+>>> +        Zone 4: #ff0101
+>>> +
+>>> +        The colors of the each of the zones can be set by writing
+>>> +        the same format to this file. For example to set all zones
+>>> +        to white, we would do:
+>>> +
+>>> +            echo -n -e '\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' | sudo tee /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
+>> Thank you for the new version and thank you for writing this doc, that is
+>> not only helpful for users but also for the review.
 >>
->> The old sysfs API exclusively uses pin-indexes inside a GPIO
->> chip to select the pin, so by changing the pin order you
->> have just broken the userspace API.
+>> Looking at the above I think what you should do is create not 1 but 4
+>> sysfs files like this:
 >>
->> And the new ioctl API can use either pin-indexes or GPIO-line-names,
->> so by changing the names you have also just potentially broken
->> that.
+>> /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
+>> /sys/class/leds/hp_omen::kbd_backlight/zone2_colors
+>> /sys/class/leds/hp_omen::kbd_backlight/zone3_colors
+>> /sys/class/leds/hp_omen::kbd_backlight/zone4_colors
 >>
->> Please keep the order as is and only use the new names for
->> the newly added models (so for APU6 I believe).
+>> And then a user could do e.g.:
+>>
+>> [hans@shalem ~]$ cat /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
+>> #01ff00
+>> [hans@shalem ~]$
+>>
+>> And e.g.:
+>>
+>> [hans@shalem ~]$ echo #ff0000 > /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
+>>
+>> This will make it much easier for users to use and generally
+>> speaking we try to avoid putting binary files in sysfs.
+>>
+>> You can take a look at drivers/hid/hid-lg-g15.c and then the
+>> color_store() function for an existing example of parsing
+>> rgb colors in the form of #rrggbb.
+>>
+>> Also if you look at lg_g510_kbd_led_write() you see there that
+>> that driver actually emulates a brightness range of 0-255 for
 > 
 > 
-> Hi, I'm not sure what the "correct" thing to do is, but just to add some background to the situation:
-> 
-> There are an increasing number of APU boards, which are *very* similar, and also through time the
-> pin allocations have muddled around, plus most recently, the BIOS can configure many things and has
-> started to use naming conventions different to the historic kernel naming
-> 
-> So I don't have a board in front of me to be definitive, but something like the following happened:
-> 
-> - APU2 used something like mpcie sockets 1&2 for USB stuff and hence LTE cards, socket 3 was msata
-> 
-> - Then another version APU3, I think moved these to sockets 2&3
-> 
-> - Then another version APU4, moved the USB to sockets 2&3 and wired up a second SIM slot in most
-> versions, including a SIM line swapper chip. Now you start to wonder if you should have labelled
-> things PCIE1, PCIE2, PCIE3, etc, when really they mean modem 1 and modem 2, etc?
-> 
-> - Then came APU5, which has 3x USB sockets, plus 3x mpcie sockets. These are wired to different pcie
-> numbers, and so the naming modem1, modem2, modem3 starts to make a lot more sense.
-> 
-> - APU6, which is mentioned in the original patch, is really just the same as one of the other
-> boards, but with different ethernet sockets (SFP vs copper)
+> I didn't think of the idea before to scale the RGB values based on the brightness range of (0-255), that's really interesting! Did a small test on my end, this does seem to function correctly, looks great. I'll include this feature in my follow up patch.
 > 
 > 
-> - There is also a rare feature, which is likely not known to most users, or even wired up correctly
-> on many boards. You have a reset/enable line to some of the mpcie slots. This again makes more sense
-> to label logically vs than per slot. It's really not clear that this feature is properly supported
-> or functioning on all boards (you can order special order boards wired in various ways). So changes
-> here are unlikely to be noticed by all but a handful of specialist users.
+>> /sys/class/leds/hp_omen::kbd_backlight/brightness
+>>
+>> by scaling the user requested zone values by the brightness
+>> value, giving a bigger brightness range in a standard
+>> sysfs interface which is e.g. supported by upower and by
+>> some desktop environments using upower, so that even
+>> without knowing how to control the specific zones users
+>> can still control at least the brightness.
+>>
+>> So I think that what you want to do is add:
+>>
+>> struct hp_omen_kbd_led {
+>>     struct led_classdev cdev;
+>>     u8 red[4];
+>>     u8 green[4];
+>>     u8 blue[4];
+>>     enum led_brightness brightness;
+>> };
+>>
+>> struct hp_omen_kbd_led omen_kbd_led;
+>>
+>> And then have 4 zone sysfs files which fill the red, green and blue
+>> arrays (and also fill these with initial values at probe) and
+>> then have an omen_kbd_led_update_zones() function which creates
+>> the 12 bytes you need to send by for each zone calculating the
+>> values similar to this lg_g510_kbd_led_write() code:
+>>
+>>          g15->transfer_buf[1] =
+>>                  DIV_ROUND_CLOSEST(g15_led->red * brightness, 255);
+>>          g15->transfer_buf[2] =
+>>                  DIV_ROUND_CLOSEST(g15_led->green * brightness, 255);
+>>          g15->transfer_buf[3] =
+>>                  DIV_ROUND_CLOSEST(g15_led->blue * brightness, 255);
+>>
+>> And then on store of a zone, you update the red, green, blue values
+>> for that zone and call omen_kbd_led_update_zones()
+>>
+>> and from set_omen_backlight_brightness() you then:
+>>
+>> 1. Store the brightness
+>> 2. Do the on/off setting of the backlight as done already
+>> 3. Call omen_kbd_led_update_zones() to update the zones for
+>>     the brightness change
+>>
+>> I believe that this will give a much nicer user experience
+>> then the current binary file which sets all 4 zones at once
+>> approach.
+>>
+>> Regards,
+>>
+>> Hans
 > 
 > 
-> Overall, if one could start again, the unifying feature would be label slots logically, ie modem1,
-> modem2, wifi1, wifi2, rather than numbering them based on how they are wired on a specific board rev.
-
-
-"this" below starts here:
-
-> Additionally, users who didn't load the APU driver, likely had ACPI named devices and these all have
-> different (and to my eye, more logical names). So whatever we decide to do here will cause some
-> breakage and inconsistency...
-
-Hmm, can you elaborate a bit on this?  Does ACPI somehow expose the LEDs / GPIO to userspace
-already and will adding APU5 / APU6 support make those ACPI exposed devices go away ?
-
-If yes then what is the advantage of using the APU driver over the ACPI exported functionality?
-
-Sorry for being a bit pedantic about this patch, but as a maintainer it is my responsibility
-to ensure that we don't break existing userspace, e.g. existing use-cases using the exposed
-ACPI devices.
-
-Note "fixing" this might be as simple as putting the new APU5 / APU6 support behind an extra Kconfig
-option (behind a modparam actually with a Kconfig option to select the default of the modparam).
-
-This way we can get distro's to opt-in to (or opt-out depending on the default) the new behavior,
-needing a modparam + Kconfig option for this is not ideal, but if there is a significant behavior
-change it is an escape hatch we can use.
-
-> Note that I submitted this previous patch "years ago", and I've somewhat given up on ever getting
-> the APU driver up to date.. I think in 2020, Enrico shot me down because he was working on some
-> grand unification for modem GPIO handling? (Enrico, please correct me on the details?) Hans, I think
-> if you search back to 2020 on "APU", you will see that you arbitrated in that thread?
-
-Yes I vaguely remember back then I was hoping / expecting you and Enrico to sort things
-out, but that seems to have not happened. And given Enrico's silence in this thread
-I'm not sure if Enrico is still working on this. So I guess now I get to figure out how
-to move forward here.
-
-> For whatever
-> reason, we seem to be stuck that there are competing voices blocking progress here. Every route
-> leads to some level of incompatibility. Personally I am a fairly large consumer of these devices,
-> but I really don't care what we decide, because we ship a custom software, where userspace will
-> match kernel, so we will update both in lockstep, whatever happens. Changes aren't a problem for me
-> personally.
+> The format with the hex color codes is definitely more user friendly. Just a small note, there is a side effect with having 4 different zone files: With the current format, it is possible to set all the colors of each zone using a single WMI method call, but with 4 different files, setting all the zones may be slightly less performant as now we'll be making 4 different WMI method calls (one for setting each zone). For userspace software which may rapidly set the colors of each zones to simulate certain effects, this would lead to an increase in the number of calls we make, and also cause possible delays. (Though from my testing, it seems the delays are negligible for most cases). Do you think it may be better to have a single zone file, with 4 hex codes instead, like the following:
 > 
-> My vote would be for a one-of breakage, to at least get everyone using the same
-> terms/names/whatever. I would suspect OpenWRT is probably the biggest voice here, so suggest we go
-> with whatever they suggest, and then at least we are all in sync for the future? If its a one off,
-> then suggest taking into account the ACPI naming as well?
+> $ cat /sys/class/leds/hp_omen::kbd_backlight/zone_colors
+> #01ff00
+> #01ff00
+> #01ff00
+> #01ff00
+> 
+> This would help us prevent the performance penalty and have it as a single WMI call. What are your thoughts on this?
 
-I agree that we need to find a way forward here. I would like to get this resolved
-and to get something merged into the mainline kernel for this.
+I have been thinking a bit about this and I still think that having separate per-zone
+files would be better. You can speedup things about 2x by only doing the call to read
+the buffer once and cache the result. At least assuming the non kbd zone related bits
+of the buffer never change (which should be easy enough to check).
 
-I also agree that if there is breakage it would be best to just break things only once.
+Actually my "thinking about this" includes a new alternate proposal. Rather then
+making up our own userspace API, as I did for the logitech 510 USB keyboard
+new support for multi-color backlights really should use the new standardized
+multi-color LED API:
 
-If there is going to breakage though I think we need some toggle to toggle between
-the old and new *mainline* kernel behavior. This could be as easy as making the modparam
-for this just abort probe() (return -ENODEV) on the new APU models when it is set to its
-"backward compat" value.
+https://www.kernel.org/doc/html/latest/leds/leds-class-multicolor.html
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-class-led-multicolor
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/includ
 
-> Note, there is a very big risk that I missed the point... Please be gentle. Quite possibly there is
-> a solution to just reorder some definitions and we land where we want to be? Is it that simple?
+I have been thinking about how to use this with a 4 zone keyboard and I believe
+that the best way to do that is to:
 
-Yes my original compatibility remark was just about reordering some definitions +
-keeping the old labels for the already supported APU models.
 
-So talking in code my proposal is to change this (in the new code):
+1. Forget about the global on/off control, individual zones can be turned off by
+setting the brightness of the zone to 0.
 
-#define APU2_GPIO_LINE_LED1		0
-#define APU2_GPIO_LINE_LED2		1
-#define APU2_GPIO_LINE_LED3		2
-#define APU2_GPIO_LINE_MODESW		3
-#define APU2_GPIO_LINE_RESETM1		4
-#define APU2_GPIO_LINE_RESETM2		5
-#define APU2_GPIO_LINE_SIMSWAP		6
+This does require the driver to at least turn on the global control once, or
+you could:
 
-to:
+1a) cache the global control value
+1b) on zone changes check if all zones are off, if they are all off, use the
+    global control to turn everything off, else turn the global control on;
+    and only make the actual WMI call for this if the global control state
+    changes vs the last cached value
 
-#define APU2_GPIO_LINE_LED1		0
-#define APU2_GPIO_LINE_LED2		1
-#define APU2_GPIO_LINE_LED3		2
-#define APU2_GPIO_LINE_MODESW		3
-#define APU2_GPIO_LINE_SIMSWAP		4
-#define APU2_GPIO_LINE_RESETM1		5
-#define APU2_GPIO_LINE_RESETM2		6
+2. Create 4 separate multi-color LED sysfs devices for each zone:
 
-Keeping the simswap signal as GPIO/pin number 4 instead of moving it
-to the end.
+/sys/class/leds/hp_omen::kbd_backlight-zone1/
+/sys/class/leds/hp_omen::kbd_backlight-zone2/
+/sys/class/leds/hp_omen::kbd_backlight-zone3/
+/sys/class/leds/hp_omen::kbd_backlight-zone4/
 
-And also instead of making changes to apu2_gpio_names[] (1)
-introduce a new apu5_gpio_names[] / apu6_gpio_names[] so that
-the labels don't change on the existing supported models.
+This way we are using standard existing userspace APIs rather then inventing
+new userspace API which IMHO is a much better approach.
 
-I'm less worried about the label change then about the index
-change, because typical GPIO use from userspace will use
-indexes not labels. So if having different labels on
-different APU versions is a big problem you might be able to
-convince me to change the labels on the old models too.
+Note this is just a suggestion, if you disagree (and can motivate
+why you think this is a bad idea) please do speak up about this.
 
-Summarizing:
+And please let me know if you need any help with converting the code
+to the ed-class-multicolor inetnal kernel APIs there are not that
+much users yet, so I have been unable to find a good example to
+point you to.
 
-Please change:
-
-1. The GPIO indexing to keep simswap at its old place
-2. Use the labels only on new models (open for discussion).
-
-Open questions:
-1. Can you elaborate a bit about the ACPI way of accessing these
-things. If that is actually a thing, we cannot just break it
-(but we could use a module-parameter for still breaking it).
-
-2. You mention this is important to the openwrt community are
-there already openwrt people in the Cc here so that we can get
-their input? If not can you reach out to them ?
+A downside of this is that it lacks e.g. support in upower. But the
+kbd_backlight code in upower needs work anyways. E.g. upower does not
+work with backlit USB keyboards if these are plugged in after boot,
+or unplugged + re-plugged after boot. So someone really needs to
+spend some time to improve the upower keyboard backlight code anyways.
 
 Regards,
 
@@ -270,5 +351,183 @@ Hans
 
 
 
-1) other then adjusting the initializers for the MPCIE? -> RESETM? rename
+
+
+
+    
+
+>>> +
+>>> +
+>>> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>>> index 0a99058be813..f86cb7feaad4 100644
+>>> --- a/drivers/platform/x86/hp/hp-wmi.c
+>>> +++ b/drivers/platform/x86/hp/hp-wmi.c
+>>> @@ -27,6 +27,7 @@
+>>>   #include <linux/rfkill.h>
+>>>   #include <linux/string.h>
+>>>   #include <linux/dmi.h>
+>>> +#include <linux/leds.h>
+>>>     MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>>>   MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
+>>> @@ -136,6 +137,7 @@ enum hp_wmi_command {
+>>>       HPWMI_WRITE    = 0x02,
+>>>       HPWMI_ODM    = 0x03,
+>>>       HPWMI_GM    = 0x20008,
+>>> +    HPWMI_KB    = 0x20009,
+>>>   };
+>>>     enum hp_wmi_hardware_mask {
+>>> @@ -254,6 +256,9 @@ static const char * const tablet_chassis_types[] = {
+>>>     #define DEVICE_MODE_TABLET    0x06
+>>>   +#define OMEN_ZONE_COLOR_OFFSET 0x19
+>>> +#define OMEN_ZONE_COLOR_LEN 0x0c
+>>> +
+>>>   /* map output size to the corresponding WMI method id */
+>>>   static inline int encode_outsize_for_pvsz(int outsize)
+>>>   {
+>>> @@ -734,12 +739,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+>>>       return count;
+>>>   }
+>>>   +static ssize_t zone_colors_show(struct device *dev,
+>>> +                    struct device_attribute *attr, char *buf)
+>>> +{
+>>> +    u8 val[128];
+>>> +
+>>> +    int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
+>>> +                       zero_if_sup(val), sizeof(val));
+>>> +
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    memcpy(buf, &val[OMEN_ZONE_COLOR_OFFSET], OMEN_ZONE_COLOR_LEN);
+>>> +
+>>> +    return OMEN_ZONE_COLOR_LEN;
+>>> +}
+>>> +
+>>> +static ssize_t zone_colors_store(struct device *dev,
+>>> +                     struct device_attribute *attr,
+>>> +                     const char *buf, size_t count)
+>>> +{
+>>> +    u8 val[128];
+>>> +    int ret;
+>>> +
+>>> +    ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
+>>> +                   zero_if_sup(val), sizeof(val));
+>>> +
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    if (count != OMEN_ZONE_COLOR_LEN)
+>>> +        return -1;
+>>> +
+>>> +    memcpy(&val[OMEN_ZONE_COLOR_OFFSET], buf, count);
+>>> +
+>>> +    ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
+>>> +                   0);
+>>> +
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    return OMEN_ZONE_COLOR_LEN;
+>>> +}
+>>> +
+>>>   static DEVICE_ATTR_RO(display);
+>>>   static DEVICE_ATTR_RO(hddtemp);
+>>>   static DEVICE_ATTR_RW(als);
+>>>   static DEVICE_ATTR_RO(dock);
+>>>   static DEVICE_ATTR_RO(tablet);
+>>>   static DEVICE_ATTR_RW(postcode);
+>>> +static DEVICE_ATTR_RW(zone_colors);
+>>>     static struct attribute *hp_wmi_attrs[] = {
+>>>       &dev_attr_display.attr,
+>>> @@ -752,6 +801,12 @@ static struct attribute *hp_wmi_attrs[] = {
+>>>   };
+>>>   ATTRIBUTE_GROUPS(hp_wmi);
+>>>   +static struct attribute *omen_kbd_led_attrs[] = {
+>>> +    &dev_attr_zone_colors.attr,
+>>> +    NULL,
+>>> +};
+>>> +ATTRIBUTE_GROUPS(omen_kbd_led);
+>>> +
+>>>   static void hp_wmi_notify(u32 value, void *context)
+>>>   {
+>>>       struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+>>> @@ -853,6 +908,10 @@ static void hp_wmi_notify(u32 value, void *context)
+>>>       case HPWMI_PROXIMITY_SENSOR:
+>>>           break;
+>>>       case HPWMI_BACKLIT_KB_BRIGHTNESS:
+>>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
+>>> +        input_sync(hp_wmi_input_dev);
+>>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
+>>> +        input_sync(hp_wmi_input_dev);
+>>>           break;
+>>>       case HPWMI_PEAKSHIFT_PERIOD:
+>>>           break;
+>>> @@ -1294,6 +1353,60 @@ static int thermal_profile_setup(void)
+>>>     static int hp_wmi_hwmon_init(void);
+>>>   +static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
+>>> +{
+>>> +    u8 val;
+>>> +
+>>> +    int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
+>>> +
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    return (val & 0x80) ? LED_ON : LED_OFF;
+>>> +}
+>>> +
+>>> +static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
+>>> +{
+>>> +    char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
+>>> +
+>>> +    hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
+>>> +                       sizeof(buffer), 0);
+>>> +}
+>>> +
+>>> +static struct led_classdev omen_kbd_led = {
+>>> +    .name = "hp_omen::kbd_backlight",
+>>> +    .brightness_set = set_omen_backlight_brightness,
+>>> +    .brightness_get = get_omen_backlight_brightness,
+>>> +    .max_brightness = 1,
+>>> +    .groups = omen_kbd_led_groups,
+>>> +};
+>>> +
+>>> +static bool is_omen_lighting_supported(void)
+>>> +{
+>>> +    u8 val;
+>>> +
+>>> +    int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
+>>> +
+>>> +    if (ret)
+>>> +        return false;
+>>> +
+>>> +    return (val & 1) == 1;
+>>> +}
+>>> +
+>>> +static int omen_backlight_init(struct device *dev)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
+>>> +
+>>> +    ret = devm_led_classdev_register(dev, &omen_kbd_led);
+>>> +
+>>> +    if (ret < 0)
+>>> +        return -1;
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>>   static int __init hp_wmi_bios_setup(struct platform_device *device)
+>>>   {
+>>>       int err;
+>>> @@ -1321,6 +1434,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>>>         thermal_profile_setup();
+>>>   +    if (is_omen_lighting_supported())
+>>> +        omen_backlight_init(&device->dev);
+>>> +
+>>>       return 0;
+>>>   }
+>>>   
+> 
 
