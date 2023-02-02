@@ -2,117 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED672C636D3
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 01:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E7AC05027
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 01:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjBBBJE (ORCPT
+        id S230218AbjBBBJE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Wed, 1 Feb 2023 20:09:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjBBBJC (ORCPT
+        with ESMTP id S229632AbjBBBJD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:09:02 -0500
+        Wed, 1 Feb 2023 20:09:03 -0500
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B286D3F2A9;
-        Wed,  1 Feb 2023 17:08:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE7246174;
+        Wed,  1 Feb 2023 17:09:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675300139; x=1706836139;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2E9LVcJw3Kk6q7B8/ENCBNmYX418E19egKvZ3PU0pdA=;
-  b=npLb678luk+QFjh54XlgrmchfiBAoHOkqe/4ExF6vOxZ3oLkjc51e6qc
-   gGjYHEmlEGpJZC9wWjp1+Wjt09jT9PKQoJbF9e7rRtopat9oPJHNt1+A2
-   sYOSGxB0rnTNBkYm0nXxWWUPToHRwbPW3B8bN4MrmCapZOyuAmWUQCS4/
-   Ru+wmguKXIUVanFU830hxbSQCej6kCD6YWRUK8xDgElzTOjpsVJXiiXub
-   cdxIrxRElK+3WsXIj4DVAUoP1riEzgJ8J2uemG47ljCjjC7xz9X0z1GGp
-   GmpqbrfCqo5ZKsI63mzYMHknOGyrOdexpeYWsAd6VU4U2SMfbI8xnv76R
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="355654298"
+  t=1675300142; x=1706836142;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MmA/+gLVYlCrWM54OgGMSsjZO5kDppV+ZBRtY3CYSqs=;
+  b=hGvxJRNW5Ar8lsa3s+3GYq8+lZzbsZ6jIMY8p3N/+6zYpF/MCDLrv71P
+   QLku44ib6x22vepuL9MARyKijpYchByO/1h6nCplsQxc9oFDO/KjDFT6i
+   5Ts2vC9OGA4+EhefUIv0oFn0u7Dd3bdYxa8JX6ocSuUvqnL+JwdQXHkUX
+   tiUENxa9IGzXopQh4SrXln6zGtA/VzR3hwyZE6ndgHfQUVkbxhS8LHjl4
+   8LFM2YG59Gc3qCXYOYE+8f28xGUfIHIocXtpq/NZ1xW7OpCU3LYO11ilI
+   INaCeFxMWK8FmdM8KGYw4+ED/d2in9qWHlHJgBw3gX8z3hl/N+SNB8xIz
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="355654310"
 X-IronPort-AV: E=Sophos;i="5.97,266,1669104000"; 
-   d="scan'208";a="355654298"
+   d="scan'208";a="355654310"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 17:08:15 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 17:08:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="665087923"
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="665087926"
 X-IronPort-AV: E=Sophos;i="5.97,266,1669104000"; 
-   d="scan'208";a="665087923"
+   d="scan'208";a="665087926"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2023 17:08:15 -0800
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 0/7]  Add TPMI support
-Date:   Wed,  1 Feb 2023 17:07:31 -0800
-Message-Id: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>
+Subject: [PATCH 3/7] platform/x86/intel/vsec: Support private data
+Date:   Wed,  1 Feb 2023 17:07:34 -0800
+Message-Id: <20230202010738.2186174-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
+References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The TPMI (Topology Aware Register and PM Capsule Interface) provides a
-flexible, extendable and PCIe enumerable MMIO interface for PM features.
+Add fields to struct intel_vsec_device, so that core module (which
+creates aux bus devices) can pass private data to the client drivers.
 
-For example Intel Speed Select Technology (Intel SST) can replace all
-mailbox commands with direct MMIO access. This reduces latency for
-SST commands and also defines an architectural interface which will
-persist for several next generations.
+For example there is one vsec device instance per CPU package. On a
+multi package system, this private data can be used to pass the package
+ID. This package id can be used by client drivers to change power
+settings for a specific CPU package by targeting MMIO space of the
+correct PCI device.
 
-Also Intel RAPL (Running Average Power Limit) provides a MMIO
-interface using TPMI. This has advantage over traditional MSR
-(Model Specific Register) interface, where a thread needs to be scheduled
-on the target CPU to read or write. Also the RAPL features vary between
-CPU models, and hence lot of model specific code. Here TPMI provides an
-architectural interface by providing hierarchical tables and fields,
-which will not need any model specific implementation.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Acked-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/vsec.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Same value is for Intel Uncore frequency where MSR interface can't
-be used because of multiple domains.
-
-The TPMI interface uses a PCI VSEC structure to expose the location of
-MMIO region, which is handled by Intel VSEC driver. Intel VSEC driver is
-already present in upstream kernel.
-
-This series contains the base driver, which parses TPMI MMIO region
-and creates device nodes for supported features. The current set of
-PM feature support includes, Intel Speed Select, RAPL, Uncore frequency
-scaling.
-
-The first there patches updates Intel VSEC driver to add TPMI VSEC ID
-and enhance to reuse the code.
-The next three patches adds TPMI base driver support.
-The last patch adds MAINTAINERS entry.
-
-The TPMI documentation can be downloaded from:
-https://github.com/intel/tpmi_power_management
-
-This series cleanly applies on 6.2-rc1.
-
-Srinivas Pandruvada (7):
-  platform/x86/intel/vsec: Add TPMI ID
-  platform/x86/intel/vsec: Enhance and Export intel_vsec_add_aux()
-  platform/x86/intel/vsec: Support private data
-  platform/x86/intel: Intel TPMI enumeration driver
-  platform/x86/intel/tpmi: Process CPU package mapping
-  platform/x86/intel/tpmi: ADD tpmi external interface for tpmi feature
-    drivers
-  MAINTAINERS: Add entry for TPMI driver
-
- MAINTAINERS                         |   6 +
- drivers/platform/x86/intel/Kconfig  |  13 +
- drivers/platform/x86/intel/Makefile |   4 +
- drivers/platform/x86/intel/tpmi.c   | 415 ++++++++++++++++++++++++++++
- drivers/platform/x86/intel/vsec.c   |  21 +-
- drivers/platform/x86/intel/vsec.h   |   6 +
- include/linux/intel_tpmi.h          |  30 ++
- 7 files changed, 490 insertions(+), 5 deletions(-)
- create mode 100644 drivers/platform/x86/intel/tpmi.c
- create mode 100644 include/linux/intel_tpmi.h
-
+diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
+index d02c340fd458..ae8fe92c5595 100644
+--- a/drivers/platform/x86/intel/vsec.h
++++ b/drivers/platform/x86/intel/vsec.h
+@@ -38,6 +38,8 @@ struct intel_vsec_device {
+ 	struct ida *ida;
+ 	struct intel_vsec_platform_info *info;
+ 	int num_resources;
++	void *priv_data;
++	size_t priv_data_size;
+ };
+ 
+ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
 -- 
 2.31.1
 
