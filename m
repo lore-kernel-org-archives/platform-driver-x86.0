@@ -2,532 +2,177 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E72C05027
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 12:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE4DC05027
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Feb 2023 14:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232405AbjBBMpp (ORCPT
+        id S232466AbjBBOpk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Feb 2023 07:45:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
+        Thu, 2 Feb 2023 09:45:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231829AbjBBMpf (ORCPT
+        with ESMTP id S232481AbjBBOpi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Feb 2023 07:45:35 -0500
+        Thu, 2 Feb 2023 09:45:38 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02C8E043
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Feb 2023 04:44:29 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2469B8660F
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Feb 2023 06:44:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675341843;
+        s=mimecast20190719; t=1675349093;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nDU0zHfCn3XfqFXex1ZgavlON6vSGnPmPRoOwR3rZ0s=;
-        b=HHiqnQ8/cWPW8WF5HZ3zJdNxM8Zb9+rkPCzCNFsO69ARwRyD5MVMSFhDkBCQGDMQASNF+X
-        L/Jil0GyABYA/O8IZfs7DCvuHcQr/x+lI6js0S2FuivvlzPqFh2ISxd09FKUIRGSSkh/LE
-        yXkvwpxKnoIjIvyU1Q88H5WKLCDK0nI=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=cYohsSU33VaUpeQ+uQ51lUIjtJ3+reB1iAMUDAsj1eQ=;
+        b=BZ4nlR/8Af3UusXa/bP0hr/a1Oh235UJceTFRhyyfJBV7+l6lcQe+A5uftYcoiboaIqLnL
+        5Cefi2zx/jab2683jFGcWr+Kl3rVEUGmc1C/ctPGb8OxjmMkok6sDwILfvOYbaUvs9ZyO8
+        jFy07PrESg48UDFbahW7pD/W5w8/9Wk=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-372-fyojdPqFNIGArzqvuwubcA-1; Thu, 02 Feb 2023 07:44:02 -0500
-X-MC-Unique: fyojdPqFNIGArzqvuwubcA-1
-Received: by mail-ed1-f71.google.com with SMTP id bo27-20020a0564020b3b00b004a6c2f6a226so1174974edb.15
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Feb 2023 04:44:02 -0800 (PST)
+ us-mta-654-b4Y574O9PFetk-ycBa7AMw-1; Thu, 02 Feb 2023 09:44:52 -0500
+X-MC-Unique: b4Y574O9PFetk-ycBa7AMw-1
+Received: by mail-ed1-f69.google.com with SMTP id k17-20020aa7c051000000b004a89bd76ca1so23886edo.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Feb 2023 06:44:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nDU0zHfCn3XfqFXex1ZgavlON6vSGnPmPRoOwR3rZ0s=;
-        b=w0CZJXqNMc9XPWrpNmd0WFuFPjKRM0DETjxbyvP4B87qzdYedDo3owkgJETlh6CMK6
-         FWHaxxxs0pan8unUvUF9alKuFQ/Fz8Ykcke/zQrwQOC5QIi9aGnPRkaZfQvSXhLjIbc2
-         aAkD+D0KplUUOcgPgFo0hbguev3geWGpalCv8Oq5Jof2se0sqmrXZOgKcHjVWYL8EU8M
-         E5d3lHwo/+UhF9CAAbuoRU1MgEqgvxR4jvoOE2UVtQ3vopv30+FX7I0DMPG5Vffycr0L
-         eY4JD2BKEBkzPgnpTRJKwlkps1XnKkb3cQouH1rIbF4Mv4BIij6DYczkY8RHxV7qkZ4q
-         nKJg==
-X-Gm-Message-State: AO0yUKWTByDVS96M+QUDMxbeDf1SPubsTv+l91NRgGP3sUsfM7GsiB+t
-        2KtyClZdI8s3UR31QvXQ0Z2Yfr8W9qFtOGpLuXznv3qCLOj+MoHrdgQyFTW5mwF28hBrJihVmJD
-        jVBf/X7vRHZ5XDJR6gu4wpYEWROlFMCBJvw==
-X-Received: by 2002:a17:906:4b57:b0:87b:d41b:67dc with SMTP id j23-20020a1709064b5700b0087bd41b67dcmr5222643ejv.74.1675341841017;
-        Thu, 02 Feb 2023 04:44:01 -0800 (PST)
-X-Google-Smtp-Source: AK7set8DLv3AMJy5MBHVpRS5ajiX8OFEZl5V6ZGxHFbJl6tjyL9zZbG7E3nyAJ+xghihd3w4GQsaoQ==
-X-Received: by 2002:a17:906:4b57:b0:87b:d41b:67dc with SMTP id j23-20020a1709064b5700b0087bd41b67dcmr5222629ejv.74.1675341840704;
-        Thu, 02 Feb 2023 04:44:00 -0800 (PST)
+        bh=cYohsSU33VaUpeQ+uQ51lUIjtJ3+reB1iAMUDAsj1eQ=;
+        b=1vz/tqxlxsXrAqpSuDOjXKBat2Y5Ro3vXg9kzNqJG4BFu5WUWR8PY7qqzJhlFLFygx
+         psCrxowB13LYKA6gkKAbm+WYQiLkncZy2Yr8GOKbpMfy2K/r5v3Ok7MvCaU6bE/UYteV
+         AvTsso95zpbQHRuTZ47VhmahPwvIfmR0LLL5SaeFd0ROxPXwXEjMHznWvGflHL69MW3M
+         uoPSoeG8Ue3o+mhzfzYqZxwqXNXsHwH3MFRJIMba7aIP4CnfWfnAZ9aB8fgu3NQZKiNK
+         N+RtkR6VHFsVxcnxoBRYYwXOOtJNi5UnUoPuEhzMyTesZ8ECyuUV2XPKJFhTPln5WJ1h
+         dGPA==
+X-Gm-Message-State: AO0yUKVa8KbMNoaGk2igECpw6DibuGMB3+rtU5VS2xXLiiI/ksRlFWtA
+        c5tQS7zOi3jTau5jNraXKC1dHFNJuqbg7F3qs8+37wN3jHiimYjGNtnBjDFLRsYvE+Zm6/u7n/u
+        XCL9+i5fvl7T5fgJOZRipO1bWiRSmkwe6Gg==
+X-Received: by 2002:a05:6402:2cb:b0:4a2:311e:5834 with SMTP id b11-20020a05640202cb00b004a2311e5834mr6330000edx.6.1675349091102;
+        Thu, 02 Feb 2023 06:44:51 -0800 (PST)
+X-Google-Smtp-Source: AK7set8qqztC5aWyryC3aF6naHuP5XRm7lpOpmcNL+RTl7PmTLcp+5ymbbblarYFyI4VJYLv3MkbLg==
+X-Received: by 2002:a05:6402:2cb:b0:4a2:311e:5834 with SMTP id b11-20020a05640202cb00b004a2311e5834mr6329989edx.6.1675349090906;
+        Thu, 02 Feb 2023 06:44:50 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hz17-20020a1709072cf100b0087879f8c65asm11135670ejc.89.2023.02.02.04.43.59
+        by smtp.gmail.com with ESMTPSA id a66-20020a509ec8000000b00482e0c55e2bsm3355915edf.93.2023.02.02.06.44.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 04:44:00 -0800 (PST)
-Message-ID: <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
-Date:   Thu, 2 Feb 2023 13:43:59 +0100
+        Thu, 02 Feb 2023 06:44:50 -0800 (PST)
+Message-ID: <6b004430-4c11-f669-55c0-84df6d39d6ab@redhat.com>
+Date:   Thu, 2 Feb 2023 15:44:49 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH V3] platform/x86: hp-wmi: Support omen backlight control
- wmi-acpi methods
+Subject: Re: New Lenovo Legion Fan, Temperature, Power Mode Driver
 Content-Language: en-US, nl
-To:     Rishit Bansal <rishitbansal0@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
- <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+To:     John Martens <john.martens4@proton.me>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "ike.pan@canonical.com" <ike.pan@canonical.com>
+References: <cchW8yA1BnN-yMnXp0EY8oKubzPC721jNMylHVzSVuf5C0YAhC7gYkSjhxIpZMv7K9hMw4ezLbxGEtEd7Gs_bAIoDizRSQG2V3Ql5nl5G_0=@proton.me>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+In-Reply-To: <cchW8yA1BnN-yMnXp0EY8oKubzPC721jNMylHVzSVuf5C0YAhC7gYkSjhxIpZMv7K9hMw4ezLbxGEtEd7Gs_bAIoDizRSQG2V3Ql5nl5G_0=@proton.me>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi John,
 
-On 2/1/23 14:59, Rishit Bansal wrote:
-> Hi Hans,
+On 1/10/23 14:26, John Martens wrote:
+> Dear Kernel devs, Mr. Hans de Goede, Mr. Ike Panhc,
 > 
-> On 01/02/23 13:47, Hans de Goede wrote:
->> Hi Rishit,
->>
->> On 2/1/23 00:50, Rishit Bansal wrote:
->>> The HP Omen Command Studio application includes a Light Studio feature
->>> which can be used to control various features related to the keyboard
->>> backlight via the 0x20009 command.
->>>
->>> The command supports the following queries:
->>>
->>> - 0x1: Checks if keyboard lighting is supported
->>> - 0x2: Get the zone colors of each of the 4 zones on the keyboard
->>> - 0x3: Set the zone colors of each of the 4 zones on the keyboard
->>> - 0x4: Gets the state (on/off) of the backlight
->>> - 0x5: Sets the state (on/off) of the backlight
->>>
->>> This patch introduces a new sysfs led class called
->>> "hp_omen::kbd_backlight" which can be used to control the state of the
->>> backlight. It also includes a sysfs RW attribute at the following
->>> location:
->>>
->>> /sys/class/leds/hp_omen::kbd_backlight/zone_colors
->>>
->>> This file contains the color codes for each of the 4 zones of the
->>> keyboard. Each zone's color is represented by R,G and B components, each
->>> of which take a byte. Therefore, the total size of this file is always:
->>>
->>> 4 (zones) * 3 (components R,G,B) = 12 bytes
->>>
->>> An example output from this file is:
->>>
->>> $ xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
->>> 00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
->>>
->>> The above output means that each zone has the following hex
->>> color codes:
->>> Zone 1: #01ff00
->>> Zone 2: #ff01ff
->>> Zone 3: #ffff01
->>> Zone 4: #ff0101
->>>
->>> Colors can be set on the backlight by writing back to this file by
->>> passing 12 bytes in the exact same format as above.
->>>
->>> Additionally this patch also maps the backlight event to the KEY_KBDILLUMTOGGLE
->>> key so it shows the correct notification on userspace.
->>>
->>> The patch has been tested on an HP Omen 15-en0037AX (AMD) laptop.
->>>
->>> Signed-off-by: Rishit Bansal <rishitbansal0@gmail.com>
->>> ---
->>> Changes since v1:
->>>   - Map backlight key to KEY_KBDILLUMTOGGLE
->>>
->>> Changes since v2:
->>>   - Changes all str operations to memcpy() to handle null bytes edge
->>>     cases
->>>   - Renamed kbd_rgb to zone_colors, and moved it to inside the
->>>     kbd_backlight directory
->>>   - Added documentation for the zone_colors file
->>>   - Removed KEY_KBDILLUMTOGGLE from the parse-map, and instead emitted
->>>     directly
->>>   - Remove logic to unregister from devm
->>>   - Moved a few constants to #define
->>>   - Updated path description with more details on zone_colors file format
->>> ---
->>>   .../ABI/testing/sysfs-platform-hp-wmi         |  33 +++++
->>>   drivers/platform/x86/hp/hp-wmi.c              | 116 ++++++++++++++++++
->>>   2 files changed, 149 insertions(+)
->>>   create mode 100644 Documentation/ABI/testing/sysfs-platform-hp-wmi
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-platform-hp-wmi b/Documentation/ABI/testing/sysfs-platform-hp-wmi
->>> new file mode 100644
->>> index 000000000000..ccf2d29185ee
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-platform-hp-wmi
->>> @@ -0,0 +1,33 @@
->>> +What:        /sys/class/leds/hp_omen::kbd_backlight/zone_colors
->>> +Date:        Feb 2023
->>> +KernelVersion:    6.2
->>> +Contact:    Rishit Bansal <rishitbansal0@gmail.com>
->>> +Description:
->>> +        This file stores the RGB color codes for each of
->>> +        the 4 zones of the backlight on HP omen keyboards.
->>> +
->>> +        Each zone takes R,G,B values. The R,G,B values each can
->>> +        range from 0-255. This means the whole state of the colors
->>> +        can be represented in 12 bytes:
->>> +
->>> +        (4 zones * 3 color components (R,G,B) * 1 byte = 12 bytes)
->>> +
->>> +        Here is an example where we read the file:
->>> +
->>> +            xxd /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
->>> +            00000000: 01ff 00ff 01ff ffff 01ff 0101            ............
->>> +
->>> +        The above output means that each zone has the following hex
->>> +        color codes:
->>> +        Zone 1: #01ff00
->>> +        Zone 2: #ff01ff
->>> +        Zone 3: #ffff01
->>> +        Zone 4: #ff0101
->>> +
->>> +        The colors of the each of the zones can be set by writing
->>> +        the same format to this file. For example to set all zones
->>> +        to white, we would do:
->>> +
->>> +            echo -n -e '\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' | sudo tee /sys/class/leds/hp_omen\:\:kbd_backlight/zone_colors
->> Thank you for the new version and thank you for writing this doc, that is
->> not only helpful for users but also for the review.
->>
->> Looking at the above I think what you should do is create not 1 but 4
->> sysfs files like this:
->>
->> /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
->> /sys/class/leds/hp_omen::kbd_backlight/zone2_colors
->> /sys/class/leds/hp_omen::kbd_backlight/zone3_colors
->> /sys/class/leds/hp_omen::kbd_backlight/zone4_colors
->>
->> And then a user could do e.g.:
->>
->> [hans@shalem ~]$ cat /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
->> #01ff00
->> [hans@shalem ~]$
->>
->> And e.g.:
->>
->> [hans@shalem ~]$ echo #ff0000 > /sys/class/leds/hp_omen::kbd_backlight/zone1_colors
->>
->> This will make it much easier for users to use and generally
->> speaking we try to avoid putting binary files in sysfs.
->>
->> You can take a look at drivers/hid/hid-lg-g15.c and then the
->> color_store() function for an existing example of parsing
->> rgb colors in the form of #rrggbb.
->>
->> Also if you look at lg_g510_kbd_led_write() you see there that
->> that driver actually emulates a brightness range of 0-255 for
+> I am currently working on a driver for fan control, fan speed, temperature sensors, and power mode (platform profile) for Lenovo Legion Laptops. Switching iGPU/dGPU could also be possible. It is a port of the closed and open tools in Windows LenovoLegionToolkit, Vantage, LegionFanControl. I am testing it on different laptops with the help of a forum/chat and its working quite good.
 > 
+> There is a README (https://github.com/johnfanv2/LenovoLegionLinux) and code (https://github.com/johnfanv2/LenovoLegionLinux/blob/main/kernel_module/legion-laptop.c).
 > 
-> I didn't think of the idea before to scale the RGB values based on the brightness range of (0-255), that's really interesting! Did a small test on my end, this does seem to function correctly, looks great. I'll include this feature in my follow up patch.
+> I would be interested to get your opinion.
 > 
+> Questions
 > 
->> /sys/class/leds/hp_omen::kbd_backlight/brightness
->>
->> by scaling the user requested zone values by the brightness
->> value, giving a bigger brightness range in a standard
->> sysfs interface which is e.g. supported by upower and by
->> some desktop environments using upower, so that even
->> without knowing how to control the specific zones users
->> can still control at least the brightness.
->>
->> So I think that what you want to do is add:
->>
->> struct hp_omen_kbd_led {
->>     struct led_classdev cdev;
->>     u8 red[4];
->>     u8 green[4];
->>     u8 blue[4];
->>     enum led_brightness brightness;
->> };
->>
->> struct hp_omen_kbd_led omen_kbd_led;
->>
->> And then have 4 zone sysfs files which fill the red, green and blue
->> arrays (and also fill these with initial values at probe) and
->> then have an omen_kbd_led_update_zones() function which creates
->> the 12 bytes you need to send by for each zone calculating the
->> values similar to this lg_g510_kbd_led_write() code:
->>
->>          g15->transfer_buf[1] =
->>                  DIV_ROUND_CLOSEST(g15_led->red * brightness, 255);
->>          g15->transfer_buf[2] =
->>                  DIV_ROUND_CLOSEST(g15_led->green * brightness, 255);
->>          g15->transfer_buf[3] =
->>                  DIV_ROUND_CLOSEST(g15_led->blue * brightness, 255);
->>
->> And then on store of a zone, you update the red, green, blue values
->> for that zone and call omen_kbd_led_update_zones()
->>
->> and from set_omen_backlight_brightness() you then:
->>
->> 1. Store the brightness
->> 2. Do the on/off setting of the backlight as done already
->> 3. Call omen_kbd_led_update_zones() to update the zones for
->>     the brightness change
->>
->> I believe that this will give a much nicer user experience
->> then the current binary file which sets all 4 zones at once
->> approach.
->>
->> Regards,
->>
->> Hans
+> Should this extend ideapad_laptop.c or a new file?
+>     - pro:
+>         - both access parts of the same hardware
+>     - con:
+>         - both files are already quite large
+>         - it only works on Lenovo Legion laptops that have this 
+>           custom control firmware in the embedded controller (EC)
+>         - there is almost no reuse of code
+
+As you say there is almost 0 code re-use so I don't think that
+adding this to ideapad_laptop.c is worth the trouble, ideapad_laptop.c
+already is big enough as is.
+
+I do see that you bind to the PNP0C09 or VPC2004 device. Since you
+poke the EC RAM and don't make any ACPI calls AFAICT it would be
+best to just create your own lenovo_legion platform_device to
+bind to, using platform_create_bundle() which will create
+a platform_device + platform_driver for you in one go.
+
+This will avoid conflicts with other drivers binding to
+the VPC2004 device such as ideapad_laptop.
+
+And you can then also specify the used superio mem or io-ports
+as resources (and claim then in your probe()) so that these
+properly show up in /proc/ioports and so that conflicts
+with other drivers also banging on these ports get detected.
+
+> Which method do you prefer writing to EC memory for older models? With ioremap or outb? 
+>     - To use ioremap one needs to get the start address. It is
+>       different on Intel vs AMD. It is the same as a OperationRegion
+>       in the ACPI tables, e.g. "OperationRegion (ERAX, SystemMemory,  
+>       0xFE00D400, 0xFF)". However, I have found no kernel functions  
+>       to get the address (here 0xFE00D400) of a  OperationRegion.  
+>       One could also hardcode it for each model/firmware.
+
+These addresses sometimes change at boot-time when different BIOS
+options are enabled/disabled so I would advice against
+hardcoding them.
+
+Have you looked in:
+
+sudo cat /proc/iomem
+
+To see if the range is perhaps known to the kernel somehow already ?
+
+>     - alternative (which I am currently using) is sending commands    
+>       to IO ports 0x4E/0x4F (Super IO controller). 
+
+I wonder if these ports are not already in use by some other driver
+causing possible conflicts. Are they not listed in "sudo cat /proc/ioports" /
+
+> Background
 > 
+> The laptops come with an embedded controller (EC) from ITE. These usually come with a 3 point fan curve in ROM, but also can be flashed with a small additional custom program. Lenovo implemented implemented a 10 point fan curve. The program is also shipped with each EFI update.
 > 
-> The format with the hex color codes is definitely more user friendly. Just a small note, there is a side effect with having 4 different zone files: With the current format, it is possible to set all the colors of each zone using a single WMI method call, but with 4 different files, setting all the zones may be slightly less performant as now we'll be making 4 different WMI method calls (one for setting each zone). For userspace software which may rapidly set the colors of each zones to simulate certain effects, this would lead to an increase in the number of calls we make, and also cause possible delays. (Though from my testing, it seems the delays are negligible for most cases). Do you think it may be better to have a single zone file, with 4 hex codes instead, like the following:
+> The fan curve can be edited by writing to some memory locations in the EC. These locations are
 > 
-> $ cat /sys/class/leds/hp_omen::kbd_backlight/zone_colors
-> #01ff00
-> #01ff00
-> #01ff00
-> #01ff00
-> 
-> This would help us prevent the performance penalty and have it as a single WMI call. What are your thoughts on this?
+> The driver works by:
+> - directly writing/reading embedded controller memory
+>     - older models (2020-2021): there are two possibilities
+>         - the EC memory is already memory mapped, so one can 
+>           use ioremap
+>         - one can use outb/inb and write sequenc of commands to 
+>           port 0x43, 0x4F (super IO ports)
+>         - ideapad_laptop.c writes to some parts of EC memory 
+>           with ACPI methods VPCR, VPCW. However, these do not seem  
+>           to work in the memory region with the fan curve.
 
-I have been thinking a bit about this and I still think that having separate per-zone
-files would be better. You can speedup things about 2x by only doing the call to read
-the buffer once and cache the result. At least assuming the non kbd zone related bits
-of the buffer never change (which should be easy enough to check).
+Ok, so lets see of we can figure out a better way to get the EC
+memory address and if not I guess outb/inb it is.
 
-Actually my "thinking about this" includes a new alternate proposal. Rather then
-making up our own userspace API, as I did for the logitech 510 USB keyboard
-new support for multi-color backlights really should use the new standardized
-multi-color LED API:
+>     - newer models (2022): these provide ACPI/WMI methods  
+>       setFanCurve/getFanCurve to write to these regions. However, I  
+>       have implemented that and have no models for testing
 
-https://www.kernel.org/doc/html/latest/leds/leds-class-multicolor.html
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-class-led-multicolor
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/includ
-
-I have been thinking about how to use this with a 4 zone keyboard and I believe
-that the best way to do that is to:
-
-
-1. Forget about the global on/off control, individual zones can be turned off by
-setting the brightness of the zone to 0.
-
-This does require the driver to at least turn on the global control once, or
-you could:
-
-1a) cache the global control value
-1b) on zone changes check if all zones are off, if they are all off, use the
-    global control to turn everything off, else turn the global control on;
-    and only make the actual WMI call for this if the global control state
-    changes vs the last cached value
-
-2. Create 4 separate multi-color LED sysfs devices for each zone:
-
-/sys/class/leds/hp_omen::kbd_backlight-zone1/
-/sys/class/leds/hp_omen::kbd_backlight-zone2/
-/sys/class/leds/hp_omen::kbd_backlight-zone3/
-/sys/class/leds/hp_omen::kbd_backlight-zone4/
-
-This way we are using standard existing userspace APIs rather then inventing
-new userspace API which IMHO is a much better approach.
-
-Note this is just a suggestion, if you disagree (and can motivate
-why you think this is a bad idea) please do speak up about this.
-
-And please let me know if you need any help with converting the code
-to the ed-class-multicolor inetnal kernel APIs there are not that
-much users yet, so I have been unable to find a good example to
-point you to.
-
-A downside of this is that it lacks e.g. support in upower. But the
-kbd_backlight code in upower needs work anyways. E.g. upower does not
-work with backlit USB keyboards if these are plugged in after boot,
-or unplugged + re-plugged after boot. So someone really needs to
-spend some time to improve the upower keyboard backlight code anyways.
+From the sound of it we should definitely use this new methods
+on these newer models, this should protect us against the
+EC RAM layout changing.  This might be best done in separate
+driver, that depends on how much code we can re-use if we
+put support for the new models inside the same driver.
 
 Regards,
 
 Hans
 
-
-
-
-
-
-    
-
->>> +
->>> +
->>> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->>> index 0a99058be813..f86cb7feaad4 100644
->>> --- a/drivers/platform/x86/hp/hp-wmi.c
->>> +++ b/drivers/platform/x86/hp/hp-wmi.c
->>> @@ -27,6 +27,7 @@
->>>   #include <linux/rfkill.h>
->>>   #include <linux/string.h>
->>>   #include <linux/dmi.h>
->>> +#include <linux/leds.h>
->>>     MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->>>   MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
->>> @@ -136,6 +137,7 @@ enum hp_wmi_command {
->>>       HPWMI_WRITE    = 0x02,
->>>       HPWMI_ODM    = 0x03,
->>>       HPWMI_GM    = 0x20008,
->>> +    HPWMI_KB    = 0x20009,
->>>   };
->>>     enum hp_wmi_hardware_mask {
->>> @@ -254,6 +256,9 @@ static const char * const tablet_chassis_types[] = {
->>>     #define DEVICE_MODE_TABLET    0x06
->>>   +#define OMEN_ZONE_COLOR_OFFSET 0x19
->>> +#define OMEN_ZONE_COLOR_LEN 0x0c
->>> +
->>>   /* map output size to the corresponding WMI method id */
->>>   static inline int encode_outsize_for_pvsz(int outsize)
->>>   {
->>> @@ -734,12 +739,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->>>       return count;
->>>   }
->>>   +static ssize_t zone_colors_show(struct device *dev,
->>> +                    struct device_attribute *attr, char *buf)
->>> +{
->>> +    u8 val[128];
->>> +
->>> +    int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
->>> +                       zero_if_sup(val), sizeof(val));
->>> +
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    memcpy(buf, &val[OMEN_ZONE_COLOR_OFFSET], OMEN_ZONE_COLOR_LEN);
->>> +
->>> +    return OMEN_ZONE_COLOR_LEN;
->>> +}
->>> +
->>> +static ssize_t zone_colors_store(struct device *dev,
->>> +                     struct device_attribute *attr,
->>> +                     const char *buf, size_t count)
->>> +{
->>> +    u8 val[128];
->>> +    int ret;
->>> +
->>> +    ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
->>> +                   zero_if_sup(val), sizeof(val));
->>> +
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    if (count != OMEN_ZONE_COLOR_LEN)
->>> +        return -1;
->>> +
->>> +    memcpy(&val[OMEN_ZONE_COLOR_OFFSET], buf, count);
->>> +
->>> +    ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
->>> +                   0);
->>> +
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return OMEN_ZONE_COLOR_LEN;
->>> +}
->>> +
->>>   static DEVICE_ATTR_RO(display);
->>>   static DEVICE_ATTR_RO(hddtemp);
->>>   static DEVICE_ATTR_RW(als);
->>>   static DEVICE_ATTR_RO(dock);
->>>   static DEVICE_ATTR_RO(tablet);
->>>   static DEVICE_ATTR_RW(postcode);
->>> +static DEVICE_ATTR_RW(zone_colors);
->>>     static struct attribute *hp_wmi_attrs[] = {
->>>       &dev_attr_display.attr,
->>> @@ -752,6 +801,12 @@ static struct attribute *hp_wmi_attrs[] = {
->>>   };
->>>   ATTRIBUTE_GROUPS(hp_wmi);
->>>   +static struct attribute *omen_kbd_led_attrs[] = {
->>> +    &dev_attr_zone_colors.attr,
->>> +    NULL,
->>> +};
->>> +ATTRIBUTE_GROUPS(omen_kbd_led);
->>> +
->>>   static void hp_wmi_notify(u32 value, void *context)
->>>   {
->>>       struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
->>> @@ -853,6 +908,10 @@ static void hp_wmi_notify(u32 value, void *context)
->>>       case HPWMI_PROXIMITY_SENSOR:
->>>           break;
->>>       case HPWMI_BACKLIT_KB_BRIGHTNESS:
->>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
->>> +        input_sync(hp_wmi_input_dev);
->>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
->>> +        input_sync(hp_wmi_input_dev);
->>>           break;
->>>       case HPWMI_PEAKSHIFT_PERIOD:
->>>           break;
->>> @@ -1294,6 +1353,60 @@ static int thermal_profile_setup(void)
->>>     static int hp_wmi_hwmon_init(void);
->>>   +static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
->>> +{
->>> +    u8 val;
->>> +
->>> +    int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
->>> +
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return (val & 0x80) ? LED_ON : LED_OFF;
->>> +}
->>> +
->>> +static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
->>> +{
->>> +    char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
->>> +
->>> +    hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
->>> +                       sizeof(buffer), 0);
->>> +}
->>> +
->>> +static struct led_classdev omen_kbd_led = {
->>> +    .name = "hp_omen::kbd_backlight",
->>> +    .brightness_set = set_omen_backlight_brightness,
->>> +    .brightness_get = get_omen_backlight_brightness,
->>> +    .max_brightness = 1,
->>> +    .groups = omen_kbd_led_groups,
->>> +};
->>> +
->>> +static bool is_omen_lighting_supported(void)
->>> +{
->>> +    u8 val;
->>> +
->>> +    int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
->>> +
->>> +    if (ret)
->>> +        return false;
->>> +
->>> +    return (val & 1) == 1;
->>> +}
->>> +
->>> +static int omen_backlight_init(struct device *dev)
->>> +{
->>> +    int ret;
->>> +
->>> +    input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
->>> +
->>> +    ret = devm_led_classdev_register(dev, &omen_kbd_led);
->>> +
->>> +    if (ret < 0)
->>> +        return -1;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>>   static int __init hp_wmi_bios_setup(struct platform_device *device)
->>>   {
->>>       int err;
->>> @@ -1321,6 +1434,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->>>         thermal_profile_setup();
->>>   +    if (is_omen_lighting_supported())
->>> +        omen_backlight_init(&device->dev);
->>> +
->>>       return 0;
->>>   }
->>>   
-> 
 
