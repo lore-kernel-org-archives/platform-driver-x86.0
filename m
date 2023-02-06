@@ -2,107 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC83C05027
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 13:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4054C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 13:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbjBFNaI (ORCPT
+        id S230459AbjBFNtW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Feb 2023 08:30:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        Mon, 6 Feb 2023 08:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbjBFNaH (ORCPT
+        with ESMTP id S230305AbjBFNtF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2023 08:30:07 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B888D2121;
-        Mon,  6 Feb 2023 05:30:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675690205; x=1707226205;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=ukdnUxaL0I/DHdvT7nUODR9r6U1yXlJ1n1A5zpafkEE=;
-  b=WwkbZEZx7yY3MQfNAQYfTHP3vjRJh9gMwp4eZaRiLqGRwcriicgIrs92
-   zRL/TabEns0R0mFzA7tqXKYSKEJheIAXSw6au8q393uSSWTnRjYthM+Zy
-   KPm+BPTaG2YsMvI1U8dhze4d9h3KYYZk48rLgeVrpXcxeUd1U6UcBqNWg
-   VZ/jQK8vmgHPTytJR+uDMBx3+SXX7LkSFGgm0bK7pHeNHcVEnXNI6BUPF
-   SqSXnByHaCW6fA4YEmemkZNJFiItPHrP9RLZj3wga3sxw24M/nFUTxvVW
-   lCwEDwm/h3+MBE9bBNVa5/Y3/XHbhWKerBNUS3zSnkeIZR0owzvAIms6s
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="329219777"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="329219777"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 05:29:51 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="616437755"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="616437755"
-Received: from gvenka5x-mobl.gar.corp.intel.com ([10.215.125.12])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 05:29:49 -0800
-Message-ID: <7fb6fa717b2c8e7869e2a5c7abb299c365ec3af3.camel@linux.intel.com>
-Subject: Re: [PATCH 0/7] Add TPMI support
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 06 Feb 2023 05:29:49 -0800
-In-Reply-To: <14c1201b-7caf-e096-624c-e5ec3597d67f@redhat.com>
-References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
-         <918ac0c5-9f35-0099-5be8-6dbc72aa88e9@redhat.com>
-         <14c1201b-7caf-e096-624c-e5ec3597d67f@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Mon, 6 Feb 2023 08:49:05 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14117A5D7
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Feb 2023 05:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1675691216;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vDkUqvD2RjYYwz8cwN7SMBQ85TuY/Pc0ZHuJPwmAGQQ=;
+        b=hNZZ6G8QuPeY6APobWl+pvvYnHTtD7zGlu775WIAR2/c3LwICJJjGr5x6hflZIe9YBuxS5
+        8lUGpdU+TuIZJGUyMCmOyOcqkaJlJ40B4YpHz1TExON1jTacFpb94R40fwFBYEWCjYie0g
+        hQntzApsxrE9J8UpFl2/ax32YkzSiJA=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-15-2VNyJPiaO8ygg4r6MC2Now-1; Mon, 06 Feb 2023 08:46:55 -0500
+X-MC-Unique: 2VNyJPiaO8ygg4r6MC2Now-1
+Received: by mail-ej1-f72.google.com with SMTP id js21-20020a17090797d500b008858509ff2aso8720912ejc.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Feb 2023 05:46:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vDkUqvD2RjYYwz8cwN7SMBQ85TuY/Pc0ZHuJPwmAGQQ=;
+        b=Lx8AQMqBdPEdje9j9IZlJdOfykWIMSdmPcuIERXkyFT8uB0x5ZBIs+BU3kfbuLrpOO
+         btOreyiS3Ov6ee3K+NW7KPc0bX79RKwbylr8YnKFQjETU1EJpqmuf/b2mZoJw1WYBfe1
+         u0DS9UhyLatIw2+MevK0LHibPvmyM/6W7A0Tc8S2D9pJiSDbVj/IkelKQkAYYazl+cvO
+         /1DpH89BEKdrXy3zTMPgqyXAq2OZ1iy2EyX/ec69GkToGYP+vohvBO0LdbqNndz62gW+
+         iCClHCHeq/QcNXT4O0chaDdnuBh3zRyguIdPkHANzUNVje3WyA2L3jJ09ihpskMVyWpJ
+         09kg==
+X-Gm-Message-State: AO0yUKU2vG6Rs20/HVnE5RWT5C3B9dTpIX2bdf3fCvfNhDr5dXoJDtBy
+        RRHLFclM2LdMHzZKVyIOuI6/ruwcEss85Clr2UGCxCPNX30rsA+MGWQz/6tXPzG4Zk9uOFgI3bb
+        SJ+rWowWYDq5xC6CQWG8n/FUUJqIlf161Ng==
+X-Received: by 2002:a17:907:2c66:b0:88d:ba89:184c with SMTP id ib6-20020a1709072c6600b0088dba89184cmr15151128ejc.29.1675691213875;
+        Mon, 06 Feb 2023 05:46:53 -0800 (PST)
+X-Google-Smtp-Source: AK7set9dJ1jg35a60F/4yjmMzRmvhRzVhhqiQkPO/4XFDo8zmnH8K8n3oowcr/lixDvslLYI2qG60Q==
+X-Received: by 2002:a17:907:2c66:b0:88d:ba89:184c with SMTP id ib6-20020a1709072c6600b0088dba89184cmr15151115ejc.29.1675691213682;
+        Mon, 06 Feb 2023 05:46:53 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id y22-20020a1709064b1600b008786675d086sm5468334eju.29.2023.02.06.05.46.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Feb 2023 05:46:53 -0800 (PST)
+Message-ID: <24a9fe52-740c-68f0-5869-ab2fd470cdfa@redhat.com>
+Date:   Mon, 6 Feb 2023 14:46:52 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] platform/x86: int3472/discrete: Drop unnecessary
+ obj->type == string check
+Content-Language: en-US, nl
+To:     Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20230204110223.54625-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230204110223.54625-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-On Mon, 2023-02-06 at 13:55 +0100, Hans de Goede wrote:
-> Hi,
->=20
-> On 2/6/23 13:49, Hans de Goede wrote:
->=20
-> > Thank you for your patch-series, I've applied the series to my
-> > review-hans branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
-x86.git/log/?h=3Dreview-hans
-> >=20
-> > Note it will show up in my review-hans branch once I've pushed my
-> > local branch there, which might take a while.
-> >=20
-> > Once I've run some tests on this branch the patches there will be
-> > added to the platform-drivers-x86/for-next branch and eventually
-> > will be included in the pdx86 pull-request to Linus for the next
-> > merge-window.
->=20
-> One thing which I did notice, which is a pre-existing problem
-> is that the IDA accesses in drivers/platform/x86/intel/vsec.c
-> are not protected by any locking.
->=20
-> This is likely ok for now because there is only 1 PCI device
-> per type of ida and the enumeration of the vsec devices
-> under the PCI device is done in a single loop, so all
-> IDA accesses are single threaded atm.
->=20
-> But still IMHO it would be good to protect the IDA accesses
-> (ida_alloc() / ida_free()) with a mutex to protect against
-> any future races.
->=20
-> I think that a single global static mutex inside
-> drivers/platform/x86/intel/vsec.c to protect the
-> ida calls there should suffice for this.
-Let me look into this and get back.
+On 2/4/23 12:02, Hans de Goede wrote:
+> acpi_evaluate_dsm_typed() already verifies the type is the requested type,
+> so this error check is a no-op, drop it.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thanks,
-Srinivas
+I've added this to my review-hans (soon to be for-next) branch now.
 
->=20
-> Regards,
->=20
-> Hans
->=20
->=20
->=20
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/intel/int3472/discrete.c | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 96963e30ab6c..f064da74f50a 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -78,14 +78,6 @@ skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
+>  		return ERR_PTR(-ENODEV);
+>  	}
+>  
+> -	if (obj->string.type != ACPI_TYPE_STRING) {
+> -		dev_err(int3472->dev,
+> -			"Sensor _DSM returned a non-string value\n");
+> -
+> -		ACPI_FREE(obj);
+> -		return ERR_PTR(-EINVAL);
+> -	}
+> -
+>  	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
+>  		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
+>  			    obj->string.pointer))
 
