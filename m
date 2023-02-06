@@ -2,82 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF02C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 13:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC83C05027
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 13:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230205AbjBFNJI (ORCPT
+        id S229707AbjBFNaI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Feb 2023 08:09:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47440 "EHLO
+        Mon, 6 Feb 2023 08:30:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbjBFNJH (ORCPT
+        with ESMTP id S229735AbjBFNaH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2023 08:09:07 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A615144B6;
-        Mon,  6 Feb 2023 05:09:04 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1675688943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K3nPz9+q4/7C6EI88CTICsEZBDsn6LekqjWFJbLJ6j0=;
-        b=pq4j5maCCj/8vJzyRsgGTYJTpzH9DVI2EVrcl9dwliEGq04DolNhT+ydJZQTgOXxpK4blP
-        /Eds3vEctyDKtP+rf/qe3YgPlsSTSE/pKqN/k7+Wif1lasOwkqa6jUg+LPKq4mDF5umVl/
-        19dbkgJAa//vTWGR89joTOtqj4HkIYuT0VTvRqIDQ7b59PsiGzhLp1Bj4owPLuwUnMtR17
-        VOQsUiGD1nc6sRLlmM9GeB003/OEbWS4qeoFj4eflDPKk+TEjsXGGSvE/kq5DMfVwTNts2
-        twv3TBcjY75gXibJAQCheXJ5xW+CQ2RZVehbVNLFPpMSZhzB8Ex8BIIGT9NcLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1675688943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K3nPz9+q4/7C6EI88CTICsEZBDsn6LekqjWFJbLJ6j0=;
-        b=pWA3gd8FT2NxyX9+dxM7BnuxNSnxGCqJfF7pVY7up13yIORFckVEIPQY7ncimJF+Ti9Zjw
-        7Fdt0rwVU7CD10CA==
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 06/19] irqdomain: Drop revmap mutex
-In-Reply-To: <Y8fv3KWoxmaykrP6@hovoldconsulting.com>
-References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-7-johan+linaro@kernel.org> <871qnslut3.ffs@tglx>
- <Y8e6Us0Qgt0p5S4R@hovoldconsulting.com> <87r0vshu1y.ffs@tglx>
- <Y8fv3KWoxmaykrP6@hovoldconsulting.com>
-Date:   Mon, 06 Feb 2023 14:09:02 +0100
-Message-ID: <87zg9rx7o1.ffs@tglx>
+        Mon, 6 Feb 2023 08:30:07 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B888D2121;
+        Mon,  6 Feb 2023 05:30:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675690205; x=1707226205;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=ukdnUxaL0I/DHdvT7nUODR9r6U1yXlJ1n1A5zpafkEE=;
+  b=WwkbZEZx7yY3MQfNAQYfTHP3vjRJh9gMwp4eZaRiLqGRwcriicgIrs92
+   zRL/TabEns0R0mFzA7tqXKYSKEJheIAXSw6au8q393uSSWTnRjYthM+Zy
+   KPm+BPTaG2YsMvI1U8dhze4d9h3KYYZk48rLgeVrpXcxeUd1U6UcBqNWg
+   VZ/jQK8vmgHPTytJR+uDMBx3+SXX7LkSFGgm0bK7pHeNHcVEnXNI6BUPF
+   SqSXnByHaCW6fA4YEmemkZNJFiItPHrP9RLZj3wga3sxw24M/nFUTxvVW
+   lCwEDwm/h3+MBE9bBNVa5/Y3/XHbhWKerBNUS3zSnkeIZR0owzvAIms6s
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="329219777"
+X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
+   d="scan'208";a="329219777"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 05:29:51 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="616437755"
+X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
+   d="scan'208";a="616437755"
+Received: from gvenka5x-mobl.gar.corp.intel.com ([10.215.125.12])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 05:29:49 -0800
+Message-ID: <7fb6fa717b2c8e7869e2a5c7abb299c365ec3af3.camel@linux.intel.com>
+Subject: Re: [PATCH 0/7] Add TPMI support
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 06 Feb 2023 05:29:49 -0800
+In-Reply-To: <14c1201b-7caf-e096-624c-e5ec3597d67f@redhat.com>
+References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
+         <918ac0c5-9f35-0099-5be8-6dbc72aa88e9@redhat.com>
+         <14c1201b-7caf-e096-624c-e5ec3597d67f@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 18 2023 at 14:10, Johan Hovold wrote:
-> On Wed, Jan 18, 2023 at 02:05:29PM +0100, Thomas Gleixner wrote:
->> You can do this in a two step approach.
->> 
->>     1) Add the new locking and ensure that the lock is held when
->>        the functions are called
->
-> But the new locking has nothing to do with these functions. They are
-> added because they fix various races elsewhere. Adding lockdep
-> assertions in unrelated function as part of those fixes doesn't really
-> make much sense.
+Hi Hans,
 
-Seriously? The point is that revmap_mutex is not protecting against any
-of the races which you are trying to protect against. Ergo, any callsite
-which does not hold the irqdomain mutex is part of the problem you are
-trying to solve, no?
-
-The removal of the revmap_mutex becomes possible due to the overall
-protection scheme rework _after_ you established that all callers hold
-the irqdomain mutex.
+On Mon, 2023-02-06 at 13:55 +0100, Hans de Goede wrote:
+> Hi,
+>=20
+> On 2/6/23 13:49, Hans de Goede wrote:
+>=20
+> > Thank you for your patch-series, I've applied the series to my
+> > review-hans branch:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
+x86.git/log/?h=3Dreview-hans
+> >=20
+> > Note it will show up in my review-hans branch once I've pushed my
+> > local branch there, which might take a while.
+> >=20
+> > Once I've run some tests on this branch the patches there will be
+> > added to the platform-drivers-x86/for-next branch and eventually
+> > will be included in the pdx86 pull-request to Linus for the next
+> > merge-window.
+>=20
+> One thing which I did notice, which is a pre-existing problem
+> is that the IDA accesses in drivers/platform/x86/intel/vsec.c
+> are not protected by any locking.
+>=20
+> This is likely ok for now because there is only 1 PCI device
+> per type of ida and the enumeration of the vsec devices
+> under the PCI device is done in a single loop, so all
+> IDA accesses are single threaded atm.
+>=20
+> But still IMHO it would be good to protect the IDA accesses
+> (ida_alloc() / ida_free()) with a mutex to protect against
+> any future races.
+>=20
+> I think that a single global static mutex inside
+> drivers/platform/x86/intel/vsec.c to protect the
+> ida calls there should suffice for this.
+Let me look into this and get back.
 
 Thanks,
+Srinivas
 
-        tglx
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
+
