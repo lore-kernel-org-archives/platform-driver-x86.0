@@ -2,75 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C04C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 12:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A0C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 12:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjBFMKv (ORCPT
+        id S229867AbjBFMuN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Feb 2023 07:10:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
+        Mon, 6 Feb 2023 07:50:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbjBFMKo (ORCPT
+        with ESMTP id S229582AbjBFMuN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2023 07:10:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80797DA1
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Feb 2023 04:09:22 -0800 (PST)
+        Mon, 6 Feb 2023 07:50:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867544C2E
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Feb 2023 04:49:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675685345;
+        s=mimecast20190719; t=1675687771;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RNssBosRYCGO4BAEKn380+4FcaMW75hDr7zMfIWFaW4=;
-        b=Ov2CVW6bE98foAvInOttzcfuAvUECg+gXR2xR1XFH+ROaThAQA/T9EXqRAzSgquuNeF7oy
-        DHv6y/whkdRA+3dVAj3jhzYzGdDSTsLora4LQI0lCPXzYULthIZJSBXxHRCDQB/KFnbLQp
-        8Dm+OFLb15rJT2K0FRwSR656GRzvo2c=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=PpljKuxnqwd1vCc9A+qtmo/K/pkdw0gqUE4LwAXX/ko=;
+        b=TFiZeUSbNZ5+dIe0xdfhOp7uWSx2+Y6A+S+9Zf5DOE0IPCqdMOkxwklr89DzxklCyQ9fz1
+        MlczY6mNV6n9H+80Cw3Of2NNNKfqbK+fEQQmYMRn2rUJSobWyMZ1Vp7liyta8LKLxLTEO7
+        gUByDtEru2zKeX6cV3p6oOMpx0fBKuU=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-411-vPboMGBUPdy2x5CsTx903g-1; Mon, 06 Feb 2023 07:09:04 -0500
-X-MC-Unique: vPboMGBUPdy2x5CsTx903g-1
-Received: by mail-ej1-f71.google.com with SMTP id xh12-20020a170906da8c00b007413144e87fso8517286ejb.14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Feb 2023 04:09:03 -0800 (PST)
+ us-mta-670-41FhjVqDMTq2tioO4dDMdg-1; Mon, 06 Feb 2023 07:49:30 -0500
+X-MC-Unique: 41FhjVqDMTq2tioO4dDMdg-1
+Received: by mail-ed1-f72.google.com with SMTP id d21-20020aa7c1d5000000b004a6e1efa7d0so7412932edp.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Feb 2023 04:49:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RNssBosRYCGO4BAEKn380+4FcaMW75hDr7zMfIWFaW4=;
-        b=5xBX1q/0Qh582kyX6DlOn+BAw4pA020iJqDL1KYRUFallT6rs2i4J6D/nbzEpEg/k3
-         kRHQovsSPmoMKzvMKIwRNknmdJFBomj4cHn4y1PMWiWmEeTMMDY4t9xwFw388z8GNhOU
-         RpGPxzpHQTfUk9LqsCQCeAWZVhGW4RkjPGDUdg6Bw6WV4JyZi8H4Vn/RFgDi26z4uecL
-         iiq6t/a6XU5znpaaeHXXYRuxWqs0JICWM1NYJjtyxXzSotv1Cxw2E7pXf4rDB0flrmCG
-         cz/z9DEXE2225rhMWsg1HnrjEjmQJP6bcyb36lvqbpjd5WNKlExk9reZc5tBVfFxNcqD
-         0uAA==
-X-Gm-Message-State: AO0yUKVaC+cMtjw349K1XNxiX34dffB6eIMIyXBnE3GLA+IWfww7Wmva
-        hsl5crNdsSxWBatlu2C3wkV1A79VdsBG3Ub5gVldKmlpYGjEFhIPWnFUS7BHM7gvuaJHmYSMS5/
-        am9R37ZwIX8YbDP2PKdRncNCot0qdt4+95g==
-X-Received: by 2002:a17:906:8559:b0:884:fd73:8053 with SMTP id h25-20020a170906855900b00884fd738053mr18427254ejy.9.1675685342196;
-        Mon, 06 Feb 2023 04:09:02 -0800 (PST)
-X-Google-Smtp-Source: AK7set9x/t6dx0zhHW1esd5BdKM363d8gQvuRhF/YzNRK79BTGTAXcZmpn6rXJqzX5OrMZB/WhNmRg==
-X-Received: by 2002:a17:906:8559:b0:884:fd73:8053 with SMTP id h25-20020a170906855900b00884fd738053mr18427244ejy.9.1675685341995;
-        Mon, 06 Feb 2023 04:09:01 -0800 (PST)
+        bh=PpljKuxnqwd1vCc9A+qtmo/K/pkdw0gqUE4LwAXX/ko=;
+        b=jaA3mT4BOabcbPYOsVJFmDHBteJ5zRnDWQqDhp5Sb7hXWOG2NlL/PF79G1T1s4g/zp
+         Drwp+eiPQCt7O4oZto3KSqeEziLv19WFBkLZ6VPZP6AY+qPD1a1Z6GxauGyhb5/DGgSj
+         gIV42PwolizpUJ7mHCztKa00bRxR1YvLEE8in9p0tmlvjuFkwW5SgRj8mPxb28Bxt9RP
+         bhdrtMqzCZ6tCd7A4hp+qO2R0RP8tBnjKSbZL9qn4XBydcYz8DJdl3AmRdQwQ6ModhIZ
+         W4RDdpuH2Qy6LSwoYqfjitHe5+KCFnkjS3A42DtsL7yp2EhcqEAOETAsqGK5lM2gxcNt
+         9m5g==
+X-Gm-Message-State: AO0yUKX7FM/XU9hUxUpsLU5zanjUbj5awHrFkqb4qWZRj4Kbj2dBuoOy
+        SHtwXc6mc52kHKEVFc16IuQV8b646uprRnPbgj3x1cQFm0rxrhpBDoRnkMm54xzHDZiwF3rqLOs
+        I2Z+FNlBymCg5W2ZTxrL2VOyH25CoKSd6+w==
+X-Received: by 2002:a17:907:3f85:b0:88f:8a5:b4cd with SMTP id hr5-20020a1709073f8500b0088f08a5b4cdmr21560138ejc.1.1675687769566;
+        Mon, 06 Feb 2023 04:49:29 -0800 (PST)
+X-Google-Smtp-Source: AK7set8hfVSmP7owsZwu+VRcTehyIYonNXyAtrL5RDgp6hez2Iv11nVI7+cMcNUn9s9VHCm+7O00Yg==
+X-Received: by 2002:a17:907:3f85:b0:88f:8a5:b4cd with SMTP id hr5-20020a1709073f8500b0088f08a5b4cdmr21560128ejc.1.1675687769399;
+        Mon, 06 Feb 2023 04:49:29 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gv21-20020a170906f11500b0086dd8f20a6asm5397562ejb.77.2023.02.06.04.09.01
+        by smtp.gmail.com with ESMTPSA id cf8-20020a170906b2c800b00882f9130eb3sm5393776ejb.223.2023.02.06.04.49.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Feb 2023 04:09:01 -0800 (PST)
-Message-ID: <9d743107-477a-7af9-153d-f27d2b1f994e@redhat.com>
-Date:   Mon, 6 Feb 2023 13:09:00 +0100
+        Mon, 06 Feb 2023 04:49:28 -0800 (PST)
+Message-ID: <918ac0c5-9f35-0099-5be8-6dbc72aa88e9@redhat.com>
+Date:   Mon, 6 Feb 2023 13:49:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2 1/4] platform/x86/amd: pmc: Add num_samples message id
- support to STB
+Subject: Re: [PATCH 0/7] Add TPMI support
 Content-Language: en-US, nl
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
-Cc:     Sanket.Goswami@amd.com, platform-driver-x86@vger.kernel.org
-References: <20230130164855.168437-1-Shyam-sundar.S-k@amd.com>
- <20230130164855.168437-2-Shyam-sundar.S-k@amd.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230130164855.168437-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,72 +78,56 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/30/23 17:48, Shyam Sundar S K wrote:
-> Recent PMFWs have the support for S2D_NUM_SAMPLES message ID that
-> can tell the current number of samples present within the STB DRAM.
+On 2/2/23 02:07, Srinivas Pandruvada wrote:
+> The TPMI (Topology Aware Register and PM Capsule Interface) provides a
+> flexible, extendable and PCIe enumerable MMIO interface for PM features.
 > 
-> num_samples returned would let the driver know the start of the read
-> from the last push location. This way, the driver would emit the
-> top most region of the STB DRAM.
+> For example Intel Speed Select Technology (Intel SST) can replace all
+> mailbox commands with direct MMIO access. This reduces latency for
+> SST commands and also defines an architectural interface which will
+> persist for several next generations.
 > 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc.c | 28 ++++++++++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
+> Also Intel RAPL (Running Average Power Limit) provides a MMIO
+> interface using TPMI. This has advantage over traditional MSR
+> (Model Specific Register) interface, where a thread needs to be scheduled
+> on the target CPU to read or write. Also the RAPL features vary between
+> CPU models, and hence lot of model specific code. Here TPMI provides an
+> architectural interface by providing hierarchical tables and fields,
+> which will not need any model specific implementation.
 > 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 3cbb01ec10e3..b0f98a201a81 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -114,6 +114,7 @@ enum s2d_arg {
->  	S2D_TELEMETRY_SIZE = 0x01,
->  	S2D_PHYS_ADDR_LOW,
->  	S2D_PHYS_ADDR_HIGH,
-> +	S2D_NUM_SAMPLES,
->  };
->  
->  struct amd_pmc_bit_map {
-> @@ -246,13 +247,36 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
->  static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  {
->  	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-> -	u32 *buf;
-> +	u32 *buf, fsize, num_samples, stb_rdptr_offset = 0;
-> +	int ret;
->  
->  	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
->  
-> -	memcpy_fromio(buf, dev->stb_virt_addr, S2D_TELEMETRY_BYTES_MAX);
-> +	/* Spill to DRAM num_samples uses separate SMU message port */
-> +	dev->msg_port = 1;
-> +
-> +	/* Get the num_samples to calculate the last push location */
-> +	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, STB_SPILL_TO_DRAM, 1);
-> +	if (ret) {
-> +		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Clear msg_port for other SMU operation */
-> +	dev->msg_port = 0;
+> Same value is for Intel Uncore frequency where MSR interface can't
+> be used because of multiple domains.
+> 
+> The TPMI interface uses a PCI VSEC structure to expose the location of
+> MMIO region, which is handled by Intel VSEC driver. Intel VSEC driver is
+> already present in upstream kernel.
+> 
+> This series contains the base driver, which parses TPMI MMIO region
+> and creates device nodes for supported features. The current set of
+> PM feature support includes, Intel Speed Select, RAPL, Uncore frequency
+> scaling.
+> 
+> The first there patches updates Intel VSEC driver to add TPMI VSEC ID
+> and enhance to reuse the code.
+> The next three patches adds TPMI base driver support.
+> The last patch adds MAINTAINERS entry.
+> 
+> The TPMI documentation can be downloaded from:
+> https://github.com/intel/tpmi_power_management
+> 
+> This series cleanly applies on 6.2-rc1.
 
-You are not clearing dev->msg_port on amd_pmc_send_cmd() errors here
-which seems wrong ?  (sorry for not catching this before)  How about:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-	/* Get the num_samples to calculate the last push location */
-	dev->msg_port = 1;
-	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, STB_SPILL_TO_DRAM, 1);
-	dev->msg_port = 0;
-	if (ret) {
-		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
-		return ret;
-	}
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-?
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -153,19 +136,25 @@ Hans
 
 
 
-
-> +
-> +	/* Start capturing data from the last push location */
-> +	if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
-> +		fsize  = S2D_TELEMETRY_BYTES_MAX;
-> +		stb_rdptr_offset = num_samples - fsize;
-> +	} else {
-> +		fsize = num_samples;
-> +		stb_rdptr_offset = 0;
-> +	}
-> +
-> +	memcpy_fromio(buf, dev->stb_virt_addr + stb_rdptr_offset, fsize);
->  	filp->private_data = buf;
->  
->  	return 0;
+> Srinivas Pandruvada (7):
+>   platform/x86/intel/vsec: Add TPMI ID
+>   platform/x86/intel/vsec: Enhance and Export intel_vsec_add_aux()
+>   platform/x86/intel/vsec: Support private data
+>   platform/x86/intel: Intel TPMI enumeration driver
+>   platform/x86/intel/tpmi: Process CPU package mapping
+>   platform/x86/intel/tpmi: ADD tpmi external interface for tpmi feature
+>     drivers
+>   MAINTAINERS: Add entry for TPMI driver
+> 
+>  MAINTAINERS                         |   6 +
+>  drivers/platform/x86/intel/Kconfig  |  13 +
+>  drivers/platform/x86/intel/Makefile |   4 +
+>  drivers/platform/x86/intel/tpmi.c   | 415 ++++++++++++++++++++++++++++
+>  drivers/platform/x86/intel/vsec.c   |  21 +-
+>  drivers/platform/x86/intel/vsec.h   |   6 +
+>  include/linux/intel_tpmi.h          |  30 ++
+>  7 files changed, 490 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/tpmi.c
+>  create mode 100644 include/linux/intel_tpmi.h
+> 
 
