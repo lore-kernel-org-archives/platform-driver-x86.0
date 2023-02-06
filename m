@@ -2,106 +2,224 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97FAC63797
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 14:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93609C05027
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 14:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231468AbjBFOPR (ORCPT
+        id S229892AbjBFOdp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Feb 2023 09:15:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56000 "EHLO
+        Mon, 6 Feb 2023 09:33:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbjBFOO5 (ORCPT
+        with ESMTP id S230204AbjBFOdo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2023 09:14:57 -0500
+        Mon, 6 Feb 2023 09:33:44 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8EC7295
-        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Feb 2023 06:13:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F3917140
+        for <platform-driver-x86@vger.kernel.org>; Mon,  6 Feb 2023 06:32:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675692809;
+        s=mimecast20190719; t=1675693978;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2pKelIDvvu0eg8F8RVTWQ0DecSfXHRsnNSF+IfLHJfM=;
-        b=EwNjRzPU4a4z23h/8kmmeDVbN9kzWrrIu6kd7vjiMdI3irfaTnynmn/4fFvmXyJJMBoy0b
-        Nomnb51+HZ09mbc/bUuRacpOCB0w2snlfqzaFHAnghHUX7y0A4Idmiqvw9CWToz5kzL79Z
-        /TVevcyVYckO0TrAG8DuKy7rnK0UQ7o=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ApD8P68dOZyA1jeBiZ69Rwdd7N3dLjS5jLBWRAgRgrA=;
+        b=a/hL5eF/vumFS/VgjfElKyY2QVdrWd+CQxi84sdzKugbmwQuiIPS2ihn8OH1HtA6QQmxVF
+        OLwIIe0HOGHhOQp5qeAxOUsdnKka1+H7mst1tsepF2k0ebylRvafGdKVbyHXI1fIRsWFzJ
+        S/eIFFlnL7qaDnJQ8N5hM7GSipjXB+Q=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-42-Mtsu_SvROPCgRrbIXMclww-1; Mon, 06 Feb 2023 09:13:27 -0500
-X-MC-Unique: Mtsu_SvROPCgRrbIXMclww-1
-Received: by mail-ed1-f70.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so7824262edz.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Feb 2023 06:13:27 -0800 (PST)
+ us-mta-620-uvI2GJpOMsKBsB9qR_8OUg-1; Mon, 06 Feb 2023 09:32:57 -0500
+X-MC-Unique: uvI2GJpOMsKBsB9qR_8OUg-1
+Received: by mail-ej1-f72.google.com with SMTP id ae2-20020a17090725c200b0088d91fe7ec5so8712173ejc.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Feb 2023 06:32:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2pKelIDvvu0eg8F8RVTWQ0DecSfXHRsnNSF+IfLHJfM=;
-        b=bgx14RDFwIr2HwkN7nOkUFm1GQ7AAYYPGPSRaFC04oUeX+Kdhj5zT7SFrGt70203sP
-         3XzcqJCVOPBUG7PcjOfHYU5x3bDz0M4NtziTfTKaAb/lTBr7HOmcLHpKMPEq5gBcZnl6
-         jmfmpshiqb+oYO0VQwI+EtZNfmRDcmFDbfa3CMkU+C3yCccW5CZaES7PKP2ULH9vebYR
-         X2Ztjk7R9xjRybNx1apY7g8en5SpEr5+kgotde3gEny9/o1eqBW2B/s9bHUm/7qet53N
-         RHlGmeGjHBTO5Rtk39pyihPfagzndH8ODKmsm877P4aHAhABQCITunsCuMDTnWVKtwcz
-         u7uw==
-X-Gm-Message-State: AO0yUKUuk6S3RzAWjAjQmERbMaJ1BiqZDDFXwe9zHBmNMu7I0uF4kgLk
-        NLmwL0wY9Ql9z1i9rQrHA0HgsQQRgFf6o9wDDdvItSvIGGz4tDUY0VQyPwErXMvSDATCZSahQ6a
-        T3S1gaJcsj+3k3BqGlils+KyngXfQ6gDQug==
-X-Received: by 2002:a05:6402:4025:b0:4aa:bc53:be32 with SMTP id d37-20020a056402402500b004aabc53be32mr1684495eda.0.1675692806581;
-        Mon, 06 Feb 2023 06:13:26 -0800 (PST)
-X-Google-Smtp-Source: AK7set8s2EE+ABlmkJySK1wBLJpxUMdUcc2lEZw8Z4jyMSB9lMLKE6hSPAPcQzjNsOyIgEEQOH1xXw==
-X-Received: by 2002:a05:6402:4025:b0:4aa:bc53:be32 with SMTP id d37-20020a056402402500b004aabc53be32mr1684478eda.0.1675692806345;
-        Mon, 06 Feb 2023 06:13:26 -0800 (PST)
+        bh=ApD8P68dOZyA1jeBiZ69Rwdd7N3dLjS5jLBWRAgRgrA=;
+        b=ClMMY/9ZXBBncngFeboA/cYjBC1ANaNx+2aR3+2t/aRT1pkAZFUUsi1U9Uo18Y8zOT
+         OgBPw42zWkvxySK+lIXrh8jGBjTgKW95pII10vFC3tTxqflP45FFMXpRnF9Ft3GIt/np
+         819QDc4f9/nfelouJct5FlynFC1E83X2PZLmtucKkOJUGnkSAHk6SiSresXmksYgyMG0
+         eCpLSwKXHYnoEBwoSXbLRjV6NPZLXtWQ9CkeqpmV22gLiWuoQ9Ym2IYCw1+Lxs/mzkSA
+         e2IVBimGe/6uKd2//tMYcylUrqSyfzIOcmYgMW7o7Wjt9oW5M7pkVRObg0PYAFZIAPs0
+         y90A==
+X-Gm-Message-State: AO0yUKXH9T/X4b0ip7e+BWvwxzkS2jxq8+vhypzxbn7Rft6OOg9CttS1
+        E+Ubot3aNYgeH0e3/ol3i4YtjsLKLsHXu/dbssyyWczz7Dvo6KwvNlBvKUdhyw9GeG4G1i52sHg
+        bwf4mho4XO+R3HXCEKTnNSlkjorWw/N5MCA==
+X-Received: by 2002:a17:907:1c0f:b0:88d:ba89:1836 with SMTP id nc15-20020a1709071c0f00b0088dba891836mr17671074ejc.7.1675693976313;
+        Mon, 06 Feb 2023 06:32:56 -0800 (PST)
+X-Google-Smtp-Source: AK7set86esOpnYnPUihLt/pnW5l9nQBRRf4ra+SnOblVI76v+eWt5ScmKDjLXujT/Bg+tAH9AWMkDA==
+X-Received: by 2002:a17:907:1c0f:b0:88d:ba89:1836 with SMTP id nc15-20020a1709071c0f00b0088dba891836mr17671050ejc.7.1675693976064;
+        Mon, 06 Feb 2023 06:32:56 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id b18-20020aa7dc12000000b004a9b5c957bfsm4598653edu.77.2023.02.06.06.13.25
+        by smtp.gmail.com with ESMTPSA id kg11-20020a17090776eb00b0088519b92074sm5456201ejc.128.2023.02.06.06.32.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Feb 2023 06:13:25 -0800 (PST)
-Message-ID: <a7d2e011-142d-88b9-2591-cf4508f1b8c5@redhat.com>
-Date:   Mon, 6 Feb 2023 15:13:25 +0100
+        Mon, 06 Feb 2023 06:32:55 -0800 (PST)
+Message-ID: <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+Date:   Mon, 6 Feb 2023 15:32:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/2] platform/x86: dell-ddv: Add hwmon support
+Subject: API for setting colors of RGB backlit keyboard zones (was [PATCH V3]
+ platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
 Content-Language: en-US, nl
-To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
-Cc:     jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230205205456.2364-1-W_Armin@gmx.de>
- <20230205205456.2364-2-W_Armin@gmx.de>
+To:     Rishit Bansal <rishitbansal0@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+References: <20230131235027.36304-1-rishitbansal0@gmail.com>
+ <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
+ <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+ <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
+ <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230205205456.2364-2-W_Armin@gmx.de>
+In-Reply-To: <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin,
+Hi Rishit,
 
-On 2/5/23 21:54, Armin Wolf wrote:
-> Thanks to bugreport 216655 on bugzilla triggered by the
-> dell-smm-hwmon driver, the contents of the sensor buffers
-> could be almost completely decoded.
-> Add an hwmon interface for exposing the fan and thermal
-> sensor values. Since the WMI interface can be quite slow
-> on some machines, the sensor buffers are cached for 1 second
-> to lessen the performance impact.
-> The debugfs interface remains in place to aid in reverse-engineering
-> of unknown sensor types and the thermal buffer.
+On 2/2/23 20:59, Rishit Bansal wrote:
+> Hi,
 > 
-> Tested-by: Antonín Skala <skala.antonin@gmail.com>
-> Tested-by: Gustavo Walbon <gustavowalbon@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> On 02/02/23 18:13, Hans de Goede wrote:
 
-This looks nice and clean to me, thank you:
+<snip>
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> I have been thinking a bit about this and I still think that having separate per-zone
+>> files would be better. You can speedup things about 2x by only doing the call to read
+>> the buffer once and cache the result. At least assuming the non kbd zone related bits
+>> of the buffer never change (which should be easy enough to check).
+>>
+>> Actually my "thinking about this" includes a new alternate proposal. Rather then
+>> making up our own userspace API, as I did for the logitech 510 USB keyboard
+>> new support for multi-color backlights really should use the new standardized
+>> multi-color LED API:
+>>
+>> https://www.kernel.org/doc/html/latest/leds/leds-class-multicolor.html
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/includ
+>>
+>> I have been thinking about how to use this with a 4 zone keyboard and I believe
+>> that the best way to do that is to:
+>>
+>>
+>> 1. Forget about the global on/off control, individual zones can be turned off by
+>> setting the brightness of the zone to 0.
+>>
+>> This does require the driver to at least turn on the global control once, or
+>> you could:
+>>
+>> 1a) cache the global control value
+>> 1b) on zone changes check if all zones are off, if they are all off, use the
+>>      global control to turn everything off, else turn the global control on;
+>>      and only make the actual WMI call for this if the global control state
+>>      changes vs the last cached value
+>>
+>> 2. Create 4 separate multi-color LED sysfs devices for each zone:
+>>
+>> /sys/class/leds/hp_omen::kbd_backlight-zone1/
+>> /sys/class/leds/hp_omen::kbd_backlight-zone2/
+>> /sys/class/leds/hp_omen::kbd_backlight-zone3/
+>> /sys/class/leds/hp_omen::kbd_backlight-zone4/
+>>
+>> This way we are using standard existing userspace APIs rather then inventing
+>> new userspace API which IMHO is a much better approach.
+>>
+>> Note this is just a suggestion, if you disagree (and can motivate
+>> why you think this is a bad idea) please do speak up about this.
+>>
+>> And please let me know if you need any help with converting the code
+>> to the ed-class-multicolor inetnal kernel APIs there are not that
+>> much users yet, so I have been unable to find a good example to
+>> point you to.
+>>
+>> A downside of this is that it lacks e.g. support in upower. But the
+>> kbd_backlight code in upower needs work anyways. E.g. upower does not
+>> work with backlit USB keyboards if these are plugged in after boot,
+>> or unplugged + re-plugged after boot. So someone really needs to
+>> spend some time to improve the upower keyboard backlight code anyways.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> 
+> I agree the multi-color class is the correct thing to use here, but I am not completely sure if we should have multiple files in /sys/class/leds with the string "kbd_backlight" in them. UPower seems to take the first occurence of kbd_backlight and assume that's the keyboard backlight (https://github.com/freedesktop/upower/blob/0e256ece04a98d3d202ed9640d33c56aaaeda137/src/up-kbd-backlight.c#L263-L269). I completely agree that this implementation needs more work on it, but it may have unintended consequences with software that uses UPower's kbd_backlight to control the keyboard.
+> 
+> For example, Ubuntu (and most gnome based distros) by default ships with gnome-settings-daemon, which by default attempts to dim the keyboard backlight after a short duration when on the "Low Power" ACPI platform profile. (https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/plugins/power/gsd-power-manager.c#L1671). This was currently working as intended with the v2 patch, but if we introduce 4 different files for each zone, this may start dimming only one keyboard zone on low power instead of all 4 of them, which is certainly not intended. There are also multiple projects (mostly gnome extensions) that interact with UPower which might also function incorrectly in other ways. I don't think we should release a feature in the driver which caused unintended consequences like the ones mentioned, especially if the software is popular. What is your opinion on this?
 
-I'm going to wait a bit with merging this to see if Guenter
-has any remarks. If there are no remarks by next Monday then
-I'll merge this for the 6.3 merge window.
+I was hoping / expecting that using $foo::kbd_backlight-$postfix
+would make current upower code ignore the LED class devices, but
+you are right, upower does not parse the string and then checks that
+the part after the last ':' is kbd_backlight it simply does a strstr
+for kbd_backlight in the LED class-device's name. So it would indeed
+pick one zone and use that.
+
+So one thing which we could do is change the name to e.g. :
+
+/sys/class/leds/hp_omen::kbd_zoned_backlight-1/
+/sys/class/leds/hp_omen::kbd_zoned_backlight-2/
+/sys/class/leds/hp_omen::kbd_zoned_backlight-3/
+/sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+
+To make upower ignore all zones (until it learns about
+such setups with new code).
+
+> One alternative I can think of to have the "best of both worlds" (maintain support with Upower, and conform with the muti-color led specification), is to use the multi-color led class, and put all the indexes/brightness under one file. (Please correct me if the multi led specification does not allow this, but I don't see any limitation for having indexes other then just "red", "green" and "blue"):
+> 
+> 
+> $ cat /sys/class/leds/hp_omen::kbd_backlight/multi_index
+> 
+> zone_1_red zone_1_green zone_1_blue zone_2_red zone_2_green zone_2_blue zone_3_red zone_3_green zone_3_blue zone_4_red zone_4_green zone_4_blue
+> 
+> 
+> And we can set it accordingly by doing:
+> 
+> $ echo 255 255 255 255 255 255 255 255 255 255 255 255 > /sys/class/leds/hp_omen::kbd_backlight/multi_intensity
+> 
+> 
+> And then I can use "led_mc_calc_color_components" when the brightness is changed to directly compute the brightness of each index value and pass it to the keyboard through the WMI method.
+> 
+> 
+> I know this suggestion goes back to us putting the all zones under a single file (sort of, we are atleast a bit closer to atleast following a spec now), but what are your thoughts on doing it this way with multi_index instead?
+
+That is quite an interesting proposal, it would still make the current
+kbd-backlight dimming in g-s-d + upower work and it means we only
+need 1 WMI call for changing all the zones, so this nicely matches
+with the actual firmware-API for this.
+
+So yes lets go this route, that seems the best way to do this to me.
+
+Note can you also add a separate patch to document the uses of:
+
+zone_1_red zone_1_green zone_1_blue zone_2_red zone_2_green zone_2_blue ...
+
+As the way to set per-zone colors for RGB backlight keyboards with zones ?
+
+Either in:
+
+Documentation/ABI/testing/sysfs-class-led-multicolor
+
+or in:
+
+Documentation/leds/leds-class-multicolor.rst
+
+?
+
+The idea here is to have a standard way of doing this to refer to
+if / when support for more zoned rgb backlight keyboards gets
+added to the kernel.
+
+I have added Dan Murphy, who is listed as contact for this in:
+Documentation/ABI/testing/sysfs-class-led-multicolor
+to the Cc.
 
 Regards,
 
@@ -109,577 +227,180 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/dell/Kconfig        |   8 +-
->  drivers/platform/x86/dell/dell-wmi-ddv.c | 492 ++++++++++++++++++++++-
->  2 files changed, 495 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index d319de8f2132..bdd78076b1d7 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -192,12 +192,12 @@ config DELL_WMI_DESCRIPTOR
->  config DELL_WMI_DDV
->  	tristate "Dell WMI sensors Support"
->  	default m
-> -	depends on ACPI_BATTERY
->  	depends on ACPI_WMI
-> +	depends on ACPI_BATTERY || HWMON
->  	help
-> -	  This option adds support for WMI-based sensors like
-> -	  battery temperature sensors found on some Dell notebooks.
-> -	  It also supports reading of the battery ePPID.
-> +	  This option adds support for WMI-based fan and thermal sensors
-> +	  found on some Dell notebooks. It also supports various WMI-based battery
-> +	  extras like reading of the battery temperature and ePPID.
-> 
->  	  To compile this drivers as a module, choose M here: the module will
->  	  be called dell-wmi-ddv.
-> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> index 9695bf493ea6..b7ac483eff12 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> @@ -12,19 +12,26 @@
->  #include <linux/device.h>
->  #include <linux/dev_printk.h>
->  #include <linux/errno.h>
-> +#include <linux/kconfig.h>
->  #include <linux/kernel.h>
-> +#include <linux/hwmon.h>
->  #include <linux/kstrtox.h>
->  #include <linux/math.h>
-> +#include <linux/math64.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
->  #include <linux/limits.h>
->  #include <linux/power_supply.h>
->  #include <linux/printk.h>
->  #include <linux/seq_file.h>
->  #include <linux/sysfs.h>
-> +#include <linux/types.h>
->  #include <linux/wmi.h>
-> 
->  #include <acpi/battery.h>
-> 
-> +#include <asm/unaligned.h>
-> +
->  #define DRIVER_NAME	"dell-wmi-ddv"
-> 
->  #define DELL_DDV_SUPPORTED_VERSION_MIN	2
-> @@ -63,13 +70,63 @@ enum dell_ddv_method {
->  	DELL_DDV_THERMAL_SENSOR_INFORMATION	= 0x22,
->  };
-> 
-> +struct fan_sensor_entry {
-> +	u8 type;
-> +	__le16 rpm;
-> +} __packed;
-> +
-> +struct thermal_sensor_entry {
-> +	u8 type;
-> +	s8 now;
-> +	s8 min;
-> +	s8 max;
-> +	u8 unknown;
-> +} __packed;
-> +
-> +struct combined_channel_info {
-> +	struct hwmon_channel_info info;
-> +	u32 config[];
-> +};
-> +
-> +struct combined_chip_info {
-> +	struct hwmon_chip_info chip;
-> +	const struct hwmon_channel_info *info[];
-> +};
-> +
-> +struct dell_wmi_ddv_sensors {
-> +	struct mutex lock;	/* protect caching */
-> +	unsigned long timestamp;
-> +	union acpi_object *obj;
-> +	u64 entries;
-> +};
-> +
->  struct dell_wmi_ddv_data {
->  	struct acpi_battery_hook hook;
->  	struct device_attribute temp_attr;
->  	struct device_attribute eppid_attr;
-> +	struct dell_wmi_ddv_sensors fans;
-> +	struct dell_wmi_ddv_sensors temps;
->  	struct wmi_device *wdev;
->  };
-> 
-> +static const char * const fan_labels[] = {
-> +	"CPU Fan",
-> +	"Chassis Motherboard Fan",
-> +	"Video Fan",
-> +	"Power Supply Fan",
-> +	"Chipset Fan",
-> +	"Memory Fan",
-> +	"PCI Fan",
-> +	"HDD Fan",
-> +};
-> +
-> +static const char * const fan_dock_labels[] = {
-> +	"Docking Chassis/Motherboard Fan",
-> +	"Docking Video Fan",
-> +	"Docking Power Supply Fan",
-> +	"Docking Chipset Fan",
-> +};
-> +
->  static int dell_wmi_ddv_query_type(struct wmi_device *wdev, enum dell_ddv_method method, u32 arg,
->  				   union acpi_object **result, acpi_object_type type)
->  {
-> @@ -171,6 +228,427 @@ static int dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_meth
->  	return dell_wmi_ddv_query_type(wdev, method, arg, result, ACPI_TYPE_STRING);
->  }
-> 
-> +/*
-> + * Needs to be called with lock held, except during initialization.
-> + */
-> +static int dell_wmi_ddv_update_sensors(struct wmi_device *wdev, enum dell_ddv_method method,
-> +				       struct dell_wmi_ddv_sensors *sensors, size_t entry_size)
-> +{
-> +	u64 buffer_size, rem, entries;
-> +	union acpi_object *obj;
-> +	u8 *buffer;
-> +	int ret;
-> +
-> +	if (sensors->obj) {
-> +		if (time_before(jiffies, sensors->timestamp + HZ))
-> +			return 0;
-> +
-> +		kfree(sensors->obj);
-> +		sensors->obj = NULL;
-> +	}
-> +
-> +	ret = dell_wmi_ddv_query_buffer(wdev, method, 0, &obj);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* buffer format sanity check */
-> +	buffer_size = obj->package.elements[0].integer.value;
-> +	buffer = obj->package.elements[1].buffer.pointer;
-> +	entries = div64_u64_rem(buffer_size, entry_size, &rem);
-> +	if (rem != 1 || buffer[buffer_size - 1] != 0xff) {
-> +		ret = -ENOMSG;
-> +
-> +		goto err_free;
-> +	}
-> +
-> +	if (!entries) {
-> +		ret = -ENODATA;
-> +
-> +		goto err_free;
-> +	}
-> +
-> +	sensors->obj = obj;
-> +	sensors->entries = entries;
-> +	sensors->timestamp = jiffies;
-> +
-> +	return 0;
-> +
-> +err_free:
-> +	kfree(obj);
-> +
-> +	return ret;
-> +}
-> +
-> +static umode_t dell_wmi_ddv_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
-> +				       int channel)
-> +{
-> +	return 0444;
-> +}
-> +
-> +static int dell_wmi_ddv_fan_read_channel(struct dell_wmi_ddv_data *data, u32 attr, int channel,
-> +					 long *val)
-> +{
-> +	struct fan_sensor_entry *entry;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_update_sensors(data->wdev, DELL_DDV_FAN_SENSOR_INFORMATION,
-> +					  &data->fans, sizeof(*entry));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (channel >= data->fans.entries)
-> +		return -ENXIO;
-> +
-> +	entry = (struct fan_sensor_entry *)data->fans.obj->package.elements[1].buffer.pointer;
-> +	switch (attr) {
-> +	case hwmon_fan_input:
-> +		*val = get_unaligned_le16(&entry[channel].rpm);
-> +
-> +		return 0;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int dell_wmi_ddv_temp_read_channel(struct dell_wmi_ddv_data *data, u32 attr, int channel,
-> +					  long *val)
-> +{
-> +	struct thermal_sensor_entry *entry;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_update_sensors(data->wdev, DELL_DDV_THERMAL_SENSOR_INFORMATION,
-> +					  &data->temps, sizeof(*entry));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (channel >= data->temps.entries)
-> +		return -ENXIO;
-> +
-> +	entry = (struct thermal_sensor_entry *)data->temps.obj->package.elements[1].buffer.pointer;
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		*val = entry[channel].now * 1000;
-> +
-> +		return 0;
-> +	case hwmon_temp_min:
-> +		*val = entry[channel].min * 1000;
-> +
-> +		return 0;
-> +	case hwmon_temp_max:
-> +		*val = entry[channel].max * 1000;
-> +
-> +		return 0;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int dell_wmi_ddv_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-> +			     int channel, long *val)
-> +{
-> +	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		mutex_lock(&data->fans.lock);
-> +		ret = dell_wmi_ddv_fan_read_channel(data, attr, channel, val);
-> +		mutex_unlock(&data->fans.lock);
-> +
-> +		return ret;
-> +	case hwmon_temp:
-> +		mutex_lock(&data->temps.lock);
-> +		ret = dell_wmi_ddv_temp_read_channel(data, attr, channel, val);
-> +		mutex_unlock(&data->temps.lock);
-> +
-> +		return ret;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int dell_wmi_ddv_fan_read_string(struct dell_wmi_ddv_data *data, int channel,
-> +					const char **str)
-> +{
-> +	struct fan_sensor_entry *entry;
-> +	int ret;
-> +	u8 type;
-> +
-> +	ret = dell_wmi_ddv_update_sensors(data->wdev, DELL_DDV_FAN_SENSOR_INFORMATION,
-> +					  &data->fans, sizeof(*entry));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (channel >= data->fans.entries)
-> +		return -ENXIO;
-> +
-> +	entry = (struct fan_sensor_entry *)data->fans.obj->package.elements[1].buffer.pointer;
-> +	type = entry[channel].type;
-> +	switch (type) {
-> +	case 0x00 ... 0x07:
-> +		*str = fan_labels[type];
-> +
-> +		break;
-> +	case 0x11 ... 0x14:
-> +		*str = fan_dock_labels[type - 0x11];
-> +
-> +		break;
-> +	default:
-> +		*str = "Unknown Fan";
-> +
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dell_wmi_ddv_temp_read_string(struct dell_wmi_ddv_data *data, int channel,
-> +					 const char **str)
-> +{
-> +	struct thermal_sensor_entry *entry;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_update_sensors(data->wdev, DELL_DDV_THERMAL_SENSOR_INFORMATION,
-> +					  &data->temps, sizeof(*entry));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (channel >= data->temps.entries)
-> +		return -ENXIO;
-> +
-> +	entry = (struct thermal_sensor_entry *)data->temps.obj->package.elements[1].buffer.pointer;
-> +	switch (entry[channel].type) {
-> +	case 0x00:
-> +		*str = "CPU";
-> +
-> +		break;
-> +	case 0x11:
-> +		*str = "Video";
-> +
-> +		break;
-> +	case 0x22:
-> +		*str = "Memory"; /* sometimes called DIMM */
-> +
-> +		break;
-> +	case 0x33:
-> +		*str = "Other";
-> +
-> +		break;
-> +	case 0x44:
-> +		*str = "Ambient"; /* sometimes called SKIN */
-> +
-> +		break;
-> +	case 0x52:
-> +		*str = "SODIMM";
-> +
-> +		break;
-> +	case 0x55:
-> +		*str = "HDD";
-> +
-> +		break;
-> +	case 0x62:
-> +		*str = "SODIMM 2";
-> +
-> +		break;
-> +	case 0x73:
-> +		*str = "NB";
-> +
-> +		break;
-> +	case 0x83:
-> +		*str = "Charger";
-> +
-> +		break;
-> +	case 0xbb:
-> +		*str = "Memory 3";
-> +
-> +		break;
-> +	default:
-> +		*str = "Unknown";
-> +
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dell_wmi_ddv_read_string(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-> +				    int channel, const char **str)
-> +{
-> +	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_label:
-> +			mutex_lock(&data->fans.lock);
-> +			ret = dell_wmi_ddv_fan_read_string(data, channel, str);
-> +			mutex_unlock(&data->fans.lock);
-> +
-> +			return ret;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_temp:
-> +		switch (attr) {
-> +		case hwmon_temp_label:
-> +			mutex_lock(&data->temps.lock);
-> +			ret = dell_wmi_ddv_temp_read_string(data, channel, str);
-> +			mutex_unlock(&data->temps.lock);
-> +
-> +			return ret;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static const struct hwmon_ops dell_wmi_ddv_ops = {
-> +	.is_visible = dell_wmi_ddv_is_visible,
-> +	.read = dell_wmi_ddv_read,
-> +	.read_string = dell_wmi_ddv_read_string,
-> +};
-> +
-> +static struct hwmon_channel_info *dell_wmi_ddv_channel_create(struct device *dev, u64 count,
-> +							      enum hwmon_sensor_types type,
-> +							      u32 config)
-> +{
-> +	struct combined_channel_info *cinfo;
-> +	int i;
-> +
-> +	cinfo = devm_kzalloc(dev, struct_size(cinfo, config, count + 1), GFP_KERNEL);
-> +	if (!cinfo)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	cinfo->info.type = type;
-> +	cinfo->info.config = cinfo->config;
-> +
-> +	for (i = 0; i < count; i++)
-> +		cinfo->config[i] = config;
-> +
-> +	return &cinfo->info;
-> +}
-> +
-> +static void dell_wmi_ddv_hwmon_cache_destroy(void *data)
-> +{
-> +	struct dell_wmi_ddv_sensors *sensors = data;
-> +
-> +	mutex_destroy(&sensors->lock);
-> +	kfree(sensors->obj);
-> +}
-> +
-> +static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *wdev,
-> +							    enum dell_ddv_method method,
-> +							    struct dell_wmi_ddv_sensors *sensors,
-> +							    size_t entry_size,
-> +							    enum hwmon_sensor_types type,
-> +							    u32 config)
-> +{
-> +	struct hwmon_channel_info *info;
-> +	int ret;
-> +
-> +	ret = dell_wmi_ddv_update_sensors(wdev, method, sensors, entry_size);
-> +	if (ret < 0)
-> +		return ERR_PTR(ret);
-> +
-> +	mutex_init(&sensors->lock);
-> +
-> +	ret = devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache_destroy, sensors);
-> +	if (ret < 0)
-> +		return ERR_PTR(ret);
-> +
-> +	info = dell_wmi_ddv_channel_create(&wdev->dev, sensors->entries, type, config);
-> +	if (IS_ERR(info))
-> +		devm_release_action(&wdev->dev, dell_wmi_ddv_hwmon_cache_destroy, sensors);
-> +
-> +	return info;
-> +}
-> +
-> +static int dell_wmi_ddv_hwmon_add(struct dell_wmi_ddv_data *data)
-> +{
-> +	struct wmi_device *wdev = data->wdev;
-> +	struct combined_chip_info *cinfo;
-> +	struct hwmon_channel_info *info;
-> +	struct device *hdev;
-> +	int index = 0;
-> +	int ret;
-> +
-> +	if (!devres_open_group(&wdev->dev, dell_wmi_ddv_hwmon_add, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	cinfo = devm_kzalloc(&wdev->dev, struct_size(cinfo, info, 4), GFP_KERNEL);
-> +	if (!cinfo) {
-> +		ret = -ENOMEM;
-> +
-> +		goto err_release;
-> +	}
-> +
-> +	cinfo->chip.ops = &dell_wmi_ddv_ops;
-> +	cinfo->chip.info = cinfo->info;
-> +
-> +	info = dell_wmi_ddv_channel_create(&wdev->dev, 1, hwmon_chip, HWMON_C_REGISTER_TZ);
-> +	if (IS_ERR(info)) {
-> +		ret = PTR_ERR(info);
-> +
-> +		goto err_release;
-> +	}
-> +
-> +	cinfo->info[index] = info;
-> +	index++;
-> +
-> +	info = dell_wmi_ddv_channel_init(wdev, DELL_DDV_FAN_SENSOR_INFORMATION, &data->fans,
-> +					 sizeof(struct fan_sensor_entry), hwmon_fan,
-> +					 (HWMON_F_INPUT | HWMON_F_LABEL));
-> +	if (!IS_ERR(info)) {
-> +		cinfo->info[index] = info;
-> +		index++;
-> +	}
-> +
-> +	info = dell_wmi_ddv_channel_init(wdev, DELL_DDV_THERMAL_SENSOR_INFORMATION, &data->temps,
-> +					 sizeof(struct thermal_sensor_entry), hwmon_temp,
-> +					 (HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX |
-> +					 HWMON_T_LABEL));
-> +	if (!IS_ERR(info)) {
-> +		cinfo->info[index] = info;
-> +		index++;
-> +	}
-> +
-> +	if (index < 2) {
-> +		ret = -ENODEV;
-> +
-> +		goto err_release;
-> +	}
-> +
-> +	hdev = devm_hwmon_device_register_with_info(&wdev->dev, "dell_ddv", data, &cinfo->chip,
-> +						    NULL);
-> +	if (IS_ERR(hdev)) {
-> +		ret = PTR_ERR(hdev);
-> +
-> +		goto err_release;
-> +	}
-> +
-> +	devres_close_group(&wdev->dev, dell_wmi_ddv_hwmon_add);
-> +
-> +	return 0;
-> +
-> +err_release:
-> +	devres_release_group(&wdev->dev, dell_wmi_ddv_hwmon_add);
-> +
-> +	return ret;
-> +}
-> +
->  static int dell_wmi_ddv_battery_index(struct acpi_device *acpi_dev, u32 *index)
->  {
->  	const char *uid_str;
-> @@ -370,7 +848,19 @@ static int dell_wmi_ddv_probe(struct wmi_device *wdev, const void *context)
-> 
->  	dell_wmi_ddv_debugfs_init(wdev);
-> 
-> -	return dell_wmi_ddv_battery_add(data);
-> +	if (IS_REACHABLE(CONFIG_ACPI_BATTERY)) {
-> +		ret = dell_wmi_ddv_battery_add(data);
-> +		if (ret < 0 && ret != -ENODEV)
-> +			dev_warn(&wdev->dev, "Unable to register ACPI battery hook: %d\n", ret);
-> +	}
-> +
-> +	if (IS_REACHABLE(CONFIG_HWMON)) {
-> +		ret = dell_wmi_ddv_hwmon_add(data);
-> +		if (ret < 0 && ret != -ENODEV)
-> +			dev_warn(&wdev->dev, "Unable to register hwmon interface: %d\n", ret);
-> +	}
-> +
-> +	return 0;
->  }
-> 
->  static const struct wmi_device_id dell_wmi_ddv_id_table[] = {
-> --
-> 2.30.2
+
+
+>>>>> +
+>>>>> +
+>>>>> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>>>>> index 0a99058be813..f86cb7feaad4 100644
+>>>>> --- a/drivers/platform/x86/hp/hp-wmi.c
+>>>>> +++ b/drivers/platform/x86/hp/hp-wmi.c
+>>>>> @@ -27,6 +27,7 @@
+>>>>>    #include <linux/rfkill.h>
+>>>>>    #include <linux/string.h>
+>>>>>    #include <linux/dmi.h>
+>>>>> +#include <linux/leds.h>
+>>>>>      MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>>>>>    MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
+>>>>> @@ -136,6 +137,7 @@ enum hp_wmi_command {
+>>>>>        HPWMI_WRITE    = 0x02,
+>>>>>        HPWMI_ODM    = 0x03,
+>>>>>        HPWMI_GM    = 0x20008,
+>>>>> +    HPWMI_KB    = 0x20009,
+>>>>>    };
+>>>>>      enum hp_wmi_hardware_mask {
+>>>>> @@ -254,6 +256,9 @@ static const char * const tablet_chassis_types[] = {
+>>>>>      #define DEVICE_MODE_TABLET    0x06
+>>>>>    +#define OMEN_ZONE_COLOR_OFFSET 0x19
+>>>>> +#define OMEN_ZONE_COLOR_LEN 0x0c
+>>>>> +
+>>>>>    /* map output size to the corresponding WMI method id */
+>>>>>    static inline int encode_outsize_for_pvsz(int outsize)
+>>>>>    {
+>>>>> @@ -734,12 +739,56 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+>>>>>        return count;
+>>>>>    }
+>>>>>    +static ssize_t zone_colors_show(struct device *dev,
+>>>>> +                    struct device_attribute *attr, char *buf)
+>>>>> +{
+>>>>> +    u8 val[128];
+>>>>> +
+>>>>> +    int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
+>>>>> +                       zero_if_sup(val), sizeof(val));
+>>>>> +
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    memcpy(buf, &val[OMEN_ZONE_COLOR_OFFSET], OMEN_ZONE_COLOR_LEN);
+>>>>> +
+>>>>> +    return OMEN_ZONE_COLOR_LEN;
+>>>>> +}
+>>>>> +
+>>>>> +static ssize_t zone_colors_store(struct device *dev,
+>>>>> +                     struct device_attribute *attr,
+>>>>> +                     const char *buf, size_t count)
+>>>>> +{
+>>>>> +    u8 val[128];
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_KB, &val,
+>>>>> +                   zero_if_sup(val), sizeof(val));
+>>>>> +
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    if (count != OMEN_ZONE_COLOR_LEN)
+>>>>> +        return -1;
+>>>>> +
+>>>>> +    memcpy(&val[OMEN_ZONE_COLOR_OFFSET], buf, count);
+>>>>> +
+>>>>> +    ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_KB, &val, sizeof(val),
+>>>>> +                   0);
+>>>>> +
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    return OMEN_ZONE_COLOR_LEN;
+>>>>> +}
+>>>>> +
+>>>>>    static DEVICE_ATTR_RO(display);
+>>>>>    static DEVICE_ATTR_RO(hddtemp);
+>>>>>    static DEVICE_ATTR_RW(als);
+>>>>>    static DEVICE_ATTR_RO(dock);
+>>>>>    static DEVICE_ATTR_RO(tablet);
+>>>>>    static DEVICE_ATTR_RW(postcode);
+>>>>> +static DEVICE_ATTR_RW(zone_colors);
+>>>>>      static struct attribute *hp_wmi_attrs[] = {
+>>>>>        &dev_attr_display.attr,
+>>>>> @@ -752,6 +801,12 @@ static struct attribute *hp_wmi_attrs[] = {
+>>>>>    };
+>>>>>    ATTRIBUTE_GROUPS(hp_wmi);
+>>>>>    +static struct attribute *omen_kbd_led_attrs[] = {
+>>>>> +    &dev_attr_zone_colors.attr,
+>>>>> +    NULL,
+>>>>> +};
+>>>>> +ATTRIBUTE_GROUPS(omen_kbd_led);
+>>>>> +
+>>>>>    static void hp_wmi_notify(u32 value, void *context)
+>>>>>    {
+>>>>>        struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+>>>>> @@ -853,6 +908,10 @@ static void hp_wmi_notify(u32 value, void *context)
+>>>>>        case HPWMI_PROXIMITY_SENSOR:
+>>>>>            break;
+>>>>>        case HPWMI_BACKLIT_KB_BRIGHTNESS:
+>>>>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
+>>>>> +        input_sync(hp_wmi_input_dev);
+>>>>> +        input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
+>>>>> +        input_sync(hp_wmi_input_dev);
+>>>>>            break;
+>>>>>        case HPWMI_PEAKSHIFT_PERIOD:
+>>>>>            break;
+>>>>> @@ -1294,6 +1353,60 @@ static int thermal_profile_setup(void)
+>>>>>      static int hp_wmi_hwmon_init(void);
+>>>>>    +static enum led_brightness get_omen_backlight_brightness(struct led_classdev *cdev)
+>>>>> +{
+>>>>> +    u8 val;
+>>>>> +
+>>>>> +    int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
+>>>>> +
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    return (val & 0x80) ? LED_ON : LED_OFF;
+>>>>> +}
+>>>>> +
+>>>>> +static void set_omen_backlight_brightness(struct led_classdev *cdev, enum led_brightness value)
+>>>>> +{
+>>>>> +    char buffer[4] = { (value == LED_OFF) ? 0x64 : 0xe4, 0, 0, 0 };
+>>>>> +
+>>>>> +    hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_KB, &buffer,
+>>>>> +                       sizeof(buffer), 0);
+>>>>> +}
+>>>>> +
+>>>>> +static struct led_classdev omen_kbd_led = {
+>>>>> +    .name = "hp_omen::kbd_backlight",
+>>>>> +    .brightness_set = set_omen_backlight_brightness,
+>>>>> +    .brightness_get = get_omen_backlight_brightness,
+>>>>> +    .max_brightness = 1,
+>>>>> +    .groups = omen_kbd_led_groups,
+>>>>> +};
+>>>>> +
+>>>>> +static bool is_omen_lighting_supported(void)
+>>>>> +{
+>>>>> +    u8 val;
+>>>>> +
+>>>>> +    int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_KB, &val, zero_if_sup(val), sizeof(val));
+>>>>> +
+>>>>> +    if (ret)
+>>>>> +        return false;
+>>>>> +
+>>>>> +    return (val & 1) == 1;
+>>>>> +}
+>>>>> +
+>>>>> +static int omen_backlight_init(struct device *dev)
+>>>>> +{
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
+>>>>> +
+>>>>> +    ret = devm_led_classdev_register(dev, &omen_kbd_led);
+>>>>> +
+>>>>> +    if (ret < 0)
+>>>>> +        return -1;
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>>    static int __init hp_wmi_bios_setup(struct platform_device *device)
+>>>>>    {
+>>>>>        int err;
+>>>>> @@ -1321,6 +1434,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>>>>>          thermal_profile_setup();
+>>>>>    +    if (is_omen_lighting_supported())
+>>>>> +        omen_backlight_init(&device->dev);
+>>>>> +
+>>>>>        return 0;
+>>>>>    }
+>>>>>    
 > 
 
