@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50426C05027
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF167C05027
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  6 Feb 2023 15:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjBFOwJ (ORCPT
+        id S229735AbjBFPBn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 6 Feb 2023 09:52:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37116 "EHLO
+        Mon, 6 Feb 2023 10:01:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbjBFOwI (ORCPT
+        with ESMTP id S229500AbjBFPBm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2023 09:52:08 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87B81C7DD;
-        Mon,  6 Feb 2023 06:52:07 -0800 (PST)
+        Mon, 6 Feb 2023 10:01:42 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6F81E9C0;
+        Mon,  6 Feb 2023 07:01:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675695127; x=1707231127;
+  t=1675695701; x=1707231701;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=L+5LlR1un7mprtyQt90rzYhyMN85ej+w5cAPag3X0F8=;
-  b=VinLM5Q/icnABxLnH5SxR95LPQvUEgbPfRMTI4GFhI/kGRQQbK/D6h6t
-   HfQu3e6Jm6o3yXMejcMKpjeidC3eFOQhs37H/roOdXo4agbpZ2ceS5RrR
-   FYBUZnYhR9GkydBM8EJVq49l4U26ONpTB+9iEze+kq69EVtfZc9ud+1+L
-   r1QiSevR6khtoiRoVyOJvWUfkIwUGwUz0dRjONmTA+io0lSEGXpQ9BbSJ
-   By2OKokJkJe/xK3vDvMiKhMCtbH858+PLqjaCC4B/gZSCjPblBw/fg4Im
-   2pVyy5W8uggfxedqFYrckOKFnavX598nTA4SvaILLKNsG5JJok5MBsDq6
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="329235388"
+  bh=Om6WD/1Mx5CxjfHlHObyDLvGRocDTOtSddT1RwDeHp4=;
+  b=cCEnINPQ3hpcNO3ycu3gpSDNwwml053Q8en1iTPvPorEMwM87WKjspBP
+   ajPAS6ECTI9GQZ+/YiwGLLqHx0ZVl9VUaaZRytPg5YX9reXc3M236CvAS
+   U9zVtjUQVkm7K9d57xziUaXRZGy7SzEMZeFeuMhm1BGPJg00RXFmeuhLM
+   Nar31BYNGu1oVlTz9U/uBVssdIe+uroOiaI3GNnxIV9OtSQFYKPynUQII
+   nzCEXOYAT3jOQGTYVnRvxlK89wf7U5vOTtn7mT0jWZZQSd2reCItknSF0
+   6mmsKIKuurom/RTfx2QyzMlpWaBih2RdlpXikJ5IKQbDQ5WoDj9xDfF39
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="331355591"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="329235388"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 06:52:07 -0800
+   d="scan'208";a="331355591"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 07:01:31 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="696884891"
+X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="735153689"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="696884891"
+   d="scan'208";a="735153689"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 06 Feb 2023 06:52:05 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 06 Feb 2023 07:01:29 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2BAB6241; Mon,  6 Feb 2023 16:52:44 +0200 (EET)
+        id 227451EA; Mon,  6 Feb 2023 17:02:07 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 1/1] platform/x86: Fix header inclusion in linux/platform_data/x86/soc.h
-Date:   Mon,  6 Feb 2023 16:52:38 +0200
-Message-Id: <20230206145238.19460-1-andriy.shevchenko@linux.intel.com>
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/x86: Add include/linux/platform_data/x86 to MAINTAINERS
+Date:   Mon,  6 Feb 2023 17:02:02 +0200
+Message-Id: <20230206150202.27892-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -57,47 +57,27 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-First of all, we don't use intel-family.h directly. On the other hand
-we actively use boolean type, that is defined in the types.h (we take
-top-level header for that) and x86_cpu_id, that is provided in the
-mod_devicetable.h.
-
-Secondly, we don't need to spread SOC_INTEL_IS_CPU() macro to the users.
-Hence, undefine it when it's appropriate.
+Most of the files there are being used under PDx86 subsystem or
+tightly related drivers (like drivers/clk/x86/). I think it makes
+sense to assure that PDx86 keeps an eye on the changes there.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/platform_data/x86/soc.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/platform_data/x86/soc.h b/include/linux/platform_data/x86/soc.h
-index da05f425587a..a5705189e2ac 100644
---- a/include/linux/platform_data/x86/soc.h
-+++ b/include/linux/platform_data/x86/soc.h
-@@ -8,10 +8,13 @@
- #ifndef __PLATFORM_DATA_X86_SOC_H
- #define __PLATFORM_DATA_X86_SOC_H
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4329d6611c20..705ffd15afbe 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22598,6 +22598,7 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
+ F:	drivers/platform/olpc/
+ F:	drivers/platform/x86/
++F:	include/linux/platform_data/x86/
  
-+#include <linux/types.h>
-+
- #if IS_ENABLED(CONFIG_X86)
- 
-+#include <linux/mod_devicetable.h>
-+
- #include <asm/cpu_device_id.h>
--#include <asm/intel-family.h>
- 
- #define SOC_INTEL_IS_CPU(soc, type)				\
- static inline bool soc_intel_is_##soc(void)			\
-@@ -34,6 +37,8 @@ SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
- SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
- SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
- 
-+#undef SOC_INTEL_IS_CPU
-+
- #else /* IS_ENABLED(CONFIG_X86) */
- 
- static inline bool soc_intel_is_byt(void)
+ X86 PLATFORM DRIVERS - ARCH
+ R:	Darren Hart <dvhart@infradead.org>
 -- 
 2.39.1
 
