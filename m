@@ -2,223 +2,127 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F75C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 13:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA7C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 14:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232174AbjBGNHK (ORCPT
+        id S231892AbjBGOH6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Feb 2023 08:07:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        Tue, 7 Feb 2023 09:07:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbjBGNHI (ORCPT
+        with ESMTP id S232385AbjBGOHq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Feb 2023 08:07:08 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FB63A59F;
-        Tue,  7 Feb 2023 05:06:31 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id d6-20020a17090ae28600b00230aa72904fso6596535pjz.5;
-        Tue, 07 Feb 2023 05:06:31 -0800 (PST)
+        Tue, 7 Feb 2023 09:07:46 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DB6C169
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Feb 2023 06:07:30 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id dr8so43330460ejc.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Feb 2023 06:07:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjpRuK8k8RRKLaDbGjDWUWOftV+VwVWVrEyk065W4Ds=;
-        b=kwCuuMxftyZesEoaINln53P4sGlTVNgzyGaOmHZ9Csy9IymIwfc8lsyGgVdyldDghR
-         ECGZ+sGmWtoTqNIVtVQm5SWwbz3AqixjwQrhEki9lRUv8xrerLb2sV4xws8B6S02kwlP
-         YnKUywqLbvIOxDD1nb5iRhNXUNHLfumm56xGA+IAmuHatGPTjMALVPdBB3S5dIIukNro
-         JK0XYLnu5tXOpE4XbXoXKROt0wfZHNbq52qUAOVyioBjivulXtcGL+M/ffVRqzA2B5b8
-         5mGS6UNKHsDFunUjTfvdqY/TBLzx5Ow52pXN7zaVM7VGvuqlNQvAxAb168cGSveV9e9g
-         T4hw==
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5FCfGZQ6QcRLAbCiEs0inxCj6h4/+YX1h9G8rkZvCE8=;
+        b=e80aBW1nqn+FqG1ZCgMOg8MDk9N8g4xboySe8jAFdTVh3ri88PPk1r1w3i7MYVUWBe
+         hy/SERaB82O0T+C+/cFyO3w5an5B4LgNfSZVPSfEcwIhQcu2MJfXwpcoeNicl7/n8iqj
+         J/gUt9cNDiKYnLKQVOc6N4X5kkmuTOGR1NLNCixvWV8DCduQFuZhqHVJIM6dbSPvX8sl
+         K8hvFPnHthNBH1SGJJ8zK7YC4NNbhS9taqPDB2/QBACu35fgiFBxqKjSQrpmqRXd8Zwc
+         qzHr8dtq6Qd1ZgCofcaMI9GjnNTDMs4zXZVNyLVZ4blNYrS5zl7R1zUYXRdue5l8BK3Z
+         1quA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjpRuK8k8RRKLaDbGjDWUWOftV+VwVWVrEyk065W4Ds=;
-        b=uuq6KBc0SAK1NpFPFbOsWQipOulYvM8IjWh7O2eEMMIRe2aHPwNNgJJ7iOtRJzfAeE
-         K8GhWvEg69jnW7EcmGr8CQfJT7vn9V+csdP0gFWCR9LZ3680RcxjAOQ5xomLu/7ge6fQ
-         fgzjGi31Z9tlIsyBL9+03aW37MwzRxk1AwNERfRvcNE8U8Jil4GhoRomlJvK3vG1ZQqe
-         IFFj0MeBhY6P27ZN8coS2Qv9thfpYb0IqmF+OsBOp5l0vhWmE/7x9Npm8cJm297XnaJc
-         auR4QHPQOehOGHcnpS3ggLdVXeCspKUNp9G4uInVAXH4IYPVdcv7orHqnh7QIZHUnAnD
-         T/gQ==
-X-Gm-Message-State: AO0yUKW6EpNhOxV4pl1MlWwzz60NC/rkV3phdflQ9Lu93miPF/jSVIH5
-        OgpRuRaafVSfiU0r47w4FFk=
-X-Google-Smtp-Source: AK7set89srq29r9rfQ4XZUvcx6WMTD2YZtjenSjPvYYKvzWB2nFOpbnKWK/gN5Daxc8FwwsImy3pRg==
-X-Received: by 2002:a17:90b:1d12:b0:22c:6c0c:3e3b with SMTP id on18-20020a17090b1d1200b0022c6c0c3e3bmr4051522pjb.7.1675775157135;
-        Tue, 07 Feb 2023 05:05:57 -0800 (PST)
-Received: from [192.168.0.133] ([106.51.67.219])
-        by smtp.gmail.com with ESMTPSA id u5-20020a17090a400500b00230b8431323sm3777969pjc.30.2023.02.07.05.05.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Feb 2023 05:05:56 -0800 (PST)
-From:   Rishit Bansal <rishitbansal0@gmail.com>
-X-Google-Original-From: Rishit Bansal <rishit.bansal0@gmail.com>
-Message-ID: <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
-Date:   Tue, 7 Feb 2023 18:35:52 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
- V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
-Content-Language: en-US
-To:     Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>
-Cc:     Rishit Bansal <rishitbansal0@gmail.com>,
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5FCfGZQ6QcRLAbCiEs0inxCj6h4/+YX1h9G8rkZvCE8=;
+        b=wrjY4mr0HYiHH6fMqF7RubOWCjsQb13wS1xNp9qlIbRZlrfJJi05NqqKHtbbFO4NDI
+         nzkTC8Dl5sYwa7nbF9uwWr8qERU5AZL/Mf3CdTAIj0ZkGFHEGTO4LMKDhzPr1JUPdu8w
+         MZrTZy3xhAEUmt0r38ylXnJSMon/FVg45mWAk5zezr0VM6OOF61LvDF4THSB5KEe7x2f
+         /NdAjWMVQnAsD6oaI16GJZNxWYQqfCAoDZ68u+yG2tGUqre8J9GGNvj+JpUCiZ2h5JYV
+         G/FtYe9kUt2ddxdypjzuq0reu6wMb7llQ7XoqRy4KODRWbVaHvkNHdHH+t0rdsYrMQWU
+         WPBQ==
+X-Gm-Message-State: AO0yUKWfl2KnaboqMK/hkHWcsIbPUwEuybEt1zKgzk0MLJAcVQGRgRaO
+        Zgr9jyb4y+q/NQoZjxXBqQI=
+X-Google-Smtp-Source: AK7set+KcHPhGXX8vRnTDkj4FuhtI+HaLMN+388RqiLAfRjdSiI/mr6/B13Wd8LVf0w/yCPKt6iFSg==
+X-Received: by 2002:a17:906:2011:b0:881:4d98:fe2e with SMTP id 17-20020a170906201100b008814d98fe2emr3861500ejo.29.1675778849029;
+        Tue, 07 Feb 2023 06:07:29 -0800 (PST)
+Received: from localhost ([5.188.50.6])
+        by smtp.gmail.com with ESMTPSA id b14-20020a1709063f8e00b0088dc98e4510sm6959144ejj.112.2023.02.07.06.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Feb 2023 06:07:27 -0800 (PST)
+Date:   Tue, 7 Feb 2023 16:07:22 +0200
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+To:     Jorge Lopez <jorge.lopez2@hp.com>, Alex Hung <alexhung@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
- <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
- <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
- <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
- <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
- <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
-In-Reply-To: <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        platform-driver-x86@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Rishit Bansal <rishitbansal0@gmail.com>,
+        Enver Balalic <balalic.enver@gmail.com>
+Subject: Firmware upgrade broke SW_TABLET_MODE on HP Dragonfly G2
+Message-ID: <Y+JbBiMJw+VLo2Nr@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hello,
 
-On 07/02/23 17:23, Pavel Machek wrote:
-> Hi!
-> 
->>>> 2. Create 4 separate multi-color LED sysfs devices for each zone:
->>>>
->>>> /sys/class/leds/hp_omen::kbd_backlight-zone1/
->>>> /sys/class/leds/hp_omen::kbd_backlight-zone2/
->>>> /sys/class/leds/hp_omen::kbd_backlight-zone3/
->>>> /sys/class/leds/hp_omen::kbd_backlight-zone4/
-> 
-> 4 separate devices, please. And the naming should be consistent with
-> the rest, so
-> 
-> :rbg:kbd_backlight-zone1
+I use HP Dragonfly G2, Arch linux, kernel 6.1.9, and I upgraded the
+firmware from 1.9.1 to 1.11 (using fwupdmgr/LVFS), and this upgrade
+broke tablet mode detection on my laptop. I did some debugging, and
+that's what I found:
 
-As covered above previously, we cannot have kbd_backlight in the name as 
-Upower and several other userspace software which depend on it assume 
-that /sys/class/leds has just a single file name with the string 
-"kbd_backlight" in it:
+1. On both firmware versions: hp-wmi registers SW_TABLET_MODE, but never
+reports events. Although HPWMI_EVENT_GUID is present on my system,
+hp_wmi_notify never gets any events of any kind. Good thing is that at
+least hp_wmi_get_tablet_mode (/sys/devices/platform/hp-wmi/tablet) works
+on my laptop.
 
-> For example, Ubuntu (and most gnome based distros) by default ships with gnome-settings-daemon, which by default attempts to dim the keyboard backlight after a short duration when on the "Low Power" ACPI platform profile. (https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/plugins/power/gsd-power-manager.c#L1671). This was currently working as intended with the v2 patch, but if we introduce 4 different files for each zone, this may start dimming only one keyboard zone on low power instead of all 4 of them, which is certainly not intended. There are also multiple projects (mostly gnome extensions) that interact with UPower which might also function incorrectly in other ways. I don't think we should release a feature in the driver which caused unintended consequences like the ones mentioned, especially if the software is popular. What is your opinion on this?
+2. "Intel HID switches" is the device that reports actual SW_TABLET_MODE
+events on firmware 1.9.1, but not anymore on firmware 1.11.
+SW_TABLET_MODE is registered after the first event (by auto_add_switch,
+on firmware 1.9.1 only).
 
+3. SW_TABLET_MODE reported by "Intel HID switches" (on firmware 1.9.1)
+differs from /sys/devices/platform/hp-wmi/tablet, when the laptop is not
+fully folded, but put into a stand position (the hinge is open more than
+180°, the keyboard faces the table). The reason is because hp-wmi only
+treats system_device_mode[0] == 6 as tablet, but 5 (stand mode) isn't
+included, while "Intel HID switches" report SW_TABLET_MODE = 1 in the
+stand mode.
 
-However, as Hans mentioned above, its possible to keep 4 seperate files 
-and use a name other than kbd_backlight, so that we don't break existing 
-stuff until the issue is fixed on upower:
+I'm pretty sure about my findings, I flashed each of these two firmware
+versions again and tested what happens in hp-wmi and intel/hid, of
+course without changing any software versions.
 
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+Regarding point 3, I can send a patch for hp-wmi, but it's not going to
+be useful for my laptop because of point 1, and I can't be fully sure it
+doesn't break other HP laptops (unless Jorge confirms?).
 
+Now back to the main topic. There are two directions that I see:
 
+1. Fix the regression in the firmware and make Intel HID switches work
+again. Unfortunately, I didn't have success reporting the firmware bug
+via HP customer support, and they don't seem to admit the bug or even
+having uploaded their firmware to LVFS. If Jorge (or anyone else on the
+mailing list) could give me some contact of a person responsible for
+firmware on LVFS or the proper way to file a bug report, I would highly
+appreciate it. Maybe Alex has an idea why intel/hid could stop working?
 
-> 
-> would be closer to something consistent. Should be documented in
-> 
-> Documentation/leds/well-known-leds.txt
-> 
-> . And if you take a look there, you'll notice we already have N900
-> that has 6 zones with white backlight.
-> 
+2. Somehow tweak hp-wmi to start getting events on my laptop and switch
+to SW_TABLET_MODE reports from hp-wmi (also fixing the stand mode
+reports). For this, I would need help from Jorge (or someone who knows
+HP laptop internals), I don't have ideas why it might be broken for me.
 
-This is interesting as well, it appears the N900 also doesn't have 
-"kbd_backlight" in the name at all. It instead uses a format like the 
-following:
+I will appreciate any help, and I'm happy to provide additional
+information if needed.
 
-/sys/class/leds/lp5523:kb1/
-/sys/class/leds/lp5523:kb2/
-...
-
-
-I'm not sure if this is because the N900 driver was made long before we 
-had the concept of "kbd_backlight" in the name, or because of some other 
-reason. There are about 9-10 drivers on the kernel which are sticking 
-with using the "kbd_backlight" convention, so N900 seems to be an 
-outlier here.
-
-
-> But I'd really like to see plan to go forward. AFAICT there are
-> keyboards with per-key backlight, and those start to look less like a
-> set of LEDs and more like a display..
-
-
-> 
-> Best regards,
-> 								Pavel
-
-
-Something else I would like to add. I had a look at 
-include/dt-bindings/leds/common.h, and it defines the following:
-
-/* Standard LED colors */
-#define LED_COLOR_ID_WHITE	0
-#define LED_COLOR_ID_RED	1
-#define LED_COLOR_ID_GREEN	2
-#define LED_COLOR_ID_BLUE	3
-#define LED_COLOR_ID_AMBER	4
-#define LED_COLOR_ID_VIOLET	5
-#define LED_COLOR_ID_YELLOW	6
-#define LED_COLOR_ID_IR		7
-#define LED_COLOR_ID_MULTI	8	/* For multicolor LEDs */
-#define LED_COLOR_ID_RGB	9	/* For multicolor LEDs that can do arbitrary 
-color,
-					   so this would include RGBW and similar */
-#define LED_COLOR_ID_PURPLE	10
-#define LED_COLOR_ID_ORANGE	11
-#define LED_COLOR_ID_PINK	12
-#define LED_COLOR_ID_CYAN	13
-#define LED_COLOR_ID_LIME	14
-#define LED_COLOR_ID_MAX	15
-
-This means that the proposal I had made for supporting intensities such 
-as zone_1_red zone_1_green zone_1_blue zone_2_red zone_2_green 
-zone_2_blue ... would be invalid as well, and inconsistent with these 
-definitions. The limit of "15" would also prohibit us from supporting 
-keyboards in the future which support lighting for every single key, as 
-we would need way more than 15 indexes to accommodate all of these.
-
-So we are at sort of a conflicted state where none of the standards seem 
-to correctly "completely" accomodate every single case/scenario of 
-keyboard backlighting and zones.
-
-
-Here is yet another approach to handle this, which I feel we should 
-consider:
-
-We can keep the kbd_backlight file, and additionally have the 4 zones as 
-separate files, (a total of 5 files) like the following:
-
-
-1. /sys/class/leds/hp_omen::kbd_backlight
-
-This file controls the global backlight brightness for all 4 zones. It 
-will have no control for RGB control at this level, this is just sort of 
-a global switch for the entire backlight. Setting the brightness on this 
-level will update the brightness for every zone. This file will also 
-help us maintain support with Upower.
-
-2.
-/sys/class/leds/hp_omen::kbd_zoned_backlight-1/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-2/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-3/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-4/
-
-These will be multi intensity RGBs, each supporting "red green blue" 
-intensities, and can be used to individually control the brightness of 
-each zone. Note that these files don't have "kbd_backlight" in the name 
-for us to not mess with Upower's logic of only having a single keyboard 
-backlight. This can be documented in 
-Documentation/leds/well-known-leds.txt for future drivers which plan to 
-support something similar.
-
-
-Please let me know if you have any suggestions/comments around this new 
-way of handling this.
-
-
-
+Thanks,
+Max
