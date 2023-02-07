@@ -2,101 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82445C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D624BC636CD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 12:58:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231280AbjBGLxp (ORCPT
+        id S231922AbjBGM6h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Feb 2023 06:53:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37506 "EHLO
+        Tue, 7 Feb 2023 07:58:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjBGLxo (ORCPT
+        with ESMTP id S231877AbjBGM6f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Feb 2023 06:53:44 -0500
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3860C166C0;
-        Tue,  7 Feb 2023 03:53:43 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AF76A1C0AC1; Tue,  7 Feb 2023 12:53:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1675770820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9/ISXoRJN7OjSXYI/XQDHcFUt5zq8kzBAjPdDE1ePBE=;
-        b=dTyTYkHAhsiD/0G2buTHNzmpOUlsQPm0VYKjZq6PGNoWFMWPmdZRM3n7Zc4CaAYOzdi/XB
-        nsDWb5rTlJmM1umgrhUq0sxJWMdbDOxbksDQHrfQgms9YmSozfYq5e9q6VDyoOJF1V+kkX
-        6BupfLyA8f4FIE6aj0ph7tGPhC7uJOk=
-Date:   Tue, 7 Feb 2023 12:53:40 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Rishit Bansal <rishitbansal0@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
- V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
-Message-ID: <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
- <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
- <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
- <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
- <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+        Tue, 7 Feb 2023 07:58:35 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94E823DBD;
+        Tue,  7 Feb 2023 04:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675774714; x=1707310714;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WDJpMcDdYBilMJ0Vr9d6MMAORMQnG9SLY+Ss5nORfsM=;
+  b=mQe/nkM5y+rlGVkvTRz5QmyaIAAHZ0NAZQll6rNqHedWcrUvZPpiAMFn
+   M8b34yPSUIHULV9bTRDgiNdllYKLZGSEPkzCCmG3CScgYxYXUjc4A2KNh
+   KMfyMu0e/dxpo5AH5FDTwlFBZbSk0aKysxtnnKAmTWD+iSBZRJPdqTOae
+   /hP9BXs37rC/aNgVHwVYCYC54UGLleJ5pGSFL5oTkV14cl3sfFSKirzwh
+   IQ8kZg35D6cncJv24ZM2vS6PV7CkmvY5TDtb8ujPPfvUSfbB9M/f+bCGw
+   ZzCpILeJR+KwLNxkLPJ5MReUb95aemZF5VGhf3uPS8q25f9HI8ZnIeFW0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="331630962"
+X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
+   d="scan'208";a="331630962"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 04:58:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="840752267"
+X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
+   d="scan'208";a="840752267"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga005.jf.intel.com with ESMTP; 07 Feb 2023 04:58:34 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org, david.e.box@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/vsec: Use mutex for ida_alloc() and ida_free()
+Date:   Tue,  7 Feb 2023 04:58:21 -0800
+Message-Id: <20230207125821.3837799-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1/R09bAlpMH05W/O"
-Content-Disposition: inline
-In-Reply-To: <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+ID alloc and free functions don't have in built protection for parallel
+invocation of ida_alloc() and ida_free(). With the current flow in the
+vsec driver, there is no such scenario. But add mutex protection for
+potential future changes.
 
---1/R09bAlpMH05W/O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/vsec.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Hi!
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index b936fc5776d7..f1680b7e64f5 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -129,11 +129,16 @@ static void intel_vsec_remove_aux(void *data)
+ 	auxiliary_device_uninit(data);
+ }
+ 
++static DEFINE_MUTEX(vsec_ida_lock);
++
+ static void intel_vsec_dev_release(struct device *dev)
+ {
+ 	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(dev);
+ 
++	mutex_lock(&vsec_ida_lock);
+ 	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
++	mutex_unlock(&vsec_ida_lock);
++
+ 	kfree(intel_vsec_dev->resource);
+ 	kfree(intel_vsec_dev);
+ }
+@@ -145,7 +150,9 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+ 	struct auxiliary_device *auxdev = &intel_vsec_dev->auxdev;
+ 	int ret, id;
+ 
++	mutex_lock(&vsec_ida_lock);
+ 	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
++	mutex_unlock(&vsec_ida_lock);
+ 	if (ret < 0) {
+ 		kfree(intel_vsec_dev);
+ 		return ret;
+@@ -161,7 +168,9 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+ 
+ 	ret = auxiliary_device_init(auxdev);
+ 	if (ret < 0) {
++		mutex_lock(&vsec_ida_lock);
+ 		ida_free(intel_vsec_dev->ida, auxdev->id);
++		mutex_unlock(&vsec_ida_lock);
+ 		kfree(intel_vsec_dev->resource);
+ 		kfree(intel_vsec_dev);
+ 		return ret;
+-- 
+2.39.1
 
-> >> 2. Create 4 separate multi-color LED sysfs devices for each zone:
-> >>
-> >> /sys/class/leds/hp_omen::kbd_backlight-zone1/
-> >> /sys/class/leds/hp_omen::kbd_backlight-zone2/
-> >> /sys/class/leds/hp_omen::kbd_backlight-zone3/
-> >> /sys/class/leds/hp_omen::kbd_backlight-zone4/
-
-4 separate devices, please. And the naming should be consistent with
-the rest, so
-
-:rbg:kbd_backlight-zone1
-
-would be closer to something consistent. Should be documented in
-
-Documentation/leds/well-known-leds.txt
-
-=2E And if you take a look there, you'll notice we already have N900
-that has 6 zones with white backlight.
-
-But I'd really like to see plan to go forward. AFAICT there are
-keyboards with per-key backlight, and those start to look less like a
-set of LEDs and more like a display...
-
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---1/R09bAlpMH05W/O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCY+I7xAAKCRAw5/Bqldv6
-8lmRAJ9H3ltvW8JDmIbMMIJaYG7arMtCEACgujbuLIFOW2SzpJh7w1dG3LJQS2Y=
-=5tqd
------END PGP SIGNATURE-----
-
---1/R09bAlpMH05W/O--
