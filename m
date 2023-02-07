@@ -2,196 +2,528 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF872C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 19:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6D4C636CD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Feb 2023 23:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231719AbjBGTtI (ORCPT
+        id S229649AbjBGXXr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Feb 2023 14:49:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
+        Tue, 7 Feb 2023 18:23:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231172AbjBGTtB (ORCPT
+        with ESMTP id S229508AbjBGXXq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Feb 2023 14:49:01 -0500
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A49BD3D925;
-        Tue,  7 Feb 2023 11:48:42 -0800 (PST)
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 317IQIXS012401;
-        Tue, 7 Feb 2023 19:48:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pps0720;
- bh=gWhBG56bA3FjO77WzZJWhEmBYgHOztfg0LeLVpldPFI=;
- b=auIf/s3l+Bn9BdtpzY7SKhbOUVbiObNI1wX4Hw5cWpp4WaQNM/rAnRN9d0/tRwr4piT/
- NsEwlc3csjs4Cz81oZh+aXsRdjr9KZ7qpZhGO4B0PH84wtr5ucN3It1izf9gF4hmWm6M
- MSMcaOdd+Up27Y+MVtb/wRV6BRZsatznYL/KG69RsXgLlBbaOm0NMZNy3QcIGod/imer
- /htiabqTzvoHryEijJOmahuexb4PpjGN2InyDvmWeM8yYzdusjzHEze9d7TK+Vewsmre
- s238nZp+pPLqABrm7USCEmJvx8u6+9a7S2FFLxMb8PsYkO9E42hBvg0ZLxoA3YBaXjvB Kg== 
-Received: from p1lg14880.it.hpe.com (p1lg14880.it.hpe.com [16.230.97.201])
-        by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3nkuwprjrw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Feb 2023 19:48:26 +0000
-Received: from p1wg14923.americas.hpqcorp.net (unknown [10.119.18.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id DD8A9800345;
-        Tue,  7 Feb 2023 19:48:25 +0000 (UTC)
-Received: from p1wg14925.americas.hpqcorp.net (10.119.18.114) by
- p1wg14923.americas.hpqcorp.net (10.119.18.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Tue, 7 Feb 2023 07:48:16 -1200
-Received: from p1wg14921.americas.hpqcorp.net (16.230.19.124) by
- p1wg14925.americas.hpqcorp.net (10.119.18.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36
- via Frontend Transport; Tue, 7 Feb 2023 07:48:16 -1200
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (192.58.206.38)
- by edge.it.hpe.com (16.230.19.124) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Tue, 7 Feb 2023 07:48:16 -1200
+        Tue, 7 Feb 2023 18:23:46 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90EC63E638
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Feb 2023 15:23:43 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MHbcWD0zNtR8BJcBcv2ecUqi9WLaVyvLIYWYd3k3qKUwHVx+G09u7OvysD7lcp0ZAsRt5IuTVkaqTse+oejpucPbZViAjZ1bZEIymMxxyywMItw2JZkCD4z0QAFgEEilMtkXb9fEjes70u3QSZhAZa/0W6113d0jxNQMklEDmxtibDYVERaYlLEQQexlRxLMHdsf0fZPNRWCJrzhQntpc2Ey5aU2kUXFfC/qMNZeubWk0GJzDb14ROEnYDFUjjqOM5MrM47e8J4M7riMAiMhJBNSpmY7PKMWoBCJKsuc86LbglHEBfE/1i8UtSxbikoTIxmnY08HJYBieKWE5HycBQ==
+ b=IfJb/6F4nwJx+/Hp+7I2wwEWfPhXBy6jzLZUwdT2E781UiMKTFctm+GktrczxNZmoHoTKHBejPiETaBmDpYzbylywbQzye5ZaHyySdukXq8CF/BWujs3yoVkUwtjV6WSHmonGkmH5ZV61GuisIFzTx173buhVgUPAMo//IPR9vaza6RS4gZyLhGFCTG3qETdFtS/NGNdo9nb5Hw/wRw//0swp/GZcmtpwPpN2ll5g0kf5qG4CZ5a8IKgi/Srzpv5PulUOqhNhVExI7QDroL/f8id2ifDgnUFXwXvUwxW+5MGECKEyqCq4Kk9KG8ojk+sU+3jL/bU3M/uH/ABM7sQgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gWhBG56bA3FjO77WzZJWhEmBYgHOztfg0LeLVpldPFI=;
- b=PMKwxn+FHoZJIz7sNhuTZB35Uc1RMKOKXLNHd/Vnozs5vB0tdtQwAFICvUlZ9Rj6d7reLRGl30l3asy7pJ6GA3LLMc9OsTbRz174sVTeO6hHPS0jSepflirjTvpgzxazdbuxUQInJw4Lq8wAC4TwXrP3Tc6nyL8TOP5FqN8URJQjb2fAtJyC4vTIPSmykoejokXWxXJnUkJl8rUM+lILL7SZ76wmkwT5waI1FB3Yptm1eDGnPeQq5h+C5En+Mms/r49xgRSbD+ZxAaGCyj8s/VrnxzGnm1kL+NPzGL0Df0S5hwQhr4hh/e30ftN4l7ACtX8EL6rH6wcN30JKkjB0Cg==
+ bh=kLatf2QUFQ4PjVUKRsCBn+0bh5aov6QDBqyh1Usn6Q0=;
+ b=Io0Ua4uUgysPUaHmNQW1uKxIAnvK1yW4ZCkdxyut6XgrCTEnVU4z1CIc/wgS1vvtQEx3blhDzzMqqlArApTkdAHhbxJ9l7pR+iTXan4kmyV/UvbmW3UEqzQB7HY3TpbdpU3XbubtSgsjE6V1dYxQnfq9e4oCQxIO48QAERbyzNYbkdIy1q6SB4GYWvcxdmZzOBiZ4KvvYEj6NKD+VVeD7VI2vQy9McFBjIbCZMcmMkiTF/me/lIfbT5wi0aMQlE6JrCYte70xifud4Q0Ju/TaTKACzd7yBe9QZaFHKTvR6INzaNrFG43TFZHrbaxO9Q+Oo3ciyX4e/JgvEp6gfKHww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:153::10)
- by PH7PR84MB3183.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:1b2::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Tue, 7 Feb
- 2023 19:48:14 +0000
-Received: from PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::1a30:a320:c989:4f7b]) by PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::1a30:a320:c989:4f7b%9]) with mapi id 15.20.6064.036; Tue, 7 Feb 2023
- 19:48:13 +0000
-From:   "Ernst, Justin" <justin.ernst@hpe.com>
-To:     =?utf-8?B?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>,
-        "Divya Bharathi" <divya.bharathi@dell.com>,
-        Prasanth Ksr <prasanth.ksr@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        "Mark Pearson" <markpearson@lenovo.com>
-CC:     "Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/3] x86/platform/uv: Make kobj_type structure constant
-Thread-Topic: [PATCH 3/3] x86/platform/uv: Make kobj_type structure constant
-Thread-Index: AQHZOxMN/LPPq1BYoUGOFiz7xUV3bK7D4r3A
-Date:   Tue, 7 Feb 2023 19:48:13 +0000
-Message-ID: <PH7PR84MB1813A835F1D77B6CAE0EC35687DB9@PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20230207-kobj_type-pdx86-v1-0-8e2c4fb83105@weissschuh.net>
- <20230207-kobj_type-pdx86-v1-3-8e2c4fb83105@weissschuh.net>
-In-Reply-To: <20230207-kobj_type-pdx86-v1-3-8e2c4fb83105@weissschuh.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR84MB1813:EE_|PH7PR84MB3183:EE_
-x-ms-office365-filtering-correlation-id: 954f1a83-d49c-476b-fa1b-08db09443fc9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bFxLKIjGKHV8WXGOm2rp7ftjSItTkvdn+UA3sy4DYTXKUwu+y3TK7+gOJAjfiS5XcP89bUXsK74kEIVKNOFeXl0XXPksowFmYTdBJwQ0N+1iXhqAA9BFmyrtI2IHoF+EV4+wDKrwvT87Lo3ERnPWr2ped1jh0mzibKE1pq+NIbvtDcDTfdk+RKhS0d4foP4Vl8LehzPSYRCmO70HRDn9v7LZx48uQ9rE3mZzZdZuYxiO3dMFzwZ7KTg1axwkp6ctvi0ehcpYNZba9zcZvJP8PDneHVgCYURoeNKyqVi01eQHReudk6XCX08Gc+G8jdPJFyyAU7taxyGGgdXwtpgk7Wo5hF3KT5klU51y3I/UgYrCE+XbTmPint2QCH1YWfK2QOyL0vgoi2k2MKbImiCO3uzvW4edTuUlq+8KVDJJGh/NDNSTPBj+KQhcFEGp3n5TBZZ/z//YfNf8x9FuUYDIZTXPeVagncOmROwp7FegjQJJrDWmLlkmk0GSKt9I1ecGtJphsJWFNY4nsI665b3/lbPB9MU4xR8GR+Hlvg6Jm1aHM42sxlbiYnNeVijdRoghyQ6TKruw2Yg9ukq/dAF4peHWcDAbSmBYJSjcvsaC3nuyzGBF+4TxC25G3iSObqUeUHn/02AMY3nnxRa1n9kXR3fcmk3aX7EFdKfipoJygogKFkD5/CA4M3fOoEaLSXhfU1AJFZYZD0wJkJqs1DdU5A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(346002)(366004)(396003)(136003)(376002)(39860400002)(451199018)(38070700005)(83380400001)(122000001)(2906002)(82960400001)(55016003)(38100700002)(41300700001)(64756008)(66556008)(66446008)(66476007)(8936002)(4326008)(8676002)(66946007)(76116006)(6506007)(26005)(52536014)(9686003)(186003)(478600001)(71200400001)(316002)(7696005)(110136005)(54906003)(86362001)(5660300002)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RUZoRHh0MG1RZlQzTHgrZm54MDYwMFhDdytGSnk3M0V4QU9vdUc5cFVhZXZY?=
- =?utf-8?B?NUZ0VEdKUTdNeVFnWjVPY1lKL3lRMVBIaWlzbVF1cERyRVl5VVVpZ1Y1aDVv?=
- =?utf-8?B?RjJKbDFKNjRDa2UvUGxqSndnRzEvdEE4N0NIY0J1OGVtL0tqZUE2clRDbHFC?=
- =?utf-8?B?eklCZFcwdVpTejUzTG9TSVRjR3FncCtZei8vUnBOWEVhYzF1NFVQU2ZMV3Uv?=
- =?utf-8?B?OVFKemQ1VXNHbU4wWEhYVVNtZ3BuTlpnaDJvd1FpZzlWZWEzS2VGWXV0Zy9O?=
- =?utf-8?B?UTlxWHh4Mk5zQjJqSnM1cXZ4WFF4aDU1eURMRXJUWFBhMHF2Nk5nWXBGcDZL?=
- =?utf-8?B?bGVCQ3dTblVvb0Y2NVpQWE95Y3FFaHFUWTh0T3lPWHl5NkVZMjRrZVFWYXN4?=
- =?utf-8?B?Wm9zd0dqbW9jRmw3cGZQa3lqUVF1ZVcyeEM1dTJUMVA2NzFpNVNYNmtTNWJ0?=
- =?utf-8?B?K3V6UnU4MW1JVnlvdmdzWk5wNVVBZ0J0cVdwVUlhaVBObzhPcU1JaWRKcFc2?=
- =?utf-8?B?ZnZodnUrbFRneTBmUDVQMWRNVjJmQWQ0STRjUTJxeElOS1E3WE04Skxpb0xO?=
- =?utf-8?B?SXNtWGg4bVBvbm5pTUs2WDhGS0VRZTJ1TGpGRmhldXJMenpIQjUreVJqak9X?=
- =?utf-8?B?Rkc5U3pMYkd3Q0tQOHJmb2N5RUJ5Y2ZKY3RobHQvMml0R1NxZlhoR1VGV3hP?=
- =?utf-8?B?N1ltdHVTRTZ1UmlhY3NpYmVsUVBYYjlBNyt5MmhHdlFRYTk0ajNNM2pqT0d3?=
- =?utf-8?B?RXA2TEVoSmtxa1J6YnA4bG04ZWRUNk9TQXJXOUhCNVlHNFFLeEpGMjhMMkE4?=
- =?utf-8?B?aWJ1RUVsTGI0a2w0WnloYWtlaXlXUHNKNUFtQWtRcXVjOWN0VU1EL2ZNMFhp?=
- =?utf-8?B?MFNMOTd4N2U4K05rMUl1cmxCUkZuMXRnd2VpT3ZrNzFNbzZaYjJFVVJhNDBw?=
- =?utf-8?B?dDZBZXhLdnZvRG5wak5CUUtFdUgvUi9sdXIvTGNYQ3o3OUFUQnIvRzBRRG11?=
- =?utf-8?B?VDEyNmZockNMaXVKV3p2U05iZzFvdVJZeWlEOE00b1NCdTMrd3N0cDlnNXo1?=
- =?utf-8?B?USt1Y1YxZ2x3T2VIV216Y0F0eXFKTHFYRTB1aG5TZ05HMGxKMEltNkx2cUlQ?=
- =?utf-8?B?NzVGK2M0c3BNN1d4ZEdoL0pzRCsxYW8vVFJMbXZUdUtDZUs1L1pUTThrZm9q?=
- =?utf-8?B?UGJ4d2VOT21ERjZOQTljallxK3BwVFFVUXRlUmQyelhKMG9ZdDhZeEM0TlZL?=
- =?utf-8?B?MC9VcnNWSktRTlYyWm42eDQwdERNWXlPSnpkU2d6Mjh2UGpmN0NLaTdleTJ4?=
- =?utf-8?B?VXdjaTQ4ZlkwcEFlQmtXSVdwRjVUV2RaNWtPLzROZ2xMckhaeHlUcmRld2Jq?=
- =?utf-8?B?blN4LzMrSWcvVlp0SU9Zd3J2d1pjVWxnR1lRNmN3dmpGNVk3c2NTbXY4Qy8v?=
- =?utf-8?B?TGF5cEhrSFBPZEdaMjRXcklOU0x2dU9QSFp5MytEMWZNRWZDL1pZVEROaWV6?=
- =?utf-8?B?WGJkSzNCbUJYaTk2L2ZVZ2FqaW9HUkl5YnZmQ3ZZemFuR2VPMHNPQnkyVG9j?=
- =?utf-8?B?dGk0UVpDR2NWcVNjTlp5bnVtUkxHZGEzeHdWeG1qMEFuNzBESnZhMVBrZ0Vn?=
- =?utf-8?B?UFJqc2h0UVc4TVpkdk1NV25tZnREMFUydnlBMEE2L2JrN3ZNbVpXcWMxS2hR?=
- =?utf-8?B?b0QzUDVuMytDYlptbmZEb3BENFpyenVEeW96ZmIySjF4bmQvWmxWb1BXZllh?=
- =?utf-8?B?MWJ5bGJVUnlWMzIyT2V6d2U1Ump0N0FiSU16NWoveVo4QklVTGhkZ0NZMDZj?=
- =?utf-8?B?VnNDN1ZjdkFkOC9SQkJuME5raHRwWC9BQ2JRWlFoZjRCTTBqeVFaeGpIZWpX?=
- =?utf-8?B?ZzZ3Z0VpaFJQUUQ3TDFIMERSY2RWcERLaGVXRTUwanVqdVNlMWQ3dFN2S1dT?=
- =?utf-8?B?ZUwxazA3aFd1SWZBdEVlVnNXb1JxK05SZUkzekM5dE1yY0hwWTFUTjV3M3Zl?=
- =?utf-8?B?TUVEd0ttZk5PY1Zqdmg3SUk1ejRjZEVhamVPRWpuV1RoQ2FnMVZGRFZCYzJh?=
- =?utf-8?B?cTJYNmdBcFRnUlhnQjYwd2F5cnpadGFSRkpUd1Jza1hQK0dEMzhtSU53ZjJu?=
- =?utf-8?Q?UxrstBWQ1WJ+09IklRGWiOpN7?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kLatf2QUFQ4PjVUKRsCBn+0bh5aov6QDBqyh1Usn6Q0=;
+ b=Y4zi4wsJx1yvSbmzz2wHhc8hatec/DCU8X2TYp5tiePjtJ+wOeK3ujypneEazwV6SYJg8BEpGB8mhTWG0kcrFNoYVL+abLQcRq5yc9ZW8+OO1c0Wpo8TiiL0mGfYAwz/JYVzFti+kwt1x1aGmg1CoVTv1cAFk0GVRzwzz6uPIZbSgHEdTOLi4nmJN963k7+HdWK4QacvmuV+wsvQ9GVgMukekiIjq8RbIPgW56x2emIQH3R7m9XEZnZFrdcLjVRg49BX2VE0PK1Nu/P9RQtpyC30DUNd8zB1NPnNMq9u45I5IyRynpM03t6DKFEmzg7J7LSSfViQfglJ5CeAtU7KDQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
+ SA0PR12MB7462.namprd12.prod.outlook.com (2603:10b6:806:24b::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6064.34; Tue, 7 Feb 2023 23:23:41 +0000
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a]) by DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a%6]) with mapi id 15.20.6064.027; Tue, 7 Feb 2023
+ 23:23:41 +0000
+Date:   Tue, 7 Feb 2023 17:23:38 -0600
+From:   Daniel Dadap <ddadap@nvidia.com>
+To:     Alexandru Dinu <alex.dinu07@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: Re: [PATCH v2] nvidia-wmi-ec-backlight: Add workarounds for confused
+ firmware
+Message-ID: <Y+LdeqVV7Oig6hqt@ddadap-lakeline.nvidia.com>
+References: <0fbfd32e-904d-1e04-8508-e863c357a2ff@nvidia.com>
+ <20220316203325.2242536-1-ddadap@nvidia.com>
+ <26e0d196-5b2d-6bdc-8cbf-19c5bb9736e4@nvidia.com>
+ <CAJOTRr6J7-E_dt+zbh6S=rg62PodsQBXYUFhxJOAqbj4w=ns=w@mail.gmail.com>
+ <Y9g96nNy5iJFBy0L@ddadap-lakeline.nvidia.com>
+ <CAJOTRr7Fek9PKSkJHbqZQUy8awXcVeVc=K1sXhqEUbjEXaSfQQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJOTRr7Fek9PKSkJHbqZQUy8awXcVeVc=K1sXhqEUbjEXaSfQQ@mail.gmail.com>
+X-ClientProxiedBy: SN7PR04CA0227.namprd04.prod.outlook.com
+ (2603:10b6:806:127::22) To DM6PR12MB2763.namprd12.prod.outlook.com
+ (2603:10b6:5:48::16)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2763:EE_|SA0PR12MB7462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54111c7b-32ab-4e9d-1158-08db096258ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M9ctRInOO0mi4MCw6XicB9nHg7h7ySItKlQsqzs+rBQbsvqHFgmZK7BdKMEQeM/19Rk9PIQVVPgSBOZ4b/R6SBXoA9s40TmAWkOeXbJSizCQXybd15gpixBnTxyVQdB2fV24Rk6ilQV3zp9DUrGX/RlMmClfB54GzDOqdp8cbFMQ8eyUbAb3nti2Ogtb4X7ynDWB7d4yxEbQCFTHCyNSiQfP6oDcNpdOCNu8t+UuLHhcbrFtgBZNI0ZasjbqppE12lq2zmDD/a11XbSa4Rxd914lDYX9JBhsuvoeWZG5HkQ+GPeUEnMtNlKMNmF2L+VnqCc3O/Rn8GIIkByONaT/bU1slOlCASwk2kKy3UEXwrKIrQQ5u1JlDAVLOh3z6CRIPdhlLaodRO7P+tCbeSKg3bNwbY1jWNuELLnQYX0V5GxerYjJgPcSC1Hnn3t3mQpetQ/Gnl6TSj0h6xYYlVwKAS6dGybM6RGh5AvMaKPi7MMP54777iFZoXKuahebnTECfKGq8gI3mbdGJJ1jjTqwswdp2zAqtVE8Wesza/XFwM73rmKuZQXUtUqh9VgWMh7GOpNiEjJm4WO4g11cqOcxg5pC/mUOwBe7XLq3GjumWgmi9cwySlYj5CHnAg35AkSh3dGV9gliEATF+2qFog8UVUoACCPZ1eN7VtpeX49RCfFFtIjQFq60necj6sKC0rSv
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(451199018)(6512007)(41300700001)(6486002)(5660300002)(66946007)(316002)(6666004)(6506007)(54906003)(478600001)(53546011)(66476007)(2906002)(6916009)(30864003)(8936002)(66556008)(4326008)(38100700002)(26005)(8676002)(83380400001)(66574015)(86362001)(186003)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TVNPdzkxTzQvYjloV0l5cmd2bEFXK0dUL0NsNDZKWlhhTGhUb0Q1b1IwWnh3?=
+ =?utf-8?B?K3FJaUxScUtMM3JtdHZBejRieWtLTkhuVVF2VGZUenpaaW0wd0JyMXpGbS9E?=
+ =?utf-8?B?VDZFamNqb2pqMW1BbVl2Vno4VU1ybFNJeFJMQm9wTktXZy9vTWYzaWlCTmJt?=
+ =?utf-8?B?ZlVteFJtVm05NUFHS1dSWGh1RDR5cjdoUThzWFduTzZEaDJHRmQyM3JwRlk5?=
+ =?utf-8?B?QUp3RXJ4ckU1cHlHbjRFNjBlaUZCNUhOL1Z3c0o4ZFg2SjZ6MUlJc0kyQWI4?=
+ =?utf-8?B?L2E2TkloRGNGQjRtVDl5dlNZbzJPdVgyUjJBMC9xRG12SnhIdmcwRGZXdVAy?=
+ =?utf-8?B?OWpoZ3VkR1M0akZTaVVhUmlQMCtRc3VjenY3eXQ5S00xNi96MmN6aGVUaTl1?=
+ =?utf-8?B?U0tNcnNTUUlBMlNWVGVvamJMa25LMmwrVklDTjJRMnFUT0lVcUNJTU1GdlBV?=
+ =?utf-8?B?a1dsdXY0SG1RUU5BdHpINjBpN3phemVmV25PQkxyR2NxZTNxZEN6QWlCN2pD?=
+ =?utf-8?B?VFZRYTNCOWpBMjlrSkFUbHZoeXEwazNxWVFGQ0VqMWtLdzRzS1ZTVElRcTBr?=
+ =?utf-8?B?b2FzSGNISnVxTlBERjJROGEyRDkxanlzbFdFY0ZhSE94cXpkRTRMQUUvMldS?=
+ =?utf-8?B?VDRocU9RNG95cmcxeDBsbkFTKzlIODY1YTkveUF6aUZUQ2luVjIrTWJJR2dp?=
+ =?utf-8?B?dGVXUGxHVHM4OS9UUnlrazJBMHd1TzNNeDhZL05KRHZEaHZJU2N1Zlp1dkNh?=
+ =?utf-8?B?U25FamFkVzhXZUM4RDgrelM3MC9tZW1ta3duanY2b2hidkcxWEZtOC9JekRy?=
+ =?utf-8?B?MlNEZ21ZSk41Z29rL050UlNaWGNJYTVaSjA2TGpiMWVSV2luT3NyZFRkdm1L?=
+ =?utf-8?B?Q1ZLUHBXOGdBcXplblNJRmF5M1RHQ01rUC9RNk5ET1RvZjJXdUNBeVpSOEtq?=
+ =?utf-8?B?cHAyeW5hM1ZXZElwVU54NThnQXErejgrb3pQczcrWWQ0U2JqMUF4M1BlV2Ns?=
+ =?utf-8?B?MW9acHFBd1NSRUFWRGxFMlZKL1lqSGZSdXhpL1J6RkVmNGk1dkdFaE5LL1hh?=
+ =?utf-8?B?SFFXZlpEM0p0TmpCK2M3WE5WaFhsdldZSmd4ak1jZVltbHNmN1h2d1NzK1Rt?=
+ =?utf-8?B?NnRCOXFkYzNyci80emd5c3lRd2puR1BNWjVvaVo1dEF6U3Y2UXgxaTVpZFRt?=
+ =?utf-8?B?QzFyRk1LeHpIb2FET0J4a2N4TGtUNzU3cmh6cHpQdXBrWXBNQzc0SGpoQlNy?=
+ =?utf-8?B?a21WcFV2NStsL3AyR1M4UVViVFFIblJYcDVaYjQ2RVdlUUwrS1N0ZS85NFhX?=
+ =?utf-8?B?WVRwakRJc2tGVmRSQnBWa1FmUm5sVzVvcEdHbmpxSHVXbmtQUkJBcmFzWnRk?=
+ =?utf-8?B?SU1iZzZFSFJkUXpsTDNwY3hzNDYycEVFOFNOdkM0QkhWSGNKcEJ6RHlrYklK?=
+ =?utf-8?B?Q05salMzYWo3QldITkRSbWpHb2VCckJydDdTZ2pwaEZpQmRwSkRVVlpLQVNm?=
+ =?utf-8?B?ZjJoRm9IWVhwSEFPaVJBOG5Fci9mbUplZ3FJcGVacWJJZjQ3dk9XSmNRQVNv?=
+ =?utf-8?B?SE1zYm5qNzhDNWhUYi8zY3E1VmJ1OU5Ycm5nM3BhTTJUQXNTd0ZoczBzSjdr?=
+ =?utf-8?B?aWJtTlRzdEFnakNObE85NzBTK215ZFhrVk5HTWVrRFA0b0IyTHFqWUFQV2sw?=
+ =?utf-8?B?bVhlczRyK3VPeTFpVlVza2wrZCsvQWhxdnRLN3VxTGhhbWQ4Zjc1c1BhTlQr?=
+ =?utf-8?B?RDZjQXFwVEE0RDgvQXM2RzQyNkxMaXhrZlNZczB1QnpBQ1JZT2Z2ZmlFRDhr?=
+ =?utf-8?B?TUw5aXJReXJCUldhRllreEdIcDQrcEh0UktuclJtWUpFMlppUklLeTNxL2lF?=
+ =?utf-8?B?amowQWRQdEc4Um5EdlFRN3ZFQXEyN1YzUTg4ek1uMW1hNm10MnJXSXE5L1Zz?=
+ =?utf-8?B?eHFxc1BrQlVsaVIvOXVpeEdST0xIVjduYzF0ZnBoMXhpNzUzV05HQ3dxZFdy?=
+ =?utf-8?B?cnAydVBNNlB0ZTUrMjdYaUFYdXdGcG5jUHJRRCtmSHlqQjVzaGNwQXFVRk9O?=
+ =?utf-8?B?Qi9kNExFUGpHaVppUW1zK3RsdTVjRzdSMFZxcm1lVXI4eEZmVzFQeWJXaTA0?=
+ =?utf-8?Q?Vl6z1ZWZZuwKI72JLAHIjApvH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54111c7b-32ab-4e9d-1158-08db096258ff
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR84MB1813.NAMPRD84.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 954f1a83-d49c-476b-fa1b-08db09443fc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2023 19:48:13.5528
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2023 23:23:41.0425
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GX/v0fqZNSG//97xk0cbQd+y+G7tb23hopWkZTj0GdWNfGmJ0KJST8Dl2j6ldKu4+I3HHfuHncXp7/aB266woA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR84MB3183
-X-OriginatorOrg: hpe.com
-X-Proofpoint-GUID: DGfMFaQgwhZSCrx6-DQKq1BS-tkMojpr
-X-Proofpoint-ORIG-GUID: DGfMFaQgwhZSCrx6-DQKq1BS-tkMojpr
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-07_11,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302070174
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A0dijDpoIi9ArOa5gWR7Wykh636Hi1+7GXioiJwvp8sEqswNoC5+QMEwTWpwu84nrGQQt/1D5eT+nZt5nqtu6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7462
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiBTaW5jZSBjb21taXQgZWU2ZDNkZDRlZDQ4ICgiZHJpdmVyIGNvcmU6IG1ha2Uga29ial90eXBl
-IGNvbnN0YW50LiIpDQo+IHRoZSBkcml2ZXIgY29yZSBhbGxvd3MgdGhlIHVzYWdlIG9mIGNvbnN0
-IHN0cnVjdCBrb2JqX3R5cGUuDQo+IA0KPiBUYWtlIGFkdmFudGFnZSBvZiB0aGlzIHRvIGNvbnN0
-aWZ5IHRoZSBzdHJ1Y3R1cmUgZGVmaW5pdGlvbiB0byBwcmV2ZW50DQo+IG1vZGlmaWNhdGlvbiBh
-dCBydW50aW1lLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIFdlacOfc2NodWggPGxpbnV4
-QHdlaXNzc2NodWgubmV0Pg0KDQpMb29rcyBnb29kLiBUaGFua3MgZm9yIHRoZSBwYXRjaCENCg0K
-UmV2aWV3ZWQtYnk6IEp1c3RpbiBFcm5zdCA8anVzdGluLmVybnN0QGhwZS5jb20+DQoNCj4gLS0t
-DQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni91dl9zeXNmcy5jIHwgNiArKystLS0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvdXZfc3lzZnMuYyBiL2RyaXZlcnMvcGxhdGZvcm0v
-eDg2L3V2X3N5c2ZzLmMNCj4gaW5kZXggNzNmYzM4ZWU3NDMwLi4zOGQxYjY5MmQzYzAgMTAwNjQ0
-DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3V2X3N5c2ZzLmMNCj4gKysrIGIvZHJpdmVy
-cy9wbGF0Zm9ybS94ODYvdXZfc3lzZnMuYw0KPiBAQCAtMjAzLDcgKzIwMyw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgc3lzZnNfb3BzIGh1Yl9zeXNmc19vcHMgPSB7DQo+ICAJLnNob3cgPSBodWJf
-dHlwZV9zaG93LA0KPiAgfTsNCj4gDQo+IC1zdGF0aWMgc3RydWN0IGtvYmpfdHlwZSBodWJfYXR0
-cl90eXBlID0gew0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBrb2JqX3R5cGUgaHViX2F0dHJfdHlw
-ZSA9IHsNCj4gIAkucmVsZWFzZQk9IGh1Yl9yZWxlYXNlLA0KPiAgCS5zeXNmc19vcHMJPSAmaHVi
-X3N5c2ZzX29wcywNCj4gIAkuZGVmYXVsdF9ncm91cHMJPSB1dl9odWJfZ3JvdXBzLA0KPiBAQCAt
-MzU2LDcgKzM1Niw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3lzZnNfb3BzIHV2X3BvcnRfc3lz
-ZnNfb3BzID0gew0KPiAgCS5zaG93ID0gdXZfcG9ydF90eXBlX3Nob3csDQo+ICB9Ow0KPiANCj4g
-LXN0YXRpYyBzdHJ1Y3Qga29ial90eXBlIHV2X3BvcnRfYXR0cl90eXBlID0gew0KPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBrb2JqX3R5cGUgdXZfcG9ydF9hdHRyX3R5cGUgPSB7DQo+ICAJLnJlbGVh
-c2UJPSB1dl9wb3J0X3JlbGVhc2UsDQo+ICAJLnN5c2ZzX29wcwk9ICZ1dl9wb3J0X3N5c2ZzX29w
-cywNCj4gIAkuZGVmYXVsdF9ncm91cHMJPSB1dl9wb3J0X2dyb3VwcywNCj4gQEAgLTUyOCw3ICs1
-MjgsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHN5c2ZzX29wcyB1dl9wY2lfdG9wX3N5c2ZzX29w
-cyA9IHsNCj4gIAkuc2hvdyA9IHBjaV90b3BfdHlwZV9zaG93LA0KPiAgfTsNCj4gDQo+IC1zdGF0
-aWMgc3RydWN0IGtvYmpfdHlwZSB1dl9wY2lfdG9wX2F0dHJfdHlwZSA9IHsNCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qga29ial90eXBlIHV2X3BjaV90b3BfYXR0cl90eXBlID0gew0KPiAgCS5yZWxl
-YXNlCT0gdXZfcGNpX3RvcF9yZWxlYXNlLA0KPiAgCS5zeXNmc19vcHMJPSAmdXZfcGNpX3RvcF9z
-eXNmc19vcHMsDQo+ICB9Ow0KPiANCj4gLS0NCj4gMi4zOS4xDQoNCg==
+On Tue, Jan 31, 2023 at 09:56:03PM +0200, Alexandru Dinu wrote:
+> Hello,
+> 
+> I updated from HACN31WW to the latest HACN39WW and tested on a fresh
+> 6.1.7 kernel.
+> The brightness issue is not fixed -- same old behaviour: controls only
+> work after an initial resume from suspend.
+> 
+> So far, I've been using your patched version of the
+> nvidia-wmi-ec-backlight module which worked great -- manually patching
+> the module after each kernel update.
+> 
+> > somebody else reported a similar issue recently which appears to be resolved by updating to the latest firmware version.
+> 
+> Can you please point me to this reference?
+
+It was a private report - I've added the reporter to this mail thread.
+Unfortunately, it turns out that the "works after update" behavior was
+actually a case of the backlight on that system coincidentally working
+for a while after the update, before breaking again. On at least that
+system, the backlight controls occasionally work as intended on their
+own for a while.
+
+> Thank you!
+> 
+> 
+> On Tue, 31 Jan 2023 at 00:00, Daniel Dadap <ddadap@nvidia.com> wrote:
+> >
+> > Hi Alex,
+> >
+> > On Thu, Mar 17, 2022 at 12:09:03AM +0200, Alexandru Dinu wrote:
+> > > > Note: the Tested-by: line above applies to the previous version of this
+> > > > patch; an explicit ACK from the tester is required for it to apply to
+> > > > the current version.
+> > >
+> > > I compiled and tested v2 on 5.16.14.
+> > > Everything works as expected: brightness control & level restore work
+> > > both on first boot and on subsequent sleep/resume cycles.
+> >
+> > I ended up abandoning this workaround patch because it was incompatible
+> > with Hans's plan to clean up the backlight subsystem. In the meantime,
+> > somebody else reported a similar issue recently which appears to be
+> > resolved by updating to the latest firmware version. Have you updated to
+> > the most recent firmware, and if so, are you still seeing this issue?
+> >
+> > > Regards,
+> > > Alex
+> > >
+> > >
+> > >
+> > > On Wed, 16 Mar 2022 at 23:28, Daniel Dadap <ddadap@nvidia.com> wrote:
+> > > >
+> > > > Sorry, just noticed a typo in a comment:
+> > > >
+> > > > /* This quirk is preset as of firmware revision HACN31WW */
+> > > >
+> > > > Obviously that is meant to read "present". I'll fix that with the next
+> > > > round of changes, assuming there will be additional review feedback.
+> > > >
+> > > > On 3/16/22 15:33, Daniel Dadap wrote:
+> > > > > Some notebook systems with EC-driven backlight control appear to have a
+> > > > > firmware bug which causes the system to use GPU-driven backlight control
+> > > > > upon a fresh boot, but then switches to EC-driven backlight control
+> > > > > after completing a suspend/resume cycle. All the while, the firmware
+> > > > > reports that the backlight is under EC control, regardless of what is
+> > > > > actually controlling the backlight brightness.
+> > > > >
+> > > > > This leads to the following behavior:
+> > > > >
+> > > > > * nvidia-wmi-ec-backlight gets probed on a fresh boot, due to the
+> > > > >    WMI-wrapped ACPI method erroneously reporting EC control.
+> > > > > * nvidia-wmi-ec-backlight does not work until after a suspend/resume
+> > > > >    cycle, due to the backlight control actually being GPU-driven.
+> > > > > * GPU drivers also register their own backlight handlers: in the case
+> > > > >    of the notebook system where this behavior has been observed, both
+> > > > >    amdgpu and the NVIDIA proprietary driver register backlight handlers.
+> > > > > * The GPU which has backlight control upon a fresh boot (amdgpu in the
+> > > > >    case observed so far) can successfully control the backlight through
+> > > > >    its backlight driver's sysfs interface, but stops working after the
+> > > > >    first suspend/resume cycle.
+> > > > > * nvidia-wmi-ec-backlight is unable to control the backlight upon a
+> > > > >    fresh boot, but begins to work after the first suspend/resume cycle.
+> > > > > * The GPU which does not have backlight control (NVIDIA in this case)
+> > > > >    is not able to control the backlight at any point while the system
+> > > > >    is in operation. On similar hybrid systems with an EC-controlled
+> > > > >    backlight, and AMD/NVIDIA iGPU/dGPU, the NVIDIA proprietary driver
+> > > > >    does not register its backlight handler. It has not been determined
+> > > > >    whether the non-functional handler registered by the NVIDIA driver
+> > > > >    is due to another firmware bug, or a bug in the NVIDIA driver.
+> > > > >
+> > > > > Since nvidia-wmi-ec-backlight registers as a BACKLIGHT_FIRMWARE type
+> > > > > device, it takes precedence over the BACKLIGHT_RAW devices registered
+> > > > > by the GPU drivers. This in turn leads to backlight control appearing
+> > > > > to be non-functional until after completing a suspend/resume cycle.
+> > > > > However, it is still possible to control the backlight through direct
+> > > > > interaction with the working GPU driver's backlight sysfs interface.
+> > > > >
+> > > > > These systems also appear to have a second firmware bug which resets
+> > > > > the EC's brightness level to 100% on resume, but leaves the state in
+> > > > > the kernel at the pre-suspend level. This causes attempts to save
+> > > > > and restore the backlight level across the suspend/resume cycle to
+> > > > > fail, due to the level appearing not to change even though it did.
+> > > > >
+> > > > > In order to work around these issues, add a quirk table to detect
+> > > > > systems that are known to show these behaviors. So far, there is
+> > > > > only one known system that requires these workarounds, and both
+> > > > > issues are present on that system, but the quirks are tracked
+> > > > > separately to make it easier to add them to other systems which
+> > > > > may exhibit one of the bugs, but not the other. The original systems
+> > > > > that this driver was tested on during development do not exhibit
+> > > > > either of these quirks.
+> > > > >
+> > > > > If a system with the "GPU driver has backlight control" quirk is
+> > > > > detected, nvidia-wmi-ec-backlight will grab a reference to the working
+> > > > > (when freshly booted) GPU backlight handler and relays any backlight
+> > > > > brightness level change requests directed at the EC to also be applied
+> > > > > to the GPU backlight interface. This leads to redundant updates
+> > > > > directed at the GPU backlight driver after a suspend/resume cycle, but
+> > > > > it does allow the EC backlight control to work when the system is
+> > > > > freshly booted.
+> > > > >
+> > > > > If a system with the "backlight level reset to full on resume" quirk
+> > > > > is detected, nvidia-wmi-ec-backlight will register a PM notifier to
+> > > > > reset the backlight to the previous level upon resume.
+> > > > >
+> > > > > These workarounds are also plumbed through to kernel module parameters,
+> > > > > to make it easier for users who suspect they may be affected by one or
+> > > > > both of these bugs to test whether these workarounds are effective on
+> > > > > their systems as well.
+> > > > >
+> > > > > Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+> > > > > Tested-by: Alexandru Dinu <alex.dinu07@gmail.com>
+> > > > > ---
+> > > > > Note: the Tested-by: line above applies to the previous version of this
+> > > > > patch; an explicit ACK from the tester is required for it to apply to
+> > > > > the current version.
+> > > > >
+> > > > > v2:
+> > > > >   * Add readable sysfs files for module params, use linear interpolation
+> > > > >     from fixp-arith.h, fix return value of notifier callback, use devm_*()
+> > > > >     for kzalloc and put_device. (Barnabás Pőcze <pobrn@protonmail.com>)
+> > > > >   * Add comment to denote known firmware versions that exhibit the bugs.
+> > > > >     (Mario Limonciello <Mario.Limonciello@amd.com>)
+> > > > >   * Unify separate per-quirk tables. (Hans de Goede <hdegoede@redhat.com>)
+> > > > >
+> > > > >   .../platform/x86/nvidia-wmi-ec-backlight.c    | 196 +++++++++++++++++-
+> > > > >   1 file changed, 194 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> > > > > index 61e37194df70..95e1ddf780fc 100644
+> > > > > --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> > > > > +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> > > > > @@ -3,8 +3,12 @@
+> > > > >    * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
+> > > > >    */
+> > > > >
+> > > > > +#define pr_fmt(f) KBUILD_MODNAME ": " f "\n"
+> > > > > +
+> > > > >   #include <linux/acpi.h>
+> > > > >   #include <linux/backlight.h>
+> > > > > +#include <linux/dmi.h>
+> > > > > +#include <linux/fixp-arith.h>
+> > > > >   #include <linux/mod_devicetable.h>
+> > > > >   #include <linux/module.h>
+> > > > >   #include <linux/types.h>
+> > > > > @@ -75,6 +79,73 @@ struct wmi_brightness_args {
+> > > > >       u32 ignored[3];
+> > > > >   };
+> > > > >
+> > > > > +/**
+> > > > > + * struct nvidia_wmi_ec_backlight_priv - driver private data
+> > > > > + * @bl_dev:       the associated backlight device
+> > > > > + * @proxy_target: backlight device which receives relayed brightness changes
+> > > > > + * @notifier:     notifier block for resume callback
+> > > > > + */
+> > > > > +struct nvidia_wmi_ec_backlight_priv {
+> > > > > +     struct backlight_device *bl_dev;
+> > > > > +     struct backlight_device *proxy_target;
+> > > > > +     struct notifier_block nb;
+> > > > > +};
+> > > > > +
+> > > > > +static char *backlight_proxy_target;
+> > > > > +module_param(backlight_proxy_target, charp, 0444);
+> > > > > +MODULE_PARM_DESC(backlight_proxy_target, "Relay brightness change requests to the named backlight driver, on systems which erroneously report EC backlight control.");
+> > > > > +
+> > > > > +static int max_reprobe_attempts = 128;
+> > > > > +module_param(max_reprobe_attempts, int, 0444);
+> > > > > +MODULE_PARM_DESC(max_reprobe_attempts, "Limit of reprobe attempts when relaying brightness change requests.");
+> > > > > +
+> > > > > +static bool restore_level_on_resume;
+> > > > > +module_param(restore_level_on_resume, bool, 0444);
+> > > > > +MODULE_PARM_DESC(restore_level_on_resume, "Restore the backlight level when resuming from suspend, on systems which reset the EC's backlight level on resume.");
+> > > > > +
+> > > > > +/* Bit field values for quirks table */
+> > > > > +
+> > > > > +#define NVIDIA_WMI_EC_BACKLIGHT_QUIRK_RESTORE_LEVEL_ON_RESUME   BIT(0)
+> > > > > +
+> > > > > +/* bits 1-7: reserved for future quirks; bits 8+: proxy target device names */
+> > > > > +
+> > > > > +#define NVIDIA_WMI_EC_BACKLIGHT_QUIRK_PROXY_TO_AMDGPU_BL1       BIT(8)
+> > > > > +
+> > > > > +#define QUIRK(name) NVIDIA_WMI_EC_BACKLIGHT_QUIRK_##name
+> > > > > +#define HAS_QUIRK(data, name) (((long) data) & QUIRK(name))
+> > > > > +
+> > > > > +static int assign_quirks(const struct dmi_system_id *id)
+> > > > > +{
+> > > > > +     if (HAS_QUIRK(id->driver_data, RESTORE_LEVEL_ON_RESUME))
+> > > > > +             restore_level_on_resume = 1;
+> > > > > +
+> > > > > +     /* If the module parameter is set, override the quirks table */
+> > > > > +     if (!backlight_proxy_target) {
+> > > > > +             if (HAS_QUIRK(id->driver_data, PROXY_TO_AMDGPU_BL1))
+> > > > > +                     backlight_proxy_target = "amdgpu_bl1";
+> > > > > +     }
+> > > > > +
+> > > > > +     return true;
+> > > > > +}
+> > > > > +
+> > > > > +#define QUIRK_ENTRY(vendor, product, quirks) {          \
+> > > > > +     .callback = assign_quirks,                      \
+> > > > > +     .matches = {                                    \
+> > > > > +             DMI_MATCH(DMI_SYS_VENDOR, vendor),      \
+> > > > > +             DMI_MATCH(DMI_PRODUCT_VERSION, product) \
+> > > > > +     },                                              \
+> > > > > +     .driver_data = (void *)(quirks)                 \
+> > > > > +}
+> > > > > +
+> > > > > +static const struct dmi_system_id quirks_table[] = {
+> > > > > +     QUIRK_ENTRY(
+> > > > > +             /* This quirk is preset as of firmware revision HACN31WW */
+> > > > > +             "LENOVO", "Legion S7 15ACH6",
+> > > > > +             QUIRK(RESTORE_LEVEL_ON_RESUME) | QUIRK(PROXY_TO_AMDGPU_BL1)
+> > > > > +     ),
+> > > > > +     { }
+> > > > > +};
+> > > > > +
+> > > > >   /**
+> > > > >    * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+> > > > >    * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+> > > > > @@ -119,9 +190,30 @@ static int wmi_brightness_notify(struct wmi_device *w, enum wmi_brightness_metho
+> > > > >       return 0;
+> > > > >   }
+> > > > >
+> > > > > +/* Scale the current brightness level of 'from' to the range of 'to'. */
+> > > > > +static int scale_backlight_level(const struct backlight_device *from,
+> > > > > +                              const struct backlight_device *to)
+> > > > > +{
+> > > > > +     int from_max = from->props.max_brightness;
+> > > > > +     int from_level = from->props.brightness;
+> > > > > +     int to_max = to->props.max_brightness;
+> > > > > +
+> > > > > +     return fixp_linear_interpolate(0, 0, from_max, to_max, from_level);
+> > > > > +}
+> > > > > +
+> > > > >   static int nvidia_wmi_ec_backlight_update_status(struct backlight_device *bd)
+> > > > >   {
+> > > > >       struct wmi_device *wdev = bl_get_data(bd);
+> > > > > +     struct nvidia_wmi_ec_backlight_priv *priv = dev_get_drvdata(&wdev->dev);
+> > > > > +     struct backlight_device *proxy_target = priv->proxy_target;
+> > > > > +
+> > > > > +     if (proxy_target) {
+> > > > > +             int level = scale_backlight_level(bd, proxy_target);
+> > > > > +
+> > > > > +             if (backlight_device_set_brightness(proxy_target, level))
+> > > > > +                     pr_warn("Failed to relay backlight update to \"%s\"",
+> > > > > +                             backlight_proxy_target);
+> > > > > +     }
+> > > > >
+> > > > >       return wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_LEVEL,
+> > > > >                                    WMI_BRIGHTNESS_MODE_SET,
+> > > > > @@ -147,13 +239,78 @@ static const struct backlight_ops nvidia_wmi_ec_backlight_ops = {
+> > > > >       .get_brightness = nvidia_wmi_ec_backlight_get_brightness,
+> > > > >   };
+> > > > >
+> > > > > +static int nvidia_wmi_ec_backlight_pm_notifier(struct notifier_block *nb, unsigned long event, void *d)
+> > > > > +{
+> > > > > +
+> > > > > +     /*
+> > > > > +      * On some systems, the EC backlight level gets reset to 100% when
+> > > > > +      * resuming from suspend, but the backlight device state still reflects
+> > > > > +      * the pre-suspend value. Refresh the existing state to sync the EC's
+> > > > > +      * state back up with the kernel's.
+> > > > > +      */
+> > > > > +     if (event == PM_POST_SUSPEND) {
+> > > > > +             struct nvidia_wmi_ec_backlight_priv *p;
+> > > > > +             int ret;
+> > > > > +
+> > > > > +             p = container_of(nb, struct nvidia_wmi_ec_backlight_priv, nb);
+> > > > > +             ret = backlight_update_status(p->bl_dev);
+> > > > > +
+> > > > > +             if (ret)
+> > > > > +                     pr_warn("failed to refresh backlight level: %d", ret);
+> > > > > +
+> > > > > +             return NOTIFY_OK;
+> > > > > +     }
+> > > > > +
+> > > > > +     return NOTIFY_DONE;
+> > > > > +}
+> > > > > +
+> > > > > +static void putdev(void *data)
+> > > > > +{
+> > > > > +     struct device *dev = data;
+> > > > > +
+> > > > > +     put_device(dev);
+> > > > > +}
+> > > > > +
+> > > > >   static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ctx)
+> > > > >   {
+> > > > > +     struct backlight_device *bdev, *target = NULL;
+> > > > > +     struct nvidia_wmi_ec_backlight_priv *priv;
+> > > > >       struct backlight_properties props = {};
+> > > > > -     struct backlight_device *bdev;
+> > > > >       u32 source;
+> > > > >       int ret;
+> > > > >
+> > > > > +     /*
+> > > > > +      * Check quirks tables to see if this system needs any of the firmware
+> > > > > +      * bug workarounds.
+> > > > > +      */
+> > > > > +     dmi_check_system(quirks_table);
+> > > > > +
+> > > > > +     if (backlight_proxy_target && backlight_proxy_target[0]) {
+> > > > > +             static int num_reprobe_attempts;
+> > > > > +
+> > > > > +             target = backlight_device_get_by_name(backlight_proxy_target);
+> > > > > +
+> > > > > +             if (target) {
+> > > > > +                     ret = devm_add_action_or_reset(&wdev->dev, putdev,
+> > > > > +                                                    &target->dev);
+> > > > > +                     if (ret)
+> > > > > +                             return ret;
+> > > > > +             } else {
+> > > > > +                     /*
+> > > > > +                      * The target backlight device might not be ready;
+> > > > > +                      * try again and disable backlight proxying if it
+> > > > > +                      * fails too many times.
+> > > > > +                      */
+> > > > > +                     if (num_reprobe_attempts < max_reprobe_attempts) {
+> > > > > +                             num_reprobe_attempts++;
+> > > > > +                             return -EPROBE_DEFER;
+> > > > > +                     }
+> > > > > +
+> > > > > +                     pr_warn("Unable to acquire %s after %d attempts. Disabling backlight proxy.",
+> > > > > +                             backlight_proxy_target, max_reprobe_attempts);
+> > > > > +             }
+> > > > > +     }
+> > > > > +
+> > > > >       ret = wmi_brightness_notify(wdev, WMI_BRIGHTNESS_METHOD_SOURCE,
+> > > > >                                  WMI_BRIGHTNESS_MODE_GET, &source);
+> > > > >       if (ret)
+> > > > > @@ -188,7 +345,41 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+> > > > >                                             &wdev->dev, wdev,
+> > > > >                                             &nvidia_wmi_ec_backlight_ops,
+> > > > >                                             &props);
+> > > > > -     return PTR_ERR_OR_ZERO(bdev);
+> > > > > +
+> > > > > +     if (IS_ERR(bdev))
+> > > > > +             return PTR_ERR(bdev);
+> > > > > +
+> > > > > +     priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> > > > > +     if (!priv)
+> > > > > +             return -ENOMEM;
+> > > > > +
+> > > > > +     priv->bl_dev = bdev;
+> > > > > +
+> > > > > +     dev_set_drvdata(&wdev->dev, priv);
+> > > > > +
+> > > > > +     if (target) {
+> > > > > +             int level = scale_backlight_level(target, bdev);
+> > > > > +
+> > > > > +             if (backlight_device_set_brightness(bdev, level))
+> > > > > +                     pr_warn("Unable to import initial brightness level from %s.",
+> > > > > +                             backlight_proxy_target);
+> > > > > +             priv->proxy_target = target;
+> > > > > +     }
+> > > > > +
+> > > > > +     if (restore_level_on_resume) {
+> > > > > +             priv->nb.notifier_call = nvidia_wmi_ec_backlight_pm_notifier;
+> > > > > +             register_pm_notifier(&priv->nb);
+> > > > > +     }
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static void nvidia_wmi_ec_backlight_remove(struct wmi_device *wdev)
+> > > > > +{
+> > > > > +     struct nvidia_wmi_ec_backlight_priv *priv = dev_get_drvdata(&wdev->dev);
+> > > > > +
+> > > > > +     if (priv->nb.notifier_call)
+> > > > > +             unregister_pm_notifier(&priv->nb);
+> > > > >   }
+> > > > >
+> > > > >   #define WMI_BRIGHTNESS_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
+> > > > > @@ -204,6 +395,7 @@ static struct wmi_driver nvidia_wmi_ec_backlight_driver = {
+> > > > >               .name = "nvidia-wmi-ec-backlight",
+> > > > >       },
+> > > > >       .probe = nvidia_wmi_ec_backlight_probe,
+> > > > > +     .remove = nvidia_wmi_ec_backlight_remove,
+> > > > >       .id_table = nvidia_wmi_ec_backlight_id_table,
+> > > > >   };
+> > > > >   module_wmi_driver(nvidia_wmi_ec_backlight_driver);
