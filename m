@@ -2,71 +2,71 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0DEC636CC
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Feb 2023 06:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E902C636D3
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Feb 2023 06:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjBHGeY (ORCPT
+        id S229559AbjBHGfr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Feb 2023 01:34:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
+        Wed, 8 Feb 2023 01:35:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjBHGeX (ORCPT
+        with ESMTP id S229706AbjBHGfq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Feb 2023 01:34:23 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E064390D
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Feb 2023 22:34:20 -0800 (PST)
+        Wed, 8 Feb 2023 01:35:46 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B369442C2
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Feb 2023 22:35:45 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bJ3wTnewQv5JDzEK7luJFRSvI6fP50g5jZkcKSYldh4MzAL/LFgQ9CgrjYu3lUchjwBxZzkIns1Z6vZch2uxp4b3jwlDAnVuICSyN6x+kUKNhhZzhksDUeFOxBUYcg9drhAwQ7ohsF2fJBVvx7RoYGFnUbQx868nqZt4ekwldnKICYJewiuQOJe3tweAsQNIeDqF4Bckr2/Z5uiNP/0+oWCw2qBrpmDrgYjvMP5/3X7Fjoz2nsiUTw7C811Ju9pf3GMRloN+6oC2EvlHKBgr7aRfpQvpkB8/8Kb1aWKlzCaAG7H1un6TWQDgndoD7iy3BNLfAtyD1H+qOBnGvGRdBw==
+ b=OGdAuhCczTnTY7mNw2vicWwcgwMZx4Paa/lKE5/eeN77ehFaCziArFJ7b+YIJuqMgDP7y9u1tRal9caAbjvk+Y01O4oYnXp/yOHSN7hVkJEw78ipCWyDblg6emPRJii77PSimAzJ0eYb3K4mL42aku2B+AYxcxfmMwUovPgn6UPY0164xicqdXgb/SJnwWSXe8mX+36OY4SoxSBlWX0VV79i9bsOvt39zToCuqDqUG4abwj25qoH5m7PTNFKFbDMsaiIBxDfiRZiCz5zcirPExTUA6KeeRS58QVLrcilshyDWJRNVCHNyaIxImkbvGhtZWUMd1j7c4J42S81PuFGNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GFQWyNggelTX+arAvbx9+D1Kch9ioV0sSdhv98UCrgA=;
- b=NDN+oAYZM+EO1Stt7Q1O5vPntcHb6W2+vmb8XwcsGi6Zk8qVDGIT8PNqm7g+6Y4uS159lXN0PdCPrdQ5eOFLgeL0FRFNrfIlF6kmda8lF55t8091iIb24Qi8nY9YkOBXJKUtY2cGBPbUZIb0qaZPPXJJR2ZdGr33tnFhblu3SSZK+qNCp1VZgMQwX4BjNeoekyosfH9YNZoGexfuDTvTROZLDj7PT6RfnkEaq9dFtg8KLnpIIpFTbu7ITQNYjc9llUc7feifNKH51czTbWy6iQDP+h0ncS3YWOetxr5d0yNmvvB+7KTj51cu4uacNUfsV2N24MPlgkT7DE0hVBVgyg==
+ bh=DEV6TBKtc9+XbpTz68e9Vux5FR/vXlDRTqKAFC6NgZU=;
+ b=kHvxI86NhKdXUdtp238w2QtEPqd4B26GLs9Uf70b9XNdMRK2IGd8/IPDTiHCX6tz3qOz/s6o/ak4jRs1jdWVmuUR7q+BSkxjyhhVU3Q/lJ9u0LBF7t9+Kmxa0Y5tNaBhCKzA5GkS4kEIHMXvF7eK2R3kKAVcbexN8q4Nd6gyFJfy5iEAEejP2ffvh8Ob+1BciapOtg+Kw+DC0CM30i/VBLNTHMYuv0/Sitd0QJqXjyH+J/qlKU56Drwd9DmbzSQG0vjtuyA3QTbwnCj8NG40PItmx5VDyyaSi13f1NJW5PsRyd1eFMojOdwz/JWFxdMdnqUqN4GmLbj+XwmeLD7upQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFQWyNggelTX+arAvbx9+D1Kch9ioV0sSdhv98UCrgA=;
- b=iQjYVBEpRVN4KnOuElptYVm8twOu6GSv/ddAUXlnybgOaZvKjz+gNFSAB8ZGGtMKtV7viQ2XIYtjK2esEsc5x8oZqQeSTsqQ6ZPbV5EVyeCs8bFbVNFa85Jc3NmTDK7ELGEKC3gozVkPIAw9FVqFvXNicRihqyynt00vexsAZAppNSkQnKFSMV5ZsbnR7J1vh7V/P+eQp45IzZEFDxv0J+nMthO6IYySL8s4nu1FAz35h5q35dPSJGB8OyK7auyZaCkiqInoPw2c/ir2vq2q9jx8W7k5+/H//3xOHK5YRHM4jvA6yKeC5sMKNoVSNJG8+NYDJHo1EIDIflMXc3Kn2Q==
-Received: from MW4PR03CA0223.namprd03.prod.outlook.com (2603:10b6:303:b9::18)
- by BL1PR12MB5756.namprd12.prod.outlook.com (2603:10b6:208:393::6) with
+ bh=DEV6TBKtc9+XbpTz68e9Vux5FR/vXlDRTqKAFC6NgZU=;
+ b=EmuXyXp2QO3bOTB0tDc7aNLbSzEtf1bZ+JT9dLrCpqVZkaur2gC92CL4uSFDFNpdXgb3PTECOc/05KuyWfkK3mfQOdJD0Ffok5GMXZn98Ig+bjuQ/pJLz8n7QigwTPjxDEKkpADOoMsHOHQx64cfiMal7fubnls54cTuFpZo2+VBr7jKiJE2tkbsxdL7Qj9WisrmMpIyjr1ATEVtMvtVyNYNDuMHkEFt+JEQNIe8FA3qX8QjIW+G53vawBFQhJW2GAycwPdxGxe7JX7flZThF8X/ag/gYSGNWIZPNeKwH8shpSCrlq7Y5l5FZMOvzi1LPM9/AoPhjxZxHlLusENOpA==
+Received: from DM6PR07CA0129.namprd07.prod.outlook.com (2603:10b6:5:330::23)
+ by CH2PR12MB4971.namprd12.prod.outlook.com (2603:10b6:610:6b::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Wed, 8 Feb
- 2023 06:34:18 +0000
-Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b9::4) by MW4PR03CA0223.outlook.office365.com
- (2603:10b6:303:b9::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.36 via Frontend
- Transport; Wed, 8 Feb 2023 06:34:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.35; Wed, 8 Feb
+ 2023 06:35:43 +0000
+Received: from DM6NAM11FT009.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:330:cafe::bf) by DM6PR07CA0129.outlook.office365.com
+ (2603:10b6:5:330::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.35 via Frontend
+ Transport; Wed, 8 Feb 2023 06:35:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DM6NAM11FT009.mail.protection.outlook.com (10.13.173.20) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6086.17 via Frontend Transport; Wed, 8 Feb 2023 06:34:18 +0000
+ 15.20.6086.16 via Frontend Transport; Wed, 8 Feb 2023 06:35:43 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 7 Feb 2023
- 22:34:08 -0800
+ 22:35:35 -0800
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.37) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Tue, 7 Feb 2023 22:34:07 -0800
+ 15.2.986.36; Tue, 7 Feb 2023 22:35:34 -0800
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 04/13] platform: mellanox: Introduce support for next-generation 800GB/s switch
-Date:   Wed, 8 Feb 2023 08:33:21 +0200
-Message-ID: <20230208063331.15560-5-vadimp@nvidia.com>
+Subject: [PATCH platform-next 06/13] platform: mellanox: Split initialization procedure
+Date:   Wed, 8 Feb 2023 08:33:23 +0200
+Message-ID: <20230208063331.15560-7-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230208063331.15560-1-vadimp@nvidia.com>
 References: <20230208063331.15560-1-vadimp@nvidia.com>
@@ -78,318 +78,187 @@ X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT040:EE_|BL1PR12MB5756:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c7469a6-1b90-4580-fc9c-08db099e8165
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT009:EE_|CH2PR12MB4971:EE_
+X-MS-Office365-Filtering-Correlation-Id: 453f8300-9168-41fd-6958-08db099eb40f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4cJRGE3kU0cZ7mOgeOOCGFzFyRXDfx3rHik/0hK284tQFH9vx1T7lY9JOu8mAmb3wgz36Z2MwLY/UDcuYSV0JPaJ7bXoovrALciyTMC+zlYmT7tJ7nkG0FpiPXW6X4dXmKxTjaEiTeRFClX6qoPMJLbWnHoyWDhBkRwGQQzYNammAbQHoUB3xAjT1O97tIXhjIn6q6UBKPEZxZvITiGq9rFgtVZ8ojrvVxNZA2WqkD/PqvtBxKoGeheoUUP6cyiiQVmO+IcrCYQzE4ZwYdjELvC1MlyYxErgrJKWPqcFJ6OPv8LjCudWiQSfZ6io7sUBMmTneXtSANu2E/+PHTJwEnCJ4OonU5J592iWFaztihb2LfkCIsyR21jKaDcEF/C/fn9eQcz65dN8XB9hj8FuqC7Elja8htvNrI8UVBI+6cY52HNAgeQ7UioBhjdZabYpKF5HrqYFTQ9eAlyvfSpKSWPTV/YgIPsTmutT0/0AaZzT7N00XG+8z/7IbJ2Ay3zOZLv/bQQfcn/hJUzdIRV5/ejfuiFQRn0Y4tq9Xl36QxiDmjqidXhDK4J9o28Jm+hlKUIAJbFP7kVnun9EjhdrL+agHBa7izqzNJXxdPmF3g59X9/gIjYBH+Gf9YscBR7IamLjE9GlMwFFgM6sapLEd/i0iYgpBEQBACWn0pmBYogY4X1B2LZZBH7F2rXrhTvL5YCdOyrcU4rmcxxEvNboCA==
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(396003)(346002)(136003)(39860400002)(376002)(451199018)(36840700001)(40470700004)(46966006)(82310400005)(54906003)(356005)(1076003)(8676002)(40480700001)(16526019)(186003)(316002)(86362001)(6666004)(107886003)(7636003)(82740400003)(26005)(478600001)(426003)(41300700001)(8936002)(336012)(83380400001)(40460700003)(47076005)(5660300002)(36756003)(4326008)(2616005)(70586007)(36860700001)(70206006)(6916009)(2906002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: TsuMT2Glz+G94FMGq50eiwWfwCuJ5jEPhBMbFu/Ow/jkLCftiG5hgYRsC0m3MXMaV2MuZqa7ru/kcl9QFHt0LAcqWJk0JnpXjltpdXtzg4Bq40DFdaRrisPZpvU/5LJXagqx2+rbsv/nrmYqQFUdhojEAHaj4XVQbsp1oNQaRjycxBc2C3hiCK+UvHEz714WSm8oq6D2c9Z1FJMzklB0U9TXxYwGyYprIEuNctKFPL06mle+6fxHpRX9lVNpe6KX/2Ji6M023mK7ItKIt3TRfF3a6xLq6jBcdll9pSsScXsP5vIc5+4W31qaDW8lcVRtz7Sd8MhDrP8bfk1S+Z3Qt8jwNLSGbutdrUK6m5Moo+L2E4oXM1mKr27Z1VseKKQGdn9vzTuiMuuVjqAL21HxkMU14WMpxfxgBEhMVg0whOi8MrO3W83cUCs4DY9vA0ZWHGW82gbnz4XV/ZVdb6qJylHru497oTXpRhG9hWZDQzDna7LbpIPaf71BnZQJTzXwXCXooSx0iHLXCdZnB96rIRnpplOXFneBbh8edUquuSIiZbHaQvmuUh0qaXWur13AdADkcuRQjZkjNh9qpDWKM6Nit24rLQlBxT+gYAT8K7Z28NomzDZBZfGsf4ftz78yek5T95mnYHxT5PLeB7HOiRAwfU1o4J5ac/9DitepB47Z/KaZHLiAGGaUmlyVr9UBx/GSBR/0pM6p8V0jHMbwMw==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(376002)(346002)(396003)(136003)(39860400002)(451199018)(36840700001)(46966006)(40470700004)(36756003)(86362001)(36860700001)(70206006)(70586007)(7636003)(2616005)(316002)(54906003)(40460700003)(8676002)(4326008)(6916009)(478600001)(5660300002)(2906002)(40480700001)(82310400005)(82740400003)(6666004)(8936002)(41300700001)(47076005)(1076003)(16526019)(26005)(186003)(426003)(107886003)(336012)(83380400001)(356005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 06:34:18.2547
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 06:35:43.1886
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c7469a6-1b90-4580-fc9c-08db099e8165
+X-MS-Exchange-CrossTenant-Network-Message-Id: 453f8300-9168-41fd-6958-08db099eb40f
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT009.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5756
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4971
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Introduce support for Nvidia next-generation 800GB/s ethernet switch
-SN5600.
+Split mlxplat_init() into two by adding mlxplat_pre_init().
 
-SN5600 is 51.2 Tbps Ethernet switch based on Nvidia Spectrum-4 ASIC.
-It can provide up to 64x800Gb/s (ETH) full bidirectional bandwidth per
-port using PAM-4 modulations. The system supports 64 Belly to Belly 2x4
-OSFP cages.
-The switch was designed to fit standard 2U racks.
+Motivation is to prepare 'mlx-platform' driver to support systems
+equipped PCIe based programming logic device.
 
-Features:
-- 64 OSFP ports support 800GbE - 10GbE speed.
-- Additional 25GbE - 1GbE service port on the front panel.
-- Air-cooled with 3 + 1 redundant fan units.
-- 1 + 1 redundant 3000W or 3600W PSUs.
-- System management board is based on Intel Coffee-lake CPU E-2276
-  with secure-boot support.
+Such systems are supposed to use different system resources, thus this
+commit separates resources allocation related code.
 
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 ---
- drivers/platform/x86/mlx-platform.c | 180 ++++++++++++++++++++++++++++
- 1 file changed, 180 insertions(+)
+ drivers/platform/x86/mlx-platform.c | 78 ++++++++++++++++++++++-------
+ 1 file changed, 60 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index e629ec8a2a2f..cd7f6ff11b1e 100644
+index 1a07a9994f05..2d33d1e5d427 100644
 --- a/drivers/platform/x86/mlx-platform.c
 +++ b/drivers/platform/x86/mlx-platform.c
-@@ -253,6 +253,7 @@
- #define MLXPLAT_CPLD_CH3_ETH_MODULAR		43
- #define MLXPLAT_CPLD_CH4_ETH_MODULAR		51
- #define MLXPLAT_CPLD_CH2_RACK_SWITCH		18
-+#define MLXPLAT_CPLD_CH2_NG800			34
- 
- /* Number of LPC attached MUX platform devices */
- #define MLXPLAT_CPLD_LPC_MUX_DEVS		4
-@@ -503,6 +504,37 @@ static struct i2c_mux_reg_platform_data mlxplat_rack_switch_mux_data[] = {
- 
+@@ -328,6 +328,8 @@
+  * @pdev_fan - FAN platform devices
+  * @pdev_wd - array of watchdog platform devices
+  * @regmap: device register map
++ * @hotplug_resources: system hotplug resources
++ * @hotplug_resources_size: size of system hotplug resources
+  */
+ struct mlxplat_priv {
+ 	struct platform_device *pdev_i2c;
+@@ -338,6 +340,8 @@ struct mlxplat_priv {
+ 	struct platform_device *pdev_fan;
+ 	struct platform_device *pdev_wd[MLXPLAT_CPLD_WD_MAX_DEVS];
+ 	void *regmap;
++	struct resource *hotplug_resources;
++	unsigned int hotplug_resources_size;
  };
  
-+/* Platform channels for ng800 system family */
-+static const int mlxplat_ng800_channels[] = {
-+	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-+	18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
-+};
-+
-+/* Platform ng800 mux data */
-+static struct i2c_mux_reg_platform_data mlxplat_ng800_mux_data[] = {
-+	{
-+		.parent = 1,
-+		.base_nr = MLXPLAT_CPLD_CH1,
-+		.write_only = 1,
-+		.reg = (void __iomem *)MLXPLAT_CPLD_LPC_REG1,
-+		.reg_size = 1,
-+		.idle_in_use = 1,
-+		.values = mlxplat_ng800_channels,
-+		.n_values = ARRAY_SIZE(mlxplat_ng800_channels),
-+	},
-+	{
-+		.parent = 1,
-+		.base_nr = MLXPLAT_CPLD_CH2_NG800,
-+		.write_only = 1,
-+		.reg = (void __iomem *)MLXPLAT_CPLD_LPC_REG2,
-+		.reg_size = 1,
-+		.idle_in_use = 1,
-+		.values = mlxplat_msn21xx_channels,
-+		.n_values = ARRAY_SIZE(mlxplat_msn21xx_channels),
-+	},
-+
-+};
-+
- /* Platform hotplug devices */
- static struct i2c_board_info mlxplat_mlxcpld_pwr[] = {
- 	{
-@@ -522,6 +554,15 @@ static struct i2c_board_info mlxplat_mlxcpld_ext_pwr[] = {
- 	},
- };
- 
-+static struct i2c_board_info mlxplat_mlxcpld_pwr_ng800[] = {
-+	{
-+		I2C_BOARD_INFO("dps460", 0x59),
-+	},
-+	{
-+		I2C_BOARD_INFO("dps460", 0x5a),
-+	},
-+};
-+
- static struct i2c_board_info mlxplat_mlxcpld_fan[] = {
- 	{
- 		I2C_BOARD_INFO("24c32", 0x50),
-@@ -601,6 +642,23 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_pwr_wc_items_data[] = {
- 	},
- };
- 
-+static struct mlxreg_core_data mlxplat_mlxcpld_default_pwr_ng800_items_data[] = {
-+	{
-+		.label = "pwr1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWR_OFFSET,
-+		.mask = BIT(0),
-+		.hpdev.brdinfo = &mlxplat_mlxcpld_pwr_ng800[0],
-+		.hpdev.nr = MLXPLAT_CPLD_PSU_MSNXXXX_NR,
-+	},
-+	{
-+		.label = "pwr2",
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWR_OFFSET,
-+		.mask = BIT(1),
-+		.hpdev.brdinfo = &mlxplat_mlxcpld_pwr_ng800[1],
-+		.hpdev.nr = MLXPLAT_CPLD_PSU_MSNXXXX_NR,
-+	},
-+};
-+
- static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_items_data[] = {
- 	{
- 		.label = "fan1",
-@@ -1224,6 +1282,47 @@ static struct mlxreg_core_item mlxplat_mlxcpld_ext_items[] = {
- 	}
- };
- 
-+static struct mlxreg_core_item mlxplat_mlxcpld_ng800_items[] = {
-+	{
-+		.data = mlxplat_mlxcpld_default_ng_psu_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_PSU_OFFSET,
-+		.mask = MLXPLAT_CPLD_PSU_EXT_MASK,
-+		.capability = MLXPLAT_CPLD_LPC_REG_PSU_I2C_CAP_OFFSET,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_ng_psu_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_default_pwr_ng800_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWR_OFFSET,
-+		.mask = MLXPLAT_CPLD_PWR_EXT_MASK,
-+		.capability = MLXPLAT_CPLD_LPC_REG_PSU_I2C_CAP_OFFSET,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_pwr_ng800_items_data),
-+		.inversed = 0,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_default_ng_fan_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
-+		.mask = MLXPLAT_CPLD_FAN_NG_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_ng_fan_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_default_asic_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
-+		.mask = MLXPLAT_CPLD_ASIC_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_asic_items_data),
-+		.inversed = 0,
-+		.health = true,
-+	},
-+};
-+
- static
- struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_ext_data = {
- 	.items = mlxplat_mlxcpld_ext_items,
-@@ -1234,6 +1333,16 @@ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_ext_data = {
- 	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_LOW | MLXPLAT_CPLD_LOW_AGGR_MASK_ASIC2,
- };
- 
-+static
-+struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_ng800_data = {
-+	.items = mlxplat_mlxcpld_ng800_items,
-+	.counter = ARRAY_SIZE(mlxplat_mlxcpld_ng800_items),
-+	.cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
-+	.mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF | MLXPLAT_CPLD_AGGR_MASK_COMEX,
-+	.cell_low = MLXPLAT_CPLD_LPC_REG_AGGRLO_OFFSET,
-+	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_LOW | MLXPLAT_CPLD_LOW_AGGR_MASK_ASIC2,
-+};
-+
- static struct mlxreg_core_data mlxplat_mlxcpld_modular_pwr_items_data[] = {
- 	{
- 		.label = "pwr1",
-@@ -3093,6 +3202,13 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mask = GENMASK(7, 0) & ~BIT(7),
- 		.mode = 0644,
- 	},
-+	{
-+		.label = "clk_brd_prog_en",
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWM_CONTROL_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(1),
-+		.mode = 0644,
-+		.secured = 1,
-+	},
- 	{
- 		.label = "erot1_recovery",
- 		.reg = MLXPLAT_CPLD_LPC_REG_PWM_CONTROL_OFFSET,
-@@ -3221,6 +3337,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mask = GENMASK(7, 0) & ~BIT(6),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "reset_ac_ok_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(7),
-+		.mode = 0444,
-+	},
- 	{
- 		.label = "psu1_on",
- 		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-@@ -3302,6 +3424,13 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.bit = 5,
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "pwr_converter_prog_en",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(0),
-+		.mode = 0644,
-+		.secured = 1,
-+	},
- 	{
- 		.label = "vpd_wp",
- 		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-@@ -3326,6 +3455,30 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mask = GENMASK(7, 0) & ~BIT(1),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "clk_brd1_boot_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "clk_brd2_boot_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "clk_brd_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "asic_pg_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(7),
-+		.mode = 0444,
-+	},
- 	{
- 		.label = "spi_chnl_select",
- 		.reg = MLXPLAT_CPLD_LPC_REG_SPI_CHNL_SELECT,
-@@ -5211,6 +5364,27 @@ static int __init mlxplat_dmi_rack_switch_matched(const struct dmi_system_id *dm
- 	return 1;
+ static struct platform_device *mlxplat_dev;
+@@ -6002,20 +6006,63 @@ static int mlxplat_mlxcpld_check_wd_capability(void *regmap)
+ 	return 0;
  }
  
-+static int __init mlxplat_dmi_ng800_matched(const struct dmi_system_id *dmi)
++static int mlxplat_lpc_cpld_device_init(struct resource **hotplug_resources,
++					unsigned int *hotplug_resources_size)
 +{
-+	int i;
++	int err;
 +
-+	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-+	mlxplat_mux_num = ARRAY_SIZE(mlxplat_ng800_mux_data);
-+	mlxplat_mux_data = mlxplat_ng800_mux_data;
-+	mlxplat_hotplug = &mlxplat_mlxcpld_ng800_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
-+	mlxplat_led = &mlxplat_default_ng_led_data;
-+	mlxplat_regs_io = &mlxplat_default_ng_regs_io_data;
-+	mlxplat_fan = &mlxplat_default_fan_data;
-+	for (i = 0; i < ARRAY_SIZE(mlxplat_mlxcpld_wd_set_type2); i++)
-+		mlxplat_wd_data[i] = &mlxplat_mlxcpld_wd_set_type2[i];
-+	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
-+	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng400;
++	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, PLATFORM_DEVID_NONE,
++						      mlxplat_lpc_resources,
++						      ARRAY_SIZE(mlxplat_lpc_resources));
++	if (IS_ERR(mlxplat_dev))
++		return PTR_ERR(mlxplat_dev);
 +
-+	return 1;
++	mlxplat_mlxcpld_regmap_ctx.base = devm_ioport_map(&mlxplat_dev->dev,
++							  mlxplat_lpc_resources[1].start, 1);
++	if (!mlxplat_mlxcpld_regmap_ctx.base) {
++		err = -ENOMEM;
++		goto fail_devm_ioport_map;
++	}
++
++	*hotplug_resources = mlxplat_mlxcpld_resources;
++	*hotplug_resources_size = ARRAY_SIZE(mlxplat_mlxcpld_resources);
++
++	return 0;
++
++fail_devm_ioport_map:
++	platform_device_unregister(mlxplat_dev);
++	return err;
 +}
 +
- static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 	{
- 		.callback = mlxplat_dmi_default_wc_matched,
-@@ -5287,6 +5461,12 @@ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_BOARD_NAME, "VMOD0011"),
- 		},
- 	},
-+	{
-+		.callback = mlxplat_dmi_ng800_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0013"),
-+		},
-+	},
- 	{
- 		.callback = mlxplat_dmi_chassis_blade_matched,
- 		.matches = {
++static void mlxplat_lpc_cpld_device_exit(void)
++{
++	platform_device_unregister(mlxplat_dev);
++}
++
++static int
++mlxplat_pre_init(struct resource **hotplug_resources, unsigned int *hotplug_resources_size)
++{
++	return mlxplat_lpc_cpld_device_init(hotplug_resources, hotplug_resources_size);
++}
++
++static void mlxplat_post_exit(void)
++{
++	mlxplat_lpc_cpld_device_exit();
++}
++
+ static int __init mlxplat_init(void)
+ {
++	unsigned int hotplug_resources_size;
++	struct resource *hotplug_resources;
+ 	struct mlxplat_priv *priv;
+ 	int i, j, nr, err;
+ 
+ 	if (!dmi_check_system(mlxplat_dmi_table))
+ 		return -ENODEV;
+ 
+-	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, PLATFORM_DEVID_NONE,
+-					mlxplat_lpc_resources,
+-					ARRAY_SIZE(mlxplat_lpc_resources));
+-
+-	if (IS_ERR(mlxplat_dev))
+-		return PTR_ERR(mlxplat_dev);
++	err = mlxplat_pre_init(&hotplug_resources, &hotplug_resources_size);
++	if (err)
++		return err;
+ 
+ 	priv = devm_kzalloc(&mlxplat_dev->dev, sizeof(struct mlxplat_priv),
+ 			    GFP_KERNEL);
+@@ -6025,12 +6072,8 @@ static int __init mlxplat_init(void)
+ 	}
+ 	platform_set_drvdata(mlxplat_dev, priv);
+ 
+-	mlxplat_mlxcpld_regmap_ctx.base = devm_ioport_map(&mlxplat_dev->dev,
+-			       mlxplat_lpc_resources[1].start, 1);
+-	if (!mlxplat_mlxcpld_regmap_ctx.base) {
+-		err = -ENOMEM;
+-		goto fail_alloc;
+-	}
++	priv->hotplug_resources = hotplug_resources;
++	priv->hotplug_resources_size = hotplug_resources_size;
+ 
+ 	if (!mlxplat_regmap_config)
+ 		mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config;
+@@ -6051,8 +6094,8 @@ static int __init mlxplat_init(void)
+ 	if (mlxplat_i2c)
+ 		mlxplat_i2c->regmap = priv->regmap;
+ 	priv->pdev_i2c = platform_device_register_resndata(&mlxplat_dev->dev, "i2c_mlxcpld",
+-							   nr, mlxplat_mlxcpld_resources,
+-							   ARRAY_SIZE(mlxplat_mlxcpld_resources),
++							   nr, priv->hotplug_resources,
++							   priv->hotplug_resources_size,
+ 							   mlxplat_i2c, sizeof(*mlxplat_i2c));
+ 	if (IS_ERR(priv->pdev_i2c)) {
+ 		err = PTR_ERR(priv->pdev_i2c);
+@@ -6076,8 +6119,8 @@ static int __init mlxplat_init(void)
+ 		priv->pdev_hotplug =
+ 		platform_device_register_resndata(&mlxplat_dev->dev,
+ 						  "mlxreg-hotplug", PLATFORM_DEVID_NONE,
+-						  mlxplat_mlxcpld_resources,
+-						  ARRAY_SIZE(mlxplat_mlxcpld_resources),
++						  priv->hotplug_resources,
++						  priv->hotplug_resources_size,
+ 						  mlxplat_hotplug, sizeof(*mlxplat_hotplug));
+ 		if (IS_ERR(priv->pdev_hotplug)) {
+ 			err = PTR_ERR(priv->pdev_hotplug);
+@@ -6179,7 +6222,6 @@ static int __init mlxplat_init(void)
+ 		platform_device_unregister(priv->pdev_mux[i]);
+ 	platform_device_unregister(priv->pdev_i2c);
+ fail_alloc:
+-	platform_device_unregister(mlxplat_dev);
+ 
+ 	return err;
+ }
+@@ -6207,7 +6249,7 @@ static void __exit mlxplat_exit(void)
+ 		platform_device_unregister(priv->pdev_mux[i]);
+ 
+ 	platform_device_unregister(priv->pdev_i2c);
+-	platform_device_unregister(mlxplat_dev);
++	mlxplat_post_exit();
+ }
+ module_exit(mlxplat_exit);
+ 
 -- 
 2.20.1
 
