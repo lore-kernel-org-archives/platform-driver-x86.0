@@ -2,40 +2,40 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4972CC6FA9E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47543C6FA9D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbjBINav (ORCPT
+        id S230266AbjBINaw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 08:30:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56764 "EHLO
+        Thu, 9 Feb 2023 08:30:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjBINaq (ORCPT
+        with ESMTP id S230163AbjBINaq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Thu, 9 Feb 2023 08:30:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CC723C7A;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710BE5D1E7;
         Thu,  9 Feb 2023 05:30:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DF6E661ABA;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F07F161AC4;
         Thu,  9 Feb 2023 13:30:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6404EC4333E;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4B3DC43239;
         Thu,  9 Feb 2023 13:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1675949443;
-        bh=NTHXrrpZCAJQDbqGQ5Dk1VncIloUIc9A9BrVorjY3xI=;
+        bh=HISCOQlywscKKiMV1pBIVu7ICjzhN///DKg1eFvToD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYyAS3/jMTrOrQkqzxE8B5R+kCJA33WHUACgO3u4maL1KI6eOMC6KdVb7sKrAIe2q
-         KGQcpdr28joNSS83Q1OENfMsXmQa+Qkj/El7u7axKD7xn+m1EfD8GB4cU8lJdL0HH3
-         YA5Ut7l3qrKwJDAG9Gro8Shh7Ki7Dwh82EieJohc9itIMwm8V4YCT5MGMEX1toj4oT
-         a9amOFPGN6m4cVkBb8CMZnPo7aWHQYlP0gtS0HUKJsz+PmZI1/FvX6ebJ99pAT0nKm
-         b/GOyJ2jehG0MLsv7Xn1q08vi3n0HDR1a6By8/HibtGzFKDwu0+FVQq0u7V0koORm8
-         irPz+jBwRRFJg==
+        b=Xu86u8HdonbGLeFJ+mZB1yqGEQXC4M0SBIKvjGHzi4Rg2oGVCNhFcvkN08I7P2CZR
+         exdI9GkIvPeNQqxQ2lku9EcNAioStI82ppokOEDdUcSYjL41tvm8+LdNtU6OkBzHVS
+         12ed9EjvZ6CJ3S6YI/a3LeKqDD0toHeo2Vur+8pgEI/zEPWH5Ny4PWL6dAvNBvtM2w
+         o6GTZayDVlY5RsYmKAsJsRg/203JlLlgyQu2yr1KJViRkLOZgK/p4gYl8ZOZatNvCt
+         +XeKr5TsfKobVo8cuDYrsaBfZOa3868riTW+jwKe+gUgzAhxbRic7FfITXVdRqIH3M
+         Zh2wZIG2YUomw==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1pQ71H-0001LO-8K; Thu, 09 Feb 2023 14:31:23 +0100
+        id 1pQ71H-0001Ld-Lj; Thu, 09 Feb 2023 14:31:23 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
@@ -45,9 +45,9 @@ Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v5 13/19] irqchip/alpine-msi: Use irq_domain_add_hierarchy()
-Date:   Thu,  9 Feb 2023 14:23:17 +0100
-Message-Id: <20230209132323.4599-14-johan+linaro@kernel.org>
+Subject: [PATCH v5 18/19] irqchip/mvebu-odmi: Use irq_domain_create_hierarchy()
+Date:   Thu,  9 Feb 2023 14:23:22 +0100
+Message-Id: <20230209132323.4599-19-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230209132323.4599-1-johan+linaro@kernel.org>
 References: <20230209132323.4599-1-johan+linaro@kernel.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the irq_domain_add_hierarchy() helper to create the hierarchical
+Use the irq_domain_create_hierarchy() helper to create the hierarchical
 domain, which both serves as documentation and avoids poking at
 irqdomain internals.
 
@@ -67,33 +67,45 @@ Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/irqchip/irq-alpine-msi.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-mvebu-odmi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-msi.c
-index 5ddb8e578ac6..604459372fdd 100644
---- a/drivers/irqchip/irq-alpine-msi.c
-+++ b/drivers/irqchip/irq-alpine-msi.c
-@@ -204,16 +204,14 @@ static int alpine_msix_init_domains(struct alpine_msix_data *priv,
- 		return -ENXIO;
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index dc4145abdd6f..108091533e10 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -161,7 +161,7 @@ static struct msi_domain_info odmi_msi_domain_info = {
+ static int __init mvebu_odmi_init(struct device_node *node,
+ 				  struct device_node *parent)
+ {
+-	struct irq_domain *inner_domain, *plat_domain;
++	struct irq_domain *parent_domain, *inner_domain, *plat_domain;
+ 	int ret, i;
+ 
+ 	if (of_property_read_u32(node, "marvell,odmi-frames", &odmis_count))
+@@ -197,16 +197,17 @@ static int __init mvebu_odmi_init(struct device_node *node,
+ 		}
  	}
  
--	middle_domain = irq_domain_add_tree(NULL,
--					    &alpine_msix_middle_domain_ops,
--					    priv);
-+	middle_domain = irq_domain_add_hierarchy(gic_domain, 0, 0, NULL,
-+						 &alpine_msix_middle_domain_ops,
-+						 priv);
- 	if (!middle_domain) {
- 		pr_err("Failed to create the MSIX middle domain\n");
- 		return -ENOMEM;
+-	inner_domain = irq_domain_create_linear(of_node_to_fwnode(node),
+-						odmis_count * NODMIS_PER_FRAME,
+-						&odmi_domain_ops, NULL);
++	parent_domain = irq_find_host(parent);
++
++	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
++						   odmis_count * NODMIS_PER_FRAME,
++						   of_node_to_fwnode(node),
++						   &odmi_domain_ops, NULL);
+ 	if (!inner_domain) {
+ 		ret = -ENOMEM;
+ 		goto err_unmap;
  	}
  
--	middle_domain->parent = gic_domain;
+-	inner_domain->parent = irq_find_host(parent);
 -
- 	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
- 					       &alpine_msix_domain_info,
- 					       middle_domain);
+ 	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
+ 						     &odmi_msi_domain_info,
+ 						     inner_domain);
 -- 
 2.39.1
 
