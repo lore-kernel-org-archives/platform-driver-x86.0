@@ -2,51 +2,51 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C88C64ED9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91381C636D6
 	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbjBINax (ORCPT
+        id S230281AbjBINax (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Thu, 9 Feb 2023 08:30:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230210AbjBINaq (ORCPT
+        with ESMTP id S229668AbjBINar (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 08:30:46 -0500
+        Thu, 9 Feb 2023 08:30:47 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D51EFF0B;
-        Thu,  9 Feb 2023 05:30:45 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3125A901;
+        Thu,  9 Feb 2023 05:30:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2AC43B82138;
+        by ams.source.kernel.org (Postfix) with ESMTPS id B901CB82130;
         Thu,  9 Feb 2023 13:30:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B9AC4339E;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF381C43443;
         Thu,  9 Feb 2023 13:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1675949442;
-        bh=tBqk6KgtGtAPTVEMAxcaZIoN23hQcgfod3xymk/Evn8=;
+        bh=/tiungLfitFlSrlnkn8ELqW8HMOoeWc08EIHOdGt7VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TeA1pbonScrBm0NCQzRGyJ3tlpcXySd1ejnAVbqKqPBVM6OHV49cOLP+zJ3t1NVJs
-         hPOpfXJALcAjzFWFzl5XoN3jLzWOeHgjyDhh/DpCM5cHGfP0IJLyhBjqysRzlSSHUP
-         F6NXWivqhs8rjF414ZgK0MVZXftxG2VZcJ9vU1bNs/RzUSubGFMuut9Xbc5/r3SxEu
-         VIWpTdySZPGv9lIoo9YIxtjFX7WrcgGQAZm3yKG+zQu0QwyQBJAjpJ4C+ktNYe9vPQ
-         0VFGEN3/aMfSOffu2VFHU+6YvE3hweyFIU1hfqR/2I7272YnF18U/W6znDwK6UN0TI
-         0Ejz3VTg42ojw==
+        b=kNUJPPGiLLrkXQ7Lc7KLWcNPIwf6YxkF+AjzZksfbfktoP2qeVtUh6bdWj/JsgCGk
+         IuMGLGxWE+YmDJzztXFF1K/jXBzj2fLnoJBl372+kNML0FeheTA/twBYfynl+UW31m
+         y5uKw2SQPdKBYGv+Z3ZjuW0abhbEJHXbZEmNA4m4O7mkCR1TXzf/TLnNRwVmYI3n9E
+         mmLwPPGfUYX5ZiM72NuqXoUW9OuuVj11EskLUvkGL4czFr4MqAsOdt8ZXzAlJvqTHp
+         uvAQ8EHFwT9Fch1BwQYUz0I8zdzppnGTQxV4hRfAve+gpepM7V6OCBAOzgn79dj4X1
+         cHA9F7W2qCLXw==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1pQ71G-0001Kh-4e; Thu, 09 Feb 2023 14:31:22 +0100
+        id 1pQ71G-0001L0-Pm; Thu, 09 Feb 2023 14:31:22 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org,
+        Johan Hovold <johan+linaro@kernel.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v5 01/19] irqdomain: Fix association race
-Date:   Thu,  9 Feb 2023 14:23:05 +0100
-Message-Id: <20230209132323.4599-2-johan+linaro@kernel.org>
+Subject: [PATCH v5 08/19] irqdomain: Drop dead domain-name assignment
+Date:   Thu,  9 Feb 2023 14:23:12 +0100
+Message-Id: <20230209132323.4599-9-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230209132323.4599-1-johan+linaro@kernel.org>
 References: <20230209132323.4599-1-johan+linaro@kernel.org>
@@ -56,79 +56,45 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The sanity check for an already mapped virq is done outside of the
-irq_domain_mutex-protected section which means that an (unlikely) racing
-association may not be detected.
+Since commit d59f6617eef0 ("genirq: Allow fwnode to carry name
+information only") an IRQ domain is always given a name during
+allocation (e.g. used for the debugfs entry).
 
-Fix this by factoring out the association implementation, which will
-also be used in a follow-on change to fix a shared-interrupt mapping
-race.
+Drop the leftover name assignment when allocating the first IRQ.
 
-Fixes: ddaf144c61da ("irqdomain: Refactor irq_domain_associate_many()")
-Cc: stable@vger.kernel.org      # 3.11
 Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ kernel/irq/irqdomain.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 798a9042421f..561689a3f050 100644
+index 28d74549414b..3d635b8bb465 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -559,8 +559,8 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 	irq_domain_clear_mapping(domain, hwirq);
- }
- 
--int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
--			 irq_hw_number_t hwirq)
-+static int irq_domain_associate_locked(struct irq_domain *domain, unsigned int virq,
-+				       irq_hw_number_t hwirq)
- {
- 	struct irq_data *irq_data = irq_get_irq_data(virq);
- 	int ret;
-@@ -573,7 +573,6 @@ int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
- 	if (WARN(irq_data->domain, "error: virq%i is already associated", virq))
- 		return -EINVAL;
- 
--	mutex_lock(&irq_domain_mutex);
- 	irq_data->hwirq = hwirq;
- 	irq_data->domain = domain;
- 	if (domain->ops->map) {
-@@ -590,7 +589,6 @@ int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
- 			}
- 			irq_data->domain = NULL;
+@@ -598,10 +598,6 @@ static int irq_domain_associate_locked(struct irq_domain *domain, unsigned int v
  			irq_data->hwirq = 0;
--			mutex_unlock(&irq_domain_mutex);
  			return ret;
  		}
- 
-@@ -601,12 +599,23 @@ int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
+-
+-		/* If not already assigned, give the domain the chip's name */
+-		if (!domain->name && irq_data->chip)
+-			domain->name = irq_data->chip->name;
+ 	}
  
  	domain->mapcount++;
- 	irq_domain_set_mapping(domain, hwirq, irq_data);
--	mutex_unlock(&irq_domain_mutex);
+@@ -1155,10 +1151,6 @@ static void irq_domain_insert_irq(int virq)
+ 
+ 		domain->mapcount++;
+ 		irq_domain_set_mapping(domain, data->hwirq, data);
+-
+-		/* If not already assigned, give the domain the chip's name */
+-		if (!domain->name && data->chip)
+-			domain->name = data->chip->name;
+ 	}
  
  	irq_clear_status_flags(virq, IRQ_NOREQUEST);
- 
- 	return 0;
- }
-+
-+int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
-+			 irq_hw_number_t hwirq)
-+{
-+	int ret;
-+
-+	mutex_lock(&irq_domain_mutex);
-+	ret = irq_domain_associate_locked(domain, virq, hwirq);
-+	mutex_unlock(&irq_domain_mutex);
-+
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(irq_domain_associate);
- 
- void irq_domain_associate_many(struct irq_domain *domain, unsigned int irq_base,
 -- 
 2.39.1
 
