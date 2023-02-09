@@ -2,230 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1356BC636D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 14:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19436C636D6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 15:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230292AbjBIOD0 (ORCPT
+        id S230463AbjBIPVj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 09:03:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
+        Thu, 9 Feb 2023 10:21:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbjBIODY (ORCPT
+        with ESMTP id S229978AbjBIPVi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 09:03:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8BB2D6F;
-        Thu,  9 Feb 2023 06:03:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65FA461A78;
-        Thu,  9 Feb 2023 14:03:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB71C433EF;
-        Thu,  9 Feb 2023 14:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675951402;
-        bh=3JCu6SWDhRVQ0rFnujYBUtGwwy/pPjw4FuegeZK3AAE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JZXPWu4/X/G4qoSiHhNVQyAWH3EJlNzyFJDOCtgMLgf1PWPRgN4TiBrZOYZeUUNph
-         EaGz3k/t1E0c2gkyeFW90gwClHilCJ6B0i3W5TkoI1IE/rdyOCmGb5dObbeyfmPc08
-         Bk6vdoQEVgkG1D8s1gtnGmuSXJ/LfjdRYD09D4H9rPGXVXAMvrDXAfO3iNnyFrC3Nq
-         8A/P28ia0ViWhzaxAS9mfMiuVskM3v0aJ5pWGQGtOI3+gvT8zadxVAnJGjgg8KmQVU
-         iXhlRjDublWzjoL5k36TVTq8ttYRi96JjDH8UNdVIrvB8xnq0n1A3NMUxQzn07Zuzz
-         OZNMa04mD1qVw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pQ7WC-0090HQ-Ad;
-        Thu, 09 Feb 2023 14:03:20 +0000
-Date:   Thu, 09 Feb 2023 14:03:19 +0000
-Message-ID: <86edqzylzs.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Thu, 9 Feb 2023 10:21:38 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25D972AF
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Feb 2023 07:21:36 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id o20so3618172lfk.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Feb 2023 07:21:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cthpLXx0f+oWoF1dzgJ83xt8I8sgWAj9IDXrTHyK+HI=;
+        b=pvSCPpmO6boIlc/8GfJMMZzVFLc8xPOCk6GRM1D1yvs8C3YfOL03iFuuWDm3B7sYWu
+         lUCiSMqMtePy6ReBPEfPhpFvl64fluB1sC4RWlcuFYEe6FG1SNQ58Iy07mPDzJ2J82N9
+         fJcIn/YLn1uIZGQ1Rw0Z40Sy2klnUAbZ0BsxIq/qKQczg8ZAiGlycakmVRQi4POjteqX
+         148tu/+ka4f43RCGmErg6mO/nnfo8hOrLMtVoPDkXLzwsKTbc+5Iqi8yc1uddSNDqkwt
+         MLEV2PpyLe/V103g4xavt6ki34d2x/vx41L3frrGhph9NtbGVQTZQb4ihHjTqH6ilXKQ
+         /ufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cthpLXx0f+oWoF1dzgJ83xt8I8sgWAj9IDXrTHyK+HI=;
+        b=LdweCdNY5+zXE/DPb1nIRF7fR3zzvbzrmlCAgQAjS0foF9wUqtCbB2b+ZfrJxk1bfe
+         dEG16Ddag5qAbgCwjWFjHgd8HoMLQ4J7M50CIdCJORg+SEsOYjj8xk3L8tcQuqPtmMp+
+         TvHvrQYZe2exDOCsJ2UtChjsuUtbiLpNOB42jfSdee0bRcMWBprNOmScefaWXrfez7N6
+         8JV32Jn0zkwFXBbXFmMnlaBAXszc8Ig0qvGCiyluLci/otencUO0uIjCtVB21PAzSVBW
+         u3wslzKcQOkX5Rse0pUBF6sV9whvwzco2K3dbtof7dFlykZHCxdJIJHcwsYKAMZMaXbC
+         LX2Q==
+X-Gm-Message-State: AO0yUKWfcnV+BgBDSeo+FMOZLsSsjVFKjMl8JYIAyi83r0LuPNzmBh3f
+        IBHNTF7e1SnDPRyrUDhhdp0rNA==
+X-Google-Smtp-Source: AK7set+TU+Y0EfByBRNfYHVNJGDzXTPUI812KqOgxmhS1mCgtjOMwkkgxe3xIvsXQ/qenGNxWLuRAg==
+X-Received: by 2002:a05:6512:40d:b0:4d8:530b:25b7 with SMTP id u13-20020a056512040d00b004d8530b25b7mr2736443lfk.58.1675956094955;
+        Thu, 09 Feb 2023 07:21:34 -0800 (PST)
+Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
+        by smtp.gmail.com with ESMTPSA id l7-20020ac25547000000b004d40e22c1eesm145037lfk.252.2023.02.09.07.21.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 07:21:34 -0800 (PST)
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+To:     linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
+        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
+        upstream@semihalf.com, hdegoede@redhat.com, markgross@kernel.org,
+        dtor@google.com, mario.limonciello@amd.com,
+        linux-pm@vger.kernel.org, x86@kernel.org,
         platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v5 06/19] irqdomain: Fix mapping-creation race
-In-Reply-To: <20230209132323.4599-7-johan+linaro@kernel.org>
-References: <20230209132323.4599-1-johan+linaro@kernel.org>
-        <20230209132323.4599-7-johan+linaro@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: johan+linaro@kernel.org, tglx@linutronix.de, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, dtor@chromium.org, jonathanh@nvidia.com, hsinyi@chromium.org, mark-pk.tsai@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: [RESEND RFCv2 0/1] x86: allow to notify host about guest entering s2idle
+Date:   Thu,  9 Feb 2023 15:21:22 +0000
+Message-Id: <20230209152123.3186930-1-jaz@semihalf.com>
+X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 09 Feb 2023 13:23:10 +0000,
-Johan Hovold <johan+linaro@kernel.org> wrote:
-> 
-> Parallel probing of devices that share interrupts (e.g. when a driver
-> uses asynchronous probing) can currently result in two mappings for the
-> same hardware interrupt to be created due to missing serialisation.
-> 
-> Make sure to hold the irq_domain_mutex when creating mappings so that
-> looking for an existing mapping before creating a new one is done
-> atomically.
-> 
-> Fixes: 765230b5f084 ("driver-core: add asynchronous probing support for drivers")
-> Fixes: b62b2cf5759b ("irqdomain: Fix handling of type settings for existing mappings")
-> Link: https://lore.kernel.org/r/YuJXMHoT4ijUxnRb@hovoldconsulting.com
-> Cc: stable@vger.kernel.org      # 4.8
-> Cc: Dmitry Torokhov <dtor@chromium.org>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  kernel/irq/irqdomain.c | 55 ++++++++++++++++++++++++++++++------------
->  1 file changed, 40 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 7b57949bc79c..1ddb01bd49a4 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -25,6 +25,9 @@ static DEFINE_MUTEX(irq_domain_mutex);
->  
->  static struct irq_domain *irq_default_domain;
->  
-> +static int irq_domain_alloc_irqs_locked(struct irq_domain *domain, int irq_base,
-> +					unsigned int nr_irqs, int node, void *arg,
-> +					bool realloc, const struct irq_affinity_desc *affinity);
->  static void irq_domain_check_hierarchy(struct irq_domain *domain);
->  
->  struct irqchip_fwid {
-> @@ -682,9 +685,9 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
->  EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
->  #endif
->  
-> -static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
-> -						  irq_hw_number_t hwirq,
-> -						  const struct irq_affinity_desc *affinity)
-> +static unsigned int irq_create_mapping_affinity_locked(struct irq_domain *domain,
-> +						       irq_hw_number_t hwirq,
-> +						       const struct irq_affinity_desc *affinity)
->  {
->  	struct device_node *of_node = irq_domain_get_of_node(domain);
->  	int virq;
-> @@ -699,7 +702,7 @@ static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
->  		return 0;
->  	}
->  
-> -	if (irq_domain_associate(domain, virq, hwirq)) {
-> +	if (irq_domain_associate_locked(domain, virq, hwirq)) {
->  		irq_free_desc(virq);
->  		return 0;
->  	}
-> @@ -735,14 +738,20 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
->  		return 0;
->  	}
->  
-> +	mutex_lock(&irq_domain_mutex);
-> +
->  	/* Check if mapping already exists */
->  	virq = irq_find_mapping(domain, hwirq);
->  	if (virq) {
->  		pr_debug("existing mapping on virq %d\n", virq);
-> -		return virq;
-> +		goto out;
->  	}
->  
-> -	return __irq_create_mapping_affinity(domain, hwirq, affinity);
-> +	virq = irq_create_mapping_affinity_locked(domain, hwirq, affinity);
-> +out:
-> +	mutex_unlock(&irq_domain_mutex);
-> +
-> +	return virq;
->  }
->  EXPORT_SYMBOL_GPL(irq_create_mapping_affinity);
->  
-> @@ -809,6 +818,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
->  		type &= IRQ_TYPE_SENSE_MASK;
->  
-> +	mutex_lock(&irq_domain_mutex);
-> +
->  	/*
->  	 * If we've already configured this interrupt,
->  	 * don't do it again, or hell will break loose.
-> @@ -821,7 +832,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  		 * interrupt number.
->  		 */
->  		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
-> -			return virq;
-> +			goto out;
->  
->  		/*
->  		 * If the trigger type has not been set yet, then set
-> @@ -830,36 +841,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
->  			irq_data = irq_get_irq_data(virq);
->  			if (!irq_data)
-> -				return 0;
-> +				goto err;
->  
->  			irqd_set_trigger_type(irq_data, type);
-> -			return virq;
-> +			goto out;
->  		}
->  
->  		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
->  			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
-> -		return 0;
-> +		goto err;
->  	}
->  
->  	if (irq_domain_is_hierarchy(domain)) {
-> -		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
-> +		virq = irq_domain_alloc_irqs_locked(domain, -1, 1, NUMA_NO_NODE,
-> +						    fwspec, false, NULL);
->  		if (virq <= 0)
-> -			return 0;
-> +			goto err;
->  	} else {
->  		/* Create mapping */
-> -		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
-> +		virq = irq_create_mapping_affinity_locked(domain, hwirq, NULL);
->  		if (!virq)
-> -			return virq;
-> +			goto err;
->  	}
->  
->  	irq_data = irq_get_irq_data(virq);
->  	if (WARN_ON(!irq_data))
-> -		return 0;
-> +		goto err;
->  
->  	/* Store trigger type */
->  	irqd_set_trigger_type(irq_data, type);
-> +out:
-> +	mutex_unlock(&irq_domain_mutex);
->  
->  	return virq;
-> +err:
-> +	mutex_unlock(&irq_domain_mutex);
-> +
-> +	return 0;
+<Resend with some extra lists added to the Cc>
 
-nit: it'd look better if we had a single exit path with the unlock,
-setting virq to 0 on failure. Not a big deal, as this can be tidied up
-when applied.
+According to the mailing list discussion [1] about the preferred approach
+for notifying hypervisor/VMM about guest entering s2idle state this RFC was
+implemented.
 
-Thanks,
+Instead of original hypercall based approach, which involves KVM change [2]
+and makes it hypervisor specific, implement different mechanism, which
+takes advantage of MMIO/PIO trapping and makes it hypervisor independent.
 
-	M.
+For the RFCv1 [3]:
+  Patch #1 extends S2Idle ops by new notify handler which will be invoked as a
+  very last command before system actually enters S2Idle states. It also allows
+  to register and use driver specific notification hook which is used in
+  patch #2.
+
+  Patch #2 introduces new driver for virtual PMC, which registers
+  acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
+  ACPI _DSM evaluation, which in turn can perform MMIO access and allow to
+  trap and therefore notify the VMM about guest entering S2Idle state.
+
+For the RFCv2: the patch #1 was dropped as in the meantime Mario Limonciello
+introduced a very similar patch [4] which uses s/notify/check and invokes the
+callback a bit earlier just before s2idle_entry. Mentioned patch has already
+been merged.
+
+This patchset is marked as RFC since patch #2 implements driver for non
+existing device "HYPE0001", which ACPI ID was not registered yet.
+Furthermore the required registration process [5] will not be started
+before getting positive feedback about this patchset.
+
+[1] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-2-jaz@semihalf.com/
+[2] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-3-jaz@semihalf.com/
+[3] https://patchwork.kernel.org/project/linux-pm/cover/20220707125329.378277-1-jaz@semihalf.com/
+[4] https://patchwork.kernel.org/project/linux-pm/patch/20220829162953.5947-2-mario.limonciello@amd.com
+[5] https://uefi.org/PNP_ACPI_Registry
+
+Grzegorz Jaszczyk (1):
+  platform/x86: Add virtual PMC driver used for S2Idle
+
+ drivers/platform/x86/Kconfig    |  7 ++++
+ drivers/platform/x86/Makefile   |  3 ++
+ drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
+ 3 files changed, 83 insertions(+)
+ create mode 100644 drivers/platform/x86/virt_pmc.c
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.39.1.519.gcb327c4b5f-goog
+
