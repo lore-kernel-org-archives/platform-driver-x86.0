@@ -2,113 +2,283 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A107EC05027
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Feb 2023 21:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F00C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 06:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230491AbjBHVnM (ORCPT
+        id S229468AbjBIGFJ convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Feb 2023 16:43:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57270 "EHLO
+        Thu, 9 Feb 2023 01:05:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230167AbjBHVnM (ORCPT
+        with ESMTP id S229526AbjBIGFJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Feb 2023 16:43:12 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549442E812
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Feb 2023 13:43:11 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id y1so18302304wru.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Feb 2023 13:43:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DMkc6Z4Dgkv06utQgnd4K0uWr4+R7e0xnwDDCtankCw=;
-        b=Ritqc3oGDgJr0mtCcO9sp2rurQj+uWc0WyjxmWqa8XZazdXfMxdJua38lcnUIn29Lf
-         ODi059uumUX1WHkuK/Bw38vtfgDyQT1FwWAXjfYvpV3Nz6EAUZ8DsSqKbFRrXEUyzus4
-         oD4m9uPXyNPuDqG7f6vX9cQ8n+F886HppFWt4R0q0RuN3kCY/aATu73DgSedAhisKShA
-         gioqekD60vgoYBac8Yxw61Xa5p0Wr9+R/mwJUmN2+MHS5k8KsAuTcC76bjJFOlwGY4B3
-         rtGegEHwwUM8TF7n91YD50qhKSA3m6QdOipQSumxnJ83U331WOVbdv6bJfm/35lNRtKY
-         FOrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DMkc6Z4Dgkv06utQgnd4K0uWr4+R7e0xnwDDCtankCw=;
-        b=pjkipiYt32AooLQuFC3dU3kVO0HOgfK+DYpP5+owVhEoDf+TiN5Kwvvtk1bD/+Hvzs
-         voVvb7wCo0/iPPcL3QpZuMTZszXCANQKAH9Wnuqh6sR6h0MnO0fq1Rts2+xfGrtkPeF2
-         4WJNvKO80BXc21gJwaRuITuz39SGMPQeqCo4Jmdf/9yMTNUf/NM4dCzrjiBTIn0eUTGf
-         CvrU8walVHXxmSRJ5qEeMQqlb5cOKHS0rpulionltibGwvNw+yRq1B0hwvCaSBofFIKq
-         42r6yKw4wvmOdBNkHFmzPjsx249UVZsCbqRD4pyQV4JDJ0nzUNdgpTIzpz5MdGtNkhWs
-         82qw==
-X-Gm-Message-State: AO0yUKW3MDwXo3xztw2Tj8KxfP85SEzPGiYe8eOFvvjEbkvdzag30ift
-        1V4UqyKE4+hfWrmMGOnZvr0=
-X-Google-Smtp-Source: AK7set/aC1pzJLIJlC/74iylhm4snZu1y7E3tEmKzeWCyB1h0bnmgN0FySZ7g40MDOlmvT1m3nlnbw==
-X-Received: by 2002:a5d:6791:0:b0:2bf:963a:f266 with SMTP id v17-20020a5d6791000000b002bf963af266mr8318551wru.27.1675892589761;
-        Wed, 08 Feb 2023 13:43:09 -0800 (PST)
-Received: from localhost ([178.218.144.99])
-        by smtp.gmail.com with ESMTPSA id q16-20020adff950000000b002bff574a250sm14470113wrr.2.2023.02.08.13.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 13:43:09 -0800 (PST)
-Date:   Wed, 8 Feb 2023 23:43:04 +0200
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-To:     Richard Hughes <hughsient@gmail.com>
-Cc:     "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>,
-        Alex Hung <alexhung@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
-        Rishit Bansal <rishitbansal0@gmail.com>,
-        Enver Balalic <balalic.enver@gmail.com>
-Subject: Re: Firmware upgrade broke SW_TABLET_MODE on HP Dragonfly G2
-Message-ID: <Y+QXXXX1u33Eyf4E@mail.gmail.com>
-References: <Y+JbBiMJw+VLo2Nr@mail.gmail.com>
- <CAD2FfiGLH87H6CVbHimXUfz7ESUKwO8k1ABCgKU9L2SnfGanTA@mail.gmail.com>
- <PH0PR84MB1953825BC90B268904C6C7E5A8D89@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
- <CAD2FfiFUEMupUBoWj2hq9ep=R0Sk-xgBscXqMPefAipvoCg8eg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD2FfiFUEMupUBoWj2hq9ep=R0Sk-xgBscXqMPefAipvoCg8eg@mail.gmail.com>
+        Thu, 9 Feb 2023 01:05:09 -0500
+Received: from mail.redfish-solutions.com (mail.redfish-solutions.com [24.116.100.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19413E0AB
+        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Feb 2023 22:05:03 -0800 (PST)
+Received: from smtpclient.apple (macbook3-2.redfish-solutions.com [192.168.8.12])
+        (authenticated bits=0)
+        by mail.redfish-solutions.com (8.17.1/8.16.1) with ESMTPSA id 31964Ehp994332
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 8 Feb 2023 23:04:14 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Re: [PATCH v4 1/2] x86: Support APU5 & APU6 in PCEngines platform
+ driver
+From:   Philip Prindeville <philipp@redfish-solutions.com>
+In-Reply-To: <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
+Date:   Wed, 8 Feb 2023 23:04:01 -0700
+Cc:     Ed W <lists@wildgooses.com>, platform-driver-x86@vger.kernel.org,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Andres Salomon <dilinger@queued.net>,
+        Andreas Eberlein <foodeas@aeberlein.de>,
+        Paul Spooren <paul@spooren.de>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5F93DF5F-BEC4-4B2A-A057-A895282A66B2@redfish-solutions.com>
+References: <20230113231139.436956-1-philipp@redfish-solutions.com>
+ <00b4cd69-14ce-ce1f-2bec-83ecbb928cbc@redhat.com>
+ <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
+ <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
+X-Scanned-By: MIMEDefang 3.2 on 192.168.8.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 08:09:16PM +0000, Richard Hughes wrote:
-> On Wed, 8 Feb 2023 at 19:27, Lopez, Jorge A (Security)
-> <jorge.lopez2@hp.com> wrote:
-> > Please do ahead and demote the firmware for me.
+Hi Ed and Hans,
+
+First off, sorry for taking a while to get back.  My wife has been busy with final exams at uni and I've been having to take care of the kids for both of us.
+
+
+
+> On Feb 2, 2023, at 4:14 AM, Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> Okay, now I'm double confused; the only HP Elite Dragonfly G2 firmware
-> on the LVFS has never been in any stable branch.
+> Hi Ed,
+> 
+> On 1/20/23 20:18, Ed W wrote:
+>> On 19/01/2023 10:22, Hans de Goede wrote:
+>> 
+>>>> /* Order in which the GPIO lines are defined in the register list */
+>>>> #define APU2_GPIO_LINE_LED1 0
+>>>> #define APU2_GPIO_LINE_LED2 1
+>>>> #define APU2_GPIO_LINE_LED3 2
+>>>> #define APU2_GPIO_LINE_MODESW 3
+>>>> -#define APU2_GPIO_LINE_SIMSWAP 4
+>>>> -#define APU2_GPIO_LINE_MPCIE2 5
+>>>> -#define APU2_GPIO_LINE_MPCIE3 6
+>>>> +#define APU2_GPIO_LINE_RESETM1 4
+>>>> +#define APU2_GPIO_LINE_RESETM2 5
+>>>> +#define APU2_GPIO_LINE_SIMSWAP 6
+>>> I don't think this changing of GPIO ordering, or
+>>> for that part the changing of the gpio_names from 
+>>> "mpcie2_reset" to "modem1-reset" is a good idea.
+>>> 
+>>> I'm not entirely sure how these GPIOs are supposed to be
+>>> consumed / used by userspace. But since they are not used
+>>> directly in this driver I assume userspace is supposed to
+>>> use either the (deprecated) sysfs GPIO API or the new ioctl
+>>> based GPIO API to toggle say "simswap" if it needs to.
+>>> 
+>>> The old sysfs API exclusively uses pin-indexes inside a GPIO
+>>> chip to select the pin, so by changing the pin order you
+>>> have just broken the userspace API.
+>>> 
+>>> And the new ioctl API can use either pin-indexes or GPIO-line-names,
+>>> so by changing the names you have also just potentially broken
+>>> that.
+>>> 
+>>> Please keep the order as is and only use the new names for
+>>> the newly added models (so for APU6 I believe).
+>> 
+>> 
+>> Hi, I'm not sure what the "correct" thing to do is, but just to add some background to the situation:
+>> 
+>> There are an increasing number of APU boards, which are *very* similar, and also through time the
+>> pin allocations have muddled around, plus most recently, the BIOS can configure many things and has
+>> started to use naming conventions different to the historic kernel naming
+>> 
+>> So I don't have a board in front of me to be definitive, but something like the following happened:
+>> 
+>> - APU2 used something like mpcie sockets 1&2 for USB stuff and hence LTE cards, socket 3 was msata
+>> 
+>> - Then another version APU3, I think moved these to sockets 2&3
+>> 
+>> - Then another version APU4, moved the USB to sockets 2&3 and wired up a second SIM slot in most
+>> versions, including a SIM line swapper chip. Now you start to wonder if you should have labelled
+>> things PCIE1, PCIE2, PCIE3, etc, when really they mean modem 1 and modem 2, etc?
+>> 
+>> - Then came APU5, which has 3x USB sockets, plus 3x mpcie sockets. These are wired to different pcie
+>> numbers, and so the naming modem1, modem2, modem3 starts to make a lot more sense.
+>> 
+>> - APU6, which is mentioned in the original patch, is really just the same as one of the other
+>> boards, but with different ethernet sockets (SFP vs copper)
 
-This is the firmware on LVFS, it's marked as stable:
 
-https://fwupd.org/lvfs/devices/com.hp.laptop.system.T90.firmware
+Yes, eth0 on the APU6 is an i210 w/ SFP cage, and i211 on all of the other ports.  The APU4 and others all used i211's on all the ports (for 1000baseTX).
 
-dmidecode says:
+I've asked PC Engines for a definitive list of what GPIO lines are used for what on all of the current revs of the boards.  I'll share that as soon as I get it.
 
-Handle 0x0001, DMI type 0, 26 bytes
-BIOS Information
-	Vendor: HP
-	Version: T90 Ver. 01.09.01
-	Release Date: 05/05/2022
 
-> Maxim -- are you sure
-> you got the firmware from the LVFS (and not automatically through
-> Windows Update)
 
-Yes, I'm pretty sure, I don't have any Windows, and I used fwupdmgr to
-upgrade (and then downgrade).
+>> 
+>> - There is also a rare feature, which is likely not known to most users, or even wired up correctly
+>> on many boards. You have a reset/enable line to some of the mpcie slots. This again makes more sense
+>> to label logically vs than per slot. It's really not clear that this feature is properly supported
+>> or functioning on all boards (you can order special order boards wired in various ways). So changes
+>> here are unlikely to be noticed by all but a handful of specialist users.
+>> 
+>> 
+>> Overall, if one could start again, the unifying feature would be label slots logically, ie modem1,
+>> modem2, wifi1, wifi2, rather than numbering them based on how they are wired on a specific board rev.
+> 
+> 
+> "this" below starts here:
+> 
+>> Additionally, users who didn't load the APU driver, likely had ACPI named devices and these all have
+>> different (and to my eye, more logical names). So whatever we decide to do here will cause some
+>> breakage and inconsistency...
+> 
+> Hmm, can you elaborate a bit on this?  Does ACPI somehow expose the LEDs / GPIO to userspace
+> already and will adding APU5 / APU6 support make those ACPI exposed devices go away ?
+> 
+> If yes then what is the advantage of using the APU driver over the ACPI exported functionality?
 
-> and if so can you please send me the output of
-> "fwupdmgr get-devices" off-list please.
 
-Sure, will send in a few minutes.
+Other than ACPI being less than reliable in a lot of cases?
+
 
 > 
-> Richard.
+> Sorry for being a bit pedantic about this patch, but as a maintainer it is my responsibility
+> to ensure that we don't break existing userspace, e.g. existing use-cases using the exposed
+> ACPI devices.
+> 
+> Note "fixing" this might be as simple as putting the new APU5 / APU6 support behind an extra Kconfig
+> option (behind a modparam actually with a Kconfig option to select the default of the modparam).
+> 
+> This way we can get distro's to opt-in to (or opt-out depending on the default) the new behavior,
+> needing a modparam + Kconfig option for this is not ideal, but if there is a significant behavior
+> change it is an escape hatch we can use.
+> 
+>> Note that I submitted this previous patch "years ago", and I've somewhat given up on ever getting
+>> the APU driver up to date.. I think in 2020, Enrico shot me down because he was working on some
+>> grand unification for modem GPIO handling? (Enrico, please correct me on the details?) Hans, I think
+>> if you search back to 2020 on "APU", you will see that you arbitrated in that thread?
+> 
+> Yes I vaguely remember back then I was hoping / expecting you and Enrico to sort things
+> out, but that seems to have not happened. And given Enrico's silence in this thread
+> I'm not sure if Enrico is still working on this. So I guess now I get to figure out how
+> to move forward here.
+> 
+>> For whatever
+>> reason, we seem to be stuck that there are competing voices blocking progress here. Every route
+>> leads to some level of incompatibility. Personally I am a fairly large consumer of these devices,
+>> but I really don't care what we decide, because we ship a custom software, where userspace will
+>> match kernel, so we will update both in lockstep, whatever happens. Changes aren't a problem for me
+>> personally.
+>> 
+>> My vote would be for a one-of breakage, to at least get everyone using the same
+>> terms/names/whatever. I would suspect OpenWRT is probably the biggest voice here, so suggest we go
+>> with whatever they suggest, and then at least we are all in sync for the future? If its a one off,
+>> then suggest taking into account the ACPI naming as well?
+> 
+> I agree that we need to find a way forward here. I would like to get this resolved
+> and to get something merged into the mainline kernel for this.
+> 
+> I also agree that if there is breakage it would be best to just break things only once.
+> 
+> If there is going to breakage though I think we need some toggle to toggle between
+> the old and new *mainline* kernel behavior. This could be as easy as making the modparam
+> for this just abort probe() (return -ENODEV) on the new APU models when it is set to its
+> "backward compat" value.
+
+
+If people wanted to use ACPI instead of the APU driver, why not just build their kernels without the APU driver linked in?
+
+
+> 
+>> Note, there is a very big risk that I missed the point... Please be gentle. Quite possibly there is
+>> a solution to just reorder some definitions and we land where we want to be? Is it that simple?
+> 
+> Yes my original compatibility remark was just about reordering some definitions +
+> keeping the old labels for the already supported APU models.
+> 
+> So talking in code my proposal is to change this (in the new code):
+> 
+> #define APU2_GPIO_LINE_LED1 0
+> #define APU2_GPIO_LINE_LED2 1
+> #define APU2_GPIO_LINE_LED3 2
+> #define APU2_GPIO_LINE_MODESW 3
+> #define APU2_GPIO_LINE_RESETM1 4
+> #define APU2_GPIO_LINE_RESETM2 5
+> #define APU2_GPIO_LINE_SIMSWAP 6
+> 
+> to:
+> 
+> #define APU2_GPIO_LINE_LED1 0
+> #define APU2_GPIO_LINE_LED2 1
+> #define APU2_GPIO_LINE_LED3 2
+> #define APU2_GPIO_LINE_MODESW 3
+> #define APU2_GPIO_LINE_SIMSWAP 4
+> #define APU2_GPIO_LINE_RESETM1 5
+> #define APU2_GPIO_LINE_RESETM2 6
+> 
+> Keeping the simswap signal as GPIO/pin number 4 instead of moving it
+> to the end.
+> 
+> And also instead of making changes to apu2_gpio_names[] (1)
+> introduce a new apu5_gpio_names[] / apu6_gpio_names[] so that
+> the labels don't change on the existing supported models.
+> 
+> I'm less worried about the label change then about the index
+> change, because typical GPIO use from userspace will use
+> indexes not labels. So if having different labels on
+> different APU versions is a big problem you might be able to
+> convince me to change the labels on the old models too.
+
+
+I've been thinking about this the last few days, and the APU's are all low-power, headless (no video), SBC's.  They're designed for embedded usage.  That is, they don't have generic distros like Ubuntu (et al) installed on them, so the kernel and the bundled applications are all released together, typically in an monolithic image (at least that's the case for OpenWRT).
+
+Changing the kernel and what's visible in user-space typically isn't a problem as long as both happen at the same time.  That's what we've done with OpenWRT, adding the 2 new board models, and the mapping of led triggers to GPIO lines.
+
+
+> 
+> Summarizing:
+> 
+> Please change:
+> 
+> 1. The GPIO indexing to keep simswap at its old place
+> 2. Use the labels only on new models (open for discussion).
+> 
+> Open questions:
+> 1. Can you elaborate a bit about the ACPI way of accessing these
+> things. If that is actually a thing, we cannot just break it
+> (but we could use a module-parameter for still breaking it).
+
+
+What would this look like?  Would it be a boolean that throws the switch from "classic/legacy" to "updated" mapping?  I think that could work...  Since in OpenWRT we control both the drivers, the Kconfig settings, and the default GRUB parameters, that would work in our case.  I can't speak for pfSense, etc.
+
+
+> 
+> 2. You mention this is important to the openwrt community are
+> there already openwrt people in the Cc here so that we can get
+> their input? If not can you reach out to them ?
+
+
+Paul and myself are both from the OpenWRT community.
+
+-PHilip
+
+
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 1) other then adjusting the initializers for the MPCIE? -> RESETM? rename
+> 
+
