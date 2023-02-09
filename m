@@ -2,220 +2,245 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB2DC636D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB6DC61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjBINbC (ORCPT
+        id S230475AbjBINcI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 08:31:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
+        Thu, 9 Feb 2023 08:32:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230261AbjBINav (ORCPT
+        with ESMTP id S230392AbjBINbr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 08:30:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343BF5EBF3;
-        Thu,  9 Feb 2023 05:30:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 61315B8213E;
-        Thu,  9 Feb 2023 13:30:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA5AC43335;
-        Thu,  9 Feb 2023 13:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675949443;
-        bh=icdD0oWFhuqEZPe3gw5UIs0Haoy0s/gzVx8NhI+aF/8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMIxVlgD0oK4YLxtOUZXM+2SCNRAM5LyhzGpegT3ZIaEgLDeC80s1NUtW2VsMCF9A
-         XX6o4bV7ej76HO5QSFFMm/QXSzehtQJYNrvQuk3ygjMnp2+jSUIDgHWFamM6N0ei4D
-         28Hr83OWltvUSwulKWbw6R8WAaxuMtcFt7D3VTRbe2VLQSW3VGG1KPKG2vJKaOJzJW
-         +e3Cfq/P7GjUo4Uh+zoU0QhPGTcJyNDD4B2JvNZ6O7KDAK0A/2/5elffd/IlrfQqjk
-         FEKVO/on54UrAOy8FTXWUTv4B3zLN4tLDynsdCiS5shKU8kqy/JKCiVo5gPQTooZjn
-         USe8nTvGGuC1w==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1pQ71G-0001L7-Uq; Thu, 09 Feb 2023 14:31:22 +0100
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v5 10/19] irqdomain: Clean up irq_domain_push/pop_irq()
-Date:   Thu,  9 Feb 2023 14:23:14 +0100
-Message-Id: <20230209132323.4599-11-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230209132323.4599-1-johan+linaro@kernel.org>
-References: <20230209132323.4599-1-johan+linaro@kernel.org>
+        Thu, 9 Feb 2023 08:31:47 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BA35FE47;
+        Thu,  9 Feb 2023 05:31:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675949467; x=1707485467;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/t8Y9QaXdzABbElXcD4B00e+zQHiJl38CC6YeB+Ptco=;
+  b=lcVuPk30qekKGkyRJMWbbJVpE1k9ThYQeJVejwMcsFS9Ya/gUpG59P3b
+   g6SZbdDeX3Gqd28o3SEAaTRRxAAm3dZPEWnyPWG++q1oEEC6wb4ThZ3y9
+   HrrRVciB47HyAuqtJcWAaW2NQ8fcrakoxUb2VDECHVH1AMzVpKeuazOfz
+   MdlcoLW4G28iNxNepS6YFuDWYsAR8rqP6NfzGjW50uC22ktj7OVVCL00A
+   lgrm8KjHi/Z/qjIcYGlvlnR5HpHfwl/Tgm1Mt48TEMbNMSjwgGkNspJ0l
+   bRXpelPWv/dpWK448BTjWPfquT+ruXfsnnqNZjxvRHYJM+OyI3nXWEyRx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="310460234"
+X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
+   d="scan'208";a="310460234"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 05:31:06 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="698020174"
+X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
+   d="scan'208";a="698020174"
+Received: from rajatkha-mobl.gar.corp.intel.com (HELO [10.67.145.167]) ([10.67.145.167])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 05:31:04 -0800
+Message-ID: <8afe0502-2e2a-a89b-dbe0-bf74aef98290@linux.intel.com>
+Date:   Thu, 9 Feb 2023 19:00:57 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: [PATCH v4] platform/x86/intel/pmc: core: Add support to show
+ LTR-ignored components
+To:     "Box, David E" <david.e.box@intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>
+Cc:     "Khandelwal, Rajat" <rajat.khandelwal@intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230205174418.1927876-1-rajat.khandelwal@linux.intel.com>
+ <75308e1b2e0406118b1012e271c622b2f02c119e.camel@intel.com>
+Content-Language: en-US
+From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+In-Reply-To: <75308e1b2e0406118b1012e271c622b2f02c119e.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The irq_domain_push_irq() interface is used to add a new (outmost) level
-to a hierarchical domain after IRQs have been allocated.
+Hi David,
+Please find the comments inline.
 
-Possibly due to differing mental images of hierarchical domains, the
-names used for the irq_data variables make these functions much harder
-to understand than what they need to be.
+On 2/5/2023 12:49 AM, Box, David E wrote:
+> Hi Rajat,
+>
+> On Sun, 2023-02-05 at 23:14 +0530, Rajat Khandelwal wrote:
+>> Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
+>> if there are components whose LTR values have been ignored.
+>>
+>> This patch adds the feature to print out such components, if they exist.
+>>
+>> Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+>> ---
+>>
+>> v4: Mutex unlock during error conditions
+>>
+>> v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
+>>
+>> v2: kmalloc -> devm_kmalloc
+>>
+>>   drivers/platform/x86/intel/pmc/core.c | 59 ++++++++++++++++++++++-----
+>>   drivers/platform/x86/intel/pmc/core.h |  2 +-
+>>   2 files changed, 49 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/pmc/core.c
+>> b/drivers/platform/x86/intel/pmc/core.c
+>> index 3a15d32d7644..f9d4b2865b03 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.c
+>> +++ b/drivers/platform/x86/intel/pmc/core.c
+>> @@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
+>>          {}
+>>   };
+>>   
+>> +/* Mutual exclusion to access the list of LTR-ignored components */
+>> +static DEFINE_MUTEX(ltr_entry_mutex);
+>> +
+>> +struct ltr_entry {
+>> +       u32 comp_index;
+>> +       const char *comp_name;
+>> +       struct list_head node;
+>> +};
+>> +
+>> +static LIST_HEAD(ltr_ignore_list);
+>> +
+>>   static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+>>   {
+>>          return readl(pmcdev->regbase + reg_offset);
+>> @@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void
+>> *unused)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+>>   
+>> -int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+>> +void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+>>   {
+>>          const struct pmc_reg_map *map = pmcdev->map;
+>>          u32 reg;
+>> -       int err = 0;
+>>   
+>>          mutex_lock(&pmcdev->lock);
+>>   
+>> -       if (value > map->ltr_ignore_max) {
+>> -               err = -EINVAL;
+>> -               goto out_unlock;
+>> -       }
+>> -
+>>          reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+>>          reg |= BIT(value);
+>>          pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
+>>   
+>> -out_unlock:
+>>          mutex_unlock(&pmcdev->lock);
+>> -
+>> -       return err;
+>>   }
+>>   
+>>   static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+>> @@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
+>> *file,
+>>   {
+>>          struct seq_file *s = file->private_data;
+>>          struct pmc_dev *pmcdev = s->private;
+>> +       const struct pmc_reg_map *map = pmcdev->map;
+>> +       struct ltr_entry *entry;
+>>          u32 buf_size, value;
+>>          int err;
+>>   
+>> @@ -473,13 +477,46 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
+>> *file,
+>>          if (err)
+>>                  return err;
+>>   
+>> -       err = pmc_core_send_ltr_ignore(pmcdev, value);
+>> +       if (value > map->ltr_ignore_max)
+>> +               return -EINVAL;
+>> +
+>> +       mutex_lock(&ltr_entry_mutex);
+>> +
+>> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
+>> +               if (entry->comp_index == value) {
+>> +                       err = -EEXIST;
+> Do we need to return an error here? We don't offer a way to undo the ignore and
+> rewriting it doesn't hurt anything. I'm okay with ignoring this.
 
-Rename the struct irq_data pointer to the data embedded in the
-descriptor as simply 'irq_data' and refer to the data allocated by this
-interface as 'parent_irq_data' so that the names reflect how
-hierarchical domains are implemented.
+Surely, it won't hurt to just write the value again. It does provide a sense of notion
+to the user that "this component was already set" (something like that).
+Not that big a deal, but I would like to keep it that way, if that's okay? :)
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- kernel/irq/irqdomain.c | 65 +++++++++++++++++++++---------------------
- 1 file changed, 32 insertions(+), 33 deletions(-)
+>
+>> +                       goto out_unlock;
+>> +               }
+>> +       }
+>> +
+>> +       entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
+>> +       if (!entry) {
+>> +               err = -ENOMEM;
+>> +               goto out_unlock;
+>> +       }
+>> +
+>> +       entry->comp_name = map->ltr_show_sts[value].name;
+>> +       entry->comp_index = value;
+>> +       list_add_tail(&entry->node, &ltr_ignore_list);
+>> +
+>> +       pmc_core_send_ltr_ignore(pmcdev, value);
+>> +
+>> +out_unlock:
+>> +       mutex_unlock(&ltr_entry_mutex);
+> You can allocate your entry and do the assignment before you take the list lock.
+> If the allocation fails, return immediately without a goto.
+>
+> You can also move pmc_core_send_ltr_ignore() after the unlock.
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index a1c6e01b395e..804d316329c8 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1571,8 +1571,8 @@ static void irq_domain_fix_revmap(struct irq_data *d)
-  */
- int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- {
--	struct irq_data *child_irq_data;
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
- 	struct irq_desc *desc;
- 	int rv = 0;
- 
-@@ -1597,45 +1597,44 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	if (WARN_ON(!irq_domain_is_hierarchy(domain)))
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!irq_data)
- 		return -EINVAL;
- 
--	if (domain->parent != root_irq_data->domain)
-+	if (domain->parent != irq_data->domain)
- 		return -EINVAL;
- 
--	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
--				      irq_data_get_node(root_irq_data));
--	if (!child_irq_data)
-+	parent_irq_data = kzalloc_node(sizeof(*parent_irq_data), GFP_KERNEL,
-+				       irq_data_get_node(irq_data));
-+	if (!parent_irq_data)
- 		return -ENOMEM;
- 
- 	mutex_lock(&irq_domain_mutex);
- 
- 	/* Copy the original irq_data. */
--	*child_irq_data = *root_irq_data;
-+	*parent_irq_data = *irq_data;
- 
- 	/*
--	 * Overwrite the root_irq_data, which is embedded in struct
--	 * irq_desc, with values for this domain.
-+	 * Overwrite the irq_data, which is embedded in struct irq_desc, with
-+	 * values for this domain.
- 	 */
--	root_irq_data->parent_data = child_irq_data;
--	root_irq_data->domain = domain;
--	root_irq_data->mask = 0;
--	root_irq_data->hwirq = 0;
--	root_irq_data->chip = NULL;
--	root_irq_data->chip_data = NULL;
-+	irq_data->parent_data = parent_irq_data;
-+	irq_data->domain = domain;
-+	irq_data->mask = 0;
-+	irq_data->hwirq = 0;
-+	irq_data->chip = NULL;
-+	irq_data->chip_data = NULL;
- 
- 	/* May (probably does) set hwirq, chip, etc. */
- 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
- 	if (rv) {
- 		/* Restore the original irq_data. */
--		*root_irq_data = *child_irq_data;
--		kfree(child_irq_data);
-+		*irq_data = *parent_irq_data;
-+		kfree(parent_irq_data);
- 		goto error;
- 	}
- 
--	irq_domain_fix_revmap(child_irq_data);
--	irq_domain_set_mapping(domain, root_irq_data->hwirq, root_irq_data);
--
-+	irq_domain_fix_revmap(parent_irq_data);
-+	irq_domain_set_mapping(domain, irq_data->hwirq, irq_data);
- error:
- 	mutex_unlock(&irq_domain_mutex);
- 
-@@ -1653,8 +1652,8 @@ EXPORT_SYMBOL_GPL(irq_domain_push_irq);
-  */
- int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- {
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
--	struct irq_data *child_irq_data;
-+	struct irq_data *irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
- 	struct irq_data *tmp_irq_data;
- 	struct irq_desc *desc;
- 
-@@ -1676,37 +1675,37 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- 	if (domain == NULL)
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!irq_data)
- 		return -EINVAL;
- 
- 	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
- 
- 	/* We can only "pop" if this domain is at the top of the list */
--	if (WARN_ON(root_irq_data != tmp_irq_data))
-+	if (WARN_ON(irq_data != tmp_irq_data))
- 		return -EINVAL;
- 
--	if (WARN_ON(root_irq_data->domain != domain))
-+	if (WARN_ON(irq_data->domain != domain))
- 		return -EINVAL;
- 
--	child_irq_data = root_irq_data->parent_data;
--	if (WARN_ON(!child_irq_data))
-+	parent_irq_data = irq_data->parent_data;
-+	if (WARN_ON(!parent_irq_data))
- 		return -EINVAL;
- 
- 	mutex_lock(&irq_domain_mutex);
- 
--	root_irq_data->parent_data = NULL;
-+	irq_data->parent_data = NULL;
- 
--	irq_domain_clear_mapping(domain, root_irq_data->hwirq);
-+	irq_domain_clear_mapping(domain, irq_data->hwirq);
- 	irq_domain_free_irqs_hierarchy(domain, virq, 1);
- 
- 	/* Restore the original irq_data. */
--	*root_irq_data = *child_irq_data;
-+	*irq_data = *parent_irq_data;
- 
--	irq_domain_fix_revmap(root_irq_data);
-+	irq_domain_fix_revmap(irq_data);
- 
- 	mutex_unlock(&irq_domain_mutex);
- 
--	kfree(child_irq_data);
-+	kfree(parent_irq_data);
- 
- 	return 0;
- }
--- 
-2.39.1
+Ok, so I allocate it only after I see that the list doesn't already has the value.
+That is why I take the lock and proceed.
+pmc_core_send_ltr_ignore() can be moved after the unlock.
 
+Please let me know your comments for v5.
+
+Thanks
+Rajat
+
+>
+> David
+>
+>>   
+>>          return err == 0 ? count : err;
+>>   }
+>>   
+>>   static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
+>>   {
+>> +       struct ltr_entry *entry;
+>> +
+>> +       mutex_lock(&ltr_entry_mutex);
+>> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
+>> +               seq_printf(s, "%s\n", entry->comp_name);
+>> +       }
+>> +       mutex_unlock(&ltr_entry_mutex);
+>> +
+>>          return 0;
+>>   }
+>>   
+>> diff --git a/drivers/platform/x86/intel/pmc/core.h
+>> b/drivers/platform/x86/intel/pmc/core.h
+>> index 810204d758ab..da35b0fcbe6e 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.h
+>> +++ b/drivers/platform/x86/intel/pmc/core.h
+>> @@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
+>>   extern const struct pmc_reg_map mtl_reg_map;
+>>   
+>>   extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+>> -extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+>> +extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+>>   
+>>   void spt_core_init(struct pmc_dev *pmcdev);
+>>   void cnp_core_init(struct pmc_dev *pmcdev);
+>> -- 
+>> 2.34.1
+>>
