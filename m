@@ -2,245 +2,230 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB6DC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1356BC636D6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 14:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230475AbjBINcI (ORCPT
+        id S230292AbjBIOD0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 08:32:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
+        Thu, 9 Feb 2023 09:03:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230392AbjBINbr (ORCPT
+        with ESMTP id S230030AbjBIODY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 08:31:47 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BA35FE47;
-        Thu,  9 Feb 2023 05:31:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675949467; x=1707485467;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/t8Y9QaXdzABbElXcD4B00e+zQHiJl38CC6YeB+Ptco=;
-  b=lcVuPk30qekKGkyRJMWbbJVpE1k9ThYQeJVejwMcsFS9Ya/gUpG59P3b
-   g6SZbdDeX3Gqd28o3SEAaTRRxAAm3dZPEWnyPWG++q1oEEC6wb4ThZ3y9
-   HrrRVciB47HyAuqtJcWAaW2NQ8fcrakoxUb2VDECHVH1AMzVpKeuazOfz
-   MdlcoLW4G28iNxNepS6YFuDWYsAR8rqP6NfzGjW50uC22ktj7OVVCL00A
-   lgrm8KjHi/Z/qjIcYGlvlnR5HpHfwl/Tgm1Mt48TEMbNMSjwgGkNspJ0l
-   bRXpelPWv/dpWK448BTjWPfquT+ruXfsnnqNZjxvRHYJM+OyI3nXWEyRx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="310460234"
-X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
-   d="scan'208";a="310460234"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 05:31:06 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="698020174"
-X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
-   d="scan'208";a="698020174"
-Received: from rajatkha-mobl.gar.corp.intel.com (HELO [10.67.145.167]) ([10.67.145.167])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 05:31:04 -0800
-Message-ID: <8afe0502-2e2a-a89b-dbe0-bf74aef98290@linux.intel.com>
-Date:   Thu, 9 Feb 2023 19:00:57 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH v4] platform/x86/intel/pmc: core: Add support to show
- LTR-ignored components
-To:     "Box, David E" <david.e.box@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>
-Cc:     "Khandelwal, Rajat" <rajat.khandelwal@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230205174418.1927876-1-rajat.khandelwal@linux.intel.com>
- <75308e1b2e0406118b1012e271c622b2f02c119e.camel@intel.com>
-Content-Language: en-US
-From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-In-Reply-To: <75308e1b2e0406118b1012e271c622b2f02c119e.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Feb 2023 09:03:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8BB2D6F;
+        Thu,  9 Feb 2023 06:03:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65FA461A78;
+        Thu,  9 Feb 2023 14:03:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB71C433EF;
+        Thu,  9 Feb 2023 14:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675951402;
+        bh=3JCu6SWDhRVQ0rFnujYBUtGwwy/pPjw4FuegeZK3AAE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JZXPWu4/X/G4qoSiHhNVQyAWH3EJlNzyFJDOCtgMLgf1PWPRgN4TiBrZOYZeUUNph
+         EaGz3k/t1E0c2gkyeFW90gwClHilCJ6B0i3W5TkoI1IE/rdyOCmGb5dObbeyfmPc08
+         Bk6vdoQEVgkG1D8s1gtnGmuSXJ/LfjdRYD09D4H9rPGXVXAMvrDXAfO3iNnyFrC3Nq
+         8A/P28ia0ViWhzaxAS9mfMiuVskM3v0aJ5pWGQGtOI3+gvT8zadxVAnJGjgg8KmQVU
+         iXhlRjDublWzjoL5k36TVTq8ttYRi96JjDH8UNdVIrvB8xnq0n1A3NMUxQzn07Zuzz
+         OZNMa04mD1qVw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pQ7WC-0090HQ-Ad;
+        Thu, 09 Feb 2023 14:03:20 +0000
+Date:   Thu, 09 Feb 2023 14:03:19 +0000
+Message-ID: <86edqzylzs.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v5 06/19] irqdomain: Fix mapping-creation race
+In-Reply-To: <20230209132323.4599-7-johan+linaro@kernel.org>
+References: <20230209132323.4599-1-johan+linaro@kernel.org>
+        <20230209132323.4599-7-johan+linaro@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan+linaro@kernel.org, tglx@linutronix.de, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, dtor@chromium.org, jonathanh@nvidia.com, hsinyi@chromium.org, mark-pk.tsai@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
-Please find the comments inline.
+On Thu, 09 Feb 2023 13:23:10 +0000,
+Johan Hovold <johan+linaro@kernel.org> wrote:
+> 
+> Parallel probing of devices that share interrupts (e.g. when a driver
+> uses asynchronous probing) can currently result in two mappings for the
+> same hardware interrupt to be created due to missing serialisation.
+> 
+> Make sure to hold the irq_domain_mutex when creating mappings so that
+> looking for an existing mapping before creating a new one is done
+> atomically.
+> 
+> Fixes: 765230b5f084 ("driver-core: add asynchronous probing support for drivers")
+> Fixes: b62b2cf5759b ("irqdomain: Fix handling of type settings for existing mappings")
+> Link: https://lore.kernel.org/r/YuJXMHoT4ijUxnRb@hovoldconsulting.com
+> Cc: stable@vger.kernel.org      # 4.8
+> Cc: Dmitry Torokhov <dtor@chromium.org>
+> Cc: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  kernel/irq/irqdomain.c | 55 ++++++++++++++++++++++++++++++------------
+>  1 file changed, 40 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 7b57949bc79c..1ddb01bd49a4 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -25,6 +25,9 @@ static DEFINE_MUTEX(irq_domain_mutex);
+>  
+>  static struct irq_domain *irq_default_domain;
+>  
+> +static int irq_domain_alloc_irqs_locked(struct irq_domain *domain, int irq_base,
+> +					unsigned int nr_irqs, int node, void *arg,
+> +					bool realloc, const struct irq_affinity_desc *affinity);
+>  static void irq_domain_check_hierarchy(struct irq_domain *domain);
+>  
+>  struct irqchip_fwid {
+> @@ -682,9 +685,9 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
+>  EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
+>  #endif
+>  
+> -static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
+> -						  irq_hw_number_t hwirq,
+> -						  const struct irq_affinity_desc *affinity)
+> +static unsigned int irq_create_mapping_affinity_locked(struct irq_domain *domain,
+> +						       irq_hw_number_t hwirq,
+> +						       const struct irq_affinity_desc *affinity)
+>  {
+>  	struct device_node *of_node = irq_domain_get_of_node(domain);
+>  	int virq;
+> @@ -699,7 +702,7 @@ static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
+>  		return 0;
+>  	}
+>  
+> -	if (irq_domain_associate(domain, virq, hwirq)) {
+> +	if (irq_domain_associate_locked(domain, virq, hwirq)) {
+>  		irq_free_desc(virq);
+>  		return 0;
+>  	}
+> @@ -735,14 +738,20 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
+>  		return 0;
+>  	}
+>  
+> +	mutex_lock(&irq_domain_mutex);
+> +
+>  	/* Check if mapping already exists */
+>  	virq = irq_find_mapping(domain, hwirq);
+>  	if (virq) {
+>  		pr_debug("existing mapping on virq %d\n", virq);
+> -		return virq;
+> +		goto out;
+>  	}
+>  
+> -	return __irq_create_mapping_affinity(domain, hwirq, affinity);
+> +	virq = irq_create_mapping_affinity_locked(domain, hwirq, affinity);
+> +out:
+> +	mutex_unlock(&irq_domain_mutex);
+> +
+> +	return virq;
+>  }
+>  EXPORT_SYMBOL_GPL(irq_create_mapping_affinity);
+>  
+> @@ -809,6 +818,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
+>  		type &= IRQ_TYPE_SENSE_MASK;
+>  
+> +	mutex_lock(&irq_domain_mutex);
+> +
+>  	/*
+>  	 * If we've already configured this interrupt,
+>  	 * don't do it again, or hell will break loose.
+> @@ -821,7 +832,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  		 * interrupt number.
+>  		 */
+>  		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
+> -			return virq;
+> +			goto out;
+>  
+>  		/*
+>  		 * If the trigger type has not been set yet, then set
+> @@ -830,36 +841,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
+>  			irq_data = irq_get_irq_data(virq);
+>  			if (!irq_data)
+> -				return 0;
+> +				goto err;
+>  
+>  			irqd_set_trigger_type(irq_data, type);
+> -			return virq;
+> +			goto out;
+>  		}
+>  
+>  		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
+>  			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
+> -		return 0;
+> +		goto err;
+>  	}
+>  
+>  	if (irq_domain_is_hierarchy(domain)) {
+> -		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
+> +		virq = irq_domain_alloc_irqs_locked(domain, -1, 1, NUMA_NO_NODE,
+> +						    fwspec, false, NULL);
+>  		if (virq <= 0)
+> -			return 0;
+> +			goto err;
+>  	} else {
+>  		/* Create mapping */
+> -		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
+> +		virq = irq_create_mapping_affinity_locked(domain, hwirq, NULL);
+>  		if (!virq)
+> -			return virq;
+> +			goto err;
+>  	}
+>  
+>  	irq_data = irq_get_irq_data(virq);
+>  	if (WARN_ON(!irq_data))
+> -		return 0;
+> +		goto err;
+>  
+>  	/* Store trigger type */
+>  	irqd_set_trigger_type(irq_data, type);
+> +out:
+> +	mutex_unlock(&irq_domain_mutex);
+>  
+>  	return virq;
+> +err:
+> +	mutex_unlock(&irq_domain_mutex);
+> +
+> +	return 0;
 
-On 2/5/2023 12:49 AM, Box, David E wrote:
-> Hi Rajat,
->
-> On Sun, 2023-02-05 at 23:14 +0530, Rajat Khandelwal wrote:
->> Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
->> if there are components whose LTR values have been ignored.
->>
->> This patch adds the feature to print out such components, if they exist.
->>
->> Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
->> ---
->>
->> v4: Mutex unlock during error conditions
->>
->> v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
->>
->> v2: kmalloc -> devm_kmalloc
->>
->>   drivers/platform/x86/intel/pmc/core.c | 59 ++++++++++++++++++++++-----
->>   drivers/platform/x86/intel/pmc/core.h |  2 +-
->>   2 files changed, 49 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c
->> b/drivers/platform/x86/intel/pmc/core.c
->> index 3a15d32d7644..f9d4b2865b03 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
->>          {}
->>   };
->>   
->> +/* Mutual exclusion to access the list of LTR-ignored components */
->> +static DEFINE_MUTEX(ltr_entry_mutex);
->> +
->> +struct ltr_entry {
->> +       u32 comp_index;
->> +       const char *comp_name;
->> +       struct list_head node;
->> +};
->> +
->> +static LIST_HEAD(ltr_ignore_list);
->> +
->>   static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
->>   {
->>          return readl(pmcdev->regbase + reg_offset);
->> @@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void
->> *unused)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
->>   
->> -int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
->> +void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
->>   {
->>          const struct pmc_reg_map *map = pmcdev->map;
->>          u32 reg;
->> -       int err = 0;
->>   
->>          mutex_lock(&pmcdev->lock);
->>   
->> -       if (value > map->ltr_ignore_max) {
->> -               err = -EINVAL;
->> -               goto out_unlock;
->> -       }
->> -
->>          reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
->>          reg |= BIT(value);
->>          pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
->>   
->> -out_unlock:
->>          mutex_unlock(&pmcdev->lock);
->> -
->> -       return err;
->>   }
->>   
->>   static ssize_t pmc_core_ltr_ignore_write(struct file *file,
->> @@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
->> *file,
->>   {
->>          struct seq_file *s = file->private_data;
->>          struct pmc_dev *pmcdev = s->private;
->> +       const struct pmc_reg_map *map = pmcdev->map;
->> +       struct ltr_entry *entry;
->>          u32 buf_size, value;
->>          int err;
->>   
->> @@ -473,13 +477,46 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
->> *file,
->>          if (err)
->>                  return err;
->>   
->> -       err = pmc_core_send_ltr_ignore(pmcdev, value);
->> +       if (value > map->ltr_ignore_max)
->> +               return -EINVAL;
->> +
->> +       mutex_lock(&ltr_entry_mutex);
->> +
->> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
->> +               if (entry->comp_index == value) {
->> +                       err = -EEXIST;
-> Do we need to return an error here? We don't offer a way to undo the ignore and
-> rewriting it doesn't hurt anything. I'm okay with ignoring this.
+nit: it'd look better if we had a single exit path with the unlock,
+setting virq to 0 on failure. Not a big deal, as this can be tidied up
+when applied.
 
-Surely, it won't hurt to just write the value again. It does provide a sense of notion
-to the user that "this component was already set" (something like that).
-Not that big a deal, but I would like to keep it that way, if that's okay? :)
+Thanks,
 
->
->> +                       goto out_unlock;
->> +               }
->> +       }
->> +
->> +       entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
->> +       if (!entry) {
->> +               err = -ENOMEM;
->> +               goto out_unlock;
->> +       }
->> +
->> +       entry->comp_name = map->ltr_show_sts[value].name;
->> +       entry->comp_index = value;
->> +       list_add_tail(&entry->node, &ltr_ignore_list);
->> +
->> +       pmc_core_send_ltr_ignore(pmcdev, value);
->> +
->> +out_unlock:
->> +       mutex_unlock(&ltr_entry_mutex);
-> You can allocate your entry and do the assignment before you take the list lock.
-> If the allocation fails, return immediately without a goto.
->
-> You can also move pmc_core_send_ltr_ignore() after the unlock.
+	M.
 
-Ok, so I allocate it only after I see that the list doesn't already has the value.
-That is why I take the lock and proceed.
-pmc_core_send_ltr_ignore() can be moved after the unlock.
-
-Please let me know your comments for v5.
-
-Thanks
-Rajat
-
->
-> David
->
->>   
->>          return err == 0 ? count : err;
->>   }
->>   
->>   static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
->>   {
->> +       struct ltr_entry *entry;
->> +
->> +       mutex_lock(&ltr_entry_mutex);
->> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
->> +               seq_printf(s, "%s\n", entry->comp_name);
->> +       }
->> +       mutex_unlock(&ltr_entry_mutex);
->> +
->>          return 0;
->>   }
->>   
->> diff --git a/drivers/platform/x86/intel/pmc/core.h
->> b/drivers/platform/x86/intel/pmc/core.h
->> index 810204d758ab..da35b0fcbe6e 100644
->> --- a/drivers/platform/x86/intel/pmc/core.h
->> +++ b/drivers/platform/x86/intel/pmc/core.h
->> @@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
->>   extern const struct pmc_reg_map mtl_reg_map;
->>   
->>   extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
->> -extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
->> +extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
->>   
->>   void spt_core_init(struct pmc_dev *pmcdev);
->>   void cnp_core_init(struct pmc_dev *pmcdev);
->> -- 
->> 2.34.1
->>
+-- 
+Without deviation from the norm, progress is not possible.
