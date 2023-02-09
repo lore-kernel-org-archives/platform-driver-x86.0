@@ -2,207 +2,359 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4408AC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 15:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39230C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 16:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbjBIPVq (ORCPT
+        id S230190AbjBIQBD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 10:21:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60966 "EHLO
+        Thu, 9 Feb 2023 11:01:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjBIPVo (ORCPT
+        with ESMTP id S231419AbjBIQBC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 10:21:44 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A1460D75
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Feb 2023 07:21:42 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id o20so3618599lfk.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Feb 2023 07:21:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf.com; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2RnjvYdTi1EW+HUEp1YLLp7LpHmutN7MJEWL7l9roU=;
-        b=lVKy0zHGwXGVsGQuqnbkoaoY8z+lSceCvkvf9yTYfdXf6OpcpHPaoJ6ca6wh6ElEUI
-         A0hLu1X3Nbv/rc1uY1S1WjYVItnKKsBzFtbd6wgivVGICoLez29334f1WD6wuvf51ILX
-         +lOCjSMsBc0YOfwe7c4HQGrGdPRoa+Z+OjLl8ch1EedtiSQFZSXcJWcYtOrXQUYbPJnA
-         +34KarEo+QCq9GoOim6l1WnVHAq005jiRWNKYhcJfC/sdY3RQC2n3t3EDD66cjA4/Gaj
-         /3b+eaJX+dik+N77NSx3ht8Pf0qLs6d954PYs10zAshpinuoTVKPSJ3o4QaQgMeZwjsM
-         h1tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k2RnjvYdTi1EW+HUEp1YLLp7LpHmutN7MJEWL7l9roU=;
-        b=0T1S84xKvWhakGOi6QmdmGuh0cLXZQvb/ukd60DqzV2S31qjtw+GXpadg0M29Zd4ys
-         nBnH7b9eAg+chDJhTCTHKWRXim8UVEam3GdM6ImYkcNpw4cEK0tRd/dydPjHy3ny71AO
-         FnhQrYRmcNmhDTKU3rWlJfjfnaEp28thHZR4CR8ufQHniLPWltcVlGP5M1SHUM9M1RqH
-         4MzeGr6STh8sOZUK+EBz5uwiP4Zf2PtsvtAWiO7JePun2jewjlFY2LxFC38roXVd0teG
-         1tSqRl73Z3MMMTgSBcGBGBRlCFhvCfMrJj/eVT/TqqBzgLm8Wwzzk39PgH3Mit5uN+wN
-         Js8Q==
-X-Gm-Message-State: AO0yUKWZ/yKxrvp8mYrR4NKaHaBdvLNu6kGJNsWXrUeWt6uNIVmibLfR
-        z0AamrypW87vuLHJ3OvJnMbjMg==
-X-Google-Smtp-Source: AK7set8Z+Vd1ZrHRCsbzn88fRuvrKws5CVA4obTneVl3zrPjGeRG+3Pq1r7UyPY4M/nTGgfKsQT3Qg==
-X-Received: by 2002:ac2:5d4e:0:b0:4cf:e904:bba5 with SMTP id w14-20020ac25d4e000000b004cfe904bba5mr3258645lfd.29.1675956102296;
-        Thu, 09 Feb 2023 07:21:42 -0800 (PST)
-Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
-        by smtp.gmail.com with ESMTPSA id l7-20020ac25547000000b004d40e22c1eesm145037lfk.252.2023.02.09.07.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 07:21:41 -0800 (PST)
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-To:     linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
-        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
-        upstream@semihalf.com, hdegoede@redhat.com, markgross@kernel.org,
-        dtor@google.com, mario.limonciello@amd.com,
-        linux-pm@vger.kernel.org, x86@kernel.org,
+        Thu, 9 Feb 2023 11:01:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB469B752;
+        Thu,  9 Feb 2023 08:01:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 305CAB821A7;
+        Thu,  9 Feb 2023 16:00:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3676C433D2;
+        Thu,  9 Feb 2023 16:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675958457;
+        bh=qnTNmKXaSHmrgc+WjwwC45H/EzEOVY53kA4QceXhqzM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i9zZSTUspNhS/drJc+CNge6raq/wvY5s0O0fZKPc9eyibZLNUFXQ1A7Q/dT1AIL9/
+         VpcxpE8BXiHQO/C715ih9HqXs4NVg7eAyN/2JK8vuvzsPmOIWAWQQagtuVinZZ/B+R
+         /YJfxIfo15jjmJr8JD2hTlYXba9OsNME8WfxELfojyBwm0ng5HZnwaAnnL9naq04tj
+         AMGKU1uMqqdj5qGQJjxmQU6XjDhUx4KgFQ6vDRSud029bTRmlxCIB45XpV8m0F18Za
+         Q/BncX0+bCSEXODoRrbds03Pye1SLuNkRGnMpZbWx2E+2P/T1jHtgI/SekU9VbmvQ9
+         46Ane+oPCFs+g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pQ9Lz-0092CU-CK;
+        Thu, 09 Feb 2023 16:00:55 +0000
+Date:   Thu, 09 Feb 2023 16:00:55 +0000
+Message-ID: <86cz6izv48.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
         platform-driver-x86@vger.kernel.org,
-        Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [RESEND RFCv2 1/1] platform/x86: Add virtual PMC driver used for S2Idle
-Date:   Thu,  9 Feb 2023 15:21:23 +0000
-Message-Id: <20230209152123.3186930-2-jaz@semihalf.com>
-X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-In-Reply-To: <20230209152123.3186930-1-jaz@semihalf.com>
-References: <20230209152123.3186930-1-jaz@semihalf.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v5 19/19] irqdomain: Switch to per-domain locking
+In-Reply-To: <20230209132323.4599-20-johan+linaro@kernel.org>
+References: <20230209132323.4599-1-johan+linaro@kernel.org>
+        <20230209132323.4599-20-johan+linaro@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan+linaro@kernel.org, tglx@linutronix.de, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, hsinyi@chromium.org, mark-pk.tsai@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Virtual PMC driver is meant for the guest VMs for the S2Idle
-notification. Its purpose is to register S2Idle dev ops check handler,
-which will evaluate ACPI _DSM just before the guest enters S2Idle power
-state.
+On Thu, 09 Feb 2023 13:23:23 +0000,
+Johan Hovold <johan+linaro@kernel.org> wrote:
+> 
+> The IRQ domain structures are currently protected by the global
+> irq_domain_mutex. Switch to using more fine-grained per-domain locking,
+> which can speed up parallel probing by reducing lock contention.
+> 
+> On a recent arm64 laptop, the total time spent waiting for the locks
+> during boot drops from 160 to 40 ms on average, while the maximum
+> aggregate wait time drops from 550 to 90 ms over ten runs for example.
+> 
+> Note that the domain lock of the root domain (innermost domain) must be
+> used for hierarchical domains. For non-hierarchical domains (as for root
+> domains), the new root pointer is set to the domain itself so that
+> domain->root->mutex can be used in shared code paths.
+> 
+> Also note that hierarchical domains should be constructed using
+> irq_domain_create_hierarchy() (or irq_domain_add_hierarchy()) to avoid
+> poking at irqdomain internals. As a safeguard, the lockdep assertion in
+> irq_domain_set_mapping() will catch any offenders that fail to set the
+> root domain pointer.
+> 
+> Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  include/linux/irqdomain.h |  4 +++
+>  kernel/irq/irqdomain.c    | 61 +++++++++++++++++++++++++--------------
+>  2 files changed, 44 insertions(+), 21 deletions(-)
+> 
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 16399de00b48..cad47737a052 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -125,6 +125,8 @@ struct irq_domain_chip_generic;
+>   *		core code.
+>   * @flags:	Per irq_domain flags
+>   * @mapcount:	The number of mapped interrupts
+> + * @mutex:	Domain lock, hierarhical domains use root domain's lock
 
-This allows to trap on MMIO access done as a consequence of _DSM
-evaluation and therefore notify the VMM about the guest entering S2Idle
-state.
+nit: hierarchical
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
----
-Changelog v1..v2:
-- Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
----
- drivers/platform/x86/Kconfig    |  7 ++++
- drivers/platform/x86/Makefile   |  3 ++
- drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
- create mode 100644 drivers/platform/x86/virt_pmc.c
+> + * @root:	Pointer to root domain, or containing structure if non-hierarchical
+>   *
+>   * Optional elements:
+>   * @fwnode:	Pointer to firmware node associated with the irq_domain. Pretty easy
+> @@ -152,6 +154,8 @@ struct irq_domain {
+>  	void				*host_data;
+>  	unsigned int			flags;
+>  	unsigned int			mapcount;
+> +	struct mutex			mutex;
+> +	struct irq_domain		*root;
+>  
+>  	/* Optional data */
+>  	struct fwnode_handle		*fwnode;
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 804d316329c8..c96aa5e5a94b 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -226,6 +226,17 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
+>  
+>  	domain->revmap_size = size;
+>  
+> +	/*
+> +	 * Hierarchical domains use the domain lock of the root domain
+> +	 * (innermost domain).
+> +	 *
+> +	 * For non-hierarchical domains (as for root domains), the root
+> +	 * pointer is set to the domain itself so that domain->root->mutex
+> +	 * can be used in shared code paths.
+> +	 */
+> +	mutex_init(&domain->mutex);
+> +	domain->root = domain;
+> +
+>  	irq_domain_check_hierarchy(domain);
+>  
+>  	mutex_lock(&irq_domain_mutex);
+> @@ -503,7 +514,7 @@ static bool irq_domain_is_nomap(struct irq_domain *domain)
+>  static void irq_domain_clear_mapping(struct irq_domain *domain,
+>  				     irq_hw_number_t hwirq)
+>  {
+> -	lockdep_assert_held(&irq_domain_mutex);
+> +	lockdep_assert_held(&domain->root->mutex);
+>  
+>  	if (irq_domain_is_nomap(domain))
+>  		return;
+> @@ -518,7 +529,11 @@ static void irq_domain_set_mapping(struct irq_domain *domain,
+>  				   irq_hw_number_t hwirq,
+>  				   struct irq_data *irq_data)
+>  {
+> -	lockdep_assert_held(&irq_domain_mutex);
+> +	/*
+> +	 * This also makes sure that all domains point to the same root when
+> +	 * called from irq_domain_insert_irq() for each domain in a hierarchy.
+> +	 */
+> +	lockdep_assert_held(&domain->root->mutex);
+>  
+>  	if (irq_domain_is_nomap(domain))
+>  		return;
+> @@ -540,7 +555,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
+>  
+>  	hwirq = irq_data->hwirq;
+>  
+> -	mutex_lock(&irq_domain_mutex);
+> +	mutex_lock(&domain->mutex);
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5692385e2d26..b7c3f98031d7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
- 	  buttons below the display. This module adds an input device
- 	  that delivers key events when these buttons are pressed.
+So you made that point about being able to uniformly using root>mutex,
+which I think is a good invariant. Yet you hardly make use of it. Why?
+
+>  
+>  	irq_set_status_flags(irq, IRQ_NOREQUEST);
+>  
+> @@ -562,7 +577,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
+>  	/* Clear reverse map for this hwirq */
+>  	irq_domain_clear_mapping(domain, hwirq);
+>  
+> -	mutex_unlock(&irq_domain_mutex);
+> +	mutex_unlock(&domain->mutex);
+>  }
+>  
+>  static int irq_domain_associate_locked(struct irq_domain *domain, unsigned int virq,
+> @@ -612,9 +627,9 @@ int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
+>  {
+>  	int ret;
+>  
+> -	mutex_lock(&irq_domain_mutex);
+> +	mutex_lock(&domain->mutex);
+>  	ret = irq_domain_associate_locked(domain, virq, hwirq);
+> -	mutex_unlock(&irq_domain_mutex);
+> +	mutex_unlock(&domain->mutex);
+>  
+>  	return ret;
+>  }
+> @@ -731,7 +746,7 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
+>  		return 0;
+>  	}
+>  
+> -	mutex_lock(&irq_domain_mutex);
+> +	mutex_lock(&domain->mutex);
+>  
+>  	/* Check if mapping already exists */
+>  	virq = irq_find_mapping(domain, hwirq);
+> @@ -742,7 +757,7 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
+>  
+>  	virq = irq_create_mapping_affinity_locked(domain, hwirq, affinity);
+>  out:
+> -	mutex_unlock(&irq_domain_mutex);
+> +	mutex_unlock(&domain->mutex);
+>  
+>  	return virq;
+>  }
+> @@ -811,7 +826,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
+>  		type &= IRQ_TYPE_SENSE_MASK;
+>  
+> -	mutex_lock(&irq_domain_mutex);
+> +	mutex_lock(&domain->root->mutex);
+>  
+>  	/*
+>  	 * If we've already configured this interrupt,
+> @@ -864,11 +879,11 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  	/* Store trigger type */
+>  	irqd_set_trigger_type(irq_data, type);
+>  out:
+> -	mutex_unlock(&irq_domain_mutex);
+> +	mutex_unlock(&domain->root->mutex);
+>  
+>  	return virq;
+>  err:
+> -	mutex_unlock(&irq_domain_mutex);
+> +	mutex_unlock(&domain->root->mutex);
+>  
+>  	return 0;
+>  }
+> @@ -1132,6 +1147,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+>  	else
+>  		domain = irq_domain_create_tree(fwnode, ops, host_data);
+>  	if (domain) {
+> +		domain->root = parent->root;
+>  		domain->parent = parent;
+>  		domain->flags |= flags;
+
+So we still have a bug here, as we have published a domain that we
+keep updating. A parallel probing could find it in the interval and do
+something completely wrong.
+
+Splitting the work would help, as per the following patch.
+
+Thanks,
+
+	M.
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index c96aa5e5a94b..6c675ef672e9 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -126,23 +126,12 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
  
-+config VIRT_PMC
-+	tristate "Virt PMC"
-+	depends on ACPI && SUSPEND
-+	help
-+	  The Virtual PMC driver is meant for the guest VMs and its main
-+	  purpose is to notify about guest entering s2idle state.
+-/**
+- * __irq_domain_add() - Allocate a new irq_domain data structure
+- * @fwnode: firmware node for the interrupt controller
+- * @size: Size of linear map; 0 for radix mapping only
+- * @hwirq_max: Maximum number of interrupts supported by controller
+- * @direct_max: Maximum value of direct maps; Use ~0 for no limit; 0 for no
+- *              direct mapping
+- * @ops: domain callbacks
+- * @host_data: Controller private data pointer
+- *
+- * Allocates and initializes an irq_domain structure.
+- * Returns pointer to IRQ domain, or NULL on failure.
+- */
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+-				    irq_hw_number_t hwirq_max, int direct_max,
+-				    const struct irq_domain_ops *ops,
+-				    void *host_data)
++static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
++					      unsigned int size,
++					      irq_hw_number_t hwirq_max,
++					      int direct_max,
++					      const struct irq_domain_ops *ops,
++					      void *host_data)
+ {
+ 	struct irqchip_fwid *fwid;
+ 	struct irq_domain *domain;
+@@ -239,12 +228,44 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
+ 
+ 	irq_domain_check_hierarchy(domain);
+ 
++	return domain;
++}
 +
- endif # X86_PLATFORM_DEVICES
++static void __irq_domain_publish(struct irq_domain *domain)
++{
+ 	mutex_lock(&irq_domain_mutex);
+ 	debugfs_add_domain_dir(domain);
+ 	list_add(&domain->link, &irq_domain_list);
+ 	mutex_unlock(&irq_domain_mutex);
  
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1d3d1b02541b..c4d3056cf4ea 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -129,6 +129,9 @@ obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
- obj-$(CONFIG_X86_INTEL_LPSS)		+= pmc_atom.o
- 
-+# Virtual PMC
-+obj-$(CONFIG_VIRT_PMC)			+= virt_pmc.o
+ 	pr_debug("Added domain %s\n", domain->name);
++}
 +
- # Siemens Simatic Industrial PCs
- obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
- 
-diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/virt_pmc.c
-new file mode 100644
-index 000000000000..daf9c9ed86e5
---- /dev/null
-+++ b/drivers/platform/x86/virt_pmc.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Virtual Power Management Controller Driver
++/**
++ * __irq_domain_add() - Allocate a new irq_domain data structure
++ * @fwnode: firmware node for the interrupt controller
++ * @size: Size of linear map; 0 for radix mapping only
++ * @hwirq_max: Maximum number of interrupts supported by controller
++ * @direct_max: Maximum value of direct maps; Use ~0 for no limit; 0 for no
++ *              direct mapping
++ * @ops: domain callbacks
++ * @host_data: Controller private data pointer
 + *
-+ * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
++ * Allocates and initializes an irq_domain structure.
++ * Returns pointer to IRQ domain, or NULL on failure.
 + */
-+
-+#include <linux/acpi.h>
-+#include <linux/platform_device.h>
-+
-+#define ACPI_VIRT_PMC_DSM_UUID	"9ea49ba3-434a-49a6-be30-37cc55c4d397"
-+#define ACPI_VIRT_PMC_NOTIFY 1
-+
-+static acpi_handle virt_pmc_handle;
-+
-+static void virt_pmc_s2idle_notify(void)
++struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
++				    irq_hw_number_t hwirq_max, int direct_max,
++				    const struct irq_domain_ops *ops,
++				    void *host_data)
 +{
-+	union acpi_object *out_obj;
-+	static guid_t dsm_guid;
++	struct irq_domain *domain;
 +
-+	guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
++	domain = __irq_domain_create(fwnode, size, hwirq_max, direct_max,
++				     ops, host_data);
++	if (domain)
++		__irq_domain_publish(domain);
 +
-+	out_obj = acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
-+					0, ACPI_VIRT_PMC_NOTIFY, NULL);
+ 	return domain;
+ }
+ EXPORT_SYMBOL_GPL(__irq_domain_add);
+@@ -1143,13 +1164,16 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+ 	struct irq_domain *domain;
+ 
+ 	if (size)
+-		domain = irq_domain_create_linear(fwnode, size, ops, host_data);
++		domain = __irq_domain_create(fwnode, size, size, 0, ops, host_data);
+ 	else
+-		domain = irq_domain_create_tree(fwnode, ops, host_data);
++		domain = __irq_domain_create(fwnode, 0, ~0, 0, ops, host_data);
 +
-+	acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluation %s\n",
-+			  ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful" : "failed");
+ 	if (domain) {
+ 		domain->root = parent->root;
+ 		domain->parent = parent;
+ 		domain->flags |= flags;
 +
-+	ACPI_FREE(out_obj);
-+}
-+
-+static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
-+	.check = virt_pmc_s2idle_notify,
-+};
-+
-+static int virt_pmc_probe(struct platform_device *pdev)
-+{
-+	int err = 0;
-+
-+	virt_pmc_handle = ACPI_HANDLE(&pdev->dev);
-+
-+	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+	if (err)
-+		dev_warn(&pdev->dev, "failed to register LPS0 sleep handler\n");
-+
-+	return err;
-+}
-+
-+static int virt_pmc_remove(struct platform_device *pdev)
-+{
-+	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id virt_pmc_acpi_ids[] = {
-+	{"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
-+
-+static struct platform_driver virt_pmc_driver = {
-+	.driver = {
-+		.name = "virtual_pmc",
-+		.acpi_match_table = ACPI_PTR(virt_pmc_acpi_ids),
-+	},
-+	.probe = virt_pmc_probe,
-+	.remove = virt_pmc_remove,
-+};
-+
-+module_platform_driver(virt_pmc_driver);
-+
-+MODULE_DESCRIPTION("Virtual PMC Driver");
--- 
-2.39.1.519.gcb327c4b5f-goog
++		__irq_domain_publish(domain);
+ 	}
+ 
+ 	return domain;
 
+-- 
+Without deviation from the norm, progress is not possible.
