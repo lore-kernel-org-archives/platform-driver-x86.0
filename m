@@ -2,91 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391B2C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 11:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68E6C636D7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 12:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231345AbjBILZr (ORCPT
+        id S229940AbjBIM7w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 06:25:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
+        Thu, 9 Feb 2023 07:59:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231567AbjBILZR (ORCPT
+        with ESMTP id S230016AbjBIM7t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 06:25:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259B85D3DD;
-        Thu,  9 Feb 2023 03:19:47 -0800 (PST)
+        Thu, 9 Feb 2023 07:59:49 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B7E5ACF8;
+        Thu,  9 Feb 2023 04:59:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 98949B8210A;
-        Thu,  9 Feb 2023 11:19:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97BBAC4339B;
-        Thu,  9 Feb 2023 11:19:18 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 16332CE1C71;
+        Thu,  9 Feb 2023 12:59:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CD2C433D2;
+        Thu,  9 Feb 2023 12:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675941559;
-        bh=eYVsuz7yIS4jkNG98M87pZNda/oClfDzRcrDjEc1DpY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLP1x7jVNS3GBsVavhOE9LQ8CBd5qJ4LDcMI3HRne8NWcJtaORs2NwBqhKW91flFE
-         vCC4va1FQeErZyikFdRZaH+I3t2/xZKQvTWyy49pWvg6Bl54b8G/M1AOA3VAdTIUHV
-         ykVGtsbpYsqtbIg3H9dGVKFvlgZcP9MJOSNT9n6kFLmrnu39mlXAWa1NtPuGJkJlzA
-         TMmwmf5UkI348tFTs29ATDRvyoc6NGYnyk6BF8RcMjDrtLBtDQLh5AIrxBSVnlKzOk
-         p9P1C1T675xfb4F54lskQg+XfMPb97zCjcnwzr289jGIoiUjiZ841bcK2FXZPfR+RL
-         ZUaNdeUujerSQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 13/13] platform/x86: touchscreen_dmi: Add Chuwi Vi8 (CWI501) DMI match
-Date:   Thu,  9 Feb 2023 06:18:31 -0500
-Message-Id: <20230209111833.1892896-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230209111833.1892896-1-sashal@kernel.org>
-References: <20230209111833.1892896-1-sashal@kernel.org>
+        s=k20201202; t=1675947582;
+        bh=ueSbzbCgVSLYf9tlzKphbkF8Np2IEsOAlfnOzU+6UYY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EOc+j1ULKe63GU4YvUl0yQ8bwgBE+7iwrHHEvKuBw8MujB+tpgtKUBpHDPA1bPpSl
+         SW3x9IMWqIraRRZLEPtbeNS28PM5edk7e7+Pk5pTra9igPlkodT8v1m0EYDmNNSXbi
+         CHqcSozPpQainIemp1Vbh97AGqQWlzCxCi+Jy7pPjJdfYVjlwkvedW6YlQ33ZFJKGs
+         LwLXGwN6FCmFPCovq+2ScjoWz/mDIY/HxX0yU7XthFXo2yf1HTjBZnuImZgwfcUB8f
+         VvByTdpLcZfrHuwXlzvnLBId6YQaYSKVzd0CbpIqwrpYFMuGdZXnScG+aQ0mXLvcoa
+         khCs8I7+tJEYA==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pQ6XE-0001F4-8c; Thu, 09 Feb 2023 14:00:21 +0100
+Date:   Thu, 9 Feb 2023 14:00:20 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v4 07/19] irqdomain: Look for existing mapping only once
+Message-ID: <Y+TuZDGwi6wfdFeK@hovoldconsulting.com>
+References: <20230116135044.14998-1-johan+linaro@kernel.org>
+ <20230116135044.14998-8-johan+linaro@kernel.org>
+ <87wn5kkfqo.ffs@tglx>
+ <Y8e7OGlPXolkC1+R@hovoldconsulting.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8e7OGlPXolkC1+R@hovoldconsulting.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Wed, Jan 18, 2023 at 10:26:16AM +0100, Johan Hovold wrote:
+> On Tue, Jan 17, 2023 at 10:34:07PM +0100, Thomas Gleixner wrote:
+> > On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+> > > Avoid looking for an existing mapping twice when creating a new mapping
+> > > using irq_create_fwspec_mapping() by factoring out the actual allocation
+> > > which is shared with irq_create_mapping_affinity().
+> > 
+> > This changelog is incomplete and it took me a while to figure out why
+> > this is before the race fix.
+> > 
+> > The point is that you need __irq_create_mapping_affinity() later to fix
+> > the shared mapping race. The double check avoidance is just a nice side
+> > effect.
+> > 
+> > So please spell it out and make it clear that this needs to be
+> > backported too, e.g. by adding:
+> > 
+> > The split out internal function will be used to fix a shared interrupt
+> > mapping race. This change is therefore tagged with the same fixes tag.
+> > 
+> > Fixes: ....
+> 
+> Sure. It was originally part of the fix of the race, but I was told to
+> clean up the code first (and not worry about backporting).
+> 
+> I'll see what I can do about reordering these again with the aim of
+> making things easier to backport.
+> 
+> > > +static unsigned int __irq_create_mapping_affinity(struct irq_domain *domain,
+> > > +						  irq_hw_number_t hwirq,
+> > > +						  const struct irq_affinity_desc *affinity)
+> > 
+> > Please rename to irq_create_mapping_affinity_locked() so it's clear what
+> > this is about and what the calling convention is. A lockdep assert to
+> > that effect would be nice too.
+> 
+> Will do.
 
-[ Upstream commit eecf2acd4a580e9364e5087daf0effca60a240b7 ]
+Actually this cannot be done as part of this patch as the function is
+still being called without the lock held until the actual
+shared-interrupt mapping fix. I have a vague recollection that this was
+part of the reason I went with the double underscore prefix.
 
-Add a DMI match for the CWI501 version of the Chuwi Vi8 tablet,
-pointing to the same chuwi_vi8_data as the existing CWI506 version
-DMI match.
+I'll rename the function using a __locked suffix as part of the race
+fix, but a lockdep assert feels like overkill here as this static
+function is only in two places where the lock has just been taken (and
+the asserts in the revmap helper will eventually catch any future
+hypothetical offenders).
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20230202103413.331459-1-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/touchscreen_dmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index bc26acace2c30..b96fbc8dba09d 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1030,6 +1030,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
- 		},
- 	},
-+	{
-+		/* Chuwi Vi8 (CWI501) */
-+		.driver_data = (void *)&chuwi_vi8_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "i86"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.W86JLBNR01"),
-+		},
-+	},
- 	{
- 		/* Chuwi Vi8 (CWI506) */
- 		.driver_data = (void *)&chuwi_vi8_data,
--- 
-2.39.0
-
+Johan
