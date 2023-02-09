@@ -2,157 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A27C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CEC61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 13:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbjBINH2 (ORCPT
+        id S229852AbjBINaq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 08:07:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
+        Thu, 9 Feb 2023 08:30:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbjBINH2 (ORCPT
+        with ESMTP id S229677AbjBINao (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 08:07:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCE7E04F;
-        Thu,  9 Feb 2023 05:07:26 -0800 (PST)
+        Thu, 9 Feb 2023 08:30:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D456A23C66;
+        Thu,  9 Feb 2023 05:30:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 94A6161A46;
-        Thu,  9 Feb 2023 13:07:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8DFC433EF;
-        Thu,  9 Feb 2023 13:07:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E37861A51;
+        Thu,  9 Feb 2023 13:30:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8A9C433EF;
+        Thu,  9 Feb 2023 13:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675948045;
-        bh=SpEERSHFmfgk88dtM6HPJS6HGSu329rEjBienFTWdo0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cK/a2kA+P7wIJ8ME19ajuwu71EB/pUoKS7KAewCmkCKdaaqn+D1Z0oHQskqZMivPK
-         Ufud3WRojlR8BgUzyXldn36Re0UpGcUvr0SONeJw5M07UikC3dIi2a2MHbMxus4XRC
-         x8uAT/jWWc6fpGwjTjlIx8IliiGVv59ZqbCA73W4zX/ov9mwVLJnuw2xKQ0FtcFSp6
-         HQYIG4NtPN+WWokTJO0ixnKgBSEde2otFNAkc6mcwWSXM6FUFb02aO1jLIQYClZLtg
-         /R8XSd+K6S324HJHMYPHT7daJZJK0vy/NPm4IPVQqoXR4duRj9Xeo9TTankEC49UL3
-         BHvAZ/jtXvXiw==
+        s=k20201202; t=1675949442;
+        bh=m6miDDXDPE0i8gfLkqlExqia0yJKU93vQt0xdTn6QTY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sa/KsdyjZtn4lNGlYVyABiISMRaa4wwQBRmFtr+M+MjPvP8y+PRzLXqo89kivIomd
+         S/PCuMrHmTTouqFOVc51sYPzkBJAh1CO89W1KzQu+w33SmAmW0PJ0+aHDsv0d4PRIb
+         POhLEV8bZceaHkWq1M1Jl1P1xV+UEelGyBJFWe3XIspLbOqyhP7frvAjajH46LDiPi
+         ObKuQb4r08H88CaO5GAFSC4Tx9igwxJcaE6yhq/+OYeIJeDpy9ldfhIeNXvAa6zog6
+         X8cGet21q1o9Of7xfeIVLhj6vsJg4PDJcN77OFOI26NWCu/aM5WeY9WuYpi48SqMk3
+         V2Rq26Ho7O1Fg==
 Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pQ6ei-0001IT-8s; Thu, 09 Feb 2023 14:08:04 +0100
-Date:   Thu, 9 Feb 2023 14:08:04 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
+        (envelope-from <johan+linaro@kernel.org>)
+        id 1pQ71G-0001Kl-B0; Thu, 09 Feb 2023 14:31:22 +0100
+From:   Johan Hovold <johan+linaro@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dmitry Torokhov <dtor@chromium.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: Re: [PATCH v4 09/19] irqdomain: Fix mapping-creation race
-Message-ID: <Y+TwNOYbeZxCE0c8@hovoldconsulting.com>
-References: <20230116135044.14998-1-johan+linaro@kernel.org>
- <20230116135044.14998-10-johan+linaro@kernel.org>
- <87sfg8kfh4.ffs@tglx>
- <Y8e+qfaC+ytx2LDv@hovoldconsulting.com>
+Subject: [PATCH v5 03/19] irqdomain: Drop bogus fwspec-mapping error handling
+Date:   Thu,  9 Feb 2023 14:23:07 +0100
+Message-Id: <20230209132323.4599-4-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230209132323.4599-1-johan+linaro@kernel.org>
+References: <20230209132323.4599-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8e+qfaC+ytx2LDv@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 18, 2023 at 10:40:57AM +0100, Johan Hovold wrote:
-> On Tue, Jan 17, 2023 at 10:39:51PM +0100, Thomas Gleixner wrote:
-> > On Mon, Jan 16 2023 at 14:50, Johan Hovold wrote:
+In case a newly allocated IRQ ever ends up not having any associated
+struct irq_data it would not even be possible to dispose the mapping.
+
+Replace the bogus disposal with a WARN_ON().
+
+This will also be used to fix a shared-interrupt mapping race, hence the
+CC-stable tag.
+
+Fixes: 1e2a7d78499e ("irqdomain: Don't set type when mapping an IRQ")
+Cc: stable@vger.kernel.org      # 4.8
+Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ kernel/irq/irqdomain.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 981cd636275e..b4326c364ae7 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -847,13 +847,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 	}
  
-> > > @@ -802,6 +811,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> > >  	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
-> > >  		type &= IRQ_TYPE_SENSE_MASK;
-> > >  
-> > > +	mutex_lock(&irq_domain_mutex);
-> > > +
-> > >  	/*
-> > >  	 * If we've already configured this interrupt,
-> > >  	 * don't do it again, or hell will break loose.
-> > > @@ -814,7 +825,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> > >  		 * interrupt number.
-> > >  		 */
-> > >  		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
-> > > -			return virq;
-> > > +			goto out;
-> > >  
-> > >  		/*
-> > >  		 * If the trigger type has not been set yet, then set
-> > > @@ -823,36 +834,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-> > >  		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
-> > >  			irq_data = irq_get_irq_data(virq);
-> > >  			if (!irq_data)
-> > > -				return 0;
-> > > +				goto err;
-> > >  
-> > >  			irqd_set_trigger_type(irq_data, type);
-> > > -			return virq;
-> > > +			goto out;
-> > >  		}
-> > >  
-> > >  		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
-> > >  			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
-> > > -		return 0;
-> > > +		goto err;
-> > >  	}
-> > >  
-> > >  	if (irq_domain_is_hierarchy(domain)) {
-> > > -		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
-> > > +		virq = ___irq_domain_alloc_irqs(domain, -1, 1, NUMA_NO_NODE,
-> > > +						fwspec, false, NULL);
-> > >  		if (virq <= 0)
-> > > -			return 0;
-> > > +			goto err;
-> > >  	} else {
-> > >  		/* Create mapping */
-> > >  		virq = __irq_create_mapping_affinity(domain, hwirq, NULL);
-> > >  		if (!virq)
-> > > -			return virq;
-> > > +			goto err;
-> > >  	}
-> > >  
-> > >  	irq_data = irq_get_irq_data(virq);
-> > >  	if (WARN_ON(!irq_data))
-> > > -		return 0;
-> > > +		goto err;
-> > >  
-> > >  	/* Store trigger type */
-> > >  	irqd_set_trigger_type(irq_data, type);
-> > > +out:
-> > > +	mutex_unlock(&irq_domain_mutex);
-> > >  
-> > >  	return virq;
-> > > +err:
-> > > +	mutex_unlock(&irq_domain_mutex);
-> > > +
-> > > +	return 0;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
-> > 
-> > You can spare that goto churn by renaming the existing function to
-> > irq_create_fwspec_mapping_locked() and invoked that guarded by the
-> > mutex, no?
-> 
-> That may be possible, but I'm not sure it's better. It wasn't really
-> obvious which of the above returns where error paths and which were
-> success paths before this change.
-> 
-> I'll try and see what it would look like.
+ 	irq_data = irq_get_irq_data(virq);
+-	if (!irq_data) {
+-		if (irq_domain_is_hierarchy(domain))
+-			irq_domain_free_irqs(virq, 1);
+-		else
+-			irq_dispose_mapping(virq);
++	if (WARN_ON(!irq_data))
+ 		return 0;
+-	}
+ 
+ 	/* Store trigger type */
+ 	irqd_set_trigger_type(irq_data, type);
+-- 
+2.39.1
 
-I gave it a try but the resulting diff is even bigger and also obscures
-the reason for why the locking is there (i.e. that the lookup and and
-creation needs to be done atomically).
-
-Adding unlocked domain lookup helpers as a preparatory patch could
-possible help somewhat with the diff size, but that doesn't really make
-sense with the per-domain locking added by the final patch.
-
-(I've made some experiments to quantify the parallel probe speed up that
-using per-domain locks can result in so I'm including that for v5.)
-
-Johan
