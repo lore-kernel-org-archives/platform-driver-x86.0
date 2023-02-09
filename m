@@ -2,83 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08048C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 09:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E185C636D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 11:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjBIJLN (ORCPT
+        id S230510AbjBILUn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 04:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
+        Thu, 9 Feb 2023 06:20:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbjBIJLL (ORCPT
+        with ESMTP id S231130AbjBILT6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 04:11:11 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13EBFF0B;
-        Thu,  9 Feb 2023 01:11:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675933870; x=1707469870;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a2MkqYZarU9Kj5aK8npfH96rjIcTD8gaXekRrzr5ZCE=;
-  b=P7/AR0hBLuJCElGxmAzDGZzfplTLRsTi7/0SDTJ933CG1AE0mvNBvs14
-   oXvGb9yWZso5h4mVJYcG3mmwzpR/cexbHKzZ0XvNN3TepmUwZT5auTBct
-   qUBjExYrufmseekWMrbG5QmtnliMQd1GTTrHUgHbJySjioSy8Ae082voX
-   AhROpDv0cIjBtUrIwgy6+7P06wMbUJsr90OZAb3Vv2sCN2E5VHTV6iU9f
-   W5EZ9xkhBzSO53p6JgVdWYBfAzaG4XgatWAKtrk5gQu6L57I14w698jpO
-   JgbKHXTyg8vWuDylruN8lYHvmaLik7noVW2HeltsNjYeeMYnv6GmrumrJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="310413202"
-X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
-   d="scan'208";a="310413202"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 01:11:10 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="791542638"
-X-IronPort-AV: E=Sophos;i="5.97,283,1669104000"; 
-   d="scan'208";a="791542638"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 01:11:08 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-        by kekkonen.fi.intel.com (Postfix) with SMTP id 085691218A3;
-        Thu,  9 Feb 2023 11:11:05 +0200 (EET)
-Date:   Thu, 9 Feb 2023 11:11:05 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: int3472/discrete: add LEDS_CLASS dependency
-Message-ID: <Y+S4qZAQf6LAT16s@kekkonen.localdomain>
-References: <20230208163658.2129009-1-arnd@kernel.org>
+        Thu, 9 Feb 2023 06:19:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B7AC6A70C;
+        Thu,  9 Feb 2023 03:17:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6057619C2;
+        Thu,  9 Feb 2023 11:17:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70847C433EF;
+        Thu,  9 Feb 2023 11:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675941446;
+        bh=SKxwpuPeFrsjkmrCHmg8BLPyCcp6Jy8418OHhjLGp5M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SraqrmUVF3ziVcjhynT+srImIWy/fQN926UgIFPH9JeYvGcFaQGg4Uvz5ok7LcSW5
+         xCjPK+daYXvlOrfCCZR7VbczypYF+KJMN5buNsEMo8iyjA9+RoxlKZvpHAoCmyaADw
+         YijiT/+L9vUnLkI3PpaVCXagcrePQpAbXJPqI+rZUEOc/ehn+Lb8OTBu11ZUias4A/
+         WMXIWYE+4CC/TcRq7+ulW3a9IaVn+bRmA/J15s4LqI9aBGK4Hok7mw7AUxEN60/Lol
+         wI97UmXl1IkNA94z4d0+dzjGgmO3Lw6bWkP9NRLHubr+Rbtc3ku9xMcD4IBzRME8SS
+         30D+Q5cPh9R5g==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 36/38] platform/x86: touchscreen_dmi: Add Chuwi Vi8 (CWI501) DMI match
+Date:   Thu,  9 Feb 2023 06:14:55 -0500
+Message-Id: <20230209111459.1891941-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230209111459.1891941-1-sashal@kernel.org>
+References: <20230209111459.1891941-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230208163658.2129009-1-arnd@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 05:36:52PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> int3472 now fails to link when the LED support is disabled:
-> 
-> x86_64-linux-ld: drivers/platform/x86/intel/int3472/led.o: in function `skl_int3472_register_pled':
-> led.c:(.text+0xf4): undefined reference to `led_classdev_register_ext'
-> x86_64-linux-ld: led.c:(.text+0x131): undefined reference to `led_add_lookup'
-> x86_64-linux-ld: drivers/platform/x86/intel/int3472/led.o: in function `skl_int3472_unregister_pled':
-> led.c:(.text+0x16b): undefined reference to `led_remove_lookup'
-> x86_64-linux-ld: led.c:(.text+0x177): undefined reference to `led_classdev_unregister'
-> 
-> Add an explicit Kconfig dependency.
-> 
-> Fixes: 5ae20a8050d0 ("platform/x86: int3472/discrete: Create a LED class device for the privacy LED")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+[ Upstream commit eecf2acd4a580e9364e5087daf0effca60a240b7 ]
 
+Add a DMI match for the CWI501 version of the Chuwi Vi8 tablet,
+pointing to the same chuwi_vi8_data as the existing CWI506 version
+DMI match.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20230202103413.331459-1-hdegoede@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index f00995390fdfe..13802a3c3591d 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -1097,6 +1097,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_DATE, "05/07/2016"),
+ 		},
+ 	},
++	{
++		/* Chuwi Vi8 (CWI501) */
++		.driver_data = (void *)&chuwi_vi8_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "i86"),
++			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.W86JLBNR01"),
++		},
++	},
+ 	{
+ 		/* Chuwi Vi8 (CWI506) */
+ 		.driver_data = (void *)&chuwi_vi8_data,
 -- 
-Sakari Ailus
+2.39.0
+
