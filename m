@@ -2,67 +2,67 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B39CC05027
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 19:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A51C636D4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 20:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233152AbjBJTxA (ORCPT
+        id S233592AbjBJUQn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 14:53:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
+        Fri, 10 Feb 2023 15:16:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233060AbjBJTw7 (ORCPT
+        with ESMTP id S233580AbjBJUQm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 14:52:59 -0500
+        Fri, 10 Feb 2023 15:16:42 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B158690
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:52:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8D828874
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 12:15:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676058729;
+        s=mimecast20190719; t=1676060154;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lrfOu3qaR69ccH7DuaoAFvxzQf97CmjDnDorDQCgmI4=;
-        b=EN2aWXhyZ/BzOz6sxPF2KHLs3DEeP8E+eANTCBF/YdnyGtpNtb1O4tMmcxiG0CTYGn9GG+
-        EC3Lm4nKK4N98lv1226H/ft881UDS8U1bum0XI5mN7AHTDYzLGF7gwQU6AEB3ep1omf67Q
-        OCYtz17roxXjFLtxLzE9sOoWdCYZ4Eg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ZNFnqY613h9bvaBLnYI52rKBZZmmgHMm3e/efaUU+qs=;
+        b=NTPvqipsjgFUBFuXLcsQ0SoHzmudeBBuIpUdzg8qeiyH3Z3KFUQZaHHO+OfwOkTID4NRm0
+        SNiuYpPR5JIUyBvXGATGJPTLCdOXmMZ3YUo8OepZhOrsgo+IN4bYlYCbmcL8CmH6ozAQ2s
+        g0LvWwpl9XAnP3SD2NCShUVzp+SbCbo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-347-LSQ6D-zgMDGP8xVdNfHldQ-1; Fri, 10 Feb 2023 14:41:24 -0500
-X-MC-Unique: LSQ6D-zgMDGP8xVdNfHldQ-1
-Received: by mail-ed1-f70.google.com with SMTP id fd23-20020a056402389700b004aaa054d189so4185018edb.11
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:41:24 -0800 (PST)
+ us-mta-457-USs5itXFOx2EB6oILdueXA-1; Fri, 10 Feb 2023 15:15:53 -0500
+X-MC-Unique: USs5itXFOx2EB6oILdueXA-1
+Received: by mail-ej1-f69.google.com with SMTP id wz4-20020a170906fe4400b0084c7e7eb6d0so4182956ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 12:15:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrfOu3qaR69ccH7DuaoAFvxzQf97CmjDnDorDQCgmI4=;
-        b=cBAPJiHGkEHJIl5QOVO+wBqzhluZKENqwRwIxmT0ycltBx3V1nQcAO3RWWoegcQLE2
-         krtXzDQBnzYTrrPPE+vdXzOlDUS0CFuAc9rMYquvAeqzB8BF3caQux9A1vN1uOAQPrtg
-         HCV9Bdv6y6vnZnQ1p4sPoAv0dBeW+lGhENYeFJgipdwLlCr/EeSjU4Ro6tLA44LSTbkd
-         KT4DLLFvHBUZFJbBeY6BLichjGB6MAxSAhs0dHXfUfqNjthO8T5HgtWCB5imFJz+B8fQ
-         zS4wMeprBUQL8MSoF7VcRZvZt7NnSmYkZXJNEUrPPt/us0gQjYmOAOOSKOIj4lF3/iXT
-         gOGw==
-X-Gm-Message-State: AO0yUKVCnDQJ4Lw+7uoj+K1tDo/8Ch+QisWAe19bp/O3ofXeqObTJd3g
-        PxkLkbzUNQigrJhVdFiDLIU3twJnX6Rkzh7vVwKrtyNd+oyPR3d2laKsMoGo6Mfb5S0jFAPWRby
-        9UYCAHODpC1W8nceUIXwkP7yg+QnkeHwqeQ==
-X-Received: by 2002:a17:907:9484:b0:878:509f:798c with SMTP id dm4-20020a170907948400b00878509f798cmr20702885ejc.4.1676058081361;
-        Fri, 10 Feb 2023 11:41:21 -0800 (PST)
-X-Google-Smtp-Source: AK7set8TTPRmaKf4d7r24Su7XzcDrt+64y6chZ0ujIOQt9F+tOX9hkZWuSzrrt1tNe/19CqcVroqsA==
-X-Received: by 2002:a17:907:9484:b0:878:509f:798c with SMTP id dm4-20020a170907948400b00878509f798cmr20702858ejc.4.1676058081200;
-        Fri, 10 Feb 2023 11:41:21 -0800 (PST)
+        bh=ZNFnqY613h9bvaBLnYI52rKBZZmmgHMm3e/efaUU+qs=;
+        b=6zIHpzZ3gOifMFEfdlFHd/rX89nORpmvO7FhDSsUnz7CFcZ35t/Q793lfF2Ur7hOq6
+         K6dgqSr8aLHflmcyrBkSn6TAInHbIT5mzqZbeAJFfXp6UH7eh4i78CaXRUq8tu3rZSbM
+         aoHvQj2V1GgIWCJgs0j16QUpNJwrPZwmMeZvaITtdvCav4eZUAmPc+lNry2fFZw7YIIO
+         WbyXs3RxQdxjfsNH3PakSp4aLW80Xvrw3lq6lITQVxp4CT+YFQucWeiTes6blgYu+bIU
+         uSmEDCAj5pEPULMR0RsUvmDBLAqDtpjk35Vqa28A8sDsPlGoqhouN4RJATruGbSC2T1S
+         lqxQ==
+X-Gm-Message-State: AO0yUKWLgeK3IlTkT97FA1DayVPSDCnzz5PXAzNEjiAOJ3y+qz2tbEAC
+        WTIXXwqEnWv6wGiYT0IJ5AhyQbu1VQ2JEcC3EwzsftW6RPbW3J4Pi5imobWL3txJyYsKES6KCqV
+        G4PBcfE60VAVaFU7U+FvO40TZmD7+WwWIOw==
+X-Received: by 2002:a17:906:a102:b0:878:5e84:e1da with SMTP id t2-20020a170906a10200b008785e84e1damr19986651ejy.27.1676060152361;
+        Fri, 10 Feb 2023 12:15:52 -0800 (PST)
+X-Google-Smtp-Source: AK7set83CY0lAZ6vzuP/e62ituWkImwtPZspb5CjMytMYB/Xmhp1TOSi84e/LdQpynGJdXlN84G9Aw==
+X-Received: by 2002:a17:906:a102:b0:878:5e84:e1da with SMTP id t2-20020a170906a10200b008785e84e1damr19986636ejy.27.1676060152166;
+        Fri, 10 Feb 2023 12:15:52 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id b12-20020a170906150c00b00888d593ce76sm2789667ejd.72.2023.02.10.11.41.20
+        by smtp.gmail.com with ESMTPSA id m10-20020a170906580a00b0086f4b8f9e42sm2813890ejq.65.2023.02.10.12.15.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 11:41:20 -0800 (PST)
-Message-ID: <f4992ffa-68db-7f8c-b92d-a0e1348a7839@redhat.com>
-Date:   Fri, 10 Feb 2023 20:41:19 +0100
+        Fri, 10 Feb 2023 12:15:51 -0800 (PST)
+Message-ID: <3e6c6cba-ad53-d380-a028-840fb19dbfcb@redhat.com>
+Date:   Fri, 10 Feb 2023 21:15:50 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [RFC PATCH 2/9] apple-gmux: consolidate version reading
+Subject: Re: [RFC PATCH 7/9] apple-gmux: add sysfs interface
 Content-Language: en-US, nl
 To:     Orlando Chamberlain <orlandoch.dev@gmail.com>,
         platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -94,9 +94,9 @@ Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Aditya Garg <gargaditya08@live.com>,
         Aun-Ali Zaidi <admin@kodeit.net>
 References: <20230210044826.9834-1-orlandoch.dev@gmail.com>
- <20230210044826.9834-3-orlandoch.dev@gmail.com>
+ <20230210044826.9834-8-orlandoch.dev@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230210044826.9834-3-orlandoch.dev@gmail.com>
+In-Reply-To: <20230210044826.9834-8-orlandoch.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -106,86 +106,28 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/10/23 05:48, Orlando Chamberlain wrote:
-> Read gmux version in one go as 32 bits on both indexed and classic
-> gmux's.
+> Allow reading gmux ports from userspace. When the unsafe module
+> parameter allow_user_writes is true, writing 1 byte
+> values is also allowed.
 > 
-> Classic gmux's used to read the version as
+> For example:
 > 
-> major = inb(base + 0x4);
-> minor = inb(base + 0x5);
-> release = inb(base + 0x6);
+> cd /sys/bus/acpi/devices/APP000B:00/physical_node/
+> echo 4 > gmux_selected_port
+> cat gmux_selected_port_data | xxd -p
 > 
-> but this can instead be done the same way as indexed gmux's with
-> gmux_read32(), so the same version reading code is used for classic
-> and indexed gmux's (as well as mmio gmux's that will be added to this
-> driver).
-> 
-> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
-> ---
->  drivers/platform/x86/apple-gmux.c | 14 ++++++--------
->  include/linux/apple-gmux.h        |  6 +-----
->  2 files changed, 7 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index e8cb084cb81f..67628104f31a 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -580,15 +580,13 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	if (indexed) {
->  		mutex_init(&gmux_data->index_lock);
->  		gmux_data->indexed = true;
-> -		version = gmux_read32(gmux_data, GMUX_PORT_VERSION_MAJOR);
-> -		ver_major = (version >> 24) & 0xff;
-> -		ver_minor = (version >> 16) & 0xff;
-> -		ver_release = (version >> 8) & 0xff;
-> -	} else {
-> -		ver_major = gmux_read8(gmux_data, GMUX_PORT_VERSION_MAJOR);
-> -		ver_minor = gmux_read8(gmux_data, GMUX_PORT_VERSION_MINOR);
-> -		ver_release = gmux_read8(gmux_data, GMUX_PORT_VERSION_RELEASE);
->  	}
-> +
-> +	version = gmux_read32(gmux_data, GMUX_PORT_VERSION_MAJOR);
-> +	ver_major = (version >> 24) & 0xff;
-> +	ver_minor = (version >> 16) & 0xff;
-> +	ver_release = (version >> 8) & 0xff;
-> +
->  	pr_info("Found gmux version %d.%d.%d [%s]\n", ver_major, ver_minor,
->  		ver_release, (gmux_data->indexed ? "indexed" : "classic"));
->  
+> Will show the gmux version information (00000005 in this case)
 
-The problem with this is that there is nothing (no known register)
-at address base + 7 and now you are reading from address base + 7
-here where before the code was not, we have no idea how the hw
-will respond to this.  This should be pretty innocent but still ...
+Please use debugfs for this and as part of the conversion
+drop the #ifdef-s (debugfs has stubs for when not enabled)
+and drop all the error checking of creating the files, debugfs
+is deliberately designed to not have any error checking in
+the setup / teardown code.
 
-> diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
-> index 1f68b49bcd68..eb2caee04abd 100644
-> --- a/include/linux/apple-gmux.h
-> +++ b/include/linux/apple-gmux.h
-> @@ -67,7 +67,6 @@ static inline bool apple_gmux_is_indexed(unsigned long iostart)
->   */
->  static inline bool apple_gmux_detect(struct pnp_dev *pnp_dev, bool *indexed_ret)
->  {
-> -	u8 ver_major, ver_minor, ver_release;
->  	struct device *dev = NULL;
->  	struct acpi_device *adev;
->  	struct resource *res;
-> @@ -95,10 +94,7 @@ static inline bool apple_gmux_detect(struct pnp_dev *pnp_dev, bool *indexed_ret)
->  	 * Invalid version information may indicate either that the gmux
->  	 * device isn't present or that it's a new one that uses indexed io.
->  	 */
-> -	ver_major = inb(res->start + GMUX_PORT_VERSION_MAJOR);
-> -	ver_minor = inb(res->start + GMUX_PORT_VERSION_MINOR);
-> -	ver_release = inb(res->start + GMUX_PORT_VERSION_RELEASE);
-> -	if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
-> +	if (!(~inl(res->start + GMUX_PORT_VERSION_MAJOR))) {
-
-Assuming we can get this tested well enough that I'm ok with the change in general
-please write this as:
-
-	if (inl(res->start + GMUX_PORT_VERSION_MAJOR) == 0xffffffff) {
-
-Which I believe is what you are trying to achieve here ?
+This also removes the need for the allow_user_writes parameter
+replacing it with the new kernel lockdown mechanism. debugfs
+will automatically block access to writable files when
+the kernel is in lockdown mode.
 
 Regards,
 
@@ -193,7 +135,173 @@ Hans
 
 
 
->  		indexed = apple_gmux_is_indexed(res->start);
->  		if (!indexed)
->  			goto out;
+
+> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
+> ---
+>  drivers/platform/x86/apple-gmux.c | 129 ++++++++++++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index c38d6ef0c15a..756059d48393 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -66,6 +66,11 @@ struct apple_gmux_data {
+>  	enum vga_switcheroo_client_id switch_state_external;
+>  	enum vga_switcheroo_state power_state;
+>  	struct completion powerchange_done;
+> +
+> +#ifdef CONFIG_SYSFS
+> +	/* sysfs data */
+> +	int selected_port;
+> +#endif /* CONFIG_SYSFS */
+>  };
+>  
+>  static struct apple_gmux_data *apple_gmux_data;
+> @@ -651,6 +656,121 @@ static void gmux_notify_handler(acpi_handle device, u32 value, void *context)
+>  		complete(&gmux_data->powerchange_done);
+>  }
+>  
+> +/**
+> + * DOC: Sysfs Interface
+> + *
+> + * gmux ports can be read from userspace as a sysfs interface. For example:
+> + *
+> + * # echo 4 > /sys/bus/acpi/devices/APP000B:00/physical_node/gmux_selected_port
+> + * # cat /sys/bus/acpi/devices/APP000B:00/physical_node/gmux_selected_port_data | xxd -p
+> + * 00000005
+> + *
+> + * Reads 4 bytes from port 4 (GMUX_PORT_VERSION_MAJOR).
+> + *
+> + * Single byte writes are also supported, however this must be enabled with the
+> + * unsafe allow_user_writes module parameter.
+> + *
+> + */
+> +
+> +#ifdef CONFIG_SYSFS
+> +
+> +static bool allow_user_writes;
+> +module_param_unsafe(allow_user_writes, bool, 0);
+> +MODULE_PARM_DESC(allow_user_writes, "Allow userspace to write to gmux ports (default: false) (bool)");
+> +
+> +static ssize_t gmux_selected_port_store(struct device *dev,
+> +		struct device_attribute *attr, const char *sysfsbuf, size_t count)
+> +{
+> +	struct apple_gmux_data *gmux_data = dev_get_drvdata(dev);
+> +	u8 port;
+> +
+> +	if (kstrtou8(sysfsbuf, 10, &port) < 0)
+> +		return -EINVAL;
+> +
+> +	/* On pio gmux's, make sure the user doesn't access too high of a port. */
+> +	if ((gmux_data->config == &apple_gmux_pio) &&
+> +		port > (gmux_data->iolen - 4))
+> +		return -EINVAL;
+> +
+> +	gmux_data->selected_port = port;
+> +	return count;
+> +}
+> +
+> +static ssize_t gmux_selected_port_show(struct device *dev,
+> +		struct device_attribute *attr, char *sysfsbuf)
+> +{
+> +	struct apple_gmux_data *gmux_data = dev_get_drvdata(dev);
+> +
+> +	return sysfs_emit(sysfsbuf, "%d\n", gmux_data->selected_port);
+> +}
+> +
+> +DEVICE_ATTR_RW(gmux_selected_port);
+> +
+> +static ssize_t gmux_selected_port_data_store(struct device *dev,
+> +		struct device_attribute *attr, const char *sysfsbuf, size_t count)
+> +{
+> +	struct apple_gmux_data *gmux_data = dev_get_drvdata(dev);
+> +
+> +	if (count == 1)
+> +		gmux_write8(gmux_data, gmux_data->selected_port, *sysfsbuf);
+> +	else
+> +		return -EINVAL;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t gmux_selected_port_data_show(struct device *dev,
+> +		struct device_attribute *attr, char *sysfsbuf)
+> +{
+> +	struct apple_gmux_data *gmux_data = dev_get_drvdata(dev);
+> +	u32 data;
+> +
+> +	data = gmux_read32(gmux_data, gmux_data->selected_port);
+> +	memcpy(sysfsbuf, &data, sizeof(data));
+> +
+> +	return sizeof(data);
+> +}
+> +
+> +struct device_attribute dev_attr_gmux_selected_port_data_rw = __ATTR_RW(gmux_selected_port_data);
+> +struct device_attribute dev_attr_gmux_selected_port_data_ro = __ATTR_RO(gmux_selected_port_data);
+> +
+> +static int gmux_init_sysfs(struct pnp_dev *pnp)
+> +{
+> +	int ret;
+> +
+> +	ret = device_create_file(&pnp->dev, &dev_attr_gmux_selected_port);
+> +	if (ret)
+> +		return ret;
+> +	if (allow_user_writes)
+> +		ret = device_create_file(&pnp->dev, &dev_attr_gmux_selected_port_data_rw);
+> +	else
+> +		ret = device_create_file(&pnp->dev, &dev_attr_gmux_selected_port_data_ro);
+> +	if (ret)
+> +		device_remove_file(&pnp->dev, &dev_attr_gmux_selected_port);
+> +	return ret;
+> +}
+> +
+> +static void gmux_fini_sysfs(struct pnp_dev *pnp)
+> +{
+> +	device_remove_file(&pnp->dev, &dev_attr_gmux_selected_port);
+> +	if (allow_user_writes)
+> +		device_remove_file(&pnp->dev, &dev_attr_gmux_selected_port_data_rw);
+> +	else
+> +		device_remove_file(&pnp->dev, &dev_attr_gmux_selected_port_data_ro);
+> +}
+> +
+> +#else
+> +
+> +static int gmux_init_sysfs(struct pnp_dev *pnp)
+> +{
+> +	return 0;
+> +}
+> +static void gmux_fini_sysfs(struct pnp_dev *pnp)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_SYSFS */
+> +
+>  static int gmux_suspend(struct device *dev)
+>  {
+>  	struct pnp_dev *pnp = to_pnp_dev(dev);
+> @@ -846,8 +966,16 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+>  		goto err_register_handler;
+>  	}
+>  
+> +	ret = gmux_init_sysfs(pnp);
+> +	if (ret) {
+> +		pr_err("Failed to register gmux sysfs entries\n");
+> +		goto err_sysfs;
+> +	}
+> +
+>  	return 0;
+>  
+> +err_sysfs:
+> +	vga_switcheroo_unregister_handler();
+>  err_register_handler:
+>  	gmux_disable_interrupts(gmux_data);
+>  	apple_gmux_data = NULL;
+> @@ -877,6 +1005,7 @@ static void gmux_remove(struct pnp_dev *pnp)
+>  {
+>  	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
+>  
+> +	gmux_fini_sysfs(pnp);
+>  	vga_switcheroo_unregister_handler();
+>  	gmux_disable_interrupts(gmux_data);
+>  	if (gmux_data->gpe >= 0) {
 
