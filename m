@@ -2,78 +2,208 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374D3C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC706C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Feb 2023 18:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230192AbjBISFO (ORCPT
+        id S229552AbjBISON (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Feb 2023 13:05:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
+        Thu, 9 Feb 2023 13:14:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230166AbjBISFN (ORCPT
+        with ESMTP id S229551AbjBISOM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2023 13:05:13 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B051EC7B;
-        Thu,  9 Feb 2023 10:05:12 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1675965910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yitrJTSVgf3Z/6id4va7dmBz3yFsi4rHDr48pn/op6U=;
-        b=Bts66rpHIar8KFiHsLUPQHvL6dzUFcCw+F4qR1ydHK3zArsYEBIoDqUM1q+9eOOIn0GAPU
-        pCV2gzRae0QYI2BDX035MgNcrTwPGJ+6NRywh0/9cAjDaOgjMH6gzpmsiMwD6iskXzYDb1
-        mBhbPI6wTpb66euioTK8VEvUZGUYNuOLOUBljl5sRjkaXrV7cfN60FLga3n5ihdx5WHKU+
-        KR/VlkMy12H1DNTze2KG6PZl4SOcI89/ZE9NJ+RqiBKS2rCgjp+HCjqPk+HGkHysYV01t5
-        OiNM3td95kLqAUESd0/wiePC9mdsE+iRtuoLNEGHN/AOvvCTIFEck0E6BIsYAA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1675965910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yitrJTSVgf3Z/6id4va7dmBz3yFsi4rHDr48pn/op6U=;
-        b=oCAdkC5e7NfL0Ge92ds3/oJTJiqW37g8YY4ETO+pMJjPkzXnW7y6ri7ULnNCzX94EY4TQV
-        NrqJ4/7NMdegGcCA==
-To:     Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
-        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
-        upstream@semihalf.com, hdegoede@redhat.com, markgross@kernel.org,
-        dtor@google.com, mario.limonciello@amd.com,
-        linux-pm@vger.kernel.org, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: Re: [RESEND RFCv2 1/1] platform/x86: Add virtual PMC driver used
- for S2Idle
-In-Reply-To: <20230209152123.3186930-2-jaz@semihalf.com>
-References: <20230209152123.3186930-1-jaz@semihalf.com>
- <20230209152123.3186930-2-jaz@semihalf.com>
-Date:   Thu, 09 Feb 2023 19:05:09 +0100
-Message-ID: <87ttzu1zqi.ffs@tglx>
+        Thu, 9 Feb 2023 13:14:12 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1472910F7;
+        Thu,  9 Feb 2023 10:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675966452; x=1707502452;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SdJR8+NQgWVSPauMXOdNTSeAcDupQOFiX/ggW5ukF60=;
+  b=YJ/u66IxLDPGyVPF+JVk53HqUJu2uPrx4x/FQhvs7iKc/lE5yvd7fQUJ
+   xM3g8aCuh2ONqQdny/tX3RuvP8Eq6GE0GbtTNmSSlMTv0Ib61df2F9weZ
+   ENQl9vMByasIR9aGWxMy9rOif5vt0bPRDQmaevRWf9tQkhpeAwkqBV9qz
+   i1KbtKCYoxq1Ev6CnL3uToctop3A7n1+0dr2IW5NPZa7IWGnD/J/ZJ7J5
+   w85ZB+FfTH4OnNuUkfYA+XMvHImDqhL/K+23owFkjiOKxBGD/610slNr+
+   Ol1hCGn6Gly3W5QVfcIZ39xDP9zrU2FLOVB+d1Qr0rik62mMMzeWxiiHI
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="318212592"
+X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
+   d="scan'208";a="318212592"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 10:14:11 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="791693614"
+X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
+   d="scan'208";a="791693614"
+Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 10:14:08 -0800
+From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
+        hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajat.khandelwal@intel.com,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+Subject: [PATCH v5] platform/x86/intel/pmc: core: Add support to show LTR-ignored components
+Date:   Fri, 10 Feb 2023 23:46:14 +0530
+Message-Id: <20230210181614.192578-1-rajat.khandelwal@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 09 2023 at 15:21, Grzegorz Jaszczyk wrote:
-> +
-> +static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
+Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
+if there are components whose LTR values have been ignored.
 
-What is AMD specific about this?
+This patch adds the feature to print out such components, if they exist.
+Further, if user tries to set an already ignored component, he will
+encounter the error code of EEXIST.
 
-> +	.check = virt_pmc_s2idle_notify,
-> +};
+Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+---
 
-...
+v5:
+1. Ignore the LTR of the respective component after unlocking the mutex lock
+2. Adding error code details to the commit message
 
-> +
-> +MODULE_DESCRIPTION("Virtual PMC Driver");
+v4: Mutex unlock during error conditions
 
-Lacks MODULE_LICENSE("GPL")
+v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
 
-Thanks,
+v2: kmalloc -> devm_kmalloc
 
-        tglx
+ drivers/platform/x86/intel/pmc/core.c | 64 ++++++++++++++++++++++-----
+ drivers/platform/x86/intel/pmc/core.h |  2 +-
+ 2 files changed, 53 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 3a15d32d7644..16cf6c634db8 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
+ 	{}
+ };
+ 
++/* Mutual exclusion to access the list of LTR-ignored components */
++static DEFINE_MUTEX(ltr_entry_mutex);
++
++struct ltr_entry {
++	u32 comp_index;
++	const char *comp_name;
++	struct list_head node;
++};
++
++static LIST_HEAD(ltr_ignore_list);
++
+ static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+ {
+ 	return readl(pmcdev->regbase + reg_offset);
+@@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+ 
+-int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
++void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+ {
+ 	const struct pmc_reg_map *map = pmcdev->map;
+ 	u32 reg;
+-	int err = 0;
+ 
+ 	mutex_lock(&pmcdev->lock);
+ 
+-	if (value > map->ltr_ignore_max) {
+-		err = -EINVAL;
+-		goto out_unlock;
+-	}
+-
+ 	reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+ 	reg |= BIT(value);
+ 	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
+ 
+-out_unlock:
+ 	mutex_unlock(&pmcdev->lock);
+-
+-	return err;
+ }
+ 
+ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+@@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ {
+ 	struct seq_file *s = file->private_data;
+ 	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_reg_map *map = pmcdev->map;
++	struct ltr_entry *entry;
+ 	u32 buf_size, value;
+ 	int err;
+ 
+@@ -473,13 +477,49 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ 	if (err)
+ 		return err;
+ 
+-	err = pmc_core_send_ltr_ignore(pmcdev, value);
++	if (value > map->ltr_ignore_max)
++		return -EINVAL;
++
++	mutex_lock(&ltr_entry_mutex);
++
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		if (entry->comp_index == value) {
++			err = -EEXIST;
++			goto out_unlock;
++		}
++	}
++
++	entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
++	if (!entry) {
++		err = -ENOMEM;
++		goto out_unlock;
++	}
++
++	entry->comp_name = map->ltr_show_sts[value].name;
++	entry->comp_index = value;
++	list_add_tail(&entry->node, &ltr_ignore_list);
++
++out_unlock:
++	mutex_unlock(&ltr_entry_mutex);
++
++	if (err)
++		return err;
++
++	pmc_core_send_ltr_ignore(pmcdev, value);
+ 
+-	return err == 0 ? count : err;
++	return count;
+ }
+ 
+ static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
+ {
++	struct ltr_entry *entry;
++
++	mutex_lock(&ltr_entry_mutex);
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		seq_printf(s, "%s\n", entry->comp_name);
++	}
++	mutex_unlock(&ltr_entry_mutex);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 810204d758ab..da35b0fcbe6e 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
+ extern const struct pmc_reg_map mtl_reg_map;
+ 
+ extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+-extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
++extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+ 
+ void spt_core_init(struct pmc_dev *pmcdev);
+ void cnp_core_init(struct pmc_dev *pmcdev);
+-- 
+2.34.1
+
