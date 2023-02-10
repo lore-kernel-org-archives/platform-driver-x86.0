@@ -2,107 +2,154 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37244C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 17:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1C9C05027
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 19:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232475AbjBJRzH (ORCPT
+        id S232620AbjBJTK5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 12:55:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
+        Fri, 10 Feb 2023 14:10:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232178AbjBJRzB (ORCPT
+        with ESMTP id S229495AbjBJTK4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 12:55:01 -0500
+        Fri, 10 Feb 2023 14:10:56 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980CF74041
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:53:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F942136
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:10:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676051638;
+        s=mimecast20190719; t=1676056210;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ByLTaBrR33/58eblN5M5BJ+SAtE6mecuJJ1gYpLRkfw=;
-        b=She6fYYoehTQ8TI6+0KU3zi7xoGK7f+G2gNe0LOyl665dj6K1eu+v4yZWAB2GkpN2x47AB
-        7whgCupznLYC0YDFqSHcYoJqawarhk+K0/dLbTUBwx/lNotC1Gfw4/qQDADR6naLY82OcQ
-        qSMH5C5HTgSYI0TXSqiWBbVuTq6h6iM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Wlj+JXAcWLxYE86Ug6fMhTbOB35cUlXqEJcONrx83sg=;
+        b=QpmNEeznljTQDa2Rs2hlc8xIDx/dVWOMfJwXq+RdiZbRTFL+oRn9atR4fTgUbG8XOCGi7v
+        53m+nSLksgSPWJlz47fd19uG3EsppYErklaQNMYUIGKQz8x0PvXL609X1lc01cznDUIDIj
+        L5aeWxRB4lr4deJKmZvmApXxYN4FcQg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-609-gx4BhgOWMjmFUYsOPL3Rpw-1; Fri, 10 Feb 2023 12:53:57 -0500
-X-MC-Unique: gx4BhgOWMjmFUYsOPL3Rpw-1
-Received: by mail-ej1-f70.google.com with SMTP id vq12-20020a170907a4cc00b00896db1c78aaso3957554ejc.9
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:53:57 -0800 (PST)
+ us-mta-215-FbgupK_wPrW2mKiV-sGCpg-1; Fri, 10 Feb 2023 14:10:01 -0500
+X-MC-Unique: FbgupK_wPrW2mKiV-sGCpg-1
+Received: by mail-ed1-f71.google.com with SMTP id o21-20020aa7dd55000000b004a245f58006so4176996edw.12
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:10:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ByLTaBrR33/58eblN5M5BJ+SAtE6mecuJJ1gYpLRkfw=;
-        b=Aefpt1zNf2b6g3nK5KG56Eh17blAS9Lkx3gp1DCxWduMnpG20h3TKIG5AJ7cx1RARZ
-         l/9RX8lE7z7EkM3+uxeLniu+Rc6O7B26W69q+eGfUKeKhqAfiDjtBhXhNNsEEgwVdgAC
-         tBy4wov2D4NK30rsUqkwqDpOQkZtZb+L9naqrMEP8eflZjQDy67b5Quaoe5xZ662oppc
-         3xBY1aGJRK+mwXRReefbSjCh1FUGjv4oXQ1cQMn3U21AX54eNtQyg0YsQhb3/bEEbMt+
-         xQbjD54rSheq1MfpPtg59QGIoWbIfx4hdD0h8VlfKwoKwHJVFLPz7t7l2It4ZFTFL8+E
-         o8rA==
-X-Gm-Message-State: AO0yUKVcg9eUc2YyiEIAXNU63W+KQ1LxXswcYeWU9brnvMe1Cf6EOrQD
-        yJp6+267XmvMtTqVx8XXTr+KcrGSUR9afezPiK/dT9PHUMqOzSPFstSg60AyF7uqFlKKaaCv4/m
-        E+Em9iPsv6tFCr9+OimfdZhnr/AkQ918clQnlNIs=
-X-Received: by 2002:a17:906:70c7:b0:885:6a2e:f941 with SMTP id g7-20020a17090670c700b008856a2ef941mr14790112ejk.54.1676051635932;
-        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
-X-Google-Smtp-Source: AK7set+DNv4GVF0SPagUZnh8wWR3eAig9uI70x2zyVfDjEpeHUGM61viPpw9njwVFtd2k8xIDYbnhg==
-X-Received: by 2002:a17:906:70c7:b0:885:6a2e:f941 with SMTP id g7-20020a17090670c700b008856a2ef941mr14790102ejk.54.1676051635725;
-        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
+        bh=Wlj+JXAcWLxYE86Ug6fMhTbOB35cUlXqEJcONrx83sg=;
+        b=r3AvzbIZb136+0S9fA9scA/+vtpvp06u+oAcMNiVVi4jlvcapsFPwoT8QRnovs+Z9m
+         uCrIkrC7yWn/cmpLJGguucu+XduIGnYHFtSSBosNcm8fQSH4fT6yOluzLoDjgfI9IYKe
+         IzTYgsm7NKbPqVS8v6hSmkR1BSRMGYxqnGwuYB+rw3VQQvy9eH16CMJZIIYcWVttDjVS
+         8xR/C7Jbm8YRG2P65t3FMmjZAGL0ZrSJdws9iL3+pz+jAZK3UPgArz2//sC2dGYT3zfJ
+         qATtoWXNn9coyQSBEw6aUsTWzykGI5AigPwUzg8MFbBPf1+1xS1dTzmJlL0hViYjIHXl
+         AgFA==
+X-Gm-Message-State: AO0yUKX5pH7ai3uwG1w588AVk52pRXatCb+TIHrkudlA7++SGzXf51P3
+        M47hZwhiWF+fJbRgQDkBtzcuxjysmeNn0JlE3da24D9xPBasAU52cNYHALS2bjHEY+Lx15MnBv7
+        Vso7R+Ke0kSlLZiTqZ7m/hMAMHUnxIHEXjg==
+X-Received: by 2002:a17:906:308c:b0:889:14ec:21ae with SMTP id 12-20020a170906308c00b0088914ec21aemr16104701ejv.32.1676056200870;
+        Fri, 10 Feb 2023 11:10:00 -0800 (PST)
+X-Google-Smtp-Source: AK7set/bQ30pqtJ+DR8BHDulCT6yJnSnGVJYAXD4vakdG0Yio03S4TdacumZBH+AU7G5YgQxaLn3ig==
+X-Received: by 2002:a17:906:308c:b0:889:14ec:21ae with SMTP id 12-20020a170906308c00b0088914ec21aemr16104674ejv.32.1676056200632;
+        Fri, 10 Feb 2023 11:10:00 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id dt19-20020a170906b79300b0088ed7de4821sm2656892ejb.158.2023.02.10.09.53.54
+        by smtp.gmail.com with ESMTPSA id a23-20020a1709063a5700b0087bcda2b07bsm2697548ejf.202.2023.02.10.11.09.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
-Message-ID: <fd4150cf-1800-51c4-e4f8-4b6aff5ddc5d@redhat.com>
-Date:   Fri, 10 Feb 2023 18:53:54 +0100
+        Fri, 10 Feb 2023 11:10:00 -0800 (PST)
+Message-ID: <3af65b5e-1f52-79f6-4130-03901ce76d2f@redhat.com>
+Date:   Fri, 10 Feb 2023 20:09:59 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v3 0/2] platform/x86: dell-ddv: Various driver updates
+Subject: Re: [RFC PATCH 1/9] apple-gmux: use cpu_to_be32 instead of manual
+ reorder
 Content-Language: en-US, nl
-To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
-Cc:     jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230209211503.2739-1-W_Armin@gmx.de>
+To:     Orlando Chamberlain <orlandoch.dev@gmail.com>,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Gross <markgross@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        YiPeng Chai <YiPeng.Chai@amd.com>,
+        Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        Jack Xiao <Jack.Xiao@amd.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Evan Quan <evan.quan@amd.com>,
+        Kerem Karabay <kekrby@gmail.com>,
+        Aditya Garg <gargaditya08@live.com>,
+        Aun-Ali Zaidi <admin@kodeit.net>
+References: <20230210044826.9834-1-orlandoch.dev@gmail.com>
+ <20230210044826.9834-2-orlandoch.dev@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230209211503.2739-1-W_Armin@gmx.de>
+In-Reply-To: <20230210044826.9834-2-orlandoch.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin,
+Hi,
 
-On 2/9/23 22:15, Armin Wolf wrote:
-> Thanks to bugreport 216655 on bugzilla, the contents of the
-> fan/thermal sensor buffers could be almost completely decoded.
+On 2/10/23 05:48, Orlando Chamberlain wrote:
+> Currently it manually flips the byte order, but we can instead use
+> cpu_to_be32(val) for this.
 > 
-> The first patch adds support for exposing the sensor values
-> over a standard hwmon interface, and the second patch enables
-> asynchronous probing for the driver since the sensor interface
-> can be quiet slow.
+> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
+> ---
+>  drivers/platform/x86/apple-gmux.c | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
 > 
-> The patch series was tested on a Dell Inspiron 3505, with the hwmon
-> patch being tested by multiple people over bugzilla and email. Those
-> who tested the final version of the hwmon patch are credited with
-> Tested-by tags.
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 9333f82cfa8a..e8cb084cb81f 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -94,13 +94,7 @@ static u32 gmux_pio_read32(struct apple_gmux_data *gmux_data, int port)
+>  static void gmux_pio_write32(struct apple_gmux_data *gmux_data, int port,
+>  			     u32 val)
+>  {
+> -	int i;
+> -	u8 tmpval;
+> -
+> -	for (i = 0; i < 4; i++) {
+> -		tmpval = (val >> (i * 8)) & 0xff;
+> -		outb(tmpval, gmux_data->iostart + port + i);
+> -	}
+> +	outl(cpu_to_be32(val), gmux_data->iostart + port);
+>  }
+>  
+>  static int gmux_index_wait_ready(struct apple_gmux_data *gmux_data)
 
-Thanks this looks nice and clean, much appreciate
-the attention to detail.
+The ioport / indexed-ioport accessed apple_gmux-es likely are (part of?)
+LPC bus devices . Looking at the bus level you are now changing 4 io
+accesses with a size of 1 byte, to 1 32 bit io-access.
 
-I've applied the series to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Depending on the decoding hw in the chip this may work fine,
+or this may work not at all.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I realized that you have asked for more testing, but most surviving
+macbooks from the older apple-gmux era appear to be models without
+a discrete GPU (which are often the first thing to break) and thus
+without a gmux.
+
+Unless we get a bunch of testers to show up, which I doubt. I would
+prefer slightly bigger / less pretty code and not change the functional
+behavior of the driver on these older models.
 
 Regards,
 
@@ -110,32 +157,22 @@ Hans
 
 
 
-
-
-
-> ---
-> Changes in v3:
-> - remove empty lines before break/return
-> - invalidate buffer cache on resume
-> Changes in v2:
-> - remove already merged patches
-> - add patch enabling asynchronous probing
-> - cache sensor buffers
-> - fix compilation on 32 bit
-> - add missing break statements
-> - remove C++ style comments
-> - rework battery hook and hwmon probing
-> - rework Kconfig dependencies
-> 
-> Armin Wolf (2):
->   platform/x86: dell-ddv: Add hwmon support
->   platform/x86: dell-ddv: Prefer asynchronous probing
-> 
->  drivers/platform/x86/dell/Kconfig        |   8 +-
->  drivers/platform/x86/dell/dell-wmi-ddv.c | 492 ++++++++++++++++++++++-
->  2 files changed, 495 insertions(+), 5 deletions(-)
-> 
-> --
-> 2.30.2
-> 
+> @@ -177,16 +171,8 @@ static u32 gmux_index_read32(struct apple_gmux_data *gmux_data, int port)
+>  static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
+>  			       u32 val)
+>  {
+> -	int i;
+> -	u8 tmpval;
+> -
+>  	mutex_lock(&gmux_data->index_lock);
+> -
+> -	for (i = 0; i < 4; i++) {
+> -		tmpval = (val >> (i * 8)) & 0xff;
+> -		outb(tmpval, gmux_data->iostart + GMUX_PORT_VALUE + i);
+> -	}
+> -
+> +	outl(cpu_to_be32(val), gmux_data->iostart + GMUX_PORT_VALUE);
+>  	gmux_index_wait_ready(gmux_data);
+>  	outb(port & 0xff, gmux_data->iostart + GMUX_PORT_WRITE);
+>  	gmux_index_wait_complete(gmux_data);
 
