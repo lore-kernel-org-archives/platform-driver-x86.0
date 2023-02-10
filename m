@@ -2,125 +2,213 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A31C636CD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 10:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009CCC05027
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 11:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231866AbjBJK6w (ORCPT
+        id S232231AbjBJLjI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 05:58:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
+        Fri, 10 Feb 2023 06:39:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbjBJK6v (ORCPT
+        with ESMTP id S232260AbjBJLjF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 05:58:51 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA965AB18
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 02:58:50 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id v3so3462175pgh.4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 02:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b7phvD7nK4kIvx8H59seUFTQxz++eLDaRYRm9yYwBI8=;
-        b=DEK0/LavcptJVJudPdJlVORLyZbyT0qPiqw+oN4lY78JSSVALFlA7GVEyX/2A0g53t
-         oC0a5UJUXOMvC6lZg4TAo76W16Xd2ihd8YR6hlrAwZUFpB1em9T1/RpQsUZ3f7IfD69C
-         DurLMUloA9oodlSGARuZ6g+gWDixmzaqroEQNkyw988QvRyev+HR+/EoG0/vabPiNKzD
-         b4E+rDYwZ848wVQZhmykJdRBFvtTCDQftoWbVYH4tIikx9zr149DeB7gRbyDjtYM76j/
-         aMAL7FxKVQ+HJiYqUKsvOyRSJhTtK5Aujpq9L4N0IsZ1TosO3MuPMugVBAmYqIEMDAEH
-         gu1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b7phvD7nK4kIvx8H59seUFTQxz++eLDaRYRm9yYwBI8=;
-        b=njIy8aJQLMeUomVv8eq5eKz3r70d37x3piUIlAo9gqVqaIcPQYafLO8bE3pJlphicl
-         z0Llg86l9B7a1i+mnGsx5H/WgrHuOzM89jx+j4RRRep46uMiqMhP6Jy2BZLGXz30Oeex
-         jMdOcQ0OZIYBFH/j3TrMRKjOCJfzEdd97orApsRLa7JoZVeL4x0AlmAr4klAGy6yF0uC
-         jYVdLyJoqQLtvmRpR019JId3Ed+NLnGZO4cWJdvgZN1/3/0xKmmJPjrSfJlWcDnAMEhg
-         Ebc+brR1+CLsB2mh+XBsMRH1MaNutj6aKnCIBTVe04FmHxQYCldVdVhEApJixSe0L7yY
-         a9Ww==
-X-Gm-Message-State: AO0yUKVVSGzaXsWw7HK8cWDw7yRloDqMIDcB/cNKSqhcrh28Wr/l3gPi
-        dZgmAGz64lcfz8dl8SL5eAYUSjSzJ+ZSbW8xoaEWlg==
-X-Google-Smtp-Source: AK7set9pOsGmIRmKHTcj+Z9vPSqM9Hmvj3TE4cl4sbWD/hRxU8GKzJ1TzKjpm9UN4xknw+vhoxstLWE8ZzdNLDQ1oTs=
-X-Received: by 2002:aa7:95b8:0:b0:593:9029:fcf6 with SMTP id
- a24-20020aa795b8000000b005939029fcf6mr3016644pfk.52.1676026730179; Fri, 10
- Feb 2023 02:58:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20230209152123.3186930-1-jaz@semihalf.com> <20230209152123.3186930-2-jaz@semihalf.com>
- <Y+VlCWwn35ECE9iz@google.com>
-In-Reply-To: <Y+VlCWwn35ECE9iz@google.com>
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-Date:   Fri, 10 Feb 2023 11:58:39 +0100
-Message-ID: <CAH76GKPTzAn==B_v9VfR0rPR-u2VBNZ7F07oyw1k_-O2=mmCPQ@mail.gmail.com>
-Subject: Re: [RESEND RFCv2 1/1] platform/x86: Add virtual PMC driver used for S2Idle
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org, dmy@semihalf.com,
-        tn@semihalf.com, dbehr@google.com,
-        zide.chen@intel.corp-partner.google.com, upstream@semihalf.com,
-        hdegoede@redhat.com, markgross@kernel.org, dtor@google.com,
-        mario.limonciello@amd.com, linux-pm@vger.kernel.org,
-        x86@kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Feb 2023 06:39:05 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D352A6D4;
+        Fri, 10 Feb 2023 03:39:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4FFA7B824B5;
+        Fri, 10 Feb 2023 11:39:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27A3C4339B;
+        Fri, 10 Feb 2023 11:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676029141;
+        bh=bXLxhCbm8PLSlv2BYgc9umLlpmECPGjRF/I+Yq6eOPU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gn8X1Mzt7l1dAv8XPucI5wpV2cSe+bBDTOedgeHXmuiVrmfXNjYqdixSpJ3jxJERT
+         L/zK4N01Z5U/P+GDlKlxMcc18jk3HWI5VqDuqI9hc/gfwBxSZUJLR0ZSW/YE/dqCCq
+         LssiToak5aDLMCfIc9+6YMCL7UbDi2MX+DsvU8dpbpg1RydjRwLfyOTpXPVwKNsX+8
+         I5x4RggA4MzINOvLpbckFSjmMpDTcyNtT+ANQ/CnZavkYFG81GQ69e0j6memkBhhA2
+         XuzfOYKC5Yd2EksaGGxcL8LfemWHGRefToaMIJqmX2xVlWCBvXrObHQGLULRnyfbUP
+         G79bCxf02kZBA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pQRk2-009G8P-JZ;
+        Fri, 10 Feb 2023 11:38:58 +0000
+Date:   Fri, 10 Feb 2023 11:38:58 +0000
+Message-ID: <86bkm1zr59.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v5 19/19] irqdomain: Switch to per-domain locking
+In-Reply-To: <Y+YUs6lzalneLyz7@hovoldconsulting.com>
+References: <20230209132323.4599-1-johan+linaro@kernel.org>
+        <20230209132323.4599-20-johan+linaro@kernel.org>
+        <86cz6izv48.wl-maz@kernel.org>
+        <Y+YUs6lzalneLyz7@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, johan+linaro@kernel.org, tglx@linutronix.de, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, hsinyi@chromium.org, mark-pk.tsai@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-czw., 9 lut 2023 o 22:26 Sean Christopherson <seanjc@google.com> napisa=C5=
-=82(a):
->
-> On Thu, Feb 09, 2023, Grzegorz Jaszczyk wrote:
-> > Virtual PMC driver is meant for the guest VMs for the S2Idle
-> > notification. Its purpose is to register S2Idle dev ops check handler,
-> > which will evaluate ACPI _DSM just before the guest enters S2Idle power
-> > state.
-> >
-> > This allows to trap on MMIO access done as a consequence of _DSM
-> > evaluation and therefore notify the VMM about the guest entering S2Idle
-> > state.
-> >
-> > Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> > ---
-> > Changelog v1..v2:
-> > - Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
-> > ---
-> >  drivers/platform/x86/Kconfig    |  7 ++++
-> >  drivers/platform/x86/Makefile   |  3 ++
-> >  drivers/platform/x86/virt_pmc.c | 73 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 83 insertions(+)
-> >  create mode 100644 drivers/platform/x86/virt_pmc.c
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 5692385e2d26..b7c3f98031d7 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
-> >         buttons below the display. This module adds an input device
-> >         that delivers key events when these buttons are pressed.
-> >
-> > +config VIRT_PMC
-> > +     tristate "Virt PMC"
->
-> Maybe spell out "Virtual Power Management Controller"?  See below.
+On Fri, 10 Feb 2023 09:56:03 +0000,
+Johan Hovold <johan@kernel.org> wrote:
+> 
+> On Thu, Feb 09, 2023 at 04:00:55PM +0000, Marc Zyngier wrote:
+> > On Thu, 09 Feb 2023 13:23:23 +0000,
+> > Johan Hovold <johan+linaro@kernel.org> wrote:
+> > > 
+> > > The IRQ domain structures are currently protected by the global
+> > > irq_domain_mutex. Switch to using more fine-grained per-domain locking,
+> > > which can speed up parallel probing by reducing lock contention.
+> > > 
+> > > On a recent arm64 laptop, the total time spent waiting for the locks
+> > > during boot drops from 160 to 40 ms on average, while the maximum
+> > > aggregate wait time drops from 550 to 90 ms over ten runs for example.
+> > > 
+> > > Note that the domain lock of the root domain (innermost domain) must be
+> > > used for hierarchical domains. For non-hierarchical domains (as for root
+> > > domains), the new root pointer is set to the domain itself so that
+> > > domain->root->mutex can be used in shared code paths.
+> > > 
+> > > Also note that hierarchical domains should be constructed using
+> > > irq_domain_create_hierarchy() (or irq_domain_add_hierarchy()) to avoid
+> > > poking at irqdomain internals. As a safeguard, the lockdep assertion in
+> > > irq_domain_set_mapping() will catch any offenders that fail to set the
+> > > root domain pointer.
+> > > 
+> > > Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > > ---
+> > >  include/linux/irqdomain.h |  4 +++
+> > >  kernel/irq/irqdomain.c    | 61 +++++++++++++++++++++++++--------------
+> > >  2 files changed, 44 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> > > index 16399de00b48..cad47737a052 100644
+> > > --- a/include/linux/irqdomain.h
+> > > +++ b/include/linux/irqdomain.h
+> > > @@ -125,6 +125,8 @@ struct irq_domain_chip_generic;
+> > >   *		core code.
+> > >   * @flags:	Per irq_domain flags
+> > >   * @mapcount:	The number of mapped interrupts
+> > > + * @mutex:	Domain lock, hierarhical domains use root domain's lock
+> > 
+> > nit: hierarchical
+> > 
+> > > + * @root:	Pointer to root domain, or containing structure if non-hierarchical
+> 
+> > > @@ -226,6 +226,17 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
+> > >  
+> > >  	domain->revmap_size = size;
+> > >  
+> > > +	/*
+> > > +	 * Hierarchical domains use the domain lock of the root domain
+> > > +	 * (innermost domain).
+> > > +	 *
+> > > +	 * For non-hierarchical domains (as for root domains), the root
+> > > +	 * pointer is set to the domain itself so that domain->root->mutex
+> > > +	 * can be used in shared code paths.
+> > > +	 */
+> > > +	mutex_init(&domain->mutex);
+> > > +	domain->root = domain;
+> > > +
+> > >  	irq_domain_check_hierarchy(domain);
+> > >  
+> > >  	mutex_lock(&irq_domain_mutex);
+> 
+> > > @@ -518,7 +529,11 @@ static void irq_domain_set_mapping(struct irq_domain *domain,
+> > >  				   irq_hw_number_t hwirq,
+> > >  				   struct irq_data *irq_data)
+> > >  {
+> > > -	lockdep_assert_held(&irq_domain_mutex);
+> > > +	/*
+> > > +	 * This also makes sure that all domains point to the same root when
+> > > +	 * called from irq_domain_insert_irq() for each domain in a hierarchy.
+> > > +	 */
+> > > +	lockdep_assert_held(&domain->root->mutex);
+> > >  
+> > >  	if (irq_domain_is_nomap(domain))
+> > >  		return;
+> > > @@ -540,7 +555,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
+> > >  
+> > >  	hwirq = irq_data->hwirq;
+> > >  
+> > > -	mutex_lock(&irq_domain_mutex);
+> > > +	mutex_lock(&domain->mutex);
+> > 
+> > So you made that point about being able to uniformly using root>mutex,
+> > which I think is a good invariant. Yet you hardly make use of it. Why?
+> 
+> I went back and forth over that a bit, but decided to only use
+> domain->root->mutex in paths that can be called for hierarchical
+> domains (i.e. the "shared code paths" mentioned above).
+> 
+> Using it in paths that are clearly only called for non-hierarchical
+> domains where domain->root == domain felt a bit lazy.
 
-Sure, it makes sense to be more verbose here.
+My concern here is that as this code gets further refactored, it may
+become much harder to reason about what is the correct level of
+locking.
 
->
-> > +     depends on ACPI && SUSPEND
->
-> I think it makes sense to take a dependency on HYPERVISOR_GUEST.  It's no=
-t strictly
-> required, but taking that dependency helps clarify that this is a guest-s=
-ide thing,
-> e.g. "virtual PMC" in KVM-land means "virtual performance monitoring coun=
-ter".
->
-> And IMO, disabling HYPERVISOR_GUEST should disable these type of guest-sp=
-ecific
-> features.
+> The counter argument is of course that using domain->root->lock allows
+> people to think less about the code they are changing, but that's not
+> necessarily always a good thing.
 
-Ok, thank you
+Eventually, non-hierarchical domains should simply die and be replaced
+with a single level hierarchy. Having a unified locking in place will
+definitely make the required work clearer.
+
+> Also note that the lockdep asserts in the revmap helpers would catch
+> anyone using domain->mutex where they should not (i.e. using
+> domain->mutex for an hierarchical domain).
+
+Lockdep is great, but lockdep is a runtime thing. It doesn't help
+reasoning about what gets locked when changing this code.
+
+> > > @@ -1132,6 +1147,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+> > >  	else
+> > >  		domain = irq_domain_create_tree(fwnode, ops, host_data);
+> > >  	if (domain) {
+> > > +		domain->root = parent->root;
+> > >  		domain->parent = parent;
+> > >  		domain->flags |= flags;
+> > 
+> > So we still have a bug here, as we have published a domain that we
+> > keep updating. A parallel probing could find it in the interval and do
+> > something completely wrong.
+> 
+> Indeed we do, even if device links should make this harder to hit these
+> days.
+> 
+> > Splitting the work would help, as per the following patch.
+> 
+> Looks good to me. Do you want to submit that as a patch that I'll rebase
+> on or should I submit it as part of a v6?
+
+Just take it directly.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
