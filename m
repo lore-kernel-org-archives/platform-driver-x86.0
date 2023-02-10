@@ -2,151 +2,175 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B09C636CD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 14:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229BDC636D4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 15:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232285AbjBJOZs (ORCPT
+        id S232351AbjBJPHH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 09:25:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59552 "EHLO
+        Fri, 10 Feb 2023 10:07:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232442AbjBJOZq (ORCPT
+        with ESMTP id S231874AbjBJPHG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 09:25:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009D271F1B
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 06:24:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676039098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=odE0ulKx/K2tP8WDUPs0emv0tzyNVjbbkK3x7rqNiF0=;
-        b=Hlp/0HFUAB1ZvNeQ4zhMDwOMBW4i9LnsL1ncGEolLCyvkt6prKAsxWrbzg4CRcKwwpdC6+
-        DXy+N9bkHC+h85dzr8Vft2eXUpYXITEaLBX3S/+zY/t9wunVWicFsTnEKPuABh1Kfmfncy
-        xGSmwwzdVuDaa3ON3BgFizaaF8gEBSw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-645-RaoyOPrHPwSJuPXeyoY7gw-1; Fri, 10 Feb 2023 09:24:57 -0500
-X-MC-Unique: RaoyOPrHPwSJuPXeyoY7gw-1
-Received: by mail-ed1-f70.google.com with SMTP id ev18-20020a056402541200b004a621e993a8so3648122edb.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 06:24:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=odE0ulKx/K2tP8WDUPs0emv0tzyNVjbbkK3x7rqNiF0=;
-        b=KJ/bWJeBEQ3Ce8h7cX8dZM9ygDQyTbmoOxPvP82lbmXbGzPU1YXLElrXYrmDbYHNPp
-         rgrwBVGG170XVGsDn8sXGWrNNFLMzVmGo6fVzAuGqLYG79hXqFgzjqfkzYULeDHeoWL0
-         S5ljZJMrLbMm0l0P8alB9+Xw/dWA43rovoeHv5vFNuRsJ+Esqe4pfKB5vVbIefW0W5dg
-         NXMydQXFTZsEJ4D67RmlbZkL5xnaKiP4FQsey7m8Ym6cXU5xrLIt1Jq12WvbEhevHl36
-         okqgMUJ5gg3OojUwAiVwMvuojnMz8l1+L1kTHaiHQ2xx1bsYy6w/R8OnstSBuIes20ke
-         SZHw==
-X-Gm-Message-State: AO0yUKXRbeZ5M7uXTwalAafWUy21rWiV6vEthxS2KrszSDMkb81F9slx
-        B2G6SPGUEMxW0BOdwA0B1F3E3kFdUd8yMiRaT/o1PnsC3xVDQu0xZ3HTgqrh9yLoTsgPnXaS6TI
-        4iTG8qBr06/KC0jg9r7xRrgFkD2lSbRrJYA==
-X-Received: by 2002:a17:906:ecb0:b0:84d:4325:7f7a with SMTP id qh16-20020a170906ecb000b0084d43257f7amr15326646ejb.65.1676039095919;
-        Fri, 10 Feb 2023 06:24:55 -0800 (PST)
-X-Google-Smtp-Source: AK7set+zswQt13cn5YUp6iD0g7CxsUnSmZHstm6R8s9QSMmuUng9vCJInctZAL+ONFhUkP6+Wxq/Tg==
-X-Received: by 2002:a17:906:ecb0:b0:84d:4325:7f7a with SMTP id qh16-20020a170906ecb000b0084d43257f7amr15326632ejb.65.1676039095692;
-        Fri, 10 Feb 2023 06:24:55 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id c10-20020a170906694a00b00856ad9108e7sm2436134ejs.70.2023.02.10.06.24.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 06:24:55 -0800 (PST)
-Message-ID: <5f413b79-cc1a-0479-6d15-3f89cc2ea514@redhat.com>
-Date:   Fri, 10 Feb 2023 15:24:54 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 0/7] Add TPMI support
-Content-Language: en-US, nl
-To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230202010738.2186174-1-srinivas.pandruvada@linux.intel.com>
- <918ac0c5-9f35-0099-5be8-6dbc72aa88e9@redhat.com>
- <6f51fcb89d0f1aad5d4f4e2cacb407a620454886.camel@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <6f51fcb89d0f1aad5d4f4e2cacb407a620454886.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 10 Feb 2023 10:07:06 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132A5211E7;
+        Fri, 10 Feb 2023 07:06:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 7CFF2CE277C;
+        Fri, 10 Feb 2023 15:06:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD07C433EF;
+        Fri, 10 Feb 2023 15:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676041599;
+        bh=eWmjVbXsukdLgJ7Kgr8ptABU8UpeBzpCUjII2j9Sisk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sw3qZgbse+nlMohjzKSGUOFHwiET+0CzHIQiV9QCGxVY/m8K6wlvqPaKeS71vFWDh
+         ocxwvoqQsI08JXk7HivB2m0ubLN5oo2PYf6ma2fPvMFRRnOzXRVdiqQgPQRzRKZ5yX
+         878upQnO9tcbiHgFjyS/JQcjpTWfoj5DGrqu6l2tJt/xs/zBYZr2crz5idRv96zHGt
+         t8hP1oyLBNcR9AaAxar1rLqxCqKAGMRob+RdJWdaocPUgYJKsnb5b9WaBB1wUJ7wwx
+         VsO7JtvHMH9YBBlIACiXC8SzdVr9ho1rSGz+JqPViBq5v3mLTG1ZnZjagQxgp+RAhv
+         dmhYhJjVgx8iw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pQUyz-009IeY-G3;
+        Fri, 10 Feb 2023 15:06:37 +0000
+Date:   Fri, 10 Feb 2023 15:06:37 +0000
+Message-ID: <868rh5zhj6.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Subject: Re: [PATCH v5 19/19] irqdomain: Switch to per-domain locking
+In-Reply-To: <Y+Y/RDRPhgm0pLWk@hovoldconsulting.com>
+References: <20230209132323.4599-1-johan+linaro@kernel.org>
+        <20230209132323.4599-20-johan+linaro@kernel.org>
+        <86cz6izv48.wl-maz@kernel.org>
+        <Y+YUs6lzalneLyz7@hovoldconsulting.com>
+        <86bkm1zr59.wl-maz@kernel.org>
+        <Y+Y/RDRPhgm0pLWk@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, johan+linaro@kernel.org, tglx@linutronix.de, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, hsinyi@chromium.org, mark-pk.tsai@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 2/10/23 09:04, srinivas pandruvada wrote:
-> Hi Hans,
+On Fri, 10 Feb 2023 12:57:40 +0000,
+Johan Hovold <johan@kernel.org> wrote:
 > 
-> On Mon, 2023-02-06 at 13:49 +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 2/2/23 02:07, Srinivas Pandruvada wrote:
->>
->>
-> [...]
+> On Fri, Feb 10, 2023 at 11:38:58AM +0000, Marc Zyngier wrote:
+> > On Fri, 10 Feb 2023 09:56:03 +0000,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > 
+> > > On Thu, Feb 09, 2023 at 04:00:55PM +0000, Marc Zyngier wrote:
+> > > > On Thu, 09 Feb 2023 13:23:23 +0000,
+> > > > Johan Hovold <johan+linaro@kernel.org> wrote:
 > 
->> Thank you for your patch-series, I've applied the series to my
->> review-hans branch:
->> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->>
->>
-> Thanks for the help here.
-
-You're welcome.
-
->> Note it will show up in my review-hans branch once I've pushed my
->> local branch there, which might take a while.
->>
->> Once I've run some tests on this branch the patches there will be
->> added to the platform-drivers-x86/for-next branch and eventually
->> will be included in the pdx86 pull-request to Linus for the next
->> merge-window.
-> I guess this will appear in 6.3 merge window.
-
-Yes I plan to push my review-hans branch to for-next shortly.
-
-> Can I post next set of patches (targeted for 6.4)?
-
-Yes please, I'm not sure if I can review them next week,
-but that will also give other people a chance to take
-a look and comment so getting them out there would be good.
-
-Regards,
-
-Hans
-
-
-
-
->>> Srinivas Pandruvada (7):
->>>   platform/x86/intel/vsec: Add TPMI ID
->>>   platform/x86/intel/vsec: Enhance and Export intel_vsec_add_aux()
->>>   platform/x86/intel/vsec: Support private data
->>>   platform/x86/intel: Intel TPMI enumeration driver
->>>   platform/x86/intel/tpmi: Process CPU package mapping
->>>   platform/x86/intel/tpmi: ADD tpmi external interface for tpmi
->>> feature
->>>     drivers
->>>   MAINTAINERS: Add entry for TPMI driver
->>>
->>>  MAINTAINERS                         |   6 +
->>>  drivers/platform/x86/intel/Kconfig  |  13 +
->>>  drivers/platform/x86/intel/Makefile |   4 +
->>>  drivers/platform/x86/intel/tpmi.c   | 415
->>> ++++++++++++++++++++++++++++
->>>  drivers/platform/x86/intel/vsec.c   |  21 +-
->>>  drivers/platform/x86/intel/vsec.h   |   6 +
->>>  include/linux/intel_tpmi.h          |  30 ++
->>>  7 files changed, 490 insertions(+), 5 deletions(-)
->>>  create mode 100644 drivers/platform/x86/intel/tpmi.c
->>>  create mode 100644 include/linux/intel_tpmi.h
->>>
->>
+> > > I went back and forth over that a bit, but decided to only use
+> > > domain->root->mutex in paths that can be called for hierarchical
+> > > domains (i.e. the "shared code paths" mentioned above).
+> > > 
+> > > Using it in paths that are clearly only called for non-hierarchical
+> > > domains where domain->root == domain felt a bit lazy.
+> > 
+> > My concern here is that as this code gets further refactored, it may
+> > become much harder to reason about what is the correct level of
+> > locking.
 > 
+> Yeah, that's conceivable.
+> 
+> > > The counter argument is of course that using domain->root->lock allows
+> > > people to think less about the code they are changing, but that's not
+> > > necessarily always a good thing.
+> > 
+> > Eventually, non-hierarchical domains should simply die and be replaced
+> > with a single level hierarchy. Having a unified locking in place will
+> > definitely make the required work clearer.
+> > 
+> > > Also note that the lockdep asserts in the revmap helpers would catch
+> > > anyone using domain->mutex where they should not (i.e. using
+> > > domain->mutex for an hierarchical domain).
+> > 
+> > Lockdep is great, but lockdep is a runtime thing. It doesn't help
+> > reasoning about what gets locked when changing this code.
+> 
+> Contributers are expected to test their changes with lockdep enabled,
+> right?
+> 
+> But sure, using root->domain->mutex throughout may prevent prevent
+> people from getting this wrong.
+> 
+> I'll update this for v6.
+>  
+> > > > > @@ -1132,6 +1147,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+> > > > >  	else
+> > > > >  		domain = irq_domain_create_tree(fwnode, ops, host_data);
+> > > > >  	if (domain) {
+> > > > > +		domain->root = parent->root;
+> > > > >  		domain->parent = parent;
+> > > > >  		domain->flags |= flags;
+> > > > 
+> > > > So we still have a bug here, as we have published a domain that we
+> > > > keep updating. A parallel probing could find it in the interval and do
+> > > > something completely wrong.
+> > > 
+> > > Indeed we do, even if device links should make this harder to hit these
+> > > days.
+> > > 
+> > > > Splitting the work would help, as per the following patch.
+> > > 
+> > > Looks good to me. Do you want to submit that as a patch that I'll rebase
+> > > on or should I submit it as part of a v6?
+> > 
+> > Just take it directly.
+> 
+> Ok, thanks.
+> 
+> I guess this turns the "Use irq_domain_create_hierarchy()" patches into
+> fixes that should be backported as well.
 
+Maybe. Backports are not my immediate concern.
+
+> But note that your proposed diff may not be sufficient to prevent
+> lookups from racing with domain registration generally. Many drivers
+> still update the bus token after the domain has been added (and
+> apparently some still set flags also after creating hierarchies I just
+> noticed, e.g. amd_iommu_create_irq_domain).
+
+The bus token should only rarely be a problem, as it is often set on
+an intermediate level which isn't directly looked-up by anything else.
+And if it did happen, it would probably result in a the domain not
+being found.
+
+Flags, on the other hand, are more problematic. But I consider this a
+driver bug which should be fixed independently.
+
+> It seems we'd need to expose a separate allocation and registration
+> interface, or at least pass in the bus token to a new combined
+> interface.
+
+Potentially, yes. But this could come later down the line. I'm more
+concerned in getting this series into -next, as the merge window is
+fast approaching.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
