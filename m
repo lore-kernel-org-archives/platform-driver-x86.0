@@ -2,107 +2,102 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A3EC05027
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 17:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37244C636D4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 17:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232953AbjBJRrK (ORCPT
+        id S232475AbjBJRzH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 12:47:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51184 "EHLO
+        Fri, 10 Feb 2023 12:55:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232770AbjBJRrJ (ORCPT
+        with ESMTP id S232178AbjBJRzB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 12:47:09 -0500
+        Fri, 10 Feb 2023 12:55:01 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEE972A1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:46:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980CF74041
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676051181;
+        s=mimecast20190719; t=1676051638;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oHwMDctmPyuPEHsQrGGOGlA3ca79YEp0OfbA8DMCS78=;
-        b=Lk8YFXrMxm+RXK7nTUesvivSqzthLF+KMHh/R+cwBLYW8HppVjcbppmLGiNLIygsdvn1LJ
-        4UGpZGL/9tBLFe3ydSCNF3LxtQ35mKqWrVYLZSsr7nhZIRQKIPwvbQbeqfVwrVv4QCBXAQ
-        E/3XrX8mx/Zt/y4buCZV36ClxtAAEs4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ByLTaBrR33/58eblN5M5BJ+SAtE6mecuJJ1gYpLRkfw=;
+        b=She6fYYoehTQ8TI6+0KU3zi7xoGK7f+G2gNe0LOyl665dj6K1eu+v4yZWAB2GkpN2x47AB
+        7whgCupznLYC0YDFqSHcYoJqawarhk+K0/dLbTUBwx/lNotC1Gfw4/qQDADR6naLY82OcQ
+        qSMH5C5HTgSYI0TXSqiWBbVuTq6h6iM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-231-L0yQ9kPDPh-0xw4hgU6WoQ-1; Fri, 10 Feb 2023 12:46:18 -0500
-X-MC-Unique: L0yQ9kPDPh-0xw4hgU6WoQ-1
-Received: by mail-ed1-f71.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so4005234edz.21
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:46:17 -0800 (PST)
+ us-mta-609-gx4BhgOWMjmFUYsOPL3Rpw-1; Fri, 10 Feb 2023 12:53:57 -0500
+X-MC-Unique: gx4BhgOWMjmFUYsOPL3Rpw-1
+Received: by mail-ej1-f70.google.com with SMTP id vq12-20020a170907a4cc00b00896db1c78aaso3957554ejc.9
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 09:53:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oHwMDctmPyuPEHsQrGGOGlA3ca79YEp0OfbA8DMCS78=;
-        b=Z4K0btIJX/QnRkfCWseAz/afOnRGsv8ePqkrxnA8m8Kh6Trn9uaTzYvxvuavbGJMmJ
-         XgsexdxtPIcr7XzX13zUljYYWd2L09gSWtQvJWbk/k+1e/iYZkTYk1O0/MZcDmhBbC4R
-         isZMtuioERJE8SgGSeCn21co/wRpOy5w+mPJ4cRnfjNpEyc2WMckTDOudQrd842Doxrf
-         mURwpSiIREkD72pLbzIe2WEzve5wsKyugn+6rDQzTyrdAzFCT16sJ5GVks1Kom6TRLPF
-         TfRe20s2LXL9Rl5p1B10IEyKXGX/zib/VLNORJeqpRS6x+++F/AyrCuIU4wskgUpxE1b
-         ZiQQ==
-X-Gm-Message-State: AO0yUKUORApx3z51URGfuTj1vbocIX/lL9oZHXhyibCl2343NdB3PHk+
-        ldL1L6v8B+lWytu0ZhwAv0YLn9i6vFzqXdi+tvlZh7TH8d6O6snm2l3vbaj1xDsoTA+rb9FkI2L
-        yau/gcKblpeeQOyJajUIBXevUNHfUjzux8kfre1E=
-X-Received: by 2002:a50:9f44:0:b0:4ab:4011:ff47 with SMTP id b62-20020a509f44000000b004ab4011ff47mr3836995edf.6.1676051176485;
-        Fri, 10 Feb 2023 09:46:16 -0800 (PST)
-X-Google-Smtp-Source: AK7set+xX4YOSxIBysSI5DhRxy4s4xvU8E3MbZWaJiljnnutiTXtDYH5MfYWwvbJzS0oUBTp7uPe6A==
-X-Received: by 2002:a50:9f44:0:b0:4ab:4011:ff47 with SMTP id b62-20020a509f44000000b004ab4011ff47mr3836985edf.6.1676051176358;
-        Fri, 10 Feb 2023 09:46:16 -0800 (PST)
+        bh=ByLTaBrR33/58eblN5M5BJ+SAtE6mecuJJ1gYpLRkfw=;
+        b=Aefpt1zNf2b6g3nK5KG56Eh17blAS9Lkx3gp1DCxWduMnpG20h3TKIG5AJ7cx1RARZ
+         l/9RX8lE7z7EkM3+uxeLniu+Rc6O7B26W69q+eGfUKeKhqAfiDjtBhXhNNsEEgwVdgAC
+         tBy4wov2D4NK30rsUqkwqDpOQkZtZb+L9naqrMEP8eflZjQDy67b5Quaoe5xZ662oppc
+         3xBY1aGJRK+mwXRReefbSjCh1FUGjv4oXQ1cQMn3U21AX54eNtQyg0YsQhb3/bEEbMt+
+         xQbjD54rSheq1MfpPtg59QGIoWbIfx4hdD0h8VlfKwoKwHJVFLPz7t7l2It4ZFTFL8+E
+         o8rA==
+X-Gm-Message-State: AO0yUKVcg9eUc2YyiEIAXNU63W+KQ1LxXswcYeWU9brnvMe1Cf6EOrQD
+        yJp6+267XmvMtTqVx8XXTr+KcrGSUR9afezPiK/dT9PHUMqOzSPFstSg60AyF7uqFlKKaaCv4/m
+        E+Em9iPsv6tFCr9+OimfdZhnr/AkQ918clQnlNIs=
+X-Received: by 2002:a17:906:70c7:b0:885:6a2e:f941 with SMTP id g7-20020a17090670c700b008856a2ef941mr14790112ejk.54.1676051635932;
+        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
+X-Google-Smtp-Source: AK7set+DNv4GVF0SPagUZnh8wWR3eAig9uI70x2zyVfDjEpeHUGM61viPpw9njwVFtd2k8xIDYbnhg==
+X-Received: by 2002:a17:906:70c7:b0:885:6a2e:f941 with SMTP id g7-20020a17090670c700b008856a2ef941mr14790102ejk.54.1676051635725;
+        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id e5-20020a50d4c5000000b004873927780bsm2562271edj.20.2023.02.10.09.46.15
+        by smtp.gmail.com with ESMTPSA id dt19-20020a170906b79300b0088ed7de4821sm2656892ejb.158.2023.02.10.09.53.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 09:46:15 -0800 (PST)
-Message-ID: <eadf0d4b-1426-6339-880a-f11de6438f17@redhat.com>
-Date:   Fri, 10 Feb 2023 18:46:15 +0100
+        Fri, 10 Feb 2023 09:53:55 -0800 (PST)
+Message-ID: <fd4150cf-1800-51c4-e4f8-4b6aff5ddc5d@redhat.com>
+Date:   Fri, 10 Feb 2023 18:53:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH platform-next 00/13] platform/x86: Add new systems and
- features for Nvidia systems
+Subject: Re: [PATCH v3 0/2] platform/x86: dell-ddv: Various driver updates
 Content-Language: en-US, nl
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20230208063331.15560-1-vadimp@nvidia.com>
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
+Cc:     jdelvare@suse.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230209211503.2739-1-W_Armin@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230208063331.15560-1-vadimp@nvidia.com>
+In-Reply-To: <20230209211503.2739-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Armin,
 
-On 2/8/23 07:33, Vadim Pasternak wrote:
-> The patchset:
-> - Introduces new systems.
-> - Adds new features.
-> - Preparation for to support systems equipped PCIe based programming 
->   logic device.
-> - Cosmetic changes.
+On 2/9/23 22:15, Armin Wolf wrote:
+> Thanks to bugreport 216655 on bugzilla, the contents of the
+> fan/thermal sensor buffers could be almost completely decoded.
 > 
-> Patches #1, #4-#5: introduce support for new systems.
-> Patch #2: changes attribute name.
-> Patches #3, #12: cosmetic changes and removing code out from the loop.
-> Patches #6 - #7, #10 - #11: infrastructure changes to prepare driver to
-> 	support systems equipped with PCIe based FPGA.
-> Patch #8: provides synchronization between I2C main bus and other
-> 	platform drivers using notification callback.
-> Patch #9: allows non-successive definition of hotplug signals
-> 	configuration.
-> Patch #13 - documentation.
+> The first patch adds support for exposing the sensor values
+> over a standard hwmon interface, and the second patch enables
+> asynchronous probing for the driver since the sensor interface
+> can be quiet slow.
+> 
+> The patch series was tested on a Dell Inspiron 3505, with the hwmon
+> patch being tested by multiple people over bugzilla and email. Those
+> who tested the final version of the hwmon patch are credited with
+> Tested-by tags.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+Thanks this looks nice and clean, much appreciate
+the attention to detail.
+
+I've applied the series to my review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -116,28 +111,31 @@ Hans
 
 
 
-> Vadim Pasternak (13):
->   platform: mellanox: Introduce support for rack manager switch
->   platform: mellanox: Change "reset_pwr_converter_fail" attribute
->   platform: mellanox: Cosmetic changes - rename to more common name
->   platform: mellanox: Introduce support for next-generation 800GB/s
->     switch
->   platform: mellanox: Introduce support of new Nvidia L1 switch
->   platform: mellanox: Split initialization procedure
->   platform: mellanox: Split logic in init and exit flow
->   platform: mellanox: Extend all systems with I2C notification callback
->   platform/mellanox: mlxreg-hotplug: Allow more flexible hotplug events
->     configuration
->   platform_data/mlxreg: Add field with mapped resource address
->   platform: mellanox: mlx-platform: Add mux selection register to regmap
->   platform: mellanox: mlx-platform: Move bus shift assignment out of the
->     loop
->   Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+
+
+> ---
+> Changes in v3:
+> - remove empty lines before break/return
+> - invalidate buffer cache on resume
+> Changes in v2:
+> - remove already merged patches
+> - add patch enabling asynchronous probing
+> - cache sensor buffers
+> - fix compilation on 32 bit
+> - add missing break statements
+> - remove C++ style comments
+> - rework battery hook and hwmon probing
+> - rework Kconfig dependencies
 > 
->  .../ABI/stable/sysfs-driver-mlxreg-io         |  122 +-
->  drivers/platform/mellanox/mlxreg-hotplug.c    |   28 +-
->  drivers/platform/x86/mlx-platform.c           | 1394 ++++++++++++++---
->  include/linux/platform_data/mlxreg.h          |    2 +
->  4 files changed, 1339 insertions(+), 207 deletions(-)
+> Armin Wolf (2):
+>   platform/x86: dell-ddv: Add hwmon support
+>   platform/x86: dell-ddv: Prefer asynchronous probing
+> 
+>  drivers/platform/x86/dell/Kconfig        |   8 +-
+>  drivers/platform/x86/dell/dell-wmi-ddv.c | 492 ++++++++++++++++++++++-
+>  2 files changed, 495 insertions(+), 5 deletions(-)
+> 
+> --
+> 2.30.2
 > 
 
