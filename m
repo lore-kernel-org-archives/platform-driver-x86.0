@@ -2,79 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9927BC05027
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 16:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5647C05027
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 16:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232491AbjBJQZz (ORCPT
+        id S232598AbjBJQ1E (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 11:25:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
+        Fri, 10 Feb 2023 11:27:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232047AbjBJQZz (ORCPT
+        with ESMTP id S232227AbjBJQ1D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 11:25:55 -0500
+        Fri, 10 Feb 2023 11:27:03 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2A21ADD8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 08:25:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC9F1CF6B
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 08:26:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676046309;
+        s=mimecast20190719; t=1676046380;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ld8jQknkBmqDQVj2zOFVhooagaMNsILXN0htn4jC07Y=;
-        b=Td3gbU/rjW2f4jyqSAX3L1EUeN0vIZl508wRewHsQ0pCRtW4Do+x4LMG02fQ0LF/9PEB8o
-        wkn2LszSlpLTekbyX+hcT43FmyV46nijKTeufs86QZ54f42RRqkeP+aDHBX3RVZYHwFoq3
-        GW20fFQ6K3qOureo8w7Mmwn3NNwqA6k=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XMyWSiBRS0vHXlOWzGHad9uq2iQmgPdEGhe+CLq72Oo=;
+        b=Eke+XbAdPirjTQ4sztQkV3Rqz8Hu43adG+lP6ccIyFn7505YPSEnPqqZPdNijrLJ6WkMRL
+        y48p78cWC8nQLwAxbB8k2y0jbxzjdaLV/GG8pTE4GtHhgzHDVHhQiG7ZCcxNwZICFYPGxa
+        RSi5vghz5PiJp8g5aODXQED4oyo+Xwg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-428-ZW-sAC8wNg-Pyy1d1be00w-1; Fri, 10 Feb 2023 11:25:08 -0500
-X-MC-Unique: ZW-sAC8wNg-Pyy1d1be00w-1
-Received: by mail-ed1-f69.google.com with SMTP id o21-20020aa7dd55000000b004a245f58006so3911400edw.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 08:25:08 -0800 (PST)
+ us-mta-258-IPUj-_08M8uNsMivh7ZO3Q-1; Fri, 10 Feb 2023 11:26:19 -0500
+X-MC-Unique: IPUj-_08M8uNsMivh7ZO3Q-1
+Received: by mail-ed1-f70.google.com with SMTP id s11-20020a056402520b00b004aada311135so3809168edd.9
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 08:26:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ld8jQknkBmqDQVj2zOFVhooagaMNsILXN0htn4jC07Y=;
-        b=lBKSUw6NpkECq8Rp6MhzuD3RpW7MquaVfijHzndzj+i6l6O7epCwSmvsc8zD2NDrys
-         cNZYVBUUmCP39GAyC/hWZ0rv7nLMUyvm4tAIU4lvFOIvnAHnHekhZtRGqzTRxxwIr+7g
-         68VKWWoB6R4cbHR2d23tSEtj5vp2vEXQg5VMct7/5cFTP0r4VUEZZWv5dvynCsjo/9dU
-         QCa6jeIcRQ7pgWqWfMhNWnJsDloG0Dfuad2Kk8YpPtHGF4y+dDcKTf2JgDTdJxtz10j3
-         8nwlnNzfldN3/LaF8aZjvPrzEy2REopCqOfb9q6ZhsMB1nebXjVHWL+WwhHAIHn9d5YS
-         F28g==
-X-Gm-Message-State: AO0yUKVlSIMtTxO0PCYBMC43LZmQwqkO/y7GP6E+YAmoiL6jU/oP0XfD
-        QtEJekeB06gxb2YhVatCVOzMtdUa3vOCZcrvMtfy8jJMChHyHKLUgHkNsumkUzQBTlEYJVm/Gtz
-        PKs17tUxWWpsG/HMLFejKrRm0+WW7Yya+tA==
-X-Received: by 2002:a50:9318:0:b0:4aa:b250:16 with SMTP id m24-20020a509318000000b004aab2500016mr15791243eda.35.1676046307638;
-        Fri, 10 Feb 2023 08:25:07 -0800 (PST)
-X-Google-Smtp-Source: AK7set+9+I+I0IrAWfr7PnQaKpoRL9Avm+D4AQ8CcF6+ZF7O2AbAZtbk0D+JjhAMswHholy/SFWMNA==
-X-Received: by 2002:a50:9318:0:b0:4aa:b250:16 with SMTP id m24-20020a509318000000b004aab2500016mr15791229eda.35.1676046307444;
-        Fri, 10 Feb 2023 08:25:07 -0800 (PST)
+        bh=XMyWSiBRS0vHXlOWzGHad9uq2iQmgPdEGhe+CLq72Oo=;
+        b=JSbZLB+cs3UnkjwmvdDtgA9q2il1BUXPHVtNHDi3wKbseUZPoA3txFPlBHEpNTKlDJ
+         gUybknIurVhSl1kFSWZTJyLvmnclIut1mrniMz1NcS4bQPwKe6PUG+8eEHRwpO97pUxp
+         fM2ZMpcGHxrGg3wxR8GCrxYVAv1evXM8aORJTp+UxZ0KhHxjn+0PAnO4NnaKI7kGoOWe
+         67q0s0gZGMfNJi/JcwZmdOGrzD/ufeUaOx0shBnnIxFFvARqcS01BGcsz8NJHU5cBH0i
+         Gm+E/CDmIvvWSCf8/qu7J8M2fUjVhT3rJ7fsUv/ZS5V8vhRyPY3tMl2fXs/jTapbEKE1
+         btUQ==
+X-Gm-Message-State: AO0yUKUxBeQ6jsT/AF75wzcBXHtWSkP6UidYZqCXKxJf+XCxzRkwgzm7
+        WwcmZxoyiOXhkSQOhgCbSxngqzCvfcYa1tcGuTC6OTbT50tj0altcxCYQLtQi2yAjkEhIx7AQAd
+        yMZk5hAJVoPTPjbiYkdI9qhQCt77c1Gk55xHzxB0=
+X-Received: by 2002:a17:907:6e90:b0:8af:91a6:de6b with SMTP id sh16-20020a1709076e9000b008af91a6de6bmr1407109ejc.50.1676046378241;
+        Fri, 10 Feb 2023 08:26:18 -0800 (PST)
+X-Google-Smtp-Source: AK7set9ilo535lQiADsLvDdkpzMsP0IMScu0e/tEllxGX4Ta/jL9ITP1JT7l9tVc1IlMqybnr41UJg==
+X-Received: by 2002:a17:907:6e90:b0:8af:91a6:de6b with SMTP id sh16-20020a1709076e9000b008af91a6de6bmr1407095ejc.50.1676046378049;
+        Fri, 10 Feb 2023 08:26:18 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v26-20020a50a45a000000b004ab0d88afe5sm2451577edb.79.2023.02.10.08.25.06
+        by smtp.gmail.com with ESMTPSA id f26-20020a170906825a00b0084c4b87aa18sm2573294ejx.37.2023.02.10.08.26.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 08:25:06 -0800 (PST)
-Message-ID: <5e4f220a-92b2-c195-f660-26ed5e882aef@redhat.com>
-Date:   Fri, 10 Feb 2023 17:25:06 +0100
+        Fri, 10 Feb 2023 08:26:17 -0800 (PST)
+Message-ID: <d5851a70-dcbb-8455-b022-49fad58be7ff@redhat.com>
+Date:   Fri, 10 Feb 2023 17:26:16 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 0/3] platform/x86: Make kobj_type structures constant
+Subject: Re: [PATCH RFC] MAINTAINERS: dell-wmi-sysman: drop Divya Bharathi
 Content-Language: en-US, nl
 To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Divya Bharathi <divya.bharathi@dell.com>,
         Prasanth Ksr <prasanth.ksr@dell.com>,
-        Mark Gross <markgross@kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Justin Ernst <justin.ernst@hpe.com>
+        Divya Bharathi <divya.bharathi@dell.com>
 Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20230207-kobj_type-pdx86-v1-0-8e2c4fb83105@weissschuh.net>
+References: <20230207-maintainers-dell-wmi-sysman-v1-1-6594fea12f6c@weissschuh.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230207-kobj_type-pdx86-v1-0-8e2c4fb83105@weissschuh.net>
+In-Reply-To: <20230207-maintainers-dell-wmi-sysman-v1-1-6594fea12f6c@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -83,17 +80,16 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/7/23 17:40, Thomas Weißschuh wrote:
-> Since commit ee6d3dd4ed48 ("driver core: make kobj_type constant.")
-> the driver core allows the usage of const struct kobj_type.
-> 
-> Take advantage of this to constify the structure definitions to prevent
-> modification at runtime.
+On 2/7/23 17:51, Thomas Weißschuh wrote:
+> According to the bounce sent by Dell's mailserver this user does not
+> exist (anymore).
 > 
 > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+I just got the same bounce, so lets move ahead with this:
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -111,18 +107,25 @@ Hans
 
 
 > ---
-> Thomas Weißschuh (3):
->       platform/x86: dell-wmi-sysman: Make kobj_type structure constant
->       platform/x86: think-lmi: Make kobj_type structure constant
->       x86/platform/uv: Make kobj_type structure constant
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
 > 
->  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
->  drivers/platform/x86/think-lmi.c                   | 4 ++--
->  drivers/platform/x86/uv_sysfs.c                    | 6 +++---
->  3 files changed, 6 insertions(+), 6 deletions(-)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fb1471cb5ed3..396bb00d98a1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5930,7 +5930,6 @@ F:	Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+>  F:	drivers/platform/x86/dell/dell-wmi-ddv.c
+>  
+>  DELL WMI SYSMAN DRIVER
+> -M:	Divya Bharathi <divya.bharathi@dell.com>
+>  M:	Prasanth Ksr <prasanth.ksr@dell.com>
+>  L:	Dell.Client.Kernel@dell.com
+>  L:	platform-driver-x86@vger.kernel.org
+> 
 > ---
 > base-commit: d2d11f342b179f1894a901f143ec7c008caba43e
-> change-id: 20230207-kobj_type-pdx86-2c60e36c63db
+> change-id: 20230207-maintainers-dell-wmi-sysman-40d6cd1ceddf
 > 
 > Best regards,
 
