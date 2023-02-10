@@ -2,60 +2,64 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC170C05027
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 16:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02506C636D4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 16:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232192AbjBJQbB (ORCPT
+        id S232201AbjBJQhW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 11:31:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
+        Fri, 10 Feb 2023 11:37:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232666AbjBJQa6 (ORCPT
+        with ESMTP id S232110AbjBJQhV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 11:30:58 -0500
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACBE728A4;
-        Fri, 10 Feb 2023 08:30:55 -0800 (PST)
-Received: by mail-ot1-x329.google.com with SMTP id bv2-20020a0568300d8200b0068dc615ee44so1669311otb.10;
-        Fri, 10 Feb 2023 08:30:55 -0800 (PST)
+        Fri, 10 Feb 2023 11:37:21 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5389D7534B;
+        Fri, 10 Feb 2023 08:37:20 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id r28so4893302oiw.3;
+        Fri, 10 Feb 2023 08:37:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xKJgqTES4Y1ubN8XM2HsQqVacGZvGadNY3UmBuYxPI=;
-        b=N7MueVuzk4rFLlVoqheOJtlOEaKS4el0qRQF8Kt6tiaU7d1m2fmbz73mjwqlNou2PX
-         NsESlEYoZV1aHGYBrqAnmItwLcmM4SPI5P3+cAUVTJ4cUx3DovW3kR+QZ6JixZWF1h5Y
-         3tqVjZP67sIS3bTwI3Mm/PsTU43HathH3gQC6YoPs65ANwshepMsSj+tnonxqGd0h1Wn
-         3Zoh7O/s6s/vQaCrM0uJ1mVrhPEeJ+9CEg76SQGVCg098vgpDBYOYBlNwXpdWTnOBlZy
-         D8uXwbFkNWVJ4qgu32qjnNNr3OJPGzbLkfEdeEgo50WGHrRk8wGY101RFJTqWBbGxO9b
-         mzGQ==
+        bh=lZGbGz1NhrfpSRG2z7TL3PYxSXZAjKUnuSOuFnqQH1M=;
+        b=J/9YT4DMQEDgj8/252EPESJY9MGTEXGRBHKNumqXE2p3HtcnXwLmcYFgJjNhgnarlY
+         QinCKWkt5IZgSgKNAB4OoYPrldjLis0yV5D8RdMQILUCxqTwRpQmlKbAZhGn6655G1ot
+         WAj0XVX1imiwW52nLWksZqsPtxknYYR7u7OtmCEJYNlXodegV2IrMIv1Hen546qavFQr
+         iwkpkQFB4BsPsFNv+dgS46s7i/QOA2way5cMVVdmyhOYtKxOTQ9gxACHd0rdJOmRL009
+         sau7+jnv5FcP0odLXOjyxJjzqoMsZ7UZdeNufPhhFsA4EX4d8A98u/CItxxxvoWyFhbd
+         QQzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1xKJgqTES4Y1ubN8XM2HsQqVacGZvGadNY3UmBuYxPI=;
-        b=8I7SujM91NLsn1Yu/MsKDprjKMia3P0CROhXkrKQq/OLPRsrC2Y6KPSEl9rtnzxnkz
-         zP7SjAv3/QF7W0xosKv3I/Lv0HcMUSJvns7NBgQ1aWpW6v5IvKjL4k9Vdyr44BK2aKRM
-         YcRTgQojtM/kSh727UiwfgSo/W8yIupcDWd4QPEPLwxck8B/xuO5QcIPLHTY8fTX0128
-         O/n76/HvKRwuJ7F5+0QLK6Y3+VxUNUnI7Iki6xZY6acWocymbAVVzuSOQsZpDUPOt9Tu
-         o6jlhRd0daLhqnLrWJlg6W1Gv5apmO9AVLE2s/WIQQLnh2J55sLN8r5/xCOeG9G68Gxy
-         nNvg==
-X-Gm-Message-State: AO0yUKX6SwjD/38oZHxf0JMpZtU9A4CA4HRRw4h5/2TzlhKQA1Gjr4Cc
-        FzuaqehgHZiEIHAOWewUohCvARl4ajMu+5tJJfY=
-X-Google-Smtp-Source: AK7set97QTJ9hS1PDImhYsFB6nhTFb+J1wBuLYTOuOx3+Li3oqFhAlOgOrvhW6466NNQ3h1jIhydK/eY9ajBbegLszU=
-X-Received: by 2002:a9d:6f13:0:b0:68d:b51a:5cde with SMTP id
- n19-20020a9d6f13000000b0068db51a5cdemr1044182otq.62.1676046649983; Fri, 10
- Feb 2023 08:30:49 -0800 (PST)
+        bh=lZGbGz1NhrfpSRG2z7TL3PYxSXZAjKUnuSOuFnqQH1M=;
+        b=4uEzG7SwedwKgNVL/uAq44By52yBdCT8YBz3wf1cwkraLs4R0J6S9QMRkzRZwXpplL
+         N33Uy71QFBKUZFTKIJmxWNYX6grukTwgwv061Uuaaa8uNwjoVtJYhJZQ/xKdTKq/XwES
+         wZ6X/DpLkyLIwSRLvBi/V43YERE7x9gczvJWn5kF2YKpOl3tzsur2QL5OYezUwtWWiFV
+         6yaZTrdIAj+P4jHuAAoZaWlq+tawW9jrjV+sd6TNwBK4TTyJ1zuUl/AKtge0ExCqTPjJ
+         F8sy9BZVnS47WXKvtj/vUS+zMi1dl38HUlW4rOWtYvfT9F2r0d/y+8tEKzBzUm6kNf3/
+         7JaA==
+X-Gm-Message-State: AO0yUKW+jq1hgTuUcIMhhainn4By1CXOdiLMxfQ6xAaADHtNIaZtxTq9
+        L7mVqkkNvWA0KHnx5cO7hopnlXWw0bhp7ogcS0c=
+X-Google-Smtp-Source: AK7set+2eWH+CMgS4hAF2ka24mHW+jrtFcHDoTu3x6gdp5f/5ym8/9ji5ZX8mgiO3zxiEOUWAIeoJiwqo9LUlsTOKwE=
+X-Received: by 2002:aca:3dd4:0:b0:378:4edd:a89c with SMTP id
+ k203-20020aca3dd4000000b003784edda89cmr1122180oia.46.1676047039514; Fri, 10
+ Feb 2023 08:37:19 -0800 (PST)
 MIME-Version: 1.0
 References: <20230210044826.9834-1-orlandoch.dev@gmail.com>
-In-Reply-To: <20230210044826.9834-1-orlandoch.dev@gmail.com>
+ <20230210044826.9834-10-orlandoch.dev@gmail.com> <CADnq5_PVsrk4+K45kVgU=r98B9GgC2CxbC8AvGUXRtv2sZAHPg@mail.gmail.com>
+ <b3a2d525-b30c-164c-705c-97fcb0016540@redhat.com>
+In-Reply-To: <b3a2d525-b30c-164c-705c-97fcb0016540@redhat.com>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 10 Feb 2023 11:30:38 -0500
-Message-ID: <CADnq5_PK7=64SW8O+Hed1h7UWfxVZSpNOwx-paUSJhpCdK7i5A@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/9] apple-gmux: support MMIO gmux type on T2 Macs
-To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+Date:   Fri, 10 Feb 2023 11:37:08 -0500
+Message-ID: <CADnq5_PXa=d8ie8jj7sGxvxfn+ZNwed-eSyNg89PfWCvpo8LCw@mail.gmail.com>
+Subject: Re: [RFC PATCH 9/9] drm/amdgpu: register a vga_switcheroo client for
+ all GPUs that are not thunderbolt attached
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Orlando Chamberlain <orlandoch.dev@gmail.com>,
+        platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
         "Pan, Xinhui" <Xinhui.Pan@amd.com>,
         Lijo Lazar <lijo.lazar@amd.com>,
@@ -71,7 +75,6 @@ Cc:     platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org,
         Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
         Bokun Zhang <Bokun.Zhang@amd.com>,
         Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
         Kerem Karabay <kekrby@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Jack Xiao <Jack.Xiao@amd.com>,
@@ -90,163 +93,111 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 3:04 AM Orlando Chamberlain
-<orlandoch.dev@gmail.com> wrote:
+On Fri, Feb 10, 2023 at 11:07 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Hi All,
+> Hi,
 >
-> This patch series adds support for the MMIO based gmux present on these
-> Dual GPU Apple T2 Macs: MacBookPro15,1, MacBookPro15,3, MacBookPro16,1,
-> MacBookPro16,4 (although amdgpu isn't working on MacBookPro16,4 [1]).
+> On 2/10/23 16:53, Alex Deucher wrote:
+> > On Fri, Feb 10, 2023 at 3:04 AM Orlando Chamberlain
+> > <orlandoch.dev@gmail.com> wrote:
+> >>
+> >> From: Kerem Karabay <kekrby@gmail.com>
+> >>
+> >> Commit 3840c5bcc245 ("drm/amdgpu: disentangle runtime pm and
+> >> vga_switcheroo") made amdgpu only register a vga_switcheroo client for
+> >> GPU's with PX, however AMD GPUs in dual gpu Apple Macbooks do need to
+> >> register, but don't have PX. Instead of AMD's PX, they use apple-gmux.
+> >
+> > Is there a way to detect apple-gmux instead?  Otherwise, we register
+> > vga_switcheroo on any system with multiple GPUs which is not what we
+> > want.
 >
-> It's only been tested by people on T2 Macs with MMIO based gmux's using
-> t2linux [2] kernels, but some changes may impact older port io and indexed
-> gmux's so testing, especially on those older Macbooks, would be
-> appreciated.
+> Yes since 6.1.y (either stable series or just take 6.2.0) the apple-gmux
+> detect code has been factored out into a stand-alone
+> apple_gmux_detect() helper inside:
 >
-> # 1-2:
+> include/linux/apple-gmux.h
 >
-> refactor code to make it easier to add the 3rd gmux type.
+> For usage outside of the actual apple-gmux driver you can simply
+> pass NULL for both arguments.
 >
-> # 3:
+> This was necessary to reliably check if the apple-gmux should be
+> used for backlight control.
 >
-> has a slight change in how the switch state is read, I don't
-> expect this to cause issues for older models (but still, please test if
-> you have one!)
+> Note there also is the older apple_gmux_present() helper, which is
+> already used in some drm code. That function is not reliable though
+> it detects if the ACPI tables contain an ACPI device describing
+> the presence of a gmux, but it turns out even Apple has buggy ACPI
+> tables and the mere presence of that ACPI device is not a reliable
+> indicator the gmux is actually there.
 >
-> # 4:
->
-> implements a system to support more than 2 gmux types
->
-> # 5:
->
-> start using the gmux's GMSP acpi method when handling interrupts. This
-> is needed for the MMIO gmux's, and its present in the acpi tables of some
-> indexed gmux's I could find so hopefully enabling this for all models
-> will be fine, but if not it can be only used on MMIO gmux's.
->
-> # 6:
->
-> Adds support for the MMIO based gmux on T2 macs.
->
-> # 7:
->
-> Add a sysfs interface to apple-gmux so data from ports can be read
-> from userspace, and written to if the user enables an unsafe kernel
-> parameter.
->
-> This can be used for more easily researching what unknown ports do,
-> and switching gpus when vga_switcheroo isn't ready (e.g. when one gpu
-> is bound to vfio-pci and in use by a Windows VM, I can use this to
-> switch my internal display between Linux and Windows easily).
->
-> # 8-9:
->
-> These patches make amdgpu and snd_hda_intel register with vga_switcheroo
-> on Macbooks. I would like advice from the AMD folks on how they want
-> this to work, so that both PX and apple-gmux laptops work properly.
->
-> For radeon and nouveau we just register for every non-thunderbolt
-> device, but this was changed for AMD cards in commit 3840c5bcc245
-> ("drm/amdgpu: disentangle runtime pm and vga_switcheroo") and commit
-> 586bc4aab878 ("ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD").
->
-> This meant that only gpu's with PX register. Commit #8 makes amdgpu
-> register for all non-thinderbolt cards, and commit #9 makes snd_hda_intel
-> register for all amd cards with the PWRD (mentioned below) acpi method.
-> An alternative would be using apple-gmux-detect(), but that won't work
-> after apple-gmux has probed and claimed its memory resources.
->
-> # Issues:
->
-> 1. Switching gpus at runtime has the same issue as indexed gmux's: the
-> inactive gpu can't probe the DDC lines for eDP [3]
->
-> 2. Powering on the amdgpu with vga_switcheroo doesn't work well. I'm
-> told on the MacBookPro15,1 it works sometimes, and adding delays helps,
-> but on my MacBookPro16,1 I haven't been able to get it to work at all:
->
-> snd_hda_intel 0000:03:00.1: Disabling via vga_switcheroo
-> snd_hda_intel 0000:03:00.1: Cannot lock devices!
-> amdgpu: switched off
-> amdgpu: switched on
-> amdgpu 0000:03:00.0:
->         Unable to change power state from D3hot to D0, device inaccessible
-> amdgpu 0000:03:00.0:
->         Unable to change power state from D3cold to D0, device inaccessible
-> [drm] PCIE GART of 512M enabled (table at 0x00000080FEE00000).
-> [drm] PSP is resuming...
-> [drm:psp_hw_start [amdgpu]] *ERROR* PSP create ring failed!
-> [drm:psp_resume [amdgpu]] *ERROR* PSP resume failed
-> [drm:amdgpu_device_fw_loading [amdgpu]]
->         *ERROR* resume of IP block <psp> failed -62
-> amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_resume failed (-62).
-> snd_hda_intel 0000:03:00.1: Enabling via vga_switcheroo
-> snd_hda_intel 0000:03:00.1:
->         Unable to change power state from D3cold to D0, device inaccessible
-> snd_hda_intel 0000:03:00.1: CORB reset timeout#2, CORBRP = 65535
-> snd_hda_codec_hdmi hdaudioC0D0: Unable to sync register 0x2f0d00. -5
->
-> There are some acpi methods (PWRD, PWG1 [4, 5]) that macOS calls when
-> changing the amdgpu's power state, but we don't use them and that could be
-> a cause. Additionally unlike previous generation Macbooks which work
+> I have not changed over any of the existing apple_gmux_present()
+> users for fear of unwanted side effects...
 
-That is likely the cause.  On non-Mac platforms, the power is
-controlled via the PX ACPI interface (for old platforms) or standard
-ACPI power resources on more recent platforms.  This is handled by the
-ACPI core on these platforms (i.e., D3cold).
-
-> better, on MacBookPro16,1 the gpu is located behind 2 pci bridges:
->
-> 01:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
->         Navi 10 XL Upstream Port of PCI Express Switch (rev 43)
-> 02:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
->         Navi 10 XL Downstream Port of PCI Express Switch
-> 03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
->         Navi 14 [Radeon RX 5500/5500M / Pro 5500M] (rev 43)
-> 03:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
->         Navi 10 HDMI Audio
->
-> Upon attempting to power on the gpu with vga_switcheroo, all these
-> devices except 01:00.0 have their config space in `lspci -x` filled with
-> 0xff. `echo 1 > /sys/bus/pci/rescan` fixes that and the dmesg errors about
-> changing power state, but "PSP create ring failed" still happens, and
-> the gpu doesn't resume properly.
-
-All of those devices are part of the dGPU itself.  When the power is
-cut to the dGPU, all of those devices will lose power.  If you are
-reading all 1's from the PCI config space for any of those devices,
-that is a good sign that the power is off to the GPU.
+Looks like we could maybe use the PWRD ACPI check like patch 8 does as well.
 
 Alex
 
 >
-> [1]: https://lore.kernel.org/all/3AFB9142-2BD0-46F9-AEA9-C9C5D13E68E6@live.com/
-> [2]: https://t2linux.org
-> [3]: https://lore.kernel.org/all/9eed8ede6f15a254ad578e783b050e1c585d5a15.1439288957.git.lukas@wunner.de/
-> [4]: https://gist.github.com/Redecorating/6c7136b7a4ac7ce3b77d8e41740dd87b
-> [5]: https://lore.kernel.org/all/20120710160555.GA31562@srcf.ucam.org/
+> Regards,
 >
-> Kerem Karabay (1):
->   drm/amdgpu: register a vga_switcheroo client for all GPUs that are not
->     thunderbolt attached
+> Hans
 >
-> Orlando Chamberlain (8):
->   apple-gmux: use cpu_to_be32 instead of manual reorder
->   apple-gmux: consolidate version reading
->   apple-gmux: use first bit to check switch state
->   apple-gmux: refactor gmux types
->   apple-gmux: Use GMSP acpi method for interrupt clear
->   apple-gmux: support MMIO gmux on T2 Macs
->   apple-gmux: add sysfs interface
->   hda/hdmi: Register with vga_switcheroo on Dual GPU Macbooks
 >
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  18 +-
->  drivers/platform/x86/apple-gmux.c          | 416 +++++++++++++++++----
->  include/linux/apple-gmux.h                 |  50 ++-
->  sound/pci/hda/hda_intel.c                  |  19 +-
->  4 files changed, 409 insertions(+), 94 deletions(-)
 >
-> --
-> 2.39.1
+>
+> >> Revert to the old logic of registering for all non-thunderbolt gpus,
+> >> like radeon and nouveau.
+> >>
+> >> Fixes: 3840c5bcc245 ("drm/amdgpu: disentangle runtime pm and vga_switcheroo")
+> >> Signed-off-by: Kerem Karabay <kekrby@gmail.com>
+> >> [Orlando Chamberlain <orlandoch.dev@gmail.com>: add commit description]
+> >> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
+> >> ---
+> >>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 18 +++++++++++-------
+> >>  1 file changed, 11 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >> index 2f28a8c02f64..0bb553a61552 100644
+> >> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >> @@ -3919,12 +3919,13 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+> >>         if ((adev->pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
+> >>                 vga_client_register(adev->pdev, amdgpu_device_vga_set_decode);
+> >>
+> >> -       if (amdgpu_device_supports_px(ddev)) {
+> >> -               px = true;
+> >> -               vga_switcheroo_register_client(adev->pdev,
+> >> -                                              &amdgpu_switcheroo_ops, px);
+> >> +       px = amdgpu_device_supports_px(ddev);
+> >> +
+> >> +       if (!pci_is_thunderbolt_attached(adev->pdev))
+> >> +               vga_switcheroo_register_client(adev->pdev, &amdgpu_switcheroo_ops, px);
+> >> +
+> >> +       if (px)
+> >>                 vga_switcheroo_init_domain_pm_ops(adev->dev, &adev->vga_pm_domain);
+> >> -       }
+> >>
+> >>         if (adev->gmc.xgmi.pending_reset)
+> >>                 queue_delayed_work(system_wq, &mgpu_info.delayed_reset_work,
+> >> @@ -4048,10 +4049,13 @@ void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+> >>
+> >>         kfree(adev->bios);
+> >>         adev->bios = NULL;
+> >> -       if (amdgpu_device_supports_px(adev_to_drm(adev))) {
+> >> +
+> >> +       if (!pci_is_thunderbolt_attached(adev->pdev))
+> >>                 vga_switcheroo_unregister_client(adev->pdev);
+> >> +
+> >> +       if (amdgpu_device_supports_px(adev_to_drm(adev)))
+> >>                 vga_switcheroo_fini_domain_pm_ops(adev->dev);
+> >> -       }
+> >> +
+> >>         if ((adev->pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
+> >>                 vga_client_unregister(adev->pdev);
+> >>
+> >> --
+> >> 2.39.1
+> >>
+> >
 >
