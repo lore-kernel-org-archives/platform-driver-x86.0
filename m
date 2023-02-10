@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9985BC636D4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 19:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758A6C05027
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Feb 2023 19:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233288AbjBJTUS (ORCPT
+        id S232946AbjBJTeT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 14:20:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
+        Fri, 10 Feb 2023 14:34:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233287AbjBJTUS (ORCPT
+        with ESMTP id S233088AbjBJTeT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 14:20:18 -0500
+        Fri, 10 Feb 2023 14:34:19 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC627CCBF
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:19:32 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD01C7164E
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:33:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676056772;
+        s=mimecast20190719; t=1676057610;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gwSrY4DltmA/yFlYQvFrP0zXeruXNly6+GpVcGdaJm4=;
-        b=MytzUYK1MHFOGQODOOdSLgxsWmryjJuDBx13OjEHqYKBED0wdq7IYuxGk9++AaaoFlxZuU
-        49TdR53h6OJEQCTGyc5B0U1zOE3/eWVSMrXhblocsDYNcdM5cJI/x07jkVHJaHul75Pymh
-        j2hr+YefNzbCrh5XFWut6kVwBojiC8w=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=lgPGguAIupQ40Gj3yYs0g6D0wN93UBUjTZwAvya27/Q=;
+        b=U15vAh0avJ/LQr6db79Q+IxZfcnJ8O/qnBG8XjQd6JpHRQmkOZXWIkHzMQPMDHQq8NmaMN
+        NQl05tje4pOr0SuHwRd+rNcMn5aqRKWP2KJUhHAokdyw5EquMY6/MvKk3cKq4hzqOyPJ3n
+        6Z/svYc1hATwZ9t9W39oyZC9Ihqca3I=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-637-jhTHaQu7OlOvCPgfJLSDDw-1; Fri, 10 Feb 2023 14:19:31 -0500
-X-MC-Unique: jhTHaQu7OlOvCPgfJLSDDw-1
-Received: by mail-ed1-f71.google.com with SMTP id o21-20020aa7dd55000000b004a245f58006so4189810edw.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:19:30 -0800 (PST)
+ us-mta-13-jze5HaJeOKaSMwRbgHVJ9w-1; Fri, 10 Feb 2023 14:33:29 -0500
+X-MC-Unique: jze5HaJeOKaSMwRbgHVJ9w-1
+Received: by mail-ej1-f71.google.com with SMTP id ti11-20020a170907c20b00b00886244203fcso4097167ejc.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 11:33:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwSrY4DltmA/yFlYQvFrP0zXeruXNly6+GpVcGdaJm4=;
-        b=SO/cSEx+OOnweZFxWQkmhTRADHxgk0SMs24/uamwIw1VyUX5M8g7HLDK2+BD4CiQHP
-         Y/2XGyy3EXi3n1NcC1UqFjMGehOBkrYU4KDUNfyp29FYDjIQQlsv1Gs5xg/GzKZ48Z/0
-         DRGOU+oGbmqWhSJfV/3q/40phBWOQ8cjBD44lH6U821BI4CZjv4LhtSdT2xWP04nXaDP
-         nbsx1UesB81OqJ4eLFfiln5XWaqrYoU5Sk+xKQ23LSd6Z1i92qbVqmYoG0+fehjB6+rI
-         z8qzGP5hbEVsRh4g9Y0e9iK5fhMfTgvIaGLBydxljetZfAq7wpKE3hdgRFV89e3+uoj1
-         g1jg==
-X-Gm-Message-State: AO0yUKXapGo5YUHXjvX5UMffNGeJIV50lywbAuhBXqZlSjjQZ75HcGzg
-        M40Le5bhHEcDWnGt0a6s3eCjj2upt99fGjF6bONYA/3AzaBHCOxG9hko/IBKu2/wVonyN/V0cZu
-        HRnkkw6qiwrIwLMQTT/x+GX6vZunuY3WdlTwwPuk=
-X-Received: by 2002:a17:906:308e:b0:88a:da35:dd51 with SMTP id 14-20020a170906308e00b0088ada35dd51mr16539092ejv.14.1676056769342;
-        Fri, 10 Feb 2023 11:19:29 -0800 (PST)
-X-Google-Smtp-Source: AK7set/LjslSqRW4K+lvECJSA5kEr2lyEGJrPcE6CF5MmtIxPBIdllG3b8htAgAt5ndbUDTe3go1qA==
-X-Received: by 2002:a17:906:308e:b0:88a:da35:dd51 with SMTP id 14-20020a170906308e00b0088ada35dd51mr16539083ejv.14.1676056769183;
-        Fri, 10 Feb 2023 11:19:29 -0800 (PST)
+        bh=lgPGguAIupQ40Gj3yYs0g6D0wN93UBUjTZwAvya27/Q=;
+        b=zzQ9bBiMif8TBjMrvHKtz1hyWdjzy6oJvHStwGILNnO3Uki8PZRkzX261uLtqm3JeG
+         0d0Dz1rZnfq/kjYgzBAoC+xmk4xq86U7p+/VwgIkiZjCUGu4o8kb2x/cZVGoDDHr4Doa
+         2HUlKG+3IVdiwyVRzwcXxev/yl2jYwZrOoKAUAPoDHceMeejueWG/6Ft7HqZArLfPhQr
+         Fchc7MVBb+owyWgHheHbCRFuf+oQCEBdEr1tFv5INLf3ML0sf7cEeIpcmLQAxI5+hU05
+         /L8zKq154b56Ue6r5MT285gZtnYyHlEempVtgzkSDib5A6PK4UYek5OcZrT/uYGzRfkS
+         fr+A==
+X-Gm-Message-State: AO0yUKW7W3gJVoaOmahMY7lP55y5iN6QKiFIp1DTU3XAtnwuFMtz7BQO
+        DCdr1GFThVOwt1PUorwb53FauoEUnwRdrp8nnqdRHGfIV0ICeFLz4WkRJvZBhi4vqiS12PoV+gY
+        EJuxcLcuwXR2diU/tlxnRsxw/LWHgegt8/A==
+X-Received: by 2002:a50:a45a:0:b0:472:1436:73ab with SMTP id v26-20020a50a45a000000b00472143673abmr17550404edb.28.1676057608631;
+        Fri, 10 Feb 2023 11:33:28 -0800 (PST)
+X-Google-Smtp-Source: AK7set9lIWI+15QivdoTZK+NEIYP5AV1VIY+nIPcZiME3QwhYRDhgoA8GEIQ9OR9X+Zok/bVlZR+qw==
+X-Received: by 2002:a50:a45a:0:b0:472:1436:73ab with SMTP id v26-20020a50a45a000000b00472143673abmr17550370edb.28.1676057608402;
+        Fri, 10 Feb 2023 11:33:28 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h14-20020a17090634ce00b00877e1bb54b0sm2770373ejb.53.2023.02.10.11.19.27
+        by smtp.gmail.com with ESMTPSA id b2-20020a50b402000000b004a245d70f17sm2701859edh.54.2023.02.10.11.33.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 11:19:28 -0800 (PST)
-Message-ID: <74e3c9ae-b1f1-1e7b-4af1-56f918471b36@redhat.com>
-Date:   Fri, 10 Feb 2023 20:19:27 +0100
+        Fri, 10 Feb 2023 11:33:27 -0800 (PST)
+Message-ID: <990b254c-b55f-539d-d6b5-fa4499078527@redhat.com>
+Date:   Fri, 10 Feb 2023 20:33:26 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
@@ -142,69 +142,20 @@ On 2/10/23 20:09, Hans de Goede wrote:
 > The ioport / indexed-ioport accessed apple_gmux-es likely are (part of?)
 > LPC bus devices . Looking at the bus level you are now changing 4 io
 > accesses with a size of 1 byte, to 1 32 bit io-access.
-> 
-> Depending on the decoding hw in the chip this may work fine,
-> or this may work not at all.
-> 
-> I realized that you have asked for more testing, but most surviving
-> macbooks from the older apple-gmux era appear to be models without
-> a discrete GPU (which are often the first thing to break) and thus
-> without a gmux.
-> 
-> Unless we get a bunch of testers to show up, which I doubt. I would
-> prefer slightly bigger / less pretty code and not change the functional
-> behavior of the driver on these older models.
 
-A quick follow up on this, I just noticed that only the pio_write32
-is doing the one byte at a time thing:
+Correction to myself, re-reading the LPC specification, then
+if I'm right and this is a LPC device then all IO in/out accesses
+are always 1 byte accesses. Since the LPC bus only supports 16 / 32
+bit accesses for DMA cycles.
 
-static u32 gmux_pio_read32(struct apple_gmux_data *gmux_data, int port)
-{
-        return inl(gmux_data->iostart + port);
-}
-
-static void gmux_pio_write32(struct apple_gmux_data *gmux_data, int port,
-                             u32 val)
-{
-        int i;
-        u8 tmpval;
-
-        for (i = 0; i < 4; i++) {
-                tmpval = (val >> (i * 8)) & 0xff;
-                outb(tmpval, gmux_data->iostart + port + i);
-        }
-}
-
-And if you look closely gmux_pio_write32() is not swapping
-the order to be32 at all, it is just taking the bytes
-in little-endian memory order, starting with the first
-(index 0) byte which is the least significant byte of
-the value.
-
-On x86 the original code is no different then doing:
-
-static void gmux_pio_write32(struct apple_gmux_data *gmux_data, int port,
-                             u32 val)
-{
-        u8 *data = (u8 *)&val;
-        int i;
-
-        for (i = 0; i < 4; i++)
-                outb(data[i], gmux_data->iostart + port + i);
-}
-
-So yeah this patch is definitely wrong, it actually swaps
-the byte order compared to the original code. Which becomes
-clear when you look the weird difference between the read32 and
-write32 functions after this patch.
-
-Presumably there is a specific reason why gmux_pio_write32()
-is not already doing a single outl(..., val) and byte-ordering
-is not the reason.
+So presumably the outl() would get split into 4 separate 8 bit
+(port) IO accesses.
 
 Regards,
 
 Hans
+
+
 
 
 
