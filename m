@@ -2,82 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5436C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Feb 2023 03:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114BAC636D4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Feb 2023 06:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjBKD52 (ORCPT
+        id S229584AbjBKGdK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Feb 2023 22:57:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        Sat, 11 Feb 2023 01:33:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjBKD52 (ORCPT
+        with ESMTP id S229585AbjBKGdJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Feb 2023 22:57:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C98C1ABE0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Feb 2023 19:57:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1049CB826DA
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Feb 2023 03:57:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ABEC4C433EF
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Feb 2023 03:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676087844;
-        bh=fNuO80A18SWfeDIjh62JEFwbps57jiJL6l57vsKyXkg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=S1EgbaOiTVxGuJM2Hc34s2ilN8WhAbj1XVYo8Z2ClPgmeZKVMowHTHzak37PbWE2X
-         fwp/GfCLxscfG5p+h69/f7o459MIoRX+Ss2gSHO0m5ghFqzmm6zBxhWfeZeMkFHWoM
-         IAv8drfk4Q9mzYR7guQDpfT5XwU1CseMen0CRwKr/TLQUDO0WiZ9NzwsYCAT7cYL7a
-         wn+kHVADlK7KVZjrsbBuFi6RKWQ2k0p4Yzg+cdoHmEwxNgopDLQ3RHXOvjbPPaRa7C
-         4zVujJCI6dbc0srfQUcTnMzXUgzK+cvLyflEuWAw+o7OVT4mccedW9bFJESJg92jZn
-         xIKkf8HqeDblw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 89C28C43142; Sat, 11 Feb 2023 03:57:24 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217020] hp-wmi: Unable to change platform profile: Operation
- not supported
-Date:   Sat, 11 Feb 2023 03:57:24 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: luisbocanegra17b@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc rep_platform
-Message-ID: <bug-217020-215701-R9vbDMyYXZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217020-215701@https.bugzilla.kernel.org/>
-References: <bug-217020-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sat, 11 Feb 2023 01:33:09 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6256A7BFD6;
+        Fri, 10 Feb 2023 22:33:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676097181; x=1707633181;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7i8zMF0K839+UX0WmEQKEd/eIgzkZJvjyjtd/qQGye0=;
+  b=YMVX+3+r3JqtYDns8ewpeLR5rTAMcpjpSkqN/JPIZXkI4hm+Sqwr8TY3
+   cFbaZ57DCVSvztuHxFshFodaHwua89vyav9oYcGZwqGJ4tXXMexzxQOTS
+   Ha3nREwTE3wrGX5MnBBaSoqdcJ/txAdJE9z13JRfyTFPHQW2fQI0s4frc
+   CUXCrV8griac5c49y0oYiTnelnU9UsMlI5g/voqPqOZbZfz2g8kT9wbtL
+   KPIlSpIT1ZTufYeEVEpQHQz6ey881/gkF45bDkjFuOknk9AVB67WX/1Mi
+   F2cVz7KPzk7zSl2zdDElGh5+PWk22+hmD1eM+4s6+xXL9PHshhKkPzd31
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="310223195"
+X-IronPort-AV: E=Sophos;i="5.97,289,1669104000"; 
+   d="scan'208";a="310223195"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 22:33:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="997171761"
+X-IronPort-AV: E=Sophos;i="5.97,289,1669104000"; 
+   d="scan'208";a="997171761"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Feb 2023 22:33:00 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 01/12] platform/x86: ISST: Fix kernel documentation warnings
+Date:   Fri, 10 Feb 2023 22:32:46 -0800
+Message-Id: <20230211063257.311746-2-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230211063257.311746-1-srinivas.pandruvada@linux.intel.com>
+References: <20230211063257.311746-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217020
+Fix warning displayed for "make W=1" for kernel documentation.
 
-Luis Bocanegra (luisbocanegra17b@gmail.com) changed:
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 3 ++-
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |luisbocanegra17b@gmail.com
-           Hardware|Intel                       |All
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index a7e02b24a87a..63d49fe17a16 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -112,6 +112,7 @@ static void isst_delete_hash(void)
+  * isst_store_cmd() - Store command to a hash table
+  * @cmd: Mailbox command.
+  * @sub_cmd: Mailbox sub-command or MSR id.
++ * @cpu: Target CPU for the command
+  * @mbox_cmd_type: Mailbox or MSR command.
+  * @param: Mailbox parameter.
+  * @data: Mailbox request data or MSR data.
+@@ -363,7 +364,7 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+ /**
+  * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
+  * @cpu: Logical CPU number.
+- * @bus_number: The bus number assigned by the hardware.
++ * @bus_no: The bus number assigned by the hardware.
+  * @dev: The device number assigned by the hardware.
+  * @fn: The function number assigned by the hardware.
+  *
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.h b/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
+index fdecdae248d7..35ff506b402e 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
+@@ -40,6 +40,7 @@
+  * @offset:	Offset to the first valid member in command structure.
+  *		This will be the offset of the start of the command
+  *		after command count field
++ * @owner:	Registered module owner
+  * @cmd_callback: Callback function to handle IOCTL. The callback has the
+  *		command pointer with data for command. There is a pointer
+  *		called write_only, which when set, will not copy the
+-- 
+2.39.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
