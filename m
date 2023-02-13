@@ -2,450 +2,208 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FFFC636D4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 14:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076E9C636D4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 14:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjBMOFz (ORCPT
+        id S229953AbjBMOG2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 09:05:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
+        Mon, 13 Feb 2023 09:06:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjBMOFz (ORCPT
+        with ESMTP id S229963AbjBMOG1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2023 09:05:55 -0500
-Received: from mail1.nippynetworks.com (mail1.nippynetworks.com [91.220.24.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4520E18B2F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 06:05:49 -0800 (PST)
-Received: from [192.168.8.188] (unknown [94.228.36.46])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: ed@wildgooses.com)
-        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4PFmLj3V4NzTgVL;
-        Mon, 13 Feb 2023 14:05:01 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1676297102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tjBaCl2L06b6XdLTbk+0a/BnhBVZ0EmKzAePjaIgvxY=;
-        b=TaKzwEaSogs6E3WBpGVe+kWfJwqBzyOzcDUw7gnHkv1dqHQ/ZN2V36NCDlixjnoSW0S7SC
-        qG6oDBDiaNGGC5saQeh5TzrHtNMh8MRmf5LVVK4T2tUGIqFkSXg28sJzqBprkxb+bNOX7T
-        3uVkaoUpW9JWHceuTTbiLJBotcRMRDs=
-Message-ID: <59ded4b9-04e9-d5d3-98eb-af0d4340a2fa@wildgooses.com>
-Date:   Mon, 13 Feb 2023 14:05:45 +0000
+        Mon, 13 Feb 2023 09:06:27 -0500
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2077.outbound.protection.outlook.com [40.107.96.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E0B1ABE2;
+        Mon, 13 Feb 2023 06:06:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n7BFHu2joEwu4HUzkFD9N0ikQDrmCC4wL8WgnJAaW03KzA5vTECUX8ldoPZEj19aDjiAL/LgTWLCQ/vLsgAZiHr7fkeBVlBafVnYKEMAfojcgXOYflxYKkNsHt79+7IC/lAZuYCt9+LRKhmK5U1H8SdpvbW5d5k4OvNzmenQOtSLL8/n4Au+JYVs52cMd1GIO86WzGWayL3ZNdpaxjDMiGrHcd5pM9atLxTxuWiuJiNXwKjDcI7ib/U43yMWqCpLBNFOqqpaZ2vD0IRTrWIq/iU2a953XRh41i3dlnWP+UMQXoglaqXjksaX8MRu5XGEhjdXNUz8hp9393OpBYQCcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KSpYi48hI00TplssZkNsXxwro7N09FY+iaiVfvBiusM=;
+ b=URu9FVDiiftQyzPraq97HzuU+0eExA+rwD+nPsr/R7y6XKOIa4F8KRgyBFZvjOuVRa6G5UpdLE0pIiazvFVvPa5HLs8j1EyBomB6iPM0K26rJZ/bOpyFo16vNi30boi4TNqai5VXKZlS5kKblovW9+50WMEhqjx1CXCV+GVDO8YzR5IdAG1dax9EX99zeP+LjzZC71s9UlEdjZ5VyD7ILGIr2I2qcP5wF75l6nOWQuoP/IS5kpSRq0V/kAaSePBAn4t8NXrZ9XUAA0OY9Ty38KFH6AsU2/BSY3hPfjTZcZieP6t+d40WRY9OCzvpzKODtFXOI8bs817j9j604if0nQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KSpYi48hI00TplssZkNsXxwro7N09FY+iaiVfvBiusM=;
+ b=hY1wed7yDDm+KczzVO5G2BWo8R0y9e6DKjjLYBy4IfrbuRwNxivhasgOjPY/xOMpdn0rTzuu7USfdle57ymE1w6B5I48omdofOblmYz7Q1xN6kSzbs7zeY68iFHok5bFPE3XJkjfN6TBORytq4nNZ0FD3ZX8Ck6Wh8CQ7WIVJzY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA1PR12MB7366.namprd12.prod.outlook.com (2603:10b6:806:2b3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.23; Mon, 13 Feb
+ 2023 14:06:24 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::a59e:bafb:f202:313c%5]) with mapi id 15.20.6086.024; Mon, 13 Feb 2023
+ 14:06:23 +0000
+Message-ID: <ac5f2aa2-e1fb-5335-12f3-9616fb294bc8@amd.com>
+Date:   Mon, 13 Feb 2023 08:06:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: RFI: Tablet mode support on HP Pro x360 435 G9 w/ AMD Ryzen 7
+ 5825U
+Content-Language: en-US
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Carsten Hatger <xmb8dsv4@gmail.com>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Jorge Lopez <jorgealtxwork@gmail.com>
+References: <CACp=KFQN79Rz0CHP-5kwP9Y5Y9bEAoN0eJzoOpSejg6aF9qnpw@mail.gmail.com>
+ <233344ca-5df1-abd9-6fb6-c04634f1b401@redhat.com>
+ <79e4b25a-2b45-e21d-e4a2-f886204d8300@amd.com>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <79e4b25a-2b45-e21d-e4a2-f886204d8300@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR08CA0016.namprd08.prod.outlook.com
+ (2603:10b6:805:66::29) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH v4 1/2] x86: Support APU5 & APU6 in PCEngines platform
- driver
-Content-Language: en-GB
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Philip Prindeville <philipp@redfish-solutions.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Andres Salomon <dilinger@queued.net>,
-        Andreas Eberlein <foodeas@aeberlein.de>,
-        Paul Spooren <paul@spooren.de>
-References: <20230113231139.436956-1-philipp@redfish-solutions.com>
- <00b4cd69-14ce-ce1f-2bec-83ecbb928cbc@redhat.com>
- <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
- <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
- <5F93DF5F-BEC4-4B2A-A057-A895282A66B2@redfish-solutions.com>
- <3a36b460-9108-5c83-b4f6-42b4718afcf0@redhat.com>
-From:   Ed W <lists@wildgooses.com>
-In-Reply-To: <3a36b460-9108-5c83-b4f6-42b4718afcf0@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB7366:EE_
+X-MS-Office365-Filtering-Correlation-Id: d62163be-a814-4432-052e-08db0dcb7d59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Z6TpYXEx8aJyM7K5cRF88QTl7sFxsa+4YSRMMjSIX1d8cwZJRZXnY0kqj+5COg1FjKioCS7eSHPYz75J2iz6hrZ3FjdFQgYB7FZ0cYIpFGjrwz1wOoVlkea29IgqET4ELxUc+AcA1JFw9G4PYj2LlaiVbKMII69fxufLsT2HmiOKYD8YzyB/EXBuy1c3aWK7UVW7TNyN8LXGGfKFwjJGQengbqWtddrEnxU1/J/zlF3w2x3fqQ3Ay2fK6+4dlslGS+vd1OugzI7+Ox8RkcQ+7kON0sl1SosywSj56yBORuGgQ9n0sq77Tq+uJalNWR7hcQqSkJ8cDqfan0aF6yxA2DSFuBRDg6bD0HKkHNyloo5YdEG9JnGuRv1jifbCRYoYAR2A/OLGPyqOg60s8Zt/YvhytG1k4m9sZzExdgG3KAIDL50TPAAC+IFskvDbIzuMP11zJXwrrQDvX0MQl8AX+J1B8M4VGLVhFN2mpA7vPEawq8sj+Ojj0M4ZeHASQg9MyIDZjNmK8uBW0/4dnB3Gbp9nGYap0adkaujCJM8YlVbk4Gzy5JjtDerO1Gz32YAK1N6wFrdBNFNTZEzobBjTe2KRpDMppDUmlmWGRlHOXMUm6MocKXiTdZPNa9voPDV2VXO63nXsW0t4St6e7X1R09FgEBpmKrvn9+4KoBI/2ZQIJWSf7NjLfTmQYXxmHCnzI261L4Wk5e8c0O0G2mYyGc8vlYKfThtaQM1hHXvtnWbFrwWUpCnQfu0P9Rc/ZvzCjXzfjTQc1ol0N7B6nnsVmaPphYtI7yR4+iiMFPXOQnQiG1d/Rniq6hyB+CynvxXh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(451199018)(31686004)(83380400001)(36756003)(86362001)(31696002)(8676002)(66556008)(66476007)(38100700002)(66946007)(2616005)(6512007)(186003)(478600001)(6486002)(110136005)(53546011)(45080400002)(966005)(5660300002)(316002)(6506007)(41300700001)(8936002)(2906002)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aGN6bHdPYlNaTXpNUGRmd2sza3I3ZTFzd2oycmFvVE5sMHQ1ZXBucG16eW96?=
+ =?utf-8?B?akRGNFI3RWc5N3dQSytRUzdvWWtwM0I0ZUJBV01PZXg4Vi9jZG80TmUzRVo1?=
+ =?utf-8?B?N2tENnBoa1UrSHRtTktDbXJqaVE4KzlJM0pVTzZKVGxSN2RnRVE5NDZHU0hJ?=
+ =?utf-8?B?LzFuVjNkK3c0YWdhT2NjdnYyN0JiOVprN2RIV05hTkMyMTZUZURYUmFKUisy?=
+ =?utf-8?B?akRVb2lKN2RWMm1JNEVtaVpRTnQ3c0ZUM1ZUOEd6MjdhN0ZkWlhyY1lLdjAx?=
+ =?utf-8?B?WU5aMHVJbmRIamdFRm9Yb3pDbWJsUDA3dElYNHc5RFV4VHdZSkhRRkdscmU2?=
+ =?utf-8?B?em0zOER2NFcvNk50MDlBdEtFU2ROMUJjWTlSMFFhNXp4YmRvUU5va0t5b1hM?=
+ =?utf-8?B?RWxNa0xvYWY1YWUrbWdnenJJTDZOMmZGcjU3RmZ2cmpvRnRDdzJPaGNqdHhF?=
+ =?utf-8?B?dXJrYWxKVGZqbHlHeFNwZldCdDlDWXZUOFZXTFNSYjdGbkNhU1hyMi9iWDdQ?=
+ =?utf-8?B?cFRzVzl2dExlY1ZkYyt3SUlleXdaMzR0ZU5uV2JmVnRIL2luR1lEY284bW96?=
+ =?utf-8?B?blpxbFVPdFlNbWJyM0tWTDlaT2dnTHZGVlFpZTV5enZTWFZKNFhBcFVxQXQ4?=
+ =?utf-8?B?VGdnUXFlZ1NNSmgzMjZENmNEYlVXMzFCSkJ1RVU0ckFxYkhPQWpDZExnUWI1?=
+ =?utf-8?B?aGd4OVpoMjR4RTRXYVltODVQVHVxTnhIQ3FWbGdIejRubmNxaVBxUFNJNWtG?=
+ =?utf-8?B?bjA5ckg2bDFoM2dyaG5kM1JhbW81QjBvSXpFc2Fsa2ZUVzFPUGZ3Q1VKWURF?=
+ =?utf-8?B?dGJIaTgyN1lSblIvNlB6a05sYVdIK3FNSFFOaTJFQWIrSXZ4THROb1h2a3pa?=
+ =?utf-8?B?LzVLRVM0L1VKL1V4OGhkeGxJK3ZsazBpNTBkcHBtZW9XWGpzcnFEekNXNlV4?=
+ =?utf-8?B?bGNvS3R2WGJyVS9HR0o5SlJpZlpMN2xUNDhsYk16YlpKVUtxL3NFMHAvRXlu?=
+ =?utf-8?B?eGViZEhOK2hPbm1ZVGhmMGJqRHk2WGkzb0wvQ3F0ZGlYS3lQcStzVk1IZEhU?=
+ =?utf-8?B?TTdFMWNiRmFKd0RSMi8yZFVMNTM4MEJxVE1ObVdjeEhsYmhhZFNYSExrV3p1?=
+ =?utf-8?B?UEU0RXRETWs5MjJvN3lLZWxLL3pscldvaENrVTd3QjBiRmw3aHVDNTdxUmZn?=
+ =?utf-8?B?U3ZYdE1ZUzZBalM2NzNzeVZ5WTB4WUFsVkdLT0pJN0Y2czA3VjFCeHBVWU1m?=
+ =?utf-8?B?b2VMK2JpdExBbFZrOTYwNnZXUEUzbVFDcG50djI5R2l4bkc2YzF4MDE3Rkgx?=
+ =?utf-8?B?Vno1Ry9qeGNVYldPbDRJM0cyQ0JVY0xFcTlwSlgyU29ERTd3UUhwRlBsTGpS?=
+ =?utf-8?B?Ny9jbzl3Y2NBSHY4UEh5cUIreXlPOUNUNWQrenM3RllhbU1CUy9VbkgrSVRa?=
+ =?utf-8?B?L2JZM0NFUGl6Mm9Ec1ZSZ2RFaXVMaGxwOWd6c0VyV1p4ZUIvZi80QU01YmNF?=
+ =?utf-8?B?NWtQUW5BRmdpMDNrdUNZRzNDbk42Sk1yNjQvaHE5UnBhSkZ4SmRudmx5Y3hW?=
+ =?utf-8?B?SnlkNXZyV1l5NSt6czZaeHNxVGVSeUtSOUFSWXN6S3owdEtpRXVUbjNBdWVL?=
+ =?utf-8?B?dWRkZ1pVbTlUdGVtOWkxZ1ZXNlBsdUN1Q0xLbG9ydVJoOWs2RDdXbHFKZkU3?=
+ =?utf-8?B?WHNKaUcyaXNFRHdOVWtRVnRUTnlUSXpmSUE5NE1GREI1WEFBWFplYkFESFFQ?=
+ =?utf-8?B?U0E1NXB6NzAzZlpuM1FvL2xVaXpUVmhSZFQrMzM0RThwaDhwaEgxcGJpbUNi?=
+ =?utf-8?B?ekkzK3B2ODBEbVJVc29EQlNmMW9ZeEdDV3RUbDhQOG5ZY1pnZjlwNmkyMHpG?=
+ =?utf-8?B?NEMrOWhPS05CK1NqZGxsTit5OC82aGJCQ2RsdUZWRGhYdmVySnpRc0NzMitK?=
+ =?utf-8?B?MG9yNHJlTGc3VVU2MGNYVVZxSWtBWExyS2dQbmJZZ2Q3Q1VEYzgxSFFySnRz?=
+ =?utf-8?B?bnFLL1d6WTkzZmMzYjlFTmpSNHEwbExiRWI2R1lVVEFpSkVKVHVLRU5mZmh6?=
+ =?utf-8?B?VFkyOU1nZTYxbTlrQmhqMzhySW12VUowR3FKQ2tjeW9mbnBiMFpMM3o3S1Rs?=
+ =?utf-8?B?WHFadXc1MDJwNXRRcEtCYVpjcXlwWFIzbkdjRWNMUmF5cHlSWXdQRHRmQldC?=
+ =?utf-8?Q?ywnTDt3QXRuLjLMxdkNhwPkXnGMY8aAG52tgKSOKl46W?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d62163be-a814-4432-052e-08db0dcb7d59
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2023 14:06:23.7440
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AM/yyu8TBOE+oHstI2h2LoYoS1boptymGBvAtE2MCqkEqXpM84ofnPdLclrPx14844ZCLA7Hlq2jyXTdkOI8kQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7366
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All
 
-
-> On 2/9/23 07:04, Philip Prindeville wrote:
->> Hi Ed and Hans,
->>
->> First off, sorry for taking a while to get back.  My wife has been bus=
-y with final exams at uni and I've been having to take care of the kids f=
-or both of us.
-> No problem.
-
-
-Ditto here. I ran out of time to build a current kernel and double check =
-the ACPI status! However, I
-can get the details in the next week to confirm. Apologies!
-
-
-
->>>> Hi, I'm not sure what the "correct" thing to do is, but just to add =
-some background to the situation:
->>>>
->>>> There are an increasing number of APU boards, which are *very* simil=
-ar, and also through time the
->>>> pin allocations have muddled around, plus most recently, the BIOS ca=
-n configure many things and has
->>>> started to use naming conventions different to the historic kernel n=
-aming
->>>>
->>>> So I don't have a board in front of me to be definitive, but somethi=
-ng like the following happened:
->>>>
->>>> - APU2 used something like mpcie sockets 1&2 for USB stuff and hence=
- LTE cards, socket 3 was msata
->>>>
->>>> - Then another version APU3, I think moved these to sockets 2&3
->>>>
->>>> - Then another version APU4, moved the USB to sockets 2&3 and wired =
-up a second SIM slot in most
->>>> versions, including a SIM line swapper chip. Now you start to wonder=
- if you should have labelled
->>>> things PCIE1, PCIE2, PCIE3, etc, when really they mean modem 1 and m=
-odem 2, etc?
->>>>
->>>> - Then came APU5, which has 3x USB sockets, plus 3x mpcie sockets. T=
-hese are wired to different pcie
->>>> numbers, and so the naming modem1, modem2, modem3 starts to make a l=
-ot more sense.
->>>>
->>>> - APU6, which is mentioned in the original patch, is really just the=
- same as one of the other
->>>> boards, but with different ethernet sockets (SFP vs copper)
->>
->> Yes, eth0 on the APU6 is an i210 w/ SFP cage, and i211 on all of the o=
-ther ports.  The APU4 and others all used i211's on all the ports (for 10=
-00baseTX).
->>
->> I've asked PC Engines for a definitive list of what GPIO lines are use=
-d for what on all of the current revs of the boards.  I'll share that as =
-soon as I get it.
-
-
-Minor nitpick.=C2=A0 The APU2 has i210 on the original boards. However, r=
-ecently the shortage of intel
-chipsets has led to various compromise options and some boards are coming=
- with i211 on. I'm not sure
-if Pascal will standardise on these for the future though?
-
-There is also an APU7 mentioned in the latest firmware notes. I don't own=
- one of these, nor the
-schematics, but the release notes say that it's an APU3 with different et=
-hernet ports. I suggest we
-assume this to be true and add APU7 to our detection?
-
-
-
->>> Hmm, can you elaborate a bit on this?  Does ACPI somehow expose the L=
-EDs / GPIO to userspace
->>> already and will adding APU5 / APU6 support make those ACPI exposed d=
-evices go away ?
->>>
->>> If yes then what is the advantage of using the APU driver over the AC=
-PI exported functionality?
->>
->> Other than ACPI being less than reliable in a lot of cases?
-> ACPI can sometimes be unreliable, but that is just down to it being bad=
-ly implemented by
-> board vendors.
+On 2/13/23 08:04, Shyam Sundar S K wrote:
 >
-> If used correctly it is no more or less reliable as any other code, so =
-its reliability is not
-> really a good argument not to use it unless the ACPI code on PCEngines =
-devices is known to
-> be unreliable ?
-
-
-So at least with the few firmware's I have tried, the ACPI works ok on AP=
-U.
-
-The history (without full details) is something like:
-
-- A long way back in time, we had either a different driver in the kernel=
-, or the ACPI used a
-different name for the LEDs and button. I forget the details without look=
-ing back at some notes
-
-- As of $lots_of_years_ago, there was a big APU firmware change and since=
- then I believe ACPI has
-(reliably) offered auto configuration for the LEDs and I believe also for=
- the switch button (sorry,
-hazy now without checking a real board, but I can do that no problem)
-
-- However, I believe Enrico built the original APU kernel driver and that=
- happened to use the old
-names, and then once the ACPI change happened, he feels/felt strongly tha=
-t we should maintain the
-current driver, disable the ACPI and ignore the updated naming convention=
- from the ACPI.
-
-- In any case, using only ACPI doesn't setup the GPIOs for things like th=
-e SIM swap chip and reset
-lines, etc. So I think a platform driver of some sort is the correct way =
-forward
-
-- I think my patch from a year or so back attempted to swap the kernel na=
-mes to match ACPI (need to
-double check that?). This was not unreasonably resisted because it would =
-break userspace relying on
-the names used by the LED driver.
-
-
-- The other change I tried to insert was to rename the GPIOs, more explan=
-ation (some repetition from
-prev email):
-
-- All boards, except APU5 have the same basic shape and 3x mpcie connecto=
-rs.
-
-- However, although the connectors are the same, they don;t all have the =
-same things wired to them
-
-- You actually have 2x USB (with up to 2x SIM), 2x pcie, 1x msata
-
-- So based on studying APU1 and APU2, which had a separate msata and the =
-other 2 ports wired up
-consistently for wifi/LTE, people named the GPIOs to match the mPCIe port=
- numbers, ie LTE Modem 1
-was on mPCIe port 1, so name the gpio something like mpcie1_reset
-
-- Then came APU3-7... These boards flipped around where modem2 was. So yo=
-u now have a situation
-where userspace needs to know that they should toggle pmcie2_reset on APU=
-3 and mpcie3_reset on APU4,
-or whatever it really is.
-
-- So my previous attempt to sneak in a change was to rename the GPIOs to =
-be something more like
-"modem1_reset" and "modem2_reset" etc. This way the GPIO names stay ident=
-ical across ALL boards,
-even though the slots might jump around board to board. This is clearly a=
- better solution if we were
-starting fresh, but it has consequences for a (very?) small number of use=
-rs (I doubt many others are
-even aware of the other GPIOs except for the LEDs/switch? Does even OpenW=
-RT break out the sim_swap
-lines and modem reset lines?)
-
-
-
->> If people wanted to use ACPI instead of the APU driver, why not just b=
-uild their kernels without the APU driver linked in?
-> Most people do no want to / don't have the skills to build their own ke=
-rnel, so they are
-> going to be relying on a distro (including openwrt as a sort of distro)=
- provided kernel.
-
-
-Well, also you don't fix the problem long term. There is this jump in nam=
-ing if you pick one over
-the other. Plus ACPI doesn't setup the sim swap line (and it may not setu=
-p the switch as people want
-it? Can't recall if this is a problem?)
-
-So whilst I agree, I think it would be desirable to narrow down the numbe=
-r of permutations here
-
-
-
->>>> Note, there is a very big risk that I missed the point... Please be =
-gentle. Quite possibly there is
->>>> a solution to just reorder some definitions and we land where we wan=
-t to be? Is it that simple?
->>> Yes my original compatibility remark was just about reordering some d=
-efinitions +
->>> keeping the old labels for the already supported APU models.
->>>
->>> So talking in code my proposal is to change this (in the new code):
->>>
->>> #define APU2_GPIO_LINE_LED1 0
->>> #define APU2_GPIO_LINE_LED2 1
->>> #define APU2_GPIO_LINE_LED3 2
->>> #define APU2_GPIO_LINE_MODESW 3
->>> #define APU2_GPIO_LINE_RESETM1 4
->>> #define APU2_GPIO_LINE_RESETM2 5
->>> #define APU2_GPIO_LINE_SIMSWAP 6
->>>
->>> to:
->>>
->>> #define APU2_GPIO_LINE_LED1 0
->>> #define APU2_GPIO_LINE_LED2 1
->>> #define APU2_GPIO_LINE_LED3 2
->>> #define APU2_GPIO_LINE_MODESW 3
->>> #define APU2_GPIO_LINE_SIMSWAP 4
->>> #define APU2_GPIO_LINE_RESETM1 5
->>> #define APU2_GPIO_LINE_RESETM2 6
->>>
->>> Keeping the simswap signal as GPIO/pin number 4 instead of moving it
->>> to the end.
->>>
->>> And also instead of making changes to apu2_gpio_names[] (1)
->>> introduce a new apu5_gpio_names[] / apu6_gpio_names[] so that
->>> the labels don't change on the existing supported models.
->>>
->>> I'm less worried about the label change then about the index
->>> change, because typical GPIO use from userspace will use
->>> indexes not labels. So if having different labels on
->>> different APU versions is a big problem you might be able to
->>> convince me to change the labels on the old models too.
-
-
-OK, so I think we see a potential solution here
-
-
-Note, board summary is:
-
-APU2-4 - vaguely the same, but modem2 jumps around slots (or disappears)
-
-APU5 - oddball, gains an extra modem, so we now have modem1-3 GPIOs. All =
-other GPIOs are maintained
-(I think?).
-
-APU6-7 - variants of APU2-4, I believe all the GPIOs stay identical?
-
-Details:
-
-=C2=A0=C2=A0=C2=A0 http://pcengines.github.io/apu2-documentation/APU_mPCI=
-e_capabilities/
-
-=C2=A0=C2=A0=C2=A0 http://pcengines.github.io/apu2-documentation/gpios/
-
-=C2=A0=C2=A0=C2=A0 However, note that the APU5 has 3x SIM swaps, one for =
-each modem (each modem has 2x SIMs). APU4
-on the other hand only has a single one, it just inverts how the 2x SIMs =
-connect to the 2x modems
-
-
-Important Note: Realise that at this point this discussion is heavily the=
-oretical because many
-boards don't have the reset wires setup correctly, or their functionality=
- might vary board release
-to board release. eg I paid PCEngines to have mine re-enabled, because th=
-ey ship them disabled by
-default. Also in my testing they don't operate as expected. So it's highl=
-y unlikely there is a
-single user in the world actually using functionality other than "Leds", =
-"mode switch", and "sim
-swap" (and even sim swap GPIO is likely to be restricted number of users)=
-=2E Certainly if anyone is
-using any of that other functionality they they are super hacker and will=
- cope with what comes next
-
-
-Conclusion: Hans, would you mind commenting on if you think this is then =
-all done and satisfactory
-if we reorder the GPIOs as you propose? ie you are content with the renam=
-e?
-
-
->> I've been thinking about this the last few days, and the APU's are all=
- low-power, headless (no video), SBC's.  They're designed for embedded us=
-age.  That is, they don't have generic distros like Ubuntu (et al) instal=
-led on them, so the kernel and the bundled applications are all released =
-together, typically in an monolithic image (at least that's the case for =
-OpenWRT).
+> On 2/13/2023 6:01 PM, Hans de Goede wrote:
+>> Hi Carsten,
 >>
->> Changing the kernel and what's visible in user-space typically isn't a=
- problem as long as both happen at the same time.  That's what we've done=
- with OpenWRT, adding the 2 new board models, and the mapping of led trig=
-gers to GPIO lines.
-> For the upstream / mainline kernel we have a very clear defined policy =
-of
-> never breaking userspace (APIs). Even though these are designed for emb=
-edded
-> usage, some people might be running normal distro-s on these.
-
-
-So we don't lose sight of the big picture, I think the remaining detail w=
-e are debating is something
-like:
-
-- kernel driver names the LEDs something like:
-
-/sys/class/leds/apu4:green:led1
-/sys/class/leds/apu4:green:led2
-/sys/class/leds/apu4:green:led3
-
-- However, ACPI gives different names (I forget the details)
-
-- Additionally, we already broke this in the (distant) past because there=
- was a previous APU driver
-which used different names still...
-
-
-So I think my rejected change tried to simplify the LED names and drop th=
-e apuN bit. However, I'm
-really not passionate about any changes here. I have a simple wrapper scr=
-ipt for the old Alix and
-newer APUs which just lets me set any LEDs by number. OpenWRT is welcome =
-to use this?
-
-=C2=A0=C2=A0=C2=A0 https://github.com/nippynetworks/gpio-utils
-
-
-
->>> Summarizing:
+>> On 2/13/23 11:43, Carsten Hatger wrote:
+>>> Dear all,
 >>>
->>> Please change:
+>>> I'd like to have tablet mode support on my system, probably by means
+>>> an linux input device such as implemented in the intel platform
+>>> specific driver drivers/platform/x86/intel/vbtn.c [0]
 >>>
->>> 1. The GPIO indexing to keep simswap at its old place
->>> 2. Use the labels only on new models (open for discussion).
+>>> In the end I hope GNOME eventually to rotate the systems display and
+>>> to show some virtual keyboard (upon users request), cf. for [3]
 >>>
->>> Open questions:
->>> 1. Can you elaborate a bit about the ACPI way of accessing these
->>> things. If that is actually a thing, we cannot just break it
->>> (but we could use a module-parameter for still breaking it).
+>>> It appears there has already been a patch proposed  by the chromium
+>>> team to support device PNP0C60 [1] but not merged to [5].
+
+Does your system support a PNP0C60 device?
+
+Or you're just mentioning this patch existed?
+
+It might be useful to look at an acpidump.
+
+>>> Since the system of interest is a HP Probook, there is already a
+>>> driver providing virtual buttons,namely hp-wmi [6]. However, the
+>>> driver loads probes and loads successfully but doesn't provide any
+>>> additional functionality plus some non critical errors on incorrect
+>>> ACPI method calls.
+>>>
+>>> I've noticed AMD has started to provide platform specific driver(s)
+>>> such as pmf [2].
+> PMF is meant for power and thermal management.
+>
+> To my knowledge there is no support for CEZANNE/green
+>>> sardine based systems (yet).
+>>>
+>>> What would be recommended practice and subsystem/folder to provide
+>>> such capability by means of a (platform specific) driver? At least the
+>>> CID PNP0C60 seems to be held by Microsoft [4] and thus be common to
+>>> both amd and intel platforms [4]. However, HID INT33D6 is held by
+>>> Intel and HID AMDI0081 by AMD. Yet I'm not quite sure if
+> IIRC, AMDI0081 is used by SFH driver as UMDF sensor class extension
+> driver[1][2], but on Linux we have implemented it as HID based driver
+> and is a single driver.
+>
+>
+>>> iio-sensor-proxy [7] needs to be involved, too.
+> you mean to say, amd_sfh driver is not switching to tablet mode?
+>
+> Thanks,
+> Shyam
+>
+> [1]
+> https://github.com/MicrosoftDocs/windows-driver-docs/blob/staging/windows-driver-docs-pr/sensors/overview-of-converged-sensor-driver-model.md
+>
+> [2]
+> https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/continuum
+>
+>> The first thing to do here is to figure out which (ACPI) device
+>> is the right device to get the SW_TABLET_MODE events from on this
+>> device.
 >>
->> What would this look like?  Would it be a boolean that throws the swit=
-ch from "classic/legacy" to "updated" mapping?  I think that could work..=
-=2E  Since in OpenWRT we control both the drivers, the Kconfig settings, =
-and the default GRUB parameters, that would work in our case.  I can't sp=
-eak for pfSense, etc.
-> Yes a boolean module parameter with the default value of the boolean
-> configurable through Kconfig, so that e.g. openwrt can just pick
-> default values matching what it wants and won't need to specify
-> anything on the kernel commandline.
->
-> Note this is not just about the mapping though. From what I understand
-> about this, using the pcengines-apu driver conflicts with the ACPI way
-> of accessing the LEDs and gpios.
->
-> So for the new APU models, there should be a module-option to decide
-> whether for probe() to continue at all on those models or whether
-> it should just return -ENODEV (so the driver won't bind), leaving
-> things just as they were before this changes.  The purpose of this
-> is to keep the ACPI way of accessing the LEDs, ..., working.
-
-
-So keeping this on topic.
-
-1) Have we all agreed and signed off on the GPIO changes to naming, cavea=
-t we maintain the current
-numbering? If so then lets tick that off
-
-2) There is a debate about whether to change the LED userspace naming. I =
-don't really want to push
-this up the hill though? Proposal is to either sync with ACPI and offer a=
- back compatible flag, or
-we could just keep the naming as is and allow it to continue to deviate f=
-rom the ACPI naming? I'm
-cool with either? (although I don't like the current naming...)
-
-Quick show of hands from openwrt on point 2? If no one cares enough to up=
-date the patch to add a
-backward compatible flag then I suggest we stop that piece? (However, I'm=
- happy to do this if I can
-get a little support on coding it?)
-
-
-Sounds like we have made progress?
-
-Philip, are you cool to resubmit your patch with the adjusted GPIO orderi=
-ng? (and APU7 detection as
-an APU3) We just then need to decide whether to drop LED renaming?
-
-Thanks all!
-
-Ed W
-
+>> Maybe Jorge (added to the Cc) can help with this ?
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> [0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/intel/vbtn.c?h=v6.2-rc8
+>>> [1] https://lore.kernel.org/lkml/1472628817-3145-1-git-send-email-wnhuang@google.com/
+>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/amd/pmf?h=v6.2-rc8
+>>> [3] https://gitlab.gnome.org/GNOME/mutter/-/issues/1760
+>>> [4] https://learn.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-implementation
+>>> [5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/button.c?h=v6.2-rc8
+>>> [6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/hp/hp-wmi.c?h=v6.2-rc8
+>>> [7] https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/
+>>>
