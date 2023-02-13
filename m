@@ -2,93 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0936C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 12:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C83C64ED6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 12:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230131AbjBMMdr (ORCPT
+        id S230366AbjBMMqo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 07:33:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45398 "EHLO
+        Mon, 13 Feb 2023 07:46:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230367AbjBMMdq (ORCPT
+        with ESMTP id S231200AbjBMMqf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2023 07:33:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2650B15563
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 04:33:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 13 Feb 2023 07:46:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB571ADCE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 04:45:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676292341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AnJoYBSrnxau6xe0s/FoZpvzZMcp5n1ICaH81YVRh4k=;
+        b=DGCweNYIxgTqdFKe6m8CWdeFcD2murSSv60eLE62p9m8bPl8kdR56G9e2Da+/fmMwSZfO/
+        OQykrn4jY4hM9WjBOvXytwHCIO6SXxW6gIPsLgK5/vKGYEfRsFqRwH3Hp7GsbZEO3F9EzZ
+        pOx3klcihUrWLekKgjHvVKNSMHW/K2Q=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-572-GzXStqZ3Obml1-Y6mG4TSQ-1; Mon, 13 Feb 2023 07:45:36 -0500
+X-MC-Unique: GzXStqZ3Obml1-Y6mG4TSQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7ED9BB811B3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 12:33:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 00CBAC433D2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 12:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676291599;
-        bh=L5xOz8J9D7EyOv8gv3MuqTJGtg7ocT7m8QZ008PLyZs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=X00KMmvdk1qKmxxpo3B9fNgxa04tMMpRm8y9lcgSmKIzHI1w7bpIt2B10pkVrIXOl
-         aSHPra3HFsijn9rMTvelfSABVmRAaIBeZlt6XaMoH01eskuPZfmzYtgzb6015pIDqs
-         hY2zXw468ukLhuP/CFLcCPJ7Yemky7TSUE6EIymuG2SleN9XLFnAvv80Nxs61DgN5O
-         uIaz3zbz+lcSVjGoOqhPdT2sWEkNY31wS4fGApxVotsFxAgGn8ord6dXQl201FwMjP
-         nf4MLMylQww8MxFl+ESKNIXsJBaua0X2YtTwriCq+zZuFMpOh8HJo74nIRFGbKGokZ
-         v9Fsf+LzsNYow==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D9DC7C43142; Mon, 13 Feb 2023 12:33:18 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217028] CONFIG_AMD_PMF missing CONFIG_POWER_SUPPLY
- depend/select
-Date:   Mon, 13 Feb 2023 12:33:18 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status cc resolution
-Message-ID: <bug-217028-215701-aD2emFgiiK@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217028-215701@https.bugzilla.kernel.org/>
-References: <bug-217028-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5645181B7C9;
+        Mon, 13 Feb 2023 12:45:35 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.67.24.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AFFE8403D0C1;
+        Mon, 13 Feb 2023 12:45:30 +0000 (UTC)
+From:   Kate Hsuan <hpa@redhat.com>
+To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     Kate Hsuan <hpa@redhat.com>
+Subject: [RESEND PATCH 0/3] leds: tps68470: LED driver for TPS68470
+Date:   Mon, 13 Feb 2023 20:45:17 +0800
+Message-Id: <20230213124520.1635257-1-hpa@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217028
+This work allows user to control the indicator and flash LEDs though
+sysfs in user space. TPS68470 is a part of INT3470 and provides GPIO,
+LED, and power controls.
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
+To allow the user to control these two LEDs, two masks for the
+ILEDCTL, called TPS68470_ILEDCTL_ENA and TPS68470_ILEDCTL_ENA and a two
+bits mask, called TPS68470_ILEDCTL_CTRLB are defined and are used to
+enable/disable the LEDs and set the power status, respectively.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
-         Resolution|---                         |CODE_FIX
+The LED driver called leds-tps68470 provides the sysfs interface and
+the register configuration implementation. For the indicator LED,
+only TPS68470_ILEDCTL_ENA needs to be set to turn on/off the LED. For the
+flash LED, TPS68470 provides 4 levels of power settings. After enabling
+the TPS68470_ILEDCTL_ENB, the power level should also be set.
+The strategy is
 
---- Comment #1 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Thank you for reporting this.
+Brightness  |  Power
+=======================
+LED_OFF     |   -
+LED_ON      |   4mA
+LED_HALF    |   8mA
+LED_FULL    |   16mA
 
-This is fixed by this (just mergd) patch in the for-next branch of the
-platform-drivers-x86 tree:
+Moreover, the user and application can set the brightness through sysfs,
+/sys/class/leds/tps68470-ileda and /sys/class/leds/tps68470-iledb
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
-git/commit/?h=3Dfor-next&id=3Da2f9d361e3d70fcd8c53612034be7dae4f586d97
+Kate Hsuan (3):
+  platform: x86: int3472: Add MFD cell for tps68470 LED
+  include: mfd: tps68470: Add masks for LEDA and LEDB
+  leds: tps68470: Add LED control for tps68470
 
---=20
-You may reply to this email to add a comment.
+ drivers/leds/Kconfig                          |  12 ++
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-tps68470.c                  | 170 ++++++++++++++++++
+ drivers/platform/x86/intel/int3472/tps68470.c |   3 +-
+ include/linux/mfd/tps68470.h                  |   5 +
+ 5 files changed, 190 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-tps68470.c
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+2.39.0
+
