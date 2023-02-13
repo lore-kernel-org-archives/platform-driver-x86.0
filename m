@@ -2,92 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAC5C64ED6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C70CC636D4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230479AbjBMKnl (ORCPT
+        id S231130AbjBMKpT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 05:43:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49250 "EHLO
+        Mon, 13 Feb 2023 05:45:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230181AbjBMKn0 (ORCPT
+        with ESMTP id S230271AbjBMKpB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2023 05:43:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DEE17158;
-        Mon, 13 Feb 2023 02:43:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 306AFB810AC;
-        Mon, 13 Feb 2023 10:43:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12414C4333D;
-        Mon, 13 Feb 2023 10:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676284997;
-        bh=CUH46wTeOwx9zhTRGAsxA0DLFQlKaikmOpM12h4ppVc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3wiRa+Pr6BJ8JnisiohjbgJZzKknaFiA/I3ZmrTKFCT/BJ5aX6t6PIYJJaIMWRvC
-         R1I9UwqJnssdoJw8nHI0sWXnJOa0p4eJ0umf6XRumYX8orVoFfTVgCmR7LWhRUmegQ
-         K9tZYDJQnGrDWsT3jNtRQd0TVlO2gH3cqXAJ8qLJ8zX9s6KP1l46eSPc3nds22nzbc
-         jKQPrZAMOEnUegDgcAlYjK+Tj+zpuwZn14k9s0jryTni1MlBQevHIiuap4tyf+G/ST
-         lprINV0Hz76ejomhkAD7GD33abBMfh25LVh5o8W6Fzpyk2hQ9lA3Qg5ZMbXBlLQ3H+
-         cqhzPGdPSh43A==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1pRWJc-0004Ws-2a; Mon, 13 Feb 2023 11:44:08 +0100
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v6 13/20] x86/uv: Use irq_domain_create_hierarchy()
-Date:   Mon, 13 Feb 2023 11:42:55 +0100
-Message-Id: <20230213104302.17307-14-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230213104302.17307-1-johan+linaro@kernel.org>
-References: <20230213104302.17307-1-johan+linaro@kernel.org>
+        Mon, 13 Feb 2023 05:45:01 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589D41026B;
+        Mon, 13 Feb 2023 02:44:06 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id o66so7924852ybc.0;
+        Mon, 13 Feb 2023 02:44:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=It2YJ0yINpc6a/dHkqF30FII/gMWp9sdCsyV4n7KWtc=;
+        b=SpPVZ3M2CpscTYE+9oAxmsVo3pW3fYwLwKm6WdbVb/+7yJjdapk4Q1q5lI7T0FzSYl
+         PRRJ0bnzLQ5cxN7XOpFAe3qUicnGHoTcCE5NmVqcZ52iDL2e6OwheTVBTPBk2HlO/s2/
+         zoBk41RmCQbTQdIF+psUf7XwwVrWTcy9rST19ICAJV11wiUdw3tEAedfViSBzMIgslmq
+         NQTGODcX5CunR0J0gAcOVc8AIcSk9uTj1RMuAb3E0859aVeURIXWba3vjIObcDkllhUr
+         exRcrqEW9xynUcXSk2OMmoW9IXczT2z1qK7XpvtPrRUZu2SOsSzUvTJvy1sZ+hjk8LuP
+         nqdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=It2YJ0yINpc6a/dHkqF30FII/gMWp9sdCsyV4n7KWtc=;
+        b=kahAU1bsz1O8U3RYnvs4fpfKitudTk4TPh9TGB0OR4ixmsyUsT5K2f6nx8wvlRs0yE
+         HsjdZ+3eXrW8YRfLWGGaA1UO6vZnZGTmyrRXXFUjYysYcaTFaJo7UxLaMtPpKpC5vQ3R
+         0NuiIStKrYz+ekoEyzRNGqcEw22OskRt/aufHMH831PDhOBk6W/5dUzQUofuuQabFm+z
+         ztT/6AHEgXLIMEG9c5bWLw+XQlXIYKGEJFvgVBH6TIEuzuYgHNKNZcX1PBapCMadjX85
+         Jc7m+Vz4kRvux3lA/v1ORDb6sc28kr+cAwlpg/runYjn2CJuRrLsdUaPT3duZ3bLIcTu
+         R66A==
+X-Gm-Message-State: AO0yUKWsY2t/l/atc6ZBCaK0VenZKB/8duicGVFoPVvO823yPp5X6Xo6
+        OJyLm5Pl7NgCUpUE+5urR9g8lTN+Uh6sLwGlYtROJwoYlMWmnw==
+X-Google-Smtp-Source: AK7set+dqgxglvqteU7oT+niFnqkk+BFacOtvdkeY+hJXXDI3ddIhwjlC3/5GLKgi3wEj7G9LZQ+qjeXBPz2Lx2rPks=
+X-Received: by 2002:a25:8a83:0:b0:92d:7c28:5d06 with SMTP id
+ h3-20020a258a83000000b0092d7c285d06mr163303ybl.372.1676285042350; Mon, 13 Feb
+ 2023 02:44:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Carsten Hatger <xmb8dsv4@gmail.com>
+Date:   Mon, 13 Feb 2023 11:43:51 +0100
+Message-ID: <CACp=KFQN79Rz0CHP-5kwP9Y5Y9bEAoN0eJzoOpSejg6aF9qnpw@mail.gmail.com>
+Subject: RFI: Tablet mode support on HP Pro x360 435 G9 w/ AMD Ryzen 7 5825U
+To:     linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the irq_domain_create_hierarchy() helper to create the hierarchical
-domain, which both serves as documentation and avoids poking at
-irqdomain internals.
+Dear all,
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/x86/platform/uv/uv_irq.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+I'd like to have tablet mode support on my system, probably by means
+an linux input device such as implemented in the intel platform
+specific driver drivers/platform/x86/intel/vbtn.c [0]
 
-diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
-index 1a536a187d74..ee21d6a36a80 100644
---- a/arch/x86/platform/uv/uv_irq.c
-+++ b/arch/x86/platform/uv/uv_irq.c
-@@ -166,10 +166,9 @@ static struct irq_domain *uv_get_irq_domain(void)
- 	if (!fn)
- 		goto out;
- 
--	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
--	if (uv_domain)
--		uv_domain->parent = x86_vector_domain;
--	else
-+	uv_domain = irq_domain_create_hierarchy(x86_vector_domain, 0, 0, fn,
-+						&uv_domain_ops, NULL);
-+	if (!uv_domain)
- 		irq_domain_free_fwnode(fn);
- out:
- 	mutex_unlock(&uv_lock);
--- 
-2.39.1
+In the end I hope GNOME eventually to rotate the systems display and
+to show some virtual keyboard (upon users request), cf. for [3]
 
+It appears there has already been a patch proposed  by the chromium
+team to support device PNP0C60 [1] but not merged to [5].
+
+Since the system of interest is a HP Probook, there is already a
+driver providing virtual buttons,namely hp-wmi [6]. However, the
+driver loads probes and loads successfully but doesn't provide any
+additional functionality plus some non critical errors on incorrect
+ACPI method calls.
+
+I've noticed AMD has started to provide platform specific driver(s)
+such as pmf [2]. To my knowledge there is no support for CEZANNE/green
+sardine based systems (yet).
+
+What would be recommended practice and subsystem/folder to provide
+such capability by means of a (platform specific) driver? At least the
+CID PNP0C60 seems to be held by Microsoft [4] and thus be common to
+both amd and intel platforms [4]. However, HID INT33D6 is held by
+Intel and HID AMDI0081 by AMD. Yet I'm not quite sure if
+iio-sensor-proxy [7] needs to be involved, too.
+
+Best regards,
+Carsten Hatger
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/intel/vbtn.c?h=v6.2-rc8
+[1] https://lore.kernel.org/lkml/1472628817-3145-1-git-send-email-wnhuang@google.com/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/amd/pmf?h=v6.2-rc8
+[3] https://gitlab.gnome.org/GNOME/mutter/-/issues/1760
+[4] https://learn.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-implementation
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/button.c?h=v6.2-rc8
+[6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/hp/hp-wmi.c?h=v6.2-rc8
+[7] https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/
