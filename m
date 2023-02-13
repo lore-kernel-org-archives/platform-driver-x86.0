@@ -2,216 +2,344 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D416C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 12:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103B5C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 13:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbjBMMuH (ORCPT
+        id S229717AbjBMNHg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 07:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
+        Mon, 13 Feb 2023 08:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230013AbjBMMuG (ORCPT
+        with ESMTP id S229485AbjBMNHf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2023 07:50:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F921BB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 04:49:25 -0800 (PST)
+        Mon, 13 Feb 2023 08:07:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAB615CAD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 05:06:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676292564;
+        s=mimecast20190719; t=1676293614;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1FWWxthwKmHnCwh/VB+LOrY7MxDsLLnsFPiG0T4E2UM=;
-        b=aJa0wm9mlbLXfUDisanx+1BTn1m2pi3MTS3PABafq0GTsVG5Q8ijcvXXxf1hEf23sgt0q+
-        PLM3KYlCqC+Q5oeLAH6EjsVJeeCsbThgfUYZ89Abh6Hd5KhmRqr6Y0faXGzZ3RalRsf9Vo
-        N4cHuycGEr8BCK3aVpdOP9w+BT0maAU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=d+abHBag84lHgIOYD22m4gmox32Aq7cjnmM1OJFb1h4=;
+        b=Z8Tgw5zHoYHMAW3GuVFAV0LG3yai+PNCAiQeyX5PPs1YRjvM4G1YtkBAVuVRsLpOscbsIq
+        65SrLZbItaGPPAS+6V7eJvW5MYrxTtbv/7eSQrS+N79vVkmdrjYx74qgwl4AZrMVm6WMHT
+        BPLX21z2LE9BKZiJJzaonSTmTT4EOYY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-68-QgYLvUXMOEyVtzTQRBkToA-1; Mon, 13 Feb 2023 07:49:21 -0500
-X-MC-Unique: QgYLvUXMOEyVtzTQRBkToA-1
-Received: by mail-ed1-f70.google.com with SMTP id l9-20020a056402254900b004acbe232c03so2355920edb.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 04:49:21 -0800 (PST)
+ us-mta-277-8kIC6PSVO6a4VmZLAFdHAw-1; Mon, 13 Feb 2023 08:06:53 -0500
+X-MC-Unique: 8kIC6PSVO6a4VmZLAFdHAw-1
+Received: by mail-ej1-f71.google.com with SMTP id gz8-20020a170907a04800b0087bd94a505fso7593805ejc.16
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 05:06:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FWWxthwKmHnCwh/VB+LOrY7MxDsLLnsFPiG0T4E2UM=;
-        b=S+RVqMkegdO5X1MJxnZoG+NXuZ3HEGKhC2Y4xxrEE+GWvzlhDNqXKYPh6VgYy71FjJ
-         KAF+OodOUpDw9F0DW5ymByOU0mEoDaTy63hkblPRXV05SzLJISlECTppg4hvKD9cm3b0
-         cwxMhLFRnmvOQt+NPuL3F1WhOJS2HaQBk1hzDp6/5TTJ9vofywPmzufGMyJ/SywJYsX1
-         mtEWZWOUwcVFqZCy4OqEPV8M77bsGHLk/nRgiTA1iEstELx2la++PeRZEVG5/VbiXYeY
-         ebGKXna2kcn0LUCnkwbWQAfxRlyxAyi7cRdOIVBIy6x1Oy6c7Ect8De6FVdi4mydAGPd
-         jf+w==
-X-Gm-Message-State: AO0yUKXQfNi3fd7xaQe9+LV98juIXCRtQLMuPlUoim9zj+XjR7HGyi44
-        OVs0TwlXgbprmyqAOKtr7V0YG7fVjigVgd3/zqHzPzhNB+7c53ngAxVxs24WIBWoO1E/DqE89Pe
-        l4+EWf/K0AHSqteXY/RLKGCC+hREjlZAQUg==
-X-Received: by 2002:a50:f61a:0:b0:4ab:f442:9cd7 with SMTP id c26-20020a50f61a000000b004abf4429cd7mr10129034edn.25.1676292560181;
-        Mon, 13 Feb 2023 04:49:20 -0800 (PST)
-X-Google-Smtp-Source: AK7set90NoCkzyYpdgoXcObSFiQSCvsk/f/PCPNWoROravG1wwqaMmVa08g8g0WO9X+Z6gUESLB7tQ==
-X-Received: by 2002:a50:f61a:0:b0:4ab:f442:9cd7 with SMTP id c26-20020a50f61a000000b004abf4429cd7mr10129010edn.25.1676292559972;
-        Mon, 13 Feb 2023 04:49:19 -0800 (PST)
+        bh=d+abHBag84lHgIOYD22m4gmox32Aq7cjnmM1OJFb1h4=;
+        b=xaUyTMKl7faDA8AIwYDszvOzWIJsLyChXX9re2hDw3BozXAoePaOEbQXpCT+wGZjzv
+         +FxWCVbL4hJKggZtD7o+ty8lZHfskQOxiMjOMgF94SYjyYVz3jPEh6hJnSLXcPBNWD93
+         /UBY4gLx8ebtQS9+UjJG2VXoeKJreVYC0QhzfW2pu2afEgcrFZ2uP7jLBe+7n5uWwo8b
+         QWijUNhKbEjljnfIGpEIoJYAQZjCxTkAIcAxsD0ajt4I7llWN7GYbBYo99qP2k74kNAo
+         yU+euNQoAnVyOAV7F/3VG/x5DCktNru9xn6ASfticFFBvo9InAyKxwgnMH8syxwiEq/w
+         t1Hw==
+X-Gm-Message-State: AO0yUKWVNcka09bm8kjdGOET+ZIyZG0HH3T43Ff9Omy/STplgI3QhT5l
+        rOYtZD+h0XJnxrE9DyTCTAcUJL+XKJ3tDsIBRz7oLNMCx8YEnWZwgOV74jr8idRMyCwqOuYombf
+        D4cjitJVRV6E2aeHKe/KyAE4uMBmxx8nAGrplsd4=
+X-Received: by 2002:a50:8705:0:b0:4ab:4569:4b9f with SMTP id i5-20020a508705000000b004ab45694b9fmr10516344edb.0.1676293611708;
+        Mon, 13 Feb 2023 05:06:51 -0800 (PST)
+X-Google-Smtp-Source: AK7set80bjCzLec7OQoCXT1alPimaacSZ+rrTiRlhnc71eZzsSXMRGzN6SlVQEJwCWAGA6UubvB3fQ==
+X-Received: by 2002:a50:8705:0:b0:4ab:4569:4b9f with SMTP id i5-20020a508705000000b004ab45694b9fmr10516326edb.0.1676293611348;
+        Mon, 13 Feb 2023 05:06:51 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id m18-20020a509992000000b004acb9ae4757sm3529087edb.40.2023.02.13.04.49.19
+        by smtp.gmail.com with ESMTPSA id z27-20020a50cd1b000000b004acc61206cfsm1837181edi.33.2023.02.13.05.06.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Feb 2023 04:49:19 -0800 (PST)
-Message-ID: <ec5bc4a6-dc9f-90dd-0cf6-5fab47bb5fa6@redhat.com>
-Date:   Mon, 13 Feb 2023 13:49:18 +0100
+        Mon, 13 Feb 2023 05:06:50 -0800 (PST)
+Message-ID: <3a36b460-9108-5c83-b4f6-42b4718afcf0@redhat.com>
+Date:   Mon, 13 Feb 2023 14:06:50 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
- V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
+Subject: Re: [PATCH v4 1/2] x86: Support APU5 & APU6 in PCEngines platform
+ driver
 Content-Language: en-US
-To:     Rishit Bansal <rishitbansal0@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
- <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
- <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
- <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
- <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
- <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
- <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
+To:     Philip Prindeville <philipp@redfish-solutions.com>
+Cc:     Ed W <lists@wildgooses.com>, platform-driver-x86@vger.kernel.org,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Andres Salomon <dilinger@queued.net>,
+        Andreas Eberlein <foodeas@aeberlein.de>,
+        Paul Spooren <paul@spooren.de>
+References: <20230113231139.436956-1-philipp@redfish-solutions.com>
+ <00b4cd69-14ce-ce1f-2bec-83ecbb928cbc@redhat.com>
+ <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
+ <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
+ <5F93DF5F-BEC4-4B2A-A057-A895282A66B2@redfish-solutions.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
+In-Reply-To: <5F93DF5F-BEC4-4B2A-A057-A895282A66B2@redfish-solutions.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/7/23 14:05, Rishit Bansal wrote:
-> Hi,
+On 2/9/23 07:04, Philip Prindeville wrote:
+> Hi Ed and Hans,
 > 
-> On 07/02/23 17:23, Pavel Machek wrote:
->> Hi!
->>
->>>>> 2. Create 4 separate multi-color LED sysfs devices for each zone:
->>>>>
->>>>> /sys/class/leds/hp_omen::kbd_backlight-zone1/
->>>>> /sys/class/leds/hp_omen::kbd_backlight-zone2/
->>>>> /sys/class/leds/hp_omen::kbd_backlight-zone3/
->>>>> /sys/class/leds/hp_omen::kbd_backlight-zone4/
->>
->> 4 separate devices, please. And the naming should be consistent with
->> the rest, so
->>
->> :rbg:kbd_backlight-zone1
-> 
-> As covered above previously, we cannot have kbd_backlight in the name as Upower and several other userspace software which depend on it assume that /sys/class/leds has just a single file name with the string "kbd_backlight" in it:
-> 
->> For example, Ubuntu (and most gnome based distros) by default ships with gnome-settings-daemon, which by default attempts to dim the keyboard backlight after a short duration when on the "Low Power" ACPI platform profile. (https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/blob/master/plugins/power/gsd-power-manager.c#L1671). This was currently working as intended with the v2 patch, but if we introduce 4 different files for each zone, this may start dimming only one keyboard zone on low power instead of all 4 of them, which is certainly not intended. There are also multiple projects (mostly gnome extensions) that interact with UPower which might also function incorrectly in other ways. I don't think we should release a feature in the driver which caused unintended consequences like the ones mentioned, especially if the software is popular. What is your opinion on this?
-> 
-> 
-> However, as Hans mentioned above, its possible to keep 4 seperate files and use a name other than kbd_backlight, so that we don't break existing stuff until the issue is fixed on upower:
-> 
->> /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
->> /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
->> /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
->> /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
-> 
-> 
-> 
->>
->> would be closer to something consistent. Should be documented in
->>
->> Documentation/leds/well-known-leds.txt
->>
->> . And if you take a look there, you'll notice we already have N900
->> that has 6 zones with white backlight.
->>
-> 
-> This is interesting as well, it appears the N900 also doesn't have "kbd_backlight" in the name at all. It instead uses a format like the following:
-> 
-> /sys/class/leds/lp5523:kb1/
-> /sys/class/leds/lp5523:kb2/
-> ...
-> 
-> 
-> I'm not sure if this is because the N900 driver was made long before we had the concept of "kbd_backlight" in the name, or because of some other reason. There are about 9-10 drivers on the kernel which are sticking with using the "kbd_backlight" convention, so N900 seems to be an outlier here.
-> 
-> 
->> But I'd really like to see plan to go forward. AFAICT there are
->> keyboards with per-key backlight, and those start to look less like a
->> set of LEDs and more like a display..
-> 
-> 
->>
->> Best regards,
->>                                 Pavel
-> 
-> 
-> Something else I would like to add. I had a look at include/dt-bindings/leds/common.h, and it defines the following:
-> 
-> /* Standard LED colors */
-> #define LED_COLOR_ID_WHITE    0
-> #define LED_COLOR_ID_RED    1
-> #define LED_COLOR_ID_GREEN    2
-> #define LED_COLOR_ID_BLUE    3
-> #define LED_COLOR_ID_AMBER    4
-> #define LED_COLOR_ID_VIOLET    5
-> #define LED_COLOR_ID_YELLOW    6
-> #define LED_COLOR_ID_IR        7
-> #define LED_COLOR_ID_MULTI    8    /* For multicolor LEDs */
-> #define LED_COLOR_ID_RGB    9    /* For multicolor LEDs that can do arbitrary color,
->                        so this would include RGBW and similar */
-> #define LED_COLOR_ID_PURPLE    10
-> #define LED_COLOR_ID_ORANGE    11
-> #define LED_COLOR_ID_PINK    12
-> #define LED_COLOR_ID_CYAN    13
-> #define LED_COLOR_ID_LIME    14
-> #define LED_COLOR_ID_MAX    15
-> 
-> This means that the proposal I had made for supporting intensities such as zone_1_red zone_1_green zone_1_blue zone_2_red zone_2_green zone_2_blue ... would be invalid as well, and inconsistent with these definitions. The limit of "15" would also prohibit us from supporting keyboards in the future which support lighting for every single key, as we would need way more than 15 indexes to accommodate all of these.
-> 
-> So we are at sort of a conflicted state where none of the standards seem to correctly "completely" accomodate every single case/scenario of keyboard backlighting and zones.
-> 
-> 
-> Here is yet another approach to handle this, which I feel we should consider:
-> 
-> We can keep the kbd_backlight file, and additionally have the 4 zones as separate files, (a total of 5 files) like the following:
-> 
-> 
-> 1. /sys/class/leds/hp_omen::kbd_backlight
-> 
-> This file controls the global backlight brightness for all 4 zones. It will have no control for RGB control at this level, this is just sort of a global switch for the entire backlight. Setting the brightness on this level will update the brightness for every zone. This file will also help us maintain support with Upower.
-> 
-> 2.
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
-> /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
-> 
-> These will be multi intensity RGBs, each supporting "red green blue" intensities, and can be used to individually control the brightness of each zone. Note that these files don't have "kbd_backlight" in the name for us to not mess with Upower's logic of only having a single keyboard backlight. This can be documented in Documentation/leds/well-known-leds.txt for future drivers which plan to support something similar.
+> First off, sorry for taking a while to get back.  My wife has been busy with final exams at uni and I've been having to take care of the kids for both of us.
 
-I am not really a fan of this. When the "global" LED then is turned off (brightness=0) then all the other LED devices all of a sudden do nothing and writing values > 0 to their brightness won't turn them on which is not how the LED class API is supposed to work. We can come up with various tricks to work around this, but the fact remains that if we go this route we end up with weird hard to define interaction between 2 LED devices while from an userspace API pov they really should be independent.
+No problem.
 
-note that both Pavel and I suggested using 4 multi-color LED class devices (1 per zone) for this and I still/really believe that this is the best way to deal with this.
+>> On Feb 2, 2023, at 4:14 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Ed,
+>>
+>> On 1/20/23 20:18, Ed W wrote:
+>>> On 19/01/2023 10:22, Hans de Goede wrote:
+>>>
+>>>>> /* Order in which the GPIO lines are defined in the register list */
+>>>>> #define APU2_GPIO_LINE_LED1 0
+>>>>> #define APU2_GPIO_LINE_LED2 1
+>>>>> #define APU2_GPIO_LINE_LED3 2
+>>>>> #define APU2_GPIO_LINE_MODESW 3
+>>>>> -#define APU2_GPIO_LINE_SIMSWAP 4
+>>>>> -#define APU2_GPIO_LINE_MPCIE2 5
+>>>>> -#define APU2_GPIO_LINE_MPCIE3 6
+>>>>> +#define APU2_GPIO_LINE_RESETM1 4
+>>>>> +#define APU2_GPIO_LINE_RESETM2 5
+>>>>> +#define APU2_GPIO_LINE_SIMSWAP 6
+>>>> I don't think this changing of GPIO ordering, or
+>>>> for that part the changing of the gpio_names from 
+>>>> "mpcie2_reset" to "modem1-reset" is a good idea.
+>>>>
+>>>> I'm not entirely sure how these GPIOs are supposed to be
+>>>> consumed / used by userspace. But since they are not used
+>>>> directly in this driver I assume userspace is supposed to
+>>>> use either the (deprecated) sysfs GPIO API or the new ioctl
+>>>> based GPIO API to toggle say "simswap" if it needs to.
+>>>>
+>>>> The old sysfs API exclusively uses pin-indexes inside a GPIO
+>>>> chip to select the pin, so by changing the pin order you
+>>>> have just broken the userspace API.
+>>>>
+>>>> And the new ioctl API can use either pin-indexes or GPIO-line-names,
+>>>> so by changing the names you have also just potentially broken
+>>>> that.
+>>>>
+>>>> Please keep the order as is and only use the new names for
+>>>> the newly added models (so for APU6 I believe).
+>>>
+>>>
+>>> Hi, I'm not sure what the "correct" thing to do is, but just to add some background to the situation:
+>>>
+>>> There are an increasing number of APU boards, which are *very* similar, and also through time the
+>>> pin allocations have muddled around, plus most recently, the BIOS can configure many things and has
+>>> started to use naming conventions different to the historic kernel naming
+>>>
+>>> So I don't have a board in front of me to be definitive, but something like the following happened:
+>>>
+>>> - APU2 used something like mpcie sockets 1&2 for USB stuff and hence LTE cards, socket 3 was msata
+>>>
+>>> - Then another version APU3, I think moved these to sockets 2&3
+>>>
+>>> - Then another version APU4, moved the USB to sockets 2&3 and wired up a second SIM slot in most
+>>> versions, including a SIM line swapper chip. Now you start to wonder if you should have labelled
+>>> things PCIE1, PCIE2, PCIE3, etc, when really they mean modem 1 and modem 2, etc?
+>>>
+>>> - Then came APU5, which has 3x USB sockets, plus 3x mpcie sockets. These are wired to different pcie
+>>> numbers, and so the naming modem1, modem2, modem3 starts to make a lot more sense.
+>>>
+>>> - APU6, which is mentioned in the original patch, is really just the same as one of the other
+>>> boards, but with different ethernet sockets (SFP vs copper)
+> 
+> 
+> Yes, eth0 on the APU6 is an i210 w/ SFP cage, and i211 on all of the other ports.  The APU4 and others all used i211's on all the ports (for 1000baseTX).
+> 
+> I've asked PC Engines for a definitive list of what GPIO lines are used for what on all of the current revs of the boards.  I'll share that as soon as I get it.
+> 
+> 
+> 
+>>>
+>>> - There is also a rare feature, which is likely not known to most users, or even wired up correctly
+>>> on many boards. You have a reset/enable line to some of the mpcie slots. This again makes more sense
+>>> to label logically vs than per slot. It's really not clear that this feature is properly supported
+>>> or functioning on all boards (you can order special order boards wired in various ways). So changes
+>>> here are unlikely to be noticed by all but a handful of specialist users.
+>>>
+>>>
+>>> Overall, if one could start again, the unifying feature would be label slots logically, ie modem1,
+>>> modem2, wifi1, wifi2, rather than numbering them based on how they are wired on a specific board rev.
+>>
+>>
+>> "this" below starts here:
+>>
+>>> Additionally, users who didn't load the APU driver, likely had ACPI named devices and these all have
+>>> different (and to my eye, more logical names). So whatever we decide to do here will cause some
+>>> breakage and inconsistency...
+>>
+>> Hmm, can you elaborate a bit on this?  Does ACPI somehow expose the LEDs / GPIO to userspace
+>> already and will adding APU5 / APU6 support make those ACPI exposed devices go away ?
+>>
+>> If yes then what is the advantage of using the APU driver over the ACPI exported functionality?
+> 
+> 
+> Other than ACPI being less than reliable in a lot of cases?
 
-I do agree with you that we need to avoid kbd_backlight in the name to avoid causing existing upower code to have weird interactions with this (it supports / assumes there is only 1 kbd_backlight LED class device).
+ACPI can sometimes be unreliable, but that is just down to it being badly implemented by
+board vendors.
 
-So lets go with just these 4:
+If used correctly it is no more or less reliable as any other code, so its reliability is not
+really a good argument not to use it unless the ACPI code on PCEngines devices is known to
+be unreliable ?
 
-/sys/class/leds/hp_omen::kbd_zoned_backlight-1/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-2/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-3/
-/sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+>> Sorry for being a bit pedantic about this patch, but as a maintainer it is my responsibility
+>> to ensure that we don't break existing userspace, e.g. existing use-cases using the exposed
+>> ACPI devices.
+>>
+>> Note "fixing" this might be as simple as putting the new APU5 / APU6 support behind an extra Kconfig
+>> option (behind a modparam actually with a Kconfig option to select the default of the modparam).
+>>
+>> This way we can get distro's to opt-in to (or opt-out depending on the default) the new behavior,
+>> needing a modparam + Kconfig option for this is not ideal, but if there is a significant behavior
+>> change it is an escape hatch we can use.
+>>
+>>> Note that I submitted this previous patch "years ago", and I've somewhat given up on ever getting
+>>> the APU driver up to date.. I think in 2020, Enrico shot me down because he was working on some
+>>> grand unification for modem GPIO handling? (Enrico, please correct me on the details?) Hans, I think
+>>> if you search back to 2020 on "APU", you will see that you arbitrated in that thread?
+>>
+>> Yes I vaguely remember back then I was hoping / expecting you and Enrico to sort things
+>> out, but that seems to have not happened. And given Enrico's silence in this thread
+>> I'm not sure if Enrico is still working on this. So I guess now I get to figure out how
+>> to move forward here.
+>>
+>>> For whatever
+>>> reason, we seem to be stuck that there are competing voices blocking progress here. Every route
+>>> leads to some level of incompatibility. Personally I am a fairly large consumer of these devices,
+>>> but I really don't care what we decide, because we ship a custom software, where userspace will
+>>> match kernel, so we will update both in lockstep, whatever happens. Changes aren't a problem for me
+>>> personally.
+>>>
+>>> My vote would be for a one-of breakage, to at least get everyone using the same
+>>> terms/names/whatever. I would suspect OpenWRT is probably the biggest voice here, so suggest we go
+>>> with whatever they suggest, and then at least we are all in sync for the future? If its a one off,
+>>> then suggest taking into account the ACPI naming as well?
+>>
+>> I agree that we need to find a way forward here. I would like to get this resolved
+>> and to get something merged into the mainline kernel for this.
+>>
+>> I also agree that if there is breakage it would be best to just break things only once.
+>>
+>> If there is going to breakage though I think we need some toggle to toggle between
+>> the old and new *mainline* kernel behavior. This could be as easy as making the modparam
+>> for this just abort probe() (return -ENODEV) on the new APU models when it is set to its
+>> "backward compat" value.
+> 
+> 
+> If people wanted to use ACPI instead of the APU driver, why not just build their kernels without the APU driver linked in?
 
-Using the _zoned_ between kbd and baclight to avoid confusing the existing upower code. Then once this has landed we can look into extending upower support for this.
+Most people do no want to / don't have the skills to build their own kernel, so they are
+going to be relying on a distro (including openwrt as a sort of distro) provided kernel.
 
-Note the requested documentation patch should probably also explain that the _zoned_ was done deliberately to make current upower code ignore the devices.
+>>> Note, there is a very big risk that I missed the point... Please be gentle. Quite possibly there is
+>>> a solution to just reorder some definitions and we land where we want to be? Is it that simple?
+>>
+>> Yes my original compatibility remark was just about reordering some definitions +
+>> keeping the old labels for the already supported APU models.
+>>
+>> So talking in code my proposal is to change this (in the new code):
+>>
+>> #define APU2_GPIO_LINE_LED1 0
+>> #define APU2_GPIO_LINE_LED2 1
+>> #define APU2_GPIO_LINE_LED3 2
+>> #define APU2_GPIO_LINE_MODESW 3
+>> #define APU2_GPIO_LINE_RESETM1 4
+>> #define APU2_GPIO_LINE_RESETM2 5
+>> #define APU2_GPIO_LINE_SIMSWAP 6
+>>
+>> to:
+>>
+>> #define APU2_GPIO_LINE_LED1 0
+>> #define APU2_GPIO_LINE_LED2 1
+>> #define APU2_GPIO_LINE_LED3 2
+>> #define APU2_GPIO_LINE_MODESW 3
+>> #define APU2_GPIO_LINE_SIMSWAP 4
+>> #define APU2_GPIO_LINE_RESETM1 5
+>> #define APU2_GPIO_LINE_RESETM2 6
+>>
+>> Keeping the simswap signal as GPIO/pin number 4 instead of moving it
+>> to the end.
+>>
+>> And also instead of making changes to apu2_gpio_names[] (1)
+>> introduce a new apu5_gpio_names[] / apu6_gpio_names[] so that
+>> the labels don't change on the existing supported models.
+>>
+>> I'm less worried about the label change then about the index
+>> change, because typical GPIO use from userspace will use
+>> indexes not labels. So if having different labels on
+>> different APU versions is a big problem you might be able to
+>> convince me to change the labels on the old models too.
+> 
+> 
+> I've been thinking about this the last few days, and the APU's are all low-power, headless (no video), SBC's.  They're designed for embedded usage.  That is, they don't have generic distros like Ubuntu (et al) installed on them, so the kernel and the bundled applications are all released together, typically in an monolithic image (at least that's the case for OpenWRT).
+> 
+> Changing the kernel and what's visible in user-space typically isn't a problem as long as both happen at the same time.  That's what we've done with OpenWRT, adding the 2 new board models, and the mapping of led triggers to GPIO lines.
+
+For the upstream / mainline kernel we have a very clear defined policy of
+never breaking userspace (APIs). Even though these are designed for embedded
+usage, some people might be running normal distro-s on these.
+
+I have seen people run Fedora on Intel Atom x86 devices designed as
+NAS boxes...
+
+
+> 
+> 
+>>
+>> Summarizing:
+>>
+>> Please change:
+>>
+>> 1. The GPIO indexing to keep simswap at its old place
+>> 2. Use the labels only on new models (open for discussion).
+>>
+>> Open questions:
+>> 1. Can you elaborate a bit about the ACPI way of accessing these
+>> things. If that is actually a thing, we cannot just break it
+>> (but we could use a module-parameter for still breaking it).
+> 
+> 
+> What would this look like?  Would it be a boolean that throws the switch from "classic/legacy" to "updated" mapping?  I think that could work...  Since in OpenWRT we control both the drivers, the Kconfig settings, and the default GRUB parameters, that would work in our case.  I can't speak for pfSense, etc.
+
+Yes a boolean module parameter with the default value of the boolean
+configurable through Kconfig, so that e.g. openwrt can just pick
+default values matching what it wants and won't need to specify
+anything on the kernel commandline.
+
+Note this is not just about the mapping though. From what I understand
+about this, using the pcengines-apu driver conflicts with the ACPI way
+of accessing the LEDs and gpios.
+
+So for the new APU models, there should be a module-option to decide
+whether for probe() to continue at all on those models or whether
+it should just return -ENODEV (so the driver won't bind), leaving
+things just as they were before this changes.  The purpose of this
+is to keep the ACPI way of accessing the LEDs, ..., working.
+
+>> 2. You mention this is important to the openwrt community are
+>> there already openwrt people in the Cc here so that we can get
+>> their input? If not can you reach out to them ?
+> 
+> 
+> Paul and myself are both from the OpenWRT community.
+
+That is good to know.
 
 Regards,
 
-hans
+Hans
 
 
