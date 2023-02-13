@@ -2,99 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937A8C64ED9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5777C677F1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbjBMKnb (ORCPT
+        id S230204AbjBMKnc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 05:43:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        Mon, 13 Feb 2023 05:43:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbjBMKnX (ORCPT
+        with ESMTP id S230043AbjBMKnX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 13 Feb 2023 05:43:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058B915C8D;
-        Mon, 13 Feb 2023 02:43:19 -0800 (PST)
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C2815C99;
+        Mon, 13 Feb 2023 02:43:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF61060F98;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0D6FEB8109E;
+        Mon, 13 Feb 2023 10:43:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AB3C4322C;
         Mon, 13 Feb 2023 10:43:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB2FC4332B;
-        Mon, 13 Feb 2023 10:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676284996;
-        bh=G4mWOCUvHTQGYHmRB/UF8iuUGYF8As5e5KSKQ7KrbSA=;
+        s=k20201202; t=1676284997;
+        bh=g/DpJ6yqRzfoadiSwGWD2YQN47sUT9bIGP4aY7Lvgjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mb6wAn9sS0BB0Lc0j8fJ8Llr8LMqVWwH45Mnld0oVxfCYtZp9AhC7Dg0QMRGdeJX9
-         OyD9xwcd/1AzVZ9ncIO3G9GPog38JvWjGVKy6A518HqRvDjVrnTNWMtcdZlRQmGk95
-         fO/498pm8f4c78JyTtOslRhcKhXjltIjkLb8xKg1ZGq0MBzQ5fAhOPgEcuS1AE4uZz
-         XVcgyFPSIdVUKQnHmht1StsuuB+OuZQmTceP+q+a6KfDKvI2cA8pizZJySIRgWX9WC
-         YxqBePIAw/PCuyiaYlDoJmqcxsB18uoVStLnWvMRXOQAByyvzzzayNawyp835Rjs8N
-         aGNLy4qLC0gfw==
+        b=glMpyAhkAbJ7h3BBqwb4f0ARTML3lseUBAkZZzPKsbr28Bv99r2ki1DZ3qh9FvAWD
+         rthsWhwZVcwcniOAAT+MwV051VFqlSuYzcmjbcCGUn797bfROURDGQWQg1ZWdw/Bat
+         w73nIBC7EfTy3BqUtqjlsOyYRNIrI4RexCrZOvch5o5Hue+ZXwheJWtgIdYs9DNeas
+         FixwYWxG4aix2o1/KrVZoLWcrHDB+u9hwqkGXsT4IYJtZkhNGxaRwSsTSmUMrC6FRy
+         xAcaTew4Ao5zm+Sd2BhdgVCWZYayJwALmb1AfT1AcFkHR/A3i6hAEtFhKoHmeDOcxS
+         mgxVvkVzBonYQ==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1pRWJb-0004Wf-NK; Mon, 13 Feb 2023 11:44:07 +0100
+        id 1pRWJc-0004Wx-8b; Mon, 13 Feb 2023 11:44:08 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>,
         Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Subject: [PATCH v6 09/20] irqdomain: Drop dead domain-name assignment
-Date:   Mon, 13 Feb 2023 11:42:51 +0100
-Message-Id: <20230213104302.17307-10-johan+linaro@kernel.org>
+Subject: [PATCH v6 15/20] irqchip/gic-v2m: Use irq_domain_create_hierarchy()
+Date:   Mon, 13 Feb 2023 11:42:57 +0100
+Message-Id: <20230213104302.17307-16-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230213104302.17307-1-johan+linaro@kernel.org>
 References: <20230213104302.17307-1-johan+linaro@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since commit d59f6617eef0 ("genirq: Allow fwnode to carry name
-information only") an IRQ domain is always given a name during
-allocation (e.g. used for the debugfs entry).
+Use the irq_domain_create_hierarchy() helper to create the hierarchical
+domain, which both serves as documentation and avoids poking at
+irqdomain internals.
 
-Drop the leftover name assignment when allocating the first IRQ.
-
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- kernel/irq/irqdomain.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/irqchip/irq-gic-v2m.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index f2247186f71d..9bba31de6928 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -619,10 +619,6 @@ static int irq_domain_associate_locked(struct irq_domain *domain, unsigned int v
- 			irq_data->hwirq = 0;
- 			return ret;
- 		}
--
--		/* If not already assigned, give the domain the chip's name */
--		if (!domain->name && irq_data->chip)
--			domain->name = irq_data->chip->name;
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index f4d7eeb13951..f1e75b35a52a 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -287,15 +287,14 @@ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
+ 	if (!v2m)
+ 		return 0;
+ 
+-	inner_domain = irq_domain_create_tree(v2m->fwnode,
+-					      &gicv2m_domain_ops, v2m);
++	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
++						   &gicv2m_domain_ops, v2m);
+ 	if (!inner_domain) {
+ 		pr_err("Failed to create GICv2m domain\n");
+ 		return -ENOMEM;
  	}
  
- 	domain->mapcount++;
-@@ -1182,10 +1178,6 @@ static void irq_domain_insert_irq(int virq)
- 
- 		domain->mapcount++;
- 		irq_domain_set_mapping(domain, data->hwirq, data);
--
--		/* If not already assigned, give the domain the chip's name */
--		if (!domain->name && data->chip)
--			domain->name = data->chip->name;
- 	}
- 
- 	irq_clear_status_flags(virq, IRQ_NOREQUEST);
+ 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+-	inner_domain->parent = parent;
+ 	pci_domain = pci_msi_create_irq_domain(v2m->fwnode,
+ 					       &gicv2m_msi_domain_info,
+ 					       inner_domain);
 -- 
 2.39.1
 
