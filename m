@@ -2,224 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E39C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BA6C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjBMKMK (ORCPT
+        id S229484AbjBMK2N (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Feb 2023 05:12:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
+        Mon, 13 Feb 2023 05:28:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjBMKLl (ORCPT
+        with ESMTP id S230038AbjBMK2M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2023 05:11:41 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AF1EFAC
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:11:39 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id f34so18118819lfv.10
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:11:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf.com; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EiRAvYfruz2LwVkJecvV8bOL6r0255EKOkvzv5hr740=;
-        b=TiK8XnATOnj70Vd48zegfPwLdxp9VAHHam3Q5OPSfn6GOAaaXMvF+oRT7Hih1o6TDO
-         8TPizkNDh0X++hSjXcQ99cBOtbcBLrsSvztSvxu8j0dZO2KaPaRhNAEhtLd3M/6o8lkl
-         ytDaRdIJgcFQ4DePsZCAB5ojlht3JWscXJ6cU3XSv72PY0oa/NcxYCYZzJiXl0yEkRgV
-         5a2me/VyI88/8MM/Yciu6mmrWahP5+NPXnWUEvhBT7EsTczKm4XvMJn3EMNS1oi0yqgB
-         qfIZmnY/BVZCjfWZ8j5CtCJ247Peu/xLosA/+ol79EIa8k0D4jucZXwKLFP1Q3+vCJmx
-         UEpw==
+        Mon, 13 Feb 2023 05:28:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EA99ED0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:27:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676284039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3CE4eMa3FyiLCFaW2IEzgSX8SFgyrVdO0vnWlAIO6nA=;
+        b=KtLqC/T6lblPbvys/TJAD2zGYAVz33AeFShPXhkFThIZgH6fUbcuwG42DDEQocxJYfk/cZ
+        bvD+ESaAXhjXn3+fG8dn+8ga23VAoR/+QHXXUkrpQxEjLQd5O/O7B2jCRQ4rMjphgm90EF
+        MFLLOZSMUWNXBaNvF0P7XBIDswOCbb0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-128-Bkq00NQBNuaJSrj7ez9-Ew-1; Mon, 13 Feb 2023 05:27:17 -0500
+X-MC-Unique: Bkq00NQBNuaJSrj7ez9-Ew-1
+Received: by mail-ej1-f71.google.com with SMTP id fy3-20020a1709069f0300b008a69400909fso7288757ejc.7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:27:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EiRAvYfruz2LwVkJecvV8bOL6r0255EKOkvzv5hr740=;
-        b=d61B5YwhKr2XVmszGuf5vx2Px/3d+x4E4XebZ0NBeMl196vMjJ5U4+wxNC02Dvyjw9
-         AG8CIUqtq2RVZNAgQztJO8C8/D1aKV/05pTXh9HnI7OPZLykZzCjm5WBOjycTumbPD3e
-         4hBTlBm9BLTKyVgnCiM2ElW/SiKbzAHZMHikD3d1Cj0C80l8OULc9WnnP5R1HVDoiUNr
-         t6qqnN6i2JfvIDmlCcSy7A1A/cnXjEjcr4kcid7WGuDclWgEhvnHW1wZ8/xpkxWA5/ml
-         tLiBXormRBOdT5xGjvIaHDj/MRiN9nD5S2ZgewUXIS52T42ci7lcEvhUT9QYeC21rNCr
-         FNmg==
-X-Gm-Message-State: AO0yUKXW9qeezn4//MyQhBdo5lYb4FnttASAvjwqSr/Uf4KHR1Y+XsgP
-        d7b9p4pOdgbIY71nJfI43MwpjQ==
-X-Google-Smtp-Source: AK7set9/jBHFXSbATRj6t/69h0znHJ7EalDvMZumXrTdcY+nIWuLh0rni3xqTLIOVrqvieMqOiewFA==
-X-Received: by 2002:ac2:5319:0:b0:4db:964:51b5 with SMTP id c25-20020ac25319000000b004db096451b5mr5015516lfh.41.1676283097810;
-        Mon, 13 Feb 2023 02:11:37 -0800 (PST)
-Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
-        by smtp.gmail.com with ESMTPSA id t6-20020a19ad06000000b004b55da14ba8sm834416lfc.291.2023.02.13.02.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 02:11:37 -0800 (PST)
-From:   Grzegorz Jaszczyk <jaz@semihalf.com>
-To:     linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
-        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
-        upstream@semihalf.com, hdegoede@redhat.com, markgross@kernel.org,
-        dtor@google.com, mario.limonciello@amd.com,
-        linux-pm@vger.kernel.org, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [RFCv3 1/1] platform/x86: Add virtual PMC driver used for S2Idle
-Date:   Mon, 13 Feb 2023 10:09:21 +0000
-Message-Id: <20230213100921.268770-2-jaz@semihalf.com>
-X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
-In-Reply-To: <20230213100921.268770-1-jaz@semihalf.com>
-References: <20230213100921.268770-1-jaz@semihalf.com>
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3CE4eMa3FyiLCFaW2IEzgSX8SFgyrVdO0vnWlAIO6nA=;
+        b=PhabTSOwclMcRHfEqsI/Bbkl+sWzZ7OBJ4F88fVrXYcBnSpMGUo9JgwzFVhzUjMc6t
+         gSirsLdoJoMPF07QcEt5ehblMmyGg5jr17iErNRLEW0FR053NNtweXKFiBFUfah+ySQC
+         hzuc6Fl7292U45Tyep/a6fULH8+jIsLPvj6lKmTWRFPgJn48reO33IAJJpp6wBkiO2nm
+         U1crlclNZyFrJqUV951yntOYkAiyeojJYw6nTezXqWR5YWq/9DVrcgdrkfKYRQl5b7I4
+         xzwRhA03i65cFb17ILthKbLWwSdUMS6dC7w4Hv7ff4QU4eooPrmoRf28PP75jpmu+Qy2
+         D+EQ==
+X-Gm-Message-State: AO0yUKXUo60kqVfDmDf7rEcVujJkmrzY1bK1NJiB0/nCa2swoMXp3QoZ
+        3ndT9luUIN/ZpH0Sx1vQHxGSuobqRJyzihUat4Zi2q1YdMhDVqHrguboPs/9ehLdR1hVeGTiDak
+        PDW+9VoS32IC3Yin5Qg77cLSiKH7awxuekK4me2k=
+X-Received: by 2002:a50:f68f:0:b0:4ac:bd71:c595 with SMTP id d15-20020a50f68f000000b004acbd71c595mr6052589edn.23.1676284036690;
+        Mon, 13 Feb 2023 02:27:16 -0800 (PST)
+X-Google-Smtp-Source: AK7set9QGHi+YsmDnD9yqlqMdgEAeBYm8x6qQMbITvCHZ+TrYaMAuKZ6VJkCEQkGSU7621PEz/lV3Q==
+X-Received: by 2002:a50:f68f:0:b0:4ac:bd71:c595 with SMTP id d15-20020a50f68f000000b004acbd71c595mr6052581edn.23.1676284036572;
+        Mon, 13 Feb 2023 02:27:16 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id t18-20020a50c252000000b0049148f6461dsm6340025edf.65.2023.02.13.02.27.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Feb 2023 02:27:16 -0800 (PST)
+Message-ID: <06020103-8bbb-c02f-f59a-b4cad88d9184@redhat.com>
+Date:   Mon, 13 Feb 2023 11:27:15 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.2-5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Virtual PMC driver is meant for the guest VMs for the S2Idle
-notification. Its purpose is to register S2Idle dev ops check handler,
-which will evaluate ACPI _DSM just before the guest enters S2Idle power
-state.
+Hi Linus,
 
-This allows to trap on MMIO access done as a consequence of _DSM
-evaluation and therefore notify the VMM about the guest entering S2Idle
-state.
+Here is the (hopefully) final platform-drivers-x86 fixes pull-req for 6.2.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
----
-Changelog v1..v2:
-- Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
+This pull-req contains just 1 trivial change, a set of Intel vsec driver
+Meteor Lake PCI id additions.
 
-Changelog v2..v3:
-- Add MODULE_LICENSE
-- Remove "amd" prefixes
-- Be more verbose in VIRT_PMC config description and make it
-  HYPERVISOR_GUEST dependent
-- Add extra check ensuring that DSM method supports ACPI_VIRT_PMC_NOTIFY function
----
- drivers/platform/x86/Kconfig    |  7 +++
- drivers/platform/x86/Makefile   |  3 ++
- drivers/platform/x86/virt_pmc.c | 83 +++++++++++++++++++++++++++++++++
- 3 files changed, 93 insertions(+)
- create mode 100644 drivers/platform/x86/virt_pmc.c
+Regards,
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5692385e2d26..837ce201b68b 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
- 	  buttons below the display. This module adds an input device
- 	  that delivers key events when these buttons are pressed.
- 
-+config VIRT_PMC
-+	tristate "Virtual Power Management Controller"
-+	depends on ACPI && SUSPEND && HYPERVISOR_GUEST
-+	help
-+	  The Virtual PMC driver is meant for the guest VMs and its main
-+	  purpose is to notify about guest entering s2idle state.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1d3d1b02541b..c4d3056cf4ea 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -129,6 +129,9 @@ obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
- obj-$(CONFIG_X86_INTEL_LPSS)		+= pmc_atom.o
- 
-+# Virtual PMC
-+obj-$(CONFIG_VIRT_PMC)			+= virt_pmc.o
-+
- # Siemens Simatic Industrial PCs
- obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
- 
-diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/virt_pmc.c
-new file mode 100644
-index 000000000000..a5966bb9048f
---- /dev/null
-+++ b/drivers/platform/x86/virt_pmc.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Virtual Power Management Controller Driver
-+ *
-+ * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/platform_device.h>
-+
-+#define ACPI_VIRT_PMC_DSM_UUID	"9ea49ba3-434a-49a6-be30-37cc55c4d397"
-+#define ACPI_VIRT_PMC_NOTIFY 1
-+
-+static acpi_handle virt_pmc_handle;
-+
-+static void virt_pmc_s2idle_notify(void)
-+{
-+	union acpi_object *out_obj;
-+	guid_t dsm_guid;
-+
-+	guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
-+
-+	out_obj = acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
-+					0, ACPI_VIRT_PMC_NOTIFY, NULL);
-+
-+	acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluation %s\n",
-+			  ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful" : "failed");
-+
-+	ACPI_FREE(out_obj);
-+}
-+
-+static struct acpi_s2idle_dev_ops pmc_s2idle_dev_ops = {
-+	.check = virt_pmc_s2idle_notify,
-+};
-+
-+static int virt_pmc_probe(struct platform_device *pdev)
-+{
-+	int err = 0;
-+	guid_t dsm_guid;
-+
-+	virt_pmc_handle = ACPI_HANDLE(&pdev->dev);
-+
-+	guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
-+
-+	if (!acpi_check_dsm(virt_pmc_handle, &dsm_guid, 0,
-+			    1 << ACPI_VIRT_PMC_NOTIFY)) {
-+		dev_err(&pdev->dev, "DSM method doesn't support ACPI_VIRT_PMC_NOTIFY\n");
-+		return -ENODEV;
-+	}
-+
-+	err = acpi_register_lps0_dev(&pmc_s2idle_dev_ops);
-+	if (err)
-+		dev_err(&pdev->dev, "failed to register LPS0 sleep handler\n");
-+
-+	return err;
-+}
-+
-+static int virt_pmc_remove(struct platform_device *pdev)
-+{
-+	acpi_unregister_lps0_dev(&pmc_s2idle_dev_ops);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id virt_pmc_acpi_ids[] = {
-+	{"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
-+
-+static struct platform_driver virt_pmc_driver = {
-+	.driver = {
-+		.name = "virtual_pmc",
-+		.acpi_match_table = ACPI_PTR(virt_pmc_acpi_ids),
-+	},
-+	.probe = virt_pmc_probe,
-+	.remove = virt_pmc_remove,
-+};
-+
-+module_platform_driver(virt_pmc_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Virtual PMC Driver");
--- 
-2.39.1.581.gbfd45094c4-goog
+Hans
+
+
+The following changes since commit eecf2acd4a580e9364e5087daf0effca60a240b7:
+
+  platform/x86: touchscreen_dmi: Add Chuwi Vi8 (CWI501) DMI match (2023-02-02 11:34:38 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.2-5
+
+for you to fetch changes up to eb4b55f2f26fc8a7b7dc6f06f1de91480d53485b:
+
+  platform/x86/intel/vsec: Add support for Meteor Lake (2023-02-06 14:40:47 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.2-5
+
+Intel vsec driver Meteor Lake PCI ids addition.
+
+The following is an automated git shortlog grouped by driver:
+
+platform/x86/intel/vsec:
+ -  Add support for Meteor Lake
+
+----------------------------------------------------------------
+Gayatri Kammela (1):
+      platform/x86/intel/vsec: Add support for Meteor Lake
+
+ drivers/platform/x86/intel/vsec.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
