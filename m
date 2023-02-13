@@ -2,239 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C82CC636D7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 03:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC2FC636D4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Feb 2023 10:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjBMDlq (ORCPT
+        id S229788AbjBMKLh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Feb 2023 22:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
+        Mon, 13 Feb 2023 05:11:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjBMDlp (ORCPT
+        with ESMTP id S229743AbjBMKLe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Feb 2023 22:41:45 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C300CDFE;
-        Sun, 12 Feb 2023 19:41:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676259690; x=1707795690;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kOm/lqLnIhrBfbKI2sllGDgMmet2FVVHyUaQ+tQOp88=;
-  b=OGEbqrYUQ8KgNYvMiF7o80mHSCnLVT0kwt/n3++43ACI3IgSWovpGXju
-   2m2UbLPF42bX75kTGoEFjQRdKRPvq7s2mwSZNeVRTApCbGU4MyV8jInxb
-   JRwuHVi1YZ/3ed5LeeS2fDDBkBcGr/cppf0Qwd9fbqbPYu0ItZq4ryz2s
-   NNmkNabmAoaC4/ss20TOxBDbp1JtZ995pi4cAwV7P8LgY6xFGun2tX4EQ
-   igZCm4tXOyIa8rjSGHtxsKMO4S6uXgpv5pSeu0ZrXhyyRyYBPCrk7ux2P
-   W84wO/pc5kVuh7K2SJQampI5Mwy4C6XhkfCwq92+BqpwFYYs/i61NU3iV
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="332937980"
-X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
-   d="scan'208";a="332937980"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2023 19:41:20 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="668669864"
-X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
-   d="scan'208";a="668669864"
-Received: from rajatkha-mobl.gar.corp.intel.com (HELO [10.213.70.43]) ([10.213.70.43])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2023 19:41:17 -0800
-Message-ID: <15eda586-b094-8d42-a6cb-deb8fd5eaca8@linux.intel.com>
-Date:   Mon, 13 Feb 2023 09:11:08 +0530
+        Mon, 13 Feb 2023 05:11:34 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1D3E073
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:11:33 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id w11so18094698lfu.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2023 02:11:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ej+P/HoLnJs9+vTrBuMVaQw7HOLkNvqo2ZBWHCQRWw=;
+        b=kxHp6ZYqu2JxWOVwiStb6OfEpyHnn17hS1V1UAsQ+S8eME58V+yJeCgrKxm50aRbeM
+         KHGYbdW0CokYH933J0Fxs9SfcAbGEyX3EpaBSREHE5JMBcZFQ0dj0ftWveXO2m6/O3wZ
+         HbXIl4h8Ld4aysmd9PqxfaRvxutYyF5a8eAUOFW4oX1GrXW+tqEt5MWLoB6kkP5vZ3nP
+         /EGhDSob+4x4IYt18uuhtXbR+FGSlZJIWDvbw3lKKatzfkTrNUhakR/oPJOrjipTzWdx
+         Gj594JZ7qdenLr+8RpIoNSVGsVYZNedB1sHGgYUdTw8U09VooV0WVotNDLA/cBob8Y70
+         NLNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8ej+P/HoLnJs9+vTrBuMVaQw7HOLkNvqo2ZBWHCQRWw=;
+        b=ZW4VJsAnbm24J6x2WXFq/qTV/Sr07jN8IhZp5/WRbNbwts5LhQG93qsDODdZ8TF+UE
+         1zL8v5n+4GGzgW8vjg69N45p4K24fQcWNlvCeUQ6FmIi+SRvsiEMzO4ND0pg4YcJFWHw
+         F430tR5FC/96TIPXaEl940QqYb4NioSglCNx8o7k69W9sCfvr7wBGYntImtZ6T32Y+Wf
+         kcmnUr7r8YYM+GwSKwjJ1Y7FWUYeIAhXpm0ftnVcIOW1Q6JRKceCpiVGB82andfOgslm
+         2yO4c6AVQLe5lD+lS5oof/BLSgesDMG7xljAnZJJEqAAqkYZn0VtGKQxnk2qKi5czKEc
+         GvNQ==
+X-Gm-Message-State: AO0yUKW2pe2HdZvbwLIja3PSwtPNzZFs1lWe61k1+qPskTC5Z/kIOtGI
+        nRqxLK092m+KZisU3BYwArTiSA==
+X-Google-Smtp-Source: AK7set+dB+QZXK5K8KWyZVBivFrc1Ty1r1X052ZMPzLr+pc4cPLcc5+fwWGIJBHmB0iWsIhcjbeciQ==
+X-Received: by 2002:ac2:41cb:0:b0:4d8:6492:5689 with SMTP id d11-20020ac241cb000000b004d864925689mr5944186lfi.31.1676283091886;
+        Mon, 13 Feb 2023 02:11:31 -0800 (PST)
+Received: from jazctssd.c.googlers.com.com (138.58.228.35.bc.googleusercontent.com. [35.228.58.138])
+        by smtp.gmail.com with ESMTPSA id t6-20020a19ad06000000b004b55da14ba8sm834416lfc.291.2023.02.13.02.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Feb 2023 02:11:31 -0800 (PST)
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+To:     linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
+        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
+        upstream@semihalf.com, hdegoede@redhat.com, markgross@kernel.org,
+        dtor@google.com, mario.limonciello@amd.com,
+        linux-pm@vger.kernel.org, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: [RFCv3 0/1] x86: allow to notify host about guest entering s2idle
+Date:   Mon, 13 Feb 2023 10:09:20 +0000
+Message-Id: <20230213100921.268770-1-jaz@semihalf.com>
+X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH v5] platform/x86/intel/pmc: core: Add support to show
- LTR-ignored components
-To:     "Box, David E" <david.e.box@intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>
-Cc:     "Khandelwal, Rajat" <rajat.khandelwal@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230210181614.192578-1-rajat.khandelwal@linux.intel.com>
- <7853400f2472fe799540de86bebddfe4b3d76c6c.camel@intel.com>
-Content-Language: en-US
-From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-In-Reply-To: <7853400f2472fe799540de86bebddfe4b3d76c6c.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
-I didn't know such restriction exists in the upstream community. :)
+According to the mailing list discussion [1] about the preferred approach
+for notifying hypervisor/VMM about guest entering s2idle state this RFC was
+implemented.
 
-How about?
-"Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
-if there are components whose LTR values have been ignored.
+Instead of original hypercall based approach, which involves KVM change [2]
+and makes it hypervisor specific, implement different mechanism, which
+takes advantage of MMIO/PIO trapping and makes it hypervisor independent.
 
-Make the sysfs attribute print out such components, if they exist, and return
-EEXIST, if tried to set an already ignored component."
+For the RFCv1 [3]:
+  Patch #1 extends S2Idle ops by new notify handler which will be invoked as a
+  very last command before system actually enters S2Idle states. It also allows
+  to register and use driver specific notification hook which is used in
+  patch #2.
 
-Thanks
-Rajat
+  Patch #2 introduces new driver for virtual PMC, which registers
+  acpi_s2idle_dev_ops's notify handler. Its implementation is based on an
+  ACPI _DSM evaluation, which in turn can perform MMIO access and allow to
+  trap and therefore notify the VMM about guest entering S2Idle state.
 
-On 2/13/2023 12:58 AM, Box, David E wrote:
-> On Fri, 2023-02-10 at 23:46 +0530, Rajat Khandelwal wrote:
->> Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
->> if there are components whose LTR values have been ignored.
->>
->> This patch adds the feature to print out such components, if they exist.
->> Further, if user tries to set an already ignored component, he will
->> encounter the error code of EEXIST.
-> Sorry to nit, but should describe the changes in "imperative mood" per the
-> guidelines in submitting-patches.rst.
->
-> David
->
->> Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
->> ---
->>
->> v5:
->> 1. Ignore the LTR of the respective component after unlocking the mutex lock
->> 2. Adding error code details to the commit message
->>
->> v4: Mutex unlock during error conditions
->>
->> v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
->>
->> v2: kmalloc -> devm_kmalloc
->>
->>   drivers/platform/x86/intel/pmc/core.c | 64 ++++++++++++++++++++++-----
->>   drivers/platform/x86/intel/pmc/core.h |  2 +-
->>   2 files changed, 53 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c
->> b/drivers/platform/x86/intel/pmc/core.c
->> index 3a15d32d7644..16cf6c634db8 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
->>          {}
->>   };
->>   
->> +/* Mutual exclusion to access the list of LTR-ignored components */
->> +static DEFINE_MUTEX(ltr_entry_mutex);
->> +
->> +struct ltr_entry {
->> +       u32 comp_index;
->> +       const char *comp_name;
->> +       struct list_head node;
->> +};
->> +
->> +static LIST_HEAD(ltr_ignore_list);
->> +
->>   static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
->>   {
->>          return readl(pmcdev->regbase + reg_offset);
->> @@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void
->> *unused)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
->>   
->> -int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
->> +void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
->>   {
->>          const struct pmc_reg_map *map = pmcdev->map;
->>          u32 reg;
->> -       int err = 0;
->>   
->>          mutex_lock(&pmcdev->lock);
->>   
->> -       if (value > map->ltr_ignore_max) {
->> -               err = -EINVAL;
->> -               goto out_unlock;
->> -       }
->> -
->>          reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
->>          reg |= BIT(value);
->>          pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
->>   
->> -out_unlock:
->>          mutex_unlock(&pmcdev->lock);
->> -
->> -       return err;
->>   }
->>   
->>   static ssize_t pmc_core_ltr_ignore_write(struct file *file,
->> @@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
->> *file,
->>   {
->>          struct seq_file *s = file->private_data;
->>          struct pmc_dev *pmcdev = s->private;
->> +       const struct pmc_reg_map *map = pmcdev->map;
->> +       struct ltr_entry *entry;
->>          u32 buf_size, value;
->>          int err;
->>   
->> @@ -473,13 +477,49 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
->> *file,
->>          if (err)
->>                  return err;
->>   
->> -       err = pmc_core_send_ltr_ignore(pmcdev, value);
->> +       if (value > map->ltr_ignore_max)
->> +               return -EINVAL;
->> +
->> +       mutex_lock(&ltr_entry_mutex);
->> +
->> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
->> +               if (entry->comp_index == value) {
->> +                       err = -EEXIST;
->> +                       goto out_unlock;
->> +               }
->> +       }
->> +
->> +       entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
->> +       if (!entry) {
->> +               err = -ENOMEM;
->> +               goto out_unlock;
->> +       }
->> +
->> +       entry->comp_name = map->ltr_show_sts[value].name;
->> +       entry->comp_index = value;
->> +       list_add_tail(&entry->node, &ltr_ignore_list);
->> +
->> +out_unlock:
->> +       mutex_unlock(&ltr_entry_mutex);
->> +
->> +       if (err)
->> +               return err;
->> +
->> +       pmc_core_send_ltr_ignore(pmcdev, value);
->>   
->> -       return err == 0 ? count : err;
->> +       return count;
->>   }
->>   
->>   static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
->>   {
->> +       struct ltr_entry *entry;
->> +
->> +       mutex_lock(&ltr_entry_mutex);
->> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
->> +               seq_printf(s, "%s\n", entry->comp_name);
->> +       }
->> +       mutex_unlock(&ltr_entry_mutex);
->> +
->>          return 0;
->>   }
->>   
->> diff --git a/drivers/platform/x86/intel/pmc/core.h
->> b/drivers/platform/x86/intel/pmc/core.h
->> index 810204d758ab..da35b0fcbe6e 100644
->> --- a/drivers/platform/x86/intel/pmc/core.h
->> +++ b/drivers/platform/x86/intel/pmc/core.h
->> @@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
->>   extern const struct pmc_reg_map mtl_reg_map;
->>   
->>   extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
->> -extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
->> +extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
->>   
->>   void spt_core_init(struct pmc_dev *pmcdev);
->>   void cnp_core_init(struct pmc_dev *pmcdev);
+For the RFCv2 [4]: the patch #1 was dropped as in the meantime Mario Limonciello
+introduced a very similar patch [5] which uses s/notify/check and invokes the
+callback a bit earlier just before s2idle_entry. Mentioned patch has already
+been merged.
+
+This patchset is marked as RFC since patch #2 implements driver for non
+existing device "HYPE0001", which ACPI ID was not registered yet.
+Furthermore the required registration process [6] will not be started
+before getting positive feedback about this patchset.
+
+[1] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-2-jaz@semihalf.com/
+[2] https://patchwork.kernel.org/project/linux-pm/patch/20220609110337.1238762-3-jaz@semihalf.com/
+[3] https://patchwork.kernel.org/project/linux-pm/cover/20220707125329.378277-1-jaz@semihalf.com/
+[4] https://patchwork.kernel.org/project/linux-pm/cover/20230209152123.3186930-1-jaz@semihalf.com/
+[5] https://patchwork.kernel.org/project/linux-pm/patch/20220829162953.5947-2-mario.limonciello@amd.com
+[6] https://uefi.org/PNP_ACPI_Registry
+
+Grzegorz Jaszczyk (1):
+  platform/x86: Add virtual PMC driver used for S2Idle
+
+ drivers/platform/x86/Kconfig    |  7 +++
+ drivers/platform/x86/Makefile   |  3 ++
+ drivers/platform/x86/virt_pmc.c | 83 +++++++++++++++++++++++++++++++++
+ 3 files changed, 93 insertions(+)
+ create mode 100644 drivers/platform/x86/virt_pmc.c
+
+-- 
+2.39.1.581.gbfd45094c4-goog
+
