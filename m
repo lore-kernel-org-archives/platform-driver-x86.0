@@ -2,300 +2,214 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38244C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Feb 2023 16:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD5CC05027
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Feb 2023 17:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjBNQgv (ORCPT
+        id S230379AbjBNRcH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Feb 2023 11:36:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
+        Tue, 14 Feb 2023 12:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232385AbjBNQgh (ORCPT
+        with ESMTP id S231294AbjBNRcF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Feb 2023 11:36:37 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2070.outbound.protection.outlook.com [40.107.244.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172722CC71;
-        Tue, 14 Feb 2023 08:36:30 -0800 (PST)
+        Tue, 14 Feb 2023 12:32:05 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2083.outbound.protection.outlook.com [40.107.94.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DC72C661
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Feb 2023 09:32:04 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S2mbheKAxBkMfwkIZFgiQcUQOxCXHqg4iYQzLorTS4DoS3G5d8y2YqctrBvP8eYs5zosjBgPJyDoE9/PYwpDv9YftAAZ6i8kPhIYjRLR6+NNRaL7rjcmPivsA1mASCkA2l/QMdWtVv95tWGxAfsA37ArhvtVwRULc2yHJop06B/6+LQpUXuSEjP4fMU8sKdt1giW+bv+C/Z46LY0V80M9bjVre9JUFP/kSsVBpwI51OAlEJKWhKef9KLjcmxWCj1fgoSeZOw36ybwj771j4xyS8p41Q2p7m0+sGP8fqDyrPzxocyosShz8e47oX3yyBc41oj06UXaMQU5EYLRfFjmw==
+ b=hOQp5MgIAQMWLUerTBPmzFM4NAOQbme7o5L7VJ+L6M9ykzpLUuvw6cR4L86HweCUEc/ndqzbVHBGpDTTMRwS7ylrI2A3hn1jUfSWfNK9l3a4WXQIpn5N5W3hRU6fyXE4OL9gZpOyIt6e8btFBoG2cfAKxQ9TdGxw07KGByzoL2K/fyhRZxs3Mgn1dnSICCy8gGhEeqBJKo/+JEh1ebleLQ1IFBItB85ozEfuzQtcofciK2Kt3XUa/nbkqsf8TLSLmRm58YuOnhueeAXF+QbiW5qg1O28TljYWDhPCr2tU6Q6Qi1fA9Ql5obw2Wa6dUtRhUVikcZep72TyIefa9sPww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RSJDJozLDEIU9xqrUt8vIb6iJPKo3tTHkvwrWye4pWQ=;
- b=J9BYjaSS8H7f2+0dL0ld3XGLdRhFJ/K1Y1SPMYW/6wIxsPkJf0FN7XFiHkpplxcvJwL1nwB8wIGfIUV0c7Bv1h93icztih+wKLFACmird2qG3woiYplUkst99PockSwz3Kw/aP0WnnjVc6Rg5eiP6fK0FK+HRZgf7n2UCdhsdRQNKWNYeOvev6bEBB1ZjErHCwqz7ztRFmbAFblGsf+z5LfmJG9Z7oYq8WnefPy6TLbLQnfxqWI9zL+r9W2Acea6RtIYKF7k3jrtPKAncuw4RP/2/EGH6qI+YWvOoKqFZ4ZrZ959+BSPPuygsptt+ZNJWaPgQu8AMWxagjiX41SMSA==
+ bh=edSQnsgU4yDr5DzK/pRnFN1UYv9WnOwj93TIUM5tXjc=;
+ b=NPRCeLfw7KuumqDeyrqBd2fZVXgLsY4pVYpHakajnpme0P9OxpeneVeubGie7XVrjMyRX95Go7M3jbaqW8PvmfK4HKir179RooEsyNS8pMBBGdZubg8+u3F7sjnITF+1MZYnBS6EQMDPpv8ZYOPkzPnAsM30jwWaRLjlKGVpwSWLGWu2AC0z8LsoZ73XRRtolk3OP6CluuT/LD/vKy78r9Lf6dceVYE5+GMes5Oq4cnvnYwaY4VEcygJ9JAqLm/UltY4x5yikppQBOkDSfTGojBQ2hWQtqSAl63OgnaWJKvW1NoHnIHP4yCgKgyEuUba5Vac3b69UHM9kJ0pFAobpA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RSJDJozLDEIU9xqrUt8vIb6iJPKo3tTHkvwrWye4pWQ=;
- b=IvEdh6EEcT2aMh/oGto7HWysmX6OK2oxG9GYmdrZalqgn3+Oct8DKOVtObn/bZMdLf4cHg1dBeFZz0KSOchXsD6cZ0GPzMsCMoaS7RAON3dE0ZHcXRZHfCGdZiQM5Dx7b0vJ4+4gJ4G78jC5FqC2qVKn2jezxMyQunC5E+ybwXE=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL1PR12MB5852.namprd12.prod.outlook.com (2603:10b6:208:397::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
- 2023 16:36:28 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c%5]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
- 16:36:27 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To:     Arnd Bergmann <arnd@kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
-Thread-Topic: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
-Thread-Index: AQHZQIiOUdOGwPV3f0+ptZfVua8KHa7Oo8dg
-Date:   Tue, 14 Feb 2023 16:36:27 +0000
-Message-ID: <MN0PR12MB610112C0A677F1526AB14F2DE2A29@MN0PR12MB6101.namprd12.prod.outlook.com>
-References: <20230214152512.806188-1-arnd@kernel.org>
-In-Reply-To: <20230214152512.806188-1-arnd@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-02-14T16:36:26Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=86e7f91e-1729-4736-83bc-4655ceeed350;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2023-02-14T16:36:26Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: cb4e4ee3-dfda-4e06-b4ba-460d4b974b2e
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|BL1PR12MB5852:EE_
-x-ms-office365-filtering-correlation-id: 563172de-b6cd-49c6-19f6-08db0ea99ec9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U7PUM7IPPliRw8GG1PLwUhg1uuz+7uUgdEm2kAjKmU2ZJQlkbVBLZ/bxFkDInvCzRLatB9gE6w8Drl+/D3VRk13tNQ2Nro2TLOmBQpNZFPKx6EnbqLfMoacg2Bq8HPG4YV2Hs+VasH+ZnehSKECCHwVF7t2u/NJWQbP+vu6gNLUv2QXrUVpbszphV0I/8BlhxxRE8nW5BE3kpcjRU9En41x6ynb0MemVjYGN160FB5PaxG8zjYIhtKf+1V0Cl0r9quanyyOgXQ4TjDQBw5munkWfWveRAhx9HC0CB4w1FZtafumtZ5LW3jCbgeW5yH0hz1HESuFA5AY1YuSYKG9NBK2wZjtGJpL+k31kY+8OscgYGT7ht93cUdo4Z6ZiNXlm1w9Ozixv7iNwYbg25j2C8IbJV2DeRWlOlWqbW9qJj6CJBEZay+KPpEz9kEVmDsu1njWRgPgWFjzrpA7j/jmjIn+PFMHSDQQjQwIpkDmqLqLbgUJGV/PjmIvDlD9j16qwB+upKZx33fLEKwY5N/2ZZaSzi4STCf6trMiueFHmfoIhB5DXvTMmjYovOGjoJYM0c8VdHp/7IX75TW8YgdfByXEGC7q4XAvRLxLzwXlmsvPpQeTEv7P1fdh+8XksNEqSQDFCZfgyDfUTpxpWQDXyYGRNty8wZxxfICAR0Auxtfdl2qovT2b8Ke8mPa0k9ensXJucKIG1FDlRxixgC15OhA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(451199018)(4326008)(6506007)(52536014)(5660300002)(41300700001)(33656002)(38100700002)(8936002)(66946007)(66446008)(64756008)(66556008)(66476007)(76116006)(8676002)(86362001)(55016003)(71200400001)(38070700005)(478600001)(53546011)(2906002)(316002)(122000001)(110136005)(54906003)(7696005)(9686003)(26005)(186003)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?P3NmWd9/JWve0PqM15Pu39pynNvxDFIk5FEHwFDS6Yo2B3Gwoc546Uqbvfk8?=
- =?us-ascii?Q?JLWA4lKpFqrex9ABvuCKgZV9ySdUrlwwpS8L4214Yt2u0kBaY4cNgBLUNsDE?=
- =?us-ascii?Q?OKSFye/c3ZWlH2BNniwjxJm3qqgOutL/BE3eOMsz8oGk9Yaa9JuQL2dP9RU0?=
- =?us-ascii?Q?b7ed80Kb7YndQaS+WxGXPfGOEH/D8sQzpXRA3jJuP2Uxoj7N7TkBby5g31Gn?=
- =?us-ascii?Q?b67b+qR2cczoyO77jlAFOMBbOEZ4XhUytvYjR1kJfzRyyAWmCfIB8u3GKhIY?=
- =?us-ascii?Q?W1n5xRW5iejcTe+8YAB/9GX+5wUd6vh92BU3PnTZxxQz3T6l7NI7QHY7/zo8?=
- =?us-ascii?Q?1/1Cs2zw+cz/4cmXgAn7xmDWQbOH58jjtTDXREcBJSTAFMWNPv7g+1G95q0f?=
- =?us-ascii?Q?gtVq+HroDLw7GAnj+LGTmAjVSAWcRodKYavfLKFMSm4LoR8SI8+BHs6oIXOe?=
- =?us-ascii?Q?bAtNJiXHMvub3Am6r+/r796oii/HWuSELnzrkXCdZm5x+jID3uCySR7OUFV5?=
- =?us-ascii?Q?TNenm/IWld5KJ0X8gepccZc8D/gxcQLK0TMOws6293ol9DyEk0BS23saiJq+?=
- =?us-ascii?Q?grXWqHIwVFyHYhVpZWo+vpEI7y7uwH9ry6lnh/jZb+45LGInfgwrCPWYgdWf?=
- =?us-ascii?Q?fFvCbHtMtDHC+hMwb3HspGyFBJ8EewLrhuDpn7sE6FYBjMO1GXka+d8YirMz?=
- =?us-ascii?Q?PN+zvtHuHvrTkeTuWL3/LRzsXjTZ2lqYakd44zlb5Io+CHbMnWovTX2Y734+?=
- =?us-ascii?Q?F5C7getXqt5pDLxpEAk9HB0UohGQZXL/J6Mm3Mr5u+4jfvkA55aDqik/zQ9m?=
- =?us-ascii?Q?jANIk323R9yU5R7iNvz2eBeun9+IvHupOgtkBX96tNPvO3Gh1Rw3PrWwF7EZ?=
- =?us-ascii?Q?oumtkN5Xy5dAbpKpTdZeDz35T5VOCKrtJS3iTeYSVriHYoS/maUwudSAdM/8?=
- =?us-ascii?Q?FvDmsmZMGIZhYv+eZEOYlamhn6FsPsPwbUBopZy1MZ7PWj2M1z9Kvzw2axXX?=
- =?us-ascii?Q?65qevFA2jJPDuvWDtAnonBnrgLHWNqS+LvBlh+SEiX95icwlSmEgS9WgOqzr?=
- =?us-ascii?Q?pp06PC/VYmmrvg8Wdm7pXG4xtymRVhmAP9GDS/1BaMMkoJSzE3orRBJqR0hr?=
- =?us-ascii?Q?tW8JY/8tXk9EohrAk6A2MKn2kLITlgCBubppPr9c4qlEvRYYrCjoebTmzqF4?=
- =?us-ascii?Q?AkB8Kfyd42/kTV7iLOCWUCNXbrMijMg4fmcXz/gvH3ycqlNJ80fJ0opYXoKJ?=
- =?us-ascii?Q?6WSKPsuJt4KLBKyBvfmsYdv+dSwl8OeK7xkxszMQeZE57MY47y+9GM9rzbrJ?=
- =?us-ascii?Q?cVJkPO7zeBfiLQMf0AzUzrTS/35vcmCkj/EsSK5yZ+P0kcZogV4oTMwS2ODq?=
- =?us-ascii?Q?gYhskr4h/IEL2nzTb4noSQv3sjOOpajaZ0k/tiHqbRjAYG0tbh4zJKfd4bdV?=
- =?us-ascii?Q?TCQBnZHFizTeIdKxBoaFkgSh0EPYHVfJs1odyJts25nKF8/2GzcWth+Ei1Xp?=
- =?us-ascii?Q?h5e3hR1vLtC+gEIZM/m8PbTbcbhFHZ8q0Gwpx8YlBXclLqsY6aHZ1E+lZicG?=
- =?us-ascii?Q?HvGtIYYW3KbOhlMnsOI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=edSQnsgU4yDr5DzK/pRnFN1UYv9WnOwj93TIUM5tXjc=;
+ b=Em2TcBAjdHNhD1GJPEfUCb5yQymJAYpgfCIRyl0yA4fpKMGaMr/2cVdYOSGCwgvkc9utKwu0AwP7jhEEzVC0UbBqf/g30reu2DAUiEaeMggdVNjFoLINMJZNYS4orHbrgml/f/21mHKZKdK9u6zvdbSFHdV0T2ekRUgVZfpMV8QQ4JVSo3K2VoJiWKKmTAk2SXTWxiOBkvjpK7Y2aK0rN318Tuqnxs4S1VWlIjmZpL+9bzze1kbV6Xs1++PBnrple3FAoRMl5MakV6DdhnXXBOeXj/d9xT6yCtTbN8wnrlrqtrjtOErmsza54ud3HmDedE9nxaTrO69OrN0q2gCS2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com (2603:10b6:5:48::16) by
+ DM4PR12MB5262.namprd12.prod.outlook.com (2603:10b6:5:399::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6086.26; Tue, 14 Feb 2023 17:32:02 +0000
+Received: from DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a]) by DM6PR12MB2763.namprd12.prod.outlook.com
+ ([fe80::6e75:2e:a53d:a7a%6]) with mapi id 15.20.6086.021; Tue, 14 Feb 2023
+ 17:32:02 +0000
+Date:   Tue, 14 Feb 2023 11:31:59 -0600
+From:   Daniel Dadap <ddadap@nvidia.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Luke McCarthy <mail@lukehmcc.com>, regressions@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: nvidia-wmi-ec-backlight: Add force module
+ parameter
+Message-ID: <Y+vFj3sRMDuPmvqc@ddadap-lakeline.nvidia.com>
+References: <20230214163435.7065-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214163435.7065-1-hdegoede@redhat.com>
+X-ClientProxiedBy: SA9PR13CA0003.namprd13.prod.outlook.com
+ (2603:10b6:806:21::8) To DM6PR12MB2763.namprd12.prod.outlook.com
+ (2603:10b6:5:48::16)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2763:EE_|DM4PR12MB5262:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43abd8ef-a80f-4173-5dac-08db0eb16229
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XqD4yJVtPOG6WD8uFkf9boASkjGqfMLbL6qVxcSO3x/garcNA4yCJHB7qhT/kDQgrQ06qsH/8vzklrWV/dBb0HMGxQQiOjs8cKWXhhASbJjfUnJdWztGLT4GROtUM+fbHHSJgC8kywBvXGzTS+uCbr39ZUXEOsczXrUwvhcD6RVcwIk5Gpr28QYfclTiUM1dzmO8jkvl0cvXS22tN5w9ltauWgXueK22T9Prrr4GZhegyDZP4NK4092fa4FybJNmTX/j96GL0pmcwQb0MNWCvGJcMGdOu8Xerm6XLj7pEyDrgbquQAL5SpfXy9i7d9Hz0GSiXUtKtUuFuQhpqx3ONhqVLSZJNytB5+KaaaV8rzj0m90raL2FpAg3rd6A1aER7/ixuB0wUxKvpy9y/w/dLugVih2LfTb31lTdvc8J5RnS31AlzQuKdE9lUr3dROsB7xKU+LIyoJUK5fw5G37vZGY3+9cPjiiNqufwEEw5M3JNS3r656Noz27q3H3prATEm3SzU2P/XsrcID9i40ft7rZszH+pLtjb+De2lTxxc7nPtsvvpGMvdtm+IRe/MVuRsqcuT5nFj7XNfpp/YdZn03r/HJPzlU1QO/NerA8xxlimtmbTv+IaT8R2Z78U6LdOK4K5+1W/mvl67OnF4XHP2nPdhUuwgVUBEpshuKcMxFqrqJSe531ix8SXhv0TeyB8ucg1ulVbJsbRVJIDWjua+xczGWlEcgrlDDlWUA9kjOucLyxR7+PDwp7+dGMMAdTL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(451199018)(478600001)(6666004)(2906002)(6506007)(966005)(6512007)(26005)(186003)(38100700002)(6486002)(5660300002)(8936002)(86362001)(54906003)(316002)(66476007)(66556008)(6916009)(83380400001)(41300700001)(8676002)(66946007)(4326008)(21314003)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+kEziI1SiQsugWv9t6rUQCYw8ChMfoG4JNemD0o0qCJqOWi3OCE/EA2+fP1/?=
+ =?us-ascii?Q?NjhR7a2+vrBGJvk8n4QM5AUbgY994h+MHFySy6qFcAhp7oO9ObUC6skDtcLz?=
+ =?us-ascii?Q?4pFnaeF7o3ZImJYU/Ye1yZxyw/09kKj2DIC9+WYK6uKzBkFz83HJdHE6ZkD8?=
+ =?us-ascii?Q?tMFGfldmIwpu78T9oHO+HXW14ygpScpxdXDBLp3BuZVoPTGTw4A+DFE4I7lX?=
+ =?us-ascii?Q?PYl53eyILkEgNCUbBldJz5FxmV7Jax7U4wT7vTZ7WhTjP+xSMnlOfxl9ZIPh?=
+ =?us-ascii?Q?or2WPITF3VR0oEuGjX4SMreSr73UEb82nl276NMrDl0WEXkp4VK1fkzBK/ec?=
+ =?us-ascii?Q?w4w7acUYJOJdFozCNu/kbdgLWYw7P4q3dBhx/7gwRGl0X9tJYW856CwhnMpU?=
+ =?us-ascii?Q?0wVSo/KHdrET+pTmPA6Ek5YuFAUR94yUS2NtiKFz6bWQ4pfH02jPIUhw6jZH?=
+ =?us-ascii?Q?TBFeSN/uApN8dG0zfGNX6dQW98PaRRNbBDMKbMMaDLsZSdt6Plxd1GZbFDI+?=
+ =?us-ascii?Q?x1FY7GW5diZr19H762XxvzMnp63svx9vx8/3VilTBIAlphxH+OPCt1iGkUUP?=
+ =?us-ascii?Q?nURhdx4oUkzo53l2nM5Ph7RQwf5ykNbDogQH6uOR32vG3XxNiKyQRbmTc1lY?=
+ =?us-ascii?Q?JNa5sefiLi/4yd+NMaD4X3XlaNhl/15odDfC6AcSt82BzQ947HBFKJ8ra2Xm?=
+ =?us-ascii?Q?3KnBP37I8Dv5qCe/qcuTktYO/T0GVeGMu02lp5roYpoTN+K11o4jg3lERlMl?=
+ =?us-ascii?Q?tfbCIAR+7ym6m5RJjiU7LlyLKln4/k9PcJbUxDdgXHoGKgxf1ymGLfXq3o/J?=
+ =?us-ascii?Q?aAoArN0sVnZsMaVcit+0FSJZkBcu8WTffDLmX51lMSuuAeFP+P7itmiz6AyL?=
+ =?us-ascii?Q?E0RUpnyyvJQpLcOAvWmRGIhsoZweWssdYJ9OhmcNyW5H/wNmVDrWoM5XD7U/?=
+ =?us-ascii?Q?GidyRvIdgouERHyTl/tzb/cVUW9chafXtV13huEnxbne10V185mBw6crGlkp?=
+ =?us-ascii?Q?gZUVGOnVN2drTqCZ0f/O72aIoAvW6BRVUQHiEchvfmBwcIU6/cmoyxzZ8A5H?=
+ =?us-ascii?Q?YYqapbWhoQtxjx0fpHtypg5wd/G9tW/cCHS20YZkcaPlfUDMUWlurxGDO/gx?=
+ =?us-ascii?Q?Ry61q6y6UE5Bx/dPX/IS7zz5YvrGA8vxxKPGAfAkQRQoqm17Dm8sWosddzJY?=
+ =?us-ascii?Q?i7UaMlxXRyJUX/qcm9VDt9540YzdPFVi7kL8VV1RnJNc3S0H1ibjPuDIF5hA?=
+ =?us-ascii?Q?g6DjYMvr2LMVdOzl5h5sWwMhCtfHYDNhl8UpkI16hjX0Gkq7a9f13CFyHfd0?=
+ =?us-ascii?Q?4o7VPFsTAdAGtB57D+hbCosP9iaMj1P0oLueDW34cIRIU1QOA5gITGPTTy2T?=
+ =?us-ascii?Q?aAx9PA01kc4LZcougUCadbmiCQkZzSLU/SVAbnmaU/FV0XDNl1/yIXzKEnNn?=
+ =?us-ascii?Q?QjJO4dl6ev8vTWtUbc+UnXlr6nS8xY7zZnJHogut/vtLoin3diHdCqQblYA0?=
+ =?us-ascii?Q?R9QHsaqMS3WP5Oq8Y2SebTZJgEKOaZ+mj8YROEHw4oM9xPC+aMX/RKcGY1aI?=
+ =?us-ascii?Q?wHQ3i7bfN7AF/bRsfXCgnDRRBbJNFQ3475Tr5tLn?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43abd8ef-a80f-4173-5dac-08db0eb16229
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2763.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 563172de-b6cd-49c6-19f6-08db0ea99ec9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2023 16:36:27.9142
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 17:32:02.3810
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JNnuGqRIYyv8NS4ulsc6tD+5lcuTygJWvMMBZdfEddFmH3xcP+r3+JZmQPE1RXWTgq7IDGS/kMNPi5ws1CW2+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5852
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UqZlFEgEXjPTzZrlUCMLZKpxgAno3smILAupk9dvSj8duVXNKrfgZYHW7XbDf0/YtIsuEy4yoLUfM0ALfkPp+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5262
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-[Public]
+Thanks, Hans:
 
+On Tue, Feb 14, 2023 at 05:34:35PM +0100, Hans de Goede wrote:
+> On models with the Nvidia WMI EC backlight interface, when the laptop is
+> configured in dynamic mux mode in the BIOS the backlight should always be
+> controlled by the Nvidia WMI EC backlight interface.
+> 
+> But it turns out that on some laptop models, E.g. Some Lenovo Legion models
+> /sys/class/backlight/nvidia_wmi_ec_backlight only works when the LCD panel
+> is muxed to the Nvidia GPU and when muxed to the AMD iGPU amdgpu_bl0
+> controls the backlight.
 
+I'm not certain that this description is accurate. From my understanding so
+far, the problem is that the working backlight device changes at runtime,
+regardless of the mux state. Recall that we don't actually have support for
+dynamic mux switching, yet, so if the system is booted in dynamic mode, it
+will remain muxed to the AMD iGPU the whole time.
 
-> -----Original Message-----
-> From: Arnd Bergmann <arnd@kernel.org>
-> Sent: Tuesday, February 14, 2023 09:25
-> To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Hans de Goede
-> <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>; Limonciello, Mario
-> <Mario.Limonciello@amd.com>; Nathan Chancellor <nathan@kernel.org>;
-> Rafael J. Wysocki <rafael.j.wysocki@intel.com>; platform-driver-
-> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
->=20
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The amd_pmc_write_stb() function was previously hidden in an
-> ifdef to avoid a warning when CONFIG_SUSPEND is disabled, but
-> now there is an additional caller:
->=20
-> drivers/platform/x86/amd/pmc.c: In function
-> 'amd_pmc_stb_debugfs_open_v2':
-> drivers/platform/x86/amd/pmc.c:256:8: error: implicit declaration of func=
-tion
-> 'amd_pmc_write_stb'; did you mean 'amd_pmc_read_stb'? [-
-> Werror=3Dimplicit-function-declaration]
->   256 |  ret =3D amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
->       |        ^~~~~~~~~~~~~~~~~
->       |        amd_pmc_read_stb
->=20
-> There is now an easier way to handle this by using
-> DEFINE_SIMPLE_DEV_PM_OPS()
-> to replace all the #ifdefs, letting gcc drop any of the unused functions
-> silently.
->=20
-> Fixes: b0d4bb973539 ("platform/x86/amd: pmc: Write dummy postcode into
-> the STB DRAM")
+In theory the EC should in charge of backlight control at all times when
+operating in dynamic mux switch mode, regardless of which GPU the mux is
+switched to. However, on some of the Lenovo Legion models it appears that
+occasionally the backlight control falls to the native interface, instead.
+The user who initially reported this class of issue observed that only the
+EC backlight interface would work upon a fresh boot, and only the native
+AMD iGPU interface would work after a suspend/resume cycle, and it would
+continue to work after further suspend/resume cycles. The second reporter
+observed that the EC backlight interface was usually active when connected
+to external power, and the iGPU native interface was usually active when
+running off of internal battery power, however, occasionally this wouldn't
+hold true, with no discernible pattern.
 
-I suspect this is not an appropriate fixes tag.  SIMPLE_DEV_PM_OPS only cam=
-e in
-8e60615e89321 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
+This third report sounds a little bit different: it is stated that different
+interfaces work to "change the brightness of the screen depending on if I
+was using the AMD GPU or NVIDIA GPU to display the current application." It
+is unclear to me what it means to use a GPU to display an application: my
+interpretation of this is that the system is configured to use PRIME Render
+Offload, and the desktop is being primarily driven by the iGPU, while select
+applications are explicitly render offloaded to be driven by the dGPU, but
+displayed on the iGPU, since the display always remains muxed to the iGPU.
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Since we don't fully understand what is going wrong, yet, it may be safer
+to leave the mux out of the description of the problem that this patch
+restores the ability to work around for, and say something more vague like
+"On some Lenovo Legion models, the backlight might be driven by either one
+of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times."
+
+> This appears to be a firmware bug on these laptops, but prior to 6.1.4
+> users would have both nvidia_wmi_ec_backlight and amdgpu_bl0 and could
+> work around this in userspace.
+>
+> Add a force module parameter which can be used with acpi_backlight=native
+> to restore the old behavior as a workound (for now):
+> 
+> "acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
+> 
+> Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/amd/pmc.c | 25 ++++++-------------------
->  1 file changed, 6 insertions(+), 19 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/amd/pmc.c
-> b/drivers/platform/x86/amd/pmc.c
-> index ab05b9ee6655..641085906baf 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -171,9 +171,7 @@ MODULE_PARM_DESC(disable_workarounds,
-> "Disable workarounds for platform bugs");
->  static struct amd_pmc_dev pmc;
->  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32
-> *data, u8 msg, bool ret);
->  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
-> -#ifdef CONFIG_SUSPEND
->  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
-> -#endif
->=20
->  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int
-> reg_offset)
->  {
-> @@ -386,7 +384,6 @@ static int get_metrics_table(struct amd_pmc_dev
-> *pdev, struct smu_metrics *table
->  	return 0;
->  }
->=20
-> -#ifdef CONFIG_SUSPEND
->  static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
->  {
->  	struct smu_metrics table;
-> @@ -400,7 +397,6 @@ static void amd_pmc_validate_deepest(struct
-> amd_pmc_dev *pdev)
->  		dev_dbg(pdev->dev, "Last suspend in deepest state for
-> %lluus\n",
->  			 table.timein_s0i3_lastcapture);
->  }
-> -#endif
->=20
->  static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
->  {
-> @@ -673,7 +669,6 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev
-> *dev, u32 arg, u32 *data, u8 msg,
->  	return rc;
->  }
->=20
-> -#ifdef CONFIG_SUSPEND
->  static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
->  {
->  	switch (dev->cpu_id) {
-> @@ -861,9 +856,7 @@ static int __maybe_unused
-> amd_pmc_suspend_handler(struct device *dev)
->  	return 0;
->  }
->=20
-> -static SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler,
-> NULL);
-> -
-> -#endif
-> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm,
-> amd_pmc_suspend_handler, NULL);
->=20
->  static const struct pci_device_id pmc_pci_ids[] =3D {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
-> @@ -905,7 +898,6 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev
-> *dev)
->  	return 0;
->  }
->=20
-> -#ifdef CONFIG_SUSPEND
->  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
->  {
->  	int err;
-> @@ -926,7 +918,6 @@ static int amd_pmc_write_stb(struct amd_pmc_dev
-> *dev, u32 data)
->=20
->  	return 0;
->  }
-> -#endif
->=20
->  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
->  {
-> @@ -1017,11 +1008,10 @@ static int amd_pmc_probe(struct
-> platform_device *pdev)
->  	}
->=20
->  	platform_set_drvdata(pdev, dev);
-> -#ifdef CONFIG_SUSPEND
-> -	err =3D acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
-> +	if (IS_ENABLED(CONFIG_SUSPEND))
-> +		err =3D acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
->  	if (err)
->  		dev_warn(dev->dev, "failed to register LPS0 sleep handler,
-> expect increased power consumption\n");
-> -#endif
->=20
->  	amd_pmc_dbgfs_register(dev);
->  	return 0;
-> @@ -1035,9 +1025,8 @@ static int amd_pmc_remove(struct platform_device
-> *pdev)
->  {
->  	struct amd_pmc_dev *dev =3D platform_get_drvdata(pdev);
->=20
-> -#ifdef CONFIG_SUSPEND
-> -	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_SUSPEND))
-> +		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
->  	amd_pmc_dbgfs_unregister(dev);
->  	pci_dev_put(dev->rdev);
->  	mutex_destroy(&dev->lock);
-> @@ -1061,9 +1050,7 @@ static struct platform_driver amd_pmc_driver =3D {
->  		.name =3D "amd_pmc",
->  		.acpi_match_table =3D amd_pmc_acpi_ids,
->  		.dev_groups =3D pmc_groups,
-> -#ifdef CONFIG_SUSPEND
-> -		.pm =3D &amd_pmc_pm,
-> -#endif
-> +		.pm =3D pm_sleep_ptr(&amd_pmc_pm),
->  	},
->  	.probe =3D amd_pmc_probe,
->  	.remove =3D amd_pmc_remove,
-> --
+>  drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> index baccdf658538..1b572c90c76e 100644
+> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+> @@ -12,6 +12,10 @@
+>  #include <linux/wmi.h>
+>  #include <acpi/video.h>
+>  
+> +static bool force;
+> +module_param(force, bool, 0444);
+> +MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
+
+This is a bit of a nit, but it took me several times reading the description
+to understand that disabling the acpi_backlight check refers specifically to
+disabling the acpi_video_get_backlight_type() check within the EC backlight
+driver. My initial read was that it is intended to disable the various checks
+in drivers/acpi/video_detect.c, which it does not. Something along the lines
+of "(ignore acpi_video_get_backlight_type check)" makes the intent a little
+bit clearer, I think.
+
+Apart from the commit message and documentation nits, I think that this patch
+makes sense:
+
+ACKed-by: Daniel Dadap <ddadap@nvidia.com>
+
+> +
+>  /**
+>   * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+>   * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+> @@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+>  	int ret;
+>  
+>  	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
+> -	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+> +	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+>  		return -ENODEV;
+>  
+>  	/*
+> -- 
 > 2.39.1
+> 
