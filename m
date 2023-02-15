@@ -2,109 +2,206 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDC3C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Feb 2023 23:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E5C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Feb 2023 16:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbjBNXqD (ORCPT
+        id S229903AbjBOQ6u (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Feb 2023 18:46:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        Wed, 15 Feb 2023 11:58:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjBNXqA (ORCPT
+        with ESMTP id S229907AbjBOQ6t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Feb 2023 18:46:00 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FF630EA1;
-        Tue, 14 Feb 2023 15:45:59 -0800 (PST)
+        Wed, 15 Feb 2023 11:58:49 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38B8227AC;
+        Wed, 15 Feb 2023 08:58:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676418359; x=1707954359;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eiS3IxaAsk6x7BayF1DCQxveYExshrK1kKyFW8zL/CQ=;
-  b=hp3GBOYZqwZ3M6mPyYU86CkDWifK7aevTJV4n52mu0YSqmcJESltHjpg
-   U00N6YESJvCTosSEPuM9EVuK8u9ECZ6Oc8eYDGvfZylx36S7tMyOa5/MI
-   NtdVxV/gY4ufK1o4QqGM9qy1pt1Cm5GfEt/9W8UV3alA1mnCxUwc6RWsy
-   mgU5EHLmRE/RbVhUMYBJxm3D/oRCtVEVHP4R6N5Ja3YFjbB/oGqGkeO/r
-   8MwUBARMuTaXt1faeHXotPlQAUM435DY5SDRK3Cr779p2VgI8tAXgdvdN
-   B5f19DtKhR70HtybFLfNW4NMX5UDgRjaonl2i3pGoPLy3GdxmEAPbKjUy
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="417523061"
-X-IronPort-AV: E=Sophos;i="5.97,298,1669104000"; 
-   d="scan'208";a="417523061"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 15:45:59 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="669391026"
-X-IronPort-AV: E=Sophos;i="5.97,298,1669104000"; 
-   d="scan'208";a="669391026"
-Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 15:45:58 -0800
-From:   Jithu Joseph <jithu.joseph@intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
+  t=1676480327; x=1708016327;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to;
+  bh=YKF6ZvLA3d1uM5u+HATdtClSHQTuSkgIY/ovoaUK2AI=;
+  b=IWQSSMw4H5DuBkZMrgnl0I2w4J4QQ4KoLhq2SVyPmOpaxKjtx0XrOcKu
+   WC9fdc18gq5GwRIeiFHte6DPiRAojo9LxWKeEBcy2B4QB0ljbrKrPs2J5
+   o/LVoIgY7bKMNRS86BiiUrelbS8A0SCfHQiQaYj/UFFwZOuBQX6v2tRxL
+   cZFB3OtZ16dD+6OBmQDD3uzOuimkf5b/QnqtVg6pVGU/mZEVGGHtLDf3N
+   yAMAc3uNnBepQ1PtsOUg0OR6wuDJyPkAsLxYPrg3AHmbEN18y+0sV0BPV
+   pdbdsUO5A3E6GcdcoC3WsaJgu7LEiqFRm0YZMwTqzO4Ii9kpfv1NGguZF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="311845718"
+X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
+   d="scan'208";a="311845718"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 08:58:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="702139634"
+X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
+   d="scan'208";a="702139634"
+Received: from chakanog-mobl.amr.corp.intel.com (HELO [10.209.64.107]) ([10.209.64.107])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 08:58:45 -0800
+Content-Type: multipart/mixed; boundary="------------2vfOd79GQan17WCFyyEr3R4L"
+Message-ID: <a24c65f8-978d-8968-7874-6b83e14b01ba@intel.com>
+Date:   Wed, 15 Feb 2023 08:58:45 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2 4/7] platform/x86/intel/ifs: Implement Array BIST test
+Content-Language: en-US
+To:     Jithu Joseph <jithu.joseph@intel.com>, hdegoede@redhat.com,
+        markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         gregkh@linuxfoundation.org, rostedt@goodmis.org,
-        jithu.joseph@intel.com, ashok.raj@intel.com, tony.luck@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v2 7/7] Documentation/ABI: Update IFS ABI doc
-Date:   Tue, 14 Feb 2023 15:44:26 -0800
-Message-Id: <20230214234426.344960-8-jithu.joseph@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230214234426.344960-1-jithu.joseph@intel.com>
 References: <20230131234302.3997223-1-jithu.joseph@intel.com>
  <20230214234426.344960-1-jithu.joseph@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20230214234426.344960-5-jithu.joseph@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230214234426.344960-5-jithu.joseph@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Array BIST test doesn't need an IFS test image to operate unlike
-the SCAN test. Consequently current_batch and image_version
-files are not applicable for Array BIST IFS device instance,
-clarify this in the ABI doc.
+This is a multi-part message in MIME format.
+--------------2vfOd79GQan17WCFyyEr3R4L
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Also given that multiple tests are supported, take the opportunity
-to generalize descriptions wherever applicable.
+On 2/14/23 15:44, Jithu Joseph wrote:
+> +/* MSR_ARRAY_BIST bit fields */
+> +union ifs_array {
+> +	u64	data;
+> +	struct {
+> +		u32	array_bitmask		:32;
+> +		u32	array_bank		:16;
+> +		u32	rsvd			:15;
+> +		u32	ctrl_result		:1;
+> +	};
+> +};
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- Documentation/ABI/testing/sysfs-platform-intel-ifs | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Wow, after all that, the bitfield remains!  Even the totally unnecessary
+parts, like the 32-bit wide bitfield in the 32-bit value.  The *LEAST*
+you can do is this:
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-index 55991983d0d0..c0cc5ef0739a 100644
---- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
-+++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-@@ -21,15 +21,16 @@ Date:		Nov 16 2022
- KernelVersion:	6.2
- Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
- Description:	Additional information regarding the last test. The details file reports
--		the hex value of the SCAN_STATUS MSR. Note that the error_code field
-+		the hex value of the STATUS MSR for this test. Note that the error_code field
- 		may contain driver defined software code not defined in the Intel SDM.
- 
- What:		/sys/devices/virtual/misc/intel_ifs_<N>/image_version
- Date:		Nov 16 2022
- KernelVersion:	6.2
- Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
--Description:	Version (hexadecimal) of loaded IFS binary image. If no scan image
--		is loaded reports "none".
-+Description:	Version (hexadecimal) of loaded IFS test image. If no test image
-+		is loaded reports "none". Only present for device instances where a test image
-+		is applicable.
- 
- What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
- Date:		Nov 16 2022
-@@ -39,3 +40,4 @@ Description:	Write a number less than or equal to 0xff to load an IFS test image
- 		The number written treated as the 2 digit suffix in the following file name:
- 		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
- 		Reading the file will provide the suffix of the currently loaded IFS test image.
-+		This file is present only for device instances where a test image is applicable.
--- 
-2.25.1
+	struct ifs_array {
+		u32	array_bitmask;
+		u16	array_bank
+		u16	rsvd			:15;
+		u16	ctrl_result		:1;
+	};
 
+to at least minimize the *ENTIRELY* unnecessary bitfields.  I'm also not
+quite sure why I'm going to the trouble of writing another one of these
+things since the last set of things I suggested were not incorporated.
+Or, what the obsession is with u32.
+
+I also think the union is a bit silly.  You could literally just do:
+
+	msrvals[0] = (u64 *)&activate;
+or
+	memcpy(&msrvals[0], &activate, sizeof(activate));
+
+and probably end up with exactly the same instructions.  There's no type
+safety here either way.  The cast, for instance, at least makes the lack
+of type safety obvious.
+
+> +static void ifs_array_test_core(int cpu, struct device *dev)
+> +{
+> +	union ifs_array activate, status = {0};
+
+So, 'status' here is initialized to 0.  But, 'activate'... hmmm
+
+Here's 1 of the 4 fields getting initialized:
+
+> +	activate.array_bitmask = ~0U;
+> +	timeout = jiffies + HZ / 2;
+> +
+> +	do {
+> +		if (time_after(jiffies, timeout)) {
+> +			timed_out = true;
+> +			break;
+> +		}
+> +
+> +		msrvals[0] = activate.data;
+
+and then the *WHOLE* union is read here.  What *is* the uninitialized
+member behavior of a bitfield?  I actually haven't the foggiest idea
+since I never use them.  Is there some subtly C voodoo that initializes
+the other 3 fields?
+
+BTW, ifs_test_core() seems to be doing basically the same thing with
+ifs_status.
+
+> +		atomic_set(&array_cpus_out, 0);
+> +		stop_core_cpuslocked(cpu, do_array_test, msrvals);
+> +		status.data = msrvals[1];
+> +
+> +		if (status.ctrl_result)
+> +			break;
+> +
+> +		activate.array_bitmask = status.array_bitmask;
+> +		activate.array_bank = status.array_bank;
+> +
+> +	} while (status.array_bitmask);
+> +
+> +	ifsd->scan_details = status.data;
+
+Beautiful.  It passes raw MSR values back out to userspace in sysfs.
+
+OK, so all this union.data nonsense is to, in the end, pass two MSR
+values through an array over to the do_array_test() function. That
+function, in the end, just does:
+
++	if (cpu == first) {
++		wrmsrl(MSR_ARRAY_BIST, msrs[0]);
++		/* Pass back the result of the test */
++		rdmsrl(MSR_ARRAY_BIST, msrs[1]);
++	}
+
+with them.  It doesn't even reuse msrs[0].  It also doesn't bother to
+even give them symbolic names, like command and result.  The msrs[]
+values are also totally hard coded.
+
+I'd probably do something like the attached patch.  It gets rid of
+'data' and uses sane types for the bitfield.  It does away with separate
+variables and munging into/out of the msr[] array and just passes a
+single command struct to the work function.  It doesn't have any
+uninitialized structure/bitfield fields.
+
+Oh, and it's less code.
+
+> +	if (status.ctrl_result)
+> +		ifsd->status = SCAN_TEST_FAIL;
+> +	else if (timed_out || status.array_bitmask)
+> +		ifsd->status = SCAN_NOT_TESTED;
+> +	else
+> +		ifsd->status = SCAN_TEST_PASS;
+> +}
+> +
+>  /*
+>   * Initiate per core test. It wakes up work queue threads on the target cpu and
+>   * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
+> @@ -253,6 +341,8 @@ int do_core_test(int cpu, struct device *dev)
+>  		ifs_test_core(cpu, dev);
+>  		break;
+>  	case IFS_ARRAY:
+> +		ifs_array_test_core(cpu, dev);
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+
+--------------2vfOd79GQan17WCFyyEr3R4L
+Content-Type: text/x-patch; charset=UTF-8; name="ifs-fun.patch"
+Content-Disposition: attachment; filename="ifs-fun.patch"
+Content-Transfer-Encoding: base64
+
+IGlmcy5oICAgICB8ICAgMTMgKysrKystLS0tLS0tLQogcnVudGVzdC5jIHwgICAzNCArKysr
+KysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDIwIGlu
+c2VydGlvbnMoKyksIDI3IGRlbGV0aW9ucygtKQo=
+
+--------------2vfOd79GQan17WCFyyEr3R4L--
