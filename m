@@ -2,103 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F51C636D4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Feb 2023 21:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA2FC636CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Feb 2023 21:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjBOVSY (ORCPT
+        id S229538AbjBOV2I (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Feb 2023 16:18:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
+        Wed, 15 Feb 2023 16:28:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjBOVSX (ORCPT
+        with ESMTP id S229551AbjBOV2I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Feb 2023 16:18:23 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752C726879;
-        Wed, 15 Feb 2023 13:18:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676495902; x=1708031902;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GTT4gNma+UDtlhtKszlXJRnKYRr1ieBb5P4RGFVL3g0=;
-  b=O2PD86DQpQbToHdsSVAk/I6AvSf8DvKYqY9HGW8yWGpblpkq8LhpOO6h
-   lEwuop5DjeSu01Me3KwjCrRdg/43OPMRvndvBcmeo5NdM7GtWZd+PCaT8
-   XecGls5/s27q5KEtzS6tLuV7sQMGFcuW5LUAAee8yJwheMl49cB/XyRwP
-   r0vfRCfJvpXMVolGg5QEThG9WoJSTwO4Sd/8Hac7Wpnjnv8Mv3oF6RenM
-   /4Ip5NWIkhBmAUTA53R0z1ogvjq8sOV8Iw/nenoBzIiWzcapR/f2662s/
-   l9XP2iMj2O+raf9/nbgh5QIY5pame77Nm6yJUmRW3ygyNnReq8rDlblSj
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="330186706"
-X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
-   d="scan'208";a="330186706"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 13:18:22 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="733558396"
-X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
-   d="scan'208";a="733558396"
-Received: from chakanog-mobl.amr.corp.intel.com (HELO [10.209.64.107]) ([10.209.64.107])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 13:18:21 -0800
-Message-ID: <76c527e3-b376-18df-bc93-f5a75e029d76@intel.com>
-Date:   Wed, 15 Feb 2023 13:18:20 -0800
+        Wed, 15 Feb 2023 16:28:08 -0500
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF932129F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Feb 2023 13:28:06 -0800 (PST)
+Received: by mail-vs1-xe2a.google.com with SMTP id j5so12382016vsc.8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Feb 2023 13:28:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8b2sRGbLC3cLDtEMqPC00i6WrfkA0RHHI3VEJ49HYU=;
+        b=lTN5xwddT+zZlQEgQ7gPWj/ldB2cN3nbrDIligdVhSIk0aiXKWGnb0FvkcvQjlvZtx
+         6RgayMs4FLeg5NUcCscZf6Y0LA7bJlJCUZTVxbG9ti+pWK4/O6HiA4wIps+AvbO9JvUo
+         FTreunuYrP0z/dvBpkW3wNWoVcs2xa+QPRmrMSnxMU9aUQwQFvyRZ9GCqSulfOHMR30B
+         ChFrE0jcNecyjLAD4DyJQQM0rPZAl1DtU5X5fSH21/ufP9ycFdU7xRTfA+pQuMWYqLyq
+         yLSlycjC+rHrTbows3D7AsGwaaU4QtmfDMB5pRIsX9lRqMl86DFSzM8lfVg7zd9ktw2B
+         U+bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q8b2sRGbLC3cLDtEMqPC00i6WrfkA0RHHI3VEJ49HYU=;
+        b=sXORHVcpDpXO8gixpiYxJnovMTDzIvAw43Upv8cU713+2lgRBoTSnaQtQ6KpUkUQ9O
+         HiTGZ9vuHGnk6PUDDwXGIbvIUxAFDEfUioy1tDRszcIK22NoAubepsIV/RFQIECOyL7A
+         KVWcquReY2t2LhJmfNQQ8nTUdMB91l2fDNiZdAcIHKdjWolUuFCOv5mV+0L+wdHfo4gh
+         FuINiHXffJSaR0V04y6fcL861hgPXBT85xmnXwwwcV/Es3MmAlv23wLl9S1bTAzo48iC
+         b949pozEDjrCo7bVq+iv8sMc7F7n7ZCLT0zsPxcX4obN+DLlgg23A0mjVypdsY3OtlCT
+         44iw==
+X-Gm-Message-State: AO0yUKXGVt5iwPcvV86sJvlL6PO8UYRwob+Al7AsIvtniovNN80VaGLh
+        ODS/feT6L0/m+7gjnuxK+25aBwt/fO1i7DC7gFw=
+X-Google-Smtp-Source: AK7set9yrpDpZTMV8esCfzGLRVRGDgYZ6oBZOcAdcBCSH2RvA7AkQXuf6ysJQK5mLQXgARP0IVXqxUVRMzcXSIhN95I=
+X-Received: by 2002:a05:6102:4187:b0:3f6:4d32:127b with SMTP id
+ cd7-20020a056102418700b003f64d32127bmr703489vsb.63.1676496485561; Wed, 15 Feb
+ 2023 13:28:05 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v2 4/7] platform/x86/intel/ifs: Implement Array BIST test
-Content-Language: en-US
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-References: <20230131234302.3997223-1-jithu.joseph@intel.com>
- <20230214234426.344960-1-jithu.joseph@intel.com>
- <20230214234426.344960-5-jithu.joseph@intel.com>
- <a24c65f8-978d-8968-7874-6b83e14b01ba@intel.com>
- <d9d18954-8434-4c85-88b8-8e1d99cd6a4b@intel.com>
- <dd501d6a-e7e9-be82-24fb-33b18fb6192b@intel.com>
- <b67d2125-4075-4eac-4cad-8e315b866144@intel.com>
- <5d57f42a-1bfc-5e6a-bb49-556ecb7402af@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <5d57f42a-1bfc-5e6a-bb49-556ecb7402af@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230214132522.32631-1-teackot@gmail.com> <83AkxqZKq3bgBwaStV4wlfKJ_gH589YsVpodZGlDzxEydljNFJWfJG8cesFfH_cr5n7YaxxqIRQUxSuiGSgQiHZJkb_q1GoJgtrIGFNChzg=@protonmail.com>
+In-Reply-To: <83AkxqZKq3bgBwaStV4wlfKJ_gH589YsVpodZGlDzxEydljNFJWfJG8cesFfH_cr5n7YaxxqIRQUxSuiGSgQiHZJkb_q1GoJgtrIGFNChzg=@protonmail.com>
+From:   Nikita Kravets <teackot@gmail.com>
+Date:   Thu, 16 Feb 2023 00:27:54 +0300
+Message-ID: <CAPXvF06Gr_Dh9NukoTmnpd+s4uNJaVOvXjmkhQ7NVOnOie1xjg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: Add new msi-ec driver
+To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/15/23 13:13, Joseph, Jithu wrote:
-> 
-> On 2/15/2023 12:26 PM, Dave Hansen wrote:
->> On 2/15/23 12:22, Joseph, Jithu wrote:
->>> 		trace_ifs_array(cpu, *((u64 *)&before), *((u64 *)&command));
->> Uhh, you control the types in the tracepoint.  Just make them compatible
->> so you don't need casts.
-> will change it to:
-> trace_ifs_array(cpu, before.array_bitmask, before.array_bank,  *((u64 *)&command));
-> 
-> i.e will pass compatible types for array_list and array_bank. And for the last argument, we need to dump the whole 64 bits within "command"
-> into trace output . Since the suggested change replaced the union with a struct, it is simplest to cast it to u64 needed by traceoutput.
-> So I would prefer to keep the cast for the last argument alone.
+Hi,
 
-<sigh>
+First of all, sorry if any of you got the message more than once.
+Gmail (and I) messed some stuff up.
 
-Your trace even can literally be:
+> Usually commas are omitted after sentinel entries.
 
-+	TP_STRUCT__entry(
-+		__field(struct ifs_foo,	before	)
-+		__field(struct ifs_foo,	after	)
-+		__field(	int,	cpu	)
-+	),
+I see, makes sense.
 
-and then you can just use structure assignment or a memcpy.  *That* is
-what I mean by compatible types.
+> Alternatively:
+>
+>         .allowed_fw = (const char * const []) {
+>                 "...",
+>                 "...",
+>                 NULL
+>         },
+>
+> (although this won't inherit the __initdata attribute as far as I can see)
 
-But, also, I'm not sure these tracepoints even make any sense.  You're
-passing raw MSR contents back and forth.  Why not just use the MSR
-tracepoints?  They'll give you the same data.
+This looks nicer so the question is: how important is it to put those
+strings into initdata, as they don't take much memory.
+
+> It's a small thing, but I would make `i` and `len` be the same type.
+
+Okay. I should also put the `i` declaration into the for loop header.
+(I'm not the original creator of this function so I didn't touch it
+yet)
+
+> Why not
+>
+>   return device_add_groups(...);
+>
+> ?
+
+Agreed. Didn't look into this one too.
+
+> Furthermore, is it possible that there are two or more batteries?
+
+So far all laptops we've tested only have one, controlled by a single
+EC parameter.
+
+> Have you checked if `match_string()` from string.h works here?
+
+Just checked, it does.
+
+> This will start poking the embedded controller when the module is loaded, regardless of the platform. I am not sure that is desirable.
+
+It only reads though, can it cause any harm?
+
+> static int __init load_configuration(void)
+> {
+>         int result;
+>
+>         // get firmware version
+>         u8 ver[MSI_EC_FW_VERSION_LENGTH + 1];
+>         result = ec_get_firmware_version(ver);
+>         if (result < 0) {
+>                 return result;
+>         }
+
+Also a note from myself: I think this should return -EOPNOTSUPP if
+ec_get_firmware() returns -ENODEV
+
+-- 
+Regards,
+Nikita
