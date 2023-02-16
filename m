@@ -2,67 +2,67 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18694C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 13:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ADAC636CC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 13:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230047AbjBPNQQ (ORCPT
+        id S229931AbjBPNVO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Feb 2023 08:16:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
+        Thu, 16 Feb 2023 08:21:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjBPNQP (ORCPT
+        with ESMTP id S229478AbjBPNVN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Feb 2023 08:16:15 -0500
+        Thu, 16 Feb 2023 08:21:13 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543B6521F5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:15:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB7255B1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:20:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676553320;
+        s=mimecast20190719; t=1676553631;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CnOWuG4C9/OSgMGsMbJB7MvW7/GVT/s62wGhM9scC/8=;
-        b=IJrZw4AqIW+z/6mPx73BQ5N0iyCKgKt+r+oc7BsYw5ZOZavqjE1WWnmTC4N+3sNPzG8q/0
-        XeAw5ws5OuBaNhpytQIL06LLmIByGwKYQwlM26OMipP+gh8tcXhMSnkuIem/segW1Yot2z
-        Yo2vpob35Df7XEV5DO+ukGr4JyuRZg4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=VmypGMX3hxQz21N6rcBT8E1yhlwVSv2aRa81TfF+OWM=;
+        b=NwZXU2z1oG1u2TOAHoMoJksUqurfNJ/m4RfV9LlCDWsQAsk4uv945pmFnj2JU3v85c+9pE
+        apq5Zsq/tA28Rfws3KIm3zVqAD3mq091jIxaubyNvTa9Rvyv6hxSER8pEA8GNqc9h1XPba
+        KQQprPetaDvYZ03wx55tkpnEIpYsAnM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-42-BR8dqOJ5OW6xqtWnMBSEfQ-1; Thu, 16 Feb 2023 08:15:19 -0500
-X-MC-Unique: BR8dqOJ5OW6xqtWnMBSEfQ-1
-Received: by mail-ed1-f71.google.com with SMTP id p36-20020a056402502400b004aab6614de9so1521348eda.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:15:19 -0800 (PST)
+ us-mta-594-qgO2itkcO265xgeR4LUY1w-1; Thu, 16 Feb 2023 08:20:30 -0500
+X-MC-Unique: qgO2itkcO265xgeR4LUY1w-1
+Received: by mail-ej1-f69.google.com with SMTP id vq12-20020a170907a4cc00b00896db1c78aaso1514048ejc.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:20:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CnOWuG4C9/OSgMGsMbJB7MvW7/GVT/s62wGhM9scC/8=;
-        b=ffwWjhK/6AzkNR0uTwgh39d53KiB7Iaf6HA/WbH/eISIhzLMg1JENQcJga2YjmMFwu
-         xtDNZx/orfN/ksdFWBm7ihZ4INslRIYCvHytmiTYMHlr1kYCXvvHN0sgC20XmRmhC5SN
-         CPRfLIpn9KuDfp80y6B7XQ674lDCbcCXUKqsB+0lR9jDXmzf4FwT9deDmNDUTC/y7nyi
-         p6F6HfQl8OaUd048JvXd+MCIBnr8Cii9wQbocVTWT6zPC9g1Ijmx6raLDZBYS1ndukQ+
-         fvtHQ3cRd19BaWJVnW3VIKPP6GgBM4d0yfDTI+0Lm7wyHbHlKOzhYBe51RY7+nb772XT
-         /VYw==
-X-Gm-Message-State: AO0yUKWferImn1doVejgULcAk1oGs80k7vBsqta7bpwyZWBq5BQsVSzP
-        /DKUvblAtnqDuZxU55HlMcvWSG8OL8rCyBTcVteW0VpNEfZASHPUxkucWjH31rlg0OEqO47luTt
-        xMLwMcHUctXCfCSMpTcCBX2+Nb25/OhVPmg==
-X-Received: by 2002:aa7:d653:0:b0:4ab:4af4:834f with SMTP id v19-20020aa7d653000000b004ab4af4834fmr5806797edr.33.1676553318159;
-        Thu, 16 Feb 2023 05:15:18 -0800 (PST)
-X-Google-Smtp-Source: AK7set/gtpsYi1jD3fY/3HEl8vq52vUl008SOxtxzvre+ErxxJrQ81qMTPgf97DK4RXcLnaXoB+jxA==
-X-Received: by 2002:aa7:d653:0:b0:4ab:4af4:834f with SMTP id v19-20020aa7d653000000b004ab4af4834fmr5806776edr.33.1676553317782;
-        Thu, 16 Feb 2023 05:15:17 -0800 (PST)
+        bh=VmypGMX3hxQz21N6rcBT8E1yhlwVSv2aRa81TfF+OWM=;
+        b=G1RhVcEVozILnJDKOqmUq7b9iHwBRZlG7uuwW660GCSPbsk+lovnpU3k2qh9/lUTpc
+         D/fUgwlkJ7n/mJeQ3J2onbso2R5rrmgUejtVKx/DcZn6viORNIJDxdTrWg0HRoI3EUwC
+         eyWYupy5L5W9sJMJdpd2Oz+K87CLMATPwZu0WAKXkptspCGx1Y3ZwhIjruTe0Jzb44cN
+         9mi3d9QJ5jZpubunjUxqEvL3xl1MNSnr+RW5OkHyB+NqnMPd+GSay0FeBE5UNRtA5NWe
+         PRgt4/lWPB2nXz7HUYtbuq4Oj6PfV7e9CvqxGU8gkdEfP9CH4Y1tF40IrFye2E5I+3Nq
+         60Dw==
+X-Gm-Message-State: AO0yUKWVw9zHJAlF964gYPaK2KhnahuhwzkdsIsk9gSqGJB7rvcW9vw8
+        0YjDnLwAvrGm35uHIFrEPB7xWcUfK9nROSGEFHanvgo//0XKiq7ZY+1r8qn1VA8W4sxCFEdPkmc
+        Jt85kEhtUcyX50S/N+MwWC0oklfXKZVrHcw==
+X-Received: by 2002:a17:906:1d03:b0:8b1:3d15:1e2c with SMTP id n3-20020a1709061d0300b008b13d151e2cmr6651618ejh.9.1676553629304;
+        Thu, 16 Feb 2023 05:20:29 -0800 (PST)
+X-Google-Smtp-Source: AK7set91YxgYVfjkKYE8byh4AKMzFpHM5u0gmr0V+jxpnf45Av6+pw5nHtYBhOjnZNAzrDRQfkFDkA==
+X-Received: by 2002:a17:906:1d03:b0:8b1:3d15:1e2c with SMTP id n3-20020a1709061d0300b008b13d151e2cmr6651592ejh.9.1676553629054;
+        Thu, 16 Feb 2023 05:20:29 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v22-20020a509556000000b004a23558f01fsm866726eda.43.2023.02.16.05.15.16
+        by smtp.gmail.com with ESMTPSA id bk26-20020a170906b0da00b0089d5aaf85besm796575ejb.219.2023.02.16.05.20.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 05:15:17 -0800 (PST)
-Message-ID: <8de35754-4f31-1f4d-3a6b-7a56cb5fe162@redhat.com>
-Date:   Thu, 16 Feb 2023 14:15:16 +0100
+        Thu, 16 Feb 2023 05:20:28 -0800 (PST)
+Message-ID: <0a58bf19-d943-b8c6-a882-7209d0543823@redhat.com>
+Date:   Thu, 16 Feb 2023 14:20:27 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2 4/5] apple-gmux: support MMIO gmux on T2 Macs
+Subject: Re: [PATCH v2 5/5] apple-gmux: add debugfs interface
 Content-Language: en-US, nl
 To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
 Cc:     Mark Gross <markgross@kernel.org>,
@@ -73,9 +73,9 @@ Cc:     Mark Gross <markgross@kernel.org>,
         Aun-Ali Zaidi <admin@kodeit.net>,
         Kerem Karabay <kekrby@gmail.com>
 References: <20230216122342.5918-1-orlandoch.dev@gmail.com>
- <20230216122342.5918-5-orlandoch.dev@gmail.com>
+ <20230216122342.5918-6-orlandoch.dev@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230216122342.5918-5-orlandoch.dev@gmail.com>
+In-Reply-To: <20230216122342.5918-6-orlandoch.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -85,348 +85,159 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/16/23 13:23, Orlando Chamberlain wrote:
-> In some newer dual gpu MacBooks, gmux is controlled by the T2 security
-> chip, and acessed with MMIO. Add support for these gmux controllers
+> Allow reading and writing gmux ports from userspace.
 > 
-> Interestingly, the ACPI table only allocates 8 bytes for GMUX, but we
-> actually need 16, and as such we request 16 with request_mem_region.
+> For example:
 > 
-> Reading and writing from ports:
->     16 bytes from 0xfe0b0200 are used. 0x0 to 0x4 are where data
->     to read appears, and where data to write goes. Writing to 0xe
->     sets the gmux port being accessed, and writing to 0xf sends commands.
+> echo 4 > /sys/kernel/debug/apple_gmux/selected_port
+> cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
 > 
->     These commands are 0x40 & data_length for write, and data_length for
->     read, where data_length is 1, 2 or 4. Once byte base+0xf is 0, the
->     command is done.
-> 
-> Issues:
->     As with other retina models, we can't switch DDC lines so
->     switching at runtime doesn't work if the inactive gpu driver
->     already disabled eDP due to it not being connected when that
->     driver loaded.
-> 
->     Additionally, turning on the dgpu back on the MacBookPro16,1 does
->     not work.
+> Will show the gmux version information (00000005 in this case)
 > 
 > Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
 > ---
-> v1->v2: Document some chips present, and clarify which chips aren't
-> present on MMIO gmux laptops.
->  drivers/platform/x86/apple-gmux.c | 142 +++++++++++++++++++++++++++---
->  include/linux/apple-gmux.h        |  40 ++++++---
->  2 files changed, 158 insertions(+), 26 deletions(-)
+> v1->v2: Use debugfs instead of sysfs.
+>  drivers/platform/x86/apple-gmux.c | 88 +++++++++++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 12a93fc49c36..5bac6dcfada0 100644
+> index 5bac6dcfada0..e8a35d98b113 100644
 > --- a/drivers/platform/x86/apple-gmux.c
 > +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -28,15 +28,17 @@
->   * DOC: Overview
->   *
->   * gmux is a microcontroller built into the MacBook Pro to support dual GPUs:
-> - * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on retinas.
-> + * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on pre-T2 retinas.
-> + * The chip used on T2 Macs is not known.
->   *
->   * (The MacPro6,1 2013 also has a gmux, however it is unclear why since it has
->   * dual GPUs but no built-in display.)
->   *
->   * gmux is connected to the LPC bus of the southbridge. Its I/O ports are
->   * accessed differently depending on the microcontroller: Driver functions
-> - * to access a pre-retina gmux are infixed ``_pio_``, those for a retina gmux
-> - * are infixed ``_index_``.
-> + * to access a pre-retina gmux are infixed ``_pio_``, those for a pre-T2
-> + * retina gmux are infixed ``_index_``, and those on T2 Macs are infixed
-> + * with ``_mmio_``.
->   *
->   * .. _Lattice XP2:
->   *     http://www.latticesemi.com/en/Products/FPGAandCPLD/LatticeXP2.aspx
-> @@ -47,6 +49,7 @@
->  struct apple_gmux_config;
+> @@ -22,6 +22,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/pci.h>
+>  #include <linux/vga_switcheroo.h>
+> +#include <linux/debugfs.h>
+>  #include <asm/io.h>
 >  
->  struct apple_gmux_data {
-> +	u8 *__iomem iomem_base;
->  	unsigned long iostart;
->  	unsigned long iolen;
->  	const struct apple_gmux_config *config;
-> @@ -209,6 +212,79 @@ static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
->  	mutex_unlock(&gmux_data->index_lock);
+>  /**
+> @@ -66,6 +67,10 @@ struct apple_gmux_data {
+>  	enum vga_switcheroo_client_id switch_state_external;
+>  	enum vga_switcheroo_state power_state;
+>  	struct completion powerchange_done;
+> +
+> +	/* debugfs data */
+> +	u8 selected_port;
+> +	struct dentry *debug_dentry;
+>  };
+>  
+>  static struct apple_gmux_data *apple_gmux_data;
+> @@ -674,6 +679,87 @@ static void gmux_notify_handler(acpi_handle device, u32 value, void *context)
+>  		complete(&gmux_data->powerchange_done);
 >  }
 >  
-> +static int gmux_mmio_wait(struct apple_gmux_data *gmux_data)
+> +/**
+> + * DOC: Debugfs Interface
+> + *
+> + * gmux ports can be accessed from userspace as a debugfs interface. For example:
+> + *
+> + * # echo 4 > /sys/kernel/debug/apple_gmux/selected_port
+> + * # cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
+> + * 00000005
+> + *
+> + * Reads 4 bytes from port 4 (GMUX_PORT_VERSION_MAJOR).
+> + *
+> + * 1 and 4 byte writes are also allowed.
+> + */
+> +
+> +static ssize_t gmux_selected_port_data_write(struct file *file,
+> +		const char __user *userbuf, size_t count, loff_t *ppos)
 > +{
-> +	int i = 200;
-> +	u8 gwr = ioread8(gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
+> +	struct apple_gmux_data *gmux_data = file->private_data;
+> +	int ret;
 > +
-> +	while (i && gwr) {
-> +		gwr = ioread8(gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +		udelay(100);
-> +		i--;
-> +	}
+> +	if (*ppos)
+> +		return -EINVAL;
 > +
-> +	return !!i;
+> +	if (count == 1) {
+> +		u8 data;
+> +
+> +		ret = copy_from_user(&data, userbuf, 1);
+> +		if (ret)
+> +			return ret;
+> +		gmux_write8(gmux_data, gmux_data->selected_port, data);
+> +	} else if (count == 4) {
+> +		u32 data;
+> +
+> +		ret = copy_from_user(&data, userbuf, 4);
+> +		if (ret)
+> +			return ret;
+> +		gmux_write32(gmux_data, gmux_data->selected_port, data);
+> +	} else
+> +		return -EINVAL;
+> +
+> +	return count;
 > +}
 > +
-> +static u8 gmux_mmio_read8(struct apple_gmux_data *gmux_data, int port)
+> +static ssize_t gmux_selected_port_data_read(struct file *file,
+> +		char __user *userbuf, size_t count, loff_t *ppos)
 > +{
-> +	u8 val;
+> +	struct apple_gmux_data *gmux_data = file->private_data;
+> +	u32 data;
 > +
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_READ | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	val = ioread8(gmux_data->iomem_base);
-> +	mutex_unlock(&gmux_data->index_lock);
+> +	data = gmux_read32(gmux_data, gmux_data->selected_port);
 > +
-> +	return val;
+> +	return simple_read_from_buffer(userbuf, count, ppos, &data, sizeof(data));
 > +}
 > +
-> +static void gmux_mmio_write8(struct apple_gmux_data *gmux_data, int port,
-> +			      u8 val)
-> +{
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8(val, gmux_data->iomem_base);
-> +
-> +	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +
-> +	gmux_mmio_wait(gmux_data);
-> +	mutex_unlock(&gmux_data->index_lock);
-> +}
-> +
-> +static u32 gmux_mmio_read32(struct apple_gmux_data *gmux_data, int port)
-> +{
-> +	u32 val;
-> +
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_READ | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	val = be32_to_cpu(ioread32(gmux_data->iomem_base));
-> +	mutex_unlock(&gmux_data->index_lock);
-> +
-> +	return val;
-> +}
-> +
-> +static void gmux_mmio_write32(struct apple_gmux_data *gmux_data, int port,
-> +			       u32 val)
-> +{
-> +	mutex_lock(&gmux_data->index_lock);
-> +	iowrite32(cpu_to_be32(val), gmux_data->iomem_base);
-> +	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	mutex_unlock(&gmux_data->index_lock);
-> +}
-> +
->  static u8 gmux_read8(struct apple_gmux_data *gmux_data, int port)
->  {
->  	return gmux_data->config->read8(gmux_data, port);
-> @@ -237,8 +313,8 @@ static void gmux_write32(struct apple_gmux_data *gmux_data, int port,
->   * the GPU. On dual GPU MacBook Pros by contrast, either GPU may be suspended
->   * to conserve energy. Hence the PWM signal needs to be generated by a separate
->   * backlight driver which is controlled by gmux. The earliest generation
-> - * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
-> - * use a `TI LP8545`_.
-> + * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. Newer models
-> + * use a `TI LP8545`_ or a TI LP8548.
->   *
->   * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
->   * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
-> @@ -302,8 +378,8 @@ static const struct backlight_ops gmux_bl_ops = {
->   * connecting it either to the discrete GPU or the Thunderbolt controller.
->   * Oddly enough, while the full port is no longer switchable, AUX and HPD
->   * are still switchable by way of an `NXP CBTL03062`_ (on pre-retinas
-> - * MBP8 2011 and MBP9 2012) or two `TI TS3DS10224`_ (on retinas) under the
-> - * control of gmux. Since the integrated GPU is missing the main link,
-> + * MBP8 2011 and MBP9 2012) or two `TI TS3DS10224`_ (on pre-t2 retinas) under
-> + * the control of gmux. Since the integrated GPU is missing the main link,
->   * external displays appear to it as phantoms which fail to link-train.
->   *
->   * gmux receives the HPD signal of all display connectors and sends an
-> @@ -506,6 +582,20 @@ static const struct apple_gmux_config apple_gmux_index = {
->  	.name = "indexed"
->  };
->  
-> +static const struct apple_gmux_config apple_gmux_mmio = {
-> +	.read8 = &gmux_mmio_read8,
-> +	.write8 = &gmux_mmio_write8,
-> +	.read32 = &gmux_mmio_read32,
-> +	.write32 = &gmux_mmio_write32,
-> +	.gmux_handler = &gmux_handler_no_ddc,
-> +	.handler_flags = VGA_SWITCHEROO_NEEDS_EDP_CONFIG,
-> +	.resource_type = IORESOURCE_MEM,
-> +	.read_version_as_u32 = true,
-> +	.use_acpi_gmsp = true,
-> +	.name = "T2"
+> +static const struct file_operations gmux_port_data_ops = {
+> +	.open = simple_open,
+> +	.write = gmux_selected_port_data_write,
+> +	.read = gmux_selected_port_data_read
 > +};
 > +
+> +static void gmux_init_debugfs(struct apple_gmux_data *gmux_data)
+> +{
+> +	struct dentry *debug_dentry;
 > +
->  /**
->   * DOC: Interrupt
->   *
-> @@ -637,6 +727,25 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	pnp_set_drvdata(pnp, gmux_data);
->  
->  	switch (type) {
-> +	case APPLE_GMUX_TYPE_MMIO:
-> +		gmux_data->config = &apple_gmux_mmio;
-> +		mutex_init(&gmux_data->index_lock);
+> +	debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
 > +
-> +		res = pnp_get_resource(pnp, IORESOURCE_MEM, 0);
-> +		gmux_data->iostart = res->start;
-> +		/* Although the ACPI table only allocates 8 bytes, we need 16. */
-> +		gmux_data->iolen = 16;
-> +		if (!request_mem_region(gmux_data->iostart, gmux_data->iolen,
-> +					"Apple gmux")) {
-> +			pr_err("gmux I/O already in use\n");
-> +			goto err_free;
-> +		}
-> +		gmux_data->iomem_base = ioremap(gmux_data->iostart, gmux_data->iolen);
-> +		if (!gmux_data->iomem_base) {
-> +			pr_err("couldn't remap gmux mmio region");
-> +			goto err_release;
-> +		}
-> +		goto get_version;
->  	case APPLE_GMUX_TYPE_INDEXED:
->  		gmux_data->config = &apple_gmux_index;
->  		mutex_init(&gmux_data->index_lock);
-> @@ -656,6 +765,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  		goto err_free;
->  	}
->  
-> +get_version:
->  	if (gmux_data->config->read_version_as_u32) {
->  		version = gmux_read32(gmux_data, GMUX_PORT_VERSION_MAJOR);
->  		ver_major = (version >> 24) & 0xff;
-> @@ -686,7 +796,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  					 gmux_data, &gmux_bl_ops, &props);
->  	if (IS_ERR(bdev)) {
->  		ret = PTR_ERR(bdev);
-> -		goto err_release;
-> +		goto err_unmap;
->  	}
->  
->  	gmux_data->bdev = bdev;
-> @@ -753,7 +863,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	/*
->  	 * Retina MacBook Pros cannot switch the panel's AUX separately
->  	 * and need eDP pre-calibration. They are distinguishable from
-> -	 * pre-retinas by having an "indexed" gmux.
-> +	 * pre-retinas by having an "indexed" or "T2" gmux.
->  	 *
->  	 * Pre-retina MacBook Pros can switch the panel's DDC separately.
->  	 */
-> @@ -778,8 +888,14 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  					   &gmux_notify_handler);
->  err_notify:
->  	backlight_device_unregister(bdev);
-> +err_unmap:
-> +	if (gmux_data->iomem_base)
-> +		iounmap(gmux_data->iomem_base);
->  err_release:
-> -	release_region(gmux_data->iostart, gmux_data->iolen);
-> +	if (gmux_data->config->resource_type == IORESOURCE_MEM)
-> +		release_mem_region(gmux_data->iostart, gmux_data->iolen);
-> +	else
-> +		release_region(gmux_data->iostart, gmux_data->iolen);
->  err_free:
->  	kfree(gmux_data);
->  	return ret;
-> @@ -800,7 +916,11 @@ static void gmux_remove(struct pnp_dev *pnp)
->  
->  	backlight_device_unregister(gmux_data->bdev);
->  
-> -	release_region(gmux_data->iostart, gmux_data->iolen);
-> +	if (gmux_data->iomem_base) {
-> +		iounmap(gmux_data->iomem_base);
-> +		release_mem_region(gmux_data->iostart, gmux_data->iolen);
-> +	} else
-> +		release_region(gmux_data->iostart, gmux_data->iolen);
->  	apple_gmux_data = NULL;
->  	kfree(gmux_data);
->  
-> diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
-> index 5f658439f7f8..b7532f26b756 100644
-> --- a/include/linux/apple-gmux.h
-> +++ b/include/linux/apple-gmux.h
-> @@ -34,11 +34,18 @@
->  #define GMUX_PORT_READ			0xd0
->  #define GMUX_PORT_WRITE			0xd4
->  
-> +#define GMUX_MMIO_PORT_SELECT		0x0e
-> +#define GMUX_MMIO_COMMAND_SEND		0x0f
-> +
-> +#define GMUX_MMIO_READ			0x00
-> +#define GMUX_MMIO_WRITE			0x40
-> +
->  #define GMUX_MIN_IO_LEN			(GMUX_PORT_BRIGHTNESS + 4)
->  
->  enum apple_gmux_type {
->  	APPLE_GMUX_TYPE_PIO,
-> -	APPLE_GMUX_TYPE_INDEXED
-> +	APPLE_GMUX_TYPE_INDEXED,
-> +	APPLE_GMUX_TYPE_MMIO
->  };
+> +	if (IS_ERR(debug_dentry))
+> +		return;
 
-With my suggested change to patch 2/5 the - + for APPLE_GMUX_TYPE_INDEXED
-will go away because the , is already there. Likewise please add a ,
-after APPLE_GMUX_TYPE_MMIO in case we want to add more entries in
-the future.
+This error check is not necessary here. The debugfs_create_*
+and debugfs_remove_recursive() functions will happily take
+the ERR_PTR value and ignore it.
 
-Otherwise this patch looks good to me.
+This is what I tried to say when I said that no error handling
+is necessary with debugfs (by design).
 
 Regards,
 
 Hans
 
 
->  
->  #if IS_ENABLED(CONFIG_APPLE_GMUX)
-> @@ -93,19 +100,24 @@ static inline bool apple_gmux_detect(struct pnp_dev *pnp_dev, enum apple_gmux_ty
+> +
+> +	gmux_data->debug_dentry = debug_dentry;
+> +
+> +	debugfs_create_u8("selected_port", 0644, debug_dentry, &gmux_data->selected_port);
+> +	debugfs_create_file("selected_port_data", 0644, debug_dentry,
+> +			gmux_data, &gmux_port_data_ops);
+> +}
+> +
+> +static void gmux_fini_debugfs(struct apple_gmux_data *gmux_data)
+> +{
+> +	debugfs_remove_recursive(gmux_data->debug_dentry);
+> +}
+> +
+>  static int gmux_suspend(struct device *dev)
+>  {
+>  	struct pnp_dev *pnp = to_pnp_dev(dev);
+> @@ -874,6 +960,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+>  		goto err_register_handler;
 >  	}
 >  
->  	res = pnp_get_resource(pnp_dev, IORESOURCE_IO, 0);
-> -	if (!res || resource_size(res) < GMUX_MIN_IO_LEN)
-> -		goto out;
-> -
-> -	/*
-> -	 * Invalid version information may indicate either that the gmux
-> -	 * device isn't present or that it's a new one that uses indexed io.
-> -	 */
-> -	ver_major = inb(res->start + GMUX_PORT_VERSION_MAJOR);
-> -	ver_minor = inb(res->start + GMUX_PORT_VERSION_MINOR);
-> -	ver_release = inb(res->start + GMUX_PORT_VERSION_RELEASE);
-> -	if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
-> -		if (apple_gmux_is_indexed(res->start))
-> -			type = APPLE_GMUX_TYPE_INDEXED;
-> +	if (res && resource_size(res) >= GMUX_MIN_IO_LEN) {
-> +		/*
-> +		 * Invalid version information may indicate either that the gmux
-> +		 * device isn't present or that it's a new one that uses indexed io.
-> +		 */
-> +		ver_major = inb(res->start + GMUX_PORT_VERSION_MAJOR);
-> +		ver_minor = inb(res->start + GMUX_PORT_VERSION_MINOR);
-> +		ver_release = inb(res->start + GMUX_PORT_VERSION_RELEASE);
-> +		if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
-> +			if (apple_gmux_is_indexed(res->start))
-> +				type = APPLE_GMUX_TYPE_INDEXED;
-> +			else
-> +				goto out;
-> +		}
-> +	} else {
-> +		res = pnp_get_resource(pnp_dev, IORESOURCE_MEM, 0);
-> +		if (res)
-> +			type = APPLE_GMUX_TYPE_MMIO;
->  		else
->  			goto out;
->  	}
+> +	gmux_init_debugfs(gmux_data);
+>  	return 0;
+>  
+>  err_register_handler:
+> @@ -905,6 +992,7 @@ static void gmux_remove(struct pnp_dev *pnp)
+>  {
+>  	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
+>  
+> +	gmux_fini_debugfs(gmux_data);
+>  	vga_switcheroo_unregister_handler();
+>  	gmux_disable_interrupts(gmux_data);
+>  	if (gmux_data->gpe >= 0) {
 
