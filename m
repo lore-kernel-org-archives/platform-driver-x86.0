@@ -2,129 +2,72 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA2FC636CC
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Feb 2023 21:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA91C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 00:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbjBOV2I (ORCPT
+        id S229517AbjBPA4Q convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Feb 2023 16:28:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        Wed, 15 Feb 2023 19:56:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbjBOV2I (ORCPT
+        with ESMTP id S229496AbjBPA4Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Feb 2023 16:28:08 -0500
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF932129F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Feb 2023 13:28:06 -0800 (PST)
-Received: by mail-vs1-xe2a.google.com with SMTP id j5so12382016vsc.8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Feb 2023 13:28:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8b2sRGbLC3cLDtEMqPC00i6WrfkA0RHHI3VEJ49HYU=;
-        b=lTN5xwddT+zZlQEgQ7gPWj/ldB2cN3nbrDIligdVhSIk0aiXKWGnb0FvkcvQjlvZtx
-         6RgayMs4FLeg5NUcCscZf6Y0LA7bJlJCUZTVxbG9ti+pWK4/O6HiA4wIps+AvbO9JvUo
-         FTreunuYrP0z/dvBpkW3wNWoVcs2xa+QPRmrMSnxMU9aUQwQFvyRZ9GCqSulfOHMR30B
-         ChFrE0jcNecyjLAD4DyJQQM0rPZAl1DtU5X5fSH21/ufP9ycFdU7xRTfA+pQuMWYqLyq
-         yLSlycjC+rHrTbows3D7AsGwaaU4QtmfDMB5pRIsX9lRqMl86DFSzM8lfVg7zd9ktw2B
-         U+bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q8b2sRGbLC3cLDtEMqPC00i6WrfkA0RHHI3VEJ49HYU=;
-        b=sXORHVcpDpXO8gixpiYxJnovMTDzIvAw43Upv8cU713+2lgRBoTSnaQtQ6KpUkUQ9O
-         HiTGZ9vuHGnk6PUDDwXGIbvIUxAFDEfUioy1tDRszcIK22NoAubepsIV/RFQIECOyL7A
-         KVWcquReY2t2LhJmfNQQ8nTUdMB91l2fDNiZdAcIHKdjWolUuFCOv5mV+0L+wdHfo4gh
-         FuINiHXffJSaR0V04y6fcL861hgPXBT85xmnXwwwcV/Es3MmAlv23wLl9S1bTAzo48iC
-         b949pozEDjrCo7bVq+iv8sMc7F7n7ZCLT0zsPxcX4obN+DLlgg23A0mjVypdsY3OtlCT
-         44iw==
-X-Gm-Message-State: AO0yUKXGVt5iwPcvV86sJvlL6PO8UYRwob+Al7AsIvtniovNN80VaGLh
-        ODS/feT6L0/m+7gjnuxK+25aBwt/fO1i7DC7gFw=
-X-Google-Smtp-Source: AK7set9yrpDpZTMV8esCfzGLRVRGDgYZ6oBZOcAdcBCSH2RvA7AkQXuf6ysJQK5mLQXgARP0IVXqxUVRMzcXSIhN95I=
-X-Received: by 2002:a05:6102:4187:b0:3f6:4d32:127b with SMTP id
- cd7-20020a056102418700b003f64d32127bmr703489vsb.63.1676496485561; Wed, 15 Feb
- 2023 13:28:05 -0800 (PST)
+        Wed, 15 Feb 2023 19:56:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86F52A153;
+        Wed, 15 Feb 2023 16:56:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 645AAB8245D;
+        Thu, 16 Feb 2023 00:56:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A658C433EF;
+        Thu, 16 Feb 2023 00:56:11 +0000 (UTC)
+Date:   Wed, 15 Feb 2023 19:56:09 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jithu Joseph <jithu.joseph@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, gregkh@linuxfoundation.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: Re: [PATCH v2 5/7] platform/x86/intel/ifs: Trace support for array
+ test
+Message-ID: <20230215195609.288a5709@rorschach.local.home>
+In-Reply-To: <20230214234426.344960-6-jithu.joseph@intel.com>
+References: <20230131234302.3997223-1-jithu.joseph@intel.com>
+        <20230214234426.344960-1-jithu.joseph@intel.com>
+        <20230214234426.344960-6-jithu.joseph@intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20230214132522.32631-1-teackot@gmail.com> <83AkxqZKq3bgBwaStV4wlfKJ_gH589YsVpodZGlDzxEydljNFJWfJG8cesFfH_cr5n7YaxxqIRQUxSuiGSgQiHZJkb_q1GoJgtrIGFNChzg=@protonmail.com>
-In-Reply-To: <83AkxqZKq3bgBwaStV4wlfKJ_gH589YsVpodZGlDzxEydljNFJWfJG8cesFfH_cr5n7YaxxqIRQUxSuiGSgQiHZJkb_q1GoJgtrIGFNChzg=@protonmail.com>
-From:   Nikita Kravets <teackot@gmail.com>
-Date:   Thu, 16 Feb 2023 00:27:54 +0300
-Message-ID: <CAPXvF06Gr_Dh9NukoTmnpd+s4uNJaVOvXjmkhQ7NVOnOie1xjg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: Add new msi-ec driver
-To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Tue, 14 Feb 2023 15:44:24 -0800
+Jithu Joseph <jithu.joseph@intel.com> wrote:
 
-First of all, sorry if any of you got the message more than once.
-Gmail (and I) messed some stuff up.
+> Enable tracing support in array test flow.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
 
-> Usually commas are omitted after sentinel entries.
+From the tracing POV:
 
-I see, makes sense.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-> Alternatively:
->
->         .allowed_fw = (const char * const []) {
->                 "...",
->                 "...",
->                 NULL
->         },
->
-> (although this won't inherit the __initdata attribute as far as I can see)
+-- Steve
 
-This looks nicer so the question is: how important is it to put those
-strings into initdata, as they don't take much memory.
-
-> It's a small thing, but I would make `i` and `len` be the same type.
-
-Okay. I should also put the `i` declaration into the for loop header.
-(I'm not the original creator of this function so I didn't touch it
-yet)
-
-> Why not
->
->   return device_add_groups(...);
->
-> ?
-
-Agreed. Didn't look into this one too.
-
-> Furthermore, is it possible that there are two or more batteries?
-
-So far all laptops we've tested only have one, controlled by a single
-EC parameter.
-
-> Have you checked if `match_string()` from string.h works here?
-
-Just checked, it does.
-
-> This will start poking the embedded controller when the module is loaded, regardless of the platform. I am not sure that is desirable.
-
-It only reads though, can it cause any harm?
-
-> static int __init load_configuration(void)
-> {
->         int result;
->
->         // get firmware version
->         u8 ver[MSI_EC_FW_VERSION_LENGTH + 1];
->         result = ec_get_firmware_version(ver);
->         if (result < 0) {
->                 return result;
->         }
-
-Also a note from myself: I think this should return -EOPNOTSUPP if
-ec_get_firmware() returns -ENODEV
-
--- 
-Regards,
-Nikita
+> ---
+>  include/trace/events/intel_ifs.h         | 25 ++++++++++++++++++++++++
+>  drivers/platform/x86/intel/ifs/runtest.c |  1 +
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/include/trace/events/intel_ifs.h b/include/trace/events/intel_ifs.h
+> index d7353024016c..d15037943b80 100644
+> --- a/include/trace/events/intel_ifs.h
