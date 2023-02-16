@@ -2,219 +2,215 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB6AC636D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 12:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBF1C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 12:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbjBPMZm (ORCPT
+        id S229512AbjBPMkn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Feb 2023 07:25:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35456 "EHLO
+        Thu, 16 Feb 2023 07:40:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjBPMZi (ORCPT
+        with ESMTP id S229495AbjBPMkm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Feb 2023 07:25:38 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB545776D;
-        Thu, 16 Feb 2023 04:25:30 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id n2so1345727pfo.3;
-        Thu, 16 Feb 2023 04:25:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Am8BGSEip5nNE8Zh0hm60KhhWsRjuiVkZed/6iLfSSg=;
-        b=kuj5ZFPccKNgGnLvhSCdjjLGRHp/Cg168G+FmzCHapcrrSBsK3Zq2++X4KBN/kfm2N
-         /YvqnFNfz8wJq8hQUrRRx0qDaQ9e4Ix/LnT2/oD+P6L9iDzb4nS/q0JD7HxyjYvKeksL
-         brv5h9SOUs/hfcUBWzikgIBVekWlqRnR3jK1XCC59m/1Seon8DSfXHvzPn5RhLZU2Wcs
-         ag9Fg+2U4RX4jkrm3jNql2ihlc3eN6CTD1wvVWv3I+JllMKVAg5YaXHtEs2NT7Jp/9tm
-         AUoF8g9dNGGJUfraAGSG0M4WJnqrt13qgU2lgPX5RHrjeS7Ok5frtdfoqVoyEsSyq8mL
-         QRNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Am8BGSEip5nNE8Zh0hm60KhhWsRjuiVkZed/6iLfSSg=;
-        b=ee30K0aBXI6gdfGrDc+nBUKNKKC9tnDY1Q0xNX1VhiLIwltRy5cI6jJXrxzTUDlUf2
-         mJc/w265f6Db6iDltxCvAS/g25XslJ9tRHhPaqpdOz45T4cOOMQckO5AZtZFnPF0wz+c
-         S/Imhz8BCradViYHEGBryHfZyhCxnXDzE1zDPSiXNPonbu3FjZfQDN7se9S8kILkCww6
-         VqW+kK12b6Vfdp6c1HeWZoWoX57lobcKVoksd8R4p5n2xumfQ/mK3+xKqChE2IbGuDsX
-         vUebPL51xsUZZhDCQD+xHujehHl9VEDIKImMgOazr2zsg+wArpT2bPhKg25ExybU+DZY
-         LoSw==
-X-Gm-Message-State: AO0yUKUUQ867heqLs/ixiyBSkZ68P9Oq3MtjhZiRDPr+n6UomfhkGjF+
-        YPwZ8piwnzpJCLRnfE2us5s=
-X-Google-Smtp-Source: AK7set8ACMHQ+CoNxkDCXmloap5SGqUHHlZGmEKH5vb6gpD3darU63R9nZVjDqKoybEsBzYbjR4Xiw==
-X-Received: by 2002:aa7:978e:0:b0:592:5276:95df with SMTP id o14-20020aa7978e000000b00592527695dfmr4534640pfp.2.1676550329599;
-        Thu, 16 Feb 2023 04:25:29 -0800 (PST)
-Received: from localhost.localdomain ([202.53.32.211])
-        by smtp.gmail.com with ESMTPSA id c10-20020aa781ca000000b005a909290425sm1224055pfn.172.2023.02.16.04.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 04:25:29 -0800 (PST)
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>,
-        Orlando Chamberlain <orlandoch.dev@gmail.com>
-Subject: [PATCH v2 5/5] apple-gmux: add debugfs interface
-Date:   Thu, 16 Feb 2023 23:23:43 +1100
-Message-Id: <20230216122342.5918-6-orlandoch.dev@gmail.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230216122342.5918-1-orlandoch.dev@gmail.com>
-References: <20230216122342.5918-1-orlandoch.dev@gmail.com>
+        Thu, 16 Feb 2023 07:40:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602CE1712;
+        Thu, 16 Feb 2023 04:40:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E810D61FB9;
+        Thu, 16 Feb 2023 12:40:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71FAC433D2;
+        Thu, 16 Feb 2023 12:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1676551240;
+        bh=YukQlthcym8GuIt8JwP/G1usKq0bLhLvB1Scby/jETU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XxwQ5oLvB7oHwBALPfQG9fu0nlcan7zw5nBJa9jvxHB/WHNOx9jYIFcUSzwXOq6qq
+         fyWdpI7afR1ZTgzxN13EpmWl/HpYKKK5gJSoLjoIllCDuj2O0PkcpgWon97cWXclDo
+         lxWLSWNoOrnu5OzbhDkYgGmEdsJy6PHzvpIM1bVM=
+Date:   Thu, 16 Feb 2023 13:40:32 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jithu Joseph <jithu.joseph@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: Re: [PATCH v2 2/7] platform/x86/intel/ifs: Introduce Array Scan test
+ to IFS
+Message-ID: <Y+4kQOtrHt5pdsSO@kroah.com>
+References: <20230131234302.3997223-1-jithu.joseph@intel.com>
+ <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230214234426.344960-3-jithu.joseph@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214234426.344960-3-jithu.joseph@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Allow reading and writing gmux ports from userspace.
+On Tue, Feb 14, 2023 at 03:44:21PM -0800, Jithu Joseph wrote:
+> Array BIST is a new type of core test introduced under the Intel Infield
+> Scan (IFS) suite of tests.
+> 
+> Emerald Rapids (EMR) is the first CPU to support Array BIST.
+> Array BIST performs tests on some portions of the core logic such as
+> caches and register files. These are different portions of the silicon
+> compared to the parts tested by the first test type
+> i.e Scan at Field (SAF).
+> 
+> Make changes in the device driver init flow to register this new test
+> type with the device driver framework. Each test will have its own
+> sysfs directory (intel_ifs_0 , intel_ifs_1) under misc hierarchy to
+> accommodate for the differences in test type and how they are initiated.
+> 
+> Upcoming patches will add actual support.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h  |  5 ++
+>  drivers/platform/x86/intel/ifs/core.c | 70 ++++++++++++++++++---------
+>  2 files changed, 52 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 046e39304fd5..2cef88a88aa9 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -137,6 +137,11 @@
+>  #define SCAN_TEST_PASS				1
+>  #define SCAN_TEST_FAIL				2
+>  
+> +enum test_types {
+> +	IFS_SAF,
+> +	IFS_ARRAY,
 
-For example:
+As you are using this enum to index an array, don't you need to set the
+starting value to be sure it's 0?
 
-echo 4 > /sys/kernel/debug/apple_gmux/selected_port
-cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
+But note, that's a horrid name of an enumerated type that is in a .h
+file, either put it only in the .c file, or give it a name that makes
+more sense that it belongs only to this driver.
 
-Will show the gmux version information (00000005 in this case)
+Yes, naming is hard.
 
-Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
----
-v1->v2: Use debugfs instead of sysfs.
- drivers/platform/x86/apple-gmux.c | 88 +++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+Wait, you don't even use the enumerated type anywhere in this patch
+series only the value, did you mean for this to happen?  Why name it
+anything?
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 5bac6dcfada0..e8a35d98b113 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -22,6 +22,7 @@
- #include <linux/delay.h>
- #include <linux/pci.h>
- #include <linux/vga_switcheroo.h>
-+#include <linux/debugfs.h>
- #include <asm/io.h>
- 
- /**
-@@ -66,6 +67,10 @@ struct apple_gmux_data {
- 	enum vga_switcheroo_client_id switch_state_external;
- 	enum vga_switcheroo_state power_state;
- 	struct completion powerchange_done;
-+
-+	/* debugfs data */
-+	u8 selected_port;
-+	struct dentry *debug_dentry;
- };
- 
- static struct apple_gmux_data *apple_gmux_data;
-@@ -674,6 +679,87 @@ static void gmux_notify_handler(acpi_handle device, u32 value, void *context)
- 		complete(&gmux_data->powerchange_done);
- }
- 
-+/**
-+ * DOC: Debugfs Interface
-+ *
-+ * gmux ports can be accessed from userspace as a debugfs interface. For example:
-+ *
-+ * # echo 4 > /sys/kernel/debug/apple_gmux/selected_port
-+ * # cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
-+ * 00000005
-+ *
-+ * Reads 4 bytes from port 4 (GMUX_PORT_VERSION_MAJOR).
-+ *
-+ * 1 and 4 byte writes are also allowed.
-+ */
-+
-+static ssize_t gmux_selected_port_data_write(struct file *file,
-+		const char __user *userbuf, size_t count, loff_t *ppos)
-+{
-+	struct apple_gmux_data *gmux_data = file->private_data;
-+	int ret;
-+
-+	if (*ppos)
-+		return -EINVAL;
-+
-+	if (count == 1) {
-+		u8 data;
-+
-+		ret = copy_from_user(&data, userbuf, 1);
-+		if (ret)
-+			return ret;
-+		gmux_write8(gmux_data, gmux_data->selected_port, data);
-+	} else if (count == 4) {
-+		u32 data;
-+
-+		ret = copy_from_user(&data, userbuf, 4);
-+		if (ret)
-+			return ret;
-+		gmux_write32(gmux_data, gmux_data->selected_port, data);
-+	} else
-+		return -EINVAL;
-+
-+	return count;
-+}
-+
-+static ssize_t gmux_selected_port_data_read(struct file *file,
-+		char __user *userbuf, size_t count, loff_t *ppos)
-+{
-+	struct apple_gmux_data *gmux_data = file->private_data;
-+	u32 data;
-+
-+	data = gmux_read32(gmux_data, gmux_data->selected_port);
-+
-+	return simple_read_from_buffer(userbuf, count, ppos, &data, sizeof(data));
-+}
-+
-+static const struct file_operations gmux_port_data_ops = {
-+	.open = simple_open,
-+	.write = gmux_selected_port_data_write,
-+	.read = gmux_selected_port_data_read
-+};
-+
-+static void gmux_init_debugfs(struct apple_gmux_data *gmux_data)
-+{
-+	struct dentry *debug_dentry;
-+
-+	debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
-+
-+	if (IS_ERR(debug_dentry))
-+		return;
-+
-+	gmux_data->debug_dentry = debug_dentry;
-+
-+	debugfs_create_u8("selected_port", 0644, debug_dentry, &gmux_data->selected_port);
-+	debugfs_create_file("selected_port_data", 0644, debug_dentry,
-+			gmux_data, &gmux_port_data_ops);
-+}
-+
-+static void gmux_fini_debugfs(struct apple_gmux_data *gmux_data)
-+{
-+	debugfs_remove_recursive(gmux_data->debug_dentry);
-+}
-+
- static int gmux_suspend(struct device *dev)
- {
- 	struct pnp_dev *pnp = to_pnp_dev(dev);
-@@ -874,6 +960,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 		goto err_register_handler;
- 	}
- 
-+	gmux_init_debugfs(gmux_data);
- 	return 0;
- 
- err_register_handler:
-@@ -905,6 +992,7 @@ static void gmux_remove(struct pnp_dev *pnp)
- {
- 	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
- 
-+	gmux_fini_debugfs(gmux_data);
- 	vga_switcheroo_unregister_handler();
- 	gmux_disable_interrupts(gmux_data);
- 	if (gmux_data->gpe >= 0) {
--- 
-2.39.1
 
+
+
+> +};
+> +
+>  /* MSR_SCAN_HASHES_STATUS bit fields */
+>  union ifs_scan_hashes_status {
+>  	u64	data;
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+> index 206a617c2e02..ab234620ef4c 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -16,27 +16,44 @@
+>  
+>  static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+>  	X86_MATCH(SAPPHIRERAPIDS_X),
+> +	X86_MATCH(EMERALDRAPIDS_X),
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+>  
+> -static struct ifs_device ifs_device = {
+> -	.data = {
+> -		.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+> -		.test_num = 0,
+> +static struct ifs_device ifs_devices[] = {
+> +	[IFS_SAF] = {
+> +		.data = {
+> +			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+> +			.test_num = IFS_SAF,
+> +		},
+> +		.misc = {
+> +			.name = "intel_ifs_0",
+> +			.nodename = "intel_ifs/0",
+
+I just noticed this, a device node called "0" is not good, why do you
+need this in a subdir at all?
+
+> +			.minor = MISC_DYNAMIC_MINOR,
+> +		},
+>  	},
+> -	.misc = {
+> -		.name = "intel_ifs_0",
+> -		.nodename = "intel_ifs/0",
+> -		.minor = MISC_DYNAMIC_MINOR,
+> +	[IFS_ARRAY] = {
+> +		.data = {
+> +			.integrity_cap_bit = MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT,
+> +			.test_num = IFS_ARRAY,
+> +		},
+> +		.misc = {
+> +			.name = "intel_ifs_1",
+> +			.nodename = "intel_ifs/1",
+
+Again, a device node called "1"?
+
+> +			.minor = MISC_DYNAMIC_MINOR,
+> +		},
+>  	},
+>  };
+>  
+> +#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
+
+Don't do this, just have a list with a NULL entry at the end, makes
+things much simpler and easier over time.
+
+
+> +
+>  static int __init ifs_init(void)
+>  {
+>  	const struct x86_cpu_id *m;
+> +	int ndevices = 0;
+>  	u64 msrval;
+> -	int ret;
+> +	int i;
+>  
+>  	m = x86_match_cpu(ifs_cpu_ids);
+>  	if (!m)
+> @@ -51,28 +68,35 @@ static int __init ifs_init(void)
+>  	if (rdmsrl_safe(MSR_INTEGRITY_CAPS, &msrval))
+>  		return -ENODEV;
+>  
+> -	ifs_device.misc.groups = ifs_get_groups();
+> -
+> -	if (!(msrval & BIT(ifs_device.data.integrity_cap_bit)))
+> -		return -ENODEV;
+> +	for (i = 0; i < IFS_NUMTESTS; i++) {
+> +		if (!(msrval & BIT(ifs_devices[i].data.integrity_cap_bit)))
+> +			continue;
+>  
+> -	ifs_device.data.pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+> -	if (!ifs_device.data.pkg_auth)
+> -		return -ENOMEM;
+> +		ifs_devices[i].data.pkg_auth = kmalloc_array(topology_max_packages(),
+> +							     sizeof(bool), GFP_KERNEL);
+> +		if (!ifs_devices[i].data.pkg_auth)
+> +			continue;
+
+You have a static array of a structure that contains both things that
+describe the devices being used, as well as dynamic data with no real
+lifespan rules.  Please don't perputate this common design pattern
+mistake.
+
+Always try to make static data constant and make dynamic data dynamic
+with proper reference counted lifetime rules.  People converting this
+code into rust in the future will thank you :)
+
+thanks,
+
+greg k-h
