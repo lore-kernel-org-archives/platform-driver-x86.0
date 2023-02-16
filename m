@@ -2,435 +2,186 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E7DC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 13:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B814C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Feb 2023 18:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbjBPN2D (ORCPT
+        id S229532AbjBPSqJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Feb 2023 08:28:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
+        Thu, 16 Feb 2023 13:46:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjBPN2C (ORCPT
+        with ESMTP id S229512AbjBPSqI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Feb 2023 08:28:02 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACAF55291
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:27:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676554037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HeD1at7G26lAamEpguJUV7j5et0cusTtxBU4Qw2ZuL4=;
-        b=K18yO3mJChBqcAQzmLB9st+sFuK1n71m03qkyp3uHeYds3c9SFHENJlp9CzmV3HptM0HiS
-        ufIcBcPOmC5D5Oo82abifCQzkJLfzgi5Snz7Q+SqW+HJHctGzvCRUYGXuMW6HdQJtoO4cD
-        uXMVs30zkxX4xq0+aX6XZu4fRgx8fKU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-106-7mGtSdfLPTa-iopXtq8Exw-1; Thu, 16 Feb 2023 08:27:15 -0500
-X-MC-Unique: 7mGtSdfLPTa-iopXtq8Exw-1
-Received: by mail-ed1-f69.google.com with SMTP id i36-20020a0564020f2400b004ad793116d5so3359eda.23
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2023 05:27:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HeD1at7G26lAamEpguJUV7j5et0cusTtxBU4Qw2ZuL4=;
-        b=iw7OXoZnDGUVQ+TcRXfgANoofTH2Oc6pXjqWVsi2MRRuF5bJnmN8tOc7LSC5pSrowZ
-         RSEqelGhgaqDL2HxLrfOOLr5GypWoO+haINp4yzvAui1kTKj/7IzhDchY73Zn8Q2wFa/
-         VrdI4H3LatoKOhS/IqqZ9hmC0N8+Ix5DmTBY3Yt6TsYnzSPZmTEAfWIxw3S+IVYSdP4w
-         fXYjht+GoKkJN99ZEO6m42qors3cK6AiGXbtVoMjhAUdN19vABBitnSdevkbnYhoBeL4
-         tCrY5/nDpBRvd/FKrnJ5thxWp2h7YC24HzDfbe5gCzlXe4dbbuEiqk0HNzX3D3F/5UXE
-         RI1Q==
-X-Gm-Message-State: AO0yUKUMtOONAlvJZpjyxgQsKR9F8/zFKU4ynk2fk9jHrYUocQiUGBSl
-        E9oykMJer+KwY/+69LoA9QiPslvMr9NSZu07GUVBQmjAV3emGllJJQXUakNuAqPEMQjpI819uQf
-        ZxA+1pk/enzVCMY42klTdjBR+6L1s27uMXA==
-X-Received: by 2002:a17:907:8d14:b0:8aa:c5d9:cabf with SMTP id tc20-20020a1709078d1400b008aac5d9cabfmr2233083ejc.3.1676554034627;
-        Thu, 16 Feb 2023 05:27:14 -0800 (PST)
-X-Google-Smtp-Source: AK7set/gFHRDPQZSHpikHiOrGxqymSp9xPvZzKll0/glCKQWXJtGzyytopsvMtBqp6Lo+NgJpwt8/g==
-X-Received: by 2002:a17:907:8d14:b0:8aa:c5d9:cabf with SMTP id tc20-20020a1709078d1400b008aac5d9cabfmr2233067ejc.3.1676554034294;
-        Thu, 16 Feb 2023 05:27:14 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906328a00b008b147e4204dsm816586ejw.32.2023.02.16.05.27.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 05:27:13 -0800 (PST)
-Message-ID: <cd6beabe-3026-d84e-63fd-3833948ecc1f@redhat.com>
-Date:   Thu, 16 Feb 2023 14:27:13 +0100
+        Thu, 16 Feb 2023 13:46:08 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8186646174;
+        Thu, 16 Feb 2023 10:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676573166; x=1708109166;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=BX7WBMsm/0aIZhYRNVxgPMyYyDO9NsVmhx1YDPVCCO0=;
+  b=FjEkGV3x1oX8c4z/Sb/4Kzy8vQRycqMtLHwfBWY16l0dlD2jmbiF4aQ4
+   +/BEbtj4t5vQbfAJuVEuFOO4HKgIwT/7NpdyXYEc7Dzgf1sjc9ccGvd6a
+   UxxImGjV39ixkOELr5TRdx5LV6MtYFYrlWrD2v0p7OzEHcSwXrNwN/msG
+   TmTl33q2bQ9NHnfjKSAj8nzbKIQMs11zBFP0HPw/uCRPGEX+NmnmuVy+i
+   privV5PCV6Xlc7OLJoYR0mmTfG2tDmqn0Dcnf18cLO3mpKnGRxH4iwLBH
+   paQcjYzCZF+oLMg5bm0/oYN7ySOO4Wo2qz+afKsDC09bKxXFUvWJ3sAzq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="359242685"
+X-IronPort-AV: E=Sophos;i="5.97,302,1669104000"; 
+   d="scan'208";a="359242685"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2023 10:46:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="734008804"
+X-IronPort-AV: E=Sophos;i="5.97,302,1669104000"; 
+   d="scan'208";a="734008804"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Feb 2023 10:46:06 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 16 Feb 2023 10:46:05 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Thu, 16 Feb 2023 10:46:05 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Thu, 16 Feb 2023 10:46:05 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IxcAaFmzPIlC8bdcJpnGx2LkfBbfjnYQEQyR38CwRhcLnHGnDtdu16RvyXg9tsYuaJU/9AcjeU7UJB7KAdiMM1Do3GVfwkhwl7/GFSAedk7gdztKtv9+T9NBIWQsofZmNlvlRfSvN67Sh256goZTOaxWFk7SEtHZZIIAoZWekre5ahLMujv0yST2HFDtqO6e/4uElLrB0aHVM+1XieKyIW26aBbHGMb3+wzTN+RRY3vP9DiEuCiPPCySlFwyZc/LMzL1UQY7aJe90k2OaDh9+/AsjAxBeygl8EaYhVn7+xg5A2XjHtJ6qyGFykK9aY/nneGSp90vnpvqFxGvkurUXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a3rcDuiVh5w443603T+QyVHSUCPI+yQwSob0K6vKXv0=;
+ b=EN9jpI3N4MTw2QBifWLzc+CCVSVSfm7eCp0qRQ2GeV9hQTkGlwwFuxWoXZp2/j/lITqUbPSiDxSVt/Fl3Sg4exkqfW4Y3CzCHTPBE3/1T3FAlF81Wnh/psjEypFzfbwQf3XdQuarMpxz54lyNk2uzbNveMixpMX9at6oxVLuHVfgnlIxVhl3k/fNz8uW58JmBjWJIvJo8hewK7KilraEbzIo/Vf0WTuJNXRiXeChlhp4j8dhn4CgWhe0tLEGanbkX4bbq8vkSGjnV9XaVns+ZUPfPJiOrZmWZvaNiSrcvEV1bHY6iu4dKxl2KetZfddpUr2Um9h54aT2NpjlfQNcAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by BL1PR11MB5555.namprd11.prod.outlook.com (2603:10b6:208:317::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.28; Thu, 16 Feb
+ 2023 18:46:03 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::ee6a:b9b2:6f37:86a1]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::ee6a:b9b2:6f37:86a1%8]) with mapi id 15.20.6086.026; Thu, 16 Feb 2023
+ 18:46:03 +0000
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Macieira, Thiago" <thiago.macieira@intel.com>,
+        "Jimenez Gonzalez, Athenas" <athenas.jimenez.gonzalez@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>
+Subject: RE: [PATCH v2 2/7] platform/x86/intel/ifs: Introduce Array Scan test
+ to IFS
+Thread-Topic: [PATCH v2 2/7] platform/x86/intel/ifs: Introduce Array Scan test
+ to IFS
+Thread-Index: AQHZQM5/4xlF/uj2HEirLPJ9j7kt167RhhoAgABjzuA=
+Date:   Thu, 16 Feb 2023 18:46:02 +0000
+Message-ID: <SJ1PR11MB608391B38FF4836192D37BC6FCA09@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20230131234302.3997223-1-jithu.joseph@intel.com>
+ <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230214234426.344960-3-jithu.joseph@intel.com> <Y+4kQOtrHt5pdsSO@kroah.com>
+In-Reply-To: <Y+4kQOtrHt5pdsSO@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|BL1PR11MB5555:EE_
+x-ms-office365-filtering-correlation-id: 51c7e154-b24b-4703-9c45-08db104e0deb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QXTW8e5p8am6MhAtGkrpbWvyBmMNyZcrDawGLDBaBdwU8BYQOVzldE8dWTnYdtK66RiCnJQ2GQMZI1Lpk1T+lVwLAyBkUKwV7dhpuxr9seW6KJy5uyd83sGptm0XQI50hXA6x4OKtiwlmZoJ9xuf1hEJcBKT2Sm4i5K+KGqT4WKMl8EqlmHmdiK0fNjKuDL+LhNyk7LSZbd33M7FWSXXqXiucxYMOs7YsxV7ig04vSVcOuI3ZrWG9wOmUAmRet0n+XjjDyPoKQXJJDwSLVKML1zRyz6p4lN2onq2kN36o1AzoH1gILBTz+sulYxpGarkFa49HFokK1ygcPrTRKv/S4RO8Nge4eUA8CxaMqZf6n/Ya+IFjREBQtVxiU02AtpQ2jddgciT6phdR9dN73jw3SrZdOE/EMUqSt2gP6TGSNA4Rlq9mZcJhIVSZyTSlDKUNgX2NHT4cO74ntexqUqov7iVdxC/Ynz9rF2LGJxNuPZMsMJ6OcNMwMQvKTPaNw1p9Ny2ji7dwyFYnTPRlsVVphytG76eRard2gnvuZywK6GD0OgpiE3kWHSHFCgjBXIXhRBff29uU9j2atZD6bRTi8lqaMqBySOBPYWzzX6wY9ogaSMGG4QA67U47rHrXt41F3tmAlB00F66P7HUD+VxH0TJwmHIQqAkeBWKW+3i+rPR1lAIDtEU2si0tdz4F+A2SC9l1sPIO7ed2ztbnoB6Ug==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(346002)(136003)(39860400002)(376002)(451199018)(2906002)(110136005)(4326008)(54906003)(122000001)(38070700005)(82960400001)(316002)(8676002)(66556008)(6636002)(76116006)(66946007)(66476007)(66446008)(64756008)(55016003)(38100700002)(7696005)(478600001)(41300700001)(33656002)(86362001)(8936002)(7416002)(4744005)(26005)(71200400001)(186003)(9686003)(6506007)(52536014)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?K3Qqe48wm/jCsvU5tHI6ty9JNyZNFyyiQJNxh4Abrr3/s1RNpGS4tEePS17+?=
+ =?us-ascii?Q?45+H6q3+FwPtjELK5kVzTlDTTYZ2pGax2JOzZFV0U82tv1LZFmZ3In5G247B?=
+ =?us-ascii?Q?OfhYUskgR7z1/178huTrXX0Ct8brOfbzw2Lry7uW+6mYXVRV2xdaHfneZUcP?=
+ =?us-ascii?Q?zhH2OTQh4Uy2adWxEqKxVzZveYj1vUzHb244n80PvGdZcTv0zSpHu0lzEcf+?=
+ =?us-ascii?Q?TN/FBAWSFgSy4uZayk7rIfxl4huvVfSJBFpfP/gqmtxbXEAdo2puDqFGxMYR?=
+ =?us-ascii?Q?5+yu/F7rk0k/zBoR41vR1Afx5SFwbW1/J7HvJqmf4JylYX8b/XfWkJQLjzMf?=
+ =?us-ascii?Q?deWDf3CB71p2VsLvmRrpuPw2e4Izcnh13zkfjojtN2+ipc3jWscG42Qt2eJP?=
+ =?us-ascii?Q?u236swoKb0ieiVD1HLyR7NFyFzJInWuJIdkA8yaPSdaRorQ9zyqjYQrXNg+/?=
+ =?us-ascii?Q?8uCG0e2shiiVqNGiIwJxVzLohxrMvvUAIa4Wv3C5fuh+JVm9Hhuc5/B9c0hQ?=
+ =?us-ascii?Q?Ldpyv7DsXMYd9Dg+5Ek0zilUgPi4ko64BlvF6aoGTpt4RrWcybk0+4ExWqjA?=
+ =?us-ascii?Q?54rFZNmWw6wmNAOJLwrEqVgYgOxMWSW0bMFJPkOqDvSYdG8iT7sidaLLq3Fa?=
+ =?us-ascii?Q?hCAKBwyG3I+PugVyfRji1KC8+BopY7jP+2x0+lQUWhYGFlLrPvXb6/r7/PIb?=
+ =?us-ascii?Q?rWF4m9VpuMLi507fKHiDqVE0E88WNHrdcuyRkkPapR404jMDFdqjeTFkhpVI?=
+ =?us-ascii?Q?1GAVVefR66FKz0sHn6oIh6ruOJYf1R1KSwG/1Z1I8Y40NEvjQcnCVoG0YVsZ?=
+ =?us-ascii?Q?jsd1c5px7c+wCgydZymZF1QxOHuwFtOK00ZTLosk+1YcVpRwzX8b9CDgfeTp?=
+ =?us-ascii?Q?sIj/2ccPzb+jw74CcBqV8ly6KiSRTy+ILf/1PuM2L6jfTRORtdIia4puE/pJ?=
+ =?us-ascii?Q?b03KlDVpC6a3eYRqxOiXdfjcTY1GGR9OFS/QJmfbgqiHk+FCIfLKOOwUljq+?=
+ =?us-ascii?Q?7HTwa4cAStA3z7iTrPIaMUA7Apw7jWWHJ5Tb5j/K1qZ4fidURtbXolzvYG09?=
+ =?us-ascii?Q?W5eckg27oCxrxFzAkDwj7TP4qeKYXr67jlB9gRM56f0AOc/menUl2t9NzI8m?=
+ =?us-ascii?Q?+CgOBhE2u+vhooCtAiYM2OkEf7gnrI5YAlUqYRVtR7/+cN+HSl70DXWrAfN2?=
+ =?us-ascii?Q?ZxOl+rYw4kED1O81Qxqld5w6/V1m8U5MyUjEMWRSHmNjzM7mBA1gyix2rW3B?=
+ =?us-ascii?Q?OhmxajYUwq+xKY3Qbh7U5JxfThG0HOg2zpusJYdpb8jgVxVy0ql7H6PX8eAL?=
+ =?us-ascii?Q?JcI+6ZOz/rEg+rkGN41LUVXBnN6Qyx/V5QWZrUTfCmY5T20Hsdh8dR8Mq2r/?=
+ =?us-ascii?Q?qH9YbNwLURx34VdoAhpT1W53T22Bl+PGFjp86M377wNalS452qUG1MxdCzzw?=
+ =?us-ascii?Q?Y2xtK2XZQ10Tq3atpQuLV3vqMajR0i2JVdsuIG2VR33QCEEkEgEO4KoUnM7G?=
+ =?us-ascii?Q?2oP94rzfeso0Dm8Y8Pg3Mi2VMsdsK3U9WlcQ7de/wcc7RbNY1sAfS/qH1VT7?=
+ =?us-ascii?Q?qhBfrdhfoSQ34JbZ4xMKWginAd8x9F1Q4GlriijX?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 4/5] apple-gmux: support MMIO gmux on T2 Macs
-Content-Language: en-US, nl
-To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>
-References: <20230216122342.5918-1-orlandoch.dev@gmail.com>
- <20230216122342.5918-5-orlandoch.dev@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230216122342.5918-5-orlandoch.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51c7e154-b24b-4703-9c45-08db104e0deb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2023 18:46:02.9470
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s4F2LeJ/pShPigkASk/LmBBgVAFYyKKELE0AkxlIqt2kuVg3Boun9wyPD+bxRzDQ3Au9OBJA2UXjmZ62pp9ldg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5555
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+>> +enum test_types {
+>> +	IFS_SAF,
+>> +	IFS_ARRAY,
+>
+> As you are using this enum to index an array, don't you need to set the
+> starting value to be sure it's 0?
 
-On 2/16/23 13:23, Orlando Chamberlain wrote:
-> In some newer dual gpu MacBooks, gmux is controlled by the T2 security
-> chip, and acessed with MMIO. Add support for these gmux controllers
-> 
-> Interestingly, the ACPI table only allocates 8 bytes for GMUX, but we
-> actually need 16, and as such we request 16 with request_mem_region.
-> 
-> Reading and writing from ports:
->     16 bytes from 0xfe0b0200 are used. 0x0 to 0x4 are where data
->     to read appears, and where data to write goes. Writing to 0xe
->     sets the gmux port being accessed, and writing to 0xf sends commands.
-> 
->     These commands are 0x40 & data_length for write, and data_length for
->     read, where data_length is 1, 2 or 4. Once byte base+0xf is 0, the
->     command is done.
-> 
-> Issues:
->     As with other retina models, we can't switch DDC lines so
->     switching at runtime doesn't work if the inactive gpu driver
->     already disabled eDP due to it not being connected when that
->     driver loaded.
-> 
->     Additionally, turning on the dgpu back on the MacBookPro16,1 does
->     not work.
-> 
-> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
-> ---
-> v1->v2: Document some chips present, and clarify which chips aren't
-> present on MMIO gmux laptops.
->  drivers/platform/x86/apple-gmux.c | 142 +++++++++++++++++++++++++++---
->  include/linux/apple-gmux.h        |  40 ++++++---
->  2 files changed, 158 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 12a93fc49c36..5bac6dcfada0 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -28,15 +28,17 @@
->   * DOC: Overview
->   *
->   * gmux is a microcontroller built into the MacBook Pro to support dual GPUs:
-> - * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on retinas.
-> + * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on pre-T2 retinas.
-> + * The chip used on T2 Macs is not known.
->   *
->   * (The MacPro6,1 2013 also has a gmux, however it is unclear why since it has
->   * dual GPUs but no built-in display.)
->   *
->   * gmux is connected to the LPC bus of the southbridge. Its I/O ports are
->   * accessed differently depending on the microcontroller: Driver functions
-> - * to access a pre-retina gmux are infixed ``_pio_``, those for a retina gmux
-> - * are infixed ``_index_``.
-> + * to access a pre-retina gmux are infixed ``_pio_``, those for a pre-T2
-> + * retina gmux are infixed ``_index_``, and those on T2 Macs are infixed
-> + * with ``_mmio_``.
->   *
->   * .. _Lattice XP2:
->   *     http://www.latticesemi.com/en/Products/FPGAandCPLD/LatticeXP2.aspx
-> @@ -47,6 +49,7 @@
->  struct apple_gmux_config;
->  
->  struct apple_gmux_data {
-> +	u8 *__iomem iomem_base;
->  	unsigned long iostart;
->  	unsigned long iolen;
->  	const struct apple_gmux_config *config;
-> @@ -209,6 +212,79 @@ static void gmux_index_write32(struct apple_gmux_data *gmux_data, int port,
->  	mutex_unlock(&gmux_data->index_lock);
->  }
->  
-> +static int gmux_mmio_wait(struct apple_gmux_data *gmux_data)
-> +{
-> +	int i = 200;
-> +	u8 gwr = ioread8(gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +
-> +	while (i && gwr) {
-> +		gwr = ioread8(gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +		udelay(100);
-> +		i--;
-> +	}
-> +
-> +	return !!i;
-> +}
-> +
-> +static u8 gmux_mmio_read8(struct apple_gmux_data *gmux_data, int port)
-> +{
-> +	u8 val;
-> +
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_READ | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	val = ioread8(gmux_data->iomem_base);
-> +	mutex_unlock(&gmux_data->index_lock);
-> +
-> +	return val;
-> +}
-> +
-> +static void gmux_mmio_write8(struct apple_gmux_data *gmux_data, int port,
-> +			      u8 val)
-> +{
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8(val, gmux_data->iomem_base);
-> +
-> +	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +
-> +	gmux_mmio_wait(gmux_data);
-> +	mutex_unlock(&gmux_data->index_lock);
-> +}
-> +
-> +static u32 gmux_mmio_read32(struct apple_gmux_data *gmux_data, int port)
-> +{
-> +	u32 val;
-> +
-> +	mutex_lock(&gmux_data->index_lock);
-> +	gmux_mmio_wait(gmux_data);
-> +	iowrite8((port & 0xff), gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_READ | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	val = be32_to_cpu(ioread32(gmux_data->iomem_base));
-> +	mutex_unlock(&gmux_data->index_lock);
-> +
-> +	return val;
-> +}
-> +
-> +static void gmux_mmio_write32(struct apple_gmux_data *gmux_data, int port,
-> +			       u32 val)
-> +{
-> +	mutex_lock(&gmux_data->index_lock);
-> +	iowrite32(cpu_to_be32(val), gmux_data->iomem_base);
-> +	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
-> +	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
-> +		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
-> +	gmux_mmio_wait(gmux_data);
-> +	mutex_unlock(&gmux_data->index_lock);
-> +}
-> +
->  static u8 gmux_read8(struct apple_gmux_data *gmux_data, int port)
->  {
->  	return gmux_data->config->read8(gmux_data, port);
-> @@ -237,8 +313,8 @@ static void gmux_write32(struct apple_gmux_data *gmux_data, int port,
->   * the GPU. On dual GPU MacBook Pros by contrast, either GPU may be suspended
->   * to conserve energy. Hence the PWM signal needs to be generated by a separate
->   * backlight driver which is controlled by gmux. The earliest generation
-> - * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
-> - * use a `TI LP8545`_.
-> + * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. Newer models
-> + * use a `TI LP8545`_ or a TI LP8548.
->   *
->   * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
->   * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
-> @@ -302,8 +378,8 @@ static const struct backlight_ops gmux_bl_ops = {
->   * connecting it either to the discrete GPU or the Thunderbolt controller.
->   * Oddly enough, while the full port is no longer switchable, AUX and HPD
->   * are still switchable by way of an `NXP CBTL03062`_ (on pre-retinas
-> - * MBP8 2011 and MBP9 2012) or two `TI TS3DS10224`_ (on retinas) under the
-> - * control of gmux. Since the integrated GPU is missing the main link,
-> + * MBP8 2011 and MBP9 2012) or two `TI TS3DS10224`_ (on pre-t2 retinas) under
-> + * the control of gmux. Since the integrated GPU is missing the main link,
->   * external displays appear to it as phantoms which fail to link-train.
->   *
->   * gmux receives the HPD signal of all display connectors and sends an
-> @@ -506,6 +582,20 @@ static const struct apple_gmux_config apple_gmux_index = {
->  	.name = "indexed"
->  };
->  
-> +static const struct apple_gmux_config apple_gmux_mmio = {
-> +	.read8 = &gmux_mmio_read8,
-> +	.write8 = &gmux_mmio_write8,
-> +	.read32 = &gmux_mmio_read32,
-> +	.write32 = &gmux_mmio_write32,
-> +	.gmux_handler = &gmux_handler_no_ddc,
-> +	.handler_flags = VGA_SWITCHEROO_NEEDS_EDP_CONFIG,
-> +	.resource_type = IORESOURCE_MEM,
-> +	.read_version_as_u32 = true,
-> +	.use_acpi_gmsp = true,
-> +	.name = "T2"
-> +};
-> +
-> +
->  /**
->   * DOC: Interrupt
->   *
-> @@ -637,6 +727,25 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	pnp_set_drvdata(pnp, gmux_data);
->  
->  	switch (type) {
-> +	case APPLE_GMUX_TYPE_MMIO:
-> +		gmux_data->config = &apple_gmux_mmio;
-> +		mutex_init(&gmux_data->index_lock);
-> +
-> +		res = pnp_get_resource(pnp, IORESOURCE_MEM, 0);
-> +		gmux_data->iostart = res->start;
-> +		/* Although the ACPI table only allocates 8 bytes, we need 16. */
-> +		gmux_data->iolen = 16;
-> +		if (!request_mem_region(gmux_data->iostart, gmux_data->iolen,
-> +					"Apple gmux")) {
-> +			pr_err("gmux I/O already in use\n");
-> +			goto err_free;
-> +		}
-> +		gmux_data->iomem_base = ioremap(gmux_data->iostart, gmux_data->iolen);
-> +		if (!gmux_data->iomem_base) {
-> +			pr_err("couldn't remap gmux mmio region");
-> +			goto err_release;
-> +		}
-> +		goto get_version;
->  	case APPLE_GMUX_TYPE_INDEXED:
->  		gmux_data->config = &apple_gmux_index;
->  		mutex_init(&gmux_data->index_lock);
-> @@ -656,6 +765,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  		goto err_free;
->  	}
->  
-> +get_version:
->  	if (gmux_data->config->read_version_as_u32) {
->  		version = gmux_read32(gmux_data, GMUX_PORT_VERSION_MAJOR);
->  		ver_major = (version >> 24) & 0xff;
-> @@ -686,7 +796,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  					 gmux_data, &gmux_bl_ops, &props);
->  	if (IS_ERR(bdev)) {
->  		ret = PTR_ERR(bdev);
-> -		goto err_release;
-> +		goto err_unmap;
->  	}
->  
->  	gmux_data->bdev = bdev;
-> @@ -753,7 +863,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	/*
->  	 * Retina MacBook Pros cannot switch the panel's AUX separately
->  	 * and need eDP pre-calibration. They are distinguishable from
-> -	 * pre-retinas by having an "indexed" gmux.
-> +	 * pre-retinas by having an "indexed" or "T2" gmux.
->  	 *
->  	 * Pre-retina MacBook Pros can switch the panel's DDC separately.
->  	 */
-> @@ -778,8 +888,14 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  					   &gmux_notify_handler);
->  err_notify:
->  	backlight_device_unregister(bdev);
-> +err_unmap:
-> +	if (gmux_data->iomem_base)
-> +		iounmap(gmux_data->iomem_base);
->  err_release:
-> -	release_region(gmux_data->iostart, gmux_data->iolen);
-> +	if (gmux_data->config->resource_type == IORESOURCE_MEM)
-> +		release_mem_region(gmux_data->iostart, gmux_data->iolen);
-> +	else
-> +		release_region(gmux_data->iostart, gmux_data->iolen);
->  err_free:
->  	kfree(gmux_data);
->  	return ret;
-> @@ -800,7 +916,11 @@ static void gmux_remove(struct pnp_dev *pnp)
->  
->  	backlight_device_unregister(gmux_data->bdev);
->  
-> -	release_region(gmux_data->iostart, gmux_data->iolen);
-> +	if (gmux_data->iomem_base) {
-> +		iounmap(gmux_data->iomem_base);
-> +		release_mem_region(gmux_data->iostart, gmux_data->iolen);
-> +	} else
-> +		release_region(gmux_data->iostart, gmux_data->iolen);
->  	apple_gmux_data = NULL;
->  	kfree(gmux_data);
->  
-> diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
-> index 5f658439f7f8..b7532f26b756 100644
-> --- a/include/linux/apple-gmux.h
-> +++ b/include/linux/apple-gmux.h
-> @@ -34,11 +34,18 @@
->  #define GMUX_PORT_READ			0xd0
->  #define GMUX_PORT_WRITE			0xd4
->  
-> +#define GMUX_MMIO_PORT_SELECT		0x0e
-> +#define GMUX_MMIO_COMMAND_SEND		0x0f
-> +
-> +#define GMUX_MMIO_READ			0x00
-> +#define GMUX_MMIO_WRITE			0x40
-> +
->  #define GMUX_MIN_IO_LEN			(GMUX_PORT_BRIGHTNESS + 4)
->  
->  enum apple_gmux_type {
->  	APPLE_GMUX_TYPE_PIO,
-> -	APPLE_GMUX_TYPE_INDEXED
-> +	APPLE_GMUX_TYPE_INDEXED,
-> +	APPLE_GMUX_TYPE_MMIO
->  };
->  
->  #if IS_ENABLED(CONFIG_APPLE_GMUX)
-> @@ -93,19 +100,24 @@ static inline bool apple_gmux_detect(struct pnp_dev *pnp_dev, enum apple_gmux_ty
->  	}
->  
->  	res = pnp_get_resource(pnp_dev, IORESOURCE_IO, 0);
-> -	if (!res || resource_size(res) < GMUX_MIN_IO_LEN)
-> -		goto out;
-> -
-> -	/*
-> -	 * Invalid version information may indicate either that the gmux
-> -	 * device isn't present or that it's a new one that uses indexed io.
-> -	 */
-> -	ver_major = inb(res->start + GMUX_PORT_VERSION_MAJOR);
-> -	ver_minor = inb(res->start + GMUX_PORT_VERSION_MINOR);
-> -	ver_release = inb(res->start + GMUX_PORT_VERSION_RELEASE);
-> -	if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
-> -		if (apple_gmux_is_indexed(res->start))
-> -			type = APPLE_GMUX_TYPE_INDEXED;
-> +	if (res && resource_size(res) >= GMUX_MIN_IO_LEN) {
-> +		/*
-> +		 * Invalid version information may indicate either that the gmux
-> +		 * device isn't present or that it's a new one that uses indexed io.
-> +		 */
-> +		ver_major = inb(res->start + GMUX_PORT_VERSION_MAJOR);
-> +		ver_minor = inb(res->start + GMUX_PORT_VERSION_MINOR);
-> +		ver_release = inb(res->start + GMUX_PORT_VERSION_RELEASE);
-> +		if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
-> +			if (apple_gmux_is_indexed(res->start))
-> +				type = APPLE_GMUX_TYPE_INDEXED;
-> +			else
-> +				goto out;
-> +		}
-> +	} else {
-> +		res = pnp_get_resource(pnp_dev, IORESOURCE_MEM, 0);
-> +		if (res)
-> +			type = APPLE_GMUX_TYPE_MMIO;
+C standard says: "The value of the first enumerator (if it does not use =3D=
+ constant-expression) is zero."
 
-Question are we not worried about MacBooks with an "APP000B"
-ACPI device (with a value IORSOURCE_MEM entry) but which do not
-actually have a gmux, because they are iGPU only ?
+>> +#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
+>
+> Don't do this, just have a list with a NULL entry at the end, makes
+> things much simpler and easier over time.
 
-I have learned the hard way (through backlight control regressions
-in 6.1) that at least some older model MacBooks with an IO resource
-have an APP000B ACPI device without them actually having a gmux,
-these get caught by the version check and then do not pass the
-indexed check so that apple_gmux_detect() properly returns false.
+Maintainers seem to be divided over this. Personally, I'm also
+in favor of a NULL entry to mark the last entry (I think it was one
+of Kernighan and Plauger's style guides "End markers are better
+than counts"). But the tiny footprint folks have beaten me up in
+the past for wasting a whole extra structure element just to include
+a terminator. :-(=20
 
-Maybe make gmux_mmio_read32() a static inline inside
-include/linux/apple-gmux.h and try to read the version here ?
-
-Has this been tested on iGPU only T2 Macs?
-
-Regards,
-
-Hans
-
-
+-Tony
