@@ -2,210 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42732C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Feb 2023 00:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD3C05027
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Feb 2023 09:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbjBQAr2 (ORCPT
+        id S229651AbjBQJZP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Feb 2023 19:47:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
+        Fri, 17 Feb 2023 04:25:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjBQAr1 (ORCPT
+        with ESMTP id S229488AbjBQJZO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Feb 2023 19:47:27 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6540902F;
-        Thu, 16 Feb 2023 16:47:26 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id c11so3180285ple.9;
-        Thu, 16 Feb 2023 16:47:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hlJ6A9cfrJlIO+wGK9KmC3/LFTkLgJOWhgHblqdIQ8E=;
-        b=iSEwCJWB4fIpF5H9XopMbzfYnD1poUko/fjLLTx8iI1GsSvX/3/YJYskvsR7iL2IDj
-         xY/aWecVdPQCU6o+V/FdF/4wTrHdmQKKFnwDguYWtoT3vFlpNDnZ3UiSXdTolKFmYI37
-         KG05lkDrp3arR3xZceRHPCMlyUu5TGEw7YSg9UzgzQMD2Sre86pBrNdWvR9GwYHI3DfU
-         ciqjltZRhpwxwQJ5yOM7GfqGsL8RaOAog4UDIqUpTBpVdgDwo1llRA79y6lF9DDXRHQq
-         dAyKRJ/mSwMuZTw1O8juIA0m2NCZ35qv4soZhmSkcQAI1iZ4TKJWPwPa1amSWwGyAxNY
-         iKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hlJ6A9cfrJlIO+wGK9KmC3/LFTkLgJOWhgHblqdIQ8E=;
-        b=rMamCAKrD46rwcYkgdS0mgKT9Ip2ll9iZ05TIQe6AFXd7PHO8t5fHoAKwLKLEKA9Ir
-         sVy51ddPj5ckhUx6VMR371DoR/4LZAvyic66Cyy6Rgj5L7yzOayO0OTqUloonocEL98b
-         mhRI9VOloh2YuqXhmVVUJXmRnhQQUbwNmgR4V28bJFo+MgYkZJzz9YxmpDu9SWkLQVmQ
-         2zjt4/mvjrHmtUjGmJMVh0ptyp3GG32oO8+Kl6wTmgwMi/Ms0Dyd+YKCpT1gJsOYL9lX
-         ZF3lJQhaqGN1fmVvS3XO9xQk/Iy+tT4OSdjHyh16bkpWTtRKqH+I1M8fVVGSKUJ5e5G7
-         Zw8A==
-X-Gm-Message-State: AO0yUKVf5+4RV4eA8zRRIZxSIRsaeu4FuAoHWS4KelF1LuK1uynmlAu1
-        AyoSDc5lB5dizgVejnTDDPM=
-X-Google-Smtp-Source: AK7set9vslSy0EwgTQ09lOwiFJSqydhYYfbMRGVIM1vRak0I1xwQTU6ZzGwvutQq6cWI976DKGyaQw==
-X-Received: by 2002:a17:90b:3ecd:b0:230:fe10:25a0 with SMTP id rm13-20020a17090b3ecd00b00230fe1025a0mr9050096pjb.11.1676594846136;
-        Thu, 16 Feb 2023 16:47:26 -0800 (PST)
-Received: from redecorated-mbp ([202.53.32.211])
-        by smtp.gmail.com with ESMTPSA id h38-20020a631226000000b004fab2ba60adsm1680573pgl.81.2023.02.16.16.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 16:47:25 -0800 (PST)
-Date:   Fri, 17 Feb 2023 11:47:18 +1100
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>
-Subject: Re: [PATCH v2 3/5] apple-gmux: Use GMSP acpi method for interrupt
- clear
-Message-ID: <20230217114718.7ff65c2f@redecorated-mbp>
-In-Reply-To: <87d2068b-2644-0307-d722-5539b1f9fb36@redhat.com>
-References: <20230216122342.5918-1-orlandoch.dev@gmail.com>
-        <20230216122342.5918-4-orlandoch.dev@gmail.com>
-        <87d2068b-2644-0307-d722-5539b1f9fb36@redhat.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.35; x86_64-pc-linux-gnu)
+        Fri, 17 Feb 2023 04:25:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1465CF1A;
+        Fri, 17 Feb 2023 01:25:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 85A36617AD;
+        Fri, 17 Feb 2023 09:25:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBF1C433EF;
+        Fri, 17 Feb 2023 09:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1676625912;
+        bh=NThfZIOw43ISCQBxVEa8Vm7Fa2T1LWxfMFodAp2xP6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HDYaknk9HFjP3bNtqcHsOTXQ9xvzUyKXs2kseGF5aInAaDJGSUu6Oh2ZDLHZmSbIA
+         8XUqaYBGXbg34VQ5SPTT8HXqej0aQ4+/gHnUKa7lJlJCUoL4ARt0FT1zSsGqmgheqC
+         50k3tHKHv0DX43dyPoEO7ec5V574FUon609smc7w=
+Date:   Fri, 17 Feb 2023 10:25:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+Subject: Re: [PATCH v2 2/7] platform/x86/intel/ifs: Introduce Array Scan test
+ to IFS
+Message-ID: <Y+9H9otxLYPqMkUh@kroah.com>
+References: <20230131234302.3997223-1-jithu.joseph@intel.com>
+ <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230214234426.344960-3-jithu.joseph@intel.com>
+ <Y+4kQOtrHt5pdsSO@kroah.com>
+ <4e5cebd0-815e-e3ca-7068-4d665d337bf2@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e5cebd0-815e-e3ca-7068-4d665d337bf2@intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 16 Feb 2023 14:07:53 +0100
-Hans de Goede <hdegoede@redhat.com> wrote:
-
-> Hi Orlando,
-> 
-> Thank you for the new version patches 1 + 2 look good,
-> one small remark on this one.
-> 
-> On 2/16/23 13:23, Orlando Chamberlain wrote:
-> > This is needed for interrupts to be cleared correctly on MMIO based
-> > gmux's. It is untested if this helps/hinders other gmux types, so
-> > currently this is only enabled for the MMIO gmux's.
+On Thu, Feb 16, 2023 at 02:57:13PM -0800, Joseph, Jithu wrote:
+> On 2/16/2023 4:40 AM, Greg KH wrote:
+> >> +		ifs_devices[i].data.pkg_auth = kmalloc_array(topology_max_packages(),
+> >> +							     sizeof(bool), GFP_KERNEL);
+> >> +		if (!ifs_devices[i].data.pkg_auth)
+> >> +			continue;
 > > 
-> > There is also a "GMLV" acpi method, and the "GMSP" method can be
-> > called with 1 as its argument, but the purposes of these aren't
-> > known and they don't seem to be needed.
+> > You have a static array of a structure that contains both things that
+> > describe the devices being used, as well as dynamic data with no real
+> > lifespan rules.  Please don't perputate this common design pattern
+> > mistake.
 > > 
-> > Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
-> > ---
-> > v1->v2: Only enable this on MMIO gmux's
-> >  drivers/platform/x86/apple-gmux.c | 30
-> > +++++++++++++++++++++++++++++- 1 file changed, 29 insertions(+), 1
-> > deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/apple-gmux.c
-> > b/drivers/platform/x86/apple-gmux.c index
-> > 36208e93d745..12a93fc49c36 100644 ---
-> > a/drivers/platform/x86/apple-gmux.c +++
-> > b/drivers/platform/x86/apple-gmux.c @@ -76,6 +76,7 @@ struct
-> > apple_gmux_config { enum vga_switcheroo_handler_flags_t
-> > handler_flags; unsigned long resource_type;
-> >  	bool read_version_as_u32;
-> > +	bool use_acpi_gmsp;
-> >  	char *name;
-> >  };
-> >  
-> > @@ -488,6 +489,7 @@ static const struct apple_gmux_config
-> > apple_gmux_pio = { .handler_flags = VGA_SWITCHEROO_CAN_SWITCH_DDC,
-> >  	.resource_type = IORESOURCE_IO,
-> >  	.read_version_as_u32 = false,
-> > +	.use_acpi_gmsp = false,
-> >  	.name = "classic"
-> >  };
-> >  
-> > @@ -500,6 +502,7 @@ static const struct apple_gmux_config
-> > apple_gmux_index = { .handler_flags =
-> > VGA_SWITCHEROO_NEEDS_EDP_CONFIG, .resource_type = IORESOURCE_IO,
-> >  	.read_version_as_u32 = true,
-> > +	.use_acpi_gmsp = false,
-> >  	.name = "indexed"
-> >  };
-> >  
-> > @@ -511,8 +514,29 @@ static const struct apple_gmux_config
-> > apple_gmux_index = {
-> >   * MCP79, on all following generations it's GPIO pin 6 of the
-> > Intel PCH.
-> >   * The GPE merely signals that an interrupt occurred, the actual
-> > type of event
-> >   * is identified by reading a gmux register.
-> > + *
-> > + * On MMIO gmux's, we also need to call the acpi method GMSP to
-> > properly clear
-> > + * interrupts.
-> >   */
-> >  
-> > +static int gmux_call_acpi_gmsp(struct apple_gmux_data *gmux_data,
-> > int arg) +{
-> > +	acpi_status status = AE_OK;
-> > +	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> > +	struct acpi_object_list arg_list = { 1, &arg0 };
-> > +
-> > +	arg0.integer.value = arg;
-> > +
-> > +	status = acpi_evaluate_object(gmux_data->dhandle, "GMSP",
-> > &arg_list, NULL);
-> > +	if (ACPI_FAILURE(status)) {
-> > +		pr_err("GMSP call failed: %s\n",
-> > +		       acpi_format_exception(status));
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static inline void gmux_disable_interrupts(struct apple_gmux_data
-> > *gmux_data) {
-> >  	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_ENABLE,
-> > @@ -536,7 +560,11 @@ static void gmux_clear_interrupts(struct
-> > apple_gmux_data *gmux_data) 
-> >  	/* to clear interrupts write back current status */
-> >  	status = gmux_interrupt_get_status(gmux_data);
-> > -	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS, status);
-> > +	if (status) {
-> > +		gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS,
-> > status);
-> > +		if (gmux_data->config->use_acpi_gmsp)
-> > +			gmux_call_acpi_gmsp(gmux_data, 0);
-> > +	}  
+> > Always try to make static data constant and make dynamic data dynamic
+> > with proper reference counted lifetime rules.  People converting this
+> > code into rust in the future will thank you :)
 > 
-> This changes the behavior on the existing supported models to
-> only write back status when it is non 0. This is likely fine
-> but given that we seem to lack testers for the old models
-> I would prefer to not change the behavior there.
+> I may not have fully understood your comment. So pardon me if the following description
+> on the lifecycle of the dynamic allocated memory is not to the point.
+> 
+> The lifetime of this allocation matches the load time of the driver (allocated on init, freed on exit).
+> There are no further / allocations or freeing anywhere within the driver.
+> There is only a single place where this memory is used, whose access is serialized via a semaphore.
 
-Oops I didn't realise I had changed that. 
+But the memory is associated with "something" that has a lifetime,
+right?  This is either a misc device, or a cpu, or a platform device, or
+something that you have to determine that you need to allocate it.
 
-> 
-> So how about:
-> 
-> 	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS, status);
-> 	if (status && gmux_data->config->use_acpi_gmsp)
-> 		gmux_call_acpi_gmsp(gmux_data, 0);
-> 
-> ?
-> 
-> The 0 write to what presumably is a register with
-> write 1 to clear bits should be harmless.
-> 
-> You can test that it is harmless on the new MMIO models
-> and this way we don't change the behavior on the older models.
+So use that as the thing you hang your dynamic data off of, don't use a
+static array.  Allow that static array to be put into read-only memory
+(i.e. it is const and can not be changed by your code accidentally or on
+purpose.)
 
-Your suggested code works fine for me.
+Does that help explain things better?
 
-I've realised the check for status != 0 probably isn't needed so I'll
-take that out too, as using GMSP means we don't get spam of interrupts
-with status = 0 on MMIO gmux's.
+thanks,
 
-> 
-> Regards,
-> 
-> Hans
-> 
-
+greg k-h
