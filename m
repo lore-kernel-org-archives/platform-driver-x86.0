@@ -2,102 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C8C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 10:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07914C636D7
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 10:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjBRKoE (ORCPT
+        id S229638AbjBRKr7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Feb 2023 05:44:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        Sat, 18 Feb 2023 05:47:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjBRKoD (ORCPT
+        with ESMTP id S229595AbjBRKr5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Feb 2023 05:44:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD1A13D7A
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:43:16 -0800 (PST)
+        Sat, 18 Feb 2023 05:47:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544BF20D31
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:47:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676716995;
+        s=mimecast20190719; t=1676717230;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LQPC+W/GGOaiPhupQkL+fioSZnAdQgjaIafObYt5jdo=;
-        b=TrOHp/1xXyozFYAh+SWYTVBhHYXCbXD55Qol0MsEo0VOKLjwzfMJ8moqTpTz2PmeKsg6/t
-        lRL3vHCBCjsY1ujD5Phk13tXjgJe5ZBaX5EI2HqJrbA741G0I2xqXG7rmZqJZhY4DuNmst
-        1bwpcmYWba08C35CNHsVP7GrjIVyNJE=
+        bh=qcEw9uxKBAie7cQ4FiqtVONnWVk+5H4SBHGJOKQGQEM=;
+        b=d4G+1pnRHGsI4XH8m6atwlyEUfQ2lwzlb3w31RbXZyYh8pI5JB5j7V6iw0Y7P/Ic52Ddlb
+        tTuSTg4TE2TtMisHh4i/UQsOsuYFh5yfz5+vEMjx46heu+s4HZ1lcsCcB7XKQjMWfk6WRm
+        WZnfsh7Pj5jeRCdMMhCs6oXrRizS6l0=
 Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
  [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-247-1YuLPhRvPpeO--DGhTGy9A-1; Sat, 18 Feb 2023 05:43:14 -0500
-X-MC-Unique: 1YuLPhRvPpeO--DGhTGy9A-1
-Received: by mail-ed1-f72.google.com with SMTP id bx11-20020a0564020b4b00b0049ec3a108beso630451edb.7
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:43:13 -0800 (PST)
+ us-mta-284-HZDDi8B8PlSFF3rwEYUkOg-1; Sat, 18 Feb 2023 05:47:09 -0500
+X-MC-Unique: HZDDi8B8PlSFF3rwEYUkOg-1
+Received: by mail-ed1-f72.google.com with SMTP id h24-20020a50cdd8000000b004acc6cf6322so926049edj.18
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:47:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LQPC+W/GGOaiPhupQkL+fioSZnAdQgjaIafObYt5jdo=;
-        b=AEAqMkHqpAaQJOb7CTJhd258MIdqUNdkF9GM2312B9Mv4boCaL5VNfja095ZDHhtqI
-         KXA92BJVOn4etcwYhfMKDoV4EuD8sQeRhKd4qbIq+J0vBhLCyxhQc8oaMxfBvmZ/tOsN
-         +l3OkjeLRqZ3v5H2FCxYODHvgCBpTPjrenvF9bIOmso4mSsQS6m9GyV2Bu5CyUn0Ftle
-         CIVTlSl+VKzhPRpy5vztfFTzyUJzXCkp3wiYel3Uu+PDh4N2eWwJBsoLtu5JIs1uwOiR
-         y3zc3vqX0BrAMCj4kLf2sr43MGGqUm04+YCdhyiW/ZNSGiqEEaGQOpwQnkw+wz5TGNWp
-         KqhA==
-X-Gm-Message-State: AO0yUKUwSfeJ9RoIrQRQg9D6Vkhiy7rPXeBooVk3iLAJrzZytzrPKJq3
-        TPckLpQfGRv7S/d47PjSWjTuvpdoN8A4kONL/sLPyP2PnXopqErr184HWVh2jTVXKY4DThEUi3p
-        +ju8yQwtYHSPosYEqg4KqTNFU0eP83YuZGQ==
-X-Received: by 2002:a17:906:9f25:b0:8b1:2eef:154c with SMTP id fy37-20020a1709069f2500b008b12eef154cmr7620895ejc.0.1676716992929;
-        Sat, 18 Feb 2023 02:43:12 -0800 (PST)
-X-Google-Smtp-Source: AK7set+hLeFT07Usv4u1EkM1gYgFZeoXCyWmGNpNmdKLWF/8jBaMBmtOx0UaGDU283iz13s90G3Q/w==
-X-Received: by 2002:a17:906:9f25:b0:8b1:2eef:154c with SMTP id fy37-20020a1709069f2500b008b12eef154cmr7620882ejc.0.1676716992636;
-        Sat, 18 Feb 2023 02:43:12 -0800 (PST)
+        bh=qcEw9uxKBAie7cQ4FiqtVONnWVk+5H4SBHGJOKQGQEM=;
+        b=oyW2sTFcL3HtsK1/WcCOwxdNkmV/Apo6h7m8U6w7HcKp3cMtV96qgXHDL91J3pNaJC
+         v8Xk4Th8o1c7Y+0fhF4N7lcHy55CJ7rc+iIGzq/9rmjYAfNb2SSSfm9GbtBCdD9lBKUb
+         hOGau8se+DwwyWgDOVq9uGfM9Q88ndxyu9CUm7SzwgkLQU2oQ60m2dlOIY/TZTgbTDA5
+         Q8I6F9KeLg5SA2Im71TUJvZzE4nTWBUivBe11rx4isHGF2YmEdkAHupgdPXw7qqyRN9Y
+         bCkqFAPko0z57eZeI7pqkxuQtYzil6gWeKVqRyxDyyMMIR6cUe9KpDtj3lWnzn6b335K
+         JbQg==
+X-Gm-Message-State: AO0yUKUeykKt6ke5jAfB/x8B09YqRmiq67POlwxI2+uJLc2BfQhEiF+Y
+        cf3DakH6q+bDwEGRjZDAq2kSqRdB5G+gGtfz8w89Epqf7tKkK0pxKwHqDiCDMJf+L5wmeIbxc5t
+        cwcoIVtvselmaZeZ8m4dy1giOONLPfSp+6w==
+X-Received: by 2002:a50:ef0b:0:b0:4aa:a5b2:b26b with SMTP id m11-20020a50ef0b000000b004aaa5b2b26bmr3720736eds.29.1676717228163;
+        Sat, 18 Feb 2023 02:47:08 -0800 (PST)
+X-Google-Smtp-Source: AK7set/XLwvqBVenRY0DqyPbTo9JYxat8aABi0wXC96V1lHuKZ7Me4qqTInY42npHACnNHlb3gT82w==
+X-Received: by 2002:a50:ef0b:0:b0:4aa:a5b2:b26b with SMTP id m11-20020a50ef0b000000b004aaa5b2b26bmr3720725eds.29.1676717227874;
+        Sat, 18 Feb 2023 02:47:07 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id z7-20020a170906714700b008b17b0f5d07sm2390553ejj.217.2023.02.18.02.43.11
+        by smtp.gmail.com with ESMTPSA id 26-20020a508e5a000000b004ad7abf007asm2462524edx.74.2023.02.18.02.47.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Feb 2023 02:43:11 -0800 (PST)
-Message-ID: <eee025e7-be05-92cb-854c-ece82eb23552@redhat.com>
-Date:   Sat, 18 Feb 2023 11:43:11 +0100
+        Sat, 18 Feb 2023 02:47:07 -0800 (PST)
+Message-ID: <16d7757c-46f0-1cf6-f6f9-bf6681fbd255@redhat.com>
+Date:   Sat, 18 Feb 2023 11:47:06 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/2] platform/x86: dell-ddv: Fix cache invalidation on
- resume
-To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
-Cc:     jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230213182215.53703-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2] platform/x86: nvidia-wmi-ec-backlight: Add force
+ module parameter
 Content-Language: en-US, nl
+To:     Daniel Dadap <ddadap@nvidia.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Luke McCarthy <mail@lukehmcc.com>,
+        platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
+References: <20230217144208.5721-1-hdegoede@redhat.com>
+ <Y++fL1Wzy+6CYBYj@ddadap-lakeline.nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230213182215.53703-1-W_Armin@gmx.de>
+In-Reply-To: <Y++fL1Wzy+6CYBYj@ddadap-lakeline.nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin,
+Hi,
 
-On 2/13/23 19:22, Armin Wolf wrote:
-> If one or both sensor buffers could not be initialized, either
-> due to missing hardware support or due to some error during probing,
-> the resume handler will encounter undefined behaviour when
-> attempting to lock buffers then protected by an uninitialized or
-> destroyed mutex.
-> Fix this by introducing a "active" flag which is set during probe,
-> and only invalidate buffers which where flaged as "active".
+On 2/17/23 16:37, Daniel Dadap wrote:
+> Thanks, Hans. The new commit message sounds more appropriate.
 > 
-> Tested on a Dell Inspiron 3505.
-> 
-> Fixes: 3b7eeff93d29 ("platform/x86: dell-ddv: Add hwmon support")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Reviewed-by: Daniel Dadap <ddadap@nvidia.com>
 
-Can you move the "if (...active)" check to inside
-dell_wmi_ddv_hwmon_cache_invalidate() please ?
-
-Otherwise this patch as well as patch 2/2 look good to me.
+Thanks. I have pushed this to pdx86/for-next now so that it
+will go to Linus during the merge-window and on to the
+stable kernel series from there.
 
 Regards,
 
@@ -105,55 +97,61 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/dell/dell-wmi-ddv.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+
 > 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> index d547c9d09725..58f996b3b374 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> @@ -96,6 +96,7 @@ struct combined_chip_info {
->  };
-> 
->  struct dell_wmi_ddv_sensors {
-> +	bool active;
->  	struct mutex lock;	/* protect caching */
->  	unsigned long timestamp;
->  	union acpi_object *obj;
-> @@ -530,6 +531,7 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *data)
->  {
->  	struct dell_wmi_ddv_sensors *sensors = data;
-> 
-> +	sensors->active = false;
->  	mutex_destroy(&sensors->lock);
->  	kfree(sensors->obj);
->  }
-> @@ -549,6 +551,7 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *w
->  		return ERR_PTR(ret);
-> 
->  	mutex_init(&sensors->lock);
-> +	sensors->active = true;
-> 
->  	ret = devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache_destroy, sensors);
->  	if (ret < 0)
-> @@ -852,9 +855,12 @@ static int dell_wmi_ddv_resume(struct device *dev)
->  {
->  	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
-> 
-> -	/* Force re-reading of all sensors */
-> -	dell_wmi_ddv_hwmon_cache_invalidate(&data->fans);
-> -	dell_wmi_ddv_hwmon_cache_invalidate(&data->temps);
-> +	/* Force re-reading of all active sensors */
-> +	if (data->fans.active)
-> +		dell_wmi_ddv_hwmon_cache_invalidate(&data->fans);
-> +
-> +	if (data->temps.active)
-> +		dell_wmi_ddv_hwmon_cache_invalidate(&data->temps);
-> 
->  	return 0;
->  }
-> --
-> 2.30.2
+> On Fri, Feb 17, 2023 at 03:42:08PM +0100, Hans de Goede wrote:
+>> On some Lenovo Legion models, the backlight might be driven by either
+>> one of nvidia_wmi_ec_backlight or amdgpu_bl0 at different times.
+>>
+>> When the Nvidia WMI EC backlight interface reports the backlight is
+>> controlled by the EC, the current backlight handling only registers
+>> nvidia_wmi_ec_backlight (and registers no other backlight interfaces).
+>>
+>> This hides (never registers) the amdgpu_bl0 interface, where as prior
+>> to 6.1.4 users would have both nvidia_wmi_ec_backlight and amdgpu_bl0
+>> and could work around things in userspace.
+>>
+>> Add a force module parameter which can be used with acpi_backlight=native
+>> to restore the old behavior as a workound (for now) by passing:
+>>
+>> "acpi_backlight=native nvidia-wmi-ec-backlight.force=1"
+>>
+>> Fixes: 8d0ca287fd8c ("platform/x86: nvidia-wmi-ec-backlight: Use acpi_video_get_backlight_type()")
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217026
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> - Reword commit message
+>> ---
+>>  drivers/platform/x86/nvidia-wmi-ec-backlight.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/nvidia-wmi-ec-backlight.c b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> index baccdf658538..1b572c90c76e 100644
+>> --- a/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> +++ b/drivers/platform/x86/nvidia-wmi-ec-backlight.c
+>> @@ -12,6 +12,10 @@
+>>  #include <linux/wmi.h>
+>>  #include <acpi/video.h>
+>>  
+>> +static bool force;
+>> +module_param(force, bool, 0444);
+>> +MODULE_PARM_DESC(force, "Force loading (disable acpi_backlight=xxx checks");
+>> +
+>>  /**
+>>   * wmi_brightness_notify() - helper function for calling WMI-wrapped ACPI method
+>>   * @w:    Pointer to the struct wmi_device identified by %WMI_BRIGHTNESS_GUID
+>> @@ -91,7 +95,7 @@ static int nvidia_wmi_ec_backlight_probe(struct wmi_device *wdev, const void *ct
+>>  	int ret;
+>>  
+>>  	/* drivers/acpi/video_detect.c also checks that SOURCE == EC */
+>> -	if (acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+>> +	if (!force && acpi_video_get_backlight_type() != acpi_backlight_nvidia_wmi_ec)
+>>  		return -ENODEV;
+>>  
+>>  	/*
+>> -- 
+>> 2.39.1
+>>
 > 
 
