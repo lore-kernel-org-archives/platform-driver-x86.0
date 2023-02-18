@@ -2,183 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896A1C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 10:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9771FC636CC
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 11:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229916AbjBRKum (ORCPT
+        id S229506AbjBRLs2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Feb 2023 05:50:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
+        Sat, 18 Feb 2023 06:48:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjBRKum (ORCPT
+        with ESMTP id S229436AbjBRLs1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Feb 2023 05:50:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F46211D4
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:49:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676717397;
+        Sat, 18 Feb 2023 06:48:27 -0500
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D03A166DC;
+        Sat, 18 Feb 2023 03:48:26 -0800 (PST)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0157F1C0DFD; Sat, 18 Feb 2023 12:48:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+        t=1676720904;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mhV9Rm9Yor6F6H/Z0Cs8WfMo7dXK4eYKdPWtQKRW3yU=;
-        b=ZwuXl8MCiJjfoofNRIEeC/5zNQTIBFP4wEZyz2b+EsQlCuC52fCEdNWTfKjU6Rse13N9OX
-        dLdUYUe4Rz0NBJfkLupDs+7l+h+wot4o5giW80XfRsI9OYXIoh3dZmrdRPjInlralN0TIX
-        zGNLcsypWtda0HZwLcXpp62ZEme0sc8=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-587-LG5eWU8NPjCR5g1jeMIVGA-1; Sat, 18 Feb 2023 05:49:55 -0500
-X-MC-Unique: LG5eWU8NPjCR5g1jeMIVGA-1
-Received: by mail-ed1-f70.google.com with SMTP id en8-20020a056402528800b004a26cc7f6cbso708805edb.4
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Feb 2023 02:49:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mhV9Rm9Yor6F6H/Z0Cs8WfMo7dXK4eYKdPWtQKRW3yU=;
-        b=YZ3baq8sTUetFPy5EEcemXlwsHdvbSQi7ZuTGH45Gn4gsCYquMzGu3N7cfnchhrvYZ
-         vpDgdxnwnjLXEFDZWC+kCnkwJLPWVcBSgX2v0Cgp7w/vdw1Hx3PjwI70dB0rj7YfUs/W
-         RgZ/RtrL20p4+kGKqlXUnjJzChSH9Shbg10110AEe4F6uC73NK/Xh+OfkuTQh8i+6foZ
-         JQNVc1X9sFrfu4LH8TguqOwxZ//f2414cFc8Buk4kWSB2ZmAODoLL4N2Yqnv9kFZTc50
-         v7k+/cb43sDSI0c5DhhuISxFmKU0Ufw2e1lnjpmNIkilFsa+8mCcSdMoeRUCDLDQIhAu
-         75sw==
-X-Gm-Message-State: AO0yUKU1Kke47XnBwLh1rDo099AUaF8gqdiGNRUJPFaZqzgYzhfb9uf8
-        pSJRr2t6xZOxCFRVuKG9qI4gGQDYtUnTrXFRK8DZFAua0igT44T0VzvTbSaq2YoVft8SB4iyJ6X
-        COV8E2C/68RPcSkgeiqC1Vva6/Sxj+P5GN28l3g4=
-X-Received: by 2002:a17:907:d87:b0:8bf:2458:a82a with SMTP id go7-20020a1709070d8700b008bf2458a82amr1589432ejc.75.1676717394164;
-        Sat, 18 Feb 2023 02:49:54 -0800 (PST)
-X-Google-Smtp-Source: AK7set8Iws+bUDN2YP4Z+rBv6i7xQGTZ7sxku1gq2v8ELQLwekn8r0a+m1GHgBFIMTRHaixOECf/EA==
-X-Received: by 2002:a17:907:d87:b0:8bf:2458:a82a with SMTP id go7-20020a1709070d8700b008bf2458a82amr1589418ejc.75.1676717393906;
-        Sat, 18 Feb 2023 02:49:53 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id y17-20020a1709064b1100b008b7a9ff7dfdsm1289839eju.162.2023.02.18.02.49.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Feb 2023 02:49:53 -0800 (PST)
-Message-ID: <9be4b45a-83cb-b671-e7df-c4c8812b5506@redhat.com>
-Date:   Sat, 18 Feb 2023 11:49:52 +0100
+        bh=YHZsK3arv/1aj12I3FHMYRgbyAEsDvuM63EKtoCmH34=;
+        b=JMxu16V3xqCXCqfOzG5r0s9Db595ho7q7LQue9sF2PWxtHqWZpKdbessRANaUG1B0v3Ytw
+        wd9GaWTcRJ5nGzkrqleDyk3NSjutmtF5L/tgANCScUYgXg028J7MGaBGT1S/+ru0bZryDG
+        39r1Cet83pkhINqV+rHN7d8SssOUziY=
+Date:   Sat, 18 Feb 2023 12:48:19 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rishit Bansal <rishitbansal0@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
+ V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
+Message-ID: <Y/C7A9eCjpdbzYbz@duo.ucw.cz>
+References: <20230131235027.36304-1-rishitbansal0@gmail.com>
+ <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
+ <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+ <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
+ <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
+ <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+ <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
+ <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
+ <ec5bc4a6-dc9f-90dd-0cf6-5fab47bb5fa6@redhat.com>
+ <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 4/5] apple-gmux: support MMIO gmux on T2 Macs
-Content-Language: en-US, nl
-To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>
-References: <20230216122342.5918-1-orlandoch.dev@gmail.com>
- <20230216122342.5918-5-orlandoch.dev@gmail.com>
- <cd6beabe-3026-d84e-63fd-3833948ecc1f@redhat.com>
- <20230217110531.6d3c07a1@redecorated-mbp>
- <20230217230246.53e3d013@redecorated-mbp>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230217230246.53e3d013@redecorated-mbp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qAV0Wrzlh/6x7U/V"
+Content-Disposition: inline
+In-Reply-To: <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 2/17/23 13:02, Orlando Chamberlain wrote:
-> On Fri, 17 Feb 2023 11:05:31 +1100
-> Orlando Chamberlain <orlandoch.dev@gmail.com> wrote:
->>>
->>> Question are we not worried about MacBooks with an "APP000B"
->>> ACPI device (with a value IORSOURCE_MEM entry) but which do not
->>> actually have a gmux, because they are iGPU only ?  
->>
->> It looks like iMac20,1, iMac20,2, and iMacPro1,1 have APP000B:
->>
->> apple_gmux: Failed to find gmux I/O resource
->>
->> iMac20,2: https://linux-hardware.org/?probe=ec2af584b3&log=dmesg
->> iMac20,1: https://linux-hardware.org/?probe=fee7644b9c&log=dmesg
->> iMacPro1,1: https://linux-hardware.org/?probe=6c26c9ff8c&log=dmesg
->>
->> But I'm not sure if they actually have it or not. I'll see if I can
->> get people with those models to test if it's a real gmux. There does
->> seem to be a pattern in that those three all have AMD GPU's.
-> 
-> Kerem Karabay managed to find the acpi tables and macOS's ioreg from and
-> iMacPro1,1:
-> 
-> https://github.com/khronokernel/DarwinDumped/blob/master/iMacPro/iMacPro1%2C1/Darwin%20Dumper/DarwinDumper_3.0.4_30.12_15.30.40_iMacPro1%2C1_Apple_X64_High%20Sierra_17C2120_apple/ACPI%20Tables/DSL/DSDT.dsl#L10423
-> https://github.com/khronokernel/DarwinDumped/blob/master/iMacPro/iMacPro1%2C1/Darwin%20Dumper/DarwinDumper_3.0.4_30.12_15.30.40_iMacPro1%2C1_Apple_X64_High%20Sierra_17C2120_apple/IORegistry/IOReg.txt#L5096
-> 
-> The DSDT table has the same APP000B device as MacBooks with actual gmux,
-> while the ioreg has no mention of Apple's driver AppleMuxControl2 being
-> used for that device.
-> 
-> I think that confirms Apple has not fixed the issue of putting
-> APP000B's where they don't need to.
-> 
-> Solutions to this I can think of are:
-> 
-> - Use DMI matching to ignore product_names "iMacPro1,1" "iMac20,1",
->   "iMac20,2"
-> - Maybe check if the MMIO region for gmux is filled with 0xff*
-> 
-> *I don't know if this would work or not as I don't have a machine to
-> check with. On my machine everything surrounding the 16 bytes used for
-> gmux is 0xff:
-> 
-> # hexdump -n48 -C -s 0xfe0b01f0 /dev/mem
-> fe0b01f0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-> fe0b0200  00 00 3e 4f 00 00 00 00  00 00 00 00 00 00 14 00  |..>O............|
-> fe0b0210  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-> 
-> so maybe on the iMacPro and iMac's, this would all be 0xff.
+--qAV0Wrzlh/6x7U/V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes checking for a regular ioread32 returning 0xffffffff sounds
-like it should work. Can you add a check for that in the next version
-please ?  Note this means we still need to do an iomap + unmap as
-you pointed out in another email, but I see no way around that.
-
-Regards,
-
-Hans
+Hi!
 
 
+> > I do agree with you that we need to avoid kbd_backlight in the name to =
+avoid causing existing upower code to have weird interactions with this (it=
+ supports / assumes there is only 1 kbd_backlight LED class device).
+> >=20
+> > So lets go with just these 4:
+> >=20
+> > /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
+> > /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
+> > /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
+> > /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+> >=20
+> > Using the _zoned_ between kbd and baclight to avoid confusing the exist=
+ing upower code. Then once this has landed we can look into extending upowe=
+r support for this.
+> >=20
+> > Note the requested documentation patch should probably also explain tha=
+t the _zoned_ was done deliberately to make current upower code ignore the =
+devices.
+> >
 
+>=20
+> This makes sense, I agree that the global LED file will cause more confus=
+ion
+> and hacks in the code. I'll start working on the  _zoned_ naming scheme w=
+ith
+> 4 files + documentation changes and make a patch for this soon!
+>
 
-> 
->>
->> I've looked at dmesg or at least lsmod on all the models with the T2
->> chip and there wasn't evidence of any other models having that error
->> or having apple-gmux loaded on any models that shouldn't have a gmux,
->> other than the three mentioned above. Of course I don't know if its
->> possible for there to be firmware versions where this isn't the case.
->>
->>>
->>> I have learned the hard way (through backlight control regressions
->>> in 6.1) that at least some older model MacBooks with an IO resource
->>> have an APP000B ACPI device without them actually having a gmux,
->>> these get caught by the version check and then do not pass the
->>> indexed check so that apple_gmux_detect() properly returns false.
->>>
->>> Maybe make gmux_mmio_read32() a static inline inside
->>> include/linux/apple-gmux.h and try to read the version here ?  
->>
->> For that would we need to ioremap() and iounmap()?
->>>
->>> Has this been tested on iGPU only T2 Macs?  
->>
->> I don't think so. 
->>
->>>
->>> Regards,
->>>
->>> Hans
->>>
->>>   
->>
-> 
+/sys/class/leds/:rgb:kbd_zoned_backlight-4/ is better than what was
+suggested above. But we already use _1 suffix to deduplicate the, so
+I'm not sure this is best naming.
 
+There are keyboards with per-key backlight. How do you suggest to
+solve those?
+
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--qAV0Wrzlh/6x7U/V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCY/C7AwAKCRAw5/Bqldv6
+8pXMAKCIdI8KbS5mAISKNMRztO7602shGACbBpeBHzXsXIPq1r6rMBoYzfUSFwk=
+=G7yz
+-----END PGP SIGNATURE-----
+
+--qAV0Wrzlh/6x7U/V--
