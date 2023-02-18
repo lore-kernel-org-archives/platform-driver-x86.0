@@ -2,118 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9771FC636CC
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 11:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945CAC64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 11:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjBRLs2 (ORCPT
+        id S229441AbjBRLxt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Feb 2023 06:48:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        Sat, 18 Feb 2023 06:53:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjBRLs1 (ORCPT
+        with ESMTP id S229436AbjBRLxt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Feb 2023 06:48:27 -0500
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D03A166DC;
-        Sat, 18 Feb 2023 03:48:26 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0157F1C0DFD; Sat, 18 Feb 2023 12:48:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1676720904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YHZsK3arv/1aj12I3FHMYRgbyAEsDvuM63EKtoCmH34=;
-        b=JMxu16V3xqCXCqfOzG5r0s9Db595ho7q7LQue9sF2PWxtHqWZpKdbessRANaUG1B0v3Ytw
-        wd9GaWTcRJ5nGzkrqleDyk3NSjutmtF5L/tgANCScUYgXg028J7MGaBGT1S/+ru0bZryDG
-        39r1Cet83pkhINqV+rHN7d8SssOUziY=
-Date:   Sat, 18 Feb 2023 12:48:19 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rishit Bansal <rishitbansal0@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
- V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
-Message-ID: <Y/C7A9eCjpdbzYbz@duo.ucw.cz>
-References: <20230131235027.36304-1-rishitbansal0@gmail.com>
- <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
- <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
- <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
- <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
- <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
- <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
- <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
- <ec5bc4a6-dc9f-90dd-0cf6-5fab47bb5fa6@redhat.com>
- <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
+        Sat, 18 Feb 2023 06:53:49 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0147713D5F;
+        Sat, 18 Feb 2023 03:53:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1676721204; i=w_armin@gmx.de;
+        bh=/fmzoCaMhnWReJYZfoH3jC5r2/1L4ZtHhXop0SMK+UE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=AjnaHu7B/QYyUWn++aMX2z2PDtT2WQv0dRmm4KrGTRWpbYkdk0QCyX10FupKRt6mL
+         J269UD2U5ug5T7Ma3WajNoCsQdTMaRokHFO/s1J/9HBkeJZ7eSpt7dw+4wnsYnq1Dq
+         Inzzk9OreeokGPdY6nL9hjQ5Owmp9eqQPBzyrFKY11VkpycF4Qc00gpoECi2UdFACV
+         P0c0Bevx1EatxFtTbG4RIkJxKC8KWg5B51O2tGr5KWpmGGx6z9W/CMY6TY5i6+mG2a
+         G9yKLu/TAvGEp2bnSfd7ao0v7LEBNtxu++Y1ApYhxxiutzyhEq8lwdofzYJ3DjMNU7
+         eWiXcVGLO4CzQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MTRMi-1p6H0x3WjU-00TiXJ; Sat, 18 Feb 2023 12:53:23 +0100
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     jdelvare@suse.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: dell-ddv: Fix cache invalidation on resume
+Date:   Sat, 18 Feb 2023 12:53:17 +0100
+Message-Id: <20230218115318.20662-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qAV0Wrzlh/6x7U/V"
-Content-Disposition: inline
-In-Reply-To: <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:77WJU57lj8Qu0dhg8UbEVrImGjypha5gHmE/E8whmJk1OnA42YP
+ hmBKmg+cvSG1eC+eRXw22V+3TXrYDpc0pHU12QmcR2Y8nzj/FQSuWor1zJycIyZZ3hIPBZr
+ yatAY3kB+3b+/QJUyQ0dm7U5Vt+j+/2NPVPdJRFk7f7Kk7/sSkENLnUNzo/Dim7WB586+FG
+ NBoVmaH4ygN5cbxVWgi4A==
+UI-OutboundReport: notjunk:1;M01:P0:um7DH0aAbPI=;+ijOefp3GJ7g5xSDUG9+wwLyAPu
+ r8ZVSN+Re8wvpGxBTwboOnm6d4ycJ50uHMOmCG4S97/skXJBzkE3MuB484L5roaSuKL7Kd+dB
+ 0rL2EgMBh3jafMnUH+rQqpQM/t0ZuUaVYrip7wEMnU0/4zIjFwDXn3goZ2IFOZwc398Fdw6Zj
+ yc4JtYDWb/C8HUD1/sNdcehbMGTMn3Frt105sP+ha3WZDR77nxeNvgAYycLwWmIi+I0Blu6QM
+ gp0i+itop1/1MifnfG9K5cm22o6ZRKu4JGOyZfFmtcaKdPvp5kYRsCoEQsuR2ObgebCai1dWU
+ 6/Cx7XEt4yI42SDHA+qy9b0i8HoAwyVYDDi1sQQYn2OWMjHLRNXeT9pJVdxWWElKsJS+REBR3
+ DlRx9J1X0R7Ng1wycLSe5djG1oaocD8qTdg4/Rww3Ltf0RUJEt+/R9krJs+yRFxmJTpc2X97y
+ gIRIC0QhW2uuv+eHr6ZlUK/OUUxWBB4Xf77x7Q0XGJPaAfOhywTN27zoE/BKOPDrpFFiZQoej
+ rObsGtzNz8/nHgRIRuLBUdYqZeUrMB8saLfcjkxqF5wliauDuQ8DgQGAVbLTVlZk6zSzft9SP
+ DY+nfXiXSuUgbzCF5ZV4ugYsdZdhy2kN/opOTW4JuwDQbsIIIdltPg+qgbKQq0v3o4qYh7VY7
+ BHXial3maN2ogOF9Y3tfXIXEYFGNAD38srimI9xwcUEJSjO9kgxD8+uupOYroNuHWJmt4ODHH
+ i7O+1WQHZxSLG+32kbh5XYhAW80PE52Ry7+kJdojwBjdzj4Wt+T9492KzeugxnRFuKPrXEGx5
+ Q/Cjm7eqNmHu+3WQUt2gF/0oxFbu9B/bL2E2+T7nTeJnO3+bl5vakMXgbKSuwmywN0TVCIfge
+ zRsA654Rl3YTCOQ2ne2QJKbvvCLdXw3S+0hKOdSH+YrILxg36GwLRtgWHVHLbzZhL4WVAfnh2
+ 07p/+FfC3A5okUWWcXgiVgp1n1w=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+If one or both sensor buffers could not be initialized, either
+due to missing hardware support or due to some error during probing,
+the resume handler will encounter undefined behaviour when
+attempting to lock buffers then protected by an uninitialized or
+destroyed mutex.
+Fix this by introducing a "active" flag which is set during probe,
+and only invalidate buffers which where flaged as "active".
 
---qAV0Wrzlh/6x7U/V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested on a Dell Inspiron 3505.
 
-Hi!
+Fixes: 3b7eeff93d29 ("platform/x86: dell-ddv: Add hwmon support")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes in v2:
+- move checking of the "active" flag inside
+  dell_wmi_ddv_hwmon_cache_invalidate()
+=2D--
+ drivers/platform/x86/dell/dell-wmi-ddv.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
+86/dell/dell-wmi-ddv.c
+index d547c9d09725..eff4e9649faf 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
++++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+@@ -96,6 +96,7 @@ struct combined_chip_info {
+ };
 
-> > I do agree with you that we need to avoid kbd_backlight in the name to =
-avoid causing existing upower code to have weird interactions with this (it=
- supports / assumes there is only 1 kbd_backlight LED class device).
-> >=20
-> > So lets go with just these 4:
-> >=20
-> > /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
-> > /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
-> > /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
-> > /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
-> >=20
-> > Using the _zoned_ between kbd and baclight to avoid confusing the exist=
-ing upower code. Then once this has landed we can look into extending upowe=
-r support for this.
-> >=20
-> > Note the requested documentation patch should probably also explain tha=
-t the _zoned_ was done deliberately to make current upower code ignore the =
-devices.
-> >
+ struct dell_wmi_ddv_sensors {
++	bool active;
+ 	struct mutex lock;	/* protect caching */
+ 	unsigned long timestamp;
+ 	union acpi_object *obj;
+@@ -520,6 +521,9 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel=
+_create(struct device *dev
 
->=20
-> This makes sense, I agree that the global LED file will cause more confus=
-ion
-> and hacks in the code. I'll start working on the  _zoned_ naming scheme w=
-ith
-> 4 files + documentation changes and make a patch for this soon!
->
+ static void dell_wmi_ddv_hwmon_cache_invalidate(struct dell_wmi_ddv_senso=
+rs *sensors)
+ {
++	if (!sensors->active)
++		return;
++
+ 	mutex_lock(&sensors->lock);
+ 	kfree(sensors->obj);
+ 	sensors->obj =3D NULL;
+@@ -530,6 +534,7 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *dat=
+a)
+ {
+ 	struct dell_wmi_ddv_sensors *sensors =3D data;
 
-/sys/class/leds/:rgb:kbd_zoned_backlight-4/ is better than what was
-suggested above. But we already use _1 suffix to deduplicate the, so
-I'm not sure this is best naming.
++	sensors->active =3D false;
+ 	mutex_destroy(&sensors->lock);
+ 	kfree(sensors->obj);
+ }
+@@ -549,6 +554,7 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel=
+_init(struct wmi_device *w
+ 		return ERR_PTR(ret);
 
-There are keyboards with per-key backlight. How do you suggest to
-solve those?
+ 	mutex_init(&sensors->lock);
++	sensors->active =3D true;
 
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
+ 	ret =3D devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache_de=
+stroy, sensors);
+ 	if (ret < 0)
+@@ -852,7 +858,7 @@ static int dell_wmi_ddv_resume(struct device *dev)
+ {
+ 	struct dell_wmi_ddv_data *data =3D dev_get_drvdata(dev);
 
---qAV0Wrzlh/6x7U/V
-Content-Type: application/pgp-signature; name="signature.asc"
+-	/* Force re-reading of all sensors */
++	/* Force re-reading of all active sensors */
+ 	dell_wmi_ddv_hwmon_cache_invalidate(&data->fans);
+ 	dell_wmi_ddv_hwmon_cache_invalidate(&data->temps);
 
------BEGIN PGP SIGNATURE-----
+=2D-
+2.30.2
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCY/C7AwAKCRAw5/Bqldv6
-8pXMAKCIdI8KbS5mAISKNMRztO7602shGACbBpeBHzXsXIPq1r6rMBoYzfUSFwk=
-=G7yz
------END PGP SIGNATURE-----
-
---qAV0Wrzlh/6x7U/V--
