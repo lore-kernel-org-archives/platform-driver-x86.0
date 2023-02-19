@@ -2,133 +2,172 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBB1C6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 14:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F34C05027
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 18:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230247AbjBSOjJ (ORCPT
+        id S231250AbjBSSqM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Feb 2023 09:39:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
+        Sun, 19 Feb 2023 13:46:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbjBSOij (ORCPT
+        with ESMTP id S229473AbjBSSqL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Feb 2023 09:38:39 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1210F26A3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Feb 2023 06:38:18 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id c17so334981wrx.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Feb 2023 06:38:17 -0800 (PST)
+        Sun, 19 Feb 2023 13:46:11 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B261422F;
+        Sun, 19 Feb 2023 10:46:10 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id w12-20020a17090a4f4c00b00236a0d55d3aso1368952pjl.3;
+        Sun, 19 Feb 2023 10:46:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hT0OFrc5BzA/EvvKaTBdDeJt/aCTGhUdeg6ktzHv2us=;
-        b=sfwr9FAw99JPs2jgsRVuLndpE8yao9Kl+E/z7U0mtt0pP2wD2IO88tvDM316wqGWhU
-         bOtdbmo6FuZElTFCkVycRnwUmdf4ah20jq0eL1sf/3WBmvAFbi2/ShUdbPUPupKNwlH7
-         DtQV0DPhDXMxxhggpMeDdWPhTaWIjd7+vtd/a5ko8mGoFoZ1GDgtQSozSm3RpQyPFhMD
-         DuUmE3eZX4nzx1bu3urwLB8LPnbclLMZNDMlpdEJLtabwYjR2FNOfQGWKOlK4oF5mHWd
-         U46QiQUoGN1d9JMBk+FmgjQY9n9uqv84+h9mvy6RR7cjaYif91wVlSrCddz1YUdlDHX8
-         zVgw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Semri/BccCq2FUJbIEhcGLx1SAMh1cOFC4BEvKoANZU=;
+        b=GzAF8wpb/DH3jbovxy866CHccI9ywc69mipvEU0wAGyTNpqgisbRzT3WV0LAuIkblE
+         RlKXEcgQJ2HK9ehCFAHqQpLb8W5ftVP4SnX++ulYmxSmp6jFHpwSsTUtl5aXxo4F3Stn
+         x576L0jJ1BU9XEsEBpwuk2D+kriA2g02AdiEs5BCp5SQlk8foq9ZkddkqdVr6PIcnsji
+         p69cx6vDuyl+UiK70vVhGQKShneTlRyAPMxEFiuWRzD5ntRv/LGL1QzoigvY4ht9xZU7
+         aona6dbhIGswYeXAzJW5GorMbX94BSHTvsrcyTJ2dKEdcOW3iaNehbq8MxKJQod2tQmx
+         TR3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hT0OFrc5BzA/EvvKaTBdDeJt/aCTGhUdeg6ktzHv2us=;
-        b=ZxSYj6YkpU+y+d2MF9DrvqlpISbzxeTQBwq42+8X1MEjjfFpAu4KBqqM57bBfDf2zd
-         tItfH4/tyBFbz3HHGMrcCDw7sDalYnfWHUI8F4me9yzPZW8j5b7YOH7XKf1xNDTky2N8
-         QyfRqE56N8m6yqYGC5tlcyKAM3or+253LYXe1O4yLqh0CinW0TP14sMupDZk/SwoPuBz
-         kzBh6Qmg11n6VfMaJTKhpc/LFeN7MpY94cSfGdHIoHcCTfh6JQ3ILjfzxljdjrSZqXMa
-         qbzCrlfOqq7ev5jV0Z9MsrIxdd97zpBUT3gzWTHGUJhYhOhMd+EHXM0Smb4yHye5n75j
-         gjuA==
-X-Gm-Message-State: AO0yUKUhzT87JAlxgRPk6pZ7HXhviKr9WwXBD+l0jZCTLZG903zQ1gzf
-        ogY8wKF2tx9bDX0SarO6MOQ7aQ==
-X-Google-Smtp-Source: AK7set9g+Xv8475Uge2nzGCrlGdlaMCAyOgNN15o6NiNULAV3ygGhrWV1qTQ1r30QtA0D7O9N+C6iQ==
-X-Received: by 2002:a05:6000:1789:b0:2c6:825d:ed13 with SMTP id e9-20020a056000178900b002c6825ded13mr368030wrg.25.1676817496530;
-        Sun, 19 Feb 2023 06:38:16 -0800 (PST)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:6f43:b92:7670:463])
-        by smtp.gmail.com with ESMTPSA id a18-20020adfe5d2000000b002be505ab59asm86176wrn.97.2023.02.19.06.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Feb 2023 06:38:16 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org, daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v1 15/17] thermal/drivers/acerhdf: Make interval setting only at module load time
-Date:   Sun, 19 Feb 2023 15:36:55 +0100
-Message-Id: <20230219143657.241542-16-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230219143657.241542-1-daniel.lezcano@linaro.org>
-References: <20230219143657.241542-1-daniel.lezcano@linaro.org>
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Semri/BccCq2FUJbIEhcGLx1SAMh1cOFC4BEvKoANZU=;
+        b=iYZeL8850LHdF5QDMXrsoA0hy2KXa5im3Ksvvljr4sAusQkqCiu2Q6nbWr/Os4Vxki
+         YFXjipejU71Y76dSjGw1XCNNlkdAUds/LHhoDOMn6p2m1qZbJvCIe0dE2SbHt2qkuBFV
+         RXMA+vMqEuChC3E+1uYjb+hs/tWT2QE0sb9c1tjNyXdUe4SRZqK6ngyz0uxPYURPGUQS
+         fxsHxZF838ySKhXOvc5PhHQNcSvW9vvJZkucMUAdfKUKo83BiGw5feh3Dwy1C4GhrTn0
+         /IBYlib6OmT9m6dBjP09slyk0ZPRJXmifnRLfnhcPsWnRMac02CMffP5Aw7wRnC2c9cc
+         caSA==
+X-Gm-Message-State: AO0yUKUtztPYSyE6i+mUKUba8dxH5yXfqOQwF9H8YcSxvxT4v4FGYmT4
+        5c7J+GZKSNYvGClX/FtK4zQ=
+X-Google-Smtp-Source: AK7set/xhzrwirO+ezkjjIkLvlBOYHCfPP7w1ZcEKcJyRrg1q2mKcXYTCHw8lOmK92Tz5Z+DzYc9dg==
+X-Received: by 2002:a17:903:27ce:b0:19a:c65d:f98 with SMTP id km14-20020a17090327ce00b0019ac65d0f98mr803223plb.40.1676832369899;
+        Sun, 19 Feb 2023 10:46:09 -0800 (PST)
+Received: from [192.168.1.73] ([171.76.81.196])
+        by smtp.gmail.com with ESMTPSA id v3-20020a170902d68300b0019ad6451a67sm6292243ply.24.2023.02.19.10.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Feb 2023 10:46:09 -0800 (PST)
+From:   Rishit Bansal <rishitbansal0@gmail.com>
+X-Google-Original-From: Rishit Bansal <rishit.bansal0@gmail.com>
+Message-ID: <a11fd918-d1bc-8a1f-c123-bcb0b4fa38a5@gmail.com>
+Date:   Mon, 20 Feb 2023 00:16:04 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
+ V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Rishit Bansal <rishitbansal0@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+References: <20230131235027.36304-1-rishitbansal0@gmail.com>
+ <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
+ <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+ <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
+ <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
+ <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+ <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
+ <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
+ <ec5bc4a6-dc9f-90dd-0cf6-5fab47bb5fa6@redhat.com>
+ <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
+ <Y/C7A9eCjpdbzYbz@duo.ucw.cz>
+ <bd2ae598-3f13-f465-4bde-6ab364b79db3@redhat.com>
+In-Reply-To: <bd2ae598-3f13-f465-4bde-6ab364b79db3@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal zone device structure is in the process of being private
-to the thermal framework core code. This driver is directly accessing
-and changing the monitoring polling rate.
 
-After discussing with the maintainers of this driver, having the
-polling interval at module loading time is enough for their purpose.
 
-Change the code to take into account the interval when the module is
-loaded but restrict the permissions so the value can not be changed
-afterwards.
+On 19/02/23 18:50, Hans de Goede wrote:
+> Hi,
+> 
+> On 2/18/23 12:48, Pavel Machek wrote:
+>> Hi!
+>>
+>>
+>>>> I do agree with you that we need to avoid kbd_backlight in the name to avoid causing existing upower code to have weird interactions with this (it supports / assumes there is only 1 kbd_backlight LED class device).
+>>>>
+>>>> So lets go with just these 4:
+>>>>
+>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
+>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
+>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
+>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+>>>>
+>>>> Using the _zoned_ between kbd and baclight to avoid confusing the existing upower code. Then once this has landed we can look into extending upower support for this.
+>>>>
+>>>> Note the requested documentation patch should probably also explain that the _zoned_ was done deliberately to make current upower code ignore the devices.
+>>>>
+>>
+>>>
+>>> This makes sense, I agree that the global LED file will cause more confusion
+>>> and hacks in the code. I'll start working on the  _zoned_ naming scheme with
+>>> 4 files + documentation changes and make a patch for this soon!
+>>>
+>>
+>> /sys/class/leds/:rgb:kbd_zoned_backlight-4/ is better than what was
+>> suggested above.
+> 
+> Ah yes using rgb for the color part of the name makes sense.
+> 
+>> But we already use _1 suffix to deduplicate the, so
+>> I'm not sure this is best naming.
+> 
+> 
+> 
+> I guess we could try to actually name the zones, something like
+> (no idea if this are indeed the 4 zones):
+> 
+> :rgb:kbd_zoned_backlight-main
+> :rgb:kbd_zoned_backlight-wasd
+> :rgb:kbd_zoned_backlight-cursor
+> :rgb:kbd_zoned_backlight-numpad
+> 
+> Rishit any comments on this or improvements to it.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/platform/x86/acerhdf.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Here is an image of how the 4 zones on the keyboard look like 
+(https://imgur.com/a/iQdRWCM). I think we can call them "left", 
+"middle", "right", and "wasd":
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 1956469c3457..61f1c3090867 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -79,7 +79,6 @@ static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
- static char force_bios[16];
- static char force_product[16];
--static unsigned int prev_interval;
- static struct thermal_zone_device *thz_dev;
- static struct thermal_cooling_device *cl_dev;
- static struct platform_device *acerhdf_dev;
-@@ -346,20 +345,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 	trips[0].temperature = fanon;
- 	trips[0].hysteresis  = fanon - fanoff;
- 
--	if (kernelmode && prev_interval != interval) {
-+	if (kernelmode) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
- 			       ACERHDF_MAX_INTERVAL);
- 			interval = ACERHDF_MAX_INTERVAL;
- 		}
-+
- 		if (verbose)
- 			pr_notice("interval changed to: %d\n", interval);
--
--		if (thermal)
--			thermal->polling_delay_jiffies =
--				round_jiffies(msecs_to_jiffies(interval * 1000));
--
--		prev_interval = interval;
- 	}
- }
- 
-@@ -807,5 +801,5 @@ static const struct kernel_param_ops interval_ops = {
- 	.get = param_get_uint,
- };
- 
--module_param_cb(interval, &interval_ops, &interval, 0600);
-+module_param_cb(interval, &interval_ops, &interval, 0000);
- MODULE_PARM_DESC(interval, "Polling interval of temperature check");
--- 
-2.34.1
+:rgb:kbd_zoned_backlight-left
+:rgb:kbd_zoned_backlight-middle
+:rgb:kbd_zoned_backlight-right
+:rgb:kbd_zoned_backlight-wasd
 
+
+> 
+>> There are keyboards with per-key backlight. How do you suggest to
+>> solve those?
+> 
+> I really think those fall into a separate category, currently AFAIK
+> all support for those use /dev/hidraw directly from userspace.
+> 
+> And any kernel API would need to likely be ioctl based, allowing
+> setting all the LEDs in a single syscall otherwise setting the
+> LEDs becomes to expensive / introduces to much latency when
+> doing software driven animations. So I think the best thing to
+> do there is to declare these out-of-scope for the classic
+> sysfs based LED class API.
+
+I agree with this as well, a separate API will be required for more 
+complex use cases with per-key color control. For most  future cases 
+with a limited number of zones, our current approach with multi LED 
+"kbd_zoned" files should work out.
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
