@@ -2,83 +2,142 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA9C05027
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 22:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0A7C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 22:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231273AbjBSWOK convert rfc822-to-8bit (ORCPT
+        id S231485AbjBSWRn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Feb 2023 17:14:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55120 "EHLO
+        Sun, 19 Feb 2023 17:17:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbjBSWOJ (ORCPT
+        with ESMTP id S231481AbjBSWRm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Feb 2023 17:14:09 -0500
-Received: from smtprelay05.ispgateway.de (smtprelay05.ispgateway.de [80.67.31.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1EF166E9;
-        Sun, 19 Feb 2023 14:14:08 -0800 (PST)
-Received: from [80.82.223.85] (helo=mail.piie.net)
-        by smtprelay05.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <peter@piie.net>)
-        id 1pTrLJ-0008LS-Oh; Sun, 19 Feb 2023 22:35:33 +0100
+        Sun, 19 Feb 2023 17:17:42 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC2818AB0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Feb 2023 14:17:39 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id E59F6101958F1;
+        Sun, 19 Feb 2023 23:17:37 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id AFEC53657D; Sun, 19 Feb 2023 23:17:37 +0100 (CET)
+Date:   Sun, 19 Feb 2023 23:17:37 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Seth Forshee <sforshee@kernel.org>,
+        Aditya Garg <gargaditya08@live.com>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 3/5] apple-gmux: Use GMSP acpi method for interrupt
+ clear
+Message-ID: <20230219221737.GA17355@wunner.de>
+References: <20230218132007.3350-1-orlandoch.dev@gmail.com>
+ <20230218132007.3350-4-orlandoch.dev@gmail.com>
 MIME-Version: 1.0
-Date:   Sun, 19 Feb 2023 21:35:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: RainLoop/1.16.0
-From:   "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
-Message-ID: <08478e74cab0a5621fbcd4e0f0a97ccb@piie.net>
-Subject: Re: [PATCH v1 16/17] thermal/drivers/acerhdf: Remove pointless
- governor test
-To:     "Daniel Lezcano" <daniel.lezcano@linaro.org>, rafael@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-In-Reply-To: <20230219143657.241542-17-daniel.lezcano@linaro.org>
-References: <20230219143657.241542-17-daniel.lezcano@linaro.org>
- <20230219143657.241542-1-daniel.lezcano@linaro.org>
-X-Df-Sender: cGV0ZXJAcGlpZS5uZXQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230218132007.3350-4-orlandoch.dev@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-19. Februar 2023 15:38, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+On Sun, Feb 19, 2023 at 12:20:05AM +1100, Orlando Chamberlain wrote:
+> This is needed for interrupts to be cleared correctly on MMIO based
+> gmux's. It is untested if this helps/hinders other gmux types, so
+> currently this is only enabled for the MMIO gmux's.
+> 
+> There is also a "GMLV" acpi method, and the "GMSP" method can be called
+> with 1 as its argument, but the purposes of these aren't known and they
+> don't seem to be needed.
 
-> The thermal zone parameter specifies the bang-bang governor.
-> 
-> The Kconfig selects the bang-bang governor. So it is pointless to test
-> if the governor was set for the thermal zone assuming it may not have
-> been compiled-in.
-> 
-> Remove the test and prevent another access into the thermal internals.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+GMLV and GMSP access a GPIO on the PCH which is connected to the
+GMUX_INT pin of the gmux microcontroller.  I've just verified that
+in the schematics of my MBP9,1.
 
-Acked-by: Peter Kaestle <peter@piie.net>
+GMLV reads the value of the GPIO ("level").
+GMSP likely sets the value ("set polarity").
+
+On my MBP9,1 (indexed gmux), if the gmux controller signals an interrupt,
+the platform signals a notification:
+
+  Scope (\_GPE)
+  {
+      Method (_L16, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
+      {
+          Notify (\_SB.PCI0.LPCB.GMUX, 0x80) // Status Change
+      }
+  }
+
+Comparing this to the MBP13,3 and MBP16,1, the GPE method differentiates
+between the OS type:  On Darwin, only a notification is signaled,
+whereas on other OSes, the GPIO's value is read and then inverted:
+
+  Scope (\_GPE)
+  {
+      Method (_L15, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
+      {
+          If (OSDW ())
+          {
+              Notify (\_SB.PCI0.LPCB.GPUC, 0x80) // Status Change
+          }
+          ElseIf ((\_SB.GGII (0x03000015) == One))
+          {
+              \_SB.SGII (0x03000015, Zero)
+          }
+          Else
+          {
+              \_SB.SGII (0x03000015, One)
+          }
+      }
+  }
+
+Linux masquerades as Darwin, so ends up in the notification-only
+code path.
+
+Does macOS execute the GMSP method as well?  Have you disassembled
+the gmux driver?  All vital information that belongs in the commit
+message and/or a code comment.
 
 
-> ---
-> drivers/platform/x86/acerhdf.c | 7 -------
-> 1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 61f1c3090867..71b9c1f922d9 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -697,13 +697,6 @@ static int __init acerhdf_register_thermal(void)
-> if (ret)
-> return ret;
-> 
-> - if (strcmp(thz_dev->governor->name,
-> - acerhdf_zone_params.governor_name)) {
-> - pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
-> - acerhdf_zone_params.governor_name);
-> - return -EINVAL;
-> - }
-> -
-> return 0;
-> }
-> 
-> -- 
-> 2.34.1
+> +static int gmux_call_acpi_gmsp(struct apple_gmux_data *gmux_data, int arg)
+> +{
+> +	acpi_status status = AE_OK;
+> +	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+> +	struct acpi_object_list arg_list = { 1, &arg0 };
+> +
+> +	arg0.integer.value = arg;
+> +
+> +	status = acpi_evaluate_object(gmux_data->dhandle, "GMSP", &arg_list, NULL);
+
+Can this be simplified by using acpi_execute_simple_method() or
+one of the other helpers provided by drivers/acpi/utils.c?
+
+
+> @@ -537,6 +561,8 @@ static void gmux_clear_interrupts(struct apple_gmux_data *gmux_data)
+>  	/* to clear interrupts write back current status */
+>  	status = gmux_interrupt_get_status(gmux_data);
+>  	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS, status);
+> +	if (gmux_data->config->use_acpi_gmsp)
+> +		gmux_call_acpi_gmsp(gmux_data, 0);
+>  }
+
+I think it would be clearer to check the gmux type directly here,
+so that a casual reader understands that invoking the method is
+necessary on MMIO-accessed GMUXes, but not any of the other types.
+By contrast, with the use_acpi_gmsp one has to look up first which
+of the gmux types sets this to true.
+
+What happens if GMSP is not executed?  Needs to be documented in the
+commit message and/or a code comment!
+
+Thanks,
+
+Lukas
