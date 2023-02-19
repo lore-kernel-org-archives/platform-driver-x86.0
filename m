@@ -2,86 +2,73 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7585C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Feb 2023 19:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B42C05027
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 06:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbjBRTRk (ORCPT
+        id S229484AbjBSGfV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Feb 2023 14:17:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
+        Sun, 19 Feb 2023 01:35:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjBRTRj (ORCPT
+        with ESMTP id S229451AbjBSGfV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Feb 2023 14:17:39 -0500
-X-Greylist: delayed 187 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 18 Feb 2023 11:17:37 PST
-Received: from mail1.nippynetworks.com (mail1.nippynetworks.com [91.220.24.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869BB149AE;
-        Sat, 18 Feb 2023 11:17:37 -0800 (PST)
-Received: from [192.168.105.188] (unknown [212.69.38.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ed@wildgooses.com)
-        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4PJyyQ3dR3zTgHX;
-        Sat, 18 Feb 2023 19:13:34 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1676747615;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N2l5zyrZnPwbgSTrfVUHO7eWAPHe6tU1hBGqXdKVlmQ=;
-        b=On6pyPKl/YWmiwVs2nQ6RGf1KCNpvwZUPECvWTuek5HguzCK+Cv1xH5COhZFh0fzLOzMaK
-        dlNDvN5YLVX+bFaBccbNGm/+gvEzRMUnxHbV/b+rg15XVwBMVdWYhIlZWXVSlnAs+I5yxc
-        tbPrC3gdZEEiQJShVxhHGd2lF9Xu5o0=
-Message-ID: <48beb1c5-5136-a287-1a74-bdc558bffe3e@wildgooses.com>
-Date:   Sat, 18 Feb 2023 19:14:25 +0000
+        Sun, 19 Feb 2023 01:35:21 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0381C11654;
+        Sat, 18 Feb 2023 22:35:19 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pTdI2-0004KC-7X; Sun, 19 Feb 2023 07:35:14 +0100
+Message-ID: <ebfe7e80-91be-b0ce-9679-80ac5161ec1f@leemhuis.info>
+Date:   Sun, 19 Feb 2023 07:35:13 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH v4 0/2] Expand APU2 driver to 3/4/5/6 models
-Content-Language: en-GB
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+To:     Corentin Chary <corentin.chary@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Philip Prindeville <philipp@redfish-solutions.com>,
-        platform-driver-x86@vger.kernel.org, linux-x86_64@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Andres Salomon <dilinger@queued.net>,
-        Andreas Eberlein <foodeas@aeberlein.de>,
-        Paul Spooren <paul@spooren.de>
-References: <20230113231139.436943-1-philipp@redfish-solutions.com>
- <44e0ef20-d6d3-4c87-1828-f88dbc08e942@redhat.com>
- <7f5644a8-2e6f-b4c6-4db8-2419d1a7f005@metux.net>
-From:   Ed W <lists@wildgooses.com>
-In-Reply-To: <7f5644a8-2e6f-b4c6-4db8-2419d1a7f005@metux.net>
+        Mark Gross <markgross@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     acpi4asus-user@lists.sourceforge.net,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        jacobecc9@gmail.com
+Subject: Bug 217057 - Asus high CPU temperature / low fan speed
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676788520;433fa141;
+X-HE-SMSGID: 1pTdI2-0004KC-7X
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 17/02/2023 12:31, Enrico Weigelt, metux IT consult wrote:
-> On 17.01.23 11:25, Hans de Goede wrote:
->
->> Enrico, can you take a look at this series please? You can find
->> the 2 actual patches here:
->>
->> https://lore.kernel.org/platform-driver-x86/20230113231139.436956-1-philipp@redfish-solutions.com/
->> https://lore.kernel.org/platform-driver-x86/20230113231140.437040-1-philipp@redfish-solutions.com/
->
-> NAK on renaming the RST lines (at least for the older boards), this will
-> break existing applications in the field (I know for sure certain ones I
-> wrote myself - and they're used in remote places!)
->
-> These lines (at least for the older boards) are supposed to be generic
-> RST lines on the mpcie ports - not strictly limited to modems - that's
-> why I've chosen this naming.
+Hi! I look out for reported regression in bugzilla.kernel.org and
+normally ignore everything else. But I noticed a newly submitted report
+that sounded somewhat bad, that's why I decided to write this mail to
+ensure the right people are at least aware of it.
 
+https://bugzilla.kernel.org/show_bug.cgi?id=217057
 
-Sure - but the *wiring* of the RST lines *follows* the modems.
+>  jacobecc9@gmail.com 2023-02-18 21:03:13 UTC
+> 
+> laptop Asus X415EA (Tiger Lake) is running fan too slow in automatic
+> mode even if CPU temperature is over 90C. There are no options in BIOS.
+> Windows has software which allows fan to reach high speed with
+> performance fan curve. Linux only allows to disable PWM.
+> 
+> [reply] [−] Comment 1 jacobecc9@gmail.com 2023-02-18 21:45:59 UTC
+> 
+> [   19.733079] asus_wmi: ASUS WMI generic driver loaded
+> [   19.779429] asus_wmi: Initialization: 0x1
+> [   19.779476] asus_wmi: BIOS WMI version: 9.0
+> [   19.779507] asus_wmi: SFUN value: 0x21
+> [   19.779510] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+> [   19.779513] asus-nb-wmi asus-nb-wmi: Detected ATK, enable event queue
+> [   19.814908] input: Asus WMI hotkeys as /devices/platform/asus-nb-wmi/input/input23
+> [   19.827710] asus_wmi: fan_curve_get_factory_default (0x00110024) failed: -19
+> [   19.827840] asus_wmi: fan_curve_get_factory_default (0x00110025) failed: -19
 
-Can you give an example of how you are using the RST line, such that it's naming affects you please?
-Hans pointed out that generally it's the number order which is used?
-
-Ed W
-
+Ciao, Thorsten
