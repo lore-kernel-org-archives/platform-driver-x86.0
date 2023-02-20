@@ -2,90 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03492C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 09:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C2C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 09:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230327AbjBTJHd (ORCPT
+        id S230258AbjBTJU4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Feb 2023 04:07:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52262 "EHLO
+        Mon, 20 Feb 2023 04:20:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjBTJHc (ORCPT
+        with ESMTP id S230050AbjBTJUz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Feb 2023 04:07:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DC7198
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 01:07:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9961F60D2F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 09:07:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F2A28C4339B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 09:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676884051;
-        bh=Y+fB2flBUacjr3ZDEPajoBxhHXobBg2VrS23pWrP6Qo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=LgGZDq19+HuHqOgWGL14Ei0t1Tsd4Nt0HuMUh6LqtPyTxoz6ttUKKhQDehbYL9+ft
-         lDfWlbybbiFk2PNb8T692Uu/N/AseKAE++d4bxLV+aoNyweW3ccy1smnYd6VWEmk4n
-         IVvMPkvK1nfrysPxVnmacmqyQ5UNy2Vnh1uoCObzrNgbSCoWR5iffTR5SoUgoMkxJ/
-         hl23eGGB8dEs8UJQEvpPnD/ROOAvkAKKdEAMOk1mL6RO5UcB7Uwye7nzKiqdOvcusB
-         4SqAtlmnTlfiXEy4/p2ERLUIO6ro+8Yuv3KuqtTxHXsWY/WSGWh/xBsl1jrRzvWUBS
-         I8MT7UBAh0Pcg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D3625C43141; Mon, 20 Feb 2023 09:07:30 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217057] Asus high CPU temperature / low fan speed
-Date:   Mon, 20 Feb 2023 09:07:30 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jdelvare@suse.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc component assigned_to
-Message-ID: <bug-217057-215701-5RtRCsc5tC@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217057-215701@https.bugzilla.kernel.org/>
-References: <bug-217057-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 20 Feb 2023 04:20:55 -0500
+X-Greylist: delayed 39791 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Feb 2023 01:20:50 PST
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8A1C168;
+        Mon, 20 Feb 2023 01:20:50 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id CCC12100D9401;
+        Mon, 20 Feb 2023 10:20:48 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id A54F036B4A; Mon, 20 Feb 2023 10:20:48 +0100 (CET)
+Date:   Mon, 20 Feb 2023 10:20:48 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Seth Forshee <sforshee@kernel.org>,
+        Aditya Garg <gargaditya08@live.com>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 4/5] apple-gmux: support MMIO gmux on T2 Macs
+Message-ID: <20230220092048.GA25532@wunner.de>
+References: <20230218132007.3350-1-orlandoch.dev@gmail.com>
+ <20230218132007.3350-5-orlandoch.dev@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230218132007.3350-5-orlandoch.dev@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217057
+On Sun, Feb 19, 2023 at 12:20:06AM +1100, Orlando Chamberlain wrote:
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -28,15 +28,17 @@
+>   * DOC: Overview
+>   *
+>   * gmux is a microcontroller built into the MacBook Pro to support dual GPUs:
+> - * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on retinas.
+> + * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on pre-T2 retinas.
+> + * The chip used on T2 Macs is not known.
 
-Jean Delvare (jdelvare@suse.de) changed:
+I've just taken a look at the schematics of the MBP16,1 and it turns out
+that T2 *is* the gmux.  The chip is called H9M.  The interaction with the
+OS is through that MMIO area.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |corentin.chary@gmail.com
-          Component|Hardware Monitoring         |Platform_x86
-           Assignee|jdelvare@suse.de            |drivers_platform_x86@kernel
-                   |                            |-bugs.osdl.org
+There's a GPIO expander attached to T2 via I2C (NXP PCAL6524), probably
+because they didn't have enough GPIO pins available on T2 itself.
+The GPIO expander enables/disables the voltage regulators of the discrete
+GPU, hence can cut power to it.  It also drives panel power and has a GPIO
+to switch the mux.
 
---- Comment #4 from Jean Delvare (jdelvare@suse.de) ---
-Moving to a more appropriate component. This is not related to hardware
-monitoring but to thermal management, and most likely the only way to handle
-this is in a dedicated x86 platform driver (or possibly fixes to the asus-w=
-mi
-driver).
+The mux is an NXP CBTL06142 as on previous models.
 
---=20
-You may reply to this email to add a comment.
+Thanks,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Lukas
