@@ -2,56 +2,56 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A684C05027
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 12:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB3C05027
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 12:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231714AbjBTMC3 (ORCPT
+        id S229768AbjBTMRL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Feb 2023 07:02:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
+        Mon, 20 Feb 2023 07:17:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231975AbjBTMC1 (ORCPT
+        with ESMTP id S231997AbjBTMQ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Feb 2023 07:02:27 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE8E1B552;
-        Mon, 20 Feb 2023 04:02:24 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id n5so605123pfv.11;
-        Mon, 20 Feb 2023 04:02:24 -0800 (PST)
+        Mon, 20 Feb 2023 07:16:56 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29741B578;
+        Mon, 20 Feb 2023 04:16:51 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id q5so1154632plh.9;
+        Mon, 20 Feb 2023 04:16:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P5iTKuc9ZIC8mfFFhdSEI0ZAf2KXUFXWVVjhvYosUIM=;
-        b=VROnHFREqd0Ltlg2g61dgYOzAojH4Mxf1RuLQvJAFmKW2iYt3juFREwpMZipmt66nd
-         wg7ntQePS/wGq2kFfxiiU+yhzDxIbv5ZXftPrHvpyrTITOPji9yXg9tu2HWIqFV5kR1/
-         wLuB7rMCTWTNX4KuGiGPVH5+SkpPrdZBmok3GA6FhvKXWGSthZRX6D1bKStNT/pCJXeY
-         E99rHLgw08pmPRoxFzgnbocdeNDIHe/m1DMA6O4ME2tyfSBl2ezZ574rZguMgu5FhM1T
-         lLB5tGVJyiXU4v3B6i5ytPOnHnzVcJqRlOSsppmtv51XO4sAFHyBXDJmnIZ4l1guVv1n
-         cOnQ==
+        bh=tcEmxazxbqplmTcmN17Wwm+l41xqAQ1PKqf3h1uJiP4=;
+        b=I4VVRfVXk1FNApIzDwUzdb0Y9aU/DgzdfRm7sekaAXTMVKlb+Qno9/aXncvwq+hEOa
+         Vi2GEBCcSXIUm0geHa96o0yEqWM337hbp8bI/98czZVFchHezkzgcz/VqagN6Zy56oYt
+         H36jUMrQpk5LlZewJPmZP1lYevM7GDnDtuLho6NDox5ZiK3uEgGstGLN4O09Kl+Gj02S
+         Sed4VbMM+hxV8m/Y1FCAfI6RikvOoLgwPHZEvjrm37yrO7PZFif1IemetOSduoRluP5K
+         QVlR+jQLWxAqrA+TE5ZqlFDpUZFKbje/idgBJteLM1qZWToSMN/KS79Nu3/fJgMxzuPM
+         h6xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P5iTKuc9ZIC8mfFFhdSEI0ZAf2KXUFXWVVjhvYosUIM=;
-        b=HNGm25ZqNs8OVk3LzpwNNHRF4IoT0bOeNQhOBS1DN4K9qXVKEcXB4LDSed8ppT3xUC
-         q8DIc+hIWtsXlM2mUaiyreJBZFE7SSAhPp3Mpq22lj9O5b8hCKLbN/aOo7Q3esM8VPhB
-         HcZIfGZS8h7mQOmeQgHUWWgeEBytfyZe5I6sBATl8QJnYl86rVl7s2uB55jN8ez0Xm32
-         oDqGnuxK37JbVknPtgxCvQX24DfCaOD/GQYUbuds2f43iTKdrc1nFZT7ifFBmMVptx/g
-         TSLOUVxM0DfVbS/woisDIk4bOpwVJV0zb6rPszEqg57mAf/h4RSdWC4y1pKnjUdXE4gl
-         oFMg==
-X-Gm-Message-State: AO0yUKXx3ArQf1/a/SZ9QWfJm4omKvetANf7SQIq3dbRlKuj3GnC7VoW
-        DtH8lj+c+8XsT/ALHQDg3yM=
-X-Google-Smtp-Source: AK7set8kTF4hiTtmXprSPQHMYdRdUzgTAJko9Ruc6cBzxpZuc8E3a/TnKnY/qKANfN8ynIoa3gc4Eg==
-X-Received: by 2002:aa7:955c:0:b0:593:91e4:99e2 with SMTP id w28-20020aa7955c000000b0059391e499e2mr2670957pfq.34.1676894544401;
-        Mon, 20 Feb 2023 04:02:24 -0800 (PST)
+        bh=tcEmxazxbqplmTcmN17Wwm+l41xqAQ1PKqf3h1uJiP4=;
+        b=R5N2kS9ie1y7yc6Rf4hFBRqP1R9cYL1PqBzXIeWiBVqRFbdCR/En4YC7JfS5KXRogX
+         cz7P49av1V01o73OjxE0876w/l2sduSpFpDVL2SPqx6J8Z7gdsxxiFw4ybjreGxEgCLB
+         Sf2cu9LdqBdT4LQ6To3dIb8zjY2/8Bwk71rtjfmXCmnEb3tfi/yPsVQTtQwp0tVNUZet
+         KmmI3kiu5C8DB23v6qy8XLmtRfP4ahVndncMl4hjjSIRIqutEx12AGWNJNWrqFNdsbFr
+         VYX02CbNLTQn2paoVACPujWnNQmeRvFuTz4VxDpHK/GWHN1aQdGtmGd/M3LPiP/2wrpA
+         5D+g==
+X-Gm-Message-State: AO0yUKWmgOVFyJCxY7jBYfzSZH/MdZDqQDIcco5f6h51yEseM3/p+Xwn
+        QNWUT6ymwAitB867wohw6UY=
+X-Google-Smtp-Source: AK7set/wLHmIl0qQEAoUiCiaL7tnmOU1vhxtFoFEIAJBnDwSEjooohnU6f0VacWTqeAvsT5fnTk2Zw==
+X-Received: by 2002:a05:6a20:1587:b0:be:9478:55ba with SMTP id h7-20020a056a20158700b000be947855bamr1879748pzj.60.1676895411306;
+        Mon, 20 Feb 2023 04:16:51 -0800 (PST)
 Received: from redecorated-mbp ([202.53.32.211])
-        by smtp.gmail.com with ESMTPSA id i16-20020aa78b50000000b0058b9c9def36sm1276361pfd.139.2023.02.20.04.02.21
+        by smtp.gmail.com with ESMTPSA id l64-20020a638843000000b004784cdc196dsm1157637pgd.24.2023.02.20.04.16.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Feb 2023 04:02:24 -0800 (PST)
-Date:   Mon, 20 Feb 2023 23:02:15 +1100
+        Mon, 20 Feb 2023 04:16:51 -0800 (PST)
+Date:   Mon, 20 Feb 2023 23:16:42 +1100
 From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
 To:     Lukas Wunner <lukas@wunner.de>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -61,13 +61,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Aditya Garg <gargaditya08@live.com>,
         Aun-Ali Zaidi <admin@kodeit.net>,
         Kerem Karabay <kekrby@gmail.com>
-Subject: Re: [PATCH v3 3/5] apple-gmux: Use GMSP acpi method for interrupt
- clear
-Message-ID: <20230220230215.6e7e09cf@redecorated-mbp>
-In-Reply-To: <20230219221737.GA17355@wunner.de>
+Subject: Re: [PATCH v3 4/5] apple-gmux: support MMIO gmux on T2 Macs
+Message-ID: <20230220231642.1e0064db@redecorated-mbp>
+In-Reply-To: <20230220092048.GA25532@wunner.de>
 References: <20230218132007.3350-1-orlandoch.dev@gmail.com>
-        <20230218132007.3350-4-orlandoch.dev@gmail.com>
-        <20230219221737.GA17355@wunner.de>
+        <20230218132007.3350-5-orlandoch.dev@gmail.com>
+        <20230220092048.GA25532@wunner.de>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.35; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -76,114 +75,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, 19 Feb 2023 23:17:37 +0100
+On Mon, 20 Feb 2023 10:20:48 +0100
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> On Sun, Feb 19, 2023 at 12:20:05AM +1100, Orlando Chamberlain wrote:
-> > This is needed for interrupts to be cleared correctly on MMIO based
-> > gmux's. It is untested if this helps/hinders other gmux types, so
-> > currently this is only enabled for the MMIO gmux's.
-> > 
-> > There is also a "GMLV" acpi method, and the "GMSP" method can be
-> > called with 1 as its argument, but the purposes of these aren't
-> > known and they don't seem to be needed.  
+> On Sun, Feb 19, 2023 at 12:20:06AM +1100, Orlando Chamberlain wrote:
+> > --- a/drivers/platform/x86/apple-gmux.c
+> > +++ b/drivers/platform/x86/apple-gmux.c
+> > @@ -28,15 +28,17 @@
+> >   * DOC: Overview
+> >   *
+> >   * gmux is a microcontroller built into the MacBook Pro to support
+> > dual GPUs:
+> > - * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on
+> > retinas.
+> > + * A `Lattice XP2`_ on pre-retinas, a `Renesas R4F2113`_ on pre-T2
+> > retinas.
+> > + * The chip used on T2 Macs is not known.  
 > 
-> GMLV and GMSP access a GPIO on the PCH which is connected to the
-> GMUX_INT pin of the gmux microcontroller.  I've just verified that
-> in the schematics of my MBP9,1.
+> I've just taken a look at the schematics of the MBP16,1 and it turns
+> out that T2 *is* the gmux.  The chip is called H9M.  The interaction
+> with the OS is through that MMIO area.
 > 
-> GMLV reads the value of the GPIO ("level").
-> GMSP likely sets the value ("set polarity").
+> There's a GPIO expander attached to T2 via I2C (NXP PCAL6524),
+> probably because they didn't have enough GPIO pins available on T2
+> itself. The GPIO expander enables/disables the voltage regulators of
+> the discrete GPU, hence can cut power to it.  It also drives panel
+> power and has a GPIO to switch the mux.
 > 
-> On my MBP9,1 (indexed gmux), if the gmux controller signals an
-> interrupt, the platform signals a notification:
-> 
->   Scope (\_GPE)
->   {
->       Method (_L16, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
->       {
->           Notify (\_SB.PCI0.LPCB.GMUX, 0x80) // Status Change
->       }
->   }
-> 
-> Comparing this to the MBP13,3 and MBP16,1, the GPE method
-> differentiates between the OS type:  On Darwin, only a notification
-> is signaled, whereas on other OSes, the GPIO's value is read and then
-> inverted:
-> 
->   Scope (\_GPE)
->   {
->       Method (_L15, 0, NotSerialized)  // _Lxx: Level-Triggered GPE,
-> xx=0x00-0xFF {
->           If (OSDW ())
->           {
->               Notify (\_SB.PCI0.LPCB.GPUC, 0x80) // Status Change
->           }
->           ElseIf ((\_SB.GGII (0x03000015) == One))
->           {
->               \_SB.SGII (0x03000015, Zero)
->           }
->           Else
->           {
->               \_SB.SGII (0x03000015, One)
->           }
->       }
->   }
-> 
-> Linux masquerades as Darwin, so ends up in the notification-only
-> code path.
-> 
-> Does macOS execute the GMSP method as well?  Have you disassembled
-> the gmux driver?  All vital information that belongs in the commit
-> message and/or a code comment.
+> The mux is an NXP CBTL06142 as on previous models.
 
-I think it does, if certain based bits in "HWFeatureMask" (which shows
-up in `ioreg -l`) are set, but I'm not very good at RE so I don't know
-exactly how macOS uses it. The kext is AppleMuxControl2.kext.
+Thanks for figuring that all out, I can add that to the documentation.
 
 > 
-> 
-> > +static int gmux_call_acpi_gmsp(struct apple_gmux_data *gmux_data,
-> > int arg) +{
-> > +	acpi_status status = AE_OK;
-> > +	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> > +	struct acpi_object_list arg_list = { 1, &arg0 };
-> > +
-> > +	arg0.integer.value = arg;
-> > +
-> > +	status = acpi_evaluate_object(gmux_data->dhandle, "GMSP",
-> > &arg_list, NULL);  
-> 
-> Can this be simplified by using acpi_execute_simple_method() or
-> one of the other helpers provided by drivers/acpi/utils.c?
-> 
-
-Yes it can thanks!
-
-> 
-> > @@ -537,6 +561,8 @@ static void gmux_clear_interrupts(struct
-> > apple_gmux_data *gmux_data) /* to clear interrupts write back
-> > current status */ status = gmux_interrupt_get_status(gmux_data);
-> >  	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS, status);
-> > +	if (gmux_data->config->use_acpi_gmsp)
-> > +		gmux_call_acpi_gmsp(gmux_data, 0);
-> >  }  
-> 
-> I think it would be clearer to check the gmux type directly here,
-> so that a casual reader understands that invoking the method is
-> necessary on MMIO-accessed GMUXes, but not any of the other types.
-> By contrast, with the use_acpi_gmsp one has to look up first which
-> of the gmux types sets this to true.
-
-I can do it like that next version.
-
-> 
-> What happens if GMSP is not executed?  Needs to be documented in the
-> commit message and/or a code comment!
-> 
-
-It gets a flood of status=0 interrupts, I'll add that as a comment.
-
 > Thanks,
 > 
 > Lukas
