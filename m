@@ -2,19 +2,19 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A49C6379F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 22:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02726C636D6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 22:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232613AbjBTWNO (ORCPT
+        id S232630AbjBTWNO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Mon, 20 Feb 2023 17:13:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33256 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232630AbjBTWNN (ORCPT
+        with ESMTP id S232615AbjBTWNN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 20 Feb 2023 17:13:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F854BDE7
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5480F1E280
         for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 14:12:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1676931148;
@@ -22,31 +22,31 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IcF78M6iyssoLqi9p/oufhgm/m06FrucinefHodPjbg=;
-        b=J8FlHGu4pPb29R7HpmAwi2GGNXdBGe55bxZ102PjxjiVq3NH/w81sCwrHW2B/Ywti54ttg
-        Ycio8sK1moGQek7plSUL6BcZJH+QnpWdFFi9lRxbJIe7sS1oXZl91K//mZpotkHyECyl5l
-        bGjqMGUh/ENExoO+VewLyZx+peNSJH4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=c6Usd3s6Lao8WuFKMO+XOf44ZFSAu8HX6pOWf1ftPx8=;
+        b=hWig0mIIVw+wJ/jMJj3JZJLfSu3C017a4Wa8x5l6b82JAQECLc/y9XQmAd6+hrsMNcFhCK
+        ypMXex+dZDrOp4NnF77TQoYgoM/YvpUjfulDjH0mg38tApbG5/QsCIGu7kBQ6yDFRHZKpK
+        CDu0owwtgxBdpWla1IXJfgPT1ofd8dM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-275-jVQz51OHPMikUbGWpTl1oA-1; Mon, 20 Feb 2023 17:12:25 -0500
-X-MC-Unique: jVQz51OHPMikUbGWpTl1oA-1
+ us-mta-100-FtXai-nYOGqwKbtulAdyxg-1; Mon, 20 Feb 2023 17:12:24 -0500
+X-MC-Unique: FtXai-nYOGqwKbtulAdyxg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D7958380662E;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D06285A5A3;
         Mon, 20 Feb 2023 22:12:24 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CDAA140EBF6;
-        Mon, 20 Feb 2023 22:12:24 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6831A140EBF6;
+        Mon, 20 Feb 2023 22:12:23 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/9] platform/x86: x86-android-tablets: Move shared power-supply fw-nodes to a separate file
-Date:   Mon, 20 Feb 2023 23:12:07 +0100
-Message-Id: <20230220221212.196009-5-hdegoede@redhat.com>
+Subject: [PATCH 3/9] platform/x86: x86-android-tablets: Move DMI match table into its own dmi.c file
+Date:   Mon, 20 Feb 2023 23:12:06 +0100
+Message-Id: <20230220221212.196009-4-hdegoede@redhat.com>
 In-Reply-To: <20230220221212.196009-1-hdegoede@redhat.com>
 References: <20230220221212.196009-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -56,354 +56,465 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move the shared power-supply fw-nodes and related files to
-a new separate shared-psy-info.c file.
+In order to have a single MODULE_DEVICE_TABLE(dmi, ...), while allowing
+splitting the board descriptions into multiple files, add a new separate
+file for the DMI match table.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
  .../platform/x86/x86-android-tablets/Makefile |   2 +-
- .../x86/x86-android-tablets/shared-psy-info.c | 100 +++++++++++++++++
- .../x86/x86-android-tablets/shared-psy-info.h |  32 ++++++
- .../x86-android-tablets-main.c                | 101 ++----------------
- 4 files changed, 142 insertions(+), 93 deletions(-)
- create mode 100644 drivers/platform/x86/x86-android-tablets/shared-psy-info.c
- create mode 100644 drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+ .../platform/x86/x86-android-tablets/dmi.c    | 166 ++++++++++++++++++
+ .../x86-android-tablets-main.c                | 160 ++---------------
+ 3 files changed, 180 insertions(+), 148 deletions(-)
+ create mode 100644 drivers/platform/x86/x86-android-tablets/dmi.c
 
 diff --git a/drivers/platform/x86/x86-android-tablets/Makefile b/drivers/platform/x86/x86-android-tablets/Makefile
-index ba16dc014e03..6383a1b26481 100644
+index 49c6bda1f817..ba16dc014e03 100644
 --- a/drivers/platform/x86/x86-android-tablets/Makefile
 +++ b/drivers/platform/x86/x86-android-tablets/Makefile
 @@ -5,4 +5,4 @@
  
  obj-$(CONFIG_X86_ANDROID_TABLETS) += x86-android-tablets.o
  
--x86-android-tablets-y := core.o dmi.o x86-android-tablets-main.o
-+x86-android-tablets-y := core.o dmi.o shared-psy-info.o x86-android-tablets-main.o
-diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+-x86-android-tablets-y := core.o x86-android-tablets-main.o
++x86-android-tablets-y := core.o dmi.o x86-android-tablets-main.o
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
 new file mode 100644
-index 000000000000..5af601f6bee4
+index 000000000000..ec7c0af8d73d
 --- /dev/null
-+++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-@@ -0,0 +1,100 @@
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -0,0 +1,166 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Shared psy info for X86 tablets which ship with Android as the factory image
-+ * and which have broken DSDT tables. The factory kernels shipped on these
++ * DMI based code to deal with broken DSDTs on X86 tablets which ship with
++ * Android as (part of) the factory image. The factory kernels shipped on these
 + * devices typically have a bunch of things hardcoded, rather than specified
 + * in their DSDT.
 + *
 + * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
 + */
 +
-+#include <linux/gpio/machine.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regulator/machine.h>
++#include <linux/dmi.h>
++#include <linux/mod_devicetable.h>
 +
-+#include "shared-psy-info.h"
++#include "x86-android-tablets.h"
 +
-+/* Generic / shared charger / battery settings */
-+const char * const tusb1211_chg_det_psy[] = { "tusb1211-charger-detect" };
-+const char * const bq24190_psy[] = { "bq24190-charger" };
-+const char * const bq25890_psy[] = { "bq25890-charger-0" };
++/*
++ * In order to have a single MODULE_DEVICE_TABLE(dmi, ...), while allowing
++ * splitting the board descriptions into multiple files, add extern declarations
++ * of the x86_dev_info structs here.
++ */
++extern const struct x86_dev_info acer_b1_750_info;
++extern const struct x86_dev_info advantech_mica_071_info;
++extern const struct x86_dev_info asus_me176c_info;
++extern const struct x86_dev_info asus_tf103c_info;
++extern const struct x86_dev_info chuwi_hi8_info;
++extern const struct x86_dev_info czc_p10t;
++extern const struct x86_dev_info lenovo_yogabook_x9x_info;
++/* Not const as this gets modified by its init callback */
++extern struct x86_dev_info lenovo_yoga_tab2_830_1050_info;
++extern const struct x86_dev_info lenovo_yt3_info;
++extern const struct x86_dev_info medion_lifetab_s10346_info;
++extern const struct x86_dev_info nextbook_ares8_info;
++extern const struct x86_dev_info whitelabel_tm800a550l_info;
++extern const struct x86_dev_info xiaomi_mipad2_info;
 +
-+static const struct property_entry fg_bq24190_supply_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_psy),
-+	{ }
-+};
-+
-+const struct software_node fg_bq24190_supply_node = {
-+	.properties = fg_bq24190_supply_props,
-+};
-+
-+static const struct property_entry fg_bq25890_supply_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq25890_psy),
-+	{ }
-+};
-+
-+const struct software_node fg_bq25890_supply_node = {
-+	.properties = fg_bq25890_supply_props,
-+};
-+
-+/* LiPo HighVoltage (max 4.35V) settings used by most devs with a HV bat. */
-+static const struct property_entry generic_lipo_hv_4v35_battery_props[] = {
-+	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
-+	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion"),
-+	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
-+	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
-+	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 1856000),
-+	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4352000),
-+	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
-+	{ }
-+};
-+
-+const struct software_node generic_lipo_hv_4v35_battery_node = {
-+	.properties = generic_lipo_hv_4v35_battery_props,
-+};
-+
-+/* For enabling the bq24190 5V boost based on id-pin */
-+static struct regulator_consumer_supply intel_int3496_consumer = {
-+	.supply = "vbus",
-+	.dev_name = "intel-int3496",
-+};
-+
-+static const struct regulator_init_data bq24190_vbus_init_data = {
-+	.constraints = {
-+		.name = "bq24190_vbus",
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.consumer_supplies = &intel_int3496_consumer,
-+	.num_consumer_supplies = 1,
-+};
-+
-+struct bq24190_platform_data bq24190_pdata = {
-+	.regulator_init_data = &bq24190_vbus_init_data,
-+};
-+
-+const char * const bq24190_modules[] __initconst = {
-+	"intel_crystal_cove_charger", /* For the bq24190 IRQ */
-+	"bq24190_charger",            /* For the Vbus regulator for intel-int3496 */
-+	NULL
-+};
-+
-+/* Generic pdevs array and gpio-lookups for micro USB ID pin handling */
-+const struct platform_device_info int3496_pdevs[] __initconst = {
++const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
 +	{
-+		/* For micro USB ID pin handling */
-+		.name = "intel-int3496",
-+		.id = PLATFORM_DEVID_NONE,
++		/* Acer Iconia One 7 B1-750 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "VESPA2"),
++		},
++		.driver_data = (void *)&acer_b1_750_info,
 +	},
-+};
-+
-+struct gpiod_lookup_table int3496_reference_gpios = {
-+	.dev_id = "intel-int3496",
-+	.table = {
-+		GPIO_LOOKUP("INT33FC:01", 15, "vbus", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("INT33FC:02", 1, "mux", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("INT33FC:02", 18, "id", GPIO_ACTIVE_HIGH),
-+		{ }
++	{
++		/* Advantech MICA-071 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Advantech"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MICA-071"),
++		},
++		.driver_data = (void *)&advantech_mica_071_info,
 +	},
++	{
++		/* Asus MeMO Pad 7 ME176C */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ME176C"),
++		},
++		.driver_data = (void *)&asus_me176c_info,
++	},
++	{
++		/* Asus TF103C */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TF103C"),
++		},
++		.driver_data = (void *)&asus_tf103c_info,
++	},
++	{
++		/* Chuwi Hi8 (CWI509) */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
++			DMI_MATCH(DMI_BOARD_NAME, "BYT-PA03C"),
++			DMI_MATCH(DMI_SYS_VENDOR, "ilife"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "S806"),
++		},
++		.driver_data = (void *)&chuwi_hi8_info,
++	},
++	{
++		/* CZC P10T */
++		.ident = "CZC ODEON TPC-10 (\"P10T\")",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "CZC"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ODEON*TPC-10"),
++		},
++		.driver_data = (void *)&czc_p10t,
++	},
++	{
++		/* CZC P10T variant */
++		.ident = "ViewSonic ViewPad 10",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ViewSonic"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "VPAD10"),
++		},
++		.driver_data = (void *)&czc_p10t,
++	},
++	{
++		/* Lenovo Yoga Book X90F / X91F / X91L */
++		.matches = {
++			/* Non exact match to match all versions */
++			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9"),
++		},
++		.driver_data = (void *)&lenovo_yogabook_x9x_info,
++	},
++	{
++		/*
++		 * Lenovo Yoga Tablet 2 830F/L or 1050F/L (The 8" and 10"
++		 * Lenovo Yoga Tablet 2 use the same mainboard)
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corp."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "VALLEYVIEW C0 PLATFORM"),
++			DMI_MATCH(DMI_BOARD_NAME, "BYT-T FFD8"),
++			/* Partial match on beginning of BIOS version */
++			DMI_MATCH(DMI_BIOS_VERSION, "BLADE_21"),
++		},
++		.driver_data = (void *)&lenovo_yoga_tab2_830_1050_info,
++	},
++	{
++		/* Lenovo Yoga Tab 3 Pro YT3-X90F */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 PLATFORM"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
++		},
++		.driver_data = (void *)&lenovo_yt3_info,
++	},
++	{
++		/* Medion Lifetab S10346 */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
++			/* Above strings are much too generic, also match on BIOS date */
++			DMI_MATCH(DMI_BIOS_DATE, "10/22/2015"),
++		},
++		.driver_data = (void *)&medion_lifetab_s10346_info,
++	},
++	{
++		/* Nextbook Ares 8 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "M890BAP"),
++		},
++		.driver_data = (void *)&nextbook_ares8_info,
++	},
++	{
++		/* Whitelabel (sold as various brands) TM800A550L */
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
++			/* Above strings are too generic, also match on BIOS version */
++			DMI_MATCH(DMI_BIOS_VERSION, "ZY-8-BI-PX4S70VTR400-X423B-005-D"),
++		},
++		.driver_data = (void *)&whitelabel_tm800a550l_info,
++	},
++	{
++		/* Xiaomi Mi Pad 2 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Xiaomi Inc"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
++		},
++		.driver_data = (void *)&xiaomi_mipad2_info,
++	},
++	{ }
 +};
-diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-new file mode 100644
-index 000000000000..bff3c82a16fb
---- /dev/null
-+++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0+
-+ *
-+ * Shared psy info for X86 tablets which ship with Android as the factory image
-+ * and which have broken DSDT tables. The factory kernels shipped on these
-+ * devices typically have a bunch of things hardcoded, rather than specified
-+ * in their DSDT.
-+ *
-+ * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
-+ */
-+#ifndef __SHARED_PSY_INFO_H
-+#define __SHARED_PSY_INFO_H
-+
-+#include <linux/power/bq24190_charger.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+extern const char * const tusb1211_chg_det_psy[];
-+extern const char * const bq24190_psy[];
-+extern const char * const bq25890_psy[];
-+
-+extern const struct software_node fg_bq24190_supply_node;
-+extern const struct software_node fg_bq25890_supply_node;
-+extern const struct software_node generic_lipo_hv_4v35_battery_node;
-+
-+extern struct bq24190_platform_data bq24190_pdata;
-+extern const char * const bq24190_modules[];
-+
-+extern const struct platform_device_info int3496_pdevs[];
-+extern struct gpiod_lookup_table int3496_reference_gpios;
-+
-+#endif
++MODULE_DEVICE_TABLE(dmi, x86_android_tablet_ids);
 diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets-main.c b/drivers/platform/x86/x86-android-tablets/x86-android-tablets-main.c
-index 4914b43eb4cd..ebe3cdeeb33a 100644
+index 05e862756953..4914b43eb4cd 100644
 --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets-main.c
 +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets-main.c
-@@ -17,86 +17,13 @@
+@@ -11,11 +11,9 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
+-#include <linux/dmi.h>
+ #include <linux/efi.h>
+ #include <linux/gpio_keys.h>
+ #include <linux/input.h>
+-#include <linux/mod_devicetable.h>
  #include <linux/pinctrl/consumer.h>
  #include <linux/pinctrl/machine.h>
  #include <linux/platform_data/lp855x.h>
--#include <linux/power/bq24190_charger.h>
- #include <linux/reboot.h>
- #include <linux/rmi.h>
- #include <linux/spi/spi.h>
- 
-+#include "shared-psy-info.h"
- #include "x86-android-tablets.h"
- 
--/* Generic / shared charger / battery settings */
--static const char * const tusb1211_chg_det_psy[] = { "tusb1211-charger-detect" };
--static const char * const bq24190_psy[] = { "bq24190-charger" };
--static const char * const bq25890_psy[] = { "bq25890-charger-0" };
--
--static const struct property_entry fg_bq24190_supply_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_psy),
--	{ }
--};
--
--static const struct software_node fg_bq24190_supply_node = {
--	.properties = fg_bq24190_supply_props,
--};
--
--static const struct property_entry fg_bq25890_supply_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq25890_psy),
--	{ }
--};
--
--static const struct software_node fg_bq25890_supply_node = {
--	.properties = fg_bq25890_supply_props,
--};
--
--/* LiPo HighVoltage (max 4.35V) settings used by most devs with a HV bat. */
--static const struct property_entry generic_lipo_hv_4v35_battery_props[] = {
--	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
--	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion"),
--	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
--	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
--	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 1856000),
--	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4352000),
--	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
--	{ }
--};
--
--static const struct software_node generic_lipo_hv_4v35_battery_node = {
--	.properties = generic_lipo_hv_4v35_battery_props,
--};
--
--/* For enabling the bq24190 5V boost based on id-pin */
--static struct regulator_consumer_supply intel_int3496_consumer = {
--	.supply = "vbus",
--	.dev_name = "intel-int3496",
--};
--
--static const struct regulator_init_data bq24190_vbus_init_data = {
--	.constraints = {
--		.name = "bq24190_vbus",
--		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
--	},
--	.consumer_supplies = &intel_int3496_consumer,
--	.num_consumer_supplies = 1,
--};
--
--static struct bq24190_platform_data bq24190_pdata = {
--	.regulator_init_data = &bq24190_vbus_init_data,
--};
--
--static const char * const bq24190_modules[] __initconst = {
--	"intel_crystal_cove_charger", /* For the bq24190 IRQ */
--	"bq24190_charger",            /* For the Vbus regulator for intel-int3496 */
--	NULL
--};
--
--/* Generic pdevs array and gpio-lookups for micro USB ID pin handling */
--static const struct platform_device_info int3496_pdevs[] __initconst = {
--	{
--		/* For micro USB ID pin handling */
--		.name = "intel-int3496",
--		.id = PLATFORM_DEVID_NONE,
--	},
--};
--
- static struct gpiod_lookup_table int3496_gpo2_pin22_gpios = {
- 	.dev_id = "intel-int3496",
- 	.table = {
-@@ -105,16 +32,6 @@ static struct gpiod_lookup_table int3496_gpo2_pin22_gpios = {
- 	},
+@@ -181,7 +179,7 @@ static struct gpiod_lookup_table * const acer_b1_750_gpios[] = {
+ 	NULL
  };
  
--static struct gpiod_lookup_table int3496_reference_gpios = {
--	.dev_id = "intel-int3496",
--	.table = {
--		GPIO_LOOKUP("INT33FC:01", 15, "vbus", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FC:02", 1, "mux", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FC:02", 18, "id", GPIO_ACTIVE_HIGH),
--		{ }
--	},
--};
--
- /* Acer Iconia One 7 B1-750 has an Android factory img with everything hardcoded */
- static const char * const acer_b1_750_mount_matrix[] = {
- 	"-1", "0", "0",
-@@ -183,7 +100,7 @@ const struct x86_dev_info acer_b1_750_info __initconst = {
+-static const struct x86_dev_info acer_b1_750_info __initconst = {
++const struct x86_dev_info acer_b1_750_info __initconst = {
  	.i2c_client_info = acer_b1_750_i2c_clients,
  	.i2c_client_count = ARRAY_SIZE(acer_b1_750_i2c_clients),
  	.pdev_info = int3496_pdevs,
--	.pdev_count = ARRAY_SIZE(int3496_pdevs),
-+	.pdev_count = 1,
- 	.gpiod_lookup_tables = acer_b1_750_gpios,
+@@ -233,7 +231,7 @@ static int __init advantech_mica_071_init(void)
+ 	return 0;
+ }
+ 
+-static const struct x86_dev_info advantech_mica_071_info __initconst = {
++const struct x86_dev_info advantech_mica_071_info __initconst = {
+ 	.pdev_info = advantech_mica_071_pdevs,
+ 	.pdev_count = ARRAY_SIZE(advantech_mica_071_pdevs),
+ 	.init = advantech_mica_071_init,
+@@ -414,7 +412,7 @@ static struct gpiod_lookup_table * const asus_me176c_gpios[] = {
+ 	NULL
  };
  
-@@ -299,7 +216,7 @@ static const struct software_node asus_me176c_accel_node = {
+-static const struct x86_dev_info asus_me176c_info __initconst = {
++const struct x86_dev_info asus_me176c_info __initconst = {
+ 	.i2c_client_info = asus_me176c_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(asus_me176c_i2c_clients),
+ 	.pdev_info = asus_me176c_tf103c_pdevs,
+@@ -559,7 +557,7 @@ static struct gpiod_lookup_table * const asus_tf103c_gpios[] = {
+ 	NULL
  };
  
- static const struct property_entry asus_me176c_bq24190_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", tusb1211_chg_det_psy),
-+	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", tusb1211_chg_det_psy, 1),
- 	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_hv_4v35_battery_node),
- 	PROPERTY_ENTRY_U32("ti,system-minimum-microvolt", 3600000),
- 	PROPERTY_ENTRY_BOOL("omit-battery-class"),
-@@ -312,7 +229,7 @@ static const struct software_node asus_me176c_bq24190_node = {
+-static const struct x86_dev_info asus_tf103c_info __initconst = {
++const struct x86_dev_info asus_tf103c_info __initconst = {
+ 	.i2c_client_info = asus_tf103c_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(asus_tf103c_i2c_clients),
+ 	.pdev_info = asus_me176c_tf103c_pdevs,
+@@ -650,7 +648,7 @@ static int __init chuwi_hi8_init(void)
+ 	return 0;
+ }
+ 
+-static const struct x86_dev_info chuwi_hi8_info __initconst = {
++const struct x86_dev_info chuwi_hi8_info __initconst = {
+ 	.i2c_client_info = chuwi_hi8_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(chuwi_hi8_i2c_clients),
+ 	.init = chuwi_hi8_init,
+@@ -685,7 +683,7 @@ static int __init czc_p10t_init(void)
+ 	return 0;
+ }
+ 
+-static const struct x86_dev_info czc_p10t __initconst = {
++const struct x86_dev_info czc_p10t __initconst = {
+ 	.init = czc_p10t_init,
  };
  
- static const struct property_entry asus_me176c_ug3105_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_psy),
-+	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", bq24190_psy, 1),
- 	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_hv_4v35_battery_node),
- 	PROPERTY_ENTRY_U32("upisemi,rsns-microohm", 10000),
- 	{ }
-@@ -467,7 +384,7 @@ static const struct software_node asus_tf103c_battery_node = {
+@@ -703,7 +701,7 @@ static const struct x86_i2c_client_info lenovo_yogabook_x9x_i2c_clients[] __init
+ 	},
  };
  
- static const struct property_entry asus_tf103c_bq24190_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", tusb1211_chg_det_psy),
-+	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", tusb1211_chg_det_psy, 1),
- 	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
- 	PROPERTY_ENTRY_U32("ti,system-minimum-microvolt", 3600000),
- 	PROPERTY_ENTRY_BOOL("omit-battery-class"),
-@@ -480,7 +397,7 @@ static const struct software_node asus_tf103c_bq24190_node = {
+-static const struct x86_dev_info lenovo_yogabook_x9x_info __initconst = {
++const struct x86_dev_info lenovo_yogabook_x9x_info __initconst = {
+ 	.i2c_client_info = lenovo_yogabook_x9x_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x9x_i2c_clients),
  };
+@@ -814,7 +812,7 @@ static struct gpiod_lookup_table * const lenovo_yoga_tab2_830_1050_gpios[] = {
+ static int __init lenovo_yoga_tab2_830_1050_init(void);
+ static void lenovo_yoga_tab2_830_1050_exit(void);
  
- static const struct property_entry asus_tf103c_ug3105_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_psy),
-+	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", bq24190_psy, 1),
- 	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
- 	PROPERTY_ENTRY_U32("upisemi,rsns-microohm", 5000),
- 	{ }
-@@ -708,7 +625,7 @@ const struct x86_dev_info lenovo_yogabook_x9x_info __initconst = {
- 
- /* Lenovo Yoga Tablet 2 1050F/L's Android factory img has everything hardcoded */
- static const struct property_entry lenovo_yoga_tab2_830_1050_bq24190_props[] = {
--	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", tusb1211_chg_det_psy),
-+	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", tusb1211_chg_det_psy, 1),
- 	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_hv_4v35_battery_node),
- 	PROPERTY_ENTRY_BOOL("omit-battery-class"),
- 	PROPERTY_ENTRY_BOOL("disable-reset"),
-@@ -816,7 +733,7 @@ struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initdata = {
+-static struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initdata = {
++struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initdata = {
  	.i2c_client_info = lenovo_yoga_tab2_830_1050_i2c_clients,
  	/* i2c_client_count gets set by lenovo_yoga_tab2_830_1050_init() */
  	.pdev_info = int3496_pdevs,
--	.pdev_count = ARRAY_SIZE(int3496_pdevs),
-+	.pdev_count = 1,
- 	.gpiod_lookup_tables = lenovo_yoga_tab2_830_1050_gpios,
- 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
- 	.modules = bq24190_modules,
-@@ -1229,7 +1146,7 @@ const struct x86_dev_info nextbook_ares8_info __initconst = {
+@@ -1079,7 +1077,7 @@ static int __init lenovo_yt3_init(void)
+ 	return 0;
+ }
+ 
+-static const struct x86_dev_info lenovo_yt3_info __initconst = {
++const struct x86_dev_info lenovo_yt3_info __initconst = {
+ 	.i2c_client_info = lenovo_yt3_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
+ 	.init = lenovo_yt3_init,
+@@ -1161,7 +1159,7 @@ static struct gpiod_lookup_table * const medion_lifetab_s10346_gpios[] = {
+ 	NULL
+ };
+ 
+-static const struct x86_dev_info medion_lifetab_s10346_info __initconst = {
++const struct x86_dev_info medion_lifetab_s10346_info __initconst = {
+ 	.i2c_client_info = medion_lifetab_s10346_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(medion_lifetab_s10346_i2c_clients),
+ 	.gpiod_lookup_tables = medion_lifetab_s10346_gpios,
+@@ -1227,7 +1225,7 @@ static struct gpiod_lookup_table * const nextbook_ares8_gpios[] = {
+ 	NULL
+ };
+ 
+-static const struct x86_dev_info nextbook_ares8_info __initconst = {
++const struct x86_dev_info nextbook_ares8_info __initconst = {
  	.i2c_client_info = nextbook_ares8_i2c_clients,
  	.i2c_client_count = ARRAY_SIZE(nextbook_ares8_i2c_clients),
  	.pdev_info = int3496_pdevs,
--	.pdev_count = ARRAY_SIZE(int3496_pdevs),
-+	.pdev_count = 1,
- 	.gpiod_lookup_tables = nextbook_ares8_gpios,
- 	.invalid_aei_gpiochip = "INT33FC:02",
+@@ -1310,7 +1308,7 @@ static struct gpiod_lookup_table * const whitelabel_tm800a550l_gpios[] = {
+ 	NULL
  };
+ 
+-static const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
++const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+ 	.i2c_client_info = whitelabel_tm800a550l_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(whitelabel_tm800a550l_i2c_clients),
+ 	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
+@@ -1344,139 +1342,7 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
+ 	},
+ };
+ 
+-static const struct x86_dev_info xiaomi_mipad2_info __initconst = {
++const struct x86_dev_info xiaomi_mipad2_info __initconst = {
+ 	.i2c_client_info = xiaomi_mipad2_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
+ };
+-
+-const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+-	{
+-		/* Acer Iconia One 7 B1-750 */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "VESPA2"),
+-		},
+-		.driver_data = (void *)&acer_b1_750_info,
+-	},
+-	{
+-		/* Advantech MICA-071 */
+-		.matches = {
+-			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Advantech"),
+-			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MICA-071"),
+-		},
+-		.driver_data = (void *)&advantech_mica_071_info,
+-	},
+-	{
+-		/* Asus MeMO Pad 7 ME176C */
+-		.matches = {
+-			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ME176C"),
+-		},
+-		.driver_data = (void *)&asus_me176c_info,
+-	},
+-	{
+-		/* Asus TF103C */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TF103C"),
+-		},
+-		.driver_data = (void *)&asus_tf103c_info,
+-	},
+-	{
+-		/* Chuwi Hi8 (CWI509) */
+-		.matches = {
+-			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+-			DMI_MATCH(DMI_BOARD_NAME, "BYT-PA03C"),
+-			DMI_MATCH(DMI_SYS_VENDOR, "ilife"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "S806"),
+-		},
+-		.driver_data = (void *)&chuwi_hi8_info,
+-	},
+-	{
+-		/* CZC P10T */
+-		.ident = "CZC ODEON TPC-10 (\"P10T\")",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "CZC"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "ODEON*TPC-10"),
+-		},
+-		.driver_data = (void *)&czc_p10t,
+-	},
+-	{
+-		/* CZC P10T variant */
+-		.ident = "ViewSonic ViewPad 10",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ViewSonic"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "VPAD10"),
+-		},
+-		.driver_data = (void *)&czc_p10t,
+-	},
+-	{
+-		/* Lenovo Yoga Book X90F / X91F / X91L */
+-		.matches = {
+-			/* Non exact match to match all versions */
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9"),
+-		},
+-		.driver_data = (void *)&lenovo_yogabook_x9x_info,
+-	},
+-	{
+-		/*
+-		 * Lenovo Yoga Tablet 2 830F/L or 1050F/L (The 8" and 10"
+-		 * Lenovo Yoga Tablet 2 use the same mainboard)
+-		 */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corp."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "VALLEYVIEW C0 PLATFORM"),
+-			DMI_MATCH(DMI_BOARD_NAME, "BYT-T FFD8"),
+-			/* Partial match on beginning of BIOS version */
+-			DMI_MATCH(DMI_BIOS_VERSION, "BLADE_21"),
+-		},
+-		.driver_data = (void *)&lenovo_yoga_tab2_830_1050_info,
+-	},
+-	{
+-		/* Lenovo Yoga Tab 3 Pro YT3-X90F */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 PLATFORM"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
+-		},
+-		.driver_data = (void *)&lenovo_yt3_info,
+-	},
+-	{
+-		/* Medion Lifetab S10346 */
+-		.matches = {
+-			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+-			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+-			/* Above strings are much too generic, also match on BIOS date */
+-			DMI_MATCH(DMI_BIOS_DATE, "10/22/2015"),
+-		},
+-		.driver_data = (void *)&medion_lifetab_s10346_info,
+-	},
+-	{
+-		/* Nextbook Ares 8 */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "M890BAP"),
+-		},
+-		.driver_data = (void *)&nextbook_ares8_info,
+-	},
+-	{
+-		/* Whitelabel (sold as various brands) TM800A550L */
+-		.matches = {
+-			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+-			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+-			/* Above strings are too generic, also match on BIOS version */
+-			DMI_MATCH(DMI_BIOS_VERSION, "ZY-8-BI-PX4S70VTR400-X423B-005-D"),
+-		},
+-		.driver_data = (void *)&whitelabel_tm800a550l_info,
+-	},
+-	{
+-		/* Xiaomi Mi Pad 2 */
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Xiaomi Inc"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
+-		},
+-		.driver_data = (void *)&xiaomi_mipad2_info,
+-	},
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(dmi, x86_android_tablet_ids);
 -- 
 2.39.1
 
