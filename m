@@ -2,142 +2,159 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0A7C636CC
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Feb 2023 22:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB162C636CC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 08:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231485AbjBSWRn (ORCPT
+        id S231265AbjBTIom (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Feb 2023 17:17:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55924 "EHLO
+        Mon, 20 Feb 2023 03:44:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231481AbjBSWRm (ORCPT
+        with ESMTP id S230257AbjBTIol (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Feb 2023 17:17:42 -0500
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC2818AB0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Feb 2023 14:17:39 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id E59F6101958F1;
-        Sun, 19 Feb 2023 23:17:37 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id AFEC53657D; Sun, 19 Feb 2023 23:17:37 +0100 (CET)
-Date:   Sun, 19 Feb 2023 23:17:37 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>
-Subject: Re: [PATCH v3 3/5] apple-gmux: Use GMSP acpi method for interrupt
- clear
-Message-ID: <20230219221737.GA17355@wunner.de>
-References: <20230218132007.3350-1-orlandoch.dev@gmail.com>
- <20230218132007.3350-4-orlandoch.dev@gmail.com>
+        Mon, 20 Feb 2023 03:44:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441BFBDE5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 00:44:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676882641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2bIx447q7zOccwg9isjOzlMuhknxYljdkPuPhMeel7o=;
+        b=Ocz3BL2Bi4nexqwzHsPjM28IP4BZ6seUMW7u/+WyrK9dzOXy9wYDQH2AcBwFQadPQSY6Z9
+        ezJkit7Lc1xN8ZDF492FLKCIr1V2GKj8ai6wL9HOU3Aqs8tMV4+0SHLeI2GyFqmvDbA/lz
+        QL6vURZ0+R0eh7gnfpRuNyagfFtUuac=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-562-1y4ASBFtMB-D_67G3OVQig-1; Mon, 20 Feb 2023 03:43:59 -0500
+X-MC-Unique: 1y4ASBFtMB-D_67G3OVQig-1
+Received: by mail-ed1-f70.google.com with SMTP id h13-20020a0564020e8d00b004a26ef05c34so382493eda.16
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 00:43:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2bIx447q7zOccwg9isjOzlMuhknxYljdkPuPhMeel7o=;
+        b=hcl7eRkJ5SsqUqHHW32xJTEXjM45HeZhmmFw6lLBoLciVBd5fpC2lVFJDYNFaJ6y0f
+         FlDyaYLvmqjUyiEnQCtkpZkfp7DPa5kHxn2vy+6NZyRb8p+IjfgkCiVfBPnft+WjtRiK
+         9tFa+6dBuQ7XMVMJTuQkvpDIKVlLPjbTNE9K9qBWTC+14L26TUKkX/76hIZaIPtbj+4+
+         fmCeolKWMGlWJMPyzXbo32M3QUxHB9CV+R1qG99nqvOVf/TgYtFvXNG4XMWld0qFEB00
+         5D/5Tqf4vncmw/PLXvq1Ozs++UAErjkZw2UxcHElGZja12sQiThRn4s6FZlo00ukWE4L
+         r3Vw==
+X-Gm-Message-State: AO0yUKWFoGmZdh1XgBdTwxQRJqP91c9Eg9lV6tGt5j0X4uvbIf62pMi6
+        yZ+rgpX8m2yjbSU2ZLWpX9UIuI7qssRHvM2DQppAxPhqwRRnu9aOzZWyOGng9yR+FcSOzrIZ+h5
+        jciYxJgKrfI56s80PwCbH4hPmg7tFFokEWg==
+X-Received: by 2002:a17:906:f6c4:b0:8b1:20f4:44a3 with SMTP id jo4-20020a170906f6c400b008b120f444a3mr7979737ejb.7.1676882638562;
+        Mon, 20 Feb 2023 00:43:58 -0800 (PST)
+X-Google-Smtp-Source: AK7set+58GGsB5PqX1g9IAc8g9ygEgGVI/hQd4d0eNE8503gRE129xA2uYyWHH8ochtavL3PvBJfDQ==
+X-Received: by 2002:a17:906:f6c4:b0:8b1:20f4:44a3 with SMTP id jo4-20020a170906f6c400b008b120f444a3mr7979726ejb.7.1676882638289;
+        Mon, 20 Feb 2023 00:43:58 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id hb22-20020a170906b89600b008b14d3978adsm5440924ejb.189.2023.02.20.00.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Feb 2023 00:43:57 -0800 (PST)
+Message-ID: <5cc2d613-d4fd-84e7-9791-963d69a66869@redhat.com>
+Date:   Mon, 20 Feb 2023 09:43:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230218132007.3350-4-orlandoch.dev@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: API for setting colors of RGB backlit keyboard zones (was [PATCH
+ V3] platform/x86: hp-wmi: Support omen backlight control wmi-acpi methods)
+Content-Language: en-US
+To:     Rishit Bansal <rishitbansal0@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Mark Gross <markgross@kernel.org>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+References: <20230131235027.36304-1-rishitbansal0@gmail.com>
+ <9b761996-d522-b0f8-6472-10e40e09e036@redhat.com>
+ <65a11a89-e780-6d60-a40e-cd3245780762@gmail.com>
+ <b83ad6ba-7d55-f309-5d7b-4a5ff77ff5a3@redhat.com>
+ <02c96cfe-ab10-513f-fc36-f474dd227656@gmail.com>
+ <544484b9-c0ac-2fd0-1f41-8fa94cb94d4b@redhat.com>
+ <Y+I7xNqkq/X6Lag+@duo.ucw.cz>
+ <3c48e204-780c-f78c-8219-267e297dc1e3@gmail.com>
+ <ec5bc4a6-dc9f-90dd-0cf6-5fab47bb5fa6@redhat.com>
+ <b11185d3-fbf3-a461-39bc-67bee4739e40@gmail.com>
+ <Y/C7A9eCjpdbzYbz@duo.ucw.cz>
+ <bd2ae598-3f13-f465-4bde-6ab364b79db3@redhat.com>
+ <a11fd918-d1bc-8a1f-c123-bcb0b4fa38a5@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <a11fd918-d1bc-8a1f-c123-bcb0b4fa38a5@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Feb 19, 2023 at 12:20:05AM +1100, Orlando Chamberlain wrote:
-> This is needed for interrupts to be cleared correctly on MMIO based
-> gmux's. It is untested if this helps/hinders other gmux types, so
-> currently this is only enabled for the MMIO gmux's.
+Hi,
+
+On 2/19/23 19:46, Rishit Bansal wrote:
 > 
-> There is also a "GMLV" acpi method, and the "GMSP" method can be called
-> with 1 as its argument, but the purposes of these aren't known and they
-> don't seem to be needed.
+> 
+> On 19/02/23 18:50, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 2/18/23 12:48, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>
+>>>>> I do agree with you that we need to avoid kbd_backlight in the name to avoid causing existing upower code to have weird interactions with this (it supports / assumes there is only 1 kbd_backlight LED class device).
+>>>>>
+>>>>> So lets go with just these 4:
+>>>>>
+>>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-1/
+>>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-2/
+>>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-3/
+>>>>> /sys/class/leds/hp_omen::kbd_zoned_backlight-4/
+>>>>>
+>>>>> Using the _zoned_ between kbd and baclight to avoid confusing the existing upower code. Then once this has landed we can look into extending upower support for this.
+>>>>>
+>>>>> Note the requested documentation patch should probably also explain that the _zoned_ was done deliberately to make current upower code ignore the devices.
+>>>>>
+>>>
+>>>>
+>>>> This makes sense, I agree that the global LED file will cause more confusion
+>>>> and hacks in the code. I'll start working on the  _zoned_ naming scheme with
+>>>> 4 files + documentation changes and make a patch for this soon!
+>>>>
+>>>
+>>> /sys/class/leds/:rgb:kbd_zoned_backlight-4/ is better than what was
+>>> suggested above.
+>>
+>> Ah yes using rgb for the color part of the name makes sense.
+>>
+>>> But we already use _1 suffix to deduplicate the, so
+>>> I'm not sure this is best naming.
+>>
+>>
+>>
+>> I guess we could try to actually name the zones, something like
+>> (no idea if this are indeed the 4 zones):
+>>
+>> :rgb:kbd_zoned_backlight-main
+>> :rgb:kbd_zoned_backlight-wasd
+>> :rgb:kbd_zoned_backlight-cursor
+>> :rgb:kbd_zoned_backlight-numpad
+>>
+>> Rishit any comments on this or improvements to it.
+> 
+> Here is an image of how the 4 zones on the keyboard look like (https://imgur.com/a/iQdRWCM). I think we can call them "left", "middle", "right", and "wasd":
+> 
+> :rgb:kbd_zoned_backlight-left
+> :rgb:kbd_zoned_backlight-middle
+> :rgb:kbd_zoned_backlight-right
+> :rgb:kbd_zoned_backlight-wasd
 
-GMLV and GMSP access a GPIO on the PCH which is connected to the
-GMUX_INT pin of the gmux microcontroller.  I've just verified that
-in the schematics of my MBP9,1.
+Sounds good to me, lets go for this. Please add these names to
+the requested documentation update.
 
-GMLV reads the value of the GPIO ("level").
-GMSP likely sets the value ("set polarity").
+Regards,
 
-On my MBP9,1 (indexed gmux), if the gmux controller signals an interrupt,
-the platform signals a notification:
+Hans
 
-  Scope (\_GPE)
-  {
-      Method (_L16, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
-      {
-          Notify (\_SB.PCI0.LPCB.GMUX, 0x80) // Status Change
-      }
-  }
-
-Comparing this to the MBP13,3 and MBP16,1, the GPE method differentiates
-between the OS type:  On Darwin, only a notification is signaled,
-whereas on other OSes, the GPIO's value is read and then inverted:
-
-  Scope (\_GPE)
-  {
-      Method (_L15, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
-      {
-          If (OSDW ())
-          {
-              Notify (\_SB.PCI0.LPCB.GPUC, 0x80) // Status Change
-          }
-          ElseIf ((\_SB.GGII (0x03000015) == One))
-          {
-              \_SB.SGII (0x03000015, Zero)
-          }
-          Else
-          {
-              \_SB.SGII (0x03000015, One)
-          }
-      }
-  }
-
-Linux masquerades as Darwin, so ends up in the notification-only
-code path.
-
-Does macOS execute the GMSP method as well?  Have you disassembled
-the gmux driver?  All vital information that belongs in the commit
-message and/or a code comment.
-
-
-> +static int gmux_call_acpi_gmsp(struct apple_gmux_data *gmux_data, int arg)
-> +{
-> +	acpi_status status = AE_OK;
-> +	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-> +	struct acpi_object_list arg_list = { 1, &arg0 };
-> +
-> +	arg0.integer.value = arg;
-> +
-> +	status = acpi_evaluate_object(gmux_data->dhandle, "GMSP", &arg_list, NULL);
-
-Can this be simplified by using acpi_execute_simple_method() or
-one of the other helpers provided by drivers/acpi/utils.c?
-
-
-> @@ -537,6 +561,8 @@ static void gmux_clear_interrupts(struct apple_gmux_data *gmux_data)
->  	/* to clear interrupts write back current status */
->  	status = gmux_interrupt_get_status(gmux_data);
->  	gmux_write8(gmux_data, GMUX_PORT_INTERRUPT_STATUS, status);
-> +	if (gmux_data->config->use_acpi_gmsp)
-> +		gmux_call_acpi_gmsp(gmux_data, 0);
->  }
-
-I think it would be clearer to check the gmux type directly here,
-so that a casual reader understands that invoking the method is
-necessary on MMIO-accessed GMUXes, but not any of the other types.
-By contrast, with the use_acpi_gmsp one has to look up first which
-of the gmux types sets this to true.
-
-What happens if GMSP is not executed?  Needs to be documented in the
-commit message and/or a code comment!
-
-Thanks,
-
-Lukas
