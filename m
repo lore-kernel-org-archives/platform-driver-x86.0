@@ -2,134 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E049C61DA3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 18:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3475C636D7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 19:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231961AbjBUSJf (ORCPT
+        id S229498AbjBUTNf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Feb 2023 13:09:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60424 "EHLO
+        Tue, 21 Feb 2023 14:13:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232478AbjBUSI5 (ORCPT
+        with ESMTP id S229468AbjBUTNd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Feb 2023 13:08:57 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AE92FCE8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 10:08:13 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id p16so1705057wmq.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 10:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aXGnK42A4qCYJjA+dChUP0zhSGjDFyIg4/mKo/il8PQ=;
-        b=gEBCgz35raawJSWhdXquGkwLq5Bl3DsbUBpnORQBazkiDOm7zRliO40D/jqg5aoqs5
-         gfJPhuCLcF5dL1lL0pkX0w11BKkBacogGz41n1n8hCNbFGenntvfmeNsmQgqCyCZnYAp
-         9O7H8nAWEfBQODQ9ObSCx55Pqc0KwpJzlOGmA3Ez9GHEr+e6t1si0x+WOpWVReLVA18P
-         /W1/K891V36uQ1IWocOQo3oH2vl+bYDhNWTPEaCwVKfMmVgHJYnpA2sZUGMYyz0L+Z2D
-         xNnKYU56b3GVjFNmWsQ7qyvYnMbjX+3GoLn9n8ZgddNX++ygyqQxB3P2PhcmY86SL9cn
-         hm3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aXGnK42A4qCYJjA+dChUP0zhSGjDFyIg4/mKo/il8PQ=;
-        b=iUg2OuzFSHGVOGcf9dzjagaohEi7sH/+9++MGHDwPoIcVVWZFuGIfiegHJrsNL4kSC
-         xNvJU+RaxkFTdaVsMeR17CI6Z2MKemvrjY8J8Z3PdcJ14ajrS01wBi9atEKdaT/HTKUk
-         +muo5zymt6ECcBlrLiFx6Zl/gnBOUBaChc8WA01SRt7IKstLguHIu7HdwQKCUfkiYxK9
-         Bi5WIs3Ya7QJYW5KAao8PCOUY6hYwoaYG6FYaPWy1CbpY1OgI8+7VnrOjusGpe1H1Q6e
-         7iAknG0uXo3fzfsPLUHD+SMwk/ai8ZWZF/pBoUUy/9IRaEW74x15OuJCkj4gn6NtVhE9
-         Ixsw==
-X-Gm-Message-State: AO0yUKWGRaO0bh5kP1sbaSVmlxDrTpguemuU/iBulyQg3jPz8WBSK2rI
-        yR9myYIyaeeoWyG70y/8kRlbog==
-X-Google-Smtp-Source: AK7set/AxKhdQLOX6PHD4ZrMdx67CH7MjQM/RjdI4qGJgjq1hrB5t+oWjz6Ic99/CuyVTvj3XAjUQQ==
-X-Received: by 2002:a05:600c:2ac8:b0:3e0:114:62ee with SMTP id t8-20020a05600c2ac800b003e0011462eemr3974936wme.8.1677002890426;
-        Tue, 21 Feb 2023 10:08:10 -0800 (PST)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:1e9:315c:bb40:e382])
-        by smtp.gmail.com with ESMTPSA id c128-20020a1c3586000000b003e21558ee9dsm5107815wma.2.2023.02.21.10.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Feb 2023 10:08:10 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org, daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Tue, 21 Feb 2023 14:13:33 -0500
+Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2023.outbound.protection.outlook.com [40.92.103.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B57DCDCE;
+        Tue, 21 Feb 2023 11:13:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RofQBWut2LK5YAGJjgr59HnYKwEHpiFXnZppZSFRhGLDdtrY6b8e2WBYi5uggLHh5Cm7jaDSyNZZC11TJPxbYGpOBF0EdGeDLD51MvnM2WGrs7C5dnMzXU95tYeLEW+mbB/aVJ03FAfbVXc1s02UAkOlNPgzmpxFYxYOi77ERU2V9oI7NvMLrkP5z3uPXgZPZskE/sas1iRyZVitqz9LsYPLHXf3K6hAAGaBUa85ABgsxd/SbXsNSXs97bxT1rY6Pb2vUpsN5KdBJvQ/BHbqp/EOIRpQxPPdAjGH1X4tCRC7hj2wicLElG9WAdkHHzGXB+M6QvQUzPPp8Y+KY/I+uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jwMweFHMnGFr/L34VT1ywOvWyMdpMmPKtUT5+V7qnII=;
+ b=RYoZMsZL68kIcnicXCo3nDJ66+cCKC8TShW+hCfJbD9d0pbFkOcVSsA7WFTDeSpJ1HX1dd8PxsGaza0XBXb3b883dYF6D9G5s/tX9NqBb8ijonTy3gnnRDhHsfbLRuQNerbaMpL2zcHpt7Llg90jYDaSGmR1rQUjTeLil4G/fmqD2imyoLi8n/jGhb8NFQQRhzNvWY8fdVS/gloI0i0k4sqcI26ilUXkTK5ebFjVAoPnyCnACp4yRvo48ykS1TVwmR9DniPfte5rPO2J/i57N1DTFk5gN/FmqqrkNyC/0FrdOgktZuk3hxLbNf1YG6CrR/SKa4A5x5OJE8Gu8ii65A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jwMweFHMnGFr/L34VT1ywOvWyMdpMmPKtUT5+V7qnII=;
+ b=CyXhc5WkjzfVVTzMNqp77skrAkZOj/TbYKrZ6lDBbRTBOHpmhvu4l0rSLSbW0QJ4yvvl11havf1JFsOjRUcrMBMO/voZAaADlIIj7ZVt8K9rnDgS/WZodpy++Xy08UXEAvK/osyN+lUBNL6nivfjOyR0+MVQpCLRttXtU9wtwlYBX+3Kb6Uslv3QtHoijTzPEgN1JD2TYk9fVGQxKDsHOxxGGFFZy4PUbo18SYhp60eLBeixkiMTiAAWxRTC/nMA/066RXTRAaYyrbpnhCAjNoEK9y/BZISXViRTW/uBINqxq57IHEwjJlEXsuHt+67AEgFLLao1Jxe0nNRctxSrpw==
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2::9) by
+ PN3PR01MB7600.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:ca::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.17; Tue, 21 Feb 2023 19:13:26 +0000
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee]) by BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee%11]) with mapi id 15.20.6134.017; Tue, 21 Feb
+ 2023 19:13:26 +0000
+From:   Aditya Garg <gargaditya08@live.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     Orlando Chamberlain <orlandoch.dev@gmail.com>,
         Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
-        TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v2 14/16] thermal/drivers/acerhdf: Make interval setting only at module load time
-Date:   Tue, 21 Feb 2023 19:07:08 +0100
-Message-Id: <20230221180710.2781027-15-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230221180710.2781027-1-daniel.lezcano@linaro.org>
-References: <20230221180710.2781027-1-daniel.lezcano@linaro.org>
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Seth Forshee <sforshee@kernel.org>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Topic: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Index: AQHZRdZPnsOA0zlv+UikzIJmE+f5Ta7ZVTYAgABwQxg=
+Date:   Tue, 21 Feb 2023 19:13:26 +0000
+Message-ID: <BM1PR01MB09313E8C98F63BD65CCD3362B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+References: <BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+ <60dad2c6-9f37-86af-5f37-aa5d45c33afa@redhat.com>
+In-Reply-To: <60dad2c6-9f37-86af-5f37-aa5d45c33afa@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [h4/XCofWnMwiSCmxJpH3vm+6ey93Kfb6fdxfQPoM/D21oDHWBgbV6GCvJuxlbGpt]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BM1PR01MB0931:EE_|PN3PR01MB7600:EE_
+x-ms-office365-filtering-correlation-id: 61450ec1-7594-4ab4-2254-08db143fb5b2
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rt+Jn+JTUNuKqzamaS2Y7ficaY9i5GJKR2vNuPAqB9fmTCPQUpBtM7IWbNPRVF1hGOrs+JtsO01aZ4NgJ0lxzrOqDGiyw0glGnhjksdmA2aAYo9D9e9h3ShaGkKMQKPLKL23lT0+A5twxib43QwWXJcaGG2cygZAb4iWtoZUbYipEwz8OgdpmbwRY5JMhmc4pVvJd1UAw2MQh6vie1n9FFcG/ovdxL/NbcQcwCTLTv+LSm1NKo32rucYyX5wRF76W/TDrvinlFbni7lfpuPs59cGfJ8sM9n0GbFpvRjlf60RXMU+Vj2jV1DkGLxGPMlzZmEQaCvL82nYZGWMuRCEEpvsMCzx7zV3FZs/35lPmLYgMbRucxODUGeraF87WIO432u5zRFGX0Ve2OGevpl76I0ccfuzGjaxrw4z7sSZKiNZndXaC1miDQV1bpyRHsZqyWeokkP/HJn1dYfAwogc5a2FIMt5DBE+zu2JYhnvnZkJOKFaht4vcLQ+DVkZvn0pl1ipQjsH5wTJf71nemKW5GEg5gl6649ItedyauteFajVH06EqcF5QZfIfiW2v/AJBP3Qs9JCubcVvDNIcDff7ZNA6BxagKSs4aF3yYECupcYoaJDlBeUfxWYAN9jQnOWznfquhFJZXQJdJ5uuZZTug==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?4TbWqmL3Ht76VvThsT8P98fNGcMRB30/SuR3RCD4VmS8jNhxYDdrGq1VNbaE?=
+ =?us-ascii?Q?Hyk4/JEi8auP6SmjNnD6koVunlEFJsKeUm1L+iyJ+Ys3NPgrjhREDBkpHVh8?=
+ =?us-ascii?Q?9vf2rN6gRxkb2iYDyk47AUVpzmQEJv0RntupCCpgKL0Vb2FBF9NTqrOCeXB2?=
+ =?us-ascii?Q?APVG3Eim8Y98Z8FTsgsLapose0iLOvXIDukWawiK9nVvh6kHdXEs2DiTJnw/?=
+ =?us-ascii?Q?BL3Fy5smR43LhoS/8iPUKZhSolUyDCTPc/rQtnatyMsx2wUysCPM0VlrU74W?=
+ =?us-ascii?Q?E0fpMxYbkyOMciSDclLVk7Vqml+jS4Sj8UPOW83BvLqzbhUiy7lPaQqe9Q5v?=
+ =?us-ascii?Q?KxdkUVTt6jJx+kitzNFhX8ZGi/PxvuznkcIy6zJRFDrML4jHdDq0cQyymjJ1?=
+ =?us-ascii?Q?7yWozMlLJ5NuaIOlMbt5E7sA8BA/pK5Q2ggJdN4GonIWJfmf5dTcu9noi6o6?=
+ =?us-ascii?Q?AxxseCQHE/rDQID4yUWiqHP51Zn4Lak4BEDBW+S24U1si0mIlTFXM/VdkFAz?=
+ =?us-ascii?Q?e8QeSUqoUPaRenayqw+KUI627d9eOqECSxE+WDe/hwzUUBOpA7N0u1qpl6j0?=
+ =?us-ascii?Q?+4nPe7xHalQY4Lnum8WcP34X9CAKJHGF5hFXsH/rajIeZemQ2O4KdnKje2y/?=
+ =?us-ascii?Q?EAaSTGLoSDLeam/V8KpFR5uc3jc7AlLH+zwe9qY71Ugtk0mk76P9vYpJnl6v?=
+ =?us-ascii?Q?aOs9im8y7g8SBuA4fpVsEP9KG2bvmJPKjqzbwaZdkpISX7qL+9qdgL0GRqTc?=
+ =?us-ascii?Q?dpzgxjHxPOQ3xn7485X4F98aAe9yBu7erx7fh7tpL8Cvu/YZ5UU5PqZgHmGh?=
+ =?us-ascii?Q?r2Sdi8pR2D8/76cUY86i4+/cBiMYNqozRC2As9hX0bRJNgedqZEOxpQuNOMq?=
+ =?us-ascii?Q?OJCas7rCHg34fsASSQ36MhxOSLASNenISksut3xXSpRyURYgnzZPwajfBcEL?=
+ =?us-ascii?Q?ZQB9S88YfJAevUUv5x7CpAcGMEpIqGRm5VfFZTHapYKqmp3IejeOe9BC7V3H?=
+ =?us-ascii?Q?TCXxiHQNAJ/5hIbr4D/tTQpskG90P828/gqm9qnhhWgEFBr4pZoHk+wnEDbo?=
+ =?us-ascii?Q?w9NjZJ0gEFvkp5HQEs7U8xuqb9WQ66MODTcohmC21CC2oJ7RfvELAIuPS5Zj?=
+ =?us-ascii?Q?ufj0YW4Z+o7BSH2o1NvuO94u47mkf33R6f3b0Ej8gdzrHKvo1MyAh6j68AIc?=
+ =?us-ascii?Q?T4mZg9BJ+lFCt8KSRZT18XtRTqp/FMWnma9L6E4oO84lax1Lkgu8RTL2MwlV?=
+ =?us-ascii?Q?uRrmhVAlDO/HCftxXNM/xlfndeKB+UVpPbBZHK3H1ekygkv+sgWlQoFF+n/7?=
+ =?us-ascii?Q?cLo9BRcf30qXII5xIWZJnow9jrzYYHsbcLIcME4vmTHPgw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-42ed3.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61450ec1-7594-4ab4-2254-08db143fb5b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2023 19:13:26.6590
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB7600
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal zone device structure is in the process of being private
-to the thermal framework core code. This driver is directly accessing
-and changing the monitoring polling rate.
 
-After discussing with the maintainers of this driver, having the
-polling interval at module loading time is enough for their purpose.
+> Currently the backlight registration in apple-gmux.c is unconditional
+> (if a GMUX is detected).
+>=20
+> I have attached a patch to make it honor the acpi_backlight=3Dxxx
+> kernel commandline option like most other x86/ACPI backlight drivers
+> do, please give this a test.
+>=20
+> Regards,
+>=20
+> Hans
+>=20
 
-Change the code to take into account the interval when the module is
-loaded but restrict the permissions so the value can not be changed
-afterwards.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Peter Kaestle <peter@piie.net>
----
- drivers/platform/x86/acerhdf.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 1956469c3457..61f1c3090867 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -79,7 +79,6 @@ static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
- static char force_bios[16];
- static char force_product[16];
--static unsigned int prev_interval;
- static struct thermal_zone_device *thz_dev;
- static struct thermal_cooling_device *cl_dev;
- static struct platform_device *acerhdf_dev;
-@@ -346,20 +345,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 	trips[0].temperature = fanon;
- 	trips[0].hysteresis  = fanon - fanoff;
- 
--	if (kernelmode && prev_interval != interval) {
-+	if (kernelmode) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
- 			       ACERHDF_MAX_INTERVAL);
- 			interval = ACERHDF_MAX_INTERVAL;
- 		}
-+
- 		if (verbose)
- 			pr_notice("interval changed to: %d\n", interval);
--
--		if (thermal)
--			thermal->polling_delay_jiffies =
--				round_jiffies(msecs_to_jiffies(interval * 1000));
--
--		prev_interval = interval;
- 	}
- }
- 
-@@ -807,5 +801,5 @@ static const struct kernel_param_ops interval_ops = {
- 	.get = param_get_uint,
- };
- 
--module_param_cb(interval, &interval_ops, &interval, 0600);
-+module_param_cb(interval, &interval_ops, &interval, 0000);
- MODULE_PARM_DESC(interval, "Polling interval of temperature check");
--- 
-2.34.1
-
+Also, another issue, I have pluymouth enabled with FRAMEBUFFER=3Dy. After u=
+sing the gmux patches, the size of the theme has become too tiny for an ini=
+tial few seconds, then it gets normal. I tested this by compiling a kernel =
+without these patches, and the bug got fixed. I also tried using acpi backl=
+ight using command line (that made me discover the `acpi_backlight=3Dvideo`=
+ not working bug). Is that also related to some upstream bug?=
