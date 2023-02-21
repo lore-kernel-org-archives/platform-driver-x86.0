@@ -2,332 +2,205 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052CEC6379F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Feb 2023 22:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9017DC6379F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 09:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232640AbjBTWNW (ORCPT
+        id S233913AbjBUJYm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Feb 2023 17:13:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
+        Tue, 21 Feb 2023 04:24:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232635AbjBTWNV (ORCPT
+        with ESMTP id S232116AbjBUJYm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Feb 2023 17:13:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4493ABBA1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2023 14:12:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676931154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1wmFjPeBR++Gy2BieIFCcgY1pSkWiBpG6/usJz+hPp8=;
-        b=VKXkEjn0iiWaMnifs+Gh28GjWm8rKe4tNECNlUUG7OuSci6Mb/f40IhhX0DqC3hY+1Kw3d
-        HtsSWGyeZNXWPq4jRMLrDnIEi9LoIYc/AGb5DYhe0uPRibgSa/18m43LZywm9aDdRaKBAq
-        Fu8ZUiyyfeRKDfu2K2VRFWeQwOJCsDA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-36-UguxO3tiMP-RLXb8-tNuVw-1; Mon, 20 Feb 2023 17:12:29 -0500
-X-MC-Unique: UguxO3tiMP-RLXb8-tNuVw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19DE0185A794;
-        Mon, 20 Feb 2023 22:12:29 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75AF4140EBF6;
-        Mon, 20 Feb 2023 22:12:28 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 9/9] platform/x86: x86-android-tablets: Add support for the Dolby button on Peaq C1010
-Date:   Mon, 20 Feb 2023 23:12:12 +0100
-Message-Id: <20230220221212.196009-10-hdegoede@redhat.com>
-In-Reply-To: <20230220221212.196009-1-hdegoede@redhat.com>
-References: <20230220221212.196009-1-hdegoede@redhat.com>
+        Tue, 21 Feb 2023 04:24:42 -0500
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2099.outbound.protection.outlook.com [40.92.102.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAFC193C9;
+        Tue, 21 Feb 2023 01:24:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H0VVflVR7XXyrz/AFVCu6OCB3eczcXvYt/H1WsH2dhOwi+eqUPYQPQ78UVx8wgINCbtjMf3X5cAT8c4E+GdIB9HF7FyXVtoZozbm8SNNa4iRUVO8SUCoL+fND/CICX1p3BInIPof7ef78NRTliRTrIGr/hHY4RMfz0sH24Zk8BdcAC5j8Lq2g+OY43tO25098LbO/5SFz/38Wsd+vW1RW/p3jSFTisE3ynokIwqFSYDtniZ6eCkoMqqKGETgFkoVe+0yfgv0mHdhALGmuMKh6oogVwIwxlXXy3iBkRFj5PjwbnIhj/3xJcipwbXw7OMz5J5TJeKo2eF712bmNk7fOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X2A3E6QbkGOHI35I9fH9WptVm4934DbNqcRjYPh1sKg=;
+ b=cnzEeNhBCArdWBaOBbx+wp2opRRbNh+d/Bi9Sah1axj1U3ot6G6QGhNFJcI3IvvmgzEE0N4ogXC0wblP/YAo6m0tDbGnLqXcas+STBWmL63w8o9+56Q5ZDaLa4mkSHmOptDtfLImsARWGBmm8BU1dPAPlikv9MBI9ykxP09+reuOJFRHxJ1JBTm0dF0g2I+itjFC4mGk5X9FZOZf9hJjiDEmxamJe0KpK8zUJG+G2bAEFSMGThdPiRdYZoyg+kaiGuK2U8EfCo2Y+OUmCW+vOfP1/gOYJUFMwn2X4GsemsRZXS2rhBre6YDCvthsKxgrCrWNbTT1xhjJ+6L/JESm9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X2A3E6QbkGOHI35I9fH9WptVm4934DbNqcRjYPh1sKg=;
+ b=avgpsgJgE+OW8DVtUfbEkHSA8+Go2HazI3jpoJ5y6zQbVgZtcnFu7ICOnmG7Z41WoJ+DCjvU3MsB8+5cNTxEhXkilBGcIj/K4ovxslOFtwg96IedD4ZZf4nbk0PACE2NdidUY+pR34qhI/7Z+JpXpbK97/Ug2Wdphp37maO9ai7/WhJ2Q2zepLycHUWlcQU/Yj7GP9J9tw96Db2xN111XyGQHLNkX5M7WKsehqhY5LhJe0Np7EWOOlBFt1lzaIWaO6M5sjT8uyo+99s4sRmyr+2HnlYguGiXLR9s2pQolcdkbDaPHvvh4gwUR90zrU4aHwgjBlbVT0h1cm8PwusjBw==
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2::9) by
+ PN3PR01MB7272.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:8b::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.17; Tue, 21 Feb 2023 09:24:34 +0000
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee]) by BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee%11]) with mapi id 15.20.6134.017; Tue, 21 Feb
+ 2023 09:24:33 +0000
+From:   Aditya Garg <gargaditya08@live.com>
+To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Seth Forshee <sforshee@kernel.org>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Topic: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Index: AQHZRdZPnsOA0zlv+UikzIJmE+f5TQ==
+Date:   Tue, 21 Feb 2023 09:24:33 +0000
+Message-ID: <BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [BtS69z0zWqszpAFEsu1ZpbIzOs3GarMeQXM7KLBB6QAPXVcFp1eudw2WJ+OE+o2z]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BM1PR01MB0931:EE_|PN3PR01MB7272:EE_
+x-ms-office365-filtering-correlation-id: 7b8d8ff5-1911-4d74-aefe-08db13ed71c0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XW6jRx50cJQTU6kUUyylklociABdgUY/3Ws1/9RLq3qLVRsIoE/56jjm6Sloke/N5HYMVnamZuK0aoC96GgSQZFfipzB6OBRZO2HBUJ4E+mSK+o5wQ/iktnk84+Bq6IdYB1/dS9MgaigGuoiXeuvLM++7Wdota4PeWQydCsICopFMDmTJ2HjP5OleX3yl6YdZeuYRlSOThBx7dAQj7RQjzz2mu9XYr7Q1fRtujVo+luCxGk8CHP8ncldo8z2cN7Cq7QEPDgIPXmLjlQ+FbnJofha1L3/lzoCzGRdVtS5NkxjdJ3Wb2ImATGJEBbdoSn61hNyOIC3+k+hhKh/jXi5cETaXTgfi/qc56r+5p1iAakgSRqjfFQHz8fvp7gH5hDebRDUyZpDRFdLxddlJOvOOWgEjT4t6vK6XLAgZfZ0p+rn7Q5YQ9XA/aLjnxdSApUAa1yujNE/s44UGfkQXWOV3v2RYJUN+EI9notdvUtt9eSkso+kAwYLrt+Kn0J/2P4ZUAAYodTNJineefK+VIvpcHUmBTOnGOD7ftKED3SmaRKz37xbNrIUeixcVQ+a5R5Wug0DrY5XYUctbykll9UwN32V+uMeyo5rMapaIugklVkpS62Zo4y+fegDiqDbxbtaGzoNHmfrw1/OD4HerQsTwHDNaUPd55foGdpluq+Xvvs=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SkxwTm96VFhHdjZidiszTmtETXBLcXA1b0t5SXdGWGVSaXFnQ2RWRXJ6anVI?=
+ =?utf-8?B?RXpzUjd2S0dMTFpJRlFHbHMzMWQ2Z2R0VG1yUnVoUUxRdUI5a0ZyT29JeEJY?=
+ =?utf-8?B?bWNFY3FoMlpBbzljWlM1cW8vVW9hcG9XaVdTV2JjMWhBRjBBQ3ZrWWY3VjN5?=
+ =?utf-8?B?OVg3eTZycnNlSzcyaHhCSTNZSlZRUTlZenF2WXBBYlZqcXJuM2ZZN2VEZkNT?=
+ =?utf-8?B?UHcyYTgzVEQ3bjYwZk1ML1NQUlQ1ajJDYk1uZEx2ZUNWckw0MEoyc21manRs?=
+ =?utf-8?B?RWgzTGl0V1Z1MC8wWFBZeUVCTEFWcmk2WlRWd3p5NnVBR29uNXBadGkwNXhI?=
+ =?utf-8?B?ZkVzZDgrQy8ySGVyWkF6QnJES3pLbm9ZcEx2UHhlaVB5M0tURXFHL1I0ays4?=
+ =?utf-8?B?TWtPOGhhTWxCSDhzYXQrOGg2OVBXb3VmRVNERDVBc1lsMEYwTEw0TXVicElr?=
+ =?utf-8?B?ZEwzQ2tPYVJHNllsK0hMa29rc0lEVDIwYWxzSkltOTJmZHF4Qk81M3pwVXFX?=
+ =?utf-8?B?V3luTlN0QTR2dUIzV24yOE4zano5MWg1a0xod1pmV2ppUHlCSjlzOGRxMnAr?=
+ =?utf-8?B?MUJoc29rYVA0R1VXTHRJTEgzckNFK0lrMTNoVjRka2l5V1luUE9malB4TmpX?=
+ =?utf-8?B?bXlhRmZJeHhUK3pNTVVGNXhOSE1OK09VSEhmdEsxdkRUc1dyVWJuUDRVbzV0?=
+ =?utf-8?B?R1k2MnpSK1FLd1ByQUZPbnl5bytnRFNSVDRLTVVlMmF5ZFYyUzNnWU9KUmhD?=
+ =?utf-8?B?Mmt4QzNoYlAvdWJxMEpMMUVQUFVHb1dxb3dqb2s1MnNIdE5oZjhoWWVyWjU5?=
+ =?utf-8?B?ODZVK0VUUUswMm1zUEcwbXhiUkUxamhueGtXbHorSVJLZUQxbmNTVkNaV1VC?=
+ =?utf-8?B?NzNnNkwvT1kxdzMyaHpYRXR1Y1FqbFYwTGp1WVNIMDI1QVZKQnVVV2JEWk5S?=
+ =?utf-8?B?OTkrdExPbkhLcGZLQ0Y4MHlvRllDOG9mQ3ljOGkwMjBTcDcvUVlrbEwvSS9W?=
+ =?utf-8?B?Rk9nejFNUGlkbnhQSkdjcTBoL3Brd0orZTJUL1B4WGY3NHZMajZoSGJyV2NQ?=
+ =?utf-8?B?ZE5pNG1sdkd6RHN3cUVKSitGREVDTS9vcFNxcWxxZzlQMW9rMk4xZGMrK21L?=
+ =?utf-8?B?QmNsQVBDZGJ1ZUxtMlhTMXoxWG1nd3JxNE1tREVrR2dVTWxRTDhXKzhTQm00?=
+ =?utf-8?B?aXBHdkpRVm1FdEw2aFgwOHBQWDM2U2pPbFhIZ0hxek9Wb1ZnZlh1dmc0a3lJ?=
+ =?utf-8?B?L0J4RFlzczBTTGJmd3FpWExxUjh0NHQ2YTZwUThpZnRROUkxb3N1SWlkVXZ3?=
+ =?utf-8?B?Y3g3N3dvM2lVVlZ1ZVo0SldvY3luWWphSGtzSDNpblpuQXJoOUlFak9Valdt?=
+ =?utf-8?B?NDhjV1lqQ1BseGNxSFdsRDZMMjlka0lNTEFqTktIUG56OHFkTGRZS2JmLy82?=
+ =?utf-8?B?Mk1hd2RzRUZpQm15cU52Mk0rbjh4ME9XaWhtQzVIZll5UlROaHB5c0IvdDhz?=
+ =?utf-8?B?NksyR1NSV1BtSkV4UVFJWnVjNlk5RjdNL3pnRmRaL1JzVHdGdEdOTTNwNjlj?=
+ =?utf-8?B?MWYyNXIyY1ROQmpFTGM3SnM4TFpabzdzcmxyZStrZ2lYeDVVaFFxOWtoOEl0?=
+ =?utf-8?B?K2QxTFM2Z1pNdHh4RmRYTmJlYU5wS2tSUHpKWjkvTW9EYXArV1BaQVRjMHcv?=
+ =?utf-8?B?eEFBYnFjWWhteGxuY0w1RkQxS2tvNTQxRkpYamkwdHo5d252UVE1R2pRN2F5?=
+ =?utf-8?B?S2NXUWg0WURVc0RsdTZSUUk0VG1RTTZWNG9keVd0SlRSaVdlNnBKNUhVZWFm?=
+ =?utf-8?B?U1RkbThuZVoyUUxJaFBLQT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BE67D70AFEE28B44B2A4D13879C99665@sct-15-20-4755-11-msonline-outlook-42ed3.templateTenant>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-42ed3.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b8d8ff5-1911-4d74-aefe-08db13ed71c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2023 09:24:33.9062
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB7272
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Peaq C1010 tablet has a special "Dolby" button. This button has
-a WMI interface, but this is broken in several ways:
-
-1. It only supports polling
-2. The value read on polling goes from 0 -> 1 for one poll on both edges
-   of the button, with no way to tell which edge causes the poll to
-   return 1.
-3. It uses a non unique GUID (it uses the Microsoft docs WMI example GUID).
-
-There currently is a WMI driver for this, but it uses several kludges
-to work around these issues and is not entirely reliable due to 2.
-
-Replace the unreliable WMI driver by using the x86-android-tablets code
-to instantiate a gpio_keys device for this.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- MAINTAINERS                                   |   6 -
- drivers/platform/x86/Kconfig                  |   7 -
- drivers/platform/x86/Makefile                 |   1 -
- drivers/platform/x86/peaq-wmi.c               | 128 ------------------
- .../platform/x86/x86-android-tablets/dmi.c    |   9 ++
- .../platform/x86/x86-android-tablets/other.c  |  27 ++++
- 6 files changed, 36 insertions(+), 142 deletions(-)
- delete mode 100644 drivers/platform/x86/peaq-wmi.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 87cc1e6b37c0..3c86814fc3ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16377,12 +16377,6 @@ S:	Maintained
- F:	crypto/pcrypt.c
- F:	include/crypto/pcrypt.h
- 
--PEAQ WMI HOTKEYS DRIVER
--M:	Hans de Goede <hdegoede@redhat.com>
--L:	platform-driver-x86@vger.kernel.org
--S:	Maintained
--F:	drivers/platform/x86/peaq-wmi.c
--
- PECI HARDWARE MONITORING DRIVERS
- M:	Iwona Winiarska <iwona.winiarska@intel.com>
- L:	linux-hwmon@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8b4e03fe5bff..e7166812875a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -84,13 +84,6 @@ config MXM_WMI
-           MXM is a standard for laptop graphics cards, the WMI interface
- 	  is required for switchable nvidia graphics machines
- 
--config PEAQ_WMI
--	tristate "PEAQ 2-in-1 WMI hotkey driver"
--	depends on ACPI_WMI
--	depends on INPUT
--	help
--	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
--
- config NVIDIA_WMI_EC_BACKLIGHT
- 	tristate "EC Backlight Driver for Hybrid Graphics Notebook Systems"
- 	depends on ACPI_VIDEO
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 0d9cc9af6ba7..12407f36d2be 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -12,7 +12,6 @@ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
- obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
--obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
- obj-$(CONFIG_YOGABOOK_WMI)		+= lenovo-yogabook-wmi.o
-diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-deleted file mode 100644
-index cf9c44c20a82..000000000000
---- a/drivers/platform/x86/peaq-wmi.c
-+++ /dev/null
-@@ -1,128 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * PEAQ 2-in-1 WMI hotkey driver
-- * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-- */
--
--#include <linux/acpi.h>
--#include <linux/dmi.h>
--#include <linux/input.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--
--#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
--#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
--#define PEAQ_POLL_INTERVAL_MS		250
--#define PEAQ_POLL_IGNORE_MS		500
--#define PEAQ_POLL_MAX_MS		1000
--
--MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
--
--static struct input_dev *peaq_poll_dev;
--
--/*
-- * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
-- * set on both press and release. The WMI method checks and clears that flag.
-- * So for a press + release we will get back One from the WMI method either once
-- * (if polling after the release) or twice (polling between press and release).
-- * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
-- */
--static void peaq_wmi_poll(struct input_dev *input_dev)
--{
--	static unsigned long last_event_time;
--	static bool had_events;
--	union acpi_object obj;
--	acpi_status status;
--	u32 dummy = 0;
--
--	struct acpi_buffer input = { sizeof(dummy), &dummy };
--	struct acpi_buffer output = { sizeof(obj), &obj };
--
--	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 0,
--				     PEAQ_DOLBY_BUTTON_METHOD_ID,
--				     &input, &output);
--	if (ACPI_FAILURE(status))
--		return;
--
--	if (obj.type != ACPI_TYPE_INTEGER) {
--		dev_err(&input_dev->dev,
--			"Error WMBC did not return an integer\n");
--		return;
--	}
--
--	if (!obj.integer.value)
--		return;
--
--	if (had_events && time_before(jiffies, last_event_time +
--					msecs_to_jiffies(PEAQ_POLL_IGNORE_MS)))
--		return;
--
--	input_event(input_dev, EV_KEY, KEY_SOUND, 1);
--	input_sync(input_dev);
--	input_event(input_dev, EV_KEY, KEY_SOUND, 0);
--	input_sync(input_dev);
--
--	last_event_time = jiffies;
--	had_events = true;
--}
--
--/* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
--static const struct dmi_system_id peaq_dmi_table[] __initconst = {
--	{
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
--		},
--	},
--	{}
--};
--
--static int __init peaq_wmi_init(void)
--{
--	int err;
--
--	/* WMI GUID is not unique, also check for a DMI match */
--	if (!dmi_check_system(peaq_dmi_table))
--		return -ENODEV;
--
--	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
--		return -ENODEV;
--
--	peaq_poll_dev = input_allocate_device();
--	if (!peaq_poll_dev)
--		return -ENOMEM;
--
--	peaq_poll_dev->name = "PEAQ WMI hotkeys";
--	peaq_poll_dev->phys = "wmi/input0";
--	peaq_poll_dev->id.bustype = BUS_HOST;
--	input_set_capability(peaq_poll_dev, EV_KEY, KEY_SOUND);
--
--	err = input_setup_polling(peaq_poll_dev, peaq_wmi_poll);
--	if (err)
--		goto err_out;
--
--	input_set_poll_interval(peaq_poll_dev, PEAQ_POLL_INTERVAL_MS);
--	input_set_max_poll_interval(peaq_poll_dev, PEAQ_POLL_MAX_MS);
--
--	err = input_register_device(peaq_poll_dev);
--	if (err)
--		goto err_out;
--
--	return 0;
--
--err_out:
--	input_free_device(peaq_poll_dev);
--	return err;
--}
--
--static void __exit peaq_wmi_exit(void)
--{
--	input_unregister_device(peaq_poll_dev);
--}
--
--module_init(peaq_wmi_init);
--module_exit(peaq_wmi_exit);
--
--MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
--MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
--MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
-index ec7c0af8d73d..9a236bcd9728 100644
---- a/drivers/platform/x86/x86-android-tablets/dmi.c
-+++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-@@ -30,6 +30,7 @@ extern struct x86_dev_info lenovo_yoga_tab2_830_1050_info;
- extern const struct x86_dev_info lenovo_yt3_info;
- extern const struct x86_dev_info medion_lifetab_s10346_info;
- extern const struct x86_dev_info nextbook_ares8_info;
-+extern const struct x86_dev_info peaq_c1010_info;
- extern const struct x86_dev_info whitelabel_tm800a550l_info;
- extern const struct x86_dev_info xiaomi_mipad2_info;
- 
-@@ -143,6 +144,14 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		},
- 		.driver_data = (void *)&nextbook_ares8_info,
- 	},
-+	{
-+		/* Peaq C1010 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
-+		},
-+		.driver_data = (void *)&peaq_c1010_info,
-+	},
- 	{
- 		/* Whitelabel (sold as various brands) TM800A550L */
- 		.matches = {
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index e4b3ad2ce7c1..e09d3baff677 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -377,6 +377,33 @@ const struct x86_dev_info nextbook_ares8_info __initconst = {
- 	.invalid_aei_gpiochip = "INT33FC:02",
- };
- 
-+/*
-+ * Peaq C1010
-+ * This is a standard Windows tablet, but it has a special Dolby button.
-+ * This button has a WMI interface, but that is broken. Instead of trying to
-+ * use the broken WMI interface, instantiate a gpio_keys device for this.
-+ */
-+static struct gpio_keys_button peaq_c1010_button = {
-+	.code = KEY_SOUND,
-+	/* .gpio gets filled in by x86_android_tablet_init() */
-+	.active_low = true,
-+	.desc = "dolby_key",
-+	.type = EV_KEY,
-+	.wakeup = false,
-+	.debounce_interval = 50,
-+};
-+
-+const struct x86_dev_info peaq_c1010_info __initconst = {
-+	.gpio_keys_button = &peaq_c1010_button,
-+	.gpio_keys_gpiochip = "INT33FC:00",
-+	.gpio_keys_pin = 3,
-+	/*
-+	 * Move the ACPI event handler used by the broken WMI interface out of
-+	 * the way. This is the only event handler on INT33FC:00.
-+	 */
-+	.invalid_aei_gpiochip = "INT33FC:00",
-+};
-+
- /*
-  * Whitelabel (sold as various brands) TM800A550L tablets.
-  * These tablet's DSDT contains a whole bunch of bogus ACPI I2C devices
--- 
-2.39.1
-
+DQo+IE9uIDE4LUZlYi0yMDIzLCBhdCA2OjUwIFBNLCBPcmxhbmRvIENoYW1iZXJsYWluIDxvcmxh
+bmRvY2guZGV2QGdtYWlsLmNvbT4gd3JvdGU6DQo+IO+7v0hpIEFsbCwNCj4gVGhpcyBwYXRjaCBz
+ZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgTU1JTyBiYXNlZCBnbXV4IHByZXNlbnQgb24gdGhl
+c2UNCj4gRHVhbCBHUFUgQXBwbGUgVDIgTWFjczogTWFjQm9va1BybzE1LDEsIE1hY0Jvb2tQcm8x
+NSwzLCBNYWNCb29rUHJvMTYsMSwNCj4gTWFjQm9va1BybzE2LDQgKGFsdGhvdWdoIGFtZGdwdSBp
+c24ndCB3b3JraW5nIG9uIE1hY0Jvb2tQcm8xNiw0IFsxXSkuDQo+IA0KDQpDb3VsZCBiZSBhbiB1
+cHN0cmVhbSBidWcsIGJ1dCBJ4oCZdmUgbm90aWNlZCB0aGF0IGFmdGVyIHVzaW5nIHRoZXNlIHBh
+dGNoZXMsIGlmIEkgYWRkIGBhY3BpX2JhY2tsaWdodD12aWRlb2AgaW4gdGhlIGNvbW1hbmQgbGlu
+ZSwgaXQgc3RpbGwgdXNlcyBgZ211eF9iYWNrbGlnaHRgDQoNCkhhbnMsIGFueSBpZGVhcyB3aHk/
+DQoNCj4gQ2hhbmdlcyBmcm9tIHYyWzJdOg0KPiANCj4gLSBBZGQgIiwiIHRvIGxhc3QgaXRlbSBp
+biBhcHBsZV9nbXV4X3R5cGUgZW51bQ0KPiAtIERvbid0IG5vdCBjbGVhciBpbnRlcnJ1cHRzIHdo
+ZW4gc3RhdHVzIGlzIDANCj4gLSBEb24ndCBjaGVjayBpZiB3ZSBmYWlsZWQgdG8gbWFrZSBkZWJ1
+Z2ZzIGZvbGRlcg0KPiAtIENoZWNrIGZvciBmYWtlIG1taW8gZ211eA0KPiANCj4gIyAxOg0KPiAN
+Cj4gaGFzIGEgc2xpZ2h0IGNoYW5nZSBpbiBob3cgdGhlIHN3aXRjaCBzdGF0ZSBpcyByZWFkOiBp
+bnN0ZWFkIG9mIGNoZWNraW5nDQo+IGZvciB4ID09IDIsIGNoZWNrICEoeCAmIDEpDQo+IA0KPiAj
+IDI6DQo+IA0KPiBpbXBsZW1lbnRzIGEgc3lzdGVtIHRvIHN1cHBvcnQgbW9yZSB0aGFuIDIgZ211
+eCB0eXBlcw0KPiANCj4gIyAzOg0KPiANCj4gc3RhcnQgdXNpbmcgdGhlIGdtdXgncyBHTVNQIGFj
+cGkgbWV0aG9kIHdoZW4gaGFuZGxpbmcgaW50ZXJydXB0cyBvbiBNTUlPDQo+IGdtdXgncy4gVGhp
+cyBpcyBuZWVkZWQgZm9yIHRoZSBNTUlPIGdtdXgncyB0byBjbGVhciBpbnRlcnJ1cHRzLg0KPiAN
+Cj4gIyA0Og0KPiANCj4gQWRkcyBzdXBwb3J0IGZvciB0aGUgTU1JTyBiYXNlZCBnbXV4IG9uIFQy
+IG1hY3MuDQo+IA0KPiAjIDU6DQo+IA0KPiBBZGQgYSBkZWJ1Z2ZzIGludGVyZmFjZSB0byBhcHBs
+ZS1nbXV4IHNvIGRhdGEgZnJvbSBwb3J0cyBjYW4gYmUgcmVhZA0KPiBhbmQgd3JpdHRlbiB0byBm
+cm9tIHVzZXJzcGFjZS4NCj4gDQo+IFRoaXMgY2FuIGJlIHVzZWQgZm9yIG1vcmUgZWFzaWx5IHJl
+c2VhcmNoaW5nIHdoYXQgdW5rbm93biBwb3J0cyBkbywNCj4gYW5kIHN3aXRjaGluZyBncHVzIHdo
+ZW4gdmdhX3N3aXRjaGVyb28gaXNuJ3QgcmVhZHkgKGUuZy4gd2hlbiBvbmUgZ3B1DQo+IGlzIGJv
+dW5kIHRvIHZmaW8tcGNpIGFuZCBpbiB1c2UgYnkgYSBXaW5kb3dzIFZNLCBJIGNhbiB1c2UgdGhp
+cyB0bw0KPiBzd2l0Y2ggbXkgaW50ZXJuYWwgZGlzcGxheSBiZXR3ZWVuIExpbnV4IGFuZCBXaW5k
+b3dzIGVhc2lseSkuDQo+IA0KPiAjIElzc3VlczoNCj4gDQo+IDEuIFN3aXRjaGluZyBncHVzIGF0
+IHJ1bnRpbWUgaGFzIHRoZSBzYW1lIGlzc3VlIGFzIGluZGV4ZWQgZ211eCdzOiB0aGUNCj4gaW5h
+Y3RpdmUgZ3B1IGNhbid0IHByb2JlIHRoZSBEREMgbGluZXMgZm9yIGVEUCBbM10NCj4gDQo+IDIu
+IGlNYWNQcm8xLDEsIGlNYWMyMCwxIGFuZCBpTWFjMjAsMiBhbGwgc2VlbSB0byBoYXZlIGEgZ211
+eCBpbiB0aGVpcg0KPiBhY3BpIHRhYmxlcywgYnV0IHRoZXkgc2hvdWxkbid0LiBBIGNoZWNrIHRo
+YXQgaG9wZWZ1bGx5IHdpbGwgZGV0ZWN0IHRoaXMNCj4gaXMgdXNlZCwgYnV0IGl0J3MgdW50ZXN0
+ZWQgYXMgSSBkb24ndCBoYXZlIGFueSBvZiB0aG9zZSBjb21wdXRlcnMuDQo+IA0KPiAzLiBQb3dl
+cmluZyBvbiB0aGUgYW1kZ3B1IHdpdGggdmdhX3N3aXRjaGVyb28gZG9lc24ndCB3b3JrIHdlbGwu
+IEknbQ0KPiB0b2xkIG9uIHRoZSBNYWNCb29rUHJvMTUsMSBpdCB3b3JrcyBzb21ldGltZXMsIGFu
+ZCBhZGRpbmcgZGVsYXlzIGhlbHBzLA0KPiBidXQgb24gbXkgTWFjQm9va1BybzE2LDEgSSBoYXZl
+bid0IGJlZW4gYWJsZSB0byBnZXQgaXQgdG8gd29yayBhdCBhbGw6DQo+IA0KPiBhbWRncHU6IHN3
+aXRjaGVkIG9mZg0KPiBhbWRncHU6IHN3aXRjaGVkIG9uDQo+IGFtZGdwdSAwMDAwOjAzOjAwLjA6
+DQo+ICAgIFVuYWJsZSB0byBjaGFuZ2UgcG93ZXIgc3RhdGUgZnJvbSBEM2hvdCB0byBEMCwgZGV2
+aWNlIGluYWNjZXNzaWJsZQ0KPiBhbWRncHUgMDAwMDowMzowMC4wOg0KPiAgICBVbmFibGUgdG8g
+Y2hhbmdlIHBvd2VyIHN0YXRlIGZyb20gRDNjb2xkIHRvIEQwLCBkZXZpY2UgaW5hY2Nlc3NpYmxl
+DQo+IFtkcm1dIFBDSUUgR0FSVCBvZiA1MTJNIGVuYWJsZWQgKHRhYmxlIGF0IDB4MDAwMDAwODBG
+RUUwMDAwMCkuDQo+IFtkcm1dIFBTUCBpcyByZXN1bWluZy4uLg0KPiBbZHJtOnBzcF9od19zdGFy
+dCBbYW1kZ3B1XV0gKkVSUk9SKiBQU1AgY3JlYXRlIHJpbmcgZmFpbGVkIQ0KPiBbZHJtOnBzcF9y
+ZXN1bWUgW2FtZGdwdV1dICpFUlJPUiogUFNQIHJlc3VtZSBmYWlsZWQNCj4gW2RybTphbWRncHVf
+ZGV2aWNlX2Z3X2xvYWRpbmcgW2FtZGdwdV1dDQo+ICAgICpFUlJPUiogcmVzdW1lIG9mIElQIGJs
+b2NrIDxwc3A+IGZhaWxlZCAtNjINCj4gYW1kZ3B1IDAwMDA6MDM6MDAuMDogYW1kZ3B1OiBhbWRn
+cHVfZGV2aWNlX2lwX3Jlc3VtZSBmYWlsZWQgKC02MikuDQo+IHNuZF9oZGFfaW50ZWwgMDAwMDow
+MzowMC4xOiBFbmFibGluZyB2aWEgdmdhX3N3aXRjaGVyb28NCj4gc25kX2hkYV9pbnRlbCAwMDAw
+OjAzOjAwLjE6DQo+ICAgIFVuYWJsZSB0byBjaGFuZ2UgcG93ZXIgc3RhdGUgZnJvbSBEM2NvbGQg
+dG8gRDAsIGRldmljZSBpbmFjY2Vzc2libGUNCj4gc25kX2hkYV9pbnRlbCAwMDAwOjAzOjAwLjE6
+IENPUkIgcmVzZXQgdGltZW91dCMyLCBDT1JCUlAgPSA2NTUzNQ0KPiBzbmRfaGRhX2NvZGVjX2hk
+bWkgaGRhdWRpb0MwRDA6IFVuYWJsZSB0byBzeW5jIHJlZ2lzdGVyIDB4MmYwZDAwLiAtNQ0KPiAN
+Cj4gVGhlcmUgYXJlIHNvbWUgYWNwaSBtZXRob2RzIChQV1JELCBQV0cxIFs0LCA1XSkgdGhhdCBt
+YWNPUyBjYWxscyB3aGVuDQo+IGNoYW5naW5nIHRoZSBhbWRncHUncyBwb3dlciBzdGF0ZSwgYnV0
+IHdlIGRvbid0IHVzZSB0aGVtIGFuZCB0aGF0IGNvdWxkIGJlDQo+IGEgY2F1c2UuIEFkZGl0aW9u
+YWxseSB1bmxpa2UgcHJldmlvdXMgZ2VuZXJhdGlvbiBNYWNib29rcyB3aGljaCB3b3JrDQo+IGJl
+dHRlciwgb24gTWFjQm9va1BybzE2LDEgdGhlIGdwdSBpcyBsb2NhdGVkIGJlaGluZCAyIHBjaSBi
+cmlkZ2VzOg0KPiANCj4gMDE6MDAuMCBQQ0kgYnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2Vz
+LCBJbmMuIFtBTUQvQVRJXQ0KPiAgICBOYXZpIDEwIFhMIFVwc3RyZWFtIFBvcnQgb2YgUENJIEV4
+cHJlc3MgU3dpdGNoIChyZXYgNDMpDQo+IDAyOjAwLjAgUENJIGJyaWRnZTogQWR2YW5jZWQgTWlj
+cm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0NCj4gICAgTmF2aSAxMCBYTCBEb3duc3RyZWFtIFBv
+cnQgb2YgUENJIEV4cHJlc3MgU3dpdGNoDQo+IDAzOjAwLjAgVkdBIGNvbXBhdGlibGUgY29udHJv
+bGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0NCj4gICAgTmF2aSAx
+NCBbUmFkZW9uIFJYIDU1MDAvNTUwME0gLyBQcm8gNTUwME1dIChyZXYgNDMpDQo+IDAzOjAwLjEg
+QXVkaW8gZGV2aWNlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTUQvQVRJXQ0KPiAg
+ICBOYXZpIDEwIEhETUkgQXVkaW8NCj4gDQo+IFVwb24gYXR0ZW1wdGluZyB0byBwb3dlciBvbiB0
+aGUgZ3B1IHdpdGggdmdhX3N3aXRjaGVyb28sIGFsbCB0aGVzZQ0KPiBkZXZpY2VzIGV4Y2VwdCAw
+MTowMC4wIGhhdmUgdGhlaXIgY29uZmlnIHNwYWNlIGZpbGxlZCB3aXRoIDFzLg0KPiBSZXNjYW5u
+aW5nIHBjaSBtYWtlcyB0aGUgY29uZmlnIHNwYWNlIG9mIGFsbCB0aGUgZGV2aWNlcyBnbyBiYWNr
+IHRvDQo+IG5vcm1hbCwgaG93ZXZlciBhbWRncHUgc3RpbGwgZmFpbHMgdG8gcmVzdW1lIHdpdGgg
+dGhlIHNhbWUgbG9ncyBhcw0KPiBhYm92ZS4NCj4gDQo+IFsxXTogaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvYWxsLzNBRkI5MTQyLTJCRDAtNDZGOS1BRUE5LUM5QzVEMTNFNjhFNkBsaXZlLmNvbS8N
+Cj4gWzJdOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9wbGF0Zm9ybS1kcml2ZXIteDg2LzIwMjMw
+MjE2MTIyMzQyLjU5MTgtMS1vcmxhbmRvY2guZGV2QGdtYWlsLmNvbS8NCj4gWzNdOiBodHRwczov
+L2xvcmUua2VybmVsLm9yZy9hbGwvOWVlZDhlZGU2ZjE1YTI1NGFkNTc4ZTc4M2IwNTBlMWM1ODVk
+NWExNS4xNDM5Mjg4OTU3LmdpdC5sdWthc0B3dW5uZXIuZGUvDQo+IFs0XTogaHR0cHM6Ly9naXN0
+LmdpdGh1Yi5jb20vUmVkZWNvcmF0aW5nLzZjNzEzNmI3YTRhYzdjZTNiNzdkOGU0MTc0MGRkODdi
+DQo+IFs1XTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMTIwNzEwMTYwNTU1LkdBMzE1
+NjJAc3JjZi51Y2FtLm9yZy8NCj4gDQo+IE9ybGFuZG8gQ2hhbWJlcmxhaW4gKDUpOg0KPiAgYXBw
+bGUtZ211eDogdXNlIGZpcnN0IGJpdCB0byBjaGVjayBzd2l0Y2ggc3RhdGUNCj4gIGFwcGxlLWdt
+dXg6IHJlZmFjdG9yIGdtdXggdHlwZXMNCj4gIGFwcGxlLWdtdXg6IFVzZSBHTVNQIGFjcGkgbWV0
+aG9kIGZvciBpbnRlcnJ1cHQgY2xlYXINCj4gIGFwcGxlLWdtdXg6IHN1cHBvcnQgTU1JTyBnbXV4
+IG9uIFQyIE1hY3MNCj4gIGFwcGxlLWdtdXg6IGFkZCBkZWJ1Z2ZzIGludGVyZmFjZQ0KPiANCj4g
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvYXBwbGUtZ211eC5jIHwgMzQ5ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrLS0tLQ0KPiBpbmNsdWRlL2xpbnV4L2FwcGxlLWdtdXguaCAgICAgICAgfCAgNzAg
+KysrKy0tDQo+IDIgZmlsZXMgY2hhbmdlZCwgMzU3IGluc2VydGlvbnMoKyksIDYyIGRlbGV0aW9u
+cygtKQ0KPiANCj4gLS0gDQo+IDIuMzkuMQ0K
