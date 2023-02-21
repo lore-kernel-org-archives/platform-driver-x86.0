@@ -2,173 +2,300 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70048C64ED9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F52DC61DA3
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 12:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234532AbjBUMZR (ORCPT
+        id S233217AbjBUMcb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Feb 2023 07:25:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47938 "EHLO
+        Tue, 21 Feb 2023 07:32:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234216AbjBUMYs (ORCPT
+        with ESMTP id S229696AbjBUMca (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Feb 2023 07:24:48 -0500
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2073.outbound.protection.outlook.com [40.107.247.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2B259EF;
-        Tue, 21 Feb 2023 04:24:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YtCBkdABdWIJf3ytLu66r0GyHH3sgWkv83GadxhY8zKtZOj4Vt4Not61TFFcWrtT9vTOFECPQKdOCU6fbWpf8IlsAgb+qS7tCnMo11uWuVAV653nFjUxYzSbKh0nKj0xtqRNHqVZkiBAEfe8YQ9pulWQackbyapNF1wl7XcUkkpuP5ZZzrlQyylObrtPeajCTfbNnV7LLCCBmEKLtJu+PQSMpEYCGdv4c3q2VY3xlVsBc2dq5IrbARKMMrSi1K3TKIOx45zNXfsH+W9O/lZ6eLMM/1CxcKtRcEVJP+xanBEfGCy2SiddoBhX9KCFQ0pWwk7Gqsy757T34cvOhjQNQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H+dt1VJ7+2xbwsvC5GLOTQP4z/FF9olVkbK+zo/2R/A=;
- b=AnzxzzAogpsF9p/5wiUbHIQKha/BqKnb6LHJKWwZuXc77Nxm9+/EwNgVwTdCJM5cdOHhROawl9KF9oY/sGgu22HWbLycHD8M06KX+ZBx+fSVznRN5cqny9sqcdEKEJT6+p1bpW7KGwV2XFPPONGnUefX1YEXtlrhvUrOsGBdHn1xRu/EDzwF9HNlHAXNNerARBsiubmMZC9Bdf/ubEpNJmjLBh3yHdm/a2Vswqgy7j1hv7OzCpJcfp4n3v/vNbX3sb0C45EVrmzZox/Uhkm0gd5soqIrZsCe2LqCG1dG/ZDtsAOovtZSvmYMOkDtyvLckuOX4OEpIefuBCRiAPFguw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.138.21.76) smtp.rcpttodomain=ucw.cz smtp.mailfrom=siemens.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=siemens.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H+dt1VJ7+2xbwsvC5GLOTQP4z/FF9olVkbK+zo/2R/A=;
- b=YBXsP7+uV56rhHZPWTGX52Zim8vraNGMe9aSoxwE9ZY2Oooph2daiVFQdrcvfB/fioTKNagiiqMEccwkKdOh9zU/Gqg8AaJ1zXvh5a/audtbKw794mWYPI0JpLQMZObm+JYM73Xu/BPabOIt+Oq++2gTHWthNvBG9JL2oHVMAk1jxPxlgeukipQgZggaXcR9541WJbUqYhqpfuxOGpk/AhS3Gd8WntjFSuJ2PFS6sTk7qFHnFSxq/EWpRQBt2B1KKczeUguaYWVL25IAHeZgSvddC4kb1DB+cZJneQ8tMf7v+kFX7RHeSn+SZgmIvxTPEsfh0GDXInHocUV4vO+z+A==
-Received: from DUZPR01CA0048.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:469::17) by AS1PR10MB5368.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:4a0::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.21; Tue, 21 Feb
- 2023 12:24:42 +0000
-Received: from DB5EUR01FT083.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:10:469:cafe::2f) by DUZPR01CA0048.outlook.office365.com
- (2603:10a6:10:469::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.20 via Frontend
- Transport; Tue, 21 Feb 2023 12:24:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.76)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=siemens.com;
-Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
- 194.138.21.76 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.76; helo=hybrid.siemens.com; pr=C
-Received: from hybrid.siemens.com (194.138.21.76) by
- DB5EUR01FT083.mail.protection.outlook.com (10.152.5.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6134.17 via Frontend Transport; Tue, 21 Feb 2023 12:24:41 +0000
-Received: from DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) by
- DEMCHDC8VSA.ad011.siemens.net (194.138.21.76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.21; Tue, 21 Feb 2023 13:24:41 +0100
-Received: from md1za8fc.ad001.siemens.net (139.25.68.242) by
- DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.21; Tue, 21 Feb 2023 13:24:40 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH 3/3] leds: simatic-ipc-leds-gpio: introduce more Kconfig switches
-Date:   Tue, 21 Feb 2023 13:24:14 +0100
-Message-ID: <20230221122414.24874-4-henning.schild@siemens.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230221122414.24874-1-henning.schild@siemens.com>
-References: <20230221122414.24874-1-henning.schild@siemens.com>
+        Tue, 21 Feb 2023 07:32:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4444140FA
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 04:31:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676982702;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wq62qNX/4EoNyLjueY5GhZ1LsRP2u6tFFFJV8ojE60g=;
+        b=crpIbDdr24pGcmQnW+A9EQxXPZHnM/SUy7ov61lIXxmQ2vqY3VeS7WCpYcdPbqZYY6x6J9
+        kAGrORDqd2LMV0buewYxsp6+nnaPISPQE9zlGczQDW9xm2CZOXt+1gggaH2xMnkaKwk2O8
+        mEx/WrIUNcOIc/XvmOy3gOUzsLUzzww=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-610-y6BvqVnhPrGEqW21_3XEGA-1; Tue, 21 Feb 2023 07:31:41 -0500
+X-MC-Unique: y6BvqVnhPrGEqW21_3XEGA-1
+Received: by mail-ed1-f72.google.com with SMTP id cz22-20020a0564021cb600b004a245f58006so6205490edb.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 04:31:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wq62qNX/4EoNyLjueY5GhZ1LsRP2u6tFFFJV8ojE60g=;
+        b=MKZmueu9fMjYeaU3Og2MteBdzeiteBiC4YoHjNOuQ9Kg0sjEWhrDRxI9fs1QUBSLwS
+         H8ACH9FWE+C6x5ExonUgYioGQ+8paUwuuqdyx1RhgiE77a9/aCsJqR1fBKbCdjBi8HOI
+         5adVrVd0M9ibJ0vplKEx13rYmw3bj8/HCx88F/kHw83FxoNNJNN7NjZykiySJN5yZqwk
+         WtaDrPFhto68l5FA1C0Bx82ysZx5iR9nQbOT/SgZSVvfzEaPhuJlp+YdlOkZeMVCFUkD
+         P5cbamP/q81VMaqmX2XqtmDTKFTkoWif3IcyanN6uD4dYiGFY21tHXU9bB6wis9JVucq
+         z+8Q==
+X-Gm-Message-State: AO0yUKVYrqULBeDw3ja8oojoVHYhxujU1nM7fbu+VRrflUAl7X4zLoag
+        oWycyUOQrI0X5PiJrHda0t5R2y+owqlSyUwUqJKZbWhi3gH0OAAaCBN3hq+krnaqDBQQzonE/99
+        vANbIynBdsC6ZevzSErzG6sU10PnS8UbWKw==
+X-Received: by 2002:a05:6402:105a:b0:4ac:c84b:1ddd with SMTP id e26-20020a056402105a00b004acc84b1dddmr3103523edu.32.1676982700190;
+        Tue, 21 Feb 2023 04:31:40 -0800 (PST)
+X-Google-Smtp-Source: AK7set+QhtI6CAuIjQ35FSPPVSACfb3JJ15cfth7p3oTDx/SOXnShQrvz8MEtr/JrD/VAwQGcEkNIA==
+X-Received: by 2002:a05:6402:105a:b0:4ac:c84b:1ddd with SMTP id e26-20020a056402105a00b004acc84b1dddmr3103501edu.32.1676982699878;
+        Tue, 21 Feb 2023 04:31:39 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ee37-20020a056402292500b004af58e57db5sm450783edb.5.2023.02.21.04.31.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Feb 2023 04:31:39 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------i9GnlXUL3bOi7jPlNfpdKXnJ"
+Message-ID: <60dad2c6-9f37-86af-5f37-aa5d45c33afa@redhat.com>
+Date:   Tue, 21 Feb 2023 13:31:38 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [139.25.68.242]
-X-ClientProxiedBy: DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) To
- DEMCHDC8WBA.ad011.siemens.net (139.25.226.105)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5EUR01FT083:EE_|AS1PR10MB5368:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3fdfa51e-a10e-4e74-3a0e-08db14069ba9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nQ8SPRm5MFNCMZNIXZqPGnDjAQ6IfVFUAbR8dBHDs7NGtplIq10fVlDZrQaVH475HzewVWQvG9B40Mmk0SDl6bsvi6mrf3B6FCI1rIZhZa9mWVNAcjiUfP7KaS75E+tqSuronBBpuXTQtIxlpfle6ff7maeFF28iRyMkiYgtTVbfFRRKg/zli+O4XcK6XF6nESnfROb8lRoeGR1dzyuT9aBXGpx5m3q5qVtJeSKBUtCXQvwRtGfLo59PqLE42emyEPo5rwBD48KFRth+spxxYmqRrS3b+SMvgGZPQGFuxTlQ5CE+A793x7KZtpEbgGUm9IrfQEDKNoDfkhD8kEmCmAvmJ7nCDdzGmYZ2vugeLbrmYFyco0J3dBA1A2tHbjLxwoFgXDaMRqnURV73qDgtxl1+OTrdQouQW2kI5JJC8WO2ICb8PrnAjAkTnIA5o1+RuDzQ3s25AZzwrsTpMyFX0NBd01exWMJsEsHF1pmI3N9lmGbSK/NXJGKYdj9XvvDIPZgBh6bm+FFlqDohUMUfCQH2sBtCPQG1e/DX8Aptxooj0xD83XpvQBVS5e24pEJhUDDP94TuXzIoBf+ZT6qPDFp0jgmrLBxSyROqQW0QSEKI8Ybxffjafid6X5+FN9qIzDc4jgKa0js+BE62hTMREcmPcMwxJzsnnZRXLvBhaCsVooaNogwzoqDefrKcfYH9Tj66JcJwcMmd9UtxtGUHcByWOkK9GMy0DqvwbO2Vmjc=
-X-Forefront-Antispam-Report: CIP:194.138.21.76;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(376002)(396003)(346002)(451199018)(40470700004)(46966006)(36840700001)(83380400001)(41300700001)(82310400005)(186003)(16526019)(26005)(316002)(110136005)(86362001)(40480700001)(6666004)(107886003)(478600001)(1076003)(40460700003)(356005)(36756003)(336012)(2616005)(956004)(70206006)(4326008)(70586007)(8676002)(47076005)(36860700001)(2906002)(82960400001)(82740400003)(81166007)(5660300002)(8936002)(44832011)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2023 12:24:41.6194
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fdfa51e-a10e-4e74-3a0e-08db14069ba9
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.76];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT083.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR10MB5368
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Content-Language: en-US, nl
+To:     Aditya Garg <gargaditya08@live.com>,
+        Orlando Chamberlain <orlandoch.dev@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Seth Forshee <sforshee@kernel.org>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+References: <BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-To describe the dependency chain better and allow for potential
-fine-grained config tuning, introduce Kconfig switch for the individual
-gpio based drivers.
+This is a multi-part message in MIME format.
+--------------i9GnlXUL3bOi7jPlNfpdKXnJ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
----
- drivers/leds/simple/Kconfig  | 31 ++++++++++++++++++++++++++++---
- drivers/leds/simple/Makefile |  6 +++---
- 2 files changed, 31 insertions(+), 6 deletions(-)
+Hi,
 
-diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
-index fd2b8225d926..fc80a5d1d78b 100644
---- a/drivers/leds/simple/Kconfig
-+++ b/drivers/leds/simple/Kconfig
-@@ -1,11 +1,36 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config LEDS_SIEMENS_SIMATIC_IPC
- 	tristate "LED driver for Siemens Simatic IPCs"
--	depends on LEDS_GPIO
- 	depends on SIEMENS_SIMATIC_IPC
- 	help
- 	  This option enables support for the LEDs of several Industrial PCs
- 	  from Siemens.
- 
--	  To compile this driver as a module, choose M here: the modules
--	  will be called simatic-ipc-leds and simatic-ipc-leds-gpio.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds.
-+
-+config LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE
-+	tristate "LED driver for Siemens Simatic IPCs based on Intel apollolake GPIO"
-+	depends on LEDS_GPIO
-+	depends on PINCTRL_BROXTON
-+	depends on SIEMENS_SIMATIC_IPC
-+	default LEDS_SIEMENS_SIMATIC_IPC
-+	help
-+	  This option enables support for the LEDs of several Industrial PCs
-+	  from Siemens based on apollolake GPIO i.e. IPC127E.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds-gpio-apollolake.
-+
-+config LEDS_SIEMENS_SIMATIC_IPC_F7188X
-+	tristate "LED driver for Siemens Simatic IPCs based on Nuvoton GPIO"
-+	depends on LEDS_GPIO
-+	depends on GPIO_F7188X
-+	depends on SIEMENS_SIMATIC_IPC
-+	default LEDS_SIEMENS_SIMATIC_IPC
-+	help
-+	  This option enables support for the LEDs of several Industrial PCs
-+	  from Siemens based on Nuvoton GPIO i.e. IPC227G.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds-gpio-f7188x.
-diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
-index 21853956c1ea..1e78bc5904be 100644
---- a/drivers/leds/simple/Makefile
-+++ b/drivers/leds/simple/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-apollolake.o
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-f7188x.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)			+= simatic-ipc-leds.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE)	+= simatic-ipc-leds-gpio-apollolake.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_F7188X)		+= simatic-ipc-leds-gpio-f7188x.o
--- 
-2.39.2
+On 2/21/23 10:24, Aditya Garg wrote:
+> 
+>> On 18-Feb-2023, at 6:50 PM, Orlando Chamberlain <orlandoch.dev@gmail.com> wrote:
+>> ﻿Hi All,
+>> This patch series adds support for the MMIO based gmux present on these
+>> Dual GPU Apple T2 Macs: MacBookPro15,1, MacBookPro15,3, MacBookPro16,1,
+>> MacBookPro16,4 (although amdgpu isn't working on MacBookPro16,4 [1]).
+>>
+> 
+> Could be an upstream bug, but I’ve noticed that after using these patches, if I add `acpi_backlight=video` in the command line, it still uses `gmux_backlight`
+> 
+> Hans, any ideas why?
+
+Currently the backlight registration in apple-gmux.c is unconditional
+(if a GMUX is detected).
+
+I have attached a patch to make it honor the acpi_backlight=xxx
+kernel commandline option like most other x86/ACPI backlight drivers
+do, please give this a test.
+
+Regards,
+
+Hans
+
+
+> 
+>> Changes from v2[2]:
+>>
+>> - Add "," to last item in apple_gmux_type enum
+>> - Don't not clear interrupts when status is 0
+>> - Don't check if we failed to make debugfs folder
+>> - Check for fake mmio gmux
+>>
+>> # 1:
+>>
+>> has a slight change in how the switch state is read: instead of checking
+>> for x == 2, check !(x & 1)
+>>
+>> # 2:
+>>
+>> implements a system to support more than 2 gmux types
+>>
+>> # 3:
+>>
+>> start using the gmux's GMSP acpi method when handling interrupts on MMIO
+>> gmux's. This is needed for the MMIO gmux's to clear interrupts.
+>>
+>> # 4:
+>>
+>> Adds support for the MMIO based gmux on T2 macs.
+>>
+>> # 5:
+>>
+>> Add a debugfs interface to apple-gmux so data from ports can be read
+>> and written to from userspace.
+>>
+>> This can be used for more easily researching what unknown ports do,
+>> and switching gpus when vga_switcheroo isn't ready (e.g. when one gpu
+>> is bound to vfio-pci and in use by a Windows VM, I can use this to
+>> switch my internal display between Linux and Windows easily).
+>>
+>> # Issues:
+>>
+>> 1. Switching gpus at runtime has the same issue as indexed gmux's: the
+>> inactive gpu can't probe the DDC lines for eDP [3]
+>>
+>> 2. iMacPro1,1, iMac20,1 and iMac20,2 all seem to have a gmux in their
+>> acpi tables, but they shouldn't. A check that hopefully will detect this
+>> is used, but it's untested as I don't have any of those computers.
+>>
+>> 3. Powering on the amdgpu with vga_switcheroo doesn't work well. I'm
+>> told on the MacBookPro15,1 it works sometimes, and adding delays helps,
+>> but on my MacBookPro16,1 I haven't been able to get it to work at all:
+>>
+>> amdgpu: switched off
+>> amdgpu: switched on
+>> amdgpu 0000:03:00.0:
+>>    Unable to change power state from D3hot to D0, device inaccessible
+>> amdgpu 0000:03:00.0:
+>>    Unable to change power state from D3cold to D0, device inaccessible
+>> [drm] PCIE GART of 512M enabled (table at 0x00000080FEE00000).
+>> [drm] PSP is resuming...
+>> [drm:psp_hw_start [amdgpu]] *ERROR* PSP create ring failed!
+>> [drm:psp_resume [amdgpu]] *ERROR* PSP resume failed
+>> [drm:amdgpu_device_fw_loading [amdgpu]]
+>>    *ERROR* resume of IP block <psp> failed -62
+>> amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_resume failed (-62).
+>> snd_hda_intel 0000:03:00.1: Enabling via vga_switcheroo
+>> snd_hda_intel 0000:03:00.1:
+>>    Unable to change power state from D3cold to D0, device inaccessible
+>> snd_hda_intel 0000:03:00.1: CORB reset timeout#2, CORBRP = 65535
+>> snd_hda_codec_hdmi hdaudioC0D0: Unable to sync register 0x2f0d00. -5
+>>
+>> There are some acpi methods (PWRD, PWG1 [4, 5]) that macOS calls when
+>> changing the amdgpu's power state, but we don't use them and that could be
+>> a cause. Additionally unlike previous generation Macbooks which work
+>> better, on MacBookPro16,1 the gpu is located behind 2 pci bridges:
+>>
+>> 01:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
+>>    Navi 10 XL Upstream Port of PCI Express Switch (rev 43)
+>> 02:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
+>>    Navi 10 XL Downstream Port of PCI Express Switch
+>> 03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
+>>    Navi 14 [Radeon RX 5500/5500M / Pro 5500M] (rev 43)
+>> 03:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
+>>    Navi 10 HDMI Audio
+>>
+>> Upon attempting to power on the gpu with vga_switcheroo, all these
+>> devices except 01:00.0 have their config space filled with 1s.
+>> Rescanning pci makes the config space of all the devices go back to
+>> normal, however amdgpu still fails to resume with the same logs as
+>> above.
+>>
+>> [1]: https://lore.kernel.org/all/3AFB9142-2BD0-46F9-AEA9-C9C5D13E68E6@live.com/
+>> [2]: https://lore.kernel.org/platform-driver-x86/20230216122342.5918-1-orlandoch.dev@gmail.com/
+>> [3]: https://lore.kernel.org/all/9eed8ede6f15a254ad578e783b050e1c585d5a15.1439288957.git.lukas@wunner.de/
+>> [4]: https://gist.github.com/Redecorating/6c7136b7a4ac7ce3b77d8e41740dd87b
+>> [5]: https://lore.kernel.org/all/20120710160555.GA31562@srcf.ucam.org/
+>>
+>> Orlando Chamberlain (5):
+>>  apple-gmux: use first bit to check switch state
+>>  apple-gmux: refactor gmux types
+>>  apple-gmux: Use GMSP acpi method for interrupt clear
+>>  apple-gmux: support MMIO gmux on T2 Macs
+>>  apple-gmux: add debugfs interface
+>>
+>> drivers/platform/x86/apple-gmux.c | 349 ++++++++++++++++++++++++++----
+>> include/linux/apple-gmux.h        |  70 ++++--
+>> 2 files changed, 357 insertions(+), 62 deletions(-)
+>>
+>> -- 
+>> 2.39.1
+
+--------------i9GnlXUL3bOi7jPlNfpdKXnJ
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-platform-x86-apple-gmux-Add-acpi_video_get_backlight.patch"
+Content-Disposition: attachment;
+ filename*0="0001-platform-x86-apple-gmux-Add-acpi_video_get_backlight.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA5NzIyOGIxMDdmZTA3NWI5NGM1OWE1YjY4MTgzZTAwZmU3MzY3ZDE1IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPgpEYXRlOiBUdWUsIDIxIEZlYiAyMDIzIDEzOjI2OjE5ICswMTAwClN1YmplY3Q6IFtQ
+QVRDSF0gcGxhdGZvcm0veDg2OiBhcHBsZS1nbXV4OiBBZGQgYWNwaV92aWRlb19nZXRfYmFj
+a2xpZ2h0X3R5cGUoKQogY2hlY2sKCk1ha2UgYXBwbGUtZ211eCBiYWNrbGlnaHQgcmVnaXN0
+cmF0aW9uIGhvbm9yIHRoZSBhY3BpX2JhY2tsaWdodD0uLi4Ka2VybmVsIGNvbW1hbmRsaW5l
+IG9wdGlvbiB3aGljaCBpcyB1c2VkIHRvIHNlbGVjdCB0aGUgYmFja2xpZ2h0CmNvbnRyb2wg
+bWV0aG9kIG9uIHg4Ni9BQ1BJIGRldmljZXMuCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdv
+ZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgotLS0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L2Fw
+cGxlLWdtdXguYyB8IDU5ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KIDEgZmls
+ZSBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9hcHBsZS1nbXV4LmMKaW5kZXggOTMzM2Y4MmNmYThhLi4yNDZjYWFhYjI3YWEg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdtdXguYworKysgYi9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMKQEAgLTIxLDYgKzIxLDcgQEAKICNp
+bmNsdWRlIDxsaW51eC9kZWxheS5oPgogI2luY2x1ZGUgPGxpbnV4L3BjaS5oPgogI2luY2x1
+ZGUgPGxpbnV4L3ZnYV9zd2l0Y2hlcm9vLmg+CisjaW5jbHVkZSA8YWNwaS92aWRlby5oPgog
+I2luY2x1ZGUgPGFzbS9pby5oPgogCiAvKioKQEAgLTU2Miw2ICs1NjMsNyBAQCBzdGF0aWMg
+aW50IGdtdXhfcHJvYmUoc3RydWN0IHBucF9kZXYgKnBucCwgY29uc3Qgc3RydWN0IHBucF9k
+ZXZpY2VfaWQgKmlkKQogCXN0cnVjdCBiYWNrbGlnaHRfcHJvcGVydGllcyBwcm9wczsKIAlz
+dHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYmRldjsKIAl1OCB2ZXJfbWFqb3IsIHZlcl9taW5v
+ciwgdmVyX3JlbGVhc2U7CisJYm9vbCByZWdpc3Rlcl9iZGV2ID0gdHJ1ZTsKIAlpbnQgcmV0
+ID0gLUVOWElPOwogCWFjcGlfc3RhdHVzIHN0YXR1czsKIAl1bnNpZ25lZCBsb25nIGxvbmcg
+Z3BlOwpAQCAtNjEwLDMzICs2MTIsMzggQEAgc3RhdGljIGludCBnbXV4X3Byb2JlKHN0cnVj
+dCBwbnBfZGV2ICpwbnAsIGNvbnN0IHN0cnVjdCBwbnBfZGV2aWNlX2lkICppZCkKIAlwcm9w
+cy50eXBlID0gQkFDS0xJR0hUX1BMQVRGT1JNOwogCXByb3BzLm1heF9icmlnaHRuZXNzID0g
+Z211eF9yZWFkMzIoZ211eF9kYXRhLCBHTVVYX1BPUlRfTUFYX0JSSUdIVE5FU1MpOwogCi0J
+LyoKLQkgKiBDdXJyZW50bHkgaXQncyBhc3N1bWVkIHRoYXQgdGhlIG1heGltdW0gYnJpZ2h0
+bmVzcyBpcyBsZXNzIHRoYW4KLQkgKiAyXjI0IGZvciBjb21wYXRpYmlsaXR5IHdpdGggb2xk
+IGdtdXggdmVyc2lvbnMuIENhcCB0aGUgbWF4Ci0JICogYnJpZ2h0bmVzcyBhdCB0aGlzIHZh
+bHVlLCBidXQgcHJpbnQgYSB3YXJuaW5nIGlmIHRoZSBoYXJkd2FyZQotCSAqIHJlcG9ydHMg
+c29tZXRoaW5nIGhpZ2hlciBzbyB0aGF0IGl0IGNhbiBiZSBmaXhlZC4KLQkgKi8KLQlpZiAo
+V0FSTl9PTihwcm9wcy5tYXhfYnJpZ2h0bmVzcyA+IEdNVVhfTUFYX0JSSUdIVE5FU1MpKQot
+CQlwcm9wcy5tYXhfYnJpZ2h0bmVzcyA9IEdNVVhfTUFYX0JSSUdIVE5FU1M7Ci0KLQliZGV2
+ID0gYmFja2xpZ2h0X2RldmljZV9yZWdpc3RlcigiZ211eF9iYWNrbGlnaHQiLCAmcG5wLT5k
+ZXYsCi0JCQkJCSBnbXV4X2RhdGEsICZnbXV4X2JsX29wcywgJnByb3BzKTsKLQlpZiAoSVNf
+RVJSKGJkZXYpKSB7Ci0JCXJldCA9IFBUUl9FUlIoYmRldik7Ci0JCWdvdG8gZXJyX3JlbGVh
+c2U7Ci0JfQotCi0JZ211eF9kYXRhLT5iZGV2ID0gYmRldjsKLQliZGV2LT5wcm9wcy5icmln
+aHRuZXNzID0gZ211eF9nZXRfYnJpZ2h0bmVzcyhiZGV2KTsKLQliYWNrbGlnaHRfdXBkYXRl
+X3N0YXR1cyhiZGV2KTsKKyNpZiBJU19SRUFDSEFCTEUoQ09ORklHX0FDUElfVklERU8pCisJ
+cmVnaXN0ZXJfYmRldiA9IGFjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90eXBlKCkgPT0gYWNw
+aV9iYWNrbGlnaHRfYXBwbGVfZ211eDsKKyNlbmRpZgorCWlmIChyZWdpc3Rlcl9iZGV2KSB7
+CisJCS8qCisJCSAqIEN1cnJlbnRseSBpdCdzIGFzc3VtZWQgdGhhdCB0aGUgbWF4aW11bSBi
+cmlnaHRuZXNzIGlzIGxlc3MgdGhhbgorCQkgKiAyXjI0IGZvciBjb21wYXRpYmlsaXR5IHdp
+dGggb2xkIGdtdXggdmVyc2lvbnMuIENhcCB0aGUgbWF4CisJCSAqIGJyaWdodG5lc3MgYXQg
+dGhpcyB2YWx1ZSwgYnV0IHByaW50IGEgd2FybmluZyBpZiB0aGUgaGFyZHdhcmUKKwkJICog
+cmVwb3J0cyBzb21ldGhpbmcgaGlnaGVyIHNvIHRoYXQgaXQgY2FuIGJlIGZpeGVkLgorCQkg
+Ki8KKwkJaWYgKFdBUk5fT04ocHJvcHMubWF4X2JyaWdodG5lc3MgPiBHTVVYX01BWF9CUklH
+SFRORVNTKSkKKwkJCXByb3BzLm1heF9icmlnaHRuZXNzID0gR01VWF9NQVhfQlJJR0hUTkVT
+UzsKKworCQliZGV2ID0gYmFja2xpZ2h0X2RldmljZV9yZWdpc3RlcigiZ211eF9iYWNrbGln
+aHQiLCAmcG5wLT5kZXYsCisJCQkJCQkgZ211eF9kYXRhLCAmZ211eF9ibF9vcHMsICZwcm9w
+cyk7CisJCWlmIChJU19FUlIoYmRldikpIHsKKwkJCXJldCA9IFBUUl9FUlIoYmRldik7CisJ
+CQlnb3RvIGVycl9yZWxlYXNlOworCQl9CiAKLQkvKgotCSAqIFRoZSBiYWNrbGlnaHQgc2l0
+dWF0aW9uIG9uIE1hY3MgaXMgY29tcGxpY2F0ZWQuIElmIHRoZSBnbXV4IGlzCi0JICogcHJl
+c2VudCBpdCdzIHRoZSBiZXN0IGNob2ljZSwgYmVjYXVzZSBpdCBhbHdheXMgd29ya3MgZm9y
+Ci0JICogYmFja2xpZ2h0IGNvbnRyb2wgYW5kIHN1cHBvcnRzIG1vcmUgbGV2ZWxzIHRoYW4g
+b3RoZXIgb3B0aW9ucy4KLQkgKiBEaXNhYmxlIHRoZSBvdGhlciBiYWNrbGlnaHQgY2hvaWNl
+cy4KLQkgKi8KLQlhcHBsZV9ibF91bnJlZ2lzdGVyKCk7CisJCWdtdXhfZGF0YS0+YmRldiA9
+IGJkZXY7CisJCWJkZXYtPnByb3BzLmJyaWdodG5lc3MgPSBnbXV4X2dldF9icmlnaHRuZXNz
+KGJkZXYpOworCQliYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhiZGV2KTsKKworCQkvKgorCQkg
+KiBUaGUgYmFja2xpZ2h0IHNpdHVhdGlvbiBvbiBNYWNzIGlzIGNvbXBsaWNhdGVkLiBJZiB0
+aGUgZ211eCBpcworCQkgKiBwcmVzZW50IGl0J3MgdGhlIGJlc3QgY2hvaWNlLCBiZWNhdXNl
+IGl0IGFsd2F5cyB3b3JrcyBmb3IKKwkJICogYmFja2xpZ2h0IGNvbnRyb2wgYW5kIHN1cHBv
+cnRzIG1vcmUgbGV2ZWxzIHRoYW4gb3RoZXIgb3B0aW9ucy4KKwkJICogRGlzYWJsZSB0aGUg
+b3RoZXIgYmFja2xpZ2h0IGNob2ljZXMuCisJCSAqLworCQlhcHBsZV9ibF91bnJlZ2lzdGVy
+KCk7CisJfQogCiAJZ211eF9kYXRhLT5wb3dlcl9zdGF0ZSA9IFZHQV9TV0lUQ0hFUk9PX09O
+OwogCi0tIAoyLjM5LjEKCg==
+
+--------------i9GnlXUL3bOi7jPlNfpdKXnJ--
 
