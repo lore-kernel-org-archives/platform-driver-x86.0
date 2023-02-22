@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046BC64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AC7C636D6
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232122AbjBVQej (ORCPT
+        id S232334AbjBVQe4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Feb 2023 11:34:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        Wed, 22 Feb 2023 11:34:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbjBVQei (ORCPT
+        with ESMTP id S232553AbjBVQex (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Feb 2023 11:34:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2212BF03
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:33:52 -0800 (PST)
+        Wed, 22 Feb 2023 11:34:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E19360B8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:34:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677083631;
+        s=mimecast20190719; t=1677083648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nfRgrG7v9e35Qkpdm4A6k1IiUUsubAbiMqnM/ML5i5c=;
-        b=dZRb2unR1uosfFaKF1dQJURWm1GKNoo2xfzslPqLsC4qLY613OvAYndC5Y8wNEIp/gu1St
-        5BK5uPVm0ZdnQn+6el0rc4nl9oYEY1B4n0KUUapsO6EexQD/VxwATBQXz/SDb2oJX7OsDO
-        VTY+g4TWxMexwrlKidbQvfFJ8uNYCxo=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=q8esxfJVTT75yFXIXwSeTLZl15U5SPnHoZLa97NCnZE=;
+        b=R8whmgqsYj3CxaXZyqIDVvGg2YCcwjFdoCYfnLfNkAejWJBL3qr1I/Dw5cqFvNMx0CWONJ
+        /auFqVyyQd47ShbkgxmV/wyUquKG21a5GlAGLoyAi9+YS9sFZwzZ16N/St3t4Q8rzR3Nm8
+        iPlt8svX0Lgo38CwmW6pvQi0I8oA/YE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-271-BsPmAwTlMruk4HWTgJa-nw-1; Wed, 22 Feb 2023 11:33:48 -0500
-X-MC-Unique: BsPmAwTlMruk4HWTgJa-nw-1
-Received: by mail-ed1-f69.google.com with SMTP id b1-20020aa7dc01000000b004ad062fee5eso11401030edu.17
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:33:47 -0800 (PST)
+ us-mta-672-mIfazeW1Oc6gPdUIieCT3A-1; Wed, 22 Feb 2023 11:34:02 -0500
+X-MC-Unique: mIfazeW1Oc6gPdUIieCT3A-1
+Received: by mail-ed1-f72.google.com with SMTP id k12-20020a50c8cc000000b004accf30f6d3so11613542edh.14
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:34:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfRgrG7v9e35Qkpdm4A6k1IiUUsubAbiMqnM/ML5i5c=;
-        b=1N2r26aVKoQfXvttUi1DL64QBNNd2OTBoPHWHfcadzzZSMayJLYRIqu4ZWwfcOcOdm
-         WesvJPJTO1NWSNuEgvdFFGnJbBx1yIjNJ0rR5TKbwB0sUdceZ1J7BdIbdn++U4oFrP2n
-         aNyov3xDNwftcuTYbhxIjpIkUzAuW6dbMkwzV68yQ1NNuBL1ZLscqpLCFaA+gcHwKRRe
-         itSjW4ngw2mdwzxFfs9+aOWa+3LglWf1YSfbSx1kzJlTk9jZfV+0TSVPbehomnvNy8PB
-         BD3ILQsa8n4SmIo0BeDvFX/7tPQlm/UfcytLui7dt6aEazMSIXwJIX/EZWxG1isFy3l3
-         mxmA==
-X-Gm-Message-State: AO0yUKVTeiO2sSNN3IMoAjlh1q74BlPf1LqAHshxlhsqWlXSYdgwF9W3
-        +DAWh95rxw7aDuA7x9voJ75LKa2rcyAGTfHUYI/+x6HU5dxJ3xtdGjSXCojxbMb8qbZ52kvI+Xs
-        g21XsT9HGOdWbV3kN1Mj1XEP75oWbD/03Rg==
-X-Received: by 2002:a17:906:3b10:b0:8b1:3f5b:af5f with SMTP id g16-20020a1709063b1000b008b13f5baf5fmr14635584ejf.73.1677083626755;
-        Wed, 22 Feb 2023 08:33:46 -0800 (PST)
-X-Google-Smtp-Source: AK7set8ExtIugX2Bx7fHgbatGgHjSU0zHS/J5rKk8WvwYyPa8Q1xg6GKOjxlXBUTELIQdSmnCzpnAQ==
-X-Received: by 2002:a17:906:3b10:b0:8b1:3f5b:af5f with SMTP id g16-20020a1709063b1000b008b13f5baf5fmr14635565ejf.73.1677083626517;
-        Wed, 22 Feb 2023 08:33:46 -0800 (PST)
+        bh=q8esxfJVTT75yFXIXwSeTLZl15U5SPnHoZLa97NCnZE=;
+        b=gUj0+pSgvNJLabUgiEqeD+QBeEIJ0jC4pC5iwHOZa5Rd65Pz82n243oua2D+bjWk93
+         qzqt6/G6dEtL5Cfe+N3ZAOkjD924fo32giRSqbX5z9OKMSRartdxS4F+C5OKbpFd3sg2
+         nHdeklAELbL6mOKjJReRhK3sQjwKD8vSI93MRhqiCmcx26eCgxsQNUROQN5aeI9bq2CG
+         j5O4OIo6Nfs6dySakrt7+z2TZiujrtS/3G6MgtG9zFZ4tJpZxATrmSA/1biJ4LdQXq2h
+         bBUClVRie7JzquU2nles7hopFgJeRAIeQhUhC7g98DpLf8eJFn6kMscVmC/KfrqCvAJy
+         6Aiw==
+X-Gm-Message-State: AO0yUKXybw0Bep5PqB5bjqVSyN+eoR/MGuUM6a78D6MJ0sZcF0pkHRA6
+        Cp8mTHGJOI42uz2MvIKbz0Nm7aWo77mNF9YysCfq7P+3a8KTTNuvtXVGTPX2ihUfCvjv/HiKCsB
+        MXefLhBu8k7B5LMWN+tZ0PfrLklT7NhCq3Q==
+X-Received: by 2002:a17:906:261b:b0:8aa:c105:f0bf with SMTP id h27-20020a170906261b00b008aac105f0bfmr17895411ejc.17.1677083641735;
+        Wed, 22 Feb 2023 08:34:01 -0800 (PST)
+X-Google-Smtp-Source: AK7set8Lsm6/R+Yo2xM+J57hhLzO45cFnz7ctQpLIoyPFTlAQ5hAIVHME6/77ief6JsuGXUNWzjVAQ==
+X-Received: by 2002:a17:906:261b:b0:8aa:c105:f0bf with SMTP id h27-20020a170906261b00b008aac105f0bfmr17895387ejc.17.1677083641475;
+        Wed, 22 Feb 2023 08:34:01 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id md1-20020a170906ae8100b008b174ef3cdesm8121626ejb.27.2023.02.22.08.33.45
+        by smtp.gmail.com with ESMTPSA id y14-20020a1709064b0e00b008c979c74732sm5054746eju.156.2023.02.22.08.34.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Feb 2023 08:33:45 -0800 (PST)
-Message-ID: <c3d8fecc-d442-e877-e170-b72b3ffc7e18@redhat.com>
-Date:   Wed, 22 Feb 2023 17:33:45 +0100
+        Wed, 22 Feb 2023 08:34:00 -0800 (PST)
+Message-ID: <cee654ea-0961-bf5d-2bcc-87e9b980b3d8@redhat.com>
+Date:   Wed, 22 Feb 2023 17:34:00 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [RESEND PATCH 1/3] platform: x86: int3472: Add MFD cell for
- tps68470 LED
+Subject: Re: [RESEND PATCH 2/3] include: mfd: tps68470: Add masks for LEDA and
+ LEDB
 Content-Language: en-US, nl
 To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
@@ -71,68 +71,56 @@ To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Daniel Scally <djrscally@gmail.com>,
         Mark Gross <markgross@kernel.org>
 References: <20230213124520.1635257-1-hpa@redhat.com>
- <20230213124520.1635257-2-hpa@redhat.com>
+ <20230213124520.1635257-3-hpa@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230213124520.1635257-2-hpa@redhat.com>
+In-Reply-To: <20230213124520.1635257-3-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Kate,
+Hi,
 
 On 2/13/23 13:45, Kate Hsuan wrote:
-> Add MFD cell for tps68470-led.
+> Add flags for both LEDA(TPS68470_ILEDCTL_ENA), LEDB
+> (TPS68470_ILEDCTL_ENB), and current control mask for LEDB
+> (TPS68470_ILEDCTL_CTRLB)
 > 
 > Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> ---
->  drivers/platform/x86/intel/int3472/tps68470.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index 5b8d1a9620a5..9dceb6507a01 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -17,7 +17,7 @@
->  #define DESIGNED_FOR_CHROMEOS		1
->  #define DESIGNED_FOR_WINDOWS		2
->  
-> -#define TPS68470_WIN_MFD_CELL_COUNT	3
-> +#define TPS68470_WIN_MFD_CELL_COUNT	4
->  
->  static const struct mfd_cell tps68470_cros[] = {
->  	{ .name = "tps68470-gpio" },
-> @@ -194,6 +194,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
->  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
->  		cells[2].name = "tps68470-gpio";
-> +		cells[3].name = "tps68470-led";
 
-As the comment a few lines above states, the gpio cell must be last because the GPIO
-driver ends up calling acpi_dev_clear_dependencies() which will cause the ACPI code
-to instantiate the i2c_client-s for the camera sensors and we want all the cells
-to be instantiated before this happens, so this needs to become:
+Thanks, patch looks good to me:
 
-		cells[2].name = "tps68470-led";
-  		cells[3].name = "tps68470-gpio";
-
-And for the sensor to actually be able to use the LEDA output as privacy LED,
-we also need to add a led lookup-table entry linking the sensor and the LEDA
-LED-class-device. I'll write a patch for this and submit that upstream soonish.
-
-For v2 of this patch-set, please include my patch with the lookup as a 4th patch.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
 
 
-
-
-
-
+> ---
+>  include/linux/mfd/tps68470.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/mfd/tps68470.h b/include/linux/mfd/tps68470.h
+> index 7807fa329db0..2d2abb25b944 100644
+> --- a/include/linux/mfd/tps68470.h
+> +++ b/include/linux/mfd/tps68470.h
+> @@ -34,6 +34,7 @@
+>  #define TPS68470_REG_SGPO		0x22
+>  #define TPS68470_REG_GPDI		0x26
+>  #define TPS68470_REG_GPDO		0x27
+> +#define TPS68470_REG_ILEDCTL		0x28
+>  #define TPS68470_REG_VCMVAL		0x3C
+>  #define TPS68470_REG_VAUX1VAL		0x3D
+>  #define TPS68470_REG_VAUX2VAL		0x3E
+> @@ -94,4 +95,8 @@
+>  #define TPS68470_GPIO_MODE_OUT_CMOS	2
+>  #define TPS68470_GPIO_MODE_OUT_ODRAIN	3
 >  
->  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
->  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> +#define TPS68470_ILEDCTL_ENA		BIT(2)
+> +#define TPS68470_ILEDCTL_ENB		BIT(6)
+> +#define TPS68470_ILEDCTL_CTRLB		GENMASK(5, 4)
+> +
+>  #endif /* __LINUX_MFD_TPS68470_H */
 
