@@ -2,394 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1496C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B4CC636D6
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 18:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232339AbjBVQyH (ORCPT
+        id S229615AbjBVSNj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Feb 2023 11:54:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
+        Wed, 22 Feb 2023 13:13:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229950AbjBVQyG (ORCPT
+        with ESMTP id S229515AbjBVSNi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Feb 2023 11:54:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC711EBCE
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:53:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677084797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h5zUU+aJ7Z+iVb3z5ISDGd1flVdL3X2DUURMitbPWhg=;
-        b=KJSVSp+fcxKpUvB2AkvyIlrXFQmv2tXs2I6kc8VFxcwyo1tX5WCFejZjhMOMYVtvBIjP39
-        VRAlNxxYDugUBz5Cf0mMSw76tFSwhm4X0itGEnXojlYEOqxxi6XypxIrdsygo7JW75u2Jf
-        lurWMXEFxzs0AuUOwUb1ciqF9Wwa6J4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-453-oLsodhDYOB-b27KBrsADlQ-1; Wed, 22 Feb 2023 11:53:15 -0500
-X-MC-Unique: oLsodhDYOB-b27KBrsADlQ-1
-Received: by mail-ed1-f71.google.com with SMTP id ec13-20020a0564020d4d00b004a621e993a8so11396469edb.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:53:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h5zUU+aJ7Z+iVb3z5ISDGd1flVdL3X2DUURMitbPWhg=;
-        b=6qc6q1aSpX2mXwHIwSKpeHdGMCLbrgcujARdBSYBEPdAff2Z3hT30QBvmH2/AIiWDT
-         Of7wRpIly2Eq2+vOGPMYWyeLF/Hy1z5q6avETCmQpX/j+QqdQNZwm0Lx134bW4hmuSpl
-         BUIJKMWfCaCsIedc4ubLiffRhcZLiFD+KrgMQbING7ObDqG/rUc8d0Xfzc5KHCieEtU8
-         CbpEhZ9YFCT+cYLL2S6kvY0bQu3sRoqC7iFdebwX3PD77M+Jb3fIDzzwmL7YN1yzTvkA
-         01kNsV2MVG94dhjfSgLFgodPlepVh99feg/Cx9fdiPa1Mq44RazUFot/7LtHWcWzK8Ok
-         A1rQ==
-X-Gm-Message-State: AO0yUKWaGvNiEOJbh4FMkj0h9HBjFeVNctX1ONQN3fSwQ5lwNYWZTSOy
-        iFDH799mDq/dujPOF5SdIJVs9Poeq25JUsfeuPPjW7ZGrpxDucwGJ0YLSgFsSeymSpS/SfCatVb
-        V5851DqtG5S/eMykRcV9XDMMzWisQ8pLvsw==
-X-Received: by 2002:a05:6402:647:b0:4ab:ec2:3cd1 with SMTP id u7-20020a056402064700b004ab0ec23cd1mr6744163edx.25.1677084794314;
-        Wed, 22 Feb 2023 08:53:14 -0800 (PST)
-X-Google-Smtp-Source: AK7set/aklv8wp7kO8cNqdv5efE18JZl366TtsvFP0NVC/K/plVkJNS4PfjBHDX42z9oKo0Dm8hLeg==
-X-Received: by 2002:a05:6402:647:b0:4ab:ec2:3cd1 with SMTP id u7-20020a056402064700b004ab0ec23cd1mr6744139edx.25.1677084793960;
-        Wed, 22 Feb 2023 08:53:13 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id p11-20020a056402074b00b004acc1374849sm2729874edy.82.2023.02.22.08.53.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Feb 2023 08:53:13 -0800 (PST)
-Message-ID: <2a0f7d36-ef0c-1c29-5f01-6115275e78dd@redhat.com>
-Date:   Wed, 22 Feb 2023 17:53:12 +0100
+        Wed, 22 Feb 2023 13:13:38 -0500
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2030.outbound.protection.outlook.com [40.92.102.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFBD227B1;
+        Wed, 22 Feb 2023 10:13:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e0kN2WVwQLl5hdnonh9eIvPWpDkNCXsybN/NqFU9GcQm664DMyGbuNaR4QEhYQQaysisWynGvh4jK7s8N6bhfpC8pMgeo+mdiJzMVccYsFOkpgX7f+lSpR3rgtMQQE3mr/JHWCMXNzViS8og0z5Qz45SId2IdDBVhJIXS9ORdlZVP280y/VrmqHaFX8aOHgNOQUD1mXk6qOJ6X4vqHREgA1m4kaxokzd6gWhPQXnwAQS3xDDEu74CVY3jnz5ZZu1cGuap3EstMjqAxjPRe41P5KNCXVgW/l8cSNSOnVp/9Lo6dlaF90o0g68nuT/ijtqWSmghU5ikr3rj35OgjBEbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gcv896YmC+tEVEF8G+2S6Gi6RYWMqX1SfRgJtAF+njI=;
+ b=ec/+bw18yxmGtcaU0s1uR1lfVrxlcKIGdYW20uhJT1fW5QYYfU3HL/PtJ065N/k5OlZj7mDYcgP2sNGfVCU6VKkz/Ako1Jact4kM4+WKcQNcCfEVawWtF6qnKeU48E0ERS3SiYvhampdwTipKaSefK1IHamSS0EmJMIpdF42GPS25F2R5bmMsMJvpBCvnlcwLi8k+5ltTdA7wudNeWO6eqbJJCf+iEfiDhvpx7BksW+or2n0fWvHAIEOOwa2jw46VY85fUIkyX41jRbR8eHqZC+NrEsRTAcuQ14u626NNsbpAJVKhc6w/StxNm4frXxtLDQNSj7+S0qKVA3nF/V4qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gcv896YmC+tEVEF8G+2S6Gi6RYWMqX1SfRgJtAF+njI=;
+ b=DN32qyyaJNLfL62vsslfbyBDmnFmqwbbiwR/MbreFkgmvf1fBXElqYDSiWtPAvnTV59EvZd9FaNeBL6ozZNHqUwmhB2/ml/9XkAl2Uja2ojyyIolPEwkiOm8NXJ+kRqrDU6MIQti/v23OrFGpOFz3ZFrIW9lJ7cb4MDx4c7BsFQi4sXtonuT0UQ2L94m3u8aZk5cyyXys0jmGZiG7k0Z+F3eBNc2sJ82AxOX8znsEQ7vXBVVfHfjosQQturdOqVLghxh2asTY5SVOiT62BlIaZEq2A6waGlL1P2aE4ZbFBIIISqhW3FmQ9qE7lHNQT6w/Z+jGRLuZj/0nmAo/D0G3A==
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2::9) by
+ MA0PR01MB8180.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:9c::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.19; Wed, 22 Feb 2023 18:13:31 +0000
+Received: from BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee]) by BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::f156:868f:a45b:aeee%11]) with mapi id 15.20.6134.019; Wed, 22 Feb
+ 2023 18:13:31 +0000
+From:   Aditya Garg <gargaditya08@live.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     Orlando Chamberlain <orlandoch.dev@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Seth Forshee <sforshee@kernel.org>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Topic: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Thread-Index: AQHZRdZPnsOA0zlv+UikzIJmE+f5Ta7ZVTYAgABwQxiAAYGTnA==
+Date:   Wed, 22 Feb 2023 18:13:31 +0000
+Message-ID: <BM1PR01MB09310531DC4ED55B73764743B8AA9@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+References: <BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+ <60dad2c6-9f37-86af-5f37-aa5d45c33afa@redhat.com>
+ <BM1PR01MB09313E8C98F63BD65CCD3362B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <BM1PR01MB09313E8C98F63BD65CCD3362B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [X32L/uTL1RI+ThEkuNVVi6pMApVpqFjfksr++lWjDoT3V7+BYFTt52Ekpf2p0hqv]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BM1PR01MB0931:EE_|MA0PR01MB8180:EE_
+x-ms-office365-filtering-correlation-id: 3cfad8b7-2c62-49a7-e3e9-08db150080f2
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: o9OUBXzI41CsTm/y4Otn1UqtS8Qxy1RIdo2Pl73boyuBO55V+so7CjcPnpBgJMvv2sZVG8kixoaWUnwifvShyQv7APzX7NtyTj05HkscVxBkqlpQCDl1fWSVUKW/MgnRiq0kGCcVCy/3LHd5HSN6IZ0+pw2DV1/93Hv/Kkx0vyMajS7DocxA3ayL5IMarxs1+ztPn6/PXXcRtWFSc9qlYQrnj6d1LmKmWlkHl1howxKsob9yYO8j8nbjK+bA6bwIOMio0/6d1ThphIAspjbV3O9dVY/zGRPxfxMC+0eCO4NuqYPCYEZV/NJoFeopGNI9XJU1snJTYZKs+0cvk/HJw5IBGL4popcP+ltSeGkucH37WUe+repD/We+qS62/iowpag7PxQCGgazEKUeziRpbAVekuQPOwGM5pF3wF9wwp45IngFgJPWbgWvDMxZqUPb6hyZ1meJhsbzou0uMcn4LsU1EHzfao56CqQ885jXUrc1wJA7cTPIcY0BrkVkNaPL/PsFve/ivfkO+jd7qLK0ZE42TMZnkoOXadi/5jYpFs5n5TSvkQJeHwPv5bW2JKG3a+QpEvXDRfMZ/rZjkL2aEYegykWFWidRwfrP+jy+5s0hdRCG58UFwqfCF3LUwXWzio/Zna6wsGPJubnJIC2mHg==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?U0E2b055Z09qSUNLOUdlbkJrSXVXd0swMVhEOFg1VzVjRGpuOTI2a3B4TUdJ?=
+ =?utf-8?B?SEhCOEhsQXlPNXVFUFdUd1ZibXU2d2xvdXZWRjRCZi9ZZDZpSnNOaThZcDQw?=
+ =?utf-8?B?WHdkaVV1T3IvQXFObG5reHh0U1NHSGRaK2ZVVUVENXFsRWdWMC9VK2U2Q2Ix?=
+ =?utf-8?B?OW1oYmg3WjY2RGI0Y241OXd6ZXdGNVhlRU5nY3UrTTQ3cFNJN2o5Q1ZnL2M4?=
+ =?utf-8?B?emwzSXYvajJqUEkxNXNwZDUyditoR0RUd0wwUnozMFJWcDBySXQzZk1qQ2ti?=
+ =?utf-8?B?QjJhVVJrMmpJTnlDa2pUMXN5UWhpbjBmY3g0dDVPaHFQdGtSWW5jZlkrcnh5?=
+ =?utf-8?B?WENmR2FHSDdzMjRIekY5RVVPZklOdXNjU0pkTVBaQXo4dFZJdVZrcnJVdlRS?=
+ =?utf-8?B?UERoUm5VRW9JMWJYMXhjV3pnWDJod2FCT05OODlyRzh5NVFFRStlV1I0S3JE?=
+ =?utf-8?B?N2ZSNkd4WWs5NGx5clY2clVpWk9YdFhZS1liMFJTczNheHhzbWltbVJKdEI5?=
+ =?utf-8?B?UngvSW5BVFppTTRodTBtczVJQlQ4ZmlZSlREaEhiM3cwbDBMV3UwUUNuVVlo?=
+ =?utf-8?B?eGIrSlVXaEp6Mmp1TS9IYjlENy9LbGtVZWZrMzJpL3NRRlovSE0vWDNLRUs4?=
+ =?utf-8?B?ZXJWcjhrV1hnNkYySGZiaStxTHpVRmpDVWMxa1hnUUZsL1VBSHVxc2htMVVq?=
+ =?utf-8?B?VHR0dDRwSlRzZXlYdVEwbW42bC9iZTgzNmtlVmtGQVc2N2YxYTNoNEJxVTJ6?=
+ =?utf-8?B?WlJIMlRsNlREcjBVVmdwWTgyNjdRcGV1Y05GRWp4WDlDb2JsN0hobVlIR3ZM?=
+ =?utf-8?B?Y0VJMjRGdnd3cFh2bkg5U2MvSGR6OXFNUVNIYVkwNXJka2lmbG4xcmdUTnVT?=
+ =?utf-8?B?dnhBZ1ppWVVhQVlrUFhWcWQrSzlZRjBqd01ObzlCZ1JFSEE1dS93elZCS2RF?=
+ =?utf-8?B?NnZQTlVOOVNVV1pXZXVmY2ZhekZHd1o3ZEkveGducy9GZGtIM1lQQ09yKzI4?=
+ =?utf-8?B?dUpXTnVNUUlmTGZNZmRvMG1DeXhPam14TGlxaS96QjEyNG5Gd2JWQndIbEkz?=
+ =?utf-8?B?N0pGZE5jNjNBTnJLS3F2b0Q3WElJeTIyeTlpVzZpdHpSdTkvdUt4aWJKamtj?=
+ =?utf-8?B?L0E0QUZsQnNKWjYzZWlqaW02SUtxOGJlOXlmSjZyYXRTQjFBUVJzMU5SMjlw?=
+ =?utf-8?B?YkZQTXRNcjdkektJdTJNdWUvbFlCZUhCQ0Z2MGJmQnNLb1NGNmZYRDhkOCta?=
+ =?utf-8?B?WUZSRG0xZWkxbzlpTjhkQm5KV3llY2E1ZXJwQ0diM3dTQ2c3N0MydnQ3RHUz?=
+ =?utf-8?B?MGx5ZHE0blFDK1BRSDBWMXphL0UwcTZiRzJubUFzZjM5VGJwMUs0L2hVcUI1?=
+ =?utf-8?B?ajJRaEhQaEM2aWR5dEptY1ZCbkF6RzlHTi8xN3A3Ukh2M0kxck4wZXV3MGZa?=
+ =?utf-8?B?YjBVOU15dnYxcnQ0SFByQzJRejNmZ05lb1g5ZXJnTmlKMGZIL3BOOVFEQVRH?=
+ =?utf-8?B?YzRFeHlYTC9iMlA5SktIR005M1BHSzFsS1ZXYTFQeGUxdDQwK3NFemd1R01H?=
+ =?utf-8?B?NXZ3clhrdFo4NWlYZmhCWGp4MVdIN0NvT0ZUUFBpMTEraUY4T0NLWTNzVEpJ?=
+ =?utf-8?B?V3luVlZsSzBPQ1c2dWU1bHRWSi9jYmVzQUFQeGcrVVRpTlB2TVhzSUV5UWp4?=
+ =?utf-8?B?MTRSdGdaMUJTK3JCMzU3ZnhGVWlzVVhQRlRhdHZYcUZUd0w1ZnU1NWF5eWh2?=
+ =?utf-8?B?YVZsSjZKbXYwMjY0dlAxOUFNWDlqc2ErbFpCSkdZREFjZnpvZXRPVTFpRkxP?=
+ =?utf-8?B?U2JxV1g4bEJCa3lCMUh5QT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [RESEND PATCH 3/3] leds: tps68470: Add LED control for tps68470
-Content-Language: en-US, nl
-To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>
-References: <20230213124520.1635257-1-hpa@redhat.com>
- <20230213124520.1635257-4-hpa@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230213124520.1635257-4-hpa@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-42ed3.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cfad8b7-2c62-49a7-e3e9-08db150080f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2023 18:13:31.0329
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB8180
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Kate,
-
-On 2/13/23 13:45, Kate Hsuan wrote:
-> There are two LED controllers, LEDA indicator LED and LEDB flash LED for
-> tps68470. LEDA can be enabled by setting TPS68470_ILEDCTL_ENA. Moreover,
-> tps68470 provides 4 levels of power status for LEDB, so after setting
-> TPS68470_ILEDCTL_ENB, the current status field (TPS68470_ILEDCTL_CTRLB)
-> should also be set according to the brightness value from user space.
-> These two LEDs can be controlled through the LED class of sysfs
-> (tps68470-leda and tps68470-ledb).
-> 
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> ---
->  drivers/leds/Kconfig         |  12 +++
->  drivers/leds/Makefile        |   1 +
->  drivers/leds/leds-tps68470.c | 170 +++++++++++++++++++++++++++++++++++
->  3 files changed, 183 insertions(+)
->  create mode 100644 drivers/leds/leds-tps68470.c
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 499d0f215a8b..453404cb1329 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -846,6 +846,18 @@ config LEDS_TPS6105X
->  	  It is a single boost converter primarily for white LEDs and
->  	  audio amplifiers.
->  
-> +config LEDS_TPS68470
-> +	tristate "LED support for TI TPS68470"
-> +	depends on LEDS_CLASS
-> +	depends on INTEL_SKL_INT3472
-> +	help
-> +	  This driver supports TPS68470 PMIC with LED chip.
-> +	  It provide two LED controllers, including an indicator LED
-> +	  and a flash LED.
-> +
-> +	  To compile this driver as a module, choose M and it will be
-> +	  called leds-tps68470
-> +
->  config LEDS_IP30
->  	tristate "LED support for SGI Octane machines"
->  	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 4fd2f92cd198..0a2ec01e27d9 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TURRIS_OMNIA)		+= leds-turris-omnia.o
->  obj-$(CONFIG_LEDS_WM831X_STATUS)	+= leds-wm831x-status.o
->  obj-$(CONFIG_LEDS_WM8350)		+= leds-wm8350.o
->  obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
-> +obj-$(CONFIG_LEDS_TPS68470)		+= leds-tps68470.o
->  
->  # LED SPI Drivers
->  obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
-> new file mode 100644
-> index 000000000000..6243e7a4a718
-> --- /dev/null
-> +++ b/drivers/leds/leds-tps68470.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * LED driver for TPS68470 PMIC
-> + *
-> + * Copyright (C) 2023 Red Hat
-> + *
-> + * Authors:
-> + *	Kate Hsuan <hpa@redhat.com>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/mfd/tps68470.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/leds.h>
-> +
-> +struct tps68470_led_data {
-> +	struct regmap *tps68470_regmap;
-> +	unsigned int brightness_a;
-> +	unsigned int brightness_b;
-> +	struct led_classdev leda_cdev;
-> +	struct led_classdev ledb_cdev;
-> +};
-> +
-> +enum ctrlb_current {
-> +	CTRLB_2MA	= 0,
-> +	CTRLB_4MA	= 1,
-> +	CTRLB_8MA	= 2,
-> +	CTRLB_16MA	= 3,
-> +};
-> +
-> +static int set_ledb_current(struct regmap *regmap,
-> +			    unsigned int *data_brightness,
-> +			    enum led_brightness brightness)
-> +{
-> +	unsigned int ledb_current;
-> +
-> +	switch (brightness) {
-> +	case LED_HALF:
-> +		ledb_current = CTRLB_8MA;
-> +		break;
-> +	case LED_FULL:
-> +		ledb_current = CTRLB_16MA;
-> +		break;
-
-LED_FULL is 255, now a days the LED class supports custom
-brightness ranges, so you could just set max_brightness to 4
-and then use brightness 1-4 to map to the 4 values.
-
-> +	case LED_ON:
-> +		ledb_current = CTRLB_4MA;
-> +		break;
-> +	case LED_OFF:
-> +		ledb_current = CTRLB_2MA;
-> +		break;
-
-This makes no sense, when brightness == LED_OFF you
-disable the LEDB output, so the configured current does
-not matter.
-
-But I believe that mapping the current to brightness is
-not how this should be done / modeled. With the separate
-on/off toggle this is clearly not intended to allow dimming
-a LED. This is configurable to allow adjusting for different
-notification LED types, but the intention is still for LEDB
-to be used as a simple on/off notification LED.
-
-(The lack of e.g. actual PWM / fine grained current control
-vs doubling the current each step to me is another clear
-indication the current is intended to be set once and not
-for dimming purposes)
-
-So IMHO both LED pins should have a max_brightness of 1 and
-the sysfs API (or internal kernel users) should only be able
-to turn them on/off (sysfs brightness 1/0)
-
-The setting of the current should be done through a device
-property. Lets call this "ti,ledb-current" with allowed
-values of 2, 4, 8, 16. You can then try to get a configured
-current for the pin using device-properties from probe()
-and only set the current once if the property is their, e.g.
-something like this:
-
-probe ()
-{
-	u32 curr;
-
-	ret = device_property_read_u32(dev, "ti,ledb-current", &curr);
-	if (ret == 0) {
-		switch (curr) {
-		case  2: current = CTRLB_2MA; break;
-		case  4: current = CTRLB_4MA; break;
-		case  8: current = CTRLB_8MA; break;
-		case 16: current = CTRLB_16MA; break;
-		default:
-			dev_err(dev, "Invalid LEDB curr value: %d\n", curr);
-			return -EINVAL;
-		}
-
-		regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, TPS68470_ILEDCTL_CTRLB, curr);
-	}
-
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	*data_brightness = brightness;
-> +	return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL,
-> +				  TPS68470_ILEDCTL_CTRLB, ledb_current);
-> +}
-> +
-> +static int tps68470_brightness_set(struct led_classdev *led_cdev,
-> +				   enum led_brightness brightness)
-> +{
-> +	struct tps68470_led_data *data;
-> +	struct regmap *regmap;
-> +	unsigned int mask;
-> +	unsigned int value;
-> +	int ret;
-> +
-> +	if (!strncmp(led_cdev->name, "tps68470-ileda", 14)) {
-> +		data = container_of(led_cdev, struct tps68470_led_data, leda_cdev);
-> +		regmap = data->tps68470_regmap;
-> +		data->brightness_a = brightness ? TPS68470_ILEDCTL_ENA : 0;
-> +		mask = TPS68470_ILEDCTL_ENA;
-> +		value = data->brightness_a;
-> +	} else if (!strncmp(led_cdev->name, "tps68470-iledb", 14)) {
-> +		data = container_of(led_cdev, struct tps68470_led_data, ledb_cdev);
-> +		regmap = data->tps68470_regmap;
-> +		mask = TPS68470_ILEDCTL_ENB;
-> +		value = brightness ? TPS68470_ILEDCTL_ENB : 0;
-> +		/* Set current state for ledb */
-> +		ret = set_ledb_current(regmap, &data->brightness_b, brightness);
-> +		if (ret)
-> +			goto err_exit;
-> +	} else
-> +		return -EINVAL;
-> +
-> +	ret = regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, mask, value);
-> +
-> +err_exit:
-> +	return ret;
-> +}
-
-
-> +
-> +static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev)
-> +{
-> +	struct tps68470_led_data *data = container_of(led_cdev,
-> +						      struct tps68470_led_data,
-> +						      ledb_cdev);
-
-This container_of only works for led_b not for led_a.
-
-> +
-> +	if (!strncmp(led_cdev->name, "tps68470-ileda", 14))
-> +		return data->brightness_a;
-> +	else if (!strncmp(led_cdev->name, "tps68470-iledb", 14))
-> +		return data->brightness_b;
-> +
-> +	return -EINVAL;
-> +}
-
-Instead of this strcmp magic, please just use 2 separate
-brightness_get functions (thus also solving the container_of
-problem above). And please also do the same for brightness_set.
-
-Regards,
-
-Hans
-
-
-> +
-> +static int tps68470_led_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0;
-> +	struct tps68470_led_data *tps68470_led;
-> +
-> +	tps68470_led = devm_kzalloc(&pdev->dev, sizeof(struct tps68470_led_data),
-> +				    GFP_KERNEL);
-> +	if (!tps68470_led)
-> +		return -ENOMEM;
-> +
-> +	tps68470_led->tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
-> +	tps68470_led->leda_cdev.name = "tps68470-ileda";
-> +	tps68470_led->leda_cdev.max_brightness = 1;
-> +	tps68470_led->leda_cdev.brightness_set_blocking = tps68470_brightness_set;
-> +	tps68470_led->leda_cdev.brightness_get = tps68470_brightness_get;
-> +	tps68470_led->leda_cdev.dev = &pdev->dev;
-> +	tps68470_led->brightness_a = 0;
-> +	ret = led_classdev_register(&pdev->dev, &tps68470_led->leda_cdev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to register LEDA: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tps68470_led->tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
-> +	tps68470_led->ledb_cdev.name = "tps68470-iledb";
-> +	tps68470_led->ledb_cdev.max_brightness = 255;
-> +	tps68470_led->ledb_cdev.brightness_set_blocking = tps68470_brightness_set;
-> +	tps68470_led->ledb_cdev.brightness_get = tps68470_brightness_get;
-> +	tps68470_led->ledb_cdev.dev = &pdev->dev;
-> +	tps68470_led->brightness_b = 0;
-> +	ret = led_classdev_register(&pdev->dev, &tps68470_led->ledb_cdev);
-> +	if (ret < 0) {
-
-		You are forgetting to unregister the other LED here.
-
-But instead of adding an unregister here, please just switch to
-devm_led_classdev_register() for both LEDs and then... (continued below)
-
-> +		dev_err(&pdev->dev, "Failed to register LEDB: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, tps68470_led);
-> +
-> +	return ret;
-> +}
-> +
-> +static int tps68470_led_remove(struct platform_device *pdev)
-> +{
-> +	struct tps68470_led_data *data = platform_get_drvdata(pdev);
-> +
-> +	led_classdev_unregister(&data->leda_cdev);
-> +	led_classdev_unregister(&data->ledb_cdev);
-> +
-> +	return 0;
-> +}
-
-You can remove the tps68470_led_remove() function since the
-devm framework now takes care of unregistering on probe-errors
-and on driver unbinding (aka remove).
-
-> +
-> +static struct platform_driver tps68470_led_driver = {
-> +	.driver = {
-> +		   .name = "tps68470-led",
-> +	},
-> +	.probe = tps68470_led_probe,
-> +	.remove = tps68470_led_remove,
-> +};
-> +module_platform_driver(tps68470_led_driver);
-> +
-> +MODULE_ALIAS("platform:tps68470-led");
-> +MODULE_DESCRIPTION("LED driver for TPS68470 PMIC");
-> +MODULE_LICENSE("GPL v2");
-
-Regards,
-
-Hans
-
+PiANCj4gQWxzbywgYW5vdGhlciBpc3N1ZSwgSSBoYXZlIHBsdXltb3V0aCBlbmFibGVkIHdpdGgg
+RlJBTUVCVUZGRVI9eS4gQWZ0ZXIgdXNpbmcgdGhlIGdtdXggcGF0Y2hlcywgdGhlIHNpemUgb2Yg
+dGhlIHRoZW1lIGhhcyBiZWNvbWUgdG9vIHRpbnkgZm9yIGFuIGluaXRpYWwgZmV3IHNlY29uZHMs
+IHRoZW4gaXQgZ2V0cyBub3JtYWwuIEkgdGVzdGVkIHRoaXMgYnkgY29tcGlsaW5nIGEga2VybmVs
+IHdpdGhvdXQgdGhlc2UgcGF0Y2hlcywgYW5kIHRoZSBidWcgZ290IGZpeGVkLiBJIGFsc28gdHJp
+ZWQgdXNpbmcgYWNwaSBiYWNrbGlnaHQgdXNpbmcgY29tbWFuZCBsaW5lICh0aGF0IG1hZGUgbWUg
+ZGlzY292ZXIgdGhlIGBhY3BpX2JhY2tsaWdodD12aWRlb2Agbm90IHdvcmtpbmcgYnVnKS4gSXMg
+dGhhdCBhbHNvIHJlbGF0ZWQgdG8gc29tZSB1cHN0cmVhbSBidWc/DQoNCkhpIEhhbnMNCg0KSXQg
+dHVybnMgb3V0IHRoYXQgQXBwbGUtZ211eCBoYWQgdG8gYmUgbG9hZGVkIGluIHRoZSBpbml0cmFt
+ZnMgZm9yIFBseW1vdXRoIHRvIHdvcmsgcHJvcGVybHkuIFNvLCBpdCBhY3R1YWxseSB3YXMgbXkg
+bWlzdGFrZS4NCg0KQWxzbyBJIG5vdGljZWQgdGhhdCB0aGUgcmVzcG9uZCB0byB5b3VyIHBhdGNo
+IGZvciBtZSB0byB0ZXN0IGRpZG7igJl0IHJlYWNoIHNpbmNlIGl0IHdhcyBhbiBIVE1MIGVtYWls
+LiBTbywgeWVzLCB5b3VyIHBhdGNoIGhvbm91cnMgYGFjcGlfYmFja2xpZ2h0PXZpZGVvYA==
