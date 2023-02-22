@@ -2,68 +2,67 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AC7C636D6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1496C636D6
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232334AbjBVQe4 (ORCPT
+        id S232339AbjBVQyH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Feb 2023 11:34:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52668 "EHLO
+        Wed, 22 Feb 2023 11:54:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232553AbjBVQex (ORCPT
+        with ESMTP id S229950AbjBVQyG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Feb 2023 11:34:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E19360B8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:34:08 -0800 (PST)
+        Wed, 22 Feb 2023 11:54:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC711EBCE
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:53:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677083648;
+        s=mimecast20190719; t=1677084797;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q8esxfJVTT75yFXIXwSeTLZl15U5SPnHoZLa97NCnZE=;
-        b=R8whmgqsYj3CxaXZyqIDVvGg2YCcwjFdoCYfnLfNkAejWJBL3qr1I/Dw5cqFvNMx0CWONJ
-        /auFqVyyQd47ShbkgxmV/wyUquKG21a5GlAGLoyAi9+YS9sFZwzZ16N/St3t4Q8rzR3Nm8
-        iPlt8svX0Lgo38CwmW6pvQi0I8oA/YE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=h5zUU+aJ7Z+iVb3z5ISDGd1flVdL3X2DUURMitbPWhg=;
+        b=KJSVSp+fcxKpUvB2AkvyIlrXFQmv2tXs2I6kc8VFxcwyo1tX5WCFejZjhMOMYVtvBIjP39
+        VRAlNxxYDugUBz5Cf0mMSw76tFSwhm4X0itGEnXojlYEOqxxi6XypxIrdsygo7JW75u2Jf
+        lurWMXEFxzs0AuUOwUb1ciqF9Wwa6J4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-672-mIfazeW1Oc6gPdUIieCT3A-1; Wed, 22 Feb 2023 11:34:02 -0500
-X-MC-Unique: mIfazeW1Oc6gPdUIieCT3A-1
-Received: by mail-ed1-f72.google.com with SMTP id k12-20020a50c8cc000000b004accf30f6d3so11613542edh.14
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:34:02 -0800 (PST)
+ us-mta-453-oLsodhDYOB-b27KBrsADlQ-1; Wed, 22 Feb 2023 11:53:15 -0500
+X-MC-Unique: oLsodhDYOB-b27KBrsADlQ-1
+Received: by mail-ed1-f71.google.com with SMTP id ec13-20020a0564020d4d00b004a621e993a8so11396469edb.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:53:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q8esxfJVTT75yFXIXwSeTLZl15U5SPnHoZLa97NCnZE=;
-        b=gUj0+pSgvNJLabUgiEqeD+QBeEIJ0jC4pC5iwHOZa5Rd65Pz82n243oua2D+bjWk93
-         qzqt6/G6dEtL5Cfe+N3ZAOkjD924fo32giRSqbX5z9OKMSRartdxS4F+C5OKbpFd3sg2
-         nHdeklAELbL6mOKjJReRhK3sQjwKD8vSI93MRhqiCmcx26eCgxsQNUROQN5aeI9bq2CG
-         j5O4OIo6Nfs6dySakrt7+z2TZiujrtS/3G6MgtG9zFZ4tJpZxATrmSA/1biJ4LdQXq2h
-         bBUClVRie7JzquU2nles7hopFgJeRAIeQhUhC7g98DpLf8eJFn6kMscVmC/KfrqCvAJy
-         6Aiw==
-X-Gm-Message-State: AO0yUKXybw0Bep5PqB5bjqVSyN+eoR/MGuUM6a78D6MJ0sZcF0pkHRA6
-        Cp8mTHGJOI42uz2MvIKbz0Nm7aWo77mNF9YysCfq7P+3a8KTTNuvtXVGTPX2ihUfCvjv/HiKCsB
-        MXefLhBu8k7B5LMWN+tZ0PfrLklT7NhCq3Q==
-X-Received: by 2002:a17:906:261b:b0:8aa:c105:f0bf with SMTP id h27-20020a170906261b00b008aac105f0bfmr17895411ejc.17.1677083641735;
-        Wed, 22 Feb 2023 08:34:01 -0800 (PST)
-X-Google-Smtp-Source: AK7set8Lsm6/R+Yo2xM+J57hhLzO45cFnz7ctQpLIoyPFTlAQ5hAIVHME6/77ief6JsuGXUNWzjVAQ==
-X-Received: by 2002:a17:906:261b:b0:8aa:c105:f0bf with SMTP id h27-20020a170906261b00b008aac105f0bfmr17895387ejc.17.1677083641475;
-        Wed, 22 Feb 2023 08:34:01 -0800 (PST)
+        bh=h5zUU+aJ7Z+iVb3z5ISDGd1flVdL3X2DUURMitbPWhg=;
+        b=6qc6q1aSpX2mXwHIwSKpeHdGMCLbrgcujARdBSYBEPdAff2Z3hT30QBvmH2/AIiWDT
+         Of7wRpIly2Eq2+vOGPMYWyeLF/Hy1z5q6avETCmQpX/j+QqdQNZwm0Lx134bW4hmuSpl
+         BUIJKMWfCaCsIedc4ubLiffRhcZLiFD+KrgMQbING7ObDqG/rUc8d0Xfzc5KHCieEtU8
+         CbpEhZ9YFCT+cYLL2S6kvY0bQu3sRoqC7iFdebwX3PD77M+Jb3fIDzzwmL7YN1yzTvkA
+         01kNsV2MVG94dhjfSgLFgodPlepVh99feg/Cx9fdiPa1Mq44RazUFot/7LtHWcWzK8Ok
+         A1rQ==
+X-Gm-Message-State: AO0yUKWaGvNiEOJbh4FMkj0h9HBjFeVNctX1ONQN3fSwQ5lwNYWZTSOy
+        iFDH799mDq/dujPOF5SdIJVs9Poeq25JUsfeuPPjW7ZGrpxDucwGJ0YLSgFsSeymSpS/SfCatVb
+        V5851DqtG5S/eMykRcV9XDMMzWisQ8pLvsw==
+X-Received: by 2002:a05:6402:647:b0:4ab:ec2:3cd1 with SMTP id u7-20020a056402064700b004ab0ec23cd1mr6744163edx.25.1677084794314;
+        Wed, 22 Feb 2023 08:53:14 -0800 (PST)
+X-Google-Smtp-Source: AK7set/aklv8wp7kO8cNqdv5efE18JZl366TtsvFP0NVC/K/plVkJNS4PfjBHDX42z9oKo0Dm8hLeg==
+X-Received: by 2002:a05:6402:647:b0:4ab:ec2:3cd1 with SMTP id u7-20020a056402064700b004ab0ec23cd1mr6744139edx.25.1677084793960;
+        Wed, 22 Feb 2023 08:53:13 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id y14-20020a1709064b0e00b008c979c74732sm5054746eju.156.2023.02.22.08.34.00
+        by smtp.gmail.com with ESMTPSA id p11-20020a056402074b00b004acc1374849sm2729874edy.82.2023.02.22.08.53.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Feb 2023 08:34:00 -0800 (PST)
-Message-ID: <cee654ea-0961-bf5d-2bcc-87e9b980b3d8@redhat.com>
-Date:   Wed, 22 Feb 2023 17:34:00 +0100
+        Wed, 22 Feb 2023 08:53:13 -0800 (PST)
+Message-ID: <2a0f7d36-ef0c-1c29-5f01-6115275e78dd@redhat.com>
+Date:   Wed, 22 Feb 2023 17:53:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [RESEND PATCH 2/3] include: mfd: tps68470: Add masks for LEDA and
- LEDB
+Subject: Re: [RESEND PATCH 3/3] leds: tps68470: Add LED control for tps68470
 Content-Language: en-US, nl
 To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
@@ -71,56 +70,326 @@ To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Daniel Scally <djrscally@gmail.com>,
         Mark Gross <markgross@kernel.org>
 References: <20230213124520.1635257-1-hpa@redhat.com>
- <20230213124520.1635257-3-hpa@redhat.com>
+ <20230213124520.1635257-4-hpa@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230213124520.1635257-3-hpa@redhat.com>
+In-Reply-To: <20230213124520.1635257-4-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Kate,
 
 On 2/13/23 13:45, Kate Hsuan wrote:
-> Add flags for both LEDA(TPS68470_ILEDCTL_ENA), LEDB
-> (TPS68470_ILEDCTL_ENB), and current control mask for LEDB
-> (TPS68470_ILEDCTL_CTRLB)
+> There are two LED controllers, LEDA indicator LED and LEDB flash LED for
+> tps68470. LEDA can be enabled by setting TPS68470_ILEDCTL_ENA. Moreover,
+> tps68470 provides 4 levels of power status for LEDB, so after setting
+> TPS68470_ILEDCTL_ENB, the current status field (TPS68470_ILEDCTL_CTRLB)
+> should also be set according to the brightness value from user space.
+> These two LEDs can be controlled through the LED class of sysfs
+> (tps68470-leda and tps68470-ledb).
 > 
 > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+>  drivers/leds/Kconfig         |  12 +++
+>  drivers/leds/Makefile        |   1 +
+>  drivers/leds/leds-tps68470.c | 170 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 183 insertions(+)
+>  create mode 100644 drivers/leds/leds-tps68470.c
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 499d0f215a8b..453404cb1329 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -846,6 +846,18 @@ config LEDS_TPS6105X
+>  	  It is a single boost converter primarily for white LEDs and
+>  	  audio amplifiers.
+>  
+> +config LEDS_TPS68470
+> +	tristate "LED support for TI TPS68470"
+> +	depends on LEDS_CLASS
+> +	depends on INTEL_SKL_INT3472
+> +	help
+> +	  This driver supports TPS68470 PMIC with LED chip.
+> +	  It provide two LED controllers, including an indicator LED
+> +	  and a flash LED.
+> +
+> +	  To compile this driver as a module, choose M and it will be
+> +	  called leds-tps68470
+> +
+>  config LEDS_IP30
+>  	tristate "LED support for SGI Octane machines"
+>  	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 4fd2f92cd198..0a2ec01e27d9 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TURRIS_OMNIA)		+= leds-turris-omnia.o
+>  obj-$(CONFIG_LEDS_WM831X_STATUS)	+= leds-wm831x-status.o
+>  obj-$(CONFIG_LEDS_WM8350)		+= leds-wm8350.o
+>  obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
+> +obj-$(CONFIG_LEDS_TPS68470)		+= leds-tps68470.o
+>  
+>  # LED SPI Drivers
+>  obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
+> new file mode 100644
+> index 000000000000..6243e7a4a718
+> --- /dev/null
+> +++ b/drivers/leds/leds-tps68470.c
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LED driver for TPS68470 PMIC
+> + *
+> + * Copyright (C) 2023 Red Hat
+> + *
+> + * Authors:
+> + *	Kate Hsuan <hpa@redhat.com>
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/mfd/tps68470.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/leds.h>
+> +
+> +struct tps68470_led_data {
+> +	struct regmap *tps68470_regmap;
+> +	unsigned int brightness_a;
+> +	unsigned int brightness_b;
+> +	struct led_classdev leda_cdev;
+> +	struct led_classdev ledb_cdev;
+> +};
+> +
+> +enum ctrlb_current {
+> +	CTRLB_2MA	= 0,
+> +	CTRLB_4MA	= 1,
+> +	CTRLB_8MA	= 2,
+> +	CTRLB_16MA	= 3,
+> +};
+> +
+> +static int set_ledb_current(struct regmap *regmap,
+> +			    unsigned int *data_brightness,
+> +			    enum led_brightness brightness)
+> +{
+> +	unsigned int ledb_current;
+> +
+> +	switch (brightness) {
+> +	case LED_HALF:
+> +		ledb_current = CTRLB_8MA;
+> +		break;
+> +	case LED_FULL:
+> +		ledb_current = CTRLB_16MA;
+> +		break;
 
-Thanks, patch looks good to me:
+LED_FULL is 255, now a days the LED class supports custom
+brightness ranges, so you could just set max_brightness to 4
+and then use brightness 1-4 to map to the 4 values.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> +	case LED_ON:
+> +		ledb_current = CTRLB_4MA;
+> +		break;
+> +	case LED_OFF:
+> +		ledb_current = CTRLB_2MA;
+> +		break;
+
+This makes no sense, when brightness == LED_OFF you
+disable the LEDB output, so the configured current does
+not matter.
+
+But I believe that mapping the current to brightness is
+not how this should be done / modeled. With the separate
+on/off toggle this is clearly not intended to allow dimming
+a LED. This is configurable to allow adjusting for different
+notification LED types, but the intention is still for LEDB
+to be used as a simple on/off notification LED.
+
+(The lack of e.g. actual PWM / fine grained current control
+vs doubling the current each step to me is another clear
+indication the current is intended to be set once and not
+for dimming purposes)
+
+So IMHO both LED pins should have a max_brightness of 1 and
+the sysfs API (or internal kernel users) should only be able
+to turn them on/off (sysfs brightness 1/0)
+
+The setting of the current should be done through a device
+property. Lets call this "ti,ledb-current" with allowed
+values of 2, 4, 8, 16. You can then try to get a configured
+current for the pin using device-properties from probe()
+and only set the current once if the property is their, e.g.
+something like this:
+
+probe ()
+{
+	u32 curr;
+
+	ret = device_property_read_u32(dev, "ti,ledb-current", &curr);
+	if (ret == 0) {
+		switch (curr) {
+		case  2: current = CTRLB_2MA; break;
+		case  4: current = CTRLB_4MA; break;
+		case  8: current = CTRLB_8MA; break;
+		case 16: current = CTRLB_16MA; break;
+		default:
+			dev_err(dev, "Invalid LEDB curr value: %d\n", curr);
+			return -EINVAL;
+		}
+
+		regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, TPS68470_ILEDCTL_CTRLB, curr);
+	}
+
+
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	*data_brightness = brightness;
+> +	return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL,
+> +				  TPS68470_ILEDCTL_CTRLB, ledb_current);
+> +}
+> +
+> +static int tps68470_brightness_set(struct led_classdev *led_cdev,
+> +				   enum led_brightness brightness)
+> +{
+> +	struct tps68470_led_data *data;
+> +	struct regmap *regmap;
+> +	unsigned int mask;
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	if (!strncmp(led_cdev->name, "tps68470-ileda", 14)) {
+> +		data = container_of(led_cdev, struct tps68470_led_data, leda_cdev);
+> +		regmap = data->tps68470_regmap;
+> +		data->brightness_a = brightness ? TPS68470_ILEDCTL_ENA : 0;
+> +		mask = TPS68470_ILEDCTL_ENA;
+> +		value = data->brightness_a;
+> +	} else if (!strncmp(led_cdev->name, "tps68470-iledb", 14)) {
+> +		data = container_of(led_cdev, struct tps68470_led_data, ledb_cdev);
+> +		regmap = data->tps68470_regmap;
+> +		mask = TPS68470_ILEDCTL_ENB;
+> +		value = brightness ? TPS68470_ILEDCTL_ENB : 0;
+> +		/* Set current state for ledb */
+> +		ret = set_ledb_current(regmap, &data->brightness_b, brightness);
+> +		if (ret)
+> +			goto err_exit;
+> +	} else
+> +		return -EINVAL;
+> +
+> +	ret = regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, mask, value);
+> +
+> +err_exit:
+> +	return ret;
+> +}
+
+
+> +
+> +static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev)
+> +{
+> +	struct tps68470_led_data *data = container_of(led_cdev,
+> +						      struct tps68470_led_data,
+> +						      ledb_cdev);
+
+This container_of only works for led_b not for led_a.
+
+> +
+> +	if (!strncmp(led_cdev->name, "tps68470-ileda", 14))
+> +		return data->brightness_a;
+> +	else if (!strncmp(led_cdev->name, "tps68470-iledb", 14))
+> +		return data->brightness_b;
+> +
+> +	return -EINVAL;
+> +}
+
+Instead of this strcmp magic, please just use 2 separate
+brightness_get functions (thus also solving the container_of
+problem above). And please also do the same for brightness_set.
 
 Regards,
 
 Hans
 
 
-> ---
->  include/linux/mfd/tps68470.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/mfd/tps68470.h b/include/linux/mfd/tps68470.h
-> index 7807fa329db0..2d2abb25b944 100644
-> --- a/include/linux/mfd/tps68470.h
-> +++ b/include/linux/mfd/tps68470.h
-> @@ -34,6 +34,7 @@
->  #define TPS68470_REG_SGPO		0x22
->  #define TPS68470_REG_GPDI		0x26
->  #define TPS68470_REG_GPDO		0x27
-> +#define TPS68470_REG_ILEDCTL		0x28
->  #define TPS68470_REG_VCMVAL		0x3C
->  #define TPS68470_REG_VAUX1VAL		0x3D
->  #define TPS68470_REG_VAUX2VAL		0x3E
-> @@ -94,4 +95,8 @@
->  #define TPS68470_GPIO_MODE_OUT_CMOS	2
->  #define TPS68470_GPIO_MODE_OUT_ODRAIN	3
->  
-> +#define TPS68470_ILEDCTL_ENA		BIT(2)
-> +#define TPS68470_ILEDCTL_ENB		BIT(6)
-> +#define TPS68470_ILEDCTL_CTRLB		GENMASK(5, 4)
 > +
->  #endif /* __LINUX_MFD_TPS68470_H */
+> +static int tps68470_led_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0;
+> +	struct tps68470_led_data *tps68470_led;
+> +
+> +	tps68470_led = devm_kzalloc(&pdev->dev, sizeof(struct tps68470_led_data),
+> +				    GFP_KERNEL);
+> +	if (!tps68470_led)
+> +		return -ENOMEM;
+> +
+> +	tps68470_led->tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
+> +	tps68470_led->leda_cdev.name = "tps68470-ileda";
+> +	tps68470_led->leda_cdev.max_brightness = 1;
+> +	tps68470_led->leda_cdev.brightness_set_blocking = tps68470_brightness_set;
+> +	tps68470_led->leda_cdev.brightness_get = tps68470_brightness_get;
+> +	tps68470_led->leda_cdev.dev = &pdev->dev;
+> +	tps68470_led->brightness_a = 0;
+> +	ret = led_classdev_register(&pdev->dev, &tps68470_led->leda_cdev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to register LEDA: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	tps68470_led->tps68470_regmap = dev_get_drvdata(pdev->dev.parent);
+> +	tps68470_led->ledb_cdev.name = "tps68470-iledb";
+> +	tps68470_led->ledb_cdev.max_brightness = 255;
+> +	tps68470_led->ledb_cdev.brightness_set_blocking = tps68470_brightness_set;
+> +	tps68470_led->ledb_cdev.brightness_get = tps68470_brightness_get;
+> +	tps68470_led->ledb_cdev.dev = &pdev->dev;
+> +	tps68470_led->brightness_b = 0;
+> +	ret = led_classdev_register(&pdev->dev, &tps68470_led->ledb_cdev);
+> +	if (ret < 0) {
+
+		You are forgetting to unregister the other LED here.
+
+But instead of adding an unregister here, please just switch to
+devm_led_classdev_register() for both LEDs and then... (continued below)
+
+> +		dev_err(&pdev->dev, "Failed to register LEDB: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, tps68470_led);
+> +
+> +	return ret;
+> +}
+> +
+> +static int tps68470_led_remove(struct platform_device *pdev)
+> +{
+> +	struct tps68470_led_data *data = platform_get_drvdata(pdev);
+> +
+> +	led_classdev_unregister(&data->leda_cdev);
+> +	led_classdev_unregister(&data->ledb_cdev);
+> +
+> +	return 0;
+> +}
+
+You can remove the tps68470_led_remove() function since the
+devm framework now takes care of unregistering on probe-errors
+and on driver unbinding (aka remove).
+
+> +
+> +static struct platform_driver tps68470_led_driver = {
+> +	.driver = {
+> +		   .name = "tps68470-led",
+> +	},
+> +	.probe = tps68470_led_probe,
+> +	.remove = tps68470_led_remove,
+> +};
+> +module_platform_driver(tps68470_led_driver);
+> +
+> +MODULE_ALIAS("platform:tps68470-led");
+> +MODULE_DESCRIPTION("LED driver for TPS68470 PMIC");
+> +MODULE_LICENSE("GPL v2");
+
+Regards,
+
+Hans
 
