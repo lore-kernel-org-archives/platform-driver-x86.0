@@ -2,103 +2,126 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680B9C636D7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Feb 2023 20:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046BC64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 16:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbjBUUJY (ORCPT
+        id S232122AbjBVQej (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Feb 2023 15:09:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        Wed, 22 Feb 2023 11:34:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbjBUUJV (ORCPT
+        with ESMTP id S231996AbjBVQei (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Feb 2023 15:09:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E4428855
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 12:08:35 -0800 (PST)
+        Wed, 22 Feb 2023 11:34:38 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2212BF03
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:33:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677010114;
+        s=mimecast20190719; t=1677083631;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=09M2IhNewYa0ZD87pwGV1iriHd9wzWyMm+sZhc4KVgY=;
-        b=Yj1AVWy7WspURCOXH8avYBMBxKuzvncOb35D47p+Oq8hoEKpwZ7WJwjLjQuFpTBCXIhx66
-        aa6jWN2o2N23Z7jZOjCUz8jBIF9okkvWhwwjSInscgt3cV5PfwUolmsJTZhK1rHMkzm+YH
-        8w35aF/cwZRRoA9NhaOp2FjoNnTYKps=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nfRgrG7v9e35Qkpdm4A6k1IiUUsubAbiMqnM/ML5i5c=;
+        b=dZRb2unR1uosfFaKF1dQJURWm1GKNoo2xfzslPqLsC4qLY613OvAYndC5Y8wNEIp/gu1St
+        5BK5uPVm0ZdnQn+6el0rc4nl9oYEY1B4n0KUUapsO6EexQD/VxwATBQXz/SDb2oJX7OsDO
+        VTY+g4TWxMexwrlKidbQvfFJ8uNYCxo=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-556-JeyLUeicOWCQJ49lh1Ft6w-1; Tue, 21 Feb 2023 15:08:10 -0500
-X-MC-Unique: JeyLUeicOWCQJ49lh1Ft6w-1
-Received: by mail-ed1-f70.google.com with SMTP id cf11-20020a0564020b8b00b0049ec3a108beso7319595edb.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Feb 2023 12:08:01 -0800 (PST)
+ us-mta-271-BsPmAwTlMruk4HWTgJa-nw-1; Wed, 22 Feb 2023 11:33:48 -0500
+X-MC-Unique: BsPmAwTlMruk4HWTgJa-nw-1
+Received: by mail-ed1-f69.google.com with SMTP id b1-20020aa7dc01000000b004ad062fee5eso11401030edu.17
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2023 08:33:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=09M2IhNewYa0ZD87pwGV1iriHd9wzWyMm+sZhc4KVgY=;
-        b=Ted99nhJAlydlxiIxNxY6E6Pj4fCc3apmBCGRccrq/EMR1pXChLMaaCUvcW0oVOLbI
-         k/jhjVPMpKJSV9Nmar/rs/NmjqOILBjPgbv2BfIkj1io0/do8UrDCVRojiwCHjYmnGKF
-         iuToHpUuWOvvta7uSEzjrFNnf8yktEAR9bE5zozNmLOtsNwUbyPF5ESiS89tQ3KdZ4GI
-         1wd6gyLJaxhDfdzwnDoHWuTu+go3XzeevO9tNc7tc+fQD4Z56gnpw1Dz7JB2YiyNGrkj
-         LyC+ep7hEWTdosKuEhlNgSTfN22HYuP3Z/8z3BtlWKaMReaxiE1WGKUUqKZXhPTGBgwZ
-         21gw==
-X-Gm-Message-State: AO0yUKVYoQR77kGbYPAFBGQcs8WCYsAJL7/irwxWduARNpTJ86VavejJ
-        zqnoz/cCiqHSUKeCSkam4+zR+sxjavSTAcRwuk+kNqs/lOwlAZPesfBwVsL0ptsqX32ZKkvkxjj
-        iW6b+PfFkp5bR5B2M6BCo4I/cXhiy3PbOuA==
-X-Received: by 2002:a50:ee1a:0:b0:4ad:7c6c:5386 with SMTP id g26-20020a50ee1a000000b004ad7c6c5386mr4666717eds.30.1677010077401;
-        Tue, 21 Feb 2023 12:07:57 -0800 (PST)
-X-Google-Smtp-Source: AK7set8BGn8xDOhDuov3MkZqm4u3X6uxPdXm6C3Wov/p2iyeV432KODzpfLNtWuyc+AJ4tr0hCdZqg==
-X-Received: by 2002:a50:ee1a:0:b0:4ad:7c6c:5386 with SMTP id g26-20020a50ee1a000000b004ad7c6c5386mr4666702eds.30.1677010077206;
-        Tue, 21 Feb 2023 12:07:57 -0800 (PST)
-Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id e17-20020a50a691000000b004accf3a63cbsm1751767edc.68.2023.02.21.12.07.56
+        bh=nfRgrG7v9e35Qkpdm4A6k1IiUUsubAbiMqnM/ML5i5c=;
+        b=1N2r26aVKoQfXvttUi1DL64QBNNd2OTBoPHWHfcadzzZSMayJLYRIqu4ZWwfcOcOdm
+         WesvJPJTO1NWSNuEgvdFFGnJbBx1yIjNJ0rR5TKbwB0sUdceZ1J7BdIbdn++U4oFrP2n
+         aNyov3xDNwftcuTYbhxIjpIkUzAuW6dbMkwzV68yQ1NNuBL1ZLscqpLCFaA+gcHwKRRe
+         itSjW4ngw2mdwzxFfs9+aOWa+3LglWf1YSfbSx1kzJlTk9jZfV+0TSVPbehomnvNy8PB
+         BD3ILQsa8n4SmIo0BeDvFX/7tPQlm/UfcytLui7dt6aEazMSIXwJIX/EZWxG1isFy3l3
+         mxmA==
+X-Gm-Message-State: AO0yUKVTeiO2sSNN3IMoAjlh1q74BlPf1LqAHshxlhsqWlXSYdgwF9W3
+        +DAWh95rxw7aDuA7x9voJ75LKa2rcyAGTfHUYI/+x6HU5dxJ3xtdGjSXCojxbMb8qbZ52kvI+Xs
+        g21XsT9HGOdWbV3kN1Mj1XEP75oWbD/03Rg==
+X-Received: by 2002:a17:906:3b10:b0:8b1:3f5b:af5f with SMTP id g16-20020a1709063b1000b008b13f5baf5fmr14635584ejf.73.1677083626755;
+        Wed, 22 Feb 2023 08:33:46 -0800 (PST)
+X-Google-Smtp-Source: AK7set8ExtIugX2Bx7fHgbatGgHjSU0zHS/J5rKk8WvwYyPa8Q1xg6GKOjxlXBUTELIQdSmnCzpnAQ==
+X-Received: by 2002:a17:906:3b10:b0:8b1:3f5b:af5f with SMTP id g16-20020a1709063b1000b008b13f5baf5fmr14635565ejf.73.1677083626517;
+        Wed, 22 Feb 2023 08:33:46 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id md1-20020a170906ae8100b008b174ef3cdesm8121626ejb.27.2023.02.22.08.33.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Feb 2023 12:07:56 -0800 (PST)
-Message-ID: <e2193efe-c001-a56b-8fd4-4485de6b185d@redhat.com>
-Date:   Tue, 21 Feb 2023 21:07:56 +0100
+        Wed, 22 Feb 2023 08:33:45 -0800 (PST)
+Message-ID: <c3d8fecc-d442-e877-e170-b72b3ffc7e18@redhat.com>
+Date:   Wed, 22 Feb 2023 17:33:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2 15/16] thermal/drivers/acerhdf: Remove pointless
- governor test
-Content-Language: en-US
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rafael@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Kaestle <peter@piie.net>,
-        Mark Gross <markgross@kernel.org>,
-        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20230221180710.2781027-1-daniel.lezcano@linaro.org>
- <20230221180710.2781027-16-daniel.lezcano@linaro.org>
+Subject: Re: [RESEND PATCH 1/3] platform: x86: int3472: Add MFD cell for
+ tps68470 LED
+Content-Language: en-US, nl
+To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+References: <20230213124520.1635257-1-hpa@redhat.com>
+ <20230213124520.1635257-2-hpa@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230221180710.2781027-16-daniel.lezcano@linaro.org>
+In-Reply-To: <20230213124520.1635257-2-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Kate,
 
-On 2/21/23 19:07, Daniel Lezcano wrote:
-> The thermal zone parameter specifies the bang-bang governor.
+On 2/13/23 13:45, Kate Hsuan wrote:
+> Add MFD cell for tps68470-led.
 > 
-> The Kconfig selects the bang-bang governor. So it is pointless to test
-> if the governor was set for the thermal zone assuming it may not have
-> been compiled-in.
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+>  drivers/platform/x86/intel/int3472/tps68470.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Remove the test and prevent another access into the thermal internals.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Peter Kaestle <peter@piie.net>
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index 5b8d1a9620a5..9dceb6507a01 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -17,7 +17,7 @@
+>  #define DESIGNED_FOR_CHROMEOS		1
+>  #define DESIGNED_FOR_WINDOWS		2
+>  
+> -#define TPS68470_WIN_MFD_CELL_COUNT	3
+> +#define TPS68470_WIN_MFD_CELL_COUNT	4
+>  
+>  static const struct mfd_cell tps68470_cros[] = {
+>  	{ .name = "tps68470-gpio" },
+> @@ -194,6 +194,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+>  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+>  		cells[2].name = "tps68470-gpio";
+> +		cells[3].name = "tps68470-led";
 
-Thanks, looks good to me, here is my ack for merging this through
-the thermal tree.
+As the comment a few lines above states, the gpio cell must be last because the GPIO
+driver ends up calling acpi_dev_clear_dependencies() which will cause the ACPI code
+to instantiate the i2c_client-s for the camera sensors and we want all the cells
+to be instantiated before this happens, so this needs to become:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+		cells[2].name = "tps68470-led";
+  		cells[3].name = "tps68470-gpio";
+
+And for the sensor to actually be able to use the LEDA output as privacy LED,
+we also need to add a led lookup-table entry linking the sensor and the LEDA
+LED-class-device. I'll write a patch for this and submit that upstream soonish.
+
+For v2 of this patch-set, please include my patch with the lookup as a 4th patch.
 
 Regards,
 
@@ -106,26 +129,10 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/acerhdf.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 61f1c3090867..71b9c1f922d9 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -697,13 +697,6 @@ static int __init acerhdf_register_thermal(void)
->  	if (ret)
->  		return ret;
+
+
+
 >  
-> -	if (strcmp(thz_dev->governor->name,
-> -				acerhdf_zone_params.governor_name)) {
-> -		pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
-> -				acerhdf_zone_params.governor_name);
-> -		return -EINVAL;
-> -	}
-> -
->  	return 0;
->  }
->  
+>  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+>  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
 
