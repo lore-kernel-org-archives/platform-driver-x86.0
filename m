@@ -2,103 +2,60 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED076C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Feb 2023 23:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904B5C636D7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Feb 2023 08:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbjBVX7l (ORCPT
+        id S229745AbjBWIhu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Feb 2023 18:59:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        Thu, 23 Feb 2023 03:37:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232787AbjBVX7k (ORCPT
+        with ESMTP id S232056AbjBWIht (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Feb 2023 18:59:40 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987C0193F6;
-        Wed, 22 Feb 2023 15:59:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677110378; x=1708646378;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dzn8kdgfc75h4WU/vsEQnFls4iq/wpJtVzCqyEFGffQ=;
-  b=TTLTqDlm0bQ9krFyq5PNwikUJSxx0JXJH+SzroiIOgJh9QJU6ADn2Jfy
-   T56M0vKz+nrUIouHgEOkYgCUcDZjyrKu7SV+/zjsHtuDc82j4Sfn0paXb
-   ljID/yqD68xNSIJJBnuU4FHX93zav58D7VMWiYWRU4NWLsmKVaiyM+nqT
-   TeNLw9vsEWagvIhT+cc+GMqHRanKJcKW48XQkPeS+0OMKi5JkWdMTya90
-   MtkQV9CKD9SpAlE2wzgDm9i3sgvLezOyXlFLl41f+1Cg34x8k59HvNWb/
-   b17XviimZDGh/UW15mbCJdc4XEHpm3YW1qPS75hzysmb1wptowNr+UT6L
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10629"; a="419297070"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="419297070"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 15:59:25 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10629"; a="672259748"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="672259748"
-Received: from bpindjur-mobl1.amr.corp.intel.com (HELO [10.209.84.109]) ([10.209.84.109])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 15:59:24 -0800
-Message-ID: <9485dc39-ab09-b929-9f22-ebc6a5b01a43@intel.com>
-Date:   Wed, 22 Feb 2023 15:59:24 -0800
+        Thu, 23 Feb 2023 03:37:49 -0500
+Received: from mail.crawnon.pl (mail.crawnon.pl [51.68.198.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628A610E2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Feb 2023 00:37:45 -0800 (PST)
+Received: by mail.crawnon.pl (Postfix, from userid 1002)
+        id D8796A5592; Thu, 23 Feb 2023 08:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=crawnon.pl; s=mail;
+        t=1677141417; bh=C5hX24svv/9/TME4wPCHfYjl17BCtmuxEd1i9B4zdYs=;
+        h=Date:From:To:Subject:From;
+        b=amxseJCUopyPDM+MMR9upRgGrUIcxAGtXqwdgZgDbCkv8xdvRlzHNKDQpYVuDMTN+
+         Db0hAPXipkI4jDe/GxI2DYvvznzb8N7OZhI4jCLJkGXNZ9Vk0RlfxyHDz39lMziD67
+         L1IB0Xdv7466rHnD4ItFfdAUVUAC4L12CdcqvNivJP07BlQqY3HCk7dEuVvn/KA9vU
+         lqHrn5anMCvMktDXQO0MqeCzcZUkwY+jR2KNfi016tv5NCIb6fYPOd212EViUzQLpz
+         vRjz0xk/WL/u0NIvEY2BmmfvRfveCDtDAtQaLVJ9YmKAl+ByZnfzVb826PB7VF4r0L
+         PH5N1z1cdMaqA==
+Received: by mail.crawnon.pl for <platform-driver-x86@vger.kernel.org>; Thu, 23 Feb 2023 08:36:00 GMT
+Message-ID: <20230223074500-0.1.9c.lzm0.0.mbsgd1rj5g@crawnon.pl>
+Date:   Thu, 23 Feb 2023 08:36:00 GMT
+From:   =?UTF-8?Q? "Miko=C5=82aj_Fiodorczyk" ?= 
+        <mikolaj.fiodorczyk@crawnon.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: Fotowoltaika - nowe warunki
+X-Mailer: mail.crawnon.pl
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 4/7] platform/x86/intel/ifs: Implement Array BIST test
-Content-Language: en-US
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-References: <20230131234302.3997223-1-jithu.joseph@intel.com>
- <20230214234426.344960-1-jithu.joseph@intel.com>
- <20230214234426.344960-5-jithu.joseph@intel.com>
- <a24c65f8-978d-8968-7874-6b83e14b01ba@intel.com>
- <d9d18954-8434-4c85-88b8-8e1d99cd6a4b@intel.com>
- <dd501d6a-e7e9-be82-24fb-33b18fb6192b@intel.com>
- <b67d2125-4075-4eac-4cad-8e315b866144@intel.com>
- <5d57f42a-1bfc-5e6a-bb49-556ecb7402af@intel.com>
- <9c55a34b-c17e-2a62-9989-902ce940dde5@intel.com>
- <42ac85ea-0ffe-55fc-57c2-6f4555e8dc5b@intel.com>
- <8fb5ebbf-d468-169d-5603-b267e7b42516@intel.com>
- <82a6f9b2-bb17-babd-fbe0-c4a5bec1203b@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <82a6f9b2-bb17-babd-fbe0-c4a5bec1203b@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/22/23 15:32, Joseph, Jithu wrote:
-> On 2/22/2023 2:28 PM, Dave Hansen wrote:
->> On 2/22/23 14:07, Joseph, Jithu wrote:
->>> Since the trace has to be explicitly enabled (I thought it is okay to
->>> add a more convenient custom one only to be enabled for detailed
->>> analysis when required).
->> 	man perf-script
->>
->> You should be able to write one to do exactly what you need in about 10
->> minutes.  No new tracepoints, no new kernel code to maintain.  Knock
-> Thanks for the pointers. I gather that user level tools might be able to format the
-> msr trace output in a more convenient way (perhaps as generated by the custom driver trace)
-> 
-> There is still the other convenience of not having to look-up the
-> MSRs addresses corresponding to all the individual tests and setting the filter on them to
-> analyze IFS test activity (rather than enabling it via echo 1 > /sys/kernel/debug/tracing/events/intel_ifs/enable)
+Dzie=C5=84 dobry,
 
-Jithu, the perf-script tooling that I suggested wraps can abstract away
-the sysfs interface.  I suspect you might also have discovered this in
-the process of exploring my (and others') suggestions.
+chcia=C5=82bym poinformowa=C4=87, i=C5=BC mog=C4=85 Pa=C5=84stwo uzyska=C4=
+=87 dofinansowanie na systemy fotowoltaiczne w ramach nowej edycji progra=
+mu M=C3=B3j Pr=C4=85d.
 
-Please go invest some time there.  Feel free to come back to this thread
-if you get stuck or have done your due diligence exhausted the
-userspace-only path.
+Program zapewnia 6000 z=C5=82 dofinansowania na instalacj=C4=99 paneli i =
+16 000 z=C5=82 na magazyn energii, ni=C5=BCsze cen pr=C4=85du i mo=C5=BCl=
+iwo=C5=9B=C4=87 odliczenia koszt=C3=B3w zwi=C4=85zanych z instalacj=C4=85=
+ fotowoltaiki w ramach rozliczenia PIT (tzw. ulga termomodernizacyjna).
+
+Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
+temacie?
 
 
+Pozdrawiam,
+Miko=C5=82aj Fiodorczyk
