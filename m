@@ -2,87 +2,88 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF89C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Feb 2023 21:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452BEC61DA3
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Feb 2023 14:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbjBWVc2 (ORCPT
+        id S229642AbjBXO3x (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Feb 2023 16:32:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45810 "EHLO
+        Fri, 24 Feb 2023 09:29:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjBWVc2 (ORCPT
+        with ESMTP id S229476AbjBXO3x (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Feb 2023 16:32:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6285356505
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Feb 2023 13:32:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B751617B2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Feb 2023 21:32:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 53C6BC43446
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Feb 2023 21:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677187946;
-        bh=l4vwhtI3QSKmVXuLK5SQuhwIb1gotqGcbcUxjbtgjiU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=BEyBzjvwwCT8fiMJENwrzdw9iSlGglmNQF802E27Uka4aDuT/kVJHcCCGMM0/WjC4
-         9Okw7miAV1Umv2qiL+Xcsv1C8E+JrOH04Ic1/h3vkLjgPWOOFkCHcKOJtShlaq+cX3
-         6Skr+NJDiClm1tvI47Y1eR9dohRK7d/q44jsDWTfIPNZd6w4CyHrV8aszFUeFTZm8r
-         O3tYKa6mbyjlq6vLUyW7Z9VJB3XT61xxrjlF/GWYAplvPnWkVeUr2KPtFXvMuhHpTP
-         pdQq0RK339jIBiHsJUh21GDM07GO+sYgIGxOnaGbok2PCtq+As/63kGHGIojCNpEQ5
-         P5z6Zj83KL82g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 445C7C43142; Thu, 23 Feb 2023 21:32:26 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Thu, 23 Feb 2023 21:32:24 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: de99like@mennucci.debian.net
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-HuJl1RUxbF@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Fri, 24 Feb 2023 09:29:53 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C445E84A;
+        Fri, 24 Feb 2023 06:29:51 -0800 (PST)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B23633F;
+        Fri, 24 Feb 2023 15:29:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1677248989;
+        bh=KHesiuIeicidiNCvlgoCpOZ0mvq0D8tKK9E3aADVfyM=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=JE9XBHAo/PRNHvanNRWfeFkJaD3uu4EHhC1q8Qhey5cY0tJ2ta29p1QV+uzkQiakJ
+         UJ1xjpghhxndGeXzLdUfm7Gb7y9q7qrW+GItO+2zC3qrBtvjaY3k+Lip7Gga/gcIu7
+         ICQ5rIuD+NSghDCtZ5K2z31kVJAPIc5QrUQRBsOk=
+Message-ID: <e094f558-166b-c936-0621-f50af47dab71@ideasonboard.com>
+Date:   Fri, 24 Feb 2023 14:29:47 +0000
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [RESEND PATCH 2/3] include: mfd: tps68470: Add masks for LEDA and
+ LEDB
+To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+References: <20230213124520.1635257-1-hpa@redhat.com>
+ <20230213124520.1635257-3-hpa@redhat.com>
+Content-Language: en-US
+From:   Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20230213124520.1635257-3-hpa@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi Kate - thanks for the set
 
---- Comment #299 from A. M. (de99like@mennucci.debian.net) ---
-hi all.
-I have added my mobo a week ago to the list. It works fine. Someone may add=
- it
-to the whitelist.=20
+On 13/02/2023 12:45, Kate Hsuan wrote:
+> Add flags for both LEDA(TPS68470_ILEDCTL_ENA), LEDB
+> (TPS68470_ILEDCTL_ENB), and current control mask for LEDB
+> (TPS68470_ILEDCTL_CTRLB)
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
 
-# cat /sys/class/dmi/id/board_name
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 
-PRIME A520M-A II
+>   include/linux/mfd/tps68470.h | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/mfd/tps68470.h b/include/linux/mfd/tps68470.h
+> index 7807fa329db0..2d2abb25b944 100644
+> --- a/include/linux/mfd/tps68470.h
+> +++ b/include/linux/mfd/tps68470.h
+> @@ -34,6 +34,7 @@
+>   #define TPS68470_REG_SGPO		0x22
+>   #define TPS68470_REG_GPDI		0x26
+>   #define TPS68470_REG_GPDO		0x27
+> +#define TPS68470_REG_ILEDCTL		0x28
+>   #define TPS68470_REG_VCMVAL		0x3C
+>   #define TPS68470_REG_VAUX1VAL		0x3D
+>   #define TPS68470_REG_VAUX2VAL		0x3E
+> @@ -94,4 +95,8 @@
+>   #define TPS68470_GPIO_MODE_OUT_CMOS	2
+>   #define TPS68470_GPIO_MODE_OUT_ODRAIN	3
+>   
+> +#define TPS68470_ILEDCTL_ENA		BIT(2)
+> +#define TPS68470_ILEDCTL_ENB		BIT(6)
+> +#define TPS68470_ILEDCTL_CTRLB		GENMASK(5, 4)
+> +
+>   #endif /* __LINUX_MFD_TPS68470_H */
 
-Thanks. a.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
