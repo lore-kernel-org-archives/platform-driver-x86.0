@@ -2,48 +2,50 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86B4C64ED6
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Feb 2023 14:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CAEC64ED6
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Feb 2023 14:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbjBZOsL (ORCPT
+        id S230337AbjBZOxT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Feb 2023 09:48:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
+        Sun, 26 Feb 2023 09:53:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbjBZOsC (ORCPT
+        with ESMTP id S229866AbjBZOwh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Feb 2023 09:48:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF2214223;
-        Sun, 26 Feb 2023 06:47:23 -0800 (PST)
+        Sun, 26 Feb 2023 09:52:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A5BB1A494;
+        Sun, 26 Feb 2023 06:49:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9B559B80BE6;
-        Sun, 26 Feb 2023 14:46:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A228C433EF;
-        Sun, 26 Feb 2023 14:46:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A653860C58;
+        Sun, 26 Feb 2023 14:48:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657E5C433D2;
+        Sun, 26 Feb 2023 14:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677422769;
-        bh=hpjxSFxme2o+ctkr+hhbvGDNOGAhSVzKWb3C5apFcf0=;
+        s=k20201202; t=1677422880;
+        bh=w+h52hvnhQo5lNcm23tac3TAxBW43PYXPti+xpjvico=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdc4wgdKLkyg2Nm1lLjPODtieTG1Dgs+0BVAY7BuQ10xMRoj6lT2VDgMDz0sNoCGr
-         0yOeQLLppV8/X16MwgOcxRmBZ+q7OM6Fx+TITuDwCpFjPgo7AIX2rBq7J0Dc+mZm2o
-         L9AOKRbDP61JSG0N1JEE6O4IqsHTmrI8z5aGOQgbooggbKMMbOAPAVONool7UVxL57
-         y/iA9atl06RuspnvZujRex7/LCquC8HhjGuvBnZPwNoyH5wbnmiyEs0If93IFrYH/2
-         tn4e+9r+OeePrTpMK69inIeqhM1SMg3RJaat4Feiens23etBEWH2mAdQlC41KWHeel
-         TOO3ds627VTZA==
+        b=rT8tVsT8IA1vMT64UGi93J6I/Uunf639N2McyXNkUtUXTLPYH3Chj0j/nn2o5a9hK
+         cszpx1JXuN1N1oD6XmGTZTQuTxdVJgiIVZfS82sdbI/fJE/aei3ZH5aILG7EqvPnRv
+         W5jf5QCZf9w9isccDZVnheBE8ll1NBWSsQ9N8ZOr3RampP4sYA+99plYvwNPjy6iQJ
+         l+3tVm+zON8vFKmrMqKmywvcNAtcp81K+1k+769arQHUxnlt412ONHWi8KecjJpOKy
+         NP+lzL9CY8bkH9iUTL04NHLoQI3gXofQyPuoYRBKB5YKtmRHHo7OpUaNJeAQNWwzb5
+         BG/Eioca6Ic3g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 35/53] platform/x86: dell-ddv: Add support for interface version 3
-Date:   Sun, 26 Feb 2023 09:44:27 -0500
-Message-Id: <20230226144446.824580-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 31/49] tools/power/x86/intel-speed-select: Add Emerald Rapid quirk
+Date:   Sun, 26 Feb 2023 09:46:31 -0500
+Message-Id: <20230226144650.826470-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226144446.824580-1-sashal@kernel.org>
-References: <20230226144446.824580-1-sashal@kernel.org>
+In-Reply-To: <20230226144650.826470-1-sashal@kernel.org>
+References: <20230226144650.826470-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -52,56 +54,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Zhang Rui <rui.zhang@intel.com>
 
-[ Upstream commit 3e899fec5dfce37701d49d656954a825275bf867 ]
+[ Upstream commit 61f9fdcdcd01f9a996b6db4e7092fcdfe8414ad5 ]
 
-While trying to solve a bugreport on bugzilla, i learned that
-some devices (for example the Dell XPS 17 9710) provide a more
-recent DDV WMI interface (version 3).
-Since the new interface version just adds an additional method,
-no code changes are necessary apart from whitelisting the version.
+Need memory frequency quirk as Sapphire Rapids in Emerald Rapids.
+So add Emerald Rapids CPU model check in is_spr_platform().
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://lore.kernel.org/r/20230126194021.381092-2-W_Armin@gmx.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+[srinivas.pandruvada@linux.intel.com: Subject, changelog and code edits]
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell/dell-wmi-ddv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
-index 2bb449845d143..9cb6ae42dbdc8 100644
---- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -26,7 +26,8 @@
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index a160bad291eb7..be3668d37d654 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -110,7 +110,7 @@ int is_skx_based_platform(void)
  
- #define DRIVER_NAME	"dell-wmi-ddv"
+ int is_spr_platform(void)
+ {
+-	if (cpu_model == 0x8F)
++	if (cpu_model == 0x8F || cpu_model == 0xCF)
+ 		return 1;
  
--#define DELL_DDV_SUPPORTED_INTERFACE 2
-+#define DELL_DDV_SUPPORTED_VERSION_MIN	2
-+#define DELL_DDV_SUPPORTED_VERSION_MAX	3
- #define DELL_DDV_GUID	"8A42EA14-4F2A-FD45-6422-0087F7A7E608"
- 
- #define DELL_EPPID_LENGTH	20
-@@ -49,6 +50,7 @@ enum dell_ddv_method {
- 	DELL_DDV_BATTERY_RAW_ANALYTICS_START	= 0x0E,
- 	DELL_DDV_BATTERY_RAW_ANALYTICS		= 0x0F,
- 	DELL_DDV_BATTERY_DESIGN_VOLTAGE		= 0x10,
-+	DELL_DDV_BATTERY_RAW_ANALYTICS_A_BLOCK	= 0x11, /* version 3 */
- 
- 	DELL_DDV_INTERFACE_VERSION		= 0x12,
- 
-@@ -340,7 +342,7 @@ static int dell_wmi_ddv_probe(struct wmi_device *wdev, const void *context)
- 		return ret;
- 
- 	dev_dbg(&wdev->dev, "WMI interface version: %d\n", version);
--	if (version != DELL_DDV_SUPPORTED_INTERFACE)
-+	if (version < DELL_DDV_SUPPORTED_VERSION_MIN || version > DELL_DDV_SUPPORTED_VERSION_MAX)
- 		return -ENODEV;
- 
- 	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+ 	return 0;
 -- 
 2.39.0
 
