@@ -2,85 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451FDC6FA8E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Feb 2023 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF45C6FA8E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Feb 2023 05:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbjBXR6j (ORCPT
+        id S229628AbjBZFkA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Feb 2023 12:58:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
+        Sun, 26 Feb 2023 00:40:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjBXR6i (ORCPT
+        with ESMTP id S229602AbjBZFj7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Feb 2023 12:58:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172FE1ACDF
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Feb 2023 09:58:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE6B761924
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Feb 2023 17:58:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 165ECC433D2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Feb 2023 17:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677261517;
-        bh=tyJe0t07ngkcK41dCNwbDX8GIJgn2yXS09mJ3Fty7wQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=iR6XMej2F2NM7nL5CQTIh7rm04kGQZ9Z+b0Q/N603VT66bnerPMI4mUiJxiOjXUpP
-         SAUC/T1SV6kcAOJNyglLz+uW/nEjHO0ENeGc25NaNDwxbk7mxiyCEPCpGeNWGn4Qyr
-         0EUtuLA429NH5RRGnHy2yihbWU1iPPaNu8h26Y4N2MAAx4LHKMLHLkwjr9BxRWWUe2
-         b6AAi2/CbDQX4xdKtO757Co676sBBfVDp2of434cB8LqkW5AB0exsSheRIxB9Xxbj8
-         Gai0MGpTpGt0bmw3WyUOBD8ZN785A+umB6lv6+uL1prHXWZpvimFdELMkTzdiGMSlM
-         BJuj4F3MOKC8w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E659FC43142; Fri, 24 Feb 2023 17:58:36 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217057] Asus high CPU temperature / low fan speed
-Date:   Fri, 24 Feb 2023 17:58:36 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jacobecc9@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217057-215701-hfKfPIcPqV@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217057-215701@https.bugzilla.kernel.org/>
-References: <bug-217057-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 26 Feb 2023 00:39:59 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437DC136EF;
+        Sat, 25 Feb 2023 21:39:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=O340cx3Gf4ovH/d02TCwqdI/1zyYU3moQhAG1qL628c=; b=pI5DciSQKlna6bL0mallbe8Ihi
+        X3b+wazKWjPIFHBzO2k2MpiVgLW3ygLANi/AF5yJaXfBCvA3CfEzTuju9IgnvXB7OGEkvwwDDdvDJ
+        9Z9n5RR9kKliIDiujjn7XESJLRcnkWQcaIix6VUwkcwXA0z21WQAQNTJLldYl6UnbA8jB7EtSnQma
+        S0l6nlNAGs9qAsf2HdLGiBLw1MteqhlFjuHr6p75SSEVAZtC3e4ltOijeGrw4ZaZDgO6g21ErtiHx
+        DgHGM3k4R25XyPSZ5CllseMdv2tJ07dK6WVyEoA7aYgdX1lKkOV85PAYswLJvCjS6pmSCcuuoGQJy
+        Il5zW/rQ==;
+Received: from [2601:1c2:980:9ec0::df2f] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pW9lM-006qYL-Ql; Sun, 26 Feb 2023 05:39:56 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Michael Shych <michaelsh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 5/8] platform: mellanox: select REGMAP instead of depending on it
+Date:   Sat, 25 Feb 2023 21:39:50 -0800
+Message-Id: <20230226053953.4681-6-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230226053953.4681-1-rdunlap@infradead.org>
+References: <20230226053953.4681-1-rdunlap@infradead.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217057
+REGMAP is a hidden (not user visible) symbol. Users cannot set it
+directly thru "make *config", so drivers should select it instead of
+depending on it if they need it.
 
---- Comment #5 from jacobecc9@gmail.com ---
-It seems some Asus laptops can change fan with ec_probe which isn't probably
-packaged=20
+Consistently using "select" or "depends on" can also help reduce
+Kconfig circular dependency issues.
 
-In ASUS FX504GD model setting the fan speed to one of the three modes uses
-these register values:
+Therefore, change the use of "depends on REGMAP" to "select REGMAP".
 
-# ec_probe write 0x5e 0x80 # silent mode
-# ec_probe write 0x5e 0x40 # balance mode
-# ec_probe write 0x5e 0xC0 # performance mode
+For NVSW_SN2201, select REGMAP_I2C instead of depending on it.
 
---=20
-You may reply to this email to add a comment.
+Fixes: c6acad68eb2d ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
+Fixes: 5ec4a8ace06c ("platform/mellanox: Introduce support for Mellanox register access driver")
+Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
+Fixes: 662f24826f95 ("platform/mellanox: Add support for new SN2201 system")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Michael Shych <michaelsh@nvidia.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Vadim Pasternak <vadimp@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/mellanox/Kconfig |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff -- a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+--- a/drivers/platform/mellanox/Kconfig
++++ b/drivers/platform/mellanox/Kconfig
+@@ -16,17 +16,17 @@ if MELLANOX_PLATFORM
+ 
+ config MLXREG_HOTPLUG
+ 	tristate "Mellanox platform hotplug driver support"
+-	depends on REGMAP
+ 	depends on HWMON
+ 	depends on I2C
++	select REGMAP
+ 	help
+ 	  This driver handles hot-plug events for the power suppliers, power
+ 	  cables and fans on the wide range Mellanox IB and Ethernet systems.
+ 
+ config MLXREG_IO
+ 	tristate "Mellanox platform register access driver support"
+-	depends on REGMAP
+ 	depends on HWMON
++	select REGMAP
+ 	help
+ 	  This driver allows access to Mellanox programmable device register
+ 	  space through sysfs interface. The sets of registers for sysfs access
+@@ -36,9 +36,9 @@ config MLXREG_IO
+ 
+ config MLXREG_LC
+ 	tristate "Mellanox line card platform driver support"
+-	depends on REGMAP
+ 	depends on HWMON
+ 	depends on I2C
++	select REGMAP
+ 	help
+ 	  This driver provides support for the Mellanox MSN4800-XX line cards,
+ 	  which are the part of MSN4800 Ethernet modular switch systems
+@@ -80,10 +80,9 @@ config MLXBF_PMC
+ 
+ config NVSW_SN2201
+ 	tristate "Nvidia SN2201 platform driver support"
+-	depends on REGMAP
+ 	depends on HWMON
+ 	depends on I2C
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  This driver provides support for the Nvidia SN2201 platform.
+ 	  The SN2201 is a highly integrated for one rack unit system with
