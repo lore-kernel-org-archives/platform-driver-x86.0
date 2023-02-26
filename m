@@ -2,106 +2,135 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C8C64ED6
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Feb 2023 17:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E0EC7EE31
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 26 Feb 2023 22:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjBZRbS (ORCPT
+        id S229893AbjBZW4C (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 26 Feb 2023 12:31:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        Sun, 26 Feb 2023 17:56:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjBZRbP (ORCPT
+        with ESMTP id S229867AbjBZWzw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 26 Feb 2023 12:31:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5699EDA
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2023 09:31:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B3B4260C5A
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2023 17:31:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DC2CC433A0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2023 17:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677432669;
-        bh=zdc5AnkPL8gL+ux8nsgn0aOztRMMHz96zBYSsc3TmT8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=UZa0nQTENKaz7fXyON5l0UbXf5ztd0/1eV5rXG43Vwj8vZIa3vqdM+iCpIf+xfiPd
-         EzVZBFQpdgSK7mUDqDn7SUcZ+DIefhnkriN6VryF33G8MZL7tJBanLcVLJU8h2IT/t
-         OzZ/NmiDzanViK/qbaxDdrIoknw+5YvxaQG18z/C0XcfbUemP+R0oHWZqldR/6nUcw
-         UZCyI184WuKMFtf+5za7FfVHve7g/1FB/ybTOSYT+nn4LayuaUJoA+zRAYZfA4p9K0
-         Rp5sl6BMHLG+kjGFgTm1VC9Mbl6pTYorqorbXRpE562/8Liebcqe6w3Qgdw5NPwpNz
-         1PiQTO9Cah8cQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 10AACC43144; Sun, 26 Feb 2023 17:31:09 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Sun, 26 Feb 2023 17:31:06 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-204807-215701-jEHnQzRMz3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 26 Feb 2023 17:55:52 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E5D19F32
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2023 14:55:22 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id d41-20020a05600c4c2900b003e9e066550fso2782109wmp.4
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2023 14:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GP9BUpkAAnItZXgZisVn1kO1oz9qmtA+bV8jqWpOtJM=;
+        b=xNF00HDit8Cyi0Oy7Ym4GIPyk2UGsV3BL68mxgXoc22L7UD8alc5G6Ga556KC7e1XR
+         R2B16kLw4VKmDDtmePz91xiBdYvL11ag+ZZuL5MtrYAKENpv9Dg/oFKh+Rke2nO6aUAE
+         OVL2qNQa5GCxSHHxR6HoQiHCPJsrkIBW7QX98P51B+UpYkC3nOqI5pe9lkbpNtq1FA8/
+         St07IP5TR7zECP7DRXto6y2rhvcwMuScPZjhXPJl4XDCRc9g/XjR060oVex8dxnu9Gi3
+         03rrGV9ZCbF1iImOCrl81nKrjm8xCMcqPzKEZ6/KHLob9r3o/1gk8SwJGQTcZ777zACv
+         z2rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GP9BUpkAAnItZXgZisVn1kO1oz9qmtA+bV8jqWpOtJM=;
+        b=HRXxYz+2JuU9lv+8VMMnsJaZh1xilTW1XJerWIs8vXcVqDScDGRWTYQNwuv4kEFsUp
+         c1LPc+j4aphb+McU0tgAZLh8UfIL22KawxXZiT9Xijs51PBHPX+CySRnYXFbMRamgV++
+         96q9MCyW5n/Z3lGkm8oGAWwd1udaCXkx6yM2JHeZwibll5TvTJUXPKH+KGedkoCa8tAy
+         OjR9CCZcmiuDZN1ULyKYGejM3IZwA+GiG9naTSo37AKnEciN10gYjo+V9igHE9vxDpQh
+         fRQTuHu2WFiMeZjgzVdd2jAhK7+9BUAK/RkzAMooXtD/bWNjBm0+SVGtghoiVLUtelXD
+         /uHw==
+X-Gm-Message-State: AO0yUKVVACrGd0EjT2FKD1HohEdg+ReVf8C/VfKEn3oWNx8NoVvTuAp7
+        MyVEBPLiWCZPDE9TmdrgCZee8Q==
+X-Google-Smtp-Source: AK7set/wU0hkiS2EFGpo+/bN0ssaDFfJf9jZphCp98HNiEk1yxLRMYbuP2NDwROuT0mdGZsWp39Mww==
+X-Received: by 2002:a05:600c:3416:b0:3eb:3cc9:9f85 with SMTP id y22-20020a05600c341600b003eb3cc99f85mr2580319wmp.26.1677452122423;
+        Sun, 26 Feb 2023 14:55:22 -0800 (PST)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:8baa:6b32:391b:62de])
+        by smtp.gmail.com with ESMTPSA id d10-20020a05600c3aca00b003eb369abd92sm6138074wms.2.2023.02.26.14.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Feb 2023 14:55:21 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org, daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
+        TEMPERATURE AND FAN DRIVER)
+Subject: [PATCH v3 18/20] thermal/drivers/acerhdf: Make interval setting only at module load time
+Date:   Sun, 26 Feb 2023 23:54:04 +0100
+Message-Id: <20230226225406.979703-19-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230226225406.979703-1-daniel.lezcano@linaro.org>
+References: <20230226225406.979703-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+The thermal zone device structure is in the process of being private
+to the thermal framework core code. This driver is directly accessing
+and changing the monitoring polling rate.
 
-Denis Pauk (pauk.denis@gmail.com) changed:
+After discussing with the maintainers of this driver, having the
+polling interval at module loading time is enough for their purpose.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #303662|0                           |1
-        is obsolete|                            |
+Change the code to take into account the interval when the module is
+loaded but restrict the permissions so the value can not be changed
+afterwards.
 
---- Comment #300 from Denis Pauk (pauk.denis@gmail.com) ---
-Created attachment 303789
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303789&action=3Dedit
-Asus WMI for nct6775 v6.2 base (2023.02.26)
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Peter Kaestle <peter@piie.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/acerhdf.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-* Rebased over v6.2
-* Added more AMD A520 boards.
-* Several boards use different mutex name, could be regression - code is
-unchecked for now.
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 1956469c3457..61f1c3090867 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -79,7 +79,6 @@ static unsigned int list_supported;
+ static unsigned int fanstate = ACERHDF_FAN_AUTO;
+ static char force_bios[16];
+ static char force_product[16];
+-static unsigned int prev_interval;
+ static struct thermal_zone_device *thz_dev;
+ static struct thermal_cooling_device *cl_dev;
+ static struct platform_device *acerhdf_dev;
+@@ -346,20 +345,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+ 	trips[0].temperature = fanon;
+ 	trips[0].hysteresis  = fanon - fanoff;
+ 
+-	if (kernelmode && prev_interval != interval) {
++	if (kernelmode) {
+ 		if (interval > ACERHDF_MAX_INTERVAL) {
+ 			pr_err("interval too high, set to %d\n",
+ 			       ACERHDF_MAX_INTERVAL);
+ 			interval = ACERHDF_MAX_INTERVAL;
+ 		}
++
+ 		if (verbose)
+ 			pr_notice("interval changed to: %d\n", interval);
+-
+-		if (thermal)
+-			thermal->polling_delay_jiffies =
+-				round_jiffies(msecs_to_jiffies(interval * 1000));
+-
+-		prev_interval = interval;
+ 	}
+ }
+ 
+@@ -807,5 +801,5 @@ static const struct kernel_param_ops interval_ops = {
+ 	.get = param_get_uint,
+ };
+ 
+-module_param_cb(interval, &interval_ops, &interval, 0600);
++module_param_cb(interval, &interval_ops, &interval, 0000);
+ MODULE_PARM_DESC(interval, "Polling interval of temperature check");
+-- 
+2.34.1
 
-(In reply to A. M. from comment #299)
-> hi all.
-> I have added my mobo a week ago to the list. It works fine. Someone may a=
-dd
-> it to the whitelist.=20
->=20
-> # cat /sys/class/dmi/id/board_name
->=20
-> PRIME A520M-A II
->=20
-> Thanks. a.
-
-Could you please recheck with new patch?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
