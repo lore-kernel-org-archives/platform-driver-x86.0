@@ -2,173 +2,104 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D35C7EE2E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C90C7EE31
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 16:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbjB0QHN (ORCPT
+        id S229877AbjB0Qe5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Feb 2023 11:07:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
+        Mon, 27 Feb 2023 11:34:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjB0QHM (ORCPT
+        with ESMTP id S230117AbjB0Qe4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Feb 2023 11:07:12 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B62F233C8;
-        Mon, 27 Feb 2023 08:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=1vz2UEdjmQXWhUlE3HWzfK6c4UyQl3yd4RAPwcSJ89A=; b=ZTBfsGzw1Zz25agNHtP5dojHJj
-        SbvBw4DWjkluj57TGsurxGKn7gq5utVt4Xo3T87VCnghOCjxsyOzwSFD6p9BzQA8dzP6aFzroou/G
-        joiJ2HyB6hVfZie38EcUmBZtP13momINHbb8XT2j4fAjqp3Qy2L7cV8ty1o0CBQL9ZEmrBFPas6B9
-        hCyor6yF7a5nzuuNCJo+8LQbNEfALDGwi0FHT3YgblTzpvR0rVQfzjEzd6ZPJeDq7FdCg+eKyKAY4
-        1TARqq1Vn1SRIuIhwDqKPV3mwmE+gt26RF978mC3zR66Misshi/Y8AiXx1BjQTKxkLcfITK3b0m8i
-        s73G6E1w==;
-Received: from [2601:1c2:980:9ec0::df2f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pWg1q-00AItm-J2; Mon, 27 Feb 2023 16:07:06 +0000
-Message-ID: <6a95a337-2972-427f-635d-5ef4e91a82fa@infradead.org>
-Date:   Mon, 27 Feb 2023 08:07:04 -0800
+        Mon, 27 Feb 2023 11:34:56 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F856181;
+        Mon, 27 Feb 2023 08:34:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B8B2B80D7A;
+        Mon, 27 Feb 2023 16:34:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFD5C4339B;
+        Mon, 27 Feb 2023 16:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677515691;
+        bh=ysg1g/ZcQSWNVuTE8NtkzMkkLbwHUGn9rkR86nbbHY4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sepxnuDvLBxSScNXeyQEUBu20wjXDXrDsNrCzMQbKStwMRSy8nYajOX+LtmkLCLZl
+         pFyFDUgwy2/Yas0WmIsh+os+rgImLgl7gUoanVRxIOzpvsJt5EIce0rZ4eV2CIvR7m
+         9yoRgpK87zcMPnh6o4SIo90kgsH7vjSP7mVn4QFzwRHwswqnDxlCmV1j6sgutY76oi
+         30ZYoA6ov8mSyIcumLxc4BmXoTWnMeJt8+wTQ66qfktxgDD1gArQc+ZRmlh3eXTkAm
+         IEw2YoprQYMj9SfF3vi1nWN/LpurN9BrtaZchbK0ErWxiczAAfKg7KkpQgxtMyxZYt
+         KKURXOuCVdKGA==
+Received: by mail-lf1-f51.google.com with SMTP id n2so9275789lfb.12;
+        Mon, 27 Feb 2023 08:34:51 -0800 (PST)
+X-Gm-Message-State: AO0yUKUX8LxcNj+umkHc1kXSHs8JDl5wBTYOqGowDUnBtP+QBjBA6gFL
+        KsmJTBrTi0imNR0Gtc9S8HlFEl2zifSzzs2+TFg=
+X-Google-Smtp-Source: AK7set++oeaP/IwOS2ZLnIc+IJsuRWJDDYe+9s9Vu25q1q3duZvdr2T5DHawYNExoRi/zeceX8KJhT6MAfTs1x5Bx1Y=
+X-Received: by 2002:ac2:5a41:0:b0:4dd:805b:5b75 with SMTP id
+ r1-20020ac25a41000000b004dd805b5b75mr7602881lfn.7.1677515689640; Mon, 27 Feb
+ 2023 08:34:49 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH 0/8] drivers: select REGMAP instead of depending on it
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        platform-driver-x86@vger.kernel.org,
-        Yegnesh S Iyer <yegnesh.s.iyer@intel.com>,
-        Bin Gao <bin.gao@intel.com>, Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
-        Oskar Senft <osk@google.com>, linux-serial@vger.kernel.org
-References: <20230226053953.4681-1-rdunlap@infradead.org>
- <7dd27ec5-0619-128d-8407-6711a05ef271@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <7dd27ec5-0619-128d-8407-6711a05ef271@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230227-kobj_type-x86-efi-v1-1-a335952d2536@weissschuh.net>
+In-Reply-To: <20230227-kobj_type-x86-efi-v1-1-a335952d2536@weissschuh.net>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 27 Feb 2023 17:34:38 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGwZxjjB3ojmH5cHDOLnveGY2vSz7t=xgj2dN7dg1K09Q@mail.gmail.com>
+Message-ID: <CAMj1kXGwZxjjB3ojmH5cHDOLnveGY2vSz7t=xgj2dN7dg1K09Q@mail.gmail.com>
+Subject: Re: [PATCH] efi: x86: make kobj_type structure constant
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, 27 Feb 2023 at 04:09, Thomas Wei=C3=9Fschuh <linux@weissschuh.net> =
+wrote:
+>
+> Since commit ee6d3dd4ed48 ("driver core: make kobj_type constant.")
+> the driver core allows the usage of const struct kobj_type.
+>
+> Take advantage of this to constify the structure definition to prevent
+> modification at runtime.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 
+Thanks, I'll queue these up after the merge window.
 
-On 2/27/23 01:31, Hans de Goede wrote:
-> Hi Randy,
-> 
-> On 2/26/23 06:39, Randy Dunlap wrote:
->> REGMAP is a hidden (not user visible) symbol. Users cannot set it
->> directly thru "make *config", so drivers should select it instead of
->> depending on it if they need it.
->>
->> Consistently using "select" or "depends on" can also help reduce
->> Kconfig circular dependency issues.
->>
->> REGMAP is selected 94 times and is depended on 11 times in
->> current linux-next. Eliminate the uses of "depends on" by
->> converting them to "select".
-> 
-> Thank you for your work on this. Mixing of depends on vs select
-> is a real problem with many Kconfig symbols.
-> 
->>  [PATCH 1/8] ipmi: ASPEED_BT_IPMI_BMC: select REGMAP_MMIO instead of depending on it
->>  [PATCH 2/8] clk: HI655X: select REGMAP instead of depending on it
->>  [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
->>  [PATCH 4/8] leds: TI_LMU_COMMON: select REGMAP instead of depending on it
->>  [PATCH 5/8] platform: mellanox: select REGMAP instead of depending on it
->>  [PATCH 6/8] platform: x86: MLX_PLATFORM: select REGMAP instead of depending on it
->>  [PATCH 7/8] thermal: intel: BXT_PMIC: select REGMAP instead of depending on it
->>  [PATCH 8/8] serial: 8250: ASPEED_VUART: select REGMAP instead of depending on it
-> 
-> For patch 5/8 and 6/8, do you want me to merge them through the pdx86
-> (platform-drivers-x86) tree, or do you plan to merge this whole series
-> in one go through some other tree?
-
-Hi Hans,
-Please merge them thru the pdx86 tree.
-
-Thanks.
-
-> If you plan to merge the whole series through some other tree,
-> here is my acked by for doing so for 5/8 and 6/8:
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
->>
->> diffstat:
->>  drivers/char/ipmi/Kconfig         |    3 ++-
->>  drivers/clk/Kconfig               |    2 +-
->>  drivers/gpio/Kconfig              |    2 +-
->>  drivers/leds/Kconfig              |    2 +-
->>  drivers/platform/mellanox/Kconfig |    9 ++++-----
->>  drivers/platform/x86/Kconfig      |    3 ++-
->>  drivers/thermal/intel/Kconfig     |    3 ++-
->>  drivers/tty/serial/8250/Kconfig   |    3 ++-
->>  8 files changed, 15 insertions(+), 12 deletions(-)
->>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: Corey Minyard <minyard@acm.org>
->> Cc: openipmi-developer@lists.sourceforge.net
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Riku Voipio <riku.voipio@linaro.org>
->> Cc: Stephen Boyd <sboyd@kernel.org>
->> Cc: Michael Turquette <mturquette@baylibre.com>
->> Cc: linux-clk@vger.kernel.org
->> Cc: Michael Walle <michael@walle.cc>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
->> Cc: linux-gpio@vger.kernel.org
->> Cc: Dan Murphy <dmurphy@ti.com>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Lee Jones <lee@kernel.org>
->> Cc: linux-leds@vger.kernel.org
->> Cc: Darren Hart <dvhart@infradead.org>
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> Cc: Michael Shych <michaelsh@nvidia.com>
->> Cc: Mark Gross <markgross@kernel.org>
->> Cc: Vadim Pasternak <vadimp@nvidia.com>
->> Cc: platform-driver-x86@vger.kernel.org
->> Cc: Yegnesh S Iyer <yegnesh.s.iyer@intel.com>
->> Cc: Bin Gao <bin.gao@intel.com>
->> Cc: Zhang Rui <rui.zhang@intel.com>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Cc: Amit Kucheria <amitk@kernel.org>
->> Cc: linux-pm@vger.kernel.org
->> Cc: Oskar Senft <osk@google.com>
->> Cc: linux-serial@vger.kernel.org
->>
-> 
-
--- 
-~Randy
+> ---
+>  arch/x86/platform/efi/runtime-map.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/platform/efi/runtime-map.c b/arch/x86/platform/efi/=
+runtime-map.c
+> index bbee682ef8cd..a6f02cef3ca2 100644
+> --- a/arch/x86/platform/efi/runtime-map.c
+> +++ b/arch/x86/platform/efi/runtime-map.c
+> @@ -93,7 +93,7 @@ static void map_release(struct kobject *kobj)
+>         kfree(entry);
+>  }
+>
+> -static struct kobj_type __refdata map_ktype =3D {
+> +static const struct kobj_type __refconst map_ktype =3D {
+>         .sysfs_ops      =3D &map_attr_ops,
+>         .default_groups =3D def_groups,
+>         .release        =3D map_release,
+>
+> ---
+> base-commit: 2fcd07b7ccd5fd10b2120d298363e4e6c53ccf9c
+> change-id: 20230227-kobj_type-x86-efi-7591b1343b08
+>
+> Best regards,
+> --
+> Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+>
