@@ -2,165 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFAAC64ED8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 13:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CF1C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 14:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbjB0Ns4 (ORCPT
+        id S230144AbjB0OI2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Feb 2023 08:48:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
+        Mon, 27 Feb 2023 09:08:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjB0Nsw (ORCPT
+        with ESMTP id S230224AbjB0OI0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Feb 2023 08:48:52 -0500
-Received: from mail1.nippynetworks.com (mail1.nippynetworks.com [91.220.24.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABDA91;
-        Mon, 27 Feb 2023 05:48:48 -0800 (PST)
-Received: from [192.168.8.188] (unknown [94.228.36.46])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: ed@wildgooses.com)
-        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4PQMJC2klvzTgS1;
-        Mon, 27 Feb 2023 13:47:39 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1677505660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=StTvi2lBY7Yfbyh4JtZMEN4y3jbf+2q9vxW9wr3dEcM=;
-        b=ABA1Ian8dNCndXCBGHKNasENTOTi8dwCM+nM7USwP179JivHHrs/L1y7mtZCZODlvBHpbB
-        vfNuudNxWWLxJ42nSsrsEu7j6+13DwynIwAC/Rk4RZh9yHIQ8ENe0NnFrZ6GLcPJocyhd1
-        IZKTS9KxGsRvpi21ggwarVc5JyXjxiI=
-Message-ID: <b1b18104-897f-d428-931e-12d2d61252b9@wildgooses.com>
-Date:   Mon, 27 Feb 2023 13:48:45 +0000
+        Mon, 27 Feb 2023 09:08:26 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E22AFF38;
+        Mon, 27 Feb 2023 06:08:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677506902; x=1709042902;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iQdGRiKPZjZMBQPADUzT+Bwwba26L0M/zf5vmcYHm2E=;
+  b=HpODl6NT6+VuPohEDyY5+jqOejfERjLYD3gZSmoLwuMcEwyBA0svvjhj
+   9ZV32HsJgbJ/nK56MjbA3i3nrnPS7kI9cRENcTe1sl49Dhq1jyF+ju4Ie
+   CmdrXUuXxXwQ3z8GKMlrGnY+minpdqi9zbWA3RKF9S256Or5mHH/jnYN2
+   cilSYrhcmt0E28M1gxyplFwIzxcyb4nKphCQ8b5UmKI/UJT0IbehUXeZr
+   QMu4C69h80XYGnKl84SuZlaSbz5TKS2WB7c24py5JGGibB+hWTCv5D/AW
+   BZDEB+ZdqGVYxt/2db9wdaSJIdMt7SYcr/Mze9bn8nd/euKbzJ+n3Cx7i
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="396416703"
+X-IronPort-AV: E=Sophos;i="5.98,332,1673942400"; 
+   d="scan'208";a="396416703"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 06:06:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="919366160"
+X-IronPort-AV: E=Sophos;i="5.98,332,1673942400"; 
+   d="scan'208";a="919366160"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Feb 2023 06:06:17 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dan Carpenter <error27@gmail.com>
+Subject: [PATCH] platform/x86/intel/tpmi: Fix double free reported by Smatch
+Date:   Mon, 27 Feb 2023 06:06:14 -0800
+Message-Id: <20230227140614.2913474-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH v3 1/1] x86: Support APU5 in PCEngines platform driver
-Content-Language: en-GB
-To:     Philip Prindeville <philipp@redfish-solutions.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-x86_64@vger.kernel.org,
-        Enrico Weigelt <info@metux.net>,
-        Andres Salomon <dilinger@queued.net>,
-        Andreas Eberlein <foodeas@aeberlein.de>,
-        Paul Spooren <paul@spooren.de>
-References: <20230102065447.3447284-1-philipp@redfish-solutions.com>
- <01dbd065-693b-e5fe-5aaf-d74971d6fe7d@redhat.com>
- <AA8BB3C5-8101-4DE2-8FE2-87EBF5329BA3@redfish-solutions.com>
- <670ac95d-cf00-d589-5779-ae754fffd921@metux.net>
- <64B23D00-A81F-4CCA-80A3-9AC58A12E09E@redfish-solutions.com>
-From:   Ed W <lists@wildgooses.com>
-In-Reply-To: <64B23D00-A81F-4CCA-80A3-9AC58A12E09E@redfish-solutions.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Excellent! I was just trying to pull together something similar based on =
-the individual schematic
-documents!
+Fix warning:
+drivers/platform/x86/intel/tpmi.c:253 tpmi_create_device()
+	warn: 'feature_vsec_dev' was already freed.
 
-I think this supports the proposal on the table already, that we should p=
-refer naming to be "modem
-orientated", rather than "pcie slot" orientated.
+If there is some error, feature_vsec_dev memory is freed as part
+of resource managed call intel_vsec_add_aux(). So, additional
+kfree() call is not required.
 
-For example, on APU2, the PE3/4_RST lines are wired to PCIe slots 1 & 2 (=
-which are the two with USB)
-But on APU4, the PE3_RST reset, USB and SIM lines move from slot 1 to slo=
-t 3.
+Reordered res allocation and feature_vsec_dev, so that on error
+only res is freed.
 
-So on APU4, you don't get the control over wireless disable (and reset is=
- hazy) on the mpcie slot 1
-for the wifi card. But in all cases the use of the reset/enable lines fol=
-low the modem slots, not
-the wifi slots
+Reported-by: Dan Carpenter <error27@gmail.com>
+Link: https://lore.kernel.org/platform-driver-x86/Y%2FxYR7WGiPayZu%2FR@kili/T/#u
+Fixes: 47731fd2865f ("platform/x86/intel: Intel TPMI enumeration driver")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/tpmi.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-So I maintain my proposal that it's far better to name the GPIOs relative=
- to the USB & modem slots,
-since this is how they are being used on ALL schematics. Especially on AP=
-U5 (which is the oddball,
-having 3x modems + 6x SIMs), this is very much the case
-
-(Also, Enrico, you should beware that your current use might not be worki=
-ng as you expect, because I
-don't see that you have control over the wifi card enable on APU4 at all?=
-)
-
-If we are now in agreement, perhaps we can proceed? I think if we make pr=
-ogress here, then I might
-also send in a patch to wire up all the other GPIOs.
-
-Thanks all
-
-Ed W
-
-
-On 27/02/2023 00:22, Philip Prindeville wrote:
-> Hi,
->
-> I wanted to get the documentation straight from the proverbial horse's =
-mouth, before I added any confusion of my own to the conversation.  I rea=
-ched out to Pascal and he was good enough to share this document with me.=
-
->
-> -Philip
->
->
->
->
->> On Feb 17, 2023, at 5:20 AM, Enrico Weigelt, metux IT consult <lkml@me=
-tux.net> wrote:
->>
->> On 14.01.23 00:04, Philip Prindeville wrote:
->>
->> Hello friends,
->>
->> sorry for being so late, busy with totally different things ...
->>
->>> My read of Enrico's comments were that using ACPI information to map
->>> the GPIO lines would break backward compatibility.  This part of the
->>> effort was dropped.
->> Yes, the big problem is inconsistent support in different firmware ver=
-sions in the field. Older version generally don't have any acpi
->> entries at all, later added it (but inconsitent and incomplete) and wa=
-s
->> dropped again later (haven't checked whether they reintroduced it
->> again).
->>
->> Obviously, we can't expect users in the field to upgrade firmware and
->> kernel in lockstep. So, we can only rely on this data for those boards=
-
->> where we can be sure that all shipped firmware versions have proper
->> support (that really does it right). The problem also goes a bit deepe=
-r:
->> just adding the GPIOs isn't really enough, they need proper (and
->> consistent) names as well as mapping to the correct drivers (eg. LEDs)=
-=2E
->>
->> Oh, BTW, don't arbitrarily change gpio line names (at least for the
->> already mainline-supported boards) - they're are used in the field.
->> (well, I'm not actually satisfied with direct gpio access or things
->> like modem reset lines, but haven't seen an actually fitting subsys
->> for those).
->>
->>
->> --mtx
->>
->> --=20
->> ---
->> Hinweis: unverschl=C3=BCsselte E-Mails k=C3=B6nnen leicht abgeh=C3=B6r=
-t und manipuliert
->> werden ! F=C3=BCr eine vertrauliche Kommunikation senden Sie bitte ihr=
-en
->> GPG/PGP-Schl=C3=BCssel zu.
->> ---
->> Enrico Weigelt, metux IT consult
->> Free software and Linux embedded engineering
->> info@metux.net -- +49-151-27565287
-
+diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+index c60733261c89..c999732b0f1e 100644
+--- a/drivers/platform/x86/intel/tpmi.c
++++ b/drivers/platform/x86/intel/tpmi.c
+@@ -209,14 +209,14 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 	if (!name)
+ 		return -EOPNOTSUPP;
+ 
+-	feature_vsec_dev = kzalloc(sizeof(*feature_vsec_dev), GFP_KERNEL);
+-	if (!feature_vsec_dev)
++	res = kcalloc(pfs->pfs_header.num_entries, sizeof(*res), GFP_KERNEL);
++	if (!res)
+ 		return -ENOMEM;
+ 
+-	res = kcalloc(pfs->pfs_header.num_entries, sizeof(*res), GFP_KERNEL);
+-	if (!res) {
++	feature_vsec_dev = kzalloc(sizeof(*feature_vsec_dev), GFP_KERNEL);
++	if (!feature_vsec_dev) {
+ 		ret = -ENOMEM;
+-		goto free_vsec;
++		goto free_res;
+ 	}
+ 
+ 	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
+@@ -239,6 +239,8 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 	/*
+ 	 * intel_vsec_add_aux() is resource managed, no explicit
+ 	 * delete is required on error or on module unload.
++	 * feature_vsec_dev memory is also freed as part of device
++	 * delete.
+ 	 */
+ 	ret = intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev->auxdev.dev,
+ 				 feature_vsec_dev, feature_id_name);
+@@ -249,8 +251,6 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 
+ free_res:
+ 	kfree(res);
+-free_vsec:
+-	kfree(feature_vsec_dev);
+ 
+ 	return ret;
+ }
+-- 
+2.39.1
 
