@@ -2,189 +2,165 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83383C7EE2D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 09:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFAAC64ED8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 13:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbjB0JcU (ORCPT
+        id S229649AbjB0Ns4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Feb 2023 04:32:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
+        Mon, 27 Feb 2023 08:48:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229962AbjB0JcP (ORCPT
+        with ESMTP id S229629AbjB0Nsw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Feb 2023 04:32:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B879773
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Feb 2023 01:31:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677490286;
+        Mon, 27 Feb 2023 08:48:52 -0500
+Received: from mail1.nippynetworks.com (mail1.nippynetworks.com [91.220.24.129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABDA91;
+        Mon, 27 Feb 2023 05:48:48 -0800 (PST)
+Received: from [192.168.8.188] (unknown [94.228.36.46])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
+        (No client certificate requested)
+        (Authenticated sender: ed@wildgooses.com)
+        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4PQMJC2klvzTgS1;
+        Mon, 27 Feb 2023 13:47:39 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
+        s=dkim; t=1677505660;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RZ7tgd2yMldNRnjyOaSsgByklv9W+sBvCfRkPHDmb94=;
-        b=HGE824Nxogy538MhhECPfusadMHUaEy6Ye+QKkb2b/ETcc0LmK93SWnlIZ+KikWZYaG/BS
-        ILBRqT/utJHXfnrXfhPwVTOhotM9O49xTeKr2CI5KafiRfl0+JelxzjJkUre3vu+EWVIzg
-        5yAVceT3edpxORj/Oev473sJWfh8ahI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-447-gXAXAWt5MyulM2pTKLZHEQ-1; Mon, 27 Feb 2023 04:31:25 -0500
-X-MC-Unique: gXAXAWt5MyulM2pTKLZHEQ-1
-Received: by mail-ed1-f70.google.com with SMTP id eh16-20020a0564020f9000b004acc4f8aa3fso7637032edb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Feb 2023 01:31:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RZ7tgd2yMldNRnjyOaSsgByklv9W+sBvCfRkPHDmb94=;
-        b=dkpqQvL/Y24xe3702CLyJCil0gnDeM0ic5jaTiAriZ2ag/PeDY36O+BMfE9xXtCUW4
-         SIpuYrkUTpKupqi4jh/U/bE2Aeo1JvzlMDc3L//ZV30KCgJS6Q+xZoShzcRjRUKeEjAr
-         HbCZLPQcngZWcdrb+HyyiQs8qEE2AsqtobCGo74P2NOqAJLMveC67ItOOg3cWpTbEwne
-         shIzjoFOIZwE8MakYguJFeCceB3zwb3tEA7uzcrMlwchwBq7XjwfLtOmQvOsUej91+0I
-         oYMJw4FNcjg9LnonfLOuGAQQMXjM6EZHROi8/cpQW5iYsPdZZk343hobc7wm2Z0R3n4d
-         bGPA==
-X-Gm-Message-State: AO0yUKUV3pxRs53DzOgPClQHH7bbp7yP8F+xQ0b4hTTRIPRG9aOutB5H
-        4yrH7yey7xp5Bb+rTKYEDnUZA7fz1wzXy/zkCjdilxwB5Yg9RjSFJHQBFVDRz9zbZph3ygkOMHS
-        rWcijyhwCKbf/1aX4ooPy44W1zMgac0uheA==
-X-Received: by 2002:a17:906:4d8c:b0:8ae:f73e:233f with SMTP id s12-20020a1709064d8c00b008aef73e233fmr36187939eju.32.1677490284509;
-        Mon, 27 Feb 2023 01:31:24 -0800 (PST)
-X-Google-Smtp-Source: AK7set+NbVSpt4yOAnECcpAr2/cCoG6u5mlrIrkJajmml4ubXI2EjR7IrG3eLzjCQWCzYYep+F5FNw==
-X-Received: by 2002:a17:906:4d8c:b0:8ae:f73e:233f with SMTP id s12-20020a1709064d8c00b008aef73e233fmr36187918eju.32.1677490284210;
-        Mon, 27 Feb 2023 01:31:24 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id qq10-20020a17090720ca00b008e09deb6610sm2942505ejb.200.2023.02.27.01.31.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 01:31:23 -0800 (PST)
-Message-ID: <7dd27ec5-0619-128d-8407-6711a05ef271@redhat.com>
-Date:   Mon, 27 Feb 2023 10:31:22 +0100
+        bh=StTvi2lBY7Yfbyh4JtZMEN4y3jbf+2q9vxW9wr3dEcM=;
+        b=ABA1Ian8dNCndXCBGHKNasENTOTi8dwCM+nM7USwP179JivHHrs/L1y7mtZCZODlvBHpbB
+        vfNuudNxWWLxJ42nSsrsEu7j6+13DwynIwAC/Rk4RZh9yHIQ8ENe0NnFrZ6GLcPJocyhd1
+        IZKTS9KxGsRvpi21ggwarVc5JyXjxiI=
+Message-ID: <b1b18104-897f-d428-931e-12d2d61252b9@wildgooses.com>
+Date:   Mon, 27 Feb 2023 13:48:45 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 0/8] drivers: select REGMAP instead of depending on it
-Content-Language: en-US
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        platform-driver-x86@vger.kernel.org,
-        Yegnesh S Iyer <yegnesh.s.iyer@intel.com>,
-        Bin Gao <bin.gao@intel.com>, Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
-        Oskar Senft <osk@google.com>, linux-serial@vger.kernel.org
-References: <20230226053953.4681-1-rdunlap@infradead.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230226053953.4681-1-rdunlap@infradead.org>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Subject: Re: [PATCH v3 1/1] x86: Support APU5 in PCEngines platform driver
+Content-Language: en-GB
+To:     Philip Prindeville <philipp@redfish-solutions.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-x86_64@vger.kernel.org,
+        Enrico Weigelt <info@metux.net>,
+        Andres Salomon <dilinger@queued.net>,
+        Andreas Eberlein <foodeas@aeberlein.de>,
+        Paul Spooren <paul@spooren.de>
+References: <20230102065447.3447284-1-philipp@redfish-solutions.com>
+ <01dbd065-693b-e5fe-5aaf-d74971d6fe7d@redhat.com>
+ <AA8BB3C5-8101-4DE2-8FE2-87EBF5329BA3@redfish-solutions.com>
+ <670ac95d-cf00-d589-5779-ae754fffd921@metux.net>
+ <64B23D00-A81F-4CCA-80A3-9AC58A12E09E@redfish-solutions.com>
+From:   Ed W <lists@wildgooses.com>
+In-Reply-To: <64B23D00-A81F-4CCA-80A3-9AC58A12E09E@redfish-solutions.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Randy,
+Excellent! I was just trying to pull together something similar based on =
+the individual schematic
+documents!
 
-On 2/26/23 06:39, Randy Dunlap wrote:
-> REGMAP is a hidden (not user visible) symbol. Users cannot set it
-> directly thru "make *config", so drivers should select it instead of
-> depending on it if they need it.
-> 
-> Consistently using "select" or "depends on" can also help reduce
-> Kconfig circular dependency issues.
-> 
-> REGMAP is selected 94 times and is depended on 11 times in
-> current linux-next. Eliminate the uses of "depends on" by
-> converting them to "select".
+I think this supports the proposal on the table already, that we should p=
+refer naming to be "modem
+orientated", rather than "pcie slot" orientated.
 
-Thank you for your work on this. Mixing of depends on vs select
-is a real problem with many Kconfig symbols.
+For example, on APU2, the PE3/4_RST lines are wired to PCIe slots 1 & 2 (=
+which are the two with USB)
+But on APU4, the PE3_RST reset, USB and SIM lines move from slot 1 to slo=
+t 3.
 
->  [PATCH 1/8] ipmi: ASPEED_BT_IPMI_BMC: select REGMAP_MMIO instead of depending on it
->  [PATCH 2/8] clk: HI655X: select REGMAP instead of depending on it
->  [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
->  [PATCH 4/8] leds: TI_LMU_COMMON: select REGMAP instead of depending on it
->  [PATCH 5/8] platform: mellanox: select REGMAP instead of depending on it
->  [PATCH 6/8] platform: x86: MLX_PLATFORM: select REGMAP instead of depending on it
->  [PATCH 7/8] thermal: intel: BXT_PMIC: select REGMAP instead of depending on it
->  [PATCH 8/8] serial: 8250: ASPEED_VUART: select REGMAP instead of depending on it
+So on APU4, you don't get the control over wireless disable (and reset is=
+ hazy) on the mpcie slot 1
+for the wifi card. But in all cases the use of the reset/enable lines fol=
+low the modem slots, not
+the wifi slots
 
-For patch 5/8 and 6/8, do you want me to merge them through the pdx86
-(platform-drivers-x86) tree, or do you plan to merge this whole series
-in one go through some other tree?
+So I maintain my proposal that it's far better to name the GPIOs relative=
+ to the USB & modem slots,
+since this is how they are being used on ALL schematics. Especially on AP=
+U5 (which is the oddball,
+having 3x modems + 6x SIMs), this is very much the case
 
-If you plan to merge the whole series through some other tree,
-here is my acked by for doing so for 5/8 and 6/8:
+(Also, Enrico, you should beware that your current use might not be worki=
+ng as you expect, because I
+don't see that you have control over the wifi card enable on APU4 at all?=
+)
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+If we are now in agreement, perhaps we can proceed? I think if we make pr=
+ogress here, then I might
+also send in a patch to wire up all the other GPIOs.
 
-Regards,
+Thanks all
 
-Hans
-
+Ed W
 
 
+On 27/02/2023 00:22, Philip Prindeville wrote:
+> Hi,
+>
+> I wanted to get the documentation straight from the proverbial horse's =
+mouth, before I added any confusion of my own to the conversation.  I rea=
+ched out to Pascal and he was good enough to share this document with me.=
 
-> 
-> diffstat:
->  drivers/char/ipmi/Kconfig         |    3 ++-
->  drivers/clk/Kconfig               |    2 +-
->  drivers/gpio/Kconfig              |    2 +-
->  drivers/leds/Kconfig              |    2 +-
->  drivers/platform/mellanox/Kconfig |    9 ++++-----
->  drivers/platform/x86/Kconfig      |    3 ++-
->  drivers/thermal/intel/Kconfig     |    3 ++-
->  drivers/tty/serial/8250/Kconfig   |    3 ++-
->  8 files changed, 15 insertions(+), 12 deletions(-)
-> 
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Corey Minyard <minyard@acm.org>
-> Cc: openipmi-developer@lists.sourceforge.net
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Riku Voipio <riku.voipio@linaro.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: Michael Walle <michael@walle.cc>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Lee Jones <lee@kernel.org>
-> Cc: linux-leds@vger.kernel.org
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Michael Shych <michaelsh@nvidia.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: Vadim Pasternak <vadimp@nvidia.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: Yegnesh S Iyer <yegnesh.s.iyer@intel.com>
-> Cc: Bin Gao <bin.gao@intel.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amitk@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: Oskar Senft <osk@google.com>
-> Cc: linux-serial@vger.kernel.org
-> 
+>
+> -Philip
+>
+>
+>
+>
+>> On Feb 17, 2023, at 5:20 AM, Enrico Weigelt, metux IT consult <lkml@me=
+tux.net> wrote:
+>>
+>> On 14.01.23 00:04, Philip Prindeville wrote:
+>>
+>> Hello friends,
+>>
+>> sorry for being so late, busy with totally different things ...
+>>
+>>> My read of Enrico's comments were that using ACPI information to map
+>>> the GPIO lines would break backward compatibility.  This part of the
+>>> effort was dropped.
+>> Yes, the big problem is inconsistent support in different firmware ver=
+sions in the field. Older version generally don't have any acpi
+>> entries at all, later added it (but inconsitent and incomplete) and wa=
+s
+>> dropped again later (haven't checked whether they reintroduced it
+>> again).
+>>
+>> Obviously, we can't expect users in the field to upgrade firmware and
+>> kernel in lockstep. So, we can only rely on this data for those boards=
+
+>> where we can be sure that all shipped firmware versions have proper
+>> support (that really does it right). The problem also goes a bit deepe=
+r:
+>> just adding the GPIOs isn't really enough, they need proper (and
+>> consistent) names as well as mapping to the correct drivers (eg. LEDs)=
+=2E
+>>
+>> Oh, BTW, don't arbitrarily change gpio line names (at least for the
+>> already mainline-supported boards) - they're are used in the field.
+>> (well, I'm not actually satisfied with direct gpio access or things
+>> like modem reset lines, but haven't seen an actually fitting subsys
+>> for those).
+>>
+>>
+>> --mtx
+>>
+>> --=20
+>> ---
+>> Hinweis: unverschl=C3=BCsselte E-Mails k=C3=B6nnen leicht abgeh=C3=B6r=
+t und manipuliert
+>> werden ! F=C3=BCr eine vertrauliche Kommunikation senden Sie bitte ihr=
+en
+>> GPG/PGP-Schl=C3=BCssel zu.
+>> ---
+>> Enrico Weigelt, metux IT consult
+>> Free software and Linux embedded engineering
+>> info@metux.net -- +49-151-27565287
+
 
