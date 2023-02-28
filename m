@@ -2,209 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DEC7EE37
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 15:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BE4C64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 22:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230216AbjB1P4l (ORCPT
+        id S229589AbjB1Wqj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Feb 2023 10:56:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
+        Tue, 28 Feb 2023 17:46:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbjB1P4k (ORCPT
+        with ESMTP id S229518AbjB1Wqj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Feb 2023 10:56:40 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE7531E36;
-        Tue, 28 Feb 2023 07:55:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677599750; x=1709135750;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xLC5mKkE/LXMOQ1pQVWUc4onWv0C2ecP8VL2usU2Bnk=;
-  b=GQg5860qQzLlNjz/8blzv67VR/mAfyRkEl79KwOnsjRsuDxD6UNspA+D
-   9WEHoIJ6gzSFJ9k/Zmmr9CAIsz4XZ6qqxzm8zRYQkpavvFeHefXb1ABJR
-   21iT53sx5lsU5yfhokGDhBw0qAl13ovBYYRjCpgHYa9cZ8PHdPwgXNQ/U
-   EScHOCCeFf6LoTUb+7HwV3BW/nOKJUNynu8mHOZ1pr7YTvDpusqlMWbCm
-   1/3xBn1VeviKlMYzkiDlHxw0mIvNiPXOZDAvVXkGQMNxKk5CvMm4ix/fn
-   clFib4WeFbLW0wWt0ISEomq30Wh+WAS6FkyXEX4AunybDtpDeCm4rglFW
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="317970801"
-X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
-   d="scan'208";a="317970801"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 07:55:40 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="848286518"
-X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
-   d="scan'208";a="848286518"
-Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 07:55:37 -0800
-From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
-        hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajat.khandelwal@intel.com,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-Subject: [PATCH v6] platform/x86/intel/pmc: core: Add support to show LTR-ignored components
-Date:   Wed,  1 Mar 2023 21:27:57 +0530
-Message-Id: <20230301155757.1293131-1-rajat.khandelwal@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 28 Feb 2023 17:46:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21CD431E16
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 14:46:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A772161225
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 22:46:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D3EB7C433B3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 22:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677624396;
+        bh=DxeyK2mISFktwrJih+V1mCchgQdP4OzRD0O+JQtStVU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=B2jky+37DGMIVuGPRB5HS3xPt9eYSRgW8yzwNcTw72YjJ5YYohU7sIQKfpU1HbbnN
+         iuUp/ZfHwfQxhFLSyyMrxmn5WebJ47WFz4TxORwPFRzxPXXECkQ4oHsiTvX5w1IRQl
+         bfN7M6ReZh3ApL3Q4eg1THUUUXrv2DiBcqQWTHzy3kdSAF36n0LRaBUBlE9tPakFf2
+         zKNVpUfPpA0Y+9dMOCJC0dY5lJhYJYI8FiUjfxCHpR2ykBIIXfbCYboMTyGMDKzixN
+         H/6RVp0ioIWRlJUaHBu9YZs0H8JkZZaDOGHZdtTj8rM+MRQP8BSg0Q3zyVGlY0xzmS
+         0mgOAcsYYFYEQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id C47E5C43144; Tue, 28 Feb 2023 22:46:36 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Tue, 28 Feb 2023 22:46:33 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-88I4aCBKZ1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
-if there are components whose LTR values have been ignored.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Make the sysfs attribute print out such components, if they exist, and
-return EEXIST, if tried to set an already ignored component.
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
----
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #303789|0                           |1
+        is obsolete|                            |
 
-v6: Description written in imperative sense
+--- Comment #301 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 303816
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303816&action=3Dedit
+Asus WMI for nct6775 v6.2 base (2023.02.28)
 
-v5:
-1. Ignore the LTR of the respective component after unlocking the mutex lock
-2. Adding error code details to the commit message
+Add A320/B350/B760/Z590 boards.
 
-v4: Mutex unlock during error conditions
+--=20
+You may reply to this email to add a comment.
 
-v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
-
-v2: kmalloc -> devm_kmalloc
-
- drivers/platform/x86/intel/pmc/core.c | 64 ++++++++++++++++++++++-----
- drivers/platform/x86/intel/pmc/core.h |  2 +-
- 2 files changed, 53 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 3a15d32d7644..16cf6c634db8 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
- 	{}
- };
- 
-+/* Mutual exclusion to access the list of LTR-ignored components */
-+static DEFINE_MUTEX(ltr_entry_mutex);
-+
-+struct ltr_entry {
-+	u32 comp_index;
-+	const char *comp_name;
-+	struct list_head node;
-+};
-+
-+static LIST_HEAD(ltr_ignore_list);
-+
- static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
- {
- 	return readl(pmcdev->regbase + reg_offset);
-@@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
- 
--int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
-+void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
- {
- 	const struct pmc_reg_map *map = pmcdev->map;
- 	u32 reg;
--	int err = 0;
- 
- 	mutex_lock(&pmcdev->lock);
- 
--	if (value > map->ltr_ignore_max) {
--		err = -EINVAL;
--		goto out_unlock;
--	}
--
- 	reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
- 	reg |= BIT(value);
- 	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
- 
--out_unlock:
- 	mutex_unlock(&pmcdev->lock);
--
--	return err;
- }
- 
- static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-@@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
- {
- 	struct seq_file *s = file->private_data;
- 	struct pmc_dev *pmcdev = s->private;
-+	const struct pmc_reg_map *map = pmcdev->map;
-+	struct ltr_entry *entry;
- 	u32 buf_size, value;
- 	int err;
- 
-@@ -473,13 +477,49 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
- 	if (err)
- 		return err;
- 
--	err = pmc_core_send_ltr_ignore(pmcdev, value);
-+	if (value > map->ltr_ignore_max)
-+		return -EINVAL;
-+
-+	mutex_lock(&ltr_entry_mutex);
-+
-+	list_for_each_entry(entry, &ltr_ignore_list, node) {
-+		if (entry->comp_index == value) {
-+			err = -EEXIST;
-+			goto out_unlock;
-+		}
-+	}
-+
-+	entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
-+	if (!entry) {
-+		err = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	entry->comp_name = map->ltr_show_sts[value].name;
-+	entry->comp_index = value;
-+	list_add_tail(&entry->node, &ltr_ignore_list);
-+
-+out_unlock:
-+	mutex_unlock(&ltr_entry_mutex);
-+
-+	if (err)
-+		return err;
-+
-+	pmc_core_send_ltr_ignore(pmcdev, value);
- 
--	return err == 0 ? count : err;
-+	return count;
- }
- 
- static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
- {
-+	struct ltr_entry *entry;
-+
-+	mutex_lock(&ltr_entry_mutex);
-+	list_for_each_entry(entry, &ltr_ignore_list, node) {
-+		seq_printf(s, "%s\n", entry->comp_name);
-+	}
-+	mutex_unlock(&ltr_entry_mutex);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 810204d758ab..da35b0fcbe6e 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
- extern const struct pmc_reg_map mtl_reg_map;
- 
- extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
--extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
-+extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- void spt_core_init(struct pmc_dev *pmcdev);
- void cnp_core_init(struct pmc_dev *pmcdev);
--- 
-2.34.1
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
