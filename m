@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3E3C7EE2E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 11:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA5C64ED6
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 11:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231569AbjB1LYg (ORCPT
+        id S229950AbjB1LY7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Feb 2023 06:24:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43982 "EHLO
+        Tue, 28 Feb 2023 06:24:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231573AbjB1LYL (ORCPT
+        with ESMTP id S229888AbjB1LYW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Feb 2023 06:24:11 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830391CF5F
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 03:23:42 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id l25so9349450wrb.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 03:23:42 -0800 (PST)
+        Tue, 28 Feb 2023 06:24:22 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C51428869
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 03:23:48 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id bv17so9341870wrb.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 03:23:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677583422;
+        d=linaro.org; s=google; t=1677583423;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GP9BUpkAAnItZXgZisVn1kO1oz9qmtA+bV8jqWpOtJM=;
-        b=SauDXJNkgfwQ1ggwYxd3HcJ5q2YHnt2xK5twAXslHbZRS9MM/k74NroFLzymffLQUg
-         /8Qo+sDoEPUr1cSGopMkHV3jf8uF4DS6dqFujIxwlA8wzFqlH4j/oBWz2vvSMQ3I3H+1
-         HBdWJlW1shUTK/+vTRiVKqlNYiL4iqNmuARgw3QYABI3N26BEUtlFSfTQoZTtckw3F+I
-         HEe0axve0k3LS4JYeh9NfoN7qd9Ml3FjmJBG4gHNagPr33+DlbXBFWUf+9bPM4h46vaQ
-         6O039a1e6OZLPfxDNhYDltwXd81IWKEHJCatF56nZixI8AIWl8WznaGgK4jZHB5F8UDh
-         n3nA==
+        bh=FS5MMzUrtYY5N2w5QCadh2L/6Lyuv9jfcaqNKoRqTRU=;
+        b=wmROP6AyQSd/5lYDaTnJSUSDXdhXDdPFq6dWXSe77IejOrFttF3d59ytNrebe9bWZD
+         7G9JvxGcOZeqMgxxKGV78ZWGnj3tWGl5eHJp0AcWtzyoe3qEdHGW6yN3eVOEs00SdMev
+         1IXw0FeceljNrRpqTqA3WpAol75g+SiSq2TGI265YAs4USbddI0OBs2VZkN0y81+KQJC
+         ag97hXN8hnVLeuV73nCVIlwWV1IJwsGLMorSpUivU/zZYBwtgadH+UPfQvbdnBvBiY/w
+         nya+SL8nqgkYI8Z5tKMI0O3fcuoPiU9Z1AjYwN6Z44iSGmqj9rWQctC5xBwHXC8HoLf1
+         f5Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677583422;
+        d=1e100.net; s=20210112; t=1677583423;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GP9BUpkAAnItZXgZisVn1kO1oz9qmtA+bV8jqWpOtJM=;
-        b=biaGpKNytYTL8Fe0MBgeyfc20+QKGI0GoCowwQR8M4g/jj6UtI9flteCmrgf12K5ca
-         n4wtQZoZYwerWzWlihrJIkLxP232IbMOxkH5ODQ835XJx11GdCfQ+9yX3PfTXReJsT9N
-         VYppn7raFSbroXgcXkQFVsf7glv82mpAdHAXuPUyzFcZW6/ShBrMWHOh9NSksXQCpI8r
-         VSBjqiZ5VZQlGEG4ylt3CIl6H8kf7dap/jqWaeHxPhCf+WAfCK/d3/P34s7vyHrGjI7u
-         aJWOMc13iigjnJnHw4dXXaWejLoBUD5JWq+S0OQJQaYHTtg57JK7uThndCITiVlcgf1Z
-         UgKQ==
-X-Gm-Message-State: AO0yUKWvhHz4FG8DD97wFxwchFvd5PdDKZWBlLmSLi2cNoZpb0EfDCGl
-        JT2xQtLThzYxtLObFtDk8ncOqa8rdtZqOlYKQMpTsg==
-X-Google-Smtp-Source: AK7set9i/mwZgbAPgu+X/cynENy84FA1SS6MIzTypXhdCG9UMMwqugEI9Tp+wf0Io245/ZW25ZRlfg==
-X-Received: by 2002:a5d:5651:0:b0:2cc:459b:8bc8 with SMTP id j17-20020a5d5651000000b002cc459b8bc8mr1651726wrw.6.1677583422037;
+        bh=FS5MMzUrtYY5N2w5QCadh2L/6Lyuv9jfcaqNKoRqTRU=;
+        b=dSeaPIbcXHXvLDNqLG8bam8/TYytSsSvkSoy85ewLqlqzpRc0SlzYmUR98QB+8gF8R
+         AZVPH4pDtIci00VkxgDBtvhe/DnKKZEpuDUegu9xvI+Y+fwmzDp9MicJu/jJ1uFJytxP
+         J7zDaVUq7PI2q/ghmkBQc48ku6I/hjDwEQV46E2McuUzdhh2epFftdZogaP6EnubRAlM
+         D1AZaghZaxIyAYAbanYSjOTq6O5Nb4aCcvRXUtRDTgB2K5zwyysHHQIsYOGtqkfuUJZ7
+         Cf+mZDlASFLPYpmLfSL9AAr6pwlBYSO3OmXz5RU9o1F66DZd7zKWY6XlUTHW3h9ofOiK
+         Qqiw==
+X-Gm-Message-State: AO0yUKVzyCoecLV2+eCvMMKTjPaYCjG20Moq9P+SvjLszmK4m5zhLPUF
+        Nfgp0F1tLh4RVikqhZ425wxhj+6plND65MPtbzip2w==
+X-Google-Smtp-Source: AK7set/dTEth29o+dr/zBLrbuIlnFlYoyHiG+j5LuNH6wDymmrDcmCwbBZcl8aJWcvTmBiAmDk7x+Q==
+X-Received: by 2002:a5d:63c6:0:b0:2c9:e34e:7d0 with SMTP id c6-20020a5d63c6000000b002c9e34e07d0mr2243434wrw.3.1677583422966;
         Tue, 28 Feb 2023 03:23:42 -0800 (PST)
 Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:6830:6390:2815:b6a5])
-        by smtp.gmail.com with ESMTPSA id z5-20020a5d6545000000b002c5501a5803sm9598130wrv.65.2023.02.28.03.23.41
+        by smtp.gmail.com with ESMTPSA id z5-20020a5d6545000000b002c5501a5803sm9598130wrv.65.2023.02.28.03.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 03:23:41 -0800 (PST)
+        Tue, 28 Feb 2023 03:23:42 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rafael@kernel.org, daniel.lezcano@linaro.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -59,9 +59,9 @@ Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
         TEMPERATURE AND FAN DRIVER)
-Subject: [PATCH v4 18/19] thermal/drivers/acerhdf: Make interval setting only at module load time
-Date:   Tue, 28 Feb 2023 12:22:37 +0100
-Message-Id: <20230228112238.2312273-19-daniel.lezcano@linaro.org>
+Subject: [PATCH v4 19/19] thermal/drivers/acerhdf: Remove pointless governor test
+Date:   Tue, 28 Feb 2023 12:22:38 +0100
+Message-Id: <20230228112238.2312273-20-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230228112238.2312273-1-daniel.lezcano@linaro.org>
 References: <20230228112238.2312273-1-daniel.lezcano@linaro.org>
@@ -71,66 +71,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The thermal zone device structure is in the process of being private
-to the thermal framework core code. This driver is directly accessing
-and changing the monitoring polling rate.
+The thermal zone parameter specifies the bang-bang governor.
 
-After discussing with the maintainers of this driver, having the
-polling interval at module loading time is enough for their purpose.
+The Kconfig selects the bang-bang governor. So it is pointless to test
+if the governor was set for the thermal zone assuming it may not have
+been compiled-in.
 
-Change the code to take into account the interval when the module is
-loaded but restrict the permissions so the value can not be changed
-afterwards.
+Remove the test and prevent another access into the thermal internals.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Acked-by: Peter Kaestle <peter@piie.net>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/acerhdf.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/platform/x86/acerhdf.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 1956469c3457..61f1c3090867 100644
+index 61f1c3090867..71b9c1f922d9 100644
 --- a/drivers/platform/x86/acerhdf.c
 +++ b/drivers/platform/x86/acerhdf.c
-@@ -79,7 +79,6 @@ static unsigned int list_supported;
- static unsigned int fanstate = ACERHDF_FAN_AUTO;
- static char force_bios[16];
- static char force_product[16];
--static unsigned int prev_interval;
- static struct thermal_zone_device *thz_dev;
- static struct thermal_cooling_device *cl_dev;
- static struct platform_device *acerhdf_dev;
-@@ -346,20 +345,15 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
- 	trips[0].temperature = fanon;
- 	trips[0].hysteresis  = fanon - fanoff;
+@@ -697,13 +697,6 @@ static int __init acerhdf_register_thermal(void)
+ 	if (ret)
+ 		return ret;
  
--	if (kernelmode && prev_interval != interval) {
-+	if (kernelmode) {
- 		if (interval > ACERHDF_MAX_INTERVAL) {
- 			pr_err("interval too high, set to %d\n",
- 			       ACERHDF_MAX_INTERVAL);
- 			interval = ACERHDF_MAX_INTERVAL;
- 		}
-+
- 		if (verbose)
- 			pr_notice("interval changed to: %d\n", interval);
+-	if (strcmp(thz_dev->governor->name,
+-				acerhdf_zone_params.governor_name)) {
+-		pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
+-				acerhdf_zone_params.governor_name);
+-		return -EINVAL;
+-	}
 -
--		if (thermal)
--			thermal->polling_delay_jiffies =
--				round_jiffies(msecs_to_jiffies(interval * 1000));
--
--		prev_interval = interval;
- 	}
+ 	return 0;
  }
  
-@@ -807,5 +801,5 @@ static const struct kernel_param_ops interval_ops = {
- 	.get = param_get_uint,
- };
- 
--module_param_cb(interval, &interval_ops, &interval, 0600);
-+module_param_cb(interval, &interval_ops, &interval, 0000);
- MODULE_PARM_DESC(interval, "Polling interval of temperature check");
 -- 
 2.34.1
 
