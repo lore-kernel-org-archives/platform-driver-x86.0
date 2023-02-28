@@ -2,104 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C90C7EE31
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Feb 2023 16:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F34C64EC7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 09:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjB0Qe5 (ORCPT
+        id S229786AbjB1Jdc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Feb 2023 11:34:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
+        Tue, 28 Feb 2023 04:33:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbjB0Qe4 (ORCPT
+        with ESMTP id S231356AbjB1JdX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Feb 2023 11:34:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F856181;
-        Mon, 27 Feb 2023 08:34:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B8B2B80D7A;
-        Mon, 27 Feb 2023 16:34:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFD5C4339B;
-        Mon, 27 Feb 2023 16:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677515691;
-        bh=ysg1g/ZcQSWNVuTE8NtkzMkkLbwHUGn9rkR86nbbHY4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sepxnuDvLBxSScNXeyQEUBu20wjXDXrDsNrCzMQbKStwMRSy8nYajOX+LtmkLCLZl
-         pFyFDUgwy2/Yas0WmIsh+os+rgImLgl7gUoanVRxIOzpvsJt5EIce0rZ4eV2CIvR7m
-         9yoRgpK87zcMPnh6o4SIo90kgsH7vjSP7mVn4QFzwRHwswqnDxlCmV1j6sgutY76oi
-         30ZYoA6ov8mSyIcumLxc4BmXoTWnMeJt8+wTQ66qfktxgDD1gArQc+ZRmlh3eXTkAm
-         IEw2YoprQYMj9SfF3vi1nWN/LpurN9BrtaZchbK0ErWxiczAAfKg7KkpQgxtMyxZYt
-         KKURXOuCVdKGA==
-Received: by mail-lf1-f51.google.com with SMTP id n2so9275789lfb.12;
-        Mon, 27 Feb 2023 08:34:51 -0800 (PST)
-X-Gm-Message-State: AO0yUKUX8LxcNj+umkHc1kXSHs8JDl5wBTYOqGowDUnBtP+QBjBA6gFL
-        KsmJTBrTi0imNR0Gtc9S8HlFEl2zifSzzs2+TFg=
-X-Google-Smtp-Source: AK7set++oeaP/IwOS2ZLnIc+IJsuRWJDDYe+9s9Vu25q1q3duZvdr2T5DHawYNExoRi/zeceX8KJhT6MAfTs1x5Bx1Y=
-X-Received: by 2002:ac2:5a41:0:b0:4dd:805b:5b75 with SMTP id
- r1-20020ac25a41000000b004dd805b5b75mr7602881lfn.7.1677515689640; Mon, 27 Feb
- 2023 08:34:49 -0800 (PST)
+        Tue, 28 Feb 2023 04:33:23 -0500
+X-Greylist: delayed 496 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Feb 2023 01:33:16 PST
+Received: from smtp-out.abv.bg (smtp-out.abv.bg [194.153.145.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE289212A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 01:33:16 -0800 (PST)
+Received: from nm83.abv.bg (nm83.ni.bg [192.168.151.146])
+        by smtp-out.abv.bg (Postfix) with UTF8SMTP id 53C826199
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 11:24:58 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abv.bg; s=smtp-out;
+        t=1677576298; bh=2wTmZ5vH+BHZ/0XLnguFNBM3c5XMnDWPVGRXu8qYweI=;
+        h=Date:From:To:Subject:From;
+        b=AowZybEjhXeew5qiVCX5pBYiQ7N1dYIPDK0z7Hmhi/tIGdc1SIEbMFt8A0es6cDlj
+         IFV4D2q4euypRIN6cFCP8GX8NGOkUF58MBBYLQwZp2RJsd0Da8b64GyDt0/8mlOT1a
+         dNBO4Q2fEIE1QvHyIia7pAtYpOsNdMwkawEeBfv0=
+Received: from nm83.abv.bg (localhost [127.0.0.1])
+        by nm83.abv.bg (Postfix) with UTF8SMTP id 207B09D7FB
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Feb 2023 11:24:58 +0200 (EET)
+Date:   Tue, 28 Feb 2023 11:24:53 +0200 (EET)
+From:   Kristian Angelov <kristiana2000@abv.bg>
+To:     platform-driver-x86@vger.kernel.org
+Message-ID: <443078148.491022.1677576298133@nm83.abv.bg>
+Subject: [bug report] platform/x86: asus-wmi: Unable to set rgb mode on TUF FX505 laptop
 MIME-Version: 1.0
-References: <20230227-kobj_type-x86-efi-v1-1-a335952d2536@weissschuh.net>
-In-Reply-To: <20230227-kobj_type-x86-efi-v1-1-a335952d2536@weissschuh.net>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 27 Feb 2023 17:34:38 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGwZxjjB3ojmH5cHDOLnveGY2vSz7t=xgj2dN7dg1K09Q@mail.gmail.com>
-Message-ID: <CAMj1kXGwZxjjB3ojmH5cHDOLnveGY2vSz7t=xgj2dN7dg1K09Q@mail.gmail.com>
-Subject: Re: [PATCH] efi: x86: make kobj_type structure constant
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Mailer: AbvMail 3.0
+X-Originating-IP: 145.93.102.78
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 27 Feb 2023 at 04:09, Thomas Wei=C3=9Fschuh <linux@weissschuh.net> =
-wrote:
->
-> Since commit ee6d3dd4ed48 ("driver core: make kobj_type constant.")
-> the driver core allows the usage of const struct kobj_type.
->
-> Take advantage of this to constify the structure definition to prevent
-> modification at runtime.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+I am unable to set the color/mode on my TUF FX505 laptop. Upon investigation of the asus-wmi driver, I can see a correct implementation of the color setting functionality (based on my own reverse engineering) however writing to the appropriate /sys/class/leds device does not work. Upon further investigation it seems to have to do with asus-wmi.c:747 where cmd = !!cmd is done. On my specific laptop the WMI interface expects the magic value 0xB3 however it is impossible to write this value as any positive value will be replaced by 1.
 
-Thanks, I'll queue these up after the merge window.
 
-> ---
->  arch/x86/platform/efi/runtime-map.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/platform/efi/runtime-map.c b/arch/x86/platform/efi/=
-runtime-map.c
-> index bbee682ef8cd..a6f02cef3ca2 100644
-> --- a/arch/x86/platform/efi/runtime-map.c
-> +++ b/arch/x86/platform/efi/runtime-map.c
-> @@ -93,7 +93,7 @@ static void map_release(struct kobject *kobj)
->         kfree(entry);
->  }
->
-> -static struct kobj_type __refdata map_ktype =3D {
-> +static const struct kobj_type __refconst map_ktype =3D {
->         .sysfs_ops      =3D &map_attr_ops,
->         .default_groups =3D def_groups,
->         .release        =3D map_release,
->
-> ---
-> base-commit: 2fcd07b7ccd5fd10b2120d298363e4e6c53ccf9c
-> change-id: 20230227-kobj_type-x86-efi-7591b1343b08
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
->
+Best regards,
+Kristiyan
+
+
+PS: Please CC
