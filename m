@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A55C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D61FC7EE32
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 02:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjCACBT (ORCPT
+        id S229831AbjCACBX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Feb 2023 21:01:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49712 "EHLO
+        Tue, 28 Feb 2023 21:01:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229764AbjCACBQ (ORCPT
+        with ESMTP id S229697AbjCACBR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Feb 2023 21:01:16 -0500
+        Tue, 28 Feb 2023 21:01:17 -0500
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB6811116E;
-        Tue, 28 Feb 2023 18:01:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93C41CF52;
+        Tue, 28 Feb 2023 18:01:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677636075; x=1709172075;
+  t=1677636076; x=1709172076;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rJiDCSyygrrCuqVsYU6GkuSNqtQTTbAqcfks22kGVi0=;
-  b=oHXmonnBw1vhAGMDNGuC8sITYKlolAhO4o9pgg7mlMKs15v8Bx9+gXn1
-   UeYZ+HNmznYjr9IS6n4BfEGYW9ULLfuRkMZW/uqdeyg2pMeA/FMyxpGjG
-   XdSJTF3dU3FAdbtVV/7M0Xio+TrDLtQBmNwhGbXUNstl4vyCoszrVsd36
-   uZtRRzbFfYtMrnGS9UyGU1wo5y2byMdvZ5/J1ZiPf4amj7USpLABtTqJL
-   y00IzUd6pU7DrGZXXGGlw21DmWdfYmIUjexC0EwETgV17oWvCKAx7Zx+Z
-   nTl4/LNolmiJnX+AHvgZDcn+Q0hT9eAMdzXN21x8crrkYP6i/aGlg47xG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="420558449"
+  bh=GMczgXavrBgg17Er2wnixo7pn8wUH2g/Rwj8eQGunFA=;
+  b=GiHOvXKGxvDRlfyXY40ImgMT9qTMtG4VLQj6HeZFSzG2heeVxECTL1MA
+   os4xm9ogB/DN1xBUThPv4xIKVEs2KpowdkGKACKtnAvx/f6aGt89gJVn1
+   BjW+fNQhj3zay7KmQ97TvkgVLHYKUazJ1qJogOqsTGIQc2KCEFAEb0/PQ
+   bR/q0EdCkqOcWmo0BtJJ0hjo3W6FJWDeTlDlnuhMGpFNPGR/P6jkN36JF
+   GO0+XbHDEZkBEb9Z8sNaeK2vwGZl3MgBoLRZgLd558qxFMWc3QcDiPWaU
+   G27odtjyE5A7z0M0uDImM+PqYUU1aP1ZfVO8yNlyxK3e23ibcZ3ShtJ/l
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="420558481"
 X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
-   d="scan'208";a="420558449"
+   d="scan'208";a="420558481"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:13 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="704639956"
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:16 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="704639969"
 X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
-   d="scan'208";a="704639956"
+   d="scan'208";a="704639969"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:12 -0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:15 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,9 +49,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 4/8] platform/x86/intel/ifs: Introduce Array Scan test to IFS
-Date:   Tue, 28 Feb 2023 17:59:38 -0800
-Message-Id: <20230301015942.462799-5-jithu.joseph@intel.com>
+Subject: [PATCH v3 7/8] platform/x86/intel/ifs: Update IFS doc
+Date:   Tue, 28 Feb 2023 17:59:41 -0800
+Message-Id: <20230301015942.462799-8-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230301015942.462799-1-jithu.joseph@intel.com>
 References: <20230214234426.344960-1-jithu.joseph@intel.com>
@@ -62,173 +62,104 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Array BIST is a new type of core test introduced under the Intel Infield
-Scan (IFS) suite of tests.
-
-Emerald Rapids (EMR) is the first CPU to support Array BIST.
-Array BIST performs tests on some portions of the core logic such as
-caches and register files. These are different portions of the silicon
-compared to the parts tested by the first test type
-i.e Scan at Field (SAF).
-
-Make changes in the device driver init flow to register this new test
-type with the device driver framework. Each test will have its own
-sysfs directory (intel_ifs_0 , intel_ifs_1) under misc hierarchy to
-accommodate for the differences in test type and how they are initiated.
-
-Upcoming patches will add actual support.
+Array BIST is the second test supported by IFS. Modify IFS doc
+entry to be more general.
 
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h  |  3 +
- drivers/platform/x86/intel/ifs/core.c | 85 +++++++++++++++++++--------
- 2 files changed, 62 insertions(+), 26 deletions(-)
+ drivers/platform/x86/intel/ifs/ifs.h | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index ab168ddf28f1..b8b956e29653 100644
+index 1228101de201..34f68778c8b5 100644
 --- a/drivers/platform/x86/intel/ifs/ifs.h
 +++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -137,6 +137,9 @@
- #define SCAN_TEST_PASS				1
- #define SCAN_TEST_FAIL				2
- 
-+#define IFS_TYPE_SAF			0
-+#define IFS_TYPE_ARRAY_BIST		1
-+
- /* MSR_SCAN_HASHES_STATUS bit fields */
- union ifs_scan_hashes_status {
- 	u64	data;
-diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-index 62c44dbae757..2237aaba7078 100644
---- a/drivers/platform/x86/intel/ifs/core.c
-+++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -16,6 +16,7 @@
- 
- static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
- 	X86_MATCH(SAPPHIRERAPIDS_X),
-+	X86_MATCH(EMERALDRAPIDS_X),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
-@@ -24,23 +25,51 @@ ATTRIBUTE_GROUPS(plat_ifs);
- 
- bool *ifs_pkg_auth;
- 
--static struct ifs_device ifs_device = {
--	.ro_data = {
--		.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
--		.test_num = 0,
-+static struct ifs_device ifs_devices[] = {
-+	[IFS_TYPE_SAF] = {
-+		.ro_data = {
-+			.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
-+			.test_num = IFS_TYPE_SAF,
-+		},
-+		.misc = {
-+			.name = "intel_ifs_0",
-+			.minor = MISC_DYNAMIC_MINOR,
-+			.groups = plat_ifs_groups,
-+		},
- 	},
--	.misc = {
--		.name = "intel_ifs_0",
--		.minor = MISC_DYNAMIC_MINOR,
--		.groups = plat_ifs_groups,
-+	[IFS_TYPE_ARRAY_BIST] = {
-+		.ro_data = {
-+			.integrity_cap_bit = MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT,
-+			.test_num = IFS_TYPE_ARRAY_BIST,
-+		},
-+		.misc = {
-+			.name = "intel_ifs_1",
-+			.minor = MISC_DYNAMIC_MINOR,
-+		},
- 	},
- };
- 
-+#define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
-+
-+static void ifs_cleanup(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < IFS_NUMTESTS; i++) {
-+		if (ifs_devices[i].misc.this_device) {
-+			misc_deregister(&ifs_devices[i].misc);
-+			kfree(ifs_devices[i].rw_data);
-+		}
-+	}
-+	kfree(ifs_pkg_auth);
-+}
-+
- static int __init ifs_init(void)
- {
- 	const struct x86_cpu_id *m;
- 	struct ifs_data *ifsd;
- 	u64 msrval;
-+	int i, ret;
- 
- 	m = x86_match_cpu(ifs_cpu_ids);
- 	if (!m)
-@@ -55,35 +84,39 @@ static int __init ifs_init(void)
- 	if (rdmsrl_safe(MSR_INTEGRITY_CAPS, &msrval))
- 		return -ENODEV;
- 
--	if (!(msrval & BIT(ifs_device.ro_data.integrity_cap_bit)))
--		return -ENODEV;
--
- 	ifs_pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
- 	if (!ifs_pkg_auth)
- 		return -ENOMEM;
- 
--	ifsd = kzalloc(sizeof(*ifsd), GFP_KERNEL);
--	if (!ifsd)
--		return -ENOMEM;
--
--	ifsd->ro_info = &ifs_device.ro_data;
--	ifs_device.rw_data = ifsd;
--
--	if (misc_register(&ifs_device.misc)) {
--		kfree(ifsd);
--		kfree(ifs_pkg_auth);
--		return -ENODEV;
-+	for (i = 0; i < IFS_NUMTESTS; i++) {
-+		ifsd = NULL;
-+		if (!(msrval & BIT(ifs_devices[i].ro_data.integrity_cap_bit)))
-+			continue;
-+
-+		ifsd = kzalloc(sizeof(*ifsd), GFP_KERNEL);
-+		if (!ifsd) {
-+			ret = -ENOMEM;
-+			goto err_exit;
-+		}
-+		ifsd->ro_info = &ifs_devices[i].ro_data;
-+		ifs_devices[i].rw_data = ifsd;
-+
-+		if (misc_register(&ifs_devices[i].misc)) {
-+			ret = -ENODEV;
-+			kfree(ifsd);
-+			goto err_exit;
-+		}
- 	}
--
- 	return 0;
- 
-+err_exit:
-+	ifs_cleanup();
-+	return ret;
- }
- 
- static void __exit ifs_exit(void)
- {
--	misc_deregister(&ifs_device.misc);
--	kfree(ifs_device.rw_data);
--	kfree(ifs_pkg_auth);
-+	ifs_cleanup();
- }
- 
- module_init(ifs_init);
+@@ -17,7 +17,7 @@
+  * In Field Scan (IFS) is a hardware feature to run circuit level tests on
+  * a CPU core to detect problems that are not caught by parity or ECC checks.
+  * Future CPUs will support more than one type of test which will show up
+- * with a new platform-device instance-id, for now only .0 is exposed.
++ * with a new platform-device instance-id.
+  *
+  *
+  * IFS Image
+@@ -25,7 +25,10 @@
+  *
+  * Intel provides a firmware file containing the scan tests via
+  * github [#f1]_.  Similar to microcode there is a separate file for each
+- * family-model-stepping.
++ * family-model-stepping. IFS Images are not applicable for some test types.
++ * Wherever applicable the sysfs directory would provide a "current_batch" file
++ * (see below) for loading the image.
++ *
+  *
+  * IFS Image Loading
+  * -----------------
+@@ -35,7 +38,7 @@
+  * SHA hashes for the test. Then the tests themselves. Status MSRs provide
+  * feedback on the success/failure of these steps.
+  *
+- * The test files are kept in a fixed location: /lib/firmware/intel/ifs_0/
++ * The test files are kept in a fixed location: /lib/firmware/intel/ifs_<n>/
+  * For e.g if there are 3 test files, they would be named in the following
+  * fashion:
+  * ff-mm-ss-01.scan
+@@ -47,7 +50,7 @@
+  * (e.g 1, 2 or 3 in the above scenario) into the curent_batch file.
+  * To load ff-mm-ss-02.scan, the following command can be used::
+  *
+- *   # echo 2 > /sys/devices/virtual/misc/intel_ifs_0/current_batch
++ *   # echo 2 > /sys/devices/virtual/misc/intel_ifs_<n>/current_batch
+  *
+  * The above file can also be read to know the currently loaded image.
+  *
+@@ -69,16 +72,16 @@
+  * to migrate those applications to other cores before running a core test.
+  * It may also be necessary to redirect interrupts to other CPUs.
+  *
+- * In all cases reading the SCAN_STATUS MSR provides details on what
++ * In all cases reading the corresponding test's STATUS MSR provides details on what
+  * happened. The driver makes the value of this MSR visible to applications
+  * via the "details" file (see below). Interrupted tests may be restarted.
+  *
+- * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_0/
++ * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_<n>/
+  * to control execution:
+  *
+  * Test a specific core::
+  *
+- *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_0/run_test
++ *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+  * when HT is enabled any of the sibling cpu# can be specified to test
+  * its corresponding physical core. Since the tests are per physical core,
+@@ -87,21 +90,21 @@
+  *
+  * For e.g. to test core corresponding to cpu5
+  *
+- *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_0/run_test
++ *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+  * Results of the last test is provided in /sys::
+  *
+- *   $ cat /sys/devices/virtual/misc/intel_ifs_0/status
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/status
+  *   pass
+  *
+  * Status can be one of pass, fail, untested
+  *
+  * Additional details of the last test is provided by the details file::
+  *
+- *   $ cat /sys/devices/virtual/misc/intel_ifs_0/details
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/details
+  *   0x8081
+  *
+- * The details file reports the hex value of the SCAN_STATUS MSR.
++ * The details file reports the hex value of the test specific status MSR.
+  * Hardware defined error codes are documented in volume 4 of the Intel
+  * Software Developer's Manual but the error_code field may contain one of
+  * the following driver defined software codes:
 -- 
 2.25.1
 
