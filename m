@@ -2,150 +2,209 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2983C64EC7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DEC7EE37
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Feb 2023 15:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjB1NWW (ORCPT
+        id S230216AbjB1P4l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Feb 2023 08:22:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
+        Tue, 28 Feb 2023 10:56:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjB1NWV (ORCPT
+        with ESMTP id S230217AbjB1P4k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Feb 2023 08:22:21 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C00E2E817;
-        Tue, 28 Feb 2023 05:22:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1677590495; i=w_armin@gmx.de;
-        bh=QVP466RW3LEp6uaazzvy9ds/oekGh5o8C2F8P4Qp8ME=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=CxxFy5YZArUXTADOk53lp2PuIQ2Shb6L1p5lVzW9xY+jnOpLl+3M3rOVsyFdSnsVO
-         /J0gOJQBwjIioilyFIqCKX9UzR/wYyKO3tNs4MOeSo4gRo0O31/qVlE8FP0pBRdCXR
-         zmRmxJjK54K25jNM7nQ/0/D4UHDKkGQXX9hHOi8Kj0HVOVw2sgSDwq+WSXPbuthZ8o
-         +CvdhWftAP4jfLSy5iqHWlBT/MmF+QToHYXG35uj+65RZ4lm4y5vUgrVpPE2/vZMji
-         q6h1y6yV9DBX1a9KQyyJubVWQ/v92RFHc2MwBCl0OW5TBIDg8EGJkjhfxj7wqN6rew
-         VXp7vTCyqjWpw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1or2KF27dQ-00fy6f; Tue, 28
- Feb 2023 14:21:35 +0100
-Subject: Re: [PATCH v2 1/2] platform/x86: dell-ddv: Fix cache invalidation on
- resume
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230218115318.20662-1-W_Armin@gmx.de>
-Message-ID: <a50ee14a-0181-5237-ddbc-5df85bd2eb6a@gmx.de>
-Date:   Tue, 28 Feb 2023 14:21:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 28 Feb 2023 10:56:40 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE7531E36;
+        Tue, 28 Feb 2023 07:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677599750; x=1709135750;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xLC5mKkE/LXMOQ1pQVWUc4onWv0C2ecP8VL2usU2Bnk=;
+  b=GQg5860qQzLlNjz/8blzv67VR/mAfyRkEl79KwOnsjRsuDxD6UNspA+D
+   9WEHoIJ6gzSFJ9k/Zmmr9CAIsz4XZ6qqxzm8zRYQkpavvFeHefXb1ABJR
+   21iT53sx5lsU5yfhokGDhBw0qAl13ovBYYRjCpgHYa9cZ8PHdPwgXNQ/U
+   EScHOCCeFf6LoTUb+7HwV3BW/nOKJUNynu8mHOZ1pr7YTvDpusqlMWbCm
+   1/3xBn1VeviKlMYzkiDlHxw0mIvNiPXOZDAvVXkGQMNxKk5CvMm4ix/fn
+   clFib4WeFbLW0wWt0ISEomq30Wh+WAS6FkyXEX4AunybDtpDeCm4rglFW
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="317970801"
+X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
+   d="scan'208";a="317970801"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 07:55:40 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="848286518"
+X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
+   d="scan'208";a="848286518"
+Received: from unknown (HELO rajath-NUC10i7FNH..) ([10.223.165.88])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 07:55:37 -0800
+From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+To:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
+        hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajat.khandelwal@intel.com,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+Subject: [PATCH v6] platform/x86/intel/pmc: core: Add support to show LTR-ignored components
+Date:   Wed,  1 Mar 2023 21:27:57 +0530
+Message-Id: <20230301155757.1293131-1-rajat.khandelwal@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <20230218115318.20662-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:clm5n+6ihDAo+6ma3hx/EJ2ABcn2sRQKbrmgBTGjMfdbPfJj4Yy
- coetI3rlDDwiOLeVxB2OZ3UWxxPnMACCJZP2HAxdDIJvRDpmxOw+TcUgWnGHB4HfVXPMjNO
- uee1AErrLp5//po7YzBdQ7HSbgUa3IMqmwAa/MvXwYBtGF8xE45eNaOCmcW96DGBXR9ocZx
- kuYmvte4lrVQCZXwmW/FA==
-UI-OutboundReport: notjunk:1;M01:P0:wg9GWKTMJ5I=;x50cEz6bWGDmmyzNX1MqkPwGeE2
- soPANucPOvq3agMLUuJs3fQXFIp0MwQ7pQxp723ZR5d4BTQXs8FSlA7PV69tfrFTMEV9LzKs7
- UrUkW17iZj0z5OwZmRqX95d3paVAd2wbLymok29oFzTU1ygPGSVI4RbsIQzYehgroiHsD7zZq
- JlkdbWEPdGsCGJWAD0joGv4CcTN3Qv3N7jISfk0qyvIO+X7ohjJTdVdkTg/g1jEwFMYzUeA7k
- oRukCzevL6y8+362lDOVOLeuuev2JQ9DxMvQlX7aJN2M136EMifmzAffQf9oJ8ArWmlSkUSjU
- lJTl27Bp0CfP3U8Ng4sRTKAs4Zqg4gYz5IPxRMRwiPJADKK2/bKQo6VquOEUuKjPcM0VhHYA7
- Yse29P69fqUr/cXPEC3hlATjZcMJVbMn6k961amTGnTPz9qwPtlghlMgRrkJoUzXkfPbsmFUP
- 5hTfI6vBGBJvGovA9IdkwfyiCG48rOAuhQh+tGUMdqBa2fV2v2RoejWFiC5tbtipC9hsvdFHc
- VeoKZXTtk8wPetx7xvasisJlfOYIL8f4+MOueVdBbg6F9cv57zgWVKbHG+D0a6z0bgW4zWIpA
- 9sKe9EGPqOQBFCafuDsgqGN1AHoFnSuetbHARpVder/5fizAPbKA5ThdKCHL+N0y+DyC0dQmk
- XWVJp+aJzP0jXhKjHSomvNF8nxE/5puB4++/jOfU1YL5Koj77SEFy0H2aD1c9ooeHNGqsuTe4
- cCNvTwZUsPkBAfa1O/eYGZ3dSB2DesgCqiaCxWrtL/GN/d2DDMNrYzvTiIrQnK+jn69ggI4la
- DWMmHiVkVTBVRTP118KcPaW6RnbLPstlOFUgaheqiaxriCVw4Vbu8uPgY2j4RTvLKHdE4oDgj
- WTwWvnGWl66o1WD6o6WRRTIUCpZ1BJf9XfyPuAJgraWLUoVr537FdRqH7w8xtEOAEgi9tLqNr
- 9TMKiRxRKDCZdlUhsceOY0KDkyo=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 18.02.23 um 12:53 schrieb Armin Wolf:
+Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
+if there are components whose LTR values have been ignored.
 
-> If one or both sensor buffers could not be initialized, either
-> due to missing hardware support or due to some error during probing,
-> the resume handler will encounter undefined behaviour when
-> attempting to lock buffers then protected by an uninitialized or
-> destroyed mutex.
-> Fix this by introducing a "active" flag which is set during probe,
-> and only invalidate buffers which where flaged as "active".
->
-> Tested on a Dell Inspiron 3505.
+Make the sysfs attribute print out such components, if they exist, and
+return EEXIST, if tried to set an already ignored component.
 
-Hello,
+Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+---
 
-what is the status of this series? Both patches are tested on real hardware
-and work flawlessly.
+v6: Description written in imperative sense
 
-Armin Wolf
+v5:
+1. Ignore the LTR of the respective component after unlocking the mutex lock
+2. Adding error code details to the commit message
 
-> Fixes: 3b7eeff93d29 ("platform/x86: dell-ddv: Add hwmon support")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> Changes in v2:
-> - move checking of the "active" flag inside
->    dell_wmi_ddv_hwmon_cache_invalidate()
-> ---
->   drivers/platform/x86/dell/dell-wmi-ddv.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> index d547c9d09725..eff4e9649faf 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> @@ -96,6 +96,7 @@ struct combined_chip_info {
->   };
->
->   struct dell_wmi_ddv_sensors {
-> +	bool active;
->   	struct mutex lock;	/* protect caching */
->   	unsigned long timestamp;
->   	union acpi_object *obj;
-> @@ -520,6 +521,9 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_create(struct device *dev
->
->   static void dell_wmi_ddv_hwmon_cache_invalidate(struct dell_wmi_ddv_sensors *sensors)
->   {
-> +	if (!sensors->active)
-> +		return;
-> +
->   	mutex_lock(&sensors->lock);
->   	kfree(sensors->obj);
->   	sensors->obj = NULL;
-> @@ -530,6 +534,7 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *data)
->   {
->   	struct dell_wmi_ddv_sensors *sensors = data;
->
-> +	sensors->active = false;
->   	mutex_destroy(&sensors->lock);
->   	kfree(sensors->obj);
->   }
-> @@ -549,6 +554,7 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *w
->   		return ERR_PTR(ret);
->
->   	mutex_init(&sensors->lock);
-> +	sensors->active = true;
->
->   	ret = devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache_destroy, sensors);
->   	if (ret < 0)
-> @@ -852,7 +858,7 @@ static int dell_wmi_ddv_resume(struct device *dev)
->   {
->   	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
->
-> -	/* Force re-reading of all sensors */
-> +	/* Force re-reading of all active sensors */
->   	dell_wmi_ddv_hwmon_cache_invalidate(&data->fans);
->   	dell_wmi_ddv_hwmon_cache_invalidate(&data->temps);
->
-> --
-> 2.30.2
->
+v4: Mutex unlock during error conditions
+
+v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
+
+v2: kmalloc -> devm_kmalloc
+
+ drivers/platform/x86/intel/pmc/core.c | 64 ++++++++++++++++++++++-----
+ drivers/platform/x86/intel/pmc/core.h |  2 +-
+ 2 files changed, 53 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 3a15d32d7644..16cf6c634db8 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
+ 	{}
+ };
+ 
++/* Mutual exclusion to access the list of LTR-ignored components */
++static DEFINE_MUTEX(ltr_entry_mutex);
++
++struct ltr_entry {
++	u32 comp_index;
++	const char *comp_name;
++	struct list_head node;
++};
++
++static LIST_HEAD(ltr_ignore_list);
++
+ static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+ {
+ 	return readl(pmcdev->regbase + reg_offset);
+@@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+ 
+-int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
++void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+ {
+ 	const struct pmc_reg_map *map = pmcdev->map;
+ 	u32 reg;
+-	int err = 0;
+ 
+ 	mutex_lock(&pmcdev->lock);
+ 
+-	if (value > map->ltr_ignore_max) {
+-		err = -EINVAL;
+-		goto out_unlock;
+-	}
+-
+ 	reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+ 	reg |= BIT(value);
+ 	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
+ 
+-out_unlock:
+ 	mutex_unlock(&pmcdev->lock);
+-
+-	return err;
+ }
+ 
+ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+@@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ {
+ 	struct seq_file *s = file->private_data;
+ 	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_reg_map *map = pmcdev->map;
++	struct ltr_entry *entry;
+ 	u32 buf_size, value;
+ 	int err;
+ 
+@@ -473,13 +477,49 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+ 	if (err)
+ 		return err;
+ 
+-	err = pmc_core_send_ltr_ignore(pmcdev, value);
++	if (value > map->ltr_ignore_max)
++		return -EINVAL;
++
++	mutex_lock(&ltr_entry_mutex);
++
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		if (entry->comp_index == value) {
++			err = -EEXIST;
++			goto out_unlock;
++		}
++	}
++
++	entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
++	if (!entry) {
++		err = -ENOMEM;
++		goto out_unlock;
++	}
++
++	entry->comp_name = map->ltr_show_sts[value].name;
++	entry->comp_index = value;
++	list_add_tail(&entry->node, &ltr_ignore_list);
++
++out_unlock:
++	mutex_unlock(&ltr_entry_mutex);
++
++	if (err)
++		return err;
++
++	pmc_core_send_ltr_ignore(pmcdev, value);
+ 
+-	return err == 0 ? count : err;
++	return count;
+ }
+ 
+ static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
+ {
++	struct ltr_entry *entry;
++
++	mutex_lock(&ltr_entry_mutex);
++	list_for_each_entry(entry, &ltr_ignore_list, node) {
++		seq_printf(s, "%s\n", entry->comp_name);
++	}
++	mutex_unlock(&ltr_entry_mutex);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 810204d758ab..da35b0fcbe6e 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
+ extern const struct pmc_reg_map mtl_reg_map;
+ 
+ extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+-extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
++extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+ 
+ void spt_core_init(struct pmc_dev *pmcdev);
+ void cnp_core_init(struct pmc_dev *pmcdev);
+-- 
+2.34.1
+
