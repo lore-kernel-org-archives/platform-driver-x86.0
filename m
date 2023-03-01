@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCA7C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 02:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28437C7EE30
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 02:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbjCACBP (ORCPT
+        id S229738AbjCACBQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Feb 2023 21:01:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
+        Tue, 28 Feb 2023 21:01:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjCACBP (ORCPT
+        with ESMTP id S229746AbjCACBP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Tue, 28 Feb 2023 21:01:15 -0500
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474D71116E;
-        Tue, 28 Feb 2023 18:01:11 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE231E2B8;
+        Tue, 28 Feb 2023 18:01:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677636071; x=1709172071;
+  t=1677636074; x=1709172074;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HpxabiM1acdSdwfWAu6jEfJlRvw6++g6eFsBCHiaOiM=;
-  b=bHlEysnrn/BYsuAitP5DOf+MZohNKhKfkEarupgTh4+guSOg033WFYtz
-   kS+dYcMu6GUab24iALPaOfsn3VDqtUTlTAKDoY+F8Rd5ttlhoOZO0S10J
-   luRlAxv5Osq7pURrIscJrdZss4rYA0ry5OB9uYxro8r7izb+FDl5aIp4v
-   rxVb9tRc7xwEymoepRELtxbEbyTO6QzLzzWS/OWS1L/+UNSzHtVl3lb2m
-   pemgAVWs2ltSA9N0epkS84K9nKoFdX5Qtc56jm6TBU03wyoB3AKmPSvDY
-   oxtX894W2P+K3NFFMkC2GhdVjdVwXV2Oueav7Ajq69qt8eTx8+YIOxXrk
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="420558397"
+  bh=8fGhALj/6YuPeeMFkK3yfUkQG/FNpfhZ0YdkO37eDWg=;
+  b=SM8JC6Dril1rZycfQdj0I6N+WG+ea0PKLXubU/5gzUFPzbv+jFo8L39D
+   kptQQcvSDglVtJcHX/z1IqQSA5WzOOBBLBlY38mQ3c+FkLoNeNjlWHWf9
+   mDeCJtnFUPyv5eB47dPtVFS1HXJ7dCQkwE4S/82BV/KNZPkzwUlq22XYs
+   F9FCzT2Jg84UX+XRHz/g+2gckV7/yNLOwTl7YPWupz3ZoLX2Z7e0w2e57
+   JVH+NvRXz3JWrLvbTep+dYvvWn1foI9kq2OW75d5OIxUnU89qSu5+IDjD
+   DXBFgKzdDHTbHINZH54Ns1AjGRcgiMCPZr8IaxlIRyVthJF1vr5x8V4DB
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="420558425"
 X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
-   d="scan'208";a="420558397"
+   d="scan'208";a="420558425"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:10 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="704639930"
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:12 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="704639942"
 X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
-   d="scan'208";a="704639930"
+   d="scan'208";a="704639942"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:09 -0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 18:01:11 -0800
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -49,76 +49,104 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         patches@lists.linux.dev, ravi.v.shankar@intel.com,
         thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
         sohil.mehta@intel.com
-Subject: [PATCH v3 0/8] Add Array BIST test support to IFS
-Date:   Tue, 28 Feb 2023 17:59:34 -0800
-Message-Id: <20230301015942.462799-1-jithu.joseph@intel.com>
+Subject: [PATCH v3 2/8] platform/x86/intel/ifs: IFS cleanup
+Date:   Tue, 28 Feb 2023 17:59:36 -0800
+Message-Id: <20230301015942.462799-3-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230214234426.344960-1-jithu.joseph@intel.com>
+In-Reply-To: <20230301015942.462799-1-jithu.joseph@intel.com>
 References: <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230301015942.462799-1-jithu.joseph@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Changes in v3
- - GregKH 
-    -  Separating read-only fields from rw fields in
-       struct ifs_device (patch 1/8)
-    -  Remove the subdirectory intel_ifs/<n> for devicenode (patch 2/8)
-    -  Replaced an enum with #define (patch 4/8)
- - Dave Hansen
-    - Remove tracing patch
-    - ifs_array_test_core() (patch 6/8)
-        - fix an initialization bug
-        - other suggested changes
-    - Use basic types in ifs_array for first two fields. (kept
-      the union to avoid type castings)
+Cleanup incorporating misc review comments
 
-v2 submission:
-Link: https://lore.kernel.org/lkml/20230214234426.344960-1-jithu.joseph@intel.com/
+ - Remove the subdirectory intel_ifs/0 for devicenode [1]
+ - Make plat_ifs_groups non static and use it directly without using a
+    function [2]
 
-Changes in v2
- - remove duplicate initializations from ifs_array_test_core()
-   (Dave Hansen, patch 4/7)
- - remove bit parsing from tracing fast path to tracing 
-   output (Steven Rostedt, patch 5/7)
- - move "ATTRIBUTE_GROUPS(plat_ifs_array)" to core.c and remove
-   exporting function ifs_get_array_groups() (Greg KH, patch 3/7)
- - Generalized doc and ABI doc (Greg KH, patches 6/7 and 7/7)
+Link: https://lore.kernel.org/lkml/Y+4kQOtrHt5pdsSO@kroah.com/ [1]
+Link: https://lore.kernel.org/lkml/Y9nyxNesVHCUXAcH@kroah.com/  [2]
 
-v1 submission:
-Link: https://lore.kernel.org/lkml/20230131234302.3997223-1-jithu.joseph@intel.com/
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+ drivers/platform/x86/intel/ifs/ifs.h   | 2 +-
+ drivers/platform/x86/intel/ifs/core.c  | 6 +++---
+ drivers/platform/x86/intel/ifs/sysfs.c | 9 +--------
+ 3 files changed, 5 insertions(+), 12 deletions(-)
 
-Array BIST is a new type of core test introduced under the Intel Infield
-Scan (IFS) suite of tests.
-
-Emerald Rapids (EMR) is the first CPU to support Array BIST.
-Array BIST performs tests on some portions of the core logic such as
-caches and register files. These are different portions of the silicon
-compared to the parts tested by Scan at Field (SAF).
-
-Unlike SAF, Array BIST doesn't require any test content to be loaded.
-
-Jithu Joseph (8):
-  platform/x86/intel/ifs: Reorganize driver data
-  platform/x86/intel/ifs: IFS cleanup
-  x86/include/asm/msr-index.h: Add IFS Array test bits
-  platform/x86/intel/ifs: Introduce Array Scan test to IFS
-  platform/x86/intel/ifs: Sysfs interface for Array BIST
-  platform/x86/intel/ifs: Implement Array BIST test
-  platform/x86/intel/ifs: Update IFS doc
-  Documentation/ABI: Update IFS ABI doc
-
- arch/x86/include/asm/msr-index.h              |  2 +
- drivers/platform/x86/intel/ifs/ifs.h          | 62 +++++++++----
- drivers/platform/x86/intel/ifs/core.c         | 92 ++++++++++++++-----
- drivers/platform/x86/intel/ifs/load.c         |  8 +-
- drivers/platform/x86/intel/ifs/runtest.c      | 91 +++++++++++++++++-
- drivers/platform/x86/intel/ifs/sysfs.c        | 17 ++--
- .../ABI/testing/sysfs-platform-intel-ifs      |  8 +-
- 7 files changed, 221 insertions(+), 59 deletions(-)
-
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index e07463c794d4..ab168ddf28f1 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -246,6 +246,6 @@ static inline struct ifs_data *ifs_get_data(struct device *dev)
+ extern bool *ifs_pkg_auth;
+ int ifs_load_firmware(struct device *dev);
+ int do_core_test(int cpu, struct device *dev);
+-const struct attribute_group **ifs_get_groups(void);
++extern struct attribute *plat_ifs_attrs[];
+ 
+ #endif
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index b518b661daf0..62c44dbae757 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -20,6 +20,8 @@ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+ };
+ MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+ 
++ATTRIBUTE_GROUPS(plat_ifs);
++
+ bool *ifs_pkg_auth;
+ 
+ static struct ifs_device ifs_device = {
+@@ -29,8 +31,8 @@ static struct ifs_device ifs_device = {
+ 	},
+ 	.misc = {
+ 		.name = "intel_ifs_0",
+-		.nodename = "intel_ifs/0",
+ 		.minor = MISC_DYNAMIC_MINOR,
++		.groups = plat_ifs_groups,
+ 	},
+ };
+ 
+@@ -53,8 +55,6 @@ static int __init ifs_init(void)
+ 	if (rdmsrl_safe(MSR_INTEGRITY_CAPS, &msrval))
+ 		return -ENODEV;
+ 
+-	ifs_device.misc.groups = ifs_get_groups();
+-
+ 	if (!(msrval & BIT(ifs_device.ro_data.integrity_cap_bit)))
+ 		return -ENODEV;
+ 
+diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
+index ee636a76b083..2007d8054f04 100644
+--- a/drivers/platform/x86/intel/ifs/sysfs.c
++++ b/drivers/platform/x86/intel/ifs/sysfs.c
+@@ -141,7 +141,7 @@ static ssize_t image_version_show(struct device *dev,
+ static DEVICE_ATTR_RO(image_version);
+ 
+ /* global scan sysfs attributes */
+-static struct attribute *plat_ifs_attrs[] = {
++struct attribute *plat_ifs_attrs[] = {
+ 	&dev_attr_details.attr,
+ 	&dev_attr_status.attr,
+ 	&dev_attr_run_test.attr,
+@@ -149,10 +149,3 @@ static struct attribute *plat_ifs_attrs[] = {
+ 	&dev_attr_image_version.attr,
+ 	NULL
+ };
+-
+-ATTRIBUTE_GROUPS(plat_ifs);
+-
+-const struct attribute_group **ifs_get_groups(void)
+-{
+-	return plat_ifs_groups;
+-}
 -- 
 2.25.1
 
