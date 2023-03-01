@@ -2,247 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05EC64EC7
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 12:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A573C7EE2D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 12:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjCAMG3 (ORCPT
+        id S229540AbjCAMPz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Mar 2023 07:06:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
+        Wed, 1 Mar 2023 07:15:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjCAMGZ (ORCPT
+        with ESMTP id S229492AbjCAMPy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Mar 2023 07:06:25 -0500
+        Wed, 1 Mar 2023 07:15:54 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3426731E05
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 04:05:38 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0477716314
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 04:15:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677672337;
+        s=mimecast20190719; t=1677672909;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V7efi1NWkDqiCLl8UPO0ZCtqDqsA0oCqrdw66aTRdaA=;
-        b=TsWcS9xwkYY9XoxYP55C0Ptu7G+0X98ZFU55ZhAD5o4bRnwQn9IZTH79CGRoMfA2YxQFUA
-        yNhdPffTAuItPxooUMDY2gSnSQXlqG5EZgA5la4Q9iNOJw/PbFMuJ0Wz2mod2FbaS1mGpg
-        x1Nji/aXlkAwXtrHRmNidtonrnmdq44=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=bu+EPKiqWaJlFT+E8yHfU9ZpiuzC1YRS6XYz2PiEsE8=;
+        b=PqxwaXZqRD0rZ1rYsgBP/Y2C+KwlVqNv7vU1znsQuEgWYQxJZLcwhgKJHuSoo7UVvIVmtE
+        bunxlXkd0i4aFy9yp7eN8q6Tojq99u1+odjqMzITaMMfgGwgmTwbeFkaiBQQ+uPLz19Ci7
+        /HtvuQ/W1J+Eces07Kdx13Bv7QX6420=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-140-JtAN8DxDPLyjmRiA6ejHwA-1; Wed, 01 Mar 2023 07:05:36 -0500
-X-MC-Unique: JtAN8DxDPLyjmRiA6ejHwA-1
-Received: by mail-ed1-f70.google.com with SMTP id eh16-20020a0564020f9000b004acc4f8aa3fso18740593edb.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 04:05:36 -0800 (PST)
+ us-mta-178-MmQsRSosMMmmGAxunKURYQ-1; Wed, 01 Mar 2023 07:15:07 -0500
+X-MC-Unique: MmQsRSosMMmmGAxunKURYQ-1
+Received: by mail-ed1-f69.google.com with SMTP id ev6-20020a056402540600b004bc2358ac04so2915639edb.21
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 04:15:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V7efi1NWkDqiCLl8UPO0ZCtqDqsA0oCqrdw66aTRdaA=;
-        b=V6eGb1xStDZ+ttamAbfTL2UqEbKD8RsvcjV9HjS82zRv4DOac+RRKrQ2UsjChHphD/
-         9k65imvQ/kR24A4P+1437k+kMv1Og/FO7sMA1XWkSMWMmfV4PcEVWw544TBIRwBEZBbm
-         fG6Ao04M5/+gMKI5HzCbALbh3SzXWwXlRE+271ofZBEsDeYrB3gNsZ2gGykVCFgxdqnv
-         RCYD+lpd/hrgnMpZKM4Yx6h78PlYs16Jgqfb1uyreh8Zqx3vqivrFFUwe+xoPDpO5wfn
-         LPiaPGXICIDcEDYKJlgpWB6N/qGwSwYLJEkIveJRSThUSS00Y84P+h/DYKM7rOOV611i
-         sd0w==
-X-Gm-Message-State: AO0yUKWkrcjOR7Plefqp9P5NiPRo0El6fARxdEYFVFlgLvrxunVA5v0T
-        VYSZSt0pUOU+yu7TP7Ab2Icdj0rc9wXnuwPoxDeOWeeyHHb6X7BwrdTnF13RaSVMg7NiugRZJbl
-        Wx3sI0L70IqrGxSbif5PGXJddtD4gtMOvllWoKho=
-X-Received: by 2002:a17:906:36c6:b0:895:ef96:9d9b with SMTP id b6-20020a17090636c600b00895ef969d9bmr6339762ejc.30.1677672335068;
-        Wed, 01 Mar 2023 04:05:35 -0800 (PST)
-X-Google-Smtp-Source: AK7set+DSZ9RolQqYAU7tw+ZULYaOzAaBrFYnJSgVm5XkEj81s5Z6bHNpTsDtwh9Rjp8MgcSkQyn/w==
-X-Received: by 2002:a17:906:36c6:b0:895:ef96:9d9b with SMTP id b6-20020a17090636c600b00895ef969d9bmr6339742ejc.30.1677672334799;
-        Wed, 01 Mar 2023 04:05:34 -0800 (PST)
+        bh=bu+EPKiqWaJlFT+E8yHfU9ZpiuzC1YRS6XYz2PiEsE8=;
+        b=M1jSF7QKoiz7V7npQdItWAJNMOPJeiQ2coOFBdv5XrZ+5CL0XLehGLAZMKZcANBz9/
+         oPa20nP5nSXUFC7w+gPbhQoobyaWJR3f05hJHg717CtiYG7PnVF+kToiHiQKW/Ld783D
+         1xcAMx74K9Fgym5xuGebxfln2I3/uiTFlItJ3tBLVYs3DwVAX9cUoL8xIi50IYrI9NOv
+         NgEY3Da7IOGtTuDRsLd2zjQaBWDisjxBfJbICmssAOMuElr+yjvUPzpqk72SWe20ga3+
+         uKX2KIchYB2pkPiKZXFGm0i62SWbCjb0YG8wBzhz7G5HF6eKb3QRaoO6Pzzo/NP97itK
+         ENcw==
+X-Gm-Message-State: AO0yUKVem4WF1CqwDEsN5tuIt5yc3z21ZtoHUxAIfOJvoEV4mo97cSn0
+        KLhANYzolUFZeWGOCKo5bo/2ZF0v9etcewowGWfA4s8MD+qYiVFeXsvKRE5DFrAUSsyrSx4Zymn
+        ZVMJjO5R4HTEtYy54H6yaBTR5ChrIit0X2Q==
+X-Received: by 2002:a17:907:38e:b0:88d:3c85:4ccf with SMTP id ss14-20020a170907038e00b0088d3c854ccfmr5340031ejb.25.1677672906131;
+        Wed, 01 Mar 2023 04:15:06 -0800 (PST)
+X-Google-Smtp-Source: AK7set9OTmWktppMquATQgyqnsl8b3YgTg0F/aRqE8fQ+5iI4ZqkI5gqr4VvdiSzTD1tE+BDH+TxbA==
+X-Received: by 2002:a17:907:38e:b0:88d:3c85:4ccf with SMTP id ss14-20020a170907038e00b0088d3c854ccfmr5340018ejb.25.1677672905806;
+        Wed, 01 Mar 2023 04:15:05 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h11-20020a1709063c0b00b008e82cb55195sm5666324ejg.203.2023.03.01.04.05.34
+        by smtp.gmail.com with ESMTPSA id m15-20020a1709061ecf00b00882f9130eafsm5717500ejj.26.2023.03.01.04.15.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Mar 2023 04:05:34 -0800 (PST)
-Message-ID: <a2b6ac03-929e-3608-635b-4fbc696ab7c5@redhat.com>
-Date:   Wed, 1 Mar 2023 13:05:33 +0100
+        Wed, 01 Mar 2023 04:15:05 -0800 (PST)
+Message-ID: <15d7b77d-c66e-6e31-e930-7595cdabcd11@redhat.com>
+Date:   Wed, 1 Mar 2023 13:15:04 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
+Subject: Re: [PATCH v2 1/2] platform/x86: dell-ddv: Fix cache invalidation on
+ resume
 Content-Language: en-US, nl
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230214152512.806188-1-arnd@kernel.org>
- <MN0PR12MB610112C0A677F1526AB14F2DE2A29@MN0PR12MB6101.namprd12.prod.outlook.com>
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
+Cc:     jdelvare@suse.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230218115318.20662-1-W_Armin@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <MN0PR12MB610112C0A677F1526AB14F2DE2A29@MN0PR12MB6101.namprd12.prod.outlook.com>
+In-Reply-To: <20230218115318.20662-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario, Arnd,
+Hi,
 
-On 2/14/23 17:36, Limonciello, Mario wrote:
-> [Public]
+On 2/18/23 12:53, Armin Wolf wrote:
+> If one or both sensor buffers could not be initialized, either
+> due to missing hardware support or due to some error during probing,
+> the resume handler will encounter undefined behaviour when
+> attempting to lock buffers then protected by an uninitialized or
+> destroyed mutex.
+> Fix this by introducing a "active" flag which is set during probe,
+> and only invalidate buffers which where flaged as "active".
 > 
+> Tested on a Dell Inspiron 3505.
 > 
-> 
->> -----Original Message-----
->> From: Arnd Bergmann <arnd@kernel.org>
->> Sent: Tuesday, February 14, 2023 09:25
->> To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Hans de Goede
->> <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>; Limonciello, Mario
->> <Mario.Limonciello@amd.com>; Nathan Chancellor <nathan@kernel.org>;
->> Rafael J. Wysocki <rafael.j.wysocki@intel.com>; platform-driver-
->> x86@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
->>
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> The amd_pmc_write_stb() function was previously hidden in an
->> ifdef to avoid a warning when CONFIG_SUSPEND is disabled, but
->> now there is an additional caller:
->>
->> drivers/platform/x86/amd/pmc.c: In function
->> 'amd_pmc_stb_debugfs_open_v2':
->> drivers/platform/x86/amd/pmc.c:256:8: error: implicit declaration of function
->> 'amd_pmc_write_stb'; did you mean 'amd_pmc_read_stb'? [-
->> Werror=implicit-function-declaration]
->>   256 |  ret = amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
->>       |        ^~~~~~~~~~~~~~~~~
->>       |        amd_pmc_read_stb
->>
->> There is now an easier way to handle this by using
->> DEFINE_SIMPLE_DEV_PM_OPS()
->> to replace all the #ifdefs, letting gcc drop any of the unused functions
->> silently.
->>
->> Fixes: b0d4bb973539 ("platform/x86/amd: pmc: Write dummy postcode into
->> the STB DRAM")
-> 
-> I suspect this is not an appropriate fixes tag.  SIMPLE_DEV_PM_OPS only came in
-> 8e60615e89321 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
+> Fixes: 3b7eeff93d29 ("platform/x86: dell-ddv: Add hwmon support")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes in v2:
+> - move checking of the "active" flag inside
+>   dell_wmi_ddv_hwmon_cache_invalidate()
 
-That commit is older then the fixes commit Arnd points to,
-Arnd's Fixes tag points to the commit causing the compile error
-Arnd hit, which is one of the last commits to drivers/platform/x86/amd/pmc.c .
-
-So the Fixes tag seems fine to me.
-
-I've applied this patch to my review-hans branch:
+Thanks, I've applied this patch to my review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note I've squashed in one small fixup, see my inline comment below.
 
 I'll rebase that branch once 6.3-rc1 is out and then push the rebased
 patch to the fixes branch and include it in my next 6.3 fixes pull-req
 to Linus.
-
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/platform/x86/amd/pmc.c | 25 ++++++-------------------
->>  1 file changed, 6 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmc.c
->> b/drivers/platform/x86/amd/pmc.c
->> index ab05b9ee6655..641085906baf 100644
->> --- a/drivers/platform/x86/amd/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc.c
->> @@ -171,9 +171,7 @@ MODULE_PARM_DESC(disable_workarounds,
->> "Disable workarounds for platform bugs");
->>  static struct amd_pmc_dev pmc;
->>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32
->> *data, u8 msg, bool ret);
->>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
->> -#ifdef CONFIG_SUSPEND
->>  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
->> -#endif
->>
->>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int
->> reg_offset)
->>  {
->> @@ -386,7 +384,6 @@ static int get_metrics_table(struct amd_pmc_dev
->> *pdev, struct smu_metrics *table
->>  	return 0;
->>  }
->>
->> -#ifdef CONFIG_SUSPEND
->>  static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
->>  {
->>  	struct smu_metrics table;
->> @@ -400,7 +397,6 @@ static void amd_pmc_validate_deepest(struct
->> amd_pmc_dev *pdev)
->>  		dev_dbg(pdev->dev, "Last suspend in deepest state for
->> %lluus\n",
->>  			 table.timein_s0i3_lastcapture);
->>  }
->> -#endif
->>
->>  static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
->>  {
->> @@ -673,7 +669,6 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev
->> *dev, u32 arg, u32 *data, u8 msg,
->>  	return rc;
->>  }
->>
->> -#ifdef CONFIG_SUSPEND
->>  static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
->>  {
->>  	switch (dev->cpu_id) {
->> @@ -861,9 +856,7 @@ static int __maybe_unused
->> amd_pmc_suspend_handler(struct device *dev)
->>  	return 0;
->>  }
->>
->> -static SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler,
->> NULL);
->> -
->> -#endif
->> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm,
->> amd_pmc_suspend_handler, NULL);
->>
->>  static const struct pci_device_id pmc_pci_ids[] = {
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
->> @@ -905,7 +898,6 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev
->> *dev)
->>  	return 0;
->>  }
->>
->> -#ifdef CONFIG_SUSPEND
->>  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
->>  {
->>  	int err;
->> @@ -926,7 +918,6 @@ static int amd_pmc_write_stb(struct amd_pmc_dev
->> *dev, u32 data)
->>
->>  	return 0;
->>  }
->> -#endif
->>
->>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
->>  {
->> @@ -1017,11 +1008,10 @@ static int amd_pmc_probe(struct
->> platform_device *pdev)
->>  	}
->>
->>  	platform_set_drvdata(pdev, dev);
->> -#ifdef CONFIG_SUSPEND
->> -	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
->> +	if (IS_ENABLED(CONFIG_SUSPEND))
->> +		err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
->>  	if (err)
->>  		dev_warn(dev->dev, "failed to register LPS0 sleep handler,
-
-This will work since err is guaranteed to be 0 here, but IMHO it is
-cleaner to put the err check for the acpi_register_lps0_dev() check
-inside the if block.
-
-I have fixed this up while applying the patch.
 
 Regards,
 
@@ -250,36 +111,59 @@ Hans
 
 
 
->> expect increased power consumption\n");
->> -#endif
->>
->>  	amd_pmc_dbgfs_register(dev);
->>  	return 0;
->> @@ -1035,9 +1025,8 @@ static int amd_pmc_remove(struct platform_device
->> *pdev)
->>  {
->>  	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
->>
->> -#ifdef CONFIG_SUSPEND
->> -	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
->> -#endif
->> +	if (IS_ENABLED(CONFIG_SUSPEND))
->> +		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
->>  	amd_pmc_dbgfs_unregister(dev);
->>  	pci_dev_put(dev->rdev);
->>  	mutex_destroy(&dev->lock);
->> @@ -1061,9 +1050,7 @@ static struct platform_driver amd_pmc_driver = {
->>  		.name = "amd_pmc",
->>  		.acpi_match_table = amd_pmc_acpi_ids,
->>  		.dev_groups = pmc_groups,
->> -#ifdef CONFIG_SUSPEND
->> -		.pm = &amd_pmc_pm,
->> -#endif
->> +		.pm = pm_sleep_ptr(&amd_pmc_pm),
->>  	},
->>  	.probe = amd_pmc_probe,
->>  	.remove = amd_pmc_remove,
->> --
->> 2.39.1
+
+> ---
+>  drivers/platform/x86/dell/dell-wmi-ddv.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> index d547c9d09725..eff4e9649faf 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> @@ -96,6 +96,7 @@ struct combined_chip_info {
+>  };
+> 
+>  struct dell_wmi_ddv_sensors {
+> +	bool active;
+>  	struct mutex lock;	/* protect caching */
+>  	unsigned long timestamp;
+>  	union acpi_object *obj;
+> @@ -520,6 +521,9 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_create(struct device *dev
+> 
+>  static void dell_wmi_ddv_hwmon_cache_invalidate(struct dell_wmi_ddv_sensors *sensors)
+>  {
+> +	if (!sensors->active)
+> +		return;
+> +
+>  	mutex_lock(&sensors->lock);
+>  	kfree(sensors->obj);
+>  	sensors->obj = NULL;
+> @@ -530,6 +534,7 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *data)
+>  {
+>  	struct dell_wmi_ddv_sensors *sensors = data;
+> 
+> +	sensors->active = false;
+>  	mutex_destroy(&sensors->lock);
+>  	kfree(sensors->obj);
+>  }
+> @@ -549,6 +554,7 @@ static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *w
+>  		return ERR_PTR(ret);
+> 
+>  	mutex_init(&sensors->lock);
+> +	sensors->active = true;
+> 
+>  	ret = devm_add_action_or_reset(&wdev->dev, dell_wmi_ddv_hwmon_cache_destroy, sensors);
+>  	if (ret < 0)
+> @@ -852,7 +858,7 @@ static int dell_wmi_ddv_resume(struct device *dev)
+>  {
+>  	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
+> 
+> -	/* Force re-reading of all sensors */
+> +	/* Force re-reading of all active sensors */
+>  	dell_wmi_ddv_hwmon_cache_invalidate(&data->fans);
+>  	dell_wmi_ddv_hwmon_cache_invalidate(&data->temps);
+> 
+> --
+> 2.30.2
 > 
 
