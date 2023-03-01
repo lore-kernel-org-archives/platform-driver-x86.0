@@ -2,91 +2,284 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3E2C64ED6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 10:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05EC64EC7
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 12:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjCAKqW (ORCPT
+        id S229841AbjCAMG3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Mar 2023 05:46:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
+        Wed, 1 Mar 2023 07:06:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbjCAKqU (ORCPT
+        with ESMTP id S229653AbjCAMGZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Mar 2023 05:46:20 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2143302B7
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 02:46:19 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id c18so13663857qte.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 02:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6mOzezMX+nuqaVXt9vkXI+R+AAWumUACh54Op0tOcFY=;
-        b=J7ARFMOaAMCJ+ieXA3Kbcc5egRxE8cgf6ZqqbM4f4g5ZX6zOVKz7oubidCesr3YbIz
-         2lW573KEQBIO7+qLY3ECnq5lxP3C8IUzP4orSMJ4l/09Kn2OtoikavVD9bXWhgq6/8sf
-         zuy3hnIHJYn2ancc+DpF5U9i/LYY1G2TKhEn3BpP9M8knb5gTLeH3RA5cO3VwMf657YM
-         15wSiscExyQesF4JNguBUBngvAVI14BAf259J9Oq3CLmQLqXUJJz+ikxNHOh/Ke8WzYA
-         VS4pakpyMtf2CHon1/1zC7FJJvEeEojnDIifRfOen9fdvqMbnaE7r8Wo2/IS9wEN0BVb
-         3CUw==
+        Wed, 1 Mar 2023 07:06:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3426731E05
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 04:05:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677672337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V7efi1NWkDqiCLl8UPO0ZCtqDqsA0oCqrdw66aTRdaA=;
+        b=TsWcS9xwkYY9XoxYP55C0Ptu7G+0X98ZFU55ZhAD5o4bRnwQn9IZTH79CGRoMfA2YxQFUA
+        yNhdPffTAuItPxooUMDY2gSnSQXlqG5EZgA5la4Q9iNOJw/PbFMuJ0Wz2mod2FbaS1mGpg
+        x1Nji/aXlkAwXtrHRmNidtonrnmdq44=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-140-JtAN8DxDPLyjmRiA6ejHwA-1; Wed, 01 Mar 2023 07:05:36 -0500
+X-MC-Unique: JtAN8DxDPLyjmRiA6ejHwA-1
+Received: by mail-ed1-f70.google.com with SMTP id eh16-20020a0564020f9000b004acc4f8aa3fso18740593edb.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 04:05:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6mOzezMX+nuqaVXt9vkXI+R+AAWumUACh54Op0tOcFY=;
-        b=haXOOBi3gvZO2Nq2128q5S56K2elBOhkQxXsMsv4WuBJQq/CXlU8PnqZeTFI73XcCb
-         NIfJ5EmAwdOGD779nIvaDMqBME3j2IBrhSUM+AOJrgR6TzJtWzhGK8qwHbw+mYY9A2Xr
-         cYNai+7W1P2WrMKGrGXzKp5aQNPKMTSzC/0PJENE1b5DCkR2/WOOMaV/1y2w7WMyKmnD
-         8U9GJ0oiTLL4i8/ggmLe7rdPNCtI+grUgDcC21jEKFmdqHtVv3bQU9nCfSaN4T385N83
-         Tg0F7GXvgrrBQM2CBuHxNxLMqEOfWbFgJMkMUsnTS26vjeWsbOQJQMXHzZQ5DHroWnp2
-         Rqhw==
-X-Gm-Message-State: AO0yUKWwtixO1YH8//A/vm7VRayXzSuboDHGAL8ozOUI8GPzLcv48hH4
-        OfNbSOq9FOXzETxqU2niVBJP2u+ISLM07VAMzrKTMlocgXFsOg==
-X-Google-Smtp-Source: AK7set/fuSjs01MsACzf6T4YpHwcOF3+SVWaA4JzKn+ZrMr5xtOSiSIOtmFSu8FvJsBxb1vHawd1z/KCvR0VH5oG/wQ=
-X-Received: by 2002:aed:2791:0:b0:3bd:1a0b:8ac4 with SMTP id
- a17-20020aed2791000000b003bd1a0b8ac4mr1619672qtd.1.1677667578930; Wed, 01 Mar
- 2023 02:46:18 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7efi1NWkDqiCLl8UPO0ZCtqDqsA0oCqrdw66aTRdaA=;
+        b=V6eGb1xStDZ+ttamAbfTL2UqEbKD8RsvcjV9HjS82zRv4DOac+RRKrQ2UsjChHphD/
+         9k65imvQ/kR24A4P+1437k+kMv1Og/FO7sMA1XWkSMWMmfV4PcEVWw544TBIRwBEZBbm
+         fG6Ao04M5/+gMKI5HzCbALbh3SzXWwXlRE+271ofZBEsDeYrB3gNsZ2gGykVCFgxdqnv
+         RCYD+lpd/hrgnMpZKM4Yx6h78PlYs16Jgqfb1uyreh8Zqx3vqivrFFUwe+xoPDpO5wfn
+         LPiaPGXICIDcEDYKJlgpWB6N/qGwSwYLJEkIveJRSThUSS00Y84P+h/DYKM7rOOV611i
+         sd0w==
+X-Gm-Message-State: AO0yUKWkrcjOR7Plefqp9P5NiPRo0El6fARxdEYFVFlgLvrxunVA5v0T
+        VYSZSt0pUOU+yu7TP7Ab2Icdj0rc9wXnuwPoxDeOWeeyHHb6X7BwrdTnF13RaSVMg7NiugRZJbl
+        Wx3sI0L70IqrGxSbif5PGXJddtD4gtMOvllWoKho=
+X-Received: by 2002:a17:906:36c6:b0:895:ef96:9d9b with SMTP id b6-20020a17090636c600b00895ef969d9bmr6339762ejc.30.1677672335068;
+        Wed, 01 Mar 2023 04:05:35 -0800 (PST)
+X-Google-Smtp-Source: AK7set+DSZ9RolQqYAU7tw+ZULYaOzAaBrFYnJSgVm5XkEj81s5Z6bHNpTsDtwh9Rjp8MgcSkQyn/w==
+X-Received: by 2002:a17:906:36c6:b0:895:ef96:9d9b with SMTP id b6-20020a17090636c600b00895ef969d9bmr6339742ejc.30.1677672334799;
+        Wed, 01 Mar 2023 04:05:34 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id h11-20020a1709063c0b00b008e82cb55195sm5666324ejg.203.2023.03.01.04.05.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Mar 2023 04:05:34 -0800 (PST)
+Message-ID: <a2b6ac03-929e-3608-635b-4fbc696ab7c5@redhat.com>
+Date:   Wed, 1 Mar 2023 13:05:33 +0100
 MIME-Version: 1.0
-References: <20230301092331.7038-1-hdegoede@redhat.com>
-In-Reply-To: <20230301092331.7038-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Mar 2023 12:45:42 +0200
-Message-ID: <CAHp75VfRs=ybLpm7TWwamHV0U=W93ev4=-MTOLWCrcjYcH+2Uw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] platform/x86: x86-android-tablets: Split in
- multiple files + misc additions
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
+Content-Language: en-US, nl
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        Arnd Bergmann <arnd@kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230214152512.806188-1-arnd@kernel.org>
+ <MN0PR12MB610112C0A677F1526AB14F2DE2A29@MN0PR12MB6101.namprd12.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <MN0PR12MB610112C0A677F1526AB14F2DE2A29@MN0PR12MB6101.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Mar 1, 2023 at 11:23=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Hi All,
->
-> Here is version 2 of my series to move the x86-android-tablets
-> driver into its own subdir and to split it into multiple-files.
+Hi Mario, Arnd,
 
-There are a few remarks, but overall it's in a good shape, so
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-for the next version of the series where I believe you will make a few
-amendments.
+On 2/14/23 17:36, Limonciello, Mario wrote:
+> [Public]
+> 
+> 
+> 
+>> -----Original Message-----
+>> From: Arnd Bergmann <arnd@kernel.org>
+>> Sent: Tuesday, February 14, 2023 09:25
+>> To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Hans de Goede
+>> <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>
+>> Cc: Arnd Bergmann <arnd@arndb.de>; Limonciello, Mario
+>> <Mario.Limonciello@amd.com>; Nathan Chancellor <nathan@kernel.org>;
+>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>; platform-driver-
+>> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: [PATCH] platform/x86/amd: pmc: remove CONFIG_SUSPEND checks
+>>
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> The amd_pmc_write_stb() function was previously hidden in an
+>> ifdef to avoid a warning when CONFIG_SUSPEND is disabled, but
+>> now there is an additional caller:
+>>
+>> drivers/platform/x86/amd/pmc.c: In function
+>> 'amd_pmc_stb_debugfs_open_v2':
+>> drivers/platform/x86/amd/pmc.c:256:8: error: implicit declaration of function
+>> 'amd_pmc_write_stb'; did you mean 'amd_pmc_read_stb'? [-
+>> Werror=implicit-function-declaration]
+>>   256 |  ret = amd_pmc_write_stb(dev, AMD_PMC_STB_DUMMY_PC);
+>>       |        ^~~~~~~~~~~~~~~~~
+>>       |        amd_pmc_read_stb
+>>
+>> There is now an easier way to handle this by using
+>> DEFINE_SIMPLE_DEV_PM_OPS()
+>> to replace all the #ifdefs, letting gcc drop any of the unused functions
+>> silently.
+>>
+>> Fixes: b0d4bb973539 ("platform/x86/amd: pmc: Write dummy postcode into
+>> the STB DRAM")
+> 
+> I suspect this is not an appropriate fixes tag.  SIMPLE_DEV_PM_OPS only came in
+> 8e60615e89321 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for RN/CZN")
 
-> Changes in v2:
-> -Gather all outstanding x86-android-tablets changes in 1 series.
-> -Address all Andy's review remarks, see individual commit messages
->  for details. Thank you for all the reviews Andy!
-> -New patches:
->  -Add LID switch support to Yoga Tablet 2 1050/830 series
->  -Lenovo Yoga Book match is for YB1-X91 models only
+That commit is older then the fixes commit Arnd points to,
+Arnd's Fixes tag points to the commit causing the compile error
+Arnd hit, which is one of the last commits to drivers/platform/x86/amd/pmc.c .
 
---=20
-With Best Regards,
-Andy Shevchenko
+So the Fixes tag seems fine to me.
+
+I've applied this patch to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note I've squashed in one small fixup, see my inline comment below.
+
+I'll rebase that branch once 6.3-rc1 is out and then push the rebased
+patch to the fixes branch and include it in my next 6.3 fixes pull-req
+to Linus.
+
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  drivers/platform/x86/amd/pmc.c | 25 ++++++-------------------
+>>  1 file changed, 6 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmc.c
+>> b/drivers/platform/x86/amd/pmc.c
+>> index ab05b9ee6655..641085906baf 100644
+>> --- a/drivers/platform/x86/amd/pmc.c
+>> +++ b/drivers/platform/x86/amd/pmc.c
+>> @@ -171,9 +171,7 @@ MODULE_PARM_DESC(disable_workarounds,
+>> "Disable workarounds for platform bugs");
+>>  static struct amd_pmc_dev pmc;
+>>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32
+>> *data, u8 msg, bool ret);
+>>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+>> -#ifdef CONFIG_SUSPEND
+>>  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+>> -#endif
+>>
+>>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int
+>> reg_offset)
+>>  {
+>> @@ -386,7 +384,6 @@ static int get_metrics_table(struct amd_pmc_dev
+>> *pdev, struct smu_metrics *table
+>>  	return 0;
+>>  }
+>>
+>> -#ifdef CONFIG_SUSPEND
+>>  static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
+>>  {
+>>  	struct smu_metrics table;
+>> @@ -400,7 +397,6 @@ static void amd_pmc_validate_deepest(struct
+>> amd_pmc_dev *pdev)
+>>  		dev_dbg(pdev->dev, "Last suspend in deepest state for
+>> %lluus\n",
+>>  			 table.timein_s0i3_lastcapture);
+>>  }
+>> -#endif
+>>
+>>  static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
+>>  {
+>> @@ -673,7 +669,6 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev
+>> *dev, u32 arg, u32 *data, u8 msg,
+>>  	return rc;
+>>  }
+>>
+>> -#ifdef CONFIG_SUSPEND
+>>  static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+>>  {
+>>  	switch (dev->cpu_id) {
+>> @@ -861,9 +856,7 @@ static int __maybe_unused
+>> amd_pmc_suspend_handler(struct device *dev)
+>>  	return 0;
+>>  }
+>>
+>> -static SIMPLE_DEV_PM_OPS(amd_pmc_pm, amd_pmc_suspend_handler,
+>> NULL);
+>> -
+>> -#endif
+>> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmc_pm,
+>> amd_pmc_suspend_handler, NULL);
+>>
+>>  static const struct pci_device_id pmc_pci_ids[] = {
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
+>> @@ -905,7 +898,6 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev
+>> *dev)
+>>  	return 0;
+>>  }
+>>
+>> -#ifdef CONFIG_SUSPEND
+>>  static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+>>  {
+>>  	int err;
+>> @@ -926,7 +918,6 @@ static int amd_pmc_write_stb(struct amd_pmc_dev
+>> *dev, u32 data)
+>>
+>>  	return 0;
+>>  }
+>> -#endif
+>>
+>>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
+>>  {
+>> @@ -1017,11 +1008,10 @@ static int amd_pmc_probe(struct
+>> platform_device *pdev)
+>>  	}
+>>
+>>  	platform_set_drvdata(pdev, dev);
+>> -#ifdef CONFIG_SUSPEND
+>> -	err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
+>> +	if (IS_ENABLED(CONFIG_SUSPEND))
+>> +		err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
+>>  	if (err)
+>>  		dev_warn(dev->dev, "failed to register LPS0 sleep handler,
+
+This will work since err is guaranteed to be 0 here, but IMHO it is
+cleaner to put the err check for the acpi_register_lps0_dev() check
+inside the if block.
+
+I have fixed this up while applying the patch.
+
+Regards,
+
+Hans
+
+
+
+>> expect increased power consumption\n");
+>> -#endif
+>>
+>>  	amd_pmc_dbgfs_register(dev);
+>>  	return 0;
+>> @@ -1035,9 +1025,8 @@ static int amd_pmc_remove(struct platform_device
+>> *pdev)
+>>  {
+>>  	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+>>
+>> -#ifdef CONFIG_SUSPEND
+>> -	acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+>> -#endif
+>> +	if (IS_ENABLED(CONFIG_SUSPEND))
+>> +		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+>>  	amd_pmc_dbgfs_unregister(dev);
+>>  	pci_dev_put(dev->rdev);
+>>  	mutex_destroy(&dev->lock);
+>> @@ -1061,9 +1050,7 @@ static struct platform_driver amd_pmc_driver = {
+>>  		.name = "amd_pmc",
+>>  		.acpi_match_table = amd_pmc_acpi_ids,
+>>  		.dev_groups = pmc_groups,
+>> -#ifdef CONFIG_SUSPEND
+>> -		.pm = &amd_pmc_pm,
+>> -#endif
+>> +		.pm = pm_sleep_ptr(&amd_pmc_pm),
+>>  	},
+>>  	.probe = amd_pmc_probe,
+>>  	.remove = amd_pmc_remove,
+>> --
+>> 2.39.1
+> 
+
