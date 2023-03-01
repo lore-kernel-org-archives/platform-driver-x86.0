@@ -2,76 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A1CC6FA9D
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 14:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A49EC6FA9D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Mar 2023 14:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjCAOYj (ORCPT
+        id S230054AbjCAO0g (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Mar 2023 09:24:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
+        Wed, 1 Mar 2023 09:26:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjCAOYi (ORCPT
+        with ESMTP id S229895AbjCAO0e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Mar 2023 09:24:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1558636459
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 06:23:35 -0800 (PST)
+        Wed, 1 Mar 2023 09:26:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4C8C667
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Mar 2023 06:25:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677680615;
+        s=mimecast20190719; t=1677680738;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LkimFynSnxK6YsAaiTKJQJFBKhhOmj+Wb4G+OWeGENQ=;
-        b=RU2gX3F+qDTH9lsmmUiswS64vz9n/DIU07Orq6kiXsMftXRY4nRr/wEx9p3JrytcjJPXXs
-        Tkxe85mrRmzEWzVIomZQYKSXS7XZJGPXD3XgAhCjcYYMVqIG8JchzYIJE1e6pGvSm1GqAg
-        9hSHVsFq5lria9hYEuvJg4Peup1pvmc=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=p1xxA/g3d/XLIXQnPY6ZiljHHG+9A/r9H/glUwgfKBk=;
+        b=Cq951oZ49mHXnIrkiUAckERcQJEL1ajw//6D82ih22R9u2iLvRNrk/EuHYav1qmUtgXiEM
+        oTXhU7yEljdQnIfdLVQttdGMFZ+9IVhFftCV2ZoD8mBpKJyo4IeDH3H0Secp/byEqcypVC
+        zgpzRDJZUX4vKE2y3zKRPYvD5Mj+g1c=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-202-guGzPqNQN5uVrR9HJcY2Xg-1; Wed, 01 Mar 2023 09:23:34 -0500
-X-MC-Unique: guGzPqNQN5uVrR9HJcY2Xg-1
-Received: by mail-ed1-f71.google.com with SMTP id d24-20020a056402401800b004b65da6d5e2so13785663eda.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 06:23:33 -0800 (PST)
+ us-mta-367-ZRj9KHVgMIOvD-_htP5cyg-1; Wed, 01 Mar 2023 09:25:33 -0500
+X-MC-Unique: ZRj9KHVgMIOvD-_htP5cyg-1
+Received: by mail-ed1-f70.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso19699890edh.15
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Mar 2023 06:25:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LkimFynSnxK6YsAaiTKJQJFBKhhOmj+Wb4G+OWeGENQ=;
-        b=TDD8yJFm25ukuLrSuSEdyME3Fsc/QLiYEn6L9ffxlFL+w/zZ2/B+BnBe5Hl/O/JKhn
-         sSFzY4/WYdOqBYRljdi9um5uTmj+45M9knjm1TYZmrluXvvZfdtLOqECy16L8T1oht0x
-         EnyumHWBr7AnhTj+FssCk7GoSCn/q2lJ9e8hdSVJB2Iu1mapPDwKKQ3GnTTe1A7R8yZM
-         57J0RQ+a+qMp1/zkLV62/EOjJgtE76L3TDElY+hRWfZfY2o67+MKZzcC9zg2pvOVQXs9
-         RTFjZ3pI6Ja8gQtvcyNNr1IZTgZfRuj65tWaLCQapQGjKlMAsSG5wrF4GzuRWwtsVnbB
-         iRzg==
-X-Gm-Message-State: AO0yUKXGD7hI1raexiaKtLrm6vbQSP5yvz/e7CTjjdjJIUtZT/Vz6aHs
-        1tzWGbTcI/c0nDIezP3WhU36OMO0hXiLqU7+qkkSJJO5e+U9L9EGCXulTydiPq6DX2sNBgANEtT
-        qV+s53u/chJzh8apAmS5Ku9/FHuQuDoPWdw==
-X-Received: by 2002:a17:907:b682:b0:8dc:cfe8:da53 with SMTP id vm2-20020a170907b68200b008dccfe8da53mr8667801ejc.10.1677680613078;
-        Wed, 01 Mar 2023 06:23:33 -0800 (PST)
-X-Google-Smtp-Source: AK7set89iR0qASUFFJ53En29c14nxWvTRDWTIt+BGVnixoWXFvL1LfSTHymUQ2K2OKvzj/ced7v/3Q==
-X-Received: by 2002:a17:907:b682:b0:8dc:cfe8:da53 with SMTP id vm2-20020a170907b68200b008dccfe8da53mr8667781ejc.10.1677680612818;
-        Wed, 01 Mar 2023 06:23:32 -0800 (PST)
+        bh=p1xxA/g3d/XLIXQnPY6ZiljHHG+9A/r9H/glUwgfKBk=;
+        b=Iu+PytpKHHx9r9smeobvqh0BA5qdHtO+eEh+KNUfZ6nTSvruWAzwP6JvMVBe2nOexd
+         39XRk71d6vAxTcHFLqdtJWNBJq/uRYLqbGTpXNOYp4jWSXEhdI/RMX1gT3RQNYtzP9B/
+         VqgeNG/pgA5T6n6YYxdKi20tExYZRo2yej9U6TL8F0MVjSzKM8g1d5ldOl0tn5vNfh/A
+         bGcSDir1M+aGvV8okkFBQoE/eDeRDdphA0JIeo5AvJE0mHTMeh2KZc2/LtHBskx9XnDv
+         OUZpJkC6pB7xJoVqGYWFzoscs/7GC4N62ysncGnA0iU9qRUwVvxXbIzgsxfSG6ggbW5v
+         ajXA==
+X-Gm-Message-State: AO0yUKXgQa1PLC9eI3Gzro4ZMidEnKTB+tCRI93cAdYhwNvr3t1Nvw9p
+        QyCpFmaJtAtvGbzfu9X+rxbfg5krJ3FLxkOA7UJwxmq/SPrcmxhrWqRRpG1e95OwYJkNBlfBh4c
+        5QS3qHCWz8FZRsDSATcUFwRs1Y0oAr0C0Dg==
+X-Received: by 2002:a17:907:c608:b0:905:a46b:a725 with SMTP id ud8-20020a170907c60800b00905a46ba725mr2774091ejc.16.1677680730733;
+        Wed, 01 Mar 2023 06:25:30 -0800 (PST)
+X-Google-Smtp-Source: AK7set9O9aIsAVHbHJ0KNun3k2X/WekzbOYA7pyJYE471Sn/lRHGrI+BPd/P2LWqrh/xnInfa0huMQ==
+X-Received: by 2002:a17:907:c608:b0:905:a46b:a725 with SMTP id ud8-20020a170907c60800b00905a46ba725mr2774079ejc.16.1677680730423;
+        Wed, 01 Mar 2023 06:25:30 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id t8-20020a170906178800b008dcf89a72d7sm5966994eje.147.2023.03.01.06.23.31
+        by smtp.gmail.com with ESMTPSA id n27-20020a170906089b00b008be5b97ca49sm5861092eje.150.2023.03.01.06.25.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Mar 2023 06:23:32 -0800 (PST)
-Message-ID: <39b98cb1-1ef5-dabf-5f01-2f673b2b59b1@redhat.com>
-Date:   Wed, 1 Mar 2023 15:23:31 +0100
+        Wed, 01 Mar 2023 06:25:29 -0800 (PST)
+Message-ID: <b82fa9d1-fcd6-b214-f0f3-532e7f7d8a00@redhat.com>
+Date:   Wed, 1 Mar 2023 15:25:29 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 01/12] platform/x86: ISST: Fix kernel documentation
- warnings
+Subject: Re: [PATCH 02/12] platform/x86: ISST: Add TPMI target
 Content-Language: en-US, nl
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230211063257.311746-1-srinivas.pandruvada@linux.intel.com>
- <20230211063257.311746-2-srinivas.pandruvada@linux.intel.com>
+ <20230211063257.311746-3-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230211063257.311746-2-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20230211063257.311746-3-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,16 +80,22 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 2/11/23 07:32, Srinivas Pandruvada wrote:
-> Fix warning displayed for "make W=1" for kernel documentation.
+> Add TPMI as one of the device type which can be registered with ISST
+> common driver.
 > 
 > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Thanks, I've applied this patch to my review-hans branch:
+Thank I've applied this patches 2-4 to my review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-I'll rebase that branch once 6.3-rc1 is out and then push the rebased
-patch to the fixes branch and include it in my next 6.3 fixes pull-req
-to Linus.
+These patches are intended for the next rc1. This branch will get
+rebased to the next rc1 when it is out and after the rebasing the
+contents of review-hans will be pushed to
+the platform-drivers-x86/for-next branch.
+
+Please base the next version of this series (minus patches 1-4)
+on pdx86/review-hans or if patches 1-4 have landed there on
+platform-drivers-x86/for-next .
 
 Regards,
 
@@ -98,44 +103,22 @@ Hans
 
 
 
-
-
 > ---
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 3 ++-
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index a7e02b24a87a..63d49fe17a16 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -112,6 +112,7 @@ static void isst_delete_hash(void)
->   * isst_store_cmd() - Store command to a hash table
->   * @cmd: Mailbox command.
->   * @sub_cmd: Mailbox sub-command or MSR id.
-> + * @cpu: Target CPU for the command
->   * @mbox_cmd_type: Mailbox or MSR command.
->   * @param: Mailbox parameter.
->   * @data: Mailbox request data or MSR data.
-> @@ -363,7 +364,7 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
->  /**
->   * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
->   * @cpu: Logical CPU number.
-> - * @bus_number: The bus number assigned by the hardware.
-> + * @bus_no: The bus number assigned by the hardware.
->   * @dev: The device number assigned by the hardware.
->   * @fn: The function number assigned by the hardware.
->   *
 > diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.h b/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
-> index fdecdae248d7..35ff506b402e 100644
+> index 35ff506b402e..967c338e83c5 100644
 > --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
 > +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
-> @@ -40,6 +40,7 @@
->   * @offset:	Offset to the first valid member in command structure.
->   *		This will be the offset of the start of the command
->   *		after command count field
-> + * @owner:	Registered module owner
->   * @cmd_callback: Callback function to handle IOCTL. The callback has the
->   *		command pointer with data for command. There is a pointer
->   *		called write_only, which when set, will not copy the
+> @@ -30,7 +30,8 @@
+>  
+>  #define ISST_IF_DEV_MBOX	0
+>  #define ISST_IF_DEV_MMIO	1
+> -#define ISST_IF_DEV_MAX		2
+> +#define ISST_IF_DEV_TPMI	2
+> +#define ISST_IF_DEV_MAX		3
+>  
+>  /**
+>   * struct isst_if_cmd_cb - Used to register a IOCTL handler
 
