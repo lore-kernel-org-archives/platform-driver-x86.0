@@ -2,49 +2,48 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8291AC7EE2F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0D1C6FA8E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjCBOsD (ORCPT
+        id S229505AbjCBOsE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:48:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        Thu, 2 Mar 2023 09:48:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbjCBOrv (ORCPT
+        with ESMTP id S230040AbjCBOry (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:47:51 -0500
+        Thu, 2 Mar 2023 09:47:54 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FF7C46154
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:47:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954A0E3AF
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:47:51 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDc-0003tr-Fw; Thu, 02 Mar 2023 15:47:40 +0100
+        id 1pXkDg-00046X-MP; Thu, 02 Mar 2023 15:47:44 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDb-001Lrf-Nx; Thu, 02 Mar 2023 15:47:39 +0100
+        id 1pXkDf-001Lsv-Ep; Thu, 02 Mar 2023 15:47:43 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDa-001Zpv-L9; Thu, 02 Mar 2023 15:47:38 +0100
+        id 1pXkDe-001Zr7-Gn; Thu, 02 Mar 2023 15:47:42 +0100
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>
 Cc:     kernel@pengutronix.de,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/29] platform/x86: dell: dell-smo8800: Convert to platform remove callback returning void
-Date:   Thu,  2 Mar 2023 15:47:13 +0100
-Message-Id: <20230302144732.1903781-11-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 28/29] platform/x86: wmi: Convert to platform remove callback returning void
+Date:   Thu,  2 Mar 2023 15:47:31 +0100
+Message-Id: <20230302144732.1903781-29-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 References: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1798; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=txLMuYR/cP10MBXXBYhoJncjcMTcRGlLrq4hOidzyFc=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALaprgeMkYzTuEyEiQoLcRYpGVSKWkuk6C5Zf EGmg4PzaBCJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2qQAKCRDB/BR4rcrs CbF9B/93h3vJrbwyrN/LyZ4EIyOBZgUqoIvTcY/7dRJS/z0eobnQEmWjBppGl+0P79+VwpzyEJp 87p+mebKkXCLMzSkyIAV6Ln+S1qed/rgakfeeQO09SmO8dheo6JCuk4AKU756i57U9y/ZnobUzv r0pbEBUtblV+gasl70k/DwvYdO6EdeWuR9NA25j4eEj/i0u5W6NpBtWoUQdJo6jK0h/dXFOs9CL x6Ibi9x7nYifDtNDqdVuZqSSdtAmfRyGVW5Xd/qj1jwQKjbnVOR4ky165J79MpQWFcq123kTwqR 3kABcySlvdIz1LoK/UyC+AR6BquPZjKun+dREdYxPWCiElC9
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1794; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=vINht6ojUFDqgv3t7NnT5jRF+UmY6wpfnULDkHfIdto=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALb6O68NAGyM825FA1GeI2kBnh4ZSeuQ+fR2u yAw6iq7r0eJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2+gAKCRDB/BR4rcrs Cc+XB/4lFYU8LTWGolMf3K0oUcggqVhrI+67SZELHpQlMDMfyWJX+LlcPKRSZmvYs3Q6T2nehtt JIJUBYSnoVPqTE/SpLPCR3cwK3rajXld6eDxKP1jX7ObtBVTaUK9nEuttiC+gsxjIiYp/Xzh9H9 2SncwaWdNIS0TWl5EwEm2mmtNH2mHdSxziFo70KxABJof7BJSBnsh/M9AIQgodLKhZeJ9/9IxOU F1z3xN45EF+Q7ukBSHC8Z5XKpfDJKoWYp/9DPg9WQEePE5MLfXUBKPw7MjooXPou9KX/1KMcf3j zZ1oPMkLQtH8l7H8MyZiUUl+DKDl72tGf8e1+m3sPI3EU3BQ
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -68,38 +67,40 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/platform/x86/dell/dell-smo8800.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/wmi.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
-index 8d6b7a83cf24..f7ec17c56833 100644
---- a/drivers/platform/x86/dell/dell-smo8800.c
-+++ b/drivers/platform/x86/dell/dell-smo8800.c
-@@ -154,14 +154,13 @@ static int smo8800_probe(struct platform_device *device)
- 	return err;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 4fe7650dd014..d81319a502ef 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1369,7 +1369,7 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
+ 		event, 0);
  }
  
--static int smo8800_remove(struct platform_device *device)
-+static void smo8800_remove(struct platform_device *device)
+-static int acpi_wmi_remove(struct platform_device *device)
++static void acpi_wmi_remove(struct platform_device *device)
  {
- 	struct smo8800_device *smo8800 = platform_get_drvdata(device);
+ 	struct acpi_device *acpi_device = ACPI_COMPANION(&device->dev);
  
- 	free_irq(smo8800->irq, smo8800);
- 	misc_deregister(&smo8800->miscdev);
- 	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
+@@ -1379,8 +1379,6 @@ static int acpi_wmi_remove(struct platform_device *device)
+ 				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+ 	wmi_free_devices(acpi_device);
+ 	device_unregister(dev_get_drvdata(&device->dev));
+-
 -	return 0;
  }
  
- /* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
-@@ -180,7 +179,7 @@ MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+ static int acpi_wmi_probe(struct platform_device *device)
+@@ -1468,7 +1466,7 @@ static struct platform_driver acpi_wmi_driver = {
+ 		.acpi_match_table = wmi_device_ids,
+ 	},
+ 	.probe = acpi_wmi_probe,
+-	.remove = acpi_wmi_remove,
++	.remove_new = acpi_wmi_remove,
+ };
  
- static struct platform_driver smo8800_driver = {
- 	.probe = smo8800_probe,
--	.remove = smo8800_remove,
-+	.remove_new = smo8800_remove,
- 	.driver = {
- 		.name = DRIVER_NAME,
- 		.acpi_match_table = smo8800_ids,
+ static int __init acpi_wmi_init(void)
 -- 
 2.39.1
 
