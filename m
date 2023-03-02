@@ -2,107 +2,167 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCD3C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 17:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6325C678D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 22:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjCBRTL (ORCPT
+        id S229613AbjCBWF5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 12:19:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
+        Thu, 2 Mar 2023 17:05:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjCBRTK (ORCPT
+        with ESMTP id S229848AbjCBWFx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 12:19:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4768F113EC;
-        Thu,  2 Mar 2023 09:19:09 -0800 (PST)
+        Thu, 2 Mar 2023 17:05:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E22D7DAA
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 14:05:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EEC9DB811F8;
-        Thu,  2 Mar 2023 17:19:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A95AC4339B;
-        Thu,  2 Mar 2023 17:19:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C5C77616C6
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 309D5C4339B
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677777546;
-        bh=i3x0hEAvwMO1Hlbu0xv9iys3WfKl3C4x9NRYdvyKmeI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SelwuPdr4PrPXwRyd32ta13tkvqBCvRh3Y9QJzAAIV3zVdE9LYHzj6ARVXyXI10Mv
-         TU00hCzfct5U7XTkPjE32lOH1k05XJQh9i1vA5yG6RmzbJZrot5TTpxY7kO7Q21qer
-         bKjHgAudKZd4un79mf6y/KZ+pPF/r+9SH7HVJkjLtYyXot+18efrxHgl+9n2cIu/rC
-         gLoUWQi7a+w4BH471vWihyoc+g6j95RMBkQQS0Fzx9seBw2HIKIcYXk3Jve8QWkj8y
-         p6zzvrTo8XBNm5o6YH3QQHUUP2GOvNst+TdJhiprNTiQ9MZs8NlJLns4Bt+Jn/TCaJ
-         8NQ+25i89lmgg==
-Received: by pali.im (Postfix)
-        id 68ED8AA6; Thu,  2 Mar 2023 18:19:03 +0100 (CET)
-Date:   Thu, 2 Mar 2023 18:19:03 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/29] platform/x86: dell: dell-smo8800: Convert to
- platform remove callback returning void
-Message-ID: <20230302171903.mzwcxe4pfefknds3@pali>
-References: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
- <20230302144732.1903781-11-u.kleine-koenig@pengutronix.de>
+        s=k20201202; t=1677794751;
+        bh=TSzQiWL/oRR2EkrBMVUZtrgPxfTnL8DYjdwY0B7SJ7U=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Q4ZrGI9clvLhAPhDvqnuyw0RicI1M66wPk/7KF5cwlLp5Lx4fAs0D6pAGLy/K0iIE
+         Vt//tQ9VPLGuRPlx3CGJaVUftBdqd+Y77ZKw+YM8XKAhKpfEeBj7z594akFByjdxeu
+         3Hsi2QkJPqLkVWxyx7O8Hc+lkT/YG9CckrToLUZpuQUjphdDEE5LH9fCPa+XNiPOgo
+         aDfEMotykDP5T1DXhgA5jKu+VDjpg23vxj2qwAVb+8swAfU9subVzjbIiNSLrQ7TLG
+         DGN9KlbdFAF5fH1PpzarBL8bAKcYMPMer9rzA08plOKAL1XCK2TjkIPASLLGojkzpg
+         tLVkDsip+p+8g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 21CF0C43143; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 02 Mar 2023 22:05:48 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mischief@offblast.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-xjqbr3PVaB@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230302144732.1903781-11-u.kleine-koenig@pengutronix.de>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thursday 02 March 2023 15:47:13 Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is (mostly) ignored
-> and this typically results in resource leaks. To improve here there is a
-> quest to make the remove callback return void. In the first step of this
-> quest all drivers are converted to .remove_new() which already returns
-> void.
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Acked-by: Pali Rohár <pali@kernel.org>
+Nick Owens (mischief@offblast.org) changed:
 
-> ---
->  drivers/platform/x86/dell/dell-smo8800.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
-> index 8d6b7a83cf24..f7ec17c56833 100644
-> --- a/drivers/platform/x86/dell/dell-smo8800.c
-> +++ b/drivers/platform/x86/dell/dell-smo8800.c
-> @@ -154,14 +154,13 @@ static int smo8800_probe(struct platform_device *device)
->  	return err;
->  }
->  
-> -static int smo8800_remove(struct platform_device *device)
-> +static void smo8800_remove(struct platform_device *device)
->  {
->  	struct smo8800_device *smo8800 = platform_get_drvdata(device);
->  
->  	free_irq(smo8800->irq, smo8800);
->  	misc_deregister(&smo8800->miscdev);
->  	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
-> -	return 0;
->  }
->  
->  /* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
-> @@ -180,7 +179,7 @@ MODULE_DEVICE_TABLE(acpi, smo8800_ids);
->  
->  static struct platform_driver smo8800_driver = {
->  	.probe = smo8800_probe,
-> -	.remove = smo8800_remove,
-> +	.remove_new = smo8800_remove,
->  	.driver = {
->  		.name = DRIVER_NAME,
->  		.acpi_match_table = smo8800_ids,
-> -- 
-> 2.39.1
-> 
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |mischief@offblast.org
+
+--- Comment #302 from Nick Owens (mischief@offblast.org) ---
+Created attachment 303833
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303833&action=3Dedit
+proart-x670e-dmi.patch
+
+hi denis,
+
+i've tested patch for 6.1.8
+(https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c290) against gentoo =
+6.1.12
+kernel on ProArt X670E-CREATOR WIFI. seems to work ok.
+
+i attached a patch to put this board in asus_wmi_info_table, as this also
+appears to make the module load automatically with a modalias. for the mute=
+x, i
+checked my DSDT and acpi_board_SBRG_MUTEX seems to exist there, but i am ve=
+ry
+much a novice in kernel programming so i am unsure if this is correct. if it
+helps i can attach my DSDT for this board.
+
+i would very much like for this to be included in a future kernel, so if i =
+can
+help further let me know.
+
+here is my sensor reading.
+
+mischief@beast:~ $ dmesg|grep nct6775
+[    6.678325] nct6775: Found NCT6799D or compatible chip at 0x2e:0x290
+mischief@beast:~ $ sensors nct6799-*
+nct6799-isa-0290
+Adapter: ISA adapter
+in0:                        1.34 V  (min =3D  +0.00 V, max =3D  +1.74 V)
+in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
+ALARM
+in2:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in3:                        3.31 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in4:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in5:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in6:                        1.15 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in7:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in8:                        3.30 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in9:                        1.66 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in10:                     528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in11:                     528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in12:                       1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in13:                       1.28 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+in14:                       1.23 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
+LARM
+fan1:                        0 RPM  (min =3D    0 RPM)
+fan2:                      849 RPM  (min =3D    0 RPM)
+fan3:                      841 RPM  (min =3D    0 RPM)
+fan4:                        0 RPM  (min =3D    0 RPM)
+fan5:                        0 RPM  (min =3D    0 RPM)
+fan6:                        0 RPM  (min =3D    0 RPM)
+fan7:                        0 RPM  (min =3D    0 RPM)
+SYSTIN:                    +37.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+CPUTIN:                    +41.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
+75.0=C2=B0C)  sensor =3D
+thermistor
+AUXTIN0:                   +18.0=C2=B0C    sensor =3D thermistor
+AUXTIN1:                   +23.0=C2=B0C    sensor =3D thermistor
+AUXTIN2:                   +23.0=C2=B0C    sensor =3D thermistor
+AUXTIN3:                   +14.0=C2=B0C    sensor =3D thermistor
+PECI Agent 0 Calibration:  +41.5=C2=B0C=20=20
+PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
+PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
+PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
+TSI0_TEMP:                 +50.5=C2=B0C=20=20
+intrusion0:               OK
+intrusion1:               ALARM
+beep_enable:              disabled
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
