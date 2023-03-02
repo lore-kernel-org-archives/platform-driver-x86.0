@@ -2,50 +2,48 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAF9C7EE36
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C99AC7EE39
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjCBOrv (ORCPT
+        id S230072AbjCBOrw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:47:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
+        Thu, 2 Mar 2023 09:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbjCBOrt (ORCPT
+        with ESMTP id S229995AbjCBOrt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Thu, 2 Mar 2023 09:47:49 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C2E41B40
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E733443472
         for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:47:47 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDb-0003rJ-BC; Thu, 02 Mar 2023 15:47:39 +0100
+        id 1pXkDc-0003uM-L8; Thu, 02 Mar 2023 15:47:40 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDa-001LrC-Bs; Thu, 02 Mar 2023 15:47:38 +0100
+        id 1pXkDb-001Lrl-WB; Thu, 02 Mar 2023 15:47:40 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDZ-001Zpi-Kt; Thu, 02 Mar 2023 15:47:37 +0100
+        id 1pXkDb-001Zq7-9v; Thu, 02 Mar 2023 15:47:39 +0100
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
-        Peter Korsgaard <peter.korsgaard@barco.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>
 Cc:     kernel@pengutronix.de,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/29] platform/x86: barco-p50-gpio: Convert to platform remove callback returning void
-Date:   Thu,  2 Mar 2023 15:47:10 +0100
-Message-Id: <20230302144732.1903781-8-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 13/29] platform/x86: huawei-wmi: Convert to platform remove callback returning void
+Date:   Thu,  2 Mar 2023 15:47:16 +0100
+Message-Id: <20230302144732.1903781-14-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 References: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1730; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=3SITRhRSsSiq5nNlw0cLw6UVXc4FMRsIXWa8cM62MP8=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALade3Gi1p/sJd8H8iXfaMV7bNpT7R16FeAlt mHVTQ9i3e+JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2nQAKCRDB/BR4rcrs CYxWB/0T9N2ZDz5pxanXc2jdn15Ou5okIo+OA378H8eFhJmwvYWT8z4crokjCAlcWEzwa4cv+3P +rZX9fAQRiNbIBH8+1OCOBVoPTZ5k9omOFb0s2QMgmXfEgi/daEjB5wJmBGpaCZVYw92pbn5D7A qKn1YLoQctNI8bhW9gbeLMNaG0IwGNHMGywnxwYb7ruLPvybqYBRSqLRJz7Mcal0jXC/D0djcPz tShBXQRNLFixNR4CiyoKY5vkLOn0YIYt8Wt8cXDxU3SLtxsyUM74CIsVAonZCEdNUeJRGYFVhOy bv6cuIeSpFDjQOK/272o5cD/s88jM+6NiCRI3Wxy0lhvfase
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1747; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=JW33fHxe/kBQW6ZFF7MD4WNhh5dcbkzNNcJmCnfisT4=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALa62P3XEguYN3LFWtRFAPXnn3mTTVM9Ih3OS W2S3s+MZOyJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2ugAKCRDB/BR4rcrs CUG0B/4+91kpU48HWypHlPmj2zLHU604Su/U8sc8tUAY3raE7VC/7zqriN00C9aqji+N3U4ds3d tdMsDO66a4eH+FJv4CKAVTaCCj2zHxoRNWuvw7pvzvsv+T3mg8Xiynjjr/sCvi/599yrdnNvxHA uwNBRlDShBVe7elB5ZP6F0zawQ8b3b6P1tcNoDtRDVMOxqdJwUMpjCHrIqsv8u8zUWB+cgm7Stc lT2Uzb0MQ/gkiPyBEmsf6Q8aGgH1lJ0hmrGQFk3dJ6UoIAESrJRC5rPPEOj4LXRAKau73f2HY3b ByESQh3fWqY1niisUV8udhiTQ6sC64wYvei5t28EjzLC701+
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -69,40 +67,40 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/platform/x86/barco-p50-gpio.c | 6 ++----
+ drivers/platform/x86/huawei-wmi.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-index 8dd672339485..af566f712057 100644
---- a/drivers/platform/x86/barco-p50-gpio.c
-+++ b/drivers/platform/x86/barco-p50-gpio.c
-@@ -370,7 +370,7 @@ static int p50_gpio_probe(struct platform_device *pdev)
- 	return ret;
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 2df1b2d5e3ea..70e5c4c0574d 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -830,7 +830,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 	return 0;
  }
  
--static int p50_gpio_remove(struct platform_device *pdev)
-+static void p50_gpio_remove(struct platform_device *pdev)
+-static int huawei_wmi_remove(struct platform_device *pdev)
++static void huawei_wmi_remove(struct platform_device *pdev)
  {
- 	struct p50_gpio *p50 = platform_get_drvdata(pdev);
+ 	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
  
-@@ -378,8 +378,6 @@ static int p50_gpio_remove(struct platform_device *pdev)
- 	platform_device_unregister(p50->leds_pdev);
- 
- 	gpiod_remove_lookup_table(&p50_gpio_led_table);
+@@ -846,8 +846,6 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_fn_lock_exit(&pdev->dev);
+ 	}
 -
 -	return 0;
  }
  
- static struct platform_driver p50_gpio_driver = {
-@@ -387,7 +385,7 @@ static struct platform_driver p50_gpio_driver = {
- 		.name = DRIVER_NAME,
+ static struct platform_driver huawei_wmi_driver = {
+@@ -855,7 +853,7 @@ static struct platform_driver huawei_wmi_driver = {
+ 		.name = "huawei-wmi",
  	},
- 	.probe = p50_gpio_probe,
--	.remove = p50_gpio_remove,
-+	.remove_new = p50_gpio_remove,
+ 	.probe = huawei_wmi_probe,
+-	.remove = huawei_wmi_remove,
++	.remove_new = huawei_wmi_remove,
  };
  
- /* Board setup */
+ static __init int huawei_wmi_init(void)
 -- 
 2.39.1
 
