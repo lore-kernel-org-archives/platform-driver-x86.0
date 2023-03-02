@@ -2,107 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF33C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB62BC678D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjCBOG1 (ORCPT
+        id S229969AbjCBOrt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:06:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
+        Thu, 2 Mar 2023 09:47:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjCBOG1 (ORCPT
+        with ESMTP id S229538AbjCBOrs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:06:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9BC498A3
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677765938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lDeJaM3OXvdvRbi0amjcP00BuSBj+eIeZi+fVmCzkd0=;
-        b=QC6spwAKLLqZE2ZbFyl5/mjwp5pu8KlSuDJXzHVy5rtVTAeIP5OvtFq7IxVWX1dE/+G2sl
-        IAZDUNXYxAnt1qFKAvquuJj0/NKFw8m1ixMXVvdre/7q/cYsHlqTK+cAmWhlt0W9E8b3fb
-        9hL75OzSfBV7Kbnhv1ioqy0QXbkq1b8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-393-x3ej2wttPXWTUrjpBY3YQQ-1; Thu, 02 Mar 2023 09:05:37 -0500
-X-MC-Unique: x3ej2wttPXWTUrjpBY3YQQ-1
-Received: by mail-ed1-f72.google.com with SMTP id fi8-20020a056402550800b004a26cc7f6cbso24409966edb.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Mar 2023 06:05:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDeJaM3OXvdvRbi0amjcP00BuSBj+eIeZi+fVmCzkd0=;
-        b=4Mr+50HpBpYUYoaAnD8diIhYn/xfLiSxUDhfZPz03vMLTJjoQWfrxBJ9Ue1OWJCmLr
-         KRqyo9FgbSbj12TPmQNj/Iy11uupxn1liNd4xCM9DM3mXy3ILKiq5IXpYTMIDAYCUIX8
-         WGcYMmJCSRyzx8qT0D+g5qmj4T/hBu1PWycx812oW/UqzIMe09zotSH7zxFi+9oYmp9V
-         5TTlfJK2TesP11E5zHf1HPZoH1blbknWmToVc69JmFtR7AhXHjpg3Xpt+j682GnidF6/
-         kQYi5Mt9WkEaxwCB+BOiXG9ctmNfiz4WqitVns1hUMzA2pbTc7Wuf9LkzdxuMPAmUw5Y
-         C6Mg==
-X-Gm-Message-State: AO0yUKUoNCvFwshSV9G1Jv/hLJVdyKXuDF8KCfgtqOgEC8KJNtfL0VLp
-        pDMMWpDKbAFNHmTlxw86hbgiorGQRubGysf8FWuxRCs0najVxzKbeFYXp5zd0yqgqZW8PUUOlzM
-        cRq+DCEu9ZnfBUCq6n7roYgGej+R0M+GpKA==
-X-Received: by 2002:a17:906:9b89:b0:88e:e498:109b with SMTP id dd9-20020a1709069b8900b0088ee498109bmr13101894ejc.5.1677765936031;
-        Thu, 02 Mar 2023 06:05:36 -0800 (PST)
-X-Google-Smtp-Source: AK7set9bZbcdC/wqORcyal6tMr8vdK45UqdOQf0mpSKcSmQstpaZCR/kUJqqifbtoHRP15py9lN3Qg==
-X-Received: by 2002:a17:906:9b89:b0:88e:e498:109b with SMTP id dd9-20020a1709069b8900b0088ee498109bmr13101863ejc.5.1677765935745;
-        Thu, 02 Mar 2023 06:05:35 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id us8-20020a170906bfc800b008cafeec917dsm7177746ejb.101.2023.03.02.06.05.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Mar 2023 06:05:34 -0800 (PST)
-Message-ID: <64cbd302-b469-9f39-9ec7-a04ce9f3ed1c@redhat.com>
-Date:   Thu, 2 Mar 2023 15:05:34 +0100
+        Thu, 2 Mar 2023 09:47:48 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB64218159
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:47:46 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXkDb-0003rU-85; Thu, 02 Mar 2023 15:47:39 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXkDa-001LrI-Jk; Thu, 02 Mar 2023 15:47:38 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXkDZ-001Zpm-R3; Thu, 02 Mar 2023 15:47:37 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     kernel@pengutronix.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/29] platform/x86: compal-laptop: Convert to platform remove callback returning void
+Date:   Thu,  2 Mar 2023 15:47:11 +0100
+Message-Id: <20230302144732.1903781-9-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
+References: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: Add new msi-ec driver
-To:     Nikita Kravets <teackot@gmail.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Aakash Singh <mail@singhaakash.dev>,
-        Jose Angel Pastrana <japp0005@red.ujaen.es>
-References: <20230214132522.32631-1-teackot@gmail.com>
- <222e94e6-2ddb-a612-31b1-4537141ef478@redhat.com>
- <CAPXvF04_sPUtwB1Rk+XKPMigoxTfoo0RzbHvn9cozTq5vnMa_g@mail.gmail.com>
- <c147567a-40cc-813c-aa48-c24a1e92ff00@redhat.com>
- <CAPXvF05BWuP87KRZ92rZux2pqHxxJ7ux+ieK15HdoXpsG4Updg@mail.gmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAPXvF05BWuP87KRZ92rZux2pqHxxJ7ux+ieK15HdoXpsG4Updg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1864; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=2FcRCflJvaecUEGlqoFBbAQbmPoh+cHoMH2b86C4p0s=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALahfyGEbwyFIZ/2N0J3qj3ymTNB0KR+nuX8B LhaekOFqSKJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2oQAKCRDB/BR4rcrs CWw6B/0SqxTeIkpbjeLgeQn8QgLD1ZpxFqsb+bXQ27zzQLCQtd9LZfgQJooPS71cLRZBGxZRj7b oOg2tNB4Kz4YnTB4C2rO4QzPcGUbwTXJAep9yZUPvY+1DSbKRrbfM8VbjT1DctOXnr2T6NVHz24 /WXcZJSHCkeDyVR+6pF05Ya9VEE1MjGnqvhAf2fsef5HSnUoAPK/i5Od/NobCYHal2/lVx+V9Hx 5JXgoNCzyusPjbvAyD8/1whKljMWg6DPkpT/eAvJnltCvBr1bVa/IrkAStsJD/RNmmu/glYLaJP zyYZUFpVOARSzTCTYPDtr+5dnutCmfmaQIFNdtsDMt97C8BJ
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is (mostly) ignored
+and this typically results in resource leaks. To improve here there is a
+quest to make the remove callback return void. In the first step of this
+quest all drivers are converted to .remove_new() which already returns
+void.
 
-On 3/2/23 13:45, Nikita Kravets wrote:
-> Here is my `modinfo msi-ec`:
-> 
-> name:           msi_ec
-> filename:       (builtin)
-> description:    MSI Embedded Controller
-> author:         Nikita Kravets <teackot@gmail.com>
-> author:         Aakash Singh <mail@singhaakash.dev>
-> author:         Jose Angel Pastrana <japp0005@red.ujaen.es>
-> license:        GPL
-> file:           drivers/platform/x86/msi-ec
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
 
-Ah you have set it to builtin rather then building it as
-a module.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/platform/x86/compal-laptop.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Yes then it will work without any module-aliases since then it
-is always part of the kernel.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index e10d2f64dfad..61c745490d71 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -1003,12 +1003,12 @@ static int compal_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
+-static int compal_remove(struct platform_device *pdev)
++static void compal_remove(struct platform_device *pdev)
+ {
+ 	struct compal_data *data;
+ 
+ 	if (!extra_features)
+-		return 0;
++		return;
+ 
+ 	pr_info("Unloading: resetting fan control to motherboard\n");
+ 	pwm_disable_control();
+@@ -1017,8 +1017,6 @@ static int compal_remove(struct platform_device *pdev)
+ 	power_supply_unregister(data->psy);
+ 
+ 	sysfs_remove_group(&pdev->dev.kobj, &compal_platform_attr_group);
+-
+-	return 0;
+ }
+ 
+ static struct platform_driver compal_driver = {
+@@ -1026,7 +1024,7 @@ static struct platform_driver compal_driver = {
+ 		.name = DRIVER_NAME,
+ 	},
+ 	.probe	= compal_probe,
+-	.remove	= compal_remove,
++	.remove_new = compal_remove,
+ };
+ 
+ static int __init compal_init(void)
+-- 
+2.39.1
 
