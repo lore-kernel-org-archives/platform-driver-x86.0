@@ -2,169 +2,115 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C750C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1559FC6FA8E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 15:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbjCBOti (ORCPT
+        id S229484AbjCBPrE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:49:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41396 "EHLO
+        Thu, 2 Mar 2023 10:47:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjCBOsu (ORCPT
+        with ESMTP id S229480AbjCBPrE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:48:50 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FD4521DC
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:48:14 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDf-0003r5-84; Thu, 02 Mar 2023 15:47:43 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDY-001Lqo-S2; Thu, 02 Mar 2023 15:47:36 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDY-001ZpK-6Z; Thu, 02 Mar 2023 15:47:36 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     "Lee, Chun-Yi" <jlee@suse.com>,
+        Thu, 2 Mar 2023 10:47:04 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A053E61A;
+        Thu,  2 Mar 2023 07:47:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677772021; x=1709308021;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JAipvvtID4UIsHFYIMs4dTvpzhPgRpYEfN79S7XKdlo=;
+  b=JF/Z+PcmyTkpkWhW9ADXA6qJ7638J9e8SaovHjk023fGlhW3dFe7r4aI
+   7BoAjB+XdTLHQcHLys5uLpyJJWM5fkUAtFfjkIw71Cd0L/K/I3hwWJNOk
+   ks/LhDUiPat5ryCevpxoI4YSu5YmHhxxaWexjvQP7bJvoDX5SamYnEZM2
+   dNMHKhlDMa5VSRkSxNFdfSkxCwMoP4xsW7OLTmgwPz93f9pkILXX5Ns0j
+   OmzAgK8325zGOSJiWirTQzXGXw9bEbbWAqj85/SNeIgNVQjBZGeEd/Zkr
+   hz6fMVMSJQcSOvxeyDGk6/YHDbmELwAF/hhHiLVxtv14QklrdDZiDOrnd
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="318571371"
+X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
+   d="scan'208";a="318571371"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 07:47:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="707452421"
+X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
+   d="scan'208";a="707452421"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 02 Mar 2023 07:46:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pXl8w-00EPc3-14;
+        Thu, 02 Mar 2023 17:46:54 +0200
+Date:   Thu, 2 Mar 2023 17:46:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andrea Ho <Andrea.Ho@advantech.com.tw>,
-        Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
-        Peter Korsgaard <peter.korsgaard@barco.com>,
-        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        =?utf-8?q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Alex Hung <alexhung@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shravan Sudhakar <s.shravan@intel.com>,
-        Intel Corporation <linuxwwan@intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>
-Cc:     kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Carlos Bilbao <carlos.bilbao@amd.com>
-Subject: [PATCH 00/29] platform/x86: Convert to platform remove callback returning void
-Date:   Thu,  2 Mar 2023 15:47:03 +0100
-Message-Id: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.1
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] leds: simatic-ipc-leds-gpio: split up into
+ multiple drivers
+Message-ID: <ZADE7kBB9HzTlpul@smile.fi.intel.com>
+References: <20230301170215.23382-1-henning.schild@siemens.com>
+ <20230301170215.23382-3-henning.schild@siemens.com>
+ <Y/+LLICwh3T25IGv@smile.fi.intel.com>
+ <20230302094009.74b5d368@md1za8fc.ad001.siemens.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5397; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=vRXXcogYXkMjIpSQ/PSu/mECXGaJ5NPjA8DIJa1C5dA=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALaAai+lsMP2/3+M9gidrZ5BYYLoghUAKK454 KjxQhHmraiJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC2gAAKCRDB/BR4rcrs CVZ0B/9dzH/Lfa1PlT/p/CMMSaa7GDt3nOpeveiqPrqtyQHw44sTlijnL3AYy4GFt+ycxReQ2yT SshFNGR14rAjD3GvvASpSjaGfKhkujtNJ/WP9MiS1gmMCmZG6xd1WPVyPAAvNwTw+MKkclIpZWl +iCtWNOqHrg4GV1gCTvrgfB8Q0ys+MaBZQd4xRw/GAfxm0/XnoRfrvqVQpVbbTO6MXp8yqNok2f vzU2OEbaxVN5SqVZBUXn78z+x7mAMUNRacSWbC7US3ylMHrcR7uNA0fpRq+/n2QXf/VDg2KBaQW hk4I4gkyZ8RQNGpOgeOzJgK6o67afS6fnmAyNt9on3AIVMjk
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20230302094009.74b5d368@md1za8fc.ad001.siemens.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+On Thu, Mar 02, 2023 at 09:40:09AM +0100, Henning Schild wrote:
+> Am Wed, 1 Mar 2023 19:28:12 +0200
+> schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> > On Wed, Mar 01, 2023 at 06:02:14PM +0100, Henning Schild wrote:
 
-this patch series adapts the platform drivers below drivers/platform/x86
-to use the .remove_new() callback. Compared to the traditional .remove()
-callback .remove_new() returns no value. This is a good thing because
-the driver core doesn't (and cannot) cope for errors during remove. The
-only effect of a non-zero return value in .remove() is that the driver
-core emits a warning. The device is removed anyhow and an early return
-from .remove() usually yields a resource leak.
+...
 
-By changing the remove callback to return void driver authors cannot
-reasonably assume any more that there is some kind of cleanup later.
+> > > +	.driver = {
+> > > +		.name = KBUILD_MODNAME,  
+> > 
+> > Strictly speaking this is an ABI (as something may instantiate the
+> > driver from the user space or elsewhere by this name. At the same
+> > time this may change with the file name change.
+> > 
+> > Personally I prefer explicit string literal here.
+> 
+> Switching from one module to three the names have to change. People who
+> explicitly loaded the old module which supported multiple machines,
+> will now how to load either both oŕ know which one to load.
 
-All drivers touched here returned zero unconditionally in their remove
-callback, so they could all be converted trivially to .remove_new().
+Wait, are you telling that now users load modules _manually_?!
 
-Note that this series depends on commit 5c5a7680e67b ("platform: Provide
-a remove callback that returns no value") that is already in Linus' tree
-but not yet included in a tagged version.
+> I personally think the ABI change is acceptable, the assumption would
+> be that the drivers load automatically anyhow. And since there are no
+> params i doubt users will have /etc/modprobe.d/ or /sys/module/ stuff
+> around.
+> 
+> And with the split i guess an ABI change can not be fully avoided.
+> Whether the names is explicit or implicit is another discussion and
+> just a matter of style. I prefer to stay with the currently used
+> pattern, it is not un-common in the kernel.
 
-Best regards
-Uwe
+The problem with that pattern is possible, while unlikely, renaming of the file
+which triggers this to be updated.
 
-Uwe Kleine-König (29):
-  platform/x86: acer-wmi: Convert to platform remove callback returning void
-  platform/x86: adv_swbutton: Convert to platform remove callback returning void
-  platform/x86: amd: hsmp: Convert to platform remove callback returning void
-  platform/x86: amd: pmc: Convert to platform remove callback returning void
-  platform/x86: amd: pmf: core: Convert to platform remove callback returning void
-  platform/x86: amilo-rfkill: Convert to platform remove callback returning void
-  platform/x86: barco-p50-gpio: Convert to platform remove callback returning void
-  platform/x86: compal-laptop: Convert to platform remove callback returning void
-  platform/x86: dell: dcdbas: Convert to platform remove callback returning void
-  platform/x86: dell: dell-smo8800: Convert to platform remove callback returning void
-  platform/x86: hp: hp_accel: Convert to platform remove callback returning void
-  platform/x86: hp: tc1100-wmi: Convert to platform remove callback returning void
-  platform/x86: huawei-wmi: Convert to platform remove callback returning void
-  platform/x86: ideapad-laptop: Convert to platform remove callback returning void
-  platform/x86: intel: bxtwc_tmu: Convert to platform remove callback returning void
-  platform/x86: intel: chtdc_ti_pwrbtn: Convert to platform remove callback returning void
-  platform/x86: intel: chtwc_int33fe: Convert to platform remove callback returning void
-  platform/x86: intel: hid: Convert to platform remove callback returning void
-  platform/x86: intel: int0002_vgpio: Convert to platform remove callback returning void
-  platform/x86: intel: int1092: intel_sar: Convert to platform remove callback returning void
-  platform/x86: intel: int3472: discrete: Convert to platform remove callback returning void
-  platform/x86: intel: mrfld_pwrbtn: Convert to platform remove callback returning void
-  platform/x86: intel: pmc: core: Convert to platform remove callback returning void
-  platform/x86: intel: telemetry: pltdrv: Convert to platform remove callback returning void
-  platform/x86: intel: vbtn: Convert to platform remove callback returning void
-  platform/x86: samsung-q10: Convert to platform remove callback returning void
-  platform/x86: serial-multi-instantiate: Convert to platform remove callback returning void
-  platform/x86: wmi: Convert to platform remove callback returning void
-  platform/x86: xo1-rfkill: Convert to platform remove callback returning void
+Under sysfs the folder will change its name. If user has a script relying on
+this, it will be broken. So, I prefer mine.
 
- drivers/platform/x86/acer-wmi.c                 |  5 ++---
- drivers/platform/x86/adv_swbutton.c             |  6 ++----
- drivers/platform/x86/amd/hsmp.c                 |  6 ++----
- drivers/platform/x86/amd/pmc.c                  |  5 ++---
- drivers/platform/x86/amd/pmf/core.c             |  5 ++---
- drivers/platform/x86/amilo-rfkill.c             |  5 ++---
- drivers/platform/x86/barco-p50-gpio.c           |  6 ++----
- drivers/platform/x86/compal-laptop.c            |  8 +++-----
- drivers/platform/x86/dell/dcdbas.c              |  6 ++----
- drivers/platform/x86/dell/dell-smo8800.c        |  5 ++---
- drivers/platform/x86/hp/hp_accel.c              |  5 ++---
- drivers/platform/x86/hp/tc1100-wmi.c            |  6 ++----
- drivers/platform/x86/huawei-wmi.c               |  6 ++----
- drivers/platform/x86/ideapad-laptop.c           |  6 ++----
- drivers/platform/x86/intel/bxtwc_tmu.c          |  5 ++---
- drivers/platform/x86/intel/chtdc_ti_pwrbtn.c    |  5 ++---
- drivers/platform/x86/intel/chtwc_int33fe.c      |  6 ++----
- drivers/platform/x86/intel/hid.c                | 10 ++--------
- drivers/platform/x86/intel/int0002_vgpio.c      |  5 ++---
- drivers/platform/x86/intel/int1092/intel_sar.c  |  5 ++---
- drivers/platform/x86/intel/int3472/discrete.c   |  6 ++----
- drivers/platform/x86/intel/mrfld_pwrbtn.c       |  5 ++---
- drivers/platform/x86/intel/pmc/core.c           |  5 ++---
- drivers/platform/x86/intel/telemetry/pltdrv.c   |  5 ++---
- drivers/platform/x86/intel/vbtn.c               | 10 ++--------
- drivers/platform/x86/samsung-q10.c              |  6 ++----
- drivers/platform/x86/serial-multi-instantiate.c |  6 ++----
- drivers/platform/x86/wmi.c                      |  6 ++----
- drivers/platform/x86/xo1-rfkill.c               |  5 ++---
- 29 files changed, 59 insertions(+), 111 deletions(-)
+> > > +	},  
 
-base-commit: ee3f96b164688dae21e2466a57f2e806b64e8a37
 -- 
-2.39.1
+With Best Regards,
+Andy Shevchenko
+
 
