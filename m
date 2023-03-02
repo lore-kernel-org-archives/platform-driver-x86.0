@@ -2,48 +2,50 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744A3C7EE36
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AA9C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 14:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjCBOr7 (ORCPT
+        id S230142AbjCBOsA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:47:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38648 "EHLO
+        Thu, 2 Mar 2023 09:48:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbjCBOrw (ORCPT
+        with ESMTP id S230086AbjCBOrx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:47:52 -0500
+        Thu, 2 Mar 2023 09:47:53 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0345041B72
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AAD49880
         for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 06:47:50 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDg-00045R-B7; Thu, 02 Mar 2023 15:47:44 +0100
+        id 1pXkDd-0003wl-Ta; Thu, 02 Mar 2023 15:47:41 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDe-001Lsi-WE; Thu, 02 Mar 2023 15:47:43 +0100
+        id 1pXkDd-001LsB-7x; Thu, 02 Mar 2023 15:47:41 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pXkDe-001Zqw-4L; Thu, 02 Mar 2023 15:47:42 +0100
+        id 1pXkDc-001ZqU-LV; Thu, 02 Mar 2023 15:47:40 +0100
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
+        Mark Gross <markgross@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
 Cc:     kernel@pengutronix.de,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 26/29] platform/x86: samsung-q10: Convert to platform remove callback returning void
-Date:   Thu,  2 Mar 2023 15:47:29 +0100
-Message-Id: <20230302144732.1903781-27-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 19/29] platform/x86: intel: int0002_vgpio: Convert to platform remove callback returning void
+Date:   Thu,  2 Mar 2023 15:47:22 +0100
+Message-Id: <20230302144732.1903781-20-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 References: <20230302144732.1903781-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1631; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=+GOxOWYmv6duofeGht03dZCq2oL/vZ0wyWmPfKijFXc=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALbxZQvm4g0jdxlGvF1cAfRQJNgxIrXIFs7JD 6/CIRehgNSJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC28QAKCRDB/BR4rcrs CblBB/sFtXfcdHErOkkcEQ8hZ49eFrmoJjb63KCPW+FGF2714vGdahbqBDkUlqhs9JJurJ9/KEL QpaH8/JbmF+gYceOJT10k10EU+oOvOxbOWtd5Yoa8p72Pwu5JR89xjLfYT7FFNyFd16Clb+lLG6 XcXu4K8enCI5fh6hTnk18uruU6G51Y3SbQr8KIbTr/insJrWBvl4zaLxke9oQ3SVWN7kwIc2/iQ 3VZtClYPMdpLMo9pNM9ntQEDbkkq06044P+8IFmVXe7yB8wy4qvCO5FtflsOlavbbH1mZ5lh16E k4uvo6NVrVx/Ebej/kuVTIJdQy/SW6J2wfJlUHVR/lKtf4Bf
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1634; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=iMzvEUqbb2rVuVtUa7k/9sDC9oHzlYpq3RgIdsmfWLU=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkALbUqZeyydEqf9Lx4bdId4bvO/zQTf+JMBtAL DyBJyhKW+iJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAC21AAKCRDB/BR4rcrs CeL8B/wLiJWJ+Cc+G4vGlLIb0gmj6OIjaI3tm75Qj3ZIxPJBm7dK7o7J/6y/PsDTqORP1b0D4t7 Zh0w7lEVWfjU4FYUnjygZFPPZKS7W/MkXmQkeohk2CYGcv6MS6+vd3l08/IIRLRvpHrUMmDFXFz pebUcKlbaNjYnIFDmfTrAAXBXmiKkwEWwTMUeOc5IoOzQuLgPPDm7gN8BerDOFTF7D+PGqtw2VJ e52arbYSVrWi5SBiL+Uka7RklzUtVMF/XvVWmEXZNlfSAqxYF5/ubtnJ52brgcpRD/xV9Lb9aE5 +Jde4XFPLDi8yGH1Akd6cp7KaGiT/9TvzfdwlADpf22HymlD
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -67,38 +69,35 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/platform/x86/samsung-q10.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/int0002_vgpio.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
-index 6eb08b539311..134e2c3d91ca 100644
---- a/drivers/platform/x86/samsung-q10.c
-+++ b/drivers/platform/x86/samsung-q10.c
-@@ -65,14 +65,12 @@ static int samsungq10_probe(struct platform_device *pdev)
+diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+index 97cfbc520a02..b6708bab7c53 100644
+--- a/drivers/platform/x86/intel/int0002_vgpio.c
++++ b/drivers/platform/x86/intel/int0002_vgpio.c
+@@ -223,11 +223,10 @@ static int int0002_probe(struct platform_device *pdev)
  	return 0;
  }
  
--static int samsungq10_remove(struct platform_device *pdev)
-+static void samsungq10_remove(struct platform_device *pdev)
+-static int int0002_remove(struct platform_device *pdev)
++static void int0002_remove(struct platform_device *pdev)
  {
- 
- 	struct backlight_device *bd = platform_get_drvdata(pdev);
- 
- 	backlight_device_unregister(bd);
--
+ 	device_init_wakeup(&pdev->dev, false);
+ 	acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
 -	return 0;
  }
  
- static struct platform_driver samsungq10_driver = {
-@@ -80,7 +78,7 @@ static struct platform_driver samsungq10_driver = {
- 		.name	= KBUILD_MODNAME,
+ static int int0002_suspend(struct device *dev)
+@@ -273,7 +272,7 @@ static struct platform_driver int0002_driver = {
+ 		.pm			= &int0002_pm_ops,
  	},
- 	.probe		= samsungq10_probe,
--	.remove		= samsungq10_remove,
-+	.remove_new	= samsungq10_remove,
+ 	.probe	= int0002_probe,
+-	.remove	= int0002_remove,
++	.remove_new = int0002_remove,
  };
  
- static struct platform_device *samsungq10_device;
+ module_platform_driver(int0002_driver);
 -- 
 2.39.1
 
