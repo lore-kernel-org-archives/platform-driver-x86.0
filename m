@@ -2,167 +2,229 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6325C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Mar 2023 22:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64762C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Mar 2023 07:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbjCBWF5 (ORCPT
+        id S229923AbjCCHyh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Mar 2023 17:05:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
+        Fri, 3 Mar 2023 02:54:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbjCBWFx (ORCPT
+        with ESMTP id S229912AbjCCHyg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2023 17:05:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E22D7DAA
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 14:05:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C5C77616C6
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 309D5C4339B
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677794751;
-        bh=TSzQiWL/oRR2EkrBMVUZtrgPxfTnL8DYjdwY0B7SJ7U=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Q4ZrGI9clvLhAPhDvqnuyw0RicI1M66wPk/7KF5cwlLp5Lx4fAs0D6pAGLy/K0iIE
-         Vt//tQ9VPLGuRPlx3CGJaVUftBdqd+Y77ZKw+YM8XKAhKpfEeBj7z594akFByjdxeu
-         3Hsi2QkJPqLkVWxyx7O8Hc+lkT/YG9CckrToLUZpuQUjphdDEE5LH9fCPa+XNiPOgo
-         aDfEMotykDP5T1DXhgA5jKu+VDjpg23vxj2qwAVb+8swAfU9subVzjbIiNSLrQ7TLG
-         DGN9KlbdFAF5fH1PpzarBL8bAKcYMPMer9rzA08plOKAL1XCK2TjkIPASLLGojkzpg
-         tLVkDsip+p+8g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 21CF0C43143; Thu,  2 Mar 2023 22:05:51 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Thu, 02 Mar 2023 22:05:48 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: mischief@offblast.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-xjqbr3PVaB@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Fri, 3 Mar 2023 02:54:36 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE9A38B4C;
+        Thu,  2 Mar 2023 23:54:34 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id h8so1857895plf.10;
+        Thu, 02 Mar 2023 23:54:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677830074;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rvMRpBHGsmqI4XAunhHv/2BkvqzD7tqq/n+XqNFTqus=;
+        b=pCxOK44i+SJOwg2Q6wqLAxAVYWBm5Rq4R4MSWVPxbevO4c5XUG8jMenWe9oVddQnEd
+         2zjbyNaj/Pk/Lit20QlWDW4VZdiQvN0K4lhOiTJUx5olo9nfjetbydoLPeiwk7bPC+9w
+         vfo8on5wiiOR619SILMB37ss4V0IIZFrDvObbSAzZbHhfZdNCqx8aHRGlAmFXUAoYZhn
+         PHneoHMUwu5A/J2epa8Qh1cMH61Qj1HfawicnbIYW5IrT+xSYx519L6IFpV56ZfnU3Oz
+         E+pjzSAm+tz9SpEGBow9SueJKqccmbUz6J8mtwHMKHjV0KJn3K09ad4q4PaRskkfpycM
+         a4cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677830074;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvMRpBHGsmqI4XAunhHv/2BkvqzD7tqq/n+XqNFTqus=;
+        b=8Oy0AaqwsdHOgVvF8oDMhsbIC7Wg2/22r+Mbf0wRrHVmubLJh5Mh8QMAvMuatnmgy9
+         XI1k9VpMqtuyrVJe7mogZJxDn3+hOIqMVfxfM7GmMnt5qEQoHrXEvmUZt6iPdaVntBUD
+         j0nr3XyC8N2SGSzgGksdWEbt9C4QLeDKj/CROcCH7lv9Ik5MNu/3ydsriL1GN43GYoKf
+         4NpEXDQT3J0ENUwfAKSvaZWHtyfslC0EbYNPJOOa1VP2I49GkWhGlKeSZDDzwziwzxdY
+         2yF150pkxZ6KVAbn7hqYspNrhP1r2TnJU6CejFFDaZNQGhzGXwtFiTqUwCneSHusnet5
+         k42w==
+X-Gm-Message-State: AO0yUKWw7WomAP6f8/bl77Wrj7RZdCXz9Ynwc0Vh5zjDDwdZyO0iWXQ/
+        QRc9DYwTaKq0suM2aAZ3aSQ=
+X-Google-Smtp-Source: AK7set8a2KzsYmksRPcdIorz8RPty10A5Hc4ARnZXOGgsO89NQzyJrNZjmkbFzp7nTTIWHJ5oCpXuw==
+X-Received: by 2002:a17:90b:164e:b0:233:cc4c:2945 with SMTP id il14-20020a17090b164e00b00233cc4c2945mr704823pjb.38.1677830074110;
+        Thu, 02 Mar 2023 23:54:34 -0800 (PST)
+Received: from redecorated-mbp (124-148-239-17.tpgi.com.au. [124.148.239.17])
+        by smtp.gmail.com with ESMTPSA id b4-20020a17090acc0400b002308e6e645bsm914437pju.49.2023.03.02.23.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Mar 2023 23:54:33 -0800 (PST)
+Date:   Fri, 3 Mar 2023 18:54:23 +1100
+From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Seth Forshee <sforshee@kernel.org>,
+        Aditya Garg <gargaditya08@live.com>,
+        Aun-Ali Zaidi <admin@kodeit.net>,
+        Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH v3 0/5] apple-gmux: support MMIO gmux type on T2 Macs
+Message-ID: <20230303185423.30bd115f@redecorated-mbp>
+In-Reply-To: <4ccb9139-1e70-e669-646a-1975460962cd@redhat.com>
+References: <20230218132007.3350-1-orlandoch.dev@gmail.com>
+        <4ccb9139-1e70-e669-646a-1975460962cd@redhat.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.35; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi Hans,
 
-Nick Owens (mischief@offblast.org) changed:
+On Wed, 1 Mar 2023 13:54:37 +0100
+Hans de Goede <hdegoede@redhat.com> wrote:
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |mischief@offblast.org
+> Hi,
+> 
+> On 2/18/23 14:20, Orlando Chamberlain wrote:
+> > Hi All,
+> > 
+> > This patch series adds support for the MMIO based gmux present on
+> > these Dual GPU Apple T2 Macs: MacBookPro15,1, MacBookPro15,3,
+> > MacBookPro16,1, MacBookPro16,4 (although amdgpu isn't working on
+> > MacBookPro16,4 [1]).
+> > 
+> > Changes from v2[2]:
+> > 
+> > - Add "," to last item in apple_gmux_type enum
+> > - Don't not clear interrupts when status is 0
+> > - Don't check if we failed to make debugfs folder
+> > - Check for fake mmio gmux  
+> 
+> Thanks, this looks good to me now:
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> for the entire series.
+> 
+> Can you prepare a v4 addressing Lukas's remarks:
+> 
+> 1. Switch to acpi_execute_simple_method()
+> 2. Add extra info about the gmux provided by Lukas 
+>    to either the docs or as comments
+> 
+> With those changes added I believe v4 will be ready
+> for merging.
 
---- Comment #302 from Nick Owens (mischief@offblast.org) ---
-Created attachment 303833
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D303833&action=3Dedit
-proart-x670e-dmi.patch
+Good to hear, I'll try to send out a v4 tonight.
 
-hi denis,
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> > 
+> > # 1:
+> > 
+> > has a slight change in how the switch state is read: instead of
+> > checking for x == 2, check !(x & 1)
+> > 
+> > # 2:
+> > 
+> > implements a system to support more than 2 gmux types
+> > 
+> > # 3:
+> > 
+> > start using the gmux's GMSP acpi method when handling interrupts on
+> > MMIO gmux's. This is needed for the MMIO gmux's to clear interrupts.
+> > 
+> > # 4:
+> > 
+> > Adds support for the MMIO based gmux on T2 macs.
+> > 
+> > # 5:
+> > 
+> > Add a debugfs interface to apple-gmux so data from ports can be read
+> > and written to from userspace.
+> > 
+> > This can be used for more easily researching what unknown ports do,
+> > and switching gpus when vga_switcheroo isn't ready (e.g. when one
+> > gpu is bound to vfio-pci and in use by a Windows VM, I can use this
+> > to switch my internal display between Linux and Windows easily).
+> > 
+> > # Issues:
+> > 
+> > 1. Switching gpus at runtime has the same issue as indexed gmux's:
+> > the inactive gpu can't probe the DDC lines for eDP [3]
+> > 
+> > 2. iMacPro1,1, iMac20,1 and iMac20,2 all seem to have a gmux in
+> > their acpi tables, but they shouldn't. A check that hopefully will
+> > detect this is used, but it's untested as I don't have any of those
+> > computers.
+> > 
+> > 3. Powering on the amdgpu with vga_switcheroo doesn't work well. I'm
+> > told on the MacBookPro15,1 it works sometimes, and adding delays
+> > helps, but on my MacBookPro16,1 I haven't been able to get it to
+> > work at all:
+> > 
+> > amdgpu: switched off
+> > amdgpu: switched on
+> > amdgpu 0000:03:00.0:
+> >     Unable to change power state from D3hot to D0, device
+> > inaccessible amdgpu 0000:03:00.0:
+> >     Unable to change power state from D3cold to D0, device
+> > inaccessible [drm] PCIE GART of 512M enabled (table at
+> > 0x00000080FEE00000). [drm] PSP is resuming...
+> > [drm:psp_hw_start [amdgpu]] *ERROR* PSP create ring failed!
+> > [drm:psp_resume [amdgpu]] *ERROR* PSP resume failed
+> > [drm:amdgpu_device_fw_loading [amdgpu]]
+> >     *ERROR* resume of IP block <psp> failed -62
+> > amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_resume failed (-62).
+> > snd_hda_intel 0000:03:00.1: Enabling via vga_switcheroo
+> > snd_hda_intel 0000:03:00.1:
+> >     Unable to change power state from D3cold to D0, device
+> > inaccessible snd_hda_intel 0000:03:00.1: CORB reset timeout#2,
+> > CORBRP = 65535 snd_hda_codec_hdmi hdaudioC0D0: Unable to sync
+> > register 0x2f0d00. -5
+> > 
+> > There are some acpi methods (PWRD, PWG1 [4, 5]) that macOS calls
+> > when changing the amdgpu's power state, but we don't use them and
+> > that could be a cause. Additionally unlike previous generation
+> > Macbooks which work better, on MacBookPro16,1 the gpu is located
+> > behind 2 pci bridges:
+> > 
+> > 01:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
+> >     Navi 10 XL Upstream Port of PCI Express Switch (rev 43)
+> > 02:00.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI]
+> >     Navi 10 XL Downstream Port of PCI Express Switch
+> > 03:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> > [AMD/ATI] Navi 14 [Radeon RX 5500/5500M / Pro 5500M] (rev 43)
+> > 03:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
+> >     Navi 10 HDMI Audio
+> > 
+> > Upon attempting to power on the gpu with vga_switcheroo, all these
+> > devices except 01:00.0 have their config space filled with 1s.
+> > Rescanning pci makes the config space of all the devices go back to
+> > normal, however amdgpu still fails to resume with the same logs as
+> > above.
+> > 
+> > [1]:
+> > https://lore.kernel.org/all/3AFB9142-2BD0-46F9-AEA9-C9C5D13E68E6@live.com/
+> > [2]:
+> > https://lore.kernel.org/platform-driver-x86/20230216122342.5918-1-orlandoch.dev@gmail.com/
+> > [3]:
+> > https://lore.kernel.org/all/9eed8ede6f15a254ad578e783b050e1c585d5a15.1439288957.git.lukas@wunner.de/
+> > [4]:
+> > https://gist.github.com/Redecorating/6c7136b7a4ac7ce3b77d8e41740dd87b
+> > [5]:
+> > https://lore.kernel.org/all/20120710160555.GA31562@srcf.ucam.org/
+> > 
+> > Orlando Chamberlain (5):
+> >   apple-gmux: use first bit to check switch state
+> >   apple-gmux: refactor gmux types
+> >   apple-gmux: Use GMSP acpi method for interrupt clear
+> >   apple-gmux: support MMIO gmux on T2 Macs
+> >   apple-gmux: add debugfs interface
+> > 
+> >  drivers/platform/x86/apple-gmux.c | 349
+> > ++++++++++++++++++++++++++---- include/linux/apple-gmux.h        |
+> > 70 ++++-- 2 files changed, 357 insertions(+), 62 deletions(-)
+> >   
+> 
 
-i've tested patch for 6.1.8
-(https://bugzilla.kernel.org/show_bug.cgi?id=3D204807#c290) against gentoo =
-6.1.12
-kernel on ProArt X670E-CREATOR WIFI. seems to work ok.
-
-i attached a patch to put this board in asus_wmi_info_table, as this also
-appears to make the module load automatically with a modalias. for the mute=
-x, i
-checked my DSDT and acpi_board_SBRG_MUTEX seems to exist there, but i am ve=
-ry
-much a novice in kernel programming so i am unsure if this is correct. if it
-helps i can attach my DSDT for this board.
-
-i would very much like for this to be included in a future kernel, so if i =
-can
-help further let me know.
-
-here is my sensor reading.
-
-mischief@beast:~ $ dmesg|grep nct6775
-[    6.678325] nct6775: Found NCT6799D or compatible chip at 0x2e:0x290
-mischief@beast:~ $ sensors nct6799-*
-nct6799-isa-0290
-Adapter: ISA adapter
-in0:                        1.34 V  (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                      1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  =
-ALARM
-in2:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in3:                        3.31 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in4:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in5:                        1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in6:                        1.15 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in7:                        3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in8:                        3.30 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in9:                        1.66 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in10:                     528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in11:                     528.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in12:                       1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in13:                       1.28 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-in14:                       1.23 V  (min =3D  +0.00 V, max =3D  +0.00 V)  A=
-LARM
-fan1:                        0 RPM  (min =3D    0 RPM)
-fan2:                      849 RPM  (min =3D    0 RPM)
-fan3:                      841 RPM  (min =3D    0 RPM)
-fan4:                        0 RPM  (min =3D    0 RPM)
-fan5:                        0 RPM  (min =3D    0 RPM)
-fan6:                        0 RPM  (min =3D    0 RPM)
-fan7:                        0 RPM  (min =3D    0 RPM)
-SYSTIN:                    +37.0=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                    +41.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +=
-75.0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                   +18.0=C2=B0C    sensor =3D thermistor
-AUXTIN1:                   +23.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                   +23.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                   +14.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0 Calibration:  +41.5=C2=B0C=20=20
-PCH_CHIP_CPU_MAX_TEMP:      +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:              +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:               +0.0=C2=B0C=20=20
-TSI0_TEMP:                 +50.5=C2=B0C=20=20
-intrusion0:               OK
-intrusion1:               ALARM
-beep_enable:              disabled
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
