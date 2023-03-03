@@ -2,214 +2,310 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF4C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Mar 2023 11:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E705C61DA3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Mar 2023 22:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230517AbjCCLbf (ORCPT
+        id S232058AbjCCW2b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Mar 2023 06:31:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46326 "EHLO
+        Fri, 3 Mar 2023 17:28:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjCCLbd (ORCPT
+        with ESMTP id S232640AbjCCW2S (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Mar 2023 06:31:33 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808C55F22E;
-        Fri,  3 Mar 2023 03:30:58 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id 6-20020a17090a190600b00237c5b6ecd7so5803988pjg.4;
-        Fri, 03 Mar 2023 03:30:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677843057;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ke2Xq6JkzOHJeaW2xUHi+wBDvgOFsG9d52tymACvPdk=;
-        b=NR+uDqI47mWmUxv2LXOghnB2XuSdJKFMr6HdJp+YQNYa0+an3IO/3ZDm9Nl8FQxOUp
-         EXg04oClvAvhSs7c742B3I5o/Yn0qfHy+Vp7oA8YZ8YiuERZk60iVD+HcQUyOJmhNj4I
-         W9aWoMGAE+nlAIxqHkJB8QTNjSh6QKN0k4yFuAnN858xSO3rNn9WbSCqDxnJjKuvRhcf
-         kptc7S3qxavi4otaXgQX3xO8IM4znklI6FJ2gewqecsUom/au8fDcPg+h9uAF/UWpZ6H
-         57wAjvxIgq48KfmER9CLqXWyGoWQcyCbLqr9NC2uF7Ib/CEYHhx6m+6c5KZl6Tr4u6JF
-         cHww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677843057;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ke2Xq6JkzOHJeaW2xUHi+wBDvgOFsG9d52tymACvPdk=;
-        b=ZUxdaLv2n+KURaGv5hgy6Jx2XxWiUtHmB8WBYf12ONoIZDnlIkn9JK+OERgsQcL1f9
-         mKbtOjU8eUR71fhg0IHQN3lIlGD+1nTkVpTggro3U1FiHNlz+iaa6eJqPAgUjF4QljAR
-         JslA2wgcDS1F9+CPrgD07iab0nU7zcDGn7OT4OGJ4qTCDiaokwnCLOERA1W3w2qqoG65
-         X7L3Adk/zOHPIBCPFhaZNb+s4D+A+91xYyz9BiTf8t4rwlnH4tRR+YG7lzke/i9l8Sp9
-         aP25Jhr9rJyx6MyDm/1YoIKS28kmUWUI0ly7XK+yxFtmASR76B+GbiJsCcRvzrDHfYGb
-         wyvQ==
-X-Gm-Message-State: AO0yUKWtr6noW6J5l4m6O88ew4pTX3Fx+lLYyUnI5nRQarDo/jxMEgqG
-        12T8F14+MPyonOD0QG0fYn4=
-X-Google-Smtp-Source: AK7set/O/sH6TF3TOVlklmFLrqOaTIiErgiBUhW4RNtc1sTzz5ArE+SokxQjfEjgoillbNN/k8veQw==
-X-Received: by 2002:a05:6a20:4281:b0:cc:a8d7:ad62 with SMTP id o1-20020a056a20428100b000cca8d7ad62mr2569827pzj.27.1677843057312;
-        Fri, 03 Mar 2023 03:30:57 -0800 (PST)
-Received: from localhost.localdomain (124-148-239-17.tpgi.com.au. [124.148.239.17])
-        by smtp.gmail.com with ESMTPSA id n4-20020a62e504000000b005a8c92f7c27sm1356262pff.212.2023.03.03.03.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Mar 2023 03:30:57 -0800 (PST)
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Seth Forshee <sforshee@kernel.org>,
-        Aditya Garg <gargaditya08@live.com>,
-        Aun-Ali Zaidi <admin@kodeit.net>,
-        Kerem Karabay <kekrby@gmail.com>,
-        Orlando Chamberlain <orlandoch.dev@gmail.com>
-Subject: [PATCH v4 4/4] apple-gmux: add debugfs interface
-Date:   Fri,  3 Mar 2023 22:28:43 +1100
-Message-Id: <20230303112842.3094-5-orlandoch.dev@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230303112842.3094-1-orlandoch.dev@gmail.com>
-References: <20230303112842.3094-1-orlandoch.dev@gmail.com>
+        Fri, 3 Mar 2023 17:28:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6AD30FE
+        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Mar 2023 14:20:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677881982;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Wxqpx+10LLa+9ai5Jml/fnQptwsl8/lWt3MQx7+tmks=;
+        b=UrCix8qLNsebRnV0n8SXkWBOZ//3M8M54bpzLc/RJg3vzo912tQp8t0aVfZQYhSJj8B/+L
+        gch0uNdbQtCBe5x6yuFsejcShURBmZIEnD5D7iMqsyFbqfdS87GCki32dlMsWdwMHOl2/e
+        fGibf2BMJu6mwpQP7paWyJBAssOvVUA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-75-g-PA14pFMP6Jov8Z30hehA-1; Fri, 03 Mar 2023 17:19:37 -0500
+X-MC-Unique: g-PA14pFMP6Jov8Z30hehA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 653FE38041DE;
+        Fri,  3 Mar 2023 22:19:37 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6ACB440D8;
+        Fri,  3 Mar 2023 22:19:36 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
+Date:   Fri,  3 Mar 2023 23:19:28 +0100
+Message-Id: <20230303221928.285477-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Allow reading and writing gmux ports from userspace.
+Add a new driver for the power-, wake- and reset-source functionality
+of the Bay Trail (BYT) version of the Crystal Cove PMIC.
 
-For example:
+The main functionality here is detecting which power-sources (USB /
+DC in / battery) are active. This is normally exposed to userspace as
+a power_supply class charger device with an online sysfs attribute.
 
-echo 4 > /sys/kernel/debug/apple_gmux/selected_port
-cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
+But if a charger is online or not is already exposed on BYT-CRC devices
+through either an ACPI AC power_supply device, or through a native driver
+for the battery charger chip (e.g. a BQ24292i).
 
-Will show the gmux version information (00000005 in this case)
+So instead of adding duplicate info under the power_supply class this
+driver exports the info through debugfs and likewise adds debugfs files
+for the reset- and wake-source info / registers.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
+Despite this driver only exporting debugfs bits it is still useful to
+have this driver because it clears the wake- and reset-source registers
+after reading them. Not clearing these can have undesirable side-effects.
+
+Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
+on reboot then the firmware on some tablets turns the reboot into
+a poweroff. I guess this may be necessary to make long power-presses turn
+into a poweroff somehow?
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-v3->v4: Collect Hans' review
- drivers/platform/x86/apple-gmux.c | 82 +++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/platform/x86/intel/Kconfig         |  10 ++
+ drivers/platform/x86/intel/Makefile        |   2 +
+ drivers/platform/x86/intel/bytcrc_pwrsrc.c | 181 +++++++++++++++++++++
+ 3 files changed, 193 insertions(+)
+ create mode 100644 drivers/platform/x86/intel/bytcrc_pwrsrc.c
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 79809fc5cf0c..53805aa7b14e 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -22,6 +22,7 @@
- #include <linux/delay.h>
- #include <linux/pci.h>
- #include <linux/vga_switcheroo.h>
-+#include <linux/debugfs.h>
- #include <asm/io.h>
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index bbbd9e54e9ee..e9dc0c021029 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -80,6 +80,16 @@ config INTEL_BXTWC_PMIC_TMU
+ 	  This driver enables the alarm wakeup functionality in the TMU unit of
+ 	  Whiskey Cove PMIC.
  
- /**
-@@ -73,6 +74,10 @@ struct apple_gmux_data {
- 	enum vga_switcheroo_client_id switch_state_external;
- 	enum vga_switcheroo_state power_state;
- 	struct completion powerchange_done;
++config INTEL_BYTCRC_PWRSRC
++	tristate "Intel Bay Trail Crystal Cove power source driver"
++	depends on INTEL_SOC_PMIC
++	help
++	  This option adds a power source driver for Crystal Cove PMICs
++	  on Intel Bay Trail devices.
 +
-+	/* debugfs data */
-+	u8 selected_port;
-+	struct dentry *debug_dentry;
- };
- 
- static struct apple_gmux_data *apple_gmux_data;
-@@ -670,6 +675,81 @@ static void gmux_notify_handler(acpi_handle device, u32 value, void *context)
- 		complete(&gmux_data->powerchange_done);
- }
- 
-+/**
-+ * DOC: Debugfs Interface
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_bytcrc_pwrsrc.
++
+ config INTEL_CHTDC_TI_PWRBTN
+ 	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
+ 	depends on INTEL_SOC_PMIC_CHTDC_TI
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index 411df4040427..c1d5fe05e3f3 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -38,6 +38,8 @@ intel_bxtwc_tmu-y			:= bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+ intel_crystal_cove_charger-y		:= crystal_cove_charger.o
+ obj-$(CONFIG_X86_ANDROID_TABLETS)	+= intel_crystal_cove_charger.o
++intel_bytcrc_pwrsrc-y			:= bytcrc_pwrsrc.o
++obj-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= intel_bytcrc_pwrsrc.o
+ intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ intel_chtwc_int33fe-y			:= chtwc_int33fe.o
+diff --git a/drivers/platform/x86/intel/bytcrc_pwrsrc.c b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+new file mode 100644
+index 000000000000..8a022b90d12d
+--- /dev/null
++++ b/drivers/platform/x86/intel/bytcrc_pwrsrc.c
+@@ -0,0 +1,181 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Power-source driver for Bay Trail Crystal Cove PMIC
 + *
-+ * gmux ports can be accessed from userspace as a debugfs interface. For example:
++ * Copyright (c) 2023 Hans de Goede <hdegoede@redhat.com>
 + *
-+ * # echo 4 > /sys/kernel/debug/apple_gmux/selected_port
-+ * # cat /sys/kernel/debug/apple_gmux/selected_port_data | xxd -p
-+ * 00000005
-+ *
-+ * Reads 4 bytes from port 4 (GMUX_PORT_VERSION_MAJOR).
-+ *
-+ * 1 and 4 byte writes are also allowed.
++ * Based on intel_crystalcove_pwrsrc.c from Android kernel sources, which is:
++ * Copyright (C) 2013 Intel Corporation
 + */
 +
-+static ssize_t gmux_selected_port_data_write(struct file *file,
-+		const char __user *userbuf, size_t count, loff_t *ppos)
-+{
-+	struct apple_gmux_data *gmux_data = file->private_data;
-+	int ret;
++#include <linux/debugfs.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+	if (*ppos)
-+		return -EINVAL;
++#define CRYSTALCOVE_SPWRSRC_REG		0x1E
++#define CRYSTALCOVE_RESETSRC0_REG	0x20
++#define CRYSTALCOVE_RESETSRC1_REG	0x21
++#define CRYSTALCOVE_WAKESRC_REG		0x22
 +
-+	if (count == 1) {
-+		u8 data;
-+
-+		ret = copy_from_user(&data, userbuf, 1);
-+		if (ret)
-+			return ret;
-+		gmux_write8(gmux_data, gmux_data->selected_port, data);
-+	} else if (count == 4) {
-+		u32 data;
-+
-+		ret = copy_from_user(&data, userbuf, 4);
-+		if (ret)
-+			return ret;
-+		gmux_write32(gmux_data, gmux_data->selected_port, data);
-+	} else
-+		return -EINVAL;
-+
-+	return count;
-+}
-+
-+static ssize_t gmux_selected_port_data_read(struct file *file,
-+		char __user *userbuf, size_t count, loff_t *ppos)
-+{
-+	struct apple_gmux_data *gmux_data = file->private_data;
-+	u32 data;
-+
-+	data = gmux_read32(gmux_data, gmux_data->selected_port);
-+
-+	return simple_read_from_buffer(userbuf, count, ppos, &data, sizeof(data));
-+}
-+
-+static const struct file_operations gmux_port_data_ops = {
-+	.open = simple_open,
-+	.write = gmux_selected_port_data_write,
-+	.read = gmux_selected_port_data_read
++struct crc_pwrsrc_data {
++	struct regmap *regmap;
++	struct dentry *debug_dentry;
++	unsigned int resetsrc0;
++	unsigned int resetsrc1;
++	unsigned int wakesrc;
 +};
 +
-+static void gmux_init_debugfs(struct apple_gmux_data *gmux_data)
-+{
-+	gmux_data->debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
++static const char * const pwrsrc_pwrsrc_info[] = {
++	/* bit 0 */ "USB",
++	/* bit 1 */ "DC in",
++	/* bit 2 */ "Battery",
++	NULL,
++};
 +
-+	debugfs_create_u8("selected_port", 0644, gmux_data->debug_dentry,
-+			&gmux_data->selected_port);
-+	debugfs_create_file("selected_port_data", 0644, gmux_data->debug_dentry,
-+			gmux_data, &gmux_port_data_ops);
++static const char * const pwrsrc_resetsrc0_info[] = {
++	/* bit 0 */ "SOC reporting a thermal event",
++	/* bit 1 */ "critical PMIC temperature",
++	/* bit 2 */ "critical system temperature",
++	/* bit 3 */ "critical battery temperature",
++	/* bit 4 */ "VSYS under voltage",
++	/* bit 5 */ "VSYS over voltage",
++	/* bit 6 */ "battery removal",
++	NULL,
++};
++
++static const char * const pwrsrc_resetsrc1_info[] = {
++	/* bit 0 */ "VCRIT threshold",
++	/* bit 1 */ "BATID reporting battery removal",
++	/* bit 2 */ "user pressing the power button",
++	NULL,
++};
++
++static const char * const pwrsrc_wakesrc_info[] = {
++	/* bit 0 */ "user pressing the power button",
++	/* bit 1 */ "a battery insertion",
++	/* bit 2 */ "a USB charger insertion",
++	/* bit 3 */ "an adapter insertion",
++	NULL,
++};
++
++static void crc_pwrsrc_log(struct seq_file *seq, const char *prefix,
++			   const char * const *info, unsigned int reg_val)
++{
++	int i;
++
++	for (i = 0; info[i]; i++) {
++		if (reg_val & BIT(i))
++			seq_printf(seq, "%s by %s\n", prefix, info[i]);
++	}
 +}
 +
-+static void gmux_fini_debugfs(struct apple_gmux_data *gmux_data)
++static int pwrsrc_show(struct seq_file *seq, void *unused)
 +{
-+	debugfs_remove_recursive(gmux_data->debug_dentry);
++	struct crc_pwrsrc_data *data = seq->private;
++	unsigned int reg_val;
++	int ret;
++
++	ret = regmap_read(data->regmap, CRYSTALCOVE_SPWRSRC_REG, &reg_val);
++	if (ret)
++		return ret;
++
++	crc_pwrsrc_log(seq, "System powered", pwrsrc_pwrsrc_info, reg_val);
++	return 0;
 +}
 +
- static int gmux_suspend(struct device *dev)
- {
- 	struct pnp_dev *pnp = to_pnp_dev(dev);
-@@ -870,6 +950,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 		goto err_register_handler;
- 	}
- 
-+	gmux_init_debugfs(gmux_data);
- 	return 0;
- 
- err_register_handler:
-@@ -901,6 +982,7 @@ static void gmux_remove(struct pnp_dev *pnp)
- {
- 	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
- 
-+	gmux_fini_debugfs(gmux_data);
- 	vga_switcheroo_unregister_handler();
- 	gmux_disable_interrupts(gmux_data);
- 	if (gmux_data->gpe >= 0) {
++static int resetsrc_show(struct seq_file *seq, void *unused)
++{
++	struct crc_pwrsrc_data *data = seq->private;
++
++	crc_pwrsrc_log(seq, "Last shutdown caused", pwrsrc_resetsrc0_info, data->resetsrc0);
++	crc_pwrsrc_log(seq, "Last shutdown caused", pwrsrc_resetsrc1_info, data->resetsrc1);
++	return 0;
++}
++
++static int wakesrc_show(struct seq_file *seq, void *unused)
++{
++	struct crc_pwrsrc_data *data = seq->private;
++
++	crc_pwrsrc_log(seq, "Last wake caused", pwrsrc_wakesrc_info, data->wakesrc);
++	return 0;
++}
++
++DEFINE_SHOW_ATTRIBUTE(pwrsrc);
++DEFINE_SHOW_ATTRIBUTE(resetsrc);
++DEFINE_SHOW_ATTRIBUTE(wakesrc);
++
++static int crc_pwrsrc_read_and_clear(struct crc_pwrsrc_data *data,
++				     unsigned int reg, unsigned int *val)
++{
++	int ret;
++
++	ret = regmap_read(data->regmap, reg, val);
++	if (ret)
++		return ret;
++
++	return regmap_write(data->regmap, reg, *val);
++}
++
++static int crc_pwrsrc_probe(struct platform_device *pdev)
++{
++	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
++	struct crc_pwrsrc_data *data;
++	int ret;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->regmap = pmic->regmap;
++
++	/*
++	 * Read + clear resetsrc0/1 and wakesrc now, so that they get
++	 * cleared even if the debugfs interface is never used.
++	 *
++	 * Properly clearing the wakesrc is important, leaving bit 0 of it
++	 * set turns reboot into poweroff on some tablets.
++	 */
++	ret = crc_pwrsrc_read_and_clear(data, CRYSTALCOVE_RESETSRC0_REG, &data->resetsrc0);
++	if (ret)
++		return ret;
++
++	ret = crc_pwrsrc_read_and_clear(data, CRYSTALCOVE_RESETSRC1_REG, &data->resetsrc1);
++	if (ret)
++		return ret;
++
++	ret = crc_pwrsrc_read_and_clear(data, CRYSTALCOVE_WAKESRC_REG, &data->wakesrc);
++	if (ret)
++		return ret;
++
++	data->debug_dentry = debugfs_create_dir(KBUILD_MODNAME, NULL);
++	debugfs_create_file("pwrsrc", 0444, data->debug_dentry, data, &pwrsrc_fops);
++	debugfs_create_file("resetsrc", 0444, data->debug_dentry, data, &resetsrc_fops);
++	debugfs_create_file("wakesrc", 0444, data->debug_dentry, data, &wakesrc_fops);
++
++	platform_set_drvdata(pdev, data);
++	return 0;
++}
++
++static int crc_pwrsrc_remove(struct platform_device *pdev)
++{
++	struct crc_pwrsrc_data *data = platform_get_drvdata(pdev);
++
++	debugfs_remove_recursive(data->debug_dentry);
++	return 0;
++}
++
++static struct platform_driver crc_pwrsrc_driver = {
++	.probe = crc_pwrsrc_probe,
++	.remove = crc_pwrsrc_remove,
++	.driver = {
++		.name = "crystal_cove_pwrsrc",
++	},
++};
++module_platform_driver(crc_pwrsrc_driver);
++
++MODULE_ALIAS("platform:crystal_cove_pwrsrc");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_DESCRIPTION("Power-source driver for Bay Trail Crystal Cove PMIC");
++MODULE_LICENSE("GPL");
 -- 
-2.39.2
+2.39.1
 
