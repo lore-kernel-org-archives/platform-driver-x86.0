@@ -2,93 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C443C678D5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 19:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990FDC678D5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 20:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbjCDTqs (ORCPT
+        id S229590AbjCDUOK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Mar 2023 14:46:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
+        Sat, 4 Mar 2023 15:14:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbjCDTqq (ORCPT
+        with ESMTP id S229484AbjCDUOJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Mar 2023 14:46:46 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0111B56C;
-        Sat,  4 Mar 2023 11:46:39 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id o38-20020a05600c512600b003e8320d1c11so4308900wms.1;
-        Sat, 04 Mar 2023 11:46:39 -0800 (PST)
+        Sat, 4 Mar 2023 15:14:09 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9254C18169
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Mar 2023 12:14:07 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id az36so3504678wmb.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Mar 2023 12:14:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677959198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lJ68f/XfFKM2MgP6LnaIRfQLo6GnMqWHhH7pP7brWGY=;
-        b=i47dN/lTe7BsroWGjOvJ38KsaW5HypdPDhTcpqnH+r6BvlaQ7V0eKH604fdAVOYdaZ
-         VVjUSXQPs2WPEy64a7LQmRqaZ7w93onxAnWoZtMm2IEXSuGlOiGQIcurrt3jRThjZhjV
-         9Tdo2PyjcPDxkcqm7fcWbJ3zU1cBN3AOuGTvh26QcEdratHRXoxj7ocd/U6RUPKM0Ol6
-         w5RqswgKgd4/yA8wEORwwUQeVUYP67r6ZB2wNsOG/VavW4JUQ2A28gp8jh5LTqpCu2mV
-         HYX22iEtHfNUsC5hWFrPolsJDfyfZAPI/mUaiQcYbel3wqyejMTuyoCDtnps5Mxur7ag
-         H1Lw==
+        d=gmail.com; s=20210112; t=1677960846;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RpODLlcBjZPtS0HsxoWKy5Foa12NNRuCD2+qNJTEtHA=;
+        b=ALfP2pU/hDz8jShh4MhfFBW0M0oGLWQNYiF/zF30uiRnb0OpBqgAFTDhjVI9wlhd/I
+         h9DBbWRPTQXWOtNxfP198Pd/KIlGpbjdPgRDstDQi92Xi5C4XaDEVVMWlffFihZrb19/
+         u1YBb7tGsKsHdo6ORSS7JVS8CrgfP0izooNzN7He62qWYuvO8tsKGYg7zBV/ejizCauX
+         9X6+Q9tTMNF8wiZAZj79CzyGjgyAlXwk7shhYvUhJlV02Vtcsfh65F0k9OXfZoDTeO6h
+         +AH6ODw9Ul7vs8lU4K5QPRp/lDpxScR8uvvQGwvsU3P01G0XnxK75bhyrLSFd2jJH2Lz
+         EXCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677959198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lJ68f/XfFKM2MgP6LnaIRfQLo6GnMqWHhH7pP7brWGY=;
-        b=nsNlrccnDGJv6XSr7uphmvvk+obbDJbXaKCouqlPqUwvLZZszQ/vub2xil0Wki69WJ
-         rS9lnAdkP+Lqp2oNGOqIKZK2c1JYj4bk9+focgs7UWt8Dpg/tS+tfAoGuGY2/lj8gMMj
-         0lZ3J8LkntNyamt868nGiJR5JJC9Z8E39LOTEvtcgmGbV6TCGrl+Kc1ee047e/NNUXzq
-         Xq+Zud3oLEcZ5qfn8hZAWd8Qt4c31QOOXEntUo46Bpx5NSEsAvDKBbBp9uJyXoB06RGD
-         9MSU5RGn73X8R9b7s+35k3mLFtlZScGe2TUQLJA5ZFa0tKPgaDRj9o3qVPEvOHRFA8rh
-         UgGQ==
-X-Gm-Message-State: AO0yUKWqLJlU42JQz3mE03EwSH8QCZu9QhS2xmQYF6coZILIRyoD4Tva
-        0QgX0mQZ8+c3DJjAxEAPmWY=
-X-Google-Smtp-Source: AK7set/RS0lWHxIAhuRbi5PNnJ+xv0169LC712Om0NSu5MYYAWlxxcHC0MNWRtd18+z4Gr38J4FAVw==
-X-Received: by 2002:a7b:c451:0:b0:3eb:2db4:c626 with SMTP id l17-20020a7bc451000000b003eb2db4c626mr5167106wmi.38.1677959197991;
-        Sat, 04 Mar 2023 11:46:37 -0800 (PST)
-Received: from xws.localdomain ([217.138.207.232])
-        by smtp.gmail.com with ESMTPSA id n37-20020a05600c3ba500b003e2052bad94sm10696067wms.33.2023.03.04.11.46.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Mar 2023 11:46:37 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH 3/3] platform/surface: aggregator_registry: Add support for tablet-mode switch on Surface Pro 9
-Date:   Sat,  4 Mar 2023 20:46:11 +0100
-Message-Id: <20230304194611.87770-4-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230304194611.87770-1-luzmaximilian@gmail.com>
-References: <20230304194611.87770-1-luzmaximilian@gmail.com>
+        d=1e100.net; s=20210112; t=1677960846;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RpODLlcBjZPtS0HsxoWKy5Foa12NNRuCD2+qNJTEtHA=;
+        b=F6QVOgrXrh1QnBEp2ieQpCTtB/kXxkgEqrhos5KUAyzQNt4bug4pbmAjow/5BSjU3J
+         NVGqkavgGnHAA7dgEDmHIJFiqVZrpmo0SBsN1/FlKpbXa04SUbjp3/9ugf8AOu0aNH0o
+         iLqbFlroi2TqqaqTjiBEZeM8JF4Dl3gSgAIusl3g84sJhMrvR/yQ68CoXgRLfDm/gzyt
+         gRRjdRUit1Eg3WuOVLqNsrwnJdqMJz4qj8cm4ytFhVW0SQMVEii0i6NBo7XkmyXQZ6H4
+         8HyHukcc6U/1jNKasmfRZuZ+Nobol0Jq7DI+Ul8MGOaFrxs4HFvr0yeb8MxSRJ+jZlF9
+         foBA==
+X-Gm-Message-State: AO0yUKV3Ghmh4GxdyXHzUGyKBBslCwLaUqTLS7B+S+mAvGBe21FQKOS/
+        b07EgpCgvKPwEPXecX0qQV0=
+X-Google-Smtp-Source: AK7set8MrCiLIdDRvMZz+z7gCqcbIVfIjmfeezdy9zrjXa0bETQk9HtPs1B2/v64S5JR4c03vr15Ag==
+X-Received: by 2002:a05:600c:4448:b0:3ea:82a9:3644 with SMTP id v8-20020a05600c444800b003ea82a93644mr4998178wmn.34.1677960846035;
+        Sat, 04 Mar 2023 12:14:06 -0800 (PST)
+Received: from [10.30.0.9] ([217.138.207.232])
+        by smtp.gmail.com with ESMTPSA id r8-20020a05600c458800b003df5be8987esm10215338wmo.20.2023.03.04.12.14.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Mar 2023 12:14:05 -0800 (PST)
+Message-ID: <044d2716-2490-6600-33e2-ecf50f65a6e9@gmail.com>
+Date:   Sat, 4 Mar 2023 21:14:04 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: ideapad_laptop tablet mode toggle detection
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com>
+ <CAG4kvq9-qGFNRP29i4jDPL6RVLwGG86wdtTR1+VWZWu5krfv2A@mail.gmail.com>
+Content-Language: en-US
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <CAG4kvq9-qGFNRP29i4jDPL6RVLwGG86wdtTR1+VWZWu5krfv2A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for the POS-subsystem tablet-mode switch used on the Surface
-Pro 9.
+Hi,
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/platform/surface/surface_aggregator_registry.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/4/23 06:46, Andrew Kallmeyer wrote:
+> I'm still wondering about that AE_NOT_FOUND error about the WM00 device> though. It seems that the ACPI expects the kernel to define this WM00> device as an extension point. In the DSDT I found:> > External (_SB_.WM00, DeviceObj)
+AFAIK this just means that it's external to this table (i.e. the DSDT I
+assume), not that the kernel needs to define it (I'm not sure if that's even an
+option in the ACPI spec or ACPICA). So it should be in some SSDT or the ACPI
+implementation is broken (unless defining devices from the kernel is really an
+option and I'm just misinformed).
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 296f72d52e6a..0fe5be539652 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -305,7 +305,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_tmp_pprof,
--	/* TODO: Tablet mode switch (via POS subsystem) */
-+	&ssam_node_pos_tablet_switch,
- 	&ssam_node_hid_kip_keyboard,
- 	&ssam_node_hid_kip_penstash,
- 	&ssam_node_hid_kip_touchpad,
--- 
-2.39.2
+> Scope (\_SB.PC00.LPCB.EC0)
+> {
+> 
+>      Method (_Q44, 0, NotSerialized)  // _Qxx: EC Query, xx=0x00-0xFF
+>      {
+>         P80B = 0x44
+>         Notify (VPC0, 0x80) // Status Change
+>         WEID = 0xF4
+>         Notify (WM00, 0x80) // Status Change
+>      }
+> ...
+>      Device (VPC0)
+>      {
+>          Name (_HID, "VPC2004")  // _HID: Hardware ID
+>          Name (_UID, Zero)  // _UID: Unique ID
+>          Name (_VPC, 0x7C0DE114)
+>          Name (VPCD, Zero)
+> 
+> 
+> Additionally two other _Qxx methods (11 and 12) Notify the same
+> two devices. These other two are the brightness up and down keys.
+> The only difference is they set those two variables differently so I'll
+> have to read those variables as well to differentiate screen flips.
+> Right now my module actually detects both screen flips and
+> brightness key presses.
 
+I believe that makes sense, given the ACPI code.
+
+> I haven't been able to figure out how to create the WM00 device,
+> I'm not even sure that's a thing in ACPI. I also haven't seen how
+> to read those variables.
+
+You can use acpi_evaluate_object() and acpi_evaluate_object_typed() for that.
+
+> Is it okay to reuse the events sent to this
+> VPC0 device or am I intercepting the events from some other
+> functionality? Any pointers would be greatly appreciated.
+
+I guess that depends on the VPC0 device. If it doesn't have a driver already
+(which you can check by getting the HID of that device from the DSDT and
+grep-ing for it in the kernel source), you can write your own driver against
+it, install the notify-handler, and do basically whatever you want. You're not
+intercepting/blocking anything by that. If there already is a driver, you'll
+have to check what that does and if you can integrate your functionality there.
+
+Given it's a Lenovo device and there are some drivers here, maybe it's also
+some know interface/structure, but I guess Hans would know more about that than
+I do.
+
+Best regards,
+Max
