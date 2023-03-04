@@ -2,143 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00F4C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 10:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C68C678D5
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 19:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjCDKBt (ORCPT
+        id S229518AbjCDTqm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Mar 2023 05:01:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
+        Sat, 4 Mar 2023 14:46:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjCDKBt (ORCPT
+        with ESMTP id S229445AbjCDTqm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Mar 2023 05:01:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0168E1EBE8
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Mar 2023 02:01:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677924063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8fpGOb7uObDhao/SoIdmzVrccwTiQotLXVUMBKWcNz8=;
-        b=KJ7YK3dBdN+JeyBsnSDagHlrmwaI3w5Sdd+cKoW4dmb1XfIS2QdUG8Y7T3jjx64I4cE188
-        iYjRFqaDrfdXzHT2l5aricUmE1BPThOhLd5W7EKz6xm79Iia4vSPlpplTf6HR67GH0eMNa
-        /lVQ0Ln8l4nNNqoWjik9FWjf8aTRgjE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-408-1kgAv9GSOZ-CA6hgLbNtcw-1; Sat, 04 Mar 2023 05:01:01 -0500
-X-MC-Unique: 1kgAv9GSOZ-CA6hgLbNtcw-1
-Received: by mail-ed1-f72.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso7419570edh.15
-        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Mar 2023 02:01:01 -0800 (PST)
+        Sat, 4 Mar 2023 14:46:42 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D058B1C30E;
+        Sat,  4 Mar 2023 11:46:35 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id l7-20020a05600c1d0700b003eb5e6d906bso3053184wms.5;
+        Sat, 04 Mar 2023 11:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677959194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jL+0SGbmsE5qL/ygYR2iPquPm8JXmREXBtNOxFccJGE=;
+        b=ViQe3pnacBvfxCp6tX9u9Z0L5MdcmmqpQBwRKdUSbaVdJAX5LnV7NnRMiDQwWN7hqn
+         3xEgwIGFjUnXnDts1QeKqnWnfQdZ750DylJhy34EzrI1v768xAO4cjPz+yqOlGpVuZ7o
+         ju+U4mTKt9Yj9FGpCFq+VFV1ZzPgKZgGxTUtj29TS2Lk8ottlKU2thzQUCddhM9gHIyZ
+         G7k20ci4kEmZENat5xG44dQxfr+1UNadoaflLmaMNrvWsITPEYTQpAMbnpssQhGD8c7b
+         Cdf2yu4JO85ZdlGYlVhL30ifCVlGcQB5qNVT+Mgkb2SYLzM8AQYeBS1W/Mp78LcdRNlB
+         jVYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677924060;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8fpGOb7uObDhao/SoIdmzVrccwTiQotLXVUMBKWcNz8=;
-        b=WP6KiIfrrEsvgwbBZEYCSx0nhVZuL9tS1yrNwbN1kyf66PdHacyR/pzw9HhJExb4RO
-         oEbaM+ovH1WD2Li3KnpnCDxR/tQGgoCRMVKUGO+xkZp1ZwpcyajKz/kJajq1SbnQA6Qk
-         aRTKXPl7x+XCPYsHzdt8wM0EO4mvWKwQhee/Q9Q9jEKDaTA2uMykg/oBg4fmvEQ0zyQC
-         09LSg2XnvEQZNwQEwozDqJuRNOVZPHwAnTBb0L663KQIyFcCVCqK6VOHq2PBDC2/Mqdj
-         w4XuWOdUEkqf4Sk7cn3ysQFZffaVMa7VxhRrrqukKLmkugMVWK3r5yIN7NZ2w2tkvmYU
-         PskQ==
-X-Gm-Message-State: AO0yUKXj+YzjeHfvZF6hrsP11oCTfEE4diNnpYkdz3g0EOl0ep9UK5LU
-        zdsXWXEeI0RRyK6aj4jYYGobQnDj8Eh0zrIK2aCsdxVI697q4onisXCZiHqGwn+0pxbD733eXxI
-        csdN2ukvO+enl2ys857aNQxOQYdDTCssqcg==
-X-Received: by 2002:a17:906:408f:b0:8b1:7968:7fb8 with SMTP id u15-20020a170906408f00b008b179687fb8mr5231774ejj.62.1677924060541;
-        Sat, 04 Mar 2023 02:01:00 -0800 (PST)
-X-Google-Smtp-Source: AK7set/IBBQx/bV7xYa/QBC3lLpzytxV8JzKcY4QIdUv8+MrBgUOe0ea0tsv9rxwav3Hw+xfNeXgkg==
-X-Received: by 2002:a17:906:408f:b0:8b1:7968:7fb8 with SMTP id u15-20020a170906408f00b008b179687fb8mr5231759ejj.62.1677924060278;
-        Sat, 04 Mar 2023 02:01:00 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n21-20020a17090625d500b00905a1abecbfsm1903094ejb.47.2023.03.04.02.00.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Mar 2023 02:00:59 -0800 (PST)
-Message-ID: <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
-Date:   Sat, 4 Mar 2023 11:00:59 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        d=1e100.net; s=20210112; t=1677959194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jL+0SGbmsE5qL/ygYR2iPquPm8JXmREXBtNOxFccJGE=;
+        b=bt+n5Fk2gCB29/Row5jPSXKhqhlhP77dkj0t9k04LN9N752/CVAd5qsUyCRTvHnave
+         MGKDfTi/Mb9FAY79lnSwahD8exzUM12iD+UEcJSgU8hbjTf+bF6LuzoV0+I3uEUP7JlL
+         LuJ3dgmM2yBaybESqXMbIAdir7S03KG5uaSGODsCa/xW4OnPxu5mXF3DvPZWwNMNMVCG
+         53EjC/K61qzLR98BoAJtFOYbriZIPZHzeh3w2m41e4Cwa88KMb8T4i3Rqnrbk0Thvbsx
+         hCa4jjsaFnDYBrsXMWOEQto53igOgTy7BDZ5QDB7oRYbTpPn9imP+hWF7emm7Ew1V6e0
+         peNA==
+X-Gm-Message-State: AO0yUKX/H+FZ8ypyX2sXSmfUpFAiieJRNRe/HizFkbfnPo6JzAfNCo5N
+        yGNSt3kJ7Iw+x0DSBn/1YFNmnrBfCcvp4A==
+X-Google-Smtp-Source: AK7set81FQQ6z+fkQfDbSI3303Jfts7/uUV1jvI7PQ451Re4nH4cOC2YGTQB7EHQ1kzAJlVBKWdZgg==
+X-Received: by 2002:a05:600c:4751:b0:3eb:2e66:8 with SMTP id w17-20020a05600c475100b003eb2e660008mr5396294wmo.35.1677959194242;
+        Sat, 04 Mar 2023 11:46:34 -0800 (PST)
+Received: from xws.localdomain ([217.138.207.232])
+        by smtp.gmail.com with ESMTPSA id n37-20020a05600c3ba500b003e2052bad94sm10696067wms.33.2023.03.04.11.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Mar 2023 11:46:33 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20230303221928.285477-1-hdegoede@redhat.com>
- <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/3] platform/surface: Add support for tablet-mode switch on Surface Pro 9
+Date:   Sat,  4 Mar 2023 20:46:08 +0100
+Message-Id: <20230304194611.87770-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+This series adds support for the tablet-mode switch on the Surface Pro
+9. On that device, the posture subsystem (POS) can be used to query the
+state of the Type-Cover (detached, laptop-mode, flipped-back, ...) and
+receive notifications when it changes. We can use this to implement a
+tablet mode switch, extending the driver already in use on the Surface
+Laptop Studio.
 
-On 3/3/23 23:41, Andy Shevchenko wrote:
-> On Sat, Mar 4, 2023 at 12:19 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Add a new driver for the power-, wake- and reset-source functionality
->> of the Bay Trail (BYT) version of the Crystal Cove PMIC.
->>
->> The main functionality here is detecting which power-sources (USB /
->> DC in / battery) are active. This is normally exposed to userspace as
->> a power_supply class charger device with an online sysfs attribute.
->>
->> But if a charger is online or not is already exposed on BYT-CRC devices
->> through either an ACPI AC power_supply device, or through a native driver
->> for the battery charger chip (e.g. a BQ24292i).
->>
->> So instead of adding duplicate info under the power_supply class this
->> driver exports the info through debugfs and likewise adds debugfs files
->> for the reset- and wake-source info / registers.
->>
->> Despite this driver only exporting debugfs bits it is still useful to
->> have this driver because it clears the wake- and reset-source registers
->> after reading them. Not clearing these can have undesirable side-effects.
-> 
-> Hmm... Why is the existing regmap debugfs not enough? OK, maybe adding
-> something (clearing bits) to the actual CRC PMIC driver.
-> (You also can add a write callback so regmap will provide the write
-> access to the registers).
+More specifically, the posture subsystem allows for different posture
+sources, identified by a numerical ID, each of which can have different
+states. At the moment, however, the tablet-mode switch driver using the
+POS subsystem only supports the Surface Laptop Studio, and support for
+that is hard-coded.
 
-I did consider adding clearing the bits to the actual CRC PMIC driver,
-but this seemed like a cleaner solution and it gives a much nicer
-(debug) interface then raw register access.
+To support the Surface Pro 9, we therefore need to adapt the driver to
+properly disambiguate between different posture sources (patch 1) and
+then implement the respective functions for the source ID representing
+the Type-Cover (patch 2). Finally, we also need to add the respective
+device to the Surface Pro 9 entry in the aggregator registry, to allow
+the driver to load (patch 3). 
 
-Also after clearing the wake + reset reasons they are gone and cannot
-be retreived using debugfs regmap accesses.
+Maximilian Luz (3):
+  platform/surface: aggregator_tabletsw: Properly handle different
+    posture source IDs
+  platform/surface: aggregator_tabletsw: Add support for Type-Cover
+    posture source
+  platform/surface: aggregator_registry: Add support for tablet-mode
+    switch on Surface Pro 9
 
-This driver caches the values before clearing them.
+ .../surface/surface_aggregator_registry.c     |   2 +-
+ .../surface/surface_aggregator_tabletsw.c     | 180 ++++++++++++++----
+ 2 files changed, 142 insertions(+), 40 deletions(-)
 
->> Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
->> on reboot then the firmware on some tablets turns the reboot into
->> a poweroff. I guess this may be necessary to make long power-presses turn
->> into a poweroff somehow?
-> 
-> Have not a doc at hand. Next week I will try to dig into it to see if
-> there is anything regarding it.
-
-Note this seems to be a thing on BYT tablets which shipped with Android
-and lack an EC compared to other BYT tablets with an CRC PMIC. So I think
-things have been hacked around a bit here to deal with the lack of an EC.
-
-I doubt this will be in the official docs, with that said thank you for
-the offer to look this up.
-
-Note for later BYTCR (Cost Reduced) tablets not having an EC is normal,
-but these are pre BYTCR Android tablets actually AFAICT and their
-Windows counterparts (same motherboard with some different components
-do have an EC).
-
-Regards,
-
-Hans
-
-
+-- 
+2.39.2
 
