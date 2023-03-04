@@ -2,129 +2,143 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF672C678D5
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 05:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00F4C64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 10:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbjCDFqu (ORCPT
+        id S229457AbjCDKBt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Mar 2023 00:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
+        Sat, 4 Mar 2023 05:01:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjCDFqt (ORCPT
+        with ESMTP id S229452AbjCDKBt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Mar 2023 00:46:49 -0500
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D23546149
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Mar 2023 21:46:48 -0800 (PST)
-Received: by mail-oi1-x235.google.com with SMTP id t22so3371597oiw.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Mar 2023 21:46:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677908806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VpQQYpLg1Nw+QoMkqFUAx3ESRpQMEl0vgFCAqclQ4iI=;
-        b=eUANFbkaQ4/kub1/JyJS5KS4kDbNfzxWSYCvIfZDfgtLVK7a0RMT1RtVNCDeK/BVa6
-         o3bEJMmCtKL/tOahhNuruMC6EKDkgH352VVUG8LIYtetseJcWDozUK49a7DOVWGxa7ki
-         +q2daQ52NIK2D1aVCsydQBgJ31YRUT3sFKUvnRs1wjxhBmc2wCSCcZrreggltFGPMTrC
-         B2XwJppRgvVhT+5vOK4YTNTrszAJaXcuIiteJgYzD69LmHT8YLtvN5oFIWQee6VDSr/Q
-         evS4HJBjZq5tmoiG27mkI/4aMnA7bfHXU3QhHc3z0YYyCZDvOVVaWUc3/M+HwhUs74mx
-         l5WQ==
+        Sat, 4 Mar 2023 05:01:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0168E1EBE8
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Mar 2023 02:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677924063;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8fpGOb7uObDhao/SoIdmzVrccwTiQotLXVUMBKWcNz8=;
+        b=KJ7YK3dBdN+JeyBsnSDagHlrmwaI3w5Sdd+cKoW4dmb1XfIS2QdUG8Y7T3jjx64I4cE188
+        iYjRFqaDrfdXzHT2l5aricUmE1BPThOhLd5W7EKz6xm79Iia4vSPlpplTf6HR67GH0eMNa
+        /lVQ0Ln8l4nNNqoWjik9FWjf8aTRgjE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-408-1kgAv9GSOZ-CA6hgLbNtcw-1; Sat, 04 Mar 2023 05:01:01 -0500
+X-MC-Unique: 1kgAv9GSOZ-CA6hgLbNtcw-1
+Received: by mail-ed1-f72.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso7419570edh.15
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Mar 2023 02:01:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677908806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VpQQYpLg1Nw+QoMkqFUAx3ESRpQMEl0vgFCAqclQ4iI=;
-        b=lr04nOYHyIGfo2CGyYvqKjK8TQ+q9TjaZsZ8d1KEttHh6f6BXS/wM9HfsaoJbPHCW6
-         lQYEHPwZqnLY7qYnOfm6C4f6iHGcFkib5Lvd962HCVhb2tMio32WygmzGvJuGelRoTjS
-         XBsGt8Go9P1SVzPFYNMAVFchPbK4f8f6NQxmFYZUzaQWtq8zSqWoWN6YW0XFKqVCA6xr
-         lQ9Xo6bHb+uPYsIWhxvbab4LkrYkJH51tmGe3y0yVq2TASklWf0u9hn8rwD/4TryJITi
-         DFB1ywy0F15PMpB3zKuH9I3xGdmQjoFjy4HWg3OIQOKFDmxDGA6M8AJ5ExpCMpKDN2C8
-         QdFg==
-X-Gm-Message-State: AO0yUKWuuu8lvLewAWkeIv2WpPPT+1Td7OcLgMJNc7RFHryDo/jsWMXR
-        ssrK+EEB5YCjKJECNImyGqq2KWwRSkznFeA3D3zr428ftIs=
-X-Google-Smtp-Source: AK7set+ri4hHuc00VkiR9oHV/TlSE9lzoFnI223+Q1R+GSQRd6OgpGFzATpG6aZCkQHVxDRI2DehBmI3iIbwQhnjx6c=
-X-Received: by 2002:a05:6808:2805:b0:383:f8b1:c259 with SMTP id
- et5-20020a056808280500b00383f8b1c259mr1350971oib.7.1677908806423; Fri, 03 Mar
- 2023 21:46:46 -0800 (PST)
+        d=1e100.net; s=20210112; t=1677924060;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8fpGOb7uObDhao/SoIdmzVrccwTiQotLXVUMBKWcNz8=;
+        b=WP6KiIfrrEsvgwbBZEYCSx0nhVZuL9tS1yrNwbN1kyf66PdHacyR/pzw9HhJExb4RO
+         oEbaM+ovH1WD2Li3KnpnCDxR/tQGgoCRMVKUGO+xkZp1ZwpcyajKz/kJajq1SbnQA6Qk
+         aRTKXPl7x+XCPYsHzdt8wM0EO4mvWKwQhee/Q9Q9jEKDaTA2uMykg/oBg4fmvEQ0zyQC
+         09LSg2XnvEQZNwQEwozDqJuRNOVZPHwAnTBb0L663KQIyFcCVCqK6VOHq2PBDC2/Mqdj
+         w4XuWOdUEkqf4Sk7cn3ysQFZffaVMa7VxhRrrqukKLmkugMVWK3r5yIN7NZ2w2tkvmYU
+         PskQ==
+X-Gm-Message-State: AO0yUKXj+YzjeHfvZF6hrsP11oCTfEE4diNnpYkdz3g0EOl0ep9UK5LU
+        zdsXWXEeI0RRyK6aj4jYYGobQnDj8Eh0zrIK2aCsdxVI697q4onisXCZiHqGwn+0pxbD733eXxI
+        csdN2ukvO+enl2ys857aNQxOQYdDTCssqcg==
+X-Received: by 2002:a17:906:408f:b0:8b1:7968:7fb8 with SMTP id u15-20020a170906408f00b008b179687fb8mr5231774ejj.62.1677924060541;
+        Sat, 04 Mar 2023 02:01:00 -0800 (PST)
+X-Google-Smtp-Source: AK7set/IBBQx/bV7xYa/QBC3lLpzytxV8JzKcY4QIdUv8+MrBgUOe0ea0tsv9rxwav3Hw+xfNeXgkg==
+X-Received: by 2002:a17:906:408f:b0:8b1:7968:7fb8 with SMTP id u15-20020a170906408f00b008b179687fb8mr5231759ejj.62.1677924060278;
+        Sat, 04 Mar 2023 02:01:00 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id n21-20020a17090625d500b00905a1abecbfsm1903094ejb.47.2023.03.04.02.00.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Mar 2023 02:00:59 -0800 (PST)
+Message-ID: <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
+Date:   Sat, 4 Mar 2023 11:00:59 +0100
 MIME-Version: 1.0
-References: <CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com>
-In-Reply-To: <CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com>
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-Date:   Fri, 3 Mar 2023 21:46:35 -0800
-Message-ID: <CAG4kvq9-qGFNRP29i4jDPL6RVLwGG86wdtTR1+VWZWu5krfv2A@mail.gmail.com>
-Subject: Re: ideapad_laptop tablet mode toggle detection
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20230303221928.285477-1-hdegoede@redhat.com>
+ <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 8:45=E2=80=AFPM Andrew Kallmeyer <kallmeyeras@gmail=
-.com> wrote:
->
-> Hello, I'm interested in detecting tablet mode switching for my Lenovo
-> Yoga laptop properly in the kernel. Ultimately I'd like to provide the
-> SW_TABLET_MODE input event.
->
-> I have found that there are ACPI events fired when the tablet mode is
-> toggled (both directions send the same event). Here are the logs:
->
-> kernel: ACPI BIOS Error (bug): Could not resolve symbol
-> [\_SB.PC00.LPCB.EC0._Q44.WM00], AE_NOT_FOUND (20221020/psargs-330)
-> kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0._Q44 due to
-> previous error (AE_NOT_FOUND) (20221020/psparse-529)
-> root[10258]: ACPI group/action undefined: 06129D99-6083- / 000000d0
->
-> When I looked at the code I found TP_HKEY_EV_TABLET_CHANGED in the
-> thinkpad_acpi.c driver which seems to have exactly the behavior I'm
-> looking for but with a different ACPI event number. Would it be
-> possible to do something like this in the ideapad_laptop driver?
+Hi,
 
-I've made some progress! After some very helpful pointers about ACPI
-from Maximilian Luz I was able to create a small module printks on screen
-flip events! It finds the _SB.PC00.LPCB.EC0.VPC0 acpi_handle and calls
-acpi_install_notify_handler on it and receives the events.
+On 3/3/23 23:41, Andy Shevchenko wrote:
+> On Sat, Mar 4, 2023 at 12:19 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Add a new driver for the power-, wake- and reset-source functionality
+>> of the Bay Trail (BYT) version of the Crystal Cove PMIC.
+>>
+>> The main functionality here is detecting which power-sources (USB /
+>> DC in / battery) are active. This is normally exposed to userspace as
+>> a power_supply class charger device with an online sysfs attribute.
+>>
+>> But if a charger is online or not is already exposed on BYT-CRC devices
+>> through either an ACPI AC power_supply device, or through a native driver
+>> for the battery charger chip (e.g. a BQ24292i).
+>>
+>> So instead of adding duplicate info under the power_supply class this
+>> driver exports the info through debugfs and likewise adds debugfs files
+>> for the reset- and wake-source info / registers.
+>>
+>> Despite this driver only exporting debugfs bits it is still useful to
+>> have this driver because it clears the wake- and reset-source registers
+>> after reading them. Not clearing these can have undesirable side-effects.
+> 
+> Hmm... Why is the existing regmap debugfs not enough? OK, maybe adding
+> something (clearing bits) to the actual CRC PMIC driver.
+> (You also can add a write callback so regmap will provide the write
+> access to the registers).
 
-I'm still wondering about that AE_NOT_FOUND error about the WM00 device
-though. It seems that the ACPI expects the kernel to define this WM00
-device as an extension point. In the DSDT I found:
+I did consider adding clearing the bits to the actual CRC PMIC driver,
+but this seemed like a cleaner solution and it gives a much nicer
+(debug) interface then raw register access.
 
-External (_SB_.WM00, DeviceObj)
-...
-Scope (\_SB.PC00.LPCB.EC0)
-{
+Also after clearing the wake + reset reasons they are gone and cannot
+be retreived using debugfs regmap accesses.
 
-    Method (_Q44, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
-    {
-       P80B =3D 0x44
-       Notify (VPC0, 0x80) // Status Change
-       WEID =3D 0xF4
-       Notify (WM00, 0x80) // Status Change
-    }
-...
-    Device (VPC0)
-    {
-        Name (_HID, "VPC2004")  // _HID: Hardware ID
-        Name (_UID, Zero)  // _UID: Unique ID
-        Name (_VPC, 0x7C0DE114)
-        Name (VPCD, Zero)
+This driver caches the values before clearing them.
+
+>> Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
+>> on reboot then the firmware on some tablets turns the reboot into
+>> a poweroff. I guess this may be necessary to make long power-presses turn
+>> into a poweroff somehow?
+> 
+> Have not a doc at hand. Next week I will try to dig into it to see if
+> there is anything regarding it.
+
+Note this seems to be a thing on BYT tablets which shipped with Android
+and lack an EC compared to other BYT tablets with an CRC PMIC. So I think
+things have been hacked around a bit here to deal with the lack of an EC.
+
+I doubt this will be in the official docs, with that said thank you for
+the offer to look this up.
+
+Note for later BYTCR (Cost Reduced) tablets not having an EC is normal,
+but these are pre BYTCR Android tablets actually AFAICT and their
+Windows counterparts (same motherboard with some different components
+do have an EC).
+
+Regards,
+
+Hans
 
 
-Additionally two other _Qxx methods (11 and 12) Notify the same
-two devices. These other two are the brightness up and down keys.
-The only difference is they set those two variables differently so I'll
-have to read those variables as well to differentiate screen flips.
-Right now my module actually detects both screen flips and
-brightness key presses.
 
-I haven't been able to figure out how to create the WM00 device,
-I'm not even sure that's a thing in ACPI. I also haven't seen how
-to read those variables. Is it okay to reuse the events sent to this
-VPC0 device or am I intercepting the events from some other
-functionality? Any pointers would be greatly appreciated.
-
-- Andrew Kallmeyer
