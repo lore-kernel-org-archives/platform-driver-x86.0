@@ -2,164 +2,106 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C5EC678DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Mar 2023 21:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026BC6FA8E
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Mar 2023 05:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjCDVhj (ORCPT
+        id S229437AbjCEFmf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Mar 2023 16:37:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
+        Sun, 5 Mar 2023 00:42:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjCDVhi (ORCPT
+        with ESMTP id S229379AbjCEFmd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Mar 2023 16:37:38 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1F91ABCA
-        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Mar 2023 13:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1677965854; i=w_armin@gmx.de;
-        bh=ScUnnclH2PSVLd3HdrimBPfOlPG2JXeFMgQPeKPBq0Y=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
-        b=B3BY/OAx90cxj0j0vS9Duvpsm7HQStl3JUp2Wv0+Ftx540Zlz4PjLTnTMfn8JtMG/
-         HjGcVElvAsMrysJgxZxtOmxodvkZbTlbRsvP9Ct1fz8uI7NXWO3Fb4BPrNlN1rZvmh
-         LuCZ88+9DtsbhVbQkzPrfk0liX0QY9kaHWd8dfjqWycofMY3p06GQPwkWzzkbYNT3R
-         igLmLs/R3vlNpO+9NJc3tJceamZ5hknwZVklr7vPMXCPHC+qgBl8wuKtEhEpU8YNoa
-         kUceTXVrNaYgQ6H5wINX8JSrOvHNGE+8Nv82t0L0wAkQ/XpwOp1AEnNUy1jGQBltTR
-         EBp3x+2nvEGZw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1paURb244H-002Tf9; Sat, 04
- Mar 2023 22:37:34 +0100
-Subject: Re: ideapad_laptop tablet mode toggle detection
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Andrew Kallmeyer <kallmeyeras@gmail.com>,
-        platform-driver-x86@vger.kernel.org
+        Sun, 5 Mar 2023 00:42:33 -0500
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F011E11E95
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Mar 2023 21:42:32 -0800 (PST)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-176261d7f45so7885271fac.11
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Mar 2023 21:42:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677994951;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cm8KzTi7hub8BN4Re6VAb2LZVqNJoWBOtCkv4jGTxHg=;
+        b=kJVT28vEATwCF/paEyWBU3Jz6Sy4nA77Gv9k5YWdsUErL1DKD90HL+UYoeL4UZhSBK
+         CQuIZlYs55bUpLQ8DDkpZKdlaf0X+evTJKibX24stKqQI7hrHbOdzrpsAys59/wycacq
+         wUz+9A9kCvTmCaQIUcHUFPL2LTmcICv9g1yMZBqpWql4Onojw7r/Q7MFz20X6iXanENA
+         4qaKEeKG4oJry291qstHDigzloa2HxMTGtYBSULRJGHhGJalJS9KMCxuoqVif76NNGsK
+         GgaMHpCZxculkijrey0Y5cP5Ffe0hP+7x7+EvOYkPAzf8Z9nP9BU+ZEMTv2ZQ2QyF2ie
+         vKKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677994951;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cm8KzTi7hub8BN4Re6VAb2LZVqNJoWBOtCkv4jGTxHg=;
+        b=AgYirKrMpa7VnuP+IdsGnde2+Wl+aeOPn99A4w2MhQ4q/MlyvbU949kIPS975XDoP2
+         55wUspbDG4ROBX241Jr1ftBh0X/LN9Vf8hMaNZ5J+QTsSfMJ1BGH2mEf//AKOh0nDA8/
+         rIxf9lokCexcFwdKKgSuRAb1w0/XOCe26Xlbflq2YxK3glUqKzU6w+JNDNQs9lLbYMVG
+         66zsLqZJX9ZmvHO91KT7RmmJ4BVFQXfQ6macVtByg0g5mV/Zrt6aHvgFG1UQAFJpPJoM
+         90flrHm7J0muFuLSHkmSGOYGV2kXsEKHOvLtFAgh7P+0oizymjg8b0xrMdCHZZzcAOP7
+         tQnA==
+X-Gm-Message-State: AO0yUKWsuuwuTOsU6wnFcX43LLDdS1aCjbIKb6tcl01AVRkDHcN/HQW5
+        ONkYsoKy7JcFVmv1BJ7cE/FrHzBTqnPrw9UVXDPTHh6DtLU2Fw==
+X-Google-Smtp-Source: AK7set8aDXk+uIdAjZeBjxYYpPp7+UjdMMNpBg3hzIWG0ZyTRatmJww9kDFmUZ4J072cVSHmbM4rfeCs75C3dKY8JuI=
+X-Received: by 2002:a05:6870:98af:b0:176:2b10:5f9f with SMTP id
+ eg47-20020a05687098af00b001762b105f9fmr2205874oab.7.1677994951374; Sat, 04
+ Mar 2023 21:42:31 -0800 (PST)
+MIME-Version: 1.0
 References: <CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com>
  <CAG4kvq9-qGFNRP29i4jDPL6RVLwGG86wdtTR1+VWZWu5krfv2A@mail.gmail.com>
- <044d2716-2490-6600-33e2-ecf50f65a6e9@gmail.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <2267dadd-f1a9-e064-6f3f-e3aea459cf5a@gmx.de>
-Date:   Sat, 4 Mar 2023 22:37:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <044d2716-2490-6600-33e2-ecf50f65a6e9@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ <044d2716-2490-6600-33e2-ecf50f65a6e9@gmail.com> <2267dadd-f1a9-e064-6f3f-e3aea459cf5a@gmx.de>
+In-Reply-To: <2267dadd-f1a9-e064-6f3f-e3aea459cf5a@gmx.de>
+From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
+Date:   Sat, 4 Mar 2023 21:42:20 -0800
+Message-ID: <CAG4kvq84Lso0x62AuZgRttcQFdKXAHpWWKB4n0ZMTgb9CZ=NCw@mail.gmail.com>
+Subject: Re: ideapad_laptop tablet mode toggle detection
+To:     Armin Wolf <W_Armin@gmx.de>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:WwR20UIXvgK8YGevna32MQ6nVO+nPIV8MVQ4eAJa+rp39X0SIwO
- Ic/E/HmVpcDTyFQomTlLajj47LPSpUbu7aknqGlC5QT/ieTFJzatqVcJBjlX/F+8Q+Op7/l
- VrjzRhR/0BIZMAtNp4Hv0kWrty4BD4Y/IbEBnPgVf/2mpENxef6RQ1ZiQwAusHF8m4pEniK
- RZ2u5wK0GcimGf/mIz4ng==
-UI-OutboundReport: notjunk:1;M01:P0:quq8jMjUaH0=;KHO3fIhhmtG+vMiztZxdQ06osFn
- O5M74N+GYT/FRml0i7HE34GLYFXdRxPVpWOIPxWcqRgi3kWrc8tDTOvY3X0g4omi6Vtxb6dBG
- J/zW6iwXSoNPazfHHdXLZszAeoBjim2ikGcDMcfqvu0ilZe4RiqecWeHF6Nbbl4HOHX5WLmqk
- RDyJ9COqJV5LqRPcXk/f69eq4iQ4MI1vJsppBB2DfJP2NnuVRQH1xf1h6Ls9zTDEyhVkd4quU
- ai+rnnQsSKN8qBsASC9Xy5ETqyE2is38XL/3vIsJTla8EGIKVKM50LVnxH7ukqirDW+6pdbYb
- +vfWmPRUFZpOBMhLu58fWdZ/NXSbvPYtRVRQQq890uoXd9h96YfHnFC3y5bIMc2jAo3dxQRl+
- fkTQYn5EBAYYrOZBMilWY89uw3T2Etgy0Zr2u6/w84B48Mqemvz/yzDw3O6mrr8TulgjcT65j
- pp2jmX32ecfJqlscaHQ5ImXOSLGVjyJ8bBZB5dVvxqCcJKugnyFD+VLFwSeyR7J3A9+SSGaQu
- g05rVR0HMild5hj3giCvVESKE4JElsce7AQvHW2o3XTgtI2QCZ8c28XOaQHiUhZ3F10d4asDH
- EqJjvWuF0RtpOkjhw5k8PwUhcEO/8zkXrDg4TmEP/cnGnga7s8RcMMHvqUBHFJtSpDRYhtJ7o
- eNZGLwlRYxSUAzNDujIEBgX0Vt5GhUsbLVyVQ0EbuWF2cci5rEI49K0ZZn4YBdF6YQqkXWZot
- Wa0PQ4cN6TmGWXs9Pop+Ma+gH+adxIOx6e/U4ah7MHyA8o19J0rA/4ImyV38GDmUDdfWzkvKs
- ZYcf/3B6LcWl4GUWfHbaWf7YQSDI8tyTUWb0Gs3iMcVu0I29wuoK9CubEJVvM+npHXPH5jSDJ
- VZxrZGPMtHCqasugtZnAfOcIH089roJDHb5ps7pjp2mFsUzo2DH2QsxxnG5PIMSvwhHIm0eUk
- 4aj85g==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 04.03.23 um 21:14 schrieb Maximilian Luz:
-
+On Sat, Mar 4, 2023 at 1:37=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
 > Hi,
 >
-> On 3/4/23 06:46, Andrew Kallmeyer wrote:
->> I'm still wondering about that AE_NOT_FOUND error about the WM00
->> device> though. It seems that the ACPI expects the kernel to define
->> this WM00> device as an extension point. In the DSDT I found:> >
->> External (_SB_.WM00, DeviceObj)
-> AFAIK this just means that it's external to this table (i.e. the DSDT I
-> assume), not that the kernel needs to define it (I'm not sure if
-> that's even an
-> option in the ACPI spec or ACPICA). So it should be in some SSDT or
-> the ACPI
-> implementation is broken (unless defining devices from the kernel is
-> really an
-> option and I'm just misinformed).
+> it seems that the VPC0 ACPI device is handled by the already mentioned id=
+eapad-laptop driver,
+> you probably just have to add the necessary event codes to ideapad_keymap=
+[].
 >
->> Scope (\_SB.PC00.LPCB.EC0)
->> {
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0 Method (_Q44, 0, NotSerialized)=C2=A0 // _Qxx:=
- EC Query, xx=3D0x00-0xFF
->> =C2=A0=C2=A0=C2=A0=C2=A0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 P80B =3D 0x44
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Notify (VPC0, 0x80) // Statu=
-s Change
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WEID =3D 0xF4
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Notify (WM00, 0x80) // Statu=
-s Change
->> =C2=A0=C2=A0=C2=A0=C2=A0 }
->> ...
->> =C2=A0=C2=A0=C2=A0=C2=A0 Device (VPC0)
->> =C2=A0=C2=A0=C2=A0=C2=A0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Name (_HID, "VPC2004")=
-=C2=A0 // _HID: Hardware ID
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Name (_UID, Zero)=C2=
-=A0 // _UID: Unique ID
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Name (_VPC, 0x7C0DE114=
-)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Name (VPCD, Zero)
->>
->>
->> Additionally two other _Qxx methods (11 and 12) Notify the same
->> two devices. These other two are the brightness up and down keys.
->> The only difference is they set those two variables differently so I'll
->> have to read those variables as well to differentiate screen flips.
->> Right now my module actually detects both screen flips and
->> brightness key presses.
+> Armin Wolf
 >
-> I believe that makes sense, given the ACPI code.
->
->> I haven't been able to figure out how to create the WM00 device,
->> I'm not even sure that's a thing in ACPI. I also haven't seen how
->> to read those variables.
->
-> You can use acpi_evaluate_object() and acpi_evaluate_object_typed()
-> for that.
->
->> Is it okay to reuse the events sent to this
->> VPC0 device or am I intercepting the events from some other
->> functionality? Any pointers would be greatly appreciated.
->
-> I guess that depends on the VPC0 device. If it doesn't have a driver
-> already
-> (which you can check by getting the HID of that device from the DSDT and
-> grep-ing for it in the kernel source), you can write your own driver
-> against
-> it, install the notify-handler, and do basically whatever you want.
-> You're not
-> intercepting/blocking anything by that. If there already is a driver,
-> you'll
-> have to check what that does and if you can integrate your
-> functionality there.
->
-> Given it's a Lenovo device and there are some drivers here, maybe it's
-> also
-> some know interface/structure, but I guess Hans would know more about
-> that than
-> I do.
->
-> Best regards,
-> Max
 
-Hi,
+I read into the ideapad-laptop code some more and found that the
+ideapad_acpi_notify function ends up being the exact same handler that
+I am installing in my test module. I copied over the read_ec_data code
+to read the same variable and found that the screen flip event I'm
+looking at is the bit 5 case which simply calls
+ideapad_sync_touchpad_state (which shows up on screen in my GNOME
+install). It seems this is not quite the P80B =3D 0x44 variable because
+the only bit 5 is set (possibly it's just the first 4?) but it looks
+to be enough to detect the screen flip.
 
-it seems that the VPC0 ACPI device is handled by the already mentioned ide=
-apad-laptop driver,
-you probably just have to add the necessary event codes to ideapad_keymap[=
-].
+So it seems like I would want to add something to send the
+SW_TABLET_MODE input event there in that bit 5 case. Presumably this
+would be something like the tpacpi_input_send_tabletsw and
+hotkey_tablet_mode_notify_change function calls that are done in the
+thinkpad-acpi driver. Would that be a reasonable thing to add to the
+ideapad driver? I'm not sure how we would know about compatibility
+across the other ideapad laptops. It seems I could at least get this
+all working with my own module for myself for now at least (maybe a
+patch of the ideapad driver because reading that variable in my module
+prevents the original driver from reading it).
 
-Armin Wolf
+I did also notice that bit 10 has a comment about a tablet mode
+switching signal being unreliable but on my machine bit 10 was not set
+for the tablet mode switch event when I checked with my test module.
 
+Thanks,
+Andrew Kallmeyer
