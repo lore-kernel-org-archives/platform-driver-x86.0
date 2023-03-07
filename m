@@ -2,253 +2,203 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86849C678D5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 12:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E18C678D5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 12:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbjCGMGg (ORCPT
+        id S231533AbjCGMLZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 07:06:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47608 "EHLO
+        Tue, 7 Mar 2023 07:11:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbjCGMGf (ORCPT
+        with ESMTP id S231542AbjCGMKv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 07:06:35 -0500
+        Tue, 7 Mar 2023 07:10:51 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318AF3347B
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 04:05:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5999D574C6
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 04:10:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678190746;
+        s=mimecast20190719; t=1678191002;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OV3TXQN7O8oKayamqJhsqwDR10DSkew1hqIvq2D1i/8=;
-        b=ZqFqcVEApvQIf9f4l+H4wLxvGCCrFXOHKzLna6LcXdpKFc0bMGcMiI84HITlfYo7Mlb5CN
-        NtkQDr41Ixin13lBrsdWixAyUgpQ1J2QTNzAcBMXx8bCK+v6BRi4Mfa0QzKz7Na6BEcsp1
-        Qmlbm5oV1lsrIkNDAKy7aWPvewB3STA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-199-Jf3khm7oP1qc-96GI0Io5w-1; Tue, 07 Mar 2023 07:05:43 -0500
-X-MC-Unique: Jf3khm7oP1qc-96GI0Io5w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 979DA18F0242;
-        Tue,  7 Mar 2023 12:05:42 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF3952166B26;
-        Tue,  7 Mar 2023 12:05:40 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Aditya Garg <gargaditya08@live.com>,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] backlight: apple_bl: Use acpi_video_get_backlight_type()
-Date:   Tue,  7 Mar 2023 13:05:40 +0100
-Message-Id: <20230307120540.389920-1-hdegoede@redhat.com>
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QWv9WBhYUIpz5gRzPBlk7mRJoAlDNXXkwrUoCn79BNo=;
+        b=goY3rzqQEDL8uKJwrFv3XJOsiFuIG53bNmtrzRUOcYKopAArMPveUJUf79kr8sB9qsKRxy
+        iCAWfBhhAlIkCOlrJiw3qXCfxS6QYtoBGUl1kdc+pESxQxcjAVUtz6QbEf+wR9o8d9www4
+        LXGRsSINutJwUtSqN/oLfxsl4oDyxgQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-79-1gvK8x31MTu4nNtVONN6jg-1; Tue, 07 Mar 2023 07:10:00 -0500
+X-MC-Unique: 1gvK8x31MTu4nNtVONN6jg-1
+Received: by mail-ed1-f71.google.com with SMTP id v11-20020a056402348b00b004ce34232666so15317585edc.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 04:10:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678191000;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QWv9WBhYUIpz5gRzPBlk7mRJoAlDNXXkwrUoCn79BNo=;
+        b=ka6v4ZEMNWvDiaFizapVszEJXbOJl1DsFyA2NduC3wBa0McWBgDc9BuM/jGJbogJBo
+         FEegV5l42iNJcxkFpM03lVZSaRTfxJktRrelozWlWNlYyVpDfifpOPu6XJThzJCR8Rpv
+         DjuRxs/Z9y4HBe/8uAw2OP2B0JU13bY/9vOQXx53se9poVrK3PIEPu2dvfLzim8qP9bL
+         EBOp1Eok1iKBf44M+Sng8mtOV/UZ/+QXUNFvyyEUg/sHaT6tGI6m1+qM2P4Y8doCUZxS
+         X7QPOd9ogU9mq8QcaIH7D8ULnvjguBpFiv5Y7rvAJ9OVgIQ8IansX5HlKbZnu+v3gGq3
+         gz1w==
+X-Gm-Message-State: AO0yUKU/7B58jmU9ytYPQ1R5mrGWWI89K27xtLaAdoF8pH+9oigFVoLV
+        jndiGGeLTs9DMfPqm/OkSAL3wXWqS7wBDtVTD6vSmjmLGKenFE70G4K328KIlKIWTCkTIYrC0hP
+        OjuetwBq0cUHKBHIF5U9ZKnb7gNFxP/cGsw==
+X-Received: by 2002:a17:907:1b1e:b0:8b2:8876:2a11 with SMTP id mp30-20020a1709071b1e00b008b288762a11mr20080890ejc.28.1678190999882;
+        Tue, 07 Mar 2023 04:09:59 -0800 (PST)
+X-Google-Smtp-Source: AK7set/5w1pSIe+vScpQoTiMyXTIER8TAZdTUQnhrRB4sAANhC+o5yJ9527e45yJ8QAtzWUO1gnpzQ==
+X-Received: by 2002:a17:907:1b1e:b0:8b2:8876:2a11 with SMTP id mp30-20020a1709071b1e00b008b288762a11mr20080867ejc.28.1678190999618;
+        Tue, 07 Mar 2023 04:09:59 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id kv22-20020a17090778d600b008dceec0fd4csm5983434ejc.73.2023.03.07.04.09.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Mar 2023 04:09:59 -0800 (PST)
+Message-ID: <a83d9acd-a2c5-85ce-36dc-c6a8f0e11a66@redhat.com>
+Date:   Tue, 7 Mar 2023 13:09:58 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] platform/x86: dell-laptop: Register ctl-led for
+ speaker-mute
+Content-Language: en-US, nl
+To:     Koba Ko <koba.ko@canonical.com>, Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230306142454.722020-1-koba.ko@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230306142454.722020-1-koba.ko@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On some MacBooks both the apple_bl and the apple-gmux backlight drivers
-may be able to export a /sys/class/backlight device.
+Hi,
 
-To avoid having 2 backlight devices for one LCD panel until now
-the apple-gmux driver has been calling apple_bl_unregister() to move
-the apple_bl backlight device out of the way when it loads.
+On 3/6/23 15:24, Koba Ko wrote:
+> Some platforms have the speaker-mute led and
+> current driver doesn't control it.
+> 
+> If the platform support the control of speaker-mute led, register it
+> 
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
 
-Similar problems exist on other x86 laptops and all backlight drivers
-which may be used on x86 laptops have moved to using
-acpi_video_get_backlight_type() to determine whether they should load
-or not.
+Thank you for your patch, one small remark below.
 
-Switch apple_bl to this model too, so that it is consistent with all
-the other x86 backlight drivers.
+> ---
+>  drivers/platform/x86/dell/dell-laptop.c | 43 +++++++++++++++++++++++++
+>  drivers/platform/x86/dell/dell-smbios.h |  2 ++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+> index 1321687d923ed..38d95bae8e3ab 100644
+> --- a/drivers/platform/x86/dell/dell-laptop.c
+> +++ b/drivers/platform/x86/dell/dell-laptop.c
+> @@ -97,6 +97,7 @@ static struct rfkill *bluetooth_rfkill;
+>  static struct rfkill *wwan_rfkill;
+>  static bool force_rfkill;
+>  static bool micmute_led_registered;
+> +static bool mute_led_registered;
+>  
+>  module_param(force_rfkill, bool, 0444);
+>  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+> @@ -2177,6 +2178,34 @@ static struct led_classdev micmute_led_cdev = {
+>  	.default_trigger = "audio-micmute",
+>  };
+>  
+> +static int mute_led_set(struct led_classdev *led_cdev,
+> +			   enum led_brightness brightness)
+> +{
+> +	struct calling_interface_buffer buffer;
+> +	struct calling_interface_token *token;
+> +	int state = brightness != LED_OFF;
+> +
+> +	if (state == 0)
+> +		token = dell_smbios_find_token(GLOBAL_MUTE_DISABLE);
+> +	else
+> +		token = dell_smbios_find_token(GLOBAL_MUTE_ENABLE);
+> +
+> +	if (!token)
+> +		return -ENODEV;
+> +
+> +	dell_fill_request(&buffer, token->location, token->value, 0, 0);
+> +	dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct led_classdev mute_led_cdev = {
+> +	.name = "platform::mute",
+> +	.max_brightness = 1,
+> +	.brightness_set_blocking = mute_led_set,
+> +	.default_trigger = "audio-mute",
+> +};
+> +
+>  static int __init dell_init(void)
+>  {
+>  	struct calling_interface_token *token;
+> @@ -2230,6 +2259,16 @@ static int __init dell_init(void)
+>  		micmute_led_registered = true;
+>  	}
+>  
+> +	if (dell_smbios_find_token(GLOBAL_MUTE_DISABLE) &&
+> +	    dell_smbios_find_token(GLOBAL_MUTE_ENABLE) &&
+> +	    !dell_privacy_has_mic_mute()) {
 
-Besides code-simplification and consistency this has 2 other benefits:
+Since this is a speaker mute LED and since the Dell hw privacy
+stuff does not deal with the speaker at all, I believe that you
+should drop the "&& !dell_privacy_has_mic_mute()" part of
+the if condition here ?
 
-1) It removes a race during boot where userspace will briefly see
-   an apple_bl backlight and then have it disappear again, leading to e.g.:
-   https://bbs.archlinux.org/viewtopic.php?id=269920
+Can you please send a new version with this dropped?
 
-2) This allows user to switch between the drivers by passing
-   acpi_backlight=apple_gmux or acpi_backlight=vendor on the kernel
-   commandline.
+Regards,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-A note to the backlight class / subsystem maintainers, this change
-applies on top of a similar patch for drivers/platform/x86/apple-gmux.c
-which makes that driver use acpi_video_get_backlight_type(). See:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Hans
 
-I believe it is easiest to also merge this patch through
-the platform-drivers-x86 tree, may I please have your Ack for this ?
----
- drivers/platform/x86/Kconfig       |  1 -
- drivers/platform/x86/apple-gmux.c  | 11 -----------
- drivers/video/backlight/Kconfig    |  1 +
- drivers/video/backlight/apple_bl.c | 31 ++++++++++--------------------
- include/linux/apple_bl.h           | 27 --------------------------
- 5 files changed, 11 insertions(+), 60 deletions(-)
- delete mode 100644 include/linux/apple_bl.h
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index d2619e7025c7..aa8df8d4aee9 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -206,7 +206,6 @@ config APPLE_GMUX
- 	depends on ACPI && PCI
- 	depends on PNP
- 	depends on BACKLIGHT_CLASS_DEVICE
--	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
- 	help
- 	  This driver provides support for the gmux device found on many
- 	  Apple laptops, which controls the display mux for the hybrid
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 787cf2a7e268..f490565e1ed1 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -16,7 +16,6 @@
- #include <linux/backlight.h>
- #include <linux/acpi.h>
- #include <linux/pnp.h>
--#include <linux/apple_bl.h>
- #include <linux/apple-gmux.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-@@ -884,14 +883,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 		gmux_data->bdev = bdev;
- 		bdev->props.brightness = gmux_get_brightness(bdev);
- 		backlight_update_status(bdev);
--
--		/*
--		 * The backlight situation on Macs is complicated. If the gmux is
--		 * present it's the best choice, because it always works for
--		 * backlight control and supports more levels than other options.
--		 * Disable the other backlight choices.
--		 */
--		apple_bl_unregister();
- 	}
- 
- 	gmux_data->power_state = VGA_SWITCHEROO_ON;
-@@ -1008,8 +999,6 @@ static void gmux_remove(struct pnp_dev *pnp)
- 		release_region(gmux_data->iostart, gmux_data->iolen);
- 	apple_gmux_data = NULL;
- 	kfree(gmux_data);
--
--	apple_bl_register();
- }
- 
- static const struct pnp_device_id gmux_device_ids[] = {
-diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index 4c33e971c0f0..51387b1ef012 100644
---- a/drivers/video/backlight/Kconfig
-+++ b/drivers/video/backlight/Kconfig
-@@ -285,6 +285,7 @@ config BACKLIGHT_MT6370
- config BACKLIGHT_APPLE
- 	tristate "Apple Backlight Driver"
- 	depends on X86 && ACPI
-+	depends on ACPI_VIDEO=n || ACPI_VIDEO
- 	help
- 	  If you have an Intel-based Apple say Y to enable a driver for its
- 	  backlight.
-diff --git a/drivers/video/backlight/apple_bl.c b/drivers/video/backlight/apple_bl.c
-index e9e7acb577bf..aaa824437a2a 100644
---- a/drivers/video/backlight/apple_bl.c
-+++ b/drivers/video/backlight/apple_bl.c
-@@ -24,7 +24,7 @@
- #include <linux/pci.h>
- #include <linux/acpi.h>
- #include <linux/atomic.h>
--#include <linux/apple_bl.h>
-+#include <acpi/video.h>
- 
- static struct backlight_device *apple_backlight_device;
- 
-@@ -215,32 +215,21 @@ static struct acpi_driver apple_bl_driver = {
- 	},
- };
- 
--static atomic_t apple_bl_registered = ATOMIC_INIT(0);
--
--int apple_bl_register(void)
--{
--	if (atomic_xchg(&apple_bl_registered, 1) == 0)
--		return acpi_bus_register_driver(&apple_bl_driver);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(apple_bl_register);
--
--void apple_bl_unregister(void)
--{
--	if (atomic_xchg(&apple_bl_registered, 0) == 1)
--		acpi_bus_unregister_driver(&apple_bl_driver);
--}
--EXPORT_SYMBOL_GPL(apple_bl_unregister);
--
- static int __init apple_bl_init(void)
- {
--	return apple_bl_register();
-+	/*
-+	 * Use ACPI video detection code to see if this driver should register
-+	 * or if another driver, e.g. the apple-gmux driver should be used.
-+	 */
-+	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
-+		return -ENODEV;
-+
-+	return acpi_bus_register_driver(&apple_bl_driver);
- }
- 
- static void __exit apple_bl_exit(void)
- {
--	apple_bl_unregister();
-+	acpi_bus_unregister_driver(&apple_bl_driver);
- }
- 
- module_init(apple_bl_init);
-diff --git a/include/linux/apple_bl.h b/include/linux/apple_bl.h
-deleted file mode 100644
-index 445af2e3cc21..000000000000
---- a/include/linux/apple_bl.h
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * apple_bl exported symbols
-- */
--
--#ifndef _LINUX_APPLE_BL_H
--#define _LINUX_APPLE_BL_H
--
--#if defined(CONFIG_BACKLIGHT_APPLE) || defined(CONFIG_BACKLIGHT_APPLE_MODULE)
--
--extern int apple_bl_register(void);
--extern void apple_bl_unregister(void);
--
--#else /* !CONFIG_BACKLIGHT_APPLE */
--
--static inline int apple_bl_register(void)
--{
--	return 0;
--}
--
--static inline void apple_bl_unregister(void)
--{
--}
--
--#endif /* !CONFIG_BACKLIGHT_APPLE */
--
--#endif /* _LINUX_APPLE_BL_H */
--- 
-2.39.1
+> +		mute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MUTE);
+> +		ret = led_classdev_register(&platform_device->dev, &mute_led_cdev);
+> +		if (ret < 0)
+> +			goto fail_led;
+> +		mute_led_registered = true;
+> +	}
+> +
+>  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+>  		return 0;
+>  
+> @@ -2277,6 +2316,8 @@ static int __init dell_init(void)
+>  fail_backlight:
+>  	if (micmute_led_registered)
+>  		led_classdev_unregister(&micmute_led_cdev);
+> +	if (mute_led_registered)
+> +		led_classdev_unregister(&mute_led_cdev);
+>  fail_led:
+>  	dell_cleanup_rfkill();
+>  fail_rfkill:
+> @@ -2299,6 +2340,8 @@ static void __exit dell_exit(void)
+>  	backlight_device_unregister(dell_backlight_device);
+>  	if (micmute_led_registered)
+>  		led_classdev_unregister(&micmute_led_cdev);
+> +	if (mute_led_registered)
+> +		led_classdev_unregister(&mute_led_cdev);
+>  	dell_cleanup_rfkill();
+>  	if (platform_device) {
+>  		platform_device_unregister(platform_device);
+> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
+> index 75fa8ea0476dc..eb341bf000c67 100644
+> --- a/drivers/platform/x86/dell/dell-smbios.h
+> +++ b/drivers/platform/x86/dell/dell-smbios.h
+> @@ -34,6 +34,8 @@
+>  #define KBD_LED_AUTO_100_TOKEN	0x02F6
+>  #define GLOBAL_MIC_MUTE_ENABLE	0x0364
+>  #define GLOBAL_MIC_MUTE_DISABLE	0x0365
+> +#define GLOBAL_MUTE_ENABLE	0x058C
+> +#define GLOBAL_MUTE_DISABLE	0x058D
+>  
+>  struct notifier_block;
+>  
 
