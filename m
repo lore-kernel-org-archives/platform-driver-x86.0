@@ -2,187 +2,253 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18C1C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 11:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86849C678D5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 12:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230476AbjCGLqy (ORCPT
+        id S231343AbjCGMGg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 06:46:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
+        Tue, 7 Mar 2023 07:06:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231328AbjCGLqa (ORCPT
+        with ESMTP id S230285AbjCGMGf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 06:46:30 -0500
+        Tue, 7 Mar 2023 07:06:35 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185F8303F3
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 03:43:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318AF3347B
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 04:05:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678189346;
+        s=mimecast20190719; t=1678190746;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CLhqgCau2ZF6uI0rajlxO7EAL6BSTDvpF0RZmY0H64g=;
-        b=WO2ri2PnLJRaZiGRVDf/S5jTsqI0Wo4iSb8lRXsEO+l8/SvNfqEwx6ghuv3HdnfqavouFh
-        W45poykKjS5D/+ZJRbMze9FV8Ick2BIVShrhVqL6tshvRryZTOM3DqZr68zyfI4t3dQOJ9
-        GcfpLA4hySfOGbeC5PjalVMSaE0lrSw=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-SH3fAIcoNCKwXQMkeAj3vA-1; Tue, 07 Mar 2023 06:42:25 -0500
-X-MC-Unique: SH3fAIcoNCKwXQMkeAj3vA-1
-Received: by mail-ed1-f69.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso18766883edh.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 03:42:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678189344;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CLhqgCau2ZF6uI0rajlxO7EAL6BSTDvpF0RZmY0H64g=;
-        b=hMg7pRkfqWuU9z0Q+uvlcB5hhXmj2VK/yusJBu1BKSmw7C/s3Nt2FeytUghHuT5Gyz
-         O9+U4ezK4qvPrgtGrUKcsdEng7NEpGfjCFKHd1w6ecGnXizmgd3qd8jm3r6RpJgCzQHQ
-         n4q6pNJBO8SSd4MzQosy7xUluwWxnvkL3avBI0/VAGiX0BEWIBNuJLQV6WDP2EuOLA2q
-         Efk/ci8qlOQNact4WxGXJrx3cF/S6Lic2EMqz89dCAS6fsI4Qk+1Lqst0BP43BZGhrC0
-         ZhWeNhr8mssx5nPzjir4I1iSIIsSXZtqKPpDMkJqbgRM7pwYXmBCjbCahXVXwho8rPaE
-         fUaA==
-X-Gm-Message-State: AO0yUKWuxCTKpjTtyPXHJhOHVh+JWcehvAdsjF/iE5p1gGgadQnC7anM
-        vzClbs+jAadw/62ElE6O8UQuUgRf2zmy3HgoDr30HDftpdqdoOOKIr8eMRxzSnCmmP7e75Bweld
-        1r7ztwWhfMhHkB8qMe6bDXjEEIpNxNCmm0Q==
-X-Received: by 2002:a17:907:6e15:b0:8b1:75a0:e5c6 with SMTP id sd21-20020a1709076e1500b008b175a0e5c6mr18301577ejc.18.1678189343834;
-        Tue, 07 Mar 2023 03:42:23 -0800 (PST)
-X-Google-Smtp-Source: AK7set9kqX21+krPozcdCGx9yXUF79hIGlVvA4Oa0/yHh0psODmlZJYRRs6nBKPaDRvYJDkxjmc2OA==
-X-Received: by 2002:a17:907:6e15:b0:8b1:75a0:e5c6 with SMTP id sd21-20020a1709076e1500b008b175a0e5c6mr18301558ejc.18.1678189343541;
-        Tue, 07 Mar 2023 03:42:23 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v9-20020a17090651c900b008b2e4f88ed7sm6007928ejk.111.2023.03.07.03.42.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Mar 2023 03:42:23 -0800 (PST)
-Message-ID: <6ca9b928-0d16-0e27-8a5f-d0af9a636748@redhat.com>
-Date:   Tue, 7 Mar 2023 12:42:22 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: apple-gmux: Add
- acpi_video_get_backlight_type() check
-Content-Language: en-US, nl
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Aditya Garg <gargaditya08@live.com>
-References: <20230307113813.359743-1-hdegoede@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OV3TXQN7O8oKayamqJhsqwDR10DSkew1hqIvq2D1i/8=;
+        b=ZqFqcVEApvQIf9f4l+H4wLxvGCCrFXOHKzLna6LcXdpKFc0bMGcMiI84HITlfYo7Mlb5CN
+        NtkQDr41Ixin13lBrsdWixAyUgpQ1J2QTNzAcBMXx8bCK+v6BRi4Mfa0QzKz7Na6BEcsp1
+        Qmlbm5oV1lsrIkNDAKy7aWPvewB3STA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-199-Jf3khm7oP1qc-96GI0Io5w-1; Tue, 07 Mar 2023 07:05:43 -0500
+X-MC-Unique: Jf3khm7oP1qc-96GI0Io5w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 979DA18F0242;
+        Tue,  7 Mar 2023 12:05:42 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.195.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EF3952166B26;
+        Tue,  7 Mar 2023 12:05:40 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230307113813.359743-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Aditya Garg <gargaditya08@live.com>,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] backlight: apple_bl: Use acpi_video_get_backlight_type()
+Date:   Tue,  7 Mar 2023 13:05:40 +0100
+Message-Id: <20230307120540.389920-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On some MacBooks both the apple_bl and the apple-gmux backlight drivers
+may be able to export a /sys/class/backlight device.
 
-On 3/7/23 12:38, Hans de Goede wrote:
-> Make apple-gmux backlight registration honor the acpi_backlight=...
-> kernel commandline option which is used to select the backlight
-> control method on x86/ACPI devices.
-> 
-> Reported-and-tested-by: Aditya Garg <gargaditya08@live.com>
-> Link: https://lore.kernel.org/platform-driver-x86/BM1PR01MB0931B467250831916F7C55B3B8A59@BM1PR01MB0931.INDPRD01.PROD.OUTLOOK.COM/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+To avoid having 2 backlight devices for one LCD panel until now
+the apple-gmux driver has been calling apple_bl_unregister() to move
+the apple_bl backlight device out of the way when it loads.
 
-I've added this to my review-hans (soon to be for-next) branch now.
+Similar problems exist on other x86 laptops and all backlight drivers
+which may be used on x86 laptops have moved to using
+acpi_video_get_backlight_type() to determine whether they should load
+or not.
 
-Regards,
+Switch apple_bl to this model too, so that it is consistent with all
+the other x86 backlight drivers.
 
-Hans
+Besides code-simplification and consistency this has 2 other benefits:
 
+1) It removes a race during boot where userspace will briefly see
+   an apple_bl backlight and then have it disappear again, leading to e.g.:
+   https://bbs.archlinux.org/viewtopic.php?id=269920
 
-> ---
->  drivers/platform/x86/apple-gmux.c | 59 +++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 757fd71c900f..787cf2a7e268 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -23,6 +23,7 @@
->  #include <linux/pci.h>
->  #include <linux/vga_switcheroo.h>
->  #include <linux/debugfs.h>
-> +#include <acpi/video.h>
->  #include <asm/io.h>
->  
->  /**
-> @@ -783,6 +784,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	struct backlight_properties props;
->  	struct backlight_device *bdev;
->  	u8 ver_major, ver_minor, ver_release;
-> +	bool register_bdev = true;
->  	int ret = -ENXIO;
->  	acpi_status status;
->  	unsigned long long gpe;
-> @@ -859,33 +861,38 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	props.type = BACKLIGHT_PLATFORM;
->  	props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
->  
-> -	/*
-> -	 * Currently it's assumed that the maximum brightness is less than
-> -	 * 2^24 for compatibility with old gmux versions. Cap the max
-> -	 * brightness at this value, but print a warning if the hardware
-> -	 * reports something higher so that it can be fixed.
-> -	 */
-> -	if (WARN_ON(props.max_brightness > GMUX_MAX_BRIGHTNESS))
-> -		props.max_brightness = GMUX_MAX_BRIGHTNESS;
-> -
-> -	bdev = backlight_device_register("gmux_backlight", &pnp->dev,
-> -					 gmux_data, &gmux_bl_ops, &props);
-> -	if (IS_ERR(bdev)) {
-> -		ret = PTR_ERR(bdev);
-> -		goto err_unmap;
-> -	}
-> -
-> -	gmux_data->bdev = bdev;
-> -	bdev->props.brightness = gmux_get_brightness(bdev);
-> -	backlight_update_status(bdev);
-> +#if IS_REACHABLE(CONFIG_ACPI_VIDEO)
-> +	register_bdev = acpi_video_get_backlight_type() == acpi_backlight_apple_gmux;
-> +#endif
-> +	if (register_bdev) {
-> +		/*
-> +		 * Currently it's assumed that the maximum brightness is less than
-> +		 * 2^24 for compatibility with old gmux versions. Cap the max
-> +		 * brightness at this value, but print a warning if the hardware
-> +		 * reports something higher so that it can be fixed.
-> +		 */
-> +		if (WARN_ON(props.max_brightness > GMUX_MAX_BRIGHTNESS))
-> +			props.max_brightness = GMUX_MAX_BRIGHTNESS;
-> +
-> +		bdev = backlight_device_register("gmux_backlight", &pnp->dev,
-> +						 gmux_data, &gmux_bl_ops, &props);
-> +		if (IS_ERR(bdev)) {
-> +			ret = PTR_ERR(bdev);
-> +			goto err_unmap;
-> +		}
->  
-> -	/*
-> -	 * The backlight situation on Macs is complicated. If the gmux is
-> -	 * present it's the best choice, because it always works for
-> -	 * backlight control and supports more levels than other options.
-> -	 * Disable the other backlight choices.
-> -	 */
-> -	apple_bl_unregister();
-> +		gmux_data->bdev = bdev;
-> +		bdev->props.brightness = gmux_get_brightness(bdev);
-> +		backlight_update_status(bdev);
-> +
-> +		/*
-> +		 * The backlight situation on Macs is complicated. If the gmux is
-> +		 * present it's the best choice, because it always works for
-> +		 * backlight control and supports more levels than other options.
-> +		 * Disable the other backlight choices.
-> +		 */
-> +		apple_bl_unregister();
-> +	}
->  
->  	gmux_data->power_state = VGA_SWITCHEROO_ON;
->  
+2) This allows user to switch between the drivers by passing
+   acpi_backlight=apple_gmux or acpi_backlight=vendor on the kernel
+   commandline.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+A note to the backlight class / subsystem maintainers, this change
+applies on top of a similar patch for drivers/platform/x86/apple-gmux.c
+which makes that driver use acpi_video_get_backlight_type(). See:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+I believe it is easiest to also merge this patch through
+the platform-drivers-x86 tree, may I please have your Ack for this ?
+---
+ drivers/platform/x86/Kconfig       |  1 -
+ drivers/platform/x86/apple-gmux.c  | 11 -----------
+ drivers/video/backlight/Kconfig    |  1 +
+ drivers/video/backlight/apple_bl.c | 31 ++++++++++--------------------
+ include/linux/apple_bl.h           | 27 --------------------------
+ 5 files changed, 11 insertions(+), 60 deletions(-)
+ delete mode 100644 include/linux/apple_bl.h
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d2619e7025c7..aa8df8d4aee9 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -206,7 +206,6 @@ config APPLE_GMUX
+ 	depends on ACPI && PCI
+ 	depends on PNP
+ 	depends on BACKLIGHT_CLASS_DEVICE
+-	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
+ 	help
+ 	  This driver provides support for the gmux device found on many
+ 	  Apple laptops, which controls the display mux for the hybrid
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 787cf2a7e268..f490565e1ed1 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -16,7 +16,6 @@
+ #include <linux/backlight.h>
+ #include <linux/acpi.h>
+ #include <linux/pnp.h>
+-#include <linux/apple_bl.h>
+ #include <linux/apple-gmux.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+@@ -884,14 +883,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 		gmux_data->bdev = bdev;
+ 		bdev->props.brightness = gmux_get_brightness(bdev);
+ 		backlight_update_status(bdev);
+-
+-		/*
+-		 * The backlight situation on Macs is complicated. If the gmux is
+-		 * present it's the best choice, because it always works for
+-		 * backlight control and supports more levels than other options.
+-		 * Disable the other backlight choices.
+-		 */
+-		apple_bl_unregister();
+ 	}
+ 
+ 	gmux_data->power_state = VGA_SWITCHEROO_ON;
+@@ -1008,8 +999,6 @@ static void gmux_remove(struct pnp_dev *pnp)
+ 		release_region(gmux_data->iostart, gmux_data->iolen);
+ 	apple_gmux_data = NULL;
+ 	kfree(gmux_data);
+-
+-	apple_bl_register();
+ }
+ 
+ static const struct pnp_device_id gmux_device_ids[] = {
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 4c33e971c0f0..51387b1ef012 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -285,6 +285,7 @@ config BACKLIGHT_MT6370
+ config BACKLIGHT_APPLE
+ 	tristate "Apple Backlight Driver"
+ 	depends on X86 && ACPI
++	depends on ACPI_VIDEO=n || ACPI_VIDEO
+ 	help
+ 	  If you have an Intel-based Apple say Y to enable a driver for its
+ 	  backlight.
+diff --git a/drivers/video/backlight/apple_bl.c b/drivers/video/backlight/apple_bl.c
+index e9e7acb577bf..aaa824437a2a 100644
+--- a/drivers/video/backlight/apple_bl.c
++++ b/drivers/video/backlight/apple_bl.c
+@@ -24,7 +24,7 @@
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/atomic.h>
+-#include <linux/apple_bl.h>
++#include <acpi/video.h>
+ 
+ static struct backlight_device *apple_backlight_device;
+ 
+@@ -215,32 +215,21 @@ static struct acpi_driver apple_bl_driver = {
+ 	},
+ };
+ 
+-static atomic_t apple_bl_registered = ATOMIC_INIT(0);
+-
+-int apple_bl_register(void)
+-{
+-	if (atomic_xchg(&apple_bl_registered, 1) == 0)
+-		return acpi_bus_register_driver(&apple_bl_driver);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(apple_bl_register);
+-
+-void apple_bl_unregister(void)
+-{
+-	if (atomic_xchg(&apple_bl_registered, 0) == 1)
+-		acpi_bus_unregister_driver(&apple_bl_driver);
+-}
+-EXPORT_SYMBOL_GPL(apple_bl_unregister);
+-
+ static int __init apple_bl_init(void)
+ {
+-	return apple_bl_register();
++	/*
++	 * Use ACPI video detection code to see if this driver should register
++	 * or if another driver, e.g. the apple-gmux driver should be used.
++	 */
++	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
++		return -ENODEV;
++
++	return acpi_bus_register_driver(&apple_bl_driver);
+ }
+ 
+ static void __exit apple_bl_exit(void)
+ {
+-	apple_bl_unregister();
++	acpi_bus_unregister_driver(&apple_bl_driver);
+ }
+ 
+ module_init(apple_bl_init);
+diff --git a/include/linux/apple_bl.h b/include/linux/apple_bl.h
+deleted file mode 100644
+index 445af2e3cc21..000000000000
+--- a/include/linux/apple_bl.h
++++ /dev/null
+@@ -1,27 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * apple_bl exported symbols
+- */
+-
+-#ifndef _LINUX_APPLE_BL_H
+-#define _LINUX_APPLE_BL_H
+-
+-#if defined(CONFIG_BACKLIGHT_APPLE) || defined(CONFIG_BACKLIGHT_APPLE_MODULE)
+-
+-extern int apple_bl_register(void);
+-extern void apple_bl_unregister(void);
+-
+-#else /* !CONFIG_BACKLIGHT_APPLE */
+-
+-static inline int apple_bl_register(void)
+-{
+-	return 0;
+-}
+-
+-static inline void apple_bl_unregister(void)
+-{
+-}
+-
+-#endif /* !CONFIG_BACKLIGHT_APPLE */
+-
+-#endif /* _LINUX_APPLE_BL_H */
+-- 
+2.39.1
 
