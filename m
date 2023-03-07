@@ -2,157 +2,125 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFF5C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 11:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B461EC678D4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 11:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230351AbjCGLH4 (ORCPT
+        id S230408AbjCGLJh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 06:07:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
+        Tue, 7 Mar 2023 06:09:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230381AbjCGLHc (ORCPT
+        with ESMTP id S230460AbjCGLJK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 06:07:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B176746E0
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 03:03:38 -0800 (PST)
+        Tue, 7 Mar 2023 06:09:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CA7769C1
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 03:04:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678186936;
+        s=mimecast20190719; t=1678187061;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BDXpVQCtQOIlmzO6ioTe8cdUScPgYtXM44balfNsDNo=;
-        b=hyAbnfyRZ4Zc+/sr432onc6xCq5uFMftphMtDcWA6/LJR0e57+9jRNB7gQ0kxqnvVqBNkH
-        VZErMwMjBIyN5ieAUgevXhEtaA6tc0G/ScwFDrx7oS2MMhTPbnQStXkA/oESR8nnx4e+jL
-        oRlG8/Egas2K2QIIK3wDiYNakVVFwbQ=
+        bh=Poe0W4YrpQzicqm/R3D+1QXHWu8wsCUEGYygTlEe1/w=;
+        b=PP+dMBBu5pu6ditUTF4JyrT1GTNrT0MCBlVGvBV2h5LQabrddjuK0cR/fsMGbGvhjGY7nC
+        IUUIOb1LiSS6Oh/lhIZsZEZX6y09T28VlI9pAgd+Bki974yP31AIc15tzFGoObXJ1DQ7I2
+        cc1tI0Qg11uGVqj5UfUGxii4N2tx+sI=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-340-58Pla6j8PI6zY6okIFnJZQ-1; Tue, 07 Mar 2023 06:02:15 -0500
-X-MC-Unique: 58Pla6j8PI6zY6okIFnJZQ-1
-Received: by mail-ed1-f70.google.com with SMTP id da22-20020a056402177600b004c60694083eso18229898edb.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 03:02:15 -0800 (PST)
+ us-mta-601-3cRKUN_2PkqzouFTBG_KDg-1; Tue, 07 Mar 2023 06:04:20 -0500
+X-MC-Unique: 3cRKUN_2PkqzouFTBG_KDg-1
+Received: by mail-ed1-f70.google.com with SMTP id da22-20020a056402177600b004c60694083eso18237902edb.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 03:04:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678186934;
+        d=1e100.net; s=20210112; t=1678187059;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BDXpVQCtQOIlmzO6ioTe8cdUScPgYtXM44balfNsDNo=;
-        b=E5QLqYU2KEEKa32B2u5GmAA46DDI9Zke93uAXr/Z9movVd71uaX+rAeQQ9hWXx1u12
-         QFhXlP0z6W8Y7T4H/KkEndbTfvZNd2GAzfvpYj3ZHxHxFuboWUVfmzcprJRHWPaIB6e6
-         2KBkrF0AB0POyKOxHRKiFxgndUIKfjDb5krWYyhgkzisSg1q22jb8+ZRWiDbZUmlYcgs
-         0srWpM5BSEX8NKfH62rAIyu22NT0I70NJKbY+7dF01PfhdzxMwnjXnC6G1XSv6vgSm86
-         jbC0DUV79j85JkD4H5VnBAllVg8zj6WJeqy69uu32XFggGDV32EWko7tAtNbRyENRzQV
-         AQIg==
-X-Gm-Message-State: AO0yUKVNtOCJ4w7cPBHvUlp9gZASub6GBJm41b5Q/DP78rruNXg/kCum
-        BwooQaFZt1YebUmrhtdQ8cMgNyucJxCRNY7FGyZ/tVp2pTY9ZTlOKS4AYbilnhS9rtVPtrhhJ9F
-        I0s8Zzg4oPawb/6Ip3gWm1gLWG7p3M09luw==
-X-Received: by 2002:a17:907:3e91:b0:8b2:b711:5e62 with SMTP id hs17-20020a1709073e9100b008b2b7115e62mr16191503ejc.52.1678186934710;
-        Tue, 07 Mar 2023 03:02:14 -0800 (PST)
-X-Google-Smtp-Source: AK7set9nJRFyyMSUSPpxbJwDWUspJLFE9XgiKxOVJCQqMy9LeMgxwcewIoOUdbCS7ZKCPD2GqektIg==
-X-Received: by 2002:a17:907:3e91:b0:8b2:b711:5e62 with SMTP id hs17-20020a1709073e9100b008b2b7115e62mr16191477ejc.52.1678186934456;
-        Tue, 07 Mar 2023 03:02:14 -0800 (PST)
+        bh=Poe0W4YrpQzicqm/R3D+1QXHWu8wsCUEGYygTlEe1/w=;
+        b=AyelMU8rh1nu072u4uZnrzAmsruTwRlC5mUcY5TDwVPGu/OQzFOtoy2ah1sHdUG6QF
+         DsZcTZYDQXoYb9P7d087+YbThFlbAGdgyAGZz+CW4ViPrLbb5GdZTd3HMUMRed5Ujsy6
+         BfuDQB4NPjr3kL5SM13JOLTgHHTt7b8fULO+WdOfJ8syelEy/19Tb5NNIWOwNi00JiBa
+         ZtNnp2tP6WQ+TsaInljvfeh/QzcIF6ln/+8UwsUKlf/s3hsrbeSUzAJU9W3dIqp+KEqX
+         BWlX7m3hawLdsR35jjH1muAh6ZGuCfFm40QrnFWxVhnXppyzg/4H7nFR6OdAcNpGCIDD
+         zU+Q==
+X-Gm-Message-State: AO0yUKUb3HuxuC5R/x+kTK5s72oqkABYD/bCb56V3R3WApfgPoYMFlid
+        UVaYqSBMAZMI2AO/UPk/JPlWPx3EOZDW5etSJ8ZpCxaIqA0wtk8oflRUhqQJj3g5I+Fana8oYnQ
+        xvCfVzD2qT2KYXJah7rvPTLp1H+Orf+cMMA==
+X-Received: by 2002:aa7:df96:0:b0:4b1:b71d:cbfe with SMTP id b22-20020aa7df96000000b004b1b71dcbfemr13404781edy.2.1678187059413;
+        Tue, 07 Mar 2023 03:04:19 -0800 (PST)
+X-Google-Smtp-Source: AK7set+e+PM+p0xi1LNYso82D/+tZKl9gd4y9h14Lk7yc4f8Art3FpluOw1S3eCH4HSQb8lL2HbvCg==
+X-Received: by 2002:aa7:df96:0:b0:4b1:b71d:cbfe with SMTP id b22-20020aa7df96000000b004b1b71dcbfemr13404773edy.2.1678187059190;
+        Tue, 07 Mar 2023 03:04:19 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id o13-20020a1709062e8d00b008e22978b98bsm5956978eji.61.2023.03.07.03.02.13
+        by smtp.gmail.com with ESMTPSA id hy26-20020a1709068a7a00b008d92897cc29sm5912061ejc.37.2023.03.07.03.04.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Mar 2023 03:02:13 -0800 (PST)
-Message-ID: <d3761f4a-6945-9a7e-03e9-bf0279c6f0f2@redhat.com>
-Date:   Tue, 7 Mar 2023 12:02:12 +0100
+        Tue, 07 Mar 2023 03:04:18 -0800 (PST)
+Message-ID: <01c0688d-b7f2-6108-a99e-19337cb3e04b@redhat.com>
+Date:   Tue, 7 Mar 2023 12:04:18 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v3 0/8] Add Array BIST test support to IFS
+Subject: Re: [PATCH] platform/x86: int3472: Add GPIOs to Surface Go 3 Board
+ data
 Content-Language: en-US, nl
-To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-References: <20230214234426.344960-1-jithu.joseph@intel.com>
- <20230301015942.462799-1-jithu.joseph@intel.com>
+To:     Daniel Scally <dan.scally@ideasonboard.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Cc:     luzmaximilian@gmail.com
+References: <20230302102611.314341-1-dan.scally@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230301015942.462799-1-jithu.joseph@intel.com>
+In-Reply-To: <20230302102611.314341-1-dan.scally@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jithu,
+Hi,
 
-On 3/1/23 02:59, Jithu Joseph wrote:
-> Changes in v3
->  - GregKH 
->     -  Separating read-only fields from rw fields in
->        struct ifs_device (patch 1/8)
->     -  Remove the subdirectory intel_ifs/<n> for devicenode (patch 2/8)
->     -  Replaced an enum with #define (patch 4/8)
->  - Dave Hansen
->     - Remove tracing patch
->     - ifs_array_test_core() (patch 6/8)
->         - fix an initialization bug
->         - other suggested changes
->     - Use basic types in ifs_array for first two fields. (kept
->       the union to avoid type castings)
+On 3/2/23 11:26, Daniel Scally wrote:
+> Add the INT347E GPIO lookup table to the board data for the Surface
+> Go 3. This is necessary to allow the ov7251 IR camera to probe
+> properly on that platform.
+> 
+> Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
 
-Thank you for the new version. Given all the feedback on
-the previous 2 versions I'm going to wait a bit to see if more
-feedback comes in before reviewing this myself.
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
 
-
-
-> v2 submission:
-> Link: https://lore.kernel.org/lkml/20230214234426.344960-1-jithu.joseph@intel.com/
+> ---
+>  drivers/platform/x86/intel/int3472/tps68470_board_data.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Changes in v2
->  - remove duplicate initializations from ifs_array_test_core()
->    (Dave Hansen, patch 4/7)
->  - remove bit parsing from tracing fast path to tracing 
->    output (Steven Rostedt, patch 5/7)
->  - move "ATTRIBUTE_GROUPS(plat_ifs_array)" to core.c and remove
->    exporting function ifs_get_array_groups() (Greg KH, patch 3/7)
->  - Generalized doc and ABI doc (Greg KH, patches 6/7 and 7/7)
-> 
-> v1 submission:
-> Link: https://lore.kernel.org/lkml/20230131234302.3997223-1-jithu.joseph@intel.com/
-> 
-> Array BIST is a new type of core test introduced under the Intel Infield
-> Scan (IFS) suite of tests.
-> 
-> Emerald Rapids (EMR) is the first CPU to support Array BIST.
-> Array BIST performs tests on some portions of the core logic such as
-> caches and register files. These are different portions of the silicon
-> compared to the parts tested by Scan at Field (SAF).
-> 
-> Unlike SAF, Array BIST doesn't require any test content to be loaded.
-> 
-> Jithu Joseph (8):
->   platform/x86/intel/ifs: Reorganize driver data
->   platform/x86/intel/ifs: IFS cleanup
->   x86/include/asm/msr-index.h: Add IFS Array test bits
->   platform/x86/intel/ifs: Introduce Array Scan test to IFS
->   platform/x86/intel/ifs: Sysfs interface for Array BIST
->   platform/x86/intel/ifs: Implement Array BIST test
->   platform/x86/intel/ifs: Update IFS doc
->   Documentation/ABI: Update IFS ABI doc
-> 
->  arch/x86/include/asm/msr-index.h              |  2 +
->  drivers/platform/x86/intel/ifs/ifs.h          | 62 +++++++++----
->  drivers/platform/x86/intel/ifs/core.c         | 92 ++++++++++++++-----
->  drivers/platform/x86/intel/ifs/load.c         |  8 +-
->  drivers/platform/x86/intel/ifs/runtest.c      | 91 +++++++++++++++++-
->  drivers/platform/x86/intel/ifs/sysfs.c        | 17 ++--
->  .../ABI/testing/sysfs-platform-intel-ifs      |  8 +-
->  7 files changed, 221 insertions(+), 59 deletions(-)
-> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 309eab9c0558..322237e056f3 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -159,9 +159,10 @@ static const struct int3472_tps68470_board_data surface_go_tps68470_board_data =
+>  static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:01",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> -	.n_gpiod_lookups = 1,
+> +	.n_gpiod_lookups = 2,
+>  	.tps68470_gpio_lookup_tables = {
+> -		&surface_go_int347a_gpios
+> +		&surface_go_int347a_gpios,
+> +		&surface_go_int347e_gpios,
+>  	},
+>  };
+>  
 
