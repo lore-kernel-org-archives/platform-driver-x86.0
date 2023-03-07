@@ -2,86 +2,157 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDF4C678D4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 11:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFF5C678D4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 11:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjCGLHW (ORCPT
+        id S230351AbjCGLH4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 06:07:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        Tue, 7 Mar 2023 06:07:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbjCGLGK (ORCPT
+        with ESMTP id S230381AbjCGLHc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 06:06:10 -0500
+        Tue, 7 Mar 2023 06:07:32 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF55D7BA14
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 03:02:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B176746E0
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 03:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678186920;
+        s=mimecast20190719; t=1678186936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tbWi3MEooi7QXfom721p8/q2q4DbH6hQwh2VvDXrFw4=;
-        b=Jsl8AVDGV9jll2ROZiGqsZ/1zplfi93PT4Nqq6GOBv/drJLI275mSECdjYIgOgrDoAfv2F
-        rxb/k38fhvwraqoeZBSTJC2mmv+WN4w+y9+WvWuH3zn3A2USEHdqLA1onsXPHre66ROmG+
-        B/C4MIjCvnK7Ha/u0RFQO8y5QpIDnGI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-520-pRbRvwKwPnyGUPkuQNrbxw-1; Tue, 07 Mar 2023 05:58:45 -0500
-X-MC-Unique: pRbRvwKwPnyGUPkuQNrbxw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4D4B800B23;
-        Tue,  7 Mar 2023 10:58:44 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C444C140EBF4;
-        Tue,  7 Mar 2023 10:58:43 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>
-Subject: [PATCH] platform: mellanox: mlx-platform: Initialize shift variable to 0
-Date:   Tue,  7 Mar 2023 11:58:42 +0100
-Message-Id: <20230307105842.286118-1-hdegoede@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BDXpVQCtQOIlmzO6ioTe8cdUScPgYtXM44balfNsDNo=;
+        b=hyAbnfyRZ4Zc+/sr432onc6xCq5uFMftphMtDcWA6/LJR0e57+9jRNB7gQ0kxqnvVqBNkH
+        VZErMwMjBIyN5ieAUgevXhEtaA6tc0G/ScwFDrx7oS2MMhTPbnQStXkA/oESR8nnx4e+jL
+        oRlG8/Egas2K2QIIK3wDiYNakVVFwbQ=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-340-58Pla6j8PI6zY6okIFnJZQ-1; Tue, 07 Mar 2023 06:02:15 -0500
+X-MC-Unique: 58Pla6j8PI6zY6okIFnJZQ-1
+Received: by mail-ed1-f70.google.com with SMTP id da22-20020a056402177600b004c60694083eso18229898edb.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 03:02:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678186934;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BDXpVQCtQOIlmzO6ioTe8cdUScPgYtXM44balfNsDNo=;
+        b=E5QLqYU2KEEKa32B2u5GmAA46DDI9Zke93uAXr/Z9movVd71uaX+rAeQQ9hWXx1u12
+         QFhXlP0z6W8Y7T4H/KkEndbTfvZNd2GAzfvpYj3ZHxHxFuboWUVfmzcprJRHWPaIB6e6
+         2KBkrF0AB0POyKOxHRKiFxgndUIKfjDb5krWYyhgkzisSg1q22jb8+ZRWiDbZUmlYcgs
+         0srWpM5BSEX8NKfH62rAIyu22NT0I70NJKbY+7dF01PfhdzxMwnjXnC6G1XSv6vgSm86
+         jbC0DUV79j85JkD4H5VnBAllVg8zj6WJeqy69uu32XFggGDV32EWko7tAtNbRyENRzQV
+         AQIg==
+X-Gm-Message-State: AO0yUKVNtOCJ4w7cPBHvUlp9gZASub6GBJm41b5Q/DP78rruNXg/kCum
+        BwooQaFZt1YebUmrhtdQ8cMgNyucJxCRNY7FGyZ/tVp2pTY9ZTlOKS4AYbilnhS9rtVPtrhhJ9F
+        I0s8Zzg4oPawb/6Ip3gWm1gLWG7p3M09luw==
+X-Received: by 2002:a17:907:3e91:b0:8b2:b711:5e62 with SMTP id hs17-20020a1709073e9100b008b2b7115e62mr16191503ejc.52.1678186934710;
+        Tue, 07 Mar 2023 03:02:14 -0800 (PST)
+X-Google-Smtp-Source: AK7set9nJRFyyMSUSPpxbJwDWUspJLFE9XgiKxOVJCQqMy9LeMgxwcewIoOUdbCS7ZKCPD2GqektIg==
+X-Received: by 2002:a17:907:3e91:b0:8b2:b711:5e62 with SMTP id hs17-20020a1709073e9100b008b2b7115e62mr16191477ejc.52.1678186934456;
+        Tue, 07 Mar 2023 03:02:14 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id o13-20020a1709062e8d00b008e22978b98bsm5956978eji.61.2023.03.07.03.02.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Mar 2023 03:02:13 -0800 (PST)
+Message-ID: <d3761f4a-6945-9a7e-03e9-bf0279c6f0f2@redhat.com>
+Date:   Tue, 7 Mar 2023 12:02:12 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 0/8] Add Array BIST test support to IFS
+Content-Language: en-US, nl
+To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+References: <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230301015942.462799-1-jithu.joseph@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230301015942.462799-1-jithu.joseph@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Initialize shift variable in mlxplat_mlxcpld_verify_bus_topology()
-to 0 to avoid the following compile error:
+Hi Jithu,
 
-drivers/platform/x86/mlx-platform.c:6013
- mlxplat_mlxcpld_verify_bus_topology() error: uninitialized symbol 'shift'.
+On 3/1/23 02:59, Jithu Joseph wrote:
+> Changes in v3
+>  - GregKH 
+>     -  Separating read-only fields from rw fields in
+>        struct ifs_device (patch 1/8)
+>     -  Remove the subdirectory intel_ifs/<n> for devicenode (patch 2/8)
+>     -  Replaced an enum with #define (patch 4/8)
+>  - Dave Hansen
+>     - Remove tracing patch
+>     - ifs_array_test_core() (patch 6/8)
+>         - fix an initialization bug
+>         - other suggested changes
+>     - Use basic types in ifs_array for first two fields. (kept
+>       the union to avoid type castings)
 
-Fixes: 50b823fdd357 ("platform: mellanox: mlx-platform: Move bus shift assignment out of the loop")
-Cc: Vadim Pasternak <vadimp@nvidia.com>
-Cc: Michael Shych <michaelsh@nvidia.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/mlx-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the new version. Given all the feedback on
+the previous 2 versions I'm going to wait a bit to see if more
+feedback comes in before reviewing this myself.
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 7b6779cdb134..67367f010139 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -5980,7 +5980,7 @@ MODULE_DEVICE_TABLE(dmi, mlxplat_dmi_table);
- static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
- {
- 	struct i2c_adapter *search_adap;
--	int shift, i;
-+	int i, shift = 0;
- 
- 	/* Scan adapters from expected id to verify it is free. */
- 	*nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
--- 
-2.39.1
+Regards,
+
+Hans
+
+
+
+
+> v2 submission:
+> Link: https://lore.kernel.org/lkml/20230214234426.344960-1-jithu.joseph@intel.com/
+> 
+> Changes in v2
+>  - remove duplicate initializations from ifs_array_test_core()
+>    (Dave Hansen, patch 4/7)
+>  - remove bit parsing from tracing fast path to tracing 
+>    output (Steven Rostedt, patch 5/7)
+>  - move "ATTRIBUTE_GROUPS(plat_ifs_array)" to core.c and remove
+>    exporting function ifs_get_array_groups() (Greg KH, patch 3/7)
+>  - Generalized doc and ABI doc (Greg KH, patches 6/7 and 7/7)
+> 
+> v1 submission:
+> Link: https://lore.kernel.org/lkml/20230131234302.3997223-1-jithu.joseph@intel.com/
+> 
+> Array BIST is a new type of core test introduced under the Intel Infield
+> Scan (IFS) suite of tests.
+> 
+> Emerald Rapids (EMR) is the first CPU to support Array BIST.
+> Array BIST performs tests on some portions of the core logic such as
+> caches and register files. These are different portions of the silicon
+> compared to the parts tested by Scan at Field (SAF).
+> 
+> Unlike SAF, Array BIST doesn't require any test content to be loaded.
+> 
+> Jithu Joseph (8):
+>   platform/x86/intel/ifs: Reorganize driver data
+>   platform/x86/intel/ifs: IFS cleanup
+>   x86/include/asm/msr-index.h: Add IFS Array test bits
+>   platform/x86/intel/ifs: Introduce Array Scan test to IFS
+>   platform/x86/intel/ifs: Sysfs interface for Array BIST
+>   platform/x86/intel/ifs: Implement Array BIST test
+>   platform/x86/intel/ifs: Update IFS doc
+>   Documentation/ABI: Update IFS ABI doc
+> 
+>  arch/x86/include/asm/msr-index.h              |  2 +
+>  drivers/platform/x86/intel/ifs/ifs.h          | 62 +++++++++----
+>  drivers/platform/x86/intel/ifs/core.c         | 92 ++++++++++++++-----
+>  drivers/platform/x86/intel/ifs/load.c         |  8 +-
+>  drivers/platform/x86/intel/ifs/runtest.c      | 91 +++++++++++++++++-
+>  drivers/platform/x86/intel/ifs/sysfs.c        | 17 ++--
+>  .../ABI/testing/sysfs-platform-intel-ifs      |  8 +-
+>  7 files changed, 221 insertions(+), 59 deletions(-)
+> 
 
