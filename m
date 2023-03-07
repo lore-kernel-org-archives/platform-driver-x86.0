@@ -2,131 +2,253 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA45C678D5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 12:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10798C678D4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 13:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjCGMfS (ORCPT
+        id S230287AbjCGNbF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 07:35:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55868 "EHLO
+        Tue, 7 Mar 2023 08:31:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjCGMfR (ORCPT
+        with ESMTP id S230430AbjCGNbA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 07:35:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4383608F
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 04:34:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678192469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nKnr0DUp/m2+BwAmLNBkIvjqUTFOrVYFFcfsOrK3Ipk=;
-        b=Jyb3MkEschNhm158CqfbtVbtNTjA62CMCUpDUjKE4vHc1NeWJLtBekM2uj1gC7fdKUfAbu
-        cajkiwkBr/a10CCn8mDp6sEYs6LD/d5MNDtzVGWYq5T9HI6s5ix05xrrbzq4BMureEWnuh
-        YQ0mC5MBDbygFLqTk5XzqdQvZOPzUcE=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-ftP0misVNdmPZNbHFWdaWA-1; Tue, 07 Mar 2023 07:34:27 -0500
-X-MC-Unique: ftP0misVNdmPZNbHFWdaWA-1
-Received: by mail-ed1-f70.google.com with SMTP id u10-20020a056402064a00b004c689813557so18458145edx.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 04:34:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678192465;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nKnr0DUp/m2+BwAmLNBkIvjqUTFOrVYFFcfsOrK3Ipk=;
-        b=uCmFC37DD2TuJdpzslTniN0lI9urt5eM+po8/mUdvDRwbxY5Tr+Rfkcr3qBkdR50bh
-         0ADRuauHPsCIUVZ9kkkkv+3Z8YMTGlBM6kGNlDcDuvSxEgqCP5uUjjOQPIupt342OKGS
-         xbKaDVzdFaww+puVtkFihMSLrzZ27M1qlxS7CZlWQcn7Oyup36v+18PIwXfAMFCQLIFA
-         jWXXXw68/nBG9QTaXM+Zl7lkOFXS5JWVoEq+N5ksbczZ+t4jWQMpNjDNS1GeIbzFEWuz
-         8uhwdCetYOrJUoYo1Qs4mKvI8IvgQwJqgFG0o/7iWqVfuDm4k7T/eAodA0t10R9TtI/Z
-         ZP5w==
-X-Gm-Message-State: AO0yUKUCOia8rklQPAgpx6OeVbFZer800SY3u4xM+hx3KvxV6DXULv7W
-        gTmYgHOLubOH+glK2GvMlPo0AsCpJE6IqsEf5LRNkuGbbLo3b91wB3xo1HByYyK8UkI0rhNY/e3
-        N+MzKUNKaggmtXU2tuft+ybgGm1JfqUnq4pl6xNJQ9Q==
-X-Received: by 2002:a17:906:fe0c:b0:8b3:b74:aeb5 with SMTP id wy12-20020a170906fe0c00b008b30b74aeb5mr18325973ejb.30.1678192465822;
-        Tue, 07 Mar 2023 04:34:25 -0800 (PST)
-X-Google-Smtp-Source: AK7set8iX49b4+qtmGhtc9D6W+y2btz3BJ60OCfbE03rLGSf8RexIl8hvboRPNJlCF415awJ/SJcmQ==
-X-Received: by 2002:a17:906:fe0c:b0:8b3:b74:aeb5 with SMTP id wy12-20020a170906fe0c00b008b30b74aeb5mr18325953ejb.30.1678192465488;
-        Tue, 07 Mar 2023 04:34:25 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id bl15-20020a170906c24f00b008d83ad86fe8sm6048770ejb.59.2023.03.07.04.34.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Mar 2023 04:34:24 -0800 (PST)
-Message-ID: <d3a285c6-2c0b-99e8-5d98-b5eb8d44d54a@redhat.com>
-Date:   Tue, 7 Mar 2023 13:34:24 +0100
+        Tue, 7 Mar 2023 08:31:00 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26344C6C4;
+        Tue,  7 Mar 2023 05:30:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678195817; x=1709731817;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OWnTmtqx2njcHCDeyfR3K5k7oQYJj5/5PcpZS3r/WhQ=;
+  b=HUXn9WufBXXE6tK/enGSvjHDKpuHWP/ElwTa1mf8VKYpHaJK6J0CITpt
+   pgf11lT06GxkinJEhAtWy7wAuEQhk2MXz9OAXUU9CRHgvwOwFEF1KPio8
+   g9QCbFw7Ai1ChoB4g4tJHHRTdeeltJIQ4lXaa87oCzxuwYlkzNQwMydwf
+   BVI057hleMuF9pdS9g/kI79MNUP70e8+1WZnvyGpyy7sU/OUYG5H+dLux
+   1w6oS27k4hQSbwV98FF8fibzt7GwHlhMu4NiuBmfRqa0sg0tQFdYkB+Ao
+   nve5EO3WebACYesIGWZ89lr4+1gWaxP5wWaZQlRcoIgx4qlxi1GRP3V+C
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="319678695"
+X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
+   d="scan'208";a="319678695"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 05:28:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="709057183"
+X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
+   d="scan'208";a="709057183"
+Received: from rajatkha-mobl.gar.corp.intel.com (HELO [10.215.203.161]) ([10.215.203.161])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 05:28:13 -0800
+Message-ID: <b51504d4-8e7c-0dac-3684-c9b4dc2f1943@linux.intel.com>
+Date:   Tue, 7 Mar 2023 18:58:05 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] backlight: apple_bl: Use acpi_video_get_backlight_type()
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Mark Gross <markgross@kernel.org>, Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Aditya Garg <gargaditya08@live.com>,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20230307120540.389920-1-hdegoede@redhat.com>
- <ZActl7YN+u7Yz58m@smile.fi.intel.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZActl7YN+u7Yz58m@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: [PATCH v6] platform/x86/intel/pmc: core: Add support to show
+ LTR-ignored components
+To:     "Box, David E" <david.e.box@intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>
+Cc:     "Khandelwal, Rajat" <rajat.khandelwal@intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230301155757.1293131-1-rajat.khandelwal@linux.intel.com>
+ <4c01c9e7ef9455c791fdad9de13ce706b4c3e3e2.camel@intel.com>
+Content-Language: en-US
+From:   Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+In-Reply-To: <4c01c9e7ef9455c791fdad9de13ce706b4c3e3e2.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi David,
 
-On 3/7/23 13:27, Andy Shevchenko wrote:
-> On Tue, Mar 07, 2023 at 01:05:40PM +0100, Hans de Goede wrote:
->> On some MacBooks both the apple_bl and the apple-gmux backlight drivers
->> may be able to export a /sys/class/backlight device.
->>
->> To avoid having 2 backlight devices for one LCD panel until now
->> the apple-gmux driver has been calling apple_bl_unregister() to move
->> the apple_bl backlight device out of the way when it loads.
->>
->> Similar problems exist on other x86 laptops and all backlight drivers
->> which may be used on x86 laptops have moved to using
->> acpi_video_get_backlight_type() to determine whether they should load
->> or not.
->>
->> Switch apple_bl to this model too, so that it is consistent with all
->> the other x86 backlight drivers.
->>
->> Besides code-simplification and consistency this has 2 other benefits:
->>
->> 1) It removes a race during boot where userspace will briefly see
->>    an apple_bl backlight and then have it disappear again, leading to e.g.:
->>    https://bbs.archlinux.org/viewtopic.php?id=269920
->>
->> 2) This allows user to switch between the drivers by passing
->>    acpi_backlight=apple_gmux or acpi_backlight=vendor on the kernel
->>    commandline.
-> 
+On 3/6/2023 11:29 PM, Box, David E wrote:
+> Hi Rajat,
+>
+> We have some changes coming for this driver in order to support multiple PMC
+> devices on the same SoC. As part of this we are modifying the output of ltr_show
+> to prefix the IP with number of the managing PMC. For example:
+>
+> PMC[0]:SOUTHPORT_A	LTR: RAW: 0x0	Non-Snoop(ns): 0	Snoop(ns): 0
+> PMC[0]:SOUTHPORT_B	LTR: RAW: 0x0	Non-Snoop(ns): 0	Snoop(ns): 0
 > ...
-> 
->> +	depends on ACPI_VIDEO=n || ACPI_VIDEO
-> 
-> I'm wondering if "imply ACPI_VIDEO" (i.o.w. weak dependency) is what suitable
-> here.
+> PMC[1]:SOUTHPORT_A	LTR: RAW: 0x0	Non-Snoop(ns): 0	Snoop(ns): 0
+> PMC[1]:SOUTHPORT_B	LTR: RAW: 0x0	Non-Snoop(ns): 0	Snoop(ns): 0
+>
+> We're thinking that it would be better to have a column in ltr_show for the
+> ignore status. This would make everything viewable in one display. A list would
+> not be needed. The status can be read back from the ltr_ignore register. Would
+> that work for you? Thanks.
 
-No, because then if apple_bl is builtin and acpi_video is a module
-we will get unresolved dependencies.
+Aah, ok. That is doable.
+Is the plan to incorporate the ignore column certain? Further, is there an ETA for the
+said changes in the upstream?
 
-The quoted bit of Kconfig magic is exactly to avoid that scenario,
-other combinations are fine (due to stubs in acpi/video.h when
-disabled).
+Thanks
+Rajat
 
-Regards,
-
-Hans
-
-
+>
+> David
+>
+> On Wed, 2023-03-01 at 21:27 +0530, Rajat Khandelwal wrote:
+>> Currently, 'ltr_ignore' sysfs attribute, when read, returns nothing, even
+>> if there are components whose LTR values have been ignored.
+>>
+>> Make the sysfs attribute print out such components, if they exist, and
+>> return EEXIST, if tried to set an already ignored component.
+>>
+>> Signed-off-by: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+>> ---
+>>
+>> v6: Description written in imperative sense
+>>
+>> v5:
+>> 1. Ignore the LTR of the respective component after unlocking the mutex lock
+>> 2. Adding error code details to the commit message
+>>
+>> v4: Mutex unlock during error conditions
+>>
+>> v3: Incorporated a mutex lock for accessing 'ltr_ignore_list'
+>>
+>> v2: kmalloc -> devm_kmalloc
+>>
+>>   drivers/platform/x86/intel/pmc/core.c | 64 ++++++++++++++++++++++-----
+>>   drivers/platform/x86/intel/pmc/core.h |  2 +-
+>>   2 files changed, 53 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/pmc/core.c
+>> b/drivers/platform/x86/intel/pmc/core.c
+>> index 3a15d32d7644..16cf6c634db8 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.c
+>> +++ b/drivers/platform/x86/intel/pmc/core.c
+>> @@ -53,6 +53,17 @@ const struct pmc_bit_map msr_map[] = {
+>>          {}
+>>   };
+>>   
+>> +/* Mutual exclusion to access the list of LTR-ignored components */
+>> +static DEFINE_MUTEX(ltr_entry_mutex);
+>> +
+>> +struct ltr_entry {
+>> +       u32 comp_index;
+>> +       const char *comp_name;
+>> +       struct list_head node;
+>> +};
+>> +
+>> +static LIST_HEAD(ltr_ignore_list);
+>> +
+>>   static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+>>   {
+>>          return readl(pmcdev->regbase + reg_offset);
+>> @@ -435,27 +446,18 @@ static int pmc_core_pll_show(struct seq_file *s, void
+>> *unused)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+>>   
+>> -int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+>> +void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+>>   {
+>>          const struct pmc_reg_map *map = pmcdev->map;
+>>          u32 reg;
+>> -       int err = 0;
+>>   
+>>          mutex_lock(&pmcdev->lock);
+>>   
+>> -       if (value > map->ltr_ignore_max) {
+>> -               err = -EINVAL;
+>> -               goto out_unlock;
+>> -       }
+>> -
+>>          reg = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+>>          reg |= BIT(value);
+>>          pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, reg);
+>>   
+>> -out_unlock:
+>>          mutex_unlock(&pmcdev->lock);
+>> -
+>> -       return err;
+>>   }
+>>   
+>>   static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+>> @@ -464,6 +466,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
+>> *file,
+>>   {
+>>          struct seq_file *s = file->private_data;
+>>          struct pmc_dev *pmcdev = s->private;
+>> +       const struct pmc_reg_map *map = pmcdev->map;
+>> +       struct ltr_entry *entry;
+>>          u32 buf_size, value;
+>>          int err;
+>>   
+>> @@ -473,13 +477,49 @@ static ssize_t pmc_core_ltr_ignore_write(struct file
+>> *file,
+>>          if (err)
+>>                  return err;
+>>   
+>> -       err = pmc_core_send_ltr_ignore(pmcdev, value);
+>> +       if (value > map->ltr_ignore_max)
+>> +               return -EINVAL;
+>> +
+>> +       mutex_lock(&ltr_entry_mutex);
+>> +
+>> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
+>> +               if (entry->comp_index == value) {
+>> +                       err = -EEXIST;
+>> +                       goto out_unlock;
+>> +               }
+>> +       }
+>> +
+>> +       entry = devm_kmalloc(&pmcdev->pdev->dev, sizeof(*entry), GFP_KERNEL);
+>> +       if (!entry) {
+>> +               err = -ENOMEM;
+>> +               goto out_unlock;
+>> +       }
+>> +
+>> +       entry->comp_name = map->ltr_show_sts[value].name;
+>> +       entry->comp_index = value;
+>> +       list_add_tail(&entry->node, &ltr_ignore_list);
+>> +
+>> +out_unlock:
+>> +       mutex_unlock(&ltr_entry_mutex);
+>> +
+>> +       if (err)
+>> +               return err;
+>> +
+>> +       pmc_core_send_ltr_ignore(pmcdev, value);
+>>   
+>> -       return err == 0 ? count : err;
+>> +       return count;
+>>   }
+>>   
+>>   static int pmc_core_ltr_ignore_show(struct seq_file *s, void *unused)
+>>   {
+>> +       struct ltr_entry *entry;
+>> +
+>> +       mutex_lock(&ltr_entry_mutex);
+>> +       list_for_each_entry(entry, &ltr_ignore_list, node) {
+>> +               seq_printf(s, "%s\n", entry->comp_name);
+>> +       }
+>> +       mutex_unlock(&ltr_entry_mutex);
+>> +
+>>          return 0;
+>>   }
+>>   
+>> diff --git a/drivers/platform/x86/intel/pmc/core.h
+>> b/drivers/platform/x86/intel/pmc/core.h
+>> index 810204d758ab..da35b0fcbe6e 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.h
+>> +++ b/drivers/platform/x86/intel/pmc/core.h
+>> @@ -396,7 +396,7 @@ extern const struct pmc_reg_map adl_reg_map;
+>>   extern const struct pmc_reg_map mtl_reg_map;
+>>   
+>>   extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+>> -extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+>> +extern void pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+>>   
+>>   void spt_core_init(struct pmc_dev *pmcdev);
+>>   void cnp_core_init(struct pmc_dev *pmcdev);
