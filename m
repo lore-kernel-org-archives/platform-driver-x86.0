@@ -2,105 +2,71 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D68C678D5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Mar 2023 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B938C64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Mar 2023 20:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230082AbjCHSNt (ORCPT
+        id S230100AbjCHUSA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Mar 2023 13:13:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        Wed, 8 Mar 2023 15:18:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbjCHSNk (ORCPT
+        with ESMTP id S230248AbjCHUR6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Mar 2023 13:13:40 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152753669C;
-        Wed,  8 Mar 2023 10:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678299193; x=1709835193;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=XGDiXvIFElyNZuTg+iCZX3wGMZQziuYEnraWMH5AgVk=;
-  b=I0rSCgERsKlT+kKk/0mnnFBeB1dGcwZ3lQUzrA3adBINobhxQm8iD6gI
-   E9QovygpHAHMpiDSsxKKE3hYRSyvc+Si0CdhTplO6HHx9zE2G6dJ9o+gd
-   nlMFqkaYW5iXHW3ya1fFcUCoTvCTi5rdopUSOSIC7ZodKz+5oocbcKWiM
-   8M0GCjOcHGdo/FBoOJWNMx2TV8o+sR2AQzEwhjJn+sroccX7JohmWVhKG
-   q4bIjOc70SfnB8y4qQAWhGgkmybuMXg+Phlty8jaHJfZx1OsLgev9OvxH
-   TDLZXmLZbWxyvxn9iZzC2X+TaVluUjtjEt/jPXnSC2yOSZP3TzD8LauNx
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="320064720"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="320064720"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 10:12:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="677079806"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="677079806"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 08 Mar 2023 10:12:20 -0800
-Received: from madesina-mobl.amr.corp.intel.com (madesina-mobl.amr.corp.intel.com [10.212.172.13])
-        by linux.intel.com (Postfix) with ESMTP id 73CBB58097C;
-        Wed,  8 Mar 2023 10:12:20 -0800 (PST)
-Message-ID: <702721b279dd864db1b8ea468136b96075df3994.camel@linux.intel.com>
-Subject: Re: [PATCH linux-next 2/3] drivers/platform/x86/intel: fix a memory
- leak in intel_vsec_add_aux
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Dongliang Mu <dzm91@hust.edu.cn>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 Mar 2023 10:12:20 -0800
-In-Reply-To: <20230308135538.479223-2-dzm91@hust.edu.cn>
-References: <20230308135538.479223-1-dzm91@hust.edu.cn>
-         <20230308135538.479223-2-dzm91@hust.edu.cn>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
-MIME-Version: 1.0
+        Wed, 8 Mar 2023 15:17:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277B83ABE;
+        Wed,  8 Mar 2023 12:17:55 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADF2D61733;
+        Wed,  8 Mar 2023 20:17:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 220C6C433EF;
+        Wed,  8 Mar 2023 20:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678306674;
+        bh=BY8Izeqd+mURyqB814FGlcrEUTYwirZSyPip5WwOnVE=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Olqm+rDXnsEIhJfSaKwO1Yz4GnN5kKAKpfyY1zQW9fpJAe/Zi2aNSTjHJRMyHzWbN
+         oPdcr+bzoBkrBebsB5NmkFvbZFlrYZjEjHpMGzLfE0152pUoaSeJojeo6Ad9AMVsCX
+         0y5a6wIfiKIWaIw3kmiKw1QkHhoUfv0vN3x6T5MsRhDq4Vp6msqXyF5HvWU29yqKe4
+         pyBrOxThYkFFVaQdgnuKXKFNC0I4PNPi8ilYZacD3KShGHS7qPCzUSiMNSaRh68zx6
+         cn70n5mAKmao1RZpmeIuPC1da4p8UFjHB+Y2yd7YKwlo4FM6ezI1bSLxFcmroyhcOi
+         8aOnVL8/BFarg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1167CE61B64;
+        Wed,  8 Mar 2023 20:17:54 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.3-2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <7cbefa41-8c79-8280-3d87-3b0b13857aba@redhat.com>
+References: <7cbefa41-8c79-8280-3d87-3b0b13857aba@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <7cbefa41-8c79-8280-3d87-3b0b13857aba@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.3-2
+X-PR-Tracked-Commit-Id: 1a0009abfa7893b9cfcd3884658af1cbee6b26ce
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 55ee6646b6ba86574d1411af275c61a82fdfe10e
+Message-Id: <167830667405.31327.6530095545614055894.pr-tracker-bot@kernel.org>
+Date:   Wed, 08 Mar 2023 20:17:54 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dongliang,
+The pull request you sent on Wed, 8 Mar 2023 15:56:19 +0100:
 
-Thanks for your patch. Do cc the mailing list next time.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.3-2
 
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/55ee6646b6ba86574d1411af275c61a82fdfe10e
 
-On Wed, 2023-03-08 at 21:55 +0800, Dongliang Mu wrote:
-> The first error handling code in intel_vsec_add_aux misses the
-> deallocation of intel_vsec_dev->resource.
->=20
-> Fix this by adding kfree(intel_vsec_dev->resource) in the error handling
-> code.
->=20
-> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-> ---
-> =C2=A0drivers/platform/x86/intel/vsec.c | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/platform/x86/intel/vsec.c
-> b/drivers/platform/x86/intel/vsec.c
-> index 13decf36c6de..2311c16cb975 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -154,6 +154,7 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct d=
-evice
-> *parent,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D ida_alloc(intel_v=
-sec_dev->ida, GFP_KERNEL);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&vsec_ida_lo=
-ck);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret < 0) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev->resource);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return ret;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
