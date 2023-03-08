@@ -2,213 +2,240 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0DEC678D5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Mar 2023 14:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF78C678D5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  8 Mar 2023 05:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230463AbjCGOYK (ORCPT
+        id S229553AbjCHFQE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Mar 2023 09:24:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50350 "EHLO
+        Wed, 8 Mar 2023 00:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbjCGOXs (ORCPT
+        with ESMTP id S229544AbjCHFP0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2023 09:23:48 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1F78F505;
-        Tue,  7 Mar 2023 06:18:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/3jbkIwpVJ/VerNvF0LcqYUDPFjsDPeMNCNxu5wBOKE=; b=hFkr/k0HYfEwqSYnZYQjP6xJlB
-        SXxUkyEFol6rmETacQwE3KcRkl3rQHT4mbB04b6bCdS0j7xAD2GH7E7L4ts18nSpzS4KqTFTsCNl5
-        ozUNCPHKQefQC1Jwu6hiksRNHavxszZXWjuK359WHoH8pHiD18dz0cNTLvhsiIV5AqGBzf/jdJLIP
-        n4eVT0xafl+uZ2d5mgpQERBO2dnkFMU1DCF+sIJl5FZ5mzSbCRUcd+pYBi/utNHEeySvJdB7rAUic
-        CUZlnDu/ByqumJYilKO6h4lA/8GIkaHjAOzr6hqBIq3F8cp14EHEJ2iJpAQ8nABsWOB6QtexfHf9q
-        Og4lznRg==;
-Received: from [2001:8b0:10b:5:640c:634b:db90:9c87] (helo=u3832b3a9db3152.ant.amazon.com)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pZY8h-006TLE-Q9; Tue, 07 Mar 2023 14:18:04 +0000
-Message-ID: <26e3ecb35c36d178cc7d02d04dfaeaaf51d58366.camel@infradead.org>
-Subject: Re: [PATCH v6 20/20] irqdomain: Switch to per-domain locking
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Juergen Gross <jgross@suse.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Date:   Tue, 07 Mar 2023 14:18:01 +0000
-In-Reply-To: <33118f0b-6752-7e4c-49a3-a8c9345f02a1@suse.com>
-References: <20230213104302.17307-1-johan+linaro@kernel.org>
-         <20230213104302.17307-21-johan+linaro@kernel.org>
-         <f149fe1eb3836c14655e3e7eaa4032298ae68545.camel@infradead.org>
-         <33118f0b-6752-7e4c-49a3-a8c9345f02a1@suse.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-        boundary="=-O5rbambac+Czr9Q3WDDZ"
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Wed, 8 Mar 2023 00:15:26 -0500
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6EFFA8807
+        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Mar 2023 21:14:39 -0800 (PST)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-176b90e14a9so10000703fac.9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2023 21:14:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678252477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+55ukHsCYO4q801zuBEa8hjGdPI/cawtTkhyHzoKZhA=;
+        b=c7lLCUD8GcvgY75Ppfr0/CmwIZqBacHGpO1Bpsr/ZJvceAhmuYkaqwlSgJ35Ayws7H
+         StzsPqsI1qzytQyUqEYbnrTQTKDMEt6VUJror3p86hzIGazak8fHZv8obi3HOLsoFiPG
+         APkQtwIIqjhFn88iEVuVhkDaN57IZtWqHmmDfDNoHVgBAPUXKh8NXUSQrsVxZOa2rKxv
+         zwHndpx2jTEn6GQTcDnK5qXxI9VIyUC5j+N5LPmzSbrb2IzBh99hIxeRhKcfmsf7Wbwg
+         XesUCE1xuW18HRnbWI+qg69jcUzJu5PCVFEIIGpf6p1b2ItBXAXimrm/dlKZWm/V4rRh
+         VtsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678252477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+55ukHsCYO4q801zuBEa8hjGdPI/cawtTkhyHzoKZhA=;
+        b=7WDLdNM+t5fV1waQ+6OtTNF4jhc/Rpy1569/tlS+SWDyv6lf2ivA+nD+pjt9cCSwJE
+         3NAdi7V5FWC9vbh2gBGUCyYSrOT+U/cMqW7CHxLngGF0Gcyj5U17eDVB1nb1kwSBoJ8e
+         vXrfkmWZKzlCsBasug2JColAzYqZHgrMJLScqZ6x2P3k4jW84qtioF2A1zER/SC5ORKp
+         1Dxd9AToU6dKO3wQeL4/8mVcNzj47MZ3B4W39tozy6wLy2bp1EaZc7CkU9Ysx9qBcUwz
+         Lpf2kbE60NS1fnKYVXEt4NRC9fEEfhe140CKyxp10ydtwPnwo/BzMhvRGUznFvoGrMwH
+         0yNg==
+X-Gm-Message-State: AO0yUKW2D38i7yc5NCwxsla7fYdEBy4RUioJedu/IPOqJqgtpC3Brogs
+        KOSlnLH4rtNVi2T1ngWE9yIhpu8Nb8lEnI19pqE=
+X-Google-Smtp-Source: AK7set83kHi8btpR+GMrP0J4f3AqzD2vkkDft0mNp54VNEL7r09Fq3N8cZx5HKMoJX+/63G98PFI5ZEbQsnDtPsh38g=
+X-Received: by 2002:a05:6870:98af:b0:176:2b10:5f9f with SMTP id
+ eg47-20020a05687098af00b001762b105f9fmr5537007oab.7.1678252477178; Tue, 07
+ Mar 2023 21:14:37 -0800 (PST)
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com>
+ <CAG4kvq9-qGFNRP29i4jDPL6RVLwGG86wdtTR1+VWZWu5krfv2A@mail.gmail.com>
+ <044d2716-2490-6600-33e2-ecf50f65a6e9@gmail.com> <2267dadd-f1a9-e064-6f3f-e3aea459cf5a@gmx.de>
+ <CAG4kvq84Lso0x62AuZgRttcQFdKXAHpWWKB4n0ZMTgb9CZ=NCw@mail.gmail.com>
+ <e95a38c0-15e0-92e2-97c0-4d09219158f5@gmx.de> <CAG4kvq9QzoXcwTxTFzoQeQDnMEHfWCG4JmLgQ-sMn_WjX-mVJw@mail.gmail.com>
+ <2181c5de-44d6-aebd-52ba-63d9fabd620c@gmx.de> <e00df016-5ff1-3e5a-cffc-ab79672a2d7f@gmx.de>
+ <24b85f3f-d973-09ef-218b-ad47d093f749@redhat.com>
+In-Reply-To: <24b85f3f-d973-09ef-218b-ad47d093f749@redhat.com>
+From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
+Date:   Tue, 7 Mar 2023 21:14:26 -0800
+Message-ID: <CAG4kvq-8-J_0ugJe0ut2A2WB83Yeq-9KCCXQCM+MDn4C5CzgCg@mail.gmail.com>
+Subject: Re: ideapad_laptop tablet mode toggle detection
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Armin Wolf <W_Armin@gmx.de>, Gergo Koteles <soyer@irl.hu>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, Mar 6, 2023 at 12:38=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi,
+>
+> Armin and Maximilian, thank you for helping Andrew with this.
+>
+> On 3/6/23 02:41, Armin Wolf wrote:
+> > Am 06.03.23 um 02:26 schrieb Armin Wolf:
+> >
+> >> Am 05.03.23 um 23:59 schrieb Andrew Kallmeyer:
+> >>
+> >>> On Sun, Mar 5, 2023 at 1:40=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
+ote:
+> >>>> Hi,
+> >>>>
+> >>>> could it be that bit 5 is set to disable the touchpad when the
+> >>>> device switches
+> >>>> to tablet mode? I suspect that the query handler does the following:
+> >>>> 1. Notify VPC0 to disable the touchpad.
+> >>>> 2. Notify ACPI WMI, which does submit the necessary scancode for
+> >>>> switching to tablet mode.
+> >>> I think you're right about this notification being for the touchpad,
+> >>> although at least on my machine
+> >>> there is no other touchpad switch. So this is identical for my machin=
+e
+> >>> specifically. In this function
+> >>> from the decompiled ACPI dump you can see VCP0 and WM00 notified:
+> >>>
+> >>> Method (_Q44, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
+> >>> {
+> >>>     P80B =3D 0x44
+> >>>     Notify (VPC0, 0x80) // Status Change
+> >>>     WEID =3D 0xF4
+> >>>     Notify (WM00, 0x80) // Status Change
+> >>> }
+> >>>
+> >>> This WM00 device sounds like the WMI you're talking about, however I'=
+m
+> >>> getting those errors
+> >>> about this device not existing in journalctl still. I was asking
+> >>> before about how to create this
+> >>> missing device but it's not clear to me if that is possible.
+> >>>
+> >>> kernel: ACPI BIOS Error (bug): Could not resolve symbol
+> >>> [\_SB.PC00.LPCB.EC0._Q44.WM00], AE_NOT_FOUND
+> >>>
+> >>> I searched in my .dsl files from the acpidump and wasn't able to find
+> >>> any of the 3 ideapad_wmi_ids
+> >>> listed in the driver. Maybe you have an idea of how to interface with
+> >>> this missing WM00 object though.
+> >>
+> >> I was combing through the ACPI DSDT table inside the acpidump you
+> >> provided,
+> >> and i found serveral PNP0C14 devices, which hold WMI methods, events
+> >> and data.
+> >>
+> >> The WMI GUIDs are encoded inside the associated _WDG buffers, you
+> >> should therefore
+> >> only grep for parts of the GUIDs.
+> >> For example: GUID 06129D99-6083-4164-81AD-F092F9D773A6 -> grep "0xF0,
+> >> 0x92"
+> >>
+> >> When feeding the content of the buffers named WQxx to the bmfdec
+> >> utility, i was able
+> >> to extract a description of each WMI object.
+> >>
+> >> On of which (WMIY) is handling the "Lenovo Yoga Mode", which seems to
+> >> handle the tablet
+> >> mode transitions. The MOF data is:
+> >>
+> >> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
+> >> Description("Lenovo Yoga Mode Change Event"),
+> >> guid("{06129D99-6083-4164-81AD-F092F9D773A6}")]
+> >> class LENOVO_GSENSOR_EVENT : WMIEvent {
+> >>   [key, read] string InstanceName;
+> >>   [read] boolean Active;
+> >>   [WmiDataId(1), read, Description("Lenovo Yoga Mode Change Event")]
+> >> uint32 ModeDataVal;
+> >> };
+> >>
+> >> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"),
+> >> Description("LENOVO_GSENSOR_DATA class"),
+> >> guid("{09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C}")]
+> >> class LENOVO_GSENSOR_DATA {
+> >>   [key, read] string InstanceName;
+> >>   [read] boolean Active;
+> >>
+> >>   [WmiMethodId(1), Implemented, Description("Mode Data")] void
+> >> GetUsageMode([out, Description("Mode Data")] uint32 Data);
+> >>   [WmiMethodId(2), Implemented, Description("Get Xaxis Value")] void
+> >> GetXaxisValue([out, Description("Get Xaxis Value")] uint32 Data);
+> >>   [WmiMethodId(3), Implemented, Description("Get Yaxis Value")] void
+> >> GetYaxisValue([out, Description("Get Yaxis Value")] uint32 Data);
+> >>   [WmiMethodId(4), Implemented, Description("Get Zaxis Value")] void
+> >> GetZaxisValue([out, Description("Get Zaxis Value")] uint32 Data);
+> >>   [WmiMethodId(5), Implemented, Description("Base to Ground")] void
+> >> GetAngle4Value([out, Description("Base to Ground")] uint32 Data);
+> >>   [WmiMethodId(6), Implemented, Description("Screen to Ground")] void
+> >> GetAngle5Value([out, Description("Screen to Ground")] uint32 Data);
+> >>   [WmiMethodId(7), Implemented, Description("Screen to Base")] void
+> >> GetAngle6Value([out, Description("Screen to Base")] uint32 Data);
+> >> };
+> >>
+> >> While looking at _WED (used to get ModeDataVal) and WMAB (handles
+> >> method calls on LENOVO_GSENSOR_DATA),
+> >> i assume that  only the first method (GetUsageMode) is implemented,
+> >> and that ModeDataVal is used to tell
+> >> which value of LENOVO_GSENSOR_DATA has changed (hardwired to 1 on your
+> >> device).
+> >>
+> >> Maybe you can write a wmi driver which handles both WMI objects, so
+> >> that you can find out what the values
+> >> returned by GetUsageMode mean. With a bit of luck, you can use this to
+> >> implement tablet mode toggle detection.
+> >>
+> >> BTW, what is the name of your notebook model?
+> >>
+> >> Armin Wolf
+> >>
+> > Well, it turns out i totally forgot that there exists already a patch w=
+hich adds support for this:
+> > https://patchwork.kernel.org/project/platform-driver-x86/patch/20221004=
+214332.35934-1-soyer@irl.hu/
+> >
+> > Maybe you can get this patch into shape and submit it again?
+>
+> Yes if you can do that, then that would be great.
+>
+> The end result should really be a patch-series then with the first patch
+> being the prep patch introducing a new ideapad-laptop.h I suggested
+> during my review. This patch can have you as the author + your
+> Signed-off-by.
+>
+> The 2nd patch would then introduce a new version of Gergo's driver using
+> the helper functions introduced in the first patch.
+>
+> For this patch you want to keep Gergo as the author (1), and then add
+> yourself as co-author by using the following tags at the end of
+> the commit message:
+>
+> Co-developed-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
+> Signed-off-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
+>
+> Note do NOT add a Signed-off-by for Gergo, he clearly intended to
+> submit his code under the GPL (see the GPL copyright header in
+> the new file) so the Signed-off-by missing is fine. And you must
+> not add Signed-off-by-s for other people. A S-o-b must always
+> be given by the person themselves.
+>
+> Regards,
+>
+> Hans
+>
+> 1) git commit --author=3D"..."
 
---=-O5rbambac+Czr9Q3WDDZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi, Hans, thanks for the great advice! I'm excited to see it's already
+so close to being done. I have compiled Gergo's module separately from
+the kernel tree and loaded it on my laptop and it works perfectly.
 
-On Tue, 2023-03-07 at 15:06 +0100, Juergen Gross wrote:
-> On 07.03.23 14:51, David Woodhouse wrote:
-> > On Mon, 2023-02-13 at 11:43 +0100, Johan Hovold wrote:
-> > > The IRQ domain structures are currently protected by the global
-> > > irq_domain_mutex. Switch to using more fine-grained per-domain lockin=
-g,
-> > > which can speed up parallel probing by reducing lock contention.
-> > >=20
-> > > On a recent arm64 laptop, the total time spent waiting for the locks
-> > > during boot drops from 160 to 40 ms on average, while the maximum
-> > > aggregate wait time drops from 550 to 90 ms over ten runs for example=
-.
-> > >=20
-> > > Note that the domain lock of the root domain (innermost domain) must =
-be
-> > > used for hierarchical domains. For non-hierarchical domains (as for r=
-oot
-> > > domains), the new root pointer is set to the domain itself so that
-> > > &domain->root->mutex always points to the right lock.
-> > >=20
-> > > Also note that hierarchical domains should be constructed using
-> > > irq_domain_create_hierarchy() (or irq_domain_add_hierarchy()) to avoi=
-d
-> > > having racing allocations access a not fully initialised domain. As a
-> > > safeguard, the lockdep assertion in irq_domain_set_mapping() will cat=
-ch
-> > > any offenders that also fail to set the root domain pointer.
-> > >=20
-> > > Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > Tested-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-> > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> >=20
-> > Broke Xen.
->=20
-> Fixed with commit ad32ab9604f2.
+I will follow the review comments on the patch, getting it integrated
+with the existing module etc. I will also make sure to sign the
+commits as you advise. It will be good to have it working for
+everyone. This will be my first kernel patch; I have found the docs
+page on submitting a patch but let me know if there's anything I'm
+missing when I do it.
 
-Thanks.
-
---=-O5rbambac+Czr9Q3WDDZ
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMwMzA3MTQxODAxWjAvBgkqhkiG9w0BCQQxIgQgtFKrZPkh
-35qQ1OUst9mi5TytFQGHvChC43pzoLEutQgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAeAyUJ27zvjBYOYdSzp3h4W+0KitGJdW2R
-WNLQETCB6qVFTvle/EZ9iZyMoOWDOV5vGV+0s6QulHjmP0UHU7DGwNVWHtUBAkPGKnon0QiKcS4s
-ZuE+iYyu/Ey7LqMvLXwnZQBnmuLo9TE+ezzbyHDmTpFv7VQyZFqiHtT5NqndLsxDhHvdVeGX4Iwx
-mAX2UEIAbYEp9AdIwQk4SZV0V2L28BfhEkg/CfC0fI9j3e8G6yyOa2D4unzXw6gvrSQ3t3TynWU3
-qIdYNxC0dMKZpfPJvr9qjlo6bT1fJHeL7rm2RjeucerIyEoPTsoLafGvAEJcY5dSVohHfqKS4yEC
-JAiuyQExSFfHjmkigpX9nu/9/OJ5rGlrJ94Psl1ZdBzjyI5JqzMCHA2zk9J0bucXGLbt5w9ZMhGK
-soZR4RL4xZpOuvkLYcDvOeTFNEL90dg1hd/SHwmHXaW4Mj5nZvHIj4LYzkjCI13dPlKO87YVsevx
-MrGssQXuwId57pqEZL5FEdVtx+bRKIvGI4ieGG0u1qSAhyp00eC69NyU8bSm5zHlaq1nQWKaLTCO
-eEyC5J0ghShA6bviXnqn9FJGQBnm4mQ7fvf3CTsblyee/HxRlEOBWGDTowdZ4ak0BOhiZJ0dUatT
-I/oN3hJkZTHYAPZ7rL6Gqmor0MzYCTIzzc+Zqe7ZQQAAAAAAAA==
-
-
---=-O5rbambac+Czr9Q3WDDZ--
+- Andrew
