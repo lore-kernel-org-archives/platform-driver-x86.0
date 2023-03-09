@@ -2,51 +2,51 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C7EC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 09:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5F9C64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 09:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjCIJkT (ORCPT
+        id S231297AbjCIJlh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Mar 2023 04:40:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55358 "EHLO
+        Thu, 9 Mar 2023 04:41:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjCIJjs (ORCPT
+        with ESMTP id S231298AbjCIJlc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2023 04:39:48 -0500
+        Thu, 9 Mar 2023 04:41:32 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF1FE0608
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 01:39:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B171BE8437
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 01:40:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678354738;
+        s=mimecast20190719; t=1678354840;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=qNEp2StRmiUH+Zkp/TFDzviO8/yeDbenPeySy/ZqZNg=;
-        b=NK96ogK0ddXND00+lrw9K2DEqXHMfyULkawirUw8x1Iy9Hj2MbMHTBTOsnhE4ABV17uRPD
-        JxZHSmrAAdpIH5okS2vmnblLnstOEw6a6mMTeRNZ/Ymff2DlUxEnG/XGk/o8f8aDQzisWy
-        eLv95mmN3vICsmpcFULvFG6afdwMMjw=
+        bh=Y+Ycje4yqZvGj2ZTpJYfrES1vVy8SUFz/YxSVsbxMTQ=;
+        b=WDZwpKmqeYjOPbaAXrZ8bZ0UEjJdw20AWdUopf37rJ1SckSV7N2zuOWoLx9vFgkHoVvooR
+        ykEXUd42cIQb0Xu+qn2NsM1+mX0jii7uNAC9Wr2GgvKaB288f7Nq0/GLafDwDzXkxlbKsh
+        ofKv8IfDfmRFj55G2ocPZkODb4eBkOI=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-644-U-fZ47gOPf6xiYQUa9aK0w-1; Thu, 09 Mar 2023 04:38:54 -0500
-X-MC-Unique: U-fZ47gOPf6xiYQUa9aK0w-1
+ us-mta-368-0jqAwMG1MvOg37yFLExvYQ-1; Thu, 09 Mar 2023 04:40:37 -0500
+X-MC-Unique: 0jqAwMG1MvOg37yFLExvYQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C1FF80280D;
-        Thu,  9 Mar 2023 09:38:52 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AE50F88B77E;
+        Thu,  9 Mar 2023 09:40:36 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 673882026D4B;
-        Thu,  9 Mar 2023 09:38:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E51C82026D4B;
+        Thu,  9 Mar 2023 09:40:35 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
         kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/x86: x86-android-tablets: Add depends on PMIC_OPREGION
-Date:   Thu,  9 Mar 2023 10:38:50 +0100
-Message-Id: <20230309093850.18523-1-hdegoede@redhat.com>
+Subject: [PATCH v2] platform/x86: x86-android-tablets: Add depends on PMIC_OPREGION
+Date:   Thu,  9 Mar 2023 10:40:35 +0100
+Message-Id: <20230309094035.18736-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
@@ -60,9 +60,13 @@ the following build error:
 ERROR: modpost: "intel_soc_pmic_exec_mipi_pmic_seq_element"
  [drivers/platform/x86/x86-android-tablets/x86-android-tablets.ko] undefined!
 
+Fixes: 9b1d2662b8c5 ("platform/x86: x86-android-tablets: Add touchscreen support for Lenovo Yoga Tab 3 Pro YT3-X90F")
 Reported-by: kernel test robot <lkp@intel.com>
 Link: https://lore.kernel.org/oe-kbuild-all/202303091711.howZNrIY-lkp@intel.com/
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Add Fixes tag
 ---
  drivers/platform/x86/x86-android-tablets/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
