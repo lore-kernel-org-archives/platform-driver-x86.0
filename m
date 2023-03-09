@@ -2,100 +2,109 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9421FC6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 10:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A694C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 17:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjCIKqB (ORCPT
+        id S229981AbjCIRMf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Mar 2023 05:46:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48908 "EHLO
+        Thu, 9 Mar 2023 12:12:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjCIKpj (ORCPT
+        with ESMTP id S229552AbjCIRLx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2023 05:45:39 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A184CB855A;
-        Thu,  9 Mar 2023 02:45:38 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id x11so1488511pln.12;
-        Thu, 09 Mar 2023 02:45:38 -0800 (PST)
+        Thu, 9 Mar 2023 12:11:53 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640D940EF
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 09:09:15 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id j19-20020a05600c1c1300b003e9b564fae9so4110689wms.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 09:09:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678358738;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OW6/6lfgOl+/I/V8WVarC0MKHx8gy98nLE1im9EecrI=;
-        b=n4g/LLpWMmjOGaqXqJLiKPmyUceGYJcijlFBs6UUum3TZ880fU89PGkkQO15hhiKK8
-         hvUWq6JVJ0+X2VXifW8jU7xOrZo55HkmyuoEd3KNUdIh3jUo4B1bxCM+VWwaj51HlfvQ
-         JdHZ1At7NphCXnHxiMMQ8JU5YNhISI7ejAvLGQsmesbdXjFV/MiCgXScNVbVk3Fv2TzP
-         0DT8omUQ5yuSy/8hqKICp2dvdDVKtbhebw4gesnhFcTZ3SIOyHQfKkaHx+lVc8sAg7GC
-         /6EX/SlIhokq2LWF8+j+BQ2dqRqEJZ9EjKIm4XUMKF8T+pZ4bbobZn9TBf9ZteeJxf2w
-         EGZQ==
+        d=linaro.org; s=google; t=1678381754;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o5wND0fd1Z3rtFlrd7Cp/13ujKlgxha1tgzRC1bLZd4=;
+        b=uGmFYUzHnNV3C5TNGAUoIaJQkGsd+hWv3ltwc5E3iMzQxTOyaZIwafzulKKhGhg/Bs
+         qmslhKXYxaCciZUC8wbskC/jJ3sU1kRiHuO3GJmQlMDaOtS367exmWToQEq9dqpA8um0
+         tB+9/0v2yXHBgej67DrmtQqX2S5Yb/e1XYMNmBu986bX7DNDrrwb2pO0J8kHpU3UT3d+
+         70jACtOeLfxuu+Njr7RPLEep8Wie+pZYjexDyOa14kcsG2mf2eX1cgppsY3MeVfN4o0Q
+         CE56MNmtF6uKzuf8Jbmn8zPQIgyRVHRx0E9vX1r+c6tRmZatSQCqvAff5gs+6HWi8kX3
+         JgQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678358738;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OW6/6lfgOl+/I/V8WVarC0MKHx8gy98nLE1im9EecrI=;
-        b=jp1TV142Mp1dDKrCepONfWnDIkkRsMBGeijpECpznJ15J32LJj6Alm2MXRQneHaRMo
-         g8od0Wbsy2+JUqxadyxf8qnlY/y+V9qWoGzhhMiJhoFehzg9ZHgmbwuq9rPgv7Wr5FXf
-         d/NNwKBAngeg3RsCaLMg3nFYwfZ93cAnmpPNbF72y2Aa3lIsizzvOtPLuq0GUF7iqOAW
-         skMRfeGF1CWRkr0sf+Y/E7fZZGicr0kMaX4eSmBpeiTmeLYGFBy/S0wksb1JGTOUlq2B
-         ttjGToINphbDpZX1kYFDsEGfxU6wJgzWxzT2WrSgosfrrn+36N5BOTuZdSOrKgSR3h7R
-         ulRA==
-X-Gm-Message-State: AO0yUKVcUL502KbEppCX2SubODk+ciytyXHW8OrIbr8677OREa249GN0
-        VVFBhwl5wxrrKa+nMJ1FllA=
-X-Google-Smtp-Source: AK7set8nj8WlbSQzjyZM4sX3CMM6HMy67cT4xHiKp9CsZwF0yG+ucYBuDC94DNrFwTKNQ3zgMTKR6g==
-X-Received: by 2002:a05:6a20:9390:b0:cc:a62f:1a9d with SMTP id x16-20020a056a20939000b000cca62f1a9dmr24966707pzh.23.1678358738150;
-        Thu, 09 Mar 2023 02:45:38 -0800 (PST)
-Received: from localhost.localdomain (124-148-239-17.tpgi.com.au. [124.148.239.17])
-        by smtp.gmail.com with ESMTPSA id y24-20020a62b518000000b005a7c892b435sm10949574pfe.25.2023.03.09.02.45.35
+        d=1e100.net; s=20210112; t=1678381754;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o5wND0fd1Z3rtFlrd7Cp/13ujKlgxha1tgzRC1bLZd4=;
+        b=d6Oi+3Mo09SLysrX1xQ7FHk97k+eHj+nsKjuGHPrnnE9prGdOh5Xz3OIOL4QyfgL9O
+         18wQyR79QueywGjjOGMD8sCWwjqY06nj52/HWNks6KFgetu0Fa6LGV8aSs0eR+ghkJt0
+         heRpkwmkOCE3doXFpXgbXSaLsajFYIB0kpfMcpzIx4skJWR6RIwWldNSzuIZ8rSMsCr6
+         CELEpr7w/sI/taEjs/CUsMts7QCwCMScdDJNOzEZtCR2IHcYbi1Wyv1LkHEZ5NG861SS
+         RrLHcQ1okQRD1z1stWP91sQoFln9t+hnOp6d27Hx+AetStPNhZDmWhTdzhnfhYBNyMLz
+         JwNQ==
+X-Gm-Message-State: AO0yUKVTJa1jkReGosWhFTPZNdVm1zLAHmr8tV7YcKSwSYTNTRMWYUEl
+        MaU5mrnwb66DxBjLZwN9DZ5IAw==
+X-Google-Smtp-Source: AK7set8MMBZWwqPrZ6maUN532SudklucvR9ks2z0HcQ0YATPkl1I3mXhCbwZmTdnQxXEaG1Fv/9dyA==
+X-Received: by 2002:a05:600c:3c87:b0:3eb:39e2:9157 with SMTP id bg7-20020a05600c3c8700b003eb39e29157mr21582110wmb.22.1678381753784;
+        Thu, 09 Mar 2023 09:09:13 -0800 (PST)
+Received: from aspen.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id n5-20020a05600c294500b003e2232d0960sm403152wmd.23.2023.03.09.09.09.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 02:45:37 -0800 (PST)
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
+        Thu, 09 Mar 2023 09:09:13 -0800 (PST)
+Date:   Thu, 9 Mar 2023 17:09:11 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orlando Chamberlain <orlandoch.dev@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH 1/1] apple-gmux: Update apple_gmux_detect documentation
-Date:   Thu,  9 Mar 2023 21:43:54 +1100
-Message-Id: <20230309104353.10905-1-orlandoch.dev@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Aditya Garg <gargaditya08@live.com>,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] backlight: apple_bl: Use acpi_video_get_backlight_type()
+Message-ID: <20230309170911.GC96419@aspen.lan>
+References: <20230307120540.389920-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230307120540.389920-1-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Commit fc83fbc80e1a ("platform/x86: apple-gmux: refactor gmux types")
-neglected to update the documentation of apple_gmux_detect's arguments.
-Update the documentation to reflect that commit's changes.
+On Tue, Mar 07, 2023 at 01:05:40PM +0100, Hans de Goede wrote:
+> On some MacBooks both the apple_bl and the apple-gmux backlight drivers
+> may be able to export a /sys/class/backlight device.
+>
+> To avoid having 2 backlight devices for one LCD panel until now
+> the apple-gmux driver has been calling apple_bl_unregister() to move
+> the apple_bl backlight device out of the way when it loads.
+>
+> Similar problems exist on other x86 laptops and all backlight drivers
+> which may be used on x86 laptops have moved to using
+> acpi_video_get_backlight_type() to determine whether they should load
+> or not.
+>
+> Switch apple_bl to this model too, so that it is consistent with all
+> the other x86 backlight drivers.
+> [snip]
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-include/linux/apple-gmux.h:99: warning:
-	Function parameter or member 'type_ret' not described in 'apple_gmux_detect'
-include/linux/apple-gmux.h:99: warning:
-	Excess function parameter 'indexed_ret' description in 'apple_gmux_detect'
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Link: https://lore.kernel.org/lkml/20230309122822.77435e33@canb.auug.org.au/
-Fixes: fc83fbc80e1a ("platform/x86: apple-gmux: refactor gmux types")
-Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
----
- include/linux/apple-gmux.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+but...
 
-diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
-index 272f63f8fd7c..a7a7d430024b 100644
---- a/include/linux/apple-gmux.h
-+++ b/include/linux/apple-gmux.h
-@@ -86,7 +86,7 @@ static inline bool apple_gmux_is_mmio(unsigned long iostart)
-  * apple_gmux_detect() - detect if gmux is built into the machine
-  *
-  * @pnp_dev:     Device to probe or NULL to use the first matching device
-- * @indexed_ret: Returns (by reference) if the gmux is indexed or not
-+ * @type_ret: Returns (by reference) the apple_gmux_type of the device
-  *
-  * Detect if a supported gmux device is present by actually probing it.
-  * This avoids the false positives returned on some models by
--- 
-2.39.2
+> ---
+> A note to the backlight class / subsystem maintainers, this change
+> applies on top of a similar patch for drivers/platform/x86/apple-gmux.c
+> which makes that driver use acpi_video_get_backlight_type(). See:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>
+> I believe it is easiest to also merge this patch through
+> the platform-drivers-x86 tree, may I please have your Ack for this ?
+> ---
 
+... please don't treat above as an ack. Lee Jones will hopefully be
+along shortly to discuss that!
+
+
+Daniel.
