@@ -2,109 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A694C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 17:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CF3C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 20:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbjCIRMf (ORCPT
+        id S230013AbjCIUK3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Mar 2023 12:12:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
+        Thu, 9 Mar 2023 15:10:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjCIRLx (ORCPT
+        with ESMTP id S229914AbjCIUK1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2023 12:11:53 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640D940EF
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 09:09:15 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id j19-20020a05600c1c1300b003e9b564fae9so4110689wms.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 09:09:15 -0800 (PST)
+        Thu, 9 Mar 2023 15:10:27 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97AEF9D34
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 12:10:25 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id q15so2557848oiw.11
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 12:10:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678381754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o5wND0fd1Z3rtFlrd7Cp/13ujKlgxha1tgzRC1bLZd4=;
-        b=uGmFYUzHnNV3C5TNGAUoIaJQkGsd+hWv3ltwc5E3iMzQxTOyaZIwafzulKKhGhg/Bs
-         qmslhKXYxaCciZUC8wbskC/jJ3sU1kRiHuO3GJmQlMDaOtS367exmWToQEq9dqpA8um0
-         tB+9/0v2yXHBgej67DrmtQqX2S5Yb/e1XYMNmBu986bX7DNDrrwb2pO0J8kHpU3UT3d+
-         70jACtOeLfxuu+Njr7RPLEep8Wie+pZYjexDyOa14kcsG2mf2eX1cgppsY3MeVfN4o0Q
-         CE56MNmtF6uKzuf8Jbmn8zPQIgyRVHRx0E9vX1r+c6tRmZatSQCqvAff5gs+6HWi8kX3
-         JgQA==
+        d=gmail.com; s=20210112; t=1678392625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bE9vK55MOOdzeiOE2peanZRCSNeF47LBqFjByutMLQ=;
+        b=XFrz9aMcl6Rdr2FsY5/E1b865bYbpfGzGQVtwHJaXEYRZoeOYC11vQq1rYlR8lRVmm
+         ikbIY8WBRDU986EITG7dsYH+KjWKHOElsBs+9oa3k9ax8sGqXdAblaW0qrgbSRmMOObe
+         sVTJ6wQBETr+y6aIfzVuhUfGBjC3xteFiJB+QOTb4e7oqIg5bgER0J/K/oXDEhzDqu1J
+         U65ey1rBrw3RYpDnBbXwwuk7Wt56OO6HHJHOBi3Zpu7bruHKedERdkTfx6arvTcHTJhY
+         /IqdM8EmijZa5/IZQFqJmAodKJkzLsVirIf++hdGrjuj5sQhwOhEFX3RWSx7O6C1Z7E1
+         l1mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678381754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o5wND0fd1Z3rtFlrd7Cp/13ujKlgxha1tgzRC1bLZd4=;
-        b=d6Oi+3Mo09SLysrX1xQ7FHk97k+eHj+nsKjuGHPrnnE9prGdOh5Xz3OIOL4QyfgL9O
-         18wQyR79QueywGjjOGMD8sCWwjqY06nj52/HWNks6KFgetu0Fa6LGV8aSs0eR+ghkJt0
-         heRpkwmkOCE3doXFpXgbXSaLsajFYIB0kpfMcpzIx4skJWR6RIwWldNSzuIZ8rSMsCr6
-         CELEpr7w/sI/taEjs/CUsMts7QCwCMScdDJNOzEZtCR2IHcYbi1Wyv1LkHEZ5NG861SS
-         RrLHcQ1okQRD1z1stWP91sQoFln9t+hnOp6d27Hx+AetStPNhZDmWhTdzhnfhYBNyMLz
-         JwNQ==
-X-Gm-Message-State: AO0yUKVTJa1jkReGosWhFTPZNdVm1zLAHmr8tV7YcKSwSYTNTRMWYUEl
-        MaU5mrnwb66DxBjLZwN9DZ5IAw==
-X-Google-Smtp-Source: AK7set8MMBZWwqPrZ6maUN532SudklucvR9ks2z0HcQ0YATPkl1I3mXhCbwZmTdnQxXEaG1Fv/9dyA==
-X-Received: by 2002:a05:600c:3c87:b0:3eb:39e2:9157 with SMTP id bg7-20020a05600c3c8700b003eb39e29157mr21582110wmb.22.1678381753784;
-        Thu, 09 Mar 2023 09:09:13 -0800 (PST)
-Received: from aspen.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id n5-20020a05600c294500b003e2232d0960sm403152wmd.23.2023.03.09.09.09.12
+        d=1e100.net; s=20210112; t=1678392625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bE9vK55MOOdzeiOE2peanZRCSNeF47LBqFjByutMLQ=;
+        b=0DrlxKutyFOSulOcZ0QZUZzAXboxi8r04u3TRdNqQyFSV2N1xFdP8ofHvKlSZmlqHW
+         oXYLiFMVrhAYi9Z0lHVhf4slEBri1Vx9Eu3RUeJMhChA4q4MOamWUmnQ4goO8rO4A/Hs
+         hx+3wFw7uML6ZaHpjETuyHv4vbAQscwHzBiFaWggCCBUxMw5hfXoNyPiiWb1Y7e7E6GD
+         grusVEYjg9S9i7dFWC6a2MlePiT00XMMM7pPqeugeCkUVTtEqAmj0DpDjeguhhmpB9l7
+         0NzfQey+YdfDUOToSYsZrVo7XCJfyetyU+CwcAKXDrKmBowLyfIuPxHLsLzTKQ3plN2p
+         pElw==
+X-Gm-Message-State: AO0yUKVdVSimg1DfU7OnoHZklK+JHUJTWJbr50c2t1/hEJUT1wgqtHmu
+        EEIQtPqoVq2/nNEwWOdIsFjK87faXUQ=
+X-Google-Smtp-Source: AK7set9oiPBSl6BFt9sLgljhaJenxnXbi2/HL0LLGqxJ/AruKKBGwY/oJmjwADth9zQoqRRxPEqREg==
+X-Received: by 2002:aca:1902:0:b0:384:3e58:2666 with SMTP id l2-20020aca1902000000b003843e582666mr9777016oii.5.1678392624982;
+        Thu, 09 Mar 2023 12:10:24 -0800 (PST)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:44ca:abca:1f7c:b8e7])
+        by smtp.gmail.com with ESMTPSA id r129-20020acaf387000000b00383f58e7e95sm98879oih.17.2023.03.09.12.10.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 09:09:13 -0800 (PST)
-Date:   Thu, 9 Mar 2023 17:09:11 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Aditya Garg <gargaditya08@live.com>,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: apple_bl: Use acpi_video_get_backlight_type()
-Message-ID: <20230309170911.GC96419@aspen.lan>
-References: <20230307120540.389920-1-hdegoede@redhat.com>
+        Thu, 09 Mar 2023 12:10:24 -0800 (PST)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v6 0/4] Introduction of HP-BIOSCFG driver
+Date:   Thu,  9 Mar 2023 14:10:18 -0600
+Message-Id: <20230309201022.9502-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230307120540.389920-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Mar 07, 2023 at 01:05:40PM +0100, Hans de Goede wrote:
-> On some MacBooks both the apple_bl and the apple-gmux backlight drivers
-> may be able to export a /sys/class/backlight device.
->
-> To avoid having 2 backlight devices for one LCD panel until now
-> the apple-gmux driver has been calling apple_bl_unregister() to move
-> the apple_bl backlight device out of the way when it loads.
->
-> Similar problems exist on other x86 laptops and all backlight drivers
-> which may be used on x86 laptops have moved to using
-> acpi_video_get_backlight_type() to determine whether they should load
-> or not.
->
-> Switch apple_bl to this model too, so that it is consistent with all
-> the other x86 backlight drivers.
-> [snip]
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Version 6 restructures the patches submitted in previous versions.
+Earlier hp-bioscfg patches were squashed together before creating
+the new split.  SureAdmin-attributes was removed completely and 
+new functionality was introduced to replace its behavior.  The
+new functionality is fully compliant to firmware-attributes 
+framework.
+ 
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-but...
-
-> ---
-> A note to the backlight class / subsystem maintainers, this change
-> applies on top of a similar patch for drivers/platform/x86/apple-gmux.c
-> which makes that driver use acpi_video_get_backlight_type(). See:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> I believe it is easiest to also merge this patch through
-> the platform-drivers-x86 tree, may I please have your Ack for this ?
-> ---
-
-... please don't treat above as an ack. Lee Jones will hopefully be
-along shortly to discuss that!
+Version 6
+	- Breaks down the changes into 4 patches
+	- SureAdmin-attributes was removed
 
 
-Daniel.
+Jorge Lopez (4):
+  Introduction of HP-BIOSCFG driver
+  Introduction of HP-BIOSCFG driver [2]
+  Introduction of HP-BIOSCFG driver [3]
+  Introduction of HP-BIOSCFG driver [4]
+
+ .../testing/sysfs-class-firmware-attributes   |  107 +-
+ MAINTAINERS                                   |    6 +
+ drivers/platform/x86/hp/hp-bioscfg/Makefile   |   13 +
+ .../x86/hp/hp-bioscfg/biosattr-interface.c    |  303 +++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 1017 +++++++++++++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  654 +++++++++++
+ .../x86/hp/hp-bioscfg/enum-attributes.c       |  553 +++++++++
+ .../x86/hp/hp-bioscfg/int-attributes.c        |  472 ++++++++
+ .../x86/hp/hp-bioscfg/ordered-attributes.c    |  571 +++++++++
+ .../x86/hp/hp-bioscfg/passwdattr-interface.c  |   51 +
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c  |  676 +++++++++++
+ .../x86/hp/hp-bioscfg/spmobj-attributes.c     |  460 ++++++++
+ .../x86/hp/hp-bioscfg/string-attributes.c     |  459 ++++++++
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  |  149 +++
+ 14 files changed, 5490 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+
+--
+2.34.1
+
