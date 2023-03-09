@@ -2,68 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C710C6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 04:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991D6C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Mar 2023 06:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjCIEO0 (ORCPT
+        id S229580AbjCIGMW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Mar 2023 23:14:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
+        Thu, 9 Mar 2023 01:12:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbjCIEOZ (ORCPT
+        with ESMTP id S229644AbjCIGMR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Mar 2023 23:14:25 -0500
-Received: from hust.edu.cn (unknown [202.114.0.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F346164A8C
-        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Mar 2023 20:14:23 -0800 (PST)
-Received: from localhost.localdomain ([172.16.0.254])
-        (user=dzm91@hust.edu.cn mech=LOGIN bits=0)
-        by mx1.hust.edu.cn  with ESMTP id 32943g7q028914-32943g7w028914
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 9 Mar 2023 12:03:57 +0800
-From:   Dongliang Mu <dzm91@hust.edu.cn>
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     Dongliang Mu <dzm91@hust.edu.cn>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH linux-next v2 3/3] drivers/platform/x86/intel: fix a memory leak in intel_vsec_add_aux
-Date:   Thu,  9 Mar 2023 12:01:07 +0800
-Message-Id: <20230309040107.534716-4-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230309040107.534716-1-dzm91@hust.edu.cn>
-References: <20230309040107.534716-1-dzm91@hust.edu.cn>
+        Thu, 9 Mar 2023 01:12:17 -0500
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA64C78FB;
+        Wed,  8 Mar 2023 22:12:10 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VdSEJM5_1678342247;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VdSEJM5_1678342247)
+          by smtp.aliyun-inc.com;
+          Thu, 09 Mar 2023 14:12:08 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     peter@piie.net
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] acerhdf: remove unneeded semicolon
+Date:   Thu,  9 Mar 2023 14:10:45 +0800
+Message-Id: <20230309061045.25256-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-FEAS-AUTH-USER: dzm91@hust.edu.cn
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The first error handling code in intel_vsec_add_aux misses the
-deallocation of intel_vsec_dev->resource.
+./drivers/platform/x86/acerhdf.c:343:2-3: Unneeded semicolon.
 
-Fix this by adding kfree(intel_vsec_dev->resource) in the error handling
-code.
-
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2271
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- drivers/platform/x86/intel/vsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/acerhdf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 13decf36c6de..2311c16cb975 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -154,6 +154,7 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
- 	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
- 	mutex_unlock(&vsec_ida_lock);
- 	if (ret < 0) {
-+		kfree(intel_vsec_dev->resource);
- 		kfree(intel_vsec_dev);
- 		return ret;
- 	}
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index a48638ad2a8a..ec8cc780b822 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -341,7 +341,7 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+ 		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
+ 		       fanoff, fanon, fanon);
+ 		fanoff = fanon;
+-	};
++	}
+ 
+ 	trips[0].temperature = fanon;
+ 	trips[0].hysteresis  = fanon - fanoff;
 -- 
-2.39.2
+2.20.1.7.g153144c
 
