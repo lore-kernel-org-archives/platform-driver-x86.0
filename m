@@ -2,329 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E64C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 04:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626CDC6FD19
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 09:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbjCJEWW (ORCPT
+        id S229996AbjCJJxx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Mar 2023 23:22:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
+        Fri, 10 Mar 2023 04:53:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjCJEV2 (ORCPT
+        with ESMTP id S229893AbjCJJxv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2023 23:21:28 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747941F914
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 20:17:45 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id nn12so4153597pjb.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 20:17:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678421865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LnpRhZFRZlqtlskeBCSE0AjSXimnl9F7ipnEffSBg3w=;
-        b=Wuc4XfVdHYM+LRwYUk6HjM4YxYUPuG9M+8cexAIIzzAgwdwFOTdUFgBWhZiP/OVuHx
-         zcPmBYnGCiwXrwuxjOTuAi+4IqvUsLhFngXii+CveUqmKs1PLMZnrM1ERp/cJeVCPtzN
-         vjw1f5+a8jeok3GHj1IzoreSl3830y2R1YhRqvuRZSmpLuE17k65ul/xbi/l+iBaiiRR
-         e1XJlayEE85BR/aRlt6u9E6w5jzieJ+z5tvyrwGrNgDbQTUmNOcxC1qFbf3eycQgFKTr
-         HLIclescjFDxyrw/w3NZ+DwN92fm+pnFGw9oUvjuhZn9lw1S+M+8dmCOy/H4dtZQ6qEh
-         quhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678421865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnpRhZFRZlqtlskeBCSE0AjSXimnl9F7ipnEffSBg3w=;
-        b=gmbj+myMHuyAUba5oqjyZPE4yzCuSzjeUZaxLClbbzpB3O/8GWFSc9Pztq8oialU8q
-         XjLwpqefpn6hQ6P5yLJcRSrBmwux1rOK/nKjaODSBCmiC3FrKMLji/SxVD/nGKQhr/1S
-         DdGc4Y+Fn4YsY/ytIbPYtnjUJP8R4ITO9un2V5vEWVFMq/X0HUqZXL+yizgNLfA8rVnC
-         iuwEVL5VkHEKjSZN8hQKvERAfiKL5Ur5oeBO2xiIyc+PHN40zdSVnwnQWxQisiJjLJmp
-         MTRkXovc9QC7OO47lSb4QzOD+ist2voqMKpBn2/DFVNcEO+eZS3O4xvyg8+PkewgAfNR
-         lpdA==
-X-Gm-Message-State: AO0yUKXcUim+yFApg2QHQN82nV2Pr+YynUMAtyLsm2LahOF27FejxE1v
-        FADZHGhtOXu+mt53GNPG2V34IW/bsZoq1A==
-X-Google-Smtp-Source: AK7set8Hlsy9sclB1BOjO15CJa25NpjpLWDtY8jhMFUKPf1+y36PP2+CK+1zEM4OefxkZ5V/rhFdzA==
-X-Received: by 2002:a17:902:d353:b0:19e:2e6b:142e with SMTP id l19-20020a170902d35300b0019e2e6b142emr23311036plk.63.1678421864749;
-        Thu, 09 Mar 2023 20:17:44 -0800 (PST)
-Received: from localhost.localdomain ([47.147.242.129])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b0019a928a8982sm388406plf.118.2023.03.09.20.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 20:17:44 -0800 (PST)
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-To:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
-        soyer@irl.hu
-Cc:     Andrew Kallmeyer <kallmeyeras@gmail.com>
-Subject: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-Date:   Thu,  9 Mar 2023 20:17:26 -0800
-Message-Id: <20230310041726.217447-3-kallmeyeras@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230310041726.217447-1-kallmeyeras@gmail.com>
-References: <20221004214332.35934-1-soyer@irl.hu>
- <20230310041726.217447-1-kallmeyeras@gmail.com>
+        Fri, 10 Mar 2023 04:53:51 -0500
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2057.outbound.protection.outlook.com [40.107.100.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30DC9A02A4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Mar 2023 01:53:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QhyKjjvPi2NAxUBACsd0BOApiMKJGFhWroQ1oBolltRAKuSb9UL4VJKuUpH/RE6CFveKN9dVa28jQQ61pF1qdqhQORyMUiJqbr0/lXlAhmi5/aoaadE6KDdHVnUxrJFcDCw56kFM9VmY+jy/V2l3Pf8YTFdh+N6u9gBPiDviAiPb37WvASDdO7Bw4v+TIy+5YZ2vjuVsikCCgtHlE3cgxl+SCCCRYuBaz/W/f+XPmsmf8gxjH9s5NdSmVr8iNvTAIfJ7ORgBoPk/6aCt60JHH4a2J369hW01sa6Op26aM4GhjADk84s5bv8o1Lvqo5SzN44jd2Lyiz3c4NtFo3Aecw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xMNs22gNDMp3tw9PCEIS31eSAa748+M5/igVJXIeYYU=;
+ b=GdexpFl4vnMXoVyQBUWC10ezQlHCg8czrcpcKMl+iue5CRzsZTSJy0+Za+UhgkGNv0ang5g5cAhm940PwVSqwU8tPeeDI1PCGRof0YlbW25A9TNGVE267nINShF6JUBCH9TE5IOL0Dq3Uf+9jHge+kp/2t+EyDgqu5i3tY4Hw3hab2xyqBceyR9nKUeI3FFAHLKn+Q3yfdQ0UqIouTVHcroM0my2xT1/9BRqM7s+U2dAPOUlW+LIAIkX7VyHVY+c1G+OW3ZFHDXeKywUIrA0vdiVCZs1x9+Gh5MqZ1dZQHMbLxU7eoCr1RjB2p5uXoNlZqPPDnRrV4lTS+mZikB93w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xMNs22gNDMp3tw9PCEIS31eSAa748+M5/igVJXIeYYU=;
+ b=Hiqu6jXTO1ISQDnUpWx+2taU4WgszpbB6M1EnQYACEr3hXEzn5Z17JyxyJ533DnC87jm+r92G9UXGzgOJFTWBmeZy0V2uRmrCJV5o3oAw1xePUm/f6qW+eZtDt07/koMDFfo1vUuiT/GgfcRYhbPm8CEw/JtAVf6mWSlWk0W2+s=
+Received: from DM6PR04CA0021.namprd04.prod.outlook.com (2603:10b6:5:334::26)
+ by IA1PR12MB6236.namprd12.prod.outlook.com (2603:10b6:208:3e4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.19; Fri, 10 Mar
+ 2023 09:53:37 +0000
+Received: from DM6NAM11FT094.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:334:cafe::eb) by DM6PR04CA0021.outlook.office365.com
+ (2603:10b6:5:334::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.20 via Frontend
+ Transport; Fri, 10 Mar 2023 09:53:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT094.mail.protection.outlook.com (10.13.172.195) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6178.20 via Frontend Transport; Fri, 10 Mar 2023 09:53:37 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 10 Mar
+ 2023 03:53:32 -0600
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>
+CC:     <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>,
+        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+        Robert Swiecki <robert@swiecki.net>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] platform/x86/amd: pmc: decouple CONFIG_SUSPEND from AMD STB API usage
+Date:   Fri, 10 Mar 2023 15:23:01 +0530
+Message-ID: <20230310095301.1596369-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT094:EE_|IA1PR12MB6236:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99cdc150-5e34-47a7-222e-08db214d51f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vX6KoJnKEQl7iEAlJFyYwcbFEunXQySVSVnvl8C2soqEjJLx9Cz5r2M0zjRQq6oRojEYKVp5AEoZqEp5YRhr3MbQaVQ48dptJOC5PoFJDsRDAJSQ3wRhNeh9PgzyhGzC3uizUnKiKAn4es5bTsOpJusg4+/2TQUQmjDnbZUTta8eS13vXBo2bDOKaj9OA1gqn9sDE87dveNTe2XkveyTEpYwmQ+r5wGUQLdQt5VJl+fCrEb8OKftS6TdUqhj2CGd8c67F4MPoou1rS5anFDWLWQmRkxSqFs5WLt3F2n3nedXpnXFXu6JN6PsV/nAQ+Fbwan4KpRqA85HNzsuTQLRaPKCazU/9PEgL2QVOxe514mmV3LYewU9SNFrBs7W644szb9bVmQhDzOb0YY5qIZXmZUCLZ7Lr68KCqs88s4iTgn85AfpPSwUkG0Hk37MnhLjqLmepWyUxM1odXqFXuQF2OAhBRPdO0gBTYkUsFbIeoj4xpNiHgEY7J9PkEfzHlONH1fVU83aYpMGfpiufwOpZh7vxiKvJ3KaZymDvxsIjgthCmtl+vc943Dn+M/18bbvcAcOSEEF7CzSLQ+NJwTN/nVAN3X/soflh4gDcyZ3nQQVHU4qkF2+1CtlOlOYtuo6bwuV9Di+M5cbksIYQksQ2kp2ccVUo8+kFz4KmTfIGrZOaCnyIT7w3mJqOk7j+pMcn5WRHCF5haaDiX2RnzlkNN1HIpTm6AqrJUH/c2jVLjo=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(346002)(136003)(376002)(396003)(39860400002)(451199018)(46966006)(40470700004)(36840700001)(2906002)(5660300002)(26005)(8936002)(36756003)(70586007)(70206006)(4326008)(8676002)(110136005)(40460700003)(316002)(41300700001)(356005)(40480700001)(86362001)(7696005)(478600001)(54906003)(966005)(36860700001)(81166007)(6666004)(1076003)(82740400003)(16526019)(186003)(336012)(2616005)(82310400005)(426003)(47076005)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2023 09:53:37.3690
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99cdc150-5e34-47a7-222e-08db214d51f8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT094.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6236
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This WMI driver for the tablet mode control switch for Lenovo Yoga
-notebooks was originally written by Gergo Koteles. The mode is mapped to
-a SW_TABLET_MODE switch capable input device.
+The initial introduction of AMD STB was limited to only suspend/resume
+use cases, but the need for STB APIs like amd_pmc_write_stb() have grown
+overtime and guarding it with CONFIG_SUSPEND seems to be incorrect.
 
-I (Andrew) followed the suggestions that were posted in reply to Gergo's
-RFC patch to follow-up and get it merged. Additionally I merged the
-lenovo_ymc_trigger_ec function with the ideapad_trigger_ymc_next_read
-function since it was no longer external. I have also added the word
-"Tablet" to the driver description to hopefully make it more clear.
+Also, with the recent commit, it seems to create a build failure where
+CONFIG_SUSPEND is not enabled. Remove the association of CONFIG_SUSPEND
+with STB APIs altogether.
 
-As Gergo said: It should work with  models like the Yoga C940, Ideapad
-flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7.
-The 14ARB7 model must trigger the EC to send mode change events. This
-might be a firmware bug.
-
-I have additionally tested this on the Yoga 7 14IAL7.
-
-Link: https://lore.kernel.org/r/20221004214332.35934-1-soyer@irl.hu/
-Co-developed-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
-Signed-off-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
+Cc: Sanket Goswami <Sanket.Goswami@amd.com>
+Fixes: b0d4bb973539 ("platform/x86/amd: pmc: Write dummy postcode into the STB DRAM")
+Reported-by: Robert Swiecki <robert@swiecki.net>
+Link: https://lore.kernel.org/platform-driver-x86/20230309225016.2e8cd211@gandalf.local.home/T/#t
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Link: https://lore.kernel.org/platform-driver-x86/20230309225016.2e8cd211@gandalf.local.home/T/#t
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/Kconfig          |  10 ++
- drivers/platform/x86/Makefile         |   1 +
- drivers/platform/x86/ideapad-laptop.h |   1 +
- drivers/platform/x86/lenovo-ymc.c     | 177 ++++++++++++++++++++++++++
- 4 files changed, 189 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-ymc.c
+ drivers/platform/x86/amd/pmc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5692385e2..858be0c65 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -470,6 +470,16 @@ config IDEAPAD_LAPTOP
- 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- 	  rfkill switch, hotkey, fan control and backlight control.
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index ab05b9ee6655..8db608e2c1ea 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -171,9 +171,7 @@ MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
+ static struct amd_pmc_dev pmc;
+ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+ static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+-#ifdef CONFIG_SUSPEND
+ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data);
+-#endif
  
-+config LENOVO_YMC
-+	tristate "Lenovo Yoga Tablet Mode Control"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	depends on IDEAPAD_LAPTOP
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
-+	  events for Lenovo Yoga notebooks.
-+
- config SENSORS_HDAPS
- 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
- 	depends on INPUT
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1d3d1b025..10054cdea 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
- # IBM Thinkpad and Lenovo
- obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
- obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
-+obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
- obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
-diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
-index 7dd8ce027..2564cb1cd 100644
---- a/drivers/platform/x86/ideapad-laptop.h
-+++ b/drivers/platform/x86/ideapad-laptop.h
-@@ -35,6 +35,7 @@ enum {
- 	VPCCMD_W_FAN,
- 	VPCCMD_R_RF,
- 	VPCCMD_W_RF,
-+	VPCCMD_W_YMC = 0x2A,
- 	VPCCMD_R_FAN = 0x2B,
- 	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
- 	VPCCMD_W_BL_POWER = 0x33,
-diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-new file mode 100644
-index 000000000..e29ada1b4
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-ymc.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * lenovo-ymc.c - Lenovo Yoga Mode Control driver
-+ *
-+ * Copyright © 2022 Gergo Koteles <soyer@irl.hu>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/wmi.h>
-+#include "ideapad-laptop.h"
-+
-+#define LENOVO_YMC_EVENT_GUID	"06129D99-6083-4164-81AD-F092F9D773A6"
-+#define LENOVO_YMC_QUERY_GUID	"09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C"
-+
-+#define LENOVO_YMC_QUERY_INSTANCE 0
-+#define LENOVO_YMC_QUERY_METHOD 0xAB
-+
-+static bool ec_trigger __read_mostly;
-+module_param(ec_trigger, bool, 0644);
-+MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events");
-+
-+static const struct dmi_system_id ec_trigger_quirk_dmi_table[] = {
-+	{
-+		// Lenovo Yoga 7 14ARB7
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
-+		},
-+	},
-+	{ },
-+};
-+
-+struct lenovo_ymc_private {
-+	struct input_dev *input_dev;
-+	struct acpi_device *ec_acpi_dev;
-+};
-+
-+static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
-+{
-+	int err;
-+
-+	if (!ec_trigger || !priv || !priv->ec_acpi_dev)
-+		return;
-+	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
-+	if (err)
-+		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
-+}
-+
-+static const struct key_entry lenovo_ymc_keymap[] = {
-+	// Laptop
-+	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
-+	// Tablet
-+	{ KE_SW, 0x02, { .sw = { SW_TABLET_MODE, 1 } } },
-+	// Drawing Board
-+	{ KE_SW, 0x03, { .sw = { SW_TABLET_MODE, 1 } } },
-+	// Tent
-+	{ KE_SW, 0x04, { .sw = { SW_TABLET_MODE, 1 } } },
-+	{ KE_END },
-+};
-+
-+static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
-+{
-+	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
-+
-+	u32 input_val = 0;
-+	struct acpi_buffer input = {sizeof(input_val), &input_val};
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	acpi_status status;
-+	union acpi_object *obj;
-+	int code;
-+
-+	status = wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
-+				LENOVO_YMC_QUERY_INSTANCE,
-+				LENOVO_YMC_QUERY_METHOD,
-+				&input, &output);
-+
-+	if (ACPI_FAILURE(status)) {
-+		dev_warn(&wdev->dev,
-+			"Failed to evaluate query method: %s\n",
-+			acpi_format_exception(status));
-+		return;
-+	}
-+
-+	obj = output.pointer;
-+
-+	if (obj->type != ACPI_TYPE_INTEGER) {
-+		dev_warn(&wdev->dev,
-+			"WMI event data is not an integer\n");
-+		goto free_obj;
-+	}
-+	code = obj->integer.value;
-+
-+	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
-+		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
-+
-+free_obj:
-+	kfree(obj);
-+	lenovo_ymc_trigger_ec(wdev, priv);
-+}
-+
-+static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
-+{
-+	struct input_dev *input_dev;
-+	struct lenovo_ymc_private *priv;
-+	int err;
-+
-+	ec_trigger |= dmi_check_system(ec_trigger_quirk_dmi_table);
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	if (ec_trigger) {
-+		pr_debug("Lenovo YMC enable EC triggering.\n");
-+		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VCP2004", NULL, -1);
-+		if (!priv->ec_acpi_dev) {
-+			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name = "Lenovo Yoga Tablet Mode Control switch";
-+	input_dev->phys = LENOVO_YMC_EVENT_GUID "/input0";
-+	input_dev->id.bustype = BUS_HOST;
-+	input_dev->dev.parent = &wdev->dev;
-+
-+	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-+
-+	err = sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
-+	if (err) {
-+		dev_err(&wdev->dev,
-+			"Could not set up input device keymap: %d\n", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(input_dev);
-+	if (err) {
-+		dev_err(&wdev->dev,
-+			"Could not register input device: %d\n", err);
-+		return err;
-+	}
-+
-+	priv->input_dev = input_dev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+	lenovo_ymc_trigger_ec(wdev, priv);
-+	return 0;
-+}
-+
-+static const struct wmi_device_id lenovo_ymc_wmi_id_table[] = {
-+	{ .guid_string = LENOVO_YMC_EVENT_GUID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, lenovo_ymc_wmi_id_table);
-+
-+static struct wmi_driver lenovo_ymc_driver = {
-+	.driver = {
-+		.name = "lenovo-ymc",
-+	},
-+	.id_table = lenovo_ymc_wmi_id_table,
-+	.probe = lenovo_ymc_probe,
-+	.notify = lenovo_ymc_notify,
-+};
-+
-+module_wmi_driver(lenovo_ymc_driver);
-+
-+MODULE_AUTHOR("Gergo Koteles <soyer@irl.hu>");
-+MODULE_DESCRIPTION("Lenovo Yoga Mode Control driver");
-+MODULE_LICENSE("GPL");
+ static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+ {
+@@ -905,7 +903,6 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_SUSPEND
+ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+ {
+ 	int err;
+@@ -926,7 +923,6 @@ static int amd_pmc_write_stb(struct amd_pmc_dev *dev, u32 data)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
+ {
 -- 
-2.39.2
+2.25.1
 
