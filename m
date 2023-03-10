@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474AEC6FA99
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 04:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E64C64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 04:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjCJEWV (ORCPT
+        id S230032AbjCJEWW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 9 Mar 2023 23:22:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        Thu, 9 Mar 2023 23:22:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbjCJEV2 (ORCPT
+        with ESMTP id S229501AbjCJEV2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Thu, 9 Mar 2023 23:21:28 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 778FA49C7
-        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 20:17:42 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id i5so4344103pla.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 20:17:42 -0800 (PST)
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747941F914
+        for <platform-driver-x86@vger.kernel.org>; Thu,  9 Mar 2023 20:17:45 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id nn12so4153597pjb.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2023 20:17:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678421862;
+        d=gmail.com; s=20210112; t=1678421865;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zWwHAJvXIA6FrwtdzJgFWLE3BeAFx0q8iSi2aXx6gGI=;
-        b=DhAbJRHiThcPzVhffhRy6woepQYZ079JdguMhR18v1lWMS4BzMtP8mZmOkZDfXd1uR
-         bcUf2KyYrBrir5BqnZJJRRocu5FtUAbSkSSsV5afQh7RNARGuCBvcDSgpw7HRuljcK+k
-         MNd2dJt/sIQHfQDi8/Xovh0yQYBtYjZ4P3xqFLhLhPdTI8uVrPVN6QQKlUXQPRr+yw0M
-         CgOYHY3mqD5y6KglmJq2TID99wvJmxDNXtuMgfduE0J2ttd78jJPnreI5PWgHabyiRm8
-         Oq34N0iLXvpqSYrdnf4QxkpbX8qRQ51nKIFIKSiC+92xtAcPt/N9MFjG5nzbU9O8vGpv
-         SNrA==
+        bh=LnpRhZFRZlqtlskeBCSE0AjSXimnl9F7ipnEffSBg3w=;
+        b=Wuc4XfVdHYM+LRwYUk6HjM4YxYUPuG9M+8cexAIIzzAgwdwFOTdUFgBWhZiP/OVuHx
+         zcPmBYnGCiwXrwuxjOTuAi+4IqvUsLhFngXii+CveUqmKs1PLMZnrM1ERp/cJeVCPtzN
+         vjw1f5+a8jeok3GHj1IzoreSl3830y2R1YhRqvuRZSmpLuE17k65ul/xbi/l+iBaiiRR
+         e1XJlayEE85BR/aRlt6u9E6w5jzieJ+z5tvyrwGrNgDbQTUmNOcxC1qFbf3eycQgFKTr
+         HLIclescjFDxyrw/w3NZ+DwN92fm+pnFGw9oUvjuhZn9lw1S+M+8dmCOy/H4dtZQ6qEh
+         quhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678421862;
+        d=1e100.net; s=20210112; t=1678421865;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zWwHAJvXIA6FrwtdzJgFWLE3BeAFx0q8iSi2aXx6gGI=;
-        b=kIyhToXtB9b/u/ju78k++yV29vm5pwjunao/zgFKyMwvGBFkoIg2OHLVaMcDkQVv4S
-         Oe+7g5S/2/uL5EJrJIGKE7FziNbFBm3hdOhWo3W0svIePWEp2k+8JJlQcR92oMBIibz+
-         WrdPQsEVQV0jeUzWe02hqK1rwmaEhEkWUuQSFfbyUWh70LYu/wUq+PFpL8Vhpys2VKDe
-         7gTzslChBb6O9h83TKHNIvKbvxU3l/Tz8DuN9AZQtdgMMCaQzAHfTvM8Z6kGTAEG8Dot
-         4KiPr8E5l220HVcAwzQgiF5zgnaXcBPw+ec3s2Vr444JAc8WCSEN2mW24xpmNRS2EUd1
-         7Drw==
-X-Gm-Message-State: AO0yUKWYSNIJtSJBGKkl35HwJi1ss2bb7RHpZV0jyeRXE2vJQmdJXCi6
-        Jw/SUcFE04H9PcNvtN2v44lE3AAY5XsQUA==
-X-Google-Smtp-Source: AK7set+kAXM0deuXwljTQfqsObWKWtt9LcRfz9XQ3sgB1krktbImTQ0cpE5Co90u8dHvXirxk3XUFQ==
-X-Received: by 2002:a17:902:db02:b0:19c:edcd:26cf with SMTP id m2-20020a170902db0200b0019cedcd26cfmr25895082plx.61.1678421861652;
-        Thu, 09 Mar 2023 20:17:41 -0800 (PST)
+        bh=LnpRhZFRZlqtlskeBCSE0AjSXimnl9F7ipnEffSBg3w=;
+        b=gmbj+myMHuyAUba5oqjyZPE4yzCuSzjeUZaxLClbbzpB3O/8GWFSc9Pztq8oialU8q
+         XjLwpqefpn6hQ6P5yLJcRSrBmwux1rOK/nKjaODSBCmiC3FrKMLji/SxVD/nGKQhr/1S
+         DdGc4Y+Fn4YsY/ytIbPYtnjUJP8R4ITO9un2V5vEWVFMq/X0HUqZXL+yizgNLfA8rVnC
+         iuwEVL5VkHEKjSZN8hQKvERAfiKL5Ur5oeBO2xiIyc+PHN40zdSVnwnQWxQisiJjLJmp
+         MTRkXovc9QC7OO47lSb4QzOD+ist2voqMKpBn2/DFVNcEO+eZS3O4xvyg8+PkewgAfNR
+         lpdA==
+X-Gm-Message-State: AO0yUKXcUim+yFApg2QHQN82nV2Pr+YynUMAtyLsm2LahOF27FejxE1v
+        FADZHGhtOXu+mt53GNPG2V34IW/bsZoq1A==
+X-Google-Smtp-Source: AK7set8Hlsy9sclB1BOjO15CJa25NpjpLWDtY8jhMFUKPf1+y36PP2+CK+1zEM4OefxkZ5V/rhFdzA==
+X-Received: by 2002:a17:902:d353:b0:19e:2e6b:142e with SMTP id l19-20020a170902d35300b0019e2e6b142emr23311036plk.63.1678421864749;
+        Thu, 09 Mar 2023 20:17:44 -0800 (PST)
 Received: from localhost.localdomain ([47.147.242.129])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b0019a928a8982sm388406plf.118.2023.03.09.20.17.41
+        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b0019a928a8982sm388406plf.118.2023.03.09.20.17.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 20:17:41 -0800 (PST)
+        Thu, 09 Mar 2023 20:17:44 -0800 (PST)
 From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
 To:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
         soyer@irl.hu
 Cc:     Andrew Kallmeyer <kallmeyeras@gmail.com>
-Subject: [PATCH 1/2] platform/x86: Move ideapad ACPI helpers to a new header
-Date:   Thu,  9 Mar 2023 20:17:25 -0800
-Message-Id: <20230310041726.217447-2-kallmeyeras@gmail.com>
+Subject: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
+Date:   Thu,  9 Mar 2023 20:17:26 -0800
+Message-Id: <20230310041726.217447-3-kallmeyeras@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230310041726.217447-1-kallmeyeras@gmail.com>
 References: <20221004214332.35934-1-soyer@irl.hu>
@@ -69,359 +69,262 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-These functions will be used by a driver written by Gergo Koteles to
-detect the tablet mode switch in Lenovo Yoga laptops. These changes were
-discussed in review of that patch.
+This WMI driver for the tablet mode control switch for Lenovo Yoga
+notebooks was originally written by Gergo Koteles. The mode is mapped to
+a SW_TABLET_MODE switch capable input device.
 
-This is the minimal set of functions needed in that driver, there are
-several more small functions left in the ACPI Helpers section in
-ideapad-laptop.c. The only change is the functions are now marked inline
-as requested in the review comments.
+I (Andrew) followed the suggestions that were posted in reply to Gergo's
+RFC patch to follow-up and get it merged. Additionally I merged the
+lenovo_ymc_trigger_ec function with the ideapad_trigger_ymc_next_read
+function since it was no longer external. I have also added the word
+"Tablet" to the driver description to hopefully make it more clear.
+
+As Gergo said: It should work with  models like the Yoga C940, Ideapad
+flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7.
+The 14ARB7 model must trigger the EC to send mode change events. This
+might be a firmware bug.
+
+I have additionally tested this on the Yoga 7 14IAL7.
 
 Link: https://lore.kernel.org/r/20221004214332.35934-1-soyer@irl.hu/
+Co-developed-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
 Signed-off-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
 ---
- drivers/platform/x86/ideapad-laptop.c | 135 +----------------------
- drivers/platform/x86/ideapad-laptop.h | 151 ++++++++++++++++++++++++++
- 2 files changed, 152 insertions(+), 134 deletions(-)
- create mode 100644 drivers/platform/x86/ideapad-laptop.h
+ drivers/platform/x86/Kconfig          |  10 ++
+ drivers/platform/x86/Makefile         |   1 +
+ drivers/platform/x86/ideapad-laptop.h |   1 +
+ drivers/platform/x86/lenovo-ymc.c     | 177 ++++++++++++++++++++++++++
+ 4 files changed, 189 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-ymc.c
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 0eb5bfdd8..55f56697e 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -20,7 +20,6 @@
- #include <linux/init.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
--#include <linux/jiffies.h>
- #include <linux/kernel.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-@@ -31,6 +30,7 @@
- #include <linux/sysfs.h>
- #include <linux/types.h>
- #include <linux/wmi.h>
-+#include "ideapad-laptop.h"
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 5692385e2..858be0c65 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -470,6 +470,16 @@ config IDEAPAD_LAPTOP
+ 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
+ 	  rfkill switch, hotkey, fan control and backlight control.
  
- #include <acpi/video.h>
- 
-@@ -85,33 +85,6 @@ enum {
- 	SALS_FNLOCK_OFF       = 0xf,
- };
- 
--enum {
--	VPCCMD_R_VPC1 = 0x10,
--	VPCCMD_R_BL_MAX,
--	VPCCMD_R_BL,
--	VPCCMD_W_BL,
--	VPCCMD_R_WIFI,
--	VPCCMD_W_WIFI,
--	VPCCMD_R_BT,
--	VPCCMD_W_BT,
--	VPCCMD_R_BL_POWER,
--	VPCCMD_R_NOVO,
--	VPCCMD_R_VPC2,
--	VPCCMD_R_TOUCHPAD,
--	VPCCMD_W_TOUCHPAD,
--	VPCCMD_R_CAMERA,
--	VPCCMD_W_CAMERA,
--	VPCCMD_R_3G,
--	VPCCMD_W_3G,
--	VPCCMD_R_ODD, /* 0x21 */
--	VPCCMD_W_FAN,
--	VPCCMD_R_RF,
--	VPCCMD_W_RF,
--	VPCCMD_R_FAN = 0x2B,
--	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
--	VPCCMD_W_BL_POWER = 0x33,
--};
--
- struct ideapad_dytc_priv {
- 	enum platform_profile_option current_profile;
- 	struct platform_profile_handler pprof;
-@@ -227,7 +200,6 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
- /*
-  * ACPI Helpers
-  */
--#define IDEAPAD_EC_TIMEOUT 200 /* in ms */
- 
- static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
- {
-@@ -270,116 +242,11 @@ static int exec_sals(acpi_handle handle, unsigned long arg)
- 	return exec_simple_method(handle, "SALS", arg);
- }
- 
--static int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long arg, unsigned long *res)
--{
--	struct acpi_object_list params;
--	unsigned long long result;
--	union acpi_object in_obj;
--	acpi_status status;
--
--	params.count = 1;
--	params.pointer = &in_obj;
--	in_obj.type = ACPI_TYPE_INTEGER;
--	in_obj.integer.value = arg;
--
--	status = acpi_evaluate_integer(handle, (char *)name, &params, &result);
--	if (ACPI_FAILURE(status))
--		return -EIO;
--
--	if (res)
--		*res = result;
--
--	return 0;
--}
--
- static int eval_dytc(acpi_handle handle, unsigned long cmd, unsigned long *res)
- {
- 	return eval_int_with_arg(handle, "DYTC", cmd, res);
- }
- 
--static int eval_vpcr(acpi_handle handle, unsigned long cmd, unsigned long *res)
--{
--	return eval_int_with_arg(handle, "VPCR", cmd, res);
--}
--
--static int eval_vpcw(acpi_handle handle, unsigned long cmd, unsigned long data)
--{
--	struct acpi_object_list params;
--	union acpi_object in_obj[2];
--	acpi_status status;
--
--	params.count = 2;
--	params.pointer = in_obj;
--	in_obj[0].type = ACPI_TYPE_INTEGER;
--	in_obj[0].integer.value = cmd;
--	in_obj[1].type = ACPI_TYPE_INTEGER;
--	in_obj[1].integer.value = data;
--
--	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
--	if (ACPI_FAILURE(status))
--		return -EIO;
--
--	return 0;
--}
--
--static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *data)
--{
--	unsigned long end_jiffies, val;
--	int err;
--
--	err = eval_vpcw(handle, 1, cmd);
--	if (err)
--		return err;
--
--	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
--
--	while (time_before(jiffies, end_jiffies)) {
--		schedule();
--
--		err = eval_vpcr(handle, 1, &val);
--		if (err)
--			return err;
--
--		if (val == 0)
--			return eval_vpcr(handle, 0, data);
--	}
--
--	acpi_handle_err(handle, "timeout in %s\n", __func__);
--
--	return -ETIMEDOUT;
--}
--
--static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long data)
--{
--	unsigned long end_jiffies, val;
--	int err;
--
--	err = eval_vpcw(handle, 0, data);
--	if (err)
--		return err;
--
--	err = eval_vpcw(handle, 1, cmd);
--	if (err)
--		return err;
--
--	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
--
--	while (time_before(jiffies, end_jiffies)) {
--		schedule();
--
--		err = eval_vpcr(handle, 1, &val);
--		if (err)
--			return err;
--
--		if (val == 0)
--			return 0;
--	}
--
--	acpi_handle_err(handle, "timeout in %s\n", __func__);
--
--	return -ETIMEDOUT;
--}
--
- /*
-  * debugfs
-  */
++config LENOVO_YMC
++	tristate "Lenovo Yoga Tablet Mode Control"
++	depends on ACPI_WMI
++	depends on INPUT
++	depends on IDEAPAD_LAPTOP
++	select INPUT_SPARSEKMAP
++	help
++	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
++	  events for Lenovo Yoga notebooks.
++
+ config SENSORS_HDAPS
+ 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
+ 	depends on INPUT
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1d3d1b025..10054cdea 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
+ # IBM Thinkpad and Lenovo
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+ obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
++obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
+ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
 diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
-new file mode 100644
-index 000000000..7dd8ce027
---- /dev/null
+index 7dd8ce027..2564cb1cd 100644
+--- a/drivers/platform/x86/ideapad-laptop.h
 +++ b/drivers/platform/x86/ideapad-laptop.h
-@@ -0,0 +1,151 @@
+@@ -35,6 +35,7 @@ enum {
+ 	VPCCMD_W_FAN,
+ 	VPCCMD_R_RF,
+ 	VPCCMD_W_RF,
++	VPCCMD_W_YMC = 0x2A,
+ 	VPCCMD_R_FAN = 0x2B,
+ 	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
+ 	VPCCMD_W_BL_POWER = 0x33,
+diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+new file mode 100644
+index 000000000..e29ada1b4
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-ymc.c
+@@ -0,0 +1,177 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ *  ideapad-laptop.h - Lenovo IdeaPad ACPI Extras
++ * lenovo-ymc.c - Lenovo Yoga Mode Control driver
 + *
-+ *  Copyright © 2010 Intel Corporation
-+ *  Copyright © 2010 David Woodhouse <dwmw2@infradead.org>
++ * Copyright © 2022 Gergo Koteles <soyer@irl.hu>
 + */
 +
-+#ifndef _IDEAPAD_LAPTOP_H_
-+#define _IDEAPAD_LAPTOP_H_
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
 +#include <linux/acpi.h>
-+#include <linux/jiffies.h>
-+#include <linux/errno.h>
++#include <linux/dmi.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/wmi.h>
++#include "ideapad-laptop.h"
 +
-+enum {
-+	VPCCMD_R_VPC1 = 0x10,
-+	VPCCMD_R_BL_MAX,
-+	VPCCMD_R_BL,
-+	VPCCMD_W_BL,
-+	VPCCMD_R_WIFI,
-+	VPCCMD_W_WIFI,
-+	VPCCMD_R_BT,
-+	VPCCMD_W_BT,
-+	VPCCMD_R_BL_POWER,
-+	VPCCMD_R_NOVO,
-+	VPCCMD_R_VPC2,
-+	VPCCMD_R_TOUCHPAD,
-+	VPCCMD_W_TOUCHPAD,
-+	VPCCMD_R_CAMERA,
-+	VPCCMD_W_CAMERA,
-+	VPCCMD_R_3G,
-+	VPCCMD_W_3G,
-+	VPCCMD_R_ODD, /* 0x21 */
-+	VPCCMD_W_FAN,
-+	VPCCMD_R_RF,
-+	VPCCMD_W_RF,
-+	VPCCMD_R_FAN = 0x2B,
-+	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
-+	VPCCMD_W_BL_POWER = 0x33,
++#define LENOVO_YMC_EVENT_GUID	"06129D99-6083-4164-81AD-F092F9D773A6"
++#define LENOVO_YMC_QUERY_GUID	"09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C"
++
++#define LENOVO_YMC_QUERY_INSTANCE 0
++#define LENOVO_YMC_QUERY_METHOD 0xAB
++
++static bool ec_trigger __read_mostly;
++module_param(ec_trigger, bool, 0644);
++MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events");
++
++static const struct dmi_system_id ec_trigger_quirk_dmi_table[] = {
++	{
++		// Lenovo Yoga 7 14ARB7
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
++		},
++	},
++	{ },
 +};
 +
-+static inline int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long arg, unsigned long *res)
++struct lenovo_ymc_private {
++	struct input_dev *input_dev;
++	struct acpi_device *ec_acpi_dev;
++};
++
++static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
 +{
-+	struct acpi_object_list params;
-+	unsigned long long result;
-+	union acpi_object in_obj;
++	int err;
++
++	if (!ec_trigger || !priv || !priv->ec_acpi_dev)
++		return;
++	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
++	if (err)
++		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
++}
++
++static const struct key_entry lenovo_ymc_keymap[] = {
++	// Laptop
++	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
++	// Tablet
++	{ KE_SW, 0x02, { .sw = { SW_TABLET_MODE, 1 } } },
++	// Drawing Board
++	{ KE_SW, 0x03, { .sw = { SW_TABLET_MODE, 1 } } },
++	// Tent
++	{ KE_SW, 0x04, { .sw = { SW_TABLET_MODE, 1 } } },
++	{ KE_END },
++};
++
++static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
++{
++	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
++
++	u32 input_val = 0;
++	struct acpi_buffer input = {sizeof(input_val), &input_val};
++	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
 +	acpi_status status;
++	union acpi_object *obj;
++	int code;
 +
-+	params.count = 1;
-+	params.pointer = &in_obj;
-+	in_obj.type = ACPI_TYPE_INTEGER;
-+	in_obj.integer.value = arg;
++	status = wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
++				LENOVO_YMC_QUERY_INSTANCE,
++				LENOVO_YMC_QUERY_METHOD,
++				&input, &output);
 +
-+	status = acpi_evaluate_integer(handle, (char *)name, &params, &result);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
++	if (ACPI_FAILURE(status)) {
++		dev_warn(&wdev->dev,
++			"Failed to evaluate query method: %s\n",
++			acpi_format_exception(status));
++		return;
++	}
 +
-+	if (res)
-+		*res = result;
++	obj = output.pointer;
 +
++	if (obj->type != ACPI_TYPE_INTEGER) {
++		dev_warn(&wdev->dev,
++			"WMI event data is not an integer\n");
++		goto free_obj;
++	}
++	code = obj->integer.value;
++
++	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
++		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
++
++free_obj:
++	kfree(obj);
++	lenovo_ymc_trigger_ec(wdev, priv);
++}
++
++static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
++{
++	struct input_dev *input_dev;
++	struct lenovo_ymc_private *priv;
++	int err;
++
++	ec_trigger |= dmi_check_system(ec_trigger_quirk_dmi_table);
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	if (ec_trigger) {
++		pr_debug("Lenovo YMC enable EC triggering.\n");
++		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VCP2004", NULL, -1);
++		if (!priv->ec_acpi_dev) {
++			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
++			return -ENODEV;
++		}
++	}
++
++	input_dev = devm_input_allocate_device(&wdev->dev);
++	if (!input_dev)
++		return -ENOMEM;
++
++	input_dev->name = "Lenovo Yoga Tablet Mode Control switch";
++	input_dev->phys = LENOVO_YMC_EVENT_GUID "/input0";
++	input_dev->id.bustype = BUS_HOST;
++	input_dev->dev.parent = &wdev->dev;
++
++	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
++
++	err = sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
++	if (err) {
++		dev_err(&wdev->dev,
++			"Could not set up input device keymap: %d\n", err);
++		return err;
++	}
++
++	err = input_register_device(input_dev);
++	if (err) {
++		dev_err(&wdev->dev,
++			"Could not register input device: %d\n", err);
++		return err;
++	}
++
++	priv->input_dev = input_dev;
++	dev_set_drvdata(&wdev->dev, priv);
++	lenovo_ymc_trigger_ec(wdev, priv);
 +	return 0;
 +}
 +
-+static inline int eval_vpcr(acpi_handle handle, unsigned long cmd, unsigned long *res)
-+{
-+	return eval_int_with_arg(handle, "VPCR", cmd, res);
-+}
++static const struct wmi_device_id lenovo_ymc_wmi_id_table[] = {
++	{ .guid_string = LENOVO_YMC_EVENT_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, lenovo_ymc_wmi_id_table);
 +
-+static inline int eval_vpcw(acpi_handle handle, unsigned long cmd, unsigned long data)
-+{
-+	struct acpi_object_list params;
-+	union acpi_object in_obj[2];
-+	acpi_status status;
++static struct wmi_driver lenovo_ymc_driver = {
++	.driver = {
++		.name = "lenovo-ymc",
++	},
++	.id_table = lenovo_ymc_wmi_id_table,
++	.probe = lenovo_ymc_probe,
++	.notify = lenovo_ymc_notify,
++};
 +
-+	params.count = 2;
-+	params.pointer = in_obj;
-+	in_obj[0].type = ACPI_TYPE_INTEGER;
-+	in_obj[0].integer.value = cmd;
-+	in_obj[1].type = ACPI_TYPE_INTEGER;
-+	in_obj[1].integer.value = data;
++module_wmi_driver(lenovo_ymc_driver);
 +
-+	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+#define IDEAPAD_EC_TIMEOUT 200 /* in ms */
-+
-+static inline int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *data)
-+{
-+	unsigned long end_jiffies, val;
-+	int err;
-+
-+	err = eval_vpcw(handle, 1, cmd);
-+	if (err)
-+		return err;
-+
-+	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-+
-+	while (time_before(jiffies, end_jiffies)) {
-+		schedule();
-+
-+		err = eval_vpcr(handle, 1, &val);
-+		if (err)
-+			return err;
-+
-+		if (val == 0)
-+			return eval_vpcr(handle, 0, data);
-+	}
-+
-+	acpi_handle_err(handle, "timeout in %s\n", __func__);
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static inline int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long data)
-+{
-+	unsigned long end_jiffies, val;
-+	int err;
-+
-+	err = eval_vpcw(handle, 0, data);
-+	if (err)
-+		return err;
-+
-+	err = eval_vpcw(handle, 1, cmd);
-+	if (err)
-+		return err;
-+
-+	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-+
-+	while (time_before(jiffies, end_jiffies)) {
-+		schedule();
-+
-+		err = eval_vpcr(handle, 1, &val);
-+		if (err)
-+			return err;
-+
-+		if (val == 0)
-+			return 0;
-+	}
-+
-+	acpi_handle_err(handle, "timeout in %s\n", __func__);
-+
-+	return -ETIMEDOUT;
-+}
-+
-+#undef IDEAPAD_EC_TIMEOUT
-+#endif /* !_IDEAPAD_LAPTOP_H_ */
++MODULE_AUTHOR("Gergo Koteles <soyer@irl.hu>");
++MODULE_DESCRIPTION("Lenovo Yoga Mode Control driver");
++MODULE_LICENSE("GPL");
 -- 
 2.39.2
 
