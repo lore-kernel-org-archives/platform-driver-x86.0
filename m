@@ -2,127 +2,85 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61397C64EC4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 10:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2340EC64EC4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Mar 2023 10:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbjCJKCO (ORCPT
+        id S230288AbjCJK2X (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Mar 2023 05:02:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
+        Fri, 10 Mar 2023 05:28:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231305AbjCJKCJ (ORCPT
+        with ESMTP id S230000AbjCJK2W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Mar 2023 05:02:09 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBA710BA68
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Mar 2023 02:01:58 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lY58lGis3kd9hokSciocggFlcbxO5Er4XWiH/9cE6mcQSwvOggUYxWLxbg5dkhfXQiYmrT9801A7PZ9jSO1uYd6CfMb1uMmJvMrgWb/DCC9n5omSeaNonbrgGFFLnBJm6dQEjJibIx4W1R0PIecJwoBhay6qTAxaQHCeF/8bIjNZPGlAqIp6f9Dcw01Z2ZTg62aN+trN6NrM4N4AUN9rP2aqt2H8QYyEBAqLBqqdO5if7G9oqfktgOXKQzspuTbjPMg5JwaS5Fpw4k/J89/Fz2HqxiGAW8PN8Xwyh76bCJz6qYKT8E2kf69ORJVQZbwmaqRw/U0Rngs6PTfP3O0eMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bkzmksrCzwAjANc6MktExdBnP7vVW+xaBws6c7usrx0=;
- b=nuUCyqKyhKim0uXTh27tgY+2CBiNi2xjqDGnPmGKzhmRKMFSwLPdEVhJad2vd5luKr/q0XcdGyc8h7cjRxp33T9ZpbYLVhGEYWzQFPtMkTrUO7NIAqx0ACUWRs7xe5ZWYtLEQNMGJ2qiCnke3xLyDQw8ZAZ+2NtKhDwdMSmhiINgipMdHXn0kJ+KCTCaU2zmRuNevpU9+OMsHwCHKOK+QUCTFbOiifIXuo506vzrz8gSUtmVyXA9AGkRXO1Chnq/krcBdIJqKplnGuxO8N2bn/FqM+pnbI+SwSvqbJzjS3Z7GPac3+IxZ+NHswnRUCkIDLB6jM29ztCDKP+W+ZhvEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkzmksrCzwAjANc6MktExdBnP7vVW+xaBws6c7usrx0=;
- b=c5LoicY+Tkrsp4Y6E1eCfY6REsJnu+54DLy9FxLzcNW3Z2QwQ5YfZRQbi+VyzCKwJXP6qQYQWniXgwj8C81JPnCuMDpnddU/D5YNq3bIYC23AE1YsBi5ISUMxJN3+DqYa3j96pK1TdLHVjVpqZ69xDHKvpSruoYxVAkyi2Sv39U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by CO6PR12MB5491.namprd12.prod.outlook.com (2603:10b6:303:13b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Fri, 10 Mar
- 2023 10:01:52 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::8db1:ed03:e196:be2e]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::8db1:ed03:e196:be2e%7]) with mapi id 15.20.6178.019; Fri, 10 Mar 2023
- 10:01:52 +0000
-Message-ID: <586069f4-5faa-18e4-df7b-0d260536b713@amd.com>
-Date:   Fri, 10 Mar 2023 15:31:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
+        Fri, 10 Mar 2023 05:28:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C623A11053A
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Mar 2023 02:27:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678444055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jk9Ck+4BKQvY6fhI8v3CiIAM338T6KrWsRn8JyKBf58=;
+        b=P/yBGCH/sWrAT+QVTPnsdp0iqsmpa/fLRW5gSgTDzDwb6/ZcrLxS9nYp6vy1ifbPqT9o0P
+        y0BrNu/2t1OcYKcM7+DX6KsYiqF6LW/E9FkY97QNH8nV7Nxi5vfGrn+1k+cN9c/8d/YYnA
+        ZH2h/Z5lZhNaFHFtUZQ17JyWMLGN6nU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-526-ggsKNOe8PGq1UhNkvYjQ8Q-1; Fri, 10 Mar 2023 05:27:33 -0500
+X-MC-Unique: ggsKNOe8PGq1UhNkvYjQ8Q-1
+Received: by mail-ed1-f70.google.com with SMTP id fi8-20020a056402550800b004a26cc7f6cbso7116491edb.4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Mar 2023 02:27:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678444052;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jk9Ck+4BKQvY6fhI8v3CiIAM338T6KrWsRn8JyKBf58=;
+        b=4pQPrtequGE3NOz9bCAZVRB1mDfg4gg0RVh0It4JTt0ijXF7JDfhBkuNSvWxoCB/z8
+         oEzO1wJQjtjYBTk6sSzv7lGleC1w82VjV4nvxRKQkbuSUSlUPgfO4Fhn/qgjW69rxNG0
+         dcoeU4EYQ0VPAaVsJ/ZYrM57Bj2A3m/bQcgs0xRI1Ke21okx0JxEjDqr1g5X84k6zEGr
+         a5cxKoXsCnAtuYCMP8TKUAUkkUoHu3XQkaHqiTtVu8j18h1WOBQQSlgTZP5RG+XkHwn9
+         iNOsgf9LmBwL1s4v10qkgIU4QZJAjBTKHZJDSlqfwjtUqMVOyf8UW8tVl+5ILxwSwd7Q
+         g3Dg==
+X-Gm-Message-State: AO0yUKUzin2IZqfineOuZfxr01ov2ZGkl+zfNi1qQ8pnN3cIpvx2AoYB
+        ra2Uq9FSNEwtjcODDemTJ2U+5frTZgSaoCQOsuqJdX6BVlfAltLxfyDDqPK/mhqDZ+xBFfFXcUC
+        DLTlQ1J9nVA2DOsTsnALe1okX5Qt0JTdgLX1HV6tLDg==
+X-Received: by 2002:a17:907:980b:b0:88c:4f0d:85af with SMTP id ji11-20020a170907980b00b0088c4f0d85afmr32161569ejc.75.1678444052409;
+        Fri, 10 Mar 2023 02:27:32 -0800 (PST)
+X-Google-Smtp-Source: AK7set9eVz7NGxNw6QtIP8d7uTI0mrXfytL3b4U5B3fzyYy0crylIu7bmdP1GL0SWF3N/diy8t07tg==
+X-Received: by 2002:a17:907:980b:b0:88c:4f0d:85af with SMTP id ji11-20020a170907980b00b0088c4f0d85afmr32161555ejc.75.1678444052166;
+        Fri, 10 Mar 2023 02:27:32 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id dt22-20020a170906b79600b008d47cd2edfbsm793046ejb.60.2023.03.10.02.27.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 02:27:31 -0800 (PST)
+Message-ID: <543000de-7aae-3670-e7d5-2243bab01115@redhat.com>
+Date:   Fri, 10 Mar 2023 11:27:31 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
 Subject: Re: [PATCH] platform/x86/amd: pmc: decouple CONFIG_SUSPEND from AMD
  STB API usage
-To:     hdegoede@redhat.com, markgross@kernel.org
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     Sanket.Goswami@amd.com, platform-driver-x86@vger.kernel.org,
         Robert Swiecki <robert@swiecki.net>,
         Steven Rostedt <rostedt@goodmis.org>
 References: <20230310095301.1596369-1-Shyam-sundar.S-k@amd.com>
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <20230310095301.1596369-1-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0005.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::10) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CO6PR12MB5491:EE_
-X-MS-Office365-Filtering-Correlation-Id: da845236-20a3-4086-eb62-08db214e789b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OsgFs0NUsaFrp3Nsxon3KcT6Ab/1N83rBVrr/pRzfHHVeV5m0pGdqm0jT/SvHTjyrLQDK3+F+TYzEa0GCgaiyU4BC2+Mz2eHCyzf62ws0hl2NpyuNs1/JWzl0Xav3yI4y2ECqIR3HVE7e/Rjbr3/my/96cMgzvEcPq/qSxeAE/X3Ht8mcrwKoS8qu9j8vbcdiuOzy23RDkmbDl7B5ZwYUb3vqVPZwMA0o5gxDumtKdP252Ie9tnkXMARwYu3D9K8XNZS3HHvibWD4fdgr6dVO9mqtXQKqniAWQ2dtOIiQm4lSG0cG+cNfuVa7p4yv2YnMV/9jv3LrBnrfvYnjiWAHCCxfrccV5mXF3Rx/OvbrQroZFEPK2R8o98EcS7B+YVJ2Kv5wd67zpG10X0hOw68bd0RGlA/j20ZEuRQ0njxEU9exBNu6PqJFlbJB6BvV2XIIC/AGFFDjrlyOSk3nVlyOy3cRRZFpuX7RPyMIKMWnpRcOY7vdmz0l2UtTzfneeq0QmzD86G7N8rn9D9Tbq9xFgkavGcSVtjReF81I9bs2Gxs5GT+5bE3ihWwFVP9g8nPlguelJa2yWR5xVn4AOoFuZWGmW6rVDlgQDwL/PM4MdLT9SwYRER5SZZdpXoJPKPbac6/x7oDrJVbioQY4xad/FctnDFH2yKAcQNURvSW//uFt07WD1L8kduTySvYsWRykMf0Zr2bZPEDxlw+naBxRag89z5hG3bXWFWGbny7lB8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(451199018)(83380400001)(31686004)(26005)(36756003)(316002)(54906003)(6506007)(38100700002)(86362001)(31696002)(186003)(66556008)(53546011)(6512007)(2616005)(41300700001)(6486002)(5660300002)(4326008)(478600001)(8936002)(966005)(8676002)(66476007)(2906002)(66946007)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXhaNXBxbmVnMEFMbDhmMThxbTZpeGY2SzZlcjNVNFFVdHhDMlRIemVwZDZH?=
- =?utf-8?B?Slg3eFludVRrT0p0eTVMcTJSMU9pM0pMN0JMYWMzYi9uaHpyaUJQVVdhbjdW?=
- =?utf-8?B?TFkyWjl1YTNZcnVuWmh6Y3FXY0xNcjE0d1ZnUUJWV1pFZ2wza2podDlLYWlo?=
- =?utf-8?B?LzREbVcrVjZHallNcE9ETVdpVUJkVEpmREhINzFORVpHOWdtU0pRL0tHSEd4?=
- =?utf-8?B?SGlUWURGczNyamNRN3JRc2pKUlNHUUJiWHJHUXlJaUV3NlpoWmJXVG5pcngv?=
- =?utf-8?B?MjZWLysrL0VqV1ZPSGNkdWFnUjEzZ0RvQXNSK3dJa2xqOFl0djdFbXZmbGVx?=
- =?utf-8?B?bXA1ZVpxZGlzalZDY0xNV2NTem5UWS9ZRlc1TFp3ZjZCdHFtSHlMRTgzcmpn?=
- =?utf-8?B?VHZZYUVESmNUejVkU3RyUlEvSko1LzIvUjdFcjJuUTlYTE9nbWx4anpRYnNZ?=
- =?utf-8?B?bUcrQUd3QzlId3RuNUN1OVBveDE0VXMrazdwY1lCVlB2WWJ5VXhDdlRob05a?=
- =?utf-8?B?bFF3eUxHLzFCdXNsNko0endvUHh5Rm9pSXBiWWxNYTAyTEV6RVJEQWhwak55?=
- =?utf-8?B?a0pNang1VnVmNjlaRlY1WmlGWTd4Y1A4NDZvQzZwcyswZHR2bUo0SUx5RG44?=
- =?utf-8?B?ekdpSTJQeGVBNitFTDltNk1yZDF5NmNOajhySmlhNDhlL1orViswYzFCM1ZT?=
- =?utf-8?B?ZktSTjI2NlJCbFpLS3kxRFdEVjl6cDJjdlNmZkNGc3JyT1QwbjRPYTBFRWFw?=
- =?utf-8?B?d3ViNS9oS01KOWxOY04rdFdYSUs1RlVxY0JPY0ZFR3RaYitKWDhQaCtFT2s1?=
- =?utf-8?B?TW9XUnFTMTk5akI2eERIQk85U1pOZE5HYnpmd1RnZnJEUTZ0a2lUT2RzNFhN?=
- =?utf-8?B?aUZXL24wQkVvVVJkc3lVVnZTbFo1KzRlL3pEQjd5U1Y4RDR2clcvQTRVVnQ1?=
- =?utf-8?B?RS9DZ0p2bGJhRVZNZlNhWklrcGxFTUgyZkFHc2N2b0RVMWFXQmdDMDJleG9U?=
- =?utf-8?B?dXp2ZVVlZEpibkNBVVM5UThNV3FWc1BiSHVpU2VlRXFDZGpkNGRzVkwwVU84?=
- =?utf-8?B?NDN0a0d5Q2hmMXVHSW5LamkzaXY0T1ZsZEFRSEpHU1BzYlJDa1EyZnZIWUp4?=
- =?utf-8?B?cTFBWTBuT1lFQ2pSeHBSTGFtVU8yeVNvQ1p4VDRzMkZxK3lUM25Fc0FYTisv?=
- =?utf-8?B?MlZCaC9CdUlJdjdZNGNESisrZVBQKzdYYXV3dEQ3UjBsTmVWY2ZFR3A1eWRw?=
- =?utf-8?B?ZDF1NXFUUzR2SS8yQ3NSYXhaSm11alRPdkhvNU5FbzBEU3JQVnQ3aEFjU0tj?=
- =?utf-8?B?RHJXTzVWeS9sSzZpQmViTG9Xb2dVTVRNSzNWU09tM2lnN0hsbi9wL2EwMzBi?=
- =?utf-8?B?OHBpNnlWM0I0S2U5VThaZVFmVHViNXhzVDBOZ3Q3SnplY2o0dkNzQkxrSStj?=
- =?utf-8?B?M3BhOVNqNFlwdjdxN29xQjk4Ri9sbUgxc2tRS0d3aEtWMGR0QlVZZ3RWajRR?=
- =?utf-8?B?VXRzbG5xOTkySjdNREphVmp4S3lYeUtxUzREYm5IbEZML0srOSttcGdIM1FV?=
- =?utf-8?B?c0h4eEpqZ3dZVTFXVXYwaWxEK0NZcUt6UytHK2E3alhBbktRQ2ZRaEN3RzNr?=
- =?utf-8?B?VjBGNGZ6TEtIUkREcisyNXlFdW1oN0xaM2cwbmMxc24rb3dnU2RkRkUrV003?=
- =?utf-8?B?VW1OSlJPYWREMTVhVTVteHNZTEZVeCsxY3JleXUzTDlXcGoyWGxjTmQwV09O?=
- =?utf-8?B?cThtL01qSmUyOWVyS2xKcGd3UmJCbXdtVm5neU9pQ0ZFZFgrRURKbXJVVnhG?=
- =?utf-8?B?cENWaVpEODdYQUY5aGJBUDdybWlhelpIYlBDUm9lbUVmMUpOaHk4dHM2bEVH?=
- =?utf-8?B?TGNrTnhKbnFaR1lUVStBbDd5eXJaRS9vSVRuUFB6WlRoWHh4R3NhaDZ5ZzVs?=
- =?utf-8?B?cDJKM0FXcFp3RFBBWEJPVE5qbDRzTWZmM2xoRk5wbHJCVURJNk9GOW1DOWda?=
- =?utf-8?B?N1VvSVJnNkN1NXozUHZaRHE3UlgxYkxQR1UrTk92UXY2VzdwSUZpZGVaL0Vk?=
- =?utf-8?B?RE1mZisyTmRad0o5b0U1ZE9YR0I2ZlVldCtkak9UQWh4YjhhbWNodjczcGF1?=
- =?utf-8?Q?LRg0SpdnVST0XdKahR/YjU6aZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da845236-20a3-4086-eb62-08db214e789b
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2023 10:01:52.0999
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2XZrjnaTuTyzAtPAJbK8uBymjRiHLkMyDk0rzzZQ7nU+sCcrjFGs6fkeWfY3rIkHvBcdEd5/Fii2RwLlBuzLlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5491
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hi Shyam,
 
-On 3/10/2023 3:23 PM, Shyam Sundar S K wrote:
+On 3/10/23 10:53, Shyam Sundar S K wrote:
 > The initial introduction of AMD STB was limited to only suspend/resume
 > use cases, but the need for STB APIs like amd_pmc_write_stb() have grown
 > overtime and guarding it with CONFIG_SUSPEND seems to be incorrect.
@@ -137,16 +95,19 @@ On 3/10/2023 3:23 PM, Shyam Sundar S K wrote:
 > Link: https://lore.kernel.org/platform-driver-x86/20230309225016.2e8cd211@gandalf.local.home/T/#t
 > Reported-by: Steven Rostedt <rostedt@goodmis.org>
 > Link: https://lore.kernel.org/platform-driver-x86/20230309225016.2e8cd211@gandalf.local.home/T/#t
-
-I had to use the same "Link" tag twice as Robert & Steven reported the
-same issue and without that checkpatch fails.
-
-Hope that's fine.
-
-Thanks,
-Shyam
-
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
+This is already fixed (in a nicer way) by:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=24efcdf03d85bb73df0ba99f69c8d238e7ada0e5
+
+Regards,
+
+Hans
+
+
+
+
 > ---
 >  drivers/platform/x86/amd/pmc.c | 4 ----
 >  1 file changed, 4 deletions(-)
@@ -181,4 +142,4 @@ Shyam
 >  
 >  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf)
 >  {
-> 
+
