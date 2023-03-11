@@ -2,90 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB9DC6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Mar 2023 20:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E97C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Mar 2023 22:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjCKUfa (ORCPT
+        id S229613AbjCKWan (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Mar 2023 15:35:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
+        Sat, 11 Mar 2023 17:30:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbjCKUf3 (ORCPT
+        with ESMTP id S229437AbjCKWan (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Mar 2023 15:35:29 -0500
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDA01EFDF
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 12:35:28 -0800 (PST)
-Received: by mail-ua1-x936.google.com with SMTP id f20so5822123uam.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 12:35:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678566928;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PYVfKjv6zo+VJ34+kg/Uzz7kX5O0SKrczyVfKwBzgf8=;
-        b=q2PfN3PU9ng7KojJ5441f2H+9qkL1PUuEgDdDM4qi0kcuW5BnStn7Kiz8Z3JQTg+TY
-         R+1hmjYoy+4SfQpi49FQxZ9/kpSgzfliUPd+tRfrcVUMNLDYLeqjcPNIxDUQRG3NE3VI
-         U5AUEPqmBz9TJEMBaCvlV/NpDpX9BTEHzzk1xCkLgalzbmbRi+UK6a15KWGCaMGsJx3o
-         vNpPAaiQqR9JOaTMVEPvkkER+wRbaOpxat/+DnVldoQ91E/AzfoRrB6uMUfIAWPZqifG
-         NPDwY6Y3/7Osghif0xKtrA49zCy4tSfDAvbQszBCZSZtRYbfgDmklHjOP/SGKCMvrRKA
-         b6iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678566928;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PYVfKjv6zo+VJ34+kg/Uzz7kX5O0SKrczyVfKwBzgf8=;
-        b=BJhW0EZQ80CWStN8XhOynHqhaj3cAN18GKdanzmeytjANs/ANGN8z4zJmX6TXFmYCx
-         f0cqfKQapBWmrBzYI243Cc/UOzfHQL3rHFdWusvHU+vN4ADc+qfj8Te66S1V034Xk9IF
-         44U/BHkn01N9LRZ3674LI3d1pvYZpDspL1uxe69wjJWvO+Oln0/xocK1b23jJr2fcIAo
-         rZN//1bmMcj0SXefxPKHFB1yKXbeMyb8cmDsGorjQONgQXWtz8MewGN9mBBZ0a4buH78
-         sxGzeSSr3SG4PlKE0cGoqdr2rZYkeN+dYGGM2iskybtVyQLmj9qU05kzZtLYT4rBzaSK
-         jL5A==
-X-Gm-Message-State: AO0yUKXmum9SY7SX1dGeNkueTiOH/D67XGvL0AwqmwcoOFYk1wgYE/NP
-        YupX4cRL6IbwYt+GpIO2K2V6wp/0ClQxnaDOh01IG0cHYt0=
-X-Google-Smtp-Source: AK7set8g+2BtAEI935U6P0B4gSzO6UKmMMSmPvoqrmqgHiE148s+aDasB4khWYPwAiDkULnNu3+ArU52IL89h0X9QU0=
-X-Received: by 2002:ab0:5402:0:b0:688:d612:2024 with SMTP id
- n2-20020ab05402000000b00688d6122024mr19143123uaa.2.1678566927735; Sat, 11 Mar
- 2023 12:35:27 -0800 (PST)
+        Sat, 11 Mar 2023 17:30:43 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4899A6B5E2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 14:30:41 -0800 (PST)
+Received: from mail.ideasonboard.com (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B51956D;
+        Sat, 11 Mar 2023 23:30:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1678573838;
+        bh=+tfvrNr7JJy25Uwf5MXaayTEeQXqAtvJAYF99Ushba4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LMKZg5lMljUu/NjzdFI1PSPjtoAlGmBUxsrWqxlogz6eALuNEm4O+THk2r8+RxM+k
+         W0kJBKXhEs3FsQCqsq/Qvpp/wA3GvlG+vmZMM4VKgkV9bOEFKE4iaAtXwV1OOn5vgs
+         MOGan079T3XYilyjRZBZVCQi9tytpM3dh6YsOENA=
+From:   Daniel Scally <dan.scally@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Daniel Scally <dan.scally@ideasonboard.com>
+Subject: [PATCH] platform/x86: int3472: Remap reset GPIO for INT347E
+Date:   Sat, 11 Mar 2023 22:30:19 +0000
+Message-Id: <20230311223019.14123-1-dan.scally@ideasonboard.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230311144054.8754-1-teackot@gmail.com> <iPt1Reo37oGFvlRdQOY-3kZypWeV0pRah5oZ17K4xUOkeMqE7E43XQVyUX0A4a6oeEc1hPPzbjKcU3NznXUA3fnmp-foM3vuFSnA4YcFTDQ=@protonmail.com>
-In-Reply-To: <iPt1Reo37oGFvlRdQOY-3kZypWeV0pRah5oZ17K4xUOkeMqE7E43XQVyUX0A4a6oeEc1hPPzbjKcU3NznXUA3fnmp-foM3vuFSnA4YcFTDQ=@protonmail.com>
-From:   Nikita Kravets <teackot@gmail.com>
-Date:   Sat, 11 Mar 2023 23:35:16 +0300
-Message-ID: <CAPXvF05AurS89f6bNg_5-VCS=vX=qMXbKgSdv5-wwBb8J3Xdcw@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: Add new msi-ec driver
-To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Jose Angel Pastrana <japp0005@red.ujaen.es>,
-        Aakash Singh <mail@singhaakash.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+ACPI _HID INT347E represents the OmniVision 7251 camera sensor. The
+driver for this sensor expects a single pin named "enable", but on
+some Microsoft Surface platforms the sensor is assigned a single
+GPIO who's type flag is INT3472_GPIO_TYPE_RESET.
 
-> The above two functions are inconsistent with the rest of the file because
-> they have the return type in a separate line.
+Remap the GPIO pin's function from "reset" to "enable". This is done
+outside of the existing remap table since it is a more widespread
+discrepancy than that method is designed for. Additionally swap the
+polarity of the pin to match the driver's expectation.
 
-I believe it was originally made to not exceed the limit of 80 columns
+Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> It's a small thing, but usually /* ... */ comments are preferred.
-> Hans will tell you if you need to change it.
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index f064da74f50a..2064b3bbe530 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -98,6 +98,9 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+ {
+ 	const struct int3472_sensor_config *sensor_config;
+ 	char *path = agpio->resource_source.string_ptr;
++	const struct acpi_device_id ov7251_ids[] = {
++		{ "INT347E" },
++	};
+ 	struct gpiod_lookup *table_entry;
+ 	struct acpi_device *adev;
+ 	acpi_handle handle;
+@@ -120,6 +123,17 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+ 		}
+ 	}
+ 
++	/*
++	 * In addition to the function remap table we need to bulk remap the
++	 * "reset" GPIO for the OmniVision 7251 sensor, as the driver for that
++	 * expects its only GPIO pin to be called "enable" (and to have the
++	 * opposite polarity).
++	 */
++	if (!strcmp(func, "reset") && !acpi_match_device_ids(int3472->sensor, ov7251_ids)) {
++		func = "enable";
++		polarity = GPIO_ACTIVE_HIGH;
++	}
++
+ 	/* Functions mapped to NULL should not be mapped to the sensor */
+ 	if (!func)
+ 		return 0;
+-- 
+2.34.1
 
-Okay
-
-> Previously you said `match_string()` works here. Has something changed?
-
-No, I implemented it in the main repo but forgot to do it in the kernel patch..
-I'll do it in the v3 after we're finished reviewing v2
-
-> Why not simply
->
->   conf = *CONFIGURATIONS[i];
-
-Noted
-
-Regards,
-Nikita
