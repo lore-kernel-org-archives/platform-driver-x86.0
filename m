@@ -2,76 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A322CC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Mar 2023 11:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B889C61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 11 Mar 2023 11:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjCKLHw (ORCPT
+        id S229814AbjCKLN1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Mar 2023 06:07:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        Sat, 11 Mar 2023 06:13:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjCKLHv (ORCPT
+        with ESMTP id S229835AbjCKLNT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Mar 2023 06:07:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E97125B9F
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 03:07:04 -0800 (PST)
+        Sat, 11 Mar 2023 06:13:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BF524124
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 03:12:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678532823;
+        s=mimecast20190719; t=1678533154;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FbQqHGhH+ljVjXCzZ+9XvDPGWO2NdWGjYQr6UXpBppw=;
-        b=CLn5MmtHARO/mTqFH461WNeSjSQVuQ1UJ7uktsdu+KlTPFGWg26IqkJurwFPrVuQzZNDIO
-        y0NhVNDhZupYM7VTY6pO9Ois90x/NI0NBzGt04DSriUMvIoZ0ytkQPdFy673f1np7TDlZp
-        0S60Nu8oayqxCmcQczHztRymWg1RCv0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=rCCwmyApAihxP4yvLbt76+J6ZESYZiBkoYCjepoizvE=;
+        b=gHfgADgTEE/i/bEUScVS28r6ILLnFgyoBR8S02/XgTqQn3HQMS+uuTNAFY+Ri1jMbwXSvw
+        WshOePEMsVSRGXOVte/Qf3jtaUfj0csg+ULZbP7a1AYkSo5QEfuA0Pxl3UfEEL3Nvi0lLk
+        AJy4jPAgFZZahgfrVzfdLjIlJeGwLFs=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-368-Oo7ghlKwNVqGpfAu1eUK7g-1; Sat, 11 Mar 2023 06:07:02 -0500
-X-MC-Unique: Oo7ghlKwNVqGpfAu1eUK7g-1
-Received: by mail-ed1-f72.google.com with SMTP id fi8-20020a056402550800b004a26cc7f6cbso10979928edb.4
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 03:07:01 -0800 (PST)
+ us-mta-471-NO8jY67lMuS3dYckReHTtw-1; Sat, 11 Mar 2023 06:12:33 -0500
+X-MC-Unique: NO8jY67lMuS3dYckReHTtw-1
+Received: by mail-ed1-f71.google.com with SMTP id da22-20020a056402177600b004c60694083eso10897727edb.5
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 03:12:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678532820;
+        d=1e100.net; s=20210112; t=1678533152;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbQqHGhH+ljVjXCzZ+9XvDPGWO2NdWGjYQr6UXpBppw=;
-        b=394vr+lNyVgGJWA686otCrl6osbywR4n60HauTiZOjqdEs0E6OGllm7SA1vjGipwgd
-         0AXPpasZ96z9XlYeVT/uFNr3R5t0foZZolW78agh8gapPzB9CXiPkzhjzLtlM3G5B4dC
-         u0FzZge2O0AtX10kjG8FyV2V0pcZA9WX8R0mpSapPGYe3n91GrXZk6ijvw6+HSZeNuAv
-         3YtikBcYkV8oPEw02QqTx9g0CvH7svG+yb6fBDsAvCvFkCWzmG1Vb+MU1LWwyKxD4GVQ
-         sLKXJHaGGUJnLG3OSZFl4UYUAIouLJ2Xuuc2jIdi6z+KtStJ0dCROqXGkwO7MstqSZh7
-         N2yg==
-X-Gm-Message-State: AO0yUKW2raY9AHrJGTecCLQ1bEl8jMcRTex3cIm8FkpKzm3DKt2yogkQ
-        +rNQXi4fKgjMhQG5hgB+Yv6A6ydShYSi5b6/TvSVJi4dCGW2t+zlv9cylhCs3p/4ep20Hh2ZQ5x
-        UDXUwzcA7ZkLemcy8vlFstRD4KRimwxoXV1Ik/QPtmA==
-X-Received: by 2002:a17:907:7daa:b0:8b1:30da:b586 with SMTP id oz42-20020a1709077daa00b008b130dab586mr35162307ejc.49.1678532820663;
-        Sat, 11 Mar 2023 03:07:00 -0800 (PST)
-X-Google-Smtp-Source: AK7set+Zv67Lh0HAKveLNflBHxBYirrDwhlUoAg1BHcOtrZ+kv28bqKhiWyYiV+95NKsdSfAYYzkvw==
-X-Received: by 2002:a17:907:7daa:b0:8b1:30da:b586 with SMTP id oz42-20020a1709077daa00b008b130dab586mr35162298ejc.49.1678532820403;
-        Sat, 11 Mar 2023 03:07:00 -0800 (PST)
+        bh=rCCwmyApAihxP4yvLbt76+J6ZESYZiBkoYCjepoizvE=;
+        b=rZvpLnKe38JgIEbnCqLiZp5wb0nfNTKRLz1xpDaoMK9e4Y+l7+OvUe4elXi6G8Z4WL
+         1HoxT7VasIgz0ruMkxNGlYah1C7eCDqo/jvXxzShApIuVYh7y9kDh/aa2W5vd674aUEE
+         FCTMTNn0EkqE4JujuA452NUhGpSTLyb9h+00KISf24kd8i8N7i54VPgkbemc2nYHia/G
+         Jy7v1twbBCMHPdLc24+6wmEppaI4z7LtJJjGw8OiSMnyNf6adRDbmC2hHfdD4bhHhdPc
+         9phOCxvS50Lb9fZXWPIXx6wVbiEz//SkjHyKSlhJTYjtJNaxbnpFoBBRwlmdywQYklIX
+         VVbw==
+X-Gm-Message-State: AO0yUKUVBWl+NZI31Hz6JKPtUTCeGDDrAbZiki3BGeeXmpWvNAapfj1T
+        yco0EunEzLzpxcIPhiOatDkx86os8pGr6A5OAUlkZLvrhzB8HyMhWcmknQWAnKshc3Sdh7q3ffN
+        tqgXYlS06gSMNBG2BmAzJzKICMy6Uc/iuIw==
+X-Received: by 2002:a17:906:16d0:b0:921:1c2c:48 with SMTP id t16-20020a17090616d000b009211c2c0048mr1295522ejd.49.1678533151889;
+        Sat, 11 Mar 2023 03:12:31 -0800 (PST)
+X-Google-Smtp-Source: AK7set80mysco1BuArjgjjwOJ+1BuiwMLI8EfFzqxX5yuGct88NWCGQJKR5qdZJEYfSQcMxULaaSNg==
+X-Received: by 2002:a17:906:16d0:b0:921:1c2c:48 with SMTP id t16-20020a17090616d000b009211c2c0048mr1295511ejd.49.1678533151605;
+        Sat, 11 Mar 2023 03:12:31 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id rn2-20020a170906d92200b00921c608b737sm406568ejb.126.2023.03.11.03.06.59
+        by smtp.gmail.com with ESMTPSA id y25-20020a170906519900b008eb5b085075sm983791ejk.122.2023.03.11.03.12.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Mar 2023 03:06:59 -0800 (PST)
-Message-ID: <089d973c-c878-3750-2b37-808213ac2f50@redhat.com>
-Date:   Sat, 11 Mar 2023 12:06:59 +0100
+        Sat, 11 Mar 2023 03:12:31 -0800 (PST)
+Message-ID: <e3c00116-5283-8c76-7414-66f36fb575fa@redhat.com>
+Date:   Sat, 11 Mar 2023 12:12:30 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2] platform/x86: x86-android-tablets: Add depends on
- PMIC_OPREGION
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: select PMIC_OPREGION
+ to resolve a link error of intel_soc_pmic_exec_mipi_pmic_seq_element
 Content-Language: en-US, nl
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        kernel test robot <lkp@intel.com>, Tom Rix <trix@redhat.com>
-References: <20230309094035.18736-1-hdegoede@redhat.com>
+To:     Tom Rix <trix@redhat.com>, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230310192915.2700069-1-trix@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230309094035.18736-1-hdegoede@redhat.com>
+In-Reply-To: <20230310192915.2700069-1-trix@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,44 +78,59 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/9/23 10:40, Hans de Goede wrote:
-> Add a depends on PMIC_OPREGION to x86-android-tablets Kconfig to fix
-> the following build error:
+On 3/10/23 20:29, Tom Rix wrote:
+> A rand config causes this link error
+> drivers/platform/x86/x86-android-tablets/lenovo.o: In function `lenovo_yt3_init':
+> lenovo.c:(.init.text+0x6c): undefined reference to `intel_soc_pmic_exec_mipi_pmic_seq_element'
 > 
-> ERROR: modpost: "intel_soc_pmic_exec_mipi_pmic_seq_element"
->  [drivers/platform/x86/x86-android-tablets/x86-android-tablets.ko] undefined!
+> The rand config has
+> CONFIG_X86_ANDROID_TABLETS=y
+> CONFIG_PMIC_OPREGION=n
 > 
-> Fixes: 9b1d2662b8c5 ("platform/x86: x86-android-tablets: Add touchscreen support for Lenovo Yoga Tab 3 Pro YT3-X90F")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/oe-kbuild-all/202303091711.howZNrIY-lkp@intel.com/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Add Fixes tag
+> PMIC_OPREGION should be selected to build the
+> intel_soc_pmic_exec_mipi_pmic_seq_element symbol.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-I've pushed this out to the pdx86/for-next branch now.
+Thanks, but this is a dup with:
+
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20230309094035.18736-1-hdegoede@redhat.com/
+
+I just did not get around to pushing that out to pdx86/for-next yet.
+I have just pushed this to pdx86/for-next to avoid further duplicate fixes.
+
+FWIW, since all other users of PMIC_OPREGION use depends on, not select this
+should have been a depends on too. Unless Kconfig symbols are explicitly
+intended to be selected (typically these are hidden Kconfig symbols (1))
+then you should usually use depends on. Mixing depends on and select leads
+to Kconfig circular dependencies errors.
 
 Regards,
 
 Hans
 
 
+1) A hidden Kconfig symbol is one which is e.g. just 'bool' not
+'bool "Description of feature here"' these typically are libraries /
+
+helpers.
+
+
 
 
 > ---
->  drivers/platform/x86/x86-android-tablets/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/x86-android-tablets/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
-> index 2b3daca5380b..6603461d4273 100644
+> index 2b3daca5380b..65980229d783 100644
 > --- a/drivers/platform/x86/x86-android-tablets/Kconfig
 > +++ b/drivers/platform/x86/x86-android-tablets/Kconfig
-> @@ -5,7 +5,7 @@
->  
+> @@ -6,6 +6,7 @@
 >  config X86_ANDROID_TABLETS
 >  	tristate "X86 Android tablet support"
-> -	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB
-> +	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB && PMIC_OPREGION
+>  	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB
+> +	select PMIC_OPREGION
 >  	help
 >  	  X86 tablets which ship with Android as (part of) the factory image
 >  	  typically have various problems with their DSDTs. The factory kernels
