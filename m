@@ -2,98 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BA6C6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Mar 2023 03:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FA6C6FD19
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Mar 2023 03:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbjCLDhv (ORCPT
+        id S229568AbjCLDsw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 11 Mar 2023 22:37:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
+        Sat, 11 Mar 2023 22:48:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjCLDhv (ORCPT
+        with ESMTP id S229509AbjCLDsv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Mar 2023 22:37:51 -0500
+        Sat, 11 Mar 2023 22:48:51 -0500
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3945A193
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Mar 2023 19:37:49 -0800 (PST)
-Date:   Sun, 12 Mar 2023 03:37:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1678592268; bh=46PsHM/aoZVw3bubgcReS+oLTOQrMdAVTBKE6Lt4ymY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LniVDcm4JmPmpOk9IODTJFrdPi6Zs2DqB7YkMe+NDeYOx9/Rrc46Oy1H/P7sZtukK
-         WTZAVXcKBhuF6trbdu2L47Q3G49I2kXlflrBd6qqixJeEsDY92rviOXHyCUsZkcXPk
-         43y1NCvN6IoJvRdXg0u/Qr2+KdYJHwM/7Gsz0lTg=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, markpearson@lenovo.com,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/2] platform/x86: think-lmi: Add possible_values for
- ThinkStation
-Message-ID: <84477e76-da8d-4eaa-b229-2f7e4fe858d4@t-8ch.de>
-References: <mpearson-lenovo@squebb.ca>
- <20230312024635.518769-1-mpearson-lenovo@squebb.ca>
- <20230312024635.518769-2-mpearson-lenovo@squebb.ca>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F065301B0;
+        Sat, 11 Mar 2023 19:48:49 -0800 (PST)
+From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+        s=mail; t=1678592927;
+        bh=+rMHRDkeP4GJtkRDL8MbsK85+v58lq+Nd+xJTUAGoUU=;
+        h=From:Date:Subject:To:Cc:From;
+        b=KU+g7t96YIFS7B2isCvvNWrFXjBfgKGm1fVErAV8xjj1k8NJ2xSJmkIBnPhzJuqli
+         xVRlXJCDKtyUfcrK2Eila0HHZ/oljLb78c3GUfvSzpUGcdG08b2jYmiOB7JkrRg0na
+         TI0am49Kx7ryRE7f453xyvPfecgwozLk+zZjsAjQ=
+Date:   Sun, 12 Mar 2023 03:47:57 +0000
+Subject: [PATCH] platform/x86: think-lmi: Properly interpret return value
+ of tlmi_setting
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230312024635.518769-2-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20230312-think-lmi-status-v1-1-4e9f36322cc4@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAGxLDWQC/x2NywoCMQwAf2XJ2UDbBRf9FfHQR7TBGqXpirDsv
+ xs8zsAwGyh1JoXztEGnDyu/xMAfJsg1yp2QizEEF2Y3+4CjsjywPRl1xLEqurIccyKflnICy1J
+ UwtSj5GqhrK2ZfHe68ff/uVz3/QfB3gYJdwAAAA==
+To:     Mark Pearson <markpearson@lenovo.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1678592925; l=1193;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=+rMHRDkeP4GJtkRDL8MbsK85+v58lq+Nd+xJTUAGoUU=;
+ b=qT5CKb7vhit8yR26drfrCP1cnWOS9WR8fzTCo52CJMP0ndSGSZnKum5T+CfijDiWZMhnIs0YQ
+ T2Sc6W8/jSRAeW99fLmoL0w4w/usuXyf/iHPXaFZzcZwszbdv/Q+nCU
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Mar 11, 2023 at 09:46:35PM -0500, Mark Pearson wrote:
-> ThinkStation platforms don't support the API to return possible_values
-> but instead embed it in the settings string.
-> 
-> Try and extract this information and set the possible_values attribute
-> appropriately.
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
->  drivers/platform/x86/think-lmi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 495a5e045069..52f3472fd1e0 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -1432,6 +1432,29 @@ static int tlmi_analyze(void)
->  			if (ret || !setting->possible_values)
->  				pr_info("Error retrieving possible values for %d : %s\n",
->  						i, setting->display_name);
-> +		} else {
-> +			/*
-> +			 * Older Thinkstations don't support the bios_selections API.
-> +			 * Instead they store this as a [Optional:Option1,Option2] section of the
-> +			 * name string.
-> +			 * Try and pull that out if it's available.
-> +			 */
-> +			char *item, *optstart, *optend;
-> +
-> +			if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID)) {
-> +				optstart = strstr(item, "[Optional:");
-> +				if (optstart) {
-> +					optstart += strlen("[Optional:");
-> +					optend = strstr(optstart, "]");
-> +					if (optend) {
-> +						setting->possible_values =
-> +							kmalloc(optend - optstart, GFP_KERNEL);
-> +						strncpy(setting->possible_values,
-> +								optstart, optend - optstart);
-> +						setting->possible_values[optend - optstart] = '\0';
+The return value of tlmi_settings() is an errorcode, not an acpi_status.
 
-Same as for patch 1.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
 
-kmalloc() can fail, etc.
+Note: This is only compile-tested.
+---
+ drivers/platform/x86/think-lmi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-kstrndup() would be much easier.
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 86b33b74519b..c924e9e4a6a5 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -1353,7 +1353,6 @@ static struct tlmi_pwd_setting *tlmi_create_auth(const char *pwd_type,
+ 
+ static int tlmi_analyze(void)
+ {
+-	acpi_status status;
+ 	int i, ret;
+ 
+ 	if (wmi_has_guid(LENOVO_SET_BIOS_SETTINGS_GUID) &&
+@@ -1390,8 +1389,8 @@ static int tlmi_analyze(void)
+ 		char *p;
+ 
+ 		tlmi_priv.setting[i] = NULL;
+-		status = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+-		if (ACPI_FAILURE(status))
++		ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
++		if (ret)
+ 			break;
+ 		if (!item)
+ 			break;
 
-> +					}
-> +				}
-> +			}
->  		}
->  		/* If we don't have a possible value mark as N/A */
->  		if (!setting->possible_values) {
-> -- 
-> 2.39.1
-> 
+---
+base-commit: 81ff855485a366a391dc3aed3942715e676ed132
+change-id: 20230312-think-lmi-status-0d76cbe1b7d9
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
+
