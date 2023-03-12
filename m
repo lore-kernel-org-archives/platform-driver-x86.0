@@ -2,159 +2,213 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E49BC7618A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Mar 2023 12:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2466CC6FA99
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Mar 2023 13:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbjCLMOc (ORCPT
+        id S230094AbjCLNV5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Mar 2023 08:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
+        Sun, 12 Mar 2023 09:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCLMOa (ORCPT
+        with ESMTP id S229502AbjCLNV4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Mar 2023 08:14:30 -0400
-Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C642D36FE1;
-        Sun, 12 Mar 2023 05:14:25 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailnew.west.internal (Postfix) with ESMTP id 2E8A02B066CB;
-        Sun, 12 Mar 2023 08:14:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 12 Mar 2023 08:14:23 -0400
+        Sun, 12 Mar 2023 09:21:56 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C667131E0C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Mar 2023 06:21:23 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1BA205C0125;
+        Sun, 12 Mar 2023 09:20:04 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Sun, 12 Mar 2023 09:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1678627204; x=1678713604; bh=fb6iy9BVWgDRTgwE5rFxWDlfcZJlM0G1SeT
+        HPrKaYsM=; b=WGSDKyESJ9fC2IKr1tYhmD21pDmYXDUCckKcqRvbcLw9Dcs6/c7
+        JfRwixXFQEAPfRVKMHxjbcvrZCLb7nGByLyvzzV8AnRQuSOcIEZHl+2J6aCYb/kP
+        MW1wcRtltPCNGTGN74gagHcqm88f2WWI35plWF4NzO22q+ZgPyUdfSHba7AvySpv
+        OCC0s/DJOYH8rRmXKKGSphtvbebg2C5gAh1BI5DDNqpy3a22zipsUj33XnORBVHp
+        ipAwvOzpNUH/1Crmoop1aV785FEh05+NsRgYLeYGkCuMCKaqPWDFBrT6ysQxQZzX
+        gxy4CRXOEp2f2Fzoo+hTtfixMF2ubJYk24Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1678623258; x=1678630458; bh=uOiTi6/NTNM3M
-        UGJcuvZvSM01KsroDdW5S+kXTtbd8w=; b=eHYyrL4NaW+yMUjCNptl5jYYtoi8E
-        hLBKzStAuQkG4v/z4hhP3kqHJQ2dwsRiMM/zQZmYQuybV3ns2BtF/u+8yL8z2Lpx
-        Fmm8zqjgnyTXuowli2+dSb8yfzjw4fhctK9VDp59jUGkHPWADWbTNq/qwMcS4V2D
-        nJzvwzXB3DZqQONKCTj7Ai1tlKWl3EuFudxD2O4eOA/UZCCneHrJ2UESteRQ80wa
-        DIqa4yLbBJCwUjKYoouq9gT2uFNwoaBp54W+m/0tweudxnh2fvhCVWnaKIgSmJRU
-        6fTwksJ6D/49vNcKmO24kfNVAM+PfU+O0BFXGq6gmpmocg7/R3c1RWetw==
-X-ME-Sender: <xms:GMINZGTf74JeblrjlpCh3YB4_QRRq8vjzK0oAN37uf84Wq2fmxR25A>
-    <xme:GMINZLwR_DLRm0xvpbHAjBj56JOUxatnZe2vfFGNpmMYMmk-Rc5duszkyCP3ccJqd
-    CMMbOhtJaOGzHw>
-X-ME-Received: <xmr:GMINZD3N8oWjeD-ZblmcgytVfWOgbjI-9Urb4YeJ1SDeIiaSlgllXVS72rYf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddvvddgfeejucetufdoteggodetrfdotf
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1678627204; x=1678713604; bh=fb6iy9BVWgDRTgwE5rFxWDlfcZJlM0G1SeT
+        HPrKaYsM=; b=HRjmiNi4cz/+7JDdD9yzNlPfWIyZLbNFeL8DRzu9zC8r5g9QWHa
+        zJipvjjjlJb4CQ1KI5+JUCj+aOWryIxQPnQRBIbQL7hFtzBGtA0DB4vd84fBbqfD
+        QnInxYvFBmlEn1adptsdxwvrsWOsPEWPNfJxXNtwW0PShBoncp9jkMgTakqLYgMk
+        B465D8PexiUjFW/DVYLQVpVEeXhOjKGhVwFR7KpSv9z08Uz/Bgd9Nd2ambGwTNNY
+        35154l+MPAXvrNh5vNwlHXWkSNpkKhw00eussNRAjQp29V+008t9Zkl+s58vPpVZ
+        J++MkQDFOW0K+cqZcF59+jq5UudOM8vxPhA==
+X-ME-Sender: <xms:g9ENZGKNaYjQYtPvD3Hf-8lQ63u34ijBuOloVkhJqmOfh5u701TZEg>
+    <xme:g9ENZOJaRYT4PeVi5POaL8enXDE3XADCfJZPhB9lW6kRzAJRduqN9eOI3XnKBgjuh
+    USbIJbOAdrBtSDMv9o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddvvddggeelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrth
-    htvghrnhepvddufeevkeehueegfedtvdevfefgudeifeduieefgfelkeehgeelgeejjeeg
-    gefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepih
-    guohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:GMINZCCd5Yv4ayURM5DOEpHnfT7iGftOXamBF3b0R3zWoNndjgvtew>
-    <xmx:GMINZPhqsrHiMYhX0eZcE-3b2KPOlLyZft3GgY2KvKmPR4znhEQTFQ>
-    <xmx:GMINZOr3mCJj8kq-QN1JeGycDSOV_iFTbuNK_uDCf3DOYZ8phjakwA>
-    <xmx:GsINZCMz0m5ZZart7AcvGICSsoelDhvqQ3z5GzBg10_jUUYuoBThpmdI-JU>
-Feedback-ID: i494840e7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 12 Mar 2023 08:14:15 -0400 (EDT)
-Date:   Sun, 12 Mar 2023 14:14:12 +0200
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, rui.zhang@intel.com,
-        Raju Rangoju <rajur@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Antoine Tenart <atenart@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        danieller@nvidia.com, vadimp@nvidia.com, petrm@nvidia.com
-Subject: Re: [PATCH v8 01/29] thermal/core: Add a generic
- thermal_zone_get_trip() function
-Message-ID: <ZA3CFNhU4AbtsP4G@shredder>
-References: <20221003092602.1323944-1-daniel.lezcano@linaro.org>
- <20221003092602.1323944-2-daniel.lezcano@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221003092602.1323944-2-daniel.lezcano@linaro.org>
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
+    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfeejgedvudegvdekhedvffefjefhuedthfdt
+    heehkeffuddvgfetjeegjeeufefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
+    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:g9ENZGsW51zWllEzRHtqSpL1q8BGq5gnZKJjWYwdCdESvVYRk556Eg>
+    <xmx:g9ENZLYZEOZCVlPAf7s_lmCeniB8JmAPhUBP7tEcqaDNJkUVufNJZQ>
+    <xmx:g9ENZNY6ADD66eUJioMfliFCtJUMUiA1lD1rW8HTYyPjDL2UXVS8Ag>
+    <xmx:hNENZMmMS3wgK5E4d2FMDkahNTFTz-Dh9NEdgSBlvCgFPBNEqAh5cQ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C3D5AC60091; Sun, 12 Mar 2023 09:20:03 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
+Mime-Version: 1.0
+Message-Id: <1815e7b3-8199-46e9-aa3d-1d31bd14001f@app.fastmail.com>
+In-Reply-To: <87957353-0778-46ca-9906-411022b55ded@app.fastmail.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230312024635.518769-1-mpearson-lenovo@squebb.ca>
+ <0bc6d16a-5c58-462b-92d5-d827d92b65ed@t-8ch.de>
+ <87957353-0778-46ca-9906-411022b55ded@app.fastmail.com>
+Date:   Sun, 12 Mar 2023 09:19:29 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     "Hans de Goede" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Mark Pearson" <markpearson@lenovo.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform/x86: think-lmi: add missing type attribute
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 03, 2022 at 11:25:34AM +0200, Daniel Lezcano wrote:
-> @@ -1252,9 +1319,10 @@ thermal_zone_device_register_with_trips(const char *type, struct thermal_trip *t
->  		goto release_device;
->  
->  	for (count = 0; count < num_trips; count++) {
-> -		if (tz->ops->get_trip_type(tz, count, &trip_type) ||
-> -		    tz->ops->get_trip_temp(tz, count, &trip_temp) ||
-> -		    !trip_temp)
-> +		struct thermal_trip trip;
-> +
-> +		result = thermal_zone_get_trip(tz, count, &trip);
-> +		if (result)
->  			set_bit(count, &tz->trips_disabled);
->  	}
+Apologies for the duplication, I forgot to set email format as text so i=
+t got bounced by the mailing list. Resending.
+Mark
 
-Daniel, this change makes it so that trip points with a temperature of
-zero are no longer disabled. This behavior was originally added in
-commit 81ad4276b505 ("Thermal: Ignore invalid trip points"). The mlxsw
-driver relies on this behavior - see mlxsw_thermal_module_trips_reset()
-- and with this change I see that the thermal subsystem tries to
-repeatedly set the state of the associated cooling devices to the
-maximum state. Other drivers might also be affected by this.
-
-Following patch solves the problem for me:
-
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 55679fd86505..b50931f84aaa 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -1309,7 +1309,7 @@ thermal_zone_device_register_with_trips(const char *type, struct thermal_trip *t
-                struct thermal_trip trip;
- 
-                result = thermal_zone_get_trip(tz, count, &trip);
--               if (result)
-+               if (result || !trip.temperature)
-                        set_bit(count, &tz->trips_disabled);
-        }
-
-Should I submit it or do you have a better idea?
-
-Thanks
+On Sat, Mar 11, 2023, at 10:44 PM, Mark Pearson wrote:
+> Thanks Thomas
+>=20
+> On Sat, Mar 11, 2023, at 10:33 PM, Thomas Wei=C3=9Fschuh wrote:
+>> On Sat, Mar 11, 2023 at 09:46:34PM -0500, Mark Pearson wrote:
+>> > This driver was missing the mandatory type attribute...oops.
+>> >=20
+>> > Add it in along with logic to determine whether the attribute is an
+>> > enumeration type or a string by parsing the possible_values attribu=
+te.
+>> >=20
+>> > Some platforms (and some attributes) don't return possible_values s=
+o to
+>> > prevent trying to scan NULL strings mark these as "N/A".
+>> >=20
+>> > Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=3D216460
+>>=20
+>> Afaik Fixes: is only for references to commits.
+>> Instead a Reported-by/Link would be better.
+> Ah - thanks. My bad.
+>=20
+>>=20
+>> > Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> > ---
+>> >  drivers/platform/x86/think-lmi.c | 26 +++++++++++++++++++++++---
+>> >  drivers/platform/x86/think-lmi.h |  6 ++++++
+>> >  2 files changed, 29 insertions(+), 3 deletions(-)
+>> >=20
+>> > diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x8=
+6/think-lmi.c
+>> > index 86b33b74519b..495a5e045069 100644
+>> > --- a/drivers/platform/x86/think-lmi.c
+>> > +++ b/drivers/platform/x86/think-lmi.c
+>> > @@ -941,12 +941,18 @@ static ssize_t possible_values_show(struct ko=
+bject *kobj, struct kobj_attribute
+>> >  {
+>> >  struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> > =20
+>> > - if (!tlmi_priv.can_get_bios_selections)
+>> > - return -EOPNOTSUPP;
+>> > -
+>> >  return sysfs_emit(buf, "%s\n", setting->possible_values);
+>> >  }
+>> > =20
+>> > +static ssize_t type_show(struct kobject *kobj, struct kobj_attribu=
+te *attr,
+>> > + char *buf)
+>> > +{
+>> > + struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> > +
+>> > + return sysfs_emit(buf, "%s\n",
+>> > + setting->type =3D=3D TLMI_ENUMERATION ? "enumeration" : "string");
+>> > +}
+>> > +
+>> >  static ssize_t current_value_store(struct kobject *kobj,
+>> >  struct kobj_attribute *attr,
+>> >  const char *buf, size_t count)
+>> > @@ -1036,10 +1042,13 @@ static struct kobj_attribute attr_possible_=
+values =3D __ATTR_RO(possible_values);
+>> > =20
+>> >  static struct kobj_attribute attr_current_val =3D __ATTR_RW_MODE(c=
+urrent_value, 0600);
+>> > =20
+>> > +static struct kobj_attribute attr_type =3D __ATTR_RO(type);
+>> > +
+>> >  static struct attribute *tlmi_attrs[] =3D {
+>> >  &attr_displ_name.attr,
+>> >  &attr_current_val.attr,
+>> >  &attr_possible_values.attr,
+>> > + &attr_type.attr,
+>> >  NULL
+>> >  };
+>> > =20
+>> > @@ -1424,6 +1433,17 @@ static int tlmi_analyze(void)
+>> >  pr_info("Error retrieving possible values for %d : %s\n",
+>> >  i, setting->display_name);
+>> >  }
+>> > + /* If we don't have a possible value mark as N/A */
+>> > + if (!setting->possible_values) {
+>> > + setting->possible_values =3D kmalloc(strlen("N/A"), GFP_KERNEL);
+>>=20
+>> kmalloc() can fail.
+>>=20
+>> > + sprintf(setting->possible_values, "N/A");
+>>=20
+>> This writes the '\0' out of bounds?
+>>=20
+>> kmalloc() and sprintf() could be replaced with kstrdup().
+>>=20
+>> Instead of having to do allocations, check for failure, worry about h=
+ow
+>> sysfs_emit() will handle the NULL it would be easier to just check of
+>> NULL inside possible_values_show() and fall back to N/A there.
+> Good point - that would be better. I'll update.
+>=20
+>>=20
+>> > + }
+>> > + /* Figure out what setting type is as BIOS does not return this */
+>> > + if (strchr(setting->possible_values, ','))
+>>=20
+>> possible_values could be NULL if the sprintf would not have dereferen=
+ced
+>> it before.
+> Agreed. This was part of the reason I'd put in the N/A to cover for th=
+at case (so it should never be NULL). But I'll revisit this.
+>=20
+>>=20
+>> > + setting->type =3D TLMI_ENUMERATION;
+>> > + else
+>> > + setting->type =3D TLMI_STRING;
+>> > +
+>>=20
+>> Is it worth introducing a new enum and field in struct
+>> tlmi_attr_setting?
+>> The check could also be done directly in type_show().
+>> (with a NULL-check).
+> Ack, this makes sense. I'll look at doing that.
+>=20
+> Many thanks for the review
+> Mark
