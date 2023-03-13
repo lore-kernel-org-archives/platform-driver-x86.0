@@ -2,59 +2,198 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DF5C6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Mar 2023 08:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD77C7618B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Mar 2023 10:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbjCMIhw (ORCPT
+        id S229994AbjCMKpv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Mar 2023 04:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
+        Mon, 13 Mar 2023 06:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjCMIhv (ORCPT
+        with ESMTP id S229616AbjCMKpu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Mar 2023 04:37:51 -0400
-X-Greylist: delayed 365 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Mar 2023 01:37:48 PDT
-Received: from mail.craftsplex.pl (mail.craftsplex.pl [162.19.155.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81684743F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 01:37:48 -0700 (PDT)
-Received: by mail.craftsplex.pl (Postfix, from userid 1002)
-        id 1091621235; Mon, 13 Mar 2023 08:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=craftsplex.pl;
-        s=mail; t=1678696301;
-        bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
-        h=Date:From:To:Subject:From;
-        b=ruuIqmP0We0/OVdXr+FX9MlBlhTrsLKwSPlIxJSSwTUfGLRzQxyI6evlvOIeBbLUT
-         TAAnmiAqFTU99SXL+mUfxV22lAK9SE3CAP9n+U2OpMDedYC+VulzGDJonHUANuQIHI
-         m7qtA304FvXOCBavZI4zhQB99M6sIy9YD6gtgnh1wujQOGS+oUbsp8HqaVbIaIucRI
-         9NUQ01rWBnO9ltABDCCaQRAWD8V7MTzkIQ7tVoInFD1Nk7sQroilfWQ3doef2WyKkr
-         dlTW6xZLxYYr8FcbZtz1kypiwZZIZpxo8KeAxwyaCeOdQKjGRH8+3eNENtzePOIU4U
-         8XFz4Bydn5isw==
-Received: by mail.craftsplex.pl for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 08:31:32 GMT
-Message-ID: <20230313073000-0.1.4v.h6nx.0.9zcigghqot@craftsplex.pl>
-Date:   Mon, 13 Mar 2023 08:31:32 GMT
-From:   "Kamil Tralewski" <kamil.tralewski@craftsplex.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.craftsplex.pl
+        Mon, 13 Mar 2023 06:45:50 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E6F52F75
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 03:45:46 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id p23-20020a05600c1d9700b003ead4835046so7301074wms.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 03:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678704345;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6YaG0SWzLbweQszAk60kBLdxmB/7i6RyPeQI10oAzV4=;
+        b=LGtukpD/p9tW2HynhY3ArpOnq71vUNWspCHDXcqL9E0H12uUGwCrNnJ8M0RxmdNpeq
+         pAeM7HgE3lC/iWS08/SNNgrlDNCkMeXQqRuX8cwlBg4zRVpNXPW3gDjtnKxALuceF78y
+         NdVTDObibZ8R4EtyBNCPIMcq0OgaTbkZvAM49h3p8hUGXW7fJ7YGuhjTjqQdepEuEkoV
+         cD7UbzHMLuWJXYr4Foe1gbFD2MHYxciKwANocceIkSdzewD4rowtkp2iwkioPH9TaNKp
+         rEBkV5vvEN+FggyOIX39CDWbzc/iJhYRAVxAyxEi2kAEgx37tlorGCa+Sd08jrlENeFY
+         mZeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678704345;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6YaG0SWzLbweQszAk60kBLdxmB/7i6RyPeQI10oAzV4=;
+        b=zsRPRpPvxH8pqEQn3WGpVX+XZc55+3c6s4urjOps0+3I9ggcUn3hCOEo29hrbah1xw
+         nh5vEcAxCJ4Y6+t6Wx0yk5M32vbP3Kv3HsXJHD+axq6CR807RBO6jacqbIzHFjKVhBFH
+         UbPMFRX0PEv8Pqh3udJ/JjAtXskFVBcMX0eJcTiQt/BYMS59sZhsyLW/YMMKmaSUMMeL
+         yg9LhVie57LD74uPZFLCmK0VqR/iXmGoZ0nrB2CSdLSyVhky3QbSp1DV2cUfyZrT97FQ
+         Vr6OnKEVkMw8DZV7tn8JjL4y9K+nStSDKQeLIdwwvC+MT6pP29RCDZcxfQX9ZezBXHvr
+         GtiA==
+X-Gm-Message-State: AO0yUKV59isGpTg4VWtkB5Qo7nlj5H7jUuQjYyxMhCMqkCXx8RhDBhkp
+        qKKUgAXacEYXvCr8F3J54wn4hQ==
+X-Google-Smtp-Source: AK7set+0Oc4726DzdphLUKeZrWCln4A5vSwSav6cx8LjV/d2+4mI/5d3Gg6o/COIT9hrcw7T8dFWSQ==
+X-Received: by 2002:a05:600c:3504:b0:3ea:d620:579b with SMTP id h4-20020a05600c350400b003ead620579bmr9852881wmq.0.1678704344899;
+        Mon, 13 Mar 2023 03:45:44 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:8522:ca6e:1db4:96c6? ([2a05:6e02:1041:c10:8522:ca6e:1db4:96c6])
+        by smtp.googlemail.com with ESMTPSA id l4-20020a05600c4f0400b003dc4a47605fsm9523224wmq.8.2023.03.13.03.45.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Mar 2023 03:45:44 -0700 (PDT)
+Message-ID: <f78e6b70-a963-c0ca-a4b2-0d4c6aeef1fb@linaro.org>
+Date:   Mon, 13 Mar 2023 11:45:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v8 01/29] thermal/core: Add a generic
+ thermal_zone_get_trip() function
+Content-Language: en-US
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, rui.zhang@intel.com,
+        Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Kaestle <peter@piie.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Broadcom Kernel Team <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Antoine Tenart <atenart@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        danieller@nvidia.com, vadimp@nvidia.com, petrm@nvidia.com
+References: <20221003092602.1323944-1-daniel.lezcano@linaro.org>
+ <20221003092602.1323944-2-daniel.lezcano@linaro.org>
+ <ZA3CFNhU4AbtsP4G@shredder>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <ZA3CFNhU4AbtsP4G@shredder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+Hi Ido,
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+On 12/03/2023 13:14, Ido Schimmel wrote:
+> On Mon, Oct 03, 2022 at 11:25:34AM +0200, Daniel Lezcano wrote:
+>> @@ -1252,9 +1319,10 @@ thermal_zone_device_register_with_trips(const char *type, struct thermal_trip *t
+>>   		goto release_device;
+>>   
+>>   	for (count = 0; count < num_trips; count++) {
+>> -		if (tz->ops->get_trip_type(tz, count, &trip_type) ||
+>> -		    tz->ops->get_trip_temp(tz, count, &trip_temp) ||
+>> -		    !trip_temp)
+>> +		struct thermal_trip trip;
+>> +
+>> +		result = thermal_zone_get_trip(tz, count, &trip);
+>> +		if (result)
+>>   			set_bit(count, &tz->trips_disabled);
+>>   	}
+> 
+> Daniel, this change makes it so that trip points with a temperature of
+> zero are no longer disabled. This behavior was originally added in
+> commit 81ad4276b505 ("Thermal: Ignore invalid trip points"). The mlxsw
+> driver relies on this behavior - see mlxsw_thermal_module_trips_reset()
+> - and with this change I see that the thermal subsystem tries to
+> repeatedly set the state of the associated cooling devices to the
+> maximum state. Other drivers might also be affected by this.
+> 
+> Following patch solves the problem for me:
+> 
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 55679fd86505..b50931f84aaa 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -1309,7 +1309,7 @@ thermal_zone_device_register_with_trips(const char *type, struct thermal_trip *t
+>                  struct thermal_trip trip;
+>   
+>                  result = thermal_zone_get_trip(tz, count, &trip);
+> -               if (result)
+> +               if (result || !trip.temperature)
+>                          set_bit(count, &tz->trips_disabled);
+>          }
+> 
+> Should I submit it or do you have a better idea?
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+Thanks for reporting this, I think the fix you are proposing is correct 
+regarding the previous behavior.
 
-Pozdrawiam
-Kamil Tralewski
+However, I disagree with the commit 81ad4276b505, because it defines the 
+zero as an invalid trip point. But some platforms have warming devices, 
+when the temperature is too cold, eg 0°C, we enable the warming device 
+in order to stay in the functioning temperature range.
+
+Other devices can do the same with negative temperature values.
+
+This feature is not yet upstream and the rework of the trip point should 
+allow proper handling of cold trip points.
+
+If you can send the change to fix the regression that would be great.
+
+But keep in mind, the driver is assuming an internal thermal framework 
+behavior. The trips_disabled is only to overcome a trip point 
+description bug and you should not rely on it as well as not changing 
+the trip points on the fly after they are registered.
+
+Actually, the mlxsw driver should just build a valid array of trip 
+points without 0°C trip point and pass it to 
+thermal_zone_device_register_with_trips(). That would be a proper change 
+without relying on a side effect of the thermal trip bug 0°C workaround.
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
