@@ -2,98 +2,412 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCFC74A4B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Mar 2023 13:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CCDC61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Mar 2023 03:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjCLN04 (ORCPT
+        id S229704AbjCMDWN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Mar 2023 09:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
+        Sun, 12 Mar 2023 23:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjCLN0t (ORCPT
+        with ESMTP id S229623AbjCMDWL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Mar 2023 09:26:49 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FE72A176
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Mar 2023 06:26:29 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id x3so38509754edb.10
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Mar 2023 06:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678627588;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+BDbceQOAYQgK567jHrWA72I3uGpkeTXZrFRx2w9d3o=;
-        b=cL1a8hHuMXeYkEGX3LBxkMgBkge8437xuLFULeTSVWmsUkdbORF0gWFoJZZA192NAR
-         9oIaJkGaTrtoCvQlz2pCKgv3tXlwwYYNOh8ikLjLO53XnPxTLGlelYjkr9p8CC/ryt2l
-         hZYN3OvN5htU4GO7/1hrZqxET/S7hRdW6l401MzVNKBZ2CtqJj1QTzQxDXCP6+WyCiJ1
-         yBW1KVxSflb4ytp4NdVqBZQRlJxRqPy9Hb2+OrHvZicH14WSLUgIS84O7ALh4R43WWk/
-         +51ed5LCGOUiWg5yErC7NNltpUeE5xTqvoW+N/a/8UYja+VU52oN2CZzitqdi4a/6aom
-         cCKQ==
+        Sun, 12 Mar 2023 23:22:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFBA28E6C
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Mar 2023 20:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678677683;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IGPhvBPoVAwRHSSTA2NbHlJPpu91svaFrlN4CxHXALc=;
+        b=IFLuXu8+RrusI44dgG+GgzHTKhIe9K1/0vwXR7kikWYfVsATLIHi33YNMR4UYIuhn+W7gh
+        MMmkfoz0Rl+WIfFbhQOqQH3v2G/PAiK9Kp8o81404+P5OxX7Ao/QJ5LKmiL2raTULduump
+        gB4jGor8uFXrcfDdQ1NMCmOZ36cxcbo=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-wZ_lx9ATPf66GaMuPyc87A-1; Sun, 12 Mar 2023 23:21:22 -0400
+X-MC-Unique: wZ_lx9ATPf66GaMuPyc87A-1
+Received: by mail-pg1-f199.google.com with SMTP id az5-20020a056a02004500b004fb64e929f2so912459pgb.7
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Mar 2023 20:21:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678627588;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1678677681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+BDbceQOAYQgK567jHrWA72I3uGpkeTXZrFRx2w9d3o=;
-        b=2nBSTby1+ESJRt2rtdIh7wq7iF1iWCXJ6ZQO0CqT7QyhQKCUQr6dh9uwnOEP9ZZlZq
-         rV8/nxRjHMRJrExy3gPsEvxoR8b7ySfNdVTudWGh7hZ5AugsorytIwDGUnoKlnpo7LpR
-         FJVMJCsYyAhqWrhsC0M69i8Ba6RWx+GR45fNvQD0qPBV0CFn/NED6CfRNDsbkfpOQE0l
-         znk5luY4k+5vgtk6cvq/Yz3DGk6BFg7AK/sWZ6K6qELR0haX79tSI+q7ytIS+J+jimAh
-         Mg7VPAgUexdGXIFfpLYgW+wYi/lGqz8Y9O4DUw6vhTC89zzC2kVbaA+g0+KBf6D1g5mk
-         kU2w==
-X-Gm-Message-State: AO0yUKWTWAMPw0xGY+yFWnnewviea96ytxx2tZiQbo9aMlIYSyLDuyY2
-        MZEhjfaMLzkAJKc7/jDv8ZNZ0A==
-X-Google-Smtp-Source: AK7set++lTLlA8S8P3AdKGyhzI1mOg+z+mc5k7KsLLhrAjG3EMSUe5pGtmzlOeA3xn52a1KyfrwqyQ==
-X-Received: by 2002:a17:907:7205:b0:8b2:fa6d:45d5 with SMTP id dr5-20020a170907720500b008b2fa6d45d5mr40522268ejc.71.1678627587914;
-        Sun, 12 Mar 2023 06:26:27 -0700 (PDT)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:d9f6:3e61:beeb:295a])
-        by smtp.gmail.com with ESMTPSA id xc14-20020a170907074e00b008b904cb2bcdsm2262530ejb.11.2023.03.12.06.26.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Mar 2023 06:26:27 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
-        Daniel Oliveira Nascimento <don@syst.com.br>,
-        Mattia Dongili <malattia@linux.it>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 3/3] platform: sony: mark SPI related data as maybe unused
-Date:   Sun, 12 Mar 2023 14:26:24 +0100
-Message-Id: <20230312132624.352703-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230312132624.352703-1-krzysztof.kozlowski@linaro.org>
-References: <20230312132624.352703-1-krzysztof.kozlowski@linaro.org>
+        bh=IGPhvBPoVAwRHSSTA2NbHlJPpu91svaFrlN4CxHXALc=;
+        b=KysWf5M42e/sKAMds0QdwPD99P0LUlHMSk+LZexIZailZVTWpblZurzU7y+/b6KguW
+         ij16fgWoqQBySI33ipGnToUdnCoyfIMZfOlMaJyEIkLV+NwTeSMmekQQeFgyikzpeNNF
+         j+v6Jk6uI1sPs9M2+LmeNsXJZLqpplMTW9HriedXxXpDDI1vw0X4JpFKBXkpg71F5pxV
+         5L0JbbTeWrTm1+QViB3MMCnKz6/bUgLcUKNhXSOHhN77I0/7tuwbYimipxdKtjB6P6Al
+         i8llR//iGTyTh5Nyr6zjjocmFnok8mzlm14yWVqBOSLaS+SdWviM32j3xC45IJqAdw3x
+         PWNg==
+X-Gm-Message-State: AO0yUKXUlmxzrQE8TjXaGFWXF3GJpUBni7SEruhhh9Mq/rWj567X23Zu
+        voFy/biY5ojyEavg1vbScfTC9Pz8/LpjCJQH/11oz0fnegPt9U1AuWUgJxLU0pcAz29h+giCqDi
+        jYdhSmd5+8oPVNfZVartLMFQkvMgeEK4uawTiFeaj5He5QL1MNA==
+X-Received: by 2002:a63:8c1d:0:b0:503:2535:44c3 with SMTP id m29-20020a638c1d000000b00503253544c3mr11048637pgd.4.1678677681122;
+        Sun, 12 Mar 2023 20:21:21 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+aM9TI42paO53bSL28doOddvzjpz5GG1QVV5dXk4xagL7/qVSl6keo/SYKsq6CscxHLqhH4ddk34sokqzjajM=
+X-Received: by 2002:a63:8c1d:0:b0:503:2535:44c3 with SMTP id
+ m29-20020a638c1d000000b00503253544c3mr11048628pgd.4.1678677680668; Sun, 12
+ Mar 2023 20:21:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230310095635.813262-1-hpa@redhat.com> <20230310095635.813262-4-hpa@redhat.com>
+ <6644d2ef-10c8-43df-987c-b688d3f75f11@ideasonboard.com>
+In-Reply-To: <6644d2ef-10c8-43df-987c-b688d3f75f11@ideasonboard.com>
+From:   Kate Hsuan <hpa@redhat.com>
+Date:   Mon, 13 Mar 2023 11:21:09 +0800
+Message-ID: <CAEth8oGnoTb9JrfKN7v61biWAoH39LnXw4OtXQQCvy+9J7f2_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] leds: tps68470: Add LED control for tps68470
+To:     Dan Scally <dan.scally@ideasonboard.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The driver can be compile tested as built-in making certain data unused:
+Hi,
 
-  drivers/platform/x86/sony-laptop.c:3290:36: error: ‘sony_device_ids’ defined but not used [-Werror=unused-const-variable=]
+On Fri, Mar 10, 2023 at 6:43=E2=80=AFPM Dan Scally <dan.scally@ideasonboard=
+.com> wrote:
+>
+> Hi Kate - thanks for the v2
+>
+> On 10/03/2023 09:56, Kate Hsuan wrote:
+> > There are two LED controllers, LEDA indicator LED and LEDB flash LED fo=
+r
+> > tps68470. LEDA can be enabled by setting TPS68470_ILEDCTL_ENA. Moreover=
+,
+> > tps68470 provides four levels of power status for LEDB. If the
+> > properties called "ti,ledb-current" can be found, the current will be
+> > set according to the property values. These two LEDs can be controlled
+> > through the LED class of sysfs (tps68470-leda and tps68470-ledb).
+> >
+> > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> > ---
+> >   drivers/leds/Kconfig         |  12 +++
+> >   drivers/leds/Makefile        |   1 +
+> >   drivers/leds/leds-tps68470.c | 182 ++++++++++++++++++++++++++++++++++=
++
+> >   3 files changed, 195 insertions(+)
+> >   create mode 100644 drivers/leds/leds-tps68470.c
+> >
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index 9dbce09eabac..fd26036b3c61 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -827,6 +827,18 @@ config LEDS_TPS6105X
+> >         It is a single boost converter primarily for white LEDs and
+> >         audio amplifiers.
+> >
+> > +config LEDS_TPS68470
+> > +     tristate "LED support for TI TPS68470"
+> > +     depends on LEDS_CLASS
+> > +     depends on INTEL_SKL_INT3472
+> > +     help
+> > +       This driver supports TPS68470 PMIC with LED chip.
+> > +       It provide two LED controllers, including an indicator LED
+> > +       and a flash LED.
+>
+> s/provide/provides. Also maybe "It provides two LED controllers, with the=
+ ability to drive 2
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/platform/x86/sony-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll revise the description in the v3 patch.
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 537d6a2d0781..9569f11dec8c 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3287,7 +3287,7 @@ static void sony_nc_remove(struct acpi_device *device)
- 	dprintk(SONY_NC_DRIVER_NAME " removed.\n");
- }
- 
--static const struct acpi_device_id sony_device_ids[] = {
-+static const struct acpi_device_id sony_device_ids[] __maybe_unused = {
- 	{SONY_NC_HID, 0},
- 	{SONY_PIC_HID, 0},
- 	{"", 0},
--- 
-2.34.1
+> indicator LEDs and 2 flash LEDs". I actually got the WLED part working no=
+w finally so I'll send
+> patches on top of this series if that's ok?
+
+Sounds good! That would be great! Thank you
+
+
+>
+> > +
+> > +       To compile this driver as a module, choose M and it will be
+> > +       called leds-tps68470
+> > +
+> >   config LEDS_IP30
+> >       tristate "LED support for SGI Octane machines"
+> >       depends on LEDS_CLASS
+> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> > index d30395d11fd8..b284bc0daa98 100644
+> > --- a/drivers/leds/Makefile
+> > +++ b/drivers/leds/Makefile
+> > @@ -84,6 +84,7 @@ obj-$(CONFIG_LEDS_TURRIS_OMNIA)             +=3D leds=
+-turris-omnia.o
+> >   obj-$(CONFIG_LEDS_WM831X_STATUS)    +=3D leds-wm831x-status.o
+> >   obj-$(CONFIG_LEDS_WM8350)           +=3D leds-wm8350.o
+> >   obj-$(CONFIG_LEDS_WRAP)                     +=3D leds-wrap.o
+> > +obj-$(CONFIG_LEDS_TPS68470)          +=3D leds-tps68470.o
+> >
+> >   # LED SPI Drivers
+> >   obj-$(CONFIG_LEDS_CR0014114)                +=3D leds-cr0014114.o
+> > diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.=
+c
+> > new file mode 100644
+> > index 000000000000..98bb56153690
+> > --- /dev/null
+> > +++ b/drivers/leds/leds-tps68470.c
+> > @@ -0,0 +1,182 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * LED driver for TPS68470 PMIC
+> > + *
+> > + * Copyright (C) 2023 Red Hat
+> > + *
+> > + * Authors:
+> > + *   Kate Hsuan <hpa@redhat.com>
+> > + */
+> > +
+> > +#include <linux/gpio/driver.h>
+>
+> Not needed I think?
+
+removed
+
+>
+> > +#include <linux/mfd/tps68470.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/leds.h>
+>
+> Alphabetical order?
+
+Okay.
+
+> > +
+> > +#define lcdev_to_led(led_cdev) \
+> > +     container_of(led_cdev, struct tps68470_led, lcdev)
+> > +
+> > +#define led_to_tps68470(led, index) \
+> > +     container_of(led, struct tps68470_device, leds[index])
+> > +
+> > +enum tps68470_led_ids {
+> > +     TPS68470_ILED_A,
+> > +     TPS68470_ILED_B,
+> > +     TPS68470_NUM_LEDS
+> > +};
+> > +
+> > +static const char *tps68470_led_names[] =3D {
+> > +     [TPS68470_ILED_A] =3D "tps68470-iled_a",
+> > +     [TPS68470_ILED_B] =3D "tps68470-iled_b",
+> > +};
+> > +
+> > +struct tps68470_led {
+> > +     unsigned int led_id;
+> > +     struct led_classdev lcdev;
+> > +};
+> > +
+> > +struct tps68470_device {
+> > +     struct device *dev;
+> > +     struct regmap *regmap;
+> > +     struct tps68470_led leds[TPS68470_NUM_LEDS];
+> > +};
+> > +
+> > +enum ctrlb_current {
+> > +     CTRLB_2MA       =3D 0,
+> > +     CTRLB_4MA       =3D 1,
+> > +     CTRLB_8MA       =3D 2,
+> > +     CTRLB_16MA      =3D 3,
+> > +};
+> > +
+> > +static int tps68470_brightness_set(struct led_classdev *led_cdev, enum=
+ led_brightness brightness)
+> > +{
+> > +     struct tps68470_led *led =3D lcdev_to_led(led_cdev);
+> > +     struct tps68470_device *tps68470 =3D led_to_tps68470(led, led->le=
+d_id);
+> > +     struct regmap *regmap =3D tps68470->regmap
+> This would work fine as is...but I would maybe add something like
+>
+>         if (state > LED_ON)
+>                 return -EINVAL;
+>
+> So that brightness values of > 1 aren't just silently accepted...or does =
+the LED core already
+> prevent that? If so it's fine.
+
+I think it is unnecessary.
+The LED framework already handles this. Since we already set
+"max_brightness" for the device, the framework will check the
+"brightness" value and make sure the value isn't greater than
+"max_brightness".
+
+>
+> > +
+> > +     switch (led->led_id) {
+> > +     case TPS68470_ILED_A:
+> > +             return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, T=
+PS68470_ILEDCTL_ENA,
+> > +                                       brightness ? TPS68470_ILEDCTL_E=
+NA : 0);
+> > +     case TPS68470_ILED_B:
+> > +             return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, T=
+PS68470_ILEDCTL_ENB,
+> > +                                       brightness ? TPS68470_ILEDCTL_E=
+NB : 0);
+> > +     }
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static enum led_brightness tps68470_brightness_get(struct led_classdev=
+ *led_cdev)
+> > +{
+> > +     struct tps68470_led *led =3D lcdev_to_led(led_cdev);
+> > +     struct tps68470_device *tps68470 =3D led_to_tps68470(led, led->le=
+d_id);
+> > +     struct regmap *regmap =3D tps68470->regmap;
+> > +     int ret =3D 0;
+> > +     int value =3D 0;
+> > +
+> > +     ret =3D  regmap_read(regmap, TPS68470_REG_ILEDCTL, &value);
+> > +     if (ret)
+> > +             goto error;
+>
+> Just return dev_err_probe(led_cdev->dev, -EINVAL, "failed on reading regi=
+ster\n") here imo.
+
+Okay.
+
+> > +
+> > +     switch (led->led_id) {
+> > +     case TPS68470_ILED_A:
+> > +             value =3D value & TPS68470_ILEDCTL_ENA;
+> > +             break;
+> > +     case TPS68470_ILED_B:
+> > +             value =3D value & TPS68470_ILEDCTL_ENB;
+> > +             break;
+> > +     }
+> > +
+> > +     return value ? LED_ON : LED_OFF;
+> > +
+> > +error:
+> > +     dev_err(led_cdev->dev, "Failed on reading register\n");
+> > +     return -EINVAL;
+> > +}
+> > +
+> > +static int tps68470_leds_probe(struct platform_device *pdev)
+> > +{
+> > +     int i =3D 0;
+> > +     int ret =3D 0;
+> > +     unsigned int curr;
+> > +     struct tps68470_device *tps68470;
+> > +     struct tps68470_led *led;
+> > +     struct led_classdev *lcdev;
+> > +
+> > +     tps68470 =3D devm_kzalloc(&pdev->dev, sizeof(struct tps68470_devi=
+ce),
+> > +                             GFP_KERNEL);
+>
+> No -ENOMEM check here?
+>
+
+I'll add a return value check here in the v3 patch.
+
+> > +     tps68470->dev =3D &pdev->dev;
+> > +     tps68470->regmap =3D dev_get_drvdata(pdev->dev.parent);
+> > +
+> > +     for (i =3D 0; i < TPS68470_NUM_LEDS; i++) {
+> > +             led =3D &tps68470->leds[i];
+> > +             lcdev =3D &led->lcdev;
+> > +
+> > +             led->led_id =3D i;
+> > +
+> > +             lcdev->name =3D devm_kasprintf(tps68470->dev, GFP_KERNEL,=
+ "%s::%s",
+> > +                                          tps68470_led_names[i], LED_F=
+UNCTION_INDICATOR);
+> > +             if (!lcdev->name)
+> > +                     return -ENOMEM;
+> > +
+> > +             lcdev->max_brightness =3D 1;
+> > +             lcdev->brightness =3D 0;
+> > +             lcdev->brightness_set_blocking =3D tps68470_brightness_se=
+t;
+> > +             lcdev->brightness_get =3D tps68470_brightness_get;
+> > +             lcdev->dev =3D &pdev->dev;
+> > +
+> > +             ret =3D devm_led_classdev_register(tps68470->dev, lcdev);
+> > +             if (ret) {
+> > +                     dev_err_probe(tps68470->dev, ret,
+> > +                                   "error registering led\n");
+> > +                     goto err_exit;
+> > +             }
+> > +     }
+> > +
+> > +     /* configure LEDB current if the properties can be got */
+> > +     if (!device_property_read_u32(&pdev->dev, "ti,ledb-current", &cur=
+r)) {
+> > +             switch (curr) {
+> > +             case  2:
+> > +                     curr =3D CTRLB_2MA;
+> > +                     break;
+> > +             case  4:
+> > +                     curr =3D CTRLB_4MA;
+> > +                     break;
+> > +             case  8:
+> > +                     curr =3D CTRLB_8MA;
+> > +                     break;
+> > +             case 16:
+> > +                     curr =3D CTRLB_16MA;
+> > +                     break;
+> > +             default:
+> > +                     dev_err(&pdev->dev, "Invalid LEDB curr value: %d\=
+n", curr);
+> > +                     return -EINVAL;
+>
+> There's no jump to err_exit here...I think that this whole section should=
+ go above the registration
+> of the LEDS...and probably also into its own function.
+
+Okay.
+
+>
+> > +             }
+> > +             ret =3D regmap_update_bits(tps68470->regmap, TPS68470_REG=
+_ILEDCTL,
+> > +                                      TPS68470_ILEDCTL_CTRLB, curr);
+> > +     }
+> > +
+> > +err_exit:
+> > +     if (ret) {
+> > +             for (i =3D 0; i < TPS68470_NUM_LEDS; i++) {
+> > +                     if (tps68470->leds[i].lcdev.name)
+> > +                             devm_led_classdev_unregister(&pdev->dev,
+> > +                                                          &tps68470->l=
+eds[i].lcdev);
+> > +             }
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +static struct platform_driver tps68470_led_driver =3D {
+> > +     .driver =3D {
+> > +                .name =3D "tps68470-led",
+> > +     },
+> > +     .probe =3D tps68470_leds_probe,
+> > +};
+> > +
+> > +module_platform_driver(tps68470_led_driver);
+> > +
+> > +MODULE_ALIAS("platform:tps68470-led");
+> > +MODULE_DESCRIPTION("LED driver for TPS68470 PMIC");
+> > +MODULE_LICENSE("GPL v2");
+>
+
+
+Thank you
+
+--=20
+BR,
+Kate
 
