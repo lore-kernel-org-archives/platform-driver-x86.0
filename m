@@ -2,173 +2,332 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3496C61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Mar 2023 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E5CC61DA4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Mar 2023 14:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbjCMN1y (ORCPT
+        id S229899AbjCMOrr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Mar 2023 09:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        Mon, 13 Mar 2023 10:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230072AbjCMN1w (ORCPT
+        with ESMTP id S229704AbjCMOrn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Mar 2023 09:27:52 -0400
+        Mon, 13 Mar 2023 10:47:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE16C5942E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 06:27:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21A26A429
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 07:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678714024;
+        s=mimecast20190719; t=1678718777;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=C3LBtxQh3FdZnjBFxxbwSxaTJMQwxJyDt7hyHTCGEwo=;
-        b=ItVAGS2ea6ZPlIuPkmTPHdDHGb/+9KsNwCc1QUpmvs/drmhwitWhfmAtCYpDqpKXeqv8Hb
-        eoYms+GbI3gGQNwy/FwXX9zrilkAZBYZfnwijpKHGhhd823IiSblDRL7Jg8KtA/Db6rtAX
-        Qt2AkWLFd1tB+NIFi3REp7LUn/rrCA8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=q8FnhFWhsWcQReYEr7jTipBhtAk4faTQb7wPHi4ycFw=;
+        b=HOsvMqFmkefnpSsJ0aw1SNnaLU0F291OmH3w93i3CFT2NxECgTtLcuIfRHnH2Pl4fseaJ+
+        v8HImeQNWvynjzxcJkWOOjeWECLnbFxM7x7yqfYjBx8T2PTwTUC+QJqNOOXppNyzhldmei
+        g9PN7jf7Wn3BXwyzC2xjHt0B8oyF/cA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-663-HO5voTI0MDCqa6WJ5zpIRA-1; Mon, 13 Mar 2023 09:27:02 -0400
-X-MC-Unique: HO5voTI0MDCqa6WJ5zpIRA-1
-Received: by mail-ed1-f72.google.com with SMTP id r9-20020a05640251c900b004d4257341c2so16946486edd.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 06:27:02 -0700 (PDT)
+ us-mta-649-zgPPbzb5NraAsP9AxfTIaA-1; Mon, 13 Mar 2023 10:46:16 -0400
+X-MC-Unique: zgPPbzb5NraAsP9AxfTIaA-1
+Received: by mail-ed1-f71.google.com with SMTP id dn8-20020a05640222e800b004bd35dd76a9so17448250edb.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2023 07:46:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678714021;
+        d=1e100.net; s=20210112; t=1678718775;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C3LBtxQh3FdZnjBFxxbwSxaTJMQwxJyDt7hyHTCGEwo=;
-        b=qZ4hMdVnQAV2PncRC+NXo/1im1tUGtVAqErElH54UoGmwtRK3e841CuHI5Yso+J7Gf
-         IZw0UYSiZz2OTdhcQ/QPUOhODMvWAXyNA1/3KhyDH6Ez+l/43HERynMU9Yba9CV4JNti
-         fDpqazJbSsANmKlJ3js503mG0DZB/OGUNpfb9jFfh7NCSKeuhRRGycFiVNaz0Gxt18eL
-         1ur/nbF+OYjsmZf9KiUma3JeJDeyDVqyPTZppvR18eEzs7gWfRjAChsxZn3xNpoaqyF5
-         ea5SWGD20dR66jeNXZ66dyHr061bKYMf1s1NEYNTkuiyUy95bLb86FyvrDSedIBZDFHm
-         j4Ow==
-X-Gm-Message-State: AO0yUKUoqDiq91AZeN4sjbG3xogcFovbLlOLeRHzE+eA2zNhGpKskgNo
-        SZhEeFXY1vDH9fdjXi2PajvFPYvWgxias3FU0d41FXL0FUey+ARovc/7r2awYdcrelZ4j4Vq9Fn
-        Jk+MXwPVs/e3iAbOor4rONbWJYexAZYrnxA==
-X-Received: by 2002:a17:906:4cda:b0:870:58ae:842e with SMTP id q26-20020a1709064cda00b0087058ae842emr36065702ejt.24.1678714021467;
-        Mon, 13 Mar 2023 06:27:01 -0700 (PDT)
-X-Google-Smtp-Source: AK7set/aSXKBNoNVmPl2BEccgtOzvp1ZVM/wg/Y0iZMHJMxd597CllBpEtwwgIWbNLXnaeEoCI0qFA==
-X-Received: by 2002:a17:906:4cda:b0:870:58ae:842e with SMTP id q26-20020a1709064cda00b0087058ae842emr36065685ejt.24.1678714021191;
-        Mon, 13 Mar 2023 06:27:01 -0700 (PDT)
+        bh=q8FnhFWhsWcQReYEr7jTipBhtAk4faTQb7wPHi4ycFw=;
+        b=W89P1usS7J9pCGSZTI3y6ANFA9SgMnwHxU2X0twCS3jUm7BFDfMJ5P75m9SjqHCsNm
+         3Sc05AXcwEndjklt5yIxejpTw2dOknNgUwjtEqdXejwcu2tKtD0LiU1xvWCAGVEl3Dah
+         g1IdPNyGvk3pdFHfFmBjGaPLZyWmYp5O6Yhcg0MzwVduDUr95uOY6fk7Omq9jZrxoQQ+
+         S8rL/xVxFr07hXXBv+3gPg0Zl5pIxUPIUnYCBHYgJsNPWAn26ja28+FcIESxCpczOVBJ
+         v1afvebZVu0aduvvbW4KzaG8nloQ91K5cKNSyqBFVRwATb0JF5Mtt9eqEDagaYdBTsKb
+         bdQg==
+X-Gm-Message-State: AO0yUKX4R/QymjyyFXUcMg+LGTNAmFZR68E4445oEtYU6daczGE020y4
+        TigYv1TuB/rOPH/sCGsjyOeYxCsTpeJov4MYUJ3lBH3zv/vyKae8r93G9Z7cSl0e3EiYwIsuaeR
+        s05/IfDoYxDilht6vG/EsjW05DAI8t6C4oQ==
+X-Received: by 2002:a17:907:2beb:b0:921:5cce:6599 with SMTP id gv43-20020a1709072beb00b009215cce6599mr6627230ejc.41.1678718774933;
+        Mon, 13 Mar 2023 07:46:14 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9mWKhtvFCDOfwoqyOCMDtxZp3GkDaz+ur2PErEi3oBFcgfP69Um9N3lOdwHyLX8448a9pzCA==
+X-Received: by 2002:a17:907:2beb:b0:921:5cce:6599 with SMTP id gv43-20020a1709072beb00b009215cce6599mr6627192ejc.41.1678718774607;
+        Mon, 13 Mar 2023 07:46:14 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 6-20020a508746000000b004c5d1a15bd5sm2770120edv.69.2023.03.13.06.27.00
+        by smtp.gmail.com with ESMTPSA id gx3-20020a1709068a4300b009200601ea12sm3298802ejc.208.2023.03.13.07.46.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 06:27:00 -0700 (PDT)
-Message-ID: <d87df1ca-0fd7-bf8f-d4b3-2d4d0b79282a@redhat.com>
-Date:   Mon, 13 Mar 2023 14:26:59 +0100
+        Mon, 13 Mar 2023 07:46:13 -0700 (PDT)
+Message-ID: <a6ae936e-effd-3794-e6fb-11b33a4d6eb1@redhat.com>
+Date:   Mon, 13 Mar 2023 15:46:13 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v4 1/2] x86: Support APU5 & APU6 in PCEngines platform
- driver
+Subject: Re: [PATCH v3 1/8] platform/x86/intel/ifs: Reorganize driver data
 Content-Language: en-US
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Ed W <lists@wildgooses.com>,
-        Philip Prindeville <philipp@redfish-solutions.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Andres Salomon <dilinger@queued.net>,
-        Andreas Eberlein <foodeas@aeberlein.de>,
-        Paul Spooren <paul@spooren.de>
-References: <20230113231139.436956-1-philipp@redfish-solutions.com>
- <00b4cd69-14ce-ce1f-2bec-83ecbb928cbc@redhat.com>
- <cb93fd68-5195-0d5e-cd40-5eba61df4c38@wildgooses.com>
- <3fffc76d-4e1b-4eef-3d9f-6d61cecacb46@redhat.com>
- <5F93DF5F-BEC4-4B2A-A057-A895282A66B2@redfish-solutions.com>
- <3a36b460-9108-5c83-b4f6-42b4718afcf0@redhat.com>
- <59ded4b9-04e9-d5d3-98eb-af0d4340a2fa@wildgooses.com>
- <b402d146-5110-970a-3f5b-8c4c4859ede1@redhat.com>
- <60af6134-3b0b-f8ec-1375-a9819a181911@metux.net>
+To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+References: <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230301015942.462799-1-jithu.joseph@intel.com>
+ <20230301015942.462799-2-jithu.joseph@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <60af6134-3b0b-f8ec-1375-a9819a181911@metux.net>
+In-Reply-To: <20230301015942.462799-2-jithu.joseph@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Jithu,
 
-On 2/17/23 14:50, Enrico Weigelt, metux IT consult wrote:
-> On 13.02.23 15:25, Hans de Goede wrote:
+On 3/1/23 02:59, Jithu Joseph wrote:
+> The struct holding device driver data contained both read only(ro)
+> and read write(rw) fields.
 > 
->> It would be good to know the ACPI names. Also what happens with the ACPI
->> registered LED devices when the pcengines-apu driver loads, does it
->> somehow unregister those ?
+> Separating ro fields from rw fields was recommended as
+> a preferable design pattern during review[1].
 > 
-> It doesn't (hasn't any code for that). But the even more interesting
-> question is: does the acpi driver lock the IO space so my gpio driver,
-> and so the apu driver itself, can't initialize at all ? Or are we in a
-> situation where two different drivers meddle with the same chip ?
+> Group the rw fields into a separate struct whose memory is allocated
+> during driver_init(). Associate it to the miscdevice being registered
+> by keeping it in the same container struct as the miscdevice.
+> 
+> Also in prepration to supporting additional tests, move ifs_pkg_auth
+> to a global as it is only applicable for the first test type.
 
-Since it seems that people are using a patched version of
-the pcengines-apu driver with openwrt on newer models I would assume
-that the answer here is: "No the ACPI code does not lock the IO space"
-although it is unclear to me how the ACPI code exposes leds at all ?
+If you are writing "Also ..." into a commit message and the
+changes for the "Also ..." are more then a single line change,
+then that change really should be split out into a separate patch.
 
-Later in the thread you write that they do some hacks to expose
-all io-space of the FCH as gpios and then presumably the embed
-devicetree-bits pointing to those new GPIOs into ACPI to make
-the leds-gpio.c code handle the LEDs ?
+Please split the "move ifs_pkg_auth to a global" changes into their
+own separate patch.
 
 > 
->> If the ACPI LEDs are not unregistered and keep working, then I guess there is no userspace
->> API breakage when using pcengines-apu on newer APU models, "just" duplicate LED devices ?
+> Link: https://lore.kernel.org/lkml/Y+9H9otxLYPqMkUh@kroah.com/ [1]
 > 
-> Supporting both LED name schemes on the newer boards is an interesting
-> thought. Do we have some way for aliasing LED names ?
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h  | 19 +++++++++-------
+>  drivers/platform/x86/intel/ifs/core.c | 31 ++++++++++++++++++---------
+>  drivers/platform/x86/intel/ifs/load.c |  8 +++----
+>  3 files changed, 36 insertions(+), 22 deletions(-)
 > 
-> OTOH, I wonder whether we need the model specific LED naming at all.
-> In the old apuv1 driver, there used to be some (unsupported) LED-only
-> support for apuv2, which used model-specific naming. When adding full
-> apuv2/v3 support, I specifically chose not to do this, since I don't want userland having to care about the specific model version. And the
-> naming is a bit more clear on the actual meaning of these LEDs.
-> 
->>> - Additionally, we already broke this in the (distant) past because there was a previous APU driver
->>> which used different names still...
->>
->> Just because we have gotten away with it once, does not mean we should do it again :)
-> 
-> Back then the situation was different. Haven't even found anybody who's
-> was actually using this in the field. This ancient driver (actually made
-> for acpuv1, which is totally different HW) was only serving the three
-> front LEDs, nothing else, and blocked using the other GPIOs (eg. button)
-> Some people out there did weird hacks by directly writing registers from
-> userland (obviously w/o loading the ancient driver) - and even worse:
-> pcengines publically adviced to so.
-> 
->> For the new models I'm fine with whatever LED naming is preferred.
-> 
-> NAK. The problem here is: userland now has to differenciate between
-> various models again. Applications suddenly need to be rewritten in
-> order to work with the next higher model, or it fails. That might be not
-> a problem for home users, but in the industrial field it is a huge
-> problem: you suddenly end up with two product configurations or need
-> extra SW complexity to cope with several models at runtime - and this
-> even grows with the next one.
-> 
-> Exactly what I wanted to prevent once and for all.
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 046e39304fd5..e07463c794d4 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -197,22 +197,23 @@ union ifs_status {
+>  #define IFS_SW_TIMEOUT				0xFD
+>  #define IFS_SW_PARTIAL_COMPLETION		0xFE
+>  
+> +struct ifs_const_data {
+> +	int	integrity_cap_bit;
+> +	int	test_num;
+> +};
+> +
 
-Note that making applications work OOTB on newer platforms is nice
-to have, but is not specifically a blocker from the upstream kernel
-review pov.  Userspace needing to adjust to e.g. /dev/sda becoming
-/dev/nvme is not considerer userspace API breakage and this is
-more or less the same.
+This is a description of the specific capabilties / bits of
+the IFS on e.g. Saphire Rapids, so please name this appropriately
+for example:
 
-Still I agree that preserving the userspace API across different
-board models is something which we want to do if possible.
+struct ifs_hw_caps  {
+	int	integrity_cap_bit;
+	int	test_num;
+};
 
-> Since the meaning of these LEDs doesn't change, there's just no need to
-> change their naming.
 
-I agree that if the LEDs have the same function as before the name should
-be preserved to not needlessly make life harder for userspace consumers
-of these LEDs.
+>  /**
+>   * struct ifs_data - attributes related to intel IFS driver
+> - * @integrity_cap_bit: MSR_INTEGRITY_CAPS bit enumerating this test
+>   * @loaded_version: stores the currently loaded ifs image version.
+> - * @pkg_auth: array of bool storing per package auth status
+>   * @loaded: If a valid test binary has been loaded into the memory
+>   * @loading_error: Error occurred on another CPU while loading image
+>   * @valid_chunks: number of chunks which could be validated.
+>   * @status: it holds simple status pass/fail/untested
+>   * @scan_details: opaque scan status code from h/w
+>   * @cur_batch: number indicating the currently loaded test file
+> - * @test_num: number indicating the test type
+> + * @ro_info: ptr to struct holding fixed details
+>   */
+>  struct ifs_data {
+> -	int	integrity_cap_bit;
+> -	bool	*pkg_auth;
+>  	int	loaded_version;
+>  	bool	loaded;
+>  	bool	loading_error;
+> @@ -220,7 +221,7 @@ struct ifs_data {
+>  	int	status;
+>  	u64	scan_details;
+>  	u32	cur_batch;
+> -	int	test_num;
+> +	struct ifs_const_data *ro_info;
+>  };
+>  
+>  struct ifs_work {
+> @@ -229,7 +230,8 @@ struct ifs_work {
+>  };
+>  
+>  struct ifs_device {
+> -	struct ifs_data data;
+> +	struct ifs_const_data ro_data;
+> +	struct ifs_data *rw_data;
+>  	struct miscdevice misc;
+>  };
+>  
+
+You got this exactly the wrong way around, there should be a single
+
+static const struct ifs_hw_caps saphire_rapids_caps = {
+	.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+	.test_num = 0,
+};
+
+And then struct ifs_device { } should have a "const struct ifs_hw_caps *hw_caps"
+which gets initialized to point to &saphire_rapids_caps. So that your const
+data is actually const.
+
+Where as since the r/w data's lifetime is couple to the misc-device lifetime
+there is no need to dynamically allocate it just keep that embedded, so that
+together you get:
+
+struct ifs_device {
+	const struct ifs_hw_caps *hw_caps;
+	struct ifs_data data;
+	struct miscdevice misc;
+};
 
 Regards,
 
 Hans
+
+
+> @@ -238,9 +240,10 @@ static inline struct ifs_data *ifs_get_data(struct device *dev)
+>  	struct miscdevice *m = dev_get_drvdata(dev);
+>  	struct ifs_device *d = container_of(m, struct ifs_device, misc);
+>  
+> -	return &d->data;
+> +	return d->rw_data;
+>  }
+>  
+> +extern bool *ifs_pkg_auth;
+>  int ifs_load_firmware(struct device *dev);
+>  int do_core_test(int cpu, struct device *dev);
+>  const struct attribute_group **ifs_get_groups(void);
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+> index 206a617c2e02..b518b661daf0 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -20,8 +20,10 @@ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+>  
+> +bool *ifs_pkg_auth;
+> +
+>  static struct ifs_device ifs_device = {
+> -	.data = {
+> +	.ro_data = {
+>  		.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+>  		.test_num = 0,
+>  	},
+> @@ -35,8 +37,8 @@ static struct ifs_device ifs_device = {
+>  static int __init ifs_init(void)
+>  {
+>  	const struct x86_cpu_id *m;
+> +	struct ifs_data *ifsd;
+>  	u64 msrval;
+> -	int ret;
+>  
+>  	m = x86_match_cpu(ifs_cpu_ids);
+>  	if (!m)
+> @@ -53,26 +55,35 @@ static int __init ifs_init(void)
+>  
+>  	ifs_device.misc.groups = ifs_get_groups();
+>  
+> -	if (!(msrval & BIT(ifs_device.data.integrity_cap_bit)))
+> +	if (!(msrval & BIT(ifs_device.ro_data.integrity_cap_bit)))
+>  		return -ENODEV;
+>  
+> -	ifs_device.data.pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+> -	if (!ifs_device.data.pkg_auth)
+> +	ifs_pkg_auth = kmalloc_array(topology_max_packages(), sizeof(bool), GFP_KERNEL);
+> +	if (!ifs_pkg_auth)
+> +		return -ENOMEM;
+> +
+> +	ifsd = kzalloc(sizeof(*ifsd), GFP_KERNEL);
+> +	if (!ifsd)
+>  		return -ENOMEM;
+>  
+> -	ret = misc_register(&ifs_device.misc);
+> -	if (ret) {
+> -		kfree(ifs_device.data.pkg_auth);
+> -		return ret;
+> +	ifsd->ro_info = &ifs_device.ro_data;
+> +	ifs_device.rw_data = ifsd;
+> +
+> +	if (misc_register(&ifs_device.misc)) {
+> +		kfree(ifsd);
+> +		kfree(ifs_pkg_auth);
+> +		return -ENODEV;
+>  	}
+>  
+>  	return 0;
+> +
+>  }
+>  
+>  static void __exit ifs_exit(void)
+>  {
+>  	misc_deregister(&ifs_device.misc);
+> -	kfree(ifs_device.data.pkg_auth);
+> +	kfree(ifs_device.rw_data);
+> +	kfree(ifs_pkg_auth);
+>  }
+>  
+>  module_init(ifs_init);
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+> index c5c24e6fdc43..cdec3316c08d 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -192,7 +192,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  	struct ifs_work local_work;
+>  	int curr_pkg, cpu, ret;
+>  
+> -	memset(ifsd->pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
+> +	memset(ifs_pkg_auth, 0, (topology_max_packages() * sizeof(bool)));
+>  	ret = validate_ifs_metadata(dev);
+>  	if (ret)
+>  		return ret;
+> @@ -204,7 +204,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  	cpus_read_lock();
+>  	for_each_online_cpu(cpu) {
+>  		curr_pkg = topology_physical_package_id(cpu);
+> -		if (ifsd->pkg_auth[curr_pkg])
+> +		if (ifs_pkg_auth[curr_pkg])
+>  			continue;
+>  		reinit_completion(&ifs_done);
+>  		local_work.dev = dev;
+> @@ -215,7 +215,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+>  			ret = -EIO;
+>  			goto out;
+>  		}
+> -		ifsd->pkg_auth[curr_pkg] = 1;
+> +		ifs_pkg_auth[curr_pkg] = 1;
+>  	}
+>  	ret = 0;
+>  out:
+> @@ -263,7 +263,7 @@ int ifs_load_firmware(struct device *dev)
+>  	int ret = -EINVAL;
+>  
+>  	snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%02x.scan",
+> -		 ifsd->test_num, boot_cpu_data.x86, boot_cpu_data.x86_model,
+> +		 ifsd->ro_info->test_num, boot_cpu_data.x86, boot_cpu_data.x86_model,
+>  		 boot_cpu_data.x86_stepping, ifsd->cur_batch);
+>  
+>  	ret = request_firmware_direct(&fw, scan_path, dev);
 
