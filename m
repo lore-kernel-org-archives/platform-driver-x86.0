@@ -2,122 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D80C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Mar 2023 11:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D6C6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Mar 2023 14:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbjCNLPT (ORCPT
+        id S230199AbjCNOXI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Mar 2023 07:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
+        Tue, 14 Mar 2023 10:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231355AbjCNLOr (ORCPT
+        with ESMTP id S231204AbjCNOXG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Mar 2023 07:14:47 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD1E591CA;
-        Tue, 14 Mar 2023 04:14:16 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id p6so16249836plf.0;
-        Tue, 14 Mar 2023 04:14:16 -0700 (PDT)
+        Tue, 14 Mar 2023 10:23:06 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB49AB889;
+        Tue, 14 Mar 2023 07:22:35 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id l12so6239781wrm.10;
+        Tue, 14 Mar 2023 07:22:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678792450;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SBhu1FN466UkE4o6eU94H2J4IRVg/Q1QnTxXpOt69VA=;
-        b=qd7r4pKNXtz7MiHAQFXtpUeuUPjHly6zNPeOuAxyYiGbCisNEBXZVWcqkTunaMefqz
-         qbA1un1n68iYFYln/zHisX0Z3sUUdYKw69iIvTmO+8gVpsZuFoIhwR0gxuhAbroriZwZ
-         l+IF7wF/Cin6sYeflY7XAUKoIcueFYitLH6U4GKE2kgtDSa8UHljZJ2aRaj0LdnMkG6C
-         jRGu6lRx94HayJq9VHILaCMo+ehjE9oYZguUfGw0iDGUL4A0J0XAq/3qQQI0bRIz6ddE
-         HH7hDyCHW3S1D8A3Bra/QMDgmrKGngBrSO5aux/brtSb1KRC9z987VTr81cIldPEqPdD
-         HW3g==
+        d=gmail.com; s=20210112; t=1678803754;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OXl4TgI3IpmiTT3XmEwykC+oT2OJpvBfbKn8ITV5+I4=;
+        b=Qd6udfidgl6S8YWBabq6CfpDGX989xxqr3fu4G5b//IdS31IGCKZBJbJEHOvlLqI6o
+         kTGLQS8hg3GLfjSKFTQUyOeD4mBD7OwYQR5w2ciFzsSunlinEORfUJTS4RWfC4pqcIm/
+         gs5kNTkZWG6QOSDzG8IP8Gb8lB6wa9FR8VvtNlii+RuL6oFHWY1R+LYHfrqU5P7ibCu3
+         pmtN04IcKGLw6HJoYeYYr7xRJhel2QFlTlXkSJtyq8K+lHW3UKN2lAFYn/1t8XikuRnB
+         VrcVMxEvKqwVD9oQevkzfe1ly7AR9hKeYfegVU85TlnAzoZ/wOD7I/ooRwSxxFD3qglM
+         5BjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678792450;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SBhu1FN466UkE4o6eU94H2J4IRVg/Q1QnTxXpOt69VA=;
-        b=qQawpxP4McJbigO/c6FDRqcbal0pOGdl5wvGioNjGNr0hhbsMe2RHynSHUqq6hm0Fd
-         pqkWkGSP/f0Q+4USCsT9CqaS7TC4GJK/k1GTBN7mQh8qU+kKq56CRjIyTQaP9bUJ8IOt
-         lEG4cHgzVeYf+00vH5VMrLpxSMJhK6ByJTSTjpZMsE5K1HTrbOIweaVqplkre60Qk1PN
-         HcstoXHCf9BNZ52bODx/4D9lfFGanazrXRsI3u3+8RHtWNaK3uF4TpFUT4pkGs9lbtvC
-         0ghaSYCp9I4p5ovjOdyXGlA1CqLZ0xgH0Aq5JUbQm8wqNPBf7F76Xpx7TGyzp848bICf
-         AWIA==
-X-Gm-Message-State: AO0yUKXJ16ldD5D1nTGN9IY8fWOtZ/8iknQVYOQXNlU8EghUEAiOMJYF
-        3cwOVmeDPItwLRkpL89y9MND90xWrQM=
-X-Google-Smtp-Source: AK7set/KLYrI0c/e5MTvR6WqzEZJYWsVYxBp3N0uHvaqGzjknlppHwJAlcopmGtxIcTUTy3QsceCvQ==
-X-Received: by 2002:a05:6a20:430c:b0:d5:3818:6427 with SMTP id h12-20020a056a20430c00b000d538186427mr3287895pzk.9.1678792450348;
-        Tue, 14 Mar 2023 04:14:10 -0700 (PDT)
-Received: from redecorated-mbp (124-148-239-17.tpgi.com.au. [124.148.239.17])
-        by smtp.gmail.com with ESMTPSA id v6-20020a62a506000000b005a817ff3903sm1390802pfm.3.2023.03.14.04.14.08
+        d=1e100.net; s=20210112; t=1678803754;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OXl4TgI3IpmiTT3XmEwykC+oT2OJpvBfbKn8ITV5+I4=;
+        b=qxESJW4XMZqMq9KAPUpO/FVzXqGqkEdjfqs5zP7ZU1yFIys4PqtUUuOD078g1Z8uVT
+         wNl4AuC/3zHHy53wC8rsHhXbvUMDpLHB/yuBVmYYbptSM+6ntFrqh48jhnYZwR/p4gjH
+         aUhCShrRgNfH8910ILZxvZNhkT4241oo10ys03iG/R+JBv0NRIYCqKPKLpvVb3jItCfb
+         cU/iBDyqkORXZAwr24SilAEMRbk+WC7OfSiOwftspRtGl0ZGnauMyJfocEBpGSw9JdDq
+         /nk09a+h5pC3WXOVGtVNtdPkFTBIgH4SNEnLbiUU2MnsDwSKsr6AS/8nONH+SiZfIIm7
+         cJgQ==
+X-Gm-Message-State: AO0yUKXqEPxrCioYutkn/aJ1EkJKYuphAJcSdBRjIXYotINBuoHg+Xtm
+        hbc2biz5VLr+FHLt9MFXh6o=
+X-Google-Smtp-Source: AK7set/qjMFLVqloraRunzYDMxB3B+4nSWcH4blFYg7bum9qXDXw/ldPZeraNtS5HiDOTxsoaR+fUA==
+X-Received: by 2002:adf:f84f:0:b0:2ce:aa62:ff73 with SMTP id d15-20020adff84f000000b002ceaa62ff73mr5480045wrq.54.1678803753757;
+        Tue, 14 Mar 2023 07:22:33 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id d17-20020a5d4f91000000b002c5598c14acsm2315939wru.6.2023.03.14.07.22.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 04:14:10 -0700 (PDT)
-Date:   Tue, 14 Mar 2023 22:13:58 +1100
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
-To:     Dan Carpenter <error27@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: apple-gmux: return -EFAULT if copy fails
-Message-ID: <20230314221358.1d5b076d@redecorated-mbp>
-In-Reply-To: <0bdfa8c2-cb22-4bec-8773-584060613043@kili.mountain>
-References: <0bdfa8c2-cb22-4bec-8773-584060613043@kili.mountain>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.35; x86_64-pc-linux-gnu)
+        Tue, 14 Mar 2023 07:22:33 -0700 (PDT)
+Date:   Tue, 14 Mar 2023 17:22:28 +0300
+From:   Dan Carpenter <error27@gmail.com>
+To:     Dongliang Mu <dzm91@hust.edu.cn>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux-next v2 1/3] platform/x86/intel/tpmi: Fix double
+ free in tpmi_create_device()
+Message-ID: <155c581f-1a3e-4d6c-82b9-0ff7855dcaab@kili.mountain>
+References: <20230309040107.534716-1-dzm91@hust.edu.cn>
+ <20230309040107.534716-2-dzm91@hust.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230309040107.534716-2-dzm91@hust.edu.cn>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 10 Mar 2023 15:31:13 +0300
-Dan Carpenter <error27@gmail.com> wrote:
-
-> The copy_to/from_user() functions return the number of bytes remaining
-> to be copied, but we want to return -EFAULT to the user.
-
-I didn't realise that, thanks for fixing it!
-
-Reviewed-by: Orlando Chamberlain <orlandlch.dev@gmail.com>
+On Thu, Mar 09, 2023 at 12:01:05PM +0800, Dongliang Mu wrote:
+> The previous commit 6a192c0cbf38 ("platform/x86/intel/tpmi: Fix
+> double free reported by Smatch") incorrectly handle the deallocation of
+> res variable. As shown in the comment, intel_vsec_add_aux handles all
+> the deallocation of res and feature_vsec_dev. Therefore, kfree(res) can
+> still cause double free if intel_vsec_add_aux returns error.
 > 
-> Fixes: ce3fef2eb235 ("platform/x86: apple-gmux: add debugfs
-> interface") Signed-off-by: Dan Carpenter <error27@gmail.com>
+> Fix this by adjusting the error handling part in tpmi_create_device,
+> following the function intel_vsec_add_dev.
+> 
+> Fixes: 6a192c0cbf38 ("platform/x86/intel/tpmi: Fix double free reported by Smatch")
+> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 > ---
->  drivers/platform/x86/apple-gmux.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/apple-gmux.c
-> b/drivers/platform/x86/apple-gmux.c index 787cf2a7e268..77e63d2da7b6
-> 100644 --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -694,7 +694,6 @@ static ssize_t
-> gmux_selected_port_data_write(struct file *file, const char __user
-> *userbuf, size_t count, loff_t *ppos) {
->  	struct apple_gmux_data *gmux_data = file->private_data;
-> -	int ret;
->  
->  	if (*ppos)
->  		return -EINVAL;
-> @@ -702,16 +701,16 @@ static ssize_t
-> gmux_selected_port_data_write(struct file *file, if (count == 1) {
->  		u8 data;
->  
-> -		ret = copy_from_user(&data, userbuf, 1);
-> -		if (ret)
-> -			return ret;
-> +		if (copy_from_user(&data, userbuf, 1))
-> +			return -EFAULT;
-> +
->  		gmux_write8(gmux_data, gmux_data->selected_port,
-> data); } else if (count == 4) {
->  		u32 data;
->  
-> -		ret = copy_from_user(&data, userbuf, 4);
-> -		if (ret)
-> -			return ret;
-> +		if (copy_from_user(&data, userbuf, 4))
-> +			return -EFAULT;
-> +
->  		gmux_write32(gmux_data, gmux_data->selected_port,
-> data); } else
->  		return -EINVAL;
+
+Yeah.  These patches are right.  The earlier fix still has a double
+free.  Devres stuff is confusing...
+
+Reviewed-by: Dan Carpenter <error27@gmail.com>
+
+regards,
+dan carpenter
 
