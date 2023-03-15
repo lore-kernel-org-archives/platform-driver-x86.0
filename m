@@ -2,46 +2,46 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23251C6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Mar 2023 18:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB7C74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Mar 2023 18:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231452AbjCOSeR (ORCPT
+        id S231769AbjCOSe1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Mar 2023 14:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Wed, 15 Mar 2023 14:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231769AbjCOSeM (ORCPT
+        with ESMTP id S231779AbjCOSeO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Mar 2023 14:34:12 -0400
+        Wed, 15 Mar 2023 14:34:14 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE156AD28;
-        Wed, 15 Mar 2023 11:34:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1719D40D3;
+        Wed, 15 Mar 2023 11:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678905250; x=1710441250;
+  t=1678905253; x=1710441253;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SLZM9Rd4ZbAV+HV63P8xQDOFKv2CzGBHIeab4YXE1bU=;
-  b=SxtjaWDHZuGsebxR2EtzSIvWNRtT3D9kLv/51mbZlFikK/GdSGLAVNh/
-   6BqrYbrqGbVzxfKXGWlXrjhYMFGlrfhQxDh0C2Z9LMQ+LLK0uDW4WzLso
-   Yk+2hTylaHyOdtJOwzmp1AxCp6qxgC2VT6Whd2HlXnFsHk9HS0izX63Dy
-   CuoBkpgicWpkukjuaM/s5zQVY/1kdgYKLl+eCoHLQ6QvFvfnr6shqqJPB
-   VLBkTK+gUoIKe/dbO8hDV9M0G/SeEZR9R4h6r5PPPfD7Xb2p5rBN6OBYF
-   7gta8GwFKlrYHbMHdDpekiklzt2W183kH9kT52zAYAEoFRne80gbMV1jM
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="340154538"
+  bh=L00M9MXhIWKlvY9DN1BY3XH1GCJuxFHrq9jz+q4X/hA=;
+  b=GHurIbEE0omo52F9FiRAeAjQWpTIIaPr5lrVGdz+JV6U4xHNNtO62p7s
+   +XNZFJP6oO+EYH1viByoweF3vtYoN06oDrZME/+hXve3sxtZ1i3J+RZGN
+   0d9dDQWyAkIjyU7Sy4kPPDfYTUMH5vz91OM2oIW0tAhe60scEmDY631my
+   4ldNxUPwQXkF1M0/ibMUGphAtF+ewOYqTr6mUszpV8u4NAMQu4RyTMRpo
+   DfloH8lbkLrgbCseH+JaxeZetOBk1hR1ffqH+ogIPpw2IrbNRnWqeqvyL
+   5hetSJ02Xt3EMJ8IsVzx+erXBfaLr7/6TRW/kUT1sar482qxNg81WDJeF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="340154549"
 X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="340154538"
+   d="scan'208";a="340154549"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 11:34:07 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 11:34:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="925435208"
+X-IronPort-AV: E=McAfee;i="6500,9779,10650"; a="925435213"
 X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="925435208"
+   d="scan'208";a="925435213"
 Received: from linux.intel.com ([10.54.29.200])
   by fmsmga006.fm.intel.com with ESMTP; 15 Mar 2023 11:34:07 -0700
 Received: from debox1-desk4.intel.com (unknown [10.209.75.205])
-        by linux.intel.com (Postfix) with ESMTP id 19268580D2C;
+        by linux.intel.com (Postfix) with ESMTP id 8CD42580C6E;
         Wed, 15 Mar 2023 11:34:07 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
@@ -49,9 +49,9 @@ To:     irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
         andy.shevchenko@gmail.com, rajvi.jingar@linux.intel.com,
         xi.pardee@intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 04/11] platform/x86/intel/pmt: Add INTEL_PMT module namespace
-Date:   Wed, 15 Mar 2023 11:33:58 -0700
-Message-Id: <20230315183405.2465630-5-david.e.box@linux.intel.com>
+Subject: [PATCH 06/11] platform/x86/intel/pmt/telemetry: Add driver version
+Date:   Wed, 15 Mar 2023 11:34:00 -0700
+Message-Id: <20230315183405.2465630-7-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230315183405.2465630-1-david.e.box@linux.intel.com>
 References: <20230315183405.2465630-1-david.e.box@linux.intel.com>
@@ -61,65 +61,32 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since the currently exported symbols in pmt_class are only used by other
-Intel PMT drivers, create an INTEL_PMT module namespace for them.
+Add a driver version number to make it easier to track changes in
+backported kernels.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmt/class.c     | 6 +++---
- drivers/platform/x86/intel/pmt/crashlog.c  | 1 +
- drivers/platform/x86/intel/pmt/telemetry.c | 1 +
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/pmt/telemetry.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index 7136475d4ab5..acc96f0cc224 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -33,7 +33,7 @@ bool intel_pmt_is_early_client_hw(struct device *dev)
- 	 */
- 	return !!(ivdev->quirks & VSEC_QUIRK_EARLY_HW);
- }
--EXPORT_SYMBOL_GPL(intel_pmt_is_early_client_hw);
-+EXPORT_SYMBOL_NS_GPL(intel_pmt_is_early_client_hw, INTEL_PMT);
- 
- static inline int
- pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
-@@ -335,7 +335,7 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
- 	return intel_pmt_dev_register(entry, ns, dev);
- 
- }
--EXPORT_SYMBOL_GPL(intel_pmt_dev_create);
-+EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, INTEL_PMT);
- 
- void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
- 			   struct intel_pmt_namespace *ns)
-@@ -351,7 +351,7 @@ void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
- 	device_unregister(dev);
- 	xa_erase(ns->xa, entry->devid);
- }
--EXPORT_SYMBOL_GPL(intel_pmt_dev_destroy);
-+EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_destroy, INTEL_PMT);
- 
- static int __init pmt_class_init(void)
- {
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index ace1239bc0a0..bbb3d61d09f4 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -328,3 +328,4 @@ module_exit(pmt_crashlog_exit);
- MODULE_AUTHOR("Alexander Duyck <alexander.h.duyck@linux.intel.com>");
- MODULE_DESCRIPTION("Intel PMT Crashlog driver");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(INTEL_PMT);
 diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 5e4009c05ecf..71cdef42084a 100644
+index 39ec8d9fb5b1..7593726e814d 100644
 --- a/drivers/platform/x86/intel/pmt/telemetry.c
 +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -160,3 +160,4 @@ module_exit(pmt_telem_exit);
+@@ -19,6 +19,7 @@
+ #include "../vsec.h"
+ #include "class.h"
+ 
++#define DRIVER_VERSION		"1.0"
+ #define TELEM_SIZE_OFFSET	0x0
+ #define TELEM_GUID_OFFSET	0x4
+ #define TELEM_BASE_OFFSET	0x8
+@@ -348,4 +349,5 @@ module_exit(pmt_telem_exit);
  MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
  MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(INTEL_PMT);
++MODULE_VERSION(DRIVER_VERSION);
+ MODULE_IMPORT_NS(INTEL_PMT);
 -- 
 2.34.1
 
