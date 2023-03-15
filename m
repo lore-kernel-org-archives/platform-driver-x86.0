@@ -2,34 +2,34 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0711C7618B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Mar 2023 12:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F274AC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Mar 2023 12:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232577AbjCOM3C (ORCPT
+        id S232570AbjCOMg3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Mar 2023 08:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
+        Wed, 15 Mar 2023 08:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232348AbjCOM2h (ORCPT
+        with ESMTP id S232212AbjCOMgG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Mar 2023 08:28:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9A3B75B;
-        Wed, 15 Mar 2023 05:27:49 -0700 (PDT)
+        Wed, 15 Mar 2023 08:36:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFB2900AB;
+        Wed, 15 Mar 2023 05:35:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A80661D49;
-        Wed, 15 Mar 2023 12:27:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C890C433EF;
-        Wed, 15 Mar 2023 12:27:48 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D82F7B81E09;
+        Wed, 15 Mar 2023 12:35:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53127C433EF;
+        Wed, 15 Mar 2023 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678883268;
-        bh=6uZGlOEALfQB14/jsIL8GLQ5euDfKimvvn8zAye8AQM=;
+        s=korg; t=1678883708;
+        bh=0ZTy/K+sQEEKWVa5LE+BZI7IWuHHjn6btf/32a0R+mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCE0D/Aqvt6v20v++hmSFfaZK4HPeg7trzeSB4isVJqTYnR5VO9q3/fJCj+AeWgnS
-         74rdxWi6Y/Wfo8JJzzckCtNTroth91frb1AAX3IcowbQ7Odu9qqQM+nVJkqkYOSRnq
-         3n9IJ1PXkfDy5sjauOTKm8nToG02m/6OALhb5y3g=
+        b=0E8bPNTf7Ep08l+nCedBU2l2HBX0oYBM03Zqq65MFQ/omybMBi0ipuF8yuYBLja6o
+         hUIeSdHGn3TDV2x7PBcRtapmKQk9ApuV4CuZuSMBuGVPAivdcNS++wnJmkeKgQWtQ7
+         onikNydTgVjJB+KE/ycI2LcuoWx2YoqD0Pt6SlAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,12 +40,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 072/145] platform: x86: MLX_PLATFORM: select REGMAP instead of depending on it
-Date:   Wed, 15 Mar 2023 13:12:18 +0100
-Message-Id: <20230315115741.391999629@linuxfoundation.org>
+Subject: [PATCH 6.1 101/143] platform: x86: MLX_PLATFORM: select REGMAP instead of depending on it
+Date:   Wed, 15 Mar 2023 13:13:07 +0100
+Message-Id: <20230315115743.575533678@linuxfoundation.org>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230315115738.951067403@linuxfoundation.org>
-References: <20230315115738.951067403@linuxfoundation.org>
+In-Reply-To: <20230315115740.429574234@linuxfoundation.org>
+References: <20230315115740.429574234@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,10 +83,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index cd8146dbdd453..61186829d1f6b 100644
+index f5312f51de19f..b02a8125bc7d5 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -943,7 +943,8 @@ config I2C_MULTI_INSTANTIATE
+@@ -997,7 +997,8 @@ config SERIAL_MULTI_INSTANTIATE
  
  config MLX_PLATFORM
  	tristate "Mellanox Technologies platform support"
