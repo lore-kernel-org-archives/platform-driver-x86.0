@@ -2,77 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9D1C6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 14:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF00C6FD19
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 14:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231189AbjCPO0L (ORCPT
+        id S230335AbjCPOhM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 10:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56590 "EHLO
+        Thu, 16 Mar 2023 10:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231145AbjCPO0J (ORCPT
+        with ESMTP id S230330AbjCPOhL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 10:26:09 -0400
+        Thu, 16 Mar 2023 10:37:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D55B78A7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:25:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11CFD514A
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:36:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678976719;
+        s=mimecast20190719; t=1678977384;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=283XLpLkY/GtlkVIgN/bgnAXAkOeliF5pq/xdk1cojI=;
-        b=QNxNIXxShleZxppmK7cMSvr2M24iZ1beiU6WYISOxkVdLC6ByXtLHxYroXMgX188bz9PEU
-        D+w9vNaldPueDELzsI1V9mRWDS2gaycRWZ9sLHN9m6qAZMtEzMbQ/2RHxDDAgw2BskDw7t
-        RQCe7EQvJS/22+MqCrmAYLyURRmM7UE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=gpcF/hcqSj5GjvLav9T+2zCuKxAs7PflO1KObok4Dec=;
+        b=EAqvXryqa3m1mNbKjUdTbOhCrI8g1AkUbkxLQSYHkZoufUo3/9hBsbeW8HtXczixhCE9oi
+        nt/haIKmmplWvsR1Ffgw0LP9vjiSaOCK+IUjDVWaCj6KohpcPPh87zPoDl2TDrBbhZKpoY
+        ncI6OJ59/8WO4jqpFnj2lL2o6L3p7Gk=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-271-uzQ-V71IPxeMiYh_Q5urRQ-1; Thu, 16 Mar 2023 10:25:18 -0400
-X-MC-Unique: uzQ-V71IPxeMiYh_Q5urRQ-1
-Received: by mail-ed1-f72.google.com with SMTP id b1-20020aa7dc01000000b004ad062fee5eso3257031edu.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:25:17 -0700 (PDT)
+ us-mta-155-1GoB_4-rMEyFSEVKITJleg-1; Thu, 16 Mar 2023 10:36:22 -0400
+X-MC-Unique: 1GoB_4-rMEyFSEVKITJleg-1
+Received: by mail-ed1-f70.google.com with SMTP id b1-20020aa7dc01000000b004ad062fee5eso3303286edu.17
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:36:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678976717;
+        d=1e100.net; s=20210112; t=1678977381;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=283XLpLkY/GtlkVIgN/bgnAXAkOeliF5pq/xdk1cojI=;
-        b=RekWVFrCLpAs+DjfVBzacK20kEpAvVfG4CI28UDguyaH7Ns8QAJ0xO3xememecVcLL
-         B9elfiX0KUIoqG+1/2/mXagQUTFQklnrADwbhWveXLGn3XPDs/13SCfbRv9biAznLWWG
-         l0Zbd4foilVtXZ+ns2sGe3WljppgTXpmh6owYrbeTJBYuzFYDXytufRWbxjoA65Nk3zQ
-         HV4mkzJBU8f6qMdxYpLNravnDbf7aiEltT9wBn5WA1hBLKz5+bU06eIi4+b0rzLDvPNY
-         rRmgxNkdSTuGs0mVQu8Ekc9inzAo2A1hdre4mJoclRhoA86sUn0C/mOCC6jewYkMgqDi
-         VqWw==
-X-Gm-Message-State: AO0yUKVPwLoWZg48dpTea0OxAT+01MRhrpWMjFnrkaXrQ2QoR20iHbSO
-        VNBaCfOIfr4X0Loll/B769TggMwBqjAchAyw4szQX50kqSVoi77sn6Ic9486/zZlX6qP4uykbze
-        D/YuS5glOBhZnfeL3ip/IrGWKKN/GL4m+PA==
-X-Received: by 2002:a05:6402:658:b0:4fd:2155:74ef with SMTP id u24-20020a056402065800b004fd215574efmr6895465edx.19.1678976717062;
-        Thu, 16 Mar 2023 07:25:17 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+8ohUPdNc1ewEcrGnImeeVbX9S/OYzn7ZNnFHIlHpjijoBmWkVr/rFmti45Bb/aaCqQQfYNQ==
-X-Received: by 2002:a05:6402:658:b0:4fd:2155:74ef with SMTP id u24-20020a056402065800b004fd215574efmr6895438edx.19.1678976716779;
-        Thu, 16 Mar 2023 07:25:16 -0700 (PDT)
+        bh=gpcF/hcqSj5GjvLav9T+2zCuKxAs7PflO1KObok4Dec=;
+        b=ilcZfq8afQekP7z4QNIjydnUXJCjbWgGCn+gU/a8cqVQx21adj1H70ygZwWVRb5alp
+         P2u75JEHbpHFZPET4uLHNaWqJe8eXWdAZv8rW3FpJFCE2ODm2T2DHw7OjwO/Imr0UmAh
+         9X+zmbqC6lJYRp6On9DAeiOSxF+ri34nuuHY+fMril3+Sd5qrAbWN+p9Fw8TC6avLnRA
+         AZm1tG/Wkent1Pm0k4y6zsOPrSExWVcOEt/e0CuTs+zqBKrkSkAoe99u5NNtUb0ON0oU
+         btqZi1UuajIEB5/+p0xRDvP+4VdeUGt4K2iyQ3RQxd8UI1V6Q9HA7xmqOxSyd9Qnac2R
+         PPBQ==
+X-Gm-Message-State: AO0yUKWFZLixZkEtgLcSg5wJviDTCxVV98wcwwtt/r/beZN+J19gE3XY
+        4HGpM181R4oQYQ/JLRytJYeM7VRDhtrnJMIydUbK4ZNN89eHn5yfIg6rmKbsqH2j7ACKtCHJj+O
+        82WlRJhPe2m8hN81VLPyuiKEwNLm1c5qvFg==
+X-Received: by 2002:a17:906:a93:b0:931:102e:13a1 with SMTP id y19-20020a1709060a9300b00931102e13a1mr1014733ejf.40.1678977381827;
+        Thu, 16 Mar 2023 07:36:21 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+3sDtdZoj5OqJUkdJWg7pUDUuqy7otslopEM9hlTRgSN7UXX5iGSty6lF+5RmzNraTlnQ3fg==
+X-Received: by 2002:a17:906:a93:b0:931:102e:13a1 with SMTP id y19-20020a1709060a9300b00931102e13a1mr1014710ejf.40.1678977381529;
+        Thu, 16 Mar 2023 07:36:21 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id z25-20020a50cd19000000b004af73333d6esm3942089edi.53.2023.03.16.07.25.16
+        by smtp.gmail.com with ESMTPSA id gt16-20020a1709072d9000b008c327bef167sm3888641ejc.7.2023.03.16.07.36.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Mar 2023 07:25:16 -0700 (PDT)
-Message-ID: <dd36a2ab-d465-f857-30c6-3c0094babd31@redhat.com>
-Date:   Thu, 16 Mar 2023 15:25:15 +0100
+        Thu, 16 Mar 2023 07:36:21 -0700 (PDT)
+Message-ID: <7b3aa5c3-493e-d765-29c4-9b28edd82ab3@redhat.com>
+Date:   Thu, 16 Mar 2023 15:36:20 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH linux-next v2 1/3] platform/x86/intel/tpmi: Fix double
- free in tpmi_create_device()
+Subject: Re: [PATCH] acerhdf: remove unneeded semicolon
 Content-Language: en-US, nl
-To:     Dongliang Mu <dzm91@hust.edu.cn>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230309040107.534716-1-dzm91@hust.edu.cn>
- <20230309040107.534716-2-dzm91@hust.edu.cn>
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, peter@piie.net
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+References: <20230309061045.25256-1-jiapeng.chong@linux.alibaba.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230309040107.534716-2-dzm91@hust.edu.cn>
+In-Reply-To: <20230309061045.25256-1-jiapeng.chong@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,24 +78,24 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/9/23 05:01, Dongliang Mu wrote:
-> The previous commit 6a192c0cbf38 ("platform/x86/intel/tpmi: Fix
-> double free reported by Smatch") incorrectly handle the deallocation of
-> res variable. As shown in the comment, intel_vsec_add_aux handles all
-> the deallocation of res and feature_vsec_dev. Therefore, kfree(res) can
-> still cause double free if intel_vsec_add_aux returns error.
+On 3/9/23 07:10, Jiapeng Chong wrote:
+> ./drivers/platform/x86/acerhdf.c:343:2-3: Unneeded semicolon.
 > 
-> Fix this by adjusting the error handling part in tpmi_create_device,
-> following the function intel_vsec_add_dev.
-> 
-> Fixes: 6a192c0cbf38 ("platform/x86/intel/tpmi: Fix double free reported by Smatch")
-> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2271
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-IIRC then after this v2 was posted I still saw some comments on the original v1 which was not posted on the list. Without the v1 comments being on the list and this archived, I have lost track of what the status of these patches is.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Srinivas, can you let me know if I should merge these, or if more changes are necessary ?
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-From the off-list discussion of v1 I got the impression more changes are necessary, but I'm not sure.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -106,44 +103,21 @@ Hans
 
 
 
-
 > ---
->  drivers/platform/x86/intel/tpmi.c | 17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
+>  drivers/platform/x86/acerhdf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-> index c999732b0f1e..882fe5e4763f 100644
-> --- a/drivers/platform/x86/intel/tpmi.c
-> +++ b/drivers/platform/x86/intel/tpmi.c
-> @@ -215,8 +215,8 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index a48638ad2a8a..ec8cc780b822 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -341,7 +341,7 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+>  		pr_err("fanoff temperature (%d) is above fanon temperature (%d), clamping to %d\n",
+>  		       fanoff, fanon, fanon);
+>  		fanoff = fanon;
+> -	};
+> +	}
 >  
->  	feature_vsec_dev = kzalloc(sizeof(*feature_vsec_dev), GFP_KERNEL);
->  	if (!feature_vsec_dev) {
-> -		ret = -ENOMEM;
-> -		goto free_res;
-> +		kfree(res);
-> +		return -ENOMEM;
->  	}
->  
->  	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
-> @@ -242,17 +242,8 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
->  	 * feature_vsec_dev memory is also freed as part of device
->  	 * delete.
->  	 */
-> -	ret = intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev->auxdev.dev,
-> -				 feature_vsec_dev, feature_id_name);
-> -	if (ret)
-> -		goto free_res;
-> -
-> -	return 0;
-> -
-> -free_res:
-> -	kfree(res);
-> -
-> -	return ret;
-> +	return intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev->auxdev.dev,
-> +				  feature_vsec_dev, feature_id_name);
->  }
->  
->  static int tpmi_create_devices(struct intel_tpmi_info *tpmi_info)
+>  	trips[0].temperature = fanon;
+>  	trips[0].hysteresis  = fanon - fanoff;
 
