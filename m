@@ -2,171 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EFDC6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 15:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7268EC6FD19
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 16:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbjCPPkM (ORCPT
+        id S229544AbjCPQDq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 11:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        Thu, 16 Mar 2023 12:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231760AbjCPPjd (ORCPT
+        with ESMTP id S229584AbjCPQDo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 11:39:33 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10722C889C;
-        Thu, 16 Mar 2023 08:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678981092; x=1710517092;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=lpeckZ811LPUH7GBNtBOnJgvZwwJw+EL6zHIrvG2K18=;
-  b=amo8kypwZ9CNUU8HTDde+W2+tyheQ4j5OviZn1FukvcYVigmfrZCudzq
-   Apben07ckUCCpDnfowcC8t9Rp/CPo4CHoGYcYJzyLXm7zc9o7E3biNDbD
-   y09kLyUBVX+y0SUVkC3U24Z+fhQtdFihwSgMsSgLDFegB1zMr8z165PKC
-   dmGgc6beD4a9U7HQfy4yBD+EGDFsYyKtFhS+BLftV1xPyXDiLgdqSc8gS
-   x7iM89WHuflDoxJkoCtAdCjERK8jwVdYuyPE3EIHwEVIGG3zylng52klj
-   serNPDQr04IvFPwrkZmTKn2NMNhkhsy/GR9DqAxA3Jwjn+d2z1aGNXlnI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="340399797"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="340399797"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 08:36:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="769002159"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="769002159"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Mar 2023 08:36:23 -0700
-Received: from vahoang-mobl.amr.corp.intel.com (unknown [10.212.175.15])
-        by linux.intel.com (Postfix) with ESMTP id B9325580C4C;
-        Thu, 16 Mar 2023 08:36:22 -0700 (PDT)
-Message-ID: <f8c8375921cbe1d16329b450ad264e8bb711a7dc.camel@linux.intel.com>
-Subject: Re: [PATCH 00/11] Intel pmc_core: Enable telemetry
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>, irenic.rajneesh@gmail.com,
-        markgross@kernel.org, andy.shevchenko@gmail.com,
-        rajvi.jingar@linux.intel.com, xi.pardee@intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Thu, 16 Mar 2023 08:36:22 -0700
-In-Reply-To: <2d8d484d-55d6-446e-10af-49be3f2f0f7c@redhat.com>
-References: <20230315183405.2465630-1-david.e.box@linux.intel.com>
-         <2d8d484d-55d6-446e-10af-49be3f2f0f7c@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Thu, 16 Mar 2023 12:03:44 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F1E4EF8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 09:03:28 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id z21so9656872edb.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 09:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678982606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E+5yg6ZbQ0SExT381wy7aXWOHC1xlGr+X1Ld1SU9mtg=;
+        b=z4O3i0DZ3ieWCRjy4RmXqfnsyzxRFtTCrznus41qB8MuYY98Fwdr9s86/FXDA07oT4
+         zETWMQ2qCzzw0dwcqtUg0zgdQ+3Ao/ffxQuWhTOxWTHDjc4ZHZz9qP20IZ0oQoe8uwRL
+         H4Y1eHbesJ4RIMyPXszDXGlM1lN9wWExp7cMt2eu1EGxdFAa34+fFMoSWqBIJRsJpBa2
+         1rXh0xzg3a6dziif4FVghXllwaMNRONBwX94RgGZYcm0QzZpeTLorQ12CQ/NCorvbZN0
+         F2Hmk0HS5vcWzOrIRnUIY46Lp4gFl7B48DxkJ9ePr2q4FOX++wYjRXBCnuKe2MQz7wip
+         Fclw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678982606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E+5yg6ZbQ0SExT381wy7aXWOHC1xlGr+X1Ld1SU9mtg=;
+        b=olBCaa+Ec3O8W1aWsfKMjGR65710CFzvXkNA1i/3lmFgRqrzbv/zkatPS0K8GT4v+z
+         ykSspAv+sCCb5LLeT+p/zKkKEO/dsRpztNt5BBbrYWCCZ6AfL30DDf1nkCfZsQKqATPH
+         QuPHEPk/qmA0JyDX8JGuW+0Ph8Z9PNx5aUAaPYlPCrg5ai9/3iXgqJ52f68TcCoLqa0t
+         cy+VNT/vJ7nskSdnGpZxTUEUWDhLCKKSnWJdNftvGNpQdz+FheHEu2YV0XxCcaB9MJpJ
+         eEt4MRGSIJIsVjpZTBTUJXkZ7xLox/YEv79yB2g1hmA0wjpHw8xQMSzylxQup9NcHcIu
+         fXOw==
+X-Gm-Message-State: AO0yUKXfkXMuZrVwzyXuwl/sY3a93+MKRuusvgvW/5FMkPfsBan4r1TX
+        8P3xEAgloRqgyQvHseofQeeT2g==
+X-Google-Smtp-Source: AK7set/jElk6KsvQPACSimpCKocXRgKWv4U85ydCqzxJHHxw0Ii/Kx0ZmWgwOC2hxqqYeG6gZFerGg==
+X-Received: by 2002:a17:906:1ed6:b0:92b:ff31:45bc with SMTP id m22-20020a1709061ed600b0092bff3145bcmr10522037ejj.44.1678982606653;
+        Thu, 16 Mar 2023 09:03:26 -0700 (PDT)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:9827:5f65:8269:a95f])
+        by smtp.gmail.com with ESMTPSA id v22-20020a170906859600b009311c9d33d7sm335338ejx.184.2023.03.16.09.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Mar 2023 09:03:26 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2] platform: olpc: use SPI device ID data to bind device
+Date:   Thu, 16 Mar 2023 17:03:24 +0100
+Message-Id: <20230316160324.78856-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+The driver defines spi_device_id table for module autoloading, but does
+not use it in id_table which causes W=1 warning:
 
-On Thu, 2023-03-16 at 15:51 +0100, Hans de Goede wrote:
-> Hi David,
->=20
-> On 3/15/23 19:33, David E. Box wrote:
-> > On Intel SoCs, registers for the Power Management Controller are availa=
-ble
-> > in the PCI BAR of the SSRAM device, 0000:14.2. On Meteor Lake, these
-> > registers are structured in Intel PMT Telemetry regions which could be
-> > handled by the pmt_telemetry driver. This series adds APIs to the
-> > intel_vsec and pmt_telemetry drivers so that pmc_core driver can both
-> > create the telemetry instance from the SSRAM device and register for a
-> > handle to read the telemetry which contains the low power mode requirem=
-ents
-> > for the S0ix states supported by Meteor Lake. The series also adds some
-> > fixes.
->=20
-> Thank you for the series. I notice that none of these patches have a Revi=
-ewed-
-> by nor a Tested-by from some other Intel developers.
->=20
-> It really helps if you can get someone other Intel kernel people to revie=
-w and
-> test your patches and then add their tags before posting a large(ish) ser=
-ies
-> like this upstream.
+  drivers/platform/olpc/olpc-xo175-ec.c:737:35: error: ‘olpc_xo175_ec_id_table’ defined but not used [-Werror=unused-const-variable=]
 
-Sure. About 5 of these, though related, are small and can be sent separatel=
-y.
-I'll send those first and get Intel review for the others. Since this small=
-er
-batch won't be enabling telemetry, as in the cover letter title, I'll send =
-as a
-new series.
+Reference the SPI device ID table, so it can be also used for device
+binding.
 
-David
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->=20
-> Regards,
->=20
-> Hans
->=20
->=20
->=20
->=20
->=20
-> >=20
-> > David E. Box (6):
-> > =C2=A0 platform/x86/intel/vsec: Explicitly enable capabilities
-> > =C2=A0 platform/x86/intel/vsec: Add base address field
-> > =C2=A0 platform/x86/intel/pmt: Add INTEL_PMT module namespace
-> > =C2=A0 platform/x86/intel/pmt: telemetry: Add telemetry read functions
-> > =C2=A0 platform/x86/intel/pmt/telemetry: Add driver version
-> > =C2=A0 platform/x86/intel/pmc: Add Intel PMT support for MTL PMC
-> >=20
-> > Gayatri Kammela (1):
-> > =C2=A0 platform/x86/intel/vsec: Add intel_vsec_register
-> >=20
-> > Rajvi Jingar (1):
-> > =C2=A0 platform/x86/intel/pmc: Alder Lake slp_s0_residency fix
-> >=20
-> > Xi Pardee (3):
-> > =C2=A0 platform/x86:intel/pmc: Combine core_init and core_configure fun=
-ction
-> > =C2=A0 platform/x86:intel/pmc: Move get_low_power_modes function
-> > =C2=A0 platform/x86/intel/pmc/mtl: get LPM information using Intel PMT
-> >=20
-> > =C2=A0drivers/platform/x86/intel/pmc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 1 +
-> > =C2=A0drivers/platform/x86/intel/pmc/adl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 17 +-
-> > =C2=A0drivers/platform/x86/intel/pmc/cnp.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 17 +-
-> > =C2=A0drivers/platform/x86/intel/pmc/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 71 +++++---
-> > =C2=A0drivers/platform/x86/intel/pmc/core.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 24 +--
-> > =C2=A0drivers/platform/x86/intel/pmc/icl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 11 +-
-> > =C2=A0drivers/platform/x86/intel/pmc/mtl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 187 ++++++++++++++++++-
-> > =C2=A0drivers/platform/x86/intel/pmc/spt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 11 +-
-> > =C2=A0drivers/platform/x86/intel/pmc/tgl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 17 +-
-> > =C2=A0drivers/platform/x86/intel/pmt/class.c=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 48 +++--
-> > =C2=A0drivers/platform/x86/intel/pmt/class.h=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 35 ++--
-> > =C2=A0drivers/platform/x86/intel/pmt/crashlog.c=C2=A0 |=C2=A0=C2=A0 3 +=
--
-> > =C2=A0drivers/platform/x86/intel/pmt/telemetry.c | 199 ++++++++++++++++=
-++++-
-> > =C2=A0drivers/platform/x86/intel/pmt/telemetry.h | 120 +++++++++++++
-> > =C2=A0drivers/platform/x86/intel/vsec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 131 ++++++--------
-> > =C2=A0drivers/platform/x86/intel/vsec.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 64 ++++++-
-> > =C2=A016 files changed, 790 insertions(+), 166 deletions(-)
-> > =C2=A0create mode 100644 drivers/platform/x86/intel/pmt/telemetry.h
-> >=20
-> >=20
-> > base-commit: 02c464b73645404654359ad21f368a13735e2850
->=20
+---
+
+Changes since v1:
+1. Rework the patch - reference the ID table instead of __maybe_unused.
+---
+ drivers/platform/olpc/olpc-xo175-ec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
+index 4823bd2819f6..62ccbcb15c74 100644
+--- a/drivers/platform/olpc/olpc-xo175-ec.c
++++ b/drivers/platform/olpc/olpc-xo175-ec.c
+@@ -746,6 +746,7 @@ static struct spi_driver olpc_xo175_ec_spi_driver = {
+ 		.of_match_table = olpc_xo175_ec_of_match,
+ 		.pm = &olpc_xo175_ec_pm_ops,
+ 	},
++	.id_table	= olpc_xo175_ec_id_table,
+ 	.probe		= olpc_xo175_ec_probe,
+ 	.remove		= olpc_xo175_ec_remove,
+ };
+-- 
+2.34.1
 
