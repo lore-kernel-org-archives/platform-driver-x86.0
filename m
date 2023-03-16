@@ -2,100 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7268EC6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 16:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86FC6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 17:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjCPQDq (ORCPT
+        id S229735AbjCPRc2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 12:03:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
+        Thu, 16 Mar 2023 13:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjCPQDo (ORCPT
+        with ESMTP id S229464AbjCPRc1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 12:03:44 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F1E4EF8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 09:03:28 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id z21so9656872edb.4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 09:03:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678982606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E+5yg6ZbQ0SExT381wy7aXWOHC1xlGr+X1Ld1SU9mtg=;
-        b=z4O3i0DZ3ieWCRjy4RmXqfnsyzxRFtTCrznus41qB8MuYY98Fwdr9s86/FXDA07oT4
-         zETWMQ2qCzzw0dwcqtUg0zgdQ+3Ao/ffxQuWhTOxWTHDjc4ZHZz9qP20IZ0oQoe8uwRL
-         H4Y1eHbesJ4RIMyPXszDXGlM1lN9wWExp7cMt2eu1EGxdFAa34+fFMoSWqBIJRsJpBa2
-         1rXh0xzg3a6dziif4FVghXllwaMNRONBwX94RgGZYcm0QzZpeTLorQ12CQ/NCorvbZN0
-         F2Hmk0HS5vcWzOrIRnUIY46Lp4gFl7B48DxkJ9ePr2q4FOX++wYjRXBCnuKe2MQz7wip
-         Fclw==
+        Thu, 16 Mar 2023 13:32:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D14AD03C
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 10:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678987873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/08vluPjzxrx+ms2g2CAdKVV//z599hvAytsqxrTszw=;
+        b=bo0rsUGJTEIKkFAchoGwEwfBWWJUwrw+fNUUUHNSfXqBK0d86f8AlwDBVKwn0uH7hgrFKD
+        ueVaVV40fRwgTylTVbYEksNmMIwBBWiwjYHbhx2Fh6GSCTm9fIlHr+5MM0k2pG5sLxfKPB
+        0RC3WBZFlqs3GFiVkslta8Hw72YClww=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-8NyrHGE0NGCW6gbXYuE-rw-1; Thu, 16 Mar 2023 13:31:10 -0400
+X-MC-Unique: 8NyrHGE0NGCW6gbXYuE-rw-1
+Received: by mail-wm1-f69.google.com with SMTP id j6-20020a05600c1c0600b003eaf882cb85so939193wms.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 10:31:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678982606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E+5yg6ZbQ0SExT381wy7aXWOHC1xlGr+X1Ld1SU9mtg=;
-        b=olBCaa+Ec3O8W1aWsfKMjGR65710CFzvXkNA1i/3lmFgRqrzbv/zkatPS0K8GT4v+z
-         ykSspAv+sCCb5LLeT+p/zKkKEO/dsRpztNt5BBbrYWCCZ6AfL30DDf1nkCfZsQKqATPH
-         QuPHEPk/qmA0JyDX8JGuW+0Ph8Z9PNx5aUAaPYlPCrg5ai9/3iXgqJ52f68TcCoLqa0t
-         cy+VNT/vJ7nskSdnGpZxTUEUWDhLCKKSnWJdNftvGNpQdz+FheHEu2YV0XxCcaB9MJpJ
-         eEt4MRGSIJIsVjpZTBTUJXkZ7xLox/YEv79yB2g1hmA0wjpHw8xQMSzylxQup9NcHcIu
-         fXOw==
-X-Gm-Message-State: AO0yUKXfkXMuZrVwzyXuwl/sY3a93+MKRuusvgvW/5FMkPfsBan4r1TX
-        8P3xEAgloRqgyQvHseofQeeT2g==
-X-Google-Smtp-Source: AK7set/jElk6KsvQPACSimpCKocXRgKWv4U85ydCqzxJHHxw0Ii/Kx0ZmWgwOC2hxqqYeG6gZFerGg==
-X-Received: by 2002:a17:906:1ed6:b0:92b:ff31:45bc with SMTP id m22-20020a1709061ed600b0092bff3145bcmr10522037ejj.44.1678982606653;
-        Thu, 16 Mar 2023 09:03:26 -0700 (PDT)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:9827:5f65:8269:a95f])
-        by smtp.gmail.com with ESMTPSA id v22-20020a170906859600b009311c9d33d7sm335338ejx.184.2023.03.16.09.03.25
+        d=1e100.net; s=20210112; t=1678987869;
+        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/08vluPjzxrx+ms2g2CAdKVV//z599hvAytsqxrTszw=;
+        b=LGWdIv+YRnTzmMSAlmgZzmoo2mbjMaaoj2z3KDM+pfqt5qDVqYeYYe6NoBbxwP8Bow
+         Xmvvet1D5X4aJfMRQPmRS+Z43zAZshsG4kHMRE3Vd4iGEdeVGOMnoIhyLujTE+mAhud7
+         T2IWoLpvLM8rOXdv1N+dizGfVwdl0FcSJJLSFH/TQQVU6GCr5MVzhSnvj53XrDJf0p0b
+         b7BIbN7q17Q67VAd4lZSBwzJuOuSzV03lWIVPWild2XjjiySFRlCr01p+VnHITgdwZ3G
+         Xgwl0PbyRtYQNggrRc82GqSOcwZAeUxfN3vidrIPooyHj8fImGBErzpDI69przWQZRXx
+         3twA==
+X-Gm-Message-State: AO0yUKUzlnqtqyx92pZl8TgZqfrNti9v0paIi0GqBW63IrZtZZzOEv3r
+        TnSD6/VOQHQpjabbMyYGimYDYR1qG1HlGNcL3XaLDOX5gLrgI7v5C0AclQ/bGsyYomxEBlyEY/9
+        zRxQDDOe+GwWvlwLPDsUsQAA6/FvTjI5nzg==
+X-Received: by 2002:a05:600c:34c3:b0:3eb:5ab3:b6d0 with SMTP id d3-20020a05600c34c300b003eb5ab3b6d0mr22301110wmq.6.1678987869083;
+        Thu, 16 Mar 2023 10:31:09 -0700 (PDT)
+X-Google-Smtp-Source: AK7set8in/lkI4jv3umpLr5SfG/+NupQAriJfTTzpU2lr1Cm4vESkvwCGyoOm7e3Bzmv2djyZ7kNsQ==
+X-Received: by 2002:a05:600c:34c3:b0:3eb:5ab3:b6d0 with SMTP id d3-20020a05600c34c300b003eb5ab3b6d0mr22301088wmq.6.1678987868741;
+        Thu, 16 Mar 2023 10:31:08 -0700 (PDT)
+Received: from localhost ([90.167.94.186])
+        by smtp.gmail.com with ESMTPSA id e25-20020a05600c219900b003ed1fa34bd3sm5477336wme.13.2023.03.16.10.31.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 09:03:26 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        Thu, 16 Mar 2023 10:31:08 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Mark Gross <markgross@kernel.org>,
+        Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
+        Daniel Oliveira Nascimento <don@syst.com.br>,
+        Mattia Dongili <malattia@linux.it>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2] platform: olpc: use SPI device ID data to bind device
-Date:   Thu, 16 Mar 2023 17:03:24 +0100
-Message-Id: <20230316160324.78856-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH 1/3] platform: olpc: mark SPI related data as maybe unused
+In-Reply-To: <51d9b1de-5f22-2085-1d3e-6c29afb44120@redhat.com>
+References: <20230312132624.352703-1-krzysztof.kozlowski@linaro.org>
+ <63814b1b-1297-da4d-79fe-8f2e58e30482@redhat.com>
+ <f9408067-ee3c-9f5b-d1b3-7017113c8026@linaro.org>
+ <51d9b1de-5f22-2085-1d3e-6c29afb44120@redhat.com>
+Date:   Thu, 16 Mar 2023 18:31:07 +0100
+Message-ID: <87o7osli1w.fsf@minerva.mail-host-address-is-not-set>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The driver defines spi_device_id table for module autoloading, but does
-not use it in id_table which causes W=1 warning:
+Hans de Goede <hdegoede@redhat.com> writes:
 
-  drivers/platform/olpc/olpc-xo175-ec.c:737:35: error: ‘olpc_xo175_ec_id_table’ defined but not used [-Werror=unused-const-variable=]
+[...]
 
-Reference the SPI device ID table, so it can be also used for device
-binding.
+>>> Exposing modaliases for a non supported way of binding the driver does not really seem useful ?
+>> 
+>> However binding the device and module loading (uevent) uses sometimes
+>> different pieces. Maybe something changed in kernel, but sometime ago
+>> certain buses where sending uevent for module loading with one ID (e.g.
+>> platform or spi bus) but device matching would be according to OF. Thus
+>> if you did not have entries in spi_device_id, the module would not autoload.
+>> 
+>> It was exactly the case for example here:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c46ed2281bbe4b84e6f3d4bdfb0e4e9ab813fa9d&context=30&ignorews=0&dt=0
+>> 
+>> You needed spi_device_id for proper module autoloading.
+>> 
+>> Unless something change in between in the kernel?
+>
+> Looks like your right, the spi_uevent() code always emits "spi:xxxxxxx" style modalias even for dt/of enumerated devices:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/spi/spi.c#n398
+>
+> So the table needs to stay.
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Yeah, and in fact dropping the spi_device_id table will cause the kernel
+to warn that an spi_device_id entry doesn't exist for a given of_device_id
+entry since commit 5fa6863ba692 ("spi: Check we have a spi_device_id for
+each DT compatible").
 
----
+Fixing that is not trivial because a lot of drivers are rely on current
+behaviour of the SPI core always returning a spi:<dev> modalias. So don't
+even have an OF table, even when the SPI devices are instantiated by DT.
 
-Changes since v1:
-1. Rework the patch - reference the ID table instead of __maybe_unused.
----
- drivers/platform/olpc/olpc-xo175-ec.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
-index 4823bd2819f6..62ccbcb15c74 100644
---- a/drivers/platform/olpc/olpc-xo175-ec.c
-+++ b/drivers/platform/olpc/olpc-xo175-ec.c
-@@ -746,6 +746,7 @@ static struct spi_driver olpc_xo175_ec_spi_driver = {
- 		.of_match_table = olpc_xo175_ec_of_match,
- 		.pm = &olpc_xo175_ec_pm_ops,
- 	},
-+	.id_table	= olpc_xo175_ec_id_table,
- 	.probe		= olpc_xo175_ec_probe,
- 	.remove		= olpc_xo175_ec_remove,
- };
 -- 
-2.34.1
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
