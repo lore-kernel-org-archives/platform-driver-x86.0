@@ -2,109 +2,126 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AAEC6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 19:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34201C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 19:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbjCPTC3 (ORCPT
+        id S229436AbjCPTjb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 15:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        Thu, 16 Mar 2023 15:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjCPTC2 (ORCPT
+        with ESMTP id S229802AbjCPTj3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 15:02:28 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB9DE41DF
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 12:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678993329; x=1710529329;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=hGxbXytV8/qNz0E7ETdmyj1cjJtE9s/nCA+D75Rf0vE=;
-  b=fjR/sx8P28IbS0wh95fXK6IPWcdtKGjH7DJM5FxKsoyK1akwZ8PXitc+
-   ny9i/Me9ZtPy/NSpXOmmzKybrdEZOwHEEJ0H/4JAvPu5/M5aRULQLC6gB
-   DgP6kS/29YR8sV7kyLXpogFQsgbffuzxUAaxBPiJpaI6Pc6HDWTigSN7x
-   qyvJc5fbVbz+mn9/pL8XVj3YeW6atgik7f7/D/VcA02Y7ZgEz93z7uzeD
-   +81bqr57ColrbZpO5WHy9YrNDoH59tRxlhnIGSIJBsdZ2q3QNqPBJrUF1
-   M2sZQIfw2rmyXYY/QwDnMseb++4TzUUQN/OkGo7Botv/QbD2GitdGiTT3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="321944128"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="321944128"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 12:02:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="925864491"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="925864491"
-Received: from mgisomme-mobl1.amr.corp.intel.com ([10.212.42.167])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 12:02:05 -0700
-Message-ID: <c6e93a83e9605ca127483dc3e7dbcf97c6961e06.camel@linux.intel.com>
-Subject: Re: [bug report] platform/x86: ISST: Add IOCTL default callback
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Dan Carpenter <error27@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Date:   Thu, 16 Mar 2023 12:02:04 -0700
-In-Reply-To: <25a8ef35-5274-4990-a683-040aacaa8d3a@kili.mountain>
-References: <25a8ef35-5274-4990-a683-040aacaa8d3a@kili.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Thu, 16 Mar 2023 15:39:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D84226854
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 12:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678995521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DrsdexTuopIeTtA+lpl9gElJgaVgw+CXQW9dVCSQk58=;
+        b=jEA1M216MY7FpDtwGPgUBQ0wlcRYb7ipDeYUo7Go+7M+gbzLn5OzuQkq8G59TuNsjmZZgm
+        hMLTEfC9RjFRBdhoc0zGq8d/DCIHuKJcHM2l+eT3BW/vvL1MXy1xsJ/prW8rIlkTwe3mPL
+        smRAx+zPhEjXhc5zm4Wr/OM1luECmDY=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-219-7KMb99ePPp2LCPmMVtrf8g-1; Thu, 16 Mar 2023 15:38:39 -0400
+X-MC-Unique: 7KMb99ePPp2LCPmMVtrf8g-1
+Received: by mail-ed1-f70.google.com with SMTP id r19-20020a50aad3000000b005002e950cd3so4540289edc.11
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 12:38:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678995518;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DrsdexTuopIeTtA+lpl9gElJgaVgw+CXQW9dVCSQk58=;
+        b=29YHlbCw+sWPjau79Xcxsia6A1gKDJtLrrVdrcWbhYkq0xCCOrSdMF8cZ6CJL6Gaz0
+         VH1Fm/OpGaVZ3ojQFAxSyeURoU/qK2P2uLWdvbKxgP3WBHfL4yDQt0GTR76E7t0PH3Fr
+         RBxobsyAHTYoZmQzX9k5B1OqKSUfZrbuFO2JEkNgYHE+rg3+SeYP1Vm8c/kS7S3PyXQS
+         xo3Fw0GlrPni3/ZNzPcvjh/yI7tNaeUpkN8LzomcugseZjCOZ/w1QmGu+TfSJ5bqfsar
+         eH7raGqntvkfmv1tGOMJWmncvGm3zt8pGFPHW7X3P6Hey1DU+HuZxcO+EXBefHLnYb4v
+         D+Qg==
+X-Gm-Message-State: AO0yUKUZV6x1g9szadh3gJlXeEhQLJxcz+xHz9bodHhvP0P4WnhHgP4C
+        5Ehp48bXLissEoM/P2K0Endq+NbswexEP4unalPDaI5khwWhrSyQavwrbxzw2L6/hzlnlXwwQjE
+        QV0+8XXCBTAYPx3t39cAF46COFEXgol+vIw==
+X-Received: by 2002:aa7:cc8a:0:b0:4af:63a7:7474 with SMTP id p10-20020aa7cc8a000000b004af63a77474mr606975edt.17.1678995518608;
+        Thu, 16 Mar 2023 12:38:38 -0700 (PDT)
+X-Google-Smtp-Source: AK7set99UEbPnuuTZmnOQukCyTBgTS+9LWWoyV4B/2IRIykoUnefR3TeHe9TGUH2J/cTDbErBabowQ==
+X-Received: by 2002:aa7:cc8a:0:b0:4af:63a7:7474 with SMTP id p10-20020aa7cc8a000000b004af63a77474mr606964edt.17.1678995518350;
+        Thu, 16 Mar 2023 12:38:38 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id u20-20020a50a414000000b004fd1ee3f723sm166227edb.67.2023.03.16.12.38.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Mar 2023 12:38:37 -0700 (PDT)
+Message-ID: <bafe3301-7a22-7944-ec80-9c64beb13a49@redhat.com>
+Date:   Thu, 16 Mar 2023 20:38:36 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 6/8] platform/x86/intel/ifs: Implement Array BIST test
+Content-Language: en-US, nl
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
+        sohil.mehta@intel.com
+References: <20230214234426.344960-1-jithu.joseph@intel.com>
+ <20230301015942.462799-1-jithu.joseph@intel.com>
+ <20230301015942.462799-7-jithu.joseph@intel.com>
+ <628e092c-793e-96ce-71f5-80392ad69569@redhat.com>
+ <9dde72aa-a28d-2b0e-7b90-6b1996dbf202@intel.com>
+ <f45c26ae-865b-b7b6-0f2a-5906d9c0a349@redhat.com>
+ <74058e98-2bbc-3f36-7e3d-538fc2323264@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <74058e98-2bbc-3f36-7e3d-538fc2323264@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-SGkgRGFuLAoKT24gRnJpLCAyMDIzLTAzLTEwIGF0IDE0OjU3ICswMzAwLCBEYW4gQ2FycGVudGVy
-IHdyb3RlOgo+IEhlbGxvIFNyaW5pdmFzIFBhbmRydXZhZGEsCj4gCj4gVGhlIHBhdGNoIDMzYzE2
-ZGMxYTJkMTogInBsYXRmb3JtL3g4NjogSVNTVDogQWRkIElPQ1RMIGRlZmF1bHQKPiBjYWxsYmFj
-ayIgZnJvbSBGZWIgMTAsIDIwMjMsIGxlYWRzIHRvIHRoZSBmb2xsb3dpbmcgU21hdGNoIHN0YXRp
-Ywo+IGNoZWNrZXIgd2FybmluZzoKPiAKPiDCoMKgwqDCoMKgwqDCoMKgZHJpdmVycy9wbGF0Zm9y
-bS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfaWZfY29tbW9uLmM6Ngo+IDI5IGlzc3Rf
-aWZfZGVmX2lvY3RsKCkKPiDCoMKgwqDCoMKgwqDCoMKgaW5mbzogcmV0dXJuIGEgbGl0ZXJhbCBp
-bnN0ZWFkIG9mICdyZXQnCj4gCkkgdXNlIHlvdXIgYmxvZwpodHRwczovL2Jsb2dzLm9yYWNsZS5j
-b20vbGludXgvcG9zdC9zbWF0Y2gtc3RhdGljLWFuYWx5c2lzLXRvb2wtb3ZlcnZpZXctYnktZGFu
-LWNhcnBlbnRlcgoKc21hdGNoL3NtYXRjaF9zY3JpcHRzL2tjaGVja2VyIC0tc3BhbW15CmRyaXZl
-cnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVkX3NlbGVjdF9pZi9pc3N0X2lmX2NvbW1vbi5jCiAg
-Q0hFQ0sgICBzY3JpcHRzL21vZC9lbXB0eS5jCiAgQ0FMTCAgICBzY3JpcHRzL2NoZWNrc3lzY2Fs
-bHMuc2gKICBERVNDRU5EIG9ianRvb2wKICBJTlNUQUxMIGxpYnN1YmNtZF9oZWFkZXJzCiAgQ0Mg
-W01dICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYvaXNzdF9pZl9j
-b21tb24ubwogIENIRUNLICAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0
-X2lmL2lzc3RfaWZfY29tbW9uLmMKCkFsc28gdHJpZWQgd2l0aCAKaHR0cHM6Ly9zbWF0Y2guc291
-cmNlZm9yZ2UubmV0LwoKbWFrZSBDSEVDSz0ifi9wYXRoL3RvL3NtYXRjaC9zbWF0Y2ggLXA9a2Vy
-bmVsIiBDPTEgXAogICAgICAgICAgICAgICAgYnpJbWFnZSBtb2R1bGUKCldoYXQgaXMgdGhlIGNv
-cnJlY3Qgd2F5IHRvIHJ1biB0aGlzIHRvIGdldCB0aGlzIGVycm9yPwoKVGhhbmtzLApTcmluaXZh
-cwoKPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYvaXNzdF9pZl9j
-b21tb24uYwo+IMKgwqDCoCA2MTXCoMKgwqDCoMKgwqDCoMKgIGNhc2UgSVNTVF9JRl9NU1JfQ09N
-TUFORDoKPiDCoMKgwqAgNjE2wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY21kX2Ni
-LmNtZF9zaXplID0gc2l6ZW9mKHN0cnVjdAo+IGlzc3RfaWZfbXNyX2NtZCk7Cj4gwqDCoMKgIDYx
-N8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNtZF9jYi5vZmZzZXQgPSBvZmZzZXRv
-ZihzdHJ1Y3QKPiBpc3N0X2lmX21zcl9jbWRzLCBtc3JfY21kKTsKPiDCoMKgwqAgNjE4wqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY21kX2NiLmNtZF9jYWxsYmFjayA9IGlzc3RfaWZf
-bXNyX2NtZF9yZXE7Cj4gwqDCoMKgIDYxOcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJldCA9IGlzc3RfaWZfZXhlY19tdWx0aV9jbWQoYXJncCwgJmNtZF9jYik7Cj4gwqDCoMKgIDYy
-MMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFrOwo+IMKgwqDCoCA2MjHCoMKg
-wqDCoMKgwqDCoMKgIGRlZmF1bHQ6Cj4gwqDCoMKgIDYyMsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGZvciAoaSA9IDA7IGkgPCBJU1NUX0lGX0RFVl9NQVg7ICsraSkgewo+IMKgwqDC
-oCA2MjPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3Ry
-dWN0IGlzc3RfaWZfY21kX2NiICpjYiA9Cj4gJnB1bml0X2NhbGxiYWNrc1tpXTsKPiDCoMKgwqAg
-NjI0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludCBy
-ZXQ7Cj4gwqDCoMKgIDYyNSAKPiDCoMKgwqAgNjI2wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIChjYi0+ZGVmX2lvY3RsKSB7Cj4gwqDCoMKgIDYyN8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgcmV0ID0gY2ItPmRlZl9pb2N0bChmaWxlLAo+IGNtZCwgYXJnKTsKPiDCoMKgwqAgNjI4
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBpZiAoIXJldCkKPiAtLT4gNjI5wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJu
-IHJldDsKPiAKPiBUaGlzIHJldHVybnMgdGhlIGZpcnN0IHRpbWUgc29tZXRoaW5nIHN1Y2NlZWRz
-LsKgIE5vcm1hbGx5IGl0IHdvdWxkIGJlCj4gdGhlIG90aGVyIHdheSBhcm91bmQsIHdoZXJlIHdl
-IHJldHVybiB0aGUgZmlyc3QgdGltZSBzb21ldGhpbmcgZmFpbHMuCj4gSWYgdGhpcyBpcyByZWFs
-bHkgaW50ZW50aW9uYWwgaXQgd291bGQgYmUgYmV0dGVyIHRvIGRvIGFuIGV4cGxpY2l0Cj4gInJl
-dHVybiAwOyIKPiAKPiDCoMKgwqAgNjMwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIH0KPiDCoMKgwqAgNjMxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfQo+IMKgwqDCoCA2MzLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVh
-azsKPiDCoMKgwqAgNjMzwqDCoMKgwqDCoMKgwqDCoCB9Cj4gwqDCoMKgIDYzNCAKPiDCoMKgwqAg
-NjM1wqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Owo+IMKgwqDCoCA2MzYgfQo+IAo+IHJlZ2Fy
-ZHMsCj4gZGFuIGNhcnBlbnRlcgoK
+Hi,
+
+On 3/16/23 19:11, Joseph, Jithu wrote:
+> 
+> 
+> On 3/16/2023 2:59 AM, Hans de Goede wrote:
+> 
+>>
+>> After taking a closer look I do see one unrelated issue with this patch
+>> sysfs.c: run_test_store() does:
+>>
+>>         if (!ifsd->loaded)
+>>                 rc = -EPERM;
+>>         else
+>>                 rc = do_core_test(cpu, dev);
+>>
+>> But AFAICT the loaded check really only applies to the first (intel_ifs_0 device) test type and the 
+>> Array BIST test should work fine when loaded is false.
+>>
+>> So I think that the if (!ifsd->loaded) error check should be moved to 
+>> ifs_test_core() ?
+>>
+> 
+> It is possible that I misinterpreted your comment in my earlier reply. (Thanks Tony for pointing it out)
+
+No you were right I was looking at the current code, not the code after this patch-set is applied.
+
+> Yes I think moving the load check into ifs_test_core() is better than doing it in run_test_store()
+
+Ack, doing that is still a cleaner way of dealing with this.
+
+Regards,
+
+Hans
+
+
 
