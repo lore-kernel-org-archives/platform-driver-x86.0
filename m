@@ -2,80 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F35C6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 12:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987FAC6FD19
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 12:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbjCPMCp (ORCPT
+        id S229542AbjCPMZX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 08:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
+        Thu, 16 Mar 2023 08:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjCPMCo (ORCPT
+        with ESMTP id S229494AbjCPMZW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 08:02:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83341BE5FA
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 05:01:57 -0700 (PDT)
+        Thu, 16 Mar 2023 08:25:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8437CB4F73
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 05:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678968116;
+        s=mimecast20190719; t=1678969476;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zsyuBqNojzRNFuOenBIPWKl1BuAwGYQDoxK4hLpZ4cY=;
-        b=P5iC1fFckamhp8wWFm+ah8+4A+d29BXW82HEFiLC/EkWLAx3q22pg3MY9/QmXkpwBeL8mC
-        6cIaqLtOfcW9cedjHHpGrGOc4Zehj+3lX8ultwI1R9O9ygvK4MZA3gb8htK22GKmhCeU8m
-        gvJnNE6s94ssVApe+85Ex4Q2GYrSiSQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=UtEGr4Rvg0bEC4nbqE2r93Q3GexaD+ubvmKMlTN9TvQ=;
+        b=erYy1GbIiw7MrJVe3r/sbAMtI/7hRYphJdiuHbYV2Y94O6Or+P/JD/yzXcVw/dul/hSV1l
+        2QuVQXisP1+C6ypt4DTGmL4VFGIlnefdZuuuwLYM7eNKdHmexRvq/zdiW0FitGn06W/axf
+        wGd8FYmAKXX1jti/Xf415xoVX+9tOBc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-384-pLkn-HBiNge2acjbQ-awNA-1; Thu, 16 Mar 2023 08:01:55 -0400
-X-MC-Unique: pLkn-HBiNge2acjbQ-awNA-1
-Received: by mail-ed1-f69.google.com with SMTP id z14-20020a05640235ce00b004e07ddbc2f8so2710485edc.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 05:01:55 -0700 (PDT)
+ us-mta-497-udi-NlIaNrSnHi6oILlHXg-1; Thu, 16 Mar 2023 08:24:35 -0400
+X-MC-Unique: udi-NlIaNrSnHi6oILlHXg-1
+Received: by mail-ed1-f71.google.com with SMTP id w6-20020a05640234c600b004fc0e5b4433so2755442edc.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 05:24:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678968114;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1678969474;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zsyuBqNojzRNFuOenBIPWKl1BuAwGYQDoxK4hLpZ4cY=;
-        b=ljhFLUkGD6UmtFDESVe8TjfiC3BXx1w5TJ8JGiS13LAgHyJOLzdCFCZONF65xvCriT
-         AV+iaHGjm2QKYGTLIykRK4xhUCriQsB1fHeA2b7jBxmUXqWAu8Tyzb60nM9Eispa+f1s
-         xvGXiMFy6H4lMnMKx6GI6Yq9Cv6cLjKlk4oeSHBJZnMoOiNgzKSIb0A16jdz7FDMxmQC
-         wuuRqdyBVUGs5bf40mBMunAQ8R/g/MbCQSNoN8I96wOVwv2scDtzVPPFCyvgg+/O/gWy
-         eSPQef7Curd+U6LtChwKOl4y5/pMOZ0AdpP8l13cagdg1+tB8FI3T+WsvJUFMmXyXG3v
-         PSgA==
-X-Gm-Message-State: AO0yUKWt9t0qSriBR2Wd+xg4HkqUpnFq2uiMqE7Lh8WMmsvO0F6hC6KB
-        vBjksl9/4XACe1TSwexN8vCyl3+34l6FCGBzwxutuVS7ekVF9OAZx2yxRRUe7sabNW52SnkBvgp
-        YmNar0iujV5oEt+zhqN1efOltAIasQfZ6/RzFCj/RGw==
-X-Received: by 2002:a17:906:5792:b0:8b0:2440:3903 with SMTP id k18-20020a170906579200b008b024403903mr9941470ejq.6.1678968114003;
-        Thu, 16 Mar 2023 05:01:54 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+gtnpGoHAVPNrilEVy5W38KHJqcVtUHQLDqtM3ObIzoY97rGE30juaPeRQOHsnH28jbgawtw==
-X-Received: by 2002:a17:906:5792:b0:8b0:2440:3903 with SMTP id k18-20020a170906579200b008b024403903mr9941437ejq.6.1678968113674;
-        Thu, 16 Mar 2023 05:01:53 -0700 (PDT)
+        bh=UtEGr4Rvg0bEC4nbqE2r93Q3GexaD+ubvmKMlTN9TvQ=;
+        b=tpo8gCLuWitPq6N+uRZboOY7Vkbg8xhUZdVcF1s9XC95HYG2FuvY692v0F7oPqHydG
+         0bXPaXWyhIVmRR9uzumROtdf2w2LOvRQtOZQuUtXlwqvs4dsNSuz8VyqaUPc72AAVZ+b
+         0QhPRd7rNXK7y+saP3U20kZ8qYLlR7BFmyzNLsymGihvlueuxrlCOrVChXmc8Ph4lfTr
+         5zawUS1rnjnBs1ewwJByq1SX2LbkpnYMkYjWuvFF5E2sLOeHlGGn/Ih3GJ3FneEzkEzd
+         LuetjAX+nZJvZ24qsROdQsjFR3+L06y6nIux0J1JdfY0A/DAgeE765gybxa9WHnhFdgx
+         qpTw==
+X-Gm-Message-State: AO0yUKVoLsGRNhDmBTdSB0gOAB6rKxFDvQn798HklbjLoG3ADV86w3eg
+        Pn4wvzgSczTM0c3og2xl1yb+Ypri85FHm8d2/YbHHCQCK7ZO6Wzaz4hHbclNqNjHLdYDERCthD6
+        PIDTtXUg2gTiCXcFK+n4ygvuHSV+kTLrUiQ==
+X-Received: by 2002:aa7:cc94:0:b0:4fd:21a6:a649 with SMTP id p20-20020aa7cc94000000b004fd21a6a649mr5834407edt.40.1678969474414;
+        Thu, 16 Mar 2023 05:24:34 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+WSRrCcr4bhPevwESZvKp7mYRo9xb3YCiMBm28uvFHEvtfafm5xMQQkMOSDAEjaTIY5YVHog==
+X-Received: by 2002:aa7:cc94:0:b0:4fd:21a6:a649 with SMTP id p20-20020aa7cc94000000b004fd21a6a649mr5834393edt.40.1678969474168;
+        Thu, 16 Mar 2023 05:24:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q6-20020a50aa86000000b004af5968cb3bsm3810490edc.17.2023.03.16.05.01.52
+        by smtp.gmail.com with ESMTPSA id v1-20020a50c401000000b004acbda55f6bsm3776310edf.27.2023.03.16.05.24.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Mar 2023 05:01:53 -0700 (PDT)
-Message-ID: <c8f12f66-829d-0222-9dde-80211d256e0b@redhat.com>
-Date:   Thu, 16 Mar 2023 13:01:52 +0100
+        Thu, 16 Mar 2023 05:24:33 -0700 (PDT)
+Message-ID: <33889d76-ec46-6154-106f-d3603960adc9@redhat.com>
+Date:   Thu, 16 Mar 2023 13:24:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2] platform/x86: Add new msi-ec driver
-To:     Nikita Kravets <teackot@gmail.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Jose Angel Pastrana <japp0005@red.ujaen.es>,
-        Aakash Singh <mail@singhaakash.dev>
-References: <20230311144054.8754-1-teackot@gmail.com>
- <iPt1Reo37oGFvlRdQOY-3kZypWeV0pRah5oZ17K4xUOkeMqE7E43XQVyUX0A4a6oeEc1hPPzbjKcU3NznXUA3fnmp-foM3vuFSnA4YcFTDQ=@protonmail.com>
- <CAPXvF05AurS89f6bNg_5-VCS=vX=qMXbKgSdv5-wwBb8J3Xdcw@mail.gmail.com>
- <badebe08-7c9b-6f34-b938-b14c06a57985@redhat.com>
- <CAPXvF05Sp6jVGaMMPaSfFtaz=Ogt46E2fibu2Q_zBh=HnQzhGA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] apple-gmux: Update apple_gmux_detect documentation
 Content-Language: en-US, nl
+To:     Orlando Chamberlain <orlandoch.dev@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20230309104353.10905-1-orlandoch.dev@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAPXvF05Sp6jVGaMMPaSfFtaz=Ogt46E2fibu2Q_zBh=HnQzhGA@mail.gmail.com>
+In-Reply-To: <20230309104353.10905-1-orlandoch.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -84,52 +79,53 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/15/23 15:29, Nikita Kravets wrote:
-> Hi,
+On 3/9/23 11:43, Orlando Chamberlain wrote:
+> Commit fc83fbc80e1a ("platform/x86: apple-gmux: refactor gmux types")
+> neglected to update the documentation of apple_gmux_detect's arguments.
+> Update the documentation to reflect that commit's changes.
 > 
->> Note most drivers/platform/x86 drivers do indeed use /* ... */, so I would not mind if you convert the comments
+> include/linux/apple-gmux.h:99: warning:
+> 	Function parameter or member 'type_ret' not described in 'apple_gmux_detect'
+> include/linux/apple-gmux.h:99: warning:
+> 	Excess function parameter 'indexed_ret' description in 'apple_gmux_detect'
 > 
-> Okay, I'll do it then
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Link: https://lore.kernel.org/lkml/20230309122822.77435e33@canb.auug.org.au/
+> Fixes: fc83fbc80e1a ("platform/x86: apple-gmux: refactor gmux types")
+> Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
 
-Thank you.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
->> But I guess it might be better to put that on the TODO list somewhere and do it once the module has had some more testing.
->>
->> E.g. I should really test this on my desktop's MSI B550M PRO-VDH board and see what it does there (hopefully nothing).
-> 
-> By design it should fail to load on your motherboard since ec_read()
-> will return with
-> ENODEV if EC isn't present, or read an incompatible version if it is.
-> Some testing would be good, so we can add a DMI table in the next set
-> of patches.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Ok I have tested this on the 2 MSI devices I have access to:
-
-MSI B550M PRO-VDH desktop motherboard:
--Does not have an ACPI EC device, so the first ec_read()
- fails with -ENODEV
-
-MSI S270 (ancient) laptop
--To my surprise this one does have an ACPI EC device,
- load_configuration() fails with:
- "msi_ec: Your firmware version is not supported!"
- Note:
- 1) It would be good to log the not supported version.
- 2) Since hitting this is expected on unsupported models this should IMHO be changed
-    from a pr_err to a pr_warn
- 3) This laptop's EC is currently supported by the old msi-laptop kernel driver
-    and this driver is necessary for backlight control at least.
-
-
-> I have a question about naming. We have the fn_super_swap
-> configuration parameter,
-> but I noticed that in the kernel code the Super key is often called Meta.
-> Should I also rename it to fn_meta_swap or stick with 'Super'?
-
-Either way is fine meta/super are both used in various places of the stack. Probably best to keep it as is to keep compatibility for existing msi-ec users.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
+
+> ---
+>  include/linux/apple-gmux.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
+> index 272f63f8fd7c..a7a7d430024b 100644
+> --- a/include/linux/apple-gmux.h
+> +++ b/include/linux/apple-gmux.h
+> @@ -86,7 +86,7 @@ static inline bool apple_gmux_is_mmio(unsigned long iostart)
+>   * apple_gmux_detect() - detect if gmux is built into the machine
+>   *
+>   * @pnp_dev:     Device to probe or NULL to use the first matching device
+> - * @indexed_ret: Returns (by reference) if the gmux is indexed or not
+> + * @type_ret: Returns (by reference) the apple_gmux_type of the device
+>   *
+>   * Detect if a supported gmux device is present by actually probing it.
+>   * This avoids the false positives returned on some models by
 
