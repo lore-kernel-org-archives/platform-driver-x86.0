@@ -2,207 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47418C6FD19
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 13:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E314FC74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Mar 2023 14:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjCPNuf (ORCPT
+        id S230227AbjCPOHa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Mar 2023 09:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
+        Thu, 16 Mar 2023 10:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbjCPNue (ORCPT
+        with ESMTP id S231142AbjCPOHY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2023 09:50:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9DF83DA
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 06:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678974587;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=S8gcYdCXFrCHWug0ZbLiId66xJ6yNt/t9Gqv4mKkphs=;
-        b=BL8vvZZ8rN0h9bd6r+alHmrX4uNj+tDEwu0CNZVJHCTltX200CX9SvJ6r++QNF0HJvwT91
-        n/CrCNx9CA3XqMWFM1BWDBSvXBgn5tRy/xwWdVrCESS+1WRUN/VdZMvgUBTICSwsaSC/Hg
-        Kga8tBUW0uGw70LxQMeaHrmLUfez6Kg=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-dkI-a1fFNliyPtyblMjIhg-1; Thu, 16 Mar 2023 09:49:46 -0400
-X-MC-Unique: dkI-a1fFNliyPtyblMjIhg-1
-Received: by mail-ed1-f69.google.com with SMTP id j21-20020a508a95000000b004fd82403c91so3148157edj.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 06:49:46 -0700 (PDT)
+        Thu, 16 Mar 2023 10:07:24 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A4AD5A44
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:07:13 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id r11so8192564edd.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Mar 2023 07:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678975632;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vl2G8fQRahhPon9XEcdzVyB1ry8SBgpUDqgOjczwYZY=;
+        b=DoiYPLq9l9cP6YEznSL9+XtbHnikXbrNugbzt/uUvVQHwZzjDlfrhYnrzpSUboZ5SR
+         lkw0BRqfynW4n0i3TGbEvABAMz5yNuRgQXhnKev5WJ2BAdYL5oFqjfUfNwG2zkj3xP7C
+         cWNUD/Vr9hJXJpuLJFaGWM3DTUtvAjDo/PuSUIbpsXhOuAMoxU3JDTwCEkF/kWc8LEYw
+         icLtmsMCMOSKz8cEXjb121u5jd9q+yCOPo+kCkluI5eJ0B+IGDIBiV+fd5QFT/taElUU
+         Ump3eYx9GmGnzBsuFKbiTfPLqT7Ew4JLx194MJAxcWoEgVXhmUGm8QA5ggMCJQQyu/nq
+         Bokg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678974585;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20210112; t=1678975632;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S8gcYdCXFrCHWug0ZbLiId66xJ6yNt/t9Gqv4mKkphs=;
-        b=rxSdRlrfBV4Sj9jERtN0RUCEaX4z4UNlgdMlLXGwZN/tQSBV8nrOzQQ07xEQ9YXg/Z
-         uk1NizvcNKsp5htowFzTGsuNgUqwTcIYn0KgiuZhMsZV+ScJRwZn7p934Xh7UgnidLFP
-         m11ty1Sml2s6zJjIv6ISaQOETYBlt1TeYEiISsWmvNY+pWHwM50GV2da6gJdFSt9KcYl
-         fd1bE4lU8uIOhydPhszRAhyve6zdnZdEJ88v+HqGH/4Mp2X9KgyHKYra0UPl4Z2b3Hmf
-         dtRfqrYZcED25MIvvjLt+739xf5ikOCjDAztoGUqIbPmSNDaBbjYVuKNAcCAG5N86RDZ
-         zT6A==
-X-Gm-Message-State: AO0yUKWD2SUeiwtvfIf5pdRPt11PnTWvYM1JPqbsCmRFb8po5V8l+EOD
-        gGZSKxukW2wvYJBBwq+BVNFhV84D/Ez6Rz4EunmdRNi83fPoGvD8L3OAtxhhrUKISzhGsnsHL0q
-        o/QOJjpdhA/RlVGNKrt22u7ZMAyCmOY4ZTg==
-X-Received: by 2002:a17:907:7609:b0:925:a96a:8b98 with SMTP id jx9-20020a170907760900b00925a96a8b98mr9623662ejc.67.1678974585359;
-        Thu, 16 Mar 2023 06:49:45 -0700 (PDT)
-X-Google-Smtp-Source: AK7set8V/tBTDRK2wbpXPYkzR7kHk5YzVUqm8+mGtRBQbQUtv77VK+ssdF8ENomBd7Bj12xfZpXOUg==
-X-Received: by 2002:a17:907:7609:b0:925:a96a:8b98 with SMTP id jx9-20020a170907760900b00925a96a8b98mr9623648ejc.67.1678974585121;
-        Thu, 16 Mar 2023 06:49:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id wt10-20020a170906ee8a00b0092ce8344078sm3448927ejb.33.2023.03.16.06.49.44
+        bh=Vl2G8fQRahhPon9XEcdzVyB1ry8SBgpUDqgOjczwYZY=;
+        b=AGE2HsFGoYNETDUQO8EOmvUQE+Norqrqc8wjuN+vs+Bgzmm7BkGkjj5gIy21ZJp2pL
+         wbFhKWF9pZiRa3GII/xQ/AESOXfN7ZiFi7F0tashDdtZ4knTs7K2S6+SoIW95E/6HGjI
+         dVp6Zmb+vFrMx3lv18uiiagqdDVHpJ3Go21HnBy/NUFQ01ayGLOPO9WDw9/a1mWrChCd
+         9/qvot5iJRLfwdNjHYAZsF6hssJ3MQYyew4vh28KXlAQN3UlgUHagVIF3xeJDDpPwhT0
+         qVMAR/WEQHzNeAi0POowWXtkR0VEEcfvp7Z1Tx+veuGqO2PmZAYcQXjDUylVo3e9FINj
+         iuiQ==
+X-Gm-Message-State: AO0yUKV5DPSjjVJxEnAQ70rxpRGKOcTfpEoi1aJ3R240GozVnCzZQqiA
+        nb82o31Cg3hzZcUkC/Ptdx/Z+w==
+X-Google-Smtp-Source: AK7set+eOw09OaHj/BkhCQOeEUdqEC+QfrZvzNMU+DOME1nyb5o4GzOQAe2V475ttHJinEpvGwu+9A==
+X-Received: by 2002:a17:906:131a:b0:8b1:7eb7:d53d with SMTP id w26-20020a170906131a00b008b17eb7d53dmr10056239ejb.49.1678975631786;
+        Thu, 16 Mar 2023 07:07:11 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:9827:5f65:8269:a95f? ([2a02:810d:15c0:828:9827:5f65:8269:a95f])
+        by smtp.gmail.com with ESMTPSA id op13-20020a170906bced00b008c607dd7cefsm3899196ejb.79.2023.03.16.07.07.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Mar 2023 06:49:44 -0700 (PDT)
-Message-ID: <8df8f02c-6dd0-e9bd-e2de-6b0d132b2b77@redhat.com>
-Date:   Thu, 16 Mar 2023 14:49:44 +0100
+        Thu, 16 Mar 2023 07:07:11 -0700 (PDT)
+Message-ID: <f9408067-ee3c-9f5b-d1b3-7017113c8026@linaro.org>
+Date:   Thu, 16 Mar 2023 15:07:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V2] platform/x86: dell-laptop: Register ctl-led for
- speaker-mute
-Content-Language: en-US, nl
-To:     Koba Ko <koba.ko@canonical.com>, Mark Gross <markgross@kernel.org>,
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 1/3] platform: olpc: mark SPI related data as maybe unused
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
+        Daniel Oliveira Nascimento <don@syst.com.br>,
+        Mattia Dongili <malattia@linux.it>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230308062414.1048913-1-koba.ko@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230308062414.1048913-1-koba.ko@canonical.com>
+References: <20230312132624.352703-1-krzysztof.kozlowski@linaro.org>
+ <63814b1b-1297-da4d-79fe-8f2e58e30482@redhat.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <63814b1b-1297-da4d-79fe-8f2e58e30482@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 3/8/23 07:24, Koba Ko wrote:
-> Some platforms have the speaker-mute led and
-> current driver doesn't control it.
+On 16/03/2023 13:50, Hans de Goede wrote:
+> Hi Krzysztof,
 > 
-> If the platform support the control of speaker-mute led, register it
+> On 3/12/23 14:26, Krzysztof Kozlowski wrote:
+>> The driver can be compile tested as built-in making certain data unused:
+>>
+>>   drivers/platform/olpc/olpc-xo175-ec.c:737:35: error: ‘olpc_xo175_ec_id_table’ defined but not used [-Werror=unused-const-variable=]
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  drivers/platform/olpc/olpc-xo175-ec.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
+>> index 4823bd2819f6..04573495ef5a 100644
+>> --- a/drivers/platform/olpc/olpc-xo175-ec.c
+>> +++ b/drivers/platform/olpc/olpc-xo175-ec.c
+>> @@ -734,7 +734,7 @@ static const struct of_device_id olpc_xo175_ec_of_match[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(of, olpc_xo175_ec_of_match);
+>>  
+>> -static const struct spi_device_id olpc_xo175_ec_id_table[] = {
+>> +static const struct spi_device_id olpc_xo175_ec_id_table[] __maybe_unused = {
+>>  	{ "xo1.75-ec", 0 },
+>>  	{}
+>>  };
+>>  MODULE_DEVICE_TABLE(spi, olpc_xo175_ec_id_table);
 > 
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> The whole presence of the olpc_xo175_ec_id_table[] seems to make little sense.
+> 
+> This should be referenced by:
+> 
+> static struct spi_driver olpc_xo175_ec_spi_driver = {
+> 
+> Like this:
+> 
+>         .probe          = olpc_xo175_ec_probe,
+>         .remove         = olpc_xo175_ec_remove,
+> +       .id_table       = olpc_xo175_ec_id_table,
 
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
+Yes, it should.
 
 > 
-> V2: Remove the dell-privacy rule for speaker-mute.
-> ---
->  drivers/platform/x86/dell/dell-laptop.c | 42 +++++++++++++++++++++++++
->  drivers/platform/x86/dell/dell-smbios.h |  2 ++
->  2 files changed, 44 insertions(+)
+> Otherwise those ids cannot be used to load the driver the non DT/of way. Since the driver assumingly does actually bind already this means that it is only used the DT/of way and it seems to me that the whole olpc_xo175_ec_id_table[] can be removed entirely.
 > 
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index e92c3ad06d696..5ed628617f63c 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -97,6 +97,7 @@ static struct rfkill *bluetooth_rfkill;
->  static struct rfkill *wwan_rfkill;
->  static bool force_rfkill;
->  static bool micmute_led_registered;
-> +static bool mute_led_registered;
->  
->  module_param(force_rfkill, bool, 0444);
->  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
-> @@ -2177,6 +2178,34 @@ static struct led_classdev micmute_led_cdev = {
->  	.default_trigger = "audio-micmute",
->  };
->  
-> +static int mute_led_set(struct led_classdev *led_cdev,
-> +			   enum led_brightness brightness)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	struct calling_interface_token *token;
-> +	int state = brightness != LED_OFF;
-> +
-> +	if (state == 0)
-> +		token = dell_smbios_find_token(GLOBAL_MUTE_DISABLE);
-> +	else
-> +		token = dell_smbios_find_token(GLOBAL_MUTE_ENABLE);
-> +
-> +	if (!token)
-> +		return -ENODEV;
-> +
-> +	dell_fill_request(&buffer, token->location, token->value, 0, 0);
-> +	dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct led_classdev mute_led_cdev = {
-> +	.name = "platform::mute",
-> +	.max_brightness = 1,
-> +	.brightness_set_blocking = mute_led_set,
-> +	.default_trigger = "audio-mute",
-> +};
-> +
->  static int __init dell_init(void)
->  {
->  	struct calling_interface_token *token;
-> @@ -2230,6 +2259,15 @@ static int __init dell_init(void)
->  		micmute_led_registered = true;
->  	}
->  
-> +	if (dell_smbios_find_token(GLOBAL_MUTE_DISABLE) &&
-> +	    dell_smbios_find_token(GLOBAL_MUTE_ENABLE)) {
-> +		mute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MUTE);
-> +		ret = led_classdev_register(&platform_device->dev, &mute_led_cdev);
-> +		if (ret < 0)
-> +			goto fail_led;
-> +		mute_led_registered = true;
-> +	}
-> +
->  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		return 0;
->  
-> @@ -2277,6 +2315,8 @@ static int __init dell_init(void)
->  fail_backlight:
->  	if (micmute_led_registered)
->  		led_classdev_unregister(&micmute_led_cdev);
-> +	if (mute_led_registered)
-> +		led_classdev_unregister(&mute_led_cdev);
->  fail_led:
->  	dell_cleanup_rfkill();
->  fail_rfkill:
-> @@ -2299,6 +2339,8 @@ static void __exit dell_exit(void)
->  	backlight_device_unregister(dell_backlight_device);
->  	if (micmute_led_registered)
->  		led_classdev_unregister(&micmute_led_cdev);
-> +	if (mute_led_registered)
-> +		led_classdev_unregister(&mute_led_cdev);
->  	dell_cleanup_rfkill();
->  	if (platform_device) {
->  		platform_device_unregister(platform_device);
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
-> index 75fa8ea0476dc..eb341bf000c67 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -34,6 +34,8 @@
->  #define KBD_LED_AUTO_100_TOKEN	0x02F6
->  #define GLOBAL_MIC_MUTE_ENABLE	0x0364
->  #define GLOBAL_MIC_MUTE_DISABLE	0x0365
-> +#define GLOBAL_MUTE_ENABLE	0x058C
-> +#define GLOBAL_MUTE_DISABLE	0x058D
->  
->  struct notifier_block;
->  
+> Exposing modaliases for a non supported way of binding the driver does not really seem useful ?
+
+However binding the device and module loading (uevent) uses sometimes
+different pieces. Maybe something changed in kernel, but sometime ago
+certain buses where sending uevent for module loading with one ID (e.g.
+platform or spi bus) but device matching would be according to OF. Thus
+if you did not have entries in spi_device_id, the module would not autoload.
+
+It was exactly the case for example here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c46ed2281bbe4b84e6f3d4bdfb0e4e9ab813fa9d&context=30&ignorews=0&dt=0
+
+You needed spi_device_id for proper module autoloading.
+
+Unless something change in between in the kernel?
+
+(+CC Javier, author of that commit)
+
+Best regards,
+Krzysztof
 
