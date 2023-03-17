@@ -2,158 +2,117 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D8FC6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 09:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE86C74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 10:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbjCQJpI (ORCPT
+        id S229703AbjCQKXL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Mar 2023 05:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37330 "EHLO
+        Fri, 17 Mar 2023 06:23:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjCQJpG (ORCPT
+        with ESMTP id S230063AbjCQKXJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2023 05:45:06 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510BE23316
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Mar 2023 02:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1679046268; i=w_armin@gmx.de;
-        bh=yxSFHvriz27QOYN7m2q9c9gBrBoiIPaYY0YXL2lfiN8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=NovAEMUMhlNFmhTIFe6+wQLUyhLs3fKTCA9UVd+8MLTtMyOrBldS3/JFmiy6NcnOm
-         HnfD5ORC9Dq9lI/9tujn8nuVE+6HS67lhIJnejjGKO4WlscoZtqV+zw9eZuDtgtTbF
-         BegDYOAAjsUcL/x9wTftv+fCE6uNCVn5dDN2Md1X/Fu9UyabKH+bd2pGo0bq0HWpkG
-         Z4JcxF+QFUdj6FUvCxABg6X0uQj2UO4qWBBvmMkQ8UX+se48R+ljWo/EksGcX/uGF6
-         tAxchhu28t+EmJj6TQT/hf1O5mH1nvPRJBk0sdaQVHqoOmQF/bXddMQlD9zlDELhyj
-         7RxPZr1hsECxA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.42.62] ([46.114.207.63]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N33ET-1qeFpR0gkX-013Lkb; Fri, 17
- Mar 2023 10:44:28 +0100
-Subject: Re: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
+        Fri, 17 Mar 2023 06:23:09 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A824590B76;
+        Fri, 17 Mar 2023 03:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679048587; x=1710584587;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=+Cxq+enE7gfxkijORsOhk3oEYP+Z4v+5j0Oidn1pDvM=;
+  b=kU4KRGF2xV9HIDTFqLNzE8gDrS4An+EeRAq9o7T+/ovXYOcakdNOhSV5
+   6xJT9bhCIQ0vRQQF+jtqdk0+dOrugI5elX1kaMQlnL491yYA5hWlGZ91g
+   B/b1kxuKzEXzwgApl81NKgdVZiaNod+6QU8TkTt924HhKQ0DvieuUJkED
+   joJX9gA9RjezK3f6BcM5IprcKNb8BE3S8R1F8P4k/aF8w5OCdeslHs8HH
+   whFMlb6HmjbsFjbDwLzayngulypGfqleHwtpHcCit4BEMcNFuuyKybPqz
+   D2r5Sbe0eM/At9x4PczDC9kUbj8divF/u545zeUlg/5Tw4BMNAjGdzXPX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="322078949"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="322078949"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 03:23:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="630246122"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="630246122"
+Received: from yeonbokl-mobl1.amr.corp.intel.com ([10.212.99.82])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 03:23:04 -0700
+Message-ID: <795de1449650c1c2293f4b52edcfd0cc2d12ca69.camel@linux.intel.com>
+Subject: Re: [PATCH linux-next v2 1/3] platform/x86/intel/tpmi: Fix double
+ free in tpmi_create_device()
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
-        Andrew Kallmeyer <kallmeyeras@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, soyer@irl.hu
-References: <20221004214332.35934-1-soyer@irl.hu>
- <20230310041726.217447-1-kallmeyeras@gmail.com>
- <20230310041726.217447-3-kallmeyeras@gmail.com>
- <91a25bfc-080d-b0e4-46cd-159bbf1346e8@gmx.de>
- <CAG4kvq8GMcw_ytss+e3y9nsaOAk9+m+TSnSBwcqdhqEOUJg_dQ@mail.gmail.com>
- <6592fd8f-f5fa-6144-e8eb-a9e701246ad7@gmx.de>
- <ac9eb4b8-e4b8-c648-c322-c143631102ba@gmx.de>
- <2ab9674c-b7e6-a794-f302-2724f038da97@redhat.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <edf7e0da-eb22-b72b-ecb2-8a0579fac2b9@gmx.de>
-Date:   Fri, 17 Mar 2023 10:43:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Dongliang Mu <dzm91@hust.edu.cn>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 17 Mar 2023 03:23:02 -0700
+In-Reply-To: <7d535885-0bf1-bbeb-7a7e-89e67aaafa1e@redhat.com>
+References: <20230309040107.534716-1-dzm91@hust.edu.cn>
+         <20230309040107.534716-2-dzm91@hust.edu.cn>
+         <dd36a2ab-d465-f857-30c6-3c0094babd31@redhat.com>
+         <559654bbef8483fcd53458824f23814236b0c9e0.camel@linux.intel.com>
+         <40d7cb19-5712-9754-b7bd-2b582055c929@hust.edu.cn>
+         <7d535885-0bf1-bbeb-7a7e-89e67aaafa1e@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <2ab9674c-b7e6-a794-f302-2724f038da97@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:Wd3Dw5gVY5q6DCcgB5x62yMINqS6uJd9Ykd+SYgIv13NZ/wVfn1
- oLjvxSse+LgVhEcJjkLhxUnAJrG+8rMdtonkHJpVy7xFuZ1yIJ/JLcZiSHr6jNI+R/BYDdX
- pzYNLY4ND6XA0Z9h1TOCUNPAxomzT7+qXyakx93DqI61jU1odEdQCQdF1VCrZYBZ/jc7em2
- YPnDXWhz3/qjZQCD4hcRg==
-UI-OutboundReport: notjunk:1;M01:P0:J3JVaIy2w2k=;zGMq4m7nWuRZctrl9lLJtC+f8bX
- eFalaenpcIzOcaraDlw+lIlCH5okxoRXA8QYgccbowMe3N95pSy9XwMDQ9ljQFxkJldeBJBhc
- 78/p3h5Qv+LSosGLMKau/sI+Lf5DA6KFI4ck7YPmgpQ1CWQ2T7uMyU8jvMj+RJUyA8BfOsays
- 67B9Wx0vMRmYtIzjCbif2S1ni0CZV5uG5pdCtHfdGe46ak1yDTF+Bnk38pg7DI1gmlJe9Fqlb
- oPu3ZKeYElzQzOFBIBKUiiEsDO160oHvg+boD8GCtefEyKFkflFZW/Z2AYEQO3y4pc7XVRu40
- 5DiOIuoCNRtRr9O7Oj3xQVA/RBBc6YG9D4m9B0nPK0JmMLKTNGteCa/vyEbjX75BNzFvdek/K
- BDtNUzoI74q3EbA9rv3JHnbth20p+qeIM1HzIf4J+KqO6Rp7kUe+aaTvKCHAweuLi97nS3KI/
- UBFYRdzKk1wCAfBu1nYlJ17bsIj2PZxBjRiO2nQM1bPrUXBIBu8JkwaJ1t+5Ty/kuxpNK+IFx
- bWY+p3kMZw1d1tgD8GSuVWPSJJ78cWIwGyEwjGYwJJGAyq7vdGYzOHk4uC9SqGbqVdAz7oYi3
- DN6Y9/4J8nDbkhEP1Y8Ixn+hgz3MK7h9tl7kYN25pyuWpstajpvdLEyMA4UpqWmEAkA0NDerq
- H6DaduQtvmaYAH9kSH/z1wT/ONiT+EUVyE834SyoGWqYLl/hqO3kVTOuJSWBec2KBSwUGjpzk
- W0qD3abwlcxLdvONsyV+OFyWzPtvTb22xY0j0NUJG1P0KdYOhzUJ9MMjxTNebTS4byJ9CVrNI
- aiuavRpayzvyC52rfdMdIfmNcl+EcIvBuUBQlnea0IRF344gNVYamrs9qM1sib3S/j2tyh7ga
- P/ORR5uUWUAM//0chkrkBB5MIfnzTfwXKuZxIm0RISk983CMU14V2n+uqgGl/tQTLDtsDGZZ5
- JIAPEbRQOcWKttvmK2HrvkxaYCI=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 16.03.23 um 10:02 schrieb Hans de Goede:
+SGksCgouLi4KLi4uCgo+ID4gCgo+ID4gSGkgU3Jpbml2YXMgYW5kIEhhbnMsCj4gPiAKPiA+IEhv
+dyBhYm91dCBmb2xkaW5nIHRoZXNlIHRocmVlIHBhdGNoZXMgaW50byBvbmUgcGF0Y2ggYW5kIHJl
+c2VuZCBhCj4gPiB2MyBwYXRjaD8KPiA+IAo+ID4gVGhpcyB3aWxsIGdldCBhbGwgcGVvcGxlIHRv
+Z2V0aGVyIGFuZCBhdm9pZCB0aGUgcHJldmlvdXMKPiA+IGVtYmFycmFzc2luZyBzaXRhdGlvbi4K
+PiAKPiBJZiBJIHVuZGVyc3RhbmQgdGhpbmdzIGNvcnJlY3RseSB0aGVuIHBhdGNoIDEvMyBuZWVk
+cyAzLzMgdG8gZnVuY3Rpb24KPiBjb3JyZWN0bHksIHJpZ2h0ID8KPiAKPiBJIHdvdWxkIG5vdCBm
+b2xkIHRoZW0gdG9nZXRoZXIsIHNtYWxsZXIgcGF0Y2hlcyBhcmUgZWFzaWVyIHRvIHJldmlldwo+
+IC8gdW5kZXJzdGFuZCwgYnV0IG1heWJlIGNoYW5nZSB0aGUgb3JkZXIgYW5kIHB1dCBwYXRjaCAz
+LzMgZmlyc3Q/IChzbwo+IG1ha2UgaXQgMS8zKSA/CgpUaGF0IHNob3VsZCBiZSBjb3JyZWN0IG9y
+ZGVyLiBUaGUgcGF0Y2ggMy8zIHNob3VsZCBiZSB0aGUgZmlyc3QuCgo+IAo+IEkgY2FuIGV2ZW4g
+ZG8gdGhhdCB3aGVuIGFwcGx5aW5nIGlmIHlvdSBhZ3JlZSB0aGF0IGlzIHRoZSBiZXR0ZXIKPiBv
+cmRlci4KQWdyZWUuCgpUaGFua3MsClNyaW5pdmFzCgo+IAo+IFJlZ2FyZHMsCj4gCj4gSGFucwo+
+IAo+IAo+IAo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiDCoMKgZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWwvdHBtaS5jIHwgMTcgKysrKy0tLS0tLS0tLS0tLS0KPiA+ID4gPiA+IMKgwqAxIGZpbGUg
+Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkKPiA+ID4gPiA+IAo+ID4g
+PiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3RwbWkuYwo+ID4g
+PiA+ID4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC90cG1pLmMKPiA+ID4gPiA+IGluZGV4
+IGM5OTk3MzJiMGYxZS4uODgyZmU1ZTQ3NjNmIDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaW50ZWwvdHBtaS5jCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9pbnRlbC90cG1pLmMKPiA+ID4gPiA+IEBAIC0yMTUsOCArMjE1LDggQEAgc3RhdGlj
+IGludCB0cG1pX2NyZWF0ZV9kZXZpY2Uoc3RydWN0Cj4gPiA+ID4gPiBpbnRlbF90cG1pX2luZm8g
+KnRwbWlfaW5mbywKPiA+ID4gPiA+IMKgIMKgwqDCoMKgwqDCoMKgwqDCoGZlYXR1cmVfdnNlY19k
+ZXYgPQo+ID4gPiA+ID4ga3phbGxvYyhzaXplb2YoKmZlYXR1cmVfdnNlY19kZXYpLAo+ID4gPiA+
+ID4gR0ZQX0tFUk5FTCk7Cj4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIWZlYXR1cmVf
+dnNlY19kZXYpIHsKPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQg
+PSAtRU5PTUVNOwo+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8g
+ZnJlZV9yZXM7Cj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKga2ZyZWUo
+cmVzKTsKPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVO
+T01FTTsKPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoH0KPiA+ID4gPiA+IMKgIMKgwqDCoMKg
+wqDCoMKgwqDCoHNucHJpbnRmKGZlYXR1cmVfaWRfbmFtZSwgc2l6ZW9mKGZlYXR1cmVfaWRfbmFt
+ZSksCj4gPiA+ID4gPiAidHBtaS0KPiA+ID4gPiA+ICVzIiwgbmFtZSk7Cj4gPiA+ID4gPiBAQCAt
+MjQyLDE3ICsyNDIsOCBAQCBzdGF0aWMgaW50IHRwbWlfY3JlYXRlX2RldmljZShzdHJ1Y3QKPiA+
+ID4gPiA+IGludGVsX3RwbWlfaW5mbyAqdHBtaV9pbmZvLAo+ID4gPiA+ID4gwqDCoMKgwqDCoMKg
+wqDCoMKgICogZmVhdHVyZV92c2VjX2RldiBtZW1vcnkgaXMgYWxzbyBmcmVlZCBhcyBwYXJ0IG9m
+Cj4gPiA+ID4gPiBkZXZpY2UKPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoCAqIGRlbGV0ZS4K
+PiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoCAqLwo+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKg
+cmV0ID0gaW50ZWxfdnNlY19hZGRfYXV4KHZzZWNfZGV2LT5wY2lkZXYsICZ2c2VjX2Rldi0KPiA+
+ID4gPiA+ID4gYXV4ZGV2LmRldiwKPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmZWF0dXJlX3ZzZWNfZGV2LAo+
+ID4gPiA+ID4gZmVhdHVyZV9pZF9uYW1lKTsKPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoGlmIChy
+ZXQpCj4gPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ290byBmcmVlX3Jl
+czsKPiA+ID4gPiA+IC0KPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ID4gPiA+
+ID4gLQo+ID4gPiA+ID4gLWZyZWVfcmVzOgo+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKga2ZyZWUo
+cmVzKTsKPiA+ID4gPiA+IC0KPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7Cj4g
+PiA+ID4gPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gaW50ZWxfdnNlY19hZGRfYXV4KHZzZWNfZGV2
+LT5wY2lkZXYsCj4gPiA+ID4gPiAmdnNlY19kZXYtCj4gPiA+ID4gPiA+IGF1eGRldi5kZXYsCj4g
+PiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBmZWF0dXJlX3ZzZWNfZGV2LAo+ID4gPiA+ID4gZmVhdHVyZV9pZF9u
+YW1lKTsKPiA+ID4gPiA+IMKgwqB9Cj4gPiA+ID4gPiDCoCDCoMKgc3RhdGljIGludCB0cG1pX2Ny
+ZWF0ZV9kZXZpY2VzKHN0cnVjdCBpbnRlbF90cG1pX2luZm8KPiA+ID4gPiA+ICp0cG1pX2luZm8p
+Cj4gCgo=
 
-> Hi
->
-> On 3/15/23 23:39, Armin Wolf wrote:
->
-> <snip>
->
->>> As a site note, i recommend to use the get_maintainer.pl scripts under
->>> scripts/ to find
->>> any additional maintainers which should be CC-ed. Since your patch
->>> series touches the
->>> ideapad-laptop driver, its maintainer (Ike Panhc
->>> <ike.pan@canonical.com>) should also be
->>> notified about this patch series.
->>>
->> I forgot to mention that your patches have to title, please add one for the next revision.
-> Armin, I'm not sure what you mean with this ?
->
-> For me the patches have a good $subject / first line of the commit message ?
->
-> Regards,
->
-> Hans
->
->
-My fault, i messed up. Sorry for the unnecessary noise.
-
-Armin Wolf
-
->
->
->> Armin Wolf
->>
->>>> Also have I correctly set Gergo as the commit author for this PATCH
->>>> 2/2 email like Hans said to? I wasn't sure if I had it right and I
->>>> could fix it in the v2 series.
->>>>
->>> You are still the author of the second patch. Also you should not send
->>> a patch series as
->>> a reply to any previous emails.
->>>
->>>>> acpi_dev_put() is missing.
->>>> Thanks! Not sure why I thought it was okay to delete lenovo_ymc_remove
->>>> but I have added that back in with the input_unregister_device call.
->>>>
->>>>> Maybe it would be beneficial to allow userspace to get the current
->>>>> usage mode without having
->>>>> to wait for an WMI event. This way, userspace could still react to
->>>>> situations like the device
->>>>> already being in tablet mode when this driver is loaded.
->>>> I'm not following how to implement this, not familiar enough with WMI.
->>>> Could you explain more?
->>> I meant that your driver should, after (!) setting up the input device
->>> and event handling, call
->>> sparse_keymap_report_event() with the code obtained from
->>> wmidev_evaluate_method() so that userspace knows about the initial state
->>> of the input device. You might also CC linux-input@vger.kernel.org for
->>> the next patch series, so that the input driver maintainers can also
->>> review your patch series.
->>>
->>>>> If the drivers handling the event and data GUIDs are fine with being
->>>>> instantiated multiple
->>>>> times, then adding the WMI GUIDs to the allow_duplicates[] list in
->>>>> drivers/platform/x86/wmi.c
->>>>> will allow the WMI driver core to handle duplicated event and data
->>>>> GUIDs.
->>>> Is there an easy way to test if it's fine to run multiple copies?
->>>> Currently testing by compiling the module with an inlined
->>>> ideapad-laptop.h out of the kernel tree and using the insmod command
->>>> to load it.
->>> Drivers can be instantiated multiple times, and each time their probe
->>> callback is invoked,
->>> and many older WMI drivers cannot do this, so the allowlist exists.
->>> The section "State Container" in
->>> Documentation/driver-api/driver-model/design-patterns.rst
->>> explains how to write drivers which can be instantiated multiple times.
->>>
->>> If your driver is not a singleton, i.e. it can safely be instantiated
->>> multiple times, then
->>> you can add its WMI GUID to the allowlist.
->>>
