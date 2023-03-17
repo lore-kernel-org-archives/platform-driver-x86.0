@@ -2,78 +2,159 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836F9C74A5B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 13:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F285DC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 13:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbjCQNgG (ORCPT
+        id S229916AbjCQNge (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Mar 2023 09:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
+        Fri, 17 Mar 2023 09:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbjCQNgF (ORCPT
+        with ESMTP id S230098AbjCQNgb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2023 09:36:05 -0400
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C243430C;
-        Fri, 17 Mar 2023 06:36:03 -0700 (PDT)
-Received: by mail-qv1-xf34.google.com with SMTP id mg14so3403795qvb.12;
-        Fri, 17 Mar 2023 06:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679060163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HNVBg27oIWutxFT+tTBlw9bXDaXQxeVQk+w6ErQV8u0=;
-        b=OFGFge9nJtxmQpEupx9yRDWqHS3snsTOJg+Lp3RztPeBlI0Sa4RxKzjyWjYisGzhIr
-         P/qEy2ZOe+DYk220tj+xjOTGe8FPuVW+9BJByl4Mh4FTZooYcLW22vKWfwmNkCSWIJcj
-         Yb+4sEQvu3hNxeOYXJGfES8Ztg/8TiO64BdDSfrYqrGz+zQRuzS6Anv8R0sfiD5ywrdE
-         bPBctJA/84oBJwyOk4Q67ZEAunF/2jbNKWyPms8Ryl7HDGHfal/tOgWloGWEEwEA3ARh
-         lJ0ICMwpVZXUOSo/Y2RIDeMwP1ZHAXJvqUhG+MtsVabHB3HejfjI7bqvqON4DBSwLqcd
-         KWAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679060163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HNVBg27oIWutxFT+tTBlw9bXDaXQxeVQk+w6ErQV8u0=;
-        b=r90zK7CZSVEf6XyNZ5Nx5MQix25FeQr4hUMkDxh1IKBjSECXeBWaDIl3P2a0kgNcGD
-         lASbxxnTQHdrvlTqTgULrA32hUt3M8FvjBr/a6i2dVB9LD0UtMQk5oa21tSAjhw2G5Nz
-         z1bEwxyndBn5+xCDcOdEjm7OHbdQDXjeh9EAzpuRv2tr3r0/SXCv+S/SerRlFDuEKQHc
-         vJvBhZrU+gKClBUMy5h6Cx0l3K8epeSQMV5pCSk1bYQIEGnfjdPJv3GXp1NRGMkMMnvy
-         3p4UpUUuZpn2u3zfsPpLQLW0drP4KrDiN9QIefUXIhkEuu2MaBC5lN47Sx/352fRTFnv
-         fSSg==
-X-Gm-Message-State: AO0yUKX49AXLTuMhXVe+pdd4mKWqp5S7kB2bICjDALV3qVOJZO2zjUFT
-        fVf2BYid48QOMap/xt7HNKkvPGWYxDp//hHHk4o=
-X-Google-Smtp-Source: AK7set803kNbp/TPA94Q6gV9IK15KDMVcbMby2EcvOAIUfF27bVl2Tade8EBMlo3YhaPYAiSp3UgfI0azs4oQAMtqP8=
-X-Received: by 2002:a05:6214:9a8:b0:56e:ff38:46a2 with SMTP id
- du8-20020a05621409a800b0056eff3846a2mr5451455qvb.10.1679060163025; Fri, 17
- Mar 2023 06:36:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230316225736.2856521-1-david.e.box@linux.intel.com> <20230316225736.2856521-2-david.e.box@linux.intel.com>
-In-Reply-To: <20230316225736.2856521-2-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Mar 2023 15:35:27 +0200
-Message-ID: <CAHp75VcP5jf4Tt-U7cs77gnTcUpQbQ+exXjOOc5epPRDfT0h0Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86/intel/pmt/telemetry: Add driver version
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Mar 2023 09:36:31 -0400
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF87EC6432;
+        Fri, 17 Mar 2023 06:36:23 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 66AEF3200925;
+        Fri, 17 Mar 2023 09:36:19 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Fri, 17 Mar 2023 09:36:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1679060179; x=1679146579; bh=D4qZmi4tQdocreiuKoNZm8CZB/39Lps/+6Z
+        IMnudQMM=; b=B6r623IXyrgTpjDsZkajnJEW4MtD+ukaf8X1PFZZWn/2IDBsU1t
+        Ng0shyKd63Yyn/K7fpg2WIApi17QXiisi9M/Z3AZE02vCKUPOshWNlLgP3nkfEZL
+        22xm0Z73srLJTM1188zBWNLnFjjErfqWBHd82BaQ+UbJs8VXt2Ej+pVew+bf6i2A
+        fKUpAGuRaWe1hCGEwEynTEmlaNa9Sj4aQO6J62Y/fUMqyHAb2FrqHuN8RCmGoaqD
+        6gWNOoaUvyjlVUu433Hfolv6XzXK8UM5sMTCVOIf6tHgL9mgCWtJPxLyjqCLWbri
+        ubaKeZvFBnyoLaRYVUh2pnbxHDFr/cE0BvQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1679060179; x=1679146579; bh=D4qZmi4tQdocreiuKoNZm8CZB/39Lps/+6Z
+        IMnudQMM=; b=gCoIg16TY15EsO4aKj8cieT3M4r3tlvD/vdaxTx+vq3ph3MNZgV
+        mBumIa9EZ+J5a3DECqct5JtyFbXV8kG8qxe05Yeik7yPOXtT0FrVl36VN2CvvnqE
+        j4yPQ4wRA2Ri02qDVfsEg9BqgsugfV27NrJBBegcHkHy/7WiY89MFlSsKklht4Wr
+        TgI5ZfpX3IPNtorEq/tuZ0TP9or5T3kh5MdYBW+WMAmae0IOmvhE41Kc/FO+9/UP
+        KpEkVS6+ToM1SHBkTbKgjF2Nsn086186r3QFYxXze6YowqsfgV2hh1Dp5xfveDSA
+        w5IjDIaecLcvngNbQFO+C4mk235UhqBqFxw==
+X-ME-Sender: <xms:0mwUZFoF7u04NKwkVperOuUl6nO0mT-PTkqsiuVysNFohmkhVLr-dg>
+    <xme:0mwUZHo_FWo4g2YeTX6CnC3gleVMLrBSnCugm6EvNmhDydllBILemmltJSWQRwrJG
+    3yO3v965_uKFrbf6eg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdefvddgheefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
+    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfeejgedvudegvdekhedvffefjefhuedthfdt
+    heehkeffuddvgfetjeegjeeufefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
+    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:0mwUZCP764mDJLFv3R4L3ITC1ecR8rQ-y2w3ZxVZOfqW8lgXchlJNQ>
+    <xmx:0mwUZA7MQuDEcLycVN6fjEM-eTGWW4hhxZBvRNBmqQ8BnBjm7Odhiw>
+    <xmx:0mwUZE468fwwCif6RK619O6m41t5LEyHW-voV0JMKGio5za5NqqN3A>
+    <xmx:02wUZCnSuBoV_bHKeWc0_b8d7BlowF9xcpudRIknq_SrhU0fenEBBg>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 8C001C60093; Fri, 17 Mar 2023 09:36:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
+Mime-Version: 1.0
+Message-Id: <d4fcab71-1381-4f71-90c6-8a51b0284d3b@app.fastmail.com>
+In-Reply-To: <ce7d4c80-a0cb-0f50-f0b4-1dd2a89fe096@redhat.com>
+References: <20230312-think-lmi-status-v1-1-4e9f36322cc4@weissschuh.net>
+ <ce7d4c80-a0cb-0f50-f0b4-1dd2a89fe096@redhat.com>
+Date:   Fri, 17 Mar 2023 09:33:41 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Hans de Goede" <hdegoede@redhat.com>,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        "Mark Pearson" <markpearson@lenovo.com>,
+        "markgross@kernel.org" <markgross@kernel.org>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: think-lmi: Properly interpret return value of
+ tlmi_setting
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 12:57=E2=80=AFAM David E. Box
-<david.e.box@linux.intel.com> wrote:
+Tested on a couple of my platforms - all looked good.
+
+Tested-by: mpearson-lenovo@squebb.ca
+
+Mark
+
+On Thu, Mar 16, 2023, at 10:44 AM, Hans de Goede wrote:
+> Hi,
 >
-> Add a driver version number to make it easier to track changes in
-> backported kernels.
-
-Sorry, but NAK. As Greg KH said, we do not use this anymore (in Git
-era) =C2=AD=E2=80=94 the SHA from the Git _is_ the version of the driver.
-
---=20
-With Best Regards,
-Andy Shevchenko
+> On 3/12/23 04:47, Thomas Wei=C3=9Fschuh wrote:
+>> The return value of tlmi_settings() is an errorcode, not an acpi_stat=
+us.
+>>=20
+>> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+>
+> Thank you for your patch, I've applied this patch to my review-hans=20
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers=
+-x86.git/log/?h=3Dreview-hans
+>
+> Note it will show up in my review-hans branch once I've pushed my
+> local branch there, which might take a while.
+>
+> Once I've run some tests on this branch the patches there will be
+> added to the platform-drivers-x86/for-next branch and eventually
+> will be included in the pdx86 pull-request to Linus for the next
+> merge-window.
+>
+> Regards,
+>
+> Hans
+>
+>
+>> ---
+>>=20
+>> Note: This is only compile-tested.
+>> ---
+>>  drivers/platform/x86/think-lmi.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/=
+think-lmi.c
+>> index 86b33b74519b..c924e9e4a6a5 100644
+>> --- a/drivers/platform/x86/think-lmi.c
+>> +++ b/drivers/platform/x86/think-lmi.c
+>> @@ -1353,7 +1353,6 @@ static struct tlmi_pwd_setting *tlmi_create_aut=
+h(const char *pwd_type,
+>> =20
+>>  static int tlmi_analyze(void)
+>>  {
+>> -	acpi_status status;
+>>  	int i, ret;
+>> =20
+>>  	if (wmi_has_guid(LENOVO_SET_BIOS_SETTINGS_GUID) &&
+>> @@ -1390,8 +1389,8 @@ static int tlmi_analyze(void)
+>>  		char *p;
+>> =20
+>>  		tlmi_priv.setting[i] =3D NULL;
+>> -		status =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+>> -		if (ACPI_FAILURE(status))
+>> +		ret =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+>> +		if (ret)
+>>  			break;
+>>  		if (!item)
+>>  			break;
+>>=20
+>> ---
+>> base-commit: 81ff855485a366a391dc3aed3942715e676ed132
+>> change-id: 20230312-think-lmi-status-0d76cbe1b7d9
+>>=20
+>> Best regards,
