@@ -2,141 +2,88 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4AEC6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 11:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F99FC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 12:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjCQL6D (ORCPT
+        id S229581AbjCQMPz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Mar 2023 07:58:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
+        Fri, 17 Mar 2023 08:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbjCQL57 (ORCPT
+        with ESMTP id S229539AbjCQMPy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2023 07:57:59 -0400
-Received: from hust.edu.cn (unknown [202.114.0.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15B4B855E;
-        Fri, 17 Mar 2023 04:57:49 -0700 (PDT)
-Received: from [IPV6:2001:250:4000:5113:9d7:3ff4:682d:e5fa] ([172.16.0.254])
-        (user=dzm91@hust.edu.cn mech=PLAIN bits=0)
-        by mx1.hust.edu.cn  with ESMTP id 32HBv5ch014333-32HBv5ci014333
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 17 Mar 2023 19:57:05 +0800
-Message-ID: <13cbbb1d-842d-819f-e57e-f6ec28ed73d0@hust.edu.cn>
-Date:   Fri, 17 Mar 2023 19:57:05 +0800
+        Fri, 17 Mar 2023 08:15:54 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58252DCA5C
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Mar 2023 05:15:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id AC9DECE2035
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Mar 2023 12:15:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 18E4DC433A4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Mar 2023 12:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679055350;
+        bh=MGyxqxgfGaSJtqr9AUeiksT3rV5yYnLFMiM9Z5TBrr0=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=b2oqJSy3zpDAiYTxH5V2MPcgVZNL3ODFT2if38+nDWxBso4haaO1NEMCYkXVKZUky
+         9j1AnnDuhPind+ysjv6LkbZrX0EJXuPn095n/PqdY/ndnvuz2mum27NnRqzBeXgh0a
+         HWL6lCadg+gvxIpvAV4LB8KmzCttPvFLYK4Y34pgmNB1C49rXj+dM4sQq7a5YOVsi9
+         0zI6YFrZZPNYastlghH5CqDn6KKhJzopm94Jf1PUuETkMw7hmj+T0uqaXsHnt+z0Ps
+         +aVYJT/UcQPSMXGVcMnJNJCfwHbnaiIyuiGKfr64kfcWPU+NZLjASXeqEEaOENTrQQ
+         DV7tuRBUQeykQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 09AADC43142; Fri, 17 Mar 2023 12:15:50 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Fri, 17 Mar 2023 12:15:48 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jeroen@beerstra.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-yc0lbXDbYH@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH linux-next v2 1/3] platform/x86/intel/tpmi: Fix double
- free in tpmi_create_device()
-To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230309040107.534716-1-dzm91@hust.edu.cn>
- <20230309040107.534716-2-dzm91@hust.edu.cn>
- <dd36a2ab-d465-f857-30c6-3c0094babd31@redhat.com>
- <559654bbef8483fcd53458824f23814236b0c9e0.camel@linux.intel.com>
- <40d7cb19-5712-9754-b7bd-2b582055c929@hust.edu.cn>
- <7d535885-0bf1-bbeb-7a7e-89e67aaafa1e@redhat.com>
- <795de1449650c1c2293f4b52edcfd0cc2d12ca69.camel@linux.intel.com>
-From:   Dongliang Mu <dzm91@hust.edu.cn>
-In-Reply-To: <795de1449650c1c2293f4b52edcfd0cc2d12ca69.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-FEAS-AUTH-USER: dzm91@hust.edu.cn
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On 2023/3/17 18:23, srinivas pandruvada wrote:
-> Hi,
->
-> ...
-> ...
->
->>> Hi Srinivas and Hans,
->>>
->>> How about folding these three patches into one patch and resend a
->>> v3 patch?
->>>
->>> This will get all people together and avoid the previous
->>> embarrassing sitation.
->> If I understand things correctly then patch 1/3 needs 3/3 to function
->> correctly, right ?
->>
->> I would not fold them together, smaller patches are easier to review
->> / understand, but maybe change the order and put patch 3/3 first? (so
->> make it 1/3) ?
-> That should be correct order. The patch 3/3 should be the first.
+--- Comment #309 from Jeroen Beerstra (jeroen@beerstra.org) ---
+(In reply to Denis Pauk from comment #308)
+> Created attachment 303968 [details]
+> Asus WMI for nct6775 v6.2 base (2023.03.16)
+>=20
+> Clean up previous patch, add more boards.
+>=20
 
-Oh, yeah. The memory leak fix 3/3 should be the first. This is more 
-reasonable.
+How do I apply this patch to 6.2.6? It reports:
+Reversed (or previously applied) patch detected!  Assume -R?
 
-BTW, I separated this memory leak fix due to that the kernel mainline is 
-still vulnerable to this memory leak problem.
+And not all changes apply :/
 
->
->> I can even do that when applying if you agree that is the better
->> order.
-> Agree.
->
-> Thanks,
-> Srinivas
->
->> Regards,
->>
->> Hans
->>
->>
->>
->>>>>> ---
->>>>>>    drivers/platform/x86/intel/tpmi.c | 17 ++++-------------
->>>>>>    1 file changed, 4 insertions(+), 13 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/platform/x86/intel/tpmi.c
->>>>>> b/drivers/platform/x86/intel/tpmi.c
->>>>>> index c999732b0f1e..882fe5e4763f 100644
->>>>>> --- a/drivers/platform/x86/intel/tpmi.c
->>>>>> +++ b/drivers/platform/x86/intel/tpmi.c
->>>>>> @@ -215,8 +215,8 @@ static int tpmi_create_device(struct
->>>>>> intel_tpmi_info *tpmi_info,
->>>>>>             feature_vsec_dev =
->>>>>> kzalloc(sizeof(*feature_vsec_dev),
->>>>>> GFP_KERNEL);
->>>>>>           if (!feature_vsec_dev) {
->>>>>> -               ret = -ENOMEM;
->>>>>> -               goto free_res;
->>>>>> +               kfree(res);
->>>>>> +               return -ENOMEM;
->>>>>>           }
->>>>>>             snprintf(feature_id_name, sizeof(feature_id_name),
->>>>>> "tpmi-
->>>>>> %s", name);
->>>>>> @@ -242,17 +242,8 @@ static int tpmi_create_device(struct
->>>>>> intel_tpmi_info *tpmi_info,
->>>>>>            * feature_vsec_dev memory is also freed as part of
->>>>>> device
->>>>>>            * delete.
->>>>>>            */
->>>>>> -       ret = intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev-
->>>>>>> auxdev.dev,
->>>>>> -                                feature_vsec_dev,
->>>>>> feature_id_name);
->>>>>> -       if (ret)
->>>>>> -               goto free_res;
->>>>>> -
->>>>>> -       return 0;
->>>>>> -
->>>>>> -free_res:
->>>>>> -       kfree(res);
->>>>>> -
->>>>>> -       return ret;
->>>>>> +       return intel_vsec_add_aux(vsec_dev->pcidev,
->>>>>> &vsec_dev-
->>>>>>> auxdev.dev,
->>>>>> +                                 feature_vsec_dev,
->>>>>> feature_id_name);
->>>>>>    }
->>>>>>      static int tpmi_create_devices(struct intel_tpmi_info
->>>>>> *tpmi_info)
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
