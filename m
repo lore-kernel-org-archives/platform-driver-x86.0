@@ -2,59 +2,59 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C180CC6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 13:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836F9C74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 13:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjCQNfB (ORCPT
+        id S229758AbjCQNgG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Mar 2023 09:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
+        Fri, 17 Mar 2023 09:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjCQNfA (ORCPT
+        with ESMTP id S229678AbjCQNgF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2023 09:35:00 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A95732CF6;
-        Fri, 17 Mar 2023 06:34:59 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id bm1so1712493qkb.13;
-        Fri, 17 Mar 2023 06:34:59 -0700 (PDT)
+        Fri, 17 Mar 2023 09:36:05 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C243430C;
+        Fri, 17 Mar 2023 06:36:03 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id mg14so3403795qvb.12;
+        Fri, 17 Mar 2023 06:36:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679060098;
+        d=gmail.com; s=20210112; t=1679060163;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8wYD2tZNMuLD2tLDq6uC02rKNtsvqsc5Llw9/64tTP4=;
-        b=p0jdlxrQwAq5VTw3187WfCRTXWZemohRsAg1qcIe0IOUbzfqIdYMY7uHaJRH/tXbBU
-         vqqAGi7zvAPNUAWmGRICb+1muFiKVtw8TRmoRMJs6hkaBPaItAlGQr8qKtEAZXMhRHL8
-         a6i20HGiUZ02DeQHZylFzTOOn7bM8bOhiHjuCxvKL3O3zxtzK4B8g4WP/9poxTxeKrn9
-         /SK56qSTtIT+l+0dr0MYUcAuv1scuJYVVDQLXId2mkokaiMUimTIcJj4e33ZTGr6w6zV
-         hu1Ej1gRBJpKJoe40vlm7bFAUOXCfe7FiHqFb2OBDyChlOkduEhX2LKs3rVp5qKbo3pL
-         qwlQ==
+        bh=HNVBg27oIWutxFT+tTBlw9bXDaXQxeVQk+w6ErQV8u0=;
+        b=OFGFge9nJtxmQpEupx9yRDWqHS3snsTOJg+Lp3RztPeBlI0Sa4RxKzjyWjYisGzhIr
+         P/qEy2ZOe+DYk220tj+xjOTGe8FPuVW+9BJByl4Mh4FTZooYcLW22vKWfwmNkCSWIJcj
+         Yb+4sEQvu3hNxeOYXJGfES8Ztg/8TiO64BdDSfrYqrGz+zQRuzS6Anv8R0sfiD5ywrdE
+         bPBctJA/84oBJwyOk4Q67ZEAunF/2jbNKWyPms8Ryl7HDGHfal/tOgWloGWEEwEA3ARh
+         lJ0ICMwpVZXUOSo/Y2RIDeMwP1ZHAXJvqUhG+MtsVabHB3HejfjI7bqvqON4DBSwLqcd
+         KWAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679060098;
+        d=1e100.net; s=20210112; t=1679060163;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8wYD2tZNMuLD2tLDq6uC02rKNtsvqsc5Llw9/64tTP4=;
-        b=F8KxyZNOg8sZ8GzDYh5D7TGeSNPKfvSiD5v5tR9rkSItaNl7/ibcOoAA8POIPszNeV
-         0lfYpMWNtVfmNVhjpS4zUNSBvfPGQJzI8LGMNAhp44hhAhcUhSGiWHVGwwSYdZzNHITq
-         a1Ab63/4JG2Bd5AD5k8o9PqiYaZulGoknVnnimIrIgT8mLlS/uPX40PR9vTTxj5bjOAJ
-         Z63RjO3jTORivYuCHls3B+nbjUR/fNO6R0KH7wx9hma4udgSKJOgZH2m8znaavhCfXlY
-         v0/hHRGD9Iyq8YvHnxVSMZsc0f3QdBgeHoFoUWDKoYiU271n/0ENH3U1sDfxEFColqaX
-         Ah6A==
-X-Gm-Message-State: AO0yUKXHpo64WGS1gSzv5HzWt4PVX15Ez561VtUmTRTLkGH5JkU+8SMH
-        q01KCGDSR5bBUZgSQtoxijtsNF9OoUyC4xY16E4=
-X-Google-Smtp-Source: AK7set/soQZodLw0OJK1WAvQBTaXWyS/o3WUYrJrNRFUjTe0WwIZIYA4cfwGHnQSJyxjOOMi5jNDu7y9MM0DEkT1F8c=
-X-Received: by 2002:a05:620a:c81:b0:743:6092:91b4 with SMTP id
- q1-20020a05620a0c8100b00743609291b4mr7040184qki.14.1679060097764; Fri, 17 Mar
- 2023 06:34:57 -0700 (PDT)
+        bh=HNVBg27oIWutxFT+tTBlw9bXDaXQxeVQk+w6ErQV8u0=;
+        b=r90zK7CZSVEf6XyNZ5Nx5MQix25FeQr4hUMkDxh1IKBjSECXeBWaDIl3P2a0kgNcGD
+         lASbxxnTQHdrvlTqTgULrA32hUt3M8FvjBr/a6i2dVB9LD0UtMQk5oa21tSAjhw2G5Nz
+         z1bEwxyndBn5+xCDcOdEjm7OHbdQDXjeh9EAzpuRv2tr3r0/SXCv+S/SerRlFDuEKQHc
+         vJvBhZrU+gKClBUMy5h6Cx0l3K8epeSQMV5pCSk1bYQIEGnfjdPJv3GXp1NRGMkMMnvy
+         3p4UpUUuZpn2u3zfsPpLQLW0drP4KrDiN9QIefUXIhkEuu2MaBC5lN47Sx/352fRTFnv
+         fSSg==
+X-Gm-Message-State: AO0yUKX49AXLTuMhXVe+pdd4mKWqp5S7kB2bICjDALV3qVOJZO2zjUFT
+        fVf2BYid48QOMap/xt7HNKkvPGWYxDp//hHHk4o=
+X-Google-Smtp-Source: AK7set803kNbp/TPA94Q6gV9IK15KDMVcbMby2EcvOAIUfF27bVl2Tade8EBMlo3YhaPYAiSp3UgfI0azs4oQAMtqP8=
+X-Received: by 2002:a05:6214:9a8:b0:56e:ff38:46a2 with SMTP id
+ du8-20020a05621409a800b0056eff3846a2mr5451455qvb.10.1679060163025; Fri, 17
+ Mar 2023 06:36:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230316225736.2856521-1-david.e.box@linux.intel.com>
-In-Reply-To: <20230316225736.2856521-1-david.e.box@linux.intel.com>
+References: <20230316225736.2856521-1-david.e.box@linux.intel.com> <20230316225736.2856521-2-david.e.box@linux.intel.com>
+In-Reply-To: <20230316225736.2856521-2-david.e.box@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Mar 2023 15:34:21 +0200
-Message-ID: <CAHp75VcB9vokGSZ6ZCqyuNGfVWpn8vdTeLyHSO9MiuSoXR8tqw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86/intel/pmt: Add INTEL_PMT module namespace
+Date:   Fri, 17 Mar 2023 15:35:27 +0200
+Message-ID: <CAHp75VcP5jf4Tt-U7cs77gnTcUpQbQ+exXjOOc5epPRDfT0h0Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86/intel/pmt/telemetry: Add driver version
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     irenic.rajneesh@gmail.com, david.e.box@intel.com,
         hdegoede@redhat.com, markgross@kernel.org,
@@ -68,79 +68,11 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 On Fri, Mar 17, 2023 at 12:57=E2=80=AFAM David E. Box
 <david.e.box@linux.intel.com> wrote:
 >
-> Since the currently exported symbols in pmt_class are only used by other
-> Intel PMT drivers, create an INTEL_PMT module namespace for them.
+> Add a driver version number to make it easier to track changes in
+> backported kernels.
 
-Makes sense.
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmt/class.c     | 6 +++---
->  drivers/platform/x86/intel/pmt/crashlog.c  | 1 +
->  drivers/platform/x86/intel/pmt/telemetry.c | 1 +
->  3 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x8=
-6/intel/pmt/class.c
-> index 46598dcb634a..0b96d75f5924 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -33,7 +33,7 @@ bool intel_pmt_is_early_client_hw(struct device *dev)
->          */
->         return !!(ivdev->info->quirks & VSEC_QUIRK_EARLY_HW);
->  }
-> -EXPORT_SYMBOL_GPL(intel_pmt_is_early_client_hw);
-> +EXPORT_SYMBOL_NS_GPL(intel_pmt_is_early_client_hw, INTEL_PMT);
->
->  static inline int
->  pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
-> @@ -327,7 +327,7 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entr=
-y, struct intel_pmt_namespa
->         return intel_pmt_dev_register(entry, ns, dev);
->
->  }
-> -EXPORT_SYMBOL_GPL(intel_pmt_dev_create);
-> +EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, INTEL_PMT);
->
->  void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
->                            struct intel_pmt_namespace *ns)
-> @@ -343,7 +343,7 @@ void intel_pmt_dev_destroy(struct intel_pmt_entry *en=
-try,
->         device_unregister(dev);
->         xa_erase(ns->xa, entry->devid);
->  }
-> -EXPORT_SYMBOL_GPL(intel_pmt_dev_destroy);
-> +EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_destroy, INTEL_PMT);
->
->  static int __init pmt_class_init(void)
->  {
-> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform=
-/x86/intel/pmt/crashlog.c
-> index ace1239bc0a0..bbb3d61d09f4 100644
-> --- a/drivers/platform/x86/intel/pmt/crashlog.c
-> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-> @@ -328,3 +328,4 @@ module_exit(pmt_crashlog_exit);
->  MODULE_AUTHOR("Alexander Duyck <alexander.h.duyck@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel PMT Crashlog driver");
->  MODULE_LICENSE("GPL v2");
-> +MODULE_IMPORT_NS(INTEL_PMT);
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platfor=
-m/x86/intel/pmt/telemetry.c
-> index 5e4009c05ecf..71cdef42084a 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -160,3 +160,4 @@ module_exit(pmt_telem_exit);
->  MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
->  MODULE_LICENSE("GPL v2");
-> +MODULE_IMPORT_NS(INTEL_PMT);
->
-> base-commit: 79df06733435e2773eb5e9ab9c0ce13c23e4cd88
-> --
-> 2.34.1
->
-
+Sorry, but NAK. As Greg KH said, we do not use this anymore (in Git
+era) =C2=AD=E2=80=94 the SHA from the Git _is_ the version of the driver.
 
 --=20
 With Best Regards,
