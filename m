@@ -2,194 +2,142 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BE8C74A5B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 13:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D212C74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Mar 2023 15:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjCQNiP (ORCPT
+        id S229813AbjCQPq4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Mar 2023 09:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        Fri, 17 Mar 2023 11:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbjCQNiM (ORCPT
+        with ESMTP id S231286AbjCQPqz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2023 09:38:12 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D123DC97D9;
-        Fri, 17 Mar 2023 06:37:51 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id E654D3200917;
-        Fri, 17 Mar 2023 09:37:50 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Fri, 17 Mar 2023 09:37:51 -0400
+        Fri, 17 Mar 2023 11:46:55 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABF1BCFE7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Mar 2023 08:46:40 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 8ECD03200920;
+        Fri, 17 Mar 2023 11:46:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 17 Mar 2023 11:46:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1679060270; x=1679146670; bh=Qjjn2kuuO3ncKAaMCKVx4y8KDMy9CPpZX4b
-        Mcqf7GVs=; b=nV4u4DyzAjUxvlg2Hg1H493wLcsFSo/erbs+DT8tVJvx2KDy6Wk
-        T5NrY8KfOgROgdn5tbbvugTcqWD8uEZGU6t6HxPEigAaiW0YvQ3i+FJjg16gl+hv
-        uxJ/NQ7ka4KVp1bGgpZeUaJIeaX3Ih9LdFPzdI4Le/AhQM0FLK4iQTpQCn64COEJ
-        faIQGtvVUWV/1YVPfo1C8x4j+IwrpTS1PPE9jKlelZ8VnCFfbOEX1ySiRaEr/7tS
-        dAnTkKqQPjIql+CpcNUen57HwhhwWWmOn7wkPsdiU5aRBsPE0eY93AGdc8vS2VZD
-        kGj6DkLwmYbOvBu1GUTAv1ZZw2khKQ5aQeA==
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1679067999; x=
+        1679154399; bh=oJTqiA1lEnsX4JQ/GzZ+6aUGQXMpeKwlUqLPE3H2zHE=; b=P
+        4noveNzRLhYFAA5ZfCjszSSaHTA2okyb2+xjRXQWYVPYyRs6Ta4JP29N8OQTVRuh
+        vOnTMDupiDcVtIS+g7AQsM7BobpTljPfc6VPbjR3VwE6IldlNI4RcTsfgbtJeEUX
+        LKWxxK7Qrwl0CMGoeFam23LFr0YbBJwD547v4ypGtG7PBai7AXL9NXcrXvYTs76r
+        nfiPEjR332PZkDsvtNCy95h6qVowTMEwvhLAeOmqK9jjDj0jOu2Ytww9JjKYJ+pt
+        3VPHaNIBqeez24wqIGtNs/S6v+IL7dGW6FO9WoDJpf/2gSmf3FyIbamFAjXIcXZy
+        J7iQ8v3/g95B4dGBUTp6g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1679060270; x=1679146670; bh=Qjjn2kuuO3ncKAaMCKVx4y8KDMy9CPpZX4b
-        Mcqf7GVs=; b=kjwPdJYQllpi86HB3CYpaPcFzkw/G7WyYYDRgfHe/hB+wLZxnJA
-        keBXYRzwAdSpbz8VIaAm6PC0g5Iu5bAUuGFMXQgv7priOPYnmQP5t/4k4/ITD41+
-        qkvLmB7VhNSu3cKSTbq1zeQEZl51Fy0iO0eyVyNFwgKVjP6i109sBGOY9dmgMMcs
-        5fpitqgLK4gRTeBh3/0YVxnTBbxbJOHtaG7Zfj8pjgOULp1lu2Cz/3yHR2i7/BF1
-        pIvWToTnmtUapqtJ0/mtfIlBi2w7YrgZgip9+5VckQVJuBtoUTHVJ12gIEIvNKZX
-        OWX2oT7SBgSDFqqn33xN2euuhenvCCU0NyQ==
-X-ME-Sender: <xms:Lm0UZEbXm6KBv4EQbmhbS9dzEmpdoXwbqv8WX5wn-xAOm8G-fed4bQ>
-    <xme:Lm0UZPaoQbCpnCs0jLcbpdcvMKgC7XYivyFu5PkHjQoGkLF_zYzJUg9ZfXf5r1m7U
-    NVJHOUdQ33a2xXKpik>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdefvddgheefucetufdoteggodetrfdotf
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1679067999; x=
+        1679154399; bh=oJTqiA1lEnsX4JQ/GzZ+6aUGQXMpeKwlUqLPE3H2zHE=; b=k
+        jdPDF11a0od6aeEUindR1yCk2NzZtQviY2rP82pAV4402of0RfgMtBV4ka0ciiz7
+        PKsTgkUrCTOY+VkiT875AC2gijOvVvZOf/ms5IQYOkpFmlz47magDyuY/t09PN3F
+        tsBOn5wJbGVjXsnDsyBfMp/N1Qd1Zkk3y+kzxVmIx2QkIac0/Je3EUFdu6Sryxsj
+        ZH/OfSPJNlcYCGEpHPwtvsdknWI/dCp3alXOyK28znyS875/lzGgvLg5z8viqz+E
+        9PFLDfunAJVYe+vRI3C1bZB3nUFgQg42LN/jcHJgElFckgwBK+doeDrqDTU3Qkat
+        4hPHgAjvKPUOchogVwjbg==
+X-ME-Sender: <xms:X4sUZCIL9q5lBF4omsiXHYBgrhG6WBHx5ADnjbV-mt6iFFengV1g2Q>
+    <xme:X4sUZKJlEZRkmVuCifqhZQ06s9speYsDha9Gr_uQbJl_bO8IQcLs8sl_XpaWgM4ib
+    9ZlqP23hVe-gNloNWw>
+X-ME-Received: <xmr:X4sUZCsqcNGx8S0olQObQgNeG7q0Bp-61ZQ3I41V9atM_JIassgFuI68S9oaQVHtrpFSiQujLmDVS0OOkg5jzkHNFjHvTFh_JrUpBK11ZCn88D2Ne2ys_gmJHVuWyPGRAqWbxLuVfDh9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdefvddgjeelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfeejgedvudegvdekhedvffefjefhuedthfdt
-    heehkeffuddvgfetjeegjeeufefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
-    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:Lm0UZO9M6hfgz2Tw8WcV-0Lqu49jyYe1dI34CSWL7rirkmvPn9qNPw>
-    <xmx:Lm0UZOrnGCOeg_86MkZRvIE-X-F_xRDYvTayNnw9aGQpj1m760jOEA>
-    <xmx:Lm0UZPq-8kW3KKa0Yk4Fj9TwznAzu1zuXirU5X2lkDR7qN9FF91mqQ>
-    <xmx:Lm0UZOXCDdJlVpokXuY15ksLwMsDsuH9fj-NjeGrCo3JIWBy5gZc-Q>
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepvedtlefggefgjeettddvgfekhfeugfeutdekfeefudeuuddvieeutdel
+    jedvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:X4sUZHYCLGGmySyePB2NTodPbCX13zZWQRQvTP4n94DFkw3IWTOTvw>
+    <xmx:X4sUZJbU_r4821zeSUMZolOWYmXQke8OGohop9YuD45xXdgWeGgCUw>
+    <xmx:X4sUZDDkrdRkVw5DGESRP1ENyVGHbfF7S9TvEuyLXoCziAySmdUICA>
+    <xmx:X4sUZNGfvBvEEyZeFaJAExpRVMS349e_G7xsmP-SLphVjTR76wLvPg>
 Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2EE87C60093; Fri, 17 Mar 2023 09:37:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
-Mime-Version: 1.0
-Message-Id: <dd77e7df-022f-4299-8827-4622c1d2d1f3@app.fastmail.com>
-In-Reply-To: <1af9e9c5-681b-483e-620f-c1866fafd6db@redhat.com>
-References: <20230314-think-lmi-sysfs_ops-v1-1-9d4f1cf9caec@weissschuh.net>
- <1af9e9c5-681b-483e-620f-c1866fafd6db@redhat.com>
-Date:   Fri, 17 Mar 2023 09:37:19 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        "Mark Pearson" <markpearson@lenovo.com>,
-        "markgross@kernel.org" <markgross@kernel.org>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: think-lmi: Remove custom kobject sysfs_ops
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 Mar 2023 11:46:38 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org, markpearson@lenovo.com,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 1/3] platform/x86: think-lmi: add missing type attribute
+Date:   Fri, 17 Mar 2023 11:46:33 -0400
+Message-Id: <20230317154635.39692-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Thomas,
+This driver was missing the mandatory type attribute...oops.
 
-Tested on a couple of my platforms - all looked good.
+Add it in along with logic to determine whether the attribute is an
+enumeration type or a string by parsing the possible_values attribute.
 
-Tested-by: mpearson-lenovo@squebb.ca
+Upstream bug https://bugzilla.kernel.org/show_bug.cgi?id=216460
 
-Mark
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v3:
+ - Rebased on latest pdx86, review_hans branch
+Changes in v2: 
+ - Simplify the code and move type determination into show function
+ - Don't use Fixes with URL in commit info
 
-On Thu, Mar 16, 2023, at 10:44 AM, Hans de Goede wrote:
-> Hi,
->
-> On 3/14/23 01:07, Thomas Wei=C3=9Fschuh wrote:
->> think-lmi defines its own sysfs_ops that are identical to the standard
->> kobj_sysfs_ops. Use the standard definitions.
->>=20
->> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
->
-> Thank you for your patch, I've applied this patch to my review-hans=20
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers=
--x86.git/log/?h=3Dreview-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
->
->
->> ---
->>=20
->> This has only been compile-tested.
->> ---
->>  drivers/platform/x86/think-lmi.c | 31 ++-----------------------------
->>  1 file changed, 2 insertions(+), 29 deletions(-)
->>=20
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/=
-think-lmi.c
->> index 86b33b74519b..2b5ae68ffce8 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -1047,33 +1047,6 @@ static const struct attribute_group tlmi_attr_=
-group =3D {
->>  	.attrs =3D tlmi_attrs,
->>  };
->> =20
->> -static ssize_t tlmi_attr_show(struct kobject *kobj, struct attribute=
- *attr,
->> -				    char *buf)
->> -{
->> -	struct kobj_attribute *kattr;
->> -
->> -	kattr =3D container_of(attr, struct kobj_attribute, attr);
->> -	if (kattr->show)
->> -		return kattr->show(kobj, kattr, buf);
->> -	return -EIO;
->> -}
->> -
->> -static ssize_t tlmi_attr_store(struct kobject *kobj, struct attribut=
-e *attr,
->> -				     const char *buf, size_t count)
->> -{
->> -	struct kobj_attribute *kattr;
->> -
->> -	kattr =3D container_of(attr, struct kobj_attribute, attr);
->> -	if (kattr->store)
->> -		return kattr->store(kobj, kattr, buf, count);
->> -	return -EIO;
->> -}
->> -
->> -static const struct sysfs_ops tlmi_kobj_sysfs_ops =3D {
->> -	.show	=3D tlmi_attr_show,
->> -	.store	=3D tlmi_attr_store,
->> -};
->> -
->>  static void tlmi_attr_setting_release(struct kobject *kobj)
->>  {
->>  	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
->> @@ -1091,12 +1064,12 @@ static void tlmi_pwd_setting_release(struct k=
-object *kobj)
->> =20
->>  static const struct kobj_type tlmi_attr_setting_ktype =3D {
->>  	.release        =3D &tlmi_attr_setting_release,
->> -	.sysfs_ops	=3D &tlmi_kobj_sysfs_ops,
->> +	.sysfs_ops	=3D &kobj_sysfs_ops,
->>  };
->> =20
->>  static const struct kobj_type tlmi_pwd_setting_ktype =3D {
->>  	.release        =3D &tlmi_pwd_setting_release,
->> -	.sysfs_ops	=3D &tlmi_kobj_sysfs_ops,
->> +	.sysfs_ops	=3D &kobj_sysfs_ops,
->>  };
->> =20
->>  static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj=
-_attribute *attr,
->>=20
->> ---
->> base-commit: eeac8ede17557680855031c6f305ece2378af326
->> change-id: 20230314-think-lmi-sysfs_ops-e849a18299bb
->>=20
->> Best regards,
+ drivers/platform/x86/think-lmi.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 86b33b74519b..5fa5451c4802 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -947,6 +947,20 @@ static ssize_t possible_values_show(struct kobject *kobj, struct kobj_attribute
+ 	return sysfs_emit(buf, "%s\n", setting->possible_values);
+ }
+ 
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
++		char *buf)
++{
++	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
++
++	if (setting->possible_values) {
++		/* Figure out what setting type is as BIOS does not return this */
++		if (strchr(setting->possible_values, ','))
++			return sysfs_emit(buf, "enumeration\n");
++	}
++	/* Anything else is going to be a string */
++	return sysfs_emit(buf, "string\n");
++}
++
+ static ssize_t current_value_store(struct kobject *kobj,
+ 		struct kobj_attribute *attr,
+ 		const char *buf, size_t count)
+@@ -1036,10 +1050,13 @@ static struct kobj_attribute attr_possible_values = __ATTR_RO(possible_values);
+ 
+ static struct kobj_attribute attr_current_val = __ATTR_RW_MODE(current_value, 0600);
+ 
++static struct kobj_attribute attr_type = __ATTR_RO(type);
++
+ static struct attribute *tlmi_attrs[] = {
+ 	&attr_displ_name.attr,
+ 	&attr_current_val.attr,
+ 	&attr_possible_values.attr,
++	&attr_type.attr,
+ 	NULL
+ };
+ 
+-- 
+2.39.2
+
