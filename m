@@ -2,152 +2,309 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348DFC61DA4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Mar 2023 17:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE50BC74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 18 Mar 2023 17:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjCRRuf (ORCPT
+        id S229648AbjCRRyN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Mar 2023 13:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
+        Sat, 18 Mar 2023 13:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjCRRue (ORCPT
+        with ESMTP id S229591AbjCRRyN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Mar 2023 13:50:34 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AF22F078
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Mar 2023 10:50:33 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id c11so6089446oiw.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Mar 2023 10:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679161832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G3p+yKSBc7F4JfijitIMR6HiQuWZrODBoMZUI4sldko=;
-        b=iTUhtPP4LRUjVtm9eLhbHvgNb5mrD8KmUUt6re+0HFODZyeRKFuukk7z8XpMNIgGHO
-         FqVsQP4ERO4UjHrmWpgurq9wJJPf8AxuFfOepQrayq+95u7c1xufYvlBteywAcXzjjWu
-         TjQs+TDHSk2s2ugWZgSVgKijfugDdukTnDVcWoNwHzfARu1kDdMwlMhtW4fyCy8Gyq6I
-         kbEa0+LeT68r+e8YgFR4zk/4ErrIswl1RVrQxMy/GhJVz29zIGmSeTXuWECRQXakP3i2
-         nCAoOHnydndU6alEz2dzNd9WOJ50jw9xk5r6ugzbZXfXQrPpLWfyb+IdQZr/V5C8IIgq
-         b8ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679161832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G3p+yKSBc7F4JfijitIMR6HiQuWZrODBoMZUI4sldko=;
-        b=dZkYtlQ1stULaNzNZwCr2G5NpV78H2iHQpvJ/3nwi6gW0J3D02w6IOahuGudTj6KRi
-         O5KkFqEpors6GlTprCu7WOjz5OGRMwLjhbrBe7w5J5wRsbfYWf4SvTUdSppBk4oeEShi
-         piWXko2MVX5ef8hr8DPCNGRMKyPX7/2ZBIk0JtpvUP+8ZmMgw08NQp+xuW2I1dGvtUID
-         NPIOgS1pjhzFGTU9tR8Xj515THjo86dGjR5aM6NPgS6r7guOahaiKERKQlW+6x3GWnvc
-         oC6iDRUQEr84QvUJozMo+g+XpLtDPq8Q8jdjxh+CmDJbM4lw2aq6TV/ADgLUiheTB0xh
-         3uHQ==
-X-Gm-Message-State: AO0yUKUmBX/QmFnpSxcAJrjITG/Fl7mHRvT3eAtJtE+G0BjConYssRiJ
-        A4lO1Ej7EFHR6magYfVPGBE2zLeTzsioX2mtlAqDBpZJ4NE=
-X-Google-Smtp-Source: AK7set+Na/3YPZJpkMbYvIejpdrPex48xQ55aZmHegXh2NGyV29KNTw20Gdf+k1NOJHc/3bh21LlDBBMDnmA/hHZ5DE=
-X-Received: by 2002:a05:6808:2219:b0:383:f981:b1e5 with SMTP id
- bd25-20020a056808221900b00383f981b1e5mr3336380oib.5.1679161832266; Sat, 18
- Mar 2023 10:50:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221004214332.35934-1-soyer@irl.hu> <20230310041726.217447-1-kallmeyeras@gmail.com>
- <20230310041726.217447-3-kallmeyeras@gmail.com> <91a25bfc-080d-b0e4-46cd-159bbf1346e8@gmx.de>
- <CAG4kvq8GMcw_ytss+e3y9nsaOAk9+m+TSnSBwcqdhqEOUJg_dQ@mail.gmail.com>
- <6592fd8f-f5fa-6144-e8eb-a9e701246ad7@gmx.de> <d00fbe99-6c82-ddfc-4e12-3dcb01eda0a6@redhat.com>
- <9b51d06c-d7b4-3886-4476-1c37f9400c62@gmx.de>
-In-Reply-To: <9b51d06c-d7b4-3886-4476-1c37f9400c62@gmx.de>
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-Date:   Sat, 18 Mar 2023 10:50:21 -0700
-Message-ID: <CAG4kvq-P=t08+=sjTNcLLgFrvhiyrdjpNyxEhMcV5rDOt3EtZw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-To:     Armin Wolf <W_Armin@gmx.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, soyer@irl.hu
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 18 Mar 2023 13:54:13 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC42712596
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Mar 2023 10:54:11 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 7E7673200786;
+        Sat, 18 Mar 2023 13:54:08 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Sat, 18 Mar 2023 13:54:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1679162048; x=1679248448; bh=/M0HCPF+J4a+72MFFgEKuJYa2hggsPf1lcw
+        9ZsUJiHw=; b=rMXpzsMaUuBaXCwNqZpYs+8RWNJXKpO/cQEVqH0dZQXaYzJYdKs
+        EtFFelP27CmlzuII1GXAGnQhlwEPbR1/tpcmFp1ZI2CypedqJYpPyj4YF46KyBf0
+        6+2gHKeEDFMckZESrzY5IEvxqLYbL2+H/FS5k9k3L9e/D0NZh8IMRFfaQHnp4QwE
+        5aio4bhPR70z69M2lNocIU204A8FpzU1DKMAaUi1wR0Q2UhTiJEJx52rKxg4wXWn
+        +DSgSuJPonq3r8AYnYkFuKALQYwwS3cHrnWut5rka3so/WJdFL6nv+KYWmFcgYQN
+        VrsSc3za+Iu3jeBs7rZvqZxpKByzXj8NBfg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1679162048; x=1679248448; bh=/M0HCPF+J4a+72MFFgEKuJYa2hggsPf1lcw
+        9ZsUJiHw=; b=sqHKe3+dXUnwiSfwANphqJjuXhdKnJrb61NPj55i3Ijez9NwwDI
+        KSIahNa+dpmRH5NyNBFjcn2lR1p90SDTSSWgafiRI0TZ7JYvcFhy/kjDo7eESkFr
+        hPj6CbyJyP5hwkUxJNJUrqtCQEQX2/eqCcOke5XzvnxAlADoggk4dVd/pXzBgJZy
+        cjy3HbqBwCjGESpMu7vMWjDwSiX339nViAhRXXzSSCZ5UhNDUjC0YGrzpG4MnIDz
+        BQZu/kea0INWrJvhxRbptRQ6VH88i35yMnhWzRDUl/YgaS5X3E/3a0GYaXhx457V
+        0D2nVm5EzxEQWMRXM1YkcT7CTAUqSacCJ8g==
+X-ME-Sender: <xms:v_oVZCYudFvnnH5LhWQQ7N6AYwLPzFfkoKwvFVLQ89Up1-aqqAj9BA>
+    <xme:v_oVZFbm6xgtHFho4gXHDNLEaacpLwc2h9enRmlvDu4c6bEKysbPJZlD5U2LB1yF7
+    _cXYc5MvCUg62-uvbY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdefgedguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
+    ofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpefhfeegudeftefgteelgfekgfdvjeelleev
+    gffhjeffhfdtiedtjeefkedvuefgkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdr
+    tggr
+X-ME-Proxy: <xmx:v_oVZM-uCnDzdCi2V3fyFb6SmFy0dBgX7j4vNTDNUnDW-i8QIyeeoA>
+    <xmx:v_oVZErUUTsPNGeN6l08F3D09nhkkG3KHrzh-JjTxTmVJrJKMskmBQ>
+    <xmx:v_oVZNqjDeMbGWhjFEOObDvZqH6Xi8rHUboke4nEfbMHwo_cPX1IkA>
+    <xmx:wPoVZE2S045OhA552d8A-meOPbWt6kuSeVA-qe4kz5D1bIBYmeTjrg>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C79B6C60091; Sat, 18 Mar 2023 13:54:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
+Mime-Version: 1.0
+Message-Id: <da0c88a5-d03f-4dc2-939d-f1e60bc7d3cc@app.fastmail.com>
+In-Reply-To: <c6175d59-2000-4145-95a6-b022631bf3a3@t-8ch.de>
+References: <mpearson-lenovo@squebb.ca>
+ <20230317154635.39692-1-mpearson-lenovo@squebb.ca>
+ <20230317154635.39692-2-mpearson-lenovo@squebb.ca>
+ <c6175d59-2000-4145-95a6-b022631bf3a3@t-8ch.de>
+Date:   Sat, 18 Mar 2023 13:53:33 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     "Hans de Goede" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Mark Pearson" <markpearson@lenovo.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] platform/x86: think-lmi: Add possible_values for
+ ThinkStation
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 5:39=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+Thanks Thomas
+
+On Sat, Mar 18, 2023, at 12:35 PM, Thomas Wei=C3=9Fschuh wrote:
+> Hi Mark,
 >
-> Am 16.03.23 um 10:00 schrieb Hans de Goede:
+> please also CC linux-kernel@vger.kernel.org and previous reviewers.
+>
+> On Fri, Mar 17, 2023 at 11:46:34AM -0400, Mark Pearson wrote:
+>> ThinkStation platforms don't support the API to return possible_values
+>> but instead embed it in the settings string.
+>>=20
+>> Try and extract this information and set the possible_values attribute
+>> appropriately.
+>>=20
+>> If there aren't any values possible then don't display possible_value=
+s.
+>>=20
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>> Changes in V3:
+>>  - Use is_visible attribute to determine if possible_values should be
+>>    available
+>>  - Code got refactored a bit to make compilation cleaner
+>> Changes in V2:
+>>  - Move no value for possible_values handling into show function
+>>  - use kstrndup for allocating string
+>>=20
+>>  drivers/platform/x86/think-lmi.c | 82 ++++++++++++++++++++++--------=
+--
+>>  1 file changed, 56 insertions(+), 26 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/=
+think-lmi.c
+>> index 5fa5451c4802..d89a1c9bdbf1 100644
+>> --- a/drivers/platform/x86/think-lmi.c
+>> +++ b/drivers/platform/x86/think-lmi.c
+>> @@ -917,6 +917,8 @@ static ssize_t display_name_show(struct kobject *=
+kobj, struct kobj_attribute *at
+>>  	return sysfs_emit(buf, "%s\n", setting->display_name);
+>>  }
+>> =20
+>> +static struct kobj_attribute attr_displ_name =3D __ATTR_RO(display_n=
+ame);
+>> +
+>>  static ssize_t current_value_show(struct kobject *kobj, struct kobj_=
+attribute *attr, char *buf)
+>>  {
+>>  	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> @@ -937,30 +939,6 @@ static ssize_t current_value_show(struct kobject=
+ *kobj, struct kobj_attribute *a
+>>  	return ret;
+>>  }
+>> =20
+>> -static ssize_t possible_values_show(struct kobject *kobj, struct kob=
+j_attribute *attr, char *buf)
+>> -{
+>> -	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> -
+>> -	if (!tlmi_priv.can_get_bios_selections)
+>> -		return -EOPNOTSUPP;
+>> -
+>> -	return sysfs_emit(buf, "%s\n", setting->possible_values);
+>> -}
+>> -
+>> -static ssize_t type_show(struct kobject *kobj, struct kobj_attribute=
+ *attr,
+>> -		char *buf)
+>> -{
+>> -	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> -
+>> -	if (setting->possible_values) {
+>> -		/* Figure out what setting type is as BIOS does not return this */
+>> -		if (strchr(setting->possible_values, ','))
+>> -			return sysfs_emit(buf, "enumeration\n");
+>> -	}
+>> -	/* Anything else is going to be a string */
+>> -	return sysfs_emit(buf, "string\n");
+>> -}
+>> -
+>>  static ssize_t current_value_store(struct kobject *kobj,
+>>  		struct kobj_attribute *attr,
+>>  		const char *buf, size_t count)
+>> @@ -1044,14 +1022,46 @@ static ssize_t current_value_store(struct kob=
+ject *kobj,
+>>  	return ret ?: count;
+>>  }
+>> =20
+>> -static struct kobj_attribute attr_displ_name =3D __ATTR_RO(display_n=
+ame);
+>> +static struct kobj_attribute attr_current_val =3D __ATTR_RW_MODE(cur=
+rent_value, 0600);
+>> +
+>> +static ssize_t possible_values_show(struct kobject *kobj, struct kob=
+j_attribute *attr, char *buf)
+>> +{
+>> +	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> +
+>> +	return sysfs_emit(buf, "%s\n", setting->possible_values);
+>> +}
+>> =20
+>>  static struct kobj_attribute attr_possible_values =3D __ATTR_RO(poss=
+ible_values);
+>> =20
+>> -static struct kobj_attribute attr_current_val =3D __ATTR_RW_MODE(cur=
+rent_value, 0600);
+>> +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute=
+ *attr,
+>> +		char *buf)
+>> +{
+>> +	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> +
+>> +	if (setting->possible_values) {
+>> +		/* Figure out what setting type is as BIOS does not return this */
+>> +		if (strchr(setting->possible_values, ','))
+>> +			return sysfs_emit(buf, "enumeration\n");
+>> +	}
+>> +	/* Anything else is going to be a string */
+>> +	return sysfs_emit(buf, "string\n");
+>> +}
+>
+> This patch seems to introduce a lot of churn, is it intentional?
+Yes(ish). It got cleaned up as the functions were in a weird order when =
+I introduced the is_visible. The actual changes are very small - but it =
+did make it look messier than it really is.
+Is this a big concern? I know it makes the review a bit more painful and=
+ my apologies for that.
+
+>> =20
+>>  static struct kobj_attribute attr_type =3D __ATTR_RO(type);
+>> =20
+>> +static umode_t attr_is_visible(struct kobject *kobj,
+>> +					     struct attribute *attr, int n)
+>> +{
+>> +	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
+>> +
+>> +	/* We don't want to display possible_values attributes if not avail=
+able */
+>> +	if (attr =3D=3D (struct attribute *)&attr_possible_values)
+>
+> This cast is unsafe, if the struct kobj_attribute order is randomised =
+it
+> will break.
+>
+> You can use
+>
+> 	if (attr =3D=3D &attr_possible_values.attr)
+>
+Ack. Will change.
+
+>> +		if (!setting->possible_values)
+>> +			return 0;
+>> +
+>> +	return attr->mode;
+>> +}
+>> +
+>>  static struct attribute *tlmi_attrs[] =3D {
+>>  	&attr_displ_name.attr,
+>>  	&attr_current_val.attr,
+>> @@ -1061,6 +1071,7 @@ static struct attribute *tlmi_attrs[] =3D {
+>>  };
+>> =20
+>>  static const struct attribute_group tlmi_attr_group =3D {
+>> +	.is_visible =3D attr_is_visible,
+>>  	.attrs =3D tlmi_attrs,
+>>  };
+>> =20
+>> @@ -1440,6 +1451,25 @@ static int tlmi_analyze(void)
+>>  			if (ret || !setting->possible_values)
+>>  				pr_info("Error retrieving possible values for %d : %s\n",
+>>  						i, setting->display_name);
+>> +		} else {
+>> +			/*
+>> +			 * Older Thinkstations don't support the bios_selections API.
+>> +			 * Instead they store this as a [Optional:Option1,Option2] sectio=
+n of the
+>> +			 * name string.
+>> +			 * Try and pull that out if it's available.
+>> +			 */
+>> +			char *item, *optstart, *optend;
+>> +
+>> +			if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID=
+)) {
+>> +				optstart =3D strstr(item, "[Optional:");
+>> +				if (optstart) {
+>> +					optstart +=3D strlen("[Optional:");
+>> +					optend =3D strstr(optstart, "]");
+>> +					if (optend)
+>> +						setting->possible_values =3D
+>> +							kstrndup(optstart, optend - optstart, GFP_KERNEL);
+>> +				}
+>> +			}
+>
+> The patch now does two things:
+> 1) Hide the sysfs attributes if the value is not available
+> 2) Extract the value from the description
+>
+> Maybe it could be split in two?
+Sure. I did contemplate that and then ultimately decided it was all from=
+ the same intent so left it. But I can split.
+
+>
+> Another observation:
+> Would it make sense to remove the part
+> "[Optional:Option1,Option2]" from the name attribute?
+>
+I considered this previously and I was concerned about if this could hav=
+e impacts that I couldn't foresee. The BIOS teams do strange things with=
+ this string so I was playing safe and leaving it alone (especially as i=
+t differs across the different portfolios)
+
+I know it would be nice to have one standard for everything but sadly th=
+at's not the case, and not a battle I can win.
+
+>>  		}
+>>  		kobject_init(&setting->kobj, &tlmi_attr_setting_ktype);
+>>  		tlmi_priv.setting[i] =3D setting;
+>> --=20
+>> 2.39.2
 >>
->> So I really so no need to make the code needlessly complicated with 2 su=
-b-drivers which then notify each other. Let keep things KISS and keep this =
-as is, so for the next version only change
->> the method_id from 0xab to 0x01.
->
-> I think that using wmi_evaluate_method() is deprecated and we should try =
-to minimize its usage whenever possible. As for the handling of the WMI GUI=
-Ds, i believe that
-> just using the first matching WMI device is not a stable solution. We sim=
-ply do not know if Lenovo considers both WMI GUIDs singletons or not. This =
-means they could
-> for example decide to have multiple independent data sources for tablet m=
-ode events. The chances for this are indeed small, but it will still create=
- a problem for users
-> using such machines. By having two drivers and maybe a global notifier ca=
-ll chain, we would enable the driver to handle such "unlikely situations" c=
-orrectly.
->
-> This would also allow the driver to work on machines missing the WMI even=
-t GUID. In such a case, userspace could then just poll the data WMI GUID fo=
-r input, but
-> this is just an idea.
-
-Hi Armin, would it work to add the second GUID to the existing
-wmi_driver wmi_device_id array? Then I could save the wmi_device in
-the driver data on probe. Later when I get the notification on the
-other GUID I would just call wmidev_evaluate_method on the saved
-pointer out of the private data.
-
-I would just need a way to distinguish the two wmi_device structs.
-Seems like the notifier setup wouldn't be needed and it could stay as
-one module for one feature.
-
-I have the code ready to mail a v2 patch series with the remove
-function added and the fixed method id and the input triggering on
-probe, but still using wmi_evaluate_method. Without having much kernel
-experience, I sort of agree with Hans that it would be best to be
-simpler and not have two modules for one feature, the notifier setup
-looks somewhat involved. However if we can do something like the above
-idea, that doesn't seem to make it much more complicated to avoid the
-deprecated API and I can mail that out instead.
-
-So let me know what you think.
-
->>> Drivers can be instantiated multiple times, and each time their probe c=
-allback is invoked,
->>> and many older WMI drivers cannot do this, so the allowlist exists.
->>> The section "State Container" in Documentation/driver-api/driver-model/=
-design-patterns.rst
->>> explains how to write drivers which can be instantiated multiple times.
->>>
->>> If your driver is not a singleton, i.e. it can safely be instantiated m=
-ultiple times, then
->>> you can add its WMI GUID to the allowlist.
->> I'm not sure about adding this to the allowlist, using the new API is go=
-od (and nice and clean) but this is still expected to be a singleton.
->
-> The allowlist is dealing with drivers not jet converted to the WMI bus mo=
-del. The allowlist should ideally disappear once the conversion has been
-> completed, something which would become difficult if WMI drivers would co=
-ntinue to rely on the older GUID singleton behavior which is not compliant
-> with the ACPI WMI spec AFAIK. If we know that our WMI GUID is a singleton=
- (which we do not), then we should handle this inside our driver, not insid=
-e
-> the WMI probing code.
-
-Would it not work to convert this driver to the WMI bus model now? I
-wasn't able to find anything about this bus model code.
-
-If I'm understanding
-Documentation/driver-api/driver-model/design-patterns.rst correctly
-then I think this driver would be okay to have the same GUID probed
-multiple times. Each device would get its own private data allocated
-for it and that would be cleaned up which each device is removed.
-Although, it does look like you would get double input events. I'm not
-sure if that's the correct behavior without access to a machine with
-two of these switch devices to test on.
-
-- Andrew
