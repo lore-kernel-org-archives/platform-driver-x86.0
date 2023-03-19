@@ -2,172 +2,124 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06C6C74A5B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Mar 2023 00:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E78AC74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 19 Mar 2023 00:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjCSAJV (ORCPT
+        id S229504AbjCSALJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 18 Mar 2023 20:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
+        Sat, 18 Mar 2023 20:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjCSAJU (ORCPT
+        with ESMTP id S229449AbjCSALI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 18 Mar 2023 20:09:20 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F9F2820E
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Mar 2023 17:09:19 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id CE8475C00FF;
-        Sat, 18 Mar 2023 20:09:18 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Sat, 18 Mar 2023 20:09:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1679184558; x=1679270958; bh=diPCZi+MEGDqg1aRXa1zNo2iA1UEy9EpmZp
-        u3CVpTDE=; b=JNaqk8kJzn7MEhruXBj9h30rt+Q2jS0aqW/2LytXb/S+9ouBwDm
-        IncodCzL7wkkggY4xj6cLUJykGOp4TwGY50nkhH0SsOIv2mAQmc9egPFm80Wag34
-        JDbGNeIfOmAyYsj1TrjFZE6ggVIj4ASHy7CT654MH+nYamg4bX9rl8Po0zKIBMDp
-        skgAuySvHAfHHYDC7a29vxWKmBJGnrfmLkTGsl3yvOvZq136flrYtsPfeagK9zrV
-        Qf8L6i96fILp2HklIAN9E9/P84ln6Q/ZWGqWIxeFVPvPvgehOnSG4IJ5Rk+rY+vk
-        Lv/0bLfjrs2EzFOirpSntaIt2XaQmIHQ32Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1679184558; x=1679270958; bh=diPCZi+MEGDqg1aRXa1zNo2iA1UEy9EpmZp
-        u3CVpTDE=; b=onSagBYEger5rJBWxixV72w2UXuzWODJBiyXRkOOhfbe2c5ASDo
-        ANehNnxlIv+4ITdR2IzZuGMpMMDlN5Bxwy1zhPOw9RiK/tfEIUT1BmWR71/dDj0P
-        BggbighmbIasLmDCIto8Fewybdxz7k16Z8/difYRQ4u0cjLBNEWdJL0noaMTsNUQ
-        +ZyO72oFbeclanVNiKBXALFuvFa4FsCTBiHQlOz7n7psqPjEKneinx4WTmxYsPDP
-        gCckvvGq23UrsVMvUIL7kRHQoSYlBNeoVRiY/+vlKpzmpSyfPntT5Fk/K6RtTdQ0
-        +awuesu4zv4AZU8t8P4UFp/dhju6wvtjnXg==
-X-ME-Sender: <xms:rlIWZCU1Ak8Op39hiXr0ZtWbiXclrNiYMw0zu1Yq5WAMBT2iYPuUYg>
-    <xme:rlIWZOn6wfuGqXnwPqnBBsZw9je2OtR-IZvd1bxwOhpNqfRzlgB4V94kkxGpokKpN
-    Tb-aqb3_HjWu5aTPXM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdefhedgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhephfefgedufeetgfetlefgkefgvdejleelvefg
-    hfejfffhtdeitdejfeekvdeugfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
-    rg
-X-ME-Proxy: <xmx:rlIWZGaDMc1QSj4u8DiMspE0XUfFtl3Kwd3lzkdP9-pguz4hsIIcWQ>
-    <xmx:rlIWZJUCDrWYdIAIvlgnSbDcdLiDwXClwUOeQHN77wG5PV0Lo5NZpA>
-    <xmx:rlIWZMm76IDde7jnCuwxFZxB6gcrCynIoG4zRcmqOs8VsdbhSAWK8g>
-    <xmx:rlIWZBwZeuLJckpq8j-2aYFZBNvvRvGqEvlS90-uxWQ8_iuCXEIAXg>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9F725C60091; Sat, 18 Mar 2023 20:09:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
-Mime-Version: 1.0
-Message-Id: <aa2f353f-6da5-4ec2-8a83-bffe310bd7b0@app.fastmail.com>
-In-Reply-To: <e56512fa-b738-44f5-9dc4-57d46c994afd@t-8ch.de>
-References: <mpearson-lenovo@squebb.ca>
- <20230317154635.39692-1-mpearson-lenovo@squebb.ca>
- <20230317154635.39692-2-mpearson-lenovo@squebb.ca>
- <c6175d59-2000-4145-95a6-b022631bf3a3@t-8ch.de>
- <da0c88a5-d03f-4dc2-939d-f1e60bc7d3cc@app.fastmail.com>
- <e56512fa-b738-44f5-9dc4-57d46c994afd@t-8ch.de>
-Date:   Sat, 18 Mar 2023 20:08:58 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     "Hans de Goede" <hdegoede@redhat.com>,
+        Sat, 18 Mar 2023 20:11:08 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F4E93C26
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Mar 2023 17:11:06 -0700 (PDT)
+Date:   Sun, 19 Mar 2023 00:11:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+        t=1679184664; bh=2ZUwBZ1btQ6YQbH4pKSrtGfRtZ8OumLO9xBg6Uffpwg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XVa4w9umDbkxZRWzPva8QzTJpxGZTkI1KBekoW6Rh7ykBQftcDuZ1lYuDoZ0PPDyp
+         gKpoLDG7sBGybZpKbanyabR4glXB+yJ+IfAnOB2REa7xGrqxiqum53tK7qPRGoATQa
+         3QcfsQ0NVmx7pP7H/NFicW9cZfMl+tdZ+yTK3dQ0=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
-        "Mark Pearson" <markpearson@lenovo.com>,
+        Mark Pearson <markpearson@lenovo.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] platform/x86: think-lmi: Add possible_values for
- ThinkStation
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/3] platform/x86: think-lmi: use correct
+ possible_values delimters
+Message-ID: <fcf4d321-8756-4d50-85f9-b9278fc1b0e0@t-8ch.de>
+References: <mpearson-lenovo@squebb.ca>
+ <20230317154635.39692-1-mpearson-lenovo@squebb.ca>
+ <20230317154635.39692-3-mpearson-lenovo@squebb.ca>
+ <23e08752-777b-4af5-8dbb-c57b1afb822f@t-8ch.de>
+ <09591551-c653-41c1-99ce-1108febc51d3@app.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09591551-c653-41c1-99ce-1108febc51d3@app.fastmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Mar 18, 2023, at 7:52 PM, Thomas Wei=C3=9Fschuh wrote:
-> On Sat, Mar 18, 2023 at 01:53:33PM -0400, Mark Pearson wrote:
->> Thanks Thomas
->>=20
->> On Sat, Mar 18, 2023, at 12:35 PM, Thomas Wei=C3=9Fschuh wrote:
->> > Hi Mark,
->> >
->> > please also CC linux-kernel@vger.kernel.org and previous reviewers.
->> >
->> > On Fri, Mar 17, 2023 at 11:46:34AM -0400, Mark Pearson wrote:
->> >> -static struct kobj_attribute attr_current_val =3D __ATTR_RW_MODE(=
-current_value, 0600);
->> >> +static ssize_t type_show(struct kobject *kobj, struct kobj_attrib=
-ute *attr,
->> >> +		char *buf)
->> >> +{
->> >> +	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(kobj);
->> >> +
->> >> +	if (setting->possible_values) {
->> >> +		/* Figure out what setting type is as BIOS does not return this=
- */
->> >> +		if (strchr(setting->possible_values, ','))
->> >> +			return sysfs_emit(buf, "enumeration\n");
->> >> +	}
->> >> +	/* Anything else is going to be a string */
->> >> +	return sysfs_emit(buf, "string\n");
->> >> +}
->> >
->> > This patch seems to introduce a lot of churn, is it intentional?
->> Yes(ish). It got cleaned up as the functions were in a weird order wh=
-en I introduced the is_visible. The actual changes are very small - but =
-it did make it look messier than it really is.
->> Is this a big concern? I know it makes the review a bit more painful =
-and my apologies for that.
->
-> Not a big concern. The shuffling around could be done in a dedicated
-> patch that explicitly only moves code around.
->
->> >> @@ -1440,6 +1451,25 @@ static int tlmi_analyze(void)
->> >>  			if (ret || !setting->possible_values)
->> >>  				pr_info("Error retrieving possible values for %d : %s\n",
->> >>  						i, setting->display_name);
->> >> +		} else {
->> >> +			/*
->> >> +			 * Older Thinkstations don't support the bios_selections API.
->> >> +			 * Instead they store this as a [Optional:Option1,Option2] sec=
-tion of the
->> >> +			 * name string.
->> >> +			 * Try and pull that out if it's available.
->> >> +			 */
->> >> +			char *item, *optstart, *optend;
->> >> +
->> >> +			if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_G=
-UID)) {
->> >> +				optstart =3D strstr(item, "[Optional:");
->> >> +				if (optstart) {
->> >> +					optstart +=3D strlen("[Optional:");
->> >> +					optend =3D strstr(optstart, "]");
->> >> +					if (optend)
->> >> +						setting->possible_values =3D
->> >> +							kstrndup(optstart, optend - optstart, GFP_KERNEL);
->> >> +				}
->> >> +			}
->> >
->> > The patch now does two things:
->> > 1) Hide the sysfs attributes if the value is not available
->> > 2) Extract the value from the description
->> >
->> > Maybe it could be split in two?
->> Sure. I did contemplate that and then ultimately decided it was all f=
-rom the same intent so left it. But I can split.
->
-> Would look nicer to me, but it's only one opinion.
+On Sat, Mar 18, 2023 at 02:06:28PM -0400, Mark Pearson wrote:
+> Thanks Thomas,
+> 
+> On Sat, Mar 18, 2023, at 12:39 PM, Thomas Weißschuh wrote:
+> > On Fri, Mar 17, 2023 at 11:46:35AM -0400, Mark Pearson wrote:
+> >> firmware-attributes class requires that possible values are delimited
+> >> using ';' but the Lenovo firmware uses ',' instead.
+> >> Parse string and replace where appropriate
+> >> 
+> >> Thanks to Thomas W for pointing this out.
 
-I have worked through this and it is nicer. Next version will be split (=
-and I unwound some of the code re-org too).
-I'm going to hold off a couple of days before pushing the changes for re=
-view in case there are other pieces of feedback.
+This could also be a
 
-Mark
+Reported-by: Thomas Weißschuh <linux@weissschuh.net>
+
+> >> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> >> ---
+> >>  Changes in V3: New patch added to the series. No V1 & V2.
+> >> 
+> >>  drivers/platform/x86/think-lmi.c | 13 ++++++++++++-
+> >>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> >> index d89a1c9bdbf1..204f1060a533 100644
+> >> --- a/drivers/platform/x86/think-lmi.c
+> >> +++ b/drivers/platform/x86/think-lmi.c
+> >> @@ -1040,7 +1040,7 @@ static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
+> >>  
+> >>  	if (setting->possible_values) {
+> >>  		/* Figure out what setting type is as BIOS does not return this */
+> >> -		if (strchr(setting->possible_values, ','))
+> >> +		if (strchr(setting->possible_values, ';'))
+> >>  			return sysfs_emit(buf, "enumeration\n");
+> >
+> > I think this patch should be earlier in the series.
+> > So the other patches can work directly from the beginning.
+> OK. I was avoiding refactoring everything - my git skills are not great. I'll look at doing that.
+
+I would do it like this with an interactive rebase:
+
+b # apply the generic parts of "platform/x86: think-lmi: use correct possible_values delimters"
+pick c2fbd30a7b15 platform/x86: think-lmi: add missing type attribute
+pick 644923d17048 platform/x86: think-lmi: Add possible_values for ThinkStation
+f a92fa3cda0d6 platform/x86: think-lmi: use correct possible_values delimters
+
+> > Also maybe this needs a Fixes: tag and a Cc: stable@ so it gets
+> > backported.
+
+> I wasn't go to label this for stable as it doesn't really have any
+> real world impact that I know of. I figure the stable team have better
+> things to do then backport minor stuff like this especially with it
+> being in a series. If you feel strongly about it I can add it - though
+> I'd rather only do it once the review is complete given the requests
+> to split patches etc. This series has been way messier then I
+> expected.
+
+The -stable process should be automated with the proper stable Cc.
+
+Given that this technically breaks ABI it may better to keep it out of
+stable, though.
+
+FYI I looked at the only user of this ABI that I know, fwupd, and it
+should gracefully handle this change.
+It accepts both ',' and ';' as separator.
+
+> For the Fixes tag - I don't have anything to reference with this apart
+> from your email. What would I put in there? If you want to raise a
+> bugzilla I'll happy reference that.
+
+The Fixes tag refers to the original commit that introduced the fixed
+issue.
+In this case it would be the commit adding the think-lmi driver:
+
+Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
+
+Thomas
