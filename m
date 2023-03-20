@@ -2,107 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEC0C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 21:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45958C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 21:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230024AbjCTVUd (ORCPT
+        id S230375AbjCTVbE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Mar 2023 17:20:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
+        Mon, 20 Mar 2023 17:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjCTVUc (ORCPT
+        with ESMTP id S230413AbjCTVbD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Mar 2023 17:20:32 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5FB2887D;
-        Mon, 20 Mar 2023 14:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679347231; x=1710883231;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7xQHgXbzZUle4rIgGnDA5qyL/krFHQPTUEfjR3Qvmg8=;
-  b=hqVgUx+zFEatCoEdkpRFHWfnHddunI7CQduuktFIwOzY7sxTkKRgQK5y
-   p7D2zwE0ueu2A0/sSkgE863NHdsbNBGvE3KOKnm/Cem5hzUj/liT6ixAN
-   MvIqb7kSVmMbnlHEaBrWsH3Z8ueSBfHv0Zfs6ptgbxS09arFWGrI3/Q36
-   w2IT3DzuJddlA71nW/vLkGpP8hIdio8FG3GRmMrddaUUBajIuQEYn3rkD
-   d+lyNqMekUlDFhk8RxfjPfOoffa8TW+qU16CabtBM9QW5+B60EKuzzIYf
-   D01fHxwkWS9hedoQ1Z5UDIcL34AaRO4ppgmwgAXOpT+npLayaxMrA9mu0
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="337498886"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="337498886"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 14:20:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="674565826"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="674565826"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 20 Mar 2023 14:20:31 -0700
-Received: from debox1-desk4.intel.com (unknown [10.251.19.209])
-        by linux.intel.com (Postfix) with ESMTP id EDEDF580110;
-        Mon, 20 Mar 2023 14:20:30 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     irenic.rajneesh@gmail.com, rajvi.jingar@linux.intel.com,
-        david.e.box@linux.intel.com, hdegoede@redhat.com,
-        markgross@kernel.org, andy.shevchenko@gmail.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmc: Alder Lake PCH slp_s0_residency fix
-Date:   Mon, 20 Mar 2023 14:20:29 -0700
-Message-Id: <20230320212029.3154407-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 20 Mar 2023 17:31:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8A140DE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 14:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679347696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rSwzNHrH7zM5+huK/gC6WhPzesYw8I+UecWeaPfUJbA=;
+        b=Rga9ooSaNolJByKW9wEQFoO0VWZrpPdlsAEhDUYWVJNm4SL4Gq2At7R3mO2QZ1gOQ65J4H
+        hKz4ILhJgZyj0Dm0GbDsK/0MggPrAYIzro9A0mJr/9VSVWMLabgNlw1yyks4YKgvI7Ox2V
+        hLE5EnvOMSXEjQ99aiE0Old4aEHKc60=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-173-xvU8skrUOjCbvZSlE2nKXA-1; Mon, 20 Mar 2023 17:28:14 -0400
+X-MC-Unique: xvU8skrUOjCbvZSlE2nKXA-1
+Received: by mail-ed1-f69.google.com with SMTP id t14-20020a056402240e00b004fb36e6d670so19111458eda.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 14:28:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679347693;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rSwzNHrH7zM5+huK/gC6WhPzesYw8I+UecWeaPfUJbA=;
+        b=nYojBzZUOGA04zV8GJCko+N6h9aR5g28N3qGbYy5UCmikp4gWPoIC7/Xz+H0Xp0be2
+         kCokAdZOSnEpKswwNE0t/oiM8QCXuxtsJKUU2Jz9RU2ShKfDR6AWrSpC6tjDiTT2oL+k
+         ZhWuCWQ1zaX1TJu5bT0Gyt1+9ft98qkV+onncftJIlE6Jwv8l/zfzm3yQ5QriNW2Wkpl
+         EE6AHlhgB4ubwKBqzABcJ4Emd3hSih95G9FiG43FAA7Len2Ri47iRmr0Zbl7odg17hYT
+         NsbW58obCt2Ygiy+EUfnwYmNAkiwCDw9TG98Bwab2VpFgWvY5zV/acp0fXmefBDOcrIZ
+         WnJw==
+X-Gm-Message-State: AO0yUKUWDQZN94DVr1vcgnirjm2KbwDH7V3IpPR9dKTpk3G5P5r2WfTt
+        CF69Q7LUrSAFw8xS214WiDERb9I/VsMI+2FbD/Rn8hk1NkCyrD+UwmHCVWu8q5D43izuVhRn6J3
+        XIdb7UnMdsG0DniXOoZQ5I0YjyUyp0JswnHgsMTD8fA==
+X-Received: by 2002:a17:906:40c3:b0:92f:3e2b:fbb7 with SMTP id a3-20020a17090640c300b0092f3e2bfbb7mr522349ejk.14.1679347693293;
+        Mon, 20 Mar 2023 14:28:13 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+pvcQh4m8dJtWKG3+6MXAdsbFa7euh5g8Dr9WZYSnnruigrvhRezs/8om+RbZ2+BerR/AR5A==
+X-Received: by 2002:a17:906:40c3:b0:92f:3e2b:fbb7 with SMTP id a3-20020a17090640c300b0092f3e2bfbb7mr522336ejk.14.1679347693003;
+        Mon, 20 Mar 2023 14:28:13 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id u17-20020a170906409100b009338ad391b9sm2431653ejj.213.2023.03.20.14.28.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Mar 2023 14:28:12 -0700 (PDT)
+Message-ID: <3f86f8a3-6767-5c72-6963-9d9d223c5e94@redhat.com>
+Date:   Mon, 20 Mar 2023 22:28:11 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2] platform/x86: Add new msi-ec driver
+To:     Nikita Kravets <teackot@gmail.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Jose Angel Pastrana <japp0005@red.ujaen.es>,
+        Aakash Singh <mail@singhaakash.dev>
+References: <20230311144054.8754-1-teackot@gmail.com>
+ <iPt1Reo37oGFvlRdQOY-3kZypWeV0pRah5oZ17K4xUOkeMqE7E43XQVyUX0A4a6oeEc1hPPzbjKcU3NznXUA3fnmp-foM3vuFSnA4YcFTDQ=@protonmail.com>
+ <CAPXvF05AurS89f6bNg_5-VCS=vX=qMXbKgSdv5-wwBb8J3Xdcw@mail.gmail.com>
+ <badebe08-7c9b-6f34-b938-b14c06a57985@redhat.com>
+ <CAPXvF05Sp6jVGaMMPaSfFtaz=Ogt46E2fibu2Q_zBh=HnQzhGA@mail.gmail.com>
+ <c8f12f66-829d-0222-9dde-80211d256e0b@redhat.com>
+ <CAPXvF04RO=nfq6sSwPy2deYF+RVBWfRP+pOpG0a9k_-rVR77gg@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAPXvF04RO=nfq6sSwPy2deYF+RVBWfRP+pOpG0a9k_-rVR77gg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Hi,
 
-For platforms with Alder Lake PCH (Alder Lake S and Raptor Lake S) the
-slp_s0_residency attribute has been reporting the wrong value. Unlike other
-platforms, ADL PCH does not have a counter for the time that the SLP_S0
-signal was asserted. Instead, firmware uses the aggregate of the Low Power
-Mode (LPM) substate counters as the S0ix value.  Since the LPM counters run
-at a different frequency, this lead to misreporting of the S0ix time.
+On 3/20/23 22:26, Nikita Kravets wrote:
+> Hi,
+> 
+> v3 is ready, but now that you've tested the driver on your devices,
+> should I add modaliases before sending it?
 
-Add a check for Alder Lake PCH and adjust the frequency accordingly when
-display slp_s0_residency.
+Yes please.
 
-Fixes: bbab31101f44 ("platform/x86/intel: pmc/core: Add Alderlake support to pmc core driver")
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index e489d2175e42..61ca7c37fb02 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -66,7 +66,18 @@ static inline void pmc_core_reg_write(struct pmc_dev *pmcdev, int reg_offset,
- 
- static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u32 value)
- {
--	return (u64)value * pmcdev->map->slp_s0_res_counter_step;
-+	/*
-+	 * ADL PCH does not have the SLP_S0 counter and LPM Residency counters are
-+	 * used as a workaround which uses 30.5 usec tick. All other client
-+	 * programs have the legacy SLP_S0 residency counter that is using the 122
-+	 * usec tick.
-+	 */
-+	const int lpm_adj_x2 = pmcdev->map->lpm_res_counter_step_x2;
-+
-+	if (pmcdev->map == &adl_reg_map)
-+		return (u64)value * GET_X2_COUNTER((u64)lpm_adj_x2);
-+	else
-+		return (u64)value * pmcdev->map->slp_s0_res_counter_step;
- }
- 
- static int set_etr3(struct pmc_dev *pmcdev)
-
-base-commit: 02c464b73645404654359ad21f368a13735e2850
--- 
-2.34.1
+Hans
 
