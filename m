@@ -2,109 +2,104 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BDDC7618A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 15:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ECDC7618A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 17:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbjCTPaJ (ORCPT
+        id S231913AbjCTRKL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Mar 2023 11:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45134 "EHLO
+        Mon, 20 Mar 2023 13:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232997AbjCTP3J (ORCPT
+        with ESMTP id S233439AbjCTRJu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Mar 2023 11:29:09 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF58F2103;
-        Mon, 20 Mar 2023 08:22:16 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 15:22:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-        s=mail; t=1679325731;
-        bh=dDG2JtIile5x6NxbgOI2fXE3QmL+bkySLTnSTWsfbIc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tOLmAaEGNMZFLXdU8dkmaqTHJYZohe/u6D6i574mlQEpE+EI3Oab3uxIAbdwtKxFV
-         VsJlx8eJ4/O9BwKVJkriJLLxYFi/KaWuhkZEaB4tEAsI6I56jEctXHepXKaEvzwUB2
-         lDLOpRusxem/tyna4hT2WDlhzReyqLzTqxyR4M/A=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     hdegoede@redhat.com, markgross@kernel.org, markpearson@lenovo.com,
-        pobrn@protonmail.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] platform/x86: think-lmi: use correct
- possible_values delimiters
-Message-ID: <3df8ca69-e2a4-49d1-9c5c-8e6ff8bb0f96@t-8ch.de>
-References: <mpearson-lenovo@squebb.ca>
- <20230320003221.561750-1-mpearson-lenovo@squebb.ca>
- <20230320003221.561750-2-mpearson-lenovo@squebb.ca>
+        Mon, 20 Mar 2023 13:09:50 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FA418F;
+        Mon, 20 Mar 2023 10:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679331907; x=1710867907;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=h5mqHkMMDgFWNI6UqCZ9y2+Rb+UJE+QUwnXWQX5nkCU=;
+  b=DSJ/0tTbMrvqg7NMMy004eP1APLRy4tE6UW1H6AAHh3GupC997xYQ4Jl
+   cD810Hmdbh9akI5esCvQn4Fhju2KjTHq8lQcaHAboMZfnYNHWx/qXjk/u
+   bYFoAAxp8b7rEx1cFyCKx5rlN5wwN0RrayDV97wfc9tX9LKwXHdbdWW5P
+   qH/CdTr60AH3XF+gX0mM4X+GDpUKXmnmRO1JNJJfOCukFvyYu5uKI5ovt
+   2USiPMcjCbJaaORUcGU+BHPykQVZtdFt6tB3Ao5doKHC8OMsqkgtB3zwU
+   eqf87TlO0d9ISx7o+jYPHrkmP2u3b+fUJlpBvhoIoRFTn0yIclUl/kdJP
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="336225840"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="336225840"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 10:03:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="631188894"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="631188894"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 20 Mar 2023 10:03:26 -0700
+Received: from sarkarbi-mobl1.amr.corp.intel.com (unknown [10.251.19.209])
+        by linux.intel.com (Postfix) with ESMTP id 70FB3580110;
+        Mon, 20 Mar 2023 10:03:26 -0700 (PDT)
+Message-ID: <a6d27ad18452d13840cb4cdd2f17cef7dbe0275c.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] platform/x86/intel/pmt/telemetry: Add driver version
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     irenic.rajneesh@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Date:   Mon, 20 Mar 2023 10:03:26 -0700
+In-Reply-To: <87382b5e-f3f8-601c-77ff-ecd44d911042@redhat.com>
+References: <20230316225736.2856521-1-david.e.box@linux.intel.com>
+         <20230316225736.2856521-2-david.e.box@linux.intel.com>
+         <CAHp75VcP5jf4Tt-U7cs77gnTcUpQbQ+exXjOOc5epPRDfT0h0Q@mail.gmail.com>
+         <87382b5e-f3f8-601c-77ff-ecd44d911042@redhat.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230320003221.561750-2-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+On Mon, 2023-03-20 at 15:18 +0100, Hans de Goede wrote:
+> Hi,
+>=20
+> On 3/17/23 14:35, Andy Shevchenko wrote:
+> > On Fri, Mar 17, 2023 at 12:57=E2=80=AFAM David E. Box
+> > <david.e.box@linux.intel.com> wrote:
+> > >=20
+> > > Add a driver version number to make it easier to track changes in
+> > > backported kernels.
+> >=20
+> > Sorry, but NAK. As Greg KH said, we do not use this anymore (in Git
+> > era) =C2=AD=E2=80=94 the SHA from the Git _is_ the version of the drive=
+r.
+>=20
+> I agree with Andy per driver version numbers are really not useful.
+>=20
+> Generally speaking the version number will get updated say once
+> per upstream kernel-release in a separate commit,=C2=A0
 
-Thanks for the series!
-For all of it:
+> but there is
+> no guarantee that commit will get cherry-picked together with
+> other cherry-picked fixes.
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Good point. Thanks.
 
-If you decide to reroll it, one more nitpick below.
+David
 
-On Sun, Mar 19, 2023 at 08:32:19PM -0400, Mark Pearson wrote:
-> firmware-attributes class requires that possible values are delimited
-> using ';' but the Lenovo firmware uses ',' instead.
-> Parse string and replace where appropriate.
-> 
-> Suggested-by: Thomas Weißschuh <linux@weissschuh.net>
-> Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v4
->  - Moved earlier in the series as recommended
->  - used strreplace function as recommended
-> Changes in v3: 
->  - New patch added to the series. No v1 & v2.
-> 
->  drivers/platform/x86/think-lmi.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index a765bf8c27d8..53f34b1adb8c 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -954,7 +954,7 @@ static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
->  
->  	if (setting->possible_values) {
->  		/* Figure out what setting type is as BIOS does not return this */
-> -		if (strchr(setting->possible_values, ','))
-> +		if (strchr(setting->possible_values, ';'))
->  			return sysfs_emit(buf, "enumeration\n");
 
-If you make this patch the first on of the series it would
-* make the hunk above unnecessary.
-* make it easier to backport if somebody wants do do so.
-* make the then second patch easier to read as it would not introduce
-  "incorrect" code that needs a fix-up in the following commit.
+>=20
+> So for downstream kernels these version numbers really don't
+> have any meaning and as such are useless.
+>=20
+> Regards,
+>=20
+> Hans
+>=20
 
->  	}
->  	/* Anything else is going to be a string */
-> @@ -1413,6 +1413,13 @@ static int tlmi_analyze(void)
->  				pr_info("Error retrieving possible values for %d : %s\n",
->  						i, setting->display_name);
->  		}
-> +		/*
-> +		 * firmware-attributes requires that possible_values are separated by ';' but
-> +		 * Lenovo FW uses ','. Replace appropriately.
-> +		 */
-> +		if (setting->possible_values)
-> +			strreplace(setting->possible_values, ',', ';');
-> +
->  		kobject_init(&setting->kobj, &tlmi_attr_setting_ktype);
->  		tlmi_priv.setting[i] = setting;
->  		kfree(item);
-> -- 
-> 2.39.2
-> 
