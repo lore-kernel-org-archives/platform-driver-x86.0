@@ -2,87 +2,133 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4F2C6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 01:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678B3C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 02:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjCTBmp (ORCPT
+        id S229527AbjCTCnn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Mar 2023 21:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        Sun, 19 Mar 2023 22:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjCTBmd (ORCPT
+        with ESMTP id S229548AbjCTCnm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Mar 2023 21:42:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E26A59DB;
-        Sun, 19 Mar 2023 18:42:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 965B3611E1;
-        Mon, 20 Mar 2023 00:56:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5665FC4339B;
-        Mon, 20 Mar 2023 00:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679273819;
-        bh=DU88Tx7IDZFMgSmR12ipeKxhrIxiH9XLYaW7YR7z40A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGcgko74zF2lma5Pfr0SfIcaDdmv5r62AhoWHVeOsQtbjcltNihUgPTZcd0yCk/Lp
-         1Bo7Tm97cIRE/yzVw/A1fM1shmfJwFK5FC+VUDpPYjtauqrYJUdsvGk8yzMbBZZdAF
-         0KNXGAfqFbOIyA4aSKcM5ro3NDUbLbcsXjloL0StbjPoZJBj8ARLm1I71V+awjf/qc
-         6QQUw+CI1pxVqPqjo96JQiIJZ0KvhG4zqVTw5KlGfC+35jTL1JkFwm3y6ceIhAlbkW
-         0e1JzhKskpV5mUF6ABxzfw7VGaZfilzkHsjcDDgKV29c0LR7dgBJlJ3H7J/XoLXIrC
-         hpyayKyUqVBoQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/12] platform/x86: ISST: Increase range of valid mail box commands
-Date:   Sun, 19 Mar 2023 20:56:32 -0400
-Message-Id: <20230320005636.1429242-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230320005636.1429242-1-sashal@kernel.org>
-References: <20230320005636.1429242-1-sashal@kernel.org>
+        Sun, 19 Mar 2023 22:43:42 -0400
+Received: from hust.edu.cn (mail.hust.edu.cn [202.114.0.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B322818169;
+        Sun, 19 Mar 2023 19:43:38 -0700 (PDT)
+Received: from [IPV6:2001:250:4000:5113:db9:10da:64d2:4d67] ([172.16.0.254])
+        (user=dzm91@hust.edu.cn mech=PLAIN bits=0)
+        by mx1.hust.edu.cn  with ESMTP id 32K2h8Pd007607-32K2h8Pe007607
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 20 Mar 2023 10:43:08 +0800
+Message-ID: <3c2f9226-8741-4e51-241f-5dbac45cc794@hust.edu.cn>
+Date:   Mon, 20 Mar 2023 10:43:07 +0800
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Subject: Re: [PATCH linux-next v2 1/3] platform/x86/intel/tpmi: Fix double
+ free in tpmi_create_device()
+To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230309040107.534716-1-dzm91@hust.edu.cn>
+ <20230309040107.534716-2-dzm91@hust.edu.cn>
+ <dd36a2ab-d465-f857-30c6-3c0094babd31@redhat.com>
+ <559654bbef8483fcd53458824f23814236b0c9e0.camel@linux.intel.com>
+ <40d7cb19-5712-9754-b7bd-2b582055c929@hust.edu.cn>
+ <41c9e613d718095e31674f625f48c60fe493d658.camel@linux.intel.com>
+From:   Dongliang Mu <dzm91@hust.edu.cn>
+In-Reply-To: <41c9e613d718095e31674f625f48c60fe493d658.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-FEAS-AUTH-USER: dzm91@hust.edu.cn
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 95ecf90158522269749f1b7ce98b1eed66ca087b ]
+On 2023/3/17 18:27, srinivas pandruvada wrote:
+> Hi Dongliang,
+>
+> ...
+> ...
+>
+>
+>> Hi Srinivas and Hans,
+>>
+>> How about folding these three patches into one patch and resend a v3
+>> patch?
+>>
+>> This will get all people together and avoid the previous embarrassing
+>> sitation.
+> This is NOT an embarrassing situation.
+> Thanks for finding and fixing the issue.
+>
+> Thanks,
+> Srinivas
+>
+Hi Srinivas,
 
-A new command CONFIG_TDP_GET_RATIO_INFO is added, with sub command type
-of 0x0C. The previous range of valid sub commands was from 0x00 to 0x0B.
-Change the valid range from 0x00 to 0x0C.
+Any conclusion about this patch set?
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Link: https://lore.kernel.org/r/20230227053504.2734214-1-srinivas.pandruvada@linux.intel.com
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_speed_select_if/isst_if_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-index cf7b6dee82191..13735d7ae6387 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-@@ -47,7 +47,7 @@ struct isst_cmd_set_req_type {
- 
- static const struct isst_valid_cmd_ranges isst_valid_cmds[] = {
- 	{0xD0, 0x00, 0x03},
--	{0x7F, 0x00, 0x0B},
-+	{0x7F, 0x00, 0x0C},
- 	{0x7F, 0x10, 0x12},
- 	{0x7F, 0x20, 0x23},
- };
--- 
-2.39.2
-
+>> Dongliang Mu
+>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>>>
+>>>>
+>>>>
+>>>>
+>>>>> ---
+>>>>>    drivers/platform/x86/intel/tpmi.c | 17 ++++-------------
+>>>>>    1 file changed, 4 insertions(+), 13 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/platform/x86/intel/tpmi.c
+>>>>> b/drivers/platform/x86/intel/tpmi.c
+>>>>> index c999732b0f1e..882fe5e4763f 100644
+>>>>> --- a/drivers/platform/x86/intel/tpmi.c
+>>>>> +++ b/drivers/platform/x86/intel/tpmi.c
+>>>>> @@ -215,8 +215,8 @@ static int tpmi_create_device(struct
+>>>>> intel_tpmi_info *tpmi_info,
+>>>>>    
+>>>>>           feature_vsec_dev = kzalloc(sizeof(*feature_vsec_dev),
+>>>>> GFP_KERNEL);
+>>>>>           if (!feature_vsec_dev) {
+>>>>> -               ret = -ENOMEM;
+>>>>> -               goto free_res;
+>>>>> +               kfree(res);
+>>>>> +               return -ENOMEM;
+>>>>>           }
+>>>>>    
+>>>>>           snprintf(feature_id_name, sizeof(feature_id_name),
+>>>>> "tpmi-
+>>>>> %s", name);
+>>>>> @@ -242,17 +242,8 @@ static int tpmi_create_device(struct
+>>>>> intel_tpmi_info *tpmi_info,
+>>>>>            * feature_vsec_dev memory is also freed as part of
+>>>>> device
+>>>>>            * delete.
+>>>>>            */
+>>>>> -       ret = intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev-
+>>>>>> auxdev.dev,
+>>>>> -                                feature_vsec_dev,
+>>>>> feature_id_name);
+>>>>> -       if (ret)
+>>>>> -               goto free_res;
+>>>>> -
+>>>>> -       return 0;
+>>>>> -
+>>>>> -free_res:
+>>>>> -       kfree(res);
+>>>>> -
+>>>>> -       return ret;
+>>>>> +       return intel_vsec_add_aux(vsec_dev->pcidev, &vsec_dev-
+>>>>>> auxdev.dev,
+>>>>> +                                 feature_vsec_dev,
+>>>>> feature_id_name);
+>>>>>    }
+>>>>>    
+>>>>>    static int tpmi_create_devices(struct intel_tpmi_info
+>>>>> *tpmi_info)
