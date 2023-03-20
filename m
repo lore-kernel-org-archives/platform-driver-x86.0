@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E303C7618E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 00:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D5C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 00:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230206AbjCTA4p (ORCPT
+        id S230010AbjCTA5Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Mar 2023 20:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34748 "EHLO
+        Sun, 19 Mar 2023 20:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbjCTA4A (ORCPT
+        with ESMTP id S230144AbjCTA4Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Mar 2023 20:56:00 -0400
+        Sun, 19 Mar 2023 20:56:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E649A1969E;
-        Sun, 19 Mar 2023 17:54:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DC11ABC1;
+        Sun, 19 Mar 2023 17:55:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B390611FA;
-        Mon, 20 Mar 2023 00:53:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7790C433A0;
-        Mon, 20 Mar 2023 00:53:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EB4CB61202;
+        Mon, 20 Mar 2023 00:55:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A4AC433A0;
+        Mon, 20 Mar 2023 00:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679273631;
+        s=k20201202; t=1679273700;
         bh=AozSHlsXSmei3bB+3S+JzhkTVZ2fKjwGMDsLJuAKtts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iiu5fjawi/KlNKVC+QbdGiHm1/KDHOTWi9E9GQ89p6j1n7gLdwdUiXsQm5kqEoi51
-         R+IEU2ULWW5Z6S1omGOZBaXSP8nmh5vWYxz5HN07MAvxUGs9sh/6wJeGSrLD+ZLJrR
-         j/Ikn8KzCq0y85Ko2fhXEw8iZpVQNWI62flxwlNoFm+LvuWMmWpQWxVay7+TR6ISIJ
-         z6Jfvq6fO1ySDRVbDF51MDzYf48Y+PBF/D3NRKZGvd9wQINK9JosL5XgfuWdxPmgWk
-         nUcV0Jm1znvw/ylSGAGMw/mYk8wQt/u9iBffPNQlQBV21GHBC58wfPIhAfptwEAkG/
-         paaDwWBN4KALg==
+        b=f2AbipoDt2MrbIJli3W5bDfREJSEEqElLtcqnTj4NGSSKtL5xlhavPVHoa6uUvTSZ
+         C5Lre/L5Hhhld7jOzzxaxIIm+SjDLvNHpqwjwo1ZgThpl5lTIr5CirOyPspklKfQWQ
+         OEZIL2++BXdRW3K3xCC8bmqrVLlOpNSsY4RCHOCZ91pXhMD9fUookbLKjSHSA0QTot
+         BS2rnIwpTxhsC6rm1MLwUe0uJ5Sg2R/mXxTRcAqToWfzK5+Y3w87HsT8fQtHoXNXv5
+         dasSk71tsxPnLi60FwBA/VtxuU3//FKZ4U0MTCnDdilGGvLqvGgF4Cddn/6nTFs7Yi
+         xFwp4TFBFVWNw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Daniel Scally <dan.scally@ideasonboard.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, djrscally@gmail.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 24/30] platform/x86: int3472: Add GPIOs to Surface Go 3 Board data
-Date:   Sun, 19 Mar 2023 20:52:49 -0400
-Message-Id: <20230320005258.1428043-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 23/29] platform/x86: int3472: Add GPIOs to Surface Go 3 Board data
+Date:   Sun, 19 Mar 2023 20:54:05 -0400
+Message-Id: <20230320005413.1428452-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230320005258.1428043-1-sashal@kernel.org>
-References: <20230320005258.1428043-1-sashal@kernel.org>
+In-Reply-To: <20230320005413.1428452-1-sashal@kernel.org>
+References: <20230320005413.1428452-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
