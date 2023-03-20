@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C47C7618A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 01:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5274CC77B62
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 01:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231292AbjCTBCl (ORCPT
+        id S231508AbjCTBGK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 19 Mar 2023 21:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45354 "EHLO
+        Sun, 19 Mar 2023 21:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231437AbjCTBAk (ORCPT
+        with ESMTP id S231460AbjCTBEt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 19 Mar 2023 21:00:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED2722DCE;
-        Sun, 19 Mar 2023 17:57:03 -0700 (PDT)
+        Sun, 19 Mar 2023 21:04:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38B4241DE;
+        Sun, 19 Mar 2023 17:58:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C49D3B80D47;
-        Mon, 20 Mar 2023 00:55:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF558C4339C;
-        Mon, 20 Mar 2023 00:55:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A1848611F5;
+        Mon, 20 Mar 2023 00:56:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D5DC433D2;
+        Mon, 20 Mar 2023 00:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679273751;
-        bh=Vy6qzJ0scVWccsfwpjRhRZs4KqxX43yXeVQHREVTV2U=;
+        s=k20201202; t=1679273788;
+        bh=J0kr3nQL3VJg4gNSkLtHxJAfTnXKG4Nl+42JRP35gzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEDXKjq0MIdvktDI3PY+BuSJB2TxXBbGoZ70g1O/nO28FixsxWHThCbQl4BKTuxu3
-         Vo5up3hyLb4nY94SB9ii1X37NbFKKqmMK4BRsohPEC4zkz7UAySpqTvr9FSC3TYqDv
-         NKCo+ordASjOP15S5XyFUSeB0gn6ZcJRvYE7dI/4XzeKMbb7pXXeQdqr/M/F0rsDxj
-         BZFUblq14uzufv8pIoVGfY590XXW3vZY4fZjTAdZFvPEJJyf3tZupxQqpUCyEk8Y5A
-         8dPMOXjjfwX92422JjN2XLVEXcNDvp2Pp1QU/SqAi5J90QfkrDSua/JgpRjRSyoPTM
-         odHvEJOdVTrbQ==
+        b=qQhGtJ9ul8JbaH4OoYmLWUIdrrnh76z4iFd00frEW7wKJsBx/VAkkNDYaFUSdnE/b
+         BWeWmAW3t/mWBdUMsvB00WhNL9xSH/ggmqaLMnLRY4t1McCdWuw0/NvQ9U5yHoP0zP
+         a1TKLJIaX0hoZjuWB4cjaPfTQ09uXIiv9CBaitnl8GlqThL6psiStUhk19JHvK4Q03
+         UTONR2oZQshXEY8ryI4Y6dAsromGHywcKFldIEw/N6ua5CKOypLuUA55Z3e3EPCSdg
+         YOLVuUAalS85cdBsD/XPMLD/HhoL8jvM9sLxDDZXhbGhbM3mUw8EdJtY/rw+JDIkc1
+         KDWM923S40Ajg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 14/17] platform/x86: ISST: Increase range of valid mail box commands
-Date:   Sun, 19 Mar 2023 20:55:16 -0400
-Message-Id: <20230320005521.1428820-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 12/15] platform/x86: ISST: Increase range of valid mail box commands
+Date:   Sun, 19 Mar 2023 20:55:56 -0400
+Message-Id: <20230320005559.1429040-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230320005521.1428820-1-sashal@kernel.org>
-References: <20230320005521.1428820-1-sashal@kernel.org>
+In-Reply-To: <20230320005559.1429040-1-sashal@kernel.org>
+References: <20230320005559.1429040-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,13 +67,13 @@ Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 2 +-
+ drivers/platform/x86/intel_speed_select_if/isst_if_common.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index e8424e70d81d2..1847564748420 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+index 407afafc7e83f..1effaa55092cc 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
 @@ -47,7 +47,7 @@ struct isst_cmd_set_req_type {
  
  static const struct isst_valid_cmd_ranges isst_valid_cmds[] = {
