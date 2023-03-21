@@ -2,95 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D493C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Mar 2023 23:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F17EC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Mar 2023 00:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbjCTXMd (ORCPT
+        id S229553AbjCUAlV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Mar 2023 19:12:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56564 "EHLO
+        Mon, 20 Mar 2023 20:41:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229836AbjCTXMc (ORCPT
+        with ESMTP id S229473AbjCUAlU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Mar 2023 19:12:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C4D1ABFA
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 16:12:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BA2C5B8119B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 23:12:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7AED5C43336
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 23:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679353948;
-        bh=Y9tJb8GFUkF1DYDEQ+FolHkxbz26Ru+x7G9bsTUNgII=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=BWlr5w1Y8d1ELgJ7Njx00XXUvUNYbTRi/jDr/TYAYR/EpNhUy3YVveHP8uzxcBOT5
-         K6tPREQyJruVFIddWwFRaUbyKokWOtzes5IxzoU0lM2t02wQZWFPW0yoJY4MVUEuLD
-         A7uoJS3ImoL1YZiGZVttrQeiY7GINwtUJZhvh039fWDMSRDRXYSePQd3YPZTnq/wOE
-         LbsyODHQ+NfTxhH8UVjEufJFNgYampQXR4txXncIsxYyUCRgjcQDqDbAPdLSQp/2f0
-         3Za3XsvwfloVb30SO2j63ZWlGQhAgHCqT0yRr83CQUO7fQkcjudsPqPi0DazDpaN3+
-         9GJ94Y+m4GhGQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 6C7B6C43141; Mon, 20 Mar 2023 23:12:28 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Mon, 20 Mar 2023 23:12:26 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: barfin@protonmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-3lDtfrXrg9@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
+        Mon, 20 Mar 2023 20:41:20 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EBB279B0;
+        Mon, 20 Mar 2023 17:41:19 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id c10so4943016vsh.12;
+        Mon, 20 Mar 2023 17:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679359278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aM3QZO6xoSFJGtEBFqPUFw6XBUQqTrnKng1a87SyblQ=;
+        b=g+PjSFQv4G3OrS8SycsR671jcutjTajQjPRI61kYf/PQVVB8kspynAhp2uk9tuP12r
+         gbkDWFSWjrnRxC2Gzr8KDi9yDKhGtkvCOuYayv0Yv3wShpNvXeqPmQDuqqeLASQxvZAh
+         lcYcq/agnZthDxQrlPxX1CTszp6wvSusqtrjvfsfgqnbsodkR+T+DtKG4WQ86VHib26j
+         vvrsyyV08q30VNCLK0cMQBRX75zS2D7FnJhATPmWzB3PUxBRZdpuwWTRlYn5IkpJ2WdF
+         QtlkNUhGUswB0KIEmKM9U1cIjG7BDDQuFK2gXyzihyyB11pofkPjohioJslai5SdNCl1
+         IiNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679359278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aM3QZO6xoSFJGtEBFqPUFw6XBUQqTrnKng1a87SyblQ=;
+        b=fCyH+5Gy1/5eZhooD49hH2sW9dcyVk8qEbf8VqKXIEzf7GY7YsiXowJUQDxB692vOF
+         CvOpTr2gH2rajBtw/Elc8zL0NFBFfhDTT0+LGn3WZIC+CUc+ADQI2Qt8LMCD50h/ho55
+         ibtmMjEuPNo45Hd+qLjp9ihyvNJv88tplCMuWenkciuG4wf/Q1oMBXspT8s1WaIS8/2v
+         JVI4nuF+VLk4lh2fBguhtzSXeMqulygqQjR7WlxGjvKW7xMYXpn6GCN6M5JoEp52ouX+
+         orSMiDoY5LNgBA5H/B2X04+fkjbYUst9UhLASLoMOkOkKs4lo9L/Y0YLdlRTYewbIEQm
+         vDCw==
+X-Gm-Message-State: AO0yUKV59COiZuI6M9aidHawwmT0nzXcTBSMIFPk6u8RiGHewSKOSXIP
+        Pzo+IgMYxs6PwAmHLqSJTvu31vlv4EAA5D/gGwkp7J5U
+X-Google-Smtp-Source: AK7set/qNnDNyLGyZ6P4oQQ6aDb3PSDcxfXjZSG/Cn3Tc8grkYuo/UkP6zjlCsBpiXRudkBVJulRtNsHIcosG+8NZl0=
+X-Received: by 2002:a67:ca9a:0:b0:402:999f:51dd with SMTP id
+ a26-20020a67ca9a000000b00402999f51ddmr557968vsl.3.1679359278115; Mon, 20 Mar
+ 2023 17:41:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230320212029.3154407-1-david.e.box@linux.intel.com>
+In-Reply-To: <20230320212029.3154407-1-david.e.box@linux.intel.com>
+From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Date:   Mon, 20 Mar 2023 20:40:47 -0400
+Message-ID: <CAE2upjTu98gf9EWKV1X1tP9q7M+vWtniGri+ccgj3BTnh+2QDQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86/intel/pmc: Alder Lake PCH slp_s0_residency fix
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     rajvi.jingar@linux.intel.com, hdegoede@redhat.com,
+        markgross@kernel.org, andy.shevchenko@gmail.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Looks good to me.  Just a nit, maybe change the subject to "Fix Alder
+Lake S0ix reporting" or something like that.
 
---- Comment #314 from barfin@protonmail.com ---
-(In reply to Denis Pauk from comment #308)
-> Created attachment 303968 [details]
-> Asus WMI for nct6775 v6.2 base (2023.03.16)
->=20
-> Clean up previous patch, add more boards.
->=20
-> (In reply to barfin from comment #305)
-> >=20
-> > here's all the outputs, the file that have "_lax" at the end were captu=
-red
-> > when acpi_enforce_resources=3Dlax was used
-> > https://drive.proton.me/urls/8S727K80A4#MdPfNfkyxSbq
->=20
-> Could you please check messages in dmesg without lax about resource
-> conflicts?
+Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 
-sure
-https://gist.github.com/barfin/943c219a5a6bd8aa15778d8c80b2786c
+On Mon, Mar 20, 2023 at 5:20=E2=80=AFPM David E. Box
+<david.e.box@linux.intel.com> wrote:
+>
+> From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+>
+> For platforms with Alder Lake PCH (Alder Lake S and Raptor Lake S) the
+> slp_s0_residency attribute has been reporting the wrong value. Unlike oth=
+er
+> platforms, ADL PCH does not have a counter for the time that the SLP_S0
+> signal was asserted. Instead, firmware uses the aggregate of the Low Powe=
+r
+> Mode (LPM) substate counters as the S0ix value.  Since the LPM counters r=
+un
+> at a different frequency, this lead to misreporting of the S0ix time.
+>
+> Add a check for Alder Lake PCH and adjust the frequency accordingly when
+> display slp_s0_residency.
+>
+> Fixes: bbab31101f44 ("platform/x86/intel: pmc/core: Add Alderlake support=
+ to pmc core driver")
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
+/intel/pmc/core.c
+> index e489d2175e42..61ca7c37fb02 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -66,7 +66,18 @@ static inline void pmc_core_reg_write(struct pmc_dev *=
+pmcdev, int reg_offset,
+>
+>  static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u3=
+2 value)
+>  {
+> -       return (u64)value * pmcdev->map->slp_s0_res_counter_step;
+> +       /*
+> +        * ADL PCH does not have the SLP_S0 counter and LPM Residency cou=
+nters are
+> +        * used as a workaround which uses 30.5 usec tick. All other clie=
+nt
+> +        * programs have the legacy SLP_S0 residency counter that is usin=
+g the 122
+> +        * usec tick.
+> +        */
+> +       const int lpm_adj_x2 =3D pmcdev->map->lpm_res_counter_step_x2;
+> +
+> +       if (pmcdev->map =3D=3D &adl_reg_map)
+> +               return (u64)value * GET_X2_COUNTER((u64)lpm_adj_x2);
+> +       else
+> +               return (u64)value * pmcdev->map->slp_s0_res_counter_step;
+>  }
+>
+>  static int set_etr3(struct pmc_dev *pmcdev)
+>
+> base-commit: 02c464b73645404654359ad21f368a13735e2850
+> --
+> 2.34.1
+>
+
 
 --=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks,
+Rajneesh
