@@ -2,102 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2713C6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Mar 2023 02:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F6BC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Mar 2023 06:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjCUCOy (ORCPT
+        id S229635AbjCUGEh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Mar 2023 22:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33526 "EHLO
+        Tue, 21 Mar 2023 02:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbjCUCOx (ORCPT
+        with ESMTP id S229610AbjCUGEg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Mar 2023 22:14:53 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF4C1449F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 19:14:40 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id k14-20020a056830150e00b0069f156d4ce9so3199766otp.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Mar 2023 19:14:40 -0700 (PDT)
+        Tue, 21 Mar 2023 02:04:36 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8E727D6D;
+        Mon, 20 Mar 2023 23:04:35 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id m15so4330584qkn.9;
+        Mon, 20 Mar 2023 23:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679364879;
+        d=gmail.com; s=20210112; t=1679378675;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z8mQdOTNc3FhldKAZ6fd7DrLH3lG5FyR3vLE3VKUWQE=;
-        b=UcO8OP0Qw51g4zr7Ye/cCXs52sJIGFOyswvrOyFQshrPBHcIi/1MVzEzyj/Oh2QK67
-         JHFKLe10HuIK6KHBd6valE3aYnEJXY2KU/gQ+QfU2F58yVEHB3L3FRqfgEL6u13h8Wsa
-         KfjKeoTWw/lYd5hbEVdBqX0FDONKV0NEDkg4aj4B6gkc18Wmv+p+0XKBzzRrsAfUPUlO
-         hz95cGj723BLw8ZEZLGqstQMZklx3a9ARxYtYXNpVSkE20hES/nDruIG4ZgUyd1hdH9e
-         xnIaIyU8icK+fzjk8p7+Bp/6ZF9gZ6KrmpD/P2rS2HulW0ZCiPFKhLVGcVG0TffaUaNS
-         8Z+g==
+        bh=e8okZ+MxCAMhs0+VJVHp9ZPpwKBGBvJ/Czo08rRq3vk=;
+        b=cNh1GYqwjZGb02XyXqjdt36rEMx40jrvUPWa8EDbApuA0HdCsLKKxWLkP3qDX01Sbp
+         4IJcwzStT5S6svSD23FRU4Ad0rioAwiz+2EaCeTyf9qYH8Y/ADwCvqbY82UeBuquvh5Z
+         mmLgKSNyh5Kiy7nzXT7mvkBvbZQU168WoPUwVb8TO0bsgRaYSwn9EyAaW+HN8PvMcpEX
+         /QprCgcrLw3Wa+6Ge3jQNanyaXGk+/sqnk8l8g20NQJT3FdZ8vJ330467217p3SCM6Su
+         d5FBEcNAs+pmxdnNQBtgixdUmWXTCl1ZkJoxJAemLsLjxLLVoNHOzcmuG9X3DysYg23R
+         H3Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679364879;
+        d=1e100.net; s=20210112; t=1679378675;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z8mQdOTNc3FhldKAZ6fd7DrLH3lG5FyR3vLE3VKUWQE=;
-        b=v02di5iVrRHadZnRa8uWaU5um4KohNCVFpFrqaXFCodmhXgsly7s6vZXzvngLyvR7v
-         K7Q6B1gUVmSY+jnuay/6Aqa/f/MQi/++u5M9PENUDk3MYsaLmBR89W9f8WyVbKuLfTdh
-         tqKp80/EdZ40kCnUYlbeOZDHhIOZJqElI78xXR8cjq6waqnPpC4n8oe5+Ily+szKN+wi
-         Kz+iyaiMkbttGQhTGLo5X/bTW1xDBFXW6rc3iOvkktOPAbaTpgJULG7PT6zj+bqfgrp8
-         Ev+cJZ+47gQrk6uJ2hSQby7MGlb6F8lxVmWtv12Ae9kk2UWbMOi3A+2BZl6EmDJShtfK
-         kK/g==
-X-Gm-Message-State: AO0yUKXZXP1265gnwchE4G5ATHcg6DvnxHa5H2o9aLE0Y2gJYhkrzy3E
-        S1GBBjHX7vc8CdmLO4EvAjPG/ulbEJbu6TNnoSQ=
-X-Google-Smtp-Source: AK7set9PaTIhBhRoMac9RMM08Ul9TZlEdZlml+sQ29lAZwl+VlzQLQQDbjQlVWdf2mOWx7UK2FUB/sdvli1RCWRzBFU=
-X-Received: by 2002:a9d:694f:0:b0:690:e6d9:4842 with SMTP id
- p15-20020a9d694f000000b00690e6d94842mr316188oto.0.1679364879220; Mon, 20 Mar
- 2023 19:14:39 -0700 (PDT)
+        bh=e8okZ+MxCAMhs0+VJVHp9ZPpwKBGBvJ/Czo08rRq3vk=;
+        b=xB1FW6fpSycZakAHMDsMAuAk0q1TTgirqXmOtQE+por94ohRf98wS2YdHv0hx4H22T
+         51835K/9ndkm6EjMkNi4+iGMrbNNQEzwcKPuNcl5P6egQTOZMvmP5YqH+lKo4UzKzxEn
+         FBMOpC2/IT1VMxpe/A9WIQAE4wE7VcUpvLeRK6RYNIzfTTbiFVafwIxDQrpeW6d6GEg/
+         RonEEGVU16M1llaQ/uYOcwkXh4ZPRB06IU1xHoVJ3hht4vdild3e3M6VReWuHyPe7zU+
+         L7Bdc42Q/gcQdB+Cfmn3i7dISMeyr6MZ7XAECqSXOZHgWFWgqkBXFqHlXNITwucqj2xB
+         6Law==
+X-Gm-Message-State: AO0yUKWK6RCX2ns73fi2d9QrY4HYem97pxdi1GxvZumRRZAumP9Y4vRK
+        m6YfS5muzXEUnDLhML0MuXSPHZD/nV/abtRKYWQ=
+X-Google-Smtp-Source: AK7set/oZRC1c37jEs+UBIZKlHM+uinEOTBoILRWM+qefzYpXQu8ihDwKO1oN6OkqNRx4Ow9gsk/Eui9sC1u9NbnM1g=
+X-Received: by 2002:a05:620a:e07:b0:746:7857:d28b with SMTP id
+ y7-20020a05620a0e0700b007467857d28bmr295379qkm.14.1679378674833; Mon, 20 Mar
+ 2023 23:04:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221004214332.35934-1-soyer@irl.hu> <20230310041726.217447-1-kallmeyeras@gmail.com>
- <20230310041726.217447-3-kallmeyeras@gmail.com> <85e87867-5001-da05-dd7c-020977c75288@irl.hu>
-In-Reply-To: <85e87867-5001-da05-dd7c-020977c75288@irl.hu>
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-Date:   Mon, 20 Mar 2023 19:14:28 -0700
-Message-ID: <CAG4kvq8=nHL49_U6=fc0eNPptzX-deXvg=XnmgKC1cAMHP3iMQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-To:     Gergo Koteles <soyer@irl.hu>
-Cc:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com
+References: <20230320212029.3154407-1-david.e.box@linux.intel.com>
+In-Reply-To: <20230320212029.3154407-1-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Mar 2023 08:03:58 +0200
+Message-ID: <CAHp75VfQVGOj6FsvgddmxBMvkKi=Az29pzovdpzwZvVmj9pCqg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86/intel/pmc: Alder Lake PCH slp_s0_residency fix
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     irenic.rajneesh@gmail.com, rajvi.jingar@linux.intel.com,
+        hdegoede@redhat.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 6:05=E2=80=AFPM Gergo Koteles <soyer@irl.hu> wrote:
+On Mon, Mar 20, 2023 at 11:20=E2=80=AFPM David E. Box
+<david.e.box@linux.intel.com> wrote:
 >
-> Hi Andrew,
+> From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 >
-> Thanks for picking this up. Sorry for the late reply.
-> I no longer think this driver should do the same workaround as ymc.exe
-> does, it shouldn't make non-WMI calls.
-> I think the 14ARB7 should be fixed in the BIOS to work like the other
-> Yogas with the same WMI IDs.
+> For platforms with Alder Lake PCH (Alder Lake S and Raptor Lake S) the
+> slp_s0_residency attribute has been reporting the wrong value. Unlike oth=
+er
+> platforms, ADL PCH does not have a counter for the time that the SLP_S0
+> signal was asserted. Instead, firmware uses the aggregate of the Low Powe=
+r
+> Mode (LPM) substate counters as the S0ix value.  Since the LPM counters r=
+un
+> at a different frequency, this lead to misreporting of the S0ix time.
 >
-> So PATCH 1/2 and codes related to ec_trigger are unnecessary.
->
-> I only have the 14ARB7 and I can't test this without the ec_trigger.
-> For this reason, I don't want to be the author of this module.
-> Could you be the author?
->
-> The working C940, 14API reports are from
-> https://github.com/lukas-w/yoga-usage-mode module, which uses the same
-> WMI IDs.
->
-> Regards,
-> Gergo
->
-> Co-developed-by: Gergo Koteles <soyer@irl.hu>
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> Add a check for Alder Lake PCH and adjust the frequency accordingly when
+> display slp_s0_residency.
 
-Hi Gergo, happy to hear from you!
+OK!
+But one nit-pick below.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Now it makes sense why this never got submitted. I suppose the 0xAB
-method ID came from decompiling that ymc.exe as well? It looks like
-the github repo uses 0x01 which is what we found in the acpidump.
+> Fixes: bbab31101f44 ("platform/x86/intel: pmc/core: Add Alderlake support=
+ to pmc core driver")
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
+/intel/pmc/core.c
+> index e489d2175e42..61ca7c37fb02 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -66,7 +66,18 @@ static inline void pmc_core_reg_write(struct pmc_dev *=
+pmcdev, int reg_offset,
+>
+>  static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u3=
+2 value)
+>  {
+> -       return (u64)value * pmcdev->map->slp_s0_res_counter_step;
+> +       /*
+> +        * ADL PCH does not have the SLP_S0 counter and LPM Residency cou=
+nters are
+> +        * used as a workaround which uses 30.5 usec tick. All other clie=
+nt
 
-I will remove that code like you say, make myself the module author,
-and add your Co-developed-by and Signed-off-by tags to the commit.
+microsecond or us or  =C2=B5s (I prefer the latter).
 
-Thanks,
-Andrew
+> +        * programs have the legacy SLP_S0 residency counter that is usin=
+g the 122
+> +        * usec tick.
+
+microsecond or us or =C2=B5s (I prefer the latter).
+
+> +        */
+> +       const int lpm_adj_x2 =3D pmcdev->map->lpm_res_counter_step_x2;
+> +
+> +       if (pmcdev->map =3D=3D &adl_reg_map)
+> +               return (u64)value * GET_X2_COUNTER((u64)lpm_adj_x2);
+
+> +       else
+
+Redundant 'else'.
+
+> +               return (u64)value * pmcdev->map->slp_s0_res_counter_step;
+>  }
+>
+>  static int set_etr3(struct pmc_dev *pmcdev)
+>
+> base-commit: 02c464b73645404654359ad21f368a13735e2850
+> --
+> 2.34.1
+>
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
