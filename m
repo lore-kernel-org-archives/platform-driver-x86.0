@@ -2,146 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF08C76196
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383A8C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 20:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbjCVRk5 (ORCPT
+        id S230432AbjCVUp3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
+        Wed, 22 Mar 2023 16:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbjCVRk4 (ORCPT
+        with ESMTP id S231335AbjCVUpL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:40:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6211ABB
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679506808;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q1IxHW5Bl/aeX6GiY6onFCTzhilEByIwhwFJS8HzHEk=;
-        b=PyE0QWivnbgWB/m/9jwwownsgambNImXkmS0GcaD0XZNyAYhE59QU8AmxeWbx4CT7nqwX5
-        cqd2Or+zBivSPBq9PU90dU7xCTLs2/B7iQfkTahcRy3iFNa+OQ89tzQ9oplLSPMWFXs7aJ
-        Lm+GvomxyhByBB3U6FVn068IiR26Uqo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-US1SyXx8Pz6iudoqxoH1vQ-1; Wed, 22 Mar 2023 13:40:07 -0400
-X-MC-Unique: US1SyXx8Pz6iudoqxoH1vQ-1
-Received: by mail-ed1-f72.google.com with SMTP id ev6-20020a056402540600b004bc2358ac04so28575244edb.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:40:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679506806;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1IxHW5Bl/aeX6GiY6onFCTzhilEByIwhwFJS8HzHEk=;
-        b=3P+idRnNjol2s6PQRlnwMl1Ni4mneqZXaIoafwKL7qdzWPeo1Jrvfgk0S8ESvisi2p
-         zbyqfU99UvCyekdQGGQNvxwIujlht2YoIq1KDhVM+lXDYVIrhkNi9pujcmGj+gcAZU2K
-         upiPL+BiWtNtJSOAsaawFxjr0Su3xlgTmZ70rboqWsi8p0dQt6jqTA6FgZBSTyhfBS5R
-         ILcSY3zKr2mlBbXP/ajyC2grx9ecyI74MUw+vAWSk3bQlhRzEZIl1ROSvEb0P+B/FDMj
-         aTR83gmeZ/Een4XWoBDFiQdcq0WbX3WPBOIL5jPobxe3UPKyYBXFiHzGxz5OIvg+Ij2d
-         8s7w==
-X-Gm-Message-State: AO0yUKUBDzb+yIvSUcjbpLYxO8MBSQSczpItSddTNT30bbAydHI6tMS/
-        9LVrS9icjlS38Wj8VmYvhx0PR4FkgOPyi/6phBX25BHnaRL6EHSa3M1RSFlDRjt65RBWeh2wWQG
-        gcz/+vZ6eAZBunOrDcgAGR50MR1GtT1iXnw==
-X-Received: by 2002:a17:906:e95:b0:937:4001:6eda with SMTP id p21-20020a1709060e9500b0093740016edamr7974787ejf.38.1679506806074;
-        Wed, 22 Mar 2023 10:40:06 -0700 (PDT)
-X-Google-Smtp-Source: AK7set/KRWGcMV00Lnp5HTo5pZKXaIDPobcH3haI4pEKStCH8MczPNvKCsZnFoDchwrVxewemwpFLA==
-X-Received: by 2002:a17:906:e95:b0:937:4001:6eda with SMTP id p21-20020a1709060e9500b0093740016edamr7974772ejf.38.1679506805771;
-        Wed, 22 Mar 2023 10:40:05 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ch19-20020a170906c2d300b00933d64cd447sm4850136ejb.121.2023.03.22.10.40.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 10:40:04 -0700 (PDT)
-Message-ID: <c8c81a00-fb89-8c35-ac3f-951dc999e8e4@redhat.com>
-Date:   Wed, 22 Mar 2023 18:40:03 +0100
+        Wed, 22 Mar 2023 16:45:11 -0400
+Received: from irl.hu (irl.hu [95.85.9.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F3A60A8B
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 13:39:58 -0700 (PDT)
+Received: from [192.168.0.31] (51b68d67.dsl.pool.telekom.hu [::ffff:81.182.141.103])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000070A53.00000000641B679A.001566BC; Wed, 22 Mar 2023 21:39:54 +0100
+Message-ID: <ba4e7835-9c13-89dc-cd3f-80ca90024639@irl.hu>
+Date:   Wed, 22 Mar 2023 21:39:53 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 0/8] Add WLED support to TPS68470 LED driver
-Content-Language: en-US, nl
-To:     Daniel Scally <dan.scally@ideasonboard.com>,
-        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>
-Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
-        sboyd@kernel.org
-References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322160926.948687-1-dan.scally@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com
+References: <20221004214332.35934-1-soyer@irl.hu>
+ <20230310041726.217447-1-kallmeyeras@gmail.com>
+ <20230310041726.217447-3-kallmeyeras@gmail.com>
+ <85e87867-5001-da05-dd7c-020977c75288@irl.hu>
+ <CAG4kvq8=nHL49_U6=fc0eNPptzX-deXvg=XnmgKC1cAMHP3iMQ@mail.gmail.com>
+Content-Language: en-US, hu
+From:   Gergo Koteles <soyer@irl.hu>
+In-Reply-To: <CAG4kvq8=nHL49_U6=fc0eNPptzX-deXvg=XnmgKC1cAMHP3iMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Daniel,
+Hi Andrew,
 
-On 3/22/23 17:09, Daniel Scally wrote:
-> This series relies on the recent "leds: tps68470: LED driver for TPS68470" set
-> from Kate Hsuan [1]
+On 2023. 03. 21. 3:14, Andrew Kallmeyer wrote:
+> On Mon, Mar 20, 2023 at 6:05 PM Gergo Koteles <soyer@irl.hu> wrote:
+>>
+>> Hi Andrew,
+>>
+>> Thanks for picking this up. Sorry for the late reply.
+>> I no longer think this driver should do the same workaround as ymc.exe
+>> does, it shouldn't make non-WMI calls.
+>> I think the 14ARB7 should be fixed in the BIOS to work like the other
+>> Yogas with the same WMI IDs.
+>>
+>> So PATCH 1/2 and codes related to ec_trigger are unnecessary.
+>>
+>> I only have the 14ARB7 and I can't test this without the ec_trigger.
+>> For this reason, I don't want to be the author of this module.
+>> Could you be the author?
+>>
+>> The working C940, 14API reports are from
+>> https://github.com/lukas-w/yoga-usage-mode module, which uses the same
+>> WMI IDs.
+>>
+>> Regards,
+>> Gergo
+>>
+>> Co-developed-by: Gergo Koteles <soyer@irl.hu>
+>> Signed-off-by: Gergo Koteles <soyer@irl.hu>
 > 
-> The TPS68470 provides two additional LED outputs on top of the indicator LEDs.
-> Add support for those to the driver. The configuration of the chip is drawn from
-> platform data which is expected to be passed to the driver. Additionally update
-> the int3472-tps68470 driver to register led lookups from platform data so that
-> the right LED is driven for each sensor, and finally define those lookups for
-> the Microsoft Surface Go line.
+> Hi Gergo, happy to hear from you!
 > 
-> Kate, Hans, this is the changes I made on top of the tps68470-led series to
-> enable the IR LED on my Go2 (plus one additional patch to media). #5 could
-> probably just be squashed into the other series though.
-
-Ack for squashing 5 into Kate's patch.
-
-> The last two patches
-> cover how I think the LED lookup should work - I unfortunately can't see an
-> automatic way to guarantee the right LED goes to the right sensor.
-
-I did not get around to replying to your review of my lookup patch. I believe
-adding this to the board-data as you have done here is fine.
-
-I had a few small comments on your patches and I believe that Kate's patches
-are ready for merging now.
-
-So I believe that for the next version it would be best to merge the 2 series
-into 1 big series. Putting all "leds: tps68470: ..." patches first. Then once
-they are all reviewed Lee can merge the entire drivers/leds/ part of
-the series and send me an IB branch to pull from before I merge
-the drivers/platform/x86/intel/int3472/ parts.
-
-Kate, is it ok with you if Daniel includes your patches (keeping you as
-author of course) in the next version of this series ?
-
-Regards,
-
-Hans
-
-
-
-
-
-> [1] https://lore.kernel.org/platform-driver-x86/20230321153718.1355511-1-hpa@redhat.com/T/
+> Now it makes sense why this never got submitted. I suppose the 0xAB
+> method ID came from decompiling that ymc.exe as well? It looks like
+> the github repo uses 0x01 which is what we found in the acpidump.
 > 
-> Daniel Scally (8):
->   platform/x86: int3472: Add platform data for LEDs
->   platform/x86: int3472: Init LED registers using platform data
->   platform/x86: int3472: Add TPS68470 LED Board Data
->   platform/x86: int3472: Add tps68470-led as clock consumer
->   leds: tps68470: Refactor tps68470_brightness_get()
->   leds: tps68470: Support the WLED driver
->   platform/x86: int3472: Support LED lookups in board data
->   platform/x86: int3472: Define LED lookup data for MS Surface Go
+
+I didn't decompile the ymc.exe, just watched the acpi/wmi trace logs, 
+while stopped and started the ymc service, and figured out what it can 
+do. After mode changes I saw the VPCW,VPCW,VPCR pattern, what I saw 
+before in the ideapad-laptop.c as write_ec_cmd. Then tried with the 
+unknown cmds, and the 0x2A worked.
+
+The 0xAB came from the object_id of debug_dump_wdg by mistake.
+
+[    1.562801] wmi: 09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C:
+[    1.562802] wmi: 	object_id: AB
+[    1.562803] wmi: 	instance_count: 1
+[    1.562804] wmi: 	flags: 0x2 ACPI_WMI_METHOD
+
+The correct one is the 0x01 here also.
+
+[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), 
+Description("LENOVO_GSENSOR_DATA class"), 
+guid("{09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C}")]
+class LENOVO_GSENSOR_DATA {
+   [key, read] string InstanceName;
+   [read] boolean Active;
+
+   [WmiMethodId(1), Implemented, Description("Mode Data")] void 
+GetUsageMode([out, Description("Mode Data")] uint32 Data);
+   [WmiMethodId(2), Implemented, Description("Get Xaxis Value")] void 
+GetXaxisValue([out, Description("Get Xaxis Value")] uint32 Data);
+   [WmiMethodId(3), Implemented, Description("Get Yaxis Value")] void 
+GetYaxisValue([out, Description("Get Yaxis Value")] uint32 Data);
+   [WmiMethodId(4), Implemented, Description("Get Zaxis Value")] void 
+GetZaxisValue([out, Description("Get Zaxis Value")] uint32 Data);
+   [WmiMethodId(5), Implemented, Description("Base to Ground")] void 
+GetAngle4Value([out, Description("Base to Ground")] uint32 Data);
+   [WmiMethodId(6), Implemented, Description("Screen to Ground")] void 
+GetAngle5Value([out, Description("Screen to Ground")] uint32 Data);
+   [WmiMethodId(7), Implemented, Description("Screen to Base")] void 
+GetAngle6Value([out, Description("Screen to Base")] uint32 Data);
+};
+
+It works with any id
+Method (WMAB, 3, NotSerialized)
+{
+    Return (^^PCI0.LPC0.EC0.YGAM) /* \_SB_.PCI0.LPC0.EC0_.YGAM */
+}
+
+
+I've found one thing, in this line
+
+priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VCP2004", NULL, -1);
+
+the correct hw id is "VPC2004", not "VCP2004".
+
+With this modification, it works well.
+
+
+> I will remove that code like you say, make myself the module author,
+> and add your Co-developed-by and Signed-off-by tags to the commit.
+
+According to Hans, it's unrealistic that Lenovo will change this 
+triggering behavior, so it can remain.
+
+Thanks,
+Gergo
+
 > 
->  drivers/leds/leds-tps68470.c                  | 170 +++++++++++++++++-
->  drivers/platform/x86/intel/int3472/tps68470.c |  31 +++-
->  drivers/platform/x86/intel/int3472/tps68470.h |  10 ++
->  .../x86/intel/int3472/tps68470_board_data.c   |  31 ++++
->  include/linux/mfd/tps68470.h                  |  12 ++
->  include/linux/platform_data/tps68470.h        |  11 ++
->  6 files changed, 248 insertions(+), 17 deletions(-)
-> 
+> Thanks,
+> Andrew
 
