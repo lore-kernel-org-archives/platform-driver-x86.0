@@ -2,77 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0746DC6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308FC6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjCVR0i (ORCPT
+        id S229813AbjCVRfm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
+        Wed, 22 Mar 2023 13:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjCVR0h (ORCPT
+        with ESMTP id S229905AbjCVRfl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:26:37 -0400
+        Wed, 22 Mar 2023 13:35:41 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42941B318
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:25:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E581141B7D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:34:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679505950;
+        s=mimecast20190719; t=1679506492;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2BCzf9yNfqPS/o+6dJP9wT9ur6OFw/P5ZqtE3Tm0xY8=;
-        b=WiLIlLoz4Zh5dExn6AEFJ3svqyfOEt+QeXZO5UWrH3T559Dokwr9oMoB/u2EGIbyluxesx
-        IY0lCInOXff97mbNmnY1W76zRUEi5/cSmr7kBwxhZMDulrYuqXdrB6GDZRc7K/lEw0RRqF
-        5fG1ivvaV6MHcGpgXJTJt33CfFj9JvA=
+        bh=sEppU8jPGeXwLeP3psOHcjcXbGFbF8/6px5b31EyYAE=;
+        b=hM1WWwx3a98KCnZZH1Tw7nZYIWGjvDUEdzMvstPSHy09L1w8yW80VAMfFkqfHT8xlc+YoN
+        Jl7mRD+qgeZc7jhYljRlLLT72JCu0d/ThnXrKcB5tR9DAhQglhNL4qX6l+P8MIPiy4ZgBy
+        K8+LqYi4sNvLO2ZDjnSJBirS035eskc=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-pkT0sZZuOFe7Vo4RujRe_Q-1; Wed, 22 Mar 2023 13:25:48 -0400
-X-MC-Unique: pkT0sZZuOFe7Vo4RujRe_Q-1
-Received: by mail-ed1-f69.google.com with SMTP id i42-20020a0564020f2a00b004fd23c238beso28073399eda.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:25:48 -0700 (PDT)
+ us-mta-250-0-dkg2UiOSCLwaHdnqKnfQ-1; Wed, 22 Mar 2023 13:34:51 -0400
+X-MC-Unique: 0-dkg2UiOSCLwaHdnqKnfQ-1
+Received: by mail-ed1-f69.google.com with SMTP id a27-20020a50c31b000000b0050047ecf4bfso22096456edb.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:34:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679505947;
+        d=1e100.net; s=20210112; t=1679506489;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BCzf9yNfqPS/o+6dJP9wT9ur6OFw/P5ZqtE3Tm0xY8=;
-        b=OVZsNVn3KDi/hC/7sChod7WKNpHAIlA9Paenj6YdwMa6fWASg2IfRSi0w73HCUISUI
-         Mcxr3C746OAqkxeE8Sd+tkkzg5e682vYNa3Dc5v73f4viTUWw7K3zkO7AbPJVRgXrYnn
-         a3rWJPav3KdLSmBtQdc8tZfYDGQZ2lIvZfs236GbM1NztmveBo682E+1tIEPv47e7oWP
-         Kqw5qKWa2Mlaf7t6gMcezaJHhwRLBTlASieRpYYnw+zDN1KRTtQnu2x3GtZzpI2AIgQS
-         ZhnN2aqtIDXdnTx1/S8avm/XSfZSB8h+U0akHT2IAjGrOZW0FWJSgze8OfvziRoqOX9Y
-         MOJw==
-X-Gm-Message-State: AO0yUKVMTEfVL5Krmb5K0GXU3Cl+Fsz8i+5Xmll9YEVpv6BbSfTcNDWS
-        Ap9qIYwZBDDPd6YjVMz9xK6GlI+/p/IRc03swhc6SSdnVbNElB4R0JgJvcpnpblDqjg5VWKG9jQ
-        QC3TY2kqt2wXKYJv42mVzJbq60jNaLcuBlw==
-X-Received: by 2002:aa7:de99:0:b0:501:d6c2:7440 with SMTP id j25-20020aa7de99000000b00501d6c27440mr7523070edv.6.1679505947056;
-        Wed, 22 Mar 2023 10:25:47 -0700 (PDT)
-X-Google-Smtp-Source: AK7set96lO/N4LsdI6KHDwwBVZl/xD+ohv8xtOec+wU93QSM6fKUYN4yZLx7lHLg0O6BUqRef37Xwg==
-X-Received: by 2002:aa7:de99:0:b0:501:d6c2:7440 with SMTP id j25-20020aa7de99000000b00501d6c27440mr7523050edv.6.1679505946819;
-        Wed, 22 Mar 2023 10:25:46 -0700 (PDT)
+        bh=sEppU8jPGeXwLeP3psOHcjcXbGFbF8/6px5b31EyYAE=;
+        b=IKIlXKfLCTye5y6xOzs0qU9D4H1zkQHsc0G9dfku/x70QSrSITeZDr8Bbi6QBQG9Fn
+         B7ed3Dr3mFR185VplA7BSB6qzrdts88wds9OE2IvQfGkmzRERE7j0QYb4TH2W0SbQIfO
+         QqocV4MBHjyujRwZkjmqIjZKjMVLMV4NmKaMCeaIsihgo5y+1f4ErCRx47MHlmK7mYfw
+         cTFIPj3/e3j/nW7+wAW6AxORD+qU2nttCPGM1KeRo8IFUNjMtvpkOaPrgbQjL5PTXVv7
+         WWBKsKoWQTu2nvHy4F4drSEfcGXMyiSxLrm297YSiVMJz2zNRqeZ2Tysb6ae+elX0JE8
+         /MUQ==
+X-Gm-Message-State: AO0yUKXDaGM0jrhA/u1b9/UQpj9cGYx4Cq7SvPsZJ+ThBj6c9YC8Ngcy
+        Abth3/dGIgUnpew6alC09RaayaqV14lHAEnAdy+Pslb5VfM6KKqeJFQf4273rFgtYoIb2d9a3JA
+        +Az8+zsBihMbSHybVRy02O11m5Qp33Ar6OarsA99Z6A==
+X-Received: by 2002:aa7:d990:0:b0:501:caae:e0de with SMTP id u16-20020aa7d990000000b00501caaee0demr8185465eds.4.1679506489673;
+        Wed, 22 Mar 2023 10:34:49 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9PgS3kaidYhV9lemzJXhmJzARDYcOeWat02j02f8hyubTMFbtmqu3D884euBElh899ajJvBA==
+X-Received: by 2002:aa7:d990:0:b0:501:caae:e0de with SMTP id u16-20020aa7d990000000b00501caaee0demr8185456eds.4.1679506489386;
+        Wed, 22 Mar 2023 10:34:49 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n12-20020a1709062bcc00b0093034e71b94sm7432397ejg.65.2023.03.22.10.25.45
+        by smtp.gmail.com with ESMTPSA id gz4-20020a170907a04400b0090e0a4e1bacsm7453497ejc.159.2023.03.22.10.34.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 10:25:46 -0700 (PDT)
-Message-ID: <cdd5a764-5c6d-8385-fbcc-c0459ae4cfb0@redhat.com>
-Date:   Wed, 22 Mar 2023 18:25:45 +0100
+        Wed, 22 Mar 2023 10:34:48 -0700 (PDT)
+Message-ID: <ed161532-1f4b-74b2-1391-95d06e4c8200@redhat.com>
+Date:   Wed, 22 Mar 2023 18:34:48 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 7/8] platform/x86: int3472: Support LED lookups in board
- data
+Subject: Re: [PATCH 8/8] platform/x86: int3472: Define LED lookup data for MS
+ Surface Go
 Content-Language: en-US, nl
 To:     Daniel Scally <dan.scally@ideasonboard.com>,
         linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
         sboyd@kernel.org, hpa@redhat.com
 References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-8-dan.scally@ideasonboard.com>
+ <20230322160926.948687-9-dan.scally@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322160926.948687-8-dan.scally@ideasonboard.com>
+In-Reply-To: <20230322160926.948687-9-dan.scally@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,79 +82,69 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 3/22/23 17:09, Daniel Scally wrote:
-> On platforms with the TPS68470 PMIC, we need to be able to define
-> which of the LEDs powered by the PMIC should be used by each of
-> the sensors that consume its resources. Add the ability to define
-> tables of LED lookup data to the board data file.
+> Add LED lookup data to tps68470_board_data.c for the Microsoft
+> Surface Go line of devices.
 > 
 > Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
+> ---
+>  .../x86/intel/int3472/tps68470_board_data.c    | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 0d46a238b630..e2c53319e112 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -157,10 +157,27 @@ static const struct tps68470_led_platform_data surface_go_tps68470_led_pdata = {
+>  	.wledctl_disled2 = false,
+>  };
+>  
+> +static struct tps68470_led_lookups surface_go_tps68470_led_lookups = {
+> +	.n_lookups = 2,
+> +	.lookup_table = {
+> +		{
+> +			.provider = "tps68470-iled_a::indicator",
+> +			.dev_id = "i2c-INT347A:00",
+> +			.con_id = "privacy-led",
+> +		},
+> +		{
+> +			.provider = "tps68470-wled::indicator",
+> +			.dev_id = "i2c-INT347E:00",
+> +			.con_id = "privacy-led",
+> +		},
 
-Thanks, patch looks good to me:
+So this feels wrong to me in 2 ways:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+1. It is abusing .con_id = "privacy-led" to enable the WLED
+
+2. You are not activating the front privacy LED for the IR projector. I have noticed on IPU6 devices that the _DSM listing GPIOs for the discrete INT3472 device lists a privacy-LED GPIO for the IR sensor too, which I so far have been guessing activates the actual privacy-LED. As I'm typing this I'm wondering if instead this is doing the same hack as you are doing here ?  
+
+Regardless I think it would be best to turn on the front privacy LED when the IR camera is used too, right ?
+
+IMHO this should look like this (with either the media-core or the driver consuming "ir-led"):
+
+static struct tps68470_led_lookups surface_go_tps68470_led_lookups = {
+	.n_lookups = 3,
+	.lookup_table = {
+		{
+			.provider = "tps68470-iled_a::indicator",
+			.dev_id = "i2c-INT347A:00",
+			.con_id = "privacy-led",
+		},
+		{
+			/* Use regular front-sensor privacy LED for ir-sensor too */
+			.provider = "INT33BE_00::privacy_led",
+			.dev_id = "i2c-INT347E:00",
+			.con_id = "privacy-led",
+		},
+		{
+			.provider = "tps68470-wled::indicator",
+			.dev_id = "i2c-INT347E:00",
+			.con_id = "ir-led",
+		},
+	}
 
 Regards,
 
 Hans
 
-
-
-> ---
->  drivers/platform/x86/intel/int3472/tps68470.c | 8 ++++++++
->  drivers/platform/x86/intel/int3472/tps68470.h | 8 ++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index 818f2fc5bf2a..07ac7b5b9082 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -206,6 +206,10 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
->  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
->  
-> +		if (board_data->led_lookups)
-> +			for (i = 0; i < board_data->led_lookups->n_lookups; i++)
-> +				led_add_lookup(&board_data->led_lookups->lookup_table[i]);
-> +
->  		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
->  					   cells, TPS68470_WIN_MFD_CELL_COUNT,
->  					   NULL, 0, NULL);
-> @@ -214,6 +218,10 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->  		if (ret) {
->  			for (i = 0; i < board_data->n_gpiod_lookups; i++)
->  				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
-> +
-> +			if (board_data->led_lookups)
-> +				for (i = 0; i < board_data->led_lookups->n_lookups; i++)
-> +					led_remove_lookup(&board_data->led_lookups->lookup_table[i]);
->  		}
->  
->  		break;
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
-> index ce50687db6fb..c03884654898 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.h
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.h
-> @@ -11,14 +11,22 @@
->  #ifndef _INTEL_SKL_INT3472_TPS68470_H
->  #define _INTEL_SKL_INT3472_TPS68470_H
->  
-> +#include <linux/leds.h>
-> +
->  struct gpiod_lookup_table;
->  struct tps68470_regulator_platform_data;
->  struct tps68470_led_platform_data;
->  
-> +struct tps68470_led_lookups {
-> +	unsigned int n_lookups;
-> +	struct led_lookup_data lookup_table[];
-> +};
-> +
->  struct int3472_tps68470_board_data {
->  	const char *dev_name;
->  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
->  	const struct tps68470_led_platform_data *tps68470_led_pdata;
-> +	struct tps68470_led_lookups *led_lookups;
->  	unsigned int n_gpiod_lookups;
->  	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
->  };
 
