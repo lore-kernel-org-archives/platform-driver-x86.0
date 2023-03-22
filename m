@@ -2,77 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45744C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9B1C6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjCVRVb (ORCPT
+        id S230191AbjCVRYj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40316 "EHLO
+        Wed, 22 Mar 2023 13:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbjCVRV2 (ORCPT
+        with ESMTP id S230323AbjCVRYZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:21:28 -0400
+        Wed, 22 Mar 2023 13:24:25 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36876664F4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:20:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5310D67724
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:22:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679505600;
+        s=mimecast20190719; t=1679505744;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yybOyM70lubrfgDREY68dFGi3XFk6IxJtz0S+wbusmo=;
-        b=aFG/1gCis6plP0JpkGaxJ+CBIDw39IxJ1PdOy/Z3AbBtfLcA6xOd0VBAwFFkK7C+C5qS1W
-        Mo06JebGMeSwp8K3qr4Rrf7Qqm6qabPrlm+lIK5vBE9GDmQJdPUrqCnmJmAnvapSND02kk
-        wMjeK75n1y4Y0wPojADDMErcbfZ70Sg=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=LRXVzF++MrVMIkJs3jZDHeZ/HQCwH6dYetSm4Auni4U=;
+        b=MdgAJx3Wd9SrnkY9/IM7cSGxQ3F276RKsOH7mRDI6Rbqd1mhi3LTyUgU0Q0wcoveW31JcC
+        vty4Hj8LumanDZge48fWMPT5JRoeyhJK5goq9XX2Sn3bLN0nh75DH3/Odi45/eftv9ZxgK
+        UYad/6puT7fKuGb6rZIewZOZ6jgAXio=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-277-Q6Z7tx0OP5yrAy-qnl027A-1; Wed, 22 Mar 2023 13:16:48 -0400
-X-MC-Unique: Q6Z7tx0OP5yrAy-qnl027A-1
-Received: by mail-ed1-f69.google.com with SMTP id c11-20020a509f8b000000b00501e2facf47so7385719edf.16
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:16:48 -0700 (PDT)
+ us-mta-428-zYmJFC26ND-eFdYmvHnDwg-1; Wed, 22 Mar 2023 13:22:22 -0400
+X-MC-Unique: zYmJFC26ND-eFdYmvHnDwg-1
+Received: by mail-ed1-f70.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso28594947edh.15
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:22:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679505407;
+        d=1e100.net; s=20210112; t=1679505741;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yybOyM70lubrfgDREY68dFGi3XFk6IxJtz0S+wbusmo=;
-        b=zMsdRYFKL/it4qM5SpJBLZpBkQqmN4/5OfBfMXrHeUzA7EnO2pNJTcJMHveE8cis1L
-         5WfN+Ne/0Z0NZe4kU0OwwmuEQlLB/jabKAdf1T9AT18j9cgw/hW4is7RuoLpFCcIdN+N
-         pfMpxSUpcuQQZxvgN9RjV5bmsBramJXbpSS3Z1crdhj3GPs+L28Oq5chvrJswePwxYL/
-         2PmhCB2bf1l9uELQqoBs0AqwZpzbxwrwywl/m5Mo0UYQsKNPeR13fWhxl4gvXd0u7JcI
-         olJ0C5l6f7ybOM5wfotBPZizAIeE8pJUmySjI1mXUijjFUTXvtV/ejI3ESPRNDaxlfOa
-         otCQ==
-X-Gm-Message-State: AO0yUKXvOzr1F64JoZB/x9fAtht79ZW6em95EoHyNK0SW7DQ9A/5D4Zn
-        qA4DBRqILXm7bmSkjl25eKK/EMjA6MPlV6Vxb7V/HED9vx76hcZh4nTp0lQ/KP2YzflXK7Sh37Q
-        6oA/8WUP2BJwYnuw+iEod3sF0awUdMorqag==
-X-Received: by 2002:a17:906:f8db:b0:8b1:7ae8:ba6f with SMTP id lh27-20020a170906f8db00b008b17ae8ba6fmr7696683ejb.16.1679505407632;
-        Wed, 22 Mar 2023 10:16:47 -0700 (PDT)
-X-Google-Smtp-Source: AK7set8faXcfrBJdaqds1K2z+gIvn6NspaXI72JkrVa/RxdzNbL1JuKW9KL8vSeAgaRt1DKAJfrcLw==
-X-Received: by 2002:a17:906:f8db:b0:8b1:7ae8:ba6f with SMTP id lh27-20020a170906f8db00b008b17ae8ba6fmr7696658ejb.16.1679505407390;
-        Wed, 22 Mar 2023 10:16:47 -0700 (PDT)
+        bh=LRXVzF++MrVMIkJs3jZDHeZ/HQCwH6dYetSm4Auni4U=;
+        b=NLtmeaDqo82xg62WP0zSCLIk9dJw1eba50zaR1q5IEfVNUQdxsLIuqbfjz4laRecG/
+         UY+r9iu1/j7IUlR3izVXZWKEHv98b7PtI/BRpn0odRqT8khisJ0oTGopRgc5+KCgDhdK
+         hN+FmL614rrQ3ojkMQM5KfqUMjx3+yH6EaALXtgCREGPEMXaUsO+q2XtlIopTMKZT9fP
+         1Nzkc7Tf5iCk8hp4vP5zsaOk0Jor2C5S1ryXevNYKcnRakFSdjdziL0IXysKrUjxOH85
+         TUHGJRI52ZIxMHgFgJif4N7Td52iFdC/dROXSeT0VQnTwAaNdRvj2IVYGQClDOPmcedC
+         3yMA==
+X-Gm-Message-State: AO0yUKWf5k6CXcXQ0ZDLBxxE8qS9WG8QHQfLDaKF0DNfHj24IZvaj0yT
+        UxQ3VKk1WkArIt0dsHsj8UEc80HXoKvEg+8734Qt23XIxsav8WiSnirN9ZG4LjezRlM+wjCzjM5
+        KByl6kzOmFG14I0e/BLsfgBgTpMXV6+8nNA==
+X-Received: by 2002:a17:906:46ce:b0:931:ad32:79ed with SMTP id k14-20020a17090646ce00b00931ad3279edmr8131238ejs.12.1679505741544;
+        Wed, 22 Mar 2023 10:22:21 -0700 (PDT)
+X-Google-Smtp-Source: AK7set8xtI18BKS9k7p/pa5yo7CxtqKHem/X/Gy85iArc5emZqyws6miH9/u9bwflD3rZSCFexAEoQ==
+X-Received: by 2002:a17:906:46ce:b0:931:ad32:79ed with SMTP id k14-20020a17090646ce00b00931ad3279edmr8131213ejs.12.1679505741212;
+        Wed, 22 Mar 2023 10:22:21 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tm8-20020a170907c38800b0093c82edfd48sm21597ejc.80.2023.03.22.10.16.46
+        by smtp.gmail.com with ESMTPSA id t21-20020a50d715000000b004af7191fe35sm8042388edi.22.2023.03.22.10.22.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 10:16:46 -0700 (PDT)
-Message-ID: <e8138361-7424-3c4d-935a-53dbbe723fa0@redhat.com>
-Date:   Wed, 22 Mar 2023 18:16:46 +0100
+        Wed, 22 Mar 2023 10:22:20 -0700 (PDT)
+Message-ID: <15dfc66b-83f7-4abf-1bc3-3bd9a2666aa1@redhat.com>
+Date:   Wed, 22 Mar 2023 18:22:20 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 2/8] platform/x86: int3472: Init LED registers using
- platform data
+Subject: Re: [PATCH 5/8] leds: tps68470: Refactor tps68470_brightness_get()
 Content-Language: en-US, nl
 To:     Daniel Scally <dan.scally@ideasonboard.com>,
         linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
         sboyd@kernel.org, hpa@redhat.com
 References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-3-dan.scally@ideasonboard.com>
+ <20230322160926.948687-6-dan.scally@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322160926.948687-3-dan.scally@ideasonboard.com>
+In-Reply-To: <20230322160926.948687-6-dan.scally@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,20 +81,58 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 3/22/23 17:09, Daniel Scally wrote:
-> Check platform data to discover the appropriate settings for the PMIC's
-> WLED registers and set them during probe.
+> We want to extend tps68470_brightness_get() to be usable with the
+> other LEDs supplied by the IC; refactor it to make that easier.
 > 
 > Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
+> ---
+>  drivers/leds/leds-tps68470.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
+> index d2060fe4259d..44df175d25de 100644
+> --- a/drivers/leds/leds-tps68470.c
+> +++ b/drivers/leds/leds-tps68470.c
+> @@ -77,23 +77,24 @@ static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev
+>  	int ret = 0;
+>  	int value = 0;
+>  
+> -	ret =  regmap_read(regmap, TPS68470_REG_ILEDCTL, &value);
+> -	if (ret)
+> -		return dev_err_probe(led_cdev->dev, -EINVAL, "failed on reading register\n");
+> -
+>  	switch (led->led_id) {
+>  	case TPS68470_ILED_A:
+> -		value = value & TPS68470_ILEDCTL_ENA;
+> -		break;
+>  	case TPS68470_ILED_B:
+> -		value = value & TPS68470_ILEDCTL_ENB;
+> +		ret =  regmap_read(regmap, TPS68470_REG_ILEDCTL, &value);
+> +		if (ret)
+> +			return dev_err_probe(led_cdev->dev, ret,
+> +					     "failed to read LED status\n");
 
-As mentioned already the subsys-prefix for this patch is wrong
-and maybe also in the subject do s/LED/WLED/, so we get:
+I realize this is a pre-existing problem, but I don't think we should
+be using dev_err_probe() in functions which are used outside the probe()
+path?
 
-[PATCH 2/8] leds: tps68470: Init WLED registers using platform data
+So maybe fix this up while at it and make this:
 
-although since the pdata is shared for all tps68470 LEDs
-I guess without the W it makes sense too.
+		if (ret) {
+			dev_err(led_cdev->dev, ""failed to read LED status: %d\n", ret);
+			return ret;
+		}
 
-With the Subject subsys prefix fixed this is:
+> +
+> +		value &= led->led_id == TPS68470_ILED_A ? TPS68470_ILEDCTL_ENA :
+> +					TPS68470_ILEDCTL_ENB;
+>  		break;
+> +	default:
+> +		return dev_err_probe(led_cdev->dev, -EINVAL, "invalid LED ID\n");
+
+idem.
+
+With those fixed:
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
@@ -105,84 +142,13 @@ Hans
 
 
 
-> ---
->  drivers/leds/leds-tps68470.c | 51 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
-> index 35aeb5db89c8..d2060fe4259d 100644
-> --- a/drivers/leds/leds-tps68470.c
-> +++ b/drivers/leds/leds-tps68470.c
-> @@ -11,6 +11,7 @@
->  #include <linux/leds.h>
->  #include <linux/mfd/tps68470.h>
->  #include <linux/module.h>
-> +#include <linux/platform_data/tps68470.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
->  #include <linux/regmap.h>
-> @@ -113,6 +114,52 @@ static int tps68470_ledb_current_init(struct platform_device *pdev,
->  	return ret;
->  }
->  
-> +static int tps68470_leds_init(struct tps68470_device *tps68470)
-> +{
-> +	struct tps68470_led_platform_data *pdata = tps68470->dev->platform_data;
-> +	int ret;
-> +
-> +	if (!pdata)
-> +		return 0;
-> +
-> +	ret = regmap_write(tps68470->regmap, TPS68470_REG_ILEDCTL, pdata->iledctl_ctrlb);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set ILED CTRLB\n");
-> +
-> +	ret = regmap_write(tps68470->regmap, TPS68470_REG_WLEDMAXF,
-> +			   pdata->wledmaxf & TPS68470_WLEDMAXF_MAX_CUR_MASK);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set WLEDMAXF\n");
-> +
-> +	ret = regmap_write(tps68470->regmap, TPS68470_REG_WLEDTO, pdata->wledto);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set WLEDTO\n");
-> +
-> +	ret = regmap_write(tps68470->regmap, TPS68470_REG_WLEDC1,
-> +			   pdata->wledc1 & TPS68470_WLEDC_ILED_MASK);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set WLEDC1\n");
-> +
-> +	ret = regmap_write(tps68470->regmap, TPS68470_REG_WLEDC2,
-> +			   pdata->wledc2 & TPS68470_WLEDC_ILED_MASK);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set WLEDC2\n");
-> +
-> +	ret = regmap_update_bits(tps68470->regmap, TPS68470_REG_WLEDCTL,
-> +				 TPS68470_WLED_DISLED1,
-> +				 pdata->wledctl_disled1 ? TPS68470_WLED_DISLED1 : 0);
-> +	if (ret)
-> +		return dev_err_probe(tps68470->dev, ret, "failed to set DISLED1\n");
-> +
-> +	ret = regmap_update_bits(tps68470->regmap, TPS68470_REG_WLEDCTL,
-> +				 TPS68470_WLED_DISLED2,
-> +				 pdata->wledctl_disled2 ? TPS68470_WLED_DISLED2 : 0);
-> +	if (ret)
-> +		dev_err_probe(tps68470->dev, ret, "failed to set DISLED2\n");
-> +
-> +	return 0;
-> +}
-> +
->  static int tps68470_leds_probe(struct platform_device *pdev)
->  {
->  	int i = 0;
-> @@ -160,6 +207,10 @@ static int tps68470_leds_probe(struct platform_device *pdev)
->  		}
 >  	}
 >  
-> +	ret = tps68470_leds_init(tps68470);
-> +	if (ret)
-> +		goto err_exit;
-> +
->  err_exit:
->  	if (ret) {
->  		for (i = 0; i < TPS68470_NUM_LEDS; i++) {
+>  	return value ? LED_ON : LED_OFF;
+>  }
+>  
+> -
+>  static int tps68470_ledb_current_init(struct platform_device *pdev,
+>  				      struct tps68470_device *tps68470)
+>  {
 
