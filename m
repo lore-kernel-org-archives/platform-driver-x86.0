@@ -2,76 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0064FC6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 03:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D0BC7619A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 08:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjCVDdJ (ORCPT
+        id S230137AbjCVIul (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Mar 2023 23:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
+        Wed, 22 Mar 2023 04:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230109AbjCVDdH (ORCPT
+        with ESMTP id S230109AbjCVIul (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Mar 2023 23:33:07 -0400
-Received: from m126.mail.126.com (m126.mail.126.com [220.181.12.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E84340FD
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Mar 2023 20:32:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OOvqj
-        nANFhM/5I0aa7j5Vctk+HbLhhfTKSBEqkAdaxA=; b=aAGumLQg76ub4IPlb+Mt1
-        LUEhpCrN4BafA6au8Q97449Cv17B0AHT4A52Xl6T3PHry3/PyrWiDdvOLzfVw2Ai
-        9lY6jHDJsBbyHDvWxUXRrRgvZNkRemRSXaImhqmlzCCFZA1y4Wzpxqy/xMfYb17G
-        AZUxwL+N8gW15gvtic60cc=
-Received: from localhost.localdomain (unknown [124.16.139.61])
-        by zwqz-smtp-mta-g4-0 (Coremail) with SMTP id _____wB3JZRydhpk7pOZAQ--.58969S2;
-        Wed, 22 Mar 2023 11:30:59 +0800 (CST)
-From:   Liang He <windhl@126.com>
-To:     luzmaximilian@gmail.com, hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, windhl@126.com
-Subject: [PATCH] platform/surface: aggregator: Add missing fwnode_handle_put()
-Date:   Wed, 22 Mar 2023 11:30:57 +0800
-Message-Id: <20230322033057.1855741-1-windhl@126.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wB3JZRydhpk7pOZAQ--.58969S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr1kuFy8ZFy5JFWDJw4UXFb_yoWDKrcEgr
-        4jganrJw18GFn2yrn2yw4SgrySqr4YgFWfAFyftrWSv345Xa9xXr1jvF95W347Zr4Yvryr
-        W3yqyrWfAry3WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_LIDPUUUUU==
-X-Originating-IP: [124.16.139.61]
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/1tbizho6F18RQrG-ugAAsB
+        Wed, 22 Mar 2023 04:50:41 -0400
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EADB591CF;
+        Wed, 22 Mar 2023 01:50:39 -0700 (PDT)
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4PhMck0XqTz501Sl;
+        Wed, 22 Mar 2023 16:50:30 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+        by mse-fl1.zte.com.cn with SMTP id 32M8oGQu010729;
+        Wed, 22 Mar 2023 16:50:16 +0800 (+08)
+        (envelope-from ye.xingchen@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+        by mapi (Zmail) with MAPI id mid31;
+        Wed, 22 Mar 2023 16:50:19 +0800 (CST)
+Date:   Wed, 22 Mar 2023 16:50:19 +0800 (CST)
+X-Zmail-TransId: 2afa641ac14b729-e53b0
+X-Mailer: Zmail v1.0
+Message-ID: <202303221650190306634@zte.com.cn>
+Mime-Version: 1.0
+From:   <ye.xingchen@zte.com.cn>
+To:     <hdegoede@redhat.com>
+Cc:     <dmitry.torokhov@gmail.com>, <linux-input@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIXSBJbnB1dDogc2lsZWFkIC0gVXNlIGRldl9lcnJfcHJvYmUoKQ==?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl1.zte.com.cn 32M8oGQu010729
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 641AC154.001/4PhMck0XqTz501Sl
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In fwnode_for_each_child_node(), we should add
-fwnode_handle_put() when break out of the iteration
-fwnode_for_each_child_node() as it will automatically
-increase and decrease the refcounter.
+From: Ye Xingchen <ye.xingchen@zte.com.cn>
 
-Fixes: fc622b3d36e6 ("platform/surface: Set up Surface Aggregator device registry")
-Signed-off-by: Liang He <windhl@126.com>
+Replace the open-code with dev_err_probe() to simplify the code.
+
+Signed-off-by: Ye Xingchen <ye.xingchen@zte.com.cn>
 ---
- drivers/platform/surface/aggregator/bus.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/silead.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-index de539938896e..b501a79f2a08 100644
---- a/drivers/platform/surface/aggregator/bus.c
-+++ b/drivers/platform/surface/aggregator/bus.c
-@@ -485,8 +485,10 @@ int __ssam_register_clients(struct device *parent, struct ssam_controller *ctrl,
- 		 * device, so ignore it and continue with the next one.
- 		 */
- 		status = ssam_add_client_device(parent, ctrl, child);
--		if (status && status != -ENODEV)
-+		if (status && status != -ENODEV) {
-+			fwnode_handle_put(child);
- 			goto err;
-+		}
- 	}
- 
- 	return 0;
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index a37fac089010..f464155aed65 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -706,11 +706,9 @@ static int silead_ts_probe(struct i2c_client *client)
+
+ 	/* Power GPIO pin */
+ 	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+-	if (IS_ERR(data->gpio_power)) {
+-		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
+-			dev_err(dev, "Shutdown GPIO request failed\n");
+-		return PTR_ERR(data->gpio_power);
+-	}
++	if (IS_ERR(data->gpio_power))
++		return dev_err_probe(dev, PTR_ERR(data->gpio_power),
++				     "Shutdown GPIO request failed\n");
+
+ 	error = silead_ts_setup(client);
+ 	if (error)
 -- 
 2.25.1
-
