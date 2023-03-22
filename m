@@ -2,103 +2,126 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B723C6FD1F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 12:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274D1C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 13:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbjCVMmD (ORCPT
+        id S230475AbjCVN7C (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 08:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
+        Wed, 22 Mar 2023 09:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbjCVMmC (ORCPT
+        with ESMTP id S229852AbjCVN67 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 08:42:02 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6997C4D603
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 05:42:01 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id l15-20020a05600c4f0f00b003ed58a9a15eso11390197wmq.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 05:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679488920;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IpH05cMxjPhntoGosiFZbtHRUGYys2kuv27LTgTdH2E=;
-        b=nqXJvxGYk2onooHHIZAhnCxK8dbnxusOD9y6TME9fV1IRrs+S/2ivosq1AO7w2RHEg
-         5Tlwcn4wp/2MU+S3um1Sg0rMzkKdrEyYaweE4+aQA9DXpolKAj+I4NyAfZX1BFMtbItP
-         /OZB02J4+lrvT1Jhf+YWT5mEIVcB0BAKfj/THHnqE0fBYzauJCv24jk8nbYxn2cVprYT
-         fCRI2tkkI6KXFHdp+d5n3vECVY3qLGbKRepz2Z+Ks2TZcsrcYhzN4aGv38i2csvGCfu5
-         OnMK6h5Rt2T+8CJZv65OXPpl96ZUl17Tdvg8iQ2ELLCXfCmO7feIUswblrWDSPdxZ4VN
-         CwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679488920;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IpH05cMxjPhntoGosiFZbtHRUGYys2kuv27LTgTdH2E=;
-        b=W7H0I20K1Mw7hsco6mdWpJ1xGfYw56FhHfkH3HmzbUojuvGA5oeJZk/FY9D619QiLS
-         Qda82gkB8Dd/pbrm8qs/PtzrcW/0BZJEUyHW5puVwhghBTeE1Fa8OkaMQpSBZqfHg5u9
-         d4Icn6Tx9Soa1/X8Ig46ow9Lv7TkFM9TPw7kuKbzFxAxagib86E7AArHBXdhN8RoQ+T7
-         Eh8udvqZfdn1HJroyQo+0r5wfat6TkLf4l4Drm0HCUHfa/pbGmRUM2R7leoE0LLAbMZk
-         mbVe4u9BW9+HWQgPmmEZE2+h/9Hptcs4Q6vgw0CpwLLEVwXQEznE4o1LuINrYzpEp1Mq
-         vv7Q==
-X-Gm-Message-State: AO0yUKV9VUoiFcd3ILr7Gxspg0l/HvsgbM+bNxsWTTe5HbqkE9MIdtNi
-        AuGbB2nLiF/bMOJo+pTtOd0lm5l9KqI=
-X-Google-Smtp-Source: AK7set8YnIqVAurinZxyZbJWL64koShhZMMFz3RMeNzWdHyVXpHdz+2BoSZDLBaevSwA5lEuOza0NQ==
-X-Received: by 2002:a7b:c7c4:0:b0:3ea:ed4d:38f6 with SMTP id z4-20020a7bc7c4000000b003eaed4d38f6mr5255279wmk.4.1679488919780;
-        Wed, 22 Mar 2023 05:41:59 -0700 (PDT)
-Received: from [10.26.0.5] ([194.126.177.81])
-        by smtp.gmail.com with ESMTPSA id n1-20020a7bc5c1000000b003db03725e86sm16922505wmk.8.2023.03.22.05.41.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 05:41:59 -0700 (PDT)
-Message-ID: <9c417628-f110-97e4-ff3e-4a835a0b0b27@gmail.com>
-Date:   Wed, 22 Mar 2023 13:41:58 +0100
+        Wed, 22 Mar 2023 09:58:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A82746AC
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 06:58:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7DC00B81CEF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 13:58:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0DF5CC433EF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 13:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679493498;
+        bh=rV1NrC9l2Q+OGdRrOUnNsreW38LZq19hSMkt2b1+rFw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=lMG6GiCJRoJ5XgwLQOiqa6K0lrCajZPlZEDtkWjNI34NHTQpcY45SeLI5yalWFkcD
+         kzcWIWWBJbb63fiRNIEk5C4/M4PB7qPBg2NMiBXvuBxQiHcCFy4UPXJ99gakhCyGZj
+         50CjKDBlL3LSnipnozGwASzBERQSNmPIp7p7TWnguPpwlqlQJEtc7qOXIx6ezR93QM
+         4KVIhn2/zQrDspe1sXjX45IdLredDoGNns9y0ln42Ce1VvEVndd5r+vqKmJL3hKqEk
+         HKD2kDewJm71IZMzFp+JTUuFIVbniIS9oLx6ATn+Eb6lGnCm/IS9lrPKH+hLBD7+OZ
+         AW4Gv+aTXcvvA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id D7364C43141; Wed, 22 Mar 2023 13:58:17 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 216824] Some laptop hotkeys don't work
+Date:   Wed, 22 Mar 2023 13:58:17 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: andretiagob@protonmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216824-215701-Uny8fMH82G@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216824-215701@https.bugzilla.kernel.org/>
+References: <bug-216824-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] platform/surface: aggregator: Add missing
- fwnode_handle_put()
-To:     Liang He <windhl@126.com>, hdegoede@redhat.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-References: <20230322033057.1855741-1-windhl@126.com>
-Content-Language: en-US
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20230322033057.1855741-1-windhl@126.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 3/22/23 04:30, Liang He wrote:
-> In fwnode_for_each_child_node(), we should add
-> fwnode_handle_put() when break out of the iteration
-> fwnode_for_each_child_node() as it will automatically
-> increase and decrease the refcounter.
-> 
-> Fixes: fc622b3d36e6 ("platform/surface: Set up Surface Aggregator device registry")
-> Signed-off-by: Liang He <windhl@126.com>
-> ---
->   drivers/platform/surface/aggregator/bus.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-> index de539938896e..b501a79f2a08 100644
-> --- a/drivers/platform/surface/aggregator/bus.c
-> +++ b/drivers/platform/surface/aggregator/bus.c
-> @@ -485,8 +485,10 @@ int __ssam_register_clients(struct device *parent, struct ssam_controller *ctrl,
->   		 * device, so ignore it and continue with the next one.
->   		 */
->   		status = ssam_add_client_device(parent, ctrl, child);
-> -		if (status && status != -ENODEV)
-> +		if (status && status != -ENODEV) {
-> +			fwnode_handle_put(child);
->   			goto err;
-> +		}
->   	}
->   
->   	return 0;
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216824
 
-Thanks for spotting this.
+--- Comment #15 from Andr=C3=A9 Barata (andretiagob@protonmail.com) ---
+Hi hans, sorry for bringing this issue again.=20
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Recently I switched desktop environments, specifically Fedora 37 Gnome from
+KDE. Since the 37 version of Fedora is using an older version of systemd i =
+had
+to install the patch you provided here and the function keys are working
+(Fedora 38 has the latest systemd version with the patch included).
+
+So the strange thing is, the disable/enable the touchpad function key F4
+stopped working in Gnome for some reason.=20
+
+evtest detects the input but it doesn't do anything in gnome:
+
+Event: time 1679493260.452112, -------------- SYN_REPORT ------------
+Event: time 1679493265.334443, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1d
+Event: time 1679493265.334443, type 1 (EV_KEY), code 29 (KEY_LEFTCTRL), val=
+ue 1
+Event: time 1679493265.334443, -------------- SYN_REPORT ------------
+Event: time 1679493265.336519, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+Event: time 1679493265.336519, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
+lue
+1
+Event: time 1679493265.336519, -------------- SYN_REPORT ------------
+Event: time 1679493265.337277, type 4 (EV_MSC), code 4 (MSC_SCAN), value 76
+Event: time 1679493265.337277, type 1 (EV_KEY), code 85 (KEY_ZENKAKUHANKAKU=
+),
+value 1
+Event: time 1679493265.337277, -------------- SYN_REPORT ------------
+Event: time 1679493265.339611, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1d
+Event: time 1679493265.339611, type 1 (EV_KEY), code 29 (KEY_LEFTCTRL), val=
+ue 0
+Event: time 1679493265.339611, -------------- SYN_REPORT ------------
+Event: time 1679493265.342147, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
+Event: time 1679493265.342147, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
+lue
+0
+Event: time 1679493265.342147, -------------- SYN_REPORT ------------
+Event: time 1679493265.343741, type 4 (EV_MSC), code 4 (MSC_SCAN), value 76
+Event: time 1679493265.343741, type 1 (EV_KEY), code 85 (KEY_ZENKAKUHANKAKU=
+),
+value 0
+Event: time 1679493265.343741, -------------- SYN_REPORT ------------
+
+
+How can i had this key to the patch you created for systemd here:
+https://github.com/systemd/systemd/pull/25824
+
+
+
+Thank you Hans!
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
