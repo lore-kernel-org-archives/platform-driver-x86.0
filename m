@@ -2,76 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC67C76195
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0746DC6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjCVRZn (ORCPT
+        id S229823AbjCVR0i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        Wed, 22 Mar 2023 13:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjCVRZn (ORCPT
+        with ESMTP id S229611AbjCVR0h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:25:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB56199C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:24:54 -0700 (PDT)
+        Wed, 22 Mar 2023 13:26:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42941B318
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679505893;
+        s=mimecast20190719; t=1679505950;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DI9mYdoQcbq0a9RshtISxvNn6vWKroN9kzvNpIKmLUU=;
-        b=KzkxFsSU694kQnSEWMABStJx+0cLB0KI4YNS9GM/PHpdA4GyjN9wA4ttaztTEH5yZsEV0v
-        YQo6ZBLpqCO6I5cetbe5AdK5hJVcrNfpUutfIRAYwn0pYBu7DRYbg+94LOoVNdvInUp7KT
-        WlGv35rQgdTFAs8zySgqnohMwmQ+1Hg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=2BCzf9yNfqPS/o+6dJP9wT9ur6OFw/P5ZqtE3Tm0xY8=;
+        b=WiLIlLoz4Zh5dExn6AEFJ3svqyfOEt+QeXZO5UWrH3T559Dokwr9oMoB/u2EGIbyluxesx
+        IY0lCInOXff97mbNmnY1W76zRUEi5/cSmr7kBwxhZMDulrYuqXdrB6GDZRc7K/lEw0RRqF
+        5fG1ivvaV6MHcGpgXJTJt33CfFj9JvA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613-lDEn25c4OwCGUFA81x_R7Q-1; Wed, 22 Mar 2023 13:24:52 -0400
-X-MC-Unique: lDEn25c4OwCGUFA81x_R7Q-1
-Received: by mail-ed1-f70.google.com with SMTP id t26-20020a50d71a000000b005003c5087caso26562769edi.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:24:51 -0700 (PDT)
+ us-mta-628-pkT0sZZuOFe7Vo4RujRe_Q-1; Wed, 22 Mar 2023 13:25:48 -0400
+X-MC-Unique: pkT0sZZuOFe7Vo4RujRe_Q-1
+Received: by mail-ed1-f69.google.com with SMTP id i42-20020a0564020f2a00b004fd23c238beso28073399eda.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:25:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679505890;
+        d=1e100.net; s=20210112; t=1679505947;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DI9mYdoQcbq0a9RshtISxvNn6vWKroN9kzvNpIKmLUU=;
-        b=70cmpqYJ0RnG7Jga1yXz0CKJjJURoAwpx+Al+4giua0w3Sg2I1PtLAahlG9/2g9Ph3
-         NGoaZ0yfa+JAKZOEo/BWtK1+/f1jlxn3788jrQIq3nLA6Ko3xfE9l7hZKoir/SbI7EjP
-         u6DfP/obT1fRFsX34sXgI+958TiJ4F7OazG+frqK6GQUTFKdMIKzS5HY2h9N4cyaQxWc
-         HNQYpcd9sKGCOtFnp9BSIwyBCwyr1bYOkvYncuVhHM39jJs2ShyKIp5Vq5DIi67OYIhe
-         oed9L55G7EtTxzJ/hrSMA5WaJoiHGUflHw+jOnUnJYc6zbF+CqgLtuB27IaXFdPp1fp7
-         IiAg==
-X-Gm-Message-State: AO0yUKUEpxaEYNzXjqX3sEMzvLrPBiZZLJsej41fxQNu7DHEGuIjyL+n
-        sDVIlC30QNn82kS8rMfgy6Ss37J0U629l31fOJeSY2nWXLcnKg80SPJlpc7mauNZ/trUSNHyC+y
-        9Wtmz2PUo7gOMCDUbuSNplYomZPqkJJWA0Y/nQZCXHg==
-X-Received: by 2002:a17:906:9bd3:b0:931:85f8:6d00 with SMTP id de19-20020a1709069bd300b0093185f86d00mr6583059ejc.47.1679505890375;
-        Wed, 22 Mar 2023 10:24:50 -0700 (PDT)
-X-Google-Smtp-Source: AK7set/iVOzwEtCBSm0BcTaZj/TqMVuTEs5AG1IzeThUKhMvbdX5pWNMSX6+SeFRhfJKZzJbxbk91Q==
-X-Received: by 2002:a17:906:9bd3:b0:931:85f8:6d00 with SMTP id de19-20020a1709069bd300b0093185f86d00mr6583037ejc.47.1679505890092;
-        Wed, 22 Mar 2023 10:24:50 -0700 (PDT)
+        bh=2BCzf9yNfqPS/o+6dJP9wT9ur6OFw/P5ZqtE3Tm0xY8=;
+        b=OVZsNVn3KDi/hC/7sChod7WKNpHAIlA9Paenj6YdwMa6fWASg2IfRSi0w73HCUISUI
+         Mcxr3C746OAqkxeE8Sd+tkkzg5e682vYNa3Dc5v73f4viTUWw7K3zkO7AbPJVRgXrYnn
+         a3rWJPav3KdLSmBtQdc8tZfYDGQZ2lIvZfs236GbM1NztmveBo682E+1tIEPv47e7oWP
+         Kqw5qKWa2Mlaf7t6gMcezaJHhwRLBTlASieRpYYnw+zDN1KRTtQnu2x3GtZzpI2AIgQS
+         ZhnN2aqtIDXdnTx1/S8avm/XSfZSB8h+U0akHT2IAjGrOZW0FWJSgze8OfvziRoqOX9Y
+         MOJw==
+X-Gm-Message-State: AO0yUKVMTEfVL5Krmb5K0GXU3Cl+Fsz8i+5Xmll9YEVpv6BbSfTcNDWS
+        Ap9qIYwZBDDPd6YjVMz9xK6GlI+/p/IRc03swhc6SSdnVbNElB4R0JgJvcpnpblDqjg5VWKG9jQ
+        QC3TY2kqt2wXKYJv42mVzJbq60jNaLcuBlw==
+X-Received: by 2002:aa7:de99:0:b0:501:d6c2:7440 with SMTP id j25-20020aa7de99000000b00501d6c27440mr7523070edv.6.1679505947056;
+        Wed, 22 Mar 2023 10:25:47 -0700 (PDT)
+X-Google-Smtp-Source: AK7set96lO/N4LsdI6KHDwwBVZl/xD+ohv8xtOec+wU93QSM6fKUYN4yZLx7lHLg0O6BUqRef37Xwg==
+X-Received: by 2002:aa7:de99:0:b0:501:d6c2:7440 with SMTP id j25-20020aa7de99000000b00501d6c27440mr7523050edv.6.1679505946819;
+        Wed, 22 Mar 2023 10:25:46 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id u27-20020a50951b000000b004bf999f8e57sm8078740eda.19.2023.03.22.10.24.49
+        by smtp.gmail.com with ESMTPSA id n12-20020a1709062bcc00b0093034e71b94sm7432397ejg.65.2023.03.22.10.25.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 10:24:49 -0700 (PDT)
-Message-ID: <98ec71dc-729b-4648-223c-6543e2efab39@redhat.com>
-Date:   Wed, 22 Mar 2023 18:24:48 +0100
+        Wed, 22 Mar 2023 10:25:46 -0700 (PDT)
+Message-ID: <cdd5a764-5c6d-8385-fbcc-c0459ae4cfb0@redhat.com>
+Date:   Wed, 22 Mar 2023 18:25:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 6/8] leds: tps68470: Support the WLED driver
+Subject: Re: [PATCH 7/8] platform/x86: int3472: Support LED lookups in board
+ data
 Content-Language: en-US, nl
 To:     Daniel Scally <dan.scally@ideasonboard.com>,
         linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
         sboyd@kernel.org, hpa@redhat.com
 References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-7-dan.scally@ideasonboard.com>
+ <20230322160926.948687-8-dan.scally@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322160926.948687-7-dan.scally@ideasonboard.com>
+In-Reply-To: <20230322160926.948687-8-dan.scally@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,239 +82,79 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 3/22/23 17:09, Daniel Scally wrote:
-> The TPS68470 PMIC provides a third LED driver in addition to the two
-> indicator LEDs. Add support for the WLED. To ensure the LED is active
-> for as long as the kernel instructs it to be we need to re-trigger it
-> periodically to avoid the IC's internal timeouts.
+> On platforms with the TPS68470 PMIC, we need to be able to define
+> which of the LEDs powered by the PMIC should be used by each of
+> the sensors that consume its resources. Add the ability to define
+> tables of LED lookup data to the board data file.
 > 
 > Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
-> ---
->  drivers/leds/leds-tps68470.c | 102 ++++++++++++++++++++++++++++++++++-
->  include/linux/mfd/tps68470.h |  12 +++++
->  2 files changed, 113 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
-> index 44df175d25de..abcd3494b1a8 100644
-> --- a/drivers/leds/leds-tps68470.c
-> +++ b/drivers/leds/leds-tps68470.c
-> @@ -8,6 +8,7 @@
->   *	Kate Hsuan <hpa@redhat.com>
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/leds.h>
->  #include <linux/mfd/tps68470.h>
->  #include <linux/module.h>
-> @@ -15,7 +16,10 @@
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
->  #include <linux/regmap.h>
-> +#include <linux/workqueue.h>
->  
-> +#define work_to_led(work) \
-> +	container_of(work, struct tps68470_led, keepalive_work)
->  
->  #define lcdev_to_led(led_cdev) \
->  	container_of(led_cdev, struct tps68470_led, lcdev)
-> @@ -26,20 +30,25 @@
->  enum tps68470_led_ids {
->  	TPS68470_ILED_A,
->  	TPS68470_ILED_B,
-> +	TPS68470_WLED,
->  	TPS68470_NUM_LEDS
->  };
->  
->  static const char *tps68470_led_names[] = {
->  	[TPS68470_ILED_A] = "tps68470-iled_a",
->  	[TPS68470_ILED_B] = "tps68470-iled_b",
-> +	[TPS68470_WLED] = "tps68470-wled",
->  };
->  
->  struct tps68470_led {
->  	unsigned int led_id;
->  	struct led_classdev lcdev;
-> +	enum led_brightness state;
-> +	struct work_struct keepalive_work;
 
-The way this is used does not look very periodical, it seems to just run as fast as it can?
+Thanks, patch looks good to me:
 
-IMHO this should use a delayed-work item and then queue that to run at a certain interval.
-
->  };
->  
->  struct tps68470_device {
-> +	struct clk *clk;
->  	struct device *dev;
->  	struct regmap *regmap;
->  	struct tps68470_led leds[TPS68470_NUM_LEDS];
-> @@ -52,11 +61,33 @@ enum ctrlb_current {
->  	CTRLB_16MA	= 3,
->  };
->  
-> +/*
-> + * The WLED can operate in different modes, including a Flash and Torch mode. In
-> + * each mode there's a timeout which ranges from a matter of milliseconds to up
-> + * to 13 seconds. We don't want that timeout to apply though because the LED
-> + * should be lit until we say that it should no longer be lit, re-trigger the
-> + * LED periodically to keep it alive.
-> + */
-> +static void tps68470_wled_keepalive_work(struct work_struct *work)
-> +{
-> +	struct tps68470_device *tps68470;
-> +	struct tps68470_led *led;
-> +
-> +	led = work_to_led(work);
-> +	tps68470 = led_to_tps68470(led, led->led_id);
-> +
-> +	regmap_update_bits_async(tps68470->regmap, TPS68470_REG_WLEDCTL,
-> +				 TPS68470_WLED_CTL_MASK, TPS68470_WLED_CTL_MASK);
-> +	schedule_work(&led->keepalive_work);
-> +}
-> +
->  static int tps68470_brightness_set(struct led_classdev *led_cdev, enum led_brightness brightness)
->  {
->  	struct tps68470_led *led = lcdev_to_led(led_cdev);
->  	struct tps68470_device *tps68470 = led_to_tps68470(led, led->led_id);
->  	struct regmap *regmap = tps68470->regmap;
-> +	const char *errmsg;
-> +	int ret;
->  
->  	switch (led->led_id) {
->  	case TPS68470_ILED_A:
-> @@ -65,8 +96,59 @@ static int tps68470_brightness_set(struct led_classdev *led_cdev, enum led_brigh
->  	case TPS68470_ILED_B:
->  		return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, TPS68470_ILEDCTL_ENB,
->  					  brightness ? TPS68470_ILEDCTL_ENB : 0);
-> +	case TPS68470_WLED:
-> +		/*
-> +		 * LED core does not prevent re-setting brightness to its current
-> +		 * value; we need to do so here to avoid unbalanced calls to clk
-> +		 * enable/disable.
-> +		 */
-> +		if (led->state == brightness)
-> +			return 0;
-> +
-> +		if (brightness) {
-> +			schedule_work(&led->keepalive_work);
-> +
-> +			ret = clk_prepare_enable(tps68470->clk);
-> +			if (ret) {
-> +				errmsg = "failed to start clock\n";
-> +				goto err_cancel_work;
-> +			}
-> +		} else {
-> +			cancel_work_sync(&led->keepalive_work);
-> +			clk_disable_unprepare(tps68470->clk);
-> +		}
-> +
-> +		ret = regmap_update_bits(tps68470->regmap, TPS68470_REG_WLEDCTL,
-> +					 TPS68470_WLED_EN_MASK,
-> +					 brightness ? TPS68470_WLED_EN_MASK :
-> +						      ~TPS68470_WLED_EN_MASK);
-> +		if (ret) {
-> +			errmsg = "failed to set WLED EN\n";
-> +			goto err_disable_clk;
-> +		}
-> +
-> +		ret = regmap_update_bits(tps68470->regmap, TPS68470_REG_WLEDCTL,
-> +					 TPS68470_WLED_CTL_MASK,
-> +					 brightness ? TPS68470_WLED_CTL_MASK :
-> +						      ~TPS68470_WLED_CTL_MASK);
-> +		if (ret) {
-> +			errmsg = "failed to set WLED START\n";
-> +			goto err_disable_clk;
-> +		}
-> +
-> +		led->state = brightness;
-> +		break;
-> +	default:
-> +		return dev_err_probe(led_cdev->dev, -EINVAL, "invalid LED ID\n");
->  	}
-> -	return -EINVAL;
-> +
-> +	return ret;
-> +
-> +err_disable_clk:
-> +	clk_disable_unprepare(tps68470->clk);
-> +err_cancel_work:
-> +	cancel_work_sync(&led->keepalive_work);
-> +	return dev_err_probe(tps68470->dev, ret, errmsg);
->  }
->  
->  static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev)
-> @@ -88,6 +170,14 @@ static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev
->  		value &= led->led_id == TPS68470_ILED_A ? TPS68470_ILEDCTL_ENA :
->  					TPS68470_ILEDCTL_ENB;
->  		break;
-> +	case TPS68470_WLED:
-> +		ret = regmap_read(regmap, TPS68470_REG_WLEDCTL, &value);
-> +		if (ret)
-> +			return dev_err_probe(led_cdev->dev, ret,
-> +					     "failed to read LED status\n");
-> +
-> +		value &= TPS68470_WLED_CTL_MASK;
-> +		break;
->  	default:
->  		return dev_err_probe(led_cdev->dev, -EINVAL, "invalid LED ID\n");
->  	}
-> @@ -177,6 +267,11 @@ static int tps68470_leds_probe(struct platform_device *pdev)
->  	tps68470->dev = &pdev->dev;
->  	tps68470->regmap = dev_get_drvdata(pdev->dev.parent);
->  
-> +	tps68470->clk = devm_clk_get(tps68470->dev, NULL);
-> +	if (IS_ERR(tps68470->clk))
-> +		return dev_err_probe(tps68470->dev, PTR_ERR(tps68470->clk),
-> +				     "failed to get clock\n");
-> +
->  	for (i = 0; i < TPS68470_NUM_LEDS; i++) {
->  		led = &tps68470->leds[i];
->  		lcdev = &led->lcdev;
-> @@ -206,6 +301,11 @@ static int tps68470_leds_probe(struct platform_device *pdev)
->  			if (ret)
->  				goto err_exit;
->  		}
-> +
-> +		if (led->led_id == TPS68470_WLED) {
-> +			INIT_WORK(&led->keepalive_work,
-> +				  tps68470_wled_keepalive_work);
-> +		}
->  	}
->  
->  	ret = tps68470_leds_init(tps68470);
-> diff --git a/include/linux/mfd/tps68470.h b/include/linux/mfd/tps68470.h
-> index 2d2abb25b944..103ff730e028 100644
-> --- a/include/linux/mfd/tps68470.h
-> +++ b/include/linux/mfd/tps68470.h
-> @@ -35,6 +35,11 @@
->  #define TPS68470_REG_GPDI		0x26
->  #define TPS68470_REG_GPDO		0x27
->  #define TPS68470_REG_ILEDCTL		0x28
-> +#define TPS68470_REG_WLEDMAXF		0x2F
-> +#define TPS68470_REG_WLEDTO		0x30
-> +#define TPS68470_REG_WLEDC1		0x34
-> +#define TPS68470_REG_WLEDC2		0x35
-> +#define TPS68470_REG_WLEDCTL		0x36
->  #define TPS68470_REG_VCMVAL		0x3C
->  #define TPS68470_REG_VAUX1VAL		0x3D
->  #define TPS68470_REG_VAUX2VAL		0x3E
-> @@ -98,5 +103,12 @@
->  #define TPS68470_ILEDCTL_ENA		BIT(2)
->  #define TPS68470_ILEDCTL_ENB		BIT(6)
->  #define TPS68470_ILEDCTL_CTRLB		GENMASK(5, 4)
-> +#define TPS68470_WLEDMAXF_MAX_CUR_MASK	GENMASK(4, 0)
-> +#define TPS68470_WLEDC_ILED_MASK	GENMASK(4, 0)
-> +#define TPS68470_WLED_MODE_MASK		GENMASK(1, 0)
-> +#define TPS68470_WLED_EN_MASK		BIT(2)
-> +#define TPS68470_WLED_DISLED1		BIT(3)
-> +#define TPS68470_WLED_DISLED2		BIT(4)
-> +#define TPS68470_WLED_CTL_MASK		BIT(5)
->  
->  #endif /* __LINUX_MFD_TPS68470_H */
-
-
-Otherwise this LGTM.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
+
+
+> ---
+>  drivers/platform/x86/intel/int3472/tps68470.c | 8 ++++++++
+>  drivers/platform/x86/intel/int3472/tps68470.h | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index 818f2fc5bf2a..07ac7b5b9082 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -206,6 +206,10 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+>  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+>  
+> +		if (board_data->led_lookups)
+> +			for (i = 0; i < board_data->led_lookups->n_lookups; i++)
+> +				led_add_lookup(&board_data->led_lookups->lookup_table[i]);
+> +
+>  		ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
+>  					   cells, TPS68470_WIN_MFD_CELL_COUNT,
+>  					   NULL, 0, NULL);
+> @@ -214,6 +218,10 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  		if (ret) {
+>  			for (i = 0; i < board_data->n_gpiod_lookups; i++)
+>  				gpiod_remove_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> +
+> +			if (board_data->led_lookups)
+> +				for (i = 0; i < board_data->led_lookups->n_lookups; i++)
+> +					led_remove_lookup(&board_data->led_lookups->lookup_table[i]);
+>  		}
+>  
+>  		break;
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+> index ce50687db6fb..c03884654898 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.h
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.h
+> @@ -11,14 +11,22 @@
+>  #ifndef _INTEL_SKL_INT3472_TPS68470_H
+>  #define _INTEL_SKL_INT3472_TPS68470_H
+>  
+> +#include <linux/leds.h>
+> +
+>  struct gpiod_lookup_table;
+>  struct tps68470_regulator_platform_data;
+>  struct tps68470_led_platform_data;
+>  
+> +struct tps68470_led_lookups {
+> +	unsigned int n_lookups;
+> +	struct led_lookup_data lookup_table[];
+> +};
+> +
+>  struct int3472_tps68470_board_data {
+>  	const char *dev_name;
+>  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
+>  	const struct tps68470_led_platform_data *tps68470_led_pdata;
+> +	struct tps68470_led_lookups *led_lookups;
+>  	unsigned int n_gpiod_lookups;
+>  	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+>  };
 
