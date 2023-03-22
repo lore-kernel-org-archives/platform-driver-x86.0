@@ -2,174 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A220C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5B3C6FD1F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Mar 2023 17:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231383AbjCVRPH (ORCPT
+        id S230499AbjCVRU1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        Wed, 22 Mar 2023 13:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbjCVRPC (ORCPT
+        with ESMTP id S231304AbjCVRUM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:15:02 -0400
+        Wed, 22 Mar 2023 13:20:12 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C07061A7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:14:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBEA66D22
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679505257;
+        s=mimecast20190719; t=1679505470;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LAnMd310MmA6pNpw5eHkqA00D/dkWZ4sGmY7r/HYNi8=;
-        b=UfVdGYdWKGSp1ZkRfHJNiCZPBcDpCmasWkFCBuCmfD92DXbvUgCNSuFGcjGmmuNLg4zNYa
-        ScMdmcK1EM7l5eupCLBEVunioFnoxQbXM5cpS9WnQvZdzPikqbAXRhxBRPTNlRiKNwmk7O
-        jL3YE841TPOMxsEMNlJaKx2XabzpZcQ=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=SMw6l8Y9d7rVMNxAIN1dm8nnft0HynDsRdE/l7NPZnA=;
+        b=NGb0wVbxObCCdDojt/XjaL3Fc4WrwmzSQJoKLtPYwDKhbmtSGpihA8idiVchHr0bRM+iVw
+        CcMb8l6CU/22vFwRc0kc+GeWxorGhdexIzpFz5kJdIJuPSy9kpjQ9JbmyBU2VNyxl7cIVH
+        0RhPGf45a6SYIwVXzOj6LS+pV+uYksU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-53LNuxbOMZ2-MVLmnMtnFQ-1; Wed, 22 Mar 2023 13:14:15 -0400
-X-MC-Unique: 53LNuxbOMZ2-MVLmnMtnFQ-1
-Received: by mail-ed1-f72.google.com with SMTP id t26-20020a50d71a000000b005003c5087caso26522305edi.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:14:15 -0700 (PDT)
+ us-mta-630-5AhB2z5iMhes0ZI7V5aLKw-1; Wed, 22 Mar 2023 13:17:49 -0400
+X-MC-Unique: 5AhB2z5iMhes0ZI7V5aLKw-1
+Received: by mail-ed1-f70.google.com with SMTP id m18-20020a50d7d2000000b00501dfd867a4so8241125edj.20
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Mar 2023 10:17:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679505254;
+        d=1e100.net; s=20210112; t=1679505468;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAnMd310MmA6pNpw5eHkqA00D/dkWZ4sGmY7r/HYNi8=;
-        b=oKWkhPjg9go3je/y3G3USLbYuLkQL12R1i3IYE9/R5UODTkPvxLt+MbN3zbHDI8xU4
-         9zLiX1B3Cjn3XlXroxSc7NIcub+O0kEr6kzcjGEVYjKTGbIRMisY/WtILx/7pkJB5F+J
-         Y9Gsn6UW7DX7nz4T5aF3xmhVNXDfCS6aoSwlpSPoEYKa9kbUJcAX2g6NJM2JDTBgzxY9
-         7ELCkO6xMgez87T0lJU5TSYRUvoRJb22Due8EE2sgZXqDUC1ioKOjCAZd32+SBwaxbsM
-         6CKqyl47Dkd+P98reiPDwA+ucAPF0OPs4QgPhtq8FCrKdCgipY/GdH2UQJ4qVJ6P1m0/
-         nshg==
-X-Gm-Message-State: AO0yUKVAxO92htbIrPOypiuvpXr3rSdqMowCDntlDxAy0G2LajDcF0tr
-        bmEp4JxHVsqsiR/wl7HI9Jb94fwcA29tl3dFSECsfRwdLg4lwbkTIkSkZiermB15IiuBu58k0tQ
-        ltWf0gKeoIMe+EcuHmBCSg4fHLH+kyWxJYQ==
-X-Received: by 2002:a17:906:3e0f:b0:933:422b:5f5d with SMTP id k15-20020a1709063e0f00b00933422b5f5dmr8707538eji.18.1679505254352;
-        Wed, 22 Mar 2023 10:14:14 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+U7G/THYaSuIF3qhrxw9o/2Nmh3Q+qTmWOnN6Iuv6VKLPg91lY+B1kfUQxuMMfsxJEhezsvA==
-X-Received: by 2002:a17:906:3e0f:b0:933:422b:5f5d with SMTP id k15-20020a1709063e0f00b00933422b5f5dmr8707516eji.18.1679505254094;
-        Wed, 22 Mar 2023 10:14:14 -0700 (PDT)
+        bh=SMw6l8Y9d7rVMNxAIN1dm8nnft0HynDsRdE/l7NPZnA=;
+        b=MAjqXl4nYorJ12syxSIg7QFohPaftfnfSe12+woOrl4zr6H7QGoqtl90/ZX61CzeQY
+         uFxRoJDQwRO/QXg5Dzb5kPi3cl4Ib/yjRRZFtAm8tKZabcv3rXUn6bHk7837aJYM5EbJ
+         OnxSGgdplrEpW9zbjI62QkC8CeDmgrpVvq9azL862ncxEYYkL3RF7lFdRhnlAUzq4TCQ
+         HmOLg8TaRA+nPhVXde0jlia4/hflK0Pne7UvA2zGIrh2+YtqxY5jzpSOk/+9p7cH81Gk
+         gFyDQGIL3CdE4dPZ56tqeSNE8/cFtAuRliALmJ41QHOlM1Dmynx/3l3+/ccqjnsTh9kA
+         +R+Q==
+X-Gm-Message-State: AO0yUKUDqNwFZLpM+sChWWEdxJ24+d/Mh96XhwYoO5RkTxWPS3rfAIt6
+        xn0ijjQ0cr+SaBTxphRiJf9L55GgwoHJZ3n0yrGB9Ayp4joGLSBKVbJ1CGsXAXUw3E6y9TlHGOh
+        GcZ4jUO7rJBkM75vn72URdzrHzIuAcoeqwA==
+X-Received: by 2002:a17:907:b0f:b0:930:e634:3d52 with SMTP id h15-20020a1709070b0f00b00930e6343d52mr7409596ejl.24.1679505468063;
+        Wed, 22 Mar 2023 10:17:48 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9UJ6fHpinSGLpYrikCXWXvZDMjiRa9RPd1G6Qo46KRj7UYH+C2D6wg7oTRZoSmf9+lH5lfwQ==
+X-Received: by 2002:a17:907:b0f:b0:930:e634:3d52 with SMTP id h15-20020a1709070b0f00b00930e6343d52mr7409568ejl.24.1679505467765;
+        Wed, 22 Mar 2023 10:17:47 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lt11-20020a170906fa8b00b008e54ac90de1sm7447206ejb.74.2023.03.22.10.14.13
+        by smtp.gmail.com with ESMTPSA id o7-20020a1709062e8700b00933356c681esm5967710eji.150.2023.03.22.10.17.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 10:14:13 -0700 (PDT)
-Message-ID: <5841f661-15f8-12d1-ca92-1dce1a7296df@redhat.com>
-Date:   Wed, 22 Mar 2023 18:14:12 +0100
+        Wed, 22 Mar 2023 10:17:47 -0700 (PDT)
+Message-ID: <ac33109b-4dd2-02ed-8315-6d80c9e93dc1@redhat.com>
+Date:   Wed, 22 Mar 2023 18:17:46 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/8] platform/x86: int3472: Add platform data for LEDs
+Subject: Re: [PATCH 3/8] platform/x86: int3472: Add TPS68470 LED Board Data
 Content-Language: en-US, nl
 To:     Daniel Scally <dan.scally@ideasonboard.com>,
         linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
         sboyd@kernel.org, hpa@redhat.com
 References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-2-dan.scally@ideasonboard.com>
+ <20230322160926.948687-4-dan.scally@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322160926.948687-2-dan.scally@ideasonboard.com>
+In-Reply-To: <20230322160926.948687-4-dan.scally@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Daniel,
-
-Thank you for your work in this!
+Hi,
 
 On 3/22/23 17:09, Daniel Scally wrote:
-> Some of the LEDs that can be provided by the TPS68470 PMIC come with
-> various configuration registers that must be set to appropriate values.
-> Add a platform data struct so that those data can be defined and
-> passed to the tps68470-led platform device.
+> Add the board data for the Surface Go platforms to configure the LEDs
+> provided by the TPS68470 PMIC.
 > 
 > Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
-> ---
->  drivers/platform/x86/intel/int3472/tps68470.c |  2 ++
->  drivers/platform/x86/intel/int3472/tps68470.h |  2 ++
->  include/linux/platform_data/tps68470.h        | 11 +++++++++++
->  3 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index 82ef022f8916..53b0459f278a 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -194,6 +194,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
->  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
->  		cells[2].name = "tps68470-led";
-> +		cells[2].platform_data = (void *)board_data->tps68470_led_pdata;
-> +		cells[2].pdata_size = sizeof(struct tps68470_led_platform_data);
->  		cells[3].name = "tps68470-gpio";
->  
->  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
-> index 35915e701593..ce50687db6fb 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.h
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.h
-> @@ -13,10 +13,12 @@
->  
->  struct gpiod_lookup_table;
->  struct tps68470_regulator_platform_data;
-> +struct tps68470_led_platform_data;
->  
->  struct int3472_tps68470_board_data {
->  	const char *dev_name;
->  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
-> +	const struct tps68470_led_platform_data *tps68470_led_pdata;
->  	unsigned int n_gpiod_lookups;
->  	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
->  };
 
+As mentioned in the review of 1/8 please squash the 
+drivers/platorm/x86/intel/int3472/ of 1/8 into this, with
+that fixed this is:
 
-> diff --git a/include/linux/platform_data/tps68470.h b/include/linux/platform_data/tps68470.h
-> index e605a2cab07f..5d55ad5c17ed 100644
-> --- a/include/linux/platform_data/tps68470.h
-> +++ b/include/linux/platform_data/tps68470.h
-> @@ -37,4 +37,15 @@ struct tps68470_clk_platform_data {
->  	struct tps68470_clk_consumer consumers[];
->  };
->  
-> +struct tps68470_led_platform_data {
-> +	u8 iledctl_ctrlb;
-> +	u8 wledmaxf;
-> +	u8 wledto;
-> +	u8 wledc1;
-> +	u8 wledc2;
-> +	u8 wledctl_mode;
-> +	bool wledctl_disled1;
-> +	bool wledctl_disled2;
-> +};
-> +
->  #endif
-
-
-It seems to me that these include/linux/platform_data/tps68470.h
-changes should be squashed to:
-
-[PATCH 2/8] platform/x86: int3472: Init LED registers using platform data
-
-Which BTW has the wrong subsys prefix, it should be named:
-
-[PATCH 2/8] leds: tps68470: Init LED registers using platform data
-
-or even better:
-
-[PATCH 2/8] leds: tps68470: Init WLED registers using platform data
-
-
-And then squash the rest of this patch into:
-
-[PATCH 3/8] platform/x86: int3472: Add TPS68470 LED Board Data
-
-please and drop this now empty patch from the set.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
+> ---
+>  ...ctps68470_board_data.c         | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 322237e056f3..0d46a238b630 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -146,9 +146,21 @@ static struct gpiod_lookup_table surface_go_int347e_gpios = {
+>  	}
+>  };
+>  
+> +static const struct tps68470_led_platform_data surface_go_tps68470_led_pdata = {
+> +	.iledctl_ctrlb = 0x30,
+> +	.wledmaxf = 0x1f,
+> +	.wledto = 0x07,
+> +	.wledc1 = 0x1f,
+> +	.wledc2 = 0x1f,
+> +	.wledctl_mode = 0x00,
+> +	.wledctl_disled1 = true,
+> +	.wledctl_disled2 = false,
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> +	.tps68470_led_pdata = &surface_go_tps68470_led_pdata,
+>  	.n_gpiod_lookups = 2,
+>  	.tps68470_gpio_lookup_tables = {
+>  		&surface_go_int347a_gpios,
+> @@ -159,6 +171,7 @@ static const struct int3472_tps68470_board_data surface_go_tps68470_board_data =
+>  static const struct int3472_tps68470_board_data surface_go3_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:01",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> +	.tps68470_led_pdata = &surface_go_tps68470_led_pdata,
+>  	.n_gpiod_lookups = 2,
+>  	.tps68470_gpio_lookup_tables = {
+>  		&surface_go_int347a_gpios,
 
