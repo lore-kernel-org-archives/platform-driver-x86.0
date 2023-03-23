@@ -2,116 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00876C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C898C76196
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 16:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231475AbjCWO5q (ORCPT
+        id S231945AbjCWQZd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Mar 2023 10:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35642 "EHLO
+        Thu, 23 Mar 2023 12:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjCWO5p (ORCPT
+        with ESMTP id S231693AbjCWQZc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Mar 2023 10:57:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76DB11ACF8;
-        Thu, 23 Mar 2023 07:57:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E8F362778;
-        Thu, 23 Mar 2023 14:57:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C9DC433D2;
-        Thu, 23 Mar 2023 14:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679583463;
-        bh=4SKK1B8jja9o0uUKsq5/ptb8ZMrXwzoUx0IkPkwl20A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QaGPIa/Q0SSYcyxHzncR8RmHnUrE/jbSffqkWKpXZfysFwkdpeScjfoYAZOoX4LqY
-         Mtqjz9Ah0PpE1yw+fLPNsKTewRYSeRR0bRVRaXo7QKMXa0Aj8kLUEwLy+T6HqbbhF4
-         slFQFLGvcQ+xLqE7kYDyqPKtgor6Kkgd03qZLLNSUA14w0ihUQPtTfVUrQmbZs8P0D
-         MblUZaWRN2LrOQ1Y73no40U5ToacSy2pi2Na6n2NSfpuYVShDUzKuDK83cwj7JRRWE
-         ASsm6S1FuHF0CP3up1N4mlL8HK7pT6X6vxzd0PbTETfoHriKk7UvpRHPWUWPcSvfbg
-         XC2upE11qwCRA==
-Date:   Thu, 23 Mar 2023 14:57:38 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Daniel Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH v3 1/3] platform: x86: int3472: Add MFD cell for tps68470
- LED
-Message-ID: <20230323145738.GN2673958@google.com>
-References: <20230321153718.1355511-1-hpa@redhat.com>
- <20230321153718.1355511-2-hpa@redhat.com>
- <20230323122327.GJ2673958@google.com>
- <d2c6af4b-218c-96a7-a2d8-87f90e856c7c@redhat.com>
+        Thu, 23 Mar 2023 12:25:32 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2068DF9;
+        Thu, 23 Mar 2023 09:25:30 -0700 (PDT)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9FC299A8;
+        Thu, 23 Mar 2023 17:25:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1679588729;
+        bh=wZtMUPdp5g8Lvp0WEwdfQw72f0XMEHo0y/0jQ6CFK38=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
+        b=sNPbw8tKLJN/4Snb/3QxVOZ6tttuw8X3IDKmuQfba2f5kpfP/bWOU/LeAYs9G0ETL
+         Exe+zpVSoOqY2YwZGJzUCFSjmrh7mGPjRD8ybicTz3tCw59wlkHj3fqc4+RCPjh1sR
+         R9nBHgam8Ud69jswhMaFVC6TAGdMGlrzS8/TTWG0=
+Message-ID: <85997479-374b-f130-29dc-e713000d4348@ideasonboard.com>
+Date:   Thu, 23 Mar 2023 16:25:26 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2c6af4b-218c-96a7-a2d8-87f90e856c7c@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        lee@kernel.org, hdegoede@redhat.com, markgross@kernel.org,
+        sboyd@kernel.org, hpa@redhat.com
+References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
+ <20230322160926.948687-7-dan.scally@ideasonboard.com>
+ <ZBw2ai0G0XCa1vky@duo.ucw.cz>
+From:   Dan Scally <dan.scally@ideasonboard.com>
+Subject: Re: [PATCH 6/8] leds: tps68470: Support the WLED driver
+In-Reply-To: <ZBw2ai0G0XCa1vky@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 23 Mar 2023, Hans de Goede wrote:
+Hi Pavel, thanks for taking a look
 
-> Hi,
+On 23/03/2023 11:22, Pavel Machek wrote:
+> On Wed 2023-03-22 16:09:24, Daniel Scally wrote:
+>> The TPS68470 PMIC provides a third LED driver in addition to the two
+>> indicator LEDs. Add support for the WLED. To ensure the LED is active
+>> for as long as the kernel instructs it to be we need to re-trigger it
+>> periodically to avoid the IC's internal timeouts.
+> Wow. No!
 >
-> On 3/23/23 13:23, Lee Jones wrote:
-> > On Tue, 21 Mar 2023, Kate Hsuan wrote:
-> >
-> >> Add MFD cell for tps68470-led.
-> >>
-> >> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-> >> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> >> ---
-> >>  drivers/platform/x86/intel/int3472/tps68470.c | 5 +++--
-> >>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> >> index 5b8d1a9620a5..82ef022f8916 100644
-> >> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> >> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> >> @@ -17,7 +17,7 @@
-> >>  #define DESIGNED_FOR_CHROMEOS		1
-> >>  #define DESIGNED_FOR_WINDOWS		2
-> >>
-> >> -#define TPS68470_WIN_MFD_CELL_COUNT	3
-> >> +#define TPS68470_WIN_MFD_CELL_COUNT	4
-> >>
-> >>  static const struct mfd_cell tps68470_cros[] = {
-> >>  	{ .name = "tps68470-gpio" },
-> >> @@ -193,7 +193,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
-> >>  		cells[1].name = "tps68470-regulator";
-> >>  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
-> >>  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
-> >> -		cells[2].name = "tps68470-gpio";
-> >> +		cells[2].name = "tps68470-led";
-> >> +		cells[3].name = "tps68470-gpio";
-> >
-> > The question is, why is the MFD API being used out side of drivers/mfd?
+> If hardware does not wart you to burn the LED, it is not okay to just
+> work around that. These are not designed for continuous operation.
 >
-> Because Intel made a big mess about how they describe camera sensors + the matching clks / regulators / GPIOs and the optional PMIC in ACPI.
->
-> The drivers/platform/x86/intel/int3472/ code untangles this mess and in some cases it instantiates MFD cells (with a whole bunch of derived platform_data per cell) for a TPS68470 PMIC.
->
-> And sometimes while binding to an INT3472 ACPI device-node it does not instantiate any MFD cells at all since the INT3472 ACPI device-node does not always describe such a PMIC.
->
-> Oh and also depending on of the ACPI tables are targetting ChromeOS or Windows a different set of MFD cells needs to be instantiated. On ChromeOS most of the PMIC poking is done through ACPI through a ChomeOS specific custom ACPI OpRegion, so there there are only cells for GPIO and a driver providing the OpRegion are created.
->
-> So lots of ugly x86 platform specific handling, ACPI parsing, etc. which is why this landed under drivers/platform/x86/ . IIRC you were even involved in the original merge since there once was a much simpler MFD driver under driver/mfd which only supported the ChromeOS setup.
->
-> (but my memory may be deceiving me here).
+>> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
+>> index 44df175d25de..abcd3494b1a8 100644
+> Fun sha1 hash ;-).
 
-Right, I guess we've both slept since then!
 
-My normal request is that MFD handling should be in drivers/mfd.
-Anything else can be farmed out to the various functional subsystems and
-drivers/platform.
+heh yeh
 
---
-Lee Jones [李琼斯]
+>
+>> @@ -52,11 +61,33 @@ enum ctrlb_current {
+>>   	CTRLB_16MA	= 3,
+>>   };
+>>   
+>> +/*
+>> + * The WLED can operate in different modes, including a Flash and Torch mode. In
+>> + * each mode there's a timeout which ranges from a matter of milliseconds to up
+>> + * to 13 seconds. We don't want that timeout to apply though because the LED
+>> + * should be lit until we say that it should no longer be lit, re-trigger the
+>> + * LED periodically to keep it alive.
+>> + */
+> We don't want the LED to overheat. That takes precedence.
+>
+> Find out what are the maximum limits for on time at various current
+> levels. LED framework should be used for torch mode, with current set
+> such that unlimited operation is safe. V4L2 should be used for flash
+> mode.
+
+
+I did it this way because this is how the IC operates on my device whilst it's booted to 
+Windows...but I suppose given they don't expose the LED outside of their Hello auth thing they can 
+guarantee it's not being lit for too long - I confess that hadn't occurred to me. Anyway; I'll 
+update this to re-trigger if the IC is in torch mode within the timeout (which the datasheet 
+explicitly says you can do in torch mode; the current is much more heavily limited in that mode) and 
+in the flash mode to update the brightness setting to 0 once the timeout expires so it reflects the 
+actual state of the LED. Does that sound ok?
+
+>
+> BR,
+> 										Pavel
