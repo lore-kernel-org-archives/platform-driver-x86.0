@@ -2,363 +2,297 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600D2C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 02:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217FFC6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 07:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbjCWCyQ (ORCPT
+        id S230370AbjCWHgW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Mar 2023 22:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45814 "EHLO
+        Thu, 23 Mar 2023 03:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbjCWCyP (ORCPT
+        with ESMTP id S231140AbjCWHgS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2023 22:54:15 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A9D2FCF6;
-        Wed, 22 Mar 2023 19:53:54 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id o6-20020a17090a9f8600b0023f32869993so602811pjp.1;
-        Wed, 22 Mar 2023 19:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679540034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LAIxtk1YfXSeYG+JVzGbN7xtN5I/M1dAKUW9+/w/q7U=;
-        b=RHF3cVgro1PVPJkM+6Bj5jvwiQdOXO6Ezms5fHTa2BwfKVG16AD54WuH9mu3pInrVa
-         sxsRDB1V7405P/bEUBchRcywhnkYJCJMsQ31N1ShvQFg3vg1R5llwQhPZiwcr5CoAQxq
-         3qDiEmz7dzkV0QKUERdqQkRJhxOvONELphFVr7ajwPJqxxbTu9zdNFn1IXNUUcyHDTCp
-         ks0NrAGwXQTmYP9RJHMRLPWkD68gS+PLQ/EY3Vl7xzYMAUAyU24TbqTvxU05nnxndwIe
-         dZ5c6jKuarMw2qSjO4rWsQiEgaKFRcBz3PSgFDgpVYT6/eS6QpUaOhfyRkhXliDUXhxF
-         O4/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679540034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LAIxtk1YfXSeYG+JVzGbN7xtN5I/M1dAKUW9+/w/q7U=;
-        b=oa9Mpx+TT15/QnsBAhYHKycGdrlOJ0dJEkXkyw7XNZBiGr3X2PXTFotlqVas3ZbyPO
-         mOvQz2p+opuhPvWYAmbMhMlXMAyppMdIo/kHyTNOWqu+3ESq0HFfbA0tA7RtwD4yaM+R
-         QuuE3xhj/7fBhE62fLieQ9kJI7N1Ro8mBAagQ+DnidfgsZJ/4UAwt7J3qxJw8CWKFCwc
-         RuoHRlM0fXXRXhKhtn39+d3FHSSb9ipPXD9POCUAdIV7q93YWW1msnoNA1CIs+4bhfK9
-         9CC1+vk9imXlQ1fu7OnAJwVKlDF/AdCYF2CfEkque4pCmb/hfevRxLGESbp5fQXWWy06
-         YHiA==
-X-Gm-Message-State: AO0yUKW9eMW+vRUDPoaES0NMkHIvad2uJ6xGxJVCLXb0tB5l5K8utE+z
-        doCjs4w6LpHBTn9qQMVT5V+Eki2aQ0Ks8A==
-X-Google-Smtp-Source: AK7set8P0RlF4b7nd1VBbVuuSPO9GDiHoymQZz+G3EFKVVsMvv9LQii3TztQUU9VkzC2kdGuLuFtuQ==
-X-Received: by 2002:a17:90b:3903:b0:23b:4f2a:8016 with SMTP id ob3-20020a17090b390300b0023b4f2a8016mr6373306pjb.3.1679540034163;
-        Wed, 22 Mar 2023 19:53:54 -0700 (PDT)
-Received: from localhost.localdomain ([47.147.242.129])
-        by smtp.gmail.com with ESMTPSA id iy13-20020a170903130d00b001a1c74554f3sm7623697plb.185.2023.03.22.19.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Mar 2023 19:53:53 -0700 (PDT)
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
-        Gergo Koteles <soyer@irl.hu>,
-        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Armin Wolf <W_Armin@gmx.de>,
-        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v2 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-Date:   Wed, 22 Mar 2023 19:52:00 -0700
-Message-Id: <20230323025200.5462-3-kallmeyeras@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230323025200.5462-1-kallmeyeras@gmail.com>
-References: <20230323025200.5462-1-kallmeyeras@gmail.com>
+        Thu, 23 Mar 2023 03:36:18 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CBE17CF7;
+        Thu, 23 Mar 2023 00:36:13 -0700 (PDT)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1DBA18B;
+        Thu, 23 Mar 2023 08:36:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1679556971;
+        bh=ER8fZix82y+H8kvq4/OAYKfbqFytO/UhpcY/GoytO8o=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=YpiHbCB3AMSMJngQclzwHV2uqFYoTnr+pADXFmUDTlDZRM7pqSImpGT83eW75Dw2c
+         QAHEJHdefbepDxYmjy0VjETu/lHpjmGL89lHelLyhd1cbbBt2PPUUnhHzvOENHjeFa
+         BVvy0bUEerpMylXbnno9KnYfTvY4yXhJ5RuuyWpQ=
+Message-ID: <aac749fa-3f33-6fb3-cfea-e7a11fd1d384@ideasonboard.com>
+Date:   Thu, 23 Mar 2023 07:36:08 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v3 3/3] leds: tps68470: Add LED control for tps68470
+To:     Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+References: <20230321153718.1355511-1-hpa@redhat.com>
+ <20230321153718.1355511-4-hpa@redhat.com>
+Content-Language: en-US
+From:   Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20230321153718.1355511-4-hpa@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Gergo Koteles <soyer@irl.hu>
+Hi Kate
 
-This WMI driver for the tablet mode control switch for Lenovo Yoga
-notebooks was originally written by Gergo Koteles. The mode is mapped to
-a SW_TABLET_MODE switch capable input device.
+On 21/03/2023 15:37, Kate Hsuan wrote:
+> There are two LED controllers, LEDA indicator LED and LEDB flash LED for
+> tps68470. LEDA can be enabled by setting TPS68470_ILEDCTL_ENA. Moreover,
+> tps68470 provides four levels of power status for LEDB. If the
+> properties called "ti,ledb-current" can be found, the current will be
+> set according to the property values. These two LEDs can be controlled
+> through the LED class of sysfs (tps68470-leda and tps68470-ledb).
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
 
-Andrew followed the suggestions that were posted in reply to Gergo's RFC
-patch, and on the v1 version of this patch to follow-up and get it
-merged.
-
-Changes from Gergo's RFC:
-
- - Refactored obtaining a reference to the EC ACPI device needed for the
-   quirk implementation as suggested by Hans de Goede
- - Applied small fixes and switched to devm_input_allocate_device() and
-   removing input_unregister_device() as suggested by Barnabás Pőcze.
- - Merged the lenovo_ymc_trigger_ec function with the
-   ideapad_trigger_ymc_next_read function since it was no longer
-   external.
- - Added the word "Tablet" to the driver description to hopefully make
-   it more clear.
- - Fixed the LENOVO_YMC_QUERY_METHOD ID and the name string for the EC
-   APCI device trigged for the quirk
- - Triggered the input event on probe so that the initial tablet mode
-   state when the driver is loaded is reported to userspace as suggested
-   by Armin Wolf.
-
-We have tested this on the Yoga 7 14AIL7 for the non-quirk path and on
-the Yoga 7 14ARB7 which has the firmware bug that requires triggering
-the embedded controller to send the mode change events. This workaround
-is also used by the Windows drivers.
-
-According to reports at https://github.com/lukas-w/yoga-usage-mode,
-which uses the same WMI devices, the following models should also work:
-Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
-
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Co-developed-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
-Signed-off-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
-Link: https://lore.kernel.org/r/20221004214332.35934-1-soyer@irl.hu/
-Link: https://lore.kernel.org/platform-driver-x86/20230310041726.217447-1-kallmeyeras@gmail.com/
----
- drivers/platform/x86/Kconfig          |  10 ++
- drivers/platform/x86/Makefile         |   1 +
- drivers/platform/x86/ideapad-laptop.h |   1 +
- drivers/platform/x86/lenovo-ymc.c     | 187 ++++++++++++++++++++++++++
- 4 files changed, 199 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-ymc.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5692385e2..858be0c65 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -470,6 +470,16 @@ config IDEAPAD_LAPTOP
- 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- 	  rfkill switch, hotkey, fan control and backlight control.
- 
-+config LENOVO_YMC
-+	tristate "Lenovo Yoga Tablet Mode Control"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	depends on IDEAPAD_LAPTOP
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
-+	  events for Lenovo Yoga notebooks.
-+
- config SENSORS_HDAPS
- 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
- 	depends on INPUT
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1d3d1b025..10054cdea 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
- # IBM Thinkpad and Lenovo
- obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
- obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
-+obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
- obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
-diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
-index 7dd8ce027..2564cb1cd 100644
---- a/drivers/platform/x86/ideapad-laptop.h
-+++ b/drivers/platform/x86/ideapad-laptop.h
-@@ -35,6 +35,7 @@ enum {
- 	VPCCMD_W_FAN,
- 	VPCCMD_R_RF,
- 	VPCCMD_W_RF,
-+	VPCCMD_W_YMC = 0x2A,
- 	VPCCMD_R_FAN = 0x2B,
- 	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
- 	VPCCMD_W_BL_POWER = 0x33,
-diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-new file mode 100644
-index 000000000..c64f7ec85
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-ymc.c
-@@ -0,0 +1,187 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * lenovo-ymc.c - Lenovo Yoga Mode Control driver
-+ *
-+ * Copyright © 2022 Gergo Koteles <soyer@irl.hu>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/wmi.h>
-+#include "ideapad-laptop.h"
-+
-+#define LENOVO_YMC_EVENT_GUID	"06129D99-6083-4164-81AD-F092F9D773A6"
-+#define LENOVO_YMC_QUERY_GUID	"09B0EE6E-C3FD-4243-8DA1-7911FF80BB8C"
-+
-+#define LENOVO_YMC_QUERY_INSTANCE 0
-+#define LENOVO_YMC_QUERY_METHOD 0x01
-+
-+static bool ec_trigger __read_mostly;
-+module_param(ec_trigger, bool, 0644);
-+MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events");
-+
-+static const struct dmi_system_id ec_trigger_quirk_dmi_table[] = {
-+	{
-+		// Lenovo Yoga 7 14ARB7
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
-+		},
-+	},
-+	{ },
-+};
-+
-+struct lenovo_ymc_private {
-+	struct input_dev *input_dev;
-+	struct acpi_device *ec_acpi_dev;
-+};
-+
-+static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
-+{
-+	int err;
-+
-+	if (!ec_trigger || !priv || !priv->ec_acpi_dev)
-+		return;
-+	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
-+	if (err)
-+		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
-+}
-+
-+static const struct key_entry lenovo_ymc_keymap[] = {
-+	// Laptop
-+	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
-+	// Tablet
-+	{ KE_SW, 0x02, { .sw = { SW_TABLET_MODE, 1 } } },
-+	// Drawing Board
-+	{ KE_SW, 0x03, { .sw = { SW_TABLET_MODE, 1 } } },
-+	// Tent
-+	{ KE_SW, 0x04, { .sw = { SW_TABLET_MODE, 1 } } },
-+	{ KE_END },
-+};
-+
-+static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
-+{
-+	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
-+
-+	u32 input_val = 0;
-+	struct acpi_buffer input = {sizeof(input_val), &input_val};
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	acpi_status status;
-+	union acpi_object *obj;
-+	int code;
-+
-+	status = wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
-+				LENOVO_YMC_QUERY_INSTANCE,
-+				LENOVO_YMC_QUERY_METHOD,
-+				&input, &output);
-+
-+	if (ACPI_FAILURE(status)) {
-+		dev_warn(&wdev->dev,
-+			"Failed to evaluate query method: %s\n",
-+			acpi_format_exception(status));
-+		return;
-+	}
-+
-+	obj = output.pointer;
-+
-+	if (obj->type != ACPI_TYPE_INTEGER) {
-+		dev_warn(&wdev->dev,
-+			"WMI event data is not an integer\n");
-+		goto free_obj;
-+	}
-+	code = obj->integer.value;
-+
-+	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
-+		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
-+
-+free_obj:
-+	kfree(obj);
-+	lenovo_ymc_trigger_ec(wdev, priv);
-+}
-+
-+static void lenovo_ymc_remove(struct wmi_device *wdev)
-+{
-+	struct lenovo_ymc_private *priv = dev_get_drvdata(&wdev->dev);
-+	acpi_dev_put(priv->ec_acpi_dev);
-+}
-+
-+static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
-+{
-+	struct input_dev *input_dev;
-+	struct lenovo_ymc_private *priv;
-+	int err;
-+
-+	ec_trigger |= dmi_check_system(ec_trigger_quirk_dmi_table);
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	if (ec_trigger) {
-+		pr_debug("Lenovo YMC enable EC triggering.\n");
-+		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VPC2004", NULL, -1);
-+		if (!priv->ec_acpi_dev) {
-+			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name = "Lenovo Yoga Tablet Mode Control switch";
-+	input_dev->phys = LENOVO_YMC_EVENT_GUID "/input0";
-+	input_dev->id.bustype = BUS_HOST;
-+	input_dev->dev.parent = &wdev->dev;
-+
-+	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-+
-+	err = sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
-+	if (err) {
-+		dev_err(&wdev->dev,
-+			"Could not set up input device keymap: %d\n", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(input_dev);
-+	if (err) {
-+		dev_err(&wdev->dev,
-+			"Could not register input device: %d\n", err);
-+		return err;
-+	}
-+
-+	priv->input_dev = input_dev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	// Report the state for the first time on probe
-+	lenovo_ymc_trigger_ec(wdev, priv);
-+	lenovo_ymc_notify(wdev, NULL);
-+	return 0;
-+}
-+
-+static const struct wmi_device_id lenovo_ymc_wmi_id_table[] = {
-+	{ .guid_string = LENOVO_YMC_EVENT_GUID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, lenovo_ymc_wmi_id_table);
-+
-+static struct wmi_driver lenovo_ymc_driver = {
-+	.driver = {
-+		.name = "lenovo-ymc",
-+	},
-+	.id_table = lenovo_ymc_wmi_id_table,
-+	.probe = lenovo_ymc_probe,
-+	.notify = lenovo_ymc_notify,
-+	.remove = lenovo_ymc_remove,
-+};
-+
-+module_wmi_driver(lenovo_ymc_driver);
-+
-+MODULE_AUTHOR("Gergo Koteles <soyer@irl.hu>");
-+MODULE_DESCRIPTION("Lenovo Yoga Mode Control driver");
-+MODULE_LICENSE("GPL");
--- 
-2.40.0
+This looks good to me now: Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+>   drivers/leds/Kconfig         |  12 +++
+>   drivers/leds/Makefile        |   1 +
+>   drivers/leds/leds-tps68470.c | 185 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 198 insertions(+)
+>   create mode 100644 drivers/leds/leds-tps68470.c
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 9dbce09eabac..ab9073b2cfef 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -827,6 +827,18 @@ config LEDS_TPS6105X
+>   	  It is a single boost converter primarily for white LEDs and
+>   	  audio amplifiers.
+>   
+> +config LEDS_TPS68470
+> +	tristate "LED support for TI TPS68470"
+> +	depends on LEDS_CLASS
+> +	depends on INTEL_SKL_INT3472
+> +	help
+> +	  This driver supports TPS68470 PMIC with LED chip.
+> +	  It provides two LED controllers, with the ability to drive 2
+> +	  indicator LEDs and 2 flash LEDs.
+> +
+> +	  To compile this driver as a module, choose M and it will be
+> +	  called leds-tps68470
+> +
+>   config LEDS_IP30
+>   	tristate "LED support for SGI Octane machines"
+>   	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index d30395d11fd8..515a69953e73 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -80,6 +80,7 @@ obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
+>   obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+>   obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
+>   obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+> +obj-$(CONFIG_LEDS_TPS68470)		+= leds-tps68470.o
+>   obj-$(CONFIG_LEDS_TURRIS_OMNIA)		+= leds-turris-omnia.o
+>   obj-$(CONFIG_LEDS_WM831X_STATUS)	+= leds-wm831x-status.o
+>   obj-$(CONFIG_LEDS_WM8350)		+= leds-wm8350.o
+> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
+> new file mode 100644
+> index 000000000000..35aeb5db89c8
+> --- /dev/null
+> +++ b/drivers/leds/leds-tps68470.c
+> @@ -0,0 +1,185 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LED driver for TPS68470 PMIC
+> + *
+> + * Copyright (C) 2023 Red Hat
+> + *
+> + * Authors:
+> + *	Kate Hsuan <hpa@redhat.com>
+> + */
+> +
+> +#include <linux/leds.h>
+> +#include <linux/mfd/tps68470.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +
+> +
+> +#define lcdev_to_led(led_cdev) \
+> +	container_of(led_cdev, struct tps68470_led, lcdev)
+> +
+> +#define led_to_tps68470(led, index) \
+> +	container_of(led, struct tps68470_device, leds[index])
+> +
+> +enum tps68470_led_ids {
+> +	TPS68470_ILED_A,
+> +	TPS68470_ILED_B,
+> +	TPS68470_NUM_LEDS
+> +};
+> +
+> +static const char *tps68470_led_names[] = {
+> +	[TPS68470_ILED_A] = "tps68470-iled_a",
+> +	[TPS68470_ILED_B] = "tps68470-iled_b",
+> +};
+> +
+> +struct tps68470_led {
+> +	unsigned int led_id;
+> +	struct led_classdev lcdev;
+> +};
+> +
+> +struct tps68470_device {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	struct tps68470_led leds[TPS68470_NUM_LEDS];
+> +};
+> +
+> +enum ctrlb_current {
+> +	CTRLB_2MA	= 0,
+> +	CTRLB_4MA	= 1,
+> +	CTRLB_8MA	= 2,
+> +	CTRLB_16MA	= 3,
+> +};
+> +
+> +static int tps68470_brightness_set(struct led_classdev *led_cdev, enum led_brightness brightness)
+> +{
+> +	struct tps68470_led *led = lcdev_to_led(led_cdev);
+> +	struct tps68470_device *tps68470 = led_to_tps68470(led, led->led_id);
+> +	struct regmap *regmap = tps68470->regmap;
+> +
+> +	switch (led->led_id) {
+> +	case TPS68470_ILED_A:
+> +		return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, TPS68470_ILEDCTL_ENA,
+> +					  brightness ? TPS68470_ILEDCTL_ENA : 0);
+> +	case TPS68470_ILED_B:
+> +		return regmap_update_bits(regmap, TPS68470_REG_ILEDCTL, TPS68470_ILEDCTL_ENB,
+> +					  brightness ? TPS68470_ILEDCTL_ENB : 0);
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static enum led_brightness tps68470_brightness_get(struct led_classdev *led_cdev)
+> +{
+> +	struct tps68470_led *led = lcdev_to_led(led_cdev);
+> +	struct tps68470_device *tps68470 = led_to_tps68470(led, led->led_id);
+> +	struct regmap *regmap = tps68470->regmap;
+> +	int ret = 0;
+> +	int value = 0;
+> +
+> +	ret =  regmap_read(regmap, TPS68470_REG_ILEDCTL, &value);
+> +	if (ret)
+> +		return dev_err_probe(led_cdev->dev, -EINVAL, "failed on reading register\n");
+> +
+> +	switch (led->led_id) {
+> +	case TPS68470_ILED_A:
+> +		value = value & TPS68470_ILEDCTL_ENA;
+> +		break;
+> +	case TPS68470_ILED_B:
+> +		value = value & TPS68470_ILEDCTL_ENB;
+> +		break;
+> +	}
+> +
+> +	return value ? LED_ON : LED_OFF;
+> +}
+> +
+> +
+> +static int tps68470_ledb_current_init(struct platform_device *pdev,
+> +				      struct tps68470_device *tps68470)
+> +{
+> +	int ret = 0;
+> +	unsigned int curr;
+> +
+> +	/* configure LEDB current if the properties can be got */
+> +	if (!device_property_read_u32(&pdev->dev, "ti,ledb-current", &curr)) {
+> +		if (curr > CTRLB_16MA) {
+> +			dev_err(&pdev->dev,
+> +				"Invalid LEDB current value: %d\n",
+> +				curr);
+> +			return -EINVAL;
+> +		}
+> +		ret = regmap_update_bits(tps68470->regmap, TPS68470_REG_ILEDCTL,
+> +					 TPS68470_ILEDCTL_CTRLB, curr);
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int tps68470_leds_probe(struct platform_device *pdev)
+> +{
+> +	int i = 0;
+> +	int ret = 0;
+> +	struct tps68470_device *tps68470;
+> +	struct tps68470_led *led;
+> +	struct led_classdev *lcdev;
+> +
+> +	tps68470 = devm_kzalloc(&pdev->dev, sizeof(struct tps68470_device),
+> +				GFP_KERNEL);
+> +	if (!tps68470)
+> +		return -ENOMEM;
+> +
+> +	tps68470->dev = &pdev->dev;
+> +	tps68470->regmap = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	for (i = 0; i < TPS68470_NUM_LEDS; i++) {
+> +		led = &tps68470->leds[i];
+> +		lcdev = &led->lcdev;
+> +
+> +		led->led_id = i;
+> +
+> +		lcdev->name = devm_kasprintf(tps68470->dev, GFP_KERNEL, "%s::%s",
+> +					     tps68470_led_names[i], LED_FUNCTION_INDICATOR);
+> +		if (!lcdev->name)
+> +			return -ENOMEM;
+> +
+> +		lcdev->max_brightness = 1;
+> +		lcdev->brightness = 0;
+> +		lcdev->brightness_set_blocking = tps68470_brightness_set;
+> +		lcdev->brightness_get = tps68470_brightness_get;
+> +		lcdev->dev = &pdev->dev;
+> +
+> +		ret = devm_led_classdev_register(tps68470->dev, lcdev);
+> +		if (ret) {
+> +			dev_err_probe(tps68470->dev, ret,
+> +				      "error registering led\n");
+> +			goto err_exit;
+> +		}
+> +
+> +		if (i == TPS68470_ILED_B) {
+> +			ret = tps68470_ledb_current_init(pdev, tps68470);
+> +			if (ret)
+> +				goto err_exit;
+> +		}
+> +	}
+> +
+> +err_exit:
+> +	if (ret) {
+> +		for (i = 0; i < TPS68470_NUM_LEDS; i++) {
+> +			if (tps68470->leds[i].lcdev.name)
+> +				devm_led_classdev_unregister(&pdev->dev,
+> +							     &tps68470->leds[i].lcdev);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +static struct platform_driver tps68470_led_driver = {
+> +	.driver = {
+> +		   .name = "tps68470-led",
+> +	},
+> +	.probe = tps68470_leds_probe,
+> +};
+> +
+> +module_platform_driver(tps68470_led_driver);
+> +
+> +MODULE_ALIAS("platform:tps68470-led");
+> +MODULE_DESCRIPTION("LED driver for TPS68470 PMIC");
+> +MODULE_LICENSE("GPL v2");
 
