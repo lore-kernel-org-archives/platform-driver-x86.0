@@ -2,201 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D7C6FD1D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 12:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F6BC76195
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 12:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231217AbjCWMG7 (ORCPT
+        id S229499AbjCWMXe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Mar 2023 08:06:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57800 "EHLO
+        Thu, 23 Mar 2023 08:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231245AbjCWMGl (ORCPT
+        with ESMTP id S229739AbjCWMXe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Mar 2023 08:06:41 -0400
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC28B46AD;
-        Thu, 23 Mar 2023 05:05:52 -0700 (PDT)
-Date:   Thu, 23 Mar 2023 12:05:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1679573148; x=1679832348;
-        bh=E7k73I4MNEuDAsQ0Kvbnyvlsp4CfV6veKmwyBA4aO+s=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID:BIMI-Selector;
-        b=vwC0RRnNmzwaeDlzwBjsscOVx91u2300tDHYgrrP37jmP77GzCnFNRsQN+Ryj8+tU
-         tFqaDq6BAYwet3/E5GhQhmcXM3Svw0EFaT01FTHS0Al1ev+A36fYX2ofD3eYuCTBYq
-         xlHTKc7IK29fA6S4JUBgbCXdaJ4wr9xhYW2VbnSmVEvlObhtEX/7SWmlMvJ9MTeSPk
-         oEEOsAqI5ng7y4BxsdnjzKElQuaaTTCApLKTTNGD+A6niuEGhMLTXQnoLdDDkPjHar
-         YrxZQoCGexYB617f3aMIvI/AcvQmXxmorV9Z356BX6J1iHfpNx69FH0v/cTMNq24uc
-         Lj/ZGbJy3G/RA==
-To:     Andrew Kallmeyer <kallmeyeras@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
-        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
+        Thu, 23 Mar 2023 08:23:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283E4222D0;
+        Thu, 23 Mar 2023 05:23:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B7D1A6267B;
+        Thu, 23 Mar 2023 12:23:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770C5C433D2;
+        Thu, 23 Mar 2023 12:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679574212;
+        bh=hatv8Y9Doyccu8RjvWrYrrTBemUUAQIktajKkNvSZbw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eCpZX+SqUQd8eP0p0T4rqb1V1iT2V82naCNAZ2bjq8S1bLytOXn3jYpWRFk+EysY+
+         q6AcTwAEtMM+kGLNA81suhT4JsO85bE+NwvH/rRSYfGNccEkPy7j26cXYtn3GtNu6/
+         n20Nb8kw8Clnn2POwqKA/HDjft78GcjzgZ4V3ZfT/2DxrbfIA+NTZ/LZWQCQOeF52E
+         /oZkWMFIiCQ1FBMM6tUxvSwR4mPPMrxQLKbSMOOrCxHi6Ram8dd5pZQKOXuKUSlajw
+         kwkDtOityHGZ412e4+ptuJFHcIMVqyp7hQ5vEWSX+7ZGOH6REZkyaIHTzhZQyFITdn
+         NYmk9lpd38DzQ==
+Date:   Thu, 23 Mar 2023 12:23:27 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Kate Hsuan <hpa@redhat.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
-        Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v2 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-Message-ID: <XgKppKbytAKuIBKEDEChlLJE86hsLgonhU8OFHaBjveK7MV8apS9OGi3cNc6v6UPKee_AkKiPD6peBcTcZ3q45k-TTyMBO4GD52wpLxQS3c=@protonmail.com>
-In-Reply-To: <20230323025200.5462-3-kallmeyeras@gmail.com>
-References: <20230323025200.5462-1-kallmeyeras@gmail.com> <20230323025200.5462-3-kallmeyeras@gmail.com>
-Feedback-ID: 20568564:user:proton
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Daniel Scally <dan.scally@ideasonboard.com>
+Subject: Re: [PATCH v3 1/3] platform: x86: int3472: Add MFD cell for tps68470
+ LED
+Message-ID: <20230323122327.GJ2673958@google.com>
+References: <20230321153718.1355511-1-hpa@redhat.com>
+ <20230321153718.1355511-2-hpa@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230321153718.1355511-2-hpa@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Tue, 21 Mar 2023, Kate Hsuan wrote:
 
-
-2023. m=C3=A1rcius 23., cs=C3=BCt=C3=B6rt=C3=B6k 3:52 keltez=C3=A9ssel, And=
-rew Kallmeyer <kallmeyeras@gmail.com> =C3=ADrta:
-
-> From: Gergo Koteles <soyer@irl.hu>
->=20
-> This WMI driver for the tablet mode control switch for Lenovo Yoga
-> notebooks was originally written by Gergo Koteles. The mode is mapped to
-> a SW_TABLET_MODE switch capable input device.
->=20
-> Andrew followed the suggestions that were posted in reply to Gergo's RFC
-> patch, and on the v1 version of this patch to follow-up and get it
-> merged.
->=20
-> Changes from Gergo's RFC:
->=20
->  - Refactored obtaining a reference to the EC ACPI device needed for the
->    quirk implementation as suggested by Hans de Goede
->  - Applied small fixes and switched to devm_input_allocate_device() and
->    removing input_unregister_device() as suggested by Barnab=C3=A1s P=
-=C5=91cze.
->  - Merged the lenovo_ymc_trigger_ec function with the
->    ideapad_trigger_ymc_next_read function since it was no longer
->    external.
->  - Added the word "Tablet" to the driver description to hopefully make
->    it more clear.
->  - Fixed the LENOVO_YMC_QUERY_METHOD ID and the name string for the EC
->    APCI device trigged for the quirk
->  - Triggered the input event on probe so that the initial tablet mode
->    state when the driver is loaded is reported to userspace as suggested
->    by Armin Wolf.
->=20
-> We have tested this on the Yoga 7 14AIL7 for the non-quirk path and on
-> the Yoga 7 14ARB7 which has the firmware bug that requires triggering
-> the embedded controller to send the mode change events. This workaround
-> is also used by the Windows drivers.
->=20
-> According to reports at https://github.com/lukas-w/yoga-usage-mode,
-> which uses the same WMI devices, the following models should also work:
-> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
->=20
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> Co-developed-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
-> Signed-off-by: Andrew Kallmeyer <kallmeyeras@gmail.com>
-> Link: https://lore.kernel.org/r/20221004214332.35934-1-soyer@irl.hu/
-> Link: https://lore.kernel.org/platform-driver-x86/20230310041726.217447-1=
--kallmeyeras@gmail.com/
+> Add MFD cell for tps68470-led.
+>
+> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 > ---
-> [...]
-> +struct lenovo_ymc_private {
-> +=09struct input_dev *input_dev;
-> +=09struct acpi_device *ec_acpi_dev;
-> +};
-> +
-> +static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo=
-_ymc_private *priv)
-> +{
-> +=09int err;
-> +
-> +=09if (!ec_trigger || !priv || !priv->ec_acpi_dev)
+>  drivers/platform/x86/intel/int3472/tps68470.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index 5b8d1a9620a5..82ef022f8916 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -17,7 +17,7 @@
+>  #define DESIGNED_FOR_CHROMEOS		1
+>  #define DESIGNED_FOR_WINDOWS		2
+>
+> -#define TPS68470_WIN_MFD_CELL_COUNT	3
+> +#define TPS68470_WIN_MFD_CELL_COUNT	4
+>
+>  static const struct mfd_cell tps68470_cros[] = {
+>  	{ .name = "tps68470-gpio" },
+> @@ -193,7 +193,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  		cells[1].name = "tps68470-regulator";
+>  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+>  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+> -		cells[2].name = "tps68470-gpio";
+> +		cells[2].name = "tps68470-led";
+> +		cells[3].name = "tps68470-gpio";
 
-I think just the `!priv->ec_acpi_dev` check is sufficient.
+The question is, why is the MFD API being used out side of drivers/mfd?
 
+>  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+>  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> --
+> 2.39.2
+>
 
-> +=09=09return;
-> +=09err =3D write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
-> +=09if (err)
-> +=09=09dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
-> +}
-> [...]
-> +static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
-> +{
-> +=09struct input_dev *input_dev;
-> +=09struct lenovo_ymc_private *priv;
-> +=09int err;
-> +
-> +=09ec_trigger |=3D dmi_check_system(ec_trigger_quirk_dmi_table);
-> +
-> +=09priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +=09if (!priv)
-> +=09=09return -ENOMEM;
-> +
-> +=09if (ec_trigger) {
-> +=09=09pr_debug("Lenovo YMC enable EC triggering.\n");
-> +=09=09priv->ec_acpi_dev =3D acpi_dev_get_first_match_dev("VPC2004", NULL=
-, -1);
-
-The reference is leaked in case of an error. Use `devm_add_action_or_reset(=
-)`:
-
-  static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
-  [...]
-  priv->ec_acpi_dev =3D acpi_dev_get_first_match_dev("VPC2004", NULL, -1);
-  if (!priv->ec_acpi_dev)
-    ...
-  err =3D devm_add_action_or_reset(&wdev->dev, acpi_dev_put_helper, priv->e=
-c_acpi_dev)
-  if (err)
-    ...
-
-And then you can remove `lenovo_ymc_remove()` altogether.
-
-
-> +=09=09if (!priv->ec_acpi_dev) {
-> +=09=09=09dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
-> +=09=09=09return -ENODEV;
-> +=09=09}
-> +=09}
-> +
-> +=09input_dev =3D devm_input_allocate_device(&wdev->dev);
-> +=09if (!input_dev)
-> +=09=09return -ENOMEM;
-> +
-> +=09input_dev->name =3D "Lenovo Yoga Tablet Mode Control switch";
-> +=09input_dev->phys =3D LENOVO_YMC_EVENT_GUID "/input0";
-> +=09input_dev->id.bustype =3D BUS_HOST;
-> +=09input_dev->dev.parent =3D &wdev->dev;
-> +
-> +=09input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-
-As far as I can tell `sparse_keymap_setup()` already sets the above.
-
-
-> +
-> +=09err =3D sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
-> +=09if (err) {
-> +=09=09dev_err(&wdev->dev,
-> +=09=09=09"Could not set up input device keymap: %d\n", err);
-> +=09=09return err;
-> +=09}
-> +
-> +=09err =3D input_register_device(input_dev);
-> +=09if (err) {
-> +=09=09dev_err(&wdev->dev,
-> +=09=09=09"Could not register input device: %d\n", err);
-> +=09=09return err;
-> +=09}
-> +
-> +=09priv->input_dev =3D input_dev;
-> +=09dev_set_drvdata(&wdev->dev, priv);
-> +
-> +=09// Report the state for the first time on probe
-> +=09lenovo_ymc_trigger_ec(wdev, priv);
-> +=09lenovo_ymc_notify(wdev, NULL);
-> +=09return 0;
-> +}
-> [...]
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+--
+Lee Jones [李琼斯]
