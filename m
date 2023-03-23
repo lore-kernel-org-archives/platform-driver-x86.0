@@ -2,98 +2,150 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F6BC76195
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 12:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FF8C76195
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 12:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjCWMXe (ORCPT
+        id S231494AbjCWMc3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Mar 2023 08:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
+        Thu, 23 Mar 2023 08:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbjCWMXe (ORCPT
+        with ESMTP id S230488AbjCWMcY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Mar 2023 08:23:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283E4222D0;
-        Thu, 23 Mar 2023 05:23:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B7D1A6267B;
-        Thu, 23 Mar 2023 12:23:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770C5C433D2;
-        Thu, 23 Mar 2023 12:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679574212;
-        bh=hatv8Y9Doyccu8RjvWrYrrTBemUUAQIktajKkNvSZbw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eCpZX+SqUQd8eP0p0T4rqb1V1iT2V82naCNAZ2bjq8S1bLytOXn3jYpWRFk+EysY+
-         q6AcTwAEtMM+kGLNA81suhT4JsO85bE+NwvH/rRSYfGNccEkPy7j26cXYtn3GtNu6/
-         n20Nb8kw8Clnn2POwqKA/HDjft78GcjzgZ4V3ZfT/2DxrbfIA+NTZ/LZWQCQOeF52E
-         /oZkWMFIiCQ1FBMM6tUxvSwR4mPPMrxQLKbSMOOrCxHi6Ram8dd5pZQKOXuKUSlajw
-         kwkDtOityHGZ412e4+ptuJFHcIMVqyp7hQ5vEWSX+7ZGOH6REZkyaIHTzhZQyFITdn
-         NYmk9lpd38DzQ==
-Date:   Thu, 23 Mar 2023 12:23:27 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Kate Hsuan <hpa@redhat.com>
+        Thu, 23 Mar 2023 08:32:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2654412BCD
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Mar 2023 05:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679574695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1JzqlzlczfbqCW+Xdhr3J5IAcKC6bLvtLMBxiLds70=;
+        b=W+xQEf8WUn1k7xT2FcNUOTTaxH2Rm48G2Sp6xEcVX2tunK2JMSKwlnhk6Q7KZhNJrdCBPx
+        BRxZ+F0E9k9H1sRBkZyj7bDtZ/7rU4crnYoG0oQeqcmtp2FLf0CmtPm0YHNCgI2hdZLhm0
+        w2ULtFneF9vpBK7WEhhKecRRNlf1os0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-169-Q55V8vOgM8m4TD_Av2nmig-1; Thu, 23 Mar 2023 08:31:33 -0400
+X-MC-Unique: Q55V8vOgM8m4TD_Av2nmig-1
+Received: by mail-ed1-f72.google.com with SMTP id i42-20020a0564020f2a00b004fd23c238beso31943718eda.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Mar 2023 05:31:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679574692;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1JzqlzlczfbqCW+Xdhr3J5IAcKC6bLvtLMBxiLds70=;
+        b=ImSaki5aM7isHlLC0HN3qamOk072muzg8PAzYYozyEzGz6qJ62dJShwu8i8ZLwI0Q7
+         Dj5iVoI5iLVtZehTAl2ES5oJemzrCmGVVd0tdbxVvH/HI7iE+q7xmInPVrNIM8oyCkx+
+         7vQ9ObzF8lov6Cm2SW9kROy8zYYCjJA5oloAIM0/YfP5esQvOdUyiqm+QDqPrMVLXBLi
+         D32mNwrChqPH4O5TFfKj3dUws9yW03cTPPRwvAnYy7QF7d7IuXst7+d1zmnWCLco1M+y
+         P4t5Tvz2+44IxCWRxqqalZsBEFivoDMAWBM8XPr39JC/ATjQrCYPUnFx7Cx4sbudI5wO
+         w9xw==
+X-Gm-Message-State: AO0yUKWCZ/5ysdxQRk3Idu45RX8JpfEiHceg/eXvgEGsYwpzi41Nbi23
+        oIy7N6tLcrmjDO445qLNqUEiVzIVO0NEq9Yuf7xPOqPhlMLLn680lYdbqrqEuto6yiK34Rl4Ss+
+        yEui/RXH+tKADiYTEcsVYNlYw8X9nBhDeFg==
+X-Received: by 2002:a17:906:22d4:b0:931:a0cb:1ef1 with SMTP id q20-20020a17090622d400b00931a0cb1ef1mr10039077eja.7.1679574692685;
+        Thu, 23 Mar 2023 05:31:32 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9yplZ7DVvBWlIq3iD/jqdBa/6TZBZhT+ErPDuVTdCVtuA2C/ZsoPuK/nOdtoUT0sqi8964lw==
+X-Received: by 2002:a17:906:22d4:b0:931:a0cb:1ef1 with SMTP id q20-20020a17090622d400b00931a0cb1ef1mr10039056eja.7.1679574692397;
+        Thu, 23 Mar 2023 05:31:32 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id z8-20020a17090655c800b00930569e6910sm8760904ejp.16.2023.03.23.05.31.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Mar 2023 05:31:31 -0700 (PDT)
+Message-ID: <d2c6af4b-218c-96a7-a2d8-87f90e856c7c@redhat.com>
+Date:   Thu, 23 Mar 2023 13:31:30 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 1/3] platform: x86: int3472: Add MFD cell for tps68470
+ LED
+Content-Language: en-US, nl
+To:     Lee Jones <lee@kernel.org>, Kate Hsuan <hpa@redhat.com>
 Cc:     Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
         Daniel Scally <djrscally@gmail.com>,
         Mark Gross <markgross@kernel.org>,
         Daniel Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH v3 1/3] platform: x86: int3472: Add MFD cell for tps68470
- LED
-Message-ID: <20230323122327.GJ2673958@google.com>
 References: <20230321153718.1355511-1-hpa@redhat.com>
  <20230321153718.1355511-2-hpa@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+ <20230323122327.GJ2673958@google.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230323122327.GJ2673958@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230321153718.1355511-2-hpa@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 21 Mar 2023, Kate Hsuan wrote:
+Hi,
 
-> Add MFD cell for tps68470-led.
->
-> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> ---
->  drivers/platform/x86/intel/int3472/tps68470.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index 5b8d1a9620a5..82ef022f8916 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -17,7 +17,7 @@
->  #define DESIGNED_FOR_CHROMEOS		1
->  #define DESIGNED_FOR_WINDOWS		2
->
-> -#define TPS68470_WIN_MFD_CELL_COUNT	3
-> +#define TPS68470_WIN_MFD_CELL_COUNT	4
->
->  static const struct mfd_cell tps68470_cros[] = {
->  	{ .name = "tps68470-gpio" },
-> @@ -193,7 +193,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->  		cells[1].name = "tps68470-regulator";
->  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
->  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
-> -		cells[2].name = "tps68470-gpio";
-> +		cells[2].name = "tps68470-led";
-> +		cells[3].name = "tps68470-gpio";
+On 3/23/23 13:23, Lee Jones wrote:
+> On Tue, 21 Mar 2023, Kate Hsuan wrote:
+> 
+>> Add MFD cell for tps68470-led.
+>>
+>> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+>> ---
+>>  drivers/platform/x86/intel/int3472/tps68470.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+>> index 5b8d1a9620a5..82ef022f8916 100644
+>> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+>> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+>> @@ -17,7 +17,7 @@
+>>  #define DESIGNED_FOR_CHROMEOS		1
+>>  #define DESIGNED_FOR_WINDOWS		2
+>>
+>> -#define TPS68470_WIN_MFD_CELL_COUNT	3
+>> +#define TPS68470_WIN_MFD_CELL_COUNT	4
+>>
+>>  static const struct mfd_cell tps68470_cros[] = {
+>>  	{ .name = "tps68470-gpio" },
+>> @@ -193,7 +193,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>>  		cells[1].name = "tps68470-regulator";
+>>  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+>>  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+>> -		cells[2].name = "tps68470-gpio";
+>> +		cells[2].name = "tps68470-led";
+>> +		cells[3].name = "tps68470-gpio";
+> 
+> The question is, why is the MFD API being used out side of drivers/mfd?
 
-The question is, why is the MFD API being used out side of drivers/mfd?
+Because Intel made a big mess about how they describe camera sensors + the matching clks / regulators / GPIOs and the optional PMIC in ACPI.
 
->  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
->  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+The drivers/platform/x86/intel/int3472/ code untangles this mess and in some cases it instantiates MFD cells (with a whole bunch of derived platform_data per cell) for a TPS68470 PMIC.
+
+And sometimes while binding to an INT3472 ACPI device-node it does not instantiate any MFD cells at all since the INT3472 ACPI device-node does not always describe such a PMIC.
+
+Oh and also depending on of the ACPI tables are targetting ChromeOS or Windows a different set of MFD cells needs to be instantiated. On ChromeOS most of the PMIC poking is done through ACPI through a ChomeOS specific custom ACPI OpRegion, so there there are only cells for GPIO and a driver providing the OpRegion are created.
+
+So lots of ugly x86 platform specific handling, ACPI parsing, etc. which is why this landed under drivers/platform/x86/ . IIRC you were even involved in the original merge since there once was a much simpler MFD driver under driver/mfd which only supported the ChromeOS setup.
+
+(but my memory may be deceiving me here).
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+>>  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+>>  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+>> --
+>> 2.39.2
+>>
+> 
 > --
-> 2.39.2
->
+> Lee Jones [李琼斯]
+> 
 
---
-Lee Jones [李琼斯]
