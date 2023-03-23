@@ -2,144 +2,125 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1108FC76195
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 10:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C6C76195
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 11:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbjCWKfS (ORCPT
+        id S231637AbjCWLPf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Mar 2023 06:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54928 "EHLO
+        Thu, 23 Mar 2023 07:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230482AbjCWKen (ORCPT
+        with ESMTP id S231458AbjCWLPd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Mar 2023 06:34:43 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22813A87F;
-        Thu, 23 Mar 2023 03:31:12 -0700 (PDT)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8540810B;
-        Thu, 23 Mar 2023 11:31:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1679567469;
-        bh=jxtqNEGFOVWMOQ2HspI4fGFkckP44VUEPSce4ZVL5gA=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-        b=IbBuiQq4cB1sQZCBchQYcIKRGA+6zNi5WFNeoDqkDdkzrVbfZ289nH0aSyh+wxn4l
-         Cc5zdnKpG6A3sxBK1WYXYfeDAD35ZbNEVJKYxgUbfxyjAA55yaT9klwYk4t/hO/A+1
-         OzEFtLG6NI+bkx8z6f3aOFigf+FDy9tN2Ap7lDa8=
-Message-ID: <ebd90301-bc84-3810-3633-041978b8056d@ideasonboard.com>
-Date:   Thu, 23 Mar 2023 10:31:06 +0000
+        Thu, 23 Mar 2023 07:15:33 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB53F2CC6C;
+        Thu, 23 Mar 2023 04:15:15 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 99AF11C0E45; Thu, 23 Mar 2023 12:15:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+        t=1679570114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XtQ3b7kcQtHY+DqkR8VLrq07M2GcafeFRH23gv5X7UA=;
+        b=CGeqoQgSJTirNND1VMtoM55volTSReRW8kfT+8RB5MinJKiL2/SxP3QVrGhWeY9KZnZO7O
+        DTdQW3AH1eynNngZnbGOHCy2Ydb8IH2j8F3Y7JqA7X+bj40S17fQDEY9k+JRekL3VabTOF
+        TBMW2vIgQqQ06DQ/RTIcDxjjVYvShP4=
+Date:   Thu, 23 Mar 2023 12:15:14 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Kate Hsuan <hpa@redhat.com>
+Cc:     Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v3 3/3] leds: tps68470: Add LED control for tps68470
+Message-ID: <ZBw0wiFztPs/LP6r@duo.ucw.cz>
+References: <20230321153718.1355511-1-hpa@redhat.com>
+ <20230321153718.1355511-4-hpa@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     pavel@ucw.cz, lee@kernel.org, markgross@kernel.org,
-        sboyd@kernel.org, hpa@redhat.com
-References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-9-dan.scally@ideasonboard.com>
- <ed161532-1f4b-74b2-1391-95d06e4c8200@redhat.com>
-From:   Dan Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH 8/8] platform/x86: int3472: Define LED lookup data for MS
- Surface Go
-In-Reply-To: <ed161532-1f4b-74b2-1391-95d06e4c8200@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="inktvM+i4ZKnwn8y"
+Content-Disposition: inline
+In-Reply-To: <20230321153718.1355511-4-hpa@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
 
-On 22/03/2023 17:34, Hans de Goede wrote:
-> Hi,
->
-> On 3/22/23 17:09, Daniel Scally wrote:
->> Add LED lookup data to tps68470_board_data.c for the Microsoft
->> Surface Go line of devices.
->>
->> Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
->> ---
->>   .../x86/intel/int3472/tps68470_board_data.c    | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
->> index 0d46a238b630..e2c53319e112 100644
->> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
->> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
->> @@ -157,10 +157,27 @@ static const struct tps68470_led_platform_data surface_go_tps68470_led_pdata = {
->>   	.wledctl_disled2 = false,
->>   };
->>   
->> +static struct tps68470_led_lookups surface_go_tps68470_led_lookups = {
->> +	.n_lookups = 2,
->> +	.lookup_table = {
->> +		{
->> +			.provider = "tps68470-iled_a::indicator",
->> +			.dev_id = "i2c-INT347A:00",
->> +			.con_id = "privacy-led",
->> +		},
->> +		{
->> +			.provider = "tps68470-wled::indicator",
->> +			.dev_id = "i2c-INT347E:00",
->> +			.con_id = "privacy-led",
->> +		},
-> So this feels wrong to me in 2 ways:
->
-> 1. It is abusing .con_id = "privacy-led" to enable the WLED
->
-> 2. You are not activating the front privacy LED for the IR projector. I have noticed on IPU6 devices that the _DSM listing GPIOs for the discrete INT3472 device lists a privacy-LED GPIO for the IR sensor too, which I so far have been guessing activates the actual privacy-LED. As I'm typing this I'm wondering if instead this is doing the same hack as you are doing here ?
+--inktvM+i4ZKnwn8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
-Oh interesting; on IPU3 devices with the discrete INT3472 the IR cameras don't seem to have an LED 
-GPIO in _DSM so we're not sure how to turn them on yet. I also have a Pro7 which is an IPU4 device, 
-but that has the same problem as on the IPU3 ones - there's no privacy-led GPIO defined in _DSM and 
-the _ON method for the camera's _PR0 resource just prints "PR Not Supported"...so we don't know how 
-to use those yet. So interesting that the IPU6 ones work differently.
+> There are two LED controllers, LEDA indicator LED and LEDB flash LED for
+> tps68470. LEDA can be enabled by setting TPS68470_ILEDCTL_ENA. Moreover,
+> tps68470 provides four levels of power status for LEDB. If the
+> properties called "ti,ledb-current" can be found, the current will be
+> set according to the property values. These two LEDs can be controlled
+> through the LED class of sysfs (tps68470-leda and tps68470-ledb).
 
+If the LED can have four different currents, should it have 4
+brightness levels?
 
->
-> Regardless I think it would be best to turn on the front privacy LED when the IR camera is used too, right ?
+> +++ b/drivers/leds/Kconfig
+> @@ -827,6 +827,18 @@ config LEDS_TPS6105X
+>  	  It is a single boost converter primarily for white LEDs and
+>  	  audio amplifiers.
+> =20
+> +config LEDS_TPS68470
+> +	tristate "LED support for TI TPS68470"
+> +	depends on LEDS_CLASS
+> +	depends on INTEL_SKL_INT3472
+> +	help
+> +	  This driver supports TPS68470 PMIC with LED chip.
+> +	  It provides two LED controllers, with the ability to drive 2
+> +	  indicator LEDs and 2 flash LEDs.
+> +
+> +	  To compile this driver as a module, choose M and it will be
+> +	  called leds-tps68470
 
+=2E at end of line.
 
-That does make a certain amount of sense yes - My only thought would be that this would be difficult 
-to replicate to platforms that use _only_ discrete versions of the INT3472, because each sensor 
-depends on a separate INT3472, so there wouldn't be an obvious way to automatically assign the 
-privacy LED for the user facing camera to the IR camera since we couldn't use the board data method 
-below. It might be surmountable using the location information in DSDT to decide whether it's on the 
-same face as another camera which DOES have a privacy LED maybe...
+> +static const char *tps68470_led_names[] =3D {
+> +	[TPS68470_ILED_A] =3D "tps68470-iled_a",
+> +	[TPS68470_ILED_B] =3D "tps68470-iled_b",
 
->
-> IMHO this should look like this (with either the media-core or the driver consuming "ir-led"):
+No. See Documentation/leds/well-known-leds.txt . We want the LEDs to
+be named after their function.
 
+> +static int tps68470_ledb_current_init(struct platform_device *pdev,
+> +				      struct tps68470_device *tps68470)
+> +{
+> +	int ret =3D 0;
+> +	unsigned int curr;
+> +
+> +	/* configure LEDB current if the properties can be got */
 
-The general principle of moving the IR led away from being treated as a privacy LED is ok by me - 
-I'll work on that.
+english?
 
->
-> static struct tps68470_led_lookups surface_go_tps68470_led_lookups = {
-> 	.n_lookups = 3,
-> 	.lookup_table = {
-> 		{
-> 			.provider = "tps68470-iled_a::indicator",
-> 			.dev_id = "i2c-INT347A:00",
-> 			.con_id = "privacy-led",
-> 		},
-> 		{
-> 			/* Use regular front-sensor privacy LED for ir-sensor too */
-> 			.provider = "INT33BE_00::privacy_led",
-> 			.dev_id = "i2c-INT347E:00",
-> 			.con_id = "privacy-led",
-> 		},
-> 		{
-> 			.provider = "tps68470-wled::indicator",
-> 			.dev_id = "i2c-INT347E:00",
-> 			.con_id = "ir-led",
-> 		},
-> 	}
->
-> Regards,
->
-> Hans
->
->
+> +	if (!device_property_read_u32(&pdev->dev, "ti,ledb-current", &curr)) {
+> +		if (curr > CTRLB_16MA) {
+
+We'll need device tree binding documentation, right?
+
+Best regards,
+								Pavel
+
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--inktvM+i4ZKnwn8y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZBw0wgAKCRAw5/Bqldv6
+8r/YAJ0XqXrqLy4mnJ8TH+K91yFtjagwtQCbB6oct/IR01jR4oynq0cVw+nhyjQ=
+=xlKW
+-----END PGP SIGNATURE-----
+
+--inktvM+i4ZKnwn8y--
