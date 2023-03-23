@@ -2,100 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C898C76196
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 16:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4F5C74A5B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 23 Mar 2023 18:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231945AbjCWQZd (ORCPT
+        id S229625AbjCWSJE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 23 Mar 2023 12:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
+        Thu, 23 Mar 2023 14:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231693AbjCWQZc (ORCPT
+        with ESMTP id S229752AbjCWSJC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Mar 2023 12:25:32 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2068DF9;
-        Thu, 23 Mar 2023 09:25:30 -0700 (PDT)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9FC299A8;
-        Thu, 23 Mar 2023 17:25:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1679588729;
-        bh=wZtMUPdp5g8Lvp0WEwdfQw72f0XMEHo0y/0jQ6CFK38=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-        b=sNPbw8tKLJN/4Snb/3QxVOZ6tttuw8X3IDKmuQfba2f5kpfP/bWOU/LeAYs9G0ETL
-         Exe+zpVSoOqY2YwZGJzUCFSjmrh7mGPjRD8ybicTz3tCw59wlkHj3fqc4+RCPjh1sR
-         R9nBHgam8Ud69jswhMaFVC6TAGdMGlrzS8/TTWG0=
-Message-ID: <85997479-374b-f130-29dc-e713000d4348@ideasonboard.com>
-Date:   Thu, 23 Mar 2023 16:25:26 +0000
+        Thu, 23 Mar 2023 14:09:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962331688D
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Mar 2023 11:08:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 20C5662856
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Mar 2023 18:08:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 884C6C4339E
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Mar 2023 18:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679594933;
+        bh=sDONsiutLxBywPEtl6OGw7CvIpM2ybbZs7Up9uUkDms=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=IGhbeqXIU+U8/SowTwFwlsbn7uEA0kpauVMJt7Cn8KrmZRFxP9hXPLmWmtVy12TQO
+         SqBJuCnB/oQ+GEyfhxuLG8W7RcbguOOKaOjZXhV9B3nlNpd6nwRhsXmnPqy+DtuHNe
+         mb+jGnMUPGPRIUPtu0D3Vn+baRprRvtd7ruQzzAfd/H7V4bUxW2IZ8fOXg4nPSyDO+
+         iKgkJ3F/zEVkKthnoI1PUZXIhbWqcAFgIkyzZHH9EyiiWZVcOwgJNxE0cuI24dIMhv
+         PSCBmPo868GCI4FXnM+WXXV8O+JyfW1EwNznmCFpH/b8ARp6e9HaaVUNoYu6KxQq2m
+         Yd2i8LFEcy7vg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 7A268C43165; Thu, 23 Mar 2023 18:08:53 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Thu, 23 Mar 2023 18:08:51 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: alejandro.gonzalez.correo@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-204807-215701-FWu8ERf9Uj@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Content-Language: en-US
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        lee@kernel.org, hdegoede@redhat.com, markgross@kernel.org,
-        sboyd@kernel.org, hpa@redhat.com
-References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
- <20230322160926.948687-7-dan.scally@ideasonboard.com>
- <ZBw2ai0G0XCa1vky@duo.ucw.cz>
-From:   Dan Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH 6/8] leds: tps68470: Support the WLED driver
-In-Reply-To: <ZBw2ai0G0XCa1vky@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Pavel, thanks for taking a look
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On 23/03/2023 11:22, Pavel Machek wrote:
-> On Wed 2023-03-22 16:09:24, Daniel Scally wrote:
->> The TPS68470 PMIC provides a third LED driver in addition to the two
->> indicator LEDs. Add support for the WLED. To ensure the LED is active
->> for as long as the kernel instructs it to be we need to re-trigger it
->> periodically to avoid the IC's internal timeouts.
-> Wow. No!
->
-> If hardware does not wart you to burn the LED, it is not okay to just
-> work around that. These are not designed for continuous operation.
->
->> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
->> index 44df175d25de..abcd3494b1a8 100644
-> Fun sha1 hash ;-).
+--- Comment #317 from Alejandro Gonz=C3=A1lez (alejandro.gonzalez.correo@gm=
+ail.com) ---
+Created attachment 304010
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D304010&action=3Dedit
+ASUS PRIME Z690-P ACPI table dump (acpidump -b)
 
+I'm attaching the ACPI table dump of an ASUS PRIME Z690-P board. As far as I
+can see it uses the classic WMI method, so it should work by adding it to t=
+he
+asus_wmi_boards list at nct6775-platform.c.
 
-heh yeh
+--=20
+You may reply to this email to add a comment.
 
->
->> @@ -52,11 +61,33 @@ enum ctrlb_current {
->>   	CTRLB_16MA	= 3,
->>   };
->>   
->> +/*
->> + * The WLED can operate in different modes, including a Flash and Torch mode. In
->> + * each mode there's a timeout which ranges from a matter of milliseconds to up
->> + * to 13 seconds. We don't want that timeout to apply though because the LED
->> + * should be lit until we say that it should no longer be lit, re-trigger the
->> + * LED periodically to keep it alive.
->> + */
-> We don't want the LED to overheat. That takes precedence.
->
-> Find out what are the maximum limits for on time at various current
-> levels. LED framework should be used for torch mode, with current set
-> such that unlimited operation is safe. V4L2 should be used for flash
-> mode.
-
-
-I did it this way because this is how the IC operates on my device whilst it's booted to 
-Windows...but I suppose given they don't expose the LED outside of their Hello auth thing they can 
-guarantee it's not being lit for too long - I confess that hadn't occurred to me. Anyway; I'll 
-update this to re-trigger if the IC is in torch mode within the timeout (which the datasheet 
-explicitly says you can do in torch mode; the current is much more heavily limited in that mode) and 
-in the flash mode to update the brightness setting to 0 once the timeout expires so it reflects the 
-actual state of the LED. Does that sound ok?
-
->
-> BR,
-> 										Pavel
+You are receiving this mail because:
+You are watching the assignee of the bug.=
