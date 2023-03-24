@@ -2,114 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4F9C6FD20
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Mar 2023 14:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B5EC76195
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 24 Mar 2023 19:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbjCXO6m (ORCPT
+        id S231725AbjCXTjn convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 24 Mar 2023 10:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
+        Fri, 24 Mar 2023 15:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232299AbjCXO6h (ORCPT
+        with ESMTP id S231794AbjCXTjm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Mar 2023 10:58:37 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A94B760
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Mar 2023 07:58:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C3FCFCE2640
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Mar 2023 14:58:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1518CC433EF
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Mar 2023 14:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679669912;
-        bh=vDf/naBXyRYkIM8kw1cbSz/oE6WXCNdOn14p31mAcCU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=NEA+T65dsXlBJJv5Hm2lYkEeUQnzgPizLFwNCMzOOHRbd+L8gjJE6LUnCjNtEVMtQ
-         Lmmcnr4kmtOxCXqC0eRg4FQ1bciSAVY5v/bJ3Zm6BB+b92eom7hkKKK6IwH9Twrqn6
-         NjU/XZAgs3mXOJX8L+Wp00+0P996cUED9FYG5Z4d9Aytaa5VGnW1Sa7vF4d0KxsSOf
-         hOrCV3WZ1SqyiHZPAVJWZjCJD5faAyieiFU2vXqEhiNHPvB5JJYH156k5pXyz4lG5e
-         IfJzbHTqTeGiHgc03dNjDsLdFSLXZJm4UIuOTYGQ85YrwL3nOa6IAx3VFqXFlhtwSV
-         SDtNAtlPenWZA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0591EC43142; Fri, 24 Mar 2023 14:58:32 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Fri, 24 Mar 2023 14:58:29 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jeroen@beerstra.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-n23RhbCYlk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
+        Fri, 24 Mar 2023 15:39:42 -0400
+X-Greylist: delayed 92 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Mar 2023 12:39:34 PDT
+Received: from smtprelay08.ispgateway.de (smtprelay08.ispgateway.de [134.119.228.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B10166DD
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Mar 2023 12:39:33 -0700 (PDT)
+Received: from [92.206.161.29] (helo=note-book.lan)
+        by smtprelay08.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <git@apitzsch.eu>)
+        id 1pfnEc-0002bR-Mx; Fri, 24 Mar 2023 20:37:58 +0100
+Message-ID: <f85a8d843e30dbeda4cb7bd283ccf9651703edc8.camel@apitzsch.eu>
+Subject: Re: [PATCH v2 0/2] platform/x86: Add driver for Yoga Tablet mode
+ switch
+From:   =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
+        linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Armin Wolf <W_Armin@gmx.de>,
+        =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Date:   Fri, 24 Mar 2023 20:37:57 +0100
+In-Reply-To: <20230323025200.5462-1-kallmeyeras@gmail.com>
+References: <20230323025200.5462-1-kallmeyeras@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4 
 MIME-Version: 1.0
+X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Am Mittwoch, dem 22.03.2023 um 19:51 -0700 schrieb Andrew Kallmeyer:
+> This driver maps the Lenovo Yoga tablet mode switch to a SW_TABLET_MODE input
+> device. This will make the tablet status available to desktop environments.
+> 
+> This patch series is the result of the discussion at
+> https://lore.kernel.org/r/CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com/
+> 
+> I decided to follow-up on the patch Gergo wrote and respond to the review
+> comments to get it merged and available for everyone.
+> 
+> Gergo and I have tested this on the Yoga 7 14ARB7, and the Yoga 7 14AIL7
+> respectively. Additionally, according to reports at
+> https://github.com/lukas-w/yoga-usage-mode, which uses the same WMI devices,
+> this driver should work with:
+> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
+> 
+> [..]
+> 
+> Andrew Kallmeyer (1):
+>   platform/x86: Move ideapad ACPI helpers to a new header
+> 
+> Gergo Koteles (1):
+>   platform/x86: Add driver for Yoga Tablet Mode switch
+> 
+>  drivers/platform/x86/Kconfig          |  10 ++
+>  drivers/platform/x86/Makefile         |   1 +
+>  drivers/platform/x86/ideapad-laptop.c | 135 +------------------
+>  drivers/platform/x86/ideapad-laptop.h | 152 +++++++++++++++++++++
+>  drivers/platform/x86/lenovo-ymc.c     | 187 ++++++++++++++++++++++++++
+>  5 files changed, 351 insertions(+), 134 deletions(-)
+>  create mode 100644 drivers/platform/x86/ideapad-laptop.h
+>  create mode 100644 drivers/platform/x86/lenovo-ymc.c
+> 
 
---- Comment #319 from Jeroen Beerstra (jeroen@beerstra.org) ---
-(In reply to Jeroen Beerstra from comment #311)
-> (In reply to Denis Pauk from comment #310)
-> > Could you please check new one ? I have rebased patch to 6.2.7
->=20
-> Applies, compiles, and works just fine. Thank you very much for your hard
-> work, hope all of this lands in 6.3.
+Hi Andrew,
 
-Same for 6.2.8. I did notice these warnings though:
+thank you for working on this.
 
-drivers/hwmon/nct6775-platform.c:1325:21: warning: 'acpi_board_0LPC_MUTEX'
-defined but not used [-Wunused-variable]
- 1325 | DMI_ASUS_BOARD_INFO(acpi_board_0LPC_MUTEX,
-"\\_SB.PC00.LPCB.SIO1.MUT0");
-      |                     ^~~~~~~~~~~~~~~~~~~~~
-drivers/hwmon/nct6775-platform.c:1319:31: note: in definition of macro
-'DMI_ASUS_BOARD_INFO'
- 1319 | static struct acpi_board_info name =3D {                          \
-      |                               ^~~~
-drivers/hwmon/nct6775-platform.c:1324:21: warning: 'acpi_board_LPCB_MUTEX'
-defined but not used [-Wunused-variable]
- 1324 | DMI_ASUS_BOARD_INFO(acpi_board_LPCB_MUTEX,
-"\\_SB_.PCI0.LPCB.SIO1.MUT0");
-      |                     ^~~~~~~~~~~~~~~~~~~~~
-drivers/hwmon/nct6775-platform.c:1319:31: note: in definition of macro
-'DMI_ASUS_BOARD_INFO'
- 1319 | static struct acpi_board_info name =3D {                          \
-      |                               ^~~~
-drivers/hwmon/nct6775-platform.c:1323:21: warning: 'acpi_board_GPEM_MUTEX'
-defined but not used [-Wunused-variable]
- 1323 | DMI_ASUS_BOARD_INFO(acpi_board_GPEM_MUTEX, "\\_GPE.MUT0");
-      |                     ^~~~~~~~~~~~~~~~~~~~~
-drivers/hwmon/nct6775-platform.c:1319:31: note: in definition of macro
-'DMI_ASUS_BOARD_INFO'
- 1319 | static struct acpi_board_info name =3D {                          \
-      |                               ^~~~
+Tested on Lenovo ThinkBook 14s Yoga ITL.
 
-Since they seem pretty harmless to me, I didn't report them earlier.
+Tested-by: André Apitzsch <git@apitzsch.eu>
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Best regards,
+André
