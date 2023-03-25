@@ -2,91 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FAC6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 19:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3216AC761AF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 21:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbjCYTbw (ORCPT
+        id S231392AbjCYVue (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Mar 2023 15:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47534 "EHLO
+        Sat, 25 Mar 2023 17:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjCYTbv (ORCPT
+        with ESMTP id S230149AbjCYVud (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Mar 2023 15:31:51 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A5ACC07;
-        Sat, 25 Mar 2023 12:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679772711; x=1711308711;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=y3j20Ytb6PM0OXbOtzYPHeDh8nA+816iTYYzLVBX+xk=;
-  b=LUpY+zK1wv5SUuIm3FIcBBAkt4CJgyA/OX+oRTlnLJ6VKUFqO58CHjfh
-   h933wTyESX/J0uX6EdMo7/xqWfCG/BAazR4zNETPY2ci3MbVUJHi0RpSm
-   bsvJPiv2Jkqz55Hn8LVmwfwWAoNedxvhIZrBmx08CYUB8fE/HP2jipdCD
-   pNwspQOzN9SY9ZQDHV+vx8WFBZ/rZoNrwxNzIqV9f8+yy+ck/45anZAFl
-   Mw0zPdksPqWR4eh96kZoe2/0YnCSzFRJ/CDvdT5fI9C64im9tGXpfcQGZ
-   YY7M41xypBjq6ElyYtcWyCV4itWq2O0rJJDMIAZTWeHypegLclskUicqp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="367742848"
-X-IronPort-AV: E=Sophos;i="5.98,291,1673942400"; 
-   d="scan'208";a="367742848"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 12:31:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="715602994"
-X-IronPort-AV: E=Sophos;i="5.98,291,1673942400"; 
-   d="scan'208";a="715602994"
-Received: from amochoa-mobl1.amr.corp.intel.com ([10.213.164.71])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 12:31:49 -0700
-Message-ID: <b7368c892515483f6b041f970da30e99d225a554.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: ISST: unlock on error path in
- tpmi_sst_init()
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Dan Carpenter <error27@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sat, 25 Mar 2023 12:31:48 -0700
-In-Reply-To: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
-References: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Sat, 25 Mar 2023 17:50:33 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF2EBB85;
+        Sat, 25 Mar 2023 14:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1679780993; i=w_armin@gmx.de;
+        bh=KcyJxrS5XQcTlT4pcvTitvCAa0GoEe27HuW9IhP/e0s=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=XbRiFUimb8meSf0lZy/gKjfoleF/QserJSUgG/t4oX6yc4qv737mKFQOm19z+eD4V
+         i2ZWwTwa60VXd0huts3OfEaw1PdKNrG38v3Mc1bLl5DAEQcjGvEuhSHwCWctoeqRt6
+         NAZ1PYe8gHScFSopzg4IgfVEBCrj//PId2O5sXHAJtOHQ2ha1+w61u8SrtvO5EgxUx
+         E/yd1R9HKXl8skRzOlEeQwAOKFdY1IqmQbof7DTjkOX1kLldx5mpXxSSUXtM9XFiDt
+         /c9lzoLY/ZuxivNdeJm3GgfsT3970qs8r7eaOxSUYB6vzOXBbDkMr/JgIZzLJcE0XA
+         eXiVE1+JfRl/Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMofc-1pwcC531Do-00Ingu; Sat, 25
+ Mar 2023 22:49:53 +0100
+Subject: Re: [PATCH v2 2/2] platform/x86: Add driver for Yoga Tablet Mode
+ switch
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
+        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+References: <20230323025200.5462-1-kallmeyeras@gmail.com>
+ <20230323025200.5462-3-kallmeyeras@gmail.com>
+ <7584e398-202a-dcee-ef5d-47a3989b06ab@gmx.de>
+ <CAG4kvq9apmScR2Y8VO4Xb=4QPVw3XE19m2fR+L_xgER2ka+BvQ@mail.gmail.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+Message-ID: <c0a74480-52f9-3e4d-f4b5-5c39611e8965@gmx.de>
+Date:   Sat, 25 Mar 2023 22:49:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
+In-Reply-To: <CAG4kvq9apmScR2Y8VO4Xb=4QPVw3XE19m2fR+L_xgER2ka+BvQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:IycHZLuYvytuQdslRSPjOxXysaVzCs7lqoQpRB8z7S+OM/ixinn
+ 5EtDHuRUKhmAO6rZ8k7LS0uGKo5D75LA5U9XMXCWjsQ2hgUmbtnun4dMrkKNXGoa3fR7HeI
+ oSKRV4zHneErDaHK9R4WotKDtVBzu2Lynl4ars6MI4/f1ycsiOFf3/O5LfwgQKETkPIM5Pt
+ pR3faiETiuk7ldpT49zBg==
+UI-OutboundReport: notjunk:1;M01:P0:l2fCcChcLPs=;XJnvB12znBJ3kR9PFUw4gpqz8m+
+ UME6t7RFd5lUTxfHxhRh/MQhGBiNVttdwDvd3NpMaX7IfdWzIVyDL5guwNFc/sdYm+1nIjq3s
+ 0Ul9szzuqrVPzbCeMtv/CFi8D8YRtDeH7THRhdhix1cBQgXLGWdwhtnIps9nFW0WninSUHKXb
+ yhGLbQFt/qmoX37cK5UE3BmpL5941fzW0cS6K2uf/YuxQI4qihzrzJYigvwQkNpGijIpSTVAQ
+ SiH7+qdhKX3tdU0sVFhOW6MUN386v9XH9bTQJ2zBSIJSX/0E+d8i5ZaBZtZTsQC52aI5yScdq
+ KyKOUybSoUQXj/xgMSrp5yHQDTL16b9nRVEcGS3uKnvCitNC07X5YioudWNUC8Gaz7OGIxDSn
+ AC8ERAefUGMCYK4CxuXFF8MbDhooPORO42yKJYcga/zPfb7jml70AeNYKLGTRY4HetZukv+fH
+ rXIQyeAo7e0+xmXADDJSsFdaI2o7QgOGCHdwT+UOiZ+Q441nFnWgIWje074EVJYQYJ1P5pECo
+ A6cRPwTmPJMYOZxqAJqXDotd2ltAzQUWYqce/fVeuoypdcGrH62CKY0byTouhZuXZw47lN4+H
+ 4T0NdmaX/Puu+vQsEBd3NxLNiHkjPyYxeiXxpn7HaG6+TRibtjHvPTmr8b1FUj5p6xK8MrVEl
+ mvPY6JoOaIzBYQEsnZTA6MSzVDpubtiDLUYsUPcn0N+2xjX2DSBC9C15HLSA+oLMocdi4rLCS
+ Su4RLCRRopQFDqIMnwD7jN15rjVZDcFJQobmUtr0Ug+hohZ0AW9+OeyvlBJUemgYND/g/QZzd
+ YR+CR+K0OK6bnucEqhkwRc3XfJKtCkonx6oQKwGvYyonvB3/hG/nhGNVg5xLSu+Uz3QixbAlE
+ Yw241eMq5b+GH4jzA2B9Bh4w1GwToN51x75FDDBZ/4EaSk8DGVlvibqrKIngqMwr6NEK2KL0p
+ 1GEnthDfOL+LeMHb3O9+0cH1sWY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-VGhpcyBpcyBmb3IgbGludXgtbmV4dCBhcyB0aGlzIGlzIG5vdCBtZXJnZWQgdG8gbWFpbmxpbmUu
-CgpPbiBTYXQsIDIwMjMtMDMtMjUgYXQgMTQ6MDggKzAzMDAsIERhbiBDYXJwZW50ZXIgd3JvdGU6
-Cj4gQ2FsbCBtdXRleF91bmxvY2soJmlzc3RfdHBtaV9kZXZfbG9jaykgYmVmb3JlIHJldHVybmlu
-ZyBvbiB0aGlzCj4gZXJyb3IgcGF0aC4KPiAKPiBGaXhlczogZDgwNTQ1NmM3MTJmICgicGxhdGZv
-cm0veDg2OiBJU1NUOiBFbnVtZXJhdGUgVFBNSSBTU1QgYW5kCj4gY3JlYXRlIGZyYW1ld29yayIp
-Cj4gU2lnbmVkLW9mZi1ieTogRGFuIENhcnBlbnRlciA8ZXJyb3IyN0BnbWFpbC5jb20+CkFja2Vk
-LWJ5OiBTcmluaXZhcyBQYW5kcnV2YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGxpbnV4LmludGVs
-LmNvbT4KCj4gLS0tCj4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3Rf
-aWYvaXNzdF90cG1pX2NvcmUuYyB8IDYKPiArKysrLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA0IGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdAo+IGEvZHJpdmVycy9w
-bGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMKPiBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVkX3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5j
-Cj4gaW5kZXggY2RiNTZhMThlYTE3Li42NjRkMmVlNjAzODUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMKPiAr
-KysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYvaXNzdF90cG1p
-X2NvcmUuYwo+IEBAIC0xMzk5LDggKzEzOTksMTAgQEAgaW50IHRwbWlfc3N0X2luaXQodm9pZCkK
-PiDCoMKgwqDCoMKgwqDCoMKgaXNzdF9jb21tb24uc3N0X2luc3QgPSBrY2FsbG9jKHRvcG9sb2d5
-X21heF9wYWNrYWdlcygpLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6ZW9mKCppc3N0X2NvbW1v
-bi5zc3RfaW5zdCksCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBHRlBfS0VSTkVMKTsKPiAtwqDCoMKg
-wqDCoMKgwqBpZiAoIWlzc3RfY29tbW9uLnNzdF9pbnN0KQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIWlzc3RfY29t
-bW9uLnNzdF9pbnN0KSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IC1F
-Tk9NRU07Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gaW5pdF9kb25lOwo+
-ICvCoMKgwqDCoMKgwqDCoH0KPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBtZW1zZXQoJmNiLCAwLCBz
-aXplb2YoY2IpKTsKPiDCoMKgwqDCoMKgwqDCoMKgY2IuY21kX3NpemUgPSBzaXplb2Yoc3RydWN0
-IGlzc3RfaWZfaW9fcmVnKTsKCg==
+Am 25.03.23 um 16:16 schrieb Andrew Kallmeyer:
+
+> On Sat, Mar 25, 2023 at 12:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+>> Hi,
+>>
+>> is it really necessary to allow userspace to read/write ec_trigger? The=
+ ACPI device
+>> used for triggering the EC is only initialized during probing, so chang=
+ing the value
+>> of ec_trigger will make no difference in such cases.
+>>
+>> Maybe you could change module_param(ec_trigger, bool, 0644) to module_p=
+aram(ec_trigger, bool, 0)?
+>>
+>> Armin Wolf
+> Great point, this is actually a regression from Gergo's original patch
+> that I didn't realize I caused. I believe the intention was that if
+> the quirk detection code doesn't have full coverage users can set the
+> parameter themselves. In Gergo's code it used the acpi_device from
+> ideapad-laptop.c which is always loaded if it exists. Now I only load
+> it if ec_trigger is true at probe time, I think I should update it to
+> load the acpi device always if it exists so that the user can set this
+> parameter at any time. I suppose I would just remove the if
+> (ec_trigger) (and the debug print) in the probe code when I load it.
+>
+> That is, unless you think it is best to just patch in more models to
+> the quirk detection later and not provide a parameter. Barnab=C3=A1s
+> actually suggested removing the ec_trigger flag completely because
+> right now the code isn't relying on it, but I think that is a bug.
+
+I think it is best to still provide this module param for people who need
+it, but only allow enabling it when loading the module. This way userspace
+should not be able to read/write ec_trigger after the module has been load=
+ed.
+
+Because of this, i believe the ACPI device should only be initialized when
+the DMI table says its necessary or ec_trigger was set. So the current sol=
+ution
+is fine for me, except for ec_trigger being accessible to userspace after
+the module was loaded.
+
+Armin Wolf
 
