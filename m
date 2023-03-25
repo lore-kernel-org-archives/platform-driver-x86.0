@@ -2,134 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD93C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 16:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FAC6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 19:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbjCYQsv (ORCPT
+        id S230123AbjCYTbw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Mar 2023 12:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38788 "EHLO
+        Sat, 25 Mar 2023 15:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbjCYQsv (ORCPT
+        with ESMTP id S229460AbjCYTbv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Mar 2023 12:48:51 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207CC10411;
-        Sat, 25 Mar 2023 09:48:49 -0700 (PDT)
-From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-        s=mail; t=1679762927;
-        bh=Qq2dEAZxs5inqRunjbHlDLyn/FTG4D6cV9cV5iEjKsU=;
-        h=From:Date:Subject:To:Cc:From;
-        b=VpsCHlYh80S1G0owOzMN3gsXXP/tGSVPzVri9VumyBL56L+CNpyPBPF7K7YLcv9wH
-         v8x10nps1SSu5W+E50vj4+myc9DUe3CUSzYg0ffq2QBcDBr+JuEDsJGb+O+fDnsOQI
-         rG6bmoqv2HNYasEgriLJaflGmjQzzpeMYT3S7G14=
-Date:   Sat, 25 Mar 2023 16:48:43 +0000
-Subject: [PATCH RFC] platform/x86: gigabyte-wmi: remove allowlist
+        Sat, 25 Mar 2023 15:31:51 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A5ACC07;
+        Sat, 25 Mar 2023 12:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679772711; x=1711308711;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=y3j20Ytb6PM0OXbOtzYPHeDh8nA+816iTYYzLVBX+xk=;
+  b=LUpY+zK1wv5SUuIm3FIcBBAkt4CJgyA/OX+oRTlnLJ6VKUFqO58CHjfh
+   h933wTyESX/J0uX6EdMo7/xqWfCG/BAazR4zNETPY2ci3MbVUJHi0RpSm
+   bsvJPiv2Jkqz55Hn8LVmwfwWAoNedxvhIZrBmx08CYUB8fE/HP2jipdCD
+   pNwspQOzN9SY9ZQDHV+vx8WFBZ/rZoNrwxNzIqV9f8+yy+ck/45anZAFl
+   Mw0zPdksPqWR4eh96kZoe2/0YnCSzFRJ/CDvdT5fI9C64im9tGXpfcQGZ
+   YY7M41xypBjq6ElyYtcWyCV4itWq2O0rJJDMIAZTWeHypegLclskUicqp
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="367742848"
+X-IronPort-AV: E=Sophos;i="5.98,291,1673942400"; 
+   d="scan'208";a="367742848"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 12:31:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="715602994"
+X-IronPort-AV: E=Sophos;i="5.98,291,1673942400"; 
+   d="scan'208";a="715602994"
+Received: from amochoa-mobl1.amr.corp.intel.com ([10.213.164.71])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 12:31:49 -0700
+Message-ID: <b7368c892515483f6b041f970da30e99d225a554.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: ISST: unlock on error path in
+ tpmi_sst_init()
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Dan Carpenter <error27@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Sat, 25 Mar 2023 12:31:48 -0700
+In-Reply-To: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
+References: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAOolH2QC/x2NywrCMBAAf6Xs2YU0qUq9Cn6AV/GQxDVdqKlsU
- h+U/ruLxxkYZoFCwlTg0Cwg9OLCU1ZoNw3EwedEyDdlsMY64+wWEycfvpXw/WCcs1CpwrHi3na
- dsya2fb8DrYMvhEF8joP2eR5HlU+hO3/+uwucT0e4rusPYq3Zq4MAAAA=
-To:     =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1679762925; l=3196;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Qq2dEAZxs5inqRunjbHlDLyn/FTG4D6cV9cV5iEjKsU=;
- b=efRnVTEY9ruNvmgje4MxmZDS+bwN8i7sG0H2mI6VCO6N6R50BwnIjbUzd+/YeNqFMW+D5T4kB
- VAVOHecWyiPBKsPXN0gWqYk6vO8B/NJsuT+BpvFXGcweErE35yGD5oh
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Having to maintain a per-system allowlist is burdensome and confusing
-for users, drop it.
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-
-I propose to keep this in -next for two cycles or so to make sure it
-does not break anything.
----
- drivers/platform/x86/gigabyte-wmi.c | 40 -------------------------------------
- 1 file changed, 40 deletions(-)
-
-diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index 322cfaeda17b..b0338f043416 100644
---- a/drivers/platform/x86/gigabyte-wmi.c
-+++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -13,10 +13,6 @@
- #define GIGABYTE_WMI_GUID	"DEADBEEF-2001-0000-00A0-C90629100000"
- #define NUM_TEMPERATURE_SENSORS	6
- 
--static bool force_load;
--module_param(force_load, bool, 0444);
--MODULE_PARM_DESC(force_load, "Force loading on unknown platform");
--
- static u8 usable_sensors_mask;
- 
- enum gigabyte_wmi_commandtype {
-@@ -133,46 +129,10 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
- 	return r;
- }
- 
--#define DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME(name) \
--	{ .matches = { \
--		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."), \
--		DMI_EXACT_MATCH(DMI_BOARD_NAME, name), \
--	}}
--
--static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
--	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
--	{ }
--};
--
- static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct device *hwmon_dev;
- 
--	if (!dmi_check_system(gigabyte_wmi_known_working_platforms)) {
--		if (!force_load)
--			return -ENODEV;
--		dev_warn(&wdev->dev, "Forcing load on unknown platform");
--	}
--
- 	usable_sensors_mask = gigabyte_wmi_detect_sensor_usability(wdev);
- 	if (!usable_sensors_mask) {
- 		dev_info(&wdev->dev, "No temperature sensors usable");
-
----
-base-commit: 65aca32efdcb0965502d3db2f1fa33838c070952
-change-id: 20230325-gigabyte-wmi-unrestrict-7244320c1996
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+VGhpcyBpcyBmb3IgbGludXgtbmV4dCBhcyB0aGlzIGlzIG5vdCBtZXJnZWQgdG8gbWFpbmxpbmUu
+CgpPbiBTYXQsIDIwMjMtMDMtMjUgYXQgMTQ6MDggKzAzMDAsIERhbiBDYXJwZW50ZXIgd3JvdGU6
+Cj4gQ2FsbCBtdXRleF91bmxvY2soJmlzc3RfdHBtaV9kZXZfbG9jaykgYmVmb3JlIHJldHVybmlu
+ZyBvbiB0aGlzCj4gZXJyb3IgcGF0aC4KPiAKPiBGaXhlczogZDgwNTQ1NmM3MTJmICgicGxhdGZv
+cm0veDg2OiBJU1NUOiBFbnVtZXJhdGUgVFBNSSBTU1QgYW5kCj4gY3JlYXRlIGZyYW1ld29yayIp
+Cj4gU2lnbmVkLW9mZi1ieTogRGFuIENhcnBlbnRlciA8ZXJyb3IyN0BnbWFpbC5jb20+CkFja2Vk
+LWJ5OiBTcmluaXZhcyBQYW5kcnV2YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGxpbnV4LmludGVs
+LmNvbT4KCj4gLS0tCj4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3Rf
+aWYvaXNzdF90cG1pX2NvcmUuYyB8IDYKPiArKysrLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA0IGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdAo+IGEvZHJpdmVycy9w
+bGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMKPiBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVkX3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5j
+Cj4gaW5kZXggY2RiNTZhMThlYTE3Li42NjRkMmVlNjAzODUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMKPiAr
+KysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYvaXNzdF90cG1p
+X2NvcmUuYwo+IEBAIC0xMzk5LDggKzEzOTksMTAgQEAgaW50IHRwbWlfc3N0X2luaXQodm9pZCkK
+PiDCoMKgwqDCoMKgwqDCoMKgaXNzdF9jb21tb24uc3N0X2luc3QgPSBrY2FsbG9jKHRvcG9sb2d5
+X21heF9wYWNrYWdlcygpLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6ZW9mKCppc3N0X2NvbW1v
+bi5zc3RfaW5zdCksCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBHRlBfS0VSTkVMKTsKPiAtwqDCoMKg
+wqDCoMKgwqBpZiAoIWlzc3RfY29tbW9uLnNzdF9pbnN0KQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIWlzc3RfY29t
+bW9uLnNzdF9pbnN0KSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IC1F
+Tk9NRU07Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gaW5pdF9kb25lOwo+
+ICvCoMKgwqDCoMKgwqDCoH0KPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBtZW1zZXQoJmNiLCAwLCBz
+aXplb2YoY2IpKTsKPiDCoMKgwqDCoMKgwqDCoMKgY2IuY21kX3NpemUgPSBzaXplb2Yoc3RydWN0
+IGlzc3RfaWZfaW9fcmVnKTsKCg==
 
