@@ -2,97 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EA9C76196
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 11:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0237C6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 15:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbjCYLIV (ORCPT
+        id S229926AbjCYPQi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Mar 2023 07:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59968 "EHLO
+        Sat, 25 Mar 2023 11:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231691AbjCYLIT (ORCPT
+        with ESMTP id S229460AbjCYPQh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Mar 2023 07:08:19 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1225916882;
-        Sat, 25 Mar 2023 04:08:14 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id er18so6117806edb.9;
-        Sat, 25 Mar 2023 04:08:13 -0700 (PDT)
+        Sat, 25 Mar 2023 11:16:37 -0400
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703558A7F;
+        Sat, 25 Mar 2023 08:16:36 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id m20-20020a9d6094000000b0069caf591747so2416974otj.2;
+        Sat, 25 Mar 2023 08:16:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679742492;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zk8doAfUl+ZfcEUfEPNWLVG3j4lJKm9U9m/sCbx1TNM=;
-        b=FtpzitCrL6ZLT62afUGqv+RGPSUb4kHMxanyPsMGCMcXHKtH0Lgwp0Yx80LkwKz4Du
-         dlhPXqebS5qcgKZhhNyNOJ4PCuRDjE0Lo8GIDutEPpUaXno7gV8LTMG2EX+1xzWOZQi7
-         wWXNGhELvKYj1duRtBUipj8qsPL+MdltXhA6jRJooW4XdV9RZySBiPg9TWccTWimAh2S
-         ah3ua9bPggPDDq1j/ue0UnrZNmKKfJsqTwBeevbv8/VWvosxPYQSJRrMWZ0lcJeIdd+t
-         VHANEh1R5Vh5/seHw1t1dgjo01Y2BzDHbqH5mgVl7VmX4WgZQfWZli0jNoJPinoo62j3
-         Rbew==
+        d=gmail.com; s=20210112; t=1679757395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/TlZfpBWvem+gaoqytw86JtAMfZO3m4fbJOdKfQtUeY=;
+        b=XXRskjzDr6Hq1YNXds3If48Z8+ylixa9vTOaxcZD5cv2GrX02FrO6kI8aPemoDJYyC
+         7YQStXunbzjG75rZ4LW8Z8dv68u14RliwVGxWNDiIYWTL++ZtNUopyap0IwTC2NhiY8l
+         I7+7Y/IUVh0krBWiVTdDlpBf3B/HK4QwbceTrbmpWFY6edJs/NQLGVV0beYJFhMo+hoO
+         hT+ntC7/kU5QJRGfj3TSY7JMa3btq+MAaDKhUB8kY9C4i9AyoNnDL7+ZbEikGsEqhfGi
+         SSc2ISi55bLMiLkZq/mqy9xNAhjqc+HQ8vwAg/rLVWLsr8XQFKzzOCZ8p3dv5QaW5nFx
+         Qu8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679742492;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zk8doAfUl+ZfcEUfEPNWLVG3j4lJKm9U9m/sCbx1TNM=;
-        b=11JnEFFVPh+PVymP4KA0VDkPEZg/Phc45Nw8muC1MVbjuu4ZJWPvBfDuqukR0vM+TE
-         nkFvmIQlLJ3xioZLK2NamipWQGLoyOtDW1AyDOks2a41nHYPy6aXGjW9VLL3La6F1JbU
-         1Hqi1s28Tg/sQj2FdjC7ALzRXN2GUx+lypcwBX+PyhNiMYqS6Dz69nryBaIu1TIYbb6X
-         fGTkSkjFkzb64M4RDSaJzbGr7GXgCIIL60xoOKVv9CLappUd3ifz44nptA4vlzWtGhrD
-         2oG8tMw57i/A5CzGFbNs2FWbllnw5bLwc6uChHc2xuW0C4lkHvVse8nWM6QXxKrXrsiu
-         TJIQ==
-X-Gm-Message-State: AAQBX9dLPZR35BEzjm1Pn5EYc7fbuVyXPDkO7BXe+W+BF5P1eCaYvYKs
-        aBIJdtnbITthzyMCyEITnco=
-X-Google-Smtp-Source: AKy350bKarJZNeSl4r8cIGS0LEIUQ8mxI9D8On4pGeX5NX/8Ff+M8ADXWPdn75wS7P4bOsm30hfZBA==
-X-Received: by 2002:a17:906:ecf4:b0:930:2e1c:97ba with SMTP id qt20-20020a170906ecf400b009302e1c97bamr6110457ejb.5.1679742492402;
-        Sat, 25 Mar 2023 04:08:12 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id xd10-20020a170907078a00b0093caa021528sm3999775ejb.85.2023.03.25.04.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Mar 2023 04:08:12 -0700 (PDT)
-Date:   Sat, 25 Mar 2023 14:08:02 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/x86: ISST: unlock on error path in tpmi_sst_init()
-Message-ID: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
+        d=1e100.net; s=20210112; t=1679757395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/TlZfpBWvem+gaoqytw86JtAMfZO3m4fbJOdKfQtUeY=;
+        b=JrfgTOnAcmkBEqqGf52qIs4asncr8woFXufehyxlTmakXU4ZYQpQz1ZEJtpnqBQToE
+         uaHc5N7uD3RUZ3nwcmFbMPMBr1X8zxigmRfsRGNWoO7ESlAkPHKFGJUuFTLfOk7ckT4B
+         vc2spQulQLrSwlFj/HVcRDFygxrpl593j8IVEbT0aoHBEnRnxGvZ4OjwpF0YWXInHehK
+         9eSFjyNKH7tdB/sHa2xi4EF8Pb5QpAnpc5uXoHfbpYLBsHBaynjsqNC3oezwtOkMQ50z
+         neHdr+/KL7Sf24htH6tbDeiY1pGUbB2mnicH5i9IynMj8vBqth2n8J069lAQUymnJqCt
+         Lpsw==
+X-Gm-Message-State: AO0yUKWGwmwtsZ2FyV47IjC+IC0wzJ9/kIkUKhJdp/C3M5RJlQIgQTBH
+        dxW7xjZZzsxtq5zYRYXMq0idXixSKsujpkmCbsaaXyKNKj9y3w==
+X-Google-Smtp-Source: AK7set/fOY9zW7NY7ed1UwkV6SsJlN7pg97FxNKrefbymDRsv+K4dZgq127PjJX0/Ob7qA03oX+H6jnAD2qJlVgkAgU=
+X-Received: by 2002:a9d:6502:0:b0:69d:4900:69ef with SMTP id
+ i2-20020a9d6502000000b0069d490069efmr2187836otl.0.1679757395437; Sat, 25 Mar
+ 2023 08:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20230323025200.5462-1-kallmeyeras@gmail.com> <20230323025200.5462-3-kallmeyeras@gmail.com>
+ <7584e398-202a-dcee-ef5d-47a3989b06ab@gmx.de>
+In-Reply-To: <7584e398-202a-dcee-ef5d-47a3989b06ab@gmx.de>
+From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
+Date:   Sat, 25 Mar 2023 08:16:24 -0700
+Message-ID: <CAG4kvq9apmScR2Y8VO4Xb=4QPVw3XE19m2fR+L_xgER2ka+BvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
+To:     Armin Wolf <W_Armin@gmx.de>
+Cc:     platform-driver-x86@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
+        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Call mutex_unlock(&isst_tpmi_dev_lock) before returning on this
-error path.
+On Sat, Mar 25, 2023 at 12:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Hi,
+>
+> is it really necessary to allow userspace to read/write ec_trigger? The A=
+CPI device
+> used for triggering the EC is only initialized during probing, so changin=
+g the value
+> of ec_trigger will make no difference in such cases.
+>
+> Maybe you could change module_param(ec_trigger, bool, 0644) to module_par=
+am(ec_trigger, bool, 0)?
+>
+> Armin Wolf
 
-Fixes: d805456c712f ("platform/x86: ISST: Enumerate TPMI SST and create framework")
-Signed-off-by: Dan Carpenter <error27@gmail.com>
----
- drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Great point, this is actually a regression from Gergo's original patch
+that I didn't realize I caused. I believe the intention was that if
+the quirk detection code doesn't have full coverage users can set the
+parameter themselves. In Gergo's code it used the acpi_device from
+ideapad-laptop.c which is always loaded if it exists. Now I only load
+it if ec_trigger is true at probe time, I think I should update it to
+load the acpi device always if it exists so that the user can set this
+parameter at any time. I suppose I would just remove the if
+(ec_trigger) (and the debug print) in the probe code when I load it.
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index cdb56a18ea17..664d2ee60385 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1399,8 +1399,10 @@ int tpmi_sst_init(void)
- 	isst_common.sst_inst = kcalloc(topology_max_packages(),
- 				       sizeof(*isst_common.sst_inst),
- 				       GFP_KERNEL);
--	if (!isst_common.sst_inst)
--		return -ENOMEM;
-+	if (!isst_common.sst_inst) {
-+		ret = -ENOMEM;
-+		goto init_done;
-+	}
- 
- 	memset(&cb, 0, sizeof(cb));
- 	cb.cmd_size = sizeof(struct isst_if_io_reg);
--- 
-2.39.1
-
+That is, unless you think it is best to just patch in more models to
+the quirk detection later and not provide a parameter. Barnab=C3=A1s
+actually suggested removing the ec_trigger flag completely because
+right now the code isn't relying on it, but I think that is a bug.
