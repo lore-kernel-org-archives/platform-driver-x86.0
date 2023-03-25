@@ -2,97 +2,134 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0237C6FD1C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 15:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD93C6FD1C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 25 Mar 2023 16:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229926AbjCYPQi (ORCPT
+        id S230522AbjCYQsv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 25 Mar 2023 11:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
+        Sat, 25 Mar 2023 12:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjCYPQh (ORCPT
+        with ESMTP id S229926AbjCYQsv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Mar 2023 11:16:37 -0400
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703558A7F;
-        Sat, 25 Mar 2023 08:16:36 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id m20-20020a9d6094000000b0069caf591747so2416974otj.2;
-        Sat, 25 Mar 2023 08:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679757395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/TlZfpBWvem+gaoqytw86JtAMfZO3m4fbJOdKfQtUeY=;
-        b=XXRskjzDr6Hq1YNXds3If48Z8+ylixa9vTOaxcZD5cv2GrX02FrO6kI8aPemoDJYyC
-         7YQStXunbzjG75rZ4LW8Z8dv68u14RliwVGxWNDiIYWTL++ZtNUopyap0IwTC2NhiY8l
-         I7+7Y/IUVh0krBWiVTdDlpBf3B/HK4QwbceTrbmpWFY6edJs/NQLGVV0beYJFhMo+hoO
-         hT+ntC7/kU5QJRGfj3TSY7JMa3btq+MAaDKhUB8kY9C4i9AyoNnDL7+ZbEikGsEqhfGi
-         SSc2ISi55bLMiLkZq/mqy9xNAhjqc+HQ8vwAg/rLVWLsr8XQFKzzOCZ8p3dv5QaW5nFx
-         Qu8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679757395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/TlZfpBWvem+gaoqytw86JtAMfZO3m4fbJOdKfQtUeY=;
-        b=JrfgTOnAcmkBEqqGf52qIs4asncr8woFXufehyxlTmakXU4ZYQpQz1ZEJtpnqBQToE
-         uaHc5N7uD3RUZ3nwcmFbMPMBr1X8zxigmRfsRGNWoO7ESlAkPHKFGJUuFTLfOk7ckT4B
-         vc2spQulQLrSwlFj/HVcRDFygxrpl593j8IVEbT0aoHBEnRnxGvZ4OjwpF0YWXInHehK
-         9eSFjyNKH7tdB/sHa2xi4EF8Pb5QpAnpc5uXoHfbpYLBsHBaynjsqNC3oezwtOkMQ50z
-         neHdr+/KL7Sf24htH6tbDeiY1pGUbB2mnicH5i9IynMj8vBqth2n8J069lAQUymnJqCt
-         Lpsw==
-X-Gm-Message-State: AO0yUKWGwmwtsZ2FyV47IjC+IC0wzJ9/kIkUKhJdp/C3M5RJlQIgQTBH
-        dxW7xjZZzsxtq5zYRYXMq0idXixSKsujpkmCbsaaXyKNKj9y3w==
-X-Google-Smtp-Source: AK7set/fOY9zW7NY7ed1UwkV6SsJlN7pg97FxNKrefbymDRsv+K4dZgq127PjJX0/Ob7qA03oX+H6jnAD2qJlVgkAgU=
-X-Received: by 2002:a9d:6502:0:b0:69d:4900:69ef with SMTP id
- i2-20020a9d6502000000b0069d490069efmr2187836otl.0.1679757395437; Sat, 25 Mar
- 2023 08:16:35 -0700 (PDT)
+        Sat, 25 Mar 2023 12:48:51 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207CC10411;
+        Sat, 25 Mar 2023 09:48:49 -0700 (PDT)
+From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+        s=mail; t=1679762927;
+        bh=Qq2dEAZxs5inqRunjbHlDLyn/FTG4D6cV9cV5iEjKsU=;
+        h=From:Date:Subject:To:Cc:From;
+        b=VpsCHlYh80S1G0owOzMN3gsXXP/tGSVPzVri9VumyBL56L+CNpyPBPF7K7YLcv9wH
+         v8x10nps1SSu5W+E50vj4+myc9DUe3CUSzYg0ffq2QBcDBr+JuEDsJGb+O+fDnsOQI
+         rG6bmoqv2HNYasEgriLJaflGmjQzzpeMYT3S7G14=
+Date:   Sat, 25 Mar 2023 16:48:43 +0000
+Subject: [PATCH RFC] platform/x86: gigabyte-wmi: remove allowlist
 MIME-Version: 1.0
-References: <20230323025200.5462-1-kallmeyeras@gmail.com> <20230323025200.5462-3-kallmeyeras@gmail.com>
- <7584e398-202a-dcee-ef5d-47a3989b06ab@gmx.de>
-In-Reply-To: <7584e398-202a-dcee-ef5d-47a3989b06ab@gmx.de>
-From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
-Date:   Sat, 25 Mar 2023 08:16:24 -0700
-Message-ID: <CAG4kvq9apmScR2Y8VO4Xb=4QPVw3XE19m2fR+L_xgER2ka+BvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
-To:     Armin Wolf <W_Armin@gmx.de>
-Cc:     platform-driver-x86@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
-        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAOolH2QC/x2NywrCMBAAf6Xs2YU0qUq9Cn6AV/GQxDVdqKlsU
+ h+U/ruLxxkYZoFCwlTg0Cwg9OLCU1ZoNw3EwedEyDdlsMY64+wWEycfvpXw/WCcs1CpwrHi3na
+ dsya2fb8DrYMvhEF8joP2eR5HlU+hO3/+uwucT0e4rusPYq3Zq4MAAAA=
+To:     =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
         Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1679762925; l=3196;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=Qq2dEAZxs5inqRunjbHlDLyn/FTG4D6cV9cV5iEjKsU=;
+ b=efRnVTEY9ruNvmgje4MxmZDS+bwN8i7sG0H2mI6VCO6N6R50BwnIjbUzd+/YeNqFMW+D5T4kB
+ VAVOHecWyiPBKsPXN0gWqYk6vO8B/NJsuT+BpvFXGcweErE35yGD5oh
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Mar 25, 2023 at 12:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Hi,
->
-> is it really necessary to allow userspace to read/write ec_trigger? The A=
-CPI device
-> used for triggering the EC is only initialized during probing, so changin=
-g the value
-> of ec_trigger will make no difference in such cases.
->
-> Maybe you could change module_param(ec_trigger, bool, 0644) to module_par=
-am(ec_trigger, bool, 0)?
->
-> Armin Wolf
+Having to maintain a per-system allowlist is burdensome and confusing
+for users, drop it.
 
-Great point, this is actually a regression from Gergo's original patch
-that I didn't realize I caused. I believe the intention was that if
-the quirk detection code doesn't have full coverage users can set the
-parameter themselves. In Gergo's code it used the acpi_device from
-ideapad-laptop.c which is always loaded if it exists. Now I only load
-it if ec_trigger is true at probe time, I think I should update it to
-load the acpi device always if it exists so that the user can set this
-parameter at any time. I suppose I would just remove the if
-(ec_trigger) (and the debug print) in the probe code when I load it.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
 
-That is, unless you think it is best to just patch in more models to
-the quirk detection later and not provide a parameter. Barnab=C3=A1s
-actually suggested removing the ec_trigger flag completely because
-right now the code isn't relying on it, but I think that is a bug.
+I propose to keep this in -next for two cycles or so to make sure it
+does not break anything.
+---
+ drivers/platform/x86/gigabyte-wmi.c | 40 -------------------------------------
+ 1 file changed, 40 deletions(-)
+
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index 322cfaeda17b..b0338f043416 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -13,10 +13,6 @@
+ #define GIGABYTE_WMI_GUID	"DEADBEEF-2001-0000-00A0-C90629100000"
+ #define NUM_TEMPERATURE_SENSORS	6
+ 
+-static bool force_load;
+-module_param(force_load, bool, 0444);
+-MODULE_PARM_DESC(force_load, "Force loading on unknown platform");
+-
+ static u8 usable_sensors_mask;
+ 
+ enum gigabyte_wmi_commandtype {
+@@ -133,46 +129,10 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+ 	return r;
+ }
+ 
+-#define DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME(name) \
+-	{ .matches = { \
+-		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."), \
+-		DMI_EXACT_MATCH(DMI_BOARD_NAME, name), \
+-	}}
+-
+-static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
+-	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
+-	{ }
+-};
+-
+ static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
+ {
+ 	struct device *hwmon_dev;
+ 
+-	if (!dmi_check_system(gigabyte_wmi_known_working_platforms)) {
+-		if (!force_load)
+-			return -ENODEV;
+-		dev_warn(&wdev->dev, "Forcing load on unknown platform");
+-	}
+-
+ 	usable_sensors_mask = gigabyte_wmi_detect_sensor_usability(wdev);
+ 	if (!usable_sensors_mask) {
+ 		dev_info(&wdev->dev, "No temperature sensors usable");
+
+---
+base-commit: 65aca32efdcb0965502d3db2f1fa33838c070952
+change-id: 20230325-gigabyte-wmi-unrestrict-7244320c1996
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
+
