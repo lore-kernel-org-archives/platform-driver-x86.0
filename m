@@ -2,128 +2,128 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51867C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E4C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjC0NTy (ORCPT
+        id S232532AbjC0NX3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Mar 2023 09:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
+        Mon, 27 Mar 2023 09:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbjC0NTw (ORCPT
+        with ESMTP id S231960AbjC0NXT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Mar 2023 09:19:52 -0400
+        Mon, 27 Mar 2023 09:23:19 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7E11FCA
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:19:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745D71985
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679923145;
+        s=mimecast20190719; t=1679923350;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EBgTYwgbbPBXMkcZFKPAHeZP7Jqx47wA107Cj1PA/QY=;
-        b=fEFM3kVGrzVCuB6nrPh5YBFkn/cbPx0B1ZyBPDi34QqpuNXWvgHOA11warVcXwZQQ7zCqc
-        C/IdIGtLX4h2K2wqlfFSiBMz5WfvD+wH2A0g1gxDEyR8kcOLunJwyp197EUr/lPJpeo/pD
-        9vxcGc0bBAA70fLR/93/3sMVj/uLlnw=
+        bh=swmjhnNjkaqtpqt5Pl5MGYtRoGQ0+bZAAWUhMT4BRK0=;
+        b=UOjvW/UR/LW1cMSbiKq9kuHMtKwhlb2BBF6FRyoFXnP0k8JhYKPlzIK9BOD/EHcAq2sSfD
+        AGCB3mm5mcTwDQH0yZd/jQ/px4YAJqlOZr+cEtQwtJKYtMdVoYNVfG/hxhenfsGufT7Jwv
+        iZ7XqM19Z4wZ9ce+j0tOeJ1d8vu0iHw=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-a4JJ2omGPMOYcOlPR5PxEw-1; Mon, 27 Mar 2023 09:19:04 -0400
-X-MC-Unique: a4JJ2omGPMOYcOlPR5PxEw-1
-Received: by mail-ed1-f71.google.com with SMTP id f15-20020a50a6cf000000b0050050d2326aso12481284edc.18
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:19:04 -0700 (PDT)
+ us-mta-456-RINexowTMX6YqzidKv5iWg-1; Mon, 27 Mar 2023 09:22:29 -0400
+X-MC-Unique: RINexowTMX6YqzidKv5iWg-1
+Received: by mail-ed1-f71.google.com with SMTP id b18-20020a50b412000000b0050234a3ad75so7265765edh.23
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:22:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679923143;
+        d=1e100.net; s=20210112; t=1679923348;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBgTYwgbbPBXMkcZFKPAHeZP7Jqx47wA107Cj1PA/QY=;
-        b=lzNGcORfJtMBijWiczFwWOJnD1ZR4LdzjgUvMwwvzEJyptl4hoRKlD0Z238vWixM+v
-         galKi9JdFQKNitflupWoMCRsQi128O5Z1up2U4u5t25SSpfgHeU3EB60oBnUJPYmIV3y
-         jqMbJfLgl1q41xEHYN+GIlBJRWOkPYkinHmZ3HkJgJoBgtT4HNINZByWHutqVYkQdRIl
-         ljv098yxR65KomnMZhW3YOKnxeygfJ4k/zdtrlDzV7mk2vgtc/LwscRYGvU/Q9L9k8Tb
-         rhdVzyMT+qqvlpTbVnGDlKYj38qFLI1RlJNTSwlKYNmKwF6NyV0KUGqwucSsb89o++J2
-         webQ==
-X-Gm-Message-State: AAQBX9f1dQSyhNRkBAlugIrZdidPdk4d39z3dGPUXqTwp3v1nUelHShD
-        DUNzTR47G/kXgpcvYiy4U0giYaJYGqj7NqmN+8JJR6xZ0Qlk6FQw9UJUD0RHNMRbjkNTNdht38N
-        7sgG2SV+q6JdpXwdpiAEU7GVOKAmgOJx3Nw==
-X-Received: by 2002:a17:907:7718:b0:93d:c57f:b8b4 with SMTP id kw24-20020a170907771800b0093dc57fb8b4mr11701397ejc.26.1679923143157;
-        Mon, 27 Mar 2023 06:19:03 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Y8Affwbtww/oGzsLGTsjSTqCH5Zk+CjaVKRD6uvWJLEqdhLBKHVDkMb0S7T1uIFwf8Xha+PQ==
-X-Received: by 2002:a17:907:7718:b0:93d:c57f:b8b4 with SMTP id kw24-20020a170907771800b0093dc57fb8b4mr11701385ejc.26.1679923142910;
-        Mon, 27 Mar 2023 06:19:02 -0700 (PDT)
+        bh=swmjhnNjkaqtpqt5Pl5MGYtRoGQ0+bZAAWUhMT4BRK0=;
+        b=UvSQR3ssVwZX5SkJU46OELTWRpYvaTjwUmhA0O2le+f+fzKdNFA0CZX59i+9vDzqGW
+         UqAqPyzX0F05rpMayzjaN+QpFF5arUjN0Ft5EU2GNYykvcFi1fnICZtb0hE8d5PXK7TM
+         iFHv1whqxcv0nHDpR0G8toD+tFWscWC5YEaQ/RE57KPnLizYYErmLFyuKa2itCQgTDTH
+         Ckj5Ac7yOe9nnNhJxfdrWHLt+1tB8XFJQTZShyNlhAV9UNtfDuuIZ8NxbvE0oorjHXn1
+         pfBGy8HwYHireguWVzJPDnhFzkTTqB6IWwnGt2vkrqRbsqa4fW2g4ElnU5fVDPTPht3e
+         qggg==
+X-Gm-Message-State: AAQBX9dW3lHpiPerx59EmpOb33G4DXGB+oztwpiDOtGU8O3PbuO72Fxz
+        YPOms44ceyJ9JvVozabUb374+fsdxAfLeYouCMxsbpMRO8r5Gb1xWtxsGty92g82bDsnU8weSF3
+        THUT10IkzF4N3+Suvag1D3fvQvw6UooxQow==
+X-Received: by 2002:a50:e70d:0:b0:4fb:f2db:a654 with SMTP id a13-20020a50e70d000000b004fbf2dba654mr12478361edn.12.1679923348095;
+        Mon, 27 Mar 2023 06:22:28 -0700 (PDT)
+X-Google-Smtp-Source: AKy350b4UaXv+XZH07n/yn7/2WM1DdUToTaKHOUQV906oWpHknoHH5Ayl+UBoumuWCRysYszp0+LhQ==
+X-Received: by 2002:a50:e70d:0:b0:4fb:f2db:a654 with SMTP id a13-20020a50e70d000000b004fbf2dba654mr12478344edn.12.1679923347837;
+        Mon, 27 Mar 2023 06:22:27 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id h27-20020a17090634db00b00933f31034f2sm11292321ejb.38.2023.03.27.06.19.01
+        by smtp.gmail.com with ESMTPSA id a25-20020a50c319000000b004bc15a440f1sm14792601edb.78.2023.03.27.06.22.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Mar 2023 06:19:02 -0700 (PDT)
-Message-ID: <a4ddfdeb-aa17-2e72-9c1d-5a7207ee8e47@redhat.com>
-Date:   Mon, 27 Mar 2023 15:19:01 +0200
+        Mon, 27 Mar 2023 06:22:26 -0700 (PDT)
+Message-ID: <7057612b-f82a-5d57-df03-1986b23127fb@redhat.com>
+Date:   Mon, 27 Mar 2023 15:22:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: ISST: unlock on error path in
- tpmi_sst_init()
+Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add support for B650 AORUS
+ ELITE AX
 Content-Language: en-US
-To:     Dan Carpenter <error27@gmail.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Mark Gross <markgross@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        got3nks <got3nks@users.noreply.github.com>
+References: <20230327-gigabyte-wmi-b650-elite-ax-v1-1-d4d645c21d0b@weissschuh.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
+In-Reply-To: <20230327-gigabyte-wmi-b650-elite-ax-v1-1-d4d645c21d0b@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/25/23 12:08, Dan Carpenter wrote:
-> Call mutex_unlock(&isst_tpmi_dev_lock) before returning on this
-> error path.
+On 3/27/23 15:05, Thomas Weißschuh wrote:
+> This has been reported as working.
 > 
-> Fixes: d805456c712f ("platform/x86: ISST: Enumerate TPMI SST and create framework")
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
+> Suggested-by: got3nks <got3nks@users.noreply.github.com>
+> Link: https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/15#issuecomment-1483942966
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Thank you for your patch, I've applied this patch to my review-hans 
+Thank you for your patch, I've applied this patch to my fixes
 branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Note it will show up in my review-hans branch once I've pushed my
+Note it will show up in my fixes branch once I've pushed my
 local branch there, which might take a while.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
 
+
 > ---
->  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/gigabyte-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index cdb56a18ea17..664d2ee60385 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -1399,8 +1399,10 @@ int tpmi_sst_init(void)
->  	isst_common.sst_inst = kcalloc(topology_max_packages(),
->  				       sizeof(*isst_common.sst_inst),
->  				       GFP_KERNEL);
-> -	if (!isst_common.sst_inst)
-> -		return -ENOMEM;
-> +	if (!isst_common.sst_inst) {
-> +		ret = -ENOMEM;
-> +		goto init_done;
-> +	}
->  
->  	memset(&cb, 0, sizeof(cb));
->  	cb.cmd_size = sizeof(struct isst_if_io_reg);
+> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+> index 322cfaeda17b..078afa98e6c6 100644
+> --- a/drivers/platform/x86/gigabyte-wmi.c
+> +++ b/drivers/platform/x86/gigabyte-wmi.c
+> @@ -150,6 +150,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
+> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B650 AORUS ELITE AX"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
+>  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
+> 
+> ---
+> base-commit: 197b6b60ae7bc51dd0814953c562833143b292aa
+> change-id: 20230327-gigabyte-wmi-b650-elite-ax-003f0b58e3c3
+> 
+> Best regards,
 
