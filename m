@@ -2,77 +2,79 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E4C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4F1C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbjC0NX3 (ORCPT
+        id S232221AbjC0N03 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Mar 2023 09:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        Mon, 27 Mar 2023 09:26:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231960AbjC0NXT (ORCPT
+        with ESMTP id S232561AbjC0N0P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Mar 2023 09:23:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745D71985
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:22:31 -0700 (PDT)
+        Mon, 27 Mar 2023 09:26:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC9B3591
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679923350;
+        s=mimecast20190719; t=1679923441;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=swmjhnNjkaqtpqt5Pl5MGYtRoGQ0+bZAAWUhMT4BRK0=;
-        b=UOjvW/UR/LW1cMSbiKq9kuHMtKwhlb2BBF6FRyoFXnP0k8JhYKPlzIK9BOD/EHcAq2sSfD
-        AGCB3mm5mcTwDQH0yZd/jQ/px4YAJqlOZr+cEtQwtJKYtMdVoYNVfG/hxhenfsGufT7Jwv
-        iZ7XqM19Z4wZ9ce+j0tOeJ1d8vu0iHw=
+        bh=w39bnXJeVyzgDP57+ppZRKn38B8WFtfby6VdNZ4p/SU=;
+        b=MPh0xI7dCXL3VWyGJchVqEqjzxiHMviDzhJQYCoOvBICRwNL6OPpQMexj3ehQEtRk7h7AD
+        zsvGwwUOSWSkkD8xgJbwrTuBmibXswhgMl1sxVKPlsLS41MsmONfq65oZZ9FshXJKsnR7C
+        ZAbX/bC7iUzUMFpw5QBro1jDJN6z9ag=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-RINexowTMX6YqzidKv5iWg-1; Mon, 27 Mar 2023 09:22:29 -0400
-X-MC-Unique: RINexowTMX6YqzidKv5iWg-1
-Received: by mail-ed1-f71.google.com with SMTP id b18-20020a50b412000000b0050234a3ad75so7265765edh.23
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:22:28 -0700 (PDT)
+ us-mta-365-Tqlfif2ZNum8n8RAp9bgqA-1; Mon, 27 Mar 2023 09:24:00 -0400
+X-MC-Unique: Tqlfif2ZNum8n8RAp9bgqA-1
+Received: by mail-ed1-f71.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso12840098edh.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:24:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679923348;
+        d=1e100.net; s=20210112; t=1679923439;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=swmjhnNjkaqtpqt5Pl5MGYtRoGQ0+bZAAWUhMT4BRK0=;
-        b=UvSQR3ssVwZX5SkJU46OELTWRpYvaTjwUmhA0O2le+f+fzKdNFA0CZX59i+9vDzqGW
-         UqAqPyzX0F05rpMayzjaN+QpFF5arUjN0Ft5EU2GNYykvcFi1fnICZtb0hE8d5PXK7TM
-         iFHv1whqxcv0nHDpR0G8toD+tFWscWC5YEaQ/RE57KPnLizYYErmLFyuKa2itCQgTDTH
-         Ckj5Ac7yOe9nnNhJxfdrWHLt+1tB8XFJQTZShyNlhAV9UNtfDuuIZ8NxbvE0oorjHXn1
-         pfBGy8HwYHireguWVzJPDnhFzkTTqB6IWwnGt2vkrqRbsqa4fW2g4ElnU5fVDPTPht3e
-         qggg==
-X-Gm-Message-State: AAQBX9dW3lHpiPerx59EmpOb33G4DXGB+oztwpiDOtGU8O3PbuO72Fxz
-        YPOms44ceyJ9JvVozabUb374+fsdxAfLeYouCMxsbpMRO8r5Gb1xWtxsGty92g82bDsnU8weSF3
-        THUT10IkzF4N3+Suvag1D3fvQvw6UooxQow==
-X-Received: by 2002:a50:e70d:0:b0:4fb:f2db:a654 with SMTP id a13-20020a50e70d000000b004fbf2dba654mr12478361edn.12.1679923348095;
-        Mon, 27 Mar 2023 06:22:28 -0700 (PDT)
-X-Google-Smtp-Source: AKy350b4UaXv+XZH07n/yn7/2WM1DdUToTaKHOUQV906oWpHknoHH5Ayl+UBoumuWCRysYszp0+LhQ==
-X-Received: by 2002:a50:e70d:0:b0:4fb:f2db:a654 with SMTP id a13-20020a50e70d000000b004fbf2dba654mr12478344edn.12.1679923347837;
-        Mon, 27 Mar 2023 06:22:27 -0700 (PDT)
+        bh=w39bnXJeVyzgDP57+ppZRKn38B8WFtfby6VdNZ4p/SU=;
+        b=r812416wjxN0aKr1jLFiYFJBwJCWXRjQbcOyx4hN439XLKP2quZ5GXzp9hWUHeXmW5
+         58k2v6qAaYTUa+Pbx9yaebyTxBtQ9lee0QJEkuF6wRa5GYGYTIzolHiQd2GQWvpAbNh/
+         Zt9IcTpSv5pMJGs8aiAOhvDy6qLK/RpLdmAFLSiper9Ih1BICxwqxn3kq7EA2mD709lo
+         wTMpsq0am+55PKDvZAwjYhHWedBK2yTu0ZF4FjZAQjKemZX+zukgaSNUw3BksFr9ZBQf
+         UvtZTnpq4e7yc6YG0oqKc/ej0JhGCCOC+qY7YHhQ8R1TnbxoDzOCz1g3YdRkoLTBBrrk
+         Jxug==
+X-Gm-Message-State: AAQBX9d59SBlttbgZMZr6QI24ydCappn4+5CxOHBKN03y/MP77+iFHzS
+        RV5YaMllWfeCqdrO1tWcBZpUiYVbo2JJKWZxzk7YdUHNoeCxu/F1/O0EqG2hJMIoycuINPv04r9
+        N2jAabdB6S6/BwSBlgtmEDYA0TvlR0i+xYgzIdY1q8A==
+X-Received: by 2002:a17:907:7e8e:b0:932:dae5:2af9 with SMTP id qb14-20020a1709077e8e00b00932dae52af9mr15881175ejc.51.1679923439084;
+        Mon, 27 Mar 2023 06:23:59 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bY8EpS/V4Wu36JRPz4lkwJeJjd0bAQVkVT6lprL+6TUgwZyQF9OHIhQnrVtxzXRcoZizhs0w==
+X-Received: by 2002:a17:907:7e8e:b0:932:dae5:2af9 with SMTP id qb14-20020a1709077e8e00b00932dae52af9mr15881139ejc.51.1679923438782;
+        Mon, 27 Mar 2023 06:23:58 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a25-20020a50c319000000b004bc15a440f1sm14792601edb.78.2023.03.27.06.22.26
+        by smtp.gmail.com with ESMTPSA id s9-20020a170906454900b008f89953b761sm14080825ejq.3.2023.03.27.06.23.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Mar 2023 06:22:26 -0700 (PDT)
-Message-ID: <7057612b-f82a-5d57-df03-1986b23127fb@redhat.com>
-Date:   Mon, 27 Mar 2023 15:22:25 +0200
+        Mon, 27 Mar 2023 06:23:57 -0700 (PDT)
+Message-ID: <bb42e715-464d-ec9e-beda-3f420980e169@redhat.com>
+Date:   Mon, 27 Mar 2023 15:23:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add support for B650 AORUS
- ELITE AX
+Subject: Re: [PATCH 6/8] leds: tps68470: Support the WLED driver
 Content-Language: en-US
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        got3nks <got3nks@users.noreply.github.com>
-References: <20230327-gigabyte-wmi-b650-elite-ax-v1-1-d4d645c21d0b@weissschuh.net>
+To:     Dan Scally <dan.scally@ideasonboard.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        lee@kernel.org, markgross@kernel.org, sboyd@kernel.org,
+        hpa@redhat.com
+References: <20230322160926.948687-1-dan.scally@ideasonboard.com>
+ <20230322160926.948687-7-dan.scally@ideasonboard.com>
+ <ZBw2ai0G0XCa1vky@duo.ucw.cz>
+ <85997479-374b-f130-29dc-e713000d4348@ideasonboard.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230327-gigabyte-wmi-b650-elite-ax-v1-1-d4d645c21d0b@weissschuh.net>
+In-Reply-To: <85997479-374b-f130-29dc-e713000d4348@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -81,49 +83,51 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/27/23 15:05, Thomas Weißschuh wrote:
-> This has been reported as working.
+On 3/23/23 17:25, Dan Scally wrote:
+> Hi Pavel, thanks for taking a look
 > 
-> Suggested-by: got3nks <got3nks@users.noreply.github.com>
-> Link: https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/15#issuecomment-1483942966
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> On 23/03/2023 11:22, Pavel Machek wrote:
+>> On Wed 2023-03-22 16:09:24, Daniel Scally wrote:
+>>> The TPS68470 PMIC provides a third LED driver in addition to the two
+>>> indicator LEDs. Add support for the WLED. To ensure the LED is active
+>>> for as long as the kernel instructs it to be we need to re-trigger it
+>>> periodically to avoid the IC's internal timeouts.
+>> Wow. No!
+>>
+>> If hardware does not wart you to burn the LED, it is not okay to just
+>> work around that. These are not designed for continuous operation.
+>>
+>>> diff --git a/drivers/leds/leds-tps68470.c b/drivers/leds/leds-tps68470.c
+>>> index 44df175d25de..abcd3494b1a8 100644
+>> Fun sha1 hash ;-).
+> 
+> 
+> heh yeh
+> 
+>>
+>>> @@ -52,11 +61,33 @@ enum ctrlb_current {
+>>>       CTRLB_16MA    = 3,
+>>>   };
+>>>   +/*
+>>> + * The WLED can operate in different modes, including a Flash and Torch mode. In
+>>> + * each mode there's a timeout which ranges from a matter of milliseconds to up
+>>> + * to 13 seconds. We don't want that timeout to apply though because the LED
+>>> + * should be lit until we say that it should no longer be lit, re-trigger the
+>>> + * LED periodically to keep it alive.
+>>> + */
+>> We don't want the LED to overheat. That takes precedence.
+>>
+>> Find out what are the maximum limits for on time at various current
+>> levels. LED framework should be used for torch mode, with current set
+>> such that unlimited operation is safe. V4L2 should be used for flash
+>> mode.
+> 
+> 
+> I did it this way because this is how the IC operates on my device whilst it's booted to Windows...but I suppose given they don't expose the LED outside of their Hello auth thing they can guarantee it's not being lit for too long - I confess that hadn't occurred to me. Anyway; I'll update this to re-trigger if the IC is in torch mode within the timeout (which the datasheet explicitly says you can do in torch mode; the current is much more heavily limited in that mode) and in the flash mode to update the brightness setting to 0 once the timeout expires so it reflects the actual state of the LED. Does that sound ok?
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+That sounds reasonable to me.
 
 Regards,
 
 Hans
-
-
-
-> ---
->  drivers/platform/x86/gigabyte-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 322cfaeda17b..078afa98e6c6 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -150,6 +150,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
-> +	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B650 AORUS ELITE AX"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
->  	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
-> 
-> ---
-> base-commit: 197b6b60ae7bc51dd0814953c562833143b292aa
-> change-id: 20230327-gigabyte-wmi-b650-elite-ax-003f0b58e3c3
-> 
-> Best regards,
 
