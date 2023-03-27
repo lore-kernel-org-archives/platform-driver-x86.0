@@ -2,186 +2,128 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37515C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51867C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232442AbjC0NQC (ORCPT
+        id S229498AbjC0NTy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Mar 2023 09:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
+        Mon, 27 Mar 2023 09:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjC0NP6 (ORCPT
+        with ESMTP id S231932AbjC0NTw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Mar 2023 09:15:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C41723
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:15:11 -0700 (PDT)
+        Mon, 27 Mar 2023 09:19:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7E11FCA
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679922911;
+        s=mimecast20190719; t=1679923145;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XjDKvnE/0RHI26sM+GFJ8N/AK61ziZWVPRz/BZ4LSd4=;
-        b=aQtu7mzgPiegXxjv1txJ/ExqUTS+zI7uRietA7uCRGuaPUVD1KjZzMYfnTClgZkVBHVTyC
-        29Z21Jj5O2+FZR0I49o6Rwfl55qsj/tqAzj2KPQytTth/lk5jz4ipqqNMEBGvuhnf7O4uh
-        F/wKKgAtCwHciHEtXr+AgOShj2lr4Rg=
+        bh=EBgTYwgbbPBXMkcZFKPAHeZP7Jqx47wA107Cj1PA/QY=;
+        b=fEFM3kVGrzVCuB6nrPh5YBFkn/cbPx0B1ZyBPDi34QqpuNXWvgHOA11warVcXwZQQ7zCqc
+        C/IdIGtLX4h2K2wqlfFSiBMz5WfvD+wH2A0g1gxDEyR8kcOLunJwyp197EUr/lPJpeo/pD
+        9vxcGc0bBAA70fLR/93/3sMVj/uLlnw=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-323-fh9VQFh_Nvenf1pkio8PTw-1; Mon, 27 Mar 2023 09:15:10 -0400
-X-MC-Unique: fh9VQFh_Nvenf1pkio8PTw-1
-Received: by mail-ed1-f71.google.com with SMTP id t26-20020a50d71a000000b005003c5087caso12522212edi.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:15:09 -0700 (PDT)
+ us-mta-616-a4JJ2omGPMOYcOlPR5PxEw-1; Mon, 27 Mar 2023 09:19:04 -0400
+X-MC-Unique: a4JJ2omGPMOYcOlPR5PxEw-1
+Received: by mail-ed1-f71.google.com with SMTP id f15-20020a50a6cf000000b0050050d2326aso12481284edc.18
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:19:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679922908;
+        d=1e100.net; s=20210112; t=1679923143;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjDKvnE/0RHI26sM+GFJ8N/AK61ziZWVPRz/BZ4LSd4=;
-        b=IXRH4F+nPtOqqHkJZsIPsT71lHMb8UcBn99lQEQOBpuqqjSwOEeqihOUUTVe9F9yLt
-         pw9HkBs3pvYIjzeBXc6EdHMCamWYu5lwUTyquSzJ5qyaXynWsgRFbQiYAnEiEk4xvWGt
-         CcUBeScfMg7cg/pludtx8PXYqpCtGZHizYYVt7U7HG5Gb+JDTpk+JAbf+IO9bGCZTvFt
-         KOZkL3K573kfHyROzkKCnArVf+/8g+6NW7A04FmnX2RrRY9IvBnTU1553jqEQ8DLYIce
-         0/CVjfNiq7hJuW4xYsKmi4Z1OIi1JdYDpL64jUIhqEqMRFdyTx7bh1FoXtUcASeozLOo
-         egWQ==
-X-Gm-Message-State: AAQBX9c1DxFFYlzU0LopDUApGUn7o1AIrv10rawpK/ceiknI4BHi3Dl8
-        EDe+orN4Nx3+lxpw+9TM4iXy669wI2RhhJKJ5GPYCzuljT14e0dWgL7Yk9Su0gnMswHCQy/mnFw
-        Ur+iWusWfgHr/vLw75PZa5LGhPLwPdj8kuNZOlboDig==
-X-Received: by 2002:a17:907:2d29:b0:8fa:b2b:9de with SMTP id gs41-20020a1709072d2900b008fa0b2b09demr16265427ejc.25.1679922908542;
-        Mon, 27 Mar 2023 06:15:08 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZUPwajKVZT22VocG9iPAcAPmPkfXZkFy2dSGhm2syf6WG8CTfO9Fo4Lh9dXbaK1t7H2CvYZg==
-X-Received: by 2002:a17:907:2d29:b0:8fa:b2b:9de with SMTP id gs41-20020a1709072d2900b008fa0b2b09demr16265400ejc.25.1679922908282;
-        Mon, 27 Mar 2023 06:15:08 -0700 (PDT)
+        bh=EBgTYwgbbPBXMkcZFKPAHeZP7Jqx47wA107Cj1PA/QY=;
+        b=lzNGcORfJtMBijWiczFwWOJnD1ZR4LdzjgUvMwwvzEJyptl4hoRKlD0Z238vWixM+v
+         galKi9JdFQKNitflupWoMCRsQi128O5Z1up2U4u5t25SSpfgHeU3EB60oBnUJPYmIV3y
+         jqMbJfLgl1q41xEHYN+GIlBJRWOkPYkinHmZ3HkJgJoBgtT4HNINZByWHutqVYkQdRIl
+         ljv098yxR65KomnMZhW3YOKnxeygfJ4k/zdtrlDzV7mk2vgtc/LwscRYGvU/Q9L9k8Tb
+         rhdVzyMT+qqvlpTbVnGDlKYj38qFLI1RlJNTSwlKYNmKwF6NyV0KUGqwucSsb89o++J2
+         webQ==
+X-Gm-Message-State: AAQBX9f1dQSyhNRkBAlugIrZdidPdk4d39z3dGPUXqTwp3v1nUelHShD
+        DUNzTR47G/kXgpcvYiy4U0giYaJYGqj7NqmN+8JJR6xZ0Qlk6FQw9UJUD0RHNMRbjkNTNdht38N
+        7sgG2SV+q6JdpXwdpiAEU7GVOKAmgOJx3Nw==
+X-Received: by 2002:a17:907:7718:b0:93d:c57f:b8b4 with SMTP id kw24-20020a170907771800b0093dc57fb8b4mr11701397ejc.26.1679923143157;
+        Mon, 27 Mar 2023 06:19:03 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Y8Affwbtww/oGzsLGTsjSTqCH5Zk+CjaVKRD6uvWJLEqdhLBKHVDkMb0S7T1uIFwf8Xha+PQ==
+X-Received: by 2002:a17:907:7718:b0:93d:c57f:b8b4 with SMTP id kw24-20020a170907771800b0093dc57fb8b4mr11701385ejc.26.1679923142910;
+        Mon, 27 Mar 2023 06:19:02 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id n12-20020a1709062bcc00b0093034e71b94sm13963031ejg.65.2023.03.27.06.15.07
+        by smtp.gmail.com with ESMTPSA id h27-20020a17090634db00b00933f31034f2sm11292321ejb.38.2023.03.27.06.19.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Mar 2023 06:15:07 -0700 (PDT)
-Message-ID: <dc1ba9f1-549f-ef27-6a49-e288d41893d2@redhat.com>
-Date:   Mon, 27 Mar 2023 15:15:06 +0200
+        Mon, 27 Mar 2023 06:19:02 -0700 (PDT)
+Message-ID: <a4ddfdeb-aa17-2e72-9c1d-5a7207ee8e47@redhat.com>
+Date:   Mon, 27 Mar 2023 15:19:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH RFC] platform/x86: gigabyte-wmi: remove allowlist
+Subject: Re: [PATCH] platform/x86: ISST: unlock on error path in
+ tpmi_sst_init()
 Content-Language: en-US
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
+To:     Dan Carpenter <error27@gmail.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
+In-Reply-To: <dcdebbb7-7de6-4d04-8e7a-43d5ca043484@kili.mountain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+Hi,
 
-On 3/25/23 17:48, Thomas Weißschuh wrote:
-> Having to maintain a per-system allowlist is burdensome and confusing
-> for users, drop it.
+On 3/25/23 12:08, Dan Carpenter wrote:
+> Call mutex_unlock(&isst_tpmi_dev_lock) before returning on this
+> error path.
 > 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
-> 
-> I propose to keep this in -next for two cycles or so to make sure it
-> does not break anything.
+> Fixes: d805456c712f ("platform/x86: ISST: Enumerate TPMI SST and create framework")
+> Signed-off-by: Dan Carpenter <error27@gmail.com>
 
-I think dropping this is a good idea (given the current experience with
-the driver), but keeping the dropping of the list in -next for 2 cycles
-is somewhat tricky. Normally once the final e.g. 6.3 is released I take
-the pdx86/for-next branch *as-is* and use that to send a pull-req to
-Linus, so that Linus gets send a hash which has been tested in linux-next
-for a while before sending it to him.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Dropping this patch at that point would mean generating a new hash,
-which is a bit meh. I can do that but I would prefer to just limit
-testing to 1 full cycle.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Maybe you can send me a non RFC version of this patch once 6.4-rc1 is out?
-Then I can add that to for-next right away and then we can get a full
-cycle of -next testing that way.
-
-Would that work for you?
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
 > ---
->  drivers/platform/x86/gigabyte-wmi.c | 40 -------------------------------------
->  1 file changed, 40 deletions(-)
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 322cfaeda17b..b0338f043416 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -13,10 +13,6 @@
->  #define GIGABYTE_WMI_GUID	"DEADBEEF-2001-0000-00A0-C90629100000"
->  #define NUM_TEMPERATURE_SENSORS	6
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index cdb56a18ea17..664d2ee60385 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -1399,8 +1399,10 @@ int tpmi_sst_init(void)
+>  	isst_common.sst_inst = kcalloc(topology_max_packages(),
+>  				       sizeof(*isst_common.sst_inst),
+>  				       GFP_KERNEL);
+> -	if (!isst_common.sst_inst)
+> -		return -ENOMEM;
+> +	if (!isst_common.sst_inst) {
+> +		ret = -ENOMEM;
+> +		goto init_done;
+> +	}
 >  
-> -static bool force_load;
-> -module_param(force_load, bool, 0444);
-> -MODULE_PARM_DESC(force_load, "Force loading on unknown platform");
-> -
->  static u8 usable_sensors_mask;
->  
->  enum gigabyte_wmi_commandtype {
-> @@ -133,46 +129,10 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
->  	return r;
->  }
->  
-> -#define DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME(name) \
-> -	{ .matches = { \
-> -		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."), \
-> -		DMI_EXACT_MATCH(DMI_BOARD_NAME, name), \
-> -	}}
-> -
-> -static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
-> -	{ }
-> -};
-> -
->  static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
->  {
->  	struct device *hwmon_dev;
->  
-> -	if (!dmi_check_system(gigabyte_wmi_known_working_platforms)) {
-> -		if (!force_load)
-> -			return -ENODEV;
-> -		dev_warn(&wdev->dev, "Forcing load on unknown platform");
-> -	}
-> -
->  	usable_sensors_mask = gigabyte_wmi_detect_sensor_usability(wdev);
->  	if (!usable_sensors_mask) {
->  		dev_info(&wdev->dev, "No temperature sensors usable");
-> 
-> ---
-> base-commit: 65aca32efdcb0965502d3db2f1fa33838c070952
-> change-id: 20230325-gigabyte-wmi-unrestrict-7244320c1996
-> 
-> Best regards,
+>  	memset(&cb, 0, sizeof(cb));
+>  	cb.cmd_size = sizeof(struct isst_if_io_reg);
 
