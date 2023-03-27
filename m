@@ -2,154 +2,109 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BE5C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37515C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 27 Mar 2023 13:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232323AbjC0NLj (ORCPT
+        id S232442AbjC0NQC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 27 Mar 2023 09:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49888 "EHLO
+        Mon, 27 Mar 2023 09:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbjC0NLi (ORCPT
+        with ESMTP id S229456AbjC0NP6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Mar 2023 09:11:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A96210D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:10:51 -0700 (PDT)
+        Mon, 27 Mar 2023 09:15:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C41723
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679922650;
+        s=mimecast20190719; t=1679922911;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/rJWR6N70Bb+OBzD3QtO0I9WNX7bLRShDPYahmlJY5Q=;
-        b=NgDJj6tKrL1gu9a5EfdvnKd28KUkNVdXiqMsKfk09Bv0BuNa+0ULHFnCMuBm+gm0XrEGs7
-        9bJvQA/hMjVVjrarTr81N+w8qVOx+5KQZOBP6YTVDcrJYLIuGTHtJhRC2861Rs1HLknPki
-        jXO4YnE2GssIFkAkO0vJ7QdVKN3eaR8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XjDKvnE/0RHI26sM+GFJ8N/AK61ziZWVPRz/BZ4LSd4=;
+        b=aQtu7mzgPiegXxjv1txJ/ExqUTS+zI7uRietA7uCRGuaPUVD1KjZzMYfnTClgZkVBHVTyC
+        29Z21Jj5O2+FZR0I49o6Rwfl55qsj/tqAzj2KPQytTth/lk5jz4ipqqNMEBGvuhnf7O4uh
+        F/wKKgAtCwHciHEtXr+AgOShj2lr4Rg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-wYi7y50mNmicLzq28yij6A-1; Mon, 27 Mar 2023 09:10:49 -0400
-X-MC-Unique: wYi7y50mNmicLzq28yij6A-1
-Received: by mail-ed1-f69.google.com with SMTP id f15-20020a50a6cf000000b0050050d2326aso12444348edc.18
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:10:48 -0700 (PDT)
+ us-mta-323-fh9VQFh_Nvenf1pkio8PTw-1; Mon, 27 Mar 2023 09:15:10 -0400
+X-MC-Unique: fh9VQFh_Nvenf1pkio8PTw-1
+Received: by mail-ed1-f71.google.com with SMTP id t26-20020a50d71a000000b005003c5087caso12522212edi.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Mar 2023 06:15:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679922648;
+        d=1e100.net; s=20210112; t=1679922908;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/rJWR6N70Bb+OBzD3QtO0I9WNX7bLRShDPYahmlJY5Q=;
-        b=AgV2gSHzabnblpZt1PZUap9Ult5YhdzXaBuINOc4IW9YnKyd+DsNdrtXiCRlSv7V5u
-         T8MZpPz0hzJvOwCxsmyV1LWUxLNg5vWCbHP/A6DspMjm3OMSalKpWKaVOgQjcHuKKf6c
-         R45ipDD21HLK1fmulK1VmOK9urPuSpdGBIDlsNgzRmhbtK0JFnykd4M5r3VAZZh61erW
-         V3iXbIof9MFk767HSHVjpIlcumJKu+GkoEr3SIvJZ/EeIG1gStf3RajoceYs77dH7VT9
-         tSl4OzIf7pEIs1djHnTjBQ+0RqSsWNJWfqqatt27QozrvY79S/7fG7pL2Tw64ekGtDct
-         VPyA==
-X-Gm-Message-State: AAQBX9eR6fPQX5gEIhaL3Gpq1/rfsIzT4HfDsVulEutduMj/RqkdECDp
-        bCtByIDZCQJZpgLseA0mKcWw9/dkSPi0LNWxdbCQ1gMyS0bFDx7Oe9PZAAjVxrtweyrmasvQUwt
-        vLxZENC0WpcSZgEKZXKUwZBJCBAHrKx8o4w==
-X-Received: by 2002:a17:906:341a:b0:931:de76:c2e8 with SMTP id c26-20020a170906341a00b00931de76c2e8mr13349478ejb.9.1679922648046;
-        Mon, 27 Mar 2023 06:10:48 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aB29/5iaE0NAyBAJvdzJkZEbWcVqIjAphp8OhATqxxdTcyJL7WxoUABN0PaPnNFhZde5qYnQ==
-X-Received: by 2002:a17:906:341a:b0:931:de76:c2e8 with SMTP id c26-20020a170906341a00b00931de76c2e8mr13349458ejb.9.1679922647711;
-        Mon, 27 Mar 2023 06:10:47 -0700 (PDT)
+        bh=XjDKvnE/0RHI26sM+GFJ8N/AK61ziZWVPRz/BZ4LSd4=;
+        b=IXRH4F+nPtOqqHkJZsIPsT71lHMb8UcBn99lQEQOBpuqqjSwOEeqihOUUTVe9F9yLt
+         pw9HkBs3pvYIjzeBXc6EdHMCamWYu5lwUTyquSzJ5qyaXynWsgRFbQiYAnEiEk4xvWGt
+         CcUBeScfMg7cg/pludtx8PXYqpCtGZHizYYVt7U7HG5Gb+JDTpk+JAbf+IO9bGCZTvFt
+         KOZkL3K573kfHyROzkKCnArVf+/8g+6NW7A04FmnX2RrRY9IvBnTU1553jqEQ8DLYIce
+         0/CVjfNiq7hJuW4xYsKmi4Z1OIi1JdYDpL64jUIhqEqMRFdyTx7bh1FoXtUcASeozLOo
+         egWQ==
+X-Gm-Message-State: AAQBX9c1DxFFYlzU0LopDUApGUn7o1AIrv10rawpK/ceiknI4BHi3Dl8
+        EDe+orN4Nx3+lxpw+9TM4iXy669wI2RhhJKJ5GPYCzuljT14e0dWgL7Yk9Su0gnMswHCQy/mnFw
+        Ur+iWusWfgHr/vLw75PZa5LGhPLwPdj8kuNZOlboDig==
+X-Received: by 2002:a17:907:2d29:b0:8fa:b2b:9de with SMTP id gs41-20020a1709072d2900b008fa0b2b09demr16265427ejc.25.1679922908542;
+        Mon, 27 Mar 2023 06:15:08 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZUPwajKVZT22VocG9iPAcAPmPkfXZkFy2dSGhm2syf6WG8CTfO9Fo4Lh9dXbaK1t7H2CvYZg==
+X-Received: by 2002:a17:907:2d29:b0:8fa:b2b:9de with SMTP id gs41-20020a1709072d2900b008fa0b2b09demr16265400ejc.25.1679922908282;
+        Mon, 27 Mar 2023 06:15:08 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id l6-20020a50d6c6000000b004af62273b66sm14534168edj.18.2023.03.27.06.10.45
+        by smtp.gmail.com with ESMTPSA id n12-20020a1709062bcc00b0093034e71b94sm13963031ejg.65.2023.03.27.06.15.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Mar 2023 06:10:46 -0700 (PDT)
-Message-ID: <49a3b712-bb17-0ec8-4598-fc40ae2ba15d@redhat.com>
-Date:   Mon, 27 Mar 2023 15:10:45 +0200
+        Mon, 27 Mar 2023 06:15:07 -0700 (PDT)
+Message-ID: <dc1ba9f1-549f-ef27-6a49-e288d41893d2@redhat.com>
+Date:   Mon, 27 Mar 2023 15:15:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v4 0/9] Add Array BIST test support to IFS
+Subject: Re: [PATCH RFC] platform/x86: gigabyte-wmi: remove allowlist
 Content-Language: en-US
-To:     Jithu Joseph <jithu.joseph@intel.com>, markgross@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        patches@lists.linux.dev, ravi.v.shankar@intel.com,
-        thiago.macieira@intel.com, athenas.jimenez.gonzalez@intel.com,
-        sohil.mehta@intel.com
-References: <20230301015942.462799-1-jithu.joseph@intel.com>
- <20230322003359.213046-1-jithu.joseph@intel.com>
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
+        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230322003359.213046-1-jithu.joseph@intel.com>
+In-Reply-To: <20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Thomas,
 
-On 3/22/23 01:33, Jithu Joseph wrote:
-> Changes in v4
->  - Hans de Goede
->      - Separate patch 1/9 (Separate ifs_pkg_auth) from reorganize
->         driver data patch
->      - Rework patch 2/9 (Reorganize driver data) to define const
->        ifs_test_caps struct and associate its pointer to miscdevice
->        and to remove dynamic allocation for ifs_data as was done in v3
->      - Move load check from run_test_store to do_core_test()
->      - Expand ABI doc to qualify which devices support which attribrutes
->        and the device instance to test mapping
+On 3/25/23 17:48, Thomas Weißschuh wrote:
+> Having to maintain a per-system allowlist is burdensome and confusing
+> for users, drop it.
 > 
-> V3 submission:
-> Link: https://lore.kernel.org/lkml/20230301015942.462799-1-jithu.joseph@intel.com/
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
 > 
-> Changes in v3
->  - GregKH 
->     -  Separating read-only fields from rw fields in
->        struct ifs_device (patch 1/8)
->     -  Remove the subdirectory intel_ifs/<n> for devicenode (patch 2/8)
->     -  Replaced an enum with #define (patch 4/8)
->  - Dave Hansen
->     - Remove tracing patch
->     - ifs_array_test_core() (patch 6/8)
->         - fix an initialization bug
->         - other suggested changes
->     - Use basic types in ifs_array for first two fields. (kept
->       the union to avoid type castings)
-> 
-> v2 submission:
-> Link: https://lore.kernel.org/lkml/20230214234426.344960-1-jithu.joseph@intel.com/
-> 
-> Changes in v2
->  - remove duplicate initializations from ifs_array_test_core()
->    (Dave Hansen, patch 4/7)
->  - remove bit parsing from tracing fast path to tracing 
->    output (Steven Rostedt, patch 5/7)
->  - move "ATTRIBUTE_GROUPS(plat_ifs_array)" to core.c and remove
->    exporting function ifs_get_array_groups() (Greg KH, patch 3/7)
->  - Generalized doc and ABI doc (Greg KH, patches 6/7 and 7/7)
-> 
-> v1 submission:
-> Link: https://lore.kernel.org/lkml/20230131234302.3997223-1-jithu.joseph@intel.com/
-> 
-> Array BIST is a new type of core test introduced under the Intel Infield
-> Scan (IFS) suite of tests.
-> 
-> Emerald Rapids (EMR) is the first CPU to support Array BIST.
-> Array BIST performs tests on some portions of the core logic such as
-> caches and register files. These are different portions of the silicon
-> compared to the parts tested by Scan at Field (SAF).
-> 
-> Unlike SAF, Array BIST doesn't require any test content to be loaded.
+> I propose to keep this in -next for two cycles or so to make sure it
+> does not break anything.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I think dropping this is a good idea (given the current experience with
+the driver), but keeping the dropping of the list in -next for 2 cycles
+is somewhat tricky. Normally once the final e.g. 6.3 is released I take
+the pdx86/for-next branch *as-is* and use that to send a pull-req to
+Linus, so that Linus gets send a hash which has been tested in linux-next
+for a while before sending it to him.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Dropping this patch at that point would mean generating a new hash,
+which is a bit meh. I can do that but I would prefer to just limit
+testing to 1 full cycle.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Maybe you can send me a non RFC version of this patch once 6.4-rc1 is out?
+Then I can add that to for-next right away and then we can get a full
+cycle of -next testing that way.
+
+Would that work for you?
 
 Regards,
 
@@ -157,28 +112,76 @@ Hans
 
 
 
-
+> ---
+>  drivers/platform/x86/gigabyte-wmi.c | 40 -------------------------------------
+>  1 file changed, 40 deletions(-)
 > 
-> Jithu Joseph (9):
->   platform/x86/intel/ifs: Separate ifs_pkg_auth from ifs_data
->   platform/x86/intel/ifs: Reorganize driver data
->   platform/x86/intel/ifs: IFS cleanup
->   x86/include/asm/msr-index.h: Add IFS Array test bits
->   platform/x86/intel/ifs: Introduce Array Scan test to IFS
->   platform/x86/intel/ifs: Sysfs interface for Array BIST
->   platform/x86/intel/ifs: Implement Array BIST test
->   platform/x86/intel/ifs: Update IFS doc
->   Documentation/ABI: Update IFS ABI doc
+> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+> index 322cfaeda17b..b0338f043416 100644
+> --- a/drivers/platform/x86/gigabyte-wmi.c
+> +++ b/drivers/platform/x86/gigabyte-wmi.c
+> @@ -13,10 +13,6 @@
+>  #define GIGABYTE_WMI_GUID	"DEADBEEF-2001-0000-00A0-C90629100000"
+>  #define NUM_TEMPERATURE_SENSORS	6
+>  
+> -static bool force_load;
+> -module_param(force_load, bool, 0444);
+> -MODULE_PARM_DESC(force_load, "Force loading on unknown platform");
+> -
+>  static u8 usable_sensors_mask;
+>  
+>  enum gigabyte_wmi_commandtype {
+> @@ -133,46 +129,10 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+>  	return r;
+>  }
+>  
+> -#define DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME(name) \
+> -	{ .matches = { \
+> -		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."), \
+> -		DMI_EXACT_MATCH(DMI_BOARD_NAME, name), \
+> -	}}
+> -
+> -static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
+> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
+> -	{ }
+> -};
+> -
+>  static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
+>  {
+>  	struct device *hwmon_dev;
+>  
+> -	if (!dmi_check_system(gigabyte_wmi_known_working_platforms)) {
+> -		if (!force_load)
+> -			return -ENODEV;
+> -		dev_warn(&wdev->dev, "Forcing load on unknown platform");
+> -	}
+> -
+>  	usable_sensors_mask = gigabyte_wmi_detect_sensor_usability(wdev);
+>  	if (!usable_sensors_mask) {
+>  		dev_info(&wdev->dev, "No temperature sensors usable");
 > 
->  arch/x86/include/asm/msr-index.h              |  2 +
->  drivers/platform/x86/intel/ifs/ifs.h          | 68 ++++++++++----
->  drivers/platform/x86/intel/ifs/core.c         | 81 +++++++++++-----
->  drivers/platform/x86/intel/ifs/load.c         |  9 +-
->  drivers/platform/x86/intel/ifs/runtest.c      | 94 ++++++++++++++++++-
->  drivers/platform/x86/intel/ifs/sysfs.c        | 21 ++---
->  .../ABI/testing/sysfs-platform-intel-ifs      | 17 +++-
->  7 files changed, 229 insertions(+), 63 deletions(-)
+> ---
+> base-commit: 65aca32efdcb0965502d3db2f1fa33838c070952
+> change-id: 20230325-gigabyte-wmi-unrestrict-7244320c1996
 > 
-> 
-> base-commit: e8d018dd0257f744ca50a729e3d042cf2ec9da65
+> Best regards,
 
