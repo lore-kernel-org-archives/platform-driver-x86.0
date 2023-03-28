@@ -2,37 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586F9C76196
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Mar 2023 16:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6474CC6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Mar 2023 19:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229985AbjC1QxV (ORCPT
+        id S229612AbjC1TGi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Mar 2023 12:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
+        Tue, 28 Mar 2023 15:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbjC1QxU (ORCPT
+        with ESMTP id S229460AbjC1TGh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Mar 2023 12:53:20 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8009C61AB;
-        Tue, 28 Mar 2023 09:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1680022386; i=w_armin@gmx.de;
-        bh=4CDnhOfQDfUDVwp8FNLyi72nRh76oUOOqBvhz9qPGZc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=oVDogFhWsIAYmNJ5ZDkgvVWga7B/lZ7nVCJk6/GIOe7w8hjqVljk4kgivGyFl1Kr9
-         k4xscNk83cwiozs2M5/N1FFp6Huyt9QBwlPOYH8kklMQ3/sDVFzoHh7mm39l2HFuMv
-         l0EISDXweh1NEBHGez3GQ7WVqIV+0ORDtFBuwlGjaNmQMi2c4geV/8gO4KIP30kW6U
-         4eXxNXiVL0Dl0pLtGYtSbU5c2GurTeLreLb5QsA9+z306nrgJPiCYwV7kscKiqLSjZ
-         XGE09ZOGm+5K+FsbTpVg1iCNWzLWZsKPgmxsuCm//l2ZCj6grLcSEsp6JpneDexbsQ
-         dTj3qOBu8cUqg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2Dx8-1qSBPY3CJy-013g5O; Tue, 28
- Mar 2023 18:53:06 +0200
-Subject: Re: [BUG] systemd-devd triggers kernel memleak apparently in
- drivers/core/dd.c: driver_register()
-To:     Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+        Tue, 28 Mar 2023 15:06:37 -0400
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A112690;
+        Tue, 28 Mar 2023 12:06:30 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id 5F2D460508;
+        Tue, 28 Mar 2023 21:06:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1680030388; bh=1MsD5J2pqKl7rI0laX3wH8kTy92Y6jzZY3HplEgrvfI=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
+        b=V1CF9K9GfnrfKJbnsTd6Qs5jp8qeS2UDIzWYdmNpiV0OwLPCL55C90qVndW06HTJr
+         7tMNwSBBoEvFQvE7xxgzaDy2iLb4AKxkVdN4eGN2JSdf4US5MGreE3YxTyMq2cNQhO
+         i99OuJNbYyulUnHMklGeci5zqIdRsr5sHX8Udy3+M7a/ytZFyoipXrkOy0gOvG72Jk
+         fRHgxrkA1bB3gBjZtoyNbQzB37oSKWt8NNBRMl+2ZdDzJizS4laWDlEYU4uzxzry1J
+         gEIP2W5ug0lMvDT7pfLMOrwklYNL1UUmZI8L8DKVV2jdEk+Np5zvUHCF9g7mSEBFDs
+         /kn3QLtpEOIZw==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qAeBq2yT13DD; Tue, 28 Mar 2023 21:06:25 +0200 (CEST)
+Received: from [192.168.1.3] (unknown [77.237.101.225])
+        by domac.alu.hr (Postfix) with ESMTPSA id 0E09760507;
+        Tue, 28 Mar 2023 21:06:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1680030385; bh=1MsD5J2pqKl7rI0laX3wH8kTy92Y6jzZY3HplEgrvfI=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
+        b=mEFYOj7OS4IDI7yzOtOhxrWDD5SJBhwcnbwIUE8nJKcMldSWWgEVJDdhn6tQ1LYmJ
+         vKV1/FKy3rxOC0d02/JR63w6A7UXj/BrVILlFen/oNi3yIXiVpwd54smRU/4omFtT3
+         j7SP2T6SSGelbuxJH26La26C4t/8a1OjGfGs5bsa+WBtNMQYbz2Q2GSz9dhknVKly4
+         ktWbEBLnNpDPtaGnQ7EVuV/NwjOIRkbrJCTZnvTwAEYD2G39Wa9ifK7nMjoCYZJYFW
+         r8hkUy14w8nypmsp1MJeBdpgdDG7pP9mPu85wtr8w/+Bdx3B9/Oc1obfpH4/BiHCGh
+         B1pZxVp3pGoaw==
+Message-ID: <16862c45-2ffd-a2f2-6719-020c5d515800@alu.unizg.hr>
+Date:   Tue, 28 Mar 2023 21:06:24 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+To:     Armin Wolf <W_Armin@gmx.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
@@ -44,208 +61,330 @@ References: <5059b11b-8b6e-394b-338f-49e1339067fa@alu.unizg.hr>
  <d011a1d7-34ab-5f54-fcc7-d727abc7ec9b@alu.unizg.hr>
  <ZCLa3_HnLQA0GQKS@kroah.com>
  <b50f9460-ac54-e997-f9b9-3c47a9b87aae@alu.unizg.hr>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de>
-Date:   Tue, 28 Mar 2023 18:53:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <b50f9460-ac54-e997-f9b9-3c47a9b87aae@alu.unizg.hr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: base64
+ <df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de>
 Content-Language: en-US
-X-Provags-ID: V03:K1:jlYe+sfeVnL+5LqJLqYwAhU++ynAsFFPPqe8ItnuMKuZ8pEirNc
- 4tArNeBYOpd2fJuerpUnn6lpdcmo4xhEpzERIdJ4fMnNVSIdmWJmIOyD7BBmdO+xy933TPq
- B0gVtnoM5mQqqeaIXtLDA79hjWYyy3hVtjoGxEe3HEfytsA8UhuLLgqgMH1ZfPu19eQ8SHT
- 5E8u9jnzEngeFGY2wcbrg==
-UI-OutboundReport: notjunk:1;M01:P0:NEitoXkZmyM=;aqrzNh0rKXhH6VCCDM85yobM95u
- COqLEPMdnBscWSdy6f+8GOoIwvjQSJm06BYh3C+g18k8iOrp5jozzlFWyD5G6+Hf4uzazb0gr
- f2AiMC3UJJYkxhTz0XIqhcXdkofKXKv534pIXpOstP66731Cviqi0JKLK0cU56thvV+d2nQCR
- wxZ+c2hm8sIFWgAVknlopM6C/cjK8v8imniipfm2gbEgdEn9CB9xgBRoYPfqLGcNkaKgrdejv
- bduOCAeYLdMBoRpMEgwZkPIVcYNXe20WKWIHNklc8FrqgmXE3UfVZPi9JKZsVhR/cbC7Mj0s7
- X73LDHrXPJcdB0GOS51uv8YV8dSEUZur/p75K8d9bgjjiqdv0FP5k32Lwr4J/1/dW0xogXgg5
- AcXxfm6hCMGTz/TuyJvcaXNSU7OZdDW67W5oAG5Vx/OEYnYktRH78st1Zh/nJU2eGqZgDT0Ly
- OMipt5KjYSoQfir7GFB8Pb35G3X+tQXg4Su4VmNfvMLtyVtdIrzGoY3pmB/PNIxrWHIlUj8S/
- GoOSDvzBBi3d+kTj4d4Ln1ZgWd8UDSbXD5NfYWqKhq9fEa+LRSeEpXDwO14V/l3fvhQsfJOPg
- VVYiXlCbiLj2QQhEaskd10C1/k5KSgckQmeEpNaxhcKOyJMJ1bJUSy6fjenqfxJj5vlpnBUMt
- 5gixBnNiK9ouZp6uiP9Cmr7tY0coQUbq/uXLLfGEFBm0BmJjdujU1bGdJOd4H9aK3PdrrjAk8
- mLRc7oOxKKxywZjbKY3Z/F1612mimvKmyzd2vYZa8/biLjVpJooDuoE1PaVofSk3/jqB6XK//
- atEBiiiZ8HeIO7mM8GjYohr8L05PEEqxVnBOU/XgXg7t7ycCuQyxV2miT6qbb3XEn5olZE/Mw
- bChAMHfSpKqWkgkxkncFEqeT3Bn6CSGvjo26HlPooaRJw9ykzihaJrRm9kdiQSAtSYv9qcs6I
- JtYv6KrMJS8S855r9lo9UaBjhTA=
+From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Organization: Academy of Fine Arts, University of Zagreb
+Subject: Re: [BUG] systemd-devd triggers kernel memleak apparently in
+ drivers/core/dd.c: driver_register()
+In-Reply-To: <df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-QW0gMjguMDMuMjMgdW0gMTQ6NDQgc2NocmllYiBNaXJzYWQgVG9kb3JvdmFjOg0KDQo+IE9uIDMv
-MjgvMjMgMTQ6MTcsIEdyZWcgS3JvYWgtSGFydG1hbiB3cm90ZToNCj4+IE9uIFR1ZSwgTWFyIDI4
-LCAyMDIzIGF0IDAyOjA4OjA2UE0gKzAyMDAsIE1pcnNhZCBUb2Rvcm92YWMgd3JvdGU6DQo+Pj4g
-T24gMy8yOC8yMyAxMzo1OSwgTWlyc2FkIFRvZG9yb3ZhYyB3cm90ZToNCj4+Pg0KPj4+PiBPbiAz
-LzI4LzIzIDEzOjI4LCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+Pj4+PiBPbiBUdWUsIE1h
-ciAyOCwgMjAyMyBhdCAwMToxMzozM1BNICswMjAwLCBNaXJzYWQgVG9kb3JvdmFjIHdyb3RlOg0K
-Pj4+Pj4+IEhpIGFsbCwNCj4+Pj4+Pg0KPj4+Pj4+IEhlcmUgaXMgYW5vdGhlciBrZXJuZWwgbWVt
-b3J5IGxlYWsgcmVwb3J0LCBqdXN0IGFzIEkgdGhvdWdodCB3ZSANCj4+Pj4+PiBoYXZlIGRvbmUg
-d2l0aA0KPj4+Pj4+IHRoZW0gYnkgdGhlIHhoY2kgcGF0Y2ggYnkgTWF0aGlhcy4NCj4+Pj4+Pg0K
-Pj4+Pj4+IFRoZSBtZW1vcnkgbGVha3Mgd2VyZSBjYXVnaHQgb24gYW4gQWxtYUxpbnV4IDguNyAo
-Q2VudE9TKSBmb3JrIA0KPj4+Pj4+IHN5c3RlbSwgcnVubmluZw0KPj4+Pj4+IG9uIGEgTGVub3Zv
-IGRlc2t0b3AgYm94IChzZWUgbHNody50eHQpIGFuZCB0aGUgbmV3ZXN0IExpbnV4IA0KPj4+Pj4+
-IGtlcm5lbCA2LjMtcmM0IGNvbW1pdA0KPj4+Pj4+IGczYTkzZTQwMzI2Yzggd2l0aCBNYXRoaWFz
-JyBwYXRjaCBmb3IgYSB4aGNpIHN5c3RlbWQtZGV2ZCANCj4+Pj4+PiB0cmlnZ2VyZWQgbGVhay4N
-Cj4+Pj4+Pg0KPj4+Pj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBTZWU6IA0KPj4+Pj4+IDwyMDIzMDMy
-NzA5NTAxOS4xMDE3MTU5LTEtbWF0aGlhcy5ueW1hbkBsaW51eC5pbnRlbC5jb20+IG9uIExLTUwu
-DQo+Pj4+Pj4NCj4+Pj4+PiBUaGlzIGxlYWsgaXMgYWxzbyBzeXN0ZW1kLWRldmQgdHJpZ2dlcmVk
-LCBleGNlcHQgZm9yIHRoZSANCj4+Pj4+PiBtZW1zdGlja19jaGVjaygpIGxlYWtzDQo+Pj4+Pj4g
-d2hpY2ggSSB3YXMgdW5hYmxlIHRvIGJpc2VjdCBkdWUgdG8gdGhlIGJveCBub3QgYm9vdGluZyBv
-bGRlciANCj4+Pj4+PiBrZXJuZWxzICh3b3JrIGluDQo+Pj4+Pj4gcHJvZ3Jlc3MpLg0KPj4+Pj4+
-DQo+Pj4+Pj4gdW5yZWZlcmVuY2VkIG9iamVjdCAweGZmZmY4OGFkMTIzOTI3MTAgKHNpemUgOTYp
-Og0KPj4+Pj4+IMKgwqDCoCBjb21tICJzeXN0ZW1kLXVkZXZkIiwgcGlkIDczNSwgamlmZmllcyA0
-Mjk0ODk2NzU5IChhZ2UgDQo+Pj4+Pj4gMjI1Ny41NjhzKQ0KPj4+Pj4+IMKgwqDCoCBoZXggZHVt
-cCAoZmlyc3QgMzIgYnl0ZXMpOg0KPj4+Pj4+IMKgwqDCoMKgwqAgNTMgNjUgNzIgNjkgNjEgNmMg
-NTAgNmYgNzIgNzQgMzEgNDEgNjQgNjQgNzIgNjUgDQo+Pj4+Pj4gU2VyaWFsUG9ydDFBZGRyZQ0K
-Pj4+Pj4+IMKgwqDCoMKgwqAgNzMgNzMgMmMgMzMgNDYgMzggMmYgNDkgNTIgNTEgMzQgM2IgNWIg
-NGYgNzAgNzQgDQo+Pj4+Pj4gc3MsM0Y4L0lSUTQ7W09wdA0KPj4+Pj4+IMKgwqDCoCBiYWNrdHJh
-Y2U6DQo+Pj4+Pj4gwqDCoMKgwqDCoCBbPGZmZmZmZmZmYWU4ZmIyNmM+XSBzbGFiX3Bvc3RfYWxs
-b2NfaG9vaysweDhjLzB4M2UwDQo+Pj4+Pj4gwqDCoMKgwqDCoCBbPGZmZmZmZmZmYWU5MDJiNDk+
-XSBfX2ttZW1fY2FjaGVfYWxsb2Nfbm9kZSsweDFkOS8weDJhMA0KPj4+Pj4+IMKgwqDCoMKgwqAg
-WzxmZmZmZmZmZmFlODc3M2M5Pl0gX19rbWFsbG9jX25vZGVfdHJhY2tfY2FsbGVyKzB4NTkvMHgx
-ODANCj4+Pj4+PiDCoMKgwqDCoMKgIFs8ZmZmZmZmZmZhZTg2NmExYT5dIGtzdHJkdXArMHgzYS8w
-eDcwDQo+Pj4+Pj4gwqDCoMKgwqDCoCBbPGZmZmZmZmZmYzBkODM5YWE+XSANCj4+Pj4+PiB0bG1p
-X2V4dHJhY3Rfb3V0cHV0X3N0cmluZy5pc3JhLjArMHgyYS8weDYwIFt0aGlua19sbWldDQo+Pj4+
-Pj4gwqDCoMKgwqDCoCBbPGZmZmZmZmZmYzBkODNiNjQ+XSB0bG1pX3NldHRpbmcuY29uc3Rwcm9w
-LjQrMHg1NC8weDkwIA0KPj4+Pj4+IFt0aGlua19sbWldDQo+Pj4+Pj4gwqDCoMKgwqDCoCBbPGZm
-ZmZmZmZmYzBkODQyYjE+XSB0bG1pX3Byb2JlKzB4NTkxLzB4YmEwIFt0aGlua19sbWldDQo+Pj4+
-Pj4gwqDCoMKgwqDCoCBbPGZmZmZmZmZmYzA1MWRjNTM+XSB3bWlfZGV2X3Byb2JlKzB4MTYzLzB4
-MjMwIFt3bWldDQo+Pj4+Pg0KSGksDQoNCnRoaXMgIlNlcmlhbFBvcnQxQWRkcmVzcyIgc3RyaW5n
-IGxvb2tzIGxpa2UgYSBCSU9TIHNldHVwIG9wdGlvbiwgYW5kIGluZGVlZCB0aGlua19sbWkgYWxs
-b3dzIGZvcg0KY2hhbmdpbmcgQklPUyBzZXR1cCBvcHRpb25zIG92ZXIgc3lzZnMuIFdoaWxlIGxv
-b2tpbmcgYXQgY3VycmVudF92YWx1ZV9zaG93KCkgaW4gdGhpbmstbG1pLmMsIGkgbm90aWNlZA0K
-dGhhdCAiaXRlbSIgaG9sZHMgYSBzdHJpbmcgd2hpY2ggaXMgYWxsb2NhdGVkIHdpdGgga3N0cmR1
-cCgpLCBzbyBpdCBoYXMgdG8gYmUgZnJlZWQgdXNpbmcga2ZyZWUoKS4NClRoaXMgaG93ZXZlciBk
-b2VzIG5vdCBoYXBwZW4gaWYgc3RyYnJrKCkgZmFpbHMsIHNvIG1heWJlIHRoZSBtZW1vcnkgbGVh
-ayBpcyBjYXVzZWQgYnkgdGhpcz8NCg0KQXJtaW4gV29sZg0KDQo+Pj4+PiBXaHkgYXJlbid0IHlv
-dSBsb29raW5nIGF0IHRoZSB3bWkuYyBkcml2ZXI/wqAgVGhhdCBzaG91bGQgYmUgd2hlcmUgdGhl
-DQo+Pj4+PiBpc3N1ZSBpcywgbm90IHRoZSBkcml2ZXIgY29yZSwgcmlnaHQ/DQo+Pj4+Pg0KPj4+
-Pj4gdGhhbmtzLA0KPj4+Pj4NCj4+Pj4+IGdyZWcgay1oDQo+Pj4+DQo+Pj4+IEhpLCBNci4gR3Jl
-ZywNCj4+Pj4NCj4+Pj4gVGhhbmtzIGZvciB0aGUgcXVpY2sgcmVwbHkuDQo+Pj4+DQo+Pj4+IEkg
-aGF2ZSBhZGRlZCBDQzogZm9yIGFkZGl0aW9uYWwgZGV2ZWxvcGVycyBwZXIgDQo+Pj4+IGRyaXZl
-cnMvcGxhdGZvcm0veDg2L3dtaS5jLA0KPj4+PiBob3dldmVyLCB0aGlzIHNlZW1zIHRvIG1lIGxp
-a2UgaGllcm9nbHlwaHMuIFRoZXJlIGlzIG5vdGhpbmcgDQo+Pj4+IG9idmlvdXMsIGJ1dA0KPj4+
-PiBJIGhhZCBub3Qgbm90aWNlZCBpdCB3aXRoIHY2LjMtcmMzPw0KPj4+Pg0KPj4+PiBNYXliZSwg
-dGhlcmUgc2VlbXMgdG8gYmUgc29tZXRoaW5nIG9mZjoNCj4+Pj4NCj4+Pj4gwqAgwqDCoMKgIDk0
-OSBzdGF0aWMgaW50IHdtaV9kZXZfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQ0KPj4+PiDCoCDC
-oMKgwqAgOTUwIHsNCj4+Pj4gwqAgwqDCoMKgIDk1McKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHdt
-aV9ibG9jayAqd2Jsb2NrID0gZGV2X3RvX3dibG9jayhkZXYpOw0KPj4+PiDCoCDCoMKgwqAgOTUy
-wqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgd21pX2RyaXZlciAqd2RyaXZlciA9IA0KPj4+PiBkcnZf
-dG9fd2RydihkZXYtPmRyaXZlcik7DQo+Pj4+IMKgIMKgwqDCoCA5NTPCoMKgwqDCoMKgwqDCoMKg
-IGludCByZXQgPSAwOw0KPj4+PiDCoCDCoMKgwqAgOTU0wqDCoMKgwqDCoMKgwqDCoCBjaGFyICpi
-dWY7DQo+Pj4+IMKgIMKgwqDCoCA5NTUNCj4+Pj4gwqAgwqDCoMKgIDk1NsKgwqDCoMKgwqDCoMKg
-wqAgaWYgKEFDUElfRkFJTFVSRSh3bWlfbWV0aG9kX2VuYWJsZSh3YmxvY2ssIHRydWUpKSkNCj4+
-Pj4gwqAgwqDCoMKgIDk1N8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRldl93YXJu
-KGRldiwgImZhaWxlZCB0byBlbmFibGUgZGV2aWNlIC0tIA0KPj4+PiBwcm9iaW5nIGFueXdheVxu
-Iik7DQo+Pj4+IMKgIMKgwqDCoCA5NTgNCj4+Pj4gwqAgwqDCoMKgIDk1OcKgwqDCoMKgwqDCoMKg
-wqAgaWYgKHdkcml2ZXItPnByb2JlKSB7DQo+Pj4+IMKgIMKgwqDCoCA5NjDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCByZXQgPSB3ZHJpdmVyLT5wcm9iZShkZXZfdG9fd2RldihkZXYp
-LA0KPj4+PiDCoCDCoMKgwqAgOTYxIGZpbmRfZ3VpZF9jb250ZXh0KHdibG9jaywgd2RyaXZlcikp
-Ow0KPj4+PiDCoCDCoMKgwqAgOTYywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYg
-KHJldCAhPSAwKQ0KPj4+PiDCoCDCoMKgwqAgOTYzwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gcHJvYmVfZmFpbHVyZTsNCj4+Pj4gwqAgwqDCoMKg
-IDk2NMKgwqDCoMKgwqDCoMKgwqAgfQ0KPj4+PiDCoCDCoMKgwqAgOTY1DQo+Pj4+IMKgIMKgwqDC
-oCA5NjbCoMKgwqDCoMKgwqDCoMKgIC8qIGRyaXZlciB3YW50cyBhIGNoYXJhY3RlciBkZXZpY2Ug
-bWFkZSAqLw0KPj4+PiDCoCDCoMKgwqAgOTY3wqDCoMKgwqDCoMKgwqDCoCBpZiAod2RyaXZlci0+
-ZmlsdGVyX2NhbGxiYWNrKSB7DQo+Pj4+IMKgIMKgwqDCoCA5NjjCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAvKiBjaGVjayB0aGF0IHJlcXVpcmVkIGJ1ZmZlciBzaXplIA0KPj4+PiBk
-ZWNsYXJlZCBieSBkcml2ZXIgb3IgTU9GICovDQo+Pj4+IMKgIMKgwqDCoCA5NjnCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIXdibG9jay0+cmVxX2J1Zl9zaXplKSB7DQo+Pj4+
-IMKgIMKgwqDCoCA5NzAgZGV2X2Vycigmd2Jsb2NrLT5kZXYuZGV2LA0KPj4+PiDCoCDCoMKgwqAg
-OTcxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCAiUmVxdWlyZWQgYnVmZmVyIHNpemUgbm90IA0KPj4+PiBzZXRcbiIpOw0KPj4+
-PiDCoCDCoMKgwqAgOTcywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHJldCA9IC1FSU5WQUw7DQo+Pj4+IMKgIMKgwqDCoCA5NzPCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBwcm9iZV9mYWlsdXJlOw0KPj4+
-PiDCoCDCoMKgwqAgOTc0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQ0KPj4+PiDC
-oCDCoMKgwqAgOTc1DQo+Pj4+IMKgIMKgwqDCoCA5NzbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB3YmxvY2stPmhhbmRsZXJfZGF0YSA9IA0KPj4+PiBrbWFsbG9jKHdibG9jay0+cmVx
-X2J1Zl9zaXplLA0KPj4+PiDCoCDCoMKgwqAgOTc3IEdGUF9LRVJORUwpOw0KPj4+PiDCoCDCoMKg
-wqAgOTc4wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKCF3YmxvY2stPmhhbmRs
-ZXJfZGF0YSkgew0KPj4+PiDCoCDCoMKgwqAgOTc5wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldCA9IC1FTk9NRU07DQo+Pj4+IMKgIMKgwqDCoCA5ODDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBwcm9i
-ZV9mYWlsdXJlOw0KPj4+PiDCoCDCoMKgwqAgOTgxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfQ0KPj4+PiDCoCDCoMKgwqAgOTgyDQo+Pj4+IMKgIMKgwqDCoCA5ODPCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWYgPSBrYXNwcmludGYoR0ZQX0tFUk5FTCwgIndtaS8l
-cyIsIA0KPj4+PiB3ZHJpdmVyLT5kcml2ZXIubmFtZSk7DQo+Pj4+IMKgIMKgwqDCoCA5ODTCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIWJ1Zikgew0KPj4+PiDCoCDCoMKgwqAg
-OTg1wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldCA9
-IC1FTk9NRU07DQo+Pj4+IMKgIMKgwqDCoCA5ODbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBwcm9iZV9zdHJpbmdfZmFpbHVyZTsNCj4+Pj4gwqAg
-wqDCoMKgIDk4N8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0NCj4+Pj4gwqAgwqDC
-oMKgIDk4OMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdibG9jay0+Y2hhcl9kZXYu
-bWlub3IgPSBNSVNDX0RZTkFNSUNfTUlOT1I7DQo+Pj4+IMKgIMKgwqDCoCA5ODnCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3YmxvY2stPmNoYXJfZGV2Lm5hbWUgPSBidWY7DQo+Pj4+
-IMKgIMKgwqDCoCA5OTDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3YmxvY2stPmNo
-YXJfZGV2LmZvcHMgPSAmd21pX2ZvcHM7DQo+Pj4+IMKgIMKgwqDCoCA5OTHCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCB3YmxvY2stPmNoYXJfZGV2Lm1vZGUgPSAwNDQ0Ow0KPj4+PiDC
-oCDCoMKgwqAgOTkywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0ID0gbWlzY19y
-ZWdpc3Rlcigmd2Jsb2NrLT5jaGFyX2Rldik7DQo+Pj4+IMKgIMKgwqDCoCA5OTPCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmV0KSB7DQo+Pj4+IMKgIMKgwqDCoCA5OTTCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGV2X3dhcm4oZGV2
-LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIA0KPj4+PiBjaGFyIGRldjogJWRcbiIsIHJldCk7DQo+Pj4+
-IMKgIMKgwqDCoCA5OTXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgcmV0ID0gLUVOT01FTTsNCj4+Pj4gwqAgwqDCoMKgIDk5NsKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIHByb2JlX21pc2NfZmFpbHVyZTsN
-Cj4+Pj4gwqAgwqDCoMKgIDk5N8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0NCj4+
-Pj4gwqAgwqDCoMKgIDk5OMKgwqDCoMKgwqDCoMKgwqAgfQ0KPj4+PiDCoCDCoMKgwqAgOTk5DQo+
-Pj4+IMKgIMKgwqAgMTAwMMKgwqDCoMKgwqDCoMKgwqAgc2V0X2JpdChXTUlfUFJPQkVELCAmd2Js
-b2NrLT5mbGFncyk7DQo+Pj4+IMKgIMKgwqAgMTAwMcKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7
-DQo+Pj4+IMKgIMKgwqAgMTAwMg0KPj4+PiDCoCDCoMKgIDEwMDMgcHJvYmVfbWlzY19mYWlsdXJl
-Og0KPj4+PiDCoCDCoMKgIDEwMDTCoMKgwqDCoMKgwqDCoMKgIGtmcmVlKGJ1Zik7DQo+Pj4+IMKg
-IMKgwqAgMTAwNSBwcm9iZV9zdHJpbmdfZmFpbHVyZToNCj4+Pj4gwqAgwqDCoCAxMDA2wqDCoMKg
-wqDCoMKgwqDCoCBrZnJlZSh3YmxvY2stPmhhbmRsZXJfZGF0YSk7DQo+Pj4+IMKgIMKgwqAgMTAw
-NyBwcm9iZV9mYWlsdXJlOg0KPj4+PiDCoCDCoMKgIDEwMDjCoMKgwqDCoMKgwqDCoMKgIGlmIChB
-Q1BJX0ZBSUxVUkUod21pX21ldGhvZF9lbmFibGUod2Jsb2NrLCBmYWxzZSkpKQ0KPj4+PiDCoCDC
-oMKgIDEwMDnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfd2FybihkZXYsICJm
-YWlsZWQgdG8gZGlzYWJsZSBkZXZpY2VcbiIpOw0KPj4+Pg0KPj4+Pg0KPj4+PiBjaGFyICpidWYg
-aXMgcGFzc2VkIHRvIGtmcmVlKGJ1ZikgdW5pbml0aWFsaXNlZCBpZiANCj4+Pj4gd2RyaXZlci0+
-ZmlsdGVyX2NhbGxiYWNrDQo+Pj4+IGlzIG5vdCBzZXQuDQo+Pj4+DQo+Pj4+IEl0IHNlZW1zIGxp
-a2UgYSBsb2dpY2FsIGVycm9yIHBlciBzZSwgYnV0IEkgZG9uJ3QgYmVsaWV2ZSB0aGlzIGlzIA0K
-Pj4+PiB0aGUgY2F1c2UNCj4+Pj4gb2YgdGhlIGxlYWs/DQo+Pj4NCj4+PiBDT1JSRUNUSU9OOg0K
-Pj4+DQo+Pj4gSSBvdmVybG9va2VkIHRoZSAicmV0dXJuIDAiIGluIGxpbmUgMTAwMS4NCj4+DQo+
-PiBZZWFoLCBhbmQgdGhlIG1lbW9yeSBsb29rcyB0byBiZSBmcmVlZCBwcm9wZXJseSBpbiB0aGUg
-d21pX2Rldl9yZW1vdmUoKQ0KPj4gY2FsbGJhY2ssIHJpZ2h0Pw0KPg0KPiBJdCB3b3VsZCBhcHBl
-YXIgc28uIFRvIHZlcmlmeSB0aGF0Og0KPg0KPiBBbGxvYzoNCj4gOTc2wqDCoMKgwqDCoMKgwqAg
-d2Jsb2NrLT5oYW5kbGVyX2RhdGEgPSBrbWFsbG9jKHdibG9jay0+cmVxX2J1Zl9zaXplLA0KPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEdGUF9L
-RVJORUwpOw0KPiDCoMKgwqDCoMKgwqDCoCA8Y2hlY2s+DQo+DQo+IDk4M8KgwqDCoMKgwqDCoMKg
-IGJ1ZiA9IGthc3ByaW50ZihHRlBfS0VSTkVMLCAid21pLyVzIiwgd2RyaXZlci0+ZHJpdmVyLm5h
-bWUpOw0KPiDCoMKgwqDCoMKgwqDCoCA8Y2hlY2s+DQo+IDk4OcKgwqDCoMKgwqDCoMKgIHdibG9j
-ay0+Y2hhcl9kZXYubmFtZSA9IGJ1ZjsNCj4NCj4gSW4gbGluZXMgMTAyMi0xMDIzOg0KPg0KPiAx
-MDIywqDCoMKgwqDCoMKgwqAga2ZyZWUod2Jsb2NrLT5jaGFyX2Rldi5uYW1lKTsNCj4gMTAyM8Kg
-wqDCoMKgwqDCoMKgIGtmcmVlKHdibG9jay0+aGFuZGxlcl9kYXRhKTsNCj4NCj4+PiBUaGlzIGlz
-IHdoeSBJIGRvbid0IHRoaW5rIHRoaW5ncyBzaG91bGQgYmUgcnVzaGVkLCBidXQgYW5hbHlzZWQg
-d2l0aCANCj4+PiBjbGVhciBhbmQNCj4+PiBjb2xkIGhlYWQuIEFuZCB3aXRoIGFzIG1hbnkgZXll
-cyBhcyBwb3NzaWJsZSA6KQ0KPj4+DQo+Pj4gVGhlIGRyaXZlciBzdHVmZiBpcyBteSBsb25nLXRl
-cm0gcmVzZWFyY2ggaW50ZXJlc3QuIFRvIHN0YXRlIHRoZSANCj4+PiBvYnZpb3VzLA0KPj4+IHRo
-ZSBwcmludGluZyBhbmQgbXVsdGltZWRpYSBlZHVjYXRpb24gYW5kIGluZHVzdHJ5IGluIGdlbmVy
-YWwgd291bGQgDQo+Pj4gYmVuZWZpdCBmcm9tDQo+Pj4gdGhlIG9wZW4tc291cmNlIGRyaXZlcnMg
-Zm9yIG1hbnkgaW5zdHJ1bWVudHMgdGhhdCBzdGlsbCB3b3JrLCBidXQgDQo+Pj4gYXJlIG9ic29s
-ZXRlZA0KPj4+IGJ5IHRoZSBwcm9kdWNlciBhbmQgcmVxdWlyZSB1bnN1cHBvcnRlZCB2ZXJzaW9u
-cyBvZiB0aGUgT1MuDQo+Pj4NCj4+PiBUaGFuayB5b3UgYWdhaW4gZm9yIHJldmlld2luZyB0aGUg
-YnVnIHJlcG9ydCwgaG93ZXZlciwgQVRNIEkgZG8gbm90IA0KPj4+IHRoaW5rIEkgaGF2ZQ0KPj4+
-IHdoYXQgaXQgdGFrZXMgdG8gaHVudCBkb3duIHRoZSBtZW1sZWFrLiA6LS8NCj4+DQo+PiBEbyB5
-b3UgaGF2ZSBhIHJlcHJvZHVjZXIgdGhhdCB5b3UgY2FuIHVzZSB0byBzaG93IHRoZSBwcm9ibGVt
-IGJldHRlcj8NCj4NCj4gVW5mb3J0dW5hdGVseSwgdGhlIHByb2JsZW0gZG9lc24ndCBzZWVtIHRv
-IGFwcGVhciBkdXJpbmcgdGhlIHJ1biBvZiBhIA0KPiBwYXJ0aWN1bGFyDQo+IHRlc3QsIGJ1dCBp
-bW1lZGlhdGVseSBvbiBzdGFydHVwIG9mIHRoZSBPUy4gVGhpcyBtYWtlcyBpdCBhd2t3YXJkIHRv
-IA0KPiBwaW5wb2ludCB0aGUNCj4gZXhhY3Qgc2VydmljZSB0aGF0IHRyaWdnZXJlZCBtZW1vcnkg
-bGVha3MuIEJ1dCB0aGV5IHdvdWxkIGFwcGVhciB0byANCj4gaGF2ZSB0byBkbw0KPiB3aXRoIHRo
-ZSBpbml0aWFsaXNhdGlvbiBvZiB0aGUgVVNCIGRldmljZXMsIHdvdWxkbid0IHRoZXk/DQo+DQo+
-IFRoZXJlIHNlZW0gdG8gYmUgc3RyaW5nczoNCj4NCj4gIlVTQlBvcnRBY2Nlc3MsRW5hYmxlZDtb
-T3B0aW9uYWw6Ig0KPiAiVVNCQklPU1N1cHBvcnQsRW5hYmxlZDtbT3B0aW9uYWwiDQo+ICJVU0JF
-bnVtZXJhdGlvbkRlbGF5LERpc2FibGVkO1tPcCINCj4NCj4gVGhpcyBzZWVtcyB0byBiZSBoYXBw
-ZW5pbmcgZHVyaW5nIFVTQiBpbml0aWFsaXNhdGlvbiBhbmQgYmVmb3JlIGFueSANCj4gc2Vydmlj
-ZXMuDQo+IEJ1dCBJIG1pZ2h0IGFzIHdlbGwgYmUgd3JvbmcuDQo+DQo+PiBPciBjYW4geW91IHRl
-c3Qga2VybmVsIHBhdGNoZXMgdG8gdmVyaWZ5IHRoZSBwcm9ibGVtIGlzIGZpeGVkIG9yIG5vdCBp
-Zg0KPj4gd2Ugc2VuZCB5b3UgcGF0Y2hlcyB0byB0ZXN0Pw0KPg0KPiBDZXJ0YWlubHksIExvcmQg
-d2lsbGluZywgSSBjYW4gdGVzdCB0aGUgcGF0Y2hlcyBpbiB0aGUgc2FtZSANCj4gZW52aXJvbm1l
-bnQgdGhhdA0KPiBtYWluZmV0ZWQgdGhlIGJ1ZyAob3IgbWVtbGVhaykuDQo+DQo+IEJlc3QgcmVn
-YXJkcywNCj4gTWlyc2FkDQo+DQo=
+On 3/28/2023 6:53 PM, Armin Wolf wrote:
+> Am 28.03.23 um 14:44 schrieb Mirsad Todorovac:
+> 
+>> On 3/28/23 14:17, Greg Kroah-Hartman wrote:
+>>> On Tue, Mar 28, 2023 at 02:08:06PM +0200, Mirsad Todorovac wrote:
+>>>> On 3/28/23 13:59, Mirsad Todorovac wrote:
+>>>>
+>>>>> On 3/28/23 13:28, Greg Kroah-Hartman wrote:
+>>>>>> On Tue, Mar 28, 2023 at 01:13:33PM +0200, Mirsad Todorovac wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> Here is another kernel memory leak report, just as I thought we have done with
+>>>>>>> them by the xhci patch by Mathias.
+>>>>>>>
+>>>>>>> The memory leaks were caught on an AlmaLinux 8.7 (CentOS) fork system, running
+>>>>>>> on a Lenovo desktop box (see lshw.txt) and the newest Linux kernel 6.3-rc4 commit
+>>>>>>> g3a93e40326c8 with Mathias' patch for a xhci systemd-devd triggered leak.
+>>>>>>>
+>>>>>>>           See: <20230327095019.1017159-1-mathias.nyman@linux.intel.com> on LKML.
+>>>>>>>
+>>>>>>> This leak is also systemd-devd triggered, except for the memstick_check() leaks
+>>>>>>> which I was unable to bisect due to the box not booting older kernels (work in
+>>>>>>> progress).
+>>>>>>>
+>>>>>>> unreferenced object 0xffff88ad12392710 (size 96):
+>>>>>>>     comm "systemd-udevd", pid 735, jiffies 4294896759 (age 2257.568s)
+>>>>>>>     hex dump (first 32 bytes):
+>>>>>>>       53 65 72 69 61 6c 50 6f 72 74 31 41 64 64 72 65 SerialPort1Addre
+>>>>>>>       73 73 2c 33 46 38 2f 49 52 51 34 3b 5b 4f 70 74 ss,3F8/IRQ4;[Opt
+>>>>>>>     backtrace:
+>>>>>>>       [<ffffffffae8fb26c>] slab_post_alloc_hook+0x8c/0x3e0
+>>>>>>>       [<ffffffffae902b49>] __kmem_cache_alloc_node+0x1d9/0x2a0
+>>>>>>>       [<ffffffffae8773c9>] __kmalloc_node_track_caller+0x59/0x180
+>>>>>>>       [<ffffffffae866a1a>] kstrdup+0x3a/0x70
+>>>>>>>       [<ffffffffc0d839aa>] tlmi_extract_output_string.isra.0+0x2a/0x60 [think_lmi]
+>>>>>>>       [<ffffffffc0d83b64>] tlmi_setting.constprop.4+0x54/0x90 [think_lmi]
+>>>>>>>       [<ffffffffc0d842b1>] tlmi_probe+0x591/0xba0 [think_lmi]
+>>>>>>>       [<ffffffffc051dc53>] wmi_dev_probe+0x163/0x230 [wmi]
+>>>>>>
+> Hi,
+> 
+> this "SerialPort1Address" string looks like a BIOS setup option, and indeed think_lmi allows for
+> changing BIOS setup options over sysfs. While looking at current_value_show() in think-lmi.c, i noticed
+> that "item" holds a string which is allocated with kstrdup(), so it has to be freed using kfree().
+> This however does not happen if strbrk() fails, so maybe the memory leak is caused by this?
+> 
+> Armin Wolf
+
+Hi Armin,
+
+I tried your suggestion, and though it is an obvious improvement and a leak fix, this
+was not the one we were searching for.
+
+I tested the following patch:
+
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index c816646eb661..1e77ecb0cba8 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -929,8 +929,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+
+         /* validate and split from `item,value` -> `value` */
+         value = strpbrk(item, ",");
+-       if (!value || value == item || !strlen(value + 1))
++       if (!value || value == item || !strlen(value + 1)) {
++               kfree(item);
+                 return -EINVAL;
++       }
+
+         ret = sysfs_emit(buf, "%s\n", value + 1);
+         kfree(item);
+
+(I would also object to the use of strlen() here, for it is inherently insecure
+against SEGFAULT in kernel space.)
+
+I still get:
+[root@pc-mtodorov marvin]# uname -rms
+Linux 6.3.0-rc4-armin-patch-00025-g3a93e40326c8-dirty x86_64
+[root@pc-mtodorov marvin]# cat /sys/kernel/debug/kmemleak [edited]
+unreferenced object 0xffff8eb008ef9260 (size 96):
+   comm "systemd-udevd", pid 771, jiffies 4294896499 (age 74.880s)
+   hex dump (first 32 bytes):
+     53 65 72 69 61 6c 50 6f 72 74 31 41 64 64 72 65  SerialPort1Addre
+     73 73 2c 33 46 38 2f 49 52 51 34 3b 5b 4f 70 74  ss,3F8/IRQ4;[Opt
+   backtrace:
+     [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
+     [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x2a0
+     [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59/0x180
+     [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
+     [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.0+0x2a/0x60 [think_lmi]
+     [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x90 [think_lmi]
+     [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lmi]
+     [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
+     [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
+     [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
+     [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
+     [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
+     [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
+     [<ffffffff9f197c62>] driver_attach+0x22/0x30
+     [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
+     [<ffffffff9f19a0a2>] driver_register+0x62/0x120
+unreferenced object 0xffff8eb018ddbb40 (size 64):
+   comm "systemd-udevd", pid 771, jiffies 4294896528 (age 74.780s)
+   hex dump (first 32 bytes):
+     55 53 42 50 6f 72 74 41 63 63 65 73 73 2c 45 6e  USBPortAccess,En
+     61 62 6c 65 64 3b 5b 4f 70 74 69 6f 6e 61 6c 3a  abled;[Optional:
+   backtrace:
+     [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
+     [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x2a0
+     [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59/0x180
+     [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
+     [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.0+0x2a/0x60 [think_lmi]
+     [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x90 [think_lmi]
+     [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lmi]
+     [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
+     [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
+     [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
+     [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
+     [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
+     [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
+     [<ffffffff9f197c62>] driver_attach+0x22/0x30
+     [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
+     [<ffffffff9f19a0a2>] driver_register+0x62/0x120
+unreferenced object 0xffff8eb006fe2b40 (size 64):
+   comm "systemd-udevd", pid 771, jiffies 4294896542 (age 74.724s)
+   hex dump (first 32 bytes):
+     55 53 42 42 49 4f 53 53 75 70 70 6f 72 74 2c 45  USBBIOSSupport,E
+     6e 61 62 6c 65 64 3b 5b 4f 70 74 69 6f 6e 61 6c  nabled;[Optional
+   backtrace:
+     [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
+     [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x2a0
+     [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59/0x180
+     [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
+     [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.0+0x2a/0x60 [think_lmi]
+     [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x90 [think_lmi]
+     [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lmi]
+     [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
+     [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
+     [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
+     [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
+     [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
+     [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
+     [<ffffffff9f197c62>] driver_attach+0x22/0x30
+     [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
+     [<ffffffff9f19a0a2>] driver_register+0x62/0x120
+
+There are currently 84 wmi_dev_probe leaks, sized mostly 64 bytes, and one 96 and two 192 bytes.
+
+I also cannot figure out the mechanism by which current_value_show() is called, when it is static?
+
+Any idea?
+
+Thanks.
+
+Best regards,
+Mirsad
+
+>>>>>> Why aren't you looking at the wmi.c driver?  That should be where the
+>>>>>> issue is, not the driver core, right?
+>>>>>>
+>>>>>> thanks,
+>>>>>>
+>>>>>> greg k-h
+>>>>>
+>>>>> Hi, Mr. Greg,
+>>>>>
+>>>>> Thanks for the quick reply.
+>>>>>
+>>>>> I have added CC: for additional developers per drivers/platform/x86/wmi.c,
+>>>>> however, this seems to me like hieroglyphs. There is nothing obvious, but
+>>>>> I had not noticed it with v6.3-rc3?
+>>>>>
+>>>>> Maybe, there seems to be something off:
+>>>>>
+>>>>>       949 static int wmi_dev_probe(struct device *dev)
+>>>>>       950 {
+>>>>>       951         struct wmi_block *wblock = dev_to_wblock(dev);
+>>>>>       952         struct wmi_driver *wdriver = drv_to_wdrv(dev->driver);
+>>>>>       953         int ret = 0;
+>>>>>       954         char *buf;
+>>>>>       955
+>>>>>       956         if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
+>>>>>       957                 dev_warn(dev, "failed to enable device -- probing anyway\n");
+>>>>>       958
+>>>>>       959         if (wdriver->probe) {
+>>>>>       960                 ret = wdriver->probe(dev_to_wdev(dev),
+>>>>>       961 find_guid_context(wblock, wdriver));
+>>>>>       962                 if (ret != 0)
+>>>>>       963                         goto probe_failure;
+>>>>>       964         }
+>>>>>       965
+>>>>>       966         /* driver wants a character device made */
+>>>>>       967         if (wdriver->filter_callback) {
+>>>>>       968                 /* check that required buffer size declared by driver or MOF */
+>>>>>       969                 if (!wblock->req_buf_size) {
+>>>>>       970 dev_err(&wblock->dev.dev,
+>>>>>       971                                 "Required buffer size not set\n");
+>>>>>       972                         ret = -EINVAL;
+>>>>>       973                         goto probe_failure;
+>>>>>       974                 }
+>>>>>       975
+>>>>>       976                 wblock->handler_data = kmalloc(wblock->req_buf_size,
+>>>>>       977 GFP_KERNEL);
+>>>>>       978                 if (!wblock->handler_data) {
+>>>>>       979                         ret = -ENOMEM;
+>>>>>       980                         goto probe_failure;
+>>>>>       981                 }
+>>>>>       982
+>>>>>       983                 buf = kasprintf(GFP_KERNEL, "wmi/%s", wdriver->driver.name);
+>>>>>       984                 if (!buf) {
+>>>>>       985                         ret = -ENOMEM;
+>>>>>       986                         goto probe_string_failure;
+>>>>>       987                 }
+>>>>>       988                 wblock->char_dev.minor = MISC_DYNAMIC_MINOR;
+>>>>>       989                 wblock->char_dev.name = buf;
+>>>>>       990                 wblock->char_dev.fops = &wmi_fops;
+>>>>>       991                 wblock->char_dev.mode = 0444;
+>>>>>       992                 ret = misc_register(&wblock->char_dev);
+>>>>>       993                 if (ret) {
+>>>>>       994                         dev_warn(dev, "failed to register char dev: %d\n", ret);
+>>>>>       995                         ret = -ENOMEM;
+>>>>>       996                         goto probe_misc_failure;
+>>>>>       997                 }
+>>>>>       998         }
+>>>>>       999
+>>>>>      1000         set_bit(WMI_PROBED, &wblock->flags);
+>>>>>      1001         return 0;
+>>>>>      1002
+>>>>>      1003 probe_misc_failure:
+>>>>>      1004         kfree(buf);
+>>>>>      1005 probe_string_failure:
+>>>>>      1006         kfree(wblock->handler_data);
+>>>>>      1007 probe_failure:
+>>>>>      1008         if (ACPI_FAILURE(wmi_method_enable(wblock, false)))
+>>>>>      1009                 dev_warn(dev, "failed to disable device\n");
+>>>>>
+>>>>>
+>>>>> char *buf is passed to kfree(buf) uninitialised if wdriver->filter_callback
+>>>>> is not set.
+>>>>>
+>>>>> It seems like a logical error per se, but I don't believe this is the cause
+>>>>> of the leak?
+>>>>
+>>>> CORRECTION:
+>>>>
+>>>> I overlooked the "return 0" in line 1001.
+>>>
+>>> Yeah, and the memory looks to be freed properly in the wmi_dev_remove()
+>>> callback, right?
+>>
+>> It would appear so. To verify that:
+>>
+>> Alloc:
+>> 976        wblock->handler_data = kmalloc(wblock->req_buf_size,
+>>                            GFP_KERNEL);
+>>         <check>
+>>
+>> 983        buf = kasprintf(GFP_KERNEL, "wmi/%s", wdriver->driver.name);
+>>         <check>
+>> 989        wblock->char_dev.name = buf;
+>>
+>> In lines 1022-1023:
+>>
+>> 1022        kfree(wblock->char_dev.name);
+>> 1023        kfree(wblock->handler_data);
+>>
+>>>> This is why I don't think things should be rushed, but analysed with clear and
+>>>> cold head. And with as many eyes as possible :)
+>>>>
+>>>> The driver stuff is my long-term research interest. To state the obvious,
+>>>> the printing and multimedia education and industry in general would benefit from
+>>>> the open-source drivers for many instruments that still work, but are obsoleted
+>>>> by the producer and require unsupported versions of the OS.
+>>>>
+>>>> Thank you again for reviewing the bug report, however, ATM I do not think I have
+>>>> what it takes to hunt down the memleak. :-/
+>>>
+>>> Do you have a reproducer that you can use to show the problem better?
+>>
+>> Unfortunately, the problem doesn't seem to appear during the run of a particular
+>> test, but immediately on startup of the OS. This makes it awkward to pinpoint the
+>> exact service that triggered memory leaks. But they would appear to have to do
+>> with the initialisation of the USB devices, wouldn't they?
+>>
+>> There seem to be strings:
+>>
+>> "USBPortAccess,Enabled;[Optional:"
+>> "USBBIOSSupport,Enabled;[Optional"
+>> "USBEnumerationDelay,Disabled;[Op"
+>>
+>> This seems to be happening during USB initialisation and before any services.
+>> But I might as well be wrong.
+>>
+>>> Or can you test kernel patches to verify the problem is fixed or not if
+>>> we send you patches to test?
+>>
+>> Certainly, Lord willing, I can test the patches in the same environment that
+>> mainfeted the bug (or memleak).
+>>
+>> Best regards,
+>> Mirsad
+>>
+
+-- 
+Mirsad Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+tel. +385 (0)1 3711 451
+mob. +385 91 57 88 355
