@@ -2,575 +2,482 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A5BC6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Mar 2023 19:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD2C6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 28 Mar 2023 21:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbjC1Tzc (ORCPT
+        id S229966AbjC1Vxj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 28 Mar 2023 15:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38164 "EHLO
+        Tue, 28 Mar 2023 17:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjC1Tzb (ORCPT
+        with ESMTP id S229964AbjC1Vxi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Mar 2023 15:55:31 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E0E1FC3;
-        Tue, 28 Mar 2023 12:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1680033316; i=w_armin@gmx.de;
-        bh=MWVlgfwGB7Yby/dbVpdeQVquEKcNLzb2BPOOjKIjWfw=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=CNog0E48vW4SG9cgfubf3+dHVjlQVfBWvI5EvSljObyNKv7Sx8KKd7xOAA02AxPCI
-         Yz/5/mQn7C22Il1FbU4iko9ltu/6AJNmQ7WM5eabG7pt1n3BJhezOod8AS/Ddj3ZS0
-         WabI4J9ZgYI1xrN5u45+XrE5RwTeq/Xs81KNb2BkL+Cgt/KsUe4wnV/BrbHlP4Uy4O
-         h35BdDSjVkpXNHlc58+VcZDbJAFVCoqj1BXk7jpaLs/m/rDTwT9jew8MVOfDNaADjr
-         XLdHP3GvHpgLPKvZeb8naUnJarPZpowTAphv/xqsT4djsEln1WQ02CPDJv61FXDjtb
-         LSCi5xmlmLjQw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWASe-1pw5Ow0F10-00XbUK; Tue, 28
- Mar 2023 21:55:16 +0200
-Subject: Re: [BUG] systemd-devd triggers kernel memleak apparently in
- drivers/core/dd.c: driver_register()
-To:     Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <5059b11b-8b6e-394b-338f-49e1339067fa@alu.unizg.hr>
- <ZCLPaYGKHlFQGKYQ@kroah.com>
- <542c13f5-4cdd-7750-f10a-ef64bb7e8faa@alu.unizg.hr>
- <d011a1d7-34ab-5f54-fcc7-d727abc7ec9b@alu.unizg.hr>
- <ZCLa3_HnLQA0GQKS@kroah.com>
- <b50f9460-ac54-e997-f9b9-3c47a9b87aae@alu.unizg.hr>
- <df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de>
- <16862c45-2ffd-a2f2-6719-020c5d515800@alu.unizg.hr>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <4f65a23f-4e04-f04f-e56b-230a38ac5ec4@gmx.de>
-Date:   Tue, 28 Mar 2023 21:55:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Tue, 28 Mar 2023 17:53:38 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D92133;
+        Tue, 28 Mar 2023 14:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680040411; x=1711576411;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BYOg0v/b9Zi+4/1Zgi33E8fJWccW0mH2Odw/+Z3jsB8=;
+  b=brTPTRrqM4sDxdw9plOzJshvIDpQHhkW4ac3oYTMNUqFl66Qk8iL/NLJ
+   R4u8rGfMojZTdL5dxobFt5SegqXDSW1PCSYlIZHPiYtpNf7altpySnEJt
+   IqOOPy22xzaBHzWTr9LgyfA1bNapMOijCrx6ExKaV0wYCyuBgMqVknpFL
+   KoAGsFATbQxFpqlYbKrKEiTpW60KinQEjJhORt/5rGwv/Ks64jEOTJa/Q
+   DGvjVVifVVGpcEouD9CqXsLB7j258cDXp6XRNmLCooB9+D0COhZGfQx2M
+   /YeQtmkg1Bq/OikRI24YW6dI1vGU4006b6SbLtctLJV5slEPqAlG3M1pA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="339426580"
+X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
+   d="scan'208";a="339426580"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 14:53:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="753331240"
+X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
+   d="scan'208";a="753331240"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Mar 2023 14:53:30 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel-uncore-freq: Uncore frequency control via TPMI
+Date:   Tue, 28 Mar 2023 14:53:28 -0700
+Message-Id: <20230328215328.101990-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-In-Reply-To: <16862c45-2ffd-a2f2-6719-020c5d515800@alu.unizg.hr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:APq1JikTrfCZ94d0nCsljU2IMtuSsBsV/K/xaNIzzRXMXKe+VQv
- LuoXrTsAanpH34GOmq1454TfoP3vysDqPBRwy86kFszaO9AAyRp2oaYkJIAE+Xv2OVbm4k5
- W38Napx3rsIv5fXdkRT5444XhqJfR61ApvgsxonMlUyIC8SLs7vszkFQkNh4pmm9Mj0RG2m
- N5LHQoIs2CQoKSK76mW4w==
-UI-OutboundReport: notjunk:1;M01:P0:bkgGkoW6+cQ=;5fI2bQo+jGZqPAieWJjpMmg0fkb
- N5tOEHVze2RBx5eUopEXoSeksyrTdA0/X+R4lf9g3mCjRM1anUUa5UHS/k9TCfhu9BfK/rbY2
- 5LUQSaNSL5YoDMIANWCD+mGAwrewQHVgElTGFWah58gnYeTtmbPVvRwwf95EwlKMkfhksRLfK
- xarUW0FD0T4yCcy0PfqGFQgJ26fOliPIk95ZH/7t8NgAdmUPq/lKjcvp8OsohIp1dHOR1Gfgr
- QfbX0z7qQUmF0Q+lvbsJwIMmejeTYl5brZwZkjC851TTOaARw8W9LFDy6dkDTawR4fxgkg71s
- F4dr+THu8ORiQKssXv81mB/jQf9GPiDfwwulL8IpspsfdJG7SEojY/8UYLkX/wsiFMfGGdxpZ
- OZ/Ez/jAfn+FmhFw+7x1Z0RGDvXEfEWv1FpWB+EwKlKih1x4fBoM4gGFHS25hAcFKhQsCTLGC
- JlE6H4N1hg7vF5ykN3OtqSLudHj3i87FsrPzFajlJM0wTMCiIWJC9PWPMkg7UcMf+eAXt/cze
- HCUhjM/cm9W+had2YVWDYSYiS6TU/QG9vlCTiXP5zJdZITb7O0tZjdZP74ov7qNz9Qj4NXuT6
- HDhHFA9L0knjo2cPKHtY5w9MVqxffmPR0fQ2R6+v83pZKWQvdNAUwwoGjNjp6E84/3kl55SIN
- ZfvfeE7dW3uaUvXiR+z42o6GmUe6rv4kY/f+cNCe+4F8HMcxDdfIVrp56CV4Z5+TGltu3gn1d
- pztFwbGIi3bEjjI/od6kgzTd96RKBjdi9Opbj99n8puueXeTuyxCSniBcZO7EiN9wDNUUULRH
- G5w42RtT7Y3bQdAMStliWqmdjTUHQO82iZvwzZqBx2HdVc2DoOrwh4RkBaJIYuraCDaZylptf
- cwXHge0NelrX61IiSyTqSkB8iMIHsmUJaH1gGS3Nyx0vT4vCY7KBw4FwGppk3UT/+1LM5b07g
- YpLDrbP92qFP8DijNQdvNzNgib0=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 28.03.23 um 21:06 schrieb Mirsad Goran Todorovac:
+Implement support of uncore frequency control via TPMI (Topology Aware
+Register and PM Capsule Interface). This driver provides the similar
+functionality as the current uncore frequency driver using MSRs.
 
-> On 3/28/2023 6:53 PM, Armin Wolf wrote:
->> Am 28.03.23 um 14:44 schrieb Mirsad Todorovac:
->>
->>> On 3/28/23 14:17, Greg Kroah-Hartman wrote:
->>>> On Tue, Mar 28, 2023 at 02:08:06PM +0200, Mirsad Todorovac wrote:
->>>>> On 3/28/23 13:59, Mirsad Todorovac wrote:
->>>>>
->>>>>> On 3/28/23 13:28, Greg Kroah-Hartman wrote:
->>>>>>> On Tue, Mar 28, 2023 at 01:13:33PM +0200, Mirsad Todorovac wrote:
->>>>>>>> Hi all,
->>>>>>>>
->>>>>>>> Here is another kernel memory leak report, just as I thought we
->>>>>>>> have done with
->>>>>>>> them by the xhci patch by Mathias.
->>>>>>>>
->>>>>>>> The memory leaks were caught on an AlmaLinux 8.7 (CentOS) fork
->>>>>>>> system, running
->>>>>>>> on a Lenovo desktop box (see lshw.txt) and the newest Linux
->>>>>>>> kernel 6.3-rc4 commit
->>>>>>>> g3a93e40326c8 with Mathias' patch for a xhci systemd-devd
->>>>>>>> triggered leak.
->>>>>>>>
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 See:
->>>>>>>> <20230327095019.1017159-1-mathias.nyman@linux.intel.com> on LKML.
->>>>>>>>
->>>>>>>> This leak is also systemd-devd triggered, except for the
->>>>>>>> memstick_check() leaks
->>>>>>>> which I was unable to bisect due to the box not booting older
->>>>>>>> kernels (work in
->>>>>>>> progress).
->>>>>>>>
->>>>>>>> unreferenced object 0xffff88ad12392710 (size 96):
->>>>>>>> =C2=A0=C2=A0=C2=A0 comm "systemd-udevd", pid 735, jiffies 4294896=
-759 (age
->>>>>>>> 2257.568s)
->>>>>>>> =C2=A0=C2=A0=C2=A0 hex dump (first 32 bytes):
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 53 65 72 69 61 6c 50 6f 72 74 31 4=
-1 64 64 72 65
->>>>>>>> SerialPort1Addre
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 73 73 2c 33 46 38 2f 49 52 51 34 3=
-b 5b 4f 70 74
->>>>>>>> ss,3F8/IRQ4;[Opt
->>>>>>>> =C2=A0=C2=A0=C2=A0 backtrace:
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffae8fb26c>] slab_post_all=
-oc_hook+0x8c/0x3e0
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffae902b49>] __kmem_cache_=
-alloc_node+0x1d9/0x2a0
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffae8773c9>] __kmalloc_nod=
-e_track_caller+0x59/0x180
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffae866a1a>] kstrdup+0x3a/=
-0x70
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffc0d839aa>]
->>>>>>>> tlmi_extract_output_string.isra.0+0x2a/0x60 [think_lmi]
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffc0d83b64>] tlmi_setting.=
-constprop.4+0x54/0x90
->>>>>>>> [think_lmi]
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffc0d842b1>] tlmi_probe+0x=
-591/0xba0 [think_lmi]
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [<ffffffffc051dc53>] wmi_dev_probe=
-+0x163/0x230 [wmi]
->>>>>>>
->> Hi,
->>
->> this "SerialPort1Address" string looks like a BIOS setup option, and
->> indeed think_lmi allows for
->> changing BIOS setup options over sysfs. While looking at
->> current_value_show() in think-lmi.c, i noticed
->> that "item" holds a string which is allocated with kstrdup(), so it
->> has to be freed using kfree().
->> This however does not happen if strbrk() fails, so maybe the memory
->> leak is caused by this?
->>
->> Armin Wolf
->
-> Hi Armin,
->
-> I tried your suggestion, and though it is an obvious improvement and a
-> leak fix, this
-> was not the one we were searching for.
->
-> I tested the following patch:
->
-> diff --git a/drivers/platform/x86/think-lmi.c
-> b/drivers/platform/x86/think-lmi.c
-> index c816646eb661..1e77ecb0cba8 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -929,8 +929,10 @@ static ssize_t current_value_show(struct kobject
-> *kobj, struct kobj_attribute *a
->
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* validate and split from `i=
-tem,value` -> `value` */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D strpbrk(item, ",");
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!value || value =3D=3D item ||=
- !strlen(value + 1))
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!value || value =3D=3D item ||=
- !strlen(value + 1)) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 kfree(item);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D sysfs_emit(buf, "%s\n=
-", value + 1);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(item);
->
-> (I would also object to the use of strlen() here, for it is inherently
-> insecure
-> against SEGFAULT in kernel space.)
->
-> I still get:
-> [root@pc-mtodorov marvin]# uname -rms
-> Linux 6.3.0-rc4-armin-patch-00025-g3a93e40326c8-dirty x86_64
-> [root@pc-mtodorov marvin]# cat /sys/kernel/debug/kmemleak [edited]
-> unreferenced object 0xffff8eb008ef9260 (size 96):
-> =C2=A0 comm "systemd-udevd", pid 771, jiffies 4294896499 (age 74.880s)
-> =C2=A0 hex dump (first 32 bytes):
-> =C2=A0=C2=A0=C2=A0 53 65 72 69 61 6c 50 6f 72 74 31 41 64 64 72 65 Seria=
-lPort1Addre
-> =C2=A0=C2=A0=C2=A0 73 73 2c 33 46 38 2f 49 52 51 34 3b 5b 4f 70 74 ss,3F=
-8/IRQ4;[Opt
-> =C2=A0 backtrace:
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x=
-2a0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59=
-/0x180
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.=
-0+0x2a/0x60
-> [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x=
-90 [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lm=
-i]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197c62>] driver_attach+0x22/0x30
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f19a0a2>] driver_register+0x62/0x120
-> unreferenced object 0xffff8eb018ddbb40 (size 64):
-> =C2=A0 comm "systemd-udevd", pid 771, jiffies 4294896528 (age 74.780s)
-> =C2=A0 hex dump (first 32 bytes):
-> =C2=A0=C2=A0=C2=A0 55 53 42 50 6f 72 74 41 63 63 65 73 73 2c 45 6e USBPo=
-rtAccess,En
-> =C2=A0=C2=A0=C2=A0 61 62 6c 65 64 3b 5b 4f 70 74 69 6f 6e 61 6c 3a abled=
-;[Optional:
-> =C2=A0 backtrace:
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x=
-2a0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59=
-/0x180
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.=
-0+0x2a/0x60
-> [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x=
-90 [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lm=
-i]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197c62>] driver_attach+0x22/0x30
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f19a0a2>] driver_register+0x62/0x120
-> unreferenced object 0xffff8eb006fe2b40 (size 64):
-> =C2=A0 comm "systemd-udevd", pid 771, jiffies 4294896542 (age 74.724s)
-> =C2=A0 hex dump (first 32 bytes):
-> =C2=A0=C2=A0=C2=A0 55 53 42 42 49 4f 53 53 75 70 70 6f 72 74 2c 45 USBBI=
-OSSupport,E
-> =C2=A0=C2=A0=C2=A0 6e 61 62 6c 65 64 3b 5b 4f 70 74 69 6f 6e 61 6c nable=
-d;[Optional
-> =C2=A0 backtrace:
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eafb26c>] slab_post_alloc_hook+0x8c/0x3e0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9eb02b49>] __kmem_cache_alloc_node+0x1d9/0x=
-2a0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea773c9>] __kmalloc_node_track_caller+0x59=
-/0x180
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9ea66a1a>] kstrdup+0x3a/0x70
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eef9aa>] tlmi_extract_output_string.isra.=
-0+0x2a/0x60
-> [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0eefb64>] tlmi_setting.constprop.4+0x54/0x=
-90 [think_lmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0ef02c1>] tlmi_probe+0x591/0xba0 [think_lm=
-i]
-> =C2=A0=C2=A0=C2=A0 [<ffffffffc0629c53>] wmi_dev_probe+0x163/0x230 [wmi]
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f1987eb>] really_probe+0x17b/0x3d0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ad4>] __driver_probe_device+0x84/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198c14>] driver_probe_device+0x24/0xc0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f198ed2>] __driver_attach+0xc2/0x190
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f195ab1>] bus_for_each_dev+0x81/0xd0
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197c62>] driver_attach+0x22/0x30
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f197354>] bus_add_driver+0x1b4/0x240
-> =C2=A0=C2=A0=C2=A0 [<ffffffff9f19a0a2>] driver_register+0x62/0x120
->
-> There are currently 84 wmi_dev_probe leaks, sized mostly 64 bytes, and
-> one 96 and two 192 bytes.
->
-> I also cannot figure out the mechanism by which current_value_show()
-> is called, when it is static?
->
-> Any idea?
->
-> Thanks.
->
-> Best regards,
-> Mirsad
->
-Can you tell me how many BIOS settings think-lmi provides on your machine?=
- Because according to the stacktrace,
-the other place where the leak could have occurred is inside tlmi_analyze(=
-), which calls tlmi_setting().
+The hardware interface to read/write is basically substitution of MSR
+0x620 and 0x621. There are specific MMIO offset and bits to get/set
+minimum and maximum uncore ratio, similar to MSRs.
 
-However, i have no idea on how *info is somehow leaked, it has to happen i=
-nside the for-loop between the call
-to tlmi_setting() and strreplace(), because otherwise the strings would no=
-t contain the "/" character.
+The scope of the uncore MSRs is package/die. But new generation of CPUs
+have more granular control at a cluster level. Each package/die can have
+multiple power domains, which further can have multiple clusters. The
+TPMI interface allows control at cluster level.
 
-Can you check if the problem is somehow solved by applying the following c=
-ommit from the platform-drivers-x86
-for-next branch:
-da62908efe80 ("platform/x86: think-lmi: Properly interpret return value of=
- tlmi_setting")
+The primary use case for uncore sysfs is to set maximum and minimum
+uncore frequency to reduce power consumption or latency. The current
+uncore sysfs control is per package/die. This is enough for the majority
+of users as workload will move to different power domains as it moves
+between different CPUs.
 
-Also current_value_show() is used by attr_current_val, the __ATTR_RW_MODE(=
-) macro arranges for that.
+The current uncore sysfs provides controls at package/die level. When
+user sets maximum/minimum limits, the driver sets the same limits to
+each cluster.
 
-Armin Wolf
+Here number of power domains = number of resources in this aux device.
+There are offsets and bits to discover number of clusters and offset for
+each cluster level controls.
 
->>>>>>> Why aren't you looking at the wmi.c driver?=C2=A0 That should be
->>>>>>> where the
->>>>>>> issue is, not the driver core, right?
->>>>>>>
->>>>>>> thanks,
->>>>>>>
->>>>>>> greg k-h
->>>>>>
->>>>>> Hi, Mr. Greg,
->>>>>>
->>>>>> Thanks for the quick reply.
->>>>>>
->>>>>> I have added CC: for additional developers per
->>>>>> drivers/platform/x86/wmi.c,
->>>>>> however, this seems to me like hieroglyphs. There is nothing
->>>>>> obvious, but
->>>>>> I had not noticed it with v6.3-rc3?
->>>>>>
->>>>>> Maybe, there seems to be something off:
->>>>>>
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 949 static int wmi_dev_probe(struct devic=
-e *dev)
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 950 {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 951=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct wmi_block *wblock =3D dev_to_wblock(dev);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 952=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct wmi_driver *wdriver =3D
->>>>>> drv_to_wdrv(dev->driver);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 953=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 int ret =3D 0;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 954=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 char *buf;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 955
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 956=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 if (ACPI_FAILURE(wmi_method_enable(wblock, true)))
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 957=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_warn(dev,=
- "failed to enable device
->>>>>> -- probing anyway\n");
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 958
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 959=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 if (wdriver->probe) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 960=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D wdriv=
-er->probe(dev_to_wdev(dev),
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 961 find_guid_context(wblock, wdriver));
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 962=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret !=3D =
-0)
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 963=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto probe_failure;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 964=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 965
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 966=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 /* driver wants a character device made */
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 967=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 if (wdriver->filter_callback) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 968=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* check that=
- required buffer size
->>>>>> declared by driver or MOF */
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 969=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!wblock->=
-req_buf_size) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 970 dev_err(&wblock->dev.dev,
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 971=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "Required buffer size
->>>>>> not set\n");
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 972=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 973=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto probe_failure;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 974=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 975
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 976=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->handl=
-er_data =3D
->>>>>> kmalloc(wblock->req_buf_size,
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 977 GFP_KERNEL);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 978=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!wblock->=
-handler_data) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 979=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -ENOMEM;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 980=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto probe_failure;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 981=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 982
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 983=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 buf =3D kaspr=
-intf(GFP_KERNEL, "wmi/%s",
->>>>>> wdriver->driver.name);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 984=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!buf) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 985=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -ENOMEM;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 986=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto probe_string_failure;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 987=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 988=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->char_=
-dev.minor =3D
->>>>>> MISC_DYNAMIC_MINOR;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 989=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->char_=
-dev.name =3D buf;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 990=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->char_=
-dev.fops =3D &wmi_fops;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 991=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->char_=
-dev.mode =3D 0444;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 992=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D misc_=
-register(&wblock->char_dev);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 993=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 994=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_warn(dev, "failed to
->>>>>> register char dev: %d\n", ret);
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 995=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -ENOMEM;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 996=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto probe_misc_failure;
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 997=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 998=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 }
->>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0 999
->>>>>> =C2=A0 =C2=A0=C2=A0 1000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 set_bit(WMI_PROBED, &wblock->flags);
->>>>>> =C2=A0 =C2=A0=C2=A0 1001=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return 0;
->>>>>> =C2=A0 =C2=A0=C2=A0 1002
->>>>>> =C2=A0 =C2=A0=C2=A0 1003 probe_misc_failure:
->>>>>> =C2=A0 =C2=A0=C2=A0 1004=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 kfree(buf);
->>>>>> =C2=A0 =C2=A0=C2=A0 1005 probe_string_failure:
->>>>>> =C2=A0 =C2=A0=C2=A0 1006=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 kfree(wblock->handler_data);
->>>>>> =C2=A0 =C2=A0=C2=A0 1007 probe_failure:
->>>>>> =C2=A0 =C2=A0=C2=A0 1008=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 if (ACPI_FAILURE(wmi_method_enable(wblock,
->>>>>> false)))
->>>>>> =C2=A0 =C2=A0=C2=A0 1009=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_warn(dev, "fail=
-ed to disable
->>>>>> device\n");
->>>>>>
->>>>>>
->>>>>> char *buf is passed to kfree(buf) uninitialised if
->>>>>> wdriver->filter_callback
->>>>>> is not set.
->>>>>>
->>>>>> It seems like a logical error per se, but I don't believe this is
->>>>>> the cause
->>>>>> of the leak?
->>>>>
->>>>> CORRECTION:
->>>>>
->>>>> I overlooked the "return 0" in line 1001.
->>>>
->>>> Yeah, and the memory looks to be freed properly in the
->>>> wmi_dev_remove()
->>>> callback, right?
->>>
->>> It would appear so. To verify that:
->>>
->>> Alloc:
->>> 976=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->handler_data =3D=
- kmalloc(wblock->req_buf_size,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 GFP_KERNEL);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <check>
->>>
->>> 983=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 buf =3D kasprintf(GFP_KE=
-RNEL, "wmi/%s", wdriver->driver.name);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <check>
->>> 989=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wblock->char_dev.name =
-=3D buf;
->>>
->>> In lines 1022-1023:
->>>
->>> 1022=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(wblock->char_dev.=
-name);
->>> 1023=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(wblock->handler_d=
-ata);
->>>
->>>>> This is why I don't think things should be rushed, but analysed
->>>>> with clear and
->>>>> cold head. And with as many eyes as possible :)
->>>>>
->>>>> The driver stuff is my long-term research interest. To state the
->>>>> obvious,
->>>>> the printing and multimedia education and industry in general
->>>>> would benefit from
->>>>> the open-source drivers for many instruments that still work, but
->>>>> are obsoleted
->>>>> by the producer and require unsupported versions of the OS.
->>>>>
->>>>> Thank you again for reviewing the bug report, however, ATM I do
->>>>> not think I have
->>>>> what it takes to hunt down the memleak. :-/
->>>>
->>>> Do you have a reproducer that you can use to show the problem better?
->>>
->>> Unfortunately, the problem doesn't seem to appear during the run of
->>> a particular
->>> test, but immediately on startup of the OS. This makes it awkward to
->>> pinpoint the
->>> exact service that triggered memory leaks. But they would appear to
->>> have to do
->>> with the initialisation of the USB devices, wouldn't they?
->>>
->>> There seem to be strings:
->>>
->>> "USBPortAccess,Enabled;[Optional:"
->>> "USBBIOSSupport,Enabled;[Optional"
->>> "USBEnumerationDelay,Disabled;[Op"
->>>
->>> This seems to be happening during USB initialisation and before any
->>> services.
->>> But I might as well be wrong.
->>>
->>>> Or can you test kernel patches to verify the problem is fixed or
->>>> not if
->>>> we send you patches to test?
->>>
->>> Certainly, Lord willing, I can test the patches in the same
->>> environment that
->>> mainfeted the bug (or memleak).
->>>
->>> Best regards,
->>> Mirsad
->>>
->
+The TPMI documentation can be downloaded from:
+https://github.com/intel/tpmi_power_management
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+The fine grain control at cluster level patches are here:
+https://github.com/spandruvada/linux-kernel/commit/0d66ea4ff76ea19127f2d207a7e17bb86846ca32
+https://github.com/spandruvada/linux-kernel/commit/cb5c2349a58318c04955821d6528cc8015541e65
+But not submitting to ease in review process as I posted too many
+patches this cycle.
+
+ .../x86/intel/uncore-frequency/Kconfig        |   4 +
+ .../x86/intel/uncore-frequency/Makefile       |   2 +
+ .../uncore-frequency/uncore-frequency-tpmi.c  | 346 ++++++++++++++++++
+ 3 files changed, 352 insertions(+)
+ create mode 100644 drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+
+diff --git a/drivers/platform/x86/intel/uncore-frequency/Kconfig b/drivers/platform/x86/intel/uncore-frequency/Kconfig
+index 21b209124916..a56d55056927 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/Kconfig
++++ b/drivers/platform/x86/intel/uncore-frequency/Kconfig
+@@ -6,9 +6,13 @@
+ menu "Intel Uncore Frequency Control"
+ 	depends on X86_64 || COMPILE_TEST
+ 
++config INTEL_UNCORE_FREQ_CONTROL_TPMI
++	tristate
++
+ config INTEL_UNCORE_FREQ_CONTROL
+ 	tristate "Intel Uncore frequency control driver"
+ 	depends on X86_64
++	select INTEL_UNCORE_FREQ_CONTROL_TPMI if INTEL_TPMI
+ 	help
+ 	  This driver allows control of Uncore frequency limits on
+ 	  supported server platforms.
+diff --git a/drivers/platform/x86/intel/uncore-frequency/Makefile b/drivers/platform/x86/intel/uncore-frequency/Makefile
+index e0f7968e8285..08ff57492b28 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/Makefile
++++ b/drivers/platform/x86/intel/uncore-frequency/Makefile
+@@ -7,3 +7,5 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency.o
+ intel-uncore-frequency-y		:= uncore-frequency.o
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency-common.o
+ intel-uncore-frequency-common-y		:= uncore-frequency-common.o
++obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL_TPMI)	+= intel-uncore-frequency-tpmi.o
++intel-uncore-frequency-tpmi-y		:= uncore-frequency-tpmi.o
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+new file mode 100644
+index 000000000000..4150bb877ab5
+--- /dev/null
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -0,0 +1,346 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * intel-ufs-tpmi: Intel x86 platform uncore frequency scaling
++ *
++ * Copyright (c) 2023, Intel Corporation.
++ * All Rights Reserved.
++ *
++ * The hardware interface to read/write is basically substitution of
++ * MSR 0x620 and 0x621.
++ * There are specific MMIO offset and bits to get/set minimum and
++ * maximum uncore ratio, similar to MSRs.
++ * The scope of the uncore MSRs was package scope. But TPMI allows
++ * new gen CPUs to have multiple uncore controls at uncore-cluster
++ * level. Each package can have multiple power domains which further
++ * can have multiple clusters.
++ * Here number of power domains = number of resources in this aux
++ * device. There are offsets and bits to discover number of clusters
++ * and offset for each cluster level controls.
++ *
++ */
++
++#include <linux/auxiliary_bus.h>
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/intel_tpmi.h>
++
++#include "uncore-frequency-common.h"
++
++#define	UNCORE_HEADER_VERSION		1
++#define UNCORE_HEADER_INDEX		0
++#define UNCORE_FABRIC_CLUSTER_OFFSET	8
++
++/* status + control + adv_ctl1 + adv_ctl2 */
++#define UNCORE_FABRIC_CLUSTER_SIZE	(4 * 8)
++
++#define UNCORE_STATUS_INDEX		0
++#define UNCORE_CONTROL_INDEX		8
++
++#define UNCORE_FREQ_KHZ_MULTIPLIER	100000
++
++struct tpmi_uncore_struct;
++
++/* Information for each cluster */
++struct tpmi_uncore_cluster_info {
++	void __iomem *cluster_base;
++	struct uncore_data uncore_data;
++	struct tpmi_uncore_struct *uncore_root;
++};
++
++/* Information for each power domain */
++struct tpmi_uncore_power_domain_info {
++	void __iomem *uncore_base;
++	int ufs_header_ver;
++	int cluster_count;
++	struct tpmi_uncore_cluster_info *cluster_infos;
++};
++
++/* Information for all power domains in a package */
++struct tpmi_uncore_struct {
++	int power_domain_count;
++	struct tpmi_uncore_power_domain_info *pd_info;
++	struct tpmi_uncore_cluster_info root_cluster;
++};
++
++#define UNCORE_GENMASK_MIN_RATIO	GENMASK_ULL(21, 15)
++#define UNCORE_GENMASK_MAX_RATIO	GENMASK_ULL(14, 8)
++
++/* Helper function to read MMIO offset for max/min control frequency */
++static void read_control_freq(struct tpmi_uncore_cluster_info *cluster_info,
++			     unsigned int *min, unsigned int *max)
++{
++	u64 control;
++
++	control = readq((u8 __iomem *)cluster_info->cluster_base + UNCORE_CONTROL_INDEX);
++	*max = FIELD_GET(UNCORE_GENMASK_MAX_RATIO, control) * UNCORE_FREQ_KHZ_MULTIPLIER;
++	*min = FIELD_GET(UNCORE_GENMASK_MIN_RATIO, control) * UNCORE_FREQ_KHZ_MULTIPLIER;
++}
++
++#define UNCORE_MAX_RATIO	0x7F
++
++/* Callback for sysfs read for max/min frequencies. Called under mutex locks */
++static int uncore_read_control_freq(struct uncore_data *data, unsigned int *min,
++				    unsigned int *max)
++{
++	struct tpmi_uncore_cluster_info *cluster_info;
++	struct tpmi_uncore_struct *uncore_root;
++	int i, _min = 0, _max = 0;
++
++	cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
++	uncore_root = cluster_info->uncore_root;
++
++	*min = UNCORE_MAX_RATIO * UNCORE_FREQ_KHZ_MULTIPLIER;
++	*max = 0;
++
++	/*
++	 * Get the max/min by looking at each cluster. Get the lowest
++	 * min and highest max.
++	 */
++	for (i = 0; i < uncore_root->power_domain_count; ++i) {
++		int j;
++
++		for (j = 0; j < uncore_root->pd_info[i].cluster_count; ++j) {
++			read_control_freq(&uncore_root->pd_info[i].cluster_infos[j],
++					  &_min, &_max);
++			if (*min > _min)
++				*min = _min;
++			if (*max < _max)
++				*max = _max;
++		}
++	}
++
++	return 0;
++}
++
++/* Helper function to write MMIO offset for max/min control frequency */
++static void write_control_freq(struct tpmi_uncore_cluster_info *cluster_info, unsigned int input,
++			      unsigned int min_max)
++{
++	u64 control;
++
++	control = readq((u8 __iomem *)cluster_info->cluster_base + UNCORE_CONTROL_INDEX);
++
++	if (min_max) {
++		control &= ~UNCORE_GENMASK_MAX_RATIO;
++		control |= FIELD_PREP(UNCORE_GENMASK_MAX_RATIO, input);
++	} else {
++		control &= ~UNCORE_GENMASK_MIN_RATIO;
++		control |= FIELD_PREP(UNCORE_GENMASK_MIN_RATIO, input);
++	}
++
++	writeq(control, ((u8 __iomem *)cluster_info->cluster_base + UNCORE_CONTROL_INDEX));
++}
++
++/* Callback for sysfs write for max/min frequencies. Called under mutex locks */
++static int uncore_write_control_freq(struct uncore_data *data, unsigned int input,
++				     unsigned int min_max)
++{
++	struct tpmi_uncore_cluster_info *cluster_info;
++	struct tpmi_uncore_struct *uncore_root;
++	int i;
++
++	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
++	if (!input || input > UNCORE_MAX_RATIO)
++		return -EINVAL;
++
++	cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
++	uncore_root = cluster_info->uncore_root;
++
++	/* Update each cluster in a package */
++	for (i = 0; i < uncore_root->power_domain_count; ++i) {
++		int j;
++
++		for (j = 0; j < uncore_root->pd_info[i].cluster_count; ++j)
++			write_control_freq(&uncore_root->pd_info[i].cluster_infos[j],
++					   input, min_max);
++	}
++
++	return 0;
++}
++
++/* Callback for sysfs read for the current uncore frequency. Called under mutex locks */
++static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
++{
++	return -ENODATA;
++}
++
++#define UNCORE_GENMASK_VERSION			GENMASK_ULL(7, 0)
++#define UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK	GENMASK_ULL(15, 8)
++#define UNCORE_CLUSTER_OFF_MASK			GENMASK_ULL(7, 0)
++#define UNCORE_MAX_CLUSTER_PER_DOMAIN		8
++
++static int tpmi_uncore_init(struct auxiliary_device *auxdev)
++{
++	struct intel_tpmi_plat_info *plat_info;
++	struct tpmi_uncore_struct *tpmi_uncore;
++	int ret, i, pkg = 0;
++	int num_resources;
++
++	/* Get number of power domains, which is equal to number of resources */
++	num_resources = tpmi_get_resource_count(auxdev);
++	if (!num_resources)
++		return -EINVAL;
++
++	/* Register callbacks to uncore core */
++	ret = uncore_freq_common_init(uncore_read_control_freq, uncore_write_control_freq,
++				      uncore_read_freq);
++	if (ret)
++		return ret;
++
++	/* Allocate uncore instance per package */
++	tpmi_uncore = devm_kzalloc(&auxdev->dev, sizeof(*tpmi_uncore), GFP_KERNEL);
++	if (!tpmi_uncore) {
++		ret = -ENOMEM;
++		goto err_rem_common;
++	}
++
++	/* Allocate memory for all power domains in a package */
++	tpmi_uncore->pd_info = devm_kcalloc(&auxdev->dev, num_resources,
++					    sizeof(*tpmi_uncore->pd_info),
++					    GFP_KERNEL);
++	if (!tpmi_uncore->pd_info) {
++		ret = -ENOMEM;
++		goto err_rem_common;
++	}
++
++	tpmi_uncore->power_domain_count = num_resources;
++
++	/* Get the package ID from the TPMI core */
++	plat_info = tpmi_get_platform_data(auxdev);
++	if (plat_info)
++		pkg = plat_info->package_id;
++
++	for (i = 0; i < num_resources; ++i) {
++		struct tpmi_uncore_power_domain_info *pd_info;
++		struct resource *res;
++		u64 cluster_offset;
++		u8 cluster_mask;
++		int mask, j;
++		u64 header;
++
++		res = tpmi_get_resource_at_index(auxdev, i);
++		if (!res)
++			continue;
++
++		pd_info = &tpmi_uncore->pd_info[i];
++
++		pd_info->uncore_base = devm_ioremap_resource(&auxdev->dev, res);
++		if (IS_ERR(pd_info->uncore_base)) {
++			ret = PTR_ERR(pd_info->uncore_base);
++			pd_info->uncore_base = NULL;
++			goto err_rem_common;
++		}
++
++		/* Check for version and skip this resource if there is mismatch */
++		header = readq(pd_info->uncore_base);
++		pd_info->ufs_header_ver = header & UNCORE_GENMASK_VERSION;
++		if (pd_info->ufs_header_ver != UNCORE_HEADER_VERSION) {
++			dev_info(&auxdev->dev, "Uncore: Unsupported version:%d\n",
++				pd_info->ufs_header_ver);
++			continue;
++		}
++
++		/* Get Cluster ID Mask */
++		cluster_mask = FIELD_GET(UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK, header);
++		if (!cluster_mask) {
++			dev_info(&auxdev->dev, "Uncore: Invalid cluster mask:%x\n", cluster_mask);
++			continue;
++		}
++
++		/* Find out number of clusters in this resource */
++		mask = 0x01;
++		for (j = 0; j < UNCORE_MAX_CLUSTER_PER_DOMAIN; ++j) {
++			if (cluster_mask & mask)
++				pd_info->cluster_count++;
++			mask <<= 1;
++		}
++
++		pd_info->cluster_infos = devm_kcalloc(&auxdev->dev, pd_info->cluster_count,
++						      sizeof(struct tpmi_uncore_cluster_info),
++						      GFP_KERNEL);
++
++		/*
++		 * Each byte in the register point to status and control
++		 * registers belonging to cluster id 0-8.
++		 */
++		cluster_offset = readq((u8 __iomem *)pd_info->uncore_base +
++					UNCORE_FABRIC_CLUSTER_OFFSET);
++
++		for (j = 0; j < pd_info->cluster_count; ++j) {
++			struct tpmi_uncore_cluster_info *cluster_info;
++
++			/* Get the offset for this cluster */
++			mask = (cluster_offset & UNCORE_CLUSTER_OFF_MASK);
++			/* Offset in QWORD, so change to bytes */
++			mask <<= 3;
++
++			cluster_info = &pd_info->cluster_infos[j];
++
++			cluster_info->cluster_base = (u8 __iomem *)pd_info->uncore_base + mask;
++
++			cluster_info->uncore_data.package_id = pkg;
++			/* There are no dies like Cascade Lake */
++			cluster_info->uncore_data.die_id = 0;
++
++			/* Point to next cluster offset */
++			cluster_offset >>= UNCORE_MAX_CLUSTER_PER_DOMAIN;
++		}
++	}
++
++	auxiliary_set_drvdata(auxdev, tpmi_uncore);
++
++	tpmi_uncore->root_cluster.uncore_root = tpmi_uncore;
++	tpmi_uncore->root_cluster.uncore_data.package_id = pkg;
++	ret = uncore_freq_add_entry(&tpmi_uncore->root_cluster.uncore_data, 0);
++	if (ret)
++		goto err_rem_common;
++
++	return 0;
++
++err_rem_common:
++	uncore_freq_common_exit();
++
++	return ret;
++}
++
++static int tpmi_uncore_remove(struct auxiliary_device *auxdev)
++{
++	struct tpmi_uncore_struct *tpmi_uncore = auxiliary_get_drvdata(auxdev);
++
++	uncore_freq_remove_die_entry(&tpmi_uncore->root_cluster.uncore_data);
++
++	uncore_freq_common_exit();
++
++	return 0;
++}
++
++static int intel_uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
++{
++	return tpmi_uncore_init(auxdev);
++}
++
++static void intel_uncore_remove(struct auxiliary_device *auxdev)
++{
++	tpmi_uncore_remove(auxdev);
++}
++
++static const struct auxiliary_device_id intel_uncore_id_table[] = {
++	{ .name = "intel_vsec.tpmi-uncore" },
++	{}
++};
++MODULE_DEVICE_TABLE(auxiliary, intel_uncore_id_table);
++
++static struct auxiliary_driver intel_uncore_aux_driver = {
++	.id_table       = intel_uncore_id_table,
++	.remove         = intel_uncore_remove,
++	.probe          = intel_uncore_probe,
++};
++
++module_auxiliary_driver(intel_uncore_aux_driver);
++
++MODULE_IMPORT_NS(INTEL_TPMI);
++MODULE_IMPORT_NS(INTEL_UNCORE_FREQUENCY);
++MODULE_DESCRIPTION("Intel TPMI UFS Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.39.1
+
