@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747AFC6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Mar 2023 16:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E1C6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Mar 2023 18:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230007AbjC2Qna (ORCPT
+        id S229905AbjC2Stk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Mar 2023 12:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
+        Wed, 29 Mar 2023 14:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjC2Qn3 (ORCPT
+        with ESMTP id S229914AbjC2Stg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Mar 2023 12:43:29 -0400
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB2C46AC;
-        Wed, 29 Mar 2023 09:43:27 -0700 (PDT)
+        Wed, 29 Mar 2023 14:49:36 -0400
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8C74C3B;
+        Wed, 29 Mar 2023 11:49:33 -0700 (PDT)
 Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id 0B164604EF;
-        Wed, 29 Mar 2023 18:43:26 +0200 (CEST)
+        by domac.alu.hr (Postfix) with ESMTP id 974CB604EA;
+        Wed, 29 Mar 2023 20:49:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1680108206; bh=XAfqU+2ECVlLAnB9ptFM/m0416xktbuZ+dEHC1VmtNA=;
+        t=1680115770; bh=2FY09q7X5ToUe7Y8QK9XX6aJPiKbJHxiEsM6S9PavgQ=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=2BBnESqw6fzJGuoFXTF+z009y0itELitbJXOT768NxiBWrVNhdCpfO+EeRTSNZriY
-         AC+vtp3oNy9eUVVF5nVPbZDz1tk1lLSSI4+YTYySNom82JdURH2CK6HASxQdYRywNA
-         +bkAkpydjgkLuX6EWVWmGBPumwKg+RBfbJ5RcuFf6Xlz+oYdrcHMAuSCXkljluQiEd
-         BcpaZ1bfb8CQCfKTNzMaQnAIcwNNwTjGHo+5xlrC+2JNH8EdFCpcP8PAumgVJ4CJGA
-         mDYqtOxR+h0jrYae2cLGHHeeTqUxK8dv4n7vJ4AqCm+Y8lwQ1C1dm5pzG0+Wsqlql2
-         uEeIsGACr0L0Q==
+        b=cfeomEXZkwlXxKgjlypsMgNX/1ZVTiH12GBclQuGyuX0KTnPXTE1iZiKwUxdMVuKt
+         Aow4ooYmRqLRjEvOydxM7PkVLHzlHYoeXKNGExzEeyEbfxy/B/me/o54VNQ+Dbssyq
+         LZw4s/3pDnSG0KVfOvxztTj246VJLpfr/sRN2w1ugO7+ZiDvAPNPhHB0XtXpfY0R8H
+         4Dt57P7QG64GQGKe5Qz4L6hDlJmnYNVyNzgf66zV7uhUk6Kr2gA5oYTxnZq3Cmh7Lc
+         gC0/i2c8tAlhQGUpjQP9L9PNOtqlsZSlP3XGnqQ8ti3UKpQUyPQI7gZV0YjHmDt7W3
+         fN6lx6TSuPxrQ==
 X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
 Received: from domac.alu.hr ([127.0.0.1])
         by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1RfS9nBdcp0P; Wed, 29 Mar 2023 18:43:23 +0200 (CEST)
+        with ESMTP id YOTInEUCGIbY; Wed, 29 Mar 2023 20:49:28 +0200 (CEST)
 Received: from [10.0.1.78] (grf-nat.grf.hr [161.53.83.23])
-        by domac.alu.hr (Postfix) with ESMTPSA id 250A1604EA;
-        Wed, 29 Mar 2023 18:43:23 +0200 (CEST)
+        by domac.alu.hr (Postfix) with ESMTPSA id A7F18604EF;
+        Wed, 29 Mar 2023 20:49:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1680108203; bh=XAfqU+2ECVlLAnB9ptFM/m0416xktbuZ+dEHC1VmtNA=;
+        t=1680115768; bh=2FY09q7X5ToUe7Y8QK9XX6aJPiKbJHxiEsM6S9PavgQ=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Ia96eRbQODgmaZjUdjsvmZLSG76V3a5G0MUqRW1OjBrbPLzkrp/P3DfHk8HsxilIN
-         FrEz2sYD1fomh4ZlyB8fBKPjnLIaHeONunT8eqygGaUUL95tdYHS7/pilSRcGPgyQk
-         jtNRoVbjgJwBHpew2awpMOVQUuVjGozwX7QUQ0/6WUP0HdE4U4AI1KEH7a3etEjgKb
-         MB7mlSxPPRTe/LH6CW1o5xA4Zh4eIHKBD129wP36g+pD2dOO0z14yGHSFnpLV2M5OY
-         PxYetZpkmTa3eQn7aTvHvSYiXzUCqi60qWAe1z+14DmLydTQKChEMSVJ9ixRBLepvF
-         Eha3VSXgbns8g==
-Message-ID: <9fa34eb2-d119-9039-6db7-edfd0ee406f9@alu.unizg.hr>
-Date:   Wed, 29 Mar 2023 18:43:22 +0200
+        b=UyCJZwgXzPOJvhvX/9JzYJl5ICtoqeeKWooL+wTEM1FOtJG9nCHL4YPavGI6IcQPu
+         2EPGojmuXjLV3LlSOjk5mkYvvwm8p7ohfzq3By/v+Nmbs+80Ho/Jaep8VtA2YZpj7B
+         pyZupCRMJJ2vz1/MGfsP8UvLGiVqFzK04H7dbJ07bRXIBaW0IPYuqNA4KkHiv5Gy9X
+         G6+vHPKrHk52RzteZXOWeI1CW7iUjqNIJrIaUv36BHKPCkewoUv26fFTDw2GzEaeqG
+         Je4SJSiyPegEmIaR33l7dIhZ7BeHHaTgOWXxFQoAmWDbC4NSREErkqZjDtTiUYv1B7
+         8zDeZI/X5tV8w==
+Message-ID: <4dc118c2-0dde-bd5e-ea41-427ed33e4545@alu.unizg.hr>
+Date:   Wed, 29 Mar 2023 20:49:27 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [BUG] [BISECTED] [CORRECTION] systemd-devd triggers kernel
- memleak apparently in drivers/core/dd.c: driver_register()
+Subject: Re: [BUG] [RFC] systemd-devd triggers kernel memleak apparently in
+ drivers/core/dd.c: driver_register()
 Content-Language: en-US
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -177,16 +177,7 @@ On 29.3.2023. 18:24, Mark Pearson wrote:
 >> Good work on catching these issues, thank you all for your work on this.
 >>
 > Seconded - thank you for flagging and catching this. These were my mistakes :(
-
-Armin's hint was the largest part of the catch. I did not even suspect think-lmi.c,
-to be honest ...
-
-Apparently, the three patches together do not raise any new issues on my box, but of
-course, proper testing and peer review is required.
-
-Best regards,
-Mirsad
-
+> 
 >> I assume that these fixes will be posted as a proper 3 patch
 >> patch-series (one patch per fix) once you are done testing?
 >>
@@ -195,6 +186,72 @@ Mirsad
 > Happy to help out with testing too as I have access to HW. Let me know.
 > 
 > Mark
+
+Here is the patch proposal according to what Mark advised (using different name for optitem):
+
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index c816646eb661..ab17254781c4 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -929,8 +929,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+
+         /* validate and split from `item,value` -> `value` */
+         value = strpbrk(item, ",");
+-       if (!value || value == item || !strlen(value + 1))
++       if (!value || value == item || !strlen(value + 1)) {
++               kfree(item);
+                 return -EINVAL;
++       }
+
+         ret = sysfs_emit(buf, "%s\n", value + 1);
+         kfree(item);
+@@ -1380,7 +1382,6 @@ static struct tlmi_pwd_setting *tlmi_create_auth(const char *pwd_type,
+
+  static int tlmi_analyze(void)
+  {
+-       acpi_status status;
+         int i, ret;
+
+         if (wmi_has_guid(LENOVO_SET_BIOS_SETTINGS_GUID) &&
+@@ -1417,8 +1418,8 @@ static int tlmi_analyze(void)
+                 char *p;
+
+                 tlmi_priv.setting[i] = NULL;
+-               status = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+-               if (ACPI_FAILURE(status))
++               ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
++               if (ret)
+                         break;
+                 if (!item)
+                         break;
+@@ -1457,10 +1458,10 @@ static int tlmi_analyze(void)
+                          * name string.
+                          * Try and pull that out if it's available.
+                          */
+-                       char *item, *optstart, *optend;
++                       char *optitem, *optstart, *optend;
+
+-                       if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID)) {
+-                               optstart = strstr(item, "[Optional:");
++                       if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID)) {
++                               optstart = strstr(optitem, "[Optional:");
+                                 if (optstart) {
+                                         optstart += strlen("[Optional:");
+                                         optend = strstr(optstart, "]");
+@@ -1469,6 +1470,7 @@ static int tlmi_analyze(void)
+                                                         kstrndup(optstart, optend - optstart,
+                                                                         GFP_KERNEL);
+                                 }
++                               kfree(optitem);
+                         }
+                 }
+                 /*
+
+I have tested it, but without a few blunders of my own.
+I guess "nobody wins them all".
+
+Best regards,
+Mirsad
 
 -- 
 Mirsad Todorovac
