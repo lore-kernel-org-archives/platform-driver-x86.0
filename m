@@ -2,132 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7A8C761AF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 13:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A317C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 14:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231989AbjC3N2r (ORCPT
+        id S232607AbjC3O75 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Mar 2023 09:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
+        Thu, 30 Mar 2023 10:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231897AbjC3N2p (ORCPT
+        with ESMTP id S232720AbjC3O74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2023 09:28:45 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542C4213C;
-        Thu, 30 Mar 2023 06:28:35 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1phsKO-00025P-KA; Thu, 30 Mar 2023 15:28:32 +0200
-Message-ID: <7fe4e169-1cf9-2a26-0567-021172dadd3c@leemhuis.info>
-Date:   Thu, 30 Mar 2023 15:28:32 +0200
+        Thu, 30 Mar 2023 10:59:56 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C2C1BC;
+        Thu, 30 Mar 2023 07:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680188387; x=1711724387;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wAx1RbbU2lhx3HRgHK8oyu8lZK7aEcdm3MlmqjpZIBw=;
+  b=bhJ/taQYD+UGj3CosRpKrIbomRbTVcnoiS2LEQAApEjMyNjiY2Bi/SHY
+   8tnFKzL8aAoJoOZOM5qapfRwe5hljXCAj7On/0SUgFRqocNZNgOsO/2lS
+   AFQ7nkasQD3I8VuMfgAibDuHQa37BqYTtudTwrRp+uOFeUKMQeemqcw+A
+   gMI/PBZ4IgawgE4V83lQJSpEmy1aEhqp6bT/O+gQ8zmPWND0RMnlZqhON
+   aPQ+RfoHOpYijpIuuy6t4aGJmnxwMessOfIc92aoU5+yHnrHUBtOsstGA
+   mnkHV9gbtZANRisg5PTa2FSLHhhUSFvwjQzYj+c9e+gKcDd76rPCYI9in
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="368971303"
+X-IronPort-AV: E=Sophos;i="5.98,303,1673942400"; 
+   d="scan'208";a="368971303"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 07:59:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="678224001"
+X-IronPort-AV: E=Sophos;i="5.98,303,1673942400"; 
+   d="scan'208";a="678224001"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga007.jf.intel.com with ESMTP; 30 Mar 2023 07:59:47 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: intel-uncore-freq: Add client processors
+Date:   Thu, 30 Mar 2023 07:59:39 -0700
+Message-Id: <20230330145939.1022261-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US, de-DE
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux kernel regressions list <regressions@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Gross <markgross@kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] Bug 217234 - Touchpad disabled after wakeup from sleep
- on Lenovo Yoga 7i 15ITL5 (bisected)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680182915;27f7e9b0;
-X-HE-SMSGID: 1phsKO-00025P-KA
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+Make Intel uncore frequency driver support to client processor starting
+from Alder Lake.
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developers don't keep an eye on it, I decided to forward it by mail.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../platform/x86/intel/uncore-frequency/uncore-frequency.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Hans, apparently it's cause by a change of yours.
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 00ac7e381441..32e2515ee366 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -204,6 +204,13 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,	NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
+ 	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE, NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
+-- 
+2.39.1
 
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217234 :
-
->  arsgeiger@gmail.com 2023-03-22 23:52:35 UTC
-> 
-> Created attachment 304002 [details]
-> libinput events on linux6.0
-> 
-> After booting linux6.1 and later upon closing the lid and opening it again, the touchpad is no longer usable. After powering off and booting linux6.0 again (no other changes), the touchpad does continue to work after closing the lid and opening it again.
-> 
-> When the touchpad gets disabled on linux6.1, after logging in to gnome, I can re-enable it from the settings. Using `libinput debug-events --verbose` Here is a comparison of the output on linux6.0:
-> 
->>    2: event10 - lid: suspending touchpad
->> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
->>    3: event10 - lid: resume touchpad
->> -event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) pressed
->>  event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) released
->>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) pressed
->>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) released
->> -event1   SWITCH_TOGGLE           +2.168s     switch lid state 0
-> 
-> And linux 6.1+:
-> 
->>   2: event10 - lid: suspending touchpad
->> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
->>    3: event10 - lid: resume touchpad
->> -event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
->> pressed
->>  event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
->>  released
->> -event1   SWITCH_TOGGLE           +2.000s     switch lid state 0
-
-> [...]
-
->  arsgeiger@gmail.com 2023-03-30 11:50:11 UTC
-> 
-> Alright, I found the offending commit (which does not exist in linux6.0 but was backported to linux6.1):
-> https://gitlab.com/linux-kernel/stable/-/commit/5829f8a897e4f030cd2d32a930eea8954ab5dcd3
-> 
-> Building linux6.2 with this commit reverted does workaround the issue for me.
-
-See the ticket for more details.
-
-
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 5829f8a897e4f0
-https://bugzilla.kernel.org/show_bug.cgi?id=217234
-#regzbot title: platform/x86: ideapad-laptop: Touchpad disabled after
-wakeup
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-this thread sees some discussion). See page linked in footer for details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
