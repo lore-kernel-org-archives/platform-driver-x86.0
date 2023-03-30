@@ -2,93 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8607CC74A5B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 29 Mar 2023 22:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED3DC761A6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 11:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbjC2WTJ (ORCPT
+        id S229778AbjC3LuB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 29 Mar 2023 18:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
+        Thu, 30 Mar 2023 07:50:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230339AbjC2WTI (ORCPT
+        with ESMTP id S229475AbjC3LuA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Mar 2023 18:19:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E2F5B82
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Mar 2023 15:19:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 09F78B824C6
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Mar 2023 22:19:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B8E61C433A0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Mar 2023 22:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680128341;
-        bh=6gI2qYvVYg3Mz3qUe3PYzACnQc3i0Ok+Z8US9u4EudE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oVk+g7HQzBSXMEGUOlam9M+2P52a4VjDoqj50MXrB+FSnWTWlkfdTyTM79Imn+ZSa
-         thWC/jchmUzGf5ijYZtxZjOJbj6Drf/TfXLMJ4oDnQz58WUhiY1+cEIC/+BaaJzYp2
-         JJ1HwogF7UTMxem7IbSpWT66Gz5Kkb7dxzC9dr+I/eztti1wnA2lA7Hr3rgrvPfSvs
-         ai9njpfTrY4FTLwXJAdzg4NIfSAsTmS1iugOiyv5RoPAqZLc4nMcfKXm5yBHQF5ein
-         oytM3fOCbrgscGKXlS5658zgaMAL0i1ORSTmRZZj2CTUxQEvGdy+9fXMrzc2eIGy5b
-         j7OLZkyR+xb4Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A1EB9C43142; Wed, 29 Mar 2023 22:19:01 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 203191] The fan speed reports to 65535, despite the fan is
- stopped
-Date:   Wed, 29 Mar 2023 22:19:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: walter@derwalter.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-203191-215701-W4aF1fX8jK@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-203191-215701@https.bugzilla.kernel.org/>
-References: <bug-203191-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 30 Mar 2023 07:50:00 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C9CDD;
+        Thu, 30 Mar 2023 04:49:59 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id le6so17779128plb.12;
+        Thu, 30 Mar 2023 04:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680176998; x=1682768998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MoqOvm+WmmcoOXasr1TBTGxRdpCYwDL2NJnL6pot/Mo=;
+        b=XDcT3KeY/F+zZmaoEHlButSpYGK1hJm15Bg8QjPwlU3C6Jr0iqSFXZM8wZoCA9pqbv
+         e6U4KdUeywBj238PKZ9zh2Xig4ijj9VwmEu0k2BWDnt+GxE4cG9sfJrjMIIhrMPTQb2z
+         2YO7rEfyuQfA7pIA73DTqWelIIxwkTZKmlrVLPZKMZRUTR+pJ3o/NokAAmjBoCSCKTm2
+         jp0dZI4TKfIFnje2WIIoM+rPjYtSO21p/vMNy57MwIzmaCOqADD9rSICEnuvAIw8nQ8y
+         euI1YDbQpCygr4cWHQgH9mWZX+d/Sifg4JiONxO+HFQrZLCj5cqZ5D1BqNVEuKyjr7yz
+         AF6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680176998; x=1682768998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MoqOvm+WmmcoOXasr1TBTGxRdpCYwDL2NJnL6pot/Mo=;
+        b=fayGaSKOqXuLvnsGQ8ggFynHlGKis68KKRb79WLb7u82YoFGgCkMf5r3MRzs2sb8Kw
+         h79Na112OHoK8keEfpsDQQY8h6ZqxDKZBSIOA/4XLFQ2Y8SIV5rNluXpTRCG5Wq+lldW
+         TioavaWcsVFdxxRYEaI6caBiE3P5pN3VhxEzOMuXdPm8a7GcsMczojEY/Yo7Qz4j0App
+         dNCN94BwuVZnmMA2gkvYNhis4JgKiIGlLlztOsgjtSIWWFgrIKmS0VW+V9eIkK8rPdAL
+         U/9qzRhezmmN7/RRa6j41rPy6t5EjUXYNFwMc7HdNWVgvIkwbUSfuRTWwRNlvkshC9MZ
+         H3bQ==
+X-Gm-Message-State: AAQBX9dyCVdcnxv2kFX7RUA4TEK4CT+tcAVb1e9K/HZNahciCHfsGsha
+        GljlurPTZZWznBmG3xKrw+c=
+X-Google-Smtp-Source: AKy350b8sLf3HXxlyRrxUD3Ij2cj5uVAfYLc69sXgotjQ50h1YNbFqM32sqKp7j1CXa3AN3iKGGnpw==
+X-Received: by 2002:a17:902:e847:b0:19e:d6f2:feea with SMTP id t7-20020a170902e84700b0019ed6f2feeamr28744596plg.9.1680176998695;
+        Thu, 30 Mar 2023 04:49:58 -0700 (PDT)
+Received: from Erekir.lan ([103.147.22.100])
+        by smtp.gmail.com with ESMTPSA id s14-20020a170902b18e00b001a1ccb37847sm20430989plr.146.2023.03.30.04.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 04:49:58 -0700 (PDT)
+From:   weiliang1503 <weiliang1503@gmail.com>
+To:     corentin.chary@gmail.com
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        weiliang1503 <weiliang1503@gmail.com>
+Subject: [PATCH v1] asus-nb-wmi: Add quirk_asus_tablet_mode to other ROG Flow X13 models
+Date:   Thu, 30 Mar 2023 19:49:43 +0800
+Message-Id: <20230330114943.15057-1-weiliang1503@gmail.com>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D203191
+Make quirk_asus_tablet_mode apply on other ROG Flow X13 devices,
+which only affects the GV301Q model before.
 
-Walter (walter@derwalter.com) changed:
+Signed-off-by: weiliang1503 <weiliang1503@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |walter@derwalter.com
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index cb15acdf1..e2c9a68d1 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -464,7 +464,8 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		.ident = "ASUS ROG FLOW X13",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
++			/* Match GV301** */
++			DMI_MATCH(DMI_PRODUCT_NAME, "GV301"),
+ 		},
+ 		.driver_data = &quirk_asus_tablet_mode,
+ 	},
+-- 
+2.40.0
 
---- Comment #14 from Walter (walter@derwalter.com) ---
-Just wanted to know it this will come or not,
-my ThinkPad X201, running on 5.19.0-35-generic
-still produces the bug, after sleep only heat,
-fan1 shows 65535rmp but isn't moving.
-
-only resolution: shutdown, remove battery and
-power cord, wait, boot.
-
-
-dualboot windows shows no problem with the fan and sleep mode.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
