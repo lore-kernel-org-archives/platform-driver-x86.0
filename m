@@ -2,92 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED3DC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 11:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7A8C761AF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 13:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjC3LuB (ORCPT
+        id S231989AbjC3N2r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Mar 2023 07:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
+        Thu, 30 Mar 2023 09:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjC3LuA (ORCPT
+        with ESMTP id S231897AbjC3N2p (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2023 07:50:00 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C9CDD;
-        Thu, 30 Mar 2023 04:49:59 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id le6so17779128plb.12;
-        Thu, 30 Mar 2023 04:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680176998; x=1682768998;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MoqOvm+WmmcoOXasr1TBTGxRdpCYwDL2NJnL6pot/Mo=;
-        b=XDcT3KeY/F+zZmaoEHlButSpYGK1hJm15Bg8QjPwlU3C6Jr0iqSFXZM8wZoCA9pqbv
-         e6U4KdUeywBj238PKZ9zh2Xig4ijj9VwmEu0k2BWDnt+GxE4cG9sfJrjMIIhrMPTQb2z
-         2YO7rEfyuQfA7pIA73DTqWelIIxwkTZKmlrVLPZKMZRUTR+pJ3o/NokAAmjBoCSCKTm2
-         jp0dZI4TKfIFnje2WIIoM+rPjYtSO21p/vMNy57MwIzmaCOqADD9rSICEnuvAIw8nQ8y
-         euI1YDbQpCygr4cWHQgH9mWZX+d/Sifg4JiONxO+HFQrZLCj5cqZ5D1BqNVEuKyjr7yz
-         AF6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680176998; x=1682768998;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MoqOvm+WmmcoOXasr1TBTGxRdpCYwDL2NJnL6pot/Mo=;
-        b=fayGaSKOqXuLvnsGQ8ggFynHlGKis68KKRb79WLb7u82YoFGgCkMf5r3MRzs2sb8Kw
-         h79Na112OHoK8keEfpsDQQY8h6ZqxDKZBSIOA/4XLFQ2Y8SIV5rNluXpTRCG5Wq+lldW
-         TioavaWcsVFdxxRYEaI6caBiE3P5pN3VhxEzOMuXdPm8a7GcsMczojEY/Yo7Qz4j0App
-         dNCN94BwuVZnmMA2gkvYNhis4JgKiIGlLlztOsgjtSIWWFgrIKmS0VW+V9eIkK8rPdAL
-         U/9qzRhezmmN7/RRa6j41rPy6t5EjUXYNFwMc7HdNWVgvIkwbUSfuRTWwRNlvkshC9MZ
-         H3bQ==
-X-Gm-Message-State: AAQBX9dyCVdcnxv2kFX7RUA4TEK4CT+tcAVb1e9K/HZNahciCHfsGsha
-        GljlurPTZZWznBmG3xKrw+c=
-X-Google-Smtp-Source: AKy350b8sLf3HXxlyRrxUD3Ij2cj5uVAfYLc69sXgotjQ50h1YNbFqM32sqKp7j1CXa3AN3iKGGnpw==
-X-Received: by 2002:a17:902:e847:b0:19e:d6f2:feea with SMTP id t7-20020a170902e84700b0019ed6f2feeamr28744596plg.9.1680176998695;
-        Thu, 30 Mar 2023 04:49:58 -0700 (PDT)
-Received: from Erekir.lan ([103.147.22.100])
-        by smtp.gmail.com with ESMTPSA id s14-20020a170902b18e00b001a1ccb37847sm20430989plr.146.2023.03.30.04.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Mar 2023 04:49:58 -0700 (PDT)
-From:   weiliang1503 <weiliang1503@gmail.com>
-To:     corentin.chary@gmail.com
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        weiliang1503 <weiliang1503@gmail.com>
-Subject: [PATCH v1] asus-nb-wmi: Add quirk_asus_tablet_mode to other ROG Flow X13 models
-Date:   Thu, 30 Mar 2023 19:49:43 +0800
-Message-Id: <20230330114943.15057-1-weiliang1503@gmail.com>
-X-Mailer: git-send-email 2.40.0
+        Thu, 30 Mar 2023 09:28:45 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542C4213C;
+        Thu, 30 Mar 2023 06:28:35 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1phsKO-00025P-KA; Thu, 30 Mar 2023 15:28:32 +0200
+Message-ID: <7fe4e169-1cf9-2a26-0567-021172dadd3c@leemhuis.info>
+Date:   Thu, 30 Mar 2023 15:28:32 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-US, de-DE
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Linux kernel regressions list <regressions@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ike Panhc <ike.pan@canonical.com>,
+        Mark Gross <markgross@kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] Bug 217234 - Touchpad disabled after wakeup from sleep
+ on Lenovo Yoga 7i 15ITL5 (bisected)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680182915;27f7e9b0;
+X-HE-SMSGID: 1phsKO-00025P-KA
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make quirk_asus_tablet_mode apply on other ROG Flow X13 devices,
-which only affects the GV301Q model before.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Signed-off-by: weiliang1503 <weiliang1503@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developers don't keep an eye on it, I decided to forward it by mail.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index cb15acdf1..e2c9a68d1 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -464,7 +464,8 @@ static const struct dmi_system_id asus_quirks[] = {
- 		.ident = "ASUS ROG FLOW X13",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
-+			/* Match GV301** */
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GV301"),
- 		},
- 		.driver_data = &quirk_asus_tablet_mode,
- 	},
--- 
-2.40.0
+Hans, apparently it's cause by a change of yours.
 
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
+
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=217234 :
+
+>  arsgeiger@gmail.com 2023-03-22 23:52:35 UTC
+> 
+> Created attachment 304002 [details]
+> libinput events on linux6.0
+> 
+> After booting linux6.1 and later upon closing the lid and opening it again, the touchpad is no longer usable. After powering off and booting linux6.0 again (no other changes), the touchpad does continue to work after closing the lid and opening it again.
+> 
+> When the touchpad gets disabled on linux6.1, after logging in to gnome, I can re-enable it from the settings. Using `libinput debug-events --verbose` Here is a comparison of the output on linux6.0:
+> 
+>>    2: event10 - lid: suspending touchpad
+>> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
+>>    3: event10 - lid: resume touchpad
+>> -event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) pressed
+>>  event6   KEYBOARD_KEY            +2.164s     KEY_F22 (192) released
+>>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) pressed
+>>  event6   KEYBOARD_KEY            +2.627s     KEY_F22 (192) released
+>> -event1   SWITCH_TOGGLE           +2.168s     switch lid state 0
+> 
+> And linux 6.1+:
+> 
+>>   2: event10 - lid: suspending touchpad
+>> -event1   SWITCH_TOGGLE           +0.000s     switch lid state 1
+>>    3: event10 - lid: resume touchpad
+>> -event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
+>> pressed
+>>  event6   KEYBOARD_KEY            +2.000s     KEY_TOUCHPAD_TOGGLE (530)
+>>  released
+>> -event1   SWITCH_TOGGLE           +2.000s     switch lid state 0
+
+> [...]
+
+>  arsgeiger@gmail.com 2023-03-30 11:50:11 UTC
+> 
+> Alright, I found the offending commit (which does not exist in linux6.0 but was backported to linux6.1):
+> https://gitlab.com/linux-kernel/stable/-/commit/5829f8a897e4f030cd2d32a930eea8954ab5dcd3
+> 
+> Building linux6.2 with this commit reverted does workaround the issue for me.
+
+See the ticket for more details.
+
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 5829f8a897e4f0
+https://bugzilla.kernel.org/show_bug.cgi?id=217234
+#regzbot title: platform/x86: ideapad-laptop: Touchpad disabled after
+wakeup
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
