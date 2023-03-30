@@ -2,135 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169CC77B71
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 19:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BDEC77B60
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 19:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231861AbjC3Tp0 (ORCPT
+        id S231161AbjC3Tsa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Mar 2023 15:45:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45138 "EHLO
+        Thu, 30 Mar 2023 15:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbjC3TpE (ORCPT
+        with ESMTP id S230200AbjC3TsZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2023 15:45:04 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6414D35A2;
-        Thu, 30 Mar 2023 12:45:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DUK39n+vS0TogruOQ029/zCCL5rTdtcoHWobrxYsD+Q2EP2ZJBWQSOHrgEl6ZSYHPAO15w0RMrXpk0veFzVizwSSzWeNSCwI5V/jHiaaEuU+ePGplmvPtbqXInkdIChvQ/VibbYZkVWxmXJnLa3Uafk/0EIr7ufO4CCDawxfj7OwmXFA9A1M/IVnoJoIn0ftQo6CdxO3mKWnDdlzdg9T9VYoWonIfRQ/YeYW6awS0x9y5b0kkbWyXXa9w1syMFzOOGPY1kgb8A/mMTV476iEdzJzxyaT98baYoNcZichr/EGSzmL1sRrH/ms1v2TJ25Yex+QXhCevl1TO52TvDpMRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=48VBBlsJaOLW4Za4yzTcA3Cj70ceCfytneOmalDrPiI=;
- b=RKalaWKfV8JR/7tBnb5UeJLwSvQdgPDFQbS4w2t+ZSWXKvCd/uh63Nj4JexXkkRRJ+ONL70E1WSLwCSA0Pg3y7hai+OILTPNVfI1eJf6AeeDC+aixYdQLMOsitJp0J5RDVOshDVlFC8Z0IYoErBXQOs30MvWVBW+7eJjKFT2/NcSxa8Vm8tb5SnzzSLZhceYpCf6cL2KfQwITZKl2msyDf7OBvmHKvAXQycTfsAgkq4qsFfUrZMUAI87ZfufSG4L66if3LoXDkPUF6jeJ7d0NY5fh1OhSVgNJ2C2jGKzRzsoOtRKgUfO271xJh7Kg2MJ8WLw6wJEoS7DfnxQui7MLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=chromium.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=48VBBlsJaOLW4Za4yzTcA3Cj70ceCfytneOmalDrPiI=;
- b=XxsGsW7x6GQT4w4tmsqjcV2zazhoM4+x8T/PJHd3oZ1ULM7bHAyTp8MXRzq/XkX3A6OHVdjB44Cr1agExDZ6ZFbVPmJy37/lEJxUEqQQ0MVbD/msu2k7WlamHb7RLlEu6HddpiDLREFbsG5Zuito7nLC/30XQEt7C2YpZKbh7oQ=
-Received: from DM6PR01CA0009.prod.exchangelabs.com (2603:10b6:5:296::14) by
- CH3PR12MB8657.namprd12.prod.outlook.com (2603:10b6:610:172::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.41; Thu, 30 Mar 2023 19:45:00 +0000
-Received: from DS1PEPF0000E63C.namprd02.prod.outlook.com
- (2603:10b6:5:296:cafe::8e) by DM6PR01CA0009.outlook.office365.com
- (2603:10b6:5:296::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.20 via Frontend
- Transport; Thu, 30 Mar 2023 19:45:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0000E63C.mail.protection.outlook.com (10.167.17.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6178.30 via Frontend Transport; Thu, 30 Mar 2023 19:45:00 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 30 Mar
- 2023 14:44:58 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Sven van Ashbrook <svenva@chromium.org>,
-        John Stultz <jstultz@google.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>
-CC:     Raul Rangel <rrangel@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        "S-k Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v5 4/4] platform/x86/intel/pmc: core: Report duration of time in HW sleep state
-Date:   Thu, 30 Mar 2023 14:44:38 -0500
-Message-ID: <20230330194439.14361-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230330194439.14361-1-mario.limonciello@amd.com>
-References: <20230330194439.14361-1-mario.limonciello@amd.com>
+        Thu, 30 Mar 2023 15:48:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C8210438
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2023 12:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680205623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Vanow7J+J1OaYA35NyY3GE3Voy18sopyES4Cj5nj10I=;
+        b=D7pSDgKjHcbPXE1Ri6m/8mDWWyu6melgQ6dLCV1oNfOh0CIMx/Hio+3vrhZSzzPIQ6nH8U
+        KnpYMfPq+SVa1YKUCB7czfILhcYmeVcXrBmibeUjJnH74fr72V6YzVAZs/MlExdbztIxaX
+        cwFUvwvjsymGiDApcEyvHVVv1w3Kr0s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-141-LA-IGvCqMU-dv92Fi2Sd8g-1; Thu, 30 Mar 2023 15:46:57 -0400
+X-MC-Unique: LA-IGvCqMU-dv92Fi2Sd8g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 041DC88B7A1;
+        Thu, 30 Mar 2023 19:46:56 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D59F440D8;
+        Thu, 30 Mar 2023 19:46:52 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        GOESSEL Guillaume <g_goessel@outlook.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Manyi Li <limanyi@uniontech.com>,
+        =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>,
+        Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Arnav Rawat <arnavr3@illinois.edu>,
+        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
+        Felix Eckhofer <felix@eckhofer.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] platform/x86: ideapad-laptop: Stop sending KEY_TOUCHPAD_TOGGLE
+Date:   Thu, 30 Mar 2023 21:46:44 +0200
+Message-Id: <20230330194644.64628-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0000E63C:EE_|CH3PR12MB8657:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e04aa07-4b1b-4c15-2061-08db31573fe4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HddhdI0XtScSeuDIuGvKaJqKpfeFJ0dYGnvuTGp/HbysjETNvcYuv8WvO5uLDhOds5dCnXiSfoDit6HbOvfofxtkvgWbysJRrkGHveE9LT9RVv/gDK7vH7nOyAYssnjRekxJrSj9aXcEXCpDVHTAYZdbN/gfNmyuGqB2jKS0dckcDErmi5MZ0hipmJIA8gFJ94VCQECgHWXSlUoZJBZRtKxzlHakr44jIQr6aQS67FAMGsl3eIRcLVK3NOrjR9rPJ8s7btv+jn5MKzCMMMdzo76oLPV3u1xH6o9+qeaiP15LlJn4FL8z2sMZSOIMsTiorLuFjtJF8JP+Eta1els9ZHouZVT36bVBho525/31gZOnXOOuXJxMcVWPw7Xy7BbhHsm9xMpjCtYfNuihWDYX9m+/5xBpbhVwhbzIOh/TZwNY5trm4d5HwnmYaVNPcCvVTxVNP0WlVlxxES0R9i/1QuDqubsVCdFzsHb0gGBUrCeON2Jgm/LLWeV7mx61IChs2iIcnB9eiIHqwHfzKtdB9OG3HFwEYvU1LhN9kWI8RPUXO2pjsdZruDu3NJFnvxfzeS5KXZa05LyE1CZp5+9ZbwFY617FqcTGKMB4RBL7WwUxMMHZFQzn7JIjFdxpOnDpRy3W+UFCesSeT+xq+FwFvFfqRsvuKxihgX+aAoFZgfSDN+b/ZZ8zQA8nz4KX9k1Rnvtf91/5GPnmGYxWyU/vLp5kkW/2BjalG0QqdLsnHoI=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(346002)(376002)(39860400002)(451199021)(40470700004)(36840700001)(46966006)(36756003)(36860700001)(316002)(110136005)(41300700001)(70586007)(8676002)(336012)(86362001)(54906003)(82310400005)(4326008)(478600001)(26005)(16526019)(70206006)(186003)(81166007)(8936002)(7416002)(1076003)(4744005)(44832011)(83380400001)(82740400003)(5660300002)(7696005)(2616005)(356005)(2906002)(40480700001)(47076005)(6666004)(40460700003)(426003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 19:45:00.6106
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e04aa07-4b1b-4c15-2061-08db31573fe4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000E63C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8657
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-intel_pmc_core displays a warning when the module parameter
-`warn_on_s0ix_failures` is set and a suspend didn't get to a HW sleep
-state.
+Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
+KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
+KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
+and the touchpad-state has not been changed by the EC itself already.
 
-Report this to the standard kernel reporting infrastructure so that
-userspace software can query after the suspend cycle is done.
+This was done under the assumption that this would be good to do to make
+the touchpad-toggle hotkey work on newer models where the EC does not
+toggle the touchpad on/off itself (because it is not routed through
+the PS/2 controller, but uses I2C).
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
+triggers an ACPI notify with VPC event bit 5 set on resume, which would
+now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
+environment responds by disabling the touchpad in software, breaking
+the touchpad (until manually re-enabled) on resume.
+
+It was never confirmed that sending KEY_TOUCHPAD_TOGGLE actually improves
+things on new models and at least some new models like the Yoga 7-15ITL5
+don't have a touchpad on/off toggle hotkey at all, while still sending
+ACPI notify events with VPC event bit 5 set.
+
+So it seems best to revert the change to send KEY_TOUCHPAD_TOGGLE when
+receiving an ACPI notify events with VPC event bit 5 and the touchpad
+state as reported by the EC has not changed.
+
+Note this is not a full revert the code to cache the last EC touchpad
+state is kept to avoid sending spurious KEY_TOUCHPAD_ON / _OFF events
+on resume.
+
+Fixes: 5829f8a897e4 ("platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217234
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-v4->v5:
- * Reword commit message
----
- drivers/platform/x86/intel/pmc/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/ideapad-laptop.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index e2f171fac094..980af32dd48a 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1203,6 +1203,8 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
- 	if (pmc_core_dev_state_get(pmcdev, &s0ix_counter))
- 		return false;
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index b5ef3452da1f..35c63cce0479 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1170,7 +1170,6 @@ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY,  65, { KEY_PROG4 } },
+ 	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
+ 	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+-	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_KEY, 128, { KEY_ESC } },
  
-+	pm_set_hw_sleep_time(s0ix_counter - pmcdev->s0ix_counter);
-+
- 	if (s0ix_counter == pmcdev->s0ix_counter)
- 		return true;
+ 	/*
+@@ -1526,18 +1525,16 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+ 	if (priv->features.ctrl_ps2_aux_port)
+ 		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
  
+-	if (send_events) {
+-		/*
+-		 * On older models the EC controls the touchpad and toggles it
+-		 * on/off itself, in this case we report KEY_TOUCHPAD_ON/_OFF.
+-		 * If the EC did not toggle, report KEY_TOUCHPAD_TOGGLE.
+-		 */
+-		if (value != priv->r_touchpad_val) {
+-			ideapad_input_report(priv, value ? 67 : 66);
+-			sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
+-		} else {
+-			ideapad_input_report(priv, 68);
+-		}
++	/*
++	 * On older models the EC controls the touchpad and toggles it on/off
++	 * itself, in this case we report KEY_TOUCHPAD_ON/_OFF. Some models do
++	 * an acpi-notify with VPC bit 5 set on resume, so this function get
++	 * called with send_events=true on every resume. Therefor if the EC did
++	 * not toggle, do nothing to avoid sending spurious KEY_TOUCHPAD_TOGGLE.
++	 */
++	if (send_events && value != priv->r_touchpad_val) {
++		ideapad_input_report(priv, value ? 67 : 66);
++		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
+ 	}
+ 
+ 	priv->r_touchpad_val = value;
 -- 
-2.34.1
+2.39.1
 
