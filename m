@@ -2,147 +2,66 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BDEC77B60
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 30 Mar 2023 19:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BA2C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 02:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231161AbjC3Tsa (ORCPT
+        id S229524AbjCaCBf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 30 Mar 2023 15:48:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48412 "EHLO
+        Thu, 30 Mar 2023 22:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbjC3TsZ (ORCPT
+        with ESMTP id S229508AbjCaCBe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2023 15:48:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C8210438
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2023 12:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680205623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Vanow7J+J1OaYA35NyY3GE3Voy18sopyES4Cj5nj10I=;
-        b=D7pSDgKjHcbPXE1Ri6m/8mDWWyu6melgQ6dLCV1oNfOh0CIMx/Hio+3vrhZSzzPIQ6nH8U
-        KnpYMfPq+SVa1YKUCB7czfILhcYmeVcXrBmibeUjJnH74fr72V6YzVAZs/MlExdbztIxaX
-        cwFUvwvjsymGiDApcEyvHVVv1w3Kr0s=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-141-LA-IGvCqMU-dv92Fi2Sd8g-1; Thu, 30 Mar 2023 15:46:57 -0400
-X-MC-Unique: LA-IGvCqMU-dv92Fi2Sd8g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 041DC88B7A1;
-        Thu, 30 Mar 2023 19:46:56 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D59F440D8;
-        Thu, 30 Mar 2023 19:46:52 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        GOESSEL Guillaume <g_goessel@outlook.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Manyi Li <limanyi@uniontech.com>,
-        =?UTF-8?q?Eray=20Or=C3=A7unus?= <erayorcunus@gmail.com>,
-        Philipp Jungkamp <p.jungkamp@gmx.net>,
-        Arnav Rawat <arnavr3@illinois.edu>,
-        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
-        Felix Eckhofer <felix@eckhofer.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] platform/x86: ideapad-laptop: Stop sending KEY_TOUCHPAD_TOGGLE
-Date:   Thu, 30 Mar 2023 21:46:44 +0200
-Message-Id: <20230330194644.64628-1-hdegoede@redhat.com>
+        Thu, 30 Mar 2023 22:01:34 -0400
+X-Greylist: delayed 699 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Mar 2023 19:01:34 PDT
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFD8BB95
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2023 19:01:33 -0700 (PDT)
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=WDr500yg00G+mXxVAkIxehTZby2u/keAH3HrQIYm9bHDXnWYKUtSg2GveqGYNX5BXESH6fNO7vttbhdjKf0A1YIVlOWfaYmT0a/jl5ZDbLPbHgqElGPaHoKPjewI496ESXbIMsG2xslHhvkAiUtWeNOoK1D+cRv4C54h0miU8UN+Cxs0EDXOtLRfRspnwZ2dlDDDUqiYlVCYBNDcEEea4JzXBzSWEw9cn22kHhbfxfe8iO4R8JyFQp9kQzlo6901JX1/dfG40VYaNfAA+vfZFejUsf70mTohesyFYGkBjnr0kEoJVLXIAsYaLd+gkX+2E8I6IKuQC8s8dhcUrZcYSQ==; s=purelymail1; d=jetfuse.net; v=1; bh=f44IWUNbR+7Hx6ud0LmoMxkugb7OBAGfw849+tIiDYM=; h=Received:From:To:Subject;
+DKIM-Signature: a=rsa-sha256; b=kFbcN8ihbtIBexZFJq0XOk5LD8FxO8k9Xo43skHgSNkk6vFViIDeErskKqcUaFg0g2lhBgyWCpqhXhBXpa+H4R7vjo5jkakwTBzCMgXUCnxhA37hR8ASoRa04VSSPt5YcQH0bj9MqTdoRLa5/SrN2275iOl6K82pQYkLhd6PKj/b8MgcRXVJ5B+wEx2DVr8l7ZzSZ+f0k55/DgjyH0h7H4XGPu+O37Ek7F0ovV+/dxc2xbkqSnbew75ztEbGf4HvY4Au6pexLi8dGbklsQ1t1MhepT3QQIdbOnlGyN1hkNJDz7D1B4DtEaRp5uf+0m2SoAJ59uICKc2L9es+U7mf4A==; s=purelymail1; d=purelymail.com; v=1; bh=f44IWUNbR+7Hx6ud0LmoMxkugb7OBAGfw849+tIiDYM=; h=Feedback-ID:Received:From:To:Subject;
+Feedback-ID: 6582:1600:null:purelymail
+X-Pm-Original-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 1293383994;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Fri, 31 Mar 2023 01:49:30 +0000 (UTC)
+From:   Brandon Nielsen <nielsenb@jetfuse.net>
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Brandon Nielsen <nielsenb@jetfuse.net>
+Subject: [PATCH] Add "X570S AORUS ELITE" to known working boards
+Date:   Thu, 30 Mar 2023 20:49:02 -0500
+Message-Id: <20230331014902.7864-1-nielsenb@jetfuse.net>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by Purelymail
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
-KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
-KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
-and the touchpad-state has not been changed by the EC itself already.
-
-This was done under the assumption that this would be good to do to make
-the touchpad-toggle hotkey work on newer models where the EC does not
-toggle the touchpad on/off itself (because it is not routed through
-the PS/2 controller, but uses I2C).
-
-But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
-triggers an ACPI notify with VPC event bit 5 set on resume, which would
-now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
-environment responds by disabling the touchpad in software, breaking
-the touchpad (until manually re-enabled) on resume.
-
-It was never confirmed that sending KEY_TOUCHPAD_TOGGLE actually improves
-things on new models and at least some new models like the Yoga 7-15ITL5
-don't have a touchpad on/off toggle hotkey at all, while still sending
-ACPI notify events with VPC event bit 5 set.
-
-So it seems best to revert the change to send KEY_TOUCHPAD_TOGGLE when
-receiving an ACPI notify events with VPC event bit 5 and the touchpad
-state as reported by the EC has not changed.
-
-Note this is not a full revert the code to cache the last EC touchpad
-state is kept to avoid sending spurious KEY_TOUCHPAD_ON / _OFF events
-on resume.
-
-Fixes: 5829f8a897e4 ("platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=217234
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/ideapad-laptop.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index b5ef3452da1f..35c63cce0479 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1170,7 +1170,6 @@ static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY,  65, { KEY_PROG4 } },
- 	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
- 	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
--	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
- 	{ KE_KEY, 128, { KEY_ESC } },
- 
- 	/*
-@@ -1526,18 +1525,16 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
- 	if (priv->features.ctrl_ps2_aux_port)
- 		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
- 
--	if (send_events) {
--		/*
--		 * On older models the EC controls the touchpad and toggles it
--		 * on/off itself, in this case we report KEY_TOUCHPAD_ON/_OFF.
--		 * If the EC did not toggle, report KEY_TOUCHPAD_TOGGLE.
--		 */
--		if (value != priv->r_touchpad_val) {
--			ideapad_input_report(priv, value ? 67 : 66);
--			sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
--		} else {
--			ideapad_input_report(priv, 68);
--		}
-+	/*
-+	 * On older models the EC controls the touchpad and toggles it on/off
-+	 * itself, in this case we report KEY_TOUCHPAD_ON/_OFF. Some models do
-+	 * an acpi-notify with VPC bit 5 set on resume, so this function get
-+	 * called with send_events=true on every resume. Therefor if the EC did
-+	 * not toggle, do nothing to avoid sending spurious KEY_TOUCHPAD_TOGGLE.
-+	 */
-+	if (send_events && value != priv->r_touchpad_val) {
-+		ideapad_input_report(priv, value ? 67 : 66);
-+		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
- 	}
- 
- 	priv->r_touchpad_val = value;
--- 
-2.39.1
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gig=
+abyte-wmi.c
+index 4dd39ab6ecfa..ca5124e31d2c 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -160,6 +160,7 @@ static const struct dmi_system_id gigabyte_wmi_known_wo=
+rking_platforms[] =3D {
+ =09DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+ =09DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+ =09DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
++=09DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570S AORUS ELITE"),
+ =09DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
+ =09{ }
+ };
+--=20
+2.39.2
 
