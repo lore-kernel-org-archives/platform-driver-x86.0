@@ -2,132 +2,220 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B415AC76196
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 18:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F0EC76196
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 18:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232048AbjCaS0F convert rfc822-to-8bit (ORCPT
+        id S231982AbjCaSy4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 31 Mar 2023 14:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60370 "EHLO
+        Fri, 31 Mar 2023 14:54:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231146AbjCaS0E (ORCPT
+        with ESMTP id S233176AbjCaSyz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 31 Mar 2023 14:26:04 -0400
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCB01BF4C;
-        Fri, 31 Mar 2023 11:26:03 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id er13so52176144edb.9;
-        Fri, 31 Mar 2023 11:26:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680287161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RaB5p8dANCz2nc2jG5lwXWHNdu974YJYtJWNgZD8A8M=;
-        b=CCZN5FF3/Ox0z+h8BWZVY6/HoRSeD1i1u16vmqKTicuMWY++c3ywrBgQiWz0tsdTtJ
-         AUx/um1OdzrqWczZomQsFxFvWtQ8YgGtays5Z92yeEMSAi8Ab+IgnMm1ZhcUBz+QuqNc
-         t7EXkeqqkWIidhoz8y7PIklVMPemnXVQhueMyVY4BNDpl+ANtqiYQ0/P5D7Gkd3m6RJm
-         d8Zlvnd4wIGt0XDu1oSyVd11op324SMA98I4MTZ8U1j/cBOmAtY6Ue0cwWusn8lZSjjS
-         IlE+L2Lm6PDRPDOygCs7NnNEStmPeCVd0nEvFi10TmJdMancdDvcDrgSPXLQzo4cCy20
-         JgSQ==
-X-Gm-Message-State: AAQBX9cyv+bilD0bZXUrPpvDpA/rN84+8gI/pykm6ru+kAZZ1bvUnDdW
-        5ng1PJ4DUDcm/W0DTUbsne1hBczrtOfCb3bmA0s=
-X-Google-Smtp-Source: AKy350adaPntcUkPWxFx1duflu6YE6LOfmcIB7o/QroDfpS7WhdUUDgFayI/MvYK8jxyM1CnjZnJ4ixoynkk5RoXGTU=
-X-Received: by 2002:a50:d49e:0:b0:4fc:ebe2:2fc9 with SMTP id
- s30-20020a50d49e000000b004fcebe22fc9mr13651347edi.3.1680287161357; Fri, 31
- Mar 2023 11:26:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230330194439.14361-1-mario.limonciello@amd.com>
- <20230330194439.14361-2-mario.limonciello@amd.com> <CAJZ5v0jbMXk5k_KG19bQnffhCkGnu=MQXjGrBPipZxA_Cg8O9w@mail.gmail.com>
- <2676888c-e93f-53aa-a4f7-e85b66f351c8@amd.com> <CAJZ5v0iia9__-jWmawvsxninoTM5ZRtqhyUJme=noZMZJdUBrA@mail.gmail.com>
- <8a04da89-1c98-8b29-bf96-1e8d0ed47e58@amd.com>
-In-Reply-To: <8a04da89-1c98-8b29-bf96-1e8d0ed47e58@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 Mar 2023 20:25:50 +0200
-Message-ID: <CAJZ5v0j-uMmi7QmC3XhtNbc+aroBkexriLQWfnyCrjBMf70Z=w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] PM: Add a sysfs file to represent time spent in
- hardware sleep state
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sven van Ashbrook <svenva@chromium.org>,
-        John Stultz <jstultz@google.com>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Raul Rangel <rrangel@chromium.org>,
-        David E Box <david.e.box@intel.com>,
-        Rajat Jain <rajatja@google.com>,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Fri, 31 Mar 2023 14:54:55 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BA422210;
+        Fri, 31 Mar 2023 11:54:54 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id EC17F5C00F0;
+        Fri, 31 Mar 2023 14:54:53 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Fri, 31 Mar 2023 14:54:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1680288893; x=1680375293; bh=Bizw76QOPWTwHoZq0VJkFTSvTLruV1nPT/l
+        8ZQLfYdQ=; b=BzD+QIC89w1M/1gB5xNoUW/8EObc250cDikQ3RlswbDML9F1Wst
+        RvLWzMXbtZ3T7S74OVksQQhmQVG8JdPULO5+T1t9ip3VPzQfeO6zcN5KRR9i7By5
+        29Q6YvWEqIJ8i9R8H52gEd5TyVbHQN7+mXgAvzFp54Gzdjk7W01RqvVHQbMuAcCp
+        XZdlmf/BqCjZ9UklbbP3BRKwtpxeo5PoWzHe1L71Kn9y39AYPzzuCluaJfPOGM3g
+        Muo0JwwgkpWvPpjOLdNxFOky51j06myPVW/iQmtCsqBr0lKmQvu0uTWBmJrAvonq
+        pZlFUYmlr3L/sLy3/2H1fKSey8J//2HcSbQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1680288893; x=1680375293; bh=Bizw76QOPWTwHoZq0VJkFTSvTLruV1nPT/l
+        8ZQLfYdQ=; b=QkmTxAfYbGfW+aWHYfu6k3c/GHX11yWudeP0Bui1X9cyo1ah+4d
+        kO+DigKqGBeP0qHVmiounZzTKACftzcpyVLzgjr2POuFGsf6zmQ9JqU0Mq64ZHq1
+        7jzxak9gxIcbTyT0R3aHyOaJsYitaRfW74Xscxmya611I3hqAExZcQX9nIeXephE
+        Dt9gAcwc9lcfdYAyJzm6e1FI+18hbzVuVSXfylfrtggn+F/r2CofW5B3+Cx+Q/7R
+        w/mVESnl8gMAZrmNzGQ4j/D1Ozf3UBGLwxAY3x/frNrOhO/MWgox/ygKW/H7/vO8
+        FZg6YufDsGN51Hi9y/8/Wku5LisPofUFDmw==
+X-ME-Sender: <xms:fSwnZPJoJ9cg3KnRiTWrONzeCw91w-s-IqE2M-YKeOigxXHIPtkWGg>
+    <xme:fSwnZDI3H-faUymX-6EATSfSXeGi-9qc0OfwRIk-jkCBx_QfmTFBPKXPFUz2wZLAB
+    y_tze3LGPECM3vsyzU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiuddguddvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
+    ofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpeefjeegvddugedvkeehvdfffeejhfeutdfh
+    tdehheekffduvdfgteejgeejueefgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggr
+    rhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:fSwnZHvEWalJlPLDO6AL_7Ov5jNJJF7xoTA8-un8taM6DM70rNhc6Q>
+    <xmx:fSwnZIaWBtIYq7iQskjKWGoLrZBtQmumhMvSNRl2-azGbnv1HabWgA>
+    <xmx:fSwnZGY_1ot9xtJLzwX71Tlf8SzW3C7ZX8t3nHm8uvIuOy3uSFEzYw>
+    <xmx:fSwnZLPu6OhaLX15OavEpvdja9sauK8KBl7dUDxL_M2d8tMjPk_eoQ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 4D112C60093; Fri, 31 Mar 2023 14:54:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-238-g746678b8b6-fm-20230329.001-g746678b8
+Mime-Version: 1.0
+Message-Id: <1059aa55-9370-4b8d-8c6c-7fdfd9ac0c70@app.fastmail.com>
+In-Reply-To: <b2d0461b-a32b-50e0-640d-9e789bb5da30@alu.unizg.hr>
+References: <5059b11b-8b6e-394b-338f-49e1339067fa@alu.unizg.hr>
+ <ZCLPaYGKHlFQGKYQ@kroah.com>
+ <542c13f5-4cdd-7750-f10a-ef64bb7e8faa@alu.unizg.hr>
+ <d011a1d7-34ab-5f54-fcc7-d727abc7ec9b@alu.unizg.hr>
+ <ZCLa3_HnLQA0GQKS@kroah.com>
+ <b50f9460-ac54-e997-f9b9-3c47a9b87aae@alu.unizg.hr>
+ <df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de>
+ <16862c45-2ffd-a2f2-6719-020c5d515800@alu.unizg.hr>
+ <4f65a23f-4e04-f04f-e56b-230a38ac5ec4@gmx.de>
+ <01e920bc-5882-ba0c-dd15-868bf0eca0b8@alu.unizg.hr>
+ <8b478e6d-7482-2cbb-ee14-b2dc522daf35@alu.unizg.hr>
+ <9f757a7b-6ac9-804a-063f-4cc2c6fc3f54@alu.unizg.hr>
+ <de54f828-e2c6-4c10-92ce-ca86fb5c5fb4@t-8ch.de>
+ <6a5dc4de-b315-1e6d-e5e2-5b95521a37c7@alu.unizg.hr>
+ <2c1d0b9b-0e71-b616-6486-52e741d25afb@redhat.com>
+ <9c142ac2-9340-4a9b-8541-99f613772340@app.fastmail.com>
+ <4dc118c2-0dde-bd5e-ea41-427ed33e4545@alu.unizg.hr>
+ <b06d1d1f-7cd5-4532-ac49-d449ef68bbcb@app.fastmail.com>
+ <bccb52fa-e1c9-482c-a024-9a02179728b2@t-8ch.de>
+ <b2d0461b-a32b-50e0-640d-9e789bb5da30@alu.unizg.hr>
+Date:   Fri, 31 Mar 2023 14:54:33 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Mirsad Goran Todorovac" <mirsad.todorovac@alu.unizg.hr>,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     "Hans de Goede" <hdegoede@redhat.com>,
+        "Armin Wolf" <W_Armin@gmx.de>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [BUG] [RFC] systemd-devd triggers kernel memleak apparently in
+ drivers/core/dd.c: driver_register()
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 8:13 PM Limonciello, Mario
-<mario.limonciello@amd.com> wrote:
+Hi all,
+
+On Wed, Mar 29, 2023, at 5:50 PM, Mirsad Goran Todorovac wrote:
+> On 29. 03. 2023. 21:21, Thomas Wei=C3=9Fschuh wrote:
+>>=20
+>> Mar 29, 2023 14:00:22 Mark Pearson <mpearson-lenovo@squebb.ca>:
+>>=20
+>>> Thanks Mirsad
+>>>
+>>> On Wed, Mar 29, 2023, at 2:49 PM, Mirsad Goran Todorovac wrote:
+>>> <snip>
+>>>>
+>>>> Here is the patch proposal according to what Mark advised (using
+>>>> different name for optitem):
+>>>>
+>>>> diff --git a/drivers/platform/x86/think-lmi.c
+>>>> b/drivers/platform/x86/think-lmi.c
+>>>> index c816646eb661..ab17254781c4 100644
+>>>> --- a/drivers/platform/x86/think-lmi.c
+>>>> +++ b/drivers/platform/x86/think-lmi.c
+>>>> @@ -929,8 +929,10 @@ static ssize_t current_value_show(struct kobje=
+ct
+>>>> *kobj, struct kobj_attribute *a
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* validate and sp=
+lit from `item,value` -> `value` */
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D strpbrk(=
+item, ",");
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!value || value =3D=3D it=
+em || !strlen(value + 1))
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!value || value =3D=3D it=
+em || !strlen(value + 1)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 kfree(item);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D sysfs_emit=
+(buf, "%s\n", value + 1);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(item);
+>>>> @@ -1380,7 +1382,6 @@ static struct tlmi_pwd_setting
+>>>> *tlmi_create_auth(const char *pwd_type,
+>>>>
+>>>> =C2=A0 static int tlmi_analyze(void)
+>>>> =C2=A0 {
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 acpi_status status;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int i, ret;
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (wmi_has_guid(L=
+ENOVO_SET_BIOS_SETTINGS_GUID) &&
+>>>> @@ -1417,8 +1418,8 @@ static int tlmi_analyze(void)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *p;
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 tlmi_priv.setting[i] =3D NULL;
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 status =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING=
+_GUID);
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(status))
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ret =3D tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GU=
+ID);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (ret)
+>>>
+>>> Really minor, but tweak to be this and save a line of code?
+>>=20
+>> This hunk is actually from another commit and should not be needed he=
+re.
+>>=20
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/c=
+ommit/drivers/platform/x86/think-lmi.c?id=3Dda62908efe80f132f691efc2ace4=
+ca67626de86b
 >
-> On 3/31/2023 13:07, Rafael J. Wysocki wrote:
-> > On Fri, Mar 31, 2023 at 8:05 PM Limonciello, Mario
-> > <mario.limonciello@amd.com> wrote:
-> >>
-> >> On 3/31/2023 13:01, Rafael J. Wysocki wrote:
-> >>> On Thu, Mar 30, 2023 at 9:45 PM Mario Limonciello
-> >>> <mario.limonciello@amd.com> wrote:
-> >>>>
-> >>>> Userspace can't easily discover how much of a sleep cycle was spent in a
-> >>>> hardware sleep state without using kernel tracing and vendor specific sysfs
-> >>>> or debugfs files.
-> >>>>
-> >>>> To make this information more discoverable, introduce a new sysfs file
-> >>>> to represent the time spent in a sleep state.
-> >>>
-> >>> This is only in the most recent suspend-resume cycle, isn't it?
-> >>
-> >> Yes; that's correct.
-> >>
-> >>>
-> >>> Wouldn't it be useful to have another attribute printing the
-> >>> accumulated total HW sleep time?
-> >>>
-> >>
-> >> I had considered this; but I didn't think it was actually very useful
-> >> because userspace will get control at the end of every cycle and can
-> >> accumulate those numbers if desirable.
-> >
-> > Unless "user space" in question is actually a human, that is.
+> Thank you, Thomas,
 >
-> This is what I envisioned:
+> Indeed, my mistake.
 >
-> * In traditional Linux some software like systemd could capture this and
-> log it.
-> It could subtract at the time the suspend started from the time it ended
-> and use that to calculate a percentage of time in hardware sleep state
-> and then put that percentage in the system journal.
+> I have accepted Armin's suggestion to test if that patch closed the le=
+ak, and I
+> have just quoted it, never claiming authorship.
 >
-> * In ChromeOS something like powerd would be the only thing reading this
-> number and it could be adding it up during dark resume until the system
-> gets to a full resume.
+> I ought to apologise if I made confusion here.
 >
-> * If a human is manually capturing these values they'll be most
-> interested in whether an individual cycle reached hardware sleep.
+> I was a bit euphoric about the leak being fixed, so forgive me for thi=
+s blatant
+> mistake. Of course, putting it here would cause a patch collision, so =
+it was a
+> stupid thing to do, and I would never do it in a formal patch submissi=
+on ...
+>
+> Thanks, anyway for correction.
+>
+> Best regards,
+> Mirsad
+>
 
-Or whether or not it has been reached in any cycle so far?  Or in the
-most recent 10 cycles?  Or similar?
+I have the patches ready to fix this issue - I just wanted to check that=
+ I wouldn't be stepping on anybodies toes or if there is a protocol for =
+doing this.
+ - I will add Reported-by tag for Mirsad and Suggested-by for Armin.
+ - I've identified Fixes tags for the two commits that caused the issue.
+Let me know if there's anything else I should do - otherwise I'll get th=
+em sent out ASAP.
 
-Or how much time the system spent in HW sleep in general?
-
-> If it didn't they'll want to look at debug data from that cycle.
-> The aggregate will be noise.
-
-Not necessarily and the point is that you can relatively easily
-provide both values, the one from the most recent cycle and the grand
-total.
-
-> Do you think of another use case?
-
-Well, if the kernel can easily compute and expose the grand total
-value, why is it better to offload that to user space, possibly in
-different ways in different system configurations?  What if somebody
-runs a minimum user space?
+Thanks
+Mark
