@@ -2,249 +2,215 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18F3C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 17:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BA7C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 18:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232565AbjCaRs7 (ORCPT
+        id S232649AbjCaSCJ convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 31 Mar 2023 13:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        Fri, 31 Mar 2023 14:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbjCaRsx (ORCPT
+        with ESMTP id S232696AbjCaSBz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 31 Mar 2023 13:48:53 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C4FA5F8;
-        Fri, 31 Mar 2023 10:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1680284895; i=w_armin@gmx.de;
-        bh=woI48I8o4xKoN1w0ykh4kPC4w3kcomO8tMZmCkuoybY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Wz05eyZrvfr+HVn7xrXOl+GVQ1hm8qbu0Y9JAz+6WtjEPzELrsTt/llMxdVMD3mvC
-         mTQBw3dmEJ5oudB5SbDwoYX+LvQWXF9jdYrrHaKej/ffHxu2aT2c1gqQe+fwgYqB4A
-         4TWI8rZX6IEN5rM7+w4PnLQs8woGH1r4/sMu5fWxuc3SeqRq6RwnXgQxDeXjahtDbO
-         XXpb/VTeCeWgEoj11o1m0RuSbPJwsRIHvMoh5r03cER4BV1ImGfLh46xbbTlcL8zZg
-         q2S+xe4niog/NyOhW6/BDZ67hrfVBMNIaebIAaWODnoMDCWZlw1/7gw+9zi4yVI/Ij
-         umJlPnXZA1Ucw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N49hB-1qQGZr3ts9-0107ql; Fri, 31
- Mar 2023 19:48:15 +0200
-Subject: Re: [PATCH v3 0/2] platform/x86: Add driver for Yoga Tablet mode
- switch
-To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
-        linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-References: <20230329014559.44494-1-kallmeyeras@gmail.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <8f021a40-5e16-10b9-2ad9-0800a761a202@gmx.de>
-Date:   Fri, 31 Mar 2023 19:48:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Fri, 31 Mar 2023 14:01:55 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D670C2368D;
+        Fri, 31 Mar 2023 11:01:26 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id b20so92874236edd.1;
+        Fri, 31 Mar 2023 11:01:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680285685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L7ILAI9xgsrv2CUqZcgKibSQHX480a+0uL0n4h1D8/Y=;
+        b=CoczZ3AzmndNpFoOOzXWYGXvbnKOoJghI63AJwFHsJe2S8j7kUUEUHzbW21vOmizwo
+         sgIzJlUOCfEPrbVSMQIBel0uV1XIy1sYnlyeDlZyTrJYhpj44L8jW1uvOYoyvOTFz10S
+         xcgOYyvTlRO4f6+oJmabZAkk4g4uF2FZddsP7mfhxmsAY7sR3IGeRRf2DkFeDmiU34JX
+         5h3/+6cfSzTN6rQ3AcAzI8SarvXtmmtIDfD+va2J17j0TQOBgbKBHAL8I5kYU+OECOQh
+         zpHGdEh+M4xKiZ7KNmXVSyFDlBvOh433UmXBQIzkhB7YPv7/Ro7jAu1XDYvS9UdVdSoV
+         gURw==
+X-Gm-Message-State: AAQBX9cw8PE6+IHr4fdkbAX0r4QVVJP6E9kTSBINrU56+RC3mvZ0JlRk
+        1CPos3U/LfJKNeyBoZjI0PtR8PgjZYq7rEn70xQ=
+X-Google-Smtp-Source: AKy350brxbsTDKjCTT/ajAFrxPEwoCv3Ui+iRpDOJ+kJUqQcbF3+5/FWXEjIUjIVTFQuMrmr/cdJZ10UqGeWk7atlJI=
+X-Received: by 2002:a50:d49e:0:b0:4fc:ebe2:2fc9 with SMTP id
+ s30-20020a50d49e000000b004fcebe22fc9mr13616496edi.3.1680285685066; Fri, 31
+ Mar 2023 11:01:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20230329014559.44494-1-kallmeyeras@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:MUNTATM8bzgn0PYqNsQEn48ib+G0rHbVof5JaE8UyTZF5r+Obfo
- Tuiv21H3MmetgOl1PWgz+y/rJrqygjxw/fWhTJNQypsh88Au6o8xME+bNBPOP2b8ZxgBf6N
- mEuYGumc38iPVYvetbrvp5rnSm3f0RZOfS0EVEtC9R/afjSXLWUHZM20Oq5825x5tYXUa41
- 1RAKlMet5fKZXe0B7356A==
-UI-OutboundReport: notjunk:1;M01:P0:Nk3jPtiSLcQ=;WEHrWx7LCVt+Z2rnRzQOxbupNf7
- Ttfz3zvUI2mdQI7knwej6IBMeF57MNUWNe1WLgt4rE3QKOy01YE01eSULcuYYDAL4ZtutVqlU
- S/iqg2YmxFdvkTAerZkTrN4QyNWr/YMoDZfU4Bp3dE3Sbp7ASO8GrjW7zyxeoCIGXuP7jE+qZ
- IDo7eSouWwoPpmYO0cyajVMbH1SpSc9I+y6EZKUpDkHbrI6nNKISkh+Q4q5KD7Ng4/PSOxZ1F
- lG5i4Swp4FfmBeTEHHpw/QCRIDBc7kBGS9Y4yv+X2kcV8OKiG+9rgPmDGj4NykBho4nhDNk1Q
- RZaublaYLKUaRgEVhT8KXR0y5RydH9iebBrm6Il6mHbi/WhfRZR51XJUwJ2xtjjG3B+FCLYH6
- Rukf5ZrJvNLGB/1ap0ldnlxm/IUpGeIrVBdB2LqlwPdpSFfUXtz+cWfKah/F9n7x4elhiDB8T
- 4axvP6KLDLThGn+t8wUvBRbKNmPt84Zqwi3UKiU4A82Vf0WwdQTigATroa+fDTHS144cLV1V5
- DP4MB9iuzIx0xLyX6WBmrdQKStRN2Yid2zo6NXkYlMr2RNuJOuhX5GD2x/HQ8j9JcmyGvKKcY
- cSMbKMsvfpZyP4LESSANRSWJH6VkEcbMPtZYrxCzsERacR/+ISS9ZFkyThJR0/lNlSSYLxeSf
- JccxM9kbRIyioxzwrTozqdnO2Ped1mzq2OmcGlRNGjSqZn8Lcnj3+r5XSaoWfUXjlUXuJAy5A
- fy2QBTJqwW4sMCqiAEJ2cIwG75f0NvHJpxGUawh4R5lwXFhXLHnVeMZ94/MZb2obqMVTuIKpD
- CUXySm/UDazb+hsjjHuQ7IF+Z0wYj2lZOKhaDRpxnrxqrzJ72GJfJ2IPPzQDLugFfgZYZB4+I
- rpLYTi/npmWMO4zLnbYbWzBP8FBWRt7qIJEjVsQY8MxUTSoEo57IutHqwj2ZbLHfX/0fejqA4
- dXRZdXHx/eD9YJz06jmjwKQp4oA=
+References: <20230330194439.14361-1-mario.limonciello@amd.com> <20230330194439.14361-2-mario.limonciello@amd.com>
+In-Reply-To: <20230330194439.14361-2-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 31 Mar 2023 20:01:14 +0200
+Message-ID: <CAJZ5v0jbMXk5k_KG19bQnffhCkGnu=MQXjGrBPipZxA_Cg8O9w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] PM: Add a sysfs file to represent time spent in
+ hardware sleep state
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Sven van Ashbrook <svenva@chromium.org>,
+        John Stultz <jstultz@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Raul Rangel <rrangel@chromium.org>,
+        David E Box <david.e.box@intel.com>,
+        Rajat Jain <rajatja@google.com>,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 29.03.23 um 03:45 schrieb Andrew Kallmeyer:
+On Thu, Mar 30, 2023 at 9:45 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Userspace can't easily discover how much of a sleep cycle was spent in a
+> hardware sleep state without using kernel tracing and vendor specific sysfs
+> or debugfs files.
+>
+> To make this information more discoverable, introduce a new sysfs file
+> to represent the time spent in a sleep state.
 
-> This driver maps the Lenovo Yoga tablet mode switch to a SW_TABLET_MODE =
-input
-> device. This will make the tablet status available to desktop environmen=
-ts.
+This is only in the most recent suspend-resume cycle, isn't it?
+
+Wouldn't it be useful to have another attribute printing the
+accumulated total HW sleep time?
+
+> This file will be present only if the system supports s2idle.
 >
-> This patch series is the result of the discussion at
-> https://lore.kernel.org/r/CAG4kvq9US=3D-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgC=
-DjdAkbg@mail.gmail.com/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v4->v5:
+>  * Provide time in microseconds instead of percent. Userspace can convert
+>    this if desirable.
+> ---
+>  Documentation/ABI/testing/sysfs-power |  9 +++++++++
+>  include/linux/suspend.h               |  2 ++
+>  kernel/power/main.c                   | 29 +++++++++++++++++++++++++++
+>  3 files changed, 40 insertions(+)
 >
-> I decided to follow-up on the patch Gergo wrote and respond to the revie=
-w
-> comments to get it merged and available for everyone.
+> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+> index f99d433ff311..9e0c31b9ce85 100644
+> --- a/Documentation/ABI/testing/sysfs-power
+> +++ b/Documentation/ABI/testing/sysfs-power
+> @@ -413,6 +413,15 @@ Description:
+>                 The /sys/power/suspend_stats/last_failed_step file contains
+>                 the last failed step in the suspend/resume path.
 >
-> Gergo and I have tested this on the Yoga 7 14ARB7, and the Yoga 7 14AIL7
-> respectively. Additionally, according to reports at
-> https://github.com/lukas-w/yoga-usage-mode, which uses the same WMI devi=
-ces,
-> this driver should work with:
-> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
->
-> v1: https://lore.kernel.org/r/20230310041726.217447-1-kallmeyeras@gmail.=
-com/
-> v2: https://lore.kernel.org/r/20230323025200.5462-1-kallmeyeras@gmail.co=
-m/
-> The diff since v2 is as follows:
->
-> --- a/drivers/platform/x86/lenovo-ymc.c
-> +++ b/drivers/platform/x86/lenovo-ymc.c
-> @@ -21,8 +21,8 @@
->   #define LENOVO_YMC_QUERY_METHOD 0x01
->
->   static bool ec_trigger __read_mostly;
-> -module_param(ec_trigger, bool, 0644);
-> -MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events")=
-;
-> +module_param(ec_trigger, bool, 0444);
-> +MODULE_PARM_DESC(ec_trigger, "Enable EC triggering work-around to force=
- emitting tablet mode events");
->
->   static const struct dmi_system_id ec_trigger_quirk_dmi_table[] =3D {
->   	{
-> @@ -43,8 +43,7 @@ struct lenovo_ymc_private {
->   static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct leno=
-vo_ymc_private *priv)
->   {
->   	int err;
-> -
-> -	if (!ec_trigger || !priv || !priv->ec_acpi_dev)
-> +	if (!priv->ec_acpi_dev)
->   		return;
->   	err =3D write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
->   	if (err)
-> @@ -103,11 +102,7 @@ static void lenovo_ymc_notify(struct wmi_device *wd=
-ev, union acpi_object *data)
->   	lenovo_ymc_trigger_ec(wdev, priv);
->   }
->
-> -static void lenovo_ymc_remove(struct wmi_device *wdev)
-> -{
-> -	struct lenovo_ymc_private *priv =3D dev_get_drvdata(&wdev->dev);
-> -	acpi_dev_put(priv->ec_acpi_dev);
-> -}
-> +static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
->
->   static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
->   {
-> @@ -124,10 +119,18 @@ static int lenovo_ymc_probe(struct wmi_device *wde=
-v, const void *ctx)
->   	if (ec_trigger) {
->   		pr_debug("Lenovo YMC enable EC triggering.\n");
->   		priv->ec_acpi_dev =3D acpi_dev_get_first_match_dev("VPC2004", NULL, =
--1);
+> +What:          /sys/power/suspend_stats/last_hw_sleep
+> +Date:          June 2023
+> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
+> +Description:
+> +               The /sys/power/suspend_stats/last_hw_sleep file
+> +               contains the duration of time spent in a hardware sleep
+> +               state during from the previous suspend cycle. This number
+
+"during from"?
+
+I would say "in the most recent system suspend-resume cycle".
+
+> +               is measured in microseconds.
 > +
->   		if (!priv->ec_acpi_dev) {
->   			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
->   			return -ENODEV;
->   		}
-> +		err =3D devm_add_action_or_reset(&wdev->dev,
-> +				acpi_dev_put_helper, priv->ec_acpi_dev);
-> +		if (err) {
-> +			dev_err(&wdev->dev,
-> +				"Could not clean up EC ACPI device: %d\n", err);
-> +			return err;
-> +		}
->   	}
+>  What:          /sys/power/sync_on_suspend
+>  Date:          October 2019
+>  Contact:       Jonas Meurer <jonas@freesources.org>
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index cfe19a028918..e0f2ac5f4406 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -68,6 +68,7 @@ struct suspend_stats {
+>         int     last_failed_errno;
+>         int     errno[REC_FAILED_NUM];
+>         int     last_failed_step;
+> +       u64     last_hw_sleep;
+>         enum suspend_stat_step  failed_steps[REC_FAILED_NUM];
+>  };
 >
->   	input_dev =3D devm_input_allocate_device(&wdev->dev);
-> @@ -138,9 +141,6 @@ static int lenovo_ymc_probe(struct wmi_device *wdev,=
- const void *ctx)
->   	input_dev->phys =3D LENOVO_YMC_EVENT_GUID "/input0";
->   	input_dev->id.bustype =3D BUS_HOST;
->   	input_dev->dev.parent =3D &wdev->dev;
-> -
-> -	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-> -
->   	err =3D sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
->   	if (err) {
->   		dev_err(&wdev->dev,
-> @@ -177,7 +177,6 @@ static struct wmi_driver lenovo_ymc_driver =3D {
->   	.id_table =3D lenovo_ymc_wmi_id_table,
->   	.probe =3D lenovo_ymc_probe,
->   	.notify =3D lenovo_ymc_notify,
-> -	.remove =3D lenovo_ymc_remove,
->   };
+> @@ -489,6 +490,7 @@ void restore_processor_state(void);
+>  extern int register_pm_notifier(struct notifier_block *nb);
+>  extern int unregister_pm_notifier(struct notifier_block *nb);
+>  extern void ksys_sync_helper(void);
+> +extern void pm_set_hw_sleep_time(u64 t);
 >
->   module_wmi_driver(lenovo_ymc_driver);
+>  #define pm_notifier(fn, pri) {                         \
+>         static struct notifier_block fn##_nb =                  \
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 31ec4a9b9d70..6a2bf8784ce8 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -6,6 +6,7 @@
+>   * Copyright (c) 2003 Open Source Development Lab
+>   */
 >
-> Andrew Kallmeyer (1):
->    platform/x86: Move ideapad ACPI helpers to a new header
+> +#include <linux/acpi.h>
+>  #include <linux/export.h>
+>  #include <linux/kobject.h>
+>  #include <linux/string.h>
+> @@ -83,6 +84,12 @@ int unregister_pm_notifier(struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_pm_notifier);
 >
-> Gergo Koteles (1):
->    platform/x86: Add driver for Yoga Tablet Mode switch
+> +void pm_set_hw_sleep_time(u64 t)
+> +{
+> +       suspend_stats.last_hw_sleep = t;
+> +}
+> +EXPORT_SYMBOL_GPL(pm_set_hw_sleep_time);
+> +
+>  int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down)
+>  {
+>         int ret;
+> @@ -377,6 +384,13 @@ static ssize_t last_failed_step_show(struct kobject *kobj,
+>  }
+>  static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
 >
->   drivers/platform/x86/Kconfig          |  10 ++
->   drivers/platform/x86/Makefile         |   1 +
->   drivers/platform/x86/ideapad-laptop.c | 135 +------------------
->   drivers/platform/x86/ideapad-laptop.h | 152 +++++++++++++++++++++
->   drivers/platform/x86/lenovo-ymc.c     | 185 ++++++++++++++++++++++++++
->   5 files changed, 349 insertions(+), 134 deletions(-)
->   create mode 100644 drivers/platform/x86/ideapad-laptop.h
->   create mode 100644 drivers/platform/x86/lenovo-ymc.c
+> +static ssize_t last_hw_sleep_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +       return sysfs_emit(buf, "%llu\n", suspend_stats.last_hw_sleep);
+> +}
+> +static struct kobj_attribute last_hw_sleep = __ATTR_RO(last_hw_sleep);
+> +
+>  static struct attribute *suspend_attrs[] = {
+>         &success.attr,
+>         &fail.attr,
+> @@ -391,12 +405,27 @@ static struct attribute *suspend_attrs[] = {
+>         &last_failed_dev.attr,
+>         &last_failed_errno.attr,
+>         &last_failed_step.attr,
+> +       &last_hw_sleep.attr,
+>         NULL,
+>  };
 >
-Hi,
+> +static umode_t suspend_attr_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+> +{
+> +       if (attr == &last_hw_sleep.attr) {
+> +#ifdef CONFIG_ACPI
+> +               if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+> +                       return 0444;
+> +#endif
+> +               return 0;
+> +       }
+> +
+> +       return 0444;
 
-while compile-testing your patch series, i noticed that there are a couple=
- of checkpatch warnings.
-For lenovo-ymc.c:
+if (attr != &last_hw_sleep.attr)
+        return 0444;
 
-WARNING: Missing a blank line after declarations
-#46: FILE: drivers/platform/x86/lenovo-ymc.c:46:
-+	int err;
-+	if (!priv->ec_acpi_dev)
+#ifdef CONFIG_ACPI
+if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+        return 0444;
+#endif
 
-CHECK: Alignment should match open parenthesis
-#77: FILE: drivers/platform/x86/lenovo-ymc.c:77:
-+	status =3D wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
-+				LENOVO_YMC_QUERY_INSTANCE,
+return 0;
 
-CHECK: Alignment should match open parenthesis
-#83: FILE: drivers/platform/x86/lenovo-ymc.c:83:
-+		dev_warn(&wdev->dev,
-+			"Failed to evaluate query method: %s\n",
-
-CHECK: Alignment should match open parenthesis
-#92: FILE: drivers/platform/x86/lenovo-ymc.c:92:
-+		dev_warn(&wdev->dev,
-+			"WMI event data is not an integer\n");
-
-CHECK: Alignment should match open parenthesis
-#128: FILE: drivers/platform/x86/lenovo-ymc.c:128:
-+		err =3D devm_add_action_or_reset(&wdev->dev,
-+				acpi_dev_put_helper, priv->ec_acpi_dev);
-
-For ideapad-laptop.h:
-
-WARNING: Improper SPDX comment style for 'drivers/platform/x86/ideapad-lap=
-top.h', please use '/*' instead
-#1: FILE: drivers/platform/x86/ideapad-laptop.h:1:
-+// SPDX-License-Identifier: GPL-2.0-or-later
-
-WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-#1: FILE: drivers/platform/x86/ideapad-laptop.h:1:
-+// SPDX-License-Identifier: GPL-2.0-or-later
-
-CHECK: line length of 112 exceeds 100 columns
-#44: FILE: drivers/platform/x86/ideapad-laptop.h:44:
-+static inline int eval_int_with_arg(acpi_handle handle, const char *name,=
- unsigned long arg, unsigned long *res)
-
-All these checkpatch warnings are minor style issues (except the malformed=
- SPDX tag in ideapad-laptop.h),
-but it would be nice if those would get fixed too.
-
-Armin Wolf
-
+> +}
+> +
+>  static const struct attribute_group suspend_attr_group = {
+>         .name = "suspend_stats",
+>         .attrs = suspend_attrs,
+> +       .is_visible = suspend_attr_is_visible,
+>  };
+>
+>  #ifdef CONFIG_DEBUG_FS
+> --
