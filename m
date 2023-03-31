@@ -2,215 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BA7C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 18:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B79C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 18:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232649AbjCaSCJ convert rfc822-to-8bit (ORCPT
+        id S229983AbjCaSDf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 31 Mar 2023 14:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        Fri, 31 Mar 2023 14:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232696AbjCaSBz (ORCPT
+        with ESMTP id S231331AbjCaSDe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 31 Mar 2023 14:01:55 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D670C2368D;
-        Fri, 31 Mar 2023 11:01:26 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id b20so92874236edd.1;
-        Fri, 31 Mar 2023 11:01:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680285685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L7ILAI9xgsrv2CUqZcgKibSQHX480a+0uL0n4h1D8/Y=;
-        b=CoczZ3AzmndNpFoOOzXWYGXvbnKOoJghI63AJwFHsJe2S8j7kUUEUHzbW21vOmizwo
-         sgIzJlUOCfEPrbVSMQIBel0uV1XIy1sYnlyeDlZyTrJYhpj44L8jW1uvOYoyvOTFz10S
-         xcgOYyvTlRO4f6+oJmabZAkk4g4uF2FZddsP7mfhxmsAY7sR3IGeRRf2DkFeDmiU34JX
-         5h3/+6cfSzTN6rQ3AcAzI8SarvXtmmtIDfD+va2J17j0TQOBgbKBHAL8I5kYU+OECOQh
-         zpHGdEh+M4xKiZ7KNmXVSyFDlBvOh433UmXBQIzkhB7YPv7/Ro7jAu1XDYvS9UdVdSoV
-         gURw==
-X-Gm-Message-State: AAQBX9cw8PE6+IHr4fdkbAX0r4QVVJP6E9kTSBINrU56+RC3mvZ0JlRk
-        1CPos3U/LfJKNeyBoZjI0PtR8PgjZYq7rEn70xQ=
-X-Google-Smtp-Source: AKy350brxbsTDKjCTT/ajAFrxPEwoCv3Ui+iRpDOJ+kJUqQcbF3+5/FWXEjIUjIVTFQuMrmr/cdJZ10UqGeWk7atlJI=
-X-Received: by 2002:a50:d49e:0:b0:4fc:ebe2:2fc9 with SMTP id
- s30-20020a50d49e000000b004fcebe22fc9mr13616496edi.3.1680285685066; Fri, 31
- Mar 2023 11:01:25 -0700 (PDT)
+        Fri, 31 Mar 2023 14:03:34 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484D41115F;
+        Fri, 31 Mar 2023 11:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1680285795; i=w_armin@gmx.de;
+        bh=2Lp2z+/qvRtTGAJyRpBMFhDcmIL5gFtMEMl6MY8KmRQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Nyi60R1NTwYE6vrAUMzPEWG9a9EHDfE1Ecyg/CLaXNIpHWXLSXPgYgLRn5R5JnnVX
+         7q4MYpiv52ElUDiWjgMcpZ5EGhu0UcmrJsybcxzP+7rp4DGPCk+lyYxHHxrkHe0I/g
+         Zl4+NqmQIr+le2oZYBfoZ/zhGz5p5WlR3r0uVtbEvR3lu5K6Lo2DpBVGxSZsHGPage
+         R2lscL05RBJMCWxdutMcV4+WIQyxWdUzX0uPiepRy/uKU3gn2P4/mtiIzv8FzmMOZa
+         a4Z7kcgssusIAdhahGwZsdL9iCdyOnToH69wM3kAJeHoCnCN2xzioEMoSkcQ0TgCbJ
+         3fCykEgaLDhbg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M7sHo-1pmAyn2Vdq-005106; Fri, 31 Mar 2023 20:03:15 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     markpearson@lenovo.com, mirsad.todorovac@alu.unizg.hr
+Cc:     hdegoede@redhat.com, markgross@kernel.org, thomas@t-8ch.de,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: think-lmi: Fix memory leak when showing current settings
+Date:   Fri, 31 Mar 2023 20:03:12 +0200
+Message-Id: <20230331180312.37997-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20230330194439.14361-1-mario.limonciello@amd.com> <20230330194439.14361-2-mario.limonciello@amd.com>
-In-Reply-To: <20230330194439.14361-2-mario.limonciello@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 Mar 2023 20:01:14 +0200
-Message-ID: <CAJZ5v0jbMXk5k_KG19bQnffhCkGnu=MQXjGrBPipZxA_Cg8O9w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] PM: Add a sysfs file to represent time spent in
- hardware sleep state
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Sven van Ashbrook <svenva@chromium.org>,
-        John Stultz <jstultz@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Raul Rangel <rrangel@chromium.org>,
-        David E Box <david.e.box@intel.com>,
-        Rajat Jain <rajatja@google.com>,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:H+fNulAdyhggvwC9T//bmx/rp1Y3e2v7ooogPF8J2FFB9KvzgTr
+ xJ/XlNHfTNs787D9dnPIf1UQrYc/v4ce7vsv0wjPjCCJ309hpGLLLExJIfQlx4Vswqcjjz7
+ Sn/83fucU8bMF4WGWA2dJ5sV10nXmjmavK4SiPSkwkifzIp5u2kaAMBuBHu6UGzd8PPv7wM
+ R/ANCAKBtwlmrxe/IZj0Q==
+UI-OutboundReport: notjunk:1;M01:P0:dO2iJJPkjfw=;Wtu1GOrIhxArCLMl3lyuq1RxcJf
+ x6MPFVwYXjwWT0JxvgBUs31+AjtO7OLBl860jNuKLE8Q1numTvKWFFLblXqfRXdl+PovC6fys
+ peAmRJ/xmE8+EaWPS7NqyYA86iC1PLTwuRGDU4Xw2Rt/jF0uwXONesBEnUqxPs090aZDH3M1q
+ OCTS3l42S3JpYvKpxBnkXuARkjx/1YWLg+RLGfclGiQkYUHXhplbBij22IV5nj5K5iQKWALGH
+ GH5HZuk1pWf/9dz338YrLG7wNtv3fgFn9jV98hRGUyX4lGOVXfhu4+nn89lr3wMOLzCEXjUEo
+ RyXNs8V/dOGKBRPqy011GGUOhi5BZuHksTNDcEeKvaBS5MlEdTAzEM/Yeo1Ve7WKsqYwADb6H
+ /xBjAssu7CfWmLl4zDAyG3zh3wojloWsDMOKwRmgkQA0kMX5LxxLKAkorXVHhK198As0iw674
+ RsDPueIvy/acGTzQhkI3rBIaZ6V32lVhxPri8cizcL0oRCG6XVlgrQFEkdXTNXkUn+/IM+TAW
+ avMqxx8BI2esSUlt5E/RnVouyoZeBFZhBls00fc4iDze9iE8i087IdiWu4GpseLDwa3bPqMKz
+ j0O8TKOmrmlqRaYqY/YDspMMeeK5mT8Tb6b0Z+gtg4fiVBvKLb39U1f/kKBXLhMeDlfWk4NOH
+ SZemdhn0OD8GKjeAaPKrCLj3fDpNKOyZN58EkFdrqUo9TLs2XN5oXowvt1W3puU/HqDe0GHF2
+ AqzL4YYXFJMUb6IEDScUsXy4lMVbkIZYatpLSUWu4c88ih1LhX7B+HRo1fVooYB5Qj/VqvYHt
+ wWGcYzmqQs/eixjq2XuTQNFTBX4HluSRNNv32+Ps6wBLbvuE1wxuOCnruaVHDZPfs9sRCoJfz
+ V3uNuNlMX1DrLRvt1f87vtt9AbjSMFXS40MDvrRwTMS8PuwpqU8/QS1VK+o7O0yke4Z9xM0np
+ FUAO5BIG8vTX9MgtcDHJjPcO8xU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 9:45 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> Userspace can't easily discover how much of a sleep cycle was spent in a
-> hardware sleep state without using kernel tracing and vendor specific sysfs
-> or debugfs files.
->
-> To make this information more discoverable, introduce a new sysfs file
-> to represent the time spent in a sleep state.
+When retriving a item string with tlmi_setting(), the result has to be
+freed using kfree(). In current_value_show() however, malformed
+item strings are not freed, causing a memory leak.
+Fix this by eliminating the early return responsible for this.
 
-This is only in the most recent suspend-resume cycle, isn't it?
+Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support o=
+n Lenovo platforms")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/think-lmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Wouldn't it be useful to have another attribute printing the
-accumulated total HW sleep time?
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
+-lmi.c
+index cc66f7cbccf2..8cafb9d4016c 100644
+=2D-- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -930,10 +930,12 @@ static ssize_t current_value_show(struct kobject *ko=
+bj, struct kobj_attribute *a
+ 	/* validate and split from `item,value` -> `value` */
+ 	value =3D strpbrk(item, ",");
+ 	if (!value || value =3D=3D item || !strlen(value + 1))
+-		return -EINVAL;
++		ret =3D -EINVAL;
++	else
++		ret =3D sysfs_emit(buf, "%s\n", value + 1);
 
-> This file will be present only if the system supports s2idle.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v4->v5:
->  * Provide time in microseconds instead of percent. Userspace can convert
->    this if desirable.
-> ---
->  Documentation/ABI/testing/sysfs-power |  9 +++++++++
->  include/linux/suspend.h               |  2 ++
->  kernel/power/main.c                   | 29 +++++++++++++++++++++++++++
->  3 files changed, 40 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index f99d433ff311..9e0c31b9ce85 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -413,6 +413,15 @@ Description:
->                 The /sys/power/suspend_stats/last_failed_step file contains
->                 the last failed step in the suspend/resume path.
->
-> +What:          /sys/power/suspend_stats/last_hw_sleep
-> +Date:          June 2023
-> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
-> +Description:
-> +               The /sys/power/suspend_stats/last_hw_sleep file
-> +               contains the duration of time spent in a hardware sleep
-> +               state during from the previous suspend cycle. This number
+-	ret =3D sysfs_emit(buf, "%s\n", value + 1);
+ 	kfree(item);
++
+ 	return ret;
+ }
 
-"during from"?
+=2D-
+2.30.2
 
-I would say "in the most recent system suspend-resume cycle".
-
-> +               is measured in microseconds.
-> +
->  What:          /sys/power/sync_on_suspend
->  Date:          October 2019
->  Contact:       Jonas Meurer <jonas@freesources.org>
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index cfe19a028918..e0f2ac5f4406 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -68,6 +68,7 @@ struct suspend_stats {
->         int     last_failed_errno;
->         int     errno[REC_FAILED_NUM];
->         int     last_failed_step;
-> +       u64     last_hw_sleep;
->         enum suspend_stat_step  failed_steps[REC_FAILED_NUM];
->  };
->
-> @@ -489,6 +490,7 @@ void restore_processor_state(void);
->  extern int register_pm_notifier(struct notifier_block *nb);
->  extern int unregister_pm_notifier(struct notifier_block *nb);
->  extern void ksys_sync_helper(void);
-> +extern void pm_set_hw_sleep_time(u64 t);
->
->  #define pm_notifier(fn, pri) {                         \
->         static struct notifier_block fn##_nb =                  \
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index 31ec4a9b9d70..6a2bf8784ce8 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -6,6 +6,7 @@
->   * Copyright (c) 2003 Open Source Development Lab
->   */
->
-> +#include <linux/acpi.h>
->  #include <linux/export.h>
->  #include <linux/kobject.h>
->  #include <linux/string.h>
-> @@ -83,6 +84,12 @@ int unregister_pm_notifier(struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL_GPL(unregister_pm_notifier);
->
-> +void pm_set_hw_sleep_time(u64 t)
-> +{
-> +       suspend_stats.last_hw_sleep = t;
-> +}
-> +EXPORT_SYMBOL_GPL(pm_set_hw_sleep_time);
-> +
->  int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long val_down)
->  {
->         int ret;
-> @@ -377,6 +384,13 @@ static ssize_t last_failed_step_show(struct kobject *kobj,
->  }
->  static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
->
-> +static ssize_t last_hw_sleep_show(struct kobject *kobj,
-> +               struct kobj_attribute *attr, char *buf)
-> +{
-> +       return sysfs_emit(buf, "%llu\n", suspend_stats.last_hw_sleep);
-> +}
-> +static struct kobj_attribute last_hw_sleep = __ATTR_RO(last_hw_sleep);
-> +
->  static struct attribute *suspend_attrs[] = {
->         &success.attr,
->         &fail.attr,
-> @@ -391,12 +405,27 @@ static struct attribute *suspend_attrs[] = {
->         &last_failed_dev.attr,
->         &last_failed_errno.attr,
->         &last_failed_step.attr,
-> +       &last_hw_sleep.attr,
->         NULL,
->  };
->
-> +static umode_t suspend_attr_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
-> +{
-> +       if (attr == &last_hw_sleep.attr) {
-> +#ifdef CONFIG_ACPI
-> +               if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
-> +                       return 0444;
-> +#endif
-> +               return 0;
-> +       }
-> +
-> +       return 0444;
-
-if (attr != &last_hw_sleep.attr)
-        return 0444;
-
-#ifdef CONFIG_ACPI
-if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
-        return 0444;
-#endif
-
-return 0;
-
-> +}
-> +
->  static const struct attribute_group suspend_attr_group = {
->         .name = "suspend_stats",
->         .attrs = suspend_attrs,
-> +       .is_visible = suspend_attr_is_visible,
->  };
->
->  #ifdef CONFIG_DEBUG_FS
-> --
