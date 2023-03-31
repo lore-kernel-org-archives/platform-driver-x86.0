@@ -2,188 +2,249 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4223C76196
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 17:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18F3C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 17:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232025AbjCaRjN (ORCPT
+        id S232565AbjCaRs7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 31 Mar 2023 13:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33582 "EHLO
+        Fri, 31 Mar 2023 13:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbjCaRjN (ORCPT
+        with ESMTP id S231849AbjCaRsx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 31 Mar 2023 13:39:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 659311EFE4
-        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Mar 2023 10:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680284295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GYDHqdmMfVO2N43YvDMG75Acr8Ym/PPCssHQCbfBDWc=;
-        b=XyJFXESiZCLWHHkyaMI+O2tqp5ybgARYDyLA4oYv+FVOOSvMYEmydPFdOVdL/x96Rda7FA
-        bqkV9kDjkpO84Hs9BhKvTDzVnlWtrJ87fjMAh54Rc/YWDWfTYQfN8BGTF18RQXT/fj3+je
-        qBbTy4mUTsKEnrtGeKMce26YrbHRxzI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-576-SAQoyXdVM5O9DSFWilCmPw-1; Fri, 31 Mar 2023 13:38:13 -0400
-X-MC-Unique: SAQoyXdVM5O9DSFWilCmPw-1
-Received: by mail-ed1-f70.google.com with SMTP id r19-20020a50aad3000000b005002e950cd3so33288774edc.11
-        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Mar 2023 10:38:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680284290;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYDHqdmMfVO2N43YvDMG75Acr8Ym/PPCssHQCbfBDWc=;
-        b=HY9C/6CqNq6wgxvFY8LKnZOd3EvrJ6TjnOf+IiIKxVGDybazfy/ZB8jw0nlSTEJ2ia
-         Wos+llzjBH4ddBOvCFGTTw6+GXI/g3CkBC6h822M3hMSd1KBLAQXy8IBvYEGhFCEkw+c
-         nNdg0VVt43QX5JDtFgwDq6A5BIOWYDHQNBf7uE3T3xJwMkT8arDwp//43Bww9cq8FKGb
-         ESk7bobg+FEPmHD+hknHaGFZPqZ5fo4XFPsb5O3tNqwWXeT7MYI+H204bssZPHzEUXiW
-         aazp8bh7HeFsiyQPgqdxqDNAfKyQCreiTwREWnug1PH+f12KKikj+88nXCxwWRoolU2p
-         yYRw==
-X-Gm-Message-State: AAQBX9di+bwm7K4MjpyhhmsIKUsSvOpAqfMXVY+ulblor2yL3tV6OOU+
-        jhnjh3nav3xCXl+yqCzBBqYu+lVm/HDEidZV4s4u2WHgmXktrr1PJzNzpdrUW61CC1GjIc3mx5h
-        jWKYjAbsqEHO3XPgK5FalNngShvVvlCxj1A==
-X-Received: by 2002:a17:907:7701:b0:92f:efdc:610e with SMTP id kw1-20020a170907770100b0092fefdc610emr26616095ejc.66.1680284290012;
-        Fri, 31 Mar 2023 10:38:10 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bttAblxAzeVcv520ae+I7/Dlz6cMxJmSXfGpZ2P5VuH7+8SybGtIrMlnlsSiHxo/ZcaYrqzA==
-X-Received: by 2002:a17:907:7701:b0:92f:efdc:610e with SMTP id kw1-20020a170907770100b0092fefdc610emr26616077ejc.66.1680284289697;
-        Fri, 31 Mar 2023 10:38:09 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id g19-20020a170906c19300b0093313f4fc3csm1182565ejz.70.2023.03.31.10.38.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Mar 2023 10:38:09 -0700 (PDT)
-Message-ID: <7d386897-76a5-976b-e8ed-6e576f8e3ac9@redhat.com>
-Date:   Fri, 31 Mar 2023 19:38:08 +0200
+        Fri, 31 Mar 2023 13:48:53 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C4FA5F8;
+        Fri, 31 Mar 2023 10:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1680284895; i=w_armin@gmx.de;
+        bh=woI48I8o4xKoN1w0ykh4kPC4w3kcomO8tMZmCkuoybY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Wz05eyZrvfr+HVn7xrXOl+GVQ1hm8qbu0Y9JAz+6WtjEPzELrsTt/llMxdVMD3mvC
+         mTQBw3dmEJ5oudB5SbDwoYX+LvQWXF9jdYrrHaKej/ffHxu2aT2c1gqQe+fwgYqB4A
+         4TWI8rZX6IEN5rM7+w4PnLQs8woGH1r4/sMu5fWxuc3SeqRq6RwnXgQxDeXjahtDbO
+         XXpb/VTeCeWgEoj11o1m0RuSbPJwsRIHvMoh5r03cER4BV1ImGfLh46xbbTlcL8zZg
+         q2S+xe4niog/NyOhW6/BDZ67hrfVBMNIaebIAaWODnoMDCWZlw1/7gw+9zi4yVI/Ij
+         umJlPnXZA1Ucw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N49hB-1qQGZr3ts9-0107ql; Fri, 31
+ Mar 2023 19:48:15 +0200
+Subject: Re: [PATCH v3 0/2] platform/x86: Add driver for Yoga Tablet mode
+ switch
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
+        linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+References: <20230329014559.44494-1-kallmeyeras@gmail.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+Message-ID: <8f021a40-5e16-10b9-2ad9-0800a761a202@gmx.de>
+Date:   Fri, 31 Mar 2023 19:48:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop sending
- KEY_TOUCHPAD_TOGGLE
-Content-Language: en-US, nl
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        GOESSEL Guillaume <g_goessel@outlook.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Manyi Li <limanyi@uniontech.com>,
-        =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
-        Philipp Jungkamp <p.jungkamp@gmx.net>,
-        Arnav Rawat <arnavr3@illinois.edu>,
-        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
-        Felix Eckhofer <felix@eckhofer.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-References: <20230330194644.64628-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230330194644.64628-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20230329014559.44494-1-kallmeyeras@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:MUNTATM8bzgn0PYqNsQEn48ib+G0rHbVof5JaE8UyTZF5r+Obfo
+ Tuiv21H3MmetgOl1PWgz+y/rJrqygjxw/fWhTJNQypsh88Au6o8xME+bNBPOP2b8ZxgBf6N
+ mEuYGumc38iPVYvetbrvp5rnSm3f0RZOfS0EVEtC9R/afjSXLWUHZM20Oq5825x5tYXUa41
+ 1RAKlMet5fKZXe0B7356A==
+UI-OutboundReport: notjunk:1;M01:P0:Nk3jPtiSLcQ=;WEHrWx7LCVt+Z2rnRzQOxbupNf7
+ Ttfz3zvUI2mdQI7knwej6IBMeF57MNUWNe1WLgt4rE3QKOy01YE01eSULcuYYDAL4ZtutVqlU
+ S/iqg2YmxFdvkTAerZkTrN4QyNWr/YMoDZfU4Bp3dE3Sbp7ASO8GrjW7zyxeoCIGXuP7jE+qZ
+ IDo7eSouWwoPpmYO0cyajVMbH1SpSc9I+y6EZKUpDkHbrI6nNKISkh+Q4q5KD7Ng4/PSOxZ1F
+ lG5i4Swp4FfmBeTEHHpw/QCRIDBc7kBGS9Y4yv+X2kcV8OKiG+9rgPmDGj4NykBho4nhDNk1Q
+ RZaublaYLKUaRgEVhT8KXR0y5RydH9iebBrm6Il6mHbi/WhfRZR51XJUwJ2xtjjG3B+FCLYH6
+ Rukf5ZrJvNLGB/1ap0ldnlxm/IUpGeIrVBdB2LqlwPdpSFfUXtz+cWfKah/F9n7x4elhiDB8T
+ 4axvP6KLDLThGn+t8wUvBRbKNmPt84Zqwi3UKiU4A82Vf0WwdQTigATroa+fDTHS144cLV1V5
+ DP4MB9iuzIx0xLyX6WBmrdQKStRN2Yid2zo6NXkYlMr2RNuJOuhX5GD2x/HQ8j9JcmyGvKKcY
+ cSMbKMsvfpZyP4LESSANRSWJH6VkEcbMPtZYrxCzsERacR/+ISS9ZFkyThJR0/lNlSSYLxeSf
+ JccxM9kbRIyioxzwrTozqdnO2Ped1mzq2OmcGlRNGjSqZn8Lcnj3+r5XSaoWfUXjlUXuJAy5A
+ fy2QBTJqwW4sMCqiAEJ2cIwG75f0NvHJpxGUawh4R5lwXFhXLHnVeMZ94/MZb2obqMVTuIKpD
+ CUXySm/UDazb+hsjjHuQ7IF+Z0wYj2lZOKhaDRpxnrxqrzJ72GJfJ2IPPzQDLugFfgZYZB4+I
+ rpLYTi/npmWMO4zLnbYbWzBP8FBWRt7qIJEjVsQY8MxUTSoEo57IutHqwj2ZbLHfX/0fejqA4
+ dXRZdXHx/eD9YJz06jmjwKQp4oA=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Am 29.03.23 um 03:45 schrieb Andrew Kallmeyer:
+
+> This driver maps the Lenovo Yoga tablet mode switch to a SW_TABLET_MODE =
+input
+> device. This will make the tablet status available to desktop environmen=
+ts.
+>
+> This patch series is the result of the discussion at
+> https://lore.kernel.org/r/CAG4kvq9US=3D-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgC=
+DjdAkbg@mail.gmail.com/
+>
+> I decided to follow-up on the patch Gergo wrote and respond to the revie=
+w
+> comments to get it merged and available for everyone.
+>
+> Gergo and I have tested this on the Yoga 7 14ARB7, and the Yoga 7 14AIL7
+> respectively. Additionally, according to reports at
+> https://github.com/lukas-w/yoga-usage-mode, which uses the same WMI devi=
+ces,
+> this driver should work with:
+> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
+>
+> v1: https://lore.kernel.org/r/20230310041726.217447-1-kallmeyeras@gmail.=
+com/
+> v2: https://lore.kernel.org/r/20230323025200.5462-1-kallmeyeras@gmail.co=
+m/
+> The diff since v2 is as follows:
+>
+> --- a/drivers/platform/x86/lenovo-ymc.c
+> +++ b/drivers/platform/x86/lenovo-ymc.c
+> @@ -21,8 +21,8 @@
+>   #define LENOVO_YMC_QUERY_METHOD 0x01
+>
+>   static bool ec_trigger __read_mostly;
+> -module_param(ec_trigger, bool, 0644);
+> -MODULE_PARM_DESC(ec_trigger, "Enable EC triggering to emit YMC events")=
+;
+> +module_param(ec_trigger, bool, 0444);
+> +MODULE_PARM_DESC(ec_trigger, "Enable EC triggering work-around to force=
+ emitting tablet mode events");
+>
+>   static const struct dmi_system_id ec_trigger_quirk_dmi_table[] =3D {
+>   	{
+> @@ -43,8 +43,7 @@ struct lenovo_ymc_private {
+>   static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct leno=
+vo_ymc_private *priv)
+>   {
+>   	int err;
+> -
+> -	if (!ec_trigger || !priv || !priv->ec_acpi_dev)
+> +	if (!priv->ec_acpi_dev)
+>   		return;
+>   	err =3D write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
+>   	if (err)
+> @@ -103,11 +102,7 @@ static void lenovo_ymc_notify(struct wmi_device *wd=
+ev, union acpi_object *data)
+>   	lenovo_ymc_trigger_ec(wdev, priv);
+>   }
+>
+> -static void lenovo_ymc_remove(struct wmi_device *wdev)
+> -{
+> -	struct lenovo_ymc_private *priv =3D dev_get_drvdata(&wdev->dev);
+> -	acpi_dev_put(priv->ec_acpi_dev);
+> -}
+> +static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
+>
+>   static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+>   {
+> @@ -124,10 +119,18 @@ static int lenovo_ymc_probe(struct wmi_device *wde=
+v, const void *ctx)
+>   	if (ec_trigger) {
+>   		pr_debug("Lenovo YMC enable EC triggering.\n");
+>   		priv->ec_acpi_dev =3D acpi_dev_get_first_match_dev("VPC2004", NULL, =
+-1);
+> +
+>   		if (!priv->ec_acpi_dev) {
+>   			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
+>   			return -ENODEV;
+>   		}
+> +		err =3D devm_add_action_or_reset(&wdev->dev,
+> +				acpi_dev_put_helper, priv->ec_acpi_dev);
+> +		if (err) {
+> +			dev_err(&wdev->dev,
+> +				"Could not clean up EC ACPI device: %d\n", err);
+> +			return err;
+> +		}
+>   	}
+>
+>   	input_dev =3D devm_input_allocate_device(&wdev->dev);
+> @@ -138,9 +141,6 @@ static int lenovo_ymc_probe(struct wmi_device *wdev,=
+ const void *ctx)
+>   	input_dev->phys =3D LENOVO_YMC_EVENT_GUID "/input0";
+>   	input_dev->id.bustype =3D BUS_HOST;
+>   	input_dev->dev.parent =3D &wdev->dev;
+> -
+> -	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
+> -
+>   	err =3D sparse_keymap_setup(input_dev, lenovo_ymc_keymap, NULL);
+>   	if (err) {
+>   		dev_err(&wdev->dev,
+> @@ -177,7 +177,6 @@ static struct wmi_driver lenovo_ymc_driver =3D {
+>   	.id_table =3D lenovo_ymc_wmi_id_table,
+>   	.probe =3D lenovo_ymc_probe,
+>   	.notify =3D lenovo_ymc_notify,
+> -	.remove =3D lenovo_ymc_remove,
+>   };
+>
+>   module_wmi_driver(lenovo_ymc_driver);
+>
+> Andrew Kallmeyer (1):
+>    platform/x86: Move ideapad ACPI helpers to a new header
+>
+> Gergo Koteles (1):
+>    platform/x86: Add driver for Yoga Tablet Mode switch
+>
+>   drivers/platform/x86/Kconfig          |  10 ++
+>   drivers/platform/x86/Makefile         |   1 +
+>   drivers/platform/x86/ideapad-laptop.c | 135 +------------------
+>   drivers/platform/x86/ideapad-laptop.h | 152 +++++++++++++++++++++
+>   drivers/platform/x86/lenovo-ymc.c     | 185 ++++++++++++++++++++++++++
+>   5 files changed, 349 insertions(+), 134 deletions(-)
+>   create mode 100644 drivers/platform/x86/ideapad-laptop.h
+>   create mode 100644 drivers/platform/x86/lenovo-ymc.c
+>
 Hi,
 
-On 3/30/23 21:46, Hans de Goede wrote:
-> Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
-> KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
-> KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
-> and the touchpad-state has not been changed by the EC itself already.
-> 
-> This was done under the assumption that this would be good to do to make
-> the touchpad-toggle hotkey work on newer models where the EC does not
-> toggle the touchpad on/off itself (because it is not routed through
-> the PS/2 controller, but uses I2C).
-> 
-> But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
-> triggers an ACPI notify with VPC event bit 5 set on resume, which would
-> now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
-> environment responds by disabling the touchpad in software, breaking
-> the touchpad (until manually re-enabled) on resume.
-> 
-> It was never confirmed that sending KEY_TOUCHPAD_TOGGLE actually improves
-> things on new models and at least some new models like the Yoga 7-15ITL5
-> don't have a touchpad on/off toggle hotkey at all, while still sending
-> ACPI notify events with VPC event bit 5 set.
-> 
-> So it seems best to revert the change to send KEY_TOUCHPAD_TOGGLE when
-> receiving an ACPI notify events with VPC event bit 5 and the touchpad
-> state as reported by the EC has not changed.
-> 
-> Note this is not a full revert the code to cache the last EC touchpad
-> state is kept to avoid sending spurious KEY_TOUCHPAD_ON / _OFF events
-> on resume.
-> 
-> Fixes: 5829f8a897e4 ("platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217234
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+while compile-testing your patch series, i noticed that there are a couple=
+ of checkpatch warnings.
+For lenovo-ymc.c:
 
-I've applied this patch to my fixes branch now:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+WARNING: Missing a blank line after declarations
+#46: FILE: drivers/platform/x86/lenovo-ymc.c:46:
++	int err;
++	if (!priv->ec_acpi_dev)
 
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
+CHECK: Alignment should match open parenthesis
+#77: FILE: drivers/platform/x86/lenovo-ymc.c:77:
++	status =3D wmi_evaluate_method(LENOVO_YMC_QUERY_GUID,
++				LENOVO_YMC_QUERY_INSTANCE,
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+CHECK: Alignment should match open parenthesis
+#83: FILE: drivers/platform/x86/lenovo-ymc.c:83:
++		dev_warn(&wdev->dev,
++			"Failed to evaluate query method: %s\n",
 
-Regards,
+CHECK: Alignment should match open parenthesis
+#92: FILE: drivers/platform/x86/lenovo-ymc.c:92:
++		dev_warn(&wdev->dev,
++			"WMI event data is not an integer\n");
 
-Hans
+CHECK: Alignment should match open parenthesis
+#128: FILE: drivers/platform/x86/lenovo-ymc.c:128:
++		err =3D devm_add_action_or_reset(&wdev->dev,
++				acpi_dev_put_helper, priv->ec_acpi_dev);
 
+For ideapad-laptop.h:
 
+WARNING: Improper SPDX comment style for 'drivers/platform/x86/ideapad-lap=
+top.h', please use '/*' instead
+#1: FILE: drivers/platform/x86/ideapad-laptop.h:1:
++// SPDX-License-Identifier: GPL-2.0-or-later
 
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index b5ef3452da1f..35c63cce0479 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1170,7 +1170,6 @@ static const struct key_entry ideapad_keymap[] = {
->  	{ KE_KEY,  65, { KEY_PROG4 } },
->  	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
->  	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
-> -	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
->  	{ KE_KEY, 128, { KEY_ESC } },
->  
->  	/*
-> @@ -1526,18 +1525,16 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
->  	if (priv->features.ctrl_ps2_aux_port)
->  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
->  
-> -	if (send_events) {
-> -		/*
-> -		 * On older models the EC controls the touchpad and toggles it
-> -		 * on/off itself, in this case we report KEY_TOUCHPAD_ON/_OFF.
-> -		 * If the EC did not toggle, report KEY_TOUCHPAD_TOGGLE.
-> -		 */
-> -		if (value != priv->r_touchpad_val) {
-> -			ideapad_input_report(priv, value ? 67 : 66);
-> -			sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
-> -		} else {
-> -			ideapad_input_report(priv, 68);
-> -		}
-> +	/*
-> +	 * On older models the EC controls the touchpad and toggles it on/off
-> +	 * itself, in this case we report KEY_TOUCHPAD_ON/_OFF. Some models do
-> +	 * an acpi-notify with VPC bit 5 set on resume, so this function get
-> +	 * called with send_events=true on every resume. Therefor if the EC did
-> +	 * not toggle, do nothing to avoid sending spurious KEY_TOUCHPAD_TOGGLE.
-> +	 */
-> +	if (send_events && value != priv->r_touchpad_val) {
-> +		ideapad_input_report(priv, value ? 67 : 66);
-> +		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
->  	}
->  
->  	priv->r_touchpad_val = value;
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+#1: FILE: drivers/platform/x86/ideapad-laptop.h:1:
++// SPDX-License-Identifier: GPL-2.0-or-later
+
+CHECK: line length of 112 exceeds 100 columns
+#44: FILE: drivers/platform/x86/ideapad-laptop.h:44:
++static inline int eval_int_with_arg(acpi_handle handle, const char *name,=
+ unsigned long arg, unsigned long *res)
+
+All these checkpatch warnings are minor style issues (except the malformed=
+ SPDX tag in ideapad-laptop.h),
+but it would be nice if those would get fixed too.
+
+Armin Wolf
 
