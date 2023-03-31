@@ -2,111 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF67C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 21:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E76C76196
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 31 Mar 2023 23:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230158AbjCaVdi (ORCPT
+        id S231775AbjCaXou (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 31 Mar 2023 17:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
+        Fri, 31 Mar 2023 19:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjCaVdh (ORCPT
+        with ESMTP id S229988AbjCaXot (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 31 Mar 2023 17:33:37 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5091BF7C;
-        Fri, 31 Mar 2023 14:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1680298401; i=w_armin@gmx.de;
-        bh=EBWPFpbCMT46T6rEenKWgprKQmJ4QU39rhCZdbZ7H2k=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=POPqArVSbsfbx7JzL1tW34DbQS+0zZGk7kT0FMHmyWu87oJyKOOSfuhyBhYB2Ee1M
-         vpAKSE+Tqn3S4at6nE3A4JhLkwiMjHz5/LGvgv/51OpDwVuXb6YQetxWxxh5/XP9kM
-         pfJkh1bUHsl331GnvOj8bK9fdRFRqjyYEzv4LC4rdJT5nc9jWt6Ed50TPzWuZyqptJ
-         Ek0IKxWuzQbadnKr/EJ6wsiUhBJeRQdS1T4HtndczuBhq9sRuvDnRqaRmydLCV6kYH
-         CE9noWONiaRVRhd3wX9E1kPkGku2E0EygPuJi4Op9N/5Fh/SogVehz6avuTBjqy3Yu
-         pTPySEgRRAJ7A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1M2f9b-1pieI20msx-004AHM; Fri, 31 Mar 2023 23:33:21 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     markpearson@lenovo.com, mirsad.todorovac@alu.unizg.hr
-Cc:     hdegoede@redhat.com, markgross@kernel.org, thomas@t-8ch.de,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
+        Fri, 31 Mar 2023 19:44:49 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 31 Mar 2023 16:44:47 PDT
+Received: from helium.impl.it (helium.impl.it [IPv6:2a01:4f8:c0c:b78a::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08F110A82;
+        Fri, 31 Mar 2023 16:44:47 -0700 (PDT)
+Received-SPF: None (mailfrom) identity=mailfrom; client-ip=2a02:ab88:1380:6600:79f7:20e6:6650:f439; helo=localhost; envelope-from=noreply@impl.it; receiver=<UNKNOWN> 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impl.it; s=mail;
+        t=1680305131; bh=SZqPCakegtWX1R1qWrI7INznL0Z1cwGdHEenYechGH8=;
+        h=From:To:Cc:Subject:Date;
+        b=c+sn60TTvHUyBB7xoT7Q9W2rs7VPzvXvCEtLl7Mwh5xafHo8MFbJ6EMu1X/TvmYYS
+         rzQ412/nOl7GJCcPbt3uYzXLr2bC8IhTBTI8YMmG99Ar9n5PA3kDUIMjgmJ2+y0YoU
+         6q2+P+PFIAWUlQjJpIUOudMoNWequIoo9mAe8Mfs=
+Received: from localhost (unknown [IPv6:2a02:ab88:1380:6600:79f7:20e6:6650:f439])
+        by helium.impl.it (Postfix) with ESMTPSA id 46749443150;
+        Sat,  1 Apr 2023 01:25:31 +0200 (CEST)
+From:   Benjamin Asbach <asbachb.kernel@impl.it>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Pearson <markpearson@lenvo.com>,
+        Benjamin Asbach <asbachb.kernel@impl.it>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] platform/x86: think-lmi: Fix memory leak when showing current settings
-Date:   Fri, 31 Mar 2023 23:33:19 +0200
-Message-Id: <20230331213319.41040-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.30.2
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle quirk list
+Date:   Sat,  1 Apr 2023 01:24:47 +0200
+Message-Id: <20230331232447.37204-1-asbachb.kernel@impl.it>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hVi4JZhY5ITHBCZ96XKgijEgPxTZgmr/KMgFg/ieta1PObiGlDn
- JiLQJ8moCnYNhHyWNcKVjAa3hCmVVmpMkk6US84PBhU4foP1SDEFXGm6CR9BPsHsFTs2zL7
- hpSsqzTzQwM8sTqY6kOWdEKA5ZJ29wT5ofSBqKUk8R4amJrNSgraYeYwIkJmG2+nUnluDdH
- z7i/xp/aAlB3YUxfzmffw==
-UI-OutboundReport: notjunk:1;M01:P0:3yD1piXwDKw=;Ee56+PiU5hMw9gDLK0SwwwcJZGx
- h3U8PXO4P5txxb+W1ze0xn0mfHxo131dYWZc7NsFi0IlzZX52frWKcotbQbn9UkXUPSbt/mz6
- Xnj/6tKhV/4NW8sxGV/AMfKFrsPPWN4m+JIFwMtQGK5HhHv2L1GqGX/QzQA0/jGn1OwDBIAMQ
- +lg/u5qdRR4ZwaNrFeMS9vqTIxMl3AxarmsIurQM9L07TiQhZmZSlnctpIkWJsDZALxSJSEBv
- aw0jfIHmiFOPOZKXIvVeSj6olZeIkajBCYZNfIsNM4rTVweP5xbynNF+Exerl/zDbtalAtd/A
- xVlDrvwMUYUoX9mzjnyx+IGCjmC1U4wxuC0ADErYomLx4tJuLEAyWxQXPauKb79NUlE9KueFr
- iI0es9zUy8ANM8MZoHJsxlkN/lNJQnS0Z8CMdRvg4qay0djYv94UkxqBWQOFBsKQpfXAg+xFV
- Y9jj5nr1wqvYUuh8i8CJ17YauDHYfElSa3xljzKwS229UhCuszQFB2RIcPBjtO46ZhPQsST9+
- 1+Zya9V5AdHvP2N/399edPHocke8NMMAHMP+/mmQ+R5y4z+hOOj3zIfDbk7MKC4e322P9FFHI
- uLny7qDCwe2EZU5JSUPR2WtnIa0Hj6Ysl/KIbbQLtpOZa/RjRg5Sp5Ya0UoF4cCHugWFx+HkX
- vn+QUSau5qrYGp4bRyLlXNxdJpflj1p/1vEcp9VvGRB3SB8G6WK85kzVun6DYeWkrXchqe/+b
- w5TvT9+v//FNPdfPcU43GHgpTTeV2/itTEntFwr96HXFtPsUtiat5lRvMJXqeO0ETN1kCi+0Y
- wm6KC8Q3iF7FcnJd2rVCbaZeyXe1CIBUp3mT83nA8to4HSt3YLP/Fs9YQLtNzpMfd30R9mE4Y
- +YJs2bRrLtW7y4Hlkd2Z2A+1cUw77pdKY1iEVEzIpqZCkYnoIb3FxRPFZNXeCtzzItydZlLEx
- /MVuhHtd2JpYXz4Wm7mSvo8XmMM=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When retriving a item string with tlmi_setting(), the result has to be
-freed using kfree(). In current_value_show() however, malformed
-item strings are not freed, causing a memory leak.
-Fix this by eliminating the early return responsible for this.
+> Lenovo laptops that contain NVME SSDs across a variety of generations have
+> trouble resuming from suspend to idle when the IOMMU translation layer is
+> active for the NVME storage device.
+>
+> This generally manifests as a large resume delay or page faults. These
+> delays and page faults occur as a result of a Lenovo BIOS specific SMI
+> that runs during the D3->D0 transition on NVME devices.
 
-Reported-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Link: https://lore.kernel.org/platform-driver-x86/01e920bc-5882-ba0c-dd15-=
-868bf0eca0b8@alu.unizg.hr/T/#t
-Tested-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Fixes: 0fdf10e5fc96 ("platform/x86: think-lmi: Split current_value to refl=
-ect only the value")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes in v3:
-- Fix Fixes: tag
-- Add Tested-by: tag
-Changes in v2:
-- Add Reported-by: and Link: tags
-=2D--
- drivers/platform/x86/think-lmi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Link: https://lore.kernel.org/all/20220503183420.348-1-mario.limonciello@amd.com/
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
--lmi.c
-index cc66f7cbccf2..8cafb9d4016c 100644
-=2D-- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -930,10 +930,12 @@ static ssize_t current_value_show(struct kobject *ko=
-bj, struct kobj_attribute *a
- 	/* validate and split from `item,value` -> `value` */
- 	value =3D strpbrk(item, ",");
- 	if (!value || value =3D=3D item || !strlen(value + 1))
--		return -EINVAL;
-+		ret =3D -EINVAL;
-+	else
-+		ret =3D sysfs_emit(buf, "%s\n", value + 1);
+As Lenovo distributes T14s Gen1 laptops with different product names
+a missing one is added by this patch.
 
--	ret =3D sysfs_emit(buf, "%s\n", value + 1);
- 	kfree(item);
+Note: Based on lenovo support page there might be some more variants which
+are not represented in s2idle quirk list.
+
+Signed-off-by: Benjamin Asbach <asbachb.kernel@impl.it>
+Tested-by: Benjamin Asbach <asbachb.kernel@impl.it>
+
+Link: https://bbs.archlinux.org/viewtopic.php?pid=2084655#p2084655
+---
+ drivers/platform/x86/thinkpad_acpi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 32c10457399e..57428d7a392d 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4478,6 +4478,15 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
+ 		}
+ 	},
++	{
++		.ident = "T14s Gen1 AMD",
++		.driver_data = &quirk_s2idle_bug,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20UJ"),
++		}
++	},
 +
- 	return ret;
- }
-
-=2D-
-2.30.2
+ 	{
+ 		.ident = "P14s Gen1 AMD",
+ 		.driver_data = &quirk_s2idle_bug,
+-- 
+2.40.0
 
