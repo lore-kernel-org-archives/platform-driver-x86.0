@@ -2,288 +2,190 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15DAC77B60
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 Apr 2023 06:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAF0C76196
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 Apr 2023 14:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbjDBGF3 (ORCPT
+        id S229646AbjDBOEi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 Apr 2023 02:05:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
+        Sun, 2 Apr 2023 10:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230037AbjDBGF2 (ORCPT
+        with ESMTP id S229448AbjDBOEg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 Apr 2023 02:05:28 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E98D20C3A
-        for <platform-driver-x86@vger.kernel.org>; Sat,  1 Apr 2023 23:05:27 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id z33so8068782qko.6
-        for <platform-driver-x86@vger.kernel.org>; Sat, 01 Apr 2023 23:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680415526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r5w4ZHKkTCN3vA7pdNgVdmdNeSjSMQOJpKmTUERmyy8=;
-        b=NNqh9LzYSCcFUVP7e02UFqHXwjYPGLwku9hr/XreWasx/6KotFHaiO2djG5X9bMif8
-         G0sQfAUkzaSuEWUmPY5juR8vjlSCd9GcKDRMKq/ZBy98G+J1O1+nj6KQKd4b0u55G19C
-         pbwYEpvkGI27spxzz/cB5Vku/onDH/vpzQOxH6o2E98k4jCHdVjAj6unVnwWZVjoG479
-         uv27626EJmuukXLAR3cwtsyAiefU3EsGfOq1QGa4Mo6lLYTfRqapAqxk2LKx26fwKPnS
-         s58Xn93u1tvT4OSO0OEwXkP/GFeXztOuVYmAd2D0yqItdsljo0N1+JRTWmAle1S+ZMyU
-         sOSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680415526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r5w4ZHKkTCN3vA7pdNgVdmdNeSjSMQOJpKmTUERmyy8=;
-        b=4303Th/2ZnCqK/r5C1nP7BdtrBE0f42T8aydfpuBFwtZAN/RWJPzBTeY0jjA6Sg+l2
-         fMJ3c4t7wcS1y6RSWZmy5JLd3FrLUbIti+kimX5vtkeUX5TVBxReZvr4Jo/YO3KZ4AGP
-         jiHMpQ7FGxlnO70fctLqmgXWbtxptN8c0LKwdbP7C2WQn49f3hpqnyI/QDhUX92NBju2
-         l58jLTyG7HywAC9fn/WUnrH5QoZI3mqgWuZvxK7k0CbG9Q2KnK9gbZGOS0hqgtXI4XE2
-         icSEsxHfmv8rH44HrTv21IFyv4O96o67d8rMy/GKGkUDBEkqPMOasy4EVZ+9lwc04U/W
-         UZBQ==
-X-Gm-Message-State: AO0yUKUwCJyJoBoTV8pVhjJOKkHwskkWgERqE78jW1jIMp0HmtliSM2x
-        u93ckxoRkmFKkR5rzEHdXbl3eJrMQX6fdRot+ZtupzQZ1EYeOg==
-X-Google-Smtp-Source: AK7set90e2bFCOiEbhP7wKc8gfxUMqWVI3njBZvBlHuhqFnuu9NFUSNhfzM/sh/uBXS9y7K0bCGjbcqmV+hy7xw0pG0=
-X-Received: by 2002:a05:620a:986:b0:746:af25:7e8a with SMTP id
- x6-20020a05620a098600b00746af257e8amr6489329qkx.14.1680415526062; Sat, 01 Apr
- 2023 23:05:26 -0700 (PDT)
+        Sun, 2 Apr 2023 10:04:36 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5BEFF35;
+        Sun,  2 Apr 2023 07:04:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VhI/b+OJjgv3jE0mL1M6CJ28r8GTPAFuSQXBrb1KVj2hUqV5MqRQsZ81STR1UJ3F/oGP9dA3vTxlr0lSOo45BRkJyBWtJJFuGu0xDnsVsu/CuIIZ4SPS94rZv1PlcOq0fRoVTrP4xtR4o1PCvIICtKwFaBkTi/3rGS+wlhNRws2fohtlOMukFTqC+Y6gZMuKSJo07lWsq97/T5vlYPSqIzhrJS+/7YjsHIkrd5V8iQYmYcc/sX6rpGvvmsebiquacmOt1cilCZN+3tDmzHjjXc0JMdjsC6mlq5C/NOk1kgtAtAx+66Kzzs/04lJlrxFlZbkz/RtB331786lDwV7YVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hXERaR9NfDYZniXs8nyWpaI5FMn7a06YCyhK9HSHQc4=;
+ b=iIqsKDiMEFT4pb9cVU9mJlH8I7hPDR/GYPyxY+CftFf2ImFYAqxa6crkZXjrnpfjOXOUl1c0m7lRb20AuG8FsqP61Qn2vXEziCIemh0A0hpwCFQNRYMsWMbPxIuRC68DTmOi/bptW19Pu6eLTB2TCN2NBDGOS33JMi9rP77iu+ctUgIyx5UtVp+zsZJJIF3FTj0mdSFlPPGQkcK5iPOk4Rdh8W6d4WT9GN3ZhnQYJnQtn1CKIXpmdvyS5gzkjsw7o6q3/DHajTpUgRvs4jjbYGb++FlYpWFdf5XWnPOmw84DDq7BMSzzdYNve90ezakh1VeouI+/f9gdMF4TbUmvvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hXERaR9NfDYZniXs8nyWpaI5FMn7a06YCyhK9HSHQc4=;
+ b=ef3trcgkgxweySyP60cgzITWtCBdFXJd6NsC5WG+DStVfwvTLVEL4rB/eJ/ggr3nNZ8PUhEyMSo8C2cd9KpYdDujfvwV9jIxdmQmX6eNArWso7zm5s+/YZGAtkfvdH1ooaEP930FKuEOVK7CtUJ8tRkAzaGK2UJ/PtXFvoltgRc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM4PR12MB5150.namprd12.prod.outlook.com (2603:10b6:5:391::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.30; Sun, 2 Apr
+ 2023 14:04:32 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f4d:82d0:c8c:bebe]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::f4d:82d0:c8c:bebe%2]) with mapi id 15.20.6254.028; Sun, 2 Apr 2023
+ 14:04:32 +0000
+Message-ID: <f2bbd848-2079-d5cb-6a59-9040708dc429@amd.com>
+Date:   Sun, 2 Apr 2023 09:04:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 1/2] platform/x86: think-lmi: Fix memory leaks when
+ parsing ThinkStation WMI strings
+Content-Language: en-US
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     hdegoede@redhat.com, markgross@kernel.org, W_Armin@gmx.de,
+        mirsad.todorovac@alu.unizg.hr, linux@weissschuh.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20230401184345.208960-1-mpearson-lenovo@squebb.ca>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20230401184345.208960-1-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR13CA0087.namprd13.prod.outlook.com
+ (2603:10b6:806:23::32) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-References: <20230401150737.597417-1-hdegoede@redhat.com> <20230401150737.597417-3-hdegoede@redhat.com>
-In-Reply-To: <20230401150737.597417-3-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 2 Apr 2023 08:04:48 +0200
-Message-ID: <CAHp75Ve5zx0rEDjQTkf2KsRC4ASVoxUkhpX2YFAJsNuV9+v3OQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] platform/x86: x86-android-tablets: Add Lenovo Yoga
- Book X90F/L data
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB5150:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f2b2181-d749-47e1-e121-08db33832e57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5M8JTU3do+8Xox/b3itHs7ni9RGUP+yVCoCr+TRvh3RVZgiVDD1Vju/3cE+aYZlQ2aPGHnHCi2nnWOJF3gny4lUCTbUfs0K1x0gMXTyQvkdRrYTXHzCg+aZozARKSPjlX+soZZjrnU1DMzKdvtVkwG4WGFZpMHYof/Y7Re+1iq6pXlrMSzozfOMGRlAGdeWFmMbssYpKcLuw02VgRuTYTvV65gG+oX1Ife8zHQvRufpJ7RoBBk8bJZrf9bg4m+vaiY+0cubHTRPYQQda5UzVzYKIVYbjIHB0uuh/POumiTamFEHtW8S6AB6p/OeQ9LN9xvktya+/vvwrUqjpnrpzYQ6Y8H6GZUddIcJoqHitnh8mLQZ3h8hoFR/OjOFrmOGr/iaFOLm/XmQcDqqnXvkEqsM7HW3l+ZG8z34h34964ZYWlDuTI0+0RWYbuNLRkNbVz4wNSniQfA+0fVLyAjlZouFVro5AaTSV3QTcG5c+6P6J0pMW+HP1TARLR8a6zFqKHhOhRGEHQnlg93Eboh7YXeN3EwdpG6PYlrZLo3ETxs6pXzJ2EB3DVwPPlRBn7qMWkBrrExOr8aM1oBP1PNVD468PhCp9T5Wvwg+Mu3xXJIEgRPEnTrSVXTwpQAUwNk0NtyiRcvMwxZ8wv3NiHe19MQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(451199021)(6916009)(4326008)(41300700001)(86362001)(31696002)(38100700002)(966005)(53546011)(83380400001)(2616005)(186003)(6512007)(6506007)(5660300002)(8676002)(8936002)(44832011)(478600001)(316002)(66946007)(66556008)(66476007)(6486002)(36756003)(6666004)(2906002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZFVFWUhkOVhDM2dmQ1p4Tmo0c090VnpKaTZuNHhUUGp4T3VnYWU4WFVUb0kx?=
+ =?utf-8?B?VlE4c3JnUkpmQW5jL1dnYTlrOVV3Umx5UkVuMExudjNRMTN0bFZjTC9CcHFW?=
+ =?utf-8?B?N3RqUXFMM0dzQW95cHVLckdkUVllSDE1QVVBQWpVSFl2SFdRVmJISThxK0Qx?=
+ =?utf-8?B?M0QyZFZlWCtmZzZzcU10Y0tPb2hWeXJMQ1VFQlFsczhheWw5NW1VdHhXemFG?=
+ =?utf-8?B?Z2xxLzd0bzgycmsrT1hnY1AxRk14OGhqdU9Jd1l0dytUWnZmUXh5TkQvNmRE?=
+ =?utf-8?B?QlR1a295alZMZHEwdjBWMlpuTmFaRTFnOGg4VXFLUDhXQ2tQZWdqbTFYYi9P?=
+ =?utf-8?B?SU5aUWFrVHFOT20vb1ZEY1RIaFJMV2g4TUdqcUt5dnFjOFArNGFYTU1pQWQr?=
+ =?utf-8?B?V1hKelV6Z1N0dFNuYXFjWk9lL09ncXBjekhxRWRETTZsZVM0UUswanMwM0p3?=
+ =?utf-8?B?a2FaZGxPR0EzT2R3Q2RsWjdjckNGNUdYK1RsMDdQcnRQR3ViMTNCSG8xbTlp?=
+ =?utf-8?B?bVpORG1lOHowOEM3QmtMQWZvOEVKcEl4YTdhc0VlNlpVcmxsVnZDTVZIWWtP?=
+ =?utf-8?B?VUhad0w1SmdnSUIvTDZQMjkrYi9RVFZWWE9VY2U3MUxoODFvMTc1QmRaeTlE?=
+ =?utf-8?B?RlFHdUpRNkJNajZWK21sL2dpbjdVTmlYL3U3SzYwT1FEQWgyMWsvZVZYUGVZ?=
+ =?utf-8?B?Y1NEZWdNb0MraE1SZEZGazMxYmVNK3JjQmhQVmRXOGVlRHBvMjNGejZGbzdx?=
+ =?utf-8?B?ZmxweUdQMGxrUGFTSlVXUWFtUmo0ZVZya0tSTVduTjNhYmhqL3E1WjZGeW9y?=
+ =?utf-8?B?MXd5VFZzcVdOMy83S0RnMkRJN3Q4eXIxVm1DYXM3RDMvWXV3YVBNYmRGS3Zo?=
+ =?utf-8?B?My9mOGpTcE01enhiUnlCdEk3UFZ3WlIvNkZzZVBWTmdzUmdWS0RyelFWeVBt?=
+ =?utf-8?B?UktVMTFwYUNKQ3RrRHVjRHAxbStYUnlROWdCTXBZQ2E3TFhhZjNjbUF3dkNt?=
+ =?utf-8?B?U01DOE9CeEp5UVlrSG96RUdYb25QOGNGc3pJOVd4aTc1d3FSTnpmV2F5QU8r?=
+ =?utf-8?B?dE9sVjByU2x0VFB4em5NYm9HYS8vOWZCZUNJQ29PMk1lRXF6U1pqUGN0TFBo?=
+ =?utf-8?B?SVlBbDk5SDZkQ2pVQi93cHVRTUpRNUxVTHVwRGVtOUFScEVTOTdLbXVLQklO?=
+ =?utf-8?B?bnZVd2ZBbDM2K1g5YUp3NTJoUmcrcGNzclpvUGhNSUNjeUlMSjRQaEswL01Y?=
+ =?utf-8?B?c29kZlRWS0ZHU0QrUlpDV3lBbnhVZW5ydlZXWWl1QnF1NkkxYVFXcHZRM0xG?=
+ =?utf-8?B?bVhhZkpmTk9TZ0FrckcwV3I2L3RlSmhjU2hjNnNHT2c3V2d0cnBpQ1pON2Rt?=
+ =?utf-8?B?a0RzcEtFaytzc1RwaWhTWmJzUW94Z3h4MlVkQ2UvSkdoUnljOHViczJJQith?=
+ =?utf-8?B?dk1ab3N0Skx4NTRRSGRxd3Z4SmlueldiTFVPYlZHVkRvVWx1ZFk5WTZOMER1?=
+ =?utf-8?B?c0puOGlvT1g3YVJzazdoZGJ1VDNKaThkdjlkSWRMZXN4aHgzNGpHMW9mUDF2?=
+ =?utf-8?B?bFdLc2k2SnN2NmZNb0ZxOFJuVlVCOTVZUW5DT1Z2QXBTMjdTVlU5d2g5MERJ?=
+ =?utf-8?B?VzZHd2ZZU2dzbXRKbnFTdkt1MytQSHRFYW81MjdvUU9WTWw5bmhxaE1QaXBp?=
+ =?utf-8?B?TVVsMTlPRUlnajQxZ3AxSW5UQ0RTdmJtLzNwWGNPdERCSkxjWWVMWTRTOFFB?=
+ =?utf-8?B?Slc0akNUQmZhbkVsNHNNcHNEd0pjaWt2MG11UnFmVENrVUQ1L3FRQ1BFK0tt?=
+ =?utf-8?B?SjBuYzVsOVVMdmhhUzRYbmx5aGFrSEpGZlB1bWhJQnJtMVk2T3ppSXFNMDh1?=
+ =?utf-8?B?dGo2U1VEOVpPcWlyN2tHUWsvNzN2UFhvNHBBQ1BncVl4R0VuWUxJeFRlSERF?=
+ =?utf-8?B?ZVVyWlFiSEVBblcwMk1PQmVTV0tHU3pHTlBJVHpCY253d21NQStPU0twbFNm?=
+ =?utf-8?B?bTNrVzZDNERVU2xwTlU5NUNTQ0x3TTM5U1ZXNkZLS3BVNzFuSDRDQUc1NS84?=
+ =?utf-8?B?a1VIdU03aWIxRm1oODFPZyswNjFDSHBDQmJOcVg2ZEhvSEphOTU0Q1M5d0pE?=
+ =?utf-8?B?TzFFQlVvd0xrWm5RbVJsSEhuZG1RVUN3VVlsVHVmWUcyclJxdWJoR01ENUs2?=
+ =?utf-8?Q?7dqEYxMWEQuwNkp5UwspCexSlZMYiwZsQDgbkZlZU3/d?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f2b2181-d749-47e1-e121-08db33832e57
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2023 14:04:31.5856
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gcdr98iLC7oXnZ/+Zp4sDqt3ZVB3rCOns5P9ckznMDN146TJRqHZyOl23RRGwoikKFlxGlFf6kt3LmJ9mW78+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5150
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Apr 1, 2023 at 5:07=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
+On 4/1/23 13:43, Mark Pearson wrote:
+
+> My previous commit introduced a memory leak where the item allocated
+> from tlmi_setting was not freed.
+> This commit also renames it to avoid confusion with the similarly name
+> variable in the same function.
 >
-> The Lenovo Yoga Book X90F/L is a x86 ACPI tablet which ships with Android
-> x86 as factory OS. Its DSDT contains a bunch of I2C devices which are not
-> actually there, causing various resource conflicts. Enumeration of these
-> is skipped through the acpi_quirk_skip_i2c_client_enumeration().
->
-> Add support for manually instantiating the I2C + other devices which are
-> actually present on this tablet by adding the necessary device info to
-> the x86-android-tablets module.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: 8a02d70679fc ("platform/x86: think-lmi: Add possible_values for ThinkStation")
+> Reported-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+> Link: https://lore.kernel.org/lkml/df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de/T/
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 > ---
->  .../platform/x86/x86-android-tablets/dmi.c    |   9 ++
->  .../platform/x86/x86-android-tablets/lenovo.c | 122 ++++++++++++++++++
->  .../x86-android-tablets/x86-android-tablets.h |   1 +
->  3 files changed, 132 insertions(+)
+> This patch series builds on top of the proposed patch from Armin Wolf
+> "platform/x86: think-lmi: Fix memory leak when showing current settings"
+
+Which version of the patch did you do it from?  I tried to apply v3 of 
+Armin's patch
+to Linus' tree and then apply these two.
+
+The first applied, but the second had conflicts.  Here was my base (with 
+patch 1 in
+this series applied).
+
+50c77e3211d7 (HEAD -> master) platform/x86: think-lmi: Fix memory leaks 
+when parsing ThinkStation WMI strings
+ede629af1e2c platform/x86: think-lmi: Fix memory leak when showing 
+current settings
+00c7b5f4ddc5 (origin/master, origin/HEAD) Merge tag 'input-for-v6.3-rc4' 
+of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+
+......
+
+Applying: platform/x86: think-lmi: Clean up display of current_value on 
+Thinkstation
+error: patch failed: drivers/platform/x86/think-lmi.c:931
+error: drivers/platform/x86/think-lmi.c: patch does not apply
+
+>   drivers/platform/x86/think-lmi.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/pla=
-tform/x86/x86-android-tablets/dmi.c
-> index 6ea47af1b480..23e640b7003d 100644
-> --- a/drivers/platform/x86/x86-android-tablets/dmi.c
-> +++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-> @@ -76,6 +76,15 @@ const struct dmi_system_id x86_android_tablet_ids[] __=
-initconst =3D {
->                 },
->                 .driver_data =3D (void *)&czc_p10t,
->         },
-> +       {
-> +               /* Lenovo Yoga Book X90F / X90L */
-> +               .matches =3D {
-> +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporatio=
-n"),
-> +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 =
-PLATFORM"),
-> +                       DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "YETI-11"),
-> +               },
-> +               .driver_data =3D (void *)&lenovo_yogabook_x90_info,
-> +       },
->         {
->                 /* Lenovo Yoga Book X91F / X91L */
->                 .matches =3D {
-> diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/=
-platform/x86/x86-android-tablets/lenovo.c
-> index 5d217cbbde30..d53928504c09 100644
-> --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-> +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-> @@ -38,6 +38,128 @@ static struct lp855x_platform_data lenovo_lp8557_pdat=
-a =3D {
->         .initial_brightness =3D 128,
->  };
->
-> +/* Lenovo Yoga Book X90F / X90L's Android factory img has everything har=
-dcoded */
-> +
-> +/*
-> + * The HiDeep IST940E touchscreen comes up in HID mode and could alterna=
-tively
-> + * be used in I2C-HID mode (I2C-HID descriptor reg 0x0020) if i2c-hid-of=
-.c is
-> + * modified to use generic (non of) device-properties and thought to dea=
-l with
-
-non-OF
-
-> + * the reset GPIO. "hideep,force-native-protocol" resets it to native mo=
-de.
-> + */
-> +static const struct property_entry lenovo_yb1_x90_hideep_ts_props[] =3D =
-{
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1200),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
-> +       PROPERTY_ENTRY_U32("touchscreen-max-pressure", 16384),
-> +       PROPERTY_ENTRY_BOOL("hideep,force-native-protocol"),
-> +       { }
-> +};
-> +
-> +static const struct software_node lenovo_yb1_x90_hideep_ts_node =3D {
-> +       .properties =3D lenovo_yb1_x90_hideep_ts_props,
-> +};
-> +
-> +static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __i=
-nitconst =3D {
-> +       {
-> +               /* BQ27542 fuel-gauge */
-> +               .board_info =3D {
-> +                       .type =3D "bq27542",
-> +                       .addr =3D 0x55,
-> +                       .dev_name =3D "bq27542",
-> +                       .swnode =3D &fg_bq25890_supply_node,
-> +               },
-> +               .adapter_path =3D "\\_SB_.PCI0.I2C1",
-> +       }, {
-> +               /* Goodix Touchscreen in keyboard half*/
-
-Missing space before */.
-
-> +               .board_info =3D {
-> +                       .type =3D "GDIX1001:00",
-> +                       .addr =3D 0x14,
-> +                       .dev_name =3D "goodix_ts",
-> +               },
-> +               .adapter_path =3D "\\_SB_.PCI0.I2C2",
-> +               .irq_data =3D {
-> +                       .type =3D X86_ACPI_IRQ_TYPE_GPIOINT,
-> +                       .chip =3D "INT33FF:01",
-> +                       .index =3D 56,
-> +                       .trigger =3D ACPI_EDGE_SENSITIVE,
-> +                       .polarity =3D ACPI_ACTIVE_LOW,
-> +               },
-> +       }, {
-> +               /* LP8557 Backlight controller */
-> +               .board_info =3D {
-> +                       .type =3D "lp8557",
-> +                       .addr =3D 0x2c,
-> +                       .dev_name =3D "lp8557",
-> +                       .platform_data =3D &lenovo_lp8557_pdata,
-> +               },
-> +               .adapter_path =3D "\\_SB_.PCI0.I2C4",
-> +       }, {
-> +               /* HiDeep IST940E Touchscreen in display half */
-> +               .board_info =3D {
-> +                       .type =3D "hideep_ts",
-> +                       .addr =3D 0x6c,
-> +                       .dev_name =3D "hideep_ts",
-> +                       .swnode =3D &lenovo_yb1_x90_hideep_ts_node,
-> +               },
-> +               .adapter_path =3D "\\_SB_.PCI0.I2C6",
-> +               .irq_data =3D {
-> +                       .type =3D X86_ACPI_IRQ_TYPE_GPIOINT,
-> +                       .chip =3D "INT33FF:03",
-> +                       .index =3D 77,
-> +                       .trigger =3D ACPI_LEVEL_SENSITIVE,
-> +                       .polarity =3D ACPI_ACTIVE_LOW,
-> +               },
-> +       },
-> +};
-> +
-> +static struct gpiod_lookup_table lenovo_yb1_x90_goodix_gpios =3D {
-> +       .dev_id =3D "i2c-goodix_ts",
-> +       .table =3D {
-> +               GPIO_LOOKUP("INT33FF:01", 53, "reset", GPIO_ACTIVE_HIGH),
-> +               GPIO_LOOKUP("INT33FF:01", 56, "irq", GPIO_ACTIVE_HIGH),
-> +               { }
-> +       },
-> +};
-> +
-> +static struct gpiod_lookup_table lenovo_yb1_x90_hideep_gpios =3D {
-> +       .dev_id =3D "i2c-hideep_ts",
-> +       .table =3D {
-> +               GPIO_LOOKUP("INT33FF:00", 7, "reset", GPIO_ACTIVE_LOW),
-> +               { }
-> +       },
-> +};
-> +
-> +static struct gpiod_lookup_table * const lenovo_yb1_x90_gpios[] =3D {
-> +       &lenovo_yb1_x90_hideep_gpios,
-> +       &lenovo_yb1_x90_goodix_gpios,
-> +       NULL
-> +};
-> +
-> +static int __init lenovo_yb1_x90_init(void)
-> +{
-> +       /* Enable the regulators used by the touchscreens */
-> +
-> +       /* Vprog3B 3.0V used by the goodix touchscreen in the keyboard ha=
-lf */
-> +       intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0x9b, 0x02, 0xff)=
-;
-> +
-> +       /* Vprog4D 3.0V used by the HiDeep touchscreen in the display hal=
-f */
-> +       intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0x9f, 0x02, 0xff)=
-;
-> +
-> +       /* Vprog5A 1.8V used by the HiDeep touchscreen in the display hal=
-f */
-> +       intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0xa0, 0x02, 0xff)=
-;
-> +
-> +       /* Vprog5B 1.8V used by the goodix touchscreen in the keyboard ha=
-lf */
-> +       intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0xa1, 0x02, 0xff)=
-;
-> +
-> +       return 0;
-> +}
-> +
-> +const struct x86_dev_info lenovo_yogabook_x90_info __initconst =3D {
-> +       .i2c_client_info =3D lenovo_yb1_x90_i2c_clients,
-> +       .i2c_client_count =3D ARRAY_SIZE(lenovo_yb1_x90_i2c_clients),
-> +       .gpiod_lookup_tables =3D lenovo_yb1_x90_gpios,
-> +       .init =3D lenovo_yb1_x90_init,
-> +};
-> +
->  /* Lenovo Yoga Book X91F/L Windows tablet needs manual instantiation of =
-the fg client */
->  static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[=
-] __initconst =3D {
->         {
-> diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets=
-.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> index c2b490519324..b6802d75dbdd 100644
-> --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> @@ -94,6 +94,7 @@ extern const struct x86_dev_info asus_me176c_info;
->  extern const struct x86_dev_info asus_tf103c_info;
->  extern const struct x86_dev_info chuwi_hi8_info;
->  extern const struct x86_dev_info czc_p10t;
-> +extern const struct x86_dev_info lenovo_yogabook_x90_info;
->  extern const struct x86_dev_info lenovo_yogabook_x91_info;
->  extern const struct x86_dev_info lenovo_yoga_tab2_830_1050_info;
->  extern const struct x86_dev_info lenovo_yt3_info;
-
-For the entire series
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
---=20
-With Best Regards,
-Andy Shevchenko
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 88da7bcb6ce9..ad952b49617b 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -1459,10 +1459,10 @@ static int tlmi_analyze(void)
+>   			 * name string.
+>   			 * Try and pull that out if it's available.
+>   			 */
+> -			char *item, *optstart, *optend;
+> +			char *optitem, *optstart, *optend;
+>   
+> -			if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID)) {
+> -				optstart = strstr(item, "[Optional:");
+> +			if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID)) {
+> +				optstart = strstr(optitem, "[Optional:");
+>   				if (optstart) {
+>   					optstart += strlen("[Optional:");
+>   					optend = strstr(optstart, "]");
+> @@ -1471,6 +1471,7 @@ static int tlmi_analyze(void)
+>   							kstrndup(optstart, optend - optstart,
+>   									GFP_KERNEL);
+>   				}
+> +				kfree(optitem);
+>   			}
+>   		}
+>   		/*
