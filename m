@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24676C761AF
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 Apr 2023 14:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31020C7619A
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 Apr 2023 14:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbjDBOPy (ORCPT
+        id S230218AbjDBOko (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 Apr 2023 10:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        Sun, 2 Apr 2023 10:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbjDBOPx (ORCPT
+        with ESMTP id S229448AbjDBOkn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 Apr 2023 10:15:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45BC2782F
-        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 07:15:50 -0700 (PDT)
+        Sun, 2 Apr 2023 10:40:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEDB5B95
+        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 07:40:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 61722B80E94
-        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 14:15:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 225CFC433D2
-        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 14:15:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91F5D6126C
+        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 14:40:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBCF2C4331D
+        for <platform-driver-x86@vger.kernel.org>; Sun,  2 Apr 2023 14:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680444948;
-        bh=heoeYLzHZG6EVFdYZTTFsykBrVdAEV17c1coRqDsOM4=;
+        s=k20201202; t=1680446441;
+        bh=PnSJgpv9CZBYVn93SgiaP3MY8S47eLPY6MfN5F3yK1k=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=gPlkhi+K0BpzH7BZnkbA0dO62PKPcPsTYzsCnm8upK9NvVvTJrUvGhtmdS5ME8+B9
-         Pu5MyGTanvP8KT2aOXQ0ZLRcPy8YgMIkjwHwox3UbI/F/BSRPoz73OgO/aW6JScwHK
-         JjPTjswHjdL8XbE50+cMwH7Tm/I5cPeB6J3mOCxf4EsyuzuaDiBazXDVLjdzyWsncr
-         o1YTagniDUjgfcxl5UZhQEpZGcap8BYi/AcwGyELjTgI54JSjH4/hoOJWnIeFoF4E3
-         iMfn/xB/NyIzvHEYYqox7XWNxoAdGdO4xzX267ZPAncK9Jt45e1w1wkpsIdtB+usQ3
-         6A0g9cG7Cjupw==
+        b=A72dHkJi83pf/6i0CH15CjXpvZauWo3wpm8YfUuAQ0qVDopQVLdJPph/namIrovhF
+         AqVC48xosVU0AkEg3s+hOU0L6KahhetczG38BQO4Z2Iw5V6FOxp1MO8ufcArHDWOHL
+         B7da9pKXwQKMqT7/T4ayMJ3fx82SjK8Yiffs1TlPw5kV2udHluAnU2IWe9BSa1WnlY
+         4sYw2URSPSk36oqf8UXBWN2YLBIWy7Vs/G211SD7KRyKoCFwpWGS0lUQw72JzIrlAd
+         +OvccXqQWtzuKdhBXK3n18fN4oz8NPtchW9wyB3bXsx9hlM50i8Wvv+fxAVpZmmBHY
+         sR+vfe5AZJPuA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id F3E10C43143; Sun,  2 Apr 2023 14:15:47 +0000 (UTC)
+        id DC80EC43144; Sun,  2 Apr 2023 14:40:40 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sun, 02 Apr 2023 14:15:43 +0000
+Date:   Sun, 02 Apr 2023 14:40:38 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,14 +48,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: jeroen@beerstra.org
+X-Bugzilla-Who: pauk.denis@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-cc2t7V0qk3@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-7qPloUXJW5@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,38 +69,25 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #323 from Jeroen Beerstra (jeroen@beerstra.org) ---
-Op 01-04-2023 om 15:09 schreef bugzilla-daemon@kernel.org:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
->
-> Denis Pauk (pauk.denis@gmail.com) changed:
->
->             What    |Removed                     |Added
-> -------------------------------------------------------------------------=
----
->   Attachment #304011|0                           |1
->          is obsolete|                            |
->
-> --- Comment #321 from Denis Pauk (pauk.denis@gmail.com) ---
-> Created attachment 304071
->    --> https://bugzilla.kernel.org/attachment.cgi?id=3D304071&action=3Ded=
-it
-> Asus WMI for nct6775 v6.2.9 base (2023.04.01)
->
-> Updated patch version.
->
->
-> (In reply to Jeroen Beerstra from comment #319)
->> (In reply to Jeroen Beerstra from comment #311)
->>> (In reply to Denis Pauk from comment #310)
->>>> Could you please check new one ? I have rebased patch to 6.2.7
->>> Applies, compiles, and works just fine. Thank you very much for your ha=
-rd
->>> work, hope all of this lands in 6.3.
->> Same for 6.2.8. I did notice these warnings though:
-> Thank you, should be fixed in new patch.
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-Yes it is, thank you.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #304071|0                           |1
+        is obsolete|                            |
+
+--- Comment #324 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 304077
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D304077&action=3Dedit
+Asus WMI for nct6775 v6.2.9 base (2023.04.02)
+
+Added A620 several boards which have uefi bios download link on official si=
+te.=20
+
+(In reply to barfin from comment #314)
+> (In reply to Denis Pauk from comment #308)
+I have added ugly hack for skip resource conflicts on "H97-PRO GAMER".
+Could you please check that it works for your case?
 
 --=20
 You may reply to this email to add a comment.
