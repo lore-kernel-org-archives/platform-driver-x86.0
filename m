@@ -2,156 +2,131 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CB0C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 00:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396AFC76196
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 01:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjDCAj0 (ORCPT
+        id S230490AbjDCBbf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 Apr 2023 20:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        Sun, 2 Apr 2023 21:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjDCAjZ (ORCPT
+        with ESMTP id S229459AbjDCBbe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 Apr 2023 20:39:25 -0400
+        Sun, 2 Apr 2023 21:31:34 -0400
 Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C1961AE;
-        Sun,  2 Apr 2023 17:39:24 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 9AA57320094B;
-        Sun,  2 Apr 2023 20:39:20 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Sun, 02 Apr 2023 20:39:21 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403135BB6;
+        Sun,  2 Apr 2023 18:31:33 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 0CBBD3200976;
+        Sun,  2 Apr 2023 21:31:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 02 Apr 2023 21:31:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1680482360; x=1680568760; bh=o9/gTgTtxZDdobCbtphP2rM5o2FwK9EFZYs
-        mc68loZo=; b=YZ+Y3UbgHiAwbPoAhCoVdoSZ2U+V+Qrf93NSPXiuKTYrtkYIltE
-        wLfW1hnDTJc7Q8gTg96f+KC8Msr+o9OPBKRxxkrv7nWj/2LSvqnvwafhns3JRToj
-        oz4h+Jy/LHOHMG44mV73fQ8Z+g6mUE5RELFob8rpgxvqQhNsKBKX6RV2Zwi6Tujn
-        Jck0GtbMy4zEurUa1+FzTWIj8L8XohigisYG6uSmhJvP/NuuVF0MNuQ1SJJVk9bt
-        dYhzQCZvhFi3NaV1vyCvEdDmaECzAMRQ8SckmIczNWr2+Hp8YsEYS4CAX+E5+SfW
-        MEBpWHhUmGpSOEflZ59eS5yPW4ct1mXQY0Q==
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1680485491; x=
+        1680571891; bh=vu5M9yMpN9Ov9B/2p2OZEU1hE+55vPvtCBpGCZL8hkw=; b=A
+        XwQBcJcmi8a0ui0niLX3jNZbn+Rvb9Kq9Nd+KvOI4zPgFi6Z1u6SaeEXvRvmcu8S
+        uUwwDhJPU9GDjiC9IFunUuIV58opsaahkKqG2z3e7vttkwOt1oRQLZpSxjL6VL7X
+        y2tDiGZbnxc+3UX4GsjBGla9X2eD0W7e9rWyupgRJwW19rPD9YsgbDRX+lOz2R9S
+        8K3nwRaJ1AhcBilXvxhsslZP1MQCiV2XBiIZXsfuOATtvKp2aw2n3pwHBnBByyCE
+        CYVXhWCagdoCOtPG1pztL9zIPefYqmsgPYR7jcoRHLnOqAetA9IyQ6dr3f9+TC3I
+        IgSSlDP3uy686P3UwY/pw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1680482360; x=1680568760; bh=o9/gTgTtxZDdobCbtphP2rM5o2FwK9EFZYs
-        mc68loZo=; b=WRS9LZ3TDOWSQSiC7tIRQBx+SgpHm2ETlqMUVZNN6QfmHg/9WnM
-        ira8Kb2+j8xyA/fAAerJ0SUgUtDoapuIyhdBFmeB3ggMyk6s1cNLRL8ZJyM/2TWa
-        gsJ4ZE5zRNJbHVyqoXV4ih6pmmJA99otHf3382eiPKIy3w6nIcPlS7F7VrlC5uum
-        ApxyXV+rQALzz/JK2kduiiB19x0AVMYJ/FhxWDMjm4+J/kPmZfGy+QtBPH/JlXKa
-        NMJ1TG8PXUXc8Mnzy+SFUNTK9zlP0hGvI396q9XcBUHhNLsLfjJyL2UeDDgTf/V/
-        HAWOHE776+eUBghYq2LUc32FE0skXlbeuPA==
-X-ME-Sender: <xms:NyAqZG7bRkfWUdSxWPTsdxirfcCHFQxhlcv7V2glGf0cpLiT99amPw>
-    <xme:NyAqZP5drvea4qqbjK3DEPWVJhYmF2jnj22cKoHRpue5mFGoKkOcAKyFiHdEPC0mz
-    PGZdzelAbr8i8xx23Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiiedgfeejucetufdoteggodetrfdotf
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1680485491; x=
+        1680571891; bh=vu5M9yMpN9Ov9B/2p2OZEU1hE+55vPvtCBpGCZL8hkw=; b=u
+        IAcb+n73tC4JPUY6bdmFy8v9FmWfFMWDzd1SzpY3DoCD/zqEPx+hjZnTn2uwhM7l
+        Nri55HZYIhsYSX5ql5URF/y20eb97QyBIglpNztsd5rTPM5WEKrokG2TC5I2jALd
+        cN3++e8HgCgLvMjng9bvfDmscTvt0ThXYjmH9FE7+wrtED20nlgoG0TeAmSbxWhj
+        SIJEIjZPXZP6LAtoyOGjI1kbmS/7L6N8gGQ9io1y5iXht0UaqhMSL3tx02Oj1fkO
+        syQbGa5QpR0NylQMh8ZalXp7bM2zMlf/fADfjsJ1SNM8upqjJwW8wq47As8BiPJE
+        CrCdUYsPf5+ewnxdtT7vg==
+X-ME-Sender: <xms:cywqZNWLjEULYjDM-sOZ2_Zlmck340YVu2L8hyWae9qVuePE-wB52Q>
+    <xme:cywqZNkDy8gvLgrKYrrtVin4pbD5fRIK3Bd4GZYJiLgw3m4EA3bR0vfgytckb6vw8
+    sIWWrcT_ghYsO16m2A>
+X-ME-Received: <xmr:cywqZJbxUZX8DkRWxH9OSENbm2SbHzRDK3LzahQ9VSgDZ10FLAlt6A-AFo2pGL97CAt2Juhi98PcgycaMFv7F1qBHBqcIhrS6JGEqq8kpCI1QLffc7eaQqHuN5dxHhcoTx9RWzjcqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiiedggeekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfeejgedvudegvdekhedvffefjefhuedthfdt
-    heehkeffuddvgfetjeegjeeufefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
-    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:NyAqZFeROP-QWgadU-vYxisoFHs2TSPK4hst7htJRZl38W-tVCq2Gg>
-    <xmx:NyAqZDJ4wTAQvBsOORB0flIpx53aD1RT1WkkpuPOcW4lLck8cKBTcQ>
-    <xmx:NyAqZKLduPrCtq1h_Bw-jqI15hGQydOpgqYJB23N9P6_VOMvxWttRg>
-    <xmx:OCAqZMgSOLuhT6UNCWWIboZ_eCBKxZStkBUX84cIRtn6w6vLs5zx0g>
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepvedtlefggefgjeettddvgfekhfeugfeutdekfeefudeuuddvieeutdel
+    jedvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:cywqZAUNHEK-J3g_-AhkMLlL_FAbHOmJH-x09ICuucWuDObdKKeYBQ>
+    <xmx:cywqZHnNg-z00QlY8szZJS1r74PrPuSPzkC0tzaZKMwVbibJ115pGg>
+    <xmx:cywqZNfOK_mhA0l2dXx1ew7HTpS-m5SvgKw6n0RXE-mjQOw7o_bZcA>
+    <xmx:cywqZFU2UaLcprAG6X65AnRXpgNf7znSGPMV8t2syTOUNEsWGu2L0A>
 Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 22C80C60091; Sun,  2 Apr 2023 20:39:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-238-g746678b8b6-fm-20230329.001-g746678b8
-Mime-Version: 1.0
-Message-Id: <251eeef8-cba5-4b3c-89c2-525cac0d6829@app.fastmail.com>
-In-Reply-To: <ea9b0d97-ddf6-cc22-652f-dde1ec6c1e89@amd.com>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 2 Apr 2023 21:31:30 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org, W_Armin@gmx.de,
+        mirsad.todorovac@alu.unizg.hr, linux@weissschuh.net,
+        Mario.Limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: think-lmi: Fix memory leaks when parsing ThinkStation WMI strings
+Date:   Sun,  2 Apr 2023 21:31:19 -0400
+Message-Id: <20230403013120.2105-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <mpearson-lenovo@squebb.ca>
 References: <mpearson-lenovo@squebb.ca>
- <20230401184345.208960-1-mpearson-lenovo@squebb.ca>
- <f2bbd848-2079-d5cb-6a59-9040708dc429@amd.com>
- <dfd65bd6-26d8-4ef4-8eaa-3cc412f381ec@app.fastmail.com>
- <ea9b0d97-ddf6-cc22-652f-dde1ec6c1e89@amd.com>
-Date:   Sun, 02 Apr 2023 20:38:58 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     "Hans de Goede" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "Armin Wolf" <W_Armin@gmx.de>,
-        "Mirsad Goran Todorovac" <mirsad.todorovac@alu.unizg.hr>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/x86: think-lmi: Fix memory leaks when parsing
- ThinkStation WMI strings
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Apr 2, 2023, at 6:17 PM, Limonciello, Mario wrote:
-> On 4/2/2023 14:23, Mark Pearson wrote:
->> Hi Mario
->>=20
->> On Sun, Apr 2, 2023, at 10:04 AM, Mario Limonciello wrote:
->>> On 4/1/23 13:43, Mark Pearson wrote:
->>>
->>>> My previous commit introduced a memory leak where the item allocated
->>>> from tlmi_setting was not freed.
->>>> This commit also renames it to avoid confusion with the similarly n=
-ame
->>>> variable in the same function.
->>>>
->>>> Fixes: 8a02d70679fc ("platform/x86: think-lmi: Add possible_values =
-for ThinkStation")
->>>> Reported-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
->>>> Link: https://lore.kernel.org/lkml/df26ff45-8933-f2b3-25f4-6ee51ccd=
-a7d8@gmx.de/T/
->>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>> ---
->>>> This patch series builds on top of the proposed patch from Armin Wo=
-lf
->>>> "platform/x86: think-lmi: Fix memory leak when showing current sett=
-ings"
->>>
->>> Which version of the patch did you do it from?=C2=A0 I tried to appl=
-y v3 of
->>> Armin's patch
->>> to Linus' tree and then apply these two.
->>>
->>> The first applied, but the second had conflicts.=C2=A0 Here was my b=
-ase (with
->>> patch 1 in
->>> this series applied).
->>=20
->> I was using v2 - but there shouldn't be any code changes between v3 a=
-nd v2....so I hadn't re-based.
->>=20
->> I'm working in the fixes branch from pdx86.git (with the aim of makin=
-g it easier for Hans to pull in the patches). It's possible I've goofed =
-somehow...though not sure how :(
->>=20
->> I'll go double check - but likely won't be until tomorrow I'm afraid.=
- I should probably just wait for the patch to be accepted and then work =
-from there....
->>=20
->> Mark
->
-> Hmm, I just tried on platform-x86/for-next.
-> commit e3271a5917d1501089b1a224d702aa053e2877f4 (tag:=20
-> platform-drivers-x86-v6.3-4, platform-x86/fixes)
->
-> I get the same problem there.  I just applied Armin's single v3 patch=20
-> and then tried your series.
+My previous commit introduced a memory leak where the item allocated
+from tlmi_setting was not freed.
+This commit also renames it to avoid confusion with the similarly name
+variable in the same function.
 
-You're absolutely right...it doesn't apply if I start again from clean.=20
-I have no idea why - it must have been something I did when applying the=
- patch in the first place but I'm at a loss as to what. Urgh :(
+Fixes: 8a02d70679fc ("platform/x86: think-lmi: Add possible_values for ThinkStation")
+Reported-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Link: https://lore.kernel.org/lkml/df26ff45-8933-f2b3-25f4-6ee51ccda7d8@gmx.de/T/
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+This patch series builds on top of the proposed patch from Armin Wolf
+"platform/x86: think-lmi: Fix memory leak when showing current settings"
+Changes in v2: None, but rebased series because of issues with second
+patch.
 
-I'm regenerating the patch and will resend as a v2. Just going to run so=
-me tests as a sanity check first.=20
+ drivers/platform/x86/think-lmi.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Mark
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 6034df6d577d..87f832142d8d 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -1459,10 +1459,10 @@ static int tlmi_analyze(void)
+ 			 * name string.
+ 			 * Try and pull that out if it's available.
+ 			 */
+-			char *item, *optstart, *optend;
++			char *optitem, *optstart, *optend;
+ 
+-			if (!tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID)) {
+-				optstart = strstr(item, "[Optional:");
++			if (!tlmi_setting(setting->index, &optitem, LENOVO_BIOS_SETTING_GUID)) {
++				optstart = strstr(optitem, "[Optional:");
+ 				if (optstart) {
+ 					optstart += strlen("[Optional:");
+ 					optend = strstr(optstart, "]");
+@@ -1471,6 +1471,7 @@ static int tlmi_analyze(void)
+ 							kstrndup(optstart, optend - optstart,
+ 									GFP_KERNEL);
+ 				}
++				kfree(optitem);
+ 			}
+ 		}
+ 		/*
+-- 
+2.39.2
+
