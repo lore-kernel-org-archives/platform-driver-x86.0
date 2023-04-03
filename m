@@ -2,135 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4015EC7619A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 02:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40803C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 08:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbjDCCFw (ORCPT
+        id S229843AbjDCIW1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 Apr 2023 22:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43100 "EHLO
+        Mon, 3 Apr 2023 04:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230090AbjDCCFv (ORCPT
+        with ESMTP id S230269AbjDCIW0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 Apr 2023 22:05:51 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2043.outbound.protection.outlook.com [40.107.244.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BAD9005;
-        Sun,  2 Apr 2023 19:05:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KV7KQ4o+DRlCZPdw/9D49JqDxgYD3tKQoivlQWD2f1wOsQbOzAfvGytv+MrMpRBPMnJ+MAR0tHcVqsaw9MElxL8+HQk5n40Es/RpL3nq9X/PCmtWU43fAqWggAG0be4k2036TINzH0GDw4vudG7ccwPb0VnBjIFX8rmEdXnyAaXCayoN36A2CTPT7cHriCcEifHUgtpU876vXiUzZukD9MtNYUB5cMOQd3Ag15nFT0/JgQC9F+EgO5tlqcfoYMx9ODClToexbJReixej4ikQjOXpmlVhoXkDJ/40SmtiQWHJj6lCZsB+dYgibaS5GG1/vQFdzJoQBgo0FnMfFAVIxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TSHHWTCgsI7OGujiYlqWXO3wBuQYxZ5zL4J8lBEpWIg=;
- b=ZiJIpAHRL+C2vW7fiDY8q/ZSKc+nBml7eGL+ScIc0QHv0joJMwNOCUxYgPpWgEZqlme39UCe6WubuNJTchiG/2cjR+3dyC/vLVBEzRermRPET4rscpCGNGg44DMVXCH20YUQ5ePxMLWbPBPAcL43zCan9c9Nsh6k87ZB9N444iUmlgwMcuFWgXa4uAOzsEHhThcJs3d3TZTKmnQNSdm0WOFictpY5JCd7iUBWUeNpg0FeXckqqmLWeUcN78voHQrmMA4L5EGQu+wB80LYxN6QQJoYZSAUzAALVeSYa6xbyDYzf8oQEORghEcvxZ3VFWJC2T3+cAg45Mj/vZPr0Tpzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TSHHWTCgsI7OGujiYlqWXO3wBuQYxZ5zL4J8lBEpWIg=;
- b=LPVsXbaEmYYmDLBszubQ5aO/ScGXDo0LdFEhi1iQrVkIJJQAPcbhxusEZGvwY9AWR04jTSU7hT6cQ4KLxpTJejHM9QwUxijUgQJWjGl8Gc6xqwX2NA7o86viCK2pWzuZgHmY6S3DjN3+avvo4S5hkOL8PwKc4F72e9trxIsCnPE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BY5PR12MB4066.namprd12.prod.outlook.com (2603:10b6:a03:207::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Mon, 3 Apr
- 2023 02:05:48 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::f4d:82d0:c8c:bebe]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::f4d:82d0:c8c:bebe%2]) with mapi id 15.20.6254.028; Mon, 3 Apr 2023
- 02:05:48 +0000
-Message-ID: <1a758838-0196-86ee-cd26-cc8c930f20dc@amd.com>
-Date:   Sun, 2 Apr 2023 21:05:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
+        Mon, 3 Apr 2023 04:22:26 -0400
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C51FF759;
+        Mon,  3 Apr 2023 01:21:57 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id 08873604F2;
+        Mon,  3 Apr 2023 10:21:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1680510115; bh=VR2LCqV2q9HM27fPvLYDKiWzVBKaBoH1u3xFXAzaijY=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mSX2x3Kuu63fMrLgRWEHuQUFIILw8lmBZLsBlwL3aM9kMGdKWUImmZUkweSKJOKbg
+         LTiCvPMd/J+JljHj9t9FbrWATv+TxRsWZYU1fmIUUjXZ0q3XS7PRxtwgD7i5xhLp51
+         NFUHMNGBS2BHjOrz2p2T8D0IzSxTKhmgmkEU1UuWmLRYbuiQv3oo2nFCvWIpR5II0m
+         0jdX9l3RG1g10pbvH7k5jDOWuDOZ0vKtBQHW8QC51hrmwsS6vrlqxBc1InZ2uiVR6C
+         CBmXLBAcaC8ryVNg3SI1AUWn/SHmFuduN9HT/CHuiLkNlm0F7Oc/xnzvmY+0YwVWmT
+         BqHGqQpTXbHgA==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id FmoxYBoraDrP; Mon,  3 Apr 2023 10:21:52 +0200 (CEST)
+Received: from [10.0.1.57] (grf-nat.grf.hr [161.53.83.23])
+        by domac.alu.hr (Postfix) with ESMTPSA id A5172604F0;
+        Mon,  3 Apr 2023 10:21:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1680510112; bh=VR2LCqV2q9HM27fPvLYDKiWzVBKaBoH1u3xFXAzaijY=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=xI0ezHIhxyFIypwTZrhe/C1do7yN5sViTFM4PEHn9xTjfSRn2IylInrTfjLIt8DSc
+         b+zlrTAYjXxyWmEJTqP94JfQl2ht39/+HKGKOFI3ixjTQ6aX8BB/TGCDeSJwZe7MQJ
+         IKBIahQn2ogfKcXzdfRSd/WSrQSKphrEefxcQCEaeIjH4Rdm8SJ3vKa9TbQfXq6UVa
+         +Re13tyI9w6Mn/nYydjenKX8qFShfkiHmD3Uoi8vblZ07Z00elycb14SQ3cwki0S7C
+         AxHzbHTdNkDDGvzUWwzeDmEjgN49YUbOMj41DR7Fd57AzyNr4/9zJgkKWk6yVT/0lY
+         9zIPGF1we5yhw==
+Message-ID: <d976e978-6555-4adf-40fd-06870864a1aa@alu.unizg.hr>
+Date:   Mon, 3 Apr 2023 10:21:50 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
 Subject: Re: [PATCH v2 2/2] platform/x86: think-lmi: Clean up display of
  current_value on Thinkstation
+Content-Language: en-US, hr
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 Cc:     hdegoede@redhat.com, markgross@kernel.org, W_Armin@gmx.de,
-        mirsad.todorovac@alu.unizg.hr, linux@weissschuh.net,
+        linux@weissschuh.net, Mario.Limonciello@amd.com,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <mpearson-lenovo@squebb.ca>
  <20230403013120.2105-1-mpearson-lenovo@squebb.ca>
  <20230403013120.2105-2-mpearson-lenovo@squebb.ca>
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
+From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
 In-Reply-To: <20230403013120.2105-2-mpearson-lenovo@squebb.ca>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR07CA0091.namprd07.prod.outlook.com
- (2603:10b6:5:337::24) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BY5PR12MB4066:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7088decb-1127-445d-3f9d-08db33e7f0ed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: drycyKZJzP07CTKQ0t+fgcKH2EaRourNUHO9kpYEc78HX5i8udYmMHBm9MwCqBCh5rfuyXvl/oU7MuzgLMB89z7Zo69ruk5lafqyaVkCgS55XYViqrSy1conUjNXVhAeKw1WPo5Oh46KGtVI6R6u821lYJECg4lWdPRQHmkxGrdtJoU+EoV2oUZnvdNSnJugRLFN1lFxD6mth4wQ+IclEYw7IImsK713gCO9PwTijxVZqDuJbD3AMJ/20ZlKvsFoewgnaCJGCNSRHx5cimu7fnOYc0gDUys4tvUp9SjjtbOIEHfHbd2s7c951YRYOfgK6HBEZhAAstRlf48R0Tdda+E/zXcbX9eQRA7LapN1lnp33EbiNmTmF35p9MFrCBK5i9hGqiPKFikADKhtyegB4/YWJY+bZfefbzzcXKSO7YtpSimONbo2GonKJH52kUtHo4vGTUBIecS2eZL9xm4pb+/kE4Y2DTHQZcqIOfPtFPN0riQfvYQ5LEdiUN+ss1eR7tmuqqPlpEaMeO03qotEO8QVCkRm9KLUDnQGd/a4a9+9fHvYJY0mU/rRP8yR6S9L7ee9Od+jx0t7HaAVNWvLgvY7oL2hLGnEY41fwLma8U4qtSI7ZOCJ7BydFuYZk/SOcRHglgxDFPjBlrLmYaShUQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(366004)(136003)(39850400004)(376002)(451199021)(8676002)(4326008)(6916009)(66556008)(66946007)(66476007)(478600001)(316002)(8936002)(44832011)(5660300002)(41300700001)(38100700002)(53546011)(186003)(83380400001)(2616005)(966005)(6486002)(6666004)(6512007)(6506007)(86362001)(31696002)(36756003)(2906002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?elJIWnpNeGxqbFZNdWlidXdsdko2VThZT1Q0RXIvRytyOFBGeFpUekc2eGp2?=
- =?utf-8?B?QlZKcTUvNU9XRHVtb1M1d1orNmlmaXMvVzF1V2VIcVJrYkpoSXNGZUtoT0dZ?=
- =?utf-8?B?RFljMW8ydytLNjRQbXg5dVQ1c0NFc0s1UVBoQ0R4dDBscVdoeFZDNGY1aGZt?=
- =?utf-8?B?TTM4eVljUFJlQ3VYS0J3dk5xZlJwQnhZUTBnb1hPeUNLRlBQMWJrTjNZVkpk?=
- =?utf-8?B?U0xNVzl1OXFtVGFKOENaOEFScFFVTzBWclVtR3o3V1B2Ni8zcFpRS1ZJeWJw?=
- =?utf-8?B?LzNJM2NRMnZtbXBrVElzb29zajF2eloveWpjSC9YOWhDb05XM2k5QWU4ejR5?=
- =?utf-8?B?NHdCbjgrQUdNc2VEc09lQ2JUV21jUlE2Q1dDV0RTdEhMc0tnVWlRQlZldlFj?=
- =?utf-8?B?bzZWb0kweWY5NnhNdExhdlp4b0NPSk9abGJpUFQrK2FsR0NZbzRkd201SnBE?=
- =?utf-8?B?SnJxUVBBOVpkc0NQMWdYNnNnV1NiV1lKOWpHY1J1V3RxZ1VFSUxRVlVhTFZG?=
- =?utf-8?B?MVR3U2NzL3ZIdDRmTFZub0IxZFNWTTlJckxzTkJxK3BmbVlLVEtPWkc3NDhY?=
- =?utf-8?B?TTVwZ3VyU3pCQ1QxazRFUUl3SHVJWGVkYzZJWjNQZEJoUGFHYlZZaHpYMERw?=
- =?utf-8?B?dmMxOTlreGlmVUlUbThhaksvQXAraTBSaFpnMGlPZHRkQXUzcHFWUFFsVWx0?=
- =?utf-8?B?ZllneWxCK3lRZTd1Qm5QKzlXSlYrLzV6MWVsTUwwK1hjbVd3Visvd3EyRkRr?=
- =?utf-8?B?bnY3RStPZFVyRDdOMjRYL3RUMlNHcjAyUHVKYzdoT2NyV2pGcVVzNGxNczRH?=
- =?utf-8?B?RWR5NHhHMUxIM3RBSDJWbGt1NXV1TnRKOVR4bW9ySloxaXhtb1Iwckt2d0lT?=
- =?utf-8?B?VXR6cWR1eHJ5cEJrV21kZnI0V3pzaDg4RW43NGpwa0NEeDVOL0dUNFFvbjFw?=
- =?utf-8?B?M3FQbW5KL2ZRa201VkRNZnVSYWJtMEJGT3ZpNGNBcmRYd2pQUG1FNWR4ZTR0?=
- =?utf-8?B?eG9PSUUveEYyRjVJdksvZm9YeCt3WHI3NWVuUEFYTU5SR3FwNmY5ck1KZko4?=
- =?utf-8?B?VU1VMWRYdituUkxEcVJKVHRNeml4L0U2TlhNeVA3Y2dEWnpWeXRzdmczMDN6?=
- =?utf-8?B?aEhHeHU4c2oyZVJINmFtTkoyQzllWHFkdmlneXdzZ09JbStwTEg2MG9iOFZR?=
- =?utf-8?B?RmFXYUh1cE05SHVNVHo5TDF2N3hSNFhVSWhBZDVBa0dCanpBQ1RjcHNwMUZQ?=
- =?utf-8?B?T0lvNzhEMzRPR0NMQUxQTHhiZWNDNEplZmJwckRURXgrdmdTNVljVXp5QWhJ?=
- =?utf-8?B?MWZYVHFlQXZadmlyMEJ2OGF2SUJWcWFQRVU0V3VDKytudG1jeGVXTThPUU1M?=
- =?utf-8?B?QXIxUHVkbFNTMXNEMVo1aVhNa0F2SzVQWlJmRVc3UWhGRFBwRkVDMXNTemw3?=
- =?utf-8?B?S1l1ZVJWaGZ5MFRZUERQZEF6RkI2c21qVXhjTjY1U0V5Wjc1d2xDaDVkbTFw?=
- =?utf-8?B?aGpZVnNEaFA5OGlnT1VCc3p0ZU0vQ2JZMFlYMkVKOGhhQi95N1lkTXExWWtX?=
- =?utf-8?B?bVNSYjFsNlI0WlVNYzEyWG9Cdmo4S1llYnNuSis4WWhnNXBuaFhoZ2tOV0JB?=
- =?utf-8?B?SWZuOVlZM21vZU54SlRnRG94RlY1Z3lWVXRzZXZMQ2FvR2VNMks2b2REcVhl?=
- =?utf-8?B?eTNGZXk3dGZ1ZmFwK2l1MzdJbXgyYjJGQnBnOTQ1QnpRSWkyVzliWFB2eUlj?=
- =?utf-8?B?cmN3YUcxL2Nja2cvajJWQ0NiTGlXbUdtWGFCVkVHcUJaWlRZWFlPQ3g5Tjgv?=
- =?utf-8?B?dmhMYmMwbEFONldGYXZKSENmbVl4bTZYOTVWZEV2bno3eEE3T1lLWnNudCtz?=
- =?utf-8?B?UERMYVdPRkxtYWk5VExMejBNMm1ZS0kyVVZ5UDVmR0ZQSVBPUW95ZlgrbUg5?=
- =?utf-8?B?NXJTZUVhVnZIUlB2TmRpVE1sdlIybmpQbjdHTHJ2dUhmZnhIbFM4VFgrOE85?=
- =?utf-8?B?eDFqcVQxOURQODljcFJrYTFsdjVLeGpET2FNcTQyZVZnT2lqb3prWnFoSTV5?=
- =?utf-8?B?YWw1NDI2TUZyMVJubjM0THNTUVExczl2WEMrTCsyck1HckF4NTAyNFAwejNU?=
- =?utf-8?B?eVBrSmdENVZTOVh0VTVkTzNMTDVFNGRVOHErcG5TYjZFdkovMWtxYXBWcFNz?=
- =?utf-8?Q?Nr05lLEOim2IvQE3x/vBtTgIMoZ0osANWOe7NTgu9+ho?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7088decb-1127-445d-3f9d-08db33e7f0ed
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2023 02:05:47.7214
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fTDPnCYLwBVNT2yP1c5oaJl1fHjVjacFo25ua5n1GDuS0xdW5piFKpB/rlm+zrwkPhEp/dz/KzLG6eAAhXOGDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4066
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-On 4/2/23 20:31, Mark Pearson wrote:
+On 3.4.2023. 3:31, Mark Pearson wrote:
 > On ThinkStations on retrieving the attribute value the BIOS appends the
 > possible values to the string.
 > Clean up the display in the current_value_show function so the options
 > part is not displayed.
->
+> 
 > Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
 > Reported by Mario Limoncello <Mario.Limonciello@amd.com>
 > Link: https://github.com/fwupd/fwupd/issues/5077#issuecomment-1488730526
@@ -138,15 +80,10 @@ On 4/2/23 20:31, Mark Pearson wrote:
 > ---
 > Changes in v2: For some reason v2 doesn't apply cleanly so rebased and
 > started again. Hopefully this one works
-
-Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-
-tested on 6.3rc5 + prerequisite Armin's patch.
-
->
+> 
 >   drivers/platform/x86/think-lmi.c | 9 ++++++---
 >   1 file changed, 6 insertions(+), 3 deletions(-)
->
+> 
 > diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
 > index 87f832142d8d..78dc82bda4dd 100644
 > --- a/drivers/platform/x86/think-lmi.c
@@ -175,3 +112,41 @@ tested on 6.3rc5 + prerequisite Armin's patch.
 >   	kfree(item);
 >   
 >   	return ret;
+
+I can confirm the build against the Torvalds 6.3-rc5 tree and Armin's patch
+applied w these.
+
+[root@pc-mtodorov kernel]# uname -rms
+Linux 6.3.0-rc5-mt-20230401-00005-g10de4cefccf7 x86_64
+[root@pc-mtodorov kernel]# cat /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# echo scan > !$
+echo scan > /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# cat /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# echo scan > /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# cat /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# echo scan > /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]# cat /sys/kernel/debug/kmemleak
+[root@pc-mtodorov kernel]#
+
+The leak is apparently gone in the original setup that reproduced the leak.
+
+At your convenience, you can please add
+
+Tested-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+
+Have a nice day.
+
+Best regards,
+Mirsad
+
+-- 
+Mirsad Todorovac
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+Republic of Croatia, the European Union
+
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+
