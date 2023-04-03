@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD46C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 10:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEDC77B6D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 10:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbjDCKDu (ORCPT
+        id S231558AbjDCKEY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 06:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
+        Mon, 3 Apr 2023 06:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbjDCKDs (ORCPT
+        with ESMTP id S231730AbjDCKEY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 06:03:48 -0400
+        Mon, 3 Apr 2023 06:04:24 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F9C4C1E
-        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Apr 2023 03:02:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D39526E
+        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Apr 2023 03:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680516178;
+        s=mimecast20190719; t=1680516213;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rjmzd/YE21ORQOPGQC93EsHd4KdzCGtkIKV/EHIywtI=;
-        b=bAmCcl2fYs9Rlql70Mme9mmbTULFVMlJQgw5W62uZ7JxU/18FT4g13Hg6wcVxMsswe2HT/
-        j6W1pttqyqE7l4sRdYG2xX2LEPMZNJWXFQiIbJ7P89+DpxhlP09hoQZmgPp9OQvBBUk3bw
-        glubYjY9cg7QoGN25bx5lxORqoUDFyE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=wA8QAb0BytdfB1jw9T76UqPrNQns0erlp298xSbCHJo=;
+        b=Dpe/Qmsrscm3KJoNPCaLCCW8ifUJ8GOVlL8fpi57SMBc4dXOUHWuAAAhaM53SWGYSdnpMU
+        d/1fnHmTyK4n6AtXzYswTOHzwR0vuHaiyabg3MxeW+MkDa6G40bLl4Qo4YFatYuGPK21pn
+        fA6N7RDy0cNGdxBenpP/Il5RDU8sq3w=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-307-krW4RrehN3-ICdnnwNn6rA-1; Mon, 03 Apr 2023 06:02:56 -0400
-X-MC-Unique: krW4RrehN3-ICdnnwNn6rA-1
-Received: by mail-ed1-f71.google.com with SMTP id y35-20020a50bb26000000b005029d37a3ffso4056461ede.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Apr 2023 03:02:56 -0700 (PDT)
+ us-mta-119-gWtQr7d8MxCR1GWGnbYkdg-1; Mon, 03 Apr 2023 06:03:32 -0400
+X-MC-Unique: gWtQr7d8MxCR1GWGnbYkdg-1
+Received: by mail-ed1-f72.google.com with SMTP id t26-20020a50d71a000000b005003c5087caso40057555edi.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Apr 2023 03:03:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680516176;
+        d=1e100.net; s=20210112; t=1680516211;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rjmzd/YE21ORQOPGQC93EsHd4KdzCGtkIKV/EHIywtI=;
-        b=RvQ/5Iq5frMCAwTcxd1lnv7PigO1+BjTW73gGiZKgIvUXOqSUD9Y0nNv0lmybuIYlW
-         rRBXCaSk9/c2lbj3Zeb0OBSWYsiBBdJaq9EMh77z7g93cjHU9+kTu4QS/l1n+Fgayf8M
-         xxZE9dVH2R7UV5aXOfylkuDHjJlH6tbnJeY9lHh5kd6lQyTV4sKKqc6mey8C519vOVQS
-         L3xDZkO+EWtE2gAy3VQVhr8kGcTRUdqCYnTn7l22rE/KJEdx0qjCiMB+BO0lULYLC0i0
-         oZgGf00BSDEUEVxGviGtOxTEBx1AgKYCOKCRWl3S9kufQrR9j24kzJmx9phtnHmEHVr0
-         Du3A==
-X-Gm-Message-State: AAQBX9eE5A8JEEIHEkAwIuPuYchS2qGu3kjkBAontKMz78M3NH3v7tUP
-        ZwXAyWY2X/m8ylELbeanDFl2kGW8Dj/eNBF96PaprsBwY+magkyF8N5QQUVmBCS0xVDVU1psENu
-        Q7Nd7HUdt2Sq2xPx49ONPzyHEtJ8gQzeQDA==
-X-Received: by 2002:a17:906:2350:b0:8a9:e330:3a23 with SMTP id m16-20020a170906235000b008a9e3303a23mr33600703eja.26.1680516175801;
-        Mon, 03 Apr 2023 03:02:55 -0700 (PDT)
-X-Google-Smtp-Source: AKy350agIn0Z0BbxQrKaHifZIEBKc5yhaJP+oZ1IQ62dW0fNCJWsj/pNyk/lJ7Zxx4QPY7mHa5cEMw==
-X-Received: by 2002:a17:906:2350:b0:8a9:e330:3a23 with SMTP id m16-20020a170906235000b008a9e3303a23mr33600677eja.26.1680516175495;
-        Mon, 03 Apr 2023 03:02:55 -0700 (PDT)
+        bh=wA8QAb0BytdfB1jw9T76UqPrNQns0erlp298xSbCHJo=;
+        b=Mk7LwHiRC41alMvYF6xioWG2Gye7qrSHesIsMxmB/abhiZwzduoLLjLQ5ubDHvG6PB
+         IsthrKqHohgBt7nAKjGthbcgH4pAulGKsI/bFunQ9xNkRVxC/sQPQh6hgWfS+iiQy4Wi
+         UG5Timiv4+j+RGMAuEy+QHwgU45hmEB23gilBO74taeSgTaiiDrD0Y8NvM/ABc/E3Uj+
+         FAfb8FghfSjv6W0yPK2ZY9/Vq7tlYS5KTiv7PZyxyvHoeEeZAGZ9iOImBx85AQ6vMxvp
+         ioDT/MhLFbW55Q+cBuLzfi6TfBszJUsff+G64XEIslPshc1GzGCK9Y5/WXUCafFGafz5
+         EZmA==
+X-Gm-Message-State: AAQBX9fhgUcj2nHfKP3Vgltlz05AzS8G54qABvR6HTj6BW6vGo3O4ST1
+        CedHrkfbaAgHxFjJC1v120ibF4QmSdJYmkTVt1akFs1tIYwClN4vFt3L1Jygm06dWFIWMK/a19q
+        QFwyoxjmXqBQwbZzNYiouQfvygeQhCgsoyQ==
+X-Received: by 2002:aa7:d49a:0:b0:502:7d3f:1f04 with SMTP id b26-20020aa7d49a000000b005027d3f1f04mr10062089edr.19.1680516211102;
+        Mon, 03 Apr 2023 03:03:31 -0700 (PDT)
+X-Google-Smtp-Source: AKy350a0nPW43YqlMdcDjiYd0jFbBqM/6O0e3gYnr0BMt9FfSlb1Dm3DExUKfArY9LumLUt0EDLCnw==
+X-Received: by 2002:aa7:d49a:0:b0:502:7d3f:1f04 with SMTP id b26-20020aa7d49a000000b005027d3f1f04mr10062074edr.19.1680516210787;
+        Mon, 03 Apr 2023 03:03:30 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id m24-20020a17090679d800b00946c1068b14sm4248587ejo.120.2023.04.03.03.02.54
+        by smtp.gmail.com with ESMTPSA id f24-20020a50a6d8000000b004acbda55f6bsm4381529edc.27.2023.04.03.03.03.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Apr 2023 03:02:54 -0700 (PDT)
-Message-ID: <12a26960-1cc8-80df-e284-d0fa4768f558@redhat.com>
-Date:   Mon, 3 Apr 2023 12:02:53 +0200
+        Mon, 03 Apr 2023 03:03:30 -0700 (PDT)
+Message-ID: <a192e386-5385-d18a-9816-273e433eb833@redhat.com>
+Date:   Mon, 3 Apr 2023 12:03:29 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
@@ -116,9 +116,6 @@ ThinkPads.
 Thank you for your patch, I've applied this patch to my fixes
 branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
 
 I will include this patch in my next fixes pull-req to Linus
 for the current kernel development cycle.
