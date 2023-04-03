@@ -2,253 +2,174 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4A4C76188
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 20:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F76C76196
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 20:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233357AbjDCUpK (ORCPT
+        id S233258AbjDCUv1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 16:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        Mon, 3 Apr 2023 16:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233101AbjDCUpJ (ORCPT
+        with ESMTP id S231961AbjDCUv0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 16:45:09 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5E4139;
-        Mon,  3 Apr 2023 13:45:06 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id a11so31710247lji.6;
-        Mon, 03 Apr 2023 13:45:06 -0700 (PDT)
+        Mon, 3 Apr 2023 16:51:26 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB6326B9;
+        Mon,  3 Apr 2023 13:51:25 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id er13so81452214edb.9;
+        Mon, 03 Apr 2023 13:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680554705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LkdjmCtGVb+5nxY71D+tZq13otQ52uuWmZ7dsuIAj1c=;
-        b=DWUJ3dQI2iPjcNDJcSYgL9Y5UkWBk4E7r2GSZvmyHqDBVE1YxrmIlEokdoKZ+qG8Gx
-         t7+mMOdSVXQkIyJzTf6c+kIPndI3sVaGCrS+/ajmXsfFtd2rcLTy7KHDAoqizf0pXWW3
-         WSFHsB8p0ZkQ0+mbEmn6wrfuKZ/ByLI941siSZMbH0OdkvnHg312U8o5O7KWYc+nKYO1
-         ZCUIJxo4uUlfwtR8r7Hu+nPXXEbVYvawtbORfXkHS2Mq2L0T3sPztK+cM2PZIuqiQfxP
-         Xr++jrjJFx/kJeFWFhnToP1dBjC+/HUe5NP573pa5/JYRMkr/2IiJeZQJiK9my7D9GOW
-         K2Rg==
+        d=gmail.com; s=20210112; t=1680555084;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oxpzfoN07dcJvSzaVP251bOO1U4HLehZS+CwOw8A66s=;
+        b=CUVCenBYqcMqoSHRb+xeBW7MY7GCf6SVH486cCCw0Hlj5aQKoL+Dy3ggyxYmjcjBYZ
+         pooM6iWEUB9PzRh5NG7vXBnfdNTvy4gKiZDmsURkH4sdcBsrLyYLv3dkIGXESlokpbMr
+         l3PTWxsj5QaVnHRleFFdx+sRiAvPUfpdftnqGlrs3lbTxS3PH94g6gvcOYx0DNJFeTve
+         2kVoy5Vge9fkipsFJjgz5gQRAIiWWZylCOBtKBXSsBtSiae76E2NlpwAiXbIcOFMrDr/
+         /bdliEFsOnZTR71J7BPY4qLhAGeMQxOL38o3i0vc2HvHscHmLDksMHkPu//j1YT2DfEy
+         Uqxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680554705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LkdjmCtGVb+5nxY71D+tZq13otQ52uuWmZ7dsuIAj1c=;
-        b=NMrwI23Tmhgl1PqeCivCiu9SBRTH5bLnJeD9dmDJxpSlNwkOeas/DIHqOgHlcNGSNT
-         bXuTnRj1sLbW0bRQccX/EbLXRnCwcNQnJJUWdmdvEuSWoUbkRaJmxL0z+977N7vGFPLC
-         i72Eo6Fr1U3C9LcCYsMC1e0jQzqPsz37XuS406ijBdc3XPlgqMlVcNO3jwgEayEzI9xZ
-         KAu0tRycpTRtG2sLNa2wQdB85mD0FBusqhVT2+X46dK8Com0Ixzkj4CSuekPtuAcp/PH
-         +wNeCXEZSsOOjfEPyOEIwE4d+59BKDUM/kZdHNZ/ydDk0bp+ScQLOpxcSL2AaWkFdM55
-         HoNA==
-X-Gm-Message-State: AAQBX9cMQfFfikjWpbdAnd1EhXuxq4S6TARoIZ0Kysa0dg5YCsgkZiul
-        GPCZnGoBqvgf7mha6co8kWmnNW4Eia5obSkwVf0=
-X-Google-Smtp-Source: AKy350ZnesGkhzSE8qOp+/zMfRaXQgH0/VVXGfjceSKaX0Lt5ftbs/aLMSdUntCdY1/cI7/dOIkYhkpT/1uKzLKb9zo=
-X-Received: by 2002:a2e:8817:0:b0:298:b3c7:293d with SMTP id
- x23-20020a2e8817000000b00298b3c7293dmr274222ljh.7.1680554704574; Mon, 03 Apr
- 2023 13:45:04 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680555084;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oxpzfoN07dcJvSzaVP251bOO1U4HLehZS+CwOw8A66s=;
+        b=7EFnT/uYzaI1WWL+D77RGCl4V1vRb4RCO7fmIKs85PQftb3wwXbJSgKNxWF9KZCZ3d
+         gNq+MwTZ1wttv8glRcBdvJK22mGXCxhOz/vHJ54G0IiRGlnxKDPqDnd5aAiQh1IXU9lz
+         7ASodsm1bdOUO6Lc79NddHnFEx4vTP5k+sBA4eMqZeeyrsT9cpcBsQ+g5MnEp0x+m9YS
+         WWj0x87hNb2WrFiFRDiCYjPDqP5WbRRR8+x0kub5V1Ebbw73N+pDm0ySR90YZjRuAAg1
+         uQy0nnRBMX0Gq3xv/PHNnO3FRCSttr3S/g9fviBNzpptKZ8dDQpuQxmdsgdt6zGVRdh2
+         6y9g==
+X-Gm-Message-State: AAQBX9c/EEDrHMBfA6Pe81flSzFq6ceXFkXmU+IuGtDiy1GoIckGdUCy
+        xmX5Crl1u3eM/yw1o7zZIa8=
+X-Google-Smtp-Source: AKy350b6D5fa6aAPhZkQjktNVmyFSIlHJ1UUwepZliWb1ykzAIRLJVQNQeM0MUn+SGRxr14T15DdHg==
+X-Received: by 2002:a17:906:3a41:b0:931:8e8c:2db5 with SMTP id a1-20020a1709063a4100b009318e8c2db5mr37449774ejf.69.1680555083419;
+        Mon, 03 Apr 2023 13:51:23 -0700 (PDT)
+Received: from localhost (tor-exit-1.zbau.f3netze.de. [185.220.100.252])
+        by smtp.gmail.com with ESMTPSA id j3-20020a170906050300b00947a40ded80sm4836191eja.104.2023.04.03.13.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 13:51:22 -0700 (PDT)
+Date:   Mon, 3 Apr 2023 23:51:20 +0300
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        GOESSEL Guillaume <g_goessel@outlook.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Manyi Li <limanyi@uniontech.com>,
+        Eray =?iso-8859-1?Q?Or=E7unus?= <erayorcunus@gmail.com>,
+        Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Arnav Rawat <arnavr3@illinois.edu>,
+        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
+        Felix Eckhofer <felix@eckhofer.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop sending
+ KEY_TOUCHPAD_TOGGLE
+Message-ID: <ZCs8SA47vGCjVl1l@mail.gmail.com>
+References: <20230330194644.64628-1-hdegoede@redhat.com>
+ <ZCatIn7ok4jRrXS9@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230309201022.9502-1-jorge.lopez2@hp.com> <20230309201022.9502-5-jorge.lopez2@hp.com>
- <6da33dcc-0526-4398-bf35-655b64d07e20@t-8ch.de> <3ca7fa3b-f0d6-4b63-bfe4-8a30197d7261@app.fastmail.com>
-In-Reply-To: <3ca7fa3b-f0d6-4b63-bfe4-8a30197d7261@app.fastmail.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 3 Apr 2023 15:44:46 -0500
-Message-ID: <CAOOmCE8WtTmP7JBGFDg7NKHeVjJKMWeMhpn+C8YBVAe+vazfBA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] Introduction of HP-BIOSCFG driver [4]
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZCatIn7ok4jRrXS9@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+On Fri, 31 Mar 2023 at 12:51:30 +0300, Maxim Mikityanskiy wrote:
+> On Thu, 30 Mar 2023 at 21:46:44 +0200, Hans de Goede wrote:
+> > Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
+> > KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
+> > KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
+> > and the touchpad-state has not been changed by the EC itself already.
+> > 
+> > This was done under the assumption that this would be good to do to make
+> > the touchpad-toggle hotkey work on newer models where the EC does not
+> > toggle the touchpad on/off itself (because it is not routed through
+> > the PS/2 controller, but uses I2C).
+> > 
+> > But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
+> > triggers an ACPI notify with VPC event bit 5 set on resume, which would
+> > now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
+> > environment responds by disabling the touchpad in software, breaking
+> > the touchpad (until manually re-enabled) on resume.
+> 
+> Oh gosh, the touchpad toggle on Ideapads is so much broken, I wonder how
+> the Windows driver deals with all this variety of different behaviors
+> (unless it's broken too :D).
+> 
+> I'll test the patch on Z570, but as I see, it shouldn't change anything
+> for Z570.
 
-Please see my comments below.
+Tested the kernel from your branch on Z570, the touchpad button still
+works fine.
 
-On Sat, Apr 1, 2023 at 7:48=E2=80=AFPM Mark Pearson <mpearson-lenovo@squebb=
-.ca> wrote:
->
-> Hi Jorge,
->
-> As I implemented similar on our platforms I have a couple of suggestions =
-which may or may not be helpful.
->
-> On Sat, Apr 1, 2023, at 7:58 AM, Thomas Wei=C3=9Fschuh wrote:
-> > Hi Jorge,
-> >
-> <snip>
-> > On 2023-03-09 14:10:22-0600, Jorge Lopez wrote:
-> <snip>
-> >
-> >> Many features of HP Commercial PC=E2=80=99s can be managed using Windo=
-ws
-> >> Management Instrumentation (WMI). WMI is an implementation of Web-Base=
-d
-> >> Enterprise Management (WBEM) that provides a standards-based interface
-> >> for changing and monitoring system settings.  HP BISOCFG driver provid=
-es
-> >> a native Linux solution and the exposed features facilitates the
-> >> migration to Linux environments.
->
-> I'd remove this paragraph personally - but as a minor note, typo in BISOC=
-FG
->
-> <snip>
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes=
- b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >> index 4cdba3477176..d1ae6b77da13 100644
-> >> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> <snip>
-> >> @@ -126,6 +133,38 @@ Description:
-> >>                                      value will not be effective throu=
-gh sysfs until this rule is
-> >>                                      met.
-> >>
-> >> +            HP specific class extensions
-> >> +            ------------------------------
-> >> +
-> >> +            On HP systems the following additional attributes are ava=
-ilable:
-> >> +
-> >> +            "ordered-list"-type specific properties:
-> >> +
-> >> +            elements:
-> >> +                                    A file that can be read to obtain=
- the possible
-> >> +                                    list of values of the <attr>. Val=
-ues are separated using
-> >> +                                    semi-colon (``;``). The order ind=
-ividual elements are listed
-> >> +                                    according to their priority.  An =
-Element listed first has the
-> >> +                                    hightest priority. Writing the li=
-st in a different order to
-> >> +                                    current_value alters the priority=
- order for the particular
-> >> +                                    attribute.
->
-> isn't this already covered in the 'possible_values' attribute - it's just=
- a string of items? Curious as to when/how this would be used instead of po=
-ssible_values (but I should probably read the code)
-> Typo in 'hightest'.
-
-Done.  Possible values provides a list of values in any order.
-elements in Ordered-list list items in level of priority such it is
-case of list of boot order values.
->
-> <snip>
-> >
-> >> +
-> >> +
-> >>  What:               /sys/class/firmware-attributes/*/authentication/
-> >>  Date:               February 2021
-> >>  KernelVersion:      5.11
-> >> @@ -206,7 +245,7 @@ Description:
-> <snip>
-> >> @@ -296,6 +335,15 @@ Description:
-> >>                                              echo "signature" > authen=
-tication/Admin/signature
-> >>                                              echo "password" > authent=
-ication/Admin/certificate_to_password
-> >>
-> >> +            HP specific class extensions
-> >> +            --------------------------------
-> >> +
-> >> +            On HP systems the following additional settings are avail=
-able:
-> >> +
-> >> +            role: enhanced-bios-auth:
-> >> +                                    This role is specific to Secure P=
-latform Management (SPM) attribute.
-> >> +                                    It requires configuring an endors=
-ement (kek) and signing certificate (sk).
-> >> +
->
-> Your implementation might be different on HP's; but on the Lenovo's this =
-was still used along with the regular roles - it's just the authentication =
-changed from password to a signature approach.
->
-> Just checking that you really need a whole new role and that it isn't par=
-t of the existing role.
->
-Unfortunately, we need a whole new role.
-
-> <snip>
->
-> >> +            HP specific class extensions
-> >> +            --------------------------------
-> >> +
-> >> +What:               /sys/class/firmware-attributes/*/authentication/S=
-PM/kek
-> >> +Date:               March 29
-> >> +KernelVersion:      5.18
-> >> +Contact:    "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> +Description:        'kek' is a write-only file that can be used to co=
-nfigure the
-> >> +            RSA public key that will be used by the BIOS to verify
-> >> +            signatures when setting the signing key.  When written,
-> >> +            the bytes should correspond to the KEK certificate
-> >> +            (x509 .DER format containing an OU).  The size of the
-> >> +            certificate must be less than or equal to 4095 bytes.
-> >> +
-> >> +
-> >> +What:               /sys/class/firmware-attributes/*/authentication/S=
-PM/sk
-> >> +Date:               March 29
-> >> +KernelVersion:      5.18
-> >> +Contact:    "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> +Description:        'sk' is a write-only file that can be used to con=
-figure the RSA
-> >> +            public key that will be used by the BIOS to verify signat=
-ures
-> >> +            when configuring BIOS settings and security features.  Wh=
-en
-> >> +            written, the bytes should correspond to the modulus of th=
-e
-> >> +            public key.  The exponent is assumed to be 0x10001.
-> >
->
-> I wondered if these could be combined with the signature and certificate =
-fields that I implemented for the Lenovo platforms - and those be moved out=
- of the Lenovo specific section and then made general (and optional)
-The behavior with Secure Platform Manager requires having KEK and SK separa=
-te.
-
-> kek looks like it corresponds to certificate and sk to signature?
-> KEK - Key-Encryption-Key
-      SK - Signature Key
-> >
-
-
-> >> +
-> >> +
-> >> +What:               /sys/class/firmware-attributes/*/attributes/last_=
-error
-> >> +Date:               March 29
-> >> +KernelVersion:      5.18
-> >> +Contact:    "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> +Description:        'last_error' is a read-only file that returns WMI=
- error number
-> >> +            and message reported by last WMI command.
-> >
-> > Does this provide much value?
-> > Or could this error just be logged via pr_warn_ratelimited()?
->
-> This one seemed odd to me too - doesn't the driver return the error to th=
-e use on a failed WMI access?
->
-It was intended for debug purposes and to determine if the failure was
-reported because of WMI error.  The WMI error is masked by the driver
-and the error reported by WMI is lost.
-for instance,   WMI error 6 is reported by driver as  -EINVAL.
-This attribute will be removed and replaced by pr_warn().
-
-Jorge.
+> > It was never confirmed that sending KEY_TOUCHPAD_TOGGLE actually improves
+> > things on new models and at least some new models like the Yoga 7-15ITL5
+> > don't have a touchpad on/off toggle hotkey at all, while still sending
+> > ACPI notify events with VPC event bit 5 set.
+> > 
+> > So it seems best to revert the change to send KEY_TOUCHPAD_TOGGLE when
+> > receiving an ACPI notify events with VPC event bit 5 and the touchpad
+> > state as reported by the EC has not changed.
+> > 
+> > Note this is not a full revert the code to cache the last EC touchpad
+> > state is kept to avoid sending spurious KEY_TOUCHPAD_ON / _OFF events
+> > on resume.
+> > 
+> > Fixes: 5829f8a897e4 ("platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models")
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=217234
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> >  drivers/platform/x86/ideapad-laptop.c | 23 ++++++++++-------------
+> >  1 file changed, 10 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> > index b5ef3452da1f..35c63cce0479 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -1170,7 +1170,6 @@ static const struct key_entry ideapad_keymap[] = {
+> >  	{ KE_KEY,  65, { KEY_PROG4 } },
+> >  	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
+> >  	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+> > -	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
+> >  	{ KE_KEY, 128, { KEY_ESC } },
+> >  
+> >  	/*
+> > @@ -1526,18 +1525,16 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+> >  	if (priv->features.ctrl_ps2_aux_port)
+> >  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
+> >  
+> > -	if (send_events) {
+> > -		/*
+> > -		 * On older models the EC controls the touchpad and toggles it
+> > -		 * on/off itself, in this case we report KEY_TOUCHPAD_ON/_OFF.
+> > -		 * If the EC did not toggle, report KEY_TOUCHPAD_TOGGLE.
+> > -		 */
+> > -		if (value != priv->r_touchpad_val) {
+> > -			ideapad_input_report(priv, value ? 67 : 66);
+> > -			sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
+> > -		} else {
+> > -			ideapad_input_report(priv, 68);
+> > -		}
+> > +	/*
+> > +	 * On older models the EC controls the touchpad and toggles it on/off
+> > +	 * itself, in this case we report KEY_TOUCHPAD_ON/_OFF. Some models do
+> > +	 * an acpi-notify with VPC bit 5 set on resume, so this function get
+> > +	 * called with send_events=true on every resume. Therefor if the EC did
+> > +	 * not toggle, do nothing to avoid sending spurious KEY_TOUCHPAD_TOGGLE.
+> > +	 */
+> > +	if (send_events && value != priv->r_touchpad_val) {
+> > +		ideapad_input_report(priv, value ? 67 : 66);
+> > +		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
+> >  	}
+> >  
+> >  	priv->r_touchpad_val = value;
+> > -- 
+> > 2.39.1
+> > 
