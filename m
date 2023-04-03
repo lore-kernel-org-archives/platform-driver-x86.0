@@ -2,174 +2,309 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F76C76196
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 20:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4313C76188
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 21:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbjDCUv1 (ORCPT
+        id S233638AbjDCVQC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 16:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        Mon, 3 Apr 2023 17:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231961AbjDCUv0 (ORCPT
+        with ESMTP id S233622AbjDCVQB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 16:51:26 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB6326B9;
-        Mon,  3 Apr 2023 13:51:25 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id er13so81452214edb.9;
-        Mon, 03 Apr 2023 13:51:25 -0700 (PDT)
+        Mon, 3 Apr 2023 17:16:01 -0400
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7D03A88;
+        Mon,  3 Apr 2023 14:15:50 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-17aa62d0a4aso32326296fac.4;
+        Mon, 03 Apr 2023 14:15:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680555084;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxpzfoN07dcJvSzaVP251bOO1U4HLehZS+CwOw8A66s=;
-        b=CUVCenBYqcMqoSHRb+xeBW7MY7GCf6SVH486cCCw0Hlj5aQKoL+Dy3ggyxYmjcjBYZ
-         pooM6iWEUB9PzRh5NG7vXBnfdNTvy4gKiZDmsURkH4sdcBsrLyYLv3dkIGXESlokpbMr
-         l3PTWxsj5QaVnHRleFFdx+sRiAvPUfpdftnqGlrs3lbTxS3PH94g6gvcOYx0DNJFeTve
-         2kVoy5Vge9fkipsFJjgz5gQRAIiWWZylCOBtKBXSsBtSiae76E2NlpwAiXbIcOFMrDr/
-         /bdliEFsOnZTR71J7BPY4qLhAGeMQxOL38o3i0vc2HvHscHmLDksMHkPu//j1YT2DfEy
-         Uqxg==
+        d=gmail.com; s=20210112; t=1680556550;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpVKnNjZqPnaciRstpcfJEnJF/FSckE/C2uZWPWSoEM=;
+        b=jt+dhlIWlRFDUG/sB05zs9S+A4hLrear512iIyueIA5WzOHD/WcIpj5LtPMnxzYicK
+         enBlhySwrfnV4EcRSHlWIjBkD9ZzEOFUApa4oEP8NkNWi1TfcUcLCo8DPDCJ7cF2mjaw
+         KM1+wKtQNNyV+vvtX0/hFFwQWzUBGjefiMOduhA/PNogRKS3T8mp1JrjXYApbtR2sAcQ
+         04xaBkRw9raCq9mcfaLmJiZBYgGfboGGAcHhtXse+XWclSp+MwoS8TMhxkK3B9rkl17w
+         lSwOD/DbWNgZ68eMciZPYG4foluk0xCrNAiUEouoWeRZYSHyDs4h+tZct0ei5aPdzDiJ
+         BiMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680555084;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oxpzfoN07dcJvSzaVP251bOO1U4HLehZS+CwOw8A66s=;
-        b=7EFnT/uYzaI1WWL+D77RGCl4V1vRb4RCO7fmIKs85PQftb3wwXbJSgKNxWF9KZCZ3d
-         gNq+MwTZ1wttv8glRcBdvJK22mGXCxhOz/vHJ54G0IiRGlnxKDPqDnd5aAiQh1IXU9lz
-         7ASodsm1bdOUO6Lc79NddHnFEx4vTP5k+sBA4eMqZeeyrsT9cpcBsQ+g5MnEp0x+m9YS
-         WWj0x87hNb2WrFiFRDiCYjPDqP5WbRRR8+x0kub5V1Ebbw73N+pDm0ySR90YZjRuAAg1
-         uQy0nnRBMX0Gq3xv/PHNnO3FRCSttr3S/g9fviBNzpptKZ8dDQpuQxmdsgdt6zGVRdh2
-         6y9g==
-X-Gm-Message-State: AAQBX9c/EEDrHMBfA6Pe81flSzFq6ceXFkXmU+IuGtDiy1GoIckGdUCy
-        xmX5Crl1u3eM/yw1o7zZIa8=
-X-Google-Smtp-Source: AKy350b6D5fa6aAPhZkQjktNVmyFSIlHJ1UUwepZliWb1ykzAIRLJVQNQeM0MUn+SGRxr14T15DdHg==
-X-Received: by 2002:a17:906:3a41:b0:931:8e8c:2db5 with SMTP id a1-20020a1709063a4100b009318e8c2db5mr37449774ejf.69.1680555083419;
-        Mon, 03 Apr 2023 13:51:23 -0700 (PDT)
-Received: from localhost (tor-exit-1.zbau.f3netze.de. [185.220.100.252])
-        by smtp.gmail.com with ESMTPSA id j3-20020a170906050300b00947a40ded80sm4836191eja.104.2023.04.03.13.51.22
+        d=1e100.net; s=20210112; t=1680556550;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpVKnNjZqPnaciRstpcfJEnJF/FSckE/C2uZWPWSoEM=;
+        b=UU8Z7p7zmoenx09EsoaTPv6otFqlq1cpm0+EeRA4SyFmXt3G+5NlrCB8w7E9qkaHbk
+         E9PV7wgFqGTfXJhDTDUJsDhuQJZDOF1RH+BNpRKqP+2sN2Cnd/yuLZktMG+faFks3l23
+         fWF6+UnE6gKzjS4WFP3+xoqwDcrxFL7yIa0bfU1QMk/iv723qD5YSoCSNs9g+c/5TqJd
+         u70SoWCoDs6AQMw42okbED3d1HhLhYvuZRRvBb8hYlFOMTmkJO+Ua1F8aDKFrIvCoAWr
+         nBOWqNPo7FevjfuUXebavOrIpkXi6y8uDMM/23JruoE7HfwXeulC7kQ8TWRPyPicQFCZ
+         nkag==
+X-Gm-Message-State: AAQBX9cP7bKxgFB7ueMUhV7rlA64bzQFz6cLqIQOwTFvwC7xYZSqDCKp
+        6ussX+kuLLz+zmlwLugldkg=
+X-Google-Smtp-Source: AKy350a9eLu5sGGAIn6R83prpRXmQDZ+0DbulKo3DOLiMMqreCrF2ye73tMLJIzrgId1q/tPLMj4gg==
+X-Received: by 2002:a05:6870:f148:b0:17a:c838:24d2 with SMTP id l8-20020a056870f14800b0017ac83824d2mr9125848oac.27.1680556549821;
+        Mon, 03 Apr 2023 14:15:49 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:1f63:ea83:6124:16b4])
+        by smtp.gmail.com with ESMTPSA id i21-20020a056871029500b00176209a6d6asm4000869oae.10.2023.04.03.14.15.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 13:51:22 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 23:51:20 +0300
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        GOESSEL Guillaume <g_goessel@outlook.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Manyi Li <limanyi@uniontech.com>,
-        Eray =?iso-8859-1?Q?Or=E7unus?= <erayorcunus@gmail.com>,
-        Philipp Jungkamp <p.jungkamp@gmx.net>,
-        Arnav Rawat <arnavr3@illinois.edu>,
-        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
-        Felix Eckhofer <felix@eckhofer.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop sending
- KEY_TOUCHPAD_TOGGLE
-Message-ID: <ZCs8SA47vGCjVl1l@mail.gmail.com>
-References: <20230330194644.64628-1-hdegoede@redhat.com>
- <ZCatIn7ok4jRrXS9@mail.gmail.com>
+        Mon, 03 Apr 2023 14:15:49 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+Date:   Mon,  3 Apr 2023 16:15:48 -0500
+Message-Id: <20230403211548.6253-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZCatIn7ok4jRrXS9@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 31 Mar 2023 at 12:51:30 +0300, Maxim Mikityanskiy wrote:
-> On Thu, 30 Mar 2023 at 21:46:44 +0200, Hans de Goede wrote:
-> > Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
-> > KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
-> > KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
-> > and the touchpad-state has not been changed by the EC itself already.
-> > 
-> > This was done under the assumption that this would be good to do to make
-> > the touchpad-toggle hotkey work on newer models where the EC does not
-> > toggle the touchpad on/off itself (because it is not routed through
-> > the PS/2 controller, but uses I2C).
-> > 
-> > But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
-> > triggers an ACPI notify with VPC event bit 5 set on resume, which would
-> > now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
-> > environment responds by disabling the touchpad in software, breaking
-> > the touchpad (until manually re-enabled) on resume.
-> 
-> Oh gosh, the touchpad toggle on Ideapads is so much broken, I wonder how
-> the Windows driver deals with all this variety of different behaviors
-> (unless it's broken too :D).
-> 
-> I'll test the patch on Z570, but as I see, it shouldn't change anything
-> for Z570.
+HP BIOS Configuration driver purpose is to provide a driver supporting
+the latest sysfs class firmware attributes framework allowing the user
+to change BIOS settings and security solutions on HP Inc.’s commercial
+notebooks.
 
-Tested the kernel from your branch on Z570, the touchpad button still
-works fine.
+Many features of HP Commercial notebooks can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings. HP BIOSCFG driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
 
-> > It was never confirmed that sending KEY_TOUCHPAD_TOGGLE actually improves
-> > things on new models and at least some new models like the Yoga 7-15ITL5
-> > don't have a touchpad on/off toggle hotkey at all, while still sending
-> > ACPI notify events with VPC event bit 5 set.
-> > 
-> > So it seems best to revert the change to send KEY_TOUCHPAD_TOGGLE when
-> > receiving an ACPI notify events with VPC event bit 5 and the touchpad
-> > state as reported by the EC has not changed.
-> > 
-> > Note this is not a full revert the code to cache the last EC touchpad
-> > state is kept to avoid sending spurious KEY_TOUCHPAD_ON / _OFF events
-> > on resume.
-> > 
-> > Fixes: 5829f8a897e4 ("platform/x86: ideapad-laptop: Send KEY_TOUCHPAD_TOGGLE on some models")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=217234
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> >  drivers/platform/x86/ideapad-laptop.c | 23 ++++++++++-------------
-> >  1 file changed, 10 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> > index b5ef3452da1f..35c63cce0479 100644
-> > --- a/drivers/platform/x86/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > @@ -1170,7 +1170,6 @@ static const struct key_entry ideapad_keymap[] = {
-> >  	{ KE_KEY,  65, { KEY_PROG4 } },
-> >  	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
-> >  	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
-> > -	{ KE_KEY,  68, { KEY_TOUCHPAD_TOGGLE } },
-> >  	{ KE_KEY, 128, { KEY_ESC } },
-> >  
-> >  	/*
-> > @@ -1526,18 +1525,16 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
-> >  	if (priv->features.ctrl_ps2_aux_port)
-> >  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
-> >  
-> > -	if (send_events) {
-> > -		/*
-> > -		 * On older models the EC controls the touchpad and toggles it
-> > -		 * on/off itself, in this case we report KEY_TOUCHPAD_ON/_OFF.
-> > -		 * If the EC did not toggle, report KEY_TOUCHPAD_TOGGLE.
-> > -		 */
-> > -		if (value != priv->r_touchpad_val) {
-> > -			ideapad_input_report(priv, value ? 67 : 66);
-> > -			sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
-> > -		} else {
-> > -			ideapad_input_report(priv, 68);
-> > -		}
-> > +	/*
-> > +	 * On older models the EC controls the touchpad and toggles it on/off
-> > +	 * itself, in this case we report KEY_TOUCHPAD_ON/_OFF. Some models do
-> > +	 * an acpi-notify with VPC bit 5 set on resume, so this function get
-> > +	 * called with send_events=true on every resume. Therefor if the EC did
-> > +	 * not toggle, do nothing to avoid sending spurious KEY_TOUCHPAD_TOGGLE.
-> > +	 */
-> > +	if (send_events && value != priv->r_touchpad_val) {
-> > +		ideapad_input_report(priv, value ? 67 : 66);
-> > +		sysfs_notify(&priv->platform_device->dev.kobj, NULL, "touchpad");
-> >  	}
-> >  
-> >  	priv->r_touchpad_val = value;
-> > -- 
-> > 2.39.1
-> > 
+The Linux security features to be provided in hp-bioscfg driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by user-mode applications. The new 
+documentation cover features such Secure Platform Management and Sure 
+Start. Each section provides security feature description and identifies 
+sysfs directories and files exposed by the driver.
+
+Many HP Commercial notebooks include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
+
+HP Commercial notebooks have several BIOS settings that control its 
+behaviour and capabilities, many of which are related to security. 
+To prevent unauthorized changes to these settings, the system can be 
+configured to use a cryptographic signature-based authorization string 
+that the BIOS will use to verify authorization to modify the setting.
+
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
+---
+Based on the latest platform-drivers-x86.git/for-next
+
+History
+
+Version 7
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 6
+	Breaks down the changes into 4 patches
+	SureAdmin-attributes was removed
+
+Version 5
+	Remove version 4 patch 1
+	Address review changes proposed in Version 4
+	Reorganize all patches number and file order
+---
+ .../testing/sysfs-class-firmware-attributes   | 119 ++++++++++++++++--
+ 1 file changed, 107 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 4cdba3477176..10afbb78baec 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -22,6 +22,12 @@ Description:
+ 			- integer: a range of numerical values
+ 			- string
+ 
++		HP specific types
++		-----------------
++			- ordered-list - a set of ordered list valid values
++			- sure-start
++
++
+ 		All attribute types support the following values:
+ 
+ 		current_value:
+@@ -42,16 +48,16 @@ Description:
+ 				description of the at <attr>
+ 
+ 		display_name_language_code:
+-						A file that can be read to obtain
+-						the IETF language tag corresponding to the
+-						"display_name" of the <attr>
++				A file that can be read to obtain
++				the IETF language tag corresponding to the
++				"display_name" of the <attr>
+ 
+ 		"enumeration"-type specific properties:
+ 
+ 		possible_values:
+-					A file that can be read to obtain the possible
+-					values of the <attr>. Values are separated using
+-					semi-colon (``;``).
++				A file that can be read to obtain the possible
++				values of the <attr>. Values are separated using
++				semi-colon (``;``).
+ 
+ 		"integer"-type specific properties:
+ 
+@@ -64,8 +70,8 @@ Description:
+ 				bound value of the <attr>
+ 
+ 		scalar_increment:
+-					A file that can be read to obtain the scalar value used for
+-					increments of current_value this attribute accepts.
++				A file that can be read to obtain the scalar value used for
++				increments of current_value this attribute accepts.
+ 
+ 		"string"-type specific properties:
+ 
+@@ -126,6 +132,40 @@ Description:
+ 					value will not be effective through sysfs until this rule is
+ 					met.
+ 
++		HP specific class extensions
++		------------------------------
++
++		On HP systems the following additional attributes are available:
++
++		"ordered-list"-type specific properties:
++
++		elements:
++					A file that can be read to obtain the possible
++					list of values of the <attr>. Values are separated using
++					semi-colon (``;``). The order individual elements are listed
++					according to their priority.  An Element listed first has the
++					highest priority. Writing the list in a different order to
++					current_value alters the priority order for the particular
++					attribute.
++
++		"sure-start"-type specific properties:
++
++		audit_log_entries:
++					A read-only file that returns the events in the log.
++					Values are separated using semi-colon (``;``)
++
++					Audit log entry format
++
++					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
++					Byte 16-127: Unused
++
++		audit_log_entry_count:
++					A read-only file that returns the number of existing audit log events available to be read.
++					Values are separated using comma (``,``)
++
++					[No of entries],[log entry size],[Max number of entries supported]
++
++
+ What:		/sys/class/firmware-attributes/*/authentication/
+ Date:		February 2021
+ KernelVersion:	5.11
+@@ -139,8 +179,7 @@ Description:
+ 		For example a "BIOS Admin" password and "System" Password can be set,
+ 		reset or cleared using these attributes.
+ 
+-		- An "Admin" password is used for preventing modification to the BIOS
+-		  settings.
++		- An "Admin" password is used for preventing modification to the BIOS settings.
+ 		- A "System" password is required to boot a machine.
+ 
+ 		Change in any of these two authentication methods will also generate an
+@@ -206,7 +245,7 @@ Description:
+ 		Drivers may emit a CHANGE uevent when a password is set or unset
+ 		userspace may check it again.
+ 
+-		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
++		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
+ 		require password validation.
+ 		On Lenovo systems if you change the Admin password the new password is not active until
+ 		the next boot.
+@@ -296,6 +335,15 @@ Description:
+ 						echo "signature" > authentication/Admin/signature
+ 						echo "password" > authentication/Admin/certificate_to_password
+ 
++		HP specific class extensions
++		--------------------------------
++
++		On HP systems the following additional settings are available:
++
++		role: enhanced-bios-auth:
++					This role is specific to Secure Platform Management (SPM) attribute.
++					It requires configuring an endorsement (kek) and signing certificate (sk).
++
+ 
+ What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+ Date:		February 2021
+@@ -311,7 +359,7 @@ Description:
+ 			==	=========================================
+ 			0	All BIOS attributes setting are current
+ 			1	A reboot is necessary to get pending BIOS
+-			        attribute changes applied
++				attribute changes applied
+ 			==	=========================================
+ 
+ 		Note, userspace applications need to follow below steps for efficient
+@@ -364,3 +412,50 @@ Description:
+ 		use it to enable extra debug attributes or BIOS features for testing purposes.
+ 
+ 		Note that any changes to this attribute requires a reboot for changes to take effect.
++
++
++		HP specific class extensions - Secure Platform Manager (SPM)
++		--------------------------------
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
++		RSA public key that will be used by the BIOS to verify signatures when setting
++		the signing key.  When written, the bytes should correspond to the KEK
++		certificate (x509 .DER format containing an OU).  The size of the certificate
++		must be less than or equal to 4095 bytes.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
++		public key that will be used by the BIOS to verify signatures when configuring
++		BIOS settings and security features.  When written, the bytes should correspond
++		to the modulus of the public key.  The exponent is assumed to be 0x10001.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/status
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'status' is a read-only file that returns ASCII text reporting
++		the status information.
++
++		  State:  Not Provisioned / Provisioned / Provisioning in progress
++		  Version:  Major.   Minor
++		  Feature Bit Mask: <16-bit unsigned number display in hex>
++		  SPM Counter: <16-bit unsigned number display in base 10>
++		  Signing Key Public Key Modulus (base64):
++		  KEK Public Key Modulus (base64):
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'statusbin' is a read-only file that returns identical status
++		information reported by 'status' file in binary format.
+-- 
+2.34.1
+
