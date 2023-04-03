@@ -2,141 +2,415 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9D2C76188
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E531C76188
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 16:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231571AbjDCPPT (ORCPT
+        id S232401AbjDCQdy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 11:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
+        Mon, 3 Apr 2023 12:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229780AbjDCPPS (ORCPT
+        with ESMTP id S231549AbjDCQdx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 11:15:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC10826AD
-        for <platform-driver-x86@vger.kernel.org>; Mon,  3 Apr 2023 08:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680534875;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WnHDxISHyvOvLnit3NOC6bnRr0EdN+jVapdWjnaO6Jc=;
-        b=HgXQmhKFlazW48QdVrKUfqsK7F7N+5FHkRwk4tBjJTiSMpxXGrjeo/YEl8kurDlpekthmS
-        KlILFlnKRIKMrbI+HdQ3rXb4C1LWYxbkmhpvC3LB+606qxOkP1+xWRFcFJZjSn0RwS/hON
-        AVT8xVafjErNUVg96m4kotRdarevh6I=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-138-bZZCnIcSNVqhMgKfPjdDcA-1; Mon, 03 Apr 2023 11:14:34 -0400
-X-MC-Unique: bZZCnIcSNVqhMgKfPjdDcA-1
-Received: by mail-ed1-f70.google.com with SMTP id s30-20020a508d1e000000b005005cf48a93so41402977eds.8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Apr 2023 08:14:34 -0700 (PDT)
+        Mon, 3 Apr 2023 12:33:53 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAA41FE9;
+        Mon,  3 Apr 2023 09:33:39 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id b6so10920152ljr.1;
+        Mon, 03 Apr 2023 09:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680539618;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IkZFZlPRMlYKwjpbbTT6jEeFeXceUIO5EZhwvdzI3bQ=;
+        b=qTi4uuh5mexUYWC4r1FH6lOdiprJe+MyZIUfSAKv/iQVigRK0vHesgdj6UHXNFRGOK
+         STDUrBkbc3VLbXjMBxgmozPlfIk2I0NVGXpaW+T2IhwpPdmLewkSLEZ0Tm9T7Ylon8xo
+         Gkc+QOIOh+wmCzxBJe6YR5EDCu78m1zJzZHk06/ZxPrMhiPRh7PK5QcWZb8rlETOpAs0
+         jw6tElzBqaHLThTrw2Jbnkqw4seBBh2/x8pUMCcGzmrnXP1v1Cyhb9+truhhmzmJ7455
+         i2/4agEv3rZJ8s+R6E6PuTXkCsw0Zq3+BHzMUNh86O0VC/kgJcDBKd3tX7cAOFabsm1Z
+         aQig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680534873;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WnHDxISHyvOvLnit3NOC6bnRr0EdN+jVapdWjnaO6Jc=;
-        b=edAwfrFORvLEZWk4AsA/6WKvPbDIl3FS4zqJYPmAbcjtc8Zixb2lR4lV0tx5myK7lY
-         FmyKigMgKJGceYNL8EEhZ5jEbsM2dFiizLXHjFKpoi1LoJcVtFvbhsfo9uncOnrVYVhN
-         mBWyyEe+V1Sb1pEmAL3+hacVkB545vCaoq/8aOQaDehFIP0DTL0p0rs2cvRIPdW6xYPO
-         MJa+Q0wyXMkt3YiKli0fay/ghosYiKXtS8N84Hd78hHfIXzjgegnSiGj0+qfK2AUR3+0
-         jZrji/x9z+zbR2H9cVLzFDfizZwIwAuyamcjM11ws07x6UpCVcMDy4rJrCxWvd1b2UjX
-         9uiQ==
-X-Gm-Message-State: AAQBX9fxrYaPL0Fa37xbNh1yDcWcHlS1QyuqdqA1gHRJ/wtSPc/S6bI0
-        a2feGq8uMhhr7b8FWBdhWuedblqW36PCMX1XhRrwYdyJSGhfUw9LilyJO1ZWAaKqmL2SREtk0nd
-        m8jpNAs1NGTdBjTBiZmcn6aeaUVm0MYaoVA==
-X-Received: by 2002:a17:906:5293:b0:92c:6fbf:28 with SMTP id c19-20020a170906529300b0092c6fbf0028mr37791198ejm.64.1680534873653;
-        Mon, 03 Apr 2023 08:14:33 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bGTc3zkapkoFnbodSzud0IWW7XUyEvjJxinyYjLv1oQXElVnMiYJv/BBp0aCfTuaUytLtuvg==
-X-Received: by 2002:a17:906:5293:b0:92c:6fbf:28 with SMTP id c19-20020a170906529300b0092c6fbf0028mr37791179ejm.64.1680534873388;
-        Mon, 03 Apr 2023 08:14:33 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h23-20020a170906261700b008e0bb004976sm4648943ejc.134.2023.04.03.08.14.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Apr 2023 08:14:32 -0700 (PDT)
-Message-ID: <bee18e30-90e8-8e22-8192-c89dc73719f1@redhat.com>
-Date:   Mon, 3 Apr 2023 17:14:31 +0200
+        d=1e100.net; s=20210112; t=1680539618;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IkZFZlPRMlYKwjpbbTT6jEeFeXceUIO5EZhwvdzI3bQ=;
+        b=aorSf1Fl8dhhajSklWQgKRxu/kOJgsEwDxLJnL2qxVoaKopUKVWZEbDpoj6x0tyVWr
+         XVQVLCLu9Cs7ptkMPkrDRwvSEr/sEvCdeZvGbBDcNOs5U7oNk13A3PezYhZH+fEuNZ+C
+         JB0GunQ+GaS5KSjFOGh4VPsjJKyxWgfTcANHMd5gOaXShZuO94+EhevMxi+8O3XOCZYO
+         +Bc/+zqWdmwVyHgGdcUz2dVEhmQb7TDV+1PT0tv3VZzRGtnKF2vxZ3zk07nwpaA990iw
+         auKaizgn6i+gn7Jvk54eUjBrPlUu37bTgBU4eDQaJ+VTEMCDEVfLUkmeRsb/qHjpe9mh
+         j6OA==
+X-Gm-Message-State: AAQBX9dk8Mvq07hld2ouzLkLDxOBfMViXhQOUrxsO8KfTAi87XJpgE1p
+        u+i2kemJ+07b/tNLwIkVadSmQrvA8cc7JEye9kO6UL7XtUI=
+X-Google-Smtp-Source: AKy350b0wUTR7gDktVVgeGYmRALTgZK1FygHgbpWCrF+54g/4oIhYITpIoRtBCvvNPPAcsND1DmuiERKtua2eR6+ViM=
+X-Received: by 2002:a2e:9809:0:b0:2a4:eb14:249b with SMTP id
+ a9-20020a2e9809000000b002a4eb14249bmr35637ljj.7.1680539617944; Mon, 03 Apr
+ 2023 09:33:37 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add missing T14s Gen1 type
- to s2idle quirk list
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>,
-        Benjamin Asbach <asbachb.kernel@impl.it>
-Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
-        Mark Pearson <markpearson@lenvo.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-References: <20230331232447.37204-1-asbachb.kernel@impl.it>
- <a192e386-5385-d18a-9816-273e433eb833@redhat.com>
- <ca667f1a-6e65-4d00-8015-bdd4c9f8de51@app.fastmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ca667f1a-6e65-4d00-8015-bdd4c9f8de51@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230309201022.9502-1-jorge.lopez2@hp.com> <20230309201022.9502-5-jorge.lopez2@hp.com>
+ <6da33dcc-0526-4398-bf35-655b64d07e20@t-8ch.de>
+In-Reply-To: <6da33dcc-0526-4398-bf35-655b64d07e20@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 3 Apr 2023 11:33:20 -0500
+Message-ID: <CAOOmCE_kzVnUr9WoPAEu-e+E5=-RfHUCjj6U7kL_yhqKHsP84g@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] Introduction of HP-BIOSCFG driver [4]
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+Hi Thomas,
 
-On 4/3/23 16:41, Mark Pearson wrote:
-> Hi Hans
-> 
-> On Mon, Apr 3, 2023, at 6:03 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 4/1/23 01:24, Benjamin Asbach wrote:
->>>> Lenovo laptops that contain NVME SSDs across a variety of generations have
->>>> trouble resuming from suspend to idle when the IOMMU translation layer is
->>>> active for the NVME storage device.
->>>>
->>>> This generally manifests as a large resume delay or page faults. These
->>>> delays and page faults occur as a result of a Lenovo BIOS specific SMI
->>>> that runs during the D3->D0 transition on NVME devices.
->>>
->>> Link: https://lore.kernel.org/all/20220503183420.348-1-mario.limonciello@amd.com/
->>>
->>> As Lenovo distributes T14s Gen1 laptops with different product names
->>> a missing one is added by this patch.
->>>
->>> Note: Based on lenovo support page there might be some more variants which
->>> are not represented in s2idle quirk list.
->>
->> Can you provide some more in info on this? Then Mark can maybe check
->> if we need to add more models ?
->>
->> Mark, generally speaking it may help to do a DMI_EXACT_MATCH on
->> DMI_PRODUCT_VERSION with ThinkPads ? That contains the human
->> readable model string instead of things like "20UJ", and I guess
->> that we want to e.g. apply the s2idle quirk to all "T14s Gen1 AMD"
->> ThinkPads.
-> 
-> Sadly that won't work :(
->  - The same ID is used for multiple platform names and those can change by geography (for instance China often calls things differently) or if WWAN supported, etc. 
->  - They use the same platform name for Intel and AMD in a few cases (not all). And this match should only be done for the AMD platforms.
-> 
-> For every platform there are two IDs. In this case the T14s G1 has 20UH and 20UJ. I need to figure out when each is used - I thought only the first one was in released platforms but it seems that's not the case from this patch. I need to understand how/why.
-> 
-> For models impacted - there are a couple missing from the list that I would expect to see there as they're the same generation: X13 G1 and L15 G2 (and a possible ? against L14/L15 G1). I'm also a bit cautious as the E-series might need to show up here - but I don't know those platforms as well..
-> And depending on the two IDs...some of the platforms may need doubling up. Urgh.
+Please see my comments below.
 
-Ok.
+On Sat, Apr 1, 2023 at 6:58=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
+de> wrote:
+>
+> Hi Jorge,
+>
+> Hans asked me to do a review of your series, so this is it.
+>
+> I'll start with patch 4 because it is the one with the docs and build
+> system changes.
+> Reviews of the other patches and the code of this patch will follow.
+>
+> In my opinion the best way forward is to drop some of the non-core
+> and duplicated functionality.
+> The reduced scope will make review and rework easier and therefore speed
+> up the process.
+>
+> Please also Cc the general kernel mailing list
+> linux-kernel@vger.kernel.org for future revisions.
+> This will make sure the patchset is picked up and tested by the bots.
+>
+Will do.
 
-Stating the obvious here: Please send a patch adding
-the necessary extra IDs once you know which ids to add.
+> On 2023-03-09 14:10:22-0600, Jorge Lopez wrote:
+> > The purpose for this patch is submit HP BIOSCFG driver to be list of
+> > HP Linux kernel drivers.  The driver include a total of 12 files
+> > broken in several patches.
+>
+> No need for this paragraph.
 
-Regards,
+I will remove it in the next submission.
 
-Hans
+>
+> > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > the latest sysfs class firmware attributes framework allowing the user
+> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s com=
+mercial
+> > notebooks.
+>
+> Here it says "notebooks", below "PC's". Does it also support
+> non-notebook machines?
 
+The initial release of the driver will be supported for business notebooks.
+Although the driver is not targeted for non-notebooks machines, the
+driver was tested on non-notebooks in the event a decision is made to
+targets them
 
+> > --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > @@ -22,6 +22,13 @@ Description:
+> >                       - integer: a range of numerical values
+> >                       - string
+> >
+> > +             HP specific types
+> > +             -----------------
+> > +                     - ordered-list - a set of ordered list valid valu=
+es
+> > +                     - sure-admin
+>
+> Does sure-admin still exist?
 
+I will remove that entry.   Sure-admin no longer exist as part of the drive=
+r
 
+>> > +             HP specific class extensions
+> > +             ------------------------------
+> > +
+> > +             On HP systems the following additional attributes are ava=
+ilable:
+> > +
+> > +             "ordered-list"-type specific properties:
+> > +
+> > +             elements:
+> > +                                     A file that can be read to obtain=
+ the possible
+> > +                                     list of values of the <attr>. Val=
+ues are separated using
+> > +                                     semi-colon (``;``). The order ind=
+ividual elements are listed
+> > +                                     according to their priority.  An =
+Element listed first has the
+> > +                                     hightest priority. Writing the li=
+st in a different order to
+> > +                                     current_value alters the priority=
+ order for the particular
+> > +                                     attribute.
+> > +
+> > +             "sure-start"-type specific properties:
+> > +
+> > +             audit_log_entries:
+> > +                                     A read-only file that returns the=
+ events in the log.
+> > +
+> > +                                     Audit log entry format
+> > +
+> > +                                     Byte 0-15:   Requested Audit Log =
+entry  (Each Audit log is 16 bytes)
+> > +                                     Byte 16-127: Unused
+> > +
+> > +             audit_log_entry_count:
+> > +                                     A read-only file that returns the=
+ number of existing audit log events available to be read.
+> > +
+> > +                                     [No of entries],[log entry size],=
+[Max number of entries supported]
+>
+> sysfs is based on the idea of "one-value-per-file".
+> The two properties above violate this idea.
+> Maybe a different interface is needed.
+>
+
+Both properties report a single string separated by semicolon.  This
+is not different from listing all elements in a single string
+separated by semicolon.
+
+> Are these properties very important for the first version of this
+> driver? If not I would propose to drop them for now and resubmit them
+> as separate patches after the main driver has been merged.
+>
+We want the initial driver to have all predefined properties available
+first.   There are plans to add future properties and features which
+will be submitted as patches.
+
+> > +
+> > +
+> >  What:                /sys/class/firmware-attributes/*/authentication/
+> >  Date:                February 2021
+> >  KernelVersion:       5.11
+> > @@ -206,7 +245,7 @@ Description:
+> >               Drivers may emit a CHANGE uevent when a password is set o=
+r unset
+> >               userspace may check it again.
+> >
+> > -             On Dell and Lenovo systems, if Admin password is set, the=
+n all BIOS attributes
+> > +             On Dell, Lenovo, and HP systems, if Admin password is set=
+, then all BIOS attributes
+>
+> No comma after "Lenovo"
+
+Will do
+>
+> >               require password validation.
+> >               On Lenovo systems if you change the Admin password the ne=
+w password is not active until
+> >               the next boot.
+> > @@ -296,6 +335,15 @@ Description:
+> >                                               echo "signature" > authen=
+tication/Admin/signature
+> >                                               echo "password" > authent=
+ication/Admin/certificate_to_password
+> >
+> > +             HP specific class extensions
+> > +             --------------------------------
+> > +
+> > +             On HP systems the following additional settings are avail=
+able:
+> > +
+> > +             role: enhanced-bios-auth:
+> > +                                     This role is specific to Secure P=
+latform Management (SPM) attribute.
+> > +                                     It requires configuring an endors=
+ement (kek) and signing certificate (sk).
+> > +
+> >
+> >  What:                /sys/class/firmware-attributes/*/attributes/pendi=
+ng_reboot
+> >  Date:                February 2021
+> > @@ -364,3 +412,60 @@ Description:
+> >               use it to enable extra debug attributes or BIOS features =
+for testing purposes.
+> >
+> >               Note that any changes to this attribute requires a reboot=
+ for changes to take effect.
+> > +
+> > +
+> > +             HP specific class extensions
+> > +             --------------------------------
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/kek
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'kek' is a write-only file that can be used to configure =
+the
+> > +             RSA public key that will be used by the BIOS to verify
+> > +             signatures when setting the signing key.  When written,
+> > +             the bytes should correspond to the KEK certificate
+> > +             (x509 .DER format containing an OU).  The size of the
+> > +             certificate must be less than or equal to 4095 bytes.
+> > +
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/sk
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'sk' is a write-only file that can be used to configure t=
+he RSA
+> > +             public key that will be used by the BIOS to verify signat=
+ures
+> > +             when configuring BIOS settings and security features.  Wh=
+en
+> > +             written, the bytes should correspond to the modulus of th=
+e
+> > +             public key.  The exponent is assumed to be 0x10001.
+>
+> The names of the files 'SPM', 'kek' and 'sk' are cryptic.
+
+SPM - Secure Platform Manager
+kek -  Key-Encryption-Key (KEK)
+sk - Signature Key (SK)
+
+Those abbreviations were used because they are industry standard and
+reduce the  size of the commands.  Any suggestions?
+>
+> > +
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/status
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'status' is a read-only file that returns ASCII text repo=
+rting
+> > +             the status information.
+> > +
+> > +               State:  Not Provisioned / Provisioned / Provisioning in=
+ progress
+> > +               Version:  Major.   Minor
+> > +               Feature Bit Mask: <16-bit unsigned number display in he=
+x>
+> > +               SPM Counter: <16-bit unsigned number display in base 10=
+>
+> > +               Signing Key Public Key Modulus (base64):
+> > +               KEK Public Key Modulus (base64):
+>
+> This also violates 'one-value-per-file'.
+> Can it be split into different files?
+
+I will split the information in multiple files.
+
+> This would also remove the need for the statusbin file.
+>
+Status bin is used by GUI applications where data is managed
+accordingly instead of individual lines.
+
+> For the values:
+>
+> Status: I think symbolic names are better for sysfs:
+>         not_provisioned, provisioned, etc.
+> Feature Bit Mask: Use names.
+> Keys: It would be nicer if these could be shown directly in the files
+>       that can be used to configure them.
+>
+> As before, what is really needed and what can be added later?
+
+Status is needed when the user enables Secure Platform Manager in BIOS
+and  KEK and/or SK are configured.
+
+>
+> > +
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/statusbin
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'statusbin' is a read-only file that returns identical st=
+atus
+> > +             information reported by 'status' file in binary format.
+>
+> How does this binary format work?
+
+Yes.  Status bin is used by GUI applications where data is managed
+accordingly instead of individual lines
+
+>
+> > +
+> > +
+> > +What:                /sys/class/firmware-attributes/*/attributes/last_=
+error
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'last_error' is a read-only file that returns WMI error n=
+umber
+> > +             and message reported by last WMI command.
+>
+> Does this provide much value?
+> Or could this error just be logged via pr_warn_ratelimited()?
+
+It is specially needed to determine if WMI calls reported an error.
+This property is similar to the one provided by both Dell and Lenovo
+drivers
+>
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index f32538373164..663ae73fb8be 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9367,6 +9367,12 @@ S:     Obsolete
+> >  W:   http://w1.fi/hostap-driver.html
+> >  F:   drivers/net/wireless/intersil/hostap/
+> >
+> > +HP BIOSCFG DRIVER
+> > +M:   Jorge Lopez <jorge.lopez2@hp.com>
+> > +L:      platform-driver-x86@vger.kernel.org
+>
+> Broken whitespace
+
+I will be corrected.
+
+>
+> > +S:   Maintained
+> > +F:   drivers/platform/x86/hp/hp-bioscfg/
+> > +
+> >  HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
+> >  L:   platform-driver-x86@vger.kernel.org
+> >  S:   Orphan
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/Makefile b/drivers/plat=
+form/x86/hp/hp-bioscfg/Makefile
+> > new file mode 100644
+> > index 000000000000..529eba6fa47f
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/Makefile
+> > @@ -0,0 +1,13 @@
+> > +obj-$(CONFIG_HP_BIOSCFG) :=3D hp-bioscfg.o
+>
+> The kbuild part that defines CONFIG_HP_BIOSCFG is missing, so this is
+> never built.
+>
+
+This is an oversight on my part.  The changes were made but never made
+part of the review.
+
+> drivers/platform/x86/hp/Makefile also needs to reference this Makefile.
+>
+> After fixing up Kbuild please build the driver with "make W=3D1" and clea=
+n
+> up all the unused functions/variables.
+> (This won't catch unused stuff from bioscfg.c, so you have to check
+> these manually)
+>
+
+Thank you.  I will make sure to include it
