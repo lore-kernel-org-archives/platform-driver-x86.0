@@ -2,105 +2,222 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93002C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531ECC761A6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 16:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234583AbjDDO4c (ORCPT
+        id S231859AbjDDQct (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 10:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
+        Tue, 4 Apr 2023 12:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233533AbjDDO4O (ORCPT
+        with ESMTP id S231668AbjDDQcs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 10:56:14 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA5E44A3;
-        Tue,  4 Apr 2023 07:56:11 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 14:56:08 +0000
+        Tue, 4 Apr 2023 12:32:48 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AEB1BF3
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 09:32:46 -0700 (PDT)
+Date:   Tue, 4 Apr 2023 16:32:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1680620170; bh=YlApgOxHSRUtW1h2korvt3P+FHxY5UML+GHECLjEmkk=;
+        t=1680625964; bh=T5ywBY3DvFluPFLGHkl9G2UeG1fFBSHDNS6UFBi1VQ8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hvUlxrG6ljYPKxp8n1yYQWceJ5Kii3GeZHTutHR5uiH533zttHWR9XgPMhDKD7lA2
-         /uz8+kK/+eQ3ppqr4bGKya329IE0JGOfniwkAtwf48c4yj2DFi26rRxg0czKjaRFJK
-         PjGsIRCeOZvVgZJxGujoijvhxJ2b6jYvaLPOv2wI=
+        b=CbP5pjNYe5rczHzXySutOuFf9SXlEmgGeY5GZpb59Idkk7g0Opl3W+w2H9oUL+qYY
+         uRfynJxSPJtkMs6QnyBI3hDKy+zCLnEcIOUBJBcZctUnFRktyUc7b6XlXUc5Kwdm8e
+         U0f3p+UyVWlShSFEYu0zb2n5VQbxLVZXc7vVvbIE=
 From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-Message-ID: <ee254b4e-579d-4b32-90a4-b28bc10046fe@t-8ch.de>
-References: <20230403211548.6253-1-jorge.lopez2@hp.com>
- <ZCuMkdb6jeL4S8hz@debian.me>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 3/4] Introduction of HP-BIOSCFG driver [3]
+Message-ID: <f75018a8-cd8c-48dc-b6da-4469e95239bb@t-8ch.de>
+References: <20230309201022.9502-1-jorge.lopez2@hp.com>
+ <20230309201022.9502-4-jorge.lopez2@hp.com>
+ <ef741af7-caf4-4f30-a02d-a939fa9cc48f@t-8ch.de>
+ <CAOOmCE_cV+n5Wn1MW13zOw69SqbSzsyg35RjR18Ed8+Wmwz5TQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZCuMkdb6jeL4S8hz@debian.me>
+In-Reply-To: <CAOOmCE_cV+n5Wn1MW13zOw69SqbSzsyg35RjR18Ed8+Wmwz5TQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Bagas,
-
-On 2023-04-04 09:33:53+0700, Bagas Sanjaya wrote:
-> On Mon, Apr 03, 2023 at 04:15:48PM -0500, Jorge Lopez wrote:
-> > HP BIOS Configuration driver purpose is to provide a driver supporting
-> > the latest sysfs class firmware attributes framework allowing the user
-> > to change BIOS settings and security solutions on HP Inc.’s commercial
-> > notebooks.
-> > 
-> > Many features of HP Commercial notebooks can be managed using Windows
-> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> > Enterprise Management (WBEM) that provides a standards-based interface
-> > for changing and monitoring system settings. HP BIOSCFG driver provides
-> > a native Linux solution and the exposed features facilitates the
-> > migration to Linux environments.
-> > 
-> > The Linux security features to be provided in hp-bioscfg driver enables
-> > managing the BIOS settings and security solutions via sysfs, a virtual
-> > filesystem that can be used by user-mode applications. The new 
-> > documentation cover features such Secure Platform Management and Sure 
-> > Start. Each section provides security feature description and identifies 
-> > sysfs directories and files exposed by the driver.
-> > 
-> > Many HP Commercial notebooks include a feature called Secure Platform
-> > Management (SPM), which replaces older password-based BIOS settings
-> > management with public key cryptography. PC secure product management
-> > begins when a target system is provisioned with cryptographic keys
-> > that are used to ensure the integrity of communications between system
-> > management utilities and the BIOS.
-> > 
-> > HP Commercial notebooks have several BIOS settings that control its 
-> > behaviour and capabilities, many of which are related to security. 
-> > To prevent unauthorized changes to these settings, the system can be 
-> > configured to use a cryptographic signature-based authorization string 
-> > that the BIOS will use to verify authorization to modify the setting.
+On 2023-04-03 15:18:31-0500, Jorge Lopez wrote:
+> Hi Thomas,
 > 
-> If this is single patch, I'd like to write the patch subject as
-> "Documentation: sysfs: document HP-specific firmware attributes".
 > 
-> And also, adjust the patch description accordingly, since as it is
-> written above, it looks like general documentation of HP-specific feature
-> (which should be in actual diff).
+> >
+> > Currently the driver stores all its state in driver-global static data.
+> > The kobjects are stored without any state.
+> > Inside the kobject attribute operations is some fiddly logic that tries
+> > to figure out the corresponding state with a fiddly mechansims.
+> >
+> > The more correct way would be to attach the corresponding state
+> > directly to the kobject.
+> >
+> > Let me know if you want to give this a shot and I'll give an example.
 > 
-> > Version 7
-> > 	Includes only sysfs-class-firmware-attributes documentation
-> 
-> Where is the rest of patches if this is a series? Had they been merged?
+> Yes.  I would  like to give it a shot.  I can take a look at the code
+> and determine when we can implement it.
+> No promises.
 
-It was my proposal to focus on the documentation first in a single
-patch.
-So we can nail down the scope and details of the user-facing API without
-Jorge and the reviewers spending time on polishing internals that will
-change anyways.
+/* data for each kernel object */
+struct bios_property {
+	/* This is *not* a pointer, it will be used by the core sysfs
+	 * code framework to manage this "object" */
+	struct kobject kobj;
+	int instance_id; /* instance ID to pass to WMI functions */
+	/* common members to all properties */
+	u8 display_name[MAX_BUFF];
+	u8 path[MAX_BUFF];
+	/* all the other common stuff */
 
-The code exists and will be submitted with future revisions again.
-You can find v6 with the code here:
-https://lore.kernel.org/all/20230309201022.9502-1-jorge.lopez2@hp.com/
+	const struct *property_ops ops;
+	union {
+		struct string_property_data {
+			u8 current_value[MAX_BUFF];
+			u8 new_value[MAX_BUFF];
+			u32 min_length;
+			u32 max_length;
+		} string_data;
+		/* same for other data types... */
+	};
+};
 
-I should have also requested a note to that point with this revision.
+struct property_ops {
+	ssize_t	(*show_current_value)(struct bios_property *, char *);
+	ssize_t	(*store_current_value)(struct bios_property *, const char *, size_t);
+};
 
-Thomas
+static ssize_t string_property_show_current_value(struct bios_property *prop, char *buf)
+{
+	/* or read from WMI. Does it need to be cached? */
+	return sysfs_emit(buf, prop->string_data.current_value);
+}
+
+ssize_t	string_property_store_current_value(struct bios_property *prop, const char *buf, size_t count)
+{
+	int ret;
+
+	if (strlen(buf) > prop->string_data.max_length)
+		return -ERANGE;
+
+	ret = do_string_specifc_wmi_stuff(buf, count);
+	if (ret)
+		return ret;
+
+	strcpy(prop->current_value, buf);
+	return count;
+}
+
+/* different show/store functionality per property type */
+static const struct property_ops string_property_ops = {
+	.store_current_value = string_property_show_current_value,
+	.show_current_value = string_property_show_current_value,
+};
+
+struct bioscfg_attribute {
+	struct attribute attr;
+	ssize_t (*show)(struct bioscfg_prop *prop, char *buf);
+	ssize_t (*store)(struct bioscfg_prop *prop, const char *buf, size_t count);
+};
+
+/* this is one implementation for *all* property types */
+static ssize_t display_name_show(struct bioscfg_prop *prop, char *buf)
+{
+	return sysfs_emit(buf, prop->display_name);
+}
+static struct bioscfg_attribute display_name = __ATTR_RO(display_name);
+
+/* and all the other ones */
+
+/* this dispatches into the type-specific property handlers */
+static ssize_t current_value_show(struct bioscfg_prop *prop, char *buf)
+{
+	return prop->ops->show_current_value(prop, buf);
+}
+static struct bioscfg_attribute current_value = __ATTR(current_value);
+
+static struct attribute *attrs[] = {
+	&display_name.attr,
+	/* other attrs here */
+	NULL
+};
+
+/* reflect read-only mode in sysfs */
+static umode_t bioscfg_attr_is_visible(struct kobject *kobj, struct attribute *attr, int n)
+{
+	struct bios_property *prop = container_of(kobj, struct bios_property, kobj);
+
+	if (attr == &current_value.attr && prop->read_only)
+		return attr->mode ^ 0222; /* clear writable bits */
+	return attr->mode;
+}
+
+static const struct attribute_group attr_group = {
+	.attrs      = attrs,
+	.is_visible = bioscfg_attr_is_visible,
+};
+
+/* the following two functions dispatch from your the core kobj pointer
+ * to your custom callbacks operating on nice bioscfg_attribute
+ */
+static ssize_t bioscfg_attr_show(struct kobject *kobj, struct attribute *attr,
+				 char *buf)
+{
+	struct bioscfg_attribute *kattr;
+	ssize_t ret = -EIO;
+
+	kattr = container_of(attr, struct bioscfg_attribute, attr);
+	if (kattr->show)
+		ret = kattr->show(kobj, kattr, buf);
+	return ret;
+}
+
+static ssize_t bioscfg_attr_store(struct kobject *kobj, struct attribute *attr,
+				  const char *buf, size_t count)
+{
+	struct bioscfg_attribute *kattr;
+	ssize_t ret = -EIO;
+
+	kattr = container_of(attr, struct bioscfg_attribute, attr);
+	if (kattr->store)
+		ret = kattr->store(kobj, kattr, buf, count);
+	return ret;
+}
+
+static const struct sysfs_ops bioscfg_kobj_sysfs_ops = {
+	.show	= bioscfg_attr_show,
+	.store	= bioscfg_attr_store,
+};
+
+/* to hook this into the generic kobject machinery */
+static const struct kobj_type bioscfg_kobj_type = {
+	.release	= free_struct_bios_property,
+	.sysfs_ops	= &bios_property_sysfs_ops,
+	.default_groups = attr_groups,
+};
+
+static int probe(void)
+{
+	struct bios_property *prop;
+
+	for (each property discovered via WMI) {
+		prop = kzalloc(sizeof(*prop));
+		prop->readonly = is_read_only(property);
+		/* other common properties */
+		if (is_string_property(property)) {
+			prop->ops = string_property_ops;
+			prop->string_data.current_value = "";
+			/* other type-specific properties */
+		} else {
+			; /* and so on for other types */
+		}
+
+		kobject_init(&prop->kobj, &bioscfg_kobj_type);
+		kobject_add(&prop->kobj, parent, name);
+	}
+
+	/* Now all properties and their memory are managed by the kernel */
+}
+
+Instead of having one kobj_type for all properties it would also be
+possible to create a new one for each. But I don't think it's worth it.
