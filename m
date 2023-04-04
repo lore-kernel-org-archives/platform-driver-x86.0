@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D74C761A6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 18:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9017FC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 18:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236286AbjDDSV7 (ORCPT
+        id S235282AbjDDSWa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 14:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        Tue, 4 Apr 2023 14:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236097AbjDDSV1 (ORCPT
+        with ESMTP id S236441AbjDDSVz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 14:21:27 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D6746A0
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 11:21:22 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id o2so32148507plg.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 11:21:22 -0700 (PDT)
+        Tue, 4 Apr 2023 14:21:55 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44F75B83
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 11:21:36 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id w4so32118742plg.9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 11:21:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1680632481;
+        d=ventanamicro.com; s=google; t=1680632496;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g9sxg5LZ/1sJSiDItv56ESM72UWoohRRXZed1vK0StQ=;
-        b=lS5ulDLpGTFhacS/vmHeoNrA8WZMS9A1XD0ivXSE8k1m9UibbT/HDIYwmDj5dsTHzm
-         khjVZGw/f+zG21uuCJRZ4P383v2CRWHkitSQ5bFYgsNJvPfImERO9jDlBRkunMUPqiAO
-         49W+etiQwtzIpjxUIlH2B2LaPlM0qZAlhwE88kXncU/Z/de2KE5mtcuosQjsfjlZUaAs
-         fp6NVPnjuihlvuWzPISUE5kl1VbgFLFjOo5lYVO7n9TJiPFNm/FP+KJDT+bNIGSBwUxj
-         nOphCmWDomst3+OiuuhOSLh6CNn9cz4rDQ9C5FEGUERClo98uzNigXIfvs9y/lcE+KJJ
-         Q6YA==
+        bh=bvg+GJpfRbLLmDkZ0StW7roD1sWqDLKd1ZxLgpiB2U8=;
+        b=I3YBhdL+3Xu+llKzrnwX1PUwlziaWfYZYAn6dc7RWq3v8qQ5bWdgGSvxCKmlXVBO6+
+         rekwV0s8mtQsUQ5+R5rntkObGS4DCiB67c5WHPJHjXpH1FI3ldw8JPXKTvadU94zPUEq
+         3MoSjz8vNOVFECLMc3b8PcTCxSp04tEPFOksmPgCMVu98oUh7zudU2b0dGhPvdMf3bq2
+         tb7nhujvFAJbspAzqq9BA4BbHp9YilY1deH4pMAEkoyBFSWtCg6cei+qkzWCtuWGEFrS
+         n/PBi6qYsRJU3PlEGBXGHpmKo1j22/fKx1+DLBUi4RnXsud0TPYfOw6Od4r7sNSzRIGQ
+         JbkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680632481;
+        d=1e100.net; s=20210112; t=1680632496;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g9sxg5LZ/1sJSiDItv56ESM72UWoohRRXZed1vK0StQ=;
-        b=cKCBJJcMp6SBLcOPvMy4BL5QTU3NsXRSrt3YDxABJsFyJfS0whL33xRRBpVX2NsCBh
-         +6YPHp4hc0ESOS2uLL/Y5tpJC1/qouAZwZqQLqCGKtTkc2PxkSo1wASxaA/8AH0WTF89
-         nWRa0lnjSWxTqiXbBmUY7Ca3RW1hFVTnRz6/ei7aNpTfoycvpox4QbRN18ZT6qqh+3lH
-         NQCsG2LUtsUufJ4voKmQr0K/LRhA0j+JwPivhWxQEBZ1LgBl+rbQqohIU7gQ7vlbZjg3
-         OLuGLSX9Hzm0SGGO8SV0ZzP2GsxOQDPr8o+n7Cowd9aQ70LJWlFkn77KaRFC1wNP49gK
-         SXOA==
-X-Gm-Message-State: AAQBX9dirXsB0stUYuHAy+6T2we442bf1QKdL584dmJld3RMcusUEv1L
-        NIzog4jkwJX5i+ReZyYMwhn0vw==
-X-Google-Smtp-Source: AKy350ZsAX/af2SGUjolLHmefDU/DyLThtAxyS7GCNHhc5U197X9IrYt3e8QE2hOBYNi+FCaIsr4/w==
-X-Received: by 2002:a05:6a20:b286:b0:d9:237e:9d08 with SMTP id ei6-20020a056a20b28600b000d9237e9d08mr3003165pzb.3.1680632481697;
-        Tue, 04 Apr 2023 11:21:21 -0700 (PDT)
+        bh=bvg+GJpfRbLLmDkZ0StW7roD1sWqDLKd1ZxLgpiB2U8=;
+        b=QIXkimeKbbeu6oRah3mTPTC+lyFoc0Gggt0uKQrkNPVoXZd13qaszU6DbcxiOpxUCk
+         IqM+9Zb2YEILkwXAe9kro5KsIk4zIGUuag/0U7zOhFGJAHKh9PoYGoJrRAaHxsa8CI5N
+         D6JqE36pBFZZFRgIMlBSnbqL7mgnpfXppu21GhpRaS0B43kW3BsjvTyiP8weJjUk46bL
+         9pIySKPSf365tkoF1/Oss3rBSnvg2rLDc6bRxXIr3TA2nTOWzcdpYafNsGzQtclbwHvJ
+         pvjaElen1D6I4G3abaSmGEiPKNt9e1st7llYOHHCzjKa1cGJCpDLtZdHd+kHG2jVvibF
+         phfQ==
+X-Gm-Message-State: AAQBX9cmCXsQzEHod6+PD3BgPn36uRah4y7Sj1rPwpFkkfQgXgkwT7br
+        EWjJPeRhpR2aJ2vgVA55cBXkmg==
+X-Google-Smtp-Source: AKy350YCFZALzxG1f0ZKLaXTb3ZCE0kWpOL0W2R5mZxwsFoNCva7gK3Ymc4i1Uu1qokGXlcAi0tynQ==
+X-Received: by 2002:a05:6a20:cf63:b0:db:b7:fe3f with SMTP id hz35-20020a056a20cf6300b000db00b7fe3fmr3101830pzb.10.1680632496052;
+        Tue, 04 Apr 2023 11:21:36 -0700 (PDT)
 Received: from localhost.localdomain ([106.51.184.50])
-        by smtp.gmail.com with ESMTPSA id o12-20020a056a001bcc00b0062dcf5c01f9sm9018524pfw.36.2023.04.04.11.21.15
+        by smtp.gmail.com with ESMTPSA id o12-20020a056a001bcc00b0062dcf5c01f9sm9018524pfw.36.2023.04.04.11.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 11:21:21 -0700 (PDT)
+        Tue, 04 Apr 2023 11:21:35 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
@@ -75,10 +75,11 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
         Sunil V L <sunilvl@ventanamicro.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH V4 05/23] ACPI: OSL: Make should_use_kmap() 0 for RISC-V
-Date:   Tue,  4 Apr 2023 23:50:19 +0530
-Message-Id: <20230404182037.863533-6-sunilvl@ventanamicro.com>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH V4 07/23] ACPI: processor_core: RISC-V: Enable mapping processor to the hartid
+Date:   Tue,  4 Apr 2023 23:50:21 +0530
+Message-Id: <20230404182037.863533-8-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230404182037.863533-1-sunilvl@ventanamicro.com>
 References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
@@ -88,28 +89,80 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Without this, if the tables are larger than 4K,
-acpi_map() will fail.
+processor_core needs arch-specific functions to map the ACPI ID
+to the physical ID. In RISC-V platforms, hartid is the physical id
+and RINTC structure in MADT provides this mapping. Add arch-specific
+function to get this mapping from RINTC.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 ---
- drivers/acpi/osl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/include/asm/acpi.h |  3 +++
+ drivers/acpi/processor_core.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 3269a888fb7a..f725813d0cce 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -276,7 +276,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
- 	return NULL;
+diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+index bcade255bd6e..9be52b6ffae1 100644
+--- a/arch/riscv/include/asm/acpi.h
++++ b/arch/riscv/include/asm/acpi.h
+@@ -15,6 +15,9 @@
+ /* Basic configuration for ACPI */
+ #ifdef CONFIG_ACPI
+ 
++typedef u64 phys_cpuid_t;
++#define PHYS_CPUID_INVALID INVALID_HARTID
++
+ /* ACPI table mapping after acpi_permanent_mmap is set */
+ void *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
+ #define acpi_os_ioremap acpi_os_ioremap
+diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
+index 2ac48cda5b20..d6606a9f2da6 100644
+--- a/drivers/acpi/processor_core.c
++++ b/drivers/acpi/processor_core.c
+@@ -106,6 +106,32 @@ static int map_gicc_mpidr(struct acpi_subtable_header *entry,
+ 	return -EINVAL;
  }
  
--#if defined(CONFIG_IA64) || defined(CONFIG_ARM64)
-+#if defined(CONFIG_IA64) || defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
- /* ioremap will take care of cache attributes */
- #define should_use_kmap(pfn)   0
- #else
++/*
++ * Retrieve the RISC-V hartid for the processor
++ */
++static int map_rintc_hartid(struct acpi_subtable_header *entry,
++			    int device_declaration, u32 acpi_id,
++			    phys_cpuid_t *hartid)
++{
++	struct acpi_madt_rintc *rintc =
++	    container_of(entry, struct acpi_madt_rintc, header);
++
++	if (!(rintc->flags & ACPI_MADT_ENABLED))
++		return -ENODEV;
++
++	/* device_declaration means Device object in DSDT, in the
++	 * RISC-V, logical processors are required to
++	 * have a Processor Device object in the DSDT, so we should
++	 * check device_declaration here
++	 */
++	if (device_declaration && rintc->uid == acpi_id) {
++		*hartid = rintc->hart_id;
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
+ static phys_cpuid_t map_madt_entry(struct acpi_table_madt *madt,
+ 				   int type, u32 acpi_id)
+ {
+@@ -136,6 +162,9 @@ static phys_cpuid_t map_madt_entry(struct acpi_table_madt *madt,
+ 		} else if (header->type == ACPI_MADT_TYPE_GENERIC_INTERRUPT) {
+ 			if (!map_gicc_mpidr(header, type, acpi_id, &phys_id))
+ 				break;
++		} else if (header->type == ACPI_MADT_TYPE_RINTC) {
++			if (!map_rintc_hartid(header, type, acpi_id, &phys_id))
++				break;
+ 		}
+ 		entry += header->length;
+ 	}
 -- 
 2.34.1
 
