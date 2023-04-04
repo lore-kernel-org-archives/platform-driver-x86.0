@@ -2,86 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46391C77B76
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 13:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93002C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 14:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235266AbjDDNh5 (ORCPT
+        id S234583AbjDDO4c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 09:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51752 "EHLO
+        Tue, 4 Apr 2023 10:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235229AbjDDNhv (ORCPT
+        with ESMTP id S233533AbjDDO4O (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 09:37:51 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A46F1BD0;
-        Tue,  4 Apr 2023 06:37:50 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id x17so42465624lfu.5;
-        Tue, 04 Apr 2023 06:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680615468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6eXqdv5R87UkWerUpADSYoTnH9yUbvTu+QxPfj9tLIA=;
-        b=U0zCF63H3O415nTgouxCcn5kmjVydu0JtlOM4Di2O9rMVKWCuU+SscNmFFUnV9zUl+
-         UnbmaZHgCOQ7+Ab216xHn5DLH3RCQSFSpMzGayzRMohf4jbY2XhBbWPU6XHMgd2Pxzsz
-         hk042GrPpRNijD3iOjVVEwvKONZYbrlVOZW045OZSGx6eUkKNNo9xMf9fxiXfRhZlAcA
-         v4YBubXVdnd9y8MWBvYwLljGHt46B82qtO5FJ6ZF/6lAitKwMlZNoKEcEbjTlGSdMh6R
-         ARhSOrWbMupM64rs8NXMiYZlW0eaQ64A2k6gP6/pb7cZ2uoG4RGlL1MhfEpMWB+bhGQr
-         GfaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680615468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6eXqdv5R87UkWerUpADSYoTnH9yUbvTu+QxPfj9tLIA=;
-        b=jk45b5Tguf3X9t/Tthm9ML8PsqFpG5+H9zVPzrfTdzXK6zi7tv0+/GAwxEPymc0y7P
-         n6M2MW07N35TNtrfXNwIOB9a9GV3q7GX4TEg2az9NtHgoVOWgekEsCGCSl2kcwL/PezX
-         cIO3exgKNk66mZyrYosOohaHv8rLgIFl/2hi5YiaV4YJamPG7VqLSfSUPdMLZloMq8ZM
-         FW/zpC9vEpmpYLcwU//p8ygQ6BnPSXOK3QF33ct116AGVWC4SzAV8rcQgfy3z0j543eD
-         +IvaDs4ttdTUgbhCm58jW8TJcImukd/EjtlhANJUg0M+tvBRdldd4o+G1bIk63vsh1KW
-         y3WQ==
-X-Gm-Message-State: AAQBX9eC9YpqL+xPyl8Hq6MtLE3SeL+EA39aXqARF1eyQiIYhcoZT6un
-        NRcAGqEhzlJXbYdIG/nRYi36G5Tcb7Awa7DdZIc=
-X-Google-Smtp-Source: AKy350ZEAT1iGbbnRn4oiCOcUJdthP/lFaoMOdybQzNCgzOXKAR70jKI+paKyFbAceTGtY/nCUeMaRW8ef3QjV4FsNA=
-X-Received: by 2002:ac2:592b:0:b0:4d5:ca32:9bd6 with SMTP id
- v11-20020ac2592b000000b004d5ca329bd6mr741155lfi.2.1680615468201; Tue, 04 Apr
- 2023 06:37:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230403211548.6253-1-jorge.lopez2@hp.com> <ZCuMkdb6jeL4S8hz@debian.me>
-In-Reply-To: <ZCuMkdb6jeL4S8hz@debian.me>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 4 Apr 2023 08:37:30 -0500
-Message-ID: <CAOOmCE-5NHkYcmBP1GGpr=sEoxF9jkjj1LevekEm8R0wbrM4xQ@mail.gmail.com>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+        Tue, 4 Apr 2023 10:56:14 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA5E44A3;
+        Tue,  4 Apr 2023 07:56:11 -0700 (PDT)
+Date:   Tue, 4 Apr 2023 14:56:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+        t=1680620170; bh=YlApgOxHSRUtW1h2korvt3P+FHxY5UML+GHECLjEmkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hvUlxrG6ljYPKxp8n1yYQWceJ5Kii3GeZHTutHR5uiH533zttHWR9XgPMhDKD7lA2
+         /uz8+kK/+eQ3ppqr4bGKya329IE0JGOfniwkAtwf48c4yj2DFi26rRxg0czKjaRFJK
+         PjGsIRCeOZvVgZJxGujoijvhxJ2b6jYvaLPOv2wI=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     hdegoede@redhat.com,
+Cc:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
         Linux x86 Platform Drivers 
         <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux Documentation <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+Message-ID: <ee254b4e-579d-4b32-90a4-b28bc10046fe@t-8ch.de>
+References: <20230403211548.6253-1-jorge.lopez2@hp.com>
+ <ZCuMkdb6jeL4S8hz@debian.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZCuMkdb6jeL4S8hz@debian.me>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi Bagas,
 
->
+On 2023-04-04 09:33:53+0700, Bagas Sanjaya wrote:
+> On Mon, Apr 03, 2023 at 04:15:48PM -0500, Jorge Lopez wrote:
+> > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > the latest sysfs class firmware attributes framework allowing the user
+> > to change BIOS settings and security solutions on HP Inc.’s commercial
+> > notebooks.
+> > 
+> > Many features of HP Commercial notebooks can be managed using Windows
+> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> > Enterprise Management (WBEM) that provides a standards-based interface
+> > for changing and monitoring system settings. HP BIOSCFG driver provides
+> > a native Linux solution and the exposed features facilitates the
+> > migration to Linux environments.
+> > 
+> > The Linux security features to be provided in hp-bioscfg driver enables
+> > managing the BIOS settings and security solutions via sysfs, a virtual
+> > filesystem that can be used by user-mode applications. The new 
+> > documentation cover features such Secure Platform Management and Sure 
+> > Start. Each section provides security feature description and identifies 
+> > sysfs directories and files exposed by the driver.
+> > 
+> > Many HP Commercial notebooks include a feature called Secure Platform
+> > Management (SPM), which replaces older password-based BIOS settings
+> > management with public key cryptography. PC secure product management
+> > begins when a target system is provisioned with cryptographic keys
+> > that are used to ensure the integrity of communications between system
+> > management utilities and the BIOS.
+> > 
+> > HP Commercial notebooks have several BIOS settings that control its 
+> > behaviour and capabilities, many of which are related to security. 
+> > To prevent unauthorized changes to these settings, the system can be 
+> > configured to use a cryptographic signature-based authorization string 
+> > that the BIOS will use to verify authorization to modify the setting.
+> 
+> If this is single patch, I'd like to write the patch subject as
+> "Documentation: sysfs: document HP-specific firmware attributes".
+> 
+> And also, adjust the patch description accordingly, since as it is
+> written above, it looks like general documentation of HP-specific feature
+> (which should be in actual diff).
+> 
+> > Version 7
+> > 	Includes only sysfs-class-firmware-attributes documentation
+> 
 > Where is the rest of patches if this is a series? Had they been merged?
->
 
-There is only one change as requested by  Thomas Wei=C3=9Fschuh
+It was my proposal to focus on the documentation first in a single
+patch.
+So we can nail down the scope and details of the user-facing API without
+Jorge and the reviewers spending time on polishing internals that will
+change anyways.
 
-> Feel free to ONLY submit the patch with the documentation for the next
-> revision. Then we can nail down the interface and initial functionality
-> and you don't always have to adapt the code to the changing interface.
+The code exists and will be submitted with future revisions again.
+You can find v6 with the code here:
+https://lore.kernel.org/all/20230309201022.9502-1-jorge.lopez2@hp.com/
 
-Perhaps, I misunderstood Thomas request.   I will address a few other
-comments and will submit all files again.
+I should have also requested a note to that point with this revision.
 
-Regards,
-
-Jorge
+Thomas
