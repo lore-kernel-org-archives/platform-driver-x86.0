@@ -2,228 +2,151 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E2FC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 20:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C4C6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 20:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235418AbjDDUYj (ORCPT
+        id S236256AbjDDUrN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 16:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
+        Tue, 4 Apr 2023 16:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232851AbjDDUYi (ORCPT
+        with ESMTP id S236254AbjDDUrL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 16:24:38 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF2E10CA;
-        Tue,  4 Apr 2023 13:24:36 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id bx10so16885540ljb.8;
-        Tue, 04 Apr 2023 13:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680639875;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oVf5L1s5vC5i2BV4mWtMiZo2kKfcnDSErU32Isic1c0=;
-        b=LFJn/i75qWzTZnNmOARwhUp1VIvYhF57EyWOrDLJMraSpbC3m31EuNymXVDnsaBh25
-         FhAYzTfHo9Ev+dUAVrmpib9+g6RWMFb8tqq6Nakq4Sr3gHFndTTiFNZ1j9Vdz9zEBb+F
-         C+8XPkOiLBL412T5yo2Zu2rSvdayZaiKVn1pNRSdXmFR8qkfPzqvHUl5OKjNGGLdcIe2
-         qwTx6kf22IbLR+VtcLBs+gMygBQQ16ha4RjZYDJgLC3dni4P1b4w9n1yee9TObcqU/h9
-         H5wvEvk2LaJ3vj/WT2r4LdS2JrEtJ7oIP679mxNvE+yhQZ6sKxSRuHs4rJyZZts2n4pP
-         yDtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680639875;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oVf5L1s5vC5i2BV4mWtMiZo2kKfcnDSErU32Isic1c0=;
-        b=s9Z/cPyk4y+TUKBT7yqM1bqBOpd3F1+MfHL+BuDMc41NKpyytqPlrLOVHax9namgxk
-         tC84YVlbgLwMTAUu8x3toZ+MeKCjTi0vAk/H0F91ry5bcyVLtLLtiKbwrGTwl/z1kdnO
-         ZWfx/tcBcTnnsIh7XjOX3/C16JBrE0IIyb3+j9G0Bz/mkwbbMR6VORunAacc9O+iYbeY
-         as2RD4rVJ5LmQLa18pZRKrKVKLspMoAPVQfJRh5cxbqybIdvGFcM6oEFie5YMbORX4F1
-         Wh2v0vlQ+EKRsOBn5bv0i4mMM28MuAKSzbldOI6fwviYmqyCykSVhEl5UAHrYCHVKotQ
-         lGmQ==
-X-Gm-Message-State: AAQBX9fxlZWYJlfTKCzj7M9qjmeeN26+TxCbhHTwrVP/aKcmYeTykjAK
-        Yjv9VHLkWLISTtfNPDSVZGAdH1bNLuVTuNKuGMI=
-X-Google-Smtp-Source: AKy350bAs0nGXa3BuJqVl2jqEm2na7mau8O6bShq31dmcE6naDoixDWRQlkRnuFwO9FX7EqnoB9mrJypSDMTei9CCYI=
-X-Received: by 2002:a2e:6817:0:b0:2a6:334b:21e9 with SMTP id
- c23-20020a2e6817000000b002a6334b21e9mr1420402lja.7.1680639874591; Tue, 04 Apr
- 2023 13:24:34 -0700 (PDT)
+        Tue, 4 Apr 2023 16:47:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A73525B;
+        Tue,  4 Apr 2023 13:47:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 039CB6386C;
+        Tue,  4 Apr 2023 20:47:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FF1C433EF;
+        Tue,  4 Apr 2023 20:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680641221;
+        bh=M7AEWkhrz5m+HYdpjj6qhbiE8Cg4ln7oJCOBbFTIiRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XKSVKmxvX+In5+aTFI38lD3mTwWpaROD+kYBh9cbnPJJlG3HlwLgZUz9omWVs9Ixr
+         bruMbiboP0WvSmcfxUXXTJ4jZSZKstsJmEs66wU1pV7eQ6vEkAjBy3wYs489g5Gt77
+         BteQHqtKWc2qqQaQmF8UyZX3irxIPZYxj2UeBS7GIXTuJjg+zHo/IM6Yi7thekeHrw
+         R7+jl9kAL9xldbbtpzij3Q6BWjM4Ph7bgidogmBKQGiDvrXaGj6zpNU7XQirvkUyuD
+         IZawGhwRO/Pp617SDrAWVKWBcrVNdcVvtiarwAekDRjP77OX+oq8QTewmM8N2FyfGT
+         Qy2lX1fAAXYTg==
+Date:   Tue, 4 Apr 2023 21:46:54 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev, Weili Qian <qianweili@huawei.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Tom Rix <trix@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH V4 12/23] RISC-V: cpufeature: Avoid calling
+ riscv_of_processor_hartid()
+Message-ID: <20230404-pavestone-skinless-2f466941a95b@spud>
+References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+ <20230404182037.863533-13-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
-References: <20230403211548.6253-1-jorge.lopez2@hp.com> <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
-In-Reply-To: <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 4 Apr 2023 15:24:16 -0500
-Message-ID: <CAOOmCE8z_UDs8dG0MqX+SFcvd-CTX12XXKzOrVOKDuvrPkyeCQ@mail.gmail.com>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kgJ+/uDheNc4jGb7"
+Content-Disposition: inline
+In-Reply-To: <20230404182037.863533-13-sunilvl@ventanamicro.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
 
-BTW, I decided to submit all files individually to facilitate the
-review process.  Only Makefile and Kconfig files will be provided as a
-single patch.
-I will be out of town until April 11 and will reply back upon my return.
+--kgJ+/uDheNc4jGb7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please see my comments below.
+On Tue, Apr 04, 2023 at 11:50:26PM +0530, Sunil V L wrote:
+> riscv_fill_hwcap() finds hartid of each cpu but never really uses
+> it. So, remove this unnecessary call.
 
->
-> > +             HP specific types
-> > +             -----------------
-> > +                     - ordered-list - a set of ordered list valid values
-> > +                     - sure-start
->
-> Could you explain what "sure-start" does?
-> Is it actually an attribute type of which multiple attributes can exist?
->
+"Never uses it" or "never really uses it"?
+This commit message misses the point though I think - is this here to
+get the hartid, or is it here to do all the property validation that
+riscv_of_processor_hartid() does for a cpu node?
 
-It is an attribute type of which multiple attributes can exist.
-At this moment  Sure-Start reports both the number of audit logs and
-all logs reported by BIOS.
-Sure-Start is exposed directly under
-/sys/class/firmware-attributes/*/attributes/.   Sure Start does not
-provide any authentication.
+This was added all the way back in 4.20 in commit 732e8e4130ff ("RISC-V:
+properly determine hardware caps").
+As the loop is a for_each_of_cpu_node(), I don't think this change is
+actually valid - there's no guarantee that the cpu we are iterating over
+is actually available and the riscv_of_processor_hartid() check is used
+to skip "bad" cpus AFAICT.
 
-> Or are there just some global properties that need to be exposed?
-> If it is global it should be directly under
-> /sys/class/firmware-attributes/*/authentication/
-> without needing the type.
->
-> > +
-> > +
-> >               All attribute types support the following values:
-> >
-> >               current_value:
-> > @@ -42,16 +48,16 @@ Description:
-> >                               description of the at <attr>
-> >
-> >               display_name_language_code:
-> > -                                             A file that can be read to obtain
-> > -                                             the IETF language tag corresponding to the
-> > -                                             "display_name" of the <attr>
-> > +                             A file that can be read to obtain
-> > +                             the IETF language tag corresponding to the
-> > +                             "display_name" of the <attr>
->
-> Are these reindentations and other cleanups intentional?
->
-> If they are intentional and there are no interactions with your actual
-> patch you could split them into their own patch and submit them
-> separately.
->
-> This way we wouldn't have to worry about them here anymore.
+Perhaps I am missing something, I don't think you can do this until you
+switch the loop to use something that only uses cpus that you know are
+valid.
 
-They were unintentionally.  I will reset them back in the next review
->
-> Note:
-> These indentations are different from the newly introduced documentation.
->
-> >
-> > +             audit_log_entries:
-> > +                                     A read-only file that returns the events in the log.
-> > +                                     Values are separated using semi-colon (``;``)
-> > +
-> > +                                     Audit log entry format
-> > +
-> > +                                     Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
-> > +                                     Byte 16-127: Unused
->
-> How to interpret each log entry?
->
+Cheers,
+Conor.
 
-Byte 0: status
-1: event id
-2: msg number
-3: severity
-4: source ID
-5: system state at event
-6-12 Time stamp
-13-15: internal buffer data
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/riscv/kernel/cpufeature.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>=20
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 59d58ee0f68d..63e56ce04162 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -91,7 +91,6 @@ void __init riscv_fill_hwcap(void)
+>  	char print_str[NUM_ALPHA_EXTS + 1];
+>  	int i, j, rc;
+>  	unsigned long isa2hwcap[26] =3D {0};
+> -	unsigned long hartid;
+> =20
+>  	isa2hwcap['i' - 'a'] =3D COMPAT_HWCAP_ISA_I;
+>  	isa2hwcap['m' - 'a'] =3D COMPAT_HWCAP_ISA_M;
+> @@ -109,10 +108,6 @@ void __init riscv_fill_hwcap(void)
+>  		DECLARE_BITMAP(this_isa, RISCV_ISA_EXT_MAX);
+>  		const char *temp;
+> =20
+> -		rc =3D riscv_of_processor_hartid(node, &hartid);
+> -		if (rc < 0)
+> -			continue;
+> -
+>  		if (of_property_read_string(node, "riscv,isa", &isa)) {
+>  			pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
+>  			continue;
+> --=20
+> 2.34.1
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Application needs to have knowledge of the data provided by BIOS in
-order to interpret the audit log.
+--kgJ+/uDheNc4jGb7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> If it is an opaque thing from the firmware that would also be useful to
-> know.
->
-> > +
-> > +             audit_log_entry_count:
-> > +                                     A read-only file that returns the number of existing audit log events available to be read.
-> > +                                     Values are separated using comma (``,``)
-> > +
-> > +                                     [No of entries],[log entry size],[Max number of entries supported]
->
-> Will log entry size always be 16? Or can it be bigger in the future when
-> more bytes are used?
-> This should be mentioned.
+-----BEGIN PGP SIGNATURE-----
 
-Log entry size is always 16 bytes in size.  The reason is to report a
-maximum of 256 entries.  Total 4096 bytes
->
-> Is audit_log_entry_count ever used without reading audit_log_entries
-> right after?
-Yes. The counter is necessary to determine how many logs are available
-to be read.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZCyMvQAKCRB4tDGHoIJi
+0hpGAP4pgJiMrwEE4MqFKel0RfYzkzWShHChGkcaYXuq9E+PjwEA5j0+IIN4EnD3
+iGmXBcTRH2L8dBKnu+t39ju3V81nRQs=
+=z9Dv
+-----END PGP SIGNATURE-----
 
-> If not the count file could be dropped.
->
-> > +What:                /sys/class/firmware-attributes/*/authentication/SPM/status
-> > +Date:                March 29
-> > +KernelVersion:       5.18
-> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> > +Description: 'status' is a read-only file that returns ASCII text reporting
-> > +             the status information.
-> > +
-> > +               State:  Not Provisioned / Provisioned / Provisioning in progress
-> > +               Version:  Major.   Minor
-> > +               Feature Bit Mask: <16-bit unsigned number display in hex>
->
-> How are these bits to be interpreted?
-This information is provided by BIOS.  It is one of those obscure
-values from BIOS.
->
-> > +               SPM Counter: <16-bit unsigned number display in base 10>
-> > +               Signing Key Public Key Modulus (base64):
-> > +               KEK Public Key Modulus (base64):
->
-> Is " (base64)" supposed to be part of the contents of the file?
-
-The information reported for Signing Key and KEK public key are
-reported as base64 values.  It applies only to the data and not to the
-file contents.
-
->
-> > +
-> > +
-> > +What:                /sys/class/firmware-attributes/*/authentication/SPM/statusbin
-> > +Date:                March 29
-> > +KernelVersion:       5.18
-> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> > +Description: 'statusbin' is a read-only file that returns identical status
-> > +             information reported by 'status' file in binary format.
->
-> This documentation should contain enough information to understand the
-> files contents.
->
->
-> I understand that one WMI call will return all the fields that are part
-> of the "status" and "statusbin" in one response.
->
-> Are these WMI calls especially expensive or called especially
-> frequently?
->
-
-Unfortunately the WMI to read the Status binary data is expensive
-hence the reason of only calling once.
-
-> If not I would still argue to split them into one file per field and
-> remove the statusbin file.
->
-
-Regards,
-
-Jorge
+--kgJ+/uDheNc4jGb7--
