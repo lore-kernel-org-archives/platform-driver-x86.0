@@ -2,142 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25A8C7618D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 02:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49519C6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 07:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231546AbjDDCd7 (ORCPT
+        id S233522AbjDDH5v (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 22:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41796 "EHLO
+        Tue, 4 Apr 2023 03:57:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjDDCd6 (ORCPT
+        with ESMTP id S233470AbjDDH5u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 22:33:58 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72951FFA;
-        Mon,  3 Apr 2023 19:33:56 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id l7so29104516pjg.5;
-        Mon, 03 Apr 2023 19:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680575636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gn9YD3alGf58TN8N9lq3/1u5tsXKao8t2A/bH+T+1dU=;
-        b=b4lqaShApbas9ZlBE8qTB4x6yHo2QnhB8A+l7p8LEEBnff7zD+YmlrF/MBF7YpcI+T
-         G+bK8kciZ5fq9O5JOjDIIW69IGolvUbMytTkyZ0Mff4O1cu+X/uXK1WGQdMdDQKaF5Vh
-         YTZZuldGOZtjfZ8NF9JszMmbZt/qm8euwwonAXDEhJj6M3cOZc2Yecv+L/RoUAQwJ9Qf
-         Z1/aQhQspQbbhXCDSWj9FQ5JC5U7DAZPSONX4c2yOosoJN1UjwGHGZqtcu+/2rOtr2YV
-         4enWUiEEaBKBAgSi0r5Vh/TsJDjYHuWH4hK5XVEInAW9Qt9HXL0pdR0EBdoiqmZdJJi6
-         ZJoQ==
+        Tue, 4 Apr 2023 03:57:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D47B1BD8
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 00:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680595024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E3TkeClV4EMiV5agwGhkpRyE4q1gMA5VINpsaFciEjg=;
+        b=dbYqy7SvVtzd2CWSGYV6o6wPFeoaQ0IYOfONOIjGTJp5D/BQZgxMvyTKmYUn+1fye4fmGT
+        T6LnD5L0SOv7zIV1ll7CcQh8QeroF8t+r3Q+9VDHO4XHi/PLrwudI6SAQpewz+iaGD/lo2
+        gZ7ij6qEZRX2ZjclsG3vHB4fLYxOXvw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-5g82VUaGOrG1BOARUHzQHg-1; Tue, 04 Apr 2023 03:57:03 -0400
+X-MC-Unique: 5g82VUaGOrG1BOARUHzQHg-1
+Received: by mail-ed1-f71.google.com with SMTP id m18-20020a50d7d2000000b00501dfd867a4so45244270edj.20
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 00:57:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680575636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gn9YD3alGf58TN8N9lq3/1u5tsXKao8t2A/bH+T+1dU=;
-        b=LMPDH2CbPZSzA+LxRfyfvyimKpI/CRn6xIYVGrRc8MDK57RGLGAOJbeC9nl2e8iQlX
-         q1wmjoQ2ONS4kIOAqgbX/DvboU/+dOnTPSQ5YUmkGyL75qOGcW+A5pHfMDHHlrHQG6Uc
-         m2ADaxxVBFB2qZb1HvxhjBnWTHXLytFFVU2gYVstaK9SR+F/+FgySdIBOt/hdGRSXgrD
-         YvZS/TGK+cJOD5UQSV2g6quhhsUzUiEUJCjKoRXEq7IupS2X8su0gJ4kG1n/0mhSSG1w
-         TEWYjYEsK422JVyYzZOOoEoc5mp7OLetaTQ9owoomPReGDNv9xziyCvj4YFmXXIf4Wmu
-         bGyw==
-X-Gm-Message-State: AAQBX9etWIKlgdGPVq8xSYEI/cfOxr4+bNNGmocVJKmokqfS7MeMsNsG
-        Qdv2SAE8xg+WZbWV2t+zh7s=
-X-Google-Smtp-Source: AKy350YPVWkAxd93yXbY0JVmIPLjPmAttfmlrGLB1VF3wzesgykIT6yBU+ZgiAgVoc6qo/Z4xTr9dA==
-X-Received: by 2002:a05:6a20:bf18:b0:dc:43e8:54b7 with SMTP id gc24-20020a056a20bf1800b000dc43e854b7mr661468pzb.43.1680575636225;
-        Mon, 03 Apr 2023 19:33:56 -0700 (PDT)
-Received: from debian.me (subs28-116-206-12-40.three.co.id. [116.206.12.40])
-        by smtp.gmail.com with ESMTPSA id b3-20020a655783000000b0050b026c444fsm6548734pgr.62.2023.04.03.19.33.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 19:33:55 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 79A4310677F; Tue,  4 Apr 2023 09:33:53 +0700 (WIB)
-Date:   Tue, 4 Apr 2023 09:33:53 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-Message-ID: <ZCuMkdb6jeL4S8hz@debian.me>
-References: <20230403211548.6253-1-jorge.lopez2@hp.com>
+        d=1e100.net; s=20210112; t=1680595021;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E3TkeClV4EMiV5agwGhkpRyE4q1gMA5VINpsaFciEjg=;
+        b=71yaeeGUhrFLUNp3LLy0sOEWktWePi+LqSr2v+SloSiBbAH0o8nSfeteY9KmM5VLK0
+         eZ9vBPy1OYpLh0eI7FtDwhaYkdxcPVY3hR6WWmcuE/Fo7Icc5+2QdvTtoy1ZDJKE4g0p
+         3qiFEhd+CcMOwk7YXDYEo3Aiu8A8r9v3t/7Ty08THjVWYALwGJJ/EYA0VrLHZRJxzF+6
+         IL6pTaByB5/NykPhMYRbi3DVS9tLSDY06kHY9EKdyDY80ARXd9Es4/ZyMve1GH0fTdKm
+         HzgiUNezrVjYdlva///iVtfcOjyFfLX8visUWv9bWTccz5Rui5zv+G0VoOxGq1NtnYaJ
+         3jaA==
+X-Gm-Message-State: AAQBX9fHyH1SXPXP3R0A0Gq2q6MYUB9lVJqnHLlCLEMNxi8IVx5MCdIv
+        yYdjKpl32OcY17BlbeNIYPkarbDwmYfwL+R8Ex6+0SzAE1GVT/6NO+JYJmicT/eBi3KMTkav03w
+        o+d/xqO0DS6Bc6y1Pk3a36c7uqcIqLaFnEQ==
+X-Received: by 2002:a05:6402:1809:b0:502:3ff4:4d76 with SMTP id g9-20020a056402180900b005023ff44d76mr1865671edy.27.1680595021372;
+        Tue, 04 Apr 2023 00:57:01 -0700 (PDT)
+X-Google-Smtp-Source: AKy350YjfRzpnjPR/iLIdp3S5PgxAT4GGGc8/A08nFF7+jREhgxY0e2BavQgGAXFxXHTQ5adX1Or3g==
+X-Received: by 2002:a05:6402:1809:b0:502:3ff4:4d76 with SMTP id g9-20020a056402180900b005023ff44d76mr1865659edy.27.1680595021091;
+        Tue, 04 Apr 2023 00:57:01 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a26-20020a50c31a000000b005027686918bsm5383762edb.11.2023.04.04.00.56.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Apr 2023 00:57:00 -0700 (PDT)
+Message-ID: <7cd9a667-9ec8-b0a9-6f2c-de5f961d765b@redhat.com>
+Date:   Tue, 4 Apr 2023 09:56:59 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wZWQ5ERks+J5+e0a"
-Content-Disposition: inline
-In-Reply-To: <20230403211548.6253-1-jorge.lopez2@hp.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop sending
+ KEY_TOUCHPAD_TOGGLE
+To:     Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        GOESSEL Guillaume <g_goessel@outlook.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Manyi Li <limanyi@uniontech.com>,
+        =?UTF-8?Q?Eray_Or=c3=a7unus?= <erayorcunus@gmail.com>,
+        Philipp Jungkamp <p.jungkamp@gmx.net>,
+        Arnav Rawat <arnavr3@illinois.edu>,
+        Kelly Anderson <kelly@xilka.com>, Meng Dong <whenov@gmail.com>,
+        Felix Eckhofer <felix@eckhofer.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+References: <20230330194644.64628-1-hdegoede@redhat.com>
+ <ZCatIn7ok4jRrXS9@mail.gmail.com> <ZCs8SA47vGCjVl1l@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZCs8SA47vGCjVl1l@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---wZWQ5ERks+J5+e0a
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/3/23 22:51, Maxim Mikityanskiy wrote:
+> On Fri, 31 Mar 2023 at 12:51:30 +0300, Maxim Mikityanskiy wrote:
+>> On Thu, 30 Mar 2023 at 21:46:44 +0200, Hans de Goede wrote:
+>>> Commit 5829f8a897e4 ("platform/x86: ideapad-laptop: Send
+>>> KEY_TOUCHPAD_TOGGLE on some models") made ideapad-laptop send
+>>> KEY_TOUCHPAD_TOGGLE when we receive an ACPI notify with VPC event bit 5 set
+>>> and the touchpad-state has not been changed by the EC itself already.
+>>>
+>>> This was done under the assumption that this would be good to do to make
+>>> the touchpad-toggle hotkey work on newer models where the EC does not
+>>> toggle the touchpad on/off itself (because it is not routed through
+>>> the PS/2 controller, but uses I2C).
+>>>
+>>> But it turns out that at least some models, e.g. the Yoga 7-15ITL5 the EC
+>>> triggers an ACPI notify with VPC event bit 5 set on resume, which would
+>>> now cause a spurious KEY_TOUCHPAD_TOGGLE on resume to which the desktop
+>>> environment responds by disabling the touchpad in software, breaking
+>>> the touchpad (until manually re-enabled) on resume.
+>>
+>> Oh gosh, the touchpad toggle on Ideapads is so much broken, I wonder how
+>> the Windows driver deals with all this variety of different behaviors
+>> (unless it's broken too :D).
+>>
+>> I'll test the patch on Z570, but as I see, it shouldn't change anything
+>> for Z570.
+> 
+> Tested the kernel from your branch on Z570, the touchpad button still
+> works fine.
 
-On Mon, Apr 03, 2023 at 04:15:48PM -0500, Jorge Lopez wrote:
-> HP BIOS Configuration driver purpose is to provide a driver supporting
-> the latest sysfs class firmware attributes framework allowing the user
-> to change BIOS settings and security solutions on HP Inc.=E2=80=99s comme=
-rcial
-> notebooks.
->=20
-> Many features of HP Commercial notebooks can be managed using Windows
-> Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> Enterprise Management (WBEM) that provides a standards-based interface
-> for changing and monitoring system settings. HP BIOSCFG driver provides
-> a native Linux solution and the exposed features facilitates the
-> migration to Linux environments.
->=20
-> The Linux security features to be provided in hp-bioscfg driver enables
-> managing the BIOS settings and security solutions via sysfs, a virtual
-> filesystem that can be used by user-mode applications. The new=20
-> documentation cover features such Secure Platform Management and Sure=20
-> Start. Each section provides security feature description and identifies=
-=20
-> sysfs directories and files exposed by the driver.
->=20
-> Many HP Commercial notebooks include a feature called Secure Platform
-> Management (SPM), which replaces older password-based BIOS settings
-> management with public key cryptography. PC secure product management
-> begins when a target system is provisioned with cryptographic keys
-> that are used to ensure the integrity of communications between system
-> management utilities and the BIOS.
->=20
-> HP Commercial notebooks have several BIOS settings that control its=20
-> behaviour and capabilities, many of which are related to security.=20
-> To prevent unauthorized changes to these settings, the system can be=20
-> configured to use a cryptographic signature-based authorization string=20
-> that the BIOS will use to verify authorization to modify the setting.
+Thank you for testing.
 
-If this is single patch, I'd like to write the patch subject as
-"Documentation: sysfs: document HP-specific firmware attributes".
+Regards,
 
-And also, adjust the patch description accordingly, since as it is
-written above, it looks like general documentation of HP-specific feature
-(which should be in actual diff).
+Hans
 
-> Version 7
-> 	Includes only sysfs-class-firmware-attributes documentation
 
-Where is the rest of patches if this is a series? Had they been merged?
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---wZWQ5ERks+J5+e0a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZCuMjAAKCRD2uYlJVVFO
-ow7OAP9gRcmB0bGzGPNpYcIbQOXyVkzMwcRvfFZI8DazZekgfwD1F0pLNN9sqHpv
-EwDI6/5ooWivsvoDHirVWJkj0mdpCw==
-=mUcv
------END PGP SIGNATURE-----
-
---wZWQ5ERks+J5+e0a--
