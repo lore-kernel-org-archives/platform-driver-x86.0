@@ -2,352 +2,225 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1DAC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 17:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652BCC6FD1D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 18:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236319AbjDDR0z (ORCPT
+        id S235706AbjDDSUv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 13:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
+        Tue, 4 Apr 2023 14:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235885AbjDDR0h (ORCPT
+        with ESMTP id S235364AbjDDSUu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 13:26:37 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4752F5263;
-        Tue,  4 Apr 2023 10:24:58 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 17:23:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1680629017; bh=vgKOa/bVFeEsCwYrjKIh0mANzZ4XmHS16QIJ65gmeVQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mGDQ9kOM8ffZO+Vw+4SbMSNo0KfsZh6bIZ+DQEk24Z+2LebEohP0jQ/hGPgBmGsNR
-         i9+RwavOKm7Q62ENpEumPDUJHyXV6UCTVa1sg6G8uSDGbfJUmdtO92sxAfwTHUYviJ
-         uCGvV08aQu/3fwUQvsgAABnERW//zTg6/TlzaOMQ=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-Message-ID: <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
-References: <20230403211548.6253-1-jorge.lopez2@hp.com>
+        Tue, 4 Apr 2023 14:20:50 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C2D421A
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 11:20:48 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id q20so10904589pfs.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 11:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1680632448;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a8QsXaZPHEAsPoW0flCc0TOSQrLjDGzZjDEO/EvIfsw=;
+        b=mpiCxWKuWoSzlX40nQKfKAaOH87Uuf9nu3eXg7EdGg557PNonvadIn6JVXiN/uM9Wy
+         phW/msttEsKDnZh1vVFo1bN9XZtZKEUa4wk/18xxEDCarICge5UwlYnQAxJzm03rXFSI
+         DJBprbDLPojSOI3lW4sui5GKgMuD72aL4oaagoTPk8faAqerVaiDZ6mu538E2hh9oqF7
+         0oK8ht9mRNdYe4sIkdaSTzl6G8Fs9E31epNQi3UPNlN8wJObdPa2hsumipAUSGbg3eKo
+         jvrjjdXwkTaMmkoq5VnpbS/FL/eFSGqJVfftsC93axZyll8/J5G4pPsWk+JEQJidr9Ym
+         fv7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680632448;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a8QsXaZPHEAsPoW0flCc0TOSQrLjDGzZjDEO/EvIfsw=;
+        b=6+BVEFCAMy5MFzdyAllEYURDCJMWiYvI7lm7RolpwdxQaLF8Q2MbzN5g4Pk+cG+qzo
+         qfUZmfpoMIUmS6OloQntIMAI76Z1OSVVAwDSN2AXdn70D5qLvuXzuEy4rboZ2jup/M3l
+         w8DhhvqJAOuX7HIFkXH3Mz2ZKkqsj8I5xqa9wdxqL+Z392VL7No5b1WVZgbramFmns/x
+         XLobBAJgK34in6qJkIcLExpMCX6pp2xPd9ZgVf6ml9S220Y6y2VnhY9R2x7k1YyQ2uqp
+         L2LCjSERSl4PUGnlkdMyCQWEDFiYdf7OeiorsjidDcyWIZiuIHMc6sbKf1Tfo3Ql4DzX
+         TWYg==
+X-Gm-Message-State: AAQBX9dyG37pA9RUmwJKVWHE5O4XwkZoKqnm5Sadwf5kWviCx7a0jceu
+        EMR3yPXCU1psjSqdvkQMwvuu/Q==
+X-Google-Smtp-Source: AKy350ZueCB8uPytSB434Qm4r5EaO+Vwyt0FglDeSJ0S0BeLW50LyieSkwwAgxgd1F0EJCZ+ZvbMfw==
+X-Received: by 2002:a62:1d41:0:b0:62a:4503:53b8 with SMTP id d62-20020a621d41000000b0062a450353b8mr3341665pfd.1.1680632447664;
+        Tue, 04 Apr 2023 11:20:47 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.184.50])
+        by smtp.gmail.com with ESMTPSA id o12-20020a056a001bcc00b0062dcf5c01f9sm9018524pfw.36.2023.04.04.11.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 11:20:47 -0700 (PDT)
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sunil V L <sunilvl@ventanamicro.com>
+Subject: [PATCH V4 00/23] Add basic ACPI support for RISC-V
+Date:   Tue,  4 Apr 2023 23:50:14 +0530
+Message-Id: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230403211548.6253-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge!
+This patch series enables the basic ACPI infrastructure for RISC-V.
+Supporting external interrupt controllers is in progress and hence it is
+tested using poll based HVC SBI console and RAM disk.
 
-Comments inline.
+The first patch in this series is one of the patch from Jisheng's
+series [1] which is not merged yet. This patch is required to support
+ACPI since efi_init() which gets called before sbi_init() can enable
+static branches and hits a panic.
 
-Please also Cc reviewers of past revisions to future revisions.
+Patch 2 and 3 are ACPICA patches which are merged now into acpica
+but not yet pulled into the linux sources. They exist in this patch set
+as reference. This series can be merged only after those ACPICA patches
+are pulled into linux.
 
-On 2023-04-03 16:15:48-0500, Jorge Lopez wrote:
-> HP BIOS Configuration driver purpose is to provide a driver supporting
-> the latest sysfs class firmware attributes framework allowing the user
-> to change BIOS settings and security solutions on HP Inc.’s commercial
-> notebooks.
-> 
-> Many features of HP Commercial notebooks can be managed using Windows
-> Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> Enterprise Management (WBEM) that provides a standards-based interface
-> for changing and monitoring system settings. HP BIOSCFG driver provides
-> a native Linux solution and the exposed features facilitates the
-> migration to Linux environments.
-> 
-> The Linux security features to be provided in hp-bioscfg driver enables
-> managing the BIOS settings and security solutions via sysfs, a virtual
-> filesystem that can be used by user-mode applications. The new 
-> documentation cover features such Secure Platform Management and Sure 
-> Start. Each section provides security feature description and identifies 
-> sysfs directories and files exposed by the driver.
-> 
-> Many HP Commercial notebooks include a feature called Secure Platform
-> Management (SPM), which replaces older password-based BIOS settings
-> management with public key cryptography. PC secure product management
-> begins when a target system is provisioned with cryptographic keys
-> that are used to ensure the integrity of communications between system
-> management utilities and the BIOS.
-> 
-> HP Commercial notebooks have several BIOS settings that control its 
-> behaviour and capabilities, many of which are related to security. 
-> To prevent unauthorized changes to these settings, the system can be 
-> configured to use a cryptographic signature-based authorization string 
-> that the BIOS will use to verify authorization to modify the setting.
-> 
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> 
-> ---
-> Based on the latest platform-drivers-x86.git/for-next
-> 
-> History
-> 
-> Version 7
-> 	Includes only sysfs-class-firmware-attributes documentation
-> 
-> Version 6
-> 	Breaks down the changes into 4 patches
-> 	SureAdmin-attributes was removed
-> 
-> Version 5
-> 	Remove version 4 patch 1
-> 	Address review changes proposed in Version 4
-> 	Reorganize all patches number and file order
-> ---
->  .../testing/sysfs-class-firmware-attributes   | 119 ++++++++++++++++--
->  1 file changed, 107 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> index 4cdba3477176..10afbb78baec 100644
-> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> @@ -22,6 +22,12 @@ Description:
->  			- integer: a range of numerical values
->  			- string
->  
-> +		HP specific types
-> +		-----------------
-> +			- ordered-list - a set of ordered list valid values
-> +			- sure-start
-
-Could you explain what "sure-start" does?
-Is it actually an attribute type of which multiple attributes can exist?
-
-Or are there just some global properties that need to be exposed?
-If it is global it should be directly under
-/sys/class/firmware-attributes/*/authentication/
-without needing the type.
-
-> +
-> +
->  		All attribute types support the following values:
->  
->  		current_value:
-> @@ -42,16 +48,16 @@ Description:
->  				description of the at <attr>
->  
->  		display_name_language_code:
-> -						A file that can be read to obtain
-> -						the IETF language tag corresponding to the
-> -						"display_name" of the <attr>
-> +				A file that can be read to obtain
-> +				the IETF language tag corresponding to the
-> +				"display_name" of the <attr>
-
-Are these reindentations and other cleanups intentional?
-
-If they are intentional and there are no interactions with your actual
-patch you could split them into their own patch and submit them
-separately.
-
-This way we wouldn't have to worry about them here anymore.
-
-Note:
-These indentations are different from the newly introduced documentation.
-
->  
->  		"enumeration"-type specific properties:
->  
->  		possible_values:
-> -					A file that can be read to obtain the possible
-> -					values of the <attr>. Values are separated using
-> -					semi-colon (``;``).
-> +				A file that can be read to obtain the possible
-> +				values of the <attr>. Values are separated using
-> +				semi-colon (``;``).
->  
->  		"integer"-type specific properties:
->  
-> @@ -64,8 +70,8 @@ Description:
->  				bound value of the <attr>
->  
->  		scalar_increment:
-> -					A file that can be read to obtain the scalar value used for
-> -					increments of current_value this attribute accepts.
-> +				A file that can be read to obtain the scalar value used for
-> +				increments of current_value this attribute accepts.
->  
->  		"string"-type specific properties:
->  
-> @@ -126,6 +132,40 @@ Description:
->  					value will not be effective through sysfs until this rule is
->  					met.
->  
-> +		HP specific class extensions
-> +		------------------------------
-> +
-> +		On HP systems the following additional attributes are available:
-> +
-> +		"ordered-list"-type specific properties:
-> +
-> +		elements:
-> +					A file that can be read to obtain the possible
-> +					list of values of the <attr>. Values are separated using
-> +					semi-colon (``;``). The order individual elements are listed
-> +					according to their priority.  An Element listed first has the
-> +					highest priority. Writing the list in a different order to
-> +					current_value alters the priority order for the particular
-> +					attribute.
-> +
-> +		"sure-start"-type specific properties:
-> +
-> +		audit_log_entries:
-> +					A read-only file that returns the events in the log.
-> +					Values are separated using semi-colon (``;``)
-> +
-> +					Audit log entry format
-> +
-> +					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
-> +					Byte 16-127: Unused
-
-How to interpret each log entry?
-
-If it is an opaque thing from the firmware that would also be useful to
-know.
-
-> +
-> +		audit_log_entry_count:
-> +					A read-only file that returns the number of existing audit log events available to be read.
-> +					Values are separated using comma (``,``)
-> +
-> +					[No of entries],[log entry size],[Max number of entries supported]
-
-Will log entry size always be 16? Or can it be bigger in the future when
-more bytes are used?
-This should be mentioned.
-
-Is audit_log_entry_count ever used without reading audit_log_entries
-right after?
-If not the count file could be dropped.
-
-> +
-> +
->  What:		/sys/class/firmware-attributes/*/authentication/
->  Date:		February 2021
->  KernelVersion:	5.11
-> @@ -139,8 +179,7 @@ Description:
->  		For example a "BIOS Admin" password and "System" Password can be set,
->  		reset or cleared using these attributes.
->  
-> -		- An "Admin" password is used for preventing modification to the BIOS
-> -		  settings.
-> +		- An "Admin" password is used for preventing modification to the BIOS settings.
->  		- A "System" password is required to boot a machine.
->  
->  		Change in any of these two authentication methods will also generate an
-> @@ -206,7 +245,7 @@ Description:
->  		Drivers may emit a CHANGE uevent when a password is set or unset
->  		userspace may check it again.
->  
-> -		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
-> +		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
->  		require password validation.
->  		On Lenovo systems if you change the Admin password the new password is not active until
->  		the next boot.
-> @@ -296,6 +335,15 @@ Description:
->  						echo "signature" > authentication/Admin/signature
->  						echo "password" > authentication/Admin/certificate_to_password
->  
-> +		HP specific class extensions
-> +		--------------------------------
-> +
-> +		On HP systems the following additional settings are available:
-> +
-> +		role: enhanced-bios-auth:
-> +					This role is specific to Secure Platform Management (SPM) attribute.
-> +					It requires configuring an endorsement (kek) and signing certificate (sk).
-> +
->  
->  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
->  Date:		February 2021
-> @@ -311,7 +359,7 @@ Description:
->  			==	=========================================
->  			0	All BIOS attributes setting are current
->  			1	A reboot is necessary to get pending BIOS
-> -			        attribute changes applied
-> +				attribute changes applied
->  			==	=========================================
->  
->  		Note, userspace applications need to follow below steps for efficient
-> @@ -364,3 +412,50 @@ Description:
->  		use it to enable extra debug attributes or BIOS features for testing purposes.
->  
->  		Note that any changes to this attribute requires a reboot for changes to take effect.
-> +
-> +
-> +		HP specific class extensions - Secure Platform Manager (SPM)
-> +		--------------------------------
-> +
-> +What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
-> +Date:		March 29
-> +KernelVersion:	5.18
-> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-> +Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
-> +		RSA public key that will be used by the BIOS to verify signatures when setting
-> +		the signing key.  When written, the bytes should correspond to the KEK
-> +		certificate (x509 .DER format containing an OU).  The size of the certificate
-> +		must be less than or equal to 4095 bytes.
-> +
-> +
-> +What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
-> +Date:		March 29
-> +KernelVersion:	5.18
-> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-> +Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
-> +		public key that will be used by the BIOS to verify signatures when configuring
-> +		BIOS settings and security features.  When written, the bytes should correspond
-> +		to the modulus of the public key.  The exponent is assumed to be 0x10001.
-> +
-> +
-> +What:		/sys/class/firmware-attributes/*/authentication/SPM/status
-> +Date:		March 29
-> +KernelVersion:	5.18
-> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-> +Description:	'status' is a read-only file that returns ASCII text reporting
-> +		the status information.
-> +
-> +		  State:  Not Provisioned / Provisioned / Provisioning in progress
-> +		  Version:  Major.   Minor
-> +		  Feature Bit Mask: <16-bit unsigned number display in hex>
-
-How are these bits to be interpreted?
-
-> +		  SPM Counter: <16-bit unsigned number display in base 10>
-> +		  Signing Key Public Key Modulus (base64):
-> +		  KEK Public Key Modulus (base64):
-
-Is " (base64)" supposed to be part of the contents of the file?
-
-> +
-> +
-> +What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
-> +Date:		March 29
-> +KernelVersion:	5.18
-> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-> +Description:	'statusbin' is a read-only file that returns identical status
-> +		information reported by 'status' file in binary format.
-
-This documentation should contain enough information to understand the
-files contents.
+Below are two ECRs approved by ASWG.
+RINTC - https://drive.google.com/file/d/1R6k4MshhN3WTT-hwqAquu5nX6xSEqK2l/view
+RHCT - https://drive.google.com/file/d/1nP3nFiH4jkPMp6COOxP6123DCZKR-tia/view
 
 
-I understand that one WMI call will return all the fields that are part
-of the "status" and "statusbin" in one response.
+Based-on: 20230328035223.1480939-1-apatel@ventanamicro.com
+(https://lore.kernel.org/lkml/20230328035223.1480939-1-apatel@ventanamicro.com/)
 
-Are these WMI calls especially expensive or called especially
-frequently?
+[1] https://lore.kernel.org/all/20220821140918.3613-1-jszhang@kernel.org/
 
-If not I would still argue to split them into one file per field and
-remove the statusbin file.
+Changes since V3:
+	1) Added two more driver patches to workaround allmodconfig build failure.
+	2) Separated removal of riscv_of_processor_hartid() to a different patch.
+	3) Addressed Conor's feedback.
+	4) Rebased to v6.3-rc5 and added latest tags
 
-It is much more intuitive to read for example the KEK from the file
-"kek" where it is also updated from.
+Changes since V2:
+	1) Dropped ACPI_PROCESSOR patch.
+	2) Added new patch to print debug info of RISC-V INTC in MADT
+	3) Addressed other comments from Drew.
+	4) Rebased and updated tags
 
-This interface will be used by various applications and it is much
-easier to read simple files than having to parse single fields from
-bespoke text or binary files.
+Changes since V1:
+	1) Dropped PCI changes and instead added dummy interfaces just to enable
+	   building ACPI core when CONFIG_PCI is enabled. Actual PCI changes will
+	   be added in future along with external interrupt controller support
+	   in ACPI.
+	2) Squashed couple of patches so that new code added gets built in each
+	   commit.
+	3) Fixed the missing wake_cpu code in timer refactor patch as pointed by
+	   Conor
+	4) Fixed an issue with SMP disabled.
+	5) Addressed other comments from Conor.
+	6) Updated documentation patch as per feedback from Sanjaya.
+	7) Fixed W=1 and checkpatch --strict issues.
+	8) Added ACK/RB tags
 
-Thomas
+These changes are available at
+https://github.com/vlsunil/linux/commits/acpi_b1_us_review_ipi17_V4
+
+Testing:
+1) Build latest Qemu 
+
+2) Build EDK2 as per instructions in
+https://github.com/vlsunil/riscv-uefi-edk2-docs/wiki/RISC-V-Qemu-Virt-support
+
+3) Build Linux after enabling SBI HVC and SBI earlycon
+CONFIG_RISCV_SBI_V01=y
+CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+CONFIG_HVC_RISCV_SBI=y
+
+4) Build buildroot.
+
+Run with below command.
+qemu-system-riscv64   -nographic \
+-drive file=Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT.fd,if=pflash,format=raw,unit=1 \
+-machine virt -smp 16 -m 2G \
+-kernel arch/riscv/boot/Image \
+-initrd buildroot/output/images/rootfs.cpio \
+-append "root=/dev/ram ro console=hvc0 earlycon=sbi"
+
+
+Jisheng Zhang (1):
+  riscv: move sbi_init() earlier before jump_label_init()
+
+Sunil V L (22):
+  ACPICA: MADT: Add RISC-V INTC interrupt controller
+  ACPICA: Add structure definitions for RISC-V RHCT
+  ACPI: tables: Print RINTC information when MADT is parsed
+  ACPI: OSL: Make should_use_kmap() 0 for RISC-V
+  RISC-V: Add support to build the ACPI core
+  ACPI: processor_core: RISC-V: Enable mapping processor to the hartid
+  RISC-V: ACPI: Cache and retrieve the RINTC structure
+  drivers/acpi: RISC-V: Add RHCT related code
+  RISC-V: smpboot: Create wrapper smp_setup()
+  RISC-V: smpboot: Add ACPI support in smp_setup()
+  RISC-V: cpufeature: Avoid calling riscv_of_processor_hartid()
+  RISC-V: cpufeature: Add ACPI support in riscv_fill_hwcap()
+  RISC-V: cpu: Enable cpuinfo for ACPI systems
+  irqchip/riscv-intc: Add ACPI support
+  clocksource/timer-riscv: Refactor riscv_timer_init_dt()
+  clocksource/timer-riscv: Add ACPI support
+  RISC-V: time.c: Add ACPI support for time_init()
+  RISC-V: Add ACPI initialization in setup_arch()
+  RISC-V: Enable ACPI in defconfig
+  MAINTAINERS: Add entry for drivers/acpi/riscv
+  platform/surface: Disable for RISC-V
+  crypto: hisilicon/qm: Workaround to enable build with RISC-V clang
+
+ .../admin-guide/kernel-parameters.txt         |   8 +-
+ MAINTAINERS                                   |   8 +
+ arch/riscv/Kconfig                            |   5 +
+ arch/riscv/configs/defconfig                  |   1 +
+ arch/riscv/include/asm/acenv.h                |  11 +
+ arch/riscv/include/asm/acpi.h                 |  77 +++++
+ arch/riscv/include/asm/cpu.h                  |   8 +
+ arch/riscv/kernel/Makefile                    |   2 +
+ arch/riscv/kernel/acpi.c                      | 266 ++++++++++++++++++
+ arch/riscv/kernel/cpu.c                       |  30 +-
+ arch/riscv/kernel/cpufeature.c                |  44 ++-
+ arch/riscv/kernel/setup.c                     |  27 +-
+ arch/riscv/kernel/smpboot.c                   |  77 ++++-
+ arch/riscv/kernel/time.c                      |  25 +-
+ drivers/acpi/Makefile                         |   2 +
+ drivers/acpi/osl.c                            |   2 +-
+ drivers/acpi/processor_core.c                 |  29 ++
+ drivers/acpi/riscv/Makefile                   |   2 +
+ drivers/acpi/riscv/rhct.c                     |  83 ++++++
+ drivers/acpi/tables.c                         |  10 +
+ drivers/clocksource/timer-riscv.c             |  92 +++---
+ drivers/crypto/hisilicon/qm.c                 |  13 +-
+ drivers/irqchip/irq-riscv-intc.c              |  74 ++++-
+ drivers/platform/surface/aggregator/Kconfig   |   2 +-
+ include/acpi/actbl2.h                         |  69 ++++-
+ 25 files changed, 867 insertions(+), 100 deletions(-)
+ create mode 100644 arch/riscv/include/asm/acenv.h
+ create mode 100644 arch/riscv/include/asm/acpi.h
+ create mode 100644 arch/riscv/include/asm/cpu.h
+ create mode 100644 arch/riscv/kernel/acpi.c
+ create mode 100644 drivers/acpi/riscv/Makefile
+ create mode 100644 drivers/acpi/riscv/rhct.c
+
+-- 
+2.34.1
+
