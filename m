@@ -2,304 +2,142 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589C9C77B70
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 Apr 2023 23:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25A8C7618D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 02:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233877AbjDCXWz (ORCPT
+        id S231546AbjDDCd7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 Apr 2023 19:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52142 "EHLO
+        Mon, 3 Apr 2023 22:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233041AbjDCXWy (ORCPT
+        with ESMTP id S229514AbjDDCd6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2023 19:22:54 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E3B1BC;
-        Mon,  3 Apr 2023 16:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680564172; x=1712100172;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0GMN8BMPXoRScxdXasX++WZ+3bDkfK4Q2lFPxzZv0M8=;
-  b=b18L+GmpaWgxPsfK6BJ53gdP5Og8m22mqYOjC9e595ZWKfcLOwc9w0eQ
-   PhsKHqnaFGk3+RHSFBhWrxzirndp3AdFFKF8o6PE9kfmrQCxIHy+ZWFP3
-   f1uAyDm6RBu2swmdQ2DlawOeSNxDwuynWX4/FESmAbWBRaE1btKtecX6g
-   dVF8lei0+iZPQNx8B/iRnvq5NggV7m2w2VQaDK+mePf2e+14gXXJySvOa
-   Sep0RfDxiHviMD1LXB3Tf0W5v3m3rMd049dmKcbPe2Slu/Gv7EyImW+1X
-   URAFwUZ2OFhP1rkiNZ+KyI0Px4xTpG/HlheSKqqsUFuhHZYDU/sJ65LH8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="344604335"
-X-IronPort-AV: E=Sophos;i="5.98,315,1673942400"; 
-   d="scan'208";a="344604335"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 16:22:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="750684865"
-X-IronPort-AV: E=Sophos;i="5.98,315,1673942400"; 
-   d="scan'208";a="750684865"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2023 16:22:48 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pjTVf-000Ow9-1h;
-        Mon, 03 Apr 2023 23:22:47 +0000
-Date:   Tue, 04 Apr 2023 07:22:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     platform-driver-x86@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-wireless@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        io-uring@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 31bd35b66249699343d2416658f57e97314a433a
-Message-ID: <642b5fbb.jG7DppFs8DO3Bu12%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 3 Apr 2023 22:33:58 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72951FFA;
+        Mon,  3 Apr 2023 19:33:56 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id l7so29104516pjg.5;
+        Mon, 03 Apr 2023 19:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680575636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gn9YD3alGf58TN8N9lq3/1u5tsXKao8t2A/bH+T+1dU=;
+        b=b4lqaShApbas9ZlBE8qTB4x6yHo2QnhB8A+l7p8LEEBnff7zD+YmlrF/MBF7YpcI+T
+         G+bK8kciZ5fq9O5JOjDIIW69IGolvUbMytTkyZ0Mff4O1cu+X/uXK1WGQdMdDQKaF5Vh
+         YTZZuldGOZtjfZ8NF9JszMmbZt/qm8euwwonAXDEhJj6M3cOZc2Yecv+L/RoUAQwJ9Qf
+         Z1/aQhQspQbbhXCDSWj9FQ5JC5U7DAZPSONX4c2yOosoJN1UjwGHGZqtcu+/2rOtr2YV
+         4enWUiEEaBKBAgSi0r5Vh/TsJDjYHuWH4hK5XVEInAW9Qt9HXL0pdR0EBdoiqmZdJJi6
+         ZJoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680575636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gn9YD3alGf58TN8N9lq3/1u5tsXKao8t2A/bH+T+1dU=;
+        b=LMPDH2CbPZSzA+LxRfyfvyimKpI/CRn6xIYVGrRc8MDK57RGLGAOJbeC9nl2e8iQlX
+         q1wmjoQ2ONS4kIOAqgbX/DvboU/+dOnTPSQ5YUmkGyL75qOGcW+A5pHfMDHHlrHQG6Uc
+         m2ADaxxVBFB2qZb1HvxhjBnWTHXLytFFVU2gYVstaK9SR+F/+FgySdIBOt/hdGRSXgrD
+         YvZS/TGK+cJOD5UQSV2g6quhhsUzUiEUJCjKoRXEq7IupS2X8su0gJ4kG1n/0mhSSG1w
+         TEWYjYEsK422JVyYzZOOoEoc5mp7OLetaTQ9owoomPReGDNv9xziyCvj4YFmXXIf4Wmu
+         bGyw==
+X-Gm-Message-State: AAQBX9etWIKlgdGPVq8xSYEI/cfOxr4+bNNGmocVJKmokqfS7MeMsNsG
+        Qdv2SAE8xg+WZbWV2t+zh7s=
+X-Google-Smtp-Source: AKy350YPVWkAxd93yXbY0JVmIPLjPmAttfmlrGLB1VF3wzesgykIT6yBU+ZgiAgVoc6qo/Z4xTr9dA==
+X-Received: by 2002:a05:6a20:bf18:b0:dc:43e8:54b7 with SMTP id gc24-20020a056a20bf1800b000dc43e854b7mr661468pzb.43.1680575636225;
+        Mon, 03 Apr 2023 19:33:56 -0700 (PDT)
+Received: from debian.me (subs28-116-206-12-40.three.co.id. [116.206.12.40])
+        by smtp.gmail.com with ESMTPSA id b3-20020a655783000000b0050b026c444fsm6548734pgr.62.2023.04.03.19.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 19:33:55 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id 79A4310677F; Tue,  4 Apr 2023 09:33:53 +0700 (WIB)
+Date:   Tue, 4 Apr 2023 09:33:53 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
+        Linux x86 Platform Drivers 
+        <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+Message-ID: <ZCuMkdb6jeL4S8hz@debian.me>
+References: <20230403211548.6253-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wZWQ5ERks+J5+e0a"
+Content-Disposition: inline
+In-Reply-To: <20230403211548.6253-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 31bd35b66249699343d2416658f57e97314a433a  Add linux-next specific files for 20230403
 
-Error/Warning reports:
+--wZWQ5ERks+J5+e0a
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://lore.kernel.org/oe-kbuild-all/202303082135.NjdX1Bij-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202303161521.jbGbaFjJ-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202304040401.IMxt7Ubi-lkp@intel.com
+On Mon, Apr 03, 2023 at 04:15:48PM -0500, Jorge Lopez wrote:
+> HP BIOS Configuration driver purpose is to provide a driver supporting
+> the latest sysfs class firmware attributes framework allowing the user
+> to change BIOS settings and security solutions on HP Inc.=E2=80=99s comme=
+rcial
+> notebooks.
+>=20
+> Many features of HP Commercial notebooks can be managed using Windows
+> Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> Enterprise Management (WBEM) that provides a standards-based interface
+> for changing and monitoring system settings. HP BIOSCFG driver provides
+> a native Linux solution and the exposed features facilitates the
+> migration to Linux environments.
+>=20
+> The Linux security features to be provided in hp-bioscfg driver enables
+> managing the BIOS settings and security solutions via sysfs, a virtual
+> filesystem that can be used by user-mode applications. The new=20
+> documentation cover features such Secure Platform Management and Sure=20
+> Start. Each section provides security feature description and identifies=
+=20
+> sysfs directories and files exposed by the driver.
+>=20
+> Many HP Commercial notebooks include a feature called Secure Platform
+> Management (SPM), which replaces older password-based BIOS settings
+> management with public key cryptography. PC secure product management
+> begins when a target system is provisioned with cryptographic keys
+> that are used to ensure the integrity of communications between system
+> management utilities and the BIOS.
+>=20
+> HP Commercial notebooks have several BIOS settings that control its=20
+> behaviour and capabilities, many of which are related to security.=20
+> To prevent unauthorized changes to these settings, the system can be=20
+> configured to use a cryptographic signature-based authorization string=20
+> that the BIOS will use to verify authorization to modify the setting.
 
-Error/Warning: (recently discovered and may have been fixed)
+If this is single patch, I'd like to write the patch subject as
+"Documentation: sysfs: document HP-specific firmware attributes".
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:351:13: warning: variable 'bw_needed' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:352:25: warning: variable 'link' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    int
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    void
-drivers/net/wireless/legacy/ray_cs.c:628:17: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+And also, adjust the patch description accordingly, since as it is
+written above, it looks like general documentation of HP-specific feature
+(which should be in actual diff).
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+> Version 7
+> 	Includes only sysfs-class-firmware-attributes documentation
 
-drivers/acpi/property.c:985 acpi_data_prop_read_single() error: potentially dereferencing uninitialized 'obj'.
-drivers/cdx/cdx.c:393:20: error: initialization of 'ssize_t (*)(const struct bus_type *, const char *, size_t)' {aka 'long int (*)(const struct bus_type *, const char *, long unsigned int)'} from incompatible pointer type 'ssize_t (*)(struct bus_type *, const char *, size_t)' {aka 'long int (*)(struct bus_type *, const char *, long unsigned int)'} [-Werror=incompatible-pointer-types]
-drivers/pinctrl/pinctrl-mlxbf3.c:162:20: sparse: sparse: symbol 'mlxbf3_pmx_funcs' was not declared. Should it be static?
-drivers/soc/fsl/qe/tsa.c:140:26: sparse: sparse: incorrect type in argument 2 (different address spaces)
-drivers/soc/fsl/qe/tsa.c:150:27: sparse: sparse: incorrect type in argument 1 (different address spaces)
-drivers/soc/fsl/qe/tsa.c:189:26: sparse: sparse: dereference of noderef expression
-drivers/soc/fsl/qe/tsa.c:663:22: sparse: sparse: incorrect type in assignment (different address spaces)
-drivers/soc/fsl/qe/tsa.c:673:21: sparse: sparse: incorrect type in assignment (different address spaces)
-drivers/usb/typec/ucsi/ucsi_glink.c:248:20: sparse: sparse: restricted __le32 degrades to integer
-drivers/usb/typec/ucsi/ucsi_glink.c:81:23: sparse: sparse: incorrect type in assignment (different base types)
-drivers/usb/typec/ucsi/ucsi_glink.c:82:22: sparse: sparse: incorrect type in assignment (different base types)
-drivers/usb/typec/ucsi/ucsi_glink.c:83:24: sparse: sparse: incorrect type in assignment (different base types)
-include/linux/gpio/consumer.h: linux/err.h is included more than once.
-include/linux/gpio/driver.h: asm/bug.h is included more than once.
-io_uring/io_uring.c:432 io_prep_async_work() error: we previously assumed 'req->file' could be null (see line 425)
-io_uring/kbuf.c:221 __io_remove_buffers() warn: variable dereferenced before check 'bl->buf_ring' (see line 219)
+Where is the rest of patches if this is a series? Had they been merged?
 
-Error/Warning ids grouped by kconfigs:
+Thanks.
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- alpha-randconfig-s051-20230403
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:int
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:sparse:incompatible-types-in-conditional-expression-(different-base-types):
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:void
-|   `-- drivers-pinctrl-pinctrl-mlxbf3.c:sparse:sparse:symbol-mlxbf3_pmx_funcs-was-not-declared.-Should-it-be-static
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-cdx-cdx.c:error:initialization-of-ssize_t-(-)(const-struct-bus_type-const-char-size_t)-aka-long-int-(-)(const-struct-bus_type-const-char-long-unsigned-int)-from-incompatible-pointer-type-ssize
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- i386-randconfig-m021-20230403
-|   |-- drivers-acpi-property.c-acpi_data_prop_read_single()-error:potentially-dereferencing-uninitialized-obj-.
-|   |-- io_uring-io_uring.c-io_prep_async_work()-error:we-previously-assumed-req-file-could-be-null-(see-line-)
-|   `-- io_uring-kbuf.c-__io_remove_buffers()-warn:variable-dereferenced-before-check-bl-buf_ring-(see-line-)
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- ia64-randconfig-r003-20230403
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- ia64-randconfig-r025-20230402
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- ia64-randconfig-r026-20230402
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-defconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
+--=20
+An old man doll... just what I always wanted! - Clara
 
-elapsed time: 724m
+--wZWQ5ERks+J5+e0a
+Content-Type: application/pgp-signature; name="signature.asc"
 
-configs tested: 140
-configs skipped: 9
+-----BEGIN PGP SIGNATURE-----
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r033-20230402   gcc  
-arc                              allyesconfig   gcc  
-arc          buildonly-randconfig-r006-20230402   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r011-20230402   gcc  
-arc                  randconfig-r022-20230402   gcc  
-arc                  randconfig-r034-20230403   gcc  
-arc                  randconfig-r043-20230402   gcc  
-arc                  randconfig-r043-20230403   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r003-20230403   clang
-arm                                 defconfig   gcc  
-arm                          exynos_defconfig   gcc  
-arm                  randconfig-r023-20230402   gcc  
-arm                  randconfig-r046-20230402   gcc  
-arm                  randconfig-r046-20230403   clang
-arm                         s5pv210_defconfig   clang
-arm                        shmobile_defconfig   gcc  
-arm                           stm32_defconfig   gcc  
-arm                        vexpress_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r002-20230403   clang
-arm64        buildonly-randconfig-r004-20230402   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r023-20230403   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r016-20230403   clang
-hexagon              randconfig-r034-20230402   clang
-hexagon              randconfig-r035-20230403   clang
-hexagon              randconfig-r041-20230403   clang
-hexagon              randconfig-r045-20230402   clang
-hexagon              randconfig-r045-20230403   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230403   clang
-i386                 randconfig-a002-20230403   clang
-i386                 randconfig-a003-20230403   clang
-i386                 randconfig-a004-20230403   clang
-i386                 randconfig-a005-20230403   clang
-i386                 randconfig-a006-20230403   clang
-i386                 randconfig-a011-20230403   gcc  
-i386                 randconfig-a012-20230403   gcc  
-i386                 randconfig-a013-20230403   gcc  
-i386                 randconfig-a014-20230403   gcc  
-i386                 randconfig-a015-20230403   gcc  
-i386                 randconfig-a016-20230403   gcc  
-i386                 randconfig-r006-20230403   clang
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r003-20230403   gcc  
-ia64                 randconfig-r025-20230402   gcc  
-ia64                 randconfig-r026-20230402   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r001-20230402   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r031-20230402   gcc  
-m68k                             allmodconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r012-20230403   gcc  
-m68k                 randconfig-r031-20230403   gcc  
-m68k                 randconfig-r032-20230403   gcc  
-microblaze   buildonly-randconfig-r002-20230402   gcc  
-microblaze           randconfig-r004-20230403   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           gcw0_defconfig   gcc  
-nios2                         3c120_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r012-20230402   gcc  
-openrisc             randconfig-r006-20230403   gcc  
-openrisc             randconfig-r021-20230402   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r011-20230403   gcc  
-parisc               randconfig-r024-20230402   gcc  
-parisc               randconfig-r033-20230403   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     asp8347_defconfig   gcc  
-powerpc      buildonly-randconfig-r006-20230403   gcc  
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc              randconfig-r014-20230402   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r004-20230403   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r035-20230402   gcc  
-riscv                randconfig-r042-20230402   clang
-riscv                randconfig-r042-20230403   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r003-20230403   clang
-s390                 randconfig-r005-20230403   clang
-s390                 randconfig-r013-20230402   clang
-s390                 randconfig-r025-20230403   gcc  
-s390                 randconfig-r044-20230403   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r016-20230402   gcc  
-sh                   randconfig-r032-20230402   gcc  
-sh                          urquell_defconfig   gcc  
-sparc        buildonly-randconfig-r005-20230403   gcc  
-sparc                               defconfig   gcc  
-sparc64      buildonly-randconfig-r003-20230402   gcc  
-sparc64                             defconfig   gcc  
-sparc64              randconfig-r014-20230403   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230403   clang
-x86_64               randconfig-a002-20230403   clang
-x86_64               randconfig-a003-20230403   clang
-x86_64               randconfig-a004-20230403   clang
-x86_64               randconfig-a005-20230403   clang
-x86_64               randconfig-a006-20230403   clang
-x86_64               randconfig-a011-20230403   gcc  
-x86_64               randconfig-a012-20230403   gcc  
-x86_64               randconfig-a013-20230403   gcc  
-x86_64               randconfig-a014-20230403   gcc  
-x86_64               randconfig-a015-20230403   gcc  
-x86_64               randconfig-a016-20230403   gcc  
-x86_64               randconfig-r013-20230403   gcc  
-x86_64               randconfig-r022-20230403   gcc  
-x86_64               randconfig-r036-20230403   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r005-20230402   gcc  
-xtensa               randconfig-r015-20230403   gcc  
-xtensa               randconfig-r024-20230403   gcc  
+iHQEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZCuMjAAKCRD2uYlJVVFO
+ow7OAP9gRcmB0bGzGPNpYcIbQOXyVkzMwcRvfFZI8DazZekgfwD1F0pLNN9sqHpv
+EwDI6/5ooWivsvoDHirVWJkj0mdpCw==
+=mUcv
+-----END PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+--wZWQ5ERks+J5+e0a--
