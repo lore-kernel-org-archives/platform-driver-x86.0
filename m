@@ -2,222 +2,352 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531ECC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1DAC761A6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 17:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231859AbjDDQct (ORCPT
+        id S236319AbjDDR0z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 12:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
+        Tue, 4 Apr 2023 13:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231668AbjDDQcs (ORCPT
+        with ESMTP id S235885AbjDDR0h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 12:32:48 -0400
+        Tue, 4 Apr 2023 13:26:37 -0400
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AEB1BF3
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 09:32:46 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 16:32:44 +0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4752F5263;
+        Tue,  4 Apr 2023 10:24:58 -0700 (PDT)
+Date:   Tue, 4 Apr 2023 17:23:36 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1680625964; bh=T5ywBY3DvFluPFLGHkl9G2UeG1fFBSHDNS6UFBi1VQ8=;
+        t=1680629017; bh=vgKOa/bVFeEsCwYrjKIh0mANzZ4XmHS16QIJ65gmeVQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CbP5pjNYe5rczHzXySutOuFf9SXlEmgGeY5GZpb59Idkk7g0Opl3W+w2H9oUL+qYY
-         uRfynJxSPJtkMs6QnyBI3hDKy+zCLnEcIOUBJBcZctUnFRktyUc7b6XlXUc5Kwdm8e
-         U0f3p+UyVWlShSFEYu0zb2n5VQbxLVZXc7vVvbIE=
+        b=mGDQ9kOM8ffZO+Vw+4SbMSNo0KfsZh6bIZ+DQEk24Z+2LebEohP0jQ/hGPgBmGsNR
+         i9+RwavOKm7Q62ENpEumPDUJHyXV6UCTVa1sg6G8uSDGbfJUmdtO92sxAfwTHUYviJ
+         uCGvV08aQu/3fwUQvsgAABnERW//zTg6/TlzaOMQ=
 From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] Introduction of HP-BIOSCFG driver [3]
-Message-ID: <f75018a8-cd8c-48dc-b6da-4469e95239bb@t-8ch.de>
-References: <20230309201022.9502-1-jorge.lopez2@hp.com>
- <20230309201022.9502-4-jorge.lopez2@hp.com>
- <ef741af7-caf4-4f30-a02d-a939fa9cc48f@t-8ch.de>
- <CAOOmCE_cV+n5Wn1MW13zOw69SqbSzsyg35RjR18Ed8+Wmwz5TQ@mail.gmail.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+Message-ID: <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
+References: <20230403211548.6253-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOOmCE_cV+n5Wn1MW13zOw69SqbSzsyg35RjR18Ed8+Wmwz5TQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230403211548.6253-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-04-03 15:18:31-0500, Jorge Lopez wrote:
-> Hi Thomas,
+Hi Jorge!
+
+Comments inline.
+
+Please also Cc reviewers of past revisions to future revisions.
+
+On 2023-04-03 16:15:48-0500, Jorge Lopez wrote:
+> HP BIOS Configuration driver purpose is to provide a driver supporting
+> the latest sysfs class firmware attributes framework allowing the user
+> to change BIOS settings and security solutions on HP Inc.’s commercial
+> notebooks.
 > 
+> Many features of HP Commercial notebooks can be managed using Windows
+> Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> Enterprise Management (WBEM) that provides a standards-based interface
+> for changing and monitoring system settings. HP BIOSCFG driver provides
+> a native Linux solution and the exposed features facilitates the
+> migration to Linux environments.
 > 
-> >
-> > Currently the driver stores all its state in driver-global static data.
-> > The kobjects are stored without any state.
-> > Inside the kobject attribute operations is some fiddly logic that tries
-> > to figure out the corresponding state with a fiddly mechansims.
-> >
-> > The more correct way would be to attach the corresponding state
-> > directly to the kobject.
-> >
-> > Let me know if you want to give this a shot and I'll give an example.
+> The Linux security features to be provided in hp-bioscfg driver enables
+> managing the BIOS settings and security solutions via sysfs, a virtual
+> filesystem that can be used by user-mode applications. The new 
+> documentation cover features such Secure Platform Management and Sure 
+> Start. Each section provides security feature description and identifies 
+> sysfs directories and files exposed by the driver.
 > 
-> Yes.  I would  like to give it a shot.  I can take a look at the code
-> and determine when we can implement it.
-> No promises.
+> Many HP Commercial notebooks include a feature called Secure Platform
+> Management (SPM), which replaces older password-based BIOS settings
+> management with public key cryptography. PC secure product management
+> begins when a target system is provisioned with cryptographic keys
+> that are used to ensure the integrity of communications between system
+> management utilities and the BIOS.
+> 
+> HP Commercial notebooks have several BIOS settings that control its 
+> behaviour and capabilities, many of which are related to security. 
+> To prevent unauthorized changes to these settings, the system can be 
+> configured to use a cryptographic signature-based authorization string 
+> that the BIOS will use to verify authorization to modify the setting.
+> 
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> 
+> ---
+> Based on the latest platform-drivers-x86.git/for-next
+> 
+> History
+> 
+> Version 7
+> 	Includes only sysfs-class-firmware-attributes documentation
+> 
+> Version 6
+> 	Breaks down the changes into 4 patches
+> 	SureAdmin-attributes was removed
+> 
+> Version 5
+> 	Remove version 4 patch 1
+> 	Address review changes proposed in Version 4
+> 	Reorganize all patches number and file order
+> ---
+>  .../testing/sysfs-class-firmware-attributes   | 119 ++++++++++++++++--
+>  1 file changed, 107 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 4cdba3477176..10afbb78baec 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -22,6 +22,12 @@ Description:
+>  			- integer: a range of numerical values
+>  			- string
+>  
+> +		HP specific types
+> +		-----------------
+> +			- ordered-list - a set of ordered list valid values
+> +			- sure-start
 
-/* data for each kernel object */
-struct bios_property {
-	/* This is *not* a pointer, it will be used by the core sysfs
-	 * code framework to manage this "object" */
-	struct kobject kobj;
-	int instance_id; /* instance ID to pass to WMI functions */
-	/* common members to all properties */
-	u8 display_name[MAX_BUFF];
-	u8 path[MAX_BUFF];
-	/* all the other common stuff */
+Could you explain what "sure-start" does?
+Is it actually an attribute type of which multiple attributes can exist?
 
-	const struct *property_ops ops;
-	union {
-		struct string_property_data {
-			u8 current_value[MAX_BUFF];
-			u8 new_value[MAX_BUFF];
-			u32 min_length;
-			u32 max_length;
-		} string_data;
-		/* same for other data types... */
-	};
-};
+Or are there just some global properties that need to be exposed?
+If it is global it should be directly under
+/sys/class/firmware-attributes/*/authentication/
+without needing the type.
 
-struct property_ops {
-	ssize_t	(*show_current_value)(struct bios_property *, char *);
-	ssize_t	(*store_current_value)(struct bios_property *, const char *, size_t);
-};
+> +
+> +
+>  		All attribute types support the following values:
+>  
+>  		current_value:
+> @@ -42,16 +48,16 @@ Description:
+>  				description of the at <attr>
+>  
+>  		display_name_language_code:
+> -						A file that can be read to obtain
+> -						the IETF language tag corresponding to the
+> -						"display_name" of the <attr>
+> +				A file that can be read to obtain
+> +				the IETF language tag corresponding to the
+> +				"display_name" of the <attr>
 
-static ssize_t string_property_show_current_value(struct bios_property *prop, char *buf)
-{
-	/* or read from WMI. Does it need to be cached? */
-	return sysfs_emit(buf, prop->string_data.current_value);
-}
+Are these reindentations and other cleanups intentional?
 
-ssize_t	string_property_store_current_value(struct bios_property *prop, const char *buf, size_t count)
-{
-	int ret;
+If they are intentional and there are no interactions with your actual
+patch you could split them into their own patch and submit them
+separately.
 
-	if (strlen(buf) > prop->string_data.max_length)
-		return -ERANGE;
+This way we wouldn't have to worry about them here anymore.
 
-	ret = do_string_specifc_wmi_stuff(buf, count);
-	if (ret)
-		return ret;
+Note:
+These indentations are different from the newly introduced documentation.
 
-	strcpy(prop->current_value, buf);
-	return count;
-}
+>  
+>  		"enumeration"-type specific properties:
+>  
+>  		possible_values:
+> -					A file that can be read to obtain the possible
+> -					values of the <attr>. Values are separated using
+> -					semi-colon (``;``).
+> +				A file that can be read to obtain the possible
+> +				values of the <attr>. Values are separated using
+> +				semi-colon (``;``).
+>  
+>  		"integer"-type specific properties:
+>  
+> @@ -64,8 +70,8 @@ Description:
+>  				bound value of the <attr>
+>  
+>  		scalar_increment:
+> -					A file that can be read to obtain the scalar value used for
+> -					increments of current_value this attribute accepts.
+> +				A file that can be read to obtain the scalar value used for
+> +				increments of current_value this attribute accepts.
+>  
+>  		"string"-type specific properties:
+>  
+> @@ -126,6 +132,40 @@ Description:
+>  					value will not be effective through sysfs until this rule is
+>  					met.
+>  
+> +		HP specific class extensions
+> +		------------------------------
+> +
+> +		On HP systems the following additional attributes are available:
+> +
+> +		"ordered-list"-type specific properties:
+> +
+> +		elements:
+> +					A file that can be read to obtain the possible
+> +					list of values of the <attr>. Values are separated using
+> +					semi-colon (``;``). The order individual elements are listed
+> +					according to their priority.  An Element listed first has the
+> +					highest priority. Writing the list in a different order to
+> +					current_value alters the priority order for the particular
+> +					attribute.
+> +
+> +		"sure-start"-type specific properties:
+> +
+> +		audit_log_entries:
+> +					A read-only file that returns the events in the log.
+> +					Values are separated using semi-colon (``;``)
+> +
+> +					Audit log entry format
+> +
+> +					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+> +					Byte 16-127: Unused
 
-/* different show/store functionality per property type */
-static const struct property_ops string_property_ops = {
-	.store_current_value = string_property_show_current_value,
-	.show_current_value = string_property_show_current_value,
-};
+How to interpret each log entry?
 
-struct bioscfg_attribute {
-	struct attribute attr;
-	ssize_t (*show)(struct bioscfg_prop *prop, char *buf);
-	ssize_t (*store)(struct bioscfg_prop *prop, const char *buf, size_t count);
-};
+If it is an opaque thing from the firmware that would also be useful to
+know.
 
-/* this is one implementation for *all* property types */
-static ssize_t display_name_show(struct bioscfg_prop *prop, char *buf)
-{
-	return sysfs_emit(buf, prop->display_name);
-}
-static struct bioscfg_attribute display_name = __ATTR_RO(display_name);
+> +
+> +		audit_log_entry_count:
+> +					A read-only file that returns the number of existing audit log events available to be read.
+> +					Values are separated using comma (``,``)
+> +
+> +					[No of entries],[log entry size],[Max number of entries supported]
 
-/* and all the other ones */
+Will log entry size always be 16? Or can it be bigger in the future when
+more bytes are used?
+This should be mentioned.
 
-/* this dispatches into the type-specific property handlers */
-static ssize_t current_value_show(struct bioscfg_prop *prop, char *buf)
-{
-	return prop->ops->show_current_value(prop, buf);
-}
-static struct bioscfg_attribute current_value = __ATTR(current_value);
+Is audit_log_entry_count ever used without reading audit_log_entries
+right after?
+If not the count file could be dropped.
 
-static struct attribute *attrs[] = {
-	&display_name.attr,
-	/* other attrs here */
-	NULL
-};
+> +
+> +
+>  What:		/sys/class/firmware-attributes/*/authentication/
+>  Date:		February 2021
+>  KernelVersion:	5.11
+> @@ -139,8 +179,7 @@ Description:
+>  		For example a "BIOS Admin" password and "System" Password can be set,
+>  		reset or cleared using these attributes.
+>  
+> -		- An "Admin" password is used for preventing modification to the BIOS
+> -		  settings.
+> +		- An "Admin" password is used for preventing modification to the BIOS settings.
+>  		- A "System" password is required to boot a machine.
+>  
+>  		Change in any of these two authentication methods will also generate an
+> @@ -206,7 +245,7 @@ Description:
+>  		Drivers may emit a CHANGE uevent when a password is set or unset
+>  		userspace may check it again.
+>  
+> -		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
+> +		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
+>  		require password validation.
+>  		On Lenovo systems if you change the Admin password the new password is not active until
+>  		the next boot.
+> @@ -296,6 +335,15 @@ Description:
+>  						echo "signature" > authentication/Admin/signature
+>  						echo "password" > authentication/Admin/certificate_to_password
+>  
+> +		HP specific class extensions
+> +		--------------------------------
+> +
+> +		On HP systems the following additional settings are available:
+> +
+> +		role: enhanced-bios-auth:
+> +					This role is specific to Secure Platform Management (SPM) attribute.
+> +					It requires configuring an endorsement (kek) and signing certificate (sk).
+> +
+>  
+>  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+>  Date:		February 2021
+> @@ -311,7 +359,7 @@ Description:
+>  			==	=========================================
+>  			0	All BIOS attributes setting are current
+>  			1	A reboot is necessary to get pending BIOS
+> -			        attribute changes applied
+> +				attribute changes applied
+>  			==	=========================================
+>  
+>  		Note, userspace applications need to follow below steps for efficient
+> @@ -364,3 +412,50 @@ Description:
+>  		use it to enable extra debug attributes or BIOS features for testing purposes.
+>  
+>  		Note that any changes to this attribute requires a reboot for changes to take effect.
+> +
+> +
+> +		HP specific class extensions - Secure Platform Manager (SPM)
+> +		--------------------------------
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
+> +		RSA public key that will be used by the BIOS to verify signatures when setting
+> +		the signing key.  When written, the bytes should correspond to the KEK
+> +		certificate (x509 .DER format containing an OU).  The size of the certificate
+> +		must be less than or equal to 4095 bytes.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
+> +		public key that will be used by the BIOS to verify signatures when configuring
+> +		BIOS settings and security features.  When written, the bytes should correspond
+> +		to the modulus of the public key.  The exponent is assumed to be 0x10001.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/status
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'status' is a read-only file that returns ASCII text reporting
+> +		the status information.
+> +
+> +		  State:  Not Provisioned / Provisioned / Provisioning in progress
+> +		  Version:  Major.   Minor
+> +		  Feature Bit Mask: <16-bit unsigned number display in hex>
 
-/* reflect read-only mode in sysfs */
-static umode_t bioscfg_attr_is_visible(struct kobject *kobj, struct attribute *attr, int n)
-{
-	struct bios_property *prop = container_of(kobj, struct bios_property, kobj);
+How are these bits to be interpreted?
 
-	if (attr == &current_value.attr && prop->read_only)
-		return attr->mode ^ 0222; /* clear writable bits */
-	return attr->mode;
-}
+> +		  SPM Counter: <16-bit unsigned number display in base 10>
+> +		  Signing Key Public Key Modulus (base64):
+> +		  KEK Public Key Modulus (base64):
 
-static const struct attribute_group attr_group = {
-	.attrs      = attrs,
-	.is_visible = bioscfg_attr_is_visible,
-};
+Is " (base64)" supposed to be part of the contents of the file?
 
-/* the following two functions dispatch from your the core kobj pointer
- * to your custom callbacks operating on nice bioscfg_attribute
- */
-static ssize_t bioscfg_attr_show(struct kobject *kobj, struct attribute *attr,
-				 char *buf)
-{
-	struct bioscfg_attribute *kattr;
-	ssize_t ret = -EIO;
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'statusbin' is a read-only file that returns identical status
+> +		information reported by 'status' file in binary format.
 
-	kattr = container_of(attr, struct bioscfg_attribute, attr);
-	if (kattr->show)
-		ret = kattr->show(kobj, kattr, buf);
-	return ret;
-}
+This documentation should contain enough information to understand the
+files contents.
 
-static ssize_t bioscfg_attr_store(struct kobject *kobj, struct attribute *attr,
-				  const char *buf, size_t count)
-{
-	struct bioscfg_attribute *kattr;
-	ssize_t ret = -EIO;
 
-	kattr = container_of(attr, struct bioscfg_attribute, attr);
-	if (kattr->store)
-		ret = kattr->store(kobj, kattr, buf, count);
-	return ret;
-}
+I understand that one WMI call will return all the fields that are part
+of the "status" and "statusbin" in one response.
 
-static const struct sysfs_ops bioscfg_kobj_sysfs_ops = {
-	.show	= bioscfg_attr_show,
-	.store	= bioscfg_attr_store,
-};
+Are these WMI calls especially expensive or called especially
+frequently?
 
-/* to hook this into the generic kobject machinery */
-static const struct kobj_type bioscfg_kobj_type = {
-	.release	= free_struct_bios_property,
-	.sysfs_ops	= &bios_property_sysfs_ops,
-	.default_groups = attr_groups,
-};
+If not I would still argue to split them into one file per field and
+remove the statusbin file.
 
-static int probe(void)
-{
-	struct bios_property *prop;
+It is much more intuitive to read for example the KEK from the file
+"kek" where it is also updated from.
 
-	for (each property discovered via WMI) {
-		prop = kzalloc(sizeof(*prop));
-		prop->readonly = is_read_only(property);
-		/* other common properties */
-		if (is_string_property(property)) {
-			prop->ops = string_property_ops;
-			prop->string_data.current_value = "";
-			/* other type-specific properties */
-		} else {
-			; /* and so on for other types */
-		}
+This interface will be used by various applications and it is much
+easier to read simple files than having to parse single fields from
+bespoke text or binary files.
 
-		kobject_init(&prop->kobj, &bioscfg_kobj_type);
-		kobject_add(&prop->kobj, parent, name);
-	}
-
-	/* Now all properties and their memory are managed by the kernel */
-}
-
-Instead of having one kobj_type for all properties it would also be
-possible to create a new one for each. But I don't think it's worth it.
+Thomas
