@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9180C77B6C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 18:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA106C77B70
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Apr 2023 18:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235823AbjDDSXH (ORCPT
+        id S236370AbjDDSXG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Apr 2023 14:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39396 "EHLO
+        Tue, 4 Apr 2023 14:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236478AbjDDSV6 (ORCPT
+        with ESMTP id S236423AbjDDSWp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2023 14:21:58 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A053E5FC2
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 11:21:43 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id bm13so7922640pfb.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 11:21:43 -0700 (PDT)
+        Tue, 4 Apr 2023 14:22:45 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B964EFB
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Apr 2023 11:22:05 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id l9-20020a17090a3f0900b0023d32684e7fso2009162pjc.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2023 11:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1680632503;
+        d=ventanamicro.com; s=google; t=1680632524;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sK3yofAaBPCm3lmjxfNqOeEWtEi7+pbDB/M30NYTLb4=;
-        b=JtyGYEmj3+3zXeCs5rBdEDlUNt6swvT2m0XrsA3IxnpAIAobJbh35p79poWYW0Y6DK
-         /NatfbFv1zcZu5PtRqFFn7Bsw50dOsX/WRlTS4Oqgzyz+qtXNFGqVS6tgUfG6Givx9N2
-         In/h+M3U6bNqy0rDKS7kJWHaCI5EgCPUJNoXaIZ+nQXKmfIoVE/uQZXVwLXSHJ2+wPSL
-         sTJBuz6w8MHN0b+gl3Jp/kbsanaFYKHbb2MfHz4Hz/y/V++YkTeXD74E3tw48NW9w1gJ
-         PSRM3VIJgLuJlkFRrz3GJC+HXFj0K9F/uZhGuFYR1Vkg91JK/xEqUbHtTgfzxNX2/ciU
-         pUHg==
+        bh=XGonri/T19XQF2naGXJvqqLnbSM1YN1GWyJxGmsm0G8=;
+        b=jlU6cVDRpS7N+hbCajzQ5MBLlupJaHtqzIdkqiPTdgeHP85eBAGnt3IyBNq6jANDpp
+         cwqU4j6QhylWaoAD+i+RvRnFnexq1wQ7hFZtqJGwVlBRMJgGNeR4vpKazmlZG0XQ2Zrn
+         InczBkrjePyvmC01JogcOj/miAoB9IP8R8uwJH07fk96+hULRShilpkKLxZorAWOWvPs
+         4lTqHyEsR8TapU0eESkEuqvZH3dKe12+qtas+XnrbS95Qwlo+rOrfF8OWmXZ214KwCeV
+         0u+YSRiu7NhnExNyDKcz1HrlVGKzxl7vbNHloZt2ohNHTePS3ZURQLDXTYnysnOHTTCx
+         aDcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680632503;
+        d=1e100.net; s=20210112; t=1680632524;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sK3yofAaBPCm3lmjxfNqOeEWtEi7+pbDB/M30NYTLb4=;
-        b=oUVHy1JSMFiB0JeJt7XFM5A9YCp74JQIQ9roVgN7TNGHZXfTmyL6oR4qG/KTFE5uhL
-         nKxGihtRZpIRGF/48Fmme2+/Q2K2bvdzgCiEhVaXGWtS0wn3YztMp7+y2yIAQZudm99f
-         D0QzYY/6i0hfn3l40rd4ZpnTiSm1vk3LQj7OFh+zX/kC6s8I7/m5vpqoqOoAJvr+pB3E
-         lvFt92Py3WXUGbmYry41ACLFWVJ8bBa8X54uf9B8QJXIOyg7Dp1gINymPliQrvWLLn6m
-         PYZcYClKIyTxJACJCJn4kDVDqxLsIqqIqzU7NCSh9hbT22un/rQcBGcUnFsjKIgxXtZ3
-         Ckvg==
-X-Gm-Message-State: AAQBX9e+XdkwHgXq8h6mVLhNi3SO6/lImmufmW026pIdbZeiORUv9/pV
-        x9kaf1E1V4cuwHWcxWOnuYVXVw==
-X-Google-Smtp-Source: AKy350Zq77XC/3ltqtm+S71XwJcX4T+QzSOKmhTEaeBoYJGiZG4Bnpd3gPBIhVtabyUTjk5IKAo18g==
-X-Received: by 2002:aa7:9793:0:b0:626:658:c998 with SMTP id o19-20020aa79793000000b006260658c998mr3204222pfp.10.1680632502984;
-        Tue, 04 Apr 2023 11:21:42 -0700 (PDT)
+        bh=XGonri/T19XQF2naGXJvqqLnbSM1YN1GWyJxGmsm0G8=;
+        b=2bHisJGtspGrhY2vzE490pfeWaLtxO5QpqzJAJznTp3Lxiv3AlBFJlKuMdnlq+gWBp
+         cClM1KE1wjzD7HzTiNjwrtBEnkMRyyCWscnyEKvsz06W/B/j4egnhbYCq5S/Sz+FMN60
+         oYxS7KfOXktYiKcUyDMdEbKAUs3jx6RBw/PDlh+Z/l3WDhqxK41YYsZgORHawvo304Yb
+         905kJ3Ag3gJsfQwmCZKNo7eiTeEpwIbX3icktJ87ywYuvaR2sK0+7dkgkb77zsRd3vf0
+         xynN+QscttVfEiqBSSgIUJRuDpsqqa5wJzxFGH87Oma/ZRxrCj2IgKJ9j/Y39LiBSwiy
+         S/2A==
+X-Gm-Message-State: AAQBX9feRaGzCp9sDrVzDGJ+lMgEiNfRnm7kXBwwuQCVoMcmsAS03vma
+        zZoychVs1WG/31kBBGxKdVjLmQ==
+X-Google-Smtp-Source: AKy350ZlBkhsUYFGZoVvsAnR0Ixd22Yfapa7HDI3EV26dD/3aAUWLts/geeosBM5SkSk2DgEm45zyg==
+X-Received: by 2002:a05:6a20:930f:b0:d9:7af9:6a82 with SMTP id r15-20020a056a20930f00b000d97af96a82mr90355pzh.9.1680632524615;
+        Tue, 04 Apr 2023 11:22:04 -0700 (PDT)
 Received: from localhost.localdomain ([106.51.184.50])
-        by smtp.gmail.com with ESMTPSA id o12-20020a056a001bcc00b0062dcf5c01f9sm9018524pfw.36.2023.04.04.11.21.36
+        by smtp.gmail.com with ESMTPSA id o12-20020a056a001bcc00b0062dcf5c01f9sm9018524pfw.36.2023.04.04.11.21.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 11:21:42 -0700 (PDT)
+        Tue, 04 Apr 2023 11:22:04 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
@@ -75,10 +75,11 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
         Sunil V L <sunilvl@ventanamicro.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH V4 08/23] RISC-V: ACPI: Cache and retrieve the RINTC structure
-Date:   Tue,  4 Apr 2023 23:50:22 +0530
-Message-Id: <20230404182037.863533-9-sunilvl@ventanamicro.com>
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH V4 11/23] RISC-V: smpboot: Add ACPI support in smp_setup()
+Date:   Tue,  4 Apr 2023 23:50:25 +0530
+Message-Id: <20230404182037.863533-12-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230404182037.863533-1-sunilvl@ventanamicro.com>
 References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
@@ -88,103 +89,127 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-RINTC structures in the MADT provide mapping between the hartid
-and the CPU. This is required many times even at run time like
-cpuinfo. So, instead of parsing the ACPI table every time, cache
-the RINTC structures and provide a function to get the correct
-RINTC structure for a given cpu.
+Enable SMP boot on ACPI based platforms by using the RINTC
+structures in the MADT table.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- arch/riscv/include/asm/acpi.h |  2 ++
- arch/riscv/kernel/acpi.c      | 60 +++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+)
+ arch/riscv/include/asm/acpi.h |  2 +
+ arch/riscv/kernel/smpboot.c   | 72 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 73 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
-index 9be52b6ffae1..1606dce8992e 100644
+index 2b3e78d5a13b..b26ba911f0a9 100644
 --- a/arch/riscv/include/asm/acpi.h
 +++ b/arch/riscv/include/asm/acpi.h
-@@ -59,6 +59,8 @@ static inline bool acpi_has_cpu_in_madt(void)
- 
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
- 
-+struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
-+u32 get_acpi_id_for_cpu(int cpu);
- #endif /* CONFIG_ACPI */
- 
- #endif /*_ASM_ACPI_H*/
-diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
-index 81d448c41714..40ab55309c70 100644
---- a/arch/riscv/kernel/acpi.c
-+++ b/arch/riscv/kernel/acpi.c
-@@ -24,6 +24,66 @@ EXPORT_SYMBOL(acpi_disabled);
- int acpi_pci_disabled = 1;	/* skip ACPI PCI scan and IRQ initialization */
- EXPORT_SYMBOL(acpi_pci_disabled);
- 
-+static struct acpi_madt_rintc cpu_madt_rintc[NR_CPUS];
+@@ -63,6 +63,8 @@ struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+ u32 get_acpi_id_for_cpu(int cpu);
+ int acpi_get_riscv_isa(struct acpi_table_header *table,
+ 		       unsigned int cpu, const char **isa);
 +
-+static int acpi_parse_madt_rintc(union acpi_subtable_headers *header, const unsigned long end)
++static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
+ #else
+ static inline int acpi_get_riscv_isa(struct acpi_table_header *table,
+ 				     unsigned int cpu, const char **isa)
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 26214ddefaa4..6a854b200b72 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -8,6 +8,7 @@
+  * Copyright (C) 2017 SiFive
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/arch_topology.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -70,6 +71,72 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 	}
+ }
+ 
++#ifdef CONFIG_ACPI
++static unsigned int cpu_count = 1;
++
++static int __init acpi_parse_rintc(union acpi_subtable_headers *header, const unsigned long end)
 +{
-+	struct acpi_madt_rintc *rintc = (struct acpi_madt_rintc *)header;
-+	int cpuid;
++	unsigned long hart;
++	static bool found_boot_cpu;
++	struct acpi_madt_rintc *processor = (struct acpi_madt_rintc *)header;
 +
-+	if (!(rintc->flags & ACPI_MADT_ENABLED))
++	/*
++	 * Each RINTC structure in MADT will have a flag. If ACPI_MADT_ENABLED
++	 * bit in the flag is not enabled, it means OS should not try to enable
++	 * the cpu to which RINTC belongs.
++	 */
++	if (!(processor->flags & ACPI_MADT_ENABLED))
 +		return 0;
 +
-+	cpuid = riscv_hartid_to_cpuid(rintc->hart_id);
-+	/*
-+	 * When CONFIG_SMP is disabled, mapping won't be created for
-+	 * all cpus.
-+	 * CPUs more than NR_CPUS, will be ignored.
-+	 */
-+	if (cpuid >= 0 && cpuid < NR_CPUS)
-+		cpu_madt_rintc[cpuid] = *rintc;
++	if (BAD_MADT_ENTRY(processor, end))
++		return -EINVAL;
++
++	acpi_table_print_madt_entry(&header->common);
++
++	hart = processor->hart_id;
++	if (hart == INVALID_HARTID) {
++		pr_warn("Invalid hartid\n");
++		return 0;
++	}
++
++	if (hart == cpuid_to_hartid_map(0)) {
++		BUG_ON(found_boot_cpu);
++		found_boot_cpu = true;
++		early_map_cpu_to_node(0, acpi_numa_get_nid(cpu_count));
++		return 0;
++	}
++
++	if (cpu_count >= NR_CPUS) {
++		pr_warn("NR_CPUS is too small for the number of ACPI tables.\n");
++		return 0;
++	}
++
++	cpuid_to_hartid_map(cpu_count) = hart;
++	early_map_cpu_to_node(cpu_count, acpi_numa_get_nid(cpu_count));
++	cpu_count++;
 +
 +	return 0;
 +}
 +
-+static int acpi_init_rintc_array(void)
++static void __init acpi_parse_and_init_cpus(void)
 +{
-+	if (acpi_table_parse_madt(ACPI_MADT_TYPE_RINTC, acpi_parse_madt_rintc, 0) > 0)
-+		return 0;
++	int cpuid;
 +
-+	return -ENODEV;
-+}
++	cpu_set_ops(0);
 +
-+/*
-+ * Instead of parsing (and freeing) the ACPI table, cache
-+ * the RINTC structures since they are frequently used
-+ * like in  cpuinfo.
-+ */
-+struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
-+{
-+	static bool rintc_init_done;
++	acpi_table_parse_madt(ACPI_MADT_TYPE_RINTC, acpi_parse_rintc, 0);
 +
-+	if (!rintc_init_done) {
-+		if (acpi_init_rintc_array()) {
-+			pr_err("No valid RINTC entries exist\n");
-+			return NULL;
++	for (cpuid = 1; cpuid < nr_cpu_ids; cpuid++) {
++		if (cpuid_to_hartid_map(cpuid) != INVALID_HARTID) {
++			cpu_set_ops(cpuid);
++			set_cpu_possible(cpuid, true);
 +		}
-+
-+		rintc_init_done = true;
 +	}
-+
-+	return &cpu_madt_rintc[cpu];
 +}
++#else
++#define acpi_parse_and_init_cpus(...)	do { } while (0)
++#endif
 +
-+u32 get_acpi_id_for_cpu(int cpu)
-+{
-+	struct acpi_madt_rintc *rintc = acpi_cpu_get_madt_rintc(cpu);
-+
-+	BUG_ON(!rintc);
-+
-+	return rintc->uid;
-+}
-+
- /*
-  * __acpi_map_table() will be called before paging_init(), so early_ioremap()
-  * or early_memremap() should be called here to for ACPI table mapping.
+ static void __init of_parse_and_init_cpus(void)
+ {
+ 	struct device_node *dn;
+@@ -118,7 +185,10 @@ static void __init of_parse_and_init_cpus(void)
+ 
+ void __init setup_smp(void)
+ {
+-	of_parse_and_init_cpus();
++	if (acpi_disabled)
++		of_parse_and_init_cpus();
++	else
++		acpi_parse_and_init_cpus();
+ }
+ 
+ static int start_secondary_cpu(int cpu, struct task_struct *tidle)
 -- 
 2.34.1
 
