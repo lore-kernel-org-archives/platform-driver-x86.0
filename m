@@ -2,162 +2,168 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2ADC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 11:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E08BC76188
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 13:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237867AbjDELgB (ORCPT
+        id S237979AbjDENQq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Apr 2023 07:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47474 "EHLO
+        Wed, 5 Apr 2023 09:16:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237871AbjDELf6 (ORCPT
+        with ESMTP id S232719AbjDENQp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2023 07:35:58 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887F41BD7;
-        Wed,  5 Apr 2023 04:35:55 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id e18so35855315wra.9;
-        Wed, 05 Apr 2023 04:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680694553;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FlvKXsC33Y3r1CipsD3fypO8/mtd2VSfqMY0AAuYEJU=;
-        b=lORbIDSoT/048s2YK0Ooqaq76pp9nO16IgSl7E0zcw4519qRfB2EB9bS33CYOOkI5J
-         pfTaClxlRxqDfVRYTx2Z+UgdqAZLwhJB9A5pB14jcytveOARMJzLG5xpjgyCQ8NG+8lz
-         ev3K604YpC9YuL/r728Z1Y9hLVtLsaw+N/7x4L7nFGT0fiuzIfjnVXthx/T5amkZgCq0
-         pEEuVse58fqlV2CyoHyzTOON/kzCpp1NDkIarzhDQElXYaKK062+3PuMCp88nlhfHLQh
-         IU1Fh5+UUIInU8suruQpN1cboZlK59YnMqsD0tiYx/ZtqdSFCdDLQzmdD790LguYejUB
-         v8aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680694553;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FlvKXsC33Y3r1CipsD3fypO8/mtd2VSfqMY0AAuYEJU=;
-        b=l1p4Nal/G3l4CLnqG2AoBkxX1vYXVfPVa2Dxx9n0fUj23CuwOHOTca5Gawcr+2oTjl
-         fd3k34m2VFQya4eBFtQPIIO6Fb5Zdda4CFW85+2rKoqYn3uo0TzwoFSBrlGdVNy7k58u
-         1eaUOeqpk7q8HThRCng7urkBlGLUkx3zZmFqs7xLsycyAav0hCxREP6v4yfUllUCvtJA
-         hQyNTk+qI02jC28ofcCxsZRq/li5aKmO0L5AlMwJ0mayXcORX+E1Xy2hfFZx3yRswcmD
-         Zo4SIctrFcUsuw/G/HckKXSzAyOvN8ofXFJJC03qIF8rnWbDF8M9zAQtixEFDfA6nUAz
-         MAbA==
-X-Gm-Message-State: AAQBX9csPRk53vQu36/yGJJSU+UEUA1k0n7+64ld187DVXoUYGLMzZRK
-        1hlqfsJKqvesNG3kA9LdVwc=
-X-Google-Smtp-Source: AKy350aseZzBCum6L3ZdzJV0ccP/niUOapvEPnQGYI92PSTLWqPEIZgktt6CkrodRO1mno8ot6F6IQ==
-X-Received: by 2002:adf:f004:0:b0:2cf:f01f:ed89 with SMTP id j4-20020adff004000000b002cff01fed89mr4390917wro.24.1680694553507;
-        Wed, 05 Apr 2023 04:35:53 -0700 (PDT)
-Received: from [192.168.237.204] (s-8d3a2aa4.on.site.uni-stuttgart.de. [141.58.42.164])
-        by smtp.gmail.com with ESMTPSA id r7-20020a5d4987000000b002ceacff44c7sm14806432wrq.83.2023.04.05.04.35.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 04:35:53 -0700 (PDT)
-Message-ID: <bedd7426-5875-dbd7-38fe-2e943c7109f8@gmail.com>
-Date:   Wed, 5 Apr 2023 13:35:45 +0200
+        Wed, 5 Apr 2023 09:16:45 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E67171F;
+        Wed,  5 Apr 2023 06:16:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l65/nPwZ+hhvGZllyNi8bW9x52UtfhnTr6cvDTzSUjC/QLJ4LUGPD4EvZtQmCwCTSEoXHyYzuXRl7rT9SWLpDexTwaXAXx/0uN3XZlZMYeUCfvraa/jRYMV/U2F+nrHl4uMT4jYPJKLE9HWejyyhmzkb5Ir1gcVl4lPMtwEBeZsSkCrxBgUul5TXwUyoGxbCm50iQqtt6g6uzk1D7scOaUzzY4MUPeCd87eGbLXUIrNeyk4yREjC8UrnWCiF15mEkw0NZmDUinlGF9hXznCiVH2Vr/dUXSTuSVyLgQ/c9RAoJztVp6TPFxzfEUkMzMez6SS/7WXtPd4cMM5tVAEHkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qRYZFeD3LrQ+GobhjYEIOWgRmmAFtkqsmlu8zLleyAM=;
+ b=mFRO06jdtiuN0q3A2NddnPAsJpmD6PiC024KR5XJJLSrS+W3aFsjNb8nt42fYdpwLCM+1UKSX+m1RDtDXdI1YP/9DtURmLROrOVMFgSQplbPLqdOxTslI8o/rt6dxPhCFeAXXdU/eqb/fZ3Xrc+P2bQxZboH8tEkYdIqCCIDqsv2oNhRdgIZ9jLMF78BTJ64HUk0mn3KpwDKsINArWC8rz60ftO6Mt4KLzqgxWiQJP9+ZkDiVP9tdI551xNaorve4Um2cxbv6rsbCZU6zK87y2H5WW4Ut+Kp0TTW/dIGrqXtXwa6xjzQA89Xy7n/8LqdpeeO89SeN91kKEkHQCFdsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qRYZFeD3LrQ+GobhjYEIOWgRmmAFtkqsmlu8zLleyAM=;
+ b=kx6PoB32APEXyt/Pg9td4apDDvELJYnT5fnjY5eW1JqGMhoLq9kzVK4/iXc/zYDNdPWbElUOSRCUgTi7VmqMgHaOd5/T4zPYK8Y7HWOsSDwTfKyL2OPYOwQ45QeDTAvQ1oUY4KIzKx2cUqASz6DbnHnM7NZy9m/SlPI7e34gNPpWoCBujqeYkBAfyQty+IAHRRU7KJ7mxRRA76S2oWSxSAwKtbL1gpx4ynFARIHjY7vcJTIznpn2DsYYVmriUIubfIrZDsuKU6CkRRkTPeRHqL/KF+Nu+nRiHROX2B1dW4IQ/V3v+X/1Yrn5enTY40NV9e5aYvC2LwOU1SQoybL5Cw==
+Received: from DS7PR03CA0337.namprd03.prod.outlook.com (2603:10b6:8:55::25) by
+ MW3PR12MB4522.namprd12.prod.outlook.com (2603:10b6:303:5f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6254.35; Wed, 5 Apr 2023 13:16:42 +0000
+Received: from DM6NAM11FT005.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:55:cafe::43) by DS7PR03CA0337.outlook.office365.com
+ (2603:10b6:8:55::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.37 via Frontend
+ Transport; Wed, 5 Apr 2023 13:16:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DM6NAM11FT005.mail.protection.outlook.com (10.13.172.238) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6277.16 via Frontend Transport; Wed, 5 Apr 2023 13:16:41 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 5 Apr 2023
+ 06:16:34 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Wed, 5 Apr 2023 06:16:34 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.180)
+ with Microsoft SMTP Server id 15.2.986.37 via Frontend Transport; Wed, 5 Apr
+ 2023 06:16:33 -0700
+From:   Khalil Blaiech <kblaiech@nvidia.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>, <vadimp@nvidia.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <davthompson@nvidia.com>,
+        <kblaiech@nvidia.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1 RESEND] platform/mellanox: add firmware reset support
+Date:   Wed, 5 Apr 2023 09:16:29 -0400
+Message-ID: <10da04fa43e8acce5d4ec173e225c28b9e979e4b.1675790783.git.kblaiech@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH V4 22/23] platform/surface: Disable for RISC-V
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        llvm@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weili Qian <qianweili@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Marc Zyngier <maz@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
- <20230404182037.863533-23-sunilvl@ventanamicro.com>
- <0c433e15-640e-280f-fcb0-a8fe081d1bcc@gmail.com>
- <ZC1XUdD3DFnNauQ2@sunil-laptop>
-Content-Language: en-US
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <ZC1XUdD3DFnNauQ2@sunil-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT005:EE_|MW3PR12MB4522:EE_
+X-MS-Office365-Filtering-Correlation-Id: f90ae823-a5ae-4a93-abbf-08db35d7ff42
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wSJTxNFLx8SepVYb+9a8MPgjJ5fHoJmoZsVL2ejcq8bCfUDBlcIdSEJeb50sJJG8oydQmdHWjaU2feVSoajOK0A4ZyFWhFjUSSbK6i5QkfEVjM6oZeIQlxKhYwYqrkjRk227DdHyRd/tjR9x0nsbEeb6L2SdvkWQFslmSV2j0lFAKiKCZgHTPunRO2ragiNEvyz1+Jdatmoigjhzs2tmZBHu39rvbTJBoiPC0KEF0ujEjZu6rHFfOeV4/HDperrADnSTGJHFrKfArykFuMWujFudYq8D3mCzkEN88mIi/VUPsy/1giOmiGbTQpGXm0SSKpuYpm4gf5XEJayWmL4vS27EIVEQQ97sUHG1VYr+xQJlesb1clmfVE3a0WNgm7H9nTS/Aqe/l0pgq3cuvwaNMo+8XcjimlxI2X4ALBlzg8eESwXgUXCpFVBbUnWAuZQNC72mwYNTz+B/druP3gyfgczQMMadLZfTXCkmZ2LUz8gDeWzHDGoBZIf2AKluMtPV5IYfdcbuarks5t+xghBYtbBPCaP5P+HxaXlb9se4oBMbjuBFhm52xg2MKUQEGRN2gyFkcqZGtHE9UBM5+xLvwd3vjk2FFtGITR8eyhItD9imwmjhPF/8B5thPt4bvjZzPaEplKMZlm82CZ0WUaxOd6z8aH3zue8QsCB7ltNuiNeMDi7PSw/47YogxPJoYPxjgJIgQk/KOGArAJGgeeJLGud/ljCi7ojY55IOEor6njUQ8Fn2ecUlyaB/DtrBk6hP
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(346002)(396003)(39860400002)(451199021)(40470700004)(36840700001)(46966006)(40460700003)(36756003)(26005)(186003)(6666004)(2616005)(426003)(47076005)(5660300002)(336012)(41300700001)(8936002)(70206006)(8676002)(4326008)(2906002)(110136005)(70586007)(316002)(7696005)(54906003)(40480700001)(478600001)(6636002)(82740400003)(356005)(82310400005)(86362001)(36860700001)(7636003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2023 13:16:41.8451
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90ae823-a5ae-4a93-abbf-08db35d7ff42
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT005.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4522
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/5/23 13:11, Sunil V L wrote:
-> On Wed, Apr 05, 2023 at 11:33:00AM +0200, Maximilian Luz wrote:
->> On 4/4/23 20:20, Sunil V L wrote:
->>> With CONFIG_ACPI enabled for RISC-V, this driver gets enabled
->>> in allmodconfig build. However, RISC-V doesn't support sub-word
->>> atomics which is used by this driver. Due to this, the build fails
->>> with below error.
->>>
->>> In function â€˜ssh_seq_nextâ€™,
->>>       inlined from â€˜ssam_request_write_dataâ€™ at drivers/platform/surface/aggregator/controller.c:1483:8:
->>> ././include/linux/compiler_types.h:399:45: error: call to â€˜__compiletime_assert_335â€™ declared with attribute error: BUILD_BUG failed
->>>     399 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>         |                                             ^
->>> ./include/linux/compiler.h:78:45: note: in definition of macro â€˜unlikelyâ€™
->>>      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
->>>         |                                             ^
->>> ././include/linux/compiler_types.h:387:9: note: in expansion of macro â€˜__compiletime_assertâ€™
->>>     387 |         __compiletime_assert(condition, msg, prefix, suffix)
->>>         |         ^~~~~~~~~~~~~~~~~~~~
->>> ././include/linux/compiler_types.h:399:9: note: in expansion of macro â€˜_compiletime_assertâ€™
->>>     399 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>         |         ^~~~~~~~~~~~~~~~~~~
->>> ./include/linux/build_bug.h:39:37: note: in expansion of macro â€˜compiletime_assertâ€™
->>>      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>         |                                     ^~~~~~~~~~~~~~~~~~
->>> ./include/linux/build_bug.h:59:21: note: in expansion of macro â€˜BUILD_BUG_ON_MSGâ€™
->>>      59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>>         |                     ^~~~~~~~~~~~~~~~
->>> ./arch/riscv/include/asm/cmpxchg.h:335:17: note: in expansion of macro â€˜BUILD_BUGâ€™
->>>     335 |                 BUILD_BUG();                                            \
->>>         |                 ^~~~~~~~~
->>> ./arch/riscv/include/asm/cmpxchg.h:344:30: note: in expansion of macro â€˜__cmpxchgâ€™
->>>     344 |         (__typeof__(*(ptr))) __cmpxchg((ptr),                           \
->>>         |                              ^~~~~~~~~
->>> ./include/linux/atomic/atomic-instrumented.h:1916:9: note: in expansion of macro â€˜arch_cmpxchgâ€™
->>>    1916 |         arch_cmpxchg(__ai_ptr, __VA_ARGS__); \
->>>         |         ^~~~~~~~~~~~
->>> drivers/platform/surface/aggregator/controller.c:61:32: note: in expansion of macro â€˜cmpxchgâ€™
->>>      61 |         while (unlikely((ret = cmpxchg(&c->value, old, new)) != old)) {
->>>         |                                ^~~~~~~
->>>
->>> So, disable this driver for RISC-V even when ACPI is enabled for now.
->>
->> CONFIG_SURFACE_PLATFORMS should be enabled for ARM64 || X86 || COMPILE_TEST only,
->> so I guess the issue only happens when compiling with the latter enabled?
->>
->> I'm not aware of any current plans of MS to release RISC-V-based Surface
->> devices, so you could maybe also just explicitly disable CONFIG_SURFACE_PLATFORMS.
->> In any case, I don't see any issues with disabling the whole platform/surface
->> or only individual drivers for RISC-V, so for either solution:
->>
->> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
->>
-> Hi Maximilian,
-> 
-> Thanks!. Yes, COMPILE_TEST gets enabled for allmodconfig builds. Since
-> the whole intention of COMPILE_TEST appears to be able to compile-test
-> drivers on a platform than they are supposed to be used, I think it is
-> better not to skip whole set of drivers but only that which can not build.
-> So, I prefer to keep this change as is.
+Add a new sysfs to initiate firmware reset in isolation mode.
 
-Hi Sunil,
+Reviewed-by: David Thompson <davthompson@nvidia.com>
+Signed-off-by: Khalil Blaiech <kblaiech@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-bootctl.c | 19 +++++++++++++++++++
+ drivers/platform/mellanox/mlxbf-bootctl.h |  6 ++++++
+ 2 files changed, 25 insertions(+)
 
-What I wanted to say with my previous mail: I'm fairly confident that
-platform/surface drivers will not be actively used on RISC-V hardware any
-time soon (not sure if that came over in this way). But whatever you/others
-prefer, I'm happy with either.
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index 1c7a288b59a5..5e41c270195c 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -244,11 +244,29 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
+ 	return buf_len;
+ }
+ 
++static ssize_t fw_reset_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	unsigned long key;
++	int err;
++
++	err = kstrtoul(buf, 16, &key);
++	if (err)
++		return err;
++
++	if (mlxbf_bootctl_smc(MLXBF_BOOTCTL_FW_RESET, key) < 0)
++		return -EINVAL;
++
++	return count;
++}
++
+ static DEVICE_ATTR_RW(post_reset_wdog);
+ static DEVICE_ATTR_RW(reset_action);
+ static DEVICE_ATTR_RW(second_reset_action);
+ static DEVICE_ATTR_RO(lifecycle_state);
+ static DEVICE_ATTR_RO(secure_boot_fuse_state);
++static DEVICE_ATTR_WO(fw_reset);
+ 
+ static struct attribute *mlxbf_bootctl_attrs[] = {
+ 	&dev_attr_post_reset_wdog.attr,
+@@ -256,6 +274,7 @@ static struct attribute *mlxbf_bootctl_attrs[] = {
+ 	&dev_attr_second_reset_action.attr,
+ 	&dev_attr_lifecycle_state.attr,
+ 	&dev_attr_secure_boot_fuse_state.attr,
++	&dev_attr_fw_reset.attr,
+ 	NULL
+ };
+ 
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.h b/drivers/platform/mellanox/mlxbf-bootctl.h
+index 148fdb43b435..b48243f60a59 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.h
++++ b/drivers/platform/mellanox/mlxbf-bootctl.h
+@@ -75,6 +75,12 @@
+ 
+ #define MLXBF_BOOTCTL_GET_DIMM_INFO		0x82000008
+ 
++/*
++ * Initiate Firmware Reset via TYU. This might be invoked during the reset
++ * flow in isolation mode.
++ */
++#define MLXBF_BOOTCTL_FW_RESET  0x8200000D
++
+ /* SMC function IDs for SiP Service queries */
+ #define MLXBF_BOOTCTL_SIP_SVC_CALL_COUNT	0x8200ff00
+ #define MLXBF_BOOTCTL_SIP_SVC_UID		0x8200ff01
+-- 
+2.30.1
 
-Best regards,
-Max
