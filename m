@@ -2,225 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65833C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 15:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0E9C76188
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 18:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239089AbjDEPt1 (ORCPT
+        id S234131AbjDES1s convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Apr 2023 11:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        Wed, 5 Apr 2023 14:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239080AbjDEPtW (ORCPT
+        with ESMTP id S232680AbjDES1r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2023 11:49:22 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C8649E5
-        for <platform-driver-x86@vger.kernel.org>; Wed,  5 Apr 2023 08:48:58 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id j24so36730878wrd.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Apr 2023 08:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1680709729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bEilYgmHZ7l/bQLzCewoCvoPGpsrJtc/Cg02p3y6vwY=;
-        b=Ii4Yh1EZdQ+aZCFlOdXALbTzJ1og9QLtlkYzPUC/jenIpbvCTAT0yz5svZia5Dsl1w
-         mGkKFXAUN0KzkkryuKYnwJ6p3L6Z+qsljm01JFxeE7zmIjwX5cLHYn8zBvpgLlFuMuav
-         8jxkSKuZH9BAdTMcA2X8UUu0G6oYMk6Lr12Ae6qn/IPyDpTnSfY2TxlOw/mYokArg6+w
-         dnZdHco7kHmKFs4gJLTE/AG1qnsUKkgXLocGdcrsfiP1S/xSx/bLc4Ymz6gVsdzsjpg+
-         eVaWKpeTl0R2tu3cAhkiEmGWlV62XMGm2jA++kxMNn/QtnvyzDPFk0IzPFn8j0T74gki
-         kTFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680709729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bEilYgmHZ7l/bQLzCewoCvoPGpsrJtc/Cg02p3y6vwY=;
-        b=4d4VxhiXdPvyWpanWrwKI94DxLNM9BV5vNCcpHpGy//xLAImjBT6ZxgKMMpCu47AUv
-         TeZyRJs2sf8Ylolc3pj8aaRO5BdZhDtHNYHDBBjo3Jk0hVHQFpuy05q8iUltHG/IuyM+
-         8JFPpy2aSqh2My4+IB9EZXMcghf7SpGo0qrcplJLWLosIzyEeNKhqBeMje8VuuYZf08o
-         aM6winmnw39SGXhJ1EisakTemG/7cmMnw/ziCcnkjLRx7Tk1fQvflmtBEfE0GYD67Qv+
-         dTFQ6Gue3dRSBkXAw4ZQ3lx8CSBX0B+Qdoy3JOjOGKfn9rsvWlu7ro+lhtRAa/YSM3yS
-         tg/Q==
-X-Gm-Message-State: AAQBX9cV9Dl29SWuFXzQhHxE7jsauB1Nm9XZp12GmqoRSVZhCkMjHplA
-        V0Paa2ef+qTlKa54PzvtxNMD2g==
-X-Google-Smtp-Source: AKy350a/4RpDuNaKeLXizakCjVT0nJJ/3/P77NUAVFXOsWcY6UUfArIEbAgLCUIHrv9hqeDQ0bOQAw==
-X-Received: by 2002:adf:d0ce:0:b0:2ce:ab0a:81fe with SMTP id z14-20020adfd0ce000000b002ceab0a81femr3890449wrh.62.1680709728645;
-        Wed, 05 Apr 2023 08:48:48 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id y16-20020adfe6d0000000b002df7c38dc3esm15375973wrm.87.2023.04.05.08.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 08:48:48 -0700 (PDT)
-Date:   Wed, 5 Apr 2023 17:48:47 +0200
-From:   Andrew Jones <ajones@ventanamicro.com>
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        llvm@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weili Qian <qianweili@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Marc Zyngier <maz@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH V4 15/23] irqchip/riscv-intc: Add ACPI support
-Message-ID: <qxftlofleo2bpyqa5lyshiluc5cd37u4hljn4bh7noxv7g5pno@ldvh6gkyrlzu>
-References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
- <20230404182037.863533-16-sunilvl@ventanamicro.com>
+        Wed, 5 Apr 2023 14:27:47 -0400
+Received: from smtprelay08.ispgateway.de (smtprelay08.ispgateway.de [134.119.228.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D963596;
+        Wed,  5 Apr 2023 11:27:45 -0700 (PDT)
+Received: from [92.206.161.29] (helo=note-book.lan)
+        by smtprelay08.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <git@apitzsch.eu>)
+        id 1pk7rB-0006r0-0c; Wed, 05 Apr 2023 20:27:41 +0200
+Message-ID: <f528763247f2513edecb00108e5099120b379350.camel@apitzsch.eu>
+Subject: Re: [PATCH v3 0/2] platform/x86: Add driver for Yoga Tablet mode
+ switch
+From:   =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
+        linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Armin Wolf <W_Armin@gmx.de>,
+        =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Date:   Wed, 05 Apr 2023 20:27:39 +0200
+In-Reply-To: <20230329014559.44494-1-kallmeyeras@gmail.com>
+References: <20230329014559.44494-1-kallmeyeras@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230404182037.863533-16-sunilvl@ventanamicro.com>
+X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 11:50:29PM +0530, Sunil V L wrote:
-> Add support for initializing the RISC-V INTC driver on ACPI
-> platforms.
+Am Dienstag, dem 28.03.2023 um 18:45 -0700 schrieb Andrew Kallmeyer:
+> This driver maps the Lenovo Yoga tablet mode switch to a SW_TABLET_MODE input
+> device. This will make the tablet status available to desktop environments.
 > 
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  drivers/irqchip/irq-riscv-intc.c | 74 ++++++++++++++++++++++++++------
->  1 file changed, 61 insertions(+), 13 deletions(-)
+> This patch series is the result of the discussion at
+> https://lore.kernel.org/r/CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com/
 > 
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-> index f229e3e66387..6b476fa356c0 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #define pr_fmt(fmt) "riscv-intc: " fmt
-> +#include <linux/acpi.h>
->  #include <linux/atomic.h>
->  #include <linux/bits.h>
->  #include <linux/cpu.h>
-> @@ -112,6 +113,30 @@ static struct fwnode_handle *riscv_intc_hwnode(void)
->  	return intc_domain->fwnode;
->  }
->  
-> +static int __init riscv_intc_init_common(struct fwnode_handle *fn)
-> +{
-> +	int rc;
-> +
-> +	intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
-> +					       &riscv_intc_domain_ops, NULL);
-> +	if (!intc_domain) {
-> +		pr_err("unable to add IRQ domain\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	rc = set_handle_irq(&riscv_intc_irq);
-> +	if (rc) {
-> +		pr_err("failed to set irq handler\n");
-> +		return rc;
-> +	}
-> +
-> +	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
-> +
-> +	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
-> +
-> +	return 0;
-> +}
-> +
->  static int __init riscv_intc_init(struct device_node *node,
->  				  struct device_node *parent)
->  {
-> @@ -133,24 +158,47 @@ static int __init riscv_intc_init(struct device_node *node,
->  	if (riscv_hartid_to_cpuid(hartid) != smp_processor_id())
->  		return 0;
->  
-> -	intc_domain = irq_domain_add_linear(node, BITS_PER_LONG,
-> -					    &riscv_intc_domain_ops, NULL);
-> -	if (!intc_domain) {
-> -		pr_err("unable to add IRQ domain\n");
-> -		return -ENXIO;
-> -	}
-> -
-> -	rc = set_handle_irq(&riscv_intc_irq);
-> +	rc = riscv_intc_init_common(of_node_to_fwnode(node));
->  	if (rc) {
-> -		pr_err("failed to set irq handler\n");
-> +		pr_err("failed to initialize INTC\n");
-
-The ACPI version doesn't output this error when riscv_intc_init_common()
-fails. It should probably be consistent. Either removing it here, if the
-errors output within riscv_intc_init_common() are sufficient, or adding
-it to the ACPI version.
-
->  		return rc;
->  	}
->  
-> -	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
-> -
-> -	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
-> -
->  	return 0;
->  }
->  
->  IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
-> +				       const unsigned long end)
-> +{
-> +	int rc;
-> +	struct fwnode_handle *fn;
-> +	struct acpi_madt_rintc *rintc;
-> +
-> +	rintc = (struct acpi_madt_rintc *)header;
-> +
-> +	/*
-> +	 * The ACPI MADT will have one INTC for each CPU (or HART)
-> +	 * so riscv_intc_acpi_init() function will be called once
-> +	 * for each INTC. We only do INTC initialization
-> +	 * for the INTC belonging to the boot CPU (or boot HART).
-> +	 */
-> +	if (riscv_hartid_to_cpuid(rintc->hart_id) != smp_processor_id())
-> +		return 0;
-> +
-> +	fn = irq_domain_alloc_named_fwnode("RISCV-INTC");
-> +	if (!fn) {
-> +		pr_err("unable to allocate INTC FW node\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rc = riscv_intc_init_common(fn);
-> +	return rc;
-
-nit: If we don't add the error message here, then rc can be removed and we
-can just do
-
-  return riscv_intc_init_common(fn);
-
-And, if we remove the error above, then we reduce the return there too.
-
-> +}
-> +
-> +IRQCHIP_ACPI_DECLARE(riscv_intc, ACPI_MADT_TYPE_RINTC, NULL,
-> +		     ACPI_MADT_RINTC_VERSION_V1, riscv_intc_acpi_init);
-> +#endif
-> -- 
-> 2.34.1
+> I decided to follow-up on the patch Gergo wrote and respond to the review
+> comments to get it merged and available for everyone.
+> 
+> Gergo and I have tested this on the Yoga 7 14ARB7, and the Yoga 7 14AIL7
+> respectively. Additionally, according to reports at
+> https://github.com/lukas-w/yoga-usage-mode, which uses the same WMI devices,
+> this driver should work with:
+> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
+> 
+> v1: https://lore.kernel.org/r/20230310041726.217447-1-kallmeyeras@gmail.com/
+> v2: https://lore.kernel.org/r/20230323025200.5462-1-kallmeyeras@gmail.com/
+> The diff since v2 is as follows:
+> 
+> [..]
+> 
+> Andrew Kallmeyer (1):
+>   platform/x86: Move ideapad ACPI helpers to a new header
+> 
+> Gergo Koteles (1):
+>   platform/x86: Add driver for Yoga Tablet Mode switch
+> 
+>  drivers/platform/x86/Kconfig          |  10 ++
+>  drivers/platform/x86/Makefile         |   1 +
+>  drivers/platform/x86/ideapad-laptop.c | 135 +------------------
+>  drivers/platform/x86/ideapad-laptop.h | 152 +++++++++++++++++++++
+>  drivers/platform/x86/lenovo-ymc.c     | 185 ++++++++++++++++++++++++++
+>  5 files changed, 349 insertions(+), 134 deletions(-)
+>  create mode 100644 drivers/platform/x86/ideapad-laptop.h
+>  create mode 100644 drivers/platform/x86/lenovo-ymc.c
 > 
 
-Thanks,
-drew
+Hi Andrew,
+
+it seems my last tested-by got lost, when preparing the this patch
+version or was ignored because of the amount of code changes.
+
+Anyway, tested again on Lenovo ThinkBook 14s Yoga ITL.
+
+Tested-by: André Apitzsch <git@apitzsch.eu>
+
+Best regards,
+André
