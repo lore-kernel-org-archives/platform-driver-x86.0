@@ -2,93 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0E9C76188
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 18:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E91C76188
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 20:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234131AbjDES1s convert rfc822-to-8bit (ORCPT
+        id S229479AbjDEUBo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Apr 2023 14:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
+        Wed, 5 Apr 2023 16:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232680AbjDES1r (ORCPT
+        with ESMTP id S230175AbjDEUBl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2023 14:27:47 -0400
-Received: from smtprelay08.ispgateway.de (smtprelay08.ispgateway.de [134.119.228.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D963596;
-        Wed,  5 Apr 2023 11:27:45 -0700 (PDT)
-Received: from [92.206.161.29] (helo=note-book.lan)
-        by smtprelay08.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <git@apitzsch.eu>)
-        id 1pk7rB-0006r0-0c; Wed, 05 Apr 2023 20:27:41 +0200
-Message-ID: <f528763247f2513edecb00108e5099120b379350.camel@apitzsch.eu>
-Subject: Re: [PATCH v3 0/2] platform/x86: Add driver for Yoga Tablet mode
- switch
-From:   =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To:     Andrew Kallmeyer <kallmeyeras@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
-        linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Armin Wolf <W_Armin@gmx.de>,
-        =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Date:   Wed, 05 Apr 2023 20:27:39 +0200
-In-Reply-To: <20230329014559.44494-1-kallmeyeras@gmail.com>
-References: <20230329014559.44494-1-kallmeyeras@gmail.com>
+        Wed, 5 Apr 2023 16:01:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D6E7AB3
+        for <platform-driver-x86@vger.kernel.org>; Wed,  5 Apr 2023 13:01:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 009A864130
+        for <platform-driver-x86@vger.kernel.org>; Wed,  5 Apr 2023 20:00:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 66327C4339C
+        for <platform-driver-x86@vger.kernel.org>; Wed,  5 Apr 2023 20:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680724842;
+        bh=l2Jq+tI69PAsRmikB/iZGUMLEuoTq5b5cJZT3Wz0VX4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=BHXwsq0N+pnMBEnb7L0Mtx2pzpjdlwu37d5q2UQeROubEuDNQdjt3ssQ6662Z4yzl
+         DMzSMbUZl7Nwd8q4jlwQpcg689rl0JoXyI1iZwQ4iAKvC6z6k1I0med1NiYb7pEK1p
+         fythEq4hHOf+csJeasNwpikcx1JoR6NsVcRcVCe82AstWYeAPleMjFiW37ED11NkgT
+         4XPHmVPD2Rk8zyQ9vfw6sb/jrx0SfDKwIZa1cMKo1i7cyjW1BdeiKwdT3I0Ka7Iy8E
+         leB2Q3gj0Ks94KZnS++lt53KuHvEu4m5BgYmA4wDqmsRieHj0JNMA2HYf0ZK9R8lY5
+         CQGM86pLaVVZQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 57CBFC43142; Wed,  5 Apr 2023 20:00:42 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 05 Apr 2023 20:00:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-kRDJ0OvezW@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.4 
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Dienstag, dem 28.03.2023 um 18:45 -0700 schrieb Andrew Kallmeyer:
-> This driver maps the Lenovo Yoga tablet mode switch to a SW_TABLET_MODE input
-> device. This will make the tablet status available to desktop environments.
-> 
-> This patch series is the result of the discussion at
-> https://lore.kernel.org/r/CAG4kvq9US=-NjyXFMzJYu2zCJryJWtOc7FGZbrewpgCDjdAkbg@mail.gmail.com/
-> 
-> I decided to follow-up on the patch Gergo wrote and respond to the review
-> comments to get it merged and available for everyone.
-> 
-> Gergo and I have tested this on the Yoga 7 14ARB7, and the Yoga 7 14AIL7
-> respectively. Additionally, according to reports at
-> https://github.com/lukas-w/yoga-usage-mode, which uses the same WMI devices,
-> this driver should work with:
-> Yoga C940, Ideapad flex 14API, Yoga 9 14IAP7, Yoga 7 14ARB7, etc.
-> 
-> v1: https://lore.kernel.org/r/20230310041726.217447-1-kallmeyeras@gmail.com/
-> v2: https://lore.kernel.org/r/20230323025200.5462-1-kallmeyeras@gmail.com/
-> The diff since v2 is as follows:
-> 
-> [..]
-> 
-> Andrew Kallmeyer (1):
->   platform/x86: Move ideapad ACPI helpers to a new header
-> 
-> Gergo Koteles (1):
->   platform/x86: Add driver for Yoga Tablet Mode switch
-> 
->  drivers/platform/x86/Kconfig          |  10 ++
->  drivers/platform/x86/Makefile         |   1 +
->  drivers/platform/x86/ideapad-laptop.c | 135 +------------------
->  drivers/platform/x86/ideapad-laptop.h | 152 +++++++++++++++++++++
->  drivers/platform/x86/lenovo-ymc.c     | 185 ++++++++++++++++++++++++++
->  5 files changed, 349 insertions(+), 134 deletions(-)
->  create mode 100644 drivers/platform/x86/ideapad-laptop.h
->  create mode 100644 drivers/platform/x86/lenovo-ymc.c
-> 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Hi Andrew,
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-it seems my last tested-by got lost, when preparing the this patch
-version or was ignored because of the amount of code changes.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #304077|0                           |1
+        is obsolete|                            |
 
-Anyway, tested again on Lenovo ThinkBook 14s Yoga ITL.
+--- Comment #325 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 304087
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D304087&action=3Dedit
+Asus WMI for nct6775 v6.2.9 base (2023.04.05)
 
-Tested-by: André Apitzsch <git@apitzsch.eu>
+Add more H310/H370/H410 boards
 
-Best regards,
-André
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
