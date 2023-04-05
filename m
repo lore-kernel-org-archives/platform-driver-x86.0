@@ -2,156 +2,159 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1009CC76188
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 08:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54910C76188
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 Apr 2023 09:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237125AbjDEIfw (ORCPT
+        id S237147AbjDEJeJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 Apr 2023 04:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        Wed, 5 Apr 2023 05:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236931AbjDEIfv (ORCPT
+        with ESMTP id S237276AbjDEJeD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2023 04:35:51 -0400
-X-Greylist: delayed 600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 05 Apr 2023 01:35:50 PDT
-Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com [64.147.123.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39DAD2704;
-        Wed,  5 Apr 2023 01:35:50 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailnew.west.internal (Postfix) with ESMTP id D88F52B0670E;
-        Wed,  5 Apr 2023 04:16:39 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 05 Apr 2023 04:16:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1680682599; x=1680689799; bh=E4
-        FRrBsELPivENRQDY0P/B5Hrosa4b2SmzmKSYFWm74=; b=O/RfOi1e5gJBwc3CRO
-        6EWvOBPfA7kqdj7sZ1wQWWJRIVpKzE5AI1hqc9WANjEOPc0VlKVpBB4IA4gZh8jQ
-        7gQbGkU/Y7DjtFOLLPN2B+vqHOOIpYuv14gSHyL8hoTTLdHfdixPwXlAinewnJDy
-        pCU4zgyjDP5nazvefaHE4a+MCCjlehkk78cElYr1RQto9eQtQ66JYTUtMLTXLFyT
-        alXZtoTKYSuJlOQrx08qlQ0XnRUG+rrBgeadWFfm485RuHUuAtjGh84wQTvAYf1u
-        Z4J5r1RhIdDO0VDx3umJg901SgI7cGEjedjvsQUVn+HdOdl7WOHeLra+pJfCDene
-        /X1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1680682599; x=1680689799; bh=E4FRrBsELPivE
-        NRQDY0P/B5Hrosa4b2SmzmKSYFWm74=; b=irXtbfnN+lz4Id+q0cchgDiq/0att
-        SZqF0jA+dW9eKrzI/Hdz0raj/1VcYz0S2gflBmiiqXTKBYnMjkxwwGXfOBUii5yE
-        UrocSTbwq7UP1YsQOV8mpGny+1J6D/q3YTuWIjpoWhsH+YM/IfYiygJCac3N83Rc
-        FJfmsJfFPEZjMUiI7b0DptN2qlYh2d+yzFiyZZCVdZw8M2Qder99fArmpHJjQqtb
-        qgM7HX6Vcg63d5aPXxLvB+iY6dIDVy5KgzAvwHDcIEJfNmboJODOxqD/5X2FpFq8
-        3vw1jmm7OATqI4D9ojOZsheWtwXNAsp0MSV7XYqVK+79+CiIBWKVP4crA==
-X-ME-Sender: <xms:ZS4tZMZI9AV0RkcBkz6u_qTZcu_jT_tJVGVzJyGanPX9Z0iZPDhS6Q>
-    <xme:ZS4tZHb84hRVmfo9CZeAclAfKYo1GAUMzA1q3vIakl9kqrd-rtexHH9Q_vpBMa_vo
-    DitDxNyuewPeT5a4og>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejuddgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:ZS4tZG_an9tb6QDw-DeyRnF-MoiRX3UK2FT5yYldQhdyUCEPK3p6cw>
-    <xmx:ZS4tZGonhwZm-UauGA8CU4Sr3yRYaGJgKoEqtpioN0iBOguVj5kRVA>
-    <xmx:ZS4tZHrI8LJ6T2u70F_faSulNUPHdK-DiuwYUbgSpTxTR3iMl3AIXw>
-    <xmx:Zy4tZBagRz_7kfsOKTOayTV_ewyD5h_EN8mJJP8RTtf85jnMin17RvleoA4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3B97AB6008F; Wed,  5 Apr 2023 04:16:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-334-g8c072af647-fm-20230330.001-g8c072af6
-Mime-Version: 1.0
-Message-Id: <dcd04005-2dba-4ccc-a235-a809220f9dbd@app.fastmail.com>
-In-Reply-To: <20230404182037.863533-24-sunilvl@ventanamicro.com>
-References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
- <20230404182037.863533-24-sunilvl@ventanamicro.com>
-Date:   Wed, 05 Apr 2023 10:16:00 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Sunil V L" <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
+        Wed, 5 Apr 2023 05:34:03 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A82959C4;
+        Wed,  5 Apr 2023 02:33:41 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id i9so35527280wrp.3;
+        Wed, 05 Apr 2023 02:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680687182;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+m6lntKXuHckes3DfOCLKyfUm4RY1tSieGlGMdRdeCg=;
+        b=ovQ3eb1eiAQwqbo5Ec1rsGTce+Hz+32WrCzTCV6aKN7VzI1t4WTQw+oi5Fjm2tx9ED
+         U2PLKAiosMdQeR7Kkq4DSD9rqJjesQPtz0iZSEb7eXbSbTNSow2QT+s6rufHSiuQosKa
+         BBYiEAEslILdu1TIp0BUOeiJSb1WUTPzbKIV26qCpu4lIhlb/AcewWwRltj5jdlAzBZ5
+         /n6V3UzQce7EFM/A/DlgNUEX5Iq0veIkKxpe/lw9Z594oiA4n/TAkEb7ebKyjKkVcFUq
+         JcXG+bAOF2T3hOwYu4OUr5B6YAZw0RkrUJEmwBPsQiySJx/lS0eoCWjMoLpGDbByT/Kf
+         MxJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680687182;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+m6lntKXuHckes3DfOCLKyfUm4RY1tSieGlGMdRdeCg=;
+        b=rNLnuUpB06fmSb46eCDhDt960xnc8GfirSmU9ZyK66IJowoPmnMzcMQXRg+8hSf0IW
+         f1X3AN33KrEIONSJyV8xaMCDb/9dOS+rrTYxk4ccbQjg0HUa4XvrV+yMqZ5m3YFYX8m9
+         AEuzlbhTxD8Snsanhkv+KxROyFELTc/JtmyC8Iq4L9a16jSnCJjLwzcgxdTF6tQLYqxr
+         T8Gom7T5OZvvvUpNf8xED4erNLMs+FE0gIZOxQ9f0YNem7ZHMY5NDgEPBrfIce93aOp9
+         OrPEMKliV/8foudJm32oxU4SQ3rr3MytzxszJbzkBDnIE28pgW2uDXO9QAarxdzW0Bpg
+         2TyA==
+X-Gm-Message-State: AAQBX9ebUEJ8btzkT282ffwbHBNYVh2F0dTvda31u5moFDge7ymuCBk/
+        DZ+dld3aUqZEB3RsWHguKUQ=
+X-Google-Smtp-Source: AKy350bEmXKhbpOLml2JKednF6JyosoF9/Y0Oyj1dYtb90pMMFwBNblSBshHAYOgh5VmCXkMUWMlIQ==
+X-Received: by 2002:adf:dc01:0:b0:2cf:9889:8428 with SMTP id t1-20020adfdc01000000b002cf98898428mr3327565wri.35.1680687181685;
+        Wed, 05 Apr 2023 02:33:01 -0700 (PDT)
+Received: from [192.168.2.202] (pd9e5a520.dip0.t-ipconnect.de. [217.229.165.32])
+        by smtp.gmail.com with ESMTPSA id y5-20020a1c4b05000000b003ede06f3178sm1599550wma.31.2023.04.05.02.33.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Apr 2023 02:33:01 -0700 (PDT)
+Message-ID: <0c433e15-640e-280f-fcb0-a8fe081d1bcc@gmail.com>
+Date:   Wed, 5 Apr 2023 11:33:00 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH V4 22/23] platform/surface: Disable for RISC-V
+To:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-acpi@vger.kernel.org, linux-crypto@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
-Cc:     "Jonathan Corbet" <corbet@lwn.net>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Albert Ou" <aou@eecs.berkeley.edu>, "Len Brown" <lenb@kernel.org>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Weili Qian" <qianweili@huawei.com>,
-        "Zhou Wang" <wangzhou1@hisilicon.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Maximilian Luz" <luzmaximilian@gmail.com>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        "Nathan Chancellor" <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Tom Rix" <trix@redhat.com>,
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH V4 23/23] crypto: hisilicon/qm: Workaround to enable build with
- RISC-V clang
-Content-Type: text/plain
+References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+ <20230404182037.863533-23-sunilvl@ventanamicro.com>
+Content-Language: en-US
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20230404182037.863533-23-sunilvl@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 4, 2023, at 20:20, Sunil V L wrote:
-> With CONFIG_ACPI enabled for RISC-V, this driver gets enabled in
-> allmodconfig build. The gcc tool chain builds this driver removing the
-> inline arm64 assembly code. However, clang for RISC-V tries to build
-> the arm64 assembly and below error is seen.
->
-> drivers/crypto/hisilicon/qm.c:627:10: error: invalid output constraint 
-> '+Q' in asm
->                        "+Q" (*((char __iomem *)fun_base))
->                        ^
-> It appears that RISC-V clang is not smart enough to detect
-> IS_ENABLED(CONFIG_ARM64) and remove the dead code.
->
-> As a workaround, move this check to preprocessing stage which works
-> with the RISC-V clang tool chain.
->
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-
-Your patch looks correct for this particular problem, but I
-see that there are a couple of other issues in the same function:
-
-> -	}
-> +#if IS_ENABLED(CONFIG_ARM64)
-> +	unsigned long tmp0 = 0, tmp1 = 0;
+On 4/4/23 20:20, Sunil V L wrote:
+> With CONFIG_ACPI enabled for RISC-V, this driver gets enabled
+> in allmodconfig build. However, RISC-V doesn't support sub-word
+> atomics which is used by this driver. Due to this, the build fails
+> with below error.
 > 
->  	asm volatile("ldp %0, %1, %3\n"
->  		     "stp %0, %1, %2\n"
-> @@ -627,6 +623,11 @@ static void qm_mb_write(struct hisi_qm *qm, const 
-> void *src)
->  		       "+Q" (*((char __iomem *)fun_base))
->  		     : "Q" (*((char *)src))
->  		     : "memory");
+> In function â€˜ssh_seq_nextâ€™,
+>      inlined from â€˜ssam_request_write_dataâ€™ at drivers/platform/surface/aggregator/controller.c:1483:8:
+> ././include/linux/compiler_types.h:399:45: error: call to â€˜__compiletime_assert_335â€™ declared with attribute error: BUILD_BUG failed
+>    399 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>        |                                             ^
+> ./include/linux/compiler.h:78:45: note: in definition of macro â€˜unlikelyâ€™
+>     78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+>        |                                             ^
+> ././include/linux/compiler_types.h:387:9: note: in expansion of macro â€˜__compiletime_assertâ€™
+>    387 |         __compiletime_assert(condition, msg, prefix, suffix)
+>        |         ^~~~~~~~~~~~~~~~~~~~
+> ././include/linux/compiler_types.h:399:9: note: in expansion of macro â€˜_compiletime_assertâ€™
+>    399 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>        |         ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro â€˜compiletime_assertâ€™
+>     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>        |                                     ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:59:21: note: in expansion of macro â€˜BUILD_BUG_ON_MSGâ€™
+>     59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>        |                     ^~~~~~~~~~~~~~~~
+> ./arch/riscv/include/asm/cmpxchg.h:335:17: note: in expansion of macro â€˜BUILD_BUGâ€™
+>    335 |                 BUILD_BUG();                                            \
+>        |                 ^~~~~~~~~
+> ./arch/riscv/include/asm/cmpxchg.h:344:30: note: in expansion of macro â€˜__cmpxchgâ€™
+>    344 |         (__typeof__(*(ptr))) __cmpxchg((ptr),                           \
+>        |                              ^~~~~~~~~
+> ./include/linux/atomic/atomic-instrumented.h:1916:9: note: in expansion of macro â€˜arch_cmpxchgâ€™
+>   1916 |         arch_cmpxchg(__ai_ptr, __VA_ARGS__); \
+>        |         ^~~~~~~~~~~~
+> drivers/platform/surface/aggregator/controller.c:61:32: note: in expansion of macro â€˜cmpxchgâ€™
+>     61 |         while (unlikely((ret = cmpxchg(&c->value, old, new)) != old)) {
+>        |                                ^~~~~~~
+> 
+> So, disable this driver for RISC-V even when ACPI is enabled for now.
 
-For the arm64 version:
+CONFIG_SURFACE_PLATFORMS should be enabled for ARM64 || X86 || COMPILE_TEST only,
+so I guess the issue only happens when compiling with the latter enabled?
 
-- the "dmb oshst" barrier needs to come before the stp, not after
-  it,  otherwise there is no guarantee that data written to memory
-  is visible by the device when the mailbox gets triggered
-- The input/output arguments need to be pointers to 128-bit types,
-  either a struct or a __uint128_t
-- this lacks a byteswap on big-endian kernels
+I'm not aware of any current plans of MS to release RISC-V-based Surface
+devices, so you could maybe also just explicitly disable CONFIG_SURFACE_PLATFORMS.
+In any case, I don't see any issues with disabling the whole platform/surface
+or only individual drivers for RISC-V, so for either solution:
 
-> +#else
-> +	memcpy_toio(fun_base, src, 16);
-> +	dma_wmb();
-> +#endif
+Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-This version has the same problems, plus the write is not actually
-atomic. I wonder if a pair of writeq() calls would just do the
-right thing here for both arm64 and others, or possibly a
-writeq() followed by a writeq_relaxed() to avoid the extra dmb()
-in the middle.
-
-     Arnd
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>   drivers/platform/surface/aggregator/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/Kconfig b/drivers/platform/surface/aggregator/Kconfig
+> index c114f9dd5fe1..88afc38ffdc5 100644
+> --- a/drivers/platform/surface/aggregator/Kconfig
+> +++ b/drivers/platform/surface/aggregator/Kconfig
+> @@ -4,7 +4,7 @@
+>   menuconfig SURFACE_AGGREGATOR
+>   	tristate "Microsoft Surface System Aggregator Module Subsystem and Drivers"
+>   	depends on SERIAL_DEV_BUS
+> -	depends on ACPI
+> +	depends on ACPI && !RISCV
+>   	select CRC_CCITT
+>   	help
+>   	  The Surface System Aggregator Module (Surface SAM or SSAM) is an
