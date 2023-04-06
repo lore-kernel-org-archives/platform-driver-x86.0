@@ -2,51 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C14BC77B6C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 11:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC85C76196
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 11:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237513AbjDFLdP (ORCPT
+        id S238028AbjDFLda (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 07:33:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34756 "EHLO
+        Thu, 6 Apr 2023 07:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237820AbjDFLcr (ORCPT
+        with ESMTP id S236513AbjDFLc7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 07:32:47 -0400
+        Thu, 6 Apr 2023 07:32:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31B23A246;
-        Thu,  6 Apr 2023 04:32:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5032727;
+        Thu,  6 Apr 2023 04:32:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 068F36466B;
-        Thu,  6 Apr 2023 11:32:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1A3C433D2;
-        Thu,  6 Apr 2023 11:32:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E28364661;
+        Thu,  6 Apr 2023 11:32:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9FDC4339E;
+        Thu,  6 Apr 2023 11:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680780729;
-        bh=61CpfB4NPx3Sn2ArhV0R5wLaJ+ElHuIv6dOpo25OXQE=;
+        s=k20201202; t=1680780749;
+        bh=myqHm/MN7G6R3HZTpB1HDaYKPLd2W5Hp9SmjuR0tUOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVf9Ii8r8btybiSHaIGPZ6LM7/XrJPpY1SDb+ShtK0wrBteDG9P/Vmv8oaD5oghB4
-         2ikX5dEY2M+xl5/5T0L9XMV/m/EPW/MArZ9Ld0U6Ir6hn4EhsmP6GL9ZLT0EXTM0ZU
-         kEg6r9rB4S/0p3wunJg67u1rgML53peUWXLVqzIf/TXzqv1sfKg/1x49c4m6mlUuIW
-         O7ss+zf+oD2lARyCmRnAbWE4fResMeCWNG7LyQCrra6Q2RX+Fus+l+qk2rVZnKYBNf
-         J4QH/I981ZorAoEVvk/n5bmkWGf3w9GiO1kwOcxE8jDBiFJv1hP8VJiJB9Q4qXsjIM
-         JypYV0HnLNYxA==
+        b=Z5UNzJULk3bDVTpKuAHanqGR8AsmeLywy6t7BJdmCpxuwv4pmVUqMVsLKSZJuTz24
+         ov3XpThTHurrw0ltLdbUyUcupOZPoO9H16xWx+In/GpFzAmJeRmvR7YgTnZSIvxB+j
+         VdgxYuepuo5Oq+vZ4rIm442WPjmqggTHryDH3XTeoFc+iMW7IetOYAoq9wOkDLT4q0
+         INb7GMe3dcWrbv55JF7Zlj13QUsEs57ICMgv8QvwbFxVy32AFr+Iv6YRzkIk9eLAVy
+         MCxYmDZ0qAaL3Xvdolu8/yp7kZnY9uvclGoW1vuTBvipx2P8+ifWxTvUDtk8XFC34q
+         DbzL/wqeKpVxg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     weiliang1503 <weiliang1503@gmail.com>,
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        got3nks <got3nks@users.noreply.github.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 16/17] platform/x86: asus-nb-wmi: Add quirk_asus_tablet_mode to other ROG Flow X13 models
-Date:   Thu,  6 Apr 2023 07:31:30 -0400
-Message-Id: <20230406113131.648213-16-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, thomas@weissschuh.net,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 08/17] platform/x86: gigabyte-wmi: add support for B650 AORUS ELITE AX
+Date:   Thu,  6 Apr 2023 07:32:02 -0400
+Message-Id: <20230406113211.648424-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406113131.648213-1-sashal@kernel.org>
-References: <20230406113131.648213-1-sashal@kernel.org>
+In-Reply-To: <20230406113211.648424-1-sashal@kernel.org>
+References: <20230406113211.648424-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -54,36 +55,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: weiliang1503 <weiliang1503@gmail.com>
+From: Thomas Weißschuh <linux@weissschuh.net>
 
-[ Upstream commit e352d685fde427a8fc9beb2ba30888f5d6f2e5e6 ]
+[ Upstream commit 441d901fbf669f6360566a4437b1e563b854de4a ]
 
-Make quirk_asus_tablet_mode apply on other ROG Flow X13 devices,
-which only affects the GV301Q model before.
+This has been reported as working.
 
-Signed-off-by: weiliang1503 <weiliang1503@gmail.com>
-Link: https://lore.kernel.org/r/20230330114943.15057-1-weiliang1503@gmail.com
+Suggested-by: got3nks <got3nks@users.noreply.github.com>
+Link: https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/15#issuecomment-1483942966
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: https://lore.kernel.org/r/20230327-gigabyte-wmi-b650-elite-ax-v1-1-d4d645c21d0b@weissschuh.net
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index cb15acdf14a30..e2c9a68d12df9 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -464,7 +464,8 @@ static const struct dmi_system_id asus_quirks[] = {
- 		.ident = "ASUS ROG FLOW X13",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
-+			/* Match GV301** */
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GV301"),
- 		},
- 		.driver_data = &quirk_asus_tablet_mode,
- 	},
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index 4dd39ab6ecfa2..5e5b17c50eb67 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -151,6 +151,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B650 AORUS ELITE AX"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
 -- 
 2.39.2
 
