@@ -2,104 +2,104 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3894C77B6C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 10:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D2BC76196
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 10:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236584AbjDFKpZ (ORCPT
+        id S231484AbjDFKyi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 06:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41346 "EHLO
+        Thu, 6 Apr 2023 06:54:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbjDFKpY (ORCPT
+        with ESMTP id S237373AbjDFKyg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 06:45:24 -0400
+        Thu, 6 Apr 2023 06:54:36 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093194ED0
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 03:44:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58ED25FC7
+        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 03:53:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680777876;
+        s=mimecast20190719; t=1680778428;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TjBeC5ttXVWU6637sM9DbdFklYW1fd4puIgmp2kM1PM=;
-        b=Dfz3CX7Dora/lPJopnZd4/oDS5Li9WbwPWSEtjWD5vjA0az3lxMuCANL/To+VKeKPduXEy
-        BfD3E5YOUgtgiMa51I2bs0w01hr4VgAEKKvusZcWhJctUPRl+Po8i0HGzuZ2UKVJswL41M
-        eRrC+Ky/jQjHaehHmGcDCEkTS7o3Ypc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=pi28H7Ys3ragZ0WvGPlL8+NvRPjRFBU0lR+sJE70dXU=;
+        b=gV9MJXYklZtp4woGG8RrLtpoX33qMGQxKtBR1ibiL9waL2g1doLJ0IOGb0PI9qSRfrkU3E
+        XU2TQ01o32DIAo8mWY84wK47FKbx9d87jJlswaCni69rRXk1ihvzTO9Ra7YuprEaESWlkK
+        DlTCJHQnVVZOX6thAVm3MXut+I7nFYA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-PKnB4thkM0GJNGoDZmSD-w-1; Thu, 06 Apr 2023 06:44:33 -0400
-X-MC-Unique: PKnB4thkM0GJNGoDZmSD-w-1
-Received: by mail-ej1-f71.google.com with SMTP id de5-20020a1709069bc500b009339c9c32ffso48107ejc.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 03:44:33 -0700 (PDT)
+ us-mta-132-PObHVpX7MmqBxIhSsLJIoQ-1; Thu, 06 Apr 2023 06:53:39 -0400
+X-MC-Unique: PObHVpX7MmqBxIhSsLJIoQ-1
+Received: by mail-ej1-f69.google.com with SMTP id e25-20020a170906749900b0094131bc45b3so55837ejl.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 03:53:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680777872; x=1683369872;
+        d=1e100.net; s=20210112; t=1680778418; x=1683370418;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TjBeC5ttXVWU6637sM9DbdFklYW1fd4puIgmp2kM1PM=;
-        b=qwlgWFPSNkI1w1Mnnpt3oFfIHKHXcz20+q425WDfUc3hA3BZjA2SDRBU799VAgnd5G
-         /Wm1W6v84t+YAMpS76AnqG1Wd+W3g35PVY8FZgp6bflasPhrlx7s0YLVGLBBWLjEKATb
-         2z9Bf8as3dylpRGFu/ajnDjhlBu+SzNHscwaWl07bmaes+nwAhIOB4t//nKbTo/f9wUg
-         WyrvBZ+2Nx22TtoIyKRwU/ARoophKj/Oy4vyhi+KCeKq+4LeVpEVhneFlTKiujQ1AGmo
-         uaaziJ3jUu5lFNItQdqsXS51WxpnaTi5jCG+wm5T0biCVpE+Ilp7veGQ3NNryqhHltr3
-         pzXQ==
-X-Gm-Message-State: AAQBX9dNLUp+LoEZ5EetuFMUD7xPo4Ey92G2jJOqQWf/4DE4EB4JVFVk
-        X7LaT1wMTgY3KIn+rhsqf0LEiLBOapMc9xZpO4NU8MfM8t/b+qPTMGaZ63QH4EnHHT2Cfet8E5/
-        0AZJaGDlKIxMZXz4Ozv15YrLIV91G068U0bTtMxur1Q==
-X-Received: by 2002:a17:906:5383:b0:939:4c86:d47b with SMTP id g3-20020a170906538300b009394c86d47bmr5936477ejo.19.1680777871849;
-        Thu, 06 Apr 2023 03:44:31 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YKw5d9sAnmrCv7+iF3IpuymujbqUnc6kSfxderJa9L09/Chkn5ceYeFPalKsTfyG9jc8ZvEw==
-X-Received: by 2002:a17:906:5383:b0:939:4c86:d47b with SMTP id g3-20020a170906538300b009394c86d47bmr5936465ejo.19.1680777871569;
-        Thu, 06 Apr 2023 03:44:31 -0700 (PDT)
+        bh=pi28H7Ys3ragZ0WvGPlL8+NvRPjRFBU0lR+sJE70dXU=;
+        b=tF/ZSrimKZNr2FBlYMKHA5YN43Y6raRL6nmrYyyvt8fQrYGb6Wwn+Pq3ACSMx3Jia1
+         3J6KBvMbriZguNfaqESb37zAyLLHGkvK6JfMXXJKb3EFuo2z3T7JQjfPH+qD2l88Acld
+         fd/Mx/PKTosg0UFIL/EmYIIlU9Oe9NLHkGXTFdERRQ+9K19j4c2q7stqYs5xdTGzu2Sx
+         xMiiNBIhZ9ZGZn7wabc5nqPOnkaOMfcVfR3oFO9bIB7IsmmUPow6CFSRwUoF4KjsNok1
+         Os4Q9MkFVTK4CFQOI/yc/DF4LkZFHGkx6lQBOdqwJgM5XNY59817xXP8tfTi80H6zBiD
+         igOg==
+X-Gm-Message-State: AAQBX9e1FTihmiZ28oStF7SWdcvrIh8R7Aiv8WKF8mbL1jn3QLFeyX7B
+        EJykqOyd7l2s+R4405juAbHljjK2YPpQrStWfx532m5k2HWGmdGXTwlmHyMwdw271UEdO3GziXf
+        x+/oDXc4aoyUyXyEovon0Ok6EtKXmVkittw==
+X-Received: by 2002:a17:906:4d8c:b0:8b1:88aa:46da with SMTP id s12-20020a1709064d8c00b008b188aa46damr6227554eju.48.1680778418655;
+        Thu, 06 Apr 2023 03:53:38 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZZfiP5eeuklEaQrdVVrA6BqszwkvZHtgP4NZZiG+OQJj261ImPta+swxAFCoNIv5pmoPKVJQ==
+X-Received: by 2002:a17:906:4d8c:b0:8b1:88aa:46da with SMTP id s12-20020a1709064d8c00b008b188aa46damr6227525eju.48.1680778418309;
+        Thu, 06 Apr 2023 03:53:38 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id rj13-20020a1709076c8d00b00947ccb6150bsm520220ejc.102.2023.04.06.03.44.30
+        by smtp.gmail.com with ESMTPSA id gs22-20020a170906f19600b00947d49ec819sm660247ejb.22.2023.04.06.03.53.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 03:44:30 -0700 (PDT)
-Message-ID: <c12fcff3-d9aa-2d8d-7053-224207defc26@redhat.com>
-Date:   Thu, 6 Apr 2023 12:44:30 +0200
+        Thu, 06 Apr 2023 03:53:37 -0700 (PDT)
+Message-ID: <c5455226-1d51-1d3d-0b67-78a0473a9e8c@redhat.com>
+Date:   Thu, 6 Apr 2023 12:53:37 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: think-lmi: Remove unnecessary casts for
- attributes
+Subject: Re: [RFCv3 1/1] platform/x86: Add virtual PMC driver used for S2Idle
 Content-Language: en-US, nl
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230329-think-lmi-attrs-v1-1-5794f2367cc2@weissschuh.net>
+To:     Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org
+Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
+        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
+        upstream@semihalf.com, markgross@kernel.org, dtor@google.com,
+        mario.limonciello@amd.com, linux-pm@vger.kernel.org,
+        x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        rafael@kernel.org
+References: <20230213100921.268770-1-jaz@semihalf.com>
+ <20230213100921.268770-2-jaz@semihalf.com>
+ <CAH76GKOHMtwE7rLTPKUZJ_7xUUdHmHnGyZOsh8pFWoHCiWQynw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230329-think-lmi-attrs-v1-1-5794f2367cc2@weissschuh.net>
+In-Reply-To: <CAH76GKOHMtwE7rLTPKUZJ_7xUUdHmHnGyZOsh8pFWoHCiWQynw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Grzegorz,
 
-On 3/29/23 06:50, Thomas Weißschuh wrote:
-> These casts are unnecessary and could break if structure layouts are
-> randomized or implementation details change.
-> Use the proper syntax that works without casts.
+On 3/29/23 14:33, Grzegorz Jaszczyk wrote:
+> Hi Hans,
 > 
-> Also remove some unnecessary braces that checkpatch complains about.
-> 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> Do you think that this RFC is in good enough state to start the ACPI
+> ID registration process so after it will be completed we could land
+> this solution? Or maybe we could land it (of course if there are no
+> other remarks) even before and adjust if needed?
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I see from the links in the cover-letter that most of
+the previous discussion has happened on the linux-pm list
+and I believe that the linux-pm folks are in a better place
+to answer this question then I am.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I have no objections against the suggested approach,
+but I don't really feel that it is my call to make if
+we should move forward with this.
 
 Regards,
 
@@ -107,44 +107,158 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/think-lmi.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+> pon., 13 lut 2023 o 11:11 Grzegorz Jaszczyk <jaz@semihalf.com> napisał(a):
+>>
+>> Virtual PMC driver is meant for the guest VMs for the S2Idle
+>> notification. Its purpose is to register S2Idle dev ops check handler,
+>> which will evaluate ACPI _DSM just before the guest enters S2Idle power
+>> state.
+>>
+>> This allows to trap on MMIO access done as a consequence of _DSM
+>> evaluation and therefore notify the VMM about the guest entering S2Idle
+>> state.
+>>
+>> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+>> ---
+>> Changelog v1..v2:
+>> - Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
+>>
+>> Changelog v2..v3:
+>> - Add MODULE_LICENSE
+>> - Remove "amd" prefixes
+>> - Be more verbose in VIRT_PMC config description and make it
+>>   HYPERVISOR_GUEST dependent
+>> - Add extra check ensuring that DSM method supports ACPI_VIRT_PMC_NOTIFY function
+>> ---
+>>  drivers/platform/x86/Kconfig    |  7 +++
+>>  drivers/platform/x86/Makefile   |  3 ++
+>>  drivers/platform/x86/virt_pmc.c | 83 +++++++++++++++++++++++++++++++++
+>>  3 files changed, 93 insertions(+)
+>>  create mode 100644 drivers/platform/x86/virt_pmc.c
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index 5692385e2d26..837ce201b68b 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
+>>           buttons below the display. This module adds an input device
+>>           that delivers key events when these buttons are pressed.
+>>
+>> +config VIRT_PMC
+>> +       tristate "Virtual Power Management Controller"
+>> +       depends on ACPI && SUSPEND && HYPERVISOR_GUEST
+>> +       help
+>> +         The Virtual PMC driver is meant for the guest VMs and its main
+>> +         purpose is to notify about guest entering s2idle state.
+>> +
+>>  endif # X86_PLATFORM_DEVICES
+>>
+>>  config P2SB
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>> index 1d3d1b02541b..c4d3056cf4ea 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -129,6 +129,9 @@ obj-$(CONFIG_INTEL_SCU_WDT)         += intel_scu_wdt.o
+>>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
+>>  obj-$(CONFIG_X86_INTEL_LPSS)           += pmc_atom.o
+>>
+>> +# Virtual PMC
+>> +obj-$(CONFIG_VIRT_PMC)                 += virt_pmc.o
+>> +
+>>  # Siemens Simatic Industrial PCs
+>>  obj-$(CONFIG_SIEMENS_SIMATIC_IPC)      += simatic-ipc.o
+>>
+>> diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/virt_pmc.c
+>> new file mode 100644
+>> index 000000000000..a5966bb9048f
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/virt_pmc.c
+>> @@ -0,0 +1,83 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Virtual Power Management Controller Driver
+>> + *
+>> + * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define ACPI_VIRT_PMC_DSM_UUID "9ea49ba3-434a-49a6-be30-37cc55c4d397"
+>> +#define ACPI_VIRT_PMC_NOTIFY 1
+>> +
+>> +static acpi_handle virt_pmc_handle;
+>> +
+>> +static void virt_pmc_s2idle_notify(void)
+>> +{
+>> +       union acpi_object *out_obj;
+>> +       guid_t dsm_guid;
+>> +
+>> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
+>> +
+>> +       out_obj = acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
+>> +                                       0, ACPI_VIRT_PMC_NOTIFY, NULL);
+>> +
+>> +       acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluation %s\n",
+>> +                         ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful" : "failed");
+>> +
+>> +       ACPI_FREE(out_obj);
+>> +}
+>> +
+>> +static struct acpi_s2idle_dev_ops pmc_s2idle_dev_ops = {
+>> +       .check = virt_pmc_s2idle_notify,
+>> +};
+>> +
+>> +static int virt_pmc_probe(struct platform_device *pdev)
+>> +{
+>> +       int err = 0;
+>> +       guid_t dsm_guid;
+>> +
+>> +       virt_pmc_handle = ACPI_HANDLE(&pdev->dev);
+>> +
+>> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
+>> +
+>> +       if (!acpi_check_dsm(virt_pmc_handle, &dsm_guid, 0,
+>> +                           1 << ACPI_VIRT_PMC_NOTIFY)) {
+>> +               dev_err(&pdev->dev, "DSM method doesn't support ACPI_VIRT_PMC_NOTIFY\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       err = acpi_register_lps0_dev(&pmc_s2idle_dev_ops);
+>> +       if (err)
+>> +               dev_err(&pdev->dev, "failed to register LPS0 sleep handler\n");
+>> +
+>> +       return err;
+>> +}
+>> +
+>> +static int virt_pmc_remove(struct platform_device *pdev)
+>> +{
+>> +       acpi_unregister_lps0_dev(&pmc_s2idle_dev_ops);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct acpi_device_id virt_pmc_acpi_ids[] = {
+>> +       {"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
+>> +
+>> +static struct platform_driver virt_pmc_driver = {
+>> +       .driver = {
+>> +               .name = "virtual_pmc",
+>> +               .acpi_match_table = ACPI_PTR(virt_pmc_acpi_ids),
+>> +       },
+>> +       .probe = virt_pmc_probe,
+>> +       .remove = virt_pmc_remove,
+>> +};
+>> +
+>> +module_platform_driver(virt_pmc_driver);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("Virtual PMC Driver");
+>> --
+>> 2.39.1.581.gbfd45094c4-goog
+>>
 > 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index c816646eb661..02bfd6e3fed2 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -862,19 +862,18 @@ static umode_t auth_attr_is_visible(struct kobject *kobj,
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->  
->  	/* We only want to display level and index settings on HDD/NVMe */
-> -	if ((attr == (struct attribute *)&auth_index) ||
-> -			(attr == (struct attribute *)&auth_level)) {
-> +	if (attr == &auth_index.attr || attr == &auth_level.attr) {
->  		if ((setting == tlmi_priv.pwd_hdd) || (setting == tlmi_priv.pwd_nvme))
->  			return attr->mode;
->  		return 0;
->  	}
->  
->  	/* We only display certificates on Admin account, if supported */
-> -	if ((attr == (struct attribute *)&auth_certificate) ||
-> -			(attr == (struct attribute *)&auth_signature) ||
-> -			(attr == (struct attribute *)&auth_save_signature) ||
-> -			(attr == (struct attribute *)&auth_cert_thumb) ||
-> -			(attr == (struct attribute *)&auth_cert_to_password)) {
-> +	if (attr == &auth_certificate.attr ||
-> +	    attr == &auth_signature.attr ||
-> +	    attr == &auth_save_signature.attr ||
-> +	    attr == &auth_cert_thumb.attr ||
-> +	    attr == &auth_cert_to_password.attr) {
->  		if ((setting == tlmi_priv.pwd_admin) && tlmi_priv.certificate_support)
->  			return attr->mode;
->  		return 0;
-> 
-> ---
-> base-commit: fcd476ea6a888ef6e6627f4c21a2ea8cca3e9312
-> change-id: 20230329-think-lmi-attrs-994abb757e98
-> 
-> Best regards,
 
