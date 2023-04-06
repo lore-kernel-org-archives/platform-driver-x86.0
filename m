@@ -2,142 +2,82 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45195C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 14:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E2CC761A6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 15:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238692AbjDFOKI (ORCPT
+        id S239575AbjDFPEW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 10:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53564 "EHLO
+        Thu, 6 Apr 2023 11:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238521AbjDFOJk (ORCPT
+        with ESMTP id S239224AbjDFPES (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 10:09:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E542F9EF3
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 07:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680790095;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AT1MAIP9v4DHYB4m5xHxagncHIIMlg0uERfKC+FM+xk=;
-        b=cfEYLmMYwan/tDPoh5e2ctTDMl9G9Zx6uTF8crXC2xKAZeY6CkKO3Wp9nkmQV6A5d1Hzuv
-        NpKuqn2pgMRl1j+dnIaoHOBmyaaYRgJeYZGAARjrPckQAiYXDtyapir8AHUOZNX5E+25xY
-        BtGZWzLNsU8dIFDzkbZuykcZYt1o9RU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-Vs6RcoaYNtq_26W2N51ENQ-1; Thu, 06 Apr 2023 10:08:14 -0400
-X-MC-Unique: Vs6RcoaYNtq_26W2N51ENQ-1
-Received: by mail-ej1-f71.google.com with SMTP id hh16-20020a170906a95000b00948f41a40d3so295714ejb.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 07:08:14 -0700 (PDT)
+        Thu, 6 Apr 2023 11:04:18 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE239764;
+        Thu,  6 Apr 2023 08:03:53 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id f4-20020a9d0384000000b0069fab3f4cafso20836811otf.9;
+        Thu, 06 Apr 2023 08:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680793431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BVy9ZCpV7/gFCLRm9iZKSvWvPfNvxYktDIa8G4cY51w=;
+        b=gA9lM1P8ytYnMTMjjdPRyGullix8jlrDTR+rutwGcVVjh+d9GQJIRbVc24n4lWBWj7
+         ckmzJczFazSttWR+/IEELLPbm1sKibImGtgCf8j/8rCEQCWODO6hl8U7UyEqbgkZj4fD
+         49uIPmsej+92gmY1dt58mzPyHIIY0m7ARf6v+co0asntoBGbwznpqKQ1o9i9M9bxge/p
+         WTAL46MKu0pC87sC7QNep6o344cEgMDgJ37WCCgyFpXMEIWFTp5pUDLhf5oxMS+2lZfW
+         BeE+32b43z6dZ+ZWzEK4BWrHXPoTzFtrUY3MAJ+/qgg9GjWSuvLvB3fgerc3YeRUkRn9
+         47WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680790093; x=1683382093;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AT1MAIP9v4DHYB4m5xHxagncHIIMlg0uERfKC+FM+xk=;
-        b=IUZviWbex+VP9Wib1KlxsfzjG86/7NH3qRCjDzFTwX9W0PUaGqLsd6KPMrWPk8oA8g
-         YfTUxzMQ6WHFvlfgmlPGyNFMxGtOomOlX3l2sqUoxPnGHTF/CqBrEKSCecr2mjKkS2oO
-         HzmfFVlsoyNLqcYA/s1/rc8wCHiL5SEDw5xfjYJkJWuhxrc2Eim+eeG2hd4WDfboy+fd
-         FWXw9fOJqOJ6GzQuY40UZiVpRZ5omHMAS3RW80aa5pHIz0tC3RQVp5j9w2w2/H5iDLCX
-         DFbMXyY0zs02L+eUYaR8Mik6nEePehXwtsmASdSwKde0VnSXHebGGsX7aW6PeMjFgWU4
-         G+ZQ==
-X-Gm-Message-State: AAQBX9cjwdvHIuy4hFb6gevwdVOkrzTFY9gjBGRqfdNabmQP8syzcFdT
-        5Ae++XLd0Z9xb8FTfm6msEQgp0ENoeAOjwuhpvDaiZhLzLkZPa5+Bltbl3x0oEHWc5em+jcIrTQ
-        F+nk2f+xsBqcKj3qYW1EDylROZot70c8MdA==
-X-Received: by 2002:a17:907:a042:b0:93f:2114:9a1c with SMTP id gz2-20020a170907a04200b0093f21149a1cmr6362888ejc.45.1680790093370;
-        Thu, 06 Apr 2023 07:08:13 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aYnPYE5+ik5n4GldzrrnSl94ImQLUG+CLdBCsnooZZBbVL3WumeFjJnRY5TgvfVBKjxVz+Iw==
-X-Received: by 2002:a17:907:a042:b0:93f:2114:9a1c with SMTP id gz2-20020a170907a04200b0093f21149a1cmr6362870ejc.45.1680790093074;
-        Thu, 06 Apr 2023 07:08:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id s14-20020a170906bc4e00b0093338259b2bsm834536ejv.207.2023.04.06.07.08.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 07:08:12 -0700 (PDT)
-Message-ID: <565e6575-91f7-9ca2-1505-17527b95a816@redhat.com>
-Date:   Thu, 6 Apr 2023 16:08:11 +0200
+        d=1e100.net; s=20210112; t=1680793431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BVy9ZCpV7/gFCLRm9iZKSvWvPfNvxYktDIa8G4cY51w=;
+        b=zrzrxa3zR0W6kkA4wkntR7WwPdpmC0ZMyCKmLRzrDjHmBvgSQ5pzc6wUfrGvehkLD+
+         x1J8nii/fo3tgFy1Vv3pFuKc8fylE8dqowddoEcwz5yoPLloi8BSWtPrVdmzZHPfbvVM
+         Z9WT2M2cv0TQtwQn6ZbgaMjGoQat9/8AQwrDgQWUwMIA+zjF0UYbYFXK682uIKixGzVM
+         nvpMlLQCG3AQ/T++wPoPB+6E+QXnIIh6iC9zmdhxl4+usIe0rK/w7/aQ6Iww7o/kybk5
+         ef5+BYiJ8kJnDwBJAmkGcYS7rwbPypXeqM1vrj0fS0NF6LiY4iy+oK7FTppq8sRf1Rh7
+         jSRA==
+X-Gm-Message-State: AAQBX9dYpFI1QRp16ZnBIFPoZrshkJ9Fbmxt/r4o68xeVk4ndjKSsW8W
+        tZX+LLZffsPRJb+tnFKiMe6zNkshB5y14bWycwk=
+X-Google-Smtp-Source: AKy350avDKOwDklBz/ABSRh4K51FlXy3ROpQNOsEneDMqd8mG1yI2ODy6rzsXl7AEcBDNg6x6SX2ru6NcKsfIoL5aH8=
+X-Received: by 2002:a9d:5c06:0:b0:68b:c94d:bbf7 with SMTP id
+ o6-20020a9d5c06000000b0068bc94dbbf7mr3238799otk.0.1680793431219; Thu, 06 Apr
+ 2023 08:03:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-Content-Language: en-US, nl
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@t-8ch.de>
-Cc:     Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-References: <20230403211548.6253-1-jorge.lopez2@hp.com>
- <ZCuMkdb6jeL4S8hz@debian.me>
- <CAOOmCE-5NHkYcmBP1GGpr=sEoxF9jkjj1LevekEm8R0wbrM4xQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAOOmCE-5NHkYcmBP1GGpr=sEoxF9jkjj1LevekEm8R0wbrM4xQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230329014559.44494-1-kallmeyeras@gmail.com> <20230329014559.44494-3-kallmeyeras@gmail.com>
+ <a24153ed-fafc-0e73-1db1-35168464b973@redhat.com>
+In-Reply-To: <a24153ed-fafc-0e73-1db1-35168464b973@redhat.com>
+From:   Andrew Kallmeyer <kallmeyeras@gmail.com>
+Date:   Thu, 6 Apr 2023 08:03:42 -0700
+Message-ID: <CAG4kvq_N5MtBvcBeRUFVxfMhaKXpMoUO+GO6XEwSbirJZSNfng@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: Add driver for Yoga Tablet Mode switch
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     platform-driver-x86@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
+        Ike Panhc <ike.pan@canonical.com>, linux-input@vger.kernel.org,
+        Armin Wolf <W_Armin@gmx.de>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+On Thu, Apr 6, 2023 at 3:34=E2=80=AFAM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Hi Andrew,
+>
+> Thank you for your patch. I have merged this now,
+> with tiny code cleanups squashed in.
 
-FWIW I have been reading along with both the v6 and
-this v7 posting.
+Thanks for all the help Hans, and everyone else too! I thought I would
+need to send another patch version tonight, but I'm glad to hear this
+is getting merged!
 
-Thomas, Mark, thank you for your review / feedback
-on this series.
-
-On 4/4/23 15:37, Jorge Lopez wrote:
-> Hi Bagas,
-> 
->>
->> Where is the rest of patches if this is a series? Had they been merged?
->>
-> 
-> There is only one change as requested by  Thomas Weißschuh
-> 
->> Feel free to ONLY submit the patch with the documentation for the next
->> revision. Then we can nail down the interface and initial functionality
->> and you don't always have to adapt the code to the changing interface.
-> 
-> Perhaps, I misunderstood Thomas request.   I will address a few other
-> comments and will submit all files again.
-
-I think that Thomas' suggestion to first focus on getting
-the userspace API right and then implement the agreed
-upon API is a good idea.
-
-So for the next version just post only the documentation
-patch again please.
-
-Note it is not the intention to merge just the documentation
-patch without merging the code first.
-
-The idea is to first nail the API down and then modify
-the code once to implement the agreed upon API.
-
-Then once the API has been agreed upon post newer
-versions which also include the code again.
-
-And then once people are also happy with the code
-we can merge both the code + documentation in one go.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-> 
-> Regards,
-> 
-> Jorge
-> 
-
+Thanks,
+Andrew
