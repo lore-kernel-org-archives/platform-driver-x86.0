@@ -2,303 +2,281 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E5CC76196
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 12:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D0EC76196
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 14:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237738AbjDFMbD (ORCPT
+        id S238860AbjDFOAD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 08:31:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35936 "EHLO
+        Thu, 6 Apr 2023 10:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237470AbjDFMbC (ORCPT
+        with ESMTP id S238820AbjDFN7s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 08:31:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED9A40C6
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 05:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680784220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xD7hj7hSemwYY6sHaFv6k5ztDu5BI61myixhJCprZ0M=;
-        b=HaE+vORj9J9QU6MFjDB32BHCG5tywJhQ5v37zOu6Yz22DYw0Am0RNl/xbBd2mohYgh/9GJ
-        uHaibeslwpQvSTO/m7FhQO17gubzJr+D89ozPcLbD7YPJN2Izc28xPoA0EPW0LmKM52bXg
-        gJuo6Tpj5pIDD6ib2G8oC6Uwf3gtiyE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-klOzpb_pPkmoaFcP2HVz9A-1; Thu, 06 Apr 2023 08:30:19 -0400
-X-MC-Unique: klOzpb_pPkmoaFcP2HVz9A-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-4fc2096b1e2so870066a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 05:30:19 -0700 (PDT)
+        Thu, 6 Apr 2023 09:59:48 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66F87AA0
+        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 06:59:29 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id q20so14689414pfs.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 06:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf.com; s=google; t=1680789560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D62uxIrnRdLIJ/0FC1wLMU5NxXl2TZq4mxa+MvGVH2I=;
+        b=ep4um+9SshODUF+wBrCFzrXH1dy9eFmb9qXjk/h54/YrbGpDP04/j7Oc4hs3985wzM
+         3QeD+8vjiNdv/MwOB1yO8rN8BlCOdoI2WAAShmDhQ/1OWWsi1hzpaPItmeFvK99EGiiN
+         gAPiYvfaB1UZyaQ041mZGeRPAmJ3YYu5xFMUuqT+3T+58FV0uBwpNTFfLFQ77AZe85er
+         ERzx3znqXBUVdSpjGr4btsrEUuoYJ89RYaejHWSdwpkreSaB359Q2Rso+SRfAf0WsgVt
+         BW2CX1PPYFKH2JRoIqgbg2/ag81DIVEK58CLUaRdsJeDk3KrHQnZPqsrWQtowqDh8pfb
+         7GPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680784218; x=1683376218;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xD7hj7hSemwYY6sHaFv6k5ztDu5BI61myixhJCprZ0M=;
-        b=jwVm/Hm4Q6EOMBQUVG7tNayzxNoOkk/lOjl7zQQ/FhG0ctckJ6phXUknoHN2qNmeo+
-         NUjSM3alYO/8JNgWFbvOvfzjqg6sfFKzPJcoFV4YorbhPftDs9ojr8LCVGA/j8q1jLMd
-         Hv2kHmjdHeJ4hH04uGNrHkKCBozDnCPBAL18p7cxxsZm8sIKu0ysmGUKxc/CX/m3x6/j
-         Itkw3lkY3x0qGRZ4cLrZtke0SLznS+Y45NLh6LTmQFoPXK8Mj+EqEPClwcVFkAxqOdnW
-         zzlYZGMfbxN4MkTa1VGBPKXjmg799mU224CydWgcqZsrKDtCmyaWZfAx8cidSrj2t4dp
-         Be9Q==
-X-Gm-Message-State: AAQBX9deCiq6p8tZvPVrON0bzTeXsUb4EB0yIMe5RYzBiyZTQFbnsgfS
-        Fs4t0gFelbiQxrPjZCLA04JEJm6DqbKiEsHrvp5gFoZEf1JnTXJNIcuUm9Rshas5DagtD+nCZdU
-        mAA8tgihZ6NYDyUtIIm+LwtOYpauPJ1xZVg==
-X-Received: by 2002:aa7:d5c5:0:b0:504:6646:79c4 with SMTP id d5-20020aa7d5c5000000b00504664679c4mr1265159eds.36.1680784218400;
-        Thu, 06 Apr 2023 05:30:18 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bY3wYpTv7liGIGAM0M8n4OqySssmNVXXhHnh41GtzcXrfJ0LqFvmAqIy5PFOwgu5pkxb+cmQ==
-X-Received: by 2002:aa7:d5c5:0:b0:504:6646:79c4 with SMTP id d5-20020aa7d5c5000000b00504664679c4mr1265140eds.36.1680784218122;
-        Thu, 06 Apr 2023 05:30:18 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 2-20020a508742000000b004f9e6495f94sm697222edv.50.2023.04.06.05.30.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 05:30:17 -0700 (PDT)
-Message-ID: <8609778b-7bbe-fb05-7317-d88f15daba6b@redhat.com>
-Date:   Thu, 6 Apr 2023 14:30:16 +0200
+        d=1e100.net; s=20210112; t=1680789560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D62uxIrnRdLIJ/0FC1wLMU5NxXl2TZq4mxa+MvGVH2I=;
+        b=ZVV9T+la28z3NBC6Ybed9IXdSFB30N85m1sC6iJIc7rQtiFj9+BJd+/q9LDoRFLqkZ
+         nUJAh+WnEP/GxDpEq1zIS4WfR6JptQrE8IYysgh+PwxyLOmCn2y5CLLyucbZnNXOofI3
+         31dHDFOYApZ/hIRaxePzQNvnSXCrkgEP1mVnllFIYvb/7uFnB5Q0lzylK/jK8iGu83i1
+         NDvOFhBFecX3mz0ahUK8CUpGFQY4R6TSctl8scnXRIuWQWOdHq0f07KD9fXrsu3VER9I
+         cLVEVNPmMgEihlqqZ2PVtVTqh5c+feWE1xF0holeAdMieU7sLDk6fJ36WUx19QQSQWUp
+         z2Eg==
+X-Gm-Message-State: AAQBX9dEUgKAMkcjl9tF24Zam7eGqa60egf2OmOFM7axR1YDMx1MOX1d
+        UdTqc1jPtrn8vdkfDfdMbb7hVtVRuwzZYdzdHjACJg==
+X-Google-Smtp-Source: AKy350awhzhXo5L1KzV0UcjmcDPDHA0lMbG00SZClLPQXXYhpDBMAKS6jF2tBEd2EBkZ3sWL3hcPOLnpoD4HJQosRMw=
+X-Received: by 2002:a63:d30b:0:b0:513:6f5:7dda with SMTP id
+ b11-20020a63d30b000000b0051306f57ddamr3239284pgg.10.1680789560598; Thu, 06
+ Apr 2023 06:59:20 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v6 1/4] PM: Add sysfs files to represent time spent in
- hardware sleep state
-Content-Language: en-US, nl
-To:     "Box, David E" <david.e.box@intel.com>,
-        "Brown, Len" <len.brown@intel.com>,
-        "jstultz@google.com" <jstultz@google.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
-        "svenva@chromium.org" <svenva@chromium.org>,
-        "rafael@kernel.org" <rafael@kernel.org>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "rrangel@chromium.org" <rrangel@chromium.org>,
-        "Jain, Rajat" <rajatja@google.com>
-References: <20230403211831.4010-1-mario.limonciello@amd.com>
- <20230403211831.4010-2-mario.limonciello@amd.com>
- <b6000a3d5d4d6a3e9f8a57414c0b795e8cff6855.camel@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <b6000a3d5d4d6a3e9f8a57414c0b795e8cff6855.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230213100921.268770-1-jaz@semihalf.com> <20230213100921.268770-2-jaz@semihalf.com>
+ <CAH76GKOHMtwE7rLTPKUZJ_7xUUdHmHnGyZOsh8pFWoHCiWQynw@mail.gmail.com> <c5455226-1d51-1d3d-0b67-78a0473a9e8c@redhat.com>
+In-Reply-To: <c5455226-1d51-1d3d-0b67-78a0473a9e8c@redhat.com>
+From:   Grzegorz Jaszczyk <jaz@semihalf.com>
+Date:   Thu, 6 Apr 2023 15:59:09 +0200
+Message-ID: <CAH76GKPkgUsXQpsBxgSaQ_qz+bGyZ-Sxu-xRMBJaQ67BZG4jsQ@mail.gmail.com>
+Subject: Re: [RFCv3 1/1] platform/x86: Add virtual PMC driver used for S2Idle
+To:     Hans de Goede <hdegoede@redhat.com>, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, dmy@semihalf.com, tn@semihalf.com,
+        dbehr@google.com, zide.chen@intel.corp-partner.google.com,
+        seanjc@google.com, upstream@semihalf.com, markgross@kernel.org,
+        dtor@google.com, mario.limonciello@amd.com,
+        linux-pm@vger.kernel.org, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
++linux-acpi@vger.kernel.org
 
-On 4/5/23 02:42, Box, David E wrote:
-> Hi Mario,
-> 
-> On Mon, 2023-04-03 at 16:18 -0500, Mario Limonciello wrote:
->> Userspace can't easily discover how much of a sleep cycle was spent in a
->> hardware sleep state without using kernel tracing and vendor specific sysfs
->> or debugfs files.
->>
->> To make this information more discoverable, introduce two new sysfs files:
->> 1) The time spent in a hw sleep state for last cycle.
->> 2) The time spent in a hw sleep state since the kernel booted
->> Both of these files will be present only if the system supports s2idle.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v5->v6:
->>  * Add total attribute as well
->>  * Change text for documentation
->>  * Adjust flow of is_visible callback.
->>  * If overflow was detected in total attribute return -EOVERFLOW
->>  * Rename symbol
->>  * Add stub for symbol for builds without CONFIG_PM_SLEEP
->> v4->v5:
->>  * Provide time in microseconds instead of percent. Userspace can convert
->>    this if desirable.
->> ---
->>  Documentation/ABI/testing/sysfs-power | 27 ++++++++++++++++
->>  include/linux/suspend.h               |  5 +++
->>  kernel/power/main.c                   | 45 +++++++++++++++++++++++++++
->>  3 files changed, 77 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-power
->> b/Documentation/ABI/testing/sysfs-power
->> index f99d433ff311..37240575d282 100644
->> --- a/Documentation/ABI/testing/sysfs-power
->> +++ b/Documentation/ABI/testing/sysfs-power
->> @@ -413,6 +413,33 @@ Description:
->>                 The /sys/power/suspend_stats/last_failed_step file contains
->>                 the last failed step in the suspend/resume path.
->>  
->> +What:          /sys/power/suspend_stats/last_hw_sleep
->> +Date:          June 2023
->> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
->> +Description:
->> +               The /sys/power/suspend_stats/last_hw_sleep file
->> +               contains the duration of time spent in a hardware sleep
->> +               state in the most recent system suspend-resume cycle.
->> +               This number is measured in microseconds.
->> +
->> +               NOTE: Limitations in the size of the hardware counters may
->> +               cause this value to be inaccurate in longer sleep cycles.
->> +
->> +What:          /sys/power/suspend_stats/total_hw_sleep
->> +Date:          June 2023
->> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
->> +Description:
->> +               The /sys/power/suspend_stats/total_hw_sleep file
->> +               contains the aggregate of time spent in a hardware sleep
->> +               state since the kernel was booted. This number
->> +               is measured in microseconds.
->> +
->> +               NOTE: Limitations in the size of the hardware counters may
->> +               cause this value to be inaccurate in longer sleep cycles.
->> +
->> +               If an overflow has been detected this file will return
->> +               -EOVERFLOW.
->> +
->>  What:          /sys/power/sync_on_suspend
->>  Date:          October 2019
->>  Contact:       Jonas Meurer <jonas@freesources.org>
->> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
->> index cfe19a028918..069ef0c0ae57 100644
->> --- a/include/linux/suspend.h
->> +++ b/include/linux/suspend.h
->> @@ -68,6 +68,8 @@ struct suspend_stats {
->>         int     last_failed_errno;
->>         int     errno[REC_FAILED_NUM];
->>         int     last_failed_step;
->> +       u64     last_hw_sleep;
->> +       u64     total_hw_sleep;
->>         enum suspend_stat_step  failed_steps[REC_FAILED_NUM];
->>  };
->>  
->> @@ -489,6 +491,7 @@ void restore_processor_state(void);
->>  extern int register_pm_notifier(struct notifier_block *nb);
->>  extern int unregister_pm_notifier(struct notifier_block *nb);
->>  extern void ksys_sync_helper(void);
->> +extern void pm_report_hw_sleep_time(u64 t);
->>  
->>  #define pm_notifier(fn, pri) {                         \
->>         static struct notifier_block fn##_nb =                  \
->> @@ -526,6 +529,8 @@ static inline int unregister_pm_notifier(struct
->> notifier_block *nb)
->>         return 0;
->>  }
->>  
->> +static inline void pm_report_hw_sleep_time(u64 t) {};
->> +
->>  static inline void ksys_sync_helper(void) {}
->>  
->>  #define pm_notifier(fn, pri)   do { (void)(fn); } while (0)
->> diff --git a/kernel/power/main.c b/kernel/power/main.c
->> index 31ec4a9b9d70..ffd4dd43cbdd 100644
->> --- a/kernel/power/main.c
->> +++ b/kernel/power/main.c
->> @@ -6,6 +6,7 @@
->>   * Copyright (c) 2003 Open Source Development Lab
->>   */
->>  
->> +#include <linux/acpi.h>
->>  #include <linux/export.h>
->>  #include <linux/kobject.h>
->>  #include <linux/string.h>
->> @@ -83,6 +84,18 @@ int unregister_pm_notifier(struct notifier_block *nb)
->>  }
->>  EXPORT_SYMBOL_GPL(unregister_pm_notifier);
->>  
->> +void pm_report_hw_sleep_time(u64 t)
->> +{
->> +       suspend_stats.last_hw_sleep = t;
->> +       if (suspend_stats.total_hw_sleep == -EOVERFLOW)
->> +               return;
->> +       if (suspend_stats.total_hw_sleep + t < suspend_stats.total_hw_sleep)
->> +               suspend_stats.total_hw_sleep = -EOVERFLOW;
->> +       else
->> +               suspend_stats.total_hw_sleep += t;
-> 
-> total_hw_sleep is u64. At microsecond granularity it will never realistically
-> overflow and isn't worth the check IMO. The overflow concern comes from the u32
-> hardware counter, but I don't think there's a good way to detect it.
-> 
-> You could just report the maximum hardware counter time as max_hw_sleep so users
-> know the value isn't reliable if suspended for longer than that.
+Hi Hans, Rafael
 
-Yes I think we need to let userspace know the longest hw-sleep time
-the hw can reliably record and then userspace can (and should) chose
-to not use/check the counters when the total suspend time is bigger
-then the max hw-sleep time.
+czw., 6 kwi 2023 o 12:53 Hans de Goede <hdegoede@redhat.com> napisa=C5=82(a=
+):
+>
+> Hi Grzegorz,
+>
+> On 3/29/23 14:33, Grzegorz Jaszczyk wrote:
+> > Hi Hans,
+> >
+> > Do you think that this RFC is in good enough state to start the ACPI
+> > ID registration process so after it will be completed we could land
+> > this solution? Or maybe we could land it (of course if there are no
+> > other remarks) even before and adjust if needed?
+>
+> I see from the links in the cover-letter that most of
+> the previous discussion has happened on the linux-pm list
+> and I believe that the linux-pm folks are in a better place
+> to answer this question then I am.
+>
+> I have no objections against the suggested approach,
+> but I don't really feel that it is my call to make if
+> we should move forward with this.
 
-Other then that this patch-set seems like a good idea to me
-and I have no objections / remarks on the pdx86 bits.
+Hans: I see and thank you for your feedback.
 
-Regards,
+Rafael: Could you please comment above?
 
-Hans
+Thank you in advance,
+Grzegorz
 
-
-
->> +}
->> +EXPORT_SYMBOL_GPL(pm_report_hw_sleep_time);
->> +
->>  int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long
->> val_down)
->>  {
->>         int ret;
->> @@ -377,6 +390,22 @@ static ssize_t last_failed_step_show(struct kobject
->> *kobj,
->>  }
->>  static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
->>  
->> +static ssize_t last_hw_sleep_show(struct kobject *kobj,
->> +               struct kobj_attribute *attr, char *buf)
->> +{
->> +       return sysfs_emit(buf, "%llu\n", suspend_stats.last_hw_sleep);
->> +}
->> +static struct kobj_attribute last_hw_sleep = __ATTR_RO(last_hw_sleep);
->> +
->> +static ssize_t total_hw_sleep_show(struct kobject *kobj,
->> +               struct kobj_attribute *attr, char *buf)
->> +{
->> +       if (suspend_stats.total_hw_sleep == -EOVERFLOW)
->> +               return suspend_stats.total_hw_sleep;
->> +       return sysfs_emit(buf, "%llu\n", suspend_stats.total_hw_sleep);
->> +}
->> +static struct kobj_attribute total_hw_sleep = __ATTR_RO(total_hw_sleep);
->> +
->>  static struct attribute *suspend_attrs[] = {
->>         &success.attr,
->>         &fail.attr,
->> @@ -391,12 +420,28 @@ static struct attribute *suspend_attrs[] = {
->>         &last_failed_dev.attr,
->>         &last_failed_errno.attr,
->>         &last_failed_step.attr,
->> +       &last_hw_sleep.attr,
->> +       &total_hw_sleep.attr,
->>         NULL,
->>  };
->>  
->> +static umode_t suspend_attr_is_visible(struct kobject *kobj, struct attribute
->> *attr, int idx)
->> +{
->> +       if (attr != &last_hw_sleep.attr &&
->> +           attr != &total_hw_sleep.attr)
->> +               return 0444;
->> +
->> +#ifdef CONFIG_ACPI
->> +       if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
->> +               return 0444;
->> +#endif
->> +       return 0;
->> +}
->> +
->>  static const struct attribute_group suspend_attr_group = {
->>         .name = "suspend_stats",
->>         .attrs = suspend_attrs,
->> +       .is_visible = suspend_attr_is_visible,
->>  };
->>  
->>  #ifdef CONFIG_DEBUG_FS
-
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > pon., 13 lut 2023 o 11:11 Grzegorz Jaszczyk <jaz@semihalf.com> napisa=
+=C5=82(a):
+> >>
+> >> Virtual PMC driver is meant for the guest VMs for the S2Idle
+> >> notification. Its purpose is to register S2Idle dev ops check handler,
+> >> which will evaluate ACPI _DSM just before the guest enters S2Idle powe=
+r
+> >> state.
+> >>
+> >> This allows to trap on MMIO access done as a consequence of _DSM
+> >> evaluation and therefore notify the VMM about the guest entering S2Idl=
+e
+> >> state.
+> >>
+> >> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> >> ---
+> >> Changelog v1..v2:
+> >> - Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
+> >>
+> >> Changelog v2..v3:
+> >> - Add MODULE_LICENSE
+> >> - Remove "amd" prefixes
+> >> - Be more verbose in VIRT_PMC config description and make it
+> >>   HYPERVISOR_GUEST dependent
+> >> - Add extra check ensuring that DSM method supports ACPI_VIRT_PMC_NOTI=
+FY function
+> >> ---
+> >>  drivers/platform/x86/Kconfig    |  7 +++
+> >>  drivers/platform/x86/Makefile   |  3 ++
+> >>  drivers/platform/x86/virt_pmc.c | 83 ++++++++++++++++++++++++++++++++=
++
+> >>  3 files changed, 93 insertions(+)
+> >>  create mode 100644 drivers/platform/x86/virt_pmc.c
+> >>
+> >> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
+ig
+> >> index 5692385e2d26..837ce201b68b 100644
+> >> --- a/drivers/platform/x86/Kconfig
+> >> +++ b/drivers/platform/x86/Kconfig
+> >> @@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
+> >>           buttons below the display. This module adds an input device
+> >>           that delivers key events when these buttons are pressed.
+> >>
+> >> +config VIRT_PMC
+> >> +       tristate "Virtual Power Management Controller"
+> >> +       depends on ACPI && SUSPEND && HYPERVISOR_GUEST
+> >> +       help
+> >> +         The Virtual PMC driver is meant for the guest VMs and its ma=
+in
+> >> +         purpose is to notify about guest entering s2idle state.
+> >> +
+> >>  endif # X86_PLATFORM_DEVICES
+> >>
+> >>  config P2SB
+> >> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Make=
+file
+> >> index 1d3d1b02541b..c4d3056cf4ea 100644
+> >> --- a/drivers/platform/x86/Makefile
+> >> +++ b/drivers/platform/x86/Makefile
+> >> @@ -129,6 +129,9 @@ obj-$(CONFIG_INTEL_SCU_WDT)         +=3D intel_scu=
+_wdt.o
+> >>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       +=3D intel_scu_ipcutil.o
+> >>  obj-$(CONFIG_X86_INTEL_LPSS)           +=3D pmc_atom.o
+> >>
+> >> +# Virtual PMC
+> >> +obj-$(CONFIG_VIRT_PMC)                 +=3D virt_pmc.o
+> >> +
+> >>  # Siemens Simatic Industrial PCs
+> >>  obj-$(CONFIG_SIEMENS_SIMATIC_IPC)      +=3D simatic-ipc.o
+> >>
+> >> diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/vi=
+rt_pmc.c
+> >> new file mode 100644
+> >> index 000000000000..a5966bb9048f
+> >> --- /dev/null
+> >> +++ b/drivers/platform/x86/virt_pmc.c
+> >> @@ -0,0 +1,83 @@
+> >> +// SPDX-License-Identifier: GPL-2.0-only
+> >> +/*
+> >> + * Virtual Power Management Controller Driver
+> >> + *
+> >> + * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
+> >> + */
+> >> +
+> >> +#include <linux/acpi.h>
+> >> +#include <linux/platform_device.h>
+> >> +
+> >> +#define ACPI_VIRT_PMC_DSM_UUID "9ea49ba3-434a-49a6-be30-37cc55c4d397"
+> >> +#define ACPI_VIRT_PMC_NOTIFY 1
+> >> +
+> >> +static acpi_handle virt_pmc_handle;
+> >> +
+> >> +static void virt_pmc_s2idle_notify(void)
+> >> +{
+> >> +       union acpi_object *out_obj;
+> >> +       guid_t dsm_guid;
+> >> +
+> >> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
+> >> +
+> >> +       out_obj =3D acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
+> >> +                                       0, ACPI_VIRT_PMC_NOTIFY, NULL)=
+;
+> >> +
+> >> +       acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluatio=
+n %s\n",
+> >> +                         ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful"=
+ : "failed");
+> >> +
+> >> +       ACPI_FREE(out_obj);
+> >> +}
+> >> +
+> >> +static struct acpi_s2idle_dev_ops pmc_s2idle_dev_ops =3D {
+> >> +       .check =3D virt_pmc_s2idle_notify,
+> >> +};
+> >> +
+> >> +static int virt_pmc_probe(struct platform_device *pdev)
+> >> +{
+> >> +       int err =3D 0;
+> >> +       guid_t dsm_guid;
+> >> +
+> >> +       virt_pmc_handle =3D ACPI_HANDLE(&pdev->dev);
+> >> +
+> >> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
+> >> +
+> >> +       if (!acpi_check_dsm(virt_pmc_handle, &dsm_guid, 0,
+> >> +                           1 << ACPI_VIRT_PMC_NOTIFY)) {
+> >> +               dev_err(&pdev->dev, "DSM method doesn't support ACPI_V=
+IRT_PMC_NOTIFY\n");
+> >> +               return -ENODEV;
+> >> +       }
+> >> +
+> >> +       err =3D acpi_register_lps0_dev(&pmc_s2idle_dev_ops);
+> >> +       if (err)
+> >> +               dev_err(&pdev->dev, "failed to register LPS0 sleep han=
+dler\n");
+> >> +
+> >> +       return err;
+> >> +}
+> >> +
+> >> +static int virt_pmc_remove(struct platform_device *pdev)
+> >> +{
+> >> +       acpi_unregister_lps0_dev(&pmc_s2idle_dev_ops);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static const struct acpi_device_id virt_pmc_acpi_ids[] =3D {
+> >> +       {"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
+> >> +       { }
+> >> +};
+> >> +MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
+> >> +
+> >> +static struct platform_driver virt_pmc_driver =3D {
+> >> +       .driver =3D {
+> >> +               .name =3D "virtual_pmc",
+> >> +               .acpi_match_table =3D ACPI_PTR(virt_pmc_acpi_ids),
+> >> +       },
+> >> +       .probe =3D virt_pmc_probe,
+> >> +       .remove =3D virt_pmc_remove,
+> >> +};
+> >> +
+> >> +module_platform_driver(virt_pmc_driver);
+> >> +
+> >> +MODULE_LICENSE("GPL");
+> >> +MODULE_DESCRIPTION("Virtual PMC Driver");
+> >> --
+> >> 2.39.1.581.gbfd45094c4-goog
+> >>
+> >
+>
