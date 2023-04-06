@@ -2,51 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC68C76196
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 11:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C7EC7618D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 11:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237068AbjDFLeS (ORCPT
+        id S238092AbjDFLej (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 07:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
+        Thu, 6 Apr 2023 07:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237960AbjDFLd2 (ORCPT
+        with ESMTP id S236317AbjDFLeE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 07:33:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DEA977D;
-        Thu,  6 Apr 2023 04:32:48 -0700 (PDT)
+        Thu, 6 Apr 2023 07:34:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F88C199;
+        Thu,  6 Apr 2023 04:33:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A479644A8;
-        Thu,  6 Apr 2023 11:32:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73F3C4339B;
-        Thu,  6 Apr 2023 11:32:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44FD164696;
+        Thu,  6 Apr 2023 11:32:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06D1C4339C;
+        Thu,  6 Apr 2023 11:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680780767;
-        bh=61CpfB4NPx3Sn2ArhV0R5wLaJ+ElHuIv6dOpo25OXQE=;
+        s=k20201202; t=1680780777;
+        bh=p75sflDLlEpgR3VxnPOI6GdWlxDyLRZMqnxgRx5CbEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exKFRcxvOpJiBcdvwNQxeCC+L+RpHpiTPAUYJv4bONohi+dbiiaTocnkap4gEhcqv
-         K9EsadzF2LLoVkqNVqwD7HhKCiIerBO4j5cTDlqYKXvRVSoa6AHoaMs3G0w0zu6kgj
-         EnfDCBb6w+d/Hmm1lIIqJQVII2mBiaw4qMHGNvZUwrrAWK00aEbuXvVWFVgU0cHr9X
-         Y6LoQqkkkC0nulDhHpAbr51IZqZxC7cRBYR75rCFWtC0ZcaIrS7VN2ltUJREq9cpQ4
-         V+jBlL1IqX8BHojefCdNAnYRdGGqDBgvwrMfgDFoEOmREwR3nbba54ou4wB7idY273
-         CwY2+9BOFQvYQ==
+        b=ETe6O3Ib3VkZqw/OJaYsKNbCYnsp9VEhnEf35my/bI/rrzO4IXXQOJW64fpCl6GVd
+         /MIKXbBxi2VoOafQad8tYUVMzJWT0J5+vyIg0r1L3IuH1LrteYe+QJt1mKicvgPmD1
+         ZfvVQEa4oe1q1Xut+PsRyFVF+hhM+G84MXd7HnlmVjF9TFGRumwnSPDzPI0qF9xiTB
+         oPflXjyRoMjykq5KisVgv77Lad7Ol+RkeiVXD7/SY84cXDSpFS4VfGbbvG2hCp+gjT
+         j2yUAmAh2PJF16FJLOt4diKwYchnUEAqf6Nncxphy32VGsfULY1EIXKM/8Cp9Rm0oE
+         6+V0IrkPKZ/+Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     weiliang1503 <weiliang1503@gmail.com>,
+Cc:     Frank Crawford <frank@crawford.emu.id.au>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 16/17] platform/x86: asus-nb-wmi: Add quirk_asus_tablet_mode to other ROG Flow X13 models
-Date:   Thu,  6 Apr 2023 07:32:10 -0400
-Message-Id: <20230406113211.648424-16-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, thomas@weissschuh.net,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 03/11] platform/x86 (gigabyte-wmi): Add support for A320M-S2H V2
+Date:   Thu,  6 Apr 2023 07:32:42 -0400
+Message-Id: <20230406113250.648634-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406113211.648424-1-sashal@kernel.org>
-References: <20230406113211.648424-1-sashal@kernel.org>
+In-Reply-To: <20230406113250.648634-1-sashal@kernel.org>
+References: <20230406113250.648634-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -54,36 +55,34 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: weiliang1503 <weiliang1503@gmail.com>
+From: Frank Crawford <frank@crawford.emu.id.au>
 
-[ Upstream commit e352d685fde427a8fc9beb2ba30888f5d6f2e5e6 ]
+[ Upstream commit b7c994f8c35e916e27c60803bb21457bc1373500 ]
 
-Make quirk_asus_tablet_mode apply on other ROG Flow X13 devices,
-which only affects the GV301Q model before.
+Add support for A320M-S2H V2.  Tested using module force_load option.
 
-Signed-off-by: weiliang1503 <weiliang1503@gmail.com>
-Link: https://lore.kernel.org/r/20230330114943.15057-1-weiliang1503@gmail.com
+Signed-off-by: Frank Crawford <frank@crawford.emu.id.au>
+Acked-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: https://lore.kernel.org/r/20230318091441.1240921-1-frank@crawford.emu.id.au
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index cb15acdf14a30..e2c9a68d12df9 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -464,7 +464,8 @@ static const struct dmi_system_id asus_quirks[] = {
- 		.ident = "ASUS ROG FLOW X13",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GV301Q"),
-+			/* Match GV301** */
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GV301"),
- 		},
- 		.driver_data = &quirk_asus_tablet_mode,
- 	},
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index 0163e912fafec..aea4f3144b68f 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -140,6 +140,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+ 	}}
+ 
+ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("A320M-S2H V2-CF"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
 -- 
 2.39.2
 
