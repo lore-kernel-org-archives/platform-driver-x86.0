@@ -2,101 +2,237 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB11C76196
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 12:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E5CC76196
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 12:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbjDFM2z (ORCPT
+        id S237738AbjDFMbD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 08:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
+        Thu, 6 Apr 2023 08:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbjDFM2y (ORCPT
+        with ESMTP id S237470AbjDFMbC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 08:28:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB39140C6
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 05:28:12 -0700 (PDT)
+        Thu, 6 Apr 2023 08:31:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED9A40C6
+        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 05:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680784092;
+        s=mimecast20190719; t=1680784220;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=u7AnMsWo/iJ5OTsTaA2l0gb9MT+nu7FOs61UeuJ4cHE=;
-        b=Y/vrjJdTcASoQU00AKgDbw7mZ6UBJAYaFarzkKYblvYQqskXqGB6c+0MBMcILffVzaGYy2
-        yIlOEB0NWQyOmJe+6LgLRvfuPcb7AhOuCzu7U2mCi4y1s53MKvEZqdi61ULQ7zQ3yQ1sUG
-        bP5nag1yJaAXSyjfKyg2p5tN1WITNbc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xD7hj7hSemwYY6sHaFv6k5ztDu5BI61myixhJCprZ0M=;
+        b=HaE+vORj9J9QU6MFjDB32BHCG5tywJhQ5v37zOu6Yz22DYw0Am0RNl/xbBd2mohYgh/9GJ
+        uHaibeslwpQvSTO/m7FhQO17gubzJr+D89ozPcLbD7YPJN2Izc28xPoA0EPW0LmKM52bXg
+        gJuo6Tpj5pIDD6ib2G8oC6Uwf3gtiyE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-400-vm6dVZfVPt2mNt3Brl6n9g-1; Thu, 06 Apr 2023 08:28:10 -0400
-X-MC-Unique: vm6dVZfVPt2mNt3Brl6n9g-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-50470e94f8dso63860a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 05:28:10 -0700 (PDT)
+ us-mta-575-klOzpb_pPkmoaFcP2HVz9A-1; Thu, 06 Apr 2023 08:30:19 -0400
+X-MC-Unique: klOzpb_pPkmoaFcP2HVz9A-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-4fc2096b1e2so870066a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 05:30:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680784088; x=1683376088;
+        d=1e100.net; s=20210112; t=1680784218; x=1683376218;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7AnMsWo/iJ5OTsTaA2l0gb9MT+nu7FOs61UeuJ4cHE=;
-        b=KuWKqGCpYBtWgPI3uj5E12OoDv78UXvDVj6W8Kqy74oFp6++wB3HnZYQzhkEVAaLrt
-         O3PwaHzOiZP+yvfaO52k8WdGFSTeqfgMsT7lgFryAYtReJGeutUxvdcdMozEj/cNngTG
-         uwsnoB4F8ObxMZWbfdwvMHmr7v6YzSeaHv0p5F90ayYwPGuVA2ExJsBMGrxwnmGjFU62
-         FZ89GUD20O2Nou2+rbDdl0ciFVg5+dBRRg9ttgBDK2Gf5iArVdsc8vlFtqbTo3KCn46z
-         RqimIj6LyVKmD3flOwhyI3LMNfWbzDQ8j6xYbTobYcZ6CEAKZQUytljwwIuqkAX0mQFN
-         NMWw==
-X-Gm-Message-State: AAQBX9cwx1OerGOpNi+jNRmvwg9NQrs4cXDK/UVZ9pM5ZnlVficT8Mvj
-        MRBMxAQlsCIKEyWdqw2ydUBWjAmJ2+9/x8pnBz7mAFHbPCvIOzmFFKWm0rlymYhOzQ0KUg/a+4D
-        pbO+T2Vy6O/MvMCztthmf60Y1xYEmNh3m1rBymyoYgQ==
-X-Received: by 2002:a50:fe8f:0:b0:502:3376:dbe1 with SMTP id d15-20020a50fe8f000000b005023376dbe1mr5331210edt.15.1680784088038;
-        Thu, 06 Apr 2023 05:28:08 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aJA72xs/8X3yGFMyNsV6577vfrcW9WcRoy9xzkdV6qKMs6UuoqQgClvcnyLctjkzdOLZld2Q==
-X-Received: by 2002:a50:fe8f:0:b0:502:3376:dbe1 with SMTP id d15-20020a50fe8f000000b005023376dbe1mr5331193edt.15.1680784087727;
-        Thu, 06 Apr 2023 05:28:07 -0700 (PDT)
+        bh=xD7hj7hSemwYY6sHaFv6k5ztDu5BI61myixhJCprZ0M=;
+        b=jwVm/Hm4Q6EOMBQUVG7tNayzxNoOkk/lOjl7zQQ/FhG0ctckJ6phXUknoHN2qNmeo+
+         NUjSM3alYO/8JNgWFbvOvfzjqg6sfFKzPJcoFV4YorbhPftDs9ojr8LCVGA/j8q1jLMd
+         Hv2kHmjdHeJ4hH04uGNrHkKCBozDnCPBAL18p7cxxsZm8sIKu0ysmGUKxc/CX/m3x6/j
+         Itkw3lkY3x0qGRZ4cLrZtke0SLznS+Y45NLh6LTmQFoPXK8Mj+EqEPClwcVFkAxqOdnW
+         zzlYZGMfbxN4MkTa1VGBPKXjmg799mU224CydWgcqZsrKDtCmyaWZfAx8cidSrj2t4dp
+         Be9Q==
+X-Gm-Message-State: AAQBX9deCiq6p8tZvPVrON0bzTeXsUb4EB0yIMe5RYzBiyZTQFbnsgfS
+        Fs4t0gFelbiQxrPjZCLA04JEJm6DqbKiEsHrvp5gFoZEf1JnTXJNIcuUm9Rshas5DagtD+nCZdU
+        mAA8tgihZ6NYDyUtIIm+LwtOYpauPJ1xZVg==
+X-Received: by 2002:aa7:d5c5:0:b0:504:6646:79c4 with SMTP id d5-20020aa7d5c5000000b00504664679c4mr1265159eds.36.1680784218400;
+        Thu, 06 Apr 2023 05:30:18 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bY3wYpTv7liGIGAM0M8n4OqySssmNVXXhHnh41GtzcXrfJ0LqFvmAqIy5PFOwgu5pkxb+cmQ==
+X-Received: by 2002:aa7:d5c5:0:b0:504:6646:79c4 with SMTP id d5-20020aa7d5c5000000b00504664679c4mr1265140eds.36.1680784218122;
+        Thu, 06 Apr 2023 05:30:18 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a24-20020aa7cf18000000b005023aaf52desm668444edy.95.2023.04.06.05.28.06
+        by smtp.gmail.com with ESMTPSA id 2-20020a508742000000b004f9e6495f94sm697222edv.50.2023.04.06.05.30.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 05:28:07 -0700 (PDT)
-Message-ID: <a872def2-9738-cdc2-51ff-74ae3a27de4b@redhat.com>
-Date:   Thu, 6 Apr 2023 14:28:06 +0200
+        Thu, 06 Apr 2023 05:30:17 -0700 (PDT)
+Message-ID: <8609778b-7bbe-fb05-7317-d88f15daba6b@redhat.com>
+Date:   Thu, 6 Apr 2023 14:30:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v1 1/1 RESEND] platform/mellanox: add firmware reset
- support
+Subject: Re: [PATCH v6 1/4] PM: Add sysfs files to represent time spent in
+ hardware sleep state
 Content-Language: en-US, nl
-To:     Khalil Blaiech <kblaiech@nvidia.com>, markgross@kernel.org,
-        vadimp@nvidia.com
-Cc:     platform-driver-x86@vger.kernel.org, davthompson@nvidia.com,
-        linux-kernel@vger.kernel.org
-References: <10da04fa43e8acce5d4ec173e225c28b9e979e4b.1675790783.git.kblaiech@nvidia.com>
+To:     "Box, David E" <david.e.box@intel.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "jstultz@google.com" <jstultz@google.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mario.limonciello@amd.com" <mario.limonciello@amd.com>,
+        "svenva@chromium.org" <svenva@chromium.org>,
+        "rafael@kernel.org" <rafael@kernel.org>
+Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "rrangel@chromium.org" <rrangel@chromium.org>,
+        "Jain, Rajat" <rajatja@google.com>
+References: <20230403211831.4010-1-mario.limonciello@amd.com>
+ <20230403211831.4010-2-mario.limonciello@amd.com>
+ <b6000a3d5d4d6a3e9f8a57414c0b795e8cff6855.camel@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <10da04fa43e8acce5d4ec173e225c28b9e979e4b.1675790783.git.kblaiech@nvidia.com>
+In-Reply-To: <b6000a3d5d4d6a3e9f8a57414c0b795e8cff6855.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 4/5/23 15:16, Khalil Blaiech wrote:
-> Add a new sysfs to initiate firmware reset in isolation mode.
+On 4/5/23 02:42, Box, David E wrote:
+> Hi Mario,
 > 
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
-> Signed-off-by: Khalil Blaiech <kblaiech@nvidia.com>
+> On Mon, 2023-04-03 at 16:18 -0500, Mario Limonciello wrote:
+>> Userspace can't easily discover how much of a sleep cycle was spent in a
+>> hardware sleep state without using kernel tracing and vendor specific sysfs
+>> or debugfs files.
+>>
+>> To make this information more discoverable, introduce two new sysfs files:
+>> 1) The time spent in a hw sleep state for last cycle.
+>> 2) The time spent in a hw sleep state since the kernel booted
+>> Both of these files will be present only if the system supports s2idle.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v5->v6:
+>>  * Add total attribute as well
+>>  * Change text for documentation
+>>  * Adjust flow of is_visible callback.
+>>  * If overflow was detected in total attribute return -EOVERFLOW
+>>  * Rename symbol
+>>  * Add stub for symbol for builds without CONFIG_PM_SLEEP
+>> v4->v5:
+>>  * Provide time in microseconds instead of percent. Userspace can convert
+>>    this if desirable.
+>> ---
+>>  Documentation/ABI/testing/sysfs-power | 27 ++++++++++++++++
+>>  include/linux/suspend.h               |  5 +++
+>>  kernel/power/main.c                   | 45 +++++++++++++++++++++++++++
+>>  3 files changed, 77 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-power
+>> b/Documentation/ABI/testing/sysfs-power
+>> index f99d433ff311..37240575d282 100644
+>> --- a/Documentation/ABI/testing/sysfs-power
+>> +++ b/Documentation/ABI/testing/sysfs-power
+>> @@ -413,6 +413,33 @@ Description:
+>>                 The /sys/power/suspend_stats/last_failed_step file contains
+>>                 the last failed step in the suspend/resume path.
+>>  
+>> +What:          /sys/power/suspend_stats/last_hw_sleep
+>> +Date:          June 2023
+>> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
+>> +Description:
+>> +               The /sys/power/suspend_stats/last_hw_sleep file
+>> +               contains the duration of time spent in a hardware sleep
+>> +               state in the most recent system suspend-resume cycle.
+>> +               This number is measured in microseconds.
+>> +
+>> +               NOTE: Limitations in the size of the hardware counters may
+>> +               cause this value to be inaccurate in longer sleep cycles.
+>> +
+>> +What:          /sys/power/suspend_stats/total_hw_sleep
+>> +Date:          June 2023
+>> +Contact:       Mario Limonciello <mario.limonciello@amd.com>
+>> +Description:
+>> +               The /sys/power/suspend_stats/total_hw_sleep file
+>> +               contains the aggregate of time spent in a hardware sleep
+>> +               state since the kernel was booted. This number
+>> +               is measured in microseconds.
+>> +
+>> +               NOTE: Limitations in the size of the hardware counters may
+>> +               cause this value to be inaccurate in longer sleep cycles.
+>> +
+>> +               If an overflow has been detected this file will return
+>> +               -EOVERFLOW.
+>> +
+>>  What:          /sys/power/sync_on_suspend
+>>  Date:          October 2019
+>>  Contact:       Jonas Meurer <jonas@freesources.org>
+>> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+>> index cfe19a028918..069ef0c0ae57 100644
+>> --- a/include/linux/suspend.h
+>> +++ b/include/linux/suspend.h
+>> @@ -68,6 +68,8 @@ struct suspend_stats {
+>>         int     last_failed_errno;
+>>         int     errno[REC_FAILED_NUM];
+>>         int     last_failed_step;
+>> +       u64     last_hw_sleep;
+>> +       u64     total_hw_sleep;
+>>         enum suspend_stat_step  failed_steps[REC_FAILED_NUM];
+>>  };
+>>  
+>> @@ -489,6 +491,7 @@ void restore_processor_state(void);
+>>  extern int register_pm_notifier(struct notifier_block *nb);
+>>  extern int unregister_pm_notifier(struct notifier_block *nb);
+>>  extern void ksys_sync_helper(void);
+>> +extern void pm_report_hw_sleep_time(u64 t);
+>>  
+>>  #define pm_notifier(fn, pri) {                         \
+>>         static struct notifier_block fn##_nb =                  \
+>> @@ -526,6 +529,8 @@ static inline int unregister_pm_notifier(struct
+>> notifier_block *nb)
+>>         return 0;
+>>  }
+>>  
+>> +static inline void pm_report_hw_sleep_time(u64 t) {};
+>> +
+>>  static inline void ksys_sync_helper(void) {}
+>>  
+>>  #define pm_notifier(fn, pri)   do { (void)(fn); } while (0)
+>> diff --git a/kernel/power/main.c b/kernel/power/main.c
+>> index 31ec4a9b9d70..ffd4dd43cbdd 100644
+>> --- a/kernel/power/main.c
+>> +++ b/kernel/power/main.c
+>> @@ -6,6 +6,7 @@
+>>   * Copyright (c) 2003 Open Source Development Lab
+>>   */
+>>  
+>> +#include <linux/acpi.h>
+>>  #include <linux/export.h>
+>>  #include <linux/kobject.h>
+>>  #include <linux/string.h>
+>> @@ -83,6 +84,18 @@ int unregister_pm_notifier(struct notifier_block *nb)
+>>  }
+>>  EXPORT_SYMBOL_GPL(unregister_pm_notifier);
+>>  
+>> +void pm_report_hw_sleep_time(u64 t)
+>> +{
+>> +       suspend_stats.last_hw_sleep = t;
+>> +       if (suspend_stats.total_hw_sleep == -EOVERFLOW)
+>> +               return;
+>> +       if (suspend_stats.total_hw_sleep + t < suspend_stats.total_hw_sleep)
+>> +               suspend_stats.total_hw_sleep = -EOVERFLOW;
+>> +       else
+>> +               suspend_stats.total_hw_sleep += t;
+> 
+> total_hw_sleep is u64. At microsecond granularity it will never realistically
+> overflow and isn't worth the check IMO. The overflow concern comes from the u32
+> hardware counter, but I don't think there's a good way to detect it.
+> 
+> You could just report the maximum hardware counter time as max_hw_sleep so users
+> know the value isn't reliable if suspended for longer than that.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Yes I think we need to let userspace know the longest hw-sleep time
+the hw can reliably record and then userspace can (and should) chose
+to not use/check the counters when the total suspend time is bigger
+then the max hw-sleep time.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Other then that this patch-set seems like a good idea to me
+and I have no objections / remarks on the pdx86 bits.
 
 Regards,
 
@@ -104,68 +240,65 @@ Hans
 
 
 
-> ---
->  drivers/platform/mellanox/mlxbf-bootctl.c | 19 +++++++++++++++++++
->  drivers/platform/mellanox/mlxbf-bootctl.h |  6 ++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-> index 1c7a288b59a5..5e41c270195c 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-> @@ -244,11 +244,29 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
->  	return buf_len;
->  }
->  
-> +static ssize_t fw_reset_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	unsigned long key;
-> +	int err;
-> +
-> +	err = kstrtoul(buf, 16, &key);
-> +	if (err)
-> +		return err;
-> +
-> +	if (mlxbf_bootctl_smc(MLXBF_BOOTCTL_FW_RESET, key) < 0)
-> +		return -EINVAL;
-> +
-> +	return count;
-> +}
-> +
->  static DEVICE_ATTR_RW(post_reset_wdog);
->  static DEVICE_ATTR_RW(reset_action);
->  static DEVICE_ATTR_RW(second_reset_action);
->  static DEVICE_ATTR_RO(lifecycle_state);
->  static DEVICE_ATTR_RO(secure_boot_fuse_state);
-> +static DEVICE_ATTR_WO(fw_reset);
->  
->  static struct attribute *mlxbf_bootctl_attrs[] = {
->  	&dev_attr_post_reset_wdog.attr,
-> @@ -256,6 +274,7 @@ static struct attribute *mlxbf_bootctl_attrs[] = {
->  	&dev_attr_second_reset_action.attr,
->  	&dev_attr_lifecycle_state.attr,
->  	&dev_attr_secure_boot_fuse_state.attr,
-> +	&dev_attr_fw_reset.attr,
->  	NULL
->  };
->  
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.h b/drivers/platform/mellanox/mlxbf-bootctl.h
-> index 148fdb43b435..b48243f60a59 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.h
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.h
-> @@ -75,6 +75,12 @@
->  
->  #define MLXBF_BOOTCTL_GET_DIMM_INFO		0x82000008
->  
-> +/*
-> + * Initiate Firmware Reset via TYU. This might be invoked during the reset
-> + * flow in isolation mode.
-> + */
-> +#define MLXBF_BOOTCTL_FW_RESET  0x8200000D
-> +
->  /* SMC function IDs for SiP Service queries */
->  #define MLXBF_BOOTCTL_SIP_SVC_CALL_COUNT	0x8200ff00
->  #define MLXBF_BOOTCTL_SIP_SVC_UID		0x8200ff01
+>> +}
+>> +EXPORT_SYMBOL_GPL(pm_report_hw_sleep_time);
+>> +
+>>  int pm_notifier_call_chain_robust(unsigned long val_up, unsigned long
+>> val_down)
+>>  {
+>>         int ret;
+>> @@ -377,6 +390,22 @@ static ssize_t last_failed_step_show(struct kobject
+>> *kobj,
+>>  }
+>>  static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
+>>  
+>> +static ssize_t last_hw_sleep_show(struct kobject *kobj,
+>> +               struct kobj_attribute *attr, char *buf)
+>> +{
+>> +       return sysfs_emit(buf, "%llu\n", suspend_stats.last_hw_sleep);
+>> +}
+>> +static struct kobj_attribute last_hw_sleep = __ATTR_RO(last_hw_sleep);
+>> +
+>> +static ssize_t total_hw_sleep_show(struct kobject *kobj,
+>> +               struct kobj_attribute *attr, char *buf)
+>> +{
+>> +       if (suspend_stats.total_hw_sleep == -EOVERFLOW)
+>> +               return suspend_stats.total_hw_sleep;
+>> +       return sysfs_emit(buf, "%llu\n", suspend_stats.total_hw_sleep);
+>> +}
+>> +static struct kobj_attribute total_hw_sleep = __ATTR_RO(total_hw_sleep);
+>> +
+>>  static struct attribute *suspend_attrs[] = {
+>>         &success.attr,
+>>         &fail.attr,
+>> @@ -391,12 +420,28 @@ static struct attribute *suspend_attrs[] = {
+>>         &last_failed_dev.attr,
+>>         &last_failed_errno.attr,
+>>         &last_failed_step.attr,
+>> +       &last_hw_sleep.attr,
+>> +       &total_hw_sleep.attr,
+>>         NULL,
+>>  };
+>>  
+>> +static umode_t suspend_attr_is_visible(struct kobject *kobj, struct attribute
+>> *attr, int idx)
+>> +{
+>> +       if (attr != &last_hw_sleep.attr &&
+>> +           attr != &total_hw_sleep.attr)
+>> +               return 0444;
+>> +
+>> +#ifdef CONFIG_ACPI
+>> +       if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+>> +               return 0444;
+>> +#endif
+>> +       return 0;
+>> +}
+>> +
+>>  static const struct attribute_group suspend_attr_group = {
+>>         .name = "suspend_stats",
+>>         .attrs = suspend_attrs,
+>> +       .is_visible = suspend_attr_is_visible,
+>>  };
+>>  
+>>  #ifdef CONFIG_DEBUG_FS
 
