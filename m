@@ -2,234 +2,213 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD8FC761A6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 16:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90934C761A6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 16:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238984AbjDFQvq (ORCPT
+        id S239240AbjDFQyE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 12:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37350 "EHLO
+        Thu, 6 Apr 2023 12:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239616AbjDFQvo (ORCPT
+        with ESMTP id S237927AbjDFQyD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 12:51:44 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2087.outbound.protection.outlook.com [40.107.94.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C3719C
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 09:51:42 -0700 (PDT)
+        Thu, 6 Apr 2023 12:54:03 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F302108
+        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 09:54:01 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dttpFzyx7fHv8RpFbe1NGviXSd1IgGBNq6eKLSkggK+prbW2fTFanq3xV0CxTJpuP3r7FMZZDp6kgQ39YgZkuWBeW6FqlldCYhaw9Z8RxpGwrj115Vl5PM7Nn8LEzW7rjO57oHDvSHjp8NArmkND4Ugs1pOEzOQSEMBk4dxvuYoYfmDj8U1gHL3p+1PUIB2WQi7yCrEhZECh4JwlgK3k9uLDsN4zzB6FaWx+nteDx3CAq790DW7BSZAIVTpGeyOzwT4uPqUcckQQDzvkOt1VhSPZWgl9+wSTbIH5QdVMsHqQ9bSIk+//SltVh+ErkrJmxS+j1DWrhvs1SFt3JpoaeQ==
+ b=f1PSw3+UkahRc93HPs9ILOpHDSZTAy2JDblyrxx9haOFSGgHvty72yfJ2oh7KcRsUWZanWEAt6cMANd9Wn/CiwxE5QFzSdG4pkzTotgbrnA5W+FdWA0f2XnhPSD+xqYDQ5D0JMpWs43OLJcBVFF/0TRWwkxwPXWXoujW/L1+1MeUav2udYy7OXmKQOXH47qhRTmAysoVfh4z45OGt/GvGo17rD3RIVxVIdXUi2bJoDb3YG1hUV4iUKGBU/53qFzPu3xgWeEji5kblZBSwToIqOqK5VFU6VbNq3ZkQKwTJdmG6arP7HasjIUSbmMJH7TjgQGp6n2pZw4aDfe/yh/3hA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YN0shEA/6bFgtAtgjHa1oYEDf0fq9WOuNL6BF1Sj1lc=;
- b=IQXYxOSKpN456gMfXNubmCDjMmQ57zXmYmJWuxMaOe+kMHLZ+BPKicY/bMWzpvT3YOhVDOvB8m47jkcY8qMrNETkrPVDp6tzjw4fEIUjw66ALqWqWIOvSYECYf8x8ZCV6FOpD+OYGG6X63gikY4Edcy0qxHd1iM92nt3WOkeygxkrNtkBTyfVlnuA6CeaaqKIhfvkmT9sMDk26MQJeTBLtmm0J6oEllQl1G5vlr25tl+bn2SwA0DR2X8wP9ZLa63nDtYuvccFPPdFYIgk1yEqqxuKzBFpFAPlsi2WZwYjymU1+bpUiw7ZXEZzVNmPGhAIH4aW03ENnxzgFzs9OWwNg==
+ bh=Mdq5jTSaReW4FhF35UfdNVypuV5ydYMTMwku4huoO1E=;
+ b=gQv0u2tEU7xgrkGItP79OGWDf1LTIMoirMMVHimj3yZwNYaH91DXD1x+UGSy5Y3ISJZOg25U/Anrl9htO8dYETBRVoaqAqbfa1vi6jQZq1vMU4jD/h1cMysF6Cj7sdxx1o5JXczTZ54UTq3Xi8vLr/IoZW4jAAoLVUCYXRVhgeXAUWJ5k4piQh1JezUQcvdz/dDARj6I1DFla2fQ7sCEfzFjKnbjSUAIAKTRaObwr71N945dyZBPXOCMiFP6TyjOQs6XG1rrEo8rA5q6dbWQbCZg04TSvMK7LAV7zrle8LRWlEAUmbXKgGFwt/DV7tXK+J9uFJaGj5926P3tU4DH9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YN0shEA/6bFgtAtgjHa1oYEDf0fq9WOuNL6BF1Sj1lc=;
- b=FqfMf77PfhPb318AP22crJHmqbogHcqtRYdUeSFmbnchqWx16yExYo4SiVWxNWz+H8UnyBDRrgpTbLK7nLkMDEuB3/842Rih+jfALn/X0OC8vOL4Fx0bF5ozK8b8Lb4ZorZkwQeEncN6iMCztsWYywr6uma1WeriJ5QOYmNCXSg=
+ bh=Mdq5jTSaReW4FhF35UfdNVypuV5ydYMTMwku4huoO1E=;
+ b=DoBJbsLCNTpnrCCyCUcocos3kMRg52fqR4407F7kFyCQBSwcILZgsLNi9PeSgr3W69JnJ46Vs4L/OcPN9jJD5bouD4OqKAtBaLn3LhkzpbxMp6LSvscR3kfZetYRI/4502TtL8GkobLdbHBS3BCxrudlQV+pQwvW1N4Wot/2QgY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB5469.namprd12.prod.outlook.com (2603:10b6:a03:37f::16) with
+ by CH2PR12MB5513.namprd12.prod.outlook.com (2603:10b6:610:68::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Thu, 6 Apr
- 2023 16:51:40 +0000
+ 2023 16:53:58 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::f4d:82d0:c8c:bebe]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::f4d:82d0:c8c:bebe%2]) with mapi id 15.20.6254.035; Thu, 6 Apr 2023
- 16:51:40 +0000
-Message-ID: <608f08ef-edfc-0132-02ba-ce96f34728c1@amd.com>
-Date:   Thu, 6 Apr 2023 11:51:38 -0500
+ 16:53:58 +0000
+Message-ID: <409e3bbc-27b3-8237-3890-63c4c3a55574@amd.com>
+Date:   Thu, 6 Apr 2023 11:53:56 -0500
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH 2/3] platform/x86/amd/pmf: Add PMF debug facilities
+Subject: Re: [PATCH 3/3] platform/x86/amd/pmf: Move out of BIOS SMN pair for
+ driver probe
 Content-Language: en-US
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
         markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
+Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
+        "Held, Felix" <Felix.Held@amd.com>
 References: <20230406164807.50969-1-Shyam-sundar.S-k@amd.com>
- <20230406164807.50969-3-Shyam-sundar.S-k@amd.com>
+ <20230406164807.50969-4-Shyam-sundar.S-k@amd.com>
 From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20230406164807.50969-3-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230406164807.50969-4-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0200.namprd03.prod.outlook.com
- (2603:10b6:610:e4::25) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: BLAPR03CA0110.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::25) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB5469:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9635e62-826c-4a5d-d80c-08db36bf319e
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH2PR12MB5513:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54ef9321-ffc5-479c-6b1f-08db36bf83da
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9FYq7hIRZG1d9JWTVJSrKmlVhbEvhr5o9og2RxGZxN3WvNGRFLhnQeuoze3XE/Ui5HPq3onIXA/GQdGgUXprTM44bzYTOhuN6WPhhJ3yjo1Ltmx17LLbOFDAbGOzNPtu7mkKNbbmewR40hX7LsKrueRgM2ZCw3sY38dwni0J4hiLd/YR+bfdUKVHvfditd6Yh+NfMpl4X7Mv4QOs1yss5rT6bhttS+l5xyFCSwlTVe5mrGyYLitnPPrtMtuGxtzIyjBQTFU9gkYiG4XITxVo8+jOhEDMV9ju52lJhEIDN6kWl5U0AQPVzP6MwyuVb/DQhX4XGUvCPpgUv87CaHrjP5rHaujUyV82La5Fl4Cs0tPjf1UfH2JTDFWMOUI4aDjReIYu4MgpCBA+Omz9ICVhQ7AlMUF/vhvbdWguQmRrlgGK1t8hMz2rG/1fCtC7m81W90RNqMD1vzBNw8DB82WfFzjvNS4cUjFpcEIonQbxhx9iExSBhobUROWsPmeCSDFnjAUUWwFDN0etWMTiY5legr8acifIg0olonvQhwsBnfLDg9MInKuTQ0ZI2Gof+8OkCuyI0V01Knewf+rBd9Z5UrDaIgwx61691A3FnrzUI9qXan1r//MtYYcmtgUDHePpIXHhfFntcX+TTzn/MclTPg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(396003)(136003)(39860400002)(346002)(451199021)(6486002)(2906002)(83380400001)(478600001)(31686004)(6512007)(5660300002)(53546011)(41300700001)(6506007)(86362001)(8936002)(26005)(186003)(2616005)(316002)(8676002)(36756003)(4326008)(66556008)(66476007)(66946007)(38100700002)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: NP+ZZXZ6KkYPn/Vm/KhOobPouFaUsZea7+KfCs9S+7aXCO4d48B+hsqDYyCzF7RvqIDZ6nKzN+Z15yj/8qbUbQ8PULd48wxFAMJr/xifZyTaRU9Gs8N1dGHkdaOSLFAdBATes/79Hyu8KcVOB3aBZDUADfRRX6j7NuK8cnyjoopoYJj8UyINvMzvwxqHYDnS7THJ3yE6Y98DWgWumWFbNM+3cNmNVk3f60GNBB16PLvrI4WUG2KOOkRNFgGliFSmyTTVpQ+xV321OvxuflY6iRYBpSR7OO22xF+cXoD9z0EQ5O2OOsfq746UmarxGBnmMIAQYKXJOdvOjGzbEnCQlKre6mnUlLAo1R26BffyhFM+1VTHETx2xPCskgDwI/t6rvgn9jiK6mqBL/p81hgdyTt7posJ37gliOENe4f0ikz2Wn9h/8IxhcJbLrqk0DOAwcLcTZykkjQNjasN9p9kANySd4Dsi1bF+5mQElo6KQoaVyBYXvlV8EJB5gQZob9cOCgwDEVywdOgn20a8eeYdqGsvm2i4Jeq4/dQW2PEoc0BOwXNm26Y4cJb9yyc67Q2D2ATn/eg8Wuchyd/ROhNWAAZeNkmjSoF86Qs0RgWFIWDHLxD91AxUFM4YQ7AmDDEft4wTDZmlaLmR6R8dXTnJA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(451199021)(31686004)(26005)(186003)(53546011)(2906002)(31696002)(5660300002)(86362001)(8936002)(6506007)(83380400001)(4326008)(6512007)(41300700001)(2616005)(478600001)(36756003)(316002)(66946007)(38100700002)(6486002)(8676002)(66476007)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WC9LYStzRkxGMSsvWEwzaW5lS0R3akdsd1BBSzNzd1duMGJyb1BXVVZ5K2Jo?=
- =?utf-8?B?NFQvVXlUamdITW1yanJaYVNDT0FUVkEvdE9CWTZKNHJKUDJPYlN3RlI1YWJB?=
- =?utf-8?B?VGlGdFQ5NlJjSWl5R3dITXYwbFlmZGcvUUp2eFBwcVlldXowTDdYTVVWSWR0?=
- =?utf-8?B?REFsbWZla1Rod2lyUjlIWTFZWVBkSGdWZ0FpTWw1eXptUkJDbkpKKzJyUlNy?=
- =?utf-8?B?UWpEZFM5cllFa29ycFpiZ0Q2c1RTdGtjMEl6b0Y5dFZjbWlYNXV2ajBJdGl2?=
- =?utf-8?B?cXhJQklEY3hheDRCRUdISjgwUFI0b2ppRmFRb1lqS3RTWHhBNFVIY2Y1azNF?=
- =?utf-8?B?cU15TkVmNjBOd20vM2s5V01mSWhNMGwrekkwZE9tWnMxcUZFN1JLNFEveld4?=
- =?utf-8?B?bE5rZFRCb3JyT0FITkpodURXaWJ1ZkJsbjhGeG1pYmNIUWduTGVUNlp5c0F0?=
- =?utf-8?B?WjM0UnhHcXNLSHBXdFVyeVZHM1FWN29CSk9DVFV0Q0JQcm1zUnpCbmNLRnN1?=
- =?utf-8?B?VmlsVnBmYUpuS3lTeXJ2alZLSW1LdTNvRjBhQ2dlVzFndXZwNTZ6ay9lWFBx?=
- =?utf-8?B?MmhCSGNlU001bDg5djFDT1lyMjRGQzl5STM5b21jOSs4eXgwbGNHRlkzS1VQ?=
- =?utf-8?B?UlRocGFRRjJ2Y0huRml6NDFab3JnU1M3anJNSTlvMDNGWEoxLzFycUllQVl3?=
- =?utf-8?B?OVRxOEFCdFpPUmp4b09XYzRMdlNycFFtVXQrekN2UWRYSk15ZmUyaC9CWTdU?=
- =?utf-8?B?MEdLSUtEZDgySVNzU0hSelI2aklDbndGWkNvekFJano2ZVJ4dWlYN28yUDJH?=
- =?utf-8?B?OXFHUWxFbndmenpVTlB5YnVNaDNqVG9TanBIZDFhcjFpbEpaeUpEZ0tOd3RG?=
- =?utf-8?B?Y0hpNS9aYVE3Mk9SQTY3dU43ZFQxd2g3MURzUlFsSnEvakJyb3NvTlJhYktv?=
- =?utf-8?B?czVXMG81bHhCWUJWRFE3eWJlZHJsSk4wcEw3c0xTSjJsbzdJUjBnN3pMMWh5?=
- =?utf-8?B?bEdBbk15Y0tsdVpjVzMzWXNyQyt6WnZWM0laKzl6aXBXVDF1dkJZMWkxeWFn?=
- =?utf-8?B?OUFiRm5oVGw2dC9wZzFNQzhiSVhSWCtlSUFQS3FHcCtqRkdZMWFFejRFNjZx?=
- =?utf-8?B?WG8raHAwYVpIaEd1VW1LV1gzMUxWZDhuVHlwN3duZ2lZdHVpUHhZV3lVY2Ra?=
- =?utf-8?B?b0hxQnBHM1MxbFJaSUxrQjBMRVpEMGdCU0dLTEYrbVFMdFFSVUdLZzJWT25h?=
- =?utf-8?B?V1ljM094cGRwOGdFZkNCaWpTa0t3S01BSUs0SDlIQjVhanNtbVNFUytBelBD?=
- =?utf-8?B?eldBcU5OWnRuVGw3WVJzTWtSMWdrZWI5S3YyRDlmTTE1TFZZWHlXbjFGWkc2?=
- =?utf-8?B?a1F5UGhWTGRab3p3WU9CallZZmlCS2NHcFJrdThiZ2twY01MV2dzdkk3THN4?=
- =?utf-8?B?UGwxeUdPNXBjME9xbVhFV013aGJoUVFNNGJrcGdjZjJqQVR3cFFHN2NCN3FF?=
- =?utf-8?B?U3p1L3FBc2ZsSi83ZzM4ays3cnJhSTBINUN6emVPZDFmdFUvMmhWQUxQdG9r?=
- =?utf-8?B?RE9tOXpjZ0dDdUlGVkMrMU5URUVvdGxVMHJQSHRrRUVDV0dDRDM2ZDNsMU1X?=
- =?utf-8?B?RTBTcWF0TWhGeUVpLzVGUzNxWDFKcVUzSjdIVGdISXIyWjNZdHNIcU5MTktI?=
- =?utf-8?B?MnJZYkE1MTlYeU5OVmVpM3JyaDdCK1FpV2dTK0ZJU2h3Y2kzRVUwZkFBNUJT?=
- =?utf-8?B?R1JJa1gydWlwTGNuTzhXOTVlbXluSzI4dmFJcUlKMVgxWXoyejlwaUs0Q0Nv?=
- =?utf-8?B?eVlvQ3VlZUZYenpQekFXVFNRVmxySHAxYkp4enNUN2ZjRlFzOW9jVHRJK1BL?=
- =?utf-8?B?dnZjSW5jc3R6eHFUMlhKMU0weHhFcDhXQTNQTE85REE5ZndrdEttbmcwWXBZ?=
- =?utf-8?B?VUVyam05dVNCS1VRNlpSY0FXL25lSWRrT1pHRGxNY3IzQTl2clgrT3NQd25P?=
- =?utf-8?B?RWlYRnoxcGhHd1lLYmZDaXQ1L1VCaXEwWTFlcDlJaktYUjVXSlEzVHVtc1Rj?=
- =?utf-8?B?RnFyRUYvbFlLN1lYNWk4RDRwb25sNDFsRlAvV2VnZ1U3cjBVclpSN3ZpSFBP?=
- =?utf-8?Q?lmhPc1gQ6KsQJ4woMrAubupTr?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UERNQzRPUC9HMHlwSzh3T0NLU003ZjRWditlVGwvUC9DbFlOUjEzYnhnRWlj?=
+ =?utf-8?B?R2tTdFBjcUFQTWJlU2xNSkhiWWNTZzdPLzBTS0I4VjJLYnd5aTBoL0ppQjhm?=
+ =?utf-8?B?VE0xWW5mdStqdEdZZnMwNmh0RHZTdE44U3NHRllIdkp6TnZhYUNmaXhVczh6?=
+ =?utf-8?B?ZllPMzNCZEJwcGFEcU8wcTBDUHlySnJDLzExRnpwYUVXZHVKL0pvWEZ6VUE0?=
+ =?utf-8?B?ajViTVZBSjJBMlB5aW5OR0E1YWZNelM2WUo3WHRmZVRnN09yYTdaWXNSNWZV?=
+ =?utf-8?B?NzVyMFVUQWNSTHBIYUFUVERRMWY5dGVzanRQM0Q5dFVsaU5oaXpCREs2YjNx?=
+ =?utf-8?B?d2wrZlpTTTUycWZUV0l1Ri9NeDExeTFMV3RjaHdIenNIYnJ4QjZZYXVIekF0?=
+ =?utf-8?B?cnhEdGxNekMwRVhGRmNRaHpKeFNRZjhhcGFhRU1NakJ0OVRSSnVzcnVhVXgv?=
+ =?utf-8?B?aXpVUkJuOTQxT1ZkenhsY3owcEJoa25kek45eit4eklaRDVwZnAzM2t0Z3dR?=
+ =?utf-8?B?U1ZZUEQ4ZHpZYkFZeEwwWnhYZDRicHhuUDJtaG1qSndKak42U3JCSWYya1hH?=
+ =?utf-8?B?TzF5dGptUTJ6QjQrd2prZU9iT1hwcDJoYU9paHBRRlRvOTUwS3RXN3VjTlFS?=
+ =?utf-8?B?b3EzWUlTV1dyY2RmalZOejJ6SkY2enhnWE9HZTIxNGpHTjk4OGFpWVZ3dEh0?=
+ =?utf-8?B?VlNzSk1yenk5eU1hWDdPZmN3QlM3SHZXS2RUN2l0R0lWOVdBTUV5OE54TDRH?=
+ =?utf-8?B?SERTVW1iWE9WZXlHeVR3U1hQeGt1ZFZNVEl2eXB0R3pWd1RiWCt4dGswcDIx?=
+ =?utf-8?B?R1dmUGVqT004MEJ2VFJvaWsvZE9BcEhKZmc3eVVpWGRqWldLSVlTM0UvbnIr?=
+ =?utf-8?B?bzJ2RFRMVWV2QjBsQkJtaW02M3R5NzZDblhmTlFJcHVMUittcUVpV1oreStx?=
+ =?utf-8?B?aGovZW9YR2MwR3Zvd2YxSDNjM2V6THRJallERWZhYUhIYm96aXlYR2pRV3p3?=
+ =?utf-8?B?WGcreGNvTFgwalZ2cVVFYlJXZytwdzJzYmZDQVQxVjNqeGYxZmpyc3hpbFFW?=
+ =?utf-8?B?ZHlCYWhRc29GOWdXcWh0MzliZlNqTFp5UXk2OEIrQ1VPdU9tSjM1TE5MakFT?=
+ =?utf-8?B?OWh3K1ZKSXBpd2h0T1lJaDdGOCsyMlp1MjQzQVhocHQ1NXdoS0ZUbVd6N0pR?=
+ =?utf-8?B?UjdFV0x4elRuSWQ5bVo0UFdsTlZIdVpoV3RHVHpQYnFpd1IxYVFYcWFPbGM2?=
+ =?utf-8?B?MjBITW93M2JnZmZlV3BRK2VsNk5TcThZYXphVG1MbHZtQWZ0OTZPV1MvZUxN?=
+ =?utf-8?B?Y3dPL0lSSG9qM29BSGY2QUpYbkRxREMwR3l0UXJsY1V1R09XdXV1V0kxYU9S?=
+ =?utf-8?B?ZjlZYno3T3R3UVI5YUZTRzFKbXYwZnl3Q1dJTFZYY3UxT0t0cWpSZ3g2Q2VJ?=
+ =?utf-8?B?N05SV3ZWTlBqRXpIRUxTTjd6T3pReDNFQndVb2E0R09OZkJBSHZCNTRVTFNV?=
+ =?utf-8?B?eFl0a2VQMURBcjZLQkVuYlR5dUN0ZlB3LzNDY2lMTTJaUDhoYWZXL09CczZa?=
+ =?utf-8?B?T2xOWTFCZkQ3Z0J3bGF0LzdIbno2bzVKWnVnQXVkSEJzR0xRYzgzNkRWOGRN?=
+ =?utf-8?B?ejNBQlBKS2dNVGdtNVBYSFN3MmlQSnBIUVAwaFlEVFJENmJIQUNlZmxjUHRG?=
+ =?utf-8?B?R1dhY0U2aE1yemZJQVJXdEx0Wmk4cm1mSFVmMGc5dGJ2Lzk1QStSVXFzUnNI?=
+ =?utf-8?B?RjA4KzhIbjdnZGU5N3pueGdOeEw3OFBub3VJKzd5QkpVcmQ1cjdteHh0UmtJ?=
+ =?utf-8?B?YXZhaldmZGNETm11N1VOY0NPZVR4YnpFUEJsKzYwWXk0b3k4QWhBeDZ0M2JW?=
+ =?utf-8?B?dlhycGZib2dLbklBdzJlU0k0SXQ5dXBtUUVFN0FpUFBxT1NUWit2VUdaSlpK?=
+ =?utf-8?B?K2s5ZUtHL29vYlhiaEEvY3Z1SHV5T3FtMUFVM0hpTlBpRlllcFVmdjRJZThT?=
+ =?utf-8?B?UmRiUHhxY1d1dUhJMmlVTlh4MG5pb3dkUUk1Y0dDcmltc1RMOGozWHF4UDEv?=
+ =?utf-8?B?VGcvRUVpbGhWd3ljSG5kQzJsTEp4Yk5td0JWQ25DMFRzZXN1L01jTyt6Rlh0?=
+ =?utf-8?Q?jfVGInUuA86/roJGKoH1GK8GC?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9635e62-826c-4a5d-d80c-08db36bf319e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54ef9321-ffc5-479c-6b1f-08db36bf83da
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2023 16:51:40.3624
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2023 16:53:58.3168
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 51fFkr4NL4+0JE9y9rRf6H+rJ8F+zC6KqlQwQnuvOxK+91SGezU89CJNCwHiAQ2AqCxdS0tPrfV1l9OxYCCnpw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5469
+X-MS-Exchange-CrossTenant-UserPrincipalName: PnqbXUtINelT/TfWo5WMa06UKwjBOBCmfD4jqgIk6yu4bkwjkFSirMOeU9prvzgZNherABVbR8xJ1/6Me6kCFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5513
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On 4/6/2023 11:48, Shyam Sundar S K wrote:
-> At times, when the mode transitions fail to happen, the current
-> driver does not give enough debug information on why the transition
-> failed or the default preset values did not load. Having an on-demand
-> logs guarded by CONFIG would be helpful in such cases.
+> The current SMN index used for the driver probe seems to be meant
+> for the BIOS pair and there are potential concurrency problems that can
+> occur with an inopportune SMI.
 > 
+> It is been advised to use SMN_INDEX_0 instead of SMN_INDEX_2, which is
+> what amd_nb.c provides and this function has protections to ensure that
+> only one caller can use it at a time.
+> 
+> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+
 > ---
->   drivers/platform/x86/amd/pmf/Kconfig     | 10 ++++++++++
->   drivers/platform/x86/amd/pmf/auto-mode.c | 22 ++++++++++++++++++++++
->   drivers/platform/x86/amd/pmf/cnqf.c      | 19 +++++++++++++++++++
->   3 files changed, 51 insertions(+)
+>   drivers/platform/x86/amd/pmf/Kconfig |  1 +
+>   drivers/platform/x86/amd/pmf/core.c  | 22 +++++-----------------
+>   2 files changed, 6 insertions(+), 17 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index f4fd764e55a6..7129de0fb9fb 100644
+> index 7129de0fb9fb..c7cda8bd478c 100644
 > --- a/drivers/platform/x86/amd/pmf/Kconfig
 > +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -26,3 +26,13 @@ config AMD_PMF_ACPI_DEBUG
->   	 in the PMF config store.
+> @@ -7,6 +7,7 @@ config AMD_PMF
+>   	tristate "AMD Platform Management Framework"
+>   	depends on ACPI && PCI
+>   	depends on POWER_SUPPLY
+> +	depends on AMD_NB
+>   	select ACPI_PLATFORM_PROFILE
+>   	help
+>   	  This driver provides support for the AMD Platform Management Framework.
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index da23639071d7..0acc0b622129 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -8,6 +8,7 @@
+>    * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>    */
 >   
->   	 Say Y here to enable more debug logs and Say N here if you are not sure.
-> +
-> +config AMD_PMF_DEBUG_FACILITIES
-> +	bool "PMF debug facilities"
-> +	depends on AMD_PMF
-> +	help
-> +	 Enabling this option would give more debug information on the PMF interna
-> +	 counters such as time constants, power thresholds, target modes and
-> +	 power mode transitions of auto mode and CnQF features.
-
-With the availability of dynamic debugging is there a lot of benefit to 
-guarding all the new dev_dbg statements behind a config option?
-
-Is it because of performance impact?
-
-> +
-> +	 Say Y here to enable logs and Say N here if you are not sure.
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> index 777490fcf8b9..560379b5cda7 100644
-> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -177,11 +177,33 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
->   			config_store.transition[i].applied = false;
->   			update = true;
->   		}
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +		dev_dbg(dev->dev, "[AUTO MODE] time_ms:%lld avg_power:%d mode:%s timer:%u tc:%d\n",
-> +			time_elapsed_ms, avg_power,
-> +			state_as_str(config_store.current_mode),
-> +			config_store.transition[i].timer,
-> +			config_store.transition[i].time_constant);
-> +
-> +		dev_dbg(dev->dev, "[AUTO MODE] shiftup:%d pt:%d pf:%d pd:%u\n",
-> +			config_store.transition[i].shifting_up,
-> +			config_store.transition[i].power_threshold,
-> +			config_store.mode_set[i].power_floor,
-> +			config_store.transition[i].power_delta);
-> +#endif
+> +#include <asm/amd_nb.h>
+>   #include <linux/debugfs.h>
+>   #include <linux/iopoll.h>
+>   #include <linux/module.h>
+> @@ -22,8 +23,6 @@
+>   #define AMD_PMF_REGISTER_ARGUMENT	0xA58
+>   
+>   /* Base address of SMU for mapping physical address to virtual address */
+> -#define AMD_PMF_SMU_INDEX_ADDRESS	0xB8
+> -#define AMD_PMF_SMU_INDEX_DATA		0xBC
+>   #define AMD_PMF_MAPPING_SIZE		0x01000
+>   #define AMD_PMF_BASE_ADDR_OFFSET	0x10000
+>   #define AMD_PMF_BASE_ADDR_LO		0x13B102E8
+> @@ -348,30 +347,19 @@ static int amd_pmf_probe(struct platform_device *pdev)
 >   	}
 >   
->   	dev_dbg(dev->dev, "[AUTO_MODE] avg power: %u mW mode: %s\n", avg_power,
->   		state_as_str(config_store.current_mode));
+>   	dev->cpu_id = rdev->device;
+> -	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_LO);
+> -	if (err) {
+> -		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
+> -		pci_dev_put(rdev);
+> -		return pcibios_err_to_errno(err);
+> -	}
 >   
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +	dev_dbg(dev->dev, "[AUTO MODE] priority1: %u, priority2: %u, priority3: %u, priority4: %u",
-> +		config_store.transition[0].applied,
-> +		config_store.transition[1].applied,
-> +		config_store.transition[2].applied,
-> +		config_store. transition[3].applied);
-> +#endif
-> +
->   	if (update) {
->   		for (j = 0; j < AUTO_TRANSITION_MAX; j++) {
->   			/* Apply the mode with highest priority indentified */
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 4b9691cd592a..1f25016b3865 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -174,6 +174,13 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->   		config_store.trans_param[src][i].count++;
+> -	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
+> +	err = amd_smn_read(0, AMD_PMF_BASE_ADDR_LO, &val);
+>   	if (err) {
+> +		dev_err(dev->dev, "error in reading from 0x%x\n", AMD_PMF_BASE_ADDR_LO);
+>   		pci_dev_put(rdev);
+>   		return pcibios_err_to_errno(err);
+>   	}
 >   
->   		tp = &config_store.trans_param[src][i];
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +		dev_dbg(dev->dev, "avg_power:%d total_power:%d count:%d timer:%d\n", avg_power,
-> +			config_store.trans_param[src][i].total_power,
-> +			config_store.trans_param[src][i].count,
-> +			config_store.trans_param[src][i].timer);
-> +#endif
->   		if (tp->timer >= tp->time_constant && tp->count) {
->   			avg_power = tp->total_power / tp->count;
+>   	base_addr_lo = val & AMD_PMF_BASE_ADDR_HI_MASK;
 >   
-> @@ -194,6 +201,18 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->   	dev_dbg(dev->dev, "[CNQF] Avg power: %u mW socket power: %u mW mode:%s\n",
->   		avg_power, socket_power, state_as_str(config_store.current_mode));
->   
-> +#ifdef AMD_PMF_DEBUG_FACILITIES
-> +	dev_dbg(dev->dev, "[CNQF] priority 1: %u, priority 2: %u, priority 3: %u",
-> +		config_store.trans_param[src][0].priority,
-> +		config_store.trans_param[src][1].priority,
-> +		config_store.trans_param[src][2].priority);
-> +
-> +	dev_dbg(dev->dev, "[CNQF] priority 4: %u, priority 5: %u, priority 6: %u",
-> +		config_store.trans_param[src][3].priority,
-> +		config_store.trans_param[src][4].priority,
-> +		config_store.trans_param[src][5].priority);
-> +#endif
-> +
->   	for (j = 0; j < CNQF_TRANSITION_MAX; j++) {
->   		/* apply the highest priority */
->   		if (config_store.trans_param[src][j].priority) {
+> -	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_HI);
+> -	if (err) {
+> -		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
+> -		pci_dev_put(rdev);
+> -		return pcibios_err_to_errno(err);
+> -	}
+> -
+> -	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
+> +	err = amd_smn_read(0, AMD_PMF_BASE_ADDR_HI, &val);
+>   	if (err) {
+> +		dev_err(dev->dev, "error in reading from 0x%x\n", AMD_PMF_BASE_ADDR_HI);
+>   		pci_dev_put(rdev);
+>   		return pcibios_err_to_errno(err);
+>   	}
 
