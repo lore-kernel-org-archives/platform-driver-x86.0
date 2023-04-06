@@ -2,104 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D2BC76196
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 10:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0CBC7618D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 Apr 2023 10:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbjDFKyi (ORCPT
+        id S237415AbjDFK7M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 6 Apr 2023 06:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
+        Thu, 6 Apr 2023 06:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237373AbjDFKyg (ORCPT
+        with ESMTP id S237419AbjDFK7L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2023 06:54:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58ED25FC7
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 03:53:49 -0700 (PDT)
+        Thu, 6 Apr 2023 06:59:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAB31703
+        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 03:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680778428;
+        s=mimecast20190719; t=1680778704;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pi28H7Ys3ragZ0WvGPlL8+NvRPjRFBU0lR+sJE70dXU=;
-        b=gV9MJXYklZtp4woGG8RrLtpoX33qMGQxKtBR1ibiL9waL2g1doLJ0IOGb0PI9qSRfrkU3E
-        XU2TQ01o32DIAo8mWY84wK47FKbx9d87jJlswaCni69rRXk1ihvzTO9Ra7YuprEaESWlkK
-        DlTCJHQnVVZOX6thAVm3MXut+I7nFYA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=sMJGZ0wM6SmRKKSmXFuC9u44rhIR7nr561NDFm1Xz2g=;
+        b=CLIx2w8r1ApkdKolo4g+G+4S8Nkx1GTDsQu2sDOvYd5PE9jkIJz+JjEBw7NyzdXApaV40f
+        dtMILOAPCBmWv/NzgSoG5F/NFLRfBO7TY/ROrDQSXSogd8XFD1s5x0dFLG+jhnR8Cu5rin
+        m4RGP9VNDpKJ+dHiHNn457dJU4qrFIY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-132-PObHVpX7MmqBxIhSsLJIoQ-1; Thu, 06 Apr 2023 06:53:39 -0400
-X-MC-Unique: PObHVpX7MmqBxIhSsLJIoQ-1
-Received: by mail-ej1-f69.google.com with SMTP id e25-20020a170906749900b0094131bc45b3so55837ejl.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 03:53:39 -0700 (PDT)
+ us-mta-83-8lqfrBC3Mw-tLquUDZHBEg-1; Thu, 06 Apr 2023 06:58:23 -0400
+X-MC-Unique: 8lqfrBC3Mw-tLquUDZHBEg-1
+Received: by mail-ed1-f72.google.com with SMTP id x35-20020a50baa6000000b005021d1b1e9eso53003822ede.13
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Apr 2023 03:58:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680778418; x=1683370418;
+        d=1e100.net; s=20210112; t=1680778702; x=1683370702;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pi28H7Ys3ragZ0WvGPlL8+NvRPjRFBU0lR+sJE70dXU=;
-        b=tF/ZSrimKZNr2FBlYMKHA5YN43Y6raRL6nmrYyyvt8fQrYGb6Wwn+Pq3ACSMx3Jia1
-         3J6KBvMbriZguNfaqESb37zAyLLHGkvK6JfMXXJKb3EFuo2z3T7JQjfPH+qD2l88Acld
-         fd/Mx/PKTosg0UFIL/EmYIIlU9Oe9NLHkGXTFdERRQ+9K19j4c2q7stqYs5xdTGzu2Sx
-         xMiiNBIhZ9ZGZn7wabc5nqPOnkaOMfcVfR3oFO9bIB7IsmmUPow6CFSRwUoF4KjsNok1
-         Os4Q9MkFVTK4CFQOI/yc/DF4LkZFHGkx6lQBOdqwJgM5XNY59817xXP8tfTi80H6zBiD
-         igOg==
-X-Gm-Message-State: AAQBX9e1FTihmiZ28oStF7SWdcvrIh8R7Aiv8WKF8mbL1jn3QLFeyX7B
-        EJykqOyd7l2s+R4405juAbHljjK2YPpQrStWfx532m5k2HWGmdGXTwlmHyMwdw271UEdO3GziXf
-        x+/oDXc4aoyUyXyEovon0Ok6EtKXmVkittw==
-X-Received: by 2002:a17:906:4d8c:b0:8b1:88aa:46da with SMTP id s12-20020a1709064d8c00b008b188aa46damr6227554eju.48.1680778418655;
-        Thu, 06 Apr 2023 03:53:38 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZZfiP5eeuklEaQrdVVrA6BqszwkvZHtgP4NZZiG+OQJj261ImPta+swxAFCoNIv5pmoPKVJQ==
-X-Received: by 2002:a17:906:4d8c:b0:8b1:88aa:46da with SMTP id s12-20020a1709064d8c00b008b188aa46damr6227525eju.48.1680778418309;
-        Thu, 06 Apr 2023 03:53:38 -0700 (PDT)
+        bh=sMJGZ0wM6SmRKKSmXFuC9u44rhIR7nr561NDFm1Xz2g=;
+        b=Xz0IWC2+fNsfmJfi1BCZdl6qWqOnS37T2RyHtoOmLwNsTSrJj900Pm8kJWf3gTWr2Y
+         S9mUVpiEWJXJ9p8rRiuVwAyUNenhYZc6J8ABZs/u2Mym58D/Z79yu2ypMtPySVfCGuP2
+         tQadj5Jzg6kiRJZ6XVboQc9cOWaW4RxXHDpA8rjd4T1crkPxRqAyJysZjBHKHmeKVEAK
+         3W0ILu1ubbfA//SKd4RUCQrp3L9sGO+WtW4LlgFu7kTV/vk3oLlvdT4X7hq0KEV5oMr/
+         s1hCJe/YN/fGvM42vGEReaWLzicZ59oFPjamVP1uL6Oes1JJoV/42r5jb7Robvo/6auf
+         GFWQ==
+X-Gm-Message-State: AAQBX9cnG7oatyfdd0QRJP76y3nFJR4UX6d7hn8JjFFxIP5QizAjMpjD
+        V89J6Fj7ToLVzbwS2UiCtscfEo/7Lt2L5IMi7savfWpohJZPitbKbYOsYEdTC5bwhbUDPbLfcFG
+        5LCXkkBYkgjvJgOUPhYvuf2OdgrleAiSO2w==
+X-Received: by 2002:a17:906:804b:b0:930:e3a0:8636 with SMTP id x11-20020a170906804b00b00930e3a08636mr5988397ejw.57.1680778701997;
+        Thu, 06 Apr 2023 03:58:21 -0700 (PDT)
+X-Google-Smtp-Source: AKy350aoETtwoyere+ZTuvC9Y59fWPxWtLXznfKvZL7UpexVQFUpgNMKCuF81n0tTrFw+RdIw1B20w==
+X-Received: by 2002:a17:906:804b:b0:930:e3a0:8636 with SMTP id x11-20020a170906804b00b00930e3a08636mr5988389ejw.57.1680778701721;
+        Thu, 06 Apr 2023 03:58:21 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gs22-20020a170906f19600b00947d49ec819sm660247ejb.22.2023.04.06.03.53.37
+        by smtp.gmail.com with ESMTPSA id i17-20020a17090671d100b0092973e209f2sm660173ejk.109.2023.04.06.03.58.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 03:53:37 -0700 (PDT)
-Message-ID: <c5455226-1d51-1d3d-0b67-78a0473a9e8c@redhat.com>
-Date:   Thu, 6 Apr 2023 12:53:37 +0200
+        Thu, 06 Apr 2023 03:58:21 -0700 (PDT)
+Message-ID: <efcdc3fe-de74-0f0d-d9d5-3249fc1d5d53@redhat.com>
+Date:   Thu, 6 Apr 2023 12:58:20 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [RFCv3 1/1] platform/x86: Add virtual PMC driver used for S2Idle
+Subject: Re: [PATCH] platform/x86: intel-uncore-freq: Add client processors
 Content-Language: en-US, nl
-To:     Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org
-Cc:     dmy@semihalf.com, tn@semihalf.com, dbehr@google.com,
-        zide.chen@intel.corp-partner.google.com, seanjc@google.com,
-        upstream@semihalf.com, markgross@kernel.org, dtor@google.com,
-        mario.limonciello@amd.com, linux-pm@vger.kernel.org,
-        x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        rafael@kernel.org
-References: <20230213100921.268770-1-jaz@semihalf.com>
- <20230213100921.268770-2-jaz@semihalf.com>
- <CAH76GKOHMtwE7rLTPKUZJ_7xUUdHmHnGyZOsh8pFWoHCiWQynw@mail.gmail.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230330145939.1022261-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAH76GKOHMtwE7rLTPKUZJ_7xUUdHmHnGyZOsh8pFWoHCiWQynw@mail.gmail.com>
+In-Reply-To: <20230330145939.1022261-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Grzegorz,
+Hi Srinivas,
 
-On 3/29/23 14:33, Grzegorz Jaszczyk wrote:
-> Hi Hans,
+On 3/30/23 16:59, Srinivas Pandruvada wrote:
+> Make Intel uncore frequency driver support to client processor starting
+> from Alder Lake.
 > 
-> Do you think that this RFC is in good enough state to start the ACPI
-> ID registration process so after it will be completed we could land
-> this solution? Or maybe we could land it (of course if there are no
-> other remarks) even before and adjust if needed?
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-I see from the links in the cover-letter that most of
-the previous discussion has happened on the linux-pm list
-and I believe that the linux-pm folks are in a better place
-to answer this question then I am.
+I assume that this is independent from the
+"[PATCH] platform/x86/intel-uncore-freq: Uncore frequency control via TPMI"
+changes ?
 
-I have no objections against the suggested approach,
-but I don't really feel that it is my call to make if
-we should move forward with this.
+(just double checking before I merge this).
 
 Regards,
 
@@ -107,158 +96,26 @@ Hans
 
 
 
-> pon., 13 lut 2023 o 11:11 Grzegorz Jaszczyk <jaz@semihalf.com> napisał(a):
->>
->> Virtual PMC driver is meant for the guest VMs for the S2Idle
->> notification. Its purpose is to register S2Idle dev ops check handler,
->> which will evaluate ACPI _DSM just before the guest enters S2Idle power
->> state.
->>
->> This allows to trap on MMIO access done as a consequence of _DSM
->> evaluation and therefore notify the VMM about the guest entering S2Idle
->> state.
->>
->> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
->> ---
->> Changelog v1..v2:
->> - Take advantage of acpi_s2idle_dev_ops's check() instead of notify()
->>
->> Changelog v2..v3:
->> - Add MODULE_LICENSE
->> - Remove "amd" prefixes
->> - Be more verbose in VIRT_PMC config description and make it
->>   HYPERVISOR_GUEST dependent
->> - Add extra check ensuring that DSM method supports ACPI_VIRT_PMC_NOTIFY function
->> ---
->>  drivers/platform/x86/Kconfig    |  7 +++
->>  drivers/platform/x86/Makefile   |  3 ++
->>  drivers/platform/x86/virt_pmc.c | 83 +++++++++++++++++++++++++++++++++
->>  3 files changed, 93 insertions(+)
->>  create mode 100644 drivers/platform/x86/virt_pmc.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 5692385e2d26..837ce201b68b 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -1099,6 +1099,13 @@ config WINMATE_FM07_KEYS
->>           buttons below the display. This module adds an input device
->>           that delivers key events when these buttons are pressed.
->>
->> +config VIRT_PMC
->> +       tristate "Virtual Power Management Controller"
->> +       depends on ACPI && SUSPEND && HYPERVISOR_GUEST
->> +       help
->> +         The Virtual PMC driver is meant for the guest VMs and its main
->> +         purpose is to notify about guest entering s2idle state.
->> +
->>  endif # X86_PLATFORM_DEVICES
->>
->>  config P2SB
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index 1d3d1b02541b..c4d3056cf4ea 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -129,6 +129,9 @@ obj-$(CONFIG_INTEL_SCU_WDT)         += intel_scu_wdt.o
->>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
->>  obj-$(CONFIG_X86_INTEL_LPSS)           += pmc_atom.o
->>
->> +# Virtual PMC
->> +obj-$(CONFIG_VIRT_PMC)                 += virt_pmc.o
->> +
->>  # Siemens Simatic Industrial PCs
->>  obj-$(CONFIG_SIEMENS_SIMATIC_IPC)      += simatic-ipc.o
->>
->> diff --git a/drivers/platform/x86/virt_pmc.c b/drivers/platform/x86/virt_pmc.c
->> new file mode 100644
->> index 000000000000..a5966bb9048f
->> --- /dev/null
->> +++ b/drivers/platform/x86/virt_pmc.c
->> @@ -0,0 +1,83 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Virtual Power Management Controller Driver
->> + *
->> + * Author: Grzegorz Jaszczyk <jaz@semihalf.com>
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/platform_device.h>
->> +
->> +#define ACPI_VIRT_PMC_DSM_UUID "9ea49ba3-434a-49a6-be30-37cc55c4d397"
->> +#define ACPI_VIRT_PMC_NOTIFY 1
->> +
->> +static acpi_handle virt_pmc_handle;
->> +
->> +static void virt_pmc_s2idle_notify(void)
->> +{
->> +       union acpi_object *out_obj;
->> +       guid_t dsm_guid;
->> +
->> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
->> +
->> +       out_obj = acpi_evaluate_dsm(virt_pmc_handle, &dsm_guid,
->> +                                       0, ACPI_VIRT_PMC_NOTIFY, NULL);
->> +
->> +       acpi_handle_debug(virt_pmc_handle, "_DSM function %u evaluation %s\n",
->> +                         ACPI_VIRT_PMC_NOTIFY, out_obj ? "successful" : "failed");
->> +
->> +       ACPI_FREE(out_obj);
->> +}
->> +
->> +static struct acpi_s2idle_dev_ops pmc_s2idle_dev_ops = {
->> +       .check = virt_pmc_s2idle_notify,
->> +};
->> +
->> +static int virt_pmc_probe(struct platform_device *pdev)
->> +{
->> +       int err = 0;
->> +       guid_t dsm_guid;
->> +
->> +       virt_pmc_handle = ACPI_HANDLE(&pdev->dev);
->> +
->> +       guid_parse(ACPI_VIRT_PMC_DSM_UUID, &dsm_guid);
->> +
->> +       if (!acpi_check_dsm(virt_pmc_handle, &dsm_guid, 0,
->> +                           1 << ACPI_VIRT_PMC_NOTIFY)) {
->> +               dev_err(&pdev->dev, "DSM method doesn't support ACPI_VIRT_PMC_NOTIFY\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       err = acpi_register_lps0_dev(&pmc_s2idle_dev_ops);
->> +       if (err)
->> +               dev_err(&pdev->dev, "failed to register LPS0 sleep handler\n");
->> +
->> +       return err;
->> +}
->> +
->> +static int virt_pmc_remove(struct platform_device *pdev)
->> +{
->> +       acpi_unregister_lps0_dev(&pmc_s2idle_dev_ops);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct acpi_device_id virt_pmc_acpi_ids[] = {
->> +       {"HYPE0001", 0}, /* _HID for XXX Power Engine, _CID PNP0D80*/
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(acpi, virt_pmc_acpi_ids);
->> +
->> +static struct platform_driver virt_pmc_driver = {
->> +       .driver = {
->> +               .name = "virtual_pmc",
->> +               .acpi_match_table = ACPI_PTR(virt_pmc_acpi_ids),
->> +       },
->> +       .probe = virt_pmc_probe,
->> +       .remove = virt_pmc_remove,
->> +};
->> +
->> +module_platform_driver(virt_pmc_driver);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("Virtual PMC Driver");
->> --
->> 2.39.1.581.gbfd45094c4-goog
->>
+> ---
+>  .../platform/x86/intel/uncore-frequency/uncore-frequency.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> index 00ac7e381441..32e2515ee366 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> @@ -204,6 +204,13 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,	NULL),
+>  	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
+>  	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE, NULL),
+> +	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L, NULL),
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
 
