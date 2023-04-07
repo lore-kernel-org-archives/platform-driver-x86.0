@@ -2,91 +2,60 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C27CC76196
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 Apr 2023 05:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8A0C76196
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 Apr 2023 08:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjDGFjU (ORCPT
+        id S232222AbjDGIN3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 Apr 2023 01:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
+        Fri, 7 Apr 2023 04:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230060AbjDGFjT (ORCPT
+        with ESMTP id S239447AbjDGIMt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2023 01:39:19 -0400
-X-Greylist: delayed 51341 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 06 Apr 2023 22:39:18 PDT
-Received: from s.wrqvwxzv.outbound-mail.sendgrid.net (s.wrqvwxzv.outbound-mail.sendgrid.net [149.72.154.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66C39ED2
-        for <platform-driver-x86@vger.kernel.org>; Thu,  6 Apr 2023 22:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=equiv.tech;
-        h=from:subject:references:mime-version:content-type:in-reply-to:to:cc:
-        content-transfer-encoding:cc:content-type:from:subject:to;
-        s=org; bh=G9VemBoo/oQmh90TMdsZVLhnDY3UIXhAohIfrIhUiYM=;
-        b=AGEJ3Lwe2Ksdfcc9PGVVpVBQz7EJBu4gjIBH3Zuw1j/N3vSG1n5tXmCtOaEbvANNV2dK
-        KkPYtWYIUQC5uxPJfPtrh+YRb5Kfutp9U/pFklctQsP4lTNQNKwVKGEbjSnuzTNaqZPlFZ
-        3IfdD05O0jH9aUeuVoPGQo8A3wz+9iRIo=
-Received: by filterdrecv-6c845fd887-lq6xf with SMTP id filterdrecv-6c845fd887-lq6xf-1-642FAC85-C
-        2023-04-07 05:39:17.456579464 +0000 UTC m=+3823669.134456244
-Received: from localhost (unknown)
-        by geopod-ismtpd-1 (SG) with ESMTP
-        id TokS6-f2QXuJBhfPgNZvSw
-        Fri, 07 Apr 2023 05:39:16.607 +0000 (UTC)
-Date:   Fri, 07 Apr 2023 05:39:17 +0000 (UTC)
-From:   James Seo <james@equiv.tech>
-Subject: Re: [PATCH v2] hwmon: add HP WMI Sensors driver
-Message-ID: <ZC+sgnuy5bssD1DN@vb-22lts>
-References: <20230406152321.42010-1-james@equiv.tech>
- <2257deba-187b-82d2-181c-f1fed08a2ff7@gmx.de>
+        Fri, 7 Apr 2023 04:12:49 -0400
+Received: from mail.workercentrum.pl (mail.workercentrum.pl [51.89.166.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20183AF00
+        for <platform-driver-x86@vger.kernel.org>; Fri,  7 Apr 2023 01:12:26 -0700 (PDT)
+Received: by mail.workercentrum.pl (Postfix, from userid 1002)
+        id F3D0AA41F1; Fri,  7 Apr 2023 08:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=workercentrum.pl;
+        s=mail; t=1680855060;
+        bh=DQrvNxV4sbMtkGDNj/C7a2f11q8dNrBm5UPp1jE5GkY=;
+        h=Date:From:To:Subject:From;
+        b=49Hw1LfsSGUKtJdC/AO9t3Ld/BmTHo/tjKaI+rl7RsXkopDDugND1l7YaFmbksjod
+         YehKulpcjSwyJdbRHnlWdNgjrXYZUZqd/RWvu1Xroe3oVGyWmGP8G4I3ZGkVhhbAav
+         +o/+mNZN/4IWGh6WzwcreHV8UrUufnovsHxWp/HOgp0JF1287jUhhgfIsJQKpZoS0Q
+         MhAw5A5VDvY91xv+tjk8kJZZfHYXbqKR5Iyr3bSCZ3nNYS0Uz5QwAOz1e284EWlNlS
+         TA/tU6EGj3VDf4Q51F6uUD9pIU5CofinGhZzXPzMFyGPyRNOM+kRQ2MrA8gE61gB2N
+         7NMHHdtbYOuUw==
+Received: by mail.workercentrum.pl for <platform-driver-x86@vger.kernel.org>; Fri,  7 Apr 2023 08:11:00 GMT
+Message-ID: <20230407064500-0.1.8i.tsc9.0.o2c8i1dkg7@workercentrum.pl>
+Date:   Fri,  7 Apr 2023 08:11:00 GMT
+From:   "Piotr Werner" <piotr.werner@workercentrum.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: Panele fotowaltaiczne
+X-Mailer: mail.workercentrum.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2257deba-187b-82d2-181c-f1fed08a2ff7@gmx.de>
-X-SG-EID: =?us-ascii?Q?1X41iaRO4wVP+tFXGLuxpQ0yxxMDhGIesR5UcsYKVengQKgidLJSXwOMZlPQwP?=
- =?us-ascii?Q?WsAj56po3NRvhdf1mTxjVMIv2D1=2FDP7Bkv5o0um?=
- =?us-ascii?Q?PWoegI9wRMHmPxJcjLNe2oweeMgjlSP+NrWwbFZ?=
- =?us-ascii?Q?OqRh=2FZ=2F83xvPmAi7YlX0X7dGZEIuVLn=2FtomZ5XJ?=
- =?us-ascii?Q?oFGzg8hJFu1t9TGNU7vSTBnN6wllr=2F7WAihQI40?=
- =?us-ascii?Q?26fZtYg=2FORzQ8qQpVXaWHmK2cgsenZvjsM6Pv55?=
- =?us-ascii?Q?ZSYi8zV85JoZTfvDeHqTQ=3D=3D?=
-To:     Armin Wolf <W_Armin@gmx.de>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-Entity-ID: Y+qgTyM7KJvXcwsg19bS4g==
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Dzie=C5=84 dobry,
 
-> is it guaranteed that faulty sensors wont become operational later?
-> Also filtering out such sensors would make the support for the hwmon_temp_fault and
-> hwmon_fan_fault attributes meaningless.
+Jeste=C5=9Bmy firm=C4=85 z wieloletnim do=C5=9Bwiadczeniem, kt=C3=B3ra sp=
+rawnie przygotuje dla Pa=C5=84stwa ofert=C4=99 i wszelkie formalno=C5=9Bc=
+i. Sam monta=C5=BC zaplanujemy na wiosn=C4=99.
 
-Good point. I can't be certain, but the MOF does seem to imply that
-sensors can indeed be faulty on just a temporary basis.
+O samych plusach fotowoltaiki czy pompach ciep=C5=82a na pewno ju=C5=BC P=
+a=C5=84stwo s=C5=82yszeli, dlatego teraz prosimy o zostawienie kontaktu, =
+aby nasz specjalista m=C3=B3g=C5=82 przedstawi=C4=87 ofert=C4=99 zgodn=C4=
+=85 z Waszymi potrzebami.
 
-I'll filter out only the sensors that are "Not Connected" at probe
-time. My thinking is, even if these might turn into connected sensors
-later, that would mean the user is e.g. hot-plugging a fan (!), and
-keeping them could result in a large number (~10 on my Z420) of
-pointless extra channels. And this would also match the behavior of
-HP's official utility.
+Kiedy mogliby=C5=9Bmy z Pa=C5=84stwem um=C3=B3wi=C4=87 si=C4=99 na rozmow=
+=C4=99 w celu zbadania potrzeb?
 
-Does that seem reasonable? Or did you mean that I shouldn't filter,
-and leave disconnected sensors in like some other hwmon drivers do?
 
-> The sanity check for HP_WMI_NUMERIC_SENSOR_GUID is unnecessary, the WMI driver core already makes sure that your driver
-> is only matched with WMI devices containing HP_WMI_NUMERIC_SENSOR_GUID.
-> As for the sanity check regarding HP_WMI_BIOS_GUID: this WMI GUID is not used inside the driver. Since WMI GUIDs are expected
-> to be unique, checking for HP_WMI_BIOS_GUID (which AFAIK is used by the HP-BIOSCFG driver) without intending to use it is
-> meaningless.
-
-In that case, I'll gladly remove the checks. I was following the
-example of the platform/x86/hp-wmi driver, which checks for that GUID
-and another at module load.
-
-Thanks for reviewing.
-
-James
+Pozdrawiam,
+Piotr Werner
