@@ -2,124 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCB2C77B61
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Apr 2023 02:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B3CC7619A
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 Apr 2023 03:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjDHC0b (ORCPT
+        id S229617AbjDHD66 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 Apr 2023 22:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        Fri, 7 Apr 2023 23:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjDHC0b (ORCPT
+        with ESMTP id S229457AbjDHD65 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2023 22:26:31 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6831BCC1F;
-        Fri,  7 Apr 2023 19:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680920790; x=1712456790;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DP/6n7B8aOJPPw9H6I1+IBM8O6GwGkK+AtSPpjSso4s=;
-  b=L36bI+GQrna0oArrKWZy9MMhpQ2pNqNP+vQ0p056EGw9qll7YvgSXYqn
-   693uKt2/5Sr3/g0ejEzewKlbht8t7AWS67+9sjlv+9BN0AqwngAtzMV7x
-   MxVpFQl9chy63druYDPqPaJDYmyRJnMLKH2h88lDl4srWs16wWSPRFpH5
-   GapQ+1w1uYkDXxAuHSdPKJUbbfF1rayiB7SgRk3SCYiXqHX5h2bfuTq0h
-   fftAPqagFZIcYoMTKoW07F0YBjxjAXClF4zq378RQbDMJ83lnrWp1Jgxp
-   44LKRiTy+ZV5QDA2Cmq+mDRh1SSdm1oAU4CJHvoEituQGp+zVaxqVhuam
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="323473923"
-X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
-   d="scan'208";a="323473923"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 19:26:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="690214902"
-X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
-   d="scan'208";a="690214902"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Apr 2023 19:26:29 -0700
-Received: from debox1-desk4.lan (unknown [10.251.23.166])
-        by linux.intel.com (Postfix) with ESMTP id A8F9558047E;
-        Fri,  7 Apr 2023 19:26:29 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     srinivas.pandruvada@linux.intel.com, irenic.rajneesh@gmail.com,
-        david.e.box@intel.com, hdegoede@redhat.com, markgross@kernel.org,
-        rjw@rjwysocki.net
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devices in D3
-Date:   Fri,  7 Apr 2023 19:26:29 -0700
-Message-Id: <20230408022629.727721-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 7 Apr 2023 23:58:57 -0400
+Received: from s.wrqvtbkv.outbound-mail.sendgrid.net (s.wrqvtbkv.outbound-mail.sendgrid.net [149.72.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5988D328
+        for <platform-driver-x86@vger.kernel.org>; Fri,  7 Apr 2023 20:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=equiv.tech;
+        h=from:subject:references:mime-version:content-type:in-reply-to:to:cc:
+        content-transfer-encoding:cc:content-type:from:subject:to;
+        s=org; bh=9fXf41jSfeH8npS2SnXtOfP5uik6JpmwKRQ6ipNjZhg=;
+        b=mMH1/aZlfkigrD7oqZwotDQVo/b4Gps6GU01Cot3KtnizHwlc1YMxH8vHOuUfqdnuCGC
+        SGn+ixiHfYx6Bu2utFfKxDrVH2vcBFJQhabWRRsDqH0GXi020AkfwMnGjmS+a/ErGhtW1Y
+        4uBWi3DmmdxfeSR2TygKP3Kzcy8nlBWo4=
+Received: by filterdrecv-7457b4c9b5-zkl2v with SMTP id filterdrecv-7457b4c9b5-zkl2v-1-6430E67E-6
+        2023-04-08 03:58:54.271893053 +0000 UTC m=+3903964.849135075
+Received: from localhost (unknown)
+        by geopod-ismtpd-6 (SG) with ESMTP
+        id XJJ8jxPtQIa9xN2G75nh4A
+        Sat, 08 Apr 2023 03:58:53.421 +0000 (UTC)
+Date:   Sat, 08 Apr 2023 03:58:54 +0000 (UTC)
+From:   James Seo <james@equiv.tech>
+Subject: Re: [PATCH v2] hwmon: add HP WMI Sensors driver
+Message-ID: <ZDDmewAgPi/4jpcX@equiv.tech>
+References: <20230406152321.42010-1-james@equiv.tech>
+ <2257deba-187b-82d2-181c-f1fed08a2ff7@gmx.de>
+ <ZC+sgnuy5bssD1DN@vb-22lts>
+ <e256d281-49a5-2d9a-7def-fd68e177e926@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e256d281-49a5-2d9a-7def-fd68e177e926@roeck-us.net>
+X-SG-EID: =?us-ascii?Q?1X41iaRO4wVP+tFXGLuxpQ0yxxMDhGIesR5UcsYKVengQKgidLJSXwOMZlPQwP?=
+ =?us-ascii?Q?WsEyzZr62PnJ8E17NJhhMO0lG3ycUBe69Gwm5XP?=
+ =?us-ascii?Q?UVOGIf7x=2FfnTSULP9ZVcTc=2FVMlX41+BWNk1aAfb?=
+ =?us-ascii?Q?WMk78u45CuLbFB4rVeUaORdTBmyFjdSS9qia3+Q?=
+ =?us-ascii?Q?f7oIIeGoKu08aA8fmergc2xzdZgDnaqbff7cb9a?=
+ =?us-ascii?Q?MHcYz+R82B28zy1s4deuotP2CMHxxHdKksvDITI?=
+ =?us-ascii?Q?hdAviDPZGhDXBqSgoQqfQ=3D=3D?=
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Entity-ID: Y+qgTyM7KJvXcwsg19bS4g==
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Meteor Lake, the GNA, IPU, and VPU devices are booted in D0 power state
-and will block the SoC from going into the deepest Package C-state if a
-driver is not present. Put each device in D3hot if no driver is found.
+Greetings,
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/mtl.c | 31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+On Fri, Apr 07, 2023 at 05:54:48AM -0700, Guenter Roeck wrote:
+> On 4/6/23 22:39, James Seo wrote:
+>> Hi,
+>> 
+>>> is it guaranteed that faulty sensors wont become operational later?
+>>> Also filtering out such sensors would make the support for the hwmon_temp_fault and
+>>> hwmon_fan_fault attributes meaningless.
+>> 
+>> Good point. I can't be certain, but the MOF does seem to imply that
+>> sensors can indeed be faulty on just a temporary basis.
+>> 
+> 
+> Your current code would explicitly exclude faulty fans from being listed,
+> which does not exactly sound like a good idea.
 
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index eeb3bd8c2502..33aa98b54049 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -8,6 +8,7 @@
-  *
-  */
- 
-+#include <linux/pci.h>
- #include "core.h"
- 
- const struct pmc_reg_map mtl_reg_map = {
-@@ -45,8 +46,38 @@ void mtl_core_configure(struct pmc_dev *pmcdev)
- 	pmc_core_send_ltr_ignore(pmcdev, 3);
- }
- 
-+#define MTL_GNA_PCI_DEV	0x7e4c
-+#define MTL_IPU_PCI_DEV	0x7d19
-+#define MTL_VPU_PCI_DEV	0x7d1d
-+void mtl_set_device_d3(unsigned int device)
-+{
-+	struct pci_dev *pcidev;
-+
-+	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, device, NULL);
-+	if (pcidev) {
-+		if (!device_trylock(&pcidev->dev)) {
-+			pci_dev_put(pcidev);
-+			return;
-+		}
-+		if (!pcidev->dev.driver) {
-+			dev_info(&pcidev->dev, "Setting to D3hot\n");
-+			pci_set_power_state(pcidev, PCI_D3hot);
-+		}
-+		device_unlock(&pcidev->dev);
-+		pci_dev_put(pcidev);
-+	}
-+}
-+
- void mtl_core_init(struct pmc_dev *pmcdev)
- {
- 	pmcdev->map = &mtl_reg_map;
- 	pmcdev->core_configure = mtl_core_configure;
-+
-+	/*
-+	 * Set power state of select devices that do not have drivers to D3
-+	 * so that they do not block Package C entry.
-+	 */
-+	mtl_set_device_d3(MTL_GNA_PCI_DEV);
-+	mtl_set_device_d3(MTL_IPU_PCI_DEV);
-+	mtl_set_device_d3(MTL_VPU_PCI_DEV);
- }
+True enough. I recall my reasoning being that faulty sensors would
+still be visible in debugfs. I should have seen the problem then.
 
-base-commit: 4f59630a5ed0a4e7d275bd7e5d253a8f5a425c5a
--- 
-2.34.1
+>> I'll filter out only the sensors that are "Not Connected" at probe
+>> time. My thinking is, even if these might turn into connected sensors
+>> later, that would mean the user is e.g. hot-plugging a fan (!), and
+>> keeping them could result in a large number (~10 on my Z420) of
+>> pointless extra channels. And this would also match the behavior of
+>> HP's official utility.
+>> 
+> Ultimately that is an implementation decision. Are the sensors hot-pluggable ?
 
+HP's WMI object specification allows sensors to be hot-pluggable in
+principle. I can't definitively say more than that due to a lack of
+test hardware (that whitepaper I referenced is from 2005, after all).
+
+So I think the answer is that it depends on the board and the WMI
+implementation. That's also what I meant in my reply to Armin when I
+said that I couldn't be certain whether faulty sensors can recover.
+
+But I take your point that the driver should be able to handle it if
+the board can.
+
+> If so, how does HP's utility handle the insertion or removal of a sensor (fan) ?
+
+HP's utility just pretty-prints a snapshot of what is in WMI at the
+moment when the user clicks a button, and then only for the sensors
+that were connected when the utility was first started. It doesn't do
+anything special to handle insertion or removal beyond that.
+
+> Either case, it is ok with me if disconnected sensors are not listed.
+> Not listing faulty sensors seems like a bad idea, though.
+> 
+> Guenter
+
+Acknowledged. Faulty sensors will be listed in the next version.
+
+Thanks for reviewing. Further suggestions or concerns from you or
+anyone else reading this are both welcome and appreciated.
+
+James
