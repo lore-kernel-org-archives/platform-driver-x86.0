@@ -2,305 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D30BC7619A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 20:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E274C76196
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 21:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjDKU0c (ORCPT
+        id S229710AbjDKVSa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 16:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40218 "EHLO
+        Tue, 11 Apr 2023 17:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbjDKU0a (ORCPT
+        with ESMTP id S229821AbjDKVS2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 16:26:30 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B958E55AD;
-        Tue, 11 Apr 2023 13:26:28 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id q15so6181451ljp.5;
-        Tue, 11 Apr 2023 13:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681244787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lQVVITLQWclfjFe3YqWywryPzaNAk23mxsgQqVNJwQY=;
-        b=Ird8NRqrKf19gxtM1ta7hArw7+t3gFLnbntkpKVwQMtawpzd8vtVsJfSKqoOz7Xhl5
-         FIytCBaDUhwYtaV6WjgFoqL/kwbd1JI+cX6F1VsiIWdRvu1ZkngkaD2uxEAo+vuuZm36
-         6f8XhFKBhQEEGvmHaMZDLJfsEFOhjXQccVlT85oBQVysb/baPylomSlqN/IgtWOJpdNg
-         p0GKhmPZozeNhEYWux3LXKkbHSUjGK2OW/7GrWn+qxtille3a+aRkaQveckCJg3zdTuh
-         0og77o5w1zN+Q94uVfMnEFVXsiF/UO6lbCr50ESY9TVbZ+lxalcsxZRQ10Raf0zibr+J
-         6faA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681244787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lQVVITLQWclfjFe3YqWywryPzaNAk23mxsgQqVNJwQY=;
-        b=zZ9VS71E0vA26x9ByN3PmZys3O36cM4nwU7CvyDH7fo3VMknhOqLdWT4DZMidn53kD
-         t9gvMVJbX20oHJVRxoPChqSn8VXMsYAT/FRjZl011+N/BwlVuF96oP79ULFVXP270g2N
-         IGWBnvcm2X4xScLdqqqx5n1hj8EBXdRnv7YZMJOJ+HsdrONv4BBtxdqP58NlRdNAX04X
-         Te60hAS1YB7beLVT6TCuwlG95TPoisJSaKPkrZNRYucDKxH1Dmda5eNlKnS3Bxe4+vht
-         KmUH82EGTbf8hDWI+L31gQwjpE/nmYjyDtNZ2gxid1+aV6CEdZYy9LS0mGPZuvGgeG4U
-         raQw==
-X-Gm-Message-State: AAQBX9foBR3IRGXm29/wz0nlRkse4FDrj1ygAtOmm1EUeqJ2+scUaJIm
-        2hBP8hyjgb7s+v11FXWiBGcVkIbSYhQpRC+qzMw=
-X-Google-Smtp-Source: AKy350Z4XWKYKFI5n0GeJ6zsX2xk9akJ/Dcx4k18MxKtNfto1XHNOAXebbc532C8bHQmvDRaTcJFRYAo1Q4bv5SKKK4=
-X-Received: by 2002:a2e:80c3:0:b0:2a3:5c1c:ec20 with SMTP id
- r3-20020a2e80c3000000b002a35c1cec20mr3609643ljg.7.1681244786692; Tue, 11 Apr
- 2023 13:26:26 -0700 (PDT)
+        Tue, 11 Apr 2023 17:18:28 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2715FDA;
+        Tue, 11 Apr 2023 14:18:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NUFDYOFwGVn3xOvmnddFzKuhWG2G5zU5XmxXpIrxC6RTlzA6Pa7mzw6AjOUhCDuZQQEVOf7W8aYCpvYa9q3cAB1TqyaoVNEYFfPl+CgIK+0Ko2o1lupNG6PgEJNbMUfQQjugrkb8lOnnX2qx27fuPmAwf70jqd3654hYf/e4PrndkEnZt/Uezi0aqE4Y8NJJ1lPUKpyd6TG89rLnqBL28jJPPEFc/da5hWi+hEQFsC6Xo4kegx/HgfYat681ooSVyfw2FOkFtSrg6yIyx/rYD+mzUbCyLb/6tCMXBPJQaSQ29qjv2ENQiniJ4mqMY+WWl2wXu2jgjDQNlKDEuUQA6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RE8MRLhkhixWhGJobhh4Akc9sdxPv/vAzn5PTr+H/FQ=;
+ b=l2KK20gnyMnqPUuvTicEHVVj4dh4qN9fmww67eywDnb0XlqatjAK2z5D5AWyEetpoHlFdt5M2x9oe3e+BDiJaLHRsYFURy4TDxmixbTSEkqz7ZwFPEdKROMNzU98G9mkuI/gmvRHopvN53AIaJN3i0mDRGoP41ATLej+Wxz+ZFuwRvAhXouBRDPN3GKC79/Oa1GsHmcPzByNo4XX3Zyg5d62B/uXGFxeanLEfKvmRk/BhPXLWTf1naghhgqCGmI+oqS9rTHHH8vsN8s66YsXeBFblZ7Z7PKAFT1bNhyGjH7oFVWDWVZEzdUU8/IAkmKEAK36SVL30cck/ESEqcGa+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RE8MRLhkhixWhGJobhh4Akc9sdxPv/vAzn5PTr+H/FQ=;
+ b=yl8jyPlJS1+U3vakzQocnBq6OlYiQJvZCDTa38FdSoZMldK/ZCIFoHXVM1Pv9wQ3mVM6vq+Trn1gBgkOODEGh1QqW50LzcKU96jIMPQ3J4R9RbfDAcZpYaKRZ8aqqiZqp86QyTEYRlmIxFDtaCYfPorvwzrdRIkKHDb+DcZraYo=
+Received: from BN8PR04CA0048.namprd04.prod.outlook.com (2603:10b6:408:d4::22)
+ by CH2PR12MB5020.namprd12.prod.outlook.com (2603:10b6:610:65::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.28; Tue, 11 Apr
+ 2023 21:17:49 +0000
+Received: from BN8NAM11FT028.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:d4::4) by BN8PR04CA0048.outlook.office365.com
+ (2603:10b6:408:d4::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.40 via Frontend
+ Transport; Tue, 11 Apr 2023 21:17:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT028.mail.protection.outlook.com (10.13.176.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6298.28 via Frontend Transport; Tue, 11 Apr 2023 21:17:48 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 11 Apr
+ 2023 16:17:47 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
+        <pavel@ucw.cz>, <svenva@chromium.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>
+CC:     <Shyam-sundar.S-k@amd.com>, <rrangel@chromium.org>,
+        Jain Rajat <rajatja@google.com>, <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 0/4] Add vendor agnostic mechanism to report hardware sleep
+Date:   Tue, 11 Apr 2023 16:17:14 -0500
+Message-ID: <20230411211719.4549-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230403211548.6253-1-jorge.lopez2@hp.com> <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
- <CAOOmCE8z_UDs8dG0MqX+SFcvd-CTX12XXKzOrVOKDuvrPkyeCQ@mail.gmail.com> <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
-In-Reply-To: <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 11 Apr 2023 15:26:06 -0500
-Message-ID: <CAOOmCE81NTALi-AWOd0JNuzy6UCcCr2qAF0DQAVjUGi=w_eEOw@mail.gmail.com>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT028:EE_|CH2PR12MB5020:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64329f96-8563-4a54-36ea-08db3ad233b4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GoT/+wwkTtG6ANxbh/hjI2spzkawa7Hm2XKakDNKJj3Hs7Tcq1pwn70dBAX340Ni66JJHg51+1FvSst/14f/jF2AF9GWv25kY4AO9On5T4a11kH6KCezfIkmCPairXj+FTVJcLEB4ju0LGvAI9cML9f8Uk/SukIMawcouvk6rXi5kbgHgMaFJbEiHD6fnDKopoYueuNdlvAE85bIL0UUav+zTCYTBXILSybH1ccx7gsH47IlyZMbynPjwQHTEOGE0vC7bLPI3eeGeX3NIRwzdtbh1jpfDkax6ksjGCKxWLRCb8GSJMmLIMguc21U/PNzRU5Ql6Xkfb37VO5l4VMQduvoM3CYHocPKSxJNvo4xBfiAoFi+bfwcm8+RPfmx3AnGLQxWQOtTkeoYR7FnBwbNAWl4sIV+AwPuSwP+ckmpdtRfIjYVsIlJmSyJLZ/Dy3oYyJVgv27DwZDhr3TZIetTX9e3Qy+QQ9rdBu1cSvi0NZOMulg+9t89aDFbRwfaBQvMiSCDVv3D+qZ+gsjabag3VhUrEbddZOm85FAg1VYK8ehb6YRAF9esyx7n+Tuq9vMZvQa8i5++2pZzfIOxUFgrholHw3eSe8dozMUj7kEPtxj5w9GsiTF8mVr/Cvw5sYm5oZ7WZXmS3Qf+0oQWaZ+glnsK6E6Ztf++qU/gI5G/5OA4Hsj1sEtBRocZzjYZqEJb60/VHXvNcdTA12rEtyYx/IpEiYVfTVXr0gEYiwiw+U=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199021)(36840700001)(46966006)(40470700004)(7416002)(1076003)(356005)(82740400003)(26005)(81166007)(47076005)(83380400001)(426003)(336012)(2616005)(186003)(16526019)(36860700001)(40460700003)(82310400005)(36756003)(44832011)(41300700001)(7696005)(316002)(8676002)(4326008)(5660300002)(86362001)(6666004)(8936002)(40480700001)(2906002)(478600001)(54906003)(110136005)(70586007)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 21:17:48.7580
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64329f96-8563-4a54-36ea-08db3ad233b4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT028.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5020
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+An important part of validating that s0ix worked properly is to check how
+much of a cycle was spent in a hardware sleep state.
 
+The reporting of hardware sleep is a mix of kernel messages and sysfs
+files that vary from vendor to vendor. Collecting this information
+requires extra information on the kernel command line or fetching from
+debugfs.
 
-On Tue, Apr 11, 2023 at 11:16=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
-h.de> wrote:
->
-> Hi Jorge!
->
->
-> Apr 4, 2023 22:24:36 Jorge Lopez <jorgealtxwork@gmail.com>:
->
-> > Hi Thomas,
-> >
-> > BTW, I decided to submit all files individually to facilitate the
-> > review process.  Only Makefile and Kconfig files will be provided as a
-> > single patch.
-> > I will be out of town until April 11 and will reply back upon my return=
-.
->
-> Sorry for the slow response.
->
-> >
-> > Please see my comments below.
-> >
-> >>
-> >>> +             HP specific types
-> >>> +             -----------------
-> >>> +                     - ordered-list - a set of ordered list valid va=
-lues
-> >>> +                     - sure-start
+To make this information more readily accessible introduce a new file in
+suspend_stats that drivers can report into during their resume routine.
 
-> But what does it mean?
-> For ordered-list there is a nice explanation.
->
+Userspace can fetch this information and compare it against the duration
+of the cycle to allow determining residency percentages and flagging
+problems.
 
-The latest submission includes a short explanation
+Mario Limonciello (4):
+  PM: Add sysfs files to represent time spent in hardware sleep state
+  platform/x86/amd: pmc: Report duration of time in hw sleep state
+  platform/x86/intel/pmc: core: Always capture counters on suspend
+  platform/x86/intel/pmc: core: Report duration of time in HW sleep
+    state
 
-                HP specific types
-                -----------------
-                        - ordered-list - a set of ordered list valid values
-                        - sure-start - report audit logs read from BIOS
+ Documentation/ABI/testing/sysfs-power | 24 ++++++++++++++++
+ drivers/platform/x86/amd/pmc.c        |  5 ++--
+ drivers/platform/x86/intel/pmc/core.c | 15 +++++-----
+ drivers/platform/x86/intel/pmc/core.h |  2 --
+ include/linux/suspend.h               |  5 ++++
+ kernel/power/main.c                   | 40 +++++++++++++++++++++++++++
+ 6 files changed, 78 insertions(+), 13 deletions(-)
 
+-- 
+2.34.1
 
-> >>> +             audit_log_entry_count:
-> >>> +                                     A read-only file that returns t=
-he number of existing audit log events available to be read.
-> >>> +                                     Values are separated using comm=
-a (``,``)
-> >>> +
-> >>> +                                     [No of entries],[log entry size=
-],[Max number of entries supported]
-> >>
-> >> Will log entry size always be 16? Or can it be bigger in the future wh=
-en
-> >> more bytes are used?
-> >> This should be mentioned.
-> >
-> > Log entry size is always 16 bytes in size.  The reason is to report a
-> > maximum of 256 entries.  Total 4096 bytes
->
-> Does it make sense to expose the number 16 from sysfs if it never can cha=
-nge anyways?
-
-The current audit log file is 16 bytes but future BIOS can expand the
-audit log to up to 128 bytes.
-Additional details are now included in the audit_log_entry_count
-section.  WMI  reports only the total number of audit logs but not the
-individual audit log size hence the reason the size is hardcoded to 16
-bytes in the driver.  A patch will be provided when the audit log size
-changes or a new WMI is provided.
-
->
-> Note you can also customize the filesize reported in sysfs to expose the =
-maximum size to be used by userspace.
->
-
-This is another area with additional details in the latest review.
-
-                "sure-start"-type specific properties:
-
-                audit_log_entries:
-                                        A read-only file that returns
-the events in the log.
-                                        Values are separated using
-semi-colon (``;``)
-
-                                        Audit log entry format
-
-                                        Byte 0-15:   Requested Audit
-Log entry  (Each Audit log is 16 bytes)
-                                        Byte 16-127: Unused
-
-                audit_log_entry_count:
-                                        A read-only file that returns
-the number of existing audit log events available to be read.
-                                        Values are separated using comma (`=
-`,``)
-
-                                        [No of entries],[log entry
-size],[Max number of entries supported]
-
-                                        log entry size identifies
-audit log size for the current BIOS version.
-                                        The current size is 16 bytes
-but it can be to up to 128 bytes long
-                                        in future BIOS versions.
-
-
-
-> >>
-> >> Is audit_log_entry_count ever used without reading audit_log_entries
-> >> right after?
-> > Yes. The counter is necessary to determine how many logs are available
-> > to be read.
->
-> I think the cleaner interface would be to have users provide a buffer to =
-read into and then they check the return value of read().
-> Users can't trust the count value anyways as it is prone to TOCTOU races.
-
-Audit logs buffer information includes an audit log number associated
-with each log entry.   The log number information is added by the
-driver.  The audit log is read as a single continuous buffer and the
-application does not read individual audit logs while reading sysfs.
-The application copies the whole buffer, extracts and identifies each
-audit log from its local buffer.
-
-Byte 0:       Audit log number
-Byte 1-16:  Audit log information
-
-
-
->
-> >
-> >> If not the count file could be dropped.
-> >>
-> >>> +What:                /sys/class/firmware-attributes/*/authentication=
-/SPM/status
-> >>> +Date:                March 29
-> >>> +KernelVersion:       5.18
-> >>> +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >>> +Description: 'status' is a read-only file that returns ASCII text re=
-porting
-> >>> +             the status information.
-> >>> +
-> >>> +               State:  Not Provisioned / Provisioned / Provisioning =
-in progress
-> >>> +               Version:  Major.   Minor
-> >>> +               Feature Bit Mask: <16-bit unsigned number display in =
-hex>
-> >>
-> >> How are these bits to be interpreted?
-> > This information is provided by BIOS.  It is one of those obscure
-> > values from BIOS.
-> >>
-> >>> +               SPM Counter: <16-bit unsigned number display in base =
-10>
-> >>> +               Signing Key Public Key Modulus (base64):
-> >>> +               KEK Public Key Modulus (base64):
-> >>
-> >> Is " (base64)" supposed to be part of the contents of the file?
-> >
-> > The information reported for Signing Key and KEK public key are
-> > reported as base64 values.  It applies only to the data and not to the
-> > file contents.
->
-> Put is the file format:
-> KEK Public Key Modulus (base64): ...
-> KEK Public Key Modulus: ...
->
-> The docs indicate the former.
-
-Also included in the last review is additional clarification on how
-the Modules are reported.
-
-What:           /sys/class/firmware-attributes/*/authentication/SPM/status
-Date:           March 29
-KernelVersion:  5.18
-Contact:        "Jorge Lopez" <jorge.lopez2@hp.com>
-Description:    'status' is a read-only file that returns ASCII text report=
-ing
-                the status information.
-
-                  State:  Not Provisioned / Provisioned / Provisioning
-in progress
-                  Version:  Major.   Minor
-                  Feature Bit Mask: <16-bit unsigned number display in hex>
-                  SPM Counter: <16-bit unsigned number display in base 10>
-                  Signing Key Public Key Modulus (base64): <256 bytes
-base64 in hex>
-                  KEK Public Key Modulus (base64): <256 bytes base64 in hex=
->
-
->
-> >>
-> >>> +
-> >>> +
-> >>> +What:                /sys/class/firmware-attributes/*/authentication=
-/SPM/statusbin
-> >>> +Date:                March 29
-> >>> +KernelVersion:       5.18
-> >>> +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >>> +Description: 'statusbin' is a read-only file that returns identical =
-status
-> >>> +             information reported by 'status' file in binary format.
-> >>
-> >> This documentation should contain enough information to understand the
-> >> files contents.
-> >>
-> >>
-> >> I understand that one WMI call will return all the fields that are par=
-t
-> >> of the "status" and "statusbin" in one response.
-> >>
-> >> Are these WMI calls especially expensive or called especially
-> >> frequently?
-> >>
-> >
-> > Unfortunately the WMI to read the Status binary data is expensive
-> > hence the reason of only calling once.
->
-> Hm, I still dislike the interface, sorry.
-
-No worries.  The implementation is a legacy from the Windows driver
-and security applications define it.
-
-> What about caching the values in the driver and exposing them via differe=
-nt files?
-
-The information changes as a group during the SPM configuration
-process so caching would not help much.  Version field is the only
-field that can be cached.
-If the information is split in difference files,  there are conditions
-when the user would read stale data in one field or another.
-
-
-> >
-> > Regards,
-> > > Jorge
->
