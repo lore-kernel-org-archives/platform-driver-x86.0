@@ -2,257 +2,305 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F03FC76196
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D30BC7619A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 20:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjDKSro (ORCPT
+        id S229640AbjDKU0c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 14:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
+        Tue, 11 Apr 2023 16:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbjDKSrn (ORCPT
+        with ESMTP id S229659AbjDKU0a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 14:47:43 -0400
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFC259E0;
-        Tue, 11 Apr 2023 11:47:37 -0700 (PDT)
-Received: by mail-oi1-x22f.google.com with SMTP id bm45so402493oib.4;
-        Tue, 11 Apr 2023 11:47:37 -0700 (PDT)
+        Tue, 11 Apr 2023 16:26:30 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B958E55AD;
+        Tue, 11 Apr 2023 13:26:28 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id q15so6181451ljp.5;
+        Tue, 11 Apr 2023 13:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681238856;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kk477w1X5WRzFsI1J9lBfe7oTm+OO75NUtps8CJqs0w=;
-        b=nPEr2GaeemD9D86mbdw4y/kZkBnw6V7zIcxBhtxwmzBu4md6A8WwUq2b4vzfPKb6js
-         7JyXhB9OJwnhb0QsXdgF0P8W1L+qQbOqBR7/C5Qce1E4T9x6gln2AigU0v+bkTByMpxv
-         lNdkcdGb30wj/YAXPf6RJOizeKcJ0BZEYc6e2czmz5n0F2ZjBgj15dNCJ6srf3ia6jai
-         SYu0Zgn6LRfKYdb6I7YmczgYKydCzc/cHb6lYNhdVzIPwczPi3utTBj6h3Myxi+azkPI
-         C53W76gXYuLzTX24TTCZvvz9BMOUYYbLYGXQG/7XDnkrcUjBCbGWSe9gM17UH4v9JiVL
-         UqKA==
+        d=gmail.com; s=20221208; t=1681244787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lQVVITLQWclfjFe3YqWywryPzaNAk23mxsgQqVNJwQY=;
+        b=Ird8NRqrKf19gxtM1ta7hArw7+t3gFLnbntkpKVwQMtawpzd8vtVsJfSKqoOz7Xhl5
+         FIytCBaDUhwYtaV6WjgFoqL/kwbd1JI+cX6F1VsiIWdRvu1ZkngkaD2uxEAo+vuuZm36
+         6f8XhFKBhQEEGvmHaMZDLJfsEFOhjXQccVlT85oBQVysb/baPylomSlqN/IgtWOJpdNg
+         p0GKhmPZozeNhEYWux3LXKkbHSUjGK2OW/7GrWn+qxtille3a+aRkaQveckCJg3zdTuh
+         0og77o5w1zN+Q94uVfMnEFVXsiF/UO6lbCr50ESY9TVbZ+lxalcsxZRQ10Raf0zibr+J
+         6faA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681238856;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kk477w1X5WRzFsI1J9lBfe7oTm+OO75NUtps8CJqs0w=;
-        b=TfU17abysAp1GnLfJVTol5WoWQrhwYG5p9tJcYEXfvgagaN8JfVdfO/eqSYvhzjq/B
-         ULmu2CFHj5tmfX3jIMi8GGJdn4zchShG/10nIhiEx2KPOqBynlU60lXrrN2Nus5/kB82
-         A1ePAz5FyxLzqqRJFB2yktTat/EeoEuRiP+/hZJxEVnXLfH8vFc0iqBPNVtUMFkmud12
-         i82MDHR22avOxJ8SMDT8/TEmmDuAWyPAtHjYUM4I4hFfwSlsxzdqtAEX0VEYfIbnd7hV
-         WQZvjkesxo84h4FRNY97l/QV0EaM5vlZyVS1VSdSxZaS9eCZ7mQCHxNboGaNtEsphqDK
-         mdww==
-X-Gm-Message-State: AAQBX9f/Krzvs8YXUM/SyQ/rWEjHdCJHO+SegQJ6xbTeDr+RWXbHeycW
-        +0Kjid9aqTqcOTdq2G45eXi4yo9v2zg=
-X-Google-Smtp-Source: AKy350bhbKuClLWPAR6pCoY/cFQZR5hrEldPIUh9unJdIFLO4niQZV2+pyhkBDL35GAId5Iv8l/Tzg==
-X-Received: by 2002:a05:6808:194:b0:387:53ce:4eb3 with SMTP id w20-20020a056808019400b0038753ce4eb3mr4894301oic.48.1681238856255;
-        Tue, 11 Apr 2023 11:47:36 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:54ed:46b2:3609:5e1a])
-        by smtp.gmail.com with ESMTPSA id o7-20020acad707000000b0038b0dd1c040sm5937771oig.3.2023.04.11.11.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 11:47:35 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8] HP BIOSCFG driver - Documentation
-Date:   Tue, 11 Apr 2023 13:47:34 -0500
-Message-Id: <20230411184734.7011-1-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20210112; t=1681244787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQVVITLQWclfjFe3YqWywryPzaNAk23mxsgQqVNJwQY=;
+        b=zZ9VS71E0vA26x9ByN3PmZys3O36cM4nwU7CvyDH7fo3VMknhOqLdWT4DZMidn53kD
+         t9gvMVJbX20oHJVRxoPChqSn8VXMsYAT/FRjZl011+N/BwlVuF96oP79ULFVXP270g2N
+         IGWBnvcm2X4xScLdqqqx5n1hj8EBXdRnv7YZMJOJ+HsdrONv4BBtxdqP58NlRdNAX04X
+         Te60hAS1YB7beLVT6TCuwlG95TPoisJSaKPkrZNRYucDKxH1Dmda5eNlKnS3Bxe4+vht
+         KmUH82EGTbf8hDWI+L31gQwjpE/nmYjyDtNZ2gxid1+aV6CEdZYy9LS0mGPZuvGgeG4U
+         raQw==
+X-Gm-Message-State: AAQBX9foBR3IRGXm29/wz0nlRkse4FDrj1ygAtOmm1EUeqJ2+scUaJIm
+        2hBP8hyjgb7s+v11FXWiBGcVkIbSYhQpRC+qzMw=
+X-Google-Smtp-Source: AKy350Z4XWKYKFI5n0GeJ6zsX2xk9akJ/Dcx4k18MxKtNfto1XHNOAXebbc532C8bHQmvDRaTcJFRYAo1Q4bv5SKKK4=
+X-Received: by 2002:a2e:80c3:0:b0:2a3:5c1c:ec20 with SMTP id
+ r3-20020a2e80c3000000b002a35c1cec20mr3609643ljg.7.1681244786692; Tue, 11 Apr
+ 2023 13:26:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230403211548.6253-1-jorge.lopez2@hp.com> <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de>
+ <CAOOmCE8z_UDs8dG0MqX+SFcvd-CTX12XXKzOrVOKDuvrPkyeCQ@mail.gmail.com> <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
+In-Reply-To: <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Tue, 11 Apr 2023 15:26:06 -0500
+Message-ID: <CAOOmCE81NTALi-AWOd0JNuzy6UCcCr2qAF0DQAVjUGi=w_eEOw@mail.gmail.com>
+Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
+Hi Thomas,
 
-Many features of HP Commercial notebooks can be managed using Windows
-Management Instrumentation (WMI). WMI is an implementation of Web-Based
-Enterprise Management (WBEM) that provides a standards-based interface
-for changing and monitoring system settings. HP BIOSCFG driver provides
-a native Linux solution and the exposed features facilitates the
-migration to Linux environments.
 
-The Linux security features to be provided in hp-bioscfg driver enables
-managing the BIOS settings and security solutions via sysfs, a virtual
-filesystem that can be used by user-mode applications. The new
-documentation cover features such Secure Platform Management and Sure
-Start. Each section provides security feature description and
-identifies sysfs directories and files exposed by the driver.
+On Tue, Apr 11, 2023 at 11:16=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
+h.de> wrote:
+>
+> Hi Jorge!
+>
+>
+> Apr 4, 2023 22:24:36 Jorge Lopez <jorgealtxwork@gmail.com>:
+>
+> > Hi Thomas,
+> >
+> > BTW, I decided to submit all files individually to facilitate the
+> > review process.  Only Makefile and Kconfig files will be provided as a
+> > single patch.
+> > I will be out of town until April 11 and will reply back upon my return=
+.
+>
+> Sorry for the slow response.
+>
+> >
+> > Please see my comments below.
+> >
+> >>
+> >>> +             HP specific types
+> >>> +             -----------------
+> >>> +                     - ordered-list - a set of ordered list valid va=
+lues
+> >>> +                     - sure-start
 
-Many HP Commercial notebooks include a feature called Secure Platform
-Management (SPM), which replaces older password-based BIOS settings
-management with public key cryptography. PC secure product management
-begins when a target system is provisioned with cryptographic keys
-that are used to ensure the integrity of communications between system
-management utilities and the BIOS.
+> But what does it mean?
+> For ordered-list there is a nice explanation.
+>
 
-HP Commercial notebooks have several BIOS settings that control its
-behaviour and capabilities, many of which are related to security.
-To prevent unauthorized changes to these settings, the system can
-be configured to use a cryptographic signature-based authorization
-string that the BIOS will use to verify authorization to modify the
-setting.
+The latest submission includes a short explanation
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+                HP specific types
+                -----------------
+                        - ordered-list - a set of ordered list valid values
+                        - sure-start - report audit logs read from BIOS
 
----
-Based on the latest platform-drivers-x86.git/for-next
 
-History
+> >>> +             audit_log_entry_count:
+> >>> +                                     A read-only file that returns t=
+he number of existing audit log events available to be read.
+> >>> +                                     Values are separated using comm=
+a (``,``)
+> >>> +
+> >>> +                                     [No of entries],[log entry size=
+],[Max number of entries supported]
+> >>
+> >> Will log entry size always be 16? Or can it be bigger in the future wh=
+en
+> >> more bytes are used?
+> >> This should be mentioned.
+> >
+> > Log entry size is always 16 bytes in size.  The reason is to report a
+> > maximum of 256 entries.  Total 4096 bytes
+>
+> Does it make sense to expose the number 16 from sysfs if it never can cha=
+nge anyways?
 
-Version 8
-	Includes only sysfs-class-firmware-attributes documentation
+The current audit log file is 16 bytes but future BIOS can expand the
+audit log to up to 128 bytes.
+Additional details are now included in the audit_log_entry_count
+section.  WMI  reports only the total number of audit logs but not the
+individual audit log size hence the reason the size is hardcoded to 16
+bytes in the driver.  A patch will be provided when the audit log size
+changes or a new WMI is provided.
 
-Version 7
-	Includes only sysfs-class-firmware-attributes documentation
----
- .../testing/sysfs-class-firmware-attributes   | 104 +++++++++++++++++-
- 1 file changed, 103 insertions(+), 1 deletion(-)
+>
+> Note you can also customize the filesize reported in sysfs to expose the =
+maximum size to be used by userspace.
+>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 4cdba3477176..574cdd8a6cc6 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -22,6 +22,12 @@ Description:
- 			- integer: a range of numerical values
- 			- string
- 
-+		HP specific types
-+		-----------------
-+			- ordered-list - a set of ordered list valid values
-+			- sure-start - report audit logs read from BIOS
-+
-+
- 		All attribute types support the following values:
- 
- 		current_value:
-@@ -126,6 +132,44 @@ Description:
- 					value will not be effective through sysfs until this rule is
- 					met.
- 
-+		HP specific class extensions
-+		------------------------------
-+
-+		On HP systems the following additional attributes are available:
-+
-+		"ordered-list"-type specific properties:
-+
-+		elements:
-+					A file that can be read to obtain the possible
-+					list of values of the <attr>. Values are separated using
-+					semi-colon (``;``). The order individual elements are listed
-+					according to their priority.  An Element listed first has the
-+					highest priority. Writing the list in a different order to
-+					current_value alters the priority order for the particular
-+					attribute.
-+
-+		"sure-start"-type specific properties:
-+
-+		audit_log_entries:
-+					A read-only file that returns the events in the log.
-+					Values are separated using semi-colon (``;``)
-+
-+					Audit log entry format
-+
-+					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
-+					Byte 16-127: Unused
-+
-+		audit_log_entry_count:
-+					A read-only file that returns the number of existing audit log events available to be read.
-+					Values are separated using comma (``,``)
-+
-+					[No of entries],[log entry size],[Max number of entries supported]
-+
-+					log entry size identifies audit log size for the current BIOS version.
-+					The current size is 16 bytes but it can be to up to 128 bytes long
-+					in future BIOS versions.
-+
-+
- What:		/sys/class/firmware-attributes/*/authentication/
- Date:		February 2021
- KernelVersion:	5.11
-@@ -206,7 +250,7 @@ Description:
- 		Drivers may emit a CHANGE uevent when a password is set or unset
- 		userspace may check it again.
- 
--		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
-+		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
- 		require password validation.
- 		On Lenovo systems if you change the Admin password the new password is not active until
- 		the next boot.
-@@ -296,6 +340,15 @@ Description:
- 						echo "signature" > authentication/Admin/signature
- 						echo "password" > authentication/Admin/certificate_to_password
- 
-+		HP specific class extensions
-+		--------------------------------
-+
-+		On HP systems the following additional settings are available:
-+
-+		role: enhanced-bios-auth:
-+					This role is specific to Secure Platform Management (SPM) attribute.
-+					It requires configuring an endorsement (kek) and signing certificate (sk).
-+
- 
- What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
- Date:		February 2021
-@@ -364,3 +417,52 @@ Description:
- 		use it to enable extra debug attributes or BIOS features for testing purposes.
- 
- 		Note that any changes to this attribute requires a reboot for changes to take effect.
-+
-+
-+		HP specific class extensions - Secure Platform Manager (SPM)
-+		--------------------------------
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
-+		RSA public key that will be used by the BIOS to verify
-+		signatures when setting the signing key.  When written,
-+		the bytes should correspond to the KEK certificate
-+		(x509 .DER format containing an OU).  The size of the
-+		certificate must be less than or equal to 4095 bytes.
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
-+		public key that will be used by the BIOS to verify signatures
-+		when configuring BIOS settings and security features.  When
-+		written, the bytes should correspond to the modulus of the
-+		public key.  The exponent is assumed to be 0x10001.
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/status
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'status' is a read-only file that returns ASCII text reporting
-+		the status information.
-+
-+		  State:  Not Provisioned / Provisioned / Provisioning in progress
-+		  Version:  Major.   Minor
-+		  Feature Bit Mask: <16-bit unsigned number display in hex>
-+		  SPM Counter: <16-bit unsigned number display in base 10>
-+		  Signing Key Public Key Modulus (base64): <256 bytes base64 in hex>
-+		  KEK Public Key Modulus (base64): <256 bytes base64 in hex>
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'statusbin' is a read-only file that returns identical status
-+		information reported by 'status' file in binary format.
--- 
-2.34.1
+This is another area with additional details in the latest review.
 
+                "sure-start"-type specific properties:
+
+                audit_log_entries:
+                                        A read-only file that returns
+the events in the log.
+                                        Values are separated using
+semi-colon (``;``)
+
+                                        Audit log entry format
+
+                                        Byte 0-15:   Requested Audit
+Log entry  (Each Audit log is 16 bytes)
+                                        Byte 16-127: Unused
+
+                audit_log_entry_count:
+                                        A read-only file that returns
+the number of existing audit log events available to be read.
+                                        Values are separated using comma (`=
+`,``)
+
+                                        [No of entries],[log entry
+size],[Max number of entries supported]
+
+                                        log entry size identifies
+audit log size for the current BIOS version.
+                                        The current size is 16 bytes
+but it can be to up to 128 bytes long
+                                        in future BIOS versions.
+
+
+
+> >>
+> >> Is audit_log_entry_count ever used without reading audit_log_entries
+> >> right after?
+> > Yes. The counter is necessary to determine how many logs are available
+> > to be read.
+>
+> I think the cleaner interface would be to have users provide a buffer to =
+read into and then they check the return value of read().
+> Users can't trust the count value anyways as it is prone to TOCTOU races.
+
+Audit logs buffer information includes an audit log number associated
+with each log entry.   The log number information is added by the
+driver.  The audit log is read as a single continuous buffer and the
+application does not read individual audit logs while reading sysfs.
+The application copies the whole buffer, extracts and identifies each
+audit log from its local buffer.
+
+Byte 0:       Audit log number
+Byte 1-16:  Audit log information
+
+
+
+>
+> >
+> >> If not the count file could be dropped.
+> >>
+> >>> +What:                /sys/class/firmware-attributes/*/authentication=
+/SPM/status
+> >>> +Date:                March 29
+> >>> +KernelVersion:       5.18
+> >>> +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> >>> +Description: 'status' is a read-only file that returns ASCII text re=
+porting
+> >>> +             the status information.
+> >>> +
+> >>> +               State:  Not Provisioned / Provisioned / Provisioning =
+in progress
+> >>> +               Version:  Major.   Minor
+> >>> +               Feature Bit Mask: <16-bit unsigned number display in =
+hex>
+> >>
+> >> How are these bits to be interpreted?
+> > This information is provided by BIOS.  It is one of those obscure
+> > values from BIOS.
+> >>
+> >>> +               SPM Counter: <16-bit unsigned number display in base =
+10>
+> >>> +               Signing Key Public Key Modulus (base64):
+> >>> +               KEK Public Key Modulus (base64):
+> >>
+> >> Is " (base64)" supposed to be part of the contents of the file?
+> >
+> > The information reported for Signing Key and KEK public key are
+> > reported as base64 values.  It applies only to the data and not to the
+> > file contents.
+>
+> Put is the file format:
+> KEK Public Key Modulus (base64): ...
+> KEK Public Key Modulus: ...
+>
+> The docs indicate the former.
+
+Also included in the last review is additional clarification on how
+the Modules are reported.
+
+What:           /sys/class/firmware-attributes/*/authentication/SPM/status
+Date:           March 29
+KernelVersion:  5.18
+Contact:        "Jorge Lopez" <jorge.lopez2@hp.com>
+Description:    'status' is a read-only file that returns ASCII text report=
+ing
+                the status information.
+
+                  State:  Not Provisioned / Provisioned / Provisioning
+in progress
+                  Version:  Major.   Minor
+                  Feature Bit Mask: <16-bit unsigned number display in hex>
+                  SPM Counter: <16-bit unsigned number display in base 10>
+                  Signing Key Public Key Modulus (base64): <256 bytes
+base64 in hex>
+                  KEK Public Key Modulus (base64): <256 bytes base64 in hex=
+>
+
+>
+> >>
+> >>> +
+> >>> +
+> >>> +What:                /sys/class/firmware-attributes/*/authentication=
+/SPM/statusbin
+> >>> +Date:                March 29
+> >>> +KernelVersion:       5.18
+> >>> +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> >>> +Description: 'statusbin' is a read-only file that returns identical =
+status
+> >>> +             information reported by 'status' file in binary format.
+> >>
+> >> This documentation should contain enough information to understand the
+> >> files contents.
+> >>
+> >>
+> >> I understand that one WMI call will return all the fields that are par=
+t
+> >> of the "status" and "statusbin" in one response.
+> >>
+> >> Are these WMI calls especially expensive or called especially
+> >> frequently?
+> >>
+> >
+> > Unfortunately the WMI to read the Status binary data is expensive
+> > hence the reason of only calling once.
+>
+> Hm, I still dislike the interface, sorry.
+
+No worries.  The implementation is a legacy from the Windows driver
+and security applications define it.
+
+> What about caching the values in the driver and exposing them via differe=
+nt files?
+
+The information changes as a group during the SPM configuration
+process so caching would not help much.  Version field is the only
+field that can be cached.
+If the information is split in difference files,  there are conditions
+when the user would read stale data in one field or another.
+
+
+> >
+> > Regards,
+> > > Jorge
+>
