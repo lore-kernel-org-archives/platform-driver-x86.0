@@ -2,126 +2,156 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219F0C76196
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 08:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10533C77B70
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 11:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbjDKInc (ORCPT
+        id S229550AbjDKLmm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 04:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34802 "EHLO
+        Tue, 11 Apr 2023 07:42:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjDKInb (ORCPT
+        with ESMTP id S229630AbjDKLmk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 04:43:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF75A30EC
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681202565;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vskGsFdxAgcEWe5MVv9C7GBdQqDCkKDihBqK9QlBwJ0=;
-        b=g7ttkhEJ3I8hX+YpvCBgVvhtJBVYPBCkXF/IeH5CFLHWAIlLhLHYjh35ekb9G4VYTpjtDA
-        AXe8ENiTuyZOj2JJo8mFjQpAFNBN8Gjoa+7a5Rr/JvyZoH29xlT1+irOhKkmnB+EaCifps
-        JpAelzubuOt7YtMrxWTdE8RikcsFR5s=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-n_Qvqu9KM4qhPEO7sNypAw-1; Tue, 11 Apr 2023 04:42:43 -0400
-X-MC-Unique: n_Qvqu9KM4qhPEO7sNypAw-1
-Received: by mail-ej1-f70.google.com with SMTP id vo2-20020a170907a80200b00949175b0b70so4242087ejc.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:42:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681202562; x=1683794562;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vskGsFdxAgcEWe5MVv9C7GBdQqDCkKDihBqK9QlBwJ0=;
-        b=f6HTEpJjL3nq7gcUq8HoVxnBHI4O49LxR9MtiK9R0cuizVy33W3Vjwsx+zHg1JFBOj
-         k9bvRNf5DAh0QDC3KEnAtDFx7qWqG0PEnQ3W7h6z2VHePZYk8XgaxAlfeTt1mECyKxIA
-         nBW4e8D/gPFqvDtFnXinU0aHVTV2amAgzFWDiBuSgEjDpYEKzzaKRQWZqJkuDrHZbfB3
-         wWXzUtOPv+vofQqKiR87X3E26F/Yx7b+P7shieS/cQ+Wzik4PEQ6KvdAk33tga+nu1nn
-         7EqYjngcPmBnqZnae1ZVJjn7vd1+6V/5gw+nniC6H3GqpGsWIThSm25dCwx0AKXKNMyZ
-         lpcw==
-X-Gm-Message-State: AAQBX9cxBVk2GZpczZHl65A7CW7kKtCYSCcnBY7VYTtuF/0sm8D+lO3t
-        36OT2ynQGPPG8SuVECRzBaJIPdKI4SgQRm+yZIVR60k+o8iEXR6BZXmek4etd+AtQaH8NiRW6dY
-        ubeFrG3DCxV7S8yLg8hrO82y/Sq+5YdVqiA==
-X-Received: by 2002:a17:906:6b8d:b0:94a:75d6:64b6 with SMTP id l13-20020a1709066b8d00b0094a75d664b6mr6484440ejr.17.1681202562825;
-        Tue, 11 Apr 2023 01:42:42 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bmX40bnIRAwwpjxIYJeKbHLMk7r/inbeybu33pYd/zL7A5yvgLr+flDYO9lnvciy048dszog==
-X-Received: by 2002:a17:906:6b8d:b0:94a:75d6:64b6 with SMTP id l13-20020a1709066b8d00b0094a75d664b6mr6484431ejr.17.1681202562633;
-        Tue, 11 Apr 2023 01:42:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id vc15-20020a170907d08f00b0094a7adda73bsm2119181ejc.207.2023.04.11.01.42.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 01:42:42 -0700 (PDT)
-Message-ID: <49cab5f9-591e-4d10-c4db-9d1e22a21618@redhat.com>
-Date:   Tue, 11 Apr 2023 10:42:41 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] platform/x86: amd: pmc: Remove __maybe_unused from
- amd_pmc_suspend_handler()
-Content-Language: en-US, nl
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Tue, 11 Apr 2023 07:42:40 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 797AF3AA3;
+        Tue, 11 Apr 2023 04:42:38 -0700 (PDT)
+Received: from kwepemm600009.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PwkTD51jGzDsW6;
+        Tue, 11 Apr 2023 19:41:52 +0800 (CST)
+Received: from [10.67.101.184] (10.67.101.184) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 11 Apr 2023 19:42:34 +0800
+Subject: Re: [PATCH V4 23/23] crypto: hisilicon/qm: Workaround to enable build
+ with RISC-V clang
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Sunil V L <sunilvl@ventanamicro.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-acpi@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <llvm@lists.linux.dev>
+References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+ <20230404182037.863533-24-sunilvl@ventanamicro.com>
+ <dcd04005-2dba-4ccc-a235-a809220f9dbd@app.fastmail.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20230410193512.64232-1-hdegoede@redhat.com>
- <MN0PR12MB61017289753C3AB5336A040AE2959@MN0PR12MB6101.namprd12.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <MN0PR12MB61017289753C3AB5336A040AE2959@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+From:   Weili Qian <qianweili@huawei.com>
+Message-ID: <487a20e7-2894-218a-47e9-b222aef4ec6e@huawei.com>
+Date:   Tue, 11 Apr 2023 19:42:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <dcd04005-2dba-4ccc-a235-a809220f9dbd@app.fastmail.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.184]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 4/10/23 22:26, Limonciello, Mario wrote:
-> [Public]
+
+On 2023/4/5 16:16, Arnd Bergmann wrote:
+> On Tue, Apr 4, 2023, at 20:20, Sunil V L wrote:
+>> With CONFIG_ACPI enabled for RISC-V, this driver gets enabled in
+>> allmodconfig build. The gcc tool chain builds this driver removing the
+>> inline arm64 assembly code. However, clang for RISC-V tries to build
+>> the arm64 assembly and below error is seen.
+>>
+>> drivers/crypto/hisilicon/qm.c:627:10: error: invalid output constraint 
+>> '+Q' in asm
+>>                        "+Q" (*((char __iomem *)fun_base))
+>>                        ^
+>> It appears that RISC-V clang is not smart enough to detect
+>> IS_ENABLED(CONFIG_ARM64) and remove the dead code.
+>>
+>> As a workaround, move this check to preprocessing stage which works
+>> with the RISC-V clang tool chain.
+>>
+>> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 > 
->> Now that the pmc code has switched to DEFINE_SIMPLE_DEV_PM_OPS()
->> the __maybe_unused is no longer necessary, drop it.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/platform/x86/amd/pmc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmc.c
->> b/drivers/platform/x86/amd/pmc.c
->> index 2761e9b76e95..2e2b99b93df7 100644
->> --- a/drivers/platform/x86/amd/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc.c
->> @@ -840,7 +840,7 @@ static struct acpi_s2idle_dev_ops
->> amd_pmc_s2idle_dev_ops = {
->>  	.restore = amd_pmc_s2idle_restore,
->>  };
->>
->> -static int __maybe_unused amd_pmc_suspend_handler(struct device
->> *dev)
->> +static int amd_pmc_suspend_handler(struct device *dev)
->>  {
->>  	struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
->>
->> --
->> 2.39.1
+> Your patch looks correct for this particular problem, but I
+> see that there are a couple of other issues in the same function:
 > 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> -	}
+>> +#if IS_ENABLED(CONFIG_ARM64)
+>> +	unsigned long tmp0 = 0, tmp1 = 0;
+>>
+>>  	asm volatile("ldp %0, %1, %3\n"
+>>  		     "stp %0, %1, %2\n"
+>> @@ -627,6 +623,11 @@ static void qm_mb_write(struct hisi_qm *qm, const 
+>> void *src)
+>>  		       "+Q" (*((char __iomem *)fun_base))
+>>  		     : "Q" (*((char *)src))
+>>  		     : "memory");
+> 
+> For the arm64 version:
+> 
+> - the "dmb oshst" barrier needs to come before the stp, not after
+>   it,  otherwise there is no guarantee that data written to memory
+>   is visible by the device when the mailbox gets triggered
+> - The input/output arguments need to be pointers to 128-bit types,
+>   either a struct or a __uint128_t
+> - this lacks a byteswap on big-endian kernels
+Sorry for the late reply.
 
-Thanks.
+- the execution order relies on the data dependency between ldp and stp:
+  load "src" to "tmp0" and "tmp1", then
+  store "tmp0" and "tmp1" to "fun_base";
+  The "dmb oshst" is used to ensure that the stp instruction has been executed
+  before CPU checking mailbox status. Whether the execution order
+  cannot be guaranteed via data dependency?
 
-I've added this to my review-hans (soon to be for-next) branch now.
+- The input argument "src" is struct "struct qm_mailbox".
+- Before call this funcion, the data has been byteswapped.
 
-Regards,
+	mailbox->w0 = cpu_to_le16((cmd) |
+		((op) ? 0x1 << QM_MB_OP_SHIFT : 0) |
+		(0x1 << QM_MB_BUSY_SHIFT));
+	mailbox->queue_num = cpu_to_le16(queue);
+	mailbox->base_l = cpu_to_le32(lower_32_bits(base));
+	mailbox->base_h = cpu_to_le32(upper_32_bits(base));
+	mailbox->rsvd = 0;
 
-Hans
+> 
+>> +#else
+>> +	memcpy_toio(fun_base, src, 16);
+>> +	dma_wmb();
+>> +#endif
+> 
+> This version has the same problems, plus the write is not actually
+> atomic. I wonder if a pair of writeq() calls would just do the
+> right thing here for both arm64 and others, or possibly a
+> writeq() followed by a writeq_relaxed() to avoid the extra dmb()
+> in the middle.
+> 
+>      Arnd
+> .
+> 
+We have to do a 128bit atomic write here to trigger a mailbox. The reason
+is that the PF and related VFs of a hardware cannot write mailbox MMIO at the
+same time.
+For this SoC(Kunpeng) which has QM, if the address is 128bit aligned, stp will
+be atomic. The offset of QM mailbox is 128bit aligned, so it is safe here.
 
-
-
+Best regards,
+Weili
