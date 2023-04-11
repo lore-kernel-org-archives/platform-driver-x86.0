@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD1EC77B72
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 21:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57424C77B6F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 21:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjDKVSc (ORCPT
+        id S229829AbjDKVSb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 17:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40460 "EHLO
+        Tue, 11 Apr 2023 17:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbjDKVS3 (ORCPT
+        with ESMTP id S229713AbjDKVS3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Tue, 11 Apr 2023 17:18:29 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2070.outbound.protection.outlook.com [40.107.237.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5CF55AB;
-        Tue, 11 Apr 2023 14:18:10 -0700 (PDT)
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA53C3594;
+        Tue, 11 Apr 2023 14:18:09 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hwuJSw5851IqutOjVW0Err6rXhBn4YIS+n4m5zrdoG8WJy5qq04orJSoETL05NlGUR7RScp2EgFfedL/02Qs14a5ux8tLm/p9SJE+kJeUuJwbantUSG3ha8/uBdj6DOqbm0gY70BgHiIVJG7WOjA5Ekf9E/B+JiKT7IENjbiKCs60GuBHg+b5PA/5ZZY/E6YKVKaynWuTZjQYAXmfxZryGl6JFJgy1tvVS5uRT6AtwWKUfyA7kWroj59b4T6iGfBhaQNnymRA+6ef7sLjomaKiN/s8xwRmWvqJLzgbOfn4LCtAmT9UQE4JdlgOVciyBFXZNfpjSOUYhJAdTe46dKpA==
+ b=cDh3w3cM5JUMa6NC/qQvNZTVzAcfwQq41I7zK3kwz8BLzzBtAT+rzflm83fZlEXe3tuf6AeMgguh07iqySD+kmO1FR9wnCO1WhDEqSCnG072CZLdamZyOR4AW4eKdVQyfkQwqRd+USbbDy4CGf5L+OqnbEYeNzGpDkz4b62Y9MvvrsdNrutk/CEHXyPCngRFUsiZ2ORoKdADTR8wJWDJwZDxZ3OGf5JP3yXcUkod8zwaI4Ln/f1PDVdEst1PMXrkjdEpz+Cd2Vk9S4EOgIdp1Y/QG/jaUuTNEvc4rE7x9tgEvjGXRE9206wCDeiH33qZ+D5AiU/baGWKI4JurkYNkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Az9VBPUEfPgiCMU0R0Wd3LcCEUdr533eDxyOpoQ2V9U=;
- b=U1RnuVhqnfieQIOW8rrBWZu6iH5qswRdaUCkvR86/2Y6UJ1/B1cz/vOzPc5hUEYgQ6t4HWP0P/iENh2zyoastCWywRa9PrIbj1t2N8Uwh+AetO2Fi2hpRwMflmejf/q3vmAx0iA7D9EBrzX0FU9sMZSggznu/01T7AV3mmZyIkhwlUAUo+FY8leWDiWQSNnt9Hm3Q5p2WqypDAli1OxzHoHfMHjplXy3yQ1oeek7N87M69qfEbYe5gLTI+IAh3QzTLaXAZqHlwMhw4l4ZzYT+BxZ0x85AdEeyibBiCVQWp4bdCWMs1PK/yL5nDR+PuBucFGQkEQQRMACDIxtmYLkJA==
+ bh=wnHrV1lWkLBUvshwq6Zj32NSdVLSIDtQyqWdZ8MAdcg=;
+ b=WHSUVoNDZixp31W2lBlRUscElIGjXjPig92WEeo1973X7tPQNEq5Wd6yFQJ1O7GFbolpUcx6FXabDr0r/rAW5HeQV/8mpodFwdRLL7pZjlUC8zA9UDvZvuH0WoaBlLqxFJAHmXmlHQ/racyduiblzwzqVKrS4Q78HmQHFRnRtsBf8+B9c/6qkfbTZr4xm+JarkvB+PGOTihFV9msqHmYwVi4c75zeEDtQr1Wqzu/lnzIHOqVSWkSI38N3/O5mbE89UFc4AWxbGFb4E6X3Kbznrb7jPDtT76b6GbQzfp3Ccaxe0jEGmOyw9gaF5NGIxHMRWAwayaMZMHhftGgXK7Qlg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Az9VBPUEfPgiCMU0R0Wd3LcCEUdr533eDxyOpoQ2V9U=;
- b=Ex4w5PxuirIMU2OB96DQLrZ25jllbu1ey+nCKYwCU0itMmTPbV1om9toTA1BeCVdc+bBlJV+aNTemYZH/rbvwd1px+axy64mlWOnz9QWIkrdOcoAlMvw/dmxwTbYvSKiwa3LVYKJW7NDp3gyXO7h1dUWTGXzFRdIFIC2gOcrZWs=
-Received: from BN0PR04CA0158.namprd04.prod.outlook.com (2603:10b6:408:eb::13)
- by SA1PR12MB7271.namprd12.prod.outlook.com (2603:10b6:806:2b8::16) with
+ bh=wnHrV1lWkLBUvshwq6Zj32NSdVLSIDtQyqWdZ8MAdcg=;
+ b=o32JrNZR+TTDHoStiPXIU4ObIACM8at7yYv5Qw0d5Wx0RoeJJx2PN2q8ldln86vx7JgkH8ssPozXED3gyxMXXEoS6OpTIQIIfKhglWUrhUUWiQMxcwhLWL4XXOpNaP1JxMygEj9TbBjiSAScbomgKVNgcTygC+Et4uytYhWurNY=
+Received: from BN0PR02CA0026.namprd02.prod.outlook.com (2603:10b6:408:e4::31)
+ by SJ2PR12MB8036.namprd12.prod.outlook.com (2603:10b6:a03:4c1::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Tue, 11 Apr
- 2023 21:17:54 +0000
-Received: from BN8NAM11FT072.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:eb:cafe::e) by BN0PR04CA0158.outlook.office365.com
- (2603:10b6:408:eb::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.40 via Frontend
- Transport; Tue, 11 Apr 2023 21:17:53 +0000
+ 2023 21:17:51 +0000
+Received: from BN8NAM11FT061.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e4:cafe::13) by BN0PR02CA0026.outlook.office365.com
+ (2603:10b6:408:e4::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.39 via Frontend
+ Transport; Tue, 11 Apr 2023 21:17:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,26 +48,26 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT072.mail.protection.outlook.com (10.13.176.165) with Microsoft SMTP
+ BN8NAM11FT061.mail.protection.outlook.com (10.13.177.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.28 via Frontend Transport; Tue, 11 Apr 2023 21:17:53 +0000
+ 15.20.6298.29 via Frontend Transport; Tue, 11 Apr 2023 21:17:51 +0000
 Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 11 Apr
- 2023 16:17:52 -0500
+ 2023 16:17:50 -0500
 From:   Mario Limonciello <mario.limonciello@amd.com>
 To:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
         <pavel@ucw.cz>, <svenva@chromium.org>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-CC:     <Shyam-sundar.S-k@amd.com>, <rrangel@chromium.org>,
-        Jain Rajat <rajatja@google.com>, <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+CC:     <rrangel@chromium.org>, Jain Rajat <rajatja@google.com>,
+        <hdegoede@redhat.com>,
         Mario Limonciello <mario.limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>,
+        "Mark Gross" <markgross@kernel.org>,
         <platform-driver-x86@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 4/4] platform/x86/intel/pmc: core: Report duration of time in HW sleep state
-Date:   Tue, 11 Apr 2023 16:17:18 -0500
-Message-ID: <20230411211719.4549-5-mario.limonciello@amd.com>
+Subject: [PATCH v7 2/4] platform/x86/amd: pmc: Report duration of time in hw sleep state
+Date:   Tue, 11 Apr 2023 16:17:16 -0500
+Message-ID: <20230411211719.4549-3-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230411211719.4549-1-mario.limonciello@amd.com>
 References: <20230411211719.4549-1-mario.limonciello@amd.com>
@@ -79,60 +79,56 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT072:EE_|SA1PR12MB7271:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ef83f87-25f8-4f0a-233d-08db3ad23693
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT061:EE_|SJ2PR12MB8036:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc506fec-e4ca-42e5-2abc-08db3ad23529
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Cc8VNi4dqMVHfD/U+8rNpojWFMrxJQlN1GjrxgTvdvscOC6insEDZ8bsInA75pVlQ9BCN8XzW/ItMdhQ5jFZBi8dN+aLxMEDZnMLqT2WAdOFXQSO0ihd3YLBTnI8IChbSCQx4ADWbLLORDYd8CcOdXJgfREcGrtoXwjHYZh3dRO7PwoUMXH1+QCmxy0BB2MP1W0ILwkHhx759q9YBwnyBeW9XemdwV/1H/Ehiej3oAYb/5ywd+kY3jBTONnpX+OsLiqBib5J9gBXu813zCZMborDtTGHRzTNmnTwEtofNAtDFvSSiDYDcZNr6WdB7Q+1HuD8GfzG79fDERPRF8XXs5hk+QU0efg+U0mu3+d0ZUvdoVt5YY+YUZFpmws37jcREpdLL1whVEu0smhWq/UNhXNze2gFt9nKsXRJ+kZJQBtzcdbc6/TePcwG8kaN4Jkxo0QOcZVbvcU2orTe4G/zHDXrJ54FJD+ePdt5FG6M7jv1rKnjEkYyCsRgxhijquARg4dYuXGHDRMUZ8a077/1auTusn1+dssbOr3xkuriMjyFJWJ8xZ2Y4mjD97uK03R2PEJrUJV8R0/8Z5MDu6xMbOyFnBYdwRPDrbg21kR0gBLm7hqnXOrvjj8Cfuk76J8ZW8B8WkEKyjsPVuX2WukUeUZtGdHF/rhp1BSsVWRp1WRvMu06dazpb0qdD8jfw5V4YxLEewqlzeb/4j9U7qDFF+TqBfk3WDkOda+OqTTd9r4=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(376002)(136003)(346002)(451199021)(40470700004)(36840700001)(46966006)(316002)(81166007)(82740400003)(26005)(1076003)(6666004)(7696005)(356005)(83380400001)(36860700001)(47076005)(2616005)(336012)(426003)(186003)(16526019)(8936002)(82310400005)(7416002)(5660300002)(8676002)(36756003)(41300700001)(2906002)(44832011)(110136005)(86362001)(40460700003)(54906003)(40480700001)(478600001)(70586007)(4326008)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Zod+efPOZTYvHINKreDAgzA3ySn7a7wkpbBfr6TjFVjMTBOC7Rn4Cxl2jinTawhYh70IHVRGsWHB5WfGvz0wTf4yT43z+jo1SflME+PKaqA2rrePmjRPu+qicmntoATOqGGqM3t0uG0NfLcIecjRrEB5NR6ghHYwjrhYAbHVgp0MUopzSY9ERoTWWmPf+IJ2w14fhFncXEJwHkb4j36Ff6C9ZNSpJLbq24aSpjH65Mmfo4IJwHxkyFbCpCP5AA/s2WTowa233RYDBlV5l8KKiCc0Nyo2d5phaz3NWleJCkUO6ac/eDcs3tU9ur8Hu6J/OvZn+4RipXpl++uuDnMv9bfwhyMDpYWe2JWnmHDF65TZMdNrhwCT01O0vtMGD2bci+LZ5JC5C0KxqdqTwzHGVP+pBAQ+T/jdgRLrAHQ9WWSNnKXZdibz1j5NDLYP7jKzdLet3LQO7nUpnYAazKjYApV7DvOlerfTlo47MXC8mxCC5sKryIKL8s6Pup5pnFKRsWIk4wCGTgh1yuWpWwDABtOzb5vHNW6jQbz3DSHAfmdXeM6XhiyHf7GiZtrF5dq6bL6YC2RAgt+yFR3AlabfvKUG6EhopXhAVWHsnhtkCTqMOu29JkYbUZm7PzvbpzQPfMl2yxx6MNxC+clOZ6cjOYmX/dUi9VyjSchEIDpO7x+SkmYvPbSEpLtlb7LFy3dqMdt39BLvgAW/T9OktZO9/CGJ1dOKp+4bNVWy14npSNs=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(376002)(39860400002)(136003)(451199021)(36840700001)(46966006)(40470700004)(478600001)(7696005)(40460700003)(316002)(1076003)(110136005)(26005)(54906003)(16526019)(186003)(6636002)(5660300002)(2906002)(44832011)(70206006)(70586007)(4326008)(7416002)(41300700001)(6666004)(8676002)(8936002)(82310400005)(356005)(81166007)(82740400003)(40480700001)(47076005)(83380400001)(36756003)(336012)(2616005)(36860700001)(426003)(86362001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 21:17:53.5744
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 21:17:51.2021
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ef83f87-25f8-4f0a-233d-08db3ad23693
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc506fec-e4ca-42e5-2abc-08db3ad23529
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT072.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT061.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7271
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8036
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-intel_pmc_core displays a warning when the module parameter
-`warn_on_s0ix_failures` is set and a suspend didn't get to a HW sleep
-state.
+amd_pmc displays a warning when a suspend didn't get to the deepest
+state and a dynamic debugging message with the duration if it did.
 
-Report this to the standard kernel reporting infrastructure so that
-userspace software can query after the suspend cycle is done.
+Rather than logging to dynamic debugging the duration spent in the
+deepest state, report this to the standard kernel reporting
+infrastructure so that userspace software can query after the
+suspend cycle is done.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
-v6->v7:
- * Handle overflow by casting instead
-v5->v6:
- * Handle overflow case
- * Use renamed symbol
-v4->v5:
- * Reword commit message
----
- drivers/platform/x86/intel/pmc/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/amd/pmc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 925c5d676a43..5b1e65876b8d 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1214,6 +1214,8 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
- 	if (pmc_core_dev_state_get(pmcdev, &s0ix_counter))
- 		return false;
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index 2edaae04a691..6aa474657845 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -393,9 +393,8 @@ static void amd_pmc_validate_deepest(struct amd_pmc_dev *pdev)
  
-+	pm_report_hw_sleep_time((u32)(s0ix_counter - pmcdev->s0ix_counter));
-+
- 	if (s0ix_counter == pmcdev->s0ix_counter)
- 		return true;
+ 	if (!table.s0i3_last_entry_status)
+ 		dev_warn(pdev->dev, "Last suspend didn't reach deepest state\n");
+-	else
+-		dev_dbg(pdev->dev, "Last suspend in deepest state for %lluus\n",
+-			 table.timein_s0i3_lastcapture);
++	pm_report_hw_sleep_time(table.s0i3_last_entry_status ?
++				table.timein_s0i3_lastcapture : 0);
+ }
  
+ static int amd_pmc_get_smu_version(struct amd_pmc_dev *dev)
 -- 
 2.34.1
 
