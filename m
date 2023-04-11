@@ -2,75 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66992C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 08:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BB5C76196
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 08:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbjDKI2W (ORCPT
+        id S230263AbjDKIat (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 04:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        Tue, 11 Apr 2023 04:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbjDKI2D (ORCPT
+        with ESMTP id S230469AbjDKI3q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 04:28:03 -0400
+        Tue, 11 Apr 2023 04:29:46 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44AC94226
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:26:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60C03A8B
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681201562;
+        s=mimecast20190719; t=1681201719;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ianVYgdHnuf+b6fncStL3XcypceOXyphlHeUk90627c=;
-        b=PVolNvMX63hD2vUSZuLjI/AY4ePYEEIiWtgphWpZTIjWs5x3oApQO91vUex88Qm5btswkf
-        qpgxCd/M+doAxVESDahcaQg2GoPv1sZ/pr/hanZLu/s8+k5xWMt9w6LLTVFwaQVN+Pm5Jz
-        yVRvvdmLCfVLDKMTaZm90jdigPtLcUY=
+        bh=34pN8MN53Iu3Gfy9LUqJsRu3fXLGqvq5XuJfuFCl+/E=;
+        b=chidVezm6CdQF6mUg5m0A5Zim0/rw69AVn/mRxoEfyZA2JouSKajNJfbCUpBID2vnumW64
+        vDtDTkKqhG3Wb+uPadk3nmetXeHlwisRIBDx2QA2PG7HQ8xrjF92gcoie9zyqwIVXCCFoO
+        RGqnjJa5aDpLFqbEBGvBJXTT1dRnzfE=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-FQiR6JbTNJyGQ91fKY-1Ag-1; Tue, 11 Apr 2023 04:26:01 -0400
-X-MC-Unique: FQiR6JbTNJyGQ91fKY-1Ag-1
-Received: by mail-ej1-f70.google.com with SMTP id fy17-20020a1709069f1100b00948fd62a55cso4223249ejc.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:26:00 -0700 (PDT)
+ us-mta-80-uGDpUZZGPPGgPbHdERXIMQ-1; Tue, 11 Apr 2023 04:28:38 -0400
+X-MC-Unique: uGDpUZZGPPGgPbHdERXIMQ-1
+Received: by mail-ej1-f70.google.com with SMTP id ja8-20020a170907988800b0094aa0655f0eso1696791ejc.18
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2023 01:28:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681201560; x=1683793560;
+        d=1e100.net; s=20210112; t=1681201717; x=1683793717;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ianVYgdHnuf+b6fncStL3XcypceOXyphlHeUk90627c=;
-        b=kGJdV7ButWI2yZmqIahyRDRAWOInh60uEQCMa6V60IVRIK+qfYxouKZJw85ZqErvSj
-         GFaFMYc4nmhXLT/157Uu8ePfpY2ZIoBgN02aW7LMGZR4mfDoEv/F0KpGDEUcBF8qbFmp
-         NAiGCFtE4YZPmUqFflNdWtOqLMrYiHGCzjIH57pULUZYNXv/3gnS3EPzN3sZOupnIHkV
-         BcsbssDtDmbLYMNHVytETq483PwYqUntE7J5CCc7JpSw/VAUR9gpkQxciwUYs3lrGnFX
-         H8pIvH577JaS+UvgcnEmWn9INi/ChWaspofux+p6Dvsa0ESvyvc9+4+czzi7Q+nPg740
-         zxuw==
-X-Gm-Message-State: AAQBX9fN5UnIqFKZ03PvqzdSpLvDBN6QDOEJ4qJC0EqA5nTVDbffmiIR
-        f3Nv/d05wn0BQZe8vkawE86A12up/HcuERlVqwZDiU9KZ9jT1jiJTb5FOOMZ1ByV5l5ZvKEVp1J
-        FWRxUAh3PhEJv308mcrG0452/bk4ObFKd1w==
-X-Received: by 2002:a17:906:e087:b0:94a:a0d7:b7bc with SMTP id gh7-20020a170906e08700b0094aa0d7b7bcmr3744751ejb.10.1681201559828;
-        Tue, 11 Apr 2023 01:25:59 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aFJhtfWqcz8aMhi/tKJdfnryJenv1/fl9wwK81ePJmGeEOiSFdM7klL3eT/ptAA2KmQuNJyw==
-X-Received: by 2002:a17:906:e087:b0:94a:a0d7:b7bc with SMTP id gh7-20020a170906e08700b0094aa0d7b7bcmr3744742ejb.10.1681201559550;
-        Tue, 11 Apr 2023 01:25:59 -0700 (PDT)
+        bh=34pN8MN53Iu3Gfy9LUqJsRu3fXLGqvq5XuJfuFCl+/E=;
+        b=Xh5L0w1YwtdvDPMYwRxLuZbHyvU1myj7eCHX9qCY4d2GDZuxNmYtV36L/yX1Nk1G5O
+         M5PgaYWgMO1xtAh2VcTZvu1GpeH6crVPdP0VZ1ap4l10bdoJZQocvpjjLvlUCBH/8jqJ
+         kIxMaGZU7L4hZhOD8Yebw6173gH0oNSCuFL5dY5tcA7cm3Ouc18J7D1wQzzxmhZTk8Zo
+         0OP1T/7hsVNcoqDnrjgPYtYvRUma6fqzSZ1mP5d+GkJ+irjhc3BGXd2CgZilZPrQv3ms
+         DNC0E1qj+OQ/kBYFT/epQkcHht/ebuNtqXtH/mfLHTxvDdAbpiGoXrtqXlhFOROyKR09
+         5qjA==
+X-Gm-Message-State: AAQBX9fAR3p6Qv4SJyE39TJO8mKgh9QWtzz0Ze0ER3S041AByPUxbt5P
+        W10PcOsn2p1Zz7/o98BJ6O1gQQW4iE8BciSjPCbJwYmnEd1183TXpm3p2IafiK5pfMRUHu65wR7
+        FUJII6UKC5hO7VYC+ub8J+bpLpTJsNiSaxQ==
+X-Received: by 2002:a17:906:d286:b0:94a:5ecb:6ea7 with SMTP id ay6-20020a170906d28600b0094a5ecb6ea7mr1997334ejb.43.1681201716896;
+        Tue, 11 Apr 2023 01:28:36 -0700 (PDT)
+X-Google-Smtp-Source: AKy350alu4PTdWE1GX6bYy44mK3hM0waXJrDoEMtLGiLGxz621J4QTWxPCWsoq7Zz5KFZHgAdvfJdg==
+X-Received: by 2002:a17:906:d286:b0:94a:5ecb:6ea7 with SMTP id ay6-20020a170906d28600b0094a5ecb6ea7mr1997311ejb.43.1681201716572;
+        Tue, 11 Apr 2023 01:28:36 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id wv1-20020a170907080100b0094c4dd34a0asm1128681ejb.114.2023.04.11.01.25.58
+        by smtp.gmail.com with ESMTPSA id s18-20020a1709067b9200b00947c42243e4sm5943031ejo.179.2023.04.11.01.28.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 01:25:59 -0700 (PDT)
-Message-ID: <d5725b00-b421-7800-5cf0-e9ab6d57cdf8@redhat.com>
-Date:   Tue, 11 Apr 2023 10:25:58 +0200
+        Tue, 11 Apr 2023 01:28:36 -0700 (PDT)
+Message-ID: <68000bbf-d3d5-5080-c1b3-aed2c9944e67@redhat.com>
+Date:   Tue, 11 Apr 2023 10:28:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 2/3] platform/x86/amd/pmf: Add PMF debug facilities
+Subject: Re: [PATCH 3/3] platform/x86/amd/pmf: Move out of BIOS SMN pair for
+ driver probe
 Content-Language: en-US, nl
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
         mario.limonciello@amd.com
 References: <20230406164807.50969-1-Shyam-sundar.S-k@amd.com>
- <20230406164807.50969-3-Shyam-sundar.S-k@amd.com>
+ <20230406164807.50969-4-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230406164807.50969-3-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230406164807.50969-4-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -80,121 +81,114 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 4/6/23 18:48, Shyam Sundar S K wrote:
-> At times, when the mode transitions fail to happen, the current
-> driver does not give enough debug information on why the transition
-> failed or the default preset values did not load. Having an on-demand
-> logs guarded by CONFIG would be helpful in such cases.
+> The current SMN index used for the driver probe seems to be meant
+> for the BIOS pair and there are potential concurrency problems that can
+> occur with an inopportune SMI.
 > 
+> It is been advised to use SMN_INDEX_0 instead of SMN_INDEX_2, which is
+> what amd_nb.c provides and this function has protections to ensure that
+> only one caller can use it at a time.
+> 
+> Fixes: da5ce22df5fe ("platform/x86/amd/pmf: Add support for PMF core layer")
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/Kconfig     | 10 ++++++++++
->  drivers/platform/x86/amd/pmf/auto-mode.c | 22 ++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/cnqf.c      | 19 +++++++++++++++++++
->  3 files changed, 51 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index f4fd764e55a6..7129de0fb9fb 100644
-> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -26,3 +26,13 @@ config AMD_PMF_ACPI_DEBUG
->  	 in the PMF config store.
->  
->  	 Say Y here to enable more debug logs and Say N here if you are not sure.
-> +
-> +config AMD_PMF_DEBUG_FACILITIES
-> +	bool "PMF debug facilities"
-> +	depends on AMD_PMF
-> +	help
-> +	 Enabling this option would give more debug information on the PMF interna
-> +	 counters such as time constants, power thresholds, target modes and
-> +	 power mode transitions of auto mode and CnQF features.
-> +
-> +	 Say Y here to enable logs and Say N here if you are not sure.
 
-Do we really need *both* CONFIG_AMD_PMF_ACPI_DEBUG and CONFIG_AMD_PMF_DEBUG_FACILITIES ?
+Since this is a fix and since this applies cleanly without
+the other 2 debug patches I have merged this into my
+review-hans branch now, so that it can be merged by Linus for
+6.4-rc1 :
 
-To me it seems that both could be covered by a generic CONFIG_AMD_PMF_DEBUG option ?
-especially since this patch only adds a few extra dev_dbg-s.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> index 777490fcf8b9..560379b5cda7 100644
-> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -177,11 +177,33 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
->  			config_store.transition[i].applied = false;
->  			update = true;
->  		}
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +		dev_dbg(dev->dev, "[AUTO MODE] time_ms:%lld avg_power:%d mode:%s timer:%u tc:%d\n",
-> +			time_elapsed_ms, avg_power,
-> +			state_as_str(config_store.current_mode),
-> +			config_store.transition[i].timer,
-> +			config_store.transition[i].time_constant);
-> +
-> +		dev_dbg(dev->dev, "[AUTO MODE] shiftup:%d pt:%d pf:%d pd:%u\n",
-> +			config_store.transition[i].shifting_up,
-> +			config_store.transition[i].power_threshold,
-> +			config_store.mode_set[i].power_floor,
-> +			config_store.transition[i].power_delta);
-> +#endif
->  	}
->  
->  	dev_dbg(dev->dev, "[AUTO_MODE] avg power: %u mW mode: %s\n", avg_power,
->  		state_as_str(config_store.current_mode));
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +	dev_dbg(dev->dev, "[AUTO MODE] priority1: %u, priority2: %u, priority3: %u, priority4: %u",
-> +		config_store.transition[0].applied,
-> +		config_store.transition[1].applied,
-> +		config_store.transition[2].applied,
-> +		config_store. transition[3].applied);
-> +#endif
-> +
->  	if (update) {
->  		for (j = 0; j < AUTO_TRANSITION_MAX; j++) {
->  			/* Apply the mode with highest priority indentified */
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 4b9691cd592a..1f25016b3865 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -174,6 +174,13 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->  		config_store.trans_param[src][i].count++;
->  
->  		tp = &config_store.trans_param[src][i];
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG_FACILITIES
-> +		dev_dbg(dev->dev, "avg_power:%d total_power:%d count:%d timer:%d\n", avg_power,
-> +			config_store.trans_param[src][i].total_power,
-> +			config_store.trans_param[src][i].count,
-> +			config_store.trans_param[src][i].timer);
-> +#endif
->  		if (tp->timer >= tp->time_constant && tp->count) {
->  			avg_power = tp->total_power / tp->count;
->  
-> @@ -194,6 +201,18 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->  	dev_dbg(dev->dev, "[CNQF] Avg power: %u mW socket power: %u mW mode:%s\n",
->  		avg_power, socket_power, state_as_str(config_store.current_mode));
->  
-> +#ifdef AMD_PMF_DEBUG_FACILITIES
-> +	dev_dbg(dev->dev, "[CNQF] priority 1: %u, priority 2: %u, priority 3: %u",
-> +		config_store.trans_param[src][0].priority,
-> +		config_store.trans_param[src][1].priority,
-> +		config_store.trans_param[src][2].priority);
-> +
-> +	dev_dbg(dev->dev, "[CNQF] priority 4: %u, priority 5: %u, priority 6: %u",
-> +		config_store.trans_param[src][3].priority,
-> +		config_store.trans_param[src][4].priority,
-> +		config_store.trans_param[src][5].priority);
-> +#endif
-> +
->  	for (j = 0; j < CNQF_TRANSITION_MAX; j++) {
->  		/* apply the highest priority */
->  		if (config_store.trans_param[src][j].priority) {
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
+
+
+
+> ---
+>  drivers/platform/x86/amd/pmf/Kconfig |  1 +
+>  drivers/platform/x86/amd/pmf/core.c  | 22 +++++-----------------
+>  2 files changed, 6 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index 7129de0fb9fb..c7cda8bd478c 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -7,6 +7,7 @@ config AMD_PMF
+>  	tristate "AMD Platform Management Framework"
+>  	depends on ACPI && PCI
+>  	depends on POWER_SUPPLY
+> +	depends on AMD_NB
+>  	select ACPI_PLATFORM_PROFILE
+>  	help
+>  	  This driver provides support for the AMD Platform Management Framework.
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index da23639071d7..0acc0b622129 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -8,6 +8,7 @@
+>   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>   */
+>  
+> +#include <asm/amd_nb.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/module.h>
+> @@ -22,8 +23,6 @@
+>  #define AMD_PMF_REGISTER_ARGUMENT	0xA58
+>  
+>  /* Base address of SMU for mapping physical address to virtual address */
+> -#define AMD_PMF_SMU_INDEX_ADDRESS	0xB8
+> -#define AMD_PMF_SMU_INDEX_DATA		0xBC
+>  #define AMD_PMF_MAPPING_SIZE		0x01000
+>  #define AMD_PMF_BASE_ADDR_OFFSET	0x10000
+>  #define AMD_PMF_BASE_ADDR_LO		0x13B102E8
+> @@ -348,30 +347,19 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	dev->cpu_id = rdev->device;
+> -	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_LO);
+> -	if (err) {
+> -		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
+> -		pci_dev_put(rdev);
+> -		return pcibios_err_to_errno(err);
+> -	}
+>  
+> -	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
+> +	err = amd_smn_read(0, AMD_PMF_BASE_ADDR_LO, &val);
+>  	if (err) {
+> +		dev_err(dev->dev, "error in reading from 0x%x\n", AMD_PMF_BASE_ADDR_LO);
+>  		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+>  	}
+>  
+>  	base_addr_lo = val & AMD_PMF_BASE_ADDR_HI_MASK;
+>  
+> -	err = pci_write_config_dword(rdev, AMD_PMF_SMU_INDEX_ADDRESS, AMD_PMF_BASE_ADDR_HI);
+> -	if (err) {
+> -		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMF_SMU_INDEX_ADDRESS);
+> -		pci_dev_put(rdev);
+> -		return pcibios_err_to_errno(err);
+> -	}
+> -
+> -	err = pci_read_config_dword(rdev, AMD_PMF_SMU_INDEX_DATA, &val);
+> +	err = amd_smn_read(0, AMD_PMF_BASE_ADDR_HI, &val);
+>  	if (err) {
+> +		dev_err(dev->dev, "error in reading from 0x%x\n", AMD_PMF_BASE_ADDR_HI);
+>  		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+>  	}
 
