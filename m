@@ -2,317 +2,257 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9CDC77B6F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 16:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F03FC76196
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 18:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjDKQSF (ORCPT
+        id S229938AbjDKSro (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 12:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50244 "EHLO
+        Tue, 11 Apr 2023 14:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230293AbjDKQRw (ORCPT
+        with ESMTP id S229936AbjDKSrn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 12:17:52 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E704212;
-        Tue, 11 Apr 2023 09:16:49 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 18:16:44 +0200 (GMT+02:00)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1681229807; bh=uKtjoYbKhktr7/nGPcAk75+/mu0TF7uA+IjJqmhqVyw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=n1g3M+W+Uwtysoh+M3KHQuIzdOc3O870NZhyc5hP8vHkhoqmHsnRQpHBh6VFtoEVg
-         nJH5/KgztbbMLImU1WJ/dtKWjFoh+vhvObTz4UQcIAMHKjGeT/0ce74kuuhxooF9U8
-         Rb3I7Y5X85heDodSYbsgtgGqZNarqoBtH4yfNegY=
-From:   =?UTF-8?Q?Thomas_Wei=C3=9Fschuh_?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        Tue, 11 Apr 2023 14:47:43 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFC259E0;
+        Tue, 11 Apr 2023 11:47:37 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id bm45so402493oib.4;
+        Tue, 11 Apr 2023 11:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681238856;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kk477w1X5WRzFsI1J9lBfe7oTm+OO75NUtps8CJqs0w=;
+        b=nPEr2GaeemD9D86mbdw4y/kZkBnw6V7zIcxBhtxwmzBu4md6A8WwUq2b4vzfPKb6js
+         7JyXhB9OJwnhb0QsXdgF0P8W1L+qQbOqBR7/C5Qce1E4T9x6gln2AigU0v+bkTByMpxv
+         lNdkcdGb30wj/YAXPf6RJOizeKcJ0BZEYc6e2czmz5n0F2ZjBgj15dNCJ6srf3ia6jai
+         SYu0Zgn6LRfKYdb6I7YmczgYKydCzc/cHb6lYNhdVzIPwczPi3utTBj6h3Myxi+azkPI
+         C53W76gXYuLzTX24TTCZvvz9BMOUYYbLYGXQG/7XDnkrcUjBCbGWSe9gM17UH4v9JiVL
+         UqKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681238856;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kk477w1X5WRzFsI1J9lBfe7oTm+OO75NUtps8CJqs0w=;
+        b=TfU17abysAp1GnLfJVTol5WoWQrhwYG5p9tJcYEXfvgagaN8JfVdfO/eqSYvhzjq/B
+         ULmu2CFHj5tmfX3jIMi8GGJdn4zchShG/10nIhiEx2KPOqBynlU60lXrrN2Nus5/kB82
+         A1ePAz5FyxLzqqRJFB2yktTat/EeoEuRiP+/hZJxEVnXLfH8vFc0iqBPNVtUMFkmud12
+         i82MDHR22avOxJ8SMDT8/TEmmDuAWyPAtHjYUM4I4hFfwSlsxzdqtAEX0VEYfIbnd7hV
+         WQZvjkesxo84h4FRNY97l/QV0EaM5vlZyVS1VSdSxZaS9eCZ7mQCHxNboGaNtEsphqDK
+         mdww==
+X-Gm-Message-State: AAQBX9f/Krzvs8YXUM/SyQ/rWEjHdCJHO+SegQJ6xbTeDr+RWXbHeycW
+        +0Kjid9aqTqcOTdq2G45eXi4yo9v2zg=
+X-Google-Smtp-Source: AKy350bhbKuClLWPAR6pCoY/cFQZR5hrEldPIUh9unJdIFLO4niQZV2+pyhkBDL35GAId5Iv8l/Tzg==
+X-Received: by 2002:a05:6808:194:b0:387:53ce:4eb3 with SMTP id w20-20020a056808019400b0038753ce4eb3mr4894301oic.48.1681238856255;
+        Tue, 11 Apr 2023 11:47:36 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:54ed:46b2:3609:5e1a])
+        by smtp.gmail.com with ESMTPSA id o7-20020acad707000000b0038b0dd1c040sm5937771oig.3.2023.04.11.11.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 11:47:35 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-ID: <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
-In-Reply-To: <CAOOmCE8z_UDs8dG0MqX+SFcvd-CTX12XXKzOrVOKDuvrPkyeCQ@mail.gmail.com>
-References: <20230403211548.6253-1-jorge.lopez2@hp.com> <d5fbc118-3b33-44b8-a7b6-4738e121b170@t-8ch.de> <CAOOmCE8z_UDs8dG0MqX+SFcvd-CTX12XXKzOrVOKDuvrPkyeCQ@mail.gmail.com>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
+Subject: [PATCH v8] HP BIOSCFG driver - Documentation
+Date:   Tue, 11 Apr 2023 13:47:34 -0500
+Message-Id: <20230411184734.7011-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <e656fc58-a910-44b3-adb2-56f952dd740e@t-8ch.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge!
+HP BIOS Configuration driver purpose is to provide a driver supporting
+the latest sysfs class firmware attributes framework allowing the user
+to change BIOS settings and security solutions on HP Inc.’s commercial
+notebooks.
 
+Many features of HP Commercial notebooks can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings. HP BIOSCFG driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
 
-Apr 4, 2023 22:24:36 Jorge Lopez <jorgealtxwork@gmail.com>:
+The Linux security features to be provided in hp-bioscfg driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by user-mode applications. The new
+documentation cover features such Secure Platform Management and Sure
+Start. Each section provides security feature description and
+identifies sysfs directories and files exposed by the driver.
 
-> Hi Thomas,
->
-> BTW, I decided to submit all files individually to facilitate the
-> review process.=C2=A0 Only Makefile and Kconfig files will be provided as=
- a
-> single patch.
-> I will be out of town until April 11 and will reply back upon my return.
+Many HP Commercial notebooks include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
 
-Sorry for the slow response.
+HP Commercial notebooks have several BIOS settings that control its
+behaviour and capabilities, many of which are related to security.
+To prevent unauthorized changes to these settings, the system can
+be configured to use a cryptographic signature-based authorization
+string that the BIOS will use to verify authorization to modify the
+setting.
 
->
-> Please see my comments below.
->
->>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 HP specific types
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 -----------------
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - ordered-list - a set =
-of ordered list valid values
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - sure-start
->>
->> Could you explain what "sure-start" does?
->> Is it actually an attribute type of which multiple attributes can exist?
->>
->
-> It is an attribute type of which multiple attributes can exist.
-> At this moment=C2=A0 Sure-Start reports both the number of audit logs and
-> all logs reported by BIOS.
-> Sure-Start is exposed directly under
-> /sys/class/firmware-attributes/*/attributes/.=C2=A0=C2=A0 Sure Start does=
- not
-> provide any authentication.
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-But what does it mean?
-For ordered-list there is a nice explanation.
+---
+Based on the latest platform-drivers-x86.git/for-next
 
->
->> Or are there just some global properties that need to be exposed?
->> If it is global it should be directly under
->> /sys/class/firmware-attributes/*/authentication/
->> without needing the type.
->>
->>> +
->>> +
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 All attribute types support the following values:
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 current_value:
->>> @@ -42,16 +48,16 @@ Description:
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description of the at <attr>
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 display_name_language_code:
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 A file that can be read to ob=
-tain
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the IETF language tag corresp=
-onding to the
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "display_name" of the <attr>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 A file that can be read to obtain
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 the IETF language tag corresponding to the
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "display_name" of the <attr>
->>
->> Are these reindentations and other cleanups intentional?
->>
->> If they are intentional and there are no interactions with your actual
->> patch you could split them into their own patch and submit them
->> separately.
->>
->> This way we wouldn't have to worry about them here anymore.
->
-> They were unintentionally.=C2=A0 I will reset them back in the next revie=
-w
->>
->> Note:
->> These indentations are different from the newly introduced documentation=
-.
->>
->>>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 audit_log_entries:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 A =
-read-only file that returns the events in the log.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Va=
-lues are separated using semi-colon (``;``)
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Au=
-dit log entry format
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 By=
-te 0-15:=C2=A0=C2=A0 Requested Audit Log entry=C2=A0 (Each Audit log is 16 =
-bytes)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 By=
-te 16-127: Unused
->>
->> How to interpret each log entry?
->>
->
-> Byte 0: status
-> 1: event id
-> 2: msg number
-> 3: severity
-> 4: source ID
-> 5: system state at event
-> 6-12 Time stamp
-> 13-15: internal buffer data
->
-> Application needs to have knowledge of the data provided by BIOS in
-> order to interpret the audit log.
->
->> If it is an opaque thing from the firmware that would also be useful to
->> know.
->>
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 audit_log_entry_count:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 A =
-read-only file that returns the number of existing audit log events availab=
-le to be read.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Va=
-lues are separated using comma (``,``)
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [N=
-o of entries],[log entry size],[Max number of entries supported]
->>
->> Will log entry size always be 16? Or can it be bigger in the future when
->> more bytes are used?
->> This should be mentioned.
->
-> Log entry size is always 16 bytes in size.=C2=A0 The reason is to report =
-a
-> maximum of 256 entries.=C2=A0 Total 4096 bytes
+History
 
-Does it make sense to expose the number 16 from sysfs if it never can chang=
-e anyways?
+Version 8
+	Includes only sysfs-class-firmware-attributes documentation
 
-Note you can also customize the filesize reported in sysfs to expose the ma=
-ximum size to be used by userspace.
+Version 7
+	Includes only sysfs-class-firmware-attributes documentation
+---
+ .../testing/sysfs-class-firmware-attributes   | 104 +++++++++++++++++-
+ 1 file changed, 103 insertions(+), 1 deletion(-)
 
->>
->> Is audit_log_entry_count ever used without reading audit_log_entries
->> right after?
-> Yes. The counter is necessary to determine how many logs are available
-> to be read.
-
-I think the cleaner interface would be to have users provide a buffer to re=
-ad into and then they check the return value of read().
-Users can't trust the count value anyways as it is prone to TOCTOU races.
-
->
->> If not the count file could be dropped.
->>
->>> +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 /sys/class/firmware-attributes/*/authentication=
-/SPM/status
->>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 March 29
->>> +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.18
->>> +Contact:=C2=A0=C2=A0=C2=A0=C2=A0 "Jorge Lopez" <jorge.lopez2@hp.com>
->>> +Description: 'status' is a read-only file that returns ASCII text repo=
-rting
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 the status information.
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 State:=C2=A0 Not Provisioned / Provisioned / Provisioning i=
-n progress
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 Version:=C2=A0 Major.=C2=A0=C2=A0 Minor
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 Feature Bit Mask: <16-bit unsigned number display in hex>
->>
->> How are these bits to be interpreted?
-> This information is provided by BIOS.=C2=A0 It is one of those obscure
-> values from BIOS.
->>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 SPM Counter: <16-bit unsigned number display in base 10>
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 Signing Key Public Key Modulus (base64):
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 KEK Public Key Modulus (base64):
->>
->> Is " (base64)" supposed to be part of the contents of the file?
->
-> The information reported for Signing Key and KEK public key are
-> reported as base64 values.=C2=A0 It applies only to the data and not to t=
-he
-> file contents.
-
-Put is the file format:
-KEK Public Key Modulus (base64): ...
-KEK Public Key Modulus: ...
-
-The docs indicate the former.
-
->>
->>> +
->>> +
->>> +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 /sys/class/firmware-attributes/*/authentication=
-/SPM/statusbin
->>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 March 29
->>> +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5.18
->>> +Contact:=C2=A0=C2=A0=C2=A0=C2=A0 "Jorge Lopez" <jorge.lopez2@hp.com>
->>> +Description: 'statusbin' is a read-only file that returns identical st=
-atus
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 information reported by 'status' file in binary format.
->>
->> This documentation should contain enough information to understand the
->> files contents.
->>
->>
->> I understand that one WMI call will return all the fields that are part
->> of the "status" and "statusbin" in one response.
->>
->> Are these WMI calls especially expensive or called especially
->> frequently?
->>
->
-> Unfortunately the WMI to read the Status binary data is expensive
-> hence the reason of only calling once.
-
-Hm, I still dislike the interface, sorry.
-What about caching the values in the driver and exposing them via different=
- files?
-
->> If not I would still argue to split them into one file per field and
->> remove the statusbin file.
->>
->
-> Regards,
-> > Jorge
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 4cdba3477176..574cdd8a6cc6 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -22,6 +22,12 @@ Description:
+ 			- integer: a range of numerical values
+ 			- string
+ 
++		HP specific types
++		-----------------
++			- ordered-list - a set of ordered list valid values
++			- sure-start - report audit logs read from BIOS
++
++
+ 		All attribute types support the following values:
+ 
+ 		current_value:
+@@ -126,6 +132,44 @@ Description:
+ 					value will not be effective through sysfs until this rule is
+ 					met.
+ 
++		HP specific class extensions
++		------------------------------
++
++		On HP systems the following additional attributes are available:
++
++		"ordered-list"-type specific properties:
++
++		elements:
++					A file that can be read to obtain the possible
++					list of values of the <attr>. Values are separated using
++					semi-colon (``;``). The order individual elements are listed
++					according to their priority.  An Element listed first has the
++					highest priority. Writing the list in a different order to
++					current_value alters the priority order for the particular
++					attribute.
++
++		"sure-start"-type specific properties:
++
++		audit_log_entries:
++					A read-only file that returns the events in the log.
++					Values are separated using semi-colon (``;``)
++
++					Audit log entry format
++
++					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
++					Byte 16-127: Unused
++
++		audit_log_entry_count:
++					A read-only file that returns the number of existing audit log events available to be read.
++					Values are separated using comma (``,``)
++
++					[No of entries],[log entry size],[Max number of entries supported]
++
++					log entry size identifies audit log size for the current BIOS version.
++					The current size is 16 bytes but it can be to up to 128 bytes long
++					in future BIOS versions.
++
++
+ What:		/sys/class/firmware-attributes/*/authentication/
+ Date:		February 2021
+ KernelVersion:	5.11
+@@ -206,7 +250,7 @@ Description:
+ 		Drivers may emit a CHANGE uevent when a password is set or unset
+ 		userspace may check it again.
+ 
+-		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
++		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
+ 		require password validation.
+ 		On Lenovo systems if you change the Admin password the new password is not active until
+ 		the next boot.
+@@ -296,6 +340,15 @@ Description:
+ 						echo "signature" > authentication/Admin/signature
+ 						echo "password" > authentication/Admin/certificate_to_password
+ 
++		HP specific class extensions
++		--------------------------------
++
++		On HP systems the following additional settings are available:
++
++		role: enhanced-bios-auth:
++					This role is specific to Secure Platform Management (SPM) attribute.
++					It requires configuring an endorsement (kek) and signing certificate (sk).
++
+ 
+ What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+ Date:		February 2021
+@@ -364,3 +417,52 @@ Description:
+ 		use it to enable extra debug attributes or BIOS features for testing purposes.
+ 
+ 		Note that any changes to this attribute requires a reboot for changes to take effect.
++
++
++		HP specific class extensions - Secure Platform Manager (SPM)
++		--------------------------------
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
++		RSA public key that will be used by the BIOS to verify
++		signatures when setting the signing key.  When written,
++		the bytes should correspond to the KEK certificate
++		(x509 .DER format containing an OU).  The size of the
++		certificate must be less than or equal to 4095 bytes.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
++		public key that will be used by the BIOS to verify signatures
++		when configuring BIOS settings and security features.  When
++		written, the bytes should correspond to the modulus of the
++		public key.  The exponent is assumed to be 0x10001.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/status
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'status' is a read-only file that returns ASCII text reporting
++		the status information.
++
++		  State:  Not Provisioned / Provisioned / Provisioning in progress
++		  Version:  Major.   Minor
++		  Feature Bit Mask: <16-bit unsigned number display in hex>
++		  SPM Counter: <16-bit unsigned number display in base 10>
++		  Signing Key Public Key Modulus (base64): <256 bytes base64 in hex>
++		  KEK Public Key Modulus (base64): <256 bytes base64 in hex>
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'statusbin' is a read-only file that returns identical status
++		information reported by 'status' file in binary format.
+-- 
+2.34.1
 
