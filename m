@@ -2,325 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37B1C77B6E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 19:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF303C77B76
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 19:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbjDLTiU (ORCPT
+        id S229925AbjDLTt4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Apr 2023 15:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59380 "EHLO
+        Wed, 12 Apr 2023 15:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbjDLTiT (ORCPT
+        with ESMTP id S229819AbjDLTto (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2023 15:38:19 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5781738
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 12:38:08 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id m4so15929160lfj.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 12:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681328287; x=1683920287;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qXugMrjabeNnR/Qpwn6yySLwWHI+631Z1rMlgb7Um70=;
-        b=ZhyDwub6t0vimOrxcYQlfVopuiumDCPD5LX+miXmCw+1cyKGeOQJCcSf19NdJJHESn
-         EywqoWxLjCrZOZaRuFuEGifM4NNc3RgSgamUN1/sd18h3gllQvP2Z064ZPuc3cUmQbPt
-         okPvZzcMXilQ8TIpWxboJ/KCr6y0vCij8I2k15jecuo6pK+0MQJ151GmHLw+sOkZ2LAf
-         0jyNh2qARJ8Kwt+kR3JSpeq4kx2pUw7HWjoVr2S3h9zc/R0pyjmf7NvfXOvd54RK8i7I
-         ywSDLzrIrRMiMNVZ5L6pS3SGWQk8aN7saz/i2Nv96pRDNdIKt0sazy4n/j8AqSCqiLWD
-         t8vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681328287; x=1683920287;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qXugMrjabeNnR/Qpwn6yySLwWHI+631Z1rMlgb7Um70=;
-        b=ER+hwWz2Wns0JDlphqFo6nsYHQtemCeCzO36CkzStoYDQMYT/p2rydQzO4g4NeWvuz
-         7nBN8CgcEQl5Vjz7G58CH5ihNcUWt4HhG2Uzn+RZomNFnlZFd3AjoVliNAfc84XK8m0/
-         onx+9unG5XHU/OwtVtRvOU9QnZ1jK7IDlhoKALGOn3gaM95qmF5enkWGKYmh61S1I1z7
-         Jf/ZTWPDcUtfMdQbzIuGBbwlcETlvzuN1zj2dnLynBrit4xcROgvyqa1qcesVhHxSTSM
-         otHijav90WGRTcJml4q4RCr/oM/XkFn5PCMET/K/d6fbO3J+r5NMuBuFVnYWaP+8tKJN
-         VJ0w==
-X-Gm-Message-State: AAQBX9c8SWNg8yG3QB+A02q3Na3uByeiowcYHLV/2oRGhNGm1IqzHaqG
-        Z2GslDBoBXcTpxpBVNbzuunFgjMjCg3qGpexCzQ=
-X-Google-Smtp-Source: AKy350azqyhrrqx1PiCurjontmk6V6o84obQ4C+9CYgn5j25JUbPAPGisEcuk39fSYTSzn46H6wY3rWx4RkTkmiSnV8=
-X-Received: by 2002:ac2:482d:0:b0:4ec:85f6:5bec with SMTP id
- 13-20020ac2482d000000b004ec85f65becmr22236lft.2.1681328286479; Wed, 12 Apr
- 2023 12:38:06 -0700 (PDT)
+        Wed, 12 Apr 2023 15:49:44 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AD07AB7;
+        Wed, 12 Apr 2023 12:49:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KdMnlXX8ap9tVJDkJGUOwjLPIl+QeD3pGAqLCKlo6taZcw23wOqed1ejGPZY1c3sDcT53Jfhnxrlq83XdmyOhGnPDKkSdrw9nq26W2qNHsBu9KNw5bZEHQeN03xtik/LyzQoLw3A583VyQSXZqtosj9DA/rPScCs5+wi5hKMbav3G3agcnEGbLaaR1bJpnx0ECcf0+SOimeYyo9rEIDpM78qlizHS84ApG9FjWZjCfKd1iikZemmvGxrIebuCUlbeAZxgfShWQuzyuWbARA7oSqrEnSyGp1qFAXXBkhqNHb8wQwRK7k8QGWemlhaV6WO/cda0jtW4112/WFTufsEdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4Jze6VODEdn8Ll9pM/C4zzNUmHbotNqnPcxPU6N5o74=;
+ b=ITGpcjipiVQuWusVfj3kZYSkQjrBmCS8v7O0GJffA+bD7YqDfT0vQUEz0XjOkYROEZi7yJpdyEij3jS3TrOSnSFJeP1hJKH5j9v2ee3EZEJgz2KT7EAma10pl0dHFJYhmlHEWokRcCLFyR9kksC2HPAEk8ga07U9Rtkop7jqknW+2g15DJSyCOUGCLxBH1bPtWQNb0kqoTGiRPKdv1QNrtC1Ui8ce1uv8Iw+IMBTa9t718kltLI3UGTSxLlHfGphKL7o6MjCF8TYP28nNvITPf+b3a/wqP0V527KneYbMUa/xjWkWH6mSL67NIVxS2fXR8z17wt1xiuqYIzqoMBftA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Jze6VODEdn8Ll9pM/C4zzNUmHbotNqnPcxPU6N5o74=;
+ b=44RJfxPHjT0GlB58t+qoJcTC6NF1HvYZZ7RmTUxB4hIn6oKg8XCCL1SvqI4L6YBwGbc+Ft2aAdtrhcju0YElaGvzCCCjtjvlpN29YHGFXGtX/0qa0+7AsmtOgzIp/SnG52KWa6UK/uEzngpnUW/qgLYTW8HKniFKcQ9FeJ71/JM=
+Received: from DM6PR07CA0048.namprd07.prod.outlook.com (2603:10b6:5:74::25) by
+ MN0PR12MB6003.namprd12.prod.outlook.com (2603:10b6:208:37f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Wed, 12 Apr
+ 2023 19:49:33 +0000
+Received: from DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:74:cafe::3d) by DM6PR07CA0048.outlook.office365.com
+ (2603:10b6:5:74::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30 via Frontend
+ Transport; Wed, 12 Apr 2023 19:49:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT113.mail.protection.outlook.com (10.13.173.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6298.31 via Frontend Transport; Wed, 12 Apr 2023 19:49:33 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 12 Apr
+ 2023 14:49:32 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
+        <pavel@ucw.cz>, <svenva@chromium.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>
+CC:     <Shyam-sundar.S-k@amd.com>, <rrangel@chromium.org>,
+        Jain Rajat <rajatja@google.com>, <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 0/4] Add vendor agnostic mechanism to report hardware sleep
+Date:   Wed, 12 Apr 2023 14:49:12 -0500
+Message-ID: <20230412194917.7164-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230309201022.9502-1-jorge.lopez2@hp.com> <20230309201022.9502-2-jorge.lopez2@hp.com>
- <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
-In-Reply-To: <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Wed, 12 Apr 2023 14:37:45 -0500
-Message-ID: <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] Introduction of HP-BIOSCFG driver
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT113:EE_|MN0PR12MB6003:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51a049b1-9fef-4098-2736-08db3b8f09cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8rQ4ST1g4quhSBCDhgG+/zVe5ttqKnJTN+y/xgdCz9PqB4GgzhwJnRk2wkX1gtD0TpqXm3tOMm6nawYwTvpB8TaVLFGJx1gvur6JROHYgw/C/GCA1sEYLXRZB7wZNatICsdnzgpH3QfzrLQXcdTexp0BhuBlNhq8nk/GG1qaKZTg1LyXtVsYH+QsleR4kbFzVfBsJ65sMCNYjh3ecGdqv+1C8qelHuaQmU17TnkXAS+X7ZoLq/VSG+oHh+QE6B940RC5y6PO5O9PQxqwAQII1t2GPAa1oyVnHlNgU4L7I2yBboF2OhlWa5V+S0UUo7/FcEJKmhpalhhpBZiaSypZnSQdk41zPCqT4j67QZ9dPYgIqDXfINScZySkj8+p7PM1gL3mhsya5gW91RGWJQlwPB5mkwczEnqh4pZ1U5htlks97DC03OISevPNKEID1deitr71OWU5yWouA00+sBHa3DrcynIVtjGJPrOaqKbnfwEIdExSIwHq3s9h59HGeG9oOEJN7M7fROfDnoE+TIJvbJCqqPa5DxuvKZNEeNlSID7ScBtG79V4W6Pg+aSGCossQwJdbWgU6kEisncZggbsF17U3+UcJ+0NMITq/AnTnM9ivXKF8OAJi7E5dWBzFzLe9FAPe5a+/6+myH6d975dc55L2yVAJWqXiiB376yr/SG3QgF1RIUwM+W+tfDIfL5+cb8FnydyWfxP/r4z5OlHPxqPsJsDHyNeowkcOq54y50=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(39860400002)(136003)(376002)(451199021)(46966006)(40470700004)(36840700001)(336012)(426003)(1076003)(26005)(40480700001)(70586007)(70206006)(36756003)(2906002)(6666004)(83380400001)(82310400005)(47076005)(7696005)(2616005)(186003)(16526019)(36860700001)(4326008)(40460700003)(44832011)(110136005)(54906003)(7416002)(86362001)(5660300002)(8676002)(8936002)(81166007)(478600001)(356005)(41300700001)(316002)(82740400003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 19:49:33.3012
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51a049b1-9fef-4098-2736-08db3b8f09cc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT113.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6003
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+An important part of validating that s0ix worked properly is to check how
+much of a cycle was spent in a hardware sleep state.
 
-Please see my comments below.
+The reporting of hardware sleep is a mix of kernel messages and sysfs
+files that vary from vendor to vendor. Collecting this information
+requires extra information on the kernel command line or fetching from
+debugfs.
 
-On Sun, Apr 2, 2023 at 11:28=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
-.de> wrote:
->
-> Hi Jorge,
->
-> below a few stylistic comments.
-> These are very general and do not only affect the commented locations
-> but the whole driver.
->
-> That said these are not critical.
->
-> First focus on removing dead code and nailing down the userspace API.
-> Then it depends on your motivation.
->
-> As said before I would focus on reducing the driver to the bare minimum
-> that makes it usable, get it merged / clean it up and then re-add pieces
-> bit-by-bit.
+To make this information more readily accessible introduce a new file in
+suspend_stats that drivers can report into during their resume routine.
 
-The driver functionality is the proposed basic functionality.  There
-are plans to provide additional support for Sure Recover (Security
-component) which is planned to be added in future patches.
+Userspace can fetch this information and compare it against the duration
+of the cycle to allow determining residency percentages and flagging
+problems.
 
->
-> I'll probably go over all the files again when I am more familiar with
-> the driver.
->
-> > +             // append UTF_PREFIX to part and then convert it to unico=
-de
-> > +             strprefix =3D kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
-> > +                                   authentication);
-> > +             if (!strprefix)
-> > +                     goto out_populate_security_buffer;
-> > +
-> > +             auth =3D ascii_to_utf16_unicode(auth, strprefix);
-> > +     }
-> > +out_populate_security_buffer:
->
-> There is no need to have the name of the function in the label.
->
-> Just "out" would be enough.
->
-> > +
-> > +     kfree(strprefix);
-> > +     strprefix =3D NULL;
->
-> No need to clear stack variables.
+Mario Limonciello (4):
+  PM: Add sysfs files to represent time spent in hardware sleep state
+  platform/x86/amd: pmc: Report duration of time in hw sleep state
+  platform/x86/intel/pmc: core: Always capture counters on suspend
+  platform/x86/intel/pmc: core: Report duration of time in HW sleep
+    state
 
-I will clear stack variables across all files.
->
-> > +}
-> > +
-> > +ssize_t update_spm_state(void)
-> > +{
-> > +     int ret;
-> > +     struct secureplatform_provisioning_data *data =3D NULL;
-> > +
-> > +     data =3D kmalloc(sizeof(struct secureplatform_provisioning_data),
-> > +                    GFP_KERNEL);
->
-> Use "sizeof(*data)". It's shorter and more robust.
-
-Done!
-
-> > +/*
-> > + * statusbin - Reports SPM status in binary format
-> > + *
-> > + * @kobj:  Pointer to a kernel object of things that show up as
-> > + *      directory in the sysfs filesystem.
-> > + * @attr:  Pointer to list of attributes for the operation
-> > + * @buf:   Pointer to buffer
->
-> The parameters are the same for every attribute_show() function.
-> No need to document them.
->
-> Also if you document something use proper kerneldoc format:
-> https://docs.kernel.org/doc-guide/kernel-doc.html
-
-I will remove any unnecessary documentation.
-
->
-
-> > +     ret =3D sysfs_emit(buf, "%s\n",
-> > +                      spm_mechanism_types[bioscfg_drv.spm_data.mechani=
-sm]);
-> > +     return ret;
->
-> No need for the temporary variable:
-
-It was an oversight.  Done!
-
->
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/d=
-rivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> > new file mode 100644
-> > index 000000000000..79ec007fbcee
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> > @@ -0,0 +1,459 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Functions corresponding to string type attributes under
-> > + * HP_WMI_BIOS_STRING_GUID for use with hp-bioscfg driver.
-> > + *
-> > + * Copyright (c) 2022 HP Development Company, L.P.
-> > + */
-> > +
-> > +#include "bioscfg.h"
-> > +
-> > +#define WMI_STRING_TYPE "HPBIOS_BIOSString"
-> > +
-> > +get_instance_id(string);
->
-> This is weird to read. It looks like a function declaration.
-> maybe use DEFINE_GET_INSTANCE_ID(string).
->
-
-get_instance_id part of a group of functions defined in bioscfg.h.
-The sample was taken from another driver which declared it in
-lowercase.   I will change all functions names declared as a macro to
-uppercase and update the names across all files.  The main purpose for
-those functions was to avoid duplicating the same functions across all
-files.
-
-> > +
-> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
-tribute *attr, char *buf)
-> > +{
-> > +     ssize_t ret;
-> > +     int instance_id =3D get_string_instance_id(kobj);
-> > +
-> > +     if (instance_id < 0)
-> > +             return -EIO;
-> > +
-> > +     ret =3D sysfs_emit(buf, "%s\n",
-> > +                      bioscfg_drv.string_data[instance_id].current_val=
-ue);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> > + * validate_string_input() -
-> > + * Validate input of current_value against min and max lengths
-> > + *
-> > + * @instance_id: The instance on which input is validated
-> > + * @buf: Input value
-> > + */
-> > +static int validate_string_input(int instance_id, const char *buf)
->
-> Instead of passing around integer ids, that all the callees are using to
-> look up some global data, it would be nicer to pass a pointer to the
-> concrete instance struct to work on.
->
-
-validate_string_input is part of the defined function
-ATTRIBUTE_PROPERTY_STORE in bioscfg.h (line 457).
-
-> This makes the code simpler and removes reference to global state all
-> over the place.
->
-Changing the values from int to pointer will add unnecessary overhead
-since the instance ID is searched only once earlier in the process.
+ Documentation/ABI/testing/sysfs-power | 29 +++++++++++++
+ drivers/platform/x86/amd/pmc.c        |  6 +--
+ drivers/platform/x86/intel/pmc/core.c | 16 ++++----
+ drivers/platform/x86/intel/pmc/core.h |  2 -
+ include/linux/suspend.h               |  8 ++++
+ kernel/power/main.c                   | 59 +++++++++++++++++++++------
+ 6 files changed, 95 insertions(+), 25 deletions(-)
 
 
-> > +{
-> > +     int in_len =3D strlen(buf);
-> > +
-> > +     /* BIOS treats it as a read only attribute */
-> > +     if (bioscfg_drv.string_data[instance_id].is_readonly)
-> > +             return -EIO;
-> > +
-> > +     if ((in_len < bioscfg_drv.string_data[instance_id].min_length) ||
-> > +         (in_len > bioscfg_drv.string_data[instance_id].max_length))
-> > +             return -EINVAL;
->
-> -ERANGE?
->
+base-commit: 09a9639e56c01c7a00d6c0ca63f4c7c41abe075d
+-- 
+2.34.1
 
-Done!
-
-> > +
-> > +     /*
-> > +      * set pending reboot flag depending on
-> > +      * "RequiresPhysicalPresence" value
-> > +      */
-> > +     if (bioscfg_drv.string_data[instance_id].requires_physical_presen=
-ce)
-> > +             bioscfg_drv.pending_reboot =3D TRUE;
->
-> Just use "true" or "false" instead of "TRUE" and "FALSE".
->
-
-Done!
-
-> > +}
-> > +
-> > +/* Expected Values types associated with each element */
-> > +static acpi_object_type expected_string_types[] =3D {
->
-> Seems this can be const.
-
-Done!
->
-> > +     [NAME] =3D ACPI_TYPE_STRING,
-> > +     [VALUE] =3D ACPI_TYPE_STRING,
-> > +     [PATH] =3D ACPI_TYPE_STRING,
-> > +     [IS_READONLY] =3D ACPI_TYPE_INTEGER,
-> > +     [DISPLAY_IN_UI] =3D ACPI_TYPE_INTEGER,
-> > +     [REQUIRES_PHYSICAL_PRESENCE] =3D ACPI_TYPE_INTEGER,
-> > +     [SEQUENCE] =3D ACPI_TYPE_INTEGER,
-> > +     [PREREQUISITES_SIZE] =3D ACPI_TYPE_INTEGER,
-> > +     [PREREQUISITES] =3D ACPI_TYPE_STRING,
-> > +     [SECURITY_LEVEL] =3D ACPI_TYPE_INTEGER,
-> > +     [STR_MIN_LENGTH] =3D ACPI_TYPE_INTEGER,
-> > +     [STR_MAX_LENGTH] =3D ACPI_TYPE_INTEGER
->
-> *Do* add a trailing comma after a non end-of-list marker.
->
-Done!
-
-> > +void exit_string_attributes(void)
-> > +{
-> > +     int instance_id;
-> > +
-> > +     for (instance_id =3D 0; instance_id < bioscfg_drv.string_instance=
-s_count; instance_id++) {
->
-> You can declare loop variables inside the loop. This saves a bunch of
-> horizontal space.
->
-> > +             if (bioscfg_drv.string_data[instance_id].attr_name_kobj)
-> > +                     sysfs_remove_group(bioscfg_drv.string_data[instan=
-ce_id].attr_name_kobj,
-> > +                                        &string_attr_group);
-> > +     }
-> > +     bioscfg_drv.string_instances_count =3D 0;
-> > +
-> > +     kfree(bioscfg_drv.string_data);
-> > +     bioscfg_drv.string_data =3D NULL;
-> > +}
-
-Done!  I will keep that in mind when I review the remaining files.
-
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c =
-b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > +static struct attribute *sure_start_attrs[] =3D {
-> > +     &sure_start_display_name.attr,
-> > +     &sure_start_display_langcode.attr,
-> > +     &sure_start_audit_log_entry_count.attr,
-> > +     &sure_start_audit_log_entries.attr,
-> > +     &sure_start_type.attr,
-> > +     NULL,
->
-> No trailing comma after end-of-array marker.
-
-Done!
