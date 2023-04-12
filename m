@@ -2,278 +2,325 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C0BC7619A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 14:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37B1C77B6E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 19:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbjDLOs1 (ORCPT
+        id S229722AbjDLTiU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Apr 2023 10:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46944 "EHLO
+        Wed, 12 Apr 2023 15:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjDLOsZ (ORCPT
+        with ESMTP id S229603AbjDLTiT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2023 10:48:25 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2375270D;
-        Wed, 12 Apr 2023 07:48:23 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id w19so7832845oiv.13;
-        Wed, 12 Apr 2023 07:48:23 -0700 (PDT)
+        Wed, 12 Apr 2023 15:38:19 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5781738
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 12:38:08 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id m4so15929160lfj.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 12:38:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681310903; x=1683902903;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qS3hYdnU5xcu/lAn2aqBm7KdfQRCnBBjsCUZoLhBBfU=;
-        b=POaB9YWgM7l/cRCo6XVrBEokLH6J+732xazwRJ800/Wm8kKGkHt+cXEDpVZe+7Hrex
-         gEsDuepH63O2t1hisRhlrszgcYa2uAHsCazTz/2H0aALnNbXYCV4DFQ1100Vy30fO6by
-         PiCBR9vzzjDqTKEuDoPXAFL1nBZhKMRlIawHIfe2bDE6OILaj922WSzubrrQTlVKqA01
-         h2cXiNPBDtbRQVKEBKZK7pWQNT9lS4PQukvwN5vv/UiufNBi+HjXbVlIOwavNF3fuCs6
-         xYJky3g3y8pW7EJGyctwnEBr9OoEX1RR6t3FbqTQFk4qrxlu66JjOb9kUJ5SGj+EjLUC
-         CnfQ==
+        d=gmail.com; s=20221208; t=1681328287; x=1683920287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qXugMrjabeNnR/Qpwn6yySLwWHI+631Z1rMlgb7Um70=;
+        b=ZhyDwub6t0vimOrxcYQlfVopuiumDCPD5LX+miXmCw+1cyKGeOQJCcSf19NdJJHESn
+         EywqoWxLjCrZOZaRuFuEGifM4NNc3RgSgamUN1/sd18h3gllQvP2Z064ZPuc3cUmQbPt
+         okPvZzcMXilQ8TIpWxboJ/KCr6y0vCij8I2k15jecuo6pK+0MQJ151GmHLw+sOkZ2LAf
+         0jyNh2qARJ8Kwt+kR3JSpeq4kx2pUw7HWjoVr2S3h9zc/R0pyjmf7NvfXOvd54RK8i7I
+         ywSDLzrIrRMiMNVZ5L6pS3SGWQk8aN7saz/i2Nv96pRDNdIKt0sazy4n/j8AqSCqiLWD
+         t8vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681310903; x=1683902903;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qS3hYdnU5xcu/lAn2aqBm7KdfQRCnBBjsCUZoLhBBfU=;
-        b=hBk8YgOktuVCtj1Xy0C/at0o1mTHeJZl8XXnQOe76m+AGxQaHviejFnukYJu/vXD33
-         ydYZP0Ry3pWslNsqoJ0si83E3eswH9ykUDQyrmVRdoUxyjdUlNBjEc4TKhSMrmlx45Lm
-         rITmMAD9ka0xR2jDAZj1r7HPdwb/t8PZpQaoRsilpLS7N0d/9QyjQpuYFTuLHRpUEA+g
-         bzM4WM3zyvMlIj/lwjUhG9AN1OUtx1W3FAka92bu4Xx4nLHPJT838wjEr33fSIjAXSTQ
-         eaakxRZW5r3KkqpuDQ5bwAeH6nGsOUPG6L7u6yMhUQD50WqacO5zaNgUOsdRb09RtBhj
-         QGrQ==
-X-Gm-Message-State: AAQBX9cwRqethR4qqeaMzj5G3ps5mFn6gX1Ddri316y7q5iIrEtAMy+J
-        Y6I6r70KceQYpND2ty3POX/jqApi3XM=
-X-Google-Smtp-Source: AKy350ajcMhrsW3Y9OTaNeua1UqYHDpv2ZC5wZflKYTxLIZ7tUkJV7Y1k4oNnLhQ7pk+VNWkn/4jGg==
-X-Received: by 2002:aca:2203:0:b0:38b:f0a7:9ce1 with SMTP id b3-20020aca2203000000b0038bf0a79ce1mr1036133oic.52.1681310903125;
-        Wed, 12 Apr 2023 07:48:23 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:ba9a:13a3:70d3:912])
-        by smtp.gmail.com with ESMTPSA id o2-20020a0568080bc200b0038413a012dasm6667894oik.4.2023.04.12.07.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 07:48:22 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v9] HP BIOSCFG driver - Documentation
-Date:   Wed, 12 Apr 2023 09:48:21 -0500
-Message-Id: <20230412144821.5716-1-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20221208; t=1681328287; x=1683920287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qXugMrjabeNnR/Qpwn6yySLwWHI+631Z1rMlgb7Um70=;
+        b=ER+hwWz2Wns0JDlphqFo6nsYHQtemCeCzO36CkzStoYDQMYT/p2rydQzO4g4NeWvuz
+         7nBN8CgcEQl5Vjz7G58CH5ihNcUWt4HhG2Uzn+RZomNFnlZFd3AjoVliNAfc84XK8m0/
+         onx+9unG5XHU/OwtVtRvOU9QnZ1jK7IDlhoKALGOn3gaM95qmF5enkWGKYmh61S1I1z7
+         Jf/ZTWPDcUtfMdQbzIuGBbwlcETlvzuN1zj2dnLynBrit4xcROgvyqa1qcesVhHxSTSM
+         otHijav90WGRTcJml4q4RCr/oM/XkFn5PCMET/K/d6fbO3J+r5NMuBuFVnYWaP+8tKJN
+         VJ0w==
+X-Gm-Message-State: AAQBX9c8SWNg8yG3QB+A02q3Na3uByeiowcYHLV/2oRGhNGm1IqzHaqG
+        Z2GslDBoBXcTpxpBVNbzuunFgjMjCg3qGpexCzQ=
+X-Google-Smtp-Source: AKy350azqyhrrqx1PiCurjontmk6V6o84obQ4C+9CYgn5j25JUbPAPGisEcuk39fSYTSzn46H6wY3rWx4RkTkmiSnV8=
+X-Received: by 2002:ac2:482d:0:b0:4ec:85f6:5bec with SMTP id
+ 13-20020ac2482d000000b004ec85f65becmr22236lft.2.1681328286479; Wed, 12 Apr
+ 2023 12:38:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230309201022.9502-1-jorge.lopez2@hp.com> <20230309201022.9502-2-jorge.lopez2@hp.com>
+ <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
+In-Reply-To: <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Wed, 12 Apr 2023 14:37:45 -0500
+Message-ID: <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] Introduction of HP-BIOSCFG driver
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
+Hi Thomas,
 
-Many features of HP Commercial notebooks can be managed using Windows
-Management Instrumentation (WMI). WMI is an implementation of Web-Based
-Enterprise Management (WBEM) that provides a standards-based interface
-for changing and monitoring system settings. HP BIOSCFG driver provides
-a native Linux solution and the exposed features facilitates the
-migration to Linux environments.
+Please see my comments below.
 
-The Linux security features to be provided in hp-bioscfg driver enables
-managing the BIOS settings and security solutions via sysfs, a virtual
-filesystem that can be used by user-mode applications. The new
-documentation cover HP-specific firmware sysfs attributes such Secure
-Platform Management and Sure Start. Each section provides security
-feature description and identifies sysfs directories and files exposed
-by the driver.
+On Sun, Apr 2, 2023 at 11:28=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
+.de> wrote:
+>
+> Hi Jorge,
+>
+> below a few stylistic comments.
+> These are very general and do not only affect the commented locations
+> but the whole driver.
+>
+> That said these are not critical.
+>
+> First focus on removing dead code and nailing down the userspace API.
+> Then it depends on your motivation.
+>
+> As said before I would focus on reducing the driver to the bare minimum
+> that makes it usable, get it merged / clean it up and then re-add pieces
+> bit-by-bit.
 
-Many HP Commercial notebooks include a feature called Secure Platform
-Management (SPM), which replaces older password-based BIOS settings
-management with public key cryptography. PC secure product management
-begins when a target system is provisioned with cryptographic keys
-that are used to ensure the integrity of communications between system
-management utilities and the BIOS.
+The driver functionality is the proposed basic functionality.  There
+are plans to provide additional support for Sure Recover (Security
+component) which is planned to be added in future patches.
 
-HP Commercial notebooks have several BIOS settings that control its
-behaviour and capabilities, many of which are related to security.
-To prevent unauthorized changes to these settings, the system can
-be configured to use a cryptographic signature-based authorization
-string that the BIOS will use to verify authorization to modify the
-setting.
+>
+> I'll probably go over all the files again when I am more familiar with
+> the driver.
+>
+> > +             // append UTF_PREFIX to part and then convert it to unico=
+de
+> > +             strprefix =3D kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
+> > +                                   authentication);
+> > +             if (!strprefix)
+> > +                     goto out_populate_security_buffer;
+> > +
+> > +             auth =3D ascii_to_utf16_unicode(auth, strprefix);
+> > +     }
+> > +out_populate_security_buffer:
+>
+> There is no need to have the name of the function in the label.
+>
+> Just "out" would be enough.
+>
+> > +
+> > +     kfree(strprefix);
+> > +     strprefix =3D NULL;
+>
+> No need to clear stack variables.
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+I will clear stack variables across all files.
+>
+> > +}
+> > +
+> > +ssize_t update_spm_state(void)
+> > +{
+> > +     int ret;
+> > +     struct secureplatform_provisioning_data *data =3D NULL;
+> > +
+> > +     data =3D kmalloc(sizeof(struct secureplatform_provisioning_data),
+> > +                    GFP_KERNEL);
+>
+> Use "sizeof(*data)". It's shorter and more robust.
 
----
-Based on the latest platform-drivers-x86.git/for-next
+Done!
 
-History
+> > +/*
+> > + * statusbin - Reports SPM status in binary format
+> > + *
+> > + * @kobj:  Pointer to a kernel object of things that show up as
+> > + *      directory in the sysfs filesystem.
+> > + * @attr:  Pointer to list of attributes for the operation
+> > + * @buf:   Pointer to buffer
+>
+> The parameters are the same for every attribute_show() function.
+> No need to document them.
+>
+> Also if you document something use proper kerneldoc format:
+> https://docs.kernel.org/doc-guide/kernel-doc.html
 
-Version 9
-	Includes only sysfs-class-firmware-attributes documentation
+I will remove any unnecessary documentation.
 
-Version 8
-	Includes only sysfs-class-firmware-attributes documentation
+>
 
-Version 7
-	Includes only sysfs-class-firmware-attributes documentation
+> > +     ret =3D sysfs_emit(buf, "%s\n",
+> > +                      spm_mechanism_types[bioscfg_drv.spm_data.mechani=
+sm]);
+> > +     return ret;
+>
+> No need for the temporary variable:
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+It was an oversight.  Done!
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- .../testing/sysfs-class-firmware-attributes   | 108 +++++++++++++++++-
- 1 file changed, 106 insertions(+), 2 deletions(-)
+>
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/d=
+rivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> > new file mode 100644
+> > index 000000000000..79ec007fbcee
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> > @@ -0,0 +1,459 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Functions corresponding to string type attributes under
+> > + * HP_WMI_BIOS_STRING_GUID for use with hp-bioscfg driver.
+> > + *
+> > + * Copyright (c) 2022 HP Development Company, L.P.
+> > + */
+> > +
+> > +#include "bioscfg.h"
+> > +
+> > +#define WMI_STRING_TYPE "HPBIOS_BIOSString"
+> > +
+> > +get_instance_id(string);
+>
+> This is weird to read. It looks like a function declaration.
+> maybe use DEFINE_GET_INSTANCE_ID(string).
+>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 4cdba3477176..d9bfef9f2f2b 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -22,6 +22,12 @@ Description:
- 			- integer: a range of numerical values
- 			- string
- 
-+		HP specific types
-+		-----------------
-+			- ordered-list - a set of ordered list valid values
-+			- sure-start - report audit logs read from BIOS
-+
-+
- 		All attribute types support the following values:
- 
- 		current_value:
-@@ -126,6 +132,44 @@ Description:
- 					value will not be effective through sysfs until this rule is
- 					met.
- 
-+		HP specific class extensions
-+		------------------------------
-+
-+		On HP systems the following additional attributes are available:
-+
-+		"ordered-list"-type specific properties:
-+
-+		elements:
-+					A file that can be read to obtain the possible
-+					list of values of the <attr>. Values are separated using
-+					semi-colon (``;``). The order individual elements are listed
-+					according to their priority.  An Element listed first has the
-+					highest priority. Writing the list in a different order to
-+					current_value alters the priority order for the particular
-+					attribute.
-+
-+		"sure-start"-type specific properties:
-+
-+		audit_log_entries:
-+					A read-only file that returns the events in the log.
-+					Values are separated using semi-colon (``;``)
-+
-+					Audit log entry format
-+
-+					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
-+					Byte 16-127: Unused
-+
-+		audit_log_entry_count:
-+					A read-only file that returns the number of existing audit log events available to be read.
-+					Values are separated using comma (``,``)
-+
-+					[No of entries],[log entry size],[Max number of entries supported]
-+
-+					log entry size identifies audit log size for the current BIOS version.
-+					The current size is 16 bytes but it can be to up to 128 bytes long
-+					in future BIOS versions.
-+
-+
- What:		/sys/class/firmware-attributes/*/authentication/
- Date:		February 2021
- KernelVersion:	5.11
-@@ -206,7 +250,7 @@ Description:
- 		Drivers may emit a CHANGE uevent when a password is set or unset
- 		userspace may check it again.
- 
--		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
-+		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
- 		require password validation.
- 		On Lenovo systems if you change the Admin password the new password is not active until
- 		the next boot.
-@@ -296,6 +340,15 @@ Description:
- 						echo "signature" > authentication/Admin/signature
- 						echo "password" > authentication/Admin/certificate_to_password
- 
-+		HP specific class extensions
-+		--------------------------------
-+
-+		On HP systems the following additional settings are available:
-+
-+		role: enhanced-bios-auth:
-+					This role is specific to Secure Platform Management (SPM) attribute.
-+					It requires configuring an endorsement (kek) and signing certificate (sk).
-+
- 
- What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
- Date:		February 2021
-@@ -311,7 +364,7 @@ Description:
- 			==	=========================================
- 			0	All BIOS attributes setting are current
- 			1	A reboot is necessary to get pending BIOS
--			        attribute changes applied
-+				attribute changes applied
- 			==	=========================================
- 
- 		Note, userspace applications need to follow below steps for efficient
-@@ -364,3 +417,54 @@ Description:
- 		use it to enable extra debug attributes or BIOS features for testing purposes.
- 
- 		Note that any changes to this attribute requires a reboot for changes to take effect.
-+
-+
-+		HP specific class extensions - Secure Platform Manager (SPM)
-+		--------------------------------
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
-+		RSA public key that will be used by the BIOS to verify
-+		signatures when setting the signing key.  When written,
-+		the bytes should correspond to the KEK certificate
-+		(x509 .DER format containing an OU).  The size of the
-+		certificate must be less than or equal to 4095 bytes.
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
-+		public key that will be used by the BIOS to verify signatures
-+		when configuring BIOS settings and security features.  When
-+		written, the bytes should correspond to the modulus of the
-+		public key.  The exponent is assumed to be 0x10001.
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/status
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'status' is a read-only file that returns ASCII text reporting
-+		the status information.
-+
-+		  State:  Not Provisioned / Provisioned / Provisioning in progress
-+		  Version:  Major.   Minor
-+		  Feature Bit Mask: <16-bit unsigned number display in hex>
-+		  SPM Counter: <16-bit unsigned number display in base 10>
-+		  Signing Key Public Key Modulus (base64): <256 bytes in base64>
-+		  KEK Public Key Modulus (base64): <256 bytes in base64>
-+
-+
-+What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
-+Date:		March 29
-+KernelVersion:	5.18
-+Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
-+Description:	'statusbin' is a read-only file that returns 'status' information
-+		in binary format. This file provides a mechanism for components
-+		downstream (e.g. Recovery Agent) can read the status and public
-+		key modulus.
+get_instance_id part of a group of functions defined in bioscfg.h.
+The sample was taken from another driver which declared it in
+lowercase.   I will change all functions names declared as a macro to
+uppercase and update the names across all files.  The main purpose for
+those functions was to avoid duplicating the same functions across all
+files.
 
- 
-2.34.1
+> > +
+> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
+tribute *attr, char *buf)
+> > +{
+> > +     ssize_t ret;
+> > +     int instance_id =3D get_string_instance_id(kobj);
+> > +
+> > +     if (instance_id < 0)
+> > +             return -EIO;
+> > +
+> > +     ret =3D sysfs_emit(buf, "%s\n",
+> > +                      bioscfg_drv.string_data[instance_id].current_val=
+ue);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +/*
+> > + * validate_string_input() -
+> > + * Validate input of current_value against min and max lengths
+> > + *
+> > + * @instance_id: The instance on which input is validated
+> > + * @buf: Input value
+> > + */
+> > +static int validate_string_input(int instance_id, const char *buf)
+>
+> Instead of passing around integer ids, that all the callees are using to
+> look up some global data, it would be nicer to pass a pointer to the
+> concrete instance struct to work on.
+>
 
+validate_string_input is part of the defined function
+ATTRIBUTE_PROPERTY_STORE in bioscfg.h (line 457).
+
+> This makes the code simpler and removes reference to global state all
+> over the place.
+>
+Changing the values from int to pointer will add unnecessary overhead
+since the instance ID is searched only once earlier in the process.
+
+
+> > +{
+> > +     int in_len =3D strlen(buf);
+> > +
+> > +     /* BIOS treats it as a read only attribute */
+> > +     if (bioscfg_drv.string_data[instance_id].is_readonly)
+> > +             return -EIO;
+> > +
+> > +     if ((in_len < bioscfg_drv.string_data[instance_id].min_length) ||
+> > +         (in_len > bioscfg_drv.string_data[instance_id].max_length))
+> > +             return -EINVAL;
+>
+> -ERANGE?
+>
+
+Done!
+
+> > +
+> > +     /*
+> > +      * set pending reboot flag depending on
+> > +      * "RequiresPhysicalPresence" value
+> > +      */
+> > +     if (bioscfg_drv.string_data[instance_id].requires_physical_presen=
+ce)
+> > +             bioscfg_drv.pending_reboot =3D TRUE;
+>
+> Just use "true" or "false" instead of "TRUE" and "FALSE".
+>
+
+Done!
+
+> > +}
+> > +
+> > +/* Expected Values types associated with each element */
+> > +static acpi_object_type expected_string_types[] =3D {
+>
+> Seems this can be const.
+
+Done!
+>
+> > +     [NAME] =3D ACPI_TYPE_STRING,
+> > +     [VALUE] =3D ACPI_TYPE_STRING,
+> > +     [PATH] =3D ACPI_TYPE_STRING,
+> > +     [IS_READONLY] =3D ACPI_TYPE_INTEGER,
+> > +     [DISPLAY_IN_UI] =3D ACPI_TYPE_INTEGER,
+> > +     [REQUIRES_PHYSICAL_PRESENCE] =3D ACPI_TYPE_INTEGER,
+> > +     [SEQUENCE] =3D ACPI_TYPE_INTEGER,
+> > +     [PREREQUISITES_SIZE] =3D ACPI_TYPE_INTEGER,
+> > +     [PREREQUISITES] =3D ACPI_TYPE_STRING,
+> > +     [SECURITY_LEVEL] =3D ACPI_TYPE_INTEGER,
+> > +     [STR_MIN_LENGTH] =3D ACPI_TYPE_INTEGER,
+> > +     [STR_MAX_LENGTH] =3D ACPI_TYPE_INTEGER
+>
+> *Do* add a trailing comma after a non end-of-list marker.
+>
+Done!
+
+> > +void exit_string_attributes(void)
+> > +{
+> > +     int instance_id;
+> > +
+> > +     for (instance_id =3D 0; instance_id < bioscfg_drv.string_instance=
+s_count; instance_id++) {
+>
+> You can declare loop variables inside the loop. This saves a bunch of
+> horizontal space.
+>
+> > +             if (bioscfg_drv.string_data[instance_id].attr_name_kobj)
+> > +                     sysfs_remove_group(bioscfg_drv.string_data[instan=
+ce_id].attr_name_kobj,
+> > +                                        &string_attr_group);
+> > +     }
+> > +     bioscfg_drv.string_instances_count =3D 0;
+> > +
+> > +     kfree(bioscfg_drv.string_data);
+> > +     bioscfg_drv.string_data =3D NULL;
+> > +}
+
+Done!  I will keep that in mind when I review the remaining files.
+
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c =
+b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> > +static struct attribute *sure_start_attrs[] =3D {
+> > +     &sure_start_display_name.attr,
+> > +     &sure_start_display_langcode.attr,
+> > +     &sure_start_audit_log_entry_count.attr,
+> > +     &sure_start_audit_log_entries.attr,
+> > +     &sure_start_type.attr,
+> > +     NULL,
+>
+> No trailing comma after end-of-array marker.
+
+Done!
