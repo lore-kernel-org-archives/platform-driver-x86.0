@@ -2,189 +2,233 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680B4C7619A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 10:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4534AC7619A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 11:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbjDLKxK (ORCPT
+        id S229612AbjDLLDb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Apr 2023 06:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
+        Wed, 12 Apr 2023 07:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjDLKxJ (ORCPT
+        with ESMTP id S229481AbjDLLDa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2023 06:53:09 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FA56A62
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 03:53:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BP2/b2KZe7g4N/66jN0ZqdV5Y9jLvWRMxzWwZHn091HgDxkmOPSbeYTjPKCWYSCtLwX20T9pGl4E+ckcFPzlvYhNHBWOktPmJLiHFNGatTTqihTairLVqhhBjG5yULspPoOD1kyX4l7Lo/l4Fv128J5ykG1TVo77uxJoZCGHfU7UFAdYXGRgXhZ+TqPYP8FRDFgZC5esugx4anwkgy6QR0udoogR6Sf0+GQaT1w07hXPOmSapuvk2AyuqXfXNqPemgX2HuF/T7y2k9K5YSsL1e6BGGL2k6rQr/1erl+Z1cMbe3hKOn3NkMPMXBZhUc69ri05zCHYqdvVaVm6aVSMqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GTg2L0idbm4RMbNX/VTWRLdd8QO+IcjHmye3HRAjJmg=;
- b=O6UlDWq7H3xWu7LZl9Vb9hn/LUv/t+sxDmICUfpAqw5xYLz1MlFQqCR/a7RIkDMuJX3MaH1jxqk6P7bxvBF1L/KBOR3d3FiQt/6jjJPxr8/7gKNNsGeLoMFb3B9O64fSIgsxDK6pv9HPGkkVvye+E/c/OzdcIKOT3RZCkbwMiwAsBYTO/nf14RdxEixkbzPsGM3ERWluR19L+ZRfc3TaKS+9SiFvUnUFm+xtuKmODvoORU7Et4n1kTya+09cIV8FIew4BHB7wC6O8zGNbsXZD6PxgH+bLSUVYsL1Bgy+NjmCrPmugqYDdwQ8gZ4OiWLBZdwpywcr52R4vp9YSzDDxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GTg2L0idbm4RMbNX/VTWRLdd8QO+IcjHmye3HRAjJmg=;
- b=KkDB8vGO49bn0bjM/2DdF0/9H4qL/XGe1+rHU39BnQnt4CIPOg2b4J5s9dchKxAXUYrrdsO/EGt33nA9RlVII7hEaKPBjN4BlFyThSvIYtPE6mL93NaLDpqv+TKv2QE168904hU+Kj6GI+IYuGIG4BugNexpj6PDzRjgkCzyOBE=
-Received: from BN0PR04CA0007.namprd04.prod.outlook.com (2603:10b6:408:ee::12)
- by PH0PR12MB7907.namprd12.prod.outlook.com (2603:10b6:510:28d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Wed, 12 Apr
- 2023 10:53:06 +0000
-Received: from BL02EPF000145BB.namprd05.prod.outlook.com
- (2603:10b6:408:ee:cafe::fc) by BN0PR04CA0007.outlook.office365.com
- (2603:10b6:408:ee::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30 via Frontend
- Transport; Wed, 12 Apr 2023 10:53:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF000145BB.mail.protection.outlook.com (10.167.241.211) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.27 via Frontend Transport; Wed, 12 Apr 2023 10:53:05 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 12 Apr
- 2023 05:53:03 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        <mario.limonciello@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v2 2/2] platform/x86/amd/pmf: Add PMF debug facilities
-Date:   Wed, 12 Apr 2023 16:22:42 +0530
-Message-ID: <20230412105242.2602148-2-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230412105242.2602148-1-Shyam-sundar.S-k@amd.com>
-References: <20230412105242.2602148-1-Shyam-sundar.S-k@amd.com>
+        Wed, 12 Apr 2023 07:03:30 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97A26A5F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2023 04:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681297409; x=1712833409;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=DBPMt6ZprRjnA/Q/feY1q3islRydQqF554/06Wk0Qo4=;
+  b=dW7SkLN1+LthW0ZbxvF85eDteSqLnwaP2GEAyxAGtZUM9p2G17eqd+yl
+   8nwtGkuPS0Z0ml/sugsb1ubjYn1tbJ6nlWxTXDIHqoGHTSwn17KQrjVMP
+   IkA4v2F2/DHbF3wZ2H021mfbdDyEZj5ShyGAVcxGHU0UVdFWWxd4W4qFP
+   4bJkPczb94sWa/X+LQ+8WgAjoT2MOKRUQ6ij1FayI+FF+UYYdOQTwOnJA
+   i+iOYOmnIxZTr/ubbWxeVfUIQajNjXmqs47EpaBfC81w+p3iUag9CNI6A
+   0q5nTL+8DfLpUCFvtzDCI3iYSdTHcoG4CcsycCDlYIxuyCz2GXBwcqYIh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="341353330"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="341353330"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 04:03:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="758199714"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="758199714"
+Received: from chanse1-mobl2.ger.corp.intel.com ([10.251.213.80])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 04:03:27 -0700
+Date:   Wed, 12 Apr 2023 14:03:25 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
+        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] platform/x86/amd: pmc: update metrics table info
+ for Pink Sardine
+In-Reply-To: <20230412102156.2592318-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <89ad92cd-6f5-c748-6b34-b1fda49a57ce@linux.intel.com>
+References: <20230412102156.2592318-1-Shyam-sundar.S-k@amd.com> <20230412102156.2592318-2-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF000145BB:EE_|PH0PR12MB7907:EE_
-X-MS-Office365-Filtering-Correlation-Id: 420e982c-d303-4b25-6f89-08db3b441897
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kvYMNVQxxRYqxCF3Hi1So/zkKOcVKLqf2pO1jCgZaLvJOz8+R2OHgIt1g8Zl1T3fG0xPSUIQOt1NdtSjBv0aHHj66NNohpUsBXKF0aA0nv3odLEumIpOt8mWOmmLtwK+cScKwXwmKKbKbj54B3h/GtDijHdD4kA8/ohVoi3FGsCOeQqnv8YP5jdYcTNg9TcxQ046A+Rk/UgtxAQ1gMcH+ge4O9HT5H/VN3qg/BEVG37o3cEhKvgp3CVlBppRRrEU6VLB92cdKD+VxIA6ZMUen2V6iAWmvUzARpGuJzVLsIiKhenOjLvnLCe02rDwZlacsCWoNKBewtxMWgP2p1+iJyNHEK6YBZ2t6rw01Xea+X38YjiHQO0mxpdaNjzWuCyTtF21J2QcEn5npm1eoAPizM41BqEPMFSONV2O74bAXCDnJRltw4EAqD5eEXaOzAGGvm4w8WuErp+iaoNYJoTzuwj2hi4tmQyCpVO8+2CbhMwDQxr7S0QzBtnPiE7deocFWNk6qrDrKYIMMT31sjPCjywKFNA+NQdtUeVBwIFLPAv86jJW/bUQJWfVYv0KVdrszhrWn0bA425Ix5RPI0Uyk0i9/bXauQplayWRr9SYqdTsQQUYBWvqUsOO8SwuyPFXOF5+csc1r5Y4ZkKevz3QeId1llgUPOa/vSkrx7RGGdt8MWVlRqOafL73Mfw78snefhyEL6uJIwkmAU27a/ljY+hineegNCbbUwNxMY9TbEM=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(39860400002)(136003)(396003)(451199021)(36840700001)(46966006)(40470700004)(86362001)(36860700001)(40460700003)(36756003)(5660300002)(2906002)(316002)(8676002)(8936002)(40480700001)(81166007)(356005)(82310400005)(41300700001)(82740400003)(4326008)(47076005)(2616005)(83380400001)(426003)(336012)(70206006)(70586007)(54906003)(1076003)(110136005)(186003)(26005)(478600001)(7696005)(16526019)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 10:53:05.8980
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 420e982c-d303-4b25-6f89-08db3b441897
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF000145BB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7907
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-At times, when the mode transitions fail to happen, the current
-driver does not give enough debug information on why the transition
-failed or the default preset values did not load. Having an on-demand
-logs guarded by CONFIG would be helpful in such cases.
+On Wed, 12 Apr 2023, Shyam Sundar S K wrote:
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-v2:
- - Based on review-hans branch
- - Drop extra CONFIG item based on feedback from Hans
+> Starting from Pink Sardine, number of IP blocks were added to the SoC
+> and the PMFW has the ability to give debug stats on each the IP blocks
+> after a S0ix cycle within part of the SMU metrics table. Add this new
+> capability to the driver.
+> 
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v2:
+>  - Based on review-hans branch
+>  - No code change
+> 
+>  drivers/platform/x86/amd/pmc.c | 56 ++++++++++++++++++++++++++--------
+>  1 file changed, 43 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+> index 9f8bc6711413..bb7597ca334f 100644
+> --- a/drivers/platform/x86/amd/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc.c
+> @@ -45,7 +45,6 @@
+>  #define AMD_PMC_STB_DUMMY_PC		0xC6000007
+>  
+>  /* STB S2D(Spill to DRAM) has different message port offset */
+> -#define STB_SPILL_TO_DRAM		0xBE
+>  #define AMD_S2D_REGISTER_MESSAGE	0xA20
+>  #define AMD_S2D_REGISTER_RESPONSE	0xA80
+>  #define AMD_S2D_REGISTER_ARGUMENT	0xA88
+> @@ -98,7 +97,6 @@
+>  #define PMC_MSG_DELAY_MIN_US		50
+>  #define RESPONSE_REGISTER_LOOP_MAX	20000
+>  
+> -#define SOC_SUBSYSTEM_IP_MAX	12
+>  #define DELAY_MIN_US		2000
+>  #define DELAY_MAX_US		3000
+>  #define FIFO_SIZE		4096
+> @@ -132,9 +130,18 @@ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
+>  	{"ISP",		BIT(6)},
+>  	{"NBIO",	BIT(7)},
+>  	{"DF",		BIT(8)},
+> -	{"USB0",	BIT(9)},
+> -	{"USB1",	BIT(10)},
+> +	{"USB3_0",	BIT(9)},
+> +	{"USB3_1",	BIT(10)},
+>  	{"LAPIC",	BIT(11)},
+> +	{"USB3_2",	BIT(12)},
+> +	{"USB3_3",	BIT(13)},
+> +	{"USB3_4",	BIT(14)},
+> +	{"USB4_0",	BIT(15)},
+> +	{"USB4_1",	BIT(16)},
+> +	{"MPM",		BIT(17)},
+> +	{"JPEG",	BIT(18)},
+> +	{"IPU",		BIT(19)},
+> +	{"UMSCH",	BIT(20)},
+>  	{}
+>  };
+>  
+> @@ -148,6 +155,8 @@ struct amd_pmc_dev {
+>  	u32 cpu_id;
+>  	u32 active_ips;
+>  	u32 dram_size;
+> +	u32 num_ips;
+> +	u32 s2d_msg_id;
+>  /* SMU version information */
+>  	u8 smu_program;
+>  	u8 major;
+> @@ -195,8 +204,8 @@ struct smu_metrics {
+>  	u64 timein_s0i3_totaltime;
+>  	u64 timein_swdrips_lastcapture;
+>  	u64 timein_swdrips_totaltime;
+> -	u64 timecondition_notmet_lastcapture[SOC_SUBSYSTEM_IP_MAX];
+> -	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
+> +	u64 timecondition_notmet_lastcapture[32];
+> +	u64 timecondition_notmet_totaltime[32];
+>  } __packed;
+>  
+>  static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
+> @@ -262,7 +271,7 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  	dev->msg_port = 1;
+>  
+>  	/* Get the num_samples to calculate the last push location */
+> -	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, STB_SPILL_TO_DRAM, 1);
+> +	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, 1);
+>  	/* Clear msg_port for other SMU operation */
+>  	dev->msg_port = 0;
+>  	if (ret) {
+> @@ -308,6 +317,23 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
+>  	.release = amd_pmc_stb_debugfs_release_v2,
+>  };
+>  
+> +static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
+> +{
+> +	switch (dev->cpu_id) {
+> +	case AMD_CPU_ID_PCO:
+> +	case AMD_CPU_ID_RN:
+> +	case AMD_CPU_ID_YC:
+> +	case AMD_CPU_ID_CB:
+> +		dev->num_ips = 12;
+> +		dev->s2d_msg_id = 0xBE;
+> +		break;
+> +	case AMD_CPU_ID_PS:
+> +		dev->num_ips = 21;
+> +		dev->s2d_msg_id = 0x85;
+> +		break;
+> +	}
+> +}
+> +
+>  static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
+>  {
+>  	if (dev->cpu_id == AMD_CPU_ID_PCO) {
+> @@ -470,7 +496,7 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
+>  		   table.timeto_resume_to_os_lastcapture);
+>  
+>  	seq_puts(s, "\n=== Active time (in us) ===\n");
+> -	for (idx = 0 ; idx < SOC_SUBSYSTEM_IP_MAX ; idx++) {
+> +	for (idx = 0 ; idx < dev->num_ips ; idx++) {
+>  		if (soc15_ip_blk[idx].bit_mask & dev->active_ips)
+>  			seq_printf(s, "%-8s : %lld\n", soc15_ip_blk[idx].name,
+>  				   table.timecondition_notmet_lastcapture[idx]);
+> @@ -901,7 +927,7 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
+>  		goto err_dram_size;
+>  	}
+>  
+> -	amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, STB_SPILL_TO_DRAM, 1);
+> +	amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, 1);
+>  	if (!dev->dram_size)
+>  		goto err_dram_size;
+>  
+> @@ -922,7 +948,10 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+>  	/* Spill to DRAM feature uses separate SMU message port */
+>  	dev->msg_port = 1;
+>  
+> -	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, STB_SPILL_TO_DRAM, 1);
+> +	/* Get num of IP blocks within the SoC */
+> +	amd_pmc_get_ip_info(dev);
+> +
+> +	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, 1);
+>  	if (size != S2D_TELEMETRY_BYTES_MAX)
+>  		return -EIO;
+>  
+> @@ -932,8 +961,8 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
+>  		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
+>  
+>  	/* Get STB DRAM address */
+> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, STB_SPILL_TO_DRAM, 1);
+> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, STB_SPILL_TO_DRAM, 1);
+> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, 1);
+> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, 1);
+>  
+>  	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+>  
+> @@ -1022,7 +1051,8 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  
+>  	mutex_init(&dev->lock);
+>  
+> -	if (enable_stb && (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB)) {
+> +	if (enable_stb && (dev->cpu_id == AMD_CPU_ID_YC || dev->cpu_id == AMD_CPU_ID_CB ||
+> +			   dev->cpu_id == AMD_CPU_ID_PS)) {
 
- drivers/platform/x86/amd/pmf/auto-mode.c | 22 ++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/cnqf.c      | 19 +++++++++++++++++++
- 2 files changed, 41 insertions(+)
+These same cpu_id checks are now done in two place. Create a helper for 
+it.
 
-diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-index 557a962b48f9..c3c1621b9833 100644
---- a/drivers/platform/x86/amd/pmf/auto-mode.c
-+++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-@@ -177,11 +177,33 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
- 			config_store.transition[i].applied = false;
- 			update = true;
- 		}
-+
-+#ifdef CONFIG_AMD_PMF_DEBUG
-+		dev_dbg(dev->dev, "[AUTO MODE] time_ms:%lld avg_power:%d mode:%s timer:%u tc:%d\n",
-+			time_elapsed_ms, avg_power,
-+			state_as_str(config_store.current_mode),
-+			config_store.transition[i].timer,
-+			config_store.transition[i].time_constant);
-+
-+		dev_dbg(dev->dev, "[AUTO MODE] shiftup:%d pt:%d pf:%d pd:%u\n",
-+			config_store.transition[i].shifting_up,
-+			config_store.transition[i].power_threshold,
-+			config_store.mode_set[i].power_floor,
-+			config_store.transition[i].power_delta);
-+#endif
- 	}
- 
- 	dev_dbg(dev->dev, "[AUTO_MODE] avg power: %u mW mode: %s\n", avg_power,
- 		state_as_str(config_store.current_mode));
- 
-+#ifdef CONFIG_AMD_PMF_DEBUG
-+	dev_dbg(dev->dev, "[AUTO MODE] priority1: %u, priority2: %u, priority3: %u, priority4: %u",
-+		config_store.transition[0].applied,
-+		config_store.transition[1].applied,
-+		config_store.transition[2].applied,
-+		config_store. transition[3].applied);
-+#endif
-+
- 	if (update) {
- 		for (j = 0; j < AUTO_TRANSITION_MAX; j++) {
- 			/* Apply the mode with highest priority indentified */
-diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-index 371762ce8446..6146875dcc44 100644
---- a/drivers/platform/x86/amd/pmf/cnqf.c
-+++ b/drivers/platform/x86/amd/pmf/cnqf.c
-@@ -173,6 +173,13 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
- 		config_store.trans_param[src][i].count++;
- 
- 		tp = &config_store.trans_param[src][i];
-+
-+#ifdef CONFIG_AMD_PMF_DEBUG
-+		dev_dbg(dev->dev, "avg_power:%d total_power:%d count:%d timer:%d\n", avg_power,
-+			config_store.trans_param[src][i].total_power,
-+			config_store.trans_param[src][i].count,
-+			config_store.trans_param[src][i].timer);
-+#endif
- 		if (tp->timer >= tp->time_constant && tp->count) {
- 			avg_power = tp->total_power / tp->count;
- 
-@@ -193,6 +200,18 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
- 	dev_dbg(dev->dev, "[CNQF] Avg power: %u mW socket power: %u mW mode:%s\n",
- 		avg_power, socket_power, state_as_str(config_store.current_mode));
- 
-+#ifdef CONFIG_AMD_PMF_DEBUG
-+	dev_dbg(dev->dev, "[CNQF] priority 1: %u, priority 2: %u, priority 3: %u",
-+		config_store.trans_param[src][0].priority,
-+		config_store.trans_param[src][1].priority,
-+		config_store.trans_param[src][2].priority);
-+
-+	dev_dbg(dev->dev, "[CNQF] priority 4: %u, priority 5: %u, priority 6: %u",
-+		config_store.trans_param[src][3].priority,
-+		config_store.trans_param[src][4].priority,
-+		config_store.trans_param[src][5].priority);
-+#endif
-+
- 	for (j = 0; j < CNQF_TRANSITION_MAX; j++) {
- 		/* apply the highest priority */
- 		if (config_store.trans_param[src][j].priority) {
+Curiously enough, the other place already had _PS added there, was this 
+place perhaps missed when 035c8a91a11f ("platform/x86/amd/pmc: Add new 
+platform support") was done? The debugfs will use incorrect 
+STB_SPILL_TO_DRAM for _PS in amd_pmc_stb_debugfs_open_v2() before this 
+change?
+
+>  		err = amd_pmc_s2d_init(dev);
+>  		if (err)
+>  			goto err_pci_dev_put;
+> 
+
 -- 
-2.25.1
+ i.
 
