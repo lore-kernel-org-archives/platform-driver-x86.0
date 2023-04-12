@@ -2,190 +2,385 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AA9C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Apr 2023 21:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBFCC77B73
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Apr 2023 04:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbjDKVSc (ORCPT
+        id S229559AbjDLEy4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Apr 2023 17:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        Wed, 12 Apr 2023 00:54:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbjDKVS3 (ORCPT
+        with ESMTP id S229452AbjDLEyy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2023 17:18:29 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B1C55BA;
-        Tue, 11 Apr 2023 14:18:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EwjQDx/YlocGg5nC7vv12V5iASGA21WOAt9jAUIBNSn+7yXhooQiZb8csgM7kWOudWOWRFVcZQ3FfrfI51bddJUotslBFXKmQ/p4xVA/LSYdaNjRgHWx6btxUkY2co07rHjBLy6O2a6fjZTRXSlAPEVrSIxy0TFs65a2XyTkyfD3p82KizLahEDxNi4yEEyScJnlcscElrRkr59XmKP2CMOP9Yyvq0X4DgZnWBtBpGm3mmiAT06Pa2kiqGbr9Dp7BC6snEcA9heb/yLjwc82Go6epperR3C0idC3UMRiAx9bUAeu3BdwCXHKtw39JayMus7xmbFi09csv6tLYESk1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6uyuYrzpFUD9AAiawcudYbjDPhPlJBKpXwXniY+Li4s=;
- b=ElqDPSpJE/cFDtm7BfF6C6C3NRoMwzlBVKGy8XJfrjmgyV2VawRep7Ve9ynrj0L/3UL9JKnoMB8sxPUTEkdE0ZMtT4KSvpSMiZPhN+8ZQEUSjACCU957DgXx50FXW4YCaxX74cyhpYCy8yUgyuuQOQmrHBYYEfCtOaa7xiIx0wi//RjPZa+bu9iPo56Wv7/iO3/1TYmHStcR1lTINy7IYn6PPs9PqIyZ1H0nYLT1ZQnwbvmG5m7JYTcqIFhX5zJpafFn83GvbrTu6GLpP76DxDZE4AMDXGfxlSem/YS6T1iit/eBumd9BbaSPq1Fq7NT6RcEEOzSrD81CHejBJqYfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6uyuYrzpFUD9AAiawcudYbjDPhPlJBKpXwXniY+Li4s=;
- b=wFOxXo44AKYcyCa/Drs2u1FJIKWXDnJYH34ZLLGUpV79uZZT/KE1g2NGRb774AGPaUrSqTTCvS/CXP4NigiHYfouKLJabHXagHCog1gEXRNv2omfsWVWWdwO/FepbF72g2CsgR3tevKCJSLKTtg3FfxQd9NK5Z8Gx7h7jkSg8ew=
-Received: from BN9PR03CA0544.namprd03.prod.outlook.com (2603:10b6:408:138::9)
- by CH2PR12MB4198.namprd12.prod.outlook.com (2603:10b6:610:7e::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.35; Tue, 11 Apr
- 2023 21:17:52 +0000
-Received: from BN8NAM11FT064.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:138:cafe::93) by BN9PR03CA0544.outlook.office365.com
- (2603:10b6:408:138::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.40 via Frontend
- Transport; Tue, 11 Apr 2023 21:17:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT064.mail.protection.outlook.com (10.13.176.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.29 via Frontend Transport; Tue, 11 Apr 2023 21:17:52 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 11 Apr
- 2023 16:17:51 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
-        <pavel@ucw.cz>, <svenva@chromium.org>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-CC:     <Shyam-sundar.S-k@amd.com>, <rrangel@chromium.org>,
-        Jain Rajat <rajatja@google.com>, <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 3/4] platform/x86/intel/pmc: core: Always capture counters on suspend
-Date:   Tue, 11 Apr 2023 16:17:17 -0500
-Message-ID: <20230411211719.4549-4-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230411211719.4549-1-mario.limonciello@amd.com>
-References: <20230411211719.4549-1-mario.limonciello@amd.com>
+        Wed, 12 Apr 2023 00:54:54 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B2D6DA;
+        Tue, 11 Apr 2023 21:54:50 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id o2-20020a17090a0a0200b00246da660bd2so3299188pjo.0;
+        Tue, 11 Apr 2023 21:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681275290;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=isC/tggr1M1j4BvcUw13VcYJi8Ta2shT86tAqvJcmz4=;
+        b=VIJu6C7V56AA2Is3/+dbl7nI4IXs55Ru1FeXvN6twXWYvW4hItNGi7o017uB5eoprA
+         3VkO4rQJS5AVsN7PinHXP27ZlYoerTRsUwjGigvaVy3z3o5y2AEiTd6dDjo5XKBQ0cSI
+         nuFUywotIB3JOs7/Z/JaWpY0MDkF8+8y6wN2bjAZ0RAB0ZmKvv14+0VwxamfHuzQvPcT
+         8Og072xbLU+8eyEQhaNISr3pzWjuAQjqUMo54wASob6YEhLdnEblPbIHxmHL9c9CGohw
+         L6b7skTSYJNPG63wP8H0E3I7kj1f3vrhPQ4XDPC2R/Gk2oOss+CCuo3uzegKs1BmLF2v
+         63+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681275290;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=isC/tggr1M1j4BvcUw13VcYJi8Ta2shT86tAqvJcmz4=;
+        b=ifk5S8eJNZyJeywpWuEUdiEhkkfCm9O1K4+Qc9nSYjdIiZnesRpnB7v6GD+T4k0uJe
+         sIVXCBQ+z/QfEFKmUVO1ywiIylFgXD2oqkxb4zQc31j5PQmUnfrMZaQd4vkJNFlFHO/F
+         6llUYWtVkFRxxFPYLJ4UrrNRQLx1qxQyjQVNHTjNhTjNLWIj8ffYlRv5v8p2bhj3OqeJ
+         xq53brajxYsbAhFO9bDy+nQKF3fD7xGkHyJpQb3lW0PtrWxi0cwKg0Qd/CAtApN8defQ
+         D56gTYz2VbL4Nt3Fgnne9fORWNORnKXxpLvWDpJtikjc+0OxtKepJWjCECamKzkhG0Y3
+         C61A==
+X-Gm-Message-State: AAQBX9fbMi5saHXuIy3awajtadlrWTtccm/XVglhKfg+kZ2+93MVEpSg
+        KMTZP14bPGDjMK1wjan4EDI=
+X-Google-Smtp-Source: AKy350bKN8KlxqOPBZiacWmIbbCWLW6MZya+0HZhJaF5N2DSvbKfEt+F7G3LKNQnYoMqc0SdAVAAQg==
+X-Received: by 2002:a17:90b:1c86:b0:240:9bf7:8df2 with SMTP id oo6-20020a17090b1c8600b002409bf78df2mr19227745pjb.37.1681275289620;
+        Tue, 11 Apr 2023 21:54:49 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-89.three.co.id. [180.214.233.89])
+        by smtp.gmail.com with ESMTPSA id l14-20020a17090add8e00b00246cf1a8d3dsm499641pjv.17.2023.04.11.21.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 21:54:49 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id A34481068E2; Wed, 12 Apr 2023 11:54:46 +0700 (WIB)
+Date:   Wed, 12 Apr 2023 11:54:46 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux Documentation <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v8] HP BIOSCFG driver - Documentation
+Message-ID: <ZDY5lqv7lDVr7eIZ@debian.me>
+References: <20230411184734.7011-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT064:EE_|CH2PR12MB4198:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2df8c4c1-fb28-452c-da15-08db3ad235ea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Tdibms7sgHEWEsYCMinsMOi4U6m2/dNP7KXXpXY+wnhS8LG6Mpk0L8ZTAQwj6muhjDq4YN1yqJJxNbvFDqmHO4w8EYVxHaWjiKoz876uwIt36xylU5PC2SNFkII5jxHV8ftU6ZxuZM8IWFJd0hyL/tM6Lu6KX6CUfVTa00WEnUTfM1G8vHxsX2Xq56cmWBBF+SplwqI0uYBywuimuysxnxz8XY7tBio1u5sXQ3MbZBCZJ3SvoKibAyL1S1eocRrjsYFZAp9wauUSH1pVVq9pfUK168NqbGug64qfbDXxGM0VdNWQLu/Cg0jsWtu+G42yPgqlKy4//w9wmY3yWNkbVpnMVKngQdcP8RLku8AhUCwQyTzRH5fshZLRaYTeYLpYPYQb1Ov5oNFGviL3ArMIE5eZx+X1PZEejsoyvRi+KjgBsir08GpN+wqmxd7QrhwybMMPCr7gY/g0HdhYmKmPQ+WL1Bu7B6askVFFwRT/QXQWESK6fsKDa/q6nsHcUETJDnKU0qdtkTZs8iIOvm6CfWRY/EjpGsE/ms12M0xtFonv6TL2emJ/vU+w1UXJp0+gLSI4Y6UiixBC8tL0ZR2Lh0lmtf3JGVVOKYJoBojSNeGd3f90Gl38dZEwYu9TEQU6g4zCUtelzbmwVLYjcGlIwl93YGAPvD67u8FdSvUs7t8K6hsFlS4O8QoKbTzJvsd6eUmoJoDX64u5xfbXaMKPey8dfr/TNLQMWgZFbpCKJ80=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(346002)(136003)(451199021)(40470700004)(36840700001)(46966006)(7696005)(478600001)(40480700001)(47076005)(36756003)(83380400001)(86362001)(40460700003)(81166007)(356005)(82740400003)(426003)(2616005)(2906002)(316002)(110136005)(16526019)(1076003)(336012)(36860700001)(54906003)(7416002)(44832011)(26005)(186003)(15650500001)(8676002)(8936002)(6666004)(82310400005)(41300700001)(5660300002)(70586007)(4326008)(70206006)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 21:17:52.4871
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2df8c4c1-fb28-452c-da15-08db3ad235ea
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT064.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4198
+In-Reply-To: <20230411184734.7011-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently counters are only captured during suspend when the
-warn_on_s0ix_failures module parameter is set.
+On Tue, Apr 11, 2023 at 01:47:34PM -0500, Jorge Lopez wrote:
+> HP BIOS Configuration driver purpose is to provide a driver supporting
+> the latest sysfs class firmware attributes framework allowing the user
+> to change BIOS settings and security solutions on HP Inc.’s commercial
+> notebooks.
+> 
+> Many features of HP Commercial notebooks can be managed using Windows
+> Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> Enterprise Management (WBEM) that provides a standards-based interface
+> for changing and monitoring system settings. HP BIOSCFG driver provides
+> a native Linux solution and the exposed features facilitates the
+> migration to Linux environments.
+> 
+> The Linux security features to be provided in hp-bioscfg driver enables
+> managing the BIOS settings and security solutions via sysfs, a virtual
+> filesystem that can be used by user-mode applications. The new
+> documentation cover features such Secure Platform Management and Sure
+> Start. Each section provides security feature description and
+> identifies sysfs directories and files exposed by the driver.
+> 
+> Many HP Commercial notebooks include a feature called Secure Platform
+> Management (SPM), which replaces older password-based BIOS settings
+> management with public key cryptography. PC secure product management
+> begins when a target system is provisioned with cryptographic keys
+> that are used to ensure the integrity of communications between system
+> management utilities and the BIOS.
+> 
+> HP Commercial notebooks have several BIOS settings that control its
+> behaviour and capabilities, many of which are related to security.
+> To prevent unauthorized changes to these settings, the system can
+> be configured to use a cryptographic signature-based authorization
+> string that the BIOS will use to verify authorization to modify the
+> setting.
 
-In order to relay this counter information to the kernel reporting
-infrastructure adjust it so that the counters are always captured.
+The patch description should also adds:
 
-warn_on_s0ix_failures will be utilized solely for messaging by
-the driver instead.
+"Document HP-specific firmware sysfs attributes."
 
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v5->v6:
- * Pick up tag
-v4->v5:
- * Squash patches together
- * Add extra pm_suspend_via_firmware() check for resume routine too
----
- drivers/platform/x86/intel/pmc/core.c | 13 +++++--------
- drivers/platform/x86/intel/pmc/core.h |  2 --
- 2 files changed, 5 insertions(+), 10 deletions(-)
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 4cdba3477176..574cdd8a6cc6 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -22,6 +22,12 @@ Description:
+>  			- integer: a range of numerical values
+>  			- string
+>  
+> +		HP specific types
+> +		-----------------
+> +			- ordered-list - a set of ordered list valid values
+> +			- sure-start - report audit logs read from BIOS
+> +
+> +
+>  		All attribute types support the following values:
+>  
+>  		current_value:
+> @@ -126,6 +132,44 @@ Description:
+>  					value will not be effective through sysfs until this rule is
+>  					met.
+>  
+> +		HP specific class extensions
+> +		------------------------------
+> +
+> +		On HP systems the following additional attributes are available:
+> +
+> +		"ordered-list"-type specific properties:
+> +
+> +		elements:
+> +					A file that can be read to obtain the possible
+> +					list of values of the <attr>. Values are separated using
+> +					semi-colon (``;``). The order individual elements are listed
+> +					according to their priority.  An Element listed first has the
+> +					highest priority. Writing the list in a different order to
+> +					current_value alters the priority order for the particular
+> +					attribute.
+> +
+> +		"sure-start"-type specific properties:
+> +
+> +		audit_log_entries:
+> +					A read-only file that returns the events in the log.
+> +					Values are separated using semi-colon (``;``)
+> +
+> +					Audit log entry format
+> +
+> +					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+> +					Byte 16-127: Unused
+> +
+> +		audit_log_entry_count:
+> +					A read-only file that returns the number of existing audit log events available to be read.
+> +					Values are separated using comma (``,``)
+> +
+> +					[No of entries],[log entry size],[Max number of entries supported]
+> +
+> +					log entry size identifies audit log size for the current BIOS version.
+> +					The current size is 16 bytes but it can be to up to 128 bytes long
+> +					in future BIOS versions.
+> +
+> +
+>  What:		/sys/class/firmware-attributes/*/authentication/
+>  Date:		February 2021
+>  KernelVersion:	5.11
+> @@ -206,7 +250,7 @@ Description:
+>  		Drivers may emit a CHANGE uevent when a password is set or unset
+>  		userspace may check it again.
+>  
+> -		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
+> +		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
+>  		require password validation.
+>  		On Lenovo systems if you change the Admin password the new password is not active until
+>  		the next boot.
+> @@ -296,6 +340,15 @@ Description:
+>  						echo "signature" > authentication/Admin/signature
+>  						echo "password" > authentication/Admin/certificate_to_password
+>  
+> +		HP specific class extensions
+> +		--------------------------------
+> +
+> +		On HP systems the following additional settings are available:
+> +
+> +		role: enhanced-bios-auth:
+> +					This role is specific to Secure Platform Management (SPM) attribute.
+> +					It requires configuring an endorsement (kek) and signing certificate (sk).
+> +
+>  
+>  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+>  Date:		February 2021
+> @@ -364,3 +417,52 @@ Description:
+>  		use it to enable extra debug attributes or BIOS features for testing purposes.
+>  
+>  		Note that any changes to this attribute requires a reboot for changes to take effect.
+> +
+> +
+> +		HP specific class extensions - Secure Platform Manager (SPM)
+> +		--------------------------------
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
+> +		RSA public key that will be used by the BIOS to verify
+> +		signatures when setting the signing key.  When written,
+> +		the bytes should correspond to the KEK certificate
+> +		(x509 .DER format containing an OU).  The size of the
+> +		certificate must be less than or equal to 4095 bytes.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
+> +		public key that will be used by the BIOS to verify signatures
+> +		when configuring BIOS settings and security features.  When
+> +		written, the bytes should correspond to the modulus of the
+> +		public key.  The exponent is assumed to be 0x10001.
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/status
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'status' is a read-only file that returns ASCII text reporting
+> +		the status information.
+> +
+> +		  State:  Not Provisioned / Provisioned / Provisioning in progress
+> +		  Version:  Major.   Minor
+> +		  Feature Bit Mask: <16-bit unsigned number display in hex>
+> +		  SPM Counter: <16-bit unsigned number display in base 10>
+> +		  Signing Key Public Key Modulus (base64): <256 bytes base64 in hex>
+> +		  KEK Public Key Modulus (base64): <256 bytes base64 in hex>
+> +
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'statusbin' is a read-only file that returns identical status
+> +		information reported by 'status' file in binary format.
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index b9591969e0fa..925c5d676a43 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1179,12 +1179,6 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
- {
- 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+The wording and formatting can be improved:
+
+---- >8 ----
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 574cdd8a6cc694..2b2309c93c1c21 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -22,10 +22,10 @@ Description:
+ 			- integer: a range of numerical values
+ 			- string
  
--	pmcdev->check_counters = false;
--
--	/* No warnings on S0ix failures */
--	if (!warn_on_s0ix_failures)
--		return 0;
--
- 	/* Check if the syspend will actually use S0ix */
- 	if (pm_suspend_via_firmware())
- 		return 0;
-@@ -1197,7 +1191,6 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
- 	if (pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
- 		return -EIO;
+-		HP specific types
++		HP-specific types
+ 		-----------------
+-			- ordered-list - a set of ordered list valid values
+-			- sure-start - report audit logs read from BIOS
++			- ordered-list: a set of ordered list valid values
++			- sure-start: report audit logs read from BIOS
  
--	pmcdev->check_counters = true;
- 	return 0;
- }
  
-@@ -1233,12 +1226,16 @@ static __maybe_unused int pmc_core_resume(struct device *dev)
- 	const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
- 	int offset = pmcdev->map->lpm_status_offset;
+ 		All attribute types support the following values:
+@@ -137,33 +137,32 @@ Description:
  
--	if (!pmcdev->check_counters)
-+	/* Check if the syspend used S0ix */
-+	if (pm_suspend_via_firmware())
- 		return 0;
+ 		On HP systems the following additional attributes are available:
  
- 	if (!pmc_core_is_s0ix_failed(pmcdev))
- 		return 0;
+-		"ordered-list"-type specific properties:
++		* "ordered-list"-type specific properties:
  
-+	if (!warn_on_s0ix_failures)
-+		return 0;
+-		elements:
+-					A file that can be read to obtain the possible
+-					list of values of the <attr>. Values are separated using
+-					semi-colon (``;``). The order individual elements are listed
+-					according to their priority.  An Element listed first has the
+-					highest priority. Writing the list in a different order to
+-					current_value alters the priority order for the particular
+-					attribute.
++			elements:
++					(RW) A file that contains semicolon-separated list of possible
++					values of the <attr>, ordered by their priority. The first
++					listed element has the highest priority. Writing the list
++					in a different order to current_value alters the priority
++					order for the particular attribute.
+ 
+-		"sure-start"-type specific properties:
++		* "sure-start"-type specific properties:
+ 
+-		audit_log_entries:
+-					A read-only file that returns the events in the log.
+-					Values are separated using semi-colon (``;``)
++			audit_log_entries:
++					(RO) Returns the events in the log. Log entries are
++					semicolon-separated.
+ 
+-					Audit log entry format
++					Audit log entry format:
+ 
+-					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+-					Byte 16-127: Unused
++					* Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
++					* Byte 16-127: Unused
+ 
+-		audit_log_entry_count:
+-					A read-only file that returns the number of existing audit log events available to be read.
+-					Values are separated using comma (``,``)
++			audit_log_entry_count:
++					(RO) Returns the number of existing audit log events available to be read.
+ 
+-					[No of entries],[log entry size],[Max number of entries supported]
++					The file format is::
 +
- 	if (pmc_core_is_pc10_failed(pmcdev)) {
- 		/* S0ix failed because of PC10 entry failure */
- 		dev_info(dev, "CPU did not enter PC10!!! (PC10 cnt=0x%llx)\n",
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 810204d758ab..51d73efceaf3 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -319,7 +319,6 @@ struct pmc_reg_map {
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-  * @mutex_lock:		mutex to complete one transcation
-- * @check_counters:	On resume, check if counters are getting incremented
-  * @pc10_counter:	PC10 residency counter
-  * @s0ix_counter:	S0ix residency (step adjusted)
-  * @num_lpm_modes:	Count of enabled modes
-@@ -338,7 +337,6 @@ struct pmc_dev {
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
++					    [No of entries],[log entry size],[Max number of entries supported]
  
--	bool check_counters; /* Check for counter increments on resume */
- 	u64 pc10_counter;
- 	u64 s0ix_counter;
- 	int num_lpm_modes;
--- 
-2.34.1
+ 					log entry size identifies audit log size for the current BIOS version.
+ 					The current size is 16 bytes but it can be to up to 128 bytes long
+@@ -426,19 +425,19 @@ What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
+ Date:		March 29
+ KernelVersion:	5.18
+ Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+-Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
++Description:	(WO) Key-Encryption-Key (KEK) file that can be used to configure the
+ 		RSA public key that will be used by the BIOS to verify
+ 		signatures when setting the signing key.  When written,
+ 		the bytes should correspond to the KEK certificate
+-		(x509 .DER format containing an OU).  The size of the
+-		certificate must be less than or equal to 4095 bytes.
++		(x509 .DER format containing an OU). The certificate size
++                must be less than or equal to 4095 bytes.
+ 
+ 
+ What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
+ Date:		March 29
+ KernelVersion:	5.18
+ Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+-Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
++Description:	(WO) Signature Key (SK) file that can be used to configure the RSA
+ 		public key that will be used by the BIOS to verify signatures
+ 		when configuring BIOS settings and security features.  When
+ 		written, the bytes should correspond to the modulus of the
+@@ -449,20 +448,21 @@ What:		/sys/class/firmware-attributes/*/authentication/SPM/status
+ Date:		March 29
+ KernelVersion:	5.18
+ Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+-Description:	'status' is a read-only file that returns ASCII text reporting
+-		the status information.
++Description:	(RO) Returns status information report in text format.
+ 
+-		  State:  Not Provisioned / Provisioned / Provisioning in progress
+-		  Version:  Major.   Minor
+-		  Feature Bit Mask: <16-bit unsigned number display in hex>
+-		  SPM Counter: <16-bit unsigned number display in base 10>
+-		  Signing Key Public Key Modulus (base64): <256 bytes base64 in hex>
+-		  KEK Public Key Modulus (base64): <256 bytes base64 in hex>
++		The fields are:
++
++		  * State:  Not Provisioned / Provisioned / Provisioning in progress
++		  * Version:  version number (<major>.<minor>)
++		  * Feature Bit Mask: 16-bit unsigned number display in hex
++		  * SPM Counter: 16-bit unsigned number display in base 10
++		  * Signing Key Public Key Modulus (base64): 256 bytes base64 in hex
++		  * KEK Public Key Modulus (base64): 256 bytes base64 in hex
+ 
+ 
+ What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
+ Date:		March 29
+ KernelVersion:	5.18
+ Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+-Description:	'statusbin' is a read-only file that returns identical status
+-		information reported by 'status' file in binary format.
++Description:	(RO) Return status information report in binary format. The fields
++		are same as returned by status sysfs above.
 
+Thanks.
+
+-- 
+An old man doll... just what I always wanted! - Clara
