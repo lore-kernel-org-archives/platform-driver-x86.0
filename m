@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0CEC77B6C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Apr 2023 01:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C87C77B6C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Apr 2023 01:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjDMB3Z (ORCPT
+        id S229527AbjDMBcd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Apr 2023 21:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
+        Wed, 12 Apr 2023 21:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjDMB3Y (ORCPT
+        with ESMTP id S229503AbjDMBcc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2023 21:29:24 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893D1121;
-        Wed, 12 Apr 2023 18:29:23 -0700 (PDT)
+        Wed, 12 Apr 2023 21:32:32 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B201712;
+        Wed, 12 Apr 2023 18:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681349363; x=1712885363;
+  t=1681349552; x=1712885552;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=eiGf+YK8D5uXT76f7SsOIA1fFUZIqBbQIs663qB/YBM=;
-  b=QbjZ+EwrWkn8LQukRDF7J8HTPIDK56mOCHYoquP8yctSGOgbDg8hAExO
-   zxq4l6AbjV6VRI+EsXGEFijDX4/t5yysVp9DhHrns0brkqUz9B86AQfW0
-   ISiwpxTOlTooNH/TwyZ4azgzgdbZHTrQFQyq37cGBftTBnWtg9qa+WHQu
-   wYyDhzZ3S8uSD9kbP9sOdNyuwN0j1WFRIfHChu8HXZVMTugdsSVsthEwK
-   bvTcpklftYoaUvE+4o6jYAwGawFFokYK8oz7zUy+/hYh+5viUwMRt9jZk
-   CrpqdCokY9Amem6CCmQeKoEV0npib5uG/UfLyL6S4OWyyftAaErNvDoNf
+  bh=ILsidFKzCVxsGAABpc4qrhew3cGTXES9pdfYjscYrKQ=;
+  b=QVjHoXWe9fVteOLuw+raqM5FSKu7/+ufAy48/GlvnDCKeCWNj3BVcfl+
+   ui9vSAEpHWzuLbmtoyICdgV6clhH5GP3AmRAB1yLAVhSQaeBAQaunwJgW
+   37lf0o84RMcwUwqT9dgsxwjrQOnL/LJzAuiaDfbmYXlY3kJnIVrNFzfy8
+   x8mS2Oh+CzFnIU0Cxp822+83AjNwZo5s8yzb9U1+UpKwHoOTNp2VuaFwL
+   bQe/O7PoBDMihRMLOizaL25EHCPUKgkmzxUiTiNFVvrZDNXx61qrninNR
+   BgLjQ+E8FQTz8MrBmEWcHL69I1c297qaeMY5R/f+FKv5iAeL8tilRFl0K
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="323684527"
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="346744380"
 X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="323684527"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 18:29:23 -0700
+   d="scan'208";a="346744380"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 18:32:31 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="719613941"
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="800575177"
 X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="719613941"
+   d="scan'208";a="800575177"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 12 Apr 2023 18:29:23 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 12 Apr 2023 18:32:31 -0700
 Received: from debox1-desk4.intel.com (unknown [10.251.6.61])
-        by linux.intel.com (Postfix) with ESMTP id D7253580BEE;
-        Wed, 12 Apr 2023 18:29:22 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 02F71580AFF;
+        Wed, 12 Apr 2023 18:32:30 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     david.e.box@linux.intel.com, hdegoede@redhat.com,
         markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmt: Ignore uninitialized entries
-Date:   Wed, 12 Apr 2023 18:29:22 -0700
-Message-Id: <20230413012922.1521377-1-david.e.box@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/sdsi: Change mailbox timeout
+Date:   Wed, 12 Apr 2023 18:32:30 -0700
+Message-Id: <20230413013230.1521584-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -57,30 +57,30 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Intel Xeon, unused PMT regions will have uninitialized discovery headers
-containing all 0xF. Instead of returning an error, just skip the region.
+On some platforms, it may take up to 400ms for the ready bit to be set in a
+successful mailbox transaction. Set the timeout to 500ms to cover the worst
+case.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmt/telemetry.c | 2 +-
+ drivers/platform/x86/intel/sdsi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 71cdef42084a..39cbc87cc28a 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -78,7 +78,7 @@ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
- 	 * reserved for future use. They have zero size. Do not fail
- 	 * probe for these. Just ignore them.
- 	 */
--	if (header->size == 0)
-+	if (header->size == 0 || header->access_type == 0xF)
- 		return 1;
+diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+index 9e0ea2cdd704..556e7c6dbb05 100644
+--- a/drivers/platform/x86/intel/sdsi.c
++++ b/drivers/platform/x86/intel/sdsi.c
+@@ -49,7 +49,7 @@
+ #define SDSI_MBOX_CMD_SUCCESS		0x40
+ #define SDSI_MBOX_CMD_TIMEOUT		0x80
  
- 	return 0;
+-#define MBOX_TIMEOUT_US			2000
++#define MBOX_TIMEOUT_US			500000
+ #define MBOX_TIMEOUT_ACQUIRE_US		1000
+ #define MBOX_POLLING_PERIOD_US		100
+ #define MBOX_ACQUIRE_NUM_RETRIES	5
 
 base-commit: 5b309e80f457ebb41770e0122766825a78cfc11b
-prerequisite-patch-id: a3bf21940fa02eb2f3adb4bd2d3a93df14df077a
 -- 
 2.34.1
 
