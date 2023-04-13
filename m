@@ -2,106 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CA8C77B71
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Apr 2023 02:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF53C77B6E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Apr 2023 09:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjDMCjI (ORCPT
+        id S230130AbjDMJYB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Apr 2023 22:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36112 "EHLO
+        Thu, 13 Apr 2023 05:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbjDMCiX (ORCPT
+        with ESMTP id S229773AbjDMJYA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2023 22:38:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F17B8A5E;
-        Wed, 12 Apr 2023 19:37:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A63D63A95;
-        Thu, 13 Apr 2023 02:37:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95772C433EF;
-        Thu, 13 Apr 2023 02:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681353438;
-        bh=6tVoMVjbXjSdhw+ClpiLyHKFwImWUjz0a/dDKuM6uMw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqjzkD0qq8JdiQZKfgPiSzjb45QjbOChF0dlgVxuoSitddFLCPgYEOzDL0LLFsYxL
-         5nXfnPyrRvf+oWRhmaznq2UCblVJlUfyaUpZgsCPpLjHY3PO+wqpOnDaBmBzEyppaW
-         kYO0NnkH1cmAmTF6fsqQRzAZ00LbmwzhnhflX1r3fiTICfGX4Ep/CbHQnBfA31Jz99
-         +ocojQFvsjIAl/BgXRmdlWkB2ExZsuxr3l+umEzH9Dla3Dme1Ri5q/AT0t9g7QC1jo
-         1KSfGWOJUXOKJCit/H1bl5TGamhWTvNuJ2PtChih93rMBSBJaM/oOZv6m8KvB145Ir
-         +PMfSEBQA85pA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Asbach <asbachb.kernel@impl.it>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
-        markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 13/17] platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle quirk list
-Date:   Wed, 12 Apr 2023 22:36:41 -0400
-Message-Id: <20230413023647.74661-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230413023647.74661-1-sashal@kernel.org>
-References: <20230413023647.74661-1-sashal@kernel.org>
+        Thu, 13 Apr 2023 05:24:00 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A50901B;
+        Thu, 13 Apr 2023 02:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681377835; x=1712913835;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SPDp3hg45JekinIXS1tAfq4DH77ftTaYczfJGUAIIzw=;
+  b=GGLHM96VIl2MVWrCT7Z1sLJugF4xCSe/0VbQLkjQijYnWejcPvhxfTqO
+   AKo7eVTjTp6wD2l3Qn0Y6NmclUIjya6nirUiEKsOxAEiQ6saUqoM3x/13
+   lqx1YpNd4c0fMZrVovT7EO1+oPN2xP6Uzz/aFQeDIaEZhwWUlN2eyaKLj
+   XcxPflRCh0QLck3zizJbH0ZdmmhJ0XeTySSQP+vI1l4w6psgkhucZ+7e8
+   83E8WDcpF2g0TLPcLZs3TYD+ShO/duoMEDLL/H401W3ITgd+nyBUiVHgH
+   U9PtpnQXjRwDjGiz4iFm/1ffvsC4WAZ4yxIEWmJAtsCk8bnNVJLnhnWDC
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="344130961"
+X-IronPort-AV: E=Sophos;i="5.98,341,1673942400"; 
+   d="scan'208";a="344130961"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 02:23:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="682887647"
+X-IronPort-AV: E=Sophos;i="5.98,341,1673942400"; 
+   d="scan'208";a="682887647"
+Received: from pkudryav-mobl1.ger.corp.intel.com ([10.252.45.220])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 02:23:51 -0700
+Date:   Thu, 13 Apr 2023 12:23:48 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+cc:     Box David E <david.e.box@intel.com>, jstultz@google.com,
+        pavel@ucw.cz, svenva@chromium.org,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Shyam-sundar.S-k@amd.com, rrangel@chromium.org,
+        Jain Rajat <rajatja@google.com>, hdegoede@redhat.com,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 4/4] platform/x86/intel/pmc: core: Report duration of
+ time in HW sleep state
+In-Reply-To: <20230412194917.7164-5-mario.limonciello@amd.com>
+Message-ID: <5d904d5a-d25e-7d6d-57e4-ca451bcead57@linux.intel.com>
+References: <20230412194917.7164-1-mario.limonciello@amd.com> <20230412194917.7164-5-mario.limonciello@amd.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Benjamin Asbach <asbachb.kernel@impl.it>
+On Wed, 12 Apr 2023, Mario Limonciello wrote:
 
-[ Upstream commit 9a469c6dfab38326f99f105386db84230be09ee3 ]
+> intel_pmc_core displays a warning when the module parameter
+> `warn_on_s0ix_failures` is set and a suspend didn't get to a HW sleep
+> state.
+> 
+> Report this to the standard kernel reporting infrastructure so that
+> userspace software can query after the suspend cycle is done.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v7->v8:
+>  * Report max sleep as well
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 925c5d676a43..f9677104353d 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1153,6 +1153,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	pmc_core_do_dmi_quirks(pmcdev);
+>  
+>  	pmc_core_dbgfs_register(pmcdev);
+> +	pm_report_max_hw_sleep(((1UL << 32) - 1) * pmc_core_adjust_slp_s0_step(pmcdev, 1));
 
-From the commit message adding the first s2idle quirks:
+Technically this is FIELD_MAX(SLP_S0_RES_COUNTER_MASK) * pmc_core_adjust...? 
+Where the define is:
+#define SLP_S0_RES_COUNTER_MASK	GENMASK(31, 0)
 
-> Lenovo laptops that contain NVME SSDs across a variety of generations have
-> trouble resuming from suspend to idle when the IOMMU translation layer is
-> active for the NVME storage device.
->
-> This generally manifests as a large resume delay or page faults. These
-> delays and page faults occur as a result of a Lenovo BIOS specific SMI
-> that runs during the D3->D0 transition on NVME devices.
+>  
+>  	device_initialized = true;
+>  	dev_info(&pdev->dev, " initialized\n");
+> @@ -1214,6 +1215,8 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
+>  	if (pmc_core_dev_state_get(pmcdev, &s0ix_counter))
+>  		return false;
+>  
+> +	pm_report_hw_sleep_time((u32)(s0ix_counter - pmcdev->s0ix_counter));
+> +
+>  	if (s0ix_counter == pmcdev->s0ix_counter)
+>  		return true;
+>  
+> 
 
-Add the DMI ids for another variant of the T14s Gen1, which also needs
-the s2idle quirk.
-
-Link: https://lore.kernel.org/all/20220503183420.348-1-mario.limonciello@amd.com/
-Link: https://bbs.archlinux.org/viewtopic.php?pid=2084655#p2084655
-Signed-off-by: Benjamin Asbach <asbachb.kernel@impl.it>
-Tested-by: Benjamin Asbach <asbachb.kernel@impl.it>
-Link: https://lore.kernel.org/r/20230331232447.37204-1-asbachb.kernel@impl.it
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 2a48a2d880d86..d1ec31086e9ba 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4481,6 +4481,14 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
- 		}
- 	},
-+	{
-+		.ident = "T14s Gen1 AMD",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20UJ"),
-+		}
-+	},
- 	{
- 		.ident = "P14s Gen1 AMD",
- 		.driver_data = &quirk_s2idle_bug,
 -- 
-2.39.2
+ i.
 
