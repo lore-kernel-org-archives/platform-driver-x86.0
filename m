@@ -2,103 +2,128 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC42C77B71
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8532C77B72
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 20:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjDNSCY (ORCPT
+        id S229514AbjDNUA2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Apr 2023 14:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45796 "EHLO
+        Fri, 14 Apr 2023 16:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjDNSCY (ORCPT
+        with ESMTP id S229461AbjDNUA1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Apr 2023 14:02:24 -0400
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8612D7F
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 11:02:21 -0700 (PDT)
-Date:   Fri, 14 Apr 2023 18:02:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danielbertalan.dev;
-        s=protonmail; t=1681495338; x=1681754538;
-        bh=cS+Yz9Rt4g22aFl67/AMvjYrRejeiQkA4zLDy7uWAB4=;
-        h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-         Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-        b=B/2vUX0qYmG6D5u+eVFUUCOKH8R43Blt3WA/cvDxUjGHZkIBd6Ms0BMPHcre+ApaY
-         kptaXQXjsYsjIA8URXtCaWJZN660nAYCxs9BTfEEzwvO4SISz68UgOhfVZ3sRx84wg
-         mz1L/gHROXDtj5GMmZ9rb/LQjvZXWNS36UN5p1RdbCoy+GrO9J9g/djLfu5Gj9In7b
-         HlC79OE01zOjdlGcw8I+sfKu8YXFaPnxFTXR8YY+xASLWog1DuTgBUUNPfJ72pe6IX
-         G5cBAq6Uo7Zv+WczruEWBoXmO31QhzU1hqy0+c1JkmLt15LjLmT7jFRYqdDnPOw4lS
-         u7mmFT8JuCs8w==
-To:     Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-From:   Daniel Bertalan <dani@danielbertalan.dev>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, liavalb@gmail.com,
-        Daniel Bertalan <dani@danielbertalan.dev>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Fix Embedded Controller access on X380 Yoga
-Message-ID: <20230414180034.63914-1-dani@danielbertalan.dev>
-Feedback-ID: 20340505:user:proton
+        Fri, 14 Apr 2023 16:00:27 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C09558B;
+        Fri, 14 Apr 2023 13:00:25 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2a8b1b51dbdso145881fa.0;
+        Fri, 14 Apr 2023 13:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681502423; x=1684094423;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fsAjVtRNvN5zm39fMMVB4mviKYMCjTZNyrnVaf04gOA=;
+        b=cVbH8BgBfOeR4ebCQ8PifhRz0cN/rtOuaXnBaqeQZvjypu65fZC8QvdZzkqEYKU7wE
+         S6zNzX9Oi/JSKuJ8WIMB3Anv06dNR+w3sOOgnJEQRPk8UrduTNNX4lvmBlSBgc9W+76Z
+         872JDyFDRBXdm3/qe8fKuUzDr7oLs4GDHer/QQqT1Wj04rkhj7DIpbrRTnuJC5PgFaUq
+         SavN0cijH67LJudrFAwIYxoMtMsEk/5Cu4vCIeW30xNEZTZEjVRT+aIQSNKgHKZ22mSv
+         CB6oKEN6hNToSGMYw+WL6a2Oqoh5LQ6jKdcdy0XNpnk09jLn23mf0vCjhFrHiIHKkr0c
+         EyCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681502423; x=1684094423;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fsAjVtRNvN5zm39fMMVB4mviKYMCjTZNyrnVaf04gOA=;
+        b=Or3+qR9fw4pT9JZqMBW6mT+BkWYUSoLpnC92dIaGKDyOwNvsEdrJcGOoFrjf7gj8m+
+         f+OK881uVnlWmB0gC5aWjTzu/D3uNnny/yazO0vXPvvHN7c8yuPHZLQd9c/8lU7JhC3E
+         bUfSqwPZRxp+rBC4O/unVxx8aWkSrrHqndC3IGVcTabkyPpEs0ygOBREcwP3AYMRrxZ6
+         wmByYChxfF+ijKFwHmZNQ1jKL5vVw5PcNCk+5ehsUnG98wpq1g8ora5kstqGFdyDF4kg
+         x3MZ0XCfuYmdEBQD8QgO41ZJiVAHQP13vfB/QQoE0hyoIcya38dMw4115viYJ/IXEJn+
+         6kCQ==
+X-Gm-Message-State: AAQBX9cOy6J95eIJLUsXkCEz7khdR9vSmCcuXwQouyYlK007ozrOWdeX
+        +9JadnLGVoF1QqAvE4Nj5pFNW9sF4QUIUaT6bJE=
+X-Google-Smtp-Source: AKy350boIx4qDnRkE7T7rJAlV6+DI0cLBhpj0Qu4rpGBj+t/Yued1P2KE+KMJtglgBpNGg99hMFs1RzdeUEtcM/msK0=
+X-Received: by 2002:ac2:532c:0:b0:4ec:4f38:10d6 with SMTP id
+ f12-20020ac2532c000000b004ec4f3810d6mr28702lfh.2.1681502423341; Fri, 14 Apr
+ 2023 13:00:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20230412144821.5716-1-jorge.lopez2@hp.com> <f91ee2ff-3a24-4e2b-bf68-f1c5400b7462@t-8ch.de>
+In-Reply-To: <f91ee2ff-3a24-4e2b-bf68-f1c5400b7462@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Fri, 14 Apr 2023 15:00:02 -0500
+Message-ID: <CAOOmCE-pfQa8_yn7zOkt9dBR9VpnnJF=dsvByZqLM=qcvoEx+Q@mail.gmail.com>
+Subject: Re: [PATCH v9] HP BIOSCFG driver - Documentation
+To:     thomas@t-8ch.de
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On the X380 Yoga, the `ECRD` and `ECWR` ACPI objects cannot be used for
-accessing the Embedded Controller: instead of a method that reads from
-the EC's memory, `ECRD` is the name of a location in high memory. This
-meant that trying to call them would fail with the following message:
+Hi Thomas,
 
-  ACPI: \_SB.PCI0.LPCB.EC.ECRD: 1 arguments were passed to a non-method
-  ACPI object (RegionField)
+On Fri, Apr 14, 2023 at 10:27=E2=80=AFAM <thomas@t-8ch.de> wrote:
+>
+> Hi Jorge,
+>
+> On 2023-04-12 09:48:21-0500, Jorge Lopez wrote:
+> > [..]
+> >
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/statusbin
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description: 'statusbin' is a read-only file that returns 'status' inf=
+ormation
+> > +             in binary format. This file provides a mechanism for comp=
+onents
+> > +             downstream (e.g. Recovery Agent) can read the status and =
+public
+> > +             key modulus.
+>
+> This is still missing docs about how to interpret the contents of the
+> "statusbin" file.
+>
+> "components downstream" -> userspace.
+>
 
-With this commit, it is now possible to access the EC and read
-temperature and fan speed information. Note that while writes to the
-HFSP register do go through (as indicated by subsequent reads showing
-the new value), the fan does not actually change its speed.
+I will provide the details in Version 10.   Additionally, I am working
+with the architect to understand the need for 'statusbin' in their
+upcoming features.
 
-Signed-off-by: Daniel Bertalan <dani@danielbertalan.dev>
----
- drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+>
+> I think we can start with the code review.
+>
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
-inkpad_acpi.c
-index 7191ff2625b1..6fe82f805ea8 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11699,6 +11699,7 @@ static int __init thinkpad_acpi_module_init(void)
- {
- =09const struct dmi_system_id *dmi_id;
- =09int ret, i;
-+=09acpi_object_type obj_type;
-=20
- =09tpacpi_lifecycle =3D TPACPI_LIFE_INIT;
-=20
-@@ -11724,6 +11725,21 @@ static int __init thinkpad_acpi_module_init(void)
- =09TPACPI_ACPIHANDLE_INIT(ecrd);
- =09TPACPI_ACPIHANDLE_INIT(ecwr);
-=20
-+=09/*
-+=09 * Quirk: in some models (e.g. X380 Yoga), an object named ECRD
-+=09 * exists, but it is a register, not a method.
-+=09 */
-+=09if (ecrd_handle) {
-+=09=09acpi_get_type(ecrd_handle, &obj_type);
-+=09=09if (obj_type !=3D ACPI_TYPE_METHOD)
-+=09=09=09ecrd_handle =3D NULL;
-+=09}
-+=09if (ecwr_handle) {
-+=09=09acpi_get_type(ecwr_handle, &obj_type);
-+=09=09if (obj_type !=3D ACPI_TYPE_METHOD)
-+=09=09=09ecwr_handle =3D NULL;
-+=09}
-+
- =09tpacpi_wq =3D create_singlethread_workqueue(TPACPI_WORKQUEUE_NAME);
- =09if (!tpacpi_wq) {
- =09=09thinkpad_acpi_module_exit();
---=20
-2.40.0
+I will send all files with Version 10.   To aid in the review process,
+I will keep all ..c in separate reviews.  It is less confusing that
+way since there is commonality between them
 
+> Could you also provide a sample of the attribute files?
+> I'm especially curious about the different instances of the sure-start
+> attributes, including current_value, possible_values and the auditlog
+> properties.
+>
 
+What type of sample are you looking for.?   I can provide you with a
+tree display of all attributes and some output samples for different
+attribute types.
+I will include sure-start  attributes, including current_value,
+possible_values and the audit log properties.  Please let me know if
+there is anything else you want to see.
+
+> Also is the userspace component for this published somewhere?
+> If so it would be useful to refer to it from the commit message.
+
+Linux components are under development and not published yet.  The
+only linux component at this time is the driver (hp bioscfg).
+The only published components are under Windows ONLY.
+
+>
+> Thanks,
+> Thomas
