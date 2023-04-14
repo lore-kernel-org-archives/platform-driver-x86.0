@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6815AC77B6E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 03:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE04BC77B6F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 10:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjDNDnZ (ORCPT
+        id S229598AbjDNKJX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Apr 2023 23:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
+        Fri, 14 Apr 2023 06:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjDNDm4 (ORCPT
+        with ESMTP id S229534AbjDNKJW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2023 23:42:56 -0400
+        Fri, 14 Apr 2023 06:09:22 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904DA49C7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Apr 2023 20:42:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F21D198D
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 03:09:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 176B66438E
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 03:42:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F3D1C433D2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 03:42:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 16AB364621
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 10:09:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FAE3C4339E
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 10:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681443774;
-        bh=yt+CzBDxuX53N4ne2+O+aiiHxUm8Qz4s/PtqevJWr60=;
+        s=k20201202; t=1681466960;
+        bh=2UI/AEw9oDcz0DhEb4WhqJCcz95BF5E9HDquql2+y+I=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=vC5CDwK/NSPMsXaDXLkrRxHPh3DQ932f9bXMR1xVYrUziCeUTSlIMO0CR2K0m4a+W
-         laswOo2SNaDb0hmHOj9QPNJFuYXVeuxfLXW4iqqjeAUP+OfRPIArBpkamAapzo5IBr
-         WyIZrvAWx92bdx9bziSbq5bdZsRTE3xreykTlfiiV3q8LGmuxuAqRX1xbhxBBHXqHP
-         quYBChrKS3AX5uxQLXyEepBL+1EYiC966l5e0uzj3ncS1igoqQE52XSsBxW9Yr6PJF
-         0Xttl666s9bhkZCqPti2ktsB5Gnx9yO0E4R2xgszmhYE848ObaQIoyquaPDw2GmuAE
-         J9Dcckz3O47FA==
+        b=fGLB4lRuMd/PMJK5fUU+uDxUJysUbE3z2P+cehsnRk66Cds153cLqNaa5O+OOadv8
+         pe2CeXZkaxxrP89hv2jIJ3TpA+o+PMvJFbGNG2Z4XxG4yRj1w1EoqsTinF9LyJCxnQ
+         SQv1pzKli+FPKtdp6CqPT49u+kvB/PzlrTSz2IWEc28/ARToLUKKG+Vs5kmvVPNNee
+         T0zossyu+zIr1R9I/9xhcYbClPeJLBHesTC5T71ifoJPRBFE7iXYFZ2DMuYwJgN+XO
+         f6FM7HFRdhKJeTpwisJjiozGDjISIoew2jFV30eyapqh+UMBtrwVaLVIJIkcv+AIRf
+         TLGguEUr5F/tA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 37695C43141; Fri, 14 Apr 2023 03:42:54 +0000 (UTC)
+        id 1CDA3C43142; Fri, 14 Apr 2023 10:09:20 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 217020] hp-wmi: Unable to change platform profile: Operation
  not supported
-Date:   Fri, 14 Apr 2023 03:42:54 +0000
+Date:   Fri, 14 Apr 2023 10:09:19 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -55,7 +55,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217020-215701-e8GINElcqY@https.bugzilla.kernel.org/>
+Message-ID: <bug-217020-215701-5rhDeH6iOi@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-217020-215701@https.bugzilla.kernel.org/>
 References: <bug-217020-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,48 +69,80 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D217020
 
---- Comment #1 from Luis Bocanegra (luisbocanegra17b@gmail.com) ---
-So tried to debug this issue the best I could and these are my findings
-omen_get_thermal_policy_version() (HPWMI_GET_SYSTEM_DESIGN_DATA) reads as 0=
-x03,
-same as windows using ec-probe tool
+--- Comment #2 from Luis Bocanegra (luisbocanegra17b@gmail.com) ---
+Looking at the registers on windows the HP_OMEN_EC_THERMAL_PROFILE_OFFSET
+(0x95) doesn't change on windows when switching modes either, could it be t=
+hat
+the gaming hub is doing something different or straight up ignoring the
+readings due to a bug in firmware?
 
-Bypassing the return in omen_get_thermal_policy_version()
-seems to allow platform_profile_omen_set() to change the power profile, at
-least with=20
-cool because I hear the fans spin up and then down when setting balanced, j=
-ust
-like the gaming hub on windows
+Here is an updated log with more debug prints:
 
-But omen_thermal_profile_get() (HP_OMEN_EC_THERMAL_PROFILE_OFFSET) always=20
-returns 0 making the sysfs entry always stay on balanced and breaking the
-funcionality of power-profiles-daemon
+[Fri Apr 14 02:47:32 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0=
+=20=20=20=20=20=20=20=20
 
-Here the logs of changing to cool then performance profiles
-
-[Thu Apr 13 21:29:40 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0
-[Thu Apr 13 21:29:42 2023] hp_wmi: platform_profile_omen_set > profile =3D =
-0x1
-[Thu Apr 13 21:29:42 2023] hp_wmi: omen_get_thermal_policy_version > ret =
+[Fri Apr 14 02:48:24 2023] hp_wmi: platform_profile_omen_set > profile =3D =
+0x5=20=20=20
+                    ## write performance
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query commandtype=3D0x28
+command=3D0x20008 size=3D0x8
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query actual_insize=3D0x80
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query > wmi_evaluate_meth=
+od
+ret=3D0x0
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query > bios_return_code=
+=3D0x3
+[Fri Apr 14 02:48:24 2023] hp_wmi: omen_get_thermal_policy_version > ret =
 =3D 0x3
-[Thu Apr 13 21:29:42 2023] hp_wmi: omen_get_thermal_policy_version > buffer=
-[3]
-=3D 0x0 //bypassed
-[Thu Apr 13 21:29:42 2023] hp_wmi: omen_thermal_profile_set 2 > ret =3D 0x0
-[Thu Apr 13 21:29:43 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0
-[Thu Apr 13 21:29:49 2023] hp_wmi: platform_profile_omen_set > profile =3D =
-0x5
-[Thu Apr 13 21:29:49 2023] hp_wmi: omen_get_thermal_policy_version > ret =
-=3D 0x3
-[Thu Apr 13 21:29:49 2023] hp_wmi: omen_get_thermal_policy_version > buffer=
+[Fri Apr 14 02:48:24 2023] hp_wmi: omen_get_thermal_policy_version > buffer=
 [3]
 =3D 0x0
-[Thu Apr 13 21:29:49 2023] hp_wmi: omen_thermal_profile_set 1 > ret =3D 0x0
-[Thu Apr 13 21:29:52 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query commandtype=3D0x1a
+command=3D0x20008 size=3D0x2
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query actual_insize=3D0x80
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query > wmi_evaluate_meth=
+od
+ret=3D0x0
+[Fri Apr 14 02:48:24 2023] hp_wmi: hp_wmi_perform_query > bios_return_code=
+=3D0x0
+[Fri Apr 14 02:48:24 2023] hp_wmi: Ignore output data of zero size outsize=
+=3D0x0
+[Fri Apr 14 02:48:24 2023] hp_wmi: omen_thermal_profile_set 1 > ret =3D 0x0
 
-Is this a very edge case bug or the controller somehow broken? Happy to pro=
-vide
-more information/test patches as needed.
+[Fri Apr 14 02:48:50 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0=
+=20=20=20=20=20=20=20=20
+
+[Fri Apr 14 02:49:02 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0=
+=20=20=20=20=20=20=20
+                    ## write cool
+[Fri Apr 14 02:49:49 2023] hp_wmi: platform_profile_omen_set > profile =3D =
+0x1
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query commandtype=3D0x28
+command=3D0x20008 size=3D0x8
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query actual_insize=3D0x80
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query > wmi_evaluate_meth=
+od
+ret=3D0x0
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query > bios_return_code=
+=3D0x3
+[Fri Apr 14 02:49:49 2023] hp_wmi: omen_get_thermal_policy_version > ret =
+=3D 0x3
+[Fri Apr 14 02:49:49 2023] hp_wmi: omen_get_thermal_policy_version > buffer=
+[3]
+=3D 0x0
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query commandtype=3D0x1a
+command=3D0x20008 size=3D0x2
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query actual_insize=3D0x80
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query > wmi_evaluate_meth=
+od
+ret=3D0x0
+[Fri Apr 14 02:49:49 2023] hp_wmi: hp_wmi_perform_query > bios_return_code=
+=3D0x0
+[Fri Apr 14 02:49:49 2023] hp_wmi: Ignore output data of zero size outsize=
+=3D0x0
+[Fri Apr 14 02:49:49 2023] hp_wmi: omen_thermal_profile_set 2 > ret =3D 0x0
+
+[Fri Apr 14 02:50:00 2023] hp_wmi: omen_thermal_profile_get > data =3D 0x0
 
 --=20
 You may reply to this email to add a comment.
