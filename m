@@ -2,67 +2,71 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE9CC77B72
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 15:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A87C77B6E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 15:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229826AbjDNPT4 (ORCPT
+        id S231371AbjDNP2w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Apr 2023 11:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
+        Fri, 14 Apr 2023 11:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbjDNPTz (ORCPT
+        with ESMTP id S231373AbjDNP2a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Apr 2023 11:19:55 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179335FDE
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 08:19:53 -0700 (PDT)
-Date:   Fri, 14 Apr 2023 17:19:50 +0200
+        Fri, 14 Apr 2023 11:28:30 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4B1E69;
+        Fri, 14 Apr 2023 08:27:55 -0700 (PDT)
+Date:   Fri, 14 Apr 2023 17:27:44 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1681485590; bh=/mYLDVppa+VQ1uhEklxE9lqSB8zRTjh6fE+WRhLBo38=;
+        t=1681486064; bh=XfABgRgasUd2NUJXHP+G4ZkXCN4p5fWetmFc96ErKLk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rjkc3N1Y6f2KslT98tnXVxxnanVb2Fhsj7OjuSptl164vXGT7BE46KwYDKbxaW7Sy
-         phhnhtZFsLpnZR6+29qAUrS++9NJ3MidtJd1Ez7xh5n1OdtJP662ULvMvuRRXKHZJ2
-         HVoF8AHLnWY82uRrLk+adZlUvJ00Jkd0crI3MMtc=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+        b=KWtwVsfuQssMtAMWq1X5TzmPuILpN1ArT4ljdrLIH1cYvDdbTsWAZk1VXYFoJp79u
+         b9bswg+yjGx1kjT9n5P2RxigSIKGxPh71UTN1zVtc14ogrSgrL/hVGgJqdh/3H9W9/
+         4eFfGTR/Bg1MbuHoVen13VG6t/mHrtHcH8Q/20L4=
+From:   thomas@t-8ch.de
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 1/4] Introduction of HP-BIOSCFG driver
-Message-ID: <f87fb773-1dd0-47fb-aa86-e0d4cd0d274d@t-8ch.de>
-References: <20230309201022.9502-1-jorge.lopez2@hp.com>
- <20230309201022.9502-2-jorge.lopez2@hp.com>
- <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
- <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9] HP BIOSCFG driver - Documentation
+Message-ID: <f91ee2ff-3a24-4e2b-bf68-f1c5400b7462@t-8ch.de>
+References: <20230412144821.5716-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
+In-Reply-To: <20230412144821.5716-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi Jorge,
 
-On 2023-04-12 14:37:45-0500, Jorge Lopez wrote:
-> On Sun, Apr 2, 2023 at 11:28 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> > Instead of passing around integer ids, that all the callees are using to
-> > look up some global data, it would be nicer to pass a pointer to the
-> > concrete instance struct to work on.
-> >
-> 
-> validate_string_input is part of the defined function
-> ATTRIBUTE_PROPERTY_STORE in bioscfg.h (line 457).
-> 
-> > This makes the code simpler and removes reference to global state all
-> > over the place.
-> >
-> Changing the values from int to pointer will add unnecessary overhead
-> since the instance ID is searched only once earlier in the process.
+On 2023-04-12 09:48:21-0500, Jorge Lopez wrote:
+> [..]
+>
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/statusbin
+> +Date:		March 29
+> +KernelVersion:	5.18
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:	'statusbin' is a read-only file that returns 'status' information
+> +		in binary format. This file provides a mechanism for components
+> +		downstream (e.g. Recovery Agent) can read the status and public
+> +		key modulus.
 
-Is this overhead measurable? If it can't be measured and/or does not
-make a difference, code clarity should always trump performance.
+This is still missing docs about how to interpret the contents of the
+"statusbin" file.
 
-On the other hand if you think the current way is clearer just keep it
-as is.
+"components downstream" -> userspace.
 
+
+I think we can start with the code review.
+
+Could you also provide a sample of the attribute files?
+I'm especially curious about the different instances of the sure-start
+attributes, including current_value, possible_values and the auditlog
+properties.
+
+Also is the userspace component for this published somewhere?
+If so it would be useful to refer to it from the commit message.
+
+Thanks,
 Thomas
