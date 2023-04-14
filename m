@@ -2,162 +2,175 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5C8C77B6F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 01:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D69BC77B61
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 01:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjDNBYi (ORCPT
+        id S229593AbjDNB7U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Apr 2023 21:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
+        Thu, 13 Apr 2023 21:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjDNBYc (ORCPT
+        with ESMTP id S229611AbjDNB7S (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2023 21:24:32 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2054.outbound.protection.outlook.com [40.107.100.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C813E40FD;
-        Thu, 13 Apr 2023 18:24:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lA0SPL5yq06GRlTwRFKWkhq87uKmUk80BxgyRkNBHcDx6VH2lwRxgsPBvIpSq9zFhGWao7YyO5zN+3IMRa63Ro5jTYCfj4KicbaJMkgVZ8nmDrbdwKFmuevtCao9CqFhua4vs1nEzL8RNi8i3QIogVv6b4I437aYkJxUbdbCQ7gSnXriRbGzam6y69ThxnllAUo4ASKHI0VMy/dER1OsOMO1NTdBGPRkreK9hAXgyBdSxSPUDxWt7OflF3id7x+oeqnBFVMCf0P9XHF3cevxfkBgL/gFr5kEBauiknzbs/eaozwjFjUL1OWFjLoGsYFORGsc/QnWnUeD6sV7xiDdWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uEGYGPy5OjPx1cD0EI26wT4NCdlfHrDRRS1jFg0AECw=;
- b=lybRjdR8mMIqmsMs1eMdIk2OHzwdMkHKvEM/evf1fUz39ZJ2/rmgi/u3mAMBCM5Vok+thsbrW+obKZvz7wtvATGFWUJPNzKrh1nEMOLGeHj1Pu4oHdY2dvxsnZe9aVZwqc5rteitt76ltxOKVGSjo4P+NEN+HxdvGrjKQqwHsy5VVe9mfEEtXcpNz5aLy/H2Ij33Yix1sarOY5LYBvfFATuJG1CYvs/UWjQ4il6AVxEaVwNdrDPt7V5gyjS1UXkouCvl2x3Wyzs17kTw8sQJmHGoPdjpLk8aNctjuxPNfMB/cEl5YC+WrTUcMHuudUkg3y7tbybxqBUwRSpuyLwBWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uEGYGPy5OjPx1cD0EI26wT4NCdlfHrDRRS1jFg0AECw=;
- b=XWtE5E6DEZgADQtUy/Hm/QwOFJcdVZaluPrcptG+erKnj8uIeDzkBBIHrkEHkveQI2YnrodB7OE/AY6GT1qBBB7TOTmf6Ekn9VuLLHXWflldXd/AOIu5NHMm7G+AnJPliW0k0ER31sAXTXV27zKA/g1ue/Js7pLdcDdoqmWNlgg=
-Received: from DM6PR02CA0105.namprd02.prod.outlook.com (2603:10b6:5:1f4::46)
- by MW4PR12MB7189.namprd12.prod.outlook.com (2603:10b6:303:224::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.35; Fri, 14 Apr
- 2023 01:24:27 +0000
-Received: from DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1f4:cafe::15) by DM6PR02CA0105.outlook.office365.com
- (2603:10b6:5:1f4::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.32 via Frontend
- Transport; Fri, 14 Apr 2023 01:24:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT050.mail.protection.outlook.com (10.13.173.111) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.33 via Frontend Transport; Fri, 14 Apr 2023 01:24:27 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 13 Apr
- 2023 20:24:25 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
-        <pavel@ucw.cz>, <svenva@chromium.org>,
+        Thu, 13 Apr 2023 21:59:18 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F7A422B;
+        Thu, 13 Apr 2023 18:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681437554; x=1712973554;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=24W6fHIJHtRcP3UdUj06bJT3QNFuCv4G1Dj+jqhkAKI=;
+  b=b2z1yX+Buerc1LO5vrAKwFVZBTTU9AIVtIxYu9emWBgUCGapMSz5dAPP
+   cPxBozYTyWBe99nNcnHlqmdc0eZmgmlGysma9KjU9UoMf1J7Xk49N00DU
+   x9DYeNztM/g8cRo2yT2DjEH8wFRZfC72ySGlnJglOf4zdwdPaVuwAQ+43
+   Un3CDIVPd4N8RwMSsr8kp9EvNJIzHdB19P9wPdrQ9KeKyI3MEg3IAQO8U
+   j8vNRY3pfqia/O6PM7yG6oZPwbku2C90f1CK91CFrfzy5i4DJsjqZGSQ/
+   boszLbuh1p7+e/RTA91IpLS+B0WXO5AqrWv9Wf5P2vrAn9DMLg+JyX1Kw
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="343122366"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="343122366"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 18:59:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="864025103"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="864025103"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 13 Apr 2023 18:59:10 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pn8iT-000Z7b-2a;
+        Fri, 14 Apr 2023 01:59:09 +0000
+Date:   Fri, 14 Apr 2023 09:58:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Box David E <david.e.box@intel.com>, jstultz@google.com,
+        pavel@ucw.cz, svenva@chromium.org,
         Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-CC:     <Shyam-sundar.S-k@amd.com>, <rrangel@chromium.org>,
-        Jain Rajat <rajatja@google.com>, <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
+Cc:     oe-kbuild-all@lists.linux.dev, Shyam-sundar.S-k@amd.com,
+        rrangel@chromium.org, Jain Rajat <rajatja@google.com>,
+        hdegoede@redhat.com, Mario Limonciello <mario.limonciello@amd.com>,
         Mark Gross <markgross@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 4/4] platform/x86/intel/pmc: core: Report duration of time in HW sleep state
-Date:   Thu, 13 Apr 2023 20:23:45 -0500
-Message-ID: <20230414012346.1946-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230414012346.1946-1-mario.limonciello@amd.com>
-References: <20230414012346.1946-1-mario.limonciello@amd.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 4/4] platform/x86/intel/pmc: core: Report duration of
+ time in HW sleep state
+Message-ID: <202304140957.hkvWzLzM-lkp@intel.com>
+References: <20230412194917.7164-5-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT050:EE_|MW4PR12MB7189:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72991e36-f0ee-40ce-41e2-08db3c86fd38
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s+1tIQJGxEMVlkVrnZPzlNhaicA4vBpV6P5b8H3dTEx9UQ2fKMTTM06q5bpIXNN0/yyCEuqvrFHryGfbnrJy0U0KlcF6p1Vur1YCoNGxf5NLRasRIgm8L24gwZh/9GynWDXez4ZRhbLn7YaFgMIDUhnlS9024c7eXKxX+2W1auPy/BD/b4z6T5Bk44op1JSYMxpvxpmth2ghLAYGvK/G83fMKPFZv9wrwAaTFnxWDCjAgf9uRNIolSSjnXUcmRSIpcvamMCnF9yUwe37J+FJrzFBQIGOttg4ISJ7+Qo3irT3WJFECxpBr+hWmPTg5nW5NUAAaRHHjuGR+JuXv4RYirKnzm4BxKVefxqYakBDDCWJv7EdjY2oSMsndOJk2DrUOsFWFjx+2zKGafc2X+UoUSWdP5NvfIBEYZsl6yNswm3fmUwiQiz9lg1N2h95t08lPNpO4tnJk/FULacMYEBqQyrP6Fe7KgcicY1SQUJkscGk8nR8Qlj1UcZgr5m+QfvxgT5Wr5lV1u+PtMZ7utstW8e9GpaZHSrOzZRemQ/3k4G8OX/oLiNsg/zfQ/eryWrXjWHbxbG4wSinAwPPH9HTP9SDKMlhGR/UDUJrmh52imR4Q5hOGtIYhGjmAG4pbX1wc4H8BRDwC9B39HICyVOlEKfrLJCp34WFeEENYjhoxE7xirj0pKL94k5BCxgSwHJpELUyuNtwxlIz3wYafQkr2+X4wKxY8JAGAX75ycNwqOc=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(376002)(39860400002)(396003)(451199021)(46966006)(36840700001)(40470700004)(7416002)(110136005)(4326008)(44832011)(5660300002)(8936002)(54906003)(2906002)(316002)(16526019)(478600001)(70586007)(41300700001)(8676002)(70206006)(186003)(7696005)(6666004)(81166007)(1076003)(356005)(82740400003)(40460700003)(26005)(47076005)(2616005)(83380400001)(66574015)(36756003)(426003)(336012)(82310400005)(40480700001)(86362001)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 01:24:27.3414
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72991e36-f0ee-40ce-41e2-08db3c86fd38
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7189
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230412194917.7164-5-mario.limonciello@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-intel_pmc_core displays a warning when the module parameter
-`warn_on_s0ix_failures` is set and a suspend didn't get to a HW sleep
-state.
+Hi Mario,
 
-Report this to the standard kernel reporting infrastructure so that
-userspace software can query after the suspend cycle is done.
+kernel test robot noticed the following build warnings:
 
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v8->v9:
- * Use FIELD_MAX and GENMASK
- * Add tags
-v7->v8:
- * Report max sleep as well
----
- drivers/platform/x86/intel/pmc/core.c | 4 ++++
- drivers/platform/x86/intel/pmc/core.h | 2 ++
- 2 files changed, 6 insertions(+)
+[auto build test WARNING on 09a9639e56c01c7a00d6c0ca63f4c7c41abe075d]
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 925c5d676a43..298f27ba1e10 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1153,6 +1153,8 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	pmc_core_do_dmi_quirks(pmcdev);
- 
- 	pmc_core_dbgfs_register(pmcdev);
-+	pm_report_max_hw_sleep(FIELD_MAX(SLP_S0_RES_COUNTER_MASK) *
-+			       pmc_core_adjust_slp_s0_step(pmcdev, 1));
- 
- 	device_initialized = true;
- 	dev_info(&pdev->dev, " initialized\n");
-@@ -1214,6 +1216,8 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
- 	if (pmc_core_dev_state_get(pmcdev, &s0ix_counter))
- 		return false;
- 
-+	pm_report_hw_sleep_time((u32)(s0ix_counter - pmcdev->s0ix_counter));
-+
- 	if (s0ix_counter == pmcdev->s0ix_counter)
- 		return true;
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 51d73efceaf3..9ca9b9746719 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -16,6 +16,8 @@
- #include <linux/bits.h>
- #include <linux/platform_device.h>
- 
-+#define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
-+
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
- 
- /* Sunrise Point Power Management Controller PCI Device ID */
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PM-Add-sysfs-files-to-represent-time-spent-in-hardware-sleep-state/20230413-035220
+base:   09a9639e56c01c7a00d6c0ca63f4c7c41abe075d
+patch link:    https://lore.kernel.org/r/20230412194917.7164-5-mario.limonciello%40amd.com
+patch subject: [PATCH v8 4/4] platform/x86/intel/pmc: core: Report duration of time in HW sleep state
+config: i386-randconfig-a001 (https://download.01.org/0day-ci/archive/20230414/202304140957.hkvWzLzM-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/315b1dd23cbedfd2848c8ac8ec1f77c3610b955e
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Mario-Limonciello/PM-Add-sysfs-files-to-represent-time-spent-in-hardware-sleep-state/20230413-035220
+        git checkout 315b1dd23cbedfd2848c8ac8ec1f77c3610b955e
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/x86/intel/pmc/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304140957.hkvWzLzM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_probe':
+>> drivers/platform/x86/intel/pmc/core.c:1156:38: warning: left shift count >= width of type [-Wshift-count-overflow]
+    1156 |         pm_report_max_hw_sleep(((1UL << 32) - 1) * pmc_core_adjust_slp_s0_step(pmcdev, 1));
+         |                                      ^~
+
+
+vim +1156 drivers/platform/x86/intel/pmc/core.c
+
+  1097	
+  1098	static int pmc_core_probe(struct platform_device *pdev)
+  1099	{
+  1100		static bool device_initialized;
+  1101		struct pmc_dev *pmcdev;
+  1102		const struct x86_cpu_id *cpu_id;
+  1103		void (*core_init)(struct pmc_dev *pmcdev);
+  1104		u64 slp_s0_addr;
+  1105	
+  1106		if (device_initialized)
+  1107			return -ENODEV;
+  1108	
+  1109		pmcdev = devm_kzalloc(&pdev->dev, sizeof(*pmcdev), GFP_KERNEL);
+  1110		if (!pmcdev)
+  1111			return -ENOMEM;
+  1112	
+  1113		platform_set_drvdata(pdev, pmcdev);
+  1114		pmcdev->pdev = pdev;
+  1115	
+  1116		cpu_id = x86_match_cpu(intel_pmc_core_ids);
+  1117		if (!cpu_id)
+  1118			return -ENODEV;
+  1119	
+  1120		core_init = (void  (*)(struct pmc_dev *))cpu_id->driver_data;
+  1121	
+  1122		/*
+  1123		 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
+  1124		 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+  1125		 * in this case.
+  1126		 */
+  1127		if (core_init == spt_core_init && !pci_dev_present(pmc_pci_ids))
+  1128			core_init = cnp_core_init;
+  1129	
+  1130		mutex_init(&pmcdev->lock);
+  1131		core_init(pmcdev);
+  1132	
+  1133	
+  1134		if (lpit_read_residency_count_address(&slp_s0_addr)) {
+  1135			pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+  1136	
+  1137			if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
+  1138				return -ENODEV;
+  1139		} else {
+  1140			pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
+  1141		}
+  1142	
+  1143		pmcdev->regbase = ioremap(pmcdev->base_addr,
+  1144					  pmcdev->map->regmap_length);
+  1145		if (!pmcdev->regbase)
+  1146			return -ENOMEM;
+  1147	
+  1148		if (pmcdev->core_configure)
+  1149			pmcdev->core_configure(pmcdev);
+  1150	
+  1151		pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+  1152		pmc_core_get_low_power_modes(pdev);
+  1153		pmc_core_do_dmi_quirks(pmcdev);
+  1154	
+  1155		pmc_core_dbgfs_register(pmcdev);
+> 1156		pm_report_max_hw_sleep(((1UL << 32) - 1) * pmc_core_adjust_slp_s0_step(pmcdev, 1));
+  1157	
+  1158		device_initialized = true;
+  1159		dev_info(&pdev->dev, " initialized\n");
+  1160	
+  1161		return 0;
+  1162	}
+  1163	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
