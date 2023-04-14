@@ -2,155 +2,67 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF28C77B72
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE9CC77B72
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Apr 2023 15:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230460AbjDNPN5 (ORCPT
+        id S229826AbjDNPT4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Apr 2023 11:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34756 "EHLO
+        Fri, 14 Apr 2023 11:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjDNPNy (ORCPT
+        with ESMTP id S231354AbjDNPTz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Apr 2023 11:13:54 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B441998;
-        Fri, 14 Apr 2023 08:13:51 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id q26so11603814lfe.9;
-        Fri, 14 Apr 2023 08:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681485230; x=1684077230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1i9POxXL2777GsR/j6INE2dl4zVKrOsk8Lf5CQ9YEg=;
-        b=H7IxpeBTfKCBd023oZLfPoA3qrnC7QnoznZHwxU3HNrafJZr+FWpYQg0u15SuiFThe
-         TjC2v/OrxLgT6CxRkRX6EefPmzQBoNKJpPgvHOMP/DnxPhZw/oWRMZzw4APivQ0EoP/0
-         NAoU4OgetX3g+EyqtNG1tWcS3ZMZPlcS/RDPFNggnAifyUUR6n3V3v2n/xA/chaeo3rD
-         SYklJjiI6hsqMCtjKU1XzypeZqXB57L/Kj4Iy6WyJu/WIfPZZRbSLzZuVAWAYZtAf88D
-         ukh4X5xSkCtzHUZ+Y3O+SelbwGuItURTe4cmodhVNfluz7UAiKc9Cczn7VEHVQlnEIdA
-         OMkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681485230; x=1684077230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1i9POxXL2777GsR/j6INE2dl4zVKrOsk8Lf5CQ9YEg=;
-        b=G6WGVumeIi1k5AYNbCwv/pgP+IjXhlgWeJhTEIT8elaR/C3oDWzcnOKWvpsFshUWeJ
-         EF6IivkRI1yFmrHrm5ZCMqz83M+hKwJnwUujO4vsAm8h4FU8OpLTtDSr6ln0IgN37o4w
-         /YrO6UqdYerZ3Ey6ZCoGUCBc6fOTAqgc2IWo5H5hX6vjEEX6VfKRG34wuF9kGh4oXIpM
-         kTPy0833aynXD/dXkAACqjNQy4n/NLSaoXu11hHkcPEguUzwVO26vIjKVRaLDrRfla2i
-         YUvd1YKckvh8DNunriYdnhQkF74czA9awTwcNFOprgrOq7/rAZnldut45+FYkFXrqLrW
-         YMfA==
-X-Gm-Message-State: AAQBX9fKiickdzzUCyhlWMokh6qzIuu7FJuw3aj7L2ZGmuqKmGoztRDf
-        EX6SJailuBMms+vQ0jWLJdxmjJDf1xzFafndgYdHFTztQWr2Xg==
-X-Google-Smtp-Source: AKy350buEZ+jHD3FTo9kQO15nElpW2d75hlaGxdWtyuHa8fl7wxFZlvOq71mZFNNZVS9ySKKYCyu1ccOgdHBSQ0ubjU=
-X-Received: by 2002:ac2:5a0c:0:b0:4ec:4f38:10d6 with SMTP id
- q12-20020ac25a0c000000b004ec4f3810d6mr1951001lfn.2.1681485229598; Fri, 14 Apr
- 2023 08:13:49 -0700 (PDT)
+        Fri, 14 Apr 2023 11:19:55 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179335FDE
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Apr 2023 08:19:53 -0700 (PDT)
+Date:   Fri, 14 Apr 2023 17:19:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+        t=1681485590; bh=/mYLDVppa+VQ1uhEklxE9lqSB8zRTjh6fE+WRhLBo38=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rjkc3N1Y6f2KslT98tnXVxxnanVb2Fhsj7OjuSptl164vXGT7BE46KwYDKbxaW7Sy
+         phhnhtZFsLpnZR6+29qAUrS++9NJ3MidtJd1Ez7xh5n1OdtJP662ULvMvuRRXKHZJ2
+         HVoF8AHLnWY82uRrLk+adZlUvJ00Jkd0crI3MMtc=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] Introduction of HP-BIOSCFG driver
+Message-ID: <f87fb773-1dd0-47fb-aa86-e0d4cd0d274d@t-8ch.de>
+References: <20230309201022.9502-1-jorge.lopez2@hp.com>
+ <20230309201022.9502-2-jorge.lopez2@hp.com>
+ <dbf97220-03d6-4815-8f14-55ee477b8afb@t-8ch.de>
+ <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230403211548.6253-1-jorge.lopez2@hp.com> <ZCuMkdb6jeL4S8hz@debian.me>
- <CAOOmCE-5NHkYcmBP1GGpr=sEoxF9jkjj1LevekEm8R0wbrM4xQ@mail.gmail.com> <565e6575-91f7-9ca2-1505-17527b95a816@redhat.com>
-In-Reply-To: <565e6575-91f7-9ca2-1505-17527b95a816@redhat.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 14 Apr 2023 10:13:28 -0500
-Message-ID: <CAOOmCE9HurxZf57CjUSxAF5TXvMGukyfP6RbaTbkEeWyeRqcsQ@mail.gmail.com>
-Subject: Re: [PATCH v7] Introduction-of-HP-BIOSCFG-driver-documentation
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bagas Sanjaya <bagasdotme@gmail.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOOmCE-=cprrpzEz5EOs00K7B=bp1rnrnZY7Ee0a245piioiJQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi there,
+Hi Jorge,
 
-Version 9 review for the sysfs-class-firmware-attributes document was
-submitted and I look forward  to getting your comments.   I understand
-you have other things happening, but as soon as the document is
-finalized, I can move to submit the rest of the files.
+On 2023-04-12 14:37:45-0500, Jorge Lopez wrote:
+> On Sun, Apr 2, 2023 at 11:28 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
+> > Instead of passing around integer ids, that all the callees are using to
+> > look up some global data, it would be nicer to pass a pointer to the
+> > concrete instance struct to work on.
+> >
+> 
+> validate_string_input is part of the defined function
+> ATTRIBUTE_PROPERTY_STORE in bioscfg.h (line 457).
+> 
+> > This makes the code simpler and removes reference to global state all
+> > over the place.
+> >
+> Changing the values from int to pointer will add unnecessary overhead
+> since the instance ID is searched only once earlier in the process.
 
-While the document review is ongoing,  I proceeded to address all
-comments made by Thomas, Hans, Bagas, and Mark regarding both
-documentation and source code changes.  The code compiles with W=3D1
-flag without any issues and the  refactoring proposed by Thomas was
-incorporated.  Testing on multiple platforms continues to validate the
-driver proper operation between reviews.
+Is this overhead measurable? If it can't be measured and/or does not
+make a difference, code clarity should always trump performance.
 
-Regards,
+On the other hand if you think the current way is clearer just keep it
+as is.
 
-Jorge
-
-
-
-On Thu, Apr 6, 2023 at 9:08=E2=80=AFAM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Hi All,
->
-> FWIW I have been reading along with both the v6 and
-> this v7 posting.
->
-> Thomas, Mark, thank you for your review / feedback
-> on this series.
->
-> On 4/4/23 15:37, Jorge Lopez wrote:
-> > Hi Bagas,
-> >
-> >>
-> >> Where is the rest of patches if this is a series? Had they been merged=
-?
-> >>
-> >
-> > There is only one change as requested by  Thomas Wei=C3=9Fschuh
-> >
-> >> Feel free to ONLY submit the patch with the documentation for the next
-> >> revision. Then we can nail down the interface and initial functionalit=
-y
-> >> and you don't always have to adapt the code to the changing interface.
-> >
-> > Perhaps, I misunderstood Thomas request.   I will address a few other
-> > comments and will submit all files again.
->
-> I think that Thomas' suggestion to first focus on getting
-> the userspace API right and then implement the agreed
-> upon API is a good idea.
->
-> So for the next version just post only the documentation
-> patch again please.
->
-> Note it is not the intention to merge just the documentation
-> patch without merging the code first.
->
-> The idea is to first nail the API down and then modify
-> the code once to implement the agreed upon API.
->
-> Then once the API has been agreed upon post newer
-> versions which also include the code again.
->
-> And then once people are also happy with the code
-> we can merge both the code + documentation in one go.
->
-> Regards,
->
-> Hans
->
->
->
->
->
->
->
-> >
-> > Regards,
-> >
-> > Jorge
-> >
->
+Thomas
