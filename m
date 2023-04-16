@@ -2,131 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CC3C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Apr 2023 21:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B22C77B76
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Apr 2023 21:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbjDPV3f (ORCPT
+        id S229488AbjDPV3f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sun, 16 Apr 2023 17:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjDPV3e (ORCPT
+        with ESMTP id S229473AbjDPV3e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sun, 16 Apr 2023 17:29:34 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74482107
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Apr 2023 14:28:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B382108
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Apr 2023 14:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681680528;
+        s=mimecast20190719; t=1681680529;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9yYwSl/G88KvZ8rvQCNrw30tHVXz0YrEdCGm3+T/A3E=;
-        b=Amysi6Dag3wQ+sJNf7yxMhJ84+ej1grdUjnTOze0EvvpMaR4H4L6Wc/OtYieqKmjuCqpuK
-        G94qw9cnOnMSfLVmawwyZmQZikx26/u00IWc+1LzX1wGvm/w/0MjBs3yvsr3i1usArEtL6
-        WgQDzy0Lcrkyk0iTakcseKl9zUTWeDc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=2Km4LcX0mE8tTTSGXnegnIfihLL0LLq1tjd3c59HzM8=;
+        b=i1SlijAUdurYW9QKEPCR2A5VeV/zyTZY3vhY6nR1VRGyoCVdpPGRaLs43HGBmp1qmKCbnT
+        BGQaUgywzriwt0FYQn4yZYJkNa9lkOoNUPn+aXaAqYOB3aYXSI0+6rF1UG/FFyCe/zOm14
+        e8OVgtHONPxVj6PAV6yOITa2bse56VM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-298-FXuFc3X6MvCASvzLapTCwQ-1; Sun, 16 Apr 2023 17:28:44 -0400
-X-MC-Unique: FXuFc3X6MvCASvzLapTCwQ-1
+ us-mta-372-Quizdg30M-yLruoTXnaojA-1; Sun, 16 Apr 2023 17:28:46 -0400
+X-MC-Unique: Quizdg30M-yLruoTXnaojA-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 235383813F2F;
-        Sun, 16 Apr 2023 21:28:44 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DA39B185A78F;
+        Sun, 16 Apr 2023 21:28:45 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 747F91415304;
-        Sun, 16 Apr 2023 21:28:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38CBF14171B8;
+        Sun, 16 Apr 2023 21:28:45 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/4] platform/x86: x86-android-tablets: Add Wacom digitizer info for Lenovo Yoga Book
-Date:   Sun, 16 Apr 2023 23:28:39 +0200
-Message-Id: <20230416212841.311152-2-hdegoede@redhat.com>
+Subject: [PATCH 4/4] platform/x86: x86-android-tablets: Add accelerometer support for Yoga Tablet 2 1050/830 series
+Date:   Sun, 16 Apr 2023 23:28:41 +0200
+Message-Id: <20230416212841.311152-4-hdegoede@redhat.com>
 In-Reply-To: <20230416212841.311152-1-hdegoede@redhat.com>
 References: <20230416212841.311152-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Lenovo Yoga Book has a wacom digitizer in its keyboard half,
-add the necessary info to instantiate an i2c_client for the digitizer.
+The Yoga Tablet 2 1050/830 series have a LSM303DA accelerometer +
+magnetometer (IMU), add this to the list of i2c_clients to
+instantiate on these models.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- .../platform/x86/x86-android-tablets/lenovo.c | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ .../platform/x86/x86-android-tablets/lenovo.c | 32 ++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index b5dd74bf9e8c..438de8b92dc6 100644
+index cf1629970f98..65cfccaa2894 100644
 --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
 +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -40,6 +40,16 @@ static struct lp855x_platform_data lenovo_lp8557_pdata = {
+@@ -255,8 +255,19 @@ static struct x86_gpio_button lenovo_yoga_tab2_830_1050_lid = {
+ /* This gets filled by lenovo_yoga_tab2_830_1050_init() */
+ static struct rmi_device_platform_data lenovo_yoga_tab2_830_1050_rmi_pdata = { };
  
- /* Lenovo Yoga Book X90F / X90L's Android factory img has everything hardcoded */
- 
-+static const struct property_entry lenovo_yb1_x90_wacom_props[] = {
-+	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0001),
-+	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 150),
+-static const struct x86_i2c_client_info lenovo_yoga_tab2_830_1050_i2c_clients[] __initconst = {
++static struct x86_i2c_client_info lenovo_yoga_tab2_830_1050_i2c_clients[] __initdata = {
+ 	{
++		/*
++		 * This must be the first entry because lenovo_yoga_tab2_830_1050_init()
++		 * may update its swnode. LSM303DA accelerometer + magnetometer.
++		 */
++		.board_info = {
++			.type = "lsm303d",
++			.addr = 0x1d,
++			.dev_name = "lsm303d",
++		},
++		.adapter_path = "\\_SB_.I2C5",
++	}, {
+ 		/* bq24292i battery charger */
+ 		.board_info = {
+ 			.type = "bq24190",
+@@ -357,7 +368,24 @@ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
+  * The Lenovo Yoga Tablet 2 830 and 1050 (8" vs 10") versions use the same
+  * mainboard, but the 830 uses a portrait LCD panel with a landscape touchscreen,
+  * requiring the touchscreen driver to adjust the touch-coords to match the LCD.
++ * And requiring the accelerometer to have a mount-matrix set to correct for
++ * the 90° rotation of the LCD vs the frame.
+  */
++static const char * const lenovo_yoga_tab2_830_lms303d_mount_matrix[] = {
++	"0", "1", "0",
++	"-1", "0", "0",
++	"0", "0", "1"
++};
++
++static const struct property_entry lenovo_yoga_tab2_830_lms303d_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", lenovo_yoga_tab2_830_lms303d_mount_matrix),
 +	{ }
 +};
 +
-+static const struct software_node lenovo_yb1_x90_wacom_node = {
-+	.properties = lenovo_yb1_x90_wacom_props,
++static const struct software_node lenovo_yoga_tab2_830_lms303d_node = {
++	.properties = lenovo_yoga_tab2_830_lms303d_props,
 +};
 +
- /*
-  * The HiDeep IST940E touchscreen comes up in I2C-HID mode. The native protocol
-  * reports ABS_MT_PRESSURE and ABS_MT_TOUCH_MAJOR which are not reported in HID
-@@ -86,6 +96,22 @@ static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst
- 			.trigger = ACPI_EDGE_SENSITIVE,
- 			.polarity = ACPI_ACTIVE_LOW,
- 		},
-+	}, {
-+		/* Wacom Digitizer in keyboard half */
-+		.board_info = {
-+			.type = "hid-over-i2c",
-+			.addr = 0x09,
-+			.dev_name = "wacom",
-+			.swnode = &lenovo_yb1_x90_wacom_node,
-+		},
-+		.adapter_path = "\\_SB_.PCI0.I2C4",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FF:01",
-+			.index = 49,
-+			.trigger = ACPI_LEVEL_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_LOW,
-+		},
- 	}, {
- 		/* LP8557 Backlight controller */
- 		.board_info = {
-@@ -131,9 +157,18 @@ static struct gpiod_lookup_table lenovo_yb1_x90_hideep_gpios = {
- 	},
- };
+ static int __init lenovo_yoga_tab2_830_1050_init_touchscreen(void)
+ {
+ 	struct gpio_desc *gpiod;
+@@ -375,6 +403,8 @@ static int __init lenovo_yoga_tab2_830_1050_init_touchscreen(void)
+ 		pr_info("detected Lenovo Yoga Tablet 2 830F/L\n");
+ 		lenovo_yoga_tab2_830_1050_rmi_pdata.sensor_pdata.axis_align.swap_axes = true;
+ 		lenovo_yoga_tab2_830_1050_rmi_pdata.sensor_pdata.axis_align.flip_y = true;
++		lenovo_yoga_tab2_830_1050_i2c_clients[0].board_info.swnode =
++			&lenovo_yoga_tab2_830_lms303d_node;
+ 	}
  
-+static struct gpiod_lookup_table lenovo_yb1_x90_wacom_gpios = {
-+	.dev_id = "i2c-wacom",
-+	.table = {
-+		GPIO_LOOKUP("INT33FF:00", 82, "reset", GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
- static struct gpiod_lookup_table * const lenovo_yb1_x90_gpios[] = {
- 	&lenovo_yb1_x90_hideep_gpios,
- 	&lenovo_yb1_x90_goodix_gpios,
-+	&lenovo_yb1_x90_wacom_gpios,
- 	NULL
- };
- 
+ 	return 0;
 -- 
 2.39.2
 
