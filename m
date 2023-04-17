@@ -2,92 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1276C77B72
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 09:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A055C77B70
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 09:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjDQJeQ (ORCPT
+        id S229508AbjDQJgB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Apr 2023 05:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        Mon, 17 Apr 2023 05:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjDQJeP (ORCPT
+        with ESMTP id S229573AbjDQJfy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Apr 2023 05:34:15 -0400
+        Mon, 17 Apr 2023 05:35:54 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1255FD5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 02:32:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B531BE1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 02:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681723890;
+        s=mimecast20190719; t=1681724009;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UzymFEnA71rZ7IV+seXO8jBzXVpCenheDhAZHXvi2GI=;
-        b=bcSLxfozxASMdlIU1VMlapuZ7iJ3MlPOBqJyCk1dWS0GA30Iz/FxSo0zAR62cph6nINvnt
-        YVdtsBbwUkQ+aiSSxSrXP0FL6Rb7K0+tqU5WapgljHFFGIG96d/1mLsSyR/UtH+Uk7TyfE
-        DkuquDYkxBu1NRqd8umaceFgD+LWmXY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=cHr2WdOjSs9BopZLugcJ3JL6xeQQEOb/bphFwfXEDmE=;
+        b=AF2JwUbdAFfawMPxYoOzLQHLyCto8nBWJrnym/yFy3Tse56MHZCwGROWurWF56XxYyUsMn
+        55IFcYZpQjD9H27Cdn9sGh74H+8fSzs3AqE1+2+TqL8DuidtwaghFmuHWl8Ah22ARz9PZM
+        t7eNxdnHNtloIYqf4jczjk613+uwgts=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-384-7K7Y5Uc2P2C-0Azf937kCw-1; Mon, 17 Apr 2023 05:31:28 -0400
-X-MC-Unique: 7K7Y5Uc2P2C-0Azf937kCw-1
-Received: by mail-ej1-f69.google.com with SMTP id vx12-20020a170907a78c00b0094a9009d99bso8077396ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 02:31:28 -0700 (PDT)
+ us-mta-574-uAaJ1nYvMfmKmCVuDMh16Q-1; Mon, 17 Apr 2023 05:33:27 -0400
+X-MC-Unique: uAaJ1nYvMfmKmCVuDMh16Q-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-94eaa8f18eeso119940566b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 02:33:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681723887; x=1684315887;
+        d=1e100.net; s=20221208; t=1681724007; x=1684316007;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UzymFEnA71rZ7IV+seXO8jBzXVpCenheDhAZHXvi2GI=;
-        b=ggpTzgr3ueYJv07P9ZirCgWEu8xVaESGJDYUsh4aYsub9RZWpP6PkKV0DUvn3kJB3f
-         zDkgMsmbvyE2ACb4MASjKOIRZF5bdXiVeElJ2+sjGOaYLyt5+ZEzNKH8oN/fkByou8EL
-         IgmEFCSK3C96CAbWDdegQJlYFOXDSOkdpz+bihGRrUEecix0PyE668tInh2ue2gF1q9V
-         /PEjpjfNWQFprlmNAqKU8nxvT0cKVC7xsPwkfBhks5yyplaJS6YnTyDvaBJFFbuu4xVp
-         lQWood+w9oY4nR5DH1YgGg8yTHd1LAF/F1ooh78SZ6dHKhoieOjZ164escT63BUtSUMo
-         L/Nw==
-X-Gm-Message-State: AAQBX9fWgQx7Fp37IpoTa63eN2+vwsk2mhzqPHrYoE95Bh/iwRcSeFc8
-        hpiCENa5BLK7dcPPZPVNaYA6ReQGlHK5aB95L0PHmkJa2edrKIFAmoaVgkL2CgZyo9CYQ9As8Gu
-        QnCvwgFER1jUESsmpi5HS48ze/oi3L6UI2g==
-X-Received: by 2002:a17:907:971b:b0:94f:9f77:ec75 with SMTP id jg27-20020a170907971b00b0094f9f77ec75mr872614ejc.58.1681723887582;
-        Mon, 17 Apr 2023 02:31:27 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YQGfxnERlv9FHfxgjzgSpldCj4n6QeHKbvVGSD5vCDFxUx7cKxxWJOKgn5G+CBih2NcAkgEA==
-X-Received: by 2002:a17:907:971b:b0:94f:9f77:ec75 with SMTP id jg27-20020a170907971b00b0094f9f77ec75mr872604ejc.58.1681723887318;
-        Mon, 17 Apr 2023 02:31:27 -0700 (PDT)
+        bh=cHr2WdOjSs9BopZLugcJ3JL6xeQQEOb/bphFwfXEDmE=;
+        b=WjZqP3lOb6VhrEveYn2zgrlY7iNs8PvZ3d3R2Qra3ekzebMT8YnCc57FPxj19GYEwn
+         WIw0kAwPnqHjsW3+TlXFaLwinNIEzwneRebLcdGGv1/Gb/qKXbdhGiijzGcuWrxswxJ5
+         gNDKQLwqmFPakN4Hsu0YFCf8NpnAoT+6UZ+HOK+vimAmJJ6LJoGIfduUFKUyq5w7Kcu7
+         ES5qcXL13qunPmSwwUX7OUkXqNX0ORDzTthI2ixtKMDaRZCLtvEMZXQwl7iM738Z5DjF
+         izzfDHL3DlOscO7Nw3tUyB5wFZ+XoLtSEZgnI2PVGpjldqMhX2zVyFTrzdE1+lwzU3/b
+         N2OA==
+X-Gm-Message-State: AAQBX9c+8lfrwHZAioZi0Nh3g3SDaI7INpPcQ+YkPPEWldRDsFLyhKno
+        Y9YZpFZ55fWUYXBaggQWvJo5dI8r+1QPAfUsTYeqyqCV4TLW2qi3xU5fmCv64JJYmzipgWc6/nR
+        sTE4WLerqSh5zKiuDI9h3Z43BU0ea/a6CIA==
+X-Received: by 2002:a05:6402:209:b0:506:741e:5c14 with SMTP id t9-20020a056402020900b00506741e5c14mr13130938edv.30.1681724006778;
+        Mon, 17 Apr 2023 02:33:26 -0700 (PDT)
+X-Google-Smtp-Source: AKy350aLAYM1bs3qCkldmaV9H41+yBA7NDbAsnoyKPyXWNzp/2YurKW+Pz6VR62I5nh2GZhYIoSdug==
+X-Received: by 2002:a05:6402:209:b0:506:741e:5c14 with SMTP id t9-20020a056402020900b00506741e5c14mr13130920edv.30.1681724006445;
+        Mon, 17 Apr 2023 02:33:26 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id y15-20020a170906524f00b0094e1026bc66sm6457935ejm.140.2023.04.17.02.31.26
+        by smtp.gmail.com with ESMTPSA id p11-20020aa7d30b000000b0050696b9e78fsm2695296edq.81.2023.04.17.02.33.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Apr 2023 02:31:26 -0700 (PDT)
-Message-ID: <bedeca01-2e1c-65a5-dc88-56ca678ef569@redhat.com>
-Date:   Mon, 17 Apr 2023 11:31:26 +0200
+        Mon, 17 Apr 2023 02:33:25 -0700 (PDT)
+Message-ID: <389eb60d-ba58-7bcf-eda6-b6db5b0e2cd9@redhat.com>
+Date:   Mon, 17 Apr 2023 11:33:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] platform/x86/amd: pmc: Get STB DRAM size from PMFW
+Subject: Re: [PATCH] platform/x86: amd: pmc: provide user message where s0ix
+ is not supported
 Content-Language: en-US, nl
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
-Cc:     Sanket.Goswami@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org
-References: <20230412102156.2592318-1-Shyam-sundar.S-k@amd.com>
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "markgross@kernel.org" <markgross@kernel.org>
+Cc:     "Goswami, Sanket" <Sanket.Goswami@amd.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20230412111500.2602529-1-Shyam-sundar.S-k@amd.com>
+ <MN0PR12MB6101DDEDF1410015A35DBF7DE29B9@MN0PR12MB6101.namprd12.prod.outlook.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230412102156.2592318-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <MN0PR12MB6101DDEDF1410015A35DBF7DE29B9@MN0PR12MB6101.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Shyam,
+Hi,
 
-On 4/12/23 12:21, Shyam Sundar S K wrote:
-> Recent PMFW's have support for querying the STB DRAM size. Add this
-> support to the driver.
+On 4/12/23 16:23, Limonciello, Mario wrote:
+> [Public]
 > 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Some platforms do not support hardware backed s0i3 transitions. When such
+>> CPUs are detected, provide a warning message to the user.
+>>
+>> Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>> Based on review-hans. Apologies, I missed this change in the earlier
+>> series.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Please prepare a new version of this series addressing
-Ilpo's review remarks.
+Hmm. I find it a bit weird to add a cpu-id, causing the module
+to get loaded, just to print a warning and then abort the probe().
+
+But I guess this will help you with debugging AMD suspend/resume
+issues so I'll take this:
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -95,91 +121,49 @@ Hans
 
 
 
-
-
-
-> ---
-> v2:
->  - Based on review-hans branch
->  - Add a switch for cpu-id check based on feedback from Mario.
 > 
->  drivers/platform/x86/amd/pmc.c | 32 +++++++++++++++++++++++++++++++-
->  1 file changed, 31 insertions(+), 1 deletion(-)
+>>
+>>  drivers/platform/x86/amd/pmc.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmc.c
+>> b/drivers/platform/x86/amd/pmc.c
+>> index bb7597ca334f..3d2a377f4424 100644
+>> --- a/drivers/platform/x86/amd/pmc.c
+>> +++ b/drivers/platform/x86/amd/pmc.c
+>> @@ -93,6 +93,7 @@
+>>  #define AMD_CPU_ID_YC			0x14B5
+>>  #define AMD_CPU_ID_CB			0x14D8
+>>  #define AMD_CPU_ID_PS			0x14E8
+>> +#define AMD_CPU_ID_SP			0x14A4
+>>
+>>  #define PMC_MSG_DELAY_MIN_US		50
+>>  #define RESPONSE_REGISTER_LOOP_MAX	20000
+>> @@ -913,6 +914,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
+>> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
+>>  	{ }
+>>  };
+>>
+>> @@ -1022,6 +1024,13 @@ static int amd_pmc_probe(struct platform_device
+>> *pdev)
+>>  	}
+>>
+>>  	dev->cpu_id = rdev->device;
+>> +
+>> +	if (dev->cpu_id == AMD_CPU_ID_SP) {
+>> +		dev_warn_once(dev->dev, "S0i3 is not supported on this
+>> hardware\n");
+>> +		err = -ENODEV;
+>> +		goto err_pci_dev_put;
+>> +	}
+>> +
+>>  	dev->rdev = rdev;
+>>  	err = amd_smn_read(0, AMD_PMC_BASE_ADDR_LO, &val);
+>>  	if (err) {
+>> --
+>> 2.25.1
 > 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 877b629e5cae..9f8bc6711413 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -114,6 +114,7 @@ enum s2d_arg {
->  	S2D_PHYS_ADDR_LOW,
->  	S2D_PHYS_ADDR_HIGH,
->  	S2D_NUM_SAMPLES,
-> +	S2D_DRAM_SIZE,
->  };
->  
->  struct amd_pmc_bit_map {
-> @@ -146,6 +147,7 @@ struct amd_pmc_dev {
->  	u32 base_addr;
->  	u32 cpu_id;
->  	u32 active_ips;
-> +	u32 dram_size;
->  /* SMU version information */
->  	u8 smu_program;
->  	u8 major;
-> @@ -888,11 +890,34 @@ static const struct pci_device_id pmc_pci_ids[] = {
->  	{ }
->  };
->  
-> +static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
-> +{
-> +	switch (dev->cpu_id) {
-> +	case AMD_CPU_ID_YC:
-> +		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39)))
-> +			goto err_dram_size;
-> +		break;
-> +	default:
-> +		goto err_dram_size;
-> +	}
-> +
-> +	amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, STB_SPILL_TO_DRAM, 1);
-> +	if (!dev->dram_size)
-> +		goto err_dram_size;
-> +
-> +	return 0;
-> +
-> +err_dram_size:
-> +	dev_err(dev->dev, "DRAM size command not supported for this platform\n");
-> +	return -EINVAL;
-> +}
-> +
->  static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  {
->  	u32 phys_addr_low, phys_addr_hi;
->  	u64 stb_phys_addr;
->  	u32 size = 0;
-> +	int ret;
->  
->  	/* Spill to DRAM feature uses separate SMU message port */
->  	dev->msg_port = 1;
-> @@ -901,6 +926,11 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  	if (size != S2D_TELEMETRY_BYTES_MAX)
->  		return -EIO;
->  
-> +	/* Get DRAM size */
-> +	ret = amd_pmc_get_dram_size(dev);
-> +	if (ret)
-> +		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
-> +
->  	/* Get STB DRAM address */
->  	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, STB_SPILL_TO_DRAM, 1);
->  	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, STB_SPILL_TO_DRAM, 1);
-> @@ -910,7 +940,7 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  	/* Clear msg_port for other SMU operation */
->  	dev->msg_port = 0;
->  
-> -	dev->stb_virt_addr = devm_ioremap(dev->dev, stb_phys_addr, S2D_TELEMETRY_DRAMBYTES_MAX);
-> +	dev->stb_virt_addr = devm_ioremap(dev->dev, stb_phys_addr, dev->dram_size);
->  	if (!dev->stb_virt_addr)
->  		return -ENOMEM;
->  
 
