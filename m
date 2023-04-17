@@ -2,143 +2,181 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5DEC77B70
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 13:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14CCC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 13:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjDQNGp (ORCPT
+        id S229565AbjDQNSM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Apr 2023 09:06:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        Mon, 17 Apr 2023 09:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230509AbjDQNG3 (ORCPT
+        with ESMTP id S231138AbjDQNSK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Apr 2023 09:06:29 -0400
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E92DD332
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 06:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-        t=1681736551; i=julian.winkler1@web.de;
-        bh=ByAYLJtw7JzcTchZQmKLDjAH6rxwrDvw2hU9IioEiew=;
-        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=ZXF7Iiz0eGAuKGhZockfjMqiGqPncV3z0gN0aFWE4vy6fpf73W4SOp7oKiZAeP1Le
-         Le7RHXHiqrHzJIn2m6DOGUfcz9C27bsvXr06RY2p/v7E61JAWKFdYFPIP0Jj8sZAuP
-         ztrfK3MUg/drQHZUCG5LJ5yD7YX+CIaaJUOf/erE8ZOHEhgPeUfI6MGznxE0j0pRa0
-         2jTTDOx0LNo+Ij3Y/2h7q/deFaoMlKwj5JGa+WJM+UN7JdwuBgS2KSDwS7hR3Fs1+d
-         m8f7OoUzSg7Hnjc/qDIuY6B2PA0GBb0Kxz9ebhY5Y6DtJl7N1FbG+fRBC6/WFzZ2w7
-         O8ZfDBucP3a9w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [149.222.207.209] ([149.222.207.209]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mv3US-1qfGAZ2trU-00qxQC; Mon, 17
- Apr 2023 15:02:31 +0200
-Message-ID: <a52ab618-97ea-04ea-01e4-ecb673f45f09@web.de>
-Date:   Mon, 17 Apr 2023 15:02:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] intel_scu_pcidrv: add back PCI id for Medfield
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20230416154932.6579-1-julian.winkler1@web.de>
- <6a2a97d9-140c-3e4f-aa12-c98f928f7481@redhat.com>
- <CAHp75VfFptZcJn7c_a2GLnSqJDXBwvUqWmu9Wb19a3VvwXJS5A@mail.gmail.com>
-From:   Julian Winkler <julian.winkler1@web.de>
-In-Reply-To: <CAHp75VfFptZcJn7c_a2GLnSqJDXBwvUqWmu9Wb19a3VvwXJS5A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:viWzEXw7bgzeqDwOSop2sQAuOCvc5bLxvn1LOqAN0r1Xzy1Ikhf
- A9j13X5Evk0CxmuIdR58A+cqcL46B7LwRRCWTTIHqs+vF6zqA4uCEQrjKGIuCc2Hb/2SVsw
- +LRLgtNjpSdyl3TXeAFBL+5wMnGnFHTMfkYhgYXmz21mqk4cIlHt19QJqi5rIb0XaAW5ukt
- t+1DvTCeG2G5lBclP91og==
-UI-OutboundReport: notjunk:1;M01:P0:jSdzdVYzCVM=;iBhSGun3dGqQ2impvEPNiH2fviP
- Iik3NBaMTu9gcUBO2aXfjA1xEVU3KFvqxzl8elGzciEE0U8DTNu2VWyY3sRAcL4mxND+IER+V
- fg+y9UG3L4r8b8hQXbF8N5hgksHC/g3BOTcWvTqx3pc1otUW7cVpkwzDi2yQDRZlstoC3VT8X
- 8vS3xw3AxcOtoY4JAQFrNvGz+zEZsy2Pp2wAKgk7vRCvC7eM8clOISHo41TS/XPUfBpk4sn0G
- DInaCUo/iqjpek65S1qMO1l1NxOOT43ceXv9dWepmsxrQHj9A+NoUDoHAkehDWJrbJpD0PmUQ
- 4tZWAWZwXpMX/hbaFlUHmyvONO8in92Jr7E1SZJIC9l1H0kvTWETvgDJCcnm1Sssz+FTYDxQc
- ZFbgLkPQrRFnaAuDHJ3Ms+kCv18X0Pl+NtsQZSd0gmr+iMi+jPxoFBTwVfuamcEHl4Elku8p3
- uUrMW2r5MpkR4U6pihyvM8WE9I3c0WrgtMQXkUeFnDN4Grtsf8Js2OAoiH1VojpX3Q08iRFbC
- yTrt7G0DKojNnQFdDwt2tBvmq0B4TsJLCOBGdtBO40W9oSpGcEDZ1zMW9UEKSsRkcQLK2b3BG
- fGfMy7fuhrtR769DPZMGPVsjNqz0hT8RGlpifImH9eTQ8uKljkbOd/JDfitnhvJUtMiRpNW6F
- /pzFCg3p5b/nFk7eSLzE2Gu0BSqA1Wc3Rqv4DJB7ONkIQsb+l3TMGb7+R6E9MrcpniitlQbIA
- uUbTAZdrUKbEGZ0tpk72QjXPUvQgkpRs93kcWy2GU1wXs58VMgOkNupi0ly/1QgRYFIyBZZ0i
- EyNevxqqp31JEsdNOtuUnvSGivoyZQ2i4HUlJFrk/tpzdFcjE/9F1q/VErFao5od7eZgWPYU5
- OujbHwizpxED4Zs0xAkaYTK9z54tGkkWCBEwSLG8KgI1TO6px17MeCynGqj2Ph7cFysezYkoZ
- mBQlyCQoYtoBSo2hMIT4lRq8YBE=
+        Mon, 17 Apr 2023 09:18:10 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C04103
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 06:18:09 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id BD2D85C00CC;
+        Mon, 17 Apr 2023 09:18:06 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Mon, 17 Apr 2023 09:18:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1681737486; x=1681823886; bh=kM
+        JGpBuonkMLnZjY9btsMO4QW6umWIuu242wMOQ4bwU=; b=X2gbRd7OMOEFkiqxCL
+        KmazF4/UmvnKoQAm3jCyJ30yXeG+JLefLNmT7/A8kaXECnbPAHM4INrxHvtZXB8y
+        gVa+IZs/JU4vKQD26+B1M1O6vAEWWF2Y4iaA6DMZssuunuh03ZRlFMcNE9oeKcZ8
+        gBhuH2GBaeB3hScS5ZTfJis9ccA2iZ3q1tw13p96BVd5kfaR7gg5v516pOhyn0JQ
+        aS8+TW/6sh5f3MZQIJxI5/udHvzbqXKRGIhz5+quBjl6UqqhPWnXzBMOwEtlU9J/
+        heGbIfKZq7SpvHl4RCIOB8S/gv2xW1/mlF3Li/5t4PMn0EAKjq7ZyxiaXQ3MgjUB
+        o2RQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1681737486; x=1681823886; bh=kMJGpBuonkMLn
+        ZjY9btsMO4QW6umWIuu242wMOQ4bwU=; b=EPt5DDcDdcgW+YFCqHF1GbXLdCoi/
+        YbDCWLoSf6yiv1RGeX6AH6d4ATKh6uq1j7vry/OpHG9XIJUNiuXVTla8Y2V84qRl
+        EN2VqUJezpiB+hIQokoNerOWDwC9w+ghkLpM5RWKQV/vWXVyww4smQ1nlYM4oHgm
+        2PhdeqDw19CW6AhKQ5oAAHlZeTkF/y7yEN0HGt1HPmSqy0GeVlA/Ns3YgWzrzndG
+        mIr9Fj4tiliEUgUXhKh45D62V6hkEdO8xDEytaeUzUGNsdQcmXLDCfn+X0maxrVQ
+        LvL6077v1wL0oR6Y4arplazrbe/jLFxzelfYzHEFWNd7nREc7MjTTS6xw==
+X-ME-Sender: <xms:Dkc9ZME-glHzY50qkzxbfjACvsYEMfrhnEVDzdjHRuhx63l5MtuKPg>
+    <xme:Dkc9ZFU6uDj3FdG2kZdVygRvh-h3BfJAgP8UOGu4yDJPRosC0AEWkoZqy_4UnUkF5
+    1XKHe4zCt8_l_W78Lg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeliedgieduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeekleeftefgfffgleeljeehhfffheffgfeljefg
+    ueeufeejieeigfffueelteelvdenucffohhmrghinheplhhptggsrdgvtgenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
+    lhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:Dkc9ZGKMlR7Ayme-6IydrnwXinEn2LYp80Su3mcGF1LPEa6VknXP3Q>
+    <xmx:Dkc9ZOE9CA248tXBaRrnmHX4VnH5u0ErpY8w9RChCvRUey30RSu7TA>
+    <xmx:Dkc9ZCVDylmqiG1ZjknL4zVXIC0E3z1Digeol5K76ZsEcVgubXyAQg>
+    <xmx:Dkc9ZAzuIVovgw7Bkc7_bQIGAJNyk686nht0bQzSuhkF2z3qXGMnSw>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 296D5C60091; Mon, 17 Apr 2023 09:18:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-372-g43825cb665-fm-20230411.003-g43825cb6
+Mime-Version: 1.0
+Message-Id: <bcd8d501-a457-40fb-9b4d-4df118b76d2f@app.fastmail.com>
+In-Reply-To: <dd07686f-dd03-4efc-3dfe-5b568c6c854d@redhat.com>
+References: <20230414180034.63914-1-dani@danielbertalan.dev>
+ <060c750b-f282-b1f4-2fcc-64fc3885f149@redhat.com>
+ <a1229347-b5f3-8a1d-40a8-20beb863592a@gmail.com>
+ <2739eb24-736f-6f59-70c5-d9975c354369@redhat.com>
+ <c7LGto3wAWSkvfZaIEtB9_5EhTFe8ZdAOCKSZE8m8L18w0kJu2tms1RSdhrdUPBfHy5f-GMvxi_Etc5s8e7NOdF_xG4atmwco2QQ41bv9Sc=@danielbertalan.dev>
+ <dd07686f-dd03-4efc-3dfe-5b568c6c854d@redhat.com>
+Date:   Mon, 17 Apr 2023 09:17:45 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Hans de Goede" <hdegoede@redhat.com>,
+        "Daniel Bertalan" <dani@danielbertalan.dev>
+Cc:     "Liav Albani" <liavalb@gmail.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix Embedded Controller access on
+ X380 Yoga
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 17.04.23 12:16, Andy Shevchenko wrote:
-> On Mon, Apr 17, 2023 at 1:11=E2=80=AFPM Hans de Goede <hdegoede@redhat.c=
-om> wrote:
->> +Cc Andy, Mika,
+On Mon, Apr 17, 2023, at 6:19 AM, Hans de Goede wrote:
+> Hi,
 >
-> Thanks for Cc'ing me.
->
->> On 4/16/23 17:49, Julian Winkler wrote:
->>> This id was removed in b47018a778c1a18cbc98b4a11936dec4f8c4bb7b, sayin=
-g it
->>> is only used on Moorestown, but apparently the same id is also used on
->>> Medfield.
+> On 4/15/23 16:22, Daniel Bertalan wrote:
+>> Hi,
+>> 
+>> On Saturday, April 15th, 2023 at 15:30, Hans de Goede <hdegoede@redhat.com> wrote:
+>> 
+>>> Hi,
 >>>
->>> Tested on the Medfield based Motorola RAZR i smartphone.
+>>> On 4/15/23 15:24, Liav Albani wrote:
+>>>
+>>>> On 4/15/23 13:12, Hans de Goede wrote:
+>>>>
+>>>>> Hi,
+>>>>>
+>>>>> On 4/14/23 20:02, Daniel Bertalan wrote:
+>>>>>
+>>>>>> On the X380 Yoga, the `ECRD` and `ECWR` ACPI objects cannot be used for
+>>>>>> accessing the Embedded Controller: instead of a method that reads from
+>>>>>> the EC's memory, `ECRD` is the name of a location in high memory. This
+>>>>>> meant that trying to call them would fail with the following message:
+>>>>>>
+>>>>>> ACPI: \_SB.PCI0.LPCB.EC.ECRD: 1 arguments were passed to a non-method
+>>>>>> ACPI object (RegionField)
+>>>>>>
+>>>>>> With this commit, it is now possible to access the EC and read
+>>>>>> temperature and fan speed information. Note that while writes to the
+>>>>>> HFSP register do go through (as indicated by subsequent reads showing
+>>>>>> the new value), the fan does not actually change its speed.
+>>>>>>
+>>>>>> Signed-off-by: Daniel Bertalan dani@danielbertalan.dev
+>>>>>> Interestig, this looks like a pretty clean solution to me.
+>>>>
+>>>> Daniel and I have looked in the DSDT ASL code and found a bunch of registers in high physical memory location (which is an ACPI OpRegion),
+>>>> and one of the registers had a bit called ECRD.
+>>>> However, there were many other registers that might be interesting as well, the problem is the short names in the ASL code (so we only see abbreviations essentially).
+>>>>
+>>>> While I do agree that adding this code is indeed a clean solution, if you (people that are dealing with Thinkpad laptops) know about cleaner way to access the embedded controller, I think it's preferable, because this way Daniel might be able to trigger the fan on that laptop so it will actually spin and will dissipate-out heat from the system, without the relying on the embedded controller to get into some sort of thermal state and then to trigger the fan.
+>>>
+>>>
+>>> Have you tried falling back to the ec_read() and ec_write() helpers
+>>> exported by the ACPI EC code ?
+>>>
+>>> The "first_ec" pointer used by these functions is exported too,
+>>> so you could try modifying thinkpad_acpi to use ec_read() and
+>>> ec_write() as fallback when first_ec is set (and the quirk
+>>> added by this patch triggers).
+>> 
+>> This is basically what my patch does. If the ECRD/ECWR method handles
+>> are NULL, thinkpad_acpi's acpi_ec_{read,write} functions fall back to
+>> the regular ACPI EC helpers you mentioned.
 >
-> Wow! This is surprising.
-> Can you tell more about your test environment? What is the Linux
-> kernel version in use and what is the userspace (AOSP, Buildroot,
-> Yocto, custom)? If custom, more details would be nice to hear.
-
-The test enviroment is postmarketOS. You can find more details on the
-Wiki page
-https://wiki.postmarketos.org/wiki/Motorola_RAZR_i_(XT890)_(motorola-smi)
-
->>> Signed-off-by: Julian Winkler <julian.winkler1@web.de>
->>
->> Hmm, so this is a former SFI platform, from your:
->> https://lore.kernel.org/all/20230223060107.23029-1-julian.winkler1@web.=
-de/
->>
->> patch I guess the plan is to use some custom bootloader
->> and then use x86 with devicetree support to replace SFI ?
+> Ah I did not realize that. Ok that sounds good to me.
 >
-> That would also be nice to hear in detail. With other Intel MID
-> platforms the decision was made to pursue ACPI (and U-Boot, as an
-> example) supports that for Intel Merrifield platform.
-
-I boot a 5.10 kernel, which still has SFI support, and from there I can
-boot latest mainline kernel with petitboot, kexec and devicetree.
-
->> Do you already have this working ?
->>
->> Sorry for all the questions for what is just a simple PCI-id
->> addition. I guess I'm worried this is just the tip of
->> the iceberg for getting medfield support back into
->> the kernel and I'm a bit worried about how much maintenance
->> work this will cause.
->>
->> E.g. also see commit e1da811218d2dc ("drm/gma500: Remove Medfield suppo=
-rt")
->> which I guess you will want to see reverted too ?
->>
->> That is an example of a lot more code to bring back
->> then just a single PCI-id addition.
->>
->> Don't get me wrong I'm all for supporting older hw
->> if there are users who are interested in actively
->> maintaining support for it. I just want to get a feel
->> of the amount of work this is going to involve.
->>
->> Andy, Mika, any remarks ?
+> I'll go and apply the patch then. To be on the save side I'm going
+> to only add this to -next, so that it gets some testing before
+> showing up in stable series. Once 6.4-rc1 is out you can then
+> send it to stable@vger.kernel.org to get it backported.
 >
-> I'm not against a patch if it helps existing users, but we need to
-> understand first if it will be really helpful for upstream (taking
-> into account 32-bit Intel MID support removal).
+>> Speaking of which, does anyone know why these private helper functions
+>> exist in the first place? The code seems to use them interchangeably.
+>> Even in the fan control code, there are places where the regular EC
+>> helpers are called directly. Can we get away with always doing that?
+>
+> I assume that on some older models there is no standard ACPI EC device
+> in the ACPI tables, so there only ECRD/ECWR work. I guess that code-paths
+> which directly call ec_read() / ec_write() are only used on newer
+> models. But this does indeed seem inconsistent.
+>
+>> Back to the issue at hand, is there someone we could ask if the X380Y
+>> even supports manual fan control in the first place? My debugging
+>> efforts are starting to look like a wild goose chase.
+>> 
+>> The thermal sensors and fan PWM readings now work, which is better
+>> than nothing, but it would be good to get to the bottom of this.
+>
+> Mark Pearson from Lenovo can hopefully help answer this, but I know
+> that he is quite busy atm. Hopefully Mark will get back to you when
+> he has some more bandwidth.
+>
 
-My downstream kernel tree can be seen here:
-https://gitlab.com/julianwi/linux-intel-medfield. Indeed, I needed to
-bring back some removed code to get the display working, but even
-without display driver, old smartphones can be used as a server or
-Raspberry Pi replacement.
+Apologies - I thought I had already replied to thread, but seems I hadn't.
+
+I'm checking with the FW team and will see what I can find out. It may take a little while, especially as this is an older platform and the question is a bit more non-standard than normal.
+Internal ticket is LO-2411
+
+Thanks!
+Mark
