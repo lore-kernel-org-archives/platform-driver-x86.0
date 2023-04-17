@@ -2,181 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14CCC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 13:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C9CC77B79
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Apr 2023 15:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjDQNSM (ORCPT
+        id S229627AbjDQP2K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Apr 2023 09:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
+        Mon, 17 Apr 2023 11:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbjDQNSK (ORCPT
+        with ESMTP id S229854AbjDQP2I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Apr 2023 09:18:10 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C04103
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2023 06:18:09 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id BD2D85C00CC;
-        Mon, 17 Apr 2023 09:18:06 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Mon, 17 Apr 2023 09:18:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1681737486; x=1681823886; bh=kM
-        JGpBuonkMLnZjY9btsMO4QW6umWIuu242wMOQ4bwU=; b=X2gbRd7OMOEFkiqxCL
-        KmazF4/UmvnKoQAm3jCyJ30yXeG+JLefLNmT7/A8kaXECnbPAHM4INrxHvtZXB8y
-        gVa+IZs/JU4vKQD26+B1M1O6vAEWWF2Y4iaA6DMZssuunuh03ZRlFMcNE9oeKcZ8
-        gBhuH2GBaeB3hScS5ZTfJis9ccA2iZ3q1tw13p96BVd5kfaR7gg5v516pOhyn0JQ
-        aS8+TW/6sh5f3MZQIJxI5/udHvzbqXKRGIhz5+quBjl6UqqhPWnXzBMOwEtlU9J/
-        heGbIfKZq7SpvHl4RCIOB8S/gv2xW1/mlF3Li/5t4PMn0EAKjq7ZyxiaXQ3MgjUB
-        o2RQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1681737486; x=1681823886; bh=kMJGpBuonkMLn
-        ZjY9btsMO4QW6umWIuu242wMOQ4bwU=; b=EPt5DDcDdcgW+YFCqHF1GbXLdCoi/
-        YbDCWLoSf6yiv1RGeX6AH6d4ATKh6uq1j7vry/OpHG9XIJUNiuXVTla8Y2V84qRl
-        EN2VqUJezpiB+hIQokoNerOWDwC9w+ghkLpM5RWKQV/vWXVyww4smQ1nlYM4oHgm
-        2PhdeqDw19CW6AhKQ5oAAHlZeTkF/y7yEN0HGt1HPmSqy0GeVlA/Ns3YgWzrzndG
-        mIr9Fj4tiliEUgUXhKh45D62V6hkEdO8xDEytaeUzUGNsdQcmXLDCfn+X0maxrVQ
-        LvL6077v1wL0oR6Y4arplazrbe/jLFxzelfYzHEFWNd7nREc7MjTTS6xw==
-X-ME-Sender: <xms:Dkc9ZME-glHzY50qkzxbfjACvsYEMfrhnEVDzdjHRuhx63l5MtuKPg>
-    <xme:Dkc9ZFU6uDj3FdG2kZdVygRvh-h3BfJAgP8UOGu4yDJPRosC0AEWkoZqy_4UnUkF5
-    1XKHe4zCt8_l_W78Lg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeliedgieduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeekleeftefgfffgleeljeehhfffheffgfeljefg
-    ueeufeejieeigfffueelteelvdenucffohhmrghinheplhhptggsrdgvtgenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
-    lhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:Dkc9ZGKMlR7Ayme-6IydrnwXinEn2LYp80Su3mcGF1LPEa6VknXP3Q>
-    <xmx:Dkc9ZOE9CA248tXBaRrnmHX4VnH5u0ErpY8w9RChCvRUey30RSu7TA>
-    <xmx:Dkc9ZCVDylmqiG1ZjknL4zVXIC0E3z1Digeol5K76ZsEcVgubXyAQg>
-    <xmx:Dkc9ZAzuIVovgw7Bkc7_bQIGAJNyk686nht0bQzSuhkF2z3qXGMnSw>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 296D5C60091; Mon, 17 Apr 2023 09:18:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-372-g43825cb665-fm-20230411.003-g43825cb6
-Mime-Version: 1.0
-Message-Id: <bcd8d501-a457-40fb-9b4d-4df118b76d2f@app.fastmail.com>
-In-Reply-To: <dd07686f-dd03-4efc-3dfe-5b568c6c854d@redhat.com>
-References: <20230414180034.63914-1-dani@danielbertalan.dev>
- <060c750b-f282-b1f4-2fcc-64fc3885f149@redhat.com>
- <a1229347-b5f3-8a1d-40a8-20beb863592a@gmail.com>
- <2739eb24-736f-6f59-70c5-d9975c354369@redhat.com>
- <c7LGto3wAWSkvfZaIEtB9_5EhTFe8ZdAOCKSZE8m8L18w0kJu2tms1RSdhrdUPBfHy5f-GMvxi_Etc5s8e7NOdF_xG4atmwco2QQ41bv9Sc=@danielbertalan.dev>
- <dd07686f-dd03-4efc-3dfe-5b568c6c854d@redhat.com>
-Date:   Mon, 17 Apr 2023 09:17:45 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>,
-        "Daniel Bertalan" <dani@danielbertalan.dev>
-Cc:     "Liav Albani" <liavalb@gmail.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix Embedded Controller access on
- X380 Yoga
-Content-Type: text/plain
+        Mon, 17 Apr 2023 11:28:08 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2082.outbound.protection.outlook.com [40.107.93.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9840CB75D;
+        Mon, 17 Apr 2023 08:27:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k5xa7O+JPDJlegDo6O8S//lxqZ9kd6hyYkeRQJmGtFkOVYTuf8cnOrMG/Lnwl50/M61b7SX1vP2B2pky0WxLYwEQ0XxUKYyIFIlkqh+rTnBAbqARnMYjGius6FYUT8fc1CHzpmGouzaA8uWmQUOYhyLlhG8AQYf55wRmBm5mX3RSLbK29sIY3qoPKIESrai8HrlEtC/cWCxiDGjSYqyc7xFbDgoAwVuSxu460IqhMGmIvYRJxb2a/1TneUIlc3VOcfXXJ0fkleKXadHSE53fit1kRXTh8dkGargZZkM3koZeE4LT7Hmt5gE9Yu1FsVBlIxItsdPkBj6VSb08//eddQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lX7IzZ9NoGafkcLs9B6Bii7+0aRCJ+oL7qYtxqnKRdM=;
+ b=RbvjwWau21zzSvejfmLHoOyHBNe0ymGDf0faN5fPAiaW0UggemViU8y0uDAtD4C3I3qzTFcRBkM9m8iCYu0PHMIPXGUjK676knV001K+M52xGwLaQscqN2YOwZuQ0xMmlN19RtOhj1iAvkSi5DWj0IA1zlDXQ70H0i1CRA8aof1I6D4J17osojN4qnUzcaUIjqjAqCPBJFjSI3NlEnj5gSxMHvybQxgLsq2TBBHX9U3MMbOh4wapYFRz3dxWWXe8kBDVhIB5IO+t6LXNlVF4QT+I5UnatEXTOLjNru6Ny1IZgD9qgN/PEipR1sxONk1wMY9UnqxAVBwvtUHJKnE42Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lX7IzZ9NoGafkcLs9B6Bii7+0aRCJ+oL7qYtxqnKRdM=;
+ b=JCnAttsu3Pz0oGMdvQID100oC0GMTQYvH2dXfTKKTt4NciXm9kyb5dS4sbF89SrSQOGNeWYL2gWqIhhdsoz7A/SsWnZF8jcDM/crtStEUj6WVNNuEYz+hL8nzorYIEiilbhLChLdfkFQx5/fMkRg5sh0gEV6Nu+9YHyyL4PihRc=
+Received: from SJ0PR03CA0094.namprd03.prod.outlook.com (2603:10b6:a03:333::9)
+ by BL0PR12MB4931.namprd12.prod.outlook.com (2603:10b6:208:17e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Mon, 17 Apr
+ 2023 15:27:27 +0000
+Received: from CO1PEPF00001A5D.namprd05.prod.outlook.com
+ (2603:10b6:a03:333:cafe::b9) by SJ0PR03CA0094.outlook.office365.com
+ (2603:10b6:a03:333::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.46 via Frontend
+ Transport; Mon, 17 Apr 2023 15:27:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF00001A5D.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6319.14 via Frontend Transport; Mon, 17 Apr 2023 15:27:26 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 17 Apr
+ 2023 10:27:22 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>
+CC:     Box David E <david.e.box@intel.com>, <jstultz@google.com>,
+        <pavel@ucw.cz>, <svenva@chromium.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        <rrangel@chromium.org>, Jain Rajat <rajatja@google.com>,
+        <hdegoede@redhat.com>, <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v10 0/4] Add vendor agnostic mechanism to report hardware sleep
+Date:   Mon, 17 Apr 2023 10:27:04 -0500
+Message-ID: <20230417152708.3599-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF00001A5D:EE_|BL0PR12MB4931:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73329d16-f645-46e1-c2df-08db3f583fbc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XVtEeHKHYUvVEfIjqo77bQ1ENzsaQKhGKNH3wVmB1BxRYOjXOnrnlLFQHFFWyFv8tHQCK7ATyebI/SGtz1M+XAdBudFFMLf+K5KVmyPdowP+5QZ2JWBy74FZMBArz+lgMOZzkjF7+inAVxWp6hLVPAo/wQt4aaDWQfyZAh0vG/DshuYA1hlGSlFcmGBmajqq7m+QlpRsxoomXvdQbm+qmwgbgrlWpW1wsVXTTfY9epPqkP1v+wksP8U57nj1YF1E4zhAxWWqQciig1hI7UXFUtCCpsfGR371KLc3bJOaIoUq/SlXy8VmnFuac4o3lzTSEeIX01mBvo7KLcdKHFPQYN0Fyj9kfnX1r4MK9uh9BjyYw1IKPrlOXWNfVJ5LkSC5QDwSjmFe+E98Gm9mCXMehZ0lHW/MoAmauyswzm0IJzfqCTOFnac755tFlLjeSVB/VjRNUoBWfD1UYxqpSVDxhI0jCiDAZhXkblj/PPiqPTPVqTHsn6PJHUBBuXJrebzqlxZ6yNA2hEbcF1HnsViE0q3vi7+si4VrDY57O+N/VGf3GZAzNkf5zXO/4OkGqK1iDA7glO5MAGE13eacjW1+SI+EbxB0+TAkl+CgmDQuOrz4C544Nmg/xzS1czT9j6YsgFNhuETb5Ew19CKiu/UvJu8sJYGcA95GlQcIl364U9Z76ujwEQLg8SRIBHl53T0WqWuw3cFNu9hBHkxCiQ/FCn90aprcS3xY8sRm2CTJsKk=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(39860400002)(396003)(376002)(451199021)(36840700001)(40470700004)(46966006)(8676002)(8936002)(40460700003)(44832011)(5660300002)(7416002)(2906002)(36756003)(82310400005)(86362001)(40480700001)(478600001)(7696005)(6666004)(54906003)(16526019)(186003)(2616005)(36860700001)(26005)(1076003)(70206006)(70586007)(82740400003)(83380400001)(316002)(81166007)(41300700001)(356005)(4326008)(6916009)(47076005)(426003)(336012)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2023 15:27:26.0501
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73329d16-f645-46e1-c2df-08db3f583fbc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF00001A5D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4931
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 17, 2023, at 6:19 AM, Hans de Goede wrote:
-> Hi,
->
-> On 4/15/23 16:22, Daniel Bertalan wrote:
->> Hi,
->> 
->> On Saturday, April 15th, 2023 at 15:30, Hans de Goede <hdegoede@redhat.com> wrote:
->> 
->>> Hi,
->>>
->>> On 4/15/23 15:24, Liav Albani wrote:
->>>
->>>> On 4/15/23 13:12, Hans de Goede wrote:
->>>>
->>>>> Hi,
->>>>>
->>>>> On 4/14/23 20:02, Daniel Bertalan wrote:
->>>>>
->>>>>> On the X380 Yoga, the `ECRD` and `ECWR` ACPI objects cannot be used for
->>>>>> accessing the Embedded Controller: instead of a method that reads from
->>>>>> the EC's memory, `ECRD` is the name of a location in high memory. This
->>>>>> meant that trying to call them would fail with the following message:
->>>>>>
->>>>>> ACPI: \_SB.PCI0.LPCB.EC.ECRD: 1 arguments were passed to a non-method
->>>>>> ACPI object (RegionField)
->>>>>>
->>>>>> With this commit, it is now possible to access the EC and read
->>>>>> temperature and fan speed information. Note that while writes to the
->>>>>> HFSP register do go through (as indicated by subsequent reads showing
->>>>>> the new value), the fan does not actually change its speed.
->>>>>>
->>>>>> Signed-off-by: Daniel Bertalan dani@danielbertalan.dev
->>>>>> Interestig, this looks like a pretty clean solution to me.
->>>>
->>>> Daniel and I have looked in the DSDT ASL code and found a bunch of registers in high physical memory location (which is an ACPI OpRegion),
->>>> and one of the registers had a bit called ECRD.
->>>> However, there were many other registers that might be interesting as well, the problem is the short names in the ASL code (so we only see abbreviations essentially).
->>>>
->>>> While I do agree that adding this code is indeed a clean solution, if you (people that are dealing with Thinkpad laptops) know about cleaner way to access the embedded controller, I think it's preferable, because this way Daniel might be able to trigger the fan on that laptop so it will actually spin and will dissipate-out heat from the system, without the relying on the embedded controller to get into some sort of thermal state and then to trigger the fan.
->>>
->>>
->>> Have you tried falling back to the ec_read() and ec_write() helpers
->>> exported by the ACPI EC code ?
->>>
->>> The "first_ec" pointer used by these functions is exported too,
->>> so you could try modifying thinkpad_acpi to use ec_read() and
->>> ec_write() as fallback when first_ec is set (and the quirk
->>> added by this patch triggers).
->> 
->> This is basically what my patch does. If the ECRD/ECWR method handles
->> are NULL, thinkpad_acpi's acpi_ec_{read,write} functions fall back to
->> the regular ACPI EC helpers you mentioned.
->
-> Ah I did not realize that. Ok that sounds good to me.
->
-> I'll go and apply the patch then. To be on the save side I'm going
-> to only add this to -next, so that it gets some testing before
-> showing up in stable series. Once 6.4-rc1 is out you can then
-> send it to stable@vger.kernel.org to get it backported.
->
->> Speaking of which, does anyone know why these private helper functions
->> exist in the first place? The code seems to use them interchangeably.
->> Even in the fan control code, there are places where the regular EC
->> helpers are called directly. Can we get away with always doing that?
->
-> I assume that on some older models there is no standard ACPI EC device
-> in the ACPI tables, so there only ECRD/ECWR work. I guess that code-paths
-> which directly call ec_read() / ec_write() are only used on newer
-> models. But this does indeed seem inconsistent.
->
->> Back to the issue at hand, is there someone we could ask if the X380Y
->> even supports manual fan control in the first place? My debugging
->> efforts are starting to look like a wild goose chase.
->> 
->> The thermal sensors and fan PWM readings now work, which is better
->> than nothing, but it would be good to get to the bottom of this.
->
-> Mark Pearson from Lenovo can hopefully help answer this, but I know
-> that he is quite busy atm. Hopefully Mark will get back to you when
-> he has some more bandwidth.
->
+An important part of validating that s0ix worked properly is to check how
+much of a cycle was spent in a hardware sleep state.
 
-Apologies - I thought I had already replied to thread, but seems I hadn't.
+The reporting of hardware sleep is a mix of kernel messages and sysfs
+files that vary from vendor to vendor. Collecting this information
+requires extra information on the kernel command line or fetching from
+debugfs.
 
-I'm checking with the FW team and will see what I can find out. It may take a little while, especially as this is an older platform and the question is a bit more non-standard than normal.
-Internal ticket is LO-2411
+To make this information more readily accessible introduce a new file in
+suspend_stats that drivers can report into during their resume routine.
 
-Thanks!
-Mark
+Userspace can fetch this information and compare it against the duration
+of the cycle to allow determining residency percentages and flagging
+problems.
+
+v9->v10:
+ * Add tags
+ * Rebase on linux-pm/bleeding-edge as it will apply through this tree
+
+Mario Limonciello (4):
+  PM: Add sysfs files to represent time spent in hardware sleep state
+  platform/x86/amd: pmc: Report duration of time in hw sleep state
+  platform/x86/intel/pmc: core: Always capture counters on suspend
+  platform/x86/intel/pmc: core: Report duration of time in HW sleep
+    state
+
+ Documentation/ABI/testing/sysfs-power | 29 +++++++++++++
+ drivers/platform/x86/amd/pmc.c        |  6 +--
+ drivers/platform/x86/intel/pmc/core.c | 17 ++++----
+ drivers/platform/x86/intel/pmc/core.h |  4 +-
+ include/linux/suspend.h               |  8 ++++
+ kernel/power/main.c                   | 59 +++++++++++++++++++++------
+ 6 files changed, 98 insertions(+), 25 deletions(-)
+
+
+base-commit: 0962c5df83b088fad0c531257744fb7a1e83221c
+-- 
+2.34.1
+
