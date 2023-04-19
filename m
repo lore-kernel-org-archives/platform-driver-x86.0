@@ -2,61 +2,65 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9C5C6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Apr 2023 15:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F4AC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Apr 2023 15:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231897AbjDSPM4 (ORCPT
+        id S231186AbjDSPM7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 Apr 2023 11:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
+        Wed, 19 Apr 2023 11:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbjDSPM4 (ORCPT
+        with ESMTP id S232823AbjDSPM5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Apr 2023 11:12:56 -0400
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE59FFA;
-        Wed, 19 Apr 2023 08:12:54 -0700 (PDT)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-18777914805so10206473fac.1;
-        Wed, 19 Apr 2023 08:12:54 -0700 (PDT)
+        Wed, 19 Apr 2023 11:12:57 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E16B740FE;
+        Wed, 19 Apr 2023 08:12:55 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-38bcc5914ecso3023b6e.0;
+        Wed, 19 Apr 2023 08:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681917174; x=1684509174;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgyelK5AQ23WEMgFpi3kd5xccNHQg9qlLU9me3qruqc=;
-        b=Wa/x4Cz0szJ1tY6/qeKeAy2D1zJuOW7o0YVnH7hAbsO1pqJRVfSd0t2KBdNI8SREf1
-         nA0k1hFNfkgQ7yLpog72b22FLNG/ZtkO50KA47rFPi9xtird2jR1CK0fFLVPbO6IsiyT
-         +SqG+6Od0+SbMGN81eC/7Xq8lQRTIO6y5sSuLPPKKmWGHmXSOpragQoqXuJJ0F4Pg8Qy
-         Wy4avHy1KHMwgoF1xTyDUDwsjRrFrJylA5RhIGOXAcMGSA2odNbh80oN5t7wSRt7EP5+
-         um/Hr5IFTN1H7GPZLGsbEj9E3jY8nZcqZd1lMVMxHOJSdCMAcKw+0NNFjwKkRq2o8/OU
-         z+zQ==
+        d=gmail.com; s=20221208; t=1681917175; x=1684509175;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2uw6cJJOj4NpjhqsMBl9W9u80TyJYI2izxlDAFaHoDI=;
+        b=i1kE4vzt2f/t9G9UipAYtp/r43L4X2m4RsNEPQ4ji5HTT8Zv/IXV7lcSiUxifcDFMO
+         gfv0G0x4NCfU5k5G90/wt+EhepxsBwe/MGVeqxlIbCqJmZIcsSbSaBceggUCgudJyeWV
+         L7iJjFngAc9ozec1ifhqFV3bCZUJZLncAa9PDc89wUB88du1X9OI6cfggy9YJgjAH7E5
+         OswNxUvETYMq8IzxoHrpHHsNo4qKc6NrLny2I0CfIobInuUU7A2oqHDUHY154F85ktr6
+         K3QA+Pi3EmPpWxEwKpCKDpzj+RZmgFdIMoM7QbCpKdyxxGsnXoznW7RkYQpEIM5+1hAe
+         ubaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681917174; x=1684509174;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgyelK5AQ23WEMgFpi3kd5xccNHQg9qlLU9me3qruqc=;
-        b=GTQhztCuWTqhDFcyi25lhhUCe2AMwD1srg/tSi5qdZe+RwzFrY+45/nRmjoJE2RoH0
-         t8dAyzSyZLwfTJ+r3ewXD+3V/6TM9SPsMav6VNFVG3eA8/ynNG3Qvn/SclG6Wo79rOnI
-         0Q0nqQk/hsJdx4AmryZf7Z15xaRyH4D8x5zGZ+7S9E+1l+kXvtQLqsGZHt8w6F8NfUyi
-         IikQwFGo0epF3snKA1tHMC4FfEuneqNlqHD1/AwVLC6x1KMMR12pucW6P4S2jlZxqa5R
-         Llp7Qo2ifcpYQY7h3dmgVEuE8nIdJbieyOn05txqzhVO/iADpwjn73eiySHrReqh60dZ
-         lRMQ==
-X-Gm-Message-State: AAQBX9eJqxYzq2puJMEMhsPx/HWMLhnraO8hUSCIyZib4htrYOf4lq42
-        7peYp5Ln8OF7BDcMknOCSc6LmTSQuhM=
-X-Google-Smtp-Source: AKy350awz6n7FOg5Rw2v9NM8srBe9A3NuVktARJJazMCjt4MxwWpj3dQqc0VVBPRBC4xY6DXAyWnTQ==
-X-Received: by 2002:aca:db56:0:b0:38e:4e96:1292 with SMTP id s83-20020acadb56000000b0038e4e961292mr1367292oig.3.1681917174004;
-        Wed, 19 Apr 2023 08:12:54 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681917175; x=1684509175;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2uw6cJJOj4NpjhqsMBl9W9u80TyJYI2izxlDAFaHoDI=;
+        b=LIov0WGDVqmBAR5O9BzThkYOkUuLwTWFMgRBv9V4W14JlSv2uGYwDLhKMDVQ0zitEd
+         VoujBb8GGLiHpFuTOWqkaUmaNjakgKxMPpuYvgyeF/Bgn6RiPpXKtiq/WF4DMmkQ7t0O
+         Ma6ZM/sujwdHxMZVyJ8VJporHV4PQj2bjjnKPy0y61fTPMU5+OaMiS/HrT+fX0HBAF8a
+         SL7qBsa/rCHvJNRc8nIEJOHmVVoSKj6TckUlipujgRhW1mnwlneki5CGILUcaKWW3jC3
+         HxHJOSC4Ts1pFqX/mupGvMdhyC4vCfk+mMgDZGNPIW9gWcImpqzDgGea4ExfQlAAKOeo
+         wqjw==
+X-Gm-Message-State: AAQBX9cBh9GszOCSQZjm2Ohmipt/UONBA6Ng6AS82DZsxqVHHTNoCpJ1
+        9kL09NOc6SuKQvntcrHaFuknjHOBe+w=
+X-Google-Smtp-Source: AKy350aCvE6JBwLsGP05LGV69QuEFTx0apH2l++wlH1wejpzrorncbZtXH0kz6sHZLSIIK6nIbW1Hw==
+X-Received: by 2002:a05:6808:9:b0:37f:aa3f:7218 with SMTP id u9-20020a056808000900b0037faa3f7218mr2849073oic.27.1681917175023;
+        Wed, 19 Apr 2023 08:12:55 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:e175:6963:338:7453])
-        by smtp.gmail.com with ESMTPSA id o10-20020acad70a000000b0038bae910f7bsm5766847oig.1.2023.04.19.08.12.52
+        by smtp.gmail.com with ESMTPSA id o10-20020acad70a000000b0038bae910f7bsm5766847oig.1.2023.04.19.08.12.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 08:12:53 -0700 (PDT)
+        Wed, 19 Apr 2023 08:12:54 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v10 00/14] HP BIOSCFG driver
-Date:   Wed, 19 Apr 2023 10:12:40 -0500
-Message-Id: <20230419151249.6126-1-jorge.lopez2@hp.com>
+Subject: [PATCH v10 01/14] HP BIOSCFG driver - Documentation
+Date:   Wed, 19 Apr 2023 10:12:41 -0500
+Message-Id: <20230419151249.6126-2-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230419151249.6126-1-jorge.lopez2@hp.com>
+References: <20230419151249.6126-1-jorge.lopez2@hp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -99,100 +103,158 @@ string that the BIOS will use to verify authorization to modify the
 setting.
 
 Linux Security components are under development and not published yet.
-The only linux component is the driver (hp bioscfg) at this time. 
+The only linux component is the driver (hp bioscfg) at this time.
 Other published security components are under Windows.
 
 Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
 ---
 Based on the latest platform-drivers-x86.git/for-next
+---
+ .../testing/sysfs-class-firmware-attributes   | 98 ++++++++++++++++++-
+ 1 file changed, 96 insertions(+), 2 deletions(-)
 
-History
-
-Version 10
-	Break down changes to single files per patch
-	Removed SPM/statusbin support
-	Patches
-	 Documentation
-	 biosattr-interface
-	 bioscfg
-	 int-attributes
-	 ordered-attributes
-	 passwdobj-attributes
-	 string-attributes
-	 bioscfg-h
-	 enum-attributes
-	 passwdattr-interface
-	 spmobj-attributes
-	 surestart-attributes
-	 Makefile ../hp/Makefile ../hp/Kconfig
-	 MAINTAINERS
-
-Version 9
-	Includes only sysfs-class-firmware-attributes documentation
-
-Version 8
-	Includes only sysfs-class-firmware-attributes documentation
-
-Version 7
-	Includes only sysfs-class-firmware-attributes documentation 
-
-Version 6
-	Breaks down the changes into 4 patches
-	SureAdmin-attributes was removed
-
-Version 5
-	Remove version 4 patch 1
-	Address review changes proposed in Version 4
-	Reorganize all patches number and file order
-
-
-Jorge Lopez (14):
-  HP BIOSCFG driver - Documentation
-  HP BIOSCFG driver  - biosattr-interface
-  HP BIOSCFG driver  - bioscfg
-  HP BIOSCFG driver  - int-attributes
-  HP BIOSCFG driver  - ordered-attributes
-  HP BIOSCFG driver  - passwdobj-attributes
-  HP BIOSCFG driver  - string-attributes
-  HP BIOSCFG driver  - bioscfg-h
-  HP BIOSCFG driver  - enum-attributes
-  HP BIOSCFG driver  - passwdattr-interface
-  HP BIOSCFG driver  - spmobj-attributes
-  HP BIOSCFG driver  - surestart-attributes
-  HP BIOSCFG driver  - Makefile
-  HP BIOSCFG driver  - MAINTAINERS
-
- .../testing/sysfs-class-firmware-attributes   |  98 +-
- MAINTAINERS                                   |   6 +
- drivers/platform/x86/hp/Kconfig               |  16 +
- drivers/platform/x86/hp/Makefile              |   1 +
- drivers/platform/x86/hp/hp-bioscfg/Makefile   |  13 +
- .../x86/hp/hp-bioscfg/biosattr-interface.c    | 305 ++++++
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 961 ++++++++++++++++++
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  | 613 +++++++++++
- .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++
- .../x86/hp/hp-bioscfg/int-attributes.c        | 474 +++++++++
- .../x86/hp/hp-bioscfg/ordered-attributes.c    | 563 ++++++++++
- .../x86/hp/hp-bioscfg/passwdattr-interface.c  |  51 +
- .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 668 ++++++++++++
- .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 405 ++++++++
- .../x86/hp/hp-bioscfg/string-attributes.c     | 451 ++++++++
- .../x86/hp/hp-bioscfg/surestart-attributes.c  | 130 +++
- 16 files changed, 5296 insertions(+), 2 deletions(-)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 4cdba3477176..73d7b8fbc0b2 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -22,6 +22,12 @@ Description:
+ 			- integer: a range of numerical values
+ 			- string
+ 
++		HP specific types
++		-----------------
++			- ordered-list - a set of ordered list valid values
++			- sure-start - report audit logs read from BIOS
++
++
+ 		All attribute types support the following values:
+ 
+ 		current_value:
+@@ -126,6 +132,44 @@ Description:
+ 					value will not be effective through sysfs until this rule is
+ 					met.
+ 
++		HP specific class extensions
++		------------------------------
++
++		On HP systems the following additional attributes are available:
++
++		"ordered-list"-type specific properties:
++
++		elements:
++					A file that can be read to obtain the possible
++					list of values of the <attr>. Values are separated using
++					semi-colon (``;``). The order individual elements are listed
++					according to their priority.  An Element listed first has the
++					highest priority. Writing the list in a different order to
++					current_value alters the priority order for the particular
++					attribute.
++
++		"sure-start"-type specific properties:
++
++		audit_log_entries:
++					A read-only file that returns the events in the log.
++					Values are separated using semi-colon (``;``)
++
++					Audit log entry format
++
++					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
++					Byte 16-127: Unused
++
++		audit_log_entry_count:
++					A read-only file that returns the number of existing audit log events available to be read.
++					Values are separated using comma (``,``)
++
++					[No of entries],[log entry size],[Max number of entries supported]
++
++					log entry size identifies audit log size for the current BIOS version.
++					The current size is 16 bytes but it can be to up to 128 bytes long
++					in future BIOS versions.
++
++
+ What:		/sys/class/firmware-attributes/*/authentication/
+ Date:		February 2021
+ KernelVersion:	5.11
+@@ -206,7 +250,7 @@ Description:
+ 		Drivers may emit a CHANGE uevent when a password is set or unset
+ 		userspace may check it again.
+ 
+-		On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
++		On Dell, Lenovo and HP systems, if Admin password is set, then all BIOS attributes
+ 		require password validation.
+ 		On Lenovo systems if you change the Admin password the new password is not active until
+ 		the next boot.
+@@ -296,6 +340,15 @@ Description:
+ 						echo "signature" > authentication/Admin/signature
+ 						echo "password" > authentication/Admin/certificate_to_password
+ 
++		HP specific class extensions
++		--------------------------------
++
++		On HP systems the following additional settings are available:
++
++		role: enhanced-bios-auth:
++					This role is specific to Secure Platform Management (SPM) attribute.
++					It requires configuring an endorsement (kek) and signing certificate (sk).
++
+ 
+ What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+ Date:		February 2021
+@@ -311,7 +364,7 @@ Description:
+ 			==	=========================================
+ 			0	All BIOS attributes setting are current
+ 			1	A reboot is necessary to get pending BIOS
+-			        attribute changes applied
++				attribute changes applied
+ 			==	=========================================
+ 
+ 		Note, userspace applications need to follow below steps for efficient
+@@ -364,3 +417,44 @@ Description:
+ 		use it to enable extra debug attributes or BIOS features for testing purposes.
+ 
+ 		Note that any changes to this attribute requires a reboot for changes to take effect.
++
++
++		HP specific class extensions - Secure Platform Manager (SPM)
++		--------------------------------
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'kek' Key-Encryption-Key is a write-only file that can be used to configure the
++		RSA public key that will be used by the BIOS to verify
++		signatures when setting the signing key.  When written,
++		the bytes should correspond to the KEK certificate
++		(x509 .DER format containing an OU).  The size of the
++		certificate must be less than or equal to 4095 bytes.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'sk' Signature Key is a write-only file that can be used to configure the RSA
++		public key that will be used by the BIOS to verify signatures
++		when configuring BIOS settings and security features.  When
++		written, the bytes should correspond to the modulus of the
++		public key.  The exponent is assumed to be 0x10001.
++
++
++What:		/sys/class/firmware-attributes/*/authentication/SPM/status
++Date:		March 29
++KernelVersion:	5.18
++Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
++Description:	'status' is a read-only file that returns ASCII text in JSON format reporting
++		the status information.
++
++		  "State": "not provisioned | provisioned | provisioning in progress ",
++		  "Version": " Major. Minor ",
++		  "Nonce": <16-bit unsigned number display in base 10>,
++		  "FeaturesInUse": <16-bit unsigned number display in base 10>,
++		  "EndorsementKeyMod": "<256 bytes in base64>",
++		  "SigningKeyMod": "<256 bytes in base64>"
 -- 
 2.34.1
 
