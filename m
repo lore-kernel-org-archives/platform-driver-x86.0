@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7AAC7EE20
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Apr 2023 15:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60866C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 Apr 2023 15:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233317AbjDSPNK (ORCPT
+        id S233222AbjDSPNJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 Apr 2023 11:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Wed, 19 Apr 2023 11:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233082AbjDSPNG (ORCPT
+        with ESMTP id S233019AbjDSPNC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Apr 2023 11:13:06 -0400
-Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3A91988;
-        Wed, 19 Apr 2023 08:13:03 -0700 (PDT)
-Received: by mail-oo1-xc2e.google.com with SMTP id w5-20020a4ae9e5000000b0054711c8ad6fso758136ooc.1;
-        Wed, 19 Apr 2023 08:13:03 -0700 (PDT)
+        Wed, 19 Apr 2023 11:13:02 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1F14489;
+        Wed, 19 Apr 2023 08:12:59 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-38ba6bd5a79so1268585b6e.2;
+        Wed, 19 Apr 2023 08:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681917183; x=1684509183;
+        d=gmail.com; s=20221208; t=1681917179; x=1684509179;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ozalp3KCLsv/1XGFew3iV1PCSC100UuMGxEjJVQkDCM=;
-        b=Zvx9BSFPu88+oMDbmj19SIyNMG2OaPkOmrq2Ful32HyvPvPbu+Uug1IAQEHnzlpgvL
-         oOihRcGLkc4WbVYEbHQsjNlKTQtsgKEfkrcO6uRUfKldtoJAxj9OGdKR4NoD3HPDjOPN
-         lwYmxLjibUyeIYe6dnkl/cIp4PW+S8zW6snf6i8V6JntQcTtBuf7jWWYsRfb8Xac1BFI
-         wF/mDQVrfpo26rCdUXI6rzKmGJpSo3u69rS5+Mgk1IdCgWWdr1KAmuk72DHSMQWD/Jvc
-         pb+GFDeI7hWJdYTzGfbiulsDQfnG5tTey1+7wFirZjbdI+o4hzIkHt+HosVamGyixMvP
-         Je4A==
+        bh=gT36Agbu21+vDf9VnVykQzz3eSgEq82FyIGTKTVofkg=;
+        b=rqpfhfMCFTTw4ls3creQrBctZkN7Knkn1bVrUZFVevZgf4PUE92Df52o+N2/CQVOaT
+         /4nvnnLsizFCUYOUetjXZeUgWm8JnsmxCgM6hm/p4RAEqD5fOk7lqFoQoRUEVtkJ52Fn
+         YKx2fy/n8sc9DCcNGgMCMBviuDBBWEMETiGd23V0w3AHCcqdiCVBvP3L3UJ/G8SO4Y2k
+         Hh8q7Lh0E6LjG8Rp8PzeK5U9+8Fs4dWKc3uClLxrQ4HfLyJm1DwiMskNR97QLbYzPViE
+         /686/LZ89YzP7dvqz5ZYYIlcD2LutAS29B/zcEV1R/BHutqJg8Ih9a24SA4y0YTdWQ1U
+         Sj+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681917183; x=1684509183;
+        d=1e100.net; s=20221208; t=1681917179; x=1684509179;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ozalp3KCLsv/1XGFew3iV1PCSC100UuMGxEjJVQkDCM=;
-        b=W/R+pOv1/bV2OCo7jCAQlVQcP72Fg2OUKrRRL8RSTOy8UcntEL75TYALUkBAS7fehY
-         +gsQp9yKaM3Mc41z7usY3xbnsZE6lk8rR5V/E1Avo969ZRrJleyPWOwqLB083rKeq2Do
-         BvqNT8fNbnr63pyxINsbjh7UrktZjB5q/UetgYJ87b6f0mphfK8rIH5lMSyAInBY46Z4
-         I6k2AJ/HCYlty02xn8S4KNo50dkKbhPqHV6myxKRmgh+bPmgsEbwlKDYpjLnRwddWSYy
-         r+1jmTntvY4IA99kf5G20lETSJ7+iyLiFKknwHnEvGd2+B26NHZPPNIh8GybsIwYGFSp
-         jAaQ==
-X-Gm-Message-State: AAQBX9f5cGIrPFtoHyAV2LG8vUHH5jLFJlENaZ+femXE/4Bd6aCQ4k8r
-        wggGv1RwEOntKp0s8Y60AWs=
-X-Google-Smtp-Source: AKy350ZuCF8tXMm9VCM6l46M3r994LDNkV4ujuFvk3DxxEUCG6mMW0AyP6+W2Tk6L/QfEO5ml23uDg==
-X-Received: by 2002:a4a:88c7:0:b0:537:f9d4:a44c with SMTP id q7-20020a4a88c7000000b00537f9d4a44cmr106642ooh.5.1681917182429;
-        Wed, 19 Apr 2023 08:13:02 -0700 (PDT)
+        bh=gT36Agbu21+vDf9VnVykQzz3eSgEq82FyIGTKTVofkg=;
+        b=aU8lUACBC/fRz67uEATKYcb3PP05ShwK0OXQuh+x9Pri6G8DEgyzWEtz19aKDzE6FM
+         N9lszVPwTR0YcKYm0+og4mNYv72dSuNNERvBRdY5m5nnKtsmqH5QWNu44PZKYsi3NLAO
+         473bFg7tYsJKyHjiBhbz8Kxj8gwpTLfsnIm0xJMYx7YTlAmiU1YlNo33YCyWXvDhxXaT
+         lUYF5bSAGL6oNFZYRE9L5mVDA+9yKchq6kjALUkRCR3y3L9FqCpwDsLzVEaZ9koXYzpf
+         x30ppuK1vrmHyjWERMMHO3l+8KfXfhHR/liGXi6lM4quuIomaSMEbpREjcK7Ob+iKJ3+
+         PaDQ==
+X-Gm-Message-State: AAQBX9c5zvPx3D5RiwSPGBZ708Io2rpMtPSZLz2tNSV4kImum3ZGKS9y
+        xvyX27Xwbeopyoc4OzCjUXM=
+X-Google-Smtp-Source: AKy350a3UZ2JP/+2TFUwziWq+4DD22d6BgHdHZq1XEZz3Xq6imjMVZi4ZE25fFEfaneg9VqKiSRUtA==
+X-Received: by 2002:aca:320b:0:b0:38c:683d:3581 with SMTP id y11-20020aca320b000000b0038c683d3581mr2734611oiy.59.1681917178784;
+        Wed, 19 Apr 2023 08:12:58 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:e175:6963:338:7453])
-        by smtp.gmail.com with ESMTPSA id o10-20020acad70a000000b0038bae910f7bsm5766847oig.1.2023.04.19.08.13.01
+        by smtp.gmail.com with ESMTPSA id o10-20020acad70a000000b0038bae910f7bsm5766847oig.1.2023.04.19.08.12.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 08:13:02 -0700 (PDT)
+        Wed, 19 Apr 2023 08:12:58 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v10 07/14] HP BIOSCFG driver  - string-attributes
-Date:   Wed, 19 Apr 2023 10:12:47 -0500
-Message-Id: <20230419151249.6126-8-jorge.lopez2@hp.com>
+Subject: [PATCH v10 04/14] HP BIOSCFG driver  - int-attributes
+Date:   Wed, 19 Apr 2023 10:12:44 -0500
+Message-Id: <20230419151249.6126-5-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230419151249.6126-1-jorge.lopez2@hp.com>
 References: <20230419151249.6126-1-jorge.lopez2@hp.com>
@@ -111,145 +111,158 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/string-attributes.c     | 451 ++++++++++++++++++
- 1 file changed, 451 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ .../x86/hp/hp-bioscfg/int-attributes.c        | 474 ++++++++++++++++++
+ 1 file changed, 474 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 new file mode 100644
-index 000000000000..7a14585d5506
+index 000000000000..d8ee39dac3f9
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -0,0 +1,451 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+@@ -0,0 +1,474 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to string type attributes under
-+ * HP_WMI_BIOS_STRING_GUID for use with hp-bioscfg driver.
++ * Functions corresponding to integer type attributes under
++ * BIOS Enumeration GUID for use with hp-bioscfg driver.
 + *
-+ * Copyright (c) 2022 HP Development Company, L.P.
++ *  Copyright (c) 2022 Hewlett-Packard Inc.
 + */
 +
 +#include "bioscfg.h"
 +
-+#define WMI_STRING_TYPE "HPBIOS_BIOSString"
-+
-+GET_INSTANCE_ID(string);
++GET_INSTANCE_ID(integer);
 +
 +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	int instance_id = get_string_instance_id(kobj);
++	int instance_id = get_integer_instance_id(kobj);
 +
 +	if (instance_id < 0)
-+		return -EIO;
++		return instance_id;
 +
-+	return  sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.string_data[instance_id].current_value);
++	return sysfs_emit(buf, "%d\n",
++			  bioscfg_drv.integer_data[instance_id].current_value);
 +}
 +
 +/*
-+ * validate_string_input() -
-+ * Validate input of current_value against min and max lengths
++ * validate_integer_input() -
++ * Validate input of current_value against lower and upper bound
 + *
 + * @instance_id: The instance on which input is validated
 + * @buf: Input value
 + */
-+static int validate_string_input(int instance_id, const char *buf)
++static int validate_integer_input(int instance_id, char *buf)
 +{
-+	int in_len = strlen(buf);
++	int in_val;
++	int ret;
++
 +
 +	/* BIOS treats it as a read only attribute */
-+	if (bioscfg_drv.string_data[instance_id].common.is_readonly)
++	if (bioscfg_drv.integer_data[instance_id].common.is_readonly)
 +		return -EIO;
 +
-+	if ((in_len < bioscfg_drv.string_data[instance_id].min_length) ||
-+	    (in_len > bioscfg_drv.string_data[instance_id].max_length))
++	ret = kstrtoint(buf, 10, &in_val);
++	if (ret < 0)
++		return ret;
++
++
++	if (in_val < bioscfg_drv.integer_data[instance_id].lower_bound ||
++	    in_val > bioscfg_drv.integer_data[instance_id].upper_bound)
 +		return -ERANGE;
 +
 +	/*
 +	 * set pending reboot flag depending on
 +	 * "RequiresPhysicalPresence" value
 +	 */
-+	if (bioscfg_drv.string_data[instance_id].common.requires_physical_presence)
++	if (bioscfg_drv.integer_data[instance_id].common.requires_physical_presence)
 +		bioscfg_drv.pending_reboot = true;
 +	return 0;
 +}
 +
-+static void update_string_value(int instance_id, char *attr_value)
++static void update_integer_value(int instance_id, char *attr_value)
 +{
-+	/* Write settings to BIOS */
-+	strscpy(bioscfg_drv.string_data[instance_id].current_value,
-+		attr_value,
-+		sizeof(bioscfg_drv.string_data[instance_id].current_value));
++	int in_val;
++	int ret;
++
++	ret = kstrtoint(attr_value, 10, &in_val);
++	if (ret == 0)
++		bioscfg_drv.integer_data[instance_id].current_value = in_val;
 +}
 +
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, string);
-+static struct kobj_attribute string_display_langcode =
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, integer);
++static struct kobj_attribute integer_display_langcode =
 +	__ATTR_RO(display_name_language_code);
 +
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, string);
-+static struct kobj_attribute string_display_name =
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, integer);
++static struct kobj_attribute integer_display_name =
 +	__ATTR_RO(display_name);
 +
-+ATTRIBUTE_PROPERTY_STORE(current_value, string);
-+static struct kobj_attribute string_current_val =
++ATTRIBUTE_PROPERTY_STORE(current_value, integer);
++static struct kobj_attribute integer_current_val =
 +	__ATTR_RW_MODE(current_value, 0644);
 +
-+ATTRIBUTE_N_PROPERTY_SHOW(min_length, string);
-+static struct kobj_attribute string_min_length =
-+	__ATTR_RO(min_length);
++ATTRIBUTE_N_PROPERTY_SHOW(lower_bound, integer);
++static struct kobj_attribute integer_lower_bound =
++	__ATTR_RO(lower_bound);
 +
-+ATTRIBUTE_N_PROPERTY_SHOW(max_length, string);
-+static struct kobj_attribute string_max_length =
-+	__ATTR_RO(max_length);
++ATTRIBUTE_N_PROPERTY_SHOW(upper_bound, integer);
++static struct kobj_attribute integer_upper_bound =
++	__ATTR_RO(upper_bound);
 +
-+ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, string);
-+static struct kobj_attribute  string_prerequisites_size_val =
-+		__ATTR_RO(prerequisites_size);
++ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, integer);
++static struct kobj_attribute  integer_prerequisites_size_val =
++	__ATTR_RO(prerequisites_size);
 +
-+ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, string);
-+static struct kobj_attribute  string_prerequisites_val =
-+		__ATTR_RO(prerequisites);
++ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, integer);
++static struct kobj_attribute  integer_prerequisites_val =
++	__ATTR_RO(prerequisites);
++
++ATTRIBUTE_N_PROPERTY_SHOW(scalar_increment, integer);
++static struct kobj_attribute integer_scalar_increment =
++	__ATTR_RO(scalar_increment);
 +
 +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
 +			 char *buf)
 +{
-+	return sysfs_emit(buf, "string\n");
++	return sysfs_emit(buf, "integer\n");
 +}
-+static struct kobj_attribute string_type =
++static struct kobj_attribute integer_type =
 +	__ATTR_RO(type);
 +
-+static struct attribute *string_attrs[] = {
-+	&string_display_langcode.attr,
-+	&string_display_name.attr,
-+	&string_current_val.attr,
-+	&string_min_length.attr,
-+	&string_max_length.attr,
-+	&string_prerequisites_size_val.attr,
-+	&string_prerequisites_val.attr,
-+	&string_type.attr,
++static struct attribute *integer_attrs[] = {
++	&integer_display_langcode.attr,
++	&integer_display_name.attr,
++	&integer_current_val.attr,
++	&integer_lower_bound.attr,
++	&integer_upper_bound.attr,
++	&integer_scalar_increment.attr,
++	&integer_prerequisites_size_val.attr,
++	&integer_prerequisites_val.attr,
++	&integer_type.attr,
 +	NULL
 +};
 +
-+static const struct attribute_group string_attr_group = {
-+	.attrs = string_attrs,
++static const struct attribute_group integer_attr_group = {
++	.attrs = integer_attrs,
 +};
 +
-+int alloc_string_data(void)
++int alloc_integer_data(void)
 +{
 +	int ret = 0;
 +
-+	bioscfg_drv.string_instances_count = get_instance_count(HP_WMI_BIOS_STRING_GUID);
-+	bioscfg_drv.string_data = kcalloc(bioscfg_drv.string_instances_count,
-+					  sizeof(struct string_data), GFP_KERNEL);
-+	if (!bioscfg_drv.string_data) {
-+		bioscfg_drv.string_instances_count = 0;
++	bioscfg_drv.integer_instances_count = get_instance_count(HP_WMI_BIOS_INTEGER_GUID);
++	bioscfg_drv.integer_data = kcalloc(bioscfg_drv.integer_instances_count,
++					   sizeof(struct integer_data), GFP_KERNEL);
++
++	if (!bioscfg_drv.integer_data) {
++		bioscfg_drv.integer_instances_count = 0;
 +		ret = -ENOMEM;
 +	}
 +	return ret;
 +}
 +
 +/* Expected Values types associated with each element */
-+static const acpi_object_type expected_string_types[] = {
++static const acpi_object_type expected_integer_types[] = {
 +	[NAME] = ACPI_TYPE_STRING,
 +	[VALUE] = ACPI_TYPE_STRING,
 +	[PATH] = ACPI_TYPE_STRING,
@@ -260,40 +273,39 @@ index 000000000000..7a14585d5506
 +	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
 +	[PREREQUISITES] = ACPI_TYPE_STRING,
 +	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[STR_MIN_LENGTH] = ACPI_TYPE_INTEGER,
-+	[STR_MAX_LENGTH] = ACPI_TYPE_INTEGER
++	[INT_LOWER_BOUND] = ACPI_TYPE_INTEGER,
++	[INT_UPPER_BOUND] = ACPI_TYPE_INTEGER,
++	[INT_SCALAR_INCREMENT] = ACPI_TYPE_INTEGER
 +};
 +
 +/*
-+ * populate_string_package_data() -
-+ * Populate all properties of an instance under string attribute
++ * populate_int_data() -
++ * Populate all properties of an instance under integer attribute
 + *
-+ * @string_obj: ACPI object with string data
++ * @integer_obj: ACPI object with integer data
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int populate_string_package_data(union acpi_object *string_obj,
-+				 int instance_id,
-+				 struct kobject *attr_name_kobj)
++int populate_integer_package_data(union acpi_object *integer_obj,
++				  int instance_id,
++				  struct kobject *attr_name_kobj)
 +{
-+	bioscfg_drv.string_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	populate_string_elements_from_package(string_obj,
-+					      string_obj->package.count,
-+					      instance_id);
-+
-+	update_attribute_permissions(bioscfg_drv.string_data[instance_id].common.is_readonly,
-+				     &string_current_val);
-+	friendly_user_name_update(bioscfg_drv.string_data[instance_id].common.path,
++	bioscfg_drv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
++	populate_integer_elements_from_package(integer_obj,
++					       integer_obj->package.count,
++					       instance_id);
++	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].common.is_readonly,
++				     &integer_current_val);
++	friendly_user_name_update(bioscfg_drv.integer_data[instance_id].common.path,
 +				  attr_name_kobj->name,
-+				  bioscfg_drv.string_data[instance_id].common.display_name,
-+				  sizeof(bioscfg_drv.string_data[instance_id].common.display_name));
-+	return sysfs_create_group(attr_name_kobj, &string_attr_group);
++				  bioscfg_drv.integer_data[instance_id].common.display_name,
++				  sizeof(bioscfg_drv.integer_data[instance_id].common.display_name));
++	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
 +}
 +
-+int populate_string_elements_from_package(union acpi_object *string_obj,
-+					  int string_obj_count,
-+					  int instance_id)
++int populate_integer_elements_from_package(union acpi_object *integer_obj,
++					   int integer_obj_count,
++					   int instance_id)
 +{
 +	char *str_value = NULL;
 +	int value_len;
@@ -304,71 +316,72 @@ index 000000000000..7a14585d5506
 +	int reqs;
 +	int eloc;
 +
-+	if (!string_obj)
++	if (!integer_obj)
 +		return -EINVAL;
 +
-+	strscpy(bioscfg_drv.string_data[instance_id].common.display_name_language_code,
++	strscpy(bioscfg_drv.integer_data[instance_id].common.display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.string_data[instance_id].common.display_name_language_code));
++		sizeof(bioscfg_drv.integer_data[instance_id].common.display_name_language_code));
 +
-+	for (elem = 1, eloc = 1; elem < string_obj_count; elem++, eloc++) {
++	for (elem = 1, eloc = 1; elem < integer_obj_count; elem++, eloc++) {
 +
-+		/* ONLY look at the first STRING_ELEM_CNT elements */
-+		if (eloc == STRING_ELEM_CNT)
-+			goto exit_string_package;
++		/* ONLY look at the first INTEGER_ELEM_CNT elements */
++		if (eloc == INTEGER_ELEM_CNT)
++			goto exit_integer_package;
 +
-+		switch (string_obj[elem].type) {
++		switch (integer_obj[elem].type) {
 +		case ACPI_TYPE_STRING:
 +
 +			if (elem != PREREQUISITES) {
-+				ret = convert_hexstr_to_str(string_obj[elem].string.pointer,
-+							    string_obj[elem].string.length,
++				ret = convert_hexstr_to_str(integer_obj[elem].string.pointer,
++							    integer_obj[elem].string.length,
 +							    &str_value, &value_len);
-+
 +				if (ret)
 +					continue;
 +			}
 +			break;
 +		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)string_obj[elem].integer.value;
++			int_value = (u32)integer_obj[elem].integer.value;
 +			break;
 +		default:
-+			pr_warn("Unsupported object type [%d]\n", string_obj[elem].type);
++			pr_warn("Unsupported object type [%d]\n", integer_obj[elem].type);
 +			continue;
 +		}
-+
 +		/* Check that both expected and read object type match */
-+		if (expected_string_types[eloc] != string_obj[elem].type) {
++		if (expected_integer_types[eloc] != integer_obj[elem].type) {
 +			pr_err("Error expected type %d for elem  %d, but got type %d instead\n",
-+			       expected_string_types[eloc], elem, string_obj[elem].type);
++			       expected_integer_types[eloc], elem, integer_obj[elem].type);
 +			return -EIO;
 +		}
-+
 +		/* Assign appropriate element value to corresponding field*/
 +		switch (eloc) {
 +		case VALUE:
-+			strscpy(bioscfg_drv.string_data[instance_id].current_value,
-+				str_value, sizeof(bioscfg_drv.string_data[instance_id].current_value));
++			ret = kstrtoint(str_value, 10, &int_value);
++			if (ret)
++				continue;
++
++			bioscfg_drv.integer_data[instance_id].current_value = int_value;
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.string_data[instance_id].common.path, str_value,
-+				sizeof(bioscfg_drv.string_data[instance_id].common.path));
++			strscpy(bioscfg_drv.integer_data[instance_id].common.path, str_value,
++				sizeof(bioscfg_drv.integer_data[instance_id].common.path));
 +			break;
 +		case IS_READONLY:
-+			bioscfg_drv.string_data[instance_id].common.is_readonly = int_value;
++			bioscfg_drv.integer_data[instance_id].common.is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.string_data[instance_id].common.display_in_ui = int_value;
++			bioscfg_drv.integer_data[instance_id].common.display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.string_data[instance_id].common.requires_physical_presence = int_value;
++			bioscfg_drv.integer_data[instance_id].common.requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.string_data[instance_id].common.sequence = int_value;
++			bioscfg_drv.integer_data[instance_id].common.sequence = int_value;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			bioscfg_drv.string_data[instance_id].common.prerequisites_size = int_value;
-+			if (size > MAX_PREREQUISITES_SIZE)
++			bioscfg_drv.integer_data[instance_id].common.prerequisites_size = int_value;
++
++			if (int_value > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
 +			/*
 +			 * This HACK is needed to keep the expected
@@ -381,196 +394,206 @@ index 000000000000..7a14585d5506
 +				eloc++;
 +			break;
 +		case PREREQUISITES:
-+			size = bioscfg_drv.string_data[instance_id].common.prerequisites_size;
++			size = bioscfg_drv.integer_data[instance_id].common.prerequisites_size;
 +
 +			for (reqs = 0; reqs < size && reqs < MAX_PREREQUISITES_SIZE; reqs++) {
-+				if (elem >= string_obj_count) {
++				if (elem >= integer_obj_count) {
 +					pr_err("Error elem-objects package is too small\n");
 +					return -EINVAL;
 +				}
 +
-+				ret = convert_hexstr_to_str(string_obj[elem + reqs].string.pointer,
-+							    string_obj[elem + reqs].string.length,
++				ret = convert_hexstr_to_str(integer_obj[elem + reqs].string.pointer,
++							    integer_obj[elem + reqs].string.length,
 +							    &str_value, &value_len);
 +
 +				if (ret)
 +					continue;
 +
-+				strscpy(bioscfg_drv.string_data[instance_id].common.prerequisites[reqs],
++				strscpy(bioscfg_drv.integer_data[instance_id].common.prerequisites[reqs],
 +					str_value,
-+					sizeof(bioscfg_drv.string_data[instance_id].common.prerequisites[reqs]));
++					sizeof(bioscfg_drv.integer_data[instance_id].common.prerequisites[reqs]));
 +				kfree(str_value);
 +			}
 +			break;
 +
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.string_data[instance_id].common.security_level = int_value;
++			bioscfg_drv.integer_data[instance_id].common.security_level = int_value;
 +			break;
-+		case STR_MIN_LENGTH:
-+			bioscfg_drv.string_data[instance_id].min_length = int_value;
++		case INT_LOWER_BOUND:
++			bioscfg_drv.integer_data[instance_id].lower_bound = int_value;
 +			break;
-+		case STR_MAX_LENGTH:
-+			bioscfg_drv.string_data[instance_id].max_length = int_value;
++		case INT_UPPER_BOUND:
++			bioscfg_drv.integer_data[instance_id].upper_bound = int_value;
++			break;
++		case INT_SCALAR_INCREMENT:
++			bioscfg_drv.integer_data[instance_id].scalar_increment = int_value;
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
 +			break;
 +		}
-+
-+		kfree(str_value);
 +	}
-+
-+exit_string_package:
++exit_integer_package:
 +	kfree(str_value);
 +	return 0;
 +}
 +
++
 +/*
-+ * populate_string_data() -
-+ * Populate all properties of an instance under string attribute
++ * populate_integer_buffer_data() -
++ * Populate all properties of an instance under integer attribute
 + *
 + * @buffer_ptr: Buffer pointer
 + * @buffer_size: Buffer size
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+				int instance_id,
-+				struct kobject *attr_name_kobj)
++int populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
++				 struct kobject *attr_name_kobj)
 +{
-+	bioscfg_drv.string_data[instance_id].attr_name_kobj = attr_name_kobj;
++	bioscfg_drv.integer_data[instance_id].attr_name_kobj = attr_name_kobj;
 +
-+	populate_string_elements_from_buffer(buffer_ptr, buffer_size,
-+					     instance_id);
-+
-+	update_attribute_permissions(bioscfg_drv.string_data[instance_id].common.is_readonly,
-+				     &string_current_val);
-+	friendly_user_name_update(bioscfg_drv.string_data[instance_id].common.path,
++	/* Populate integer elements */
++	populate_integer_elements_from_buffer(buffer_ptr, buffer_size,
++					      instance_id);
++	update_attribute_permissions(bioscfg_drv.integer_data[instance_id].common.is_readonly,
++				     &integer_current_val);
++	friendly_user_name_update(bioscfg_drv.integer_data[instance_id].common.path,
 +				  attr_name_kobj->name,
-+				  bioscfg_drv.string_data[instance_id].common.display_name,
-+				  sizeof(bioscfg_drv.string_data[instance_id].common.display_name));
++				  bioscfg_drv.integer_data[instance_id].common.display_name,
++				  sizeof(bioscfg_drv.integer_data[instance_id].common.display_name));
 +
-+	return sysfs_create_group(attr_name_kobj, &string_attr_group);
++	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
 +}
 +
-+int populate_string_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+					 int instance_id)
++int populate_integer_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
++					  int instance_id)
 +{
-+	int ret;
 +	char *dst = NULL;
 +	int elem;
 +	int reqs;
-+	int int_value;
++	int integer;
 +	int size = 0;
++	int ret;
 +	int dst_size = *buffer_size / sizeof(u16);
 +
 +	dst = kcalloc(dst_size, sizeof(char), GFP_KERNEL);
 +	if (!dst)
 +		return -ENOMEM;
 +
-+	strscpy(bioscfg_drv.string_data[instance_id].common.display_name_language_code,
++	elem = 0;
++	strscpy(bioscfg_drv.integer_data[instance_id].common.display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.string_data[instance_id].common.display_name_language_code));
++		sizeof(bioscfg_drv.integer_data[instance_id].common.display_name_language_code));
 +
 +	for (elem = 1; elem < 3; elem++) {
++
 +		ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
-+		/* Ignore. Zero length string values */
 +		if (ret < 0)
 +			continue;
 +
 +		switch (elem) {
 +		case VALUE:
-+			strscpy(bioscfg_drv.string_data[instance_id].current_value,
-+				dst, sizeof(bioscfg_drv.string_data[instance_id].current_value));
++			ret = kstrtoint(dst, 10, &integer);
++			if (ret)
++				continue;
++
++			bioscfg_drv.integer_data[instance_id].current_value = integer;
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.string_data[instance_id].common.path, dst,
-+				sizeof(bioscfg_drv.string_data[instance_id].common.path));
++			strscpy(bioscfg_drv.integer_data[instance_id].common.path, dst,
++				sizeof(bioscfg_drv.integer_data[instance_id].common.path));
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +	}
 +
-+	for (elem = 3; elem < STRING_ELEM_CNT; elem++) {
++	for (elem = 3; elem < INTEGER_ELEM_CNT; elem++) {
++
 +		if (elem != PREREQUISITES) {
-+			ret = get_integer_from_buffer((int **)&buffer_ptr,
-+						      buffer_size,
-+						      (int *)&int_value);
++			ret = get_integer_from_buffer((int **)&buffer_ptr, buffer_size, (int *)&integer);
 +			if (ret < 0)
 +				continue;
 +		}
 +
 +		switch (elem) {
++
 +		case IS_READONLY:
-+			bioscfg_drv.string_data[instance_id].common.is_readonly = int_value;
++			bioscfg_drv.integer_data[instance_id].common.is_readonly = integer;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.string_data[instance_id].common.display_in_ui = int_value;
++			bioscfg_drv.integer_data[instance_id].common.display_in_ui = integer;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.string_data[instance_id].common.requires_physical_presence = int_value;
++			bioscfg_drv.integer_data[instance_id].common.requires_physical_presence = integer;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.string_data[instance_id].common.sequence = int_value;
++			bioscfg_drv.integer_data[instance_id].common.sequence = integer;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			bioscfg_drv.string_data[instance_id].common.prerequisites_size = int_value;
-+			if (int_value > MAX_PREREQUISITES_SIZE)
++			bioscfg_drv.integer_data[instance_id].common.prerequisites_size = integer;
++			size = integer;
++			if (size > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			break;
 +
-+		case PREREQUISITES:
-+			size = bioscfg_drv.string_data[instance_id].common.prerequisites_size;
-+			for (reqs = 0; reqs < size && reqs < MAX_PREREQUISITES_SIZE; reqs++) {
++			// PREREQUISITES:
++			elem++;
++			for (reqs = 0; reqs < size && reqs  < MAX_PREREQUISITES_SIZE; reqs++) {
 +				ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
-+				/* Ignore. Zero length string values */
 +				if (ret < 0)
 +					continue;
-+				strscpy(bioscfg_drv.string_data[instance_id].common.prerequisites[reqs],
++
++				strscpy(bioscfg_drv.integer_data[instance_id].common.prerequisites[reqs],
 +					dst,
-+					sizeof(bioscfg_drv.string_data[instance_id].common.prerequisites[reqs]));
++					sizeof(bioscfg_drv.integer_data[instance_id].common.prerequisites[reqs]));
 +			}
 +			break;
++
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.string_data[instance_id].common.security_level = int_value;
++			bioscfg_drv.integer_data[instance_id].common.security_level = integer;
 +			break;
-+		case STR_MIN_LENGTH:
-+			bioscfg_drv.string_data[instance_id].min_length = int_value;
++		case INT_LOWER_BOUND:
++			bioscfg_drv.integer_data[instance_id].lower_bound = integer;
 +			break;
-+		case STR_MAX_LENGTH:
-+			bioscfg_drv.string_data[instance_id].max_length = int_value;
++		case INT_UPPER_BOUND:
++			bioscfg_drv.integer_data[instance_id].upper_bound = integer;
 +			break;
++		case INT_SCALAR_INCREMENT:
++			bioscfg_drv.integer_data[instance_id].scalar_increment = integer;
++			break;
++
 +		default:
-+			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +	}
 +	kfree(dst);
++
 +	return 0;
 +}
 +
 +/*
-+ * exit_string_attributes() - Clear all attribute data
++ * exit_integer_attributes() - Clear all attribute data
 + *
 + * Clears all data allocated for this group of attributes
 + */
-+void exit_string_attributes(void)
++void exit_integer_attributes(void)
 +{
 +	int instance_id;
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.string_instances_count; instance_id++) {
++	for (instance_id = 0; instance_id < bioscfg_drv.integer_instances_count; instance_id++) {
 +
-+		struct kobject *attr_name_kobj = bioscfg_drv.string_data[instance_id].attr_name_kobj;
++		struct kobject *attr_name_kobj = bioscfg_drv.integer_data[instance_id].attr_name_kobj;
 +
 +		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj, &string_attr_group);
++			sysfs_remove_group(attr_name_kobj, &integer_attr_group);
 +	}
-+	bioscfg_drv.string_instances_count = 0;
++	bioscfg_drv.integer_instances_count = 0;
 +
-+	kfree(bioscfg_drv.string_data);
-+	bioscfg_drv.string_data = NULL;
++	kfree(bioscfg_drv.integer_data);
++	bioscfg_drv.integer_data = NULL;
 +}
 -- 
 2.34.1
