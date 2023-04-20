@@ -2,312 +2,329 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435E5C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 23:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99A6C77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 23:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbjDTXcp (ORCPT
+        id S233186AbjDTXct (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 19:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59878 "EHLO
+        Thu, 20 Apr 2023 19:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232985AbjDTXco (ORCPT
+        with ESMTP id S233174AbjDTXcr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 19:32:44 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA52A1FDE;
-        Thu, 20 Apr 2023 16:32:41 -0700 (PDT)
+        Thu, 20 Apr 2023 19:32:47 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E301270A;
+        Thu, 20 Apr 2023 16:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1682033551; i=w_armin@gmx.de;
-        bh=Da4PHCXaosXpykDrP87jrud25OULHX5gF6GpD5hlCjk=;
+        t=1682033554; i=w_armin@gmx.de;
+        bh=59VQdVygaIlsJiozK74OZ/XRysCQm7UBEinzk+/3klQ=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=t4hTEB7A/5hInBeoBkypP8asJUDLA+GCqKB0j3NYoTuzF7GHKvPGe3W3TGo2UEh+b
-         FVUyHZ4NQCl8hzMlFFjulF02ZMXzZllPhrH0exYV9NghmEtFV5F6BM9FnsoZoL+/qG
-         U/GX0X8cr/sdxWvCjtRoH+EEjPyFCSXjZWEqLJsSIvL6ZjF8grWKRwCintt3gUyhD9
-         gO6YPUSnK6WiIE312FAzOq/f+Os7h6yIB5l3jj5HGWC7Jc5fD6rj25QB1R6K54oZVf
-         wFk/0vQ/lN6xlMGAkl1hRx3XgfTmsVU/1jcDKaRDhTQSTKnGF0cuqumqwovUOu1BCh
-         04SdV6/qwfBIw==
+        b=S+M/C2Y//MXwpM+09KwzlHZFSiDRP6IQaRBRqxTHhhkSj3pJBnemfEfl4lDUcdDWF
+         2eRIPzFKOBi8QlK8zgoW58Ody12+jnFtHVfW0ScEKPSXWZPgBBmFAydSlD52hDhFHj
+         Jb0dP4Sp3leNL18XTrJ9HI5QV4lAHqUZyu1ebFg304DS+2yzM4vjEY+hN7r3s5/KIC
+         vakwamGb5WGTC6NWDHkodEaVmOrFpQqiMQ5w4T1hKI7LjfdwsEhNr1pyJL3QgmAVA2
+         wDYxAyA3sMPz9MFS4yexjb67NWHyfqSOBmGuPvGINbrEg7BMFmvcy357JtaII2CtQa
+         RTTDcRS6/6kMw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N1Obh-1qIKV20NMx-012ppz; Fri, 21 Apr 2023 01:32:31 +0200
+ 1M8ygO-1pvi2G1KS6-0066MN; Fri, 21 Apr 2023 01:32:34 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] platform/x86: wmi: Add kernel doc comments
-Date:   Fri, 21 Apr 2023 01:32:23 +0200
-Message-Id: <20230420233226.14561-2-W_Armin@gmx.de>
+Subject: [PATCH 3/4] platform/x86: wmi: Add documentation
+Date:   Fri, 21 Apr 2023 01:32:25 +0200
+Message-Id: <20230420233226.14561-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230420233226.14561-1-W_Armin@gmx.de>
 References: <20230420233226.14561-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fSd0QTLLNKuFlQrIfQkjWUYjLpmuYGJzdnrmDNWWJIoKyr3vBPD
- qtNhSwyF7uw490szcqf1ZmpWy1TY+ItKEY4Hw9g41aok9ZB7JLXOX6XL7ZdAUaXVD/2bCrN
- EbmtALcHVpyYj+JRktmcHAhfLtsG6wYWeLZlTxXbmNlB2sEQOQEHRIkh5YxNgiDYsvPb8Xh
- MF4hymQZaMj68dRmfPU7w==
-UI-OutboundReport: notjunk:1;M01:P0:9ZovCV5aIWI=;nwiSxoPMyEkA1XDo9sEwJmgKo0w
- KC/TqXcZwXzBOuyfobPiSCMJb2+gN82BXnFJLYsgalr2oPPG4M6BqA84DW3byO8YNHkp77+mq
- OGcgA1KCnjVNn6Cy0doNow4gNbRXilN7FENzn2u9Rvb+oAfVwR+9eeGTKFxbq3oViEoKkHvwD
- UrKmN5ijdBtCImSLskGYfIAKW/iJJDLAg9oGrskLuaVMVBo97F0FIixu/WVK/9Mt8G7B/OeOe
- 7+EhxXPXejI0edIU/cd2N6/DwS5zio9l3/YdLf9QZ0xAQ6w5T7jZM7iH0/uyaBuNYAQ8D+hbA
- jr3yYPV+f2vTt3XPgno+19XrIn1Hnjae81YcaSPbKXsyBQAnt+HydinepIOxV0XkknhnUJbhP
- NnpNkl22EvDbi4OfnjtDNVRJ9RlFh999N+5oGvgJiYUimSw/qvwukxgf+41/2N8UR1/YMDiNr
- 997BT+7O2dJDn9oRV7fYP10OGQSZw2lwc2/yJgujYLUJVS5a3VyKfQ5mB1U539ipNOqVAZ0Sl
- UHrjx6vKQyEqm0JnGkzh8SVrZ9UMM+MYyiPrZLk9V9EddnnMx7+NeY8dImGrLDSEvH4fX9dM6
- FMmHoADJiphYkigsiq/Hkmt2RZwmtYSFKrCdwb65ezTNtP02/DveDPC/ry2qwOLlcuTEpHJrW
- 5/KUuizL6q2kpR9lO/hx7XKFaSspnD4V+U9nMOcHoJgLFX3hwUSn6/80Rmk+2yJxSr7erjY+t
- QGhHwj67XZJwESjDAg/9CLpBgjkpdj4lkoayuF6GINbw1rsRoq/ivCzBGRAl+915BmOhwd5yt
- ed4d9BQahLmNrSdCBo4e0tBVGNjsCYJIGM1QA1xOv3ql88Xrv4Df9SVQZaUhp4hI4+3h7wXbK
- SaFNkihngjUZRFws66KMXNRK+6fSGzDdM+wcS4tj0wujKmlc6YekWBvxv3z6U5wKLIU5CvRni
- V3T/WQtkyL4eVOHbkoadMT6hgOs=
+X-Provags-ID: V03:K1:X0PWQTH8zdOq1am+cRdzfFag0t8NuS8L7ey5DE7VMKB41b4DXxW
+ UDLkrYiqqAv50eIqPGZ8pp19CVAphTRCCKvbXYjChhT8iDuXUHPz1B7EAHyjxZgXPVBPZva
+ PqZWcRLbAUvan3paLe8GjwvzsqQ2hEAXuLpiaoLvCcehuTJy33EnLVwQ4lRVIAjpGOUrs7k
+ z3o8KWKI7vrtyNQFNrsDA==
+UI-OutboundReport: notjunk:1;M01:P0:iqXF51PNwCQ=;w0twXHa/nMCFMGFt/W7R+Q5stKt
+ oOSdnifnW06gWa4eWH3LjHP4yk0uY028UOmUrMdQNwsGYnuET70OCeCpW4GEWl4dFs0YOdF6q
+ 8yfMX2gtQx6Q4gawoxpb8SwtBmoiSy+opullZztpkA5fWo16bshtLAE4PKYSGy05jGmJF0CNq
+ ZTgCPauFvYJ/hf5bNlI4cbUntD0/lZEHnTHzkzUJRGXEooWHSpavSZNHzjAdehDIJOi7R/w/a
+ 1RwALw1HcXjQy9ErPNCMswgHQgOh+NaUh9f1myTxKGSDxDiYXvo/J0J3aW3/KINdEiBKKl79m
+ sjRmC7sFkT/DtH+OLrYGthnwVXyWsxRBlEnK3JhPROjcLiusVO17EJr9uEFj6+YSZpvUEf6SU
+ XfLB8jhPSjrevSWOmaljWK/mgRVncR0EQavWAgRMZtwGp8YawXbyFpREiYOg4HzkTEzXJutdM
+ uCVobhcx1QFUY2cXv549BapxkYY2XBEgf8uWiAe9+/NTIvH8MqHtpSGdUstv1wysOnDBxzZoA
+ 0seztju8uBHx0Q2yy7+0T36BKmKhesMLB0Frb2GiRxzN9hQst7X7cnBU+kTowwJcA/RchtbLx
+ dFpalS49gOU8Rn8aiczW5YceDzKukbBieANvZtMz7USDsXr6nD9s6gSX5OmvR/9BjBJk41P/5
+ zyRVCoanU03bznRRArB+hS29dX/ZjBeuexh5gdUr4utxJTnid8k2kKqhH5u/u1fpe0nizr1dz
+ 443u58pylba4LvX3IOxIF1IEMsgy3bUwSiw+Psvuno8fw0B95pgGDcAnbavpPpcP0ZISsQe5n
+ UkNUmSR0/dK08HveIxaeQ9r9Fx0k30lL+v8hjn82d/Wn1K8sSTDcFDJJt4eV1wtkqhoXzMh1O
+ BfdDNzAcSO89bT8wBh2HrvkjIP4k5z3w6YSHvS8OIqS4ERYGEmunN2mxuee6yaM9zT9tUwTJg
+ /Nhch9EIIQKmhm1q+wrurNfn6q8=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add kernel doc comments useful for documenting the functions/structs
-used to interact with the WMI driver core.
+Add documentation for the WMI subsystem. The documentation describes
+both the ACPI WMI interface and the driver API for interacting with
+the WMI driver core. The information regarding the ACPI interface
+where retrieved from the Ubuntu kernel references and the
+Windows driver samples available on GitHub. The documentation is
+supposed to help driver developers writing WMI drivers, as many
+modern machines designed to run Windows provide a ACPI WMI interface.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 51 +++++++++++++++++++++++++++++++-------
- include/linux/wmi.h        | 41 +++++++++++++++++++++++++++---
- 2 files changed, 80 insertions(+), 12 deletions(-)
+ Documentation/driver-api/index.rst   |  1 +
+ Documentation/driver-api/wmi.rst     | 19 ++++++
+ Documentation/subsystem-apis.rst     |  1 +
+ Documentation/wmi/acpi-interface.rst | 86 ++++++++++++++++++++++++++++
+ Documentation/wmi/index.rst          | 18 ++++++
+ MAINTAINERS                          |  2 +
+ include/linux/wmi.h                  |  2 +-
+ 7 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/driver-api/wmi.rst
+ create mode 100644 Documentation/wmi/acpi-interface.rst
+ create mode 100644 Documentation/wmi/index.rst
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index d81319a502ef..e4b41dca70c7 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -248,7 +248,9 @@ static acpi_status get_event_data(const struct wmi_blo=
-ck *wblock, struct acpi_bu
-  * @wdev: A wmi bus device from a driver
-  * @length: Required buffer size
-  *
-- * Allocates memory needed for buffer, stores the buffer size in that mem=
-ory
-+ * Allocates memory needed for buffer, stores the buffer size in that mem=
-ory.
-+ *
-+ * Return: 0 on success or a negative error code for failure.
-  */
- int set_required_buffer_size(struct wmi_device *wdev, u64 length)
- {
-@@ -269,7 +271,9 @@ EXPORT_SYMBOL_GPL(set_required_buffer_size);
-  * @in: Buffer containing input for the method call
-  * @out: Empty buffer to return the method results
-  *
-- * Call an ACPI-WMI method
-+ * Call an ACPI-WMI method, the caller must free @out.
-+ *
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmi_evaluate_method(const char *guid_string, u8 instance, u32=
- method_id,
- 				const struct acpi_buffer *in, struct acpi_buffer *out)
-@@ -294,7 +298,9 @@ EXPORT_SYMBOL_GPL(wmi_evaluate_method);
-  * @in: Buffer containing input for the method call
-  * @out: Empty buffer to return the method results
-  *
-- * Call an ACPI-WMI method
-+ * Call an ACPI-WMI method, the caller must free @out.
-+ *
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmidev_evaluate_method(struct wmi_device *wdev, u8 instance, =
-u32 method_id,
- 				   const struct acpi_buffer *in, struct acpi_buffer *out)
-@@ -411,7 +417,9 @@ static acpi_status __query_block(struct wmi_block *wbl=
-ock, u8 instance,
-  * @instance: Instance index
-  * @out: Empty buffer to return the contents of the data block to
-  *
-- * Return the contents of an ACPI-WMI data block to a buffer
-+ * Query a ACPI-WMI block, the caller must free @out.
-+ *
-+ * Return: ACPI object containing the content of the WMI block.
-  */
- acpi_status wmi_query_block(const char *guid_string, u8 instance,
- 			    struct acpi_buffer *out)
-@@ -427,6 +435,15 @@ acpi_status wmi_query_block(const char *guid_string, =
-u8 instance,
- }
- EXPORT_SYMBOL_GPL(wmi_query_block);
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api=
+/index.rst
+index ff9aa1afdc62..1e16a40da3ba 100644
+=2D-- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -113,6 +113,7 @@ available subsections can be seen below.
+    xillybus
+    zorro
+    hte/index
++   wmi
 
-+/**
-+ * wmidev_block_query - Return contents of a WMI block
-+ * @wdev: A wmi bus device from a driver
-+ * @instance: Instance index
-+ *
-+ * Query a ACPI-WMI block, the caller must free the result.
-+ *
-+ * Return: ACPI object containing the content of the WMI block.
-+ */
- union acpi_object *wmidev_block_query(struct wmi_device *wdev, u8 instanc=
-e)
- {
- 	struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -445,7 +462,9 @@ EXPORT_SYMBOL_GPL(wmidev_block_query);
-  * @instance: Instance index
-  * @in: Buffer containing new values for the data block
-  *
-- * Write the contents of the input buffer to an ACPI-WMI data block
-+ * Write the contents of the input buffer to an ACPI-WMI data block.
-+ *
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmi_set_block(const char *guid_string, u8 instance,
- 			  const struct acpi_buffer *in)
-@@ -555,6 +574,8 @@ static void wmi_notify_debug(u32 value, void *context)
-  * @data: Data to be returned to handler when event is fired
-  *
-  * Register a handler for events sent to the ACPI-WMI mapper device.
-+ *
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmi_install_notify_handler(const char *guid,
- 				       wmi_notify_handler handler,
-@@ -597,6 +618,8 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
-  * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-  *
-  * Unregister handler for events sent to the ACPI-WMI mapper device.
-+ *
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmi_remove_notify_handler(const char *guid)
- {
-@@ -641,9 +664,11 @@ EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
-  * wmi_get_event_data - Get WMI data associated with an event
-  *
-  * @event: Event to find
-- * @out: Buffer to hold event data. out->pointer should be freed with kfr=
-ee()
-+ * @out: Buffer to hold event data
-+ *
-+ * Get extra data associated with an WMI event, the caller needs to free =
-@out.
-  *
-- * Returns extra data associated with an event in WMI.
-+ * Return: acpi_status signaling success or error.
-  */
- acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)
- {
-@@ -664,7 +689,9 @@ EXPORT_SYMBOL_GPL(wmi_get_event_data);
-  * wmi_has_guid - Check if a GUID is available
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
-f2f49ba
-  *
-- * Check if a given GUID is defined by _WDG
-+ * Check if a given GUID is defined by _WDG.
-+ *
-+ * Return: True if GUID is available, false otherwise.
-  */
- bool wmi_has_guid(const char *guid_string)
- {
-@@ -678,7 +705,7 @@ EXPORT_SYMBOL_GPL(wmi_has_guid);
-  *
-  * Find the _UID of ACPI device associated with this WMI GUID.
-  *
-- * Return: The ACPI _UID field value or NULL if the WMI GUID was not foun=
-d
-+ * Return: The ACPI _UID field value or NULL if the WMI GUID was not foun=
-d.
-  */
- char *wmi_get_acpi_device_uid(const char *guid_string)
- {
-@@ -1454,6 +1481,12 @@ int __must_check __wmi_driver_register(struct wmi_d=
-river *driver,
- }
- EXPORT_SYMBOL(__wmi_driver_register);
+ .. only::  subproject and html
 
-+/**
-+ * wmi_driver_unregister() - Unregister a WMI driver
-+ * @driver: WMI driver to unregister
-+ *
-+ * Unregisters a WMI driver from the WMI bus.
-+ */
- void wmi_driver_unregister(struct wmi_driver *driver)
- {
- 	driver_unregister(&driver->driver);
+diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/w=
+mi.rst
+new file mode 100644
+index 000000000000..06cecbe36afd
+=2D-- /dev/null
++++ b/Documentation/driver-api/wmi.rst
+@@ -0,0 +1,19 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++WMI Driver API
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The WMI driver core supports a more modern bus-based interface for intera=
+cting with WMI devices,
++and an older GUID-based interface. The later interface is considered to b=
+e deprecated, so new
++WMI drivers should generally avoid it since it has some issues with multi=
+ple WMI devices and
++events sharing the same GUIDs and/or notification IDs. The modern bus-bas=
+ed interface instead
++maps each WMI device to a :c:type:`struct wmi_device <wmi_device>`, so it=
+ supports WMI devices
++sharing GUIDs and/or notification IDs. Drivers can then register a :c:typ=
+e:`struct wmi_driver <wmi_driver>`,
++which will get bound to compatible WMI devices by the driver core.
++
++.. kernel-doc:: include/linux/wmi.h
++   :internal:
++
++.. kernel-doc:: drivers/platform/x86/wmi.c
++   :export:
+diff --git a/Documentation/subsystem-apis.rst b/Documentation/subsystem-ap=
+is.rst
+index b51f38527e14..69f5e4d53bad 100644
+=2D-- a/Documentation/subsystem-apis.rst
++++ b/Documentation/subsystem-apis.rst
+@@ -57,3 +57,4 @@ needed).
+    scheduler/index
+    mhi/index
+    peci/index
++   wmi/index
+diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi=
+-interface.rst
+new file mode 100644
+index 000000000000..c0afdb6c5885
+=2D-- /dev/null
++++ b/Documentation/wmi/acpi-interface.rst
+@@ -0,0 +1,86 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++ACPI WMI interface
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The ACPI WMI interface is a proprietary extension of the ACPI specificati=
+on made by Microsoft
++to allow hardware vendors to embed WMI (Windows Management Instrumentatio=
+n) objects inside
++their ACPI firmware. Typical functions implemented over ACPI WMI are hotk=
+ey events on modern
++notebooks and configuration of BIOS options.
++
++PNP0C14 ACPI device
++-------------------
++
++Discovery of WMI objects is handled by defining ACPI devices with a PNP I=
+D of ``PNP0C14``.
++These devices will contain a set of ACPI buffers and methods used for map=
+ping and execution
++of WMI methods and/or queries. If there exist multiple of such devices, t=
+hen each device is
++required to have a unique ACPI UID.
++
++_WDG buffer
++-----------
++
++The ``_WDG`` buffer is used to discover WMI objects and is required to be=
+ static. Its internal
++structure consists of data blocks with a size of 20 bytes, containing the=
+ following data:
++
++=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++Offset  Size (in bytes) Content
++=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++0x00    16              128 bit Variant 2 object GUID.
++0x10    2               2 character method ID or single byte notification=
+ ID.
++0x12    1               Object instance count.
++0x13    1               Object flags.
++=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++
++The WMI object flags control whether the method or notification ID is use=
+d:
++
++- 0x1: Data block usage is expensive and must be explicitly enabled/disab=
+led.
++- 0x2: Data block contains WMI methods.
++- 0x4: Data block contains ASCIZ string.
++- 0x8: Data block describes a WMI event, use notification ID instead of m=
+ethod ID.
++
++Each WMI object GUID can appear multiple times inside a system. The metho=
+d/notification ID
++is used to construct the ACPI method names used for interacting with the =
+WMI object.
++
++WQxx ACPI methods
++-----------------
++
++If a data block does not contain WMI methods, then its content can be ret=
+rieved by this required
++ACPI methods. The last two characters of the ACPI method name are the met=
+hod ID of the data block
++to query. Their single parameter is a integer describing the instance whi=
+ch should be queried. This
++parameter can be omitted if the data block contains only a single instanc=
+e.
++
++WSxx ACPI methods
++-----------------
++
++Similar to the ``WQxx`` ACPI methods, except that it is optional and take=
+s an additional buffer
++as its second argument. The instance argument also cannot be omitted.
++
++WMxx ACPI methods
++-----------------
++
++Used for executing WMI methods associated with a data block. The last two=
+ characters of the ACPI method
++name are the method ID of the data block containing the WMI methods. Thei=
+r first parameter is a integer
++describing the instance which methods should be executed. The second para=
+meter is a integer describing
++the WMI method ID to execute, and the third parameter is a buffer contain=
+ing the WMI method parameters.
++If the data block is marked as containing a ASCIZ string, then this buffe=
+r should contain a ASCIZ string.
++The ACPI method will return the result of the executed WMI method.
++
++WExx ACPI methods
++-----------------
++
++Used for optionally enabling/disabling WMI events, the last two character=
+s of the ACPI method are the
++notification ID of the data block describing the WMI event as hexadecimal=
+ value. Their first parameter
++is an integer with a value of 0 if the WMI event should be disabled, othe=
+r values will enable the WMI event.
++
++WCxx ACPI methods
++-----------------
++Similar to the ``WExx`` ACPI methods, except that it controls data collec=
+tion instead of events
++and thus the last two characters of the ACPI method name are the method I=
+D of the data block
++to enable/disable.
++
++_WED ACPI method
++----------------
++
++Used to retrieve additional WMI event data, its single parameter is a int=
+eger holding the
++notification ID of the event.
+diff --git a/Documentation/wmi/index.rst b/Documentation/wmi/index.rst
+new file mode 100644
+index 000000000000..b29933a86380
+=2D-- /dev/null
++++ b/Documentation/wmi/index.rst
+@@ -0,0 +1,18 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++WMI Subsystem
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++.. toctree::
++   :maxdepth: 1
++
++   acpi-interface
++
++.. only::  subproject and html
++
++
++   Indices
++   =3D=3D=3D=3D=3D=3D=3D
++
++   * :ref:`genindex`
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c9011f5fc17..979d37176429 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -449,6 +449,8 @@ F:	include/linux/acpi_viot.h
+ ACPI WMI DRIVER
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Orphan
++F:	Documentation/driver-api/wmi.rst
++F:	Documentation/wmi/
+ F:	drivers/platform/x86/wmi.c
+ F:	include/uapi/linux/wmi.h
+
 diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index b88d7b58e61e..88f66b12eef9 100644
+index 88f66b12eef9..87822effdf3c 100644
 =2D-- a/include/linux/wmi.h
 +++ b/include/linux/wmi.h
-@@ -13,25 +13,44 @@
- #include <linux/mod_devicetable.h>
- #include <uapi/linux/wmi.h>
-
-+/**
-+ * struct wmi_device - WMI device structure
-+ * @dev: Device associated with this WMI device
-+ * @setable: True for devices implementing the Set Control Method
-+ *
-+ * This represents WMI devices discovered by the WMI driver core.
-+ */
- struct wmi_device {
- 	struct device dev;
-
--	 /* True for data blocks implementing the Set Control Method */
-+	/* private: used by the WMI driver core */
- 	bool setable;
- };
-
--/* evaluate the ACPI method associated with this device */
- extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
- 					  u8 instance, u32 method_id,
- 					  const struct acpi_buffer *in,
- 					  struct acpi_buffer *out);
-
--/* Caller must kfree the result. */
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
-
- extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
-
-+/**
-+ * struct wmi_driver - WMI driver structure
-+ * @driver: Driver model structure
-+ * @id_table: List of WMI GUIDs supported by this driver
-+ * @no_notify_data: WMI events provide no event data
-+ * @probe: Callback for device binding
-+ * @remove: Callback for device unbinding
-+ * @notify: Callback for receiving WMI events
-+ * @filter_callback: Callback for filtering device IOCTLs
-+ *
-+ * This represents WMI drivers which handle WMI devices.
-+ * @filter_callback is only necessary for drivers which
-+ * want to set up a WMI IOCTL interface.
-+ */
+@@ -49,7 +49,7 @@ extern int set_required_buffer_size(struct wmi_device *w=
+dev, u64 length);
+  *
+  * This represents WMI drivers which handle WMI devices.
+  * @filter_callback is only necessary for drivers which
+- * want to set up a WMI IOCTL interface.
++ * want to set up a WMI IOCTL interface
+  */
  struct wmi_driver {
  	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
-@@ -47,8 +66,24 @@ struct wmi_driver {
- extern int __must_check __wmi_driver_register(struct wmi_driver *driver,
- 					      struct module *owner);
- extern void wmi_driver_unregister(struct wmi_driver *driver);
-+
-+/**
-+ * wmi_driver_register() - Helper macro ro register a WMI driver
-+ * @driver: wmi_driver struct
-+ *
-+ * Helper macro for registering a WMI driver. It automatically passes
-+ * THIS_MODULE to the underlying function.
-+ */
- #define wmi_driver_register(driver) __wmi_driver_register((driver), THIS_=
-MODULE)
-
-+/**
-+ * module_wmi_driver() - Helper macro to register/unregister a WMI driver
-+ * @__wmi_driver: wmi_driver struct
-+ *
-+ * Helper macro for WMI drivers which do not do anything special in modul=
-e
-+ * init/exit. This eliminates a lot of boilerplate. Each module may only
-+ * use this macro once, and calling it replaces module_init() and module_=
-exit().
-+ */
- #define module_wmi_driver(__wmi_driver) \
- 	module_driver(__wmi_driver, wmi_driver_register, \
- 		      wmi_driver_unregister)
 =2D-
 2.30.2
 
