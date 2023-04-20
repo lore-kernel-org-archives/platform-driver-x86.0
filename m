@@ -2,495 +2,103 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2772DC7618E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 22:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23581C7618E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 23:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232929AbjDTWG5 (ORCPT
+        id S231944AbjDTXcm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 18:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
+        Thu, 20 Apr 2023 19:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232852AbjDTWGt (ORCPT
+        with ESMTP id S229839AbjDTXcl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 18:06:49 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1271701;
-        Thu, 20 Apr 2023 15:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682028407; x=1713564407;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PLmT3wEI8LeOQJN1deZiV4fV7HaRJgT28M0+D9lpClU=;
-  b=Yz1CjNT1RZRkdINKIgXNL7cf1+ZEogUgQNoWGRvHbPGEIgYnkbif/wLn
-   P1qTbMXMt8WCMWh7JWIV1M9PAoE0GaGMfWtriiIKenOV7qz+SKMkhco0U
-   2sqAju2P1yan0ahNTt5voZ8NqmIWpHcHLYz9C4ZuvmS0179F3Ev8M/yhn
-   eJvc2RvhNKxx78z1K+YvVZvBPZhMFvVxFn33iN/2SX+MdU+9YKWxaD2HC
-   tYIEk5zw5lIXJzkP9zXmhhdxX6FXSvchFz2IMfWuGVOh+rxn7gHmg4RnP
-   Dd11kF7LbBiXgQzJWrT27BsgUssh0juPhK42N1/K8T7KxVfbmHPwk4gzf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="432137920"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="432137920"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 15:06:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="761355684"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="761355684"
-Received: from lmruiz-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.101.68])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 15:06:31 -0700
-Message-ID: <152c96f65a848f43a6b84807db91551dc07dd38a.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] platform/x86/intel-uncore-freq: Uncore frequency
- control via TPMI
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wendy Wang <wendy.wang@intel.com>
-Date:   Thu, 20 Apr 2023 15:06:30 -0700
-In-Reply-To: <2adb9bd-864f-5bd7-449-8291f067d2d8@linux.intel.com>
-References: <20230418171340.681662-1-srinivas.pandruvada@linux.intel.com>
-         <20230418171340.681662-2-srinivas.pandruvada@linux.intel.com>
-         <2adb9bd-864f-5bd7-449-8291f067d2d8@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Thu, 20 Apr 2023 19:32:41 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64279172A;
+        Thu, 20 Apr 2023 16:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1682033549; i=w_armin@gmx.de;
+        bh=NGlN7WhKpCXC32UorWAt3fK4hRHpP3AFfPfRXp8ykXk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=rzPvR6LVsGc7av6bFcK6y4RpNJz5+JHjZnhmT5+o8xg9i30zl/Be7M9it45Sat+MA
+         r9RAEAEbYNsBqtAZYt4q91szzdSeMUSyS6ngxqtosizg5PizGfDXhEvYBmNIVYYZbR
+         8O7I8Y+R5QNZ7TDDBfwDiNi9Jdg2MgRlyR0EirBsOjaaH6ZsZJJakvXZI+o4IvIPy9
+         F7bCCpr+3lTpO4WaCFE0ec1aRl0t2Xg5Ps5bfwkO957FkaXVSm4DsN3EBNh33GMGOX
+         cm/ceC/JRNKS26xh/eIByTVbcboYecXudz29mtIu1ufnSkgvHhIvLqBkja/p96uOOK
+         rDknXJ6XlYmwA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MC34h-1q1UfY1hIj-00CNlD; Fri, 21 Apr 2023 01:32:29 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] platform/x86: wmi: Add subsystem documentation
+Date:   Fri, 21 Apr 2023 01:32:22 +0200
+Message-Id: <20230420233226.14561-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VosZo3WIQjkYCBzzJ6OwPTI8whtbxtKrvTXnqoF79ThWaP/+Yo5
+ OHewk3zzr1J4/T+8rfBDT8jZGvOmpyRVMxk2AdJzK2l3dlDakB8N+tjO/T7wRB3tHHxA+Au
+ mUaic5TJ9c3R0qmvkVGHypY+/yvyCwVebCX+ncdEi/iAD5xhTt7kuMl7yznI4RxpXChyVBc
+ oLFa7UWXup+mJKdV6Ku+Q==
+UI-OutboundReport: notjunk:1;M01:P0:qEjxGZMQOQs=;mmH3Zu9IknHgqH+NfH/F7iwTmjC
+ O7YipxZZmRiAK235ISk2+jLTkKURfNUD+P6FzaqbVtvzU1rIjO09/rFTGhjei8/wwlih73P/B
+ v6aTE9WAect+yBLLfRhl0dVzERaco0YBGEJUgXhyNQhY1vAsVxd6tRwwH0fbAt1Z6ab5BFAx/
+ ne7pTYmLqvJ4jLs3FbK/1beEyMpXKVuLs1zAI24ksIhdteSsOuMxZEQZSBLdmt03kGOp29UXg
+ cqJoP1fsf/92ovoPTfj3ecyqRtA6rH1PgDLJD5clnBv2RqnTfpMNGuW/+G3eKBRjJC8dDjIqo
+ qXxtK/REi+qMTI5XqixYzRzPLCXCiouOwqZdpZjT6lJoNvqvN7oiOnazNmHaHYB+0ufmHzQGK
+ 95vQWEXjuDdbZtyHh4aem3hP7OA/dINN2854kEpdgO0TzeDUNeHO7QilkeqQJn8/qrzUdg9xB
+ OrIAvXIi3lCrlWiXP6NGOFylLdDjqooz97gHVNbEhI4470B4ufFLPWJvhrGdvGKGcedolkbDC
+ m8nblw6RFHDToKYhQtWPCHnTBJ/z5qWSyinuHkza1yiaZXB7pRXqsw11S6gBsBhpghLzqoGBh
+ JVW8RVoyjauMUKmHuaipDTf7o4ns+6+STv4uxspDXo3B7HeW/Yum5Dmw7CXGj+LzD/IbDaQLy
+ pNHfI0maimK4SabNzCJR23dacYeNGZAqP9jVhxRxJZER0WumVqIepTDgl4rXWjRfhkrTspxYM
+ VBnJGj0N0SP4pxeO0pwkWpKm2I34VYIYqS8jGmmQrqwsFDsfjFpaE7wD6lQA08Qu2HDAAHXBP
+ +iNTuqD+WmK9QITpypspj1q9Bz2/MEo7iIVOqwVMUdYbe6+NabkYheSOMVCXOuampU1cBB5V8
+ 82uMW44n9v7SPKGwBe2u+hw5ynWIVTq6CS/ScW2t/Aampd/o3MFOHEBkzGTeQqOYi6yhOrXK0
+ KMgbuAXVjJ6/jOKXCM4bdj94cQo=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2023-04-20 at 14:25 +0300, Ilpo Järvinen wrote:
-> On Tue, 18 Apr 2023, Srinivas Pandruvada wrote:
-> 
-> > Implement support of uncore frequency control via TPMI (Topology
-> > Aware
-> > Register and PM Capsule Interface). This driver provides the
-> > similar
-> > functionality as the current uncore frequency driver using MSRs.
-> > 
-> > The hardware interface to read/write is basically substitution of
-> > MSR
-> > 0x620 and 0x621. There are specific MMIO offset and bits to get/set
-> > minimum and maximum uncore ratio, similar to MSRs.
-> > 
-> > The scope of the uncore MSRs is package/die. But new generation of
-> > CPUs
-> > have more granular control at a cluster level. Each package/die can
-> > have
-> > multiple power domains, which further can have multiple clusters.
-> > The
-> > TPMI interface allows control at cluster level.
-> > 
-> > The primary use case for uncore sysfs is to set maximum and minimum
-> > uncore frequency to reduce power consumption or latency. The
-> > current
-> > uncore sysfs control is per package/die. This is enough for the
-> > majority
-> > of users as workload will move to different power domains as it
-> > moves
-> > between different CPUs.
-> > 
-> > The current uncore sysfs provides controls at package/die level.
-> > When
-> > user sets maximum/minimum limits, the driver sets the same limits
-> > to
-> > each cluster.
-> > 
-> > Here number of power domains = number of resources in this aux
-> > device.
-> > There are offsets and bits to discover number of clusters and
-> > offset for
-> > each cluster level controls.
-> > 
-> > The TPMI documentation can be downloaded from:
-> > https://github.com/intel/tpmi_power_management
-> > 
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > Reviewed-by: Zhang Rui <rui.zhang@intel.com>
-> > Tested-by: Wendy Wang <wendy.wang@intel.com>
-> > ---
-Submitted update with the suggested changes here.
+Currently, there is no recent documentation available for writing WMI
+drivers using the modern bus-based interface. This leads to developers
+using the deprecated GUID-based interface when developing new drivers,
+causing issues with notification handling when multiple WMI devices sharin=
+g
+the same notification ID are present. There is also no way for WMI
+drivers to add device specific documentation at the moment.
+Add documentation for the WMI subsystem to solve those issues. The
+device specific documentation currently onyl include documentation for
+the wmi-bmof driver, but more is expected to follow.
 
-Thanks,
-Srinivas
+Armin Wolf (4):
+  platform/x86: wmi: Add kernel doc comments
+  platform/x86: wmi: Mark GUID-based WMI interface as deprecated
+  platform/x86: wmi: Add documentation
+  platform/x86: wmi: Add device specific documentation
 
-> > v2
-> > - Changed mmio to u8* (Hans)
-> > - Not setting pd_info->uncore_base to NULL (Hans)
-> > - Handling failure of devm_kcalloc() (Hans)
-> > - Merged init/remove to probe/remove functions (Rui)
-> > - Log when platform is NULL (Rui)
-> > 
-> >  .../x86/intel/uncore-frequency/Kconfig        |   4 +
-> >  .../x86/intel/uncore-frequency/Makefile       |   2 +
-> >  .../uncore-frequency/uncore-frequency-tpmi.c  | 338
-> > ++++++++++++++++++
-> >  3 files changed, 344 insertions(+)
-> >  create mode 100644 drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-tpmi.c
-> > 
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/Kconfig
-> > b/drivers/platform/x86/intel/uncore-frequency/Kconfig
-> > index 21b209124916..a56d55056927 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/Kconfig
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/Kconfig
-> > @@ -6,9 +6,13 @@
-> >  menu "Intel Uncore Frequency Control"
-> >         depends on X86_64 || COMPILE_TEST
-> >  
-> > +config INTEL_UNCORE_FREQ_CONTROL_TPMI
-> > +       tristate
-> > +
-> >  config INTEL_UNCORE_FREQ_CONTROL
-> >         tristate "Intel Uncore frequency control driver"
-> >         depends on X86_64
-> > +       select INTEL_UNCORE_FREQ_CONTROL_TPMI if INTEL_TPMI
-> >         help
-> >           This driver allows control of Uncore frequency limits on
-> >           supported server platforms.
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/Makefile
-> > b/drivers/platform/x86/intel/uncore-frequency/Makefile
-> > index e0f7968e8285..08ff57492b28 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/Makefile
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/Makefile
-> > @@ -7,3 +7,5 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL) += intel-
-> > uncore-frequency.o
-> >  intel-uncore-frequency-y               := uncore-frequency.o
-> >  obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)        += intel-uncore-
-> > frequency-common.o
-> >  intel-uncore-frequency-common-y                := uncore-
-> > frequency-common.o
-> > +obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL_TPMI)   += intel-uncore-
-> > frequency-tpmi.o
-> > +intel-uncore-frequency-tpmi-y          := uncore-frequency-tpmi.o
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-tpmi.c
-> > new file mode 100644
-> > index 000000000000..5e454e9dd4a7
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > tpmi.c
-> > @@ -0,0 +1,338 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * uncore-frquency-tpmi: Uncore frequency scaling using TPMI
-> > + *
-> > + * Copyright (c) 2023, Intel Corporation.
-> > + * All Rights Reserved.
-> > + *
-> > + * The hardware interface to read/write is basically substitution
-> > of
-> > + * MSR 0x620 and 0x621.
-> > + * There are specific MMIO offset and bits to get/set minimum and
-> > + * maximum uncore ratio, similar to MSRs.
-> > + * The scope of the uncore MSRs was package scope. But TPMI allows
-> > + * new gen CPUs to have multiple uncore controls at uncore-cluster
-> > + * level. Each package can have multiple power domains which
-> > further
-> > + * can have multiple clusters.
-> > + * Here number of power domains = number of resources in this aux
-> > + * device. There are offsets and bits to discover number of
-> > clusters
-> > + * and offset for each cluster level controls.
-> > + *
-> > + */
-> > +
-> > +#include <linux/auxiliary_bus.h>
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/intel_tpmi.h>
-> > +
-> > +#include "uncore-frequency-common.h"
-> > +
-> > +#define        UNCORE_HEADER_VERSION           1
-> > +#define UNCORE_HEADER_INDEX            0
-> > +#define UNCORE_FABRIC_CLUSTER_OFFSET   8
-> > +
-> > +/* status + control + adv_ctl1 + adv_ctl2 */
-> > +#define UNCORE_FABRIC_CLUSTER_SIZE     (4 * 8)
-> > +
-> > +#define UNCORE_STATUS_INDEX            0
-> > +#define UNCORE_CONTROL_INDEX           8
-> > +
-> > +#define UNCORE_FREQ_KHZ_MULTIPLIER     100000
-> > +
-> > +struct tpmi_uncore_struct;
-> > +
-> > +/* Information for each cluster */
-> > +struct tpmi_uncore_cluster_info {
-> > +       u8 __iomem *cluster_base;
-> > +       struct uncore_data uncore_data;
-> > +       struct tpmi_uncore_struct *uncore_root;
-> > +};
-> > +
-> > +/* Information for each power domain */
-> > +struct tpmi_uncore_power_domain_info {
-> > +       u8 __iomem *uncore_base;
-> > +       int ufs_header_ver;
-> > +       int cluster_count;
-> > +       struct tpmi_uncore_cluster_info *cluster_infos;
-> > +};
-> > +
-> > +/* Information for all power domains in a package */
-> > +struct tpmi_uncore_struct {
-> > +       int power_domain_count;
-> > +       struct tpmi_uncore_power_domain_info *pd_info;
-> > +       struct tpmi_uncore_cluster_info root_cluster;
-> > +};
-> > +
-> > +#define UNCORE_GENMASK_MIN_RATIO       GENMASK_ULL(21, 15)
-> > +#define UNCORE_GENMASK_MAX_RATIO       GENMASK_ULL(14, 8)
-> > +
-> > +/* Helper function to read MMIO offset for max/min control
-> > frequency */
-> > +static void read_control_freq(struct tpmi_uncore_cluster_info
-> > *cluster_info,
-> > +                            unsigned int *min, unsigned int *max)
-> > +{
-> > +       u64 control;
-> > +
-> > +       control = readq(cluster_info->cluster_base +
-> > UNCORE_CONTROL_INDEX);
-> > +       *max = FIELD_GET(UNCORE_GENMASK_MAX_RATIO, control) *
-> > UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +       *min = FIELD_GET(UNCORE_GENMASK_MIN_RATIO, control) *
-> > UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +}
-> > +
-> > +#define UNCORE_MAX_RATIO       0x7F
-> 
-> FIELD_MAX(UNCORE_GENMASK_MAX_RATIO) ?
-> 
-> > +
-> > +/* Callback for sysfs read for max/min frequencies. Called under
-> > mutex locks */
-> > +static int uncore_read_control_freq(struct uncore_data *data,
-> > unsigned int *min,
-> > +                                   unsigned int *max)
-> > +{
-> > +       struct tpmi_uncore_cluster_info *cluster_info;
-> > +       struct tpmi_uncore_struct *uncore_root;
-> > +       int i, _min = 0, _max = 0;
-> > +
-> > +       cluster_info = container_of(data, struct
-> > tpmi_uncore_cluster_info, uncore_data);
-> > +       uncore_root = cluster_info->uncore_root;
-> > +
-> > +       *min = UNCORE_MAX_RATIO * UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +       *max = 0;
-> > +
-> > +       /*
-> > +        * Get the max/min by looking at each cluster. Get the
-> > lowest
-> > +        * min and highest max.
-> > +        */
-> > +       for (i = 0; i < uncore_root->power_domain_count; ++i) {
-> > +               int j;
-> > +
-> > +               for (j = 0; j < uncore_root-
-> > >pd_info[i].cluster_count; ++j) {
-> > +                       read_control_freq(&uncore_root-
-> > >pd_info[i].cluster_infos[j],
-> > +                                         &_min, &_max);
-> > +                       if (*min > _min)
-> > +                               *min = _min;
-> > +                       if (*max < _max)
-> > +                               *max = _max;
-> > +               }
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/* Helper function to write MMIO offset for max/min control
-> > frequency */
-> > +static void write_control_freq(struct tpmi_uncore_cluster_info
-> > *cluster_info, unsigned int input,
-> > +                             unsigned int min_max)
-> > +{
-> > +       u64 control;
-> > +
-> > +       control = readq(cluster_info->cluster_base +
-> > UNCORE_CONTROL_INDEX);
-> > +
-> > +       if (min_max) {
-> > +               control &= ~UNCORE_GENMASK_MAX_RATIO;
-> > +               control |= FIELD_PREP(UNCORE_GENMASK_MAX_RATIO,
-> > input);
-> > +       } else {
-> > +               control &= ~UNCORE_GENMASK_MIN_RATIO;
-> > +               control |= FIELD_PREP(UNCORE_GENMASK_MIN_RATIO,
-> > input);
-> > +       }
-> > +
-> > +       writeq(control, (cluster_info->cluster_base +
-> > UNCORE_CONTROL_INDEX));
-> > +}
-> > +
-> > +/* Callback for sysfs write for max/min frequencies. Called under
-> > mutex locks */
-> > +static int uncore_write_control_freq(struct uncore_data *data,
-> > unsigned int input,
-> > +                                    unsigned int min_max)
-> > +{
-> > +       struct tpmi_uncore_cluster_info *cluster_info;
-> > +       struct tpmi_uncore_struct *uncore_root;
-> > +       int i;
-> > +
-> > +       input /= UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +       if (!input || input > UNCORE_MAX_RATIO)
-> > +               return -EINVAL;
-> > +
-> > +       cluster_info = container_of(data, struct
-> > tpmi_uncore_cluster_info, uncore_data);
-> > +       uncore_root = cluster_info->uncore_root;
-> > +
-> > +       /* Update each cluster in a package */
-> > +       for (i = 0; i < uncore_root->power_domain_count; ++i) {
-> > +               int j;
-> > +
-> > +               for (j = 0; j < uncore_root-
-> > >pd_info[i].cluster_count; ++j)
-> > +                       write_control_freq(&uncore_root-
-> > >pd_info[i].cluster_infos[j],
-> > +                                          input, min_max);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/* Callback for sysfs read for the current uncore frequency.
-> > Called under mutex locks */
-> > +static int uncore_read_freq(struct uncore_data *data, unsigned int
-> > *freq)
-> > +{
-> > +       return -ENODATA;
-> > +}
-> > +
-> > +#define UNCORE_GENMASK_VERSION                 GENMASK_ULL(7, 0)
-> 
-> GENMASK makes the name little bit confusing (what is "uncore genmask"
-> ??). 
-> Either drop it entirely (my preference) or add _MASK to the end
-> instead.
-> 
-> > +#define UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK    GENMASK_ULL(15, 8)
-> > +#define
-> > UNCORE_CLUSTER_OFF_MASK                        GENMASK_ULL(7, 0)
-> > +#define UNCORE_MAX_CLUSTER_PER_DOMAIN          8
-> > +
-> > +static int uncore_probe(struct auxiliary_device *auxdev, const
-> > struct auxiliary_device_id *id)
-> > +{
-> > +       struct intel_tpmi_plat_info *plat_info;
-> > +       struct tpmi_uncore_struct *tpmi_uncore;
-> > +       int ret, i, pkg = 0;
-> > +       int num_resources;
-> > +
-> > +       /* Get number of power domains, which is equal to number of
-> > resources */
-> > +       num_resources = tpmi_get_resource_count(auxdev);
-> > +       if (!num_resources)
-> > +               return -EINVAL;
-> > +
-> > +       /* Register callbacks to uncore core */
-> > +       ret = uncore_freq_common_init(uncore_read_control_freq,
-> > uncore_write_control_freq,
-> > +                                     uncore_read_freq);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       /* Allocate uncore instance per package */
-> > +       tpmi_uncore = devm_kzalloc(&auxdev->dev,
-> > sizeof(*tpmi_uncore), GFP_KERNEL);
-> > +       if (!tpmi_uncore) {
-> > +               ret = -ENOMEM;
-> > +               goto err_rem_common;
-> > +       }
-> > +
-> > +       /* Allocate memory for all power domains in a package */
-> > +       tpmi_uncore->pd_info = devm_kcalloc(&auxdev->dev,
-> > num_resources,
-> > +                                           sizeof(*tpmi_uncore-
-> > >pd_info),
-> > +                                           GFP_KERNEL);
-> > +       if (!tpmi_uncore->pd_info) {
-> > +               ret = -ENOMEM;
-> > +               goto err_rem_common;
-> > +       }
-> > +
-> > +       tpmi_uncore->power_domain_count = num_resources;
-> > +
-> > +       /* Get the package ID from the TPMI core */
-> > +       plat_info = tpmi_get_platform_data(auxdev);
-> > +       if (plat_info)
-> > +               pkg = plat_info->package_id;
-> > +       else
-> > +               dev_info(&auxdev->dev, "Platform information is
-> > NULL\n");
-> > +
-> > +       for (i = 0; i < num_resources; ++i) {
-> > +               struct tpmi_uncore_power_domain_info *pd_info;
-> > +               struct resource *res;
-> > +               u64 cluster_offset;
-> > +               u8 cluster_mask;
-> > +               int mask, j;
-> > +               u64 header;
-> > +
-> > +               res = tpmi_get_resource_at_index(auxdev, i);
-> > +               if (!res)
-> > +                       continue;
-> > +
-> > +               pd_info = &tpmi_uncore->pd_info[i];
-> > +
-> > +               pd_info->uncore_base =
-> > devm_ioremap_resource(&auxdev->dev, res);
-> > +               if (IS_ERR(pd_info->uncore_base)) {
-> > +                       ret = PTR_ERR(pd_info->uncore_base);
-> > +                       goto err_rem_common;
-> > +               }
-> > +
-> > +               /* Check for version and skip this resource if
-> > there is mismatch */
-> > +               header = readq(pd_info->uncore_base);
-> > +               pd_info->ufs_header_ver = header &
-> > UNCORE_GENMASK_VERSION;
-> > +               if (pd_info->ufs_header_ver !=
-> > UNCORE_HEADER_VERSION) {
-> > +                       dev_info(&auxdev->dev, "Uncore: Unsupported
-> > version:%d\n",
-> > +                               pd_info->ufs_header_ver);
-> > +                       continue;
-> > +               }
-> > +
-> > +               /* Get Cluster ID Mask */
-> > +               cluster_mask =
-> > FIELD_GET(UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK, header);
-> > +               if (!cluster_mask) {
-> > +                       dev_info(&auxdev->dev, "Uncore: Invalid
-> > cluster mask:%x\n", cluster_mask);
-> > +                       continue;
-> > +               }
-> > +
-> > +               /* Find out number of clusters in this resource */
-> > +               mask = 0x01;
-> > +               for (j = 0; j < UNCORE_MAX_CLUSTER_PER_DOMAIN; ++j)
-> > {
-> > +                       if (cluster_mask & mask)
-> > +                               pd_info->cluster_count++;
-> > +                       mask <<= 1;
-> > +               }
-> 
-> pd_info->cluster_count = hweight8(cluster_mask);
-> 
-> ?
-> 
-> 
+ .../ABI/stable/sysfs-platform-wmi-bmof        |  7 ++
+ Documentation/driver-api/index.rst            |  1 +
+ Documentation/driver-api/wmi.rst              | 19 ++++
+ Documentation/subsystem-apis.rst              |  1 +
+ Documentation/wmi/acpi-interface.rst          | 86 +++++++++++++++++++
+ Documentation/wmi/devices/index.rst           | 22 +++++
+ Documentation/wmi/devices/wmi-bmof.rst        | 22 +++++
+ Documentation/wmi/index.rst                   | 19 ++++
+ MAINTAINERS                                   |  9 ++
+ drivers/platform/x86/wmi.c                    | 63 ++++++++++----
+ include/linux/wmi.h                           | 41 ++++++++-
+ 11 files changed, 272 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-platform-wmi-bmof
+ create mode 100644 Documentation/driver-api/wmi.rst
+ create mode 100644 Documentation/wmi/acpi-interface.rst
+ create mode 100644 Documentation/wmi/devices/index.rst
+ create mode 100644 Documentation/wmi/devices/wmi-bmof.rst
+ create mode 100644 Documentation/wmi/index.rst
+
+=2D-
+2.30.2
 
