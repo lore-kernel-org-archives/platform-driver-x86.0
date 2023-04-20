@@ -2,135 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9837CC77B73
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 16:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2D5C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 17:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231278AbjDTQ4K (ORCPT
+        id S229523AbjDTRIi convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 12:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
+        Thu, 20 Apr 2023 13:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbjDTQzb (ORCPT
+        with ESMTP id S230257AbjDTRIh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 12:55:31 -0400
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7603B5266;
-        Thu, 20 Apr 2023 09:55:14 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id c17-20020a4aa4d1000000b005418821052aso831485oom.6;
-        Thu, 20 Apr 2023 09:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682009713; x=1684601713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gpWRid5cmCr0SjsRhGTnuvLDk1kP0ktA07Mc2yuVwzg=;
-        b=hrCkm3v0lPvEh5WcfNQ8A72ib23453Pklu0dKzjJ6OPLQQZNE9m1/O3Ba9pyWgO8bh
-         AeEbyidca4tDwBPuhM9x46UHBhNmZgjN2cVb3Is7tup/xUO/4OLVcvr/cMP0n7rMOB8n
-         qV2EWIkBV+Ya4JsuaeQZR0UtRWd3nMZWcvnHrYPxD9Mw9QZzWL+0mY6CI8aUsRcO+qQT
-         9nYuw13C144FzmPSpKAOpY2/D6w4qBDQR6lyx2PwN/sFdexXNKbJLqHeIAAWYRXelr6w
-         cbTSwNgWrGfXXK5113BNEoTiI+OUmmqMJP+KYZqO0HiZVRoBcAPUimMSK7EkRxKybB4R
-         XYYw==
+        Thu, 20 Apr 2023 13:08:37 -0400
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED99210F;
+        Thu, 20 Apr 2023 10:08:34 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-94f59fbe2cbso29311866b.1;
+        Thu, 20 Apr 2023 10:08:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682009713; x=1684601713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1682010513; x=1684602513;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gpWRid5cmCr0SjsRhGTnuvLDk1kP0ktA07Mc2yuVwzg=;
-        b=fCJmWfaH3ZDXMIwTYJTMj3hQyzEm4AwVt7JceKtovv4NiHvSG8tYSbYa5rumIzt1uz
-         H6CuhSwg0aIFikto8Zu5MkVtrMdxj2zYlt/P16T5J9clbiFuROhZRyzz4h0ky1kDkwsU
-         KqEiKrtFuQx3qtr4kuUMhr3RKor5VqyeRTTn9/RiZ0AlLsk+SQVKf0g8A3RZrdd9H9rc
-         kk+RvkBA+3ZthrbwDFHOBYEwynhYzHvJEraRlbM2isS6jr0UuvkmedcPtHntgUsywqT5
-         Nu5r7juyB3/Lpy7aL8vb/68XlxdVxs6d4MNYyNFDF8jrMwkMXwLnCziw2yWTnANL4ck5
-         gxpA==
-X-Gm-Message-State: AAQBX9dGbWDGypDPwn6bUwZcsNQSkED8k5ctgsIi0qz8gSrg125LVYhg
-        bHCI0aonee1BsKQ6Enu6u6s=
-X-Google-Smtp-Source: AKy350Y1cDONqVLv8t632CLRxjrRwLeh1FZP4I/U+6wffWnW8ySXbVTBwC5DG//mLBp6F+wgFqEEAA==
-X-Received: by 2002:a4a:3315:0:b0:545:3076:9e6b with SMTP id q21-20020a4a3315000000b0054530769e6bmr1269076ooq.6.1682009712936;
-        Thu, 20 Apr 2023 09:55:12 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:d090:9746:e449:eb46])
-        by smtp.gmail.com with ESMTPSA id s129-20020a4a5187000000b005252e5b6604sm791913ooa.36.2023.04.20.09.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:55:12 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v11 14/14] HP BIOSCFG driver  - MAINTAINERS
-Date:   Thu, 20 Apr 2023 11:54:54 -0500
-Message-Id: <20230420165454.9517-15-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230420165454.9517-1-jorge.lopez2@hp.com>
-References: <20230420165454.9517-1-jorge.lopez2@hp.com>
+        bh=BuRONv8seiZYRHKVDXe/quu6lUAwCL/qK3jfgqGF4GY=;
+        b=WcuplgFsu5AGUrCigusfsZULy4wg63JOMGDQHQHKBeFpqd1Vrxen6jWcrQCmWQKm6U
+         TLjLcOOxrjMsvzU5rIAvp+YOBxfC8+Oq2EU6W544IJLDAuNB2iKGTCBiuiXB/zLybNDN
+         FOhrdCxTEWHsTiprONvbU/66NuFMxDprUIwIRd2cVjrpeWzEAcrP0xvYNd2GKJhpT167
+         nKgZxpwpMJJwtJewkn7zMx94xE3b9UEK1PThnirqsB7sJahaXzzoQfkq4M30rkvv/XU9
+         tOi934fqMzGllqjf+nIRIFBMRdw7bTg5/We5giUZXeFa4dXGqkLe+L0W6dx+BUdLW0EP
+         CXmg==
+X-Gm-Message-State: AAQBX9cLIYHiope2dbqn63LrFdN3vkSzfIzjJAWO35DBT2JtT/EGuGrb
+        0fxGgSi4B90zsjz4MLnu8RZh+LCXzGPv/XlG/Ew=
+X-Google-Smtp-Source: AKy350a3R0mZC2e6WMfLZ1aKIbwnAdPJZzuO1Lv9M3Qn3e5ge3cus6J/R8KP0F4hPmE01C8rkUeIHCSEvpzQMW99mfo=
+X-Received: by 2002:a17:907:37c:b0:94e:8b6c:462c with SMTP id
+ rs28-20020a170907037c00b0094e8b6c462cmr2155391ejb.2.1682010513297; Thu, 20
+ Apr 2023 10:08:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230417152708.3599-1-mario.limonciello@amd.com>
+In-Reply-To: <20230417152708.3599-1-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Apr 2023 19:08:22 +0200
+Message-ID: <CAJZ5v0hBVosNmxN-KFZ0N=syNWNsQKtPOxYbNFy1bjRO2tP05Q@mail.gmail.com>
+Subject: Re: [PATCH v10 0/4] Add vendor agnostic mechanism to report hardware sleep
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Box David E <david.e.box@intel.com>, jstultz@google.com,
+        pavel@ucw.cz, svenva@chromium.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        rrangel@chromium.org, Jain Rajat <rajatja@google.com>,
+        hdegoede@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
+On Mon, Apr 17, 2023 at 5:27 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> An important part of validating that s0ix worked properly is to check how
+> much of a cycle was spent in a hardware sleep state.
+>
+> The reporting of hardware sleep is a mix of kernel messages and sysfs
+> files that vary from vendor to vendor. Collecting this information
+> requires extra information on the kernel command line or fetching from
+> debugfs.
+>
+> To make this information more readily accessible introduce a new file in
+> suspend_stats that drivers can report into during their resume routine.
+>
+> Userspace can fetch this information and compare it against the duration
+> of the cycle to allow determining residency percentages and flagging
+> problems.
+>
+> v9->v10:
+>  * Add tags
+>  * Rebase on linux-pm/bleeding-edge as it will apply through this tree
+>
+> Mario Limonciello (4):
+>   PM: Add sysfs files to represent time spent in hardware sleep state
+>   platform/x86/amd: pmc: Report duration of time in hw sleep state
+>   platform/x86/intel/pmc: core: Always capture counters on suspend
+>   platform/x86/intel/pmc: core: Report duration of time in HW sleep
+>     state
+>
+>  Documentation/ABI/testing/sysfs-power | 29 +++++++++++++
+>  drivers/platform/x86/amd/pmc.c        |  6 +--
+>  drivers/platform/x86/intel/pmc/core.c | 17 ++++----
+>  drivers/platform/x86/intel/pmc/core.h |  4 +-
+>  include/linux/suspend.h               |  8 ++++
+>  kernel/power/main.c                   | 59 +++++++++++++++++++++------
+>  6 files changed, 98 insertions(+), 25 deletions(-)
+>
 
-Many features of HP Commercial notebooks can be managed using Windows
-Management Instrumentation (WMI). WMI is an implementation of Web-Based
-Enterprise Management (WBEM) that provides a standards-based interface
-for changing and monitoring system settings. HP BIOSCFG driver provides
-a native Linux solution and the exposed features facilitates the
-migration to Linux environments.
-
-The Linux security features to be provided in hp-bioscfg driver enables
-managing the BIOS settings and security solutions via sysfs, a virtual
-filesystem that can be used by user-mode applications. The new
-documentation cover HP-specific firmware sysfs attributes such Secure
-Platform Management and Sure Start. Each section provides security
-feature description and identifies sysfs directories and files exposed
-by the driver.
-
-Many HP Commercial notebooks include a feature called Secure Platform
-Management (SPM), which replaces older password-based BIOS settings
-management with public key cryptography. PC secure product management
-begins when a target system is provisioned with cryptographic keys
-that are used to ensure the integrity of communications between system
-management utilities and the BIOS.
-
-HP Commercial notebooks have several BIOS settings that control its
-behaviour and capabilities, many of which are related to security.
-To prevent unauthorized changes to these settings, the system can
-be configured to use a cryptographic signature-based authorization
-string that the BIOS will use to verify authorization to modify the
-setting.
-
-Linux Security components are under development and not published yet.
-The only linux component is the driver (hp bioscfg) at this time.
-Other published security components are under Windows.
-
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-
----
-Based on the latest platform-drivers-x86.git/for-next
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c9011f5fc17..7d1f261af539 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9367,6 +9367,12 @@ S:	Obsolete
- W:	http://w1.fi/hostap-driver.html
- F:	drivers/net/wireless/intersil/hostap/
- 
-+HP BIOSCFG DRIVER
-+M:	Jorge Lopez <jorge.lopez2@hp.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/hp/hp-bioscfg/
-+
- HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
--- 
-2.34.1
-
+Whole series applied as 6.4-rc1 material, thanks!
