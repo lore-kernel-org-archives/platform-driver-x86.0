@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA47C77B72
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33DCC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 16:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbjDTQz2 (ORCPT
+        id S230352AbjDTQza (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 12:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34384 "EHLO
+        Thu, 20 Apr 2023 12:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230202AbjDTQzI (ORCPT
+        with ESMTP id S230257AbjDTQzL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 12:55:08 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E372F46BB;
-        Thu, 20 Apr 2023 09:55:04 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-38e3a1a07c8so758785b6e.0;
-        Thu, 20 Apr 2023 09:55:04 -0700 (PDT)
+        Thu, 20 Apr 2023 12:55:11 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DEA02D78;
+        Thu, 20 Apr 2023 09:55:08 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-38c35975545so832351b6e.1;
+        Thu, 20 Apr 2023 09:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682009704; x=1684601704;
+        d=gmail.com; s=20221208; t=1682009707; x=1684601707;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oJzFd9DQWnocycMGXpRDKiH/Hn/0E4Pxo0xVt+mEMjI=;
-        b=CDLnGTlTwb6iNIynJI3na7P9nYsHriBHHntRryLfAZjJYk26v9slJ8ULQOWs5xnZIX
-         qS80D1mxOWwMZzdlfAUvWuN/Zv/BlA1AQybpH5x11pgDwofdWA6ad0M7FCV+QKoquYR5
-         C0ejJbJ8iEq9+tdWhOBlku3d8JIz8ylPoKwB6tpOuiYYpMI5P/Tp+0ENf13phjuNjmvL
-         W6AtrO8gMbMjSNBzmx7iTK1zZUAO4uMa6LCMJp3WFGj+6H/EW2yduDEuJ0Jgn0Ev1AVP
-         VLEuiirs2GxXGbDw166mSKfL4/Y2nbYZgKMTscX+YUi+5eyqmvuvSoORh+GEjMjgEZQe
-         A/bw==
+        bh=W8MDowcdCyHRBFtM9QJqVy9DUXrPddSgYQvuHIZ0L1A=;
+        b=izji5BqFI8xkY8RxRQvBsHds8dnkgnxCouJ4HPlI1uSY0AUKELl9BfoTCZbW/2M2yN
+         yFbIOWRhBSrXYvKxUj39LRft2yQxG3TgX95wi4DjP5h8wqvH+iMDhV9i1lExZr7d2jEf
+         cgCpAuI96Vgh7aCNdgohAaXuOuAcoSgYiaqnSBezUgvJWJx82oBE0PMN3F8ZqKX5ZYiK
+         K2Bp91iRciww7J0iBY8somz9ByubaT+4bofNs8D/+wRs2cX+6tzzfolC/Rogfpc+SPXH
+         HBbm6iLpy6JB3jAwinXSgHpfWvrse85JPU5lHCIbz3fILXf+OdWrkfDpCjMwXkrPjBjD
+         JBtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682009704; x=1684601704;
+        d=1e100.net; s=20221208; t=1682009707; x=1684601707;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oJzFd9DQWnocycMGXpRDKiH/Hn/0E4Pxo0xVt+mEMjI=;
-        b=FIbWGUNilWmP/Xo0k9sNjAsx/w5Z1b1NuiHSTFjbuf8WAxPzeo8cncT68ImM8cUEEr
-         vAQpLTdoQC02H2lgxCoUUxOhqMQdphvLsOjHWn4bSaH1ZNc7qCYXdZKYbCTC3FR5Jfpq
-         3Dkrw6N+iE1S+CKZL9yEwtmdtecoj+Y4tCK9XxV1E0k7G039szz0HO4NITMaRyWVsOfQ
-         WOtC0Ok6QL9XSJyY72MbLX5eG/Q+5SfTcNKcFTT+pxUzdHqlb8YKwv7a/T3hhH8sf8gd
-         AFm/hFXgSUYJagjVWxR+qvaCvbHriOkHKpKOdTde8yMlGQvMbUS+3xhK7tJ2cvXv2ba6
-         ttxQ==
-X-Gm-Message-State: AAQBX9cjWDnmiWLRxzMkwbZvwMrBowaO4SHFDyh2CAA4wQO495UigRG5
-        VhuYD/pZcomsCs3yONekzIYGnNlL1sw=
-X-Google-Smtp-Source: AKy350aabNy0z6fJQSQeRDA/1E10toSYg9AqECxhh/Fv1a3Suye0O/A3+QgkzAMKveAu1zaVmHwTgQ==
-X-Received: by 2002:a54:4383:0:b0:38d:e9b3:e671 with SMTP id u3-20020a544383000000b0038de9b3e671mr1343001oiv.10.1682009703695;
-        Thu, 20 Apr 2023 09:55:03 -0700 (PDT)
+        bh=W8MDowcdCyHRBFtM9QJqVy9DUXrPddSgYQvuHIZ0L1A=;
+        b=ihr2isGXqi94Rz/H1LMf6vVj+DIY6Dai64gCYmxbcKIvVMiMmwFtgGRiU/oaSULQmX
+         nINUjBj7ekneksTp3cUaqrdBM+gMjwuryFyZdXcziD2jAf6VELjW4pXPGnILK5+IoOVH
+         BmHHflRn3HA3xKywlBTdHhVAA6HGfSoonNKphtzSmvVM3NtkMOwKmM2OCiYZTJydDjEH
+         JdLxrxD9b7QgIsurAJzSQ71u3N2jEyH4yH5F35VB3ZTKS1cV/lw29siCCGIxPapNH9p+
+         vZCih4gej4H5+aJrnB70E7qBn2IeUAAZQb9L+LAC242NH9hPCJyChe6QfLeqLL0pRjCX
+         /dyg==
+X-Gm-Message-State: AAQBX9emClbUIeR0KnVSIhzQYC5LjTkPfiML45QLw/lTtKLN5gqaZrlw
+        onGTvKfDL3f8PFv03tsss0TvcdafVhE=
+X-Google-Smtp-Source: AKy350bir62Gkkf02Zkm2wdFlc3BUeHuzRK2ZDOZOFx7r8b9a6Q+Jp/Z8IVbiYOvyulyeJ/2XomBEQ==
+X-Received: by 2002:aca:a856:0:b0:38e:6ba9:6491 with SMTP id r83-20020acaa856000000b0038e6ba96491mr1303371oie.50.1682009707248;
+        Thu, 20 Apr 2023 09:55:07 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:d090:9746:e449:eb46])
-        by smtp.gmail.com with ESMTPSA id s129-20020a4a5187000000b005252e5b6604sm791913ooa.36.2023.04.20.09.55.02
+        by smtp.gmail.com with ESMTPSA id s129-20020a4a5187000000b005252e5b6604sm791913ooa.36.2023.04.20.09.55.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:55:03 -0700 (PDT)
+        Thu, 20 Apr 2023 09:55:06 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v11 06/14] HP BIOSCFG driver - passwdobj-attributes
-Date:   Thu, 20 Apr 2023 11:54:46 -0500
-Message-Id: <20230420165454.9517-7-jorge.lopez2@hp.com>
+Subject: [PATCH v11 09/14] HP BIOSCFG driver  - enum-attributes
+Date:   Thu, 20 Apr 2023 11:54:49 -0500
+Message-Id: <20230420165454.9517-10-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230420165454.9517-1-jorge.lopez2@hp.com>
 References: <20230420165454.9517-1-jorge.lopez2@hp.com>
@@ -111,328 +111,155 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 669 ++++++++++++++++++
- 1 file changed, 669 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++++++
+ 1 file changed, 543 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
 new file mode 100644
-index 000000000000..c03b3a71e9c4
+index 000000000000..20defa92da6f
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -0,0 +1,669 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+@@ -0,0 +1,543 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to password object type attributes under
-+ * BIOS PASSWORD for use with hp-bioscfg driver.
++ * Functions corresponding to enumeration type attributes under
++ * BIOS Enumeration GUID for use with hp-bioscfg driver.
 + *
 + *  Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
-+#include <asm-generic/posix_types.h>
 +
-+GET_INSTANCE_ID(password);
-+/*
-+ * Clear all passwords copied to memory for a particular
-+ * authentication instance
-+ */
-+int clear_passwords(const int instance)
++GET_INSTANCE_ID(enumeration);
++
++static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	if (!bioscfg_drv.password_data[instance].is_enabled)
-+		return 0;
++	int instance_id = get_enumeration_instance_id(kobj);
 +
-+	memset(bioscfg_drv.password_data[instance].current_password,
-+	       0, sizeof(bioscfg_drv.password_data[instance].current_password));
-+	memset(bioscfg_drv.password_data[instance].new_password,
-+	       0, sizeof(bioscfg_drv.password_data[instance].new_password));
++	if (instance_id < 0)
++		return -EIO;
 +
-+	return 0;
++	return sysfs_emit(buf, "%s\n",
++			 bioscfg_drv.enumeration_data[instance_id].current_value);
 +}
 +
 +/*
-+ * Clear all credentials copied to memory for both Power-ON and Setup
-+ * BIOS instances
++ * validate_enumeration_input() -
++ * Validate input of current_value against possible values
++ *
++ * @instance_id: The instance on which input is validated
++ * @buf: Input value
 + */
-+int clear_all_credentials(void)
++static int validate_enumeration_input(int instance_id, const char *buf)
 +{
-+	int instance;
++	int ret = 0;
++	int found = 0;
++	int i;
++	int possible_values;
 +
-+	/* clear all passwords */
-+	for (instance = 0; instance < bioscfg_drv.password_instances_count; instance++)
-+		clear_passwords(instance);
++	/* Is it a read only attribute */
++	if (bioscfg_drv.enumeration_data[instance_id].common.is_readonly)
++		return -EIO;
 +
-+	/* clear auth_token */
-+	kfree(bioscfg_drv.spm_data.auth_token);
-+	bioscfg_drv.spm_data.auth_token = NULL;
++	possible_values = bioscfg_drv.enumeration_data[instance_id].possible_values_size;
++	for (i = 0; i < possible_values && !found; i++)
++		if (!strcasecmp(bioscfg_drv.enumeration_data[instance_id].possible_values[i], buf))
++			found = 1;
 +
-+	return 0;
-+}
-+
-+int get_password_instance_for_type(const char *name)
-+{
-+	int count = bioscfg_drv.password_instances_count;
-+	int instance;
-+
-+	for (instance = 0; instance < count; instance++) {
-+		if (strcmp(bioscfg_drv.password_data[instance].common.display_name, name) == 0)
-+			return instance;
-+	}
-+	return -EINVAL;
-+}
-+
-+int validate_password_input(int instance_id, const char *buf)
-+{
-+	int length;
-+
-+	length = strlen(buf);
-+	if (buf[length-1] == '\n')
-+		length--;
-+
-+	if (length > MAX_PASSWD_SIZE)
-+		return INVALID_BIOS_AUTH;
-+
-+	if (bioscfg_drv.password_data[instance_id].min_password_length > length ||
-+	    bioscfg_drv.password_data[instance_id].max_password_length < length)
-+		return INVALID_BIOS_AUTH;
-+	return SUCCESS;
-+}
-+
-+int password_is_set(const char *name)
-+{
-+	int id;
-+
-+	id = get_password_instance_for_type(name);
-+	if (id < 0)
-+		return 0;
-+
-+	return bioscfg_drv.password_data[id].is_enabled;
-+}
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(is_enabled, password);
-+static struct kobj_attribute password_is_password_set = __ATTR_RO(is_enabled);
-+
-+static ssize_t current_password_store(struct kobject *kobj,
-+				      struct kobj_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	char *p, *buf_cp;
-+	int id, ret = 0;
-+
-+	buf_cp = kstrdup(buf, GFP_KERNEL);
-+	if (!buf_cp) {
-+		ret = -ENOMEM;
-+		goto exit_password;
++	if (!found) {
++		ret = -EINVAL;
++		goto exit_enum_input;
 +	}
 +
-+	p = memchr(buf_cp, '\n', count);
-+
-+	if (p != NULL)
-+		*p = '\0';
-+
-+	id = get_password_instance_id(kobj);
-+
-+	if (id >= 0)
-+		ret = validate_password_input(id, buf_cp);
-+
-+	if (!ret) {
-+		strscpy(bioscfg_drv.password_data[id].current_password,
-+			buf_cp,
-+			sizeof(bioscfg_drv.password_data[id].current_password));
-+		/*
-+		 * set pending reboot flag depending on
-+		 * "RequiresPhysicalPresence" value
-+		 */
-+		if (bioscfg_drv.password_data[id].common.requires_physical_presence)
-+			bioscfg_drv.pending_reboot = true;
-+	}
-+
-+exit_password:
-+	kfree(buf_cp);
-+	return ret ? ret : count;
-+}
-+static struct kobj_attribute password_current_password = __ATTR_WO(current_password);
-+
-+static ssize_t new_password_store(struct kobject *kobj,
-+				  struct kobj_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	char *p, *buf_cp = NULL;
-+	int id = 0;
-+	int ret = -EIO;
-+
-+	buf_cp = kstrdup(buf, GFP_KERNEL);
-+	if (!buf_cp) {
-+		ret = -ENOMEM;
-+		goto exit_password;
-+	}
-+
-+	p = memchr(buf_cp, '\n', count);
-+
-+	if (p != NULL)
-+		*p = '\0';
-+
-+	id = get_password_instance_id(kobj);
-+
-+	if (id >= 0)
-+		ret = validate_password_input(id, buf_cp);
-+
-+	if (!ret)
-+		strscpy(bioscfg_drv.password_data[id].new_password,
-+			buf_cp,
-+			sizeof(bioscfg_drv.password_data[id].new_password));
-+
-+	if (!ret)
-+		ret = hp_set_attribute(kobj->name, buf_cp);
-+
-+exit_password:
 +	/*
-+	 * Regardless of the results both new and current passwords
-+	 * will be set to zero and avoid security issues
++	 * set pending reboot flag depending on
++	 * "RequiresPhysicalPresence" value
 +	 */
-+	clear_passwords(id);
++	if (bioscfg_drv.enumeration_data[instance_id].common.requires_physical_presence)
++		bioscfg_drv.pending_reboot = true;
 +
-+	kfree(buf_cp);
-+	return ret ? ret : count;
++exit_enum_input:
++	return ret;
 +}
 +
-+static struct kobj_attribute password_new_password = __ATTR_WO(new_password);
-+
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(min_password_length, password);
-+static struct kobj_attribute password_min_password_length = __ATTR_RO(min_password_length);
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(max_password_length, password);
-+static struct kobj_attribute password_max_password_length = __ATTR_RO(max_password_length);
-+
-+static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
++static void update_enumeration_value(int instance_id, char *attr_value)
 +{
-+	if (strcmp(kobj->name, SETUP_PASSWD) == 0)
-+		return sysfs_emit(buf, "%s\n", BIOS_ADMIN);
-+
-+	if (strcmp(kobj->name, POWER_ON_PASSWD) == 0)
-+		return sysfs_emit(buf,  "%s\n", POWER_ON);
-+
-+	return -EIO;
++	strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
++		attr_value,
++		sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
 +}
-+static struct kobj_attribute password_role = __ATTR_RO(role);
 +
-+static ssize_t mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			   char *buf)
-+{
-+	int i = get_password_instance_id(kobj);
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, enumeration);
++static struct kobj_attribute enumeration_display_langcode =
++		__ATTR_RO(display_name_language_code);
 +
-+	if (i < 0)
-+		return i;
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, enumeration);
++static struct kobj_attribute  enumeration_display_name =
++		__ATTR_RO(display_name);
 +
-+	if (bioscfg_drv.password_data[i].mechanism != PASSWORD)
-+		return -EINVAL;
++ATTRIBUTE_PROPERTY_STORE(current_value, enumeration);
++static struct kobj_attribute enumeration_current_val =
++	__ATTR_RW_MODE(current_value, 0644);
 +
-+	return sysfs_emit(buf, "%s\n", PASSWD_MECHANISM_TYPES);
-+}
-+static struct kobj_attribute password_mechanism = __ATTR_RO(mechanism);
++ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, enumeration);
++static struct kobj_attribute  enumeration_prerequisites_size_val =
++		__ATTR_RO(prerequisites_size);
++
++ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, enumeration);
++static struct kobj_attribute  enumeration_prerequisites_val =
++		__ATTR_RO(prerequisites);
++
++ATTRIBUTE_N_PROPERTY_SHOW(possible_values_size, enumeration);
++static struct kobj_attribute  enumeration_possible_values_size_val =
++		__ATTR_RO(possible_values_size);
++
++ATTRIBUTE_VALUES_PROPERTY_SHOW(possible_values, enumeration);
++static struct kobj_attribute  enumeration_poss_val =
++		__ATTR_RO(possible_values);
 +
 +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
 +			 char *buf)
 +{
-+	return sysfs_emit(buf, "password\n");
++	return sysfs_emit(buf, "enumeration\n");
 +}
-+static struct kobj_attribute password_type = __ATTR_RO(type);
++static struct kobj_attribute enumeration_type =
++		__ATTR_RO(type);
 +
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, password);
-+static struct kobj_attribute password_display_name =
-+		__ATTR_RO(display_name);
-+
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, password);
-+static struct kobj_attribute password_display_langcode =
-+		__ATTR_RO(display_name_language_code);
-+
-+ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, password);
-+static struct kobj_attribute  password_prerequisites_size_val =
-+		__ATTR_RO(prerequisites_size);
-+
-+ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, password);
-+static struct kobj_attribute  password_prerequisites_val =
-+		__ATTR_RO(prerequisites);
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(encodings_size, password);
-+static struct kobj_attribute  password_encodings_size_val =
-+		__ATTR_RO(encodings_size);
-+
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(encodings, password);
-+static struct kobj_attribute  password_encodings_val =
-+		__ATTR_RO(encodings);
-+
-+
-+static struct attribute *password_attrs[] = {
-+	&password_is_password_set.attr,
-+	&password_min_password_length.attr,
-+	&password_max_password_length.attr,
-+	&password_current_password.attr,
-+	&password_new_password.attr,
-+	&password_role.attr,
-+	&password_mechanism.attr,
-+	&password_type.attr,
-+	&password_display_name.attr,
-+	&password_display_langcode.attr,
-+	&password_prerequisites_size_val.attr,
-+	&password_prerequisites_val.attr,
-+	&password_encodings_val.attr,
-+	&password_encodings_size_val.attr,
++static struct attribute *enumeration_attrs[] = {
++	&enumeration_display_langcode.attr,
++	&enumeration_display_name.attr,
++	&enumeration_current_val.attr,
++	&enumeration_prerequisites_size_val.attr,
++	&enumeration_prerequisites_val.attr,
++	&enumeration_possible_values_size_val.attr,
++	&enumeration_poss_val.attr,
++	&enumeration_type.attr,
 +	NULL
 +};
 +
-+static const struct attribute_group bios_password_attr_group = {
-+	.attrs = password_attrs
++static const struct attribute_group enumeration_attr_group = {
++	.attrs = enumeration_attrs,
 +};
 +
-+static const struct attribute_group system_password_attr_group = {
-+	.attrs = password_attrs
-+};
-+
-+int alloc_password_data(void)
++int alloc_enumeration_data(void)
 +{
 +	int ret = 0;
 +
-+	bioscfg_drv.password_instances_count = get_instance_count(HP_WMI_BIOS_PASSWORD_GUID);
-+	bioscfg_drv.password_data = kcalloc(bioscfg_drv.password_instances_count,
-+					    sizeof(struct password_data), GFP_KERNEL);
-+	if (!bioscfg_drv.password_data) {
-+		bioscfg_drv.password_instances_count = 0;
++	bioscfg_drv.enumeration_instances_count =
++		get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
++
++	bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
++					       sizeof(struct enumeration_data), GFP_KERNEL);
++	if (!bioscfg_drv.enumeration_data) {
++		bioscfg_drv.enumeration_instances_count = 0;
 +		ret = -ENOMEM;
 +	}
-+
 +	return ret;
 +}
 +
-+/*
-+ * populate_password_package_data -
-+ *	Populate all properties for an instance under password attribute
-+ *
-+ * @password_obj: ACPI object with password data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int populate_password_package_data(union acpi_object *password_obj, int instance_id,
-+				   struct kobject *attr_name_kobj)
-+{
-+	bioscfg_drv.password_data[instance_id].attr_name_kobj = attr_name_kobj;
-+
-+	populate_password_elements_from_package(password_obj,
-+						password_obj->package.count,
-+						instance_id);
-+
-+	if (strcmp(attr_name_kobj->name, "Setup Password") == 0) {
-+		/* Save  system authentication instance for easy access */
-+		return sysfs_create_group(attr_name_kobj, &bios_password_attr_group);
-+	}
-+
-+	return sysfs_create_group(attr_name_kobj, &system_password_attr_group);
-+}
-+
 +/* Expected Values types associated with each element */
-+static const acpi_object_type expected_password_types[] = {
++static const acpi_object_type expected_enum_types[] = {
 +	[NAME] = ACPI_TYPE_STRING,
 +	[VALUE] = ACPI_TYPE_STRING,
 +	[PATH] = ACPI_TYPE_STRING,
@@ -443,92 +270,118 @@ index 000000000000..c03b3a71e9c4
 +	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
 +	[PREREQUISITES] = ACPI_TYPE_STRING,
 +	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[PSWD_MIN_LENGTH] = ACPI_TYPE_INTEGER,
-+	[PSWD_MAX_LENGTH] = ACPI_TYPE_INTEGER,
-+	[PSWD_SIZE] = ACPI_TYPE_INTEGER,
-+	[PSWD_ENCODINGS] = ACPI_TYPE_STRING,
-+	[PSWD_IS_SET] = ACPI_TYPE_INTEGER
++	[ENUM_CURRENT_VALUE] = ACPI_TYPE_STRING,
++	[ENUM_SIZE] = ACPI_TYPE_INTEGER,
++	[ENUM_POSSIBLE_VALUES] = ACPI_TYPE_STRING
 +};
 +
++/*
++ * populate_enumeration_package_data() -
++ * Populate all properties of an instance under enumeration attribute
++ *
++ * @enum_obj: ACPI object with enumeration data
++ * @instance_id: The instance to enumerate
++ * @attr_name_kobj: The parent kernel object
++ */
++int populate_enumeration_package_data(union acpi_object *enum_obj,
++				      int instance_id,
++				      struct kobject *attr_name_kobj)
++{
++	bioscfg_drv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
 +
-+int populate_password_elements_from_package(union acpi_object *password_obj,
-+					    int password_obj_count,
-+					    int instance_id)
++	populate_enumeration_elements_from_package(enum_obj,
++						   enum_obj->package.count,
++						   instance_id);
++	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].common.is_readonly,
++				     &enumeration_current_val);
++	/*
++	 * Several attributes have names such "MONDAY".  Friendly
++	 * user nane is generated to make the name more descriptive
++	 */
++	friendly_user_name_update(bioscfg_drv.enumeration_data[instance_id].common.path,
++				  attr_name_kobj->name,
++				  bioscfg_drv.enumeration_data[instance_id].common.display_name,
++				  sizeof(bioscfg_drv.enumeration_data[instance_id].common.display_name));
++	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
++}
++
++int populate_enumeration_elements_from_package(union acpi_object *enum_obj,
++					       int enum_obj_count,
++					       int instance_id)
 +{
 +	char *str_value = NULL;
 +	int value_len;
-+	int ret = 0;
 +	u32 size = 0;
 +	u32 int_value;
 +	int elem = 0;
 +	int reqs;
-+	int eloc;
 +	int pos_values;
++	int ret;
++	int eloc;
 +
-+
-+	if (!password_obj)
-+		return -EINVAL;
-+
-+	strscpy(bioscfg_drv.password_data[instance_id].common.display_name_language_code,
++	strscpy(bioscfg_drv.enumeration_data[instance_id].common.display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.password_data[instance_id].common.display_name_language_code));
++		sizeof(bioscfg_drv.enumeration_data[instance_id].common.display_name_language_code));
 +
-+	for (elem = 1, eloc = 1; elem < password_obj_count; elem++, eloc++) {
++	for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
 +
-+		/* ONLY look at the first PASSWORD_ELEM_CNT elements */
-+		if (eloc == PASSWORD_ELEM_CNT)
-+			goto exit_package;
++		/* ONLY look at the first ENUM_ELEM_CNT elements */
++		if (eloc == ENUM_ELEM_CNT)
++			goto exit_enumeration_package;
 +
-+		switch (password_obj[elem].type) {
++		switch (enum_obj[elem].type) {
 +		case ACPI_TYPE_STRING:
 +
-+			if (PREREQUISITES != elem && PSWD_ENCODINGS != elem) {
-+				ret = convert_hexstr_to_str(password_obj[elem].string.pointer,
-+							    password_obj[elem].string.length,
++			if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
++				ret = convert_hexstr_to_str(enum_obj[elem].string.pointer,
++							    enum_obj[elem].string.length,
 +							    &str_value, &value_len);
 +				if (ret)
-+					continue;
++					return -EINVAL;
++
 +			}
 +			break;
 +		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)password_obj[elem].integer.value;
++			int_value = (u32)enum_obj[elem].integer.value;
 +			break;
 +		default:
-+			pr_warn("Unsupported object type [%d]\n", password_obj[elem].type);
++			pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
 +			continue;
 +		}
 +
 +		/* Check that both expected and read object type match */
-+		if (expected_password_types[eloc] != password_obj[elem].type) {
++		if (expected_enum_types[eloc] != enum_obj[elem].type) {
 +			pr_err("Error expected type %d for elem  %d, but got type %d instead\n",
-+			       expected_password_types[eloc], elem, password_obj[elem].type);
++			       expected_enum_types[eloc], elem, enum_obj[elem].type);
 +			return -EIO;
 +		}
 +
-+		/* Assign appropriate element value to corresponding field*/
++		/* Assign appropriate element value to corresponding field */
 +		switch (eloc) {
++		case NAME:
 +		case VALUE:
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.password_data[instance_id].common.path, str_value,
-+				sizeof(bioscfg_drv.password_data[instance_id].common.path));
++			strscpy(bioscfg_drv.enumeration_data[instance_id].common.path, str_value,
++				sizeof(bioscfg_drv.enumeration_data[instance_id].common.path));
 +			break;
 +		case IS_READONLY:
-+			bioscfg_drv.password_data[instance_id].common.is_readonly = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.password_data[instance_id].common.display_in_ui = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.password_data[instance_id].common.requires_physical_presence = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.password_data[instance_id].common.sequence = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.sequence = int_value;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			bioscfg_drv.password_data[instance_id].common.prerequisites_size = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.prerequisites_size = int_value;
 +			if (int_value > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++
 +			/*
 +			 * This HACK is needed to keep the expected
 +			 * element list pointing to the right obj[elem].type
@@ -539,120 +392,142 @@ index 000000000000..c03b3a71e9c4
 +			if (int_value == 0)
 +				eloc++;
 +			break;
-+		case PREREQUISITES:
-+			size = bioscfg_drv.password_data[instance_id].common.prerequisites_size;
 +
-+			for (reqs = 0; reqs < size; reqs++) {
-+				ret = convert_hexstr_to_str(password_obj[elem + reqs].string.pointer,
-+							    password_obj[elem + reqs].string.length,
++		case PREREQUISITES:
++
++			size = bioscfg_drv.enumeration_data[instance_id].common.prerequisites_size;
++
++			for (reqs = 0; reqs < size && reqs < MAX_PREREQUISITES_SIZE; reqs++) {
++				if (elem >= enum_obj_count) {
++					pr_err("Error enum-objects package is too small\n");
++					return -EINVAL;
++				}
++
++				ret = convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
++							    enum_obj[elem + reqs].string.length,
 +							    &str_value, &value_len);
 +
 +				if (ret)
-+					break;
++					return -EINVAL;
 +
-+				strscpy(bioscfg_drv.password_data[instance_id].common.prerequisites[reqs],
++				strlcpy(bioscfg_drv.enumeration_data[instance_id].common.prerequisites[reqs],
 +					str_value,
-+					sizeof(bioscfg_drv.password_data[instance_id].common.prerequisites[reqs]));
++					sizeof(bioscfg_drv.enumeration_data[instance_id].common.prerequisites[reqs]));
 +
 +				kfree(str_value);
 +			}
 +			break;
 +
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.password_data[instance_id].common.security_level = int_value;
++			bioscfg_drv.enumeration_data[instance_id].common.security_level = int_value;
 +			break;
 +
-+		case PSWD_MIN_LENGTH:
-+			bioscfg_drv.password_data[instance_id].min_password_length = int_value;
++		case ENUM_CURRENT_VALUE:
++			strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
++				str_value, sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
 +			break;
-+		case PSWD_MAX_LENGTH:
-+			bioscfg_drv.password_data[instance_id].max_password_length = int_value;
-+			break;
-+		case PSWD_SIZE:
-+			bioscfg_drv.password_data[instance_id].encodings_size = int_value;
-+			if (int_value > MAX_ENCODINGS_SIZE)
-+				pr_warn("Password Encoding size value exceeded the maximum number of elements supported or data may be malformed\n");
++		case ENUM_SIZE:
++			bioscfg_drv.enumeration_data[instance_id].possible_values_size = int_value;
++			if (int_value > MAX_VALUES_SIZE)
++				pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
 +			/*
 +			 * This HACK is needed to keep the expected
 +			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. PSWD_ENCODINGS
-+			 * object is omitted by BIOS when the size is
-+			 * zero.
++			 * when the size is zero.  POSSIBLE_VALUES
++			 * object is omitted by BIOS when the size is zero.
 +			 */
 +			if (int_value == 0)
 +				eloc++;
 +			break;
 +
-+		case PSWD_ENCODINGS:
-+			size = bioscfg_drv.password_data[instance_id].encodings_size;
++		case ENUM_POSSIBLE_VALUES:
++			size = bioscfg_drv.enumeration_data[instance_id].possible_values_size;
 +
-+			for (pos_values = 0; pos_values < size && pos_values < MAX_ENCODINGS_SIZE; pos_values++) {
-+				ret = convert_hexstr_to_str(password_obj[elem + pos_values].string.pointer,
-+							    password_obj[elem + pos_values].string.length,
++			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE; pos_values++) {
++				if (elem >= enum_obj_count) {
++					pr_err("Error enum-objects package is too small\n");
++					return -EINVAL;
++				}
++
++				ret = convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
++							    enum_obj[elem  + pos_values].string.length,
 +							    &str_value, &value_len);
-+				if (ret)
-+					break;
 +
-+				strscpy(bioscfg_drv.password_data[instance_id].encodings[pos_values],
-+					str_value,
-+					sizeof(bioscfg_drv.password_data[instance_id].encodings[pos_values]));
++				if (ret)
++					return -EINVAL;
++
++				/*
++				 * ignore strings when possible values size
++				 * is greater than  MAX_VALUES_SIZE
++				 */
++				if (size < MAX_VALUES_SIZE)
++					strlcpy(bioscfg_drv.enumeration_data[instance_id].possible_values[pos_values],
++						str_value,
++						sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values[pos_values]));
++
 +				kfree(str_value);
 +			}
 +			break;
-+		case PSWD_IS_SET:
-+			bioscfg_drv.password_data[instance_id].is_enabled = int_value;
-+			break;
-+
 +		default:
-+			pr_warn("Invalid element: %d found in Password attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
 +			break;
 +		}
++
 +		kfree(str_value);
 +	}
 +
-+exit_package:
++exit_enumeration_package:
 +	kfree(str_value);
 +	return 0;
 +}
 +
 +/*
-+ * populate_password_buffer_data -
-+ * Populate all properties for an instance under password object attribute
++ * populate_enumeration_buffer_data() -
++ * Populate all properties of an instance under enumeration attribute
 + *
 + * @buffer_ptr: Buffer pointer
 + * @buffer_size: Buffer size
++ * @enum_obj: ACPI object with enumeration data
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
++ * @enumeration_property_count: Total properties count under enumeration type
 + */
-+int populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
-+				  struct kobject *attr_name_kobj)
++int populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
++				     int instance_id,
++				     struct kobject *attr_name_kobj)
 +{
-+	bioscfg_drv.password_data[instance_id].attr_name_kobj = attr_name_kobj;
 +
-+	/* Populate Password attributes */
-+	populate_password_elements_from_buffer(buffer_ptr, buffer_size,
-+					       instance_id);
-+	friendly_user_name_update(bioscfg_drv.password_data[instance_id].common.path,
++	bioscfg_drv.enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
++
++	/* Populate enumeration elements */
++	populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size,
++						  instance_id);
++
++	update_attribute_permissions(bioscfg_drv.enumeration_data[instance_id].common.is_readonly,
++				     &enumeration_current_val);
++	/*
++	 * Several attributes have names such "MONDAY". A Friendlier
++	 * user nane is generated to make the name more descriptive
++	 */
++	friendly_user_name_update(bioscfg_drv.enumeration_data[instance_id].common.path,
 +				  attr_name_kobj->name,
-+				  bioscfg_drv.password_data[instance_id].common.display_name,
-+				  sizeof(bioscfg_drv.password_data[instance_id].common.display_name));
-+	if (strcmp(attr_name_kobj->name, "Setup Password") == 0)
-+		return sysfs_create_group(attr_name_kobj, &bios_password_attr_group);
++				  bioscfg_drv.enumeration_data[instance_id].common.display_name,
++				  sizeof(bioscfg_drv.enumeration_data[instance_id].common.display_name));
 +
-+	return sysfs_create_group(attr_name_kobj, &system_password_attr_group);
++	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
 +}
 +
-+int populate_password_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+					   int instance_id)
++int populate_enumeration_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
++					      int instance_id)
 +{
-+	int ret;
 +	char *dst = NULL;
 +	int elem;
 +	int reqs;
 +	int integer;
 +	int size = 0;
 +	int values;
++	int ret;
 +	int dst_size = *buffer_size / sizeof(u16);
 +
 +	dst = kcalloc(dst_size, sizeof(char), GFP_KERNEL);
@@ -660,135 +535,134 @@ index 000000000000..c03b3a71e9c4
 +		return -ENOMEM;
 +
 +	elem = 0;
-+	strscpy(bioscfg_drv.password_data[instance_id].common.display_name_language_code,
++
++	strscpy(bioscfg_drv.enumeration_data[instance_id].common.display_name_language_code,
 +		LANG_CODE_STR,
-+		sizeof(bioscfg_drv.password_data[instance_id].common.display_name_language_code));
++		sizeof(bioscfg_drv.enumeration_data[instance_id].common.display_name_language_code));
 +
 +	for (elem = 1; elem < 3; elem++) {
 +
 +		ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
++		/* Ignore. Zero length string values */
 +		if (ret < 0)
 +			continue;
 +
 +		switch (elem) {
 +		case VALUE:
-+			strscpy(bioscfg_drv.password_data[instance_id].current_password,
-+				dst, sizeof(bioscfg_drv.password_data[instance_id].current_password));
++			/* Skip 'Value' since 'CurrentValue' is reported. */
 +			break;
 +		case PATH:
-+			strscpy(bioscfg_drv.password_data[instance_id].common.path, dst,
-+				sizeof(bioscfg_drv.password_data[instance_id].common.path));
++			strscpy(bioscfg_drv.enumeration_data[instance_id].common.path,
++				dst, sizeof(bioscfg_drv.enumeration_data[instance_id].common.path));
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Password  attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +	}
 +
-+	for (elem = 3; elem < PASSWORD_ELEM_CNT; elem++) {
-+
-+		if (elem != PREREQUISITES  && elem != PSWD_ENCODINGS) {
++	for (elem = 3; elem < ENUM_ELEM_CNT; elem++) {
++		if (PREREQUISITES != elem && ENUM_CURRENT_VALUE != elem && ENUM_POSSIBLE_VALUES != elem) {
 +			ret = get_integer_from_buffer((int **)&buffer_ptr, buffer_size, (int *)&integer);
-+			if (ret)
++			if (ret < 0)
 +				continue;
 +		}
 +
 +		switch (elem) {
 +		case IS_READONLY:
-+			bioscfg_drv.password_data[instance_id].common.is_readonly = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.is_readonly = integer;
 +			break;
 +		case DISPLAY_IN_UI:
-+			bioscfg_drv.password_data[instance_id].common.display_in_ui = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.display_in_ui = integer;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			bioscfg_drv.password_data[instance_id].common.requires_physical_presence = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.requires_physical_presence = integer;
 +			break;
 +		case SEQUENCE:
-+			bioscfg_drv.password_data[instance_id].common.sequence = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.sequence = integer;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			bioscfg_drv.password_data[instance_id].common.prerequisites_size = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.prerequisites_size = integer;
 +			if (integer > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
 +			// PREREQUISITES:
 +			elem++;
-+			size = bioscfg_drv.password_data[instance_id].common.prerequisites_size;
-+			for (reqs = 0; reqs < size && reqs > MAX_PREREQUISITES_SIZE; reqs++) {
++
++			size = bioscfg_drv.enumeration_data[instance_id].common.prerequisites_size;
++			for (reqs = 0; reqs < size && reqs < MAX_PREREQUISITES_SIZE; reqs++) {
 +				ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
++				/* Ignore. expect zero length strings at the end of prerequisite values */
 +				if (ret < 0)
 +					continue;
 +
-+				strscpy(bioscfg_drv.password_data[instance_id].common.prerequisites[reqs],
++				strscpy(bioscfg_drv.enumeration_data[instance_id].common.prerequisites[reqs],
 +					dst,
-+					sizeof(bioscfg_drv.password_data[instance_id].common.prerequisites[reqs]));
++					sizeof(bioscfg_drv.enumeration_data[instance_id].common.prerequisites[reqs]));
 +			}
 +			break;
 +		case SECURITY_LEVEL:
-+			bioscfg_drv.password_data[instance_id].common.security_level = integer;
++			bioscfg_drv.enumeration_data[instance_id].common.security_level = integer;
 +			break;
++		case ENUM_CURRENT_VALUE:
++			ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
++			if (ret < 0)
++				continue;
 +
-+		case PSWD_MIN_LENGTH:
-+			bioscfg_drv.password_data[instance_id].min_password_length = integer;
++			strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
++				dst,
++				sizeof(bioscfg_drv.enumeration_data[instance_id].current_value));
 +			break;
-+		case PSWD_MAX_LENGTH:
-+			bioscfg_drv.password_data[instance_id].max_password_length = integer;
-+			break;
-+		case PSWD_SIZE:
-+			bioscfg_drv.password_data[instance_id].encodings_size = integer;
-+			if (integer > MAX_ENCODINGS_SIZE)
-+				pr_warn("Password Encoding size value exceeded the maximum number of elements supported or data may be malformed\n");
++		case ENUM_SIZE:
++			bioscfg_drv.enumeration_data[instance_id].possible_values_size = integer;
++			if (integer > MAX_VALUES_SIZE)
++				pr_warn("Possible size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
-+			// PSWD_ENCODINGS:
++			// ENUM_POSSIBLE_VALUES:
 +			elem++;
-+			size = bioscfg_drv.password_data[instance_id].encodings_size;
-+			for (values = 0; values < size && values < MAX_ENCODINGS_SIZE; values++) {
++
++			size = bioscfg_drv.enumeration_data[instance_id].possible_values_size;
++			for (values = 0; values < size && values < MAX_VALUES_SIZE; values++) {
 +				ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
++				/* Ignore expect zero size strings at the end of all possible values */
 +				if (ret < 0)
 +					continue;
 +
-+				strscpy(bioscfg_drv.password_data[instance_id].encodings[values],
++				strscpy(bioscfg_drv.enumeration_data[instance_id].possible_values[values],
 +					dst,
-+					sizeof(bioscfg_drv.password_data[instance_id].encodings[values]));
-+
++					sizeof(bioscfg_drv.enumeration_data[instance_id].possible_values[values]));
 +			}
 +			break;
-+		case PSWD_IS_SET:
-+			bioscfg_drv.password_data[instance_id].is_enabled = integer;
-+			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Password  attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
 +			break;
 +		}
 +	}
++
 +	kfree(dst);
++
 +	return 0;
 +}
 +
-+/*
-+ * exit_password_attributes() - Clear all attribute data
++/**
++ * exit_enumeration_attributes() - Clear all attribute data
 + *
 + * Clears all data allocated for this group of attributes
 + */
-+void exit_password_attributes(void)
++void exit_enumeration_attributes(void)
 +{
 +	int instance_id;
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.password_instances_count; instance_id++) {
-+		struct kobject *attr_name_kobj = bioscfg_drv.password_data[instance_id].attr_name_kobj;
++	for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count; instance_id++) {
++		struct kobject *attr_name_kobj = bioscfg_drv.enumeration_data[instance_id].attr_name_kobj;
 +
-+		if (attr_name_kobj) {
-+			if (strcmp(attr_name_kobj->name, SETUP_PASSWD) == 0)
-+				sysfs_remove_group(attr_name_kobj,
-+						   &bios_password_attr_group);
-+			else
-+				sysfs_remove_group(attr_name_kobj,
-+						   &system_password_attr_group);
-+		}
++		if (attr_name_kobj)
++			sysfs_remove_group(attr_name_kobj, &enumeration_attr_group);
 +	}
-+	bioscfg_drv.password_instances_count = 0;
-+	kfree(bioscfg_drv.password_data);
-+	bioscfg_drv.password_data = NULL;
++	bioscfg_drv.enumeration_instances_count = 0;
++
++	kfree(bioscfg_drv.enumeration_data);
++	bioscfg_drv.enumeration_data = NULL;
 +}
 -- 
 2.34.1
