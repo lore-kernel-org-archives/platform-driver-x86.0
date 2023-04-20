@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BEDC77B76
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 11:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B89C7EE20
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 11:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234770AbjDTLFS (ORCPT
+        id S235357AbjDTLHY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 07:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        Thu, 20 Apr 2023 07:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234867AbjDTLEW (ORCPT
+        with ESMTP id S234188AbjDTLFR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 07:04:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4565245;
-        Thu, 20 Apr 2023 04:03:08 -0700 (PDT)
+        Thu, 20 Apr 2023 07:05:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184A36E9F;
+        Thu, 20 Apr 2023 04:03:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AFA87647D7;
-        Thu, 20 Apr 2023 11:02:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A63C433A0;
-        Thu, 20 Apr 2023 11:02:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0CA2F647E0;
+        Thu, 20 Apr 2023 11:03:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746DDC433D2;
+        Thu, 20 Apr 2023 11:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681988546;
-        bh=OEalqhz3jQJi98FXcA5XLhVknsL3nGukl8irN8JTk60=;
+        s=k20201202; t=1681988583;
+        bh=6tVoMVjbXjSdhw+ClpiLyHKFwImWUjz0a/dDKuM6uMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTkPdcN9vdGeyI8rVYMGZIFfADtS867BBKumBw1nHp3j8mlC+J2pucjzoC10vvg7u
-         VhA0uWtb7F97ryUjWWnX1ldOdMmYLXW8erht02+0JtNWezqC2cV3bdItQ28MlranGD
-         w4nKADiaUBMrOHdpfXnEYHDB2hGaVYaMg6FWrVCiY1YSrxxavvr4pycu5lPBIefgHf
-         3LOCLoT1aKhgi3G6BEsJd+XzP6KVzs1sPY0dhtahOeBfkUIdBTpIdGqp1y4JD9NMgu
-         dOmtyJsgV7k4JrQ4zqad1Hkx//eKqRCessAVp/bmz61wYjtNJ3daA6wG9oAsAaCU2R
-         iXOhwoSgtZ/iQ==
+        b=qFC93I+rYDXYbU+VPcEHnRHvuDxnzpvWcenm6SZpcXAPZSJPRAmV/jwUeQsMnA8vQ
+         tvArOv95oX23Qsymv1fCY7Hc4FQHz0cDg5KcJ2hZ8Q79v9GEzXY6S3Bfw15Z3UEpro
+         ZZ4Rp7flhxpedYAtBLH9LFIkuLYjFtx4fOvh79GFro3CPh3Zz4HPnwpA+ZjRsGHwqG
+         UoS+ktLzEDhb6HFLtcZbL1nWsW22zk3aaLwbAvnR9piM9xfuaAUwikCai5mgvMpR5w
+         bQ8jurF9Pkugr52zUNN12hqCqZArrzHeBtBZdvYIcjy1MRj/98I12mBnyxEY0R+9hm
+         dKB/AW+2OjT3Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benjamin Asbach <asbachb.kernel@impl.it>,
@@ -40,12 +40,12 @@ Cc:     Benjamin Asbach <asbachb.kernel@impl.it>,
         Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
         markgross@kernel.org, ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 15/17] platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle quirk list
-Date:   Thu, 20 Apr 2023 07:01:44 -0400
-Message-Id: <20230420110148.505779-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 13/15] platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle quirk list
+Date:   Thu, 20 Apr 2023 07:02:27 -0400
+Message-Id: <20230420110231.505992-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230420110148.505779-1-sashal@kernel.org>
-References: <20230420110148.505779-1-sashal@kernel.org>
+In-Reply-To: <20230420110231.505992-1-sashal@kernel.org>
+References: <20230420110231.505992-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -84,10 +84,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 32c10457399e4..7191ff2625b1e 100644
+index 2a48a2d880d86..d1ec31086e9ba 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4478,6 +4478,14 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
+@@ -4481,6 +4481,14 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
  			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
  		}
  	},
