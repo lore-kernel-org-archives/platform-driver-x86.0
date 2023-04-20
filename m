@@ -2,306 +2,217 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27A4C77B72
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 13:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FC8C77B72
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Apr 2023 16:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbjDTNeW (ORCPT
+        id S229749AbjDTQy7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Apr 2023 09:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42404 "EHLO
+        Thu, 20 Apr 2023 12:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229821AbjDTNeV (ORCPT
+        with ESMTP id S230036AbjDTQy6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2023 09:34:21 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B3B49E5;
-        Thu, 20 Apr 2023 06:34:19 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4edbd6cc46bso570065e87.2;
-        Thu, 20 Apr 2023 06:34:19 -0700 (PDT)
+        Thu, 20 Apr 2023 12:54:58 -0400
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F541FDA;
+        Thu, 20 Apr 2023 09:54:57 -0700 (PDT)
+Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-5427422a17eso570940eaf.3;
+        Thu, 20 Apr 2023 09:54:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681997658; x=1684589658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBx+eefuD3mlwASOnAXXaphvTZnbQD+D9i1G2I4aLj8=;
-        b=qmB7IgRNrOg7Yiy3/TCCuLJTdZB4SeCbSJttL+VR1cUJ04+ObsDD9YNoCesG+AnTHJ
-         aTeVhRRCY5DH9nEbVtHUHA46SG7WHzuheX2uLfll+cHdp7LAjEqFRzwamv7j4ZRlpYWo
-         LEWj3a6svuA2UrbTejkMtUNjhba6LI+KwaWc5ejbGx99wt79qmebAVLxUZp0cn6zBI/d
-         r+iWKXXsu5bcz9v81h5zaXe2/YBUu1c/lwRSqIOnlFrtvbsetPjfOWpUPQm8WBbBU2Rd
-         dJoZoLwtjUfqSjMspUZ7yJoKBkIURWO4PLxVccPS+Xc8LISsIDwtU5IcglUK/Ea+MJas
-         QJNw==
+        d=gmail.com; s=20221208; t=1682009696; x=1684601696;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1xiCdBRN3dkhS3z75tgs/uAmebSFn4Q10CTGq+DYf8=;
+        b=sRjWqBs83UZWdFqal36ni+g160KKgLqCpgKpwUj9Thpi8XQ5O2+5UqfOqWkuukuXkz
+         aT87Foksb3uH4/xUFe8YxdeL3X3HXL4DY66yDiOhQKHA8gkMFDDPWaMmeQBTW4To+Q4Y
+         tSG6SoUYYp7x7sMIKg/XpbHZ7R6lWXgbimlHmAMUZ1SkXSMDhSVjkdzxhnTEhbAJvkZI
+         Kfj52zIdTtLlzFckUqInFBPw36TfPydLrmxTUa7pouKVitK8Kue2ICaxFkNjiv2KH1Lb
+         a5dJp+Lzrld++OXvFCcH7jSUpftqBMAjwTnvYV0LP45JhdcLHBO/qlfKsKpjoLzJWD12
+         q6ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681997658; x=1684589658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JBx+eefuD3mlwASOnAXXaphvTZnbQD+D9i1G2I4aLj8=;
-        b=ZcYF8PawvgjFBcyNRs/pzUw7fCV8eEtpAvB2BBTEWBpVogYbq8lzMSkoomZcD2MPDQ
-         5lQ1sJ3M3gjt9KU/0HiAQd9sz4nQSeluDF2g5H11/pQHVAl/juWXXi1+YqwoUuaiisn/
-         36fKYiSDCIRbuEV1eg1PuDHTCoWa8q7839+RZxv3ncbKb9Hsag0IizvZaqTrgW3KJmGU
-         3vzSn1IVjn9PGFFrhIgj78RtQxSZhIfVQHXl/YBHAAEHsfEiEggLcm/46ikT0BtV13l7
-         dEnS/SC40Ri2zFb7NTJq03EWEBsKoMGtx/GZUX44qqxVsMMWedUAsv3OVSw2K6cyRKBF
-         5Hwg==
-X-Gm-Message-State: AAQBX9esOAAyxs0xcUFyD6H1Uz5gk2jBZfrvOTSIcyY5Cx82U9xrKprq
-        85sK84/vsJ7H3zjrbFPT3m8JsUmyo2l0x64yiY5ffD+S
-X-Google-Smtp-Source: AKy350btAzYnXLlPTv04Y7unRU8YAvfOdqZn0Lxv4Zt4Os2OAzHN86GYf4hNuxyadHt2aEVCWzfucLKCiIJ2BZ7vVzA=
-X-Received: by 2002:a19:ee0e:0:b0:4ea:e799:59f7 with SMTP id
- g14-20020a19ee0e000000b004eae79959f7mr393073lfb.2.1681997657435; Thu, 20 Apr
- 2023 06:34:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230419151321.6167-14-jorge.lopez2@hp.com> <202304200914.VfJcRutc-lkp@intel.com>
-In-Reply-To: <202304200914.VfJcRutc-lkp@intel.com>
+        d=1e100.net; s=20221208; t=1682009696; x=1684601696;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1xiCdBRN3dkhS3z75tgs/uAmebSFn4Q10CTGq+DYf8=;
+        b=a/yaMG0LxQAhqIOkarUhNNHDpgmc5TvaYKL2+HAch3pED7nkMyx2D2nJ8MRRX6aUw2
+         jm3kyFdsQreYhUIv2r+rx+WxLki4fO78A6m5R36x++lyqAuhuZHFFhYKLkRc76z/wHHD
+         aNSKjj63U2GO/zzmbZqeik3JBeZ/E5qRUzfSQxZx6uo41gGIys2yjEinjLQg1kKWm3Ej
+         TLBb2uG8QxxPfY8tZFvKtfv1Anh1KluXS9y2+L7858AQNi4B9DohonJCmQrkaVRTIJBO
+         lqZB8rNo/TJXsB+1BYgPod5G6hCO51nKlfuSdIBJAp3PF2xu6Km2Xnv1jZVi0O18FQra
+         XuQg==
+X-Gm-Message-State: AAQBX9dsUgh0VkDzQjhrAEjeTw72sqsB50/XgiBA0+LvbymFgQwbdZ4i
+        Zax9qfuZ57qHlPM1XK26kgrZXLLPAHA=
+X-Google-Smtp-Source: AKy350aUfhxFP9p0HiI8OVyHXVFTAe4hcVJfnD/CgGaGdRl/x+0EAvjxHVwkLgm3WMoa+Cd7hGKJ4w==
+X-Received: by 2002:a05:6808:655:b0:38e:19e6:6401 with SMTP id z21-20020a056808065500b0038e19e66401mr1160640oih.30.1682009696364;
+        Thu, 20 Apr 2023 09:54:56 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:d090:9746:e449:eb46])
+        by smtp.gmail.com with ESMTPSA id s129-20020a4a5187000000b005252e5b6604sm791913ooa.36.2023.04.20.09.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 09:54:55 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Thu, 20 Apr 2023 08:33:54 -0500
-Message-ID: <CAOOmCE_+UL31C50Md-eV5H76jy2Ta1q1xB7b=QqdNU95Q4y6fw@mail.gmail.com>
-Subject: Re: [PATCH v10 13/14] HP BIOSCFG driver - Makefile
-To:     kernel test robot <lkp@intel.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de
+Subject: [PATCH v11 00/14] HP BIOSCFG driver
+Date:   Thu, 20 Apr 2023 11:54:40 -0500
+Message-Id: <20230420165454.9517-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thank you.  I will address those issues.
+HP BIOS Configuration driver purpose is to provide a driver supporting
+the latest sysfs class firmware attributes framework allowing the user
+to change BIOS settings and security solutions on HP Inc.’s commercial
+notebooks.
 
-Regards,
+Many features of HP Commercial notebooks can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings. HP BIOSCFG driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
 
-Jorge
+The Linux security features to be provided in hp-bioscfg driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by user-mode applications. The new
+documentation cover HP-specific firmware sysfs attributes such Secure
+Platform Management and Sure Start. Each section provides security
+feature description and identifies sysfs directories and files exposed
+by the driver.
 
-On Wed, Apr 19, 2023 at 8:45=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Jorge,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v6.3-rc7 next-20230419]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jorge-Lopez/HP-BIO=
-SCFG-driver-Documentation/20230419-231828
-> patch link:    https://lore.kernel.org/r/20230419151321.6167-14-jorge.lop=
-ez2%40hp.com
-> patch subject: [PATCH v10 13/14] HP BIOSCFG driver  - Makefile
-> config: i386-randconfig-a015-20230417 (https://download.01.org/0day-ci/ar=
-chive/20230420/202304200914.VfJcRutc-lkp@intel.com/config)
-> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c=
-006a5895fc0e329fe15fead81e37457cb1d1)
-> reproduce (this is a W=3D1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
-n/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/cfbebfbd4ed15793f=
-ab894715bfd74387adcf4f1
->         git remote add linux-review https://github.com/intel-lab-lkp/linu=
-x
->         git fetch --no-tags linux-review Jorge-Lopez/HP-BIOSCFG-driver-Do=
-cumentation/20230419-231828
->         git checkout cfbebfbd4ed15793fab894715bfd74387adcf4f1
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross W=
-=3D1 O=3Dbuild_dir ARCH=3Di386 olddefconfig
->         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross W=
-=3D1 O=3Dbuild_dir ARCH=3Di386 SHELL=3D/bin/bash drivers/platform/x86/hp/hp=
--bioscfg/
->
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202304200914.VfJcRutc-lkp@i=
-ntel.com/
->
-> All warnings (new ones prefixed by >>):
->
-> >> drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:141:2: warni=
-ng: variable 'id' is used uninitialized whenever 'if' condition is true [-W=
-sometimes-uninitialized]
->            if (!buf_cp) {
->            ^~~~~~~~~~~~
->    include/linux/compiler.h:56:28: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:58:30: note: expanded from macro '__trace_if_=
-var'
->    #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __=
-trace_if_value(cond))
->                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~
->    drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:169:18: note=
-: uninitialized use occurs here
->            clear_passwords(id);
->                            ^~
->    drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:141:2: note:=
- remove the 'if' if its condition is always false
->            if (!buf_cp) {
->            ^~~~~~~~~~~~~~
->    include/linux/compiler.h:56:23: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                          ^
->    drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:138:8: note:=
- initialize the variable 'id' to silence this warning
->            int id, ret =3D -EIO;
->                  ^
->                   =3D 0
->    1 warning generated.
-> --
-> >> drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:76:2: warning:=
- variable 'ret' is used uninitialized whenever 'if' condition is true [-Wso=
-metimes-uninitialized]
->            if (!start)
->            ^~~~~~~~~~~
->    include/linux/compiler.h:56:28: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:58:30: note: expanded from macro '__trace_if_=
-var'
->    #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __=
-trace_if_value(cond))
->                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:87:9: note: un=
-initialized use occurs here
->            return ret;
->                   ^~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:76:2: note: re=
-move the 'if' if its condition is always false
->            if (!start)
->            ^~~~~~~~~~~
->    include/linux/compiler.h:56:23: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                          ^
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:72:2: warning:=
- variable 'ret' is used uninitialized whenever 'if' condition is true [-Wso=
-metimes-uninitialized]
->            if (!start)
->            ^~~~~~~~~~~
->    include/linux/compiler.h:56:28: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:58:30: note: expanded from macro '__trace_if_=
-var'
->    #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __=
-trace_if_value(cond))
->                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:87:9: note: un=
-initialized use occurs here
->            return ret;
->                   ^~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:72:2: note: re=
-move the 'if' if its condition is always false
->            if (!start)
->            ^~~~~~~~~~~
->    include/linux/compiler.h:56:23: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                          ^
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:43:2: warning:=
- variable 'ret' is used uninitialized whenever 'if' condition is true [-Wso=
-metimes-uninitialized]
->            if (instance < 0)
->            ^~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:56:28: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:58:30: note: expanded from macro '__trace_if_=
-var'
->    #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __=
-trace_if_value(cond))
->                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:87:9: note: un=
-initialized use occurs here
->            return ret;
->                   ^~~
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:43:2: note: re=
-move the 'if' if its condition is always false
->            if (instance < 0)
->            ^~~~~~~~~~~~~~~~~
->    include/linux/compiler.h:56:23: note: expanded from macro 'if'
->    #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) )=
- )
->                          ^
->    drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c:30:9: note: in=
-itialize the variable 'ret' to silence this warning
->            int ret;
->                   ^
->                    =3D 0
->    3 warnings generated.
->
->
-> vim +141 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
->
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  132
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  133  static ssize_t new_password_s=
-tore(struct kobject *kobj,
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  134                               =
- struct kobj_attribute *attr,
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  135                               =
- const char *buf, size_t count)
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  136  {
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  137      char *p, *buf_cp =3D NULL=
-;
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  138      int id, ret =3D -EIO;
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  139
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  140      buf_cp =3D kstrdup(buf, G=
-FP_KERNEL);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19 @141      if (!buf_cp) {
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  142              ret =3D -ENOMEM;
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  143              goto exit_passwor=
-d;
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  144      }
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  145
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  146      p =3D memchr(buf_cp, '\n'=
-, count);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  147
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  148      if (p !=3D NULL)
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  149              *p =3D '\0';
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  150
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  151      id =3D get_password_insta=
-nce_id(kobj);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  152
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  153      if (id >=3D 0)
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  154              ret =3D validate_=
-password_input(id, buf_cp);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  155
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  156      if (!ret)
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  157              strscpy(bioscfg_d=
-rv.password_data[id].new_password,
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  158                      buf_cp,
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  159                      sizeof(bi=
-oscfg_drv.password_data[id].new_password));
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  160
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  161      if (!ret)
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  162              ret =3D hp_set_at=
-tribute(kobj->name, buf_cp);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  163
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  164  exit_password:
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  165      /*
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  166       * Regardless of the resu=
-lts both new and current passwords
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  167       * will be set to zero an=
-d avoid security issues
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  168       */
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  169      clear_passwords(id);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  170
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  171      kfree(buf_cp);
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  172      return ret ? ret : count;
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  173  }
-> 1780f5eca27fb8 Jorge Lopez 2023-04-19  174
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests
+Many HP Commercial notebooks include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
+
+HP Commercial notebooks have several BIOS settings that control its
+behaviour and capabilities, many of which are related to security.
+To prevent unauthorized changes to these settings, the system can
+be configured to use a cryptographic signature-based authorization
+string that the BIOS will use to verify authorization to modify the
+setting.
+
+Linux Security components are under development and not published yet.
+The only linux component is the driver (hp bioscfg) at this time. 
+Other published security components are under Windows.
+
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
+---
+Based on the latest platform-drivers-x86.git/for-next
+
+History
+
+Version 11
+	Only patches marked [update] changed between version 10 and 11
+
+	Patches
+	 Documentation
+	 biosattr-interface [update]
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes [update]
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes [update]
+	 surestart-attributes [update]
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+
+Version 10
+	Break down changes to single files per patch
+	Removed SPM/statusbin support
+	Patches
+	 Documentation
+	 biosattr-interface
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes
+	 surestart-attributes
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+Version 9
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 8
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 7
+	Includes only sysfs-class-firmware-attributes documentation 
+
+Version 6
+	Breaks down the changes into 4 patches
+	SureAdmin-attributes was removed
+
+Version 5
+	Remove version 4 patch 1
+	Address review changes proposed in Version 4
+	Reorganize all patches number and file order
+
+
+Jorge Lopez (14):
+  HP BIOSCFG driver - Documentation
+  HP BIOSCFG driver  - biosattr-interface
+  HP BIOSCFG driver  - bioscfg
+  HP BIOSCFG driver  - int-attributes
+  HP BIOSCFG driver  - ordered-attributes
+  HP BIOSCFG driver  - passwdobj-attributes
+  HP BIOSCFG driver  - string-attributes
+  HP BIOSCFG driver  - bioscfg-h
+  HP BIOSCFG driver  - enum-attributes
+  HP BIOSCFG driver  - passwdattr-interface
+  HP BIOSCFG driver  - spmobj-attributes
+  HP BIOSCFG driver  - surestart-attributes
+  HP BIOSCFG driver  - Makefile
+  HP BIOSCFG driver  - MAINTAINERS
+
+ .../testing/sysfs-class-firmware-attributes   |  98 +-
+ MAINTAINERS                                   |   6 +
+ drivers/platform/x86/hp/Kconfig               |  16 +
+ drivers/platform/x86/hp/Makefile              |   1 +
+ drivers/platform/x86/hp/hp-bioscfg/Makefile   |  13 +
+ .../x86/hp/hp-bioscfg/biosattr-interface.c    | 307 ++++++++++++++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 961 ++++++++++++++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  | 613 +++++++++++
+ .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++
+ .../x86/hp/hp-bioscfg/int-attributes.c        | 474 +++++++++
+ .../x86/hp/hp-bioscfg/ordered-attributes.c    | 563 ++++++++++
+ .../x86/hp/hp-bioscfg/passwdattr-interface.c  |  51 +
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 669 ++++++++++++++++++
+ .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 405 ++++++++
+ .../x86/hp/hp-bioscfg/string-attributes.c     | 451 ++++++++
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  | 130 +++
+ 16 files changed, 5299 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+
+-- 
+2.34.1
+
