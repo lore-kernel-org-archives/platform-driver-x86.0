@@ -2,92 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C671C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Apr 2023 11:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269FAC7618E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Apr 2023 02:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjDULjD (ORCPT
+        id S229544AbjDVC2w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Apr 2023 07:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
+        Fri, 21 Apr 2023 22:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjDULjC (ORCPT
+        with ESMTP id S229451AbjDVC2t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Apr 2023 07:39:02 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2470C155;
-        Fri, 21 Apr 2023 04:38:18 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3BA001C0E01; Fri, 21 Apr 2023 13:37:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1682077056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2XdBu+av0qZxGuaP1nMetGj4D3Yj20NmV5LLc6errWE=;
-        b=aNse9vV4/YdI8p2PwrhG7v1PhLBPhn46Zi7YAOIkphiD1ARS846CLid8RVs34xQBi4rSv3
-        0nOH+W3ZcETf0P+jnPeOGZ4D+94zHF4eAzrIzUK6FOi3WJANanxAnWGQ3o4wVYjHjn5qwv
-        12IiJgnJeQ6ET1zaLk2StdOafSpkKOA=
-Date:   Fri, 21 Apr 2023 13:37:35 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: Re: [PATCH v10 02/14] HP BIOSCFG driver  - biosattr-interface
-Message-ID: <ZEJ1f7vOL1zCyNyR@duo.ucw.cz>
-References: <20230419151321.6167-1-jorge.lopez2@hp.com>
- <20230419151321.6167-3-jorge.lopez2@hp.com>
+        Fri, 21 Apr 2023 22:28:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA66A2109;
+        Fri, 21 Apr 2023 19:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=dStA0e+b1SYRzzHmgaCFWHkx9F8OF2AyMoR08H/BjKE=; b=aYr/TqY3YKOCT0wiQSBP9PTn1Q
+        CqDmOTuvfuoBWjWRWe48KGXzRZCFpK1iN0372q8noNvtvzPDIM4Voet2L/I5igPUhStYTpfFKDgcb
+        wHR+zJEDc17kgwxAp7TWdhl7gtmLwuNW2Pxfl4LvRGT2a7YfjVC+TKpH9eXRGezBr8L+T4bwfEHkI
+        d3bDx4Js1wyTS1SQG8h5D8UwSMHL8pJl9fVti/AYZlgdcKuI1CcLVsMVx9KlYnNSky7stIvHDgpA2
+        xwouw2fvE+tAMsgybep26Rf1FxViO+NDa5LhsjCOQnhks22f55SwkY/mGHCPH6RgjvxVHUgOpvGgf
+        moj5IHNQ==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pq2zR-00CGC0-03;
+        Sat, 22 Apr 2023 02:28:41 +0000
+Message-ID: <3d151775-f72a-2261-2a2b-0a81214cca5c@infradead.org>
+Date:   Fri, 21 Apr 2023 19:28:34 -0700
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="X09ELK96AjtUktk9"
-Content-Disposition: inline
-In-Reply-To: <20230419151321.6167-3-jorge.lopez2@hp.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 4/4] platform/x86: wmi: Add device specific documentation
+Content-Language: en-US
+To:     Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230420233226.14561-1-W_Armin@gmx.de>
+ <20230420233226.14561-5-W_Armin@gmx.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230420233226.14561-5-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---X09ELK96AjtUktk9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/20/23 16:32, Armin Wolf wrote:
+> diff --git a/Documentation/wmi/devices/wmi-bmof.rst b/Documentation/wmi/devices/wmi-bmof.rst
+> new file mode 100644
+> index 000000000000..b558fa46190c
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/wmi-bmof.rst
+> @@ -0,0 +1,22 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +==============================
+> +WMI embedded Binary MOF driver
+> +==============================
+> +
 
-Hi!
+Please tell the reader what MOF means.
 
-> Linux Security components are under development and not published yet.
-> The only linux component is the driver (hp bioscfg) at this time.
-> Other published security components are under Windows.
->=20
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+It would be good in drivers/platform/x86/Kconfig also did that.
 
-> +/*
-> + * ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
-> + *
-> + * BIOS supports UTF-16 characters that are 2 bytes long.  No variable
-> + * multi-byte language supported.
-> + *
-> + * @p:   Unicode buffer address
-> + * @str: string to convert to unicode
-> + *
-> + * Returns a void pointer to the buffer containing unicode string
-> + */
-> +void *ascii_to_utf16_unicode(u16 *p, const u8 *str)
-> +{
+> +Introduction
+> +============
+> +
+> +Many machines embed WMI Binary MOF metadata used to describe the details of their ACPI WMI interfaces.
+> +The data can be decoded with tools like `bmfdec <https://github.com/pali/bmfdec>`_ to obtain a
+> +human readable WMI interface description, which is useful for developing new WMI drivers.
+> +
+> +The Binary MOF data can be retrieved from the ``bmof`` sysfs attribute of the associated WMI device.
+> +Please note that multiple WMI devices containing Binary MOF data can exist on a given system.
+> +
+> +WMI interface
+> +=============
+> +
+> +The Binary MOF WMI device is identified by the WMI GUID ``05901221-D566-11D1-B2F0-00A0C9062910``.
+> +The Binary MOF can be obtained by doing a WMI data block query. The result is then returned as
+> +an ACPI buffer with a variable size.
 
-Does this need to go to library somewhere?
-
-BR,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---X09ELK96AjtUktk9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZEJ1fwAKCRAw5/Bqldv6
-8vJfAJ9GV17J1jjrrXapJv4Y1ULKh0TKogCgnx32XNgfDS28gAnlJLciuHSUfPI=
-=LREm
------END PGP SIGNATURE-----
-
---X09ELK96AjtUktk9--
+-- 
+~Randy
