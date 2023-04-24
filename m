@@ -2,61 +2,61 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B5C77B61
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Apr 2023 21:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE9C7618E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Apr 2023 21:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbjDXVfo (ORCPT
+        id S231438AbjDXVuB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Apr 2023 17:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
+        Mon, 24 Apr 2023 17:50:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbjDXVfn (ORCPT
+        with ESMTP id S233074AbjDXVt5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2023 17:35:43 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1630359D1;
-        Mon, 24 Apr 2023 14:35:42 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2a8ba5f1d6bso47427091fa.2;
-        Mon, 24 Apr 2023 14:35:42 -0700 (PDT)
+        Mon, 24 Apr 2023 17:49:57 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3C69012;
+        Mon, 24 Apr 2023 14:49:51 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4efec123b28so2547137e87.1;
+        Mon, 24 Apr 2023 14:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682372140; x=1684964140;
+        d=gmail.com; s=20221208; t=1682372990; x=1684964990;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XvvV2Db3dNXOEyxvu0ZhQaFJcicKRgzkj7yt5HDfa2o=;
-        b=lknRgkQJMrf4tiJq6SH3IA3SoCAG6ZkEIf0+NGQQQC9iNPgCTPpKXhAJPam8HuFuXO
-         GXxKFUfQYR0DwoJvj64TASyHew9cN/okcxuyKyu/7BVX/nL4l6dVHExp0nMjul4mX71d
-         Odmkm3Z4Hth3nHYJ436/N0jNgvK9WCujLGepQt72Slma+CVnKrOF5BPv0vgZMCWpbtFI
-         JBqk0LR5n0D+5kwdx1ENLMs4bdY5glKaWOyguC6hziIiHtyepwiusxPEuMyV+y2/je41
-         uUSU/Y2bjUjy9iC2TudlubQvPRQAvgE5U1J+boLPo+6SaVDU8GP7QVvxso5QbHJ8QH1/
-         bxOA==
+        bh=0UaqrPzK4eXqFK4tbZryREyP9NkLVlumedAFj/tL9Ss=;
+        b=knb7XFdICiuaEwjt64pugG0hxN0VKqdoWMObG+APb5g80uUURWsUK3VsyTvQxCKpFD
+         bf/OlJiJHtDoHY97wt/6rbAmJU0SVAoP7JJm223GLKinLjMB+x9ue2R0dsIMC3WRf6e1
+         G8m7Sskqbc6EoMPWfhVV2kufqbjOhrsZlpek/wXWKU2OJfMTwopNCTKrKKXEuZ93fOe1
+         n4BGUZOO09n2USHY2ouYknL/fyJLr1+yV31LSKLKJsFIeJ4Cy4H64D+gmH+x2uQag8LK
+         OOcDgbiy26EqIYB/KTV/tjNLvfQf51Td4Xn/iU3ooZ6nu87uQjughw1Mi0/NlN2k3LGo
+         gikg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682372140; x=1684964140;
+        d=1e100.net; s=20221208; t=1682372990; x=1684964990;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XvvV2Db3dNXOEyxvu0ZhQaFJcicKRgzkj7yt5HDfa2o=;
-        b=KuDf/la/XTnMm6+tCsc8AT4Xa80x/sToGQGr6RZ0Ou/zZTSlJ38dsjyuKqU67IfB6S
-         MespmWGANDmwDfwmnAPLQSThykIs2ClDVQduDhXVp/LOw4z9sRlD9kBXT64RG/Z1GcGa
-         cDkiuckcaKj1XLJKAVUTNxWug1wVS+sKhtit0F0mB4n0g/oRXopJMYZOzQ/PvvVTrbYM
-         5GNciLiVsnQS355C0j23cXW+hJcc5Bwn5kD0o7YRmxvRL7bD857Nm1J6zjI/42AJu14Z
-         2Fuf8NWuJbvM/QesO94a1mya0YHaugm0ll5z2YoHSNI5+WKXfTbTpZUka4CPSTXRC7ZH
-         7INw==
-X-Gm-Message-State: AAQBX9fbf9tealDyhlAV/qY/i/WAmoyvxG06fDunBcu9z+CixGtKACRt
-        Wo/WkvRcVXGzsqa6H+f4Bk8EN2p5HrMrOaQ+ikA=
-X-Google-Smtp-Source: AKy350Ywq3L01KI+bc3Ftz5yqVWkxpyZWe7gaxtlwKjLlDRh5icglSTA8iJdzJcZYLpfqF6dsyIK4V8yiSW3DQ6jP/k=
-X-Received: by 2002:a2e:9043:0:b0:2a9:f9ee:bd9a with SMTP id
- n3-20020a2e9043000000b002a9f9eebd9amr2771955ljg.38.1682372140325; Mon, 24 Apr
- 2023 14:35:40 -0700 (PDT)
+        bh=0UaqrPzK4eXqFK4tbZryREyP9NkLVlumedAFj/tL9Ss=;
+        b=VsvMdI0UPf5UV40LRpHMN/0OrbwvaA5xhthQBog3Q2Jjf6DtHfKSV1tms4LnrVXw2y
+         iIFWlfWsCJ7rCIKHLThU5lXXuOZYvzCUsrEF7qJ8PRwCAdynHO9qDiRDLCXo1gyN37vg
+         b2NtmFH2XMzr5e55pr36Rtag3YOeG6Ahb0PnE5xRaY9Dv8Xl/F/TtLPgWLDZpduu1JoN
+         KbCwfCaJMJ7jatpTOsKUsyYzXhqJ9+Iqu9yQZvGh3MGj6or1+F7EmtCgFC34W0yLIH5m
+         gqeP6EOZnuxi5ubw828JgnhRf77BB24MGeAkDUStRlCNZQZpqfVVeoZYheQ+hBKrYiE4
+         1SBw==
+X-Gm-Message-State: AAQBX9csnTm49buib+TPur7YH2/qtE4E6at2zy0DOOQNcomyBJ0G3DcS
+        G8eQfQsJL1AEgPwQOQSDf7o7nQtcs8jkbttxzZ4=
+X-Google-Smtp-Source: AKy350b5tdpbEJCrZ81EZqUJEz+IWXWtCLOs15yrXwf4I0rjMgh/wNK94iLciWHDKBta6/zTKosOyA16Ak9PeUlm65c=
+X-Received: by 2002:ac2:54b3:0:b0:4e9:8994:49bd with SMTP id
+ w19-20020ac254b3000000b004e9899449bdmr4456740lfk.3.1682372989638; Mon, 24 Apr
+ 2023 14:49:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-2-jorge.lopez2@hp.com>
- <dc902d52-7186-4095-9be9-60c728a24f05@t-8ch.de> <CAOOmCE-N9yMn7Cvr9bK5TpAwpv7_Lam1huWRrYaFzXVtf4v_aA@mail.gmail.com>
- <80c448f8-f043-460a-908f-e87e6b8215dc@t-8ch.de>
-In-Reply-To: <80c448f8-f043-460a-908f-e87e6b8215dc@t-8ch.de>
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-3-jorge.lopez2@hp.com>
+ <b7c49593-13f9-44f8-b3b8-66551b01e966@t-8ch.de> <CAOOmCE_MdHnPb250DDYC6Hoqutod2m=2voBqFz4g0dLcmJ5PRQ@mail.gmail.com>
+ <67108caf-2a03-4ef0-9f8d-819b0d6f0a2e@t-8ch.de>
+In-Reply-To: <67108caf-2a03-4ef0-9f8d-819b0d6f0a2e@t-8ch.de>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 24 Apr 2023 16:35:16 -0500
-Message-ID: <CAOOmCE8jYZ=dt9r47Vo3LPb0c8DOhK31-998S9ZCp0nPN3jcvg@mail.gmail.com>
-Subject: Re: [PATCH v11 01/14] HP BIOSCFG driver - Documentation
+Date:   Mon, 24 Apr 2023 16:49:25 -0500
+Message-ID: <CAOOmCE8dru7YOmZeTiEoDMiy7d6nTEih6D2H-AMrOykt=z1bhQ@mail.gmail.com>
+Subject: Re: [PATCH v11 02/14] HP BIOSCFG driver - biosattr-interface
 To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -68,54 +68,213 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi Thomas,
 
-On Mon, Apr 24, 2023 at 3:52=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
+On Mon, Apr 24, 2023 at 4:04=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
 .de> wrote:
 >
-> Hi Jorge,
->
-> On 2023-04-24 11:11:41-0500, Jorge Lopez wrote:
-> > On Sat, Apr 22, 2023 at 3:51=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t=
+> On 2023-04-24 15:33:26-0500, Jorge Lopez wrote:
+> > Hi Thomas,
+> >
+> > Please see my comments below.
+> >
+> > On Sat, Apr 22, 2023 at 4:30=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t=
 -8ch.de> wrote:
 > > >
-> > > On 2023-04-20 11:54:41-0500, Jorge Lopez wrote:
-> > > > Based on the latest platform-drivers-x86.git/for-next
-> > > > ---
-> > > >  .../testing/sysfs-class-firmware-attributes   | 98 +++++++++++++++=
-+++-
-> > > >  1 file changed, 96 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attribu=
-tes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> > > > index 4cdba3477176..73d7b8fbc0b2 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> > > > +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> > > > @@ -22,6 +22,12 @@ Description:
-> > > >                       - integer: a range of numerical values
-> > > >                       - string
-> > > >
-> > > > +             HP specific types
-> > > > +             -----------------
-> > > > +                     - ordered-list - a set of ordered list valid =
-values
-> > > > +                     - sure-start - report audit logs read from BI=
-OS
+> > > Hi Jorge,
 > > >
-> > > In the treevie you sent the Sure_Start attribute does not have
-> > > a "current_value".
-> > > This indicated that it's not actually a firmware attribute but just s=
-ome
-> > > standalone sysfs attribute.
+> > > checkpatch.pl finds some issues on your patches.
+> > > Please make sure checkpath.pl --strict is happy.
 > > >
-> > > In this case it should not be documented here, but handled the same w=
-ay
-> > > as the SPM stuff.
-> >
-> > I will update the documentation as indicated.
+> > I wasn't aware of the '--strict' parameter.  It is not part of the
+> > help information for checkpath.pl tool.
+> > Nonetheless, I will use it forward.
+> > Thanks
 >
-> This will also need changes to the code.
-> Only the audit log stuff is needed then.
+> It's an alias to --subjective. But indeed, it's hard to see in the help
+> output.
+Thanks
+>
+> > > On 2023-04-20 11:54:42-0500, Jorge Lopez wrote:
+> > > > ---
+> > > > Based on the latest platform-drivers-x86.git/for-next
+> > > No need to initialize auth_token_choice and start.
+> > > Consider coalescing variable declaration to avoid wasting vertical
+> > > space.
+> > >
+> > Done!
+>
+> Please note that this affects many parts of the driver,
+> try to fix it everywhere.
 
-Ok.  Sure_Start will only report two entries; audit_log_entries and
-audit_log_entry_count.
-Other entries such display_name, type and display_name_language will be rem=
-oved
+It will be done across all files
+
+>
+> > > > +{
+> > > > +     struct acpi_buffer input, output =3D { ACPI_ALLOCATE_BUFFER, =
+NULL };
+> > > > +     struct bios_return *bios_return;
+> > > > +     union acpi_object *obj =3D NULL;
+> > > > +     struct bios_args *args =3D NULL;
+> > > > +     int mid, actual_outsize;
+> > > > +     size_t bios_args_size;
+> > > > +     int ret;
+> > > > +
+> > > > +     mid =3D encode_outsize_for_pvsz(outsize);
+> > > > +     if (WARN_ON(mid < 0))
+> > > > +             return mid;
+> > > > +
+> > > > +     bios_args_size =3D struct_size(args, data, insize);
+> > > > +     args =3D kmalloc(bios_args_size, GFP_KERNEL);
+> > > > +     if (!args)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     input.length =3D bios_args_size;
+> > > > +     input.pointer =3D args;
+> > > > +
+> > > > +     args->signature =3D 0x55434553;
+> > >
+> > > What does this number mean?
+> > This is a HEX representation of the word  'SECU' expected by BIOS as a =
+signa.
+>
+> Sounds like a good thing to comment or put into a #define.
+
+I will add a comment since it is only used here.
+>
+> > >
+> > > > +     args->command =3D command;
+> > > > +     args->commandtype =3D query;
+> > > > +     args->datasize =3D insize;
+> > > > +     memcpy(args->data, buffer, flex_array_size(args, data, insize=
+));
+> > > > +
+> > > > +     ret =3D wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &input,=
+ &output);
+> > >
+> > > The driver is mixing calls to the UUID based APIs and the wmi_device
+> > > ones.
+> > > wmi_devices is newer and preferred.
+> >
+> > The driver  calls wmi_evaluate_method when initiating an WMI call.
+> > Where is the driver mixing calls to the UUID based APIs and the
+> > wmi_device one?
+> > WMI calls are made by calling hp_wmi_perform_query() which invokes
+> > wmi_evaluate_method().
+> > Did I miss something?
+>
+> wmi_evaluate_method() is UUID-based.
+> struct wmi_driver is wmi_device based.
+>
+> The wmi_driver/wmi_device code essentially does nothing and is only used
+> to validate that a device is present.
+> The same can be done more easily wmi_has_guid().
+>
+
+Thank you for the clarification.
+> > >
+> > > > +     bioscfg_wmi_error_and_message(ret);
+> > > > +
+> > > > +     if (ret)
+> > > > +             goto out_free;
+> > > > +
+> > > > +     obj =3D output.pointer;
+> > > > +     if (!obj) {
+> > > > +             ret =3D -EINVAL;
+> > > > +             goto out_free;
+> > > > +     }
+> > > > +     if (query !=3D HPWMI_SECUREPLATFORM_GET_STATE &&
+> > > > +         command !=3D HPWMI_SECUREPLATFORM)
+> > > > +             if (obj->type !=3D ACPI_TYPE_BUFFER ||
+> > > > +                 obj->buffer.length < sizeof(*bios_return)) {
+> > > > +                     pr_warn("query 0x%x returned wrong type or to=
+o small buffer\n", query);
+> > > > +                     ret =3D -EINVAL;
+> > > > +                     goto out_free;
+> > > > +             }
+> > > > +
+> > > > +
+> > > > +     bios_return =3D (struct bios_return *)obj->buffer.pointer;
+> > >
+> > > For query =3D=3D HPWMI_SECUREPLATFORM_GET_STATE && command =3D=3D HPW=
+MI_SECUREPLATFORM
+> > > this is not guaranteed to be a buffer.
+> >
+> > BIOS ensures the output is of buffer type and  buffer of 1024 bytes in
+> > size.  This check also help us validate that BIOS only returns a
+> > buffer type for this query/command type.
+>
+> The kernel does not trust the BIOS :-)
+> It trusts nothing and nobody.
+>
+> All cases should be validated.
+
+Additional validation will be added to cover all cases.
+
+>
+> > >
+> > > > + */
+> > > > +void *ascii_to_utf16_unicode(u16 *p, const u8 *str)
+> > > > +{
+> > > > +     int len =3D strlen(str);
+> > > > +     int ret;
+> > > > +
+> > > > +     /*
+> > > > +      * Add null character when reading an empty string
+> > > > +      * "02 00 00 00"
+> > > > +      */
+> > > > +     if (len =3D=3D 0)
+> > > > +             return utf16_empty_string(p);
+> > > > +
+> > > > +     /* Move pointer len * 2 number of bytes */
+> > > > +     *p++ =3D len * 2;
+> > > > +     ret =3D utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN, =
+p, len);
+> > > > +     if (ret < 0) {
+> > > > +             dev_err(bioscfg_drv.class_dev, "UTF16 conversion fail=
+ed\n");
+> > > > +             goto ascii_to_utf16_unicode_out;
+> > > > +     }
+> > >
+> > > What if ret !=3D len ?
+> >
+> > only in conditions where utf8s_to_utf16s an error, we can state  ret !=
+=3D len.
+> > ret =3D=3D len when utf8s_to_utf16s() is successful.
+> > >
+> > > > +
+> > > > +     if ((ret * sizeof(u16)) > U16_MAX) {
+> > > > +             dev_err(bioscfg_drv.class_dev, "Error string too long=
+\n");
+> > > > +             goto ascii_to_utf16_unicode_out;
+> > > > +     }
+> > > > +
+> > > > +ascii_to_utf16_unicode_out:
+> > > > +     p +=3D len;
+> > >
+> > > In cases of errors this will still point to the end of the data that
+> > > should have been written but was not actually written.
+> > > The caller has no way to recognize the error case.
+> > >
+> > That is correct.  If an error occurs, we only provide an error message
+> > for those conditions.
+>
+> But the caller has no idea that this error occurred and will try to use
+> the garbage buffer.
+> The error should be communicated to the caller, and the caller has to
+> validate the result.
+> Maybe return NULL?
+
+returning NULL will be a good option so I will review what the impact
+will be across the driver
+>
+> >
+> > > > +     return p;
+> > > > +}
+> > > > +
+> > > > +/*
+> > >
+> > > kernel-doc comments start with "/**". Note the two asterisks.
+> > Done
+>
+> This also needs to be done all over the driver.
+
+It will be done across all files.
