@@ -2,101 +2,109 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8157FC7618E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Apr 2023 22:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D3AC77B76
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Apr 2023 22:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbjDXWP0 (ORCPT
+        id S232314AbjDXWaa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Apr 2023 18:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        Mon, 24 Apr 2023 18:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232071AbjDXWPZ (ORCPT
+        with ESMTP id S232399AbjDXWaI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2023 18:15:25 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0576A59;
-        Mon, 24 Apr 2023 15:15:24 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2a8ba5f1d6bso47788071fa.2;
-        Mon, 24 Apr 2023 15:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682374522; x=1684966522;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5UP7FGVhzXdLz5iNJ9W7/3mzISJ7lFKbYrpdcyd0K4c=;
-        b=rFZhJXyhnhQMxNtKliFDYrs9WJ56GWxeQkyKhAdFXSnV/qEpzJk6s7gKC8APzmAEGC
-         OXFj3OpN/XTjz1IYRu1Rx5dyDyC0xBS1TKiRTFtEjEGLX40zN0j65kwpKsqRYnjiUAmf
-         Y9+I583vBY0i9dprdGPDMzhzlnAD1O8S6f77RLCEbolwA+MC5BXYr5pTCLHrGEFxCivC
-         8Kfj25FVOhFmCl0iz99fO9jGb90mmbzdUNQpEMQad6n4H84FnDKWcvc2W5Sr3uv96lLj
-         a+XjNGZajQaYDCx5mBLFdghlVQ+S9fEeC67JtykVkRPiKoaerYl4cZKWp+3EKvBIrn+I
-         01cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682374522; x=1684966522;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5UP7FGVhzXdLz5iNJ9W7/3mzISJ7lFKbYrpdcyd0K4c=;
-        b=GEFbIhZ9AfGeZLHTjnmwWQxFHPHVIQ7RXGsqf1Tl8gdQ/FqSIeJRbC7i2z2nyLPqf3
-         oj4sSBWxATMnnm8dw9qNoxpfiQyn90Om3Pby+YsxuDoVIY9Y7XwFnZMB6O97OfskErAk
-         qCwIJZBCTIDrdaAyZJ5TuWG8OVfiJuobvNrYmSaMbh2nIINgttxLHyY3ZY6A5jR/I4aP
-         1T9PabDGByEJsCfcPHtAodNiNQp3wLteUYpk+tLns5LYNmIdZ/FH4hhS+V+4fAaOVLBl
-         egDiIDsHiPVPFRT61Y2uOm5eR6YoYGIOHNqm0i2ntJoKgrkQ1QXWgxTOz+sSUj+RoHod
-         87vw==
-X-Gm-Message-State: AAQBX9ehsaIgoka6yz0n+15a5jJCFJiwrlDVwin9Gc9ICeEFcVMplPIp
-        1evxyx/EWfy1a9BNIPIH1ogAM/RsSfFHggARCeA=
-X-Google-Smtp-Source: AKy350bK379v+0wKKHkuBxIPRu/TPM76BjJ5es5FmF246WAd6QmI7UB4BOl2YgvleGyE4WkHOZ159NdHbFybuph58TQ=
-X-Received: by 2002:a2e:80c5:0:b0:2a8:b79b:7e81 with SMTP id
- r5-20020a2e80c5000000b002a8b79b7e81mr2992508ljg.30.1682374522001; Mon, 24 Apr
- 2023 15:15:22 -0700 (PDT)
+        Mon, 24 Apr 2023 18:30:08 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0855F61B3;
+        Mon, 24 Apr 2023 15:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1682375389; i=w_armin@gmx.de;
+        bh=acj7MjZssQd6iVJtWK9G4mZt4XTGSOZZ6U7g33Agxrc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=PBfY6K/IqJ15g6IEF24HH+VQKVu0Smlie9233P7abZlCuMsD98yhjtHsrsCYZUp4o
+         MD7LUx4c7jA5pIRlH+oGU/C8fBjTXhvzgNl1BSsJUWHykMgATj5NeaIeg61Y9HBMpt
+         d2iXG+pHLcrIBKokhe4UhDFUcSTWd0bggKeaoNmGoxLAKVDSX1qip+YqhIZ7va7Cui
+         XaTpomlndPc5wtn5gc19L+jMjw/Nv3f+2O931siC/k2BZeb0lVE+a2aueAXX47JNX4
+         3aN/rVZRjMMlr1zFkaHV8P9COsuPEQuidVJpWaCvREAhbJgmQP/91RhVDDbDEwMIY+
+         x7WWle1t4B3NA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M3DNt-1pruhU1NmP-003fuD; Tue, 25 Apr 2023 00:29:49 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org, rdunlap@infradead.org
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] platform/x86: wmi: Add subsystem documentation
+Date:   Tue, 25 Apr 2023 00:29:35 +0200
+Message-Id: <20230424222939.208137-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-3-jorge.lopez2@hp.com>
- <b7c49593-13f9-44f8-b3b8-66551b01e966@t-8ch.de> <CAOOmCE_MdHnPb250DDYC6Hoqutod2m=2voBqFz4g0dLcmJ5PRQ@mail.gmail.com>
- <67108caf-2a03-4ef0-9f8d-819b0d6f0a2e@t-8ch.de> <CAOOmCE8dru7YOmZeTiEoDMiy7d6nTEih6D2H-AMrOykt=z1bhQ@mail.gmail.com>
-In-Reply-To: <CAOOmCE8dru7YOmZeTiEoDMiy7d6nTEih6D2H-AMrOykt=z1bhQ@mail.gmail.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 24 Apr 2023 17:14:57 -0500
-Message-ID: <CAOOmCE8SGn9JsWVXUDnKgWyxSzuCuiXzjsv3V737uNXPu2jykA@mail.gmail.com>
-Subject: Re: [PATCH v11 02/14] HP BIOSCFG driver - biosattr-interface
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bCiOkL9kSiizjHyxEVl+fhG2Do4FjhanHynhIPahm4cxFRkVQh4
+ gmjvc1pC2ofyc8LjqiMusLebOPNUWdfV7IGiJVnxtdfCkoNZWvtvjWHsv1nP3PSuVgt4FJM
+ k0m4XyZ4TRzC7nKq3ECXSKq3KTtdwn/GHGCb5u8ehb1gPwOqplNY16wi63wXbtMk5rjZT7T
+ +lemoG4nuuPuRP0Nsn2fA==
+UI-OutboundReport: notjunk:1;M01:P0:kHRGcxxyzKQ=;sqSHSbGA6xtxoyjd+PfqCGBglyG
+ dzM64Jz/SJhm8EJ4HVU2GJwKcjy8qOMU3Prumt9MbCbHpapIIqWqarZBj1X2EJFr8wKiumUGe
+ ttHiakBza/1wdK5xc+arz1Z38Wp3QlnFC2iDBgwX7nrP3TVvApD7TIcumIzq5u+GG75JQNMxX
+ aV4XJDOBcjgV0XEB94gK9/bIZXsO161XUSb2pmz+NjIRGkxH7bHLs3WOPnX124yuGg2jZvFZC
+ 13jZ1/K2U9u4/DzBja/N3TgcWPLr6BFLXqJ00espIlTi+bYgNawjzEgpMNeBzvEB3Drw5NLw7
+ DPVarZx63CL84t+maKFJowhvrBPXAr2TVeeWMA4mIRQvwa9lMwggZj6HCYVXf0u2mMMPR67TU
+ HN8jTy0IYac4wNwFpBYSPhekchefAIEuHARLqFt5wQb5Ak0iVB9Qhhdjws46ENbonYkg5MMbh
+ ustNHTUsTyxsOGbYFTskFleUz5JBuvddakblXpLfu1cHkACKaLYK7vADt3xtoKBXkDexu2mml
+ Qz7lAhXzbqDAsxjdGo/IYnwlFQLyNLREXKTUm/Z54VxAMyRFkz9M957+3mLFOxUEniGKdL8OX
+ B8F1Q2vZiaf6/DE5DO3iohRfbQahOEUFOk3QEZR/vM4hCYV5H76eQ02zD6GQKS6CsLayR3DTq
+ 4lMW+nmKCYMbVc71Zny/2inYGpLXkFx0KDZh8bMvWBFy4kGtrKjOtJWI64YBxIbscrsohqa0b
+ Fy+rruVUb4MeK30/wkGXOF9/9uM+vmIjq34k0jMz6o/Sg05z4r7d6FnMyMK2G54jviyc3in7g
+ iMBtUiqmto6j0X6H+CMnwKkiGEjRzMo/q6LyRoBc6SkhwbW3ccY6D92ama2/Ec1v6d5zNWZIR
+ Htrz1L7OrYjfcZYqWRXSLcyshEh/C6iXF2rwuQ2vZLoSoDv2IsIUfCOju+mz63Mz7SgyzGim4
+ uRk7mjK8/CDTFz+c4gwAP4K9NLc=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HI Thomas,
+Currently, there is no recent documentation available for writing WMI
+drivers using the modern bus-based interface. This leads to developers
+using the deprecated GUID-based interface when developing new drivers,
+causing issues with notification handling when multiple WMI devices sharin=
+g
+the same notification ID are present. There is also no way for WMI
+drivers to add device specific documentation at the moment.
+Add documentation for the WMI subsystem to solve those issues. The
+device specific documentation currently onyl include documentation for
+the wmi-bmof driver, but more is expected to follow.
+=2D--
+Changes in v2:
+- spelling fixes
+- tell readers that MOF means Managed Object Format
+- 80-cloumn limit
 
-Sorry for asking again.  I just want to be understand exactly what I must do.
+Armin Wolf (4):
+  platform/x86: wmi: Add kernel doc comments
+  platform/x86: wmi: Mark GUID-based WMI interface as deprecated
+  platform/x86: wmi: Add documentation
+  platform/x86: wmi: Add device specific documentation
 
+ .../ABI/stable/sysfs-platform-wmi-bmof        |  7 ++
+ Documentation/driver-api/index.rst            |  1 +
+ Documentation/driver-api/wmi.rst              | 21 ++++
+ Documentation/subsystem-apis.rst              |  1 +
+ Documentation/wmi/acpi-interface.rst          | 96 +++++++++++++++++++
+ Documentation/wmi/devices/index.rst           | 22 +++++
+ Documentation/wmi/devices/wmi-bmof.rst        | 25 +++++
+ Documentation/wmi/index.rst                   | 19 ++++
+ MAINTAINERS                                   |  9 ++
+ drivers/platform/x86/Kconfig                  |  4 +-
+ drivers/platform/x86/wmi.c                    | 63 +++++++++---
+ include/linux/wmi.h                           | 41 +++++++-
+ 12 files changed, 289 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-platform-wmi-bmof
+ create mode 100644 Documentation/driver-api/wmi.rst
+ create mode 100644 Documentation/wmi/acpi-interface.rst
+ create mode 100644 Documentation/wmi/devices/index.rst
+ create mode 100644 Documentation/wmi/devices/wmi-bmof.rst
+ create mode 100644 Documentation/wmi/index.rst
 
-> > > >
-> > > > > +     args->command = command;
-> > > > > +     args->commandtype = query;
-> > > > > +     args->datasize = insize;
-> > > > > +     memcpy(args->data, buffer, flex_array_size(args, data, insize));
-> > > > > +
-> > > > > +     ret = wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &input, &output);
-> > > >
-> > > > The driver is mixing calls to the UUID based APIs and the wmi_device
-> > > > ones.
-> > > > wmi_devices is newer and preferred.
-> > >
-> > > The driver  calls wmi_evaluate_method when initiating an WMI call.
-> > > Where is the driver mixing calls to the UUID based APIs and the
-> > > wmi_device one?
-> > > WMI calls are made by calling hp_wmi_perform_query() which invokes
-> > > wmi_evaluate_method().
-> > > Did I miss something?
-> >
-> > wmi_evaluate_method() is UUID-based.
-> > struct wmi_driver is wmi_device based.
-> >
-> > The wmi_driver/wmi_device code essentially does nothing and is only used
-> > to validate that a device is present.
-> > The same can be done more easily wmi_has_guid().
-> >
->
+=2D-
+2.30.2
 
-Are you asking to replace all calls to wmi_evaluate_method() which is
-UUID based API with calls to  wmidev_evaluate_method() which is
-wmi_device based?  Correct?
