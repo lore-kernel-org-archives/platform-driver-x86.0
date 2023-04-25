@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A2C6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 03:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A339C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 03:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231814AbjDYDIJ (ORCPT
+        id S232950AbjDYDIM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Apr 2023 23:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
+        Mon, 24 Apr 2023 23:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjDYDII (ORCPT
+        with ESMTP id S232845AbjDYDIL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2023 23:08:08 -0400
+        Mon, 24 Apr 2023 23:08:11 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE7F1BD0;
-        Mon, 24 Apr 2023 20:08:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F0AA8;
+        Mon, 24 Apr 2023 20:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
         Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=nBFqtXx0vNABq18Vz8VpE1uoF7ruSN5UrVhGELTAEOo=; b=eeyOXc0wCK/NL3QlsDzJmcK9DV
-        YYV/O8N5Np7CJUZAP5MdhzJouBrXeGudEdn841IqeFsRrbEQmLtO9YJjyH8B0OT8f8Pft2UOaKlQC
-        rzWJ13vxm4u97Z3oVycq2YIRtKovICRrCppA+u5iZBp86FQBHtxILDQkjwvSKTNGL7dTQOY/ZfEP4
-        MiwoXfgzAiyZnKwau3+XzNijp4CAUWpE9Xppj8pDdH0/XaN1yjt0Rrnl+vSizaH+S564FZI3bjZOV
-        saMM+UbFg78oq7uUS9LKJdU9dfJ/on1xeo06kw+tkvdI+bUvUOrTop/WfWbmkl8FzCTn3iZ/G6rF1
-        8Nmb/KZA==;
+        bh=psTvjtQPzA5Vi6Y2pdFr8jOV8iAK+uA3UqfeHcAS958=; b=HWWF/JYD2yumveJ8IzBuFgEKNv
+        I0qryq/pWXC9jm9ykvpqbgP/BCxsoKFH0sH/Yj5QpXKBfcTZhyknZjOFt8GiPqv/Np9oxu8tuqbg0
+        6o5Lwh/dKl4YZ+gD9Dmzw5LglXp7w4n9rrTLeNelHy+TyaQCXdt5vCCyb9Ff33IdwCNdw4pvkl1jd
+        UahJY/KhHJzag+FDiAiPN+k+0R5Wf6aRXurGwcUBBX2dnAENZyUSLmW5AKPDVCZ/zZmKhlHpWJ9Au
+        f5PS+D12Dezsc4WZMFP1x9ik1QjB2NlFjfquj9VMOF6Y+73P/ZY4R+F+nCHrk7y3oMQLSIk/16qoT
+        bAfovltQ==;
 Received: from [2601:1c2:980:9ec0::2764]
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pr929-0004jm-14;
-        Tue, 25 Apr 2023 03:08:01 +0000
-Message-ID: <fd333355-8059-4d7d-7a7e-be67006ad3fc@infradead.org>
-Date:   Mon, 24 Apr 2023 20:07:58 -0700
+        id 1pr92G-0004kL-0e;
+        Tue, 25 Apr 2023 03:08:08 +0000
+Message-ID: <956006f7-70d6-f00e-8919-cbfbf2a5ef02@infradead.org>
+Date:   Mon, 24 Apr 2023 20:08:07 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v2 3/4] platform/x86: wmi: Add documentation
+Subject: Re: [PATCH v2 1/4] platform/x86: wmi: Add kernel doc comments
 Content-Language: en-US
 To:     Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
         markgross@kernel.org
 Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230424222939.208137-1-W_Armin@gmx.de>
- <20230424222939.208137-4-W_Armin@gmx.de>
+ <20230424222939.208137-2-W_Armin@gmx.de>
 From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230424222939.208137-4-W_Armin@gmx.de>
+In-Reply-To: <20230424222939.208137-2-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -54,60 +54,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi--
 
 On 4/24/23 15:29, Armin Wolf wrote:
-> Add documentation for the WMI subsystem. The documentation describes
-> both the ACPI WMI interface and the driver API for interacting with
-> the WMI driver core. The information regarding the ACPI interface
-> was retrieved from the Ubuntu kernel references and the Windows driver
-> samples available on GitHub. The documentation is supposed to help
-> driver developers writing WMI drivers, as many modern machines designed
-> to run Windows provide an ACPI WMI interface.
+> Add kernel doc comments useful for documenting the functions/structs
+> used to interact with the WMI driver core.
 > 
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  Documentation/driver-api/index.rst   |  1 +
->  Documentation/driver-api/wmi.rst     | 21 ++++++
->  Documentation/subsystem-apis.rst     |  1 +
->  Documentation/wmi/acpi-interface.rst | 96 ++++++++++++++++++++++++++++
->  Documentation/wmi/index.rst          | 18 ++++++
->  MAINTAINERS                          |  2 +
->  6 files changed, 139 insertions(+)
->  create mode 100644 Documentation/driver-api/wmi.rst
->  create mode 100644 Documentation/wmi/acpi-interface.rst
->  create mode 100644 Documentation/wmi/index.rst
+>  drivers/platform/x86/wmi.c | 51 +++++++++++++++++++++++++++++++-------
+>  include/linux/wmi.h        | 41 +++++++++++++++++++++++++++---
+>  2 files changed, 80 insertions(+), 12 deletions(-)
 > 
-
-> diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/wmi.rst
-> new file mode 100644
-> index 000000000000..6ca58c8249e5
-> --- /dev/null
-> +++ b/Documentation/driver-api/wmi.rst
-> @@ -0,0 +1,21 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +==============
-> +WMI Driver API
-> +==============
-> +
-> +The WMI driver core supports a more modern bus-based interface for interacting
-> +with WMI devices, and an older GUID-based interface. The latter interface is
-> +considered to be deprecated, so new WMI drivers should generally avoid it since
-> +it has some issues with multiple WMI devices and events sharing the same GUIDs
-> +and/or notification IDs. The modern bus-based interface instead maps each
-> +WMI device to a :c:type:`struct wmi_device <wmi_device>`, so it supports
-> +WMI devices sharing GUIDs and/or notification IDs. Drivers can then register
-> +a :c:type:`struct wmi_driver <wmi_driver>`, which will be bound to compatible
-> +WMI devices by the driver core.
-> +
-> +.. kernel-doc:: include/linux/wmi.h
-> +   :internal:
-
-There are no kernel-doc comments in include/linux/wmi.h, so this
-causes a kernel-doc warning:
-
-../include/linux/wmi.h:1: warning: no structured comments found
-
-Otherwise this all looks good.
-
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Acked-by: Randy Dunlap <rdunlap@infradead.org>
