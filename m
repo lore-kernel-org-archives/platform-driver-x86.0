@@ -2,130 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7564FC77B61
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 13:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC583C6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 13:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233361AbjDYNkM (ORCPT
+        id S233762AbjDYNnr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Apr 2023 09:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
+        Tue, 25 Apr 2023 09:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233893AbjDYNkL (ORCPT
+        with ESMTP id S233368AbjDYNnq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2023 09:40:11 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716E9FF;
-        Tue, 25 Apr 2023 06:40:10 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2a8ad872ea5so56763861fa.2;
-        Tue, 25 Apr 2023 06:40:10 -0700 (PDT)
+        Tue, 25 Apr 2023 09:43:46 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A27EE58;
+        Tue, 25 Apr 2023 06:43:44 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2a8aea2a654so56107881fa.1;
+        Tue, 25 Apr 2023 06:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682430008; x=1685022008;
+        d=gmail.com; s=20221208; t=1682430223; x=1685022223;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dcesIuzpK+VEGSU+S/FfSN/2SfK0JmwTeQlJxmdrzFM=;
-        b=aRcTPUR3iqZnYw+Yr2fYBhV3LnFlC1Xe9QETZn5PYXINeHrAEut1aj9SXNTXB0DdWH
-         ZSE89o67bN/v/j+9Npvdh55RprcsCwbSKLbi7vtKGpTCMeM0Wznee/H6bAxFf6M6Xgju
-         iQcSMqqaWExrBlXdn5dNwZ0GwvABlSMpsd4lZnCA+b99Io0PFLRS/FGvCHTGPSLqhyZU
-         cu4U6ITOyFugrxAPlaZOlSak1wpZyFllVa2ydRk2KSrlcyK8JBDzdhLPqp4/3BUA81RC
-         9SGSknAZeCdLus2PjGfzdTPAWkQuLD083ZiaEbCR3xGNlOkRDp+RYi5YJipCcqulrKU2
-         POzw==
+        bh=yL70Rc7HzGeZUoqLDlSCDrwe16+F8INjLhdwD4sRim0=;
+        b=XJ6hTJmA79SxhcWsncYDGRQAHC8yuAJ4yJls/gUbDA28G07pwVjM+vnz6TEAHng0T8
+         Vlzwc852rcvUjutLOYfoMcAhZsKP2Yz0N6ASljEexoeUoatymuRIPElCovKV310bOGTf
+         nejC4plihdpXPyemrl+t6oeBQ7HhFxEIFyMcMR0MI5DL/lNJ5UzVQ4L9gs8kJeOBI550
+         8Hc4/rM3SCrvle7AIpngypcysazAGRzQGRsFWsGdAgYvDp430uxxWV1Tz8/R2bL+Ivpb
+         0HMV/vPvOli5pqSK2YAUjZ4fCXkP1nfExku0YsAc8XH7fjSmbSSQXqgXc9fJsIDyMlzk
+         hwkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682430008; x=1685022008;
+        d=1e100.net; s=20221208; t=1682430223; x=1685022223;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dcesIuzpK+VEGSU+S/FfSN/2SfK0JmwTeQlJxmdrzFM=;
-        b=bhA7cEPoGldmekVjqqz7059sAS5dSrsRwsn5/uWOXg/57mMuxi/T0F8FGY1kHJwwn6
-         ydTlA3yBm/CIx/aIt0RmVUDRb0vsMIcD5GJXrI0EfuOEHePds7gyRETrfnhvqT8Pn9Bf
-         qbbcYGu1w8FRBG3zVf9r03QWmsr1ziGRui7I55SGN1GUTUxagw+4rA4Pl9qoLcZ4DxqW
-         ZzxlmovDLwlZmSFWra8syjXIGz6wWdVW6sMAehAIxSipwZ3RTXw0kvka2lhRYQSibhM7
-         JUdmJ5JpkOtgDGg/YCosUfcdv3iuiHGeARVujiIoMDq8TsmGXiTlBw/eCqkllCGhn3V6
-         bQdA==
-X-Gm-Message-State: AAQBX9dkRFpPh4FRPNFzNChSYniY3FhMEB0WLK9gCkGZxbPhc/RgBPUG
-        7P8nmyU5zo+ubH44WkGdYbm1s41HiagcfEDoT1w=
-X-Google-Smtp-Source: AKy350bbOzdNjLlA7R7eOdjlSWKPWRPT27ArhDGiTkuzHiDECXu9jbRZsA4ymCraoZiVUXRf66O7NdYmIhy/vTHzXU0=
-X-Received: by 2002:a2e:3213:0:b0:2a8:e642:8cdb with SMTP id
- y19-20020a2e3213000000b002a8e6428cdbmr3317683ljy.49.1682430008375; Tue, 25
- Apr 2023 06:40:08 -0700 (PDT)
+        bh=yL70Rc7HzGeZUoqLDlSCDrwe16+F8INjLhdwD4sRim0=;
+        b=H9s1fHFq48Q/fPeD7DTm7XpiLfxsc2j+vOpMBzlGYNkEAwt1JXwsUv8oeMjLfQFWpg
+         2x1gs57YXNQt8s2tP7LdkiX5Zv5qJZNWeFM2ItDELJvfuMFdq5sjpdbPMSprffLcxKNM
+         EsnF8SRXbZ0m6PZ6PCN4Wq/G1nAp5rEX/G3boYXhGPkTAnHO4Fk41GFYmUXRtlKBNbk9
+         K1uaf9xPDz8Lv2GoqMYYSXPsDqyyUbndhR6K3bB/ZSU7KAQ+p3jPAMLZ62ja6qIkI6Jz
+         nVIGRmP8qyPjYGg798vC+YktCwzae1Khtn/3j8v9XQt1vCyQlP3P6oOU5fZXIXlYjzIu
+         OuEg==
+X-Gm-Message-State: AAQBX9fQ/czq1GmzJKJdMCbYpOolnbqGyunNiTYK5Y/CLivzPA9hWA0u
+        DRhe4JLDPh6ZfnTQuL9VP+uxZTjvJq7sxg19pVA=
+X-Google-Smtp-Source: AKy350aCHamhC0FqIkzUEGC576nU3ilFEoW8UqM8jU1//M55SfNYvUVmQZJyuc/kGkaQuDgiVDE4dWYnJg5EvFG8VXY=
+X-Received: by 2002:a2e:8255:0:b0:2ab:d1b:dcb2 with SMTP id
+ j21-20020a2e8255000000b002ab0d1bdcb2mr2071882ljh.38.1682430222632; Tue, 25
+ Apr 2023 06:43:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-3-jorge.lopez2@hp.com>
- <b7c49593-13f9-44f8-b3b8-66551b01e966@t-8ch.de> <CAOOmCE_MdHnPb250DDYC6Hoqutod2m=2voBqFz4g0dLcmJ5PRQ@mail.gmail.com>
- <67108caf-2a03-4ef0-9f8d-819b0d6f0a2e@t-8ch.de> <CAOOmCE8dru7YOmZeTiEoDMiy7d6nTEih6D2H-AMrOykt=z1bhQ@mail.gmail.com>
- <CAOOmCE8SGn9JsWVXUDnKgWyxSzuCuiXzjsv3V737uNXPu2jykA@mail.gmail.com> <b4b9fb11-d6d0-42e6-9193-ba3c2c846071@t-8ch.de>
-In-Reply-To: <b4b9fb11-d6d0-42e6-9193-ba3c2c846071@t-8ch.de>
+References: <20230419151321.6167-1-jorge.lopez2@hp.com> <20230419151321.6167-3-jorge.lopez2@hp.com>
+ <ZEJ1f7vOL1zCyNyR@duo.ucw.cz> <6ddd373b-6bcb-85a7-2423-ceea5d3f1246@redhat.com>
+In-Reply-To: <6ddd373b-6bcb-85a7-2423-ceea5d3f1246@redhat.com>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 25 Apr 2023 08:39:43 -0500
-Message-ID: <CAOOmCE8Q4g=jvqZK6m1hAGGDnM4GCOX6QoAcwqSYroSx11cE4A@mail.gmail.com>
-Subject: Re: [PATCH v11 02/14] HP BIOSCFG driver - biosattr-interface
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 25 Apr 2023 08:43:18 -0500
+Message-ID: <CAOOmCE8AkvXmD=RJLS_R1z+fmuzt1HSSr9DwnS8=pA4Wtjx7mA@mail.gmail.com>
+Subject: Re: [PATCH v10 02/14] HP BIOSCFG driver - biosattr-interface
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 12:28=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
-h.de> wrote:
+On Tue, Apr 25, 2023 at 5:31=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
 >
-> On 2023-04-24 17:14:57-0500, Jorge Lopez wrote:
-> > Sorry for asking again.  I just want to be understand exactly what I mu=
-st do.
+> Hi,
 >
-> No problem!
->
-> > > > > >
-> > > > > > > +     args->command =3D command;
-> > > > > > > +     args->commandtype =3D query;
-> > > > > > > +     args->datasize =3D insize;
-> > > > > > > +     memcpy(args->data, buffer, flex_array_size(args, data, =
-insize));
-> > > > > > > +
-> > > > > > > +     ret =3D wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &=
-input, &output);
-> > > > > >
-> > > > > > The driver is mixing calls to the UUID based APIs and the wmi_d=
-evice
-> > > > > > ones.
-> > > > > > wmi_devices is newer and preferred.
-> > > > >
-> > > > > The driver  calls wmi_evaluate_method when initiating an WMI call=
-.
-> > > > > Where is the driver mixing calls to the UUID based APIs and the
-> > > > > wmi_device one?
-> > > > > WMI calls are made by calling hp_wmi_perform_query() which invoke=
-s
-> > > > > wmi_evaluate_method().
-> > > > > Did I miss something?
-> > > >
-> > > > wmi_evaluate_method() is UUID-based.
-> > > > struct wmi_driver is wmi_device based.
-> > > >
-> > > > The wmi_driver/wmi_device code essentially does nothing and is only=
- used
-> > > > to validate that a device is present.
-> > > > The same can be done more easily wmi_has_guid().
-> > > >
-> > >
+> On 4/21/23 13:37, Pavel Machek wrote:
+> > Hi!
 > >
-> > Are you asking to replace all calls to wmi_evaluate_method() which is
-> > UUID based API with calls to  wmidev_evaluate_method() which is
-> > wmi_device based?  Correct?
+> >> Linux Security components are under development and not published yet.
+> >> The only linux component is the driver (hp bioscfg) at this time.
+> >> Other published security components are under Windows.
+> >>
+> >> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> >
+> >> +/*
+> >> + * ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
+> >> + *
+> >> + * BIOS supports UTF-16 characters that are 2 bytes long.  No variabl=
+e
+> >> + * multi-byte language supported.
+> >> + *
+> >> + * @p:   Unicode buffer address
+> >> + * @str: string to convert to unicode
+> >> + *
+> >> + * Returns a void pointer to the buffer containing unicode string
+> >> + */
+> >> +void *ascii_to_utf16_unicode(u16 *p, const u8 *str)
+> >> +{
+> >
+> > Does this need to go to library somewhere?
 >
-> To be honest I'm not 100% sure.
+> This has already been discussed in earlier submissions
+> of the driver, the utf16 format is HP specific (prefixed
+> with a 16 bit le lenght, and the 0 length string needs
+> special encoding) so despite the name this is not generic.
 >
-> wmi_device is great and perferct for simple drivers binding to a single
-> UUID.
+> It should probably be prefixed with hp_ because of this
+> though, to avoid potential symbol conflicts when builtin.
 >
-> But it does not handle multi-UUID logic as your driver needs very well.
->
-> I would argue to stick to the legacy calls as it allows you to drop a
-> bunch of code and makes the initialization flow more straightforward.
->
-> But I don't know if somebody else won't ask for wmi_device later.
+> (and the same applies to other generic functions).
 
-I understand.  I will keep the legacy code because the driver handles
-multiple UUID logic.
-Thank you for the clarification
+I will add the prefix 'hp_' to those generic functions such
+ascii_to_utf16_unicode.
+
+>
+> Regards,
+>
+> Hans
+>
+>
