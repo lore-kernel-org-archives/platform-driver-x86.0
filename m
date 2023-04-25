@@ -2,162 +2,154 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46328C6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F34C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 20:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234771AbjDYTDG (ORCPT
+        id S236271AbjDYUWi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Apr 2023 15:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
+        Tue, 25 Apr 2023 16:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235061AbjDYTDC (ORCPT
+        with ESMTP id S236187AbjDYUWh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2023 15:03:02 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE68D18B8A
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 12:02:55 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-5ef524eaca1so26948416d6.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 12:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682449375; x=1685041375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qwxw4kYjRu94woJ/oAzgVlJil50JAGt1pGKKPkXJZDU=;
-        b=AghHuty5oWctp9Fgr83YOfdz1BvOQbpIwjkTYYfgttlq6ySniKDD7HZzYbct/MelF7
-         KCyOoSyYVYnqHzZ3WuIV19whLv5mp8h72xdlOLolauG8pB5J29Fpql8sBXyGu37RV3PZ
-         IxiuPQsSOvQe0A+vrtQFswUVYES6tB+2F3JoXUkdBgXkwDQeN4TGLbCGckpnQGCpOr/F
-         gX4/TxKx0lKf1BCUsSKv0FUPW4os9592riA32cNLFo8ftroFUXB5xXV02ThawlC7mXKo
-         U6f3SP4vipjuwJEXsAy+pJxnztxeU8zVD84qF2MKvkt1kMmTo1IOGARjiHB8PTWMrYt4
-         BVLg==
+        Tue, 25 Apr 2023 16:22:37 -0400
+X-Greylist: delayed 75 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 25 Apr 2023 13:22:35 PDT
+Received: from mx0b-00256a01.pphosted.com (mx0b-00256a01.pphosted.com [67.231.153.242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE4A17A06
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 13:22:35 -0700 (PDT)
+Received: from pps.filterd (m0355791.ppops.net [127.0.0.1])
+        by mx0b-00256a01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33PHivPD017246
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 16:22:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding;
+ s=20180315; bh=79sHrAEj5hNmmwiOWP5bra7BXbatTc7MFEdKV9lCbEg=;
+ b=SYuc8Uj9vcPmCTBfp4xgA2NC7a2k12qHGZAPoEtSVxfV13ehIiogtFnUQro7WekQlb2C
+ 0qH77P+QIlSAOBVDFudksahotxi6sCufQAbMHFJvIwubWmbAZAlhsxCCESskYY1kIksu
+ 0fy5V93Qts2m+vhUPMkhdTeQoOQW19kgdYCnWbvcD9Nsnvezrq74u8Oe0S/Tt/LnySmq
+ H3YcPwSFJL8HFJ/u6AvEEsAeTzk9KNyMnTml6ALWUeI98s0NptMqhjV8oKGOd2Xn5U4O
+ OzSUBbSHLLllibBFdBsz0vtwoPnfLO5gvklLXUNWAiESeTjP9UVjt+DPvTVGZCDAD8mI tg== 
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        by mx0b-00256a01.pphosted.com (PPS) with ESMTPS id 3q48sv3dx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 16:22:34 -0400
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-3ef33ed8843so38943561cf.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 13:22:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682449375; x=1685041375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qwxw4kYjRu94woJ/oAzgVlJil50JAGt1pGKKPkXJZDU=;
-        b=JmTZYL996wt66nUFXRq2fZbSSs5JyhaW/Tw6d2AT2/FodJQuC1fj2RhXfGdxTq7Qun
-         FRYp3BvKJsPLiqvtyxWHEKTzq/p7AgVE5+TtSYmNdEGpXrKwjm+R/C01nuLlkm6mdGcw
-         Bjc7M4TovQ1W8rSlvPlLYUmFrCuWlI8HHwYSiEf3nAc1bSmgzNlFVAIsCxazzVfZ3/rs
-         DrJp6r95FrnB/BRKP915Jn/OZwXGlHbgAGIQbBBxs04QCLoFWDBOFhyY43n8iswn2jwi
-         8KC1PD0S+0mAsXKiBe5U7+gTZngZoFbR32kJDREJEyy60VcK8Ljy5QYaS8EWvcs/z1z6
-         p2rQ==
-X-Gm-Message-State: AAQBX9cCerw9SONlank+ySWcFloMRulijv/M1WK/792+ZkjrcCvzGx3a
-        n5JOZYUdNEnaB0D5IfAg/dmNnFLO4tyE3MVOwYwsV+V0go35vfJh
-X-Google-Smtp-Source: AKy350agAw9KyWU53yLYXfd1J4J+BiyXjDZE9msU+dz5hedKInCwkG8xE3v1vsN8FZM46cC9DccdQWxPCdIWv8BDLrE=
-X-Received: by 2002:a05:6214:29ec:b0:60e:52e:33df with SMTP id
- jv12-20020a05621429ec00b0060e052e33dfmr18305992qvb.36.1682449374739; Tue, 25
- Apr 2023 12:02:54 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1682454154; x=1685046154;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=79sHrAEj5hNmmwiOWP5bra7BXbatTc7MFEdKV9lCbEg=;
+        b=ZNa7tYx4lmT5Ic3d3r9VpsxbhiI+DKohc24/+BZXOKmAiwwr/nRKYr7FgsJFcVxVmu
+         IcmaCSxDpA1ooerz5+W4NQVwfdoPqxP+4Lgt/8xx9jHt7dxUz4byFArNKxjId8mRIV4R
+         NBOkMHDmGT9z/2CuKHoj4yTUpXBBNT0R17Y9jiSmxod0VvmY6DQGmIwHReck86J/lh+G
+         874pw92PoP3geDRanuwlqINxK+fDXlt3B8wRoi3wpzpQp9drh+ooQezvKtAoChoR8u6i
+         j02DWjGFDtHCgrIR5iLg669GERnpNxfc/z30VC2TIVZwNI2WWdHqnLyARSrZZcDopMWJ
+         9Zeg==
+X-Gm-Message-State: AAQBX9dzsHbx1/ewMe6dymQm0jg8niD2lSF4N9gGAa5MMOGhUDxGY2E/
+        kXsSShR1hS6LV4azZXMmhBuBnyB22Sp3Nt+uDUTAHJtqsVsh69q9Uk+99T5XoC9FjJu4o/S33/C
+        FMVUn5XXt0WhUiWTTQwiLVYwMfJN/dqcB7alb5+fxuxM=
+X-Received: by 2002:a05:622a:247:b0:3ef:658c:6b33 with SMTP id c7-20020a05622a024700b003ef658c6b33mr21799748qtx.43.1682454153854;
+        Tue, 25 Apr 2023 13:22:33 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bXalb6KNUFxy602syb2mx3rbxcInYNZKvz7dlsT5PAYTZ1Lkcgx/ZIdqH4EGO0cCNjXbdL/A==
+X-Received: by 2002:a05:622a:247:b0:3ef:658c:6b33 with SMTP id c7-20020a05622a024700b003ef658c6b33mr21799728qtx.43.1682454153621;
+        Tue, 25 Apr 2023 13:22:33 -0700 (PDT)
+Received: from enviable.nyu.edu (216-165-95-139.natpool.nyu.edu. [216.165.95.139])
+        by smtp.gmail.com with ESMTPSA id ee27-20020a05620a801b00b0073b878e3f30sm3798281qkb.59.2023.04.25.13.22.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Apr 2023 13:22:33 -0700 (PDT)
+From:   Jonathan Singer <jes965@nyu.edu>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Jonathan Singer <jes965@nyu.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jorge Lopez <jorge.lopez2@hp.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Rishit Bansal <rishitbansal0@gmail.com>,
+        Daniel Houldsworth <dhould3@gmail.com>,
+        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] platform/x86: hp-wmi: Add HP Envy special key support
+Date:   Tue, 25 Apr 2023 16:22:18 -0400
+Message-Id: <20230425202219.7511-1-jes965@nyu.edu>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-References: <20230416154932.6579-1-julian.winkler1@web.de> <6a2a97d9-140c-3e4f-aa12-c98f928f7481@redhat.com>
- <CAHp75VfFptZcJn7c_a2GLnSqJDXBwvUqWmu9Wb19a3VvwXJS5A@mail.gmail.com> <a52ab618-97ea-04ea-01e4-ecb673f45f09@web.de>
-In-Reply-To: <a52ab618-97ea-04ea-01e4-ecb673f45f09@web.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 25 Apr 2023 22:02:18 +0300
-Message-ID: <CAHp75VcGWo8YvHYOD19ECRDcF6D_yZB5oN24=aYgyFn5m8Kz=A@mail.gmail.com>
-Subject: Re: [PATCH] intel_scu_pcidrv: add back PCI id for Medfield
-To:     Julian Winkler <julian.winkler1@web.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: FS1h9p5oSnAary5TMvzSgEE9mgpIn4Dn
+X-Proofpoint-ORIG-GUID: FS1h9p5oSnAary5TMvzSgEE9mgpIn4Dn
+X-Orig-IP: 209.85.160.198
+X-Proofpoint-Spam-Details: rule=outbound_bp_notspam policy=outbound_bp score=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 adultscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304250183
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 4:02=E2=80=AFPM Julian Winkler <julian.winkler1@web=
-.de> wrote:
-> On 17.04.23 12:16, Andy Shevchenko wrote:
-> > On Mon, Apr 17, 2023 at 1:11=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
-com> wrote:
-> >> On 4/16/23 17:49, Julian Winkler wrote:
-> >>> This id was removed in b47018a778c1a18cbc98b4a11936dec4f8c4bb7b, sayi=
-ng it
-> >>> is only used on Moorestown, but apparently the same id is also used o=
-n
-> >>> Medfield.
-> >>>
-> >>> Tested on the Medfield based Motorola RAZR i smartphone.
-> >
-> > Wow! This is surprising.
-> > Can you tell more about your test environment? What is the Linux
-> > kernel version in use and what is the userspace (AOSP, Buildroot,
-> > Yocto, custom)? If custom, more details would be nice to hear.
->
-> The test enviroment is postmarketOS. You can find more details on the
-> Wiki page
-> https://wiki.postmarketos.org/wiki/Motorola_RAZR_i_(XT890)_(motorola-smi)
->
-> >>> Signed-off-by: Julian Winkler <julian.winkler1@web.de>
-> >>
-> >> Hmm, so this is a former SFI platform, from your:
-> >> https://lore.kernel.org/all/20230223060107.23029-1-julian.winkler1@web=
-.de/
-> >>
-> >> patch I guess the plan is to use some custom bootloader
-> >> and then use x86 with devicetree support to replace SFI ?
-> >
-> > That would also be nice to hear in detail. With other Intel MID
-> > platforms the decision was made to pursue ACPI (and U-Boot, as an
-> > example) supports that for Intel Merrifield platform.
->
-> I boot a 5.10 kernel, which still has SFI support, and from there I can
-> boot latest mainline kernel with petitboot, kexec and devicetree.
+Previously, some support for certain keys on the HP keyboard has been
+added already in commit 3ee5447b2048 ("platform/x86: hp-wmi: Handle Omen
+Key event"), however this as tested did not allow even the fn+esc key on
+my HP Envy which uses the same keycode on my HP Envy x360 laptop to work
+--the keycode rather than being passed in as a separate int from WMI, was
+being passed in as the event_data for the HPWMI_OMEN_KEY event.
 
-Aha, but would it be possible to boot a U-Boot instead?
+This patch, as tested was able to properly get the keycode for fn+esc,
+and for fn+f12 which is supposed to be a programmable key according to
+HP's keyboard diagram and is thus mapped to KEY_PROG2. The fn+f8 key
+combination (mute microphone) was a standard HPWMI_BEZEL_BUTTON key,
+however it did not previously have an entry in the sparse keymap. This
+patch preserves the original HPWMI_OMEN_KEY behavior for laptops that
+use it by only taking the keycode from the event_data only when the 
+event_data is nonzero.
 
-> >> Do you already have this working ?
-> >>
-> >> Sorry for all the questions for what is just a simple PCI-id
-> >> addition. I guess I'm worried this is just the tip of
-> >> the iceberg for getting medfield support back into
-> >> the kernel and I'm a bit worried about how much maintenance
-> >> work this will cause.
-> >>
-> >> E.g. also see commit e1da811218d2dc ("drm/gma500: Remove Medfield supp=
-ort")
-> >> which I guess you will want to see reverted too ?
-> >>
-> >> That is an example of a lot more code to bring back
-> >> then just a single PCI-id addition.
-> >>
-> >> Don't get me wrong I'm all for supporting older hw
-> >> if there are users who are interested in actively
-> >> maintaining support for it. I just want to get a feel
-> >> of the amount of work this is going to involve.
-> >>
-> >> Andy, Mika, any remarks ?
-> >
-> > I'm not against a patch if it helps existing users, but we need to
-> > understand first if it will be really helpful for upstream (taking
-> > into account 32-bit Intel MID support removal).
->
-> My downstream kernel tree can be seen here:
-> https://gitlab.com/julianwi/linux-intel-medfield.
+Signed-off-by: Jonathan Singer <jes965@nyu.edu>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Okay, I see that it doesn't have many patches, but it still has some
-code that won't be acceptable upstream. What I would suggest is to
-actually provide the ACPI tables rather than going Device Tree way.
-Also note, that GPIO driver has to be integrated into gpio-pxa.c which
-is the historical parent IP of the Medfield case (it was a mistake to
-have a separate driver to begin with).
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index b27362209b04..b61185fc0d8a 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -212,6 +212,7 @@ struct bios_rfkill2_state {
+ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_KEY, 0x02,    { KEY_BRIGHTNESSUP } },
+ 	{ KE_KEY, 0x03,    { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, 0x270,   { KEY_MICMUTE } },
+ 	{ KE_KEY, 0x20e6,  { KEY_PROG1 } },
+ 	{ KE_KEY, 0x20e8,  { KEY_MEDIA } },
+ 	{ KE_KEY, 0x2142,  { KEY_MEDIA } },
+@@ -222,6 +223,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_IGNORE, 0x121a4, }, /* Win Lock Off */
+ 	{ KE_KEY, 0x21a5,  { KEY_PROG2 } }, /* HP Omen Key */
+ 	{ KE_KEY, 0x21a7,  { KEY_FN_ESC } },
++	{ KE_KEY, 0x21a8,  { KEY_PROG2 } }, /* HP Envy x360 programmable key */
+ 	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
+ 	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 0x231b,  { KEY_HELP } },
+@@ -816,11 +818,20 @@ static void hp_wmi_notify(u32 value, void *context)
+ 	case HPWMI_SMART_ADAPTER:
+ 		break;
+ 	case HPWMI_BEZEL_BUTTON:
+-	case HPWMI_OMEN_KEY:
+ 		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
+ 		if (key_code < 0)
+ 			break;
+ 
++		if (!sparse_keymap_report_event(hp_wmi_input_dev,
++						key_code, 1, true))
++			pr_info("Unknown key code - 0x%x\n", key_code);
++		break;
++	case HPWMI_OMEN_KEY:
++		if (event_data) /* Only should be true for HP Omen */
++			key_code = event_data;
++		else
++			key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
++
+ 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
+ 						key_code, 1, true))
+ 			pr_info("Unknown key code - 0x%x\n", key_code);
+-- 
+2.40.0
 
-U-Boot would be ideal to have flashed there instead of so called
-bootstub (which is 4k or 8k blob to load kernel and initrd and pass
-the execution to it).
-
-> Indeed, I needed to
-> bring back some removed code to get the display working, but even
-> without display driver, old smartphones can be used as a server or
-> Raspberry Pi replacement.
-
-True.
-
-P.S. I'm on a long leave, but I can help you with the stuff to be
-upstreamed and tested, we still have a device available to test in our
-lab. Just see above.
-
---=20
-With Best Regards,
-Andy Shevchenko
