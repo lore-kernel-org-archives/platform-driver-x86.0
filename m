@@ -2,217 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C49C77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Apr 2023 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A2C6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 03:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232399AbjDXWaf (ORCPT
+        id S231814AbjDYDIJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Apr 2023 18:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
+        Mon, 24 Apr 2023 23:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232797AbjDXWaS (ORCPT
+        with ESMTP id S229629AbjDYDII (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2023 18:30:18 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA47719BA;
-        Mon, 24 Apr 2023 15:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1682375399; i=w_armin@gmx.de;
-        bh=5sBozmCf1BEgGSGkQpQ5TyvhvOpqQjnfZg8RI7c13lk=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=FC5JywkA/v5UxGhp8hi3nxL80rlZlTGfNrFD1a2FKtJ60+MKzi+d8Nksv97tNglu3
-         q0FxY8612TUoitJkt5zEsZfGEAEb4IjitLlzI+W/4WKVYzt2DCKJV+08bCocRqqsKD
-         bPV3B91ffGYh8tiIllxEUkTg2mIPS53a9DdF4QhbeQxLKYVIO4r4BsJuGZ7jULr3YG
-         MTzZRjaARA5OISsRwcYaCuMqM7iF30ycjcmUDOP7fJpr6Wu8Hhfxg8LkElRhbXC83s
-         fyPau81CN/0Yi9fPHcigm0vqAD7nNlKuZkUeLzZWm+h0u18G6s664m3VvgRkEPuXqo
-         kODP61Oxy7r/Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MTzf6-1phpGX1oVW-00R1oW; Tue, 25 Apr 2023 00:29:59 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org, rdunlap@infradead.org
+        Mon, 24 Apr 2023 23:08:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE7F1BD0;
+        Mon, 24 Apr 2023 20:08:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=nBFqtXx0vNABq18Vz8VpE1uoF7ruSN5UrVhGELTAEOo=; b=eeyOXc0wCK/NL3QlsDzJmcK9DV
+        YYV/O8N5Np7CJUZAP5MdhzJouBrXeGudEdn841IqeFsRrbEQmLtO9YJjyH8B0OT8f8Pft2UOaKlQC
+        rzWJ13vxm4u97Z3oVycq2YIRtKovICRrCppA+u5iZBp86FQBHtxILDQkjwvSKTNGL7dTQOY/ZfEP4
+        MiwoXfgzAiyZnKwau3+XzNijp4CAUWpE9Xppj8pDdH0/XaN1yjt0Rrnl+vSizaH+S564FZI3bjZOV
+        saMM+UbFg78oq7uUS9LKJdU9dfJ/on1xeo06kw+tkvdI+bUvUOrTop/WfWbmkl8FzCTn3iZ/G6rF1
+        8Nmb/KZA==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pr929-0004jm-14;
+        Tue, 25 Apr 2023 03:08:01 +0000
+Message-ID: <fd333355-8059-4d7d-7a7e-be67006ad3fc@infradead.org>
+Date:   Mon, 24 Apr 2023 20:07:58 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 3/4] platform/x86: wmi: Add documentation
+Content-Language: en-US
+To:     Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
+        markgross@kernel.org
 Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] platform/x86: wmi: Add device specific documentation
-Date:   Tue, 25 Apr 2023 00:29:39 +0200
-Message-Id: <20230424222939.208137-5-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230424222939.208137-1-W_Armin@gmx.de>
 References: <20230424222939.208137-1-W_Armin@gmx.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7+O4enu/7tBLqmAzdJ19x3VYC6p81wTc2Dcvcw2qlO/LUffLERb
- u/8VvAuNUSQdNEyYsgw173I+QYxGCtgRrTSlFW0B2mnnlheRktdqrtbe+H0+98750UXoEbR
- 1lVD2oERS6EteadvPBY7xLdyMsoPgDJLJMcMf7jqXuml9sfaPx4vVNddA5rfv1TVck9gZ5U
- DoqIhLHzmUWm8rEECS16Q==
-UI-OutboundReport: notjunk:1;M01:P0:loTMlzO8HN0=;r3JaavTxwMUfj/S5WPf6y8yap4K
- DOI7NZPNEEh//RJrvbktQw1wA9+YApoiVOiMFpu7IS3mvbmPrIW3nOITznzKa36ZUKTO6SH//
- Pfi4Bf+XTVkmdZZyZ2+yfs6X6wdIn/feM77tNyK1wtyCEuUO3fyKzEWvJLjUm/YFWmmlJMGgP
- osZX2ZETorSIhCV0AK9eQhy0P8p1PI/RVsFa2dnjoztplSOK90UJVW0QGEpgcm2bc7rGxC8Od
- U60Xoh9lHrIR660ZPopVmItpU8Iy3QafykhD2A1VhNXwKPgky8Tt7556O2xvCh8mOz3GyQRnY
- wtsQkya+PtLUBqqzdfhQ4QUtYxRnwsLa44ofx+GrzyU/X2JXlXDi7C2cNRSrKnEKOGyBFz5mO
- oRRRjaL+V7d+eSPvFyLyyZXPQTewAoMU2tnz+8nHHd8qCeu/Dfioyonrb8Z6Wdf04Zl4Yd/kw
- AgMdEYk8vsCiWeMRkRVvoiv826on997cRUbgK+fW+66K6y7hHLcAPF4QT1FTl212kOPIoa9Kw
- JkLgdMyuLEQSwgX0vLv8S2Nc7GVX9lGK16CCuD/Swpz5wuyJ10fy/Lzzt4Tglb29ugpsoUMwR
- 7pud+fjZ8gu3zw2N2JJJNCL6nY7gvqIlsMmzI71+WEW+InH4kVqEQSB/iQzDMA1YiYm5WZQjP
- TmiMTmgPyX/RaSqRNxPVsu56qxrkJeuVCdHMbKKpJnOsgpAx8isvoiXwddvYi6EI29Ks6D5Do
- DpEtCudvkNOHR9J5dZAVhqfda2LN57IJibeWxWgKhu2ow38uSBslz/DVm3Y+vf6k8ulCPT2Mb
- +WJCnOSeY8e/eqkrU+zB/9Akqr2JQRvhSzxIIJvmKMwIf59RBle2hMafNwU1DOmbVlzSZcfma
- PqE7e3U653MZZiSvOcqCcFGRxVuKlF2Aw018o/Z8unf2E+cSwcqZTHbg3RDfY8NhFXSPb5tTp
- k4EGVb81m4NMelmNJrGI+qjoG/s=
+ <20230424222939.208137-4-W_Armin@gmx.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230424222939.208137-4-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a place for device-specific documentation of WMI drivers.
-The first entry is documentation for the wmi-bmof driver, with
-additional documentation being expected to follow.
+Hi--
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- .../ABI/stable/sysfs-platform-wmi-bmof        |  7 ++++++
- Documentation/wmi/devices/index.rst           | 22 ++++++++++++++++
- Documentation/wmi/devices/wmi-bmof.rst        | 25 +++++++++++++++++++
- Documentation/wmi/index.rst                   |  1 +
- MAINTAINERS                                   |  7 ++++++
- drivers/platform/x86/Kconfig                  |  4 +--
- 6 files changed, 64 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/stable/sysfs-platform-wmi-bmof
- create mode 100644 Documentation/wmi/devices/index.rst
- create mode 100644 Documentation/wmi/devices/wmi-bmof.rst
+On 4/24/23 15:29, Armin Wolf wrote:
+> Add documentation for the WMI subsystem. The documentation describes
+> both the ACPI WMI interface and the driver API for interacting with
+> the WMI driver core. The information regarding the ACPI interface
+> was retrieved from the Ubuntu kernel references and the Windows driver
+> samples available on GitHub. The documentation is supposed to help
+> driver developers writing WMI drivers, as many modern machines designed
+> to run Windows provide an ACPI WMI interface.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  Documentation/driver-api/index.rst   |  1 +
+>  Documentation/driver-api/wmi.rst     | 21 ++++++
+>  Documentation/subsystem-apis.rst     |  1 +
+>  Documentation/wmi/acpi-interface.rst | 96 ++++++++++++++++++++++++++++
+>  Documentation/wmi/index.rst          | 18 ++++++
+>  MAINTAINERS                          |  2 +
+>  6 files changed, 139 insertions(+)
+>  create mode 100644 Documentation/driver-api/wmi.rst
+>  create mode 100644 Documentation/wmi/acpi-interface.rst
+>  create mode 100644 Documentation/wmi/index.rst
+> 
 
-diff --git a/Documentation/ABI/stable/sysfs-platform-wmi-bmof b/Documentat=
-ion/ABI/stable/sysfs-platform-wmi-bmof
-new file mode 100644
-index 000000000000..a786504b6027
-=2D-- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-platform-wmi-bmof
-@@ -0,0 +1,7 @@
-+What:		/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof
-+Date:		Jun 2017
-+KernelVersion:	4.13
-+Description:
-+		Binary MOF metadata used to decribe the details of available ACPI WMI i=
-nterfaces.
-+
-+		See Documentation/wmi/devices/wmi-bmof.rst for details.
-diff --git a/Documentation/wmi/devices/index.rst b/Documentation/wmi/devic=
-es/index.rst
-new file mode 100644
-index 000000000000..c08735a9d7df
-=2D-- /dev/null
-+++ b/Documentation/wmi/devices/index.rst
-@@ -0,0 +1,22 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-+Driver-specific Documentation
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-+
-+This section provides information about various devices supported by
-+the Linux kernel, their protocols and driver details.
-+
-+.. toctree::
-+   :maxdepth: 1
-+   :numbered:
-+   :glob:
-+
-+   *
-+
-+.. only:: subproject and html
-+
-+   Indices
-+   =3D=3D=3D=3D=3D=3D=3D
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/wmi/devices/wmi-bmof.rst b/Documentation/wmi/de=
-vices/wmi-bmof.rst
-new file mode 100644
-index 000000000000..ca1ee9a29be3
-=2D-- /dev/null
-+++ b/Documentation/wmi/devices/wmi-bmof.rst
-@@ -0,0 +1,25 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-+WMI embedded Binary MOF driver
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-+
-+Introduction
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Many machines embed WMI Binary MOF (Managed Object Format) metadata used =
-to
-+describe the details of their ACPI WMI interfaces. The data can be decode=
-d
-+with tools like `bmfdec <https://github.com/pali/bmfdec>`_ to obtain a
-+human readable WMI interface description, which is useful for developing
-+new WMI drivers.
-+
-+The Binary MOF data can be retrieved from the ``bmof`` sysfs attribute of=
- the
-+associated WMI device. Please note that multiple WMI devices containing B=
-inary
-+MOF data can exist on a given system.
-+
-+WMI interface
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+The Binary MOF WMI device is identified by the WMI GUID ``05901221-D566-1=
-1D1-B2F0-00A0C9062910``.
-+The Binary MOF can be obtained by doing a WMI data block query. The resul=
-t is
-+then returned as an ACPI buffer with a variable size.
-diff --git a/Documentation/wmi/index.rst b/Documentation/wmi/index.rst
-index b29933a86380..537cff188e14 100644
-=2D-- a/Documentation/wmi/index.rst
-+++ b/Documentation/wmi/index.rst
-@@ -8,6 +8,7 @@ WMI Subsystem
-    :maxdepth: 1
+> diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/wmi.rst
+> new file mode 100644
+> index 000000000000..6ca58c8249e5
+> --- /dev/null
+> +++ b/Documentation/driver-api/wmi.rst
+> @@ -0,0 +1,21 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +==============
+> +WMI Driver API
+> +==============
+> +
+> +The WMI driver core supports a more modern bus-based interface for interacting
+> +with WMI devices, and an older GUID-based interface. The latter interface is
+> +considered to be deprecated, so new WMI drivers should generally avoid it since
+> +it has some issues with multiple WMI devices and events sharing the same GUIDs
+> +and/or notification IDs. The modern bus-based interface instead maps each
+> +WMI device to a :c:type:`struct wmi_device <wmi_device>`, so it supports
+> +WMI devices sharing GUIDs and/or notification IDs. Drivers can then register
+> +a :c:type:`struct wmi_driver <wmi_driver>`, which will be bound to compatible
+> +WMI devices by the driver core.
+> +
+> +.. kernel-doc:: include/linux/wmi.h
+> +   :internal:
 
-    acpi-interface
-+   devices/index
+There are no kernel-doc comments in include/linux/wmi.h, so this
+causes a kernel-doc warning:
 
- .. only::  subproject and html
+../include/linux/wmi.h:1: warning: no structured comments found
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 979d37176429..4d5b1f6d77f6 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22556,6 +22556,13 @@ L:	linux-wireless@vger.kernel.org
- S:	Odd fixes
- F:	drivers/net/wireless/wl3501*
+Otherwise this all looks good.
 
-+WMI BINARY MOF DRIVER
-+L:	platform-drivers-x86@vger.kernel.org
-+S:	Orphan
-+F:	Documentation/ABI/stable/sysfs-platform-wmi-bmof
-+F:	Documentation/wmi/devices/wmi-bmof.rst
-+F:	drivers/platform/x86/wmi-bmof.c
-+
- WOLFSON MICROELECTRONICS DRIVERS
- L:	patches@opensource.cirrus.com
- S:	Supported
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 22052031c719..3d5dd9e997a6 100644
-=2D-- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -43,8 +43,8 @@ config WMI_BMOF
- 	default ACPI_WMI
- 	help
- 	  Say Y here if you want to be able to read a firmware-embedded
--	  WMI Binary MOF data. Using this requires userspace tools and may be
--	  rather tedious.
-+	  WMI Binary MOF (Managed Object Format) data. Using this requires
-+	  userspace tools and may be rather tedious.
 
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called wmi-bmof.
-=2D-
-2.30.2
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
+thanks.
+-- 
+~Randy
