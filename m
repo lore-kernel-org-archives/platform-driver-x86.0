@@ -2,237 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C47DC6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 10:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7564FC77B61
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 13:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233013AbjDYKez (ORCPT
+        id S233361AbjDYNkM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Apr 2023 06:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        Tue, 25 Apr 2023 09:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233810AbjDYKex (ORCPT
+        with ESMTP id S233893AbjDYNkL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2023 06:34:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7BF4E2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682418849;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u7THULRhWgMcFebRgtK1WD8sev+RUBTaeAQwjg1I+VQ=;
-        b=cnxKzhN5OSTfELkUDbpLeGh5ieVdw1fQhVCVqN1q5Sosg/EEbpBPQ/3jgL061XYvi5KNI9
-        N2YGWuUn8XzrH0vcsozkDEtpLnotqrG/VFRMOFfpFO3EyaipZboFX3lldRGfyESr1LYpxs
-        QOQ/JY3hfgfPMF3kAk60gftcrl90540=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-NbX4Xb7DO66iZ3-SI_K9Rw-1; Tue, 25 Apr 2023 06:34:08 -0400
-X-MC-Unique: NbX4Xb7DO66iZ3-SI_K9Rw-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5069f2ae8eeso14665772a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:34:08 -0700 (PDT)
+        Tue, 25 Apr 2023 09:40:11 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716E9FF;
+        Tue, 25 Apr 2023 06:40:10 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2a8ad872ea5so56763861fa.2;
+        Tue, 25 Apr 2023 06:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682430008; x=1685022008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dcesIuzpK+VEGSU+S/FfSN/2SfK0JmwTeQlJxmdrzFM=;
+        b=aRcTPUR3iqZnYw+Yr2fYBhV3LnFlC1Xe9QETZn5PYXINeHrAEut1aj9SXNTXB0DdWH
+         ZSE89o67bN/v/j+9Npvdh55RprcsCwbSKLbi7vtKGpTCMeM0Wznee/H6bAxFf6M6Xgju
+         iQcSMqqaWExrBlXdn5dNwZ0GwvABlSMpsd4lZnCA+b99Io0PFLRS/FGvCHTGPSLqhyZU
+         cu4U6ITOyFugrxAPlaZOlSak1wpZyFllVa2ydRk2KSrlcyK8JBDzdhLPqp4/3BUA81RC
+         9SGSknAZeCdLus2PjGfzdTPAWkQuLD083ZiaEbCR3xGNlOkRDp+RYi5YJipCcqulrKU2
+         POzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682418847; x=1685010847;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7THULRhWgMcFebRgtK1WD8sev+RUBTaeAQwjg1I+VQ=;
-        b=JYBa/tbdG1zV9tYPQpF6omjc0eSsJfk+8/W9AJelaEhoCob9DFX8kvl8iCxT094wn6
-         LghBLt9JpuI4GnNZBe2tI7UafcSns/eWo5pjfwu+Tni+htG/nH8hbUv51mbV3lpgmaO9
-         OMSt2RXUxO2Ynk/lU2yEl/7wN7gwEd1u23PXa/GlqsD2PJwG+E24mou0PuLwf2JraFBf
-         CyINBjFfzaAhjU3qfx8DdNS43E0cyLPF/lKPf7x81ZKMKih9Vv8Cbng9w58vzLPAJ43f
-         Yvyxhmn+NZD3Fb6vt48LB3XZGrmHaHeSFevtvMkxHVLpus3SF0XwFqLW42NQUMPuoAiO
-         EIog==
-X-Gm-Message-State: AAQBX9cCyz1sULJuZz07HuTbQAj/OrBqh1ebSgQzKNhAoIQRDOddLUzW
-        VA25tx8ZBgJqCmKFLp0sGDpdJjw8c+emf9KpwuLi9yhceVp7K2538UDfL6+KRYWEWQ4M1jV8aqY
-        Ij9+d6uSvkyAUDbI/8nOXs115YOzQxKo3z2aFVgGQOQ==
-X-Received: by 2002:a17:906:a007:b0:933:4d47:55b7 with SMTP id p7-20020a170906a00700b009334d4755b7mr13107370ejy.2.1682418847254;
-        Tue, 25 Apr 2023 03:34:07 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YAYU/DR0ZaWkz5n4MShN6au3yfTGV9bLtppFGS3UL2Zj1HtySGTfbBLI84UGn9chQQMJ8A3g==
-X-Received: by 2002:a17:906:a007:b0:933:4d47:55b7 with SMTP id p7-20020a170906a00700b009334d4755b7mr13107354ejy.2.1682418846891;
-        Tue, 25 Apr 2023 03:34:06 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id l7-20020a1709060e0700b0094ee21fe943sm6548204eji.116.2023.04.25.03.34.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Apr 2023 03:34:06 -0700 (PDT)
-Message-ID: <6c05cc9e-815d-7a94-8b2d-f17fd5d47354@redhat.com>
-Date:   Tue, 25 Apr 2023 12:34:05 +0200
+        d=1e100.net; s=20221208; t=1682430008; x=1685022008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dcesIuzpK+VEGSU+S/FfSN/2SfK0JmwTeQlJxmdrzFM=;
+        b=bhA7cEPoGldmekVjqqz7059sAS5dSrsRwsn5/uWOXg/57mMuxi/T0F8FGY1kHJwwn6
+         ydTlA3yBm/CIx/aIt0RmVUDRb0vsMIcD5GJXrI0EfuOEHePds7gyRETrfnhvqT8Pn9Bf
+         qbbcYGu1w8FRBG3zVf9r03QWmsr1ziGRui7I55SGN1GUTUxagw+4rA4Pl9qoLcZ4DxqW
+         ZzxlmovDLwlZmSFWra8syjXIGz6wWdVW6sMAehAIxSipwZ3RTXw0kvka2lhRYQSibhM7
+         JUdmJ5JpkOtgDGg/YCosUfcdv3iuiHGeARVujiIoMDq8TsmGXiTlBw/eCqkllCGhn3V6
+         bQdA==
+X-Gm-Message-State: AAQBX9dkRFpPh4FRPNFzNChSYniY3FhMEB0WLK9gCkGZxbPhc/RgBPUG
+        7P8nmyU5zo+ubH44WkGdYbm1s41HiagcfEDoT1w=
+X-Google-Smtp-Source: AKy350bbOzdNjLlA7R7eOdjlSWKPWRPT27ArhDGiTkuzHiDECXu9jbRZsA4ymCraoZiVUXRf66O7NdYmIhy/vTHzXU0=
+X-Received: by 2002:a2e:3213:0:b0:2a8:e642:8cdb with SMTP id
+ y19-20020a2e3213000000b002a8e6428cdbmr3317683ljy.49.1682430008375; Tue, 25
+ Apr 2023 06:40:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v10 03/14] HP BIOSCFG driver - bioscfg
-Content-Language: en-US, nl
-To:     Armin Wolf <W_Armin@gmx.de>, Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas@t-8ch.de
-References: <20230419151321.6167-1-jorge.lopez2@hp.com>
- <20230419151321.6167-4-jorge.lopez2@hp.com>
- <38929a45-79de-964b-5d6f-cfa44099b35e@gmx.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <38929a45-79de-964b-5d6f-cfa44099b35e@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-3-jorge.lopez2@hp.com>
+ <b7c49593-13f9-44f8-b3b8-66551b01e966@t-8ch.de> <CAOOmCE_MdHnPb250DDYC6Hoqutod2m=2voBqFz4g0dLcmJ5PRQ@mail.gmail.com>
+ <67108caf-2a03-4ef0-9f8d-819b0d6f0a2e@t-8ch.de> <CAOOmCE8dru7YOmZeTiEoDMiy7d6nTEih6D2H-AMrOykt=z1bhQ@mail.gmail.com>
+ <CAOOmCE8SGn9JsWVXUDnKgWyxSzuCuiXzjsv3V737uNXPu2jykA@mail.gmail.com> <b4b9fb11-d6d0-42e6-9193-ba3c2c846071@t-8ch.de>
+In-Reply-To: <b4b9fb11-d6d0-42e6-9193-ba3c2c846071@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Tue, 25 Apr 2023 08:39:43 -0500
+Message-ID: <CAOOmCE8Q4g=jvqZK6m1hAGGDnM4GCOX6QoAcwqSYroSx11cE4A@mail.gmail.com>
+Subject: Re: [PATCH v11 02/14] HP BIOSCFG driver - biosattr-interface
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+On Tue, Apr 25, 2023 at 12:28=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
+h.de> wrote:
+>
+> On 2023-04-24 17:14:57-0500, Jorge Lopez wrote:
+> > Sorry for asking again.  I just want to be understand exactly what I mu=
+st do.
+>
+> No problem!
+>
+> > > > > >
+> > > > > > > +     args->command =3D command;
+> > > > > > > +     args->commandtype =3D query;
+> > > > > > > +     args->datasize =3D insize;
+> > > > > > > +     memcpy(args->data, buffer, flex_array_size(args, data, =
+insize));
+> > > > > > > +
+> > > > > > > +     ret =3D wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &=
+input, &output);
+> > > > > >
+> > > > > > The driver is mixing calls to the UUID based APIs and the wmi_d=
+evice
+> > > > > > ones.
+> > > > > > wmi_devices is newer and preferred.
+> > > > >
+> > > > > The driver  calls wmi_evaluate_method when initiating an WMI call=
+.
+> > > > > Where is the driver mixing calls to the UUID based APIs and the
+> > > > > wmi_device one?
+> > > > > WMI calls are made by calling hp_wmi_perform_query() which invoke=
+s
+> > > > > wmi_evaluate_method().
+> > > > > Did I miss something?
+> > > >
+> > > > wmi_evaluate_method() is UUID-based.
+> > > > struct wmi_driver is wmi_device based.
+> > > >
+> > > > The wmi_driver/wmi_device code essentially does nothing and is only=
+ used
+> > > > to validate that a device is present.
+> > > > The same can be done more easily wmi_has_guid().
+> > > >
+> > >
+> >
+> > Are you asking to replace all calls to wmi_evaluate_method() which is
+> > UUID based API with calls to  wmidev_evaluate_method() which is
+> > wmi_device based?  Correct?
+>
+> To be honest I'm not 100% sure.
+>
+> wmi_device is great and perferct for simple drivers binding to a single
+> UUID.
+>
+> But it does not handle multi-UUID logic as your driver needs very well.
+>
+> I would argue to stick to the legacy calls as it allows you to drop a
+> bunch of code and makes the initialization flow more straightforward.
+>
+> But I don't know if somebody else won't ask for wmi_device later.
 
-On 4/19/23 20:04, Armin Wolf wrote:
-> Am 19.04.23 um 17:13 schrieb Jorge Lopez:
-
-<snip>
-
->> +static int __init bioscfg_init(void)
->> +{
->> +    int ret = 0;
->> +    int bios_capable = wmi_has_guid(HP_WMI_BIOS_GUID);
->> +
->> +    if (!bios_capable) {
->> +        pr_err("Unable to run on non-HP system\n");
->> +        return -ENODEV;
->> +    }
->> +
-> 
-> Currently, this driver will no get automatically loaded on supported hardware,
-> something which would be quite beneficial for users to have.
-> Since the HP_WMI_BIOS_GUID is already handled by the hp-wmi driver, maybe this
-> driver (which also already implements a function similar to hp_wmi_perform_query())
-> could register a platform device which is then used by this driver? This together
-> with MODULE_DEVICE_TABLE() would allow for automatically loading the module on supported hardware.
-
-Both drivers can already co-exist since the old hp-wmi driver uses the old
-wmi kernel functions and is not a "wmi_driver" so there is no need for
-a platform_device for this driver to bind to since the wmi_device is
-still free for it to bind to.
-
-This does indeed need a MODULE_DEVICE_TABLE() statement for
-the bios_attr_pass_interface_id_table[] id-table. Note only for that
-table, because the HP_WMI_BIOS_GUID is present on models which do
-not support this and we don't want the module to auto-load there.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Armin Wolf
-> 
->> +    ret = init_bios_attr_set_interface();
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = init_bios_attr_pass_interface();
->> +    if (ret)
->> +        goto err_exit_bios_attr_set_interface;
->> +
->> +    if (!bioscfg_drv.bios_attr_wdev || !bioscfg_drv.password_attr_wdev) {
->> +        pr_debug("Failed to find set or pass interface\n");
->> +        ret = -ENODEV;
->> +        goto err_exit_bios_attr_pass_interface;
->> +    }
->> +
->> +    ret = fw_attributes_class_get(&fw_attr_class);
->> +    if (ret)
->> +        goto err_exit_bios_attr_pass_interface;
->> +
->> +    bioscfg_drv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
->> +                          NULL, "%s", DRIVER_NAME);
->> +    if (IS_ERR(bioscfg_drv.class_dev)) {
->> +        ret = PTR_ERR(bioscfg_drv.class_dev);
->> +        goto err_unregister_class;
->> +    }
->> +
->> +    bioscfg_drv.main_dir_kset = kset_create_and_add("attributes", NULL,
->> +                            &bioscfg_drv.class_dev->kobj);
->> +    if (!bioscfg_drv.main_dir_kset) {
->> +        ret = -ENOMEM;
->> +        pr_debug("Failed to create and add attributes\n");
->> +        goto err_destroy_classdev;
->> +    }
->> +
->> +    bioscfg_drv.authentication_dir_kset = kset_create_and_add("authentication", NULL,
->> +                                  &bioscfg_drv.class_dev->kobj);
->> +    if (!bioscfg_drv.authentication_dir_kset) {
->> +        ret = -ENOMEM;
->> +        pr_debug("Failed to create and add authentication\n");
->> +        goto err_release_attributes_data;
->> +    }
->> +
->> +    /*
->> +     * sysfs level attributes.
->> +     * - pending_reboot
->> +     */
->> +    ret = create_attributes_level_sysfs_files();
->> +    if (ret)
->> +        pr_debug("Failed to create sysfs level attributes\n");
->> +
->> +    ret = hp_init_bios_attributes(HPWMI_STRING_TYPE, HP_WMI_BIOS_STRING_GUID);
->> +    if (ret)
->> +        pr_debug("Failed to populate string type attributes\n");
->> +
->> +    ret = hp_init_bios_attributes(HPWMI_INTEGER_TYPE, HP_WMI_BIOS_INTEGER_GUID);
->> +    if (ret)
->> +        pr_debug("Failed to populate integer type attributes\n");
->> +
->> +    ret = hp_init_bios_attributes(HPWMI_ENUMERATION_TYPE, HP_WMI_BIOS_ENUMERATION_GUID);
->> +    if (ret)
->> +        pr_debug("Failed to populate enumeration type attributes\n");
->> +
->> +    ret = hp_init_bios_attributes(HPWMI_ORDERED_LIST_TYPE, HP_WMI_BIOS_ORDERED_LIST_GUID);
->> +    if (ret)
->> +        pr_debug("Failed to populate ordered list object type attributes\n");
->> +
->> +    ret = hp_init_bios_attributes(HPWMI_PASSWORD_TYPE, HP_WMI_BIOS_PASSWORD_GUID);
->> +    if (ret)
->> +        pr_debug("Failed to populate password object type attributes\n");
->> +
->> +    bioscfg_drv.spm_data.attr_name_kobj = NULL;
->> +    ret = hp_add_other_attributes(HPWMI_SECURE_PLATFORM_TYPE);
->> +    if (ret)
->> +        pr_debug("Failed to populate secure platform object type attribute\n");
->> +
->> +    bioscfg_drv.sure_start_attr_kobj = NULL;
->> +    ret = hp_add_other_attributes(HPWMI_SURE_START_TYPE);
->> +    if (ret)
->> +        pr_debug("Failed to populate sure start object type attribute\n");
->> +
->> +    return 0;
->> +
->> +err_release_attributes_data:
->> +    release_attributes_data();
->> +
->> +err_destroy_classdev:
->> +    device_destroy(fw_attr_class, MKDEV(0, 0));
->> +
->> +err_unregister_class:
->> +    fw_attributes_class_put();
->> +
->> +err_exit_bios_attr_pass_interface:
->> +    exit_bios_attr_pass_interface();
->> +
->> +err_exit_bios_attr_set_interface:
->> +    exit_bios_attr_set_interface();
->> +
->> +    return ret;
->> +}
->> +
->> +static void __exit bioscfg_exit(void)
->> +{
->> +    release_attributes_data();
->> +    device_destroy(fw_attr_class, MKDEV(0, 0));
->> +
->> +    fw_attributes_class_put();
->> +    exit_bios_attr_set_interface();
->> +    exit_bios_attr_pass_interface();
->> +}
->> +
->> +module_init(bioscfg_init);
->> +module_exit(bioscfg_exit);
-> 
-
+I understand.  I will keep the legacy code because the driver handles
+multiple UUID logic.
+Thank you for the clarification
