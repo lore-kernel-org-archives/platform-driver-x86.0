@@ -2,120 +2,237 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A11C6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 10:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C47DC6FD18
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 10:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233752AbjDYKb5 (ORCPT
+        id S233013AbjDYKez (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Apr 2023 06:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37792 "EHLO
+        Tue, 25 Apr 2023 06:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233705AbjDYKbw (ORCPT
+        with ESMTP id S233810AbjDYKex (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2023 06:31:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F7C5FDD
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:31:04 -0700 (PDT)
+        Tue, 25 Apr 2023 06:34:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7BF4E2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682418663;
+        s=mimecast20190719; t=1682418849;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kkMHifCLaqZQe23JCKz0wmjfgG+ZZZ7m9ycDSIKx5x0=;
-        b=X6lCvllwbEjC3LRTte2zF83uTzcvT0VEQoiqGLPWiKmqNeJ3XCM/BZi0/07ObugR+GcEAW
-        kUYvuL/ofR5n82FwHn0hptqUOUZWpydA4SQbJihSLmTeAhCnSgYuWH/8hg/K0ytlvrZizv
-        UE2iX79BPPOFpzviNn2yI/Xr/IEKs6A=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=u7THULRhWgMcFebRgtK1WD8sev+RUBTaeAQwjg1I+VQ=;
+        b=cnxKzhN5OSTfELkUDbpLeGh5ieVdw1fQhVCVqN1q5Sosg/EEbpBPQ/3jgL061XYvi5KNI9
+        N2YGWuUn8XzrH0vcsozkDEtpLnotqrG/VFRMOFfpFO3EyaipZboFX3lldRGfyESr1LYpxs
+        QOQ/JY3hfgfPMF3kAk60gftcrl90540=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-sdXP4OGjMb68-7LQqwcvlw-1; Tue, 25 Apr 2023 06:31:02 -0400
-X-MC-Unique: sdXP4OGjMb68-7LQqwcvlw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9537db54c94so512584966b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:31:01 -0700 (PDT)
+ us-mta-591-NbX4Xb7DO66iZ3-SI_K9Rw-1; Tue, 25 Apr 2023 06:34:08 -0400
+X-MC-Unique: NbX4Xb7DO66iZ3-SI_K9Rw-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5069f2ae8eeso14665772a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2023 03:34:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682418660; x=1685010660;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1682418847; x=1685010847;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kkMHifCLaqZQe23JCKz0wmjfgG+ZZZ7m9ycDSIKx5x0=;
-        b=a7VkUW6/L7BHyxVNXfLmF0Evz1+sYZwKoM1KLDGiCKoNUcUA5ptnF4kNnvpOBAabpH
-         zjXrQSLDM97b/a4pOE918YCBAXk166+jbMBbeNqia384++vHLbtGNXq/RT51CEnMtObK
-         OD4JLr00fLbP45Xfu5LievDmdhI3eWx/qar3DQ0Ecn1Cav97LJUEDNyPl1qD7c3JEdZh
-         1fRrX5zkfqlMoi352Vjznq/TWu8gW6Yiz9kEDSabnZxyRqT43ssxeJd3blG3xyEz/URy
-         R4zVUosBpf1g2Po2kt71wRGpPbp06e38/xyTa/CyLhkXAJSJX+EgLw5C3B29+ZcQO2Vn
-         lK9Q==
-X-Gm-Message-State: AAQBX9e9PM/j5jK1mmfM/Z+LId+dzMOaaR1yZDe73sdhWAXVvAu6kf5J
-        VVxpgbvC8Ie4elni/WJxskdNWjyn5iIRmaKXVxNgiqm2i63JudxFWIFbr7TzHqB5oSeURJYtSH0
-        u9U/rK5Ogsnvb5mix75UpbgUOWvVo8GddVle1d8k6EQ==
-X-Received: by 2002:a17:906:19ce:b0:94e:dd3f:b650 with SMTP id h14-20020a17090619ce00b0094edd3fb650mr13035670ejd.18.1682418660732;
-        Tue, 25 Apr 2023 03:31:00 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZWvpXVsqotwJMVCcXpApG9Pp9pQl/N2qIHkm+Soa3pwcq0A663kb3Gqpzim79ZsmIsa6ao3g==
-X-Received: by 2002:a17:906:19ce:b0:94e:dd3f:b650 with SMTP id h14-20020a17090619ce00b0094edd3fb650mr13035657ejd.18.1682418660467;
-        Tue, 25 Apr 2023 03:31:00 -0700 (PDT)
+        bh=u7THULRhWgMcFebRgtK1WD8sev+RUBTaeAQwjg1I+VQ=;
+        b=JYBa/tbdG1zV9tYPQpF6omjc0eSsJfk+8/W9AJelaEhoCob9DFX8kvl8iCxT094wn6
+         LghBLt9JpuI4GnNZBe2tI7UafcSns/eWo5pjfwu+Tni+htG/nH8hbUv51mbV3lpgmaO9
+         OMSt2RXUxO2Ynk/lU2yEl/7wN7gwEd1u23PXa/GlqsD2PJwG+E24mou0PuLwf2JraFBf
+         CyINBjFfzaAhjU3qfx8DdNS43E0cyLPF/lKPf7x81ZKMKih9Vv8Cbng9w58vzLPAJ43f
+         Yvyxhmn+NZD3Fb6vt48LB3XZGrmHaHeSFevtvMkxHVLpus3SF0XwFqLW42NQUMPuoAiO
+         EIog==
+X-Gm-Message-State: AAQBX9cCyz1sULJuZz07HuTbQAj/OrBqh1ebSgQzKNhAoIQRDOddLUzW
+        VA25tx8ZBgJqCmKFLp0sGDpdJjw8c+emf9KpwuLi9yhceVp7K2538UDfL6+KRYWEWQ4M1jV8aqY
+        Ij9+d6uSvkyAUDbI/8nOXs115YOzQxKo3z2aFVgGQOQ==
+X-Received: by 2002:a17:906:a007:b0:933:4d47:55b7 with SMTP id p7-20020a170906a00700b009334d4755b7mr13107370ejy.2.1682418847254;
+        Tue, 25 Apr 2023 03:34:07 -0700 (PDT)
+X-Google-Smtp-Source: AKy350YAYU/DR0ZaWkz5n4MShN6au3yfTGV9bLtppFGS3UL2Zj1HtySGTfbBLI84UGn9chQQMJ8A3g==
+X-Received: by 2002:a17:906:a007:b0:933:4d47:55b7 with SMTP id p7-20020a170906a00700b009334d4755b7mr13107354ejy.2.1682418846891;
+        Tue, 25 Apr 2023 03:34:06 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906328a00b009599c3a019fsm2455809ejw.60.2023.04.25.03.30.59
+        by smtp.gmail.com with ESMTPSA id l7-20020a1709060e0700b0094ee21fe943sm6548204eji.116.2023.04.25.03.34.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Apr 2023 03:30:59 -0700 (PDT)
-Message-ID: <6ddd373b-6bcb-85a7-2423-ceea5d3f1246@redhat.com>
-Date:   Tue, 25 Apr 2023 12:30:59 +0200
+        Tue, 25 Apr 2023 03:34:06 -0700 (PDT)
+Message-ID: <6c05cc9e-815d-7a94-8b2d-f17fd5d47354@redhat.com>
+Date:   Tue, 25 Apr 2023 12:34:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v10 02/14] HP BIOSCFG driver - biosattr-interface
+Subject: Re: [PATCH v10 03/14] HP BIOSCFG driver - bioscfg
 Content-Language: en-US, nl
-To:     Pavel Machek <pavel@ucw.cz>, Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Armin Wolf <W_Armin@gmx.de>, Jorge Lopez <jorgealtxwork@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas@t-8ch.de
 References: <20230419151321.6167-1-jorge.lopez2@hp.com>
- <20230419151321.6167-3-jorge.lopez2@hp.com> <ZEJ1f7vOL1zCyNyR@duo.ucw.cz>
+ <20230419151321.6167-4-jorge.lopez2@hp.com>
+ <38929a45-79de-964b-5d6f-cfa44099b35e@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZEJ1f7vOL1zCyNyR@duo.ucw.cz>
+In-Reply-To: <38929a45-79de-964b-5d6f-cfa44099b35e@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 4/21/23 13:37, Pavel Machek wrote:
-> Hi!
-> 
->> Linux Security components are under development and not published yet.
->> The only linux component is the driver (hp bioscfg) at this time.
->> Other published security components are under Windows.
->>
->> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> 
->> +/*
->> + * ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
->> + *
->> + * BIOS supports UTF-16 characters that are 2 bytes long.  No variable
->> + * multi-byte language supported.
->> + *
->> + * @p:   Unicode buffer address
->> + * @str: string to convert to unicode
->> + *
->> + * Returns a void pointer to the buffer containing unicode string
->> + */
->> +void *ascii_to_utf16_unicode(u16 *p, const u8 *str)
+On 4/19/23 20:04, Armin Wolf wrote:
+> Am 19.04.23 um 17:13 schrieb Jorge Lopez:
+
+<snip>
+
+>> +static int __init bioscfg_init(void)
 >> +{
+>> +    int ret = 0;
+>> +    int bios_capable = wmi_has_guid(HP_WMI_BIOS_GUID);
+>> +
+>> +    if (!bios_capable) {
+>> +        pr_err("Unable to run on non-HP system\n");
+>> +        return -ENODEV;
+>> +    }
+>> +
 > 
-> Does this need to go to library somewhere?
+> Currently, this driver will no get automatically loaded on supported hardware,
+> something which would be quite beneficial for users to have.
+> Since the HP_WMI_BIOS_GUID is already handled by the hp-wmi driver, maybe this
+> driver (which also already implements a function similar to hp_wmi_perform_query())
+> could register a platform device which is then used by this driver? This together
+> with MODULE_DEVICE_TABLE() would allow for automatically loading the module on supported hardware.
 
-This has already been discussed in earlier submissions
-of the driver, the utf16 format is HP specific (prefixed
-with a 16 bit le lenght, and the 0 length string needs
-special encoding) so despite the name this is not generic.
+Both drivers can already co-exist since the old hp-wmi driver uses the old
+wmi kernel functions and is not a "wmi_driver" so there is no need for
+a platform_device for this driver to bind to since the wmi_device is
+still free for it to bind to.
 
-It should probably be prefixed with hp_ because of this
-though, to avoid potential symbol conflicts when builtin.
-
-(and the same applies to other generic functions).
+This does indeed need a MODULE_DEVICE_TABLE() statement for
+the bios_attr_pass_interface_id_table[] id-table. Note only for that
+table, because the HP_WMI_BIOS_GUID is present on models which do
+not support this and we don't want the module to auto-load there.
 
 Regards,
 
 Hans
 
+
+
+
+> 
+> Armin Wolf
+> 
+>> +    ret = init_bios_attr_set_interface();
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    ret = init_bios_attr_pass_interface();
+>> +    if (ret)
+>> +        goto err_exit_bios_attr_set_interface;
+>> +
+>> +    if (!bioscfg_drv.bios_attr_wdev || !bioscfg_drv.password_attr_wdev) {
+>> +        pr_debug("Failed to find set or pass interface\n");
+>> +        ret = -ENODEV;
+>> +        goto err_exit_bios_attr_pass_interface;
+>> +    }
+>> +
+>> +    ret = fw_attributes_class_get(&fw_attr_class);
+>> +    if (ret)
+>> +        goto err_exit_bios_attr_pass_interface;
+>> +
+>> +    bioscfg_drv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
+>> +                          NULL, "%s", DRIVER_NAME);
+>> +    if (IS_ERR(bioscfg_drv.class_dev)) {
+>> +        ret = PTR_ERR(bioscfg_drv.class_dev);
+>> +        goto err_unregister_class;
+>> +    }
+>> +
+>> +    bioscfg_drv.main_dir_kset = kset_create_and_add("attributes", NULL,
+>> +                            &bioscfg_drv.class_dev->kobj);
+>> +    if (!bioscfg_drv.main_dir_kset) {
+>> +        ret = -ENOMEM;
+>> +        pr_debug("Failed to create and add attributes\n");
+>> +        goto err_destroy_classdev;
+>> +    }
+>> +
+>> +    bioscfg_drv.authentication_dir_kset = kset_create_and_add("authentication", NULL,
+>> +                                  &bioscfg_drv.class_dev->kobj);
+>> +    if (!bioscfg_drv.authentication_dir_kset) {
+>> +        ret = -ENOMEM;
+>> +        pr_debug("Failed to create and add authentication\n");
+>> +        goto err_release_attributes_data;
+>> +    }
+>> +
+>> +    /*
+>> +     * sysfs level attributes.
+>> +     * - pending_reboot
+>> +     */
+>> +    ret = create_attributes_level_sysfs_files();
+>> +    if (ret)
+>> +        pr_debug("Failed to create sysfs level attributes\n");
+>> +
+>> +    ret = hp_init_bios_attributes(HPWMI_STRING_TYPE, HP_WMI_BIOS_STRING_GUID);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate string type attributes\n");
+>> +
+>> +    ret = hp_init_bios_attributes(HPWMI_INTEGER_TYPE, HP_WMI_BIOS_INTEGER_GUID);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate integer type attributes\n");
+>> +
+>> +    ret = hp_init_bios_attributes(HPWMI_ENUMERATION_TYPE, HP_WMI_BIOS_ENUMERATION_GUID);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate enumeration type attributes\n");
+>> +
+>> +    ret = hp_init_bios_attributes(HPWMI_ORDERED_LIST_TYPE, HP_WMI_BIOS_ORDERED_LIST_GUID);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate ordered list object type attributes\n");
+>> +
+>> +    ret = hp_init_bios_attributes(HPWMI_PASSWORD_TYPE, HP_WMI_BIOS_PASSWORD_GUID);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate password object type attributes\n");
+>> +
+>> +    bioscfg_drv.spm_data.attr_name_kobj = NULL;
+>> +    ret = hp_add_other_attributes(HPWMI_SECURE_PLATFORM_TYPE);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate secure platform object type attribute\n");
+>> +
+>> +    bioscfg_drv.sure_start_attr_kobj = NULL;
+>> +    ret = hp_add_other_attributes(HPWMI_SURE_START_TYPE);
+>> +    if (ret)
+>> +        pr_debug("Failed to populate sure start object type attribute\n");
+>> +
+>> +    return 0;
+>> +
+>> +err_release_attributes_data:
+>> +    release_attributes_data();
+>> +
+>> +err_destroy_classdev:
+>> +    device_destroy(fw_attr_class, MKDEV(0, 0));
+>> +
+>> +err_unregister_class:
+>> +    fw_attributes_class_put();
+>> +
+>> +err_exit_bios_attr_pass_interface:
+>> +    exit_bios_attr_pass_interface();
+>> +
+>> +err_exit_bios_attr_set_interface:
+>> +    exit_bios_attr_set_interface();
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +static void __exit bioscfg_exit(void)
+>> +{
+>> +    release_attributes_data();
+>> +    device_destroy(fw_attr_class, MKDEV(0, 0));
+>> +
+>> +    fw_attributes_class_put();
+>> +    exit_bios_attr_set_interface();
+>> +    exit_bios_attr_pass_interface();
+>> +}
+>> +
+>> +module_init(bioscfg_init);
+>> +module_exit(bioscfg_exit);
+> 
 
