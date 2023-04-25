@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC583C6FD18
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 13:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9306EC77B61
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Apr 2023 14:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233762AbjDYNnr (ORCPT
+        id S233893AbjDYOdC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Apr 2023 09:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40646 "EHLO
+        Tue, 25 Apr 2023 10:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233368AbjDYNnq (ORCPT
+        with ESMTP id S233838AbjDYOdC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2023 09:43:46 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A27EE58;
-        Tue, 25 Apr 2023 06:43:44 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2a8aea2a654so56107881fa.1;
-        Tue, 25 Apr 2023 06:43:44 -0700 (PDT)
+        Tue, 25 Apr 2023 10:33:02 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955EF13FBE;
+        Tue, 25 Apr 2023 07:32:53 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2a8bcfbf276so53404951fa.3;
+        Tue, 25 Apr 2023 07:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682430223; x=1685022223;
+        d=gmail.com; s=20221208; t=1682433171; x=1685025171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yL70Rc7HzGeZUoqLDlSCDrwe16+F8INjLhdwD4sRim0=;
-        b=XJ6hTJmA79SxhcWsncYDGRQAHC8yuAJ4yJls/gUbDA28G07pwVjM+vnz6TEAHng0T8
-         Vlzwc852rcvUjutLOYfoMcAhZsKP2Yz0N6ASljEexoeUoatymuRIPElCovKV310bOGTf
-         nejC4plihdpXPyemrl+t6oeBQ7HhFxEIFyMcMR0MI5DL/lNJ5UzVQ4L9gs8kJeOBI550
-         8Hc4/rM3SCrvle7AIpngypcysazAGRzQGRsFWsGdAgYvDp430uxxWV1Tz8/R2bL+Ivpb
-         0HMV/vPvOli5pqSK2YAUjZ4fCXkP1nfExku0YsAc8XH7fjSmbSSQXqgXc9fJsIDyMlzk
-         hwkA==
+        bh=MbBZp2UwvFnYA0QA/lQDtuNJIeFok3sFwNh+5GowoR8=;
+        b=Uy6Z5S2VL0AK4rynnr993GVmWtQt3z579fvWKHOVhHGpSu3KhmhMHBg6V02/M4urIW
+         f+1ehqWqGCaMHVwa+tUFIioKakNNxkBtZ/lgWrbGQ5b0WDkCE69Rep2uEQaFSZ/i9hcp
+         MJPbiyNMEzL5j807zYpYs0CG6R4aRiqd5EpmBOB7UBqMFZUp2IuaCzxYdAneWKBv2lqv
+         infynBbRA5uXMi9eVEiLyX3tGisrriY+DhWSPg/GFua0Wc7F5P5jb2gX7CI3YB0gEs+d
+         vRVfFg92JtFuo9+DOaG0FS2AAMO6u0CW35qLFb2kR8TsiNVz5eFPwhh1Jr8+4uAl1YQf
+         1zfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682430223; x=1685022223;
+        d=1e100.net; s=20221208; t=1682433171; x=1685025171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yL70Rc7HzGeZUoqLDlSCDrwe16+F8INjLhdwD4sRim0=;
-        b=H9s1fHFq48Q/fPeD7DTm7XpiLfxsc2j+vOpMBzlGYNkEAwt1JXwsUv8oeMjLfQFWpg
-         2x1gs57YXNQt8s2tP7LdkiX5Zv5qJZNWeFM2ItDELJvfuMFdq5sjpdbPMSprffLcxKNM
-         EsnF8SRXbZ0m6PZ6PCN4Wq/G1nAp5rEX/G3boYXhGPkTAnHO4Fk41GFYmUXRtlKBNbk9
-         K1uaf9xPDz8Lv2GoqMYYSXPsDqyyUbndhR6K3bB/ZSU7KAQ+p3jPAMLZ62ja6qIkI6Jz
-         nVIGRmP8qyPjYGg798vC+YktCwzae1Khtn/3j8v9XQt1vCyQlP3P6oOU5fZXIXlYjzIu
-         OuEg==
-X-Gm-Message-State: AAQBX9fQ/czq1GmzJKJdMCbYpOolnbqGyunNiTYK5Y/CLivzPA9hWA0u
-        DRhe4JLDPh6ZfnTQuL9VP+uxZTjvJq7sxg19pVA=
-X-Google-Smtp-Source: AKy350aCHamhC0FqIkzUEGC576nU3ilFEoW8UqM8jU1//M55SfNYvUVmQZJyuc/kGkaQuDgiVDE4dWYnJg5EvFG8VXY=
-X-Received: by 2002:a2e:8255:0:b0:2ab:d1b:dcb2 with SMTP id
- j21-20020a2e8255000000b002ab0d1bdcb2mr2071882ljh.38.1682430222632; Tue, 25
- Apr 2023 06:43:42 -0700 (PDT)
+        bh=MbBZp2UwvFnYA0QA/lQDtuNJIeFok3sFwNh+5GowoR8=;
+        b=CF/BBfwFGeWFN1edl1LNrTzz2wcHxFEdrME99tz35usPaTVdSHVqH6Qg3OUP4Bq+nY
+         h7EKWWhJEt1sZIrE2nRGfq2qe/AK7JqequejXXEMCHk2lfSy4ZOIJ+67eQl8aS85iMuD
+         TBY6MQ6Lm7LlmXt84ChBOwhutv5K7cY+cMEf+ImU+p38Kl1KYniaN3lrpGMTdvfvR7Kb
+         cw2krBuhpsmn0cY6TqoW+t+AjHeYLxEweEyhmoD+CqpIikWJBd5YzqmeJWEnTry2Q46Y
+         2MoJz0ImXra/OxxTEzZcnSd0E4d+94ClelbSxXRA+5kq8j08YWy6q/JbFbcyGW//NTtm
+         z4YQ==
+X-Gm-Message-State: AAQBX9f9c3lerQmEVgIeEsIVBtyiV+GQLHnFrG8BYSFprtXIImD94Gv/
+        qaKxe+lsGvNjNA9fU5Tv5aarDGXI8GpEyoK2zud1Yqh8vbw=
+X-Google-Smtp-Source: AKy350bwtv8/nbv7mZxvJxWUlZt1sO4by2cW608vPG2BMPNGnotkC85t7kiKTixLzN2up79Qf6GpnjKEANPR/ODC+/Q=
+X-Received: by 2002:a2e:9214:0:b0:2a7:a719:5936 with SMTP id
+ k20-20020a2e9214000000b002a7a7195936mr3747878ljg.19.1682433171389; Tue, 25
+ Apr 2023 07:32:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230419151321.6167-1-jorge.lopez2@hp.com> <20230419151321.6167-3-jorge.lopez2@hp.com>
- <ZEJ1f7vOL1zCyNyR@duo.ucw.cz> <6ddd373b-6bcb-85a7-2423-ceea5d3f1246@redhat.com>
-In-Reply-To: <6ddd373b-6bcb-85a7-2423-ceea5d3f1246@redhat.com>
+References: <20230419151321.6167-1-jorge.lopez2@hp.com> <20230419151321.6167-4-jorge.lopez2@hp.com>
+ <38929a45-79de-964b-5d6f-cfa44099b35e@gmx.de> <6c05cc9e-815d-7a94-8b2d-f17fd5d47354@redhat.com>
+In-Reply-To: <6c05cc9e-815d-7a94-8b2d-f17fd5d47354@redhat.com>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 25 Apr 2023 08:43:18 -0500
-Message-ID: <CAOOmCE8AkvXmD=RJLS_R1z+fmuzt1HSSr9DwnS8=pA4Wtjx7mA@mail.gmail.com>
-Subject: Re: [PATCH v10 02/14] HP BIOSCFG driver - biosattr-interface
+Date:   Tue, 25 Apr 2023 09:32:27 -0500
+Message-ID: <CAOOmCE_W7_pgQT=8bQBi8_0pD74O6uen6-8p0Orvi1qjEcaHng@mail.gmail.com>
+Subject: Re: [PATCH v10 03/14] HP BIOSCFG driver - bioscfg
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org,
+Cc:     Armin Wolf <W_Armin@gmx.de>, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -65,53 +65,62 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 5:31=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
+On Tue, Apr 25, 2023 at 5:34=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
  wrote:
 >
-> Hi,
+> Hi All,
 >
-> On 4/21/23 13:37, Pavel Machek wrote:
-> > Hi!
-> >
-> >> Linux Security components are under development and not published yet.
-> >> The only linux component is the driver (hp bioscfg) at this time.
-> >> Other published security components are under Windows.
-> >>
-> >> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> >
-> >> +/*
-> >> + * ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
-> >> + *
-> >> + * BIOS supports UTF-16 characters that are 2 bytes long.  No variabl=
-e
-> >> + * multi-byte language supported.
-> >> + *
-> >> + * @p:   Unicode buffer address
-> >> + * @str: string to convert to unicode
-> >> + *
-> >> + * Returns a void pointer to the buffer containing unicode string
-> >> + */
-> >> +void *ascii_to_utf16_unicode(u16 *p, const u8 *str)
+> On 4/19/23 20:04, Armin Wolf wrote:
+> > Am 19.04.23 um 17:13 schrieb Jorge Lopez:
+>
+> <snip>
+>
+> >> +static int __init bioscfg_init(void)
 > >> +{
+> >> +    int ret =3D 0;
+> >> +    int bios_capable =3D wmi_has_guid(HP_WMI_BIOS_GUID);
+> >> +
+> >> +    if (!bios_capable) {
+> >> +        pr_err("Unable to run on non-HP system\n");
+> >> +        return -ENODEV;
+> >> +    }
+> >> +
 > >
-> > Does this need to go to library somewhere?
+> > Currently, this driver will no get automatically loaded on supported ha=
+rdware,
+> > something which would be quite beneficial for users to have.
+> > Since the HP_WMI_BIOS_GUID is already handled by the hp-wmi driver, may=
+be this
+> > driver (which also already implements a function similar to hp_wmi_perf=
+orm_query())
+> > could register a platform device which is then used by this driver? Thi=
+s together
+> > with MODULE_DEVICE_TABLE() would allow for automatically loading the mo=
+dule on supported hardware.
 >
-> This has already been discussed in earlier submissions
-> of the driver, the utf16 format is HP specific (prefixed
-> with a 16 bit le lenght, and the 0 length string needs
-> special encoding) so despite the name this is not generic.
+> Both drivers can already co-exist since the old hp-wmi driver uses the ol=
+d
+> wmi kernel functions and is not a "wmi_driver" so there is no need for
+> a platform_device for this driver to bind to since the wmi_device is
+> still free for it to bind to.
 >
-> It should probably be prefixed with hp_ because of this
-> though, to avoid potential symbol conflicts when builtin.
+> This does indeed need a MODULE_DEVICE_TABLE() statement for
+> the bios_attr_pass_interface_id_table[] id-table. Note only for that
+> table, because the HP_WMI_BIOS_GUID is present on models which do
+> not support this and we don't want the module to auto-load there.
 >
-> (and the same applies to other generic functions).
 
-I will add the prefix 'hp_' to those generic functions such
-ascii_to_utf16_unicode.
+I am considering adding a check for the  HP_WMI_SET_BIOS_SETTING_GUID
+and HP_WMI_BIOS_GUID during the initialization process.
+The driver will report a message If HP_WMI_SET_BIOS_SETTING_GUID is
+found or not.
+If HP_WMI_SET_BIOS_SETTING_GUID does not exist, the driver cannot
+change the BIOS settings.
 
->
 > Regards,
 >
 > Hans
+>
+>
 >
 >
