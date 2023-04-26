@@ -2,121 +2,144 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937B5C77B60
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 09:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C6BC7618E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 12:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239813AbjDZJAZ (ORCPT
+        id S241033AbjDZMpX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Apr 2023 05:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59268 "EHLO
+        Wed, 26 Apr 2023 08:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239597AbjDZJAY (ORCPT
+        with ESMTP id S241032AbjDZMos (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2023 05:00:24 -0400
+        Wed, 26 Apr 2023 08:44:48 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E423B40D1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 01:59:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA2661A9
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 05:43:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682499578;
+        s=mimecast20190719; t=1682512926;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=K3fBb63lE0NdO6K08wbAb+sUNpRZJ7AhFNrVK+l26Xw=;
-        b=iR7LDcQPA0g/WRcqk4ssuV0EavPLxm3gNrH3sy1P89t/Ln/5rz7nVOhkioHmlH+u94oo32
-        BGstiMFK5kqP5m/LYyZhQ4RuzBHkyS/9Zl35ESrzOUGXr5ZNiIouCk2C7IrDMjfrbx457F
-        Biqcjv7ZDAZFlaMcqP0z5ca2K44x0HQ=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=N5DM8uFRDHl/3yHn+2axRN4cpB2/Yn2dxraiQxNEcRs=;
+        b=OQ5yd0wQ/wiIL0yEPLBSlNY7ovRUh3nvdb4bE1ojjhRpau2PV7CJo331qreobViH4VmwPh
+        TG0IrKybnQjAdSj/Gi9fH5x7YlCxvovh0kYs7ZUZmS3vsH1VeoN1qSTr4fJIHpGnd6QaLg
+        eydOgM2JYzuY3IP8wszYadWqOb0WMnY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-jynuv75AMyayUejEjD3ZQQ-1; Wed, 26 Apr 2023 04:59:36 -0400
-X-MC-Unique: jynuv75AMyayUejEjD3ZQQ-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-505149e1a4eso2925041a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 01:59:35 -0700 (PDT)
+ us-mta-375-kaVzCD6WMNSiod6S8LRakw-1; Wed, 26 Apr 2023 08:42:05 -0400
+X-MC-Unique: kaVzCD6WMNSiod6S8LRakw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94ec76d7a26so664584166b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 05:42:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682499575; x=1685091575;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1682512924; x=1685104924;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3fBb63lE0NdO6K08wbAb+sUNpRZJ7AhFNrVK+l26Xw=;
-        b=XbVcJKDOluFRr1O5bufuaOH9rkkR/cYCAOODPNsIIjsC4/PonSF6IIhB9OQDWOBZ6+
-         1oBV4QUlI1iTRwhXsvkqt45qUITQIzJlklli3z3TpFk3EJ5AARADxObUC4Rbg12Ch4Sh
-         wUOoYV4boDWpq7/tZJXguS2HdEuujW3tWPiCUQY6YDXD5Tqs8oQJjkXaM8W+wuprRGmX
-         rkFB8/fYyXb4IN9Zp7MakARFWetF0xuGKcGJEfCkad+A51QOiVkmASd2+2YJHOgAaOPg
-         8PmeKsguUsI1hol11VdahlvTRy704FpTxeiw6QFtZyakOUeN3ZjocNsnc3SWKotMlofN
-         Ybng==
-X-Gm-Message-State: AC+VfDy0MLD27WiLfJThnHc5aE6zint2hRm15M+vGeOQ3Eov4IV0kFiZ
-        4XzJ09/LaEq9LqmpHq1wWLmq2KU9tOKVJcbWoefBjtmnYdzaR7mi4gHnedrOGYWWebQM9DjWuTF
-        +oEfM6eZnC7ap768BaIjlBassIUy3mwjvWw==
-X-Received: by 2002:a05:6402:50cd:b0:504:77ed:5a33 with SMTP id h13-20020a05640250cd00b0050477ed5a33mr1433499edb.8.1682499574946;
-        Wed, 26 Apr 2023 01:59:34 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5E4YUPH6KUsC/YrJcqjdZonZ+2wpE9ht7ygVt3UseyqI98eMH/6X68EG/k6xQyfw3gCFXChw==
-X-Received: by 2002:a05:6402:50cd:b0:504:77ed:5a33 with SMTP id h13-20020a05640250cd00b0050477ed5a33mr1433493edb.8.1682499574687;
-        Wed, 26 Apr 2023 01:59:34 -0700 (PDT)
+        bh=N5DM8uFRDHl/3yHn+2axRN4cpB2/Yn2dxraiQxNEcRs=;
+        b=NQ9fk6dS9B2DVfEnby+D3+xE/msp+v4NjsPA2pnnCtAU/LukITJV2sVK5o/rMSNns9
+         WUrGZRmhJVpQ8Q0jilOU3D58Yo7NuBp1FoKJ0T19Li1Aq+pYmBjt10JqjThA3sf2mUwV
+         MfATg/nYSrpRSsExy2fivdi/tnCcGd+bLLg47lnksOyT5C7+gB16Ajf8NgrDV8pcblCg
+         1WPpaOWqDILjzTZ5nV3FlioJ7QlM3zgBsBW7+/8iOfz1f0UFVqid/Ru1J++TZH4BWQkZ
+         TRhpd9X3g7dIPelKscjVVwaX2hNfkbVjmpYtacC25D5OseEKhnXARLcvThXkZCYiR+QP
+         6XJw==
+X-Gm-Message-State: AAQBX9dzdYDFwvWQ3hFG2EfhTxOKXIb8H5wZRe1vCNp5onKgWE1L2OvV
+        epDRVHPW3/t0XQ1Th++oVpL5mtnl5FOMho1PZE4ibIfF0vWi+tQqy7Ta+7KiMixC5j1/stqg4ia
+        jsJJxxZg0t1I/DmAGV/tmAsBCp7BmOC+WEYlPhnMxrg==
+X-Received: by 2002:a17:907:d092:b0:959:6fb2:1c35 with SMTP id vc18-20020a170907d09200b009596fb21c35mr9999714ejc.60.1682512923891;
+        Wed, 26 Apr 2023 05:42:03 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bvXKOYJy6okWIZQECAi2PCDtQ0dPgUVzmT7RubNUWIJbMHxurZWDEmVVfiERP74ogwTR7r/g==
+X-Received: by 2002:a17:907:d092:b0:959:6fb2:1c35 with SMTP id vc18-20020a170907d09200b009596fb21c35mr9999703ejc.60.1682512923548;
+        Wed, 26 Apr 2023 05:42:03 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id d21-20020aa7c1d5000000b005027d31615dsm6408138edp.62.2023.04.26.01.59.33
+        by smtp.gmail.com with ESMTPSA id f15-20020a056402150f00b00506adf55ae2sm6742648edw.6.2023.04.26.05.42.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Apr 2023 01:59:34 -0700 (PDT)
-Message-ID: <c2d0c706-e006-6c2f-8fe6-ea20a745ddd6@redhat.com>
-Date:   Wed, 26 Apr 2023 10:59:33 +0200
+        Wed, 26 Apr 2023 05:42:02 -0700 (PDT)
+Message-ID: <d632fa2f-e94f-2958-c899-480afa9354c3@redhat.com>
+Date:   Wed, 26 Apr 2023 14:42:02 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: Function of the camera key on windows
-To:     Jonathan Singer <jes965@nyu.edu>,
-        platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <MN0PR12MB6101D9688E7904FF52634520E2649@MN0PR12MB6101.namprd12.prod.outlook.com>
- <20230425210953.14597-1-jes965@nyu.edu>
+Subject: Re: [PATCH v2 0/4] platform/x86: wmi: Add subsystem documentation
 Content-Language: en-US, nl
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org,
+        rdunlap@infradead.org
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230424222939.208137-1-W_Armin@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230425210953.14597-1-jes965@nyu.edu>
+In-Reply-To: <20230424222939.208137-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Armin,
 
-On 4/25/23 23:09, Jonathan Singer wrote:
-> The key itself triggers a hardware response both on windows and linux.
-> It disconnects power from the camera USB module and raises a cover in front
-> of the camera aperature. The keycode is as far as I know only to notify the
-> operating system in case it wanted to show a message.
-> 
-> Is that the kind of use case that would benefit from emitting a KEY_CAMERA?
+On 4/25/23 00:29, Armin Wolf wrote:
+> Currently, there is no recent documentation available for writing WMI
+> drivers using the modern bus-based interface. This leads to developers
+> using the deprecated GUID-based interface when developing new drivers,
+> causing issues with notification handling when multiple WMI devices sharing
+> the same notification ID are present. There is also no way for WMI
+> drivers to add device specific documentation at the moment.
+> Add documentation for the WMI subsystem to solve those issues. The
+> device specific documentation currently onyl include documentation for
+> the wmi-bmof driver, but more is expected to follow.
 
-Actually we have SW_CAMERA_LENS_COVER for this and this is what
-new Dell laptops with a similar feature use.
+Thank you for your patch series, I've applied this series
+to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-The problem with using a SW for this though is that we should then either:
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-a) Figure out a way to identify models which will report this; or
-b) register a separate input_dev just for reporting the SW
-   on the first event.
-
-This is necessary because unlike keys where only press + release
-events really matter and if those never happens no harm is done,
-switches can be acted upon by userspace in both there open and closed
-state, so the mere presence of an input_device with a SW_CAMERA_LENS_COVER
-may be acted upon by userspace. E.g. if we by default report
-SW_CAMERA_LENS_COVER=1 (so lenscover closed) then apps who want to access
-the camera may ask the user something like: "Your camera is currently
-unavailable, please press the keyboard combination to enable your camera"
-which makes no sense to ask on devices without such feature.
-
-Note that simply registering a separate input_dev for just reporting
-SW_CAMERA_LENS_COVER on the first event is a good workaround for
-this though. We already do the same in other drivers for SW_TABLET_MODE
-for similar reasons.
-
-A second problem is that we would need to be able to tell if we
-get the 0x1A event because of the camera being enabled or disabled,
-but perhaps this info is already present in the event_data ?
+Patches which are added to review-hans now are intended for
+the next rc1. This branch will get rebased to the next rc1 when
+it is out and after the rebasing the contents of review-hans
+will be pushed to the platform-drivers-x86/for-next branch.
 
 Regards,
 
 Hans
 
+
+> ---
+> Changes in v2:
+> - spelling fixes
+> - tell readers that MOF means Managed Object Format
+> - 80-cloumn limit
+> 
+> Armin Wolf (4):
+>   platform/x86: wmi: Add kernel doc comments
+>   platform/x86: wmi: Mark GUID-based WMI interface as deprecated
+>   platform/x86: wmi: Add documentation
+>   platform/x86: wmi: Add device specific documentation
+> 
+>  .../ABI/stable/sysfs-platform-wmi-bmof        |  7 ++
+>  Documentation/driver-api/index.rst            |  1 +
+>  Documentation/driver-api/wmi.rst              | 21 ++++
+>  Documentation/subsystem-apis.rst              |  1 +
+>  Documentation/wmi/acpi-interface.rst          | 96 +++++++++++++++++++
+>  Documentation/wmi/devices/index.rst           | 22 +++++
+>  Documentation/wmi/devices/wmi-bmof.rst        | 25 +++++
+>  Documentation/wmi/index.rst                   | 19 ++++
+>  MAINTAINERS                                   |  9 ++
+>  drivers/platform/x86/Kconfig                  |  4 +-
+>  drivers/platform/x86/wmi.c                    | 63 +++++++++---
+>  include/linux/wmi.h                           | 41 +++++++-
+>  12 files changed, 289 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/ABI/stable/sysfs-platform-wmi-bmof
+>  create mode 100644 Documentation/driver-api/wmi.rst
+>  create mode 100644 Documentation/wmi/acpi-interface.rst
+>  create mode 100644 Documentation/wmi/devices/index.rst
+>  create mode 100644 Documentation/wmi/devices/wmi-bmof.rst
+>  create mode 100644 Documentation/wmi/index.rst
+> 
+> --
+> 2.30.2
+> 
 
