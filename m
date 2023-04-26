@@ -2,192 +2,159 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D90C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 13:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76741C77B60
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 13:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241026AbjDZNGh (ORCPT
+        id S240795AbjDZNOg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Apr 2023 09:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        Wed, 26 Apr 2023 09:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241086AbjDZNGU (ORCPT
+        with ESMTP id S240710AbjDZNOf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2023 09:06:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4E061B9
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 06:04:39 -0700 (PDT)
+        Wed, 26 Apr 2023 09:14:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A95D170D
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 06:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682514278;
+        s=mimecast20190719; t=1682514831;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Fq4Od2HxM/Y6pUx1QLzBOFhnuHgYBugl3wErDAOLIqo=;
-        b=arwJ6M5aQCYl9/o8AR3TOSwe8hwHU3ZR65xO+AIStqn8nnOtsKlAB3LDS5IGOnt64xFbqT
-        z9yDEDcDMmHud+jl0JunsG11v/LXWUET8wk9LvohtjOgZTvMi7mVYz7wWUSpcnzcVhX+Cf
-        jU4VAqXR8dGDQEweelN6JaDr4eNDYC8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=r5FMj5V6zQGEx1smSeHyO2VckisagRWE0U4SFvOEqxo=;
+        b=J1ZRx6k7OkGeqtRlOqLmYyiMmQgZLuKgGelvMGvqrK6SRqWKX9zxTQwuju7N0z2b8i2Xv6
+        1AEiZsDkqJJtoR8pYep3MfMcRpNwAby5tRecv7IDjVnw3ysNMJpHjtnDYsROwes8PYl8J/
+        VMLKa5mzTIHP2RBikIdYYugyZc1r+/s=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-196-BHNpbaWaOEyo6qmKQcfmkQ-1; Wed, 26 Apr 2023 09:04:33 -0400
-X-MC-Unique: BHNpbaWaOEyo6qmKQcfmkQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-95f6f291b9aso25916266b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 06:04:30 -0700 (PDT)
+ us-mta-557-ACraUDtWOom13KTgBdjA5Q-1; Wed, 26 Apr 2023 09:13:47 -0400
+X-MC-Unique: ACraUDtWOom13KTgBdjA5Q-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-509e422cfb3so4016219a12.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 06:13:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682514269; x=1685106269;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20221208; t=1682514826; x=1685106826;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fq4Od2HxM/Y6pUx1QLzBOFhnuHgYBugl3wErDAOLIqo=;
-        b=h/FRsEFyqrGV/Xmd6+SdwjlfnLQuHg/82V4jYn5TPeImo/OET3LznBJocAfc1MIOUj
-         Q5+S0m04zaymCdpiZtN2/5ovlK33PpcWdxYPTwveyI5WIHe6c4bLc7Gm6ujaiB2g/ocu
-         P8jh9S+ZCKTJDdwBaM/LBMs2UCte+4AtWXL5kpa6gz8XZuPfSIWh9FJ83etN/p/W/gwJ
-         5h0NcL7QAguGaIsCvjYGgSF26zhJhpPJTLZ7wuVgWFz5bXTkL2GLrkmgyatrJJhDvfQR
-         l2bLeX5wDDGYt3xlsS4ArD2b87PlbRFUfBRHzt5fud75q4zmty5iI8/GuAgDx2eN1D1Z
-         72oQ==
-X-Gm-Message-State: AAQBX9cV1UEgSfwUNFCToHNm6YEWvk5f4mAGbz7nvNmAxbpV9ykHGAzM
-        zWifKX1uz2rMuOC1FbhqJr2mp6lSmmsnaii/zIPz5YTA2Wjt28i2uX3j9oqqTgABAnZ9oL3Im98
-        BsavvhwRHsbmkfpZnQ8Rerwqp6bmK3V7WpQ==
-X-Received: by 2002:a17:906:830d:b0:94e:b3a1:3ed9 with SMTP id j13-20020a170906830d00b0094eb3a13ed9mr20202180ejx.49.1682514269334;
-        Wed, 26 Apr 2023 06:04:29 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZWOopZTBlxSVKCxrbUqA87SO0sLZv3R9/ZOpeg+cX6/lPO2BB/fBduMntUiAVZDI4AZkb5yQ==
-X-Received: by 2002:a17:906:830d:b0:94e:b3a1:3ed9 with SMTP id j13-20020a170906830d00b0094eb3a13ed9mr20202159ejx.49.1682514268997;
-        Wed, 26 Apr 2023 06:04:28 -0700 (PDT)
+        bh=r5FMj5V6zQGEx1smSeHyO2VckisagRWE0U4SFvOEqxo=;
+        b=A55i0P1aJUkvom4Q2IYTd4yC0gquApLsYp615qIZ9ZB2KSo4X+fw5z0MrrPK4IFNfE
+         ZjRghkvSB8oe6ZuEJlCgaj5ymtSCovMYD6/bolTnEhALFfeybtTjDn1PGE8sU2Ri7Yxn
+         v1/D0C3Qg1EtTir+6//4es7+tbdBWlPx+kwwO7HnPf+LzKwK4T8YSQOEn+FckiL+u6Eq
+         XLtdWWWwORpefOTjk/E6Tt0w+h92/WOsIWwRPjztCAV2Hehfos4bgl7jI+Efy+gzBwJp
+         ditMZw3p+GyzelWyrcdxztP2YmkbxlDLhoWW40Z6clpeXcD21Hg6K5hA2ilggsm52oc2
+         dGdw==
+X-Gm-Message-State: AAQBX9fRrXjMMem1hzFpqsM7CeJNmFZHygjJ3Ho2J/0oAayGMHG3bbdn
+        2sygvdUfTx8nExXF6DA9Uom33qkB0KcwoDnzD59s+rSNwlu8AvypiCC06y6EC0U7KnnIqhaAJpW
+        J7+S3BDXHcPj/xwdMqMUwy5QGGH1K3vROXg==
+X-Received: by 2002:a17:906:5a45:b0:94f:2852:1d2b with SMTP id my5-20020a1709065a4500b0094f28521d2bmr15549504ejc.72.1682514826460;
+        Wed, 26 Apr 2023 06:13:46 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Yav2rCQ6o4OfF1/qgcXthGVrMPHSf2rKrA/ZeHhE8xWzywFVnyOuguqMCQ54Fj8T+PyHIyGQ==
+X-Received: by 2002:a17:906:5a45:b0:94f:2852:1d2b with SMTP id my5-20020a1709065a4500b0094f28521d2bmr15549483ejc.72.1682514826132;
+        Wed, 26 Apr 2023 06:13:46 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id mb17-20020a170906eb1100b00932fa67b48fsm8068863ejb.183.2023.04.26.06.04.28
+        by smtp.gmail.com with ESMTPSA id v10-20020a1709063bca00b0094ee3e4c934sm8220307ejf.221.2023.04.26.06.13.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Apr 2023 06:04:28 -0700 (PDT)
-Message-ID: <2af933f1-1662-2c91-b4da-6e067a9a9389@redhat.com>
-Date:   Wed, 26 Apr 2023 15:04:27 +0200
+        Wed, 26 Apr 2023 06:13:45 -0700 (PDT)
+Message-ID: <8651f747-b932-4cbc-52ca-046f7b1d700e@redhat.com>
+Date:   Wed, 26 Apr 2023 15:13:45 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v11 01/14] HP BIOSCFG driver - Documentation
+Subject: Re: [PATCH v11 06/14] HP BIOSCFG driver - passwdobj-attributes
 Content-Language: en-US, nl
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas@t-8ch.de
+To:     thomas@t-8ch.de, Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230420165454.9517-1-jorge.lopez2@hp.com>
- <20230420165454.9517-2-jorge.lopez2@hp.com>
+ <20230420165454.9517-7-jorge.lopez2@hp.com>
+ <016a9a6a-cff1-444d-b96a-63eded1ac58a@t-8ch.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230420165454.9517-2-jorge.lopez2@hp.com>
+In-Reply-To: <016a9a6a-cff1-444d-b96a-63eded1ac58a@t-8ch.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge, Thomas,
+Hi,
 
-Thank you both so much for all your work on this!
-
-The userspace API of this looks like it is pretty much
-done now (after the discussed changes for
-the "Sure_Start" attribute), which is great.
-
-I have one small remark below (inline).
-
-On 4/20/23 18:54, Jorge Lopez wrote:
-
-<snip>
-
-> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> index 4cdba3477176..73d7b8fbc0b2 100644
-> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> @@ -22,6 +22,12 @@ Description:
->  			- integer: a range of numerical values
->  			- string
->  
-> +		HP specific types
-> +		-----------------
-> +			- ordered-list - a set of ordered list valid values
-> +			- sure-start - report audit logs read from BIOS
-> +
-> +
->  		All attribute types support the following values:
->  
->  		current_value:
-> @@ -126,6 +132,44 @@ Description:
->  					value will not be effective through sysfs until this rule is
->  					met.
->  
-> +		HP specific class extensions
-> +		------------------------------
-> +
-> +		On HP systems the following additional attributes are available:
-> +
-> +		"ordered-list"-type specific properties:
-> +
-> +		elements:
-> +					A file that can be read to obtain the possible
-> +					list of values of the <attr>. Values are separated using
-> +					semi-colon (``;``). The order individual elements are listed
-> +					according to their priority.  An Element listed first has the
-> +					highest priority. Writing the list in a different order to
-> +					current_value alters the priority order for the particular
-> +					attribute.
-> +
-> +		"sure-start"-type specific properties:
-> +
-> +		audit_log_entries:
-> +					A read-only file that returns the events in the log.
-> +					Values are separated using semi-colon (``;``)
-
-Looking at the documented format which seems to be 128 raw bytes per entry, I think
-that the "Values are separated using semi-colon (``;``)" line is not correct here
-and that line should not removed here ?
-
-But maybe I'm misunderstanding things here. Do you have an example
-of what catting (or "hexdump -C"-ing if binary)
-the "audit_log_entries" sysfs file looks like ? 
-
-
-
-> +
-> +					Audit log entry format
-> +
-> +					Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
-> +					Byte 16-127: Unused
-> +
-> +		audit_log_entry_count:
-> +					A read-only file that returns the number of existing audit log events available to be read.
-> +					Values are separated using comma (``,``)
-> +
-> +					[No of entries],[log entry size],[Max number of entries supported]
-> +
-> +					log entry size identifies audit log size for the current BIOS version.
-> +					The current size is 16 bytes but it can be to up to 128 bytes long
-> +					in future BIOS versions.
-> +
-> +
->  What:		/sys/class/firmware-attributes/*/authentication/
->  Date:		February 2021
->  KernelVersion:	5.11
+On 4/23/23 11:07, thomas@t-8ch.de wrote:
+> On 2023-04-20 11:54:46-0500, Jorge Lopez wrote:
+>> ---
+>>  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 669 ++++++++++++++++++
+>>  1 file changed, 669 insertions(+)
+>>  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+>>
+>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+>> new file mode 100644
+>> index 000000000000..c03b3a71e9c4
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
 
 <snip>
 
-> @@ -311,7 +364,7 @@ Description:
->  			==	=========================================
->  			0	All BIOS attributes setting are current
->  			1	A reboot is necessary to get pending BIOS
-> -			        attribute changes applied
-> +				attribute changes applied
->  			==	=========================================
->  
->  		Note, userspace applications need to follow below steps for efficient
+>> +static ssize_t current_password_store(struct kobject *kobj,
+>> +				      struct kobj_attribute *attr,
+>> +				      const char *buf, size_t count)
+>> +{
+>> +	char *p, *buf_cp;
+>> +	int id, ret = 0;
+>> +
+>> +	buf_cp = kstrdup(buf, GFP_KERNEL);
+>> +	if (!buf_cp) {
+>> +		ret = -ENOMEM;
+>> +		goto exit_password;
+>> +	}
+>> +
+>> +	p = memchr(buf_cp, '\n', count);
+>> +
+>> +	if (p != NULL)
+>> +		*p = '\0';
+> 
+> This will also accept input like "foo\nbar" and truncate away the "bar".
 
-This seems like an unrelated whitespace change which
-has accidentally ended up in this patch.
+That is true, but stripping '\n' at the end is a pretty standard
+pattern for sysfs attr store functions since users will e.g.
+often do:
+
+echo one-string-out-of-a-few-valid-strings > /sys/.../some-enum-attr
+
+Where to actually write the real valid string the user should do:
+
+echo -n one-string-out-of-a-few-valid-strings > /sys/.../some-enum-attr
+
+See e.g.:
+
+drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c new_password_store()
+
+which does the exact same thing.
+
+The stripping of '\n' is often taken care of by various kernel
+helpers for sysfs attr.
+
+> For something like a password it seems errorprone to try to munge the
+> value.
+
+Almost all password input dialogs including the actual BIOS password
+input dialog will consider the enter key / a new-line to mean
+"end-of-password, please validate the password inputted so far"
+
+So I don't think this is really a problem. With that said we
+could make this more robust (and maybe also change the Dell
+code to match) by doing:
+
+	len = strlen(buf_cp);
+	if (len && buf_cp[len - 1] == '\n')
+		buf_cp[len - 1] = 0;
+
+To ensure that we only ever strip a leading  '\n'
+and not one in the middle of the buffer.
 
 Regards,
 
 Hans
 
 
-p.s.
-
-I'll also read / catch up with all the comments on the actual implementation
-(patches 2-14) and I'll let you know if I have any remarks there.
 
 
