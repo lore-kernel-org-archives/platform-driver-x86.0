@@ -2,109 +2,109 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8580DC77B78
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CDAC77B78
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 16:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240351AbjDZQKF (ORCPT
+        id S231337AbjDZQr0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Apr 2023 12:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33348 "EHLO
+        Wed, 26 Apr 2023 12:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241351AbjDZQKD (ORCPT
+        with ESMTP id S231137AbjDZQrZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2023 12:10:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0B72D66
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 09:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682525358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=erKsqZ6PhfpGuRSr7TKmSUm9LgXe9vjm1nzPbCbLxKs=;
-        b=gfzZxViQb9n/q9s6APxiNXCRZ2IsZDQjLSoNrRjZMXtvi58J/KnaR17PtqgURYd6wQ6ds4
-        eF7VnGX1Lyq009WgS4HPTaqWs0AR/4V5v1pkJewxY1bTo1P+grPKgQKpYkWpp+fU2QXrcI
-        JzOAGjYsuH0gPw0oP3+RpJ/QcdmDAps=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-mLgF4LLLNXSA09Dr_CQIXg-1; Wed, 26 Apr 2023 12:09:16 -0400
-X-MC-Unique: mLgF4LLLNXSA09Dr_CQIXg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-50692ecb286so6666504a12.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 09:09:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682525355; x=1685117355;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=erKsqZ6PhfpGuRSr7TKmSUm9LgXe9vjm1nzPbCbLxKs=;
-        b=SgJs5XbASKsfL/fM6nvZICvwKX0DtasVpSUm2mK3MZGaPLjc2J/bPFHkxgcw5gbryh
-         8abImF7cMTgCBxpYhBhQrgjYxfIX+Q4IzS/znGWMhZ3nwSUe5JUR0J3EnYSJy7WegpWG
-         gVtkoCh0aAqier3wmDb/Jb9f8YXDasTvvcJvD5mx1heag8bmpnkcu2Y752makqKB1E0+
-         YhZpzTnGGpa8n1dY4K0zRsWguHW/Sfzj3Q1eNXejq3yJ2a3Qc3mGdhrfvNhxnFjipXOF
-         I3jSm9s5kUg6aWdAL7d75ZTrtMaN7PecV2vRn51fqsWR8/dGkTvieYnH7XsTSEBmQN6s
-         Rnxg==
-X-Gm-Message-State: AAQBX9cQlJ8P6lusMh9HR5jc0Rbjn2nuMhCTk7MHGHLj2qmJP4er7xxh
-        S9khQWM8n6SwNf4jjUEOMnzKB4tu6BuoLmwX+griPTNgENlSlugodnfldPSYmuWUe6C0rRA6vf1
-        ygj1Z7u9MNiO9sme4bldAtcpTIOIThPCV0Q==
-X-Received: by 2002:aa7:d7c5:0:b0:504:7d53:2148 with SMTP id e5-20020aa7d7c5000000b005047d532148mr17319984eds.30.1682525355159;
-        Wed, 26 Apr 2023 09:09:15 -0700 (PDT)
-X-Google-Smtp-Source: AKy350anx2sC5Pqc4Hhggb8KfSFvLG2RmVT2FaoRvOJO0KMbM0Q0KYD3ZHaAHSgaCTHgF+3bpJ4ZIg==
-X-Received: by 2002:aa7:d7c5:0:b0:504:7d53:2148 with SMTP id e5-20020aa7d7c5000000b005047d532148mr17319972eds.30.1682525354910;
-        Wed, 26 Apr 2023 09:09:14 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h25-20020a50ed99000000b00505060e4280sm6814607edr.94.2023.04.26.09.09.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Apr 2023 09:09:14 -0700 (PDT)
-Message-ID: <0b609a22-5da3-8305-ac93-caf1a0265170@redhat.com>
-Date:   Wed, 26 Apr 2023 18:09:13 +0200
+        Wed, 26 Apr 2023 12:47:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09153599;
+        Wed, 26 Apr 2023 09:47:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C11E63787;
+        Wed, 26 Apr 2023 16:47:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60921C433EF;
+        Wed, 26 Apr 2023 16:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682527644;
+        bh=LQIlZBXyvbpRW/w7bY9aSuiYQzw21Inh3Gti8/6IHO0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=sKZvNectox1rW/0Kt+dYBwGPPJyiXg/4k6NvGpRI/m3H/I1ZyTCgo54bLncGXM15x
+         1AQ5mmloG8jT8XJd8KasLmwdRAm0lFLwFMG9Io4HoxUyA0rqXdOlBXI2zrxNazX81q
+         WKgBJBQ6k/Peg/xD7UpueXtlG1s4ySQovbI/kAsmeZAOEU2+nZQBXhZJPyj4ph2Sfe
+         ajKQQm31OtiPNfdz33ot6Y5A8HBt3UNngT3WVqjDNLSpv0L7cYv8dJhTI+f7bqnZZ6
+         DLunByvUsKVa91qD51NoR05GAJDp/UH86hcoNCzQYq4g6dMPlRBqmsSU8gSMCH5uPM
+         G4gwU3FQgRP/w==
+From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-acpi@vger.kernel.org, linux-crypto@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sunil V L <sunilvl@ventanamicro.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH V4 05/23] ACPI: OSL: Make should_use_kmap() 0 for RISC-V
+In-Reply-To: <20230404182037.863533-6-sunilvl@ventanamicro.com>
+References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+ <20230404182037.863533-6-sunilvl@ventanamicro.com>
+Date:   Wed, 26 Apr 2023 18:47:20 +0200
+Message-ID: <87a5yua8vb.fsf@all.your.base.are.belong.to.us>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] platform/x86: hp-wmi: Add HP WMI camera switch
-Content-Language: en-US, nl
-To:     Jonathan Singer <jes965@nyu.edu>,
-        Mario Limonciello <Mario.Limonciello@amd.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
-        Rishit Bansal <rishitbansal0@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-References: <20230426152139.1692-1-jes965@nyu.edu>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230426152139.1692-1-jes965@nyu.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi again,
+Sunil V L <sunilvl@ventanamicro.com> writes:
 
-On 4/26/23 17:21, Jonathan Singer wrote:
-> Previously, when the camera toggle switch was hit, the hp-wmi driver
-> would report an invalid event code. By adding a case for that in the
-> event handling switch statement we can eliminate that error code and
-> enable a framework for potential further kernel handling of that key.
-> This change was tested on my HP Envy x360 15-ey0023dx laptop, but it
-> would likely work for any HP laptop with a camera toggle button. Now
-> we emit an SW_CAMERA_LENS_COVER event, on a device that gets created
-> on the first such event so as to not report incorrectly the state of
-> the camera shutter before we can know its state.
-> 
-> Signed-off-by: Jonathan Singer <jes965@nyu.edu>
+> Without this, if the tables are larger than 4K,
+> acpi_map() will fail.
+>
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/osl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 3269a888fb7a..f725813d0cce 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -276,7 +276,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size si=
+ze)
+>  	return NULL;
+>  }
+>=20=20
+> -#if defined(CONFIG_IA64) || defined(CONFIG_ARM64)
+> +#if defined(CONFIG_IA64) || defined(CONFIG_ARM64) || defined(CONFIG_RISC=
+V)
+>  /* ioremap will take care of cache attributes */
+>  #define should_use_kmap(pfn)   0
 
-p.s.
+An observation, which can be addressed later; The acpi_os_ioremap()
+(called when the config above is enabled for RV), does not have an arch
+specific implementation for RISC-V. The generic one calls
+ioremap_cached(), which on RISC-V defaults to ioremap() -- caching
+disabled/_PAGE_IO.
 
-> +		if (event_data == 0xff)
-> +			input_report_switch(camera_shutter_input_dev, SW_CAMERA_LENS_COVER, 1);
-
-I assume that event_data = 0xff happens when disabling the camera, so
-we report SW_CAMERA_LENS_COVER 1 when the camera is disabled, right ?
-
-Regards,
-
-Hans
+That is probably not what we want, but rather something similar that
+arm64 does.
 
 
+Bj=C3=B6rn
